@@ -12,8 +12,6 @@
 *.prj
 *.drawio
 vscode-settings
-easifem-documentation/
-easifem-test/
 pkgs/
 old-classes/
 examples/
