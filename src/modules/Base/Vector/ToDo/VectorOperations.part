@@ -1,0 +1,366 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   VectorOperations.part
+!                   Last Update :   September-06-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   Type:: Part of module
+!
+!   Info::  -   This contains some vector operations
+
+!   Hosting File -
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                VectorProduct2
+!------------------------------------------------------------------------------
+
+ FUNCTION VectorProduct2( u, v )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Vector product; u x v
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u, v
+    REAL( DFP ), DIMENSION( 3 ) :: VectorProduct2
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+
+
+    Error_Flag = .FALSE.
+
+    IF( SIZE( u ) .NE. SIZE( v ) ) THEN
+
+        CALL Err_Msg( &
+        "Tensor_Class.f90>>VectorOperations.part", &
+        "VectorProduct( u, v )", &
+        "The size of u and v must be same; &
+        & it should be either 2 or 3; PROGRAM STOPPED!!")
+        Error_Flag = .TRUE.
+        STOP
+
+    END IF
+
+    N = SIZE( u )
+
+    SELECT CASE( N )
+
+        CASE( 3 )
+
+            VectorProduct2( 1 ) = U( 2 ) * V( 3 ) - U( 3 ) * V( 2 )
+            VectorProduct2( 2 ) = U( 3 ) * V( 1 ) - U( 1 ) * V( 3 )
+            VectorProduct2( 3 ) = U( 1 ) * V( 2 ) - U( 2 ) * V( 1 )
+
+        CASE( 2 )
+
+            VectorProduct2( 1 ) = 0.0_DFP
+            VectorProduct2( 2 ) = 0.0_DFP
+            VectorProduct2( 3 ) = U( 1 ) * V( 2 ) - U( 2 ) * V( 1 )
+
+        CASE DEFAULT
+
+            CALL Err_Msg( &
+            "Tensor_Class.f90>>VectorOperations.part", &
+            "VectorProduct()", &
+            "No case found for the size of u and v; &
+            & it should be either 2 or 3; PROGRAM STOPPED!!")
+            Error_Flag = .TRUE.
+            STOP
+
+    END SELECT
+
+ END FUNCTION VectorProduct2
+
+!------------------------------------------------------------------------------
+!                                                                VectorProduct3
+!------------------------------------------------------------------------------
+
+ FUNCTION VectorProduct3( u, v, w )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Triple Vector product u x ( v x w )
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Utility, ONLY: Assert_Eq
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( 3 ), INTENT( IN ) :: u, v, w
+    REAL( DFP ), DIMENSION( 3 ) :: VectorProduct3
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+
+
+    Error_Flag = .FALSE.
+
+    VectorProduct3 = DOT_PRODUCT( u, w ) * v - DOT_PRODUCT( u, v ) * w
+
+ END FUNCTION VectorProduct3
+
+!------------------------------------------------------------------------------
+!                                                                   BoxProduct
+!------------------------------------------------------------------------------
+
+ REAL( DFP ) FUNCTION BoxProduct( u, v, w )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Triple Scalar product u.( v x w ) = [u,v,w] = [v,w,u] = [w,u,v]
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Utility, ONLY: Det
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( 3 ), INTENT( IN ) :: u, v, w
+
+    ! Define internal variables
+    REAL( DFP ), DIMENSION( 3, 3 ) :: DummyMat
+    Error_Flag = .FALSE.
+
+    DummyMat = RESHAPE((/u(1), v(1), w(1),&
+    u(2), v(2), w(2),&
+    u(3), v(3), w(3)/),(/3,3/))
+
+    BoxProduct = Det( DummyMat )
+
+ END FUNCTION BoxProduct
+
+!------------------------------------------------------------------------------
+!                                                                   getAngle
+!------------------------------------------------------------------------------
+
+ REAL( DFP ) FUNCTION getAngle( u, v )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Returns the angle between two vectors
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u, v
+
+    ! Define internal variables
+    REAL( DFP ) :: Norm_u, Norm_v, CosTheta
+
+    Norm_u = SQRT( DOT_PRODUCT( u, u ) )
+    Norm_v = SQRT( DOT_PRODUCT( v, v ) )
+
+    IF( Norm_u .EQ. 0.0_DFP .OR. Norm_v .EQ. 0.0_DFP ) THEN
+
+        CALL Err_Msg( &
+        "Rank2Tensor_Class.f90>>VectorOperations.part", &
+        "getAngle()", &
+        "Either u or v is/are zero, Angle Not Defined, Program Stopped!")
+        STOP
+
+    END IF
+
+    CosTheta = DOT_PRODUCT( u, v ) / Norm_u / Norm_v
+
+    getAngle = ACOS( CosTheta )
+
+ END FUNCTION getAngle
+
+!------------------------------------------------------------------------------
+!                                                                getProjection
+!------------------------------------------------------------------------------
+
+ FUNCTION getProjection( u, v )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  project u on v and return the projection vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u, v
+    REAL( DFP ), DIMENSION( SIZE( u ) ) :: getProjection
+
+    ! Define internal variables
+    REAL( DFP ) :: Norm_u, Norm_v, CosTheta
+
+    Norm_u = SQRT( DOT_PRODUCT( u, u ) )
+    Norm_v = SQRT( DOT_PRODUCT( v, v ) )
+
+    IF( Norm_u .EQ. 0.0_DFP .OR. Norm_v .EQ. 0.0_DFP ) THEN
+
+        CALL Err_Msg( &
+        "Rank2Tensor_Class.f90>>VectorOperations.part", &
+        "getProjection()", &
+        "Either u or v is/are zero, projection is not defined, &
+        Program Stopped!")
+        STOP
+
+    END IF
+
+    CosTheta = DOT_PRODUCT( u, v ) / Norm_u / Norm_v
+
+    getProjection = ( Norm_u * CosTheta / Norm_v ) * v
+
+ END FUNCTION getProjection
+
+!------------------------------------------------------------------------------
+!                                                                UnitVector
+!------------------------------------------------------------------------------
+
+ FUNCTION UnitVector( u )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1. -   returns unit vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u
+    REAL( DFP ), DIMENSION( SIZE( u ) ) :: UnitVector
+
+    ! Define internal variables
+    REAL( DFP ) :: Norm_u
+
+    Norm_u = SQRT( DOT_PRODUCT( u, u ) )
+
+    IF( Norm_u .EQ. 0.0_DFP ) THEN
+
+        CALL Err_Msg( &
+        "Rank2Tensor_Class.f90>>VectorOperations.part", &
+        "UnitVector()", &
+        "U vector is zero, projection is not defined, &
+        Program Stopped!")
+        STOP
+
+    END IF
+
+    UnitVector = ( 1.0_DFP / Norm_u ) * u
+
+ END FUNCTION UnitVector
+
+!------------------------------------------------------------------------------
+!                                                                DotProduct
+!------------------------------------------------------------------------------
+
+ FUNCTION DotProduct( u, v )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  returns u.v
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u, v
+    REAL( DFP ) :: DotProduct
+
+    DotProduct = DOT_PRODUCT( u, v)
+
+ END FUNCTION DotProduct
+
+!------------------------------------------------------------------------------
+!                                                           getNormalComponent
+!------------------------------------------------------------------------------
+
+ FUNCTION getNormalComponent( u, v )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  returns component of u that is normal to v
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u, v
+    REAL( DFP ), DIMENSION( SIZE( u ) ) :: getNormalComponent
+
+    getNormalComponent = u - ( u .ProjectOn. v )
+
+ END FUNCTION getNormalComponent
+
+!------------------------------------------------------------------------------
+!                                                           Vector2D
+!------------------------------------------------------------------------------
+
+ FUNCTION Vector2D( u )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  converts any vector in 2D vector format.
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u
+    REAL( DFP ), DIMENSION( 2 ) :: Vector2D
+
+
+    Vector2D = 0.0_DFP
+    SELECT CASE( SIZE( U ) )
+
+    CASE( 1 )
+
+        Vector2D( 1 ) = U( 1 )
+
+    CASE DEFAULT
+
+        Vector2D( 1: 2 ) = U( 1: 2 )
+
+    END SELECT
+
+ END FUNCTION Vector2D
+
+!------------------------------------------------------------------------------
+!                                                           Vector3D
+!------------------------------------------------------------------------------
+
+ FUNCTION Vector3D( u )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  converts any vector in 3D vector format.
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u
+    REAL( DFP ), DIMENSION( 3 ) :: Vector3D
+
+
+    Vector3D = 0.0_DFP
+
+    SELECT CASE( SIZE( u ) )
+
+        CASE( 1 )
+
+            Vector3D( 1 ) = u( 1 )
+
+        CASE( 2 )
+
+            Vector3D( 1 : 2 ) = u( 1 : 2 )
+
+        CASE DEFAULT
+
+            Vector3D( 1: 3 ) = u( 1 : 3 )
+
+    END SELECT
+
+ END FUNCTION Vector3D
+
+!------------------------------------------------------------------------------
+!                                                           Vector1D
+!------------------------------------------------------------------------------
+
+ FUNCTION Vector1D( u )
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  converts any vector in 1D vector format.
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: u
+    REAL( DFP ), DIMENSION( 1 ) :: Vector1D
+
+    Vector1D( 1 ) = u( 1 )
+
+ END FUNCTION Vector1D
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

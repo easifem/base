@@ -1,0 +1,4 @@
+cd ${lib}/kernel
+ar rcs ${lib}/kernel/libeasifemKernel.a ${lib}/kernel/*.o
+ln -s -f ${lib}/kernel/libeasifemKernel.a ${lib}/libeasifemKernel.a
+cd -

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd ${lib}/extpkgs
+ar rcs ${lib}/extpkgs/libeasifemExtpkgs.a ${lib}/extpkgs/*.o
+ln -s -f ${lib}/extpkgs/libeasifemExtpkgs.a ${lib}/libeasifemExtpkgs.a
+cd -

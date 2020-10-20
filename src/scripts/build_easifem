@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd ${lib}
+ar rcs ${lib}/libeasifem.a ${lib}/*.o
+cd -

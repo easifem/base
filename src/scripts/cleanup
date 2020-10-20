@@ -1,0 +1,7 @@
+cd $lib
+rm *.o libeasifem*
+cd -
+cd $include
+rm *.mod *.smod
+rm libeasifem*
+cd -

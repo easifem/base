@@ -1,0 +1,13 @@
+{
+  "source_dirs": ["Base", "Classes"],
+  "excl_paths": [],
+  "excl_suffixes": ["_skip.f90"],
+  "pp_suffixes": [".f90", ".inc", ".part"],
+  "pp_defs": {},
+  "include_dirs": ["/Users/vikassharma/include/"],
+  "ext_source_dirs": [
+    "/Users/vikassharma/include/", "/Users/vikassharma/.easifem/include/"
+    ],
+  "lowercase_intrinsics": false,
+  "debug_log": false
+}
