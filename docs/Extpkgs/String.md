@@ -1,7 +1,11 @@
 # Strings in easifem
 
 - EASIFEM employs StringiFor library to implement `String` datatype.
-- `Str()` method has been defined which is defined in `penf_stringify` library.
+- More information about the `String` datatype can be found in [StringiFor](https://github.com/szaghi/StringiFor/releases) library
+
+In addition, following routines are used from [PENF](https://github.com/szaghi/PENF) library.
+
+- `Str()` method has been defined which is defined in
 - `Strz()` method has been defined, which convert integer to string with the righ number of zeros
 - `cton()` method convert string to number
 - `bstr()` method converts number to bit-string
@@ -62,3 +66,43 @@ CALL Display( str(n=[1._DFP, -2._DFP]), "Default :: " )
 CALL Display( str(n=[1._DFP, -2._DFP], separator=";" ), "Separator ; :: " )
 CALL Display( str(n=[1._DFP, -2._DFP], separator=",", delimiters= ["(", ")"] ), "Separator and delimiters :: " )
 ```
+
+## `Str(n, no_sign, separator, delimiters)`
+
+- `n` is vector of integers
+- `no_sign`  is logical, if present then true, else false
+- `separator` is character of length 1, optional, default is `,`
+- `delimiters` is vector of characters of length 2, optional
+
+```fortran
+CALL Display( str(n=[1, -2]), "Default :: " )
+CALL Display( str(n=[1, -2], separator=";" ), "Separator ; :: " )
+CALL Display( str(n=[1, -2], separator=",", delimiters= ["(", ")"]), "Separator and delimiters :: " )
+```
+
+## `Strz(n, nz_pad)`
+
+- `n` is integer number
+- `nz_pad` is the padding size
+
+```fortran
+WRITE( *, * ) strz( 111 )
+WRITE( *, * ) strz( 111, nz_pad=3 )
+WRITE( *, * ) strz( 111, nz_pad=4 )
+WRITE( *, * ) strz( 111, nz_pad=5 )
+```
+
+## `CTON(str, knd) `
+
+- `str` is the string
+- `knd` is the real or integer number
+
+```fortran
+WRITE( *, * ) CTON( "-1", 1.0_DFP )
+WRITE( *, * ) CTON( "-1", 1_I4B )
+```
+
+## `BSTR(n)`
+
+- `n` can be real or integer number
+

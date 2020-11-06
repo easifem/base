@@ -267,9 +267,9 @@ MODULE PROCEDURE readline_avbv
 
   Na=size(a); Nb=size(b)
   IF ( PRESENT(buffer) ) THEN
-    READ( buffer,*,iostat=istat ) ( a(i),i=1,Na ) ( b(i),i=1,Nb )
+    READ( buffer,*,iostat=istat ) ( a(i),i=1,Na ), ( b(i),i=1,Nb )
   ELSE
-    READ( unitNo,*,iostat=istat ) ( a(i),i=1,Na ) ( b(i),i=1,Nb )
+    READ( unitNo,*,iostat=istat ) ( a(i),i=1,Na ), ( b(i),i=1,Nb )
     CALL FileError(istat=istat,fname=fileName,flg=IO_READ, File=__FILE__, &
       & Routine="readline_avbv()", Line=__LINE__ )
   ENDIF
@@ -284,10 +284,10 @@ MODULE PROCEDURE readline_avbvcv
 
   Na=size(a); Nb=size(b); Nc=size(c)
   IF ( PRESENT(buffer) ) THEN
-    READ( buffer,*,iostat=istat ) ( a(i),i=1,Na ) ( b(i),i=1,Nb ) &
+    READ( buffer,*,iostat=istat ) ( a(i),i=1,Na ), ( b(i),i=1,Nb ), &
       & ( c(i),i=1,Nc )
   ELSE
-    READ( unitNo,*,iostat=istat ) ( a(i),i=1,Na ) ( b(i),i=1,Nb ) &
+    READ( unitNo,*,iostat=istat ) ( a(i),i=1,Na ), ( b(i),i=1,Nb ), &
       & ( c(i),i=1,Nc )
     CALL FileError(istat=istat,fname=fileName,flg=IO_READ, File=__FILE__, &
       & Routine="readline_avbvcv()", Line=__LINE__ )
