@@ -3,6 +3,7 @@ MODULE BaseMethod
   USE IO
   USE Buffer_Method
   USE Utility
+  USE ErrorHandling
   USE File_Method
   USE BoundingBox_Method
   USE AbstractArray_Method
@@ -17,6 +18,7 @@ MODULE BaseMethod
   USE IterationData_Method
   USE DISPMODULE
   USE KeyValue_Method
+  USE Random_Method
 
   ! Tensor related
   USE VoigtRank2Tensor_Method

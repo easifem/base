@@ -10,7 +10,7 @@ PRIVATE
 
 INTEGER( I4B ), PARAMETER :: minRow = 4, minCol = 4
 PUBLIC :: Display, BlankLines, DashLine, DebugTag
-PUBLIC :: DotLine, EqualLine, Err_Msg, ERR_OPEN_FILE
+PUBLIC :: DotLine, EqualLine
 PUBLIC :: TIMESTAMP
 
 INTERFACE Display
@@ -21,7 +21,6 @@ INTERFACE Display
     & Display_Real, &
     & Display_Int, &
     & Display_Logical, &
-    & Display_Vector_Real, &
     & Display_Vector_Int, &
     & Display_Mat2_Real, &
     & Display_Mat2_Int, &
@@ -139,74 +138,6 @@ END SUBROUTINE Display_Logical
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-SUBROUTINE Display_Vector_Real( vec, msg, unitNo, path, filename, &
-  & extension )
-  ! Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  REAL( DFP ), INTENT( IN ) :: vec( : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: path
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: filename
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: extension
-  !
-
-  INTEGER( I4B ) :: i
-  type(hdf5_file) :: h5f
-
-  IF( PRESENT( UnitNo ) ) THEN
-    IF( LEN_TRIM( msg ) .NE. 0 ) THEN
-      WRITE( UnitNo, "(A)" ) TRIM( msg )
-    END IF
-
-    CALL Write_data( UnitNo )
-    RETURN
-  END IF
-
-  IF( PRESENT( filename ) ) THEN
-    SELECT CASE( TRIM( extension ) )
-    CASE( '.hdf5' )
-      call ExecuteCommand( 'mkdir -p ' // trim(path), &
-        & __FILE__ // "Line num :: " // TRIM(INT2STR(__LINE__)) &
-        & // "  Display_Vector_Real()" )
-      call h5f%initialize( &
-        & filename= trim(path)//trim(filename)//trim(extension), &
-        & status='new', action='w', comp_lvl=1)
-      call h5f%write( '/' // TRIM(msg), Vec )
-      call h5f%finalize()
-    END SELECT
-    RETURN
-  END IF
-
-  IF( LBOUND( vec, 1 ) .EQ. 1 ) THEN
-  call disp( title = msg, &
-    & x= vec, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & orient = 'row' )
-  ELSE
-    call disp( title = msg, &
-    & x= vec, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & sep = ' ---> ', &
-    & lbound = LBOUND( Vec ) )
-  END IF
-
-  CONTAINS
-  SUBROUTINE Write_data( unitno )
-    INTEGER( I4B ), INTENT( IN ) :: unitno
-    INTEGER( I4B ) :: i
-    DO i = 1, SIZE( Vec )
-      WRITE( UnitNo, * ) Vec(i)
-    END DO
-  END SUBROUTINE
-
-END SUBROUTINE Display_Vector_Real
-
-!----------------------------------------------------------------------------
-!                                                                    Display
-!----------------------------------------------------------------------------
-
 SUBROUTINE Display_Vector_Int( vec, msg, unitNo, full )
 
   ! Define intent of dummy variables
@@ -214,7 +145,6 @@ SUBROUTINE Display_Vector_Int( vec, msg, unitNo, full )
   INTEGER( I4B ), DIMENSION( : ), INTENT( IN ) :: vec
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
-
 
   ! Define internal variables
   INTEGER( I4B ) :: I
@@ -517,140 +447,9 @@ END SUBROUTINE EqualLine
 !------------------------------------------------------------------------------
 !
 !------------------------------------------------------------------------------
-
-SUBROUTINE check_error(pgm,name1)
-  ! INTENT OF DUMMY VARIABLES
-  CHARACTER(*), INTENT(IN):: name1, pgm
-
-  IF(Error_Flag) THEN
-    WRITE(*,100) TRIM(pgm), TRIM(name1)
-    STOP
-  END IF
-
-  ! Format
-  100 FORMAT(1X,"=======================================================",/&
-  T6,"ERROR:: in PROGRAM :: ", a, /&
-  T6,"and SUBROUTINE :: ", a, /&
-  T6, "Please See The Message Return By the subroutine",/ &
-  T6, "Program STOPPED ", / 1X, &
-  "=======================================================")
-
-END SUBROUTINE check_error
-
-!------------------------------------------------------------------------------
-!
-!------------------------------------------------------------------------------
-
-SUBROUTINE Err_msg(pgm, str1, str2)
-!
-!   Description
-!-----------------------------------------------------------------------------
-!       1.  This procedure returns the formatted error message
-!
-!       2.  Arguments
-!               -   str1; subroutine name
-!               -   str2; error message
-!               -   pgm = name of main program name that contains subroutine
-!
-!-----------------------------------------------------------------------------
-!
-! Define Intent of dummy Variable
-  CHARACTER(*), INTENT(IN):: str1, str2, pgm
-!
-!
-  WRITE(*,*)
-  WRITE(*,121)TRIM(pgm),TRIM(str1), TRIM(str2)
-!
-! Format
-121 FORMAT(1X,"------------------------------------------------------",/&
-T6,"ERROR!!:: in PROGRAM::= ",a, /&
-T6,"& SUBROUTINE:: ",a, /&
-T6, "Message: ",a, / &
-1X, "------------------------------------------------------",/)
-!
-END SUBROUTINE Err_msg
-!
-!
-!------------------------------------------------------------------------------
-!
-!------------------------------------------------------------------------------
-!
-SUBROUTINE Error_Msg(pgm, str1, str2)
-!
-!   Description
-!-----------------------------------------------------------------------------
-!       1.  This procedure returns the formatted error message
-!
-!       2.  Arguments
-!               -   str1; subroutine name
-!               -   str2; error message
-!               -   pgm = name of main program name that contains subroutine
-!
-!-----------------------------------------------------------------------------
-!
-! Define Intent of dummy Variable
-  CHARACTER(*), INTENT(IN):: str1, str2, pgm
-!
-!
-  WRITE(*,*)
-  WRITE(*,121)TRIM(pgm),TRIM(str1), TRIM(str2)
-!
-! Format
-121 FORMAT(1X,"------------------------------------------------------",/&
-T6,"ERROR!!:: in PROGRAM::= ",a, /&
-T6,"& SUBROUTINE:: ",a, /&
-T6, "Message: ",a, / &
-1X, "------------------------------------------------------",/)
-!
-END SUBROUTINE Error_Msg
-!------------------------------------------------------------------------------
-!
-!------------------------------------------------------------------------------
-!
-SUBROUTINE ERR_OPEN_FILE(Main_pgm,Routine_name,file_name, open_IOstat)
-!
-!   Description
-!------------------------------------------------------------------------------
-!       1.  This procedure checks the success of file opening operation
-!           If opening opertation is failed then subroutine stops
-!           the execution of program with message on the screen.
-!
-!       2.  Arguments
-!               -   Main_pgm    :   Name of main program
-!               -   Routine_name:   Name of subroutine
-!               -   file_name   :   Name of the file which we are trying to open.
-!               -   open_IOstat :   IOSTAT returned by open function.
-!
-!------------------------------------------------------------------------------
-!
-! Define Intent of dummy Variable
-  CHARACTER(*), INTENT(IN):: Main_pgm,Routine_name, file_name
-  INTEGER(I4B), INTENT(IN):: open_IOstat
-
-  IF(open_IOstat .NE. 0)THEN
-    WRITE(*,100)TRIM(Main_pgm),TRIM(Routine_name), TRIM(file_name)
-    100 FORMAT(2X, "FATAL ERROR!!:: in PROGRAM= ", a,/ &
-  2X," & SUBROUTINE = ",a,/ &
-    2X, "could not found the file::= ", a, /, 2X, "PROGRAM STOPPED !", /)
-    WRITE(*,*)"======================================================="
-    STOP
-  END IF
-!
-END SUBROUTINE ERR_OPEN_FILE
-!
-!------------------------------------------------------------------------------
-!
-!------------------------------------------------------------------------------
 !
 SUBROUTINE TIMESTAMP ( )
-!
-!   Description
-!------------------------------------------------------------------------------
-!       1.  This subroutine prints the current YMDHMS date as a time stamp.
-!
-!------------------------------------------------------------------------------
-!
-! Define Intent of dummy Variable
+  ! Define Intent of dummy Variable
   CHARACTER (LEN = 8 ):: ampm
   INTEGER (I4B)::   d
   INTEGER (I4B)::   h
@@ -677,18 +476,14 @@ SUBROUTINE TIMESTAMP ( )
 
   IF ( h < 12 ) THEN
     ampm = 'AM'
-!
   ELSE IF ( h == 12 ) THEN
-!
     IF( n == 0 .and. s == 0 ) THEN
       ampm = 'Noon'
     ELSE
       ampm = 'PM'
     END IF
-!
   ELSE
     h = h - 12
-!
     IF ( h < 12 ) THEN
       ampm = 'PM'
     ELSE IF ( h == 12 ) THEN
@@ -698,13 +493,11 @@ SUBROUTINE TIMESTAMP ( )
         ampm = 'AM'
       END IF
     END IF
-!
   END IF
 
   WRITE( *, '(8x, i2,1x,a,1x,i4,2x,i2,a1,i2.2,a1,i2.2,a1,i3.3,1x,a)' ) &
   d, TRIM( month(m) ), y, h, ':', n, ':', s, '.', mm, TRIM( ampm )
-!
-!
+
 END SUBROUTINE TIMESTAMP
 
 !----------------------------------------------------------------------------
@@ -727,17 +520,8 @@ SUBROUTINE ExecuteCommand( CMD, Str )
 
   IF( CMDSTAT .NE. 0 ) THEN
     IF( CMDSTAT .EQ. -1 ) THEN
-      CALL Err_Msg( &
-        & Str, &
-        & "exe_cmd()", &
-        & "The Command " //TRIM( CMD ) // " FAILED; Program Stopped" )
       STOP
     END IF
-    CALL Err_Msg( &
-      & Str, &
-      & "exe_cmd()", &
-      & "Returned Error Message; Program Stopped"//TRIM( CMDMSG ) )
-
     STOP
   END IF
 END SUBROUTINE ExecuteCommand

@@ -1,4 +1,10 @@
 MODULE File_Method
+  !! This module contains routine related to file handling
+  !! Routines for File_ userdata typehas been defined
+  !! Submodules
+  !! - Constructor
+  !! - WriteMethods
+  !! - ReadLine
 USE GlobalData
 USE BaseType
 PRIVATE

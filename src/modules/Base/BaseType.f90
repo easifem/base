@@ -1172,6 +1172,25 @@ TYPE(QualityMeasure_), PARAMETER, PUBLIC :: &
   & QualityMeasure = QualityMeasure_()
 
 !----------------------------------------------------------------------------
+!                                                                    Random_
+!----------------------------------------------------------------------------
+
+TYPE :: Random_
+  INTEGER( I4B ) :: random_int = 100
+  INTEGER( I4B ), ALLOCATABLE  :: random_int_seed(:)
+  INTEGER( I4B ), ALLOCATABLE :: random_int_vec(:)
+  REAL( DFP ) :: random_real = 0.0_DFP
+  REAL( DFP ), ALLOCATABLE :: random_real_vec(:)
+END TYPE
+
+PUBLIC :: Random_
+
+TYPE( Random_ ), PARAMETER, PUBLIC :: &
+  & TypeRandom = Random_( random_int_seed = NULL( ), &
+    & random_int_vec = NULL( ), &
+    & random_real_vec = NULL( ) )
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 END MODULE BaseType
