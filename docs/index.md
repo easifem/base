@@ -12,13 +12,40 @@ In future, EASIFEM, will also act as a platform to use exisiting finite element 
 
 The structor of easifem is broadly classified into
 
-- Base; The user data type defined inside the `Base` follow muli-dispatch paradigm.
+- Base; The user data type defined inside the `Base` follow muli-dispatch paradigm. All these datatypes have been defined in module called `BaseType.f90` and the methods are included in module called `BaseMethod.f90`
 - Classes; the data-type defined inside `Classes` follow OOP.
+- Extpkgs; lib developed by other users
 
 ## Base
 
-
-
+- [boundingBox](./Base/BoundingBox.md)
+- [buffer](#)
+- [DOF](#)
+- [ElemShapeData](#)
+- [FEMatrix](#)
+- [FEVariable](#)
+- [File](#)
+- [IndexValue](#)
+- [IterationData](#)
+- [KeyValue](#)
+- [QuadraturePoint](#)
+- [Random](#)
+- [Tensor](#)
+- [ReferenceElement](#)
+- [RealMatrix](#)
+- [SparseMatrix](#)
+- [IntVector](#)
+- [RealVector](#)
+- [AbstractArray](#)
+- [AbstractMatrix](#)
+- [AbstractVector](#)
+- [BaseMethod](#)
+- [BaseType](#)
+- [BlasInterface](#)
+- [ErrorHandling](#)
+- [GlobalData](#)
+- [IO](#)
+- [Utility](#)
 
 
 <!-- ## Welcome to GitHub Pages
