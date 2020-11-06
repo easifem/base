@@ -287,6 +287,17 @@ END INTERFACE
 
 PUBLIC :: ArrayValues
 
+INTERFACE getValues
+  MODULE PROCEDURE f_getValues_self, &
+    & f_getSectionValues_self, &
+    & f_getValuesFromTriplet_self, &
+    & f_getARRAYValues_self, &
+    & f_getARRAYSectionValues_self, &
+    & f_getARRAYValuesFromTriplet_self
+END INTERFACE getValues
+
+PUBLIC :: getValues
+
 !----------------------------------------------------------------------------
 !                                                       ArrayValues@GetMethod
 !----------------------------------------------------------------------------
@@ -347,6 +358,16 @@ INTERFACE ArrayValues
     & f_getARRAYSectionValues_Int, &
     & f_getARRAYValuesFromTriplet_Int
 END INTERFACE ArrayValues
+
+INTERFACE getValues
+  MODULE PROCEDURE f_getValues_Int, &
+    & f_getSectionValues_Int, &
+    & f_getValuesFromTriplet_Int, &
+    & f_getARRAYValues_Int, &
+    & f_getARRAYSectionValues_Int, &
+    & f_getARRAYValuesFromTriplet_Int
+END INTERFACE getValues
+
 
 !----------------------------------------------------------------------------
 !                                                               ArrayPointers
@@ -427,6 +448,12 @@ INTERFACE IndexOF
 END INTERFACE
 
 PUBLIC :: IndexOf
+
+INTERFACE LOC
+  MODULE PROCEDURE IndexOf_1, IndexOf_2, IndexOf_3, IndexOf_4
+END INTERFACE LOC
+
+PUBLIC :: LOC
 
 !----------------------------------------------------------------------------
 !                                                        isPresent@getMethod

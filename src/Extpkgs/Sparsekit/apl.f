@@ -4,7 +4,7 @@
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1),
      *     iw(ncol)
 c-----------------------------------------------------------------------
-c performs the matrix sum  C = A+s*B. 
+c performs the matrix sum  C = A+s*B.
 c-----------------------------------------------------------------------
 c on entry:
 c ---------
@@ -17,26 +17,26 @@ c
 c a,
 c ja,
 c ia   = Matrix A in compressed sparse row format.
-c 
+c
 c s    = real*8 - coefficient that multiplies B.
-c b, 
-c jb, 
+c b,
+c jb,
 c ib     =  Matrix B in compressed sparse row format.
 c
 c nzmax	= integer. The  length of the arrays c and jc.
-c         amub will stop if the result matrix C  has a number 
+c         amub will stop if the result matrix C  has a number
 c         of elements that exceeds exceeds nzmax. See ierr.
-c 
+c
 c on return:
 c----------
-c c, 
-c jc, 
+c c,
+c jc,
 c ic	= resulting matrix C in compressed sparse row sparse format.
-c	    
-c ierr	= integer. serving as error message. 
+c
+c ierr	= integer. serving as error message.
 c         ierr = 0 means normal return,
 c         ierr .gt. 0 means that aplsb1 stopped while computing the
-c         i-th row  of C with i=ierr, because the number 
+c         i-th row  of C with i=ierr, because the number
 c         of elements in C exceeds nzmax.
 c
 c work arrays:
@@ -48,22 +48,22 @@ c       be sorted.
 c-----------------------------------------------------------------------
       ierr = 0
       len = 0
-      ic(1) = 1 
+      ic(1) = 1
       do 1 j=1, ncol
          iw(j) = 0
  1    continue
-c     
+c
       do 500 ii=1, nrow
 c     copy row ii  to C
-         do 200 ka=ia(ii), ia(ii+1)-1 
+         do 200 ka=ia(ii), ia(ii+1)-1
             len = len+1
             jcol    = ja(ka)
             if (len .gt. nzmax) goto 999
-            jc(len) = jcol 
-            c(len)  = a(ka) 
+            jc(len) = jcol
+            c(len)  = a(ka)
             iw(jcol)= len
  200     continue
-c     
+c
          do 300 kb=ib(ii),ib(ii+1)-1
             jcol = jb(kb)
             jpos = iw(jcol)
@@ -85,7 +85,7 @@ c
       return
  999  ierr = ii
       return
-c------------end of aplsb1 --------------------------------------------- 
+c------------end of aplsb1 ---------------------------------------------
 c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------

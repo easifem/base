@@ -2,6 +2,7 @@ MODULE Utility
   !! Utility module contains useful general purpose routines
 USE GlobalData
 USE IO
+USE ErrorHandling
 IMPLICIT NONE
 
 PRIVATE
@@ -39,7 +40,7 @@ PUBLIC :: Reallocate
 !----------------------------------------------------------------------------
 
 !>
-! Generic function to evaluate a polynomial
+! Generic FUNCTION to evaluate a polynomial
 INTERFACE EvaluatePolynomial
   MODULE PROCEDURE eval_poly
 END INTERFACE EvaluatePolynomial
@@ -51,7 +52,7 @@ PUBLIC :: EvaluatePolynomial
 !----------------------------------------------------------------------------
 
 !>
-! Generic function to evaluate vector product
+! Generic FUNCTION to evaluate vector product
 INTERFACE VectorProduct
   MODULE PROCEDURE vec_prod
 END INTERFACE VectorProduct
@@ -63,7 +64,7 @@ PUBLIC :: VectorProduct
 !----------------------------------------------------------------------------
 
 !>
-! Generic function to evaluate outerproduct.
+! Generic FUNCTION to evaluate outerproduct.
 INTERFACE OUTERPROD
   MODULE PROCEDURE OUTERPROD1_1, OUTERPROD2_1, OUTERPROD3_1, OUTERPROD2_11, &
     & OUTERPROD1_1_sym
@@ -148,12 +149,12 @@ PUBLIC :: SWAP
 !
 !----------------------------------------------------------------------------
 
-!> Generic function to get local of maximum value
+!> Generic FUNCTION to get local of maximum value
 INTERFACE IMAXLOC
   MODULE PROCEDURE imaxloc_r,imaxloc_i
 END INTERFACE
 
-!> Generic function for getting location of minmum value
+!> Generic FUNCTION for getting location of minmum value
 INTERFACE IMINLOC
   MODULE PROCEDURE iminloc_r
 END INTERFACE IMINLOC
@@ -165,7 +166,7 @@ PUBLIC :: IMAXLOC
 !
 !----------------------------------------------------------------------------
 
-!> Generic function to get determinent of `2x2` and `3x3` matrix
+!> Generic FUNCTION to get determinent of `2x2` and `3x3` matrix
 INTERFACE Det
   MODULE PROCEDURE det_2D, det_3D
 END INTERFACE Det
@@ -191,10 +192,432 @@ END INTERFACE matmul
 PUBLIC :: matmul
 
 !----------------------------------------------------------------------------
-!                                                                     CONTAINS
+!                                                                     Radian
+!----------------------------------------------------------------------------
+
+INTERFACE radian
+  MODULE PROCEDURE radian_dfp, radian_int
+END INTERFACE
+
+PUBLIC :: radian
+
+!----------------------------------------------------------------------------
+!                                                                    Degrees
+!----------------------------------------------------------------------------
+
+INTERFACE Degrees
+  MODULE PROCEDURE degrees_dfp
+END INTERFACE Degrees
+
+PUBLIC :: Degrees
+
+!----------------------------------------------------------------------------
+!                                                          LOC_NearestPoint
+!----------------------------------------------------------------------------
+
+INTERFACE LOC_NearestPoint
+  MODULE PROCEDURE Loc_Nearest_Point
+END INTERFACE LOC_NearestPoint
+
+PUBLIC :: LOC_NearestPoint
+
+INTERFACE SearchNearestCoord
+  MODULE PROCEDURE Loc_Nearest_Point
+END INTERFACE SearchNearestCoord
+
+PUBLIC :: SearchNearestCoord
+
+!----------------------------------------------------------------------------
+!                                                                 HeapSort
+!----------------------------------------------------------------------------
+
+INTERFACE HeapSort
+  MODULE PROCEDURE HEAPSORT_INT, HEAPSORT_REAL
+END INTERFACE HeapSort
+
+PUBLIC :: HeapSort
+
+!----------------------------------------------------------------------------
+!                                                              Cross_Product
+!----------------------------------------------------------------------------
+
+INTERFACE Cross_Product
+  MODULE PROCEDURE CROSS_PRODUCT_R1_R1
+END INTERFACE Cross_Product
+
+PUBLIC :: Cross_Product
+
+!----------------------------------------------------------------------------
+!                                                                     Input
+!----------------------------------------------------------------------------
+
+INTERFACE Input
+  MODULE PROCEDURE input_Int,input_Real,input_IntVec,input_RealVec,input_IntArray,input_RealArray,input_String,input_logical
+END INTERFACE Input
+
+PUBLIC :: Input
+
+PUBLIC :: getExtension
+
+!----------------------------------------------------------------------------
+!                                                                   CONTAINS
 !----------------------------------------------------------------------------
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                               getExtension
+!----------------------------------------------------------------------------
+
+FUNCTION getExtension( char ) RESULT(ext)
+  CHARACTER( LEN=* ), INTENT( IN ) :: char
+  CHARACTER(7) :: ext
+
+  ! Define internal variables
+  integer(int32) :: n,m
+
+  ext="       "
+  n=0
+  n = index(char,".", back=.true.)
+  m = len(char)
+  ext(1:m-n+1) = char(n+1:m)
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!                                                                     Radian
+!----------------------------------------------------------------------------
+
+PURE FUNCTION radian_dfp( deg ) RESULT( Ans )
+	REAL( DFP ), INTENT( IN ) :: deg
+	REAL( DFP ) :: Ans
+	Ans = deg / 180.0_DFP * 3.1415926535_DFP
+END FUNCTION radian_dfp
+
+PURE FUNCTION radian_int( deg ) RESULT( Ans )
+	INTEGER( I4B ), INTENT( IN ) :: deg
+	REAL( DFP ) :: Ans
+	Ans = REAL( deg, KIND=DFP ) / 180.0_DFP * 3.1415926535_DFP
+END FUNCTION radian_int
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine search the location of nearest point to x in the
+! array of coordinates; Array
+
+FUNCTION Loc_Nearest_Point( Array, x )  RESULT( id )
+  REAL( DFP ), INTENT( IN ) :: Array( :, : )
+    !! Nodal coordinates in XiJ format
+  REAL( DFP ), INTENT( IN ) :: x( : )
+  INTEGER( I4B ) :: id
+
+  ! Define internal variables
+	REAL( DFP ) :: xr( 3 )
+	INTEGER( I4B ) :: i, n,m,norm,tr_norm
+
+	n = SIZE( Array, 1 )
+  m = SIZE( Array, 2 )
+
+  IF( n .NE. SIZE(x) ) THEN
+    CALL Display( __FILE__, "ERROR :: In File :: " )
+    CALL Display( __LINE__, "         At line number :: " )
+    CALL Display( "Loc_Nearest_Point()", "In routine :: ")
+    CALL Display( "SearchNearestCoord >> size(Array,1) should be =size(x)")
+    STOP
+	ENDIF
+
+	DO i = 1, m
+		xr( 1:n ) = Array( 1:n, i )
+		tr_norm = DOT_PRODUCT( xr(1:n) - x(1:n), xr(1:n) - x(1:n) )
+		IF( i .EQ. 1 ) THEN
+			norm = tr_norm
+			id  = i
+		ELSE
+			IF( norm .GT. tr_norm ) THEN
+				norm = tr_norm
+				id  = i
+			ELSE
+				CYCLE
+			END IF
+		END IF
+  END DO
+END FUNCTION Loc_Nearest_Point
+
+!----------------------------------------------------------------------------
+!                                                                   HeapSort
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! Heap Sort algorithm for Integer
+PURE SUBROUTINE HEAPSORT_INT( array )
+  INTEGER( I4B ), INTENT( INOUT ) :: array( : )
+
+  INTEGER( I4B ) :: n, i,k,j,l, t
+
+  n = SIZE( array )
+
+  IF( n .EQ. 1) RETURN
+
+	l=n/2+1
+  k=n
+
+	DO WHILE( k .NE. 1 )
+    IF( l .GT. 1 ) THEN
+      l=l-1
+      t=array(L)
+    ELSE
+      t=array(k)
+      array(k)=array(1)
+      k=k-1
+      IF( k .EQ. 1 ) THEN
+          array(1)=t
+        EXIT
+      ENDIF
+    ENDIF
+
+    i=l
+    j=l+l
+    DO WHILE( j .LE. k )
+      IF( j .LT. k ) THEN
+        IF( array( j ) .LT. array( j+1 ) ) j=j+1
+      ENDIF
+      IF ( t .LT. array(j) ) THEN
+        array(i)=array(j)
+        i=j
+        j=j+j
+      ELSE
+        j=k+1
+      ENDIF
+    END DO
+    array(i)=t
+  ENDDO
+
+END SUBROUTINE HEAPSORT_INT
+
+!----------------------------------------------------------------------------
+!                                                                   HeapSort
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! Heap Sort algorithm for Real
+PURE SUBROUTINE HEAPSORT_REAL( array )
+  REAL( DFP ), INTENT( INOUT ) :: array( : )
+
+  INTEGER( I4B ) :: n, i,k,j,l
+  REAL( DFP ) :: t
+
+  n = SIZE( array )
+
+  IF( n .EQ. 1) RETURN
+
+	l=n/2+1
+  k=n
+
+	DO WHILE( k .NE. 1 )
+    IF( l .GT. 1 ) THEN
+      l=l-1
+      t=array(L)
+    ELSE
+      t=array(k)
+      array(k)=array(1)
+      k=k-1
+      IF( k .EQ. 1 ) THEN
+          array(1)=t
+        EXIT
+      ENDIF
+    ENDIF
+
+    i=l
+    j=l+l
+    DO WHILE( j .LE. k )
+      IF( j .LT. k ) THEN
+        IF( array( j ) .LT. array( j+1 ) ) j=j+1
+      ENDIF
+      IF ( t .LT. array(j) ) THEN
+        array(i)=array(j)
+        i=j
+        j=j+j
+      ELSE
+        j=k+1
+      ENDIF
+    END DO
+    array(i)=t
+  ENDDO
+
+END SUBROUTINE HEAPSORT_REAL
+
+!----------------------------------------------------------------------------
+!                                                             Cross_Product
+!----------------------------------------------------------------------------
+
+PURE FUNCTION CROSS_PRODUCT_R1_R1( a, b ) RESULT ( Ans )
+	REAL( DFP ), INTENT( IN ) :: a( 3 ), b( 3 )
+	REAL( DFP ) :: Ans( 3 )
+
+  Ans(1) = a(2)*b(3) - a(3)*b(2)
+  Ans(2) = a(3)*b(1) - a(1)*b(3)
+  Ans(3) = a(1)*b(2) - a(2)*b(1)
+
+END FUNCTION CROSS_PRODUCT_R1_R1
+
+!----------------------------------------------------------------------------
+!                                                                    Degrees
+!----------------------------------------------------------------------------
+
+PURE FUNCTION degrees_dfp( rad ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: rad
+  REAL( DFP ) :: Ans
+  Ans = rad / 3.1415926535_DFP * 180.0_DFP
+END FUNCTION degrees_dfp
+
+!----------------------------------------------------------------------------
+!                                                                     Input
+!----------------------------------------------------------------------------
+
+PURE FUNCTION input_Int( default, option ) RESULT( val )
+	INTEGER( I4B ), INTENT( IN ) :: default
+	INTEGER( I4B ), OPTIONAL,INTENT( IN ) :: option
+	INTEGER( I4B ) :: val
+
+	IF(PRESENT(option) )THEN
+		val=option
+	ELSE
+		val=default
+	ENDIF
+
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+FUNCTION input_Real(default,option) RESULT(val)
+	REAL(DFP),INTENT(in) :: default
+	REAL(DFP),OPTIONAL,INTENT(in)::option
+	REAL(DFP) :: val
+
+	IF(PRESENT(option) )THEN
+		val=option
+	ELSE
+		val=default
+	ENDIF
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+FUNCTION input_IntVec( default, option ) RESULT( val )
+	INTEGER( I4B ), INTENT( IN ) :: default(:)
+	INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:)
+	INTEGER( I4B ), ALLOCATABLE :: val(:)
+
+	IF( PRESENT( option ) ) THEN
+		val=option
+	ELSE
+		val=default
+	ENDIF
+
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+FUNCTION input_Realvec( default, option ) RESULT( val )
+	REAL( DFP ), INTENT( IN ) :: default(:)
+	REAL( DFP ), OPTIONAL,INTENT( IN ) :: option(:)
+	REAL( DFP ), ALLOCATABLE :: val(:)
+
+	IF( PRESENT(option) )THEN
+		val=option
+	ELSE
+		val=default
+	ENDIF
+END FUNCTION
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This function input integer array
+PURE FUNCTION input_IntArray(default,option) RESULT(val)
+	INTEGER( I4B ), INTENT( IN ) :: default(:,:)
+	INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:,:)
+	INTEGER( I4B ), ALLOCATABLE :: val(:,:)
+
+	IF(PRESENT(option) )THEN
+		val = option
+  ELSE
+    val = default
+	ENDIF
+END FUNCTION input_IntArray
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This function input real array
+PURE FUNCTION input_RealArray(default,option) RESULT(val)
+	REAL( DFP ), INTENT( IN ) :: default(:,:)
+	REAL( DFP ), OPTIONAL,INTENT( IN )::option(:,:)
+	REAL( DFP ), ALLOCATABLE :: val(:,:)
+
+	IF(PRESENT(option) )THEN
+		val = option
+  ELSE
+    val = default
+	ENDIF
+END FUNCTION input_RealArray
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This function input string
+PURE FUNCTION input_String(default,option) RESULT(val)
+	CHARACTER( LEN=* ), INTENT( IN ) :: default
+	CHARACTER( LEN=* ), OPTIONAL, INTENT( IN )::option
+	CHARACTER( 200 )  :: val
+
+	IF(PRESENT(option) )THEN
+		val=TRIM(option)
+	ELSE
+		val=TRIM(default)
+	ENDIF
+END FUNCTION input_String
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This function input logical variables
+
+PURE FUNCTION input_logical(default,option) RESULT(val)
+	LOGICAL( LGT ), INTENT( IN ) :: default
+	LOGICAL( LGT ), OPTIONAL, INTENT( IN )::option
+	LOGICAL( LGT )  :: val
+
+	IF(PRESENT(option) )THEN
+		val=option
+	ELSE
+		val=default
+	ENDIF
+
+END FUNCTION input_logical
 
 !----------------------------------------------------------------------------
 !                                                                     MATMUL
@@ -316,9 +739,9 @@ PURE SUBROUTINE Reallocate1( Mat, row, col )
   Mat = 0.0_DFP
 END SUBROUTINE Reallocate1
 
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !                                                                 Reallocate2
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 !> authors: Dr. Vikas Sharma
 !
@@ -692,9 +1115,9 @@ END SUBROUTINE Reallocate10
 
 !> authors: Dr. Vikas Sharma
 !
-! this function evaluate a polynomial
+! this FUNCTION evaluate a polynomial
 ! - Power table contains the power of x, y, z
-! - Its shape if ( tTerms, 3 )
+! - Its shape IF ( tTerms, 3 )
 !	- Coeff is vector its size is tTerms
 !	- X( 3 ) contains x, y, z
 
@@ -726,11 +1149,11 @@ END FUNCTION eval_poly
 
 !> authors: Dr. Vikas Sharma
 !
-! This function evaluate vectors product
+! This FUNCTION evaluate vectors product
 ! $$\mathbf{ans} = \mathbf{a} \times \mathbf{b}$$
 
 PURE FUNCTION vec_prod( a, b ) RESULT( c )
-  ! Define intent of dummy argument
+  ! Define INTENT of dummy argument
   REAL( DFP ), INTENT( IN ) :: a( 3 ), b( 3 )
   REAL( DFP ) :: c( 3 )
   c(1) = a(2) * b(3) - a(3) * b(2)
@@ -744,7 +1167,7 @@ END FUNCTION vec_prod
 
 !> authors: Dr. Vikas Sharma
 !
-! This function returns outerproduct(matrix) of two vectors
+! This FUNCTION returns outerproduct(matrix) of two vectors
 ! $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
 
 PURE FUNCTION OUTERPROD1_1( a,b ) RESULT( Ans )
@@ -761,12 +1184,12 @@ END FUNCTION OUTERPROD1_1
 
 !> authors: Dr. Vikas Sharma
 !
-! This function returns outerproduct(matrix) of two vectors
+! This FUNCTION returns outerproduct(matrix) of two vectors
 ! - $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
-! - If `Sym` is .true. then symmetric part is returned
+! - If `Sym` is .true. THEN symmetric part is returned
 
 PURE FUNCTION OUTERPROD1_1_sym(a,b, Sym) RESULT( Ans )
-  ! Define intent of dummy variables
+  ! Define INTENT of dummy variables
   REAL(DFP), INTENT(IN) :: a ( : ), b ( : )
   REAL(DFP), DIMENSION(SIZE(a),SIZE(b)) :: Ans
   LOGICAL( LGT ), INTENT( IN ) :: Sym
@@ -790,7 +1213,7 @@ END FUNCTION OUTERPROD1_1_sym
 
 !> authors: Dr. Vikas Sharma
 !
-! This function returns outerprod between a matrix and a vector
+! This FUNCTION returns outerprod between a matrix and a vector
 ! `Ans(:,:,i) = a(:,:) * b(i)`
 
 PURE FUNCTION OUTERPROD2_1(a,b) RESULT( Ans )
@@ -813,7 +1236,7 @@ END FUNCTION OUTERPROD2_1
 
 !> authors: Dr. Vikas Sharma
 !
-! This function evaluate outerproduct between a 3D matrix and a vector
+! This FUNCTION evaluate outerproduct between a 3D matrix and a vector
 ! - `Ans( :, :, :,  I ) = a( :, :, : ) * b( I )`
 PURE FUNCTION OUTERPROD3_1(a,b) RESULT( Ans )
   REAL(DFP), INTENT( IN ) :: a(:,:,:)
@@ -834,7 +1257,7 @@ END FUNCTION OUTERPROD3_1
 
 !> authors: Dr. Vikas Sharma
 !
-! This function evaluates outer product between a matrix and two vector
+! This FUNCTION evaluates outer product between a matrix and two vector
 !
 ! $$Ans = a \otimes b \otimes c$$
 
@@ -866,24 +1289,28 @@ SUBROUTINE exe_cmd( CMD, Str )
   CHARACTER( LEN = 300 ) :: CMDMSG = ""
 
   CALL EXECUTE_COMMAND_LINE( TRIM(CMD), CMDSTAT = CMDSTAT, &
-    & EXITSTAT = EXITSTAT, &
-    WAIT = WAIT, CMDMSG = CMDMSG )
+    & EXITSTAT = EXITSTAT, WAIT = WAIT, CMDMSG = CMDMSG )
 
   IF( CMDSTAT .NE. 0 ) THEN
+
     IF( CMDSTAT .EQ. -1 ) THEN
-      CALL Err_Msg( &
-        & Str, &
-        & "exe_cmd()", &
-        & "The Command " //TRIM( CMD ) // " FAILED; Program Stopped" )
-      STOP
+      CALL ErrorMsg( &
+        & File = __FILE__, &
+        & Routine = "exe_cmd()", &
+        & Line = __LINE__, &
+        & MSG = "following command failed " // TRIM( CMDMSG ) )
     END IF
-    CALL Err_Msg( &
-      & Str, &
-      & "exe_cmd()", &
-      & "Returned Error Message; Program Stopped"//TRIM( CMDMSG ) )
+
+    CALL ErrorMsg( &
+      & File = __FILE__, &
+      & Routine = "exe_cmd()", &
+      & Line = __LINE__, &
+      & MSG = "following command failed " // TRIM( CMDMSG ) )
 
     STOP
+
   END IF
+
 END SUBROUTINE exe_cmd
 
 !------------------------------------------------------------------------------
@@ -892,10 +1319,10 @@ END SUBROUTINE exe_cmd
 
 !> authors: Dr. Vikas Sharma
 !
-! This function returns valid unit no for input output
+! This FUNCTION returns valid unit no for input output
 
 FUNCTION getUnitNo( Str )
-  ! Define intent of dumy varibales
+  ! Define INTENT of dumy varibales
   INTEGER( I4B ) :: getUnitNo
   CHARACTER( LEN = * ), INTENT( IN ) :: Str
 
@@ -912,10 +1339,12 @@ FUNCTION getUnitNo( Str )
   END DO
 
   IF( isOpen .OR. .NOT. isExist ) THEN
-    CALL Err_Msg( &
-      & Str, &
-      & "getUnitNo()", &
-      & "Cannot find a valid unit number; Program Stopped" )
+
+    CALL ErrorMsg( &
+      & File = __FILE__, &
+      & Routine = "getUnitNo()", &
+      & Line = __LINE__, &
+      & MSG = " cannot find a valid unit number; Program Stopped" )
     STOP
   END IF
 
@@ -929,7 +1358,7 @@ END FUNCTION getUnitNo
 
 !> authors: Dr. Vikas Sharma
 !
-! Append scalar integer to integer vector
+! Append scalar INTEGER  to  INTEGER  vec tor
 
 PURE SUBROUTINE Append_I1( A, Entry )
   INTEGER(I4B), ALLOCATABLE, INTENT( INOUT ) :: A( : )
@@ -951,7 +1380,7 @@ END SUBROUTINE Append_I1
 
 !> authors: Dr. Vikas Sharma
 !
-! Append vector of integer to integer vector
+! Append vector of INTEGER  to  INTEGER  vec tor
 !------------------------------------------------------------------------------
 
 PURE SUBROUTINE Append_I2( A, Entry )
@@ -976,7 +1405,7 @@ END SUBROUTINE Append_I2
 !----------------------------------------------------------------------------
 !> authors: Dr. Vikas Sharma
 !
-! Append scalar real to the real-vector
+! Append scalar REAL to the REAL-vector
 !------------------------------------------------------------------------------
 
 PURE SUBROUTINE Append_R1( A, Entry )
@@ -1003,7 +1432,7 @@ END SUBROUTINE Append_R1
 
 !> authors: Dr. Vikas Sharma
 !
-! Append vector of real to real-vector
+! Append vector of REAL to REAL-vector
 
 PURE SUBROUTINE Append_R2( A, Entry )
   REAL(DFP), ALLOCATABLE, INTENT( INOUT ) :: A( : )
@@ -1036,14 +1465,17 @@ SUBROUTINE Rank1ToRank3( R1, R3, NSD, NNS, NNT )
   INTEGER( I4B ), INTENT( IN ) :: NSD, NNS, NNT
 
   INTEGER( I4B ) :: I, N, a, b, K
-  ! Free the memory if R3 is already allocated
+  ! Free the memory IF R3 is already allocated
   IF( ASSOCIATED( R3 ) ) DEALLOCATE( R3 )
   NULLIFY( R3 )
   N = SIZE( R1 )
   ! Flag-1
   IF( N .NE. ( NSD*NNS*NNT ) )THEN
-    CALL Err_Msg( "Utility.f90", "Rank1ToRank3(), Flag-1", &
-    & "Factor problem" )
+    CALL ErrorMsg( &
+      & File = __FILE__, &
+      & Routine = "Rank1ToRank3()", &
+      & Line = __LINE__, &
+      & MSG = " Factor Problem" )
     RETURN
   END IF
 
@@ -1061,7 +1493,7 @@ END SUBROUTINE Rank1ToRank3
 !----------------------------------------------------------------------------
 !> authors: Dr. Vikas Sharma
 !
-! This function computes the factorial of an integer
+! This FUNCTION computes the factorial of an INTEGER
 
 RECURSIVE FUNCTION Factorial( N ) RESULT( Fact )
     INTEGER( I4B ), INTENT( IN ) :: N
@@ -1079,7 +1511,7 @@ END FUNCTION Factorial
 
 !> authors: Dr. Vikas Sharma
 !
-! Convert integer to string
+! Convert INTEGER  to  string
 
 PURE FUNCTION Int2Str( I )
     INTEGER( I4B ), INTENT( IN ) :: I
@@ -1095,7 +1527,7 @@ END FUNCTION Int2Str
 
 !> authors: Dr. Vikas Sharma
 !
-! Convert real to string
+! Convert REAL to string
 
 FUNCTION SP2Str( I )
     REAL( SP ), INTENT( IN ) :: I
@@ -1111,7 +1543,7 @@ END FUNCTION SP2Str
 
 !> authors: Dr. Vikas Sharma
 !
-! Convert real to string
+! Convert REAL to string
 
 FUNCTION DP2Str( I )
     REAL( DP ), INTENT( IN ) :: I
@@ -1132,7 +1564,7 @@ PURE FUNCTION arth_r(first,increment,n)
   INTEGER(I4B) :: k,k2
   REAL(SP) :: temp
   IF (n > 0) arth_r(1)=first
-  IF (n <= NPAR_ARTH) then
+  IF (n <= NPAR_ARTH) THEN
     DO k=2,n
       arth_r(k)=arth_r(k-1)+increment
     END DO
@@ -1159,7 +1591,7 @@ PURE FUNCTION arth_d(first,increment,n)
   INTEGER(I4B) :: k,k2
   REAL(DP) :: temp
   IF (n > 0) arth_d(1)=first
-  IF (n <= NPAR_ARTH) then
+  IF (n <= NPAR_ARTH) THEN
     DO k=2,n
       arth_d(k)=arth_d(k-1)+increment
     END DO
@@ -1184,7 +1616,7 @@ PURE FUNCTION arth_i(first,increment,n)
   INTEGER(I4B), DIMENSION(n) :: arth_i
   INTEGER(I4B) :: k,k2,temp
   IF (n > 0) arth_i(1)=first
-  IF (n <= NPAR_ARTH) then
+  IF (n <= NPAR_ARTH) THEN
     DO k=2,n
       arth_i(k)=arth_i(k-1)+increment
     END DO
@@ -1248,11 +1680,14 @@ FUNCTION assert_eq2(n1,n2,string)
   CHARACTER(LEN=*), INTENT(IN) :: string
   INTEGER( I4B ), INTENT(IN) :: n1,n2
   INTEGER( I4B ) :: assert_eq2
-  IF (n1 .EQ. n2) then
+  IF (n1 .EQ. n2) THEN
     assert_eq2=n1
   ELSE
-        CALL Err_Msg( string, " Assert_Eq () ", &
-        " Sizes of Matrices are not the same; Program Stopped " )
+    CALL ErrorMsg( &
+      & File = __FILE__, &
+      & Routine = "Assert_Eq()", &
+      & Line = __LINE__, &
+      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
     STOP
   END IF
 END FUNCTION assert_eq2
@@ -1261,11 +1696,14 @@ FUNCTION assert_eq3(n1,n2,n3,string)
   CHARACTER(LEN=*), INTENT(IN) :: string
   INTEGER( I4B ), INTENT(IN) :: n1,n2,n3
   INTEGER( I4B ) :: assert_eq3
-  IF (n1 == n2 .and. n2 == n3) then
+  IF (n1 == n2 .and. n2 == n3) THEN
     assert_eq3=n1
   ELSE
-        CALL Err_Msg( string, " Assert_Eq () ", &
-        " Sizes of Matrices are not the same; Program Stopped " )
+    CALL ErrorMsg( &
+      & File = __FILE__, &
+      & Routine = "Assert_Eq()", &
+      & Line = __LINE__, &
+      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
     STOP
   END IF
 END FUNCTION assert_eq3
@@ -1274,11 +1712,14 @@ FUNCTION assert_eq4(n1,n2,n3,n4,string)
   CHARACTER(LEN=*), INTENT(IN) :: string
   INTEGER( I4B ), INTENT(IN) :: n1,n2,n3,n4
   INTEGER( I4B ) :: assert_eq4
-  IF (n1 == n2 .and. n2 == n3 .and. n3 == n4) then
+  IF (n1 == n2 .and. n2 == n3 .and. n3 == n4) THEN
     assert_eq4=n1
   ELSE
-        CALL Err_Msg( string, " Assert_Eq () ", &
-        " Sizes of Matrices are not the same; Program Stopped " )
+    CALL ErrorMsg( &
+      & File = __FILE__, &
+      & Routine = "Assert_Eq()", &
+      & Line = __LINE__, &
+      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
     STOP
   END IF
 END FUNCTION assert_eq4
@@ -1287,11 +1728,14 @@ FUNCTION assert_eqn(nn,string)
   CHARACTER( LEN=* ), INTENT( IN ) :: string
   INTEGER( I4B ), DIMENSION( : ), INTENT(IN) :: nn
   INTEGER( I4B ):: assert_eqn
-  IF (all(nn(2:) == nn(1))) then
+  IF (all(nn(2:) == nn(1))) THEN
     assert_eqn=nn(1)
   ELSE
-        CALL Err_Msg( string, " Assert_Eq () ", &
-        " Sizes of Matrices are not the same; Program Stopped " )
+    CALL ErrorMsg( &
+      & File = __FILE__, &
+      & Routine = "Assert_Eq()", &
+      & Line = __LINE__, &
+      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
     STOP
   END IF
 END FUNCTION assert_eqn
@@ -1302,7 +1746,7 @@ END FUNCTION assert_eqn
 
 !> authors: Dr. Vikas Sharma
 !
-! Subroutine for interchanging two integer
+! Subroutine for interchanging two INTEGER
 
 PURE SUBROUTINE swap_i(a,b)
   INTEGER(I4B), INTENT(INOUT) :: a,b
@@ -1318,7 +1762,7 @@ END SUBROUTINE swap_i
 
 !> authors: Dr. Vikas Sharma
 !
-! Subroutine for interchanging two real numbers
+! Subroutine for interchanging two REAL numbers
 
 PURE SUBROUTINE swap_r(a,b)
   REAL(DFP), INTENT(INOUT) :: a,b
@@ -1334,7 +1778,7 @@ END SUBROUTINE swap_r
 
 !> authors: Dr. Vikas Sharma
 !
-! Subroutine for interchanging two real valued vectors
+! Subroutine for interchanging two REAL valued vectors
 
 PURE SUBROUTINE swap_rv(a,b)
   REAL(DFP), DIMENSION(:), INTENT(INOUT) :: a,b
@@ -1398,13 +1842,13 @@ END SUBROUTINE swap_cm
 
 !> authors: Dr. Vikas Sharma
 !
-! Subroutine for interchanging two real valued number
+! Subroutine for interchanging two REAL valued number
 
 PURE SUBROUTINE masked_swap_rs(a,b,mask)
   REAL(DFP), INTENT(INOUT) :: a,b
   LOGICAL(LGT), INTENT(IN) :: mask
   REAL(DFP) :: swp
-  IF (mask) then
+  IF (mask) THEN
     swp=a
     a=b
     b=swp
@@ -1417,7 +1861,7 @@ END SUBROUTINE masked_swap_rs
 
 !> authors: Dr. Vikas Sharma
 !
-!Subroutine for interchanging two real valued vectors
+!Subroutine for interchanging two REAL valued vectors
 
 PURE SUBROUTINE masked_swap_rv(a,b,mask)
   REAL(DFP), DIMENSION(:), INTENT(INOUT) :: a,b
@@ -1436,7 +1880,7 @@ END SUBROUTINE masked_swap_rv
 
 !> authors: Dr. Vikas Sharma
 !
-! Subroutine for interchanging two real valued matrices
+! Subroutine for interchanging two REAL valued matrices
 
 PURE SUBROUTINE masked_swap_rm(a,b,mask)
   REAL(DFP), DIMENSION(:,:), INTENT(INOUT) :: a,b
@@ -1503,7 +1947,7 @@ END FUNCTION iminloc_r
 
 !> authors: Dr. Vikas Sharma
 !
-! This function returns determinent of 2 by 2 and 3 by 3 matrix
+! This FUNCTION returns determinent of 2 by 2 and 3 by 3 matrix
 
 PURE FUNCTION det_2D( A ) RESULT( Ans )
   REAL( DFP ), INTENT( IN ) :: A( :, : )
@@ -1540,7 +1984,7 @@ END FUNCTION det_2D
 
 !> authors: Dr. Vikas Sharma
 !
-! This function returns the determinent of matrix
+! This FUNCTION returns the determinent of matrix
 
 PURE FUNCTION det_3D( A ) RESULT( Ans )
   REAL( DFP ), INTENT( IN ) :: A( :, :, : )
