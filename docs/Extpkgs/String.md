@@ -62,4 +62,3 @@ CALL Display( str(n=[1._DFP, -2._DFP]), "Default :: " )
 CALL Display( str(n=[1._DFP, -2._DFP], separator=";" ), "Separator ; :: " )
 CALL Display( str(n=[1._DFP, -2._DFP], separator=",", delimiters= ["(", ")"] ), "Separator and delimiters :: " )
 ```
-
