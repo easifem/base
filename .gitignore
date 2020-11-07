@@ -12,10 +12,10 @@
 *.prj
 *.drawio
 vscode-settings
-pkgs/
-old-classes/
-examples/
+# pkgs/
+# old-classes/
+# examples/
 # docs/
-easifem.wiki/
-pages/
-doc/
+# easifem.wiki/
+# pages/
+# doc/
