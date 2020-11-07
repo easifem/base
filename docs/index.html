@@ -134,79 +134,60 @@
         <div class="col-md-8">
 		  
           <h1>Fortran Program</h1>
-          <!-- # EASIFEM
-
-## Introduction
-
-### About
-
-EASIFEM stands for Expandable And Scalable infrastructure for Finite Element Method. It is a framework for developing code for finite element method by using modern fortran. The framework has been developed in [Modern-Fortran](https://fortran-lang.org/) programming language. The library is still in the development stage. EASIFEM is written both in OOP and Multiple dispatch approach.
-
-### Capabilities
-
-The goal of EASIFEM is to ease the coding of FEM by using fortran language. The library is developed for developing code for complex problems related to multiphysics and multiphase problems. EASIFEM will facilitate an environment where new FEM can be implemented easily while decreasing the time required for writing the code.
-
-Dr Vikas Sharma, the creator EASIFEM conducts his research in the area of computational geomechanics. Therefore, so far, easifem has been used to develop applications related to dam-reservoir-soil interactions, seismic cracking of dams, nonlinear seismic behavior of earthdams, high-order accurate solvers for transient problems, space-time finite element methods for moving boundary problems, simulation of freezing and thawing in frozen soils, among others.
-
-EASIFEM describes all types of datatype required for coding FEM, such as string, file, vector, array, degrees of freedom, indices, mesh, nodes, finite elements, domain, shape functions, quadrature rules, linear solver, sparse and dense matrix, iterative and non iterative solvers, among others. EASIFEM also have a strong interface with the [GMSH](https://gmsh.info/) for pre- and post- processing. In addition, it provides great interface with [PARAVIEW](https://www.paraview.org/) for visualization of results.
-
-In future, EASIFEM, will also act as a platform to use exisiting finite element libraries in effortless manner. The vision of EASIFEM will always be  to keep  FEM programming easy and ellegant.
-
-### Bug Reporting
-
-### ChangeLog
-
-### License
-
-### ToDo
-
-## Installation
-
-### Installing
-
-## Usage
-
-## Structure
-
-### Base
-
-- [BoundingBox](./Base/BoundingBox.md)
-- [Buffer](#)
-- [DOF](#)
-- [ElemShapeData](#)
-- [FEMatrix](#)
-- [FEVariable](#)
-- [File](#)
-- [IndexValue](#)
-- [IterationData](#)
-- [KeyValue](#)
-- [QuadraturePoint](#)
-- [Random](#)
-- [Tensor](#)
-- [ReferenceElement](#)
-- [RealMatrix](#)
-- [SparseMatrix](#)
-- [IntVector](#)
-- [RealVector](#)
-- [AbstractArray](#)
-- [AbstractMatrix](#)
-- [AbstractVector](#)
-- [BaseMethod](#)
-- [BaseType](#)
-- [BlasInterface](#)
-- [ErrorHandling](#)
-- [GlobalData](#)
-- [IO](#)
-- [Utility](#)
-
-## Dependencies
-
-- [String](./Extpkgs/String.md)
-
-## Contributing
-
-## Credits -->
-
+          <h1 id="easifem">EASIFEM</h1>
+<h2 id="introduction">Introduction</h2>
+<h3 id="about">About</h3>
+<p>EASIFEM stands for Expandable And Scalable infrastructure for Finite Element Method. It is a framework for developing code for finite element method by using modern fortran. The framework has been developed in <a href="https://fortran-lang.org/">Modern-Fortran</a> programming language. The library is still in the development stage. EASIFEM is written both in OOP and Multiple dispatch approach.</p>
+<h3 id="capabilities">Capabilities</h3>
+<p>The goal of EASIFEM is to ease the coding of FEM by using fortran language. The library is developed for developing code for complex problems related to multiphysics and multiphase problems. EASIFEM will facilitate an environment where new FEM can be implemented easily while decreasing the time required for writing the code.</p>
+<p>Dr Vikas Sharma, the creator EASIFEM conducts his research in the area of computational geomechanics. Therefore, so far, easifem has been used to develop applications related to dam-reservoir-soil interactions, seismic cracking of dams, nonlinear seismic behavior of earthdams, high-order accurate solvers for transient problems, space-time finite element methods for moving boundary problems, simulation of freezing and thawing in frozen soils, among others.</p>
+<p>EASIFEM describes all types of datatype required for coding FEM, such as string, file, vector, array, degrees of freedom, indices, mesh, nodes, finite elements, domain, shape functions, quadrature rules, linear solver, sparse and dense matrix, iterative and non iterative solvers, among others. EASIFEM also have a strong interface with the <a href="https://gmsh.info/">GMSH</a> for pre- and post- processing. In addition, it provides great interface with <a href="https://www.paraview.org/">PARAVIEW</a> for visualization of results.</p>
+<p>In future, EASIFEM, will also act as a platform to use exisiting finite element libraries in effortless manner. The vision of EASIFEM will always be  to keep  FEM programming easy and ellegant.</p>
+<h3 id="bug-reporting">Bug Reporting</h3>
+<h3 id="changelog">ChangeLog</h3>
+<h3 id="license">License</h3>
+<h3 id="todo">ToDo</h3>
+<h2 id="installation">Installation</h2>
+<h3 id="installing">Installing</h3>
+<h2 id="usage">Usage</h2>
+<h2 id="structure">Structure</h2>
+<h3 id="base">Base</h3>
+<ul>
+<li><a href="./Base/BoundingBox.md">BoundingBox</a></li>
+<li><a href="#">Buffer</a></li>
+<li><a href="#">DOF</a></li>
+<li><a href="#">ElemShapeData</a></li>
+<li><a href="#">FEMatrix</a></li>
+<li><a href="#">FEVariable</a></li>
+<li><a href="#">File</a></li>
+<li><a href="#">IndexValue</a></li>
+<li><a href="#">IterationData</a></li>
+<li><a href="#">KeyValue</a></li>
+<li><a href="#">QuadraturePoint</a></li>
+<li><a href="#">Random</a></li>
+<li><a href="#">Tensor</a></li>
+<li><a href="#">ReferenceElement</a></li>
+<li><a href="#">RealMatrix</a></li>
+<li><a href="#">SparseMatrix</a></li>
+<li><a href="#">IntVector</a></li>
+<li><a href="#">RealVector</a></li>
+<li><a href="#">AbstractArray</a></li>
+<li><a href="#">AbstractMatrix</a></li>
+<li><a href="#">AbstractVector</a></li>
+<li><a href="#">BaseMethod</a></li>
+<li><a href="#">BaseType</a></li>
+<li><a href="#">BlasInterface</a></li>
+<li><a href="#">ErrorHandling</a></li>
+<li><a href="#">GlobalData</a></li>
+<li><a href="#">IO</a></li>
+<li><a href="#">Utility</a></li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li><a href="./Extpkgs/String.md">String</a></li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<h2 id="credits">Credits</h2>
 <!-- FORD features two macros to make it easier to provide intradocumentation links. These are `.` which gets replaced by the project URL, and `./media`, which gets replaced by the (absolute) path to the media directory in the output. you can also use `favicon:` -->
         </div>
 		  
@@ -216,7 +197,7 @@ In future, EASIFEM, will also act as a platform to use exisiting finite element 
           <h4>Dr Vikas Sharma</h4>
           
           <p>Ph. D.
-Kyoto University
+Kyoto University,
 Kyoto, Japan</p>
 			   
             <div class="text-center"><div class="btn-group" role="group">
@@ -4421,7 +4402,7 @@ Kyoto, Japan</p>
           <p class="text-right">
             Documentation generated by 
             <a href="https://github.com/cmacmackin/ford">FORD</a>
-             on 2020-11-07 17:03  
+             on 2020-11-07 17:31  
           </p>
         </div>
         <div class="col-xs-12 col-md-4 col-md-pull-4"><p class="text-center"> Fortran Program was developed by Dr Vikas Sharma</p></div>

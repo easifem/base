@@ -1,15 +1,15 @@
-project_dir: ./src/modules/
+project_dir: ./src
 project_github: https://github.com/vickysharma0812/easifem
 project_website: https://vickysharma0812.github.io/easifem/
 media_dir: ./easifem-tutorials
 page_dir: ./pages
 output_dir: ./docs
 exclude_dir: ./src/Extpkgs
-             ./src/submodules
+              ./src/submodules
              ./src/scripts
 author: Dr Vikas Sharma
 author_description: Ph. D.
-	Kyoto University
+	Kyoto University,
 	Kyoto, Japan
 email: vickysharma0812@gmail.com
 github: https://vickysharma0812.github.io/
@@ -35,6 +35,6 @@ docmark: !
 fpp_extensions: f90
 preprocesses: true
 
-<!-- {!./README.md!} -->
+{!./README.md!}
 
 <!-- FORD features two macros to make it easier to provide intradocumentation links. These are `|url|` which gets replaced by the project URL, and `|media|`, which gets replaced by the (absolute) path to the media directory in the output. you can also use `favicon:` -->
