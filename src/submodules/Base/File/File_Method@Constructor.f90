@@ -5,6 +5,46 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                                    Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE init_file
+  Obj%Path = String( trim(Path) )
+  Obj%FileName = String( trim(FileName) )
+  Obj%Extension = String( trim(Extension) )
+  Obj%Status = String( trim(Status) )
+  Obj%Action = String( trim(Action) )
+
+  IF( PRESENT( Access ) ) THEN
+    Obj%Access = String(trim(Access))
+  ELSE
+    Obj%Access = String( " " )
+  END IF
+
+  CALL OpenFile( Obj )
+  Obj%WriteNo = 0
+
+  IF( PRESENT( isBinary ) ) THEN
+    Obj%isBinary = isBinary
+  ELSE
+    Obj%isBinary = .FALSE.
+  END IF
+
+  IF( PRESENT( Comment ) ) THEN
+    Obj%Comment = Comment
+  ELSE
+    Obj%Comment = "#"
+  END IF
+
+  IF( PRESENT( Separator ) ) THEN
+    Obj%Separator = Separator
+  ELSE
+    Obj%Separator = ","
+  END IF
+
+END PROCEDURE init_file
+
+!----------------------------------------------------------------------------
 !                                                                 OpenFile
 !----------------------------------------------------------------------------
 
@@ -22,22 +62,45 @@ MODULE PROCEDURE open_file
   ! if uni = -1 then filename is not opened else opened
   IF( uni .LT. 0 ) THEN
     tsize = LEN_TRIM( Obj % Access )
+
     IF( tsize .EQ. 0 ) THEN
-      OPEN( &
-        & NewUnit = Obj % UnitNo,  &
-        &	FILE = TRIM( FileName % Raw ), &
-        &	STATUS = TRIM( Obj % STATUS % Raw ), &
-        &	ACTION = TRIM( Obj % ACTION % Raw ), &
-        &	IOSTAT = Obj % IOSTAT  )
+      IF( Obj%isBinary ) THEN
+        OPEN( &
+          & NewUnit = Obj % UnitNo,  &
+          &	FILE = TRIM( FileName % Raw ), &
+          &	STATUS = TRIM( Obj % STATUS % Raw ), &
+          &	ACTION = TRIM( Obj % ACTION % Raw ), &
+          &	IOSTAT = Obj % IOSTAT, &
+          & FORM="UNFORMATTED"  )
+      ELSE
+        OPEN( &
+          & NewUnit = Obj % UnitNo,  &
+          &	FILE = TRIM( FileName % Raw ), &
+          &	STATUS = TRIM( Obj % STATUS % Raw ), &
+          &	ACTION = TRIM( Obj % ACTION % Raw ), &
+          &	IOSTAT = Obj % IOSTAT  )
+      END IF
     ELSE
-      OPEN( &
-        & NewUnit = Obj % UnitNo,  &
-        &	FILE = TRIM( FileName % Raw ), &
-        &	STATUS = TRIM( Obj % STATUS % Raw ), &
-        &	ACTION = TRIM( Obj % ACTION % Raw ), &
-        & ACCESS = TRIM( Obj % Access % Raw ), &
-        &	IOSTAT = Obj % IOSTAT  )
+      IF( Obj%isBinary ) THEN
+        OPEN( &
+          & NewUnit = Obj % UnitNo,  &
+          &	FILE = TRIM( FileName % Raw ), &
+          &	STATUS = TRIM( Obj % STATUS % Raw ), &
+          &	ACTION = TRIM( Obj % ACTION % Raw ), &
+          & ACCESS = TRIM( Obj % Access % Raw ), &
+          &	IOSTAT = Obj % IOSTAT, &
+          & FORM="UNFORMATTED"  )
+      ELSE
+        OPEN( &
+          & NewUnit = Obj % UnitNo,  &
+          &	FILE = TRIM( FileName % Raw ), &
+          &	STATUS = TRIM( Obj % STATUS % Raw ), &
+          &	ACTION = TRIM( Obj % ACTION % Raw ), &
+          & ACCESS = TRIM( Obj % Access % Raw ), &
+          &	IOSTAT = Obj % IOSTAT  )
+      END IF
     END IF
+
     IF( Obj % IOSTAT .NE. 0 ) THEN
       Obj % isOpen = .FALSE.
       CALL Display( "ERROR: File_Method@Constructor.f90")
@@ -55,27 +118,6 @@ MODULE PROCEDURE open_file
   END IF
 
 END PROCEDURE open_file
-
-!----------------------------------------------------------------------------
-!                                                                    Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE init_file
-  Obj % Path = String( trim(Path) )
-  Obj % FileName = String( trim(FileName) )
-  Obj % Extension = String( trim(Extension) )
-  Obj % Status = String( trim(Status) )
-  Obj % Action = String( trim(Action) )
-
-  IF( PRESENT( Access ) ) THEN
-    Obj % Access = String(trim(Access))
-  ELSE
-    Obj % Access = String( " " )
-  END IF
-
-  CALL OpenFile( Obj )
-  Obj % WriteNo = 0
-END PROCEDURE init_file
 
 !-----------------------------------------------------------------------------
 !                                                                       File
@@ -110,6 +152,16 @@ MODULE PROCEDURE open_file_write_c
   CALL Initiate( Obj, Path % Raw, FileName % Raw, Extension % Raw, &
   & "REPLACE", "WRITE" )
 END PROCEDURE open_file_write_c
+
+!----------------------------------------------------------------------------
+!                                                     OpenBinaryFileToWrite
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE open_bfile_write_a
+  CALL Initiate( Obj=Obj, Path=Path, FileName=FileName, &
+    & Extension=Extension, Status="REPLACE", ACTION="WRITE", &
+    & isBinary=.TRUE. )
+END PROCEDURE open_bfile_write_a
 
 !----------------------------------------------------------------------------
 !                                                           OpenFileToRead
@@ -185,6 +237,19 @@ MODULE PROCEDURE close_file
   END IF
 END PROCEDURE close_file
 
+!----------------------------------------------------------------------------
+!                                                                 DeleteFile
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DeleteFile
+  INTEGER( I4B ) :: u, istat
+  TYPE( string ) :: FileName
+
+  FileName = FileName%Join ([Obj % Path, Obj % FileName, Obj % Extension])
+
+  OPEN( newunit = u, file = FileName%chars(), status='old', iostat=istat)
+  if(istat==0) close(u,status='delete')
+END PROCEDURE DeleteFile
 !----------------------------------------------------------------------------
 !                                                                 ReopenFile
 !----------------------------------------------------------------------------

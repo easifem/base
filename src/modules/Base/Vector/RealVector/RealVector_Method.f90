@@ -25,7 +25,7 @@ END INTERFACE Shape
 PUBLIC :: Shape
 
 !----------------------------------------------------------------------------
-!                                                            SIZE@Constructor
+!                                                           SIZE@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -43,7 +43,7 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
-!                                                    AllocateData@Constructor
+!                                                   AllocateData@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -60,7 +60,7 @@ END INTERFACE AllocateData
 PUBLIC :: AllocateData
 
 !----------------------------------------------------------------------------
-!                                                  DeAllocateData@Constructor
+!                                                 DeAllocateData@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -76,7 +76,7 @@ END INTERFACE DeallocateData
 PUBLIC :: DeallocateData
 
 !----------------------------------------------------------------------------
-!                                                        Initiate@Constructor
+!                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -98,7 +98,7 @@ END SUBROUTINE initiate_obj
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                        Initiate@Constructor
+!                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -116,7 +116,7 @@ END SUBROUTINE initiate_obj_vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                        Initiate@Constructor
+!                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -168,7 +168,7 @@ END INTERFACE RANDOM_NUMBER
 PUBLIC :: RANDOM_NUMBER
 
 !----------------------------------------------------------------------------
-!                                                          Vector@Constructor
+!                                                         Vector@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -194,7 +194,6 @@ MODULE PURE FUNCTION Constructor_1( tSize ) RESULT( Obj )
   INTEGER( I4B ), INTENT( IN ) :: tSize
 END FUNCTION Constructor_1
 END INTERFACE
-
 
 INTERFACE RealVector_Pointer
   MODULE PROCEDURE Constructor_1
@@ -985,284 +984,11 @@ MODULE SUBROUTINE Display_Vector_Real( vec, msg, unitNo, path, filename, &
 END SUBROUTINE Display_Vector_Real
 END INTERFACE
 
-
-
 INTERFACE Display
   MODULE PROCEDURE RealVectorDisplay, RealscalarDisplay, Display_Vector_Real
 END INTERFACE Display
 
 PUBLIC :: Display
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_a( a, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_a
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 ReadLine@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_ab( a, b, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_ab
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 ReadLine@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abc( a, b, c, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b, c
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  character(len=*), intent(in), optional :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abc
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 ReadLine@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abcd( a, b, c, d, buffer, fileName, unitNo )
-  real(DFP), intent(out) :: a, b, c, d
-    !! Number
-  character(len=*), intent(in) :: fileName
-    !! File name
-  integer(I4B), intent(in) :: UnitNo
-    !! File id number to read from
-  character(len=*), intent(in), optional :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abcd
-END INTERFACE
-INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 ReadLine@IO
-!----------------------------------------------------------------------------
-
-MODULE SUBROUTINE readline_abcde( a, b, c, d, e, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b, c, d, e
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  character(len=*), intent(in), optional :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abcde
-END INTERFACE
-
-INTERFACE ReadLine
-  MODULE PROCEDURE readline_a, readline_ab, readline_abc, readline_abcd, &
-    & readline_abcde
-END INTERFACE ReadLine
-
-PUBLIC :: ReadLine
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_av( a, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_av
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_avbv( a, b, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a( : ), b( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_avbv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_avbvcv( a, b, c, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a( : ), b( : ), c( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_avbvcv
-END INTERFACE
-
-INTERFACE ReadLine
-  MODULE PROCEDURE readline_av, readline_avbv, readline_avbvcv
-END INTERFACE ReadLine
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abv( a, b, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abvcv( a, b, c, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b( : ), c( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abvcv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abcv( a, b, c, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b, c( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abcv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abcvdv( a, b, c, d, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b, c( : ), d( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abcvdv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abcdv( a, b, c, d, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b, c, d( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abcdv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abcdvev( a, b, c, d, e, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b, c, d( : ), e( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abcdvev
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Readline@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE readline_abcdev( a, b, c, d, e, buffer, fileName, unitNo )
-  REAL(DFP), INTENT(OUT) :: a, b, c, d, e( : )
-    !! Number
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: fileName
-    !! File name
-  INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-    !! File id number to read from
-  CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: buffer
-    !! Character string to read from instead of the line in the file
-END SUBROUTINE readline_abcdev
-END INTERFACE
-
-INTERFACE ReadLine
-  MODULE PROCEDURE readline_abv, readline_abvcv, readline_abcv, &
-    & readline_abcvdv, readline_abcdv, readline_abcdvev, readline_abcdev
-END INTERFACE ReadLine
 
 !----------------------------------------------------------------------------
 !                                                                 Contains

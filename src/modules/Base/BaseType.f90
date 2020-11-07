@@ -4,7 +4,7 @@ USE StringiFor, ONLY: string, adjustl, adjustr, count, index, len_trim, &
   & repeat, scan, trim, verify, read_file, read_lines, write_file, &
   & write_lines
 
-USE PENF, ONLY: STR
+USE PENF, ONLY: STR, STRZ, CTON, BSTR, BCTON
 
 IMPLICIT NONE
 PRIVATE
@@ -13,7 +13,7 @@ PUBLIC :: string, adjustl, adjustr, count, index, len_trim, &
   & repeat, scan, trim, verify, read_file, read_lines, write_file, &
   & write_lines
 
-PUBLIC :: STR
+PUBLIC :: STR, STRZ, CTON, BSTR, BCTON
 
 TYPE( String ), PARAMETER, PUBLIC :: TypeString = String( raw = NULL() )
 
@@ -44,8 +44,10 @@ PUBLIC :: Buffer_
 
 TYPE :: File_
   TYPE( String ) :: FileName, Path, Extension, ACTION, STATUS, ACCESS
-  INTEGER( I4B ) :: UnitNo, WriteNo, IOSTAT
-  LOGICAL( LGT ) :: isOpen
+  INTEGER( I4B ) :: UnitNo=1, WriteNo=1, IOSTAT=1
+  LOGICAL( LGT ) :: isOpen = .FALSE., isBinary = .FALSE.
+  CHARACTER( LEN = 1 ) :: Comment = "#"
+  CHARACTER( LEN = 1 ) :: Separator = ","
 END TYPE File_
 
 PUBLIC :: File_
