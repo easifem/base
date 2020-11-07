@@ -39,7 +39,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
   IF( ALLOCATED( Obj%CurveEntities ) ) te(2) = SIZE(Obj%CurveEntities)
   IF( ALLOCATED( Obj%SurfaceEntities ) ) te(3) = SIZE(Obj%SurfaceEntities)
   IF( ALLOCATED( Obj%VolumeEntities ) ) te(4) = SIZE(Obj%VolumeEntities)
-  CALL WRITE( aFile, te, transpose =.true. )
+  CALL WRITE( aFile, te, row=.true. )
     ! write point entities
   DO ii = 1, te(1)
     tsize=0
@@ -55,7 +55,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
       WRITE( afile%unitno, FInt32, ADVANCE="YES" ) tsize
     ELSE
       WRITE( afile%unitno, FInt32, ADVANCE="NO" ) tsize
-      CALL WRITE( afile,Obj%PointEntities(ii)%PhysicalTag, transpose=.true. )
+      CALL WRITE( afile,Obj%PointEntities(ii)%PhysicalTag, row=.true. )
     END IF
   END DO
 
@@ -185,7 +185,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
     END DO
     DO jj = 1, tSize
       CALL WRITE( afile, Nodes(:, Obj%PointEntities(ii)%NodeNumber(jj) ), &
-        & transpose=.true.)
+        & row=.true.)
     END DO
   END DO
     ! Write Nodes of curve entity
@@ -205,7 +205,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
     END DO
     DO jj = 1, tSize
       CALL WRITE( afile, Nodes(:, Obj%CurveEntities(ii)%NodeNumber(jj) ), &
-        & transpose=.true.)
+        & row=.true.)
     END DO
   END DO
     ! Write Nodes of surface entity
@@ -225,7 +225,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
     END DO
     DO jj = 1, tSize
       CALL WRITE( afile, Nodes(:, Obj%SurfaceEntities(ii)%NodeNumber(jj) ), &
-        & transpose=.true.)
+        & row=.true.)
     END DO
   END DO
     ! Write Nodes of volume entity
@@ -245,7 +245,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
     END DO
     DO jj = 1, tSize
       CALL WRITE( afile, Nodes(:, Obj%VolumeEntities(ii)%NodeNumber(jj) ), &
-        & transpose=.true.)
+        & row=.true.)
     END DO
   END DO
   CALL Write( aFile, '$EndNodes' )
@@ -272,7 +272,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
     DO jj = 1, tSize
       WRITE( afile%unitno, FInt32, ADVANCE="NO" ) &
         & Obj%PointEntities(ii)%ElemNumber(jj)
-      CALL WRITE( afile, Obj%PointEntities(ii)%Nptrs(:, jj), transpose=.true.)
+      CALL WRITE( afile, Obj%PointEntities(ii)%Nptrs(:, jj), row=.true.)
     END DO
   END DO
 
@@ -292,7 +292,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
     DO jj = 1, tSize
       WRITE( afile%unitno, FInt32, ADVANCE="NO" ) &
         & Obj%CurveEntities(ii)%ElemNumber(jj)
-      CALL WRITE( afile, Obj%CurveEntities(ii)%Nptrs(:, jj), transpose=.true.)
+      CALL WRITE( afile, Obj%CurveEntities(ii)%Nptrs(:, jj), row=.true.)
     END DO
   END DO
 
@@ -312,7 +312,7 @@ MODULE PROCEDURE gmsh_mesh_write_mesh
     DO jj = 1, tSize
       WRITE( afile%unitno, FInt32, ADVANCE="NO" ) &
         & Obj%SurfaceEntities(ii)%ElemNumber(jj)
-      CALL WRITE( afile, Obj%SurfaceEntities(ii)%Nptrs(:, jj), transpose=.true.)
+      CALL WRITE( afile, Obj%SurfaceEntities(ii)%Nptrs(:, jj), row=.true.)
     END DO
   END DO
 

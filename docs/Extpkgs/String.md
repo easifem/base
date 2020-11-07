@@ -1,7 +1,7 @@
 # Strings in easifem
 
 - EASIFEM employs StringiFor library to implement `String` datatype.
-- More information about the `String` datatype can be found in [StringiFor](https://github.com/szaghi/StringiFor/releases) library
+- More information about the `String` datatype can be found in [StringiFor](https://github.com/szaghi/StringiFor) library
 
 In addition, following routines are used from [PENF](https://github.com/szaghi/PENF) library.
 

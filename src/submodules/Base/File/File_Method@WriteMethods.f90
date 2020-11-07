@@ -11,67 +11,63 @@ MODULE PROCEDURE write_data_ascii_scalar
   TYPE IS( CHARACTER( * ))
     WRITE( Obj%UnitNo, "(A)") TRIM(Val)
   TYPE IS( Real(Real64) )
-    WRITE( Obj%UnitNo, FReal64 ) Val
+    WRITE( Obj%UnitNo, "(A)" ) STR(Val)
   TYPE IS( Real(Real32) )
-    WRITE( Obj%UnitNo, FReal32 ) Val
+    WRITE( Obj%UnitNo, "(A)" ) STR(Val)
   TYPE IS( Integer(INT32) )
-    WRITE( Obj%UnitNo, FInt32 ) Val
+    WRITE( Obj%UnitNo, "(A)" ) STR(Val)
   TYPE IS( Integer(INT64) )
-    WRITE( Obj%UnitNo, FInt64 ) Val
+    WRITE( Obj%UnitNo, "(A)" ) STR(Val)
   END SELECT
 END PROCEDURE write_data_ascii_scalar
+
 !----------------------------------------------------------------------------
 !                                                                 WriteData
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE write_data_ascii_r1
-  INTEGER( I4B ) :: ii, l
-  TYPE( String ) :: fmt
+  INTEGER( I4B ) :: ii
 
   SELECT TYPE( Val )
   TYPE IS ( Integer(Int32) )
-    IF( .NOT. transpose ) THEN
+    IF( PRESENT( col ) ) THEN
       DO ii =1, SIZE(Val)
-        WRITE(Obj%UnitNo, FInt32) Val( ii )
+        WRITE(Obj%UnitNo, "(A)") STR(Val( ii ))
       END DO
-    ELSE
-      l = SIZE(Val)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FInt32)//")"
-      WRITE(Obj%UnitNo, fmt%chars()) Val
+      RETURN
     END IF
+
+    WRITE(Obj%UnitNo, "(A)") STR(Val, Separator = Obj%Separator)
 
   TYPE IS ( Integer(Int64) )
-    IF( .NOT. transpose ) THEN
+    IF( PRESENT( col ) ) THEN
       DO ii =1, SIZE(Val)
-        WRITE(Obj%UnitNo, FInt64) Val( ii )
+        WRITE(Obj%UnitNo, "(A)") STR(Val( ii ))
       END DO
-    ELSE
-      l = SIZE(Val)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FInt64)//")"
-      WRITE(Obj%UnitNo, fmt%chars()) Val
+      RETURN
     END IF
+
+    WRITE(Obj%UnitNo, "(A)") STR(Val, Separator = Obj%Separator)
 
   TYPE IS ( Real(Real32) )
-    IF( .NOT. transpose ) THEN
+    IF( PRESENT( col ) ) THEN
       DO ii =1, SIZE(Val)
-        WRITE(Obj%UnitNo, FReal32) Val( ii )
+        WRITE(Obj%UnitNo, "(A)") STR(Val( ii ))
       END DO
-    ELSE
-      l = SIZE(Val)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FReal32)//")"
-      WRITE(Obj%UnitNo, fmt%chars()) Val
+      RETURN
     END IF
 
+    WRITE(Obj%UnitNo, "(A)") STR(Val, Separator = Obj%Separator)
+
   TYPE IS ( Real(Real64) )
-        IF( .NOT. transpose ) THEN
+    IF( PRESENT( col ) ) THEN
       DO ii =1, SIZE(Val)
-        WRITE(Obj%UnitNo, FReal64) Val( ii )
+        WRITE(Obj%UnitNo, "(A)") STR(Val( ii ))
       END DO
-    ELSE
-      l = SIZE(Val)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FReal64)//")"
-      WRITE(Obj%UnitNo, fmt%chars()) Val
+      RETURN
     END IF
+
+    WRITE(Obj%UnitNo, "(A)") STR(Val, Separator = Obj%Separator)
   END SELECT
 
 END PROCEDURE write_data_ascii_r1
@@ -81,75 +77,131 @@ END PROCEDURE write_data_ascii_r1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE write_data_ascii_r2
-  INTEGER( I4B ) :: ii, l
-  TYPE( String ) :: fmt
+  INTEGER( I4B ) :: ii, jj, m, n
 
   SELECT TYPE( Val )
+
   TYPE IS ( Integer(Int32) )
     ! print column wise
+    m = SIZE( Val, 1 )
+    n = SIZE( Val, 2 )
     IF(transpose) THEN
-      l = SIZE(val, 1)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FInt32)//")"
-      DO ii =1, SIZE(val,2)
-        WRITE(Obj%UnitNo, fmt%chars()) val( :, ii )
+
+      DO jj=1,n
+        DO ii = 1, m
+          IF( ii .EQ. m ) THEN
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="YES" ) TRIM(STR(val( ii, jj )))
+          ELSE
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="NO" ) &
+              & TRIM(STR(val( ii, jj ))) // Obj%Separator
+          END IF
+        END DO
       END DO
+
     ELSE
       ! print rowwise
-      l = SIZE(val,2)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FInt32)//")"
-      DO ii =1, SIZE(val,1)
-        WRITE(Obj%UnitNo, fmt%chars()) val( ii, : )
+      DO ii =1, m
+        DO jj=1,n
+          IF( jj .EQ. n ) THEN
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="YES" ) TRIM(STR(val( ii, jj )))
+          ELSE
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="NO" ) &
+              & TRIM(STR(val( ii, jj ))) // Obj%Separator
+          END IF
+        END DO
       END DO
     END IF
 
   TYPE IS ( Integer(Int64) )
     ! print column wise
+    m = SIZE( Val, 1 )
+    n = SIZE( Val, 2 )
     IF(transpose) THEN
-      l = SIZE(val, 1)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FInt64)//")"
-      DO ii =1, SIZE(val,2)
-        WRITE(Obj%UnitNo, fmt%chars()) val( :, ii )
+
+      DO jj=1,n
+        DO ii = 1, m
+          IF( ii .EQ. m ) THEN
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="YES" ) TRIM(STR(val( ii, jj )))
+          ELSE
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="NO" ) &
+              & TRIM(STR(val( ii, jj ))) // Obj%Separator
+          END IF
+        END DO
       END DO
+
     ELSE
       ! print rowwise
-      l = SIZE(val,2)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FInt64)//")"
-      DO ii =1, SIZE(val,1)
-        WRITE(Obj%UnitNo, fmt%chars()) val( ii, : )
+      DO ii =1, m
+        DO jj=1,n
+          IF( jj .EQ. n ) THEN
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="YES" ) TRIM(STR(val( ii, jj )))
+          ELSE
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="NO" ) &
+              & TRIM(STR(val( ii, jj ))) // Obj%Separator
+          END IF
+        END DO
       END DO
     END IF
 
   TYPE IS ( Real(Real32) )
     ! print column wise
+    m = SIZE( Val, 1 )
+    n = SIZE( Val, 2 )
     IF(transpose) THEN
-      l = SIZE(val, 1)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FReal32)//")"
-      DO ii =1, SIZE(val,2)
-        WRITE(Obj%UnitNo, fmt%chars()) val( :, ii )
+
+      DO jj=1,n
+        DO ii = 1, m
+          IF( ii .EQ. m ) THEN
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="YES" ) TRIM(STR(val( ii, jj )))
+          ELSE
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="NO" ) &
+              & TRIM(STR(val( ii, jj ))) // Obj%Separator
+          END IF
+        END DO
       END DO
+
     ELSE
       ! print rowwise
-      l = SIZE(val,2)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FReal32)//")"
-      DO ii =1, SIZE(val,1)
-        WRITE(Obj%UnitNo, fmt%chars()) val( ii, : )
+      DO ii =1, m
+        DO jj=1,n
+          IF( jj .EQ. n ) THEN
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="YES" ) TRIM(STR(val( ii, jj )))
+          ELSE
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="NO" ) &
+              & TRIM(STR(val( ii, jj ))) // Obj%Separator
+          END IF
+        END DO
       END DO
     END IF
 
   TYPE IS ( Real(Real64) )
     ! print column wise
+    m = SIZE( Val, 1 )
+    n = SIZE( Val, 2 )
     IF(transpose) THEN
-      l = SIZE(val, 1)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FReal64)//")"
-      DO ii =1, SIZE(val,2)
-        WRITE(Obj%UnitNo, fmt%chars()) val( :, ii )
+
+      DO jj=1,n
+        DO ii = 1, m
+          IF( ii .EQ. m ) THEN
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="YES" ) TRIM(STR(val( ii, jj )))
+          ELSE
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="NO" ) &
+              & TRIM(STR(val( ii, jj ))) // Obj%Separator
+          END IF
+        END DO
       END DO
+
     ELSE
       ! print rowwise
-      l = SIZE(val,2)
-      fmt = "("//trim(str(l, no_sign=.true.)) // trim(FReal64)//")"
-      DO ii =1, SIZE(val,1)
-        WRITE(Obj%UnitNo, fmt%chars()) val( ii, : )
+      DO ii =1, m
+        DO jj=1,n
+          IF( jj .EQ. n ) THEN
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="YES" ) TRIM(STR(val( ii, jj )))
+          ELSE
+            WRITE(Obj%UnitNo, "(A)", ADVANCE="NO" ) &
+              & TRIM(STR(val( ii, jj ))) // Obj%Separator
+          END IF
+        END DO
       END DO
     END IF
   END SELECT
@@ -157,7 +209,140 @@ MODULE PROCEDURE write_data_ascii_r2
 END PROCEDURE write_data_ascii_r2
 
 !----------------------------------------------------------------------------
-!                                                                 WriteData
+!                                                                 WriteLine
 !----------------------------------------------------------------------------
+
+MODULE PROCEDURE writeLine_a
+  INTEGER( I4B ) :: iunit, istat
+
+  IF( PRESENT( unitNo ) ) THEN
+    iunit = unitNo
+  ELSE
+    iunit = stdout
+  END IF
+
+  WRITE( iunit, '(a)' ) STR( a )
+
+END PROCEDURE writeLine_a
+
+!----------------------------------------------------------------------------
+!                                                                 WriteLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE writeLine_ab
+  INTEGER( I4B ) :: iunit, istat
+
+  IF( PRESENT( unitNo ) ) THEN
+    iunit = unitNo
+  ELSE
+    iunit = stdout
+  END IF
+
+  WRITE( iunit, '(a)' ) STR( a ) // STR( b )
+
+END PROCEDURE writeLine_ab
+
+!----------------------------------------------------------------------------
+!                                                                 WriteLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE writeLine_abc
+  INTEGER( I4B ) :: iunit, istat
+
+  IF( PRESENT( unitNo ) ) THEN
+    iunit = unitNo
+  ELSE
+    iunit = stdout
+  END IF
+
+  WRITE( iunit, '(a)' ) STR( a ) // STR( b ) // STR( c )
+
+END PROCEDURE writeLine_abc
+
+!----------------------------------------------------------------------------
+!                                                                 WriteLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE writeLine_abcd
+  INTEGER( I4B ) :: iunit, istat
+
+  IF( PRESENT( unitNo ) ) THEN
+    iunit = unitNo
+  ELSE
+    iunit = stdout
+  END IF
+
+  WRITE( iunit, '(a)' ) STR( a ) // STR( b ) // STR( c ) // STR( d )
+
+END PROCEDURE writeLine_abcd
+
+!----------------------------------------------------------------------------
+!                                                                 WriteLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE writeLine_abcde
+  INTEGER( I4B ) :: iunit, istat
+
+  IF( PRESENT( unitNo ) ) THEN
+    iunit = unitNo
+  ELSE
+    iunit = stdout
+  END IF
+
+  WRITE( iunit, '(a)' ) STR( a ) // STR( b ) // STR( c ) // STR( d ) // STR(e)
+
+END PROCEDURE writeLine_abcde
+
+!----------------------------------------------------------------------------
+!                                                                 WriteLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE writeLine_av
+  INTEGER( I4B ) :: iunit, istat
+
+  IF( PRESENT( unitNo ) ) THEN
+    iunit = unitNo
+  ELSE
+    iunit = stdout
+  END IF
+
+  WRITE( iunit, '(a)' ) STR( a )
+
+END PROCEDURE writeLine_av
+
+!----------------------------------------------------------------------------
+!                                                                 WriteLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE writeLine_avbv
+  INTEGER( I4B ) :: iunit, istat
+
+  IF( PRESENT( unitNo ) ) THEN
+    iunit = unitNo
+  ELSE
+    iunit = stdout
+  END IF
+
+  WRITE( iunit, '(a)' ) STR( a ) // STR( b )
+
+END PROCEDURE writeLine_avbv
+
+!----------------------------------------------------------------------------
+!                                                                 WriteLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE writeLine_avbvcv
+  INTEGER( I4B ) :: iunit, istat
+
+  IF( PRESENT( unitNo ) ) THEN
+    iunit = unitNo
+  ELSE
+    iunit = stdout
+  END IF
+
+  WRITE( iunit, '(a)' ) STR( a ) // STR( b ) // STR( c )
+
+END PROCEDURE writeLine_avbvcv
+
 
 END SUBMODULE WriteMethods
