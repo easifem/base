@@ -1,0 +1,3591 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <meta name="description" content="Expandable and Scalable Infrastructure for Finite Element Methods">
+    
+    <meta name="author" content="Dr Vikas Sharma" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>Kernel_Class &ndash; Fortran Program</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Fortran Program </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+        
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          
+              
+            <li><a href="../lists/files.html">Source Files</a></li>
+        
+        
+        
+            <li><a href="../lists/modules.html">Modules</a></li>
+        
+            
+                                
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+        
+        
+            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+               
+            <li><a href="../lists/types.html">Derived Types</a></li>
+        
+        
+            </ul>
+            </li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                             
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+
+
+          </ul>
+        
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+  
+  <div class="row">
+    <h1>Kernel_Class 
+    <small>Module</small>
+    
+    </h1>
+    
+<div class="row">
+  <div class="col-lg-12">
+<div class="well well-sm">
+  <ul class="list-inline" style="margin-bottom:0px;display:inline">
+     
+     
+     
+     
+    
+    
+     <li><i class="fa fa-list-ol"></i>
+       <a data-toggle="tooltip"
+    data-placement="bottom" data-html="true"
+    title=" 1.4% of total for modules and submodules.">234 statements</a>
+     </li> 
+     
+     
+     
+    <li><i class="fa fa-code"></i><a href="../src/Kernel_Class.f90"> Source File</a></li>
+     
+     
+  </ul>
+  <ol class="breadcrumb in-well text-right">
+  
+    
+     <li><a href='../sourcefile/kernel_class.f90.html'>Kernel_Class.f90</a></li>
+    
+  
+     <li class="active">Kernel_Class</li>
+  </ol>
+</div>
+</div>
+</div>
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    
+<div id="sidebar">
+  
+<h3>Contents</h3>
+ 
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#vars-0">Variables</a></h3></div>
+  <div id="vars-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_flux">ALGO_OPT_FLUX</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_flux_air">ALGO_OPT_FLUX_AIR</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_flux_water">ALGO_OPT_FLUX_WATER</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_flux_water_air">ALGO_OPT_FLUX_WATER_AIR</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_no_flux">ALGO_OPT_NO_FLUX</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_no_phase_change">ALGO_OPT_NO_PHASE_CHANGE</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_phase_change">ALGO_OPT_PHASE_CHANGE</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_semidiscrete">ALGO_OPT_SEMIDISCRETE</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_spacetime">ALGO_OPT_SPACETIME</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_static">ALGO_OPT_STATIC</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_transient">ALGO_OPT_TRANSIENT</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-lis_fpar_len">LIS_FPAR_LEN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-lis_ipar_len">LIS_IPAR_LEN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-lis_precond_fpar_len">LIS_PRECOND_FPAR_LEN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-lis_precond_ipar_len">LIS_PRECOND_IPAR_LEN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-max_material_type">MAX_MATERIAL_TYPE</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_1_horizontal">NSD_1_HORIZONTAL</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_1_vertical">NSD_1_VERTICAL</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_2_axisymmetric">NSD_2_AXISYMMETRIC</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_2_cartesian">NSD_2_CARTESIAN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_3">NSD_3</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-0">Interfaces</a></h3></div>
+  <div id="inters-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_dealloc">kernel_dealloc</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_init">kernel_init</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_mesh_quality">kernel_mesh_quality</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setalgo">kernel_setalgo</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setdomain">kernel_setdomain</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setlinsol">kernel_setlinsol</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setmatprops">kernel_setmatprops</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setprecond">kernel_setprecond</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_settanmat">kernel_settanmat</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-set_material">set_material</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-set_total_materials">set_total_materials</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#absints-0">Abstract Interfaces</a></h3></div>
+  <div id="absints-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_assemble">kernel_assemble</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_isconverg">kernel_isconverg</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_savestate">kernel_savestate</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_set_kernel">kernel_set_kernel</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_solve">kernel_solve</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_update">kernel_update</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_writedata">kernel_writedata</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#types-0">Derived Types</a></h3></div>
+  <div id="types-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/kernel_class.html#type-kernelpointer_">KernelPointer_</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#type-kernel_">Kernel_</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    
+      <br>
+    
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Uses</h3>
+      </div>
+      <ul class="list-group">
+      
+      <li class="list-group-item">
+  <ul class="list-inline">
+    
+    <li><a href='../module/easifem.html'>EASIFEM</a></li>
+    
+  </ul>
+      </li>
+      
+      
+      
+      </ul>
+    </div>
+    
+
+    
+    
+
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+      
+<h3>Contents</h3>
+ 
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#vars-1">Variables</a></h3></div>
+  <div id="vars-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_flux">ALGO_OPT_FLUX</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_flux_air">ALGO_OPT_FLUX_AIR</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_flux_water">ALGO_OPT_FLUX_WATER</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_flux_water_air">ALGO_OPT_FLUX_WATER_AIR</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_no_flux">ALGO_OPT_NO_FLUX</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_no_phase_change">ALGO_OPT_NO_PHASE_CHANGE</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_phase_change">ALGO_OPT_PHASE_CHANGE</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_semidiscrete">ALGO_OPT_SEMIDISCRETE</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_spacetime">ALGO_OPT_SPACETIME</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_static">ALGO_OPT_STATIC</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-algo_opt_transient">ALGO_OPT_TRANSIENT</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-lis_fpar_len">LIS_FPAR_LEN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-lis_ipar_len">LIS_IPAR_LEN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-lis_precond_fpar_len">LIS_PRECOND_FPAR_LEN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-lis_precond_ipar_len">LIS_PRECOND_IPAR_LEN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-max_material_type">MAX_MATERIAL_TYPE</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_1_horizontal">NSD_1_HORIZONTAL</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_1_vertical">NSD_1_VERTICAL</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_2_axisymmetric">NSD_2_AXISYMMETRIC</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_2_cartesian">NSD_2_CARTESIAN</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#variable-nsd_3">NSD_3</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-1">Interfaces</a></h3></div>
+  <div id="inters-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_dealloc">kernel_dealloc</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_init">kernel_init</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_mesh_quality">kernel_mesh_quality</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setalgo">kernel_setalgo</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setdomain">kernel_setdomain</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setlinsol">kernel_setlinsol</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setmatprops">kernel_setmatprops</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_setprecond">kernel_setprecond</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_settanmat">kernel_settanmat</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-set_material">set_material</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-set_total_materials">set_total_materials</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#absints-1">Abstract Interfaces</a></h3></div>
+  <div id="absints-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_assemble">kernel_assemble</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_isconverg">kernel_isconverg</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_savestate">kernel_savestate</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_set_kernel">kernel_set_kernel</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_solve">kernel_solve</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_update">kernel_update</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#interface-kernel_writedata">kernel_writedata</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#types-1">Derived Types</a></h3></div>
+  <div id="types-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/kernel_class.html#type-kernelpointer_">KernelPointer_</a>
+      
+      <a class="list-group-item" href="../module/kernel_class.html#type-kernel_">Kernel_</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+    
+
+    
+    <section>
+    <h2>Variables</h2>
+    
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th>
+
+<th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_flux"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_FLUX</strong></td><td> =</td><td>2</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_flux_air"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_FLUX_AIR</strong></td><td> =</td><td>7</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_flux_water"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_FLUX_WATER</strong></td><td> =</td><td>6</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_flux_water_air"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_FLUX_WATER_AIR</strong></td><td> =</td><td>8</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_no_flux"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_NO_FLUX</strong></td><td> =</td><td>3</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_no_phase_change"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_NO_PHASE_CHANGE</strong></td><td> =</td><td>5</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_phase_change"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_PHASE_CHANGE</strong></td><td> =</td><td>4</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_semidiscrete"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_SEMIDISCRETE</strong></td><td> =</td><td>1</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_spacetime"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_SPACETIME</strong></td><td> =</td><td>2</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_static"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_STATIC</strong></td><td> =</td><td>0</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-algo_opt_transient"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>ALGO_OPT_TRANSIENT</strong></td><td> =</td><td>1</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lis_fpar_len"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>LIS_FPAR_LEN</strong></td><td> =</td><td>10</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lis_ipar_len"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>LIS_IPAR_LEN</strong></td><td> =</td><td>10</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lis_precond_fpar_len"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>LIS_PRECOND_FPAR_LEN</strong></td><td> =</td><td>10</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lis_precond_ipar_len"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>LIS_PRECOND_IPAR_LEN</strong></td><td> =</td><td>10</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-max_material_type"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>MAX_MATERIAL_TYPE</strong></td><td> =</td><td>20</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nsd_1_horizontal"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>NSD_1_HORIZONTAL</strong></td><td> =</td><td>1</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nsd_1_vertical"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>NSD_1_VERTICAL</strong></td><td> =</td><td>2</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nsd_2_axisymmetric"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>NSD_2_AXISYMMETRIC</strong></td><td> =</td><td>4</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nsd_2_cartesian"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>NSD_2_CARTESIAN</strong></td><td> =</td><td>3</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nsd_3"></span>integer(kind=I4B),</td>
+  
+  <td>private,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>NSD_3</strong></td><td> =</td><td>5</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+    </section>
+    <br>
+    
+    
+    
+    
+    
+    <section>
+   <h2>Interfaces</h2>
+   
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_dealloc"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_dealloc(Obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_init"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine initiate the Kernel</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_init(Obj, nsd, nnt, dt, SpatialCoordType, tn, NTS, tol_res, tol_sol)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine initiate the kernel
+ - If <code>NNT</code> (num of nodes in time domain) is not given then <code>NNT=1</code>
+ - <code>NSD</code> is the spatial dimension of the problem
+ - <code>dt</code> is the time step size; default value is &lsquo;1.0&rsquo;</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nsd</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>nnt</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>dt</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>SpatialCoordType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>tn</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>NTS</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>tol_res</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>tol_sol</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_mesh_quality"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine computes the mesh quality</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_mesh_quality(Obj, qmin, qmax, qavg, measure, q, nodes)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine computes the mesh quality
+ - if <code>q</code> is present then mesh-quality of each element will be returned in it
+   otherwise meshquality will be stored in <code>obj%meshq</code>
+ - <code>qmin</code> <code>qmax</code> and <code>qavg</code> are statistical parameters
+ -<code>measure</code> is quality measure which can be
+     - meshquality%area
+     - meshquality%minAngle
+     - meshquality%maxAngle
+     - meshquality%angleRatio
+     - meshquality%radiusRatio
+     - meshquality%edgeRatio
+     - meshquality%aspectRatio
+     - meshquality%scaledJacobian
+ - if <code>nodes</code> are not present then <code>dom%nodes</code> are used</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>qmin</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>qmax</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>qavg</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>measure</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td>optional</td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>q</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>nodes</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_setalgo"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the algorithm for the kernel</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_setalgo(Obj, mainOption, extraOption)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine set the algorithm of the Kernel
+ This subroutine should be defined by specific kernel</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>mainOption</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>extraOption</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_setdomain"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the domain to the kernel</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_setdomain(Obj, dom, omegaNo)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine set the domain to the kernel
+ - Here <code>dom</code> is the <code>domain_</code> datatype
+ - <code>omegaNo</code> is the IDs of regions which is required in the analysis
+ - This subroutine will store information of <code>omegano</code>
+ - It also prepares the mapping between local and global node numbers
+ - Information such as, <code>obj%tnodes</code> and <code>obj%telements</code> are also stored
+ inside the kernel</p><a href="../interface/kernel_setdomain.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Domain_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>dom</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>omegaNo</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_setlinsol"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_setlinsol(Obj, name, maxiter, tol, fpar, ipar)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>name</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>maxiter</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>tol</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>fpar</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>ipar</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_setmatprops"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the material propeties in the kernel</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_setmatprops(Obj, matprops)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine set the material properties in the kernel
+ <code>matprops</code> contains information about different materials
+ Each column of <code>matprops</code> denote a material type
+ This method can be extended by the other kernels</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>matprops</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_setprecond"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_setprecond(Obj, name, fpar, ipar)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>name</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>fpar</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>ipar</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_settanmat"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_settanmat(Obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_material"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine set_material(Obj, materialNo)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>materialNo</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_total_materials"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine set_total_materials(Obj, tMaterials)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>tMaterials</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+    </section>
+  <br>
+    
+
+    
+    <section>
+     <h2>Abstract Interfaces</h2>
+   
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_assemble"></span><h3>abstract interface
+    
+  </h3></div>
+  
+  <ul class="list-group">
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_assemble(Obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_isconverg"></span><h3>abstract interface
+    
+  </h3></div>
+  
+  <ul class="list-group">
+    <li class="list-group-item">
+    
+    
+    <h3>
+private function kernel_isconverg(Obj, relTol, absTol, convergeInRes, convergeInSol) result(Ans)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>relTol</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>absTol</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>logical(kind=LGT),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>convergeInRes</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>logical(kind=LGT),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>convergeInSol</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>logical(kind=LGT)
+  </small></h4>
+  
+    
+
+    </li>
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_savestate"></span><h3>abstract interface
+    
+  </h3></div>
+  
+  <ul class="list-group">
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_savestate(Obj, Path, Filename, Extension, timestep)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Path</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Filename</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Extension</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>timestep</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_set_kernel"></span><h3>abstract interface
+    
+  </h3></div>
+  
+  <ul class="list-group">
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_set_kernel(Obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_solve"></span><h3>abstract interface
+    
+  </h3></div>
+  
+  <ul class="list-group">
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_solve(Obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_update"></span><h3>abstract interface
+    
+  </h3></div>
+  
+  <ul class="list-group">
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_update(Obj, reset)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>logical(kind=LGT),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>reset</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-kernel_writedata"></span><h3>abstract interface
+    
+  </h3></div>
+  
+  <ul class="list-group">
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine kernel_writedata(Obj, gmsh, path, filename, extension, indx)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(gmsh_),</td>
+  <td>intent(inout),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>gmsh</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>path</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>filename</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>extension</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>indx</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  </ul>
+</div>
+
+    
+    </section>
+  <br>
+    
+    
+    
+    <section>
+     <h2>Derived Types</h2>
+   
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-kernelpointer_"></span><h3>type, public :: <a href='../type/kernelpointer_.html'>KernelPointer_</a>
+    
+  </h3></div>
+  <div class="panel-body">
+    
+     
+     <h4>Components</h4>
+    
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th>
+
+<th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-ptr~38"></span>class(<a href='../type/kernel_.html'>Kernel_</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER</td><td>::</td>
+  <td><strong>Ptr</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+     
+     
+          
+     
+  </div>
+</div>
+
+     
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-kernel_"></span><h3>type, public :: <a href='../type/kernel_.html'>Kernel_</a>
+    
+  </h3></div>
+  <div class="panel-body">
+    
+     
+     <h4>Components</h4>
+    
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th>
+
+<th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-assemble"></span>procedure(<a href='../interface/kernel_assemble.html'>kernel_assemble</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS(Obj)</td><td>::</td>
+  <td><strong>Assemble</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-assemblerhs"></span>procedure(<a href='../interface/kernel_assemble.html'>kernel_assemble</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS(Obj)</td><td>::</td>
+  <td><strong>AssembleRHS</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-assembletanmat"></span>procedure(<a href='../interface/kernel_assemble.html'>kernel_assemble</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS(Obj)</td><td>::</td>
+  <td><strong>AssembleTanMat</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-db"></span>type(IntVector_),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>DB</strong>(:)</td><td></td><td></td><td><p>DB(1) uniform pressure DB
+ DB(2) hydrostate pressure DB
+ DB(3) uniform discharge/flux NB
+ DB(4) drainage/ filter / robin/ boundary NB</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-dbcinfo"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>DBCinfo</strong>(:)</td><td></td><td></td><td><p>Boundary info</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-dom"></span>class(Domain_),</td>
+  
+  <td>public,</td>
+  <td>POINTER</td><td>::</td>
+  <td><strong>Dom</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-iter"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>ITER</strong></td><td> =</td><td>0</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-its"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>ITS</strong></td><td> =</td><td>0</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lis_fpar"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>LIS_FPAR</strong>(LIS_FPAR_LEN)</td><td> =</td><td>0.0</td><td><p>real parameters for linear iterative solver</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lis_ipar"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>LIS_IPAR</strong>(LIS_IPAR_LEN)</td><td> =</td><td>0</td><td><p>integer parameters for linear iterative solver</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-maxiter"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>MAXITER</strong></td><td> =</td><td>100</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nnt"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>NNT</strong></td><td> =</td><td>2</td><td><p>number of nodes in time finite element method</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nsd~3"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>NSD</strong></td><td> =</td><td>2</td><td><p>Spatial dimension of problem</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nts"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>NTS</strong></td><td> =</td><td>0</td><td><p>maximum iteration number for linear iterative solver</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nptrs~4"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Nptrs</strong>(:)</td><td></td><td></td><td><p>Global Nptrs</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-omegano"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>OmegaNo</strong>(:)</td><td></td><td></td><td><p>Id of cell mesh in domain</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-omeganotomaterials"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>OmegaNoToMaterials</strong>(:)</td><td></td><td></td><td><p>Mesh region to material mapping</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-oned_horizontal"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>OneD_Horizontal</strong></td><td> =</td><td>NSD_1_HORIZONTAL</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-oned_vertical"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>OneD_Vertical</strong></td><td> =</td><td>NSD_1_VERTICAL</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-precond_fpar"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>PRECOND_FPAR</strong>(LIS_PRECOND_FPAR_LEN)</td><td> =</td><td>0.0</td><td><p>real parameter for linear iterative solver</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-precond_ipar"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>PRECOND_IPAR</strong>(LIS_PRECOND_IPAR_LEN)</td><td> =</td><td>0</td><td><p>integer parameters for linear iterative solver</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-static"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>STATIC</strong></td><td> =</td><td>ALGO_OPT_STATIC</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-solve~4"></span>procedure(<a href='../interface/kernel_solve.html'>kernel_solve</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS(Obj)</td><td>::</td>
+  <td><strong>Solve</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-spatialcoordtype"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>SpatialCoordType</strong></td><td> =</td><td>0</td><td><p>Spatial coordinate type</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-tol"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>TOL</strong></td><td> =</td><td>1.0E-5</td><td><p>tolerance for linear iterative solver</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-transient"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>TRANSIENT</strong></td><td> =</td><td>ALGO_OPT_TRANSIENT</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-threed"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>ThreeD</strong></td><td> =</td><td>NSD_3</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-twod_axisymmetric"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>TwoD_AxiSymmetric</strong></td><td> =</td><td>NSD_2_AXISYMMETRIC</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-twod_cartesian"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>TwoD_Cartesian</strong></td><td> =</td><td>NSD_2_CARTESIAN</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-update"></span>procedure(<a href='../interface/kernel_update.html'>kernel_update</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS(Obj)</td><td>::</td>
+  <td><strong>Update</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-writedata"></span>procedure(<a href='../interface/kernel_writedata.html'>kernel_writedata</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS(Obj)</td><td>::</td>
+  <td><strong>WriteData</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-dof"></span>type(DOF_),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dof</strong>(:)</td><td></td><td></td><td><p>dof( 1 ) :: pressure
+ dof( 2 ) :: right hand side (residual)
+ dof( 3 ) :: velocity</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-dt"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>dt</strong></td><td> =</td><td>0.01_DFP</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-err"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>err</strong></td><td> =</td><td>0.0_DFP</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-err0"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>err0</strong></td><td> =</td><td>0.0_DFP</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-err0_res"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>err0_res</strong></td><td> =</td><td>0.0_DFP</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-err_res"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>err_res</strong></td><td> =</td><td>0.0_DFP</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-intvec"></span>type(IntVector_),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>intvec</strong>(:)</td><td></td><td></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-isconverged"></span>procedure(<a href='../interface/kernel_isconverg.html'>kernel_isconverg</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS(Obj)</td><td>::</td>
+  <td><strong>isConverged</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-linsol"></span>class(LinSolver_),</td>
+  
+  <td>public,</td>
+  <td>POINTER</td><td>::</td>
+  <td><strong>linsol</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-local_nptrs"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>local_nptrs</strong>(:)</td><td></td><td></td><td><p>Local Nptrs</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-matprops"></span>real(kind=DFP),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>matprops</strong>(:,:)</td><td></td><td></td><td><p>material properties</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-meshq"></span>real(kind=DFP),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>meshq</strong>(:)</td><td></td><td></td><td><p>Mesh quality</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nodalvar"></span>type(RealVector_),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>nodalVar</strong>(:)</td><td></td><td></td><td><p>nodalVar( 1 ) :: pressure
+ nodalVar( 2 ) :: right hand side (residual)
+ nodalVar( 3 ) :: velocity</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-precondtype~2"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>precondType</strong></td><td> =</td><td>P_ILUD</td><td><p>linear iterative solver preconditioning</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-savestate"></span>procedure(<a href='../interface/kernel_savestate.html'>kernel_savestate</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS( Obj )</td><td>::</td>
+  <td><strong>saveState</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-setkernel"></span>procedure(<a href='../interface/kernel_set_kernel.html'>kernel_set_kernel</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER, PASS( Obj )</td><td>::</td>
+  <td><strong>setKernel</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-solvername~2"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>solverName</strong></td><td> =</td><td>LIS_CG</td><td><p>linear iterative solver name</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-tdof"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>tDOF</strong></td><td> =</td><td>0</td><td><p>total number of degrees of freedom per node</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-telements"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>tELEMENTS</strong></td><td> =</td><td>0</td><td><p>total elements</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-tmaterials"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>tMaterials</strong></td><td> =</td><td>1</td><td><p>Total number of materials</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-tnodes"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>tNODES</strong></td><td> =</td><td>0</td><td><p>total number of nodes in problem</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-tanmat"></span>class(SparseMatrix_),</td>
+  
+  <td>public,</td>
+  <td>POINTER</td><td>::</td>
+  <td><strong>tanmat</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-tn"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>tn</strong></td><td> =</td><td>0.0_DFP</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-tol_res"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>tol_res</strong></td><td> =</td><td>1.0E-5</td><td><p>Time step for solving dynamic/ transient problems</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-tol_sol"></span>real(kind=DFP),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>tol_sol</strong></td><td> =</td><td>1.0E-5</td><td><p>Time step for solving dynamic/ transient problems</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+     
+     
+          
+     
+     <h4>Type-Bound Procedures</h4>
+      <table class="table table-striped varlist">
+      <tbody>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-finalize~13'>Finalize</a></strong>  => kernel_dealloc </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-initiate~12'>Initiate</a></strong>  => kernel_init </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-setdomain'>SetDomain</a></strong>  => kernel_setdomain </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-getmeshquality'>getMeshQuality</a></strong>  => kernel_mesh_quality </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-setalgorithm~2'>setAlgorithm</a></strong>  => kernel_setalgo </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-setlinearsolver'>setLinearSolver</a></strong>  => kernel_setlinsol </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-setmaterial'>setMaterial</a></strong>  => set_material </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-setprecondition~4'>setPrecondition</a></strong>  => kernel_setprecond </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-settanmat'>setTanMat</a></strong>  => kernel_settanmat </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/kernel_.html#boundprocedure-settotalmaterials'>setTotalMaterials</a></strong>  => set_total_materials </td>
+       <td></td></tr>
+      
+       </tbody>
+       </table>
+     
+  </div>
+</div>
+
+     
+    </section>
+  <br>
+    
+    
+    
+
+    
+    
+    
+    </div>
+  </div>
+
+  
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-4"><p>&copy; 2020 
+                                          </p></div>
+        <div class="col-xs-6 col-md-4 col-md-push-4">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/cmacmackin/ford">FORD</a>
+             on 2020-11-07 17:03  
+          </p>
+        </div>
+        <div class="col-xs-12 col-md-4 col-md-pull-4"><p class="text-center"> Fortran Program was developed by Dr Vikas Sharma</p></div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>

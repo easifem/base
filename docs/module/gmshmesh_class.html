@@ -1,0 +1,3976 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <meta name="description" content="Expandable and Scalable Infrastructure for Finite Element Methods">
+    
+    <meta name="author" content="Dr Vikas Sharma" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>gmshMesh_Class &ndash; Fortran Program</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">Fortran Program </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+        
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          
+              
+            <li><a href="../lists/files.html">Source Files</a></li>
+        
+        
+        
+            <li><a href="../lists/modules.html">Modules</a></li>
+        
+            
+                                
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+        
+        
+            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+               
+            <li><a href="../lists/types.html">Derived Types</a></li>
+        
+        
+            </ul>
+            </li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                             
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+
+
+          </ul>
+        
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+  
+  <div class="row">
+    <h1>gmshMesh_Class 
+    <small>Module</small>
+    
+    </h1>
+    
+<div class="row">
+  <div class="col-lg-12">
+<div class="well well-sm">
+  <ul class="list-inline" style="margin-bottom:0px;display:inline">
+     
+     
+     
+     
+    
+    
+     <li><i class="fa fa-list-ol"></i>
+       <a data-toggle="tooltip"
+    data-placement="bottom" data-html="true"
+    title=" 1.6% of total for modules and submodules.">271 statements</a>
+     </li> 
+     
+     
+     
+    <li><i class="fa fa-code"></i><a href="../src/gmshMesh_Class.f90"> Source File</a></li>
+     
+     
+  </ul>
+  <ol class="breadcrumb in-well text-right">
+  
+    
+     <li><a href='../sourcefile/gmshmesh_class.f90.html'>gmshMesh_Class.f90</a></li>
+    
+  
+     <li class="active">gmshMesh_Class</li>
+  </ol>
+</div>
+</div>
+</div>
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    
+<div id="sidebar">
+  
+<h3>Contents</h3>
+ 
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#vars-0">Variables</a></h3></div>
+  <div id="vars-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#variable-typegmshmesh">TypegmshMesh</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-0">Interfaces</a></h3></div>
+  <div id="inters-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-deallocatedata~9">DeallocateData</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-display~6">Display</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-initiate~6">Initiate</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-dom_init_from_gmshmesh">dom_init_from_gmshMesh</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmshmesh">gmshMesh</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_pointer">gmsh_mesh_Pointer</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_constuctor1">gmsh_mesh_constuctor1</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_deallocatedata">gmsh_mesh_deallocatedata</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_display">gmsh_mesh_display</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_1">gmsh_mesh_getelements_1</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_2">gmsh_mesh_getelements_2</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_2c">gmsh_mesh_getelements_2c</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_3">gmsh_mesh_getelements_3</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_3c">gmsh_mesh_getelements_3c</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_4">gmsh_mesh_getelements_4</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_4c">gmsh_mesh_getelements_4c</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getnodes_array">gmsh_mesh_getnodes_array</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getnodes_file">gmsh_mesh_getnodes_file</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_initiate">gmsh_mesh_initiate</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_telements_1">gmsh_mesh_telements_1</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_telements_2">gmsh_mesh_telements_2</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_telements_3">gmsh_mesh_telements_3</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_totalnodes">gmsh_mesh_totalnodes</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_write_mesh">gmsh_mesh_write_mesh</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_write_nodedata_1">gmsh_mesh_write_nodedata_1</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_write_nodedata_2">gmsh_mesh_write_nodedata_2</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-mesh_generate">mesh_generate</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-mesh_write">mesh_write</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#types-0">Derived Types</a></h3></div>
+  <div id="types-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#type-gmshmeshpointer_">gmshMeshPointer_</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#type-gmshmesh_">gmshMesh_</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#funcs-0">Functions</a></h3></div>
+  <div id="funcs-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#proc-gmsh_mesh_constructor_1">gmsh_mesh_constructor_1</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    
+      <br>
+    
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Uses</h3>
+      </div>
+      <ul class="list-group">
+      
+      <li class="list-group-item">
+  <ul class="list-inline">
+    
+    <li><a href='../module/basetype.html'>BaseType</a></li>
+    
+    <li><a href='../module/globaldata.html'>GlobalData</a></li>
+    
+    <li><a href='../module/mshformat_class.html'>mshFormat_Class</a></li>
+    
+    <li><a href='../module/mshphysicalnames_class.html'>mshPhysicalNames_Class</a></li>
+    
+    <li><a href='../module/mshentity_class.html'>mshEntity_Class</a></li>
+    
+    <li><a href='../module/mshnodes_class.html'>mshNodes_Class</a></li>
+    
+    <li><a href='../module/mshelements_class.html'>mshElements_Class</a></li>
+    
+    <li><a href='../module/mesh_class.html'>Mesh_Class</a></li>
+    
+    <li><a href='../module/fe.html'>FE</a></li>
+    
+    <li><a href='../module/domain_class.html'>Domain_Class</a></li>
+    
+  </ul>
+      </li>
+      
+      
+      
+      </ul>
+    </div>
+    
+
+    
+    
+
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+      
+<h3>Contents</h3>
+ 
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#vars-1">Variables</a></h3></div>
+  <div id="vars-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#variable-typegmshmesh">TypegmshMesh</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-1">Interfaces</a></h3></div>
+  <div id="inters-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-deallocatedata~9">DeallocateData</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-display~6">Display</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-initiate~6">Initiate</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-dom_init_from_gmshmesh">dom_init_from_gmshMesh</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmshmesh">gmshMesh</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_pointer">gmsh_mesh_Pointer</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_constuctor1">gmsh_mesh_constuctor1</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_deallocatedata">gmsh_mesh_deallocatedata</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_display">gmsh_mesh_display</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_1">gmsh_mesh_getelements_1</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_2">gmsh_mesh_getelements_2</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_2c">gmsh_mesh_getelements_2c</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_3">gmsh_mesh_getelements_3</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_3c">gmsh_mesh_getelements_3c</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_4">gmsh_mesh_getelements_4</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getelements_4c">gmsh_mesh_getelements_4c</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getnodes_array">gmsh_mesh_getnodes_array</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_getnodes_file">gmsh_mesh_getnodes_file</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_initiate">gmsh_mesh_initiate</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_telements_1">gmsh_mesh_telements_1</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_telements_2">gmsh_mesh_telements_2</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_telements_3">gmsh_mesh_telements_3</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_totalnodes">gmsh_mesh_totalnodes</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_write_mesh">gmsh_mesh_write_mesh</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_write_nodedata_1">gmsh_mesh_write_nodedata_1</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-gmsh_mesh_write_nodedata_2">gmsh_mesh_write_nodedata_2</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-mesh_generate">mesh_generate</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#interface-mesh_write">mesh_write</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#types-1">Derived Types</a></h3></div>
+  <div id="types-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#type-gmshmeshpointer_">gmshMeshPointer_</a>
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#type-gmshmesh_">gmshMesh_</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#funcs-1">Functions</a></h3></div>
+  <div id="funcs-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/gmshmesh_class.html#proc-gmsh_mesh_constructor_1">gmsh_mesh_constructor_1</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+    
+
+    
+    <section>
+    <h2>Variables</h2>
+    
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th>
+
+<th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-typegmshmesh"></span>type(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>TypegmshMesh</strong></td><td> =</td><td>gmshMesh_(mshFile=TypeFile, Format=TypemshFormat, PhysicalNames=TypeMSHPhysicalNames, PointEntities=NULL(), CurveEntities=NULL(), SurfaceEntities=NULL(), VolumeEntities=NULL(), Nodes=TypeMshNodes, Elements=TypemshElements)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+    </section>
+    <br>
+    
+    
+    
+    
+    
+    <section>
+   <h2>Interfaces</h2>
+   
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-deallocatedata~9"></span><h3>public interface <a href='../interface/deallocatedata~9.html'>DeallocateData</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/gmsh_mesh_deallocatedata.html'>gmsh_mesh_deallocatedata</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This will deallocate data</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-display~6"></span><h3>public interface <a href='../interface/display~6.html'>Display</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/gmsh_mesh_display.html'>gmsh_mesh_display</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine display the content of gmshmesh object</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~6"></span><h3>public interface <a href='../interface/initiate~6.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/gmsh_mesh_initiate.html'>gmsh_mesh_initiate</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine generates the gmshMesh_ object</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-dom_init_from_gmshmesh"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine initiate <a href="../type/domain_.html">Domain_</a> by reading gmshMesh file</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine dom_init_from_gmshMesh(mshobj, obj, facetmesh)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine initiate <a href="../type/domain_.html">Domain_</a> by reading gmshMesh file
+ This is a high level routine</p><a href="../interface/dom_init_from_gmshmesh.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>mshobj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Domain_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(String),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>facetmesh</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmshmesh"></span><h3>public interface <a href='../interface/gmshmesh.html'>gmshMesh</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/gmsh_mesh_constuctor1.html'>gmsh_mesh_constuctor1</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This function will create the <a href="../type/gmshmesh_.html">gmshMesh_</a> object</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_pointer"></span><h3>public interface <a href='../interface/gmsh_mesh_pointer.html'>gmsh_mesh_Pointer</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private function <a href='../proc/gmsh_mesh_constructor_1.html'>gmsh_mesh_constructor_1</a>(Path, FileName, Extension, NSD) result(Obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Path</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FileName</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Extension</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NSD</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),
+  POINTER</small></h4>
+  
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_constuctor1"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function will create the <a href="../type/gmshmesh_.html">gmshMesh_</a> object</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private function gmsh_mesh_constuctor1(Path, FileName, Extension, NSD) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function will create the <a href="../type/gmshmesh_.html">gmshMesh_</a> object</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Path</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FileName</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Extension</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NSD</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(<a href='../type/gmshmesh_.html'>gmshMesh_</a>)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_deallocatedata"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This will deallocate data</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_deallocatedata(obj)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine deallocate data</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_display"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine display the content of gmshmesh object</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_display(obj, msg, UnitNo)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine display the content of obj</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>msg</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>UnitNo</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getelements_1"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns a mesh of elements;</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getelements_1(obj, MeshObj, FEObj)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns a single <a href="../type/mesh_.html">Mesh_</a> object containing all elements</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Mesh_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>MeshObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FEObj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getelements_2"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine builds a mesh of elements with same co-dimensions</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getelements_2(obj, MeshObj, XiDim, FEObj, Offset)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine builds a mesh of elements with same co-dimensions</p><a href="../interface/gmsh_mesh_getelements_2.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Mesh_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>MeshObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XiDim</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FEObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Offset</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getelements_2c"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine build a <a href="../type/mesh_.html">Mesh_</a> in <a href="../type/domain_.html">Domain_</a> by using <a href="../type/gmshmesh_.html">gmshMesh_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getelements_2c(Obj, Dom, indx, XiDim, FEObj, Offset)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine builds a mesh of elements with same co-dimensions</p><a href="../interface/gmsh_mesh_getelements_2c.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Domain_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>Dom</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>indx</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XiDim</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FEObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Offset</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getelements_3"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the mesh of elements</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getelements_3(obj, MeshObj, XiDim, Tag, FEObj, Offset)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the mesh of elements; it applies two levels of
+ filter</p><a href="../interface/gmsh_mesh_getelements_3.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Mesh_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>MeshObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XiDim</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Tag</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FEObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Offset</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getelements_3c"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine build a <a href="../type/mesh_.html">Mesh_</a> in <a href="../type/domain_.html">Domain_</a> by using <a href="../type/gmshmesh_.html">gmshMesh_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getelements_3c(Obj, Dom, Indx, XiDim, Tag, FEObj, Offset)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the mesh of elements; it applies two levels of
+ filter</p><a href="../interface/gmsh_mesh_getelements_3c.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Domain_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>Dom</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Indx</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XiDim</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Tag</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FEObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Offset</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getelements_4"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the mesh of elements</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getelements_4(obj, MeshObj, XiDim, TagNames, FEObj, Offset)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the mesh of elements; it applies two levels of
+ filter</p><a href="../interface/gmsh_mesh_getelements_4.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Mesh_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>MeshObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XiDim</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(String),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>TagNames</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FEObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Offset</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getelements_4c"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine build a <a href="../type/mesh_.html">Mesh_</a> in <a href="../type/domain_.html">Domain_</a> by using <a href="../type/gmshmesh_.html">gmshMesh_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getelements_4c(Obj, Dom, Indx, XiDim, TagNames, FEObj, Offset)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the mesh of elements; it applies two levels of
+ filter</p><a href="../interface/gmsh_mesh_getelements_4c.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Domain_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>Dom</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Indx</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XiDim</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(String),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>TagNames</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FEObj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Offset</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getnodes_array"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine retunr the nodal coordinates</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getnodes_array(obj, Nodes)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the nodal coordinates</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Nodes</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_getnodes_file"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine retunr the nodal coordinates</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_getnodes_file(obj, UnitNo, Str, EndStr)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the nodal coordinates</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>UnitNo</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Str</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>EndStr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_initiate"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine generates the gmshMesh_ object</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_initiate(obj, Path, FileName, Extension, NSD)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine reads the .msh file and creates the object</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Path</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FileName</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Extension</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NSD</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_telements_1"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function returns the total element in the mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure function gmsh_mesh_telements_1(obj) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function returns the total element in the mesh</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_telements_2"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function returns the total element in the mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure function gmsh_mesh_telements_2(obj, XiDim) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function returns the total element in the mesh
+ Xidim is a codimension based filter
+ Xidim=0 =&gt; Point
+ Xidim=1 =&gt; Curve
+ Xidim=2 =&gt; Surface
+ Xidim=3 =&gt; Volume</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XiDim</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_telements_3"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function returns the total element in the mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure function gmsh_mesh_telements_3(obj, XiDim, Tag) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function returns the total element in the mesh
+ We can filter elements based on <code>Xidim</code> and <code>tag</code></p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XiDim</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Tag</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_totalnodes"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function will return the total number of nodes in mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure function gmsh_mesh_totalnodes(obj) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function will return the total number of nodes in mesh</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_write_mesh"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_write_mesh(obj, Path, FileName, Extension, Nodes)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Path</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FileName</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Extension</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Nodes</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_write_nodedata_1"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine writes the node data information in a msh file format</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_write_nodedata_1(obj, x, dofobj, name, indx, local_nptrs, nodes)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine writes the nodal values of a variable <code>x</code> into msh file</p><a href="../interface/gmsh_mesh_write_nodedata_1.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>x</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(DOF_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dofobj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=1),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>name</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>indx</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>local_nptrs</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>nodes</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-gmsh_mesh_write_nodedata_2"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine writes the node data information in a gmshMesh file format</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine gmsh_mesh_write_nodedata_2(obj, x, dofobj, indx, local_nptrs, nodes)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine writes the nodal values of a variable <code>x</code> into gmshMesh file</p><a href="../interface/gmsh_mesh_write_nodedata_2.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>x</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(DOF_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dofobj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>indx</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>local_nptrs</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>nodes</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-mesh_generate"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This will add mesh generation command to .geo file</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private function mesh_generate(Obj, dim) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This will add mesh generation command to .geo file</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dim</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-mesh_write"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function will dump the buffer content in to a file</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private function mesh_write(Obj, UnitNo) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function will dump the buffer content in to a file</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>UnitNo</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+    </section>
+  <br>
+    
+
+    
+    
+    
+    <section>
+     <h2>Derived Types</h2>
+   
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-gmshmeshpointer_"></span><h3>type, public :: <a href='../type/gmshmeshpointer_.html'>gmshMeshPointer_</a>
+    
+  </h3></div>
+  <div class="panel-body">
+    
+     
+     <h4>Components</h4>
+    
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th>
+
+<th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-ptr~9"></span>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),</td>
+  
+  <td>public,</td>
+  <td>POINTER</td><td>::</td>
+  <td><strong>Ptr</strong></td><td>=> </td><td>NULL()</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+     
+     
+          
+     
+  </div>
+</div>
+
+     
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-gmshmesh_"></span><h3>type, public :: <a href='../type/gmshmesh_.html'>gmshMesh_</a>
+    
+  </h3></div>
+  <div class="panel-body">
+    
+    
+    <p>This class handles the mesh generation by gmsh
+ This class can generate the mesh and reads the mesh file</p>
+    
+     
+     <h4>Components</h4>
+    
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th>
+
+<th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-curveentities"></span>type(mshEntity_),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>CurveEntities</strong>(:)</td><td></td><td></td><td><p>curve entities</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-elements"></span>type(mshElements_),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>Elements</strong></td><td></td><td></td><td><p>elements</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-format"></span>type(mshFormat_),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>Format</strong></td><td></td><td></td><td><p>mesh format</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nodes~2"></span>type(mshNodes_),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>Nodes</strong></td><td></td><td></td><td><p>nodes</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-physicalnames"></span>type(mshPhysicalNames_),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>PhysicalNames</strong></td><td></td><td></td><td><p>mesh physical groups</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-pointentities"></span>type(mshEntity_),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>PointEntities</strong>(:)</td><td></td><td></td><td><p>point entities</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-surfaceentities"></span>type(mshEntity_),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>SurfaceEntities</strong>(:)</td><td></td><td></td><td><p>surface entities</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-volumeentities"></span>type(mshEntity_),</td>
+  
+  <td>public,</td>
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>VolumeEntities</strong>(:)</td><td></td><td></td><td><p>volume entities</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-buffer"></span>type(Buffer_),</td>
+  
+  <td>public,</td>
+  <td>POINTER</td><td>::</td>
+  <td><strong>buffer</strong></td><td>=> </td><td>NULL()</td><td><p>buffer to recoord coommands</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-mshfile"></span>type(File_),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>mshFile</strong></td><td></td><td></td><td><p>mesh file</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nsd~2"></span>integer(kind=I4B),</td>
+  
+  <td>public</td>
+  <td></td><td>::</td>
+  <td><strong>nsd</strong></td><td> =</td><td>0</td><td><p>Spatial dimension</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+     
+     
+          
+     
+     <h4>Type-Bound Procedures</h4>
+      <table class="table table-striped varlist">
+      <tbody>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-finalize~7'>Finalize</a></strong>  => gmsh_mesh_deallocatedata </td>
+       <td><p>deallocate the data</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-initiate~7'>Initiate</a></strong>  => gmsh_mesh_initiate </td>
+       <td><p>initiate the object</p></td></tr>
+      
+       <tr><td>generic, public :: <strong><a href='../type/gmshmesh_.html#boundprocedure-totalelements~2'>TotalElements</a></strong>  => gmsh_mesh_telements_1, gmsh_mesh_telements_2, gmsh_mesh_telements_3 </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-totalnodes~2'>TotalNodes</a></strong>  => gmsh_mesh_totalnodes </td>
+       <td><p>returns total nodes in mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-writemesh'>WriteMesh</a></strong>  => gmsh_mesh_write_mesh </td>
+       <td></td></tr>
+      
+       <tr><td>generic, public :: <strong><a href='../type/gmshmesh_.html#boundprocedure-writenodedata~2'>WriteNodeData</a></strong>  => gmsh_mesh_write_nodedata_1, gmsh_mesh_write_nodedata_2 </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( mshobj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-dom_init_from_gmshmesh'>dom_init_from_gmshMesh</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-generate'>generate</a></strong>  => mesh_generate </td>
+       <td></td></tr>
+      
+       <tr><td>generic, public :: <strong><a href='../type/gmshmesh_.html#boundprocedure-getelements'>getElements</a></strong>  => gmsh_mesh_getelements_1, gmsh_mesh_getelements_2, gmsh_mesh_getelements_2c, gmsh_mesh_getelements_3, gmsh_mesh_getelements_3c, gmsh_mesh_getelements_4, gmsh_mesh_getelements_4c, dom_init_from_gmshMesh </td>
+       <td></td></tr>
+      
+       <tr><td>generic, public :: <strong><a href='../type/gmshmesh_.html#boundprocedure-getnodes'>getNodes</a></strong>  => gmsh_mesh_getnodes_array, gmsh_mesh_getnodes_file </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getelements_1'>gmsh_mesh_getelements_1</a></strong>  </td>
+       <td><p>return finite element mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getelements_2'>gmsh_mesh_getelements_2</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getelements_2c'>gmsh_mesh_getelements_2c</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getelements_3'>gmsh_mesh_getelements_3</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getelements_3c'>gmsh_mesh_getelements_3c</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getelements_4'>gmsh_mesh_getelements_4</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getelements_4c'>gmsh_mesh_getelements_4c</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, private, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getnodes_array'>gmsh_mesh_getnodes_array</a></strong>  </td>
+       <td><p>returns nodes in an array</p></td></tr>
+      
+       <tr><td>procedure, private, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_getnodes_file'>gmsh_mesh_getnodes_file</a></strong>  </td>
+       <td><p>writes notes to a file</p></td></tr>
+      
+       <tr><td>procedure, private, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_telements_1'>gmsh_mesh_telements_1</a></strong>  </td>
+       <td><p>returns total elements in mesh</p></td></tr>
+      
+       <tr><td>procedure, private, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_telements_2'>gmsh_mesh_telements_2</a></strong>  </td>
+       <td><p>returns total elements in mesh</p></td></tr>
+      
+       <tr><td>procedure, private, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_telements_3'>gmsh_mesh_telements_3</a></strong>  </td>
+       <td><p>returns total elements in mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_write_nodedata_1'>gmsh_mesh_write_nodedata_1</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-gmsh_mesh_write_nodedata_2'>gmsh_mesh_write_nodedata_2</a></strong>  </td>
+       <td></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/gmshmesh_.html#boundprocedure-write~2'>write</a></strong>  => mesh_write </td>
+       <td></td></tr>
+      
+       </tbody>
+       </table>
+     
+  </div>
+</div>
+
+     
+    </section>
+  <br>
+    
+    
+     
+    <section>
+    <h2>Functions</h2>
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-gmsh_mesh_constructor_1"></span><h3>
+private function <a href='../proc/gmsh_mesh_constructor_1.html'>gmsh_mesh_constructor_1</a>(Path, FileName, Extension, NSD) result(Obj)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Path</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>FileName</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>Extension</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NSD</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>class(<a href='../type/gmshmesh_.html'>gmshMesh_</a>),
+  POINTER</small></h4>
+  
+    
+
+  </div>
+  </div>
+
+    
+    </section>
+    <br>
+    
+
+    
+    
+    
+    </div>
+  </div>
+
+  
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-4"><p>&copy; 2020 
+                                          </p></div>
+        <div class="col-xs-6 col-md-4 col-md-push-4">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/cmacmackin/ford">FORD</a>
+             on 2020-11-07 17:03  
+          </p>
+        </div>
+        <div class="col-xs-12 col-md-4 col-md-pull-4"><p class="text-center"> Fortran Program was developed by Dr Vikas Sharma</p></div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>
