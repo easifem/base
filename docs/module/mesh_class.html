@@ -10,7 +10,7 @@
     <meta name="author" content="Dr Vikas Sharma" >
     <link rel="icon" href="../favicon.png">
 
-    <title>Mesh_Class &ndash; EASIFEM</title>
+    <title>Mesh_Class &ndash; Fortran Program</title>
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/pygments.css" rel="stylesheet">
@@ -44,13 +44,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../index.html">EASIFEM </a>
+          <a class="navbar-brand" href="../index.html">Fortran Program </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
         
-            <li><a href='../page/index.html'>Mesh Class</a></li>
-      
             <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
               <a href="#" class="dropdown-toggle"
               data-toggle="dropdown" role="button"
@@ -59,7 +57,7 @@
         <ul class="dropdown-menu">
           
               
-            <li><a href="../sourcefile/mesh_class.f90.html">Source File</a></li>
+            <li><a href="../lists/files.html">Source Files</a></li>
         
         
         
@@ -69,6 +67,8 @@
                                 
             <li><a href="../lists/procedures.html">Procedures</a></li>
         
+        
+            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
                
             <li><a href="../lists/types.html">Derived Types</a></li>
         
@@ -77,7 +77,7 @@
             </li>
 
 
-<li class="visible-xs hidden-sm visible-lg"><a href="../sourcefile/mesh_class.f90.html">Source File</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
 
 
 
@@ -87,6 +87,8 @@
 
 <li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
 
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
                              
 <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
 
@@ -128,7 +130,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title="100.0% of total for modules and submodules.">60 statements</a>
+    title=" 0.9% of total for modules and submodules.">153 statements</a>
      </li> 
      
      
@@ -171,6 +173,8 @@
   <div id="vars-0" class="panel-collapse collapse">
     <div class="list-group">
       
+      <a class="list-group-item" href="../module/mesh_class.html#variable-typemesh">TypeMesh</a>
+      
       <a class="list-group-item" href="../module/mesh_class.html#variable-default_factor">default_factor</a>
       
     </div>
@@ -190,13 +194,43 @@
   <div id="inters-0" class="panel-collapse collapse">
     <div class="list-group">
       
-      <a class="list-group-item" href="../module/mesh_class.html#interface-initiate">Initiate</a>
+      <a class="list-group-item" href="../module/mesh_class.html#interface-constructor1">Constructor1</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-deallocatedata~2">DeallocateData</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-deallocate_data">Deallocate_Data</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-display">Display</a>
       
       <a class="list-group-item" href="../module/mesh_class.html#interface-initiate~2">Initiate</a>
       
+      <a class="list-group-item" href="../module/mesh_class.html#interface-mesh">Mesh</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-mesh_pointer">Mesh_Pointer</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-set_element">Set_element</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-add_element">add_element</a>
+      
       <a class="list-group-item" href="../module/mesh_class.html#interface-allocatemeshsize">allocateMeshSize</a>
       
-      <a class="list-group-item" href="../module/mesh_class.html#interface-init_meshdata_1">init_meshdata_1</a>
+      <a class="list-group-item" href="../module/mesh_class.html#interface-display_mesh">display_mesh</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-getelement_pointer">getElement_Pointer</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-getnptrs">getNptrs</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-get_nptrs">get_nptrs</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-mesh_pointer_get_nptrs">mesh_pointer_get_nptrs</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-remove_element">remove_element</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-setmaterialtype_1">setMaterialType_1</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-set_total_elements">set_total_elements</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-total_elements">total_elements</a>
       
     </div>
   </div>
@@ -210,7 +244,7 @@
   <div id="types-0" class="panel-collapse collapse">
     <div class="list-group">
       
-      <a class="list-group-item" href="../module/mesh_class.html#type-meshdata_">MeshData_</a>
+      <a class="list-group-item" href="../module/mesh_class.html#type-meshpointer_">MeshPointer_</a>
       
       <a class="list-group-item" href="../module/mesh_class.html#type-mesh_">Mesh_</a>
       
@@ -218,6 +252,18 @@
   </div>
 </div>
 
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#funcs-0">Functions</a></h3></div>
+  <div id="funcs-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/mesh_class.html#proc-constructor_1">Constructor_1</a>
+      
+    </div>
+  </div>
+</div>
 
 
 
@@ -234,8 +280,9 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <p>The module <code>Mesh_Class</code> contains three data types <code>Mesh_</code>, <code>MeshData_</code>, and
- <code>MeshConnectivity_</code>.</p>
+    <p><code>Mesh_Class</code> module contains three data user defined data types related to
+  finite element meshes: <a href="../type/mesh_.html">Mesh_</a>, <a href="../type/meshdata_.html">MeshData_</a>, and <a href="../type/meshconnectivity_.html">MeshConnectivity_</a>.
+ This module contains <code>Mesh_</code> <code>MeshData_</code> and <code>MeshConnectivity_</code></p>
       <br>
     
   
@@ -248,146 +295,16 @@
       <li class="list-group-item">
   <ul class="list-inline">
     
-    <li>BaseType</li>
+    <li><a href='../module/basetype.html'>BaseType</a></li>
     
-    <li>GlobalData</li>
+    <li><a href='../module/globaldata.html'>GlobalData</a></li>
     
-    <li>StringiFor</li>
-    
-    <li>FE</li>
+    <li><a href='../module/fe.html'>FE</a></li>
     
   </ul>
       </li>
       
       
-      
-      <li class="list-group-item">
-  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
- "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Generated by graphviz version 2.43.0 (0)
- -->
-<!-- Title: module~~mesh_class~~UsesGraph Pages: 1 -->
-<svg id="modulemesh_classUsesGraph" width="178pt" height="154pt"
- viewBox="0.00 0.00 178.30 153.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="module~~mesh_class~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 149.5)">
-<title>module~~mesh_class~~UsesGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-149.5 174.3,-149.5 174.3,4 -4,4"/>
-<!-- module~mesh_class -->
-<g id="module~~mesh_class~~UsesGraph_node1" class="node">
-<title>module~mesh_class</title>
-<polygon fill="none" stroke="black" points="170.19,-83.26 100.65,-83.26 100.65,-61.24 170.19,-61.24 170.19,-83.26"/>
-<text text-anchor="middle" x="135.42" y="-69.1" font-family="Helvetica,sans-Serif" font-size="10.50">Mesh_Class</text>
-</g>
-<!-- BaseType -->
-<g id="module~~mesh_class~~UsesGraph_node2" class="node">
-<title>BaseType</title>
-<polygon fill="#337ab7" stroke="#337ab7" points="61.47,-145.26 3.06,-145.26 3.06,-123.24 61.47,-123.24 61.47,-145.26"/>
-<text text-anchor="middle" x="32.27" y="-131.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">BaseType</text>
-</g>
-<!-- module~mesh_class&#45;&gt;BaseType -->
-<g id="module~~mesh_class~~UsesGraph_edge1" class="edge">
-<title>module~mesh_class&#45;&gt;BaseType</title>
-<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M116.33,-83.33C100.75,-92.89 78.03,-106.81 60.29,-117.68"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="58.23,-114.84 51.53,-123.05 61.89,-120.81 58.23,-114.84"/>
-</g>
-<!-- StringiFor -->
-<g id="module~~mesh_class~~UsesGraph_node3" class="node">
-<title>StringiFor</title>
-<polygon fill="#337ab7" stroke="#337ab7" points="60.78,-104.26 3.75,-104.26 3.75,-82.24 60.78,-82.24 60.78,-104.26"/>
-<text text-anchor="middle" x="32.27" y="-90.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">StringiFor</text>
-</g>
-<!-- module~mesh_class&#45;&gt;StringiFor -->
-<g id="module~~mesh_class~~UsesGraph_edge2" class="edge">
-<title>module~mesh_class&#45;&gt;StringiFor</title>
-<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M100.45,-79.3C90.91,-81.28 80.48,-83.45 70.75,-85.47"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="70,-82.05 60.92,-87.51 71.42,-88.9 70,-82.05"/>
-</g>
-<!-- FE -->
-<g id="module~~mesh_class~~UsesGraph_node4" class="node">
-<title>FE</title>
-<polygon fill="#337ab7" stroke="#337ab7" points="59.27,-63.26 5.27,-63.26 5.27,-41.24 59.27,-41.24 59.27,-63.26"/>
-<text text-anchor="middle" x="32.27" y="-49.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">FE</text>
-</g>
-<!-- module~mesh_class&#45;&gt;FE -->
-<g id="module~~mesh_class~~UsesGraph_edge3" class="edge">
-<title>module~mesh_class&#45;&gt;FE</title>
-<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M100.45,-65.53C90.38,-63.54 79.32,-61.36 69.13,-59.34"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="69.79,-55.9 59.3,-57.4 68.43,-62.77 69.79,-55.9"/>
-</g>
-<!-- GlobalData -->
-<g id="module~~mesh_class~~UsesGraph_node5" class="node">
-<title>GlobalData</title>
-<polygon fill="#337ab7" stroke="#337ab7" points="64.3,-22.26 0.23,-22.26 0.23,-0.24 64.3,-0.24 64.3,-22.26"/>
-<text text-anchor="middle" x="32.27" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">GlobalData</text>
-</g>
-<!-- module~mesh_class&#45;&gt;GlobalData -->
-<g id="module~~mesh_class~~UsesGraph_edge4" class="edge">
-<title>module~mesh_class&#45;&gt;GlobalData</title>
-<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M115.86,-61.06C100.32,-51.69 77.93,-38.18 60.38,-27.6"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="62.07,-24.53 51.7,-22.37 58.46,-30.53 62.07,-24.53"/>
-</g>
-</g>
-</svg>
-</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
-    <p>Nodes of different colours represent the following: </p>
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
- "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Generated by graphviz version 2.43.0 (0)
- -->
-<!-- Title: Graph Key Pages: 1 -->
-<svg width="484pt" height="31pt"
- viewBox="0.00 0.00 483.85 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
-<title>Graph Key</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-26.5 479.85,-26.5 479.85,4 -4,4"/>
-<!-- Module -->
-<g id="node1" class="node">
-<title>Module</title>
-<polygon fill="#337ab7" stroke="#337ab7" points="54,-22.26 0,-22.26 0,-0.24 54,-0.24 54,-22.26"/>
-<text text-anchor="middle" x="27" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
-</g>
-<!-- Submodule -->
-<g id="node2" class="node">
-<title>Submodule</title>
-<polygon fill="#5bc0de" stroke="#5bc0de" points="137.62,-22.26 72.38,-22.26 72.38,-0.24 137.62,-0.24 137.62,-22.26"/>
-<text text-anchor="middle" x="105" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
-</g>
-<!-- Subroutine -->
-<g id="node3" class="node">
-<title>Subroutine</title>
-<polygon fill="#d9534f" stroke="#d9534f" points="218.29,-22.26 155.71,-22.26 155.71,-0.24 218.29,-0.24 218.29,-22.26"/>
-<text text-anchor="middle" x="187" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
-</g>
-<!-- Function -->
-<g id="node4" class="node">
-<title>Function</title>
-<polygon fill="#d94e8f" stroke="#d94e8f" points="290,-22.26 236,-22.26 236,-0.24 290,-0.24 290,-22.26"/>
-<text text-anchor="middle" x="263" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
-</g>
-<!-- Program -->
-<g id="node5" class="node">
-<title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="362,-22.26 308,-22.26 308,-0.24 362,-0.24 362,-22.26"/>
-<text text-anchor="middle" x="335" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
-</g>
-<!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
-<title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="black" points="475.71,-22.26 380.29,-22.26 380.29,-0.24 475.71,-0.24 475.71,-22.26"/>
-<text text-anchor="middle" x="428" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
-</g>
-</g>
-</svg>
-
-    
-    <p>Solid arrows point from a submodule to the (sub)module which it is
-    descended from. Dashed arrows point from a module or program unit to 
-    modules which it uses. Where possible, edges connecting nodes are given different colours to make them easier to distinguish in large graphs.
-    </p>
-    </div></div></div></div>
-      </li>
       
       </ul>
     </div>
@@ -410,6 +327,8 @@
   <div id="vars-1" class="panel-collapse collapse">
     <div class="list-group">
       
+      <a class="list-group-item" href="../module/mesh_class.html#variable-typemesh">TypeMesh</a>
+      
       <a class="list-group-item" href="../module/mesh_class.html#variable-default_factor">default_factor</a>
       
     </div>
@@ -429,13 +348,43 @@
   <div id="inters-1" class="panel-collapse collapse">
     <div class="list-group">
       
-      <a class="list-group-item" href="../module/mesh_class.html#interface-initiate">Initiate</a>
+      <a class="list-group-item" href="../module/mesh_class.html#interface-constructor1">Constructor1</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-deallocatedata~2">DeallocateData</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-deallocate_data">Deallocate_Data</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-display">Display</a>
       
       <a class="list-group-item" href="../module/mesh_class.html#interface-initiate~2">Initiate</a>
       
+      <a class="list-group-item" href="../module/mesh_class.html#interface-mesh">Mesh</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-mesh_pointer">Mesh_Pointer</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-set_element">Set_element</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-add_element">add_element</a>
+      
       <a class="list-group-item" href="../module/mesh_class.html#interface-allocatemeshsize">allocateMeshSize</a>
       
-      <a class="list-group-item" href="../module/mesh_class.html#interface-init_meshdata_1">init_meshdata_1</a>
+      <a class="list-group-item" href="../module/mesh_class.html#interface-display_mesh">display_mesh</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-getelement_pointer">getElement_Pointer</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-getnptrs">getNptrs</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-get_nptrs">get_nptrs</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-mesh_pointer_get_nptrs">mesh_pointer_get_nptrs</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-remove_element">remove_element</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-setmaterialtype_1">setMaterialType_1</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-set_total_elements">set_total_elements</a>
+      
+      <a class="list-group-item" href="../module/mesh_class.html#interface-total_elements">total_elements</a>
       
     </div>
   </div>
@@ -449,7 +398,7 @@
   <div id="types-1" class="panel-collapse collapse">
     <div class="list-group">
       
-      <a class="list-group-item" href="../module/mesh_class.html#type-meshdata_">MeshData_</a>
+      <a class="list-group-item" href="../module/mesh_class.html#type-meshpointer_">MeshPointer_</a>
       
       <a class="list-group-item" href="../module/mesh_class.html#type-mesh_">Mesh_</a>
       
@@ -457,6 +406,18 @@
   </div>
 </div>
 
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#funcs-1">Functions</a></h3></div>
+  <div id="funcs-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/mesh_class.html#proc-constructor_1">Constructor_1</a>
+      
+    </div>
+  </div>
+</div>
 
 
 
@@ -492,6 +453,20 @@
   
 <tr>
   
+  <td><span class="anchor" id="variable-typemesh"></span>type(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>TypeMesh</strong></td><td> =</td><td>Mesh_(Elem=NULL(), NSD=0, tElements=0, maxElements=0)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
   <td><span class="anchor" id="variable-default_factor"></span>real(kind=DFP),</td>
   
   <td>private,</td>
@@ -515,13 +490,284 @@
    
      
 <div class="panel panel-default">
-  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate"></span><h3>public interface <a href='../interface/initiate.html'>Initiate</a>
+  <div class="panel-heading codesum"><span class="anchor" id="interface-constructor1"></span><h3>interface 
     
   </h3></div>
   
   <div class="panel-body">
     
-    <p>Generic subroutine for constructing the <a href="../type/mesh_.html">Mesh_</a></p>
+    <p>Function for constructing <a href="../type/mesh_.html">Mesh_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure function Constructor1(NSD, tElements, factor) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Function for constructing <a href="../type/mesh_.html">Mesh_</a></p><a href="../interface/constructor1.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NSD</strong></td><td><p>spatial dimension</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>tElements</strong></td><td><p>totat number of elements in mesh</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>factor</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(<a href='../type/mesh_.html'>Mesh_</a>)
+  </small></h4>
+  <p>Mesh object</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-deallocatedata~2"></span><h3>public interface <a href='../interface/deallocatedata~2.html'>DeallocateData</a>
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Generic subroutine for deallcating data stored in <a href="../type/mesh_.html">Mesh_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/deallocate_data.html'>Deallocate_Data</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>Deallocate data stored in <a href="../type/mesh_.html">Mesh_</a></p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-deallocate_data"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Deallocate data stored in <a href="../type/mesh_.html">Mesh_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine Deallocate_Data(Obj)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Deallocate data stored in <a href="../type/mesh_.html">Mesh_</a></p><a href="../interface/deallocate_data.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>mesh object</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-display"></span><h3>public interface <a href='../interface/display.html'>Display</a>
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>generic routine to display content of mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/display_mesh.html'>display_mesh</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>display content of <a href="../type/mesh_.html">Mesh_</a></p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~2"></span><h3>public interface <a href='../interface/initiate~2.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Generic routine for constructing <a href="../type/mesh_.html">Mesh_</a></p>
   </div>
   
   <ul class="list-group">
@@ -538,6 +784,14 @@ private interface <a href='../interface/allocatemeshsize.html'>allocateMeshSize<
    
 </h3>
     
+
+
+
+
+
+
+
+<p>Allocate the size of the mesh</p>
     
     <h4>Arguments</h4>
     
@@ -554,13 +808,13 @@ private interface <a href='../interface/allocatemeshsize.html'>allocateMeshSize<
     
      
 <div class="panel panel-default">
-  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~2"></span><h3>private interface <a href='../interface/initiate~2.html'>Initiate</a>
+  <div class="panel-heading codesum"><span class="anchor" id="interface-mesh"></span><h3>public interface <a href='../interface/mesh.html'>Mesh</a>
     
   </h3></div>
   
   <div class="panel-body">
     
-    <p>Generic subroutine for constructing <a href="../type/meshdata_.html">MeshData_</a></p>
+    <p>Generic function for constructing <a href="../type/mesh_.html">Mesh_</a></p>
   </div>
   
   <ul class="list-group">
@@ -571,7 +825,7 @@ private interface <a href='../interface/allocatemeshsize.html'>allocateMeshSize<
     
     
     <h3>
-private interface <a href='../interface/init_meshdata_1.html'>init_meshdata_1</a>()
+private interface <a href='../interface/constructor1.html'>Constructor1</a>()
     
     
    
@@ -582,19 +836,9 @@ private interface <a href='../interface/init_meshdata_1.html'>init_meshdata_1</a
 
 
 
-  <dl class="dl-horizontal">
-    
-    <dt>Author</dt><dd>Dr Vikas Sharma</dd>
-    
-    
-    
-    
-    
-  </dl>
 
 
-
-<p>Initiate&ndash;&gt;init_mesh_data_1  constructor for <a href="../type/meshdata_.html">MeshData_</a></p>
+<p>Function for constructing <a href="../type/mesh_.html">Mesh_</a></p>
     
     <h4>Arguments</h4>
     
@@ -611,9 +855,313 @@ private interface <a href='../interface/init_meshdata_1.html'>init_meshdata_1</a
     
      
 <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-mesh_pointer"></span><h3>public interface <a href='../interface/mesh_pointer.html'>Mesh_Pointer</a>
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Generic function for constructing pointer to <a href="../type/mesh_.html">Mesh_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private function <a href='../proc/constructor_1.html'>Constructor_1</a>(NSD, tElements, factor) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>Function for constructing pointer to <a href="../type/mesh_.html">Mesh_</a></p><a href="../proc/constructor_1.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NSD</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>tElements</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>factor</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>class(<a href='../type/mesh_.html'>Mesh_</a>),
+  POINTER</small></h4>
+  
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_element"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Set an element to a mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine Set_element(Obj, Elem, iel)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Seting element; total number of elements remain same
+ Size of mesh should be sufficient while using this.</p><a href="../interface/set_element.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>Mesh object</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>Elem</strong></td><td><p>Finite element to be put in mesh</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>iel</strong></td><td><p>element number</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-add_element"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Add an element to mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine add_element(Obj, Elem)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Append an element, increate total elements in mesh by one</p><a href="../interface/add_element.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>mesh obj</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(Element_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>Elem</strong></td><td><p>finite element to be added</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
   <div class="panel-heading codesum"><span class="anchor" id="interface-allocatemeshsize"></span><h3>interface 
     
   </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Allocate the size of the mesh</p>
+  </div>
   
   <ul class="list-group">
   
@@ -630,7 +1178,7 @@ private subroutine allocateMeshSize(Obj, NSD, tElements, factor)
 
 
 
-<p>Initiate&ndash;&gt;allocateMeshSize  allocate the mesh size</p>
+<p>Allocate the size of the mesh. Generic name &mdash;&gt; Initiate()</p><a href="../interface/allocatemeshsize.html" class="pull-right"><emph>Read more&hellip;</emph></a>
     
     <h4>Arguments</h4>
     
@@ -656,7 +1204,7 @@ private subroutine allocateMeshSize(Obj, NSD, tElements, factor)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>Obj</strong></td><td><p>Mesh which will be allocated</p></td>
+  <td><strong>Obj</strong></td><td><p>mesh object</p></td>
   
 </tr>
 
@@ -671,7 +1219,7 @@ private subroutine allocateMeshSize(Obj, NSD, tElements, factor)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>NSD</strong></td><td><p>Spatial dimension of the problem</p></td>
+  <td><strong>NSD</strong></td><td><p>spatial dimension</p></td>
   
 </tr>
 
@@ -686,7 +1234,7 @@ private subroutine allocateMeshSize(Obj, NSD, tElements, factor)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>tElements</strong></td><td><p>Total number of elements</p></td>
+  <td><strong>tElements</strong></td><td><p>total number of elements in mesh</p></td>
   
 </tr>
 
@@ -701,7 +1249,7 @@ private subroutine allocateMeshSize(Obj, NSD, tElements, factor)
   <td>optional</td>
   
   <td></td><td>::</td>
-  <td><strong>factor</strong></td><td><p>maxElements = factor * tElements</p></td>
+  <td><strong>factor</strong></td><td><p>maxLength = factor * telements</p></td>
   
 </tr>
 
@@ -720,13 +1268,13 @@ private subroutine allocateMeshSize(Obj, NSD, tElements, factor)
     
      
 <div class="panel panel-default">
-  <div class="panel-heading codesum"><span class="anchor" id="interface-init_meshdata_1"></span><h3>interface 
+  <div class="panel-heading codesum"><span class="anchor" id="interface-display_mesh"></span><h3>interface 
     
   </h3></div>
   
   <div class="panel-body">
     
-    <p>Initiate&ndash;&gt;init_mesh_data_1  constructor for <a href="../type/meshdata_.html">MeshData_</a></p>
+    <p>display content of <a href="../type/mesh_.html">Mesh_</a></p>
   </div>
   
   <ul class="list-group">
@@ -735,12 +1283,16 @@ private subroutine allocateMeshSize(Obj, NSD, tElements, factor)
     
     
     <h3>
-private subroutine init_meshdata_1(Obj, MeshObj)
+private subroutine display_mesh(Obj, Msg, UnitNo)
     
     
    
 </h3>
     
+
+
+
+<p>Display content of <a href="../type/mesh_.html">Mesh_</a></p><a href="../interface/display_mesh.html" class="pull-right"><emph>Read more&hellip;</emph></a>
     
     <h4>Arguments</h4>
     
@@ -761,7 +1313,514 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   
 <tr>
   
-  <td><span class="anchor" ></span>class(<a href='../type/meshdata_.html'>MeshData_</a>),</td>
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>mesh object</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Msg</strong></td><td><p>message on screen</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>UnitNo</strong></td><td><p>unit number of ouput file</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getelement_pointer"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Return the pointer to an element <code>Obj % Elem(iel)</code></p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private function getElement_Pointer(Obj, iel) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Return the pointer to an element <code>Obj % Elem(iel)</code></p><a href="../interface/getelement_pointer.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>mesh object</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>iel</strong></td><td><p>element number</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>class(Element_),
+  POINTER</small></h4>
+  <p>pointer to finite element</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getnptrs"></span><h3>public interface <a href='../interface/getnptrs.html'>getNptrs</a>
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Generic subroutine to get <code>Nptrs</code> in <a href="../type/meshpointer_.html">MeshPointer_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/mesh_pointer_get_nptrs.html'>mesh_pointer_get_nptrs</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>Returns a vec of node numbers present in a collection of <a href="../type/meshpointer_.html">MeshPointer_</a></p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-get_nptrs"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Returns the node numbers in mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine get_nptrs(Obj, Nptrs)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Returns the node numbers in mesh</p><a href="../interface/get_nptrs.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>mesh object</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Nptrs</strong>(:)</td><td><p>node numbers</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-mesh_pointer_get_nptrs"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Returns a vec of node numbers present in a collection of <a href="../type/meshpointer_.html">MeshPointer_</a></p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine mesh_pointer_get_nptrs(Obj, Nptrs)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Returns the vec of node numbers present in a collection of <a href="../type/meshpointer_.html">MeshPointer_</a></p><a href="../interface/mesh_pointer_get_nptrs.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(<a href='../type/meshpointer_.html'>MeshPointer_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong>(:)</td><td><p>Collection of pointer to <a href="../type/mesh_.html">Mesh_</a></p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Nptrs</strong>(:)</td><td><p>Node present in the collection of mesh</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-remove_element"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Remove an element from the mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine remove_element(Obj, iel, extraoption)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Remove an element from the mesh</p><a href="../interface/remove_element.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>mesh object</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>iel</strong></td><td><p>element number</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>extraoption</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setmaterialtype_1"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Set material propertie</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine setMaterialType_1(Obj, MatType)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>set material properties of element in the mesh. Currently, this routine
+ add same material property to all elements</p><a href="../interface/setmaterialtype_1.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -776,12 +1835,12 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   
 <tr>
   
-  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
-  <td>intent(inout)</td>
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>MeshObj</strong></td><td></td>
+  <td><strong>MatType</strong></td><td></td>
   
 </tr>
 
@@ -790,6 +1849,153 @@ private subroutine init_meshdata_1(Obj, MeshObj)
 
       
     
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_total_elements"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Set total elements in mesh object</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine set_total_elements(Obj)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Set total elements in mesh object</p><a href="../interface/set_total_elements.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>mesh object</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-total_elements"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Returns total elements in the mesh</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure function total_elements(Obj) result(Ans)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>Returns total elements in the mesh</p><a href="../interface/total_elements.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(<a href='../type/mesh_.html'>Mesh_</a>),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Obj</strong></td><td><p>mesh object</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  
     
 
     </li>
@@ -810,13 +2016,14 @@ private subroutine init_meshdata_1(Obj, MeshObj)
    
      
 <div class="panel panel-default">
-  <div class="panel-heading codesum"><span class="anchor" id="type-meshdata_"></span><h3>type, public :: <a href='../type/meshdata_.html'>MeshData_</a>
+  <div class="panel-heading codesum"><span class="anchor" id="type-meshpointer_"></span><h3>type, public :: <a href='../type/meshpointer_.html'>MeshPointer_</a>
     
   </h3></div>
   <div class="panel-body">
     
     
-    <p>author: Dr Vikas Sharma</p><a href="../type/meshdata_.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    <p><code>MeshPointer_</code> is a userdefine datatype which contains the pointer to
+ a mesh</p>
     
      
      <h4>Components</h4>
@@ -836,235 +2043,11 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   
 <tr>
   
-  <td><span class="anchor" id="variable-bbox"></span>type(BoundingBox_),</td>
-  
-  <td>public</td>
-  <td></td><td>::</td>
-  <td><strong>BBox</strong></td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-boundarydata"></span>type(IntVector_),</td>
+  <td><span class="anchor" id="variable-ptr~2"></span>type(<a href='../type/mesh_.html'>Mesh_</a>),</td>
   
   <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>BoundaryData</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-boundarynptrs"></span>integer(kind=I4B),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>BoundaryNptrs</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-elemtoelem"></span>type(IntVector_),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>ElemToElem</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-elemtonode"></span>type(IntVector_),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>ElemToNode</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-internalbndyelemnum"></span>type(IntVector_),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>InternalBndyElemNum</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-internalboundarydata"></span>type(IntVector_),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>InternalBoundaryData</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-internalnptrs"></span>integer(kind=I4B),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>InternalNptrs</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-lbndyindex"></span>integer(kind=I4B),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>LBndyIndex</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-local_nptrs"></span>integer(kind=I4B),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>Local_Nptrs</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-maxnptrs"></span>integer(kind=I4B),</td>
-  
-  <td>public</td>
-  <td></td><td>::</td>
-  <td><strong>MaxNptrs</strong></td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-minnptrs"></span>integer(kind=I4B),</td>
-  
-  <td>public</td>
-  <td></td><td>::</td>
-  <td><strong>MinNptrs</strong></td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-ntn"></span>type(IntVector_),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>NTN</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-nodetoelem"></span>type(IntVector_),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>NodeToElem</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-nptrs"></span>integer(kind=I4B),</td>
-  
-  <td>public,</td>
-  <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>Nptrs</strong>(:)</td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-isinitiated"></span>logical(kind=LGT),</td>
-  
-  <td>public</td>
-  <td></td><td>::</td>
-  <td><strong>isInitiated</strong></td><td></td><td></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-tnodes"></span>integer(kind=I4B),</td>
-  
-  <td>public</td>
-  <td></td><td>::</td>
-  <td><strong>tNodes</strong></td><td></td><td></td><td></td>
+  <td>POINTER</td><td>::</td>
+  <td><strong>Ptr</strong></td><td>=> </td><td>NULL()</td><td></td>
   
 </tr>
 
@@ -1074,16 +2057,6 @@ private subroutine init_meshdata_1(Obj, MeshObj)
      
      
           
-     
-     <h4>Type-Bound Procedures</h4>
-      <table class="table table-striped varlist">
-      <tbody>
-      
-       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/meshdata_.html#boundprocedure-initiate'>Initiate</a></strong>  => init_meshdata_1 </td>
-       <td><p>Constructor for <a href="../type/meshdata_.html">MeshData_</a> object</p></td></tr>
-      
-       </tbody>
-       </table>
      
   </div>
 </div>
@@ -1097,7 +2070,10 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   <div class="panel-body">
     
     
-    <p>author: Dr Vikas Sharma</p><a href="../type/mesh_.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    <p>In <strong>EASIFEM</strong> <code>Mesh_</code> datatype is simply a collection of finite elements.
+ To avoid working with linked list I have encapsulated a vector of
+ <code>ElementPointer_</code>. This way, adding or removing of an element
+ to existing mesh becomes simple.</p><a href="../type/mesh_.html" class="pull-right"><emph>Read more&hellip;</emph></a>
     
      
      <h4>Components</h4>
@@ -1121,7 +2097,7 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   
   <td>public,</td>
   <td>ALLOCATABLE</td><td>::</td>
-  <td><strong>Elem</strong>(:)</td><td></td><td></td><td><p>Vector of <code>ElementPointer_</code> denotes the elements in the mesh</p></td>
+  <td><strong>Elem</strong>(:)</td><td></td><td></td><td><p>Collection of finite elements</p></td>
   
 </tr>
 
@@ -1135,7 +2111,7 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   
   <td>public</td>
   <td></td><td>::</td>
-  <td><strong>NSD</strong></td><td></td><td></td><td><p>Spatial dimension</p></td>
+  <td><strong>NSD</strong></td><td></td><td></td><td><p>spatial dimension</p></td>
   
 </tr>
 
@@ -1149,7 +2125,7 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   
   <td>public</td>
   <td></td><td>::</td>
-  <td><strong>maxElements</strong></td><td></td><td></td><td><p>Maximum storage length <code>maxElements= default_factor * tElements</code></p></td>
+  <td><strong>maxElements</strong></td><td></td><td></td><td><p>maximum size of the wrapper</p></td>
   
 </tr>
 
@@ -1163,7 +2139,7 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   
   <td>public</td>
   <td></td><td>::</td>
-  <td><strong>tElements</strong></td><td></td><td></td><td><p>Total elements in the mesh</p></td>
+  <td><strong>tElements</strong></td><td></td><td></td><td><p>total elements in mesh</p></td>
   
 </tr>
 
@@ -1178,8 +2154,41 @@ private subroutine init_meshdata_1(Obj, MeshObj)
       <table class="table table-striped varlist">
       <tbody>
       
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-append'>Append</a></strong>  => add_element </td>
+       <td><p>Append an element to a mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-elementpointer'>ElementPointer</a></strong>  => getElement_Pointer </td>
+       <td><p>Get Pointer to an element in mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-finalize~2'>Finalize</a></strong>  => Deallocate_Data </td>
+       <td><p>Deallocate data</p></td></tr>
+      
        <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-initiate~2'>Initiate</a></strong>  => allocateMeshSize </td>
-       <td><p>Constructor for mesh</p></td></tr>
+       <td><p>Allocate size of a mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-removeelement'>RemoveElement</a></strong>  => remove_element </td>
+       <td><p>Remove an element from a mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-size'>SIZE</a></strong>  => total_elements </td>
+       <td><p>Returns the total elements in a mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-setelement'>SetElement</a></strong>  => Set_element </td>
+       <td><p>Set an element to a mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-setsize'>SetSize</a></strong>  => set_total_elements </td>
+       <td><p>Set total elements in a mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-settotalelements'>SetTotalElements</a></strong>  => set_total_elements </td>
+       <td><p>Alias of SetSize</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-totalelements'>TotalElements</a></strong>  => total_elements </td>
+       <td><p>Alias of SIZE</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-getnptrs'>getNptrs</a></strong>  => get_nptrs </td>
+       <td><p>Get node numbers in a mesh</p></td></tr>
+      
+       <tr><td>procedure, public, PASS( Obj ) :: <strong><a href='../type/mesh_.html#boundprocedure-setmaterialtype'>setMaterialType</a></strong>  => setMaterialType_1 </td>
+       <td><p>Set material type of a mesh</p></td></tr>
       
        </tbody>
        </table>
@@ -1192,6 +2201,110 @@ private subroutine init_meshdata_1(Obj, MeshObj)
   <br>
     
     
+     
+    <section>
+    <h2>Functions</h2>
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-constructor_1"></span><h3>
+private function <a href='../proc/constructor_1.html'>Constructor_1</a>(NSD, tElements, factor) result(Ans)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+
+
+<p>Function for constructing pointer to <a href="../type/mesh_.html">Mesh_</a></p><a href="../proc/constructor_1.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NSD</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>tElements</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>factor</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>class(<a href='../type/mesh_.html'>Mesh_</a>),
+  POINTER</small></h4>
+  
+    
+
+  </div>
+  </div>
+
+    
+    </section>
+    <br>
     
 
     
@@ -1212,10 +2325,10 @@ private subroutine init_meshdata_1(Obj, MeshObj)
           <p class="text-right">
             Documentation generated by 
             <a href="https://github.com/cmacmackin/ford">FORD</a>
-             on 2020-04-04 11:43  
+             on 2020-11-07 17:31  
           </p>
         </div>
-        <div class="col-xs-12 col-md-4 col-md-pull-4"><p class="text-center"> EASIFEM was developed by Dr Vikas Sharma</p></div>
+        <div class="col-xs-12 col-md-4 col-md-pull-4"><p class="text-center"> Fortran Program was developed by Dr Vikas Sharma</p></div>
       </div>
       <br>
       </div> <!-- /container -->    
