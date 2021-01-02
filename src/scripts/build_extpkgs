@@ -1,6 +1,14 @@
 #!/bin/bash
 
-cd ${lib}/extpkgs
-ar rcs ${lib}/extpkgs/libeasifemExtpkgs.a ${lib}/extpkgs/*.o
-ln -s -f ${lib}/extpkgs/libeasifemExtpkgs.a ${lib}/libeasifemExtpkgs.a
+# cd ${lib}/extpkgs
+# ar rcs ${lib}/extpkgs/libeasifemExtpkgs.a ${lib}/extpkgs/*.o
+# ln -s -f ${lib}/extpkgs/libeasifemExtpkgs.a ${lib}/libeasifemExtpkgs.a
+# cd -
+
+echo "entering easifem external library..."
+cd $EASIFEM_EXTLIB_LIB
+echo "---- making shared library"
+ar rcs ${EASIFEM_EXTLIB_LIB}/libeasifemExtpkgs.a ${EASIFEM_EXTLIB_LIB}/*.o
+# ln -s -f ${EASIFEM_EXTLIB_LIB}/libeasifemExtpkgs.a ${lib}/libeasifemExtpkgs.a
+echo "exiting easifem external library.."
 cd -

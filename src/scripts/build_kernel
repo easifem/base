@@ -1,4 +1,11 @@
-cd ${lib}/kernel
-ar rcs ${lib}/kernel/libeasifemKernel.a ${lib}/kernel/*.o
-ln -s -f ${lib}/kernel/libeasifemKernel.a ${lib}/libeasifemKernel.a
+#cd ${lib}/kernel
+#ar rcs ${lib}/kernel/libeasifemKernel.a ${lib}/kernel/*.o
+#ln -s -f ${lib}/kernel/libeasifemKernel.a ${lib}/libeasifemKernel.a
+#cd -
+
+echo "entering easifem kernel library..."
+cd $EASIFEM_KERNEL_LIB
+echo "---- making shared library"
+ar rcs ${EASIFEM_KERNEL_LIB}/libeasifemKernel.a ${EASIFEM_KERNEL_LIB}/*.o
+echo "exiting easifem kernel library.."
 cd -

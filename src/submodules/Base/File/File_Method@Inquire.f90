@@ -18,6 +18,32 @@ MODULE PROCEDURE file_size
 END PROCEDURE file_size
 
 !----------------------------------------------------------------------------
+!                                                                 TotalLines
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getTotalLines
+  INTEGER(I4B) :: istat
+
+  CALL CloseFile( Obj )
+  CALL OpenFileToRead( Obj, Obj%Path, Obj%FileName, Obj%Extension )
+
+  IF ( PRESENT( nHeader ) ) THEN
+    IF ( nHeader > 0 ) THEN
+      CALL SkipLines( Obj, nHeader )
+    END IF
+  ENDIF
+
+  Ans = 0
+
+  READ( Obj%UnitNo, '(a)', iostat=istat )
+  DO WHILE( istat .EQ. 0 )
+    Ans = Ans + 1
+    READ( Obj%UnitNo, '(a)', iostat=istat )
+  END DO
+  CALL CloseFile( Obj )
+END PROCEDURE getTotalLines
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

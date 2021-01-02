@@ -60,61 +60,60 @@ MODULE PROCEDURE open_file
   INQUIRE( file = FileName % Raw,  number = uni )
 
   ! if uni = -1 then filename is not opened else opened
-  IF( uni .LT. 0 ) THEN
-    tsize = LEN_TRIM( Obj % Access )
+  IF( uni .GE. 0 ) THEN
+    CALL CloseFile( Obj )
+  END IF
 
-    IF( tsize .EQ. 0 ) THEN
-      IF( Obj%isBinary ) THEN
-        OPEN( &
-          & NewUnit = Obj % UnitNo,  &
-          &	FILE = TRIM( FileName % Raw ), &
-          &	STATUS = TRIM( Obj % STATUS % Raw ), &
-          &	ACTION = TRIM( Obj % ACTION % Raw ), &
-          &	IOSTAT = Obj % IOSTAT, &
-          & FORM="UNFORMATTED"  )
-      ELSE
-        OPEN( &
-          & NewUnit = Obj % UnitNo,  &
-          &	FILE = TRIM( FileName % Raw ), &
-          &	STATUS = TRIM( Obj % STATUS % Raw ), &
-          &	ACTION = TRIM( Obj % ACTION % Raw ), &
-          &	IOSTAT = Obj % IOSTAT  )
-      END IF
-    ELSE
-      IF( Obj%isBinary ) THEN
-        OPEN( &
-          & NewUnit = Obj % UnitNo,  &
-          &	FILE = TRIM( FileName % Raw ), &
-          &	STATUS = TRIM( Obj % STATUS % Raw ), &
-          &	ACTION = TRIM( Obj % ACTION % Raw ), &
-          & ACCESS = TRIM( Obj % Access % Raw ), &
-          &	IOSTAT = Obj % IOSTAT, &
-          & FORM="UNFORMATTED"  )
-      ELSE
-        OPEN( &
-          & NewUnit = Obj % UnitNo,  &
-          &	FILE = TRIM( FileName % Raw ), &
-          &	STATUS = TRIM( Obj % STATUS % Raw ), &
-          &	ACTION = TRIM( Obj % ACTION % Raw ), &
-          & ACCESS = TRIM( Obj % Access % Raw ), &
-          &	IOSTAT = Obj % IOSTAT  )
-      END IF
-    END IF
+  tsize = LEN_TRIM( Obj % Access )
 
-    IF( Obj % IOSTAT .NE. 0 ) THEN
-      Obj % isOpen = .FALSE.
-      CALL Display( "ERROR: File_Method@Constructor.f90")
-      CALL Display( "       OpenFile()")
-      CALL Display( "        Could not open the file")
-      CALL Display( Obj%IOSTAT, "        IOSTAT :: ")
-      CALL Display( "        Program stoped")
-      STOP
+  IF( tsize .EQ. 0 ) THEN
+    IF( Obj%isBinary ) THEN
+      OPEN( &
+        & NewUnit = Obj % UnitNo,  &
+        &	FILE = TRIM( FileName % Raw ), &
+        &	STATUS = TRIM( Obj % STATUS % Raw ), &
+        &	ACTION = TRIM( Obj % ACTION % Raw ), &
+        &	IOSTAT = Obj % IOSTAT, &
+        & FORM="UNFORMATTED"  )
     ELSE
-      Obj % isOpen = .TRUE.
+      OPEN( &
+        & NewUnit = Obj % UnitNo,  &
+        &	FILE = TRIM( FileName % Raw ), &
+        &	STATUS = TRIM( Obj % STATUS % Raw ), &
+        &	ACTION = TRIM( Obj % ACTION % Raw ), &
+        &	IOSTAT = Obj % IOSTAT  )
     END IF
   ELSE
+    IF( Obj%isBinary ) THEN
+      OPEN( &
+        & NewUnit = Obj % UnitNo,  &
+        &	FILE = TRIM( FileName % Raw ), &
+        &	STATUS = TRIM( Obj % STATUS % Raw ), &
+        &	ACTION = TRIM( Obj % ACTION % Raw ), &
+        & ACCESS = TRIM( Obj % Access % Raw ), &
+        &	IOSTAT = Obj % IOSTAT, &
+        & FORM="UNFORMATTED"  )
+    ELSE
+      OPEN( &
+        & NewUnit = Obj % UnitNo,  &
+        &	FILE = TRIM( FileName % Raw ), &
+        &	STATUS = TRIM( Obj % STATUS % Raw ), &
+        &	ACTION = TRIM( Obj % ACTION % Raw ), &
+        & ACCESS = TRIM( Obj % Access % Raw ), &
+        &	IOSTAT = Obj % IOSTAT  )
+    END IF
+  END IF
+
+  IF( Obj % IOSTAT .NE. 0 ) THEN
+    Obj % isOpen = .FALSE.
+    CALL Display( "ERROR: File_Method@Constructor.f90")
+    CALL Display( "       OpenFile()")
+    CALL Display( "        Could not open the file")
+    CALL Display( Obj%IOSTAT, "        IOSTAT :: ")
+    CALL Display( "        Program stoped")
+    STOP
+  ELSE
     Obj % isOpen = .TRUE.
-    Obj % UnitNo = uni
   END IF
 
 END PROCEDURE open_file

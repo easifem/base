@@ -8,7 +8,8 @@ WRC="windres"
 PRJTK="sfprjtk"
 RM=rm -f
 
-IDIR=-I/Applications/SimplyFortran/SimplyFortran.app/Contents/Resources/gcc/include/ -I/Users/vikassharma/include -I/Users/vikassharma/include/extpkgs -I/Users/vikassharma/include/kernel 
+IDIR=-I/Applications/SimplyFortran/SimplyFortran.app/Contents/Resources/gcc/include/ -I/usr/local/include -I/Users/vikassharma/Dropbox/easifem/include 
+# warning - directory error: ../../extpkgs/include
 
 LDIR=-L/Applications/SimplyFortran/SimplyFortran.app/Contents/Resources/gcc/lib/ 
 
@@ -23,613 +24,604 @@ PRJ_FFLAGS= -cpp
 
 PRJ_CFLAGS=
 
-PRJ_LFLAGS=
+PRJ_LFLAGS= -lsfopenblas
 
-FFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_FFLAGS) -J../../../../include/ 
+FFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_FFLAGS) -J../../include 
 
 CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 
-"../../../../lib/AbstractArray_Method.o": "Base/AbstractArray_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/AbstractArray_Method.o": "Base/AbstractArray_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/AbstractArray_Method.f90
-	@$(FC) -c -o "../../../../lib/AbstractArray_Method.o" $(FFLAGS) "Base/AbstractArray_Method.f90"
-"../../../../include/abstractarray_method.mod" : "../../../../lib/AbstractArray_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/AbstractArray_Method.o" $(FFLAGS) "Base/AbstractArray_Method.f90"
+"../../include/abstractarray_method.mod" : "../../lib/AbstractArray_Method.o" .EXISTSONLY
 	@echo Compiling Base/AbstractArray_Method.f90
-	@$(FC) -c -o "../../../../lib/AbstractArray_Method.o" $(FFLAGS) "Base/AbstractArray_Method.f90"
+	@$(FC) -c -o "../../lib/AbstractArray_Method.o" $(FFLAGS) "Base/AbstractArray_Method.f90"
 
-"../../../../lib/AbstractMatrix_Method.o": "Base/AbstractMatrix_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/AbstractMatrix_Method.o": "Base/AbstractMatrix_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/AbstractMatrix_Method.f90
-	@$(FC) -c -o "../../../../lib/AbstractMatrix_Method.o" $(FFLAGS) "Base/AbstractMatrix_Method.f90"
-"../../../../include/abstractmatrix_method.mod" : "../../../../lib/AbstractMatrix_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/AbstractMatrix_Method.o" $(FFLAGS) "Base/AbstractMatrix_Method.f90"
+"../../include/abstractmatrix_method.mod" : "../../lib/AbstractMatrix_Method.o" .EXISTSONLY
 	@echo Compiling Base/AbstractMatrix_Method.f90
-	@$(FC) -c -o "../../../../lib/AbstractMatrix_Method.o" $(FFLAGS) "Base/AbstractMatrix_Method.f90"
+	@$(FC) -c -o "../../lib/AbstractMatrix_Method.o" $(FFLAGS) "Base/AbstractMatrix_Method.f90"
 
-"../../../../lib/AbstractVector_Method.o": "Base/AbstractVector_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/AbstractVector_Method.o": "Base/AbstractVector_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/AbstractVector_Method.f90
-	@$(FC) -c -o "../../../../lib/AbstractVector_Method.o" $(FFLAGS) "Base/AbstractVector_Method.f90"
-"../../../../include/abstractvector_method.mod" : "../../../../lib/AbstractVector_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/AbstractVector_Method.o" $(FFLAGS) "Base/AbstractVector_Method.f90"
+"../../include/abstractvector_method.mod" : "../../lib/AbstractVector_Method.o" .EXISTSONLY
 	@echo Compiling Base/AbstractVector_Method.f90
-	@$(FC) -c -o "../../../../lib/AbstractVector_Method.o" $(FFLAGS) "Base/AbstractVector_Method.f90"
+	@$(FC) -c -o "../../lib/AbstractVector_Method.o" $(FFLAGS) "Base/AbstractVector_Method.f90"
 
-"../../../../lib/BaseMethod.o": "Base/BaseMethod.f90" "../../../../include/globaldata.mod" "../../../../include/io.mod" "../../../../include/buffer_method.mod" "../../../../include/utility.mod" "../../../../include/errorhandling.mod" "../../../../include/file_method.mod" "../../../../include/boundingbox_method.mod" "../../../../include/abstractarray_method.mod" "../../../../include/abstractmatrix_method.mod" "../../../../include/abstractvector_method.mod" "../../../../include/realvector_method.mod" "../../../../include/intvector_method.mod" "../../../../include/realmatrix_method.mod" "../../../../include/sparsematrix_method.mod" "../../../../include/indexvalue_method.mod" "../../../../include/dof_method.mod" "../../../../include/iterationdata_method.mod" "../../../../include/keyvalue_method.mod" "../../../../include/random_method.mod" "../../../../include/voigtrank2tensor_method.mod" "../../../../include/rank2tensor_method.mod" "../../../../include/referenceelement_method.mod" "../../../../include/quadraturepoint_method.mod" "../../../../include/elemshapedata_method.mod" "../../../../include/fevariable_method.mod" "../../../../include/fematrix_module.mod"
+"../../lib/BaseMethod.o": "Base/BaseMethod.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/buffer_method.mod" "../../include/utility.mod" "../../include/errorhandling.mod" "../../include/file_method.mod" "../../include/boundingbox_method.mod" "../../include/abstractarray_method.mod" "../../include/abstractmatrix_method.mod" "../../include/abstractvector_method.mod" "../../include/realvector_method.mod" "../../include/intvector_method.mod" "../../include/realmatrix_method.mod" "../../include/sparsematrix_method.mod" "../../include/indexvalue_method.mod" "../../include/dof_method.mod" "../../include/iterationdata_method.mod" "../../include/keyvalue_method.mod" "../../include/random_method.mod" "../../include/voigtrank2tensor_method.mod" "../../include/rank2tensor_method.mod" "../../include/referenceelement_method.mod" "../../include/quadraturepoint_method.mod" "../../include/elemshapedata_method.mod" "../../include/fevariable_method.mod" "../../include/fematrix_module.mod"
 	@echo Compiling Base/BaseMethod.f90
-	@$(FC) -c -o "../../../../lib/BaseMethod.o" $(FFLAGS) "Base/BaseMethod.f90"
-"../../../../include/basemethod.mod" : "../../../../lib/BaseMethod.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/BaseMethod.o" $(FFLAGS) "Base/BaseMethod.f90"
+"../../include/basemethod.mod" : "../../lib/BaseMethod.o" .EXISTSONLY
 	@echo Compiling Base/BaseMethod.f90
-	@$(FC) -c -o "../../../../lib/BaseMethod.o" $(FFLAGS) "Base/BaseMethod.f90"
+	@$(FC) -c -o "../../lib/BaseMethod.o" $(FFLAGS) "Base/BaseMethod.f90"
 
-"../../../../lib/BaseType.o": "Base/BaseType.f90" "../../../../include/globaldata.mod"
+"../../lib/BaseType.o": "Base/BaseType.f90" "../../include/globaldata.mod"
 	@echo Compiling Base/BaseType.f90
-	@$(FC) -c -o "../../../../lib/BaseType.o" $(FFLAGS) "Base/BaseType.f90"
-"../../../../include/basetype.mod" : "../../../../lib/BaseType.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/BaseType.o" $(FFLAGS) "Base/BaseType.f90"
+"../../include/basetype.mod" : "../../lib/BaseType.o" .EXISTSONLY
 	@echo Compiling Base/BaseType.f90
-	@$(FC) -c -o "../../../../lib/BaseType.o" $(FFLAGS) "Base/BaseType.f90"
+	@$(FC) -c -o "../../lib/BaseType.o" $(FFLAGS) "Base/BaseType.f90"
 
-"../../../../lib/BaseType@AdditionalMethods.o": "Base/BaseType@AdditionalMethods.f90" "../../../../include/referenceelement_method.mod"
+"../../lib/BaseType@AdditionalMethods.o": "Base/BaseType@AdditionalMethods.f90" "../../include/referenceelement_method.mod"
 	@echo Compiling Base/BaseType@AdditionalMethods.f90
-	@$(FC) -c -o "../../../../lib/BaseType@AdditionalMethods.o" $(FFLAGS) "Base/BaseType@AdditionalMethods.f90"
+	@$(FC) -c -o "../../lib/BaseType@AdditionalMethods.o" $(FFLAGS) "Base/BaseType@AdditionalMethods.f90"
 
-"../../../../lib/BLASInterface.o": "Base/BLASInterface.f90"
+"../../lib/BLASInterface.o": "Base/BLASInterface.f90"
 	@echo Compiling Base/BLASInterface.f90
-	@$(FC) -c -o "../../../../lib/BLASInterface.o" $(FFLAGS) "Base/BLASInterface.f90"
-"../../../../include/blasinterface.mod" : "../../../../lib/BLASInterface.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/BLASInterface.o" $(FFLAGS) "Base/BLASInterface.f90"
+"../../include/blasinterface.mod" : "../../lib/BLASInterface.o" .EXISTSONLY
 	@echo Compiling Base/BLASInterface.f90
-	@$(FC) -c -o "../../../../lib/BLASInterface.o" $(FFLAGS) "Base/BLASInterface.f90"
+	@$(FC) -c -o "../../lib/BLASInterface.o" $(FFLAGS) "Base/BLASInterface.f90"
 
-"../../../../lib/BoundingBox_Method.o": "Base/BoundingBox/BoundingBox_Method.f90" "../../../../include/globaldata.mod" "../../../../include/io.mod" "../../../../include/basetype.mod"
+"../../lib/BoundingBox_Method.o": "Base/BoundingBox/BoundingBox_Method.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/basetype.mod"
 	@echo Compiling Base/BoundingBox/BoundingBox_Method.f90
-	@$(FC) -c -o "../../../../lib/BoundingBox_Method.o" $(FFLAGS) "Base/BoundingBox/BoundingBox_Method.f90"
-"../../../../include/boundingbox_method.mod" : "../../../../lib/BoundingBox_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/BoundingBox_Method.o" $(FFLAGS) "Base/BoundingBox/BoundingBox_Method.f90"
+"../../include/boundingbox_method.mod" : "../../lib/BoundingBox_Method.o" .EXISTSONLY
 	@echo Compiling Base/BoundingBox/BoundingBox_Method.f90
-	@$(FC) -c -o "../../../../lib/BoundingBox_Method.o" $(FFLAGS) "Base/BoundingBox/BoundingBox_Method.f90"
+	@$(FC) -c -o "../../lib/BoundingBox_Method.o" $(FFLAGS) "Base/BoundingBox/BoundingBox_Method.f90"
 
-"../../../../lib/Buffer_Method.o": "Base/Buffer/Buffer_Method.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod"
+"../../lib/Buffer_Method.o": "Base/Buffer/Buffer_Method.f90" "../../include/basetype.mod" "../../include/globaldata.mod"
 	@echo Compiling Base/Buffer/Buffer_Method.f90
-	@$(FC) -c -o "../../../../lib/Buffer_Method.o" $(FFLAGS) "Base/Buffer/Buffer_Method.f90"
-"../../../../include/buffer_method.mod" : "../../../../lib/Buffer_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/Buffer_Method.o" $(FFLAGS) "Base/Buffer/Buffer_Method.f90"
+"../../include/buffer_method.mod" : "../../lib/Buffer_Method.o" .EXISTSONLY
 	@echo Compiling Base/Buffer/Buffer_Method.f90
-	@$(FC) -c -o "../../../../lib/Buffer_Method.o" $(FFLAGS) "Base/Buffer/Buffer_Method.f90"
+	@$(FC) -c -o "../../lib/Buffer_Method.o" $(FFLAGS) "Base/Buffer/Buffer_Method.f90"
 
-"../../../../lib/DOF_Method.o": "Base/DOF/DOF_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/DOF_Method.o": "Base/DOF/DOF_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/DOF/DOF_Method.f90
-	@$(FC) -c -o "../../../../lib/DOF_Method.o" $(FFLAGS) "Base/DOF/DOF_Method.f90"
-"../../../../include/dof_method.mod" : "../../../../lib/DOF_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/DOF_Method.o" $(FFLAGS) "Base/DOF/DOF_Method.f90"
+"../../include/dof_method.mod" : "../../lib/DOF_Method.o" .EXISTSONLY
 	@echo Compiling Base/DOF/DOF_Method.f90
-	@$(FC) -c -o "../../../../lib/DOF_Method.o" $(FFLAGS) "Base/DOF/DOF_Method.f90"
+	@$(FC) -c -o "../../lib/DOF_Method.o" $(FFLAGS) "Base/DOF/DOF_Method.f90"
 
-"../../../../lib/Domain_Class.o": "Classes/FEMesh/Domain/Domain_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/mesh_class.mod" "../../../../include/meshdata_class.mod" "../../../../include/meshconnectivity_class.mod" "../../../../include/fe.mod"
+"../../lib/Domain_Class.o": "Classes/FEMesh/Domain/Domain_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/mesh_class.mod" "../../include/meshdata_class.mod" "../../include/meshconnectivity_class.mod" "../../include/fe.mod"
 	@echo Compiling Classes/FEMesh/Domain/Domain_Class.f90
-	@$(FC) -c -o "../../../../lib/Domain_Class.o" $(FFLAGS) "Classes/FEMesh/Domain/Domain_Class.f90"
-"../../../../include/domain_class.mod" : "../../../../lib/Domain_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/Domain_Class.o" $(FFLAGS) "Classes/FEMesh/Domain/Domain_Class.f90"
+"../../include/domain_class.mod" : "../../lib/Domain_Class.o" .EXISTSONLY
 	@echo Compiling Classes/FEMesh/Domain/Domain_Class.f90
-	@$(FC) -c -o "../../../../lib/Domain_Class.o" $(FFLAGS) "Classes/FEMesh/Domain/Domain_Class.f90"
+	@$(FC) -c -o "../../lib/Domain_Class.o" $(FFLAGS) "Classes/FEMesh/Domain/Domain_Class.f90"
 
-"../../../../lib/dsyevc3.o": "Base/Tensor/Rank2Tensor/dsyevc3.f"
+"../../lib/dsyevc3.o": "Base/Tensor/Rank2Tensor/dsyevc3.f"
 	@echo Compiling Base/Tensor/Rank2Tensor/dsyevc3.f
-	@$(FC) -c -o "../../../../lib/dsyevc3.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/dsyevc3.f"
+	@$(FC) -c -o "../../lib/dsyevc3.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/dsyevc3.f"
 
-"../../../../lib/dsyevh3.o": "Base/Tensor/Rank2Tensor/dsyevh3.f"
+"../../lib/dsyevh3.o": "Base/Tensor/Rank2Tensor/dsyevh3.f"
 	@echo Compiling Base/Tensor/Rank2Tensor/dsyevh3.f
-	@$(FC) -c -o "../../../../lib/dsyevh3.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/dsyevh3.f"
+	@$(FC) -c -o "../../lib/dsyevh3.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/dsyevh3.f"
 
-"../../../../lib/dsyevq3.o": "Base/Tensor/Rank2Tensor/dsyevq3.f"
+"../../lib/dsyevq3.o": "Base/Tensor/Rank2Tensor/dsyevq3.f"
 	@echo Compiling Base/Tensor/Rank2Tensor/dsyevq3.f
-	@$(FC) -c -o "../../../../lib/dsyevq3.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/dsyevq3.f"
+	@$(FC) -c -o "../../lib/dsyevq3.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/dsyevq3.f"
 
-"../../../../lib/dsytrd3.o": "Base/Tensor/Rank2Tensor/dsytrd3.f"
+"../../lib/dsytrd3.o": "Base/Tensor/Rank2Tensor/dsytrd3.f"
 	@echo Compiling Base/Tensor/Rank2Tensor/dsytrd3.f
-	@$(FC) -c -o "../../../../lib/dsytrd3.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/dsytrd3.f"
+	@$(FC) -c -o "../../lib/dsytrd3.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/dsytrd3.f"
 
-"../../../../lib/EASIFEM.o": "EASIFEM.f90" "../../../../include/basetype.mod" "../../../../include/basemethod.mod" "../../../../include/easifemclasses.mod"
+"../../lib/EASIFEM.o": "EASIFEM.f90" "../../include/basetype.mod" "../../include/basemethod.mod" "../../include/easifemclasses.mod"
 	@echo Compiling EASIFEM.f90
-	@$(FC) -c -o "../../../../lib/EASIFEM.o" $(FFLAGS) "EASIFEM.f90"
-"../../../../include/easifem.mod" : "../../../../lib/EASIFEM.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/EASIFEM.o" $(FFLAGS) "EASIFEM.f90"
+"../../include/easifem.mod" : "../../lib/EASIFEM.o" .EXISTSONLY
 	@echo Compiling EASIFEM.f90
-	@$(FC) -c -o "../../../../lib/EASIFEM.o" $(FFLAGS) "EASIFEM.f90"
+	@$(FC) -c -o "../../lib/EASIFEM.o" $(FFLAGS) "EASIFEM.f90"
 
-"../../../../lib/easifemClasses.o": "Classes/easifemClasses.f90" "../../../../include/fe.mod" "../../../../include/mesh_class.mod" "../../../../include/meshdata_class.mod" "../../../../include/meshconnectivity_class.mod" "../../../../include/domain_class.mod" "../../../../include/quadraturevariables_class.mod" "../../../../include/gmsh_class.mod" "../../../../include/gmshmesh_class.mod" "../../../../include/vtktype.mod" "../../../../include/linsolver_class.mod" "../../../../include/material_class.mod" "../../../../include/stdmaterials.mod" "../../../../include/thermcondmodel_class.mod" "../../../../include/volheatcapmodel_class.mod" "../../../../include/sfccmodel_class.mod"
+"../../lib/easifemClasses.o": "Classes/easifemClasses.f90" "../../include/fe.mod" "../../include/mesh_class.mod" "../../include/meshdata_class.mod" "../../include/meshconnectivity_class.mod" "../../include/domain_class.mod" "../../include/quadraturevariables_class.mod" "../../include/gmsh_class.mod" "../../include/gmshmesh_class.mod" "../../include/vtktype.mod" "../../include/linsolver_class.mod" "../../include/material_class.mod" "../../include/stdmaterials.mod" "../../include/thermcondmodel_class.mod" "../../include/volheatcapmodel_class.mod" "../../include/sfccmodel_class.mod"
 	@echo Compiling Classes/easifemClasses.f90
-	@$(FC) -c -o "../../../../lib/easifemClasses.o" $(FFLAGS) "Classes/easifemClasses.f90"
-"../../../../include/easifemclasses.mod" : "../../../../lib/easifemClasses.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/easifemClasses.o" $(FFLAGS) "Classes/easifemClasses.f90"
+"../../include/easifemclasses.mod" : "../../lib/easifemClasses.o" .EXISTSONLY
 	@echo Compiling Classes/easifemClasses.f90
-	@$(FC) -c -o "../../../../lib/easifemClasses.o" $(FFLAGS) "Classes/easifemClasses.f90"
+	@$(FC) -c -o "../../lib/easifemClasses.o" $(FFLAGS) "Classes/easifemClasses.f90"
 
-"../../../../lib/Element_Class.o": "Classes/FE/Element/Element_Class.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/Element_Class.o": "Classes/FE/Element/Element_Class.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Classes/FE/Element/Element_Class.f90
-	@$(FC) -c -o "../../../../lib/Element_Class.o" $(FFLAGS) "Classes/FE/Element/Element_Class.f90"
-"../../../../include/element_class.mod" : "../../../../lib/Element_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/Element_Class.o" $(FFLAGS) "Classes/FE/Element/Element_Class.f90"
+"../../include/element_class.mod" : "../../lib/Element_Class.o" .EXISTSONLY
 	@echo Compiling Classes/FE/Element/Element_Class.f90
-	@$(FC) -c -o "../../../../lib/Element_Class.o" $(FFLAGS) "Classes/FE/Element/Element_Class.f90"
+	@$(FC) -c -o "../../lib/Element_Class.o" $(FFLAGS) "Classes/FE/Element/Element_Class.f90"
 
-"../../../../lib/ElemshapeData_Method.o": "Base/ElemshapeData/ElemshapeData_Method.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod"
+"../../lib/ElemshapeData_Method.o": "Base/ElemshapeData/ElemshapeData_Method.f90" "../../include/basetype.mod" "../../include/globaldata.mod"
 	@echo Compiling Base/ElemshapeData/ElemshapeData_Method.f90
-	@$(FC) -c -o "../../../../lib/ElemshapeData_Method.o" $(FFLAGS) "Base/ElemshapeData/ElemshapeData_Method.f90"
-"../../../../include/elemshapedata_method.mod" : "../../../../lib/ElemshapeData_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/ElemshapeData_Method.o" $(FFLAGS) "Base/ElemshapeData/ElemshapeData_Method.f90"
+"../../include/elemshapedata_method.mod" : "../../lib/ElemshapeData_Method.o" .EXISTSONLY
 	@echo Compiling Base/ElemshapeData/ElemshapeData_Method.f90
-	@$(FC) -c -o "../../../../lib/ElemshapeData_Method.o" $(FFLAGS) "Base/ElemshapeData/ElemshapeData_Method.f90"
+	@$(FC) -c -o "../../lib/ElemshapeData_Method.o" $(FFLAGS) "Base/ElemshapeData/ElemshapeData_Method.f90"
 
-"../../../../lib/ErrorHandling.o": "Base/ErrorHandling.f90" "../../../../include/globaldata.mod" "../../../../include/io.mod"
+"../../lib/ErrorHandling.o": "Base/ErrorHandling.f90" "../../include/globaldata.mod" "../../include/io.mod"
 	@echo Compiling Base/ErrorHandling.f90
-	@$(FC) -c -o "../../../../lib/ErrorHandling.o" $(FFLAGS) "Base/ErrorHandling.f90"
-"../../../../include/errorhandling.mod" : "../../../../lib/ErrorHandling.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/ErrorHandling.o" $(FFLAGS) "Base/ErrorHandling.f90"
+"../../include/errorhandling.mod" : "../../lib/ErrorHandling.o" .EXISTSONLY
 	@echo Compiling Base/ErrorHandling.f90
-	@$(FC) -c -o "../../../../lib/ErrorHandling.o" $(FFLAGS) "Base/ErrorHandling.f90"
+	@$(FC) -c -o "../../lib/ErrorHandling.o" $(FFLAGS) "Base/ErrorHandling.f90"
 
-"../../../../lib/FacetElement_Class.o": "Classes/FE/FacetElement/FacetElement_Class.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "../../../../include/element_class.mod"
+"../../lib/FacetElement_Class.o": "Classes/FE/FacetElement/FacetElement_Class.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "../../include/element_class.mod"
 	@echo Compiling Classes/FE/FacetElement/FacetElement_Class.f90
-	@$(FC) -c -o "../../../../lib/FacetElement_Class.o" $(FFLAGS) "Classes/FE/FacetElement/FacetElement_Class.f90"
-"../../../../include/facetelement_class.mod" : "../../../../lib/FacetElement_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/FacetElement_Class.o" $(FFLAGS) "Classes/FE/FacetElement/FacetElement_Class.f90"
+"../../include/facetelement_class.mod" : "../../lib/FacetElement_Class.o" .EXISTSONLY
 	@echo Compiling Classes/FE/FacetElement/FacetElement_Class.f90
-	@$(FC) -c -o "../../../../lib/FacetElement_Class.o" $(FFLAGS) "Classes/FE/FacetElement/FacetElement_Class.f90"
+	@$(FC) -c -o "../../lib/FacetElement_Class.o" $(FFLAGS) "Classes/FE/FacetElement/FacetElement_Class.f90"
 
-"../../../../lib/FE.o": "Classes/FE/FE.f90" "../../../../include/element_class.mod" "../../../../include/facetelement_class.mod" "../../../../include/basetype.mod" "../../../../include/globaldata.mod"
+"../../lib/FE.o": "Classes/FE/FE.f90" "../../include/element_class.mod" "../../include/facetelement_class.mod" "../../include/basetype.mod" "../../include/globaldata.mod"
 	@echo Compiling Classes/FE/FE.f90
-	@$(FC) -c -o "../../../../lib/FE.o" $(FFLAGS) "Classes/FE/FE.f90"
-"../../../../include/fe.mod" : "../../../../lib/FE.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/FE.o" $(FFLAGS) "Classes/FE/FE.f90"
+"../../include/fe.mod" : "../../lib/FE.o" .EXISTSONLY
 	@echo Compiling Classes/FE/FE.f90
-	@$(FC) -c -o "../../../../lib/FE.o" $(FFLAGS) "Classes/FE/FE.f90"
+	@$(FC) -c -o "../../lib/FE.o" $(FFLAGS) "Classes/FE/FE.f90"
 
-"../../../../lib/FEMatrix_Module.o": "Base/FEMatrix/FEMatrix_Module.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod"
+"../../lib/FEMatrix_Module.o": "Base/FEMatrix/FEMatrix_Module.f90" "../../include/basetype.mod" "../../include/globaldata.mod"
 	@echo Compiling Base/FEMatrix/FEMatrix_Module.f90
-	@$(FC) -c -o "../../../../lib/FEMatrix_Module.o" $(FFLAGS) "Base/FEMatrix/FEMatrix_Module.f90"
-"../../../../include/fematrix_module.mod" : "../../../../lib/FEMatrix_Module.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/FEMatrix_Module.o" $(FFLAGS) "Base/FEMatrix/FEMatrix_Module.f90"
+"../../include/fematrix_module.mod" : "../../lib/FEMatrix_Module.o" .EXISTSONLY
 	@echo Compiling Base/FEMatrix/FEMatrix_Module.f90
-	@$(FC) -c -o "../../../../lib/FEMatrix_Module.o" $(FFLAGS) "Base/FEMatrix/FEMatrix_Module.f90"
+	@$(FC) -c -o "../../lib/FEMatrix_Module.o" $(FFLAGS) "Base/FEMatrix/FEMatrix_Module.f90"
 
-"../../../../lib/FEVariable_Method.o": "Base/FEVariable/FEVariable_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/FEVariable_Method.o": "Base/FEVariable/FEVariable_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/FEVariable/FEVariable_Method.f90
-	@$(FC) -c -o "../../../../lib/FEVariable_Method.o" $(FFLAGS) "Base/FEVariable/FEVariable_Method.f90"
-"../../../../include/fevariable_method.mod" : "../../../../lib/FEVariable_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/FEVariable_Method.o" $(FFLAGS) "Base/FEVariable/FEVariable_Method.f90"
+"../../include/fevariable_method.mod" : "../../lib/FEVariable_Method.o" .EXISTSONLY
 	@echo Compiling Base/FEVariable/FEVariable_Method.f90
-	@$(FC) -c -o "../../../../lib/FEVariable_Method.o" $(FFLAGS) "Base/FEVariable/FEVariable_Method.f90"
+	@$(FC) -c -o "../../lib/FEVariable_Method.o" $(FFLAGS) "Base/FEVariable/FEVariable_Method.f90"
 
-"../../../../lib/File_Method.o": "Base/File/File_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/File_Method.o": "Base/File/File_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/File/File_Method.f90
-	@$(FC) -c -o "../../../../lib/File_Method.o" $(FFLAGS) "Base/File/File_Method.f90"
-"../../../../include/file_method.mod" : "../../../../lib/File_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/File_Method.o" $(FFLAGS) "Base/File/File_Method.f90"
+"../../include/file_method.mod" : "../../lib/File_Method.o" .EXISTSONLY
 	@echo Compiling Base/File/File_Method.f90
-	@$(FC) -c -o "../../../../lib/File_Method.o" $(FFLAGS) "Base/File/File_Method.f90"
+	@$(FC) -c -o "../../lib/File_Method.o" $(FFLAGS) "Base/File/File_Method.f90"
 
-"../../../../lib/GlobalData.o": "Base/GlobalData.f90"
+"../../lib/GlobalData.o": "Base/GlobalData.f90"
 	@echo Compiling Base/GlobalData.f90
-	@$(FC) -c -o "../../../../lib/GlobalData.o" $(FFLAGS) "Base/GlobalData.f90"
-"../../../../include/globaldata.mod" : "../../../../lib/GlobalData.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/GlobalData.o" $(FFLAGS) "Base/GlobalData.f90"
+"../../include/globaldata.mod" : "../../lib/GlobalData.o" .EXISTSONLY
 	@echo Compiling Base/GlobalData.f90
-	@$(FC) -c -o "../../../../lib/GlobalData.o" $(FFLAGS) "Base/GlobalData.f90"
+	@$(FC) -c -o "../../lib/GlobalData.o" $(FFLAGS) "Base/GlobalData.f90"
 
-"../../../../lib/gmsh_Class.o": "Classes/GMSH/gmsh_Class.f90" "../../../../include/basetype.mod" "../../../../include/basemethod.mod" "../../../../include/gmshmodel_class.mod"
+"../../lib/gmsh_Class.o": "Classes/GMSH/gmsh_Class.f90" "../../include/basetype.mod" "../../include/basemethod.mod" "../../include/gmshmodel_class.mod"
 	@echo Compiling Classes/GMSH/gmsh_Class.f90
-	@$(FC) -c -o "../../../../lib/gmsh_Class.o" $(FFLAGS) "Classes/GMSH/gmsh_Class.f90"
-"../../../../include/gmsh_class.mod" : "../../../../lib/gmsh_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmsh_Class.o" $(FFLAGS) "Classes/GMSH/gmsh_Class.f90"
+"../../include/gmsh_class.mod" : "../../lib/gmsh_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmsh_Class.f90
-	@$(FC) -c -o "../../../../lib/gmsh_Class.o" $(FFLAGS) "Classes/GMSH/gmsh_Class.f90"
+	@$(FC) -c -o "../../lib/gmsh_Class.o" $(FFLAGS) "Classes/GMSH/gmsh_Class.f90"
 
-"../../../../lib/gmshCurve_Class.o": "Classes/GMSH/gmshEntity/gmshCurve_Class.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "../../../../include/gmshentity_class.mod"
+"../../lib/gmshCurve_Class.o": "Classes/GMSH/gmshEntity/gmshCurve_Class.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "../../include/gmshentity_class.mod"
 	@echo Compiling Classes/GMSH/gmshEntity/gmshCurve_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshCurve_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshCurve_Class.f90"
-"../../../../include/gmshcurve_class.mod" : "../../../../lib/gmshCurve_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshCurve_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshCurve_Class.f90"
+"../../include/gmshcurve_class.mod" : "../../lib/gmshCurve_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshEntity/gmshCurve_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshCurve_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshCurve_Class.f90"
+	@$(FC) -c -o "../../lib/gmshCurve_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshCurve_Class.f90"
 
-"../../../../lib/gmshEntity_Class.o": "Classes/GMSH/gmshEntity/gmshEntity_Class.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/gmshEntity_Class.o": "Classes/GMSH/gmshEntity/gmshEntity_Class.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Classes/GMSH/gmshEntity/gmshEntity_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshEntity_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshEntity_Class.f90"
-"../../../../include/gmshentity_class.mod" : "../../../../lib/gmshEntity_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshEntity_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshEntity_Class.f90"
+"../../include/gmshentity_class.mod" : "../../lib/gmshEntity_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshEntity/gmshEntity_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshEntity_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshEntity_Class.f90"
+	@$(FC) -c -o "../../lib/gmshEntity_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshEntity_Class.f90"
 
-"../../../../lib/gmshGeo_Class.o": "Classes/GMSH/gmshGeo/gmshGeo_Class.f90" "../../../../include/basetype.mod" "../../../../include/basemethod.mod" "../../../../include/gmshpoint_class.mod" "../../../../include/gmshcurve_class.mod" "../../../../include/gmshsurface_class.mod" "../../../../include/gmshvolume_class.mod" "../../../../include/gmshgeomesh_class.mod" "Classes/GMSH/gmshGeo/addcurve.inc" "Classes/GMSH/gmshGeo/addcurveloop.inc" "Classes/GMSH/gmshGeo/addsurface.inc" "Classes/GMSH/gmshGeo/addsurfaceloop.inc" "Classes/GMSH/gmshGeo/addvolume.inc"
+"../../lib/gmshGeo_Class.o": "Classes/GMSH/gmshGeo/gmshGeo_Class.f90" "../../include/basetype.mod" "../../include/basemethod.mod" "../../include/gmshpoint_class.mod" "../../include/gmshcurve_class.mod" "../../include/gmshsurface_class.mod" "../../include/gmshvolume_class.mod" "../../include/gmshgeomesh_class.mod" "Classes/GMSH/gmshGeo/addcurve.inc" "Classes/GMSH/gmshGeo/addcurveloop.inc" "Classes/GMSH/gmshGeo/addsurface.inc" "Classes/GMSH/gmshGeo/addsurfaceloop.inc" "Classes/GMSH/gmshGeo/addvolume.inc"
 	@echo Compiling Classes/GMSH/gmshGeo/gmshGeo_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshGeo_Class.o" $(FFLAGS) "Classes/GMSH/gmshGeo/gmshGeo_Class.f90"
-"../../../../include/gmshgeo_class.mod" : "../../../../lib/gmshGeo_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshGeo_Class.o" $(FFLAGS) "Classes/GMSH/gmshGeo/gmshGeo_Class.f90"
+"../../include/gmshgeo_class.mod" : "../../lib/gmshGeo_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshGeo/gmshGeo_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshGeo_Class.o" $(FFLAGS) "Classes/GMSH/gmshGeo/gmshGeo_Class.f90"
+	@$(FC) -c -o "../../lib/gmshGeo_Class.o" $(FFLAGS) "Classes/GMSH/gmshGeo/gmshGeo_Class.f90"
 
-"../../../../lib/gmshGeoMesh_Class.o": "Classes/GMSH/gmshGeo/gmshGeoMesh_Class.f90" "../../../../include/basetype.mod" "../../../../include/basemethod.mod"
+"../../lib/gmshGeoMesh_Class.o": "Classes/GMSH/gmshGeo/gmshGeoMesh_Class.f90" "../../include/basetype.mod" "../../include/basemethod.mod"
 	@echo Compiling Classes/GMSH/gmshGeo/gmshGeoMesh_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshGeoMesh_Class.o" $(FFLAGS) "Classes/GMSH/gmshGeo/gmshGeoMesh_Class.f90"
-"../../../../include/gmshgeomesh_class.mod" : "../../../../lib/gmshGeoMesh_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshGeoMesh_Class.o" $(FFLAGS) "Classes/GMSH/gmshGeo/gmshGeoMesh_Class.f90"
+"../../include/gmshgeomesh_class.mod" : "../../lib/gmshGeoMesh_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshGeo/gmshGeoMesh_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshGeoMesh_Class.o" $(FFLAGS) "Classes/GMSH/gmshGeo/gmshGeoMesh_Class.f90"
+	@$(FC) -c -o "../../lib/gmshGeoMesh_Class.o" $(FFLAGS) "Classes/GMSH/gmshGeo/gmshGeoMesh_Class.f90"
 
-"../../../../lib/gmshMesh_Class.o": "Classes/GMSH/gmshMesh/gmshMesh_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/mshformat_class.mod" "../../../../include/mshphysicalnames_class.mod" "../../../../include/mshentity_class.mod" "../../../../include/mshnodes_class.mod" "../../../../include/mshelements_class.mod" "../../../../include/mesh_class.mod" "../../../../include/fe.mod" "../../../../include/domain_class.mod"
+"../../lib/gmshMesh_Class.o": "Classes/GMSH/gmshMesh/gmshMesh_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/mshformat_class.mod" "../../include/mshphysicalnames_class.mod" "../../include/mshentity_class.mod" "../../include/mshnodes_class.mod" "../../include/mshelements_class.mod" "../../include/mesh_class.mod" "../../include/fe.mod" "../../include/domain_class.mod"
 	@echo Compiling Classes/GMSH/gmshMesh/gmshMesh_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshMesh_Class.o" $(FFLAGS) "Classes/GMSH/gmshMesh/gmshMesh_Class.f90"
-"../../../../include/gmshmesh_class.mod" : "../../../../lib/gmshMesh_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshMesh_Class.o" $(FFLAGS) "Classes/GMSH/gmshMesh/gmshMesh_Class.f90"
+"../../include/gmshmesh_class.mod" : "../../lib/gmshMesh_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshMesh/gmshMesh_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshMesh_Class.o" $(FFLAGS) "Classes/GMSH/gmshMesh/gmshMesh_Class.f90"
+	@$(FC) -c -o "../../lib/gmshMesh_Class.o" $(FFLAGS) "Classes/GMSH/gmshMesh/gmshMesh_Class.f90"
 
-"../../../../lib/gmshModel_Class.o": "Classes/GMSH/gmshModel/gmshModel_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/basemethod.mod" "../../../../include/gmshgeo_class.mod" "../../../../include/gmshmesh_class.mod" "Classes/GMSH/gmshModel/addphysicalpoint.inc" "Classes/GMSH/gmshModel/addphysicalcurve.inc" "Classes/GMSH/gmshModel/addphysicalsurface.inc" "Classes/GMSH/gmshModel/addphysicalvolume.inc"
+"../../lib/gmshModel_Class.o": "Classes/GMSH/gmshModel/gmshModel_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/basemethod.mod" "../../include/gmshgeo_class.mod" "../../include/gmshmesh_class.mod" "Classes/GMSH/gmshModel/addphysicalpoint.inc" "Classes/GMSH/gmshModel/addphysicalcurve.inc" "Classes/GMSH/gmshModel/addphysicalsurface.inc" "Classes/GMSH/gmshModel/addphysicalvolume.inc"
 	@echo Compiling Classes/GMSH/gmshModel/gmshModel_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshModel_Class.o" $(FFLAGS) "Classes/GMSH/gmshModel/gmshModel_Class.f90"
-"../../../../include/gmshmodel_class.mod" : "../../../../lib/gmshModel_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshModel_Class.o" $(FFLAGS) "Classes/GMSH/gmshModel/gmshModel_Class.f90"
+"../../include/gmshmodel_class.mod" : "../../lib/gmshModel_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshModel/gmshModel_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshModel_Class.o" $(FFLAGS) "Classes/GMSH/gmshModel/gmshModel_Class.f90"
+	@$(FC) -c -o "../../lib/gmshModel_Class.o" $(FFLAGS) "Classes/GMSH/gmshModel/gmshModel_Class.f90"
 
-"../../../../lib/gmshPoint_Class.o": "Classes/GMSH/gmshEntity/gmshPoint_Class.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "../../../../include/gmshentity_class.mod"
+"../../lib/gmshPoint_Class.o": "Classes/GMSH/gmshEntity/gmshPoint_Class.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "../../include/gmshentity_class.mod"
 	@echo Compiling Classes/GMSH/gmshEntity/gmshPoint_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshPoint_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshPoint_Class.f90"
-"../../../../include/gmshpoint_class.mod" : "../../../../lib/gmshPoint_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshPoint_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshPoint_Class.f90"
+"../../include/gmshpoint_class.mod" : "../../lib/gmshPoint_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshEntity/gmshPoint_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshPoint_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshPoint_Class.f90"
+	@$(FC) -c -o "../../lib/gmshPoint_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshPoint_Class.f90"
 
-"../../../../lib/gmshSurface_Class.o": "Classes/GMSH/gmshEntity/gmshSurface_Class.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "../../../../include/gmshentity_class.mod"
+"../../lib/gmshSurface_Class.o": "Classes/GMSH/gmshEntity/gmshSurface_Class.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "../../include/gmshentity_class.mod"
 	@echo Compiling Classes/GMSH/gmshEntity/gmshSurface_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshSurface_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshSurface_Class.f90"
-"../../../../include/gmshsurface_class.mod" : "../../../../lib/gmshSurface_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshSurface_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshSurface_Class.f90"
+"../../include/gmshsurface_class.mod" : "../../lib/gmshSurface_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshEntity/gmshSurface_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshSurface_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshSurface_Class.f90"
+	@$(FC) -c -o "../../lib/gmshSurface_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshSurface_Class.f90"
 
-"../../../../lib/gmshVolume_Class.o": "Classes/GMSH/gmshEntity/gmshVolume_Class.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "../../../../include/gmshentity_class.mod"
+"../../lib/gmshVolume_Class.o": "Classes/GMSH/gmshEntity/gmshVolume_Class.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "../../include/gmshentity_class.mod"
 	@echo Compiling Classes/GMSH/gmshEntity/gmshVolume_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshVolume_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshVolume_Class.f90"
-"../../../../include/gmshvolume_class.mod" : "../../../../lib/gmshVolume_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/gmshVolume_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshVolume_Class.f90"
+"../../include/gmshvolume_class.mod" : "../../lib/gmshVolume_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/gmshEntity/gmshVolume_Class.f90
-	@$(FC) -c -o "../../../../lib/gmshVolume_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshVolume_Class.f90"
+	@$(FC) -c -o "../../lib/gmshVolume_Class.o" $(FFLAGS) "Classes/GMSH/gmshEntity/gmshVolume_Class.f90"
 
-"../../../../lib/IndexValue_Method.o": "Base/IndexValue/IndexValue_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/IndexValue_Method.o": "Base/IndexValue/IndexValue_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/IndexValue/IndexValue_Method.f90
-	@$(FC) -c -o "../../../../lib/IndexValue_Method.o" $(FFLAGS) "Base/IndexValue/IndexValue_Method.f90"
-"../../../../include/indexvalue_method.mod" : "../../../../lib/IndexValue_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/IndexValue_Method.o" $(FFLAGS) "Base/IndexValue/IndexValue_Method.f90"
+"../../include/indexvalue_method.mod" : "../../lib/IndexValue_Method.o" .EXISTSONLY
 	@echo Compiling Base/IndexValue/IndexValue_Method.f90
-	@$(FC) -c -o "../../../../lib/IndexValue_Method.o" $(FFLAGS) "Base/IndexValue/IndexValue_Method.f90"
+	@$(FC) -c -o "../../lib/IndexValue_Method.o" $(FFLAGS) "Base/IndexValue/IndexValue_Method.f90"
 
-"../../../../lib/IntVector_Method.o": "Base/Vector/IntVector/IntVector_Method.f90" "../../../../include/globaldata.mod" "../../../../include/io.mod" "../../../../include/basetype.mod" "Base/IterationData/contains.part"
+"../../lib/IntVector_Method.o": "Base/Vector/IntVector/IntVector_Method.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/basetype.mod" "Base/IterationData/contains.part"
 	@echo Compiling Base/Vector/IntVector/IntVector_Method.f90
-	@$(FC) -c -o "../../../../lib/IntVector_Method.o" $(FFLAGS) "Base/Vector/IntVector/IntVector_Method.f90"
-"../../../../include/intvector_method.mod" : "../../../../lib/IntVector_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/IntVector_Method.o" $(FFLAGS) "Base/Vector/IntVector/IntVector_Method.f90"
+"../../include/intvector_method.mod" : "../../lib/IntVector_Method.o" .EXISTSONLY
 	@echo Compiling Base/Vector/IntVector/IntVector_Method.f90
-	@$(FC) -c -o "../../../../lib/IntVector_Method.o" $(FFLAGS) "Base/Vector/IntVector/IntVector_Method.f90"
+	@$(FC) -c -o "../../lib/IntVector_Method.o" $(FFLAGS) "Base/Vector/IntVector/IntVector_Method.f90"
 
-"../../../../lib/IO.o": "Base/IO.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/IO.o": "Base/IO.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/IO.f90
-	@$(FC) -c -o "../../../../lib/IO.o" $(FFLAGS) "Base/IO.f90"
-"../../../../include/io.mod" : "../../../../lib/IO.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/IO.o" $(FFLAGS) "Base/IO.f90"
+"../../include/io.mod" : "../../lib/IO.o" .EXISTSONLY
 	@echo Compiling Base/IO.f90
-	@$(FC) -c -o "../../../../lib/IO.o" $(FFLAGS) "Base/IO.f90"
+	@$(FC) -c -o "../../lib/IO.o" $(FFLAGS) "Base/IO.f90"
 
-"../../../../lib/IterationData_Method.o": "Base/IterationData/IterationData_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "Base/IterationData/contains.part"
+"../../lib/IterationData_Method.o": "Base/IterationData/IterationData_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "Base/IterationData/contains.part"
 	@echo Compiling Base/IterationData/IterationData_Method.f90
-	@$(FC) -c -o "../../../../lib/IterationData_Method.o" $(FFLAGS) "Base/IterationData/IterationData_Method.f90"
-"../../../../include/iterationdata_method.mod" : "../../../../lib/IterationData_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/IterationData_Method.o" $(FFLAGS) "Base/IterationData/IterationData_Method.f90"
+"../../include/iterationdata_method.mod" : "../../lib/IterationData_Method.o" .EXISTSONLY
 	@echo Compiling Base/IterationData/IterationData_Method.f90
-	@$(FC) -c -o "../../../../lib/IterationData_Method.o" $(FFLAGS) "Base/IterationData/IterationData_Method.f90"
+	@$(FC) -c -o "../../lib/IterationData_Method.o" $(FFLAGS) "Base/IterationData/IterationData_Method.f90"
 
-"../../../../lib/Kernel_Class.o": "Classes/Kernel/Kernel_Class.f90" "../../../../include/easifem.mod" "Classes/Kernel/Kernel_Def.inc"
-	@echo Compiling Classes/Kernel/Kernel_Class.f90
-	@$(FC) -c -o "../../../../lib/Kernel_Class.o" $(FFLAGS) "Classes/Kernel/Kernel_Class.f90"
-"../../../../include/kernel_class.mod" : "../../../../lib/Kernel_Class.o" .EXISTSONLY
-	@echo Compiling Classes/Kernel/Kernel_Class.f90
-	@$(FC) -c -o "../../../../lib/Kernel_Class.o" $(FFLAGS) "Classes/Kernel/Kernel_Class.f90"
-
-"../../../../lib/KeyValue_Method.o": "Base/KeyValue/KeyValue_Method.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "Base/KeyValue/constructor.inc" "Base/KeyValue/setmethod.inc" "Base/KeyValue/getmethod.inc" "Base/IterationData/contains.part"
+"../../lib/KeyValue_Method.o": "Base/KeyValue/KeyValue_Method.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "Base/KeyValue/constructor.inc" "Base/KeyValue/setmethod.inc" "Base/KeyValue/getmethod.inc" "Base/IterationData/contains.part"
 	@echo Compiling Base/KeyValue/KeyValue_Method.f90
-	@$(FC) -c -o "../../../../lib/KeyValue_Method.o" $(FFLAGS) "Base/KeyValue/KeyValue_Method.f90"
-"../../../../include/keyvalue_method.mod" : "../../../../lib/KeyValue_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/KeyValue_Method.o" $(FFLAGS) "Base/KeyValue/KeyValue_Method.f90"
+"../../include/keyvalue_method.mod" : "../../lib/KeyValue_Method.o" .EXISTSONLY
 	@echo Compiling Base/KeyValue/KeyValue_Method.f90
-	@$(FC) -c -o "../../../../lib/KeyValue_Method.o" $(FFLAGS) "Base/KeyValue/KeyValue_Method.f90"
+	@$(FC) -c -o "../../lib/KeyValue_Method.o" $(FFLAGS) "Base/KeyValue/KeyValue_Method.f90"
 
-"../../../../lib/LinSolver_Class.o": "Classes/LinSolver/LinSolver_Class.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/LinSolver_Class.o": "Classes/LinSolver/LinSolver_Class.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Classes/LinSolver/LinSolver_Class.f90
-	@$(FC) -c -o "../../../../lib/LinSolver_Class.o" $(FFLAGS) "Classes/LinSolver/LinSolver_Class.f90"
-"../../../../include/linsolver_class.mod" : "../../../../lib/LinSolver_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/LinSolver_Class.o" $(FFLAGS) "Classes/LinSolver/LinSolver_Class.f90"
+"../../include/linsolver_class.mod" : "../../lib/LinSolver_Class.o" .EXISTSONLY
 	@echo Compiling Classes/LinSolver/LinSolver_Class.f90
-	@$(FC) -c -o "../../../../lib/LinSolver_Class.o" $(FFLAGS) "Classes/LinSolver/LinSolver_Class.f90"
+	@$(FC) -c -o "../../lib/LinSolver_Class.o" $(FFLAGS) "Classes/LinSolver/LinSolver_Class.f90"
 
-"../../../../lib/Material_Class.o": "Classes/Material/Material_Class.f90" "../../../../include/globaldata.mod" "../../../../include/thermcondmodel_class.mod" "../../../../include/volheatcapmodel_class.mod" "../../../../include/sfccmodel_class.mod" "Classes/Material/soils_define.inc" "Classes/Material/soil.inc"
+"../../lib/Material_Class.o": "Classes/Material/Material_Class.f90" "../../include/globaldata.mod" "../../include/thermcondmodel_class.mod" "../../include/volheatcapmodel_class.mod" "../../include/sfccmodel_class.mod" "Classes/Material/soils_define.inc" "Classes/Material/soil.inc"
 	@echo Compiling Classes/Material/Material_Class.f90
-	@$(FC) -c -o "../../../../lib/Material_Class.o" $(FFLAGS) "Classes/Material/Material_Class.f90"
-"../../../../include/material_class.mod" : "../../../../lib/Material_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/Material_Class.o" $(FFLAGS) "Classes/Material/Material_Class.f90"
+"../../include/material_class.mod" : "../../lib/Material_Class.o" .EXISTSONLY
 	@echo Compiling Classes/Material/Material_Class.f90
-	@$(FC) -c -o "../../../../lib/Material_Class.o" $(FFLAGS) "Classes/Material/Material_Class.f90"
+	@$(FC) -c -o "../../lib/Material_Class.o" $(FFLAGS) "Classes/Material/Material_Class.f90"
 
-"../../../../lib/matrix_exponential.o": "Base/Tensor/Rank2Tensor/matrix_exponential.f90"
+"../../lib/matrix_exponential.o": "Base/Tensor/Rank2Tensor/matrix_exponential.f90"
 	@echo Compiling Base/Tensor/Rank2Tensor/matrix_exponential.f90
-	@$(FC) -c -o "../../../../lib/matrix_exponential.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/matrix_exponential.f90"
+	@$(FC) -c -o "../../lib/matrix_exponential.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/matrix_exponential.f90"
 
-"../../../../lib/Mesh_Class.o": "Classes/FEMesh/Mesh/Mesh_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/fe.mod"
+"../../lib/Mesh_Class.o": "Classes/FEMesh/Mesh/Mesh_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/fe.mod"
 	@echo Compiling Classes/FEMesh/Mesh/Mesh_Class.f90
-	@$(FC) -c -o "../../../../lib/Mesh_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/Mesh_Class.f90"
-"../../../../include/mesh_class.mod" : "../../../../lib/Mesh_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/Mesh_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/Mesh_Class.f90"
+"../../include/mesh_class.mod" : "../../lib/Mesh_Class.o" .EXISTSONLY
 	@echo Compiling Classes/FEMesh/Mesh/Mesh_Class.f90
-	@$(FC) -c -o "../../../../lib/Mesh_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/Mesh_Class.f90"
+	@$(FC) -c -o "../../lib/Mesh_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/Mesh_Class.f90"
 
-"../../../../lib/MeshConnectivity_Class.o": "Classes/FEMesh/Mesh/MeshConnectivity_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/fe.mod" "../../../../include/mesh_class.mod" "../../../../include/meshdata_class.mod"
+"../../lib/MeshConnectivity_Class.o": "Classes/FEMesh/Mesh/MeshConnectivity_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/fe.mod" "../../include/mesh_class.mod" "../../include/meshdata_class.mod"
 	@echo Compiling Classes/FEMesh/Mesh/MeshConnectivity_Class.f90
-	@$(FC) -c -o "../../../../lib/MeshConnectivity_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/MeshConnectivity_Class.f90"
-"../../../../include/meshconnectivity_class.mod" : "../../../../lib/MeshConnectivity_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/MeshConnectivity_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/MeshConnectivity_Class.f90"
+"../../include/meshconnectivity_class.mod" : "../../lib/MeshConnectivity_Class.o" .EXISTSONLY
 	@echo Compiling Classes/FEMesh/Mesh/MeshConnectivity_Class.f90
-	@$(FC) -c -o "../../../../lib/MeshConnectivity_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/MeshConnectivity_Class.f90"
+	@$(FC) -c -o "../../lib/MeshConnectivity_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/MeshConnectivity_Class.f90"
 
-"../../../../lib/MeshData_Class.o": "Classes/FEMesh/Mesh/MeshData_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/mesh_class.mod" "../../../../include/fe.mod"
+"../../lib/MeshData_Class.o": "Classes/FEMesh/Mesh/MeshData_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/mesh_class.mod" "../../include/fe.mod"
 	@echo Compiling Classes/FEMesh/Mesh/MeshData_Class.f90
-	@$(FC) -c -o "../../../../lib/MeshData_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/MeshData_Class.f90"
-"../../../../include/meshdata_class.mod" : "../../../../lib/MeshData_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/MeshData_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/MeshData_Class.f90"
+"../../include/meshdata_class.mod" : "../../lib/MeshData_Class.o" .EXISTSONLY
 	@echo Compiling Classes/FEMesh/Mesh/MeshData_Class.f90
-	@$(FC) -c -o "../../../../lib/MeshData_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/MeshData_Class.f90"
+	@$(FC) -c -o "../../lib/MeshData_Class.o" $(FFLAGS) "Classes/FEMesh/Mesh/MeshData_Class.f90"
 
-"../../../../lib/mshElements_Class.o": "Classes/GMSH/MSH/mshElements_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/mshformat_class.mod"
+"../../lib/mshElements_Class.o": "Classes/GMSH/MSH/mshElements_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/mshformat_class.mod"
 	@echo Compiling Classes/GMSH/MSH/mshElements_Class.f90
-	@$(FC) -c -o "../../../../lib/mshElements_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshElements_Class.f90"
-"../../../../include/mshelements_class.mod" : "../../../../lib/mshElements_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/mshElements_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshElements_Class.f90"
+"../../include/mshelements_class.mod" : "../../lib/mshElements_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/MSH/mshElements_Class.f90
-	@$(FC) -c -o "../../../../lib/mshElements_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshElements_Class.f90"
+	@$(FC) -c -o "../../lib/mshElements_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshElements_Class.f90"
 
-"../../../../lib/mshEntity_Class.o": "Classes/GMSH/MSH/mshEntity_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod"
+"../../lib/mshEntity_Class.o": "Classes/GMSH/MSH/mshEntity_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod"
 	@echo Compiling Classes/GMSH/MSH/mshEntity_Class.f90
-	@$(FC) -c -o "../../../../lib/mshEntity_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshEntity_Class.f90"
-"../../../../include/mshentity_class.mod" : "../../../../lib/mshEntity_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/mshEntity_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshEntity_Class.f90"
+"../../include/mshentity_class.mod" : "../../lib/mshEntity_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/MSH/mshEntity_Class.f90
-	@$(FC) -c -o "../../../../lib/mshEntity_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshEntity_Class.f90"
+	@$(FC) -c -o "../../lib/mshEntity_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshEntity_Class.f90"
 
-"../../../../lib/mshFormat_Class.o": "Classes/GMSH/MSH/mshFormat_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod"
+"../../lib/mshFormat_Class.o": "Classes/GMSH/MSH/mshFormat_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod"
 	@echo Compiling Classes/GMSH/MSH/mshFormat_Class.f90
-	@$(FC) -c -o "../../../../lib/mshFormat_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshFormat_Class.f90"
-"../../../../include/mshformat_class.mod" : "../../../../lib/mshFormat_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/mshFormat_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshFormat_Class.f90"
+"../../include/mshformat_class.mod" : "../../lib/mshFormat_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/MSH/mshFormat_Class.f90
-	@$(FC) -c -o "../../../../lib/mshFormat_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshFormat_Class.f90"
+	@$(FC) -c -o "../../lib/mshFormat_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshFormat_Class.f90"
 
-"../../../../lib/mshNodes_Class.o": "Classes/GMSH/MSH/mshNodes_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/mshformat_class.mod"
+"../../lib/mshNodes_Class.o": "Classes/GMSH/MSH/mshNodes_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/mshformat_class.mod"
 	@echo Compiling Classes/GMSH/MSH/mshNodes_Class.f90
-	@$(FC) -c -o "../../../../lib/mshNodes_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshNodes_Class.f90"
-"../../../../include/mshnodes_class.mod" : "../../../../lib/mshNodes_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/mshNodes_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshNodes_Class.f90"
+"../../include/mshnodes_class.mod" : "../../lib/mshNodes_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/MSH/mshNodes_Class.f90
-	@$(FC) -c -o "../../../../lib/mshNodes_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshNodes_Class.f90"
+	@$(FC) -c -o "../../lib/mshNodes_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshNodes_Class.f90"
 
-"../../../../lib/mshPhysicalNames_Class.o": "Classes/GMSH/MSH/mshPhysicalNames_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod"
+"../../lib/mshPhysicalNames_Class.o": "Classes/GMSH/MSH/mshPhysicalNames_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod"
 	@echo Compiling Classes/GMSH/MSH/mshPhysicalNames_Class.f90
-	@$(FC) -c -o "../../../../lib/mshPhysicalNames_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshPhysicalNames_Class.f90"
-"../../../../include/mshphysicalnames_class.mod" : "../../../../lib/mshPhysicalNames_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/mshPhysicalNames_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshPhysicalNames_Class.f90"
+"../../include/mshphysicalnames_class.mod" : "../../lib/mshPhysicalNames_Class.o" .EXISTSONLY
 	@echo Compiling Classes/GMSH/MSH/mshPhysicalNames_Class.f90
-	@$(FC) -c -o "../../../../lib/mshPhysicalNames_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshPhysicalNames_Class.f90"
+	@$(FC) -c -o "../../lib/mshPhysicalNames_Class.o" $(FFLAGS) "Classes/GMSH/MSH/mshPhysicalNames_Class.f90"
 
-"../../../../lib/QuadraturePoint_Method.o": "Base/QuadraturePoint/QuadraturePoint_Method.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "Base/IterationData/contains.part"
+"../../lib/QuadraturePoint_Method.o": "Base/QuadraturePoint/QuadraturePoint_Method.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "Base/IterationData/contains.part"
 	@echo Compiling Base/QuadraturePoint/QuadraturePoint_Method.f90
-	@$(FC) -c -o "../../../../lib/QuadraturePoint_Method.o" $(FFLAGS) "Base/QuadraturePoint/QuadraturePoint_Method.f90"
-"../../../../include/quadraturepoint_method.mod" : "../../../../lib/QuadraturePoint_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/QuadraturePoint_Method.o" $(FFLAGS) "Base/QuadraturePoint/QuadraturePoint_Method.f90"
+"../../include/quadraturepoint_method.mod" : "../../lib/QuadraturePoint_Method.o" .EXISTSONLY
 	@echo Compiling Base/QuadraturePoint/QuadraturePoint_Method.f90
-	@$(FC) -c -o "../../../../lib/QuadraturePoint_Method.o" $(FFLAGS) "Base/QuadraturePoint/QuadraturePoint_Method.f90"
+	@$(FC) -c -o "../../lib/QuadraturePoint_Method.o" $(FFLAGS) "Base/QuadraturePoint/QuadraturePoint_Method.f90"
 
-"../../../../lib/QuadratureVariables_Class.o": "Classes/QuadratureVariables/QuadratureVariables_Class.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "../../../../include/mesh_class.mod"
+"../../lib/QuadratureVariables_Class.o": "Classes/QuadratureVariables/QuadratureVariables_Class.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/mesh_class.mod"
 	@echo Compiling Classes/QuadratureVariables/QuadratureVariables_Class.f90
-	@$(FC) -c -o "../../../../lib/QuadratureVariables_Class.o" $(FFLAGS) "Classes/QuadratureVariables/QuadratureVariables_Class.f90"
-"../../../../include/quadraturevariables_class.mod" : "../../../../lib/QuadratureVariables_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/QuadratureVariables_Class.o" $(FFLAGS) "Classes/QuadratureVariables/QuadratureVariables_Class.f90"
+"../../include/quadraturevariables_class.mod" : "../../lib/QuadratureVariables_Class.o" .EXISTSONLY
 	@echo Compiling Classes/QuadratureVariables/QuadratureVariables_Class.f90
-	@$(FC) -c -o "../../../../lib/QuadratureVariables_Class.o" $(FFLAGS) "Classes/QuadratureVariables/QuadratureVariables_Class.f90"
+	@$(FC) -c -o "../../lib/QuadratureVariables_Class.o" $(FFLAGS) "Classes/QuadratureVariables/QuadratureVariables_Class.f90"
 
-"../../../../lib/Random_Method.o": "Base/Random/Random_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod"
+"../../lib/Random_Method.o": "Base/Random/Random_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Base/Random/Random_Method.f90
-	@$(FC) -c -o "../../../../lib/Random_Method.o" $(FFLAGS) "Base/Random/Random_Method.f90"
-"../../../../include/random_method.mod" : "../../../../lib/Random_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/Random_Method.o" $(FFLAGS) "Base/Random/Random_Method.f90"
+"../../include/random_method.mod" : "../../lib/Random_Method.o" .EXISTSONLY
 	@echo Compiling Base/Random/Random_Method.f90
-	@$(FC) -c -o "../../../../lib/Random_Method.o" $(FFLAGS) "Base/Random/Random_Method.f90"
+	@$(FC) -c -o "../../lib/Random_Method.o" $(FFLAGS) "Base/Random/Random_Method.f90"
 
-"../../../../lib/Rank2Tensor_Method.o": "Base/Tensor/Rank2Tensor/Rank2Tensor_Method.f90" "../../../../include/globaldata.mod" "../../../../include/io.mod" "../../../../include/basetype.mod"
+"../../lib/Rank2Tensor_Method.o": "Base/Tensor/Rank2Tensor/Rank2Tensor_Method.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/basetype.mod"
 	@echo Compiling Base/Tensor/Rank2Tensor/Rank2Tensor_Method.f90
-	@$(FC) -c -o "../../../../lib/Rank2Tensor_Method.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/Rank2Tensor_Method.f90"
-"../../../../include/rank2tensor_method.mod" : "../../../../lib/Rank2Tensor_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/Rank2Tensor_Method.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/Rank2Tensor_Method.f90"
+"../../include/rank2tensor_method.mod" : "../../lib/Rank2Tensor_Method.o" .EXISTSONLY
 	@echo Compiling Base/Tensor/Rank2Tensor/Rank2Tensor_Method.f90
-	@$(FC) -c -o "../../../../lib/Rank2Tensor_Method.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/Rank2Tensor_Method.f90"
+	@$(FC) -c -o "../../lib/Rank2Tensor_Method.o" $(FFLAGS) "Base/Tensor/Rank2Tensor/Rank2Tensor_Method.f90"
 
-"../../../../lib/RealMatrix_Method.o": "Base/Matrix/RealMatrix/RealMatrix_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "Base/KeyValue/constructor.inc" "Base/Matrix/RealMatrix/lapack.inc" "Base/Matrix/RealMatrix/getvalue.inc" "Base/Matrix/RealMatrix/setvalue.inc" "Base/IterationData/contains.part"
+"../../lib/RealMatrix_Method.o": "Base/Matrix/RealMatrix/RealMatrix_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "Base/KeyValue/constructor.inc" "Base/Matrix/RealMatrix/lapack.inc" "Base/Matrix/RealMatrix/getvalue.inc" "Base/Matrix/RealMatrix/setvalue.inc" "Base/IterationData/contains.part"
 	@echo Compiling Base/Matrix/RealMatrix/RealMatrix_Method.f90
-	@$(FC) -c -o "../../../../lib/RealMatrix_Method.o" $(FFLAGS) "Base/Matrix/RealMatrix/RealMatrix_Method.f90"
-"../../../../include/realmatrix_method.mod" : "../../../../lib/RealMatrix_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/RealMatrix_Method.o" $(FFLAGS) "Base/Matrix/RealMatrix/RealMatrix_Method.f90"
+"../../include/realmatrix_method.mod" : "../../lib/RealMatrix_Method.o" .EXISTSONLY
 	@echo Compiling Base/Matrix/RealMatrix/RealMatrix_Method.f90
-	@$(FC) -c -o "../../../../lib/RealMatrix_Method.o" $(FFLAGS) "Base/Matrix/RealMatrix/RealMatrix_Method.f90"
+	@$(FC) -c -o "../../lib/RealMatrix_Method.o" $(FFLAGS) "Base/Matrix/RealMatrix/RealMatrix_Method.f90"
 
-"../../../../lib/RealVector_Method.o": "Base/Vector/RealVector/RealVector_Method.f90" "../../../../include/globaldata.mod" "../../../../include/io.mod" "../../../../include/basetype.mod" "Base/IterationData/contains.part"
+"../../lib/RealVector_Method.o": "Base/Vector/RealVector/RealVector_Method.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/basetype.mod" "Base/IterationData/contains.part"
 	@echo Compiling Base/Vector/RealVector/RealVector_Method.f90
-	@$(FC) -c -o "../../../../lib/RealVector_Method.o" $(FFLAGS) "Base/Vector/RealVector/RealVector_Method.f90"
-"../../../../include/realvector_method.mod" : "../../../../lib/RealVector_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/RealVector_Method.o" $(FFLAGS) "Base/Vector/RealVector/RealVector_Method.f90"
+"../../include/realvector_method.mod" : "../../lib/RealVector_Method.o" .EXISTSONLY
 	@echo Compiling Base/Vector/RealVector/RealVector_Method.f90
-	@$(FC) -c -o "../../../../lib/RealVector_Method.o" $(FFLAGS) "Base/Vector/RealVector/RealVector_Method.f90"
+	@$(FC) -c -o "../../lib/RealVector_Method.o" $(FFLAGS) "Base/Vector/RealVector/RealVector_Method.f90"
 
-"../../../../lib/ReferenceElement_Method.o": "Base/ReferenceElement/ReferenceElement_Method.f90" "../../../../include/basetype.mod" "../../../../include/globaldata.mod" "Base/ReferenceElement/line.inc" "Base/ReferenceElement/triangle.inc" "Base/ReferenceElement/quadrangle.inc" "Base/ReferenceElement/tetrahedron.inc" "Base/ReferenceElement/hexahedron.inc" "Base/ReferenceElement/prism.inc" "Base/ReferenceElement/pyramid.inc"
+"../../lib/ReferenceElement_Method.o": "Base/ReferenceElement/ReferenceElement_Method.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "Base/ReferenceElement/line.inc" "Base/ReferenceElement/triangle.inc" "Base/ReferenceElement/quadrangle.inc" "Base/ReferenceElement/tetrahedron.inc" "Base/ReferenceElement/hexahedron.inc" "Base/ReferenceElement/prism.inc" "Base/ReferenceElement/pyramid.inc"
 	@echo Compiling Base/ReferenceElement/ReferenceElement_Method.f90
-	@$(FC) -c -o "../../../../lib/ReferenceElement_Method.o" $(FFLAGS) "Base/ReferenceElement/ReferenceElement_Method.f90"
-"../../../../include/referenceelement_method.mod" : "../../../../lib/ReferenceElement_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/ReferenceElement_Method.o" $(FFLAGS) "Base/ReferenceElement/ReferenceElement_Method.f90"
+"../../include/referenceelement_method.mod" : "../../lib/ReferenceElement_Method.o" .EXISTSONLY
 	@echo Compiling Base/ReferenceElement/ReferenceElement_Method.f90
-	@$(FC) -c -o "../../../../lib/ReferenceElement_Method.o" $(FFLAGS) "Base/ReferenceElement/ReferenceElement_Method.f90"
+	@$(FC) -c -o "../../lib/ReferenceElement_Method.o" $(FFLAGS) "Base/ReferenceElement/ReferenceElement_Method.f90"
 
-"../../../../lib/SFCCModel_Class.o": "Classes/MaterialProperties/SFCCModel_Class.f90" "../../../../include/globaldata.mod" "Classes/MaterialProperties/PMDefine.inc"
+"../../lib/SFCCModel_Class.o": "Classes/MaterialProperties/SFCCModel_Class.f90" "../../include/globaldata.mod" "Classes/MaterialProperties/PMDefine.inc"
 	@echo Compiling Classes/MaterialProperties/SFCCModel_Class.f90
-	@$(FC) -c -o "../../../../lib/SFCCModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/SFCCModel_Class.f90"
-"../../../../include/sfccmodel_class.mod" : "../../../../lib/SFCCModel_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/SFCCModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/SFCCModel_Class.f90"
+"../../include/sfccmodel_class.mod" : "../../lib/SFCCModel_Class.o" .EXISTSONLY
 	@echo Compiling Classes/MaterialProperties/SFCCModel_Class.f90
-	@$(FC) -c -o "../../../../lib/SFCCModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/SFCCModel_Class.f90"
+	@$(FC) -c -o "../../lib/SFCCModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/SFCCModel_Class.f90"
 
-"../../../../lib/SparseMatrix_Method.o": "Base/SparseMatrix/SparseMatrix_Method.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "Base/SparseMatrix/SparseMatrix_Interface.inc" "Base/IterationData/contains.part"
+"../../lib/SparseMatrix_Method.o": "Base/SparseMatrix/SparseMatrix_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "Base/SparseMatrix/SparseMatrix_Interface.inc" "Base/IterationData/contains.part"
 	@echo Compiling Base/SparseMatrix/SparseMatrix_Method.f90
-	@$(FC) -c -o "../../../../lib/SparseMatrix_Method.o" $(FFLAGS) "Base/SparseMatrix/SparseMatrix_Method.f90"
-"../../../../include/sparsematrix_method.mod" : "../../../../lib/SparseMatrix_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/SparseMatrix_Method.o" $(FFLAGS) "Base/SparseMatrix/SparseMatrix_Method.f90"
+"../../include/sparsematrix_method.mod" : "../../lib/SparseMatrix_Method.o" .EXISTSONLY
 	@echo Compiling Base/SparseMatrix/SparseMatrix_Method.f90
-	@$(FC) -c -o "../../../../lib/SparseMatrix_Method.o" $(FFLAGS) "Base/SparseMatrix/SparseMatrix_Method.f90"
+	@$(FC) -c -o "../../lib/SparseMatrix_Method.o" $(FFLAGS) "Base/SparseMatrix/SparseMatrix_Method.f90"
 
-"../../../../lib/StdMaterials.o": "Classes/Material/StdMaterials.f90" "../../../../include/globaldata.mod" "../../../../include/material_class.mod" "Classes/Material/water.inc" "Classes/Material/ice.inc" "Classes/Material/air.inc" "Classes/Material/mineral.inc" "Classes/Material/waterfunctions.inc" "Classes/Material/icefunctions.inc" "Classes/Material/airfunctions.inc" "Classes/Material/mineralfunctions.inc"
+"../../lib/StdMaterials.o": "Classes/Material/StdMaterials.f90" "../../include/globaldata.mod" "../../include/material_class.mod" "Classes/Material/water.inc" "Classes/Material/ice.inc" "Classes/Material/air.inc" "Classes/Material/mineral.inc" "Classes/Material/waterfunctions.inc" "Classes/Material/icefunctions.inc" "Classes/Material/airfunctions.inc" "Classes/Material/mineralfunctions.inc"
 	@echo Compiling Classes/Material/StdMaterials.f90
-	@$(FC) -c -o "../../../../lib/StdMaterials.o" $(FFLAGS) "Classes/Material/StdMaterials.f90"
-"../../../../include/stdmaterials.mod" : "../../../../lib/StdMaterials.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/StdMaterials.o" $(FFLAGS) "Classes/Material/StdMaterials.f90"
+"../../include/stdmaterials.mod" : "../../lib/StdMaterials.o" .EXISTSONLY
 	@echo Compiling Classes/Material/StdMaterials.f90
-	@$(FC) -c -o "../../../../lib/StdMaterials.o" $(FFLAGS) "Classes/Material/StdMaterials.f90"
+	@$(FC) -c -o "../../lib/StdMaterials.o" $(FFLAGS) "Classes/Material/StdMaterials.f90"
 
-"../../../../lib/ThermCondModel_Class.o": "Classes/MaterialProperties/ThermCondModel_Class.f90" "../../../../include/globaldata.mod" "Classes/MaterialProperties/PMDefine.inc"
+"../../lib/ThermCondModel_Class.o": "Classes/MaterialProperties/ThermCondModel_Class.f90" "../../include/globaldata.mod" "Classes/MaterialProperties/PMDefine.inc"
 	@echo Compiling Classes/MaterialProperties/ThermCondModel_Class.f90
-	@$(FC) -c -o "../../../../lib/ThermCondModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/ThermCondModel_Class.f90"
-"../../../../include/thermcondmodel_class.mod" : "../../../../lib/ThermCondModel_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/ThermCondModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/ThermCondModel_Class.f90"
+"../../include/thermcondmodel_class.mod" : "../../lib/ThermCondModel_Class.o" .EXISTSONLY
 	@echo Compiling Classes/MaterialProperties/ThermCondModel_Class.f90
-	@$(FC) -c -o "../../../../lib/ThermCondModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/ThermCondModel_Class.f90"
+	@$(FC) -c -o "../../lib/ThermCondModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/ThermCondModel_Class.f90"
 
-"../../../../lib/Utility.o": "Base/Utility.f90" "../../../../include/globaldata.mod" "../../../../include/io.mod" "../../../../include/errorhandling.mod"
+"../../lib/Utility.o": "Base/Utility.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/errorhandling.mod"
 	@echo Compiling Base/Utility.f90
-	@$(FC) -c -o "../../../../lib/Utility.o" $(FFLAGS) "Base/Utility.f90"
-"../../../../include/utility.mod" : "../../../../lib/Utility.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/Utility.o" $(FFLAGS) "Base/Utility.f90"
+"../../include/utility.mod" : "../../lib/Utility.o" .EXISTSONLY
 	@echo Compiling Base/Utility.f90
-	@$(FC) -c -o "../../../../lib/Utility.o" $(FFLAGS) "Base/Utility.f90"
+	@$(FC) -c -o "../../lib/Utility.o" $(FFLAGS) "Base/Utility.f90"
 
-"../../../../lib/VoigtRank2Tensor_Method.o": "Base/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90" "../../../../include/globaldata.mod" "../../../../include/io.mod" "../../../../include/basetype.mod"
+"../../lib/VoigtRank2Tensor_Method.o": "Base/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/basetype.mod"
 	@echo Compiling Base/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90
-	@$(FC) -c -o "../../../../lib/VoigtRank2Tensor_Method.o" $(FFLAGS) "Base/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90"
-"../../../../include/voigtrank2tensor_method.mod" : "../../../../lib/VoigtRank2Tensor_Method.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/VoigtRank2Tensor_Method.o" $(FFLAGS) "Base/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90"
+"../../include/voigtrank2tensor_method.mod" : "../../lib/VoigtRank2Tensor_Method.o" .EXISTSONLY
 	@echo Compiling Base/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90
-	@$(FC) -c -o "../../../../lib/VoigtRank2Tensor_Method.o" $(FFLAGS) "Base/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90"
+	@$(FC) -c -o "../../lib/VoigtRank2Tensor_Method.o" $(FFLAGS) "Base/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90"
 
-"../../../../lib/VolHeatCapModel_Class.o": "Classes/MaterialProperties/VolHeatCapModel_Class.f90" "../../../../include/globaldata.mod" "Classes/MaterialProperties/PMDefine.inc"
+"../../lib/VolHeatCapModel_Class.o": "Classes/MaterialProperties/VolHeatCapModel_Class.f90" "../../include/globaldata.mod" "Classes/MaterialProperties/PMDefine.inc"
 	@echo Compiling Classes/MaterialProperties/VolHeatCapModel_Class.f90
-	@$(FC) -c -o "../../../../lib/VolHeatCapModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/VolHeatCapModel_Class.f90"
-"../../../../include/volheatcapmodel_class.mod" : "../../../../lib/VolHeatCapModel_Class.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/VolHeatCapModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/VolHeatCapModel_Class.f90"
+"../../include/volheatcapmodel_class.mod" : "../../lib/VolHeatCapModel_Class.o" .EXISTSONLY
 	@echo Compiling Classes/MaterialProperties/VolHeatCapModel_Class.f90
-	@$(FC) -c -o "../../../../lib/VolHeatCapModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/VolHeatCapModel_Class.f90"
+	@$(FC) -c -o "../../lib/VolHeatCapModel_Class.o" $(FFLAGS) "Classes/MaterialProperties/VolHeatCapModel_Class.f90"
 
-"../../../../lib/vtkType.o": "Classes/VTK/vtkType.f90" "../../../../include/globaldata.mod" "../../../../include/basetype.mod" "../../../../include/mesh_class.mod" "../../../../include/meshdata_class.mod"
+"../../lib/vtkType.o": "Classes/VTK/vtkType.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "../../include/mesh_class.mod" "../../include/meshdata_class.mod"
 	@echo Compiling Classes/VTK/vtkType.f90
-	@$(FC) -c -o "../../../../lib/vtkType.o" $(FFLAGS) "Classes/VTK/vtkType.f90"
-"../../../../include/vtktype.mod" : "../../../../lib/vtkType.o" .EXISTSONLY
+	@$(FC) -c -o "../../lib/vtkType.o" $(FFLAGS) "Classes/VTK/vtkType.f90"
+"../../include/vtktype.mod" : "../../lib/vtkType.o" .EXISTSONLY
 	@echo Compiling Classes/VTK/vtkType.f90
-	@$(FC) -c -o "../../../../lib/vtkType.o" $(FFLAGS) "Classes/VTK/vtkType.f90"
+	@$(FC) -c -o "../../lib/vtkType.o" $(FFLAGS) "Classes/VTK/vtkType.f90"
 
 clean: .SYMBOLIC
-	@echo Deleting ../../../../lib/AbstractArray_Method.o and related files
-	@$(RM) "../../../../lib/AbstractArray_Method.o" "../../../../include/abstractarray_method.mod" "../../../../include/abstractarray_method.smod"
-	@echo Deleting ../../../../lib/AbstractMatrix_Method.o and related files
-	@$(RM) "../../../../lib/AbstractMatrix_Method.o" "../../../../include/abstractmatrix_method.mod" "../../../../include/abstractmatrix_method.smod"
-	@echo Deleting ../../../../lib/AbstractVector_Method.o and related files
-	@$(RM) "../../../../lib/AbstractVector_Method.o" "../../../../include/abstractvector_method.mod" "../../../../include/abstractvector_method.smod"
-	@echo Deleting ../../../../lib/BaseMethod.o and related files
-	@$(RM) "../../../../lib/BaseMethod.o" "../../../../include/basemethod.mod" "../../../../include/basemethod.smod"
-	@echo Deleting ../../../../lib/BaseType.o and related files
-	@$(RM) "../../../../lib/BaseType.o" "../../../../include/basetype.mod" "../../../../include/basetype.smod"
-	@echo Deleting ../../../../lib/BaseType@AdditionalMethods.o and related files
-	@$(RM) "../../../../lib/BaseType@AdditionalMethods.o"
-	@echo Deleting ../../../../lib/BLASInterface.o and related files
-	@$(RM) "../../../../lib/BLASInterface.o" "../../../../include/blasinterface.mod" "../../../../include/blasinterface.smod"
-	@echo Deleting ../../../../lib/BoundingBox_Method.o and related files
-	@$(RM) "../../../../lib/BoundingBox_Method.o" "../../../../include/boundingbox_method.mod" "../../../../include/boundingbox_method.smod"
-	@echo Deleting ../../../../lib/Buffer_Method.o and related files
-	@$(RM) "../../../../lib/Buffer_Method.o" "../../../../include/buffer_method.mod" "../../../../include/buffer_method.smod"
-	@echo Deleting ../../../../lib/DOF_Method.o and related files
-	@$(RM) "../../../../lib/DOF_Method.o" "../../../../include/dof_method.mod" "../../../../include/dof_method.smod"
-	@echo Deleting ../../../../lib/Domain_Class.o and related files
-	@$(RM) "../../../../lib/Domain_Class.o" "../../../../include/domain_class.mod" "../../../../include/domain_class.smod"
-	@echo Deleting ../../../../lib/dsyevc3.o and related files
-	@$(RM) "../../../../lib/dsyevc3.o"
-	@echo Deleting ../../../../lib/dsyevh3.o and related files
-	@$(RM) "../../../../lib/dsyevh3.o"
-	@echo Deleting ../../../../lib/dsyevq3.o and related files
-	@$(RM) "../../../../lib/dsyevq3.o"
-	@echo Deleting ../../../../lib/dsytrd3.o and related files
-	@$(RM) "../../../../lib/dsytrd3.o"
-	@echo Deleting ../../../../lib/EASIFEM.o and related files
-	@$(RM) "../../../../lib/EASIFEM.o" "../../../../include/easifem.mod" "../../../../include/easifem.smod"
-	@echo Deleting ../../../../lib/easifemClasses.o and related files
-	@$(RM) "../../../../lib/easifemClasses.o" "../../../../include/easifemclasses.mod" "../../../../include/easifemclasses.smod"
-	@echo Deleting ../../../../lib/Element_Class.o and related files
-	@$(RM) "../../../../lib/Element_Class.o" "../../../../include/element_class.mod" "../../../../include/element_class.smod"
-	@echo Deleting ../../../../lib/ElemshapeData_Method.o and related files
-	@$(RM) "../../../../lib/ElemshapeData_Method.o" "../../../../include/elemshapedata_method.mod" "../../../../include/elemshapedata_method.smod"
-	@echo Deleting ../../../../lib/ErrorHandling.o and related files
-	@$(RM) "../../../../lib/ErrorHandling.o" "../../../../include/errorhandling.mod" "../../../../include/errorhandling.smod"
-	@echo Deleting ../../../../lib/FacetElement_Class.o and related files
-	@$(RM) "../../../../lib/FacetElement_Class.o" "../../../../include/facetelement_class.mod" "../../../../include/facetelement_class.smod"
-	@echo Deleting ../../../../lib/FE.o and related files
-	@$(RM) "../../../../lib/FE.o" "../../../../include/fe.mod" "../../../../include/fe.smod"
-	@echo Deleting ../../../../lib/FEMatrix_Module.o and related files
-	@$(RM) "../../../../lib/FEMatrix_Module.o" "../../../../include/fematrix_module.mod" "../../../../include/fematrix_module.smod"
-	@echo Deleting ../../../../lib/FEVariable_Method.o and related files
-	@$(RM) "../../../../lib/FEVariable_Method.o" "../../../../include/fevariable_method.mod" "../../../../include/fevariable_method.smod"
-	@echo Deleting ../../../../lib/File_Method.o and related files
-	@$(RM) "../../../../lib/File_Method.o" "../../../../include/file_method.mod" "../../../../include/file_method.smod"
-	@echo Deleting ../../../../lib/GlobalData.o and related files
-	@$(RM) "../../../../lib/GlobalData.o" "../../../../include/globaldata.mod" "../../../../include/globaldata.smod"
-	@echo Deleting ../../../../lib/gmsh_Class.o and related files
-	@$(RM) "../../../../lib/gmsh_Class.o" "../../../../include/gmsh_class.mod" "../../../../include/gmsh_class.smod"
-	@echo Deleting ../../../../lib/gmshCurve_Class.o and related files
-	@$(RM) "../../../../lib/gmshCurve_Class.o" "../../../../include/gmshcurve_class.mod" "../../../../include/gmshcurve_class.smod"
-	@echo Deleting ../../../../lib/gmshEntity_Class.o and related files
-	@$(RM) "../../../../lib/gmshEntity_Class.o" "../../../../include/gmshentity_class.mod" "../../../../include/gmshentity_class.smod"
-	@echo Deleting ../../../../lib/gmshGeo_Class.o and related files
-	@$(RM) "../../../../lib/gmshGeo_Class.o" "../../../../include/gmshgeo_class.mod" "../../../../include/gmshgeo_class.smod"
-	@echo Deleting ../../../../lib/gmshGeoMesh_Class.o and related files
-	@$(RM) "../../../../lib/gmshGeoMesh_Class.o" "../../../../include/gmshgeomesh_class.mod" "../../../../include/gmshgeomesh_class.smod"
-	@echo Deleting ../../../../lib/gmshMesh_Class.o and related files
-	@$(RM) "../../../../lib/gmshMesh_Class.o" "../../../../include/gmshmesh_class.mod" "../../../../include/gmshmesh_class.smod"
-	@echo Deleting ../../../../lib/gmshModel_Class.o and related files
-	@$(RM) "../../../../lib/gmshModel_Class.o" "../../../../include/gmshmodel_class.mod" "../../../../include/gmshmodel_class.smod"
-	@echo Deleting ../../../../lib/gmshPoint_Class.o and related files
-	@$(RM) "../../../../lib/gmshPoint_Class.o" "../../../../include/gmshpoint_class.mod" "../../../../include/gmshpoint_class.smod"
-	@echo Deleting ../../../../lib/gmshSurface_Class.o and related files
-	@$(RM) "../../../../lib/gmshSurface_Class.o" "../../../../include/gmshsurface_class.mod" "../../../../include/gmshsurface_class.smod"
-	@echo Deleting ../../../../lib/gmshVolume_Class.o and related files
-	@$(RM) "../../../../lib/gmshVolume_Class.o" "../../../../include/gmshvolume_class.mod" "../../../../include/gmshvolume_class.smod"
-	@echo Deleting ../../../../lib/IndexValue_Method.o and related files
-	@$(RM) "../../../../lib/IndexValue_Method.o" "../../../../include/indexvalue_method.mod" "../../../../include/indexvalue_method.smod"
-	@echo Deleting ../../../../lib/IntVector_Method.o and related files
-	@$(RM) "../../../../lib/IntVector_Method.o" "../../../../include/intvector_method.mod" "../../../../include/intvector_method.smod"
-	@echo Deleting ../../../../lib/IO.o and related files
-	@$(RM) "../../../../lib/IO.o" "../../../../include/io.mod" "../../../../include/io.smod"
-	@echo Deleting ../../../../lib/IterationData_Method.o and related files
-	@$(RM) "../../../../lib/IterationData_Method.o" "../../../../include/iterationdata_method.mod" "../../../../include/iterationdata_method.smod"
-	@echo Deleting ../../../../lib/Kernel_Class.o and related files
-	@$(RM) "../../../../lib/Kernel_Class.o" "../../../../include/kernel_class.mod" "../../../../include/kernel_class.smod"
-	@echo Deleting ../../../../lib/KeyValue_Method.o and related files
-	@$(RM) "../../../../lib/KeyValue_Method.o" "../../../../include/keyvalue_method.mod" "../../../../include/keyvalue_method.smod"
-	@echo Deleting ../../../../lib/LinSolver_Class.o and related files
-	@$(RM) "../../../../lib/LinSolver_Class.o" "../../../../include/linsolver_class.mod" "../../../../include/linsolver_class.smod"
-	@echo Deleting ../../../../lib/Material_Class.o and related files
-	@$(RM) "../../../../lib/Material_Class.o" "../../../../include/material_class.mod" "../../../../include/material_class.smod"
-	@echo Deleting ../../../../lib/matrix_exponential.o and related files
-	@$(RM) "../../../../lib/matrix_exponential.o"
-	@echo Deleting ../../../../lib/Mesh_Class.o and related files
-	@$(RM) "../../../../lib/Mesh_Class.o" "../../../../include/mesh_class.mod" "../../../../include/mesh_class.smod"
-	@echo Deleting ../../../../lib/MeshConnectivity_Class.o and related files
-	@$(RM) "../../../../lib/MeshConnectivity_Class.o" "../../../../include/meshconnectivity_class.mod" "../../../../include/meshconnectivity_class.smod"
-	@echo Deleting ../../../../lib/MeshData_Class.o and related files
-	@$(RM) "../../../../lib/MeshData_Class.o" "../../../../include/meshdata_class.mod" "../../../../include/meshdata_class.smod"
-	@echo Deleting ../../../../lib/mshElements_Class.o and related files
-	@$(RM) "../../../../lib/mshElements_Class.o" "../../../../include/mshelements_class.mod" "../../../../include/mshelements_class.smod"
-	@echo Deleting ../../../../lib/mshEntity_Class.o and related files
-	@$(RM) "../../../../lib/mshEntity_Class.o" "../../../../include/mshentity_class.mod" "../../../../include/mshentity_class.smod"
-	@echo Deleting ../../../../lib/mshFormat_Class.o and related files
-	@$(RM) "../../../../lib/mshFormat_Class.o" "../../../../include/mshformat_class.mod" "../../../../include/mshformat_class.smod"
-	@echo Deleting ../../../../lib/mshNodes_Class.o and related files
-	@$(RM) "../../../../lib/mshNodes_Class.o" "../../../../include/mshnodes_class.mod" "../../../../include/mshnodes_class.smod"
-	@echo Deleting ../../../../lib/mshPhysicalNames_Class.o and related files
-	@$(RM) "../../../../lib/mshPhysicalNames_Class.o" "../../../../include/mshphysicalnames_class.mod" "../../../../include/mshphysicalnames_class.smod"
-	@echo Deleting ../../../../lib/QuadraturePoint_Method.o and related files
-	@$(RM) "../../../../lib/QuadraturePoint_Method.o" "../../../../include/quadraturepoint_method.mod" "../../../../include/quadraturepoint_method.smod"
-	@echo Deleting ../../../../lib/QuadratureVariables_Class.o and related files
-	@$(RM) "../../../../lib/QuadratureVariables_Class.o" "../../../../include/quadraturevariables_class.mod" "../../../../include/quadraturevariables_class.smod"
-	@echo Deleting ../../../../lib/Random_Method.o and related files
-	@$(RM) "../../../../lib/Random_Method.o" "../../../../include/random_method.mod" "../../../../include/random_method.smod"
-	@echo Deleting ../../../../lib/Rank2Tensor_Method.o and related files
-	@$(RM) "../../../../lib/Rank2Tensor_Method.o" "../../../../include/rank2tensor_method.mod" "../../../../include/rank2tensor_method.smod"
-	@echo Deleting ../../../../lib/RealMatrix_Method.o and related files
-	@$(RM) "../../../../lib/RealMatrix_Method.o" "../../../../include/realmatrix_method.mod" "../../../../include/realmatrix_method.smod"
-	@echo Deleting ../../../../lib/RealVector_Method.o and related files
-	@$(RM) "../../../../lib/RealVector_Method.o" "../../../../include/realvector_method.mod" "../../../../include/realvector_method.smod"
-	@echo Deleting ../../../../lib/ReferenceElement_Method.o and related files
-	@$(RM) "../../../../lib/ReferenceElement_Method.o" "../../../../include/referenceelement_method.mod" "../../../../include/referenceelement_method.smod"
-	@echo Deleting ../../../../lib/SFCCModel_Class.o and related files
-	@$(RM) "../../../../lib/SFCCModel_Class.o" "../../../../include/sfccmodel_class.mod" "../../../../include/sfccmodel_class.smod"
-	@echo Deleting ../../../../lib/SparseMatrix_Method.o and related files
-	@$(RM) "../../../../lib/SparseMatrix_Method.o" "../../../../include/sparsematrix_method.mod" "../../../../include/sparsematrix_method.smod"
-	@echo Deleting ../../../../lib/StdMaterials.o and related files
-	@$(RM) "../../../../lib/StdMaterials.o" "../../../../include/stdmaterials.mod" "../../../../include/stdmaterials.smod"
-	@echo Deleting ../../../../lib/ThermCondModel_Class.o and related files
-	@$(RM) "../../../../lib/ThermCondModel_Class.o" "../../../../include/thermcondmodel_class.mod" "../../../../include/thermcondmodel_class.smod"
-	@echo Deleting ../../../../lib/Utility.o and related files
-	@$(RM) "../../../../lib/Utility.o" "../../../../include/utility.mod" "../../../../include/utility.smod"
-	@echo Deleting ../../../../lib/VoigtRank2Tensor_Method.o and related files
-	@$(RM) "../../../../lib/VoigtRank2Tensor_Method.o" "../../../../include/voigtrank2tensor_method.mod" "../../../../include/voigtrank2tensor_method.smod"
-	@echo Deleting ../../../../lib/VolHeatCapModel_Class.o and related files
-	@$(RM) "../../../../lib/VolHeatCapModel_Class.o" "../../../../include/volheatcapmodel_class.mod" "../../../../include/volheatcapmodel_class.smod"
-	@echo Deleting ../../../../lib/vtkType.o and related files
-	@$(RM) "../../../../lib/vtkType.o" "../../../../include/vtktype.mod" "../../../../include/vtktype.smod"
-	@echo Deleting libeasifem.a
-	@$(RM) "libeasifem.a"
+	@echo Deleting ../../lib/AbstractArray_Method.o and related files
+	@$(RM) "../../lib/AbstractArray_Method.o" "../../include/abstractarray_method.mod" "../../include/abstractarray_method.smod"
+	@echo Deleting ../../lib/AbstractMatrix_Method.o and related files
+	@$(RM) "../../lib/AbstractMatrix_Method.o" "../../include/abstractmatrix_method.mod" "../../include/abstractmatrix_method.smod"
+	@echo Deleting ../../lib/AbstractVector_Method.o and related files
+	@$(RM) "../../lib/AbstractVector_Method.o" "../../include/abstractvector_method.mod" "../../include/abstractvector_method.smod"
+	@echo Deleting ../../lib/BaseMethod.o and related files
+	@$(RM) "../../lib/BaseMethod.o" "../../include/basemethod.mod" "../../include/basemethod.smod"
+	@echo Deleting ../../lib/BaseType.o and related files
+	@$(RM) "../../lib/BaseType.o" "../../include/basetype.mod" "../../include/basetype.smod"
+	@echo Deleting ../../lib/BaseType@AdditionalMethods.o and related files
+	@$(RM) "../../lib/BaseType@AdditionalMethods.o"
+	@echo Deleting ../../lib/BLASInterface.o and related files
+	@$(RM) "../../lib/BLASInterface.o" "../../include/blasinterface.mod" "../../include/blasinterface.smod"
+	@echo Deleting ../../lib/BoundingBox_Method.o and related files
+	@$(RM) "../../lib/BoundingBox_Method.o" "../../include/boundingbox_method.mod" "../../include/boundingbox_method.smod"
+	@echo Deleting ../../lib/Buffer_Method.o and related files
+	@$(RM) "../../lib/Buffer_Method.o" "../../include/buffer_method.mod" "../../include/buffer_method.smod"
+	@echo Deleting ../../lib/DOF_Method.o and related files
+	@$(RM) "../../lib/DOF_Method.o" "../../include/dof_method.mod" "../../include/dof_method.smod"
+	@echo Deleting ../../lib/Domain_Class.o and related files
+	@$(RM) "../../lib/Domain_Class.o" "../../include/domain_class.mod" "../../include/domain_class.smod"
+	@echo Deleting ../../lib/dsyevc3.o and related files
+	@$(RM) "../../lib/dsyevc3.o"
+	@echo Deleting ../../lib/dsyevh3.o and related files
+	@$(RM) "../../lib/dsyevh3.o"
+	@echo Deleting ../../lib/dsyevq3.o and related files
+	@$(RM) "../../lib/dsyevq3.o"
+	@echo Deleting ../../lib/dsytrd3.o and related files
+	@$(RM) "../../lib/dsytrd3.o"
+	@echo Deleting ../../lib/EASIFEM.o and related files
+	@$(RM) "../../lib/EASIFEM.o" "../../include/easifem.mod" "../../include/easifem.smod"
+	@echo Deleting ../../lib/easifemClasses.o and related files
+	@$(RM) "../../lib/easifemClasses.o" "../../include/easifemclasses.mod" "../../include/easifemclasses.smod"
+	@echo Deleting ../../lib/Element_Class.o and related files
+	@$(RM) "../../lib/Element_Class.o" "../../include/element_class.mod" "../../include/element_class.smod"
+	@echo Deleting ../../lib/ElemshapeData_Method.o and related files
+	@$(RM) "../../lib/ElemshapeData_Method.o" "../../include/elemshapedata_method.mod" "../../include/elemshapedata_method.smod"
+	@echo Deleting ../../lib/ErrorHandling.o and related files
+	@$(RM) "../../lib/ErrorHandling.o" "../../include/errorhandling.mod" "../../include/errorhandling.smod"
+	@echo Deleting ../../lib/FacetElement_Class.o and related files
+	@$(RM) "../../lib/FacetElement_Class.o" "../../include/facetelement_class.mod" "../../include/facetelement_class.smod"
+	@echo Deleting ../../lib/FE.o and related files
+	@$(RM) "../../lib/FE.o" "../../include/fe.mod" "../../include/fe.smod"
+	@echo Deleting ../../lib/FEMatrix_Module.o and related files
+	@$(RM) "../../lib/FEMatrix_Module.o" "../../include/fematrix_module.mod" "../../include/fematrix_module.smod"
+	@echo Deleting ../../lib/FEVariable_Method.o and related files
+	@$(RM) "../../lib/FEVariable_Method.o" "../../include/fevariable_method.mod" "../../include/fevariable_method.smod"
+	@echo Deleting ../../lib/File_Method.o and related files
+	@$(RM) "../../lib/File_Method.o" "../../include/file_method.mod" "../../include/file_method.smod"
+	@echo Deleting ../../lib/GlobalData.o and related files
+	@$(RM) "../../lib/GlobalData.o" "../../include/globaldata.mod" "../../include/globaldata.smod"
+	@echo Deleting ../../lib/gmsh_Class.o and related files
+	@$(RM) "../../lib/gmsh_Class.o" "../../include/gmsh_class.mod" "../../include/gmsh_class.smod"
+	@echo Deleting ../../lib/gmshCurve_Class.o and related files
+	@$(RM) "../../lib/gmshCurve_Class.o" "../../include/gmshcurve_class.mod" "../../include/gmshcurve_class.smod"
+	@echo Deleting ../../lib/gmshEntity_Class.o and related files
+	@$(RM) "../../lib/gmshEntity_Class.o" "../../include/gmshentity_class.mod" "../../include/gmshentity_class.smod"
+	@echo Deleting ../../lib/gmshGeo_Class.o and related files
+	@$(RM) "../../lib/gmshGeo_Class.o" "../../include/gmshgeo_class.mod" "../../include/gmshgeo_class.smod"
+	@echo Deleting ../../lib/gmshGeoMesh_Class.o and related files
+	@$(RM) "../../lib/gmshGeoMesh_Class.o" "../../include/gmshgeomesh_class.mod" "../../include/gmshgeomesh_class.smod"
+	@echo Deleting ../../lib/gmshMesh_Class.o and related files
+	@$(RM) "../../lib/gmshMesh_Class.o" "../../include/gmshmesh_class.mod" "../../include/gmshmesh_class.smod"
+	@echo Deleting ../../lib/gmshModel_Class.o and related files
+	@$(RM) "../../lib/gmshModel_Class.o" "../../include/gmshmodel_class.mod" "../../include/gmshmodel_class.smod"
+	@echo Deleting ../../lib/gmshPoint_Class.o and related files
+	@$(RM) "../../lib/gmshPoint_Class.o" "../../include/gmshpoint_class.mod" "../../include/gmshpoint_class.smod"
+	@echo Deleting ../../lib/gmshSurface_Class.o and related files
+	@$(RM) "../../lib/gmshSurface_Class.o" "../../include/gmshsurface_class.mod" "../../include/gmshsurface_class.smod"
+	@echo Deleting ../../lib/gmshVolume_Class.o and related files
+	@$(RM) "../../lib/gmshVolume_Class.o" "../../include/gmshvolume_class.mod" "../../include/gmshvolume_class.smod"
+	@echo Deleting ../../lib/IndexValue_Method.o and related files
+	@$(RM) "../../lib/IndexValue_Method.o" "../../include/indexvalue_method.mod" "../../include/indexvalue_method.smod"
+	@echo Deleting ../../lib/IntVector_Method.o and related files
+	@$(RM) "../../lib/IntVector_Method.o" "../../include/intvector_method.mod" "../../include/intvector_method.smod"
+	@echo Deleting ../../lib/IO.o and related files
+	@$(RM) "../../lib/IO.o" "../../include/io.mod" "../../include/io.smod"
+	@echo Deleting ../../lib/IterationData_Method.o and related files
+	@$(RM) "../../lib/IterationData_Method.o" "../../include/iterationdata_method.mod" "../../include/iterationdata_method.smod"
+	@echo Deleting ../../lib/KeyValue_Method.o and related files
+	@$(RM) "../../lib/KeyValue_Method.o" "../../include/keyvalue_method.mod" "../../include/keyvalue_method.smod"
+	@echo Deleting ../../lib/LinSolver_Class.o and related files
+	@$(RM) "../../lib/LinSolver_Class.o" "../../include/linsolver_class.mod" "../../include/linsolver_class.smod"
+	@echo Deleting ../../lib/Material_Class.o and related files
+	@$(RM) "../../lib/Material_Class.o" "../../include/material_class.mod" "../../include/material_class.smod"
+	@echo Deleting ../../lib/matrix_exponential.o and related files
+	@$(RM) "../../lib/matrix_exponential.o"
+	@echo Deleting ../../lib/Mesh_Class.o and related files
+	@$(RM) "../../lib/Mesh_Class.o" "../../include/mesh_class.mod" "../../include/mesh_class.smod"
+	@echo Deleting ../../lib/MeshConnectivity_Class.o and related files
+	@$(RM) "../../lib/MeshConnectivity_Class.o" "../../include/meshconnectivity_class.mod" "../../include/meshconnectivity_class.smod"
+	@echo Deleting ../../lib/MeshData_Class.o and related files
+	@$(RM) "../../lib/MeshData_Class.o" "../../include/meshdata_class.mod" "../../include/meshdata_class.smod"
+	@echo Deleting ../../lib/mshElements_Class.o and related files
+	@$(RM) "../../lib/mshElements_Class.o" "../../include/mshelements_class.mod" "../../include/mshelements_class.smod"
+	@echo Deleting ../../lib/mshEntity_Class.o and related files
+	@$(RM) "../../lib/mshEntity_Class.o" "../../include/mshentity_class.mod" "../../include/mshentity_class.smod"
+	@echo Deleting ../../lib/mshFormat_Class.o and related files
+	@$(RM) "../../lib/mshFormat_Class.o" "../../include/mshformat_class.mod" "../../include/mshformat_class.smod"
+	@echo Deleting ../../lib/mshNodes_Class.o and related files
+	@$(RM) "../../lib/mshNodes_Class.o" "../../include/mshnodes_class.mod" "../../include/mshnodes_class.smod"
+	@echo Deleting ../../lib/mshPhysicalNames_Class.o and related files
+	@$(RM) "../../lib/mshPhysicalNames_Class.o" "../../include/mshphysicalnames_class.mod" "../../include/mshphysicalnames_class.smod"
+	@echo Deleting ../../lib/QuadraturePoint_Method.o and related files
+	@$(RM) "../../lib/QuadraturePoint_Method.o" "../../include/quadraturepoint_method.mod" "../../include/quadraturepoint_method.smod"
+	@echo Deleting ../../lib/QuadratureVariables_Class.o and related files
+	@$(RM) "../../lib/QuadratureVariables_Class.o" "../../include/quadraturevariables_class.mod" "../../include/quadraturevariables_class.smod"
+	@echo Deleting ../../lib/Random_Method.o and related files
+	@$(RM) "../../lib/Random_Method.o" "../../include/random_method.mod" "../../include/random_method.smod"
+	@echo Deleting ../../lib/Rank2Tensor_Method.o and related files
+	@$(RM) "../../lib/Rank2Tensor_Method.o" "../../include/rank2tensor_method.mod" "../../include/rank2tensor_method.smod"
+	@echo Deleting ../../lib/RealMatrix_Method.o and related files
+	@$(RM) "../../lib/RealMatrix_Method.o" "../../include/realmatrix_method.mod" "../../include/realmatrix_method.smod"
+	@echo Deleting ../../lib/RealVector_Method.o and related files
+	@$(RM) "../../lib/RealVector_Method.o" "../../include/realvector_method.mod" "../../include/realvector_method.smod"
+	@echo Deleting ../../lib/ReferenceElement_Method.o and related files
+	@$(RM) "../../lib/ReferenceElement_Method.o" "../../include/referenceelement_method.mod" "../../include/referenceelement_method.smod"
+	@echo Deleting ../../lib/SFCCModel_Class.o and related files
+	@$(RM) "../../lib/SFCCModel_Class.o" "../../include/sfccmodel_class.mod" "../../include/sfccmodel_class.smod"
+	@echo Deleting ../../lib/SparseMatrix_Method.o and related files
+	@$(RM) "../../lib/SparseMatrix_Method.o" "../../include/sparsematrix_method.mod" "../../include/sparsematrix_method.smod"
+	@echo Deleting ../../lib/StdMaterials.o and related files
+	@$(RM) "../../lib/StdMaterials.o" "../../include/stdmaterials.mod" "../../include/stdmaterials.smod"
+	@echo Deleting ../../lib/ThermCondModel_Class.o and related files
+	@$(RM) "../../lib/ThermCondModel_Class.o" "../../include/thermcondmodel_class.mod" "../../include/thermcondmodel_class.smod"
+	@echo Deleting ../../lib/Utility.o and related files
+	@$(RM) "../../lib/Utility.o" "../../include/utility.mod" "../../include/utility.smod"
+	@echo Deleting ../../lib/VoigtRank2Tensor_Method.o and related files
+	@$(RM) "../../lib/VoigtRank2Tensor_Method.o" "../../include/voigtrank2tensor_method.mod" "../../include/voigtrank2tensor_method.smod"
+	@echo Deleting ../../lib/VolHeatCapModel_Class.o and related files
+	@$(RM) "../../lib/VolHeatCapModel_Class.o" "../../include/volheatcapmodel_class.mod" "../../include/volheatcapmodel_class.smod"
+	@echo Deleting ../../lib/vtkType.o and related files
+	@$(RM) "../../lib/vtkType.o" "../../include/vtktype.mod" "../../include/vtktype.smod"
+	@echo Deleting libeasifemModules.a
+	@$(RM) "libeasifemModules.a"
 
-"libeasifem.a":  "../../../../lib/AbstractArray_Method.o" "../../../../lib/AbstractMatrix_Method.o" "../../../../lib/AbstractVector_Method.o" "../../../../lib/BaseMethod.o" "../../../../lib/BaseType.o" "../../../../lib/BaseType@AdditionalMethods.o" "../../../../lib/BLASInterface.o" "../../../../lib/BoundingBox_Method.o" "../../../../lib/Buffer_Method.o" "../../../../lib/DOF_Method.o" "../../../../lib/Domain_Class.o" "../../../../lib/dsyevc3.o" "../../../../lib/dsyevh3.o" "../../../../lib/dsyevq3.o" "../../../../lib/dsytrd3.o" "../../../../lib/EASIFEM.o" "../../../../lib/easifemClasses.o" "../../../../lib/Element_Class.o" "../../../../lib/ElemshapeData_Method.o" "../../../../lib/ErrorHandling.o" "../../../../lib/FacetElement_Class.o" "../../../../lib/FE.o" "../../../../lib/FEMatrix_Module.o" "../../../../lib/FEVariable_Method.o" "../../../../lib/File_Method.o" "../../../../lib/GlobalData.o" "../../../../lib/gmsh_Class.o" "../../../../lib/gmshCurve_Class.o" "../../../../lib/gmshEntity_Class.o" "../../../../lib/gmshGeo_Class.o" "../../../../lib/gmshGeoMesh_Class.o" "../../../../lib/gmshMesh_Class.o" "../../../../lib/gmshModel_Class.o" "../../../../lib/gmshPoint_Class.o" "../../../../lib/gmshSurface_Class.o" "../../../../lib/gmshVolume_Class.o" "../../../../lib/IndexValue_Method.o" "../../../../lib/IntVector_Method.o" "../../../../lib/IO.o" "../../../../lib/IterationData_Method.o" "../../../../lib/Kernel_Class.o" "../../../../lib/KeyValue_Method.o" "../../../../lib/LinSolver_Class.o" "../../../../lib/Material_Class.o" "../../../../lib/matrix_exponential.o" "../../../../lib/Mesh_Class.o" "../../../../lib/MeshConnectivity_Class.o" "../../../../lib/MeshData_Class.o" "../../../../lib/mshElements_Class.o" "../../../../lib/mshEntity_Class.o" "../../../../lib/mshFormat_Class.o" "../../../../lib/mshNodes_Class.o" "../../../../lib/mshPhysicalNames_Class.o" "../../../../lib/QuadraturePoint_Method.o" "../../../../lib/QuadratureVariables_Class.o" "../../../../lib/Random_Method.o" "../../../../lib/Rank2Tensor_Method.o" "../../../../lib/RealMatrix_Method.o" "../../../../lib/RealVector_Method.o" "../../../../lib/ReferenceElement_Method.o" "../../../../lib/SFCCModel_Class.o" "../../../../lib/SparseMatrix_Method.o" "../../../../lib/StdMaterials.o" "../../../../lib/ThermCondModel_Class.o" "../../../../lib/Utility.o" "../../../../lib/VoigtRank2Tensor_Method.o" "../../../../lib/VolHeatCapModel_Class.o" "../../../../lib/vtkType.o" "../../../../lib/modules.prj.target"
-	@echo Generating libeasifem.a
-	@$(AR) rcs "libeasifem.a" "../../../../lib/AbstractArray_Method.o" "../../../../lib/AbstractMatrix_Method.o" "../../../../lib/AbstractVector_Method.o" "../../../../lib/BaseMethod.o" "../../../../lib/BaseType.o" "../../../../lib/BaseType@AdditionalMethods.o" "../../../../lib/BLASInterface.o" "../../../../lib/BoundingBox_Method.o" "../../../../lib/Buffer_Method.o" "../../../../lib/DOF_Method.o" "../../../../lib/Domain_Class.o" "../../../../lib/dsyevc3.o" "../../../../lib/dsyevh3.o" "../../../../lib/dsyevq3.o" "../../../../lib/dsytrd3.o" "../../../../lib/EASIFEM.o" "../../../../lib/easifemClasses.o" "../../../../lib/Element_Class.o" "../../../../lib/ElemshapeData_Method.o" "../../../../lib/ErrorHandling.o" "../../../../lib/FacetElement_Class.o" "../../../../lib/FE.o" "../../../../lib/FEMatrix_Module.o" "../../../../lib/FEVariable_Method.o" "../../../../lib/File_Method.o" "../../../../lib/GlobalData.o" "../../../../lib/gmsh_Class.o" "../../../../lib/gmshCurve_Class.o" "../../../../lib/gmshEntity_Class.o" "../../../../lib/gmshGeo_Class.o" "../../../../lib/gmshGeoMesh_Class.o" "../../../../lib/gmshMesh_Class.o" "../../../../lib/gmshModel_Class.o" "../../../../lib/gmshPoint_Class.o" "../../../../lib/gmshSurface_Class.o" "../../../../lib/gmshVolume_Class.o" "../../../../lib/IndexValue_Method.o" "../../../../lib/IntVector_Method.o" "../../../../lib/IO.o" "../../../../lib/IterationData_Method.o" "../../../../lib/Kernel_Class.o" "../../../../lib/KeyValue_Method.o" "../../../../lib/LinSolver_Class.o" "../../../../lib/Material_Class.o" "../../../../lib/matrix_exponential.o" "../../../../lib/Mesh_Class.o" "../../../../lib/MeshConnectivity_Class.o" "../../../../lib/MeshData_Class.o" "../../../../lib/mshElements_Class.o" "../../../../lib/mshEntity_Class.o" "../../../../lib/mshFormat_Class.o" "../../../../lib/mshNodes_Class.o" "../../../../lib/mshPhysicalNames_Class.o" "../../../../lib/QuadraturePoint_Method.o" "../../../../lib/QuadratureVariables_Class.o" "../../../../lib/Random_Method.o" "../../../../lib/Rank2Tensor_Method.o" "../../../../lib/RealMatrix_Method.o" "../../../../lib/RealVector_Method.o" "../../../../lib/ReferenceElement_Method.o" "../../../../lib/SFCCModel_Class.o" "../../../../lib/SparseMatrix_Method.o" "../../../../lib/StdMaterials.o" "../../../../lib/ThermCondModel_Class.o" "../../../../lib/Utility.o" "../../../../lib/VoigtRank2Tensor_Method.o" "../../../../lib/VolHeatCapModel_Class.o" "../../../../lib/vtkType.o"
+"libeasifemModules.a":  "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/DOF_Method.o" "../../lib/Domain_Class.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/EASIFEM.o" "../../lib/easifemClasses.o" "../../lib/Element_Class.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FacetElement_Class.o" "../../lib/FE.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/GlobalData.o" "../../lib/gmsh_Class.o" "../../lib/gmshCurve_Class.o" "../../lib/gmshEntity_Class.o" "../../lib/gmshGeo_Class.o" "../../lib/gmshGeoMesh_Class.o" "../../lib/gmshMesh_Class.o" "../../lib/gmshModel_Class.o" "../../lib/gmshPoint_Class.o" "../../lib/gmshSurface_Class.o" "../../lib/gmshVolume_Class.o" "../../lib/IndexValue_Method.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/LinSolver_Class.o" "../../lib/Material_Class.o" "../../lib/matrix_exponential.o" "../../lib/Mesh_Class.o" "../../lib/MeshConnectivity_Class.o" "../../lib/MeshData_Class.o" "../../lib/mshElements_Class.o" "../../lib/mshEntity_Class.o" "../../lib/mshFormat_Class.o" "../../lib/mshNodes_Class.o" "../../lib/mshPhysicalNames_Class.o" "../../lib/QuadraturePoint_Method.o" "../../lib/QuadratureVariables_Class.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SFCCModel_Class.o" "../../lib/SparseMatrix_Method.o" "../../lib/StdMaterials.o" "../../lib/ThermCondModel_Class.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "../../lib/VolHeatCapModel_Class.o" "../../lib/vtkType.o" "../../lib/modules.prj.target"
+	@echo Generating libeasifemModules.a
+	@$(AR) rcs "libeasifemModules.a" "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/DOF_Method.o" "../../lib/Domain_Class.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/EASIFEM.o" "../../lib/easifemClasses.o" "../../lib/Element_Class.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FacetElement_Class.o" "../../lib/FE.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/GlobalData.o" "../../lib/gmsh_Class.o" "../../lib/gmshCurve_Class.o" "../../lib/gmshEntity_Class.o" "../../lib/gmshGeo_Class.o" "../../lib/gmshGeoMesh_Class.o" "../../lib/gmshMesh_Class.o" "../../lib/gmshModel_Class.o" "../../lib/gmshPoint_Class.o" "../../lib/gmshSurface_Class.o" "../../lib/gmshVolume_Class.o" "../../lib/IndexValue_Method.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/LinSolver_Class.o" "../../lib/Material_Class.o" "../../lib/matrix_exponential.o" "../../lib/Mesh_Class.o" "../../lib/MeshConnectivity_Class.o" "../../lib/MeshData_Class.o" "../../lib/mshElements_Class.o" "../../lib/mshEntity_Class.o" "../../lib/mshFormat_Class.o" "../../lib/mshNodes_Class.o" "../../lib/mshPhysicalNames_Class.o" "../../lib/QuadraturePoint_Method.o" "../../lib/QuadratureVariables_Class.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SFCCModel_Class.o" "../../lib/SparseMatrix_Method.o" "../../lib/StdMaterials.o" "../../lib/ThermCondModel_Class.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "../../lib/VolHeatCapModel_Class.o" "../../lib/vtkType.o"
 
-all: "libeasifem.a" .SYMBOLIC
+all: "libeasifemModules.a" .SYMBOLIC
 

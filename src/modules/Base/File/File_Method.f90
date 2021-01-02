@@ -295,6 +295,33 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
+!                                                         TotalLines@Inquiry
+!----------------------------------------------------------------------------
+
+INTERFACE
+!! This function counts total number of lines in [[file_]] object
+
+!> authors: Dr. Vikas Sharma
+!
+! This function counts totatl number of lines in [[file_]] object
+
+MODULE FUNCTION getTotalLines( Obj, nHeader ) RESULT( Ans )
+  CLASS( File_ ), INTENT( INOUT ) :: Obj
+    !! File object
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nHeader
+    !! Skip this number of lines at the top of the file
+  INTEGER( I4B ) :: Ans
+    !! Total number of lines
+END FUNCTION getTotalLines
+END INTERFACE
+
+INTERFACE TotalLines
+  MODULE PROCEDURE getTotalLines
+END INTERFACE TotalLines
+
+PUBLIC :: TotalLines
+
+!----------------------------------------------------------------------------
 !                                                              Exist@Inquiry
 !----------------------------------------------------------------------------
 
@@ -539,6 +566,24 @@ INTERFACE WriteLine
 END INTERFACE WriteLine
 
 PUBLIC :: WriteLine
+
+!----------------------------------------------------------------------------
+!                                                      SkipLines@ReadMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+!! This subroutine skips nLines
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine skips nLines
+
+MODULE SUBROUTINE SkipLines( Obj, nLines )
+  CLASS( File_ ), INTENT( INOUT) :: Obj
+END SUBROUTINE SkipLines
+END INTERFACE
+
+PUBLIC :: SkipLines
 
 !----------------------------------------------------------------------------
 !                                                       Readline@ReadMethods
