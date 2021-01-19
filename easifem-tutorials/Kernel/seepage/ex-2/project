@@ -1,4 +1,0 @@
-easifem projection
-cp state_new/seepage.hdf5 ./InitCondition/seepage.hdf5
-cp state_new/mesh.msh ./mesh.msh
-rm state_new/mesh.msh
