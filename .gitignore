@@ -15,6 +15,7 @@ vscode-settings
 include/
 lib/
 opt/
+bin/
 # pkgs/
 # old-classes/
 # examples/
