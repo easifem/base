@@ -1,3 +1,0 @@
-# Boundingbox
-
-[Home](../index.md)

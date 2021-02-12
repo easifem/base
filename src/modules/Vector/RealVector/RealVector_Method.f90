@@ -972,15 +972,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE Display_Vector_Real( vec, msg, unitNo, path, filename, &
+MODULE SUBROUTINE Display_Vector_Real( vec, msg, path, filename, &
   & extension )
   ! Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
   REAL( DFP ), INTENT( IN ) :: vec( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: path
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: filename
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: extension
+  CHARACTER( LEN = * ), INTENT( IN ) :: path
+  CHARACTER( LEN = * ), INTENT( IN ) :: filename
+  CHARACTER( LEN = * ), INTENT( IN ) :: extension
 END SUBROUTINE Display_Vector_Real
 END INTERFACE
 

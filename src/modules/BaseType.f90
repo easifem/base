@@ -87,11 +87,14 @@ PUBLIC :: BoundingBoxPointer_
 !                                                           AbstractArray_
 !----------------------------------------------------------------------------
 
-PUBLIC :: AbstractArray_
-
+!> authors: Dr. Vikas Sharma
+!
+! Abstract data type for array and matrix
 TYPE :: AbstractArray_
   INTEGER( I4B ) :: tDimension = 0_I4B
 END TYPE AbstractArray_
+
+PUBLIC :: AbstractArray_
 
 TYPE :: AbstractArrayPointer_
   CLASS( AbstractArray_ ), POINTER :: Ptr => NULL( )
@@ -103,7 +106,11 @@ PUBLIC :: AbstractArrayPointer_
 !                                                          AbstractMatrix_
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! Abstract matrix denotes a 2D array
 TYPE, EXTENDS( AbstractArray_ ) :: AbstractMatrix_
+  CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
 END TYPE AbstractMatrix_
 
 PUBLIC :: AbstractMatrix_
@@ -120,7 +127,6 @@ PUBLIC :: AbstractMatrixPointer_
 
 TYPE, EXTENDS( AbstractMatrix_ ) :: RealMatrix_
   REAL( DFP ), ALLOCATABLE :: Val( :, : )
-  CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
 END TYPE RealMatrix_
 
 PUBLIC :: RealMatrix_
@@ -160,7 +166,7 @@ TYPE, EXTENDS( AbstractMatrix_ ) :: SparseMatrix_
   INTEGER( I4B ) :: nnz = 0
   INTEGER( I4B ) :: ncol = 0
   INTEGER( I4B ) :: nrow=0
-  CHARACTER( LEN = 5 ) :: MatrixProp='UNSYM'
+  !CHARACTER( LEN = 5 ) :: MatrixProp='UNSYM'
   INTEGER( I4B ) :: StorageFMT = Nodes_FMT
 END TYPE SparseMatrix_
 

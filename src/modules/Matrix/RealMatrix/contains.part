@@ -1,9 +1,0 @@
-CONTAINS
-
-PURE FUNCTION Constructor_1( Dims ) RESULT( Obj )
-  CLASS( RealMatrix_ ), POINTER :: Obj
-  INTEGER( I4B ), INTENT( IN ) :: Dims( 2 )
-
-  ALLOCATE( Obj )
-  CALL Initiate( Obj, Dims )
-END FUNCTION Constructor_1

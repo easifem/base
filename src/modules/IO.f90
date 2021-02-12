@@ -1,8 +1,8 @@
 MODULE IO
 USE GlobalData
 USE DISPMODULE
-USE H5Fortran
-USE BaseType, ONLY: FILE_
+! USE H5Fortran
+! USE BaseType, ONLY: FILE_
 
 IMPLICIT NONE
 
@@ -21,6 +21,7 @@ INTERFACE Display
     & Display_Real, &
     & Display_Int, &
     & Display_Logical, &
+    & Display_Vector_Real, &
     & Display_Vector_Int, &
     & Display_Mat2_Real, &
     & Display_Mat2_Int, &
@@ -138,6 +139,41 @@ END SUBROUTINE Display_Logical
 !                                                                    Display
 !----------------------------------------------------------------------------
 
+SUBROUTINE Display_Vector_Real( val, msg, unitNo, full )
+
+  ! Define intent of dummy variables
+  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
+  REAL( DFP ), INTENT( IN ) :: val( : )
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
+
+  ! Define internal variables
+  INTEGER( I4B ) :: I
+
+  I = stdout
+  IF( PRESENT( unitNo ) ) I = unitNo
+
+  IF( LBOUND( val, 1 ) .EQ. 1 ) THEN
+  call disp( title = msg, &
+    & x= val, &
+    & unit = I, &
+    & style = 'underline & pad', &
+    & orient = 'row' )
+  ELSE
+    call disp( title = msg, &
+    & x= val, &
+    & unit = I, &
+    & style = 'underline & pad', &
+    & sep = ' ---> ', &
+    & lbound = LBOUND( val ) )
+  END IF
+
+END SUBROUTINE Display_Vector_Real
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
 SUBROUTINE Display_Vector_Int( val, msg, unitNo, full )
 
   ! Define intent of dummy variables
@@ -193,39 +229,6 @@ SUBROUTINE Display_Mat2_Real( Val, msg, unitNo, full )
     & style = 'underline & pad', &
     & sep = ', ', &
     & advance = 'double' )
-
-  ! IF( LEN_TRIM( msg ) .NE. 0 ) THEN
-  !   WRITE( I, "(A)" ) TRIM( msg )
-  ! END IF
-  ! !
-  ! r = SIZE( Val, 1 )
-  ! IF( I .EQ. stdout ) THEN
-  !   IF( PRESENT( full ) ) THEN
-  !     DO j = 1, r
-  !       CALL Display( Val( j, : ), "", I, full )
-  !     END DO
-  !   ELSE
-  !     IF( r .LE. 10 ) THEN
-  !       DO j = 1, r
-  !         CALL Display( Val( j, : ), "", I )
-  !       END DO
-  !     ELSE
-  !       DO j = 1, minRow
-  !         CALL Display( Val( j, : ), "", I )
-  !       END DO
-  !       WRITE( I, "(A)") "."
-  !       WRITE( I, "(A)") "."
-  !       WRITE( I, "(A)") "."
-  !       DO j = r, r-minRow, -1
-  !         CALL Display( Val( j, : ), "", I )
-  !       END DO
-  !     END IF
-  !   END IF
-  ! ELSE
-  !   DO j = 1, r
-  !     CALL Display( Val( j, : ), "", I )
-  !   END DO
-  ! END IF
 END SUBROUTINE Display_Mat2_Real
 
 !----------------------------------------------------------------------------
@@ -252,39 +255,6 @@ SUBROUTINE Display_Mat2_Int( Val, msg, unitNo, full )
     & style = 'underline & pad', &
     & sep = ', ', &
     & advance = 'double' )
-
-  ! IF( LEN_TRIM( msg ) .NE. 0 ) THEN
-  !   WRITE( I, "(A)" ) TRIM( msg )
-  ! END IF
-  ! !
-  ! r = SIZE( Val, 1 )
-  ! IF( I .EQ. stdout ) THEN
-  !   IF( PRESENT( full ) ) THEN
-  !     DO j = 1, r
-  !       CALL Display( Val( j, : ), "", I, full )
-  !     END DO
-  !   ELSE
-  !     IF( r .LE. 10 ) THEN
-  !       DO j = 1, r
-  !         CALL Display( Val( j, : ), "", I )
-  !       END DO
-  !     ELSE
-  !       DO j = 1, minRow
-  !         CALL Display( Val( j, : ), "", I )
-  !       END DO
-  !       WRITE( I, "(A)") "."
-  !       WRITE( I, "(A)") "."
-  !       WRITE( I, "(A)") "."
-  !       DO j = r, r-minRow, -1
-  !         CALL Display( Val( j, : ), "", I )
-  !       END DO
-  !     END IF
-  !   END IF
-  ! ELSE
-  !   DO j = 1, r
-  !     CALL Display( Val( j, : ), "", I )
-  !   END DO
-  ! END IF
 END SUBROUTINE Display_Mat2_Int
 
 !----------------------------------------------------------------------------

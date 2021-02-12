@@ -50,7 +50,7 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling AbstractVector_Method.f90
 	@$(FC) -c -o "../../lib/AbstractVector_Method.o" $(FFLAGS) "AbstractVector_Method.f90"
 
-"../../lib/BaseMethod.o": "BaseMethod.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/buffer_method.mod" "../../include/utility.mod" "../../include/errorhandling.mod" "../../include/file_method.mod" "../../include/boundingbox_method.mod" "../../include/abstractarray_method.mod" "../../include/abstractmatrix_method.mod" "../../include/abstractvector_method.mod" "../../include/realvector_method.mod" "../../include/intvector_method.mod" "../../include/realmatrix_method.mod" "../../include/sparsematrix_method.mod" "../../include/indexvalue_method.mod" "../../include/dof_method.mod" "../../include/iterationdata_method.mod" "../../include/keyvalue_method.mod" "../../include/random_method.mod" "../../include/voigtrank2tensor_method.mod" "../../include/rank2tensor_method.mod" "../../include/referenceelement_method.mod" "../../include/quadraturepoint_method.mod" "../../include/elemshapedata_method.mod" "../../include/fevariable_method.mod" "../../include/fematrix_module.mod"
+"../../lib/BaseMethod.o": "BaseMethod.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/buffer_method.mod" "../../include/utility.mod" "../../include/errorhandling.mod" "../../include/file_method.mod" "../../include/boundingbox_method.mod" "../../include/abstractarray_method.mod" "../../include/abstractmatrix_method.mod" "../../include/abstractvector_method.mod" "../../include/realvector_method.mod" "../../include/intvector_method.mod" "../../include/realmatrix_method.mod" "../../include/lapack_method.mod" "../../include/sparsematrix_method.mod" "../../include/indexvalue_method.mod" "../../include/dof_method.mod" "../../include/iterationdata_method.mod" "../../include/keyvalue_method.mod" "../../include/random_method.mod" "../../include/voigtrank2tensor_method.mod" "../../include/rank2tensor_method.mod" "../../include/referenceelement_method.mod" "../../include/quadraturepoint_method.mod" "../../include/elemshapedata_method.mod" "../../include/fevariable_method.mod" "../../include/fematrix_module.mod"
 	@echo Compiling BaseMethod.f90
 	@$(FC) -c -o "../../lib/BaseMethod.o" $(FFLAGS) "BaseMethod.f90"
 "../../include/basemethod.mod" : "../../lib/BaseMethod.o" .EXISTSONLY
@@ -154,6 +154,13 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling File/File_Method.f90
 	@$(FC) -c -o "../../lib/File_Method.o" $(FFLAGS) "File/File_Method.f90"
 
+"../../lib/GE_Lapack_Method.o": "Lapack/GE_Lapack_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
+	@echo Compiling Lapack/GE_Lapack_Method.f90
+	@$(FC) -c -o "../../lib/GE_Lapack_Method.o" $(FFLAGS) "Lapack/GE_Lapack_Method.f90"
+"../../include/ge_lapack_method.mod" : "../../lib/GE_Lapack_Method.o" .EXISTSONLY
+	@echo Compiling Lapack/GE_Lapack_Method.f90
+	@$(FC) -c -o "../../lib/GE_Lapack_Method.o" $(FFLAGS) "Lapack/GE_Lapack_Method.f90"
+
 "../../lib/GlobalData.o": "GlobalData.f90"
 	@echo Compiling GlobalData.f90
 	@$(FC) -c -o "../../lib/GlobalData.o" $(FFLAGS) "GlobalData.f90"
@@ -175,7 +182,7 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling Vector/IntVector/IntVector_Method.f90
 	@$(FC) -c -o "../../lib/IntVector_Method.o" $(FFLAGS) "Vector/IntVector/IntVector_Method.f90"
 
-"../../lib/IO.o": "IO.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
+"../../lib/IO.o": "IO.f90" "../../include/globaldata.mod"
 	@echo Compiling IO.f90
 	@$(FC) -c -o "../../lib/IO.o" $(FFLAGS) "IO.f90"
 "../../include/io.mod" : "../../lib/IO.o" .EXISTSONLY
@@ -195,6 +202,13 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 "../../include/keyvalue_method.mod" : "../../lib/KeyValue_Method.o" .EXISTSONLY
 	@echo Compiling KeyValue/KeyValue_Method.f90
 	@$(FC) -c -o "../../lib/KeyValue_Method.o" $(FFLAGS) "KeyValue/KeyValue_Method.f90"
+
+"../../lib/Lapack_Method.o": "Lapack/Lapack_Method.f90" "../../include/ge_lapack_method.mod"
+	@echo Compiling Lapack/Lapack_Method.f90
+	@$(FC) -c -o "../../lib/Lapack_Method.o" $(FFLAGS) "Lapack/Lapack_Method.f90"
+"../../include/lapack_method.mod" : "../../lib/Lapack_Method.o" .EXISTSONLY
+	@echo Compiling Lapack/Lapack_Method.f90
+	@$(FC) -c -o "../../lib/Lapack_Method.o" $(FFLAGS) "Lapack/Lapack_Method.f90"
 
 "../../lib/matrix_exponential.o": "Tensor/Rank2Tensor/matrix_exponential.f90"
 	@echo Compiling Tensor/Rank2Tensor/matrix_exponential.f90
@@ -221,7 +235,7 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling Tensor/Rank2Tensor/Rank2Tensor_Method.f90
 	@$(FC) -c -o "../../lib/Rank2Tensor_Method.o" $(FFLAGS) "Tensor/Rank2Tensor/Rank2Tensor_Method.f90"
 
-"../../lib/RealMatrix_Method.o": "Matrix/RealMatrix/RealMatrix_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod" "KeyValue/constructor.inc" "Matrix/RealMatrix/lapack.inc" "Matrix/RealMatrix/getvalue.inc" "Matrix/RealMatrix/setvalue.inc" "IterationData/contains.part"
+"../../lib/RealMatrix_Method.o": "Matrix/RealMatrix/RealMatrix_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Matrix/RealMatrix/RealMatrix_Method.f90
 	@$(FC) -c -o "../../lib/RealMatrix_Method.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method.f90"
 "../../include/realmatrix_method.mod" : "../../lib/RealMatrix_Method.o" .EXISTSONLY
@@ -304,6 +318,8 @@ clean: .SYMBOLIC
 	@$(RM) "../../lib/FEVariable_Method.o" "../../include/fevariable_method.mod" "../../include/fevariable_method.smod"
 	@echo Deleting ../../lib/File_Method.o and related files
 	@$(RM) "../../lib/File_Method.o" "../../include/file_method.mod" "../../include/file_method.smod"
+	@echo Deleting ../../lib/GE_Lapack_Method.o and related files
+	@$(RM) "../../lib/GE_Lapack_Method.o" "../../include/ge_lapack_method.mod" "../../include/ge_lapack_method.smod"
 	@echo Deleting ../../lib/GlobalData.o and related files
 	@$(RM) "../../lib/GlobalData.o" "../../include/globaldata.mod" "../../include/globaldata.smod"
 	@echo Deleting ../../lib/IndexValue_Method.o and related files
@@ -316,6 +332,8 @@ clean: .SYMBOLIC
 	@$(RM) "../../lib/IterationData_Method.o" "../../include/iterationdata_method.mod" "../../include/iterationdata_method.smod"
 	@echo Deleting ../../lib/KeyValue_Method.o and related files
 	@$(RM) "../../lib/KeyValue_Method.o" "../../include/keyvalue_method.mod" "../../include/keyvalue_method.smod"
+	@echo Deleting ../../lib/Lapack_Method.o and related files
+	@$(RM) "../../lib/Lapack_Method.o" "../../include/lapack_method.mod" "../../include/lapack_method.smod"
 	@echo Deleting ../../lib/matrix_exponential.o and related files
 	@$(RM) "../../lib/matrix_exponential.o"
 	@echo Deleting ../../lib/QuadraturePoint_Method.o and related files
@@ -339,9 +357,9 @@ clean: .SYMBOLIC
 	@echo Deleting libeasifemBase.a
 	@$(RM) "libeasifemBase.a"
 
-"libeasifemBase.a":  "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/DOF_Method.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/easifemBase.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/GlobalData.o" "../../lib/IndexValue_Method.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/matrix_exponential.o" "../../lib/QuadraturePoint_Method.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SparseMatrix_Method.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "/Users/vikassharma/Dropbox/easifem-base/src/modules/libeasifemModules.a" "../../lib/easifemBaseModules.prj.target"
+"libeasifemBase.a":  "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/DOF_Method.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/easifemBase.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/GE_Lapack_Method.o" "../../lib/GlobalData.o" "../../lib/IndexValue_Method.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/Lapack_Method.o" "../../lib/matrix_exponential.o" "../../lib/QuadraturePoint_Method.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SparseMatrix_Method.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "/Users/vikassharma/Dropbox/easifem-base/src/modules/libeasifemModules.a" "../../lib/easifemBaseModules.prj.target"
 	@echo Generating libeasifemBase.a
-	@$(AR) rcs "libeasifemBase.a" "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/DOF_Method.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/easifemBase.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/GlobalData.o" "../../lib/IndexValue_Method.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/matrix_exponential.o" "../../lib/QuadraturePoint_Method.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SparseMatrix_Method.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "/Users/vikassharma/Dropbox/easifem-base/src/modules/libeasifemModules.a"
+	@$(AR) rcs "libeasifemBase.a" "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/DOF_Method.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/easifemBase.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/GE_Lapack_Method.o" "../../lib/GlobalData.o" "../../lib/IndexValue_Method.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/Lapack_Method.o" "../../lib/matrix_exponential.o" "../../lib/QuadraturePoint_Method.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SparseMatrix_Method.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "/Users/vikassharma/Dropbox/easifem-base/src/modules/libeasifemModules.a"
 
 all: "libeasifemBase.a" .SYMBOLIC
 

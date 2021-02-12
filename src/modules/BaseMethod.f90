@@ -12,6 +12,7 @@ MODULE BaseMethod
   USE RealVector_Method
   USE IntVector_Method
   USE RealMatrix_Method
+  USE Lapack_Method
   USE SparseMatrix_Method
   USE IndexValue_Method
   USE DOF_Method

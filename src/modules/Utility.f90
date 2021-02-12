@@ -131,6 +131,12 @@ END INTERFACE
 
 PUBLIC :: ASSERT_EQ
 
+INTERFACE ASSERT
+  MODULE PROCEDURE assert_shape_2, assert_shape_3, assert_shape_4
+END INTERFACE ASSERT
+
+PUBLIC :: ASSERT
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -1672,9 +1678,9 @@ SUBROUTINE nrerror( string )
   STOP 'program terminated by nrerror'
 END SUBROUTINE nrerror
 
-!------------------------------------------------------------------------------
-!                                                                   assert_eq2
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                  Assert_EQ
+!----------------------------------------------------------------------------
 
 FUNCTION assert_eq2(n1,n2,string)
   CHARACTER(LEN=*), INTENT(IN) :: string
@@ -1692,6 +1698,10 @@ FUNCTION assert_eq2(n1,n2,string)
   END IF
 END FUNCTION assert_eq2
 
+!----------------------------------------------------------------------------
+!                                                                  Assert_EQ
+!----------------------------------------------------------------------------
+
 FUNCTION assert_eq3(n1,n2,n3,string)
   CHARACTER(LEN=*), INTENT(IN) :: string
   INTEGER( I4B ), INTENT(IN) :: n1,n2,n3
@@ -1707,6 +1717,10 @@ FUNCTION assert_eq3(n1,n2,n3,string)
     STOP
   END IF
 END FUNCTION assert_eq3
+
+!----------------------------------------------------------------------------
+!                                                                  Assert_EQ
+!----------------------------------------------------------------------------
 
 FUNCTION assert_eq4(n1,n2,n3,n4,string)
   CHARACTER(LEN=*), INTENT(IN) :: string
@@ -1724,6 +1738,10 @@ FUNCTION assert_eq4(n1,n2,n3,n4,string)
   END IF
 END FUNCTION assert_eq4
 
+!----------------------------------------------------------------------------
+!                                                                  Assert_EQ
+!----------------------------------------------------------------------------
+
 FUNCTION assert_eqn(nn,string)
   CHARACTER( LEN=* ), INTENT( IN ) :: string
   INTEGER( I4B ), DIMENSION( : ), INTENT(IN) :: nn
@@ -1739,6 +1757,78 @@ FUNCTION assert_eqn(nn,string)
     STOP
   END IF
 END FUNCTION assert_eqn
+
+!----------------------------------------------------------------------------
+!                                                               ASSERT_SHAPE
+!----------------------------------------------------------------------------
+
+SUBROUTINE assert_shape_2( Mat, s, msg, file, line, routine )
+  REAL( DFP ), INTENT( IN ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( 2 )
+  INTEGER( I4B ), INTENT( IN ) :: line
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
+
+  ! define internal variable
+  INTEGER( I4B ) :: shape_mat( 2 )
+  shape_mat = SHAPE( Mat )
+
+  IF (all(shape_mat == s) ) THEN
+    RETURN
+  ELSE
+    CALL ErrorMsg( &
+      & File = file, &
+      & Routine = routine, &
+      & Line = line, &
+      & MSG = msg )
+    STOP
+  END IF
+END SUBROUTINE assert_shape_2
+
+!----------------------------------------------------------------------------
+!                                                               ASSERT_SHAPE
+!----------------------------------------------------------------------------
+
+SUBROUTINE assert_shape_3( Mat, s,  msg, file, line, routine )
+  REAL( DFP ), INTENT( IN ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( 3 )
+  INTEGER( I4B ), INTENT( IN ) :: line
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
+
+  ! define internal variable
+  INTEGER( I4B ) :: shape_mat( 3 )
+  shape_mat = SHAPE( Mat )
+
+  IF (all(shape_mat == s) ) THEN
+    RETURN
+  ELSE
+    CALL ErrorMsg( File = file, Routine = routine, Line = line, &
+      & MSG = msg )
+    STOP
+  END IF
+END SUBROUTINE assert_shape_3
+
+!----------------------------------------------------------------------------
+!                                                               ASSERT_SHAPE
+!----------------------------------------------------------------------------
+
+SUBROUTINE assert_shape_4( Mat, s, msg, file, line, routine )
+  REAL( DFP ), INTENT( IN ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( 4 )
+  INTEGER( I4B ), INTENT( IN ) :: line
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
+
+  ! define internal variable
+  INTEGER( I4B ) :: shape_mat( 4 )
+  shape_mat = SHAPE( Mat )
+
+  IF (all(shape_mat == s) ) THEN
+    RETURN
+  ELSE
+    CALL ErrorMsg( File = file, Routine = routine, Line = line, &
+      & MSG = msg )
+    STOP
+  END IF
+END SUBROUTINE assert_shape_4
 
 !----------------------------------------------------------------------------
 !                                                                      SWAP

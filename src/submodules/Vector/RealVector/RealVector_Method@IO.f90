@@ -87,17 +87,17 @@ END PROCEDURE RealVectorDisplay
 
 MODULE PROCEDURE RealscalarDisplay
   IF( PRESENT( UnitNo ) ) THEN
-    CALL Display(Vec=Obj%Val, UnitNo = UnitNo, msg=msg )
+    CALL Display( Obj%Val, UnitNo = UnitNo, msg=msg )
     RETURN
   END IF
 
   IF( PRESENT( filename ) ) THEN
-    CALL Display(Vec=Obj%Val, msg=msg, filename=filename, &
+    CALL Display( Obj%Val, msg=msg, filename=filename, &
       & extension=extension, path=path )
     RETURN
   END IF
 
-  CALL Display(Vec=Obj%Val, msg=msg)
+  CALL Display( Obj%Val, msg=msg, unitNo = stdout)
 
 END PROCEDURE RealscalarDisplay
 
@@ -109,53 +109,22 @@ MODULE PROCEDURE Display_Vector_Real
   INTEGER( I4B ) :: i
   type(hdf5_file) :: h5f
 
-  IF( PRESENT( UnitNo ) ) THEN
-    IF( LEN_TRIM( msg ) .NE. 0 ) THEN
-      WRITE( UnitNo, "(A)" ) TRIM( msg )
-    END IF
-
-    CALL Write_data( UnitNo )
-    RETURN
-  END IF
-
-  IF( PRESENT( filename ) ) THEN
-    SELECT CASE( TRIM( extension ) )
-    CASE( '.hdf5' )
-      call ExecuteCommand( 'mkdir -p ' // trim(path), &
-        & __FILE__ // "Line num :: " // TRIM(INT2STR(__LINE__)) &
-        & // "  Display_Vector_Real()" )
-      call h5f%initialize( &
-        & filename= trim(path)//trim(filename)//trim(extension), &
-        & status='new', action='w', comp_lvl=1)
-      call h5f%write( '/' // TRIM(msg), Vec )
-      call h5f%finalize()
-    END SELECT
-    RETURN
-  END IF
-
-  IF( LBOUND( vec, 1 ) .EQ. 1 ) THEN
-  call disp( title = msg, &
-    & x= vec, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & orient = 'row' )
-  ELSE
-    call disp( title = msg, &
-    & x= vec, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & sep = ' ---> ', &
-    & lbound = LBOUND( Vec ) )
-  END IF
-
-  CONTAINS
-  SUBROUTINE Write_data( unitno )
-    INTEGER( I4B ), INTENT( IN ) :: unitno
-    INTEGER( I4B ) :: i
-    DO i = 1, SIZE( Vec )
-      WRITE( UnitNo, * ) Vec(i)
-    END DO
-  END SUBROUTINE
+  SELECT CASE( TRIM( extension ) )
+  CASE( '.hdf5' )
+    call ExecuteCommand( 'mkdir -p ' // trim(path), &
+      & __FILE__ // "Line num :: " // TRIM(INT2STR(__LINE__)) &
+      & // "  Display_Vector_Real()" )
+    call h5f%initialize( &
+      & filename= trim(path)//trim(filename)//trim(extension), &
+      & status='new', action='w', comp_lvl=1)
+    call h5f%write( '/' // TRIM(msg), Vec )
+    call h5f%finalize()
+  CASE DEFAULT
+    CALL Display( Val=__FILE__, msg="Error: In file :: ", unitNo = stdout )
+    CALL Display( Val=__LINE__, msg="In line number :: ", UnitNo = stdout )
+    CALL Display( Msg= "No match found for given extension", UnitNo=stdout )
+    STOP
+  END SELECT
 
 END PROCEDURE Display_Vector_Real
 

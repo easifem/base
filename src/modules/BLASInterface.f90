@@ -1,28 +1,3 @@
-!
-!------------------------------------------------------------------------------
-!                      Author: Vikas sharma
-!                    Position: DOctral Student
-!                Institute: Kyoto Univeristy, Japan
-!                   Program name:  BLASInterface.f90
-!                   Last Update:  March-08-2017
-!
-!------------------------------------------------------------------------------
-!                       Details of Program
-!==============================================================================
-!
-!   Type:: Module
-!
-!   Info::  -   Interface to BLAS Level-1, Level-2, Level-3
-!
-!   USE association:
-!           -   Global Data
-!           -   IO
-!
-!   Content Information:
-!
-!==============================================================================
-!
-
 MODULE BLASInterface
     IMPLICIT NONE
 !===============================================================================
