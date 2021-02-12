@@ -1,7 +1,0 @@
-rm -rf Seepage GMSH
-echo "copying initial mesh from ./model to ./"
-cp ./model/mesh.msh ./mesh.msh
-easifem initcond
-echo "--------------------------"
-echo "running 'initcond' program"
-echo "--------------------------"

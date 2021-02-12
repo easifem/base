@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# cd ${lib}
+# ar rcs ${lib}/libeasifem.a ${lib}/*.o
+# cd -
+
+echo "entering easifem Base library..."
+cd $EASIFEM_BASE_LIB
+echo "---- creating libeasifemBase ----"
+ar rcs ${EASIFEM_BASE_LIB}/libeasifemBase.a ${EASIFEM_BASE_LIB}/*.o
+echo "exiting easifem Base library..."
+cd -

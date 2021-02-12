@@ -34,38 +34,22 @@ In future, EASIFEM, will also act as a platform to use exisiting finite element 
 
 ### Base
 
-- [BoundingBox](./Base/BoundingBox.md)
-- [Buffer](#)
-- [DOF](#)
-- [ElemShapeData](#)
-- [FEMatrix](#)
-- [FEVariable](#)
-- [File](#)
-- [IndexValue](#)
-- [IterationData](#)
-- [KeyValue](#)
-- [QuadraturePoint](#)
-- [Random](#)
-- [Tensor](#)
-- [ReferenceElement](#)
-- [RealMatrix](#)
-- [SparseMatrix](#)
-- [IntVector](#)
-- [RealVector](#)
-- [AbstractArray](#)
-- [AbstractMatrix](#)
-- [AbstractVector](#)
-- [BaseMethod](#)
-- [BaseType](#)
-- [BlasInterface](#)
-- [ErrorHandling](#)
-- [GlobalData](#)
-- [IO](#)
-- [Utility](#)
+| | | |
+ --- | --- | --- |
+[BoundingBox](./pages/BoundingBox.md) | [Buffer](#) | [DOF](#)
+[ElemShapeData](#) | [FEMatrix](#) | [FEVariable](#)
+[File](#) | [IndexValue](#) | [IterationData](#)
+[KeyValue](#) | [QuadraturePoint](#) | [Random](#)
+[Tensor](#) | [ReferenceElement](#) | [RealMatrix](#)
+[SparseMatrix](#) | [IntVector](#) | [RealVector](#)
+[AbstractArray](#) | [AbstractMatrix](#) | [AbstractVector](#)
+[BaseMethod](#) | [BaseType](#) | [BlasInterface](#)
+[ErrorHandling](#) | [GlobalData](#) | [IO](#)
+[Utility](#) | |
 
 ## Dependencies
 
-- [String](./Extpkgs/String.md)
+- [String](./pages/String.md)
 
 ## Contributing
 

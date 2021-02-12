@@ -12,6 +12,9 @@
 *.prj
 *.drawio
 vscode-settings
+include/
+lib/
+opt/
 # pkgs/
 # old-classes/
 # examples/
