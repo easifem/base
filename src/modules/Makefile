@@ -50,14 +50,14 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling AbstractVector_Method.f90
 	@$(FC) -c -o "../../lib/AbstractVector_Method.o" $(FFLAGS) "AbstractVector_Method.f90"
 
-"../../lib/BaseMethod.o": "BaseMethod.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/buffer_method.mod" "../../include/utility.mod" "../../include/errorhandling.mod" "../../include/file_method.mod" "../../include/boundingbox_method.mod" "../../include/abstractarray_method.mod" "../../include/abstractmatrix_method.mod" "../../include/abstractvector_method.mod" "../../include/realvector_method.mod" "../../include/intvector_method.mod" "../../include/realmatrix_method.mod" "../../include/lapack_method.mod" "../../include/sparsematrix_method.mod" "../../include/indexvalue_method.mod" "../../include/dof_method.mod" "../../include/iterationdata_method.mod" "../../include/keyvalue_method.mod" "../../include/random_method.mod" "../../include/voigtrank2tensor_method.mod" "../../include/rank2tensor_method.mod" "../../include/referenceelement_method.mod" "../../include/quadraturepoint_method.mod" "../../include/elemshapedata_method.mod" "../../include/fevariable_method.mod" "../../include/fematrix_module.mod"
+"../../lib/BaseMethod.o": "BaseMethod.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/buffer_method.mod" "../../include/utility.mod" "../../include/errorhandling.mod" "../../include/file_method.mod" "../../include/boundingbox_method.mod" "../../include/abstractarray_method.mod" "../../include/abstractmatrix_method.mod" "../../include/abstractvector_method.mod" "../../include/realvector_method.mod" "../../include/intvector_method.mod" "../../include/realmatrix_method.mod" "../../include/lapack_method.mod" "../../include/sparsematrix_method.mod" "../../include/indexvalue_method.mod" "../../include/dof_method.mod" "../../include/iterationdata_method.mod" "../../include/dispmodule.mod" "../../include/keyvalue_method.mod" "../../include/random_method.mod" "../../include/voigtrank2tensor_method.mod" "../../include/rank2tensor_method.mod" "../../include/referenceelement_method.mod" "../../include/quadraturepoint_method.mod" "../../include/elemshapedata_method.mod" "../../include/fevariable_method.mod" "../../include/fematrix_module.mod"
 	@echo Compiling BaseMethod.f90
 	@$(FC) -c -o "../../lib/BaseMethod.o" $(FFLAGS) "BaseMethod.f90"
 "../../include/basemethod.mod" : "../../lib/BaseMethod.o" .EXISTSONLY
 	@echo Compiling BaseMethod.f90
 	@$(FC) -c -o "../../lib/BaseMethod.o" $(FFLAGS) "BaseMethod.f90"
 
-"../../lib/BaseType.o": "BaseType.f90" "../../include/globaldata.mod"
+"../../lib/BaseType.o": "BaseType.f90" "../../include/globaldata.mod" "../../include/stringifor.mod" "../../include/penf.mod"
 	@echo Compiling BaseType.f90
 	@$(FC) -c -o "../../lib/BaseType.o" $(FFLAGS) "BaseType.f90"
 "../../include/basetype.mod" : "../../lib/BaseType.o" .EXISTSONLY
@@ -67,6 +67,20 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 "../../lib/BaseType@AdditionalMethods.o": "BaseType@AdditionalMethods.f90" "../../include/referenceelement_method.mod"
 	@echo Compiling BaseType@AdditionalMethods.f90
 	@$(FC) -c -o "../../lib/BaseType@AdditionalMethods.o" $(FFLAGS) "BaseType@AdditionalMethods.f90"
+
+"../../lib/befor64.o": "BeFoR64/befor64.F90" "../../include/penf.mod" "../../include/befor64_pack_data_m.mod"
+	@echo Compiling BeFoR64/befor64.F90
+	@$(FC) -c -o "../../lib/befor64.o" $(FFLAGS) "BeFoR64/befor64.F90"
+"../../include/befor64.mod" : "../../lib/befor64.o" .EXISTSONLY
+	@echo Compiling BeFoR64/befor64.F90
+	@$(FC) -c -o "../../lib/befor64.o" $(FFLAGS) "BeFoR64/befor64.F90"
+
+"../../lib/befor64_pack_data_m.o": "BeFoR64/befor64_pack_data_m.F90" "../../include/penf.mod"
+	@echo Compiling BeFoR64/befor64_pack_data_m.F90
+	@$(FC) -c -o "../../lib/befor64_pack_data_m.o" $(FFLAGS) "BeFoR64/befor64_pack_data_m.F90"
+"../../include/befor64_pack_data_m.mod" : "../../lib/befor64_pack_data_m.o" .EXISTSONLY
+	@echo Compiling BeFoR64/befor64_pack_data_m.F90
+	@$(FC) -c -o "../../lib/befor64_pack_data_m.o" $(FFLAGS) "BeFoR64/befor64_pack_data_m.F90"
 
 "../../lib/BLASInterface.o": "BLASInterface.f90"
 	@echo Compiling BLASInterface.f90
@@ -88,6 +102,62 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 "../../include/buffer_method.mod" : "../../lib/Buffer_Method.o" .EXISTSONLY
 	@echo Compiling Buffer/Buffer_Method.f90
 	@$(FC) -c -o "../../lib/Buffer_Method.o" $(FFLAGS) "Buffer/Buffer_Method.f90"
+
+"../../lib/disp_i1mod.o": "DispModule/disp_i1mod.f90" "../../include/dispmodule_util.mod"
+	@echo Compiling DispModule/disp_i1mod.f90
+	@$(FC) -c -o "../../lib/disp_i1mod.o" $(FFLAGS) "DispModule/disp_i1mod.f90"
+"../../include/disp_i1mod.mod" : "../../lib/disp_i1mod.o" .EXISTSONLY
+	@echo Compiling DispModule/disp_i1mod.f90
+	@$(FC) -c -o "../../lib/disp_i1mod.o" $(FFLAGS) "DispModule/disp_i1mod.f90"
+
+"../../lib/disp_i2mod.o": "DispModule/disp_i2mod.f90" "../../include/dispmodule_util.mod"
+	@echo Compiling DispModule/disp_i2mod.f90
+	@$(FC) -c -o "../../lib/disp_i2mod.o" $(FFLAGS) "DispModule/disp_i2mod.f90"
+"../../include/disp_i2mod.mod" : "../../lib/disp_i2mod.o" .EXISTSONLY
+	@echo Compiling DispModule/disp_i2mod.f90
+	@$(FC) -c -o "../../lib/disp_i2mod.o" $(FFLAGS) "DispModule/disp_i2mod.f90"
+
+"../../lib/disp_i4mod.o": "DispModule/disp_i4mod.f90" "../../include/dispmodule_util.mod"
+	@echo Compiling DispModule/disp_i4mod.f90
+	@$(FC) -c -o "../../lib/disp_i4mod.o" $(FFLAGS) "DispModule/disp_i4mod.f90"
+"../../include/disp_i4mod.mod" : "../../lib/disp_i4mod.o" .EXISTSONLY
+	@echo Compiling DispModule/disp_i4mod.f90
+	@$(FC) -c -o "../../lib/disp_i4mod.o" $(FFLAGS) "DispModule/disp_i4mod.f90"
+
+"../../lib/disp_i8mod.o": "DispModule/disp_i8mod.f90" "../../include/dispmodule_util.mod"
+	@echo Compiling DispModule/disp_i8mod.f90
+	@$(FC) -c -o "../../lib/disp_i8mod.o" $(FFLAGS) "DispModule/disp_i8mod.f90"
+"../../include/disp_i8mod.mod" : "../../lib/disp_i8mod.o" .EXISTSONLY
+	@echo Compiling DispModule/disp_i8mod.f90
+	@$(FC) -c -o "../../lib/disp_i8mod.o" $(FFLAGS) "DispModule/disp_i8mod.f90"
+
+"../../lib/disp_l1mod.o": "DispModule/disp_l1mod.f90" "../../include/dispmodule_util.mod"
+	@echo Compiling DispModule/disp_l1mod.f90
+	@$(FC) -c -o "../../lib/disp_l1mod.o" $(FFLAGS) "DispModule/disp_l1mod.f90"
+"../../include/disp_l1mod.mod" : "../../lib/disp_l1mod.o" .EXISTSONLY
+	@echo Compiling DispModule/disp_l1mod.f90
+	@$(FC) -c -o "../../lib/disp_l1mod.o" $(FFLAGS) "DispModule/disp_l1mod.f90"
+
+"../../lib/disp_r16mod.o": "DispModule/disp_r16mod.f90" "../../include/dispmodule_util.mod"
+	@echo Compiling DispModule/disp_r16mod.f90
+	@$(FC) -c -o "../../lib/disp_r16mod.o" $(FFLAGS) "DispModule/disp_r16mod.f90"
+"../../include/disp_r16mod.mod" : "../../lib/disp_r16mod.o" .EXISTSONLY
+	@echo Compiling DispModule/disp_r16mod.f90
+	@$(FC) -c -o "../../lib/disp_r16mod.o" $(FFLAGS) "DispModule/disp_r16mod.f90"
+
+"../../lib/dispmodule.o": "DispModule/dispmodule.f90" "../../include/dispmodule_util.mod"
+	@echo Compiling DispModule/dispmodule.f90
+	@$(FC) -c -o "../../lib/dispmodule.o" $(FFLAGS) "DispModule/dispmodule.f90"
+"../../include/dispmodule.mod" : "../../lib/dispmodule.o" .EXISTSONLY
+	@echo Compiling DispModule/dispmodule.f90
+	@$(FC) -c -o "../../lib/dispmodule.o" $(FFLAGS) "DispModule/dispmodule.f90"
+
+"../../lib/dispmodule_util.o": "DispModule/dispmodule_util.f90" "../../include/putstrmodule.mod"
+	@echo Compiling DispModule/dispmodule_util.f90
+	@$(FC) -c -o "../../lib/dispmodule_util.o" $(FFLAGS) "DispModule/dispmodule_util.f90"
+"../../include/dispmodule_util.mod" : "../../lib/dispmodule_util.o" .EXISTSONLY
+	@echo Compiling DispModule/dispmodule_util.f90
+	@$(FC) -c -o "../../lib/dispmodule_util.o" $(FFLAGS) "DispModule/dispmodule_util.f90"
 
 "../../lib/DOF_Method.o": "DOF/DOF_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling DOF/DOF_Method.f90
@@ -154,12 +224,37 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling File/File_Method.f90
 	@$(FC) -c -o "../../lib/File_Method.o" $(FFLAGS) "File/File_Method.f90"
 
+"../../lib/foxy.o": "FoXy/foxy.f90" "../../include/foxy_xml_file.mod" "../../include/foxy_xml_tag.mod" "../../include/penf.mod"
+	@echo Compiling FoXy/foxy.f90
+	@$(FC) -c -o "../../lib/foxy.o" $(FFLAGS) "FoXy/foxy.f90"
+"../../include/foxy.mod" : "../../lib/foxy.o" .EXISTSONLY
+	@echo Compiling FoXy/foxy.f90
+	@$(FC) -c -o "../../lib/foxy.o" $(FFLAGS) "FoXy/foxy.f90"
+
+"../../lib/foxy_xml_file.o": "FoXy/foxy_xml_file.f90" "../../include/foxy_xml_tag.mod" "../../include/penf.mod"
+	@echo Compiling FoXy/foxy_xml_file.f90
+	@$(FC) -c -o "../../lib/foxy_xml_file.o" $(FFLAGS) "FoXy/foxy_xml_file.f90"
+"../../include/foxy_xml_file.mod" : "../../lib/foxy_xml_file.o" .EXISTSONLY
+	@echo Compiling FoXy/foxy_xml_file.f90
+	@$(FC) -c -o "../../lib/foxy_xml_file.o" $(FFLAGS) "FoXy/foxy_xml_file.f90"
+
+"../../lib/foxy_xml_tag.o": "FoXy/foxy_xml_tag.F90" "../../include/penf.mod" "../../include/stringifor.mod"
+	@echo Compiling FoXy/foxy_xml_tag.F90
+	@$(FC) -c -o "../../lib/foxy_xml_tag.o" $(FFLAGS) "FoXy/foxy_xml_tag.F90"
+"../../include/foxy_xml_tag.mod" : "../../lib/foxy_xml_tag.o" .EXISTSONLY
+	@echo Compiling FoXy/foxy_xml_tag.F90
+	@$(FC) -c -o "../../lib/foxy_xml_tag.o" $(FFLAGS) "FoXy/foxy_xml_tag.F90"
+
 "../../lib/GE_Lapack_Method.o": "Lapack/GE_Lapack_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Lapack/GE_Lapack_Method.f90
 	@$(FC) -c -o "../../lib/GE_Lapack_Method.o" $(FFLAGS) "Lapack/GE_Lapack_Method.f90"
 "../../include/ge_lapack_method.mod" : "../../lib/GE_Lapack_Method.o" .EXISTSONLY
 	@echo Compiling Lapack/GE_Lapack_Method.f90
 	@$(FC) -c -o "../../lib/GE_Lapack_Method.o" $(FFLAGS) "Lapack/GE_Lapack_Method.f90"
+
+"../../lib/Geometry.o": "Geometry/Geometry.f90" "Geometry/geometry_by_burkardt.inc" "Geometry/geometry_burkardt_line.inc" "Geometry/geometry_burkardt_triangle.inc"
+	@echo Compiling Geometry/Geometry.f90
+	@$(FC) -c -o "../../lib/Geometry.o" $(FFLAGS) "Geometry/Geometry.f90"
 
 "../../lib/GlobalData.o": "GlobalData.f90"
 	@echo Compiling GlobalData.f90
@@ -175,6 +270,13 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling IndexValue/IndexValue_Method.f90
 	@$(FC) -c -o "../../lib/IndexValue_Method.o" $(FFLAGS) "IndexValue/IndexValue_Method.f90"
 
+"../../lib/interface.o": "H5Fortran/interface.f90" "../../include/string_utils.mod"
+	@echo Compiling H5Fortran/interface.f90
+	@$(FC) -c -o "../../lib/interface.o" $(FFLAGS) "H5Fortran/interface.f90"
+"../../include/h5fortran.mod" : "../../lib/interface.o" .EXISTSONLY
+	@echo Compiling H5Fortran/interface.f90
+	@$(FC) -c -o "../../lib/interface.o" $(FFLAGS) "H5Fortran/interface.f90"
+
 "../../lib/IntVector_Method.o": "Vector/IntVector/IntVector_Method.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/basetype.mod" "IterationData/contains.part"
 	@echo Compiling Vector/IntVector/IntVector_Method.f90
 	@$(FC) -c -o "../../lib/IntVector_Method.o" $(FFLAGS) "Vector/IntVector/IntVector_Method.f90"
@@ -182,7 +284,7 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling Vector/IntVector/IntVector_Method.f90
 	@$(FC) -c -o "../../lib/IntVector_Method.o" $(FFLAGS) "Vector/IntVector/IntVector_Method.f90"
 
-"../../lib/IO.o": "IO.f90" "../../include/globaldata.mod"
+"../../lib/IO.o": "IO.f90" "../../include/globaldata.mod" "../../include/dispmodule.mod"
 	@echo Compiling IO.f90
 	@$(FC) -c -o "../../lib/IO.o" $(FFLAGS) "IO.f90"
 "../../include/io.mod" : "../../lib/IO.o" .EXISTSONLY
@@ -196,7 +298,7 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling IterationData/IterationData_Method.f90
 	@$(FC) -c -o "../../lib/IterationData_Method.o" $(FFLAGS) "IterationData/IterationData_Method.f90"
 
-"../../lib/KeyValue_Method.o": "KeyValue/KeyValue_Method.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "KeyValue/constructor.inc" "KeyValue/setmethod.inc" "KeyValue/getmethod.inc" "IterationData/contains.part"
+"../../lib/KeyValue_Method.o": "KeyValue/KeyValue_Method.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "../../include/stringifor.mod" "KeyValue/constructor.inc" "KeyValue/setmethod.inc" "KeyValue/getmethod.inc" "IterationData/contains.part"
 	@echo Compiling KeyValue/KeyValue_Method.f90
 	@$(FC) -c -o "../../lib/KeyValue_Method.o" $(FFLAGS) "KeyValue/KeyValue_Method.f90"
 "../../include/keyvalue_method.mod" : "../../lib/KeyValue_Method.o" .EXISTSONLY
@@ -213,6 +315,62 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 "../../lib/matrix_exponential.o": "Tensor/Rank2Tensor/matrix_exponential.f90"
 	@echo Compiling Tensor/Rank2Tensor/matrix_exponential.f90
 	@$(FC) -c -o "../../lib/matrix_exponential.o" $(FFLAGS) "Tensor/Rank2Tensor/matrix_exponential.f90"
+
+"../../lib/mod_functional.o": "functional-fortran/mod_functional.f90" "../../include/mod_interfaces.mod"
+	@echo Compiling functional-fortran/mod_functional.f90
+	@$(FC) -c -o "../../lib/mod_functional.o" $(FFLAGS) "functional-fortran/mod_functional.f90"
+"../../include/mod_functional.mod" : "../../lib/mod_functional.o" .EXISTSONLY
+	@echo Compiling functional-fortran/mod_functional.f90
+	@$(FC) -c -o "../../lib/mod_functional.o" $(FFLAGS) "functional-fortran/mod_functional.f90"
+
+"../../lib/mod_interfaces.o": "functional-fortran/mod_interfaces.f90"
+	@echo Compiling functional-fortran/mod_interfaces.f90
+	@$(FC) -c -o "../../lib/mod_interfaces.o" $(FFLAGS) "functional-fortran/mod_interfaces.f90"
+"../../include/mod_interfaces.mod" : "../../lib/mod_interfaces.o" .EXISTSONLY
+	@echo Compiling functional-fortran/mod_interfaces.f90
+	@$(FC) -c -o "../../lib/mod_interfaces.o" $(FFLAGS) "functional-fortran/mod_interfaces.f90"
+
+"../../lib/ogpf.o": "Gnuplot/ogpf.f90"
+	@echo Compiling Gnuplot/ogpf.f90
+	@$(FC) -c -o "../../lib/ogpf.o" $(FFLAGS) "Gnuplot/ogpf.f90"
+"../../include/ogpf.mod" : "../../lib/ogpf.o" .EXISTSONLY
+	@echo Compiling Gnuplot/ogpf.f90
+	@$(FC) -c -o "../../lib/ogpf.o" $(FFLAGS) "Gnuplot/ogpf.f90"
+
+"../../lib/penf.o": "PENF/penf.F90" "../../include/penf_global_parameters_variables.mod" "../../include/penf_b_size.mod" "../../include/penf_stringify.mod"
+	@echo Compiling PENF/penf.F90
+	@$(FC) -c -o "../../lib/penf.o" $(FFLAGS) "PENF/penf.F90"
+"../../include/penf.mod" : "../../lib/penf.o" .EXISTSONLY
+	@echo Compiling PENF/penf.F90
+	@$(FC) -c -o "../../lib/penf.o" $(FFLAGS) "PENF/penf.F90"
+
+"../../lib/penf_b_size.o": "PENF/penf_b_size.F90" "../../include/penf_global_parameters_variables.mod"
+	@echo Compiling PENF/penf_b_size.F90
+	@$(FC) -c -o "../../lib/penf_b_size.o" $(FFLAGS) "PENF/penf_b_size.F90"
+"../../include/penf_b_size.mod" : "../../lib/penf_b_size.o" .EXISTSONLY
+	@echo Compiling PENF/penf_b_size.F90
+	@$(FC) -c -o "../../lib/penf_b_size.o" $(FFLAGS) "PENF/penf_b_size.F90"
+
+"../../lib/penf_global_parameters_variables.o": "PENF/penf_global_parameters_variables.F90"
+	@echo Compiling PENF/penf_global_parameters_variables.F90
+	@$(FC) -c -o "../../lib/penf_global_parameters_variables.o" $(FFLAGS) "PENF/penf_global_parameters_variables.F90"
+"../../include/penf_global_parameters_variables.mod" : "../../lib/penf_global_parameters_variables.o" .EXISTSONLY
+	@echo Compiling PENF/penf_global_parameters_variables.F90
+	@$(FC) -c -o "../../lib/penf_global_parameters_variables.o" $(FFLAGS) "PENF/penf_global_parameters_variables.F90"
+
+"../../lib/penf_stringify.o": "PENF/penf_stringify.F90" "../../include/penf_b_size.mod" "../../include/penf_global_parameters_variables.mod"
+	@echo Compiling PENF/penf_stringify.F90
+	@$(FC) -c -o "../../lib/penf_stringify.o" $(FFLAGS) "PENF/penf_stringify.F90"
+"../../include/penf_stringify.mod" : "../../lib/penf_stringify.o" .EXISTSONLY
+	@echo Compiling PENF/penf_stringify.F90
+	@$(FC) -c -o "../../lib/penf_stringify.o" $(FFLAGS) "PENF/penf_stringify.F90"
+
+"../../lib/putstrmodule.o": "DispModule/putstrmodule.f90"
+	@echo Compiling DispModule/putstrmodule.f90
+	@$(FC) -c -o "../../lib/putstrmodule.o" $(FFLAGS) "DispModule/putstrmodule.f90"
+"../../include/putstrmodule.mod" : "../../lib/putstrmodule.o" .EXISTSONLY
+	@echo Compiling DispModule/putstrmodule.f90
+	@$(FC) -c -o "../../lib/putstrmodule.o" $(FFLAGS) "DispModule/putstrmodule.f90"
 
 "../../lib/QuadraturePoint_Method.o": "QuadraturePoint/QuadraturePoint_Method.f90" "../../include/basetype.mod" "../../include/globaldata.mod" "IterationData/contains.part"
 	@echo Compiling QuadraturePoint/QuadraturePoint_Method.f90
@@ -234,6 +392,27 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 "../../include/rank2tensor_method.mod" : "../../lib/Rank2Tensor_Method.o" .EXISTSONLY
 	@echo Compiling Tensor/Rank2Tensor/Rank2Tensor_Method.f90
 	@$(FC) -c -o "../../lib/Rank2Tensor_Method.o" $(FFLAGS) "Tensor/Rank2Tensor/Rank2Tensor_Method.f90"
+
+"../../lib/read.o": "H5Fortran/read.f90" "../../include/h5fortran.mod"
+	@echo Compiling H5Fortran/read.f90
+	@$(FC) -c -o "../../lib/read.o" $(FFLAGS) "H5Fortran/read.f90"
+"../../include/h5fortran@read.smod" : "../../lib/read.o" .EXISTSONLY
+	@echo Compiling H5Fortran/read.f90
+	@$(FC) -c -o "../../lib/read.o" $(FFLAGS) "H5Fortran/read.f90"
+
+"../../lib/reader.o": "H5Fortran/reader.f90" "../../include/h5fortran@read.smod"
+	@echo Compiling H5Fortran/reader.f90
+	@$(FC) -c -o "../../lib/reader.o" $(FFLAGS) "H5Fortran/reader.f90"
+"../../include/h5fortran@read@reader.smod" : "../../lib/reader.o" .EXISTSONLY
+	@echo Compiling H5Fortran/reader.f90
+	@$(FC) -c -o "../../lib/reader.o" $(FFLAGS) "H5Fortran/reader.f90"
+
+"../../lib/reader_lt.o": "H5Fortran/reader_lt.f90" "../../include/h5fortran@read.smod"
+	@echo Compiling H5Fortran/reader_lt.f90
+	@$(FC) -c -o "../../lib/reader_lt.o" $(FFLAGS) "H5Fortran/reader_lt.f90"
+"../../include/h5fortran@read@reader_lt.smod" : "../../lib/reader_lt.o" .EXISTSONLY
+	@echo Compiling H5Fortran/reader_lt.f90
+	@$(FC) -c -o "../../lib/reader_lt.o" $(FFLAGS) "H5Fortran/reader_lt.f90"
 
 "../../lib/RealMatrix_Method.o": "Matrix/RealMatrix/RealMatrix_Method.f90" "../../include/globaldata.mod" "../../include/basetype.mod"
 	@echo Compiling Matrix/RealMatrix/RealMatrix_Method.f90
@@ -263,6 +442,27 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling SparseMatrix/SparseMatrix_Method.f90
 	@$(FC) -c -o "../../lib/SparseMatrix_Method.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method.f90"
 
+"../../lib/string_utils.o": "H5Fortran/string_utils.f90"
+	@echo Compiling H5Fortran/string_utils.f90
+	@$(FC) -c -o "../../lib/string_utils.o" $(FFLAGS) "H5Fortran/string_utils.f90"
+"../../include/string_utils.mod" : "../../lib/string_utils.o" .EXISTSONLY
+	@echo Compiling H5Fortran/string_utils.f90
+	@$(FC) -c -o "../../lib/string_utils.o" $(FFLAGS) "H5Fortran/string_utils.f90"
+
+"../../lib/stringifor.o": "StringiFor/stringifor.F90" "../../include/penf.mod" "../../include/stringifor_string_t.mod"
+	@echo Compiling StringiFor/stringifor.F90
+	@$(FC) -c -o "../../lib/stringifor.o" $(FFLAGS) "StringiFor/stringifor.F90"
+"../../include/stringifor.mod" : "../../lib/stringifor.o" .EXISTSONLY
+	@echo Compiling StringiFor/stringifor.F90
+	@$(FC) -c -o "../../lib/stringifor.o" $(FFLAGS) "StringiFor/stringifor.F90"
+
+"../../lib/stringifor_string_t.o": "StringiFor/stringifor_string_t.F90" "../../include/befor64.mod" "../../include/penf.mod"
+	@echo Compiling StringiFor/stringifor_string_t.F90
+	@$(FC) -c -o "../../lib/stringifor_string_t.o" $(FFLAGS) "StringiFor/stringifor_string_t.F90"
+"../../include/stringifor_string_t.mod" : "../../lib/stringifor_string_t.o" .EXISTSONLY
+	@echo Compiling StringiFor/stringifor_string_t.F90
+	@$(FC) -c -o "../../lib/stringifor_string_t.o" $(FFLAGS) "StringiFor/stringifor_string_t.F90"
+
 "../../lib/Utility.o": "Utility.f90" "../../include/globaldata.mod" "../../include/io.mod" "../../include/errorhandling.mod"
 	@echo Compiling Utility.f90
 	@$(FC) -c -o "../../lib/Utility.o" $(FFLAGS) "Utility.f90"
@@ -277,6 +477,97 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90
 	@$(FC) -c -o "../../lib/VoigtRank2Tensor_Method.o" $(FFLAGS) "Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method.f90"
 
+"../../lib/vtk_fortran.o": "VTKFortran/vtk_fortran.f90" "../../include/vtk_fortran_pvtk_file.mod" "../../include/vtk_fortran_vtk_file.mod" "../../include/vtk_fortran_vtm_file.mod"
+	@echo Compiling VTKFortran/vtk_fortran.f90
+	@$(FC) -c -o "../../lib/vtk_fortran.o" $(FFLAGS) "VTKFortran/vtk_fortran.f90"
+"../../include/vtk_fortran.mod" : "../../lib/vtk_fortran.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran.f90
+	@$(FC) -c -o "../../lib/vtk_fortran.o" $(FFLAGS) "VTKFortran/vtk_fortran.f90"
+
+"../../lib/vtk_fortran_dataarray_encoder.o": "VTKFortran/vtk_fortran_dataarray_encoder.f90" "../../include/befor64.mod" "../../include/penf.mod"
+	@echo Compiling VTKFortran/vtk_fortran_dataarray_encoder.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_dataarray_encoder.o" $(FFLAGS) "VTKFortran/vtk_fortran_dataarray_encoder.f90"
+"../../include/vtk_fortran_dataarray_encoder.mod" : "../../lib/vtk_fortran_dataarray_encoder.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_dataarray_encoder.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_dataarray_encoder.o" $(FFLAGS) "VTKFortran/vtk_fortran_dataarray_encoder.f90"
+
+"../../lib/vtk_fortran_parameters.o": "VTKFortran/vtk_fortran_parameters.f90" "../../include/penf.mod"
+	@echo Compiling VTKFortran/vtk_fortran_parameters.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_parameters.o" $(FFLAGS) "VTKFortran/vtk_fortran_parameters.f90"
+"../../include/vtk_fortran_parameters.mod" : "../../lib/vtk_fortran_parameters.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_parameters.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_parameters.o" $(FFLAGS) "VTKFortran/vtk_fortran_parameters.f90"
+
+"../../lib/vtk_fortran_pvtk_file.o": "VTKFortran/vtk_fortran_pvtk_file.f90" "../../include/befor64.mod" "../../include/penf.mod" "../../include/vtk_fortran_vtk_file_xml_writer_abstract.mod" "../../include/vtk_fortran_vtk_file_xml_writer_ascii_local.mod"
+	@echo Compiling VTKFortran/vtk_fortran_pvtk_file.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_pvtk_file.o" $(FFLAGS) "VTKFortran/vtk_fortran_pvtk_file.f90"
+"../../include/vtk_fortran_pvtk_file.mod" : "../../lib/vtk_fortran_pvtk_file.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_pvtk_file.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_pvtk_file.o" $(FFLAGS) "VTKFortran/vtk_fortran_pvtk_file.f90"
+
+"../../lib/vtk_fortran_vtk_file.o": "VTKFortran/vtk_fortran_vtk_file.f90" "../../include/befor64.mod" "../../include/penf.mod" "../../include/stringifor.mod" "../../include/vtk_fortran_vtk_file_xml_writer_abstract.mod" "../../include/vtk_fortran_vtk_file_xml_writer_appended.mod" "../../include/vtk_fortran_vtk_file_xml_writer_ascii_local.mod" "../../include/vtk_fortran_vtk_file_xml_writer_binary_local.mod"
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file.f90"
+"../../include/vtk_fortran_vtk_file.mod" : "../../lib/vtk_fortran_vtk_file.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file.f90"
+
+"../../lib/vtk_fortran_vtk_file_xml_writer_abstract.o": "VTKFortran/vtk_fortran_vtk_file_xml_writer_abstract.f90" "../../include/foxy.mod" "../../include/penf.mod" "../../include/stringifor.mod" "../../include/vtk_fortran_parameters.mod"
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file_xml_writer_abstract.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file_xml_writer_abstract.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file_xml_writer_abstract.f90"
+"../../include/vtk_fortran_vtk_file_xml_writer_abstract.mod" : "../../lib/vtk_fortran_vtk_file_xml_writer_abstract.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file_xml_writer_abstract.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file_xml_writer_abstract.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file_xml_writer_abstract.f90"
+
+"../../lib/vtk_fortran_vtk_file_xml_writer_appended.o": "VTKFortran/vtk_fortran_vtk_file_xml_writer_appended.f90" "../../include/penf.mod" "../../include/stringifor.mod" "../../include/vtk_fortran_dataarray_encoder.mod" "../../include/vtk_fortran_parameters.mod" "../../include/vtk_fortran_vtk_file_xml_writer_abstract.mod"
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file_xml_writer_appended.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file_xml_writer_appended.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file_xml_writer_appended.f90"
+"../../include/vtk_fortran_vtk_file_xml_writer_appended.mod" : "../../lib/vtk_fortran_vtk_file_xml_writer_appended.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file_xml_writer_appended.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file_xml_writer_appended.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file_xml_writer_appended.f90"
+
+"../../lib/vtk_fortran_vtk_file_xml_writer_ascii_local.o": "VTKFortran/vtk_fortran_vtk_file_xml_writer_ascii_local.f90" "../../include/penf.mod" "../../include/stringifor.mod" "../../include/vtk_fortran_dataarray_encoder.mod" "../../include/vtk_fortran_vtk_file_xml_writer_abstract.mod"
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file_xml_writer_ascii_local.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file_xml_writer_ascii_local.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file_xml_writer_ascii_local.f90"
+"../../include/vtk_fortran_vtk_file_xml_writer_ascii_local.mod" : "../../lib/vtk_fortran_vtk_file_xml_writer_ascii_local.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file_xml_writer_ascii_local.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file_xml_writer_ascii_local.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file_xml_writer_ascii_local.f90"
+
+"../../lib/vtk_fortran_vtk_file_xml_writer_binary_local.o": "VTKFortran/vtk_fortran_vtk_file_xml_writer_binary_local.f90" "../../include/penf.mod" "../../include/stringifor.mod" "../../include/vtk_fortran_dataarray_encoder.mod" "../../include/vtk_fortran_vtk_file_xml_writer_abstract.mod"
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file_xml_writer_binary_local.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file_xml_writer_binary_local.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file_xml_writer_binary_local.f90"
+"../../include/vtk_fortran_vtk_file_xml_writer_binary_local.mod" : "../../lib/vtk_fortran_vtk_file_xml_writer_binary_local.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_vtk_file_xml_writer_binary_local.f90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtk_file_xml_writer_binary_local.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtk_file_xml_writer_binary_local.f90"
+
+"../../lib/vtk_fortran_vtm_file.o": "VTKFortran/vtk_fortran_vtm_file.F90" "../../include/befor64.mod" "../../include/penf.mod" "../../include/vtk_fortran_vtk_file_xml_writer_abstract.mod" "../../include/vtk_fortran_vtk_file_xml_writer_ascii_local.mod"
+	@echo Compiling VTKFortran/vtk_fortran_vtm_file.F90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtm_file.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtm_file.F90"
+"../../include/vtk_fortran_vtm_file.mod" : "../../lib/vtk_fortran_vtm_file.o" .EXISTSONLY
+	@echo Compiling VTKFortran/vtk_fortran_vtm_file.F90
+	@$(FC) -c -o "../../lib/vtk_fortran_vtm_file.o" $(FFLAGS) "VTKFortran/vtk_fortran_vtm_file.F90"
+
+"../../lib/write.o": "H5Fortran/write.f90" "../../include/h5fortran.mod"
+	@echo Compiling H5Fortran/write.f90
+	@$(FC) -c -o "../../lib/write.o" $(FFLAGS) "H5Fortran/write.f90"
+"../../include/h5fortran@write.smod" : "../../lib/write.o" .EXISTSONLY
+	@echo Compiling H5Fortran/write.f90
+	@$(FC) -c -o "../../lib/write.o" $(FFLAGS) "H5Fortran/write.f90"
+
+"../../lib/writer.o": "H5Fortran/writer.f90" "../../include/h5fortran@write.smod"
+	@echo Compiling H5Fortran/writer.f90
+	@$(FC) -c -o "../../lib/writer.o" $(FFLAGS) "H5Fortran/writer.f90"
+"../../include/h5fortran@write@writer.smod" : "../../lib/writer.o" .EXISTSONLY
+	@echo Compiling H5Fortran/writer.f90
+	@$(FC) -c -o "../../lib/writer.o" $(FFLAGS) "H5Fortran/writer.f90"
+
+"../../lib/writer_lt.o": "H5Fortran/writer_lt.f90" "../../include/h5fortran@write.smod"
+	@echo Compiling H5Fortran/writer_lt.f90
+	@$(FC) -c -o "../../lib/writer_lt.o" $(FFLAGS) "H5Fortran/writer_lt.f90"
+"../../include/h5fortran@write@writer_lt.smod" : "../../lib/writer_lt.o" .EXISTSONLY
+	@echo Compiling H5Fortran/writer_lt.f90
+	@$(FC) -c -o "../../lib/writer_lt.o" $(FFLAGS) "H5Fortran/writer_lt.f90"
+
 clean: .SYMBOLIC
 	@echo Deleting ../../lib/AbstractArray_Method.o and related files
 	@$(RM) "../../lib/AbstractArray_Method.o" "../../include/abstractarray_method.mod" "../../include/abstractarray_method.smod"
@@ -290,12 +581,32 @@ clean: .SYMBOLIC
 	@$(RM) "../../lib/BaseType.o" "../../include/basetype.mod" "../../include/basetype.smod"
 	@echo Deleting ../../lib/BaseType@AdditionalMethods.o and related files
 	@$(RM) "../../lib/BaseType@AdditionalMethods.o"
+	@echo Deleting ../../lib/befor64.o and related files
+	@$(RM) "../../lib/befor64.o" "../../include/befor64.mod" "../../include/befor64.smod"
+	@echo Deleting ../../lib/befor64_pack_data_m.o and related files
+	@$(RM) "../../lib/befor64_pack_data_m.o" "../../include/befor64_pack_data_m.mod" "../../include/befor64_pack_data_m.smod"
 	@echo Deleting ../../lib/BLASInterface.o and related files
 	@$(RM) "../../lib/BLASInterface.o" "../../include/blasinterface.mod" "../../include/blasinterface.smod"
 	@echo Deleting ../../lib/BoundingBox_Method.o and related files
 	@$(RM) "../../lib/BoundingBox_Method.o" "../../include/boundingbox_method.mod" "../../include/boundingbox_method.smod"
 	@echo Deleting ../../lib/Buffer_Method.o and related files
 	@$(RM) "../../lib/Buffer_Method.o" "../../include/buffer_method.mod" "../../include/buffer_method.smod"
+	@echo Deleting ../../lib/disp_i1mod.o and related files
+	@$(RM) "../../lib/disp_i1mod.o" "../../include/disp_i1mod.mod" "../../include/disp_i1mod.smod"
+	@echo Deleting ../../lib/disp_i2mod.o and related files
+	@$(RM) "../../lib/disp_i2mod.o" "../../include/disp_i2mod.mod" "../../include/disp_i2mod.smod"
+	@echo Deleting ../../lib/disp_i4mod.o and related files
+	@$(RM) "../../lib/disp_i4mod.o" "../../include/disp_i4mod.mod" "../../include/disp_i4mod.smod"
+	@echo Deleting ../../lib/disp_i8mod.o and related files
+	@$(RM) "../../lib/disp_i8mod.o" "../../include/disp_i8mod.mod" "../../include/disp_i8mod.smod"
+	@echo Deleting ../../lib/disp_l1mod.o and related files
+	@$(RM) "../../lib/disp_l1mod.o" "../../include/disp_l1mod.mod" "../../include/disp_l1mod.smod"
+	@echo Deleting ../../lib/disp_r16mod.o and related files
+	@$(RM) "../../lib/disp_r16mod.o" "../../include/disp_r16mod.mod" "../../include/disp_r16mod.smod"
+	@echo Deleting ../../lib/dispmodule.o and related files
+	@$(RM) "../../lib/dispmodule.o" "../../include/dispmodule.mod" "../../include/dispmodule.smod"
+	@echo Deleting ../../lib/dispmodule_util.o and related files
+	@$(RM) "../../lib/dispmodule_util.o" "../../include/dispmodule_util.mod" "../../include/dispmodule_util.smod"
 	@echo Deleting ../../lib/DOF_Method.o and related files
 	@$(RM) "../../lib/DOF_Method.o" "../../include/dof_method.mod" "../../include/dof_method.smod"
 	@echo Deleting ../../lib/dsyevc3.o and related files
@@ -318,12 +629,22 @@ clean: .SYMBOLIC
 	@$(RM) "../../lib/FEVariable_Method.o" "../../include/fevariable_method.mod" "../../include/fevariable_method.smod"
 	@echo Deleting ../../lib/File_Method.o and related files
 	@$(RM) "../../lib/File_Method.o" "../../include/file_method.mod" "../../include/file_method.smod"
+	@echo Deleting ../../lib/foxy.o and related files
+	@$(RM) "../../lib/foxy.o" "../../include/foxy.mod" "../../include/foxy.smod"
+	@echo Deleting ../../lib/foxy_xml_file.o and related files
+	@$(RM) "../../lib/foxy_xml_file.o" "../../include/foxy_xml_file.mod" "../../include/foxy_xml_file.smod"
+	@echo Deleting ../../lib/foxy_xml_tag.o and related files
+	@$(RM) "../../lib/foxy_xml_tag.o" "../../include/foxy_xml_tag.mod" "../../include/foxy_xml_tag.smod"
 	@echo Deleting ../../lib/GE_Lapack_Method.o and related files
 	@$(RM) "../../lib/GE_Lapack_Method.o" "../../include/ge_lapack_method.mod" "../../include/ge_lapack_method.smod"
+	@echo Deleting ../../lib/Geometry.o and related files
+	@$(RM) "../../lib/Geometry.o"
 	@echo Deleting ../../lib/GlobalData.o and related files
 	@$(RM) "../../lib/GlobalData.o" "../../include/globaldata.mod" "../../include/globaldata.smod"
 	@echo Deleting ../../lib/IndexValue_Method.o and related files
 	@$(RM) "../../lib/IndexValue_Method.o" "../../include/indexvalue_method.mod" "../../include/indexvalue_method.smod"
+	@echo Deleting ../../lib/interface.o and related files
+	@$(RM) "../../lib/interface.o" "../../include/h5fortran.mod" "../../include/h5fortran.smod"
 	@echo Deleting ../../lib/IntVector_Method.o and related files
 	@$(RM) "../../lib/IntVector_Method.o" "../../include/intvector_method.mod" "../../include/intvector_method.smod"
 	@echo Deleting ../../lib/IO.o and related files
@@ -336,12 +657,36 @@ clean: .SYMBOLIC
 	@$(RM) "../../lib/Lapack_Method.o" "../../include/lapack_method.mod" "../../include/lapack_method.smod"
 	@echo Deleting ../../lib/matrix_exponential.o and related files
 	@$(RM) "../../lib/matrix_exponential.o"
+	@echo Deleting ../../lib/mod_functional.o and related files
+	@$(RM) "../../lib/mod_functional.o" "../../include/mod_functional.mod" "../../include/mod_functional.smod"
+	@echo Deleting ../../lib/mod_interfaces.o and related files
+	@$(RM) "../../lib/mod_interfaces.o" "../../include/mod_interfaces.mod" "../../include/mod_interfaces.smod"
+	@echo Deleting ../../lib/ogpf.o and related files
+	@$(RM) "../../lib/ogpf.o" "../../include/ogpf.mod" "../../include/ogpf.smod"
+	@echo Deleting ../../lib/penf.o and related files
+	@$(RM) "../../lib/penf.o" "../../include/penf.mod" "../../include/penf.smod"
+	@echo Deleting ../../lib/penf_b_size.o and related files
+	@$(RM) "../../lib/penf_b_size.o" "../../include/penf_b_size.mod" "../../include/penf_b_size.smod"
+	@echo Deleting ../../lib/penf_global_parameters_variables.o and related files
+	@$(RM) "../../lib/penf_global_parameters_variables.o" "../../include/penf_global_parameters_variables.mod" "../../include/penf_global_parameters_variables.smod"
+	@echo Deleting ../../lib/penf_stringify.o and related files
+	@$(RM) "../../lib/penf_stringify.o" "../../include/penf_stringify.mod" "../../include/penf_stringify.smod"
+	@echo Deleting ../../lib/putstrmodule.o and related files
+	@$(RM) "../../lib/putstrmodule.o" "../../include/putstrmodule.mod" "../../include/putstrmodule.smod"
 	@echo Deleting ../../lib/QuadraturePoint_Method.o and related files
 	@$(RM) "../../lib/QuadraturePoint_Method.o" "../../include/quadraturepoint_method.mod" "../../include/quadraturepoint_method.smod"
 	@echo Deleting ../../lib/Random_Method.o and related files
 	@$(RM) "../../lib/Random_Method.o" "../../include/random_method.mod" "../../include/random_method.smod"
 	@echo Deleting ../../lib/Rank2Tensor_Method.o and related files
 	@$(RM) "../../lib/Rank2Tensor_Method.o" "../../include/rank2tensor_method.mod" "../../include/rank2tensor_method.smod"
+	@echo Deleting ../../lib/read.o and related files
+	@$(RM) "../../lib/read.o" "../../include/h5fortran@read.smod"
+	@echo Deleting ../../lib/reader.o and related files
+	@$(RM) "../../lib/reader.o" "../../include/h5fortran@read@reader.smod"
+	@echo Deleting ../../lib/reader_lt.o and related files
+	@$(RM) "../../lib/reader_lt.o" "../../include/h5fortran@read@reader_lt.smod"
+	@echo Deleting ../../lib/reader_nd.o and related files
+	@$(RM) "../../lib/reader_nd.o"
 	@echo Deleting ../../lib/RealMatrix_Method.o and related files
 	@$(RM) "../../lib/RealMatrix_Method.o" "../../include/realmatrix_method.mod" "../../include/realmatrix_method.smod"
 	@echo Deleting ../../lib/RealVector_Method.o and related files
@@ -350,16 +695,50 @@ clean: .SYMBOLIC
 	@$(RM) "../../lib/ReferenceElement_Method.o" "../../include/referenceelement_method.mod" "../../include/referenceelement_method.smod"
 	@echo Deleting ../../lib/SparseMatrix_Method.o and related files
 	@$(RM) "../../lib/SparseMatrix_Method.o" "../../include/sparsematrix_method.mod" "../../include/sparsematrix_method.smod"
+	@echo Deleting ../../lib/string_utils.o and related files
+	@$(RM) "../../lib/string_utils.o" "../../include/string_utils.mod" "../../include/string_utils.smod"
+	@echo Deleting ../../lib/stringifor.o and related files
+	@$(RM) "../../lib/stringifor.o" "../../include/stringifor.mod" "../../include/stringifor.smod"
+	@echo Deleting ../../lib/stringifor_string_t.o and related files
+	@$(RM) "../../lib/stringifor_string_t.o" "../../include/stringifor_string_t.mod" "../../include/stringifor_string_t.smod"
 	@echo Deleting ../../lib/Utility.o and related files
 	@$(RM) "../../lib/Utility.o" "../../include/utility.mod" "../../include/utility.smod"
 	@echo Deleting ../../lib/VoigtRank2Tensor_Method.o and related files
 	@$(RM) "../../lib/VoigtRank2Tensor_Method.o" "../../include/voigtrank2tensor_method.mod" "../../include/voigtrank2tensor_method.smod"
+	@echo Deleting ../../lib/vtk_fortran.o and related files
+	@$(RM) "../../lib/vtk_fortran.o" "../../include/vtk_fortran.mod" "../../include/vtk_fortran.smod"
+	@echo Deleting ../../lib/vtk_fortran_dataarray_encoder.o and related files
+	@$(RM) "../../lib/vtk_fortran_dataarray_encoder.o" "../../include/vtk_fortran_dataarray_encoder.mod" "../../include/vtk_fortran_dataarray_encoder.smod"
+	@echo Deleting ../../lib/vtk_fortran_parameters.o and related files
+	@$(RM) "../../lib/vtk_fortran_parameters.o" "../../include/vtk_fortran_parameters.mod" "../../include/vtk_fortran_parameters.smod"
+	@echo Deleting ../../lib/vtk_fortran_pvtk_file.o and related files
+	@$(RM) "../../lib/vtk_fortran_pvtk_file.o" "../../include/vtk_fortran_pvtk_file.mod" "../../include/vtk_fortran_pvtk_file.smod"
+	@echo Deleting ../../lib/vtk_fortran_vtk_file.o and related files
+	@$(RM) "../../lib/vtk_fortran_vtk_file.o" "../../include/vtk_fortran_vtk_file.mod" "../../include/vtk_fortran_vtk_file.smod"
+	@echo Deleting ../../lib/vtk_fortran_vtk_file_xml_writer_abstract.o and related files
+	@$(RM) "../../lib/vtk_fortran_vtk_file_xml_writer_abstract.o" "../../include/vtk_fortran_vtk_file_xml_writer_abstract.mod" "../../include/vtk_fortran_vtk_file_xml_writer_abstract.smod"
+	@echo Deleting ../../lib/vtk_fortran_vtk_file_xml_writer_appended.o and related files
+	@$(RM) "../../lib/vtk_fortran_vtk_file_xml_writer_appended.o" "../../include/vtk_fortran_vtk_file_xml_writer_appended.mod" "../../include/vtk_fortran_vtk_file_xml_writer_appended.smod"
+	@echo Deleting ../../lib/vtk_fortran_vtk_file_xml_writer_ascii_local.o and related files
+	@$(RM) "../../lib/vtk_fortran_vtk_file_xml_writer_ascii_local.o" "../../include/vtk_fortran_vtk_file_xml_writer_ascii_local.mod" "../../include/vtk_fortran_vtk_file_xml_writer_ascii_local.smod"
+	@echo Deleting ../../lib/vtk_fortran_vtk_file_xml_writer_binary_local.o and related files
+	@$(RM) "../../lib/vtk_fortran_vtk_file_xml_writer_binary_local.o" "../../include/vtk_fortran_vtk_file_xml_writer_binary_local.mod" "../../include/vtk_fortran_vtk_file_xml_writer_binary_local.smod"
+	@echo Deleting ../../lib/vtk_fortran_vtm_file.o and related files
+	@$(RM) "../../lib/vtk_fortran_vtm_file.o" "../../include/vtk_fortran_vtm_file.mod" "../../include/vtk_fortran_vtm_file.smod"
+	@echo Deleting ../../lib/write.o and related files
+	@$(RM) "../../lib/write.o" "../../include/h5fortran@write.smod"
+	@echo Deleting ../../lib/writer.o and related files
+	@$(RM) "../../lib/writer.o" "../../include/h5fortran@write@writer.smod"
+	@echo Deleting ../../lib/writer_lt.o and related files
+	@$(RM) "../../lib/writer_lt.o" "../../include/h5fortran@write@writer_lt.smod"
+	@echo Deleting ../../lib/writer_nd.o and related files
+	@$(RM) "../../lib/writer_nd.o"
 	@echo Deleting libeasifemBase.a
 	@$(RM) "libeasifemBase.a"
 
-"libeasifemBase.a":  "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/DOF_Method.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/easifemBase.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/GE_Lapack_Method.o" "../../lib/GlobalData.o" "../../lib/IndexValue_Method.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/Lapack_Method.o" "../../lib/matrix_exponential.o" "../../lib/QuadraturePoint_Method.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SparseMatrix_Method.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "/Users/vikassharma/Dropbox/easifem-base/src/modules/libeasifemModules.a" "../../lib/easifemBaseModules.prj.target"
+"libeasifemBase.a":  "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/befor64.o" "../../lib/befor64_pack_data_m.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/disp_i1mod.o" "../../lib/disp_i2mod.o" "../../lib/disp_i4mod.o" "../../lib/disp_i8mod.o" "../../lib/disp_l1mod.o" "../../lib/disp_r16mod.o" "../../lib/dispmodule.o" "../../lib/dispmodule_util.o" "../../lib/DOF_Method.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/easifemBase.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/foxy.o" "../../lib/foxy_xml_file.o" "../../lib/foxy_xml_tag.o" "../../lib/GE_Lapack_Method.o" "../../lib/Geometry.o" "../../lib/GlobalData.o" "../../lib/IndexValue_Method.o" "../../lib/interface.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/Lapack_Method.o" "../../lib/matrix_exponential.o" "../../lib/mod_functional.o" "../../lib/mod_interfaces.o" "../../lib/ogpf.o" "../../lib/penf.o" "../../lib/penf_b_size.o" "../../lib/penf_global_parameters_variables.o" "../../lib/penf_stringify.o" "../../lib/putstrmodule.o" "../../lib/QuadraturePoint_Method.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/read.o" "../../lib/reader.o" "../../lib/reader_lt.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SparseMatrix_Method.o" "../../lib/string_utils.o" "../../lib/stringifor.o" "../../lib/stringifor_string_t.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "../../lib/vtk_fortran.o" "../../lib/vtk_fortran_dataarray_encoder.o" "../../lib/vtk_fortran_parameters.o" "../../lib/vtk_fortran_pvtk_file.o" "../../lib/vtk_fortran_vtk_file.o" "../../lib/vtk_fortran_vtk_file_xml_writer_abstract.o" "../../lib/vtk_fortran_vtk_file_xml_writer_appended.o" "../../lib/vtk_fortran_vtk_file_xml_writer_ascii_local.o" "../../lib/vtk_fortran_vtk_file_xml_writer_binary_local.o" "../../lib/vtk_fortran_vtm_file.o" "../../lib/write.o" "../../lib/writer.o" "../../lib/writer_lt.o" "/Users/vikassharma/Dropbox/easifem-base/src/modules/libeasifemModules.a" "../../lib/easifemBaseModules.prj.target"
 	@echo Generating libeasifemBase.a
-	@$(AR) rcs "libeasifemBase.a" "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/DOF_Method.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/easifemBase.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/GE_Lapack_Method.o" "../../lib/GlobalData.o" "../../lib/IndexValue_Method.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/Lapack_Method.o" "../../lib/matrix_exponential.o" "../../lib/QuadraturePoint_Method.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SparseMatrix_Method.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "/Users/vikassharma/Dropbox/easifem-base/src/modules/libeasifemModules.a"
+	@$(AR) rcs "libeasifemBase.a" "../../lib/AbstractArray_Method.o" "../../lib/AbstractMatrix_Method.o" "../../lib/AbstractVector_Method.o" "../../lib/BaseMethod.o" "../../lib/BaseType.o" "../../lib/BaseType@AdditionalMethods.o" "../../lib/befor64.o" "../../lib/befor64_pack_data_m.o" "../../lib/BLASInterface.o" "../../lib/BoundingBox_Method.o" "../../lib/Buffer_Method.o" "../../lib/disp_i1mod.o" "../../lib/disp_i2mod.o" "../../lib/disp_i4mod.o" "../../lib/disp_i8mod.o" "../../lib/disp_l1mod.o" "../../lib/disp_r16mod.o" "../../lib/dispmodule.o" "../../lib/dispmodule_util.o" "../../lib/DOF_Method.o" "../../lib/dsyevc3.o" "../../lib/dsyevh3.o" "../../lib/dsyevq3.o" "../../lib/dsytrd3.o" "../../lib/easifemBase.o" "../../lib/ElemshapeData_Method.o" "../../lib/ErrorHandling.o" "../../lib/FEMatrix_Module.o" "../../lib/FEVariable_Method.o" "../../lib/File_Method.o" "../../lib/foxy.o" "../../lib/foxy_xml_file.o" "../../lib/foxy_xml_tag.o" "../../lib/GE_Lapack_Method.o" "../../lib/Geometry.o" "../../lib/GlobalData.o" "../../lib/IndexValue_Method.o" "../../lib/interface.o" "../../lib/IntVector_Method.o" "../../lib/IO.o" "../../lib/IterationData_Method.o" "../../lib/KeyValue_Method.o" "../../lib/Lapack_Method.o" "../../lib/matrix_exponential.o" "../../lib/mod_functional.o" "../../lib/mod_interfaces.o" "../../lib/ogpf.o" "../../lib/penf.o" "../../lib/penf_b_size.o" "../../lib/penf_global_parameters_variables.o" "../../lib/penf_stringify.o" "../../lib/putstrmodule.o" "../../lib/QuadraturePoint_Method.o" "../../lib/Random_Method.o" "../../lib/Rank2Tensor_Method.o" "../../lib/read.o" "../../lib/reader.o" "../../lib/reader_lt.o" "../../lib/RealMatrix_Method.o" "../../lib/RealVector_Method.o" "../../lib/ReferenceElement_Method.o" "../../lib/SparseMatrix_Method.o" "../../lib/string_utils.o" "../../lib/stringifor.o" "../../lib/stringifor_string_t.o" "../../lib/Utility.o" "../../lib/VoigtRank2Tensor_Method.o" "../../lib/vtk_fortran.o" "../../lib/vtk_fortran_dataarray_encoder.o" "../../lib/vtk_fortran_parameters.o" "../../lib/vtk_fortran_pvtk_file.o" "../../lib/vtk_fortran_vtk_file.o" "../../lib/vtk_fortran_vtk_file_xml_writer_abstract.o" "../../lib/vtk_fortran_vtk_file_xml_writer_appended.o" "../../lib/vtk_fortran_vtk_file_xml_writer_ascii_local.o" "../../lib/vtk_fortran_vtk_file_xml_writer_binary_local.o" "../../lib/vtk_fortran_vtm_file.o" "../../lib/write.o" "../../lib/writer.o" "../../lib/writer_lt.o" "/Users/vikassharma/Dropbox/easifem-base/src/modules/libeasifemModules.a"
 
 all: "libeasifemBase.a" .SYMBOLIC
 
