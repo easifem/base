@@ -1,6 +1,6 @@
 MODULE File_Method
   !! This module contains routine related to file handling
-  !! Routines for File_ userdata typehas been defined
+  !! Routines for File_ userdata type has been defined
   !! Submodules
   !! - Constructor
   !! - WriteMethods
