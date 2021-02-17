@@ -21,7 +21,8 @@ use H5LT, only: &
   & h5ltset_attribute_int_f, &
   & h5ltmake_dataset_string_f
 
-implicit none (type, external)
+! implicit none (type, external)
+implicit none
 
 contains
 

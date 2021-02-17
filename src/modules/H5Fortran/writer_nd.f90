@@ -1,7 +1,7 @@
 !! conceptual--not tested
 submodule (h5fortran:write) writer_ND
 
-implicit none (type, external)
+implicit none
 
 contains
 

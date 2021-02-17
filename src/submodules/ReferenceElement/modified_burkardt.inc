@@ -420,11 +420,11 @@ PURE SUBROUTINE POLYHEDRONVOLUME3D ( coord, order_max, face_num, node, &
   !    Output, real ( kind = 8 ) VOLUME, the volume of the polyhedron.
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-  REAL( DFP ), INTENT( IN ) :: coord(3,node_num)
   INTEGER( I4B ), INTENT( IN ) :: order_max
   INTEGER( I4B ), INTENT( IN ) :: face_num
   INTEGER( I4B ), INTENT( IN ) :: node(face_num,order_max)
   INTEGER( I4B ), INTENT( IN ) :: node_num
+  REAL( DFP ), INTENT( IN ) :: coord(3,node_num)
   INTEGER( I4B ), INTENT( IN ) :: order(face_num)
   REAL( DFP ), INTENT( OUT ) :: volume
 
