@@ -16,6 +16,9 @@ include/
 lib/
 opt/
 bin/
+src/build/
+src/modules/build/
+src/submodules/build/
 # pkgs/
 # old-classes/
 # examples/

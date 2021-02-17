@@ -24,8 +24,8 @@ MODULE PROCEDURE readline_a
     READ(buffer,*,iostat=istat) a
   ELSE
     READ(unitNo,*,iostat=istat) a
-    CALL FileError(istat=istat,fname=fileName,flg=IO_READ, File=__FILE__, &
-      & Routine="readline_a()", Line=__LINE__ )
+    CALL FileError(istat=istat,fname=fileName,flg=IO_READ, &
+      & File= __FILE__, Routine="readline_a()", Line= __LINE__ )
   ENDIF
 
 END PROCEDURE readline_a

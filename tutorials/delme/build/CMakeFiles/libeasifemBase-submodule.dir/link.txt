@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblibeasifemBase-submodule.a  CMakeFiles/easifemBaseObj.dir/foo.f90.o
+/usr/bin/ranlib liblibeasifemBase-submodule.a

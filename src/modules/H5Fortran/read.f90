@@ -6,7 +6,8 @@ use H5LT, only : h5ltpath_valid_f, H5LTGET_ATTRIBUTE_INT_F, &
   & H5LTGET_ATTRIBUTE_STRING_F, H5LTGET_ATTRIBUTE_FLOAT_F, &
   & H5LTGET_ATTRIBUTE_DOUBLE_F
 
-implicit none (type, external)
+! implicit none (type, external)
+implicit none
 
 contains
 
