@@ -1,7 +1,14 @@
+! This document belongs to easifem
+! Copyright (c) 2020-2021, Vikas Sharma, Ph. D.
+! All rights reserved.
+!---------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This module contains error handling tools
 MODULE ErrorHandling
-  !!Module contains error handling procedures
 USE GlobalData
-USE IO
+USE Display_Method
 IMPLICIT NONE
 PRIVATE
 
@@ -19,7 +26,6 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_DEALLOC = 2
 PUBLIC :: ErrorMSG, WarningMSG, FileError, AllocationErr
 
 CONTAINS
-
 !----------------------------------------------------------------------------
 !                                                                 ErrorMsg
 !----------------------------------------------------------------------------

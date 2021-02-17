@@ -5,37 +5,52 @@
 # 16/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-list(APPEND szaghi_SOURCES
-  PENF/penf_global_parameters_variables.f90
-  PENF/penf_b_size.f90
-  PENF/penf_stringify.f90
-  PENF/penf.f90
-  BeFoR64/befor64_pack_data_m.f90
-  BeFoR64/befor64.f90
-  StringiFor/stringifor_string_t.f90
-  StringiFor/stringifor.f90
+set(pkg_name "libszaghi")
+set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+
+list(APPEND "${pkg_name}_SOURCES"
+  ${src_path}PENF/penf_global_parameters_variables.f90
+  ${src_path}PENF/penf_b_size.f90
+  ${src_path}PENF/penf_stringify.f90
+  ${src_path}PENF/penf.f90
+  ${src_path}BeFoR64/befor64_pack_data_m.f90
+  ${src_path}BeFoR64/befor64.f90
+  ${src_path}StringiFor/stringifor_string_t.f90
+  ${src_path}StringiFor/stringifor.f90
 )
 
-add_library(szaghi_obj OBJECT "")
-target_sources(szaghi_obj PRIVATE
-  "${szaghi_SOURCES}"
+if(BUILD_SHARED_LIBS)
+  add_library(${pkg_name} SHARED "")
+else()
+  add_library(${pkg_name} STATIC "")
+endif()
+
+target_sources(
+  ${pkg_name} PRIVATE
+  "${${pkg_name}_SOURCES}"
 )
+
 target_include_directories(
-  szaghi_obj PRIVATE
+  ${pkg_name} PRIVATE
   ${EASIFEM_BASE_INCLUDE}
-  ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
 )
+
 target_compile_options(
-  szaghi_obj
+  ${pkg_name}
   PRIVATE
   ${FORTRAN_FLAGS_RELEASE}
 )
 
-if(BUILD_SHARED_LIBS)
-  add_library(libszaghi SHARED $<TARGET_OBJECTS:szaghi_obj>)
-else()
-  add_library(libszaghi STATIC $<TARGET_OBJECTS:szaghi_obj>)
-endif()
-install(TARGETS libszaghi
-  DESTINATION ${EASIFEM_BASE_LIB})
+set_target_properties(
+  ${pkg_name}
+  PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${EASIFEM_BASE_LIB}"
+  ARCHIVE_OUTPUT_DIRECTORY "${EASIFEM_BASE_LIB}"
+  RUNTIME_OUTPUT_DIRECTORY "${EASIFEM_BASE_BIN}"
+)
+
+target_link_libraries(
+  ${PROJECT_NAME} PUBLIC
+  ${pkg_name}
+)

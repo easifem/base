@@ -1,24 +1,21 @@
-MODULE BLASInterface
-    IMPLICIT NONE
-!===============================================================================
-! Copyright 2005-2018 Intel Corporation.
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 !
-! This software and the related documents are Intel copyrighted  materials,  and
-! your use of  them is  governed by the  express license  under which  they were
-! provided to you (License).  Unless the License provides otherwise, you may not
-! use, modify, copy, publish, distribute,  disclose or transmit this software or
-! the related documents without Intel's prior written permission.
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
 !
-! This software and the related documents  are provided as  is,  with no express
-! or implied  warranties,  other  than those  that are  expressly stated  in the
-! License.
-!===============================================================================
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-!  Content:
-!       Intel(R) MKL BLAS77 interface as prototypes for
-!       Intel(R) MKL BLAS95 interfaces
-!
-!*******************************************************************************
+MODULE BLASInterface
+IMPLICIT NONE
 
 INTERFACE  XERBLA
   PURE SUBROUTINE XERBLA(NAME,INFO)

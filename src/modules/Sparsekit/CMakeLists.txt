@@ -1,48 +1,67 @@
 # This file is a part of easifem-base
-# (c) 2021, all right reserved, Dr Vikas Sharma
+# (c) 2021, Vikas Sharma, Ph.D.
+# All right reserved
 #
 # log
 # 16/02/2021 this file was created
 #-----------------------------------------------------------------------
+set(pkg_name "libsparsekit")
+set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 
-list(APPEND sparsekit_SOURCES
-  apl.f
-  blassm.f
-  ccn.f
-  color.f
-  dinfo13.f
-  dsepart.f
-  formats.f
-  ilut.f
-  infofun.f
-  inout.f
-  iters.f
-  matvec.f
-  unary.f
+list(APPEND "${pkg_name}_SOURCES"
+  ${src_path}apl.f
+  ${src_path}blassm.f
+  ${src_path}ccn.f
+  ${src_path}color.f
+  ${src_path}dinfo13.f
+  ${src_path}dsepart.f
+  ${src_path}formats.f
+  ${src_path}ilut.f
+  ${src_path}infofun.f
+  ${src_path}inout.f
+  ${src_path}iters.f
+  ${src_path}matvec.f
+  ${src_path}unary.f
 )
-add_library(sparsekit_obj OBJECT "")
-target_sources(sparsekit_obj PRIVATE
-  "${sparsekit_SOURCES}"
+
+if(BUILD_SHARED_LIBS)
+  add_library(${pkg_name} SHARED "")
+else()
+  add_library(${pkg_name} STATIC "")
+endif()
+
+target_sources(
+  ${pkg_name} PRIVATE
+  "${${pkg_name}_SOURCES}"
 )
+
 target_include_directories(
-  sparsekit_obj PRIVATE
+  ${pkg_name} PRIVATE
   ${EASIFEM_BASE_INCLUDE}
-  ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
 )
+
+target_link_libraries(
+  ${pkg_name} PUBLIC
+  ${LAPACK_LIBRARIES}
+  ${BLAS_LIBRARIES}
+)
+
 target_compile_options(
-  sparsekit_obj
+  ${pkg_name}
   PRIVATE
   "-O3" "-std=legacy"
 )
 
-if(BUILD_SHARED_LIBS)
-  add_library(libsparsekit SHARED $<TARGET_OBJECTS:sparsekit_obj>)
-  target_link_libraries(libsparsekit PUBLIC
-  ${LAPACK_LIBRARIES}
-  ${BLAS_LIBRARIES})
-else()
-  add_library(libsparsekit STATIC $<TARGET_OBJECTS:sparsekit_obj>)
-endif()
-install(TARGETS libsparsekit
-  DESTINATION ${EASIFEM_BASE_LIB})
+set_target_properties(
+  ${pkg_name}
+  PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${EASIFEM_BASE_LIB}"
+  ARCHIVE_OUTPUT_DIRECTORY "${EASIFEM_BASE_LIB}"
+  RUNTIME_OUTPUT_DIRECTORY "${EASIFEM_BASE_BIN}"
+)
+
+target_link_libraries(
+  ${PROJECT_NAME} PUBLIC
+  ${pkg_name}
+)

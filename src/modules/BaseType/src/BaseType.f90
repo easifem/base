@@ -1,3 +1,20 @@
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021 Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https://www.gnu.org/licenses/>
+!
+
 MODULE BaseType
 USE GlobalData
 USE StringiFor, ONLY: string, adjustl, adjustr, count, index, len_trim, &
@@ -386,9 +403,8 @@ TYPE :: ReferenceElement_
   INTEGER( I4B ) :: EntityCounts( 4 )
   INTEGER( I4B ) :: XiDimension, Name, Order, NSD
   TYPE( ReferenceTopology_ ), ALLOCATABLE :: Topology( : )
-  CONTAINS
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangePoints => lp_refelem
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangeElement => lag_elem_refelem
+  PROCEDURE(lp_refelem), POINTER, PASS( Obj ) :: LagrangePoints => NULL()
+  PROCEDURE(lag_elem_refelem), POINTER, PASS( Obj ) :: LagrangeElement=>NULL()
 END TYPE ReferenceElement_
 
 PUBLIC :: ReferenceElement_
@@ -405,7 +421,9 @@ INTERFACE
     INTEGER( I4B ), INTENT( IN ) :: Order
     REAL( DFP ), ALLOCATABLE :: Ans( :, : )
   END FUNCTION lp_refelem
+END INTERFACE
 
+INTERFACE
   MODULE FUNCTION lag_elem_refelem(Obj, Order) RESULT( Ans )
     CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
     INTEGER( I4B ), INTENT( IN ) :: Order
@@ -418,9 +436,6 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferenceLine_
-  CONTAINS
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangePoints => lp_refelem_line
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangeElement => lag_elem_refLine
 END TYPE ReferenceLine_
 
 PUBLIC :: ReferenceLine_
@@ -430,28 +445,11 @@ TYPE( ReferenceLine_ ), PARAMETER, PUBLIC :: &
   & XiJ=NULL( ), EntityCounts = [0,0,0,0], XiDimension = 0, Name = 0, &
   & Topology = NULL( ), Order = 0, NSD=0  )
 
-INTERFACE
-  MODULE PURE FUNCTION lp_refelem_line( Obj, Order ) RESULT( Ans )
-    CLASS( ReferenceLine_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-  END FUNCTION lp_refelem_line
-
-  MODULE FUNCTION lag_elem_refline(Obj, Order) RESULT( Ans )
-    CLASS( ReferenceLine_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), POINTER :: Ans
-  END FUNCTION lag_elem_refline
-END INTERFACE
-
 !----------------------------------------------------------------------------
 !                                                      ReferenceTriangle_
 !----------------------------------------------------------------------------
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferenceTriangle_
-  CONTAINS
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangePoints => lp_refelem_Triangle
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangeElement => lag_elem_refTriangle
 END TYPE ReferenceTriangle_
 
 PUBLIC :: ReferenceTriangle_
@@ -461,28 +459,11 @@ TYPE( ReferenceTriangle_ ), PARAMETER, PUBLIC :: &
   & XiJ=NULL( ), EntityCounts = [0,0,0,0], XiDimension = 0, Name = 0, &
   & Topology = NULL( ), Order = 0, NSD = 0 )
 
-INTERFACE
-  MODULE PURE FUNCTION lp_refelem_Triangle( Obj, Order ) RESULT( Ans )
-    CLASS( ReferenceTriangle_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-  END FUNCTION lp_refelem_Triangle
-
-  MODULE FUNCTION lag_elem_refTriangle(Obj, Order) RESULT( Ans )
-    CLASS( ReferenceTriangle_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), POINTER :: Ans
-  END FUNCTION lag_elem_refTriangle
-END INTERFACE
-
 !----------------------------------------------------------------------------
 !                                                    ReferenceQuadrangle_
 !----------------------------------------------------------------------------
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferenceQuadrangle_
-  CONTAINS
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangePoints => lp_refelem_Quadrangle
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangeElement => lag_elem_refQuadrangle
 END TYPE ReferenceQuadrangle_
 
 PUBLIC :: ReferenceQuadrangle_
@@ -493,28 +474,11 @@ TYPE( ReferenceQuadrangle_ ), PARAMETER, PUBLIC :: &
   & XiJ=NULL( ), EntityCounts = [0,0,0,0], XiDimension = 0, Name = 0, &
   & Topology = NULL( ), Order = 0, NSD = 0 )
 
-INTERFACE
-  MODULE PURE FUNCTION lp_refelem_Quadrangle( Obj, Order ) RESULT( Ans )
-    CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-  END FUNCTION lp_refelem_Quadrangle
-
-  MODULE FUNCTION lag_elem_refQuadrangle(Obj, Order) RESULT( Ans )
-    CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), POINTER :: Ans
-  END FUNCTION lag_elem_refQuadrangle
-END INTERFACE
-
 !----------------------------------------------------------------------------
 !                                                    ReferenceTetrahedron_
 !----------------------------------------------------------------------------
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferenceTetrahedron_
-  CONTAINS
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangePoints => lp_refelem_Tetrahedron
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangeElement => lag_elem_refTetrahedron
 END TYPE ReferenceTetrahedron_
 
 PUBLIC :: ReferenceTetrahedron_
@@ -525,28 +489,11 @@ TYPE( ReferenceTetrahedron_ ), PARAMETER, PUBLIC :: &
   & XiJ=NULL( ), EntityCounts = [0,0,0,0], XiDimension = 0, Name = 0, &
   & Topology = NULL( ), Order = 0, NSD = 0 )
 
-INTERFACE
-  MODULE PURE FUNCTION lp_refelem_Tetrahedron( Obj, Order ) RESULT( Ans )
-    CLASS( ReferenceTetrahedron_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-  END FUNCTION lp_refelem_Tetrahedron
-
-  MODULE FUNCTION lag_elem_refTetrahedron(Obj, Order) RESULT( Ans )
-    CLASS( ReferenceTetrahedron_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), POINTER :: Ans
-  END FUNCTION lag_elem_refTetrahedron
-END INTERFACE
-
 !----------------------------------------------------------------------------
 !                                                     ReferenceHexahedron_
 !----------------------------------------------------------------------------
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferenceHexahedron_
-  CONTAINS
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangePoints => lp_refelem_Hexahedron
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangeElement => lag_elem_refHexahedron
 END TYPE ReferenceHexahedron_
 
 PUBLIC :: ReferenceHexahedron_
@@ -557,28 +504,11 @@ TYPE( ReferenceHexahedron_ ), PARAMETER, PUBLIC :: &
   & XiJ=NULL( ), EntityCounts = [0,0,0,0], XiDimension = 0, Name = 0, &
   & Topology = NULL( ), Order = 0, NSD = 0 )
 
-INTERFACE
-  MODULE PURE FUNCTION lp_refelem_Hexahedron( Obj, Order ) RESULT( Ans )
-    CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-  END FUNCTION lp_refelem_Hexahedron
-
-  MODULE FUNCTION lag_elem_refHexahedron(Obj, Order) RESULT( Ans )
-    CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), POINTER :: Ans
-  END FUNCTION lag_elem_refHexahedron
-END INTERFACE
-
 !----------------------------------------------------------------------------
 !                                                            ReferencePrism_
 !----------------------------------------------------------------------------
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferencePrism_
-  CONTAINS
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangePoints => lp_refelem_Prism
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangeElement => lag_elem_refPrism
 END TYPE ReferencePrism_
 
 PUBLIC :: ReferencePrism_
@@ -588,28 +518,11 @@ TYPE( ReferencePrism_ ), PARAMETER, PUBLIC :: TypeReferencePrism &
   & XiJ=NULL( ), EntityCounts = [0,0,0,0], XiDimension = 0, Name = 0, &
   & Topology = NULL( ), Order = 0, NSD = 0 )
 
-INTERFACE
-  MODULE PURE FUNCTION lp_refelem_Prism( Obj, Order ) RESULT( Ans )
-    CLASS( ReferencePrism_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-  END FUNCTION lp_refelem_Prism
-
-  MODULE FUNCTION lag_elem_refPrism(Obj, Order) RESULT( Ans )
-    CLASS( ReferencePrism_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), POINTER :: Ans
-  END FUNCTION lag_elem_refPrism
-END INTERFACE
-
 !----------------------------------------------------------------------------
 !                                                          ReferencePyramid_
 !----------------------------------------------------------------------------
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferencePyramid_
-  CONTAINS
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangePoints => lp_refelem_Pyramid
-  PROCEDURE, PUBLIC, PASS( Obj ) :: LagrangeElement => lag_elem_refPyramid
 END TYPE ReferencePyramid_
 
 PUBLIC :: ReferencePyramid_
@@ -619,20 +532,6 @@ TYPE( ReferencePyramid_ ), PARAMETER, PUBLIC :: TypeReferencePyramid &
   & XiJ=NULL( ), EntityCounts = [0,0,0,0], &
   & XiDimension = 0, Name = 0, &
   & Topology = NULL( ), Order = 0, NSD = 0 )
-
-INTERFACE
-  MODULE PURE FUNCTION lp_refelem_Pyramid( Obj, Order ) RESULT( Ans )
-    CLASS( ReferencePyramid_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-  END FUNCTION lp_refelem_Pyramid
-
-  MODULE FUNCTION lag_elem_refPyramid(Obj, Order) RESULT( Ans )
-    CLASS( ReferencePyramid_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), POINTER :: Ans
-  END FUNCTION lag_elem_refPyramid
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                                 KeyValue_

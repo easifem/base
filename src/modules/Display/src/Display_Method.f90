@@ -1,20 +1,27 @@
-MODULE IO
+! This document belongs to easifem
+! Copyright (c) 2020-2021, Vikas Sharma, Ph. D.
+! All rights reserved.
+!---------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! [[Display_Method]] module consists small routines related
+! to input/output operation
+
+MODULE Display_Method
 USE GlobalData
 USE DISPMODULE
-! USE H5Fortran
-! USE BaseType, ONLY: FILE_
-
 IMPLICIT NONE
-
 PRIVATE
-
 INTEGER( I4B ), PARAMETER :: minRow = 4, minCol = 4
 PUBLIC :: Display, BlankLines, DashLine, DebugTag
 PUBLIC :: DotLine, EqualLine
 PUBLIC :: TIMESTAMP
 
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
 INTERFACE Display
-
   MODULE PROCEDURE &
     & Display_Str, &
     & Display_Str2, &
@@ -35,10 +42,22 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-SUBROUTINE Display_Str( msg, unitno )
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitno
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine Display the string
+!
+! ## usage
+! CALL Display( msg="hello world", unitno=stdout )
+!
 
+SUBROUTINE Display_Str( msg, unitno )
+  ! Dummt arguments
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg
+    !! input message
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitno
+    !! unit no
+
+  ! Internal variables
   INTEGER( I4B ) :: i
 
   if( PRESENT( unitno ) ) then
@@ -46,8 +65,6 @@ SUBROUTINE Display_Str( msg, unitno )
   ELSE
     i = stdout
   END IF
-
-  ! write( i, "(A)" ) TRIM( msg )
 
   call disp( title = '', &
     & x = msg, &
@@ -60,6 +77,15 @@ END SUBROUTINE Display_Str
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+!  This routine prints a string; msg=val
+!
+! ## Usage
+! ```fortran
+!   CALL Display( val="some string value", msg="str var", stdout)
+! ```
 
 SUBROUTINE Display_Str2( val, msg, unitno )
   CHARACTER( LEN = * ), INTENT( IN ) :: val
@@ -153,6 +179,10 @@ SUBROUTINE Display_Vector_Real( val, msg, unitNo, full )
   I = stdout
   IF( PRESENT( unitNo ) ) I = unitNo
 
+  IF( PRESENT( full ) ) THEN
+    ! do nothing for now
+  END IF
+
   IF( LBOUND( val, 1 ) .EQ. 1 ) THEN
   call disp( title = msg, &
     & x= val, &
@@ -189,12 +219,16 @@ SUBROUTINE Display_Vector_Int( val, msg, unitNo, full )
   I = stdout
   IF( PRESENT( unitNo ) ) I = unitNo
 
+  IF( PRESENT( full ) ) THEN
+    ! do nothing for now
+  END IF
+
   IF( LBOUND( val, 1 ) .EQ. 1 ) THEN
-  call disp( title = msg, &
-    & x= val, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & orient = 'row' )
+    call disp( title = msg, &
+      & x= val, &
+      & unit = I, &
+      & style = 'underline & pad', &
+      & orient = 'row' )
   ELSE
     call disp( title = msg, &
     & x= val, &
@@ -218,17 +252,31 @@ SUBROUTINE Display_Mat2_Real( Val, msg, unitNo, full )
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
   !   Define internal variables
-  INTEGER( I4B ) :: I, j, r
+  INTEGER( I4B ) :: I
   !
   I = stdout
   IF( PRESENT( unitNo ) ) I = unitNo
 
-  call disp( title = msg, &
-    & x= val, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & sep = ', ', &
-    & advance = 'double' )
+  IF( PRESENT( full ) ) THEN
+    IF( PRESENT( full ) ) THEN
+      call disp( title = msg, &
+      & x= val, &
+      & unit = I, &
+      & style = 'underline & pad', &
+      & sep = ', ', &
+      & advance = 'double' )
+    ELSE
+      WRITE( I, "(A)" ) "ERROR:: In file :: Display_Method.f90"
+      STOP
+    END IF
+  ELSE
+    call disp( title = msg, &
+      & x= val, &
+      & unit = I, &
+      & style = 'underline & pad', &
+      & sep = ', ', &
+      & advance = 'double' )
+  END IF
 END SUBROUTINE Display_Mat2_Real
 
 !----------------------------------------------------------------------------
@@ -244,17 +292,33 @@ SUBROUTINE Display_Mat2_Int( Val, msg, unitNo, full )
   LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
 
   !   Define internal variables
-  INTEGER( I4B ) :: I, j, r
-  !
+  INTEGER( I4B ) :: I
+
   I = stdout
   IF( PRESENT( unitNo ) ) I = unitNo
 
-  call disp( title = msg, &
-    & x= val, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & sep = ', ', &
-    & advance = 'double' )
+  IF( PRESENT( full ) ) THEN
+
+    IF( full ) THEN
+      call disp( title = msg, &
+      & x= val, &
+      & unit = I, &
+      & style = 'underline & pad', &
+      & sep = ', ', &
+      & advance = 'double' )
+    ELSE
+      WRITE( I, "(A)" ) "ERROR:: In file :: Display_Method.f90"
+      STOP
+    END IF
+
+  ELSE
+    call disp( title = msg, &
+      & x= val, &
+      & unit = I, &
+      & style = 'underline & pad', &
+      & sep = ', ', &
+      & advance = 'double' )
+  END IF
 END SUBROUTINE Display_Mat2_Int
 
 !----------------------------------------------------------------------------
@@ -311,10 +375,10 @@ SUBROUTINE Display_Mat4_Real( Val, msg, unitNo )
 
 END SUBROUTINE Display_Mat4_Real
 
-!------------------------------------------------------------------------------
-!                                                                       Int2Str
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
+!----------------------------------------------------------------------------
+
 FUNCTION Int2Str( I )
   ! Define intent of dummy arguments
   INTEGER( I4B ), INTENT( IN ) :: I
@@ -326,9 +390,9 @@ FUNCTION Int2Str( I )
   Int2Str = TRIM( ADJUSTL( Str ) )
 END FUNCTION Int2Str
 
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 SUBROUTINE DebugTag( Tag, unitNo )
 	! INTENT OF DUMMY VARIABLES
@@ -345,9 +409,9 @@ SUBROUTINE DebugTag( Tag, unitNo )
   END IF
 END SUBROUTINE DebugTag
 
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 SUBROUTINE BlankLines( unitNo, NOL )
   ! INTENT OF DUMMY VARIABLES
@@ -368,9 +432,9 @@ SUBROUTINE BlankLines( unitNo, NOL )
   END IF
 END SUBROUTINE BlankLines
 
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 SUBROUTINE DashLine( unitNo )
   ! INTENT OF DUMMY VARIABLES
@@ -383,9 +447,9 @@ SUBROUTINE DashLine( unitNo )
   END IF
 END SUBROUTINE DashLine
 
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
 SUBROUTINE DotLine( unitNo )
   ! INTENT OF DUMMY VARIABLES
@@ -414,10 +478,10 @@ SUBROUTINE EqualLine( unitNo )
 
 END SUBROUTINE EqualLine
 
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!------------------------------------------------------------------------------
-!
+!----------------------------------------------------------------------------
+
 SUBROUTINE TIMESTAMP ( )
   ! Define Intent of dummy Variable
   CHARACTER (LEN = 8 ):: ampm
@@ -469,31 +533,4 @@ SUBROUTINE TIMESTAMP ( )
   d, TRIM( month(m) ), y, h, ':', n, ':', s, '.', mm, TRIM( ampm )
 
 END SUBROUTINE TIMESTAMP
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine run a system commoand on terminal
-SUBROUTINE ExecuteCommand( CMD, Str )
-  CHARACTER( LEN = * ), INTENT( IN ) :: CMD, Str
-
-  ! Define internal variables
-  INTEGER( I4B ) :: CMDSTAT, EXITSTAT
-  LOGICAL( LGT ) :: WAIT = .TRUE.
-  CHARACTER( LEN = 300 ) :: CMDMSG = ""
-
-  CALL EXECUTE_COMMAND_LINE( TRIM(CMD), CMDSTAT = CMDSTAT, &
-    & EXITSTAT = EXITSTAT, &
-    WAIT = WAIT, CMDMSG = CMDMSG )
-
-  IF( CMDSTAT .NE. 0 ) THEN
-    IF( CMDSTAT .EQ. -1 ) THEN
-      STOP
-    END IF
-    STOP
-  END IF
-END SUBROUTINE ExecuteCommand
-
-END MODULE IO
+END MODULE Display_Method

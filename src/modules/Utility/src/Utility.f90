@@ -1,7 +1,7 @@
 MODULE Utility
   !! Utility module contains useful general purpose routines
 USE GlobalData
-USE IO
+USE Display_Method
 USE ErrorHandling
 IMPLICIT NONE
 

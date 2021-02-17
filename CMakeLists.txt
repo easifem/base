@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
-set(PROJECT_NAME "easifemBase")
+set(PROJECT_NAME "libeasifemBase")
 project(${PROJECT_NAME})
 enable_language(C)
 enable_language(Fortran)
@@ -29,13 +29,19 @@ cmake_print_variables(CMAKE_SYSTEM_PROCESSOR)
 cmake_print_variables(CMAKE_HOST_SYSTEM_NAME)
 #-------------------------------------------------------------------
 
+# Disable in-source builds to prevent source tree corruption.
+if(" ${CMAKE_SOURCE_DIR}" STREQUAL " ${CMAKE_BINARY_DIR}")
+  message(FATAL_ERROR "
+FATAL: In-source builds are not allowed.
+  You should create a separate directory for build files.
+")
+endif()
+
 option(BUILD_SHARED_LIBS "Build shared library" ON)
 if (BUILD_SHARED_LIBS)
   message("-- EASIFEM will be built as a shared library.")
-  set(${PROJECT_NAME}_LIB_EXPORT libeasifemBase.dylib)
 else()
   message("-- EASIFEM will be built as a static library.")
-  set(${PROJECT_NAME}_LIB_EXPORT libeasifemBase.a)
 endif()
 
 ######################################################################
@@ -111,41 +117,52 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 else()
 # ------------------------unit/linux--------------------------------
   set(EASIFEM_DEFAULT_PREFIX "${CMAKE_BINARY_DIR}/../../../")
+
   set(EASIFEM_PREFIX "${EASIFEM_DEFAULT_PREFIX}" CACHE PATH "location where easifem will be installed")
   message("EASIFEM_PREFIX = ${EASIFEM_PREFIX}")
-
   if( EXISTS "${EASIFEM_PREFIX}/easifem")
     message("${EASIFEM_PREFIX}/easifem already exists, using it only")
   else()
     message("${EASIFEM_PREFIX}/easifem has been created")
     file( MAKE_DIRECTORY "${EASIFEM_PREFIX}/easifem" )
   endif()
-  set(EASIFEM_BASE_ARCH "${EASIFEM_PREFIX}/easifem/easifem-base" CACHE PATH "Location of easifem-base")
 
+  set(EASIFEM_BASE_ARCH "${EASIFEM_PREFIX}/easifem/easifem-base" CACHE PATH "Location of easifem-base")
   if( EXISTS "${EASIFEM_BASE_ARCH}")
     message("${EASIFEM_BASE_ARCH} already exists, using it.")
   else()
     message("${EASIFEM_BASE_ARCH} has been created")
     file( MAKE_DIRECTORY "${EASIFEM_BASE_ARCH}" )
   endif()
-  set(EASIFEM_BASE_INCLUDE "${EASIFEM_BASE_ARCH}/include" CACHE PATH "Location where modules of easifemBase")
 
+  set(EASIFEM_BASE_INCLUDE "${EASIFEM_BASE_ARCH}/include" CACHE PATH "easifem-base/include")
   if( EXISTS "${EASIFEM_BASE_INCLUDE}")
     message("${EASIFEM_BASE_INCLUDE} already exists, using it.")
   else()
     message("${EASIFEM_BASE_INCLUDE} has been created")
     file( MAKE_DIRECTORY "${EASIFEM_BASE_INCLUDE}" )
   endif()
-  set(EASIFEM_BASE_LIB "${EASIFEM_BASE_ARCH}/lib" CACHE PATH "Location where modules of easifemBase")
 
+  set(EASIFEM_BASE_LIB "${EASIFEM_BASE_ARCH}/lib" CACHE PATH "easifem-base/lib")
   if( EXISTS "${EASIFEM_BASE_LIB}")
     message("${EASIFEM_BASE_LIB} already exists, using it.")
   else()
     message("${EASIFEM_BASE_LIB} has been created")
     file( MAKE_DIRECTORY "${EASIFEM_BASE_LIB}" )
   endif()
+
+  set(EASIFEM_BASE_BIN "${EASIFEM_BASE_ARCH}/bin" CACHE PATH "easifem-base/bin")
+  if( EXISTS "${EASIFEM_BASE_BIN}")
+    message("${EASIFEM_BASE_BIN} already exists, using it.")
+  else()
+    message("${EASIFEM_BASE_BIN} has been created")
+    file( MAKE_DIRECTORY "${EASIFEM_BASE_BIN}" )
+  endif()
 endif()
 set(CMAKE_Fortran_MODULE_DIRECTORY "${EASIFEM_BASE_INCLUDE}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${EASIFEM_BASE_LIB}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${EASIFEM_BASE_LIB}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EASIFEM_BASE_BIN}")
 
 ######################################################################
 #
@@ -153,4 +170,50 @@ set(CMAKE_Fortran_MODULE_DIRECTORY "${EASIFEM_BASE_INCLUDE}")
 #
 ######################################################################
 
-add_subdirectory(src/modules)
+set(${PROJECT_NAME} "libeasifemBase")
+
+if(BUILD_SHARED_LIBS)
+  add_library(${PROJECT_NAME} SHARED "" )
+else()
+  add_library(${PROJECT_NAME} STATIC "")
+endif()
+
+target_compile_options(
+  ${PROJECT_NAME}
+  PRIVATE
+  ${FORTRAN_FLAGS}
+  "$<$<CONFIG:Debug>:${FORTRAN_FLAGS_DEBUG}>"
+  "$<$<CONFIG:Release>:${FORTRAN_FLAGS_RELEASE}>"
+)
+
+include(${CMAKE_SOURCE_DIR}/src/modules/CMakeLists.txt)
+# add_subdirectory(src/submodules)
+
+# target_include_directories(
+#   ${pkg_name} PUBLIC
+#   ${EASIFEM_BASE_INCLUDE}
+#   ${HDF5_INCLUDE_DIRS}
+#   ${CMAKE_SOURCE_DIR}
+# )
+
+# target_link_libraries(
+#   ${pkg_name} PUBLIC
+#   ${HDF5_Fortran_LIBRARIES}
+#   ${HDF5_Fortran_HL_LIBRARIES}
+#   libsparsekit
+#   libh5fortran
+#   libszaghi
+# )
+
+# target_compile_options(
+#   base_obj
+#   PRIVATE
+#   ${FORTRAN_FLAGS}
+#   "$<$<CONFIG:Debug>:${FORTRAN_FLAGS_DEBUG}>"
+#   "$<$<CONFIG:Release>:${FORTRAN_FLAGS_RELEASE}>"
+# )
+
+# $<TARGET_OBJECTS:easifem_GlobalData>
+# set_target_properties(superlu PROPERTIES
+#   VERSION ${PROJECT_VERSION} SOVERSION ${VERSION_MAJOR}
+#   )

@@ -1,6 +1,7 @@
 MODULE BaseMethod
   USE GlobalData
-  USE IO
+  USE Display_Method
+
   USE Buffer_Method
   USE Utility
   USE ErrorHandling
@@ -17,7 +18,6 @@ MODULE BaseMethod
   USE IndexValue_Method
   USE DOF_Method
   USE IterationData_Method
-  USE DISPMODULE
   USE KeyValue_Method
   USE Random_Method
 
