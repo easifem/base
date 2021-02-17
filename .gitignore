@@ -16,6 +16,9 @@ include/
 lib/
 opt/
 bin/
+easifem/
+*/build/
+build/
 src/build/
 src/modules/build/
 src/submodules/build/
