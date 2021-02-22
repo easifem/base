@@ -32,6 +32,7 @@ MODULE GlobalData
 #else
   INTEGER, PARAMETER :: Real128 = SELECTED_REAL_KIND(15,307)
 #endif
+
   INTEGER, PARAMETER :: Real64  = SELECTED_REAL_KIND(15,307)
   INTEGER, PARAMETER :: Real32  = SELECTED_REAL_KIND(6,37)
   INTEGER, PARAMETER :: Float  = Real64  ! Default
@@ -282,5 +283,17 @@ MODULE GlobalData
 
   ! ScalarDOF
   INTEGER( I4B ), PARAMETER :: ScalarDOF = -1
+
+  !! Following are used in ErrorHandling.f90
+  INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_OPEN = 1
+  !! Constant for file open used by fErr
+  INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_READ = 2
+  !! Constant for file read used by fErr
+  INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_WRITE = 3
+  !! Constant for file write used by fErr
+  INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_CLOSE = 4
+  !! Constant for file close used by fErr
+  INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_ALLOC = 1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_DEALLOC = 2
 
 END MODULE GlobalData

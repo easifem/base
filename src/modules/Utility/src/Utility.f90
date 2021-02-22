@@ -1,12 +1,28 @@
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
+!> [[Utility]] module contains useful general purpose routines
 MODULE Utility
-  !! Utility module contains useful general purpose routines
 USE GlobalData
 USE Display_Method
 USE ErrorHandling
 IMPLICIT NONE
 
 PRIVATE
-
 INTEGER( I4B ), PARAMETER :: NPAR_ARTH=16,NPAR2_ARTH=8
 INTEGER( I4B ), PARAMETER :: NPAR_GEOP=4,NPAR2_GEOP=2
 INTEGER( I4B ), PARAMETER :: NPAR_CUMSUM=16
@@ -18,8 +34,9 @@ INTEGER( I4B ), PARAMETER :: NPAR_POLYTERM=8
 !                                                                 Reallocate
 !----------------------------------------------------------------------------
 
-!>
-! Generic subroutine to reallocate arrays
+!> authors: Dr. Vikas Sharma
+!
+! `Reallocate` is a generic subroutine to reallocate arrays
 INTERFACE Reallocate
   MODULE PROCEDURE Reallocate1, &
     & Reallocate2, &
@@ -39,8 +56,9 @@ PUBLIC :: Reallocate
 !                                                         EvaluatePolynomial
 !----------------------------------------------------------------------------
 
-!>
-! Generic FUNCTION to evaluate a polynomial
+!> authors: Dr. Vikas Sharma
+!
+! This function can evaluate a polynomial
 INTERFACE EvaluatePolynomial
   MODULE PROCEDURE eval_poly
 END INTERFACE EvaluatePolynomial
@@ -51,7 +69,8 @@ PUBLIC :: EvaluatePolynomial
 !                                                              VectorProduct
 !----------------------------------------------------------------------------
 
-!>
+!> authors: Dr. Vikas Sharma
+!
 ! Generic FUNCTION to evaluate vector product
 INTERFACE VectorProduct
   MODULE PROCEDURE vec_prod
@@ -63,7 +82,8 @@ PUBLIC :: VectorProduct
 !                                                                 OUTERPROD
 !----------------------------------------------------------------------------
 
-!>
+!> authors: Dr. Vikas Sharma
+!
 ! Generic FUNCTION to evaluate outerproduct.
 INTERFACE OUTERPROD
   MODULE PROCEDURE OUTERPROD1_1, OUTERPROD2_1, OUTERPROD3_1, OUTERPROD2_11, &
@@ -75,6 +95,10 @@ PUBLIC :: OUTERPROD
 !----------------------------------------------------------------------------
 !                                                             ExecuteCommand
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! Generic function to execute a command
 
 INTERFACE ExecuteCommand
   MODULE PROCEDURE exe_cmd
@@ -92,8 +116,12 @@ PUBLIC :: getUnitNo, Factorial
 !                                                                     Append
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This generic subroutine can append entries to vector of reals and integers.
+
 INTERFACE Append
-    MODULE PROCEDURE Append_I1, Append_I2, Append_R1, &
+  MODULE PROCEDURE Append_I1, Append_I2, Append_R1, &
     Append_R2
 END INTERFACE
 
@@ -102,6 +130,10 @@ PUBLIC :: Append
 !----------------------------------------------------------------------------
 !                                                                    Int2Str
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine converts real value to characters
 
 INTERFACE Real2Str
   MODULE PROCEDURE SP2STR, DP2STR
@@ -275,6 +307,16 @@ CONTAINS
 !                                                               getExtension
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This function get the extension from a file
+!
+! ## Usage
+! ```fortran
+! call display( getExtension("helloworld.f90") .EQ. "f90", &
+! & msg="test1:: ")
+! ```
+
 FUNCTION getExtension( char ) RESULT(ext)
   CHARACTER( LEN=* ), INTENT( IN ) :: char
   CHARACTER(7) :: ext
@@ -293,17 +335,38 @@ END FUNCTION
 !                                                                     Radian
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! Convert degrees into radian
 PURE FUNCTION radian_dfp( deg ) RESULT( Ans )
-	REAL( DFP ), INTENT( IN ) :: deg
-	REAL( DFP ) :: Ans
-	Ans = deg / 180.0_DFP * 3.1415926535_DFP
+  REAL( DFP ), INTENT( IN ) :: deg
+  REAL( DFP ) :: Ans
+  Ans = deg / 180.0_DFP * 3.1415926535_DFP
 END FUNCTION radian_dfp
 
+!> authors: Dr. Vikas Sharma
+!
+! Converts degrees into radian
 PURE FUNCTION radian_int( deg ) RESULT( Ans )
-	INTEGER( I4B ), INTENT( IN ) :: deg
-	REAL( DFP ) :: Ans
-	Ans = REAL( deg, KIND=DFP ) / 180.0_DFP * 3.1415926535_DFP
+  INTEGER( I4B ), INTENT( IN ) :: deg
+  REAL( DFP ) :: Ans
+  Ans = REAL( deg, KIND=DFP ) / 180.0_DFP * 3.1415926535_DFP
 END FUNCTION radian_int
+
+!----------------------------------------------------------------------------
+!                                                                    Degrees
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This function converts radian into degrees
+! Belongs to `Degrees`
+
+PURE FUNCTION degrees_dfp( rad ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: rad
+  REAL( DFP ) :: Ans
+  Ans = rad / 3.1415926535_DFP * 180.0_DFP
+END FUNCTION degrees_dfp
 
 !----------------------------------------------------------------------------
 !
@@ -313,43 +376,58 @@ END FUNCTION radian_int
 !
 ! This subroutine search the location of nearest point to x in the
 ! array of coordinates; Array
+!
+! ## Usage
+! ```fortran
+! real( dfp ) :: xij( 2, 20 ), x( 2 )
+! integer( i4b ) :: id
+!
+! call random_number( xij )
+! x = [11.0, 100.0]
+! xij( 1:2, 15 ) = x
+! id = searchNearestCoord(Array=xij, x=x)
+! call display( id==15, "test4:: " )
+!```
 
 FUNCTION Loc_Nearest_Point( Array, x )  RESULT( id )
   REAL( DFP ), INTENT( IN ) :: Array( :, : )
-    !! Nodal coordinates in XiJ format
+  !! Nodal coordinates in XiJ format
   REAL( DFP ), INTENT( IN ) :: x( : )
   INTEGER( I4B ) :: id
 
   ! Define internal variables
-	REAL( DFP ) :: xr( 3 )
-	INTEGER( I4B ) :: i, n,m,norm,tr_norm
+  REAL( DFP ) :: xr( 3 )
+  INTEGER( I4B ) :: i, n,m,norm,tr_norm
 
-	n = SIZE( Array, 1 )
+  n = SIZE( Array, 1 )
   m = SIZE( Array, 2 )
 
   IF( n .NE. SIZE(x) ) THEN
-    CALL Display( __FILE__, "ERROR :: In File :: " )
-    CALL Display( __LINE__, "         At line number :: " )
-    CALL Display( "Loc_Nearest_Point()", "In routine :: ")
-    CALL Display( "SearchNearestCoord >> size(Array,1) should be =size(x)")
+    CALL ErrorMSG(&
+      & Msg="SearchNearestCoord >> size(Array,1) should be =size(x)", &
+      & File= __FILE__, &
+      & Line = __LINE__, &
+      & Routine = "Loc_Nearest_Point(Array, x)" &
+    )
     STOP
-	ENDIF
+  ENDIF
 
-	DO i = 1, m
-		xr( 1:n ) = Array( 1:n, i )
-		tr_norm = DOT_PRODUCT( xr(1:n) - x(1:n), xr(1:n) - x(1:n) )
-		IF( i .EQ. 1 ) THEN
-			norm = tr_norm
-			id  = i
-		ELSE
-			IF( norm .GT. tr_norm ) THEN
-				norm = tr_norm
-				id  = i
-			ELSE
-				CYCLE
-			END IF
-		END IF
+  DO i = 1, m
+    xr( 1:n ) = Array( 1:n, i )
+    tr_norm = NORM2( xr(1:n) - x(1:n) )
+    IF( i .EQ. 1 ) THEN
+      norm = tr_norm
+      id  = i
+    ELSE
+      IF( norm .GT. tr_norm ) THEN
+        norm = tr_norm
+        id  = i
+      ELSE
+        CYCLE
+      END IF
+    END IF
   END DO
+
 END FUNCTION Loc_Nearest_Point
 
 !----------------------------------------------------------------------------
@@ -359,6 +437,7 @@ END FUNCTION Loc_Nearest_Point
 !> authors: Dr. Vikas Sharma
 !
 ! Heap Sort algorithm for Integer
+
 PURE SUBROUTINE HEAPSORT_INT( array )
   INTEGER( I4B ), INTENT( INOUT ) :: array( : )
 
@@ -368,10 +447,10 @@ PURE SUBROUTINE HEAPSORT_INT( array )
 
   IF( n .EQ. 1) RETURN
 
-	l=n/2+1
+  l=n/2+1
   k=n
 
-	DO WHILE( k .NE. 1 )
+  DO WHILE( k .NE. 1 )
     IF( l .GT. 1 ) THEN
       l=l-1
       t=array(L)
@@ -411,6 +490,7 @@ END SUBROUTINE HEAPSORT_INT
 !> authors: Dr. Vikas Sharma
 !
 ! Heap Sort algorithm for Real
+
 PURE SUBROUTINE HEAPSORT_REAL( array )
   REAL( DFP ), INTENT( INOUT ) :: array( : )
 
@@ -421,10 +501,10 @@ PURE SUBROUTINE HEAPSORT_REAL( array )
 
   IF( n .EQ. 1) RETURN
 
-	l=n/2+1
+  l=n/2+1
   k=n
 
-	DO WHILE( k .NE. 1 )
+  DO WHILE( k .NE. 1 )
     IF( l .GT. 1 ) THEN
       l=l-1
       t=array(L)
@@ -461,9 +541,14 @@ END SUBROUTINE HEAPSORT_REAL
 !                                                             Cross_Product
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This function performs vector product of two vectors
+
 PURE FUNCTION CROSS_PRODUCT_R1_R1( a, b ) RESULT ( Ans )
-	REAL( DFP ), INTENT( IN ) :: a( 3 ), b( 3 )
-	REAL( DFP ) :: Ans( 3 )
+  REAL( DFP ), INTENT( IN ) :: a( 3 )
+  REAL( DFP ), INTENT( IN ) :: b( 3 )
+  REAL( DFP ) :: Ans( 3 )
 
   Ans(1) = a(2)*b(3) - a(3)*b(2)
   Ans(2) = a(3)*b(1) - a(1)*b(3)
@@ -472,29 +557,21 @@ PURE FUNCTION CROSS_PRODUCT_R1_R1( a, b ) RESULT ( Ans )
 END FUNCTION CROSS_PRODUCT_R1_R1
 
 !----------------------------------------------------------------------------
-!                                                                    Degrees
-!----------------------------------------------------------------------------
-
-PURE FUNCTION degrees_dfp( rad ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: rad
-  REAL( DFP ) :: Ans
-  Ans = rad / 3.1415926535_DFP * 180.0_DFP
-END FUNCTION degrees_dfp
-
-!----------------------------------------------------------------------------
 !                                                                     Input
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
 PURE FUNCTION input_Int( default, option ) RESULT( val )
-	INTEGER( I4B ), INTENT( IN ) :: default
-	INTEGER( I4B ), OPTIONAL,INTENT( IN ) :: option
-	INTEGER( I4B ) :: val
+  INTEGER( I4B ), INTENT( IN ) :: default
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: option
+  INTEGER( I4B ) :: val
 
-	IF(PRESENT(option) )THEN
-		val=option
-	ELSE
-		val=default
-	ENDIF
+  IF(PRESENT(option) )THEN
+    val=option
+  ELSE
+    val=default
+  ENDIF
 
 END FUNCTION
 
@@ -503,15 +580,15 @@ END FUNCTION
 !----------------------------------------------------------------------------
 
 FUNCTION input_Real(default,option) RESULT(val)
-	REAL(DFP),INTENT(in) :: default
-	REAL(DFP),OPTIONAL,INTENT(in)::option
-	REAL(DFP) :: val
+  REAL(DFP),INTENT(in) :: default
+  REAL(DFP),OPTIONAL,INTENT(in)::option
+  REAL(DFP) :: val
 
-	IF(PRESENT(option) )THEN
-		val=option
-	ELSE
-		val=default
-	ENDIF
+  IF(PRESENT(option) )THEN
+    val=option
+  ELSE
+    val=default
+  ENDIF
 END FUNCTION
 
 !----------------------------------------------------------------------------
@@ -519,15 +596,15 @@ END FUNCTION
 !----------------------------------------------------------------------------
 
 FUNCTION input_IntVec( default, option ) RESULT( val )
-	INTEGER( I4B ), INTENT( IN ) :: default(:)
-	INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:)
-	INTEGER( I4B ), ALLOCATABLE :: val(:)
+  INTEGER( I4B ), INTENT( IN ) :: default(:)
+  INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:)
+  INTEGER( I4B ), ALLOCATABLE :: val(:)
 
-	IF( PRESENT( option ) ) THEN
-		val=option
-	ELSE
-		val=default
-	ENDIF
+  IF( PRESENT( option ) ) THEN
+    val=option
+  ELSE
+    val=default
+  ENDIF
 
 END FUNCTION
 
@@ -536,15 +613,15 @@ END FUNCTION
 !----------------------------------------------------------------------------
 
 FUNCTION input_Realvec( default, option ) RESULT( val )
-	REAL( DFP ), INTENT( IN ) :: default(:)
-	REAL( DFP ), OPTIONAL,INTENT( IN ) :: option(:)
-	REAL( DFP ), ALLOCATABLE :: val(:)
+  REAL( DFP ), INTENT( IN ) :: default(:)
+  REAL( DFP ), OPTIONAL,INTENT( IN ) :: option(:)
+  REAL( DFP ), ALLOCATABLE :: val(:)
 
-	IF( PRESENT(option) )THEN
-		val=option
-	ELSE
-		val=default
-	ENDIF
+  IF( PRESENT(option) )THEN
+    val=option
+  ELSE
+    val=default
+  ENDIF
 END FUNCTION
 
 !----------------------------------------------------------------------------
@@ -555,15 +632,15 @@ END FUNCTION
 !
 ! This function input integer array
 PURE FUNCTION input_IntArray(default,option) RESULT(val)
-	INTEGER( I4B ), INTENT( IN ) :: default(:,:)
-	INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:,:)
-	INTEGER( I4B ), ALLOCATABLE :: val(:,:)
+  INTEGER( I4B ), INTENT( IN ) :: default(:,:)
+  INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:,:)
+  INTEGER( I4B ), ALLOCATABLE :: val(:,:)
 
-	IF(PRESENT(option) )THEN
-		val = option
+  IF(PRESENT(option) )THEN
+    val = option
   ELSE
     val = default
-	ENDIF
+  ENDIF
 END FUNCTION input_IntArray
 
 !----------------------------------------------------------------------------
@@ -574,15 +651,15 @@ END FUNCTION input_IntArray
 !
 ! This function input real array
 PURE FUNCTION input_RealArray(default,option) RESULT(val)
-	REAL( DFP ), INTENT( IN ) :: default(:,:)
-	REAL( DFP ), OPTIONAL,INTENT( IN )::option(:,:)
-	REAL( DFP ), ALLOCATABLE :: val(:,:)
+  REAL( DFP ), INTENT( IN ) :: default(:,:)
+  REAL( DFP ), OPTIONAL,INTENT( IN )::option(:,:)
+  REAL( DFP ), ALLOCATABLE :: val(:,:)
 
-	IF(PRESENT(option) )THEN
-		val = option
+  IF(PRESENT(option) )THEN
+    val = option
   ELSE
     val = default
-	ENDIF
+  ENDIF
 END FUNCTION input_RealArray
 
 !----------------------------------------------------------------------------
@@ -593,15 +670,15 @@ END FUNCTION input_RealArray
 !
 ! This function input string
 PURE FUNCTION input_String(default,option) RESULT(val)
-	CHARACTER( LEN=* ), INTENT( IN ) :: default
-	CHARACTER( LEN=* ), OPTIONAL, INTENT( IN )::option
-	CHARACTER( 200 )  :: val
+  CHARACTER( LEN=* ), INTENT( IN ) :: default
+  CHARACTER( LEN=* ), OPTIONAL, INTENT( IN )::option
+  CHARACTER( 200 )  :: val
 
-	IF(PRESENT(option) )THEN
-		val=TRIM(option)
-	ELSE
-		val=TRIM(default)
-	ENDIF
+  IF(PRESENT(option) )THEN
+    val=TRIM(option)
+  ELSE
+    val=TRIM(default)
+  ENDIF
 END FUNCTION input_String
 
 !----------------------------------------------------------------------------
@@ -613,15 +690,15 @@ END FUNCTION input_String
 ! This function input logical variables
 
 PURE FUNCTION input_logical(default,option) RESULT(val)
-	LOGICAL( LGT ), INTENT( IN ) :: default
-	LOGICAL( LGT ), OPTIONAL, INTENT( IN )::option
-	LOGICAL( LGT )  :: val
+  LOGICAL( LGT ), INTENT( IN ) :: default
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN )::option
+  LOGICAL( LGT )  :: val
 
-	IF(PRESENT(option) )THEN
-		val=option
-	ELSE
-		val=default
-	ENDIF
+  IF(PRESENT(option) )THEN
+    val=option
+  ELSE
+    val=default
+  ENDIF
 
 END FUNCTION input_logical
 

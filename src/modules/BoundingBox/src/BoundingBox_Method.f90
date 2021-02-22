@@ -1,6 +1,5 @@
 MODULE BoundingBox_Method
 USE GlobalData
-USE IO
 USE BaseType
 IMPLICIT NONE
 

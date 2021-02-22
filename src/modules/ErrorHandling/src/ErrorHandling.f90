@@ -1,27 +1,28 @@
-! This document belongs to easifem
-! Copyright (c) 2020-2021, Vikas Sharma, Ph. D.
-! All rights reserved.
-!---------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 !
-! This module contains error handling tools
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
+
+!> [[ErrorHandling]] module contains error handling tools.
+
 MODULE ErrorHandling
 USE GlobalData
 USE Display_Method
 IMPLICIT NONE
 PRIVATE
-
-INTEGER( I4B ), PARAMETER, PUBLIC :: IO_OPEN = 1
-  !! Constant for file open used by fErr
-INTEGER( I4B ), PARAMETER, PUBLIC :: IO_READ = 2
-  !! Constant for file read used by fErr
-INTEGER( I4B ), PARAMETER, PUBLIC :: IO_WRITE = 3
-  !! Constant for file write used by fErr
-INTEGER( I4B ), PARAMETER, PUBLIC :: IO_CLOSE = 4
-  !! Constant for file close used by fErr
-INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_ALLOC = 1
-INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_DEALLOC = 2
 
 PUBLIC :: ErrorMSG, WarningMSG, FileError, AllocationErr
 
@@ -30,15 +31,33 @@ CONTAINS
 !                                                                 ErrorMsg
 !----------------------------------------------------------------------------
 
-SUBROUTINE ErrorMSG( Msg, File, Routine, Line, UnitNo )
-  !! Write a message
-  CHARACTER( LEN = * ), INTENT( IN ) :: Msg, File, Routine
-  !! Message to write
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-  !! file id to write the message to
-  INTEGER( I4B ), INTENT( IN ) :: Line
-  !! Line number
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine prints the error message
+!
+! #Usage
+! ```fortran
+! call ErrorMSG( &
+!   & Msg="Some Error Message", &
+!   & File= "test_ErrorHandling", &
+!   & Routine =  "test1", &
+!   & Line = 29 &
+! )
+! ```
 
+SUBROUTINE ErrorMSG( Msg, File, Routine, Line, UnitNo )
+  CHARACTER( LEN = * ), INTENT( IN ) :: Msg
+  !! Message
+  CHARACTER( LEN = * ), INTENT( IN ) :: File
+  !! Name of the file
+  CHARACTER( LEN = * ), INTENT( IN ) :: Routine
+  !! Name of the routine where error has occured
+  INTEGER( I4B ), INTENT( IN ) :: Line
+  !! Line number where error has occured
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
+  !! Unit number
+
+  ! Internal variable
   INTEGER( I4B ) :: Unit_No
 
   IF( PRESENT( UnitNo ) ) THEN
@@ -47,26 +66,37 @@ SUBROUTINE ErrorMSG( Msg, File, Routine, Line, UnitNo )
     Unit_No = stdout
   END IF
 
-  CALL Display( FILE, "Error:: In File ", UnitNo = Unit_No )
-  CALL Display( LINE, "Line number = ", UnitNo = Unit_No )
-  CALL Display( " ", "Routine named "// TRIM(Routine) // &
-    & " has ERROR with message ", UnitNo = Unit_No )
+  CALL Display( FILE, "ERROR :: In File :: ", UnitNo = Unit_No )
+  CALL Display( LINE, "at line number :: ", UnitNo = Unit_No )
+  CALL Display( " ", "in Routine named :: "// TRIM(Routine) // &
+    & " with following message :: ", UnitNo = Unit_No )
+  CALL DashLine(UnitNo = Unit_No)
   CALL Display(  Msg, UnitNo = Unit_No )
+  CALL DashLine(UnitNo = Unit_No)
 END SUBROUTINE ErrorMSG
 
 !----------------------------------------------------------------------------
 !                                                                WarningMSG
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine prints the warning message
+
 SUBROUTINE WarningMSG( Msg, File, Routine, Line, UnitNo )
   !! This subroutine prints the warning message
-  CHARACTER( LEN = * ), INTENT( IN ) :: Msg, File, Routine
-  !! Message to write
+  CHARACTER( LEN = * ), INTENT( IN ) :: Msg
+  !! Message
+  CHARACTER( LEN = * ), INTENT( IN ) :: File
+  !! Name of the file
+  CHARACTER( LEN = * ), INTENT( IN ) :: Routine
+  !! Name of the routine where error has occured
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
   !! file id to write the message to
   INTEGER( I4B ), INTENT( IN ) :: Line
   !! Line number
 
+  ! Define internal variables
   INTEGER( I4B ) :: Unit_No
 
   IF( PRESENT( UnitNo ) ) THEN
@@ -75,36 +105,47 @@ SUBROUTINE WarningMSG( Msg, File, Routine, Line, UnitNo )
     Unit_No = stdout
   END IF
 
-  CALL Display( FILE, "Warning:: In File ", UnitNo = Unit_No )
-  CALL Display( LINE, "Line number = ", UnitNo = Unit_No )
-  CALL Display( " ", "Routine named "// TRIM(Routine) // &
-    & " has ERROR with message ", UnitNo = Unit_No )
+  CALL Display( FILE, "WARNING :: In File ::", UnitNo = Unit_No )
+  CALL Display( LINE, "Line number ::", UnitNo = Unit_No )
+  CALL Display( " ", "in Routine named :: "// TRIM(Routine) // &
+    & " with following message :: ", UnitNo = Unit_No )
+  CALL DashLine(UnitNo = Unit_No)
   CALL Display(  Msg, UnitNo = Unit_No )
+  CALL DashLine(UnitNo = Unit_No)
 END SUBROUTINE WarningMSG
 
 !----------------------------------------------------------------------------
 !                                                                 FileError
 !----------------------------------------------------------------------------
 
-SUBROUTINE FileError(istat, fname, flg, UnitNo, File, Routine, Line )
-  !! Checks for a file error
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine prints error while handling a file
+
+SUBROUTINE FileError(istat, filename, flg, UnitNo, File, Routine, Line )
+  ! Dummy argumnet
   INTEGER( I4B ), INTENT( IN ) :: istat
     !! Result of iostat=istat for open,read,write,close
-  CHARACTER(len=*), INTENT( IN ) :: fname
-    !! Name of the file
+  CHARACTER(len=*), INTENT( IN ) :: filename
+    !! Name of the file (IO related)
   INTEGER( I4B ), INTENT( IN ) :: flg
     !! IO_OPEN=Open, IO_READ=Read, IO_WRITE=Write, IO_CLOSE=Close
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
     !! file id to write the error to
   CHARACTER( LEN = * ), INTENT( IN ) :: File, Routine
-    !! Filename and routine name
+    !! Name of the source code file and routine name
   INTEGER( I4B ), INTENT( IN ) :: Line
+    !! Line number
 
   ! Define internal variables
   CHARACTER(len=:),allocatable :: Amsg
   INTEGER( I4B ) :: iunit
 
-  IF ( istat == 0 ) RETURN
+  ! Return if no error
+  IF ( istat == 0 ) THEN
+    RETURN
+  END IF
+
 
   IF( PRESENT( UnitNo ) ) THEN
     iunit = UnitNo
@@ -115,20 +156,20 @@ SUBROUTINE FileError(istat, fname, flg, UnitNo, File, Routine, Line )
   Amsg=''
 
   SELECT CASE(flg)
-  CASE(IO_OPEN)
-    Amsg='Opening file: '//trim(fname)
-  CASE(IO_READ)
-    Amsg='Reading from: '//trim(fname)
-  CASE(IO_WRITE)
-    Amsg='Writing to file: '//trim(fname)
-  CASE(IO_CLOSE)
-    Amsg='Closing file: '//trim(fname)
+  CASE(OPT_OPEN)
+    Amsg='Opening file: '//  TRIM(filename)
+  CASE(OPT_READ)
+    Amsg='Reading from: '// TRIM(filename)
+  CASE(OPT_WRITE)
+    Amsg='Writing to file: '// TRIM(filename)
+  CASE(OPT_CLOSE)
+    Amsg='Closing file: '// TRIM(filename)
   CASE DEFAULT
     Amsg='Error:Invalid error flag [1-4]'
   END SELECT
 
-  call ErrorMSG( Msg=aMsg, UnitNo=iunit, File=File, Line=Line, &
-    & Routine=Routine)
+  CALL ErrorMSG( Msg=AMsg, UnitNo=iunit, File=File, Line=Line, &
+    & Routine=Routine )
 
 END SUBROUTINE FileError
 
@@ -136,23 +177,26 @@ END SUBROUTINE FileError
 !                                                              AllocationErr
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine prints the error which occurs while allocating/
+! deallocating an array
+!
+! Use this after an allocate/deallocate statement
+! allocate(x(nz,ny,nx), stat=istat); call AllocationErr(istat,'x',1)
+! deallocate(x, stat=istat); call AllocationErr(istat,'x',2)
+
 SUBROUTINE AllocationErr( istat, aMsg, alloc, UnitNo, File, Routine, Line)
-  !! Checks for successful (de)allocation.  Stops the code.
-  !!
-  !! Use this after an allocate/deallocate statement
-  !! allocate(x(nz,ny,nx), stat=istat); call mErr(istat,'x',1)
-  !! deallocate(x, stat=istat); call mErr(istat,'x',2)
-  !====================================================================!
-  INTEGER( I4B ), intent(in) :: istat
-    !! results of stat=istat in (de)allocate
-  character(len=*), intent(in) :: aMsg
-    !! Message associated with the (de)allocate
-  INTEGER( I4B ), intent(in) :: alloc
-    !! 1 = allocate, 2 = deallocate
-  INTEGER( I4B ), OPTIONAL, intent(in) :: UnitNo
-    !! Optional file id to write the message to
+  INTEGER( I4B ), INTENT( IN ) :: istat
+  !! results of stat=istat in (de)allocate
+  CHARACTER(LEN=*), INTENT( IN ) :: aMsg
+  !! Message associated with the (de)allocate
+  INTEGER( I4B ), INTENT( IN ) :: alloc
+  !! For OPT_ALLOC = allocate, for OPT_DEALLOC = deallocate
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
+  !! Optional file id to write the message to
   CHARACTER( LEN = * ), INTENT( IN ) :: File, Routine
-    !! Filename and routine name
+  !! Filename and routine name
   INTEGER( I4B ), INTENT( IN ) :: Line
 
   ! Define internal variables
@@ -164,9 +208,9 @@ SUBROUTINE AllocationErr( istat, aMsg, alloc, UnitNo, File, Routine, Line)
   tmp=''
   SELECT CASE( alloc )
   CASE( OPT_ALLOC )
-    tmp='Allocating Memory: '//trim(aMsg)
+    tmp='Allocating Memory: '// TRIM( aMsg )
   CASE( OPT_DEALLOC )
-    tmp='Deallocating Memory: '//trim(aMsg)
+    tmp='Deallocating Memory: '// TRIM( aMsg )
   END SELECT
 
   call ErrorMSG( Msg=tmp, UnitNo=iunit, File=File, Line=Line, &

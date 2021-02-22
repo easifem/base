@@ -1,12 +1,26 @@
-! This document belongs to easifem
-! Copyright (c) 2020-2021, Vikas Sharma, Ph. D.
-! All rights reserved.
-!---------------------------------------------------------------------------
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
 
 !> authors: Dr. Vikas Sharma
 !
 ! [[Display_Method]] module consists small routines related
-! to input/output operation
+! to displaying the fortran variables on the screen
+
 
 MODULE Display_Method
 USE GlobalData
@@ -14,9 +28,13 @@ USE DISPMODULE
 IMPLICIT NONE
 PRIVATE
 INTEGER( I4B ), PARAMETER :: minRow = 4, minCol = 4
-PUBLIC :: Display, BlankLines, DashLine, DebugTag
+PUBLIC :: Display, BlankLines, DashLine
 PUBLIC :: DotLine, EqualLine
 PUBLIC :: TIMESTAMP
+
+CHARACTER( LEN = 30 ) :: equal = "=============================="
+CHARACTER( LEN = 30 ) :: dot  =  ".............................."
+CHARACTER( LEN = 30 ) :: dash =  "------------------------------"
 
 !----------------------------------------------------------------------------
 !                                                                    Display
@@ -44,18 +62,20 @@ CONTAINS
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine Display the string
+! This subroutine Displays the string
 !
 ! ## usage
+! ```fortran
 ! CALL Display( msg="hello world", unitno=stdout )
+! ```
 !
 
 SUBROUTINE Display_Str( msg, unitno )
   ! Dummt arguments
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
-    !! input message
+  !! input message
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitno
-    !! unit no
+  !! unit no
 
   ! Internal variables
   INTEGER( I4B ) :: i
@@ -84,7 +104,7 @@ END SUBROUTINE Display_Str
 !
 ! ## Usage
 ! ```fortran
-!   CALL Display( val="some string value", msg="str var", stdout)
+!   CALL Display( val=" world!", msg="hello", stdout)
 ! ```
 
 SUBROUTINE Display_Str2( val, msg, unitno )
@@ -112,6 +132,16 @@ END SUBROUTINE Display_Str2
 !                                                                    Display
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a scalar real number
+!
+! ## Usage
+!
+! ```fortran
+! call display( val=1.0_DFP, msg="var=", unitno=stdout)
+! ```
+
 SUBROUTINE Display_Real( val, msg, unitNo )
   ! Define intent of dummy variables
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
@@ -130,6 +160,16 @@ END SUBROUTINE Display_Real
 !                                                                    Display
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a scalar integer number
+!
+! ## Usage
+!
+! ```fortran
+! call display( val=1.0_I4B, msg="var=", unitno=stdout)
+! ```
+
 SUBROUTINE Display_Int( val, msg, unitNo )
   ! Define intent of dummy variables
   INTEGER( I4B ), INTENT( IN ) :: val
@@ -146,6 +186,16 @@ END SUBROUTINE Display_Int
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a scalar logical variable
+!
+! ## Usage
+!
+! ```fortran
+! call display( val=.TRUE., msg="var=", unitno=stdout)
+! ```
 
 SUBROUTINE Display_Logical( val, msg, unitNo )
   ! Define intent of dummy variables
@@ -165,38 +215,65 @@ END SUBROUTINE Display_Logical
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-SUBROUTINE Display_Vector_Real( val, msg, unitNo, full )
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a vector of real numbers
+!
+! ## Usage
+! ```fortran
+! real( dfp ) :: vec(10)
+! call RANDOM_NUMBER(vec)
+! call display( val=vec, msg="var=", unitno=stdout)
+! call display( val=vec, msg="var=", unitno=stdout, orient="col")
+! ```
+
+SUBROUTINE Display_Vector_Real( val, msg, unitNo, orient, full )
 
   ! Define intent of dummy variables
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
+  !! Unit number
   REAL( DFP ), INTENT( IN ) :: val( : )
+  !! vector of real numbers
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  !! message
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
+  !! orient=row => rowwise printing
+  !! orient=col =>  columnwise printing
   LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
+  !! logical variable to print the whole vector
 
   ! Define internal variables
   INTEGER( I4B ) :: I
+  CHARACTER( LEN = 3 ) :: orient_
 
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
+  IF( PRESENT( unitNo ) ) THEN
+    I = unitNo
+  ELSE
+    I = stdout
+  END IF
 
   IF( PRESENT( full ) ) THEN
     ! do nothing for now
   END IF
 
-  IF( LBOUND( val, 1 ) .EQ. 1 ) THEN
-  call disp( title = msg, &
-    & x= val, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & orient = 'row' )
+  IF( PRESENT( orient ) ) THEN
+    IF( orient(1:1) .EQ. "r" .OR. orient(1:1) .EQ. "R" ) THEN
+      orient_ = "row"
+    ELSE
+      orient_ = "col"
+    END IF
   ELSE
-    call disp( title = msg, &
+    orient_ = "row"
+  END IF
+
+  call disp( &
+    & title = msg, &
     & x= val, &
     & unit = I, &
-    & style = 'underline & pad', &
-    & sep = ' ---> ', &
-    & lbound = LBOUND( val ) )
-  END IF
+    ! & style = 'underline & pad', &
+    & style = 'left', &
+    & orient = orient_ &
+  )
 
 END SUBROUTINE Display_Vector_Real
 
@@ -204,48 +281,83 @@ END SUBROUTINE Display_Vector_Real
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-SUBROUTINE Display_Vector_Int( val, msg, unitNo, full )
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a vector of integer numbers
+!
+! ## Usage
+! ```fortran
+! real( dfp ) :: vec(10)
+! call RANDOM_NUMBER(vec)
+! call display( val=vec, msg="var=", unitno=stdout)
+! call display( val=vec, msg="var=", unitno=stdout, orient="col")
+! ```
+
+SUBROUTINE Display_Vector_Int( val, msg, unitNo, orient, full )
 
   ! Define intent of dummy variables
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  INTEGER( I4B ), DIMENSION( : ), INTENT( IN ) :: val
+  !! Unit number
+  INTEGER( I4B ), INTENT( IN ) :: val( : )
+  !! vector of real numbers
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  !! message
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
+  !! orient=row => rowwise printing
+  !! orient=col =>  columnwise printing
   LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
+  !! logical variable to print the whole vector
 
   ! Define internal variables
   INTEGER( I4B ) :: I
-  ! INTEGER( I4B ) :: I, j, n
-  ! CHARACTER( LEN = 120 ) :: fmt
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
+  CHARACTER( LEN = 3 ) :: orient_
+
+  IF( PRESENT( unitNo ) ) THEN
+    I = unitNo
+  ELSE
+    I = stdout
+  END IF
 
   IF( PRESENT( full ) ) THEN
     ! do nothing for now
   END IF
 
-  IF( LBOUND( val, 1 ) .EQ. 1 ) THEN
-    call disp( title = msg, &
-      & x= val, &
-      & unit = I, &
-      & style = 'underline & pad', &
-      & orient = 'row' )
+  IF( PRESENT( orient ) ) THEN
+    IF( orient(1:1) .EQ. "r" .OR. orient(1:1) .EQ. "R" ) THEN
+      orient_ = "row"
+    ELSE
+      orient_ = "col"
+    END IF
   ELSE
-    call disp( title = msg, &
-    & x= val, &
-    & unit = I, &
-    & style = 'underline & pad', &
-    & sep = ' ---> ', &
-    & lbound = LBOUND( val ) )
+    orient_ = "row"
   END IF
 
+  call disp( &
+    & title = msg, &
+    & x= val, &
+    & unit = I, &
+    ! & style = 'underline & pad', &
+    & style = 'left', &
+    & orient = orient_ &
+  )
 END SUBROUTINE Display_Vector_Int
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-SUBROUTINE Display_Mat2_Real( Val, msg, unitNo, full )
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a matrix of real numbers
+!
+! ## Usage
+! ```fortran
+! real( dfp ) :: mat(10, 10)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
 
+SUBROUTINE Display_Mat2_Real( Val, msg, unitNo, full )
   !   Define intent of dummy variables
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
   REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Val
@@ -253,35 +365,36 @@ SUBROUTINE Display_Mat2_Real( Val, msg, unitNo, full )
   LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
   !   Define internal variables
   INTEGER( I4B ) :: I
-  !
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
 
-  IF( PRESENT( full ) ) THEN
-    IF( PRESENT( full ) ) THEN
-      call disp( title = msg, &
-      & x= val, &
-      & unit = I, &
-      & style = 'underline & pad', &
-      & sep = ', ', &
-      & advance = 'double' )
-    ELSE
-      WRITE( I, "(A)" ) "ERROR:: In file :: Display_Method.f90"
-      STOP
-    END IF
+  IF( PRESENT( unitNo ) ) THEN
+    I = unitNo
   ELSE
-    call disp( title = msg, &
-      & x= val, &
-      & unit = I, &
-      & style = 'underline & pad', &
-      & sep = ', ', &
-      & advance = 'double' )
+    I = stdout
   END IF
+
+  call disp( title = msg, &
+    & x= val, &
+    & unit = I, &
+    & style = 'left', &
+    & sep = ' ', &
+    & advance = 'double' )
 END SUBROUTINE Display_Mat2_Real
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
+
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a matrix of real numbers
+!
+! ## Usage
+! ```fortran
+! integer( i4b ) :: mat(10, 10)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
 
 SUBROUTINE Display_Mat2_Int( Val, msg, unitNo, full )
 
@@ -297,33 +410,30 @@ SUBROUTINE Display_Mat2_Int( Val, msg, unitNo, full )
   I = stdout
   IF( PRESENT( unitNo ) ) I = unitNo
 
-  IF( PRESENT( full ) ) THEN
-
-    IF( full ) THEN
-      call disp( title = msg, &
-      & x= val, &
-      & unit = I, &
-      & style = 'underline & pad', &
-      & sep = ', ', &
-      & advance = 'double' )
-    ELSE
-      WRITE( I, "(A)" ) "ERROR:: In file :: Display_Method.f90"
-      STOP
-    END IF
-
-  ELSE
-    call disp( title = msg, &
-      & x= val, &
-      & unit = I, &
-      & style = 'underline & pad', &
-      & sep = ', ', &
-      & advance = 'double' )
-  END IF
+  call disp( &
+    & title = msg, &
+    & x= val, &
+    & unit = I, &
+    & style = 'left', &
+    & sep = ' ', &
+    & advance = 'double' &
+  )
 END SUBROUTINE Display_Mat2_Int
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine displays the contents of a rank 3 array.
+!
+! ## Usage
+!```fortran
+! real( dfp ) :: mat(5, 5, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
 
 SUBROUTINE Display_Mat3_Real( Val, msg, unitNo )
 
@@ -333,13 +443,16 @@ SUBROUTINE Display_Mat3_Real( Val, msg, unitNo )
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   !   Define internal variables
   INTEGER( I4B ) :: I, J
-  !
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
-  !
+
+  IF( PRESENT( unitNo ) ) THEN
+    I = unitNo
+  ELSE
+    I =stdout
+  END IF
+
   DO J = 1, SIZE( Val, 3 )
     CALL Display( Val( :, :, J ), &
-      & TRIM( msg ) //"( :, :, "//TRIM( Int2Str( J ) ) // " )", I )
+      & TRIM( msg ) //"( :, :, "//TRIM( Int2Str( J ) ) // " ) = ", I )
   END DO
 
 END SUBROUTINE Display_Mat3_Real
@@ -347,6 +460,18 @@ END SUBROUTINE Display_Mat3_Real
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine displays the content of rank4 matrix
+!
+! ## Usage
+!
+!```fortran
+! real( dfp ) :: mat(3, 3, 2, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
 
 SUBROUTINE Display_Mat4_Real( Val, msg, unitNo )
 
@@ -368,7 +493,7 @@ SUBROUTINE Display_Mat4_Real( Val, msg, unitNo )
       & // TRIM( Int2Str( J ) ) &
       & // ", " &
       & // TRIM( Int2Str( K ) ) &
-      & // " )" &
+      & // " ) = " &
       & , I )
     END DO
   END DO
@@ -378,6 +503,11 @@ END SUBROUTINE Display_Mat4_Real
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This function converts integer to character
+!
 
 FUNCTION Int2Str( I )
   ! Define intent of dummy arguments
@@ -394,24 +524,9 @@ END FUNCTION Int2Str
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE DebugTag( Tag, unitNo )
-	! INTENT OF DUMMY VARIABLES
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: Tag, unitNo
-
-	! Define internal variables
-  INTEGER( I4B ) :: M = 1
-  IF( PRESENT( Tag ) ) M = Tag
-
-  IF( PRESENT( unitNo ) ) THEN
-    WRITE( unitNo, "(A,I4)") "**Debug**", M
-  ELSE
-    WRITE( stdout, "(A,I4)") "**Debug**", M
-  END IF
-END SUBROUTINE DebugTag
-
-!----------------------------------------------------------------------------
+!> authors: Dr. Vikas Sharma
 !
-!----------------------------------------------------------------------------
+! This subroutine prints blankline
 
 SUBROUTINE BlankLines( unitNo, NOL )
   ! INTENT OF DUMMY VARIABLES
@@ -436,14 +551,18 @@ END SUBROUTINE BlankLines
 !
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine prints dash line
+
 SUBROUTINE DashLine( unitNo )
   ! INTENT OF DUMMY VARIABLES
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
 
   IF( PRESENT( unitNo ) ) THEN
-    WRITE( unitNo, "(A)")"-------------------------------------------------"
+    WRITE( unitNo, "(A)") dash
   ELSE
-    WRITE( stdout, "(A)") "-------------------------------------------------"
+    WRITE( stdout, "(A)") dash
   END IF
 END SUBROUTINE DashLine
 
@@ -451,29 +570,38 @@ END SUBROUTINE DashLine
 !
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine prints dot line
+
 SUBROUTINE DotLine( unitNo )
   ! INTENT OF DUMMY VARIABLES
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
 
   IF( PRESENT( unitNo ) ) THEN
-    WRITE( unitNo, "(A)")"................................................."
+    WRITE( unitNo, "(A)") dot
   ELSE
-    WRITE( stdout, "(A)") "................................................."
+    WRITE( stdout, "(A)") dot
   END IF
+
 END SUBROUTINE DotLine
 
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 !
-!------------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine prints equal line
 
 SUBROUTINE EqualLine( unitNo )
   ! INTENT OF DUMMY VARIABLES
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
 
   IF( PRESENT( unitNo ) ) THEN
-    WRITE( unitNo, "(A)")"================================================="
+    WRITE( unitNo, "(A)") equal
   ELSE
-    WRITE( stdout, "(A)") "================================================="
+    WRITE( stdout, "(A)") equal
   END IF
 
 END SUBROUTINE EqualLine
@@ -481,6 +609,10 @@ END SUBROUTINE EqualLine
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine prints the time stamp
 
 SUBROUTINE TIMESTAMP ( )
   ! Define Intent of dummy Variable

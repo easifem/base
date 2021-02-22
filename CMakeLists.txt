@@ -5,8 +5,8 @@
 # 17/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
-set(PROJECT_NAME "libeasifemBase")
+cmake_minimum_required(VERSION 3.14.0 FATAL_ERROR)
+set(PROJECT_NAME "easifemBase")
 project(${PROJECT_NAME})
 enable_language(C)
 enable_language(Fortran)
@@ -15,163 +15,104 @@ set(VERSION_MAJOR "1")
 set(VERSION_MINOR "1")
 set(VERSION_BugFix "0")
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BugFix})
+set(CMAKE_PROJECT_DESCRIPTION "easifem base")
+set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/")
+set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
+set(namespace "${PROJECT_NAME}")
+
 include(CMakePrintHelpers)
 
-######################################################################
-#
+
 # SYSTEM INFORMATION
-#
-#####################################################################
+# Disable in-source builds to prevent source tree corruption.
+if(" ${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL " ${CMAKE_CURRENT_BINARY_DIR}")
+  message(FATAL_ERROR "
+    FATAL: In-source builds are not allowed.
+    You should create a separate directory for build files.")
+endif()
+
 cmake_print_variables(CMAKE_SYSTEM)
 cmake_print_variables(CMAKE_SYSTEM_NAME)
 cmake_print_variables(CMAKE_SYSTEM_VERSION)
 cmake_print_variables(CMAKE_SYSTEM_PROCESSOR)
 cmake_print_variables(CMAKE_HOST_SYSTEM_NAME)
-#-------------------------------------------------------------------
-
-# Disable in-source builds to prevent source tree corruption.
-if(" ${CMAKE_SOURCE_DIR}" STREQUAL " ${CMAKE_BINARY_DIR}")
-  message(FATAL_ERROR "
-FATAL: In-source builds are not allowed.
-  You should create a separate directory for build files.
-")
-endif()
 
 option(BUILD_SHARED_LIBS "Build shared library" ON)
 if (BUILD_SHARED_LIBS)
-  message("-- EASIFEM will be built as a shared library.")
+  message(STATUS "${PROJECT_NAME} will be built as a shared library.")
 else()
-  message("-- EASIFEM will be built as a static library.")
+  message(STATUS "${PROJECT_NAME} will be built as a static library.")
 endif()
 
-######################################################################
-#
 # COMPILER RELATED OPTIONS
-#
-######################################################################
-#
-message(STATUS "Is the Fortran compiler loaded? ${CMAKE_Fortran_COMPILER_LOADED}")
-if(CMAKE_Fortran_COMPILER_LOADED)
-  message(STATUS "Fortran compiler ID = ${CMAKE_Fortran_COMPILER_ID}")
-  message(STATUS "Is the Fortran from GNU? ${CMAKE_COMPILER_IS_GNUFortran}")
-  message(STATUS "The Fortran compiler version is: ${CMAKE_Fortran_COMPILER_VERSION}")
-endif()
+include(${PROJECT_SOURCE_DIR}/cmake/Compiler.cmake)
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-endif()
+# # FIND PACKAGES BLAS AND LAPACK
+# option(USE_BLAS "User blas")
+# list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-if( CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-	list(APPEND FORTRAN_FLAGS "-O2" "-cpp" "-fPIC")
-	list(APPEND FORTRAN_FLAGS_DEBUG "-g" "-Wextra" "-Wall" "-std=f2008" "-pedantic" "-cpp" "-fPIC" "-fall-intrinsics")
-	list( APPEND FORTRAN_FLAGS_RELEASE "-O2" "-cpp" "-fPIC")
-endif()
 
-######################################################################
-#
-# Find packages
-#
-######################################################################
-#
-#--------------------- BLAS and LAPACK ---------------------
+# if(DEFINED ENV{CMAKE_BLAS_ROOT})
+#   find_package(LAPACK COMPONENTS OpenBLAS REQUIRED)
+# else()
+#   if(USE_BLAS)
+#     find_package(LAPACK COMPONENTS ${USE_BLAS} REQUIRED)
+#   else()
+#     find_package(LAPACK COMPONENTS OpenBLAS REQUIRED)
+#   endif()
+# endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-endif()
+# message(STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}")
+# message(STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES}")
 
-#download openblas using homebrew on macOS
-if( NOT BLAS_LIBRARIES AND CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  set(BLAS_LIBRARIES "/usr/local/opt/openblas/lib/libopenblas.dylib" CACHE PATH "libblas")
-endif()
-#download lapack
-if( NOT LAPACK_LIBRARIES AND CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  set(LAPACK_LIBRARIES "/usr/local/opt/lapack/lib/liblapack.dylib" CACHE PATH "liblapack" FORCE)
-endif()
-#download openblas using sudo-apt on Ubuntu
-if( NOT BLAS_LIBRARIES AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(BLAS_LIBRARIES "/usr/lib/libblas.so" CACHE PATH "libblas" FORCE)
-endif()
-#download lapack
-if( NOT LAPACK_LIBRARIES AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(LAPACK_LIBRARIES "/usr/lib/liblapack.so" CACHE PATH "liblapack" FORCE)
-endif()
-cmake_print_variables(BLAS_LIBRARIES)
-cmake_print_variables(LAPACK_LIBRARIES)
-
-#--------------------- HDF5 ------------------------------------------
-find_package(HDF5 REQUIRED COMPONENTS Fortran HL)
-if(HDF5_FOUND)
-  cmake_print_variables(HDF5_VERSION HDF5_INCLUDE_DIRS)
-else()
-  message("HDF5 library not found")
-endif()
-
-######################################################################
-#
 # CREATING DIRECTORIES FOR EASIFEM_BASE
-#
-######################################################################
-#
-# ------------------------windows-----------------------------------
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  message(STATUS "Windows system found")
+include(GNUInstallDirs)
+set(
+  CMAKE_Fortran_MODULE_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}
+)
+set(
+  CMAKE_LIBRARY_OUTPUT_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
+)
+set(
+  CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
+)
+set(
+  CMAKE_RUNTIME_OUTPUT_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
+)
+
+set(
+  INSTALL_LIBDIR
+  ${CMAKE_INSTALL_LIBDIR}
+  CACHE PATH "install location of lib"
+)
+set(
+  INSTALL_INCLUDEDIR
+  ${CMAKE_INSTALL_INCLUDEDIR}
+  CACHE PATH "install location of include"
+)
+set(
+  INSTALL_BINDIR
+  ${CMAKE_INSTALL_BINDIR}
+  CACHE PATH "install location of bin"
+)
+
+if(WIN32 AND NOT CYGWIN)
+  set(DEF_INSTALL_CMAKEDIR CMake)
 else()
-# ------------------------unit/linux--------------------------------
-  set(EASIFEM_DEFAULT_PREFIX "${CMAKE_BINARY_DIR}/../../../")
-
-  set(EASIFEM_PREFIX "${EASIFEM_DEFAULT_PREFIX}" CACHE PATH "location where easifem will be installed")
-  message("EASIFEM_PREFIX = ${EASIFEM_PREFIX}")
-  if( EXISTS "${EASIFEM_PREFIX}/easifem")
-    message("${EASIFEM_PREFIX}/easifem already exists, using it only")
-  else()
-    message("${EASIFEM_PREFIX}/easifem has been created")
-    file( MAKE_DIRECTORY "${EASIFEM_PREFIX}/easifem" )
-  endif()
-
-  set(EASIFEM_BASE_ARCH "${EASIFEM_PREFIX}/easifem/easifem-base" CACHE PATH "Location of easifem-base")
-  if( EXISTS "${EASIFEM_BASE_ARCH}")
-    message("${EASIFEM_BASE_ARCH} already exists, using it.")
-  else()
-    message("${EASIFEM_BASE_ARCH} has been created")
-    file( MAKE_DIRECTORY "${EASIFEM_BASE_ARCH}" )
-  endif()
-
-  set(EASIFEM_BASE_INCLUDE "${EASIFEM_BASE_ARCH}/include" CACHE PATH "easifem-base/include")
-  if( EXISTS "${EASIFEM_BASE_INCLUDE}")
-    message("${EASIFEM_BASE_INCLUDE} already exists, using it.")
-  else()
-    message("${EASIFEM_BASE_INCLUDE} has been created")
-    file( MAKE_DIRECTORY "${EASIFEM_BASE_INCLUDE}" )
-  endif()
-
-  set(EASIFEM_BASE_LIB "${EASIFEM_BASE_ARCH}/lib" CACHE PATH "easifem-base/lib")
-  if( EXISTS "${EASIFEM_BASE_LIB}")
-    message("${EASIFEM_BASE_LIB} already exists, using it.")
-  else()
-    message("${EASIFEM_BASE_LIB} has been created")
-    file( MAKE_DIRECTORY "${EASIFEM_BASE_LIB}" )
-  endif()
-
-  set(EASIFEM_BASE_BIN "${EASIFEM_BASE_ARCH}/bin" CACHE PATH "easifem-base/bin")
-  if( EXISTS "${EASIFEM_BASE_BIN}")
-    message("${EASIFEM_BASE_BIN} already exists, using it.")
-  else()
-    message("${EASIFEM_BASE_BIN} has been created")
-    file( MAKE_DIRECTORY "${EASIFEM_BASE_BIN}" )
-  endif()
+  set(DEF_INSTALL_CMAKEDIR share/cmake/${PROJECT_NAME})
 endif()
-set(CMAKE_Fortran_MODULE_DIRECTORY "${EASIFEM_BASE_INCLUDE}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${EASIFEM_BASE_LIB}")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${EASIFEM_BASE_LIB}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EASIFEM_BASE_BIN}")
+set(INSTALL_CMAKEDIR ${DEF_INSTALL_CMAKEDIR} CACHE PATH "Installation directory for CMake files")
 
-######################################################################
-#
+foreach(p LIB BIN INCLUDE CMAKE)
+  file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${INSTALL_${p}DIR} _path)
+  message(STATUS "Installing ${p} componenets to ${_path}")
+endforeach()
+
 # INSTALLING easifemBase
-#
-######################################################################
-
-set(${PROJECT_NAME} "libeasifemBase")
-
 if(BUILD_SHARED_LIBS)
   add_library(${PROJECT_NAME} SHARED "" )
 else()
@@ -186,34 +127,96 @@ target_compile_options(
   "$<$<CONFIG:Release>:${FORTRAN_FLAGS_RELEASE}>"
 )
 
-include(${CMAKE_SOURCE_DIR}/src/modules/CMakeLists.txt)
-# add_subdirectory(src/submodules)
+# target_compile_definitions()
+set_target_properties(
+  ${PROJECT_NAME}
+    PROPERTIES
+    POSITION_INDEPENDENT_CODE 1
+    SOVERSION ${VERSION_MAJOR}
+    OUTPUT_NAME ${PROJECT_NAME}
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    MACOSX_RPATH ON
+    WINDOWS_EXPORT_ALL_SYMBOLS ON
+)
 
-# target_include_directories(
-#   ${pkg_name} PUBLIC
-#   ${EASIFEM_BASE_INCLUDE}
-#   ${HDF5_INCLUDE_DIRS}
-#   ${CMAKE_SOURCE_DIR}
-# )
+target_include_directories(
+  ${PROJECT_NAME}
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
+  $<INSTALL_INTERFACE:${INSTALL_INCLUDEDIR}>
+)
 
 # target_link_libraries(
-#   ${pkg_name} PUBLIC
-#   ${HDF5_Fortran_LIBRARIES}
-#   ${HDF5_Fortran_HL_LIBRARIES}
-#   libsparsekit
-#   libh5fortran
-#   libszaghi
+#   ${PROJECT_NAME}
+#   PUBLIC
+#   LAPACK::LAPACK
+#   BLAS::BLAS
 # )
 
-# target_compile_options(
-#   base_obj
-#   PRIVATE
-#   ${FORTRAN_FLAGS}
-#   "$<$<CONFIG:Debug>:${FORTRAN_FLAGS_DEBUG}>"
-#   "$<$<CONFIG:Release>:${FORTRAN_FLAGS_RELEASE}>"
-# )
+include(src/modules/CMakeLists.txt)
+# add_subdirectory(src/submodules)
 
-# $<TARGET_OBJECTS:easifem_GlobalData>
-# set_target_properties(superlu PROPERTIES
-#   VERSION ${PROJECT_VERSION} SOVERSION ${VERSION_MAJOR}
-#   )
+install(
+  TARGETS
+    ${PROJECT_NAME}
+  EXPORT
+    ${TARGETS_EXPORT_NAME}
+  ARCHIVE
+    DESTINATION ${INSTALL_LIBDIR}
+    COMPONENT lib
+  RUNTIME
+    DESTINATION ${INSTALL_BINDIR}
+    COMPONENT bin
+  LIBRARY
+    DESTINATION ${INSTALL_LIBDIR}
+    COMPONENT lib
+)
+
+install(
+  DIRECTORY
+    ${CMAKE_Fortran_MODULE_DIRECTORY}
+    DESTINATION "./"
+    COMPONENT lib
+)
+
+install(
+  EXPORT
+    ${TARGETS_EXPORT_NAME}
+    NAMESPACE ${namespace}::
+    DESTINATION ${INSTALL_CMAKEDIR}
+    COMPONENT dev
+)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION ${INSTALL_CMAKEDIR}
+)
+if(BUILD_SHARED_LIBS OR PROJECT_VERSION_MAJOR EQUAL 0)
+  # Due to the uncertain ABI compatibility of Fortran shared libraries
+  # limit compatibility for dynamic linking to same minor version.
+  set(COMPATIBILITY AnyNewerVersion)
+  # set(COMPATIBILITY SameMinorVersion)
+else()
+  # Require API compatibility via semantic versioning for static linking.
+  set(COMPATIBILITY AnyNewerVersion)
+  # set(COMPATIBILITY SameMajorVersion)
+endif()
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION "${PROJECT_VERSION}"
+  COMPATIBILITY ${COMPATIBILITY}
+)
+
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION
+    ${INSTALL_CMAKEDIR}
+)

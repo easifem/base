@@ -38,6 +38,9 @@ TYPE( String ), PARAMETER, PUBLIC :: TypeString = String( raw = NULL() )
 !                                                              StringPointer_
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! [[StringPointer_]] data-type contains pointer to `String`
 TYPE :: StringPointer_
   TYPE( String ), POINTER :: Ptr => NULL ()
 END TYPE StringPointer_
@@ -47,6 +50,10 @@ PUBLIC :: StringPointer_
 !----------------------------------------------------------------------------
 !                                                                   Buffer_
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! [[Buffer_]] contains vector of stringPointer
 
 TYPE :: Buffer_
   TYPE( StringPointer_ ), ALLOCATABLE :: Line( : )
@@ -58,6 +65,10 @@ PUBLIC :: Buffer_
 !----------------------------------------------------------------------------
 !                                                                      File_
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! [[File_]] data-type is defined for IO
 
 TYPE :: File_
   TYPE( String ) :: FileName, Path, Extension, ACTION, STATUS, ACCESS
@@ -84,6 +95,9 @@ PUBLIC :: FilePointer_
 !                                                               BoundingBox_
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! [[BoundingBox_]] data type
 TYPE :: BoundingBox_
   INTEGER( I4B ) :: NSD
   REAL( DFP ) :: Box( 2, 3 )
@@ -142,6 +156,10 @@ PUBLIC :: AbstractMatrixPointer_
 !                                                                    Matrix_
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! Array of rank 2 of real numbers
+
 TYPE, EXTENDS( AbstractMatrix_ ) :: RealMatrix_
   REAL( DFP ), ALLOCATABLE :: Val( :, : )
 END TYPE RealMatrix_
@@ -170,6 +188,9 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: FMT_NODES = 1
 !                                                              SparseMatrix_
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! User data type for handling sparse matrices
 TYPE, EXTENDS( AbstractMatrix_ ) :: SparseMatrix_
   TYPE( IntVector_ ), ALLOCATABLE :: Row( : )
   INTEGER( I4B ), ALLOCATABLE :: IA( : )
@@ -210,6 +231,9 @@ PUBLIC :: SparseMatrixPointer_
 !                                                          AbstractVector_
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! Abstract vector type
 TYPE, EXTENDS( AbstractArray_ ) :: AbstractVector_
 END TYPE AbstractVector_
 
@@ -222,6 +246,10 @@ END TYPE AbstractVectorPointer_
 !----------------------------------------------------------------------------
 !                                                             IntVector_
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! Vector of integers
 
 TYPE, EXTENDS( AbstractVector_ ) :: IntVector_
   INTEGER( I4B ), ALLOCATABLE :: Val( : )
@@ -242,6 +270,10 @@ PUBLIC :: IntVectorPointer_
 !                                                             RealVector_
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! Vectors of real
+
 TYPE, EXTENDS( AbstractVector_ ) :: RealVector_
   REAL( DFP ), ALLOCATABLE :: Val( : )
 END TYPE RealVector_
@@ -260,6 +292,10 @@ PUBLIC :: RealVectorPointer_
 !----------------------------------------------------------------------------
 !                                                              IndexValue_
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! Index value key map; useful for defining nodal boundary conditions
 
 TYPE :: IndexValue_
   INTEGER( I4B ) :: Indx
@@ -281,6 +317,9 @@ PUBLIC :: IndexValuePointer_
 !                                                                     DOF_
 !----------------------------------------------------------------------------
 
+!> authors: Dr. Vikas Sharma
+!
+! Degree of freedom object
 TYPE :: DOF_
   INTEGER( I4B ), ALLOCATABLE :: MAP( :, : )
   INTEGER( I4B ), ALLOCATABLE :: ValMap( : )
@@ -301,6 +340,10 @@ PUBLIC :: DOFPointer_
 !----------------------------------------------------------------------------
 !                                                             IterationData_
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! Data-type to handle iteration parameters
 
 TYPE :: IterationData_
   INTEGER( I4B ) :: MaxIter = 100, IterationNumber = 0
@@ -328,13 +371,23 @@ PUBLIC :: IterationDataPointer_
 !                                                  TensorRelatedParameters
 !----------------------------------------------------------------------------
 
-  INTEGER( I4B ), PARAMETER, PUBLIC :: SymTensor = 1, SkewSymTensor = -1, &
-    & GeneralTensor = 0, StressTypeVoigt = 1, StrainTypeVoigt = -1, &
-    & WithSpectral = 1, WithoutSpectral = -1, SineLode = 1, CosineLode = 0
+  INTEGER( I4B ), PARAMETER, PUBLIC :: SymTensor = 1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: SkewSymTensor = -1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: GeneralTensor = 0
+  INTEGER( I4B ), PARAMETER, PUBLIC :: StressTypeVoigt = 1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: StrainTypeVoigt = -1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: WithSpectral = 1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: WithoutSpectral = -1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: SineLode = 1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: CosineLode = 0
 
 !----------------------------------------------------------------------------
 !                                                       VoigtRank2Tensor_
 !----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! Voigt representation of rank2 tensor
 
 TYPE :: VoigtRank2Tensor_
   REAL( DFP ) :: V( 9 )
@@ -1027,6 +1080,7 @@ PUBLIC :: ElemShapeDataPointer_
 !   end do
 ! end program
 !```
+
 TYPE, EXTENDS( ElemShapeData_ ) :: STElemShapeData_
   REAL( DFP ) :: Wt = 0.0
     !! Weight of gauss point in time domain

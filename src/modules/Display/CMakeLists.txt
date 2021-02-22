@@ -5,10 +5,11 @@
 # log
 # 16/02/2021 this file was created
 #-----------------------------------------------------------------------
-set(pkg_name ${PROJECT_NAME})
+
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 
-list(APPEND "${pkg_name}_SOURCES"
+target_sources(
+  ${PROJECT_NAME} PRIVATE
   ${src_path}disp_i1mod.f90
   ${src_path}disp_i2mod.f90
   ${src_path}disp_i4mod.f90
@@ -19,15 +20,4 @@ list(APPEND "${pkg_name}_SOURCES"
   ${src_path}dispmodule.f90
   ${src_path}putstrmodule.f90
   ${src_path}/Display_Method.f90
-)
-
-target_sources(
-  ${pkg_name} PRIVATE
-  "${${pkg_name}_SOURCES}"
-)
-
-target_include_directories(
-  ${pkg_name} PUBLIC
-  ${EASIFEM_BASE_INCLUDE}
-  ${CMAKE_SOURCE_DIR}
 )

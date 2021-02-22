@@ -169,6 +169,31 @@ PUBLIC :: DOF
 !                                                     DOF_Pointer@Constructor
 !----------------------------------------------------------------------------
 
+INTERFACE
+!! Constructor for [[dof_]] object
+
+!> authors: Dr. Vikas Sharma
+!
+! This function returns the pointer to instance of [[dof_]] object
+! for more see [[dof_:initiate]]
+
+MODULE FUNCTION Constructor_1( tNodes, Names, SpaceCompo, TimeCompo, &
+  & StorageFMT ) RESULT( Obj )
+  CLASS(DOF_), POINTER :: Obj
+    !! [[dof_]] object
+  INTEGER( I4B ), INTENT( IN ) :: tNodes( : )
+    !! total number of nodes for each dof
+  CHARACTER( LEN = 1 ), INTENT( IN ) :: Names( : )
+    !! name of each dof
+  INTEGER( I4B ), INTENT( IN ) :: SpaceCompo( : )
+    !! space components for each dof
+  INTEGER( I4B ), INTENT( IN ) :: TimeCompo( : )
+    !! time component for each dof
+  INTEGER( I4B ), INTENT( IN ) :: StorageFMT
+    !! storage format for dof
+END FUNCTION Constructor_1
+END INTERFACE
+
 !> Generic interface to get pointer to instance of [[dof_]] object
 INTERFACE DOF_Pointer
   MODULE PROCEDURE Constructor_1
@@ -644,29 +669,29 @@ PUBLIC :: addContribution
 !
 !----------------------------------------------------------------------------
 
-CONTAINS
+! CONTAINS
 
-!----------------------------------------------------------------------------
-!                                                                DOF_Pointer
-!----------------------------------------------------------------------------
+! !----------------------------------------------------------------------------
+! !                                                                DOF_Pointer
+! !----------------------------------------------------------------------------
 
-!! Constructor for pointer to [[dof_]] object
+! !! Constructor for pointer to [[dof_]] object
 
-!> authors: Dr. Vikas Sharma
-!
-! This function returns the pointer to instance of [[dof_]] object
-! for more see [[dof_:initiate]]
+! !> authors: Dr. Vikas Sharma
+! !
+! ! This function returns the pointer to instance of [[dof_]] object
+! ! for more see [[dof_:initiate]]
 
-FUNCTION Constructor_1( tNodes, Names, SpaceCompo, TimeCompo, &
-  & StorageFMT ) RESULT( Obj )
+! FUNCTION Constructor_1( tNodes, Names, SpaceCompo, TimeCompo, &
+!   & StorageFMT ) RESULT( Obj )
 
-  CLASS(DOF_), POINTER :: Obj
-  INTEGER( I4B ), INTENT( IN ) :: tNodes( : ), SpaceCompo( : ), &
-    & TimeCompo( : ), StorageFMT
-  CHARACTER( LEN = 1 ), INTENT( IN ) :: Names( : )
-  ALLOCATE( Obj )
-  CALL Initiate( Obj = Obj, Names = Names, tNodes = tNodes, &
-    & SpaceCompo = SpaceCompo, TimeCompo = TimeCompo, StorageFMT = StorageFMT)
-END FUNCTION Constructor_1
+!   CLASS(DOF_), POINTER :: Obj
+!   INTEGER( I4B ), INTENT( IN ) :: tNodes( : ), SpaceCompo( : ), &
+!     & TimeCompo( : ), StorageFMT
+!   CHARACTER( LEN = 1 ), INTENT( IN ) :: Names( : )
+!   ALLOCATE( Obj )
+!   CALL Initiate( Obj = Obj, Names = Names, tNodes = tNodes, &
+!     & SpaceCompo = SpaceCompo, TimeCompo = TimeCompo, StorageFMT = StorageFMT)
+! END FUNCTION Constructor_1
 
 END MODULE DOF_Method

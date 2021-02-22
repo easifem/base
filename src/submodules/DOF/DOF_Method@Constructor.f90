@@ -119,6 +119,16 @@ MODULE PROCEDURE Constructor1
 END PROCEDURE Constructor1
 
 !----------------------------------------------------------------------------
+!                                                                 DOF_Pointer
+!----------------------------------------------------------------------------
+MODULE PROCEDURE Constructor_1
+  ALLOCATE( Obj )
+  CALL Initiate( Obj = Obj, Names = Names, tNodes = tNodes, &
+    & SpaceCompo = SpaceCompo, TimeCompo = TimeCompo, &
+    & StorageFMT = StorageFMT)
+END PROCEDURE Constructor_1
+
+!----------------------------------------------------------------------------
 !                                                             DeallocateData
 !----------------------------------------------------------------------------
 
