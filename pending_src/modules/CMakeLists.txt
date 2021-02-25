@@ -39,16 +39,10 @@ include(${CMAKE_CURRENT_LIST_DIR}/AbstractVector/CMakeLists.txt)
 #BoundingBox
 include(${CMAKE_CURRENT_LIST_DIR}/BoundingBox/CMakeLists.txt)
 
-#IntVector
-include(${CMAKE_CURRENT_LIST_DIR}/IntVector/CMakeLists.txt)
+# #Buffer
+# include(${CMAKE_CURRENT_LIST_DIR}/Buffer/CMakeLists.txt)
 
-#RealVector
-include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
-
-#Vector3D_
-include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
-
-## DOF
+# #DOF
 # include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
 
 # #ElemshapeData
@@ -96,8 +90,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 # # #ReferenceElement
 # # include(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
 
-#BaseMethod
-include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
 
-#easifemBase
-include(${CMAKE_CURRENT_LIST_DIR}/easifemBase/CMakeLists.txt)
+
+
+

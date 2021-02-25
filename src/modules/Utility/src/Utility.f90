@@ -285,6 +285,12 @@ END INTERFACE Cross_Product
 
 PUBLIC :: Cross_Product
 
+INTERFACE Vector_Product
+  MODULE PROCEDURE CROSS_PRODUCT_R1_R1
+END INTERFACE Vector_Product
+
+PUBLIC :: Vector_Product
+
 !----------------------------------------------------------------------------
 !                                                                     Input
 !----------------------------------------------------------------------------

@@ -16,8 +16,7 @@
 !
 
 module test_BaseType
-use GlobalData
-use BaseType
+use easifemBase
 implicit none
 contains
 !----------------------------------------------------------------------------

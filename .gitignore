@@ -12,6 +12,8 @@
 *.prj
 *.drawio
 vscode-settings
+docs/
+media/
 include/
 lib/
 opt/

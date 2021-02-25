@@ -16,9 +16,9 @@
 !
 
 module test_ErrorHandling
-use ErrorHandling
-use GlobalData
+use easifemBase
 implicit none
+
 contains
 
 !----------------------------------------------------------------------------

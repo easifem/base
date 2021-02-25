@@ -156,7 +156,7 @@ target_include_directories(
 # )
 
 include(src/modules/CMakeLists.txt)
-# add_subdirectory(src/submodules)
+include(src/submodules/CMakeLists.txt)
 
 install(
   TARGETS

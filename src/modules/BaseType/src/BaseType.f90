@@ -15,6 +15,10 @@
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
+!> authors: Dr. Vikas Sharma
+!
+! [[BaseType]] module contains several userful user defined data types.
+
 MODULE BaseType
 USE GlobalData
 USE StringiFor, ONLY: string, adjustl, adjustr, count, index, len_trim, &
@@ -46,21 +50,6 @@ TYPE :: StringPointer_
 END TYPE StringPointer_
 
 PUBLIC :: StringPointer_
-
-!----------------------------------------------------------------------------
-!                                                                   Buffer_
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! [[Buffer_]] contains vector of stringPointer
-
-TYPE :: Buffer_
-  TYPE( StringPointer_ ), ALLOCATABLE :: Line( : )
-  INTEGER( I4B ) :: tLine = 0
-END TYPE Buffer_
-
-PUBLIC :: Buffer_
 
 !----------------------------------------------------------------------------
 !                                                                      File_
@@ -95,18 +84,38 @@ PUBLIC :: FilePointer_
 !                                                               BoundingBox_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: A data type to represent a bounding box;
 !
-! [[BoundingBox_]] data type
+!{!pages/BoundingBox.md!}
+
 TYPE :: BoundingBox_
   INTEGER( I4B ) :: NSD
+    !! Number of spatial dimension
+    !! NSD=1,2,3 for 1D, 2D, 3D box
   REAL( DFP ) :: Box( 2, 3 )
+    !! Box contains the xmin, ymin, ...
+    !! `Box(1:2, 1:3)`  an array containing box coordinates.
+    !!- `Box(1:2, 1:3)`  an array containing box coordinates.
+    !!- `Box(1,1)` is x_min
+    !!- `Box(2,1)` is x_max
+    !!- `Box(1,2)` is y_min
+    !!- `Box(2,2)` is y_max
+    !!- `Box(1,3)` is z_min
+    !!- `Box(2,3)` is z_max
 END TYPE BoundingBox_
 
 PUBLIC :: BoundingBox_
 
 TYPE( BoundingBox_ ), PUBLIC, PARAMETER :: TypeBoundingBox = &
   & BoundingBox_( NSD = 0, Box = 0 )
+!! A Type Instance of Boundingbox
+
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 Feb 2021
+! summary: 	[[BoundingBoxPointer_]] is a user defined data type which contains the pointer to the [[BoundingBox_]] data type.
 
 TYPE :: BoundingBoxPointer_
   CLASS( BoundingBoxPointer_ ), POINTER :: Ptr => NULL( )
@@ -119,13 +128,18 @@ PUBLIC :: BoundingBoxPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Dr. Vikas Sharma
+! date: 23 Feb 2021
+! summary: Abstract data type for array and matrix
 !
-! Abstract data type for array and matrix
 TYPE :: AbstractArray_
   INTEGER( I4B ) :: tDimension = 0_I4B
 END TYPE AbstractArray_
 
 PUBLIC :: AbstractArray_
+
+!> authors: Dr. Vikas Sharma
+! date: 23 Feb 2021
+! summary: Data-type to contain the pointer to [[AbstractArray_]] data type
 
 TYPE :: AbstractArrayPointer_
   CLASS( AbstractArray_ ), POINTER :: Ptr => NULL( )
@@ -247,9 +261,12 @@ END TYPE AbstractVectorPointer_
 !                                                             IntVector_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	24 Feb 2021
+! summary: 	A data type to contain fortran vector of integer numbers
 !
-! Vector of integers
+!{!pages/IntVector.md!}s
 
 TYPE, EXTENDS( AbstractVector_ ) :: IntVector_
   INTEGER( I4B ), ALLOCATABLE :: Val( : )
@@ -270,9 +287,12 @@ PUBLIC :: IntVectorPointer_
 !                                                             RealVector_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	24 Feb 2021
+! summary: 	A data type to contain fortran vector of real numbers
 !
-! Vectors of real
+!{!pages/RealVector.md!}
+!
 
 TYPE, EXTENDS( AbstractVector_ ) :: RealVector_
   REAL( DFP ), ALLOCATABLE :: Val( : )
@@ -283,11 +303,40 @@ PUBLIC :: RealVector_
 TYPE(RealVector_), PUBLIC, PARAMETER :: TypeRealVector = RealVector_( &
 tDimension = 1_I4B, Val = NULL( ) )
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	24 Feb 2021
+! summary: 	A data type to contain pointer to [[RealVector_]].
+
 TYPE :: RealVectorPointer_
   CLASS( RealVector_ ), POINTER :: Ptr => NULL( )
 END TYPE RealVectorPointer_
 
 PUBLIC :: RealVectorPointer_
+
+!----------------------------------------------------------------------------
+!                                                                 Vector3D_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 Feb 2021
+! summary: Data type for 3D vectors
+!
+!{!pages/Vector3D.md!}
+
+TYPE, EXTENDS( AbstractVector_ ) :: Vector3D_
+  REAL( DFP ) :: Val(3)
+END TYPE Vector3D_
+
+PUBLIC:: Vector3D_
+
+TYPE( Vector3D_ ), PUBLIC, PARAMETER :: TypeVector3D = Vector3D_( &
+  & tDimension=1_I4B, Val=[0.0_DFP, 0.0_DFP, 0.0_DFP])
+
+TYPE :: Vector3DPointer_
+  CLASS( Vector3D_ ), POINTER :: Ptr => NULL()
+END TYPE Vector3DPointer_
+
+PUBLIC :: Vector3DPointer_
 
 !----------------------------------------------------------------------------
 !                                                              IndexValue_
@@ -317,13 +366,19 @@ PUBLIC :: IndexValuePointer_
 !                                                                     DOF_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: 	Degree of freedom object type
 !
-! Degree of freedom object
+!{!pages/DOF.md!}
+
 TYPE :: DOF_
   INTEGER( I4B ), ALLOCATABLE :: MAP( :, : )
+    !! Encapsulation of information of DOF
   INTEGER( I4B ), ALLOCATABLE :: ValMap( : )
+    !! Val map
   INTEGER( I4B ) :: StorageFMT = Nodes_FMT
+    !! Storage format
 END TYPE DOF_
 
 PUBLIC :: DOF_

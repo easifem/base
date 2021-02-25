@@ -15,6 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: 	This module contains methods of [[DOF_]] object
+!
+!### Introduction
+!This module contains methods for derived type called [[DOF_]]
+
 MODULE DOF_Method
 USE GlobalData
 USE BaseType
@@ -25,33 +32,33 @@ PRIVATE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Initiate [[DOF_]] object
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: This subroutine initiate [[DOF_]] object
+!
+!### Introduction
 !
 ! This subroutine initiate [[DOF_]] object
 !
-! - If size of all dof are same then set tNodes = [tNodes] otherwise
-!   we need to provide length of all dofs
-! - If a dof is scalar, such as pressure, temperature etc., then set
-! its spaceCompo to -1.
-! - For a time independent dof set `TimeCompo=1`.
-! - The size of `Names`, `SpaceCompo`, `TimeCompo` should be same
+!- If the size of all physical variables are equal then set tNodes = [tNodes] otherwise we need to provide size of each dof
+!- For a scalar physical variable such as pressure and temperature, `spaceCompo` is set to -1.
+!- For a time independent physical variable `TimeCompo` is set to 1.
+!- The size of `Names`, `SpaceCompo`, `TimeCompo` should be same
 !
-! @note
+!@note
 ! 	$\matbf{v}$ is a physical variable, however,
 !   its component $v_1, v_2, v_3$ all are degrees of freedom.
-! @endnote
+!@endnote
 !
 !### Usage
 !
-! ```fortran
+!```fortran
 !	type( dof_ ) :: obj
 ! call initiate( obj, tNodes = [10], Names = ['x', 'y'], &
 !   & SpaceCompo = [3,3], TimeCompo = [1,1], StorageFMT = FMT_Nodes )
-! ```
+!```
 
+INTERFACE
 MODULE PURE SUBROUTINE initiate_st_dof( Obj, tNodes, Names, SpaceCompo, &
   & TimeCompo, StorageFMT )
   CLASS( DOF_ ), INTENT( INOUT ) :: Obj
@@ -67,31 +74,51 @@ MODULE PURE SUBROUTINE initiate_st_dof( Obj, tNodes, Names, SpaceCompo, &
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Names( : )
     !! Names of each physical variable
 END SUBROUTINE initiate_st_dof
-
 END INTERFACE
 
-INTERFACE
-!! Initiate a fortran vector using [[dof_]] object
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: Initiate a fortran vector using [[DOF_]] object
 !
-! This subroutine initiate a fortran vector using information stored inside
-! [[dof_]] object
+!### Introduction
+!
+! This subroutine initiate a fortran vector of real using the information stored inside [[DOF_]] object.
+!
+!@todo
+!usage
+!@endtodo
 
+INTERFACE
 MODULE PURE SUBROUTINE initiate_val( Val, Obj )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
+    !! This vector will be initiated by using Obj
   CLASS( DOF_ ), INTENT( IN ) :: Obj
+    !! DOF object
 END SUBROUTINE initiate_val
 END INTERFACE
 
-INTERFACE
-!! Initiate [[RealVector_]] using [[dof_]] object
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: Initiate [[RealVector_]] using [[dof_]] object
 !
-! This subroutine initiate [[RealVector_]] using information stored inside
+!### Introduction
+!
+! This subroutine initiate [[RealVector_]] using the information stored inside
 ! [[dof_]] object
+!
+!@todo
+!usage
+!@endtodo
 
+INTERFACE
 MODULE PURE SUBROUTINE initiate_realvector_scalar( Val, Obj )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Val
   CLASS( DOF_ ), INTENT( IN ) :: Obj
@@ -127,7 +154,7 @@ END SUBROUTINE initiate_2val
 END INTERFACE
 
 !> Generic interface to initiate Fortran vectors or [[realvectors_]] from
-! [[dof_]] object
+! [[DOF_]] object
 INTERFACE Initiate
   MODULE PROCEDURE initiate_st_dof, initiate_val, &
     & initiate_realvector_scalar, &
@@ -147,7 +174,7 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This function return instance of [[dof_]]
-! for more see [[dof_:initiate]]
+! for more see [[dof_]]
 
 MODULE PURE FUNCTION Constructor1( tNodes, Names, SpaceCompo, TimeCompo, &
   & StorageFMT ) RESULT( Obj )
@@ -175,7 +202,7 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This function returns the pointer to instance of [[dof_]] object
-! for more see [[dof_:initiate]]
+! for more see [[dof_]]
 
 MODULE FUNCTION Constructor_1( tNodes, Names, SpaceCompo, TimeCompo, &
   & StorageFMT ) RESULT( Obj )
@@ -545,7 +572,6 @@ END INTERFACE
 
 PUBLIC :: ArrayValues
 
-
 !----------------------------------------------------------------------------
 !                                                        setValue@setMethod
 !----------------------------------------------------------------------------
@@ -664,34 +690,5 @@ INTERFACE addContribution
 END INTERFACE addContribution
 
 PUBLIC :: addContribution
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-! CONTAINS
-
-! !----------------------------------------------------------------------------
-! !                                                                DOF_Pointer
-! !----------------------------------------------------------------------------
-
-! !! Constructor for pointer to [[dof_]] object
-
-! !> authors: Dr. Vikas Sharma
-! !
-! ! This function returns the pointer to instance of [[dof_]] object
-! ! for more see [[dof_:initiate]]
-
-! FUNCTION Constructor_1( tNodes, Names, SpaceCompo, TimeCompo, &
-!   & StorageFMT ) RESULT( Obj )
-
-!   CLASS(DOF_), POINTER :: Obj
-!   INTEGER( I4B ), INTENT( IN ) :: tNodes( : ), SpaceCompo( : ), &
-!     & TimeCompo( : ), StorageFMT
-!   CHARACTER( LEN = 1 ), INTENT( IN ) :: Names( : )
-!   ALLOCATE( Obj )
-!   CALL Initiate( Obj = Obj, Names = Names, tNodes = tNodes, &
-!     & SpaceCompo = SpaceCompo, TimeCompo = TimeCompo, StorageFMT = StorageFMT)
-! END FUNCTION Constructor_1
 
 END MODULE DOF_Method

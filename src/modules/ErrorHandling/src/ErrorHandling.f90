@@ -16,7 +16,7 @@
 !
 
 
-!> [[ErrorHandling]] module contains error handling tools.
+!> [[ErrorHandling]] module contains error handling routines.
 
 MODULE ErrorHandling
 USE GlobalData
@@ -153,7 +153,7 @@ SUBROUTINE FileError(istat, filename, flg, UnitNo, File, Routine, Line )
     iunit = stdout
   END IF
 
-  Amsg=''
+  Amsg = ""
 
   SELECT CASE(flg)
   CASE(OPT_OPEN)
@@ -205,7 +205,7 @@ SUBROUTINE AllocationErr( istat, aMsg, alloc, UnitNo, File, Routine, Line)
 
   IF ( istat == 0 ) RETURN
 
-  tmp=''
+  tmp = ""
   SELECT CASE( alloc )
   CASE( OPT_ALLOC )
     tmp='Allocating Memory: '// TRIM( aMsg )
