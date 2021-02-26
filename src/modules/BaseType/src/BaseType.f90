@@ -129,8 +129,10 @@ PUBLIC :: BoundingBoxPointer_
 
 !> authors: Dr. Vikas Sharma
 ! date: 23 Feb 2021
-! summary: Abstract data type for array and matrix
+! summary: Abstract data type for array, matrix, and vectors
 !
+!{!pages/AbstractArray.md!}
+
 TYPE :: AbstractArray_
   INTEGER( I4B ) :: tDimension = 0_I4B
 END TYPE AbstractArray_
@@ -151,15 +153,20 @@ PUBLIC :: AbstractArrayPointer_
 !                                                          AbstractMatrix_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: Abstract matrix denotes a 2D array
 !
-! Abstract matrix denotes a 2D array
+!{!pages/AbtractArray.md!}
 TYPE, EXTENDS( AbstractArray_ ) :: AbstractMatrix_
   CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
 END TYPE AbstractMatrix_
 
 PUBLIC :: AbstractMatrix_
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	A pointer to [[AbstractMatrix_]] data type
 TYPE :: AbstractMatrixPointer_
   CLASS( AbstractMatrix_ ), POINTER :: Ptr => NULL( )
 END TYPE AbstractMatrixPointer_
@@ -170,9 +177,11 @@ PUBLIC :: AbstractMatrixPointer_
 !                                                                    Matrix_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: A data type for an Array of rank 2 of real numbers
 !
-! Array of rank 2 of real numbers
+!{!pages/RealMatrix.md!}
 
 TYPE, EXTENDS( AbstractMatrix_ ) :: RealMatrix_
   REAL( DFP ), ALLOCATABLE :: Val( :, : )
@@ -192,7 +201,9 @@ PUBLIC :: RealMatrixPointer_
 
 ! for matrix conversion ( dense to dense )
 ! element matrix storage may differ from global matrix storage format
-INTEGER( I4B ), PARAMETER, PUBLIC :: DofToNodes = 0, NONE = -1, NodesToDOF = 1
+INTEGER( I4B ), PARAMETER, PUBLIC :: DofToNodes = 0
+INTEGER( I4B ), PARAMETER, PUBLIC :: NONE = -1
+INTEGER( I4B ), PARAMETER, PUBLIC :: NodesToDOF = 1
 INTEGER( I4B ), PARAMETER, PUBLIC :: DOF_FMT = 0
 INTEGER( I4B ), PARAMETER, PUBLIC :: NODES_FMT = 1
 INTEGER( I4B ), PARAMETER, PUBLIC :: FMT_DOF = 0

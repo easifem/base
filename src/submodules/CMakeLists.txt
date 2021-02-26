@@ -15,8 +15,8 @@ include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 #IntVector
 include(${CMAKE_CURRENT_LIST_DIR}/IntVector/CMakeLists.txt)
 
-# #RealVector
-# include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
+# RealVector
+include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 
 #DOF
 # include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)

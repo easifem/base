@@ -46,6 +46,22 @@ MODULE PROCEDURE dot_product_2
 END PROCEDURE dot_product_2
 
 !----------------------------------------------------------------------------
+!                                                                DOT_PRODUCT
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dot_product_3
+  Ans = DOT_PRODUCT(Obj=Obj, Val=Val)
+END PROCEDURE dot_product_3
+
+!----------------------------------------------------------------------------
+!                                                               DOT_PRODUCT
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dot_product_4
+  Ans = DOT_PRODUCT(VECTOR_PRODUCT(v, w), u)
+END PROCEDURE dot_product_4
+
+!----------------------------------------------------------------------------
 !                                                             Vector_Product
 !----------------------------------------------------------------------------
 
@@ -65,5 +81,72 @@ MODULE PROCEDURE vector_product_2
   END IF
 END PROCEDURE vector_product_2
 
+!----------------------------------------------------------------------------
+!                                                            Vector_Product
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE vector_product_3
+  Ans = VECTOR_PRODUCT(Obj=Obj, Val=Val)
+END PROCEDURE vector_product_3
+
+!----------------------------------------------------------------------------
+!                                                            Vector_Product
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE vector_product_4
+  Ans = DOT_PRODUCT( u%val, w%val ) * v%val- DOT_PRODUCT( u%val, v%val ) * w%val
+END PROCEDURE vector_product_4
+
+!----------------------------------------------------------------------------
+!                                                                 Norm2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Norm2_obj
+  Ans = SQRT( DOT_PRODUCT( Obj%Val, Obj%Val ) )
+END PROCEDURE Norm2_obj
+
+!----------------------------------------------------------------------------
+!                                                                 UnitVector
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE get_UnitVector
+  Ans = Obj % Val / NORM2( Obj % Val )
+END PROCEDURE get_UnitVector
+
+!----------------------------------------------------------------------------
+!                                                                 Angle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE get_angle
+  Ans = ACOS( DOT_PRODUCT( u, v ) / NORM2(u) / NORM2(v) )
+END PROCEDURE get_angle
+
+!----------------------------------------------------------------------------
+!                                                           ProjectionVector
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE get_projection_vector_obj
+  Ans = (DOT_PRODUCT( u, v ) / DOT_PRODUCT( v, v )) * v % val
+END PROCEDURE get_projection_vector_obj
+
+!----------------------------------------------------------------------------
+!                                                                 Normal
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getNormal_Vector
+  Ans = u % val - (DOT_PRODUCT( u, v ) / DOT_PRODUCT( v, v )) * v % val
+END PROCEDURE getNormal_Vector
+
+!----------------------------------------------------------------------------
+!                                                                 Projection
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE get_projection_obj
+  Ans = DOT_PRODUCT( u, v ) / NORM2( v )
+END PROCEDURE get_projection_obj
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Misc

@@ -274,7 +274,7 @@ PUBLIC :: Vector3D
 !
 !### Introduction
 !
-! This function returns pointer to an instance of [[Vector2D_]]
+! This function returns pointer to an instance of [[Vector3D_]]
 !
 !
 !### Usage
@@ -455,11 +455,50 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This function returns the box product (triple scalar product) of three vector.
+!
+!### Introduction
+!
+! Box product or triple scalar product is defined as:
+!
+! $$\mathbf{u} \cdot (\mathbf{v} \times \mathbf{w})=[\mathbf{u}, \mathbf{v}, \mathbf{w}]$$
+!
+! This function computes the box product.
+!
+!### Usage
+!
+!```fortran
+! type( Vector3D_ ) :: obj1, obj2, obj3
+! obj1 = [1.0_dfp, 0.0_dfp, 0.0_dfp]
+! obj2 = [0.0_dfp, 1.0_dfp, 0.0_dfp]
+! obj3 = [1.0_dfp, 2.0_dfp, 1.0_dfp]
+! CALL Equalline()
+! CALL Display( "test12" )
+! CALL Display( DOT_PRODUCT( obj1, obj2, obj3 ), "dot_product = " )
+! CALL DotLine()
+!```
+
+INTERFACE
+MODULE PURE FUNCTION dot_product_4( u, v, w ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: u
+  CLASS( Vector3D_ ), INTENT( IN ) :: v
+  CLASS( Vector3D_ ), INTENT( IN ) :: w
+  REAL( DFP ) :: Ans
+END FUNCTION dot_product_4
+END INTERFACE
+
+
+!----------------------------------------------------------------------------
+!                                                          DOT_PRODUCT@Misc
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This Generic function computes dot product of [[Vector3D_]] object.
 
 INTERFACE DOT_PRODUCT
-  MODULE PROCEDURE dot_product_1, dot_product_2
+  MODULE PROCEDURE dot_product_1, dot_product_2, dot_product_4
 END INTERFACE DOT_PRODUCT
 
 PUBLIC :: DOT_PRODUCT
@@ -583,7 +622,30 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
-! summary: 	This
+! summary: 	This function performs vector triple product
+!
+!### Introduction
+!
+! This function performs vector triple product, and returns the resultant [[Vector3D_]] object;
+!
+! $$\mathbf{u} \times (\mathbf{v} \times \mathbf{w}) = (\mathbf{u} \cdot \mathbf{w}) \mathbf{v} - (\mathbf{u} \cdot \mathbf{v}) \mathbf{w}$$
+!
+!
+!### Usage
+!
+!```fortran
+! type( Vector3D_ ) :: obj1, obj2, obj3
+! obj1 = [1.0_dfp, 0.0_dfp, 0.0_dfp]
+! obj2 = [0.0_dfp, 1.0_dfp, 0.0_dfp]
+! obj3 = [1.0_dfp, 2.0_dfp, 1.0_dfp]
+!
+! CALL Equalline()
+! CALL Display( "test11" )
+! CALL Display( Vector_PRODUCT( obj1, obj2, obj3 ), "vector_product = " )
+! CALL Display( Obj1 .X. (Obj2 .X. Obj3), "vector_product = " )
+! CALL DotLine()
+!```
+
 INTERFACE
 MODULE PURE FUNCTION vector_product_4( u, v, w ) RESULT( Ans )
   CLASS( Vector3D_ ), INTENT( IN ) :: u
@@ -602,7 +664,7 @@ END INTERFACE
 ! summary: This generic function computes the vector product
 
 INTERFACE Vector_Product
-  MODULE PROCEDURE vector_product_1, vector_product_2
+  MODULE PROCEDURE vector_product_1, vector_product_2, vector_product_4
 END INTERFACE Vector_Product
 
 PUBLIC :: Vector_Product
@@ -618,8 +680,293 @@ END INTERFACE OPERATOR(.X.)
 PUBLIC :: OPERATOR(.X.)
 
 !----------------------------------------------------------------------------
-!                                                                 Vector_
+!                                                                 NORM2@Misc
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 25 Feb 2021
+! summary: This function creates Norm2 of a vector
+!
+!### Introduction
+! This function computes second norm of [[vector3d_]] object.
+!
+! $$\vert \mathbf(u) \vert = \sqrt{\matbf{u} \cdot \mathbf{v}}$$
+!
+!
+!### Usage
+!
+!```fortran
+! type( Vector3D_ ) :: obj
+! obj = [1.0_dfp, 2.0_dfp, 3.0_dfp]
+! CALL Equalline()
+! CALL Display( "test13" )
+! CALL Display( NORM2( obj ), "NORM2 = " )
+! CALL Display( .NORM. obj, ".Norm. Obj = ")
+! CALL DotLine()
+!```
+
+INTERFACE
+MODULE PURE FUNCTION Norm2_obj( Obj ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: Obj
+  REAL( DFP ) :: Ans
+END FUNCTION Norm2_obj
+END INTERFACE
+
+INTERFACE OPERATOR( .NORM.)
+  MODULE PROCEDURE Norm2_obj
+END INTERFACE OPERATOR( .NORM.)
+
+PUBLIC :: OPERATOR( .NORM.)
+
+INTERFACE Norm2
+  MODULE PROCEDURE Norm2_obj
+END INTERFACE Norm2
+
+PUBLIC :: Norm2
+
+!----------------------------------------------------------------------------
+!                                                            UnitVector@Misc
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	Returnt the unit vector from a given vector
+!
+!### Usage
+!
+!```fortran
+!
+!```
+
+INTERFACE
+MODULE PURE FUNCTION get_unitVector( obj ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj
+  TYPE( Vector3D_ ) :: Ans
+END FUNCTION get_unitVector
+END INTERFACE
+
+INTERFACE UnitVector
+  MODULE PROCEDURE get_unitVector
+END INTERFACE UnitVector
+
+PUBLIC :: UnitVector
+
+INTERFACE Hat
+  MODULE PROCEDURE get_unitVector
+END INTERFACE Hat
+
+PUBLIC :: Hat
+
+INTERFACE OPERATOR( .HAT. )
+  MODULE PROCEDURE get_unitVector
+END INTERFACE OPERATOR( .HAT. )
+
+PUBLIC :: OPERATOR( .HAT. )
+
+!----------------------------------------------------------------------------
+!                                                                 Angle@Misc
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date:  25 Feb 2021
+! summary: 	This function returns the angle beteen two vectors
+!
+!### Introduction
+! Angle between two vectors $\mathbf{u}$ and $\mathbf{v}$ is given by:
+!
+! $$\cos \theta = \frac{\mathbf{u} \cdot \mathbf{v}}{\vert \mathbf{u} \vert \cdot \vert \mathbf{v} \vert}$$
+!
+! This function computes the angle between the two vectors and returnt the result in radians.
+!
+!
+!### Usage
+!
+!```fortran
+! type( Vector3D_ ) :: obj1, obj2
+! obj1 = [0.0_dfp, 2.0_dfp, 3.0_dfp]
+! obj2 = [1.0_dfp, 0.0_dfp]
+! CALL Equalline()
+! CALL Display( "test14" )
+! CALL Display( ANGLE( obj1, obj2), "Angle = " )
+! CALL Display( obj1 .ANGLE. obj2, ".Angle. = ")
+! CALL Display( DEGREES( obj1 .ANGLE. obj2 ), "In degrees :: ")
+! CALL DotLine()
+!```
+
+INTERFACE
+MODULE PURE FUNCTION get_angle( u, v ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: u
+  CLASS( Vector3D_ ), INTENT( IN ) :: v
+  REAL( DFP ):: Ans
+END FUNCTION get_angle
+END INTERFACE
+
+INTERFACE OPERATOR( .Angle. )
+  MODULE PROCEDURE get_angle
+END INTERFACE OPERATOR( .Angle. )
+
+PUBLIC :: OPERATOR( .Angle. )
+
+INTERFACE Angle
+  MODULE PROCEDURE get_angle
+END INTERFACE Angle
+
+PUBLIC :: Angle
+
+!----------------------------------------------------------------------------
+!                                                     ProjectionVector@Misc
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	Returns the vector of projection from u onto v
+!
+!### Introduction
+! Projetion of a vector $\mathbf{u}$ on \mathbf{v} is given by
+!
+! $$\mathbf{p} =\left( \frac{\bf{u}\cdot \bf{v}}{\bf{v} \cdot \bf{v}} \right) \bf{v}$$
+!
+! This function computes $\mathbf{p}$.
+!
+!@note
+! `.PARALLEL.` operator is alias of `.ProjectionVector.`
+!@endnote
+!
+!
+!
+!### Usage
+!
+!```fortran
+! type( Vector3D_ ) :: obj1, obj2
+! obj1 = [4.0_dfp, 2.0_dfp, 3.0_dfp]
+! obj2 = [2.0_dfp, 0.0_dfp]
+! CALL Equalline()
+! CALL Display( "test15" )
+! CALL Display( ProjectionVector( obj1, obj2), "PROJECTIONVector = " )
+! CALL Display( obj1 .PROJECTIONVector. obj2, ".PROJECTIONVector. = ")
+! CALL Display( PROJECTION(obj1, obj2), "PROJECTION = " )
+! CALL Display( obj1 .PROJECTION. obj2, ".PROJECTION. = ")
+! CALL DotLine()
+!```
+
+INTERFACE
+MODULE PURE FUNCTION get_projection_vector_obj( u, v ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: u
+  CLASS( Vector3D_ ), INTENT( IN ) :: v
+  TYPE( Vector3D_ ) ::  Ans
+END FUNCTION get_projection_vector_obj
+END INTERFACE
+
+INTERFACE ProjectionVector
+  MODULE PROCEDURE get_projection_vector_obj
+END INTERFACE ProjectionVector
+
+PUBLIC :: ProjectionVector
+
+INTERFACE OPERATOR( .ProjectionVector. )
+  MODULE PROCEDURE get_projection_vector_obj
+END INTERFACE OPERATOR( .ProjectionVector. )
+
+PUBLIC :: OPERATOR( .ProjectionVector. )
+
+INTERFACE OPERATOR( .Parallel. )
+  MODULE PROCEDURE get_projection_vector_obj
+END INTERFACE OPERATOR( .Parallel. )
+
+PUBLIC :: OPERATOR( .Parallel. )
+
+!----------------------------------------------------------------------------
+!                                                                Normal@Misc
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: Returns the component of u normal to v.
+!
+!### Introduction
+!
+! The component of u normal to v is given by:
+!
+! $$\bf{n} =\bf{u} -(\bf{u} \cdot \hat{\bf{v} } )\hat{\bf{v} }$$
+!
+! This subroutine return the component of u normal to v
+!
+!### Usage
+!
+!```fortran
+!
+!```
+
+INTERFACE
+MODULE PURE FUNCTION getNormal_Vector( u, v ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: u
+  CLASS( Vector3D_ ), INTENT( IN ) :: v
+  TYPE( Vector3D_ ) :: Ans
+END FUNCTION getNormal_Vector
+END INTERFACE
+
+INTERFACE OPERATOR( .Normal. )
+  MODULE PROCEDURE getNormal_Vector
+END INTERFACE OPERATOR( .Normal. )
+
+PUBLIC :: OPERATOR( .Normal. )
+
+INTERFACE Normal
+  MODULE PROCEDURE getNormal_Vector
+END INTERFACE Normal
+
+PUBLIC :: Normal
+
+!----------------------------------------------------------------------------
+!                                                           Projection@Misc
+!----------------------------------------------------------------------------
+
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	Returns the projection from u onto v
+!
+!### Introduction
+! Projetion of a vector $\mathbf{u}$ on \mathbf{v} is given by
+!
+! $$p = \mathbf{u} \cdot \hat{\mathbf{v}}$$
+!
+! This function computes $p$
+!
+!
+!### Usage
+!
+!```fortran
+! type( Vector3D_ ) :: obj1, obj2
+! obj1 = [4.0_dfp, 2.0_dfp, 3.0_dfp]
+! obj2 = [2.0_dfp, 0.0_dfp]
+! CALL Equalline()
+! CALL Display( "test15" )
+! CALL Display( ProjectionVector( obj1, obj2), "PROJECTIONVector = " )
+! CALL Display( obj1 .PROJECTIONVector. obj2, ".PROJECTIONVector. = ")
+! CALL Display( PROJECTION(obj1, obj2), "PROJECTION = " )
+! CALL Display( obj1 .PROJECTION. obj2, ".PROJECTION. = ")
+! CALL DotLine()
+!```
+
+INTERFACE
+MODULE PURE FUNCTION get_projection_obj( u, v ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: u
+  CLASS( Vector3D_ ), INTENT( IN ) :: v
+  REAL( DFP ) :: Ans
+END FUNCTION get_projection_obj
+END INTERFACE
+
+INTERFACE Projection
+  MODULE PROCEDURE get_projection_obj
+END INTERFACE Projection
+
+PUBLIC :: Projection
+
+INTERFACE OPERATOR( .Projection. )
+  MODULE PROCEDURE get_projection_obj
+END INTERFACE OPERATOR( .Projection. )
+
+PUBLIC :: OPERATOR( .Projection. )
 
 END MODULE Vector3D_Method

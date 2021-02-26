@@ -152,8 +152,99 @@ subroutine test10
   CALL DotLine()
 end
 
-end module test_Vector3D
+!----------------------------------------------------------------------------
+!                                                                 test11
+!----------------------------------------------------------------------------
 
+subroutine test11
+  type( Vector3D_ ) :: obj1, obj2, obj3
+  obj1 = [1.0_dfp, 0.0_dfp, 0.0_dfp]
+  obj2 = [0.0_dfp, 1.0_dfp, 0.0_dfp]
+  obj3 = [1.0_dfp, 2.0_dfp, 1.0_dfp]
+  CALL Equalline()
+  CALL Display( "test11" )
+  CALL Display( Vector_PRODUCT( obj1, obj2, obj3 ), "vector_product = " )
+  CALL Display( Obj1 .X. (Obj2 .X. Obj3), "vector_product = " )
+  CALL DotLine()
+end
+
+!----------------------------------------------------------------------------
+!                                                                 test12
+!----------------------------------------------------------------------------
+
+subroutine test12
+  type( Vector3D_ ) :: obj1, obj2, obj3
+  obj1 = [1.0_dfp, 0.0_dfp, 0.0_dfp]
+  obj2 = [0.0_dfp, 1.0_dfp, 0.0_dfp]
+  obj3 = [1.0_dfp, 2.0_dfp, 1.0_dfp]
+  CALL Equalline()
+  CALL Display( "test12" )
+  CALL Display( DOT_PRODUCT( obj1, obj2, obj3 ), "dot_product = " )
+  CALL DotLine()
+end
+
+!----------------------------------------------------------------------------
+!                                                                 test13
+!----------------------------------------------------------------------------
+
+subroutine test13
+  type( Vector3D_ ) :: obj
+  obj = [1.0_dfp, 2.0_dfp, 3.0_dfp]
+  CALL Equalline()
+  CALL Display( "test13" )
+  CALL Display( NORM2( obj ), "NORM2 = " )
+  CALL Display( .NORM. obj, ".Norm. Obj = ")
+  CALL DotLine()
+end
+
+!----------------------------------------------------------------------------
+!                                                                 test14
+!----------------------------------------------------------------------------
+
+subroutine test14
+  type( Vector3D_ ) :: obj1, obj2
+  obj1 = [0.0_dfp, 2.0_dfp, 3.0_dfp]
+  obj2 = [1.0_dfp, 0.0_dfp]
+  CALL Equalline()
+  CALL Display( "test14" )
+  CALL Display( ANGLE( obj1, obj2), "Angle = " )
+  CALL Display( obj1 .ANGLE. obj2, ".Angle. = ")
+  CALL Display( DEGREES( obj1 .ANGLE. obj2 ), "In degrees :: ")
+  CALL DotLine()
+end
+
+!----------------------------------------------------------------------------
+!                                                                 test15
+!----------------------------------------------------------------------------
+
+subroutine test15
+  type( Vector3D_ ) :: obj1, obj2
+  obj1 = [4.0_dfp, 2.0_dfp, 3.0_dfp]
+  obj2 = [2.0_dfp, 0.0_dfp]
+  CALL Equalline()
+  CALL Display( "test15" )
+  CALL Display( ProjectionVector( obj1, obj2), "PROJECTIONVector = " )
+  CALL Display( obj1 .PROJECTIONVector. obj2, ".PROJECTIONVector. = ")
+  CALL Display( PROJECTION(obj1, obj2), "PROJECTION = " )
+  CALL Display( obj1 .PROJECTION. obj2, ".PROJECTION. = ")
+  CALL DotLine()
+end
+
+!----------------------------------------------------------------------------
+!                                                                 test16
+!----------------------------------------------------------------------------
+
+subroutine test16
+  type( Vector3D_ ) :: obj
+  obj = [1.0_dfp, 1.0_dfp, 0.0_dfp]
+  CALL Equalline()
+  CALL Display( "test16" )
+  CALL Display(UnitVector( obj ), "UnitVector = " )
+  CALL Display( .Hat. obj, ".Hat. = ")
+  CALL Display(HAT(obj), "Hat = " )
+  CALL DotLine()
+end
+end module test_Vector3D
 
 !----------------------------------------------------------------------------
 !
@@ -172,5 +263,11 @@ call test7
 call test8
 call test9
 call test10
+call test11
+call test12
+call test13
+call test14
+call test15
+call test16
 
 end program main

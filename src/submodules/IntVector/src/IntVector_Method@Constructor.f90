@@ -1,7 +1,26 @@
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This submodule contains the contructor methods for [[IntVector_]]
+
 SUBMODULE ( IntVector_Method ) Constructor
-
 USE BaseMethod
-
 IMPLICIT NONE
 
 CONTAINS
@@ -35,18 +54,7 @@ END PROCEDURE get_size
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE allocate_data
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    IF( SIZE( Obj % Val ) .NE. Dims ) THEN
-      DEALLOCATE( Obj % Val )
-      ALLOCATE( Obj % Val( Dims ) )
-      Obj % Val = 0
-    ELSE
-      Obj % Val = 0
-    END IF
-  ELSE
-    ALLOCATE( Obj % Val( Dims ) )
-    Obj % Val = 0
-  END IF
+  CALL Reallocate(Obj%Val, Dims)
   CALL setTotalDimension( Obj, 1_I4B )
 END PROCEDURE allocate_data
 
@@ -62,34 +70,14 @@ END PROCEDURE deallocate_data
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVectorDisplay
-
-  INTEGER( I4B ) :: I, j
-  
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = stdout
-  END IF
-  
-  WRITE( I, "(A)" ) TRIM( msg )
-  DO j = 1, SIZE( Obj )
-    CALL Display( Obj( j ) % Val, "", I )
-  END DO
-
-END PROCEDURE IntVectorDisplay
-
-!----------------------------------------------------------------------------
-!                                                                    Display
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE IntscalarDisplay
+  INTEGER( I4B ) :: I
 
-  IF( PRESENT( UnitNo ) ) THEN
-    CALL Display( Obj % Val, msg )
-  ELSE
-    CALL Display( Obj % Val, msg, UnitNo )
-  END IF
+  I = Input( option=UnitNo, default=stdout)
+
+  CALL Display( msg = "# "//TRIM(msg), UnitNo = I )
+  CALL Display( msg = "# Dim, Shape = 1, " // TRIM( INT2STR( SIZE( Obj ) ) ), unitNo = I )
+  CALL Display( Val = Obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
 
 END PROCEDURE IntscalarDisplay
 
@@ -97,24 +85,20 @@ END PROCEDURE IntscalarDisplay
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntIntrinsicDisplay
+MODULE PROCEDURE IntVectorDisplay
+  INTEGER( I4B ) :: j, I
 
-  INTEGER( I4B ) :: I
-  CHARACTER( LEN = 20 ) :: Fmt1, Fmt2
+  I = Input( option=UnitNo, default=stdout)
 
-  Fmt1 = FInt32
+  CALL Display( msg = "# "//TRIM(msg), UnitNo = I )
+  CALL Display( msg = "# TotalVectors = " // TRIM( INT2STR( SIZE( Obj ) ) ), &
+    & unitNo = i )
 
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = stdout
-  END IF
-
-  Fmt2 = "( "//"1"//Fmt1( 2 : )
-  WRITE( I, "(A)" ) TRIM( msg )
-  WRITE( I, Fmt2 ) Val
-
-END PROCEDURE IntIntrinsicDisplay
+  DO j = 1, SIZE( Obj )
+    CALL Display( Obj( j ), msg = "( " // TRIM( INT2STR( j ) ) // " ) ", &
+      & unitNo = I )
+  END DO
+END PROCEDURE IntVectorDisplay
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate

@@ -24,10 +24,9 @@
 !
 ! This module contains methods of [[IntVector_]] data type. This module only contains the definition of the interfaces of these methods. The actual implementation is given inside the submodules. This modules has following submodules:
 !
-!@todo Documentation, testing, usage
 
 MODULE IntVector_Method
-USE GlobalData, ONLY: DFP, I4B, LGT
+USE GlobalData, ONLY: DFP, I4B, LGT, stdout
 USE BaseType, ONLY : IntVector_
 IMPLICIT NONE
 PRIVATE
@@ -35,6 +34,10 @@ PRIVATE
 !----------------------------------------------------------------------------
 !                                                          Shape@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	Returns shape of the vector
 
 INTERFACE
 MODULE PURE FUNCTION get_shape( Obj ) RESULT( Ans )
@@ -52,6 +55,10 @@ PUBLIC :: Shape
 !----------------------------------------------------------------------------
 !                                                             SIZE@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	Returns size of the vector
 
 INTERFACE
 MODULE PURE FUNCTION get_size( Obj, Dims ) RESULT( Ans )
@@ -71,13 +78,15 @@ PUBLIC :: SIZE
 !                                                    AllocateData@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
+!> authors: Vikas Sharma, Ph. D.
+! date:  25 Feb 2021
+! summary: 	Allocate memory for the vector
 
+INTERFACE
 MODULE PURE SUBROUTINE Allocate_Data( Obj, Dims )
   CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: Dims
 END SUBROUTINE Allocate_Data
-
 END INTERFACE
 
 INTERFACE AllocateData
@@ -90,12 +99,14 @@ PUBLIC :: AllocateData
 !                                                  DeAllocateData@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	Deallocate memory occupied by IntVector
+
 INTERFACE
-
-  MODULE PURE SUBROUTINE Deallocate_Data( Obj )
-    CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
-  END SUBROUTINE Deallocate_Data
-
+MODULE PURE SUBROUTINE Deallocate_Data( Obj )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+END SUBROUTINE Deallocate_Data
 END INTERFACE
 
 INTERFACE DeallocateData
@@ -108,26 +119,41 @@ PUBLIC :: DeallocateData
 !                                                         Display@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: Display the content of [[IntVector_]]
+
 INTERFACE
-  MODULE SUBROUTINE IntVectorDisplay ( Obj, msg, UnitNo )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
-    CHARACTER( LEN = * ), INTENT( IN ) :: msg
-    INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-  END SUBROUTINE IntVectorDisplay
-
-  MODULE SUBROUTINE IntscalarDisplay ( Obj, msg, UnitNo )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    CHARACTER( LEN = * ), INTENT( IN ) :: msg
-    INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-  END SUBROUTINE IntscalarDisplay
-
-  MODULE SUBROUTINE IntIntrinsicDisplay ( Val, msg, UnitNo )
-    INTEGER( I4B ), INTENT( IN ) :: Val( : )
-    CHARACTER( LEN = * ), INTENT( IN ) :: msg
-    INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-  END SUBROUTINE IntIntrinsicDisplay
+MODULE SUBROUTINE IntVectorDisplay ( Obj, msg, UnitNo )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
+END SUBROUTINE IntVectorDisplay
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                        Display@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: Display the content of [[IntVector_]]
+
+INTERFACE
+MODULE SUBROUTINE IntscalarDisplay ( Obj, msg, UnitNo )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
+END SUBROUTINE IntscalarDisplay
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        Display@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 FEb 2021
+! summary: 	This is a generic subroutine that displays the content of [[IntVector_]]
 INTERFACE Display
   MODULE PROCEDURE IntVectorDisplay, &
     & IntscalarDisplay
@@ -139,18 +165,63 @@ PUBLIC :: Display
 !                                                        Initiate@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine initiates the [[IntVector_]]
+!
+!
+!### Usage
+!
+!```fortran
+! type(IntVector_) :: obj
+! call display( "test1" )
+! call EqualLine()
+! call initiate(obj=obj, tSize=10)
+! call display( obj, msg = "test1")
+! call DashLine()
+!```
 
+INTERFACE
   MODULE PURE SUBROUTINE initiate_obj( Obj, tSize )
     CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
     INTEGER( I4B ), INTENT( IN ) :: tSize
   END SUBROUTINE initiate_obj
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 25 Feb 2021
+! summary: 	This routine initiates the vector of [[IntVector_]]
+!
+!
+!### Usage
+!
+!```fortran
+! type(IntVector_), allocatable :: obj( : )
+! integer( I4B ) :: tsize( 4 )
+! tsize = [5,5,10,10]
+! call display( "test2" )
+! call EqualLine()
+! call initiate(obj=obj, tSize=tsize)
+! call display( obj, msg = "test2")
+! call DashLine()
+!```
+
+INTERFACE
   MODULE PURE SUBROUTINE initiate_obj_vector( Obj, tSize )
     TYPE( IntVector_ ), ALLOCATABLE, INTENT( INOUT ) :: Obj( : )
     INTEGER( I4B ), INTENT( IN ) :: tSize( : )
   END SUBROUTINE initiate_obj_vector
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
   MODULE PURE SUBROUTINE initiate_obj_ab( Obj, a, b )
     CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
     INTEGER( I4B ), INTENT( IN ) :: a, b
@@ -169,12 +240,10 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-
-  MODULE PURE FUNCTION Constructor1( tSize ) RESULT( Obj )
-    TYPE( IntVector_ ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: tSize
-  END FUNCTION Constructor1
-
+MODULE PURE FUNCTION Constructor1( tSize ) RESULT( Obj )
+  TYPE( IntVector_ ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: tSize
+END FUNCTION Constructor1
 END INTERFACE
 
 INTERFACE IntVector
@@ -188,12 +257,10 @@ PUBLIC :: IntVector
 !----------------------------------------------------------------------------
 
 INTERFACE
-
-  MODULE PURE FUNCTION Constructor_1( tSize ) RESULT( Obj )
-    CLASS( IntVector_ ), POINTER :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: tSize
-  END FUNCTION Constructor_1
-
+MODULE PURE FUNCTION Constructor_1( tSize ) RESULT( Obj )
+  CLASS( IntVector_ ), POINTER :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: tSize
+END FUNCTION Constructor_1
 END INTERFACE
 
 
@@ -208,15 +275,15 @@ PUBLIC :: IntVector_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Constructor_Int( Val ) RESULT( Obj )
-    CLASS( IntVector_ ), POINTER :: Obj
-    INTEGER(I4B), INTENT( IN ) :: Val( : )
-  END FUNCTION Constructor_Int
+MODULE PURE FUNCTION Constructor_Int( Val ) RESULT( Obj )
+CLASS( IntVector_ ), POINTER :: Obj
+  INTEGER(I4B), INTENT( IN ) :: Val( : )
+END FUNCTION Constructor_Int
 
-  MODULE PURE FUNCTION ConstructorInt( Val ) RESULT( Obj )
-    TYPE( IntVector_ ) :: Obj
-    INTEGER(I4B), INTENT( IN ) :: Val( : )
-  END FUNCTION ConstructorInt
+MODULE PURE FUNCTION ConstructorInt( Val ) RESULT( Obj )
+  TYPE( IntVector_ ) :: Obj
+  INTEGER(I4B), INTENT( IN ) :: Val( : )
+END FUNCTION ConstructorInt
 END INTERFACE
 
 INTERFACE IntVector
@@ -228,15 +295,15 @@ INTERFACE IntVector_Pointer
 END INTERFACE IntVector_Pointer
 
 INTERFACE
-  MODULE PURE FUNCTION Constructor_Real( Val ) RESULT( Obj )
-    CLASS( IntVector_ ), POINTER :: Obj
-    REAL(DFP), INTENT( IN ) :: Val( : )
-  END FUNCTION Constructor_Real
+MODULE PURE FUNCTION Constructor_Real( Val ) RESULT( Obj )
+  CLASS( IntVector_ ), POINTER :: Obj
+  REAL(DFP), INTENT( IN ) :: Val( : )
+END FUNCTION Constructor_Real
 
-  MODULE PURE FUNCTION ConstructorReal( Val ) RESULT( Obj )
-    TYPE( IntVector_ ) :: Obj
-    REAL(DFP), INTENT( IN ) :: Val( : )
-  END FUNCTION ConstructorReal
+MODULE PURE FUNCTION ConstructorReal( Val ) RESULT( Obj )
+  TYPE( IntVector_ ) :: Obj
+  REAL(DFP), INTENT( IN ) :: Val( : )
+END FUNCTION ConstructorReal
 END INTERFACE
 
 INTERFACE IntVector
@@ -252,50 +319,49 @@ END INTERFACE IntVector_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION f_getValues_self( Obj, DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    TYPE( IntVector_ ), INTENT( IN ) :: DataType
-    TYPE( IntVector_ ) :: Val
-  END FUNCTION f_getValues_self
+MODULE PURE FUNCTION f_getValues_self( Obj, DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  TYPE( IntVector_ ), INTENT( IN ) :: DataType
+  TYPE( IntVector_ ) :: Val
+END FUNCTION f_getValues_self
 
-  MODULE PURE FUNCTION f_getSectionValues_self( Obj, Indx, DataType ) &
-    & RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    TYPE( IntVector_ ), INTENT( IN ) :: DataType
-    INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-    TYPE( IntVector_ ) :: Val
-  END FUNCTION f_getSectionValues_self
+MODULE PURE FUNCTION f_getSectionValues_self( Obj, Indx, DataType ) &
+  & RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  TYPE( IntVector_ ), INTENT( IN ) :: DataType
+  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
+  TYPE( IntVector_ ) :: Val
+END FUNCTION f_getSectionValues_self
 
-  MODULE PURE FUNCTION f_getValuesFromTriplet_self( Obj, iStart, iEnd, &
-    & Stride, DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    TYPE( IntVector_ ), INTENT( IN ) :: DataType
-    INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-    TYPE( IntVector_ ) :: Val
-  END FUNCTION f_getValuesFromTriplet_self
+MODULE PURE FUNCTION f_getValuesFromTriplet_self( Obj, iStart, iEnd, &
+  & Stride, DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  TYPE( IntVector_ ), INTENT( IN ) :: DataType
+  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
+  TYPE( IntVector_ ) :: Val
+END FUNCTION f_getValuesFromTriplet_self
 
-  MODULE PURE FUNCTION f_getARRAYValues_self( Obj, DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
-    TYPE( IntVector_ ), INTENT( IN ) :: DataType
-    TYPE( IntVector_ ) :: Val
-  END FUNCTION f_getARRAYValues_self
+MODULE PURE FUNCTION f_getARRAYValues_self( Obj, DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
+  TYPE( IntVector_ ), INTENT( IN ) :: DataType
+  TYPE( IntVector_ ) :: Val
+END FUNCTION f_getARRAYValues_self
 
-  MODULE PURE FUNCTION f_getARRAYSectionValues_self( Obj, Indx, DataType ) &
-    & RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
-    TYPE( IntVector_ ), INTENT( IN ) :: DataType
-    INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-    TYPE( IntVector_ ) :: Val
-  END FUNCTION f_getARRAYSectionValues_self
+MODULE PURE FUNCTION f_getARRAYSectionValues_self( Obj, Indx, DataType ) &
+  & RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
+  TYPE( IntVector_ ), INTENT( IN ) :: DataType
+  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
+  TYPE( IntVector_ ) :: Val
+END FUNCTION f_getARRAYSectionValues_self
 
-  MODULE PURE FUNCTION f_getARRAYValuesFromTriplet_self( Obj, iStart, iEnd, &
-    & Stride, DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
-    INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-    TYPE( IntVector_ ), INTENT( IN ) :: DataType
-    TYPE( IntVector_ ) :: Val
-  END FUNCTION f_getARRAYValuesFromTriplet_self
-
+MODULE PURE FUNCTION f_getARRAYValuesFromTriplet_self( Obj, iStart, iEnd, &
+  & Stride, DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
+  TYPE( IntVector_ ), INTENT( IN ) :: DataType
+  TYPE( IntVector_ ) :: Val
+END FUNCTION f_getARRAYValuesFromTriplet_self
 END INTERFACE
 
 INTERFACE ArrayValues
@@ -325,52 +391,85 @@ PUBLIC :: getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION f_getValues_Int( Obj, DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    INTEGER(I4B), INTENT( IN ) :: DataType
-    INTEGER(I4B), ALLOCATABLE :: Val( : )
-  END FUNCTION f_getValues_Int
-
-  MODULE PURE FUNCTION f_getSectionValues_Int( Obj, Indx, DataType ) &
-    & RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-    INTEGER(I4B), INTENT( IN ):: DataType
-    INTEGER(I4B), ALLOCATABLE :: Val( : )
-  END FUNCTION f_getSectionValues_Int
-
-  MODULE PURE FUNCTION f_getValuesFromTriplet_Int( Obj, iStart, iEnd, Stride,&
-    & DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-    INTEGER(I4B), INTENT( IN ):: DataType
-    INTEGER(I4B), ALLOCATABLE :: Val( : )
-  END FUNCTION f_getValuesFromTriplet_Int
-
-  MODULE PURE FUNCTION f_getARRAYValues_Int( Obj, DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
-    INTEGER(I4B), INTENT( IN ) :: DataType
-    INTEGER(I4B), ALLOCATABLE :: Val( : )
-  END FUNCTION f_getARRAYValues_Int
-
-  MODULE PURE FUNCTION f_getARRAYSectionValues_Int( Obj, Indx, DataType ) &
-    & RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
-    INTEGER(I4B), INTENT( IN ) :: DataType
-    INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-    INTEGER(I4B), ALLOCATABLE :: Val( : )
-  END FUNCTION f_getARRAYSectionValues_Int
-
-  MODULE PURE FUNCTION f_getARRAYValuesFromTriplet_Int( Obj, iStart, iEnd, &
-    & Stride, &
-    & DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
-    INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-    INTEGER(I4B), INTENT( IN ):: DataType
-    INTEGER(I4B), ALLOCATABLE :: Val( : )
-  END FUNCTION f_getARRAYValuesFromTriplet_Int
-
+MODULE PURE FUNCTION f_getValues_Int( Obj, DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  INTEGER(I4B), INTENT( IN ) :: DataType
+  INTEGER(I4B), ALLOCATABLE :: Val( : )
+END FUNCTION f_getValues_Int
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       ArrayValues@GetMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION f_getSectionValues_Int( Obj, Indx, DataType ) &
+  & RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
+  INTEGER(I4B), INTENT( IN ):: DataType
+  INTEGER(I4B), ALLOCATABLE :: Val( : )
+END FUNCTION f_getSectionValues_Int
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       ArrayValues@GetMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION f_getValuesFromTriplet_Int( Obj, iStart, iEnd, Stride,&
+  & DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
+  INTEGER(I4B), INTENT( IN ):: DataType
+  INTEGER(I4B), ALLOCATABLE :: Val( : )
+END FUNCTION f_getValuesFromTriplet_Int
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       ArrayValues@GetMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION f_getARRAYValues_Int( Obj, DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
+  INTEGER(I4B), INTENT( IN ) :: DataType
+  INTEGER(I4B), ALLOCATABLE :: Val( : )
+END FUNCTION f_getARRAYValues_Int
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       ArrayValues@GetMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION f_getARRAYSectionValues_Int( Obj, Indx, DataType ) &
+  & RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
+  INTEGER(I4B), INTENT( IN ) :: DataType
+  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
+  INTEGER(I4B), ALLOCATABLE :: Val( : )
+END FUNCTION f_getARRAYSectionValues_Int
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       ArrayValues@GetMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION f_getARRAYValuesFromTriplet_Int( Obj, iStart, iEnd, &
+  & Stride, &
+  & DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
+  INTEGER(I4B), INTENT( IN ):: DataType
+  INTEGER(I4B), ALLOCATABLE :: Val( : )
+END FUNCTION f_getARRAYValuesFromTriplet_Int
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       ArrayValues@GetMethod
+!----------------------------------------------------------------------------
 
 INTERFACE ArrayValues
   MODULE PROCEDURE f_getValues_Int, &
@@ -381,6 +480,10 @@ INTERFACE ArrayValues
     & f_getARRAYValuesFromTriplet_Int
 END INTERFACE ArrayValues
 
+!----------------------------------------------------------------------------
+!                                                       ArrayValues@GetMethod
+!----------------------------------------------------------------------------
+
 INTERFACE getValues
   MODULE PROCEDURE f_getValues_Int, &
     & f_getSectionValues_Int, &
@@ -390,25 +493,22 @@ INTERFACE getValues
     & f_getARRAYValuesFromTriplet_Int
 END INTERFACE getValues
 
-
 !----------------------------------------------------------------------------
-!                                                               ArrayPointers
+!                                                   ArrayPointers@getMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
+MODULE FUNCTION f_getPointer_self( Obj, DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ), TARGET :: Obj
+  TYPE( IntVector_ ), INTENT( IN ) :: DataType
+  TYPE( IntVector_ ), POINTER :: Val
+END FUNCTION f_getPointer_self
 
-  MODULE FUNCTION f_getPointer_self( Obj, DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ), TARGET :: Obj
-    TYPE( IntVector_ ), INTENT( IN ) :: DataType
-    TYPE( IntVector_ ), POINTER :: Val
-  END FUNCTION f_getPointer_self
-
-  MODULE FUNCTION f_getPointer_Int( Obj, DataType ) RESULT( Val )
-    CLASS( IntVector_ ), INTENT( IN ), TARGET :: Obj
-    INTEGER(I4B), INTENT( IN ) :: DataType
-    INTEGER(I4B), POINTER :: Val( : )
-  END FUNCTION f_getPointer_Int
-
+MODULE FUNCTION f_getPointer_Int( Obj, DataType ) RESULT( Val )
+  CLASS( IntVector_ ), INTENT( IN ), TARGET :: Obj
+  INTEGER(I4B), INTENT( IN ) :: DataType
+  INTEGER(I4B), POINTER :: Val( : )
+END FUNCTION f_getPointer_Int
 END INTERFACE
 
 INTERFACE ArrayPointer
@@ -439,30 +539,35 @@ PUBLIC :: Convert
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION IndexOf_1( Obj, Value ) RESULT( Ans )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Value
-    INTEGER( I4B ) :: Ans
-  END FUNCTION IndexOf_1
+MODULE PURE FUNCTION IndexOf_1( Obj, Value ) RESULT( Ans )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Value
+  INTEGER( I4B ) :: Ans
+END FUNCTION IndexOf_1
+END INTERFACE
 
-  MODULE PURE FUNCTION IndexOf_2( Obj, Value ) RESULT( Ans )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Value( : )
-    INTEGER( I4B ), ALLOCATABLE :: Ans( : )
-  END FUNCTION IndexOf_2
+INTERFACE
+MODULE PURE FUNCTION IndexOf_2( Obj, Value ) RESULT( Ans )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Value( : )
+  INTEGER( I4B ), ALLOCATABLE :: Ans( : )
+END FUNCTION IndexOf_2
+END INTERFACE
 
-  MODULE PURE FUNCTION IndexOf_3( Obj, Value ) RESULT( Ans )
-    INTEGER( I4B ), INTENT( IN ) :: Obj( : )
-    INTEGER( I4B ), INTENT( IN ) :: Value
-    INTEGER( I4B ) :: Ans
-  END FUNCTION IndexOf_3
+INTERFACE
+MODULE PURE FUNCTION IndexOf_3( Obj, Value ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: Obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: Value
+  INTEGER( I4B ) :: Ans
+END FUNCTION IndexOf_3
+END INTERFACE
 
-  MODULE PURE FUNCTION IndexOf_4( Obj, Value ) RESULT( Ans )
-    INTEGER( I4B ), INTENT( IN ) :: Obj( : )
-    INTEGER( I4B ), INTENT( IN ) :: Value( : )
-    INTEGER( I4B ), ALLOCATABLE :: Ans( : )
-  END FUNCTION IndexOf_4
-
+INTERFACE
+MODULE PURE FUNCTION IndexOf_4( Obj, Value ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: Obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: Value( : )
+  INTEGER( I4B ), ALLOCATABLE :: Ans( : )
+END FUNCTION IndexOf_4
 END INTERFACE
 
 INTERFACE IndexOF
@@ -482,18 +587,19 @@ PUBLIC :: LOC
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION isPresent_1( Obj, Value ) RESULT( Ans )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Value
-    LOGICAL( LGT ) :: Ans
-  END FUNCTION isPresent_1
+MODULE PURE FUNCTION isPresent_1( Obj, Value ) RESULT( Ans )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Value
+  LOGICAL( LGT ) :: Ans
+END FUNCTION isPresent_1
+END INTERFACE
 
-  MODULE PURE FUNCTION isPresent_2( Obj, Value ) RESULT( Ans )
-    CLASS( IntVector_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Value( : )
-    LOGICAL( LGT ), ALLOCATABLE :: Ans( : )
-  END FUNCTION isPresent_2
-
+INTERFACE
+MODULE PURE FUNCTION isPresent_2( Obj, Value ) RESULT( Ans )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Value( : )
+  LOGICAL( LGT ), ALLOCATABLE :: Ans( : )
+END FUNCTION isPresent_2
 END INTERFACE
 
 INTERFACE isPresent
@@ -513,20 +619,24 @@ PUBLIC :: isPresent
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE Append_1( Obj, Value )
-    CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Value
-  END SUBROUTINE Append_1
+MODULE PURE SUBROUTINE Append_1( Obj, Value )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Value
+END SUBROUTINE Append_1
+END INTERFACE
 
-  MODULE PURE SUBROUTINE Append_2( Obj, Value )
-    CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Value( : )
-  END SUBROUTINE Append_2
+INTERFACE
+MODULE PURE SUBROUTINE Append_2( Obj, Value )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Value( : )
+END SUBROUTINE Append_2
+END INTERFACE
 
-  MODULE PURE SUBROUTINE Append_3( Obj, AnotherObj )
-    CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
-    CLASS( IntVector_ ), INTENT( IN ) :: AnotherObj
-  END SUBROUTINE Append_3
+INTERFACE
+MODULE PURE SUBROUTINE Append_3( Obj, AnotherObj )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+  CLASS( IntVector_ ), INTENT( IN ) :: AnotherObj
+END SUBROUTINE Append_3
 END INTERFACE
 
 INTERFACE Append

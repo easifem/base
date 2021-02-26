@@ -630,97 +630,147 @@ END INTERFACE Append
 
 PUBLIC :: Append
 
-!<----------------------------------------------------------------------------
-!                                                                   NRM2@BLAS1
-!<----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                 DOT@BLAS1
+!----------------------------------------------------------------------------
 
-INTERFACE
-MODULE PURE FUNCTION NRM2scalar( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
-  REAL( DFP ) :: Ans
-END FUNCTION NRM2scalar
-
-MODULE PURE FUNCTION NRM2vector( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  REAL( DFP ) :: Ans
-END FUNCTION NRM2vector
-END INTERFACE
-
-INTERFACE NORM2
-  MODULE PROCEDURE NRM2scalar, NRM2vector
-END INTERFACE NORM2
-
-PUBLIC :: NORM2
-
-! <---------------------------------------------------------------------------
-!                                                               NORM2SQR@BLAS1
-! <---------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION NRM2SQRscalar( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
-  REAL( DFP ) :: Ans
-END FUNCTION NRM2SQRscalar
-
-MODULE PURE FUNCTION NRM2SQRvector( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  REAL( DFP ) :: Ans
-END FUNCTION NRM2SQRvector
-
-MODULE PURE FUNCTION NRM2SQRintrinsic( Val ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-  REAL( DFP ) :: Ans
-END FUNCTION NRM2SQRintrinsic
-END INTERFACE
-
-INTERFACE NORM2SQR
-  MODULE PROCEDURE NRM2SQRscalar, NRM2SQRvector, NRM2SQRintrinsic
-END INTERFACE NORM2SQR
-
-PUBLIC :: NORM2SQR
-
-!<----------------------------------------------------------------------------
-!                                                                   DOT@BLAS1
-!<----------------------------------------------------------------------------
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine performs dot_product of two fortran vectors
+!
+!@note
+! 	This subroutine calls BLAS function `DDOT` `SDOT`.
+!@endnote
+!@todo
+! 	usage, documentation
+!@endtodo
 
 INTERFACE
 MODULE PURE FUNCTION intrinsicDOTintrinsic( Val1, Val2 ) RESULT( Ans )
   REAL ( DFP ), INTENT( IN ) :: Val1( : ), Val2( : )
   REAL( DFP ) :: Ans
 END FUNCTION intrinsicDOTintrinsic
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 DOT@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine returns dot product of two [[RealVector_]]
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
 MODULE PURE FUNCTION scalarDOTscalar( Obj1, Obj2 ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj1, Obj2
   REAL( DFP ) :: Ans
 END FUNCTION scalarDOTscalar
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 DOT@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routines returns the dot product of vector of [[RealVector_]] data type.
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
 MODULE PURE FUNCTION vectorDOTvector( Obj1, Obj2 ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj1( : ), Obj2( : )
   REAL( DFP ) :: Ans
 END FUNCTION vectorDOTvector
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 DOT@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes dot product of a vector of [[RealVector_]] and scalar of [[RealVector_]]
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
 MODULE PURE FUNCTION vectorDOTscalar( Obj1, Obj2 ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj1( : ), Obj2
   REAL( DFP ) :: Ans
 END FUNCTION vectorDOTscalar
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 DOT@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes dot product of a scalar of [[RealVector_]] and vector of [[RealVector_]]
+
+INTERFACE
 MODULE PURE FUNCTION scalarDOTvector( Obj1, Obj2 ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj1, Obj2( : )
   REAL( DFP ) :: Ans
 END FUNCTION scalarDOTvector
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 DOT@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes dot product of a fortran vector and a scalar instance of [[RealVector_]]
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
 MODULE PURE FUNCTION intrinsicDOTscalar( Val, Obj ) RESULT( Ans )
   REAL ( DFP ), INTENT( IN ) :: Val( : )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ) :: Ans
 END FUNCTION intrinsicDOTscalar
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 DOT@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes dot product of a fortran array and scalar instance of [[RealVector_]]
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
 MODULE PURE FUNCTION scalarDOTintrinsic( Obj, Val ) RESULT( Ans )
   REAL ( DFP ), INTENT( IN ) :: Val( : )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ) :: Ans
 END FUNCTION scalarDOTintrinsic
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 DOT@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This generic routine computes dot product
 
 INTERFACE DOT
   MODULE PROCEDURE scalarDOTscalar, vectorDOTvector, vectorDOTscalar, &
@@ -731,25 +781,288 @@ END INTERFACE DOT
 PUBLIC :: DOT
 
 !----------------------------------------------------------------------------
+!                                                                Norm2@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This function computes Euclidean norm of [[RealVector_]]
+!
+!### Introduction
+!
+! L2 norm of a vector is give by
+!
+! $$\left| \left| \bf{V} \right|  \right|  =\sqrt{\bf{V} \cdot \bf{V} }$$
+!
+!@note
+! 	This subroutine uses DOT function.
+!@endnote
+!
+!### Usage
+!
+!```fortran
+!	s = NORM2(Obj)
+!```
+
+INTERFACE
+MODULE PURE FUNCTION NRM2scalar( Obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+  REAL( DFP ) :: Ans
+END FUNCTION NRM2scalar
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                Norm2@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes the L2 norm of [[RealVector_]]
+!
+!### Introduction
+!
+! This routine computes L2 norm of a vector of [[RealVector_]].
+!
+!@note
+! 	This function employs DOT function.
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
+MODULE PURE FUNCTION NRM2vector( Obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
+  REAL( DFP ) :: Ans
+END FUNCTION NRM2vector
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                Norm2@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes norm2
+!
+!@note
+! 	This function internally calls DOT function
+!@endnote
+
+INTERFACE NORM2
+  MODULE PROCEDURE NRM2scalar, NRM2vector
+END INTERFACE NORM2
+
+PUBLIC :: NORM2
+
+!----------------------------------------------------------------------------
+!                                                             Norm2SQR@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes square of L2 norm of [[RealVector_]]
+!
+!@note
+! 	This function internally calls DOT function
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
+MODULE PURE FUNCTION NRM2SQRscalar( Obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+  REAL( DFP ) :: Ans
+END FUNCTION NRM2SQRscalar
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             Norm2SQR@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes square of L2 norm of [[RealVector_]]
+!
+!### Introduction
+!
+! $$\text{NRM2SQR}=(\left| \left| \bf{V} \right|  \right|_{2}  )^{2}=DOT\left( V,V\right)$$
+!
+!@note
+! 	This function internally calls DOT function
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
+MODULE PURE FUNCTION NRM2SQRvector( Obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
+  REAL( DFP ) :: Ans
+END FUNCTION NRM2SQRvector
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             Norm2SQR@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine computes square of L2 norm of fortran vector
+!
+!### Introduction
+!
+! $$\text{NRM2SQR}=(\left| \left| \bf{V} \right|  \right|_{2}  )^{2}=DOT\left( V,V\right)$$
+!
+!@note
+! 	This function internally calls DOT function
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodo
+INTERFACE
+MODULE PURE FUNCTION NRM2SQRintrinsic( Val ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: Val( : )
+  REAL( DFP ) :: Ans
+END FUNCTION NRM2SQRintrinsic
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             Norm2SQR@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This is a generic function which computers square of L2 norm of a vector.
+!
+!### Introduction
+!
+! $$\text{NRM2SQR}=(\left| \left| \bf{V} \right|  \right|_{2}  )^{2}=DOT\left( V,V\right)$$
+!
+!@note
+! 	This function internally calls DOT function
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodoe
+
+INTERFACE NORM2SQR
+  MODULE PROCEDURE NRM2SQRscalar, NRM2SQRvector, NRM2SQRintrinsic
+END INTERFACE NORM2SQR
+
+PUBLIC :: NORM2SQR
+
+!----------------------------------------------------------------------------
 !                                                                 ASUM@BLAS1
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This function computes the absolute sum of a vector.
+!
+!### Introduction
+!
+! This function computes the absolute sum of a vector.
+!
+! $$\left| \left| V\right|  \right|_{1}  =\sum^{N}_{i=1} \left( \  \left| V_{i}\right|  \right)$$
+!
+!@note
+! 	This function calls BLAS function ASUM.
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodo
 
 INTERFACE
 MODULE PURE FUNCTION ASUMIntrinsic( Val ) RESULT( Ans )
   REAL( DFP ), INTENT( IN ) :: Val( : )
   REAL( DFP ) :: Ans
 END FUNCTION ASUMIntrinsic
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 ASUM@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This function computes the absolute sum of a vector
+!### Introduction
+!
+! This function computes the absolute sum of a vector.
+!
+! $$\left| \left| V\right|  \right|_{1}  =\sum^{N}_{i=1} \left( \  \left| V_{i}\right|  \right)$$
+!
+!@note
+! 	This function calls BLAS function ASUM.
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
 MODULE PURE FUNCTION ASUMScalar( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ) :: Ans
 END FUNCTION ASUMScalar
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 ASUM@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This function computes the absolute sum of a vector
+!### Introduction
+!
+! This function computes the absolute sum of a vector.
+!
+! $$\left| \left| V\right|  \right|_{1}  =\sum^{N}_{i=1} \left( \  \left| V_{i}\right|  \right)$$
+!
+!@note
+! 	This function calls BLAS function ASUM.
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodo
+
+INTERFACE
 MODULE PURE FUNCTION ASUMvector( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
   REAL( DFP ) :: Ans
 END FUNCTION ASUMvector
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 ASUM@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This function computes the absolute sum of a vector
+!### Introduction
+!
+! This function computes the absolute sum of a vector.
+!
+! $$\left| \left| V\right|  \right|_{1}  =\sum^{N}_{i=1} \left( \  \left| V_{i}\right|  \right)$$
+!
+!@note
+! 	This function calls BLAS function ASUM.
+!@endnote
+!
+!@todo
+! 	usage
+!@endtodo
 
 INTERFACE ASUM
   MODULE PROCEDURE ASUMScalar, ASUMvector, ASUMIntrinsic
@@ -761,32 +1074,152 @@ PUBLIC :: ASUM
 !                                                                 COPY@BLAS1
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy one vector into another, i.e. `Val1=Val2
+!
+!@note
+! 	This subroutine calls BLAS function (D,S)COPY
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
 INTERFACE
 MODULE PURE SUBROUTINE intrinsicCOPYintrinsic( Val1, Val2 )
   REAL( DFP ), INTENT( IN ) :: Val2( : )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val1( : )
 END SUBROUTINE intrinsicCOPYintrinsic
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy one vector into another, i.e. `Val1=Val2
+!
+!@note
+! 	This subroutine calls BLAS function (D,S)COPY
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
 MODULE PURE SUBROUTINE scalarCOPYscalar( Obj1, Obj2 )
   TYPE( RealVector_ ), INTENT( INOUT ) :: Obj1
   CLASS( RealVector_ ), INTENT( IN ) :: Obj2
 END SUBROUTINE scalarCOPYscalar
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy one vector into another, i.e. `Val1=Val2
+!
+!@note
+! 	This subroutine internally calls COPY routine
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
 MODULE PURE SUBROUTINE vectorCOPYvector( Obj1, Obj2 )
   TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Obj1( : )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj2( : )
 END SUBROUTINE vectorCOPYvector
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy one fortran vector into another, i.e. `Val1=Val2`
+!
+!@note
+! 	This subroutine calls BLAS function (D,S)COPY
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
 MODULE PURE SUBROUTINE scalarCOPYvector( Obj1, Obj2 )
   TYPE( RealVector_ ), INTENT( INOUT ) :: Obj1
   CLASS( RealVector_ ), INTENT( IN ) :: Obj2( : )
 END SUBROUTINE scalarCOPYvector
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy fortran vector into [[RealVector_]], i.e. `Obj=Val`
+!
+!@note
+! 	This subroutine internally calls COPY
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
 MODULE PURE SUBROUTINE scalarCOPYintrinsic( Obj, Val )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
 END SUBROUTINE scalarCOPYintrinsic
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy one [[RealVector_]] into fortran vector, i.e. `Val=Obj`
+!
+!@note
+! 	This subroutine internally calls COPY subroutine. Also `Val` is allocatable.
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
 MODULE PURE SUBROUTINE intrinsicCOPYscalar( Val, Obj )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
