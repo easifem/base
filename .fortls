@@ -12,11 +12,7 @@
     "/Users/vikassharma/.easifem/classes/include/",
     "/Users/vikassharma/.easifem/extpkgs/include/",
     "/Users/vikassharma/.easifem/vscode/include/"],
-  "ext_source_dirs": [
-     "/Users/vikassharma/.easifem/base/include/",
-    "/Users/vikassharma/.easifem/classes/include/",
-    "/Users/vikassharma/.easifem/extpkgs/include/",
-    "/Users/vikassharma/.easifem/vscode/include/"],
+  "ext_source_dirs": [],
   "lowercase_intrinsics": false,
   "debug_log": true
 }

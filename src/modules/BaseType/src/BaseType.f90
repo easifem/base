@@ -157,7 +157,7 @@ PUBLIC :: AbstractArrayPointer_
 ! date: 	25 Feb 2021
 ! summary: Abstract matrix denotes a 2D array
 !
-!{!pages/AbtractArray.md!}
+!{!pages/AbstractArray.md!}
 TYPE, EXTENDS( AbstractArray_ ) :: AbstractMatrix_
   CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
 END TYPE AbstractMatrix_

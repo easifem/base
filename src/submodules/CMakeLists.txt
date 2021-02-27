@@ -9,11 +9,11 @@
 #BoundingBox
 include(${CMAKE_CURRENT_LIST_DIR}/BoundingBox/CMakeLists.txt)
 
-#Vector3D
-include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
-
 #IntVector
 include(${CMAKE_CURRENT_LIST_DIR}/IntVector/CMakeLists.txt)
+
+#Vector3D
+include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 
 # RealVector
 include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)

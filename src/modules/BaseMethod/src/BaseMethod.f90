@@ -24,6 +24,7 @@
 !
 
 MODULE BaseMethod
+  USE EASIFEM_BLAS
   USE GlobalData
   USE Display_Method
   USE ErrorHandling
@@ -34,9 +35,9 @@ MODULE BaseMethod
   USE AbstractVector_Method
   USE BoundingBox_Method
   USE IntVector_Method
-  USE RealVector_Method
   USE Vector3D_Method
-  USE DOF_Method
+  USE RealVector_Method
+  ! USE DOF_Method
   ! USE File_Method
   ! USE RealMatrix_Method
   ! USE Lapack_Method

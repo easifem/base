@@ -153,7 +153,7 @@ MODULE PURE SUBROUTINE initiate_2val( Val1, Val2, Obj )
 END SUBROUTINE initiate_2val
 END INTERFACE
 
-!> Generic interface to initiate Fortran vectors or [[realvectors_]] from
+!> Generic interface to initiate Fortran vectors or [[RealVector_]] from
 ! [[DOF_]] object
 INTERFACE Initiate
   MODULE PROCEDURE initiate_st_dof, initiate_val, &

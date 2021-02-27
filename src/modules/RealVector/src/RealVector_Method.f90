@@ -28,9 +28,7 @@
 MODULE RealVector_Method
 USE GlobalData, ONLY: DFP, I4B, Int8, Int16, Int32, Int64, Real32, Real64, LGT
 USE BaseType, ONLY : RealVector_
-
 IMPLICIT NONE
-
 PRIVATE
 
 !----------------------------------------------------------------------------
@@ -636,28 +634,6 @@ PUBLIC :: Append
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
-! summary: 	This routine performs dot_product of two fortran vectors
-!
-!@note
-! 	This subroutine calls BLAS function `DDOT` `SDOT`.
-!@endnote
-!@todo
-! 	usage, documentation
-!@endtodo
-
-INTERFACE
-MODULE PURE FUNCTION intrinsicDOTintrinsic( Val1, Val2 ) RESULT( Ans )
-  REAL ( DFP ), INTENT( IN ) :: Val1( : ), Val2( : )
-  REAL( DFP ) :: Ans
-END FUNCTION intrinsicDOTintrinsic
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 DOT@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
 ! summary: 	This routine returns dot product of two [[RealVector_]]
 !
 !@todo
@@ -665,7 +641,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTscalar( Obj1, Obj2 ) RESULT( Ans )
+MODULE FUNCTION scalarDOTscalar( Obj1, Obj2 ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj1, Obj2
   REAL( DFP ) :: Ans
 END FUNCTION scalarDOTscalar
@@ -684,7 +660,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION vectorDOTvector( Obj1, Obj2 ) RESULT( Ans )
+MODULE FUNCTION vectorDOTvector( Obj1, Obj2 ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj1( : ), Obj2( : )
   REAL( DFP ) :: Ans
 END FUNCTION vectorDOTvector
@@ -703,7 +679,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION vectorDOTscalar( Obj1, Obj2 ) RESULT( Ans )
+MODULE FUNCTION vectorDOTscalar( Obj1, Obj2 ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj1( : ), Obj2
   REAL( DFP ) :: Ans
 END FUNCTION vectorDOTscalar
@@ -718,7 +694,7 @@ END INTERFACE
 ! summary: 	This routine computes dot product of a scalar of [[RealVector_]] and vector of [[RealVector_]]
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTvector( Obj1, Obj2 ) RESULT( Ans )
+MODULE FUNCTION scalarDOTvector( Obj1, Obj2 ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj1, Obj2( : )
   REAL( DFP ) :: Ans
 END FUNCTION scalarDOTvector
@@ -737,7 +713,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION intrinsicDOTscalar( Val, Obj ) RESULT( Ans )
+MODULE FUNCTION intrinsicDOTscalar( Val, Obj ) RESULT( Ans )
   REAL ( DFP ), INTENT( IN ) :: Val( : )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ) :: Ans
@@ -757,7 +733,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTintrinsic( Obj, Val ) RESULT( Ans )
+MODULE FUNCTION scalarDOTintrinsic( Obj, Val ) RESULT( Ans )
   REAL ( DFP ), INTENT( IN ) :: Val( : )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ) :: Ans
@@ -774,11 +750,16 @@ END INTERFACE
 
 INTERFACE DOT
   MODULE PROCEDURE scalarDOTscalar, vectorDOTvector, vectorDOTscalar, &
-    & scalarDOTvector, intrinsicDOTintrinsic, &
-    & scalarDOTintrinsic
+    & scalarDOTvector, scalarDOTintrinsic
 END INTERFACE DOT
 
 PUBLIC :: DOT
+
+! INTERFACE OPERATOR( .DOT. )
+!   MODULE PROCEDURE
+! END INTERFACE OPERATOR( .DOT. )
+
+! PUBLIC :: OPERATOR( .DOT. )
 
 !----------------------------------------------------------------------------
 !                                                                Norm2@BLAS1
@@ -805,7 +786,7 @@ PUBLIC :: DOT
 !```
 
 INTERFACE
-MODULE PURE FUNCTION NRM2scalar( Obj ) RESULT( Ans )
+MODULE FUNCTION NRM2scalar( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ) :: Ans
 END FUNCTION NRM2scalar
@@ -832,7 +813,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION NRM2vector( Obj ) RESULT( Ans )
+MODULE FUNCTION NRM2vector( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
   REAL( DFP ) :: Ans
 END FUNCTION NRM2vector
@@ -873,7 +854,7 @@ PUBLIC :: NORM2
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION NRM2SQRscalar( Obj ) RESULT( Ans )
+MODULE FUNCTION NRM2SQRscalar( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ) :: Ans
 END FUNCTION NRM2SQRscalar
@@ -900,7 +881,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION NRM2SQRvector( Obj ) RESULT( Ans )
+MODULE FUNCTION NRM2SQRvector( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
   REAL( DFP ) :: Ans
 END FUNCTION NRM2SQRvector
@@ -925,8 +906,9 @@ END INTERFACE
 !@todo
 ! 	usage
 !@endtodo
+
 INTERFACE
-MODULE PURE FUNCTION NRM2SQRintrinsic( Val ) RESULT( Ans )
+MODULE FUNCTION NRM2SQRintrinsic( Val ) RESULT( Ans )
   REAL( DFP ), INTENT( IN ) :: Val( : )
   REAL( DFP ) :: Ans
 END FUNCTION NRM2SQRintrinsic
@@ -964,35 +946,6 @@ PUBLIC :: NORM2SQR
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
-! summary: 	This function computes the absolute sum of a vector.
-!
-!### Introduction
-!
-! This function computes the absolute sum of a vector.
-!
-! $$\left| \left| V\right|  \right|_{1}  =\sum^{N}_{i=1} \left( \  \left| V_{i}\right|  \right)$$
-!
-!@note
-! 	This function calls BLAS function ASUM.
-!@endnote
-!
-!@todo
-! 	usage
-!@endtodo
-
-INTERFACE
-MODULE PURE FUNCTION ASUMIntrinsic( Val ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-  REAL( DFP ) :: Ans
-END FUNCTION ASUMIntrinsic
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 ASUM@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
 ! summary: 	This function computes the absolute sum of a vector
 !### Introduction
 !
@@ -1009,7 +962,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION ASUMScalar( Obj ) RESULT( Ans )
+MODULE FUNCTION ASUMScalar( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
   REAL( DFP ) :: Ans
 END FUNCTION ASUMScalar
@@ -1037,7 +990,7 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION ASUMvector( Obj ) RESULT( Ans )
+MODULE FUNCTION ASUMvector( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
   REAL( DFP ) :: Ans
 END FUNCTION ASUMvector
@@ -1065,207 +1018,44 @@ END INTERFACE
 !@endtodo
 
 INTERFACE ASUM
-  MODULE PROCEDURE ASUMScalar, ASUMvector, ASUMIntrinsic
+  MODULE PROCEDURE ASUMScalar, ASUMvector
 END INTERFACE ASUM
 
 PUBLIC :: ASUM
-
-!----------------------------------------------------------------------------
-!                                                                 COPY@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
-!
-!### Introduction
-! This subroutine copy one vector into another, i.e. `Val1=Val2
-!
-!@note
-! 	This subroutine calls BLAS function (D,S)COPY
-!@endnote
-!
-!@todo
-! usage
-!@endtodo
-
-INTERFACE
-MODULE PURE SUBROUTINE intrinsicCOPYintrinsic( Val1, Val2 )
-  REAL( DFP ), INTENT( IN ) :: Val2( : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val1( : )
-END SUBROUTINE intrinsicCOPYintrinsic
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 COPY@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
-!
-!### Introduction
-! This subroutine copy one vector into another, i.e. `Val1=Val2
-!
-!@note
-! 	This subroutine calls BLAS function (D,S)COPY
-!@endnote
-!
-!@todo
-! usage
-!@endtodo
-
-INTERFACE
-MODULE PURE SUBROUTINE scalarCOPYscalar( Obj1, Obj2 )
-  TYPE( RealVector_ ), INTENT( INOUT ) :: Obj1
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj2
-END SUBROUTINE scalarCOPYscalar
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 COPY@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
-!
-!### Introduction
-! This subroutine copy one vector into another, i.e. `Val1=Val2
-!
-!@note
-! 	This subroutine internally calls COPY routine
-!@endnote
-!
-!@todo
-! usage
-!@endtodo
-
-INTERFACE
-MODULE PURE SUBROUTINE vectorCOPYvector( Obj1, Obj2 )
-  TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Obj1( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj2( : )
-END SUBROUTINE vectorCOPYvector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 COPY@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
-!
-!### Introduction
-! This subroutine copy one fortran vector into another, i.e. `Val1=Val2`
-!
-!@note
-! 	This subroutine calls BLAS function (D,S)COPY
-!@endnote
-!
-!@todo
-! usage
-!@endtodo
-
-INTERFACE
-MODULE PURE SUBROUTINE scalarCOPYvector( Obj1, Obj2 )
-  TYPE( RealVector_ ), INTENT( INOUT ) :: Obj1
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj2( : )
-END SUBROUTINE scalarCOPYvector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 COPY@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
-!
-!### Introduction
-! This subroutine copy fortran vector into [[RealVector_]], i.e. `Obj=Val`
-!
-!@note
-! 	This subroutine internally calls COPY
-!@endnote
-!
-!@todo
-! usage
-!@endtodo
-
-INTERFACE
-MODULE PURE SUBROUTINE scalarCOPYintrinsic( Obj, Val )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-END SUBROUTINE scalarCOPYintrinsic
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 COPY@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
-!
-!### Introduction
-! This subroutine copy one [[RealVector_]] into fortran vector, i.e. `Val=Obj`
-!
-!@note
-! 	This subroutine internally calls COPY subroutine. Also `Val` is allocatable.
-!@endnote
-!
-!@todo
-! usage
-!@endtodo
-
-INTERFACE
-MODULE PURE SUBROUTINE intrinsicCOPYscalar( Val, Obj )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
-END SUBROUTINE intrinsicCOPYscalar
-END INTERFACE
-
-INTERFACE COPY
-  MODULE PROCEDURE intrinsicCOPYintrinsic, scalarCOPYscalar, &
-    & vectorCOPYvector, scalarCOPYvector, scalarCOPYintrinsic
-END INTERFACE COPY
-
-PUBLIC :: COPY
 
 !----------------------------------------------------------------------------
 !                                                          SHALLOWCOPY@BLAS1
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE intrinsicSHALLOWCOPYintrinsic( Val1, Val2 )
-  REAL( DFP ), INTENT( IN ) :: Val2( : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val1( : )
+MODULE SUBROUTINE intrinsicSHALLOWCOPYintrinsic( Y, X )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
+  REAL( DFP ), INTENT( IN ) :: X( : )
 END SUBROUTINE intrinsicSHALLOWCOPYintrinsic
 
-MODULE PURE SUBROUTINE scalarSHALLOWCOPYscalar( Obj1, Obj2 )
-  TYPE( RealVector_ ), INTENT( INOUT ) :: Obj1
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj2
+MODULE SUBROUTINE scalarSHALLOWCOPYscalar( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
+  CLASS( RealVector_ ), INTENT( IN ) :: X
 END SUBROUTINE scalarSHALLOWCOPYscalar
 
-MODULE PURE SUBROUTINE vectorSHALLOWCOPYvector( Obj1, Obj2 )
-  TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Obj1( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj2( : )
+MODULE SUBROUTINE vectorSHALLOWCOPYvector( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Y( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
 END SUBROUTINE vectorSHALLOWCOPYvector
 
-MODULE PURE SUBROUTINE scalarSHALLOWCOPYvector( Obj1, Obj2 )
-  TYPE( RealVector_ ), INTENT( INOUT ) :: Obj1
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj2( : )
+MODULE SUBROUTINE scalarSHALLOWCOPYvector( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
+  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
 END SUBROUTINE scalarSHALLOWCOPYvector
 
-MODULE PURE SUBROUTINE scalarSHALLOWCOPYintrinsic( Obj, Val )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
+MODULE SUBROUTINE scalarSHALLOWCOPYintrinsic( Y, X )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
+  REAL( DFP ), INTENT( IN ) :: X( : )
 END SUBROUTINE scalarSHALLOWCOPYintrinsic
 
-MODULE PURE SUBROUTINE intrinsicSHALLOWCOPYscalar( Val, Obj )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
+MODULE SUBROUTINE intrinsicSHALLOWCOPYscalar( Y, X )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: X
 END SUBROUTINE intrinsicSHALLOWCOPYscalar
 END INTERFACE
 
@@ -1278,31 +1068,187 @@ END INTERFACE SHALLOWCOPY
 PUBLIC :: SHALLOWCOPY
 
 !----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copies one [[RealVector_]] object into another object, i.e. `Obj1=Obj2`. See figure given below:
+!
+!
+! <img src=|media|/scalar_copy_scalar.jpg alt="drawing" style="max-width:500px;"/>
+!
+!@note
+! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
+MODULE SUBROUTINE scalarCOPYscalar( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
+  CLASS( RealVector_ ), INTENT( IN ) :: X
+END SUBROUTINE scalarCOPYscalar
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy a vector of [[RealVector_]] into another vector, i.e. `Obj1=Obj2` see the figure below:
+!
+! <img src=|media|/vector_copy_vector.jpg alt="drawing" style="max-width:500px;"/>
+!
+!@note
+! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine. Also note that `Obj1` and `Obj2` are vectors of [[RealVector_]] data type.
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
+MODULE SUBROUTINE vectorCOPYvector( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Y( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
+END SUBROUTINE vectorCOPYvector
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copies a vector of [[RealVector_]] into a scalar instance of [[RealVector_]]. See Figure below:
+!
+! <img src=|media|/scalar_copy_vector.jpg alt="drawing" style="max-width:500px;"/>
+!
+!@note
+! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
+MODULE SUBROUTINE scalarCOPYvector( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
+  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
+END SUBROUTINE scalarCOPYvector
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy a fortran vector into [[RealVector_]] obj, i.e. `Obj=Val`
+!
+!@note
+! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
+MODULE SUBROUTINE scalarCOPYintrinsic( Y, X )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
+  REAL( DFP ), INTENT( IN ) :: X( : )
+END SUBROUTINE scalarCOPYintrinsic
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy an instance of [[RealVector_]] in another fortran vector, i.e. `Val=Obj`
+!
+!@note
+! 	This subroutine internally calls [[intrinsicCOPYintrinsic]]. Also `Val` is allocatable.
+!@endnote
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
+MODULE SUBROUTINE intrinsicCOPYscalar( Y, X )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: X
+END SUBROUTINE intrinsicCOPYscalar
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	26 Feb 2021
+! summary: 	This is generic subroutine for copying.
+!
+!### Introduction
+! See
+! * [[intrinsicCOPYintrinsic]]
+! * [[scalarCOPYscalar]]
+! * [[vectorCOPYvector]]
+! * [[scalarCOPYvector]]
+! * [[scalarCOPYintrinsic]]
+
+INTERFACE COPY
+  MODULE PROCEDURE scalarCOPYscalar, &
+    & vectorCOPYvector, scalarCOPYvector, scalarCOPYintrinsic
+END INTERFACE COPY
+
+PUBLIC :: COPY
+
+!----------------------------------------------------------------------------
 !                                                                 SWAP@BLAS1
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE intrinsicSWAPintrinsic( Val1, Val2 )
-  REAL( DFP ), INTENT( INOUT ) :: Val1( : ), Val2( : )
-END SUBROUTINE intrinsicSWAPintrinsic
+! MODULE SUBROUTINE intrinsicSWAPintrinsic( Val1, Val2 )
+!   REAL( DFP ), INTENT( INOUT ) :: Val1( : ), Val2( : )
+! END SUBROUTINE intrinsicSWAPintrinsic
 
-MODULE PURE SUBROUTINE scalarSWAPscalar( Obj1, Obj2 )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj1, Obj2
+MODULE SUBROUTINE scalarSWAPscalar( X, Y )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: X
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
 END SUBROUTINE scalarSWAPscalar
 
-MODULE PURE SUBROUTINE vectorSWAPvector( Obj1, Obj2 )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj1( : ), Obj2( : )
+MODULE SUBROUTINE vectorSWAPvector( X, Y )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: X( : )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Y( : )
 END SUBROUTINE vectorSWAPvector
 
-MODULE PURE SUBROUTINE scalarSWAPintrinsic( Obj, Val )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
-  REAL( DFP ), INTENT( INOUT ) :: Val( : )
+MODULE SUBROUTINE scalarSWAPintrinsic( X, Y )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: X
+  REAL( DFP ), INTENT( INOUT ) :: Y( : )
 END SUBROUTINE scalarSWAPintrinsic
-
-MODULE PURE SUBROUTINE intrinsicSWAPscalar( Val, Obj )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
-  REAL( DFP ), INTENT( INOUT ) :: Val( : )
-END SUBROUTINE intrinsicSWAPscalar
 END INTERFACE
 
 INTERFACE SWAP
@@ -1317,61 +1263,52 @@ PUBLIC :: SWAP
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE SCALintrinsic( alpha, Val )
-  REAL( DFP ), INTENT( INOUT ) :: Val( : )
-  REAL( DFP ), INTENT( IN ) :: alpha
-END SUBROUTINE SCALintrinsic
-
-MODULE PURE SUBROUTINE SCALscalar( alpha, Obj )
-  CLASS ( RealVector_ ), INTENT( INOUT ) :: Obj
-  REAL( DFP ), INTENT( IN ) :: alpha
+MODULE SUBROUTINE SCALscalar( X, A )
+  CLASS ( RealVector_ ), INTENT( INOUT ) :: X
+  REAL( DFP ), INTENT( IN ) :: A
 END SUBROUTINE SCALscalar
 
-MODULE PURE SUBROUTINE SCALvector( alpha, Obj )
-  CLASS ( RealVector_ ), INTENT( INOUT ) :: Obj( : )
-  REAL( DFP ), INTENT( IN ) :: alpha
+MODULE SUBROUTINE SCALvector( X, A )
+  CLASS ( RealVector_ ), INTENT( INOUT ) :: X( : )
+  REAL( DFP ), INTENT( IN ) :: A
 END SUBROUTINE SCALvector
 END INTERFACE
 
-INTERFACE SCALE
-  MODULE PROCEDURE SCALintrinsic, SCALscalar, SCALvector
-END INTERFACE SCALE
+INTERFACE SCAL
+  MODULE PROCEDURE SCALscalar, SCALvector
+END INTERFACE SCAL
 
-PUBLIC :: SCALE
+PUBLIC :: SCAL
 
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE scalarAXPYscalar( Obj1, alpha, Obj2 )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj1
-  REAL( DFP ), INTENT( IN ) :: alpha
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj2
+
+! Y = Y + A*X
+MODULE SUBROUTINE scalarAXPYscalar( X, Y, A )
+  CLASS( RealVector_ ), INTENT( IN ) :: X
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
+  REAL( DFP ), INTENT( IN ) :: A
 END SUBROUTINE scalarAXPYscalar
 
-MODULE PURE SUBROUTINE vectorAXPYvector( Obj1, alpha, Obj2 )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj1( : )
-  REAL( DFP ), INTENT( IN ) :: alpha
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj2( : )
+MODULE SUBROUTINE vectorAXPYvector( X, Y, A )
+  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Y( : )
+  REAL( DFP ), INTENT( IN ) :: A
 END SUBROUTINE vectorAXPYvector
 
-MODULE PURE SUBROUTINE scalarAXPYintrinsic( Obj, alpha, Val )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
-  REAL( DFP ), INTENT( IN ) :: alpha
-  REAL( DFP ), INTENT( IN ) :: Val( : )
+MODULE SUBROUTINE scalarAXPYintrinsic( X, Y, A )
+  REAL( DFP ), INTENT( IN ) :: X( : )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
+  REAL( DFP ), INTENT( IN ) :: A
 END SUBROUTINE scalarAXPYintrinsic
-
-MODULE PURE SUBROUTINE intrinsicAXPYintrinsic( Val1, alpha, Val2 )
-  REAL( DFP ), INTENT( INOUT ) :: Val1( : )
-  REAL( DFP ), INTENT( IN ) :: alpha
-  REAL( DFP ), INTENT( IN ) :: Val2( : )
-END SUBROUTINE intrinsicAXPYintrinsic
 END INTERFACE
 
 INTERFACE AXPY
   MODULE PROCEDURE scalarAXPYscalar, vectorAXPYvector, &
-    & scalarAXPYintrinsic, intrinsicAXPYintrinsic
+    & scalarAXPYintrinsic
 END INTERFACE AXPY
 
 PUBLIC :: AXPY
@@ -1381,7 +1318,7 @@ PUBLIC :: AXPY
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE setValue_1( Obj, Indx, Value )
+MODULE SUBROUTINE setValue_1( Obj, Indx, Value )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
   REAL( DFP ), INTENT( IN ) :: Value( : )
@@ -1395,55 +1332,34 @@ END INTERFACE
 PUBLIC :: SetValue
 
 !----------------------------------------------------------------------------
+!                                                                 Display@IO
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE Obj_Scalar_Display( Obj, msg, UnitNo )
+  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
+END SUBROUTINE Obj_Scalar_Display
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                                Display@IO
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE RealVectorDisplay ( Obj, msg, UnitNo, path, filename, &
-  & extension )
+MODULE SUBROUTINE Obj_Vector_Display ( Obj, msg, UnitNo )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: path
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: filename
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: extension
-END SUBROUTINE RealVectorDisplay
+END SUBROUTINE Obj_Vector_Display
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                                 Display@IO
 !----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE RealscalarDisplay ( Obj, msg, UnitNo, path, filename, &
-  & extension )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: path
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: filename
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: extension
-END SUBROUTINE RealscalarDisplay
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 Display@IO
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE Display_Vector_Real( vec, msg, path, filename, &
-  & extension )
-  ! Define intent of dummy variables
-  REAL( DFP ), INTENT( IN ) :: vec( : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  CHARACTER( LEN = * ), INTENT( IN ) :: path
-  CHARACTER( LEN = * ), INTENT( IN ) :: filename
-  CHARACTER( LEN = * ), INTENT( IN ) :: extension
-END SUBROUTINE Display_Vector_Real
-END INTERFACE
-
 INTERFACE Display
-  MODULE PROCEDURE RealVectorDisplay, RealscalarDisplay, Display_Vector_Real
+  MODULE PROCEDURE Obj_Scalar_Display, Obj_Vector_Display
 END INTERFACE Display
 
 PUBLIC :: Display

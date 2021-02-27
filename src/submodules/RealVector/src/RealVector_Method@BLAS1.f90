@@ -20,7 +20,6 @@
 ! summary: 	This submodule  implements BLAS1 methods of [[RealVector_]]
 
 SUBMODULE ( RealVector_Method ) BLAS1
-USE BLASInterface
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,24 +28,12 @@ CONTAINS
 !                                                                      DOT
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intrinsicDOTintrinsic
-  IF( DFP .EQ. Real64 ) THEN
-    Ans = DDOT( SIZE( Val1 ), Val1, 1, Val2, 1 )
-  ELSE IF( DFP .EQ. Real32 ) THEN
-    Ans = SDOT( SIZE( Val1 ), Val1, 1, Val2, 1 )
-  END IF
-END PROCEDURE intrinsicDOTintrinsic
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE scalarDOTscalar
   Ans = DOT( Obj1%Val, Obj2%Val )
 END PROCEDURE scalarDOTscalar
 
 !----------------------------------------------------------------------------
-!
+!                                                                      DOT
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vectorDOTvector
@@ -58,7 +45,7 @@ MODULE PROCEDURE vectorDOTvector
 END PROCEDURE vectorDOTvector
 
 !----------------------------------------------------------------------------
-!
+!                                                                      DOT
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vectorDOTscalar
@@ -70,7 +57,7 @@ MODULE PROCEDURE vectorDOTscalar
 END PROCEDURE vectorDOTscalar
 
 !----------------------------------------------------------------------------
-!
+!                                                                      DOT
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarDOTvector
@@ -82,7 +69,7 @@ MODULE PROCEDURE scalarDOTvector
 END PROCEDURE scalarDOTvector
 
 !----------------------------------------------------------------------------
-!
+!                                                                      DOT
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarDOTintrinsic
@@ -90,7 +77,7 @@ MODULE PROCEDURE scalarDOTintrinsic
 END PROCEDURE scalarDOTintrinsic
 
 !----------------------------------------------------------------------------
-!
+!                                                                      DOT
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intrinsicDOTscalar
@@ -141,13 +128,13 @@ END PROCEDURE NRM2SQRintrinsic
 !                                                                     ASUM
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE ASUMintrinsic
-  IF( DFP .EQ. Real64 ) THEN
-    Ans = DASUM( SIZE( Val ), Val, 1 )
-  ELSE IF( DFP .EQ. Real32 )
-    Ans = SASUM( SIZE( Val ), Val, 1 )
-  END IF
-END PROCEDURE ASUMintrinsic
+! MODULE PROCEDURE ASUMintrinsic
+!   IF( DFP .EQ. Real64 ) THEN
+!     Ans = DASUM( SIZE( Val ), Val, 1 )
+!   ELSE
+!     Ans = SASUM( SIZE( Val ), Val, 1 )
+!   END IF
+! END PROCEDURE ASUMintrinsic
 
 !----------------------------------------------------------------------------
 !                                                                     ASUM
@@ -170,25 +157,77 @@ MODULE PROCEDURE ASUMvector
 END PROCEDURE ASUMvector
 
 !----------------------------------------------------------------------------
-!                                                                      COPY
+!                                                                 SHALLOWCOPY
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intrinsicCOPYintrinsic
-  CALL SHALLOWCOPY( Val1, Val2 )
-  IF( DFP .EQ. Real64 ) THEN
-    CALL DCOPY( SIZE( Val2 ), Val2, 1, Val1, 1 )
+MODULE PROCEDURE intrinsicSHALLOWCOPYintrinsic
+  CALL Reallocate( Y, SIZE( X ) )
+END PROCEDURE intrinsicSHALLOWCOPYintrinsic
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE scalarSHALLOWCOPYscalar
+  CALL SHALLOWCOPY( Y=Y%Val, X=X%Val )
+END PROCEDURE scalarSHALLOWCOPYscalar
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE vectorSHALLOWCOPYvector
+  INTEGER( I4B ) :: i
+  IF( ALLOCATED( Y ) ) THEN
+    IF( SIZE( Y ) .NE. SIZE( X ) ) THEN
+      DEALLOCATE( Y )
+      ALLOCATE( Y( SIZE( X ) ) )
+    END IF
   ELSE
-    CALL SCOPY( SIZE( Val2 ), Val2, 1, Val1, 1 )
+    ALLOCATE( Y( SIZE( X ) ) )
   END IF
-END PROCEDURE intrinsicCOPYintrinsic
+  DO i = 1, SIZE( Y )
+    CALL SHALLOWCOPY( Y=Y( i )%Val, X=X( i )%Val )
+  END DO
+END PROCEDURE vectorSHALLOWCOPYvector
+
+!----------------------------------------------------------------------------
+!                                                               SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE scalarSHALLOWCOPYvector
+  INTEGER( I4B ) :: i, tNodes
+  tNodes = 0
+  DO i = 1, SIZE( X )
+    tNodes = tNodes + SIZE( X( i ) % Val )
+  END DO
+  CALL Reallocate( Y%Val, tNodes )
+END PROCEDURE scalarSHALLOWCOPYvector
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE scalarSHALLOWCOPYintrinsic
+  CALL SHALLOWCOPY( Y=Y%Val, X=X )
+END PROCEDURE scalarSHALLOWCOPYintrinsic
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intrinsicSHALLOWCOPYscalar
+  CALL SHALLOWCOPY( Y=Y, X=X%Val )
+  CALL COPY( Y=Y, X=X%Val )
+END PROCEDURE intrinsicSHALLOWCOPYscalar
 
 !----------------------------------------------------------------------------
 !                                                                      COPY
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarCOPYscalar
-  CALL COPY( Obj1%Val, Obj2%Val )
-  CALL setTotalDimension( Obj1, 1_I4B )
+  CALL COPY( Y=Y%Val, X=X%Val )
+  CALL setTotalDimension( Y, 1_I4B )
 END PROCEDURE scalarCOPYscalar
 
 !----------------------------------------------------------------------------
@@ -197,10 +236,10 @@ END PROCEDURE scalarCOPYscalar
 
 MODULE PROCEDURE vectorCOPYvector
   INTEGER( I4B ) :: i
-  CALL SHALLOWCOPY( Obj1, Obj2 )
-  DO i = 1, SIZE( Obj1 )
-    CALL COPY( Obj1( i ) % Val, Obj2( i ) % Val )
-    CALL setTotalDimension( Obj1( i ), 1_I4B )
+  CALL SHALLOWCOPY( Y=Y, X=X )
+  DO i = 1, SIZE( X )
+    CALL COPY( X=X( i ) % Val, Y=Y( i ) % Val )
+    CALL setTotalDimension( Y( i ), 1_I4B )
   END DO
 END PROCEDURE vectorCOPYvector
 
@@ -209,14 +248,13 @@ END PROCEDURE vectorCOPYvector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarCOPYvector
-  INTEGER( I4B ) :: i, r1, r2, tNodes
-  CALL SHALLOWCOPY( Obj1, Obj2 )
+  INTEGER( I4B ) :: i, r1, r2
+  CALL SHALLOWCOPY( Y=Y, X=X )
   r1 = 0; r2 = 0
-  DO i = 1, SIZE( Obj2 )
-    tNodes = SIZE( Obj2( i ) % Val )
+  DO i = 1, SIZE( X )
     r1 = r2 + 1
-    r2 = r2 + tNodes
-    Obj1%Val( r1 : r2 ) = Obj2( i ) % Val
+    r2 = r2 + SIZE( X( i ) % Val )
+    Y%Val( r1 : r2 ) = X( i ) % Val
   END DO
 END PROCEDURE scalarCOPYvector
 
@@ -225,8 +263,8 @@ END PROCEDURE scalarCOPYvector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarCOPYintrinsic
-  CALL SHALLOWCOPY( Obj%Val, Val )
-  CALL COPY( Obj%Val, Val )
+  CALL SHALLOWCOPY( Y=Y%Val, X=X )
+  CALL COPY( Y=Y%Val, X=X )
 END PROCEDURE scalarCOPYintrinsic
 
 !----------------------------------------------------------------------------
@@ -234,160 +272,53 @@ END PROCEDURE scalarCOPYintrinsic
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intrinsicCOPYscalar
-  CALL SHALLOWCOPY( Val, Obj%Val )
-  CALL COPY( Val, Obj%Val )
+  CALL SHALLOWCOPY( Y=Y, X=X%Val )
+  CALL COPY( Y=Y, X=X%Val )
 END PROCEDURE intrinsicCOPYscalar
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE intrinsicSHALLOWCOPYintrinsic
-  IF( ALLOCATED( Val1 ) ) THEN
-    IF( SIZE( Val1 ) .NE. SIZE( Val2 ) ) THEN
-      DEALLOCATE( Val1 )
-      ALLOCATE( Val1( SIZE( Val2 ) ) )
-    END IF
-  ELSE
-    ALLOCATE( Val1( SIZE( Val2 ) ) )
-  END IF
-END PROCEDURE intrinsicSHALLOWCOPYintrinsic
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE scalarSHALLOWCOPYscalar
-  CALL SHALLOWCOPY( Obj1%Val , Obj2%Val )
-END PROCEDURE scalarSHALLOWCOPYscalar
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE vectorSHALLOWCOPYvector
-  INTEGER( I4B ) :: i
-  IF( ALLOCATED( Obj1 ) ) THEN
-    IF( SIZE( Obj1 ) .NE. SIZE( Obj2 ) ) THEN
-      DEALLOCATE( Obj1 )
-      ALLOCATE( Obj1( SIZE( Obj2 ) ) )
-    END IF
-  ELSE
-    ALLOCATE( Obj1( SIZE( Obj2 ) ) )
-  END IF
-  DO i = 1, SIZE( Obj1 )
-    CALL SHALLOWCOPY( Obj1( i ) % Val, Obj2( i ) % Val )
-  END DO
-END PROCEDURE vectorSHALLOWCOPYvector
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE scalarSHALLOWCOPYvector
-  INTEGER( I4B ) :: i, tNodes
-  tNodes = 0
-  DO i = 1, SIZE( Obj2 )
-    tNodes = tNodes + SIZE( Obj2( i ) % Val )
-  END DO
-  IF( ALLOCATED( Obj1%Val ) ) THEN
-    IF( SIZE( Obj1%Val ) .NE. tNodes ) THEN
-      DEALLOCATE( Obj1%Val )
-      ALLOCATE( Obj1%Val( tNodes ) )
-    END IF
-  ELSE
-    ALLOCATE( Obj1%Val( tNodes ) )
-  END IF
-END PROCEDURE scalarSHALLOWCOPYvector
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE scalarSHALLOWCOPYintrinsic
-  CALL SHALLOWCOPY( Obj%Val, Val )
-END PROCEDURE scalarSHALLOWCOPYintrinsic
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE intrinsicSHALLOWCOPYscalar
-  CALL SHALLOWCOPY( Val, Obj%Val )
-  CALL COPY( Val, Obj%Val )
-END PROCEDURE intrinsicSHALLOWCOPYscalar
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE intrinsicSWAPintrinsic
-  CALL SWAP( SIZE( Val1 ), Val1, 1, Val2, 1 )
-END PROCEDURE intrinsicSWAPintrinsic
-
-!----------------------------------------------------------------------------
-!
+!                                                                      SWAP
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarSWAPscalar
-  CALL SWAP( Obj1%Val, Obj2%Val )
+  CALL SWAP( X=X%Val, Y=Y%Val )
 END PROCEDURE scalarSWAPscalar
 
 !----------------------------------------------------------------------------
-!
+!                                                                      SWAP
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vectorSWAPvector
   INTEGER( I4B ) :: i
-  DO CONCURRENT ( i = 1:SIZE( Obj1 ) )
-    CALL SWAP( Obj1( i ) % Val, Obj2( i ) % Val )
+  DO i = 1, SIZE( X )
+    CALL SWAP( X=X( i ) % Val, Y=Y( i ) % Val )
   END DO
 END PROCEDURE vectorSWAPvector
 
 !----------------------------------------------------------------------------
-!
+!                                                                      SWAP
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarSWAPintrinsic
-  CALL SWAP( Val, Obj%Val )
+  CALL SWAP( X=X%Val, Y=Y )
 END PROCEDURE scalarSWAPintrinsic
 
 !----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE intrinsicSWAPscalar
-  CALL SWAP( Val, Obj%Val )
-END PROCEDURE intrinsicSWAPscalar
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE SCALintrinsic
-#ifndef _REAL_
-    Val = Val * Alpha
-#else
-    CALL SCALE( SIZE( Val ), Alpha, Val, 1 )
-#endif
-END PROCEDURE SCALintrinsic
-
-!----------------------------------------------------------------------------
-!
+!                                                                       SCAL
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SCALscalar
-  CALL SCALE( Alpha, Obj%Val )
+  CALL SCAL( A=A, X=X%Val )
 END PROCEDURE SCALscalar
 
 !----------------------------------------------------------------------------
-!
+!                                                                       SCAL
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SCALvector
   INTEGER( I4B ) :: i
-  DO CONCURRENT( i = 1:SIZE( Obj ) )
-    CALL SCALE( Alpha, Obj( i ) % Val )
+  DO i = 1, SIZE( X )
+    CALL SCAL( A=A, X=X( i )%Val )
   END DO
 END PROCEDURE SCALvector
 
@@ -395,29 +326,9 @@ END PROCEDURE SCALvector
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intrinsicAXPYintrinsic
-#ifndef _REAL_
-  Val1 = Val1 + Alpha * Val2
-#else
-  CALL AXPY( SIZE( Val2 ), Alpha, Val2, 1, Val1, 1 )
-#endif
-END PROCEDURE intrinsicAXPYintrinsic
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE scalarAXPYscalar
-  CALL AXPY( Obj1%Val, Alpha, Obj2%Val )
+  CALL AXPY( X=X%Val, Y=Y%Val, A=A )
 END PROCEDURE scalarAXPYscalar
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE scalarAXPYintrinsic
-  CALL AXPY( Obj%Val, Alpha, Val )
-END PROCEDURE scalarAXPYintrinsic
 
 !----------------------------------------------------------------------------
 !
@@ -425,9 +336,17 @@ END PROCEDURE scalarAXPYintrinsic
 
 MODULE PROCEDURE vectorAXPYvector
   INTEGER( I4B ) :: i
-  DO CONCURRENT( i = 1:SIZE( Obj1 ) )
-    CALL AXPY( Obj1( i ) % Val, Alpha, Obj2( i ) % Val )
+  DO i = 1, SIZE( Y )
+    CALL AXPY( Y=Y( i )%Val, A=A, X=X( i )%Val )
   END DO
 END PROCEDURE vectorAXPYvector
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE scalarAXPYintrinsic
+  CALL AXPY( Y=Y%Val, A=A, X=X )
+END PROCEDURE scalarAXPYintrinsic
 
 END SUBMODULE BLAS1

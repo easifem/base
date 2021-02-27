@@ -175,11 +175,16 @@ PUBLIC :: ASSERT
 
 !>
 ! Generic subroutine for swapping
+! swap_rv and swap_cv have been removed... they belong to EASIFEM_BLAS now
 INTERFACE SWAP
-  MODULE PROCEDURE swap_i,swap_r,swap_rv,swap_c, &
-    & swap_cv,swap_cm, &
-    & masked_swap_rs,masked_swap_rv,masked_swap_rm
+  MODULE PROCEDURE swap_i,swap_r,swap_c,swap_cm, &
+    & masked_swap_rs, masked_swap_rv, masked_swap_rm
 END INTERFACE
+
+! INTERFACE SWAP
+!   MODULE PROCEDURE swap_i,swap_r,swap_rv,swap_c, swap_cv,swap_cm, &
+!     & masked_swap_rs, masked_swap_rv, masked_swap_rm
+! END INTERFACE
 
 PUBLIC :: SWAP
 
