@@ -35,6 +35,10 @@ PRIVATE
 !                                                          Shape@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	27 Feb 2021
+! summary: 	This function returns the shape of [[RealVector_]]
+
 INTERFACE
 MODULE PURE FUNCTION get_shape( Obj ) RESULT( Ans )
   CLASS( RealVector_ ), INTENT( IN ) :: Obj
@@ -51,6 +55,10 @@ PUBLIC :: Shape
 !----------------------------------------------------------------------------
 !                                                           SIZE@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	27 Feb 2021
+! summary: 	This function returns the size of [[RealVector_]]
 
 INTERFACE
 MODULE PURE FUNCTION get_size( Obj, Dims ) RESULT( Ans )
@@ -70,6 +78,22 @@ PUBLIC :: SIZE
 !                                                   AllocateData@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 27 Feb 2021
+! summary: 	This subroutine allocates memory for [[RealVector_]]
+!
+!
+!### Usage
+!
+!```fortran
+! type( _obj_ ) :: obj
+! call display("test1")
+! call equalline()
+! call allocateData(obj, 10)
+! call display( obj, "test1=")
+! call dashline()
+!```
+
 INTERFACE
 MODULE PURE SUBROUTINE Allocate_Data( Obj, Dims )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
@@ -87,6 +111,10 @@ PUBLIC :: AllocateData
 !                                                 DeAllocateData@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	27 Feb 2021
+! summary: 	This subroutine deallocates the data in [[RealVector_]]
+
 INTERFACE
 MODULE PURE SUBROUTINE Deallocate_Data( Obj )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
@@ -103,17 +131,21 @@ PUBLIC :: DeallocateData
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine allocate the memory for [[RealVector_]]
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	27 Feb 2021
+! summary: 	This subroutine allocates the memory for [[RealVector_]]
 !
-! This subroutine allocates the memeory for [[RealVector_]]
+!### Introduction This subroutine allocates the memeory for [[RealVector_]]
+!
+!@note
+! 	This subroutine is an alias for [[Allocate_Data]]
+!@endnote
 !
 ! ```fortran
 ! CALL Initiate(Obj, 5)
 !```
 
+INTERFACE
 MODULE PURE SUBROUTINE initiate_obj( Obj, tSize )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: tSize
@@ -125,14 +157,29 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine allocate the memory for a vector of type [[RealVector_]]
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	27 Feb 2021
+! summary: This subroutine allocate the memory for a vector of type [[RealVector_]]
 !
+!### Introduction
 ! This subroutine allocate the memory for a vector of type [[RealVector_]]
+!@note
 ! The size of `Obj` would be same as the size of `tSize`
+!@endnote
+!
+!
+!### Usage
+!
+!```fortran
+! type(_obj_), allocatable :: obj( : )
+! call display("test2")
+! call equalline()
+! call initiate(obj, [10,10,5,5])
+! call display( obj, "initiate Obj(:)=")
+! call dashline()
+!```
 
+INTERFACE
 MODULE PURE SUBROUTINE initiate_obj_vector( Obj, tSize )
   TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT ) :: Obj( : )
   INTEGER( I4B ), INTENT( IN ) :: tSize( : )
@@ -143,19 +190,41 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine allocate the memory for an instance of [[RealVector_]]
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	27 Feb 2021
+! summary: This subroutine allocate the memory for an instance of [[RealVector_]]
 !
+!### Introduction
 ! This subroutine allocate the memory for an instance of [[RealVector_]].
-! User can specify the lowerbounds and upper bounds
+! User can specify the lowerbounds and upper bounds.
+!
+!
+!### Usage
+!
+!```fortran
+! type(_obj_) :: obj
+! call display("test3")
+! call equalline()
+! call initiate(obj, 2, 10)
+! obj%val(2) = 1.0_DFP
+! call display( obj, "initiate Obj(a:b)=")
+! call dashline()
+!```
 
+INTERFACE
 MODULE PURE SUBROUTINE initiate_obj_ab( Obj, a, b )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: a, b
 END SUBROUTINE initiate_obj_ab
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	27 Feb 2021
+! summary: 	Generic subroutine to initiate [[RealVector_]]
 
 INTERFACE Initiate
   MODULE PROCEDURE initiate_obj, initiate_obj_vector, initiate_obj_ab
@@ -167,16 +236,46 @@ PUBLIC :: Initiate
 !                                                  Random_number@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This routine computes radom_number
+!
+!### Introduction
+!
+! This routine calls `RANDOM_NUMBER` to generate a random instnance of [[RealVector_]]
+!
+!
+!### Usage
+!
+!```fortran
+!
+!```
+
 INTERFACE
-MODULE SUBROUTINE RANDOM_NUMBER_Obj( Obj, tsize )
+MODULE SUBROUTINE random_number_obj( Obj, tsize )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: tsize
-END SUBROUTINE RANDOM_NUMBER_Obj
+END SUBROUTINE random_number_obj
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                  Random_number@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This routine computes radom_number
+!
+!### Introduction
+!
+! This routine calls `RANDOM_NUMBER` to generate a random instnance of [[RealVector_]]
+!
+!
+!### Usage
+!
+!```fortran
+!
+!```
 
 INTERFACE
 MODULE SUBROUTINE Random_number_obj_vec( Obj, tsize )

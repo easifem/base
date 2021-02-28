@@ -128,18 +128,6 @@ END PROCEDURE NRM2SQRintrinsic
 !                                                                     ASUM
 !----------------------------------------------------------------------------
 
-! MODULE PROCEDURE ASUMintrinsic
-!   IF( DFP .EQ. Real64 ) THEN
-!     Ans = DASUM( SIZE( Val ), Val, 1 )
-!   ELSE
-!     Ans = SASUM( SIZE( Val ), Val, 1 )
-!   END IF
-! END PROCEDURE ASUMintrinsic
-
-!----------------------------------------------------------------------------
-!                                                                     ASUM
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE ASUMscalar
   Ans = ASUM( Obj%Val )
 END PROCEDURE ASUMscalar

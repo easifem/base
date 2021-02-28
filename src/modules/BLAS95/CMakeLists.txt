@@ -13,26 +13,26 @@ target_sources(
   ${src_path}/EASIFEM_BLAS.f90
 )
 
-# FIND PACKAGES BLAS AND LAPACK
-option(USE_BLAS "User blas")
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+# # FIND PACKAGES BLAS AND LAPACK
+# option(USE_BLAS "User blas")
+# list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-if(DEFINED ENV{CMAKE_BLAS_ROOT})
-  find_package(LAPACK COMPONENTS OpenBLAS REQUIRED)
-else()
-  if(USE_BLAS)
-    find_package(LAPACK COMPONENTS ${USE_BLAS} REQUIRED)
-  else()
-    find_package(LAPACK COMPONENTS OpenBLAS REQUIRED)
-  endif()
-endif()
+# if(DEFINED ENV{CMAKE_BLAS_ROOT})
+#   find_package(LAPACK COMPONENTS OpenBLAS REQUIRED)
+# else()
+#   if(USE_BLAS)
+#     find_package(LAPACK COMPONENTS ${USE_BLAS} REQUIRED)
+#   else()
+#     find_package(LAPACK COMPONENTS OpenBLAS REQUIRED)
+#   endif()
+# endif()
 
-message(STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}")
-message(STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES}")
+# message(STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}")
+# message(STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES}")
 
-target_link_libraries(
-  ${PROJECT_NAME}
-  PUBLIC
-  LAPACK::LAPACK
-  BLAS::BLAS
-)
+# target_link_libraries(
+#   ${PROJECT_NAME}
+#   PUBLIC
+#   ${LAPACK_LIBRARIES}
+#   ${BLAS_LIBRARIES}
+# )
