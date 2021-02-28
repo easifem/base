@@ -214,6 +214,7 @@ END PROCEDURE intrinsicSHALLOWCOPYscalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarCOPYscalar
+  CALL SHALLOWCOPY( Y=Y%Val, X=X%Val)
   CALL COPY( Y=Y%Val, X=X%Val )
   CALL setTotalDimension( Y, 1_I4B )
 END PROCEDURE scalarCOPYscalar

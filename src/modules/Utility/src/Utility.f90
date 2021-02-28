@@ -590,7 +590,7 @@ END FUNCTION
 !                                                                      Input
 !----------------------------------------------------------------------------
 
-FUNCTION input_Real(default,option) RESULT(val)
+PURE FUNCTION input_Real(default,option) RESULT(val)
   REAL(DFP),INTENT(in) :: default
   REAL(DFP),OPTIONAL,INTENT(in)::option
   REAL(DFP) :: val
@@ -606,7 +606,7 @@ END FUNCTION
 !                                                                      Input
 !----------------------------------------------------------------------------
 
-FUNCTION input_IntVec( default, option ) RESULT( val )
+PURE FUNCTION input_IntVec( default, option ) RESULT( val )
   INTEGER( I4B ), INTENT( IN ) :: default(:)
   INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:)
   INTEGER( I4B ), ALLOCATABLE :: val(:)
@@ -623,7 +623,7 @@ END FUNCTION
 !                                                                      Input
 !----------------------------------------------------------------------------
 
-FUNCTION input_Realvec( default, option ) RESULT( val )
+PURE FUNCTION input_Realvec( default, option ) RESULT( val )
   REAL( DFP ), INTENT( IN ) :: default(:)
   REAL( DFP ), OPTIONAL,INTENT( IN ) :: option(:)
   REAL( DFP ), ALLOCATABLE :: val(:)

@@ -113,18 +113,17 @@ END PROCEDURE initiate_obj_ab
 !                                                             Random_Number
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Random_Number_obj
+MODULE PROCEDURE random_number_obj
   CALL Initiate( Obj=Obj, tSize=tSize )
   CALL RANDOM_NUMBER( Obj%Val )
-END PROCEDURE Random_Number_obj
+END PROCEDURE random_number_obj
 
 !----------------------------------------------------------------------------
 !                                                             Random_Number
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Random_Number_obj_vec
+MODULE PROCEDURE random_number_obj_vec
   INTEGER( I4B ) :: ii, n
-
   n = SIZE( tSize )
   IF( ALLOCATED( Obj ) ) THEN
     IF( SIZE( Obj ) .NE. n ) THEN
@@ -134,13 +133,11 @@ MODULE PROCEDURE Random_Number_obj_vec
   ELSE
     ALLOCATE( Obj( n ) )
   END IF
-
   DO ii = 1, n
     CALL Initiate( Obj=Obj(ii), tSize=tSize(ii) )
     CALL RANDOM_NUMBER( Obj(ii)%Val )
   END DO
-
-END PROCEDURE Random_Number_obj_vec
+END PROCEDURE random_number_obj_vec
 
 !----------------------------------------------------------------------------
 !                                                                     Vector
@@ -149,6 +146,14 @@ END PROCEDURE Random_Number_obj_vec
 MODULE PROCEDURE Constructor1
   CALL AllocateData( Obj, tSize )
 END PROCEDURE Constructor1
+
+MODULE PROCEDURE Constructor2
+  CALL COPY( Y = Obj, X=REAL( Val, KIND=DFP ) )
+END PROCEDURE Constructor2
+
+MODULE PROCEDURE Constructor3
+  CALL COPY( Y = Obj, X=Val )
+END PROCEDURE Constructor3
 
 !----------------------------------------------------------------------------
 !                                                              Vector_Pointer
@@ -160,73 +165,21 @@ MODULE PROCEDURE Constructor_1
 END PROCEDURE Constructor_1
 
 !----------------------------------------------------------------------------
-!                                                    Vector and Vector_Pointer
+!                                                              Vector_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Constructor_Int8
+MODULE PROCEDURE Constructor_2
   ALLOCATE( Obj )
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE Constructor_Int8
+  CALL COPY( Y = Obj, X=REAL( Val, KIND=DFP ) )
+END PROCEDURE Constructor_2
 
-MODULE PROCEDURE ConstructorInt8
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE ConstructorInt8
+!----------------------------------------------------------------------------
+!                                                              Vector_Pointer
+!----------------------------------------------------------------------------
 
-MODULE PROCEDURE Constructor_Int16
+MODULE PROCEDURE Constructor_3
   ALLOCATE( Obj )
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE Constructor_Int16
-
-MODULE PROCEDURE ConstructorInt16
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE ConstructorInt16
-
-MODULE PROCEDURE Constructor_Int32
-  ALLOCATE( Obj )
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE Constructor_Int32
-
-MODULE PROCEDURE ConstructorInt32
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE ConstructorInt32
-
-MODULE PROCEDURE Constructor_Int64
-  ALLOCATE( Obj )
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE Constructor_Int64
-
-MODULE PROCEDURE ConstructorInt64
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE ConstructorInt64
-
-MODULE PROCEDURE Constructor_Real32
-  ALLOCATE( Obj )
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE Constructor_Real32
-
-MODULE PROCEDURE ConstructorReal32
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE ConstructorReal32
-
-MODULE PROCEDURE Constructor_Real64
-  ALLOCATE( Obj )
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE Constructor_Real64
-
-MODULE PROCEDURE ConstructorReal64
-  Obj % Val = Val
-  CALL setTotalDimension( Obj , 1_I4B )
-END PROCEDURE ConstructorReal64
+  CALL COPY( Y = Obj, X=Val )
+END PROCEDURE Constructor_3
 
 END SUBMODULE Constructor

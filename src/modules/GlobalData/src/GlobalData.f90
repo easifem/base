@@ -43,12 +43,12 @@ MODULE GlobalData
   INTEGER, PARAMETER :: Int8  = SELECTED_INT_KIND(2)
   INTEGER, PARAMETER :: DIP  = Int32 ! Default
   INTEGER, PARAMETER :: I4B  = Int32 ! Default
-  INTEGER, PARAMETER      :: SP= Real32
-  INTEGER, PARAMETER      :: DP= Real64
-  INTEGER, PARAMETER      :: DFPC = KIND((1.0D0,1.0D0))   !Default Kind cmplx
-  INTEGER, PARAMETER      :: SPC = KIND((1.0,1.0))    !Single Precision cmplx
-  INTEGER, PARAMETER      :: DPC = KIND((1.0D0,1.0D0))!Double Precision cmplx
-  INTEGER, PARAMETER      :: LGT = KIND(.true.)       !Logical
+  INTEGER, PARAMETER :: SP= Real32
+  INTEGER, PARAMETER :: DP= Real64
+  INTEGER, PARAMETER :: DFPC = KIND((1.0D0,1.0D0))   !Default Kind cmplx
+  INTEGER, PARAMETER :: SPC = KIND((1.0,1.0))    !Single Precision cmplx
+  INTEGER, PARAMETER :: DPC = KIND((1.0D0,1.0D0))!Double Precision cmplx
+  INTEGER, PARAMETER :: LGT = KIND(.true.)       !Logical
 
   ! Format parameters
 #ifdef Real128

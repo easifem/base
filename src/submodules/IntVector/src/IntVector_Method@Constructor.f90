@@ -67,40 +67,6 @@ MODULE PROCEDURE deallocate_data
 END PROCEDURE deallocate_data
 
 !----------------------------------------------------------------------------
-!                                                                    Display
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE IntscalarDisplay
-  INTEGER( I4B ) :: I
-
-  I = Input( option=UnitNo, default=stdout)
-
-  CALL Display( msg = "# "//TRIM(msg), UnitNo = I )
-  CALL Display( msg = "# Dim, Shape = 1, " // TRIM( INT2STR( SIZE( Obj ) ) ), unitNo = I )
-  CALL Display( Val = Obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
-
-END PROCEDURE IntscalarDisplay
-
-!----------------------------------------------------------------------------
-!                                                                    Display
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE IntVectorDisplay
-  INTEGER( I4B ) :: j, I
-
-  I = Input( option=UnitNo, default=stdout)
-
-  CALL Display( msg = "# "//TRIM(msg), UnitNo = I )
-  CALL Display( msg = "# TotalVectors = " // TRIM( INT2STR( SIZE( Obj ) ) ), &
-    & unitNo = i )
-
-  DO j = 1, SIZE( Obj )
-    CALL Display( Obj( j ), msg = "( " // TRIM( INT2STR( j ) ) // " ) ", &
-      & unitNo = I )
-  END DO
-END PROCEDURE IntVectorDisplay
-
-!----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 

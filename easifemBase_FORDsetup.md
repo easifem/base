@@ -8,7 +8,10 @@ project_dir: ./src
 media_dir: ./media
 page_dir: ./pages
 output_dir: ./docs
-exclude_dir:  ./src/modules/H5Fortran/
+exclude_dir:  ./src/submodules/
+              ./src/modules/BLAS95/
+              ./src/modules/LAPACK95/
+              ./src/modules/H5Fortran/
               ./src/modules/Szaghi/
               ./src/modules/Display/
 author: Vikas Sharma

@@ -16,11 +16,12 @@
 !
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This submodule implements IO methods of [[RealVector_]]
+! date: 	28 Feb 2021
+! summary: 	This submodule contains Input/Output methods for [[IntVector_]]
 
-SUBMODULE( RealVector_Method ) IO
-USE BaseMethod
+SUBMODULE( IntVector_Method ) IO
+USE Display_Method
+USE Utility, ONLY: Input, INT2STR
 IMPLICIT NONE
 CONTAINS
 
@@ -28,26 +29,27 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Obj_Scalar_Display
+MODULE PROCEDURE IntscalarDisplay
   INTEGER( I4B ) :: I
   I = Input( option=UnitNo, default=stdout)
   CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : " // TRIM(ADJUSTL(STR( fm=FI4B, n=SIZE(Obj) ))), unitNo = I )
+  CALL Display( msg = "size : ", val = SIZE( Obj ), unitNo = I )
   CALL Display( Val = Obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
-END PROCEDURE Obj_Scalar_Display
+END PROCEDURE IntscalarDisplay
 
 !----------------------------------------------------------------------------
-!                                                                 Display
+!                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Obj_Vector_Display
+MODULE PROCEDURE IntVectorDisplay
   INTEGER( I4B ) :: j, I
   I = Input( option=UnitNo, default=stdout)
   CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
   CALL Display( msg = "size : ", val = SIZE( Obj ), unitNo = I )
   DO j = 1, SIZE( Obj )
-    CALL Display( Obj( j ), msg = "( " // TRIM(ADJUSTL(STR(fm=FI4B, n=j))) // " ) ",unitNo = I )
+    CALL Display( Obj( j ), msg = "( " // TRIM(STR( fm=FI4B, n=j )) // " ) ", &
+      & unitNo = I )
   END DO
-END PROCEDURE Obj_Vector_Display
+END PROCEDURE IntVectorDisplay
 
 END SUBMODULE IO

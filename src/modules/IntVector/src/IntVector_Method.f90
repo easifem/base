@@ -26,8 +26,8 @@
 !
 
 MODULE IntVector_Method
-USE GlobalData, ONLY: DFP, I4B, LGT, stdout
-USE BaseType, ONLY : IntVector_
+USE GlobalData, ONLY: DFP, I4B, LGT, stdout, FDFP, FI4B
+USE BaseType, ONLY : IntVector_, STR
 IMPLICIT NONE
 PRIVATE
 
@@ -116,7 +116,7 @@ END INTERFACE DeallocateData
 PUBLIC :: DeallocateData
 
 !----------------------------------------------------------------------------
-!                                                         Display@Constructor
+!                                                                 Display@IO
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -132,7 +132,7 @@ END SUBROUTINE IntVectorDisplay
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                        Display@Constructor
+!                                                                 Display@IO
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
