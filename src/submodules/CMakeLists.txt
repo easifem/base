@@ -19,7 +19,13 @@ include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 
 #DOF
-# include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
+
+#ReferenceElement
+include(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
+
+#ElemShapeData
+# include(${CMAKE_CURRENT_LIST_DIR}/ElemShapeData/CMakeLists.txt)
 
 # #BaseMethod
 # include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)

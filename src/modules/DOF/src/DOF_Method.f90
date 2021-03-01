@@ -252,7 +252,7 @@ END INTERFACE DeallocateData
 PUBLIC :: DeallocateData
 
 !----------------------------------------------------------------------------
-!                                                        Display@Constructor
+!                                                                Display@IO
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -286,7 +286,6 @@ INTERFACE Display
 END INTERFACE Display
 
 PUBLIC :: Display
-
 
 !----------------------------------------------------------------------------
 !                                                            tNodes@getMethod

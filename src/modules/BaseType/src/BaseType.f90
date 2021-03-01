@@ -500,9 +500,18 @@ PUBLIC :: Rank2TensorPointer_
 !                                                       ReferenceTopology_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: 	This data type is defined to handle reference topology
+!
+!### Introduction
+!
+! This data type is defined to handle reference topology
+
 TYPE :: ReferenceTopology_
   INTEGER( I4B ), ALLOCATABLE :: Nptrs( : )
-  INTEGER( I4B ) :: Name, XiDimension
+  INTEGER( I4B ) :: Name
+  INTEGER( I4B ) :: XiDimension
 END TYPE ReferenceTopology_
 
 PUBLIC :: ReferenceTopology_

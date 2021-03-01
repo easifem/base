@@ -3,14 +3,13 @@
 # All right reserved
 #
 # log
-# 23/02/2021 this file was created
+# 16/02/2021 this file was created
 #-----------------------------------------------------------------------
 
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/DOF_Method@Constructor.f90
-  ${src_path}/DOF_Method@IO.f90
-  ${src_path}/DOF_Method@setMethod.f90
-  ${src_path}/DOF_Method@getMethod.f90
+  ${src_path}/QuadraturePoint_Method@Constructor.f90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre.f90
 )
+

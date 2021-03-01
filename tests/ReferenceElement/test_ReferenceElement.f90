@@ -15,51 +15,41 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This submodule contains set methods of [[RealVector_]]
-
-SUBMODULE( RealVector_Method ) setMethod
-USE BaseMethod
-IMPLICIT NONE
-CONTAINS
+module test_ReferenceElement
+use easifemBase
+implicit none
+contains
 
 !----------------------------------------------------------------------------
-!                                                                     Append
+!
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Append_1
-  CALL Append( Obj % Val, Value )
-END PROCEDURE Append_1
+subroutine test1
+type( ReferenceTopology_ ) :: obj
+obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
+call display( obj, "obj=")
+call display( .NNE. obj, "nne =")
+end
 
 !----------------------------------------------------------------------------
-!                                                                     Append
+!
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Append_2
-  CALL Append( Obj % Val, Value )
-END PROCEDURE Append_2
+subroutine test2
+type( ReferenceTopology_ ) :: obj
+obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
+call display( obj, "obj=")
+end
+
+
+end module
 
 !----------------------------------------------------------------------------
-!                                                                     Append
+!
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Append_3
-  CALL Append( Obj % Val, AnotherObj % Val )
-END PROCEDURE Append_3
-
-!----------------------------------------------------------------------------
-!                                                                 setMethod
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE setValue_1
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    IF( SIZE( Value) .EQ. 1 ) THEN
-      Obj % Val( Indx ) = Value( 1 )
-    ELSE
-      Obj % Val( Indx ) = Value
-    END IF
-  END IF
-END PROCEDURE setValue_1
-
-END SUBMODULE setMethod
+program main
+use test_ReferenceElement
+implicit none
+call test1
+end program main

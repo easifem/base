@@ -14,12 +14,13 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-!> authors: Dr. Vikas Sharma
-!
-! This module implements methods related to [[elemShapeData_]] datatype
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This module implements methods related to [[elemShapeData_]] datatype
+
 MODULE ElemshapeData_Method
 USE BaseType
-USE GlobalData
+USE GlobalData, ONLY: DFP, I4B, LGT, stdout
 IMPLICIT NONE
 PRIVATE
 
@@ -97,6 +98,7 @@ INTERFACE
 !
 ! This subroutine deallocates the data stored inside [[elemshapedata_]] and
 ! [[stelemshapedata_]]
+
 MODULE PURE SUBROUTINE deallocate_data( Obj )
   CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
 END SUBROUTINE deallocate_data
@@ -119,6 +121,7 @@ INTERFACE
 !
 ! This subroutine displays the content of [[elemshapedata_]] and
 ! [[stelemshapedata_]]
+
 MODULE SUBROUTINE display_obj( Obj, Msg, UnitNo )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Msg
@@ -145,6 +148,7 @@ INTERFACE
 ! Here `Val` denotes the nodal value of thickeness
 !
 ! $$d = d_{I} N^{I}$$
+
 MODULE PURE SUBROUTINE set_thickness( Obj, Val, N )
   CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val( : ), N( :, : )
@@ -762,6 +766,7 @@ INTERFACE
 ! This function performs interpolation of a vector from its space-time nodal
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
+
 MODULE PURE FUNCTION stsd_interpol_vector( Obj, Val ) RESULT(interpol)
   CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
@@ -783,6 +788,7 @@ INTERFACE
 ! This function performs interpolation of a matrix from its space-time nodal
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
+
 MODULE PURE FUNCTION stsd_interpol_matrix( Obj, Val ) RESULT(interpol)
   CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, :, : )

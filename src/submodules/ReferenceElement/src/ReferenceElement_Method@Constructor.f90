@@ -1,8 +1,27 @@
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This submodule contains constructor methods of [[ReferenceElement_]]
+
 SUBMODULE( ReferenceElement_Method ) Constructor
 USE BaseMethod
-
 IMPLICIT NONE
-
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -10,11 +29,9 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_topology
-
   Obj % Nptrs = Nptrs
   Obj % Name = Name
   Obj % XiDimension = XiDimension( Name )
-
 END PROCEDURE reference_topology
 
 !----------------------------------------------------------------------------
@@ -39,6 +56,10 @@ MODULE PROCEDURE tNodes_RefTopo
   END IF
 END PROCEDURE tNodes_RefTopo
 
+!----------------------------------------------------------------------------
+!                                                                        NNE
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE tNodes_RefElem
   IF( ALLOCATED( Obj % XiJ ) ) THEN
     Ans = SIZE( Obj % XiJ, 2 )
@@ -59,90 +80,6 @@ MODULE PROCEDURE deallocatedata_ref_elem
   Obj % Name = -1
   Obj % NSD = -1
 END PROCEDURE deallocatedata_ref_elem
-
-!----------------------------------------------------------------------------
-!                                                                    Display
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE display_ref_topo
-  INTEGER( I4B ) :: I
-  CHARACTER( LEN = 120 ) :: fmt
-
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = Stdout
-  END IF
-  !
-  IF( LEN_TRIM( Msg ) .NE. 0 ) THEN
-    WRITE( I, "(A)" ) TRIM( Msg )
-  END IF
-  !
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  WRITE( I, "(A)" ) "ELEMENT TYPE :: " // TRIM( ElementName( Obj % Name ) )
-  WRITE( I, "(A)" ) "XIDIM :: " // TRIM( INT2STR( Obj % XiDimension ) )
-  CALL Display( Obj % Nptrs,  "NPTRS")
-  CALL Blanklines( NOL = 1, UnitNo = I )
-END PROCEDURE display_ref_topo
-
-!----------------------------------------------------------------------------
-!                                                                    Display
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE display_ref_elem
-  ! Define internal variable
-  INTEGER( I4B ) :: I, j
-  CHARACTER( LEN = 120 ) :: fmt
-  !
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = Stdout
-  END IF
-  !
-  IF( LEN_TRIM( Msg ) .NE. 0 ) THEN
-    WRITE( I, "(A)" ) TRIM( Msg )
-  END IF
-  !
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  CALL Display( "Element Type :: "// trim( ElementName( Obj % Name ) ), I )
-  CALL Display( Obj%XiDimension, "XiDimension :: ", UnitNo = I )
-  CALL Display( Obj%NSD, "NSD :: ", UnitNo = I )
-  CALL Display( Obj%Order, "Order :: ", UnitNo = I )
-
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  WRITE( I, "(A)" ) "XiDim ---> Entities "
-  SELECT CASE( COUNT( Obj % EntityCounts .NE. 0 ) )
-  CASE( 0 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I  )
-  CASE( 1 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I )
-  CASE( 2 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 2 ), " XiDim(1) :: ", UnitNo = I )
-  CASE( 3 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 2 ), " XiDim(1) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 3 ), " XiDim(2) :: ", UnitNo = I )
-  CASE( 4 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 2 ), " XiDim(1) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 3 ), " XiDim(2) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 4 ), " XiDim(3) :: ", UnitNo = I )
-  END SELECT
-
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  DO j = 1, SIZE( Obj % XiJ, 2 )
-    CALL Display( Obj % XiJ( :, j), &
-      & "Node(" // trim( str( j, .true. ) ) // " )" )
-  END DO
-
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  DO j = 1, SIZE( Obj % Topology )
-    CALL Display( Obj % Topology( j ), &
-      & "Obj % Topology( " // TRIM( INT2STR( j ) ) // " )", I )
-  END DO
-END PROCEDURE display_ref_elem
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
@@ -197,6 +134,19 @@ MODULE PROCEDURE reference_Line
 END PROCEDURE reference_Line
 
 !----------------------------------------------------------------------------
+!                                                     ReferenceLine_Pointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE reference_Line_Pointer
+  ALLOCATE( Obj )
+  IF( PRESENT( XiJ ) ) THEN
+    CALL Initiate( Obj, NSD, XiJ )
+  ELSE
+    CALL Initiate( Obj, NSD )
+  END IF
+END PROCEDURE reference_Line_Pointer
+
+!----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
@@ -206,22 +156,18 @@ MODULE PROCEDURE initiate_ref_Triangle
   ELSE
     Obj % XiJ =  RESHAPE( [0, 0, 0, 1, 0, 0, 0, 1, 0], [3, 3] )
   END IF
-
   Obj % EntityCounts = [3, 3, 1, 0]
   Obj % XiDimension = 2
   Obj % Name = Triangle3
   Obj % Order = 1
   Obj % NSD = NSD
   ALLOCATE( Obj % Topology( 7 ) )
-
   Obj % Topology( 1 ) = ReferenceTopology( [1], Point )
   Obj % Topology( 2 ) = ReferenceTopology( [2], Point )
   Obj % Topology( 3 ) = ReferenceTopology( [3], Point )
-
   Obj % Topology( 4 ) = ReferenceTopology( [1, 2], Line2 )
   Obj % Topology( 5 ) = ReferenceTopology( [2, 3], Line2 )
   Obj % Topology( 6 ) = ReferenceTopology( [3, 1], Line2 )
-
   Obj % Topology( 7 ) = ReferenceTopology( [1, 2, 3], Triangle3 )
 END PROCEDURE initiate_ref_Triangle
 
@@ -236,6 +182,19 @@ MODULE PROCEDURE reference_Triangle
     CALL Initiate( Obj, NSD )
   END IF
 END PROCEDURE reference_Triangle
+
+!----------------------------------------------------------------------------
+!                                                          ReferenceTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE reference_Triangle_Pointer
+  ALLOCATE( Obj )
+  IF( PRESENT( XiJ ) ) THEN
+    CALL Initiate( Obj, NSD, XiJ )
+  ELSE
+    CALL Initiate( Obj, NSD )
+  END IF
+END PROCEDURE reference_Triangle_Pointer
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
@@ -281,6 +240,20 @@ MODULE PROCEDURE reference_Quadrangle
 END PROCEDURE reference_Quadrangle
 
 !----------------------------------------------------------------------------
+!                                               ReferenceQuadrangle_Pointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE reference_Quadrangle_Pointer
+  ALLOCATE( Obj )
+  IF( PRESENT( XiJ ) ) THEN
+    CALL Initiate( Obj, NSD, XiJ )
+  ELSE
+    CALL Initiate( Obj, NSD )
+  END IF
+END PROCEDURE reference_Quadrangle_Pointer
+
+
+!----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
@@ -290,6 +263,7 @@ END PROCEDURE Initiate_ref_Tetrahedron
 !----------------------------------------------------------------------------
 !                                                      ReferenceTetrahedron
 !----------------------------------------------------------------------------
+
 MODULE PROCEDURE reference_Tetrahedron
   IF( PRESENT( XiJ ) ) THEN
     CALL Initiate( Obj, NSD, XiJ )
@@ -297,6 +271,19 @@ MODULE PROCEDURE reference_Tetrahedron
     CALL Initiate( Obj, NSD )
   END IF
 END PROCEDURE reference_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                              ReferenceTetrahedron_Pointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE reference_Tetrahedron_Pointer
+  ALLOCATE( Obj )
+  IF( PRESENT( XiJ ) ) THEN
+    CALL Initiate( Obj, NSD, XiJ )
+  ELSE
+    CALL Initiate( Obj, NSD )
+  END IF
+END PROCEDURE reference_Tetrahedron_Pointer
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
@@ -308,6 +295,7 @@ END PROCEDURE Initiate_ref_Hexahedron
 !----------------------------------------------------------------------------
 !                                                      ReferenceHexahedron
 !----------------------------------------------------------------------------
+
 MODULE PROCEDURE reference_Hexahedron
   IF( PRESENT( XiJ ) ) THEN
     CALL Initiate( Obj, NSD, XiJ )
@@ -315,6 +303,19 @@ MODULE PROCEDURE reference_Hexahedron
     CALL Initiate( Obj, NSD )
   END IF
 END PROCEDURE reference_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                      ReferenceHexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE reference_Hexahedron_Pointer
+  ALLOCATE( Obj )
+  IF( PRESENT( XiJ ) ) THEN
+    CALL Initiate( Obj, NSD, XiJ )
+  ELSE
+    CALL Initiate( Obj, NSD )
+  END IF
+END PROCEDURE reference_Hexahedron_Pointer
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
@@ -344,6 +345,7 @@ END PROCEDURE Initiate_ref_Prism
 !----------------------------------------------------------------------------
 !                                                      ReferencePrism
 !----------------------------------------------------------------------------
+
 MODULE PROCEDURE reference_Prism
   IF( PRESENT( XiJ ) ) THEN
     CALL Initiate( Obj, NSD, XiJ )
@@ -351,5 +353,22 @@ MODULE PROCEDURE reference_Prism
     CALL Initiate( Obj, NSD )
   END IF
 END PROCEDURE reference_Prism
+
+!----------------------------------------------------------------------------
+!                                                     ReferencePrism_Pointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE reference_Prism_Pointer
+  ALLOCATE( Obj )
+  IF( PRESENT( XiJ ) ) THEN
+    CALL Initiate( Obj, NSD, XiJ )
+  ELSE
+    CALL Initiate( Obj, NSD )
+  END IF
+END PROCEDURE reference_Prism_Pointer
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Constructor

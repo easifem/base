@@ -1,11 +1,31 @@
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This sumodule contains method for geometry
+
 SUBMODULE( ReferenceElement_Method ) Geometry
 USE BaseMethod
 IMPLICIT NONE
-
 CONTAINS
 
 !-----------------------------------------------------------------------------
-!                                                                  ElementName
+!                                                                ElementName
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Name
@@ -111,10 +131,9 @@ MODULE PROCEDURE Element_Name
 
 END PROCEDURE Element_Name
 
-!-----------------------------------------------------------------------------
-!                                                                   ElementType
-!-----------------------------------------------------------------------------
-
+!----------------------------------------------------------------------------
+!                                                               ElementType
+!----------------------------------------------------------------------------
 MODULE PROCEDURE Element_Type
 
   SELECT CASE( TRIM( ElemName ) )
@@ -193,9 +212,9 @@ MODULE PROCEDURE Element_Type
 
 END PROCEDURE Element_Type
 
-!-----------------------------------------------------------------------------
-!                                                            TotalNodesInElement
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                        TotalNodesInElement
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Total_Nodes_In_Element
 
@@ -271,9 +290,9 @@ MODULE PROCEDURE Total_Nodes_In_Element
 
 END PROCEDURE Total_Nodes_In_Element
 
-!-----------------------------------------------------------------------------
-!                                                                  ElementOrder
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                              ElementOrder
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Order
 
@@ -349,16 +368,17 @@ MODULE PROCEDURE Element_Order
 
 END PROCEDURE Element_Order
 
-!-----------------------------------------------------------------------------
-!                                                                 ElementOrder
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                              ElementOrder
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Element_Order_RefElem
   Ans = RefElem % Order
 END PROCEDURE Element_Order_RefElem
 
-!-----------------------------------------------------------------------------
-!                                                                    XiDimension
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                               XiDimension
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Elem_XiDimension
 
@@ -381,7 +401,7 @@ MODULE PROCEDURE Elem_XiDimension
   Hexahedron64, &
   Hexahedron125 )
 
-   Ans = 3
+  Ans = 3
 
   CASE( Triangle3, &
   Triangle6, &
@@ -413,9 +433,9 @@ MODULE PROCEDURE Elem_XiDimension
 
 END PROCEDURE Elem_XiDimension
 
-!-----------------------------------------------------------------------------
-!                                                                      isVolume
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                 isVolume
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isVolume
 
@@ -448,9 +468,9 @@ MODULE PROCEDURE isVolume
 
 END PROCEDURE isVolume
 
-!-----------------------------------------------------------------------------
-!                                                                     isSurface
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                 isSurface
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isSurface
   SELECT CASE( ElemType )
@@ -471,12 +491,11 @@ MODULE PROCEDURE isSurface
   END SELECT
 END PROCEDURE isSurface
 
-!-----------------------------------------------------------------------------
-!                                                                        isLine
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                 isLine
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isLine
-
   SELECT CASE( ElemType )
   CASE( Line2, &
     & Line3, &
@@ -487,12 +506,11 @@ MODULE PROCEDURE isLine
   CASE DEFAULT
     Ans = .FALSE.
   END SELECT
-
 END PROCEDURE isLine
 
-!-----------------------------------------------------------------------------
-!                                                                       isPoint
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                 isPoint
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isPoint
   SELECT CASE( ElemType )
@@ -503,9 +521,9 @@ MODULE PROCEDURE isPoint
   END SELECT
 END PROCEDURE isPoint
 
-!-----------------------------------------------------------------------------
-!                                                                    isTriangle
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                 isTriangle
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isTriangle
   SELECT CASE( ElemType )
@@ -518,9 +536,9 @@ MODULE PROCEDURE isTriangle
   END SELECT
 END PROCEDURE isTriangle
 
-!-----------------------------------------------------------------------------
-!                                                                  isQuadrangle
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                              isQuadrangle
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isQuadrangle
   SELECT CASE( ElemType )
@@ -533,7 +551,7 @@ MODULE PROCEDURE isQuadrangle
 END PROCEDURE isQuadrangle
 
 !-----------------------------------------------------------------------------
-!                                                                 isTetrahedron
+!                                                              isTetrahedron
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE isTetrahedron
@@ -546,9 +564,9 @@ MODULE PROCEDURE isTetrahedron
   END SELECT
 END PROCEDURE isTetrahedron
 
-!-----------------------------------------------------------------------------
-!                                                                  isHexahedron
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                               isHexahedron
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isHexahedron
   SELECT CASE( ElemType )
@@ -560,9 +578,9 @@ MODULE PROCEDURE isHexahedron
   END SELECT
 END PROCEDURE isHexahedron
 
-!-----------------------------------------------------------------------------
-!                                                                       isPrism
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                    isPrism
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isPrism
   SELECT CASE( ElemType )
@@ -573,9 +591,9 @@ MODULE PROCEDURE isPrism
   END SELECT
 END PROCEDURE isPrism
 
-!-----------------------------------------------------------------------------
-!                                                                     isPyramid
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                                  isPyramid
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isPyramid
   SELECT CASE( ElemType )
@@ -586,9 +604,9 @@ MODULE PROCEDURE isPyramid
   END SELECT
 END PROCEDURE isPyramid
 
-!-----------------------------------------------------------------------------
-!                                                           isSerendipityElement
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                        isSerendipityElement
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isSerendipityElement
   SELECT CASE( ElemType )
@@ -599,9 +617,9 @@ MODULE PROCEDURE isSerendipityElement
   END SELECT
 END PROCEDURE isSerendipityElement
 
-!-----------------------------------------------------------------------------
-!                                                               ElementTopology
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                            ElementTopology
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Elem_Topology
   SELECT CASE( ElemType )

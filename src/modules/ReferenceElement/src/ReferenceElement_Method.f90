@@ -15,6 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This submodule contains method for [[ReferenceElement_]]
+
 MODULE ReferenceElement_Method
 USE BaseType
 USE GlobalData
@@ -22,13 +26,73 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
+!                                                                Display@IO
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE display_ref_elem( Obj, msg, unitno )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitno
+END SUBROUTINE display_ref_elem
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                Display@IO
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE display_ref_topo( Obj, msg, unitno )
+  CLASS( ReferenceTopology_ ), INTENT( IN ) :: Obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitno
+END SUBROUTINE display_ref_topo
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        Display@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE Display
+  MODULE PROCEDURE display_ref_elem, display_ref_topo
+END INTERFACE Display
+
+PUBLIC :: Display
+
+!----------------------------------------------------------------------------
 !                                              ReferenceTopology@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: 	This function returns the instance of [[ReferenceTopology_]]
+!
+!### Introduction
+! 	This function returns the instance of [[ReferenceTopology_]].
+! The possible valaues of Name can be
+!
+! * `Line, Line2, Line3, Line4, Line5, Line6`
+! * `Triangle, Triangle3, Triangle6, Triangle9, Triangle10, Triangle12, Triangl15a, Triangl15b, Triangl15, Triangl21`
+! * `Quadrangle, Quadrangle4, Quadrangle9, Quadrangle8`
+! * `Tetrahedron, Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, Tetrahedron56`
+! * `Hexahedron, Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64, Hexahedron125`
+! * `Prism, Prism6, Prism15, Prism18`
+! * `Pyramid, Pyramid5, Pyramid14, Pyramid13`
+! * `Point, Point1`
+!
+!### Usage
+!
+!```fortran
+! type( ReferenceTopology_ ) :: obj
+! obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
+! call display( obj, "obj=")
+!```
 
 INTERFACE
 MODULE PURE FUNCTION reference_topology( Nptrs, Name ) RESULT( Obj )
   TYPE( ReferenceTopology_ ) :: Obj
-  INTEGER( I4B), INTENT( IN ) :: Nptrs( : ), Name
+  INTEGER( I4B), INTENT( IN ) :: Nptrs( : )
+  INTEGER( I4B), INTENT( IN ) :: Name
 END FUNCTION reference_topology
 END INTERFACE
 
@@ -41,6 +105,10 @@ PUBLIC :: ReferenceTopology
 !----------------------------------------------------------------------------
 !                                                 DeallocateData@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: 	This subroutine reset the instance of [[ReferenceTopology_]]
 
 INTERFACE
 MODULE PURE SUBROUTINE deallocatedata_ref_topology( Obj )
@@ -57,17 +125,48 @@ PUBLIC :: DeallocateData
 !----------------------------------------------------------------------------
 !                                                           NNE@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: 	This function returns the totat nodes inside the referenc topology
+!
+!### Usage
+!
+!```fortran
+! type( ReferenceTopology_ ) :: obj
+! obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
+! call display( obj, "obj=")
+! call display( .NNE. obj, "nne =")
+!```
 INTERFACE
 MODULE PURE FUNCTION tNodes_RefTopo( Obj ) RESULT( Ans )
   CLASS( ReferenceTopology_ ), INTENT( IN ) :: Obj
   INTEGER( I4B ) :: Ans
 END FUNCTION tNodes_RefTopo
+END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                           NNE@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: 	This function returns the total number of nodes in the reference element
+!
+!@todo
+! usage
+!@endtodo
+
+INTERFACE
 MODULE PURE FUNCTION tNodes_RefElem( Obj ) RESULT( Ans )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
   INTEGER( I4B ) :: Ans
 END FUNCTION tNodes_RefElem
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            NNE@Constructor
+!----------------------------------------------------------------------------
 
 INTERFACE OPERATOR( .NNE. )
   MODULE PROCEDURE tNodes_RefTopo, tNodes_RefElem
@@ -78,6 +177,17 @@ PUBLIC :: OPERATOR( .NNE. )
 !----------------------------------------------------------------------------
 !                                                 DeallocateData@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: 	This routine deallocates the data stored inside the [[ReferenceElement_]]
+!
+!### Usage
+!
+!```fortran
+!	CALL DeallocateData(Obj)
+!```
+
 INTERFACE
 MODULE PURE SUBROUTINE deallocatedata_ref_elem( Obj )
   CLASS( ReferenceElement_ ), INTENT( INOUT ) :: Obj
@@ -89,32 +199,9 @@ INTERFACE DeallocateData
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                       Display@Constructor
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE display_ref_elem( Obj, msg, unitno )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitno
-END SUBROUTINE display_ref_elem
-
-MODULE SUBROUTINE display_ref_topo( Obj, msg, unitno )
-  CLASS( ReferenceTopology_ ), INTENT( IN ) :: Obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitno
-END SUBROUTINE display_ref_topo
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE display_ref_elem, display_ref_topo
-END INTERFACE Display
-
-PUBLIC :: Display
-
-!----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
+
 INTERFACE
 MODULE PURE SUBROUTINE init_refelem( Obj, AnotherObj )
   CLASS( ReferenceElement_ ), INTENT( INOUT ) :: Obj
@@ -138,10 +225,11 @@ PUBLIC :: ASSIGNMENT( = )
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: This subroutine for constructing linear reference line object
+
 INTERFACE
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-! 1. Subroutine for constructing linear reference line object
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 MODULE PURE SUBROUTINE initiate_ref_Line( Obj, NSD, XiJ )
   CLASS( ReferenceLine_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
@@ -168,6 +256,18 @@ END INTERFACE
 INTERFACE ReferenceLine
   MODULE PROCEDURE reference_line
 END INTERFACE ReferenceLine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION reference_line_pointer(NSD, XiJ) RESULT( Obj )
+  INTEGER( I4B ), INTENT( IN ) :: NSD
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  CLASS( ReferenceLine_ ), POINTER :: Obj
+END FUNCTION reference_line_pointer
+END INTERFACE
 
 INTERFACE ReferenceLine_Pointer
   MODULE PROCEDURE reference_line_Pointer
@@ -207,10 +307,21 @@ INTERFACE ReferenceTriangle
   MODULE PROCEDURE reference_Triangle
 END INTERFACE ReferenceTriangle
 
+!----------------------------------------------------------------------------
+!                                     ReferenceTriangle_Pointer@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION reference_Triangle_pointer(NSD, XiJ) RESULT( Obj )
+  INTEGER( I4B ), INTENT( IN ) :: NSD
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  CLASS( ReferenceTriangle_ ), POINTER :: Obj
+END FUNCTION reference_Triangle_pointer
+END INTERFACE
+
 INTERFACE ReferenceTriangle_Pointer
   MODULE PROCEDURE reference_Triangle_Pointer
 END INTERFACE ReferenceTriangle_Pointer
-
 
 PUBLIC :: ReferenceTriangle, ReferenceTriangle_Pointer
 
@@ -246,6 +357,18 @@ INTERFACE ReferenceQuadrangle
   MODULE PROCEDURE reference_Quadrangle
 END INTERFACE ReferenceQuadrangle
 
+!----------------------------------------------------------------------------
+!                                   ReferenceQuadrangle_Pointer@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION reference_Quadrangle_Pointer( NSD, XiJ ) RESULT( Obj )
+  INTEGER( I4B ), INTENT( IN ) :: NSD
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  CLASS( ReferenceQuadrangle_ ), POINTER :: Obj
+END FUNCTION reference_Quadrangle_Pointer
+END INTERFACE
+
 INTERFACE ReferenceQuadrangle_Pointer
   MODULE PROCEDURE reference_Quadrangle_Pointer
 END INTERFACE ReferenceQuadrangle_Pointer
@@ -255,10 +378,12 @@ PUBLIC :: ReferenceQuadrangle, ReferenceQuadrangle_Pointer
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: This subroutine for constructing the object
+
 INTERFACE
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-! 1. Subroutine for constructing the object
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 MODULE PURE SUBROUTINE initiate_ref_Tetrahedron( Obj, NSD, XiJ )
   CLASS( ReferenceTetrahedron_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
@@ -286,6 +411,18 @@ INTERFACE ReferenceTetrahedron
   MODULE PROCEDURE reference_Tetrahedron
 END INTERFACE ReferenceTetrahedron
 
+!----------------------------------------------------------------------------
+!                                   ReferenceTetrahedron_Pointer@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION reference_Tetrahedron_Pointer( NSD, XiJ ) RESULT( Obj )
+  INTEGER( I4B ), INTENT( IN ) :: NSD
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  CLASS( ReferenceTetrahedron_ ), POINTER :: Obj
+END FUNCTION reference_Tetrahedron_Pointer
+END INTERFACE
+
 INTERFACE ReferenceTetrahedron_Pointer
   MODULE PROCEDURE reference_Tetrahedron_Pointer
 END INTERFACE ReferenceTetrahedron_Pointer
@@ -295,10 +432,12 @@ PUBLIC :: ReferenceTetrahedron, ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This subroutine for constructing the object
+
 INTERFACE
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-! 1. Subroutine for constructing the object
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 MODULE PURE SUBROUTINE initiate_ref_Hexahedron( Obj, NSD, XiJ )
   CLASS( ReferenceHexahedron_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
@@ -326,6 +465,18 @@ INTERFACE ReferenceHexahedron
   MODULE PROCEDURE reference_Hexahedron
 END INTERFACE ReferenceHexahedron
 
+!----------------------------------------------------------------------------
+!                                    ReferenceHexahedron_Pointer@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION reference_Hexahedron_Pointer( NSD, XiJ ) RESULT( Obj )
+  INTEGER( I4B ), INTENT( IN ) :: NSD
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  CLASS( ReferenceHexahedron_ ), POINTER :: Obj
+END FUNCTION reference_Hexahedron_Pointer
+END INTERFACE
+
 INTERFACE ReferenceHexahedron_Pointer
   MODULE PROCEDURE reference_Hexahedron_Pointer
 END INTERFACE ReferenceHexahedron_Pointer
@@ -335,10 +486,12 @@ PUBLIC :: ReferenceHexahedron, ReferenceHexahedron_Pointer
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: This subroutine for constructing the object
+
 INTERFACE
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-! 1. Subroutine for constructing the object
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 MODULE PURE SUBROUTINE initiate_ref_Pyramid( Obj, NSD, XiJ )
   CLASS( ReferencePyramid_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
@@ -351,7 +504,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                            ReferencePyramid@Constructor
+!                                               ReferencePyramid@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -366,6 +519,18 @@ INTERFACE ReferencePyramid
   MODULE PROCEDURE reference_Pyramid
 END INTERFACE ReferencePyramid
 
+!----------------------------------------------------------------------------
+!                                      ReferencePyramid_Pointer@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION reference_Pyramid_Pointer( NSD, XiJ ) RESULT( Obj )
+  INTEGER( I4B ), INTENT( IN ) :: NSD
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  CLASS( ReferencePyramid_ ), POINTER :: Obj
+END FUNCTION reference_Pyramid_Pointer
+END INTERFACE
+
 INTERFACE ReferencePyramid_Pointer
   MODULE PROCEDURE reference_Pyramid_Pointer
 END INTERFACE ReferencePyramid_Pointer
@@ -375,10 +540,12 @@ PUBLIC :: ReferencePyramid, ReferencePyramid_Pointer
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This subroutine for constructing the object
+
 INTERFACE
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
-! 1. Subroutine for constructing the object
-!  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 MODULE PURE SUBROUTINE initiate_ref_Prism( Obj, NSD, XiJ )
   CLASS( ReferencePrism_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
@@ -406,6 +573,18 @@ INTERFACE ReferencePrism
   MODULE PROCEDURE reference_Prism
 END INTERFACE ReferencePrism
 
+!----------------------------------------------------------------------------
+!                                        ReferencePrism_Pointer@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION reference_Prism_Pointer( NSD, XiJ ) RESULT( Obj )
+  INTEGER( I4B ), INTENT( IN ) :: NSD
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  CLASS( ReferencePrism_ ), POINTER :: Obj
+END FUNCTION reference_Prism_Pointer
+END INTERFACE
+
 INTERFACE ReferencePrism_Pointer
   MODULE PROCEDURE reference_Prism_Pointer
 END INTERFACE ReferencePrism_Pointer
@@ -416,12 +595,16 @@ PUBLIC :: ReferencePrism, ReferencePrism_Pointer
 !                                                    LagrangePoints@Lagrange
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This function returns equidistance lagrange points on a line
+!
+!### Introduction
+! * Returns equidistant points on [-1,1] for lagrange interpolation
+!	* Nodecoord is a 2D array with 3 rows
+!	* First row is xi, second row is eta, third row is zeta
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1. Returns equidistant points on [-1,1] for lagrange interpolation
-!		2, Nodecoord is a 2D array with 3 rows
-!		3. first row is xi, second row is eta, third row is zeta
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 MODULE PURE FUNCTION EquidistanceLIP_Line( RefElem, Order ) &
   & RESULT( NodeCoord )
   CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
@@ -440,10 +623,14 @@ PUBLIC :: LagrangePoints
 !                                                  LagrangeElement@Lagrange
 !----------------------------------------------------------------------------
 
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This function returns lagrange element on line
+!
+!### Introduction
 ! Returns lagrange line element of different order
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+INTERFACE
 MODULE PURE FUNCTION LagrangeElement_Line( RefElem, Order ) RESULT( Obj )
   CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
@@ -461,12 +648,16 @@ PUBLIC :: LagrangeElement
 !                                                   LagrangePoints@Lagrange
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: 	This subroutine generate Lagrange points on triangle
+!
+!### Introduction
+! * Returns equidistant points on triangle for lagrange interpolation
+!	* Nodecoord is a 2D array with 3 rows
+!	* first row is xi, second row is eta, third row is zeta
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1. Returns equidistant points on triangle for lagrange interpolation
-!		2, Nodecoord is a 2D array with 3 rows
-!		3. first row is xi, second row is eta, third row is zeta
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 MODULE PURE FUNCTION EquidistanceLIP_Triangle( RefElem, Order ) &
   & RESULT( NodeCoord )
   CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
@@ -483,10 +674,11 @@ END INTERFACE
 !                                                   LagrangeElement@Lagrange
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: Returns lagrange Triangle element of different order
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-! Returns lagrange Triangle element of different order
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 MODULE PURE FUNCTION LagrangeElement_Triangle( RefElem, Order ) RESULT( Obj )
   CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
@@ -1513,7 +1705,7 @@ END FUNCTION Measure_Simplex_Tetrahedron
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          tetrahedron_quality
+!                                                       tetrahedron_quality
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1589,7 +1781,7 @@ END FUNCTION Measure_Simplex_Pyramid
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                        Pyramid_quality
+!                                                            Pyramid_quality
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1675,132 +1867,5 @@ INTERFACE getVTKelementType
 END INTERFACE getVTKelementType
 
 PUBLIC :: getVTKelementType
-
-!----------------------------------------------------------------------------
-!                                                                 Contains
-!----------------------------------------------------------------------------
-
-! there are some routines which should be described inside the module
-! rather than submodules. those routines should be described inside
-! the contains.part
-! These routines mainly returns pointers.
-
-CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                      ReferenceLine_Pointer
-!----------------------------------------------------------------------------
-
-PURE FUNCTION reference_Line_Pointer(NSD, XiJ) RESULT( Obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceLine_ ), POINTER :: Obj
-  ALLOCATE( Obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
-END FUNCTION reference_Line_Pointer
-
-!----------------------------------------------------------------------------
-!                                                      ReferenceTriangle_Pointer
-!----------------------------------------------------------------------------
-
-PURE FUNCTION reference_Triangle_Pointer(NSD, XiJ) RESULT( Obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceTriangle_ ), POINTER :: Obj
-  ALLOCATE( Obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
-END FUNCTION reference_Triangle_Pointer
-
-!----------------------------------------------------------------------------
-!                                                      ReferenceQuadrangle_Pointer
-!----------------------------------------------------------------------------
-
-PURE FUNCTION reference_Quadrangle_Pointer(NSD, XiJ) RESULT( Obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceQuadrangle_ ), POINTER :: Obj
-  ALLOCATE( Obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
-END FUNCTION reference_Quadrangle_Pointer
-
-!----------------------------------------------------------------------------
-!                                               ReferenceTetrahedron_Pointer
-!----------------------------------------------------------------------------
-
-PURE FUNCTION reference_Tetrahedron_Pointer(NSD, XiJ) RESULT( Obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceTetrahedron_ ), POINTER :: Obj
-  ALLOCATE( Obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
-END FUNCTION reference_Tetrahedron_Pointer
-
-!----------------------------------------------------------------------------
-!                                               ReferenceHexahedron_Pointer
-!----------------------------------------------------------------------------
-
-PURE FUNCTION reference_Hexahedron_Pointer(NSD, XiJ) RESULT( Obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceHexahedron_ ), POINTER :: Obj
-  ALLOCATE( Obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
-END FUNCTION reference_Hexahedron_Pointer
-
-!----------------------------------------------------------------------------
-!                                               ReferencePyramid_Pointer
-!----------------------------------------------------------------------------
-
-PURE FUNCTION reference_Pyramid_Pointer(NSD, XiJ) RESULT( Obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferencePyramid_ ), POINTER :: Obj
-  ALLOCATE( Obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
-END FUNCTION reference_Pyramid_Pointer
-
-!----------------------------------------------------------------------------
-!                                               ReferencePrism_Pointer
-!----------------------------------------------------------------------------
-
-PURE FUNCTION reference_Prism_Pointer(NSD, XiJ) RESULT( Obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferencePrism_ ), POINTER :: Obj
-  ALLOCATE( Obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
-END FUNCTION reference_Prism_Pointer
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 END MODULE ReferenceElement_Method

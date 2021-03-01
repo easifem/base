@@ -37,7 +37,10 @@ MODULE BaseMethod
   USE IntVector_Method
   USE Vector3D_Method
   USE RealVector_Method
-  ! USE DOF_Method
+  USE DOF_Method
+  USE ReferenceElement_Method
+  ! USE QuadraturePoint_Method
+  ! USE Elemshapedata_Method
   ! USE File_Method
   ! USE RealMatrix_Method
   ! USE Lapack_Method
@@ -50,15 +53,6 @@ MODULE BaseMethod
   ! ! Tensor related
   ! USE VoigtRank2Tensor_Method
   ! USE Rank2Tensor_Method
-
-  ! ! FE related
-  ! USE ReferenceElement_Method
-
-  ! ! Quadrature Point
-  ! USE QuadraturePoint_Method
-
-  ! ! Elemshapedata
-  ! USE Elemshapedata_Method
 
   ! ! FE variable
   ! USE FEVariable_Method

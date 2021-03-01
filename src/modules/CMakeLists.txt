@@ -51,11 +51,20 @@ include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 #RealVector
 include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 
-# # DOF
-# include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
+# DOF
+include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
 
-# # #ElemshapeData
-# # include(${CMAKE_CURRENT_LIST_DIR}/ElemshapeData/CMakeLists.txt)
+#Geometry
+include(${CMAKE_CURRENT_LIST_DIR}/Geometry/CMakeLists.txt)
+
+#ReferenceElement
+include(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
+
+# #QuadraturePoint
+# include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
+
+#ElemshapeData
+# include(${CMAKE_CURRENT_LIST_DIR}/ElemshapeData/CMakeLists.txt)
 
 # # #FEMatrix
 # # include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
@@ -68,9 +77,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 
 # # #FoXy
 # # include(${CMAKE_CURRENT_LIST_DIR}/FoXy/CMakeLists.txt)
-
-# # #Geometry
-# # include(${CMAKE_CURRENT_LIST_DIR}/Geometry/CMakeLists.txt)
 
 # # #Gnuplot
 # # include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
@@ -87,17 +93,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 # # #Lapack
 # # include(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)
 
-# # #QuadraturePoint
-# # include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
-
 # # #Random
 # # include(${CMAKE_CURRENT_LIST_DIR}/Random/CMakeLists.txt)
 
 # # # #RealMatrix
 # # # include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
-
-# # # #ReferenceElement
-# # # include(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
 
 #BaseMethod
 include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
