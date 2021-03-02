@@ -107,18 +107,15 @@ MODULE PROCEDURE initiate_ref_Line
   ELSE
     Obj % XiJ = RESHAPE( [-1, 0, 0, 1, 0, 0], [3, 2] )
   END IF
-
   Obj % EntityCounts = [2, 1, 0, 0]
   Obj % XiDimension = 1
   Obj % Order = 1
   Obj % NSD = NSD
   Obj % Name = Line2
   ALLOCATE( Obj % Topology( 3 ) )
-
   Obj % Topology( 1 ) = ReferenceTopology( [1], Point )
   Obj % Topology( 2 ) = ReferenceTopology( [2], Point )
   Obj % Topology( 3 ) = ReferenceTopology( [1, 2], Line2 )
-
 END PROCEDURE initiate_ref_Line
 
 !----------------------------------------------------------------------------
