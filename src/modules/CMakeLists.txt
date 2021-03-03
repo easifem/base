@@ -60,8 +60,8 @@ include(${CMAKE_CURRENT_LIST_DIR}/Geometry/CMakeLists.txt)
 #ReferenceElement
 include(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
 
-# #QuadraturePoint
-# include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
+#QuadraturePoint
+include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
 
 #ElemshapeData
 # include(${CMAKE_CURRENT_LIST_DIR}/ElemshapeData/CMakeLists.txt)

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module test_ReferenceElement
+module test_ReferenceTriangle
 use easifemBase
 implicit none
 contains
@@ -25,10 +25,35 @@ contains
 !----------------------------------------------------------------------------
 
 subroutine test1
-type( ReferenceTopology_ ) :: obj
-obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
-call display( obj, "test-1 obj : ")
-call display( .NNE. obj, "nne : ")
+  type( ReferenceTriangle_ ) :: obj
+  real( dfp ) :: xij( 3, 3 )
+  xij( 1, 1:3 ) = [1.0, 2.0, 1.0]
+  xij( 2, 1:3 ) = [0.0, 0.0, 1.0]
+  xij( 3, : ) = 0.0
+  call initiate( obj, nsd = 2, xij = xij )
+  call display( obj, "obj : " )
+end
+
+subroutine test2
+  type( ReferenceTriangle_ ) :: obj
+  obj = referenceTriangle( nsd = 2 )
+  call display( obj, "obj : " )
+end
+
+subroutine test3
+  class( ReferenceElement_ ), pointer :: obj => null()
+  obj => referenceTriangle_pointer( nsd = 2 )
+  call display( obj, "obj : " )
+end
+
+subroutine test4
+  class( ReferenceElement_ ), pointer :: obj_ptr => null()
+  type( ReferenceTriangle_ ) :: obj
+  obj_ptr => referenceTriangle_pointer( nsd = 2 )
+  call obj_ptr%LagrangeElement( order = 2, HighOrderObj = obj )
+  call display( obj, "higher order obj : ")
+  call obj_ptr%LagrangeElement( order = 3, HighOrderObj = obj )
+  call display( obj, "3rd order obj : ")
 end
 
 !----------------------------------------------------------------------------
@@ -42,8 +67,13 @@ end module
 !----------------------------------------------------------------------------
 
 program main
-use test_ReferenceElement
+use test_ReferenceTriangle
 implicit none
 call test1
 call BlankLines(nol=3)
+call test2
+call BlankLines(nol=3)
+call test3
+call BlankLines(nol=3)
+call test4
 end program main

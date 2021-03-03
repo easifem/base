@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.14.0 FATAL_ERROR)
-set(PROJECT_NAME "ReferenceElement")
+set(PROJECT_NAME "ReferenceTriangle")
 project(${PROJECT_NAME})
 enable_language(Fortran)
 set(TARGET_NAME "test")

@@ -181,11 +181,6 @@ INTERFACE SWAP
     & masked_swap_rs, masked_swap_rv, masked_swap_rm
 END INTERFACE
 
-! INTERFACE SWAP
-!   MODULE PROCEDURE swap_i,swap_r,swap_rv,swap_c, swap_cv,swap_cm, &
-!     & masked_swap_rs, masked_swap_rv, masked_swap_rm
-! END INTERFACE
-
 PUBLIC :: SWAP
 
 !----------------------------------------------------------------------------
@@ -197,13 +192,18 @@ INTERFACE IMAXLOC
   MODULE PROCEDURE imaxloc_r,imaxloc_i
 END INTERFACE
 
+PUBLIC :: IMAXLOC
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 !> Generic FUNCTION for getting location of minmum value
 INTERFACE IMINLOC
   MODULE PROCEDURE iminloc_r
 END INTERFACE IMINLOC
 
 PUBLIC :: IMINLOC
-PUBLIC :: IMAXLOC
 
 !----------------------------------------------------------------------------
 !
@@ -306,13 +306,96 @@ END INTERFACE Input
 
 PUBLIC :: Input
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 PUBLIC :: getExtension
+
+!----------------------------------------------------------------------------
+!                                                                 arange
+!----------------------------------------------------------------------------
+INTERFACE arange
+  MODULE PROCEDURE arange_int, arange_real
+END INTERFACE arange
+
+PUBLIC arange
 
 !----------------------------------------------------------------------------
 !                                                                   CONTAINS
 !----------------------------------------------------------------------------
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                                    arange
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: Returns a vector of integer
+!
+!### Introduction
+! Returns an array of integers given `istart`,  `iend`,  and `increment` values.
+! Default value of increment is 1
+! This function belongs to the generic function [[Utility:arange]]
+!
+!### Usage
+!
+!```fortran
+!	arange(1,10,1)
+! arange(1,10,2)
+!```
+
+PURE FUNCTION arange_int (istart, iend, increment) result(Ans)
+  integer(i4b), intent(in) :: istart
+  integer(i4b), intent(in) :: iend
+  integer(i4b), intent(in), optional :: increment
+  integer(i4b), dimension(:), allocatable :: Ans
+
+  ! Internal var
+  integer(i4b) :: incr
+  integer(i4b) :: i
+  integer(i4b) :: n
+
+  incr = INPUT( default = 1, option=increment )
+  n = ( iend - istart ) / incr+1
+  ALLOCATE( Ans(n) )
+  DO CONCURRENT( i = 1:n )
+    Ans(i) = istart + ( i - 1 ) * incr
+  enddo
+END FUNCTION arange_int
+
+!----------------------------------------------------------------------------
+!                                                                 arange
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: Returns a vector of reals given `start`,  `end`,  and `increment` values.
+!
+!### Introduction
+!
+
+PURE FUNCTION arange_real( istart, iend, increment ) result( Ans )
+  REAL( DFP ), INTENT( IN ) :: istart !! Start value of the array
+  REAL( DFP ), INTENT( IN ) :: iend !! End value of the array
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: increment !! Array increment
+  REAL( DFP ), DIMENSION( : ), ALLOCATABLE :: Ans
+
+  ! internal var
+  REAL( DFP ) :: incr
+  INTEGER( I4B ) :: i
+  INTEGER( I4B ) :: n
+
+  incr = INPUT( Default = 1.0_DFP, Option=increment )
+
+  n = ( iend - istart + 0.5_DFP * incr ) / incr + 1
+  ALLOCATE( Ans( n ) )
+  DO CONCURRENT( i = 1:n )
+    Ans( i ) = istart + ( i - 1 ) * incr
+  ENDDO
+END FUNCTION arange_real
 
 !----------------------------------------------------------------------------
 !                                                               getExtension
@@ -334,7 +417,6 @@ FUNCTION getExtension( char ) RESULT(ext)
 
   ! Define internal variables
   integer(int32) :: n,m
-
   ext="       "
   n=0
   n = index(char,".", back=.true.)

@@ -109,6 +109,15 @@ PUBLIC :: ReferenceTopology
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
 ! summary: 	This subroutine reset the instance of [[ReferenceTopology_]]
+!
+!### Usage
+!
+!```fortran
+! type( ReferenceTopology_ ) :: obj
+! obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
+! call display( obj, "obj=")
+! call deallocatedata( obj ) !<------
+!```
 
 INTERFACE
 MODULE PURE SUBROUTINE deallocatedata_ref_topology( Obj )
@@ -138,6 +147,7 @@ PUBLIC :: DeallocateData
 ! call display( obj, "obj=")
 ! call display( .NNE. obj, "nne =")
 !```
+
 INTERFACE
 MODULE PURE FUNCTION tNodes_RefTopo( Obj ) RESULT( Ans )
   CLASS( ReferenceTopology_ ), INTENT( IN ) :: Obj
@@ -185,7 +195,7 @@ PUBLIC :: OPERATOR( .NNE. )
 !### Usage
 !
 !```fortran
-!	CALL DeallocateData(Obj)
+!	todo
 !```
 
 INTERFACE
@@ -201,6 +211,21 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	2 March 2021
+! summary: 	This subroutine copies one reference element into other
+!
+!### Introduction
+!
+! This subroutine copies one reference element into other
+! This subroutine also defines an assignment operator for `Obj1=Obj2` type opertions
+!
+!### Usage
+!
+!```fortran
+!	todo
+!```
 
 INTERFACE
 MODULE PURE SUBROUTINE init_refelem( Obj, AnotherObj )
@@ -222,18 +247,40 @@ END INTERFACE
 PUBLIC :: ASSIGNMENT( = )
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                            Initiate@Line
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
-! summary: This subroutine for constructing linear reference line object
+! summary: This subroutine constructs an instance of line reference element
+!
+!### Introduction
+! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+!
+! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+!
+!@note
+! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+!@endnote
+!
+!### Usage
+!
+!```fortran
+! type( ReferenceLine_ ) :: obj1
+! real( dfp ) :: xij( 3, 2 )
+! call random_number( xij )
+! call initiate( Obj=obj1, NSD=3, xij )
+! call display( obj1, "obj1 : " )
+!```
 
 INTERFACE
 MODULE PURE SUBROUTINE initiate_ref_Line( Obj, NSD, XiJ )
   CLASS( ReferenceLine_ ), INTENT( INOUT ) :: Obj
+    !! The instance
   INTEGER( I4B ), INTENT( IN ) :: NSD
+    !! Spatial dimension of the problem
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
+    !! Coords of element
 END SUBROUTINE initiate_ref_Line
 END INTERFACE
 
@@ -242,8 +289,29 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                 ReferenceLine@Constructor
+!                                                       ReferenceLine@Line
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: This routine constructs an instance of line reference element
+!
+!### Introduction
+! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+!
+! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+!
+!@note
+! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+!@endnote
+!
+!### Usage
+!
+!```fortran
+! type( ReferenceLine_ ) :: obj
+! obj = ReferenceLine(nsd=3)
+! call display( obj, 'obj : ' )
+!```
 
 INTERFACE
 MODULE PURE FUNCTION reference_line(NSD, XiJ) RESULT( Obj )
@@ -257,27 +325,159 @@ INTERFACE ReferenceLine
   MODULE PROCEDURE reference_line
 END INTERFACE ReferenceLine
 
+PUBLIC :: ReferenceLine
+
 !----------------------------------------------------------------------------
-!
+!                                                ReferenceLine_Pointer@Line
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: This routine constructs an instance of line reference element
+!
+!### Introduction
+! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+!
+! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+!
+!@note
+! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+!@endnote
+!
+!### Usage
+!
+!```fortran
+! class( ReferenceElement_ ), pointer :: obj => NULL()
+! obj => ReferenceLine_Pointer( nsd = 3 )
+! call display( obj, "obj : ")
+!```
+
 INTERFACE
-MODULE PURE FUNCTION reference_line_pointer(NSD, XiJ) RESULT( Obj )
+MODULE PURE FUNCTION reference_line_pointer_1(NSD, XiJ) RESULT( Obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
   CLASS( ReferenceLine_ ), POINTER :: Obj
-END FUNCTION reference_line_pointer
+END FUNCTION reference_line_pointer_1
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                 ReferenceLine_Pointer@Line
+!----------------------------------------------------------------------------
+
 INTERFACE ReferenceLine_Pointer
-  MODULE PROCEDURE reference_line_Pointer
+  MODULE PROCEDURE reference_line_Pointer_1
 END INTERFACE ReferenceLine_Pointer
 
-PUBLIC :: ReferenceLine, ReferenceLine_Pointer
+PUBLIC :: ReferenceLine_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                       LagrangeElement@Line
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: This function returns lagrange element on line
+!
+!### Introduction
+! Returns lagrange line element of higher order. By lagrange element we means
+! standard finite elements, with equi-distance lagrange interpolation points.
+!
+!### Usage
+!
+!```fortran
+! type( ReferenceLine_ ) :: obj1, obj3
+! real( dfp ) :: xij( 3, 2 )
+! call random_number( xij )
+! call initiate( Obj=obj1, NSD=3, XiJ=xij )
+! call display( obj1, "obj1 : " )
+! call obj1%LagrangeElement( Order=2, HighOrderObj=obj3 ) <---
+! call display( obj3, "Second Order Lagrange Element : ")
+!```
+
+INTERFACE
+MODULE PURE SUBROUTINE LagrangeElement_Line( RefElem, Order, Obj )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+    !! Linear line element
+  INTEGER( I4B ), INTENT( IN ) :: Order
+    !! Order or generated element
+  CLASS( ReferenceElement_ ),  INTENT( INOUT ) ::  Obj
+    !! High order lagrange line element
+END SUBROUTINE LagrangeElement_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      MeasureSimplex@Line
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: 	This function returns the measure of linear line element
+!
+!### Introduction
+!
+! This function returns the measure of linear line element. Its generic form is given by [[ReferenceElement_Method:MeasureSimplex]]
+!
+!
+!### Usage
+!
+!```fortran
+! type( ReferenceLine_ ) :: obj
+! real( dfp ) :: xij( 3, 2 )
+! call random_number( xij )
+! call initiate( Obj=obj, NSD=3, XiJ=xij )
+! call display( MeasureSimplex(obj, obj%xij), "Measure :: ")
+!```
+
+INTERFACE
+MODULE PURE FUNCTION Measure_Simplex_Line( RefElem, XiJ ) RESULT( Ans )
+  CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
+  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
+  REAL( DFP ) :: Ans
+END FUNCTION Measure_Simplex_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             line_quality
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION line_quality( refelem, xij, measure ) RESULT( Ans )
+  CLASS( ReferenceLine_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
+  INTEGER( I4B ), INTENT( IN ) :: measure
+  REAL( DFP ) :: Ans
+END FUNCTION line_quality
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Initiate@Triangle
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: This routine constructs an instance of [[ReferenceTriangle_]]
+!
+!### Introduction
+! * This routine contructs an instance of [[ReferenceTriangle_]]
+! * User can specify the coordinates of the trinagle
+!@note
+! 	This routine will contruct a three node triangle. Also, SHAPE(XiJ) = [3,3]
+!@endnote
+!
+!### Usage
+!
+!```fortran
+! subroutine test1
+!   type( ReferenceTriangle_ ) :: obj
+!   real( dfp ) :: xij( 3, 3 )
+!   xij( 1, 1:3 ) = [1.0, 2.0, 1.0]
+!   xij( 2, 1:3 ) = [0.0, 0.0, 1.0]
+!   xij( 3, : ) = 0.0
+!   call initiate( obj, nsd = 2, xij = xij )
+!   call display( obj, "obj : " )
+! end
+!```
+
 
 INTERFACE
 MODULE PURE SUBROUTINE initiate_ref_Triangle( Obj, NSD, XiJ )
@@ -292,8 +492,29 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                             ReferenceTriangle@Constructor
+!                                                 ReferenceTriangle@Triangle
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: This function returns an instance of [[ReferenceTriangle_]]
+!
+!### Introduction
+! * This routine contructs an instance of [[ReferenceTriangle_]]
+! * User can specify the coordinates of the trinagle
+!@note
+! 	This routine will contruct a three node triangle. Also, SHAPE(XiJ) = [3,3]
+!@endnote
+!
+!### Usage
+!
+!```fortran
+! subroutine test2
+!   type( ReferenceTriangle_ ) :: obj
+!   obj = referenceTriangle( nsd = 2 )
+!   call display( obj, "obj : " )
+! end
+!```
 
 INTERFACE
 MODULE PURE FUNCTION reference_Triangle(NSD, XiJ) RESULT( Obj )
@@ -307,9 +528,32 @@ INTERFACE ReferenceTriangle
   MODULE PROCEDURE reference_Triangle
 END INTERFACE ReferenceTriangle
 
+PUBLIC :: ReferenceTriangle
+
 !----------------------------------------------------------------------------
-!                                     ReferenceTriangle_Pointer@Constructor
+!                                         ReferenceTriangle_Pointer@Triangle
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: This function returns an instance of [[ReferenceTriangle_]]
+!
+!### Introduction
+! * This routine contructs an instance of [[ReferenceTriangle_]]
+! * User can specify the coordinates of the trinagle
+!@note
+! 	This routine will contruct a three node triangle. Also, SHAPE(XiJ) = [3,3]
+!@endnote
+!
+!### Usage
+!
+!```fortran
+! subroutine test3
+!   class( ReferenceElement_ ), pointer :: obj => null()
+!   obj => referenceTriangle_pointer( nsd = 2 )
+!   call display( obj, "obj : " )
+! end
+!```
 
 INTERFACE
 MODULE PURE FUNCTION reference_Triangle_pointer(NSD, XiJ) RESULT( Obj )
@@ -323,11 +567,438 @@ INTERFACE ReferenceTriangle_Pointer
   MODULE PROCEDURE reference_Triangle_Pointer
 END INTERFACE ReferenceTriangle_Pointer
 
-PUBLIC :: ReferenceTriangle, ReferenceTriangle_Pointer
+PUBLIC :: ReferenceTriangle_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                   LagrangeElement@Triangle
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: Returns lagrange Triangle element of higher order
+!
+!### Introduction
+! 	This routine retuns the lagrance element of higher order
+! This routine will be called by [[ReferenceTriangle_:LagrangeElement]]
+! Currently upto 3rd order triangle elements are supported.
+!
+!
+!### Usage
+!
+!```fortran
+! subroutine test4
+!   class( ReferenceElement_ ), pointer :: obj_ptr => null()
+!   type( ReferenceTriangle_ ) :: obj
+!   obj_ptr => referenceTriangle_pointer( nsd = 2 )
+!   call obj_ptr%LagrangeElement( order = 2, HighOrderObj = obj )
+!   call display( obj, "higher order obj : ")
+!   call obj_ptr%LagrangeElement( order = 3, HighOrderObj = obj )
+!   call display( obj, "3rd order obj : ")
+! end
+!```
+
+INTERFACE
+MODULE PURE SUBROUTINE LagrangeElement_Triangle( RefElem, Order, Obj )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+  INTEGER( I4B ), INTENT( IN ) :: Order
+  CLASS( ReferenceElement_ ), INTENT( INOUT) ::  Obj
+END SUBROUTINE LagrangeElement_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                 MeasureSimplex@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION Measure_Simplex_Triangle( RefElem, XiJ ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
+  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
+  REAL( DFP ) :: Ans
+END FUNCTION Measure_Simplex_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            Angles@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_angles( refelem, xij ) RESULT( Ans )
+  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans(3)
+END FUNCTION triangle_angles
+END INTERFACE
+
+INTERFACE Angles
+  MODULE PROCEDURE triangle_angles
+END INTERFACE Angles
+
+PUBLIC :: Angles
+
+!----------------------------------------------------------------------------
+!                                                             Area@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_area( refelem, xij ) RESULT( Ans )
+  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans
+END FUNCTION triangle_area
+END INTERFACE
+
+INTERFACE Area
+  MODULE PROCEDURE triangle_area
+END INTERFACE Area
+
+PUBLIC :: Area
+
+!----------------------------------------------------------------------------
+!                                                        AreaVector@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_areaVector( refelem, xij ) RESULT( Ans )
+  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans( 3 )
+END FUNCTION triangle_areaVector
+END INTERFACE
+
+INTERFACE AreaVector
+  MODULE PROCEDURE triangle_areaVector
+END INTERFACE AreaVector
+
+PUBLIC :: AreaVector
+
+!----------------------------------------------------------------------------
+!                                                      Barycentric@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_barycentric( refelem, xij, x ) RESULT( Ans )
+  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ), INTENT( IN ) :: x( : )
+  REAL( DFP ) :: Ans( 3 )
+END FUNCTION triangle_barycentric
+END INTERFACE
+
+INTERFACE Barycentric
+  MODULE PROCEDURE triangle_barycentric
+END INTERFACE Barycentric
+
+PUBLIC :: Barycentric
+
+!----------------------------------------------------------------------------
+!                                                          Centroid@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_centroid( refelem, xij ) RESULT( Ans )
+  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans(3)
+END FUNCTION triangle_centroid
+END INTERFACE
+
+INTERFACE Centroid
+  MODULE PROCEDURE triangle_centroid
+END INTERFACE Centroid
+
+PUBLIC :: Centroid
+
+!----------------------------------------------------------------------------
+!                                                      CircumCenter@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_circumcentre(  refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans(3)
+END FUNCTION triangle_circumcentre
+END INTERFACE
+
+INTERFACE CircumCenter
+  MODULE PROCEDURE triangle_circumcentre
+END INTERFACE CircumCenter
+
+PUBLIC :: CircumCenter
+
+!----------------------------------------------------------------------------
+!                                                      CircumCircle@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_circumcircle( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans(4)
+    !! Ans(1) = radius and Ans(2:4) center
+END FUNCTION triangle_circumcircle
+END INTERFACE
+
+INTERFACE CircumCircle
+  MODULE PROCEDURE triangle_circumcircle
+END INTERFACE CircumCircle
+
+PUBLIC :: CircumCircle
+
+!----------------------------------------------------------------------------
+!                                                      CircumRadius@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_circumradius( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans
+END FUNCTION triangle_circumradius
+END INTERFACE
+
+INTERFACE CircumRadius
+  MODULE PROCEDURE triangle_circumradius
+END INTERFACE CircumRadius
+
+PUBLIC :: CircumRadius
+
+!----------------------------------------------------------------------------
+!                                                     ContainsLine@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE triangle_contains_line( refelem, xij, x1, x2, &
+  & parametricLine, inside, xint )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:), x1(3), x2(3)
+  LOGICAL(LGT), INTENT( IN ) :: parametricLine
+  LOGICAL(LGT), INTENT (OUT) :: inside
+  REAL( DFP ), INTENT( OUT ) :: xint(3)
+END SUBROUTINE triangle_contains_line
+END INTERFACE
+
+INTERFACE ContainsLine
+  MODULE PROCEDURE triangle_contains_line
+END INTERFACE ContainsLine
+
+PUBLIC :: ContainsLine
+
+!----------------------------------------------------------------------------
+!                                                    ContainsPoint@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_contains_point( refelem, xij, x ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:), x(:)
+  LOGICAL(LGT) :: Ans
+END FUNCTION triangle_contains_point
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Diameter@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_diameter( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans
+END FUNCTION triangle_diameter
+END INTERFACE
+
+INTERFACE diameter
+  MODULE PROCEDURE triangle_diameter
+END INTERFACE diameter
+
+PUBLIC :: diameter
+
+!----------------------------------------------------------------------------
+!                                                       EdgeLength@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_edge_length( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans(3)
+END FUNCTION triangle_edge_length
+END INTERFACE
+
+INTERFACE EdgeLength
+  MODULE PROCEDURE triangle_edge_length
+END INTERFACE EdgeLength
+
+PUBLIC :: EdgeLength
+
+!----------------------------------------------------------------------------
+!                                                         Incenter@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_incenter( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans(3)
+END FUNCTION triangle_incenter
+END INTERFACE
+
+INTERFACE Incenter
+  MODULE PROCEDURE triangle_incenter
+END INTERFACE Incenter
+
+PUBLIC :: Incenter
+
+!----------------------------------------------------------------------------
+!                                                         Incircle@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_incircle( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans(4)
+END FUNCTION triangle_incircle
+END INTERFACE
+
+INTERFACE Incircle
+  MODULE PROCEDURE triangle_incircle
+END INTERFACE Incircle
+
+PUBLIC :: Incircle
+
+!----------------------------------------------------------------------------
+!                                                         Inradius@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_inradius( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans
+END FUNCTION triangle_inradius
+END INTERFACE
+
+INTERFACE Inradius
+  MODULE PROCEDURE triangle_inradius
+END INTERFACE Inradius
+
+PUBLIC :: Inradius
+
+!----------------------------------------------------------------------------
+!                                                      Orthocenter@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_orthocenter( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
+  REAL( DFP ) :: Ans( 3 )
+END FUNCTION triangle_orthocenter
+END INTERFACE
+
+INTERFACE Orthocenter
+  MODULE PROCEDURE triangle_orthocenter
+END INTERFACE Orthocenter
+
+PUBLIC :: Orthocenter
+
+!----------------------------------------------------------------------------
+!                                                DistanceFromPoint@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_point_dist( refelem, xij, x ) &
+  & RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:), x(:)
+  REAL( DFP ) :: Ans
+END FUNCTION triangle_point_dist
+END INTERFACE
+
+INTERFACE DistanceFromPoint
+  MODULE PROCEDURE triangle_point_dist
+END INTERFACE DistanceFromPoint
+
+PUBLIC :: DistanceFromPoint
+
+!----------------------------------------------------------------------------
+!                                                      NearestPoint@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE triangle_get_nearest_point( refelem, xij, x, xn, dist )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:), x(:)
+  REAL( DFP ) , INTENT (INOUT) :: xn(:)
+  REAL( DFP ), INTENT (OUT) :: dist
+END SUBROUTINE triangle_get_nearest_point
+END INTERFACE
+
+INTERFACE NearestPoint
+  MODULE PROCEDURE triangle_get_nearest_point
+END INTERFACE NearestPoint
+
+PUBLIC :: NearestPoint
+
+!----------------------------------------------------------------------------
+!                                                       RandomPoint@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_random_point( refelem, xij, n, seed ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij(:,:)
+  INTEGER( I4B ) :: n, seed
+  REAL( DFP ) :: Ans(3, n)
+END FUNCTION triangle_random_point
+END INTERFACE
+
+INTERFACE RandomPoint
+  MODULE PROCEDURE triangle_random_point
+END INTERFACE RandomPoint
+
+PUBLIC :: RandomPoint
+
+!----------------------------------------------------------------------------
+!                                                          Quality@Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION triangle_quality( refelem, xij, measure ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
+  INTEGER( I4B ), INTENT( IN ) :: measure
+  REAL( DFP ) :: Ans
+END FUNCTION triangle_quality
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       Initiate@Quadrangle
+!----------------------------------------------------------------------------
+
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: Returns lagrange Quadrangle element of higher order
+!
+!### Introduction
+! 	This routine retuns the lagrance element of higher order
+! This routine will be called by [[ReferenceQuadrangle_:LagrangeElement]]
+! Currently upto 3rd order Quadrangle elements are supported.
+!
+!
+!### Usage
+!
+!```fortran
+! subroutine test1
+!   type( ReferenceQuadrangle_ ) :: obj
+!   call initiate( obj, nsd = 2 )
+!   ! call initiate( obj, nsd = 2, xij = xij )
+!   call display( obj, "obj : " )
+! end
+!```
 
 INTERFACE
 MODULE PURE SUBROUTINE initiate_ref_Quadrangle( Obj, NSD, XiJ )
@@ -342,8 +1013,27 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                            ReferenceQuadrangle@Constructor
+!                                            ReferenceQuadrangle@Quadrangle
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: Returns lagrange Quadrangle element of higher order
+!
+!### Introduction
+! 	This routine retuns the lagrance element of higher order
+! This routine will be called by [[ReferenceQuadrangle_:LagrangeElement]]
+! Currently upto 3rd order Quadrangle elements are supported.
+!
+!### Usage
+!
+!```fortran
+! subroutine test2
+!   type( ReferenceQuadrangle_ ) :: obj
+!   obj = referenceQuadrangle( nsd = 2 )
+!   call display( obj, "obj : " )
+! end
+!```
 
 INTERFACE
 MODULE PURE FUNCTION reference_Quadrangle( NSD, XiJ ) RESULT( Obj )
@@ -357,9 +1047,30 @@ INTERFACE ReferenceQuadrangle
   MODULE PROCEDURE reference_Quadrangle
 END INTERFACE ReferenceQuadrangle
 
+PUBLIC :: ReferenceQuadrangle
+
 !----------------------------------------------------------------------------
-!                                   ReferenceQuadrangle_Pointer@Constructor
+!                                     ReferenceQuadrangle_Pointer@Quadrangle
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 March 2021
+! summary: Returns lagrange Quadrangle element of higher order
+!
+!### Introduction
+! 	This routine retuns the lagrance element of higher order
+! This routine will be called by [[ReferenceQuadrangle_:LagrangeElement]]
+! Currently upto 3rd order Quadrangle elements are supported.
+!
+!### Usage
+!
+!```fortran
+! subroutine test3
+!   class( ReferenceElement_ ), pointer :: obj => null()
+!   obj => referenceQuadrangle_pointer( nsd = 2 )
+!   call display( obj, "obj : " )
+! end
+!```
 
 INTERFACE
 MODULE PURE FUNCTION reference_Quadrangle_Pointer( NSD, XiJ ) RESULT( Obj )
@@ -373,15 +1084,51 @@ INTERFACE ReferenceQuadrangle_Pointer
   MODULE PROCEDURE reference_Quadrangle_Pointer
 END INTERFACE ReferenceQuadrangle_Pointer
 
-PUBLIC :: ReferenceQuadrangle, ReferenceQuadrangle_Pointer
+PUBLIC :: ReferenceQuadrangle_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                LagrangeElement@Quadrangle
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: 	Higher order lagrange elements
+!
+!### Usage
+!
+!```fortran
+! subroutine test4
+!   class( ReferenceElement_ ), pointer :: obj_ptr => null()
+!   type( ReferenceQuadrangle_ ) :: obj
+!   obj_ptr => referenceQuadrangle_pointer( nsd = 2 )
+!   call obj_ptr%LagrangeElement( order = 2, HighOrderObj = obj )
+!   call display( obj, "higher order obj : ")
+!   call obj_ptr%LagrangeElement( order = 3, HighOrderObj = obj )
+!   call display( obj, "3rd order obj : ")
+! end
+!```
+
+INTERFACE
+MODULE PURE SUBROUTINE LagrangeElement_Quadrangle( RefElem, Order, Obj )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+  INTEGER( I4B ), INTENT( IN ) :: Order
+  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: Obj
+END SUBROUTINE LagrangeElement_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       Initiate@Tetrahedron
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
 ! summary: This subroutine for constructing the object
+!
+!### Usage
+!
+!```fortran
+!
+!```
 
 INTERFACE
 MODULE PURE SUBROUTINE initiate_ref_Tetrahedron( Obj, NSD, XiJ )
@@ -396,7 +1143,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                            ReferenceTetrahedron@Constructor
+!                                            ReferenceTetrahedron@Tetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -411,8 +1158,10 @@ INTERFACE ReferenceTetrahedron
   MODULE PROCEDURE reference_Tetrahedron
 END INTERFACE ReferenceTetrahedron
 
+PUBLIC :: ReferenceTetrahedron
+
 !----------------------------------------------------------------------------
-!                                   ReferenceTetrahedron_Pointer@Constructor
+!                                   ReferenceTetrahedron_Pointer@Tetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -427,10 +1176,22 @@ INTERFACE ReferenceTetrahedron_Pointer
   MODULE PROCEDURE reference_Tetrahedron_Pointer
 END INTERFACE ReferenceTetrahedron_Pointer
 
-PUBLIC :: ReferenceTetrahedron, ReferenceTetrahedron_Pointer
+PUBLIC :: ReferenceTetrahedron_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                               LagrangeElement@Tetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE LagrangeElement_Tetrahedron( RefElem, Order, Obj )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+  INTEGER( I4B ), INTENT( IN ) :: Order
+  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: Obj
+END SUBROUTINE LagrangeElement_Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       Initiate@Hexahedron
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -450,7 +1211,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                            ReferenceHexahedron@Constructor
+!                                            ReferenceHexahedron@Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -465,8 +1226,10 @@ INTERFACE ReferenceHexahedron
   MODULE PROCEDURE reference_Hexahedron
 END INTERFACE ReferenceHexahedron
 
+PUBLIC :: ReferenceHexahedron
+
 !----------------------------------------------------------------------------
-!                                    ReferenceHexahedron_Pointer@Constructor
+!                                    ReferenceHexahedron_Pointer@Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -481,10 +1244,22 @@ INTERFACE ReferenceHexahedron_Pointer
   MODULE PROCEDURE reference_Hexahedron_Pointer
 END INTERFACE ReferenceHexahedron_Pointer
 
-PUBLIC :: ReferenceHexahedron, ReferenceHexahedron_Pointer
+PUBLIC :: ReferenceHexahedron_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                LagrangeElement@Hexahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE LagrangeElement_Hexahedron( RefElem, Order, Obj )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+  INTEGER( I4B ), INTENT( IN ) :: Order
+  CLASS( ReferenceElement_ ), INTENT( INOUT) ::  Obj
+END SUBROUTINE LagrangeElement_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          Initiate@Pyramid
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -504,7 +1279,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                               ReferencePyramid@Constructor
+!                                                   ReferencePyramid@Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -519,8 +1294,10 @@ INTERFACE ReferencePyramid
   MODULE PROCEDURE reference_Pyramid
 END INTERFACE ReferencePyramid
 
+PUBLIC :: ReferencePyramid
+
 !----------------------------------------------------------------------------
-!                                      ReferencePyramid_Pointer@Constructor
+!                                           ReferencePyramid_Pointer@Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -535,10 +1312,22 @@ INTERFACE ReferencePyramid_Pointer
   MODULE PROCEDURE reference_Pyramid_Pointer
 END INTERFACE ReferencePyramid_Pointer
 
-PUBLIC :: ReferencePyramid, ReferencePyramid_Pointer
+PUBLIC :: ReferencePyramid_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                  LagrangeElement@Pyramid
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE LagrangeElement_Pyramid( RefElem, Order, Obj )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+  INTEGER( I4B ), INTENT( IN ) :: Order
+  CLASS( ReferenceElement_ ), INTENT( INOUT ) ::  Obj
+END SUBROUTINE LagrangeElement_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             Initiate@Prism
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -558,7 +1347,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                ReferencePrism@Constructor
+!                                                       ReferencePrism@Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -573,8 +1362,10 @@ INTERFACE ReferencePrism
   MODULE PROCEDURE reference_Prism
 END INTERFACE ReferencePrism
 
+PUBLIC :: ReferencePrism
+
 !----------------------------------------------------------------------------
-!                                        ReferencePrism_Pointer@Constructor
+!                                               ReferencePrism_Pointer@Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -589,313 +1380,19 @@ INTERFACE ReferencePrism_Pointer
   MODULE PROCEDURE reference_Prism_Pointer
 END INTERFACE ReferencePrism_Pointer
 
-PUBLIC :: ReferencePrism, ReferencePrism_Pointer
+PUBLIC :: ReferencePrism_Pointer
 
 !----------------------------------------------------------------------------
-!                                                    LagrangePoints@Lagrange
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 1 March 2021
-! summary: This function returns equidistance lagrange points on a line
-!
-!### Introduction
-! * Returns equidistant points on [-1,1] for lagrange interpolation
-!	* Nodecoord is a 2D array with 3 rows
-!	* First row is xi, second row is eta, third row is zeta
-
-INTERFACE
-MODULE PURE FUNCTION EquidistanceLIP_Line( RefElem, Order ) &
-  & RESULT( NodeCoord )
-  CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  REAL( DFP ), ALLOCATABLE :: NodeCoord( :, : )
-END FUNCTION EquidistanceLIP_Line
-END INTERFACE
-
-INTERFACE LagrangePoints
-  MODULE PROCEDURE EquidistanceLIP_Line
-END INTERFACE LagrangePoints
-
-PUBLIC :: LagrangePoints
-
-!----------------------------------------------------------------------------
-!                                                  LagrangeElement@Lagrange
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 1 March 2021
-! summary: This function returns lagrange element on line
-!
-!### Introduction
-! Returns lagrange line element of different order
-
-INTERFACE
-MODULE PURE FUNCTION LagrangeElement_Line( RefElem, Order ) RESULT( Obj )
-  CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceLine_ ) :: Obj
-END FUNCTION LagrangeElement_Line
-END INTERFACE
-
-INTERFACE LagrangeElement
-  MODULE PROCEDURE LagrangeElement_Line
-END INTERFACE LagrangeElement
-
-PUBLIC :: LagrangeElement
-
-!----------------------------------------------------------------------------
-!                                                   LagrangePoints@Lagrange
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 1 March 2021
-! summary: 	This subroutine generate Lagrange points on triangle
-!
-!### Introduction
-! * Returns equidistant points on triangle for lagrange interpolation
-!	* Nodecoord is a 2D array with 3 rows
-!	* first row is xi, second row is eta, third row is zeta
-
-INTERFACE
-MODULE PURE FUNCTION EquidistanceLIP_Triangle( RefElem, Order ) &
-  & RESULT( NodeCoord )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  REAL( DFP ), ALLOCATABLE :: NodeCoord( :, : )
-END FUNCTION EquidistanceLIP_Triangle
-END INTERFACE
-
-INTERFACE LagrangePoints
-  MODULE PROCEDURE EquidistanceLIP_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                   LagrangeElement@Lagrange
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 1 March 2021
-! summary: Returns lagrange Triangle element of different order
-
-INTERFACE
-MODULE PURE FUNCTION LagrangeElement_Triangle( RefElem, Order ) RESULT( Obj )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceTriangle_ ) :: Obj
-END FUNCTION LagrangeElement_Triangle
-END INTERFACE
-
-INTERFACE LagrangeElement
-  MODULE PROCEDURE LagrangeElement_Triangle
-END INTERFACE LagrangeElement
-
-!----------------------------------------------------------------------------
-!                                                    LagrangePoints@Lagrange
+!                                                     LagrangeElement@Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1. Returns equidistant points on [-1,1] for lagrange interpolation
-!		2, Nodecoord is a 2D array with 3 rows
-!		3. first row is xi, second row is eta, third row is zeta
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION EquidistanceLIP_Quadrangle( RefElem, Order ) &
-  & RESULT( NodeCoord )
-  CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  REAL( DFP ), ALLOCATABLE :: NodeCoord( :, : )
-END FUNCTION EquidistanceLIP_Quadrangle
-END INTERFACE
-
-INTERFACE LagrangePoints
-  MODULE PROCEDURE EquidistanceLIP_Quadrangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                   LagrangeElement@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-! Returns lagrange Quadrangle element of different order
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION LagrangeElement_Quadrangle( RefElem, Order ) &
-  & RESULT( Obj )
-  CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceQuadrangle_ ) :: Obj
-END FUNCTION LagrangeElement_Quadrangle
-END INTERFACE
-
-INTERFACE LagrangeElement
-  MODULE PROCEDURE LagrangeElement_Quadrangle
-END INTERFACE LagrangeElement
-
-!----------------------------------------------------------------------------
-!                                                   LagrangePoints@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1. Returns equidistant points on [-1,1] for lagrange interpolation
-!		2, Nodecoord is a 2D array with 3 rows
-!		3. first row is xi, second row is eta, third row is zeta
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION EquidistanceLIP_Tetrahedron( RefElem, Order ) &
-  & RESULT( NodeCoord )
-  CLASS( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  REAL( DFP ), ALLOCATABLE :: NodeCoord( :, : )
-END FUNCTION EquidistanceLIP_Tetrahedron
-END INTERFACE
-
-INTERFACE LagrangePoints
-  MODULE PROCEDURE EquidistanceLIP_Tetrahedron
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                   LagrangeElement@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-! Returns lagrange Tetrahedron element of different order
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION LagrangeElement_Tetrahedron( RefElem, Order ) &
-  & RESULT( Obj )
-  CLASS( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceTetrahedron_ ) :: Obj
-END FUNCTION LagrangeElement_Tetrahedron
-END INTERFACE
-
-INTERFACE LagrangeElement
-  MODULE PROCEDURE LagrangeElement_Tetrahedron
-END INTERFACE LagrangeElement
-
-!----------------------------------------------------------------------------
-!                                                   LagrangePoints@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1. Returns equidistant points on [-1,1] for lagrange interpolation
-!		2, Nodecoord is a 2D array with 3 rows
-!		3. first row is xi, second row is eta, third row is zeta
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION EquidistanceLIP_Prism( RefElem, Order ) &
-  & RESULT( NodeCoord )
+MODULE PURE SUBROUTINE LagrangeElement_Prism( RefElem, Order, Obj )
   CLASS( ReferencePrism_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
-  REAL( DFP ), ALLOCATABLE :: NodeCoord( :, : )
-END FUNCTION EquidistanceLIP_Prism
+  CLASS( ReferencePrism_ ), INTENT( INOUT) ::  Obj
+END SUBROUTINE LagrangeElement_Prism
 END INTERFACE
-
-INTERFACE LagrangePoints
-  MODULE PROCEDURE EquidistanceLIP_Prism
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                   LagrangeElement@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-! Returns lagrange Prism element of different order
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION LagrangeElement_Prism( RefElem, Order ) RESULT( Obj )
-  CLASS( ReferencePrism_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferencePrism_ ) :: Obj
-END FUNCTION LagrangeElement_Prism
-END INTERFACE
-
-INTERFACE LagrangeElement
-  MODULE PROCEDURE LagrangeElement_Prism
-END INTERFACE LagrangeElement
-
-!----------------------------------------------------------------------------
-!                                                   LagrangePoints@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1. Returns equidistant points on [-1,1] for lagrange interpolation
-!   2, Nodecoord is a 2D array with 3 rows
-!   3. first row is xi, second row is eta, third row is zeta
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION EquidistanceLIP_Pyramid( RefElem, Order ) &
-  & RESULT( NodeCoord )
-  CLASS( ReferencePyramid_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  REAL( DFP ), ALLOCATABLE :: NodeCoord( :, : )
-END FUNCTION EquidistanceLIP_Pyramid
-END INTERFACE
-
-INTERFACE LagrangePoints
-  MODULE PROCEDURE EquidistanceLIP_Pyramid
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                  LagrangeElement@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-! Returns lagrange Pyramid element of different order
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION LagrangeElement_Pyramid( RefElem, Order ) RESULT( Obj )
-  CLASS( ReferencePyramid_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferencePyramid_ ) :: Obj
-END FUNCTION LagrangeElement_Pyramid
-END INTERFACE
-
-INTERFACE LagrangeElement
-  MODULE PROCEDURE LagrangeElement_Pyramid
-END INTERFACE LagrangeElement
-
-!----------------------------------------------------------------------------
-!                                                   LagrangePoints@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1. Returns equidistant points on [-1,1] for lagrange interpolation
-!		2, Nodecoord is a 2D array with 3 rows
-!		3. first row is xi, second row is eta, third row is zeta
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION EquidistanceLIP_Hexahedron( RefElem, Order ) &
-  & RESULT( NodeCoord )
-  CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  REAL( DFP ), ALLOCATABLE :: NodeCoord( :, : )
-END FUNCTION EquidistanceLIP_Hexahedron
-END INTERFACE
-
-INTERFACE LagrangePoints
-  MODULE PROCEDURE EquidistanceLIP_Hexahedron
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                   LagrangeElement@Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-! Returns lagrange Hexahedron element of different order
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION LagrangeElement_Hexahedron( RefElem, Order ) RESULT( Obj )
-  CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceHexahedron_ ) :: Obj
-END FUNCTION LagrangeElement_Hexahedron
-END INTERFACE
-
-INTERFACE LagrangeElement
-  MODULE PROCEDURE LagrangeElement_Hexahedron
-END INTERFACE LagrangeElement
 
 !----------------------------------------------------------------------------
 !                                                       ElementType@Geometry
@@ -1273,402 +1770,7 @@ END INTERFACE LocalNodeCoord
 PUBLIC :: LocalNodeCoord
 
 !----------------------------------------------------------------------------
-!                                                  MeasureOfSimplex@Geometry
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Line( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Line
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          line_quality
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION line_quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferenceLine_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION line_quality
-END INTERFACE
-
-
-!----------------------------------------------------------------------------
-!                                                 MeasureOfSimplex@Geometry
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Triangle( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Triangle
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                             Triangle_Angle
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_angles( refelem, xij ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_angles
-END INTERFACE
-
-INTERFACE Angles
-  MODULE PROCEDURE triangle_angles
-END INTERFACE Angles
-
-PUBLIC :: Angles
-
-!----------------------------------------------------------------------------
-!                                                             Triangle_Area
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_area( refelem, xij ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_area
-END INTERFACE
-
-INTERFACE Area
-  MODULE PROCEDURE triangle_area
-END INTERFACE Area
-
-PUBLIC :: Area
-
-!----------------------------------------------------------------------------
-!                                                        Triangle_AreaVector
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_areaVector( refelem, xij ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans( 3 )
-END FUNCTION triangle_areaVector
-END INTERFACE
-
-INTERFACE AreaVector
-  MODULE PROCEDURE triangle_areaVector
-END INTERFACE AreaVector
-
-PUBLIC :: AreaVector
-
-!----------------------------------------------------------------------------
-!                                                       Triangle_Barycentric
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_barycentric( refelem, xij, x ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ), INTENT( IN ) :: x( : )
-  REAL( DFP ) :: Ans( 3 )
-END FUNCTION triangle_barycentric
-END INTERFACE
-
-INTERFACE Barycentric
-  MODULE PROCEDURE triangle_barycentric
-END INTERFACE Barycentric
-
-PUBLIC :: Barycentric
-
-!----------------------------------------------------------------------------
-!                                                          Triangle_Centroid
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_centroid( refelem, xij ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_centroid
-END INTERFACE
-
-INTERFACE Centroid
-  MODULE PROCEDURE triangle_centroid
-END INTERFACE Centroid
-
-PUBLIC :: Centroid
-
-!----------------------------------------------------------------------------
-!                                                      Triangle_CircumCenter
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_circumcentre(  refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_circumcentre
-END INTERFACE
-
-INTERFACE CircumCenter
-  MODULE PROCEDURE triangle_circumcentre
-END INTERFACE CircumCenter
-
-PUBLIC :: CircumCenter
-
-!----------------------------------------------------------------------------
-!                                                       Triangle_CircumCircle
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_circumcircle( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(4)
-    !! Ans(1) = radius and Ans(2:4) center
-END FUNCTION triangle_circumcircle
-END INTERFACE
-
-INTERFACE CircumCircle
-  MODULE PROCEDURE triangle_circumcircle
-END INTERFACE CircumCircle
-
-PUBLIC :: CircumCircle
-
-!----------------------------------------------------------------------------
-!                                                       Triangle_CircumRadius
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_circumradius( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_circumradius
-END INTERFACE
-
-INTERFACE CircumRadius
-  MODULE PROCEDURE triangle_circumradius
-END INTERFACE CircumRadius
-
-PUBLIC :: CircumRadius
-
-!----------------------------------------------------------------------------
-!                                              triangle_contains_line
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE triangle_contains_line( refelem, xij, x1, x2, &
-  & parametricLine, inside, xint )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:), x1(3), x2(3)
-  LOGICAL(LGT), INTENT( IN ) :: parametricLine
-  LOGICAL(LGT), INTENT (OUT) :: inside
-  REAL( DFP ), INTENT( OUT ) :: xint(3)
-END SUBROUTINE triangle_contains_line
-END INTERFACE
-
-INTERFACE ContainsLine
-  MODULE PROCEDURE triangle_contains_line
-END INTERFACE ContainsLine
-
-PUBLIC :: ContainsLine
-
-!----------------------------------------------------------------------------
-!                                                   triangle_contains_point
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_contains_point( refelem, xij, x ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:), x(:)
-  LOGICAL(LGT) :: Ans
-END FUNCTION triangle_contains_point
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          triangle_diameter
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_diameter( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_diameter
-END INTERFACE
-
-INTERFACE diameter
-  MODULE PROCEDURE triangle_diameter
-END INTERFACE diameter
-
-PUBLIC :: diameter
-
-!----------------------------------------------------------------------------
-!                                                       triangle_edge_length
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_edge_length( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_edge_length
-END INTERFACE
-
-INTERFACE EdgeLength
-  MODULE PROCEDURE triangle_edge_length
-END INTERFACE EdgeLength
-
-PUBLIC :: EdgeLength
-
-!----------------------------------------------------------------------------
-!                                                         triangle_incenter
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_incenter( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_incenter
-END INTERFACE
-
-INTERFACE Incenter
-  MODULE PROCEDURE triangle_incenter
-END INTERFACE Incenter
-
-PUBLIC :: Incenter
-
-!----------------------------------------------------------------------------
-!                                                         triangle_incircle
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_incircle( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(4)
-END FUNCTION triangle_incircle
-END INTERFACE
-
-INTERFACE Incircle
-  MODULE PROCEDURE triangle_incircle
-END INTERFACE Incircle
-
-PUBLIC :: Incircle
-
-!----------------------------------------------------------------------------
-!                                                         triangle_inradius
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_inradius( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_inradius
-END INTERFACE
-
-INTERFACE Inradius
-  MODULE PROCEDURE triangle_inradius
-END INTERFACE Inradius
-
-PUBLIC :: Inradius
-
-!----------------------------------------------------------------------------
-!                                                      triangle_orthocenter
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_orthocenter( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans( 3 )
-END FUNCTION triangle_orthocenter
-END INTERFACE
-
-INTERFACE Orthocenter
-  MODULE PROCEDURE triangle_orthocenter
-END INTERFACE Orthocenter
-
-PUBLIC :: Orthocenter
-
-!----------------------------------------------------------------------------
-!                                                        triangle_point_dist
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_point_dist( refelem, xij, x ) &
-  & RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:), x(:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_point_dist
-END INTERFACE
-
-INTERFACE DistanceFromPoint
-  MODULE PROCEDURE triangle_point_dist
-END INTERFACE DistanceFromPoint
-
-PUBLIC :: DistanceFromPoint
-
-!----------------------------------------------------------------------------
-!                                                    triangle_nearest_point
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE triangle_get_nearest_point( refelem, xij, x, xn, dist )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:), x(:)
-  REAL( DFP ) , INTENT (INOUT) :: xn(:)
-  REAL( DFP ), INTENT (OUT) :: dist
-END SUBROUTINE triangle_get_nearest_point
-END INTERFACE
-
-INTERFACE NearestPoint
-  MODULE PROCEDURE triangle_get_nearest_point
-END INTERFACE NearestPoint
-
-PUBLIC :: NearestPoint
-
-!----------------------------------------------------------------------------
-!                                                     triangle_random_point
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_random_point( refelem, xij, n, seed ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ) :: n, seed
-  REAL( DFP ) :: Ans(3, n)
-END FUNCTION triangle_random_point
-END INTERFACE
-
-INTERFACE RandomPoint
-  MODULE PROCEDURE triangle_random_point
-END INTERFACE RandomPoint
-
-PUBLIC :: RandomPoint
-
-!----------------------------------------------------------------------------
-!                                                          triangle_quality
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION triangle_quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_quality
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                 MeasureOfSimplex@Geometry
+!                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1693,7 +1795,7 @@ END FUNCTION Quadrangle_quality
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                 MeasureOfSimplex@Geometry
+!                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1718,7 +1820,7 @@ END FUNCTION tetrahedron_quality
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                 MeasureOfSimplex@Geometry
+!                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1743,7 +1845,7 @@ END FUNCTION Hexahedron_quality
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                  MeasureOfSimplex@Geometry
+!                                                  MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1755,7 +1857,7 @@ END FUNCTION Measure_Simplex_Prism
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          Prism_quality
+!                                                             Prism_quality
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1769,7 +1871,7 @@ END INTERFACE
 
 
 !----------------------------------------------------------------------------
-!                                                 MeasureOfSimplex@Geometry
+!                                                  MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1794,7 +1896,7 @@ END FUNCTION Pyramid_quality
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                 MeasureOfSimplex@Geometry
+!                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1860,7 +1962,6 @@ MODULE PURE SUBROUTINE get_vtk_elemType( ElemType, vtk_type, nptrs )
   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: nptrs( : )
 END SUBROUTINE get_vtk_elemType
 END INTERFACE
-
 
 INTERFACE getVTKelementType
   MODULE PROCEDURE get_vtk_elemType

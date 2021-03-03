@@ -24,6 +24,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
 #ReferenceElement
 include(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
 
+#QuadraturePoint
+include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
+
 #ElemShapeData
 # include(${CMAKE_CURRENT_LIST_DIR}/ElemShapeData/CMakeLists.txt)
 

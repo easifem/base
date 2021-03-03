@@ -39,7 +39,7 @@ MODULE BaseMethod
   USE RealVector_Method
   USE DOF_Method
   USE ReferenceElement_Method
-  ! USE QuadraturePoint_Method
+  USE QuadraturePoint_Method
   ! USE Elemshapedata_Method
   ! USE File_Method
   ! USE RealMatrix_Method

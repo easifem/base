@@ -239,6 +239,7 @@ MODULE GlobalData
   INTEGER( I4B ), PARAMETER   ::  Quadrangle4=3
   INTEGER( I4B ), PARAMETER   ::  Quadrangle9=10
   INTEGER( I4B ), PARAMETER   ::  Quadrangle8=16
+  INTEGER( I4B ), PARAMETER   ::  Quadrangle16=160
 
   INTEGER( I4B ), PARAMETER   ::  Tetrahedron=4
   INTEGER( I4B ), PARAMETER   ::  Tetrahedron4=4

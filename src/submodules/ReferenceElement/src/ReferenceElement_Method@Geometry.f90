@@ -137,7 +137,6 @@ END PROCEDURE Element_Name
 MODULE PROCEDURE Element_Type
 
   SELECT CASE( TRIM( ElemName ) )
-
     CASE( "Line0" )
     Ans = 0
     CASE( "Line1" )
@@ -219,7 +218,6 @@ END PROCEDURE Element_Type
 MODULE PROCEDURE Total_Nodes_In_Element
 
   SELECT CASE( ElemType )
-
   CASE( Line2 )
   Ans = 2
   CASE( Triangle3 )
@@ -297,7 +295,6 @@ END PROCEDURE Total_Nodes_In_Element
 MODULE PROCEDURE Element_Order
 
   SELECT CASE( ElemType )
-
   CASE( Line2 )
   Ans = 1
   CASE( Triangle3 )
@@ -383,7 +380,6 @@ END PROCEDURE Element_Order_RefElem
 MODULE PROCEDURE Elem_XiDimension
 
   SELECT CASE( ElemType )
-
   CASE( Tetrahedron4, &
   Hexahedron8, &
   Prism6, &
@@ -440,7 +436,6 @@ END PROCEDURE Elem_XiDimension
 MODULE PROCEDURE isVolume
 
   SELECT CASE( ElemType )
-
   CASE( Tetrahedron4, &
   Hexahedron8, &
   Prism6, &
@@ -663,7 +658,6 @@ END PROCEDURE Elem_Topology
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Facet_Matrix_RefElem
-
   INTEGER( I4B ) :: XiCell, T( 4 ), i, istart, iend, max_nns, nns, tFacet
 
   T( 1 ) = 0
@@ -713,7 +707,7 @@ MODULE PROCEDURE Facet_Matrix_RefElem
 END PROCEDURE Facet_Matrix_RefElem
 
 !-----------------------------------------------------------------------------
-!                                                                   FacetMatrix
+!                                                                 FacetMatrix
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Local_NodeCoord
@@ -1079,7 +1073,7 @@ MODULE PROCEDURE Local_NodeCoord
 END PROCEDURE Local_NodeCoord
 
 !-----------------------------------------------------------------------------
-!                                                                   FacetMatrix
+!                                                                FacetMatrix
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Local_NodeCoord_RefElem

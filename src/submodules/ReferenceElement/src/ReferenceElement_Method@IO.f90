@@ -59,42 +59,23 @@ MODULE PROCEDURE display_ref_elem
     I = Stdout
   END IF
   IF( LEN_TRIM( Msg ) .NE. 0 ) THEN
-    WRITE( I, "(A)" ) TRIM( Msg )
+    WRITE( I, "(A)" ) "#" // TRIM( Msg )
   END IF
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  CALL Display( "Element Type :: "// trim( ElementName( Obj % Name ) ), I )
+  CALL Display( "ElemType : "// trim( ElementName( Obj%Name ) ), I )
   CALL Display( Obj%XiDimension, "XiDimension :: ", UnitNo = I )
-  CALL Display( Obj%NSD, "NSD :: ", UnitNo = I )
-  CALL Display( Obj%Order, "Order :: ", UnitNo = I )
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  WRITE( I, "(A)" ) "XiDim ---> Entities "
-  SELECT CASE( COUNT( Obj % EntityCounts .NE. 0 ) )
-  CASE( 0 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I  )
-  CASE( 1 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I )
-  CASE( 2 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 2 ), " XiDim(1) :: ", UnitNo = I )
-  CASE( 3 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 2 ), " XiDim(1) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 3 ), " XiDim(2) :: ", UnitNo = I )
-  CASE( 4 )
-    CALL Display( Obj % EntityCounts( 1 ), " XiDim(0) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 2 ), " XiDim(1) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 3 ), " XiDim(2) :: ", UnitNo = I )
-    CALL Display( Obj % EntityCounts( 4 ), " XiDim(3) :: ", UnitNo = I )
-  END SELECT
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  DO j = 1, SIZE( Obj % XiJ, 2 )
-    CALL Display( Obj % XiJ( :, j), &
-      & "Node(" // trim( str( j, .true. ) ) // " )" )
+  CALL Display( Obj%NSD, "NSD : ", UnitNo = I )
+  CALL Display( Obj%Order, "Order : ", UnitNo = I )
+  CALL Display( Obj%EntityCounts( 1 ), "EntityCounts(0) : ", UnitNo = I )
+  CALL Display( Obj%EntityCounts( 2 ), "EntityCounts(1) : ", UnitNo = I )
+  CALL Display( Obj%EntityCounts( 3 ), "EntityCounts(2) : ", UnitNo = I )
+  CALL Display( Obj%EntityCounts( 4 ), "EntityCounts(3) : ", UnitNo = I )
+  DO j = 1, SIZE( Obj%XiJ, 2 )
+    CALL Display( Obj%XiJ( :, j), &
+      & "Node( " // trim( str( j, .true. ) ) // " ) : " )
   END DO
-  CALL Blanklines( NOL = 1, UnitNo = I )
-  DO j = 1, SIZE( Obj % Topology )
-    CALL Display( Obj % Topology( j ), &
-      & "Obj % Topology( " // TRIM( INT2STR( j ) ) // " )", I )
+  DO j = 1, SIZE( Obj%Topology )
+    CALL Display( Obj%Topology( j ), &
+      & "Topology( " // TRIM( INT2STR( j ) ) // " ) : ", I )
   END DO
 END PROCEDURE display_ref_elem
 

@@ -504,9 +504,7 @@ PUBLIC :: Rank2TensorPointer_
 ! date: 	1 March 2021
 ! summary: 	This data type is defined to handle reference topology
 !
-!### Introduction
-!
-! This data type is defined to handle reference topology
+!{!pages/ReferenceElement.md}
 
 TYPE :: ReferenceTopology_
   INTEGER( I4B ), ALLOCATABLE :: Nptrs( : )
@@ -523,16 +521,31 @@ END TYPE ReferenceTopologyPointer_
 PUBLIC :: ReferenceTopologyPointer_
 
 !----------------------------------------------------------------------------
-!                                                        ReferenceElement_
+!                                                          ReferenceElement_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	2 March 2021
+! summary: 	An abstract data type for Reference Element
+!
+!{!pages/ReferenceElement.md}
 TYPE :: ReferenceElement_
   REAL( DFP ), ALLOCATABLE :: XiJ( :, : )
+    !! Node coord
   INTEGER( I4B ) :: EntityCounts( 4 )
-  INTEGER( I4B ) :: XiDimension, Name, Order, NSD
+    !! Number of 0D, 1D, 2D, 3D entities
+  INTEGER( I4B ) :: XiDimension
+    !! Xidimension
+  INTEGER( I4B ) :: Name
+    !! Name of the element
+  INTEGER( I4B ) :: Order
+    !! Order of element
+  INTEGER( I4B ) :: NSD
+    !! Number of spatial dimensions
   TYPE( ReferenceTopology_ ), ALLOCATABLE :: Topology( : )
-  PROCEDURE(lp_refelem), POINTER, PASS( Obj ) :: LagrangePoints => NULL()
+    !! Topology information of 0D, 1, 2, 3D entities
   PROCEDURE(lag_elem_refelem), POINTER, PASS( Obj ) :: LagrangeElement=>NULL()
+    !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
 PUBLIC :: ReferenceElement_
@@ -544,24 +557,23 @@ END TYPE ReferenceElementPointer_
 PUBLIC :: ReferenceElementPointer_
 
 INTERFACE
-  MODULE PURE FUNCTION lp_refelem( Obj, Order ) RESULT( Ans )
+  PURE SUBROUTINE lag_elem_refelem(Obj, Order, HighOrderObj)
+    IMPORT :: ReferenceElement_, I4B
     CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
     INTEGER( I4B ), INTENT( IN ) :: Order
-    REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-  END FUNCTION lp_refelem
-END INTERFACE
-
-INTERFACE
-  MODULE FUNCTION lag_elem_refelem(Obj, Order) RESULT( Ans )
-    CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
-    INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), POINTER :: Ans
-  END FUNCTION lag_elem_refelem
+    CLASS( ReferenceElement_ ), INTENT( INOUT ) :: HighOrderObj
+  END SUBROUTINE lag_elem_refelem
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                          ReferenceLine_
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: 	This data type defines a reference line element
+!
+!{!pages/ReferenceLine.md}
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferenceLine_
 END TYPE ReferenceLine_
@@ -577,6 +589,11 @@ TYPE( ReferenceLine_ ), PARAMETER, PUBLIC :: &
 !                                                      ReferenceTriangle_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: 	This data type defines a reference line triangle
+!
+!{!pages/ReferenceTriangle.md}
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferenceTriangle_
 END TYPE ReferenceTriangle_
 
@@ -588,8 +605,14 @@ TYPE( ReferenceTriangle_ ), PARAMETER, PUBLIC :: &
   & Topology = NULL( ), Order = 0, NSD = 0 )
 
 !----------------------------------------------------------------------------
-!                                                    ReferenceQuadrangle_
+!                                                       ReferenceQuadrangle_
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: 	This data type defines a reference line quadrangle
+!
+!{!pages/ReferenceQuadrangle.md}
 
 TYPE, EXTENDS( ReferenceElement_ ) :: ReferenceQuadrangle_
 END TYPE ReferenceQuadrangle_
@@ -668,6 +691,7 @@ TYPE( ReferencePyramid_ ), PARAMETER, PUBLIC :: TypeReferencePyramid &
 !> authors: Dr. Vikas Sharma
 !
 ! [[keyvalue_]] is a poor implementation of dict
+
 TYPE :: KeyValue_
   INTEGER( I4B ) :: DataType = 0
   TYPE( String ) :: Key
@@ -1053,7 +1077,6 @@ PUBLIC :: STShapeDataPointer_
 ! This data type contains shapefunction related data defined
 ! at all gauss points of an elements
 TYPE :: ElemShapeData_
-
   REAL( DFP ), ALLOCATABLE :: N( :, : )
     !! Shape function value `N(I,ips)`
   REAL( DFP ), ALLOCATABLE :: dNdXi( :, :, : )
@@ -1072,7 +1095,7 @@ TYPE :: ElemShapeData_
     !! Barycentric coordinate
   REAL( DFP ), ALLOCATABLE :: Normal( :, : )
     !! Normal in case of facet element
-  TYPE( ReferenceElement_ ) :: RefElem
+  TYPE( ReferenceElement_ ) :: RefElem !=> NULL()
     !! Refererece element
   TYPE( QuadraturePoint_ ) :: Quad
     !! Quadrature points
@@ -1114,7 +1137,7 @@ PUBLIC :: ElemShapeDataPointer_
 !   !! This program shows how to use space-time element shape data
 ! use easifem
 ! implicit none
-
+!
 !   !line order 1
 !   type( stelemshapedata_ ), allocatable :: obj( : )
 !   type( elemshapedata_ ) :: elemsd
@@ -1122,31 +1145,31 @@ PUBLIC :: ElemShapeDataPointer_
 !   class( referenceElement_ ), pointer :: refelem
 !   integer( i4b ) :: orderInTime, ii
 !   real( dfp ) :: xiJ( 1, 2 )
-
+!
 !   orderInTime = 2
 !   ALLOCATE( ReferenceLine_ :: refelem )
 !   refelem = ReferenceLine( nsd = 1 )
-
+!
 !   quad = GaussLegendreQuadrature(refelem=refelem,order=orderInTime )
-
+!
 !   ! higher order lagrange element
 !   SELECT TYPE( refelem )
 !   TYPE IS ( ReferenceLine_  )
 !     refelem = LagrangeElement( refelem = refelem, order = 1 )
 !   END SELECT
-
+!
 !   call initiate( &
 !     & obj = elemsd, quad = quad, refelem = refelem, &
 !     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
-
+!
 !   call initiate( obj = obj, elemsd = elemsd )
-
+!
 !   !! Generating shape functions for space element
 !   ALLOCATE( ReferenceTriangle_ :: refelem )
 !   refelem = ReferenceTriangle( nsd = 2 )
-
+!
 !   quad = GaussLegendreQuadrature( refelem=refelem, order = 2 )
-
+!
 !   do ii = 1, size( obj )
 !     call initiate( &
 !       & obj = obj( ii ), quad = quad, refelem = refelem, &

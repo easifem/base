@@ -35,6 +35,41 @@ end
 !
 !----------------------------------------------------------------------------
 
+subroutine test2
+  type( ReferenceLine_ ) :: obj1, obj2, obj3
+  class( ReferenceElement_ ), pointer :: obj_ptr1 => NULL()
+  real( dfp ) :: xij( 3, 2 )
+  call random_number( xij )
+  call initiate( Obj=obj1, NSD=3 )
+  call display( obj1, "obj1 : " )
+  call display( MeasureSimplex(obj1, obj1%xij), "measure = ")
+  obj2 = ReferenceLine(nsd=3)
+  call display( obj2, 'obj2 : ' )
+  call obj1%LagrangeElement( Order=2, HighOrderObj=obj3 )
+  call display( obj3, "Second Order Lagrange Element : ")
+  obj_ptr1 => ReferenceLine_Pointer( nsd = 3, xij = xij )
+  call display( obj_ptr1, "obj_ptr1 : ")
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+
+subroutine test3
+  class( ReferenceElement_ ), pointer :: obj_ptr => NULL()
+  type( ReferenceLine_ ) :: obj
+  obj_ptr => ReferenceLine_Pointer(nsd=1)
+  call display( obj_ptr, 'obj_ptr : ' )
+  call obj_ptr%LagrangeElement( Order=2, HighOrderObj=obj )
+  call display( obj, "Second Order Lagrange Element : ")
+  call display( MeasureSimplex(obj, obj%xij), "Measuresimplex : ")
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 end module
 
 !----------------------------------------------------------------------------
@@ -45,5 +80,9 @@ program main
 use test_ReferenceElement
 implicit none
 call test1
+call BlankLines(nol=3)
+call test2
+call BlankLines(nol=3)
+call test3
 call BlankLines(nol=3)
 end program main
