@@ -843,9 +843,8 @@ TYPE( FEVariableMatrix_ ), PARAMETER, PUBLIC :: &
 !
 ! [[QuadraturePoint_]] data type contains the quadrature point information
 !
-! - Each of column of `Points` corresponds to a quadrature point
-! - `Points(1:tXi, :)` contains information of quarature points
-! - The last row contains the information about the weighths
+!{!pages/QuadraturePoint.md}
+
 TYPE :: QuadraturePoint_
   REAL(DFP), ALLOCATABLE :: Points( :, : )
   INTEGER( I4B ) :: tXi = 0

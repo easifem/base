@@ -49,15 +49,10 @@ END INTERFACE
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                QuadraturePoint@Constructor
+!                                              QuadraturePoint@Constructure
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Constructor_1( Points ) RESULT( Obj )
-	CLASS( QuadraturePoint_ ), POINTER :: Obj
-	REAL( DFP ), INTENT( IN ) :: Points( :, : )
-END FUNCTION Constructor_1
-
 MODULE PURE FUNCTION Constructor1( Points ) RESULT( Obj )
 	TYPE( QuadraturePoint_ ) :: Obj
 	REAL( DFP ), INTENT( IN ) :: Points( :, : )
@@ -68,11 +63,25 @@ INTERFACE QuadraturePoint
 	MODULE PROCEDURE Constructor1
 END INTERFACE QuadraturePoint
 
+
+PUBLIC :: QuadraturePoint
+
+!----------------------------------------------------------------------------
+!                                        QuadraturePoint_Pointer@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION Constructor_1( Points ) RESULT( Obj )
+	CLASS( QuadraturePoint_ ), POINTER :: Obj
+	REAL( DFP ), INTENT( IN ) :: Points( :, : )
+END FUNCTION Constructor_1
+END INTERFACE
+
 INTERFACE QuadraturePoint_Pointer
 	MODULE PROCEDURE Constructor_1
 END INTERFACE QuadraturePoint_Pointer
 
-PUBLIC :: QuadraturePoint, QuadraturePoint_Pointer
+PUBLIC :: QuadraturePoint_Pointer
 
 !----------------------------------------------------------------------------
 !                                                 DeallocateData@Constructor
@@ -109,7 +118,42 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
-!                                                        Display@Constructor
+!                                             GetQuadraturePoint@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE getQP1( Obj, Point, Weight, Num )
+	CLASS( QuadraturePoint_ ), INTENT( IN ) :: Obj
+	REAL( DFP ), INTENT( INOUT ) :: Point( 3 )
+	REAL( DFP ), INTENT( INOUT ) :: Weight
+	INTEGER( I4B ), INTENT( IN ) :: Num
+END SUBROUTINE getQP1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                             GetQuadraturePoint@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE getQP2( Obj, Point, Weight )
+	CLASS( QuadraturePoint_ ), INTENT( IN ) :: Obj
+	REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Point( :, : )
+	REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Weight( : )
+END SUBROUTINE getQP2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                             GetQuadraturePoint@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE GetQuadraturePoints
+	MODULE PROCEDURE getQP1, getQP2
+END INTERFACE
+
+PUBLIC :: GetQuadraturePoints
+
+!----------------------------------------------------------------------------
+!                                                               Display@IO
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -127,99 +171,38 @@ END INTERFACE Display
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
-!                                             GetQuadraturePoint@Constructor
+!                                      GaussLegendreQuadrature@GaussLegendre
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE getQP1( Obj, Point, Weight, Num )
-	CLASS( QuadraturePoint_ ), INTENT( IN ) :: Obj
-	REAL( DFP ), INTENT( INOUT ) :: Point( 3 )
-	REAL( DFP ), INTENT( INOUT ) :: Weight
-	INTEGER( I4B ), INTENT( IN ) :: Num
-END SUBROUTINE getQP1
-
-MODULE PURE SUBROUTINE getQP2( Obj, Point, Weight )
-	CLASS( QuadraturePoint_ ), INTENT( IN ) :: Obj
-	REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Point( :, : )
-	REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Weight( : )
-END SUBROUTINE getQP2
+MODULE PURE FUNCTION getGaussLegendreQP1( RefElem, Order ) RESULT( Obj )
+	CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+	INTEGER( I4B ), INTENT( IN ) :: Order
+	TYPE( QuadraturePoint_ ) :: Obj
+END FUNCTION getGaussLegendreQP1
 END INTERFACE
-
-INTERFACE GetQuadraturePoints
-	MODULE PROCEDURE getQP1, getQP2
-END INTERFACE
-
-PUBLIC :: GetQuadraturePoints
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQP1( RefElem, Order ) RESULT( Obj )
-	INTEGER( I4B ), INTENT( IN ) :: Order
-	CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQP1
-
 MODULE PURE FUNCTION getGaussLegendreQP2( RefElem, NIPS ) RESULT( Obj )
-	INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
 	CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+	INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
 	TYPE( QuadraturePoint_ ) :: Obj
 END FUNCTION getGaussLegendreQP2
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                      GaussLegendreQuadrature@GaussLegendre
+!----------------------------------------------------------------------------
 
 INTERFACE GaussLegendreQuadrature
 	MODULE PROCEDURE getGaussLegendreQP1, getGaussLegendreQP2
 END INTERFACE GaussLegendreQuadrature
 
 PUBLIC :: GaussLegendreQuadrature
-
-!----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPLine1( RefElem, Order ) RESULT( Obj )
-	INTEGER( I4B ), INTENT( IN ) :: Order
-	TYPE( ReferenceLine_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPLine1
-
-MODULE PURE FUNCTION getGaussLegendreQPLine2( RefElem, NIPS ) RESULT( Obj )
-	INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-	TYPE( ReferenceLine_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPLine2
-END INTERFACE
-
-! INTERFACE GaussLegendreQuadrature
-!   MODULE PROCEDURE getGaussLegendreQPLine1, getGaussLegendreQPLine2
-! END INTERFACE GaussLegendreQuadrature
-
-! PUBLIC :: GaussLegendreQuadrature
-
-!----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTriangle1( RefElem, Order ) RESULT(Obj)
-	INTEGER( I4B ), INTENT( IN ) :: Order
-	TYPE( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPTriangle1
-
-MODULE PURE FUNCTION getGaussLegendreQPTriangle2( RefElem, NIPS ) RESULT(Obj)
-	INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-	TYPE( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPTriangle2
-END INTERFACE
-
-! INTERFACE GaussLegendreQuadrature
-!   MODULE PROCEDURE getGaussLegendreQPTriangle1, getGaussLegendreQPTriangle2
-! END INTERFACE GaussLegendreQuadrature
 
 !----------------------------------------------------------------------------
 !                                                GaussLegendre@GaussLegendre
@@ -238,99 +221,5 @@ MODULE PURE FUNCTION getGaussLegendreQPQuadrangle2( RefElem, NIPS)RESULT(Obj)
 	TYPE( QuadraturePoint_ ) :: Obj
 END FUNCTION getGaussLegendreQPQuadrangle2
 END INTERFACE
-
-! INTERFACE GaussLegendreQuadrature
-!   MODULE PROCEDURE getGaussLegendreQPQuadrangle1, getGaussLegendreQPQuadrangle2
-! END INTERFACE GaussLegendreQuadrature
-
-!----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTetrahedron1( RefElem, Order)RESULT(Obj)
-	INTEGER( I4B ), INTENT( IN ) :: Order
-	TYPE( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPTetrahedron1
-
-MODULE PURE FUNCTION getGaussLegendreQPTetrahedron2( RefElem, NIPS)RESULT(Obj)
-	INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-	TYPE( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPTetrahedron2
-END INTERFACE
-
-! INTERFACE GaussLegendreQuadrature
-!   MODULE PROCEDURE getGaussLegendreQPTetrahedron1, getGaussLegendreQPTetrahedron2
-! END INTERFACE GaussLegendreQuadrature
-
-!----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPyramid1( RefElem, Order)RESULT(Obj)
-	INTEGER( I4B ), INTENT( IN ) :: Order
-	TYPE( ReferencePyramid_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPPyramid1
-
-MODULE PURE FUNCTION getGaussLegendreQPPyramid2( RefElem, NIPS)RESULT(Obj)
-	INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-	TYPE( ReferencePyramid_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPPyramid2
-END INTERFACE
-
-! INTERFACE GaussLegendreQuadrature
-!   MODULE PROCEDURE getGaussLegendreQPPyramid1, getGaussLegendreQPPyramid2
-! END INTERFACE GaussLegendreQuadrature
-
-!----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPrism1( RefElem, Order ) RESULT( Obj )
-	INTEGER( I4B ), INTENT( IN ) :: Order
-	TYPE( ReferencePrism_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPPrism1
-
-MODULE PURE FUNCTION getGaussLegendreQPPrism2( RefElem, NIPS ) RESULT( Obj )
-	INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-	TYPE( ReferencePrism_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPPrism2
-END INTERFACE
-
-! INTERFACE GaussLegendreQuadrature
-!   MODULE PROCEDURE getGaussLegendreQPPrism1, getGaussLegendreQPPrism2
-! END INTERFACE GaussLegendreQuadrature
-
-!----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPHexahedron1( RefElem, Order ) &
-		& RESULT( Obj )
-	INTEGER( I4B ), INTENT( IN ) :: Order
-	TYPE( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPHexahedron1
-
-MODULE PURE FUNCTION getGaussLegendreQPHexahedron2( RefElem, NIPS ) &
-		& RESULT( Obj )
-	INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-	TYPE( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
-	TYPE( QuadraturePoint_ ) :: Obj
-END FUNCTION getGaussLegendreQPHexahedron2
-END INTERFACE
-
-! INTERFACE GaussLegendreQuadrature
-!   MODULE PROCEDURE getGaussLegendreQPHexahedron1, getGaussLegendreQPHexahedron2
-! END INTERFACE GaussLegendreQuadrature
 
 END MODULE QuadraturePoint_Method
