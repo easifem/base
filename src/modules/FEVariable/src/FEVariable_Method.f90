@@ -14,15 +14,14 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-
 MODULE FEVariable_Method
-USE GlobalData
 USE BaseType
+USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                         Display@Constructor
+!                                                                Display@IO
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -60,7 +59,7 @@ PUBLIC :: DeallocateData
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE MODULE PURE FUNCTION Nodal_Scalar_Constant( Val, Rank, VarType ) &
+MODULE PURE FUNCTION Nodal_Scalar_Constant( Val, Rank, VarType ) &
   & RESULT( Obj )
   TYPE( FEVariable_ ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val
@@ -114,7 +113,7 @@ END INTERFACE NodalVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE MODULE PURE FUNCTION Nodal_Vector_Constant( Val, Rank, VarType ) &
+MODULE PURE FUNCTION Nodal_Vector_Constant( Val, Rank, VarType ) &
   & RESULT( Obj )
   TYPE( FEVariable_ ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
@@ -167,7 +166,7 @@ END INTERFACE NodalVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE MODULE PURE FUNCTION Nodal_Matrix_Constant( Val, Rank, VarType ) &
+MODULE PURE FUNCTION Nodal_Matrix_Constant( Val, Rank, VarType ) &
   & RESULT( Obj )
   TYPE( FEVariable_ ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
@@ -220,7 +219,7 @@ END INTERFACE NodalVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE MODULE PURE FUNCTION Quadrature_Scalar_Constant( Val, Rank, VarType ) &
+MODULE PURE FUNCTION Quadrature_Scalar_Constant( Val, Rank, VarType ) &
   & RESULT( Obj )
   TYPE( FEVariable_ ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val
@@ -276,7 +275,7 @@ END INTERFACE QuadratureVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE MODULE PURE FUNCTION Quadrature_Vector_Constant( Val, Rank, VarType ) &
+MODULE PURE FUNCTION Quadrature_Vector_Constant( Val, Rank, VarType ) &
   & RESULT( Obj )
   TYPE( FEVariable_ ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
@@ -290,7 +289,7 @@ INTERFACE QuadratureVariable
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
-!                                                  QuadratureVariable@Constructor
+!                                             QuadratureVariable@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -308,7 +307,7 @@ INTERFACE QuadratureVariable
 END INTERFACE QuadratureVariable
 
 !----------------------------------------------------------------------------
-!                                              QuadratureVariable@Constructor
+!                                             QuadratureVariable@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -330,7 +329,7 @@ END INTERFACE QuadratureVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE MODULE PURE FUNCTION Quadrature_Matrix_Constant( Val, Rank, VarType ) &
+MODULE PURE FUNCTION Quadrature_Matrix_Constant( Val, Rank, VarType ) &
   & RESULT( Obj )
   TYPE( FEVariable_ ) :: Obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
@@ -398,7 +397,7 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
-!                                                             SHAPE@GetMethod
+!                                                            SHAPE@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -434,7 +433,7 @@ END INTERFACE getValues
 PUBLIC :: getValues
 
 !----------------------------------------------------------------------------
-!                                                   getValues@GetMethod
+!                                                       getValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -451,7 +450,7 @@ INTERFACE getValues
 END INTERFACE getValues
 
 !----------------------------------------------------------------------------
-!                                                   getValues@GetMethod
+!                                                       getValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -468,7 +467,7 @@ INTERFACE getValues
 END INTERFACE getValues
 
 !----------------------------------------------------------------------------
-!                                                   getValues@GetMethod
+!                                                       getValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -485,7 +484,7 @@ INTERFACE getValues
 END INTERFACE getValues
 
 !----------------------------------------------------------------------------
-!                                                   getValues@GetMethod
+!                                                        getValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -502,7 +501,7 @@ INTERFACE getValues
 END INTERFACE getValues
 
 !----------------------------------------------------------------------------
-!                                                   getValues@GetMethod
+!                                                       getValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -519,7 +518,7 @@ INTERFACE getValues
 END INTERFACE getValues
 
 !----------------------------------------------------------------------------
-!                                                   getValues@GetMethod
+!                                                       getValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -536,7 +535,7 @@ INTERFACE getValues
 END INTERFACE getValues
 
 !----------------------------------------------------------------------------
-!                                                   getValues@GetMethod
+!                                                       getValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -553,7 +552,7 @@ INTERFACE getValues
 END INTERFACE getValues
 
 !----------------------------------------------------------------------------
-!                                                   getValues@GetMethod
+!                                                       getValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE

@@ -16,8 +16,6 @@
 !
 
 MODULE Random_Method
-  !! Module to handle random numbers in easifem
-
 USE GlobalData
 USE BaseType
 IMPLICIT NONE

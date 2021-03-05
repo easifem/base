@@ -30,32 +30,29 @@ MODULE BaseMethod
   USE ErrorHandling
   USE Utility
   USE BaseType
+  USE Random_Method
   USE AbstractArray_Method
   USE AbstractMatrix_Method
   USE AbstractVector_Method
   USE BoundingBox_Method
   USE IntVector_Method
+  USE IndexValue_Method
+  USE KeyValue_Method
   USE Vector3D_Method
   USE RealVector_Method
   USE DOF_Method
   USE ReferenceElement_Method
   USE QuadraturePoint_Method
-  ! USE Elemshapedata_Method
+  USE FEVariable_Method
+  USE Elemshapedata_Method
   ! USE File_Method
   ! USE RealMatrix_Method
   ! USE Lapack_Method
   ! USE SparseMatrix_Method
-  ! USE IndexValue_Method
   ! USE IterationData_Method
-  ! USE KeyValue_Method
-  ! USE Random_Method
-
   ! ! Tensor related
   ! USE VoigtRank2Tensor_Method
   ! USE Rank2Tensor_Method
-
-  ! ! FE variable
-  ! USE FEVariable_Method
 
   ! ! FE Matrix
   ! USE FEMatrix_Module

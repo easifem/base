@@ -30,6 +30,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 #BaseType
 include(${CMAKE_CURRENT_LIST_DIR}/BaseType/CMakeLists.txt)
 
+#Random
+include(${CMAKE_CURRENT_LIST_DIR}/Random/CMakeLists.txt)
+
 #AbstractArray
 include(${CMAKE_CURRENT_LIST_DIR}/AbstractArray/CMakeLists.txt)
 
@@ -44,6 +47,12 @@ include(${CMAKE_CURRENT_LIST_DIR}/BoundingBox/CMakeLists.txt)
 
 #IntVector
 include(${CMAKE_CURRENT_LIST_DIR}/IntVector/CMakeLists.txt)
+
+#IndexValue
+include(${CMAKE_CURRENT_LIST_DIR}/IndexValue/CMakeLists.txt)
+
+#KeyValue
+include(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
 
 # Vector3D_
 include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
@@ -63,14 +72,14 @@ include(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
 #QuadraturePoint
 include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
 
-#ElemshapeData
-# include(${CMAKE_CURRENT_LIST_DIR}/ElemshapeData/CMakeLists.txt)
+#FEVariable
+include(${CMAKE_CURRENT_LIST_DIR}/FEVariable/CMakeLists.txt)
+
+# ElemshapeData
+include(${CMAKE_CURRENT_LIST_DIR}/ElemshapeData/CMakeLists.txt)
 
 # # #FEMatrix
 # # include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
-
-# # #FEVariable
-# # include(${CMAKE_CURRENT_LIST_DIR}/FEVariable/CMakeLists.txt)
 
 # # #File
 # # include(${CMAKE_CURRENT_LIST_DIR}/File/CMakeLists.txt)
@@ -92,9 +101,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
 
 # # #Lapack
 # # include(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)
-
-# # #Random
-# # include(${CMAKE_CURRENT_LIST_DIR}/Random/CMakeLists.txt)
 
 # # # #RealMatrix
 # # # include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)

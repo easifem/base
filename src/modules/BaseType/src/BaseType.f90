@@ -1071,10 +1071,11 @@ PUBLIC :: STShapeDataPointer_
 !                                                           ElemShapeData_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	4 March 2021
+! summary: 	This data type contains shapefunction related data defined at all gauss points of an elements
 !
-! This data type contains shapefunction related data defined
-! at all gauss points of an elements
+!{!pages/ElemshapeData.md}
 TYPE :: ElemShapeData_
   REAL( DFP ), ALLOCATABLE :: N( :, : )
     !! Shape function value `N(I,ips)`

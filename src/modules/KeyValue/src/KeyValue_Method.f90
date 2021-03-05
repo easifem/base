@@ -15,11 +15,9 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Dr. Vikas Sharma
-!
-! This module contains interfaces of methods related to [[keyvalue_]]
-!> authors: Dr. Vikas Sharma
-!
+!> authors: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This module contains interfaces of methods related to [[keyvalue_]]
 !
 !### Usage
 !
@@ -54,7 +52,6 @@ INTEGER, PARAMETER :: REAL_RANK_2 = 2
 INTEGER, PARAMETER :: INT_RANK_0 = 3
 INTEGER, PARAMETER :: INT_RANK_1 = 4
 INTEGER, PARAMETER :: INT_RANK_2 = 5
-
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate
