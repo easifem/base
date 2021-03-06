@@ -1,22 +1,36 @@
-!< StringiFor, definition of `string` type.
-module stringifor_string_t
-!< StringiFor, definition of `string` type.
-use, intrinsic :: iso_fortran_env, only : iostat_eor
-use befor64, only : b64_decode, b64_encode
-use penf, only : I1P, I2P, I4P, I8P, R4P, R8P, R16P, str
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
 
-implicit none
-private
-save
-! expose StingiFor overloaded builtins and operators
-! public :: adjustl, adjustr, count, index, len, len_trim, repeat, scan, trim, verify
-public :: adjustl, adjustr, count, index, len_trim, repeat, scan, trim, verify
-! expose StingiFor objects
-public :: CK
-public :: string
+MODULE stringifor_string_t
+USE, INTRINSIC :: iso_fortran_env, ONLY : iostat_eor
+USE befor64, ONLY : b64_decode, b64_encode
+USE penf, ONLY : I1P, I2P, I4P, I8P, R4P, R8P, R16P, str
+IMPLICIT NONE
+PRIVATE
+SAVE
 
-integer, parameter :: CK = selected_char_kind('DEFAULT') !< Default character kind.
+PUBLIC :: adjustl, adjustr, count, index, len_trim, repeat, scan, trim, verify
+PUBLIC :: CK
+PUBLIC :: string
+INTEGER, PARAMETER :: CK = selected_char_kind('DEFAULT')
 
+!----------------------------------------------------------------------------
+!                                                                     String
+!----------------------------------------------------------------------------
 type :: string
   !< OOP designed string class.
   character(kind=CK, len=:), allocatable :: raw !< Raw data.

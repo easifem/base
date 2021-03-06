@@ -34,21 +34,27 @@ PRIVATE
 !                                                      Initiate@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	6 March 2021
+! summary: 	This subroutine initiates the [[File_]] object
+
 INTERFACE
 MODULE SUBROUTINE init_file( Obj, Path, FileName, Extension, Status, &
-  & Action, Access, isBinary, Comment, Separator )
+  & Action, Access, Binary, Comment, Separator, Delimiter )
   CLASS( File_ ), INTENT( INOUT ) :: Obj
-  !! File object
-  CHARACTER( LEN = * ), INTENT( IN ) :: Path
-  CHARACTER( LEN = * ), INTENT( IN ) :: FileName
-  CHARACTER( LEN = * ), INTENT( IN ) :: Extension
-  CHARACTER( LEN = * ), INTENT( IN ) :: Status
-  CHARACTER( LEN = * ), INTENT( IN ) :: Action
-  CHARACTER( LEN = * ), INTENT( IN ), OPTIONAL ::  Access
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isBinary
-  !! Flag for binary file
+    !! File object
+  TYPE( String ), INTENT( IN ) :: Path
+  TYPE( String ), INTENT( IN ) :: FileName
+  TYPE( String ), INTENT( IN ) :: Extension
+  TYPE( String ), INTENT( IN ) :: Status
+    !! New, Old, Replace
+  TYPE( String ), INTENT( IN ) :: Action
+  TYPE( String ), INTENT( IN ), OPTIONAL ::  Access
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: Binary
+    !! Flag for binary file, if present then it must be true
   CHARACTER( LEN = 1 ), OPTIONAL, INTENT( IN ) :: Comment
   CHARACTER( LEN = 1 ), OPTIONAL, INTENT( IN ) :: Separator
+  CHARACTER( LEN = 2 ), OPTIONAL, INTENT( IN ) :: Delimiter
 END SUBROUTINE init_file
 END INTERFACE
 
@@ -78,7 +84,7 @@ MODULE SUBROUTINE open_file_b( Obj, Path, FileName, Extension, tag )
   TYPE( String ), INTENT( IN ) :: Path
   TYPE( String ), INTENT( IN ) :: FileName
   TYPE( String ), INTENT( IN ) :: Extension
-  TYPE( String ), INTENT( IN ) :: tag
+  CHARACTER( LEN = * ), INTENT( IN ) :: tag
 END SUBROUTINE open_file_b
 END INTERFACE
 
@@ -139,16 +145,16 @@ PUBLIC :: OpenBinaryFileToWrite
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE open_file_Read_a( Obj, Path, FileName, Extension )
+MODULE SUBROUTINE open_file_read_a( Obj, Path, FileName, Extension )
   CLASS( File_ ), INTENT( INOUT ) :: Obj
   TYPE( String ), INTENT( IN ) :: Path
   TYPE( String ), INTENT( IN ) :: FileName
   TYPE( String ), INTENT( IN ) :: Extension
-END SUBROUTINE open_file_Read_a
+END SUBROUTINE open_file_read_a
 END INTERFACE
 
 INTERFACE OpenFileToRead
-  MODULE PROCEDURE open_file_Read_a
+  MODULE PROCEDURE open_file_read_a
 END INTERFACE OpenFileToRead
 
 PUBLIC :: OpenFileToRead
@@ -182,11 +188,11 @@ MODULE SUBROUTINE close_file( Obj )
 END SUBROUTINE close_file
 END INTERFACE
 
-INTERFACE CloseFile
+INTERFACE Close
   MODULE PROCEDURE close_file
-END INTERFACE CloseFile
+END INTERFACE Close
 
-PUBLIC :: CloseFile
+PUBLIC :: Close
 
 !----------------------------------------------------------------------------
 !                                                     DeleteFile@Constructor
@@ -202,7 +208,11 @@ MODULE SUBROUTINE DeleteFile( Obj )
 END SUBROUTINE DeleteFile
 END INTERFACE
 
-PUBLIC :: DeleteFile
+INTERFACE Delete
+  MODULE PROCEDURE DeleteFile
+END INTERFACE Delete
+
+PUBLIC :: Delete
 
 !----------------------------------------------------------------------------
 !                                                     ReopenFile@Constructor
@@ -218,12 +228,33 @@ MODULE SUBROUTINE reopen_file( Obj )
 END SUBROUTINE reopen_file
 END INTERFACE
 
-INTERFACE ReopenFile
+INTERFACE Reopen
   MODULE PROCEDURE reopen_file
-END INTERFACE ReopenFile
+END INTERFACE Reopen
 
 PUBLIC :: Reopen
 
+
+!----------------------------------------------------------------------------
+!                                                              Exist@Inquiry
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 5 March 2021
+! summary: This subroutine checks whether a file exists or not
+
+INTERFACE
+MODULE FUNCTION fileExists( Obj ) RESULT( Ans )
+  CLASS( File_ ), INTENT( IN ) :: Obj
+  LOGICAL( LGT ) :: Ans
+END FUNCTION fileExists
+END INTERFACE
+
+INTERFACE Exists
+  MODULE PROCEDURE fileExists
+END INTERFACE Exists
+
+PUBLIC :: Exists
 
 !----------------------------------------------------------------------------
 !                                                       FileSize@Inquiry
@@ -245,66 +276,6 @@ INTERFACE SIZE
 END INTERFACE SIZE
 
 PUBLIC :: SIZE
-
-!----------------------------------------------------------------------------
-!                                                         TotalLines@Inquiry
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
-! summary: This function counts total number of lines in [[file_]] object
-
-INTERFACE
-MODULE FUNCTION getTotalLines( Obj, nHeader ) RESULT( Ans )
-  CLASS( File_ ), INTENT( INOUT ) :: Obj
-    !! File object
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nHeader
-    !! Skip this number of lines at the top of the file
-  INTEGER( I4B ) :: Ans
-    !! Total number of lines
-END FUNCTION getTotalLines
-END INTERFACE
-
-INTERFACE TotalLines
-  MODULE PROCEDURE getTotalLines
-END INTERFACE TotalLines
-
-PUBLIC :: TotalLines
-
-!----------------------------------------------------------------------------
-!                                                              Exist@Inquiry
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 5 March 2021
-! summary: This subroutine checks whether filename exists or not
-
-INTERFACE
-MODULE FUNCTION fileExists( Obj ) RESULT( Ans )
-  CLASS( File_ ), INTENT( IN ) :: Obj
-  LOGICAL( LGT ) :: Ans
-END FUNCTION fileExists
-END INTERFACE
-
-INTERFACE Exists
-  MODULE PROCEDURE fileExists
-END INTERFACE Exists
-
-PUBLIC :: Exists
-
-!----------------------------------------------------------------------------
-!                                                       hasExtension@Inquiry
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE FUNCTION hasExtension( Obj, Extension ) RESULT( Ans )
-  CLASS( File_ ), INTENT( IN ) :: Obj
-  CHARACTER( LEN = 3 ), INTENT( IN ) :: Extension
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
-END INTERFACE
-
-PUBLIC :: hasExtension
 
 !----------------------------------------------------------------------------
 !                                                            isOpen@Inquiry

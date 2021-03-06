@@ -214,7 +214,7 @@ PURE FUNCTION EquidistanceLIP_Triangle( XiJ, Order ) RESULT( NodeCoord )
 
     CASE( 7 )
     NodeCoord = RESHAPE( [ &
-      &	0.0, 0.0, 0.0, &
+      & 0.0, 0.0, 0.0, &
       & 1.0, 0.0, 0.0, &
       & 0.0, 1.0, 0.0, &
       & 0.14285714285714285714, 0.0, 0.0, &

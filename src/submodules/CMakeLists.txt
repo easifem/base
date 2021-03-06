@@ -9,6 +9,9 @@
 #Random
 include(${CMAKE_CURRENT_LIST_DIR}/Random/CMakeLists.txt)
 
+#File
+include(${CMAKE_CURRENT_LIST_DIR}/File/CMakeLists.txt)
+
 #BoundingBox
 include(${CMAKE_CURRENT_LIST_DIR}/BoundingBox/CMakeLists.txt)
 

@@ -15,40 +15,39 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This submodule contains Input/Output methods for [[IntVector_]]
-
-SUBMODULE( IntVector_Method ) IO
+SUBMODULE( File_Method ) Inquire
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                    Display
+!
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntscalarDisplay
-  INTEGER( I4B ) :: I
-  I = Input( option=UnitNo, default=stdout)
-  CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : ", val = SIZE( Obj ), unitNo = I )
-  CALL Display( Val = Obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
-END PROCEDURE IntscalarDisplay
+MODULE PROCEDURE fileExists
+  INQUIRE( FILE = (Obj%Path//Obj%FileName//Obj%Extension) // "", &
+    & EXIST = Ans )
+END PROCEDURE fileExists
 
 !----------------------------------------------------------------------------
-!                                                                    Display
+!                                                                 FileSize
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVectorDisplay
-  INTEGER( I4B ) :: j, I
-  I = Input( option=UnitNo, default=stdout)
-  CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : ", val = SIZE( Obj ), unitNo = I )
-  DO j = 1, SIZE( Obj )
-    CALL Display( Obj( j ), msg = "( " // TRIM(STR( fm=FI4B, n=j )) // " ) ", &
-      & unitNo = I )
-  END DO
-END PROCEDURE IntVectorDisplay
+MODULE PROCEDURE file_size
+  IF( .NOT. Exists( Obj ) ) THEN
+    Ans = 0
+  ELSE
+    INQUIRE( FILE=(Obj%Path//Obj%FileName//Obj%Extension) // "", SIZE=Ans )
+  END IF
+END PROCEDURE file_size
 
-END SUBMODULE IO
+!----------------------------------------------------------------------------
+!                                                                 isOpen
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE checkIsOpen
+  INQUIRE( FILE=( Obj%Path // Obj%FileName // Obj%Extension ) // "", &
+    & OPENED = Ans )
+END PROCEDURE checkIsOpen
+
+END SUBMODULE Inquire

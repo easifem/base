@@ -26,8 +26,8 @@
 !
 
 MODULE IntVector_Method
-USE GlobalData, ONLY: DFP, I4B, LGT, stdout, FDFP, FI4B
-USE BaseType, ONLY : IntVector_, STR
+USE GlobalData
+USE BaseType
 IMPLICIT NONE
 PRIVATE
 

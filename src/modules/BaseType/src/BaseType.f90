@@ -21,32 +21,16 @@
 
 MODULE BaseType
 USE GlobalData
-USE StringiFor, ONLY: string, adjustl, adjustr, count, index, len_trim, &
-  & repeat, scan, trim, verify, read_file, read_lines, write_file, &
-  & write_lines
-
-USE PENF, ONLY: STR, STRZ, CTON, BSTR, BCTON
-
+USE StringiFor, ONLY: String
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: string, adjustl, adjustr, count, index, len_trim, &
-  & repeat, scan, trim, verify, read_file, read_lines, write_file, &
-  & write_lines
+PUBLIC :: String
 
-PUBLIC :: STR, STRZ, CTON, BSTR, BCTON
+TYPE( String ), PUBLIC, PARAMETER :: TypeString = String(raw=NULL())
 
-TYPE( String ), PARAMETER, PUBLIC :: TypeString = String( raw = NULL() )
-
-!----------------------------------------------------------------------------
-!                                                              StringPointer_
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! [[StringPointer_]] data-type contains pointer to `String`
 TYPE :: StringPointer_
-  TYPE( String ), POINTER :: Ptr => NULL ()
+  CLASS( String ), POINTER :: Ptr => NULL()
 END TYPE StringPointer_
 
 PUBLIC :: StringPointer_
@@ -75,6 +59,7 @@ TYPE :: File_
   LOGICAL( LGT ) :: isBinary = .FALSE.
   CHARACTER( LEN = 1 ) :: Comment = "#"
   CHARACTER( LEN = 1 ) :: Separator = ","
+  CHARACTER( LEN = 2 ) :: Delimiter = "\n"
 END TYPE File_
 
 PUBLIC :: File_
@@ -777,7 +762,7 @@ END TYPE KeyValue_
 PUBLIC :: KeyValue_
 
 TYPE( KeyValue_ ), PARAMETER, PUBLIC :: TypeKeyValue = &
-  & KeyValue_( Value = NULL( ), Key = TypeString )
+  & KeyValue_( Value = NULL( ) )
 
 !----------------------------------------------------------------------------
 !                                                                FEVariable_

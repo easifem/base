@@ -21,7 +21,8 @@ set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
 set(namespace "${PROJECT_NAME}")
 
 include(CMakePrintHelpers)
-
+include(FortranCInterface)
+FortranCInterface_VERIFY()
 
 # SYSTEM INFORMATION
 # Disable in-source builds to prevent source tree corruption.
