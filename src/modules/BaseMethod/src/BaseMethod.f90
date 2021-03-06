@@ -42,6 +42,13 @@ MODULE BaseMethod
   USE RealVector_Method
   USE DOF_Method
   USE ReferenceElement_Method
+  USE ReferenceLine_Method
+  USE ReferenceTriangle_Method
+  USE ReferenceQuadrangle_Method
+  USE ReferenceTetrahedron_Method
+  USE ReferenceHexahedron_Method
+  USE ReferencePrism_Method
+  USE ReferencePyramid_Method
   USE QuadraturePoint_Method
   USE FEVariable_Method
   USE Elemshapedata_Method
@@ -50,11 +57,8 @@ MODULE BaseMethod
   ! USE Lapack_Method
   ! USE SparseMatrix_Method
   ! USE IterationData_Method
-  ! ! Tensor related
   ! USE VoigtRank2Tensor_Method
   ! USE Rank2Tensor_Method
-
-  ! ! FE Matrix
   ! USE FEMatrix_Module
 
 END MODULE BaseMethod

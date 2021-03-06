@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: This submodule contains method for [[ReferenceQuadrangle_]]
 
-SUBMODULE( ReferenceElement_Method ) Quadrangle
+SUBMODULE( ReferenceQuadrangle_Method ) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -212,4 +212,4 @@ END PROCEDURE Quadrangle_quality
 
 #include "./modified_burkardt.inc"
 
-END SUBMODULE Quadrangle
+END SUBMODULE Methods

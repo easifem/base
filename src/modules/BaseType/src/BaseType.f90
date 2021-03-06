@@ -55,30 +55,106 @@ PUBLIC :: StringPointer_
 !                                                                      File_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	5 March 2021
+! summary: This data type is defined for the IO operation.
 !
-! [[File_]] data-type is defined for IO
+!{!pages/File.md}
 
 TYPE :: File_
-  TYPE( String ) :: FileName, Path, Extension, ACTION, STATUS, ACCESS
-  INTEGER( I4B ) :: UnitNo=1, WriteNo=1, IOSTAT=1
-  LOGICAL( LGT ) :: isOpen = .FALSE., isBinary = .FALSE.
+  TYPE( String ) :: FileName
+  TYPE( String ) :: Path
+  TYPE( String ) :: Extension
+  TYPE( String ) :: ACTION
+  TYPE( String ) :: STATUS
+  TYPE( String ) :: ACCESS
+  INTEGER( I4B ) :: UnitNo=1
+  INTEGER( I4B ) :: WriteNo=1
+  INTEGER( I4B ) :: IOSTAT=1
+  LOGICAL( LGT ) :: isOpen = .FALSE.
+  LOGICAL( LGT ) :: isBinary = .FALSE.
   CHARACTER( LEN = 1 ) :: Comment = "#"
   CHARACTER( LEN = 1 ) :: Separator = ","
 END TYPE File_
 
 PUBLIC :: File_
 
-TYPE( File_ ), PUBLIC, PARAMETER :: TypeFile = &
-  & File_( FileName = TypeString, Path = TypeString, Extension = TypeString, &
-  & ACTION = TypeString, STATUS = TypeString, ACCESS = TypeString, &
-  & UnitNo = -1, WriteNo = -1, IOSTAT = -1, isOpen = .FALSE. )
+TYPE( File_ ), PUBLIC, PARAMETER :: TypeFile = File_( )
 
 TYPE :: FilePointer_
   CLASS( File_ ), POINTER :: Ptr => NULL( )
 END TYPE FilePointer_
 
 PUBLIC :: FilePointer_
+
+!----------------------------------------------------------------------------
+!                                                                   txtFile_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	5 March 2021
+! summary: This data type is defined for the IO operation.
+!
+!{!pages/File.md}
+
+TYPE, EXTENDS( File_ ) :: txtFile_
+END TYPE txtFile_
+
+PUBLIC :: txtFile_
+
+TYPE( txtFile_ ), PUBLIC, PARAMETER :: TypetxtFile = txtFile_()
+
+TYPE :: txtFilePointer_
+  CLASS( txtFile_ ), POINTER :: Ptr => NULL( )
+END TYPE txtFilePointer_
+
+PUBLIC :: txtFilePointer_
+
+!----------------------------------------------------------------------------
+!                                                                 jsonFile_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	5 March 2021
+! summary: This data type is defined for the IO operation.
+!
+!{!pages/File.md}
+
+TYPE, EXTENDS( File_ ) :: jsonFile_
+END TYPE jsonFile_
+
+PUBLIC :: jsonFile_
+
+TYPE( jsonFile_ ), PUBLIC, PARAMETER :: TypejsonFile_ = jsonFile_()
+
+TYPE :: jsonFilePointer_
+  CLASS( jsonFile_ ), POINTER :: Ptr => NULL()
+END TYPE jsonFilePointer_
+
+PUBLIC :: jsonFilePointer_
+
+!----------------------------------------------------------------------------
+!                                                                 hdfFile_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	5 March 2021
+! summary: This data type is defined for the IO operation.
+!
+!{!pages/File.md}
+
+TYPE :: hdfFile_
+END TYPE hdfFile_
+
+PUBLIC :: hdfFile_
+
+TYPE( hdfFile_ ), PUBLIC, PARAMETER :: TypehdfFile_ = hdfFile_()
+
+TYPE :: hdfFilePointer_
+  CLASS( hdfFile_ ), POINTER :: Ptr => NULL()
+END TYPE hdfFilePointer_
+
+PUBLIC :: hdfFilePointer_
 
 !----------------------------------------------------------------------------
 !                                                               BoundingBox_

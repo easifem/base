@@ -13,12 +13,12 @@ target_sources(
   ${src_path}/ElemshapeData_Method@IO.f90
   ${src_path}/ElemshapeData_Method@getMethod.f90
   ${src_path}/ElemshapeData_Method@setMethod.f90
-  ${src_path}/ElemshapeData_Method@LineH1Lagrange.f90
-  ${src_path}/ElemshapeData_Method@QuadrangleH1Lagrange.f90
   ${src_path}/ElemshapeData_Method@H1Lagrange.f90
-  ${src_path}/ElemshapeData_Method@PrismH1Lagrange.f90
-  ${src_path}/ElemshapeData_Method@TetrahedronH1Lagrange.f90
-  ${src_path}/ElemshapeData_Method@HexahedronH1Lagrange.f90
-  ${src_path}/ElemshapeData_Method@PyramidH1Lagrange.f90
-  ${src_path}/ElemshapeData_Method@TriangleH1Lagrange.f90
+  ${src_path}/ElemshapeData_Method@H1Lagrange@Line.f90
+  ${src_path}/ElemshapeData_Method@H1Lagrange@Triangle.f90
+  ${src_path}/ElemshapeData_Method@H1Lagrange@Quadrangle.f90
+  ${src_path}/ElemshapeData_Method@H1Lagrange@Tetrahedron.f90
+  ${src_path}/ElemshapeData_Method@H1Lagrange@Hexahedron.f90
+  ${src_path}/ElemshapeData_Method@H1Lagrange@Prism.f90
+  ${src_path}/ElemshapeData_Method@H1Lagrange@Pyramid.f90
 )

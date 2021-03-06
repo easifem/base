@@ -34,27 +34,27 @@ subroutine test1
   call display( obj, "obj : " )
 end
 
-subroutine test2
-  type( ReferenceTriangle_ ) :: obj
-  obj = referenceTriangle( nsd = 2 )
-  call display( obj, "obj : " )
-end
+! subroutine test2
+!   type( ReferenceTriangle_ ) :: obj
+!   obj = referenceTriangle( nsd = 2 )
+!   call display( obj, "obj : " )
+! end
 
-subroutine test3
-  class( ReferenceElement_ ), pointer :: obj => null()
-  obj => referenceTriangle_pointer( nsd = 2 )
-  call display( obj, "obj : " )
-end
+! subroutine test3
+!   class( ReferenceElement_ ), pointer :: obj => null()
+!   obj => referenceTriangle_pointer( nsd = 2 )
+!   call display( obj, "obj : " )
+! end
 
-subroutine test4
-  class( ReferenceElement_ ), pointer :: obj_ptr => null()
-  type( ReferenceTriangle_ ) :: obj
-  obj_ptr => referenceTriangle_pointer( nsd = 2 )
-  call obj_ptr%LagrangeElement( order = 2, HighOrderObj = obj )
-  call display( obj, "higher order obj : ")
-  call obj_ptr%LagrangeElement( order = 3, HighOrderObj = obj )
-  call display( obj, "3rd order obj : ")
-end
+! subroutine test4
+!   class( ReferenceElement_ ), pointer :: obj_ptr => null()
+!   type( ReferenceTriangle_ ) :: obj
+!   obj_ptr => referenceTriangle_pointer( nsd = 2 )
+!   call obj_ptr%LagrangeElement( order = 2, HighOrderObj = obj )
+!   call display( obj, "higher order obj : ")
+!   call obj_ptr%LagrangeElement( order = 3, HighOrderObj = obj )
+!   call display( obj, "3rd order obj : ")
+! end
 
 !----------------------------------------------------------------------------
 !
@@ -70,10 +70,10 @@ program main
 use test_ReferenceTriangle
 implicit none
 call test1
-call BlankLines(nol=3)
-call test2
-call BlankLines(nol=3)
-call test3
-call BlankLines(nol=3)
-call test4
+! call BlankLines(nol=3)
+! call test2
+! call BlankLines(nol=3)
+! call test3
+! call BlankLines(nol=3)
+! call test4
 end program main

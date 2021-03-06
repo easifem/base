@@ -546,7 +546,7 @@ END INTERFACE setValue
 PUBLIC :: setValue
 
 !----------------------------------------------------------------------------
-!                                                                 setNormal
+!                                                       setNormal@setMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1269,131 +1269,6 @@ INTERFACE getUnitNormal
 END INTERFACE getUnitNormal
 
 PUBLIC :: getUnitNormal
-
-!----------------------------------------------------------------------------
-!                                                    Initiate@LineH1Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! This subroutine computes the shape functions given by Lagrange polynomials !! over reference line element
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine computes shape functions, lagrange polynomials, over
-! reference line element
-! The interpolation functions are defined inside the reference element itself
-! The order of shape functions are also included inside the refelem
-
-MODULE PURE SUBROUTINE Line_H1_Lagrange( Obj, Quad, RefElem, &
-  & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
-    !! Quadrature points where shapefunctions will be evaluated
-  CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
-    !! Reference element where shape functions will be defined
-  CLASS( H1_ ), INTENT( IN ) :: ContinuityType
-    !! H1 (nodal) Continuity type
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: InterpolType
-    !! Lagrange polynomial will be used for interpolation
-END SUBROUTINE Line_H1_Lagrange
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                Initiate@TriangleH1Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! This subroutine computes the shape functions given by Lagrange polynomials !! over reference triangle element
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine computes shape functions, lagrange polynomials, over
-! reference triangle element
-
-MODULE PURE SUBROUTINE Triangle_H1_Lagrange( Obj, Quad, RefElem, &
-  & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
-  CLASS( H1_ ), INTENT( IN ) :: ContinuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: InterpolType
-END SUBROUTINE Triangle_H1_Lagrange
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                              Initiate@QuadrangleH1Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE Quadrangle_H1_Lagrange( Obj, Quad, RefElem, &
-  & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
-  CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
-  CLASS( H1_ ), INTENT( IN ) :: ContinuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: InterpolType
-END SUBROUTINE Quadrangle_H1_Lagrange
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                              Initiate@TetrahedronH1Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE Tetrahedron_H1_Lagrange( Obj, Quad, RefElem, &
-  & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
-  CLASS( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
-  CLASS( H1_ ), INTENT( IN ) :: ContinuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: InterpolType
-END SUBROUTINE Tetrahedron_H1_Lagrange
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                              Initiate@HexahedronH1Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE Hexahedron_H1_Lagrange( Obj, Quad, RefElem, &
-  & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
-  CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
-  CLASS( H1_ ), INTENT( IN ) :: ContinuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: InterpolType
-END SUBROUTINE Hexahedron_H1_Lagrange
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                              Initiate@PrismH1Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE Prism_H1_Lagrange( Obj, Quad, RefElem, &
-  & ContinuityType, InterpolType)
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
-  CLASS( ReferencePrism_ ), INTENT( IN ) :: RefElem
-  CLASS( H1_ ), INTENT( IN ) :: ContinuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: InterpolType
-END SUBROUTINE Prism_H1_Lagrange
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                              Initiate@PyramidH1Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE Pyramid_H1_Lagrange( Obj, Quad, RefElem, &
-  & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
-  CLASS( ReferencePyramid_ ), INTENT( IN ) :: RefElem
-  CLASS( H1_ ), INTENT( IN ) :: ContinuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: InterpolType
-END SUBROUTINE Pyramid_H1_Lagrange
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                        Initiate@H1Lagrange

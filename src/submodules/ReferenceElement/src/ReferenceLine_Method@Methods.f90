@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: 	This submodule contains methods for [[ReferenceLine_]]
 
-SUBMODULE( ReferenceElement_Method ) Line
+SUBMODULE( ReferenceLine_Method ) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -208,4 +208,4 @@ MODULE PROCEDURE Line_quality
   ans = 0.0_DFP
 END PROCEDURE Line_quality
 
-END SUBMODULE Line
+END SUBMODULE Methods

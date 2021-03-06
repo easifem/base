@@ -19,7 +19,7 @@
 ! date: 	2 March 2021
 ! summary: This submodule contains methods for [[ReferenceTriangle_]]
 
-SUBMODULE( ReferenceElement_Method ) Triangle
+SUBMODULE( ReferenceTriangle_Method ) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -755,4 +755,4 @@ END PROCEDURE triangle_quality
 !----------------------------------------------------------------------------
 
 #include "./modified_burkardt.inc"
-END SUBMODULE Triangle
+END SUBMODULE Methods

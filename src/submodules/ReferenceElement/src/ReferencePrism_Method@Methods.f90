@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: This submodule defines methods for [[ReferencePrism_]]
 
-SUBMODULE( ReferenceElement_Method ) Prism
+SUBMODULE( ReferencePrism_Method ) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -95,4 +95,4 @@ END PROCEDURE Prism_quality
 !----------------------------------------------------------------------------
 
 #include "./modified_burkardt.inc"
-END SUBMODULE Prism
+END SUBMODULE Methods

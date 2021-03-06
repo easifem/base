@@ -17,9 +17,9 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 2 March 2021
-! summary: This module contains method for [[ReferenceHexahedron_]]
+! summary: 	This submodule contians methods for [[ReferencePyramid_]]
 
-SUBMODULE( ReferenceElement_Method ) Hexahedron
+SUBMODULE( ReferencePyramid_Method ) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -28,71 +28,58 @@ CONTAINS
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Initiate_ref_Hexahedron
-END PROCEDURE Initiate_ref_Hexahedron
+MODULE PROCEDURE Initiate_ref_Pyramid
+END PROCEDURE Initiate_ref_Pyramid
 
 !----------------------------------------------------------------------------
-!                                                      ReferenceHexahedron
+!                                                      ReferencePyramid
 !----------------------------------------------------------------------------
-
-MODULE PROCEDURE reference_Hexahedron
+MODULE PROCEDURE reference_Pyramid
   IF( PRESENT( XiJ ) ) THEN
     CALL Initiate( Obj, NSD, XiJ )
   ELSE
     CALL Initiate( Obj, NSD )
   END IF
-END PROCEDURE reference_Hexahedron
-
-!----------------------------------------------------------------------------
-!                                                      ReferenceHexahedron
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE reference_Hexahedron_Pointer
-  ALLOCATE( Obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
-END PROCEDURE reference_Hexahedron_Pointer
+END PROCEDURE reference_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                             LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeElement_Hexahedron
-END PROCEDURE LagrangeElement_Hexahedron
+MODULE PROCEDURE LagrangeElement_Pyramid
+END PROCEDURE LagrangeElement_Pyramid
 
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 !                                                              MeasureSimplex
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 
-MODULE PROCEDURE Measure_Simplex_Hexahedron
-  INTEGER( I4B ) :: Order0( 6 ), Node0( 6, 4 ), FM( 6, 7 ), iFace, b
+MODULE PROCEDURE Measure_Simplex_Pyramid
+  INTEGER( I4B ) :: FM( 5, 7 ), Node0( 5, 4 ), Order0( 5 ), iFace, b
 
-  Order0 = [4, 4, 4, 4, 4, 4]
-  FM = FacetMatrix( RefElem )
-  DO iFace = 1, 6
-    b = FM( iFace, 3 ) + 3
+  FM = FacetMatrix(RefElem)
+  DO iFace = 1, 5
+    Order0( iFace ) = FM( iFace, 3 )
+    b = Order0( iFace ) + 3
     Node0( iFace, 1:Order0( iFace ) ) = FM( iFace, 4 : b )
   END DO
-  CALL POLYHEDRONVOLUME3D( coord = XiJ( 1:3, 1:8 ), &
-    & order_max = 4, face_num = 6,  &
-    & node = Node0, node_num = 8, &
+  CALL POLYHEDRONVOLUME3D( coord = XiJ( 1:3, 1:5 ), &
+    & order_max = 4, face_num = 5,  &
+    & node = Node0, node_num = 5, &
     & order = Order0, &
     & volume = Ans )
-END PROCEDURE Measure_Simplex_Hexahedron
+END PROCEDURE Measure_Simplex_Pyramid
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Hexahedron_quality
-END PROCEDURE Hexahedron_quality
+MODULE PROCEDURE Pyramid_quality
+END PROCEDURE Pyramid_quality
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 #include "./modified_burkardt.inc"
-END SUBMODULE Hexahedron
+
+END SUBMODULE Methods

@@ -1,14 +1,31 @@
-SUBMODULE(File_Method) WriteMethods
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+SUBMODULE( txtFile_Method ) WriteMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                 WriteData
+!                                                                 SaveFile
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE write_data_ascii_scalar
+MODULE PROCEDURE save_to_file_r0
   SELECT TYPE( Val )
-  TYPE IS( CHARACTER( * ))
+  TYPE IS( CHARACTER( * ) )
     WRITE( Obj%UnitNo, "(A)") TRIM(Val)
   TYPE IS( Real(Real64) )
     WRITE( Obj%UnitNo, "(A)" ) STR(Val)
@@ -19,7 +36,7 @@ MODULE PROCEDURE write_data_ascii_scalar
   TYPE IS( Integer(INT64) )
     WRITE( Obj%UnitNo, "(A)" ) STR(Val)
   END SELECT
-END PROCEDURE write_data_ascii_scalar
+END PROCEDURE save_to_file_r0
 
 !----------------------------------------------------------------------------
 !                                                                 WriteData
@@ -207,142 +224,5 @@ MODULE PROCEDURE write_data_ascii_r2
   END SELECT
 
 END PROCEDURE write_data_ascii_r2
-
-!----------------------------------------------------------------------------
-!                                                                 WriteLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE writeLine_a
-  INTEGER( I4B ) :: iunit, istat
-
-  IF( PRESENT( unitNo ) ) THEN
-    iunit = unitNo
-  ELSE
-    iunit = stdout
-  END IF
-
-  WRITE( iunit, '(a)' ) STR( a )
-
-END PROCEDURE writeLine_a
-
-!----------------------------------------------------------------------------
-!                                                                 WriteLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE writeLine_ab
-  INTEGER( I4B ) :: iunit, istat
-
-  IF( PRESENT( unitNo ) ) THEN
-    iunit = unitNo
-  ELSE
-    iunit = stdout
-  END IF
-
-  WRITE( iunit, '(a)' ) STR( a ) // STR( b )
-
-END PROCEDURE writeLine_ab
-
-!----------------------------------------------------------------------------
-!                                                                 WriteLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE writeLine_abc
-  INTEGER( I4B ) :: iunit, istat
-
-  IF( PRESENT( unitNo ) ) THEN
-    iunit = unitNo
-  ELSE
-    iunit = stdout
-  END IF
-
-  WRITE( iunit, '(a)' ) STR( a ) // STR( b ) // STR( c )
-
-END PROCEDURE writeLine_abc
-
-!----------------------------------------------------------------------------
-!                                                                 WriteLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE writeLine_abcd
-  INTEGER( I4B ) :: iunit, istat
-
-  IF( PRESENT( unitNo ) ) THEN
-    iunit = unitNo
-  ELSE
-    iunit = stdout
-  END IF
-
-  WRITE( iunit, '(a)' ) STR( a ) // STR( b ) // STR( c ) // STR( d )
-
-END PROCEDURE writeLine_abcd
-
-!----------------------------------------------------------------------------
-!                                                                 WriteLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE writeLine_abcde
-  INTEGER( I4B ) :: iunit, istat
-
-  IF( PRESENT( unitNo ) ) THEN
-    iunit = unitNo
-  ELSE
-    iunit = stdout
-  END IF
-
-  WRITE( iunit, '(a)' ) STR( a ) // STR( b ) // STR( c ) // STR( d ) // STR(e)
-
-END PROCEDURE writeLine_abcde
-
-!----------------------------------------------------------------------------
-!                                                                 WriteLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE writeLine_av
-  INTEGER( I4B ) :: iunit, istat
-
-  IF( PRESENT( unitNo ) ) THEN
-    iunit = unitNo
-  ELSE
-    iunit = stdout
-  END IF
-
-  WRITE( iunit, '(a)' ) STR( a )
-
-END PROCEDURE writeLine_av
-
-!----------------------------------------------------------------------------
-!                                                                 WriteLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE writeLine_avbv
-  INTEGER( I4B ) :: iunit, istat
-
-  IF( PRESENT( unitNo ) ) THEN
-    iunit = unitNo
-  ELSE
-    iunit = stdout
-  END IF
-
-  WRITE( iunit, '(a)' ) STR( a ) // STR( b )
-
-END PROCEDURE writeLine_avbv
-
-!----------------------------------------------------------------------------
-!                                                                 WriteLine
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE writeLine_avbvcv
-  INTEGER( I4B ) :: iunit, istat
-
-  IF( PRESENT( unitNo ) ) THEN
-    iunit = unitNo
-  ELSE
-    iunit = stdout
-  END IF
-
-  WRITE( iunit, '(a)' ) STR( a ) // STR( b ) // STR( c )
-
-END PROCEDURE writeLine_avbvcv
-
 
 END SUBMODULE WriteMethods

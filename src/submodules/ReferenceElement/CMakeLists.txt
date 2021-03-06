@@ -13,12 +13,12 @@ target_sources(
   ${src_path}/ReferenceElement_Method@Constructor.f90
   ${src_path}/ReferenceElement_Method@IO.f90
   ${src_path}/ReferenceElement_Method@Geometry.f90
-  ${src_path}/ReferenceElement_Method@Line.f90
-  ${src_path}/ReferenceElement_Method@Triangle.f90
-  ${src_path}/ReferenceElement_Method@Quadrangle.f90
-  ${src_path}/ReferenceElement_Method@Tetrahedron.f90
-  ${src_path}/ReferenceElement_Method@Prism.f90
-  ${src_path}/ReferenceElement_Method@Hexahedron.f90
-  ${src_path}/ReferenceElement_Method@Pyramid.f90
   ${src_path}/ReferenceElement_Method@VTK.f90
+  ${src_path}/ReferenceLine_Method@Methods.f90
+  ${src_path}/ReferenceTriangle_Method@Methods.f90
+  ${src_path}/ReferenceQuadrangle_Method@Methods.f90
+  ${src_path}/ReferenceTetrahedron_Method@Methods.f90
+  ${src_path}/ReferenceHexahedron_Method@Methods.f90
+  ${src_path}/ReferencePrism_Method@Methods.f90
+  ${src_path}/ReferencePyramid_Method@Methods.f90
 )

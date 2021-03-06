@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: 	This submodule contains methods for [[ReferenceTetrahedron_]]
 
-SUBMODULE( ReferenceElement_Method ) Tetrahedron
+SUBMODULE( ReferenceTetrahedron_Method ) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -329,4 +329,4 @@ END PROCEDURE Tetrahedron_quality
 
 #include "./modified_burkardt.inc"
 
-END SUBMODULE Tetrahedron
+END SUBMODULE Methods
