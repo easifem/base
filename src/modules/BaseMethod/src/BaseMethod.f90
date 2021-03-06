@@ -27,6 +27,7 @@ MODULE BaseMethod
   USE System_Method
   USE StringiFor
   USE PENF
+  USE FACE
   USE EASIFEM_BLAS
   USE GlobalData
   USE Display_Method

@@ -17,4 +17,5 @@ target_sources(
   ${src_path}BeFoR64/befor64.f90
   ${src_path}StringiFor/stringifor_string_t.f90
   ${src_path}StringiFor/stringifor.f90
+  ${src_path}FACE/face.f90
 )
