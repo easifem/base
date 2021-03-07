@@ -42,7 +42,9 @@ MODULE BaseMethod
   USE IntVector_Method
   USE IndexValue_Method
   USE KeyValue_Method
+  USE IterationData_Method
   USE Vector3D_Method
+  USE BLAS1_Method
   USE RealVector_Method
   USE DOF_Method
   USE ReferenceElement_Method
@@ -57,12 +59,11 @@ MODULE BaseMethod
   USE FEVariable_Method
   USE Elemshapedata_Method
   USE File_Method
-  ! USE RealMatrix_Method
+  USE RealMatrix_Method
+  USE FEMatrix_Method
   ! USE Lapack_Method
   ! USE SparseMatrix_Method
-  ! USE IterationData_Method
   ! USE VoigtRank2Tensor_Method
   ! USE Rank2Tensor_Method
-  ! USE FEMatrix_Module
 
 END MODULE BaseMethod

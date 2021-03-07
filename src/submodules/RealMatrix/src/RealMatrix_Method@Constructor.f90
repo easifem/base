@@ -1,8 +1,23 @@
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
 SUBMODULE (RealMatrix_Method) Constructor
 USE BaseMethod
-
 IMPLICIT NONE
-
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -41,53 +56,9 @@ END PROCEDURE get_size
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE allocate_data
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    IF( ANY( SHAPE( Obj % Val ) .NE. Dims ) ) THEN
-      DEALLOCATE( Obj % Val )
-      ALLOCATE( Obj % Val( Dims(1), Dims( 2 ) ) )
-      Obj % Val = 0
-    ELSE
-      Obj % Val = 0
-    END IF
-  ELSE
-    ALLOCATE( Obj % Val( Dims( 1 ), Dims( 2 ) ) )
-    Obj % Val = 0
-  END IF
+  CALL Reallocate( Obj%Val, Dims(1), Dims(2) )
   CALL setTotalDimension( Obj, 2_I4B )
 END PROCEDURE allocate_data
-
-!----------------------------------------------------------------------------
-!                                                                    Display
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE Display_Obj
-  INTEGER( I4B ) :: I
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = stdout
-  END IF
-  IF( LEN_TRIM( msg ) .NE. 0 ) WRITE( I, "(A)") TRIM( Msg )
-  CALL Display( Obj % Val, "", I )
-END PROCEDURE Display_Obj
-
-!----------------------------------------------------------------------------
-!                                                                    Display
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE Display_Obj_vec
-  INTEGER( I4B ) :: I, j
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = stdout
-  END IF
-  IF( LEN_TRIM( msg ) .NE. 0 ) WRITE( I, "(A)") TRIM( Msg )
-  DO j = 1, SIZE( Obj )
-    CALL Display( Obj( j ) % Val, "", I )
-    CALL Blanklines( UnitNo = I, NOL = 1 )
-  END DO
-END PROCEDURE Display_Obj_vec
 
 !----------------------------------------------------------------------------
 !                                                             DeallocateData
@@ -204,7 +175,6 @@ MODULE PROCEDURE convert_doftonodes
   m = nns * tdof
   ALLOCATE( T( m, m ) )
   T = Eye( m, TypeInt )
-
   SELECT CASE( Conversion )
   CASE( DofToNodes )
     DO inode  = 1, nns
@@ -225,7 +195,6 @@ MODULE PROCEDURE convert_doftonodes
       END DO
     END DO
   END SELECT
-
   to = MATMUL( TRANSPOSE( T ), MATMUL( from, T ) )
   DEALLOCATE( T )
 
@@ -247,7 +216,6 @@ END PROCEDURE realmat_convert_doftonodes
 MODULE PROCEDURE convert_mat4_to_mat2
   !   Define internal variables
   INTEGER( I4B ) :: a, b, I( 4 ), r1, r2, c1, c2
-
   I = SHAPE( From )
   CALL Reallocate( To, I(1)*I(3), I(2)*I(4) )
   c1 = 0; c2 = 0

@@ -5,19 +5,19 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                ArrayValues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValues_Real
-  Ans = Obj % Val
+  Ans = Obj%Val
 END PROCEDURE f_getValues_Real
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                ArrayValues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getSectionValues_Real
-  Ans = Obj % Val( RIndx, CIndx )
+  Ans = Obj%Val( RIndx, CIndx )
 END PROCEDURE f_getSectionValues_Real
 
 !----------------------------------------------------------------------------
@@ -25,11 +25,9 @@ END PROCEDURE f_getSectionValues_Real
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValuesFromTriplet_Real
-  INTEGER( I4B ), allocatable :: Indx( : )
-  INTEGER( I4B ) :: i
-  Indx = [(i, i=iStart, iEnd, Stride)]
-  Ans = Obj % Val( Indx, Indx )
-  deallocate( Indx )
+#define Indx iStart:iEnd:Stride
+  Ans = Obj%Val( Indx, Indx )
+#undef Indx
 END PROCEDURE f_getValuesFromTriplet_Real
 
 !----------------------------------------------------------------------------
@@ -37,7 +35,7 @@ END PROCEDURE f_getValuesFromTriplet_Real
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValues_self
-  Ans % Val = Obj % Val
+  Ans%Val = Obj%Val
   CALL SetTotalDimension( Ans, 2_I4B )
 END PROCEDURE f_getValues_self
 
@@ -46,7 +44,7 @@ END PROCEDURE f_getValues_self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getSectionValues_Self
-  Ans % Val = Obj % Val( RIndx, CIndx )
+  Ans%Val = Obj%Val( RIndx, CIndx )
   CALL SetTotalDimension( Ans, 2_I4B )
 END PROCEDURE f_getSectionValues_Self
 
@@ -55,12 +53,10 @@ END PROCEDURE f_getSectionValues_Self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValuesFromTriplet_self
-  INTEGER( I4B ), allocatable :: Indx( : )
-  INTEGER( I4B ) :: i
-  Indx = [(i, i=iStart, iEnd, Stride)]
-  Ans % Val= Obj % Val( Indx, Indx )
+#define Indx iStart:iEnd:Stride
+  Ans%Val= Obj%Val( Indx, Indx )
+#undef Indx
   CALL SetTotalDimension( Ans, 2_I4B )
-  deallocate( Indx )
 END PROCEDURE f_getValuesFromTriplet_self
 
 !----------------------------------------------------------------------------
@@ -79,10 +75,7 @@ MODULE PROCEDURE f_getValues_1
   END DO
   i = MAXVAL( SUM( RESHAPE( rc( 1, 1: ), SHAPE( Obj ) ), 1 ) )
   j = MAXVAL( SUM( RESHAPE( rc( 2, 1: ), SHAPE( Obj ) ), 2 ) )
-
-  ALLOCATE( Ans( i, j ) )
-  Ans = 0.0_DFP
-  !
+  ALLOCATE( Ans( i, j ) ); Ans = 0.0_DFP
   c1 = 0; c2 = 0
   DO j = 1, s( 2 )
     c1 = 1 + c2
@@ -91,10 +84,9 @@ MODULE PROCEDURE f_getValues_1
     DO i = 1, s( 1 )
       r1 = 1 + r2
       r2 = r1 + rc( 1, i ) - 1
-      Ans( r1:r2, c1:c2 ) = Obj( i, j ) % Val
+      Ans( r1:r2, c1:c2 ) = Obj( i, j )%Val
     END DO
   END DO
-
 END PROCEDURE f_getValues_1
 
 !----------------------------------------------------------------------------
@@ -102,7 +94,7 @@ END PROCEDURE f_getValues_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValues_2
-  Ans % Val = ArrayValues( Obj, TypeDFP )
+  Ans%Val = ArrayValues( Obj, TypeDFP )
   CALL setTotalDimension( Ans, 2_I4B )
 END PROCEDURE f_getValues_2
 
@@ -111,7 +103,7 @@ END PROCEDURE f_getValues_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Copy_Obj_to_Val
-  To = From % Val
+  To = From%Val
 END PROCEDURE Copy_Obj_to_Val
 
 !----------------------------------------------------------------------------
@@ -119,7 +111,7 @@ END PROCEDURE Copy_Obj_to_Val
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Copy_Obj_to_Obj
-  To % Val = From % Val
+  To%Val = From%Val
   CALL SetTotalDimension( To, 2_I4B )
 END PROCEDURE Copy_Obj_to_Obj
 
@@ -128,7 +120,7 @@ END PROCEDURE Copy_Obj_to_Obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Copy_Val_to_Obj
-  To % Val = From
+  To%Val = From
   CALL SetTotalDimension( To, 2_I4B )
 END PROCEDURE Copy_Val_to_Obj
 
@@ -137,7 +129,7 @@ END PROCEDURE Copy_Val_to_Obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getPointer_Real
-  Ans => Obj % Val
+  Ans => Obj%Val
 END PROCEDURE f_getPointer_Real
 
 END SUBMODULE getValues

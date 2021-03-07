@@ -13,5 +13,4 @@ target_sources(
   ${src_path}/RealVector_Method@getMethod.f90
   ${src_path}/RealVector_Method@setMethod.f90
   ${src_path}/RealVector_Method@IO.f90
-  ${src_path}/RealVector_Method@BLAS1.f90
 )

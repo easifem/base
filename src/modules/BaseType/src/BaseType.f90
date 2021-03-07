@@ -269,6 +269,10 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: DOF_FMT = 0
 INTEGER( I4B ), PARAMETER, PUBLIC :: NODES_FMT = 1
 INTEGER( I4B ), PARAMETER, PUBLIC :: FMT_DOF = 0
 INTEGER( I4B ), PARAMETER, PUBLIC :: FMT_NODES = 1
+INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_ROW = 1
+INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_COLUMN = 2
+INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_DIAGONAL = 0
+
 
 !----------------------------------------------------------------------------
 !                                                              SparseMatrix_

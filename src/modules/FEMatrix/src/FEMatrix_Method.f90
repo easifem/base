@@ -15,11 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Dr. Vikas Sharma
-!
-! This module contains interfaces of finite element matrices
+!> authors: Vikas Sharma, Ph. D.
+! date: 	6 March 2021
+! summary: This module contains method to construct finite element matrices
 MODULE FEMatrix_Method
-
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
@@ -29,15 +28,24 @@ PRIVATE
 !                                                       MassMatrix@MassMatrix
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine makes mass matrix in space domain
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine makes mass matrix in space domain
+!
+!### Introduction
 !
 ! This subroutine makes space matrix in space domain, Here Rho $\rho$ is a
 ! finite element variable
 !
 ! $$\int_{\Omega } N^{I}\rho N^{J}d\Omega$$
+!
+!### Usage
+!
+!```fortran
+!
+!```
+
+INTERFACE
 MODULE PURE FUNCTION Space_MassMatrix( Test, Trial, Rho, nCopy ) RESULT( Ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: Test
     !! Shapedata for test function
@@ -55,20 +63,26 @@ END INTERFACE
 !                                                                 MassMatrix
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine makes mass matrix in space time domain
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine makes mass matrix in space time domain
 !
-! This subroutine makes space matrix in space domain, Here Rho $\rho$ is a
-! finite element variable. Following expression can be evaluated
+!### Introduction
+!
+! This subroutine makes space matrix in space domain, Here Rho $\rho$ is a finite element variable. Following expression can be evaluated
 !
 ! $$\int_{\Omega } N^{I}T_{a}\rho N^{J}T_{b}d\Omega$$
 ! $$\iint \frac{\partial N^{I}T_{a}}{\partial t} \rho N^{J}T_{b}d\Omega dt$$
-! $$\iint \frac{\partial N^{I}T_{a}}{\partial t} \rho \frac{\partial
-! N^{J}T_{b}}{\partial t} d\Omega dt$$
+! $$\iint \frac{\partial N^{I}T_{a}}{\partial t} \rho \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
 ! $$\iint N^{I}T_{a}\rho \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
+!
+!### Usage
+!
+!```fortran
+!
+!```
 
+INTERFACE
 MODULE PURE FUNCTION st_massMatrix_a( Test, Trial, Rho, Term1, Term2, nCopy )&
   & RESULT( Ans )
   CLASS( STElemshapeData_ ), INTENT( IN ) :: Test(:)
@@ -87,7 +101,6 @@ END INTERFACE
 !                                                                 MassMatrix
 !----------------------------------------------------------------------------
 
-!> Generic function to obtain mass matrix
 INTERFACE MassMatrix
   MODULE PROCEDURE Space_MassMatrix, st_massMatrix_a
 END INTERFACE MassMatrix
@@ -98,15 +111,18 @@ PUBLIC :: MassMatrix
 !                                            DiffusionMatrix@DiffusionMatrix
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine returns the diffusion matrix in space domain
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine returns the diffusion matrix in space domain
+!
+!### Introduction
 !
 ! This function returns the diffusion matrix in space domain
 !
 ! $$\int^{}_{\Omega } \frac{\partial N^{I}}{\partial x_{i}} \frac{\partial N^
 ! {J}}{\partial x_{i}} d\Omega$$
+
+INTERFACE
 MODULE PURE FUNCTION Space_DiffusionMatrix( Test, Trial, nCopy ) RESULT( Ans )
   CLASS( ElemshapeData_ ), INTENT( IN )  :: Test, Trial
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: nCopy
@@ -118,15 +134,18 @@ END INTERFACE
 !                                            DiffusionMatrix@DiffusionMatrix
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine returns the diffusion matrix in space domain
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine returns the diffusion matrix in space domain
+!
+!### Introduction
 !
 ! This function returns the diffusion matrix in space domain
 !
 ! $$\int^{}_{\Omega } \frac{\partial N^{I}}{\partial x_{i}} k_{ij}
 !\frac{\partial N^{J}}{\partial x_{j}} d\Omega$$
+
+INTERFACE
 MODULE PURE FUNCTION Space_DiffusionMatrix_K( Test, Trial, K, nCopy ) &
   & RESULT( Ans )
   CLASS( ElemshapeData_ ), INTENT( IN )  :: Test, Trial
@@ -140,15 +159,24 @@ END INTERFACE
 !                                            DiffusionMatrix@DiffusionMatrix
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine returns the diffusion matrix in space domain
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine returns the diffusion matrix in space domain
+!
+!### Introduction
 !
 ! This function returns the diffusion matrix in space domain
 !
 ! $$\int^{}_{\Omega } \frac{\partial N^{I}}{\partial x_{i}} c_i
 !\frac{\partial N^{J}}{\partial x_{j}} c_j d\Omega$$
+!
+!### Usage
+!
+!```fortran
+!
+!```
+
+INTERFACE
 MODULE PURE FUNCTION Space_DiffusionMatrix_C( Test, Trial, C1, C2, nCopy ) &
   & RESULT( Ans )
   CLASS( ElemshapeData_ ), INTENT( IN )  :: Test, Trial
@@ -203,9 +231,12 @@ END FUNCTION st_diffusionMatrix_C
 END INTERFACE
 
 INTERFACE DiffusionMatrix
-  MODULE PROCEDURE Space_DiffusionMatrix, Space_DiffusionMatrix_K,&
+  MODULE PROCEDURE &
+    & Space_DiffusionMatrix, &
+    & Space_DiffusionMatrix_K,&
     & Space_DiffusionMatrix_C, &
-    & st_DiffusionMatrix, st_DiffusionMatrix_K,&
+    & st_DiffusionMatrix, &
+    & st_DiffusionMatrix_K,&
     & st_DiffusionMatrix_C
 END INTERFACE DiffusionMatrix
 

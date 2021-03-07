@@ -19,7 +19,7 @@
 ! date: 	25 Feb 2021
 ! summary: 	This submodule  implements BLAS1 methods of [[RealVector_]]
 
-SUBMODULE ( RealVector_Method ) BLAS1
+SUBMODULE ( BLAS1_Method ) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -338,4 +338,4 @@ MODULE PROCEDURE scalarAXPYintrinsic
   CALL AXPY( Y=Y%Val, A=A, X=X )
 END PROCEDURE scalarAXPYintrinsic
 
-END SUBMODULE BLAS1
+END SUBMODULE Methods

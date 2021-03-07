@@ -3,12 +3,14 @@
 # All right reserved
 #
 # log
-# 26/02/2021 this file was created
+# 1/03/2021 this file was created
 #-----------------------------------------------------------------------
 
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/EASIFEM_F77_BLAS.f90
-  ${src_path}/EASIFEM_BLAS.f90
+  ${src_path}/FEMatrix_Method@DiffusionMatrix.f90
+  ${src_path}/FEMatrix_Method@MassMatrix.f90
+  ${src_path}/FEMatrix_Method@StiffnessMatrix.f90
+  ${src_path}/FEMatrix_Method@NitscheMatrix.f90
 )
