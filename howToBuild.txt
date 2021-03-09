@@ -1,0 +1,17 @@
+how to build
+
+alias cm="cmake -DCMAKE_INSTALL_PREFIX=${EASIFEM_BASE} -S ./ -B ./build"
+cm -DBLAS_VENDOR=OpenBLAS
+-CMAKE_BLAS_ROOT
+-CMAKE_LAPACK_ROOT
+
+possible vendors
+
+MKL
+OpenBLAS
+Atlas
+Netlib
+
+
+
+

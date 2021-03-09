@@ -11,7 +11,10 @@
 *.DS_Store
 *.prj
 *.drawio
+*.log
 vscode-settings
+docs/
+media/
 include/
 lib/
 opt/

@@ -1,6 +1,31 @@
-# README
+## EASIFEM-BASE
+[![GitHub release](https://img.shields.io/github/release/vickysharma0812/easifem-base.svg?style=plastic)](https://github.com/vickysharma0812/easifem-base/releases/latest)
 
-# EASIFEM
+- [EASIFEM-BASE](#easifem-base)
+- [Status](#status)
+- [Introduction](#introduction)
+- [VISION](#vision)
+- [EASIFEM-BASE](#easifem-base-1)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Dependencies](#dependencies)
+  - [PENF](#penf)
+  - [BeFoR64](#befor64)
+  - [StringiFor](#stringifor)
+  - [FoXy](#foxy)
+  - [vtkFortran](#vtkfortran)
+  - [H5Fortran](#h5fortran)
+  - [Functional-fortran](#functional-fortran)
+  - [OGPF](#ogpf)
+  - [Sparsekit](#sparsekit)
+- [Contributing](#contributing)
+- [Credits](#credits)
+
+## Status
+
+[![GitHub issues](https://img.shields.io/github/issues/vickysharma0812/easifem-base.png?style=plastic)](https://github.com/vickysharma0812/easifem-base/issues)
+[![GitHub stars](https://img.shields.io/github/stars/vickysharma0812/easifem-base.png?style=plastic)](https://github.com/vickysharma0812/easifem-base/stars)
+[![GitHub license](https://img.shields.io/github/license/vickysharma0812/easifem-base.png?style=plastic)](https://github.com/vickysharma0812/easifem-base/license)
 
 ## Introduction
 
