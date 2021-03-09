@@ -109,7 +109,7 @@ function(atlas_libs)
       lapack
     NAMES_PER_DIR
     HINTS
-      "${CMAKE_LAPACK_ROOT}"
+      ${CMAKE_LAPACK_ROOT}
       ${pc_atlas_lapack_LIBRARY_DIRS}
       ${pc_atlas_lapack_LIBDIR}
     PATH_SUFFIXES
@@ -128,7 +128,7 @@ function(atlas_libs)
       blas
     NAMES_PER_DIR
     HINTS
-      "${CMAKE_BLAS_ROOT}"
+      ${CMAKE_BLAS_ROOT}
       ${pc_atlas_blas_LIBRARY_DIRS}
       ${pc_atlas_blas_LIBDIR}
     PATH_SUFFIXES
@@ -144,7 +144,7 @@ function(atlas_libs)
       cblas
     NAMES_PER_DIR
     HINTS
-      "${CMAKE_BLAS_ROOT}"
+      ${CMAKE_BLAS_ROOT}
       ${pc_atlas_blas_LIBRARY_DIRS}
       ${pc_atlas_blas_LIBDIR}
     PATH_SUFFIXES
@@ -160,7 +160,7 @@ function(atlas_libs)
       cblas.h
       clapack.h
     HINTS
-      "${CMAKE_BLAS_ROOT}"
+      ${CMAKE_BLAS_ROOT}
       ${pc_atlas_blas_INCLUDE_DIRS}
       ${pc_atlas_blas_LIBDIR}
     PATH_SUFFIXES
@@ -237,7 +237,7 @@ function(netlib_libs)
       lapack
     NAMES_PER_DIR
     HINTS
-      "${CMAKE_LAPACK_ROOT}"
+      ${CMAKE_LAPACK_ROOT}
       ${_lapack_hints}
       ${pc_lapack_LIBRARY_DIRS}
       ${pc_lapack_LIBDIR}
@@ -261,7 +261,7 @@ function(netlib_libs)
         lapacke
       NAMES_PER_DIR
       HINTS
-        "${CMAKE_LAPACK_ROOT}"
+        ${CMAKE_LAPACK_ROOT}
         ${pc_lapacke_LIBRARY_DIRS}
         ${pc_lapacke_LIBDIR}
       PATH_SUFFIXES
@@ -276,7 +276,7 @@ function(netlib_libs)
       NAMES
         lapacke.h
       HINTS
-        "${CMAKE_LAPACK_ROOT}"
+        ${CMAKE_LAPACK_ROOT}
         ${pc_lapacke_INCLUDE_DIRS}
         ${pc_lapacke_LIBDIR}
       PATH_SUFFIXES
@@ -353,7 +353,7 @@ function(openblas_libs)
       lapack
     NAMES_PER_DIR
     PATHS
-      "${CMAKE_BLAS_ROOT}"
+      ${CMAKE_BLAS_ROOT}
       ${pc_lapack_LIBRARY_DIRS}
       ${pc_lapack_LIBDIR}
     PATH_SUFFIXES
@@ -370,7 +370,7 @@ function(openblas_libs)
       openblas
     NAMES_PER_DIR
     HINTS
-      "${CMAKE_BLAS_ROOT}"
+      ${CMAKE_BLAS_ROOT}
       ${pc_blas_LIBRARY_DIRS}
       ${pc_blas_LIBDIR}
     PATH_SUFFIXES
@@ -387,7 +387,7 @@ function(openblas_libs)
       f77blas.h
       openblas_config.h
     HINTS
-      "${CMAKE_BLAS_ROOT}"
+      ${CMAKE_BLAS_ROOT}
       ${pc_lapack_INCLUDE_DIRS}
     PATH_SUFFIXES
       openblas
@@ -480,14 +480,16 @@ if(NOT (
 endif()
 
 find_package(PkgConfig QUIET)
-if(CMAKE_BLAS_ROOT AND CMAKE_LAPACK_ROOT)
+if(DEFINED CMAKE_BLAS_ROOT )
   set(CMAKE_BLAS_ROOT ${CMAKE_BLAS_ROOT})
+else()
+  set(CMAKE_BLAS_ROOT "/usr/local/opt/")
+endif()
+
+if(DEFINED CMAKE_LAPACK_ROOT )
   set(CMAKE_LAPACK_ROOT ${CMAKE_LAPACK_ROOT})
 else()
-  if(DEFINED ENV{CMAKE_BLAS_ROOT} AND DEFINED ENV{CMAKE_LAPACK_ROOT})
-    set(CMAKE_BLAS_ROOT "$ENV{CMAKE_BLAS_ROOT}")
-    set(CMAKE_LAPACK_ROOT "$ENV{CMAKE_LAPACK_ROOT}")
-  endif()
+  set(CMAKE_LAPACK_ROOT "/usr/local/opt/")
 endif()
 
 # ==== generic MKL variables ====

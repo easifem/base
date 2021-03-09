@@ -260,20 +260,6 @@ END TYPE RealMatrixPointer_
 
 PUBLIC :: RealMatrixPointer_
 
-! for matrix conversion ( dense to dense )
-! element matrix storage may differ from global matrix storage format
-INTEGER( I4B ), PARAMETER, PUBLIC :: DofToNodes = 0
-INTEGER( I4B ), PARAMETER, PUBLIC :: NONE = -1
-INTEGER( I4B ), PARAMETER, PUBLIC :: NodesToDOF = 1
-INTEGER( I4B ), PARAMETER, PUBLIC :: DOF_FMT = 0
-INTEGER( I4B ), PARAMETER, PUBLIC :: NODES_FMT = 1
-INTEGER( I4B ), PARAMETER, PUBLIC :: FMT_DOF = 0
-INTEGER( I4B ), PARAMETER, PUBLIC :: FMT_NODES = 1
-INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_ROW = 1
-INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_COLUMN = 2
-INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_DIAGONAL = 0
-
-
 !----------------------------------------------------------------------------
 !                                                              SparseMatrix_
 !----------------------------------------------------------------------------
@@ -1317,4 +1303,21 @@ TYPE( Random_ ), PARAMETER, PUBLIC :: &
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	9 March 2021
+! summary: 	This data type is defined to handle compatibility between OpenMP and EASIFEM
+TYPE :: OpenMP_
+  INTEGER( I4B ) :: Rank = 0
+  INTEGER( I4B ) :: NUM_THREADS = 1
+  INTEGER( I4B ) :: MAX_THREADS = 1
+  INTEGER( I4B ) :: STATE = OMP_THREADS_JOINED
+  LOGICAL( LGT ) :: IS_INIT = .FALSE.
+  LOGICAL( LGT ) :: DID_I_INIT = .FALSE.
+END TYPE OpenMP_
+
+TYPE( OpenMP_ ), PARAMETER, PUBLIC :: TypeOpenMP=OpenMP_()
+TYPE( OpenMP_ ), PUBLIC :: OMP
+!$OMP THREADPRIVATE( OMP )
+
 END MODULE BaseType

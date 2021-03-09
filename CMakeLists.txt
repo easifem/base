@@ -5,7 +5,7 @@
 # 17/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.14.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
 set(PROJECT_NAME "easifemBase")
 project(${PROJECT_NAME})
 enable_language(C)
@@ -32,42 +32,53 @@ if(" ${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL " ${CMAKE_CURRENT_BINARY_DIR}")
     You should create a separate directory for build files.")
 endif()
 
-cmake_print_variables(CMAKE_SYSTEM)
-cmake_print_variables(CMAKE_SYSTEM_NAME)
-cmake_print_variables(CMAKE_SYSTEM_VERSION)
-cmake_print_variables(CMAKE_SYSTEM_PROCESSOR)
-cmake_print_variables(CMAKE_HOST_SYSTEM_NAME)
-
-option(BUILD_SHARED_LIBS "Build shared library" ON)
-if (BUILD_SHARED_LIBS)
-  message(STATUS "${PROJECT_NAME} will be built as a shared library.")
+# install openblas
+  # list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+if(NOT CMAKE_PREFIX_PATH)
+  set(CMAKE_PREFIX_PATH "$ENV{EASIFEM_EXTPKGS}")
+endif()
+find_package( OpenBLAS 0.3 CONFIG REQUIRED pthread)
+# #possible COMPONENTS are: pthread, static, shared, serial, openmp
+if(OpenBLAS_FOUND)
+  set(BLAS_VENDOR "OpenBLAS")
+  message(STATUS "OpenBLAS_LIBRARIES found")
 else()
-  message(STATUS "${PROJECT_NAME} will be built as a static library.")
+  # @todo download and build openblas @endtodo
+endif()
+#this is necessary to set LAPACK_LIBRARIES and BLAS_LIBRARIES to openblas
+find_package( LAPACK REQUIRED )
+if( LAPACK_FOUND )
+  message(STATUS "LAPACK_LIBRARIES found")
+  message("LAPACK_LIBRARIES: ${LAPACK_LIBRARIES}")
+  message("BLAS_LIBRARIES: ${BLAS_LIBRARIES}")
 endif()
 
-# COMPILER RELATED OPTIONS
-include(${PROJECT_SOURCE_DIR}/cmake/Compiler.cmake)
+if( BLAS_VENDOR MATCHES "MKL" )
+  message(STATUS "BLAS_VENDOR : MKL")
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_INTEL_MKL" )
+elseif( BLAS_VENDOR MATCHES "OpenBLAS" )
+  message(STATUS "BLAS_VENDOR : OpenBLAS")
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_OpenBLAS" )
+else( )
+  message(STATUS "BLAS_VENDOR : Native")
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_NativeBLAS" )
+endif( )
 
-# # FIND PACKAGES BLAS AND LAPACK
-option(USE_BLAS "User blas")
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
-
-if(DEFINED ENV{CMAKE_BLAS_ROOT})
-  find_package(LAPACK COMPONENTS OpenBLAS REQUIRED)
-else()
-  if(USE_BLAS)
-    find_package(LAPACK COMPONENTS ${USE_BLAS} REQUIRED)
+# Find OpenMP
+option(USE_OpenMP OFF)
+if(USE_OpenMP)
+  find_package(OpenMP)
+  if(OpenMP_FOUND)
+    message("OpenMP FOUND: ")
+    list( APPEND TARGET_COMPILE_DEF "-DUSE_OpenMP" )
+    list( APPEND TARGET_COMPILE_OPT ${OpenMP_Fortran_FLAGS}  )
   else()
-    find_package(LAPACK COMPONENTS OpenBLAS REQUIRED)
+    message("OpenMP NOT FOUND: building without it")
   endif()
 endif()
 
-message(STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}")
-message(STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES}")
-
 # CREATING DIRECTORIES FOR EASIFEM_BASE
-include(GNUInstallDirs)
+include( GNUInstallDirs )
 set(
   CMAKE_Fortran_MODULE_DIRECTORY
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}
@@ -113,6 +124,14 @@ foreach(p LIB BIN INCLUDE CMAKE)
   message(STATUS "Installing ${p} componenets to ${_path}")
 endforeach()
 
+
+option(BUILD_SHARED_LIBS "Build shared library" ON)
+if (BUILD_SHARED_LIBS)
+  message(STATUS "${PROJECT_NAME} will be built as a shared library.")
+else()
+  message(STATUS "${PROJECT_NAME} will be built as a static library.")
+endif()
+
 # INSTALLING easifemBase
 if(BUILD_SHARED_LIBS)
   add_library(${PROJECT_NAME} SHARED "" )
@@ -120,12 +139,31 @@ else()
   add_library(${PROJECT_NAME} STATIC "")
 endif()
 
+# COMPILER RELATED OPTIONS
+include(${PROJECT_SOURCE_DIR}/cmake/Compiler.cmake)
 target_compile_options(
   ${PROJECT_NAME}
   PRIVATE
+  ${TARGET_COMPILE_OPT}
   ${FORTRAN_FLAGS}
   "$<$<CONFIG:Debug>:${FORTRAN_FLAGS_DEBUG}>"
   "$<$<CONFIG:Release>:${FORTRAN_FLAGS_RELEASE}>"
+)
+
+message("ADDING Extra COMPILE DEF: ${TARGET_COMPILE_DEF}")
+
+target_compile_definitions(
+  ${PROJECT_NAME}
+  PUBLIC
+  ${TARGET_COMPILE_DEF}
+)
+
+target_link_libraries(
+  ${PROJECT_NAME}
+  PUBLIC
+  ${LAPACK_LIBRARIES}
+  ${BLAS_LIBRARIES}
+  "$<$<BOOL:${OpenMP_FOUND}>:${OpenMP_Fortran_LIBRARIES}>"
 )
 
 # target_compile_definitions()
@@ -147,13 +185,6 @@ target_include_directories(
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
   $<INSTALL_INTERFACE:${INSTALL_INCLUDEDIR}>
-)
-
-target_link_libraries(
-  ${PROJECT_NAME}
-  PUBLIC
-  ${LAPACK_LIBRARIES}
-  ${BLAS_LIBRARIES}
 )
 
 include(src/modules/CMakeLists.txt)

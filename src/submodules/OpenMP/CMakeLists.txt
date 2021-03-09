@@ -3,11 +3,11 @@
 # All right reserved
 #
 # log
-# 7/03/2021 this file was created
+# 9/03/2021 this file was created
 #-----------------------------------------------------------------------
 
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/BLAS1V_Method@Methods.f90
+  ${src_path}/OpenMP_Method@Constructor.f90
 )

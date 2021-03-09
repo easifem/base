@@ -103,13 +103,9 @@ CONTAINS
 #include "./blas95_src/dzasum.f90"
 #include "./blas95_src/dznrm2.f90"
 #include "./blas95_src/icamax.f90"
-#include "./blas95_src/icamin.f90"
 #include "./blas95_src/idamax.f90"
-#include "./blas95_src/idamin.f90"
 #include "./blas95_src/isamax.f90"
-#include "./blas95_src/isamin.f90"
 #include "./blas95_src/izamax.f90"
-#include "./blas95_src/izamin.f90"
 #include "./blas95_src/sasum.f90"
 #include "./blas95_src/saxpby.f90"
 #include "./blas95_src/saxpy.f90"
@@ -184,6 +180,13 @@ CONTAINS
 #include "./blas95_src/ztrmv.f90"
 #include "./blas95_src/ztrsm.f90"
 #include "./blas95_src/ztrsv.f90"
+
+#ifndef USE_NativeBLAS
+#include "./blas95_src/icamin.f90"
+#include "./blas95_src/idamin.f90"
+#include "./blas95_src/isamin.f90"
+#include "./blas95_src/izamin.f90"
+#endif
 
 #ifdef USE_INTEL_MKL
 #include "./blas95_src/droti.f90"

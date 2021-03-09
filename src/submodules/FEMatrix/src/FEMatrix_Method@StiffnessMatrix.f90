@@ -1,9 +1,23 @@
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
 SUBMODULE( FEMatrix_Method ) StiffnessMatrix
-
 USE BaseMethod
-
 IMPLICIT NONE
-
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -163,7 +177,7 @@ MODULE PROCEDURE Space_StiffnessMatrix_Lambda
         IF( i .EQ. j ) THEN
           Ke11 = Real1 * MATMUL( Test % dNdXt( :, :, ips ), &
             & TRANSPOSE( Trial % dNdXt( :, :, ips ) ) ) &
-            &	+ Real2 * OUTERPROD( Test % dNdXt( :, i, ips ), &
+            & + Real2 * OUTERPROD( Test % dNdXt( :, i, ips ), &
             & Trial % dNdXt( :, i, ips ) )
         ELSE
           Ke11 = Real3 * OUTERPROD( Test % dNdXt( :, i, ips ), &
@@ -215,7 +229,7 @@ MODULE PROCEDURE space_stiffnessmatrix_LamMu
         IF( i .EQ. j ) THEN
           Ke11 = Real1 * MATMUL( Test % dNdXt( :, :, ips ), &
             & TRANSPOSE( Trial % dNdXt( :, :, ips ) ) ) &
-            &	+ Real2 * OUTERPROD( Test % dNdXt( :, i, ips ), &
+            & + Real2 * OUTERPROD( Test % dNdXt( :, i, ips ), &
             & Trial % dNdXt( :, i, ips ) )
         ELSE
           Ke11 = Real3 * OUTERPROD( Test % dNdXt( :, i, ips ), &

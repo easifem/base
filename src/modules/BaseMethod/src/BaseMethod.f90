@@ -25,6 +25,10 @@
 
 MODULE BaseMethod
   USE System_Method
+#ifdef USE_OpenMP
+  USE OMP_LIB
+#endif
+  USE OpenMP_Method
   USE StringiFor
   USE PENF
   USE FACE
@@ -44,7 +48,7 @@ MODULE BaseMethod
   USE KeyValue_Method
   USE IterationData_Method
   USE Vector3D_Method
-  USE BLAS1_Method
+  USE BLAS1V_Method
   USE RealVector_Method
   USE DOF_Method
   USE ReferenceElement_Method

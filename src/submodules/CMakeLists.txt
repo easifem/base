@@ -6,6 +6,9 @@
 # 17/02/2021 this file was created
 #-----------------------------------------------------------------------
 
+#OpenMP put it at top
+include(${CMAKE_CURRENT_LIST_DIR}/OpenMP/CMakeLists.txt)
+
 #Random
 include(${CMAKE_CURRENT_LIST_DIR}/Random/CMakeLists.txt)
 
@@ -30,11 +33,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
 #Vector3D
 include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 
-#BLAS
-include(${CMAKE_CURRENT_LIST_DIR}/BLAS/CMakeLists.txt)
-
 #RealVector
 include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
+
+#BLAS
+include(${CMAKE_CURRENT_LIST_DIR}/BLAS/CMakeLists.txt)
 
 #DOF
 include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
@@ -52,7 +55,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/FEVariable/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/ElemShapeData/CMakeLists.txt)
 
 #FEMatrix
-# include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
 
 # RealMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)

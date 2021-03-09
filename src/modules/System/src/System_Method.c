@@ -359,7 +359,7 @@ int my_issock(const char *path){
 /*
  * Decides whether a given file name is a symbolic link.
  * return 1 if file exists and is a symlink, 0 otherwise.
- */
+*/
 int my_islnk(const char *fname) {
   struct stat statbuf;
 
@@ -375,8 +375,8 @@ int my_islnk(const char *fname) {
  * return 1 if file exists, 0 otherwise.
  */
 int my_file_exists(const char *fname) {
-  struct stat statbuf;
-  return !stat(fname, &statbuf);
+   struct stat statbuf;
+   return !stat(fname, &statbuf);
 }
 /* ===============================================================================================================================*/
 #include <grp.h>

@@ -297,4 +297,31 @@ MODULE GlobalData
   INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_ALLOC = 1
   INTEGER( I4B ), PARAMETER, PUBLIC :: OPT_DEALLOC = 2
 
+
+  ! for matrix conversion ( dense to dense )
+! element matrix storage may differ from global matrix storage format
+INTEGER( I4B ), PARAMETER, PUBLIC :: DofToNodes = 0
+  !! It is used in [[RealVector_]] and [[RealMatrix_]]
+INTEGER( I4B ), PARAMETER, PUBLIC :: NONE = -1
+  !! It is used in [[RealVector_]] and [[RealMatrix_]]
+INTEGER( I4B ), PARAMETER, PUBLIC :: NodesToDOF = 1
+  !! It is used in [[RealVector_]] and [[RealMatrix_]]
+INTEGER( I4B ), PARAMETER, PUBLIC :: DOF_FMT = 0
+INTEGER( I4B ), PARAMETER, PUBLIC :: NODES_FMT = 1
+INTEGER( I4B ), PARAMETER, PUBLIC :: FMT_DOF = 0
+INTEGER( I4B ), PARAMETER, PUBLIC :: FMT_NODES = 1
+INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_ROW = 1
+INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_COLUMN = 2
+INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix_DIAGONAL = 0
+
+INTEGER( I4B ), PARAMETER, PUBLIC :: SMALL_MATRIX_ROW = 10
+  !! Lenght of small matrix in row dimension
+INTEGER( I4B ), PARAMETER, PUBLIC :: SMALL_MATRIX_LEN_COL = 10
+  !! Length of small matrix in column dimension
+INTEGER( I4B ), PARAMETER, PUBLIC :: SMALL_VECTOR_LEN = 100
+  !! Length of small vector
+
+INTEGER( I4B ), PARAMETER, PUBLIC :: OMP_THREADS_FORKED=1
+INTEGER( I4B ), PARAMETER, PUBLIC :: OMP_THREADS_JOINED=2
+
 END MODULE GlobalData

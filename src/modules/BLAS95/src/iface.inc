@@ -149,11 +149,14 @@ PUBLIC :: IAMAX
 !
 !----------------------------------------------------------------------------
 
+#ifndef USE_NativeBLAS
 INTERFACE IAMIN
   MODULE PROCEDURE ISAMIN_F95, IDAMIN_F95, ICAMIN_F95, IZAMIN_F95
 END INTERFACE IAMIN
 
 PUBLIC :: IAMIN
+
+#endif
 
 !----------------------------------------------------------------------------
 !
