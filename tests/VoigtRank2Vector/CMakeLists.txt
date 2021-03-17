@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
-set(PROJECT_NAME "BLAS1V")
+set(PROJECT_NAME "VoigtRank2Tensor")
 project(${PROJECT_NAME})
 enable_language(Fortran)
 set(TARGET_NAME "test")

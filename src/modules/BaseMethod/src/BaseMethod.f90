@@ -28,11 +28,15 @@ MODULE BaseMethod
 #ifdef USE_OpenMP
   USE OMP_LIB
 #endif
+  USE EASIFEM_BLAS
+  USE EASIFEM_LAPACK
   USE OpenMP_Method
   USE StringiFor
   USE PENF
   USE FACE
-  USE EASIFEM_BLAS
+  USE FoXy
+  USE VTK_FORTRAN
+  USE GNUPLOT_Method
   USE GlobalData
   USE Display_Method
   USE ErrorHandling
@@ -65,9 +69,9 @@ MODULE BaseMethod
   USE File_Method
   USE RealMatrix_Method
   USE FEMatrix_Method
+  USE Rank2Tensor_Method
+  USE VoigtRank2Tensor_Method
   ! USE Lapack_Method
   ! USE SparseMatrix_Method
-  ! USE VoigtRank2Tensor_Method
-  ! USE Rank2Tensor_Method
 
 END MODULE BaseMethod

@@ -186,7 +186,8 @@ END PROCEDURE f_getARRAYValuesFromTriplet_Real
 
 MODULE PROCEDURE f_getSectionValues_self
   IF( ALLOCATED( Obj % Val ) ) THEN
-    CALL COPY( Y=Val, X=Obj%Val( Indx ) )
+    ! CALL COPY( Y=Val, X=Obj%Val( Indx ) )
+    STOP
   END IF
 END PROCEDURE f_getSectionValues_self
 
@@ -196,7 +197,8 @@ END PROCEDURE f_getSectionValues_self
 
 MODULE PROCEDURE f_getValuesFromTriplet_self
   IF( ALLOCATED( Obj % Val ) ) THEN
-    CALL COPY( Y=Val, X=Obj%Val( iStart:iEnd:Stride ) )
+    ! CALL COPY( Y=Val, X=Obj%Val( iStart:iEnd:Stride ) )
+    STOP
   END IF
 END PROCEDURE f_getValuesFromTriplet_self
 
@@ -205,7 +207,8 @@ END PROCEDURE f_getValuesFromTriplet_self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getARRAYValues_self
-  CALL COPY( Y=Val, X=ArrayValues( Obj, TypeReal64 ) )
+  ! CALL COPY( Y=Val, X=ArrayValues( Obj, TypeReal64 ) )
+  STOP
 END PROCEDURE f_getARRAYValues_self
 
 !----------------------------------------------------------------------------
@@ -213,7 +216,8 @@ END PROCEDURE f_getARRAYValues_self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getARRAYSectionValues_self
-  CALL COPY( Y=Val, X=ArrayValues( Obj, Indx, TypeReal64 ) )
+  ! CALL COPY( Y=Val, X=ArrayValues( Obj, Indx, TypeReal64 ) )
+  STOP
 END PROCEDURE f_getARRAYSectionValues_self
 
 !----------------------------------------------------------------------------
@@ -221,7 +225,8 @@ END PROCEDURE f_getARRAYSectionValues_self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getARRAYValuesFromTriplet_self
-  CALL COPY( Y=Val, X=ArrayValues( Obj, iStart, iEnd, Stride, TypeReal64 ) )
+  ! CALL COPY( Y=Val, X=ArrayValues( Obj, iStart, iEnd, Stride, TypeReal64 ) )
+  STOP
 END PROCEDURE f_getARRAYValuesFromTriplet_self
 
 !----------------------------------------------------------------------------

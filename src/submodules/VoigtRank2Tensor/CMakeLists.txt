@@ -3,11 +3,12 @@
 # All right reserved
 #
 # log
-# 16/02/2021 this file was created
+# 23/02/2021 this file was created
 #-----------------------------------------------------------------------
 
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/GNUPLOT_Method.f90
+  ${src_path}/VoigtRank2Tensor_Method@Constructor.f90
+  ${src_path}/VoigtRank2Tensor_Method@IO.f90
 )

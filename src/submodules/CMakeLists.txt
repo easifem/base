@@ -60,6 +60,12 @@ include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
 # RealMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 
+# VoigtRank2Tensor
+include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
+
+# Rank2Tensor
+include(${CMAKE_CURRENT_LIST_DIR}/Rank2Tensor/CMakeLists.txt)
+
 # #BaseMethod
 # include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
 

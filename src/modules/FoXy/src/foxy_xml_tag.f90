@@ -1,12 +1,31 @@
-!< FoXy XML tag class.
-module foxy_xml_tag
-!< FoXy XML tag class.
-use penf
-use stringifor
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
 
-implicit none
-private
-public :: xml_tag
+!> authors: Vikas Sharma, Ph. D.
+! date: 	10 March 2021
+! summary: FoXy XML tag class.
+
+MODULE FOXY_XML_TAG
+!< FoXy XML tag class.
+USE PENF
+USE STRINGIFOR
+IMPLICIT NONE
+PRIVATE
+PUBLIC :: XML_TAG
 
 type :: xml_tag
   !< XML tag class.
@@ -33,14 +52,14 @@ type :: xml_tag
   contains
     ! public methods
     generic               :: add_attributes =>        &
-                             add_single_attribute,    &
-                             add_multiple_attributes, &
-                             add_stream_attributes       !< Add attributes name/value pairs.
+                            add_single_attribute,    &
+                            add_multiple_attributes, &
+                            add_stream_attributes       !< Add attributes name/value pairs.
     procedure, pass(self) :: attributes                  !< Return attributes name/value pairs as string.
     procedure, pass(self) :: get_content                 !< Return tag content.
     generic               :: delete_attributes =>     &
-                             delete_single_attribute, &
-                             delete_multiple_attributes  !< Delete attributes name/value pairs.
+                            delete_single_attribute, &
+                            delete_multiple_attributes  !< Delete attributes name/value pairs.
     procedure, pass(self) :: delete_content              !< Delete tag conent.
     procedure, pass(self) :: end_tag                     !< Return `</tag_name>` end tag.
     procedure, pass(self) :: free                        !< Free dynamic memory.
@@ -249,7 +268,7 @@ contains
   if (present(attribute)) call self%add_single_attribute(attribute=attribute, sanitize_value=sanitize_attributes_value)
   if (present(attributes)) call self%add_multiple_attributes(attributes=attributes, sanitize_values=sanitize_attributes_value)
   if (present(attributes_stream)) call self%add_stream_attributes(attributes_stream=attributes_stream, &
-                                                                  sanitize_values=sanitize_attributes_value)
+    & sanitize_values=sanitize_attributes_value)
   if (present(indent)) self%indent = indent
   if (present(content)) then
     is_content_indented_ = .false. ; if (present(is_content_indented)) is_content_indented_ = is_content_indented
@@ -330,7 +349,7 @@ contains
         if (self%tag_content%is_allocated()) then
           if (is_content_indented_) then
             stringed = stringed//new_line('a')//repeat(' ', self%indent+2)//&
-                       self%tag_content//new_line('a')//repeat(' ', self%indent)
+                      self%tag_content//new_line('a')//repeat(' ', self%indent)
           else
             stringed = stringed//self%tag_content
           endif
@@ -342,7 +361,7 @@ contains
   endfunction stringify
 
   subroutine write_tag(self, unit, is_indented, is_content_indented, form, end_record, only_start, only_content, only_end, &
-                       iostat, iomsg)
+                      iostat, iomsg)
   !< Write tag to unit file.
   class(xml_tag), intent(in)            :: self                !< XML tag.
   integer(I4P),   intent(in)            :: unit                !< File unit.
@@ -368,17 +387,17 @@ contains
   end_record_ = '' ; if (present(end_record)) end_record_ = end_record
   select case(form_%chars())
   case('UNFORMATTED')
-    write(unit=unit, iostat=iostat_, iomsg=iomsg_)self%stringify(is_indented=is_indented,                 &
-                                                                 is_content_indented=is_content_indented, &
-                                                                 only_start=only_start,                   &
-                                                                 only_content=only_content,               &
-                                                                 only_end=only_end)//end_record_
+    write(unit=unit, iostat=iostat_, iomsg=iomsg_)self%stringify(is_indented=is_indented, &
+      & is_content_indented=is_content_indented, &
+      & only_start=only_start, &
+      & only_content=only_content,&
+      & only_end=only_end) // end_record_
   case('FORMATTED')
     write(unit=unit, fmt='(A)', iostat=iostat_, iomsg=iomsg_)self%stringify(is_indented=is_indented,                 &
-                                                                            is_content_indented=is_content_indented, &
-                                                                            only_start=only_start,                   &
-                                                                            only_content=only_content,               &
-                                                                            only_end=only_end)//end_record_
+    is_content_indented=is_content_indented, &
+    only_start=only_start,                   &
+    only_content=only_content,               &
+    only_end=only_end) // end_record_
   endselect
   if (present(iostat)) iostat = iostat_
   if (present(iomsg)) iomsg = iomsg_
@@ -790,4 +809,4 @@ contains
 
   call tag%free
   endsubroutine finalize
-endmodule foxy_xml_tag
+ENDMODULE FOXY_XML_TAG

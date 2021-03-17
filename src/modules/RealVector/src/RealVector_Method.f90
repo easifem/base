@@ -483,7 +483,7 @@ END INTERFACE
 INTERFACE
 MODULE PURE FUNCTION Constructor_2( Val ) RESULT( Obj )
   CLASS( RealVector_ ), POINTER :: Obj
-  INTEGER(Int32), INTENT( IN ) :: Val( : )
+  INTEGER(I4B), INTENT( IN ) :: Val( : )
 END FUNCTION Constructor_2
 END INTERFACE
 
@@ -520,7 +520,7 @@ END INTERFACE
 INTERFACE
 MODULE PURE FUNCTION Constructor_3( Val ) RESULT( Obj )
   CLASS( RealVector_ ), POINTER :: Obj
-  REAL(Real64), INTENT( IN ) :: Val( : )
+  REAL(DFP), INTENT( IN ) :: Val( : )
 END FUNCTION Constructor_3
 END INTERFACE
 

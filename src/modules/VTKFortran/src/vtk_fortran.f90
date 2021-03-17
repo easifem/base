@@ -15,14 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!< FoXy, Fortran XML parser for poor people
-MODULE FOXY
-!< FoXy, Fortran XML parser for poor people
-USE FOXY_XML_FILE, ONLY : XML_FILE
-USE FOXY_XML_TAG, ONLY : XML_TAG
-USE PENF
-IMPLICIT NONE
+!> authors: Vikas Sharma, Ph. D.
+! date: 	10 March 2021
+! summary: 	VTK_Fortran, pure Fortran (2003+) library to parse and emitt VTK files.
+
+MODULE VTK_FORTRAN
+USE VTK_FORTRAN_PVTK_FILE, ONLY : PVTK_FILE
+USE VTK_FORTRAN_VTK_FILE, ONLY : VTK_FILE
+USE VTK_FORTRAN_VTM_FILE, ONLY : VTM_FILE
 PRIVATE
-PUBLIC :: XML_FILE
-PUBLIC :: XML_TAG
-ENDMODULE FOXY
+PUBLIC :: PVTK_FILE
+PUBLIC :: VTK_FILE
+PUBLIC :: VTM_FILE
+ENDMODULE VTK_FORTRAN

@@ -485,20 +485,6 @@ END TYPE IterationDataPointer_
 PUBLIC :: IterationDataPointer_
 
 !----------------------------------------------------------------------------
-!                                                  TensorRelatedParameters
-!----------------------------------------------------------------------------
-
-  INTEGER( I4B ), PARAMETER, PUBLIC :: SymTensor = 1
-  INTEGER( I4B ), PARAMETER, PUBLIC :: SkewSymTensor = -1
-  INTEGER( I4B ), PARAMETER, PUBLIC :: GeneralTensor = 0
-  INTEGER( I4B ), PARAMETER, PUBLIC :: StressTypeVoigt = 1
-  INTEGER( I4B ), PARAMETER, PUBLIC :: StrainTypeVoigt = -1
-  INTEGER( I4B ), PARAMETER, PUBLIC :: WithSpectral = 1
-  INTEGER( I4B ), PARAMETER, PUBLIC :: WithoutSpectral = -1
-  INTEGER( I4B ), PARAMETER, PUBLIC :: SineLode = 1
-  INTEGER( I4B ), PARAMETER, PUBLIC :: CosineLode = 0
-
-!----------------------------------------------------------------------------
 !                                                       VoigtRank2Tensor_
 !----------------------------------------------------------------------------
 
@@ -507,13 +493,15 @@ PUBLIC :: IterationDataPointer_
 ! Voigt representation of rank2 tensor
 
 TYPE :: VoigtRank2Tensor_
-  REAL( DFP ) :: V( 9 )
+  REAL( DFP ) :: V( 6 ) = 0.0_DFP
+  REAL( DFP ) :: Scale = 1.0_DFP
+  INTEGER( I4B )  :: VoigtType = StressTypeVoigt
 END TYPE VoigtRank2Tensor_
 
 PUBLIC :: VoigtRank2Tensor_
 
 TYPE( VoigtRank2Tensor_ ), PARAMETER, PUBLIC :: &
-  & TypeVoigtRank2Tensor = VoigtRank2Tensor_( V = 0.0_DFP )
+  & TypeVoigtRank2Tensor = VoigtRank2Tensor_(  )
 
 TYPE :: VoigtRank2TensorPointer
   CLASS( VoigtRank2Tensor_ ), POINTER :: Ptr => NULL( )
@@ -533,13 +521,14 @@ END TYPE Tensor_
 !----------------------------------------------------------------------------
 
 TYPE, EXTENDS( Tensor_ ) :: Rank2Tensor_
-  REAL( DFP ) :: T( 3, 3 )
+  REAL( DFP ) :: T( 3, 3 ) = 0.0_DFP
+  LOGICAL( LGT ) :: isSym = .FALSE.
 END TYPE Rank2Tensor_
 
 PUBLIC :: Rank2Tensor_
 
 TYPE( Rank2Tensor_ ), PARAMETER, PUBLIC :: &
-  & TypeRank2Tensor = Rank2Tensor_( T = 0.0_DFP )
+  & TypeRank2Tensor = Rank2Tensor_( )
 
 TYPE :: Rank2TensorPointer_
   CLASS( Rank2Tensor_ ), POINTER :: Ptr => NULL( )

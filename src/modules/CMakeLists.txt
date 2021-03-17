@@ -12,6 +12,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/System/CMakeLists.txt)
 #BLAS95
 include(${CMAKE_CURRENT_LIST_DIR}/BLAS95/CMakeLists.txt)
 
+#BLAS95
+include(${CMAKE_CURRENT_LIST_DIR}/LAPACK95/CMakeLists.txt)
+
 # H5Fortran
 include(${CMAKE_CURRENT_LIST_DIR}/H5Fortran/CMakeLists.txt)
 
@@ -99,20 +102,23 @@ include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 #FEMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
 
-# # #FoXy
-# # include(${CMAKE_CURRENT_LIST_DIR}/FoXy/CMakeLists.txt)
+#FoXy
+include(${CMAKE_CURRENT_LIST_DIR}/FoXy/CMakeLists.txt)
 
-# # #Gnuplot
-# # include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
+#VTKFortran
+include(${CMAKE_CURRENT_LIST_DIR}/VTKFortran/CMakeLists.txt)
 
-# # #IndexValue
-# # include(${CMAKE_CURRENT_LIST_DIR}/IndexValue/CMakeLists.txt)
+#Gnuplot
+include(${CMAKE_CURRENT_LIST_DIR}/GNUPLOT/CMakeLists.txt)
+
+#VoigtRank2Tensor
+include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
+
+#Rank2Tensor
+include(${CMAKE_CURRENT_LIST_DIR}/Rank2Tensor/CMakeLists.txt)
 
 # # #Lapack
 # # include(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)
-
-# # # #RealMatrix
-# # # include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 
 #BaseMethod
 include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)

@@ -148,11 +148,11 @@ MODULE PROCEDURE Constructor1
 END PROCEDURE Constructor1
 
 MODULE PROCEDURE Constructor2
-  CALL COPY( Y = Obj, X=REAL( Val, KIND=DFP ) )
+  Obj%Val = Val
 END PROCEDURE Constructor2
 
 MODULE PROCEDURE Constructor3
-  CALL COPY( Y = Obj, X=Val )
+  Obj%Val = Val
 END PROCEDURE Constructor3
 
 !----------------------------------------------------------------------------
@@ -170,7 +170,7 @@ END PROCEDURE Constructor_1
 
 MODULE PROCEDURE Constructor_2
   ALLOCATE( Obj )
-  CALL COPY( Y = Obj, X=REAL( Val, KIND=DFP ) )
+  Obj%Val = Val
 END PROCEDURE Constructor_2
 
 !----------------------------------------------------------------------------
@@ -179,7 +179,7 @@ END PROCEDURE Constructor_2
 
 MODULE PROCEDURE Constructor_3
   ALLOCATE( Obj )
-  CALL COPY( Y = Obj, X=Val )
+  Obj%Val = Val
 END PROCEDURE Constructor_3
 
 END SUBMODULE Constructor

@@ -24,39 +24,30 @@ USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
+#define _tr_ Indx(1):Indx(2):Indx(3)
+
 !----------------------------------------------------------------------------
 !                                                                     ASUM
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ASUMscalar
-  INTEGER ( I4B ) :: Indx( 4 ), i
-  REAL( DFP ) :: local_sum
+  INTEGER ( I4B ) :: Indx( 4 )
 
   !! small data
-  IF( SIZE( Obj%Val ) .LE. SMALL_VECTOR_LEN ) THEN
-    Ans = SUM( ABS( Obj%Val ) )
-
+  IF( (SIZE( Obj%Val ) .LE. SMALL_VECTOR_LEN) &
+    & .OR. (OMP%STATE .EQ. OMP_THREADS_FORKED) ) THEN
+    Ans = ASUM( Obj%Val )
   !! big data
   ELSE
-
-    IF( OMP%STATE .EQ. OMP_THREADS_FORKED ) THEN
-      !> someone already started the working sharing outside the lexical scope
-      Ans = ASUM( Obj%Val )
-    ELSE
-
-      !> create threads and share the work
-      Ans = 0.0_DFP
-      !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i, Indx, local_sum) REDUCTION( +: Ans )
-      CALL OMP_INITIATE
-      Indx = OMP_Partition( SIZE( Obj%Val ), OMP%NUM_THREADS )
-      local_sum = ASUM( Obj%Val( Indx( 1 ) : Indx( 2 ) : Indx( 3 ) ) )
-      Ans = Ans + local_sum
-      CALL OMP_FINALIZE
-      !$OMP END PARALLEL
-
-    END IF
+    !> create threads and share the work
+    Ans = 0.0_DFP
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(Indx) REDUCTION( +: Ans )
+    CALL OMP_INITIATE
+    Indx = OMP_Partition( SIZE( Obj%Val ), OMP%NUM_THREADS )
+    Ans = Ans + ASUM( Obj%Val( _tr_ ) )
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
   END IF
-
 END PROCEDURE ASUMscalar
 
 !----------------------------------------------------------------------------
@@ -64,11 +55,27 @@ END PROCEDURE ASUMscalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ASUMvector
-  INTEGER( I4B ) :: i
-  Ans = 0.0
-  DO i = 1, SIZE( Obj )
-    Ans = Ans + ASUM( Obj( i )%Val )
-  END DO
+  INTEGER( I4B ) :: i, Indx( 4 )
+
+  IF( OMP%STATE .EQ. OMP_THREADS_FORKED ) THEN
+    !> already forked
+    Ans = 0.0
+    DO i = 1, SIZE( Obj )
+      !> Calling BLAS routine
+      Ans = Ans + ASUM( Obj( i )%Val )
+    END DO
+  ELSE
+    !> forking
+    Ans = 0.0_DFP
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i, Indx) REDUCTION( +: Ans )
+    CALL OMP_INITIATE
+    DO i = 1, SIZE(Obj)
+      Indx = OMP_Partition( SIZE( Obj(i)%Val ), OMP%NUM_THREADS )
+      Ans = Ans + ASUM( Obj(i)%Val( _tr_ ) )
+    END DO
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
+  END IF
 END PROCEDURE ASUMvector
 
 !----------------------------------------------------------------------------
@@ -76,10 +83,18 @@ END PROCEDURE ASUMvector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarAXPYscalar
-  IF( SIZE( X%Val ) .LE. SMALL_VECTOR_LEN ) THEN
-    Y%Val = Y%Val + A*X%Val
-  ELSE
+  INTEGER( I4B ) :: Indx( 4 )
+
+  IF( ( SIZE( X%Val ) .LE. SMALL_VECTOR_LEN ) .OR. &
+    & ( OMP%STATE .EQ. OMP_THREADS_FORKED ) ) THEN
     CALL AXPY( X=X%Val, Y=Y%Val, A=A )
+  ELSE
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(Indx)
+    CALL OMP_INITIATE
+    Indx = OMP_Partition( SIZE( X%Val ), OMP%NUM_THREADS )
+    CALL AXPY( X = X%Val( _tr_ ), Y = Y%Val( _tr_ ), A = A )
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
   END IF
 END PROCEDURE scalarAXPYscalar
 
@@ -88,7 +103,18 @@ END PROCEDURE scalarAXPYscalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarAXPYintrinsic
-  CALL AXPY( Y=Y%Val, A=A, X=X )
+  INTEGER( I4B ) :: Indx( 4 )
+  IF( ( SIZE( X ) .LE. SMALL_VECTOR_LEN ) .OR. &
+    & ( OMP%STATE .EQ. OMP_THREADS_FORKED ) ) THEN
+    CALL AXPY( X=X, Y=Y%Val, A=A )
+  ELSE
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(Indx)
+    CALL OMP_INITIATE
+    Indx = OMP_Partition( SIZE( X ), OMP%NUM_THREADS )
+    CALL AXPY( X = X( _tr_ ), Y = Y%Val( _tr_ ), A = A )
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
+  END IF
 END PROCEDURE scalarAXPYintrinsic
 
 !----------------------------------------------------------------------------
@@ -96,34 +122,56 @@ END PROCEDURE scalarAXPYintrinsic
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vectorAXPYvector
-  INTEGER( I4B ) :: i
-  DO i = 1, SIZE( Y )
-    CALL AXPY( Y=Y( i )%Val, A=A, X=X( i )%Val )
-  END DO
-END PROCEDURE vectorAXPYvector
+  INTEGER( I4B ) :: i, Indx( 4 )
 
-!----------------------------------------------------------------------------
-!                                                                       COPY
-!----------------------------------------------------------------------------
-
-PURE SUBROUTINE internal_copy(Y,X)
-  REAL( DFP ), INTENT( INOUT ) :: Y( : )
-  REAL( DFP ), INTENT( IN ) :: X( : )
-  IF( SIZE(X) .LE. SMALL_VECTOR_LEN ) THEN
-    Y = X
-  ELSE
-    CALL COPY( Y=Y, X=X )
+#ifdef DEBUG_VER
+  IF( SIZE( A ) .NE. SIZE( X ) ) THEN
+    CALL ErrMSG(&
+      & Msg = "SIZE(A) should be equal to SIZE(X)", &
+      & File = __FILE__, &
+      & Routine = "vectorAXPYvector()", &
+      & Line = __LINE__, &
+      & UnitNo = stderr )
+    STOP
   END IF
-END SUBROUTINE internal_copy
+#endif
+
+  IF( OMP%STATE .EQ. OMP_THREADS_FORKED ) THEN
+    DO i = 1, SIZE( X )
+      CALL AXPY( Y=Y( i )%Val, A=A( i ), X=X( i )%Val )
+    END DO
+  ELSE
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i, Indx)
+    CALL OMP_INITIATE
+    DO i = 1, SIZE( X )
+      Indx = OMP_Partition( SIZE( X( i )%Val ), OMP%NUM_THREADS )
+      CALL AXPY( Y=Y( i )%Val( _tr_ ), X=X( i )%Val( _tr_ ), A = A( i ) )
+    END DO
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
+  END IF
+END PROCEDURE vectorAXPYvector
 
 !----------------------------------------------------------------------------
 !                                                                      COPY
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarCOPYscalar
-  CALL SHALLOWCOPY( Y=Y%Val, X=X%Val )
-  CALL internal_copy( Y = Y%Val, X = X%Val )
+  INTEGER( I4B ) :: Indx( 4 )
+
+  CALL SHALLOWCOPY( Y = Y%Val, X = X%Val )
   CALL setTotalDimension( Y, 1_I4B )
+  IF( ( SIZE( X%Val ) .LE. SMALL_VECTOR_LEN ) .OR. &
+    & ( OMP%STATE .EQ. OMP_THREADS_FORKED ) ) THEN
+    CALL COPY( Y = Y%Val, X = X%Val )
+  ELSE
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(Indx)
+    CALL OMP_INITIATE
+    Indx = OMP_Partition( SIZE( X%Val ), OMP%NUM_THREADS )
+    CALL COPY( X = X%Val( _tr_ ), Y = Y%Val( _tr_ ) )
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
+  END IF
 END PROCEDURE scalarCOPYscalar
 
 !----------------------------------------------------------------------------
@@ -131,9 +179,21 @@ END PROCEDURE scalarCOPYscalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarCOPYintrinsic
-  CALL SHALLOWCOPY( Y=Y%Val, X=X )
-  CALL internal_copy( Y = Y%Val, X = X )
+  INTEGER( I4B ) :: Indx( 4 )
+
+  CALL SHALLOWCOPY( Y = Y%Val, X = X )
   CALL setTotalDimension( Y, 1_I4B )
+  IF( ( SIZE( X ) .LE. SMALL_VECTOR_LEN ) .OR. &
+    & ( OMP%STATE .EQ. OMP_THREADS_FORKED ) ) THEN
+    CALL COPY( Y = Y%Val, X = X )
+  ELSE
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(Indx)
+    CALL OMP_INITIATE
+    Indx = OMP_Partition( SIZE( X ), OMP%NUM_THREADS )
+    CALL COPY( X = X( _tr_ ), Y = Y%Val( _tr_ ) )
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
+  END IF
 END PROCEDURE scalarCOPYintrinsic
 
 !----------------------------------------------------------------------------
@@ -141,8 +201,20 @@ END PROCEDURE scalarCOPYintrinsic
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intrinsicCOPYscalar
-  CALL SHALLOWCOPY( Y=Y, X=X%Val )
-  CALL internal_copy( Y = Y, X = X%Val )
+  INTEGER( I4B ) :: Indx( 4 )
+
+  CALL SHALLOWCOPY( Y = Y, X = X%Val )
+  IF( ( SIZE( X%Val ) .LE. SMALL_VECTOR_LEN ) .OR. &
+    & ( OMP%STATE .EQ. OMP_THREADS_FORKED ) ) THEN
+    CALL COPY( Y = Y, X = X%Val )
+  ELSE
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(Indx)
+    CALL OMP_INITIATE
+    Indx = OMP_Partition( SIZE( X%Val ), OMP%NUM_THREADS )
+    CALL COPY( X = X%Val( _tr_ ), Y = Y( _tr_ ) )
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
+  END IF
 END PROCEDURE intrinsicCOPYscalar
 
 !----------------------------------------------------------------------------
@@ -150,20 +222,41 @@ END PROCEDURE intrinsicCOPYscalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vectorCOPYvector
-  INTEGER( I4B ) :: i
+  INTEGER( I4B ) :: i, Indx( 4 )
+
   CALL SHALLOWCOPY( Y=Y, X=X )
-  DO i = 1, SIZE( X )
-    CALL COPY( X=X( i ), Y=Y( i ) )
-  END DO
+  IF( OMP%STATE .EQ. OMP_THREADS_FORKED ) THEN
+    DO i = 1, SIZE( X )
+      CALL COPY( Y=Y( i )%Val, X=X( i )%Val )
+      CALL setTotalDimension( Y(i), 1_I4B )
+    END DO
+  ELSE
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i, Indx)
+    CALL OMP_INITIATE
+    DO i = 1, SIZE( X )
+      Indx = OMP_Partition( SIZE( X( i )%Val ), OMP%NUM_THREADS )
+      CALL COPY( X=X( i )%Val( _tr_ ), Y=Y( i )%Val( _tr_ ) )
+    END DO
+    !$OMP DO
+    DO i = 1, SIZE( Y )
+      CALL setTotalDimension( Y(i), 1_I4B )
+    END DO
+    !$OMP ENDDO
+    CALL OMP_FINALIZE
+    !$OMP END PARALLEL
+  END IF
 END PROCEDURE vectorCOPYvector
 
 !----------------------------------------------------------------------------
 !                                                                      COPY
 !----------------------------------------------------------------------------
 
+!!Y=X(:)%Val
 MODULE PROCEDURE scalarCOPYvector
-  INTEGER( I4B ) :: i, r1, r2
+  INTEGER( I4B ) :: i, r1, r2, Indx( 4 )
+
   CALL SHALLOWCOPY( Y=Y, X=X )
+  CALL setTotalDimension( Y, 1_I4B )
   r1 = 0; r2 = 0
   DO i = 1, SIZE( X )
     r1 = r2 + 1
@@ -180,13 +273,11 @@ PURE FUNCTION inner_dot( Obj1, Obj2 ) RESULT( Ans )
   REAL( DFP ), INTENT( IN ) :: Obj1( : )
   REAL( DFP ), INTENT( IN ) :: Obj2( : )
   REAL( DFP ) :: Ans
-
   IF( SIZE( Obj1 ) .LE. SMALL_VECTOR_LEN ) THEN
     Ans = DOT_PRODUCT( Obj1, Obj2 )
   ELSE
     Ans = DOT( Obj1, Obj2 )
   END IF
-
 END FUNCTION inner_dot
 
 !----------------------------------------------------------------------------
@@ -384,4 +475,5 @@ MODULE PROCEDURE intrinsicSHALLOWCOPYscalar
   CALL COPY( Y=Y, X=X%Val )
 END PROCEDURE intrinsicSHALLOWCOPYscalar
 
+#undef _tr_
 END SUBMODULE Methods

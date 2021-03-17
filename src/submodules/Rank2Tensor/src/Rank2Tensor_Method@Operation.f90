@@ -1,0 +1,472 @@
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
+SUBMODULE( Rank2Tensor_Method ) Operation
+USE BaseMethod
+#define T_11 T( 1, 1 )
+#define T_12 T( 1, 2 )
+#define T_13 T( 1, 3 )
+#define T_21 T( 2, 1 )
+#define T_22 T( 2, 2 )
+#define T_23 T( 2, 3 )
+#define T_31 T( 3, 1 )
+#define T_32 T( 3, 2 )
+#define T_33 T( 3, 3 )
+IMPLICIT NONE
+CONTAINS
+
+#include "./DSYEVC3.f90"
+#include "./DSYEVH3.f90"
+#include "./DSYEVQ3.f90"
+#include "./DSYTRD3.f90"
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE trace_obj
+  ASSOCIATE( T => Obj%T )
+  IF( PRESENT( Power ) ) THEN
+    SELECT CASE( Power )
+    CASE( 1 )
+      Ans = T_11 + T_22 + T_33
+    CASE( 2 )
+      Ans = SUM( T * TRANSPOSE( T ) )
+    CASE( 3 )
+      Ans = SUM( MATMUL( T, T ) * TRANSPOSE( T ) )
+    END SELECT
+  ELSE
+    Ans = T_11 + T_22 + T_33
+  END IF
+  END ASSOCIATE
+END PROCEDURE trace_obj
+
+!----------------------------------------------------------------------------
+!                                                                       J2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE j2_obj
+  LOGICAL( LGT ) :: isDev
+  isDev = INPUT( default = .FALSE., option = isDeviatoric )
+  IF( isDev ) THEN
+    Ans = 0.5_DFP * Trace(Obj=Obj, Power=2)
+  ELSE
+    ASSOCIATE( T => Obj%T )
+      Ans = ( T_11 - T_22 ) ** 2 &
+        & + ( T_22 - T_33 ) ** 2 &
+        & + ( T_33 - T_11 ) ** 2 &
+        & + 6.0_DFP * ( T_12 * T_21 + T_23 * T_32 + T_13 * T_31 )
+      Ans = Ans / 6.0_DFP
+    END ASSOCIATE
+  END IF
+END PROCEDURE j2_obj
+
+!----------------------------------------------------------------------------
+!                                                                         J3
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE j3_obj
+  LOGICAL( LGT ) :: isDev
+  isDev = INPUT( default = .FALSE., option = isDeviatoric )
+  IF( isDev ) THEN
+    Ans = det( Obj )
+  ELSE
+    Ans = det( Deviatoric( Obj ) )
+  END IF
+END PROCEDURE j3_obj
+
+!----------------------------------------------------------------------------
+!                                                                         Det
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE det_obj
+  ASSOCIATE( T => Obj%T )
+    Ans = T(1,1)*(T(2,2)*T(3,3)-T(2,3)*T(3,2)) &
+          & - T(1,2)*(T(2,1)*T(3,3)-T(2,3)*T(3,1)) &
+          & + T(1,3)*(T(2,1)*T(3,2)-T(3,1)*T(2,2))
+  END ASSOCIATE
+END PROCEDURE det_obj
+
+!----------------------------------------------------------------------------
+!                                                                   LodeAngle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE theta_obj_j2j3
+  REAL( DFP ) :: J_2, J_3, Dummy
+  J_2 = J2; J_3 = J3
+  IF( J_2 .EQ. 0.0_DFP ) THEN
+    Ans = 0.0_DFP
+  ELSE
+    Dummy = 1.5_DFP * SQRT( 3.0_DFP ) * J_3 / ( J_2 * SQRT( J_2 ) )
+    IF( Dummy .GE. 1.0_DFP ) Dummy = 1.0_DFP
+    IF( Dummy .LE. -1.0_DFP ) Dummy = -1.0_DFP
+    IF( LodeType .EQ. SineLode ) Ans = ASIN( -Dummy ) / 3.0_DFP
+    IF( LodeType .EQ. CosineLode ) Ans = ACOS( Dummy ) / 3.0_DFP
+  END IF
+END PROCEDURE theta_obj_j2j3
+
+!----------------------------------------------------------------------------
+!                                                                   LodeAngle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE theta_obj
+  Ans = LodeAngle(LodeType=LodeType, &
+    & J2=J2( Obj, isDeviatoric ), &
+    & J3=J3( Obj, isDeviatoric ) )
+END PROCEDURE theta_obj
+
+!----------------------------------------------------------------------------
+!                                                                        Sym
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE sym_r2t
+  IF( Obj%isSym ) THEN
+    CALL Initiate( Obj=Ans, Mat=Obj%T, isSym = .TRUE. )
+  ELSE
+    CALL Initiate( Obj=Ans, Mat=SYM( Obj%T ), isSym = .TRUE. )
+  END IF
+END PROCEDURE sym_r2t
+
+!----------------------------------------------------------------------------
+!                                                                     SkewSym
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE skewsym_r2t
+  CALL Initiate( Obj=Ans, Mat=SkewSym(Obj%T), isSym=.FALSE. )
+END PROCEDURE skewsym_r2t
+
+!----------------------------------------------------------------------------
+!                                                                   Isotropic
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE iso_part_obj
+  CALL IsotropicTensor( Obj=Ans, Lambda=Trace( Obj ) / 3.0_DFP )
+END PROCEDURE iso_part_obj
+
+!----------------------------------------------------------------------------
+!                                                                 Deviatoric
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dev_part_obj
+  REAL( DFP ) :: a
+  ASSOCIATE( T => Ans%T )
+  a = Trace( Obj ) / 3.0_DFP
+  T = 0.0_DFP
+  T_11 = a
+  T_22 = a
+  T_33 = a
+  T = -T + Obj%T
+  END ASSOCIATE
+END PROCEDURE dev_part_obj
+
+!----------------------------------------------------------------------------
+!                                                              Contraction
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE r2_contract_r2
+  Ans = SUM( Obj1%T * Obj2%T )
+END PROCEDURE r2_contract_r2
+
+!----------------------------------------------------------------------------
+!                                                              Contraction
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE r2_contract_voigt_r2
+  ASSOCIATE( T => Obj1%T, V => Obj2%V, Scale => Obj2%Scale )
+  Ans = T_11 * V( 1 ) &
+    & + T_22 * V( 2 ) &
+    & + T_33 * V( 3 ) &
+    & + (T_12 + T_21) * V( 4 ) * Scale &
+    & + (T_23 + T_32) * V( 5 ) * Scale &
+    & + (T_13 + T_31) * V( 6 ) * Scale
+  END ASSOCIATE
+END PROCEDURE r2_contract_voigt_r2
+
+!----------------------------------------------------------------------------
+!                                                              Contraction
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE voigt_r2_contract_r2
+  Ans = r2_contract_voigt_r2( Obj1=Obj2, Obj2=Obj1 )
+END PROCEDURE voigt_r2_contract_r2
+
+!----------------------------------------------------------------------------
+!                                                              Contraction
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE voigt_r2_contract_voigt_r2
+  ASSOCIATE( A => Obj1%V, B => Obj2%V, S1 => Obj1%Scale, S2 => Obj2%Scale )
+    Ans = A( 1 ) * B( 1 ) + A( 2 ) * B( 2 ) + A( 3 ) * B( 3 ) &
+      & + 2.0 * S1 * S2 * ( A( 4 ) * B( 4 ) &
+      & + A( 5 ) * B( 5 ) + A( 6 ) * B( 6 ) )
+  END ASSOCIATE
+END PROCEDURE voigt_r2_contract_voigt_r2
+
+!----------------------------------------------------------------------------
+!                                                                 Invariants
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE invariants_rank2
+  LOGICAL( LGT ) :: isDev
+
+  isDev = INPUT( default = .FALSE., option=isDeviatoric )
+  IF( isDev ) THEN
+    Ans( 1 ) = 0.0
+    Ans( 2 ) = 0.5_DFP * Contraction( Obj, TRANSPOSE( obj ) )
+    Ans( 3 ) = Det( Obj )
+  ELSE
+    Ans( 1 ) = Trace( Obj )
+    Ans( 2 ) = 0.5_DFP * ( Ans( 1 ) ** 2 -  Trace( Obj, Power=2 ) )
+    Ans( 3 ) = Det( Obj )
+  END IF
+END PROCEDURE invariants_rank2
+
+!----------------------------------------------------------------------------
+!                                                                    Spectral
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE eigen_r2t
+  IF( Obj%isSym ) THEN
+    CALL DSYEVQ3( Obj%T, QR, WR )
+  ELSE
+    CALL spectral_r2t( Obj%T, QR=QR, WR=WR, QI=QI, WI=WI )
+  END IF
+END PROCEDURE eigen_r2t
+
+!----------------------------------------------------------------------------
+!                                                                    Spectral
+!----------------------------------------------------------------------------
+
+SUBROUTINE spectral_r2t( T, QR, WR, QI, WI )
+  REAL( DFP ), INTENT( IN ) :: T( 3, 3 )
+  REAL( DFP ), INTENT( INOUT ) :: QR( 3, 3 ), QI( 3, 3 )
+  REAL( DFP ), INTENT( OUT ) :: WR( 3 ), WI( 3 )
+
+  ! Define internal varuables
+  REAL( DFP ) :: EigenVec( 3, 3 )
+  REAL( DFP ) :: Mat( 3, 3 )
+
+  Mat = T
+  CALL GEEV( A = Mat, WR = WR, WI = WI, VR = EigenVec )
+
+  ! First two eigen value is complex
+  IF( ABS( WI( 1 ) ) .GT. Zero ) THEN
+    QR( :, 1 ) = EigenVec( :, 1 )
+    QI( :, 1 ) = EigenVec( :, 2 )
+    QR( :, 2 ) = EigenVec( :, 1 )
+    QI( :, 2 ) = -EigenVec( :, 2 )
+    QR( :, 3 ) = EigenVec( :, 3 )
+    QI( :, 3 ) = 0.0_DFP
+  ! Last two eigen value is complex
+ELSE IF( ABS( WI( 2 ) ) .GT. Zero ) THEN
+    QR( :, 1 ) = EigenVec( :, 1 )
+    QI( :, 1 ) = 0.0_DFP
+    QR( :, 2 ) = EigenVec( :, 2 )
+    QI( :, 2 ) = EigenVec( :, 3 )
+    QR( :, 3 ) = EigenVec( :, 2 )
+    QI( :, 3 ) = -EigenVec( :, 3 )
+  ! no complex eigen value
+  ELSE
+    QI = 0.0_DFP
+    QR( :, 1 ) = EigenVec( :, 1 )
+    QR( :, 2 ) = EigenVec( :, 2 )
+    QR( :, 3 ) = EigenVec( :, 2 )
+  END IF
+END SUBROUTINE spectral_r2t
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE right_pd_r2t
+  CALL PD( Obj%T, R%T, U%T, 1 )
+END PROCEDURE right_pd_r2t
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE left_pd_r2t
+  CALL PD( Obj%T, R%T, V%T, 2 )
+END PROCEDURE left_pd_r2t
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE PD( Mat, R, H, PDType )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !   1. 	Ref: Higham and Noferini, 2015 Algorithm 3.1 for NSD = 3
+  !   2.	PDType = 1 for F = RU; and 2 for F = VR
+  !		3.	Mat = RU = VR, Therefore H denotes either U or V
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  ! Define intent of dummy variables
+  REAL( DFP ), INTENT( IN ) :: Mat( 3, 3 )
+  REAL( DFP ), INTENT( INOUT ) :: R( 3, 3 ), H( 3, 3 )
+  INTEGER( I4B ), INTENT( IN ) :: PDType
+
+  ! Define internal variables
+  REAL( DFP ) :: B( 4, 4 ), EigenVecs( 4, 4 ), EigenVals( 4 ), Vmax( 4 )
+  INTEGER( I4B ) :: MAX_LOC( 1 )
+  B( 1, 1 ) = Mat( 1, 1 ) + Mat( 2, 2 ) + Mat( 3, 3 )
+  B( 1, 2 ) = Mat( 2, 3 ) - Mat( 3, 2 )
+  B( 1, 3 ) = Mat( 3, 1 ) - Mat( 1, 3 )
+  B( 1, 4 ) = Mat( 1, 2 ) - Mat( 2, 1 )
+  B( 2, 1 ) = Mat( 1, 2 )
+  B( 2, 2 ) = Mat( 1, 1 ) - Mat( 2, 2 ) -  Mat( 3, 3 )
+  B( 2, 3 ) = Mat( 1, 2 ) + Mat( 2, 1 )
+  B( 2, 4 ) = Mat( 1, 3 ) + Mat( 3, 1 )
+  B( 3, 1 ) = B( 1, 3 )
+  B( 3, 2 ) = B( 2, 3 )
+  B( 3, 3 ) = - Mat( 1, 1 ) + Mat( 2, 2 ) - Mat( 3, 3 )
+  B( 3, 4 ) = Mat( 2, 3 ) + Mat( 3, 2 )
+  B( 4, 1 ) = B( 1, 4 )
+  B( 4, 2 ) = B( 2, 4 )
+  B( 4, 3 ) = B( 3, 4 )
+  B( 4, 4 ) = - Mat( 1, 1 ) - Mat( 2, 2 ) + Mat( 3, 3 )
+  CALL JacobiMethod( Mat = B, EigenValues  = EigenVals,  &
+    & EigenVectors = EigenVecs, MaxIter = 20 )
+
+  ! Get Dominating eigen value and corresponding eigen vectors
+  MAX_LOC = MAXLOC ( ABS( EigenVals ) )
+  Vmax = EigenVecs( :, MAX_LOC( 1 ) )
+
+  ! Compute R matrix from Vmax Vector
+
+  R( 1, 1 ) = 1.0_DFP - 2.0_DFP * ( Vmax( 3 ) * Vmax( 3 ) + Vmax( 4 ) * Vmax( 4 ) )
+  R( 1, 2 ) = 2.0_DFP * ( Vmax( 2 ) * Vmax( 3 ) + Vmax( 1 ) * Vmax( 4 ) )
+  R( 1, 3 ) = 2.0_DFP * ( Vmax( 2 ) * Vmax( 4 ) - Vmax( 1 ) * Vmax( 3 ) )
+  R( 2, 1 ) = 2.0_DFP * ( Vmax( 2 ) * Vmax( 3 ) - Vmax( 1 ) * Vmax( 4 ) )
+  R( 2, 2 ) = 1.0_DFP - 2.0_DFP * ( Vmax( 2 ) * Vmax( 2 ) + Vmax( 4 ) * Vmax( 4 ) )
+  R( 2, 3 ) = 2.0_DFP * ( Vmax( 3 ) * Vmax( 4 ) + Vmax( 1 ) * Vmax( 2 ) )
+  R( 3, 1 ) = 2.0_DFP * ( Vmax( 2 ) * Vmax( 4 ) + Vmax( 1 ) * Vmax( 3 ) )
+  R( 3, 2 ) = 2.0_DFP * ( Vmax( 3 ) * Vmax( 4 ) - Vmax( 1 ) * Vmax( 2 ) )
+  R( 3, 3 ) = 1.0_DFP - 2.0_DFP * ( Vmax( 3 ) * Vmax( 3 ) + Vmax( 2 ) * Vmax( 2 ) )
+
+  ! Compute H matrix based upon the PDType
+  SELECT CASE( PDType )
+  CASE( 1 ) ! F = RU
+    H = MATMUL( TRANSPOSE( R ), Mat )
+  CASE( 2 ) ! F = VR
+    H = MATMUL( Mat, TRANSPOSE( R ) )
+  END SELECT
+END SUBROUTINE PD
+
+!----------------------------------------------------------------------------
+!                                                                 Transpose
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE obj_transpose
+  CALL Initiate( Ans, Mat = TRANSPOSE(Obj%T), isSym=Obj%isSym )
+END PROCEDURE obj_transpose
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Obj_add_Obj
+  Ans%T = Obj1%T + Obj2%T
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Obj_add_Mat
+  Ans%T = Obj1%T + Obj2
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Mat_add_Obj
+  Ans%T = Obj1 + Obj2%T
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Obj_add_Scalar
+  Ans%T = Obj1%T + Obj2
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Scalar_add_Obj
+  Ans%T = Obj1 + Obj2%T
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Obj_minus_Obj
+  Ans%T = Obj1%T - Obj2%T
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Obj_minus_Mat
+  Ans%T = Obj1%T - Obj2
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Mat_minus_Obj
+  Ans%T = Obj1 - Obj2%T
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Obj_minus_Scalar
+  Ans%T = Obj1%T - Obj2
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Scalar_minus_Obj
+  Ans%T = Obj1 - Obj2%T
+END PROCEDURE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+#undef T_11
+#undef T_12
+#undef T_13
+#undef T_21
+#undef T_22
+#undef T_23
+#undef T_31
+#undef T_32
+#undef T_33
+
+END SUBMODULE Operation

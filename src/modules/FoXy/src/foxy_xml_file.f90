@@ -1,11 +1,26 @@
-!< FoXy XML file class.
-module foxy_xml_file
-!< FoXy XML file class.
-use foxy_xml_tag, only : xml_tag
-use penf
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
 
-implicit none
-private
+!< FoXy XML file class.
+MODULE FOXY_XML_FILE
+USE FOXY_XML_TAG, ONLY : XML_TAG
+USE PENF
+IMPLICIT NONE
+PRIVATE
 
 type, public:: xml_file
   !< XML file class.
@@ -269,4 +284,4 @@ contains
   if (present(iostat)) iostat = iostatd
   if (present(iomsg))  iomsg  = iomsgd
   endfunction load_file_as_stream
-endmodule foxy_xml_file
+ENDMODULE FOXY_XML_FILE
