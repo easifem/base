@@ -1,0 +1,50 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma                            
+!                   Position    :   Doctral Student                                       
+!                   Institute   :   Kyoto Univeristy, Japan                        
+!                   Program name:   setSigma.part
+!                   Last Update :   March-29-2017
+!                                                               
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+! 
+!   Type    ::  Part of the Code
+!
+!   Info    ::  -   Part of the code; Initiate the Sigma object
+!
+!   Hosting File
+!           ::  -   Stress_Class.f90
+!
+!==============================================================================
+!
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+!
+!
+ SUBROUTINE setSigma(Stress, Sigma)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1.  - set the Sigma Object
+!
+!------------------------------------------------------------------------------
+!  Define arguments of dummy argument
+    CLASS(Stress_)   ::  Stress
+    REAL(DFP), DIMENSION(:), INTENT(IN):: Sigma
+!
+    INTEGER(I4B) :: n
+!
+    n = SIZE(Sigma, 1)
+    CALL Stress%Initiate(n)
+!
+    Stress%Sigma(:) = Sigma(:)
+
+ END SUBROUTINE setSigma
+!
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+!

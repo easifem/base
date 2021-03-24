@@ -1,0 +1,314 @@
+
+    INTERFACE Rank2Tensor_Pointer
+
+        MODULE PROCEDURE :: Constructor1, Constructor2, Constructor3, &
+        Constructor4, Constructor10
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Rank2Tensor
+
+        MODULE PROCEDURE :: Constructor5, Constructor6, Constructor7, &
+        Constructor8, Constructor9
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE VectorProduct
+
+        MODULE PROCEDURE VectorProduct2, VectorProduct3
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Box
+
+        MODULE PROCEDURE BoxProduct
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE getParallelComponent
+
+        MODULE PROCEDURE getProjection
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Trace
+
+        MODULE PROCEDURE Trace_2, Trace_1
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE isSymmetric
+
+        MODULE PROCEDURE isSymmetric_1, isSymmetric_2
+
+    END INTERFACE
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE isDeviatoric
+
+        MODULE PROCEDURE isDeviatoric_1, isDeviatoric_2
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE DoubleDot_Product
+
+        MODULE PROCEDURE DoubleDot_Product1, DoubleDot_Product2, &
+        DoubleDot_Product3, DoubleDot_Product4,&
+        DoubleDot_Product5, DoubleDot_Product6
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Invariant_I1
+
+        MODULE PROCEDURE f_Invariant_I1, m_Invariant_I1
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Invariant_I2
+
+        MODULE PROCEDURE f_Invariant_I2, m_Invariant_I2
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Invariant_I3
+
+        MODULE PROCEDURE f_Invariant_I3, m_Invariant_I3
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Invariant_J2
+
+        MODULE PROCEDURE f_Invariant_J2, m_Invariant_J2
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Invariant_J3
+
+        MODULE PROCEDURE f_Invariant_J3, m_Invariant_J3
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE LodeAngle
+
+        MODULE PROCEDURE f_LodeAngle_1, f_LodeAngle_2, m_LodeAngle
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE SymmetricPart
+
+        MODULE PROCEDURE f_SymmetricPart, m_SymmetricPart
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE AntiSymmetricPart
+
+        MODULE PROCEDURE f_AntiSymmetricPart, m_AntiSymmetricPart
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE HydrostaticPart
+
+        MODULE PROCEDURE f_HydrostaticPart, m_HydrostaticPart
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE SphericalPart
+
+        MODULE PROCEDURE f_HydrostaticPart, m_HydrostaticPart
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE DeviatoricPart
+
+        MODULE PROCEDURE f_DeviatoricPart, m_DeviatoricPart
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Pullback
+
+        MODULE PROCEDURE m_Rank2PullBack_1, m_Rank2PullBack_2, &
+        f_Rank2PullBack_1, f_Rank2PullBack_2, &
+        f_VecPullBack_1, f_VecPullBack_2
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE PushForward
+
+        MODULE PROCEDURE m_Rank2PushForward_1, m_Rank2PushForward_2, &
+        f_Rank2PushForward_1, f_Rank2PushForward_2, &
+        f_VecPushForward_1, f_VecPushForward_2
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Tensor_Eigens
+
+        MODULE PROCEDURE m_Eigens_1, m_Eigens_2, f_Eigens_1, f_Eigens_2
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Tensor_PrincipalValue
+
+        MODULE PROCEDURE m_PrincipalValue_1, f_PrincipalValue_1
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Tensor_SpectralRadius
+
+        MODULE PROCEDURE m_SpectralRadius_1, f_SpectralRadius_1
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE PolarDecomposition
+
+        MODULE PROCEDURE m_getPolarDecomp_1, f_getPolarDecomp_1
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE RotationPart
+
+        MODULE PROCEDURE f_getRotationPart, m_getRotationPart
+
+    END INTERFACE
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    INTERFACE Tensor_Exp
+
+        MODULE PROCEDURE m_TensorEXP_1, f_TensorEXP_1
+
+    END INTERFACE
+
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .

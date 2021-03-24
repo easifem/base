@@ -33,34 +33,27 @@ if(" ${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL " ${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
 # install openblas
-  # list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+# list(APPEND CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake")
 if(NOT CMAKE_PREFIX_PATH)
   set(CMAKE_PREFIX_PATH "$ENV{EASIFEM_EXTPKGS}")
 endif()
-find_package( OpenBLAS 0.3 CONFIG REQUIRED pthread)
-# #possible COMPONENTS are: pthread, static, shared, serial, openmp
-if(OpenBLAS_FOUND)
-  set(BLAS_VENDOR "OpenBLAS")
-  message(STATUS "OpenBLAS_LIBRARIES found")
-else()
-  # @todo download and build openblas @endtodo
-endif()
-#this is necessary to set LAPACK_LIBRARIES and BLAS_LIBRARIES to openblas
+set(BLA_VENDOR "OpenBLAS")
 find_package( LAPACK REQUIRED )
 if( LAPACK_FOUND )
   message(STATUS "LAPACK_LIBRARIES found")
   message("LAPACK_LIBRARIES: ${LAPACK_LIBRARIES}")
   message("BLAS_LIBRARIES: ${BLAS_LIBRARIES}")
+  message("BLA_vendor: ${BLA_VENDOR}")
 endif()
 
-if( BLAS_VENDOR MATCHES "MKL" )
-  message(STATUS "BLAS_VENDOR : MKL")
+if( BLA_VENDOR MATCHES "MKL" )
+  message(STATUS "BLA_VENDOR : MKL")
   list( APPEND TARGET_COMPILE_DEF "-DUSE_INTEL_MKL" )
-elseif( BLAS_VENDOR MATCHES "OpenBLAS" )
-  message(STATUS "BLAS_VENDOR : OpenBLAS")
+elseif( BLA_VENDOR MATCHES "OpenBLAS" )
+  message(STATUS "BLA_VENDOR : OpenBLAS")
   list( APPEND TARGET_COMPILE_DEF "-DUSE_OpenBLAS" )
 else( )
-  message(STATUS "BLAS_VENDOR : Native")
+  message(STATUS "BLA_VENDOR : System provided")
   list( APPEND TARGET_COMPILE_DEF "-DUSE_NativeBLAS" )
 endif( )
 
@@ -141,6 +134,11 @@ endif()
 
 # COMPILER RELATED OPTIONS
 include(${PROJECT_SOURCE_DIR}/cmake/Compiler.cmake)
+
+if( $<CONFIG:Debug> )
+  list( APPEND TARGET_COMPILE_DEF "-DDEBUG_VER" )
+endif()
+
 target_compile_options(
   ${PROJECT_NAME}
   PRIVATE

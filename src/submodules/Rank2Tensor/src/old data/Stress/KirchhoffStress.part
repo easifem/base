@@ -1,0 +1,101 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   KirchhoffStress.part
+!                   Last Update :   Dec-28-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   Type:: Part of Module
+!
+!   Description ::  
+!       -   This part includes subroutine for getting Kirchhoff Stress from
+!           any other Stress Measures
+!   Hosting File ::
+!       -   Stress_Class
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                           getKirchhoffStress
+!------------------------------------------------------------------------------
+
+ FUNCTION getKirchhoffStress( Obj, F )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  This subroutine computes the Cauchy stress from given stress type
+!       2.  FObj is Deformation Gradient object.
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+    USE DeformationGradient_Class
+
+    !  Define arguments of dummy argument
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    TYPE( DeformationGradient_ ), INTENT( IN ) :: F
+    REAL( DFP ), ALLOCATABLE :: getKirchhoffStress( :, : )
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+    REAL( DFP ) :: J
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+
+        CALL Err_Msg( &
+            "Stress_Class.f90>>KirchhoffStress.part", &
+            "getKirchhoffStress()", &
+            "Stress_ Object is not initiated. &
+            Program Stopped !!!" &
+        )
+        STOP
+
+    END IF
+
+    T = Obj
+
+    SELECT CASE( TRIM( Obj % StressType ) )
+
+        CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
+
+            J = .det. F
+            getKirchhoffStress = T * J
+            
+        CASE( "Kirchhoff", "kirchhoff", "Tau", "kirchoff", "Kirchoff", "tau" )
+
+            getKirchhoffStress = T 
+
+        CASE( "PK2", "Pk2", "pk2", "PK-2", "pk-2", "S", "s" )
+
+            getKirchhoffStress  = ( F .matmul. T ) .matmul. ( .transpose. F )
+
+        CASE( "PK1", "Pk1", "pk1", "PK-1", "pk-1", "Pi", "PI", "pi" )
+
+            getKirchhoffStress = T .matmul. ( .transpose. F )
+
+        CASE( "Eshelby-Like", "Eshelby", "EshelbyLike", "M", "m" )
+
+            getKirchhoffStress = ( ( .transpose. ( .inv. F ) ) .matmul. T ) .matmul. ( .transpose. F )
+
+        CASE DEFAULT
+
+            CALL Err_Msg( &
+                "Stress_Class.f90>>KirchhoffStress.part", &
+                "getKirchhoffStress( Obj, F )", &
+                "No case found for Obj % StressType. &
+                Program Stopped!!!" &
+            )
+            STOP
+
+    END SELECT
+
+    CALL T % DeallocateData( )
+
+ END FUNCTION getKirchhoffStress
+
+!------------------------------------------------------------------------------
+!                                                         
+!------------------------------------------------------------------------------
+

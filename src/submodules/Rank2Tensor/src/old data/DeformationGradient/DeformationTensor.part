@@ -1,0 +1,100 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   DeformationTensor.part
+!                   Last Update :   Dec-29-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Deformation Gradient class is defined
+!   HOSTING FILE
+!       -   DeformationGradient_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                           m_RightCauchyGreen
+!------------------------------------------------------------------------------
+
+ FUNCTION m_RightCauchyGreen( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  m_RightCauchyGreen = F^T F
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( DeformationGradient_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: m_RightCauchyGreen
+
+    ! Define internal variables
+
+    m_RightCauchyGreen = ( .transpose. Obj ) .matmul. Obj
+
+ END FUNCTION m_RightCauchyGreen
+
+!------------------------------------------------------------------------------
+!                                                           f_RightCauchyGreen
+!------------------------------------------------------------------------------
+
+ FUNCTION f_RightCauchyGreen( Mat )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  f_RightCauchyGreen = F^T F
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    REAL( DFP ), INTENT( IN ) :: Mat( :, : )
+    REAL( DFP ), DIMENSION( 3, 3 ) :: f_RightCauchyGreen
+
+    ! Define internal variables
+
+    f_RightCauchyGreen = ( .transpose. Mat ) .matmul. Mat
+
+ END FUNCTION f_RightCauchyGreen
+
+!------------------------------------------------------------------------------
+!                                                           m_LeftCauchyGreen
+!------------------------------------------------------------------------------
+
+ FUNCTION m_LeftCauchyGreen( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  m_LeftCauchyGreen = FF^T
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( DeformationGradient_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: m_LeftCauchyGreen
+
+    ! Define internal variables
+
+    m_LeftCauchyGreen = Obj .matmul. ( .transpose. Obj )
+
+ END FUNCTION m_LeftCauchyGreen
+
+!------------------------------------------------------------------------------
+!                                                           f_LeftCauchyGreen
+!------------------------------------------------------------------------------
+
+ FUNCTION f_LeftCauchyGreen( Mat )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  f_LeftCauchyGreen = FF^T
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    REAL( DFP ), INTENT( IN ) :: Mat( :, : )
+    REAL( DFP ), DIMENSION( 3, 3 ) :: f_LeftCauchyGreen
+
+    ! Define internal variables
+
+    f_LeftCauchyGreen = MATMUL( Mat, TRANSPOSE( Mat ) )
+
+ END FUNCTION f_LeftCauchyGreen

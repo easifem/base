@@ -1,0 +1,237 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   getCSigmaTruesdell.part
+!                   Last Update :   August-27-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   Type:: Module
+!
+!   Info::  -   This module includes subroutine for tensor operations
+!
+!   Hosting File :- Tensor.f90
+!
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                            getCSigmaTruesdell
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE getCSigmaTruesdell( C, Stress, StressType, StressRateType, F, J )
+     USE Utility, ONLY : OUTERPROD
+     USE Voigt
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1.  This Function computes "CsigmaTruesdell" which is used in
+!           Linearization of virtual work.
+!           StressType is for Stress Tensor
+!       2.  C has INTENT(INOUT)
+!       3.  Stress Rate Type provides information to the program about the
+!           type of C matrix. Sigma( StressRateType ) = C:d
+!       4.  Note Changes will appear in C
+!       5.  F and J are Optional arguments which are needed incase StressType
+!           is not Cauchy Stress.
+!           It will be used for conversion
+!
+!------------------------------------------------------------------------------
+!  Define arguments of dummy argument
+    REAL( DFP ), DIMENSION( :, : ), INTENT( INOUT ) :: C
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ), OPTIONAL :: Stress
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ), OPTIONAL :: F
+    REAL( DFP ), INTENT( IN ), OPTIONAL :: J
+    CHARACTER( LEN = * ), INTENT( IN ), OPTIONAL :: StressType
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressRateType
+! Define internal variables
+    REAL( DFP ), DIMENSION( :, : ), ALLOCATABLE :: Sigma, DummyMat, B
+    INTEGER( I4B ), DIMENSION( :, : ), ALLOCATABLE :: Indx
+    REAL( DFP ) :: d2 = 2.0_DFP, pt5 = 0.5_DFP
+    INTEGER( I4B ) :: ii, jj, M
+!
+! get Cauchy Stress
+    IF( PRESENT( Stress ) ) THEN
+        ALLOCATE( Sigma( SIZE( Stress, 1 ), SIZE( Stress, 2 ) ) )
+! Flag-1
+        CALL getCauchyStress( Sigma = Sigma, Stress = Stress, &
+        StressType = StressType )
+        CALL Check_Error( "Utility>>Tensor.f90>>getCSigmaTruesdell.part", &
+        "getCSigmaTruesdell() >> Flag-1" )
+    END IF
+!
+! Build case based on Stress Rate Type
+    SELECT CASE( TRIM( StressRateType ) )
+!
+!-------------------------------------------------------------------------------
+!                                                           Jaumann Stress Rate
+!-------------------------------------------------------------------------------
+!
+    CASE( "Jaumann", "JaumannZaremba", "JZ" )
+        SELECT CASE( SIZE( C, 1 ) )
+        CASE( 6 )
+            C ( 1, 1 ) = C ( 1, 1 ) - Sigma( 1, 1 )
+            C ( 1, 2 ) = C ( 1, 2 ) + Sigma( 1, 1 )
+            C ( 1, 3 ) = C ( 1, 3 ) + Sigma( 1, 1 )
+            C ( 1, 4 ) = C ( 1, 4 ) - Sigma( 1, 2 )
+            !C ( 1, 5 ) = C ( 1, 5 ) - 0.0_DFP
+            C ( 1, 6 ) = C ( 1, 6 ) - Sigma( 1, 3 )
+
+            C ( 2, 1 ) = C ( 2, 1 ) + Sigma( 2, 2 )
+            C ( 2, 2 ) = C ( 2, 2 ) - Sigma( 2, 2 )
+            C ( 2, 3 ) = C ( 2, 3 ) + Sigma( 2, 2 )
+            C ( 2, 4 ) = C ( 2, 4 ) - Sigma( 2, 1 )
+            C ( 2, 5 ) = C ( 2, 5 ) - Sigma( 2, 3 )
+            !C ( 2, 6 ) = C ( 2, 6 ) - 0.0_DFP
+
+            C ( 3, 1 ) = C ( 3, 1 ) + Sigma( 3, 3 )
+            C ( 3, 2 ) = C ( 3, 2 ) + Sigma( 3, 3 )
+            C ( 3, 3 ) = C ( 3, 3 ) - Sigma( 3, 3 )
+            !C ( 3, 4 ) = C ( 3, 4 ) - 0.0_DFP
+            C ( 3, 5 ) = C ( 3, 5 ) - Sigma( 2, 3 )
+            C ( 3, 6 ) = C ( 3, 6 ) - Sigma( 1, 3 )
+
+            !C ( 4, 1 ) = C ( 4, 1 ) - Sigma( 1, 2 ) + Sigma( 1, 2 )
+            !C ( 4, 2 ) = C ( 4, 2 ) - Sigma( 1, 2 ) + Sigma( 1, 2 )
+            C ( 4, 3 ) = C ( 4, 3 ) + Sigma( 1, 2 )
+            C ( 4, 4 ) = C ( 4, 4 ) - pt5 * Sigma( 1, 1 ) - pt5 * Sigma( 2, 2 )
+            C ( 4, 5 ) = C ( 4, 5 ) - pt5 * Sigma( 1, 3 )
+            C ( 4, 6 ) = C ( 4, 6 ) - pt5 * Sigma( 2, 3 )
+
+            C ( 5, 1 ) = C ( 5, 1 ) + Sigma( 2, 3 )
+            !C ( 5, 2 ) = C ( 5, 2 ) - Sigma( 2, 3 ) + Sigma( 2, 3 )
+            !C ( 5, 3 ) = C ( 5, 3 ) - Sigma( 2, 3 ) + Sigma( 2, 3 )
+            C ( 5, 4 ) = C ( 5, 4 ) - pt5 * Sigma( 1, 3 )
+            C ( 5, 5 ) = C ( 5, 5 ) - pt5 * Sigma( 2, 2 ) - pt5 * Sigma( 3, 3 )
+            C ( 5, 6 ) = C ( 5, 6 ) - pt5 * Sigma( 2, 1 )
+
+
+            !C ( 6, 1 ) = C ( 6, 1 ) - Sigma( 1, 3 ) + Sigma( 1, 3 )
+            C ( 6, 2 ) = C ( 6, 2 ) + Sigma( 1, 3 )
+            !C ( 6, 3 ) = C ( 6, 3 ) - Sigma( 1, 3 ) + Sigma( 1, 3 )
+            C ( 6, 4 ) = C ( 6, 4 ) - pt5 * Sigma( 2, 3 )
+            C ( 6, 5 ) = C ( 6, 5 ) - pt5 * Sigma( 2, 1 )
+            C ( 6, 6 ) = C ( 6, 6 ) - pt5 * Sigma( 1, 1 ) - pt5 * Sigma( 3, 3 )
+
+        CASE( 4 )
+
+            C ( 1, 1 ) = C ( 1, 1 ) - Sigma( 1, 1 )
+            C ( 1, 2 ) = C ( 1, 2 ) + Sigma( 1, 1 )
+            C ( 1, 3 ) = C ( 1, 3 ) - Sigma( 1, 2 )
+            C ( 1, 4 ) = C ( 1, 4 ) + Sigma( 1, 1 )
+
+            C ( 2, 1 ) = C ( 2, 1 ) + Sigma( 2, 2 )
+            C ( 2, 2 ) = C ( 2, 2 ) - Sigma( 2, 2 )
+            C ( 2, 3 ) = C ( 2, 3 ) - Sigma( 1, 2 )
+            C ( 2, 4 ) = C ( 2, 4 ) + Sigma( 2, 2 )
+
+            !C ( 3, 1 ) = C ( 3, 1 ) - Sigma( 1, 2 ) + Sigma( 1, 2 )
+            !C ( 3, 2 ) = C ( 3, 2 ) - Sigma( 1, 2 ) + Sigma( 1, 2 )
+            C ( 3, 3 ) = C ( 3, 3 ) - pt5 * Sigma( 1, 1 ) - pt5 * Sigma( 2, 2 )
+            C ( 3, 4 ) = C ( 3, 4 ) + Sigma( 1, 2 )
+
+            IF ( SIZE ( Sigma, 1 ) .EQ. 3 ) THEN
+                C ( 4, 1 ) = C ( 4, 1 ) + Sigma( 3, 3 )
+                C ( 4, 2 ) = C ( 4, 2 ) + Sigma( 3, 3 )
+                !C ( 4, 3 ) = C ( 4, 3 ) - 0.0_DFP
+                C ( 4, 4 ) = C ( 4, 4 ) - Sigma( 3, 3 )
+            END IF
+
+        CASE ( 1 )
+            C ( 1, 1 ) = C ( 1 , 1 ) - Sigma( 1, 1 )
+        END SELECT
+!
+!-------------------------------------------------------------------------------
+!                                                           Jaumann Stress Rate
+!-------------------------------------------------------------------------------
+!
+    CASE( "Truesdell", "truesdell" )
+        RETURN ! Do nothing and return
+!
+!-------------------------------------------------------------------------------
+!                                                                            SE
+!-------------------------------------------------------------------------------
+!
+    CASE( "SE", "se", "NA" )
+! Flag-2
+        IF( .NOT. PRESENT( F ) .OR. .NOT. PRESENT( J ) ) THEN
+            CALL Err_Msg( "Utility>>Tensor.part>>getCSigmaTruesdell.part", &
+            " getCSigmaTruesdell(), Flag-2 ", &
+            " F and J are missing in arguments ")
+            Error_Flag = .TRUE.
+            RETURN
+        END IF
+!
+        ALLOCATE( B( SIZE( C, 1 ), SIZE( C, 2 ) ) )
+        ALLOCATE( DummyMat( SIZE( F, 2 ), SIZE( F, 2 ) ) )
+        ALLOCATE( Indx( SIZE( C, 1 ), 2 ) )
+
+        SELECT CASE( SIZE( Indx, 1 ) )
+        CASE( 6 )
+            Indx( 1, 1 ) = 1; Indx( 1, 2 ) = 1
+            Indx( 2, 1 ) = 2; Indx( 2, 2 ) = 2
+            Indx( 3, 1 ) = 3; Indx( 3, 2 ) = 3
+            Indx( 4, 1 ) = 1; Indx( 4, 2 ) = 2
+            Indx( 5, 1 ) = 2; Indx( 5, 2 ) = 3
+            Indx( 6, 1 ) = 1; Indx( 6, 2 ) = 3
+        CASE(4)
+            Indx( 1, 1 ) = 1; Indx( 1, 2 ) = 1
+            Indx( 2, 1 ) = 2; Indx( 2, 2 ) = 2
+            Indx( 3, 1 ) = 1; Indx( 3, 2 ) = 2
+            Indx( 4, 1 ) = 3; Indx( 4, 2 ) = 3
+        CASE(3)
+            Indx( 1, 1 ) = 1; Indx( 1, 2 ) = 1
+            Indx( 2, 1 ) = 2; Indx( 2, 2 ) = 2
+            Indx( 3, 1 ) = 1; Indx( 3, 2 ) = 2
+        CASE(1)
+            Indx( 1, 1 ) = 1; Indx( 1, 2 ) = 1
+! Flag-3
+        CASE DEFAULT
+            CALL Err_Msg( "Utility>>Tensor.part", &
+            " getCSigmaTruesdell(), Flag-3 ", &
+            "No case found for given Size of C")
+            Error_Flag = .TRUE.
+            RETURN
+        END SELECT
+
+        DO M = 1, SIZE( Indx, 1 )
+            ii = Indx( M, 1); jj = Indx( M, 2 )
+            DummyMat = 0.0_DFP
+            DummyMat = OUTERPROD( a = F( ii, : ), b = F( jj, : ) )
+! Flag-4
+            CALL Matrix2Voigt( Mat = DummyMat, VoigtVec = B( :, M ), &
+            VoigtType = "Strain" )
+            CALL Check_Error( "Utility>>Tensor.f90>>getCSigmaTruesdell.part", &
+            "getCSigmaTruesdell() >> Flag-4" )
+        END DO
+
+        IF( ALLOCATED( DummyMat ) ) DEALLOCATE( DummyMat )
+        ALLOCATE( DummyMat( SIZE( C, 1), SIZE( C, 2 ) ) )
+        DummyMat = MATMUL( TRANSPOSE( B ), MATMUL( C, B ) )
+        C = DummyMat / J
+! Flag-5
+    CASE DEFAULT
+        CALL Err_Msg( "Utility>>Tensor.part", &
+        " getCSigmaTruesdell(), Flag-5 ", &
+        "Unknown Stress Rate Type")
+        Error_Flag = .TRUE.
+        RETURN
+!
+    END SELECT
+!
+    IF( ALLOCATED( Sigma ) ) DEALLOCATE( Sigma )
+    IF( ALLOCATED( B ) ) DEALLOCATE( B )
+    IF( ALLOCATED( DummyMat ) ) DEALLOCATE( DummyMat )
+    IF( ALLOCATED( Indx ) ) DEALLOCATE( Indx )
+!
+ END SUBROUTINE getCSigmaTruesdell
+ !
+ !
+ !------------------------------------------------------------------------------
+ !                                                            getCSigmaTruesdell
+ !------------------------------------------------------------------------------
+ !

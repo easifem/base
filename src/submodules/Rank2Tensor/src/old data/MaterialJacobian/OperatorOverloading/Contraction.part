@@ -1,0 +1,130 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Contraction.part
+!                   Last Update :   Dec-30-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Contraction Operator is defined for Material Jacobian and 
+!           tensor
+!   HOSTING FILE
+!       -   MaterialJacobian_Class.f90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                       Contraction_1
+!------------------------------------------------------------------------------
+
+ FUNCTION Contraction_1( Obj, TensorObj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Obj .Contraction. Tensor
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+    
+    USE Rank2Tensor_Class
+    USE Voigt
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    REAL( DFP ) :: Contraction_1( 3, 3 )
+
+    ! Define intent of dummy variables
+    REAL( DFP ), ALLOCATABLE :: Vec( : )
+
+    CALL TensorObj % getTensor( Vec, "Strain" )
+    Vec = MATMUL( Obj .Cijkl. SIZE(Vec), Vec )
+    Contraction_1 = MatFromVoigtVec( Vec, "Stress" )
+    DEALLOCATE( Vec )
+
+ END FUNCTION Contraction_1
+
+!------------------------------------------------------------------------------
+!                                                       Contraction_2
+!------------------------------------------------------------------------------
+
+ FUNCTION Contraction_2( TensorObj, Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Tensor .Contraction. Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+    
+    USE Rank2Tensor_Class
+    USE Voigt
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    REAL( DFP ) :: Contraction_2( 3, 3 )
+
+    ! Define intent of dummy variables
+    REAL( DFP ), ALLOCATABLE :: Vec( : )
+
+    CALL TensorObj % getTensor( Vec, "Strain" )
+    Vec = MATMUL( TRANSPOSE( Obj .Cijkl. SIZE( Vec ) ), Vec )
+    Contraction_2 = MatFromVoigtVec( Vec, "Stress" )
+    DEALLOCATE( Vec )
+
+ END FUNCTION Contraction_2
+
+!------------------------------------------------------------------------------
+!                                                                Contraction_3
+!------------------------------------------------------------------------------
+
+ FUNCTION Contraction_3( Obj, Mat )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Obj .Contraction. Mat
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+    
+    USE Rank2Tensor_Class
+    USE Voigt
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), INTENT( IN ) :: Mat( :, : )
+    REAL( DFP ) :: Contraction_3( 3, 3 )
+
+    ! Define intent of dummy variables
+    TYPE( Rank2Tensor_ ) :: TensorObj
+
+    TensorObj = Mat
+    Contraction_3 = Contraction_1( Obj, TensorObj )
+    CALL TensorObj % DeallocateData( )
+
+ END FUNCTION Contraction_3
+
+!------------------------------------------------------------------------------
+!                                                               Contraction_4
+!------------------------------------------------------------------------------
+
+ FUNCTION Contraction_4( Mat, Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Mat .Contraction. Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+    
+    USE Rank2Tensor_Class
+    USE Voigt
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), INTENT( IN ) :: Mat( :, : )
+    REAL( DFP ) :: Contraction_4( 3, 3 )
+
+    ! Define intent of dummy variables
+    TYPE( Rank2Tensor_ ) :: TensorObj
+
+    TensorObj = Mat
+    Contraction_4 = Contraction_2( TensorObj, Obj )
+    CALL TensorObj % DeallocateData( )
+
+ END FUNCTION Contraction_4

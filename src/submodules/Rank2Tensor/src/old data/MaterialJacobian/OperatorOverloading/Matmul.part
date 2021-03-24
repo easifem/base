@@ -1,0 +1,91 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Matmul.part
+!                   Last Update :   Dec-30-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   matmul Operator is defined for defining matrix multiplication 
+!           of Material Jacobian and voigt vector.
+!   HOSTING FILE
+!       -   MaterialJacobian_Class.f90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                       Obj_matmul_Vec
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_matmul_Vec( Obj, Vec )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Obj .matmul. Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+    
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), INTENT( IN ) :: Vec( : )
+    REAL( DFP ), ALLOCATABLE :: Obj_matmul_Vec( : )
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+
+    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+
+        CALL Err_Msg( &
+        "MaterialJacobian_Class.f90>>matmul.part", &
+        "Obj .matmul. Vec", &
+        "Obj  is not initiated, Program Stopped!!!"&
+        )
+        STOP
+
+    END IF
+
+    N = SIZE( Vec )
+    ALLOCATE( Obj_matmul_Vec( N ) )
+    Obj_matmul_Vec = MATMUL( Obj .Cijkl. N, Vec )
+
+ END FUNCTION Obj_matmul_Vec
+
+!------------------------------------------------------------------------------
+!                                                              Vec_matmul_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Vec_matmul_Obj( Vec, Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Vec .matmul. Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+    
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), INTENT( IN ) :: Vec( : )
+    REAL( DFP ), ALLOCATABLE :: Vec_matmul_Obj( : )
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+
+    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+
+        CALL Err_Msg( &
+        "MaterialJacobian_Class.f90>>matmul.part", &
+        "Obj .matmul. Vec", &
+        "Obj  is not initiated, Program Stopped!!!"&
+        )
+        STOP
+
+    END IF
+
+    N = SIZE( Vec )
+    ALLOCATE( Vec_matmul_Obj( N ) )
+
+    Vec_matmul_Obj = MATMUL( TRANSPOSE( Obj .Cijkl. N ), Vec )
+
+ END FUNCTION Vec_matmul_Obj

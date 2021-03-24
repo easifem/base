@@ -148,11 +148,11 @@ MODULE PROCEDURE Constructor1
 END PROCEDURE Constructor1
 
 MODULE PROCEDURE Constructor2
-  CALL COPY( Y = Obj, X=REAL( Val, KIND=DFP ) )
+  Obj%Val = Val
 END PROCEDURE Constructor2
 
 MODULE PROCEDURE Constructor3
-  CALL COPY( Y = Obj, X=Val )
+  Obj%Val = Val
 END PROCEDURE Constructor3
 
 !----------------------------------------------------------------------------
@@ -170,7 +170,7 @@ END PROCEDURE Constructor_1
 
 MODULE PROCEDURE Constructor_2
   ALLOCATE( Obj )
-  CALL COPY( Y = Obj, X=REAL( Val, KIND=DFP ) )
+  Obj%Val = Val
 END PROCEDURE Constructor_2
 
 !----------------------------------------------------------------------------
@@ -179,7 +179,71 @@ END PROCEDURE Constructor_2
 
 MODULE PROCEDURE Constructor_3
   ALLOCATE( Obj )
-  CALL COPY( Y = Obj, X=Val )
+  Obj%Val = Val
 END PROCEDURE Constructor_3
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intrinsicSHALLOWCOPYintrinsic
+  CALL Reallocate( Y, SIZE( X ) )
+END PROCEDURE intrinsicSHALLOWCOPYintrinsic
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE scalarSHALLOWCOPYscalar
+  CALL SHALLOWCOPY( Y=Y%Val, X=X%Val )
+END PROCEDURE scalarSHALLOWCOPYscalar
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE vectorSHALLOWCOPYvector
+  INTEGER( I4B ) :: i
+  IF( ALLOCATED( Y ) ) THEN
+    IF( SIZE( Y ) .NE. SIZE( X ) ) THEN
+      DEALLOCATE( Y )
+      ALLOCATE( Y( SIZE( X ) ) )
+    END IF
+  ELSE
+    ALLOCATE( Y( SIZE( X ) ) )
+  END IF
+  DO i = 1, SIZE( Y )
+    CALL SHALLOWCOPY( Y=Y( i )%Val, X=X( i )%Val )
+  END DO
+END PROCEDURE vectorSHALLOWCOPYvector
+
+!----------------------------------------------------------------------------
+!                                                               SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE scalarSHALLOWCOPYvector
+  INTEGER( I4B ) :: i, tNodes
+  tNodes = 0
+  DO i = 1, SIZE( X )
+    tNodes = tNodes + SIZE( X( i )%Val )
+  END DO
+  CALL Reallocate( Y%Val, tNodes )
+END PROCEDURE scalarSHALLOWCOPYvector
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE scalarSHALLOWCOPYintrinsic
+  CALL SHALLOWCOPY( Y=Y%Val, X=X )
+END PROCEDURE scalarSHALLOWCOPYintrinsic
+
+!----------------------------------------------------------------------------
+!                                                                 SHALLOWCOPY
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intrinsicSHALLOWCOPYscalar
+  CALL SHALLOWCOPY( Y=Y, X=X%Val )
+END PROCEDURE intrinsicSHALLOWCOPYscalar
 
 END SUBMODULE Constructor

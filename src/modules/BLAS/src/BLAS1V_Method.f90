@@ -45,7 +45,13 @@ PRIVATE
 !@endnote
 !
 !@todo
-! 	usage
+! subroutine test1
+!   type( RealVector_ ) :: obj
+!   real( dfp ) :: ans
+!   obj = RealVector(arange(1,1000,1))
+!   ans = asum(obj)
+!   call display( ans-sum(obj%val), "test1: 0 if correct : " )
+! end
 !@endtodo
 
 INTERFACE
@@ -72,9 +78,44 @@ END INTERFACE
 ! 	This function calls [[ASUMScalar]] method
 !@endnote
 !
-!@todo
-! 	usage
-!@endtodo
+!### Usage
+!
+!```fortran
+!   integer( i4b ), parameter :: n = 10, m=5
+!   integer( i4b ) :: i
+!   type( RealVector_ ) :: obj( m )
+!   real( dfp ) :: ans_l(m), ans
+!   do i = 1, m
+!     obj( i ) = RealVector(arange(1,n,1))
+!   end do
+!   ans = 0.0
+!   !$omp parallel default(shared) private( i ) reduction(+:ans)
+!   CALL OMP_INITIATE
+!   !$omp do
+!   do i = 1, m
+!     ans = ans + asum(obj(i)) !! no parallel
+!   enddo
+!   !$omp enddo
+!   CALL OMP_FINALIZE
+!   !$omp end parallel
+!   call display( ans - (m*sum(obj(1)%val)), "test2: 0 if correct : " )
+!```
+!
+! Another example
+!
+!### Usage
+!
+!```fortran
+  ! integer( i4b ), parameter :: n = 100, m=5
+  ! integer( i4b ) :: i
+  ! type( RealVector_ ) :: obj( m )
+  ! real( dfp ) :: ans_l(m), ans
+  ! do i = 1, m
+  !   obj( i ) = RealVector(arange(1,n,1))
+  ! end do
+  ! ans = ASUM(obj)
+  ! call display( ans - (m*sum(obj(1)%val)), "test3: 0 if correct : " )
+!```
 
 INTERFACE
 MODULE  FUNCTION ASUMvector( Obj ) RESULT( Ans )
@@ -105,19 +146,28 @@ PUBLIC :: ASUM
 ! Here A is an scalar
 !
 !@note
-! 	This subroutine called AXPY from BLAS
+! In joined state this subroutine creates new threads and share the work.
+! If this subroutine is called within parallel block (i.e., forked state) then it does not create any new threads. Each thread will call this subroutine while X, Y, A treated as shared type.
 !@endnote
 !
 !### Usage
 !
 !```fortran
-!
+  ! integer( i4b ), parameter :: n = 100
+  ! integer( i4b ) :: i
+  ! real( dfp ) :: a = 1.0_DFP
+  ! type( RealVector_ ) :: x, y, z
+  ! call random_number( x, n )
+  ! call random_number( y, n )
+  ! z%val = y%val + a * x%val
+  ! call axpy( x = x, y = y, A = a  )
+  ! call display( asum(y%val - z%val), "test4: 0 if correct : " )
 !```
 
 INTERFACE
 
 ! Y = Y + A*X
-MODULE PURE SUBROUTINE scalarAXPYscalar( X, Y, A )
+MODULE  SUBROUTINE scalarAXPYscalar( X, Y, A )
   CLASS( RealVector_ ), INTENT( IN ) :: X
   CLASS( RealVector_ ), INTENT( INOUT ) :: Y
   REAL( DFP ), INTENT( IN ) :: A
@@ -140,7 +190,8 @@ END INTERFACE
 ! Here A is an scalar
 !
 !@note
-! 	This subroutine calls [[scalarAXPYscalar]]
+! In joined state this subroutine creates new threads and share the work.
+! If this subroutine is called within parallel block (i.e., forked state) then it does not create any new threads. Each thread will call this subroutine while X, Y, A treated as shared type.
 !@endnote
 !
 !### Usage
@@ -150,7 +201,7 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE scalarAXPYintrinsic( X, Y, A )
+MODULE SUBROUTINE scalarAXPYintrinsic( X, Y, A )
   REAL( DFP ), INTENT( IN ) :: X( : )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Y
   REAL( DFP ), INTENT( IN ) :: A
@@ -166,30 +217,46 @@ END INTERFACE
 ! summary: This subroutine computes AXPY
 !
 !### Introduction
-! 	This subroutine performs following task
+! This subroutine performs `AXPY` operation. It performs the following task.
 !
-! $$Y=Y+A*X$$
+! $$Y(i)=Y(i)+A(i)*X(i)$$
 !
-! Here A is an scalar
+! Here A is an vector of length same as size of `X` or `Y`.
 !
 !@note
-! 	This subroutine calls [[scalarAXPYscalar]]
+! In joined state this subroutine creates new threads and share the work.
+! If this subroutine is called within parallel block (i.e., forked state) then it does not create any new threads. Each thread will call this subroutine while X, Y, A treated as shared type.
 !@endnote
 !
 !### Usage
 !
 !```fortran
-!
+  ! integer( i4b ), parameter :: n = 100, m = 4
+  ! integer( i4b ) :: i, tsize(m)
+  ! real( dfp ) :: a( m ), ans
+  ! type( RealVector_ ), allocatable :: x( : ), y( : ), z( : )
+  ! tsize = m; a = 1.0
+  ! call random_number( x, tsize )
+  ! call random_number( y, tsize )
+  ! call initiate( z, tsize )
+  ! do i = 1, m
+  !   z(i)%val = y(i)%val + a( i ) * x(i)%val
+  ! end do
+  ! call axpy( x = x, y = y, A = a )
+  ! ans = 0.0
+  ! do i = 1, m
+  !   ans = ans + asum( y(i)%val - z(i)%val )
+  ! end do
+  ! call display( ans, "test5: 0 if correct : " )
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE vectorAXPYvector( X, Y, A )
+MODULE SUBROUTINE vectorAXPYvector( X, Y, A )
   CLASS( RealVector_ ), INTENT( IN ) :: X( : )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Y( : )
-  REAL( DFP ), INTENT( IN ) :: A
+  REAL( DFP ), INTENT( IN ) :: A( : )
 END SUBROUTINE vectorAXPYvector
 END INTERFACE
-
 
 INTERFACE AXPY
   MODULE PROCEDURE scalarAXPYscalar, vectorAXPYvector, &
@@ -215,12 +282,23 @@ PUBLIC :: AXPY
 ! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
 !@endnote
 !
-!@todo
-! usage
-!@endtodo
+!### Usage
+!
+!```fortran
+  ! integer( i4b ), parameter :: n = 10000
+  ! type( RealVector_ ) :: x, y
+  ! real( dfp ), allocatable :: z( : )
+  ! call random_number( x, n )
+  ! call copy( x = x, y = y )
+  ! call display( asum( x%val - y%val ), "test6: 0 if correct : " )
+  ! call copy( y=z, x=x )
+  ! call display( asum( z - x%val ), "test6: 0 if correct : " )
+  ! call copy( y=x, x=z )
+  ! call display( asum( z - x%val ), "test6: 0 if correct : " )
+!```
 
 INTERFACE
-MODULE PURE SUBROUTINE scalarCOPYscalar( Y, X )
+MODULE SUBROUTINE scalarCOPYscalar( Y, X )
   TYPE( RealVector_ ), INTENT( INOUT ) :: Y
   CLASS( RealVector_ ), INTENT( IN ) :: X
 END SUBROUTINE scalarCOPYscalar
@@ -241,15 +319,64 @@ END INTERFACE
 ! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
 !@endnote
 !
-!@todo
-! usage
-!@endtodo
+!### Usage
+!
+!```fortran
+  ! integer( i4b ), parameter :: n = 10000
+  ! type( RealVector_ ) :: x, y
+  ! real( dfp ), allocatable :: z( : )
+  ! call random_number( x, n )
+  ! call copy( x = x, y = y )
+  ! call display( asum( x%val - y%val ), "test6: 0 if correct : " )
+  ! call copy( y=z, x=x )
+  ! call display( asum( z - x%val ), "test6: 0 if correct : " )
+  ! call copy( y=x, x=z )
+  ! call display( asum( z - x%val ), "test6: 0 if correct : " )
+!```
 
 INTERFACE
-MODULE PURE SUBROUTINE scalarCOPYintrinsic( Y, X )
+MODULE SUBROUTINE scalarCOPYintrinsic( Y, X )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Y
   REAL( DFP ), INTENT( IN ) :: X( : )
 END SUBROUTINE scalarCOPYintrinsic
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 COPY@BLAS1
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This routine copies one vector into another
+!
+!### Introduction
+! This subroutine copy an instance of [[RealVector_]] in another fortran vector, i.e. `Val=Obj`
+!
+!@note
+! 	This subroutine internally calls [[intrinsicCOPYintrinsic]]. Also `Val` is allocatable.
+!@endnote
+!
+!
+!### Usage
+!
+!```fortran
+  ! integer( i4b ), parameter :: n = 10000
+  ! type( RealVector_ ) :: x, y
+  ! real( dfp ), allocatable :: z( : )
+  ! call random_number( x, n )
+  ! call copy( x = x, y = y )
+  ! call display( asum( x%val - y%val ), "test6: 0 if correct : " )
+  ! call copy( y=z, x=x )
+  ! call display( asum( z - x%val ), "test6: 0 if correct : " )
+  ! call copy( y=x, x=z )
+  ! call display( asum( z - x%val ), "test6: 0 if correct : " )
+!```
+
+INTERFACE
+MODULE SUBROUTINE intrinsicCOPYscalar( Y, X )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: X
+END SUBROUTINE intrinsicCOPYscalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -269,12 +396,27 @@ END INTERFACE
 ! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine. Also note that `Obj1` and `Obj2` are vectors of [[RealVector_]] data type.
 !@endnote
 !
-!@todo
-! usage
-!@endtodo
+!
+!### Usage
+!
+!```fortran
+  ! integer( i4b ), parameter :: n = 10000, m = 5
+  ! type( RealVector_ ), allocatable :: x( : ), y( : )
+  ! integer( i4b ) :: tsize( m ), i
+  ! real( dfp ), allocatable :: z( : )
+  ! real( dfp ) :: ans
+  ! tsize = n
+  ! call random_number(x, tsize)
+  ! call copy( x = x, y = y )
+  ! ans = 0.0
+  ! do i = 1, size( x )
+  !   ans = ans + asum( x(i)%val - y(i)%val )
+  ! end do
+  ! call display( ans, "test7: 0 if correct : " )
+!```
 
 INTERFACE
-MODULE PURE SUBROUTINE vectorCOPYvector( Y, X )
+MODULE SUBROUTINE vectorCOPYvector( Y, X )
   TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Y( : )
   CLASS( RealVector_ ), INTENT( IN ) :: X( : )
 END SUBROUTINE vectorCOPYvector
@@ -301,36 +443,10 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE SUBROUTINE scalarCOPYvector( Y, X )
+MODULE SUBROUTINE scalarCOPYvector( Y, X )
   TYPE( RealVector_ ), INTENT( INOUT ) :: Y
   CLASS( RealVector_ ), INTENT( IN ) :: X( : )
 END SUBROUTINE scalarCOPYvector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 COPY@BLAS1
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
-!
-!### Introduction
-! This subroutine copy an instance of [[RealVector_]] in another fortran vector, i.e. `Val=Obj`
-!
-!@note
-! 	This subroutine internally calls [[intrinsicCOPYintrinsic]]. Also `Val` is allocatable.
-!@endnote
-!
-!@todo
-! usage
-!@endtodo
-
-INTERFACE
-MODULE PURE SUBROUTINE intrinsicCOPYscalar( Y, X )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: X
-END SUBROUTINE intrinsicCOPYscalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -356,6 +472,35 @@ INTERFACE COPY
 END INTERFACE COPY
 
 PUBLIC :: COPY
+
+!----------------------------------------------------------------------------
+!                                                            Compact@BLAS1V
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE Compact_real_1( Val, row )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
+  INTEGER( I4B ), INTENT( IN ) :: row
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            Compact@BLAS1V
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE Compact_int_1( Val, row )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
+  INTEGER( I4B ), INTENT( IN ) :: row
+END SUBROUTINE
+END INTERFACE
+
+
+INTERFACE Compact
+  MODULE PROCEDURE Compact_real_1, Compact_int_1
+END INTERFACE Compact
+
+PUBLIC :: Compact
 
 !----------------------------------------------------------------------------
 !                                                                 DOT@BLAS1
@@ -574,84 +719,6 @@ END INTERFACE NORM2
 PUBLIC :: NORM2
 
 !----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE intrinsicSHALLOWCOPYintrinsic( Y, X )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
-  REAL( DFP ), INTENT( IN ) :: X( : )
-END SUBROUTINE intrinsicSHALLOWCOPYintrinsic
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE scalarSHALLOWCOPYscalar( Y, X )
-  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
-  CLASS( RealVector_ ), INTENT( IN ) :: X
-END SUBROUTINE scalarSHALLOWCOPYscalar
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE vectorSHALLOWCOPYvector( Y, X )
-  TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Y( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
-END SUBROUTINE vectorSHALLOWCOPYvector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE scalarSHALLOWCOPYvector( Y, X )
-  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
-  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
-END SUBROUTINE scalarSHALLOWCOPYvector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE scalarSHALLOWCOPYintrinsic( Y, X )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
-  REAL( DFP ), INTENT( IN ) :: X( : )
-END SUBROUTINE scalarSHALLOWCOPYintrinsic
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE intrinsicSHALLOWCOPYscalar( Y, X )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: X
-END SUBROUTINE intrinsicSHALLOWCOPYscalar
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
-!----------------------------------------------------------------------------
-
-INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE intrinsicSHALLOWCOPYintrinsic, scalarSHALLOWCOPYscalar, &
-    & vectorSHALLOWCOPYvector, scalarSHALLOWCOPYvector, &
-    & scalarSHALLOWCOPYintrinsic
-END INTERFACE SHALLOWCOPY
-
-PUBLIC :: SHALLOWCOPY
-
-!----------------------------------------------------------------------------
 !                                                                 SWAP@BLAS1
 !----------------------------------------------------------------------------
 
@@ -700,6 +767,5 @@ INTERFACE SCAL
 END INTERFACE SCAL
 
 PUBLIC :: SCAL
-
 
 END MODULE BLAS1V_Method

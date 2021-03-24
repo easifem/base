@@ -1,0 +1,72 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Transpose.part
+!                   Last Update :   Dec-13-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Tensor class is defined
+!   HOSTING FILE
+!       -   Rank2Tensor_Class.f90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                  Transpose_1
+!------------------------------------------------------------------------------
+
+ FUNCTION Transpose_1( Obj )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  transpose of obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Transpose_1
+
+    IF( .NOT. ALLOCATED( Obj % T )  ) THEN
+
+        CALL Err_Msg(                                                      &
+                       "Rank2Tensor_Class.f90>>OperatorOverloading.part",  &
+                        ".Transpose.()",                                   &
+                        "Tensor_ Obj is not allocated. Program Stopped"    &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+
+    Transpose_1 = TRANSPOSE( Obj % T )
+
+ END FUNCTION Transpose_1
+
+!------------------------------------------------------------------------------
+!                                                                  Transpose_2
+!------------------------------------------------------------------------------
+
+ FUNCTION Transpose_2( Mat )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  transpose
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( SIZE( Mat, 1 ), SIZE( Mat, 2 ) ) :: Transpose_2
+
+    Transpose_2 = TRANSPOSE( Mat )
+
+ END FUNCTION Transpose_2
+!

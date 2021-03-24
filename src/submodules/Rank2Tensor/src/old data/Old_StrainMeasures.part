@@ -1,0 +1,349 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   StrainMeasures.part
+!                   Last Update :   September-03-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   Type:: Module
+!
+!   Info::  -   This module includes subroutine for computing various strain
+!               Measures
+!
+!==============================================================================
+!
+! List of items
+!
+! To Do:: Add subroutine for Seth-Hill General Strain Measures
+!
+!
+!------------------------------------------------------------------------------
+!
+!
+!------------------------------------------------------------------------------
+!                                                             DeformationTensor
+!------------------------------------------------------------------------------
+!
+ FUNCTION DeformationTensor( F, DefTensorType )
+ !
+ !   Description
+ !------------------------------------------------------------------------------
+ !       1. -   This subroutine computes deformation tensor
+ !          -   Right Cauchy Green Deformation Tensor C = F^T F
+ !          -   Left Cauchy Green Deformation Tensro b = F F^T
+ !
+ !------------------------------------------------------------------------------
+ !
+ USE Utility, ONLY: Inv
+ ! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: F
+    REAL( DFP ), DIMENSION( SIZE( F, 1 ), SIZE( F, 2 ) ) :: DeformationTensor
+    CHARACTER( LEN = * ), INTENT( IN ) :: DefTensorType
+!
+! Define internal variables
+    REAL( DFP ), DIMENSION( SIZE( F, 1 ), SIZE( F, 2 ) ) :: DummyMat
+    Error_Flag = .FALSE.
+!
+    SELECT CASE( TRIM( DefTensorType ) )
+    CASE( "Right", "C", "right", "c" )
+        DeformationTensor = MATMUL( TRANSPOSE( F ), F )
+    CASE( "Left", "left", "b", "B" )
+        DeformationTensor = MATMUL( F, TRANSPOSE( F ) )
+    CASE( "BInv", "bInv", "binv", "Binv" )
+        DummyMat = MATMUL( F, TRANSPOSE( F ) )
+        CALL Inv( A = DummyMat, InvA = DeformationTensor )
+! Flag-1
+    CASE DEFAULT
+        CALL Err_Msg( "Tensor.f90>>StrainMeasures.part", &
+        "DeformationTensor(), Flag-1", "Unknown Deformation Tensor Type" )
+        Error_Flag = .TRUE.
+        RETURN
+    END SELECT
+!
+ END FUNCTION DeformationTensor
+!
+!------------------------------------------------------------------------------
+!                                                            GreenStrainTensor
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE GreenStrainTensor( E, F, C, U )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -   This subroutine computes deformation tensor
+!          -   Right Cauchy Green Deformation Tensor C = F^T F
+!          -   Left Cauchy Green Deformation Tensro b = F F^T
+!
+!------------------------------------------------------------------------------
+!
+ USE Utility, ONLY: Assert_Eq, Eye
+! Define Intent of dummy variables
+  REAL( DFP ), DIMENSION( :, : ), INTENT( IN ), OPTIONAL :: F, C, U
+  REAL( DFP ), DIMENSION( :, : ), INTENT( OUT ) :: E
+ !
+ ! Internal varible
+    INTEGER( I4B ) :: N
+    REAL( DFP ), ALLOCATABLE, DIMENSION( :, : ) :: I
+
+    Error_Flag = .FALSE.
+
+    N = Assert_Eq( SIZE( E, 1 ), SIZE( E, 2 ), &
+    "Tensor.f90>>StrainMeasures.part" )
+
+    ALLOCATE( I( N, N ) )
+    I = Eye( N )
+
+    IF( PRESENT( F ) ) THEN
+        E = 0.5_DFP * ( DeformationTensor( F, "C" ) - I )
+        DEALLOCATE( I )
+        RETURN
+    ELSE IF( PRESENT( C ) ) THEN
+        E = 0.5_DFP * ( C - I )
+        DEALLOCATE( I )
+        RETURN
+    ELSE IF( PRESENT( U ) ) THEN
+        E = 0.5*(  MATMUL( U, U ) - I )
+        DEALLOCATE( I )
+        RETURN
+    ELSE
+! Flag-1
+        CALL Err_Msg( " Tensor.f90 >> StrainMeasures.part", &
+        "GreenStrainTensor(), Flag-1" , "  Both C and F cannot be present")
+        Error_Flag = .TRUE.
+        DEALLOCATE( I )
+        RETURN
+     END IF
+!
+  END SUBROUTINE GreenStrainTensor
+!
+!------------------------------------------------------------------------------
+!                                                           AlmansiStrainTensor
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE AlmansiStrainTensor( e, F, B, bInv, V )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -   This subroutine computes deformation tensor
+!          -   Right Cauchy Green Deformation Tensor C = F^T F
+!          -   Left Cauchy Green Deformation Tensro b = F F^T
+!
+!------------------------------------------------------------------------------
+!
+USE Utility, ONLY: Assert_Eq, Eye, Inv
+! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ), OPTIONAL :: F, B, bInv, V
+    REAL( DFP ), DIMENSION( :, : ), INTENT( OUT ) :: e
+!
+! Internal varible
+    INTEGER( I4B ) :: N
+    REAL( DFP ), ALLOCATABLE, DIMENSION( :, : ) :: I
+
+    Error_Flag = .FALSE.
+
+    N = Assert_Eq( SIZE( e, 1 ), SIZE( e, 2 ), &
+    "Tensor.f90>>StrainMeasures.part" )
+
+    ALLOCATE( I( N, N ) )
+
+    IF( PRESENT( F ) ) THEN
+        e = 0.5_DFP * (  I - DeformationTensor( F, "bInv" ) )
+        DEALLOCATE( I )
+        RETURN
+    ELSE IF ( PRESENT( B ) ) THEN
+        CALL INV ( A = B, INVA = I )
+        e = -0.5_DFP * I
+        I = Eye( N )
+        e = e + 0.5_DFP * I
+        DEALLOCATE( I )
+        RETURN
+    ELSE IF ( PRESENT( bInv ) ) THEN
+        I = Eye( N )
+        e = 0.5_DFP * ( I - bInv )
+        DEALLOCATE( I )
+        RETURN
+    ELSE IF( PRESENT( V ) ) THEN
+        CALL INV( A = V, INVA = I )
+        e = -0.5_DFP*MATMUL( I, I )
+        I = Eye( N )
+        e = e + 0.5_DFP * I
+        DEALLOCATE( I )
+        RETURN
+  ELSE
+! Flag-1
+      CALL Err_Msg( " Tensor.f90 >> StrainMeasures.part", &
+      "AlmansiStrainTensor(), Flag-1" , "  Both B and F cannot be present")
+      Error_Flag = .TRUE.
+      DEALLOCATE( I )
+      RETURN
+   END IF
+!
+END SUBROUTINE AlmansiStrainTensor
+!
+!------------------------------------------------------------------------------
+!                                                                 StretchTensor
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE StretchTensor( C, B, F, U, V )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -   This subroutine computes deformation tensor
+!          -   Right Cauchy Green Deformation Tensor C = F^T F
+!          -   Left Cauchy Green Deformation Tensro b = F F^T
+!
+!------------------------------------------------------------------------------
+!
+USE LinearAlgebra, ONLY: JacobiMethod
+USE Utility, ONLY: Put_Diag
+! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( :, : ), INTENT( INOUT ), OPTIONAL  :: F, B, C
+    REAL( DFP ), DIMENSION( :, : ), INTENT( OUT ), OPTIONAL :: U, V
+!
+! Internal varible
+    REAL( DFP ), ALLOCATABLE :: EigenVals( : ), EigenVecs( :, : ), DummyMat(:,:)
+
+    Error_Flag = .FALSE.
+!
+    IF( PRESENT( U ) ) THEN
+!
+        IF( PRESENT( F ) ) THEN
+            ALLOCATE( DummyMat( SIZE( F, 1 ), SIZE( F, 2 ) ) )
+            DummyMat = 0.0_DFP
+            CALL getPolarDecomp( T = F, R = DummyMat, H = U, PDType = "U" )
+            DEALLOCATE( DummyMat )
+!
+        ELSE IF(  PRESENT( C ) ) THEN
+            ALLOCATE( DummyMat( SIZE( C, 1 ), SIZE( C, 2 ) ) )
+            ALLOCATE( EigenVals( SIZE( C, 1 ) ) )
+            ALLOCATE( EigenVecs( SIZE( C, 1 ), SIZE( C, 2 ) ) )
+            DummyMat = 0.0_DFP
+! Flag-1
+            CALL JacobiMethod( Mat = C, EigenVals = EigenVals, &
+            EigenVecs = EigenVecs, MaxIter = 20 )
+            CALL Check_Error( "Tensor.f90>>StrainMeasures.part", &
+            "StretchTensor(), Flag-1" )
+!
+            EigenVals( : ) = SQRT( EigenVals ( : ) )
+!
+            CALL Put_Diag( EigenVals, DummyMat )
+!
+            U = MATMUL( EigenVecs, &
+            MATMUL( DummyMat, TRANSPOSE( EigenVecs) ) )
+
+            DEALLOCATE( DummyMat, EigenVals, EigenVecs )
+!
+        ELSE
+            CALL Err_Msg( "Tensor.f90>>StrainMeasures.part", &
+            "StretchTensor(), Flag-2", &
+            "To Find U either F or C should be present")
+        END IF
+    END IF
+!
+    IF( PRESENT( V ) ) THEN
+        IF( PRESENT( F ) ) THEN
+            ALLOCATE( DummyMat( SIZE( F, 1 ), SIZE( F, 2 ) ) )
+            DummyMat = 0.0_DFP
+            CALL getPolarDecomp( T = F, R = DummyMat, H = V, PDType = "V" )
+            DEALLOCATE( DummyMat )
+!
+        ELSE IF( PRESENT(  B ) ) THEN
+            ALLOCATE( DummyMat( SIZE( B, 1 ), SIZE( B, 2 ) ) )
+            ALLOCATE( EigenVals( SIZE( B, 1 ) ) )
+            ALLOCATE( EigenVecs( SIZE( B, 1 ), SIZE( B, 2 ) ) )
+            DummyMat = 0.0_DFP
+! Flag-2
+            CALL JacobiMethod( Mat = B, EigenVals = EigenVals, &
+            EigenVecs = EigenVecs, MaxIter = 20 )
+            CALL Check_Error( " Tensor.f90>>StrainMeasures.part", &
+            "StretchTensor(), Flag-2" )
+!
+            EigenVals( : ) = SQRT( EigenVals ( : ) )
+!
+            CALL Put_Diag( EigenVals, DummyMat )
+!
+            V = MATMUL( EigenVecs, &
+            MATMUL( DummyMat, TRANSPOSE( EigenVecs) ) )
+!
+            DEALLOCATE( DummyMat, EigenVals, EigenVecs )
+!Flag-3
+        ELSE
+            CALL Err_Msg( "Tensor.f90>>StrainMeasures.part", &
+            "StretchTensor(), Flag-3", &
+            "To Find V either F or B should be present")
+        END IF
+!
+    END IF
+!
+ END SUBROUTINE StretchTensor
+!
+!------------------------------------------------------------------------------
+!                                                                F_Distortional
+!------------------------------------------------------------------------------
+!
+ FUNCTION F_Distortional( F, J )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    This subroutine computes Distortional part of Deformation
+!               gradient tensor
+!
+!------------------------------------------------------------------------------
+!
+USE Utility, ONLY: det
+! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: F
+    REAL( DFP ), DIMENSION( SIZE( F, 1 ), SIZE( F, 2 ) ) :: F_Distortional
+    REAL( DFP ), INTENT( IN ), OPTIONAL :: J
+! Define internal variables
+    REAL( DFP ) :: DetF
+
+    Error_Flag = .FALSE.
+
+    IF( PRESENT(  J ) ) THEN
+        DetF = J
+    ELSE
+        DetF = det( F )
+    END IF
+!
+    F_Distortional = ( DetF ** ( -1.0_DFP / 3.0_DFP ) ) * F
+!
+END FUNCTION F_Distortional
+!
+!------------------------------------------------------------------------------
+!                                                                 StretchTensor
+!------------------------------------------------------------------------------
+!
+ FUNCTION C_Distortional( C, J )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1.  -   This subroutine computes Distortional part of the Right
+!               Cauchy deformation tensor
+!
+!------------------------------------------------------------------------------
+!
+ USE Utility, ONLY: det
+! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: C
+    REAL( DFP ), DIMENSION( SIZE( C, 1 ), SIZE( C, 2 ) ) :: C_Distortional
+    REAL( DFP ), INTENT( IN ), OPTIONAL :: J
+! Define internal variables
+    REAL( DFP ) :: DetC
+
+    Error_Flag = .FALSE.
+
+    IF( PRESENT(  J ) ) THEN
+        DetC = J*J
+    ELSE
+        DetC = det( C )
+    END IF
+
+    C_Distortional = ( DetC ** ( -1.0_DFP / 3.0_DFP ) ) * C
+!
+ END FUNCTION C_Distortional

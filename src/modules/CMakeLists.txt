@@ -12,8 +12,8 @@ include(${CMAKE_CURRENT_LIST_DIR}/System/CMakeLists.txt)
 #BLAS95
 include(${CMAKE_CURRENT_LIST_DIR}/BLAS95/CMakeLists.txt)
 
-# H5Fortran
-include(${CMAKE_CURRENT_LIST_DIR}/H5Fortran/CMakeLists.txt)
+#BLAS95
+include(${CMAKE_CURRENT_LIST_DIR}/LAPACK95/CMakeLists.txt)
 
 #Szaghi
 include(${CMAKE_CURRENT_LIST_DIR}/Szaghi/CMakeLists.txt)
@@ -69,11 +69,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
 # Vector3D_
 include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 
-#RealVector
-include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
-
 #BLAS
 include(${CMAKE_CURRENT_LIST_DIR}/BLAS/CMakeLists.txt)
+
+#RealVector
+include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 
 # DOF
 include(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
@@ -99,23 +99,24 @@ include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 #FEMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
 
-# # #FoXy
-# # include(${CMAKE_CURRENT_LIST_DIR}/FoXy/CMakeLists.txt)
+#Gnuplot
+include(${CMAKE_CURRENT_LIST_DIR}/GNUPLOT/CMakeLists.txt)
 
-# # #Gnuplot
-# # include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
+#VoigtRank2Tensor
+include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
 
-# # #IndexValue
-# # include(${CMAKE_CURRENT_LIST_DIR}/IndexValue/CMakeLists.txt)
+#Rank2Tensor
+include(${CMAKE_CURRENT_LIST_DIR}/Rank2Tensor/CMakeLists.txt)
+
+#SparseMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/SparseMatrix/CMakeLists.txt)
 
 # # #Lapack
 # # include(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)
-
-# # # #RealMatrix
-# # # include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 
 #BaseMethod
 include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
 
 #easifemBase
 include(${CMAKE_CURRENT_LIST_DIR}/easifemBase/CMakeLists.txt)
+

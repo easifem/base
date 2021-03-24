@@ -1,0 +1,153 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   MaterialJacobian_Pointer.part
+!                   Last Update :   Dec-30-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   MaterialJacobian class is defined
+!   HOSTING FILE
+!       -   MaterialJacobian_Class.f90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                               Constructor1
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor1( N )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Allocate the Constructor1 % C( N, N )
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( MaterialJacobian_ ) :: Constructor1
+    INTEGER( I4B ), INTENT( IN ) :: N
+
+    CALL Constructor1 % Initiate( N )
+
+ END FUNCTION Constructor1
+
+!------------------------------------------------------------------------------
+!                                                               Constructor2
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor2( N, Fill )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Allocate the Constructor2 % C( N, N ) with all entries fill
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( MaterialJacobian_ ) :: Constructor2
+    INTEGER( I4B ), INTENT( IN ) :: N
+    REAL( DFP ), INTENT( IN ) :: Fill
+
+    CALL Constructor2 % Initiate( N, Fill )
+
+ END FUNCTION Constructor2
+
+!------------------------------------------------------------------------------
+!                                                               Constructor3
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor3( Mat )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Allocate the Constructor3 % C( :, : ) = Mat
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( MaterialJacobian_ ) :: Constructor3
+    REAL( DFP ), INTENT( IN ) :: Mat( :, : )
+
+    CALL Constructor3 % Initiate( Mat )
+
+ END FUNCTION Constructor3
+
+!------------------------------------------------------------------------------
+!                                                               Constructor4
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor4( N, StressType, StrainType, RateType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Size of Constructor4 % C is N, with other details
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( MaterialJacobian_ ) :: Constructor4
+    INTEGER( I4B ), INTENT( IN ) :: N
+    TYPE( String_ ), INTENT( IN ) :: StressType, StrainType, RateType
+
+    CALL Constructor4 % Initiate( N, StressType, StrainType, RateType )
+
+ END FUNCTION Constructor4
+
+!------------------------------------------------------------------------------
+!                                                               Constructor5
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor5( N, StressType, StrainType, RateType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Size of Constructor5 % C is N, with other details
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( MaterialJacobian_ ) :: Constructor5
+    INTEGER( I4B ), INTENT( IN ) :: N
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType, StrainType, RateType
+
+    CALL Constructor5 % Initiate( N, StressType, StrainType, RateType )
+
+ END FUNCTION Constructor5
+
+!------------------------------------------------------------------------------
+!                                                               Constructor6
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor6( N, Names )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Size of Constructor6 % C is N, with other details
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( MaterialJacobian_ ) :: Constructor6
+    INTEGER( I4B ), INTENT( IN ) :: N
+    TYPE( String_ ), INTENT( IN ) :: Names( 3 )
+
+    CALL Constructor6 % Initiate( N, Names )
+
+ END FUNCTION Constructor6
+
+!------------------------------------------------------------------------------
+!                                                               Constructor7
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor7( N, Names )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Allocate the Constructor7 % C( N, N ) with all entries fill
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( MaterialJacobian_ ) :: Constructor7
+    INTEGER( I4B ), INTENT( IN ) :: N
+    CHARACTER( LEN = * ), INTENT( IN ) :: Names( 3 )
+
+    CALL Constructor7 % Initiate( N, Names )
+
+ END FUNCTION Constructor7
+
+
+

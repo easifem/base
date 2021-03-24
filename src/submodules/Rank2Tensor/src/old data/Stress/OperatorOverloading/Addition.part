@@ -1,0 +1,372 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Addition.part
+!                   Last Update :   Dec-18-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Addition of Stress tensor, returns (3,3) array
+!   HOSTING FILE
+!       -   Rank2Tensor_Class.f90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                  Obj_Add_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_Add_Obj( Obj, Obj2 )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Obj2
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj, Obj2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Obj
+
+    Obj_Add_Obj = MatFromVoigtVec(Obj % V + Obj2 % V, "Stress")
+
+ END FUNCTION Obj_Add_Obj
+
+!------------------------------------------------------------------------------
+!                                                                  Obj_Add_Mat
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_Add_Mat( Obj, Mat )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Mat
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Mat
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+
+    N = SIZE( Mat, 1 )
+
+    Obj_Add_Mat = MatFromVoigtVec( Obj % V, "Stress" )
+    
+    SELECT CASE( N )
+
+        CASE( 1 )
+
+            Obj_Add_Mat( 1, 1 ) =  Obj_Add_Mat( 1, 1 ) + Mat( 1, 1 )
+
+        CASE( 2 )
+
+            Obj_Add_Mat( 1:2, 1:2 ) =  Obj_Add_Mat( 1:2, 1:2 ) &
+                                    + Mat( 1:2, 1:2 )
+
+        CASE DEFAULT
+
+            Obj_Add_Mat( 1:3, 1:3 ) =  Obj_Add_Mat( 1:3, 1:3 ) &
+                                    + Mat( 1:3, 1:3 )
+
+    END SELECT
+
+ END FUNCTION Obj_Add_Mat
+
+!------------------------------------------------------------------------------
+!                                                                  Mat_Add_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Mat_Add_Obj( Mat, Obj )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Mat + Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_Add_Obj
+
+    Mat_Add_Obj = Obj_Add_Mat( Obj, Mat )
+
+ END FUNCTION Mat_Add_Obj
+
+!------------------------------------------------------------------------------
+!                                                                  Obj_Add_Vec
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_Add_Vec( Obj, Vec )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Vec
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+    REAL( DFP ), ALLOCATABLE :: DummyVec( : )
+
+
+    DummyVec = Obj % V
+
+    N = MINVAL( [SIZE( Vec ), SIZE( DummyVec ) ])
+    
+    DummyVec( 1:N ) =  DummyVec( 1:N ) + Vec( 1:N )
+
+    Obj_Add_Vec = MatFromVoigtVec( DummyVec, "Stress" )
+
+    DEALLOCATE( DummyVec )
+
+ END FUNCTION Obj_Add_Vec
+
+!------------------------------------------------------------------------------
+!                                                               Obj_Add_Scalar
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_Add_Scalar( Obj, S )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), INTENT( IN ) :: S
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Scalar
+
+    Obj_Add_Scalar = MatFromVoigtVec( Obj % V + S, "Stress" )
+
+ END FUNCTION Obj_Add_Scalar
+
+!------------------------------------------------------------------------------
+!                                                               Obj_Add_Scalar
+!------------------------------------------------------------------------------
+
+ FUNCTION Scalar_Add_Obj( S, Obj )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), INTENT( IN ) :: S
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Scalar_Add_Obj
+
+    Scalar_Add_Obj = Obj_Add_Scalar( Obj, S )
+
+ END FUNCTION Scalar_Add_Obj
+
+!------------------------------------------------------------------------------
+!                                                                  Vec_Add_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Vec_Add_Obj( Vec, Obj )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Vec_Add_Obj
+
+    Vec_Add_Obj = Obj_Add_Vec( Obj, Vec )
+
+ END FUNCTION Vec_Add_Obj
+
+
+!------------------------------------------------------------------------------
+!                                                                  Obj_Minus_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_Minus_Obj( Obj, Obj2 )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Obj2
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj, Obj2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Obj
+
+    Obj_Minus_Obj = MatFromVoigtVec( Obj % V - Obj2 % V, "Stress" )
+
+ END FUNCTION Obj_Minus_Obj
+
+!------------------------------------------------------------------------------
+!                                                                  Obj_Minus_Mat
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_Minus_Mat( Obj, Mat )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Mat
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Mat
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+
+    N = SIZE( Mat, 1 )
+
+    Obj_Minus_Mat = MatFromVoigtVec( Obj % V, "Stress" )
+    
+    SELECT CASE( N )
+
+        CASE( 1 )
+
+            Obj_Minus_Mat( 1, 1 ) =  Obj_Minus_Mat( 1, 1 ) - Mat( 1, 1 )
+
+        CASE( 2 )
+
+            Obj_Minus_Mat( 1:2, 1:2 ) =  Obj_Minus_Mat( 1:2, 1:2 ) &
+                                    - Mat( 1:2, 1:2 )
+
+        CASE DEFAULT
+
+            Obj_Minus_Mat( 1:3, 1:3 ) =  Obj_Minus_Mat( 1:3, 1:3 ) &
+                                      - Mat( 1:3, 1:3 )
+
+    END SELECT
+
+ END FUNCTION Obj_Minus_Mat
+
+!------------------------------------------------------------------------------
+!                                                                  Mat_Minus_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Mat_Minus_Obj( Mat, Obj )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Mat + Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_Minus_Obj
+
+    Mat_Minus_Obj = -Obj_Minus_Mat( Obj, Mat )
+
+ END FUNCTION Mat_Minus_Obj
+
+!------------------------------------------------------------------------------
+!                                                                  Obj_Minus_Vec
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_Minus_Vec( Obj, Vec )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Vec
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+    REAL( DFP ), ALLOCATABLE :: DummyVec( : )
+
+    DummyVec = Obj % V
+
+    N = MINVAL( [SIZE( Vec ), SIZE( DummyVec ) ])
+    
+    DummyVec( 1:N ) =  DummyVec( 1:N ) - Vec( 1:N )
+
+    Obj_Minus_Vec = MatFromVoigtVec( DummyVec, "Stress" )
+
+    DEALLOCATE( DummyVec )
+
+ END FUNCTION Obj_Minus_Vec
+
+!------------------------------------------------------------------------------
+!                                                                  Vec_Minus_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Vec_Minus_Obj( Vec, Obj )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Vec_Minus_Obj
+
+    Vec_Minus_Obj = -Obj_Minus_Vec( Obj, Vec )
+
+ END FUNCTION Vec_Minus_Obj
+
+!------------------------------------------------------------------------------
+!                                                               Obj_Minus_Scalar
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_Minus_Scalar( Obj, S )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), INTENT( IN ) :: S
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Scalar
+
+    Obj_Minus_Scalar = MatFromVoigtVec( Obj % V - S, "Stress" )
+
+ END FUNCTION Obj_Minus_Scalar
+
+!------------------------------------------------------------------------------
+!                                                               Scalar_Minus_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Scalar_Minus_Obj( S, Obj )
+
+!   DESCRIPTION
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj + Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), INTENT( IN ) :: S
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Scalar_Minus_Obj
+
+    Scalar_Minus_Obj = -Obj_Minus_Scalar( Obj, S )
+
+ END FUNCTION Scalar_Minus_Obj
+
+
+

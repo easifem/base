@@ -1,0 +1,66 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma                            
+!                   Position    :   Doctral Student                                       
+!                   Institute   :   Kyoto Univeristy, Japan                        
+!                   Program name:   StressDecomposition.part
+!                   Last Update :   March-29-2017
+!                                                               
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+! 
+!   Type    ::  Part of the Code
+!
+!   Info    ::  -   Part of the code;
+!
+!   Hosting File
+!           ::  -   Stress_Class.f90
+!
+!==============================================================================
+!
+!------------------------------------------------------------------------------
+!                                                                   getSigma_m
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE getDeviatoricPart(Stress, S)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   This subroutine Makes Stress Invariants
+!                   Sigma_m     =   tr(sigma)/3
+!                   trSigma     =
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_) :: Stress
+    REAL(DFP), DIMENSION(:), INTENT(OUT) ::  S
+!
+    INTEGER(I4B) :: n
+    REAL(DFP)    :: Sigma_m
+	Error_flag = .FALSE.
+
+    n = Stress%getLength()
+!
+    SELECT CASE(n)
+        CASE(4)
+        Sigma_m = ( Stress%Sigma(1) + Stress%Sigma(2) + Stress%Sigma(4) ) / 3.0_DFP
+            S(1) = Stress%Sigma(1) - Sigma_m
+            S(2) = Stress%Sigma(2) - Sigma_m
+            S(4) = Stress%Sigma(4) - Sigma_m
+            S(3) = Stress%Sigma(3)
+
+        CASE(6)
+        Sigma_m = ( Stress%Sigma(1) + Stress%Sigma(2) + Stress%Sigma(3) ) / 3.0_DFP
+            S(:) = Stress%Sigma(:)
+            S(1) = Stress%Sigma(1) - Sigma_m
+            S(2) = Stress%Sigma(2) - Sigma_m
+            S(3) = Stress%Sigma(3) - Sigma_m
+    END SELECT
+!
+ END SUBROUTINE getDeviatoricPart
+!
+!------------------------------------------------------------------------------
+!                                                                  getSigma_bar
+!------------------------------------------------------------------------------
+!

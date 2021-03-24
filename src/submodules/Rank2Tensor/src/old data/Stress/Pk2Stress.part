@@ -1,0 +1,109 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   PK2Stress.part
+!                   Last Update :   Dec-28-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   Type:: Part of Module
+!
+!   Description ::  
+!       -   This part includes subroutine for getting PK2 Stress from
+!           any other Stress Measures
+!   Hosting File ::
+!       -   Stress_Class
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                              getPK2Stress
+!------------------------------------------------------------------------------
+
+ FUNCTION getPK2Stress( Obj, F )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  This subroutine computes the Cauchy stress from given stress type
+!       2.  FObj is Deformation Gradient object.
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+    USE DeformationGradient_Class
+
+    !  Define arguments of dummy argument
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    TYPE( DeformationGradient_ ), INTENT( IN ) :: F
+    REAL( DFP ), ALLOCATABLE :: getPK2Stress( :, : )
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+    REAL( DFP ) :: J
+    REAL( DFP ), ALLOCATABLE :: InvF( :, : )
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+
+        CALL Err_Msg( &
+            "Stress_Class.f90>>Pk2Stress.part", &
+            "getPK2Stress(), Obj.pkTwo.F, Obj.S.F", &
+            "Stress_ Object is not initiated. &
+            Program Stopped !!!" &
+        )
+        STOP
+
+    END IF
+
+    T = Obj
+
+    SELECT CASE( TRIM( Obj % StressType ) )
+
+        CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
+
+            J = .det. F
+            InvF = .INV. F
+            getPK2Stress = ( InvF .matmul. T ) .matmul. TRANSPOSE( InvF )
+            getPK2Stress = J * getPK2Stress
+            
+        CASE( "Kirchhoff", "kirchhoff", "Tau", "kirchoff", "Kirchoff", "tau" )
+
+            InvF = .INV. F
+            getPK2Stress = ( InvF .matmul. T ) .matmul. TRANSPOSE( InvF )
+
+        CASE( "PK2", "Pk2", "pk2", "PK-2", "pk-2", "S", "s" )
+
+            getPK2Stress  = T
+
+        CASE( "PK1", "pk1", "PK-1", "pk-1", "Pi", "PI", "pi" )
+
+            InvF = .INV. F
+            getPK2Stress = InvF .matmul. T
+
+        CASE( "Eshelby-Like", "Eshelby", "EshelbyLike", "M", "m" )
+
+            InvF = .INV. F
+            getPK2Stress = InvF .matmul. ( TRANSPOSE( InvF ) .matmul. T )
+
+
+        CASE DEFAULT
+
+            CALL Err_Msg( &
+                "Stress_Class.f90>>Pk2Stress.part", &
+                "getPK2Stress( Obj, F ), Obj .pkTwo. F, Obj .S. F", &
+                "No case found for Obj % StressType. &
+                Program Stopped!!!" &
+            )
+            STOP
+
+    END SELECT
+
+    CALL T % DeallocateData( )
+    IF( ALLOCATED( InvF ) ) DEALLOCATE( InvF )
+
+ END FUNCTION getPK2Stress
+
+!------------------------------------------------------------------------------
+!                                                         
+!------------------------------------------------------------------------------
+

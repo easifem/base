@@ -141,7 +141,7 @@
 ! Date:     Jan 5th, 2012
 ! First object-based version
 
-module Gnuplot_Method
+MODULE GNUPLOT_METHOD
 
   implicit none
   private
@@ -2571,4 +2571,4 @@ contains
 
 
     !End of ogpf
-end module Gnuplot_Method
+END MODULE GNUPLOT_METHOD
