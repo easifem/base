@@ -15,9 +15,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/BLAS95/CMakeLists.txt)
 #BLAS95
 include(${CMAKE_CURRENT_LIST_DIR}/LAPACK95/CMakeLists.txt)
 
-# # H5Fortran
-# include(${CMAKE_CURRENT_LIST_DIR}/H5Fortran/CMakeLists.txt)
-
 #Szaghi
 include(${CMAKE_CURRENT_LIST_DIR}/Szaghi/CMakeLists.txt)
 
@@ -72,6 +69,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
 # Vector3D_
 include(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 
+#BLAS
+include(${CMAKE_CURRENT_LIST_DIR}/BLAS/CMakeLists.txt)
+
 #RealVector
 include(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 
@@ -98,12 +98,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 
 #FEMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
-
-# #FoXy
-# include(${CMAKE_CURRENT_LIST_DIR}/FoXy/CMakeLists.txt)
-
-# #VTKFortran
-# include(${CMAKE_CURRENT_LIST_DIR}/VTKFortran/CMakeLists.txt)
 
 #Gnuplot
 include(${CMAKE_CURRENT_LIST_DIR}/GNUPLOT/CMakeLists.txt)

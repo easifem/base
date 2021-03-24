@@ -1,3 +1,7 @@
+!
+! Modified by the Vikas Sharma on 23 March 2021
+! Details of original is given below
+!
 !-----------------------------------------------------------------------
 ! extracts the submatrix A(i1:i2,j1:j2) and puts the result in
 ! matrix ao,iao,jao
@@ -34,26 +38,26 @@
 !           Y. Saad, Sep. 21 1989                                      c
 !----------------------------------------------------------------------c
 
-SUBROUTINE submat_saad( job,i1,i2,j1,j2,a,ja,ia,nr,nc,ao,jao,iao )
-  INTEGER( I4B ), INTENT( IN ) :: job
+SUBROUTINE submat_saad( isValues,i1,i2,j1,j2,a,ja,ia, ao,jao,iao )
+  LOGICAL( LGT ), INTENT( IN ) :: isValues
   INTEGER( I4B ), INTENT( IN ) :: i1
   INTEGER( I4B ), INTENT( IN ) :: i2
   INTEGER( I4B ), INTENT( IN ) :: j1
   INTEGER( I4B ), INTENT( IN ) :: j2
-  INTEGER( I4B ), INTENT( OUT ) :: nr
-  INTEGER( I4B ), INTENT( OUT ) :: nc
   INTEGER( I4B ), INTENT( IN ) :: ia( : )
   INTEGER( I4B ), INTENT( IN ) :: ja( : )
-  INTEGER( I4B ), INTENT( OUT ) :: jao( : )
-  INTEGER( I4B ), INTENT( OUT ) :: iao( : )
   REAL( DFP ), INTENT( IN ) :: a( : )
-  REAL( DFP ), INTENT( INOUT) :: ao( : )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: ao( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( OUT ) :: jao( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( OUT ) :: iao( : )
 
+  INTEGER( I4B ) :: job, nr, nc
   nr = i2-i1+1
   nc = j2-j1+1
-
-  IF ( nr .LE. 0 .or. nc .LE. 0) RETURN
   klen = 0
+
+  CALL Reallocate( AO, SIZE( A ), IAO, nr+1, JAO, SIZE( JA ) )
+
   DO i = 1,nr
     ii = i1+i-1
     k1 = ia(ii)
@@ -69,4 +73,6 @@ SUBROUTINE submat_saad( job,i1,i2,j1,j2,a,ja,ia,nr,nc,ao,jao,iao )
     END DO
   END DO
   iao(nr+1) = klen+1
+  CALL COMPACT( AO, klen )
+  CALL COMPACT( JAO, klen )
 END SUBROUTINE submat_saad

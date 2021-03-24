@@ -50,6 +50,7 @@ MODULE BaseMethod
   USE KeyValue_Method
   USE IterationData_Method
   USE Vector3D_Method
+  USE BLAS1V_Method
   USE RealVector_Method
   USE DOF_Method
   USE ReferenceElement_Method
