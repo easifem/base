@@ -60,7 +60,7 @@ END PROCEDURE f_getValuesFromTriplet_Int
 
 MODULE PROCEDURE f_getValues_Real
   IF( ALLOCATED( Obj % Val ) ) THEN
-    CALL SHALLOWCOPY( Y=Val, X=Obj%Val )
+    CALL Reallocate( Val, SIZE( Obj ) )
     CALL COPY( Y=Val, X=Obj%Val )
   END IF
 END PROCEDURE f_getValues_Real

@@ -188,6 +188,10 @@ subroutine test11
   call display( contraction(V, V), "test11: r2v:r2v =")
 end
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 subroutine test12
   type( Rank2Tensor_ ) :: obj
   real( dfp ) :: mat( 3, 3 ), QR( 3, 3 ), WR( 3 ), QI( 3, 3 ), WI( 3 )
@@ -196,13 +200,143 @@ subroutine test12
   mat(2:3, 2) = [-6, -12]
   mat(2:3, 3) = [-12, 1]
   call initiate( obj, mat, isSym=.true.)
-  call Eigen( obj, QR, WR, QI, WI )
+  call Eigen( obj, QR, WR )
   call BlankLines(unitNo=stdout, NOL=2)
   call display( obj, 'test12: obj=')
   call display( Invariants(obj), "test12: Invariants=" )
   call display( QR, "test12: QR=")
   call display( WR, "test12: WR=")
 end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test13
+  type( Rank2Tensor_ ) :: obj, R, U, V
+  real( dfp ) :: mat( 3, 3 ) = reshape( [1.0, -0.333, 0.959, 0.495, 1.0, 0.0, 0.5, -0.247, 1.5], [3,3] )
+  call initiate( obj, mat, isSym=.false. )
+  call PolarDecomp( Obj, R, U, V )
+  call display( obj, "test13: obj=")
+  call display( R, "test13: R=" )
+  call display( U, "test13: U=" )
+  call display( V, "test13: V=" )
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test14
+  type( Rank2Tensor_ ) :: a, b
+  real( dfp ) :: mat( 3, 3 )
+  call random_number( mat )
+  a = mat
+  call random_number( mat )
+  b = mat
+  call display( a+b, "test14: a+b=")
+  call display( a+1.0_DFP, "test14: a+1=")
+  call display( 1.0_DFP + a, "test14: 1+a=")
+  call display( a-b, "test14: a-b=")
+  call display( a-1.0_DFP, "test14: a-1=")
+  call display( 1.0_DFP - a, "test14: 1-a=")
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test15
+  type( Rank2Tensor_ ) :: a, b
+  real( dfp ) :: mat( 3, 3 )
+  call random_number( mat )
+  a = mat
+  call random_number( mat )
+  b = mat
+  call display( a*b, "test15: a*b=")
+  call display( a*1.0_DFP, "test15: a*1=")
+  call display( 1.0_DFP * a, "test15: 1*a=")
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test16
+  type( Rank2Tensor_ ) :: a
+  real( dfp ) :: mat( 3, 3 ), vec( 3 )
+  call random_number( mat )
+  call random_number( vec )
+  a = mat
+  call display( matmul( a, a ), "test16: matmul(a,a)=" )
+  call display( matmul( a, vec ), "test16: matmul(a,vec)=")
+  call display( matmul( vec, a ), "test16: matmul(vec, a)=")
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test17
+  type( Rank2Tensor_ ) :: obj, invobj
+  real( dfp ) :: mat( 3, 3 )
+  call random_number( mat )
+  obj = mat
+  call inv( obj, invobj )
+  call display( obj, "test17: obj = ")
+  call display( invobj, "test17: obj = ")
+  call display( matmul(obj,invobj), "test17: should be I=")
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test18
+  type( DeformationGradient_ ) :: F
+  class( Rank2Tensor_ ), pointer :: objptr => null()
+  real( dfp ) :: mat( 3, 3 )
+
+  call random_number( mat )
+  call display( mat, "test18: mat = ")
+  F = mat !< this works too
+  call display( F, "test18: F = " )
+  F = DeformationGradient(Rank2Tensor(mat=mat, issym=.false.))
+  call display( F, "test18: F = " )
+  objptr => DeformationGradient_Pointer(Rank2Tensor(mat=mat, issym=.false.))
+  call display( objptr, "test18: objptr = " )
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test19
+  type( Rank2Tensor_ ) :: R, U, V
+  type( DeformationGradient_ ) :: F
+  type( LeftCauchyGreen_ ) :: b
+  type( RightCauchyGreen_ ) :: C
+  real( dfp ) :: mat( 3, 3 ) = reshape( [1.0, -0.333, 0.959, 0.495, 1.0, 0.0, 0.5, -0.247, 1.5], [3,3] )
+
+  call initiate( F, mat, isSym=.false. )
+  call PolarDecomp( F, R=R, U=U, V=V )
+  call display( F, "test13: obj=")
+  call display( R, "test13: R=" )
+  call display( U, "test13: U=" )
+  call display( V, "test13: V=" )
+  b = LeftCauchyGreen( F=F )
+  call display( b, "b(F) = " )
+  b = LeftCauchyGreen( V = V )
+  call display( b, "b(V) = " )
+  C = RightCauchyGreen( F=F )
+  call display( C, "C(F) = " )
+  C = RightCauchyGreen( U = U )
+  call display( C, "C(U) = " )
+end
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 end module
 
@@ -213,17 +347,24 @@ end module
 program main
 use test_Rank2Tensor
 implicit none
-call test1
-call test2
-call test3
-call test4
-call test5
-call test6
-call test7
-call test8
-call test9
-call test10
-call test11
-call test12
+! call test1
+! call test2
+! call test3
+! call test4
+! call test5
+! call test6
+! call test7
+! call test8
+! call test9
+! call test10
+! call test11
+! call test12
+! call test13
+! call test14
+! call test15
+! call test16
+! call test17
+! call test18
+call test19
 
 end program main

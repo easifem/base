@@ -1,0 +1,334 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   MatMul.part
+!                   Last Update :   Dec-17-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESsCRIPTION
+!       -   Matrix multiplication operator
+!   HOSTING FILE
+!       -   Stress_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                Obj_matmul_Obj
+!------------------------------------------------------------------------------
+!
+ FUNCTION Obj_matmul_Obj( Obj, Obj2 )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       Obj .matmul. Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj, Obj2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_matmul_Obj
+
+    ! Define internal variables
+    REAL( DFP ), ALLOCATABLE :: Mat1( :, : ), Mat2( :, : )
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( Obj % V ) &
+        .OR. .NOT. ALLOCATED( Obj2 % V ) ) THEN 
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Obj_matmul_Obj()", &
+                        "Stress_ Obj is/are not allocated. Program Stopped"&
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    CALL Obj % getStress( Mat1 )
+    CALL Obj % getStress( Mat2 )
+
+    CALL Display_Array( Mat1, "Debug:: Obj_matmul_Obj :: Mat1 =")
+
+    Obj_matmul_Obj = MATMUL( Mat1, Mat2 )
+
+    DEALLOCATE( Mat1, Mat2 )
+
+ END FUNCTION Obj_matmul_Obj
+
+!------------------------------------------------------------------------------
+!                                                                Obj_matmul_Mat
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_matmul_Mat( Obj, Mat2 )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  -  Obj .matmul. Mat
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_matmul_Mat
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Obj_matmul_Mat()", &
+                        "Stress_ Obj is not allocated. Program Stopped" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    T = Obj
+
+    Obj_matmul_Mat = T .matmul. Mat2
+
+    CALL T % DeallocateData( )
+
+ END FUNCTION Obj_matmul_Mat
+
+!------------------------------------------------------------------------------
+!                                                                Obj_matmul_Vec
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_matmul_Vec( Obj, Vec )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  -  Obj .matmul. Vec
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 3 ) :: Obj_matmul_Vec
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Obj_matmul_Vec()", &
+                        "Stress_ Obj is not allocated. Program Stopped" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+
+    IF( SIZE( Vec ) .GT. 3 ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Obj_matmul_Vec()", &
+                        "The size of Vec should be less than or equal to 3. &
+                        Program Stopped" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    T = Obj
+
+    Obj_matmul_Vec = T .matmul. Vec
+
+    CALL T % DeallocateData( )
+
+ END FUNCTION Obj_matmul_Vec
+
+!------------------------------------------------------------------------------
+!                                                               Vec_matmul_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Vec_matmul_Obj( Vec, Obj )
+
+    USE Rank2Tensor_Class
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  -  Vec .matmul. Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    REAL( DFP ), DIMENSION( 3 ) :: Vec_matmul_Obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Vec_matmul_Obj()", &
+                        "Stress_ Obj is not allocated. &
+                        Program Stopped !!!" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    IF( SIZE( Vec ) .GT. 3 ) THEN
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Vec_matmul_Obj()", &
+                        "The size of Vec should be less than or equal to 3. &
+                        Program Stopped !!!" &
+                    )
+        Error_Flag = .TRUE.
+
+        STOP
+
+    END IF
+
+    T = Obj
+
+    Vec_matmul_Obj = Vec .matmul. T
+
+    CALL T % DeallocateData( )
+
+ END FUNCTION Vec_matmul_Obj
+
+!------------------------------------------------------------------------------
+!                                                               Mat_matmul_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Mat_matmul_Obj( Mat2, Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Mat .matmul. Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_matmul_Obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Mat_matmul_Obj()", &
+                        "Stress_ Obj is not allocated. Program Stopped" &
+                    )
+        STOP
+
+    END IF
+
+    T = Obj
+    Mat_matmul_Obj = Mat2 .matmul. T
+    CALL T % DeallocateData( )
+
+ END FUNCTION Mat_matmul_Obj
+
+!------------------------------------------------------------------------------
+!                                                            Obj_matmul_Tensor
+!------------------------------------------------------------------------------
+
+ FUNCTION Obj_matmul_Tensor( Obj, TensorObj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Obj .matmul. TensorObj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_matmul_Tensor
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Obj_matmul_Tensor()", &
+                        "Stress_ Obj is not allocated. Program Stopped" &
+                    )
+        STOP
+
+    END IF
+
+    T = Obj
+    Obj_matmul_Tensor = T .matmul. TensorObj
+    CALL T % DeallocateData( )
+
+ END FUNCTION Obj_matmul_Tensor
+
+!------------------------------------------------------------------------------
+!                                                            Tensor_matmul_Obj
+!------------------------------------------------------------------------------
+
+ FUNCTION Tensor_matmul_Obj( TensorObj, Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Tensor .matmul. Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Tensor_matmul_Obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+
+        CALL Err_Msg( &
+                        "Stress_Class.f90>>Matmul.part", &
+                        "Tensor_matmul_Obj()", &
+                        "Stress_ Obj is not allocated. Program Stopped" &
+                    )
+        STOP
+
+    END IF
+
+    T = Obj
+    Tensor_matmul_Obj = TensorObj .matmul. T
+    CALL T % DeallocateData( )
+
+ END FUNCTION Tensor_matmul_Obj

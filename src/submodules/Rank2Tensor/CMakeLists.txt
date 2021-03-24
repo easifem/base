@@ -11,5 +11,9 @@ target_sources(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/Rank2Tensor_Method@Constructor.f90
   ${src_path}/Rank2Tensor_Method@IO.f90
-  ${src_path}/Rank2Tensor_Method@Operation.f90
+  ${src_path}/Rank2Tensor_Method@Contraction.f90
+  ${src_path}/Rank2Tensor_Method@InvarMethods.f90
+  ${src_path}/Rank2Tensor_Method@Operator.f90
+  ${src_path}/Rank2Tensor_Method@Pullback.f90
+  ${src_path}/Rank2Tensor_Method@PushForward.f90
 )

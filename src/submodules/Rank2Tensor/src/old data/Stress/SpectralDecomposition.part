@@ -1,0 +1,193 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   SpectralDecomposition.part
+!                   Last Update :   Dec-16-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   Type:: Part of module
+!
+!   Info::  -   This is part of the code.
+!           -   Contains subroutines related to the spectral decomposition of
+!               a tensor.
+!   Hosting File -
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                   Eigens
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Eigens( Obj, EigenValues, EigenVectors )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Returns the eigen values and Eigen Vectors
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    CLASS( Stress_ ), INTENT( IN ) ::  Obj
+    REAL( DFP ), ALLOCATABLE, INTENT( OUT ) ::  EigenValues( : ), &
+                                                EigenVectors( :, : )
+    
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+
+        CALL Err_Msg( &
+        "Stress_Class.f90>>SpectralDecomposition.part", &
+        "Eigens()", &
+        "Stress_ Object is not allocated. &
+        Program Stopped !!!")
+
+        STOP
+
+    END IF
+
+    T = Obj
+
+    CALL T % Eigens( EigenValues = Eigenvalues, EigenVectors = EigenVectors )
+
+    CALL Check_Error( &
+    "Stress_Class.f90>>SpectralDecomposition.part>>m_Eigen_1()", &
+    "Traceback ---> &
+    CALL T % Eigens( EigenValues = Eigenvalues, EigenVectors = EigenVectors )"& 
+    )
+
+    CALL T % DeallocateData( )
+
+ END SUBROUTINE Eigens
+
+!------------------------------------------------------------------------------
+!                                                               PrincipalValue
+!------------------------------------------------------------------------------
+
+REAL( DFP ) FUNCTION  PrincipalValue( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       -   Returns the max( Real( eigenvalue ) )
+!       -   m_Eigens_1 is used in this routine
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy arguments
+    CLASS( Stress_ ), INTENT( IN ) ::  Obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+
+        CALL Err_Msg( &
+        "Stress_Class.f90>>SpectralDecomposition.part", &
+        "PrincipalValue()", &
+        "Stress_ Object is not allocated. &
+        Program Stopped !!!")
+
+        STOP
+
+    END IF
+
+    T = Obj
+
+    PrincipalValue = Tensor_PrincipalValue( T )
+
+    CALL T % DeallocateData( )
+
+END FUNCTION  PrincipalValue
+
+!------------------------------------------------------------------------------
+!                                                               SpectralRadius
+!------------------------------------------------------------------------------
+
+REAL( DFP ) FUNCTION SpectralRadius( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       -   Returns the max( Real( eigenvalue ) )
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy arguments
+    CLASS( Stress_ ), INTENT( IN ) ::  Obj
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+
+    T = Obj
+
+    SpectralRadius = Tensor_SpectralRadius( T )
+    
+    CALL T % DeallocateData( )
+
+END FUNCTION SpectralRadius
+
+!------------------------------------------------------------------------------
+!                                                               EigenValues
+!------------------------------------------------------------------------------
+
+ FUNCTION EigenValues( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       -   Returns EigenValues
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy arguments
+    CLASS( Stress_ ), INTENT( IN ) ::  Obj
+    REAL( DFP ), DIMENSION( 3 ) :: EigenValues
+
+    ! Define internal variables
+    REAL( DFP ), ALLOCATABLE :: EigVals( : ), EigVecs( :, : )
+
+    CALL Eigens( Obj, EigVals, EigVecs )
+    CALL Check_Error( &
+    "Stress_Class.f90>>SpectralDecomposition.part>>EigenValues()", &
+    "Traceback ---> CALL Eigens( Obj, EigVals, EigVecs ) "&
+    )
+
+    EigenValues( 1 : 3 ) = EigVals( 1 : 3 )
+
+    DEALLOCATE( EigVals, EigVecs )
+
+
+END FUNCTION EigenValues
+
+!------------------------------------------------------------------------------
+!                                                               EigenVectors
+!------------------------------------------------------------------------------
+
+ FUNCTION EigenVectors( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       -   Returns EigenVectors 
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy arguments
+    CLASS( Stress_ ), INTENT( IN ) ::  Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: EigenVectors
+
+    ! Define internal variables
+    REAL( DFP ), ALLOCATABLE :: EigVals( : ), EigVecs( :, : )
+
+    CALL Eigens( Obj, EigVals, EigVecs )
+    CALL Check_Error( &
+    "Stress_Class.f90>>SpectralDecomposition.part>>EigenVectors()", &
+    "Traceback ---> CALL Eigens( Obj, EigVals, EigVecs ) "&
+    )
+
+    EigenVectors( :, : ) = EigVecs( :, : )
+
+    DEALLOCATE( EigVals, EigVecs )
+
+END FUNCTION EigenVectors
+

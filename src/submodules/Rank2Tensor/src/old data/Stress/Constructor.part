@@ -1,0 +1,563 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Constructor.part
+!                   Last Update :   Dec-17-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Deformation Gradient class is defined
+!   HOSTING FILE
+!       -   Stress_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                               DeallocateData
+!------------------------------------------------------------------------------
+
+ SUBROUTINE DeallocateData( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Deallocate the data
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    IF( ALLOCATED( Obj % V ) ) DEALLOCATE( Obj % V )
+    
+ END SUBROUTINE DeallocateData
+
+!------------------------------------------------------------------------------
+!                                                                  isInitiated
+!------------------------------------------------------------------------------
+
+ LOGICAL( LGT ) FUNCTION isInitiated( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Tensor Class
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+
+    isInitiated = .FALSE.
+
+    IF( ALLOCATED( Obj % V ) ) THEN
+        isInitiated = .TRUE.
+    END IF
+
+ END FUNCTION isInitiated
+
+!------------------------------------------------------------------------------
+!                                                                     getNSD
+!------------------------------------------------------------------------------
+
+ INTEGER( I4B ) FUNCTION getNSD( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Tensor Class
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+
+    getNSD = Obj % NSD
+
+ END FUNCTION getNSD
+
+!------------------------------------------------------------------------------
+!                                                                     getVoigtLen
+!------------------------------------------------------------------------------
+
+ INTEGER( I4B ) FUNCTION getVoigtLen( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Tensor Class
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+
+    IF( ALLOCATED( Obj % V ) ) THEN
+
+        getVoigtLen = SIZE( Obj % V )
+
+    ELSE
+
+        CALL Err_Msg( &
+        "Stress_Class.f90>>Constructor.part", &
+        ".Size. Obj", &
+        "Obj % V is not allocated, Program Stopped!!!"&
+        )
+
+        STOP
+        
+    END IF
+
+ END FUNCTION getVoigtLen
+
+!------------------------------------------------------------------------------
+!                                                                      getNSD
+!------------------------------------------------------------------------------
+
+ SUBROUTINE setNSD( Obj, NSD )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Tensor Class
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    INTEGER( I4B ), INTENT( IN ) :: NSD
+
+    Obj % NSD = NSD
+
+ END SUBROUTINE setNSD
+
+!------------------------------------------------------------------------------
+!                                                                    Initiate1
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Initiate1( Obj, Vec, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    ! Define internal variables
+    INTEGER( I4B ) :: N
+
+    N = SIZE( Vec )
+    IF( ALLOCATED( Obj % V ) ) DEALLOCATE( Obj % V )
+    ALLOCATE( Obj % V( N ) )
+
+    Obj % V = Vec
+
+    Obj % StressType = TRIM( StressType )
+
+    SELECT CASE( N )
+
+        CASE( 1 )
+            Obj % NSD = 1
+        CASE( 3 )
+            Obj % NSD = 2
+        CASE( 4 )
+            Obj % NSD = 2
+        CASE( 6 )
+            Obj % NSD = 3
+
+    END SELECT 
+
+ END SUBROUTINE Initiate1
+
+!------------------------------------------------------------------------------
+!                                                                    Initiate2
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Initiate2( Obj, Mat, VoigtLen, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Matrix
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+    INTEGER( I4B ), INTENT( IN ) :: VoigtLen
+
+    ! Define internal variable
+    REAL( DFP ), ALLOCATABLE :: Vec( : )
+
+    Vec = VoigtVec( Mat, VoigtLen, "Stress")
+
+    CALL Check_Error( &
+    "Stress_Class.f90>>Constructor.f90>>Initiate()", &
+    "Traceback ---> Obj % V = VoigtVec( Mat, VoigtLen,'Stress') " )
+
+    CALL Obj % Initiate1( Vec = Vec, StressType = StressType )
+
+    DEALLOCATE( Vec )  
+
+ END SUBROUTINE Initiate2
+
+!------------------------------------------------------------------------------
+!                                                                    Initiate3
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Initiate3( Obj, Obj2 )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj Stress Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: Obj2
+
+
+    IF( ALLOCATED( Obj % V ) ) DEALLOCATE( Obj % V )
+
+    IF( ALLOCATED( Obj2 % V ) ) THEN 
+
+        Obj % V = Obj2 % V
+
+    END IF
+
+    Obj % StressType = TRIM( Obj2 % StressType )
+    Obj % NSD = Obj2 % NSD
+
+ END SUBROUTINE Initiate3
+
+!------------------------------------------------------------------------------
+!                                                                    Initiate4
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Initiate4( Obj, TensorObj, VoigtLen, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Rank2Tensor Object
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    INTEGER( I4B ), INTENT( IN ) :: VoigtLen
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    REAL( DFP ), ALLOCATABLE :: Mat( :, : )
+
+    Mat = TensorObj
+
+    CALL Obj % Initiate2( Mat = Mat, VoigtLen = VoigtLen, &
+    StressType = StressType )
+
+    DEALLOCATE( Mat )
+
+ END SUBROUTINE Initiate4
+
+!------------------------------------------------------------------------------
+!                                                                    Initiate5
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Initiate5( Obj, Mat, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Matrix
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+    
+    CALL Obj % Initiate2( &
+                         Mat = Mat, &
+                         VoigtLen = 6, &
+                         StressType = StressType &
+                        )
+
+ END SUBROUTINE Initiate5
+
+!------------------------------------------------------------------------------
+!                                                                    Initiate6
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Initiate6( Obj, TensorObj, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Rank2Tensor Object
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    CALL Obj % Initiate4( &
+                         TensorObj = TensorObj, &
+                         VoigtLen = 6, &
+                         StressType = StressType &
+                        )
+
+ END SUBROUTINE Initiate6
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor_1
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_1( Vec, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), POINTER :: Constructor_1
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    ALLOCATE( Stress_ :: Constructor_1 )
+
+    CALL Constructor_1 % Initiate( Vec = Vec, StressType = StressType )
+
+ END FUNCTION Constructor_1
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor_2
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_2( Mat, VoigtLen, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), POINTER :: Constructor_2
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+    INTEGER( I4B ), INTENT( IN ) :: VoigtLen
+
+    ALLOCATE( Stress_ :: Constructor_2 )
+
+    CALL Constructor_2 % Initiate( Mat = Mat, &
+    VoigtLen = VoigtLen, StressType = StressType )
+
+ END FUNCTION Constructor_2
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor_3
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_3( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), POINTER :: Constructor_3
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+
+    ALLOCATE( Stress_ :: Constructor_3 )
+
+    CALL Constructor_3 % Initiate( Obj )
+
+ END FUNCTION Constructor_3
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor_4
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_4( TensorObj, VoigtLen, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), POINTER :: Constructor_4
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    INTEGER( I4B ), INTENT( IN ) :: VoigtLen
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    ALLOCATE( Stress_ :: Constructor_4 )
+
+    CALL Constructor_4 % Initiate( TensorObj = TensorObj, &
+    VoigtLen = VoigtLen, StressType = StressType )
+
+ END FUNCTION Constructor_4
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor_5
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_5( Mat, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), POINTER :: Constructor_5
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    ALLOCATE( Stress_ :: Constructor_5 )
+
+    CALL Constructor_5 % Initiate( Mat = Mat, StressType = StressType )
+
+ END FUNCTION Constructor_5
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor_6
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_6( TensorObj, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), POINTER :: Constructor_6
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    ALLOCATE( Stress_ :: Constructor_6 )
+
+    CALL Constructor_6 % Initiate( &
+        TensorObj = TensorObj, &
+        StressType = StressType &
+        )
+
+ END FUNCTION Constructor_6
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor1
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor1( Vec, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( Stress_ ) :: Constructor1
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    CALL Constructor1 % Initiate( Vec = Vec, StressType = StressType )
+
+ END FUNCTION Constructor1
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor2
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor2( Mat, VoigtLen, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( Stress_ ) :: Constructor2
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+    INTEGER( I4B ), INTENT( IN ) :: VoigtLen
+
+    CALL Constructor2 % Initiate( Mat = Mat, &
+    VoigtLen = VoigtLen, StressType = StressType )
+
+ END FUNCTION Constructor2
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor3
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor3( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( Stress_ ) :: Constructor3
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+
+    CALL Constructor3 % Initiate( Obj )
+
+ END FUNCTION Constructor3
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor4
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor4( TensorObj, VoigtLen, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    TYPE( Stress_ ) :: Constructor4
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    INTEGER( I4B ), INTENT( IN ) :: VoigtLen
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    CALL Constructor4 % Initiate( TensorObj = TensorObj, &
+    VoigtLen = VoigtLen, StressType = StressType )
+
+ END FUNCTION Constructor4
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor5
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor5( Mat, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( Stress_ ) :: Constructor5
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    CALL Constructor5 % Initiate( &
+        Mat = Mat, &
+        StressType = StressType &
+        )
+
+ END FUNCTION Constructor5
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor6
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor6( TensorObj, StressType )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Initiate Obj using Voigt vector
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    TYPE( Stress_ ) :: Constructor6
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    CHARACTER( LEN = * ), INTENT( IN ) :: StressType
+
+    CALL Constructor6 % Initiate( &
+        TensorObj = TensorObj, &
+        StressType = StressType &
+    )
+
+ END FUNCTION Constructor6

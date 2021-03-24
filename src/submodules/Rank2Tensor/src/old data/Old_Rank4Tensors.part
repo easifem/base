@@ -1,0 +1,518 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Rank4Tensors.part
+!                   Last Update :   September-10-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   Type:: Part of module
+!
+!   Info::  -   This part contains isotropic tensors of Rank-1, Rank-2, Rank-3
+!               and Rank-4
+!
+!   Hosting File -  Tensor.f90
+!
+!==============================================================================
+!
+! List of items
+!
+!------------------------------------------------------------------------------
+!                                                                   DiracDelta
+!------------------------------------------------------------------------------
+!
+ INTEGER(I4B) FUNCTION DiracDelta( i, j )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    IsotropicTensors Rank-2
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: i, j
+!
+    Error_Flag = .FALSE.
+
+    IF( i .EQ. j ) THEN
+        DiracDelta = 1
+    ELSE
+        DiracDelta = 0
+    END IF
+!
+ END FUNCTION DiracDelta
+!
+!------------------------------------------------------------------------------
+!                                                                   LeviCivita
+!------------------------------------------------------------------------------
+!
+ INTEGER(I4B) FUNCTION LeviCivita( i, j, k )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    IsotropicTensors Rank-3
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: i, j, k
+!
+    Error_Flag = .FALSE.
+
+    LeviCivita = ( i - j ) * ( j - k ) * ( k - i ) / 2
+!
+ END FUNCTION LeviCivita
+!
+!------------------------------------------------------------------------------
+!                                                                       ISO4
+!------------------------------------------------------------------------------
+!
+ REAL(DFP) FUNCTION ISO4( lambda, mu, i, j, k, l )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    IsotropicTensors Rank-4
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: i, j, k, l
+    REAL( DFP ), INTENT( IN ) :: lambda, mu
+!
+ Error_Flag = .FALSE.
+
+    ISO4 = lambda * DiracDelta( i, j ) * DiracDelta( k, l ) &
+          + mu * ( DiracDelta( i, k ) * DiracDelta( j, l ) &
+          + DiracDelta( i, l ) * DiracDelta( j, k ) )
+!
+ END FUNCTION ISO4
+!
+!------------------------------------------------------------------------------
+!                                                                   TraceISO4
+!------------------------------------------------------------------------------
+!
+ REAL(DFP) FUNCTION TraceISO4( i, j, k, l )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    IsotropicTensors Rank-3
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: i, j, k, l
+!
+    Error_Flag = .FALSE.
+    TraceISO4 = DiracDelta( i, j ) * DiracDelta( k, l )
+!
+ END FUNCTION TraceISO4
+!
+!------------------------------------------------------------------------------
+!                                                                 IdentityISO4
+!------------------------------------------------------------------------------
+!
+ REAL(DFP) FUNCTION IdentityISO4( i, j, k, l )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    IsotropicTensors Rank-3
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: i, j, k, l
+!
+    Error_Flag = .FALSE.
+    IdentityISO4 = DiracDelta( i, k ) * DiracDelta( j, l )
+!
+ END FUNCTION IdentityISO4
+!
+!------------------------------------------------------------------------------
+!                                                                 TransposeISO4
+!------------------------------------------------------------------------------
+!
+ REAL(DFP) FUNCTION TransposeISO4( i, j, k, l )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    IsotropicTensors Rank-3
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: i, j, k, l
+!
+    Error_Flag = .FALSE.
+    TransposeISO4 = DiracDelta( i, l ) * DiracDelta( j, k )
+!
+ END FUNCTION TransposeISO4
+!
+!------------------------------------------------------------------------------
+!                                                                      SymISO4
+!------------------------------------------------------------------------------
+!
+ REAL(DFP) FUNCTION SymISO4( i, j, k, l )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    IsotropicTensors Rank-3
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: i, j, k, l
+!
+    Error_Flag = .FALSE.
+    SymISO4 = 0.5_DFP * ( IdentityISO4( i, j, k, l ) + TransposeISO4( i,j,k,l ))
+!
+ END FUNCTION SymISO4
+!
+!------------------------------------------------------------------------------
+!                                                                  AntiSymISO4
+!------------------------------------------------------------------------------
+!
+ REAL(DFP) FUNCTION AntiSymISO4( i, j, k, l )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -    IsotropicTensors Rank-3
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: i, j, k, l
+!
+    Error_Flag = .FALSE.
+    AntiSymISO4 = 0.5_DFP * ( IdentityISO4( i, j, k, l ) &
+    - TransposeISO4( i, j, k, l ) )
+!
+ END FUNCTION AntiSymISO4
+!
+!------------------------------------------------------------------------------
+!                                                            VoigtMatTraceISO4
+!------------------------------------------------------------------------------
+!
+ FUNCTION VoigtMatTraceISO4( N )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: N
+    REAL( DFP ), DIMENSION( N, N ) :: VoigtMatTraceISO4
+!
+    Error_Flag = .FALSE.
+    VoigtMatTraceISO4 = 0.0_DFP
+    SELECT CASE( N )
+    CASE( 6 )
+        VoigtMatTraceISO4( 1 : 3, 1 : 3 ) = 1.0_DFP
+    CASE( 4 )
+        VoigtMatTraceISO4( 1 : 2, 1 : 2 ) = 1.0_DFP
+        VoigtMatTraceISO4( 4, 4 ) = 1.0_DFP
+        VoigtMatTraceISO4( 1, 4 ) = 1.0_DFP
+        VoigtMatTraceISO4( 4, 1 ) = 1.0_DFP
+        VoigtMatTraceISO4( 4, 2 ) = 1.0_DFP
+    CASE( 3 )
+        VoigtMatTraceISO4( 1 : 2, 1 : 2 ) = 1.0_DFP
+    CASE( 1 )
+        VoigtMatTraceISO4( 1, 1 ) =1.0_DFP
+    CASE DEFAULT
+        CALL Err_Msg( "Tensor.f90>>Rank4Tensors.part", &
+        "VoigtMatTraceISO4(), Flag-1", "Unknown N" )
+        Error_Flag = .TRUE.
+        RETURN
+    END SELECT
+!
+ END FUNCTION VoigtMatTraceISO4
+!
+!------------------------------------------------------------------------------
+!                                                         VoigtMatIdentityISO4
+!------------------------------------------------------------------------------
+!
+ FUNCTION VoigtMatIdentityISO4( N )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: N
+    REAL( DFP ), DIMENSION( N, N ) :: VoigtMatIdentityISO4
+!
+    VoigtMatIdentityISO4 = 0.0_DFP
+    Error_Flag = .FALSE.
+    SELECT CASE( N )
+    CASE( 6 )
+        VoigtMatIdentityISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 2, 2 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 3, 3 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 4, 4 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 5, 5 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 6, 6 ) = 1.0_DFP
+    CASE( 4 )
+        VoigtMatIdentityISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 2, 2 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 3, 3 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 4, 4 ) = 1.0_DFP
+    CASE( 3 )
+        VoigtMatIdentityISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 2, 2 ) = 1.0_DFP
+        VoigtMatIdentityISO4( 3, 3 ) = 1.0_DFP
+    CASE( 1 )
+        VoigtMatIdentityISO4( 1, 1 ) =1.0_DFP
+    CASE DEFAULT
+        CALL Err_Msg( "Tensor.f90>>Rank4Tensors.part", &
+        "VoigtMatIdentityISO4(), Flag-1", "Unknown N" )
+        Error_Flag = .TRUE.
+        RETURN
+    END SELECT
+!
+ END FUNCTION VoigtMatIdentityISO4
+!
+!------------------------------------------------------------------------------
+!                                                        VoigtMatTransposeISO4
+!------------------------------------------------------------------------------
+!
+ FUNCTION VoigtMatTransposeISO4( N )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: N
+    REAL( DFP ), DIMENSION( N, N ) :: VoigtMatTransposeISO4
+!
+    VoigtMatTransposeISO4 = 0.0_DFP
+    Error_Flag = .FALSE.
+    SELECT CASE( N )
+    CASE( 6 )
+        VoigtMatTransposeISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatTransposeISO4( 2, 2 ) = 1.0_DFP
+        VoigtMatTransposeISO4( 3, 3 ) = 1.0_DFP
+    CASE( 4 )
+        VoigtMatTransposeISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatTransposeISO4( 2, 2 ) = 1.0_DFP
+        VoigtMatTransposeISO4( 4, 4 ) = 1.0_DFP
+    CASE( 3 )
+        VoigtMatTransposeISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatTransposeISO4( 2, 2 ) = 1.0_DFP
+    CASE( 1 )
+        VoigtMatTransposeISO4( 1, 1 ) = 1.0_DFP
+    CASE DEFAULT
+        CALL Err_Msg( "Tensor.f90>>Rank4Tensors.part", &
+        "VoigtMatTransposeISO4(), Flag-1", "Unknown N" )
+        Error_Flag = .TRUE.
+        RETURN
+    END SELECT
+!
+ END FUNCTION VoigtMatTransposeISO4
+!
+!------------------------------------------------------------------------------
+!                                                              VoigtMatSymISO4
+!------------------------------------------------------------------------------
+!
+ FUNCTION VoigtMatSymISO4( N )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: N
+    REAL( DFP ), DIMENSION( N, N ) :: VoigtMatSymISO4
+!
+    VoigtMatSymISO4 = 0.0_DFP
+    Error_Flag = .FALSE.
+    SELECT CASE( N )
+    CASE( 6 )
+        VoigtMatSymISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatSymISO4( 2, 2 ) = 1.0_DFP
+        VoigtMatSymISO4( 3, 3 ) = 1.0_DFP
+        VoigtMatSymISO4( 4, 4 ) = 0.5_DFP
+        VoigtMatSymISO4( 5, 5 ) = 0.5_DFP
+        VoigtMatSymISO4( 6, 6 ) = 0.5_DFP
+    CASE( 4 )
+        VoigtMatSymISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatSymISO4( 2, 2 ) = 1.0_DFP
+        VoigtMatSymISO4( 4, 4 ) = 1.0_DFP
+        VoigtMatSymISO4( 3, 3 ) = 0.5_DFP
+    CASE( 3 )
+        VoigtMatSymISO4( 1, 1 ) = 1.0_DFP
+        VoigtMatSymISO4( 2, 2 ) = 1.0_DFP
+        VoigtMatSymISO4( 3, 3 ) = 0.5_DFP
+    CASE( 1 )
+        VoigtMatSymISO4( 1, 1 ) = 1.0_DFP
+    CASE DEFAULT
+        CALL Err_Msg( "Tensor.f90>>Rank4Tensors.part", &
+        "VoigtMatSymISO4(), Flag-1", "Unknown N" )
+        Error_Flag = .TRUE.
+        RETURN
+    END SELECT
+!
+ END FUNCTION VoigtMatSymISO4
+!
+!------------------------------------------------------------------------------
+!                                                          VoigtMatAntiSymISO4
+!------------------------------------------------------------------------------
+!
+ FUNCTION VoigtMatAntiSymISO4( N )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1. -
+!
+!------------------------------------------------------------------------------
+!
+! Define Intent of dummy variables
+    INTEGER( I4B ), INTENT( IN ) :: N
+    REAL( DFP ), DIMENSION( N, N ) :: VoigtMatAntiSymISO4
+!
+    VoigtMatAntiSymISO4 = 0.0_DFP
+    Error_Flag = .FALSE.
+!
+    SELECT CASE( N )
+    CASE( 6 )
+        VoigtMatAntiSymISO4( 4, 4 ) = 0.5_DFP
+        VoigtMatAntiSymISO4( 5, 5 ) = 0.5_DFP
+        VoigtMatAntiSymISO4( 6, 6 ) = 0.5_DFP
+    CASE( 4 )
+        VoigtMatAntiSymISO4( 3, 3 ) = 0.5_DFP
+    CASE( 3 )
+
+    CASE( 1 )
+
+    CASE DEFAULT
+        CALL Err_Msg( "Tensor.f90>>Rank4Tensors.part", &
+        "VoigtMatAntiSymISO4(), Flag-1", "Unknown N" )
+        Error_Flag = .TRUE.
+        RETURN
+    END SELECT
+!
+ END FUNCTION VoigtMatAntiSymISO4
+!
+!------------------------------------------------------------------------------
+!                                                                  MatTriadMat
+!------------------------------------------------------------------------------
+!
+SUBROUTINE MatTriadMat( C, A, B, TriadType )
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1.  -   C = A Triad B
+!           -   TriadType = "NA", "UPBar", "DownBar", "UpTilde", "DownTilde"
+!
+!------------------------------------------------------------------------------
+!
+ USE Utility, ONLY : Assert_Eq
+! Define Intent of dummy variables
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: A, B
+    REAL( DFP ), DIMENSION( :, : ), INTENT( OUT ) :: C
+    CHARACTER( LEN = * ), INTENT( IN ) :: TriadType
+!
+! Define internal variables
+    INTEGER( I4B ) :: N, II, JJ, i, j, k, l
+    INTEGER( I4B ), ALLOCATABLE, DIMENSION( :, : ) :: Indx
+    Error_Flag = .FALSE.
+    N = Assert_Eq( (/SIZE( A, 1 ), SIZE( A, 2 ), SIZE( B, 1 ), SIZE( B, 2 )/), &
+    "Tensor.f90>>Rank4Tensors.part>>MatTriadMat()")
+!
+    SELECT CASE( N )
+    CASE( 3 )
+!
+        ALLOCATE( Indx( 6, 2 ) )
+        IndX( 1, 1 ) = 1; IndX( 1, 2 ) = 1
+        IndX( 2, 1 ) = 2; IndX( 2, 2 ) = 2
+        IndX( 3, 1 ) = 3; IndX( 3, 2 ) = 3
+        IndX( 4, 1 ) = 1; IndX( 4, 2 ) = 2
+        IndX( 5, 1 ) = 2; IndX( 5, 2 ) = 3
+        IndX( 6, 1 ) = 1; IndX( 6, 2 ) = 3
+!
+        DO II = 1, 6
+            i = Indx( II, 1 ); j = Indx( II, 2 )
+            DO JJ = 1, 6
+                k = Indx( JJ, 1 ); l = Indx( JJ, 2 )
+                SELECT CASE( TRIM( TriadType )  )
+                CASE( "NA", "Na", "na", "Default", "DEFAULT", " " )
+                    C( II, JJ ) = A( i, j ) * B( k, l )
+                CASE( "BarUp", "UpBar", "BARUP", "UPBAR", "Bar_Up", "Up_Bar" )
+                    C( II, JJ ) = A( i, k ) * B( j, l )
+                CASE( "BarDown", "DownBar", "BARDOWN", "DOWNBAR", "Bar_Down", &
+                    "Down_Bar")
+                    C( II, JJ ) = A( i, l ) * B( j, k )
+                CASE DEFAULT
+! Flag-1
+                    CALL Err_Msg( "Tensor.f90>>Rank4Tensors.part", &
+                    "MatTriadMat( ), Flag-2", "Unknown TriadType" )
+                    Error_Flag = .TRUE.
+                    RETURN
+                END SELECT
+            END DO
+        END DO
+        DEALLOCATE( Indx )
+!
+    CASE( 2 )
+!
+        ALLOCATE( Indx( 4, 2 ) )
+        IndX( 1, 1 ) = 1; IndX( 1, 2 ) = 1
+        IndX( 2, 1 ) = 2; IndX( 2, 2 ) = 2
+        IndX( 3, 1 ) = 1; IndX( 3, 2 ) = 2
+        IndX( 4, 1 ) = 3; IndX( 4, 2 ) = 3
+!
+        DO II = 1, 4
+            i = Indx( II, 1 ); j = Indx( II, 2 )
+            DO JJ = 1, 4
+                k = Indx( JJ, 1 ); l = Indx( JJ, 2 )
+                SELECT CASE( TRIM( TriadType )  )
+                CASE( "NA", "Na", "na", "Default", "DEFAULT", " " )
+                    C( II, JJ ) = A( i, j ) * B( k, l )
+                CASE( "BarUp", "UpBar", "BARUP", "UPBAR", "Bar_Up", "Up_Bar" )
+                    C( II, JJ ) = A( i, k ) * B( j, l )
+                CASE( "BarDown", "DownBar", "BARDOWN", "DOWNBAR", "Bar_Down", &
+                    "Down_Bar")
+                    C( II, JJ ) = A( i, l ) * B( j, k )
+                CASE( "TildeDown", "DownTilde", "TILDEDOWN", "DOWNTILDE", &
+                    "Tilde_Down", "Down_Tilde")
+                    C( II, JJ ) = A( i, l ) * B( k, j )
+                CASE( "TildeUp", "UpTilde", "TILDEUP", "UPTILDE", &
+                    "Tilde_Up", "Up_Tilde")
+                    C( II, JJ ) = A( i, k ) * B( l, j )
+                CASE DEFAULT
+! Flag-2
+                    CALL Err_Msg( "Tensor.f90>>Rank4Tensors.part", &
+                    "MatTriadMat( ), Flag-2", "Unknown TriadType" )
+                    Error_Flag = .TRUE.
+                    RETURN
+                END SELECT
+            END DO
+        END DO
+        DEALLOCATE( Indx )
+!
+    CASE DEFAULT
+! Flag-3
+        CALL Err_Msg( "Tensor.f90>>Rank4Tensors.part", &
+        "MatTriadMat( ), Flag-1", "Unknown N" )
+        Error_Flag = .TRUE.
+        RETURN
+     END SELECT
+!
+END SUBROUTINE MatTriadMat
+!
+!
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+!

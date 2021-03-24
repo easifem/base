@@ -4,13 +4,7 @@
 			"path": "../src/modules/Rank2Tensor"
 		},
 		{
-			"path": "../src/modules/VoigtRank2Tensor"
-		},
-		{
 			"path": "../src/submodules/Rank2Tensor"
-		},
-		{
-			"path": "../src/submodules/VoigtRank2Tensor"
 		}
 	]
 }

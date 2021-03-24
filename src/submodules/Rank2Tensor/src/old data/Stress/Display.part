@@ -1,0 +1,71 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Display.part
+!                   Last Update :   Dec-17-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Display Stress Tensor
+!   HOSTING FILE
+!       -   Stress_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                      Display
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Display( Obj, UnitNo )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  -  Display Stress Tensor
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Utility, ONLY : Display_Array
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
+
+    ! Define internal variables
+    INTEGER( I4B ) :: I, j
+
+    IF( PRESENT( UnitNo ) ) THEN
+        I = UnitNo
+    ELSE
+        I = 6
+    END IF
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+
+        CALL BlankLines( UnitNo = I )
+        WRITE( I, "(A)" ) "Stress_ Object is not initiated "
+        WRITE( I, "(A)" ) "Nothing to show "
+        CALL BlankLines( UnitNo = I )
+        RETURN
+
+    END IF
+
+    CALL BlankLines( UnitNo = I )
+    CALL EqualLine( UnitNo = I )
+    WRITE( I, "(12X, A)" ) "|||| Stress Obj Data ||||"
+    CALL EqualLine( UnitNo = I )
+    CALL BlankLines( UnitNo = I )
+
+    WRITE( I, "(A, I2)" ) "NSD = ", Obj % NSD
+    CALL BlankLines( UnitNo = I )
+    WRITE( I, "(A, A)" ) "Stress Type = ", TRIM( Obj % StressType )
+
+    CALL Display_Array( MatFromVoigtVec( Obj % V, "Stress" ), "Stress "  )
+
+    CALL DashLine( UnitNo = I )
+
+ END SUBROUTINE Display

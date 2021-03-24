@@ -34,8 +34,6 @@ MODULE BaseMethod
   USE StringiFor
   USE PENF
   USE FACE
-  USE FoXy
-  USE VTK_FORTRAN
   USE GNUPLOT_Method
   USE GlobalData
   USE Display_Method
@@ -52,7 +50,6 @@ MODULE BaseMethod
   USE KeyValue_Method
   USE IterationData_Method
   USE Vector3D_Method
-  USE BLAS1V_Method
   USE RealVector_Method
   USE DOF_Method
   USE ReferenceElement_Method
@@ -71,7 +68,5 @@ MODULE BaseMethod
   USE FEMatrix_Method
   USE Rank2Tensor_Method
   USE VoigtRank2Tensor_Method
-  ! USE Lapack_Method
-  ! USE SparseMatrix_Method
-
+  USE SparseMatrix_Method
 END MODULE BaseMethod

@@ -1,0 +1,146 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   getCijkl.part
+!                   Last Update :   Dec-30-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE :: Part of the program
+!
+!   DESCRIPTION
+!       -   Methods to access the Obj % C
+!   HOSTING FILE
+!       -   MaterialJacobian_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                    getCijkl
+!------------------------------------------------------------------------------
+
+ SUBROUTINE getCijkl( Obj, Mat )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Reallcoate Mat with Obj % C
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), ALLOCATABLE, INTENT( OUT ) :: Mat( :, : )
+
+    Error_Flag = .FALSE.
+
+    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+
+        CALL Err_Msg( &
+        "MaterialJacobian_Class.f90>>getCijkl.part", &
+        "getCijkl(Obj, Mat)", &
+        "Obj % C is not allocated."&
+        )
+
+        Error_Flag = .TRUE. 
+        RETURN
+
+    END IF
+
+    IF( ALLOCATED( Mat ) ) DEALLOCATE( Mat )
+    Mat = Obj % C
+
+ END SUBROUTINE getCijkl
+
+!------------------------------------------------------------------------------
+!                                                                    getCijkl_Pointer
+!------------------------------------------------------------------------------
+
+ SUBROUTINE getCijkl_Pointer( Obj, Mat )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Mat => Obj % C, Returns pointer to Obj % C
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ), TARGET :: Obj
+    REAL( DFP ), POINTER, INTENT( OUT ) :: Mat( :, : )
+
+    Error_Flag = .FALSE.
+
+    IF( ASSOCIATED( Mat ) ) THEN
+
+        CALL Err_Msg( &
+        "MaterialJacobian_Class.f90>>getCijkl_Pointer.part", &
+        "getCijkl_Pointer(Obj, Mat)", &
+        "Mat is already associated, Nullify first."&
+        )
+
+        Error_Flag = .TRUE. 
+        RETURN
+
+    END IF
+
+    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+
+        CALL Err_Msg( &
+        "MaterialJacobian_Class.f90>>getCijkl_Pointer.part", &
+        "getCijkl_Pointer(Obj, Mat)", &
+        "Obj % C is not allocated."&
+        )
+
+        Error_Flag = .TRUE. 
+        RETURN
+
+    END IF
+
+    Mat => Obj % C
+
+ END SUBROUTINE getCijkl_Pointer
+
+!------------------------------------------------------------------------------
+!                                                             Cijkl_Pointer
+!------------------------------------------------------------------------------
+
+ FUNCTION Cijkl_Pointer( Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Cijkl_Pointer => Obj % C, Function Returns pointer to Obj % C
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ), TARGET :: Obj
+    REAL( DFP ), POINTER :: Cijkl_Pointer( :, : )
+
+    Cijkl_Pointer => NULL( )
+
+    CALL Obj % getCijkl_Pointer( Cijkl_Pointer )
+    CALL Check_Error( &
+    "MaterialJacobian_Class.f90>>getCijkl.part>> Mat => Obj % Cijkl_Pointer()", &
+    "Traceback ---> CALL Obj % getCijkl_Pointer( Cijkl_Pointer )"&
+    )
+
+ END FUNCTION Cijkl_Pointer
+
+!------------------------------------------------------------------------------
+!                                                                    Obj2Mat
+!------------------------------------------------------------------------------
+
+ SUBROUTINE Obj2Mat( Mat, Obj )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  Mat = Obj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    REAL( DFP ), ALLOCATABLE, INTENT( OUT ) :: Mat( :, : )
+
+    CALL Obj % getCijkl( Mat )
+    CALL Check_Error( &
+    "MaterialJacobian_Class.f90>>getCijkl.part>> Mat = Obj", &
+    "Traceback ---> CALL Obj % getCijkl( Mat )"&
+    )
+
+ END SUBROUTINE Obj2Mat

@@ -264,9 +264,12 @@ PUBLIC :: RealMatrixPointer_
 !                                                              SparseMatrix_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	User data type for handling sparse matrices
 !
-! User data type for handling sparse matrices
+!{!pages/SparseMatrix.md}
+
 TYPE, EXTENDS( AbstractMatrix_ ) :: SparseMatrix_
   TYPE( IntVector_ ), ALLOCATABLE :: Row( : )
   INTEGER( I4B ), ALLOCATABLE :: IA( : )
@@ -274,28 +277,34 @@ TYPE, EXTENDS( AbstractMatrix_ ) :: SparseMatrix_
   INTEGER( I4B ), ALLOCATABLE :: ColSize( : )
   INTEGER( I4B ), ALLOCATABLE :: RowSize( : )
   INTEGER( I4B ), ALLOCATABLE :: DiagIndx( : )
-  REAL( DFP ), ALLOCATABLE :: A( : ), Diag( : )
+  INTEGER( I4B ), ALLOCATABLE :: IndexUT( : )
+  INTEGER( I4B ), ALLOCATABLE :: tNodes( : )
+  REAL( DFP ), ALLOCATABLE :: A( : )
+  REAL( DFP ), ALLOCATABLE :: Diag( : )
   INTEGER( I4B ) :: tDOF = 1
-  INTEGER( I4B ) :: tNodes=0
   INTEGER( I4B ) :: nnz = 0
   INTEGER( I4B ) :: ncol = 0
   INTEGER( I4B ) :: nrow=0
   !CHARACTER( LEN = 5 ) :: MatrixProp='UNSYM'
   INTEGER( I4B ) :: StorageFMT = Nodes_FMT
+  LOGICAL( LGT ) :: isSorted = .FALSE.
 END TYPE SparseMatrix_
 
 PUBLIC :: SparseMatrix_
 
 TYPE( SparseMatrix_ ), PUBLIC, PARAMETER :: &
   & TypeSparseMatrix = SparseMatrix_( &
-    & Row = NULL( ), &
-    & IA = NULL( ), &
-    & JA = NULL( ), &
-    & ColSize = NULL( ), &
-    & RowSize = NULL( ), &
-    & DiagIndx = NULL( ), &
-    & A = NULL( ), &
-    & Diag = NULL( ) )
+  & Row = NULL( ), &
+  & IA = NULL( ), &
+  & JA = NULL( ), &
+  & ColSize = NULL( ), &
+  & RowSize = NULL( ), &
+  & DiagIndx = NULL( ), &
+  & IndexUT = NULL( ), &
+  & tNodes = NULL( ), &
+  & A = NULL( ), &
+  & Diag = NULL( ) &
+  & )
 
 TYPE :: SparseMatrixPointer_
   CLASS( SparseMatrix_ ), POINTER :: Ptr => NULL( )
@@ -535,6 +544,153 @@ TYPE :: Rank2TensorPointer_
 END TYPE Rank2TensorPointer_
 
 PUBLIC :: Rank2TensorPointer_
+
+!----------------------------------------------------------------------------
+!                                                       DeformationGradient_
+!----------------------------------------------------------------------------
+TYPE, EXTENDS( Rank2Tensor_ ) :: DeformationGradient_
+END TYPE DeformationGradient_
+
+PUBLIC :: DeformationGradient_
+
+TYPE( DeformationGradient_ ), PUBLIC, PARAMETER :: &
+  & TypeDeformationGradient = DeformationGradient_()
+
+TYPE :: DeformationGradientPointer_
+  CLASS( DeformationGradient_ ), POINTER :: Ptr => NULL()
+END TYPE DeformationGradientPointer_
+
+PUBLIC :: DeformationGradientPointer_
+
+!----------------------------------------------------------------------------
+!                                                           LeftCauchyGreen_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Left Cauchy Green Deformation tensor
+!
+!### Introduction
+! 	This data tyoe defines Left Cauchy Green Deformation tensor, which is an Eulerian tensor. It is symmetric and given by
+!
+! $$b=F F^{T}=V^2$$
+!
+!{!pages/LeftCauchyGreen.md}
+
+TYPE, EXTENDS( Rank2Tensor_ ) :: LeftCauchyGreen_
+END TYPE LeftCauchyGreen_
+
+PUBLIC :: LeftCauchyGreen_
+
+TYPE( LeftCauchyGreen_ ), PUBLIC, PARAMETER :: &
+  & TypeLeftCauchyGreen = LeftCauchyGreen_()
+
+TYPE :: LeftCauchyGreenPointer_
+  CLASS( LeftCauchyGreen_ ), POINTER :: Ptr => NULL()
+END TYPE LeftCauchyGreenPointer_
+
+PUBLIC :: LeftCauchyGreenPointer_
+
+!----------------------------------------------------------------------------
+!                                                           RightCauchyGreen_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Right Cauchy Green Deformation tensor
+!
+!### Introduction
+! 	This data tyoe defines Right Cauchy Green Deformation tensor, which is an Eulerian tensor. It is symmetric and given by
+!
+! $$b=F F^{T}=V^2$$
+!
+!{!pages/RightCauchyGreen.md}
+
+TYPE, EXTENDS( Rank2Tensor_ ) :: RightCauchyGreen_
+END TYPE RightCauchyGreen_
+
+PUBLIC :: RightCauchyGreen_
+
+TYPE( RightCauchyGreen_ ), PUBLIC, PARAMETER :: &
+  & TypeRightCauchyGreen = RightCauchyGreen_()
+
+TYPE :: RightCauchyGreenPointer_
+  CLASS( RightCauchyGreen_ ), POINTER :: Ptr => NULL()
+END TYPE RightCauchyGreenPointer_
+
+PUBLIC :: RightCauchyGreenPointer_
+
+!----------------------------------------------------------------------------
+!                                                                    Strain_
+!----------------------------------------------------------------------------
+
+TYPE, EXTENDS( Rank2Tensor_ ) :: Strain_
+END TYPE Strain_
+
+PUBLIC :: Strain_
+
+TYPE( Strain_ ), PUBLIC, PARAMETER :: &
+  & TypeStrain = Strain_()
+
+TYPE :: StrainPointer_
+  CLASS( Strain_ ), POINTER :: Ptr => NULL()
+END TYPE StrainPointer_
+
+PUBLIC :: StrainPointer_
+
+!----------------------------------------------------------------------------
+!                                                             AlmansiStrain_
+!----------------------------------------------------------------------------
+
+TYPE, EXTENDS( Strain_ ) :: AlmansiStrain_
+END TYPE AlmansiStrain_
+
+PUBLIC :: AlmansiStrain_
+
+TYPE( AlmansiStrain_ ), PUBLIC, PARAMETER :: &
+  & TypeAlmansiStrain = AlmansiStrain_()
+
+TYPE :: AlmansiStrainPointer_
+  CLASS( AlmansiStrain_ ), POINTER :: Ptr => NULL()
+END TYPE AlmansiStrainPointer_
+
+PUBLIC :: AlmansiStrainPointer_
+
+!----------------------------------------------------------------------------
+!                                                             GreenStrain_
+!----------------------------------------------------------------------------
+
+TYPE, EXTENDS( Strain_ ) :: GreenStrain_
+END TYPE GreenStrain_
+
+PUBLIC :: GreenStrain_
+
+TYPE( GreenStrain_ ), PUBLIC, PARAMETER :: &
+  & TypeGreenStrain = GreenStrain_()
+
+TYPE :: GreenStrainPointer_
+  CLASS( GreenStrain_ ), POINTER :: Ptr => NULL()
+END TYPE GreenStrainPointer_
+
+PUBLIC :: GreenStrainPointer_
+
+!----------------------------------------------------------------------------
+!                                                             SmallStrain_
+!----------------------------------------------------------------------------
+
+TYPE, EXTENDS( Strain_ ) :: SmallStrain_
+END TYPE SmallStrain_
+
+PUBLIC :: SmallStrain_
+
+TYPE( SmallStrain_ ), PUBLIC, PARAMETER :: &
+  & TypeSmallStrain = SmallStrain_()
+
+TYPE :: SmallStrainPointer_
+  CLASS( SmallStrain_ ), POINTER :: Ptr => NULL()
+END TYPE SmallStrainPointer_
+
+PUBLIC :: SmallStrainPointer_
 
 !----------------------------------------------------------------------------
 !                                                       ReferenceTopology_

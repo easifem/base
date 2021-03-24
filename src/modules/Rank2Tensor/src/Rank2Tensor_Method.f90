@@ -31,6 +31,33 @@ PRIVATE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
+! summary: Initiates [[Rank2Tensor_]] from another [[Rank2Tensor_]]
+!
+!### Introduction
+! 	Initiates [[Rank2Tensor_]] from another [[Rank2Tensor_]]
+!
+!@note
+! 	This routine also used in assignment(=) operator
+!@endnote
+!
+!### Usage
+!
+!```fortran
+!```
+
+INTERFACE
+MODULE PURE SUBROUTINE init_by_rank2( Obj, Obj2 )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+END SUBROUTINE init_by_rank2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      initiate@constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 13 March 2021
 ! summary: Initiates [[Rank2Tensor_]] from a matrix
 !
 !### Usage
@@ -100,10 +127,17 @@ END SUBROUTINE init_voigt_from_r2tensor
 END INTERFACE
 
 INTERFACE Initiate
-  MODULE PROCEDURE init_by_mat, init_by_voigt, init_voigt_from_r2tensor
+  MODULE PROCEDURE init_by_rank2, init_by_mat, init_by_voigt, &
+    & init_voigt_from_r2tensor
 END INTERFACE Initiate
 
 PUBLIC :: Initiate
+
+INTERFACE ASSIGNMENT(=)
+  MODULE PROCEDURE init_by_rank2
+END INTERFACE ASSIGNMENT(=)
+
+PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                                    Rank2Tensor@constructor
@@ -322,8 +356,6 @@ INTERFACE ASSIGNMENT( = )
     & voigt_eq_r2tensor
 END INTERFACE
 
-PUBLIC :: ASSIGNMENT( = )
-
 !----------------------------------------------------------------------------
 !                                                 IdentityTensor@constructor
 !----------------------------------------------------------------------------
@@ -460,6 +492,285 @@ END INTERFACE IsotropicTensor
 PUBLIC :: IsotropicTensor
 
 !----------------------------------------------------------------------------
+!                                                          isSym@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Returns true if symmetric
+
+INTERFACE
+MODULE PURE FUNCTION isSym_rank2( Obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+  LOGICAL( LGT ) :: Ans
+END FUNCTION isSym_rank2
+END INTERFACE
+
+INTERFACE isSym
+  MODULE PROCEDURE isSym_rank2
+END INTERFACE isSym
+
+PUBLIC :: isSym
+
+!----------------------------------------------------------------------------
+!                                                   isDeviatoric@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Returns true of deviatoric tensor
+
+INTERFACE
+MODULE PURE FUNCTION isDeviatoric_rank2( Obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+  LOGICAL( LGT ) :: Ans
+END FUNCTION isDeviatoric_rank2
+END INTERFACE
+
+INTERFACE isDeviatoric
+  MODULE PROCEDURE isDeviatoric_rank2
+END INTERFACE isDeviatoric
+
+PUBLIC :: isDeviatoric
+
+!----------------------------------------------------------------------------
+!                                           DeformationGradient@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns pointer to a newly created instance of [[DeformationGradient_]]
+
+INTERFACE
+MODULE PURE FUNCTION F_constructor1( Obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: Obj
+  TYPE( DeformationGradient_ ) :: Ans
+END FUNCTION F_constructor1
+END INTERFACE
+
+INTERFACE DeformationGradient
+  MODULE PROCEDURE F_constructor1
+END INTERFACE DeformationGradient
+
+PUBLIC :: DeformationGradient
+
+!----------------------------------------------------------------------------
+!                                           DeformationGradient@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns pointer to a newly created instance of [[DeformationGradient_]]
+
+INTERFACE
+MODULE PURE FUNCTION F_constructor_1( Obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: Obj
+  CLASS( DeformationGradient_ ), POINTER :: Ans
+END FUNCTION F_constructor_1
+END INTERFACE
+
+INTERFACE DeformationGradient_Pointer
+  MODULE PROCEDURE F_constructor_1
+END INTERFACE DeformationGradient_Pointer
+
+PUBLIC :: DeformationGradient_Pointer
+
+!----------------------------------------------------------------------------
+!                                                           LeftCauchyGreen
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns pointer to a newly created instance of [[LeftCauchyGreen_]]
+
+INTERFACE
+MODULE PURE FUNCTION b_constructor1( F, V ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: F
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: V
+  TYPE( LeftCauchyGreen_ ) :: Ans
+END FUNCTION b_constructor1
+END INTERFACE
+
+INTERFACE LeftCauchyGreen
+  MODULE PROCEDURE b_constructor1
+END INTERFACE LeftCauchyGreen
+
+PUBLIC :: LeftCauchyGreen
+
+!----------------------------------------------------------------------------
+!                                                           LeftCauchyGreen
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns pointer to a newly created instance of [[LeftCauchyGreen_]]
+
+INTERFACE
+MODULE PURE FUNCTION b_constructor_1( F, V ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: F
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: V
+  CLASS( LeftCauchyGreen_ ), POINTER :: Ans
+END FUNCTION b_constructor_1
+END INTERFACE
+
+INTERFACE LeftCauchyGreen_Pointer
+  MODULE PROCEDURE b_constructor_1
+END INTERFACE LeftCauchyGreen_Pointer
+
+PUBLIC :: LeftCauchyGreen_Pointer
+
+!----------------------------------------------------------------------------
+!                                                           RightCauchyGreen
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns pointer to a newly created instance of [[RightCauchyGreen_]]
+
+INTERFACE
+MODULE PURE FUNCTION C_constructor1( F, U ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: F
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: U
+  TYPE( RightCauchyGreen_ ) :: Ans
+END FUNCTION C_constructor1
+END INTERFACE
+
+INTERFACE RightCauchyGreen
+  MODULE PROCEDURE C_constructor1
+END INTERFACE RightCauchyGreen
+
+PUBLIC :: RightCauchyGreen
+
+!----------------------------------------------------------------------------
+!                                                           RightCauchyGreen
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns pointer to a newly created instance of [[RightCauchyGreen_]]
+
+INTERFACE
+MODULE PURE FUNCTION C_constructor_1( F, U ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: F
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: U
+  CLASS( RightCauchyGreen_ ), POINTER :: Ans
+END FUNCTION C_constructor_1
+END INTERFACE
+
+INTERFACE RightCauchyGreen_Pointer
+  MODULE PROCEDURE C_constructor_1
+END INTERFACE RightCauchyGreen_Pointer
+
+PUBLIC :: RightCauchyGreen_Pointer
+
+!----------------------------------------------------------------------------
+!                                                              INV@Operation
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE inv_rank2( Obj, InvObj )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+  CLASS( Rank2Tensor_ ), INTENT( INOUT) :: InvObj
+END SUBROUTINE inv_rank2
+END INTERFACE
+
+INTERFACE INV
+  MODULE PROCEDURE inv_rank2
+END INTERFACE INV
+
+PUBLIC :: INV
+
+!----------------------------------------------------------------------------
+!                                                        Transpose@Operation
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Transpose of a tensor
+
+INTERFACE
+MODULE PURE FUNCTION obj_transpose( Obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION obj_transpose
+END INTERFACE
+
+INTERFACE TRANSPOSE
+  MODULE PROCEDURE obj_transpose
+END INTERFACE TRANSPOSE
+
+PUBLIC :: TRANSPOSE
+
+!----------------------------------------------------------------------------
+!                                                           Sym@InvarMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 March 2021
+! summary: Returns the symmetric part of a rank2 tensor
+!
+!### Introduction
+! Returns the symmetric part of the tensor
+!
+!
+!### Usage
+!
+!```fortran
+! type( Rank2Tensor_ ) :: obj
+! real( dfp ) :: mat( 3, 3 )
+! call random_number( mat )
+! obj = mat
+! obj = sym(obj)
+!```
+
+INTERFACE
+MODULE PURE FUNCTION sym_r2t( Obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION sym_r2t
+END INTERFACE
+
+INTERFACE Sym
+  MODULE PROCEDURE sym_r2t
+END INTERFACE Sym
+
+PUBLIC :: Sym
+
+!----------------------------------------------------------------------------
+!                                                       SkewSym@InvarMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 March 2021
+! summary: Returns the skew symmetric part of the tensor
+!
+!### Introduction
+! Returns the skew symmetric part of the tensor.
+!
+!### Usage
+!
+!```fortran
+! type( Rank2Tensor_ ) :: obj
+! real( dfp ) :: mat( 3, 3 )
+! call random_number( mat )
+! obj = mat
+! obj = SkewSym(obj)
+!```
+
+INTERFACE
+MODULE PURE FUNCTION Skewsym_r2t( Obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION Skewsym_r2t
+END INTERFACE
+
+INTERFACE SkewSym
+  MODULE PROCEDURE Skewsym_r2t
+END INTERFACE SkewSym
+
+PUBLIC :: SkewSym
+
+!----------------------------------------------------------------------------
 !                                                               Display@IO
 !----------------------------------------------------------------------------
 
@@ -482,7 +793,7 @@ END INTERFACE Display
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
-!                                                           Trace@Operation
+!                                                         Trace@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -522,7 +833,7 @@ END INTERFACE Trace
 PUBLIC :: Trace
 
 !----------------------------------------------------------------------------
-!                                                                J2@Operation
+!                                                            J2@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -562,7 +873,7 @@ END INTERFACE J2
 PUBLIC :: J2
 
 !----------------------------------------------------------------------------
-!                                                                J3@Operation
+!                                                           J3@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -603,7 +914,7 @@ END INTERFACE J3
 PUBLIC :: J3
 
 !----------------------------------------------------------------------------
-!                                                               Det@Operation
+!                                                           Det@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -637,7 +948,7 @@ END INTERFACE Det
 PUBLIC :: Det
 
 !----------------------------------------------------------------------------
-!                                                       LodeAngle@Operation
+!                                                     LodeAngle@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -666,7 +977,7 @@ END FUNCTION theta_obj_j2j3
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                       LodeAngle@Operation
+!                                                     LodeAngle@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -707,76 +1018,7 @@ END INTERFACE LodeAngle
 PUBLIC :: LodeAngle
 
 !----------------------------------------------------------------------------
-!                                                             Sym@Operation
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 March 2021
-! summary: Returns the symmetric part of a rank2 tensor
-!
-!### Introduction
-! Returns the symmetric part of the tensor
-!
-!
-!### Usage
-!
-!```fortran
-! type( Rank2Tensor_ ) :: obj
-! real( dfp ) :: mat( 3, 3 )
-! call random_number( mat )
-! obj = mat
-! obj = sym(obj)
-!```
-
-INTERFACE
-MODULE PURE FUNCTION sym_r2t( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
-  TYPE( Rank2Tensor_ ) :: Ans
-END FUNCTION sym_r2t
-END INTERFACE
-
-INTERFACE Sym
-  MODULE PROCEDURE sym_r2t
-END INTERFACE Sym
-
-PUBLIC :: Sym
-
-!----------------------------------------------------------------------------
-!                                                         SkewSym@Operation
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 March 2021
-! summary: Returns the skew symmetric part of the tensor
-!
-!### Introduction
-! Returns the skew symmetric part of the tensor.
-!
-!### Usage
-!
-!```fortran
-! type( Rank2Tensor_ ) :: obj
-! real( dfp ) :: mat( 3, 3 )
-! call random_number( mat )
-! obj = mat
-! obj = SkewSym(obj)
-!```
-
-INTERFACE
-MODULE PURE FUNCTION Skewsym_r2t( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
-  TYPE( Rank2Tensor_ ) :: Ans
-END FUNCTION Skewsym_r2t
-END INTERFACE
-
-INTERFACE SkewSym
-  MODULE PROCEDURE Skewsym_r2t
-END INTERFACE SkewSym
-
-PUBLIC :: SkewSym
-
-!----------------------------------------------------------------------------
-!                                                    IsotropicPart@Operation
+!                                                IsotropicPart@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -817,7 +1059,7 @@ END INTERFACE Iso
 PUBLIC :: Iso
 
 !----------------------------------------------------------------------------
-!                                                    DeviatoricPart@Operation
+!                                                DeviatoricPart@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -849,84 +1091,7 @@ END INTERFACE Dev
 PUBLIC :: Dev
 
 !----------------------------------------------------------------------------
-!                                                      Contraction@Operation
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 March 2021
-! summary: Returns the contraction of tensor
-
-INTERFACE
-MODULE PURE FUNCTION r2_contract_r2( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1, Obj2
-  REAL( DFP ) :: Ans
-END FUNCTION r2_contract_r2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                      Contraction@Operation
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 March 2021
-! summary: Returns the contraction of a rank2 tensor and voigt rank2 tensor
-
-INTERFACE
-MODULE PURE FUNCTION r2_contract_voigt_r2( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj2
-  REAL( DFP ) :: Ans
-END FUNCTION r2_contract_voigt_r2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                      Contraction@Operation
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 March 2021
-! summary: Returns contraction of aa voigt rank2 tensor and rank2 tensor
-
-INTERFACE
-MODULE PURE FUNCTION voigt_r2_contract_r2( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
-  REAL( DFP ) :: Ans
-END FUNCTION voigt_r2_contract_r2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                      Contraction@Operation
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 March 2021
-! summary: Returns contraction of two voigt rank tensor
-
-INTERFACE
-MODULE PURE FUNCTION voigt_r2_contract_voigt_r2( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj2
-  REAL( DFP ) :: Ans
-END FUNCTION voigt_r2_contract_voigt_r2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                      Contraction@Operation
-!----------------------------------------------------------------------------
-
-INTERFACE Contraction
-  MODULE PROCEDURE &
-    & r2_contract_r2, &
-    & r2_contract_voigt_r2, &
-    & voigt_r2_contract_r2, &
-    & voigt_r2_contract_voigt_r2
-END INTERFACE Contraction
-
-PUBLIC :: Contraction
-
-!----------------------------------------------------------------------------
-!                                                      Invariants@Operation
+!                                                    Invariants@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -968,12 +1133,37 @@ END INTERFACE Invariants
 PUBLIC :: Invariants
 
 !----------------------------------------------------------------------------
-!                                                          Eigen@Operation
+!                                                        Eigen@InvarMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the eigen vector and eigen value of the tensor.
+!
+!### Introduction
+! 	This subroutine returns the eigen values and eigen vectors of a tensor.
+! If the tensor is symmetric then the eigenvalues and eigenvectors are real
+! and `QI` and `WI` are not required. However, if the tensor is not symmetric
+! then `QI` and `WI` contain the imaginary part of the eigenvalues and
+! eigenvectors.
+!
+!### Usage
+!
+!```fortran
+! type( Rank2Tensor_ ) :: obj
+! real( dfp ) :: mat( 3, 3 ), QR( 3, 3 ), WR( 3 ), QI( 3, 3 ), WI( 3 )
+! mat = 0.0
+! mat(1,1) = 5.0
+! mat(2:3, 2) = [-6, -12]
+! mat(2:3, 3) = [-12, 1]
+! call initiate( obj, mat, isSym=.true.)
+! call Eigen( obj, QR, WR )
+! call BlankLines(unitNo=stdout, NOL=2)
+! call display( obj, 'test12: obj=')
+! call display( Invariants(obj), "test12: Invariants=" )
+! call display( QR, "test12: QR=")
+! call display( WR, "test12: WR=")
+!```
 
 INTERFACE
 MODULE SUBROUTINE eigen_r2t( Obj, QR, WR, QI, WI )
@@ -990,53 +1180,141 @@ END INTERFACE Eigen
 PUBLIC :: Eigen
 
 !----------------------------------------------------------------------------
-!                                                     PolarDecomp@Operation
+!                                                   PolarDecomp@InvarMethods
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	This subroutine provides polar decomposition of a tensor.
+!
+!### Introduction
+! 	This subroutine provides right polar decomposition of a tensor, which is
+! given by
+!
+! $$T=RU$$
+!
+!### Usage
+!
+!```fortran
+! type( Rank2Tensor_ ) :: obj, R, U, V
+! real( dfp ) :: mat( 3, 3 ) = reshape( [1.0, -0.333, 0.959, 0.495, 1.0, 0.0, 0.5, -0.247, 1.5], [3,3] )
+! call initiate( obj, mat, isSym=.false. )
+! call PolarDecomp( Obj, R, U, V )
+!```
 
 INTERFACE
-MODULE SUBROUTINE right_pd_r2t( Obj, R, U )
+MODULE SUBROUTINE pd_r2t( Obj, R, U, V )
   CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: R, U
-END SUBROUTINE right_pd_r2t
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: R
+  CLASS( Rank2Tensor_ ), INTENT( INOUT) :: U
+  CLASS( Rank2Tensor_ ), INTENT( INOUT) :: V
+END SUBROUTINE pd_r2t
 END INTERFACE
+
+INTERFACE PolarDecomp
+  MODULE PROCEDURE pd_r2t
+END INTERFACE PolarDecomp
+
+PUBLIC :: PolarDecomp
+
+!----------------------------------------------------------------------------
+!                                                    Contraction@Contraction
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 March 2021
+! summary: Returns the contraction of tensor
 
 INTERFACE
-MODULE SUBROUTINE left_pd_r2t( Obj, V, R )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: R, V
-END SUBROUTINE left_pd_r2t
+MODULE PURE FUNCTION r2_contract_r2( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1, Obj2
+  REAL( DFP ) :: Ans
+END FUNCTION r2_contract_r2
 END INTERFACE
 
-INTERFACE RightPolarDecomp
-  MODULE PROCEDURE right_pd_r2t
-END INTERFACE RightPolarDecomp
-
-INTERFACE LeftPolarDecomp
-  MODULE PROCEDURE right_pd_r2t
-END INTERFACE LeftPolarDecomp
-
-PUBLIC :: RightPolarDecomp, LeftPolarDecomp
-
 !----------------------------------------------------------------------------
-!                                                        Transpose@Operation
+!                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 March 2021
+! summary: Returns the contraction of a rank2 tensor and voigt rank2 tensor
 
 INTERFACE
-MODULE PURE FUNCTION obj_transpose( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
-  TYPE( Rank2Tensor_ ) :: Ans
-END FUNCTION obj_transpose
+MODULE PURE FUNCTION r2_contract_voigt_r2( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj2
+  REAL( DFP ) :: Ans
+END FUNCTION r2_contract_voigt_r2
 END INTERFACE
 
-INTERFACE TRANSPOSE
-  MODULE PROCEDURE obj_transpose
-END INTERFACE TRANSPOSE
+!----------------------------------------------------------------------------
+!                                                    Contraction@Contraction
+!----------------------------------------------------------------------------
 
-PUBLIC :: TRANSPOSE
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 March 2021
+! summary: Returns contraction of aa voigt rank2 tensor and rank2 tensor
+
+INTERFACE
+MODULE PURE FUNCTION voigt_r2_contract_r2( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+  REAL( DFP ) :: Ans
+END FUNCTION voigt_r2_contract_r2
+END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                                +@Operation
+!                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 March 2021
+! summary: Returns contraction of two voigt rank tensor
+
+INTERFACE
+MODULE PURE FUNCTION voigt_r2_contract_voigt_r2( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj1
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj2
+  REAL( DFP ) :: Ans
+END FUNCTION voigt_r2_contract_voigt_r2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    Contraction@Contraction
+!----------------------------------------------------------------------------
+
+INTERFACE Contraction
+  MODULE PROCEDURE &
+    & r2_contract_r2, &
+    & r2_contract_voigt_r2, &
+    & voigt_r2_contract_r2, &
+    & voigt_r2_contract_voigt_r2
+END INTERFACE Contraction
+
+PUBLIC :: Contraction
+
+!----------------------------------------------------------------------------
+!                                                                +@Operator
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Addition of two tensor
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a+b, "test14: a+b=")
+  ! call display( a+1.0_DFP, "test14: a+1=")
+  ! call display( 1.0_DFP + a, "test14: 1+a=")
+!```
 
 INTERFACE
 MODULE PURE FUNCTION obj_add_obj( Obj1, Obj2 ) RESULT( Ans )
@@ -1046,21 +1324,27 @@ MODULE PURE FUNCTION obj_add_obj( Obj1, Obj2 ) RESULT( Ans )
 END FUNCTION obj_add_obj
 END INTERFACE
 
-INTERFACE
-MODULE PURE FUNCTION obj_add_mat( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  REAL( DFP ), INTENT( IN ) :: Obj2( 3, 3 )
-  TYPE( Rank2Tensor_ ) :: Ans
-END FUNCTION obj_add_mat
-END INTERFACE
+!----------------------------------------------------------------------------
+!                                                                +@Operator
+!----------------------------------------------------------------------------
 
-INTERFACE
-MODULE PURE FUNCTION mat_add_obj( Obj1, Obj2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj1( 3, 3 )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
-  TYPE( Rank2Tensor_ ) :: Ans
-END FUNCTION mat_add_obj
-END INTERFACE
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Addition of tensor and scalar
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a+b, "test14: a+b=")
+  ! call display( a+1.0_DFP, "test14: a+1=")
+  ! call display( 1.0_DFP + a, "test14: 1+a=")
+!```
 
 INTERFACE
 MODULE PURE FUNCTION obj_add_scalar( Obj1, Obj2 ) RESULT( Ans )
@@ -1069,6 +1353,28 @@ MODULE PURE FUNCTION obj_add_scalar( Obj1, Obj2 ) RESULT( Ans )
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_add_scalar
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                +@Operator
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Addition of tensor and scalar
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a+b, "test14: a+b=")
+  ! call display( a+1.0_DFP, "test14: a+1=")
+  ! call display( 1.0_DFP + a, "test14: 1+a=")
+!```
 
 INTERFACE
 MODULE PURE FUNCTION scalar_add_obj( Obj1, Obj2 ) RESULT( Ans )
@@ -1079,15 +1385,32 @@ END FUNCTION scalar_add_obj
 END INTERFACE
 
 INTERFACE OPERATOR( + )
-  MODULE PROCEDURE obj_add_obj, obj_add_mat, mat_add_obj, obj_add_scalar, &
-    & scalar_add_obj
+  MODULE PROCEDURE obj_add_obj, obj_add_scalar, scalar_add_obj
 END INTERFACE
 
 PUBLIC :: OPERATOR( + )
 
 !----------------------------------------------------------------------------
-!                                                                -@Operation
+!                                                                -@Operator
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Subtraction of tensor and tensor
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a-b, "test14: a+b=")
+  ! call display( a-1.0_DFP, "test14: a+1=")
+  ! call display( 1.0_DFP - a, "test14: 1+a=")
+!```
 
 INTERFACE
 MODULE PURE FUNCTION obj_minus_obj( Obj1, Obj2 ) RESULT( Ans )
@@ -1097,21 +1420,27 @@ MODULE PURE FUNCTION obj_minus_obj( Obj1, Obj2 ) RESULT( Ans )
 END FUNCTION obj_minus_obj
 END INTERFACE
 
-INTERFACE
-MODULE PURE FUNCTION obj_minus_mat( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  REAL( DFP ), INTENT( IN ) :: Obj2( 3, 3 )
-  TYPE( Rank2Tensor_ ) :: Ans
-END FUNCTION obj_minus_mat
-END INTERFACE
+!----------------------------------------------------------------------------
+!                                                                -@Operator
+!----------------------------------------------------------------------------
 
-INTERFACE
-MODULE PURE FUNCTION mat_minus_obj( Obj1, Obj2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj1( 3, 3 )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
-  TYPE( Rank2Tensor_ ) :: Ans
-END FUNCTION mat_minus_obj
-END INTERFACE
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Subtraction of tensor and scalar
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a-b, "test14: a-b=")
+  ! call display( a-1.0_DFP, "test14: a-1=")
+  ! call display( 1.0_DFP - a, "test14: 1-a=")
+!```
 
 INTERFACE
 MODULE PURE FUNCTION obj_minus_scalar( Obj1, Obj2 ) RESULT( Ans )
@@ -1120,6 +1449,28 @@ MODULE PURE FUNCTION obj_minus_scalar( Obj1, Obj2 ) RESULT( Ans )
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_minus_scalar
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                -@Operator
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	Subtraction of tensor and scalar
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a-b, "test14: a-b=")
+  ! call display( a-1.0_DFP, "test14: a-1=")
+  ! call display( 1.0_DFP - a, "test14: 1-a=")
+!```
 
 INTERFACE
 MODULE PURE FUNCTION scalar_minus_obj( Obj1, Obj2 ) RESULT( Ans )
@@ -1130,33 +1481,257 @@ END FUNCTION scalar_minus_obj
 END INTERFACE
 
 INTERFACE OPERATOR( - )
-  MODULE PROCEDURE obj_minus_obj, obj_minus_mat, mat_minus_obj, &
+  MODULE PROCEDURE obj_minus_obj, &
     & obj_minus_scalar, scalar_minus_obj
 END INTERFACE
 
 PUBLIC :: OPERATOR( - )
 
 !----------------------------------------------------------------------------
-!                                                             Exp@Operation
+!                                                                 *@Operator
 !----------------------------------------------------------------------------
 
-! INTERFACE
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	rank2 tensor times rank 2 tensor
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a*b, "test14: a*b=")
+  ! call display( a*1.0_DFP, "test14: a*1=")
+  ! call display( 1.0_DFP * a, "test14: 1*a=")
+!```
 
-! MODULE FUNCTION exp_r2t( Obj ) RESULT( Ans )
-! 	CLASS( Rank2Tensor_ ), INTENT( IN ) ::Obj
-! 	TYPE( Rank2Tensor_ ) :: Ans
-! END FUNCTION exp_r2t
-
-! END INTERFACE
-
-! INTERFACE EXP
-! 	MODULE PROCEDURE exp_r2t
-! END INTERFACE
-
-! PUBLIC :: EXP
+INTERFACE
+MODULE PURE FUNCTION obj_times_obj( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION obj_times_obj
+END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                                    Contains
+!                                                                 *@Operator
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	rank2 tensor times scalar
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a*b, "test14: a*b=")
+  ! call display( a*1.0_DFP, "test14: a*1=")
+  ! call display( 1.0_DFP * a, "test14: 1*a=")
+!```
+
+INTERFACE
+MODULE PURE FUNCTION obj_times_scalar( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
+  REAL( DFP ), INTENT( IN ) :: Obj2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION obj_times_scalar
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 *@Operator
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	17 March 2021
+! summary: 	rank2 tensor times scalar
+!
+!### Usage
+!
+!```fortran
+  ! type( Rank2Tensor_ ) :: a, b
+  ! real( dfp ) :: mat( 3, 3 )
+  ! call random_number( mat )
+  ! a = mat
+  ! call random_number( mat )
+  ! b = mat
+  ! call display( a*b, "test14: a*b=")
+  ! call display( a*1.0_DFP, "test14: a*1=")
+  ! call display( 1.0_DFP * a, "test14: 1*a=")
+!```
+
+INTERFACE
+MODULE PURE FUNCTION scalar_times_obj( Obj1, Obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: Obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION scalar_times_obj
+END INTERFACE
+
+INTERFACE OPERATOR( * )
+  MODULE PROCEDURE obj_times_obj, obj_times_scalar, scalar_times_obj
+END INTERFACE OPERATOR( * )
+
+PUBLIC :: OPERATOR( * )
+
+!----------------------------------------------------------------------------
+!                                                                /@Operator
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION obj_div_obj( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION obj_div_obj
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                /@Operator
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION obj_div_scalar( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
+  REAL( DFP ), INTENT( IN ) :: Obj2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION obj_div_scalar
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                /@Operator
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION scalar_div_obj( Obj1, Obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: Obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION scalar_div_obj
+END INTERFACE
+
+INTERFACE OPERATOR( / )
+  MODULE PROCEDURE obj_div_obj, obj_div_scalar, scalar_div_obj
+END INTERFACE OPERATOR( / )
+
+PUBLIC :: OPERATOR( / )
+
+!----------------------------------------------------------------------------
+!                                                             MATMUL@Operator
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION obj_matmul_obj( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION obj_matmul_obj
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            MATMUL@Operator
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION obj_matmul_vec( Obj1, Obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
+  REAL( DFP ), INTENT( IN ) :: Obj2( 3 )
+  REAL( DFP ) :: Ans( 3 )
+END FUNCTION obj_matmul_vec
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            MATMUL@Operator
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION vec_matmul_obj( Obj1, Obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: Obj1( 3 )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+  REAL( DFP ) :: Ans( 3 )
+END FUNCTION vec_matmul_obj
+END INTERFACE
+
+INTERFACE MATMUL
+  MODULE PROCEDURE obj_matmul_obj, obj_matmul_vec, vec_matmul_obj
+END INTERFACE MATMUL
+
+PUBLIC :: MATMUL
+
+!----------------------------------------------------------------------------
+!                                                          Pullback@Pullback
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION pullback_rank2( T, F, indx1, indx2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: T
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: F
+  CHARACTER( LEN = * ),  INTENT( IN ) :: indx1, indx2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION pullback_rank2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          Pullback@Pullback
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION pullback_vec( Vec, F, indx1 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: Vec( 3 )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: F
+  CHARACTER( LEN = * ), INTENT( IN ) :: indx1
+  REAL( DFP ) :: Ans( 3 )
+END FUNCTION pullback_vec
+END INTERFACE
+
+INTERFACE PULLBACK
+  MODULE PROCEDURE pullback_rank2, pullback_vec
+END INTERFACE PULLBACK
+
+PUBLIC :: PULLBACK
+
+!----------------------------------------------------------------------------
+!                                                    PushForward@Pushforward
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION pushforward_rank2( T, F, indx1, indx2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: T
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: F
+  CHARACTER( LEN = * ), INTENT( IN ) :: indx1, indx2
+  TYPE( Rank2Tensor_ ) :: Ans
+END FUNCTION pushforward_rank2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    Pushforward@Pushforward
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION pushforward_vec( Vec, F, indx1 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: Vec( 3 )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: F
+  CHARACTER( LEN = * ), INTENT( IN ) :: indx1
+  REAL( DFP ) :: Ans( 3 )
+END FUNCTION pushforward_vec
+END INTERFACE
+
+INTERFACE PushForward
+  MODULE PROCEDURE pushforward_rank2, pushforward_vec
+END INTERFACE PushForward
+
+PUBLIC :: PushForward
+
+!----------------------------------------------------------------------------
+!                                                                 D
+!----------------------------------------------------------------------------
 END MODULE Rank2Tensor_Method

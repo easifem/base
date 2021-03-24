@@ -536,6 +536,85 @@ PUBLIC :: RealVector_Pointer
 
 
 !----------------------------------------------------------------------------
+!                                                          SHALLOWCOPY@BLAS1
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE intrinsicSHALLOWCOPYintrinsic( Y, X )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
+  REAL( DFP ), INTENT( IN ) :: X( : )
+END SUBROUTINE intrinsicSHALLOWCOPYintrinsic
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          SHALLOWCOPY@BLAS1
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE scalarSHALLOWCOPYscalar( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
+  CLASS( RealVector_ ), INTENT( IN ) :: X
+END SUBROUTINE scalarSHALLOWCOPYscalar
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          SHALLOWCOPY@BLAS1
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE vectorSHALLOWCOPYvector( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Y( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
+END SUBROUTINE vectorSHALLOWCOPYvector
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          SHALLOWCOPY@BLAS1
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE scalarSHALLOWCOPYvector( Y, X )
+  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
+  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
+END SUBROUTINE scalarSHALLOWCOPYvector
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          SHALLOWCOPY@BLAS1
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE scalarSHALLOWCOPYintrinsic( Y, X )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
+  REAL( DFP ), INTENT( IN ) :: X( : )
+END SUBROUTINE scalarSHALLOWCOPYintrinsic
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          SHALLOWCOPY@BLAS1
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE intrinsicSHALLOWCOPYscalar( Y, X )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: X
+END SUBROUTINE intrinsicSHALLOWCOPYscalar
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          SHALLOWCOPY@BLAS1
+!----------------------------------------------------------------------------
+
+INTERFACE SHALLOWCOPY
+  MODULE PROCEDURE intrinsicSHALLOWCOPYintrinsic, scalarSHALLOWCOPYscalar, &
+    & vectorSHALLOWCOPYvector, scalarSHALLOWCOPYvector, &
+    & scalarSHALLOWCOPYintrinsic
+END INTERFACE SHALLOWCOPY
+
+PUBLIC :: SHALLOWCOPY
+
+
+!----------------------------------------------------------------------------
 !                                                     ArrayValues@GetMethod
 !----------------------------------------------------------------------------
 

@@ -1,0 +1,108 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Pk1Stress.part
+!                   Last Update :   Dec-28-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   Type:: Part of Module
+!
+!   Description ::  
+!       -   This part includes subroutine for getting Pk1 Stress from
+!           any other Stress Measures
+!   Hosting File ::
+!       -   Stress_Class
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                              getPk1Stress
+!------------------------------------------------------------------------------
+
+ FUNCTION getPk1Stress( Obj, F )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1.  This subroutine computes the Pk1 stress ( PI )from given stress type
+!       2.  FObj is Deformation Gradient object.
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+    USE DeformationGradient_Class
+
+    !  Define arguments of dummy argument
+    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    TYPE( DeformationGradient_ ), INTENT( IN ) :: F
+    REAL( DFP ), ALLOCATABLE :: getPk1Stress( :, : )
+
+    ! Define internal variables
+    TYPE( Rank2Tensor_ ) :: T
+    REAL( DFP ) :: J
+    REAL( DFP ), ALLOCATABLE :: InvF( :, : )
+
+    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+
+        CALL Err_Msg( &
+            "Stress_Class.f90>>Pk1Stress.part", &
+            "getPk1Stress(), Obj .pkOne. F, Obj .PI. F", &
+            "Stress_ Object is not initiated. &
+            Program Stopped !!!" &
+        )
+        STOP
+
+    END IF
+
+    T = Obj
+
+    SELECT CASE( TRIM( Obj % StressType ) )
+
+        CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
+
+            J = .det. F
+            InvF = .INV. F
+            getPk1Stress = T .matmul. TRANSPOSE( InvF )
+            getPk1Stress = J * getPk1Stress
+            
+        CASE( "Kirchhoff", "kirchhoff", "Tau", "kirchoff", "Kirchoff", "tau" )
+
+            InvF = .INV. F
+            getPk1Stress = T .matmul. TRANSPOSE( InvF )
+
+        CASE( "PK2", "Pk2", "pk2", "PK-2", "pk-2", "S", "s" )
+
+            getPk1Stress  = F .matmul. T
+
+        CASE( "PK1", "pk1", "PK-1", "pk-1", "Pi", "PI", "pi" )
+
+            getPk1Stress = T
+
+        CASE( "Eshelby-Like", "Eshelby", "EshelbyLike", "M", "m" )
+
+            InvF = .INV. F
+            getPk1Stress = TRANSPOSE( InvF ) .matmul. T 
+
+
+        CASE DEFAULT
+
+            CALL Err_Msg( &
+                "Stress_Class.f90>>Pk1Stress.part", &
+                "getPk1Stress( Obj, F ), Obj .pkOne. F, Obj .PI. F", &
+                "No case found for Obj % StressType. &
+                Program Stopped!!!" &
+            )
+            STOP
+
+    END SELECT
+
+    CALL T % DeallocateData( )
+    IF( ALLOCATED( InvF ) ) DEALLOCATE( InvF )
+
+ END FUNCTION getPk1Stress
+
+!------------------------------------------------------------------------------
+!                                                         
+!------------------------------------------------------------------------------
+

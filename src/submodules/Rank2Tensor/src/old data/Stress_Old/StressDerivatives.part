@@ -1,0 +1,201 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma                            
+!                   Position    :   Doctral Student                                       
+!                   Institute   :   Kyoto Univeristy, Japan                        
+!                   Program name:   StressDerivatives.part
+!                   Last Update :   March-29-2017
+!                                                               
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+! 
+!   Type    ::  Part of the Code
+!
+!   Info    ::  -   Part of the code;
+!
+!   Hosting File
+!           ::  -   Stress_Class.f90
+!
+!==============================================================================
+!
+!------------------------------------------------------------------------------
+!                                                            getDsigma_mDsigma
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE getDsigma_mDsigma(Stress, Dsigma_m)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   This subroutine Makes Stress Invariants
+!                   Sigma_m     =   tr(sigma)/3
+!                   trSigma     =
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_) :: Stress
+    REAL(DFP), DIMENSION(:), INTENT(OUT) ::  Dsigma_m
+!
+    INTEGER(I4B) :: n
+    REAL(DFP)    :: one3 , zro = 0.0_DFP
+	Error_flag = .FALSE.
+    n = Stress%getLength()
+    one3 = 1.0_DFP / 3.0_DFP
+!
+    SELECT CASE(n)
+        CASE(4)
+            Dsigma_m(:) = one3
+            Dsigma_m(3) = zro
+
+        CASE(6)
+            Dsigma_m (1:3) = one3
+            Dsigma_m (4:6) = zro
+    END SELECT
+!
+ END SUBROUTINE getDsigma_mDsigma
+!
+!------------------------------------------------------------------------------
+!                                                                 getDJ2Dsigma
+!------------------------------------------------------------------------------
+!
+!
+ SUBROUTINE getDJ2Dsigma(Stress, DJ2, Voigt)
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   If voigt is true then Kinematic-Voigt notatio is followed 
+!               If Voigt is true then
+!               DJ2 = [s11, s22, s33, 2*s12, 2*s23, 2*s13]
+!
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_) :: Stress
+    REAL(DFP), DIMENSION(:), INTENT(OUT) ::  DJ2
+    LOGICAL(LGT),  INTENT(IN), OPTIONAL  ::  Voigt
+! Define internal variables
+    LOGICAL(LGT)    :: isVoigt = .TRUE.
+    INTEGER(I4B) :: n
+!
+    n = Stress%getLength()
+!
+    IF( PRESENT( Voigt ) ) isVoigt = Voigt
+!
+    CALL Stress%getDeviatoricPart( S = DJ2 )
+
+    IF( isVoigt ) THEN
+        SELECT CASE(n)
+            CASE(4)
+                DJ2( 3 ) = 2.0_DFP * DJ2( 3 )
+            CASE(6)
+                DJ2( 4 : 6 ) = 2.0_DFP * DJ2( 4 : 6 )
+        END SELECT
+    END IF
+!
+ END SUBROUTINE getDJ2Dsigma
+!
+!
+!------------------------------------------------------------------------------
+!                                                              getDsigma_barDJ2
+!------------------------------------------------------------------------------
+!
+ FUNCTION getDsigma_barDJ2(Stress)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -
+!
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_) :: Stress
+    REAL(DFP)  ::  getDsigma_barDJ2
+! Define internal variables
+    REAL(DFP) :: Sigma_bar
+!
+    Sigma_bar = Stress%getSigma_bar()
+
+    getDsigma_barDJ2 = 3.0_DFP / Sigma_bar / 2.0_DFP
+!
+ END FUNCTION getDsigma_barDJ2
+!
+!------------------------------------------------------------------------------
+!                                                          getDsigma_barDsigma
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE getDsigma_barDsigma(Stress, Dsigma_bar, Voigt)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -   If voigt is true then Kinematic-Voigt notation is followed
+!
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_) :: Stress
+    REAL(DFP), DIMENSION(:), INTENT(OUT) ::  Dsigma_bar
+    LOGICAL(LGT),  INTENT(IN), OPTIONAL  ::  Voigt
+! Define internal variables
+    REAL( DFP ), ALLOCATABLE :: DJ2(:)
+    REAL(DFP) :: a
+    INTEGER(I4B) :: n
+!
+    n = Stress%getLength()
+
+    ALLOCATE(DJ2(n))
+
+    IF( PRESENT( Voigt ) ) THEN
+        CALL Stress%getDJ2Dsigma( DJ2 = DJ2,  Voigt = Voigt)
+    ELSE
+        CALL Stress%getDJ2Dsigma( DJ2 = DJ2 )
+    END IF
+
+    a = Stress%getDsigma_barDJ2()
+
+    Dsigma_bar (:) = a * DJ2 (:)
+
+    DEALLOCATE(DJ2)
+!
+ END SUBROUTINE getDsigma_barDsigma
+!
+!------------------------------------------------------------------------------
+!                                                               getDJ3Dsigma
+!------------------------------------------------------------------------------
+!
+ SUBROUTINE getDJ3Dsigma(Stress, DJ3, Voigt)
+!
+!   Description
+!------------------------------------------------------------------------------
+!       1   -
+!
+!------------------------------------------------------------------------------
+! Define intent of dummy variables
+!
+    CLASS(Stress_) :: Stress
+    REAL(DFP), DIMENSION(:), INTENT(OUT) ::  DJ3
+    LOGICAL(LGT),  INTENT(IN), OPTIONAL  ::  Voigt
+! Define internal variables
+    LOGICAL(LGT) :: isVoigt = .TRUE.
+    INTEGER(I4B) :: n
+!
+    n = Stress%getLength()
+
+    IF(PRESENT(Voigt)) isVoigt = Voigt
+
+
+    CALL Stress%getHillTensor(H = DJ3)
+
+    IF(isVoigt) THEN
+        SELECT CASE(n)
+            CASE(4)
+                DJ3( 3 ) = 2.0_DFP * DJ3 (3)
+            CASE(6)
+                DJ3( 4 : 6 ) = 2.0_DFP * DJ3( 4 : 6 )
+        END SELECT
+    END IF
+!
+ END SUBROUTINE getDJ3Dsigma
+!
+!------------------------------------------------------------------------------
+!                                                               getDJ3Dsigma
+!------------------------------------------------------------------------------
+!

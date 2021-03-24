@@ -30,13 +30,353 @@ INTEGER( I4B ), PARAMETER :: NPAR_CUMPROD=8
 INTEGER( I4B ), PARAMETER :: NPAR_POLY=8
 INTEGER( I4B ), PARAMETER :: NPAR_POLYTERM=8
 
+
 !----------------------------------------------------------------------------
-!                                                                 Reallocate
+!                                                  arange@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: Returns a vector of reals given `start`,  `end`,  and `increment` values.
 !
-! `Reallocate` is a generic subroutine to reallocate arrays
+!### Introduction
+!
+
+INTERFACE
+MODULE PURE FUNCTION arange_real( istart, iend, increment ) result( Ans )
+  REAL( DFP ), INTENT( IN ) :: istart !! Start value of the array
+  REAL( DFP ), INTENT( IN ) :: iend !! End value of the array
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: increment !! Array increment
+  REAL( DFP ), DIMENSION( : ), ALLOCATABLE :: Ans
+END FUNCTION
+END INTERFACE
+!----------------------------------------------------------------------------
+!                                                                    arange
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: Returns a vector of integer
+!
+!### Introduction
+! Returns an array of integers given `istart`,  `iend`,  and `increment` values.
+! Default value of increment is 1
+! This function belongs to the generic function [[Utility:arange]]
+!
+!### Usage
+!
+!```fortran
+!	arange(1,10,1)
+! arange(1,10,2)
+!```
+
+INTERFACE
+MODULE PURE FUNCTION arange_int (istart, iend, increment) result(Ans)
+  integer(i4b), intent(in) :: istart
+  integer(i4b), intent(in) :: iend
+  integer(i4b), intent(in), optional :: increment
+  integer(i4b), dimension(:), allocatable :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE arange
+  MODULE PROCEDURE arange_int, arange_real
+END INTERFACE arange
+
+PUBLIC arange
+
+
+!----------------------------------------------------------------------------
+!                                                     Head@FunctionalFortran
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns the first element of array `x`.
+
+
+INTERFACE
+MODULE PURE FUNCTION head_int(x) RESULT(Ans)
+  INTEGER( I4B ), INTENT( IN ) ::  x( : )
+  INTEGER( I4B ) :: Ans
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Head@FunctionalFortran
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns the first element of array `x`.
+
+
+INTERFACE
+MODULE PURE FUNCTION head_real(x) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) ::  x( : )
+  REAL( DFP ) :: Ans
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Head@FunctionalFortran
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns the first element of array `x`.
+
+
+INTERFACE
+MODULE PURE FUNCTION head_char( x ) RESULT(Ans)
+  CHARACTER( LEN = * ), INTENT( IN ) :: x
+  CHARACTER( LEN = 1 ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE HEAD
+  MODULE PROCEDURE head_real, head_int, head_char
+END INTERFACE HEAD
+
+PUBLIC :: HEAD
+
+!----------------------------------------------------------------------------
+!                                                     Tail@FunctionalFortran
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION tail_int( x ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: x( : )
+  INTEGER( I4B ) :: Ans(SIZE(x)-1)
+END FUNCTION tail_int
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Tail@FunctionalFortran
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION tail_real( x ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: x( : )
+  REAL( DFP ) :: Ans(SIZE(x)-1)
+END FUNCTION tail_real
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Tail@FunctionalFortran
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION tail_char( x ) RESULT( Ans )
+  CHARACTER( LEN = * ), INTENT( IN ) :: x
+  CHARACTER( LEN = LEN(x) - 1 ) :: Ans
+END FUNCTION tail_char
+END INTERFACE
+
+INTERFACE TAIL
+  MODULE PROCEDURE tail_int, tail_real, tail_char
+END INTERFACE TAIL
+
+PUBLIC :: TAIL
+
+!----------------------------------------------------------------------------
+!                                                    SPLIT@FunctionalFortran
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns the first half of the array `x` if `section == 1`,
+!
+!### Introduction
+!
+! Returns the first half of the array `x` if `section == 1`, the second half
+! of the array `x` if `section == 2`, and an empty array otherwise. If `size
+! (x) == 1`,  `split(x, 1)`  returns and empty array,  and `split(x, 2)`
+! returns `x(1)`.
+
+
+INTERFACE
+MODULE PURE FUNCTION split_int( x, section ) RESULT( Ans )
+  INTEGER( I4B ), DIMENSION( : ), INTENT(IN) :: x !! Input array
+  INTEGER( I4B ), INTENT(IN) :: section !! Array section to return
+  INTEGER( I4B ), DIMENSION( : ), ALLOCATABLE :: Ans
+END FUNCTION split_int
+END INTERFACE
+
+
+!----------------------------------------------------------------------------
+!                                                    SPLIT@FunctionalFortran
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns the first half of the array `x` if `section == 1`,
+!
+!### Introduction
+!
+! Returns the first half of the array `x` if `section == 1`, the second half
+! of the array `x` if `section == 2`, and an empty array otherwise. If `size
+! (x) == 1`,  `split(x, 1)`  returns and empty array,  and `split(x, 2)`
+! returns `x(1)`.
+
+INTERFACE
+MODULE PURE FUNCTION split_real( x, section ) RESULT( Ans )
+  REAL( DFP ), DIMENSION( : ), INTENT(IN) :: x !! Input array
+  INTEGER( I4B ), INTENT(IN) :: section !! Array section to return
+  REAL( DFP ), DIMENSION( : ), ALLOCATABLE :: Ans
+END FUNCTION split_real
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    SPLIT@FunctionalFortran
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Returns the first half of the array `x` if `section == 1`,
+!
+!### Introduction
+!
+! Returns the first half of the array `x` if `section == 1`, the second half
+! of the array `x` if `section == 2`, and an empty array otherwise. If `size
+! (x) == 1`,  `split(x, 1)`  returns and empty array,  and `split(x, 2)`
+! returns `x(1)`.
+
+INTERFACE
+MODULE PURE FUNCTION split_char( x, section ) RESULT( Ans )
+  CHARACTER( LEN = * ), INTENT( IN ) :: x !! Input array
+  INTEGER( I4B ), INTENT( IN ) :: section !! Array section to return
+  CHARACTER( LEN = : ), ALLOCATABLE :: Ans
+END FUNCTION split_char
+END INTERFACE
+
+INTERFACE SPLIT
+  MODULE PROCEDURE split_int, split_char, split_real
+END INTERFACE SPLIT
+
+PUBLIC :: SPLIT
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate1( Mat, row, col )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: row, col
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate2( Mat, row )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+  INTEGER( I4B ), INTENT( IN ) :: row
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate3( Mat, i1, i2, i3 )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate4( Mat, row, col )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: row, col
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate5( Mat, row )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+  INTEGER( I4B ), INTENT( IN ) :: row
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate6( Vec1, n1, Vec2, n2, Vec3, n3, Vec4, n4, &
+  & Vec5, n5, Vec6, n6 )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: Vec1( : ), Vec2( : )
+  INTEGER( I4B ), ALLOCATABLE, OPTIONAL, INTENT( INOUT) :: Vec3( : ), &
+    & Vec4( : ), Vec5( : ), Vec6( : )
+  INTEGER( I4B ), INTENT( IN ) :: n1, n2
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate7( Vec1, n1, Vec2, n2, Vec3, n3, Vec4, n4, &
+  & Vec5, n5, Vec6, n6 )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: Vec1( : ), Vec2( : )
+  REAL( DFP ), ALLOCATABLE, OPTIONAL, INTENT( INOUT) :: Vec3( : ), &
+    & Vec4( : ), Vec5( : ), Vec6( : )
+  INTEGER( I4B ), INTENT( IN ) :: n1, n2
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate8( A, nA, IA, nIA, JA, nJA )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : ), JA( : )
+  INTEGER( I4B ), INTENT( IN ) :: nA, nIA, nJA
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate9( A, nA, IA, nIA )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : )
+  INTEGER( I4B ), INTENT( IN ) :: nA, nIA
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate10( Mat, i1, i2, i3, i4 )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
+END SUBROUTINE
+END INTERFACE
+
 INTERFACE Reallocate
   MODULE PROCEDURE Reallocate1, &
     & Reallocate2, &
@@ -53,6 +393,225 @@ END INTERFACE Reallocate
 PUBLIC :: Reallocate
 
 !----------------------------------------------------------------------------
+!                                                         Cross_Product@Prod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	 This FUNCTION evaluate vectors product
+!
+!### Introduction
+! 	This FUNCTION evaluate vectors products
+! $$\mathbf{ans} = \mathbf{a} \times \mathbf{b}$$
+
+INTERFACE
+MODULE PURE FUNCTION vec_prod( a, b ) RESULT( c )
+  ! Define INTENT of dummy argument
+  REAL( DFP ), INTENT( IN ) :: a( 3 ), b( 3 )
+  REAL( DFP ) :: c( 3 )
+END FUNCTION vec_prod
+END INTERFACE
+
+INTERFACE Cross_Product
+  MODULE PROCEDURE vec_prod
+END INTERFACE Cross_Product
+
+PUBLIC :: Cross_Product
+
+INTERFACE Vector_Product
+  MODULE PROCEDURE vec_prod
+END INTERFACE Vector_Product
+
+PUBLIC :: Vector_Product
+
+INTERFACE VectorProduct
+  MODULE PROCEDURE vec_prod
+END INTERFACE VectorProduct
+
+PUBLIC :: VectorProduct
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This FUNCTION returns outerproduct(matrix) of two vectors
+!
+!### Introduction
+!
+! $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
+
+INTERFACE
+MODULE PURE FUNCTION OUTERPROD1_1( a,b ) RESULT( Ans )
+  REAL(DFP), DIMENSION(:), INTENT(IN) :: a,b
+  REAL(DFP), DIMENSION(SIZE(a),SIZE(b)) :: Ans
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This FUNCTION returns outerproduct
+!
+!### Introduction
+!
+! This FUNCTION returns outerproduct(matrix) of two vectors
+! - $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
+! - If `Sym` is .true. THEN symmetric part is returned
+
+INTERFACE
+MODULE PURE FUNCTION OUTERPROD1_1_sym(a,b, Sym) RESULT( Ans )
+  ! Define INTENT of dummy variables
+  REAL(DFP), INTENT(IN) :: a ( : ), b ( : )
+  REAL(DFP), DIMENSION(SIZE(a),SIZE(b)) :: Ans
+  LOGICAL( LGT ), INTENT( IN ) :: Sym
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This FUNCTION returns outerproduct
+!
+!### Introduction
+!
+! This FUNCTION returns outerprod between a matrix and a vector
+! `Ans(:,:,i) = a(:,:) * b(i)`
+
+INTERFACE
+MODULE PURE FUNCTION OUTERPROD2_1(a,b) RESULT( Ans )
+    REAL(DFP), INTENT(IN) :: a( :, : )
+    REAL(DFP), INTENT(IN) :: b( : )
+    REAL(DFP) :: Ans( SIZE( a, 1 ), SIZE( a, 2 ), SIZE(b) )
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This FUNCTION returns outerproduct
+!
+!### Introduction
+!
+! This FUNCTION evaluate outerproduct between a 3D matrix and a vector
+! - `Ans( :, :, :,  I ) = a( :, :, : ) * b( I )`
+
+INTERFACE
+MODULE PURE FUNCTION OUTERPROD3_1(a,b) RESULT( Ans )
+  REAL(DFP), INTENT( IN ) :: a(:,:,:)
+  REAL(DFP), INTENT( IN ) :: b(:)
+  REAL(DFP) :: Ans( SIZE( a, 1 ), SIZE( a, 2 ), SIZE( a, 3 ), SIZE(  b ) )
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This FUNCTION returns outerproduct
+!
+!### Introduction
+!
+! This FUNCTION evaluates outer product between a matrix and two vector
+!
+! $$Ans = a \otimes b \otimes c$$
+
+INTERFACE
+MODULE PURE FUNCTION OUTERPROD2_11(a,b,c) RESULT( ANS )
+  REAL(DFP), INTENT( IN ) :: a( :, : )
+  REAL(DFP), INTENT( IN ) :: b( : ), c( : )
+  REAL(DFP) :: ANS( SIZE( a, 1 ), SIZE( a, 2 ), SIZE( b ), SIZE(  c ) )
+END FUNCTION
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE OUTERPROD1_1, OUTERPROD2_1, OUTERPROD3_1, OUTERPROD2_11, &
+    & OUTERPROD1_1_sym
+END INTERFACE OUTERPROD
+
+PUBLIC :: OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                              Append@Append
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Append scalar INTEGER  to  INTEGER  vec tor
+
+INTERFACE
+MODULE PURE SUBROUTINE Append_I1( A, Entry )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+  INTEGER( I4B ), INTENT( IN ) :: Entry
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              Append@Append
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Append vector of INTEGER to INTEGER vector
+
+INTERFACE
+MODULE PURE SUBROUTINE Append_I2( A, Entry )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+  INTEGER( I4B ), INTENT( IN ) :: Entry( : )
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              Append@Append
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Append scalar REAL to the REAL vector
+
+INTERFACE
+MODULE PURE SUBROUTINE Append_R1( A, Entry )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+  REAL( DFP ), INTENT( IN ) :: Entry
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              Append@Append
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Append vector of REAL to REAL-vector
+
+INTERFACE
+MODULE PURE SUBROUTINE Append_R2( A, Entry )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+  REAL( DFP ), INTENT( IN ) :: Entry( : )
+END SUBROUTINE
+END INTERFACE
+
+INTERFACE Append
+  MODULE PROCEDURE Append_I1, Append_I2, Append_R1, &
+    Append_R2
+END INTERFACE
+
+PUBLIC :: Append
+
+!----------------------------------------------------------------------------
 !                                                         EvaluatePolynomial
 !----------------------------------------------------------------------------
 
@@ -64,33 +623,6 @@ INTERFACE EvaluatePolynomial
 END INTERFACE EvaluatePolynomial
 
 PUBLIC :: EvaluatePolynomial
-
-!----------------------------------------------------------------------------
-!                                                              VectorProduct
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Generic FUNCTION to evaluate vector product
-INTERFACE VectorProduct
-  MODULE PROCEDURE vec_prod
-END INTERFACE VectorProduct
-
-PUBLIC :: VectorProduct
-
-!----------------------------------------------------------------------------
-!                                                                 OUTERPROD
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Generic FUNCTION to evaluate outerproduct.
-INTERFACE OUTERPROD
-  MODULE PROCEDURE OUTERPROD1_1, OUTERPROD2_1, OUTERPROD3_1, OUTERPROD2_11, &
-    & OUTERPROD1_1_sym
-END INTERFACE OUTERPROD
-
-PUBLIC :: OUTERPROD
 
 !----------------------------------------------------------------------------
 !                                                             ExecuteCommand
@@ -111,21 +643,6 @@ PUBLIC :: ExecuteCommand
 !----------------------------------------------------------------------------
 
 PUBLIC :: getUnitNo, Factorial
-
-!----------------------------------------------------------------------------
-!                                                                     Append
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This generic subroutine can append entries to vector of reals and integers.
-
-INTERFACE Append
-  MODULE PROCEDURE Append_I1, Append_I2, Append_R1, &
-    Append_R2
-END INTERFACE
-
-PUBLIC :: Append
 
 !----------------------------------------------------------------------------
 !                                                                    Int2Str
@@ -170,8 +687,113 @@ END INTERFACE ASSERT
 PUBLIC :: ASSERT
 
 !----------------------------------------------------------------------------
-!
+!                                                                  SWAP@SWAP
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Swap two integer
+
+INTERFACE
+MODULE PURE SUBROUTINE swap_i( a, b )
+  INTEGER( I4B ), INTENT( INOUT) :: a, b
+END SUBROUTINE swap_i
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP@SWAP
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Swap two real
+
+INTERFACE
+MODULE PURE SUBROUTINE swap_r( a, b )
+  REAL( DFP ), INTENT( INOUT) :: a, b
+END SUBROUTINE swap_r
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP@SWAP
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Swap two real
+
+INTERFACE
+MODULE PURE SUBROUTINE swap_rv( a, b )
+  REAL(DFP), INTENT(INOUT) :: a(:), b(:)
+END SUBROUTINE swap_rv
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                  SWAP@SWAP
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Subroutine for interchanging two complex numbers
+
+INTERFACE
+MODULE PURE SUBROUTINE swap_c( a, b )
+  COMPLEX(DFPC), INTENT(INOUT) :: a,b
+END SUBROUTINE swap_c
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 SWAP@SWAP
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE swap_cv( a, b )
+  COMPLEX(DFPC), INTENT(INOUT) :: a(:), b(:)
+END SUBROUTINE swap_cv
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 SWAP@SWAP
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE swap_cm( a, b )
+  COMPLEX(DFPC), INTENT(INOUT) :: a(:,:), b(:,:)
+END SUBROUTINE swap_cm
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 SWAP@SWAP
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE masked_swap_rs( a, b, mask )
+  REAL(DFP), INTENT(INOUT) :: a,b
+  LOGICAL(LGT), INTENT(IN) :: mask
+END SUBROUTINE masked_swap_rs
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 SWAP@SWAP
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE masked_swap_rv( a, b, mask )
+  REAL(DFP), INTENT(INOUT) :: a( : ), b( : )
+  LOGICAL(LGT), INTENT(IN) :: mask( : )
+END SUBROUTINE masked_swap_rv
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 SWAP@SWAP
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE masked_swap_rm( a, b, mask )
+  REAL(DFP), INTENT(INOUT) :: a( :, : ), b( :, : )
+  LOGICAL(LGT), INTENT(IN) :: mask( :, : )
+END SUBROUTINE masked_swap_rm
+END INTERFACE
 
 !>
 ! Generic subroutine for swapping
@@ -270,9 +892,30 @@ END INTERFACE SearchNearestCoord
 
 PUBLIC :: SearchNearestCoord
 
+
 !----------------------------------------------------------------------------
-!                                                                 HeapSort
+!                                                              HeapSort@Sort
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Heap sort
+
+INTERFACE
+MODULE PURE SUBROUTINE HEAPSORT_INT( array )
+  INTEGER( I4B ), INTENT( INOUT) :: array( : )
+END SUBROUTINE HEAPSORT_INT
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             HeapSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE HEAPSORT_REAL( array )
+  REAL( DFP ), INTENT( INOUT) :: array( : )
+END SUBROUTINE HEAPSORT_REAL
+END INTERFACE
 
 INTERFACE HeapSort
   MODULE PROCEDURE HEAPSORT_INT, HEAPSORT_REAL
@@ -281,20 +924,410 @@ END INTERFACE HeapSort
 PUBLIC :: HeapSort
 
 !----------------------------------------------------------------------------
-!                                                              Cross_Product
+!                                                             QuickSort@Sort
 !----------------------------------------------------------------------------
 
-INTERFACE Cross_Product
-  MODULE PROCEDURE CROSS_PRODUCT_R1_R1
-END INTERFACE Cross_Product
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort1vectR(vect1, low, high)
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE quickSort1vectR
+END INTERFACE
 
-PUBLIC :: Cross_Product
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
 
-INTERFACE Vector_Product
-  MODULE PROCEDURE CROSS_PRODUCT_R1_R1
-END INTERFACE Vector_Product
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort1vectI(vect1, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE quickSort1vectI
+END INTERFACE
 
-PUBLIC :: Vector_Product
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort2vectIR(vect1, vect2, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect2
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort2vectII(vect1, vect2, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect2
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort2vectRI(vect1, vect2, low, high)
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect2
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort2vectRR(vect1, vect2, low, high)
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect2
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort3vectIII(vect1, vect2, vect3, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort3vectIIR(vect1, vect2, vect3, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort3vectIRR(vect1, vect2, vect3, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort3vectIRI(vect1, vect2, vect3, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect2
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort3vectRRR(vect1, vect2, vect3, low, high)
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort3vectRRI(vect1, vect2, vect3, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect3
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort3vectRIR(vect1, vect2, vect3, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect2
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort3vectRII(vect1, vect2, vect3, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectIIII(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3, vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectIIIR(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectIIRI(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect4
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectIIRR(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect3, vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectIRRR(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect2, vect3, vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectIRRI(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect4
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectIRIR(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect2, vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectIRII(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect1, vect3, vect4
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect2
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectRRRR(vect1, vect2, vect3, vect4, low, high)
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3, vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectRRRI(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect4
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectRRIR(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect3
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectRRII(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect3, vect4
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectRIRR(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect2
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect3, vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectRIRI(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect2, vect4
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectRIIR(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1, vect4
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE RECURSIVE SUBROUTINE quickSort4vectRIII(vect1, vect2, vect3, vect4, low, high)
+  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT) :: vect2, vect3, vect4
+  REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: vect1
+  INTEGER( I4B ), INTENT(IN) :: low, high
+END SUBROUTINE
+END INTERFACE
+
+
+INTERFACE QUICKSORT
+  MODULE PROCEDURE quickSort1vectI, quickSort1vectR, quickSort2vectII, &
+    & quickSort2vectIR, quickSort2vectRR, quickSort2vectRI, &
+    & quickSort3vectIII, quickSort3vectIIR, quickSort3vectIRI, &
+    & quickSort3vectIRR, quickSort3vectRRR, quickSort3vectRRI, &
+    & quickSort3vectRIR, quickSort3vectRII, quickSort4vectIIII, &
+    & quickSort4vectIIIR, quickSort4vectIIRI, quickSort4vectIIRR, &
+    & quickSort4vectIRII, quickSort4vectIRIR, quickSort4vectIRRI, &
+    & quickSort4vectIRRR, quickSort4vectRIII, quickSort4vectRIIR, &
+    & quickSort4vectRIRI, quickSort4vectRIRR, quickSort4vectRRII, &
+    & quickSort4vectRRIR, quickSort4vectRRRI, quickSort4vectRRRR
+END INTERFACE QUICKSORT
+
+PUBLIC :: QUICKSORT
+
+!----------------------------------------------------------------------------
+!                                                                 SORT@SORT
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Recursive quicksort using binary tree pivot.
+
+INTERFACE
+MODULE PURE RECURSIVE FUNCTION SORT_INT( x ) RESULT( Ans )
+  INTEGER( I4B ), DIMENSION(:), INTENT( IN ) :: x
+  INTEGER( I4B ), DIMENSION( SIZE(x) ) :: Ans
+END FUNCTION SORT_INT
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 SORT@SORT
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Recursive quicksort using binary tree pivot.
+
+INTERFACE
+MODULE PURE RECURSIVE FUNCTION SORT_REAL( x ) RESULT( Ans )
+  REAL( DFP ), DIMENSION(:), INTENT( IN ) :: x
+  REAL( DFP ), DIMENSION( SIZE(x) ) :: Ans
+END FUNCTION SORT_REAL
+END INTERFACE
+
+INTERFACE SORT
+  MODULE PROCEDURE SORT_INT, SORT_REAL
+END INTERFACE SORT
+
+PUBLIC :: SORT
 
 !----------------------------------------------------------------------------
 !                                                                     Input
@@ -313,89 +1346,10 @@ PUBLIC :: Input
 PUBLIC :: getExtension
 
 !----------------------------------------------------------------------------
-!                                                                 arange
-!----------------------------------------------------------------------------
-INTERFACE arange
-  MODULE PROCEDURE arange_int, arange_real
-END INTERFACE arange
-
-PUBLIC arange
-
-!----------------------------------------------------------------------------
 !                                                                   CONTAINS
 !----------------------------------------------------------------------------
 
 CONTAINS
-
-!----------------------------------------------------------------------------
-!                                                                    arange
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
-! summary: Returns a vector of integer
-!
-!### Introduction
-! Returns an array of integers given `istart`,  `iend`,  and `increment` values.
-! Default value of increment is 1
-! This function belongs to the generic function [[Utility:arange]]
-!
-!### Usage
-!
-!```fortran
-!	arange(1,10,1)
-! arange(1,10,2)
-!```
-
-PURE FUNCTION arange_int (istart, iend, increment) result(Ans)
-  integer(i4b), intent(in) :: istart
-  integer(i4b), intent(in) :: iend
-  integer(i4b), intent(in), optional :: increment
-  integer(i4b), dimension(:), allocatable :: Ans
-
-  ! Internal var
-  integer(i4b) :: incr
-  integer(i4b) :: i
-  integer(i4b) :: n
-
-  incr = INPUT( default = 1, option=increment )
-  n = ( iend - istart ) / incr+1
-  ALLOCATE( Ans(n) )
-  DO CONCURRENT( i = 1:n )
-    Ans(i) = istart + ( i - 1 ) * incr
-  enddo
-END FUNCTION arange_int
-
-!----------------------------------------------------------------------------
-!                                                                 arange
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
-! summary: Returns a vector of reals given `start`,  `end`,  and `increment` values.
-!
-!### Introduction
-!
-
-PURE FUNCTION arange_real( istart, iend, increment ) result( Ans )
-  REAL( DFP ), INTENT( IN ) :: istart !! Start value of the array
-  REAL( DFP ), INTENT( IN ) :: iend !! End value of the array
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: increment !! Array increment
-  REAL( DFP ), DIMENSION( : ), ALLOCATABLE :: Ans
-
-  ! internal var
-  REAL( DFP ) :: incr
-  INTEGER( I4B ) :: i
-  INTEGER( I4B ) :: n
-
-  incr = INPUT( Default = 1.0_DFP, Option=increment )
-
-  n = ( iend - istart + 0.5_DFP * incr ) / incr + 1
-  ALLOCATE( Ans( n ) )
-  DO CONCURRENT( i = 1:n )
-    Ans( i ) = istart + ( i - 1 ) * incr
-  ENDDO
-END FUNCTION arange_real
 
 !----------------------------------------------------------------------------
 !                                                               getExtension
@@ -522,132 +1476,6 @@ FUNCTION Loc_Nearest_Point( Array, x )  RESULT( id )
   END DO
 
 END FUNCTION Loc_Nearest_Point
-
-!----------------------------------------------------------------------------
-!                                                                   HeapSort
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Heap Sort algorithm for Integer
-
-PURE SUBROUTINE HEAPSORT_INT( array )
-  INTEGER( I4B ), INTENT( INOUT ) :: array( : )
-
-  INTEGER( I4B ) :: n, i,k,j,l, t
-
-  n = SIZE( array )
-
-  IF( n .EQ. 1) RETURN
-
-  l=n/2+1
-  k=n
-
-  DO WHILE( k .NE. 1 )
-    IF( l .GT. 1 ) THEN
-      l=l-1
-      t=array(L)
-    ELSE
-      t=array(k)
-      array(k)=array(1)
-      k=k-1
-      IF( k .EQ. 1 ) THEN
-          array(1)=t
-        EXIT
-      ENDIF
-    ENDIF
-
-    i=l
-    j=l+l
-    DO WHILE( j .LE. k )
-      IF( j .LT. k ) THEN
-        IF( array( j ) .LT. array( j+1 ) ) j=j+1
-      ENDIF
-      IF ( t .LT. array(j) ) THEN
-        array(i)=array(j)
-        i=j
-        j=j+j
-      ELSE
-        j=k+1
-      ENDIF
-    END DO
-    array(i)=t
-  ENDDO
-
-END SUBROUTINE HEAPSORT_INT
-
-!----------------------------------------------------------------------------
-!                                                                   HeapSort
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Heap Sort algorithm for Real
-
-PURE SUBROUTINE HEAPSORT_REAL( array )
-  REAL( DFP ), INTENT( INOUT ) :: array( : )
-
-  INTEGER( I4B ) :: n, i,k,j,l
-  REAL( DFP ) :: t
-
-  n = SIZE( array )
-
-  IF( n .EQ. 1) RETURN
-
-  l=n/2+1
-  k=n
-
-  DO WHILE( k .NE. 1 )
-    IF( l .GT. 1 ) THEN
-      l=l-1
-      t=array(L)
-    ELSE
-      t=array(k)
-      array(k)=array(1)
-      k=k-1
-      IF( k .EQ. 1 ) THEN
-          array(1)=t
-        EXIT
-      ENDIF
-    ENDIF
-
-    i=l
-    j=l+l
-    DO WHILE( j .LE. k )
-      IF( j .LT. k ) THEN
-        IF( array( j ) .LT. array( j+1 ) ) j=j+1
-      ENDIF
-      IF ( t .LT. array(j) ) THEN
-        array(i)=array(j)
-        i=j
-        j=j+j
-      ELSE
-        j=k+1
-      ENDIF
-    END DO
-    array(i)=t
-  ENDDO
-
-END SUBROUTINE HEAPSORT_REAL
-
-!----------------------------------------------------------------------------
-!                                                             Cross_Product
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This function performs vector product of two vectors
-
-PURE FUNCTION CROSS_PRODUCT_R1_R1( a, b ) RESULT ( Ans )
-  REAL( DFP ), INTENT( IN ) :: a( 3 )
-  REAL( DFP ), INTENT( IN ) :: b( 3 )
-  REAL( DFP ) :: Ans( 3 )
-
-  Ans(1) = a(2)*b(3) - a(3)*b(2)
-  Ans(2) = a(3)*b(1) - a(1)*b(3)
-  Ans(3) = a(1)*b(2) - a(2)*b(1)
-
-END FUNCTION CROSS_PRODUCT_R1_R1
 
 !----------------------------------------------------------------------------
 !                                                                     Input
@@ -894,398 +1722,6 @@ PURE FUNCTION matmul_r3_r2( a1, a2 ) RESULT( Ans )
 END FUNCTION matmul_r3_r2
 
 !-----------------------------------------------------------------------------
-!                                                                 Reallocate1
-!-----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Reallocate a 2D array
-PURE SUBROUTINE Reallocate1( Mat, row, col )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: row, col
-
-  IF( ALLOCATED( Mat ) ) THEN
-    IF( (SIZE( Mat, 1 ) .NE. row) .OR. (SIZE( Mat, 2 ) .NE. col) ) THEN
-      DEALLOCATE( Mat )
-      ALLOCATE( Mat( row, col ) )
-    END IF
-  ELSE
-    ALLOCATE( Mat( row, col ) )
-  END IF
-  Mat = 0.0_DFP
-END SUBROUTINE Reallocate1
-
-!----------------------------------------------------------------------------
-!                                                                 Reallocate2
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine reallocates a vector
-PURE SUBROUTINE Reallocate2( Mat, row )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: row
-
-  IF( ALLOCATED( Mat ) ) THEN
-    IF( SIZE( Mat ) .NE. row ) THEN
-      DEALLOCATE( Mat )
-      ALLOCATE( Mat( row ) )
-    END IF
-  ELSE
-    ALLOCATE( Mat( row ) )
-  END IF
-  Mat = 0.0_DFP
-
-END SUBROUTINE Reallocate2
-
-!---------------------------------------------------------------------------
-!                                                                 Reallocate
-!---------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine reallocates a 3D array
-PURE SUBROUTINE Reallocate3( Mat, i1, i2, i3 )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
-
-  IF( ALLOCATED( Mat ) ) THEN
-    IF( (SIZE( Mat, 1 ) .NE. i1) &
-      & .OR. (SIZE( Mat, 2 ) .NE. i2) &
-      & .OR. (SIZE( Mat, 3 ) .NE. i3) ) THEN
-      DEALLOCATE( Mat )
-      ALLOCATE( Mat( i1, i2, i3 ) )
-    END IF
-  ELSE
-    ALLOCATE( Mat( i1, i2, i3 ) )
-  END IF
-  Mat = 0.0_DFP
-
-END SUBROUTINE Reallocate3
-
-!-----------------------------------------------------------------------------
-!                                                                 Reallocate4
-!-----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine reallocates a 2D matrix
-PURE SUBROUTINE Reallocate4( Mat, row, col )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: row, col
-
-  IF( ALLOCATED( Mat ) ) THEN
-    IF( (SIZE( Mat, 1 ) .NE. row) .OR. (SIZE( Mat, 2 ) .NE. col) ) THEN
-      DEALLOCATE( Mat )
-      ALLOCATE( Mat( row, col ) )
-    END IF
-  ELSE
-    ALLOCATE( Mat( row, col ) )
-  END IF
-  Mat = 0
-
-END SUBROUTINE Reallocate4
-
-!-----------------------------------------------------------------------------
-!                                                                 Reallocate5
-!-----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine reallocates a vector
-PURE SUBROUTINE Reallocate5( Mat, row )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: row
-
-  IF( ALLOCATED( Mat ) ) THEN
-    IF( SIZE( Mat ) .NE. row ) THEN
-      DEALLOCATE( Mat )
-      ALLOCATE( Mat( row ) )
-    END IF
-  ELSE
-    ALLOCATE( Mat( row ) )
-  END IF
-  Mat = 0
-
-END SUBROUTINE Reallocate5
-
-!----------------------------------------------------------------------------
-!                                                                 Reallocate6
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine can reallocates upto six vectors
-PURE SUBROUTINE Reallocate6( Vec1, n1, Vec2, n2, Vec3, n3, Vec4, n4, &
-  & Vec5, n5, Vec6, n6 )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: Vec1( : ), Vec2( : )
-  INTEGER( I4B ), ALLOCATABLE, OPTIONAL, INTENT( INOUT) :: Vec3( : ), &
-    & Vec4( : ), Vec5( : ), Vec6( : )
-  INTEGER( I4B ), INTENT( IN ) :: n1, n2
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
-
-  IF( ALLOCATED( Vec1 ) ) THEN
-    IF( SIZE( Vec1 ) .NE. n1 ) THEN
-      DEALLOCATE( Vec1 )
-      ALLOCATE( Vec1( n1 ) )
-    END IF
-  ELSE
-    ALLOCATE( Vec1( n1 ) )
-  END IF
-  Vec1 = 0
-
-  IF( ALLOCATED( Vec2 ) ) THEN
-    IF( SIZE( Vec2 ) .NE. n2 ) THEN
-      DEALLOCATE( Vec2 )
-      ALLOCATE( Vec2( n2 ) )
-    END IF
-  ELSE
-    ALLOCATE( Vec2( n2 ) )
-  END IF
-  Vec2 = 0
-
-  IF( PRESENT( Vec3 ) ) THEN
-    IF( ALLOCATED( Vec3 ) ) THEN
-      IF( SIZE( Vec3 ) .NE. n3 ) THEN
-        DEALLOCATE( Vec3 )
-        ALLOCATE( Vec3( n3 ) )
-      END IF
-    ELSE
-      ALLOCATE( Vec3( n3 ) )
-    END IF
-    Vec3 = 0
-  END IF
-
-  IF( PRESENT( Vec4 ) ) THEN
-    IF( ALLOCATED( Vec4 ) ) THEN
-      IF( SIZE( Vec4 ) .NE. n4 ) THEN
-        DEALLOCATE( Vec4 )
-        ALLOCATE( Vec4( n4 ) )
-      END IF
-    ELSE
-      ALLOCATE( Vec4( n4 ) )
-    END IF
-    Vec4 = 0
-  END IF
-
-  IF( PRESENT( Vec5 ) ) THEN
-    IF( ALLOCATED( Vec5 ) ) THEN
-      IF( SIZE( Vec5 ) .NE. n5 ) THEN
-        DEALLOCATE( Vec5 )
-        ALLOCATE( Vec5( n5 ) )
-      END IF
-    ELSE
-      ALLOCATE( Vec5( n5 ) )
-    END IF
-    Vec5 = 0
-  END IF
-
-  IF( PRESENT( Vec6 ) ) THEN
-    IF( ALLOCATED( Vec6 ) ) THEN
-      IF( SIZE( Vec6 ) .NE. n6 ) THEN
-        DEALLOCATE( Vec6 )
-        ALLOCATE( Vec6( n6 ) )
-      END IF
-    ELSE
-      ALLOCATE( Vec6( n6 ) )
-    END IF
-    Vec6 = 0
-  END IF
-
-END SUBROUTINE Reallocate6
-
-!----------------------------------------------------------------------------
-!                                                                 Reallocate7
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine can reallocate upto six vectors
-PURE SUBROUTINE Reallocate7( Vec1, n1, Vec2, n2, Vec3, n3, Vec4, n4, &
-  & Vec5, n5, Vec6, n6 )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: Vec1( : ), Vec2( : )
-  REAL( DFP ), ALLOCATABLE, OPTIONAL, INTENT( INOUT) :: Vec3( : ), &
-    & Vec4( : ), Vec5( : ), Vec6( : )
-  INTEGER( I4B ), INTENT( IN ) :: n1, n2
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
-
-  IF( ALLOCATED( Vec1 ) ) THEN
-    IF( SIZE( Vec1 ) .NE. n1 ) THEN
-      DEALLOCATE( Vec1 )
-      ALLOCATE( Vec1( n1 ) )
-    END IF
-  ELSE
-    ALLOCATE( Vec1( n1 ) )
-  END IF
-  Vec1 = 0.0
-
-  IF( ALLOCATED( Vec2 ) ) THEN
-    IF( SIZE( Vec2 ) .NE. n2 ) THEN
-      DEALLOCATE( Vec2 )
-      ALLOCATE( Vec2( n2 ) )
-    END IF
-  ELSE
-    ALLOCATE( Vec2( n2 ) )
-  END IF
-  Vec2 = 0.0
-
-  IF( PRESENT( Vec3 ) ) THEN
-    IF( ALLOCATED( Vec3 ) ) THEN
-      IF( SIZE( Vec3 ) .NE. n3 ) THEN
-        DEALLOCATE( Vec3 )
-        ALLOCATE( Vec3( n3 ) )
-      END IF
-    ELSE
-      ALLOCATE( Vec3( n3 ) )
-    END IF
-    Vec3 = 0.0
-  END IF
-
-  IF( PRESENT( Vec4 ) ) THEN
-    IF( ALLOCATED( Vec4 ) ) THEN
-      IF( SIZE( Vec4 ) .NE. n4 ) THEN
-        DEALLOCATE( Vec4 )
-        ALLOCATE( Vec4( n4 ) )
-      END IF
-    ELSE
-      ALLOCATE( Vec4( n4 ) )
-    END IF
-    Vec4 = 0.0
-  END IF
-
-  IF( PRESENT( Vec5 ) ) THEN
-    IF( ALLOCATED( Vec5 ) ) THEN
-      IF( SIZE( Vec5 ) .NE. n5 ) THEN
-        DEALLOCATE( Vec5 )
-        ALLOCATE( Vec5( n5 ) )
-      END IF
-    ELSE
-      ALLOCATE( Vec5( n5 ) )
-    END IF
-    Vec5 = 0.0
-  END IF
-
-  IF( PRESENT( Vec6 ) ) THEN
-    IF( ALLOCATED( Vec6 ) ) THEN
-      IF( SIZE( Vec6 ) .NE. n6 ) THEN
-        DEALLOCATE( Vec6 )
-        ALLOCATE( Vec6( n6 ) )
-      END IF
-    ELSE
-      ALLOCATE( Vec6( n6 ) )
-    END IF
-    Vec6 = 0.0
-  END IF
-END SUBROUTINE Reallocate7
-
-!----------------------------------------------------------------------------
-!                                                                Reallocate
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine can reallocate three vectors; it is useful for
-! sparse matrix related methods
-
-PURE SUBROUTINE Reallocate8( A, nA, IA, nIA, JA, nJA )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : ), JA( : )
-  INTEGER( I4B ), INTENT( IN ) :: nA, nIA, nJA
-
-  IF( ALLOCATED( A ) ) THEN
-    IF( SIZE( A ) .NE. nA ) THEN
-      DEALLOCATE( A )
-      ALLOCATE( A( nA ) )
-    END IF
-  ELSE
-    ALLOCATE( A( nA ) )
-  END IF
-  A = 0.0
-
-  IF( ALLOCATED( IA ) ) THEN
-    IF( SIZE( IA ) .NE. nIA ) THEN
-      DEALLOCATE( IA )
-      ALLOCATE( IA( nIA ) )
-    END IF
-  ELSE
-    ALLOCATE( IA( nIA ) )
-  END IF
-  IA = 0
-
-  IF( ALLOCATED( JA ) ) THEN
-    IF( SIZE( JA ) .NE. nJA ) THEN
-      DEALLOCATE( JA )
-      ALLOCATE( JA( nJA ) )
-    END IF
-  ELSE
-    ALLOCATE( JA( nJA ) )
-  END IF
-  JA = 0
-
-END SUBROUTINE Reallocate8
-
-!----------------------------------------------------------------------------
-!                                                                Reallocate
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine can reallocate two vectors
-PURE SUBROUTINE Reallocate9( A, nA, IA, nIA )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : )
-  INTEGER( I4B ), INTENT( IN ) :: nA, nIA
-
-  IF( ALLOCATED( A ) ) THEN
-    IF( SIZE( A ) .NE. nA ) THEN
-      DEALLOCATE( A )
-      ALLOCATE( A( nA ) )
-    END IF
-  ELSE
-    ALLOCATE( A( nA ) )
-  END IF
-  A = 0.0
-
-  IF( ALLOCATED( IA ) ) THEN
-    IF( SIZE( IA ) .NE. nIA ) THEN
-      DEALLOCATE( IA )
-      ALLOCATE( IA( nIA ) )
-    END IF
-  ELSE
-    ALLOCATE( IA( nIA ) )
-  END IF
-  IA = 0
-
-END SUBROUTINE Reallocate9
-
-!----------------------------------------------------------------------------
-!                                                                 Reallocate
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine reallocates a 3D array
-PURE SUBROUTINE Reallocate10( Mat, i1, i2, i3, i4 )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
-
-  IF( ALLOCATED( Mat ) ) THEN
-    IF( (SIZE( Mat, 1 ) .NE. i1) &
-      & .OR. (SIZE( Mat, 2 ) .NE. i2) &
-      & .OR. (SIZE( Mat, 3 ) .NE. i3) &
-      & .OR. (SIZE( Mat, 4 ) .NE. i4) &
-      & ) THEN
-      DEALLOCATE( Mat )
-      ALLOCATE( Mat( i1, i2, i3, i4 ) )
-    END IF
-  ELSE
-    ALLOCATE( Mat( i1, i2, i3, i4 ) )
-  END IF
-  Mat = 0.0_DFP
-
-END SUBROUTINE Reallocate10
-
-!-----------------------------------------------------------------------------
 !
 !-----------------------------------------------------------------------------
 
@@ -1318,136 +1754,6 @@ FUNCTION eval_poly( PowerTable, Coeff, X, tTerms ) RESULT( Ans )
     END IF
   END DO
 END FUNCTION eval_poly
-
-!------------------------------------------------------------------------------
-!
-!------------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION evaluate vectors product
-! $$\mathbf{ans} = \mathbf{a} \times \mathbf{b}$$
-
-PURE FUNCTION vec_prod( a, b ) RESULT( c )
-  ! Define INTENT of dummy argument
-  REAL( DFP ), INTENT( IN ) :: a( 3 ), b( 3 )
-  REAL( DFP ) :: c( 3 )
-  c(1) = a(2) * b(3) - a(3) * b(2)
-  c(2) = a(3) * b(1) - a(1) * b(3)
-  c(3) = a(1) * b(2) - a(2) * b(1)
-END FUNCTION vec_prod
-
-!--------------------------------------------------------------------
-!
-!--------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION returns outerproduct(matrix) of two vectors
-! $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
-
-PURE FUNCTION OUTERPROD1_1( a,b ) RESULT( Ans )
-  REAL(DFP), DIMENSION(:), INTENT(IN) :: a,b
-  REAL(DFP), DIMENSION(SIZE(a),SIZE(b)) :: Ans
-  Ans = 0.0_DFP
-  Ans = SPREAD(a,dim=2,ncopies=size(b)) * &
-          & SPREAD(b,dim=1,ncopies=size(a))
-END FUNCTION OUTERPROD1_1
-
-!--------------------------------------------------------------------
-!
-!--------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION returns outerproduct(matrix) of two vectors
-! - $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
-! - If `Sym` is .true. THEN symmetric part is returned
-
-PURE FUNCTION OUTERPROD1_1_sym(a,b, Sym) RESULT( Ans )
-  ! Define INTENT of dummy variables
-  REAL(DFP), INTENT(IN) :: a ( : ), b ( : )
-  REAL(DFP), DIMENSION(SIZE(a),SIZE(b)) :: Ans
-  LOGICAL( LGT ), INTENT( IN ) :: Sym
-
-  Ans = 0.0_DFP
-  IF( Sym ) THEN
-    Ans =   SPREAD( 0.5_DFP * a, dim=2, ncopies=size(b) ) &
-        & * SPREAD( b, dim=1, ncopies=size(a) ) &
-        & + SPREAD( 0.5_DFP * b, dim=2, ncopies=size(a) ) &
-        & * SPREAD( a, dim=1, ncopies=size(b) )
-  ELSE
-    Ans = SPREAD(a,dim=2,ncopies=size(b)) * &
-            & SPREAD(b,dim=1,ncopies=size(a))
-  END IF
-
-END FUNCTION OUTERPROD1_1_sym
-
-!--------------------------------------------------------------------
-!
-!--------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION returns outerprod between a matrix and a vector
-! `Ans(:,:,i) = a(:,:) * b(i)`
-
-PURE FUNCTION OUTERPROD2_1(a,b) RESULT( Ans )
-    REAL(DFP), INTENT(IN) :: a( :, : )
-    REAL(DFP), INTENT(IN) :: b( : )
-    REAL(DFP) :: Ans( SIZE( a, 1 ), SIZE( a, 2 ), SIZE(b) )
-
-    ! Definen internal variables
-    INTEGER( I4B ) :: I
-    Ans = 0.0_DFP
-    FORALL (I =1:SIZE( b ))
-      Ans( :, :, I ) = a( :, : ) * b( I )
-    END FORALL
-
-END FUNCTION OUTERPROD2_1
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION evaluate outerproduct between a 3D matrix and a vector
-! - `Ans( :, :, :,  I ) = a( :, :, : ) * b( I )`
-PURE FUNCTION OUTERPROD3_1(a,b) RESULT( Ans )
-  REAL(DFP), INTENT( IN ) :: a(:,:,:)
-  REAL(DFP), INTENT( IN ) :: b(:)
-  REAL(DFP) :: Ans( SIZE( a, 1 ), SIZE( a, 2 ), SIZE( a, 3 ), SIZE(  b ) )
-
-  INTEGER( I4B ) :: I
-
-  Ans = 0.0_DFP
-  FORALL (I =1:SIZE( b ) )
-    Ans( :, :, :,  I ) = a( :, :, : ) * b( I )
-  END FORALL
-END FUNCTION OUTERPROD3_1
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION evaluates outer product between a matrix and two vector
-!
-! $$Ans = a \otimes b \otimes c$$
-
-PURE FUNCTION OUTERPROD2_11(a,b,c) RESULT( ANS )
-  REAL(DFP), INTENT( IN ) :: a( :, : )
-  REAL(DFP), INTENT( IN ) :: b( : ), c( : )
-  REAL(DFP) :: ANS( SIZE( a, 1 ), SIZE( a, 2 ), SIZE( b ), SIZE(  c ) )
-
-  ! Definen internal variables
-  REAL(DFP), DIMENSION( SIZE( a, 1 ), SIZE( a, 2 ), SIZE( b ) ) :: Dummy3
-  Dummy3 = OUTERPROD2_1(a,b)
-  ANS = OUTERPROD3_1( Dummy3, c )
-
-END FUNCTION OUTERPROD2_11
 
 !------------------------------------------------------------------------------
 !                                                                ExecuteCommand
@@ -1527,105 +1833,6 @@ FUNCTION getUnitNo( Str )
   getUnitNo = I
 
 END FUNCTION getUnitNo
-
-!----------------------------------------------------------------------------
-!                                                                     Append
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Append scalar INTEGER  to  INTEGER  vec tor
-
-PURE SUBROUTINE Append_I1( A, Entry )
-  INTEGER(I4B), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER(I4B), INTENT( IN ) :: Entry
-  INTEGER(I4B),  ALLOCATABLE :: Dummy( : )
-  INTEGER(I4B) :: tSize
-  IF( .NOT. ALLOCATED( A ) ) THEN
-    A = [Entry]
-  ELSE
-    tSize = SIZE( A ); ALLOCATE( Dummy( tSize + 1 ) )
-    Dummy( 1 : tSize ) = A; Dummy( tSize + 1 ) = Entry
-    CALL MOVE_ALLOC( From = Dummy, To = A )
-  END IF
-END SUBROUTINE Append_I1
-
-!----------------------------------------------------------------------------
-!                                                                     Append
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Append vector of INTEGER  to  INTEGER  vec tor
-!------------------------------------------------------------------------------
-
-PURE SUBROUTINE Append_I2( A, Entry )
-  INTEGER(I4B), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER(I4B), INTENT( IN ) :: Entry( : )
-
-  INTEGER(I4B),  ALLOCATABLE :: Dummy( : )
-  INTEGER(I4B) :: n, m
-
-  IF( .NOT. ALLOCATED( A ) ) THEN
-    A = Entry
-  ELSE
-    m = SIZE( Entry ); n = SIZE( A )
-    ALLOCATE( Dummy( n + m ) ); Dummy( 1 : n ) = A; Dummy( n+1 : ) = Entry
-    CALL MOVE_ALLOC( From = Dummy, To = A )
-  END IF
-
-END SUBROUTINE Append_I2
-
-!----------------------------------------------------------------------------
-!                                                                    Append
-!----------------------------------------------------------------------------
-!> authors: Dr. Vikas Sharma
-!
-! Append scalar REAL to the REAL-vector
-!------------------------------------------------------------------------------
-
-PURE SUBROUTINE Append_R1( A, Entry )
-  REAL(DFP), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  REAL(DFP), INTENT( IN ) :: Entry
-
-  REAL(DFP),  ALLOCATABLE :: Dummy( : )
-  INTEGER(I4B) :: n
-
-
-  IF( .NOT. ALLOCATED( A ) ) THEN
-    A = [Entry]
-  ELSE
-    n = SIZE( A ); ALLOCATE( Dummy( n + 1 ) )
-    Dummy( 1 : n ) = A; Dummy( 1 + n ) = Entry
-    CALL MOVE_ALLOC( From = Dummy, TO = A )
-  END IF
-
-END SUBROUTINE Append_R1
-
-!----------------------------------------------------------------------------
-!                                                                     Append
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Append vector of REAL to REAL-vector
-
-PURE SUBROUTINE Append_R2( A, Entry )
-  REAL(DFP), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  REAL(DFP), INTENT( IN ) :: Entry( : )
-
-  REAL(DFP),  ALLOCATABLE :: Dummy( : )
-  INTEGER(I4B) :: n, m
-
-  IF( .NOT. ALLOCATED( A ) ) THEN
-    A = Entry
-  ELSE
-    m = SIZE( Entry ); n = SIZE( A ); ALLOCATE( Dummy( n + m ) )
-    Dummy( 1 : n ) = A; Dummy( 1 + n : ) = Entry
-    CALL MOVE_ALLOC( FROM = Dummy, TO = A )
-  END IF
-
-END SUBROUTINE Append_R2
 
 !------------------------------------------------------------------------------
 !                                                                  Rank1ToRank3
@@ -1999,159 +2206,6 @@ SUBROUTINE assert_shape_4( Mat, s, msg, file, line, routine )
     STOP
   END IF
 END SUBROUTINE assert_shape_4
-
-!----------------------------------------------------------------------------
-!                                                                      SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Subroutine for interchanging two INTEGER
-
-PURE SUBROUTINE swap_i(a,b)
-  INTEGER(I4B), INTENT(INOUT) :: a,b
-  INTEGER(I4B) :: dum
-  dum=a
-  a=b
-  b=dum
-END SUBROUTINE swap_i
-
-!----------------------------------------------------------------------------
-!                                                                      SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Subroutine for interchanging two REAL numbers
-
-PURE SUBROUTINE swap_r(a,b)
-  REAL(DFP), INTENT(INOUT) :: a,b
-  REAL(DFP) :: dum
-  dum=a
-  a=b
-  b=dum
-END SUBROUTINE swap_r
-
-!----------------------------------------------------------------------------
-!                                                                       SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Subroutine for interchanging two REAL valued vectors
-
-PURE SUBROUTINE swap_rv(a,b)
-  REAL(DFP), DIMENSION(:), INTENT(INOUT) :: a,b
-  REAL(DFP), DIMENSION(SIZE(a)) :: dum
-  dum=a
-  a=b
-  b=dum
-END SUBROUTINE swap_rv
-
-!----------------------------------------------------------------------------
-!                                                                       SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Subroutine for interchanging two complex numbers
-
-PURE SUBROUTINE swap_c(a,b)
-  COMPLEX(DFPC), INTENT(INOUT) :: a,b
-  COMPLEX(DFPC) :: dum
-  dum=a
-  a=b
-  b=dum
-END SUBROUTINE swap_c
-
-!----------------------------------------------------------------------------
-!                                                                       SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Subroutine for interchanging two complexed valued vectors
-
-PURE SUBROUTINE swap_cv(a,b)
-  COMPLEX(DFPC), DIMENSION(:), INTENT(INOUT) :: a,b
-  COMPLEX(DFPC), DIMENSION(SIZE(a)) :: dum
-  dum=a
-  a=b
-  b=dum
-END SUBROUTINE swap_cv
-
-!----------------------------------------------------------------------------
-!                                                                       SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Subroutine for interchanging two complexed valued matrices
-
-PURE SUBROUTINE swap_cm(a,b)
-  COMPLEX(DFPC), DIMENSION(:,:), INTENT(INOUT) :: a,b
-  COMPLEX(DFPC), DIMENSION(size(a,1),size(a,2)) :: dum
-  dum=a
-  a=b
-  b=dum
-END SUBROUTINE swap_cm
-
-!----------------------------------------------------------------------------
-!                                                                      SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Subroutine for interchanging two REAL valued number
-
-PURE SUBROUTINE masked_swap_rs(a,b,mask)
-  REAL(DFP), INTENT(INOUT) :: a,b
-  LOGICAL(LGT), INTENT(IN) :: mask
-  REAL(DFP) :: swp
-  IF (mask) THEN
-    swp=a
-    a=b
-    b=swp
-  END IF
-END SUBROUTINE masked_swap_rs
-
-!----------------------------------------------------------------------------
-!                                                                       SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-!Subroutine for interchanging two REAL valued vectors
-
-PURE SUBROUTINE masked_swap_rv(a,b,mask)
-  REAL(DFP), DIMENSION(:), INTENT(INOUT) :: a,b
-  LOGICAL(LGT), DIMENSION(:), INTENT(IN) :: mask
-  REAL(DFP), DIMENSION(size(a)) :: swp
-  WHERE(mask)
-    swp=a
-    a=b
-    b=swp
-  END WHERE
-END SUBROUTINE masked_swap_rv
-
-!----------------------------------------------------------------------------
-!                                                                      SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Subroutine for interchanging two REAL valued matrices
-
-PURE SUBROUTINE masked_swap_rm(a,b,mask)
-  REAL(DFP), DIMENSION(:,:), INTENT(INOUT) :: a,b
-  LOGICAL(LGT), DIMENSION(:,:), INTENT(IN) :: mask
-  REAL(DFP), DIMENSION(size(a,1),size(a,2)) :: swp
-  where (mask)
-    swp=a
-    a=b
-    b=swp
-  END where
-END SUBROUTINE masked_swap_rm
 
 !----------------------------------------------------------------------------
 !                                                                   IMAXLOC

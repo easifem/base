@@ -343,3 +343,160 @@ subroutine r8mat_expm3 ( n, a, e )
 
   return
 end
+
+
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   TensorFunctions.part
+!                   Last Update :   Dec-16-2017
+!
+!------------------------------------------------------------------------------
+!                       Details of Program
+!==============================================================================
+!
+!   TYPE    :: Part of module
+!
+!   DESCRIPTION ::
+!       -   This part contains subroutines for computing various
+!           Tensor valued Tensor functions
+!
+!   HOSTING FILE
+!       -  Rank2Tensor_Class.f90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                   TensorPower
+!------------------------------------------------------------------------------
+
+!  RECURSIVE FUNCTION TensorPower( N, T, TSquare, I1, I2, I3 ) RESULT( TP )
+
+! !   Description
+! !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+! !       1. -    T^n is computed using Cayley-Hamilton theorem
+! !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+!     USE Utility, ONLY : Eye
+
+!     ! Define Intent of dummy variables
+!     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: T, TSquare
+!     REAL( DFP ), DIMENSION( SIZE( T, 1 ), SIZE( T, 2 ) ) :: TP
+!     REAL( DFP ), INTENT( IN ) :: I1, I2, I3
+!     INTEGER( I4B ), INTENT( IN ) :: N
+
+!     ! Define internal variables
+!     INTEGER( I4B ) :: I
+!     Error_Flag = .FALSE.
+
+!     SELECT CASE( N )
+
+!     CASE( 0 )
+!         TP = Eye( SIZE( T, 1 ) )
+!     CASE( 1 )
+!         TP = T
+!     CASE( 2 )
+!         TP = TSquare
+!     CASE DEFAULT
+!         TP  = I1 * TensorPower( N-1, T, TSquare, I1, I2, I3 ) &
+!             - I2 * TensorPower( N-2, T, TSquare, I1, I2, I3 ) &
+!             + I3 * TensorPower( N-3, T, TSquare, I1, I2, I3 )
+!     END SELECT
+! !
+!  END FUNCTION TensorPower
+
+!------------------------------------------------------------------------------
+!                                                               f_TensorEXP_1
+!------------------------------------------------------------------------------
+
+ FUNCTION f_TensorEXP_1( Mat, t, m )
+
+!   Description
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1. -    compute exp( T ) using time-series
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Utility, ONLY: Factorial, Eye, INT2STR
+
+    ! Define Intent of dummy variables
+
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
+    REAL( DFP ), DIMENSION( SIZE( Mat, 1 ), SIZE( Mat, 2 ) ) :: f_TensorEXP_1
+    INTEGER( I4B ), INTENT( IN ), OPTIONAL :: m
+    REAL( DFP ), INTENT( IN ) :: t
+
+    ! Define internal variables
+    REAL( DFP ), ALLOCATABLE :: Dummy( :, : )
+    INTEGER( I4B ) :: N = 20, I
+
+    IF( PRESENT( m ) ) N = m
+
+    IF( N .GE. 40 ) THEN
+
+        CALL Err_Msg( "Rank2Tensor_Class.f90>>TensorFunctions.part", &
+        "Tensor_Exp()", &
+        "m is too large to compute the factorial; Program Stopped!")
+        STOP
+
+    END IF
+
+    Dummy = Eye( SIZE( Mat, 1 ) )
+    f_TensorEXP_1 = Dummy
+
+    DO I = 1, N
+
+
+        Dummy = MATMUL( Mat, Dummy )
+        f_TensorEXP_1 = f_TensorEXP_1 + ( t**I ) * Dummy / REAL( Factorial( I ), KIND = DFP )
+
+    END DO
+
+
+    DEALLOCATE( Dummy )
+
+ END FUNCTION f_TensorEXP_1
+
+!------------------------------------------------------------------------------
+!                                                               m_TensorEXP_1
+!------------------------------------------------------------------------------
+
+ FUNCTION m_TensorEXP_1( Obj, t, m )
+
+!   Description
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       1. -    compute exp( T ) using time-series
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Utility, ONLY: Factorial, Eye
+
+    ! Define Intent of dummy variables
+
+    CLASS( Rank2Tensor_ ), INTENT( IN ) ::  Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: m_TensorEXP_1
+    INTEGER( I4B ), INTENT( IN ), OPTIONAL :: m
+    REAL( DFP ), INTENT( IN ) :: t
+
+    ! Define internal variables
+    REAL( DFP ), ALLOCATABLE :: Mat( :, : )
+
+    Mat = Obj
+
+    IF( PRESENT( m ) ) THEN
+
+        m_TensorEXP_1 = f_TensorEXP_1( Mat, t, m )
+
+    ELSE
+
+        m_TensorEXP_1 = f_TensorEXP_1( Mat, t )
+
+    END IF
+
+    DEALLOCATE( Mat )
+
+ END FUNCTION m_TensorEXP_1
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+
