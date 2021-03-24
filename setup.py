@@ -27,12 +27,13 @@ str = "(c) 2020-2021"
 print(str)
 print("================================================================\n")
 
-
 print("Detecting OS type...")
 _os = platform.system()
 if _os == 'Windows':
     print("Windows platform found")
     print("Setting up for Windows...")
+    print("ERROR: INSTALLATION on windows is work in progress")
+    exit
     #os.system("install.bat")
     print("Please use Windows Subsystem Linux(WSL) ")
     print("Installation DONE!!")
@@ -44,7 +45,7 @@ elif _os == "Darwin":
 elif _os == "Linux":
     print("MacOSX system found")
     print("Setting up for MacOSX...")
-    # os.system("sh ./setup/setup")
+    os.system("sh ./setup/Ubuntu.sh")
     print("Installation DONE!!")
 else:
     print("ERROR: Unknown Operating System")
