@@ -40,6 +40,8 @@ echo "easifem_prefix=${prefix}" >> ${ERC}
 
 echo 'export EASIFEM_BASE=${prefix}/.easifem/base/' >> ${ERC}
 echo "export EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs/" >> ${ERC}
+mkdir -p ${EASIFEM_EXTPKGS}
+mkdir -p ${EASIFEM_BASE}
 echo "mkdir -p ${EASIFEM_EXTPKGS}" >> ${ERC}
 echo "mkdir -p ${EASIFEM_BASE}" >> ${ERC}
 # export EASIFEM_CLASSES=${prefix}/.easifem/classes/
@@ -56,6 +58,5 @@ echo "alias cpp=/usr/local/bin/cpp-10" >> ${ERC}
 echo "alias ld=/usr/local/bin/gcc-10" >> ${ERC}
 echo "alias cc=/usr/local/bin/gcc-10" >> ${ERC}
 echo "alias gfortran=/usr/local/bin/gfortran-10" >> ${ERC}
-
 echo 'source ~/.easifemrc' >> ${BP}
-# source ${BP}
+source ${BP}
