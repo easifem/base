@@ -67,9 +67,9 @@ elif _os == "Linux":
     print("Linux system found")
     print("Setting up for Linux...")
     if(installpkgs()):
-        os.system("sh ./setup/install_pkgs_Ubuntu.sh")
+        os.system("bash ./setup/install_pkgs_Ubuntu.sh")
     if(setEnvVar()):
-        os.system("sh ./setup/set_envvar_Ubuntu.sh")
+        os.system("bash ./setup/set_envvar_Ubuntu.sh")
 
 else:
     print("ERROR: Unknown Operating System")

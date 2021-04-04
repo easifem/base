@@ -9,23 +9,27 @@
 #--------------------------------------------------------------
 
 SHELL_=${SHELL}
-if [[ $SHELL_ =~ .*zsh.* ]]; then
+if [[ $SHELL_ =~ .*zsh.* ]]
+then
   BP=${HOME}/.zshrc
 fi
-if [[ $SHELL_ =~ .*bash.* ]]; then
+if [[ $SHELL_ =~ .*bash.* ]]
+then
   BP=${HOME}/.bashrc
 fi
 echo $BP
 
-if [ -f "$BP" ]; then
-    echo "${BP} found"
+if [ -f "${BP}" ]
+then
+  echo "${BP} found"
 else
   touch ${BP}
   echo '#!/bin/sh' >> ${BP}
 fi
 
 ERC=${HOME}/.easifemrc
-if [ -f "$ERC" ]; then
+if [ -f "$ERC" ]
+then
     echo "${ERC} found, removing it"
     rm -rf ${ERC}
     touch ${ERC}
@@ -39,10 +43,10 @@ prefix=${HOME}
 echo "easifem_prefix=${prefix}" >> ${ERC}
 echo "export EASIFEM_BASE=${prefix}/.easifem/base/" >> ${ERC}
 echo "export EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs/" >> ${ERC}
+export EASIFEM_CLASSES=${prefix}/.easifem/classes/
+export EASIFEM_KERNEL=${prefix}/.easifem/kernel/
 echo "mkdir -p ${EASIFEM_EXTPKGS}" >> ${ERC}
 echo "mkdir -p ${EASIFEM_BASE}" >> ${ERC}
-# export EASIFEM_CLASSES=${prefix}/.easifem/classes/
-# export EASIFEM_KERNEL=${prefix}/.easifem/kernel/
 echo "export CC=/usr/bin/gcc-10" >> ${ERC}
 echo "export CXX=/usr/bin/g++-10" >> ${ERC}
 echo "export CPP=/usr/bin/cpp-10" >> ${ERC}
