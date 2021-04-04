@@ -100,7 +100,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
 
 #Gnuplot
-include(${CMAKE_CURRENT_LIST_DIR}/GNUPLOT/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 
 #VoigtRank2Tensor
 include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)

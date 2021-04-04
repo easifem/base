@@ -23,6 +23,7 @@ sudo apt install -y git
 echo "=========================================="
 echo "running: apt install -y gcc-10"
 sudo apt install -y gcc-10
+sudo apt install -y g++-10
 echo "=========================================="
 echo "running: apt install -y gfortran-10"
 sudo apt install -y gfortran-10

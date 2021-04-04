@@ -55,7 +55,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/FEVariable/CMakeLists.txt)
 
 #ElemShapeData
-include(${CMAKE_CURRENT_LIST_DIR}/ElemShapeData/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/ElemshapeData/CMakeLists.txt)
 
 #FEMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)

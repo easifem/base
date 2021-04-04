@@ -5,7 +5,7 @@
 # 17/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
 set(PROJECT_NAME "easifemBase")
 project(${PROJECT_NAME})
 enable_language(C)
