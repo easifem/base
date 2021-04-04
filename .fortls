@@ -1,9 +1,8 @@
 {
   "source_dirs": [
-    "src/modules/",
-    "tests/"
+    "src",
+    "tests"
     ],
-  "excl_paths": ["pending_src/", "src/submodules"],
   "excl_suffixes": ["_skip.f90"],
   "pp_suffixes": [".f90", ".inc", ".part"],
   "pp_defs": {},
@@ -12,5 +11,5 @@
     ],
   "ext_source_dirs": [],
   "lowercase_intrinsics": false,
-  "debug_log": true
+  "debug_log": false
 }
