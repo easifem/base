@@ -12,6 +12,8 @@
 #include <sys/utsname.h>
 #include <unistd.h>
 #include <utime.h>
+#define __USE_POSIX
+#include <limits.h>
 
 #ifndef HZ
 #define HZ 60
@@ -21,8 +23,8 @@
 
 extern char **environ;
 
-extern int HOST_NAME_MAX;
-// int FHOST_NAME_MAX=HOST_NAME_MAX;
+//extern int HOST_NAME_MAX;
+int FHOST_NAME_MAX=HOST_NAME_MAX;
 
 extern mode_t FS_IRGRP;
 extern mode_t FS_IROTH;
