@@ -10,10 +10,7 @@ However, if you like to see and set the available options by yourself then follo
 
 ### Install packages
 
-
-**Step 5** Update linux by using following commands
-
-Run following commands
+Update linux by using following commands.
 
 ```bash
 sudo apt update
@@ -32,9 +29,11 @@ sudo apt install -y gmsh
 sudo apt install -y gnuplot
 ```
 
+> `gnuplot` and `gmsh` are relatively big programs. You can ignore their installation if you want.
+
+
 ### Set environment variables
 
-> `gnuplot` and `gmsh` are relatively big programs. You can ignore their installation if you want.
 
 **Step 1:** Go to home directory by using the following command, and check the existance of `.bashrc`
 
