@@ -27,6 +27,22 @@ str = "(c) 2020-2021"
 print(str)
 print("================================================================\n")
 
+def installpkgs():
+    while True:
+        choice = input( f"Do you want to automatically Install external packages from home brew? 'yes' or 'no' [Y/n]: " ).lower()
+        if choice in ['Y', 'y', 'ye', 'yes']:
+            return True
+        else:
+            return False
+
+def setEnvVar():
+    while True:
+        choice = input( f"Do you want to automatically set environment variables? 'yes' or 'no' [Y/n]: " ).lower()
+        if choice in ['Y', 'y', 'ye', 'yes']:
+            return True
+        else:
+            return False
+
 print("Detecting OS type...")
 _os = platform.system()
 if _os == 'Windows':
@@ -37,15 +53,23 @@ if _os == 'Windows':
     #os.system("install.bat")
     print("Please use Windows Subsystem Linux(WSL) ")
     print("Installation DONE!!")
+
 elif _os == "Darwin":
     print("MacOSX system found")
     print("Setting up for MacOSX...")
-    os.system("sh ./setup/Darwin.sh")
+    if( installpkgs() ):
+        os.system( "sh ./setup/install_pkgs_Darwin.sh" )
+    if( setEnvVar() ):
+        os.system("sh ./setup/set_envvar_Darwin.sh")
     print("Installation DONE!!")
+
 elif _os == "Linux":
-    print("MacOSX system found")
-    print("Setting up for MacOSX...")
-    os.system("sh ./setup/Ubuntu.sh")
-    print("Installation DONE!!")
+    print("Linux system found")
+    print("Setting up for Linux...")
+    if(installpkgs()):
+        os.system("sh ./setup/install_pkgs_Ubuntu.sh")
+    if(setEnvVar()):
+        os.system("sh ./setup/set_envvar_Ubuntu.sh")
+
 else:
     print("ERROR: Unknown Operating System")
