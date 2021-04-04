@@ -30,6 +30,7 @@ if _os == 'Windows':
     #print("Installation DONE!!")
 else:
     if(installRequest("OpenBLAS")):
+      print("====================================")
       cwd = os.getcwd()
       os.chdir(os.getenv('EASIFEM_EXTPKGS'))
       os.system(f"git clone --branch develop https://github.com/xianyi/OpenBLAS.git")
@@ -37,6 +38,7 @@ else:
       openblas_def = "-S ./ -B build -DCMAKE_INSTALL_PREFIX=${EASIFEM_EXTPKGS} -DBUILD_WITHOUT_LAPACK=OFF -DBUILD_WITHOUT_CBLAS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DNOFORTRAN=OFF"
       os.system( f"cmake {openblas_def}")
       os.chdir(cwd)
+      print("====================================")
 
     cmake_def = ""
     opt = getOption("USE_OpenMP", ["ON", "OFF"] )
@@ -52,6 +54,6 @@ else:
 
     print( "CMAKE DEF : ", cmake_def )
 
-    # os.system( f"cmake -S ./ -B ./build {cmake_def}")
-    # os.system(f"cmake --build ./build --target install" )
+    os.system( f"cmake -S ./ -B ./build {cmake_def}")
+    os.system(f"cmake --build ./build --target install" )
     print("Installation DONE!!")
