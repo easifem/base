@@ -4,7 +4,39 @@
 
 Before installation of easifem we should setup a simple working environment for the library. This means that we need to set some environment variables and install some packages. The procedure is given below.
 
-If you are not comfortable with setting up environment variables and installing packages on Linux then you should use python script which comes with the `easifemBase`. This will do most of the things automatically.
+If you are not comfortable with setting up environment variables and installing packages on Linux then you should use the `setup.py` script. This will do most of the things automatically. If there is any issue with this script then you can raise the issue on github, and I will try to overcome the issue.
+
+```bash
+python3 setup.py
+```
+
+The script asks you two questions:
+
+```bash
+Do you want to automatically Install external packages? 'yes' or 'no' [Y/n]:
+```
+
+If you want the script to download following pacakages, then type `yes` else type `no`.
+
+- curl
+- git
+- gcc-10
+- gfortran-10
+- python-3
+- python3-pip
+- lapack
+- cmake
+- gmsh
+- gnuplot
+
+The next question that you need to answer is
+
+```bash
+Do you want to automatically set environment variables? 'yes' or 'no' [Y/n]:
+```
+
+> If you want the script to set the environment variable then press `yes` else `no`. This would be enough, and you can jump to install section.
+
 
 However, if you like to see and set the available options by yourself then follow the following instruction.
 
@@ -116,6 +148,8 @@ Now we restart the shell to bring following changes.
 ```bash
 source ~/.bashrc
 ```
+
+## Installatation
 
 #### CMake
 

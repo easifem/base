@@ -29,7 +29,7 @@ print("================================================================\n")
 
 def installpkgs():
     while True:
-        choice = input( f"Do you want to automatically Install external packages from home brew? 'yes' or 'no' [Y/n]: " ).lower()
+        choice = input( f"Do you want to automatically Install external packages? 'yes' or 'no' [Y/n]: " ).lower()
         if choice in ['Y', 'y', 'ye', 'yes']:
             return True
         else:
