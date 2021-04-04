@@ -32,9 +32,11 @@ else:
     if(installRequest("OpenBLAS")):
       print("====================================")
       cwd = os.getcwd()
-      os.chdir(os.getenv('EASIFEM_EXTPKGS'))
+      extpkgs_dir = os.getenv('HOME') + "/easifem-extpkgs"
+      os.makedirs(extpkgs_dir, exist_ok=True)
+      os.chdir( extpkgs_dir )
       os.system(f"git clone --branch develop https://github.com/xianyi/OpenBLAS.git")
-      os.chdir(os.getenv('EASIFEM_EXTPKGS') + "/OpenBLAS")
+      os.chdir(extpkgs_dir + "/OpenBLAS")
       openblas_def = "-S ./ -B build -DCMAKE_INSTALL_PREFIX=${EASIFEM_EXTPKGS} -DBUILD_WITHOUT_LAPACK=OFF -DBUILD_WITHOUT_CBLAS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DNOFORTRAN=OFF"
       os.system( f"cmake {openblas_def}")
       os.chdir(cwd)
