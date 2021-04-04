@@ -4,6 +4,10 @@
 
 Before installation of easifem we should setup a simple working environment for the library. This means that we need to set some environment variables and install some packages. The procedure is given below.
 
+If you are not comfortable with setting up environment variables and installing packages on Linux then you should use python script which comes with the `easifemBase`. This will do most of the things automatically.
+
+However, if you like to see and set the available options by yourself then follow the following instruction.
+
 ### Install packages
 
 
