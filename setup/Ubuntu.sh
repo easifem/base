@@ -79,13 +79,14 @@ ERC=~/.easifemrc
 if [-f "$ERC"]; then
     echo "${ERC} found, removing it"
     rm -rf ${ERC}
+    touch ${ERC}
+    echo '#!/bin/sh' >> ${ERC}
 else
   touch ${ERC}
   echo '#!/bin/sh' >> ${ERC}
 fi
 
-read -p "Where do you want to install easifemBase? : " prefix
-
+prefix=${HOME}
 echo `easifem_prefix=${prefix}` >> ${ERC}
 echo `export EASIFEM_BASE=${prefix}/.easifem/base/` >> ${ERC}
 echo `export EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs/` >> ${ERC}
