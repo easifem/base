@@ -21,11 +21,9 @@ MODULE GlobalData
   PUBLIC
   SAVE
 
-  LOGICAL            :: is_initialized = .FALSE., Error_Flag = .FALSE.
-  INTEGER, PARAMETER  :: endianL        = 1
-  INTEGER, PARAMETER  :: endianB        = 0
-  INTEGER            :: endian         = endianL
-  !$OMP THREADPRIVATE(is_initialized,endian, Error_Flag)
+  INTEGER, PARAMETER :: endianL = 1
+  INTEGER, PARAMETER :: endianB = 0
+  INTEGER :: endian = endianL
 
 #ifdef Real128
   INTEGER, PARAMETER :: Real128 = SELECTED_REAL_KIND(33,4931)
@@ -35,19 +33,43 @@ MODULE GlobalData
 
   INTEGER, PARAMETER :: Real64  = SELECTED_REAL_KIND(15,307)
   INTEGER, PARAMETER :: Real32  = SELECTED_REAL_KIND(6,37)
+
+#ifdef USE_Real64
   INTEGER, PARAMETER :: Float  = Real64  ! Default
-  INTEGER, PARAMETER :: DFP  = Real64  ! Default
+#else
+  INTEGER, PARAMETER :: Float  = Real32  ! Default
+#endif
+
+#ifdef USE_Real64
+  INTEGER, PARAMETER :: DFP  = Real64
+#else
+  INTEGER, PARAMETER :: DFP  = Real32
+#endif
+
   INTEGER, PARAMETER :: Int64  = SELECTED_INT_KIND(18)
   INTEGER, PARAMETER :: Int32  = SELECTED_INT_KIND(9)
   INTEGER, PARAMETER :: Int16  = SELECTED_INT_KIND(4)
   INTEGER, PARAMETER :: Int8  = SELECTED_INT_KIND(2)
-  INTEGER, PARAMETER :: DIP  = Int32 ! Default
-  INTEGER, PARAMETER :: I4B  = Int32 ! Default
+
+#ifdef USE_Int64
+  INTEGER, PARAMETER :: I4B  = Int64
+  INTEGER, PARAMETER :: DIP  = Int64
+#else
+  INTEGER, PARAMETER :: I4B  = Int32
+  INTEGER, PARAMETER :: DIP  = Int32
+#endif
+
   INTEGER, PARAMETER :: SP= Real32
   INTEGER, PARAMETER :: DP= Real64
-  INTEGER, PARAMETER :: DFPC = KIND((1.0D0,1.0D0))   !Default Kind cmplx
-  INTEGER, PARAMETER :: SPC = KIND((1.0,1.0))    !Single Precision cmplx
-  INTEGER, PARAMETER :: DPC = KIND((1.0D0,1.0D0))!Double Precision cmplx
+  INTEGER, PARAMETER :: SPC = KIND(( 1.0_Real32, 1.0_Real32 ))
+  INTEGER, PARAMETER :: DPC = KIND(( 1.0_Real64, 1.0_Real64 ))
+
+#ifdef USE_Real64
+  INTEGER, PARAMETER :: DFPC = KIND( ( 1.0_Real64, 1.0_Real64 ) )
+#else
+  INTEGER, PARAMETER :: DFPC = KIND( ( 1.0_Real32, 1.0_Real32 ) )
+#endif
+
   INTEGER, PARAMETER :: LGT = KIND(.true.)       !Logical
 
   ! Format parameters
@@ -56,11 +78,24 @@ MODULE GlobalData
 #else
   CHARACTER(*), PARAMETER :: FReal128  = '(E23.15E3)'
 #endif
+
   CHARACTER(*), PARAMETER :: FReal64   = '(E23.15E3)'
   CHARACTER(*), PARAMETER :: FReal32   = '(E13.6E2)'
-  CHARACTER(*), PARAMETER :: FReal   = FReal64 ! Default
-  CHARACTER(*), PARAMETER :: FFloat   = FReal64 ! Default
+
+#ifdef USE_Real64
+  CHARACTER(*), PARAMETER :: FReal   = FReal64
+  CHARACTER(*), PARAMETER :: FFloat   = FReal64
+#else
+  CHARACTER(*), PARAMETER :: FReal   = FReal32
+  CHARACTER(*), PARAMETER :: FFloat   = FReal32
+#endif
+
+#ifdef USE_Real64
   CHARACTER(*), PARAMETER :: FDFP   = FReal64 ! Default
+#else
+  CHARACTER(*), PARAMETER :: FDFP   = FReal32 ! Default
+#endif
+
   CHARACTER(*), PARAMETER :: FInt64   = '(I20)'
   CHARACTER(*), PARAMETER :: FInt64ZP = '(I20.19)'
   CHARACTER(*), PARAMETER :: FInt32   = '(I11)'
@@ -69,10 +104,18 @@ MODULE GlobalData
   CHARACTER(*), PARAMETER :: FInt16ZP = '(I6.5)'
   CHARACTER(*), PARAMETER :: FInt8   = '(I4)'
   CHARACTER(*), PARAMETER :: FInt8ZP = '(I4.3)'
+
+#ifdef USE_Int64
+  CHARACTER(*), PARAMETER :: FInt   = FInt64
+  CHARACTER(*), PARAMETER :: FI4B   = FInt64
+  CHARACTER(*), PARAMETER :: FI4BZP = FInt64ZP
+  CHARACTER(*), PARAMETER :: FIntZP = FInt64ZP
+#else
   CHARACTER(*), PARAMETER :: FInt   = FInt32 !Default
   CHARACTER(*), PARAMETER :: FI4B   = FInt32 !Default
   CHARACTER(*), PARAMETER :: FI4BZP = FInt32ZP
   CHARACTER(*), PARAMETER :: FIntZP = FInt32ZP
+#endif
 
   ! Length (number of digits) of formatted numbers
 #ifdef Real128
@@ -80,27 +123,32 @@ MODULE GlobalData
 #else
   INTEGER, PARAMETER :: DReal128 = 23
 #endif
+
   INTEGER, PARAMETER :: DReal64  = 23
   INTEGER, PARAMETER :: DReal32  = 13
-  INTEGER, PARAMETER :: DReal  = DReal64 !Default
-  INTEGER, PARAMETER :: DFloat  = DReal64 !Default
-  INTEGER, PARAMETER :: DDFP  = DReal64 !Default
+
+#ifdef USE_Real64
+  INTEGER, PARAMETER :: DReal  = DReal64
+  INTEGER, PARAMETER :: DFloat  = DReal64
+  INTEGER, PARAMETER :: DDFP  = DReal64
+#else
+  INTEGER, PARAMETER :: DReal = DReal32
+  INTEGER, PARAMETER :: DFloat = DReal32
+  INTEGER, PARAMETER :: DDFP = DReal32
+#endif
+
   INTEGER, PARAMETER :: DInt64  = 20
   INTEGER, PARAMETER :: DInt32  = 11
   INTEGER, PARAMETER :: DInt16  = 6
   INTEGER, PARAMETER :: DInt8  = 4
-  INTEGER, PARAMETER :: DInt  = DInt32 !Default
-  INTEGER, PARAMETER :: DI4B  = DInt32 !Default
 
-  ! List of kinds
-  INTEGER, PARAMETER :: REAL_KINDS_LIST(1:4) &
-    & = [Real128, Real64, Real32, Float]
-  CHARACTER(*), PARAMETER :: REAL_FORMATS_LIST(1:4) &
-    & = [FReal128, FReal64, FReal32//' ', FReal]
-  INTEGER, PARAMETER :: INTEGER_KINDS_LIST(1:5)  &
-    & = [Int64, Int32, Int16, Int8, DIP]
-  CHARACTER(*), PARAMETER :: INTEGER_FORMATS_LIST(1:5) = &
-    & [FInt64, FInt32, FInt16//' ', FInt8//' ', FInt]
+#ifdef USE_Int64
+  INTEGER, PARAMETER :: DInt  = DInt64
+  INTEGER, PARAMETER :: DI4B  = DInt64
+#else
+  INTEGER, PARAMETER :: DInt  = DInt32
+  INTEGER, PARAMETER :: DI4B  = DInt32
+#endif
 
   ! Minimum and maximum (representable) values
   REAL(Real128), PARAMETER :: TypeReal128 = 1.0
@@ -115,57 +163,98 @@ MODULE GlobalData
   REAL(Real32), PARAMETER :: MinReal32 = -huge(1._Real32 )
   REAL(Real32), PARAMETER :: MaxReal32 = huge(1._Real32 )
 
-  REAL(Float), PARAMETER :: MinFloat  = MinReal64 ! default
-  REAL(Float), PARAMETER :: MinReal  = MinReal64 ! default
-  REAL(Float), PARAMETER :: MaxFloat  = MaxReal64 ! default
-  REAL(Float), PARAMETER :: MaxReal  = MaxReal64 ! default
-  REAL(Float), PARAMETER :: MinDFP  = MinReal64 ! default
-  REAL(Float), PARAMETER :: MaxDFP  = MaxReal64 ! default
-  REAL(Float), PARAMETER :: TypeReal = 1.0, TypeDFP = 1.0, TypeFloat = 1.0
+#ifdef USE_Real64
+  REAL(Float), PARAMETER :: MinFloat  = MinReal64
+  REAL(Float), PARAMETER :: MinReal  = MinReal64
+  REAL(Float), PARAMETER :: MaxFloat  = MaxReal64
+  REAL(Float), PARAMETER :: MaxReal  = MaxReal64
+  REAL(Float), PARAMETER :: MinDFP  = MinReal64
+  REAL(Float), PARAMETER :: MaxDFP  = MaxReal64
+#else
+  REAL(Float), PARAMETER :: MinFloat  = MinReal32
+  REAL(Float), PARAMETER :: MinReal  = MinReal32
+  REAL(Float), PARAMETER :: MaxFloat  = MaxReal32
+  REAL(Float), PARAMETER :: MaxReal  = MaxReal32
+  REAL(Float), PARAMETER :: MinDFP  = MinReal32
+  REAL(Float), PARAMETER :: MaxDFP  = MaxReal32
+#endif
+
+  REAL(Float), PARAMETER :: TypeReal = 1.0
+  REAL(Float), PARAMETER :: TypeDFP = 1.0
+  REAL(Float), PARAMETER :: TypeFloat = 1.0
 
   INTEGER(Int64), PARAMETER :: MinInt64  = -huge(1_Int64), TypeInt64 = 1
   INTEGER(Int32), PARAMETER :: MinInt32  = -huge(1_Int32), TypeInt32 = 1
   INTEGER(Int16), PARAMETER :: MinInt16  = -huge(1_Int16), TypeInt16 = 1
   INTEGER(Int8), PARAMETER :: MinInt8  = -huge(1_Int8), TypeInt8 = 1
-  INTEGER(DIP), PARAMETER :: MinInt  = MinInt32, TypeInt = 1 ! default
-  INTEGER(I4B), PARAMETER :: MinI4B  = MinInt32, TypeIntI4B = 1 ! default
+
+#ifdef USE_Int64
+  INTEGER(DIP), PARAMETER :: MinInt  = MinInt64
+  INTEGER(I4B), PARAMETER :: MinI4B  = MinInt64
+#else
+  INTEGER(DIP), PARAMETER :: MinInt  = MinInt32
+  INTEGER(I4B), PARAMETER :: MinI4B  = MinInt32
+#endif
+
+  INTEGER(DIP), PARAMETER :: TypeInt = 1
+  INTEGER(DIP), PARAMETER :: TypeIntI4B = 1
+
   INTEGER(Int64), PARAMETER :: MaxInt64  =  huge(1_Int64)
   INTEGER(Int32), PARAMETER :: MaxInt32  =  huge(1_Int32)
   INTEGER(Int16), PARAMETER :: MaxInt16  =  huge(1_Int16)
-  INTEGER(Int8), PARAMETER :: MaxInt8  =  huge(1_Int8)
+  INTEGER(Int8),  PARAMETER :: MaxInt8  =  huge(1_Int8)
+
+#ifdef USE_Int64
+  INTEGER(DIP), PARAMETER :: MaxI4B  = MaxInt64 !default
+  INTEGER(DIP), PARAMETER :: MaxInt  = MaxInt64 !default
+#else
   INTEGER(DIP), PARAMETER :: MaxI4B  = MaxInt32 !default
   INTEGER(DIP), PARAMETER :: MaxInt  = MaxInt32 !default
+#endif
 
   ! Real smallest (representable) values
   REAL(Real128), PARAMETER :: smallReal128 = tiny(1._Real128)
   REAL(Real64),  PARAMETER :: smallReal64  = tiny(1._Real64 )
   REAL(Real32),  PARAMETER :: smallReal32  = tiny(1._Real32 )
-  REAL(Float),  PARAMETER :: smallFloat  = smallReal64 !default
-  REAL(Float),  PARAMETER :: smallReal  = smallReal64 !default
-  REAL(Float),  PARAMETER :: smallDFP  = smallReal64 !default
+
+#ifdef USE_Real64
+  REAL(Float),  PARAMETER :: smallFloat  = smallReal64
+  REAL(Float),  PARAMETER :: smallReal  = smallReal64
+  REAL(Float),  PARAMETER :: smallDFP  = smallReal64
+#else
+  REAL(Float),  PARAMETER :: smallFloat  = smallReal32
+  REAL(Float),  PARAMETER :: smallReal  = smallReal32
+  REAL(Float),  PARAMETER :: smallDFP  = smallReal32
+#endif
 
 ! Smallest REAL representable difference by the running calculator
-  REAL(Real128), PARAMETER :: ZeroReal128 = nearest(1._Real128, 1._Real128) - &
-    & nearest(1._Real128,-1._Real128)
-  REAL(Real64),  PARAMETER :: ZeroReal64  = nearest(1._Real64, 1._Real64) - &
-    & nearest(1._Real64,-1._Real64)
-  REAL(Real32),  PARAMETER :: ZeroReal32  = nearest(1._Real32, 1._Real32) - &
-    & nearest(1._Real32,-1._Real32)
+  REAL(Real128), PARAMETER :: ZeroReal128 = &
+    & nearest(1._Real128, 1._Real128) - nearest(1._Real128,-1._Real128)
+  REAL(Real64),  PARAMETER :: ZeroReal64  = &
+    & nearest(1._Real64, 1._Real64) - nearest(1._Real64,-1._Real64)
+  REAL(Real32),  PARAMETER :: ZeroReal32  = &
+    & nearest(1._Real32, 1._Real32) - nearest(1._Real32,-1._Real32)
+
+#ifdef USE_Real64
   REAL(Float),  PARAMETER :: Zero = ZeroReal64
+#else
+  REAL(Float),  PARAMETER :: Zero = ZeroReal32
+#endif
 
   ! Bits/bytes memory requirements (REAL variables (R?P) must be computed at runtime)
-  INTEGER(Int16)            :: BIReal128
-  INTEGER(Int8)            :: BIReal64
-  INTEGER(Int8)            :: BIReal32
-  INTEGER(Int8)            :: BIFloat !default in bits
-  INTEGER(Int8)            :: BIReal !default in bits
-  INTEGER(Int8)            :: BIDFP !default in bytes
-  INTEGER(Int16)            :: BYReal128
-  INTEGER(Int8)            :: BYReal64
-  INTEGER(Int8)            :: BYReal32
-  INTEGER(Int8)            :: BYFloat !default
-  INTEGER(Int8)            :: BYReal !default
-  INTEGER(Int8)            :: BYDFP !default
+  INTEGER(Int16) :: BIReal128
+  INTEGER(Int8) :: BIReal64
+  INTEGER(Int8) :: BIReal32
+  INTEGER(Int8) :: BIFloat !default in bits
+  INTEGER(Int8) :: BIReal !default in bits
+  INTEGER(Int8) :: BIDFP !default in bytes
+  INTEGER(Int16) :: BYReal128
+  INTEGER(Int8) :: BYReal64
+  INTEGER(Int8) :: BYReal32
+  INTEGER(Int8) :: BYFloat !default
+  INTEGER(Int8) :: BYReal !default
+  INTEGER(Int8) :: BYDFP !default
+
   INTEGER(Int64), PARAMETER :: BIInt64 = bit_size(MaxInt64)
   INTEGER(Int32), PARAMETER :: BIInt32 = bit_size(MaxInt32)
   INTEGER(Int16), PARAMETER :: BIInt16 = bit_size(MaxInt16)

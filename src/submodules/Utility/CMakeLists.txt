@@ -15,4 +15,10 @@ target_sources(
   ${src_path}/Utility@Prod.f90
   ${src_path}/Utility@FunctionalFortran.f90
   ${src_path}/Utility@Append.f90
+  ${src_path}/Utility@Input.f90
+  ${src_path}/Utility@Inverse.f90
+  ${src_path}/Utility@MatrixMul.f90
+  ${src_path}/Utility@Assert.f90
+  ${src_path}/Utility@Approx.f90
+  ${src_path}/Utility@Misc.f90
 )

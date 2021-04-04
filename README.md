@@ -7,6 +7,16 @@
 - [VISION](#vision)
 - [EASIFEM-BASE](#easifem-base-1)
 - [Installation](#installation)
+  - [MacOSX](#macosx)
+    - [CMake](#cmake)
+    - [Python](#python)
+    - [Homebrew](#homebrew)
+  - [Linux](#linux)
+    - [CMake](#cmake-1)
+    - [Python](#python-1)
+    - [apt-get](#apt-get)
+  - [Windows](#windows)
+  - [Run on Cloud](#run-on-cloud)
 - [Usage](#usage)
 - [Dependencies](#dependencies)
   - [PENF](#penf)
@@ -20,6 +30,7 @@
   - [Sparsekit](#sparsekit)
 - [Contributing](#contributing)
 - [Credits](#credits)
+- [License](#license)
 
 ## Status
 
@@ -29,7 +40,13 @@
 
 ## Introduction
 
-EASIFEM stands for **E**xpandable **A**nd **S**calable **I**nfrastructure for **F**inite **E**lement **M**ethod. EASIFEM is designed by using [Modern-Fortran](https://fortran-lang.org/) programming language. It facilitates a framework for writing fortran programs for solving partial differential equations using the finite element methods. The framework has been developed in  programming language. The design of EASIFEM is simple and effective; it employs both object oriented paradigm and multi-dispatch paradigm. It will be useful for students, teachers, and researchers working in the area of finite element method. The library is still in active state, which means the new features will be added to the library as time-passes without hurting the backward compatibility of EASIFEM.
+EASIFEM stands for **E**xpandable **A**nd **S**calable **I**nfrastructure for **F**inite **E**lement **M**ethod. EASIFEM is designed by using [Modern-Fortran](https://fortran-lang.org/) programming language.
+
+- It is a framework for writing for developing Finite Element Programs for solving partial differential equations.
+- It is written in Modern Fortran.
+- The design of EASIFEM is simple and effective; it employs both object oriented paradigm and multi-dispatch paradigm.
+- It will be useful for students, teachers, and researchers working in the area of finite element method.
+- The library is still in development state, which means the new features will be added to the library as time-passes without hurting the backward compatibility of EASIFEM.
 
 ## VISION
 
@@ -45,6 +62,25 @@ The vision of EASIFEM is to ease the coding part of FEM. This library can be emp
 Details of data-types and methods included in EASIFEM-base can be found [here](https://www.notion.so/d1490ecc9fa84e75ac9731c1f8538e67).
 
 ## Installation
+
+### MacOSX
+
+#### CMake
+
+#### Python
+#### Homebrew
+
+### Linux
+
+#### CMake
+
+#### Python
+
+#### apt-get
+
+### Windows
+
+### Run on Cloud
 
 ## Usage
 
@@ -91,3 +127,5 @@ Sparsekit is a legacy fortran code written by the great [Yusef Saad](https://en.
 ## Contributing
 
 ## Credits
+
+## License

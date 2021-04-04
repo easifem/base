@@ -233,9 +233,9 @@ END PROCEDURE f_getARRAYValuesFromTriplet_self
 !                                                               ArrayPointers
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getPointer_Real64
+MODULE PROCEDURE f_getPointer_Real
   Val => Obj % Val
-END PROCEDURE f_getPointer_Real64
+END PROCEDURE f_getPointer_Real
 
 !----------------------------------------------------------------------------
 !                                                                     IndexOf

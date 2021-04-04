@@ -418,8 +418,7 @@ SUBROUTINE Display_Mat2_Int( Val, msg, unitNo, full )
     & unit = I, &
     & style = 'left', &
     & sep = ' ', &
-    & advance = 'double' &
-  )
+    & advance = 'double' )
 END SUBROUTINE Display_Mat2_Int
 
 !----------------------------------------------------------------------------

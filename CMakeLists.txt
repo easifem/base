@@ -12,7 +12,7 @@ enable_language(C)
 enable_language(Fortran)
 enable_language(CXX)
 set(VERSION_MAJOR "1")
-set(VERSION_MINOR "1")
+set(VERSION_MINOR "0")
 set(VERSION_BugFix "0")
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BugFix})
 set(CMAKE_PROJECT_DESCRIPTION "easifem base")
@@ -68,6 +68,29 @@ if(USE_OpenMP)
   else()
     message("OpenMP NOT FOUND: building without it")
   endif()
+endif()
+
+#Single precision or double precision
+option(USE_Real32 OFF)
+option(USE_Real64 OFF)
+
+if(USE_Real32)
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_Real32" )
+elseif(USE_Real64)
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_Real64" )
+else()
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_Real64" )
+endif()
+
+#Single precision or double precision
+option(USE_Int32 OFF)
+option(USE_Int64 OFF)
+if(USE_Int32)
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_Int32" )
+elseif(USE_Real64)
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_Int64" )
+else()
+  list( APPEND TARGET_COMPILE_DEF "-DUSE_Int32" )
 endif()
 
 # CREATING DIRECTORIES FOR EASIFEM_BASE

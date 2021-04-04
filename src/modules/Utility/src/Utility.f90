@@ -15,11 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> [[Utility]] module contains useful general purpose routines
+!> This module contains useful general purpose routines
 MODULE Utility
 USE GlobalData
 USE Display_Method
 USE ErrorHandling
+USE ISO_C_BINDING
 IMPLICIT NONE
 
 PRIVATE
@@ -30,11 +31,356 @@ INTEGER( I4B ), PARAMETER :: NPAR_CUMPROD=8
 INTEGER( I4B ), PARAMETER :: NPAR_POLY=8
 INTEGER( I4B ), PARAMETER :: NPAR_POLYTERM=8
 
+!----------------------------------------------------------------------------
+!                                                            APPROXEQ@APPROX
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 Apr 2021
+! summary: 	returns bool logical indicating if a and b are approximately equal
+!
+!### Introduction
+! This routine just does a simple absolute comparison using an epsilon that is
+! a compile time constant. It should be used whenever possible because it has
+! the least overhead. However, it is not appropriate to use when a and b
+! are either very large or very small.
+!
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION approxeq_abs_real(a,b) RESULT(ans)
+  REAL( DFP ), INTENT( IN ) :: a, b
+  LOGICAL( LGT ) :: ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE OPERATOR(.APPROXEQ.)
+  MODULE PROCEDURE approxeq_abs_real
+ENDINTERFACE
+
+INTERFACE OPERATOR(.APPROXEQA.)
+  MODULE PROCEDURE approxeq_abs_real
+END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                  arange@FunctionalFortran
+!                                                           APPROXR@APPROX
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: returns bool logical indicating if a and b are approximately equal
+!
+!### Introduction
+! This performs a relative comparison by scaling the default epsilon value to
+! the size of the larger of the two. It should be used when @c and @b are of
+! the same magnitude and very large or very small. If either @c a or @c b is
+! zero (exactly) then this routine is equivalent to an absolute comparison.
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION approxeq_rel_real(a,b) RESULT(Ans)
+  REAL( DFP ),INTENT(IN) :: a,b
+  LOGICAL( LGT ) :: Ans
+END FUNCTION approxeq_rel_real
+END INTERFACE
+
+INTERFACE OPERATOR( .APPROXEQR. )
+  MODULE PROCEDURE approxeq_rel_real
+END INTERFACE
+
+PUBLIC :: OPERATOR( .APPROXEQR. )
+
+!----------------------------------------------------------------------------
+!                                                          APPROXEQF@APPROX
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 Apr 2021
+! summary: 	returns bool logical indicating if a and b are approximately equal
+!
+!### Introduction
+! This performs a comparison of the binary representation of the two reals
+! to compare the binary units in the last place (ULP). If the two reals differ
+! on the floating point number line by 10 or less representable floating point
+! reals then they are considered equal. In theory, this is the most appropriate comparison to use, but will break down near zero.
+
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION approxeq_ulp_real(a,b) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) :: a, b
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE OPERATOR(.APPROXEQF.)
+  MODULE PROCEDURE approxeq_ulp_real
+ENDINTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            APPROXLE@APPROX
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 Apr 2021
+! summary: 	Defines the operation when comparing two single precision reals
+! with .APPROXLE.
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION approxle_real( r1, r2 ) RESULT( Ans )
+  REAL( DFP ),INTENT(IN) :: r1
+  REAL( DFP ),INTENT(IN) :: r2
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE OPERATOR( .ARROXLE. )
+  MODULE PROCEDURE approxle_real
+END INTERFACE
+
+PUBLIC :: OPERATOR( .ARROXLE. )
+
+!----------------------------------------------------------------------------
+!                                                            APPROXGE@APPROX
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	Defines the operation when comparing two single precision reals with .APPROXGE.
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION approxge_real(r1,r2) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) :: r1
+  REAL( DFP ), INTENT( IN ) :: r2
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE OPERATOR( .ARROXGE. )
+  MODULE PROCEDURE approxge_real
+END INTERFACE
+
+PUBLIC :: OPERATOR( .ARROXGE. )
+
+!----------------------------------------------------------------------------
+!                                                              SOFTEQ@APPROX
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	Defines the operation when comparing two single precision reals with SOFTEQ
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION softeq_real(r1,r2,tol) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) :: r1
+  REAL( DFP ), INTENT( IN ) :: r2
+  REAL( DFP ), INTENT( IN ) :: tol
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+INTERFACE SOFTEQ
+  MODULE PROCEDURE softeq_real
+ENDINTERFACE
+
+PUBLIC :: SOFTEQ
+
+!----------------------------------------------------------------------------
+!                                                             SOFTEQR@APPROX
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	Defines the operation when comparing two single precision reals with SOFTEQR
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION softeqr_real(r1,r2,tol) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) :: r1
+  REAL( DFP ), INTENT( IN ) :: r2
+  REAL( DFP ), INTENT( IN ) :: tol
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE SOFTEQR
+  MODULE PROCEDURE softeqr_real
+END INTERFACE SOFTEQR
+
+PUBLIC :: SOFTEQR
+
+!----------------------------------------------------------------------------
+!                                                              SOFTLE@APPROX
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	Defines the operation when comparing two single precision reals with SOFTLE
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION softle_real(r1,r2,tol) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) :: r1
+  REAL( DFP ), INTENT( IN ) :: r2
+  REAL( DFP ), INTENT( IN ) :: tol
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE SOFTLE
+  MODULE PROCEDURE softle_real
+END INTERFACE SOFTLE
+
+PUBLIC :: SOFTLE
+
+!----------------------------------------------------------------------------
+!                                                              SOFTLT@APPROX
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: Defines the operation when comparing two single precision reals with SOFTLT
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION softlt_real(r1,r2,tol) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) :: r1
+  REAL( DFP ), INTENT( IN ) :: r2
+  REAL( DFP ), INTENT( IN ) :: tol
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE SOFTLT
+  MODULE PROCEDURE softlt_real
+END INTERFACE SOFTLT
+
+PUBLIC :: SOFTLT
+
+!----------------------------------------------------------------------------
+!                                                              SOFTGE@APPROX
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION softge_real(r1,r2,tol) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) :: r1
+  REAL( DFP ), INTENT( IN ) :: r2
+  REAL( DFP ), INTENT( IN ) :: tol
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE SOFTGE
+  MODULE PROCEDURE softge_real
+END INTERFACE SOFTGE
+
+PUBLIC :: SOFTGE
+
+!----------------------------------------------------------------------------
+!                                                              SOFTGT@APPROX
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION softgt_real(r1,r2,tol) RESULT(Ans)
+  REAL( DFP ), INTENT( IN ) :: r1
+  REAL( DFP ), INTENT( IN ) :: r2
+  REAL( DFP ), INTENT( IN ) :: tol
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE SOFTGT
+  MODULE PROCEDURE softgt_real
+END INTERFACE SOFTGT
+
+PUBLIC :: SOFTGT
+
+!----------------------------------------------------------------------------
+!                                                                 @APPROX
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION equalto_logical(l1,l2) RESULT(Ans)
+  LOGICAL( LGT ), INTENT( IN ) :: l1
+  LOGICAL( LGT ), INTENT( IN ) :: l2
+  LOGICAL( LGT )  :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE OPERATOR(==)
+  MODULE PROCEDURE equalto_logical
+END INTERFACE
+
+PUBLIC :: OPERATOR(==)
+
+!----------------------------------------------------------------------------
+!                                                                   @APPROX
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION notequalto_logical(l1,l2) RESULT( Ans )
+  LOGICAL( LGT ), INTENT( IN ) :: l1
+  LOGICAL( LGT ), INTENT( IN ) :: l2
+  LOGICAL( LGT ) :: Ans
+END FUNCTION
+END INTERFACE
+
+INTERFACE OPERATOR(/=)
+  MODULE PROCEDURE notequalto_logical
+END INTERFACE
+
+PUBLIC :: OPERATOR(/=)
+
+!----------------------------------------------------------------------------
+!                                                             ASSIGN@APPROX
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE ELEMENTAL SUBROUTINE assign_char_to_int(i,c)
+  INTEGER( I4B ), INTENT( OUT ) :: i
+  CHARACTER( LEN=* ), INTENT( IN ) :: c
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             ASSIGN@APPROX
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE ELEMENTAL SUBROUTINE assign_char_to_bool(b,c)
+  LOGICAL( LGT ), INTENT( OUT ) :: b
+  CHARACTER( LEN=* ), INTENT( IN ) :: c
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             ASSIGN@APPROX
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE ELEMENTAL SUBROUTINE assign_char_to_real(s,c)
+  REAL( DFP ), INTENT( OUT ) :: s
+  CHARACTER( LEN=* ), INTENT( IN ) :: c
+END SUBROUTINE
+END INTERFACE
+
+INTERFACE ASSIGNMENT(=)
+  MODULE PROCEDURE assign_char_to_int
+  MODULE PROCEDURE assign_char_to_bool
+  MODULE PROCEDURE assign_char_to_real
+ENDINTERFACE
+
+PUBLIC :: ASSIGNMENT(=)
+
+!----------------------------------------------------------------------------
+!                                                                 @APPROX
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION isNumeric(char_str) RESULT(bool)
+  CHARACTER( LEN=* ),INTENT( IN ) :: char_str
+  LOGICAL( LGT ) :: bool
+END FUNCTION
+END INTERFACE
+
+PUBLIC :: isNumeric
+
+!----------------------------------------------------------------------------
+!                                                   arange@FunctionalFortran
+!----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
@@ -51,8 +397,9 @@ MODULE PURE FUNCTION arange_real( istart, iend, increment ) result( Ans )
   REAL( DFP ), DIMENSION( : ), ALLOCATABLE :: Ans
 END FUNCTION
 END INTERFACE
+
 !----------------------------------------------------------------------------
-!                                                                    arange
+!                                                    arangeFunctionalFortran
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -86,7 +433,6 @@ END INTERFACE arange
 
 PUBLIC arange
 
-
 !----------------------------------------------------------------------------
 !                                                     Head@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -94,7 +440,6 @@ PUBLIC arange
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Returns the first element of array `x`.
-
 
 INTERFACE
 MODULE PURE FUNCTION head_int(x) RESULT(Ans)
@@ -203,7 +548,6 @@ MODULE PURE FUNCTION split_int( x, section ) RESULT( Ans )
   INTEGER( I4B ), DIMENSION( : ), ALLOCATABLE :: Ans
 END FUNCTION split_int
 END INTERFACE
-
 
 !----------------------------------------------------------------------------
 !                                                    SPLIT@FunctionalFortran
@@ -612,73 +956,97 @@ END INTERFACE
 PUBLIC :: Append
 
 !----------------------------------------------------------------------------
-!                                                         EvaluatePolynomial
+!                                                             Assert@Assert
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! This function can evaluate a polynomial
-INTERFACE EvaluatePolynomial
-  MODULE PROCEDURE eval_poly
-END INTERFACE EvaluatePolynomial
-
-PUBLIC :: EvaluatePolynomial
-
-!----------------------------------------------------------------------------
-!                                                             ExecuteCommand
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Generic function to execute a command
-
-INTERFACE ExecuteCommand
-  MODULE PROCEDURE exe_cmd
-END INTERFACE ExecuteCommand
-
-PUBLIC :: ExecuteCommand
-
-!----------------------------------------------------------------------------
-!                                                                 getUnitNo
-!----------------------------------------------------------------------------
-
-PUBLIC :: getUnitNo, Factorial
-
-!----------------------------------------------------------------------------
-!                                                                    Int2Str
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine converts real value to characters
-
-INTERFACE Real2Str
-  MODULE PROCEDURE SP2STR, DP2STR
+INTERFACE
+MODULE FUNCTION assert_eq2(n1,n2,string)
+  CHARACTER(LEN=*), INTENT(IN) :: string
+  INTEGER( I4B ), INTENT(IN) :: n1,n2
+  INTEGER( I4B ) :: assert_eq2
+END FUNCTION
 END INTERFACE
 
-PUBLIC :: Real2Str, Int2Str
-
 !----------------------------------------------------------------------------
-!
+!                                                             Assert@Assert
 !----------------------------------------------------------------------------
 
-INTERFACE outerdIFf
-  MODULE PROCEDURE outerdIFf_r, outerdIFf_i, outerdIFf_d
+INTERFACE
+MODULE FUNCTION assert_eq3(n1,n2,n3,string)
+  CHARACTER(LEN=*), INTENT(IN) :: string
+  INTEGER( I4B ), INTENT(IN) :: n1,n2,n3
+  INTEGER( I4B ) :: assert_eq3
+END FUNCTION
 END INTERFACE
 
-PUBLIC :: outerdIFf
+!----------------------------------------------------------------------------
+!                                                             Assert@Assert
+!----------------------------------------------------------------------------
 
-INTERFACE arth
-  MODULE PROCEDURE arth_r, arth_d, arth_i
+INTERFACE
+MODULE FUNCTION assert_eq4(n1,n2,n3,n4,string)
+  CHARACTER(LEN=*), INTENT(IN) :: string
+  INTEGER( I4B ), INTENT(IN) :: n1,n2,n3,n4
+  INTEGER( I4B ) :: assert_eq4
+END FUNCTION
 END INTERFACE
 
-PUBLIC :: ARTH
+!----------------------------------------------------------------------------
+!                                                             Assert@Assert
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION assert_eqn(nn,string)
+  CHARACTER( LEN=* ), INTENT( IN ) :: string
+  INTEGER( I4B ), DIMENSION( : ), INTENT(IN) :: nn
+  INTEGER( I4B ):: assert_eqn
+END FUNCTION
+END INTERFACE
 
 INTERFACE assert_eq
-  MODULE PROCEDURE assert_eq2, assert_eq3, assert_eq4, assert_eqn
+  MODULE PROCEDURE assert_eqn, assert_eq2, assert_eq3, assert_eq4
 END INTERFACE
 
 PUBLIC :: ASSERT_EQ
+
+!----------------------------------------------------------------------------
+!                                                              Assert@Assert
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE assert_shape_2( Mat, s, msg, file, line, routine )
+  REAL( DFP ), INTENT( IN ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( 2 )
+  INTEGER( I4B ), INTENT( IN ) :: line
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             Assert@Assert
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE assert_shape_3( Mat, s,  msg, file, line, routine )
+  REAL( DFP ), INTENT( IN ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( 3 )
+  INTEGER( I4B ), INTENT( IN ) :: line
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             Assert@Assert
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE assert_shape_4( Mat, s, msg, file, line, routine )
+  REAL( DFP ), INTENT( IN ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( 4 )
+  INTEGER( I4B ), INTENT( IN ) :: line
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
+END SUBROUTINE
+END INTERFACE
 
 INTERFACE ASSERT
   MODULE PROCEDURE assert_shape_2, assert_shape_3, assert_shape_4
@@ -806,92 +1174,110 @@ END INTERFACE
 PUBLIC :: SWAP
 
 !----------------------------------------------------------------------------
-!
+!                                                             Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> Generic FUNCTION to get local of maximum value
-INTERFACE IMAXLOC
-  MODULE PROCEDURE imaxloc_r,imaxloc_i
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 April 2021
+! summary: matmul for rank3  and rank1 array
+!
+!### Introduction
+!
+! This fuction performs following task
+! `Ans(:,:) = a1(:,:,a)*a2(a)`
+
+INTERFACE
+MODULE PURE FUNCTION matmul_r3_r1( a1, a2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: a1( :, :, : ), a2( : )
+  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ) )
+END FUNCTION
 END INTERFACE
 
-PUBLIC :: IMAXLOC
 
 !----------------------------------------------------------------------------
+!                                                              Matmul@Matmul
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 April 2021
+! summary: matmul for rank1 and rank3 array
 !
-!----------------------------------------------------------------------------
-
-!> Generic FUNCTION for getting location of minmum value
-INTERFACE IMINLOC
-  MODULE PROCEDURE iminloc_r
-END INTERFACE IMINLOC
-
-PUBLIC :: IMINLOC
-
-!----------------------------------------------------------------------------
+!### Introduction
 !
+! This fuction performs following task
+! `Ans(i,j) = a1(a)*a2(a,i,j)`
+
+INTERFACE
+MODULE PURE FUNCTION matmul_r1_r3( a1, a2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: a1( : ), a2( :, :, : )
+  REAL( DFP ) :: Ans( size( a2, 2 ), size( a2, 3 ) )
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> Generic FUNCTION to get determinent of `2x2` and `3x3` matrix
-INTERFACE Det
-  MODULE PROCEDURE det_2D, det_3D
-END INTERFACE Det
-
-PUBLIC :: DET
-
-!----------------------------------------------------------------------------
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	matmul for rank2 and rank3 array
 !
+!### Introduction
+!
+! This fuction performs following task
+! `Ans(i,j,ip) = a1(i,I)*a2(I,j,ip)`
+
+INTERFACE
+MODULE PURE FUNCTION matmul_r2_r3( a1, a2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: a1( :, : ), a2( :, :, : )
+  REAL( DFP ) :: Ans( size( a1, 1 ), size( a2, 2 ), size( a2, 3 ) )
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> Generic subroutine to get inverse of `2x2` and `3x3` matrix
-INTERFACE Inv
-    MODULE PROCEDURE Inv_2D, Inv_3D
-END INTERFACE Inv
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	matmul for rank4 and rank1 array
+!
+!### Introduction
+!
+! `Ans(:,:,:) = a1(:,:,:,a)*a2(a)`
 
-PUBLIC :: INV
+INTERFACE
+MODULE PURE FUNCTION matmul_r4_r1( a1, a2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: a1( :, :, :, : ), a2( : )
+  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ), size( a1, 3 ) )
+END FUNCTION
+END INTERFACE
 
-INTERFACE matmul
+!----------------------------------------------------------------------------
+!                                                               Matmul@Matmul
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	matmul for rank3 and rank2
+!
+!### Introduction
+! This fuction performs following task
+! `Ans(i,j,ip) = a1(i,j,I)*a2(I,ip)`
+
+INTERFACE
+MODULE PURE FUNCTION matmul_r3_r2( a1, a2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: a1( :, :, : ), a2( :, : )
+  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ), size( a2, 2 ) )
+END FUNCTION
+END INTERFACE
+
+INTERFACE MATMUL
   MODULE PROCEDURE matmul_r3_r1, matmul_r4_r1, matmul_r3_r2, &
     & matmul_r1_r3, matmul_r2_r3
-END INTERFACE matmul
+END INTERFACE MATMUL
 
-PUBLIC :: matmul
-
-!----------------------------------------------------------------------------
-!                                                                     Radian
-!----------------------------------------------------------------------------
-
-INTERFACE radian
-  MODULE PROCEDURE radian_dfp, radian_int
-END INTERFACE
-
-PUBLIC :: radian
-
-!----------------------------------------------------------------------------
-!                                                                    Degrees
-!----------------------------------------------------------------------------
-
-INTERFACE Degrees
-  MODULE PROCEDURE degrees_dfp
-END INTERFACE Degrees
-
-PUBLIC :: Degrees
-
-!----------------------------------------------------------------------------
-!                                                          LOC_NearestPoint
-!----------------------------------------------------------------------------
-
-INTERFACE LOC_NearestPoint
-  MODULE PROCEDURE Loc_Nearest_Point
-END INTERFACE LOC_NearestPoint
-
-PUBLIC :: LOC_NearestPoint
-
-INTERFACE SearchNearestCoord
-  MODULE PROCEDURE Loc_Nearest_Point
-END INTERFACE SearchNearestCoord
-
-PUBLIC :: SearchNearestCoord
-
+PUBLIC :: MATMUL
 
 !----------------------------------------------------------------------------
 !                                                              HeapSort@Sort
@@ -1330,7 +1716,103 @@ END INTERFACE SORT
 PUBLIC :: SORT
 
 !----------------------------------------------------------------------------
-!                                                                     Input
+!                                                               Input@Input
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION input_int( default, option ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: default
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: option
+  INTEGER( I4B ) :: Ans
+END FUNCTION input_int
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               Input@Input
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION input_Real(default,option) RESULT(val)
+  REAL(DFP),INTENT(in) :: default
+  REAL(DFP),OPTIONAL,INTENT(in)::option
+  REAL(DFP) :: val
+END FUNCTION input_Real
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               Input@Input
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION input_IntVec( default, option ) RESULT( val )
+  INTEGER( I4B ), INTENT( IN ) :: default(:)
+  INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:)
+  INTEGER( I4B ), ALLOCATABLE :: val(:)
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               Input@Input
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION input_Realvec( default, option ) RESULT( val )
+  REAL( DFP ), INTENT( IN ) :: default(:)
+  REAL( DFP ), OPTIONAL,INTENT( IN ) :: option(:)
+  REAL( DFP ), ALLOCATABLE :: val(:)
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               Input@Input
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION input_IntArray(default,option) RESULT(val)
+  INTEGER( I4B ), INTENT( IN ) :: default(:,:)
+  INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:,:)
+  INTEGER( I4B ), ALLOCATABLE :: val(:,:)
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                Input@Input
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION input_RealArray(default,option) RESULT(val)
+  REAL( DFP ), INTENT( IN ) :: default(:,:)
+  REAL( DFP ), OPTIONAL,INTENT( IN )::option(:,:)
+  REAL( DFP ), ALLOCATABLE :: val(:,:)
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                Input@Input
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION input_String(default,option) RESULT(val)
+  CHARACTER( LEN=* ), INTENT( IN ) :: default
+  CHARACTER( LEN=* ), OPTIONAL, INTENT( IN )::option
+  CHARACTER( 200 )  :: val
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                Input@Input
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION input_logical(default,option) RESULT(val)
+  LOGICAL( LGT ), INTENT( IN ) :: default
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN )::option
+  LOGICAL( LGT )  :: val
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                Input@Input
 !----------------------------------------------------------------------------
 
 INTERFACE Input
@@ -1340,19 +1822,63 @@ END INTERFACE Input
 PUBLIC :: Input
 
 !----------------------------------------------------------------------------
-!
+!                                                                     Det@Inv
 !----------------------------------------------------------------------------
 
-PUBLIC :: getExtension
+INTERFACE
+MODULE PURE FUNCTION det_2D( A ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: A( :, : )
+  REAL( DFP ) :: Ans
+END FUNCTION det_2D
+END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                                   CONTAINS
+!                                                                     Det@Inv
 !----------------------------------------------------------------------------
 
-CONTAINS
+INTERFACE
+MODULE PURE FUNCTION det_3D( A ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: A( :, :, : )
+  REAL( DFP ), ALLOCATABLE :: Ans( : )
+END FUNCTION det_3D
+END INTERFACE
+
+INTERFACE Det
+  MODULE PROCEDURE det_2D, det_3D
+END INTERFACE Det
+
+PUBLIC :: DET
 
 !----------------------------------------------------------------------------
-!                                                               getExtension
+!                                                                     INV@Inv
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Inv_2D( invA, A )
+  REAL( DFP ), INTENT( INOUT ) :: invA( :, : )
+  REAL( DFP ), INTENT( IN ) :: A( :, : )
+END SUBROUTINE
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                     INV@Inv
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Inv_3D( invA, A )
+  REAL( DFP ), INTENT( INOUT ) :: invA( :, :, : )
+  REAL( DFP ), INTENT( IN ) :: A( :, :, : )
+END SUBROUTINE
+END INTERFACE
+
+INTERFACE Inv
+    MODULE PROCEDURE Inv_2D, Inv_3D
+END INTERFACE Inv
+
+PUBLIC :: INV
+
+!----------------------------------------------------------------------------
+!                                                         getExtension@MISC
 !----------------------------------------------------------------------------
 
 !> authors: Dr. Vikas Sharma
@@ -1365,43 +1891,53 @@ CONTAINS
 ! & msg="test1:: ")
 ! ```
 
-FUNCTION getExtension( char ) RESULT(ext)
+INTERFACE
+MODULE FUNCTION getExtension( char ) RESULT(ext)
   CHARACTER( LEN=* ), INTENT( IN ) :: char
   CHARACTER(7) :: ext
-
-  ! Define internal variables
-  integer(int32) :: n,m
-  ext="       "
-  n=0
-  n = index(char,".", back=.true.)
-  m = len(char)
-  ext(1:m-n+1) = char(n+1:m)
 END FUNCTION
+END INTERFACE
+
+PUBLIC :: getExtension
 
 !----------------------------------------------------------------------------
-!                                                                     Radian
+!                                                               Radian@MISC
 !----------------------------------------------------------------------------
 
 !> authors: Dr. Vikas Sharma
 !
 ! Convert degrees into radian
-PURE FUNCTION radian_dfp( deg ) RESULT( Ans )
+
+INTERFACE
+MODULE PURE FUNCTION radian_dfp( deg ) RESULT( Ans )
   REAL( DFP ), INTENT( IN ) :: deg
   REAL( DFP ) :: Ans
-  Ans = deg / 180.0_DFP * 3.1415926535_DFP
-END FUNCTION radian_dfp
+END FUNCTION
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               Radian@MISC
+!----------------------------------------------------------------------------
 
 !> authors: Dr. Vikas Sharma
 !
 ! Converts degrees into radian
-PURE FUNCTION radian_int( deg ) RESULT( Ans )
+
+INTERFACE
+MODULE PURE FUNCTION radian_int( deg ) RESULT( Ans )
   INTEGER( I4B ), INTENT( IN ) :: deg
   REAL( DFP ) :: Ans
-  Ans = REAL( deg, KIND=DFP ) / 180.0_DFP * 3.1415926535_DFP
-END FUNCTION radian_int
+END FUNCTION
+END INTERFACE
+
+INTERFACE radian
+  MODULE PROCEDURE radian_dfp, radian_int
+END INTERFACE
+
+PUBLIC :: radian
 
 !----------------------------------------------------------------------------
-!                                                                    Degrees
+!                                                              Degrees@MISC
 !----------------------------------------------------------------------------
 
 !> authors: Dr. Vikas Sharma
@@ -1409,17 +1945,29 @@ END FUNCTION radian_int
 ! This function converts radian into degrees
 ! Belongs to `Degrees`
 
-PURE FUNCTION degrees_dfp( rad ) RESULT( Ans )
+INTERFACE
+MODULE PURE FUNCTION degrees_dfp( rad ) RESULT( Ans )
   REAL( DFP ), INTENT( IN ) :: rad
   REAL( DFP ) :: Ans
-  Ans = rad / 3.1415926535_DFP * 180.0_DFP
-END FUNCTION degrees_dfp
+END FUNCTION
+END INTERFACE
+
+INTERFACE Degrees
+  MODULE PROCEDURE degrees_dfp
+END INTERFACE Degrees
+
+PUBLIC :: Degrees
+
 
 !----------------------------------------------------------------------------
+!                                                                 @MISC
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	This subroutine search the location of nearest point to x in the array of coordinates; Array
 !
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
+!### Introduction
 !
 ! This subroutine search the location of nearest point to x in the
 ! array of coordinates; Array
@@ -1436,1009 +1984,221 @@ END FUNCTION degrees_dfp
 ! call display( id==15, "test4:: " )
 !```
 
-FUNCTION Loc_Nearest_Point( Array, x )  RESULT( id )
+INTERFACE
+MODULE FUNCTION Loc_Nearest_Point( Array, x )  RESULT( id )
   REAL( DFP ), INTENT( IN ) :: Array( :, : )
   !! Nodal coordinates in XiJ format
   REAL( DFP ), INTENT( IN ) :: x( : )
   INTEGER( I4B ) :: id
-
-  ! Define internal variables
-  REAL( DFP ) :: xr( 3 )
-  INTEGER( I4B ) :: i, n,m,norm,tr_norm
-
-  n = SIZE( Array, 1 )
-  m = SIZE( Array, 2 )
-
-  IF( n .NE. SIZE(x) ) THEN
-    CALL ErrorMSG(&
-      & Msg="SearchNearestCoord >> size(Array,1) should be =size(x)", &
-      & File= __FILE__, &
-      & Line = __LINE__, &
-      & Routine = "Loc_Nearest_Point(Array, x)" &
-    )
-    STOP
-  ENDIF
-
-  DO i = 1, m
-    xr( 1:n ) = Array( 1:n, i )
-    tr_norm = NORM2( xr(1:n) - x(1:n) )
-    IF( i .EQ. 1 ) THEN
-      norm = tr_norm
-      id  = i
-    ELSE
-      IF( norm .GT. tr_norm ) THEN
-        norm = tr_norm
-        id  = i
-      ELSE
-        CYCLE
-      END IF
-    END IF
-  END DO
-
-END FUNCTION Loc_Nearest_Point
-
-!----------------------------------------------------------------------------
-!                                                                     Input
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-PURE FUNCTION input_Int( default, option ) RESULT( val )
-  INTEGER( I4B ), INTENT( IN ) :: default
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: option
-  INTEGER( I4B ) :: val
-
-  IF(PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
-
 END FUNCTION
+END INTERFACE
+
+INTERFACE LOC_NearestPoint
+  MODULE PROCEDURE Loc_Nearest_Point
+END INTERFACE LOC_NearestPoint
+
+PUBLIC :: LOC_NearestPoint
+
+INTERFACE SearchNearestCoord
+  MODULE PROCEDURE Loc_Nearest_Point
+END INTERFACE SearchNearestCoord
+
+PUBLIC :: SearchNearestCoord
 
 !----------------------------------------------------------------------------
-!                                                                      Input
+!                                                                     @MISC
 !----------------------------------------------------------------------------
 
-PURE FUNCTION input_Real(default,option) RESULT(val)
-  REAL(DFP),INTENT(in) :: default
-  REAL(DFP),OPTIONAL,INTENT(in)::option
-  REAL(DFP) :: val
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	This subroutine run a system commoand on terminal
 
-  IF(PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
-END FUNCTION
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-PURE FUNCTION input_IntVec( default, option ) RESULT( val )
-  INTEGER( I4B ), INTENT( IN ) :: default(:)
-  INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:)
-  INTEGER( I4B ), ALLOCATABLE :: val(:)
-
-  IF( PRESENT( option ) ) THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
-
-END FUNCTION
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-PURE FUNCTION input_Realvec( default, option ) RESULT( val )
-  REAL( DFP ), INTENT( IN ) :: default(:)
-  REAL( DFP ), OPTIONAL,INTENT( IN ) :: option(:)
-  REAL( DFP ), ALLOCATABLE :: val(:)
-
-  IF( PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
-END FUNCTION
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This function input integer array
-PURE FUNCTION input_IntArray(default,option) RESULT(val)
-  INTEGER( I4B ), INTENT( IN ) :: default(:,:)
-  INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:,:)
-  INTEGER( I4B ), ALLOCATABLE :: val(:,:)
-
-  IF(PRESENT(option) )THEN
-    val = option
-  ELSE
-    val = default
-  ENDIF
-END FUNCTION input_IntArray
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This function input real array
-PURE FUNCTION input_RealArray(default,option) RESULT(val)
-  REAL( DFP ), INTENT( IN ) :: default(:,:)
-  REAL( DFP ), OPTIONAL,INTENT( IN )::option(:,:)
-  REAL( DFP ), ALLOCATABLE :: val(:,:)
-
-  IF(PRESENT(option) )THEN
-    val = option
-  ELSE
-    val = default
-  ENDIF
-END FUNCTION input_RealArray
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This function input string
-PURE FUNCTION input_String(default,option) RESULT(val)
-  CHARACTER( LEN=* ), INTENT( IN ) :: default
-  CHARACTER( LEN=* ), OPTIONAL, INTENT( IN )::option
-  CHARACTER( 200 )  :: val
-
-  IF(PRESENT(option) )THEN
-    val=TRIM(option)
-  ELSE
-    val=TRIM(default)
-  ENDIF
-END FUNCTION input_String
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This function input logical variables
-
-PURE FUNCTION input_logical(default,option) RESULT(val)
-  LOGICAL( LGT ), INTENT( IN ) :: default
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN )::option
-  LOGICAL( LGT )  :: val
-
-  IF(PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
-
-END FUNCTION input_logical
-
-!----------------------------------------------------------------------------
-!                                                                     MATMUL
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This fuction performs following task
-! `Ans(:,:) = a1(:,:,a)*a2(a)`
-
-PURE FUNCTION matmul_r3_r1( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( :, :, : ), a2( : )
-  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ) )
-
-  INTEGER( I4B ) :: ii
-  Ans = a2( 1 ) * a1( :, :, 1 )
-  DO ii = 2, SIZE( a2 )
-    Ans = Ans + a2( ii ) * a1( :, :, ii )
-  END DO
-END FUNCTION matmul_r3_r1
-
-!----------------------------------------------------------------------------
-!                                                                     MATMUL
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This fuction performs following task
-! `Ans(i,j) = a1(a)*a2(a,i,j)`
-
-PURE FUNCTION matmul_r1_r3( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( : ), a2( :, :, : )
-  REAL( DFP ) :: Ans( size( a2, 2 ), size( a2, 3 ) )
-
-  INTEGER( I4B ) :: ii
-  Ans = a1(1)*a2(1,:,:)
-  DO ii = 2, SIZE( a1 )
-    Ans = Ans + a1(ii)*a2(ii,:,:)
-  END DO
-END FUNCTION matmul_r1_r3
-
-!----------------------------------------------------------------------------
-!                                                                     MATMUL
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This fuction performs following task
-! `Ans(i,j,ip) = a1(i,I)*a2(I,j,ip)`
-
-PURE FUNCTION matmul_r2_r3( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( :, : ), a2( :, :, : )
-  REAL( DFP ) :: Ans( size( a1, 1 ), size( a2, 2 ), size( a2, 3 ) )
-
-  INTEGER( I4B ) :: ii
-  DO ii = 1, SIZE( a2, 3 )
-    Ans( :, :, ii ) = MATMUL( a1, a2( :, :, ii ) )
-  END DO
-END FUNCTION matmul_r2_r3
-
-!----------------------------------------------------------------------------
-!                                                                     MATMUL
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This fuction performs following task
-! `Ans(:,:,:) = a1(:,:,:,a)*a2(a)`
-
-PURE FUNCTION matmul_r4_r1( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( :, :, :, : ), a2( : )
-  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ), size( a1, 3 ) )
-
-  INTEGER( I4B ) :: ii
-  Ans = a2( 1 ) * a1( :, :, :, 1 )
-  DO ii = 2, SIZE( a2 )
-    Ans = Ans + a2( ii ) * a1( :, :, :, ii )
-  END DO
-END FUNCTION matmul_r4_r1
-
-!----------------------------------------------------------------------------
-!                                                                     MATMUL
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This fuction performs following task
-! `Ans(i,j,ip) = a1(i,j,I)*a2(I,ip)`
-
-PURE FUNCTION matmul_r3_r2( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( :, :, : ), a2( :, : )
-  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ), size( a2, 2 ) )
-
-  INTEGER( I4B ) :: ip
-  DO ip = 1, SIZE( a2, 2)
-    Ans( :,:, ip ) = MATMUL( a1, a2( :, ip ) )
-  END DO
-END FUNCTION matmul_r3_r2
-
-!-----------------------------------------------------------------------------
-!
-!-----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! this FUNCTION evaluate a polynomial
-! - Power table contains the power of x, y, z
-! - Its shape IF ( tTerms, 3 )
-!	- Coeff is vector its size is tTerms
-!	- X( 3 ) contains x, y, z
-
-FUNCTION eval_poly( PowerTable, Coeff, X, tTerms ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: tTerms
-  REAL( DFP ), DIMENSION( tTerms, 3 ), INTENT( IN ) :: PowerTable
-  REAL( DFP ), DIMENSION( tTerms ), INTENT( IN ) :: Coeff
-  REAL( DFP ), INTENT( IN ) :: X( 3 )
-  REAL( DFP ) :: Ans
-
-  ! Define internal variable
-  INTEGER( I4B ) :: i
-
-  Ans = 0.0_DFP
-  DO i = 1, tTerms
-    IF( Coeff( i ) .NE. 0.0_DFP ) THEN
-      Ans = Ans + Coeff( i ) * &
-          & ( X( 1 ) ** PowerTable( i, 1 ) &
-          & * X( 2 ) ** PowerTable( i, 2 ) &
-          & * X( 3 ) ** PowerTable( i, 3 ) &
-          & )
-    END IF
-  END DO
-END FUNCTION eval_poly
-
-!------------------------------------------------------------------------------
-!                                                                ExecuteCommand
-!------------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine run a system commoand on terminal
-SUBROUTINE exe_cmd( CMD, Str )
+INTERFACE
+MODULE SUBROUTINE exe_cmd( CMD, Str )
   CHARACTER( LEN = * ), INTENT( IN ) :: CMD, Str
+END SUBROUTINE
+END INTERFACE
 
-  ! Define internal variables
-  INTEGER( I4B ) :: CMDSTAT, EXITSTAT
-  LOGICAL( LGT ) :: WAIT = .TRUE.
-  CHARACTER( LEN = 300 ) :: CMDMSG = ""
+INTERFACE ExecuteCommand
+  MODULE PROCEDURE exe_cmd
+END INTERFACE ExecuteCommand
 
-  CALL EXECUTE_COMMAND_LINE( TRIM(CMD), CMDSTAT = CMDSTAT, &
-    & EXITSTAT = EXITSTAT, WAIT = WAIT, CMDMSG = CMDMSG )
+PUBLIC :: ExecuteCommand
 
-  IF( CMDSTAT .NE. 0 ) THEN
+!----------------------------------------------------------------------------
+!                                                             getUnitNo@MISC
+!----------------------------------------------------------------------------
 
-    IF( CMDSTAT .EQ. -1 ) THEN
-      CALL ErrorMsg( &
-        & File = __FILE__, &
-        & Routine = "exe_cmd()", &
-        & Line = __LINE__, &
-        & MSG = "following command failed " // TRIM( CMDMSG ) )
-    END IF
-
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "exe_cmd()", &
-      & Line = __LINE__, &
-      & MSG = "following command failed " // TRIM( CMDMSG ) )
-
-    STOP
-
-  END IF
-
-END SUBROUTINE exe_cmd
-
-!------------------------------------------------------------------------------
-!
-!------------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION returns valid unit no for input output
-
-FUNCTION getUnitNo( Str )
-  ! Define INTENT of dumy varibales
+INTERFACE
+MODULE FUNCTION getUnitNo( Str )
   INTEGER( I4B ) :: getUnitNo
   CHARACTER( LEN = * ), INTENT( IN ) :: Str
+END FUNCTION
+END INTERFACE
 
-  ! Define internal variables
-  LOGICAL( LGT ) :: isOpen, isExist
-  INTEGER( I4B ) :: Imin, Imax, I
-
-  Imin = 10
-  Imax = 1000
-
-  DO I = Imin, Imax, 1
-    INQUIRE( UNIT = I, OPENED = isOpen, EXIST = isExist )
-    IF( isExist .AND. .NOT. isOpen ) EXIT
-  END DO
-
-  IF( isOpen .OR. .NOT. isExist ) THEN
-
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "getUnitNo()", &
-      & Line = __LINE__, &
-      & MSG = " cannot find a valid unit number; Program Stopped" )
-    STOP
-  END IF
-
-  getUnitNo = I
-
-END FUNCTION getUnitNo
-
-!------------------------------------------------------------------------------
-!                                                                  Rank1ToRank3
-!------------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Returns a 3D arrays of pointers
-
-SUBROUTINE Rank1ToRank3( R1, R3, NSD, NNS, NNT )
-  REAL( DFP ), DIMENSION( : ), CONTIGUOUS, TARGET :: R1
-  REAL( DFP ), DIMENSION( :, :, : ), POINTER :: R3
-  INTEGER( I4B ), INTENT( IN ) :: NSD, NNS, NNT
-
-  INTEGER( I4B ) :: I, N, a, b, K
-  ! Free the memory IF R3 is already allocated
-  IF( ASSOCIATED( R3 ) ) DEALLOCATE( R3 )
-  NULLIFY( R3 )
-  N = SIZE( R1 )
-  ! Flag-1
-  IF( N .NE. ( NSD*NNS*NNT ) )THEN
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Rank1ToRank3()", &
-      & Line = __LINE__, &
-      & MSG = " Factor Problem" )
-    RETURN
-  END IF
-
-  DO K = 1, NNT
-    DO I = 1, NSD
-      a = ( K - 1 ) * NSD * NNS  + ( I - 1 ) * NNS + 1
-      b = a + NNS - 1
-      R3( I:I, 1 : NNS, K:K ) => R1( a : b )
-    END DO
-  END DO
-END SUBROUTINE Rank1ToRank3
+PUBLIC :: getUnitNo
 
 !----------------------------------------------------------------------------
-!                                                                 Factorial
-!----------------------------------------------------------------------------
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION computes the factorial of an INTEGER
-
-RECURSIVE FUNCTION Factorial( N ) RESULT( Fact )
-    INTEGER( I4B ), INTENT( IN ) :: N
-    INTEGER( I4B ) :: Fact
-    IF ( N .EQ. 0 ) THEN
-        Fact = 1
-    ELSE
-        Fact = N * Factorial( N - 1 )
-    END IF
-END FUNCTION Factorial
-
-!------------------------------------------------------------------------------
-!                                                                      Int2Str
-!------------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Convert INTEGER  to  string
-
-PURE FUNCTION Int2Str( I )
-    INTEGER( I4B ), INTENT( IN ) :: I
-    CHARACTER( LEN = 15 ) :: Int2Str
-    CHARACTER( LEN = 15 ) :: Str
-    WRITE( Str, "(I15)" ) I
-    Int2Str = TRIM( ADJUSTL( Str ) )
-END FUNCTION Int2Str
-
-!----------------------------------------------------------------------------
-!                                                                  Real2Str
+!                                                             Factorial@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! Convert REAL to string
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: This FUNCTION computes the factorial of an INTEGER
 
-FUNCTION SP2Str( I )
-    REAL( SP ), INTENT( IN ) :: I
-    CHARACTER( LEN = 20 ) :: SP2Str
-    CHARACTER( LEN = 20 ) :: Str
-    WRITE( Str, "(G17.7)" ) I
-    SP2Str = TRIM( ADJUSTL( Str ) )
-END FUNCTION SP2Str
+INTERFACE
+MODULE RECURSIVE FUNCTION Factorial( N ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: N
+  INTEGER( I4B ) :: Ans
+END FUNCTION
+END INTERFACE
+
+PUBLIC :: Factorial
 
 !----------------------------------------------------------------------------
-!                                                                  Real2Str
+!                                                               Int2STR@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! Convert REAL to string
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 April 2021
+! summary: 	Convert INTEGER  to  string
 
-FUNCTION DP2Str( I )
-    REAL( DP ), INTENT( IN ) :: I
-    CHARACTER( LEN = 20 ) :: DP2Str
-    CHARACTER( LEN = 20 ) :: Str
-    WRITE( Str, "(G17.7)" ) I
-    DP2Str = TRIM( ADJUSTL( Str ) )
-END FUNCTION DP2Str
+INTERFACE
+MODULE PURE FUNCTION Int2Str( I )
+  INTEGER( I4B ), INTENT( IN ) :: I
+  CHARACTER( LEN = 15 ) :: Int2Str
+END FUNCTION
+END INTERFACE
 
-!------------------------------------------------------------------------------
-!                                                                         arth
-!------------------------------------------------------------------------------
+PUBLIC :: Int2Str
 
-PURE FUNCTION arth_r(first,increment,n)
-  REAL(SP), INTENT(IN) :: first,increment
-  INTEGER(I4B), INTENT(IN) :: n
-  REAL(SP), DIMENSION(n) :: arth_r
-  INTEGER(I4B) :: k,k2
-  REAL(SP) :: temp
-  IF (n > 0) arth_r(1)=first
-  IF (n <= NPAR_ARTH) THEN
-    DO k=2,n
-      arth_r(k)=arth_r(k-1)+increment
-    END DO
-  ELSE
-    DO k=2,NPAR2_ARTH
-      arth_r(k)=arth_r(k-1)+increment
-    END DO
-    temp=increment*NPAR2_ARTH
-    k=NPAR2_ARTH
-    DO
-      IF (k >= n) exit
-      k2=k+k
-      arth_r(k+1:min(k2,n))=temp+arth_r(1:min(k,n-k))
-      temp=temp+temp
-      k=k2
-    END DO
-  END IF
-END FUNCTION arth_r
-    !BL
-PURE FUNCTION arth_d(first,increment,n)
-  REAL(DP), INTENT(IN) :: first,increment
-  INTEGER(I4B), INTENT(IN) :: n
-  REAL(DP), DIMENSION(n) :: arth_d
-  INTEGER(I4B) :: k,k2
-  REAL(DP) :: temp
-  IF (n > 0) arth_d(1)=first
-  IF (n <= NPAR_ARTH) THEN
-    DO k=2,n
-      arth_d(k)=arth_d(k-1)+increment
-    END DO
-  ELSE
-    DO k=2,NPAR2_ARTH
-      arth_d(k)=arth_d(k-1)+increment
-    END DO
-    temp=increment*NPAR2_ARTH
-    k=NPAR2_ARTH
-    DO
-      IF (k >= n) exit
-      k2=k+k
-      arth_d(k+1:min(k2,n))=temp+arth_d(1:min(k,n-k))
-      temp=temp+temp
-      k=k2
-    END DO
-  END IF
-END FUNCTION arth_d
-!
-PURE FUNCTION arth_i(first,increment,n)
-  INTEGER(I4B), INTENT(IN) :: first,increment,n
-  INTEGER(I4B), DIMENSION(n) :: arth_i
-  INTEGER(I4B) :: k,k2,temp
-  IF (n > 0) arth_i(1)=first
-  IF (n <= NPAR_ARTH) THEN
-    DO k=2,n
-      arth_i(k)=arth_i(k-1)+increment
-    END DO
-  ELSE
-    DO k=2,NPAR2_ARTH
-      arth_i(k)=arth_i(k-1)+increment
-    END DO
-    temp=increment*NPAR2_ARTH
-    k=NPAR2_ARTH
-    DO
-      IF (k >= n) exit
-      k2=k+k
-      arth_i(k+1:min(k2,n))=temp+arth_i(1:min(k,n-k))
-      temp=temp+temp
-      k=k2
-    END DO
-  END IF
-END FUNCTION arth_i
+!----------------------------------------------------------------------------
+!                                                              Real2Str@MISC
+!----------------------------------------------------------------------------
 
-!------------------------------------------------------------------------------
-!                                                                    OuterDIFf
-!------------------------------------------------------------------------------
+INTERFACE
+MODULE FUNCTION SP2Str( I )
+  REAL( SP ), INTENT( IN ) :: I
+  CHARACTER( LEN = 20 ) :: SP2Str
+END FUNCTION
+END INTERFACE
 
-!BL
-PURE FUNCTION outerdIFf_r(a,b)
+INTERFACE
+MODULE FUNCTION DP2Str( I )
+  REAL( DP ), INTENT( IN ) :: I
+  CHARACTER( LEN = 20 ) :: DP2Str
+END FUNCTION
+END INTERFACE
+
+INTERFACE Real2Str
+  MODULE PROCEDURE SP2Str, DP2Str
+END INTERFACE Real2Str
+
+PUBLIC :: Real2Str
+
+!----------------------------------------------------------------------------
+!                                                                       ARTH
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION arth_r(first,increment,n)
+  REAL( SP ), INTENT( IN ) :: first,increment
+  INTEGER( I4B ), INTENT( IN ) :: n
+  REAL( SP ) :: arth_r( n )
+END FUNCTION
+END INTERFACE
+
+INTERFACE
+MODULE PURE FUNCTION arth_d(first,increment,n)
+  REAL( DP ), INTENT(IN) :: first,increment
+  INTEGER( I4B ), INTENT(IN) :: n
+  REAL( DP ) :: arth_d( n )
+END FUNCTION
+END INTERFACE
+
+INTERFACE
+MODULE PURE FUNCTION arth_i(first,increment,n)
+  INTEGER( I4B ), INTENT( IN ) :: first,increment,n
+  INTEGER( I4B ) :: arth_i( n )
+END FUNCTION
+END INTERFACE
+
+INTERFACE ARTH
+  MODULE PROCEDURE arth_d, arth_i, arth_r
+END INTERFACE ARTH
+
+PUBLIC :: ARTH
+
+!----------------------------------------------------------------------------
+!                                                                 outerDIFF
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION outerdIFf_r(a,b)
   REAL( SP ), DIMENSION(:), INTENT(IN) :: a,b
   REAL( SP ), DIMENSION(size(a),size(b)) :: outerdIFf_r
-  outerdIFf_r = SPREAD(a,dim=2,ncopies=size(b)) - &
-    SPREAD(b,dim=1,ncopies=size(a))
-END FUNCTION outerdIFf_r
-!
-PURE FUNCTION outerdIFf_d(a,b)
+END FUNCTION
+END INTERFACE
+
+INTERFACE
+MODULE PURE FUNCTION outerdIFf_d(a,b)
   REAL( DP ), DIMENSION(:), INTENT(IN) :: a,b
   REAL( DP ), DIMENSION(size(a),size(b)) :: outerdIFf_d
-  outerdIFf_d = SPREAD(a,dim=2,ncopies=size(b)) - &
-    SPREAD(b,dim=1,ncopies=size(a))
-END FUNCTION outerdIFf_d
-!BL
-PURE FUNCTION outerdIFf_i(a,b)
+END FUNCTION
+END INTERFACE
+
+INTERFACE
+MODULE PURE FUNCTION outerdIFf_i(a,b)
   INTEGER( I4B ), DIMENSION(:), INTENT(IN) :: a,b
   INTEGER( I4B ), DIMENSION(size(a),size(b)) :: outerdIFf_i
-  outerdIFf_i = SPREAD(a,dim=2,ncopies=size(b)) - &
-    SPREAD(b,dim=1,ncopies=size(a))
-END FUNCTION outerdIFf_i
+END FUNCTION
+END INTERFACE
 
-!------------------------------------------------------------------------------
-!                                                                      nrerror
-!------------------------------------------------------------------------------
+INTERFACE outerDIFF
+  MODULE PROCEDURE outerdIFf_r, outerdIFf_i, outerdIFf_d
+END INTERFACE
 
-SUBROUTINE nrerror( string )
-  CHARACTER(LEN=*), INTENT(IN) :: string
-  write (*,*) 'nrerror: ', string
-  STOP 'program terminated by nrerror'
-END SUBROUTINE nrerror
+PUBLIC :: outerDIFF
 
 !----------------------------------------------------------------------------
-!                                                                  Assert_EQ
+!                                                              IMAXLOC@MISC
 !----------------------------------------------------------------------------
 
-FUNCTION assert_eq2(n1,n2,string)
-  CHARACTER(LEN=*), INTENT(IN) :: string
-  INTEGER( I4B ), INTENT(IN) :: n1,n2
-  INTEGER( I4B ) :: assert_eq2
-  IF (n1 .EQ. n2) THEN
-    assert_eq2=n1
-  ELSE
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Assert_Eq()", &
-      & Line = __LINE__, &
-      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
-    STOP
-  END IF
-END FUNCTION assert_eq2
-
-!----------------------------------------------------------------------------
-!                                                                  Assert_EQ
-!----------------------------------------------------------------------------
-
-FUNCTION assert_eq3(n1,n2,n3,string)
-  CHARACTER(LEN=*), INTENT(IN) :: string
-  INTEGER( I4B ), INTENT(IN) :: n1,n2,n3
-  INTEGER( I4B ) :: assert_eq3
-  IF (n1 == n2 .and. n2 == n3) THEN
-    assert_eq3=n1
-  ELSE
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Assert_Eq()", &
-      & Line = __LINE__, &
-      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
-    STOP
-  END IF
-END FUNCTION assert_eq3
-
-!----------------------------------------------------------------------------
-!                                                                  Assert_EQ
-!----------------------------------------------------------------------------
-
-FUNCTION assert_eq4(n1,n2,n3,n4,string)
-  CHARACTER(LEN=*), INTENT(IN) :: string
-  INTEGER( I4B ), INTENT(IN) :: n1,n2,n3,n4
-  INTEGER( I4B ) :: assert_eq4
-  IF (n1 == n2 .and. n2 == n3 .and. n3 == n4) THEN
-    assert_eq4=n1
-  ELSE
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Assert_Eq()", &
-      & Line = __LINE__, &
-      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
-    STOP
-  END IF
-END FUNCTION assert_eq4
-
-!----------------------------------------------------------------------------
-!                                                                  Assert_EQ
-!----------------------------------------------------------------------------
-
-FUNCTION assert_eqn(nn,string)
-  CHARACTER( LEN=* ), INTENT( IN ) :: string
-  INTEGER( I4B ), DIMENSION( : ), INTENT(IN) :: nn
-  INTEGER( I4B ):: assert_eqn
-  IF (all(nn(2:) == nn(1))) THEN
-    assert_eqn=nn(1)
-  ELSE
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Assert_Eq()", &
-      & Line = __LINE__, &
-      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
-    STOP
-  END IF
-END FUNCTION assert_eqn
-
-!----------------------------------------------------------------------------
-!                                                               ASSERT_SHAPE
-!----------------------------------------------------------------------------
-
-SUBROUTINE assert_shape_2( Mat, s, msg, file, line, routine )
-  REAL( DFP ), INTENT( IN ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( 2 )
-  INTEGER( I4B ), INTENT( IN ) :: line
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
-
-  ! define internal variable
-  INTEGER( I4B ) :: shape_mat( 2 )
-  shape_mat = SHAPE( Mat )
-
-  IF (all(shape_mat == s) ) THEN
-    RETURN
-  ELSE
-    CALL ErrorMsg( &
-      & File = file, &
-      & Routine = routine, &
-      & Line = line, &
-      & MSG = msg )
-    STOP
-  END IF
-END SUBROUTINE assert_shape_2
-
-!----------------------------------------------------------------------------
-!                                                               ASSERT_SHAPE
-!----------------------------------------------------------------------------
-
-SUBROUTINE assert_shape_3( Mat, s,  msg, file, line, routine )
-  REAL( DFP ), INTENT( IN ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( 3 )
-  INTEGER( I4B ), INTENT( IN ) :: line
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
-
-  ! define internal variable
-  INTEGER( I4B ) :: shape_mat( 3 )
-  shape_mat = SHAPE( Mat )
-
-  IF (all(shape_mat == s) ) THEN
-    RETURN
-  ELSE
-    CALL ErrorMsg( File = file, Routine = routine, Line = line, &
-      & MSG = msg )
-    STOP
-  END IF
-END SUBROUTINE assert_shape_3
-
-!----------------------------------------------------------------------------
-!                                                               ASSERT_SHAPE
-!----------------------------------------------------------------------------
-
-SUBROUTINE assert_shape_4( Mat, s, msg, file, line, routine )
-  REAL( DFP ), INTENT( IN ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( 4 )
-  INTEGER( I4B ), INTENT( IN ) :: line
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
-
-  ! define internal variable
-  INTEGER( I4B ) :: shape_mat( 4 )
-  shape_mat = SHAPE( Mat )
-
-  IF (all(shape_mat == s) ) THEN
-    RETURN
-  ELSE
-    CALL ErrorMsg( File = file, Routine = routine, Line = line, &
-      & MSG = msg )
-    STOP
-  END IF
-END SUBROUTINE assert_shape_4
-
-!----------------------------------------------------------------------------
-!                                                                   IMAXLOC
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Function for getting location of maximum value
-
-PURE FUNCTION imaxloc_r(arr)
-  REAL( DFP ), DIMENSION(:), INTENT(IN) :: arr
+INTERFACE
+MODULE PURE FUNCTION imaxloc_r(arr)
+  REAL( DFP ), INTENT( IN ) :: arr( : )
   INTEGER( I4B ) :: imaxloc_r
-  INTEGER( I4B ), DIMENSION(1) :: imax
-  imax = MAXLOC( arr(:) )
-  imaxloc_r = imax(1)
-END FUNCTION imaxloc_r
+END FUNCTION
+END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                                   IMAXLOC
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! Function for getting location of maximum value
-
-PURE FUNCTION imaxloc_i(iarr)
-  INTEGER( I4B ), DIMENSION(:), INTENT(IN) :: iarr
-  INTEGER( I4B ), DIMENSION(1) :: imax
+INTERFACE
+MODULE PURE FUNCTION imaxloc_i(iarr)
+  INTEGER( I4B ), INTENT( IN ) :: iarr( : )
   INTEGER( I4B ) :: imaxloc_i
-  imax = MAXLOC( iarr( : ) )
-  imaxloc_i = imax(1)
-END FUNCTION imaxloc_i
+END FUNCTION
+END INTERFACE
+
+INTERFACE IMAXLOC
+  MODULE PROCEDURE imaxloc_r,imaxloc_i
+END INTERFACE
+
+PUBLIC :: IMAXLOC
 
 !----------------------------------------------------------------------------
-!                                                                    IMINLOC
+!                                                                 IMIN@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! Function for getting location of minimum value
+INTERFACE
+MODULE FUNCTION iminloc_r(arr)
+  REAL( DFP ), INTENT( IN ) :: arr( : )
+  INTEGER( I4B ) :: iminloc_r
+END FUNCTION
+END INTERFACE
 
-FUNCTION iminloc_r(arr)
-  REAL(DFP), DIMENSION(:), INTENT(IN) :: arr
-  INTEGER(I4B), DIMENSION(1) :: imin
-  INTEGER(I4B) :: iminloc_r
-  imin=MINLOC(arr(:))
-  iminloc_r=imin(1)
-END FUNCTION iminloc_r
+INTERFACE IMINLOC
+  MODULE PROCEDURE iminloc_r
+END INTERFACE IMINLOC
 
-!----------------------------------------------------------------------------
-!                                                                        DET
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION returns determinent of 2 by 2 and 3 by 3 matrix
-
-PURE FUNCTION det_2D( A ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: A( :, : )
-  REAL( DFP ) :: Ans
-
-  SELECT CASE( SIZE( A, 1 ) )
-  CASE( 1 )
-    Ans = A( 1, 1 )
-  CASE( 2 )
-    Ans = A(1,1)*A(2,2)-A(1,2)*A(2,1)
-  CASE( 3 )
-    Ans = A(1,1)*(A(2,2)*A(3,3)-A(2,3)*A(3,2)) &
-      & - A(1,2)*(A(2,1)*A(3,3)-A(2,3)*A(3,1)) &
-      & + A(1,3)*(A(2,1)*A(3,2)-A(3,1)*A(2,2))
-  CASE( 4 )
-    Ans =  A(1,1)*(A(2,2)*(A(3,3)*A(4,4)-A(3,4)*A(4,3))&
-      & + A(2,3)*(A(3,4)*A(4,2)-A(3,2)*A(4,4)) &
-      & + A(2,4)*(A(3,2)*A(4,3) &
-      & - A(3,3)*A(4,2)))-A(1,2)*(A(2,1)*(A(3,3)*A(4,4) &
-      & - A(3,4)*A(4,3))+A(2,3)*(A(3,4)*A(4,1)-A(3,1)*A(4,4)) &
-      & + A(2,4)*(A(3,1)*A(4,3)-A(3,3)*A(4,1))) &
-      & + A(1,3)*(A(2,1)*(A(3,2)*A(4,4)-A(3,4)*A(4,2)) &
-      & + A(2,2)*(A(3,4)*A(4,1) &
-      & - A(3,1)*A(4,4))+A(2,4)*(A(3,1)*A(4,2)-A(3,2)*A(4,1))) &
-      & - A(1,4)*(A(2,1)*(A(3,2)*A(4,3)-A(3,3)*A(4,2)) &
-      & + A(2,2)*(A(3,3)*A(4,1)-A(3,1)*A(4,3)) &
-      & + A(2,3)*(A(3,1)*A(4,2)-A(3,2)*A(4,1)))
-  END SELECT
-END FUNCTION det_2D
-
-!----------------------------------------------------------------------------
-!                                                                        DET
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This FUNCTION returns the determinent of matrix
-
-PURE FUNCTION det_3D( A ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: A( :, :, : )
-  REAL( DFP ), ALLOCATABLE :: Ans( : )
-  INTEGER( I4B ) :: i, n
-  n = SIZE( A, 3 )
-  ALLOCATE( Ans( n ) )
-  DO i = 1, n
-    Ans( i ) = Det( A( :, :, i ) )
-  END DO
-END FUNCTION det_3D
-
-!----------------------------------------------------------------------------
-!                                                                        Inv
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine returns inverse of 2 by 2 and 3 by 3 matrix
-
-PURE SUBROUTINE Inv_2D( invA, A )
-  REAL( DFP ), INTENT( INOUT ) :: invA( :, : )
-  REAL( DFP ), INTENT( IN ) :: A( :, : )
-
-  !Define internal variables
-  REAL( DFP ) :: d, co( 4, 4 )
-
-  d = det( A )
-
-  IF( ABS( d ) .LT. ZERO ) THEN
-    invA = 0.0_DFP
-  ELSE
-    SELECT CASE( SIZE( A, 1 ) )
-    CASE( 1 )
-
-      invA = 1.0 / d
-
-    CASE( 2 )
-
-      invA(1,1) =  A(2,2)/d
-      invA(1,2) = -A(1,2)/d
-      invA(2,1) = -A(2,1)/d
-      invA(2,2) =  A(1,1)/d
-
-    CASE( 3 )
-
-      co(1,1) =  (A(2,2)*A(3,3)-A(2,3)*A(3,2))
-      co(1,2) = -(A(2,1)*A(3,3)-A(2,3)*A(3,1))
-      co(1,3) = +(A(2,1)*A(3,2)-A(2,2)*A(3,1))
-      co(2,1) = -(A(1,2)*A(3,3)-A(1,3)*A(3,2))
-      co(2,2) = +(A(1,1)*A(3,3)-A(1,3)*A(3,1))
-      co(2,3) = -(A(1,1)*A(3,2)-A(1,2)*A(3,1))
-      co(3,1) = +(A(1,2)*A(2,3)-A(1,3)*A(2,2))
-      co(3,2) = -(A(1,1)*A(2,3)-A(1,3)*A(2,1))
-      co(3,3) = +(A(1,1)*A(2,2)-A(1,2)*A(2,1))
-
-      invA = TRANSPOSE(co( 1:3, 1:3 ) ) / d
-
-    CASE( 4 )
-
-      co(1,1) = A(2,2)*(A(3,3)*A(4,4)-A(3,4)*A(4,3))+ &
-                A(2,3)*(A(3,4)*A(4,2)-A(3,2)*A(4,4))+ &
-                A(2,4)*(A(3,2)*A(4,3)-A(3,3)*A(4,2))
-      co(1,2) = A(2,1)*(A(3,4)*A(4,3)-A(3,3)*A(4,4))+ &
-                A(2,3)*(A(3,1)*A(4,4)-A(3,4)*A(4,1))+ &
-                A(2,4)*(A(3,3)*A(4,1)-A(3,1)*A(4,3))
-      co(1,3) = A(2,1)*(A(3,2)*A(4,4)-A(3,4)*A(4,2))+ &
-                A(2,2)*(A(3,4)*A(4,1)-A(3,1)*A(4,4))+ &
-                A(2,4)*(A(3,1)*A(4,2)-A(3,2)*A(4,1))
-      co(1,4) = A(2,1)*(A(3,3)*A(4,2)-A(3,2)*A(4,3))+ &
-                A(2,2)*(A(3,1)*A(4,3)-A(3,3)*A(4,1))+ &
-                A(2,3)*(A(3,2)*A(4,1)-A(3,1)*A(4,2))
-      co(2,1) = A(1,2)*(A(3,4)*A(4,3)-A(3,3)*A(4,4))+ &
-                A(1,3)*(A(3,2)*A(4,4)-A(3,4)*A(4,2))+ &
-                A(1,4)*(A(3,3)*A(4,2)-A(3,2)*A(4,3))
-      co(2,2) = A(1,1)*(A(3,3)*A(4,4)-A(3,4)*A(4,3))+ &
-                A(1,3)*(A(3,4)*A(4,1)-A(3,1)*A(4,4))+ &
-                A(1,4)*(A(3,1)*A(4,3)-A(3,3)*A(4,1))
-      co(2,3) = A(1,1)*(A(3,4)*A(4,2)-A(3,2)*A(4,4))+ &
-                A(1,2)*(A(3,1)*A(4,4)-A(3,4)*A(4,1))+ &
-                A(1,4)*(A(3,2)*A(4,1)-A(3,1)*A(4,2))
-      co(2,4) = A(1,1)*(A(3,2)*A(4,3)-A(3,3)*A(4,2))+ &
-                A(1,2)*(A(3,3)*A(4,1)-A(3,1)*A(4,3))+ &
-                A(1,3)*(A(3,1)*A(4,2)-A(3,2)*A(4,1))
-      co(3,1) = A(1,2)*(A(2,3)*A(4,4)-A(2,4)*A(4,3))+ &
-                A(1,3)*(A(2,4)*A(4,2)-A(2,2)*A(4,4))+ &
-                A(1,4)*(A(2,2)*A(4,3)-A(2,3)*A(4,2))
-      co(3,2) = A(1,1)*(A(2,4)*A(4,3)-A(2,3)*A(4,4))+ &
-                A(1,3)*(A(2,1)*A(4,4)-A(2,4)*A(4,1))+ &
-                A(1,4)*(A(2,3)*A(4,1)-A(2,1)*A(4,3))
-      co(3,3) = A(1,1)*(A(2,2)*A(4,4)-A(2,4)*A(4,2))+ &
-                A(1,2)*(A(2,4)*A(4,1)-A(2,1)*A(4,4))+ &
-                A(1,4)*(A(2,1)*A(4,2)-A(2,2)*A(4,1))
-      co(3,4) = A(1,1)*(A(2,3)*A(4,2)-A(2,2)*A(4,3))+ &
-                A(1,2)*(A(2,1)*A(4,3)-A(2,3)*A(4,1))+ &
-                A(1,3)*(A(2,2)*A(4,1)-A(2,1)*A(4,2))
-      co(4,1) = A(1,2)*(A(2,4)*A(3,3)-A(2,3)*A(3,4))+ &
-                A(1,3)*(A(2,2)*A(3,4)-A(2,4)*A(3,2))+ &
-                A(1,4)*(A(2,3)*A(3,2)-A(2,2)*A(3,3))
-      co(4,2) = A(1,1)*(A(2,3)*A(3,4)-A(2,4)*A(3,3))+ &
-                A(1,3)*(A(2,4)*A(3,1)-A(2,1)*A(3,4))+ &
-                A(1,4)*(A(2,1)*A(3,3)-A(2,3)*A(3,1))
-      co(4,3) = A(1,1)*(A(2,4)*A(3,2)-A(2,2)*A(3,4))+ &
-                A(1,2)*(A(2,1)*A(3,4)-A(2,4)*A(3,1))+ &
-                A(1,4)*(A(2,2)*A(3,1)-A(2,1)*A(3,2))
-      co(4,4) = A(1,1)*(A(2,2)*A(3,3)-A(2,3)*A(3,2))+ &
-                A(1,2)*(A(2,3)*A(3,1)-A(2,1)*A(3,3))+ &
-                A(1,3)*(A(2,1)*A(3,2)-A(2,2)*A(3,1))
-
-      invA = TRANSPOSE(co)/d
-
-    END SELECT
-  END IF
-
-END SUBROUTINE Inv_2D
-
-!----------------------------------------------------------------------------
-!                                                                        Inv
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine returns inverse of 2 by 2 and 3 by 3 matrix
-
-PURE SUBROUTINE Inv_3D( invA, A )
-  REAL( DFP ), INTENT( INOUT ) :: invA( :, :, : )
-  REAL( DFP ), INTENT( IN ) :: A( :, :, : )
-
-  ! define internal variables
-  INTEGER( I4B ) :: i, n
-
-  n = SIZE( A, 3 )
-
-  DO i = 1,n
-    CALL Inv( invA = invA( :, :, i ), A = A( :, :, i ) )
-  END DO
-END SUBROUTINE Inv_3D
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
+PUBLIC :: IMINLOC
 
 END MODULE Utility

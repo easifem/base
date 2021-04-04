@@ -366,7 +366,7 @@ END INTERFACE
 INTERFACE
 MODULE PURE FUNCTION Constructor2( Val ) RESULT( Obj )
   TYPE( RealVector_ ) :: Obj
-  INTEGER(Int32), INTENT( IN ) :: Val( : )
+  INTEGER(I4B), INTENT( IN ) :: Val( : )
 END FUNCTION Constructor2
 END INTERFACE
 
@@ -404,7 +404,7 @@ END INTERFACE
 INTERFACE
 MODULE PURE FUNCTION Constructor3( Val ) RESULT( Obj )
   TYPE( RealVector_ ) :: Obj
-  REAL(Real64), INTENT( IN ) :: Val( : )
+  REAL(DFP), INTENT( IN ) :: Val( : )
 END FUNCTION Constructor3
 END INTERFACE
 
@@ -1228,15 +1228,15 @@ PUBLIC :: ArrayValues
 !```
 
 INTERFACE
-MODULE FUNCTION f_getPointer_Real64( Obj, DataType ) RESULT( Val )
+MODULE FUNCTION f_getPointer_Real( Obj, DataType ) RESULT( Val )
   CLASS( RealVector_ ), INTENT( IN ), TARGET :: Obj
-  REAL( Real64 ), INTENT( IN ) :: DataType
-  REAL( Real64 ), POINTER :: Val( : )
-END FUNCTION f_getPointer_Real64
+  REAL( DFP ), INTENT( IN ) :: DataType
+  REAL( DFP ), POINTER :: Val( : )
+END FUNCTION f_getPointer_Real
 END INTERFACE
 
 INTERFACE ArrayValuesPointer
-  MODULE PROCEDURE f_getPointer_Real64
+  MODULE PROCEDURE f_getPointer_Real
 END INTERFACE
 
 PUBLIC :: ArrayValuesPointer

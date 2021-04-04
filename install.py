@@ -12,7 +12,7 @@ def installRequest(LIB):
   while True:
     choice = input(
         f"Do you want to Install {LIB} 'yes' or 'no' [Y/n]: ").lower()
-    if choice in ['y', 'ye', 'yes']:
+    if choice in ['Y', 'y', 'ye', 'yes']:
       return True
     else:
       return False
@@ -26,9 +26,9 @@ if _os == 'Windows':
     #print("Installation DONE!!")
 else:
     if installRequest('OpenMP'):
-      cmake_def = '-DUSE_OPENMP'
-    cmake_def = cmake_def + " -DBUILD_TYPE='Release'"
-    cmake_def = cmake_def + " -DCMAKE_INSTALL_PREFIX=${EASIFEM_BASE}"
+      cmake_def = '-DUSE_OpenMP=ON'
+    cmake_def = cmake_def + " -DBUILD_TYPE='Release' -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=${EASIFEM_BASE} -DUSE_Int32=ON -DUSE_Real64=ON"
+    print( "CMAKE DEF : ", cmake_def )
     os.system( f"cmake -S ./ -B ./build {cmake_def}")
     os.system(f"cmake --build ./build --target install" )
     print("Installation DONE!!")
