@@ -23,8 +23,10 @@ str = "Expandable And Scalable Infrastrcture for Finite Element Methods"
 print(str)
 str = "Developed by Vikas Sharma, Ph. D."
 print(str)
-str = "(c) 2020-2021"
+str = "(c) 2020-present"
 print(str)
+print("")
+print("External packages used in easifemBase are:")
 print("================================================================\n")
 
 def installpkgs():

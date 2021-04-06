@@ -23,8 +23,15 @@
 
 extern char **environ;
 
+#ifdef Linux_SYSTEM
 //extern int HOST_NAME_MAX;
 int FHOST_NAME_MAX=HOST_NAME_MAX;
+#endif
+
+#ifdef Darwin_SYSTEM
+#define HOST_NAME_MAX 255
+int FHOST_NAME_MAX = HOST_NAME_MAX;
+#endif
 
 extern mode_t FS_IRGRP;
 extern mode_t FS_IROTH;

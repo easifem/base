@@ -36,6 +36,7 @@ MODULE BaseMethod
   USE FACE
   USE GNUPLOT_Method
   USE GlobalData
+  USE Test_Method
   USE Display_Method
   USE ErrorHandling
   USE Utility

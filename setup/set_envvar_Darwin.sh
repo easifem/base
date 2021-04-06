@@ -36,16 +36,26 @@ else
 fi
 
 prefix=${HOME}
-echo "easifem_prefix=${prefix}" >> ${ERC}
-
-echo 'export EASIFEM_BASE=${prefix}/.easifem/base/' >> ${ERC}
-echo "export EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs/" >> ${ERC}
+export EASIFEM_BASE=${prefix}/.easifem/base/
+export EASIFEM_CLASSES=${prefix}/.easifem/classes/
+export EASIFEM_KERNEL=${prefix}/.easifem/kernel/
+export EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs/
+echo "${EASIFEM_BASE}"
 mkdir -p ${EASIFEM_EXTPKGS}
 mkdir -p ${EASIFEM_BASE}
+mkdir -p ${EASIFEM_CLASSES}
+mkdir -p ${EASIFEM_KERNEL}
+
+echo "easifem_prefix=${prefix}" >> ${ERC}
+echo "export EASIFEM_BASE=${prefix}/.easifem/base/" >> ${ERC}
+echo "export EASIFEM_CLASSES=${prefix}/.easifem/classes/" >> ${ERC}
+echo "export EASIFEM_KERNEL=${prefix}/.easifem/kernel/" >> ${ERC}
+echo "export EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs/" >> ${ERC}
 echo "mkdir -p ${EASIFEM_EXTPKGS}" >> ${ERC}
 echo "mkdir -p ${EASIFEM_BASE}" >> ${ERC}
-# export EASIFEM_CLASSES=${prefix}/.easifem/classes/
-# export EASIFEM_KERNEL=${prefix}/.easifem/kernel/
+echo "mkdir -p ${EASIFEM_CLASSES}" >> ${ERC}
+echo "mkdir -p ${EASIFEM_KERNEL}" >> ${ERC}
+
 echo "export CC=/usr/local/bin/gcc-10" >> ${ERC}
 echo "export CXX=/usr/local/bin/g++-10" >> ${ERC}
 echo "export CPP=/usr/local/bin/cpp-10" >> ${ERC}
@@ -58,5 +68,5 @@ echo "alias cpp=/usr/local/bin/cpp-10" >> ${ERC}
 echo "alias ld=/usr/local/bin/gcc-10" >> ${ERC}
 echo "alias cc=/usr/local/bin/gcc-10" >> ${ERC}
 echo "alias gfortran=/usr/local/bin/gfortran-10" >> ${ERC}
-echo 'source ~/.easifemrc' >> ${BP}
+echo "source ${ERC}" >> ${BP}
 source ${BP}

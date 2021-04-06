@@ -7,7 +7,6 @@ import os
 import sys
 import platform
 
-
 def installRequest(LIB):
     while True:
         choice = input(f"Do you want to Install {LIB} 'yes' or 'no' [Y/n]: ").lower()
@@ -44,15 +43,22 @@ else:
 
     cmake_def = ""
     opt = getOption("USE_OpenMP", ["ON", "OFF"] )
-    cmake_def += "-DUSE_OpenMP=" + opt
+    if( opt == " " ): opt="ON"
+    cmake_def += " -DUSE_OpenMP=" + opt
 
-    cmake_def += "-DBUILD_TYPE=" + getOption("BUILD_TYPE", ["Release", "Debug"])
+    opt = getOption("CMAKE_BUILD_TYPE", ["Release", "Debug"])
+    if(opt == " "):
+        opt = "Release"
+    cmake_def += " -DCMAKE_BUILD_TYPE=" + opt
 
-    cmake_def += "-DBUILD_SHARED_LIBS=" + getOption("BUILD_SHARED_LIBS", ["ON", "OFF"])
+    opt = getOption("BUILD_SHARED_LIBS", ["ON", "OFF"])
+    if(opt == " "):
+        opt = "ON"
+    cmake_def += " -DBUILD_SHARED_LIBS=" + opt
 
-    cmake_def += " -DCMAKE_INSTALL_PREFIX=${EASIFEM_BASE} "
+    cmake_def += " -DCMAKE_INSTALL_PREFIX=${EASIFEM_BASE}"
 
-    cmake_def += " -DUSE_Int32=ON -DUSE_Real64=ON "
+    cmake_def += " -DUSE_Int32=ON -DUSE_Real64=ON"
 
     print( "CMAKE DEF : ", cmake_def )
 
