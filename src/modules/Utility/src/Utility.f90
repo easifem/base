@@ -61,6 +61,9 @@ INTERFACE OPERATOR(.APPROXEQA.)
   MODULE PROCEDURE approxeq_abs_real
 END INTERFACE
 
+PUBLIC :: OPERATOR( .APPROXEQ. )
+PUBLIC :: OPERATOR( .APPROXEQA. )
+
 !----------------------------------------------------------------------------
 !                                                           APPROXR@APPROX
 !----------------------------------------------------------------------------
@@ -113,6 +116,8 @@ END INTERFACE
 INTERFACE OPERATOR(.APPROXEQF.)
   MODULE PROCEDURE approxeq_ulp_real
 ENDINTERFACE
+
+PUBLIC :: OPERATOR(.APPROXEQF.)
 
 !----------------------------------------------------------------------------
 !                                                            APPROXLE@APPROX

@@ -16,7 +16,7 @@
 !
 
 MODULE stringifor_string_t
-USE, INTRINSIC :: iso_fortran_env, ONLY : iostat_eor
+USE, INTRINSIC :: iso_fortran_env, ONLY : iostat_eor, stdout => output_unit
 USE befor64, ONLY : b64_decode, b64_encode
 USE penf, ONLY : I1P, I2P, I4P, I8P, R4P, R8P, R16P, str
 IMPLICIT NONE
@@ -282,8 +282,70 @@ interface verify
   module procedure sverify_string_string, sverify_string_character, sverify_character_string
 endinterface verify
 
+interface String
+   module procedure constructor1
+end interface String
+
+interface Display
+      module procedure display_str
+end interface Display
+
+public :: Display
+
 contains
    ! public non TBP
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+   subroutine display_str( obj, msg, unitno )
+      type( string ), intent( in ) :: obj
+      character( len = * ), intent( in ) :: msg
+      integer( i4p ), optional, intent( in ) :: unitno
+
+      integer( i4p ) :: i
+      if( present( unitno ) ) then
+         i = unitno
+      else
+         i = stdout
+      end if
+      if( len_trim( msg ) .NE. 0 ) write( i, "(A)" ) "#" // trim(msg)
+      write( i, "(A)" ) obj%chars()
+   end subroutine display_str
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+   pure function constructor1( c ) result( self )
+      type( string ) :: self
+      class( * ), intent( in ) :: c
+      select type ( c )
+      type is( character( * ) )
+         self = c
+      type is( real(r4p) )
+         self = c
+      type is( real(r8p) )
+         self = c
+      type is( real(r16p) )
+         self = c
+      type is( integer(i1p))
+         self = str(c, .true.)
+      type is( integer(i2p))
+         self = str(c, .true.)
+      type is( integer(i4p))
+         self = str(c, .true.)
+      type is( integer(i8p))
+         self = str(c, .true.)
+      type is( string )
+         self = c
+      end select
+   end function
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    ! creator
    pure function string_(c)
@@ -298,6 +360,10 @@ contains
 
    string_%raw = c
    endfunction string_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    ! builtins replacements
    pure function sadjustl_character(s) result(adjusted)
@@ -451,6 +517,10 @@ contains
    if (allocated(adjusted%raw)) adjusted%raw = adjustl(adjusted%raw)
    endfunction sadjustl
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    elemental function sadjustr(self) result(adjusted)
    !< Right adjust a string by removing leading spaces.
    !<
@@ -466,6 +536,10 @@ contains
    adjusted = self
    if (allocated(adjusted%raw)) adjusted%raw = adjustr(adjusted%raw)
    endfunction sadjustr
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    elemental function scount(self, substring, ignore_isolated) result(No)
    !< Count the number of occurences of a substring into a string.
@@ -516,6 +590,10 @@ contains
    endif
    endfunction scount
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    elemental function sindex_string_string(self, substring, back) result(i)
    !< Return the position of the start of the first occurrence of string `substring` as a substring in `string`, counting from one.
    !< If `substring` is not present in `string`, zero is returned. If the back argument is present and true, the return value is
@@ -545,6 +623,10 @@ contains
    endif
    endfunction sindex_string_string
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    elemental function sindex_string_character(self, substring, back) result(i)
    !< Return the position of the start of the first occurrence of string `substring` as a substring in `string`, counting from one.
    !< If `substring` is not present in `string`, zero is returned. If the back argument is present and true, the return value is
@@ -571,6 +653,10 @@ contains
    endif
    endfunction sindex_string_character
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    elemental function slen(self) result(l)
    !< Return the length of a string.
    !<
@@ -589,6 +675,10 @@ contains
       l = 0
    endif
    endfunction slen
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    elemental function slen_trim(self) result(l)
    !< Return the length of a string, ignoring any trailing blanks.
@@ -609,6 +699,10 @@ contains
    endif
    endfunction slen_trim
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    elemental function srepeat_string_string(self, ncopies) result(repeated)
    !< Concatenates several copies of an input string.
    !<
@@ -625,6 +719,10 @@ contains
    repeated%raw = repeat(string=self%raw, ncopies=ncopies)
    endfunction srepeat_string_string
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    elemental function srepeat_character_string(rstring, ncopies) result(repeated)
    !< Concatenates several copies of an input string.
    !<
@@ -640,6 +738,10 @@ contains
 
    repeated%raw = repeat(string=rstring, ncopies=ncopies)
    endfunction srepeat_character_string
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    elemental function sscan_string_string(self, set, back) result(i)
    !< Return the leftmost (if `back` is either absent or equals false, otherwise the rightmost) character of string that is in `set`.
@@ -667,6 +769,10 @@ contains
    endif
    endfunction sscan_string_string
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    elemental function sscan_string_character(self, set, back) result(i)
    !< Return the leftmost (if `back` is either absent or equals false, otherwise the rightmost) character of string that is in `set`.
    !<
@@ -691,6 +797,10 @@ contains
    endif
    endfunction sscan_string_character
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    elemental function strim(self) result(trimmed)
    !< Remove trailing spaces.
    !<
@@ -706,6 +816,10 @@ contains
    trimmed = self
    if (allocated(trimmed%raw)) trimmed%raw = trim(trimmed%raw)
    endfunction strim
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    elemental function sverify_string_string(self, set, back) result(i)
    !< Return the leftmost (if `back` is either absent or equals false, otherwise the rightmost) character of string that is not
@@ -733,6 +847,10 @@ contains
      i = 0
    endif
    endfunction sverify_string_string
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    elemental function sverify_string_character(self, set, back) result(i)
    !< Return the leftmost (if `back` is either absent or equals false, otherwise the rightmost) character of string that is not

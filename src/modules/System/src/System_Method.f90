@@ -1,5 +1,4 @@
-! This program is a part of EASIFEM library
-! Source: https://github.com/urbanjost/M_system
+! This program is a part of EASIFEM library. This program is directly taken from the source: https://github.com/urbanjost/M_system. The original name of the program has been changed from M_SYSTEM to System_Method. This is to confirm to the coding sytles of easifem.
 !
 ! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 !

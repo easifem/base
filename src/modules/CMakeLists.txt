@@ -18,6 +18,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/LAPACK95/CMakeLists.txt)
 #Szaghi
 include(${CMAKE_CURRENT_LIST_DIR}/Szaghi/CMakeLists.txt)
 
+#Test
+include(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
+
 #GlobalData
 include(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
 

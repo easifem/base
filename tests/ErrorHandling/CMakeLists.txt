@@ -17,10 +17,8 @@ add_executable(
   test_${PROJECT_NAME}.f90
 )
 
-
 list(APPEND CMAKE_PREFIX_PATH "$ENV{EASIFEM_BASE}/share/cmake/")
-
-find_package(${LIB_NAME} 1.1.0 CONFIG REQUIRED)
+find_package( easifemBase REQUIRED )
 
 if(${LIB_NAME}_FOUND)
 
