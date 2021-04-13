@@ -3179,6 +3179,10 @@ contains
    lhs%raw = rhs
    endsubroutine string_assign_character
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
    pure subroutine string_assign_integer_I1P(lhs, rhs)
    !< Assignment operator from integer input.
    !<
@@ -3194,8 +3198,12 @@ contains
    class(string), intent(inout) :: lhs !< Left hand side.
    integer(I1P),  intent(in)    :: rhs !< Right hand side.
 
-   lhs%raw = trim(str(rhs))
+   lhs%raw = trim(str(rhs, no_sign=.true.))
    endsubroutine string_assign_integer_I1P
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    pure subroutine string_assign_integer_I2P(lhs, rhs)
    !< Assignment operator from integer input.
@@ -3212,8 +3220,12 @@ contains
    class(string), intent(inout) :: lhs !< Left hand side.
    integer(I2P),  intent(in)    :: rhs !< Right hand side.
 
-   lhs%raw = trim(str(rhs))
+   lhs%raw = trim(str(rhs, no_sign=.true.))
    endsubroutine string_assign_integer_I2P
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    pure subroutine string_assign_integer_I4P(lhs, rhs)
    !< Assignment operator from integer input.
@@ -3230,8 +3242,12 @@ contains
    class(string), intent(inout) :: lhs !< Left hand side.
    integer(I4P),  intent(in)    :: rhs !< Right hand side.
 
-   lhs%raw = trim(str(rhs))
+   lhs%raw = trim(str(rhs, no_sign=.true.))
    endsubroutine string_assign_integer_I4P
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    pure subroutine string_assign_integer_I8P(lhs, rhs)
    !< Assignment operator from integer input.
@@ -3248,8 +3264,12 @@ contains
    class(string), intent(inout) :: lhs !< Left hand side.
    integer(I8P),  intent(in)    :: rhs !< Right hand side.
 
-   lhs%raw = trim(str(rhs))
+   lhs%raw = trim(str(rhs, no_sign=.true.))
    endsubroutine string_assign_integer_I8P
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    pure subroutine string_assign_real_R4P(lhs, rhs)
    !< Assignment operator from real input.
@@ -3268,6 +3288,10 @@ contains
 
    lhs%raw = trim(str(rhs))
    endsubroutine string_assign_real_R4P
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
    pure subroutine string_assign_real_R8P(lhs, rhs)
    !< Assignment operator from real input.
