@@ -5,46 +5,46 @@
 # 17/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
-set(PROJECT_NAME "easifemBase")
-project(${PROJECT_NAME})
-enable_language(C)
-enable_language(Fortran)
-enable_language(CXX)
-set(VERSION_MAJOR "1")
-set(VERSION_MINOR "0")
-set(VERSION_BugFix "0")
-set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BugFix})
-set(CMAKE_PROJECT_DESCRIPTION "easifem base")
-set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/")
-set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
-set(namespace "${PROJECT_NAME}")
-
-include(CMakePrintHelpers)
-include(FortranCInterface)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10.0 FATAL_ERROR)
+SET(PROJECT_NAME "easifemBase")
+PROJECT(${PROJECT_NAME})
+ENABLE_LANGUAGE(C)
+ENABLE_LANGUAGE(Fortran)
+ENABLE_LANGUAGE(CXX)
+SET(VERSION_MAJOR "1")
+SET(VERSION_MINOR "0")
+SET(VERSION_BugFix "0")
+SET(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BugFix})
+SET(CMAKE_PROJECT_DESCRIPTION "easifem base")
+SET(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/")
+SET(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
+SET(namespace "${PROJECT_NAME}")
+INCLUDE(CMakePrintHelpers)
+INCLUDE(FortranCInterface)
 FortranCInterface_VERIFY()
 
 # SYSTEM INFORMATION
 # Disable in-source builds to prevent source tree corruption.
-if(" ${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL " ${CMAKE_CURRENT_BINARY_DIR}")
-  message(FATAL_ERROR "
+IF(" ${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL " ${CMAKE_CURRENT_BINARY_DIR}")
+  MESSAGE(FATAL_ERROR "
     FATAL: In-source builds are not allowed.
     You should create a separate directory for build files.")
-endif()
+ENDIF()
 
 # install openblas
 # list(APPEND CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake")
-if(NOT CMAKE_PREFIX_PATH)
-  set(CMAKE_PREFIX_PATH "$ENV{EASIFEM_EXTPKGS}")
-endif()
-set(BLA_VENDOR "OpenBLAS")
-find_package( LAPACK REQUIRED )
-if( LAPACK_FOUND )
-  message(STATUS "LAPACK_LIBRARIES found")
-  message("LAPACK_LIBRARIES: ${LAPACK_LIBRARIES}")
-  message("BLAS_LIBRARIES: ${BLAS_LIBRARIES}")
-  message("BLA_vendor: ${BLA_VENDOR}")
-endif()
+IF(NOT CMAKE_PREFIX_PATH)
+  SET(CMAKE_PREFIX_PATH "$ENV{EASIFEM_EXTPKGS}")
+ENDIF()
+
+SET(BLA_VENDOR "OpenBLAS")
+FIND_PACKAGE( LAPACK REQUIRED )
+IF( LAPACK_FOUND )
+  MESSAGE(STATUS "LAPACK_LIBRARIES found")
+  MESSAGE("LAPACK_LIBRARIES: ${LAPACK_LIBRARIES}")
+  MESSAGE("BLAS_LIBRARIES: ${BLAS_LIBRARIES}")
+  MESSAGE("BLA_vendor: ${BLA_VENDOR}")
+ENDIF()
 
 if( BLA_VENDOR MATCHES "MKL" )
   message(STATUS "BLA_VENDOR : MKL")
@@ -164,33 +164,27 @@ if( $<CONFIG:Debug> )
   list( APPEND TARGET_COMPILE_DEF "-DDEBUG_VER" )
 endif()
 
-target_compile_options(
+###########################################
+INCLUDE(src/modules/CMakeLists.txt)
+INCLUDE(src/submodules/CMakeLists.txt)
+###########################################
+
+TARGET_COMPILE_OPTIONS(
   ${PROJECT_NAME}
   PRIVATE
   ${TARGET_COMPILE_OPT}
   ${FORTRAN_FLAGS}
   "$<$<CONFIG:Debug>:${FORTRAN_FLAGS_DEBUG}>"
-  "$<$<CONFIG:Release>:${FORTRAN_FLAGS_RELEASE}>"
-)
+  "$<$<CONFIG:Release>:${FORTRAN_FLAGS_RELEASE}>")
 
-message("ADDING Extra COMPILE DEF: ${TARGET_COMPILE_DEF}")
-
-target_compile_definitions(
+TARGET_COMPILE_DEFINITIONS(
   ${PROJECT_NAME}
   PUBLIC
   ${TARGET_COMPILE_DEF}
 )
 
-target_link_libraries(
-  ${PROJECT_NAME}
-  PUBLIC
-  ${LAPACK_LIBRARIES}
-  ${BLAS_LIBRARIES}
-  "$<$<BOOL:${OpenMP_FOUND}>:${OpenMP_Fortran_LIBRARIES}>"
-)
-
 # target_compile_definitions()
-set_target_properties(
+SET_TARGET_PROPERTIES(
   ${PROJECT_NAME}
     PROPERTIES
     POSITION_INDEPENDENT_CODE 1
@@ -203,17 +197,44 @@ set_target_properties(
     WINDOWS_EXPORT_ALL_SYMBOLS ON
 )
 
-target_include_directories(
+TARGET_INCLUDE_DIRECTORIES(
   ${PROJECT_NAME}
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
-  $<INSTALL_INTERFACE:${INSTALL_INCLUDEDIR}>
+  $<INSTALL_INTERFACE:${INSTALL_INCLUDEDIR}> )
+
+TARGET_LINK_LIBRARIES(
+  ${PROJECT_NAME}
+  PUBLIC
+  ${LAPACK_LIBRARIES}
+  ${BLAS_LIBRARIES}
+  "$<$<BOOL:${OpenMP_FOUND}>:${OpenMP_Fortran_LIBRARIES}>"
 )
 
-include(src/modules/CMakeLists.txt)
-include(src/submodules/CMakeLists.txt)
+FOREACH(p PENF BeFoR64 FACE StringiFor)
+  FIND_PACKAGE( ${p} REQUIRED )
+  IF( ${p}_FOUND )
+  GET_TARGET_PROPERTY(
+    ${p}_INCLUDEDIR
+    ${p}::${p}
+    INTERFACE_INCLUDE_DIRECTORIES)
+  MESSAGE(STATUS "${p} found")
 
-install(
+  TARGET_LINK_LIBRARIES(
+    ${PROJECT_NAME}
+    PUBLIC
+    ${p}::${p} )
+
+  TARGET_INCLUDE_DIRECTORIES(
+    ${PROJECT_NAME}
+    PUBLIC
+    "${${p}_INCLUDEDIR}" )
+ELSE()
+  MESSAGE(STATUS "${p} not found")
+ENDIF()
+ENDFOREACH()
+
+INSTALL(
   TARGETS
     ${PROJECT_NAME}
   EXPORT

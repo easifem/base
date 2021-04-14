@@ -32,7 +32,7 @@ MODULE BaseMethod
   USE EASIFEM_LAPACK
   USE OpenMP_Method
   USE StringiFor
-  USE PENF
+  ! USE PENF
   USE FACE
   USE GNUPLOT_Method
   USE GlobalData

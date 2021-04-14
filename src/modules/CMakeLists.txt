@@ -12,11 +12,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/System/CMakeLists.txt)
 #BLAS95
 include(${CMAKE_CURRENT_LIST_DIR}/BLAS95/CMakeLists.txt)
 
-#BLAS95
+#LAPACK95
 include(${CMAKE_CURRENT_LIST_DIR}/LAPACK95/CMakeLists.txt)
 
-#Szaghi
-include(${CMAKE_CURRENT_LIST_DIR}/Szaghi/CMakeLists.txt)
+# #Szaghi
+# include(${CMAKE_CURRENT_LIST_DIR}/Szaghi/CMakeLists.txt)
 
 #Test
 include(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
@@ -122,4 +122,3 @@ include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
 
 #easifemBase
 include(${CMAKE_CURRENT_LIST_DIR}/easifemBase/CMakeLists.txt)
-
