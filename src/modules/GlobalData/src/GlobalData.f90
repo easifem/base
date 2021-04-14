@@ -73,7 +73,7 @@ MODULE GlobalData
   INTEGER, PARAMETER :: LGT = KIND(.true.)       !Logical
 
   ! Format parameters
-#ifdef Real128
+#ifdef USE_Real128
   CHARACTER(*), PARAMETER :: FReal128  = '(E42.33E4)'
 #else
   CHARACTER(*), PARAMETER :: FReal128  = '(E23.15E3)'
@@ -118,7 +118,7 @@ MODULE GlobalData
 #endif
 
   ! Length (number of digits) of formatted numbers
-#ifdef Real128
+#ifdef USE_Real128
   INTEGER, PARAMETER :: DReal128 = 42
 #else
   INTEGER, PARAMETER :: DReal128 = 23

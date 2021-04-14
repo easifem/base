@@ -71,9 +71,3 @@ include(${CMAKE_CURRENT_LIST_DIR}/Rank2Tensor/CMakeLists.txt)
 
 # SparseMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/SparseMatrix/CMakeLists.txt)
-
-# #BaseMethod
-# include(${CMAKE_CURRENT_LIST_DIR}/BaseMethod/CMakeLists.txt)
-
-# #easifemBase
-# include(${CMAKE_CURRENT_LIST_DIR}/easifemBase/CMakeLists.txt)

@@ -48,9 +48,7 @@ interface b64_encode
   !< procedure.
   !<
   !< @warning The encoding of array of strings is admitted only if each string of the array has the same length.
-  module procedure &
-                   b64_encode_R16,    b64_encode_R16_a, &
-                   b64_encode_R8,     b64_encode_R8_a,  &
+  module procedure b64_encode_R8,     b64_encode_R8_a,  &
                    b64_encode_R4,     b64_encode_R4_a,  &
                    b64_encode_I8,     b64_encode_I8_a,  &
                    b64_encode_I4,     b64_encode_I4_a,  &
@@ -58,6 +56,12 @@ interface b64_encode
                    b64_encode_I1,     b64_encode_I1_a,  &
                    b64_encode_string, b64_encode_string_a
 endinterface
+
+#ifdef _R16P
+INTERFACE b64_encode
+   MODULE PROCEDURE b64_encode_R16_a, b64_encode_R16
+END INTERFACE b64_encode
+#endif
 
 interface b64_encode_up
   !< Encode unlimited polymorphic variable to base64.
@@ -124,9 +128,7 @@ interface b64_decode
   !< procedure.
   !<
   !< @warning The decoding of array of strings is admitted only if each string of the array has the same length.
-  module procedure &
-                   b64_decode_R16,    b64_decode_R16_a, &
-                   b64_decode_R8,     b64_decode_R8_a,  &
+  module procedure b64_decode_R8,     b64_decode_R8_a,  &
                    b64_decode_R4,     b64_decode_R4_a,  &
                    b64_decode_I8,     b64_decode_I8_a,  &
                    b64_decode_I4,     b64_decode_I4_a,  &
@@ -134,6 +136,12 @@ interface b64_decode
                    b64_decode_I1,     b64_decode_I1_a,  &
                    b64_decode_string, b64_decode_string_a
 endinterface
+
+#ifdef _R16P
+INTERFACE b64_decode
+   MODULE PROCEDURE b64_decode_R16_a, b64_decode_R16
+END INTERFACE b64_decode
+#endif
 
 interface b64_decode_up
   !< Decode unlimited polymorphic variable from base64.
@@ -424,7 +432,13 @@ contains
    allocate(nI1P(1:((BYR16P+2)/3)*3)) ; nI1P = 0_I1P
    code = repeat(' ',((BYR16P+2)/3)*4)
    nI1P = transfer(n,nI1P)
-   padd = mod((BYR16P),3_I2P) ; if (padd>0_I4P) padd = 3_I4P - padd
+#ifdef _R16P
+   padd = mod((BYR16P),3_I2P)
+#else
+   padd = mod((BYR16P),3_I1P) !! to remove GNU Extension error
+#endif
+
+   if (padd>0_I4P) padd = 3_I4P - padd
    call encode_bits(bits=nI1P,padd=padd,code=code)
    endsubroutine b64_encode_R16
 
