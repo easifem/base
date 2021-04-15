@@ -21,7 +21,6 @@
 
 SUBMODULE( ReferenceElement_Method ) IO
 USE BaseMethod
-USE PENF, ONLY: STR
 CONTAINS
 
 !----------------------------------------------------------------------------

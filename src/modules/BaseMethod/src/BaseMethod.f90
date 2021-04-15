@@ -29,11 +29,12 @@ MODULE BaseMethod
   USE OMP_LIB
 #endif
   USE EASIFEM_BLAS
-  USE EASIFEM_LAPACK
+  USE F95_LAPACK
   USE OpenMP_Method
   USE StringiFor
-  ! USE PENF
+  USE PENF, ONLY: STR
   USE FACE
+  USE FPL
   USE GNUPLOT_Method
   USE GlobalData
   USE Test_Method
