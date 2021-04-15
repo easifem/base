@@ -21,7 +21,6 @@
 
 SUBMODULE( RealVector_Method ) IO
 USE BaseMethod
-USE PENF, ONLY: STR
 IMPLICIT NONE
 CONTAINS
 

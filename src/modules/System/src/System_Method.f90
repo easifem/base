@@ -224,7 +224,7 @@ public :: system_utime
 
 public :: system_setumask
 public :: system_getumask
-private :: system_umask
+public :: system_umask
 
 public :: system_getcwd
 
