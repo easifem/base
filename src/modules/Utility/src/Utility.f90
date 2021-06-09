@@ -611,21 +611,10 @@ PUBLIC :: SPLIT
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate1( Mat, row, col )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: row, col
-END SUBROUTINE
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     Reallocate@Reallocate
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE Reallocate2( Mat, row )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+MODULE PURE SUBROUTINE Reallocate_Real64_R1( Mat, row )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
   INTEGER( I4B ), INTENT( IN ) :: row
-END SUBROUTINE
+END SUBROUTINE Reallocate_Real64_R1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -633,10 +622,87 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate3( Mat, i1, i2, i3 )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+MODULE PURE SUBROUTINE Reallocate_Real64_R1b( Mat, s )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Real64_R1b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R1( Mat, row )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+  INTEGER( I4B ), INTENT( IN ) :: row
+END SUBROUTINE Reallocate_Real32_R1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R1b( Mat, s )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real32_R1b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R2( Mat, row, col )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: row, col
+END SUBROUTINE Reallocate_Real64_R2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R2b( Mat, s )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Real64_R2b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R2( Mat, row, col )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: row, col
+END SUBROUTINE Reallocate_Real32_R2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R2b( Mat, s )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Real32_R2b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R3( Mat, i1, i2, i3 )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
   INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
-END SUBROUTINE
+END SUBROUTINE Reallocate_Real64_R3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -644,10 +710,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate4( Mat, row, col )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: row, col
-END SUBROUTINE
+MODULE PURE SUBROUTINE Reallocate_Real64_R3b( Mat, s )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Real64_R3b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -655,10 +721,209 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate5( Mat, row )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+MODULE PURE SUBROUTINE Reallocate_Real32_R3( Mat, i1, i2, i3 )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
+END SUBROUTINE Reallocate_Real32_R3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R3b( Mat, s )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Real32_R3b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R4 ( Mat, i1, i2, i3, i4 )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
+END SUBROUTINE Reallocate_Real64_R4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R4b( Mat, s )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real64_R4b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R4 ( Mat, i1, i2, i3, i4 )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
+END SUBROUTINE Reallocate_Real32_R4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R4b( Mat, s )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real32_R4b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R5 ( Mat, i1, i2, i3, i4, i5 )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5
+END SUBROUTINE Reallocate_Real64_R5
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R5b( Mat, s )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real64_R5b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R5( Mat, i1, i2, i3, i4, i5 )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5
+END SUBROUTINE Reallocate_Real32_R5
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R5b( Mat, s )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real32_R5b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R6 ( Mat, i1, i2, i3, i4, i5, i6 )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6
+END SUBROUTINE Reallocate_Real64_R6
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R6b( Mat, s )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real64_R6b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R6( Mat, i1, i2, i3, i4, i5, i6 )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6
+END SUBROUTINE Reallocate_Real32_R6
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R6b( Mat, s )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real32_R6b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R7 ( Mat, i1, i2, i3, i4, i5, &
+  & i6, i7 )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6, i7
+END SUBROUTINE Reallocate_Real64_R7
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_R7b( Mat, s )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real64_R7b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R7( Mat, i1, i2, i3, i4, i5, i6, i7)
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6, i7
+END SUBROUTINE Reallocate_Real32_R7
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real32_R7b( Mat, s )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Real32_R7b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R1( Mat, row )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
   INTEGER( I4B ), INTENT( IN ) :: row
-END SUBROUTINE
+END SUBROUTINE Reallocate_Int64_R1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -666,14 +931,312 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate6( Vec1, n1, Vec2, n2, Vec3, n3, Vec4, n4, &
-  & Vec5, n5, Vec6, n6 )
+MODULE PURE SUBROUTINE Reallocate_Int64_R1b( Mat, s )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Int64_R1b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R1( Mat, row )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+  INTEGER( I4B ), INTENT( IN ) :: row
+END SUBROUTINE Reallocate_Int32_R1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R1b( Mat, s )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int32_R1b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R2( Mat, row, col )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: row, col
+END SUBROUTINE Reallocate_Int64_R2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R2b( Mat, s )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Int64_R2b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R2( Mat, row, col )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: row, col
+END SUBROUTINE Reallocate_Int32_R2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R2b( Mat, s )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Int32_R2b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R3( Mat, i1, i2, i3 )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
+END SUBROUTINE Reallocate_Int64_R3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R3b( Mat, s )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Int64_R3b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R3( Mat, i1, i2, i3 )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
+END SUBROUTINE Reallocate_Int32_R3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R3b( Mat, s )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s(:)
+END SUBROUTINE Reallocate_Int32_R3b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R4 ( Mat, i1, i2, i3, i4 )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
+END SUBROUTINE Reallocate_Int64_R4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R4b( Mat, s )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int64_R4b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R4 ( Mat, i1, i2, i3, i4 )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
+END SUBROUTINE Reallocate_Int32_R4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R4b( Mat, s )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int32_R4b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R5 ( Mat, i1, i2, i3, i4, i5 )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5
+END SUBROUTINE Reallocate_Int64_R5
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R5b( Mat, s )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int64_R5b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R5( Mat, i1, i2, i3, i4, i5 )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5
+END SUBROUTINE Reallocate_Int32_R5
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R5b( Mat, s )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int32_R5b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R6 ( Mat, i1, i2, i3, i4, i5, i6 )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6
+END SUBROUTINE Reallocate_Int64_R6
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R6b( Mat, s )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int64_R6b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R6( Mat, i1, i2, i3, i4, i5, i6 )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6
+END SUBROUTINE Reallocate_Int32_R6
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R6b( Mat, s )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int32_R6b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R7 ( Mat, i1, i2, i3, i4, i5, &
+  & i6, i7 )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6, i7
+END SUBROUTINE Reallocate_Int64_R7
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int64_R7b( Mat, s )
+  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int64_R7b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R7( Mat, i1, i2, i3, i4, i5, i6, i7)
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6, i7
+END SUBROUTINE Reallocate_Int32_R7
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R7b( Mat, s )
+  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
+  INTEGER( I4B ), INTENT( IN ) :: s( : )
+END SUBROUTINE Reallocate_Int32_R7b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Int32_R1_6( Vec1, n1, Vec2, n2, Vec3, &
+  & n3, Vec4, n4, Vec5, n5, Vec6, n6 )
   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: Vec1( : ), Vec2( : )
   INTEGER( I4B ), ALLOCATABLE, OPTIONAL, INTENT( INOUT) :: Vec3( : ), &
     & Vec4( : ), Vec5( : ), Vec6( : )
   INTEGER( I4B ), INTENT( IN ) :: n1, n2
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
-END SUBROUTINE
+END SUBROUTINE Reallocate_Int32_R1_6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -681,14 +1244,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate7( Vec1, n1, Vec2, n2, Vec3, n3, Vec4, n4, &
-  & Vec5, n5, Vec6, n6 )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: Vec1( : ), Vec2( : )
-  REAL( DFP ), ALLOCATABLE, OPTIONAL, INTENT( INOUT) :: Vec3( : ), &
+MODULE PURE SUBROUTINE Reallocate_Real64_R1_6( Vec1, n1, Vec2, &
+  & n2, Vec3, n3, Vec4, n4, Vec5, n5, Vec6, n6 )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT) :: Vec1( : ), Vec2( : )
+  REAL( Real64 ), ALLOCATABLE, OPTIONAL, INTENT( INOUT) :: Vec3( : ), &
     & Vec4( : ), Vec5( : ), Vec6( : )
   INTEGER( I4B ), INTENT( IN ) :: n1, n2
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
-END SUBROUTINE
+END SUBROUTINE Reallocate_Real64_R1_6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -696,11 +1259,26 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate8( A, nA, IA, nIA, JA, nJA )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+MODULE PURE SUBROUTINE Reallocate_Real32_R1_6( Vec1, n1, Vec2, &
+  & n2, Vec3, n3, Vec4, n4, Vec5, n5, Vec6, n6 )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT) :: Vec1( : ), Vec2( : )
+  REAL( Real32 ), ALLOCATABLE, OPTIONAL, INTENT( INOUT) :: Vec3( : ), &
+    & Vec4( : ), Vec5( : ), Vec6( : )
+  INTEGER( I4B ), INTENT( IN ) :: n1, n2
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
+END SUBROUTINE Reallocate_Real32_R1_6
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_AIJ( A, nA, IA, nIA, JA, nJA )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : ), JA( : )
   INTEGER( I4B ), INTENT( IN ) :: nA, nIA, nJA
-END SUBROUTINE
+END SUBROUTINE Reallocate_Real64_AIJ
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -708,11 +1286,23 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate9( A, nA, IA, nIA )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+MODULE PURE SUBROUTINE Reallocate_Real32_AIJ( A, nA, IA, nIA, JA, nJA )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : ), JA( : )
+  INTEGER( I4B ), INTENT( IN ) :: nA, nIA, nJA
+END SUBROUTINE Reallocate_Real32_AIJ
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     Reallocate@Reallocate
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE Reallocate_Real64_AI( A, nA, IA, nIA )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : )
   INTEGER( I4B ), INTENT( IN ) :: nA, nIA
-END SUBROUTINE
+END SUBROUTINE Reallocate_Real64_AI
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -720,23 +1310,51 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate10( Mat, i1, i2, i3, i4 )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
-END SUBROUTINE
+MODULE PURE SUBROUTINE Reallocate_Real32_AI( A, nA, IA, nIA )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : )
+  INTEGER( I4B ), INTENT( IN ) :: nA, nIA
+END SUBROUTINE Reallocate_Real32_AI
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
 INTERFACE Reallocate
-  MODULE PROCEDURE Reallocate1, &
-    & Reallocate2, &
-    & Reallocate3, &
-    & Reallocate4, &
-    & Reallocate5, &
-    & Reallocate6, &
-    & Reallocate7, &
-    & Reallocate8, &
-    & Reallocate9, &
-    & Reallocate10
+  MODULE PROCEDURE &
+    & Reallocate_Real64_R1, Reallocate_Real32_R1, &
+    & Reallocate_Real64_R1b, Reallocate_Real32_R1b, &
+    & Reallocate_Real64_R2, Reallocate_Real32_R2, &
+    & Reallocate_Real64_R2b, Reallocate_Real32_R2b, &
+    & Reallocate_Real64_R3, Reallocate_Real32_R3, &
+    & Reallocate_Real64_R3b, Reallocate_Real32_R3b, &
+    & Reallocate_Real64_R4, Reallocate_Real32_R4, &
+    & Reallocate_Real64_R4b, Reallocate_Real32_R4b, &
+    & Reallocate_Real64_R5, Reallocate_Real32_R5, &
+    & Reallocate_Real64_R5b, Reallocate_Real32_R5b, &
+    & Reallocate_Real64_R6, Reallocate_Real32_R6, &
+    & Reallocate_Real64_R6b, Reallocate_Real32_R6b, &
+    & Reallocate_Real64_R7, Reallocate_Real32_R7, &
+    & Reallocate_Real64_R7b, Reallocate_Real32_R7b, &
+    & Reallocate_Int64_R1, Reallocate_Int32_R1, &
+    & Reallocate_Int64_R1b, Reallocate_Int32_R1b, &
+    & Reallocate_Int64_R2, Reallocate_Int32_R2, &
+    & Reallocate_Int64_R2b, Reallocate_Int32_R2b, &
+    & Reallocate_Int64_R3, Reallocate_Int32_R3, &
+    & Reallocate_Int64_R3b, Reallocate_Int32_R3b, &
+    & Reallocate_Int64_R4, Reallocate_Int32_R4, &
+    & Reallocate_Int64_R4b, Reallocate_Int32_R4b, &
+    & Reallocate_Int64_R5, Reallocate_Int32_R5, &
+    & Reallocate_Int64_R5b, Reallocate_Int32_R5b, &
+    & Reallocate_Int64_R6, Reallocate_Int32_R6, &
+    & Reallocate_Int64_R6b, Reallocate_Int32_R6b, &
+    & Reallocate_Int64_R7, Reallocate_Int32_R7, &
+    & Reallocate_Int64_R7b, Reallocate_Int32_R7b, &
+    & Reallocate_Int32_R1_6, Reallocate_Real64_R1_6, &
+    & Reallocate_Real32_R1_6, &
+    & Reallocate_Real64_AIJ, Reallocate_Real32_AIJ, &
+    & Reallocate_Real64_AI, Reallocate_Real32_AI
 END INTERFACE Reallocate
 
 PUBLIC :: Reallocate

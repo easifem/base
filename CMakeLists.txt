@@ -22,6 +22,7 @@ SET(namespace "${PROJECT_NAME}")
 INCLUDE(CMakePrintHelpers)
 INCLUDE(FortranCInterface)
 FortranCInterface_VERIFY()
+LIST( APPEND TARGET_COMPILE_DEF "-DUSE_CMAKE" )
 
 # SYSTEM INFORMATION
 # Disable in-source builds to prevent source tree corruption.
@@ -31,8 +32,96 @@ IF(" ${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL " ${CMAKE_CURRENT_BINARY_DIR}")
     You should create a separate directory for build files.")
 ENDIF()
 
+#Single precision or double precision
+OPTION(USE_Real32 OFF)
+OPTION(USE_Real64 OFF)
+IF(USE_Real32)
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_Real32" )
+ELSEIF(USE_Real64)
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_Real64" )
+ELSE()
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_Real64" )
+ENDIF()
+
+#Single precision or double precision
+OPTION(USE_Int32 OFF)
+OPTION(USE_Int64 OFF)
+IF(USE_Int32)
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_Int32" )
+ELSEIF(USE_Real64)
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_Int64" )
+ELSE()
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_Int32" )
+ENDIF()
+LIST( APPEND TARGET_COMPILE_DEF "-D${CMAKE_HOST_SYSTEM_NAME}_SYSTEM" )
+
+# CREATING DIRECTORIES FOR EASIFEM_BASE
+INCLUDE( GNUInstallDirs )
+SET(
+  CMAKE_Fortran_MODULE_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR} )
+SET(
+  CMAKE_LIBRARY_OUTPUT_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR} )
+SET(
+  CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR} )
+SET(
+  CMAKE_RUNTIME_OUTPUT_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR} )
+
+SET(
+  INSTALL_LIBDIR
+  ${CMAKE_INSTALL_LIBDIR}
+  CACHE PATH "install location of lib" )
+SET(
+  INSTALL_INCLUDEDIR
+  ${CMAKE_INSTALL_INCLUDEDIR}
+  CACHE PATH "install location of include" )
+SET(
+  INSTALL_BINDIR
+  ${CMAKE_INSTALL_BINDIR}
+  CACHE PATH "install location of bin" )
+
+IF(WIN32 AND NOT CYGWIN)
+  SET(DEF_INSTALL_CMAKEDIR CMake)
+ELSE()
+  SET(DEF_INSTALL_CMAKEDIR share/cmake/${PROJECT_NAME})
+ENDIF()
+SET(INSTALL_CMAKEDIR ${DEF_INSTALL_CMAKEDIR} CACHE PATH "Installation directory for CMake files")
+
+FOREACH(p LIB BIN INCLUDE CMAKE)
+  FILE(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${INSTALL_${p}DIR} _path)
+  MESSAGE(STATUS "Installing ${p} componenets to ${_path}")
+ENDFOREACH()
+
+OPTION(BUILD_SHARED_LIBS "Build shared library" ON)
+IF(BUILD_SHARED_LIBS)
+  MESSAGE(STATUS "${PROJECT_NAME} will be built as a shared library.")
+ELSE()
+  MESSAGE(STATUS "${PROJECT_NAME} will be built as a static library.")
+ENDIF()
+
+# INSTALLING EASIFEMBASE
+IF(BUILD_SHARED_LIBS)
+  ADD_LIBRARY(${PROJECT_NAME} SHARED "" )
+ELSE()
+  ADD_LIBRARY(${PROJECT_NAME} STATIC "")
+ENDIF()
+
+# COMPILER RELATED OPTIONS
+INCLUDE(${PROJECT_SOURCE_DIR}/cmake/Compiler.cmake)
+
+IF( $<CONFIG:DEBUG> )
+  LIST( APPEND TARGET_COMPILE_DEF "-DDEBUG_VER" )
+ENDIF()
+
+###########################################
+INCLUDE(src/modules/CMakeLists.txt)
+INCLUDE(src/submodules/CMakeLists.txt)
+###########################################
+
 # install openblas
-# list(APPEND CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake")
 IF(NOT CMAKE_PREFIX_PATH)
   SET(CMAKE_PREFIX_PATH "$ENV{EASIFEM_EXTPKGS}")
 ENDIF()
@@ -41,133 +130,31 @@ SET(BLA_VENDOR "OpenBLAS")
 FIND_PACKAGE( LAPACK REQUIRED )
 IF( LAPACK_FOUND )
   MESSAGE(STATUS "LAPACK_LIBRARIES found")
-  MESSAGE("LAPACK_LIBRARIES: ${LAPACK_LIBRARIES}")
-  MESSAGE("BLAS_LIBRARIES: ${BLAS_LIBRARIES}")
-  MESSAGE("BLA_vendor: ${BLA_VENDOR}")
 ENDIF()
 
-if( BLA_VENDOR MATCHES "MKL" )
-  message(STATUS "BLA_VENDOR : MKL")
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_INTEL_MKL" )
-elseif( BLA_VENDOR MATCHES "OpenBLAS" )
-  message(STATUS "BLA_VENDOR : OpenBLAS")
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_OpenBLAS" )
-else( )
-  message(STATUS "BLA_VENDOR : System provided")
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_NativeBLAS" )
-endif( )
+IF( BLA_VENDOR MATCHES "MKL" )
+  MESSAGE(STATUS "BLA_VENDOR : MKL")
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_INTEL_MKL" )
+ELSEIF( BLA_VENDOR MATCHES "OpenBLAS" )
+  MESSAGE(STATUS "BLA_VENDOR : OpenBLAS")
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_OpenBLAS" )
+ELSE( )
+  MESSAGE(STATUS "BLA_VENDOR : System provided")
+  LIST( APPEND TARGET_COMPILE_DEF "-DUSE_NativeBLAS" )
+ENDIF( )
 
 # Find OpenMP
-option(USE_OpenMP OFF)
-if(USE_OpenMP)
-  find_package(OpenMP)
-  if(OpenMP_FOUND)
-    message("OpenMP FOUND: ")
-    list( APPEND TARGET_COMPILE_DEF "-DUSE_OpenMP" )
-    list( APPEND TARGET_COMPILE_OPT ${OpenMP_Fortran_FLAGS}  )
-  else()
-    message("OpenMP NOT FOUND: building without it")
-  endif()
-endif()
-
-#Single precision or double precision
-option(USE_Real32 OFF)
-option(USE_Real64 OFF)
-
-if(USE_Real32)
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_Real32" )
-elseif(USE_Real64)
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_Real64" )
-else()
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_Real64" )
-endif()
-
-#Single precision or double precision
-option(USE_Int32 OFF)
-option(USE_Int64 OFF)
-if(USE_Int32)
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_Int32" )
-elseif(USE_Real64)
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_Int64" )
-else()
-  list( APPEND TARGET_COMPILE_DEF "-DUSE_Int32" )
-endif()
-
-list( APPEND TARGET_COMPILE_DEF "-D${CMAKE_HOST_SYSTEM_NAME}_SYSTEM" )
-
-# CREATING DIRECTORIES FOR EASIFEM_BASE
-include( GNUInstallDirs )
-set(
-  CMAKE_Fortran_MODULE_DIRECTORY
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}
-)
-set(
-  CMAKE_LIBRARY_OUTPUT_DIRECTORY
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
-)
-set(
-  CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
-)
-set(
-  CMAKE_RUNTIME_OUTPUT_DIRECTORY
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
-)
-
-set(
-  INSTALL_LIBDIR
-  ${CMAKE_INSTALL_LIBDIR}
-  CACHE PATH "install location of lib"
-)
-set(
-  INSTALL_INCLUDEDIR
-  ${CMAKE_INSTALL_INCLUDEDIR}
-  CACHE PATH "install location of include"
-)
-set(
-  INSTALL_BINDIR
-  ${CMAKE_INSTALL_BINDIR}
-  CACHE PATH "install location of bin"
-)
-
-if(WIN32 AND NOT CYGWIN)
-  set(DEF_INSTALL_CMAKEDIR CMake)
-else()
-  set(DEF_INSTALL_CMAKEDIR share/cmake/${PROJECT_NAME})
-endif()
-set(INSTALL_CMAKEDIR ${DEF_INSTALL_CMAKEDIR} CACHE PATH "Installation directory for CMake files")
-
-foreach(p LIB BIN INCLUDE CMAKE)
-  file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${INSTALL_${p}DIR} _path)
-  message(STATUS "Installing ${p} componenets to ${_path}")
-endforeach()
-
-
-option(BUILD_SHARED_LIBS "Build shared library" ON)
-if (BUILD_SHARED_LIBS)
-  message(STATUS "${PROJECT_NAME} will be built as a shared library.")
-else()
-  message(STATUS "${PROJECT_NAME} will be built as a static library.")
-endif()
-
-# INSTALLING easifemBase
-if(BUILD_SHARED_LIBS)
-  add_library(${PROJECT_NAME} SHARED "" )
-else()
-  add_library(${PROJECT_NAME} STATIC "")
-endif()
-
-# COMPILER RELATED OPTIONS
-include(${PROJECT_SOURCE_DIR}/cmake/Compiler.cmake)
-
-if( $<CONFIG:Debug> )
-  list( APPEND TARGET_COMPILE_DEF "-DDEBUG_VER" )
-endif()
-
-###########################################
-INCLUDE(src/modules/CMakeLists.txt)
-INCLUDE(src/submodules/CMakeLists.txt)
-###########################################
+OPTION(USE_OpenMP OFF)
+IF(USE_OpenMP)
+  FIND_PACKAGE(OpenMP)
+  IF(OpenMP_FOUND)
+    MESSAGE("OpenMP FOUND: ")
+    LIST( APPEND TARGET_COMPILE_DEF "-DUSE_OpenMP" )
+    LIST( APPEND TARGET_COMPILE_OPT ${OpenMP_Fortran_FLAGS}  )
+  ELSE()
+    MESSAGE("OpenMP NOT FOUND: building without it")
+  ENDIF()
+ENDIF()
 
 TARGET_COMPILE_OPTIONS(
   ${PROJECT_NAME}
@@ -180,8 +167,7 @@ TARGET_COMPILE_OPTIONS(
 TARGET_COMPILE_DEFINITIONS(
   ${PROJECT_NAME}
   PUBLIC
-  ${TARGET_COMPILE_DEF}
-)
+  ${TARGET_COMPILE_DEF} )
 
 # target_compile_definitions()
 SET_TARGET_PROPERTIES(
@@ -194,8 +180,7 @@ SET_TARGET_PROPERTIES(
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     MACOSX_RPATH ON
-    WINDOWS_EXPORT_ALL_SYMBOLS ON
-)
+    WINDOWS_EXPORT_ALL_SYMBOLS ON )
 
 TARGET_INCLUDE_DIRECTORIES(
   ${PROJECT_NAME}
@@ -234,6 +219,9 @@ ELSE()
 ENDIF()
 ENDFOREACH()
 
+###############################
+###### I N S T A L L ##########
+###############################
 INSTALL(
   TARGETS
     ${PROJECT_NAME}
@@ -247,52 +235,47 @@ INSTALL(
     COMPONENT bin
   LIBRARY
     DESTINATION ${INSTALL_LIBDIR}
-    COMPONENT lib
-)
+    COMPONENT lib )
 
 INSTALL(
   DIRECTORY
     ${CMAKE_Fortran_MODULE_DIRECTORY}
     DESTINATION "./"
-    COMPONENT lib
-)
+    COMPONENT lib )
 
-install(
+INSTALL(
   EXPORT
     ${TARGETS_EXPORT_NAME}
     NAMESPACE ${namespace}::
     DESTINATION ${INSTALL_CMAKEDIR}
-    COMPONENT dev
-)
+    COMPONENT dev)
 
-include(CMakePackageConfigHelpers)
+INCLUDE(CMakePackageConfigHelpers)
 
 configure_package_config_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-  INSTALL_DESTINATION ${INSTALL_CMAKEDIR}
-)
-if(BUILD_SHARED_LIBS OR PROJECT_VERSION_MAJOR EQUAL 0)
+  INSTALL_DESTINATION ${INSTALL_CMAKEDIR})
+
+IF(BUILD_SHARED_LIBS OR PROJECT_VERSION_MAJOR EQUAL 0)
   # Due to the uncertain ABI compatibility of Fortran shared libraries
   # limit compatibility for dynamic linking to same minor version.
-  set(COMPATIBILITY AnyNewerVersion)
+  SET(COMPATIBILITY AnyNewerVersion)
   # set(COMPATIBILITY SameMinorVersion)
-else()
+ELSE()
   # Require API compatibility via semantic versioning for static linking.
-  set(COMPATIBILITY AnyNewerVersion)
+  SET(COMPATIBILITY AnyNewerVersion)
   # set(COMPATIBILITY SameMajorVersion)
-endif()
+ENDIF()
 
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   VERSION "${PROJECT_VERSION}"
-  COMPATIBILITY ${COMPATIBILITY}
-)
+  COMPATIBILITY ${COMPATIBILITY})
 
-install(
+INSTALL(
   FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   DESTINATION
-    ${INSTALL_CMAKEDIR}
-)
+    ${INSTALL_CMAKEDIR})
