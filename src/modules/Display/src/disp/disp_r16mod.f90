@@ -80,7 +80,7 @@ CONTAINS
     integer, intent(in), optional :: unit, lbound(:), digmax
     type(settings) :: SE
     call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient, zeroas, digmax)
-    if (SE % row) then
+    if (SE%row) then
       call disp_quad(title, reshape(x, (/1, size(x)/)), SE)
     else
       call disp_quad(title, reshape(x, (/size(x), 1/)), SE)
@@ -113,7 +113,7 @@ CONTAINS
     real(quad),     intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
-    call find_editdesc_quad(x, SE, wid, nbl) ! determine also SE % w
+    call find_editdesc_quad(x, SE, wid, nbl) ! determine also SE%w
     call tobox_quad(title, x, SE, wid, nbl)
   end subroutine disp_quad
 
@@ -124,7 +124,7 @@ CONTAINS
     type(settings), intent(inout) :: SE      ! settings
     integer,        intent(inout) :: wid(:)  ! widths of columns
     integer,        intent(inout) :: nbl(:)  ! number of blanks to trim from left
-    character(SE % w)  :: s(size(x,1))
+    character(SE%w)  :: s(size(x,1))
     integer            :: lin1, j, wleft, m, n, widp(size(wid))
     character, pointer :: boxp(:,:)
     real(quad)         :: xj(size(x,1)), h
@@ -134,10 +134,10 @@ CONTAINS
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
       xj = x(:, j)
-      if (m > 0) write(s, SE % ed) xj
-      call replace_zeronaninf(s, SE % zas(1:SE % lzas), xj == 0, xj /= xj, xj < -h, xj > h)
+      if (m > 0) write(s, SE%ed) xj
+      call replace_zeronaninf(s, SE%zas(1:SE%lzas), xj == 0, xj /= xj, xj < -h, xj > h)
       call copytobox(s, lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_quad
@@ -166,7 +166,7 @@ CONTAINS
   end function maxw_quad
 
   subroutine find_editdesc_quad(x, SE, wid, nbl)
-    ! Determine SE % ed, SE % w (unless specified) and wid.
+    ! Determine SE%ed, SE%w (unless specified) and wid.
     ! The if-block (*) is for safety: make f wider in case xm is written ok with the
     ! ES format in fmt but overflows with F format (the feature has been tested through
     ! manual changes to the program).
@@ -180,17 +180,17 @@ CONTAINS
     character(99) s
     logical xzero(size(x,2)), xallz(size(x,2)), xfinite(size(x,1),size(x,2)), xnonn(size(x,2)), xalln(size(x,2))
     !
-    dmx = SE % dmx
+    dmx = SE%dmx
     h = huge(h)
     xfinite = x == x .and. x >= -h .and. x <= h ! neither NaN, Inf nor -Inf
-    if (SE % w == 0) then  ! Edit descriptor 'F0.d' specified
-      ww = maxw_quad(reshape(x, (/size(x)/)), SE % d)
-      if (SE % lzas > 0 .and. any(x == 0._quad))  ww = max(ww, SE % lzas)
-      call replace_w(SE % ed, ww)
-      SE % w = ww
-    elseif (SE % w < 0) then ! No edit descriptor specified
+    if (SE%w == 0) then  ! Edit descriptor 'F0.d' specified
+      ww = maxw_quad(reshape(x, (/size(x)/)), SE%d)
+      if (SE%lzas > 0 .and. any(x == 0._quad))  ww = max(ww, SE%lzas)
+      call replace_w(SE%ed, ww)
+      SE%w = ww
+    elseif (SE%w < 0) then ! No edit descriptor specified
       if (size(x) == 0) then
-        SE % w = 0
+        SE%w = 0
         wid = 0
         nbl = 0
         return
@@ -201,21 +201,21 @@ CONTAINS
         write(f1(7:11), '(SS,I2,".",I2.2)') dmx + 8, dmx - 1
         write(s,f1) xp; read(s(dmx+4:dmx+8),'(I5)') expmax
         write(s,f1) xm; read(s(dmx+4:dmx+8),'(I5)') expmin
-        call find_editdesc_real(expmax, expmin, dmx,  SE % ed, ww, dd, xm >= 0)
+        call find_editdesc_real(expmax, expmin, dmx,  SE%ed, ww, dd, xm >= 0)
         if (.not. all(xfinite))                     ww = max(ww, 4)
-        if (SE % lzas > 0 .and. any(x == 0._quad))  ww = max(ww, SE % lzas)
-        if (SE % ed(5:5)=='F') then  ! (*)
-          write(s, SE % ed) xp; if (s(1:1) == '*') ww = ww + 1
-          write(s, SE % ed) xm; if (s(1:1) == '*') ww = ww + 1
-          write(SE % ed(6:10), '(SS,I2,".",I2)') ww, dd
+        if (SE%lzas > 0 .and. any(x == 0._quad))  ww = max(ww, SE%lzas)
+        if (SE%ed(5:5)=='F') then  ! (*)
+          write(s, SE%ed) xp; if (s(1:1) == '*') ww = ww + 1
+          write(s, SE%ed) xm; if (s(1:1) == '*') ww = ww + 1
+          write(SE%ed(6:10), '(SS,I2,".",I2)') ww, dd
         endif
       else
         ww = 4
-        SE % ed = '(F4.0)'
+        SE%ed = '(F4.0)'
       endif
-      SE % w = ww
+      SE%w = ww
     endif
-    if (SE % trm) then
+    if (SE%trm) then
       xmaxv = maxval(x, 1, mask=xfinite)  ! max in each column
       xminv = minval(x, 1, mask=xfinite)  ! min
       xzero = any(x == 0._quad, 1) ! true where column has some zeros
@@ -224,7 +224,7 @@ CONTAINS
       xalln = all(x > h .or. x < -h .or. x /= x, 1)  ! true where column has only nonnormals (inf, -inf, nan)
       call getwid_quad(xmaxv, xminv, xzero, xallz, xnonn, xalln, SE,  wid, nbl)
     else
-      wid = SE % w
+      wid = SE%w
       nbl = 0
     endif
   end subroutine find_editdesc_quad
@@ -238,22 +238,22 @@ CONTAINS
     type(settings), intent(in)  :: SE                 ! settings
     integer,        intent(out) :: wid(:)             ! widths of columns
     integer,        intent(out) :: nbl(:)             ! number of blanks to peel from left (w-wid)
-    character(SE % w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
+    character(SE%w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
     integer w
-    w = SE % w
-    write(stmin, SE % ed) xminv
-    write(stmax, SE % ed) xmaxv
+    w = SE%w
+    write(stmin, SE%ed) xminv
+    write(stmax, SE%ed) xmaxv
     nbl = mod(verify(stmin, ' ') + w, w + 1) ! loc. of first nonblank
     nbl = min(nbl, mod(verify(stmax, ' ') + w, w + 1))
-    if (SE % gedit) then
+    if (SE%gedit) then
       wid = w
     else
       wid = len_trim(adjustl(stmin))
       wid = max(wid, len_trim(adjustl(stmax)))
     endif
-    if (SE % lzas > 0) then
-      wid = merge(SE % lzas, wid, xallz)
-      wid = max(wid, merge(SE % lzas, 0, xzero))
+    if (SE%lzas > 0) then
+      wid = merge(SE%lzas, wid, xallz)
+      wid = max(wid, merge(SE%lzas, 0, xzero))
     endif
     wid = merge(4, wid, xalln)
     wid = max(wid, merge(4, 0, xnonn))
@@ -264,8 +264,8 @@ CONTAINS
   function tostring_s_quad(x) result(st)
     ! Scalar to string
     real(quad), intent(in) :: x
-    character(len_f_quad((/x/), tosset % rfmt)) :: st
-    st = tostring_f_quad((/x/), tosset % rfmt)
+    character(len_f_quad((/x/), tosset%rfmt)) :: st
+    st = tostring_f_quad((/x/), tosset%rfmt)
   end function tostring_s_quad
 
   function tostring_sf_quad(x, fmt) result(st)
@@ -279,8 +279,8 @@ CONTAINS
   function tostring_quad(x) result(st)
     ! Vector to string
     real(quad), intent(in) :: x(:)
-    character(len_f_quad(x, tosset % rfmt)) :: st
-    st = tostring_f_quad(x, tosset % rfmt)
+    character(len_f_quad(x, tosset%rfmt)) :: st
+    st = tostring_f_quad(x, tosset%rfmt)
   end function tostring_quad
 
   function tostring_f_quad(x, fmt) result(st)
@@ -321,7 +321,7 @@ CONTAINS
     endif
     write(sa, fmt1) x
     call trim_real(sa, gedit, w)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset % seplen)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
   end function len_f_quad
 
   pure function widthmax_quad(x, fmt) result(w)
@@ -392,7 +392,7 @@ CONTAINS
     else
       SEim = SE
     end if
-    if (SE % row) then
+    if (SE%row) then
       call disp_cplq(title, reshape(x, (/1, size(x)/)), SE, SEim, n = size(x))
     else
       call disp_cplq(title, reshape(x, (/size(x), 1/)), SE, SEim, n = 1)
@@ -436,8 +436,8 @@ CONTAINS
     type(settings), intent(inout) :: SE, SEim
     integer,        intent(in)    :: n
     integer, dimension(n) :: widre(n), widim(n), nblre(n), nblim(n)
-    call find_editdesc_quad(real(x), SE, widre, nblre)         ! determine also SE % w
-    call find_editdesc_quad(abs(aimag(x)), SEim, widim, nblim) ! determine also SEim % w
+    call find_editdesc_quad(real(x), SE, widre, nblre)         ! determine also SE%w
+    call find_editdesc_quad(abs(aimag(x)), SEim, widim, nblim) ! determine also SEim%w
     call tobox_cplq(title, x, SE, SEim, widre, widim, nblre, nblim, m = size(x,1), n = size(x,2))
   end subroutine disp_cplq
 
@@ -447,26 +447,26 @@ CONTAINS
     complex(quad),  intent(in)    :: x(:,:)
     integer,        intent(in)    :: m, n, widre(:), widim(:), nblre(:), nblim(:)
     type(settings), intent(inout) :: SE, SEim
-    character(SE % w)   :: s(m)
-    character(SEim % w) :: sim(m)
+    character(SE%w)   :: s(m)
+    character(SEim%w) :: sim(m)
     character(3)        :: sgn(m)
     integer             :: lin1, i, j, wleft, wid(n), widp(n)
     character, pointer  :: boxp(:,:)
-    SE % zas = ''
-    SEim % zas = ''
+    SE%zas = ''
+    SEim%zas = ''
     wid = widre + widim + 4
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
-      if (m > 0) write(s, SE % ed) (real(x(i,j)), i=1,m)
+      if (m > 0) write(s, SE%ed) (real(x(i,j)), i=1,m)
       call copytobox(s, lin1, widre(j), widp(j) - widim(j) - 4, nblre(j), boxp,  wleft)
       do i=1,m
         if (aimag(x(i,j)) < 0) then; sgn(i) = ' - '; else; sgn(i) = ' + '; endif
         enddo
       call copytobox(sgn, lin1, 3, 3, 0, boxp,  wleft)
-      if (m > 0) write(sim, SEim % ed) (abs(aimag(x(i,j))), i=1,m)
+      if (m > 0) write(sim, SEim%ed) (abs(aimag(x(i,j))), i=1,m)
       call copytobox(sim, lin1, widim(j), widim(j), nblim(j), boxp,  wleft)
       call copyseptobox('i', m, lin1, boxp, wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_cplq
@@ -475,8 +475,8 @@ CONTAINS
 
   function tostring_s_cplq(x) result(st)
     complex(quad), intent(in)                   :: x
-    character(len_s_cplq(x, tosset % rfmt)) :: st
-    st = tostring_f_cplq((/x/), tosset % rfmt)
+    character(len_s_cplq(x, tosset%rfmt)) :: st
+    st = tostring_f_cplq((/x/), tosset%rfmt)
   end function tostring_s_cplq
 
   function tostring_sf_cplq(x, fmt) result(st)
@@ -488,8 +488,8 @@ CONTAINS
 
   function tostring_cplq(x) result(st)
     complex(quad), intent(in)               :: x(:)
-    character(len_f_cplq(x, tosset % rfmt)) :: st
-    st = tostring_f_cplq(x, tosset % rfmt)
+    character(len_f_cplq(x, tosset%rfmt)) :: st
+    st = tostring_f_cplq(x, tosset%rfmt)
   end function tostring_cplq
 
   function tostring_f_cplq(x, fmt) result(st)
@@ -542,7 +542,7 @@ CONTAINS
     character(nnblk(fmt)+8)   :: fmt1
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
-    wtot = len_f_quad(real(x), fmt) + len_f_quad(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset % seplen)
+    wtot = len_f_quad(real(x), fmt) + len_f_quad(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset%seplen)
     ! subtract seplen because it has been added twice in len_f_quad
   end function len_f_cplq
   ! *************************************** END OF QUADRUPLE PRECISION COMPLEX PROCEDURES ********************************

@@ -29,8 +29,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValues_Int
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = Obj % Val
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = Obj%Val
   END IF
 END PROCEDURE f_getValues_Int
 
@@ -39,8 +39,8 @@ END PROCEDURE f_getValues_Int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getSectionValues_Int
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = Obj % Val( Indx )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = Obj%Val( Indx )
   END IF
 END PROCEDURE f_getSectionValues_Int
 
@@ -49,8 +49,8 @@ END PROCEDURE f_getSectionValues_Int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValuesFromTriplet_Int
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = Obj % Val( iStart:iEnd:Stride )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = Obj%Val( iStart:iEnd:Stride )
   END IF
 END PROCEDURE f_getValuesFromTriplet_Int
 
@@ -59,7 +59,7 @@ END PROCEDURE f_getValuesFromTriplet_Int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValues_Real
-  IF( ALLOCATED( Obj % Val ) ) THEN
+  IF( ALLOCATED( Obj%Val ) ) THEN
     CALL Reallocate( Val, SIZE( Obj ) )
     CALL COPY( Y=Val, X=Obj%Val )
   END IF
@@ -70,7 +70,7 @@ END PROCEDURE f_getValues_Real
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getSectionValues_Real
-  IF( ALLOCATED( Obj % Val ) ) THEN
+  IF( ALLOCATED( Obj%Val ) ) THEN
     CALL Reallocate( Val, SIZE(Indx ) )
     CALL COPY( Y=Val, X=Obj%Val(Indx) )
   END IF
@@ -81,7 +81,7 @@ END PROCEDURE f_getSectionValues_Real
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValuesFromTriplet_Real
-  IF( ALLOCATED( Obj % Val ) ) THEN
+  IF( ALLOCATED( Obj%Val ) ) THEN
     Val = Obj%Val ( iStart:iEnd:Stride )
   END IF
 END PROCEDURE f_getValuesFromTriplet_Real
@@ -95,13 +95,13 @@ MODULE PROCEDURE f_getARRAYValues_Int
   N = SIZE( Obj )
   tNodes = 0
   DO i = 1, N
-    tNodes = tNodes + SIZE( Obj( i ) % Val )
+    tNodes = tNodes + SIZE( Obj( i )%Val )
   END DO
   ALLOCATE( Val( tNodes ) )
   tNodes = 0; r1 = 0; r2 = 0
   DO i = 1, N
-    r1 = r2 + 1; r2 = r2 + SIZE( Obj( i ) % Val )
-    Val( r1 : r2 ) = Obj( i ) % Val
+    r1 = r2 + 1; r2 = r2 + SIZE( Obj( i )%Val )
+    Val( r1 : r2 ) = Obj( i )%Val
   END DO
 END PROCEDURE f_getARRAYValues_Int
 
@@ -115,7 +115,7 @@ MODULE PROCEDURE f_getARRAYSectionValues_Int
   M = SIZE( Indx )
   ALLOCATE( Val( N * M ) )
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i ) % Val( Indx )
+    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( Indx )
   END DO
 END PROCEDURE f_getARRAYSectionValues_Int
 
@@ -129,7 +129,7 @@ MODULE PROCEDURE f_getARRAYValuesFromTriplet_Int
   M = 1 + ( iEnd - iStart ) / Stride
   ALLOCATE( Val( M * N ) )
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i ) % Val( iStart:iEnd:Stride )
+    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( iStart:iEnd:Stride )
   END DO
 END PROCEDURE f_getARRAYValuesFromTriplet_Int
 
@@ -142,13 +142,13 @@ MODULE PROCEDURE f_getARRAYValues_Real
   N = SIZE( Obj )
   tNodes = 0
   DO i = 1, N
-    tNodes = tNodes + SIZE( Obj( i ) % Val )
+    tNodes = tNodes + SIZE( Obj( i )%Val )
   END DO
   ALLOCATE( Val( tNodes ) )
   tNodes = 0; r1 = 0; r2 = 0
   DO i = 1, N
-    r1 = r2 + 1; r2 = r2 + SIZE( Obj( i ) % Val )
-    Val( r1 : r2 ) = Obj( i ) % Val
+    r1 = r2 + 1; r2 = r2 + SIZE( Obj( i )%Val )
+    Val( r1 : r2 ) = Obj( i )%Val
   END DO
 END PROCEDURE f_getARRAYValues_Real
 
@@ -162,7 +162,7 @@ MODULE PROCEDURE f_getARRAYSectionValues_Real
   M = SIZE( Indx )
   ALLOCATE( Val( M * N ) )
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i ) % Val( Indx )
+    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( Indx )
   END DO
 END PROCEDURE f_getARRAYSectionValues_Real
 
@@ -176,7 +176,7 @@ MODULE PROCEDURE f_getARRAYValuesFromTriplet_Real
   M = 1 + ( iEnd - iStart ) / Stride
   ALLOCATE( Val( M * N ) )
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i ) % Val( iStart:iEnd:Stride )
+    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( iStart:iEnd:Stride )
   END DO
 END PROCEDURE f_getARRAYValuesFromTriplet_Real
 
@@ -185,7 +185,7 @@ END PROCEDURE f_getARRAYValuesFromTriplet_Real
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getSectionValues_self
-  IF( ALLOCATED( Obj % Val ) ) THEN
+  IF( ALLOCATED( Obj%Val ) ) THEN
     ! CALL COPY( Y=Val, X=Obj%Val( Indx ) )
     STOP
   END IF
@@ -196,7 +196,7 @@ END PROCEDURE f_getSectionValues_self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValuesFromTriplet_self
-  IF( ALLOCATED( Obj % Val ) ) THEN
+  IF( ALLOCATED( Obj%Val ) ) THEN
     ! CALL COPY( Y=Val, X=Obj%Val( iStart:iEnd:Stride ) )
     STOP
   END IF
@@ -234,7 +234,7 @@ END PROCEDURE f_getARRAYValuesFromTriplet_self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getPointer_Real
-  Val => Obj % Val
+  Val => Obj%Val
 END PROCEDURE f_getPointer_Real
 
 !----------------------------------------------------------------------------
@@ -242,7 +242,7 @@ END PROCEDURE f_getPointer_Real
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IndexOf_1
-  Ans = MINLOC( ABS( Obj % Val - Value ), 1 )
+  Ans = MINLOC( ABS( Obj%Val - Value ), 1 )
 END PROCEDURE IndexOf_1
 
 !----------------------------------------------------------------------------
@@ -250,7 +250,7 @@ END PROCEDURE IndexOf_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IndexOf_2
-  ! Ans = MINLOC( ABS( Obj % Val - Value ), 1 )
+  ! Ans = MINLOC( ABS( Obj%Val - Value ), 1 )
   INTEGER( I4B ) :: i, j, m
   LOGICAL( LGT ), ALLOCATABLE :: Search( : )
   REAL( DFP ) :: tol0
@@ -260,10 +260,10 @@ MODULE PROCEDURE IndexOf_2
   ALLOCATE( Search( m ), Ans( m ) )
   Search = .TRUE.
   Ans = 0
-  DO i = 1, SIZE( Obj % Val )
+  DO i = 1, SIZE( Obj%Val )
     DO j = 1, m
       IF( Search( j ) ) THEN
-        IF( ABS(Value(j) - Obj % Val(i)) .LE. tol0  ) THEN
+        IF( ABS(Value(j) - Obj%Val(i)) .LE. tol0  ) THEN
           Search( j ) = .FALSE.
           Ans( j ) = i
         END IF
@@ -281,7 +281,7 @@ MODULE PROCEDURE isPresent_1
   REAL( DFP ) :: tol0
   Ans = .FALSE.
   tol0 = INPUT( default = REAL(1.0E-10, DFP), option = tol )
-  DO i = 1, SIZE( Obj % Val )
+  DO i = 1, SIZE( Obj%Val )
     IF( ABS( Obj%Val(i) - Value ) .LE. tol0 ) THEN
       Ans = .TRUE.
       EXIT
@@ -303,7 +303,7 @@ MODULE PROCEDURE isPresent_2
   ALLOCATE( Ans( m ), Search( m ) )
   Search = .TRUE.
   Ans = .FALSE.
-  DO i = 1, SIZE( Obj % Val )
+  DO i = 1, SIZE( Obj%Val )
     DO j = 1, m
       IF( Search( j ) ) THEN
         IF( ABS( Value(j) - Obj%Val(i) ) .LE. tol0 ) THEN

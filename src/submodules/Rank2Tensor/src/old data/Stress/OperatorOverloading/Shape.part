@@ -27,7 +27,7 @@
  FUNCTION VoigtVector_1( Obj, M )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .Shape. M, Returns Obj % S in Voigt vector 
+!       1.  Obj .Shape. M, Returns Obj%S in Voigt vector
 !           form of length M
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
@@ -40,12 +40,12 @@
 
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
         "Stress_Class.f90>>OperatorOverloading/Shape.part", &
         " Obj .Shape. M", &
-        "Obj % V is not allocated, Program Stopped!!!"&
+        "Obj%V is not allocated, Program Stopped!!!"&
         )
 
         STOP
@@ -62,23 +62,23 @@
 
                 CASE( 6 )
 
-                    VoigtVector_1 = Obj % V
+                    VoigtVector_1 = Obj%V
 
                 CASE( 4 )
 
-                    VoigtVector_1 = Vec4_From_Vec6( Obj % V )
+                    VoigtVector_1 = Vec4_From_Vec6( Obj%V )
 
                 CASE( 3 )
 
-                    VoigtVector_1 = Vec3_From_Vec6( Obj % V )
+                    VoigtVector_1 = Vec3_From_Vec6( Obj%V )
 
                 CASE( 2 )
 
-                    VoigtVector_1 = Vec2_From_Vec6( Obj % V )
+                    VoigtVector_1 = Vec2_From_Vec6( Obj%V )
 
                 CASE( 1 )
 
-                    VoigtVector_1( 1 ) = Obj % V( 1 )
+                    VoigtVector_1( 1 ) = Obj%V( 1 )
 
 
             END SELECT
@@ -89,23 +89,23 @@
 
                 CASE( 6 )
 
-                    VoigtVector_1 = Vec6_From_Vec4( Obj % V )
+                    VoigtVector_1 = Vec6_From_Vec4( Obj%V )
 
                 CASE( 4 )
 
-                    VoigtVector_1 =  Obj % V
+                    VoigtVector_1 =  Obj%V
 
                 CASE( 3 )
 
-                    VoigtVector_1 = Vec3_From_Vec4( Obj % V )
+                    VoigtVector_1 = Vec3_From_Vec4( Obj%V )
 
                 CASE( 2 )
 
-                    VoigtVector_1 = Vec2_From_Vec4( Obj % V )
+                    VoigtVector_1 = Vec2_From_Vec4( Obj%V )
 
                 CASE( 1 )
 
-                    VoigtVector_1( 1 ) = Obj % V( 1 )
+                    VoigtVector_1( 1 ) = Obj%V( 1 )
 
 
             END SELECT
@@ -116,23 +116,23 @@
 
                 CASE( 6 )
 
-                    VoigtVector_1 = Vec6_From_Vec3( Obj % V )
+                    VoigtVector_1 = Vec6_From_Vec3( Obj%V )
 
                 CASE( 4 )
 
-                    VoigtVector_1 =  Vec4_From_Vec3( Obj % V )
+                    VoigtVector_1 =  Vec4_From_Vec3( Obj%V )
 
                 CASE( 3 )
 
-                    VoigtVector_1 = Obj % V
+                    VoigtVector_1 = Obj%V
 
                 CASE( 2 )
 
-                    VoigtVector_1 = Vec2_From_Vec3( Obj % V )
+                    VoigtVector_1 = Vec2_From_Vec3( Obj%V )
 
                 CASE( 1 )
 
-                    VoigtVector_1( 1 ) = Obj % V( 1 )
+                    VoigtVector_1( 1 ) = Obj%V( 1 )
 
 
             END SELECT
@@ -143,23 +143,23 @@
 
                 CASE( 6 )
 
-                    VoigtVector_1 = Vec6_From_Vec2( Obj % V )
+                    VoigtVector_1 = Vec6_From_Vec2( Obj%V )
 
                 CASE( 4 )
 
-                    VoigtVector_1 =  Vec4_From_Vec2( Obj % V )
+                    VoigtVector_1 =  Vec4_From_Vec2( Obj%V )
 
                 CASE( 3 )
 
-                    VoigtVector_1 = Vec3_From_Vec2( Obj % V )
+                    VoigtVector_1 = Vec3_From_Vec2( Obj%V )
 
                 CASE( 2 )
 
-                    VoigtVector_1 = Obj % V
+                    VoigtVector_1 = Obj%V
 
                 CASE( 1 )
 
-                    VoigtVector_1( 1 ) = Obj % V( 1 )
+                    VoigtVector_1( 1 ) = Obj%V( 1 )
 
 
             END SELECT
@@ -170,23 +170,23 @@
 
                 CASE( 6 )
 
-                    VoigtVector_1 = Vec6_From_Vec1( Obj % V )
+                    VoigtVector_1 = Vec6_From_Vec1( Obj%V )
 
                 CASE( 4 )
 
-                    VoigtVector_1 =  Vec4_From_Vec1( Obj % V )
+                    VoigtVector_1 =  Vec4_From_Vec1( Obj%V )
 
                 CASE( 3 )
 
-                    VoigtVector_1 = Vec3_From_Vec1( Obj % V )
+                    VoigtVector_1 = Vec3_From_Vec1( Obj%V )
 
                 CASE( 2 )
 
-                    VoigtVector_1 = Vec2_From_Vec1( Obj % V )
+                    VoigtVector_1 = Vec2_From_Vec1( Obj%V )
 
                 CASE( 1 )
 
-                    VoigtVector_1( 1 ) = Obj % V( 1 )
+                    VoigtVector_1( 1 ) = Obj%V( 1 )
 
 
             END SELECT
@@ -196,7 +196,7 @@
             CALL Err_Msg( &
             "Stress_Class.f90>>OperatorOverloading/Shape.part", &
             " Obj .Shape. M", &
-            "No Case Found for shape of Obj % V, Program Stopped!!!"&
+            "No Case Found for shape of Obj%V, Program Stopped!!!"&
             )
             STOP
 

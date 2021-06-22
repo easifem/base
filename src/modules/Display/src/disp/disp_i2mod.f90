@@ -77,7 +77,7 @@ CONTAINS
     integer, intent(in), optional :: unit, lbound(:)
     type(settings) :: SE
     call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient, zeroas)
-    if (SE % row) then
+    if (SE%row) then
       call disp_byt2(title, reshape(x, (/1, size(x)/)), SE)
     else
       call disp_byt2(title, reshape(x, (/size(x), 1/)), SE)
@@ -108,7 +108,7 @@ CONTAINS
     integer(byt2),  intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
-    call find_editdesc_byt2(x, SE, wid, nbl) ! determine also SE % w
+    call find_editdesc_byt2(x, SE, wid, nbl) ! determine also SE%w
     call tobox_byt2(title, x, SE, wid, nbl)
   end subroutine disp_byt2
 
@@ -119,23 +119,23 @@ CONTAINS
     type(settings), intent(inout) :: SE
     integer,        intent(inout) :: wid(:)
     integer,        intent(inout) :: nbl(:)
-    character(SE % w)  :: s(size(x,1))
+    character(SE%w)  :: s(size(x,1))
     integer            :: lin1, j, wleft, m, n, widp(size(wid))
     character, pointer :: boxp(:,:)
     m = size(x,1)
     n = size(x,2)
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
-      if (m > 0) write(s, SE % ed) x(:,j)
-      if (SE % lzas > 0) call replace_zeronaninf(s, SE % zas(1:SE % lzas), x(:,j) == 0)
+      if (m > 0) write(s, SE%ed) x(:,j)
+      if (SE%lzas > 0) call replace_zeronaninf(s, SE%zas(1:SE%lzas), x(:,j) == 0)
       call copytobox(s, lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_byt2
 
   subroutine find_editdesc_byt2(x, SE, wid, nbl)
-    ! Determine SE % ed, SE % w (unless specified) and wid
+    ! Determine SE%ed, SE%w (unless specified) and wid
     integer(byt2),  intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer,        intent(out)   :: wid(size(x,2)), nbl(size(x,2))
@@ -145,17 +145,17 @@ CONTAINS
     character(22) s
     integer ww
     !
-    if (SE % w == 0) then
+    if (SE%w == 0) then
       xp = maxval(x)
       xm = minval(x)
       write(s, '(SS,I0)') xp; ww = len_trim(s)
       write(s, '(SS,I0)') xm; ww = max(ww, len_trim(s))
-      SE % w = max(SE % lzas, ww)
-      call replace_w(SE % ed, ww)
-    elseif (SE % w < 0) then ! obtain max-width of x
+      SE%w = max(SE%lzas, ww)
+      call replace_w(SE%ed, ww)
+    elseif (SE%w < 0) then ! obtain max-width of x
       if (size(x) == 0) then
-        SE % ed = '()'
-        SE % w = 0
+        SE%ed = '()'
+        SE%w = 0
         wid = 0
         return
       endif
@@ -163,19 +163,19 @@ CONTAINS
       xm = minval(x)
       write(s, '(SS,I0)') xp; ww = len_trim(s)
       write(s, '(SS,I0)') xm; ww = max(ww, len_trim(s))
-      ww = max(SE % lzas, ww)
-      SE % ed = '(SS,Ixx)'
-      write(SE % ed(6:7), '(SS,I2)') ww
-      SE % w = ww
+      ww = max(SE%lzas, ww)
+      SE%ed = '(SS,Ixx)'
+      write(SE%ed(6:7), '(SS,I2)') ww
+      SE%w = ww
     endif
-    if (SE % trm) then
+    if (SE%trm) then
       xmaxv = maxval(x, 1) ! max in each column
       xminv = minval(x, 1) ! min
       xzero = any(x == 0_byt2, 1) ! true where column has some zeros
       xallz = all(x == 0_byt2, 1) ! true where column has only zeros
       call getwid_byt2(xmaxv, xminv, xzero, xallz, SE,  wid, nbl)
     else
-      wid = SE % w
+      wid = SE%w
       nbl = 0
     endif
   end subroutine find_editdesc_byt2
@@ -186,17 +186,17 @@ CONTAINS
     type(settings), intent(in)  :: SE                 ! Settings
     integer,        intent(out) :: wid(:)             ! Widths of columns
     integer,        intent(out) :: nbl(:)             ! n of blanks to peel from left (w-wid)
-    character(SE % w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
+    character(SE%w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
     integer w
-    w = SE % w
-    write(stmax, SE % ed) xmaxv
-    write(stmin, SE % ed) xminv
+    w = SE%w
+    write(stmax, SE%ed) xmaxv
+    write(stmin, SE%ed) xminv
     nbl = mod(verify(stmin, ' ') + w, w + 1) ! loc. of first nonblank
     nbl = min(nbl, mod(verify(stmax, ' ') + w, w + 1))
     wid = w - nbl
-    if (SE % lzas > 0) then
-      wid = merge(SE % lzas, wid, xallz)
-      wid = max(wid, merge(SE % lzas, 0, xzero))
+    if (SE%lzas > 0) then
+      wid = merge(SE%lzas, wid, xallz)
+      wid = max(wid, merge(SE%lzas, 0, xzero))
       nbl = w - wid
     endif
   end subroutine getwid_byt2
@@ -205,8 +205,8 @@ CONTAINS
   function tostring_s_byt2(x) result(st)
     ! Scalar to string
     integer(byt2), intent(in)                   :: x
-    character(len_f_byt2((/x/), tosset % ifmt)) :: st
-    st = tostring_f_byt2((/x/), tosset % ifmt)
+    character(len_f_byt2((/x/), tosset%ifmt)) :: st
+    st = tostring_f_byt2((/x/), tosset%ifmt)
   end function tostring_s_byt2
 
   function tostring_sf_byt2(x, fmt) result(st)
@@ -220,8 +220,8 @@ CONTAINS
   function tostring_byt2(x) result(st)
     ! Vector to string
     integer(byt2), intent(in)               :: x(:)
-    character(len_f_byt2(x, tosset % ifmt)) :: st
-    st = tostring_f_byt2(x, tosset % ifmt)
+    character(len_f_byt2(x, tosset%ifmt)) :: st
+    st = tostring_f_byt2(x, tosset%ifmt)
   end function tostring_byt2
 
   function tostring_f_byt2(x, fmt) result(st)
@@ -236,7 +236,7 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; st = errormsg; return; endif
     write(sa, fmt1) x
-    if (tosset % trimb == 'YES' .or. w == 0) sa = adjustl(sa)
+    if (tosset%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
     call tostring_get(sa, st)
   end function tostring_f_byt2
 
@@ -251,8 +251,8 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
     write(sa, fmt1) x
-    if (tosset % trimb == 'YES' .or. w == 0) sa = adjustl(sa)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset % seplen)
+    if (tosset%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
   end function len_f_byt2
 
   pure function widthmax_byt2(x, fmt) result(w)

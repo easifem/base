@@ -13,7 +13,7 @@
 !   TYPE :: Part of the program
 !
 !   DESCRIPTION
-!       -   Asterics Operator is defined for Material Jacobian and 
+!       -   Asterics Operator is defined for Material Jacobian and
 !           tensor
 !   HOSTING FILE
 !       -   MaterialJacobian_Class.f90
@@ -28,7 +28,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Obj .Contraction. Tensor
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     ! Define intent of dummy variables
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
     REAL( DFP ), INTENT( IN ) :: Scalar
@@ -37,7 +37,7 @@
     ! Define internal variables
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj % C ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Asterics.part", &
@@ -50,7 +50,7 @@
 
     N = .SIZE. Obj
     ALLOCATE( Obj_Times_Scalar( N, N ) )
-    Obj_Times_Scalar = Obj % C * Scalar
+    Obj_Times_Scalar = Obj%C * Scalar
 
  END FUNCTION Obj_Times_Scalar
 
@@ -63,7 +63,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Obj .Contraction. Tensor
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     ! Define intent of dummy variables
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
     REAL( DFP ), INTENT( IN ) :: Scalar

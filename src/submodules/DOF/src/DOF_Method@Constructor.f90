@@ -27,10 +27,10 @@ CONTAINS
 MODULE PROCEDURE initiate_st_dof
   INTEGER( I4B ) :: n, i, k, j
 
-  Obj % StorageFMT = StorageFMT; n = SIZE( Names )
+  Obj%StorageFMT = StorageFMT; n = SIZE( Names )
 
-  CALL reallocate( Obj % Map, n + 1, 6 )
-  ASSOCIATE( Map => Obj % Map )
+  CALL reallocate( Obj%Map, n + 1, 6 )
+  ASSOCIATE( Map => Obj%Map )
     !
     !<- Names in ascii code
     Map( 1:n, 1 ) = ICHAR( Names( 1:n ) )
@@ -65,12 +65,12 @@ MODULE PROCEDURE initiate_st_dof
     Map( n+1, 6 ) = SUM( Map( 1:n, 6 ) * Map( 1:n, 4 ) )
     !
     !<- ValMap( tDOF + 1, 2 )
-    CALL Reallocate( Obj % ValMap, Map( n + 1, 4 ) + 1 )
-    Obj % ValMap( 1 ) = 1; k = 1
+    CALL Reallocate( Obj%ValMap, Map( n + 1, 4 ) + 1 )
+    Obj%ValMap( 1 ) = 1; k = 1
     DO i = 1, n
       DO j = 1, Map( i, 4 )
         k = k + 1
-        Obj % ValMap( k ) = Obj % ValMap( k-1 ) + Map( i, 6 )
+        Obj%ValMap( k ) = Obj%ValMap( k-1 ) + Map( i, 6 )
       END DO
     END DO
   END ASSOCIATE
@@ -103,7 +103,7 @@ END PROCEDURE initiate_2val
 MODULE PROCEDURE initiate_realvector_scalar
   INTEGER( I4B ) :: tNodes
   tNodes = .tNodes. Obj
-  CALL Reallocate( Val % Val, tNodes )
+  CALL Reallocate( Val%Val, tNodes )
 END PROCEDURE initiate_realvector_scalar
 
 !----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ MODULE PROCEDURE initiate_realvector_vector
   INTEGER( I4B ) :: tDOF, i, n
   INTEGER( I4B ), ALLOCATABLE :: tNodes( : )
   !
-  ASSOCIATE( Map => Obj % Map )
+  ASSOCIATE( Map => Obj%Map )
     tDOF = .tDOF. Obj
     ALLOCATE( tNodes( tDOF ) )
     n = SIZE( Map, 1 )
@@ -150,8 +150,8 @@ END PROCEDURE Constructor_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE deallocate_data
-  IF( ALLOCATED( Obj % Map ) ) DEALLOCATE( Obj % Map )
-  IF( ALLOCATED( Obj % ValMap ) ) DEALLOCATE( Obj % ValMap )
+  IF( ALLOCATED( Obj%Map ) ) DEALLOCATE( Obj%Map )
+  IF( ALLOCATED( Obj%ValMap ) ) DEALLOCATE( Obj%ValMap )
 END PROCEDURE deallocate_data
 
 

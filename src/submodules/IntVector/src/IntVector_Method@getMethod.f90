@@ -29,20 +29,20 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValues_self
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = IntVector( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = IntVector( Obj%Val )
   END IF
 END PROCEDURE f_getValues_self
 
 MODULE PROCEDURE f_getSectionValues_self
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = IntVector( Obj % Val( Indx ) )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = IntVector( Obj%Val( Indx ) )
   END IF
 END PROCEDURE f_getSectionValues_self
 
 MODULE PROCEDURE f_getValuesFromTriplet_self
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = IntVector( Obj % Val( iStart:iEnd:Stride ) )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = IntVector( Obj%Val( iStart:iEnd:Stride ) )
   END IF
 END PROCEDURE f_getValuesFromTriplet_self
 
@@ -64,8 +64,8 @@ END PROCEDURE f_getARRAYValuesFromTriplet_self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValues_Int
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = Obj % Val
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = Obj%Val
   END IF
 END PROCEDURE f_getValues_Int
 
@@ -74,8 +74,8 @@ END PROCEDURE f_getValues_Int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getSectionValues_Int
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = Obj % Val( Indx )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = Obj%Val( Indx )
   END IF
 END PROCEDURE f_getSectionValues_Int
 
@@ -84,8 +84,8 @@ END PROCEDURE f_getSectionValues_Int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getValuesFromTriplet_Int
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Val = Obj % Val( iStart:iEnd:Stride )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Val = Obj%Val( iStart:iEnd:Stride )
   END IF
 END PROCEDURE f_getValuesFromTriplet_Int
 
@@ -98,7 +98,7 @@ MODULE PROCEDURE f_getARRAYValues_Int
   N = SIZE( Obj )
   tNodes = 0
   DO i = 1, N
-    tNodes = tNodes + SIZE( Obj( i ) % Val )
+    tNodes = tNodes + SIZE( Obj( i )%Val )
   END DO
 
   ALLOCATE( Val( tNodes ) )
@@ -106,8 +106,8 @@ MODULE PROCEDURE f_getARRAYValues_Int
   tNodes = 0; r1 = 0; r2 = 0
 
   DO i = 1, N
-    r1 = r2 + 1; r2 = r2 + SIZE( Obj( i ) % Val )
-    Val( r1 : r2 ) = Obj( i ) % Val
+    r1 = r2 + 1; r2 = r2 + SIZE( Obj( i )%Val )
+    Val( r1 : r2 ) = Obj( i )%Val
   END DO
 
 END PROCEDURE f_getARRAYValues_Int
@@ -125,7 +125,7 @@ MODULE PROCEDURE f_getARRAYSectionValues_Int
   ALLOCATE( Val( N * M ) )
 
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i ) % Val( Indx )
+    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( Indx )
   END DO
 
 END PROCEDURE f_getARRAYSectionValues_Int
@@ -143,10 +143,18 @@ MODULE PROCEDURE f_getARRAYValuesFromTriplet_Int
   ALLOCATE( Val( M * N ) )
 
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i ) % Val( iStart:iEnd:Stride )
+    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( iStart:iEnd:Stride )
   END DO
 
 END PROCEDURE f_getARRAYValuesFromTriplet_Int
+
+!----------------------------------------------------------------------------
+!                                                                 Assignment
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IntVec_assign_a
+  Val = getValues( obj, datatype=TYPEInt )
+END PROCEDURE IntVec_assign_a
 
 !----------------------------------------------------------------------------
 !                                                               ArrayPointers
@@ -161,7 +169,7 @@ END PROCEDURE f_getPointer_self
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE f_getPointer_Int
-  Val => Obj % Val
+  Val => Obj%Val
 END PROCEDURE f_getPointer_Int
 
 !----------------------------------------------------------------------------
@@ -169,8 +177,8 @@ END PROCEDURE f_getPointer_Int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_convert_int
-  IF( ALLOCATED( From % Val ) ) THEN
-    To = From % Val
+  IF( ALLOCATED( From%Val ) ) THEN
+    To = From%Val
   END IF
 END PROCEDURE obj_convert_int
 
@@ -179,7 +187,7 @@ END PROCEDURE obj_convert_int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IndexOf_1
-  Ans = MINLOC( ABS( Obj % Val - Value ), 1 )
+  Ans = MINLOC( ABS( Obj%Val - Value ), 1 )
 END PROCEDURE IndexOf_1
 
 !----------------------------------------------------------------------------
@@ -187,7 +195,7 @@ END PROCEDURE IndexOf_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IndexOf_2
-  ! Ans = MINLOC( ABS( Obj % Val - Value ), 1 )
+  ! Ans = MINLOC( ABS( Obj%Val - Value ), 1 )
   INTEGER( I4B ) :: i, j, m
   LOGICAL( LGT ), ALLOCATABLE :: Search( : )
   !
@@ -196,10 +204,10 @@ MODULE PROCEDURE IndexOf_2
   Search = .TRUE.
   Ans = 0
 
-  DO i = 1, SIZE( Obj % Val )
+  DO i = 1, SIZE( Obj%Val )
     DO j = 1, m
       IF( Search( j ) ) THEN
-        IF( Value( j ) .EQ. Obj % Val( i ) ) THEN
+        IF( Value( j ) .EQ. Obj%Val( i ) ) THEN
           Search( j ) = .FALSE.
           Ans( j ) = i
         END IF
@@ -221,7 +229,7 @@ END PROCEDURE IndexOf_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IndexOf_4
-  ! Ans = MINLOC( ABS( Obj % Val - Value ), 1 )
+  ! Ans = MINLOC( ABS( Obj%Val - Value ), 1 )
   INTEGER( I4B ) :: i, j, m
   LOGICAL( LGT ), ALLOCATABLE :: Search( : )
   !
@@ -249,8 +257,8 @@ END PROCEDURE IndexOf_4
 MODULE PROCEDURE isPresent_1
   INTEGER( I4B ) :: i
   Ans = .FALSE.
-  DO i = 1, SIZE( Obj % Val )
-    IF( Obj % Val( i ) .EQ. Value ) THEN
+  DO i = 1, SIZE( Obj%Val )
+    IF( Obj%Val( i ) .EQ. Value ) THEN
       Ans = .TRUE.
       EXIT
     END IF
@@ -269,10 +277,10 @@ MODULE PROCEDURE isPresent_2
   Search = .TRUE.
   Ans = .FALSE.
 
-  DO i = 1, SIZE( Obj % Val )
+  DO i = 1, SIZE( Obj%Val )
     DO j = 1, m
       IF( Search( j ) ) THEN
-        IF( Value( j ) .EQ. Obj % Val( i ) ) THEN
+        IF( Value( j ) .EQ. Obj%Val( i ) ) THEN
           Search( j ) = .FALSE.
           Ans( j ) = .TRUE.
         END IF

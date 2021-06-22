@@ -48,7 +48,7 @@ call RANDOM_NUMBER( mat ); call addcontribution( obj, [8,6,2], mat, 1.0_dfp, na)
 !   call convert( from = csr_u, to = U )
 !   LU = matmul( L, U )
 
-!   call reallocate( x, csrobj % nrow ); y = x; call RANDOM_NUMBER( x )
+!   call reallocate( x, csrobj%nrow ); y = x; call RANDOM_NUMBER( x )
 !   call display( x, "x" )
 !   y = matmul( lu, x )
 !   call display( y, "y" )
@@ -79,7 +79,7 @@ block
   call convert( from = csr_u, to = U )
   LU = matmul( L, U )
 
-  call reallocate( x, csrobj % nrow ); y = x; call RANDOM_NUMBER( x )
+  call reallocate( x, csrobj%nrow ); y = x; call RANDOM_NUMBER( x )
   call display( x, "x" )
   y = matmul( lu, x )
   call display( y, "y" )

@@ -31,8 +31,8 @@
 
     ! Define intent of dummy variables
     CLASS( Stress_ ), INTENT( INOUT ) :: Obj
-    IF( ALLOCATED( Obj % V ) ) DEALLOCATE( Obj % V )
-    
+    IF( ALLOCATED( Obj%V ) ) DEALLOCATE( Obj%V )
+
  END SUBROUTINE DeallocateData
 
 !------------------------------------------------------------------------------
@@ -50,7 +50,7 @@
 
     isInitiated = .FALSE.
 
-    IF( ALLOCATED( Obj % V ) ) THEN
+    IF( ALLOCATED( Obj%V ) ) THEN
         isInitiated = .TRUE.
     END IF
 
@@ -69,7 +69,7 @@
     ! Define intent of dummy variables
     CLASS( Stress_ ), INTENT( IN ) :: Obj
 
-    getNSD = Obj % NSD
+    getNSD = Obj%NSD
 
  END FUNCTION getNSD
 
@@ -86,20 +86,20 @@
     ! Define intent of dummy variables
     CLASS( Stress_ ), INTENT( IN ) :: Obj
 
-    IF( ALLOCATED( Obj % V ) ) THEN
+    IF( ALLOCATED( Obj%V ) ) THEN
 
-        getVoigtLen = SIZE( Obj % V )
+        getVoigtLen = SIZE( Obj%V )
 
     ELSE
 
         CALL Err_Msg( &
         "Stress_Class.f90>>Constructor.part", &
         ".Size. Obj", &
-        "Obj % V is not allocated, Program Stopped!!!"&
+        "Obj%V is not allocated, Program Stopped!!!"&
         )
 
         STOP
-        
+
     END IF
 
  END FUNCTION getVoigtLen
@@ -118,7 +118,7 @@
     CLASS( Stress_ ), INTENT( INOUT ) :: Obj
     INTEGER( I4B ), INTENT( IN ) :: NSD
 
-    Obj % NSD = NSD
+    Obj%NSD = NSD
 
  END SUBROUTINE setNSD
 
@@ -141,25 +141,25 @@
     INTEGER( I4B ) :: N
 
     N = SIZE( Vec )
-    IF( ALLOCATED( Obj % V ) ) DEALLOCATE( Obj % V )
-    ALLOCATE( Obj % V( N ) )
+    IF( ALLOCATED( Obj%V ) ) DEALLOCATE( Obj%V )
+    ALLOCATE( Obj%V( N ) )
 
-    Obj % V = Vec
+    Obj%V = Vec
 
-    Obj % StressType = TRIM( StressType )
+    Obj%StressType = TRIM( StressType )
 
     SELECT CASE( N )
 
         CASE( 1 )
-            Obj % NSD = 1
+            Obj%NSD = 1
         CASE( 3 )
-            Obj % NSD = 2
+            Obj%NSD = 2
         CASE( 4 )
-            Obj % NSD = 2
+            Obj%NSD = 2
         CASE( 6 )
-            Obj % NSD = 3
+            Obj%NSD = 3
 
-    END SELECT 
+    END SELECT
 
  END SUBROUTINE Initiate1
 
@@ -186,11 +186,11 @@
 
     CALL Check_Error( &
     "Stress_Class.f90>>Constructor.f90>>Initiate()", &
-    "Traceback ---> Obj % V = VoigtVec( Mat, VoigtLen,'Stress') " )
+    "Traceback ---> Obj%V = VoigtVec( Mat, VoigtLen,'Stress') " )
 
-    CALL Obj % Initiate1( Vec = Vec, StressType = StressType )
+    CALL Obj%Initiate1( Vec = Vec, StressType = StressType )
 
-    DEALLOCATE( Vec )  
+    DEALLOCATE( Vec )
 
  END SUBROUTINE Initiate2
 
@@ -209,16 +209,16 @@
     CLASS( Stress_ ), INTENT( IN ) :: Obj2
 
 
-    IF( ALLOCATED( Obj % V ) ) DEALLOCATE( Obj % V )
+    IF( ALLOCATED( Obj%V ) ) DEALLOCATE( Obj%V )
 
-    IF( ALLOCATED( Obj2 % V ) ) THEN 
+    IF( ALLOCATED( Obj2%V ) ) THEN
 
-        Obj % V = Obj2 % V
+        Obj%V = Obj2%V
 
     END IF
 
-    Obj % StressType = TRIM( Obj2 % StressType )
-    Obj % NSD = Obj2 % NSD
+    Obj%StressType = TRIM( Obj2%StressType )
+    Obj%NSD = Obj2%NSD
 
  END SUBROUTINE Initiate3
 
@@ -244,7 +244,7 @@
 
     Mat = TensorObj
 
-    CALL Obj % Initiate2( Mat = Mat, VoigtLen = VoigtLen, &
+    CALL Obj%Initiate2( Mat = Mat, VoigtLen = VoigtLen, &
     StressType = StressType )
 
     DEALLOCATE( Mat )
@@ -265,8 +265,8 @@
     CLASS( Stress_ ), INTENT( INOUT ) :: Obj
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
-    
-    CALL Obj % Initiate2( &
+
+    CALL Obj%Initiate2( &
                          Mat = Mat, &
                          VoigtLen = 6, &
                          StressType = StressType &
@@ -291,7 +291,7 @@
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
 
-    CALL Obj % Initiate4( &
+    CALL Obj%Initiate4( &
                          TensorObj = TensorObj, &
                          VoigtLen = 6, &
                          StressType = StressType &
@@ -316,7 +316,7 @@
 
     ALLOCATE( Stress_ :: Constructor_1 )
 
-    CALL Constructor_1 % Initiate( Vec = Vec, StressType = StressType )
+    CALL Constructor_1%Initiate( Vec = Vec, StressType = StressType )
 
  END FUNCTION Constructor_1
 
@@ -338,7 +338,7 @@
 
     ALLOCATE( Stress_ :: Constructor_2 )
 
-    CALL Constructor_2 % Initiate( Mat = Mat, &
+    CALL Constructor_2%Initiate( Mat = Mat, &
     VoigtLen = VoigtLen, StressType = StressType )
 
  END FUNCTION Constructor_2
@@ -359,7 +359,7 @@
 
     ALLOCATE( Stress_ :: Constructor_3 )
 
-    CALL Constructor_3 % Initiate( Obj )
+    CALL Constructor_3%Initiate( Obj )
 
  END FUNCTION Constructor_3
 
@@ -383,7 +383,7 @@
 
     ALLOCATE( Stress_ :: Constructor_4 )
 
-    CALL Constructor_4 % Initiate( TensorObj = TensorObj, &
+    CALL Constructor_4%Initiate( TensorObj = TensorObj, &
     VoigtLen = VoigtLen, StressType = StressType )
 
  END FUNCTION Constructor_4
@@ -405,7 +405,7 @@
 
     ALLOCATE( Stress_ :: Constructor_5 )
 
-    CALL Constructor_5 % Initiate( Mat = Mat, StressType = StressType )
+    CALL Constructor_5%Initiate( Mat = Mat, StressType = StressType )
 
  END FUNCTION Constructor_5
 
@@ -428,7 +428,7 @@
 
     ALLOCATE( Stress_ :: Constructor_6 )
 
-    CALL Constructor_6 % Initiate( &
+    CALL Constructor_6%Initiate( &
         TensorObj = TensorObj, &
         StressType = StressType &
         )
@@ -450,7 +450,7 @@
     REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
 
-    CALL Constructor1 % Initiate( Vec = Vec, StressType = StressType )
+    CALL Constructor1%Initiate( Vec = Vec, StressType = StressType )
 
  END FUNCTION Constructor1
 
@@ -470,7 +470,7 @@
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
     INTEGER( I4B ), INTENT( IN ) :: VoigtLen
 
-    CALL Constructor2 % Initiate( Mat = Mat, &
+    CALL Constructor2%Initiate( Mat = Mat, &
     VoigtLen = VoigtLen, StressType = StressType )
 
  END FUNCTION Constructor2
@@ -489,7 +489,7 @@
     TYPE( Stress_ ) :: Constructor3
     CLASS( Stress_ ), INTENT( IN ) :: Obj
 
-    CALL Constructor3 % Initiate( Obj )
+    CALL Constructor3%Initiate( Obj )
 
  END FUNCTION Constructor3
 
@@ -511,7 +511,7 @@
     INTEGER( I4B ), INTENT( IN ) :: VoigtLen
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
 
-    CALL Constructor4 % Initiate( TensorObj = TensorObj, &
+    CALL Constructor4%Initiate( TensorObj = TensorObj, &
     VoigtLen = VoigtLen, StressType = StressType )
 
  END FUNCTION Constructor4
@@ -531,7 +531,7 @@
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
 
-    CALL Constructor5 % Initiate( &
+    CALL Constructor5%Initiate( &
         Mat = Mat, &
         StressType = StressType &
         )
@@ -555,7 +555,7 @@
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
 
-    CALL Constructor6 % Initiate( &
+    CALL Constructor6%Initiate( &
         TensorObj = TensorObj, &
         StressType = StressType &
     )

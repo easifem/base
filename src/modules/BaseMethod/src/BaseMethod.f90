@@ -38,6 +38,7 @@ MODULE BaseMethod
   USE GNUPLOT_Method
   USE GlobalData
   USE Test_Method
+  USE DISPMODULE
   USE Display_Method
   USE ErrorHandling
   USE Utility
@@ -56,6 +57,7 @@ MODULE BaseMethod
   USE RealVector_Method
   USE DOF_Method
   USE ReferenceElement_Method
+  USE ReferencePoint_Method
   USE ReferenceLine_Method
   USE ReferenceTriangle_Method
   USE ReferenceQuadrangle_Method

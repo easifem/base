@@ -57,7 +57,7 @@ block
   call display( mat, "mat" )
 
   call sparsekit_ilutp( csrobj, csr_l, csr_u, iperm, ierr, droptol, permtol, &
-    & lfil, csrobj % nrow )
+    & lfil, csrobj%nrow )
   call display( ierr, "ierr=" )
 
   call convert( from = csr_l, to = L )

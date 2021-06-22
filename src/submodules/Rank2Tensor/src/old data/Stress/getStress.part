@@ -26,7 +26,7 @@
  SUBROUTINE s_getStress_1( Obj, T )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  T = Obj % T
+!       1.  T = Obj%T
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -35,8 +35,8 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
-        
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "s_getStress_1()",&
@@ -48,7 +48,7 @@
     END IF
 
     IF( ALLOCATED( T )  ) DEALLOCATE( T )
-    T = MatFromVoigtVec( Obj % V, "Stress" )
+    T = MatFromVoigtVec( Obj%V, "Stress" )
 
 END SUBROUTINE s_getStress_1
 
@@ -59,7 +59,7 @@ END SUBROUTINE s_getStress_1
  SUBROUTINE s_getStress_2( Obj, Vec )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Vec = Obj % V
+!       1.  Vec = Obj%V
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -68,8 +68,8 @@ END SUBROUTINE s_getStress_1
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
-        
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "s_getStress_2()",&
@@ -83,8 +83,8 @@ END SUBROUTINE s_getStress_1
 
     IF( ALLOCATED( Vec )  ) DEALLOCATE( Vec )
 
-    Vec = Obj % V
-    
+    Vec = Obj%V
+
  END SUBROUTINE s_getStress_2
 
 !------------------------------------------------------------------------------
@@ -103,8 +103,8 @@ END SUBROUTINE s_getStress_1
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
-        
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "Assignement Operator( = )",&
@@ -115,11 +115,11 @@ END SUBROUTINE s_getStress_1
 
     END IF
 
-    T = MatFromVoigtVec( Obj % V, "Stress" )
+    T = MatFromVoigtVec( Obj%V, "Stress" )
 
     CALL Check_Error( &
     "Stress_Class.f90>>getStress.part>>Assignemnt Operator", &
-    "Traceback ---> T = MatFromVoigtVec( Obj % V " &
+    "Traceback ---> T = MatFromVoigtVec( Obj%V " &
     )
 
  END SUBROUTINE s_getStress_3
@@ -140,8 +140,8 @@ END SUBROUTINE s_getStress_1
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
-        
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "Assignement Operator( = )",&
@@ -153,8 +153,8 @@ END SUBROUTINE s_getStress_1
     END IF
 
     IF( ALLOCATED( Vec ) ) DEALLOCATE( Vec )
-    
-    Vec = Obj % V
+
+    Vec = Obj%V
 
  END SUBROUTINE s_getStress_4
 
@@ -177,8 +177,8 @@ END SUBROUTINE s_getStress_1
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
-        
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "s_getStress_5",&
@@ -189,7 +189,7 @@ END SUBROUTINE s_getStress_1
 
     END IF
 
-    CALL TensorObj % Initiate( Obj % V, "Stress" )
+    CALL TensorObj%Initiate( Obj%V, "Stress" )
 
  END SUBROUTINE s_getStress_5
 
@@ -211,8 +211,8 @@ END SUBROUTINE s_getStress_1
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
-        
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "Assignment Operator( = )",&
@@ -223,6 +223,6 @@ END SUBROUTINE s_getStress_1
 
     END IF
 
-    CALL TensorObj % Initiate( Obj % V, "Stress" )
+    CALL TensorObj%Initiate( Obj%V, "Stress" )
 
  END SUBROUTINE s_getStress_6

@@ -25,7 +25,7 @@
  FUNCTION Constructor_1( N )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Constructor_1 % C( N, N )
+!       1.  Allocate the Constructor_1%C( N, N )
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -33,7 +33,7 @@
     INTEGER( I4B ), INTENT( IN ) :: N
 
     ALLOCATE( Constructor_1 )
-    CALL Constructor_1 % Initiate( N )
+    CALL Constructor_1%Initiate( N )
 
  END FUNCTION Constructor_1
 
@@ -44,7 +44,7 @@
  FUNCTION Constructor_2( N, Fill )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Constructor_2 % C( N, N ) with all entries fill
+!       1.  Allocate the Constructor_2%C( N, N ) with all entries fill
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -53,7 +53,7 @@
     REAL( DFP ), INTENT( IN ) :: Fill
 
     ALLOCATE( Constructor_2 )
-    CALL Constructor_2 % Initiate( N, Fill )
+    CALL Constructor_2%Initiate( N, Fill )
 
  END FUNCTION Constructor_2
 
@@ -64,7 +64,7 @@
  FUNCTION Constructor_3( Mat )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Constructor_3 % C( :, : ) = Mat
+!       1.  Allocate the Constructor_3%C( :, : ) = Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -72,7 +72,7 @@
     REAL( DFP ), INTENT( IN ) :: Mat( :, : )
 
     ALLOCATE( Constructor_3 )
-    CALL Constructor_3 % Initiate( Mat )
+    CALL Constructor_3%Initiate( Mat )
 
  END FUNCTION Constructor_3
 
@@ -83,7 +83,7 @@
  FUNCTION Constructor_4( N, StressType, StrainType, RateType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Constructor_4 % C is N, with other details
+!       1.  Size of Constructor_4%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -92,7 +92,7 @@
     TYPE( String_ ), INTENT( IN ) :: StressType, StrainType, RateType
 
     ALLOCATE( Constructor_4 )
-    CALL Constructor_4 % Initiate( N, StressType, StrainType, RateType )
+    CALL Constructor_4%Initiate( N, StressType, StrainType, RateType )
 
  END FUNCTION Constructor_4
 
@@ -103,7 +103,7 @@
  FUNCTION Constructor_5( N, StressType, StrainType, RateType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Constructor_5 % C is N, with other details
+!       1.  Size of Constructor_5%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -112,7 +112,7 @@
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType, StrainType, RateType
 
     ALLOCATE( Constructor_5 )
-    CALL Constructor_5 % Initiate( N, StressType, StrainType, RateType )
+    CALL Constructor_5%Initiate( N, StressType, StrainType, RateType )
 
  END FUNCTION Constructor_5
 
@@ -123,7 +123,7 @@
  FUNCTION Constructor_6( N, Names )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Constructor_6 % C is N, with other details
+!       1.  Size of Constructor_6%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -132,7 +132,7 @@
     TYPE( String_ ), INTENT( IN ) :: Names( 3 )
 
     ALLOCATE( Constructor_6  )
-    CALL Constructor_6 % Initiate( N, Names )
+    CALL Constructor_6%Initiate( N, Names )
 
  END FUNCTION Constructor_6
 
@@ -143,7 +143,7 @@
  FUNCTION Constructor_7( N, Names )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Constructor_7 % C( N, N ) with all entries fill
+!       1.  Allocate the Constructor_7%C( N, N ) with all entries fill
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -152,7 +152,7 @@
     CHARACTER( LEN = * ), INTENT( IN ) :: Names( 3 )
 
     ALLOCATE( Constructor_7  )
-    CALL Constructor_7 % Initiate( N, Names )
+    CALL Constructor_7%Initiate( N, Names )
 
  END FUNCTION Constructor_7
 

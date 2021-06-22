@@ -83,17 +83,17 @@ CONTAINS
     ! Change display settings according to individual parameters
     character(*), optional, intent(in) :: advance, sep, matsep, orient, style, zeroas
     integer, optional, intent(in) :: digmax, unit
-    if (present(advance))    DEFSET % advance = upper(advance)
-    if (present(sep))        DEFSET % sep = sep
-    if (present(sep))        DEFSET % seplen = min(9, len(sep))
-    if (present(zeroas))     DEFSET % zeroas = zeroas
-    if (present(zeroas))     DEFSET % zaslen = min(9, len(zeroas))
-    if (present(matsep))     DEFSET % matsep = matsep
-    if (present(matsep))     DEFSET % matseplen = min(9, len(matsep))
-    if (present(orient))     DEFSET % orient = upper(orient)
-    if (present(style))      DEFSET % style = style
-    if (present(digmax))     DEFSET % digmax = digmax
-    if (present(unit))       DEFSET % unit = unit
+    if (present(advance))    DEFSET%advance = upper(advance)
+    if (present(sep))        DEFSET%sep = sep
+    if (present(sep))        DEFSET%seplen = min(9, len(sep))
+    if (present(zeroas))     DEFSET%zeroas = zeroas
+    if (present(zeroas))     DEFSET%zaslen = min(9, len(zeroas))
+    if (present(matsep))     DEFSET%matsep = matsep
+    if (present(matsep))     DEFSET%matseplen = min(9, len(matsep))
+    if (present(orient))     DEFSET%orient = upper(orient)
+    if (present(style))      DEFSET%style = style
+    if (present(digmax))     DEFSET%digmax = digmax
+    if (present(unit))       DEFSET%unit = unit
     call check_settings
   end subroutine disp_set
 
@@ -117,12 +117,12 @@ CONTAINS
 
   subroutine tostring_set(sep, rfmt, ifmt, trimb, trimz)
     character(*), optional, intent(in) :: sep, rfmt, ifmt, trimb, trimz
-    if (present(sep))    tosset % sep    = upper(sep)
-    if (present(sep))    tosset % seplen = min(9, len(sep))
-    if (present(rfmt))   tosset % rfmt   = upper(rfmt)
-    if (present(ifmt))   tosset % ifmt   = upper(ifmt)
-    if (present(trimb))  tosset % trimb  = upper(trimb)
-    if (present(trimz))  tosset % trimz  = upper(trimz)
+    if (present(sep))    tosset%sep    = upper(sep)
+    if (present(sep))    tosset%seplen = min(9, len(sep))
+    if (present(rfmt))   tosset%rfmt   = upper(rfmt)
+    if (present(ifmt))   tosset%ifmt   = upper(ifmt)
+    if (present(trimb))  tosset%trimb  = upper(trimb)
+    if (present(trimz))  tosset%trimz  = upper(trimz)
     call tostring_check_settings
   end subroutine tostring_set
 
@@ -189,7 +189,7 @@ CONTAINS
     integer, intent(in), optional :: unit, lbound(:)
     type(settings) :: SE
     call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient, zeroas)
-    if (SE % row) then
+    if (SE%row) then
       call disp_dint(title, reshape(x, (/1, size(x)/)), SE)
     else
       call disp_dint(title, reshape(x, (/size(x), 1/)), SE)
@@ -220,7 +220,7 @@ CONTAINS
     integer(dint),  intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
-    call find_editdesc_dint(x, SE, wid, nbl) ! determine also SE % w
+    call find_editdesc_dint(x, SE, wid, nbl) ! determine also SE%w
     call tobox_dint(title, x, SE, wid, nbl)
   end subroutine disp_dint
 
@@ -231,23 +231,23 @@ CONTAINS
     type(settings), intent(inout) :: SE
     integer,        intent(inout) :: wid(:)
     integer,        intent(inout) :: nbl(:)
-    character(SE % w)  :: s(size(x,1))
+    character(SE%w)  :: s(size(x,1))
     integer            :: lin1, j, wleft, m, n, widp(size(wid))
     character, pointer :: boxp(:,:)
     m = size(x,1)
     n = size(x,2)
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
-      if (m > 0) write(s, SE % ed) x(:,j)
-      if (SE % lzas > 0) call replace_zeronaninf(s, SE % zas(1:SE % lzas), x(:,j) == 0)
+      if (m > 0) write(s, SE%ed) x(:,j)
+      if (SE%lzas > 0) call replace_zeronaninf(s, SE%zas(1:SE%lzas), x(:,j) == 0)
       call copytobox(s, lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_dint
 
   subroutine find_editdesc_dint(x, SE, wid, nbl)
-    ! Determine SE % ed, SE % w (unless specified) and wid
+    ! Determine SE%ed, SE%w (unless specified) and wid
     integer(dint),  intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer,        intent(out)   :: wid(size(x,2)), nbl(size(x,2))
@@ -257,17 +257,17 @@ CONTAINS
     character(22) s
     integer ww
     !
-    if (SE % w == 0) then
+    if (SE%w == 0) then
       xp = maxval(x)
       xm = minval(x)
       write(s, '(SS,I0)') xp; ww = len_trim(s)
       write(s, '(SS,I0)') xm; ww = max(ww, len_trim(s))
-      SE % w = max(SE % lzas, ww)
-      call replace_w(SE % ed, ww)
-    elseif (SE % w < 0) then ! obtain max-width of x
+      SE%w = max(SE%lzas, ww)
+      call replace_w(SE%ed, ww)
+    elseif (SE%w < 0) then ! obtain max-width of x
       if (size(x) == 0) then
-        SE % ed = '()'
-        SE % w = 0
+        SE%ed = '()'
+        SE%w = 0
         wid = 0
         return
       endif
@@ -275,19 +275,19 @@ CONTAINS
       xm = minval(x)
       write(s, '(SS,I0)') xp; ww = len_trim(s)
       write(s, '(SS,I0)') xm; ww = max(ww, len_trim(s))
-      ww = max(SE % lzas, ww)
-      SE % ed = '(SS,Ixx)'
-      write(SE % ed(6:7), '(SS,I2)') ww
-      SE % w = ww
+      ww = max(SE%lzas, ww)
+      SE%ed = '(SS,Ixx)'
+      write(SE%ed(6:7), '(SS,I2)') ww
+      SE%w = ww
     endif
-    if (SE % trm) then
+    if (SE%trm) then
       xmaxv = maxval(x, 1) ! max in each column
       xminv = minval(x, 1) ! min
       xzero = any(x == 0_dint, 1) ! true where column has some zeros
       xallz = all(x == 0_dint, 1) ! true where column has only zeros
       call getwid_dint(xmaxv, xminv, xzero, xallz, SE,  wid, nbl)
     else
-      wid = SE % w
+      wid = SE%w
       nbl = 0
     endif
   end subroutine find_editdesc_dint
@@ -298,17 +298,17 @@ CONTAINS
     type(settings), intent(in)  :: SE                 ! Settings
     integer,        intent(out) :: wid(:)             ! Widths of columns
     integer,        intent(out) :: nbl(:)             ! n of blanks to peel from left (w-wid)
-    character(SE % w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
+    character(SE%w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
     integer w
-    w = SE % w
-    write(stmax, SE % ed) xmaxv
-    write(stmin, SE % ed) xminv
+    w = SE%w
+    write(stmax, SE%ed) xmaxv
+    write(stmin, SE%ed) xminv
     nbl = mod(verify(stmin, ' ') + w, w + 1) ! loc. of first nonblank
     nbl = min(nbl, mod(verify(stmax, ' ') + w, w + 1))
     wid = w - nbl
-    if (SE % lzas > 0) then
-      wid = merge(SE % lzas, wid, xallz)
-      wid = max(wid, merge(SE % lzas, 0, xzero))
+    if (SE%lzas > 0) then
+      wid = merge(SE%lzas, wid, xallz)
+      wid = max(wid, merge(SE%lzas, 0, xzero))
       nbl = w - wid
     endif
   end subroutine getwid_dint
@@ -317,8 +317,8 @@ CONTAINS
   function tostring_s_dint(x) result(st)
     ! Scalar to string
     integer(dint), intent(in)                   :: x
-    character(len_f_dint((/x/), tosset % ifmt)) :: st
-    st = tostring_f_dint((/x/), tosset % ifmt)
+    character(len_f_dint((/x/), tosset%ifmt)) :: st
+    st = tostring_f_dint((/x/), tosset%ifmt)
   end function tostring_s_dint
 
   function tostring_sf_dint(x, fmt) result(st)
@@ -332,8 +332,8 @@ CONTAINS
   function tostring_dint(x) result(st)
     ! Vector to string
     integer(dint), intent(in)               :: x(:)
-    character(len_f_dint(x, tosset % ifmt)) :: st
-    st = tostring_f_dint(x, tosset % ifmt)
+    character(len_f_dint(x, tosset%ifmt)) :: st
+    st = tostring_f_dint(x, tosset%ifmt)
   end function tostring_dint
 
   function tostring_f_dint(x, fmt) result(st)
@@ -348,7 +348,7 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; st = errormsg; return; endif
     write(sa, fmt1) x
-    if (tosset % trimb == 'YES' .or. w == 0) sa = adjustl(sa)
+    if (tosset%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
     call tostring_get(sa, st)
   end function tostring_f_dint
 
@@ -363,8 +363,8 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
     write(sa, fmt1) x
-    if (tosset % trimb == 'YES' .or. w == 0) sa = adjustl(sa)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset % seplen)
+    if (tosset%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
   end function len_f_dint
 
   pure function widthmax_dint(x, fmt) result(w)
@@ -426,7 +426,7 @@ CONTAINS
     integer, intent(in), optional :: unit, lbound(:), digmax
     type(settings) :: SE
     call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient, zeroas, digmax)
-    if (SE % row) then
+    if (SE%row) then
       call disp_sngl(title, reshape(x, (/1, size(x)/)), SE)
     else
       call disp_sngl(title, reshape(x, (/size(x), 1/)), SE)
@@ -459,7 +459,7 @@ CONTAINS
     real(sngl),     intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
-    call find_editdesc_sngl(x, SE, wid, nbl) ! determine also SE % w
+    call find_editdesc_sngl(x, SE, wid, nbl) ! determine also SE%w
     call tobox_sngl(title, x, SE, wid, nbl)
   end subroutine disp_sngl
 
@@ -470,7 +470,7 @@ CONTAINS
     type(settings), intent(inout) :: SE      ! settings
     integer,        intent(inout) :: wid(:)  ! widths of columns
     integer,        intent(inout) :: nbl(:)  ! number of blanks to trim from left
-    character(SE % w)  :: s(size(x,1))
+    character(SE%w)  :: s(size(x,1))
     integer            :: lin1, j, wleft, m, n, widp(size(wid))
     character, pointer :: boxp(:,:)
     real(sngl)         :: xj(size(x,1)), h
@@ -480,10 +480,10 @@ CONTAINS
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
       xj = x(:, j)
-      if (m > 0) write(s, SE % ed) xj
-      call replace_zeronaninf(s, SE % zas(1:SE % lzas), xj == 0, xj /= xj, xj < -h, xj > h)
+      if (m > 0) write(s, SE%ed) xj
+      call replace_zeronaninf(s, SE%zas(1:SE%lzas), xj == 0, xj /= xj, xj < -h, xj > h)
       call copytobox(s, lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_sngl
@@ -512,7 +512,7 @@ CONTAINS
   end function maxw_sngl
 
   subroutine find_editdesc_sngl(x, SE, wid, nbl)
-    ! Determine SE % ed, SE % w (unless specified) and wid.
+    ! Determine SE%ed, SE%w (unless specified) and wid.
     ! The if-block (*) is for safety: make f wider in case xm is written ok with the
     ! ES format in fmt but overflows with F format (the feature has been tested through
     ! manual changes to the program).
@@ -526,17 +526,17 @@ CONTAINS
     character(99) s
     logical xzero(size(x,2)), xallz(size(x,2)), xfinite(size(x,1),size(x,2)), xnonn(size(x,2)), xalln(size(x,2))
     !
-    dmx = SE % dmx
+    dmx = SE%dmx
     h = huge(h)
     xfinite = x == x .and. x >= -h .and. x <= h ! neither NaN, Inf nor -Inf
-    if (SE % w == 0) then  ! Edit descriptor 'F0.d' specified
-      ww = maxw_sngl(reshape(x, (/size(x)/)), SE % d)
-      if (SE % lzas > 0 .and. any(x == 0._sngl))  ww = max(ww, SE % lzas)
-      call replace_w(SE % ed, ww)
-      SE % w = ww
-    elseif (SE % w < 0) then ! No edit descriptor specified
+    if (SE%w == 0) then  ! Edit descriptor 'F0.d' specified
+      ww = maxw_sngl(reshape(x, (/size(x)/)), SE%d)
+      if (SE%lzas > 0 .and. any(x == 0._sngl))  ww = max(ww, SE%lzas)
+      call replace_w(SE%ed, ww)
+      SE%w = ww
+    elseif (SE%w < 0) then ! No edit descriptor specified
       if (size(x) == 0) then
-        SE % w = 0
+        SE%w = 0
         wid = 0
         nbl = 0
         return
@@ -547,21 +547,21 @@ CONTAINS
         write(f1(7:11), '(SS,I2,".",I2.2)') dmx + 8, dmx - 1
         write(s,f1) xp; read(s(dmx+4:dmx+8),'(I5)') expmax
         write(s,f1) xm; read(s(dmx+4:dmx+8),'(I5)') expmin
-        call find_editdesc_real(expmax, expmin, dmx,  SE % ed, ww, dd, xm >= 0)
+        call find_editdesc_real(expmax, expmin, dmx,  SE%ed, ww, dd, xm >= 0)
         if (.not. all(xfinite))                     ww = max(ww, 4)
-        if (SE % lzas > 0 .and. any(x == 0._sngl))  ww = max(ww, SE % lzas)
-        if (SE % ed(5:5)=='F') then  ! (*)
-          write(s, SE % ed) xp; if (s(1:1) == '*') ww = ww + 1
-          write(s, SE % ed) xm; if (s(1:1) == '*') ww = ww + 1
-          write(SE % ed(6:10), '(SS,I2,".",I2)') ww, dd
+        if (SE%lzas > 0 .and. any(x == 0._sngl))  ww = max(ww, SE%lzas)
+        if (SE%ed(5:5)=='F') then  ! (*)
+          write(s, SE%ed) xp; if (s(1:1) == '*') ww = ww + 1
+          write(s, SE%ed) xm; if (s(1:1) == '*') ww = ww + 1
+          write(SE%ed(6:10), '(SS,I2,".",I2)') ww, dd
         endif
       else
         ww = 4
-        SE % ed = '(F4.0)'
+        SE%ed = '(F4.0)'
       endif
-      SE % w = ww
+      SE%w = ww
     endif
-    if (SE % trm) then
+    if (SE%trm) then
       xmaxv = maxval(x, 1, mask=xfinite)  ! max in each column
       xminv = minval(x, 1, mask=xfinite)  ! min
       xzero = any(x == 0._sngl, 1) ! true where column has some zeros
@@ -570,7 +570,7 @@ CONTAINS
       xalln = all(x > h .or. x < -h .or. x /= x, 1)  ! true where column has only nonnormals (inf, -inf, nan)
       call getwid_sngl(xmaxv, xminv, xzero, xallz, xnonn, xalln, SE,  wid, nbl)
     else
-      wid = SE % w
+      wid = SE%w
       nbl = 0
     endif
   end subroutine find_editdesc_sngl
@@ -584,22 +584,22 @@ CONTAINS
     type(settings), intent(in)  :: SE                 ! settings
     integer,        intent(out) :: wid(:)             ! widths of columns
     integer,        intent(out) :: nbl(:)             ! number of blanks to peel from left (w-wid)
-    character(SE % w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
+    character(SE%w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
     integer w
-    w = SE % w
-    write(stmin, SE % ed) xminv
-    write(stmax, SE % ed) xmaxv
+    w = SE%w
+    write(stmin, SE%ed) xminv
+    write(stmax, SE%ed) xmaxv
     nbl = mod(verify(stmin, ' ') + w, w + 1) ! loc. of first nonblank
     nbl = min(nbl, mod(verify(stmax, ' ') + w, w + 1))
-    if (SE % gedit) then
+    if (SE%gedit) then
       wid = w
     else
       wid = len_trim(adjustl(stmin))
       wid = max(wid, len_trim(adjustl(stmax)))
     endif
-    if (SE % lzas > 0) then
-      wid = merge(SE % lzas, wid, xallz)
-      wid = max(wid, merge(SE % lzas, 0, xzero))
+    if (SE%lzas > 0) then
+      wid = merge(SE%lzas, wid, xallz)
+      wid = max(wid, merge(SE%lzas, 0, xzero))
     endif
     wid = merge(4, wid, xalln)
     wid = max(wid, merge(4, 0, xnonn))
@@ -610,8 +610,8 @@ CONTAINS
   function tostring_s_sngl(x) result(st)
     ! Scalar to string
     real(sngl), intent(in) :: x
-    character(len_f_sngl((/x/), tosset % rfmt)) :: st
-    st = tostring_f_sngl((/x/), tosset % rfmt)
+    character(len_f_sngl((/x/), tosset%rfmt)) :: st
+    st = tostring_f_sngl((/x/), tosset%rfmt)
   end function tostring_s_sngl
 
   function tostring_sf_sngl(x, fmt) result(st)
@@ -625,8 +625,8 @@ CONTAINS
   function tostring_sngl(x) result(st)
     ! Vector to string
     real(sngl), intent(in) :: x(:)
-    character(len_f_sngl(x, tosset % rfmt)) :: st
-    st = tostring_f_sngl(x, tosset % rfmt)
+    character(len_f_sngl(x, tosset%rfmt)) :: st
+    st = tostring_f_sngl(x, tosset%rfmt)
   end function tostring_sngl
 
   function tostring_f_sngl(x, fmt) result(st)
@@ -667,7 +667,7 @@ CONTAINS
     endif
     write(sa, fmt1) x
     call trim_real(sa, gedit, w)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset % seplen)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
   end function len_f_sngl
 
   pure function widthmax_sngl(x, fmt) result(w)
@@ -738,7 +738,7 @@ CONTAINS
     else
       SEim = SE
     end if
-    if (SE % row) then
+    if (SE%row) then
       call disp_cplx(title, reshape(x, (/1, size(x)/)), SE, SEim, n = size(x))
     else
       call disp_cplx(title, reshape(x, (/size(x), 1/)), SE, SEim, n = 1)
@@ -782,8 +782,8 @@ CONTAINS
     type(settings), intent(inout) :: SE, SEim
     integer,        intent(in)    :: n
     integer, dimension(n) :: widre(n), widim(n), nblre(n), nblim(n)
-    call find_editdesc_sngl(real(x), SE, widre, nblre)         ! determine also SE % w
-    call find_editdesc_sngl(abs(aimag(x)), SEim, widim, nblim) ! determine also SEim % w
+    call find_editdesc_sngl(real(x), SE, widre, nblre)         ! determine also SE%w
+    call find_editdesc_sngl(abs(aimag(x)), SEim, widim, nblim) ! determine also SEim%w
     call tobox_cplx(title, x, SE, SEim, widre, widim, nblre, nblim, m = size(x,1), n = size(x,2))
   end subroutine disp_cplx
 
@@ -793,26 +793,26 @@ CONTAINS
     complex(sngl),  intent(in)    :: x(:,:)
     integer,        intent(in)    :: m, n, widre(:), widim(:), nblre(:), nblim(:)
     type(settings), intent(inout) :: SE, SEim
-    character(SE % w)   :: s(m)
-    character(SEim % w) :: sim(m)
+    character(SE%w)   :: s(m)
+    character(SEim%w) :: sim(m)
     character(3)        :: sgn(m)
     integer             :: lin1, i, j, wleft, wid(n), widp(n)
     character, pointer  :: boxp(:,:)
-    SE % zas = ''
-    SEim % zas = ''
+    SE%zas = ''
+    SEim%zas = ''
     wid = widre + widim + 4
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
-      if (m > 0) write(s, SE % ed) (real(x(i,j)), i=1,m)
+      if (m > 0) write(s, SE%ed) (real(x(i,j)), i=1,m)
       call copytobox(s, lin1, widre(j), widp(j) - widim(j) - 4, nblre(j), boxp,  wleft)
       do i=1,m
         if (aimag(x(i,j)) < 0) then; sgn(i) = ' - '; else; sgn(i) = ' + '; endif
         enddo
       call copytobox(sgn, lin1, 3, 3, 0, boxp,  wleft)
-      if (m > 0) write(sim, SEim % ed) (abs(aimag(x(i,j))), i=1,m)
+      if (m > 0) write(sim, SEim%ed) (abs(aimag(x(i,j))), i=1,m)
       call copytobox(sim, lin1, widim(j), widim(j), nblim(j), boxp,  wleft)
       call copyseptobox('i', m, lin1, boxp, wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_cplx
@@ -821,8 +821,8 @@ CONTAINS
 
   function tostring_s_cplx(x) result(st)
     complex(sngl), intent(in)                   :: x
-    character(len_s_cplx(x, tosset % rfmt)) :: st
-    st = tostring_f_cplx((/x/), tosset % rfmt)
+    character(len_s_cplx(x, tosset%rfmt)) :: st
+    st = tostring_f_cplx((/x/), tosset%rfmt)
   end function tostring_s_cplx
 
   function tostring_sf_cplx(x, fmt) result(st)
@@ -834,8 +834,8 @@ CONTAINS
 
   function tostring_cplx(x) result(st)
     complex(sngl), intent(in)               :: x(:)
-    character(len_f_cplx(x, tosset % rfmt)) :: st
-    st = tostring_f_cplx(x, tosset % rfmt)
+    character(len_f_cplx(x, tosset%rfmt)) :: st
+    st = tostring_f_cplx(x, tosset%rfmt)
   end function tostring_cplx
 
   function tostring_f_cplx(x, fmt) result(st)
@@ -888,7 +888,7 @@ CONTAINS
     character(nnblk(fmt)+8)   :: fmt1
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
-    wtot = len_f_sngl(real(x), fmt) + len_f_sngl(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset % seplen)
+    wtot = len_f_sngl(real(x), fmt) + len_f_sngl(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset%seplen)
     ! subtract seplen because it has been added twice in len_f_sngl
   end function len_f_cplx
   ! *************************************** END OF SINGLE PRECISION COMPLEX PROCEDURES ********************************
@@ -936,7 +936,7 @@ CONTAINS
     integer, intent(in), optional :: unit, lbound(:), digmax
     type(settings) :: SE
     call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient, zeroas, digmax)
-    if (SE % row) then
+    if (SE%row) then
       call disp_dble(title, reshape(x, (/1, size(x)/)), SE)
     else
       call disp_dble(title, reshape(x, (/size(x), 1/)), SE)
@@ -969,7 +969,7 @@ CONTAINS
     real(dble),     intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
-    call find_editdesc_dble(x, SE, wid, nbl) ! determine also SE % w
+    call find_editdesc_dble(x, SE, wid, nbl) ! determine also SE%w
     call tobox_dble(title, x, SE, wid, nbl)
   end subroutine disp_dble
 
@@ -980,7 +980,7 @@ CONTAINS
     type(settings), intent(inout) :: SE      ! settings
     integer,        intent(inout) :: wid(:)  ! widths of columns
     integer,        intent(inout) :: nbl(:)  ! number of blanks to trim from left
-    character(SE % w)  :: s(size(x,1))
+    character(SE%w)  :: s(size(x,1))
     integer            :: lin1, j, wleft, m, n, widp(size(wid))
     character, pointer :: boxp(:,:)
     real(dble)         :: xj(size(x,1)), h
@@ -990,10 +990,10 @@ CONTAINS
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
       xj = x(:, j)
-      if (m > 0) write(s, SE % ed) xj
-      call replace_zeronaninf(s, SE % zas(1:SE % lzas), xj == 0, xj /= xj, xj < -h, xj > h)
+      if (m > 0) write(s, SE%ed) xj
+      call replace_zeronaninf(s, SE%zas(1:SE%lzas), xj == 0, xj /= xj, xj < -h, xj > h)
       call copytobox(s, lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_dble
@@ -1022,7 +1022,7 @@ CONTAINS
   end function maxw_dble
 
   subroutine find_editdesc_dble(x, SE, wid, nbl)
-    ! Determine SE % ed, SE % w (unless specified) and wid.
+    ! Determine SE%ed, SE%w (unless specified) and wid.
     ! The if-block (*) is for safety: make f wider in case xm is written ok with the
     ! ES format in fmt but overflows with F format (the feature has been tested through
     ! manual changes to the program).
@@ -1036,17 +1036,17 @@ CONTAINS
     character(99) s
     logical xzero(size(x,2)), xallz(size(x,2)), xfinite(size(x,1),size(x,2)), xnonn(size(x,2)), xalln(size(x,2))
     !
-    dmx = SE % dmx
+    dmx = SE%dmx
     h = huge(h)
     xfinite = x == x .and. x >= -h .and. x <= h ! neither NaN, Inf nor -Inf
-    if (SE % w == 0) then  ! Edit descriptor 'F0.d' specified
-      ww = maxw_dble(reshape(x, (/size(x)/)), SE % d)
-      if (SE % lzas > 0 .and. any(x == 0._dble))  ww = max(ww, SE % lzas)
-      call replace_w(SE % ed, ww)
-      SE % w = ww
-    elseif (SE % w < 0) then ! No edit descriptor specified
+    if (SE%w == 0) then  ! Edit descriptor 'F0.d' specified
+      ww = maxw_dble(reshape(x, (/size(x)/)), SE%d)
+      if (SE%lzas > 0 .and. any(x == 0._dble))  ww = max(ww, SE%lzas)
+      call replace_w(SE%ed, ww)
+      SE%w = ww
+    elseif (SE%w < 0) then ! No edit descriptor specified
       if (size(x) == 0) then
-        SE % w = 0
+        SE%w = 0
         wid = 0
         nbl = 0
         return
@@ -1057,21 +1057,21 @@ CONTAINS
         write(f1(7:11), '(SS,I2,".",I2.2)') dmx + 8, dmx - 1
         write(s,f1) xp; read(s(dmx+4:dmx+8),'(I5)') expmax
         write(s,f1) xm; read(s(dmx+4:dmx+8),'(I5)') expmin
-        call find_editdesc_real(expmax, expmin, dmx,  SE % ed, ww, dd, xm >= 0)
+        call find_editdesc_real(expmax, expmin, dmx,  SE%ed, ww, dd, xm >= 0)
         if (.not. all(xfinite))                     ww = max(ww, 4)
-        if (SE % lzas > 0 .and. any(x == 0._dble))  ww = max(ww, SE % lzas)
-        if (SE % ed(5:5)=='F') then  ! (*)
-          write(s, SE % ed) xp; if (s(1:1) == '*') ww = ww + 1
-          write(s, SE % ed) xm; if (s(1:1) == '*') ww = ww + 1
-          write(SE % ed(6:10), '(SS,I2,".",I2)') ww, dd
+        if (SE%lzas > 0 .and. any(x == 0._dble))  ww = max(ww, SE%lzas)
+        if (SE%ed(5:5)=='F') then  ! (*)
+          write(s, SE%ed) xp; if (s(1:1) == '*') ww = ww + 1
+          write(s, SE%ed) xm; if (s(1:1) == '*') ww = ww + 1
+          write(SE%ed(6:10), '(SS,I2,".",I2)') ww, dd
         endif
       else
         ww = 4
-        SE % ed = '(F4.0)'
+        SE%ed = '(F4.0)'
       endif
-      SE % w = ww
+      SE%w = ww
     endif
-    if (SE % trm) then
+    if (SE%trm) then
       xmaxv = maxval(x, 1, mask=xfinite)  ! max in each column
       xminv = minval(x, 1, mask=xfinite)  ! min
       xzero = any(x == 0._dble, 1) ! true where column has some zeros
@@ -1080,7 +1080,7 @@ CONTAINS
       xalln = all(x > h .or. x < -h .or. x /= x, 1)  ! true where column has only nonnormals (inf, -inf, nan)
       call getwid_dble(xmaxv, xminv, xzero, xallz, xnonn, xalln, SE,  wid, nbl)
     else
-      wid = SE % w
+      wid = SE%w
       nbl = 0
     endif
   end subroutine find_editdesc_dble
@@ -1094,22 +1094,22 @@ CONTAINS
     type(settings), intent(in)  :: SE                 ! settings
     integer,        intent(out) :: wid(:)             ! widths of columns
     integer,        intent(out) :: nbl(:)             ! number of blanks to peel from left (w-wid)
-    character(SE % w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
+    character(SE%w) :: stmax(size(xmaxv)), stmin(size(xmaxv))
     integer w
-    w = SE % w
-    write(stmin, SE % ed) xminv
-    write(stmax, SE % ed) xmaxv
+    w = SE%w
+    write(stmin, SE%ed) xminv
+    write(stmax, SE%ed) xmaxv
     nbl = mod(verify(stmin, ' ') + w, w + 1) ! loc. of first nonblank
     nbl = min(nbl, mod(verify(stmax, ' ') + w, w + 1))
-    if (SE % gedit) then
+    if (SE%gedit) then
       wid = w
     else
       wid = len_trim(adjustl(stmin))
       wid = max(wid, len_trim(adjustl(stmax)))
     endif
-    if (SE % lzas > 0) then
-      wid = merge(SE % lzas, wid, xallz)
-      wid = max(wid, merge(SE % lzas, 0, xzero))
+    if (SE%lzas > 0) then
+      wid = merge(SE%lzas, wid, xallz)
+      wid = max(wid, merge(SE%lzas, 0, xzero))
     endif
     wid = merge(4, wid, xalln)
     wid = max(wid, merge(4, 0, xnonn))
@@ -1120,8 +1120,8 @@ CONTAINS
   function tostring_s_dble(x) result(st)
     ! Scalar to string
     real(dble), intent(in) :: x
-    character(len_f_dble((/x/), tosset % rfmt)) :: st
-    st = tostring_f_dble((/x/), tosset % rfmt)
+    character(len_f_dble((/x/), tosset%rfmt)) :: st
+    st = tostring_f_dble((/x/), tosset%rfmt)
   end function tostring_s_dble
 
   function tostring_sf_dble(x, fmt) result(st)
@@ -1135,8 +1135,8 @@ CONTAINS
   function tostring_dble(x) result(st)
     ! Vector to string
     real(dble), intent(in) :: x(:)
-    character(len_f_dble(x, tosset % rfmt)) :: st
-    st = tostring_f_dble(x, tosset % rfmt)
+    character(len_f_dble(x, tosset%rfmt)) :: st
+    st = tostring_f_dble(x, tosset%rfmt)
   end function tostring_dble
 
   function tostring_f_dble(x, fmt) result(st)
@@ -1177,7 +1177,7 @@ CONTAINS
     endif
     write(sa, fmt1) x
     call trim_real(sa, gedit, w)
-    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset % seplen)
+    wtot = sum(len_trim(sa)) + (size(x) - 1)*(tosset%seplen)
   end function len_f_dble
 
   pure function widthmax_dble(x, fmt) result(w)
@@ -1248,7 +1248,7 @@ CONTAINS
     else
       SEim = SE
     end if
-    if (SE % row) then
+    if (SE%row) then
       call disp_cpld(title, reshape(x, (/1, size(x)/)), SE, SEim, n = size(x))
     else
       call disp_cpld(title, reshape(x, (/size(x), 1/)), SE, SEim, n = 1)
@@ -1292,8 +1292,8 @@ CONTAINS
     type(settings), intent(inout) :: SE, SEim
     integer,        intent(in)    :: n
     integer, dimension(n) :: widre(n), widim(n), nblre(n), nblim(n)
-    call find_editdesc_dble(real(x), SE, widre, nblre)         ! determine also SE % w
-    call find_editdesc_dble(abs(aimag(x)), SEim, widim, nblim) ! determine also SEim % w
+    call find_editdesc_dble(real(x), SE, widre, nblre)         ! determine also SE%w
+    call find_editdesc_dble(abs(aimag(x)), SEim, widim, nblim) ! determine also SEim%w
     call tobox_cpld(title, x, SE, SEim, widre, widim, nblre, nblim, m = size(x,1), n = size(x,2))
   end subroutine disp_cpld
 
@@ -1303,26 +1303,26 @@ CONTAINS
     complex(dble),  intent(in)    :: x(:,:)
     integer,        intent(in)    :: m, n, widre(:), widim(:), nblre(:), nblim(:)
     type(settings), intent(inout) :: SE, SEim
-    character(SE % w)   :: s(m)
-    character(SEim % w) :: sim(m)
+    character(SE%w)   :: s(m)
+    character(SEim%w) :: sim(m)
     character(3)        :: sgn(m)
     integer             :: lin1, i, j, wleft, wid(n), widp(n)
     character, pointer  :: boxp(:,:)
-    SE % zas = ''
-    SEim % zas = ''
+    SE%zas = ''
+    SEim%zas = ''
     wid = widre + widim + 4
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
-      if (m > 0) write(s, SE % ed) (real(x(i,j)), i=1,m)
+      if (m > 0) write(s, SE%ed) (real(x(i,j)), i=1,m)
       call copytobox(s, lin1, widre(j), widp(j) - widim(j) - 4, nblre(j), boxp,  wleft)
       do i=1,m
         if (aimag(x(i,j)) < 0) then; sgn(i) = ' - '; else; sgn(i) = ' + '; endif
         enddo
       call copytobox(sgn, lin1, 3, 3, 0, boxp,  wleft)
-      if (m > 0) write(sim, SEim % ed) (abs(aimag(x(i,j))), i=1,m)
+      if (m > 0) write(sim, SEim%ed) (abs(aimag(x(i,j))), i=1,m)
       call copytobox(sim, lin1, widim(j), widim(j), nblim(j), boxp,  wleft)
       call copyseptobox('i', m, lin1, boxp, wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_cpld
@@ -1331,8 +1331,8 @@ CONTAINS
 
   function tostring_s_cpld(x) result(st)
     complex(dble), intent(in)                   :: x
-    character(len_s_cpld(x, tosset % rfmt)) :: st
-    st = tostring_f_cpld((/x/), tosset % rfmt)
+    character(len_s_cpld(x, tosset%rfmt)) :: st
+    st = tostring_f_cpld((/x/), tosset%rfmt)
   end function tostring_s_cpld
 
   function tostring_sf_cpld(x, fmt) result(st)
@@ -1344,8 +1344,8 @@ CONTAINS
 
   function tostring_cpld(x) result(st)
     complex(dble), intent(in)               :: x(:)
-    character(len_f_cpld(x, tosset % rfmt)) :: st
-    st = tostring_f_cpld(x, tosset % rfmt)
+    character(len_f_cpld(x, tosset%rfmt)) :: st
+    st = tostring_f_cpld(x, tosset%rfmt)
   end function tostring_cpld
 
   function tostring_f_cpld(x, fmt) result(st)
@@ -1398,7 +1398,7 @@ CONTAINS
     character(nnblk(fmt)+8)   :: fmt1
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w < 0) then; wtot = len(errormsg); return; endif
-    wtot = len_f_dble(real(x), fmt) + len_f_dble(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset % seplen)
+    wtot = len_f_dble(real(x), fmt) + len_f_dble(abs(aimag(x)), fmt) + size(x)*4 - (size(x) - 1)*(tosset%seplen)
     ! subtract seplen because it has been added twice in len_f_dble
   end function len_f_cpld
   ! *************************************** END OF DOUBLE PRECISION COMPLEX PROCEDURES ********************************
@@ -1445,7 +1445,7 @@ CONTAINS
     integer, intent(in), optional :: unit, lbound(:)
     type(settings) :: SE
     call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient)
-    if (SE % row) then
+    if (SE%row) then
       call disp_dlog(title, reshape(x, (/1, size(x)/)), SE)
     else
       call disp_dlog(title, reshape(x, (/size(x), 1/)), SE)
@@ -1476,17 +1476,17 @@ CONTAINS
     logical(dlog),  intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
-    if (SE % w <= 0 .or. SE % trm) then
-      SE % ed = '(L1)'
+    if (SE%w <= 0 .or. SE%trm) then
+      SE%ed = '(L1)'
       if (size(x) == 0) then
         wid = 0
       else
         wid = 1
       endif
-      SE % w = 1
-      nbl = SE % w - wid
+      SE%w = 1
+      nbl = SE%w - wid
     else
-      wid = SE % w
+      wid = SE%w
       nbl = 0
     endif
     call tobox_dlog(title, x, SE, wid, nbl)
@@ -1498,16 +1498,16 @@ CONTAINS
     type(settings), intent(inout) :: SE
     integer,        intent(inout) :: wid(:)
     integer,        intent(inout) :: nbl(:)
-    character(SE % w)  :: s(size(x,1))
+    character(SE%w)  :: s(size(x,1))
     integer            :: m, n, lin1, i, j, wleft, widp(size(wid))
     character, pointer :: boxp(:,:)
     m = size(x,1)
     n = size(x,2)
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
-      if (m > 0) write(s, SE % ed) (x(i,j), i=1,m)
+      if (m > 0) write(s, SE%ed) (x(i,j), i=1,m)
       call copytobox(s, lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_dlog
@@ -1528,7 +1528,7 @@ CONTAINS
 
   function tostring_dlog(x) result(st)
     logical(dlog), intent(in)                          :: x(:)
-    character(1 + (size(x) - 1)*(1 + tosset % seplen)) :: st
+    character(1 + (size(x) - 1)*(1 + tosset%seplen)) :: st
     st = tostring_f_dlog(x, 'L1')
   end function tostring_dlog
 
@@ -1543,7 +1543,7 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w <= 0) then; st = errormsg; return; endif
     write(sa, fmt1) x
-    if (tosset % trimb == 'YES') sa = adjustl(sa)
+    if (tosset%trimb == 'YES') sa = adjustl(sa)
     call tostring_get(sa, st)
   end function tostring_f_dlog
 
@@ -1555,9 +1555,9 @@ CONTAINS
     character(nnblk(fmt)+5)    :: fmt1
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w <= 0) then; wtot = len(errormsg); return; endif
-    if (tosset % trimb == 'YES') wtot = size(x)
-    if (tosset % trimb == 'NO' ) wtot = w*size(x)
-    wtot = wtot + (size(x) - 1)*(tosset % seplen)
+    if (tosset%trimb == 'YES') wtot = size(x)
+    if (tosset%trimb == 'NO' ) wtot = w*size(x)
+    wtot = wtot + (size(x) - 1)*(tosset%seplen)
   end function len_f_dlog
 
   pure function widthmax_dlog(fmt) result(w)
@@ -1622,7 +1622,7 @@ CONTAINS
     integer, intent(in), optional :: unit, lbound(:)
     type(settings) :: SE
     call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient)
-    if (SE % row) then
+    if (SE%row) then
       call disp_dchr(title, reshape(x, (/1, size(x)/)), SE)
     else
       call disp_dchr(title, reshape(x, (/size(x), 1/)), SE)
@@ -1658,16 +1658,16 @@ CONTAINS
     m = size(x,1)
     n = size(x,2)
     lx = len(x)
-    w = SE % w
+    w = SE%w
     if (w <= 0) then
       w = lx
       if (w < 0) then
         edesc = '(A__________)'
         write(edesc(3:12), '(SS,I10)') w
-        SE % ed = edesc
+        SE%ed = edesc
       end if
     end if
-    if (SE % trm .and. size(x) > 0) then
+    if (SE%trm .and. size(x) > 0) then
       n1 = minval(mod(verify(x, ' ') - w - 1, w + 1), 1) + w + 1
       n2 = maxval(verify(x, ' ', back = .true.), 1)
       wid = n2 - n1 + 1
@@ -1679,16 +1679,16 @@ CONTAINS
       nbl = 0
     end if
     if (all(wid == 0)) n = 0
-    SE % w = w
+    SE%w = w
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
-      if (SE % trm) then
+      if (SE%trm) then
         call copytobox(x(:,j)(n1(j):n2(j)), lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
       else
         if (widp(j) > lx) call copyseptobox(repeat(' ', widp(j)-lx), m, lin1, boxp,  wleft)
         call copytobox(x(:,j), lin1, lx, lx, 0, boxp,  wleft)
       end if
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine disp_dchr

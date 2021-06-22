@@ -40,13 +40,13 @@ implicit none
   !   val = 0.0
   !   indx = 0
   !   DO i = 1, n
-  !     m = SIZE( Obj % Row( i ) % Val )
+  !     m = SIZE( Obj%Row( i )%Val )
   !     row( i + 1 ) = row( i ) + m
   !     IF( m .eq. 0 ) CYCLE
   !     DO j = 1, m
   !       indx = indx + 1
-  !       Col( indx ) = Obj % Row( i ) % Val( j )
-  !       Val( indx ) = Obj % Val( i ) % Val( j )
+  !       Col( indx ) = Obj%Row( i )%Val( j )
+  !       Val( indx ) = Obj%Val( i )%Val( j )
   !     END DO
   !   END DO
 
@@ -114,9 +114,9 @@ implicit none
   !   call display( obj, "obj" )
   !   nrow = SIZE( obj, 1 ); ncol = SIZE( Obj, 2 )
   !   call openFileToWrite( aFile, "./", "delme", ".ps" )
-  !   call pspltm( nrow, ncol, 0, crsobj % JA, crsobj % IA, "title", &
-  !     & 0, 1, 'cm', 0, lines, aFile % UnitNo )
-  !   close( aFile % UnitNo )
+  !   call pspltm( nrow, ncol, 0, crsobj%JA, crsobj%IA, "title", &
+  !     & 0, 1, 'cm', 0, lines, aFile%UnitNo )
+  !   close( aFile%UnitNo )
 
   ! end block
 
@@ -180,7 +180,7 @@ implicit none
   !   call display( y, "y" )
   !   call convert( from = crsobj, to = mat )
   !   call display( y - matmul( mat, x ), "error" )
-  ! end block  
+  ! end block
 
 
 end program main

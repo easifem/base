@@ -100,20 +100,20 @@ CONTAINS
     character(6), parameter :: ADVOK(3) = (/'NO    ', 'YES   ', 'DOUBLE'/)
     type(disp_settings) ds
     ds = DEFSET
-    call getstyles(ds % style, tsty, tch, number, ok)
+    call getstyles(ds%style, tsty, tch, number, ok)
     styerr = .not. ok
-    dmxerr = ds % digmax < 1 .or. ds % digmax > 89
-    orierr = all(ds % orient /= (/'ROW', 'COL'/))
-    adverr = all(ds % advance /= ADVOK)
-    if (dmxerr) DEFSET % digmax = 6
-    if (orierr) DEFSET % orient = 'COL'
-    if (styerr) DEFSET % style = 'LEFT'
-    if (adverr) DEFSET % advance = 'YES'
+    dmxerr = ds%digmax < 1 .or. ds%digmax > 89
+    orierr = all(ds%orient /= (/'ROW', 'COL'/))
+    adverr = all(ds%advance /= ADVOK)
+    if (dmxerr) DEFSET%digmax = 6
+    if (orierr) DEFSET%orient = 'COL'
+    if (styerr) DEFSET%style = 'LEFT'
+    if (adverr) DEFSET%advance = 'YES'
     !
     if (dmxerr) call disp_errmsg('DISP_SET: error, illegal digmax (must be 1-89), set to 6')
-    if (orierr) call disp_errmsg('DISP_SET: error, illegal orient: ' // trim(ds % orient) // ', set to "COL"')
-    if (styerr) call disp_errmsg('DISP_SET: error, illegal style: ' // trim(ds % style) // ', set to "LEFT"')
-    if (adverr) call disp_errmsg('DISP_SET: error, illegal advance: ' // trim(ds % advance) // ', set to "YES"')
+    if (orierr) call disp_errmsg('DISP_SET: error, illegal orient: ' // trim(ds%orient) // ', set to "COL"')
+    if (styerr) call disp_errmsg('DISP_SET: error, illegal style: ' // trim(ds%style) // ', set to "LEFT"')
+    if (adverr) call disp_errmsg('DISP_SET: error, illegal advance: ' // trim(ds%advance) // ', set to "YES"')
   end subroutine check_settings
 
   function number_rows(SE) result(nbr)
@@ -121,8 +121,8 @@ CONTAINS
     type(settings), intent(in) :: SE
     logical nbr
     nbr = .false.
-    if (.not. SE % number) return
-    if (SE % vec .and. SE % row) return
+    if (.not. SE%number) return
+    if (SE%vec .and. SE%row) return
     nbr = .true.
   end function number_rows
 
@@ -131,8 +131,8 @@ CONTAINS
     type(settings), intent(in) :: SE
     logical nbr
     nbr = .false.
-    if (.not. SE % number) return
-    if (SE % vec .and. .not. SE % row) return
+    if (.not. SE%number) return
+    if (SE%vec .and. .not. SE%row) return
     nbr = .true.
   end function number_cols
 
@@ -168,13 +168,13 @@ CONTAINS
     !          ...                    ...                       ...
     !         10   6.18  4.22        10   6.18  4.22           10   6.18  4.22
     ! rm = 0                     wt = wbox                     lm = rm = 0, wleft = wrow
-    m1 = SE % m1
-    n1 = SE % n1
-    ws = SE % lsep
+    m1 = SE%m1
+    n1 = SE%n1
+    ws = SE%lsep
     wt = len(title)
     wrow = 0
     widp = wid
-    if (SE % number) then
+    if (SE%number) then
       fmt = '(SS,I0)'
       if (number_cols(SE)) then
         write(col_nums, fmt) (/ (i, i = n1, n1 + n - 1) /)
@@ -188,7 +188,7 @@ CONTAINS
       endif
     endif
     wa = max(0,n-1)*ws + sum(widp)
-    select case(upper(SE % tsty))
+    select case(upper(SE%tsty))
     case('LEFT');      lin1 = 1; wbox = wt + wrow + wa;     h = max(1,m); lm = wt
     case('PAD');       lin1 = 2; wbox = max(wt, wa + wrow); h = m + 1;    lm = max(0, (wt - wa - wrow)/2)
     case('UNDERLINE'); lin1 = 3; wbox = max(wt, wa + wrow); h = m + 2;    lm = max(0, (wt - wa - wrow)/2)
@@ -196,13 +196,13 @@ CONTAINS
     end select
     wleft = lm
     if (number_cols(SE)) h = h + 1
-    call newbox(SE % lun, h, wbox, boxp)
+    call newbox(SE%lun, h, wbox, boxp)
     if (number_cols(SE)) then
       call copycolumnnumberstobox(col_nums, wleft + wrow, wid, widp, ws,  boxp, lin1)
     endif
     if (number_rows(SE)) then
       call copytobox(row_nums, lin1, wrow - ws, wrow - ws, nblj = 0, boxp = boxp, wleft = wleft)
-      call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp, wleft)
+      call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp, wleft)
     endif
   end subroutine preparebox
 
@@ -263,7 +263,7 @@ CONTAINS
     !
     wt = len(title)
     w = size(boxp,1)
-    if (upper(SE % tsty) == 'LEFT') then
+    if (upper(SE%tsty) == 'LEFT') then
       lin1 = 1
       if (number_cols(SE)) lin1 = min(2,size(boxp,2))
       forall(i=1:wt) boxp(i,lin1) = title(i:i)
@@ -271,15 +271,15 @@ CONTAINS
       wpadright = (w - wt)/2
       wpadleft = w - wpadright - wt
       forall(i=1:wt) boxp(wpadleft+i, 1) = title(i:i)
-      if (upper(SE % tsty) == 'PAD') then
-        boxp(1:wpadleft, 1) = SE % tch
-        boxp(w-wpadright+1:w, 1) = SE % tch
+      if (upper(SE%tsty) == 'PAD') then
+        boxp(1:wpadleft, 1) = SE%tch
+        boxp(w-wpadright+1:w, 1) = SE%tch
       else ! tsty == 'UNDERLINE'
-        boxp(:,2) = SE % tch
+        boxp(:,2) = SE%tch
       endif
     endif
-    if (SE % adv >= 1) call dispboxlist(SE % lun, DEFSET % matsep(1:DEFSET % matseplen))
-    if (SE % adv >= 2) call dispnewline(SE % lun)
+    if (SE%adv >= 1) call dispboxlist(SE%lun, DEFSET%matsep(1:DEFSET%matseplen))
+    if (SE%adv >= 2) call dispnewline(SE%lun)
   end subroutine finishbox
 
   subroutine find_editdesc_real(exp, expm, dmx,  edesc, flen, ndec, posit)
@@ -399,7 +399,7 @@ CONTAINS
         row = .false.
       end select
     elseif (vec) then
-      row = DEFSET % orient == 'ROW'
+      row = DEFSET%orient == 'ROW'
     else
       row = .false.
     endif
@@ -412,10 +412,10 @@ CONTAINS
     if (present(unit)) then
       lun = unit
     else
-      lun = DEFSET % unit
+      lun = DEFSET%unit
     endif
     if (.not.present(digmax)) then
-      dmx = DEFSET % digmax
+      dmx = DEFSET%digmax
     elseif (present(fmt)) then
       call disp_errmsg('DISP: error, both FMT and DIGMAX present, ignoring DIGMAX')
       dmx = 1
@@ -428,7 +428,7 @@ CONTAINS
     if (present(advance)) then
       advchr = upper(advance)
     else
-      advchr = DEFSET % advance
+      advchr = DEFSET%advance
     endif
     select case(trims(advchr))
     case('NO');     adv = 0
@@ -448,20 +448,20 @@ CONTAINS
     elseif (w == 0) then
       trm = .true.
     else
-      trm = DEFSET % trim == 'YES' .or. DEFSET % trim == 'AUTO' .and. .not.present(FMT)
+      trm = DEFSET%trim == 'YES' .or. DEFSET%trim == 'AUTO' .and. .not.present(FMT)
     endif
     if (present(seperator)) then
       sep = seperator
       lsep = len(seperator)
     else
-      sep = DEFSET % sep
-      lsep = DEFSET % seplen
+      sep = DEFSET%sep
+      lsep = DEFSET%seplen
     endif
     if (present(style)) then
       call getstyles(style, tsty, tch, number, ok)
       if (.not. ok) call disp_errmsg('DISP: error, illegal style: '//style//'. Using default instead')
     else
-      call getstyles(DEFSET % style, tsty, tch, number, ok)
+      call getstyles(DEFSET%style, tsty, tch, number, ok)
     endif
     if (title == '') tsty = 'LEFT'
     if (is_scalar) number = .false.
@@ -469,8 +469,8 @@ CONTAINS
       zas = zeroas
       lzas = len(zeroas)
     else
-      zas = DEFSET % zeroas
-      lzas = DEFSET % zaslen
+      zas = DEFSET%zeroas
+      lzas = DEFSET%zaslen
     endif
     if (w > 0) lzas = min(w, lzas)
     zas = zas(1:lzas)
@@ -660,23 +660,23 @@ CONTAINS
     ! Sanity check of tostring settings
     type(tostring_settings) ts
     integer wi, wr, d
-    character(max(len(tosset % rfmt), len(tosset % ifmt)) + 5) fmt1
+    character(max(len(tosset%rfmt), len(tosset%ifmt)) + 5) fmt1
     logical gedit
     ts = tosset
-    if (all(ts % trimb /= (/'YES', 'NO '/)))           tosset % trimb = tosfac % trimb
-    if (all(ts % trimz /= (/'NONE', 'ALL ', 'G   '/))) tosset % trimz = tosfac % trimz
-    call readfmt(tosset % rfmt, fmt1, wr, d, gedit)
-    call readfmt(tosset % ifmt, fmt1, wi, d, gedit)
-    if (wr < 0) tosset % rfmt = tosfac % rfmt
-    if (wi < 0) tosset % ifmt = tosfac % ifmt
-    if (all(ts % trimb /= (/'YES ', 'NO  ', 'AUTO'/))) call disp_errmsg( &
-         'TOSTRING_SET: error, illegal trimb: '//trim(ts % trimb)//', set to ' // trim(tosfac % trimb))
-    if (all(ts % trimz /= (/'NONE', 'ALL ', 'G   '/))) call disp_errmsg( &
-         'TOSTRING_SET: error, illegal trimz: '//trim(ts % trimz)//', set to '//trim(tosfac % trimz))
+    if (all(ts%trimb /= (/'YES', 'NO '/)))           tosset%trimb = tosfac%trimb
+    if (all(ts%trimz /= (/'NONE', 'ALL ', 'G   '/))) tosset%trimz = tosfac%trimz
+    call readfmt(tosset%rfmt, fmt1, wr, d, gedit)
+    call readfmt(tosset%ifmt, fmt1, wi, d, gedit)
+    if (wr < 0) tosset%rfmt = tosfac%rfmt
+    if (wi < 0) tosset%ifmt = tosfac%ifmt
+    if (all(ts%trimb /= (/'YES ', 'NO  ', 'AUTO'/))) call disp_errmsg( &
+         'TOSTRING_SET: error, illegal trimb: '//trim(ts%trimb)//', set to ' // trim(tosfac%trimb))
+    if (all(ts%trimz /= (/'NONE', 'ALL ', 'G   '/))) call disp_errmsg( &
+         'TOSTRING_SET: error, illegal trimz: '//trim(ts%trimz)//', set to '//trim(tosfac%trimz))
     if (wr < 0) call disp_errmsg( &
-         'TOSTRING_SET: error, illegal rfmt: '//trim(ts % rfmt)//', set to '//trim(tosfac % rfmt))
+         'TOSTRING_SET: error, illegal rfmt: '//trim(ts%rfmt)//', set to '//trim(tosfac%rfmt))
     if (wi < 0) call disp_errmsg( &
-         'TOSTRING_SET: error, illegal ifmt: '//trim(ts % ifmt)//', set to '//trim(tosfac % ifmt))
+         'TOSTRING_SET: error, illegal ifmt: '//trim(ts%ifmt)//', set to '//trim(tosfac%ifmt))
   end subroutine tostring_check_settings
 
   pure subroutine trim_s_real(sa, gedit, w)
@@ -687,8 +687,8 @@ CONTAINS
     logical, intent(in) :: gedit
     integer, intent(in) :: w
     integer k, k2, k3
-    if (tosset % trimb == 'YES' .or. w == 0) sa = adjustl(sa)
-    if (tosset % trimz == 'ALL' .or. tosset % trimz == 'G' .and. gedit) then
+    if (tosset%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
+    if (tosset%trimz == 'ALL' .or. tosset%trimz == 'G' .and. gedit) then
       k = scan(sa, '.')
       if (k > 0) then
         k2 = verify(sa(k+1:), '0123456789') + k
@@ -707,8 +707,8 @@ CONTAINS
     logical, intent(in) :: gedit
     integer, intent(in) :: w
     integer i
-    if (tosset % trimb == 'YES' .or. w == 0) sa = adjustl(sa)
-    if (tosset % trimz == 'ALL' .or. tosset % trimz == 'G' .and. gedit) then
+    if (tosset%trimb == 'YES' .or. w == 0) sa = adjustl(sa)
+    if (tosset%trimz == 'ALL' .or. tosset%trimz == 'G' .and. gedit) then
       do i=1,size(sa) ! trim trailing zeros from fractional part
         call trim_s_real(sa(i), gedit, w)
       enddo
@@ -717,14 +717,14 @@ CONTAINS
 
   pure subroutine tostring_get(sa, st)
     ! Copy trimmed elements of sa (containing individual elements as strings) to the final
-    ! tostring result st, separated by tosset % sep strings.
+    ! tostring result st, separated by tosset%sep strings.
     character(*), intent(in)  :: sa(:)
     character(*), intent(out) :: st
     integer                   :: i, k, n, sepl
-    sepl = tosset % seplen
+    sepl = tosset%seplen
     k = 0
     do i = 1,size(sa)
-      if (k>0) st(k+1:k+sepl) = tosset % sep(1:sepl)
+      if (k>0) st(k+1:k+sepl) = tosset%sep(1:sepl)
       if (k>0) k = k + sepl
       n = len_trim(sa(i))
       st(k+1:k+n) = trim(sa(i))
@@ -737,10 +737,10 @@ CONTAINS
     character(*), intent(in)  :: sar(:), sai(:), sgn(*)
     character(*), intent(out) :: st
     integer                   :: i, k, n, sepl
-    sepl = tosset % seplen
+    sepl = tosset%seplen
     k = 0
     do i = 1,size(sar)
-      if (k>0) st(k+1:k+sepl) = tosset % sep(1:sepl)
+      if (k>0) st(k+1:k+sepl) = tosset%sep(1:sepl)
       if (k>0) k = k + sepl
       n = len_trim(sar(i))
       st(k+1:k+n) = trim(sar(i))
@@ -784,12 +784,12 @@ CONTAINS
     type(boxlist), pointer :: p
     p => firstboxlist
     do while(associated(p))
-      if (p % unit == unit) return
-      p => p % nextboxlist
+      if (p%unit == unit) return
+      p => p%nextboxlist
     end do
     allocate(p)
-    p % nextboxlist => firstboxlist  ! put at head of list
-    p % unit = unit
+    p%nextboxlist => firstboxlist  ! put at head of list
+    p%unit = unit
     firstboxlist => p
   end function getboxlist
 
@@ -800,19 +800,19 @@ CONTAINS
     type(boxlist), pointer :: blp
     blp => firstboxlist
     do while(associated(blp))
-      if (blp % unit == unit) exit
-      blp => blp % nextboxlist
+      if (blp%unit == unit) exit
+      blp => blp%nextboxlist
     end do
     if (.not. associated(blp)) return
-    p => blp % firstbox
+    p => blp%firstbox
     do while(associated(p))
       q => p
-      p => p % nextbox
-      deallocate(q % box)
+      p => p%nextbox
+      deallocate(q%box)
       deallocate(q)
     enddo
     if (associated(firstboxlist, blp)) then
-      firstboxlist => blp % nextboxlist
+      firstboxlist => blp%nextboxlist
     endif
     deallocate(blp)
   end subroutine clearboxlist
@@ -824,15 +824,15 @@ CONTAINS
     type(boxnode), pointer :: p
     type(boxlist), pointer :: blp
     allocate(p)
-    allocate(p % box(n, m))
+    allocate(p%box(n, m))
     blp => getboxlist(unit)
-    if (.not.associated(blp % firstbox)) then
-      blp % firstbox => p
+    if (.not.associated(blp%firstbox)) then
+      blp%firstbox => p
     else
-      blp % lastbox % nextbox => p
+      blp%lastbox%nextbox => p
     end if
-    blp % lastbox => p
-    boxp => p % box
+    blp%lastbox => p
+    boxp => p%box
     boxp = ' '
   end subroutine newbox
 
@@ -854,29 +854,29 @@ CONTAINS
     integer k, nlines, h, w, ns
     character(*), intent(in) :: sep
     blp => getboxlist(unit)
-    pfirst => blp % firstbox
+    pfirst => blp%firstbox
     nlines = 0
     p => pfirst
     do while (associated(p))
-      nlines = max(nlines, size(p % box, 2))
-      p => p % nextbox
+      nlines = max(nlines, size(p%box, 2))
+      p => p%nextbox
     enddo
     do k=1,nlines
       p => pfirst
       ns = 0
       do while (associated(p))
-        h = size(p % box, 2)
-        w = size(p % box, 1)
+        h = size(p%box, 2)
+        w = size(p%box, 1)
         if (k <= h) then
           select case(unit)
           case(-1)
             continue
           case(-2)
-            call putstr(sep(1:ns) // tostr(p % box(:,k)))
+            call putstr(sep(1:ns) // tostr(p%box(:,k)))
           case(-3)
-            write(*,    '(2A)', advance = 'no') sep(1:ns), tostr(p % box(:,k))
+            write(*,    '(2A)', advance = 'no') sep(1:ns), tostr(p%box(:,k))
           case default
-            write(unit, '(2A)', advance = 'no') sep(1:ns), tostr(p % box(:,k))
+            write(unit, '(2A)', advance = 'no') sep(1:ns), tostr(p%box(:,k))
           end select
         else
           select case(unit)
@@ -890,7 +890,7 @@ CONTAINS
             write(unit, '(2A)', advance = 'no') sep(1:ns), repeat(' ', w)
           end select
         end if
-        p => p % nextbox
+        p => p%nextbox
         ns = len(sep)
       enddo
       call dispnewline(unit)
@@ -916,15 +916,15 @@ CONTAINS
   !     bl => firstboxlist
   !     write(*,'("BOXES:")')
   !     do while (associated(bl))
-  !       write(*,'("UNIT=",SS,I0,":")') bl % unit
-  !       p => bl % firstbox
+  !       write(*,'("UNIT=",SS,I0,":")') bl%unit
+  !       p => bl%firstbox
   !       k = 1
   !       do while(associated(p))
-  !         write(*,'("  box ",SS,I0,", size=(",I0,",",I0,")")') k, shape(p % box)
+  !         write(*,'("  box ",SS,I0,", size=(",I0,",",I0,")")') k, shape(p%box)
   !         k = k+1
-  !         p => p % nextbox
+  !         p => p%nextbox
   !       enddo
-  !       bl => bl % nextboxlist
+  !       bl => bl%nextboxlist
   !     enddo
   !   end subroutine print_boxes
 

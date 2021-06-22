@@ -30,26 +30,26 @@ CONTAINS
 
 MODULE PROCEDURE Initiate_ref_Quadrangle
   IF( PRESENT( XiJ ) ) THEN
-    Obj % XiJ = XiJ
+    Obj%XiJ = XiJ
   ELSE
-    Obj % XiJ =  RESHAPE( [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], [3, 4] )
+    Obj%XiJ =  RESHAPE( [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], [3, 4] )
   END IF
-  Obj % EntityCounts = [4, 4, 1, 0]
-  Obj % XiDimension = 2
-  Obj % Name = Quadrangle4
-  Obj % Order = 1
-  Obj % NSD = NSD
-  ALLOCATE( Obj % Topology( 9 ) )
-  Obj % Topology( 1 ) = ReferenceTopology( [1], Point )
-  Obj % Topology( 2 ) = ReferenceTopology( [2], Point )
-  Obj % Topology( 3 ) = ReferenceTopology( [3], Point )
-  Obj % Topology( 4 ) = ReferenceTopology( [4], Point )
-  Obj % Topology( 5 ) = ReferenceTopology( [1, 2], Line2 )
-  Obj % Topology( 6 ) = ReferenceTopology( [2, 3], Line2 )
-  Obj % Topology( 7 ) = ReferenceTopology( [3, 4], Line2 )
-  Obj % Topology( 8 ) = ReferenceTopology( [4, 1], Line2 )
-  Obj % Topology( 9 ) = ReferenceTopology( [1, 2, 3, 4], Quadrangle4 )
-  Obj % LagrangeElement => LagrangeElement_Quadrangle
+  Obj%EntityCounts = [4, 4, 1, 0]
+  Obj%XiDimension = 2
+  Obj%Name = Quadrangle4
+  Obj%Order = 1
+  Obj%NSD = NSD
+  ALLOCATE( Obj%Topology( 9 ) )
+  Obj%Topology( 1 ) = ReferenceTopology( [1], Point )
+  Obj%Topology( 2 ) = ReferenceTopology( [2], Point )
+  Obj%Topology( 3 ) = ReferenceTopology( [3], Point )
+  Obj%Topology( 4 ) = ReferenceTopology( [4], Point )
+  Obj%Topology( 5 ) = ReferenceTopology( [1, 2], Line2 )
+  Obj%Topology( 6 ) = ReferenceTopology( [2, 3], Line2 )
+  Obj%Topology( 7 ) = ReferenceTopology( [3, 4], Line2 )
+  Obj%Topology( 8 ) = ReferenceTopology( [4, 1], Line2 )
+  Obj%Topology( 9 ) = ReferenceTopology( [1, 2, 3, 4], Quadrangle4 )
+  Obj%LagrangeElement => LagrangeElement_Quadrangle
 END PROCEDURE Initiate_ref_Quadrangle
 
 !----------------------------------------------------------------------------
@@ -148,42 +148,42 @@ MODULE PROCEDURE LagrangeElement_Quadrangle
   CASE( 1 )
     CALL Initiate( Obj=Obj, AnotherObj=RefElem )
   CASE( 2 )
-    Obj % XiJ = EquidistanceLIP_Quadrangle( RefElem%XiJ(1:3, 1:4), Order )
+    Obj%XiJ = EquidistanceLIP_Quadrangle( RefElem%XiJ(1:3, 1:4), Order )
     NNS = 9
-    Obj % EntityCounts = [NNS, 4, 1, 0]
-    Obj % XiDimension = 2
-    Obj % Name = Quadrangle9
-    Obj % Order = Order
-    Obj % NSD = RefElem % NSD
-    ALLOCATE( Obj % Topology( SUM( Obj % EntityCounts) ) )
+    Obj%EntityCounts = [NNS, 4, 1, 0]
+    Obj%XiDimension = 2
+    Obj%Name = Quadrangle9
+    Obj%Order = Order
+    Obj%NSD = RefElem%NSD
+    ALLOCATE( Obj%Topology( SUM( Obj%EntityCounts) ) )
     DO I = 1, NNS
-      Obj % Topology( I ) = ReferenceTopology( [I], Point )
+      Obj%Topology( I ) = ReferenceTopology( [I], Point )
     END DO
-    Obj % Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 5], Line3 )
-    Obj % Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 6], Line3 )
-    Obj % Topology( NNS + 3 ) = ReferenceTopology( [3, 4, 7], Line3 )
-    Obj % Topology( NNS + 4 ) = ReferenceTopology( [4, 1, 8], Line3 )
+    Obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 5], Line3 )
+    Obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 6], Line3 )
+    Obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 4, 7], Line3 )
+    Obj%Topology( NNS + 4 ) = ReferenceTopology( [4, 1, 8], Line3 )
 
-    Obj % Topology( NNS + 5 ) = ReferenceTopology( [1,2,3,4,5,6,7,8,9], Obj%Name )
-    Obj % LagrangeElement => RefElem % LagrangeElement
+    Obj%Topology( NNS + 5 ) = ReferenceTopology( [1,2,3,4,5,6,7,8,9], Obj%Name )
+    Obj%LagrangeElement => RefElem%LagrangeElement
   CASE( 3 )
-    Obj % XiJ = EquidistanceLIP_Quadrangle( RefElem%XiJ(1:3, 1:4), Order )
+    Obj%XiJ = EquidistanceLIP_Quadrangle( RefElem%XiJ(1:3, 1:4), Order )
     NNS = 16
-    Obj % EntityCounts = [NNS, 4, 1, 0]
-    Obj % XiDimension = 2
-    Obj % Name = Quadrangle16
-    Obj % Order = Order
-    Obj % NSD = RefElem % NSD
-    ALLOCATE( Obj % Topology( SUM( Obj % EntityCounts) ) )
+    Obj%EntityCounts = [NNS, 4, 1, 0]
+    Obj%XiDimension = 2
+    Obj%Name = Quadrangle16
+    Obj%Order = Order
+    Obj%NSD = RefElem%NSD
+    ALLOCATE( Obj%Topology( SUM( Obj%EntityCounts) ) )
     DO I = 1, NNS
-      Obj % Topology( I ) = ReferenceTopology( [I], Point )
+      Obj%Topology( I ) = ReferenceTopology( [I], Point )
     END DO
-    Obj % Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 5, 6], Line4 )
-    Obj % Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 7, 8], Line4 )
-    Obj % Topology( NNS + 3 ) = ReferenceTopology( [3, 4, 9, 10], Line4 )
-    Obj % Topology( NNS + 4 ) = ReferenceTopology( [4, 1, 11, 12], Line4 )
-    Obj % Topology( NNS + 5 ) = ReferenceTopology( arange(1,NNS,1), Obj%Name)
-    Obj % LagrangeElement => RefElem % LagrangeElement
+    Obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 5, 6], Line4 )
+    Obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 7, 8], Line4 )
+    Obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 4, 9, 10], Line4 )
+    Obj%Topology( NNS + 4 ) = ReferenceTopology( [4, 1, 11, 12], Line4 )
+    Obj%Topology( NNS + 5 ) = ReferenceTopology( arange(1,NNS,1), Obj%Name)
+    Obj%LagrangeElement => RefElem%LagrangeElement
   END SELECT
 END PROCEDURE LagrangeElement_Quadrangle
 

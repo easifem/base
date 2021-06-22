@@ -29,15 +29,15 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj
-  CALL reallocate( Obj % N, nns, nips )
-  CALL reallocate( Obj % dNdXi, nns, xidim, nips )
-  CALL reallocate( Obj % Normal, 3, nips )
-  CALL reallocate( Obj % dNdXt, nns, nsd, nips )
-  CALL reallocate( Obj % Jacobian, nsd, xidim, nips )
-  CALL reallocate( Obj % Js, nips )
-  CALL reallocate( Obj % Thickness, nips )
-  Obj % Thickness = 1.0_DFP
-  CALL reallocate( Obj % Coord, nsd, nips )
+  CALL reallocate( Obj%N, nns, nips )
+  CALL reallocate( Obj%dNdXi, nns, xidim, nips )
+  CALL reallocate( Obj%Normal, 3, nips )
+  CALL reallocate( Obj%dNdXt, nns, nsd, nips )
+  CALL reallocate( Obj%Jacobian, nsd, xidim, nips )
+  CALL reallocate( Obj%Js, nips )
+  CALL reallocate( Obj%Thickness, nips )
+  Obj%Thickness = 1.0_DFP
+  CALL reallocate( Obj%Coord, nsd, nips )
 END PROCEDURE initiate_obj
 
 !----------------------------------------------------------------------------
@@ -47,16 +47,16 @@ END PROCEDURE initiate_obj
 MODULE PROCEDURE stsd_initiate
   INTEGER( I4B ) :: tip, ip
   REAL( DFP ) :: x( 3 )
-  tip = SIZE( elemsd % N, 2 )
+  tip = SIZE( elemsd%N, 2 )
   IF( ALLOCATED( obj ) ) DEALLOCATE( obj )
   ALLOCATE( obj( tip ) )
   DO ip = 1, tip
-    Obj( ip ) % T = elemsd % N( :, ip )
-    Obj( ip ) % dTdTheta = elemsd % dNdXi( :, 1, ip )
-    Obj( ip ) % Jt = elemsd % Js( ip )
-    CALL getQuadraturePoints( Obj = elemsd % Quad, Weight = Obj( ip ) % Wt,&
+    Obj( ip )%T = elemsd%N( :, ip )
+    Obj( ip )%dTdTheta = elemsd%dNdXi( :, 1, ip )
+    Obj( ip )%Jt = elemsd%Js( ip )
+    CALL getQuadraturePoints( Obj = elemsd%Quad, Weight = Obj( ip )%Wt,&
       & Num = ip, Point = x )
-    Obj( ip ) % Theta = x( 1 )
+    Obj( ip )%Theta = x( 1 )
   END DO
 END PROCEDURE stsd_initiate
 
@@ -65,23 +65,23 @@ END PROCEDURE stsd_initiate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE deallocate_data
-  IF( ALLOCATED( Obj % Normal ) ) DEALLOCATE( Obj % Normal )
-  IF( ALLOCATED( Obj % N ) ) DEALLOCATE( Obj % N )
-  IF( ALLOCATED( Obj % dNdXi ) ) DEALLOCATE( Obj % dNdXi )
-  IF( ALLOCATED( Obj % dNdXt ) ) DEALLOCATE( Obj % dNdXt )
-  IF( ALLOCATED( Obj % Jacobian ) ) DEALLOCATE( Obj % Jacobian )
-  IF( ALLOCATED( Obj % Js ) ) DEALLOCATE( Obj % Js )
-  IF( ALLOCATED( Obj % Ws ) ) DEALLOCATE( Obj % Ws )
-  IF( ALLOCATED( Obj % Thickness ) ) DEALLOCATE( Obj % Thickness )
-  IF( ALLOCATED( Obj % Coord ) ) DEALLOCATE( Obj % Coord )
-  CALL DeallocateData( Obj % Quad )
-  CALL DeallocateData( Obj % RefElem )
+  IF( ALLOCATED( Obj%Normal ) ) DEALLOCATE( Obj%Normal )
+  IF( ALLOCATED( Obj%N ) ) DEALLOCATE( Obj%N )
+  IF( ALLOCATED( Obj%dNdXi ) ) DEALLOCATE( Obj%dNdXi )
+  IF( ALLOCATED( Obj%dNdXt ) ) DEALLOCATE( Obj%dNdXt )
+  IF( ALLOCATED( Obj%Jacobian ) ) DEALLOCATE( Obj%Jacobian )
+  IF( ALLOCATED( Obj%Js ) ) DEALLOCATE( Obj%Js )
+  IF( ALLOCATED( Obj%Ws ) ) DEALLOCATE( Obj%Ws )
+  IF( ALLOCATED( Obj%Thickness ) ) DEALLOCATE( Obj%Thickness )
+  IF( ALLOCATED( Obj%Coord ) ) DEALLOCATE( Obj%Coord )
+  CALL DeallocateData( Obj%Quad )
+  CALL DeallocateData( Obj%RefElem )
   SELECT TYPE( Obj )
   TYPE IS (STElemShapeData_)
-    IF( ALLOCATED( Obj % T ) ) DEALLOCATE( Obj % T )
-    IF( ALLOCATED( Obj % dTdTheta ) ) DEALLOCATE( Obj % dTdTheta )
-    IF( ALLOCATED( Obj % dNTdt ) ) DEALLOCATE( Obj % dNTdt )
-    IF( ALLOCATED( Obj % dNTdXt ) ) DEALLOCATE( Obj % dNTdXt )
+    IF( ALLOCATED( Obj%T ) ) DEALLOCATE( Obj%T )
+    IF( ALLOCATED( Obj%dTdTheta ) ) DEALLOCATE( Obj%dTdTheta )
+    IF( ALLOCATED( Obj%dNTdt ) ) DEALLOCATE( Obj%dNTdt )
+    IF( ALLOCATED( Obj%dNTdXt ) ) DEALLOCATE( Obj%dNTdXt )
   END SELECT
 END PROCEDURE deallocate_data
 

@@ -73,75 +73,6 @@ END TYPE FilePointer_
 PUBLIC :: FilePointer_
 
 !----------------------------------------------------------------------------
-!                                                                   txtFile_
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
-! summary: This data type is defined for the IO operation.
-!
-!{!pages/File.md}
-
-TYPE, EXTENDS( File_ ) :: txtFile_
-END TYPE txtFile_
-
-PUBLIC :: txtFile_
-
-TYPE( txtFile_ ), PUBLIC, PARAMETER :: TypetxtFile = txtFile_()
-
-TYPE :: txtFilePointer_
-  CLASS( txtFile_ ), POINTER :: Ptr => NULL( )
-END TYPE txtFilePointer_
-
-PUBLIC :: txtFilePointer_
-
-!----------------------------------------------------------------------------
-!                                                                 jsonFile_
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
-! summary: This data type is defined for the IO operation.
-!
-!{!pages/File.md}
-
-TYPE, EXTENDS( File_ ) :: jsonFile_
-END TYPE jsonFile_
-
-PUBLIC :: jsonFile_
-
-TYPE( jsonFile_ ), PUBLIC, PARAMETER :: TypejsonFile_ = jsonFile_()
-
-TYPE :: jsonFilePointer_
-  CLASS( jsonFile_ ), POINTER :: Ptr => NULL()
-END TYPE jsonFilePointer_
-
-PUBLIC :: jsonFilePointer_
-
-!----------------------------------------------------------------------------
-!                                                                 hdfFile_
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
-! summary: This data type is defined for the IO operation.
-!
-!{!pages/File.md}
-
-TYPE :: hdfFile_
-END TYPE hdfFile_
-
-PUBLIC :: hdfFile_
-
-TYPE( hdfFile_ ), PUBLIC, PARAMETER :: TypehdfFile_ = hdfFile_()
-
-TYPE :: hdfFilePointer_
-  CLASS( hdfFile_ ), POINTER :: Ptr => NULL()
-END TYPE hdfFilePointer_
-
-PUBLIC :: hdfFilePointer_
-
-!----------------------------------------------------------------------------
 !                                                               BoundingBox_
 !----------------------------------------------------------------------------
 
@@ -760,6 +691,26 @@ INTERFACE
     CLASS( ReferenceElement_ ), INTENT( INOUT ) :: HighOrderObj
   END SUBROUTINE lag_elem_refelem
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          ReferencePoint_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	3 March 2021
+! summary: 	This data type defines a reference point element
+!
+!{!pages/ReferencePoint.md}
+
+TYPE, EXTENDS( ReferenceElement_ ) :: ReferencePoint_
+END TYPE ReferencePoint_
+
+PUBLIC :: ReferencePoint_
+
+TYPE( ReferencePoint_ ), PARAMETER, PUBLIC :: &
+  & TypeReferencePoint = ReferencePoint_( &
+  & XiJ=NULL( ), EntityCounts = [0,0,0,0], XiDimension = 0, Name = 0, &
+  & Topology = NULL( ), Order = 0, NSD=0  )
 
 !----------------------------------------------------------------------------
 !                                                          ReferenceLine_

@@ -31,7 +31,7 @@ CONTAINS
 MODULE PROCEDURE initiate_ref_Triangle
   INTEGER( I4B ) :: s(2)
   IF( PRESENT( XiJ ) ) THEN
-    CALL REALLOCATE( Obj % XiJ, 3, 3 )
+    CALL REALLOCATE( Obj%XiJ, 3, 3 )
     s = SHAPE( XiJ )
     Obj%XiJ = XiJ
   ELSE
@@ -452,58 +452,58 @@ MODULE PROCEDURE LagrangeElement_Triangle
   INTEGER( I4B ) :: I, NNS, NSD
 
   CALL DeallocateData( Obj )
-  Obj % XiJ = EquidistanceLIP_Triangle( RefElem%XiJ(1:3, 1:3), Order )
-  NSD = RefElem % NSD
-  Obj % LagrangeElement => RefElem % LagrangeElement
+  Obj%XiJ = EquidistanceLIP_Triangle( RefElem%XiJ(1:3, 1:3), Order )
+  NSD = RefElem%NSD
+  Obj%LagrangeElement => RefElem%LagrangeElement
   SELECT CASE( Order )
   CASE( 1 )
     NNS = 3
-    Obj % EntityCounts = [NNS, 3, 1, 0]
-    Obj % XiDimension = 2
-    Obj % Name = Triangle3
-    Obj % Order = Order
-    Obj % NSD = NSD
-    ALLOCATE( Obj % Topology( SUM( Obj % EntityCounts) ) )
+    Obj%EntityCounts = [NNS, 3, 1, 0]
+    Obj%XiDimension = 2
+    Obj%Name = Triangle3
+    Obj%Order = Order
+    Obj%NSD = NSD
+    ALLOCATE( Obj%Topology( SUM( Obj%EntityCounts) ) )
     DO I = 1, NNS
-      Obj % Topology( I ) = ReferenceTopology( [I], Point )
+      Obj%Topology( I ) = ReferenceTopology( [I], Point )
     END DO
-    Obj % Topology( NNS + 1 ) = ReferenceTopology( [1, 2], Line2 )
-    Obj % Topology( NNS + 2 ) = ReferenceTopology( [2, 3], Line2 )
-    Obj % Topology( NNS + 3 ) = ReferenceTopology( [3, 1], Line2 )
-    Obj % Topology( NNS + 4 ) = ReferenceTopology( [1, 2, 3], Obj % Name )
+    Obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2], Line2 )
+    Obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3], Line2 )
+    Obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 1], Line2 )
+    Obj%Topology( NNS + 4 ) = ReferenceTopology( [1, 2, 3], Obj%Name )
 
   CASE( 2 )
     NNS = 6
-    Obj % EntityCounts = [NNS, 3, 1, 0]
-    Obj % XiDimension = 2
-    Obj % Name = Triangle6
-    Obj % Order = Order
-    Obj % NSD = NSD
-    ALLOCATE( Obj % Topology( SUM( Obj % EntityCounts) ) )
+    Obj%EntityCounts = [NNS, 3, 1, 0]
+    Obj%XiDimension = 2
+    Obj%Name = Triangle6
+    Obj%Order = Order
+    Obj%NSD = NSD
+    ALLOCATE( Obj%Topology( SUM( Obj%EntityCounts) ) )
     DO I = 1, NNS
-      Obj % Topology( I ) = ReferenceTopology( [I], Point )
+      Obj%Topology( I ) = ReferenceTopology( [I], Point )
     END DO
-    Obj % Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 4], Line3 )
-    Obj % Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 5], Line3 )
-    Obj % Topology( NNS + 3 ) = ReferenceTopology( [3, 1, 6], Line3 )
-    Obj % Topology( NNS + 4 ) = ReferenceTopology( [1, 2, 3, 4, 5, 6], Obj % Name )
+    Obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 4], Line3 )
+    Obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 5], Line3 )
+    Obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 1, 6], Line3 )
+    Obj%Topology( NNS + 4 ) = ReferenceTopology( [1, 2, 3, 4, 5, 6], Obj%Name )
 
   CASE( 3 )
     NNS = 10
-    Obj % EntityCounts = [NNS, 3, 1, 0]
-    Obj % XiDimension = 2
-    Obj % Name = Triangle10
-    Obj % Order = Order
-    Obj % NSD = NSD
-    ALLOCATE( Obj % Topology( SUM( Obj % EntityCounts) ) )
+    Obj%EntityCounts = [NNS, 3, 1, 0]
+    Obj%XiDimension = 2
+    Obj%Name = Triangle10
+    Obj%Order = Order
+    Obj%NSD = NSD
+    ALLOCATE( Obj%Topology( SUM( Obj%EntityCounts) ) )
     DO I = 1, NNS
-      Obj % Topology( I ) = ReferenceTopology( [I], Point )
+      Obj%Topology( I ) = ReferenceTopology( [I], Point )
     END DO
-    Obj % Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 4, 5], Line4 )
-    Obj % Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 6, 7], Line4 )
-    Obj % Topology( NNS + 3 ) = ReferenceTopology( [3, 1, 8, 9], Line4 )
-    Obj % Topology( NNS + 4 ) = ReferenceTopology( &
-      & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], Obj % Name )
+    Obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 4, 5], Line4 )
+    Obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 6, 7], Line4 )
+    Obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 1, 8, 9], Line4 )
+    Obj%Topology( NNS + 4 ) = ReferenceTopology( &
+      & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], Obj%Name )
   END SELECT
 END PROCEDURE LagrangeElement_Triangle
 

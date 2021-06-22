@@ -32,15 +32,15 @@ MODULE PROCEDURE space_nitsche_mat_1
   INTEGER( I4B ) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j
   REAL( DFP ), ALLOCATABLE :: SBar( :, : ), DummyMat( :, : )
 
-  nns1 = SIZE( Test % N, 1 ); nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 ); nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 ); nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 ); nsd = Trial%RefElem%NSD
   isLamNod = .FALSE.; isMuNod = .FALSE.; isEvecNod = .FALSE.
-  IF( Lambda % DefineOn .EQ. Nodal ) isLamNod = .TRUE.
-  IF( Mu % DefineOn .EQ. Nodal ) isMuNod = .TRUE.
-  IF( EVec % DefineOn .EQ. Nodal ) isEvecNod = .TRUE.
+  IF( Lambda%DefineOn .EQ. Nodal ) isLamNod = .TRUE.
+  IF( Mu%DefineOn .EQ. Nodal ) isMuNod = .TRUE.
+  IF( EVec%DefineOn .EQ. Nodal ) isEvecNod = .TRUE.
 
   !<--- LamBar and MuBar contains space varying values of Lam and Mu
-  SELECT CASE( Lambda % VarType )
+  SELECT CASE( Lambda%VarType )
   CASE( Constant )
 
     ALLOCATE( LamBar( nips ) )
@@ -59,7 +59,7 @@ MODULE PROCEDURE space_nitsche_mat_1
     END IF
   END SELECT
 
-  SELECT CASE( Mu % VarType )
+  SELECT CASE( Mu%VarType )
   CASE( Constant )
 
     ALLOCATE( MuBar( nips ) )
@@ -78,7 +78,7 @@ MODULE PROCEDURE space_nitsche_mat_1
     END IF
   END SELECT
 
-  SELECT CASE( Evec % VarType )
+  SELECT CASE( Evec%VarType )
   CASE( Constant )
 
     ALLOCATE( EvecBar( nsd, nips ) )
@@ -103,7 +103,7 @@ MODULE PROCEDURE space_nitsche_mat_1
   END SELECT
 
   !<--- make integration parameters
-  RealVal = Trial % Ws * Trial % Js * Trial % Thickness
+  RealVal = Trial%Ws * Trial%Js * Trial%Thickness
 
   !<--- allocate Ans
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
@@ -112,18 +112,18 @@ MODULE PROCEDURE space_nitsche_mat_1
   DO ips = 1, nips
     DummyMat = &
     &   LamBar( ips ) * RealVal( ips ) &
-    & * DOT_PRODUCT( Trial % normal(1:nsd, ips),  EvecBar(1:nsd, ips) ) &
+    & * DOT_PRODUCT( Trial%normal(1:nsd, ips),  EvecBar(1:nsd, ips) ) &
     & * Eye3( 1:nsd, 1:nsd ) &
     & + 2.0 * MuBar( ips ) * RealVal( ips ) &
-    & * OUTERPROD(  a = Trial % normal( 1 : nsd, ips ), &
+    & * OUTERPROD(  a = Trial%normal( 1 : nsd, ips ), &
                 & b = EvecBar( 1 : nsd, ips ), &
                 & Sym = .TRUE. )
 
-    SBar = MATMUL( Trial % dNdXt( :, :, ips ), DummyMat )
+    SBar = MATMUL( Trial%dNdXt( :, :, ips ), DummyMat )
 
     DummyMat = RESHAPE( SBar, [nsd*nns2, 1] )
 
-    SBar = OUTERPROD( Test % N( :, ips ), DummyMat( :, 1 ) )
+    SBar = OUTERPROD( Test%N( :, ips ), DummyMat( :, 1 ) )
 
     r1 = 0; r2 = 0
     DO i = 1, nsd
@@ -145,13 +145,13 @@ MODULE PROCEDURE space_nitsche_mat_3
     & SBar( :, : ), DummyMat( :, : )
   INTEGER( I4B ) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j
 
-  nns1 = SIZE( Test % N, 1 ); nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 ); nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 ); nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 ); nsd = Trial%RefElem%NSD
   isEvecNod = .FALSE.
 
-  IF( EVec % DefineOn .EQ. Nodal ) isEvecNod = .TRUE.
+  IF( EVec%DefineOn .EQ. Nodal ) isEvecNod = .TRUE.
 
-  SELECT CASE( Evec % VarType )
+  SELECT CASE( Evec%VarType )
   CASE( Constant )
 
     ALLOCATE( EvecBar( nsd, nips ) )
@@ -176,7 +176,7 @@ MODULE PROCEDURE space_nitsche_mat_3
   END SELECT
 
   !<--- make integration parameters
-  RealVal = Trial % Ws * Trial % Thickness * Trial % Js
+  RealVal = Trial%Ws * Trial%Thickness * Trial%Js
 
   !<--- allocate Ans
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
@@ -185,16 +185,16 @@ MODULE PROCEDURE space_nitsche_mat_3
   DO ips = 1, nips
     DummyMat = &
     &   Lambda * RealVal( ips ) &
-    & * DOT_PRODUCT( Trial % normal(1:nsd, ips),  EvecBar(1:nsd, ips) ) &
+    & * DOT_PRODUCT( Trial%normal(1:nsd, ips),  EvecBar(1:nsd, ips) ) &
     & * Eye3( 1:nsd, 1:nsd ) &
     & + 2.0 * Mu * RealVal( ips ) &
-    & * OUTERPROD(  a = Trial % normal( 1 : nsd, ips ), &
+    & * OUTERPROD(  a = Trial%normal( 1 : nsd, ips ), &
                 & b = EvecBar( 1 : nsd, ips ), &
                 & Sym = .TRUE. )
 
-    SBar = MATMUL( Trial % dNdXt( :, :, ips ), DummyMat )
+    SBar = MATMUL( Trial%dNdXt( :, :, ips ), DummyMat )
     DummyMat = RESHAPE( SBar, [nsd*nns2, 1] )
-    SBar = OUTERPROD( a = Test % N( :, ips ), b = DummyMat( :, 1 ) )
+    SBar = OUTERPROD( a = Test%N( :, ips ), b = DummyMat( :, 1 ) )
 
     r1 = 0; r2 = 0
     DO i = 1, nsd
@@ -214,15 +214,15 @@ MODULE PROCEDURE space_nitsche_mat_5
   REAL( DFP ), ALLOCATABLE :: RealVal( : ), SBar( : ), cdNdXt( :, : )
   INTEGER( I4B ) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j, c1, c2
 
-  nns1 = SIZE( Test % N, 1 ); nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 ); nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 ); nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 ); nsd = Trial%RefElem%NSD
   !<--- make integration parameters
-  RealVal = Trial % Ws * Trial % Thickness * Trial % Js
+  RealVal = Trial%Ws * Trial%Thickness * Trial%Js
   !<--- allocate Ans
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
   ALLOCATE( cdNdXt( SIZE(Trial%N,1), SIZE(Trial%N,2) ) )
   DO i = 1, SIZE(Trial%N,2)
-    cdNdXt( :, i ) = MATMUL( Trial % dNdXt( :, :, i ), Trial%Normal(1:nsd,i))
+    cdNdXt( :, i ) = MATMUL( Trial%dNdXt( :, :, i ), Trial%Normal(1:nsd,i))
   END DO
 
   DO ips = 1, nips
@@ -258,10 +258,10 @@ MODULE PROCEDURE space_nitsche_mat_7
     & LamBar(:), MuBar(:)
   INTEGER( I4B ) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j, c1, c2
 
-  nns1 = SIZE( Test % N, 1 ); nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 ); nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 ); nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 ); nsd = Trial%RefElem%NSD
 
-  SELECT CASE( Lambda % VarType )
+  SELECT CASE( Lambda%VarType )
   CASE( Constant )
 
     ALLOCATE( LamBar( nips ) )
@@ -273,14 +273,14 @@ MODULE PROCEDURE space_nitsche_mat_7
     RealVal = getValues( Lambda, TypeFEVariableScalar, &
       & TypeFEVariableSpace )
 
-    IF( Lambda % DefineOn .EQ. Nodal  ) THEN
+    IF( Lambda%DefineOn .EQ. Nodal  ) THEN
       LamBar = Interpolation( Trial, RealVal )
     ELSE
       LamBar = RealVal
     END IF
   END SELECT
 
-  SELECT CASE( Mu % VarType )
+  SELECT CASE( Mu%VarType )
   CASE( Constant )
 
     ALLOCATE( MuBar( nips ) )
@@ -292,7 +292,7 @@ MODULE PROCEDURE space_nitsche_mat_7
     RealVal = getValues( Mu, TypeFEVariableScalar, &
       & TypeFEVariableSpace )
 
-    IF( Mu % DefineOn .EQ. Nodal  ) THEN
+    IF( Mu%DefineOn .EQ. Nodal  ) THEN
       MuBar = Interpolation( Trial, RealVal )
     ELSE
       MuBar = RealVal
@@ -300,12 +300,12 @@ MODULE PROCEDURE space_nitsche_mat_7
   END SELECT
 
   !<--- make integration parameters
-  RealVal = Trial % Ws * Trial % Thickness * Trial % Js
+  RealVal = Trial%Ws * Trial%Thickness * Trial%Js
   !<--- allocate Ans
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
   ALLOCATE( cdNdXt( SIZE(Trial%N,1), SIZE(Trial%N,2) ) )
   DO i = 1, SIZE(Trial%N,2)
-    cdNdXt( :, i ) = MATMUL( Trial % dNdXt( :, :, i ), Trial%Normal(1:nsd,i))
+    cdNdXt( :, i ) = MATMUL( Trial%dNdXt( :, :, i ), Trial%Normal(1:nsd,i))
   END DO
 
   DO ips = 1, nips
@@ -343,14 +343,14 @@ MODULE PROCEDURE space_nitsche_mat_2
   REAL( DFP ), ALLOCATABLE :: AlphaBar( : ), EvecBar( :, : ), RealVal( : )
   REAL( DFP ), ALLOCATABLE :: DummyMat( :, : )
 
-  nns1 = SIZE( Test % N, 1 ); nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 ); nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 ); nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 ); nsd = Trial%RefElem%NSD
 
   isAlphaNod = .FALSE.; isEvecNod = .FALSE.
-  IF( Alpha % DefineOn .EQ. Nodal ) isAlphaNod = .TRUE.
-  IF( Evec % DefineOn .EQ. Nodal ) isEvecNod = .TRUE.
+  IF( Alpha%DefineOn .EQ. Nodal ) isAlphaNod = .TRUE.
+  IF( Evec%DefineOn .EQ. Nodal ) isEvecNod = .TRUE.
 
-  SELECT CASE( Alpha % VarType )
+  SELECT CASE( Alpha%VarType )
   CASE( Constant )
 
     ALLOCATE( AlphaBar( nips ) )
@@ -369,7 +369,7 @@ MODULE PROCEDURE space_nitsche_mat_2
     END IF
   END SELECT
 
-  SELECT CASE( Evec % VarType )
+  SELECT CASE( Evec%VarType )
   CASE( Constant )
 
     ALLOCATE( EvecBar( nsd, nips ) )
@@ -393,12 +393,12 @@ MODULE PROCEDURE space_nitsche_mat_2
     DEALLOCATE( Ans )
   END SELECT
 
-  RealVal = Trial % Ws * Trial % Js * Trial % Thickness * AlphaBar
+  RealVal = Trial%Ws * Trial%Js * Trial%Thickness * AlphaBar
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
 
   DO ips = 1, nips
     DummyMat = RealVal( ips ) * &
-      & OUTERPROD( a = Test % N( :, ips ), b = Trial % N( :, ips ) )
+      & OUTERPROD( a = Test%N( :, ips ), b = Trial%N( :, ips ) )
     c1 = 0; c2 = 0
     DO j = 1, nsd
       c1 = c2 + 1; c2 = j * nns2; r1 = 0; r2 = r1
@@ -424,16 +424,16 @@ MODULE PROCEDURE space_nitsche_mat_4
   REAL( DFP ), ALLOCATABLE :: EvecBar( :, : ), RealVal( : )
   REAL( DFP ), ALLOCATABLE :: DummyMat( :, : )
 
-  nns1 = SIZE( Test % N, 1 ); nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 ); nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 ); nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 ); nsd = Trial%RefElem%NSD
 
-  IF( Evec % DefineOn .EQ. Nodal ) THEN
+  IF( Evec%DefineOn .EQ. Nodal ) THEN
     isEvecNod = .TRUE.
   ELSE
     isEvecNod = .FALSE.
   END IF
 
-  SELECT CASE( Evec % VarType )
+  SELECT CASE( Evec%VarType )
   CASE( Constant )
 
     ALLOCATE( EvecBar( nsd, nips ) )
@@ -457,12 +457,12 @@ MODULE PROCEDURE space_nitsche_mat_4
     DEALLOCATE( Ans )
   END SELECT
 
-  RealVal = Trial % Ws * Trial % Js * Trial % Thickness * Alpha
+  RealVal = Trial%Ws * Trial%Js * Trial%Thickness * Alpha
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
 
   DO ips = 1, nips
     DummyMat = RealVal( ips ) * &
-      & OUTERPROD( a = Test % N( :, ips ), b = Trial % N( :, ips ) )
+      & OUTERPROD( a = Test%N( :, ips ), b = Trial%N( :, ips ) )
     c1 = 0; c2 = 0
     DO j = 1, nsd
       c1 = c2 + 1; c2 = j * nns2; r1 = 0; r2 = r1

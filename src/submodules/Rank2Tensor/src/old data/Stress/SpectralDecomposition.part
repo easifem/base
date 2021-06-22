@@ -34,12 +34,12 @@
     CLASS( Stress_ ), INTENT( IN ) ::  Obj
     REAL( DFP ), ALLOCATABLE, INTENT( OUT ) ::  EigenValues( : ), &
                                                 EigenVectors( :, : )
-    
+
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
 
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
         "Stress_Class.f90>>SpectralDecomposition.part", &
@@ -53,15 +53,15 @@
 
     T = Obj
 
-    CALL T % Eigens( EigenValues = Eigenvalues, EigenVectors = EigenVectors )
+    CALL T%Eigens( EigenValues = Eigenvalues, EigenVectors = EigenVectors )
 
     CALL Check_Error( &
     "Stress_Class.f90>>SpectralDecomposition.part>>m_Eigen_1()", &
     "Traceback ---> &
-    CALL T % Eigens( EigenValues = Eigenvalues, EigenVectors = EigenVectors )"& 
+    CALL T%Eigens( EigenValues = Eigenvalues, EigenVectors = EigenVectors )"&
     )
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END SUBROUTINE Eigens
 
@@ -86,7 +86,7 @@ REAL( DFP ) FUNCTION  PrincipalValue( Obj )
     TYPE( Rank2Tensor_ ) :: T
 
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
         "Stress_Class.f90>>SpectralDecomposition.part", &
@@ -102,7 +102,7 @@ REAL( DFP ) FUNCTION  PrincipalValue( Obj )
 
     PrincipalValue = Tensor_PrincipalValue( T )
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
 END FUNCTION  PrincipalValue
 
@@ -127,8 +127,8 @@ REAL( DFP ) FUNCTION SpectralRadius( Obj )
     T = Obj
 
     SpectralRadius = Tensor_SpectralRadius( T )
-    
-    CALL T % DeallocateData( )
+
+    CALL T%DeallocateData( )
 
 END FUNCTION SpectralRadius
 
@@ -169,7 +169,7 @@ END FUNCTION EigenValues
  FUNCTION EigenVectors( Obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       -   Returns EigenVectors 
+!       -   Returns EigenVectors
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy arguments

@@ -12,7 +12,7 @@
 !
 !   Type:: Part of Module
 !
-!   Description ::  
+!   Description ::
 !       -   This part includes subroutine for getting Kirchhoff Stress from
 !           any other Stress Measures
 !   Hosting File ::
@@ -42,7 +42,7 @@
     TYPE( Rank2Tensor_ ) :: T
     REAL( DFP ) :: J
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
             "Stress_Class.f90>>KirchhoffStress.part", &
@@ -56,16 +56,16 @@
 
     T = Obj
 
-    SELECT CASE( TRIM( Obj % StressType ) )
+    SELECT CASE( TRIM( Obj%StressType ) )
 
         CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
 
             J = .det. F
             getKirchhoffStress = T * J
-            
+
         CASE( "Kirchhoff", "kirchhoff", "Tau", "kirchoff", "Kirchoff", "tau" )
 
-            getKirchhoffStress = T 
+            getKirchhoffStress = T
 
         CASE( "PK2", "Pk2", "pk2", "PK-2", "pk-2", "S", "s" )
 
@@ -84,18 +84,18 @@
             CALL Err_Msg( &
                 "Stress_Class.f90>>KirchhoffStress.part", &
                 "getKirchhoffStress( Obj, F )", &
-                "No case found for Obj % StressType. &
+                "No case found for Obj%StressType. &
                 Program Stopped!!!" &
             )
             STOP
 
     END SELECT
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION getKirchhoffStress
 
 !------------------------------------------------------------------------------
-!                                                         
+!
 !------------------------------------------------------------------------------
 

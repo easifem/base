@@ -25,7 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE set_thickness
-  Obj % Thickness = MATMUL( Val, N )
+  Obj%Thickness = MATMUL( Val, N )
 END PROCEDURE set_thickness
 
 !----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ END PROCEDURE stsd_set_thickness
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE set_coord
-  Obj % Coord = MATMUL( Val, N )
+  Obj%Coord = MATMUL( Val, N )
 END PROCEDURE set_coord
 
 !----------------------------------------------------------------------------
@@ -61,22 +61,22 @@ MODULE PROCEDURE set_Js
   INTEGER( I4B ) :: xidim, nsd, nips, ips
   REAL( DFP ) :: aa, bb, ab
 
-  xidim = Obj % RefElem % XiDimension
-  nsd = Obj % RefElem % nsd
-  nips = SIZE( Obj % N, 2 )
+  xidim = Obj%RefElem%XiDimension
+  nsd = Obj%RefElem%nsd
+  nips = SIZE( Obj%N, 2 )
 
   DO ips = 1, nips
     IF( nsd .EQ. xidim ) THEN
-      Obj % Js( ips ) = det( Obj % Jacobian( :, :, ips ) )
+      Obj%Js( ips ) = det( Obj%Jacobian( :, :, ips ) )
     ELSE IF( xidim .EQ. 1 .AND. xidim .NE. nsd ) THEN
-      Obj % Js( ips ) = &
-        & SQRT( DOT_PRODUCT( Obj % Jacobian( :, 1, ips ), &
-        & Obj % Jacobian( :, 1, ips ) ) )
+      Obj%Js( ips ) = &
+        & SQRT( DOT_PRODUCT( Obj%Jacobian( :, 1, ips ), &
+        & Obj%Jacobian( :, 1, ips ) ) )
     ELSE IF( xidim .EQ. 2 .AND. xidim .NE. nsd ) THEN
-      aa = DOT_PRODUCT( Obj % Jacobian( :, 1, ips ), Obj % Jacobian(:,1,ips))
-      bb = DOT_PRODUCT( Obj % Jacobian( :, 2, ips ), Obj % Jacobian(:,2,ips))
-      ab = DOT_PRODUCT( Obj % Jacobian( :, 1, ips ), Obj % Jacobian(:,2,ips))
-      Obj % Js( ips ) = SQRT( aa * bb - ab * ab )
+      aa = DOT_PRODUCT( Obj%Jacobian( :, 1, ips ), Obj%Jacobian(:,1,ips))
+      bb = DOT_PRODUCT( Obj%Jacobian( :, 2, ips ), Obj%Jacobian(:,2,ips))
+      ab = DOT_PRODUCT( Obj%Jacobian( :, 1, ips ), Obj%Jacobian(:,2,ips))
+      Obj%Js( ips ) = SQRT( aa * bb - ab * ab )
     END IF
   END DO
 END PROCEDURE set_Js
@@ -90,18 +90,18 @@ MODULE PROCEDURE set_dNdXt_internally
   INTEGER( I4B ) :: NSD, XiDim, ips, nips
   REAL( DFP ), ALLOCATABLE :: InvJacobian( :, :, : )
 
-  NSD = Obj % RefElem % NSD
-  XiDim = Obj % RefElem % XiDimension
+  NSD = Obj%RefElem%NSD
+  XiDim = Obj%RefElem%XiDimension
   IF( NSD .NE. XiDim ) THEN
-    Obj % dNdXt = 0.0_DFP
+    Obj%dNdXt = 0.0_DFP
   ELSE
     ! Compute inverse of Jacobian
-    nips = SIZE( Obj % N, 2 )
+    nips = SIZE( Obj%N, 2 )
     ALLOCATE( InvJacobian( NSD, NSD, nips ) )
-    CALL Inv( InvA = InvJacobian, A = Obj % Jacobian )
+    CALL Inv( InvA = InvJacobian, A = Obj%Jacobian )
     DO ips = 1, nips
-      Obj % dNdXt( :, :, ips ) = &
-        & MATMUL( Obj % dNdXi( :, :, ips ), InvJacobian( :, :, ips ) )
+      Obj%dNdXt( :, :, ips ) = &
+        & MATMUL( Obj%dNdXi( :, :, ips ), InvJacobian( :, :, ips ) )
     END DO
     DEALLOCATE( InvJacobian )
   END IF
@@ -132,11 +132,11 @@ MODULE PROCEDURE stsd_set_dNTdt
   INTEGER( I4B ) :: ip
 
   !! get mesh velocity at space integration points
-  v = MATMUL(MATMUL( Val, Obj%dTdTheta/Obj % Jt ), Obj%N )
-  CALL Reallocate( Obj % dNTdt, SIZE( Obj % N, 1 ),  SIZE( Obj % T ), &
-    & SIZE( Obj % N, 2 ) )
-  DO ip = 1, SIZE( Obj % N, 2 )
-    Obj % dNTdt( :, :, ip ) = OUTERPROD(Obj%N(:,ip), Obj%dTdTheta/Obj%Jt) &
+  v = MATMUL(MATMUL( Val, Obj%dTdTheta/Obj%Jt ), Obj%N )
+  CALL Reallocate( Obj%dNTdt, SIZE( Obj%N, 1 ),  SIZE( Obj%T ), &
+    & SIZE( Obj%N, 2 ) )
+  DO ip = 1, SIZE( Obj%N, 2 )
+    Obj%dNTdt( :, :, ip ) = OUTERPROD(Obj%N(:,ip), Obj%dTdTheta/Obj%Jt) &
       & - MATMUL( Obj%dNTdXt(:,:,:,ip), v(:,ip) )
   END DO
 END PROCEDURE stsd_set_dNTdt

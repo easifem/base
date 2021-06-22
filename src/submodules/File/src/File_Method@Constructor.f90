@@ -83,7 +83,7 @@ MODULE PROCEDURE open_file_a
     CALL Close( Obj )
   END IF
 
-  tsize = LEN_TRIM( Obj % Access )
+  tsize = LEN_TRIM( Obj%Access )
 
   IF( tsize .EQ. 0 ) THEN
     IF( Obj%isBinary ) THEN
@@ -124,7 +124,7 @@ MODULE PROCEDURE open_file_a
   END IF
 
   IF( Obj%IOSTAT .NE. 0 ) THEN
-    Obj % isOpen = .FALSE.
+    Obj%isOpen = .FALSE.
     CALL ErrorMSG( &
       & Msg = "Could not open the file", &
       & File = "File_Method@Constructor.f90", &
@@ -133,7 +133,7 @@ MODULE PROCEDURE open_file_a
       & UnitNo = stderr )
     STOP
   ELSE
-    Obj % isOpen = .TRUE.
+    Obj%isOpen = .TRUE.
   END IF
 
 END PROCEDURE open_file_a
@@ -222,9 +222,9 @@ END PROCEDURE open_file_append_a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE close_file
-  IF( Obj % isOpen ) THEN
-    CLOSE( Obj % Unitno )
-    Obj % isOpen = .FALSE.
+  IF( Obj%isOpen ) THEN
+    CLOSE( Obj%Unitno )
+    Obj%isOpen = .FALSE.
   END IF
 END PROCEDURE close_file
 

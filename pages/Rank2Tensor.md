@@ -40,11 +40,11 @@ On 13-July-2018, when I tried to compile this module using ifort then there was 
 The subroutine `Initiate()` can be used to create the `Tensor_` class.
 
 ```fortran
-CALL Obj % Initiate( )
-CALL Obj % Initiate( Mat2( :, : ) )
-CALL Obj % Initiate( Scalar )
-CALL Obj % Initiate( VoigtVec, VoigtType )
-CALL Obj % Initiate( Obj2 )
+CALL Obj%Initiate( )
+CALL Obj%Initiate( Mat2( :, : ) )
+CALL Obj%Initiate( Scalar )
+CALL Obj%Initiate( VoigtVec, VoigtType )
+CALL Obj%Initiate( Obj2 )
 ```
 
 In addition we can use the function `Rank2Tensor()` which returns the `Rank2Tensor_` type.
@@ -74,7 +74,7 @@ Obj = Mat2( :, : )
 ```
 
 ```fortran
-CALL Obj % Initiate( )
+CALL Obj%Initiate( )
 Obj = Rank2Tensor( )
 Obj => Rank2Tensor_Pointer( )
 ```
@@ -82,7 +82,7 @@ Obj => Rank2Tensor_Pointer( )
 The above call will create the `Tensor_` object with all zero entries and NSD = 3.
 
 ```fortran
-CALL Obj % Initiate( Mat2 )
+CALL Obj%Initiate( Mat2 )
 Obj = Rank2Tensor( Mat2 )
 Obj => Rank2Tensor_Pointer( Mat2 )
 ```
@@ -90,7 +90,7 @@ Obj => Rank2Tensor_Pointer( Mat2 )
 The above call will create the `Tensor_` object. Depending upon the size of `Mat2(:,:)` NSD is decided.
 
 ```fortran
-CALL Obj % Initiate( Scalar )
+CALL Obj%Initiate( Scalar )
 Obj = Rank2Tensor( Scalar )
 Obj => Rank2Tensor_Pointer( Scalar )
 ```
@@ -98,7 +98,7 @@ Obj => Rank2Tensor_Pointer( Scalar )
 The above call will fill all entries with the scalar, and `NSD` will be set to 3.
 
 ```fortran
-CALL Obj % Initiate( VoigtVec, VoigtType )
+CALL Obj%Initiate( VoigtVec, VoigtType )
 Obj = Rank2Tensor( VoigtVec, VoigtType )
 Obj => Rank2Tensor_Pointer( VoigtVec, VoigtType )
 ```
@@ -106,7 +106,7 @@ Obj => Rank2Tensor_Pointer( VoigtVec, VoigtType )
 The above call will make tensor object from the voigt vector. `VoigtType` can be `Stress` or `Strain`.
 
 ```fortran
-CALL Obj % Initiate( Obj2 )
+CALL Obj%Initiate( Obj2 )
 Obj = Rank2Tensor( Obj2 )
 Obj => Rank2Tensor_Pointer( Obj2 )
 ```
@@ -116,16 +116,16 @@ The above call will make tensor object from other tensor object.
 ### Checking the status and deallocating the data
 
 ```fortran
-CALL Obj % isInitiated( )
-CALL Obj % DeallocateData( )
+CALL Obj%isInitiated( )
+CALL Obj%DeallocateData( )
 ```
 
 ### Setting and getting the NSD
 
 ```fortran
-NSD = Obj % getNSD( )
+NSD = Obj%getNSD( )
 NSD = .NSD. Obj
-CALL Obj % setNSD( NSD )
+CALL Obj%setNSD( NSD )
 ```
 
 ### Getting the tensor
@@ -133,8 +133,8 @@ CALL Obj % setNSD( NSD )
 We can get the Tensor in a matrix as well as voigt vector. To get tensor in voigt vector we need to call `getTensor()`
 
 ```fortran
-CALL Obj % getTensor( Mat )
-CALL Obj % getTensor( VoigtVec, VoigtType )
+CALL Obj%getTensor( Mat )
+CALL Obj%getTensor( VoigtVec, VoigtType )
 ```
 
 Both `Mat` and `VoigtVec` must be allocatable as they are reallocated by the method.
@@ -481,11 +481,11 @@ MaterialJaconbianObj .Contraction. Obj
 ## Construction Methods
 
 ```fortran
-CALL Obj % initiate( )
-CALL Obj % Initiate( Mat )
-CALL Obj % Initiate( Scalar )
-CALL Obj % Initiate( VoigtVec, VoigtType )
-CALL Obj % Initiate( Obj2 )
+CALL Obj%initiate( )
+CALL Obj%Initiate( Mat )
+CALL Obj%Initiate( Scalar )
+CALL Obj%Initiate( VoigtVec, VoigtType )
+CALL Obj%Initiate( Obj2 )
 ```
 
 ```fortran
@@ -513,10 +513,10 @@ Interface
 ```fortran
  SUBROUTINE Initiate1( Obj )
     CLASS( Tensor_ ), INTENT( INOUT ) :: Obj
-    IF( ALLOCATED( Obj % T ) ) DEALLOCATE( Obj % T )
-    ALLOCATE( Obj % T( 3, 3 ) )
-    Obj % NSD = 3
-    Obj % T = 0.0_DFP
+    IF( ALLOCATED( Obj%T ) ) DEALLOCATE( Obj%T )
+    ALLOCATE( Obj%T( 3, 3 ) )
+    Obj%NSD = 3
+    Obj%T = 0.0_DFP
  END SUBROUTINE Initiate1
 ```
 
@@ -547,9 +547,9 @@ Interface
     CLASS( Tensor_ ), INTENT( INOUT ) :: Obj
     REAL( DFP ), INTENT( IN ) :: A
 
-    IF( ALLOCATED( Obj % T ) ) DEALLOCATE( Obj % T )
-    ALLOCATE( OBj % T( 3, 3 ) )
-    Obj % T = A
+    IF( ALLOCATED( Obj%T ) ) DEALLOCATE( Obj%T )
+    ALLOCATE( OBj%T( 3, 3 ) )
+    Obj%T = A
  END SUBROUTINE Initiate3
 ```
 
@@ -598,7 +598,7 @@ Interface
     CLASS( Tensor_ ), POINTER :: Constructor1
 
     ALLOCATE( Tensor_ :: Constructor1 )
-    CALL Constructor1 % Initiate( )
+    CALL Constructor1%Initiate( )
  END FUNCTION Constructor1
 ```
 
@@ -614,7 +614,7 @@ Interface
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: A
     Error_Flag = .FALSE.
     ALLOCATE( Tensor_ :: Constructor2 )
-    CALL Constructor2 % Initiate( A )
+    CALL Constructor2%Initiate( A )
  END FUNCTION Constructor2
 ```
 
@@ -632,7 +632,7 @@ Interface
     Error_Flag = .FALSE.
 
     ALLOCATE( Tensor_ :: Constructor3 )
-    CALL Constructor3 % Initiate( A )
+    CALL Constructor3%Initiate( A )
  END FUNCTION Constructor3
 ```
 
@@ -651,7 +651,7 @@ Interface
 
     Error_Flag = .FALSE.
     ALLOCATE( Tensor_ :: Constructor4 )
-    CALL Constructor4 % Initiate( A, VoigtType )
+    CALL Constructor4%Initiate( A, VoigtType )
  END FUNCTION Constructor4
 ```
 
@@ -667,7 +667,7 @@ Interface
     CLASS( Tensor_ ), INTENT( IN ) :: Obj
 
     ALLOCATE( Constructor10 )
-    CALL Constructor10 % Initiate( Obj )
+    CALL Constructor10%Initiate( Obj )
  END FUNCTION Constructor10
 ```
 
@@ -683,7 +683,7 @@ Interface
  FUNCTION Constructor5( )
     TYPE( Tensor_ ) :: Constructor5
 
-    CALL Constructor5 % Initiate( )
+    CALL Constructor5%Initiate( )
  END FUNCTION Constructor5
 ```
 
@@ -699,7 +699,7 @@ Interface
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: A
 
     Error_Flag = .FALSE.
-    CALL Constructor6 % Initiate( A )
+    CALL Constructor6%Initiate( A )
  END FUNCTION Constructor6
 ```
 
@@ -716,7 +716,7 @@ Interface
 
     Error_Flag = .FALSE.
 
-    CALL Constructor7 % Initiate( A )
+    CALL Constructor7%Initiate( A )
  END FUNCTION Constructor7
 ```
 
@@ -735,11 +735,11 @@ Interface
 
 
     Error_Flag = .FALSE.
-    CALL Constructor8 % Initiate( A, VoigtType )
+    CALL Constructor8%Initiate( A, VoigtType )
 
     CALL Check_Error( &
         "Tensor_Class.f90>>Constructor.part>>Constructor8()", &
-        "TraceBack --->  CALL Constructor8 % Initiate( A, VoigtType )" &
+        "TraceBack --->  CALL Constructor8%Initiate( A, VoigtType )" &
         )
  END FUNCTION Constructor8
 ```
@@ -755,7 +755,7 @@ Interface
     TYPE( Tensor_ ) :: Constructor9
     CLASS( Tensor_ ), INTENT( IN ) :: Obj
 
-    CALL Constructor9 % Initiate( Obj )
+    CALL Constructor9%Initiate( Obj )
  END FUNCTION Constructor9
 ```
 
@@ -768,7 +768,7 @@ Interface
 ```fortran
  INTEGER( I4B ) FUNCTION getNSD( Obj )
     CLASS( Tensor_ ), INTENT( IN ) :: Obj
-    getNSD = Obj % NSD
+    getNSD = Obj%NSD
  END FUNCTION getNSD
 ```
 
@@ -783,7 +783,7 @@ Interface
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. Obj % isInitiated( ) ) THEN
+    IF( .NOT. Obj%isInitiated( ) ) THEN
         CALL Err_Msg(                                       &
                       "Tensor_Class.f90>>getTensor_1.part",   &
                       "getTensor_1()",                        &
@@ -795,7 +795,7 @@ Interface
     END IF
 
     IF( ALLOCATED( T )  ) DEALLOCATE( T )
-    T = Obj % T
+    T = Obj%T
 
 END SUBROUTINE getTensor_1
 ```
@@ -1055,7 +1055,7 @@ Vec2 = [1.d0] * T
 Examples
 
 ```fortran
-    CALL T % FreeThePointer( T )
+    CALL T%FreeThePointer( T )
 
     T => Rank2Tensor_Pointer( RESHAPE( [                  &
                                         1.d0, 1.d0, 1.d0, &
@@ -1066,7 +1066,7 @@ Examples
                                     )                     &
                             )
 
-    CALL T % Display( )
+    CALL T%Display( )
 
     DummyMat = T .Otimes. T
 
@@ -1169,7 +1169,7 @@ Type-1
  FUNCTION Obj_Add_Obj( Obj, Obj2 )
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj, Obj2
     REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Obj
-    Obj_Add_Obj = Obj % T + Obj2 % T
+    Obj_Add_Obj = Obj%T + Obj2%T
  END FUNCTION Obj_Add_Obj
 ```
 
@@ -1182,7 +1182,7 @@ Type-2
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
     REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Mat
-    Obj_Add_Mat = Obj % T + Mat
+    Obj_Add_Mat = Obj%T + Mat
  END FUNCTION Obj_Add_Mat
 ```
 
@@ -1195,7 +1195,7 @@ Type-3
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
     REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_Add_Obj
-    Mat_Add_Obj = Obj % T + Mat
+    Mat_Add_Obj = Obj%T + Mat
  END FUNCTION Mat_Add_Obj
 ```
 
@@ -1209,7 +1209,7 @@ Type-1
  FUNCTION Obj_Minus_Obj( Obj, Obj2 )
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj, Obj2
     REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Obj
-    Obj_Minus_Obj = Obj % T - Obj2 % T
+    Obj_Minus_Obj = Obj%T - Obj2%T
  END FUNCTION Obj_Minus_Obj
 ```
 
@@ -1222,7 +1222,7 @@ Type-2
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
     REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Mat
-    Obj_Minus_Mat = Obj % T - Mat
+    Obj_Minus_Mat = Obj%T - Mat
  END FUNCTION Obj_Minus_Mat
 ```
 
@@ -1235,7 +1235,7 @@ Type-3
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
     REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_Minus_Obj
-    Mat_Minus_Obj = Obj % T - Mat
+    Mat_Minus_Obj = Obj%T - Mat
  END FUNCTION Mat_Minus_Obj
 ```
 
@@ -1334,7 +1334,7 @@ Example
     Vec1 = [1.d0, 0.d0, 0.d0]
     Vec2 = [-1.d0, 1.d0, 0.d0]
 
-    CALL T % FreeThePointer( T )
+    CALL T%FreeThePointer( T )
     T => Rank2Tensor_Pointer( RESHAPE( [                  &
                                         1.d0, 1.d0, 1.d0, &
                                         2.d0, 2.d0, 2.d0, &
@@ -1486,7 +1486,7 @@ Method
  FUNCTION m_SymmetricPart( Obj )
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_SymmetricPart
-    m_SymmetricPart = 0.5_DFP * ( Obj % T + TRANSPOSE( Obj % T ) )
+    m_SymmetricPart = 0.5_DFP * ( Obj%T + TRANSPOSE( Obj%T ) )
  END FUNCTION m_SymmetricPart
 ```
 
@@ -1508,7 +1508,7 @@ Method
  FUNCTION m_AntiSymmetricPart( Obj )
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_AntiSymmetricPart
-    m_AntiSymmetricPart = 0.5_DFP * ( Obj % T - TRANSPOSE( Obj % T ) )
+    m_AntiSymmetricPart = 0.5_DFP * ( Obj%T - TRANSPOSE( Obj%T ) )
  END FUNCTION m_AntiSymmetricPart
 ```
 
@@ -1556,7 +1556,7 @@ Method
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_DeviatoricPart
 
-    m_DeviatoricPart = Obj % T - HydrostaticPart( Obj )
+    m_DeviatoricPart = Obj%T - HydrostaticPart( Obj )
 ```
 
 Function
@@ -1576,7 +1576,7 @@ Function
 Method
 
 ```fortran
-I = Obj % Trace( )
+I = Obj%Trace( )
 ```
 
 Returns the trace of Tensor object.
@@ -1591,7 +1591,7 @@ Returns the trace of fortran array `T`.
 
 ### Double_DotProduct
 
-There is a generic method _Double\_DotProduct_ and module-function called _Double\_DotProduct_. Therefore you can use this function e.g. `real_val = Obj % Double_DotProduct( ... )` as a method as well as a module-function `real_val = Double_DotProduct()`.
+There is a generic method _Double\_DotProduct_ and module-function called _Double\_DotProduct_. Therefore you can use this function e.g. `real_val = Obj%Double_DotProduct( ... )` as a method as well as a module-function `real_val = Double_DotProduct()`.
 
 Type-1
 
@@ -1633,7 +1633,7 @@ Type-4
     T = Rank2Tensor( A, VoigtType )
     DoubleDot_Product4 = SUM( T*Obj )
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION DoubleDot_Product4
 ```
@@ -1649,7 +1649,7 @@ Type-5
     TYPE( Rank2Tensor_ ) :: T
     T = Rank2Tensor( B, VoigtType )
     DoubleDot_Product5 = SUM( T * A )
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
  END FUNCTION DoubleDot_Product5
 ```
 
@@ -1663,8 +1663,8 @@ Type-6
     T1 = Rank2Tensor( A, VoigtType_A )
     T2 = Rank2Tensor( B, VoigtType_B )
     DoubleDot_Product6 = SUM( T1 * T2 )
-    CALL T1 % DeallocateData( )
-    CALL T2 % DeallocateData( )
+    CALL T1%DeallocateData( )
+    CALL T2%DeallocateData( )
  END FUNCTION DoubleDot_Product6
 ```
 
@@ -1697,7 +1697,7 @@ There are methods as well as module-function for this.
 Method
 
 ```fortran
-Obj % Invariant_I1( )
+Obj%Invariant_I1( )
 ```
 
 Module-function
@@ -1716,7 +1716,7 @@ There are methods as well as module-function for this.
 Method
 
 ```fortran
-Obj % Invariant_I2( )
+Obj%Invariant_I2( )
 ```
 
 Module-function
@@ -1735,7 +1735,7 @@ There are methods as well as module-function for this.
 Method
 
 ```fortran
-Obj % Invaria3t_I2( )
+Obj%Invaria3t_I2( )
 ```
 
 Module-function
@@ -2137,7 +2137,7 @@ Example
 ```fortran
 CALL Tensor_Eigens( Mat, EigenVectors, EigenValues )
 CALL Tensor_Eigens( Obj, EigenVectors, EigenValues )
-CALL Obj % Eigens( EigenVectors, EigenValues )
+CALL Obj%Eigens( EigenVectors, EigenValues )
 ```
 
 ### Principal Value

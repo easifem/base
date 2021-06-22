@@ -247,6 +247,27 @@ END INTERFACE
 PUBLIC :: ASSIGNMENT( = )
 
 !----------------------------------------------------------------------------
+!                                                       getNptrs@Construcor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 June 2021
+! summary: Returns the node numbers of reference element
+
+INTERFACE
+MODULE PURE FUNCTION RefElem_getNptrs( obj ) RESULT( Ans )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION RefElem_getNptrs
+END INTERFACE
+
+INTERFACE getConnectivity
+  MODULE PROCEDURE RefElem_getNptrs
+END INTERFACE getConnectivity
+
+PUBLIC :: getConnectivity
+
+!----------------------------------------------------------------------------
 !                                                       ElementType@Geometry
 !----------------------------------------------------------------------------
 
@@ -586,6 +607,27 @@ END INTERFACE FacetMatrix
 PUBLIC :: FacetMatrix
 
 !----------------------------------------------------------------------------
+!                                                     FacetElements@Geometry
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	16 June 2021
+! summary: This routine returns the facet elements
+
+INTERFACE
+MODULE PURE FUNCTION RefElem_FacetElements( RefElem ) RESULT( ans )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceElement_ ), ALLOCATABLE :: ans( : )
+END FUNCTION RefElem_FacetElements
+END INTERFACE
+
+INTERFACE FacetElements
+  MODULE PROCEDURE RefElem_FacetElements
+END INTERFACE FacetElements
+
+PUBLIC :: FacetElements
+
+!----------------------------------------------------------------------------
 !                                                    LocalNodeCoord@Geometry
 !----------------------------------------------------------------------------
 
@@ -676,6 +718,49 @@ INTERFACE ContainsPoint
 END INTERFACE ContainsPoint
 
 PUBLIC :: ContainsPoint
+
+!----------------------------------------------------------------------------
+!                                             TotalEntities@Geometry
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	16 June 2021
+! summary: 	Total entities present in an element
+
+INTERFACE
+MODULE PURE FUNCTION RefElem_TotalEntities( ElemType ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: ElemType
+  INTEGER( I4B ) :: ans( 4 )
+END FUNCTION RefElem_TotalEntities
+END INTERFACE
+
+INTERFACE TotalEntities
+  MODULE PROCEDURE RefElem_TotalEntities
+END INTERFACE TotalEntities
+
+PUBLIC :: TotalEntities
+
+!----------------------------------------------------------------------------
+!                                            FacetTopology@Geometry
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	16 June 2021
+! summary: 	This routine returns the facet topology of the given element type
+
+INTERFACE
+MODULE PURE FUNCTION RefElem_FacetTopology( ElemType, Nptrs ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: ElemType
+  INTEGER( I4B ), INTENT( IN ) :: Nptrs( : )
+  TYPE( ReferenceTopology_ ), ALLOCATABLE :: ans( : )
+END FUNCTION RefElem_FacetTopology
+END INTERFACE
+
+INTERFACE FacetTopology
+  MODULE PROCEDURE RefElem_FacetTopology
+END INTERFACE FacetTopology
+
+PUBLIC :: FacetTopology
 
 !----------------------------------------------------------------------------
 !                                                          getVTKelementType

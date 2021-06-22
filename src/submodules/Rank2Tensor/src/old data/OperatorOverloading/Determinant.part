@@ -54,7 +54,7 @@
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ) :: m_Det_1
 
-    m_Det_1 = Det( Obj % T )
+    m_Det_1 = Det( Obj%T )
 
  END FUNCTION m_Det_1
 

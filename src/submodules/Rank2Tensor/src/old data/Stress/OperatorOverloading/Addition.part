@@ -33,7 +33,7 @@
     CLASS( Stress_ ), INTENT( IN ) :: Obj, Obj2
     REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Obj
 
-    Obj_Add_Obj = MatFromVoigtVec(Obj % V + Obj2 % V, "Stress")
+    Obj_Add_Obj = MatFromVoigtVec(Obj%V + Obj2%V, "Stress")
 
  END FUNCTION Obj_Add_Obj
 
@@ -58,8 +58,8 @@
 
     N = SIZE( Mat, 1 )
 
-    Obj_Add_Mat = MatFromVoigtVec( Obj % V, "Stress" )
-    
+    Obj_Add_Mat = MatFromVoigtVec( Obj%V, "Stress" )
+
     SELECT CASE( N )
 
         CASE( 1 )
@@ -121,10 +121,10 @@
     REAL( DFP ), ALLOCATABLE :: DummyVec( : )
 
 
-    DummyVec = Obj % V
+    DummyVec = Obj%V
 
     N = MINVAL( [SIZE( Vec ), SIZE( DummyVec ) ])
-    
+
     DummyVec( 1:N ) =  DummyVec( 1:N ) + Vec( 1:N )
 
     Obj_Add_Vec = MatFromVoigtVec( DummyVec, "Stress" )
@@ -149,7 +149,7 @@
     REAL( DFP ), INTENT( IN ) :: S
     REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Scalar
 
-    Obj_Add_Scalar = MatFromVoigtVec( Obj % V + S, "Stress" )
+    Obj_Add_Scalar = MatFromVoigtVec( Obj%V + S, "Stress" )
 
  END FUNCTION Obj_Add_Scalar
 
@@ -209,7 +209,7 @@
     CLASS( Stress_ ), INTENT( IN ) :: Obj, Obj2
     REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Obj
 
-    Obj_Minus_Obj = MatFromVoigtVec( Obj % V - Obj2 % V, "Stress" )
+    Obj_Minus_Obj = MatFromVoigtVec( Obj%V - Obj2%V, "Stress" )
 
  END FUNCTION Obj_Minus_Obj
 
@@ -234,8 +234,8 @@
 
     N = SIZE( Mat, 1 )
 
-    Obj_Minus_Mat = MatFromVoigtVec( Obj % V, "Stress" )
-    
+    Obj_Minus_Mat = MatFromVoigtVec( Obj%V, "Stress" )
+
     SELECT CASE( N )
 
         CASE( 1 )
@@ -296,10 +296,10 @@
     INTEGER( I4B ) :: N
     REAL( DFP ), ALLOCATABLE :: DummyVec( : )
 
-    DummyVec = Obj % V
+    DummyVec = Obj%V
 
     N = MINVAL( [SIZE( Vec ), SIZE( DummyVec ) ])
-    
+
     DummyVec( 1:N ) =  DummyVec( 1:N ) - Vec( 1:N )
 
     Obj_Minus_Vec = MatFromVoigtVec( DummyVec, "Stress" )
@@ -344,7 +344,7 @@
     REAL( DFP ), INTENT( IN ) :: S
     REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Scalar
 
-    Obj_Minus_Scalar = MatFromVoigtVec( Obj % V - S, "Stress" )
+    Obj_Minus_Scalar = MatFromVoigtVec( Obj%V - S, "Stress" )
 
  END FUNCTION Obj_Minus_Scalar
 

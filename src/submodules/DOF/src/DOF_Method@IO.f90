@@ -40,9 +40,9 @@ MODULE PROCEDURE display_obj
     WRITE( I, "(A)" ) TRIM( msg )
   END IF
 
-  IF( ALLOCATED( Obj % Map ) ) THEN
+  IF( ALLOCATED( Obj%Map ) ) THEN
     CALL DashLine( UnitNo = I )
-    ASSOCIATE( Map => Obj % Map, ValMap => Obj % ValMap )
+    ASSOCIATE( Map => Obj%Map, ValMap => Obj%ValMap )
       n = SIZE( Map, 1 ) - 1
       CALL BlankLines( I, 1 )
       WRITE( I, "(A, I4 )") "Number of Physical Quantities :: ", n
@@ -57,13 +57,13 @@ MODULE PROCEDURE display_obj
         WRITE( I, "(A, I4)") "Time Components :: ", Map( j, 3 )
         WRITE( I, "(A, I6)") "Total Nodes :: ", Map( j, 6 )
       END DO
-      SELECT CASE( Obj % StorageFMT )
+      SELECT CASE( Obj%StorageFMT )
       CASE( dof_FMT )
         WRITE( I, "(A)") "Storage Format :: DOF"
       CASE( Nodes_FMT )
         WRITE( I, "(A)") "Storage Format :: Nodes"
       END SELECT
-      CALL Display( Obj % ValMap, "Value Map :: " )
+      CALL Display( Obj%ValMap, "Value Map :: " )
     END ASSOCIATE
     CALL DashLine( UnitNo = I )
   END IF
@@ -86,33 +86,33 @@ MODULE PROCEDURE dof_display_vec
 
   CALL Display( Obj, 'Degree of freedom info=', Unitno = I )
 
-  n = SIZE( Obj % Map, 1 ) - 1
+  n = SIZE( Obj%Map, 1 ) - 1
 
-  SELECT CASE( Obj % StorageFMT )
+  SELECT CASE( Obj%StorageFMT )
   CASE( FMT_Nodes  )
 
     DO j = 1, n
 
       CALL BlankLines( UnitNo = I )
-      WRITE( I, "(4X, A)" ) "VAR : "//ACHAR( Obj % Map( j, 1 )  )
+      WRITE( I, "(4X, A)" ) "VAR : "//ACHAR( Obj%Map( j, 1 )  )
 
-      DO idof = Obj % Map( j, 5 ), Obj % Map( j+1, 5 ) - 1
+      DO idof = Obj%Map( j, 5 ), Obj%Map( j+1, 5 ) - 1
         WRITE( I, "( 6X, A )", ADVANCE="NO" ) "--------------"
       END DO
       WRITE( I, "(A)", ADVANCE="YES" ) " "
 
-      DO idof = Obj % Map( j, 5 ), Obj % Map( j+1, 5 ) - 1
+      DO idof = Obj%Map( j, 5 ), Obj%Map( j+1, 5 ) - 1
         WRITE( I, "(6X, 4X, A, 4X )", ADVANCE="NO" ) "DOF-"//TRIM( INT2STR( idof ) )
       END DO
       WRITE( I, "(A)", ADVANCE="YES" ) " "
 
-      DO idof = Obj % Map( j, 5 ), Obj % Map( j+1, 5 ) - 1
+      DO idof = Obj%Map( j, 5 ), Obj%Map( j+1, 5 ) - 1
         WRITE( I, "( 6X, A )", ADVANCE="NO" ) "--------------"
       END DO
       WRITE( I, "(A)", ADVANCE="YES" ) " "
 
-      DO k = 1, Obj % Map( j,  6)
-        DO idof = Obj % Map( j, 5 ), Obj % Map( j+1, 5 ) - 1
+      DO k = 1, Obj%Map( j,  6)
+        DO idof = Obj%Map( j, 5 ), Obj%Map( j+1, 5 ) - 1
           WRITE( I, "(I6, 2X, G10.2, 2X )", ADVANCE="NO" ) k, &
             & Vec(  ( k - 1 ) * tdof + idof )
         END DO

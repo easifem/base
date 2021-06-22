@@ -77,18 +77,18 @@ block
   fpar( 6 ) = 0.0 ! current residual/error norm
   fpar( 7 ) = 0.0 ! convergence rate
   fpar( 8:16 ) = 0.0 ! NA
-  
+
 10 call cg( nrow, rhs, sol, ipar, fpar, w )
 
   select case( ipar( 1 ) )
   case( 1  )
     ! matvec with A
     write( *, * ) "matvec:: Ax"
-    call amux( nrow, w( ipar( 8 ) ), w( ipar( 9 ) ), csrobj % A, csrobj % ja, csrobj % ia )
+    call amux( nrow, w( ipar( 8 ) ), w( ipar( 9 ) ), csrobj%A, csrobj%ja, csrobj%ia )
     goto 10
   case( 2 )
     write( *, * ) "matvec:: A^Tx"
-    call atmux( nrow, w( ipar( 8 ) ), w( ipar( 9 ) ), csrobj % A, csrobj % ja, csrobj % ia )
+    call atmux( nrow, w( ipar( 8 ) ), w( ipar( 9 ) ), csrobj%A, csrobj%ja, csrobj%ia )
     goto 10
   case( 3, 5 )
     write( *, * ) "solve:: ML^-1 x"

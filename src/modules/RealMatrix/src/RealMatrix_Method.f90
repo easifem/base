@@ -303,7 +303,7 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
-! summary: This subroutine performs `Obj % Val = Val`, i.e., initiate `Obj` with `Val`
+! summary: This subroutine performs `Obj%l = Val`, i.e., initiate `Obj` with `Val`
 !
 !### Usage
 !
@@ -881,7 +881,7 @@ PUBLIC :: TestMatrix
 !
 !### Introduction
 !
-! This function returns the value stored in `Obj % Val` in a 2D fortran array
+! This function returns the value stored in `Obj%l` in a 2D fortran array
 !
 !### Usage
 !
@@ -907,8 +907,8 @@ END INTERFACE
 !
 !### Introduction
 !
-! This function returns a section of `Obj % Val` in a 2D fortran array. This
-! is equivalent to `Val = Obj % Val(RIndx, CIndx)`
+! This function returns a section of `Obj%l` in a 2D fortran array. This
+! is equivalent to `Val = Obj%l(RIndx, CIndx)`
 !
 !### Usage
 !
@@ -943,8 +943,8 @@ END INTERFACE
 !
 !### Introduction
 !
-! This function returns a section of `Obj % Val` in a 2D fortran array. This
-! is equivalent to `Val = Obj % Val(is:ie:s, is:ie:s)`
+! This function returns a section of `Obj%l` in a 2D fortran array. This
+! is equivalent to `Val = Obj%l(is:ie:s, is:ie:s)`
 !
 !### Usage
 !
@@ -1243,7 +1243,7 @@ PUBLIC :: ArrayPointer
 !
 !### Introduction
 !
-! This subroutine set `Obj % Val` to `Val`
+! This subroutine set `Obj%l` to `Val`
 !
 !### Usage
 !
@@ -1269,8 +1269,8 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine set values in `Obj % Val`
-! `Obj % Val( i, j ) = Val`
+! This subroutine set values in `Obj%l`
+! `Obj%l( i, j ) = Val`
 !
 !### Usage
 !
@@ -1295,7 +1295,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine set values in `Obj % Val`
+! This subroutine set values in `Obj%l`
 !
 
 INTERFACE
@@ -1316,7 +1316,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine set values in `Obj % val`
+! This subroutine set values in `Obj%l`
 ! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx` denotes diagonal number with `0` being the main diagonal
 ! - If `Extraoption=MATRIX_ROW` then row values are set; `Indx` then denotes row number
 ! - If `Extraoption=MATRIX_COLUMN` then col values are set; `Indx` then denotes col number
@@ -1346,7 +1346,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine set values in `Obj % val`
+! This subroutine set values in `Obj%l`
 ! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx` denotes the diagonal number with `0` being the main diagonal
 ! - If `Extraoption=ROW` then row values are set; `Indx` then denotes row number
 ! - If `Extraoption=COLUMN` then col values are set; `Indx` then denotes col number
@@ -1386,7 +1386,7 @@ PUBLIC :: setValues
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj % Val`. This subroutine performs following task:
+! This subroutine adds contribution in values of `Obj%l`. This subroutine performs following task:
 !
 ! $$obj = obj <op> scale * val $$
 !
@@ -1417,10 +1417,10 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%l`
 !
 !```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%l = obj%v%*Op* scale * val
 !```
 
 INTERFACE
@@ -1444,10 +1444,10 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%l`
 !
 !```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%l = obj%v%*Op* scale * val
 !```
 
 INTERFACE
@@ -1471,10 +1471,10 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%l`
 !
 ! ```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%l = obj%v%*Op* scale * val
 ! ```
 
 INTERFACE
@@ -1497,10 +1497,10 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%l`
 !
 !```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%l = obj%v%*Op* scale * val
 !```
 
 INTERFACE

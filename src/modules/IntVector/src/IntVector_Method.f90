@@ -32,7 +32,7 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                          Shape@Constructor
+!                                                         Shape@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -53,7 +53,7 @@ END INTERFACE Shape
 PUBLIC :: Shape
 
 !----------------------------------------------------------------------------
-!                                                             SIZE@Constructor
+!                                                           SIZE@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -75,7 +75,7 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
-!                                                    AllocateData@Constructor
+!                                                   AllocateData@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -96,7 +96,7 @@ END INTERFACE AllocateData
 PUBLIC :: AllocateData
 
 !----------------------------------------------------------------------------
-!                                                  DeAllocateData@Constructor
+!                                                 DeAllocateData@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -315,7 +315,7 @@ INTERFACE IntVector_Pointer
 END INTERFACE IntVector_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       ArrayValues@GetMethod
+!                                                      ArrayValues@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -468,6 +468,23 @@ END FUNCTION f_getARRAYValuesFromTriplet_Int
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                     ArrayValues@GetMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE IntVec_assign_a( Val, Obj )
+  INTEGER(I4B), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
+  CLASS( IntVector_ ), INTENT( IN ) :: Obj
+END SUBROUTINE IntVec_assign_a
+END INTERFACE
+
+INTERFACE ASSIGNMENT( = )
+  MODULE PROCEDURE IntVec_assign_a
+END INTERFACE ASSIGNMENT( = )
+
+PUBLIC :: ASSIGNMENT( = )
+
+!----------------------------------------------------------------------------
 !                                                       ArrayValues@GetMethod
 !----------------------------------------------------------------------------
 
@@ -535,7 +552,7 @@ END INTERFACE Convert
 PUBLIC :: Convert
 
 !----------------------------------------------------------------------------
-!                                                           IndexOf@getMethod
+!                                                         IndexOf@getMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -615,72 +632,92 @@ PUBLIC :: isPresent
 ! PUBLIC :: OPERATOR( .EQ. )
 
 !----------------------------------------------------------------------------
-!                                                                      Append
+!                                                        setValue@SetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-MODULE PURE SUBROUTINE Append_1( Obj, Value )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
-  INTEGER( I4B ), INTENT( IN ) :: Value
-END SUBROUTINE Append_1
-END INTERFACE
+!> authors: Vikas Sharma, Ph. D.
+! date: 17 June 2021
+! summary: set the value in IntVector
 
 INTERFACE
-MODULE PURE SUBROUTINE Append_2( Obj, Value )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
-  INTEGER( I4B ), INTENT( IN ) :: Value( : )
-END SUBROUTINE Append_2
-END INTERFACE
-
-INTERFACE
-MODULE PURE SUBROUTINE Append_3( Obj, AnotherObj )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
-  CLASS( IntVector_ ), INTENT( IN ) :: AnotherObj
-END SUBROUTINE Append_3
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE Append_1, Append_2, Append_3
-END INTERFACE Append
-
-PUBLIC :: Append
-
-!----------------------------------------------------------------------------
-!                                                         setValue@SetMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE setValue_1( Obj, Indx, Value )
+MODULE PURE SUBROUTINE IntVec_SetValue_1( Obj, Indx, Value )
   CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
   INTEGER( I4B ), INTENT( IN ) :: Value( : )
-END SUBROUTINE setValue_1
+END SUBROUTINE IntVec_SetValue_1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        setValue@SetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 17 June 2021
+! summary: set the value in IntVector
+
+INTERFACE
+MODULE PURE SUBROUTINE IntVec_SetValue_2( Obj, Indx, Value )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Indx
+  INTEGER( I4B ), INTENT( IN ) :: Value
+END SUBROUTINE IntVec_SetValue_2
 END INTERFACE
 
 INTERFACE SetValue
-  MODULE PROCEDURE setValue_1
+  MODULE PROCEDURE IntVec_SetValue_1, IntVec_SetValue_2
 END INTERFACE
 
 PUBLIC :: SetValue
 
 !----------------------------------------------------------------------------
-!                                                 RemoveDuplicate@setMethod
+!                                                         Append@setMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE remove_duplicates( Obj )
+MODULE PURE SUBROUTINE IntVec_Append_1( Obj, Value )
   CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
-END SUBROUTINE remove_duplicates
+  INTEGER( I4B ), INTENT( IN ) :: Value
+END SUBROUTINE IntVec_Append_1
 END INTERFACE
 
 INTERFACE
-MODULE PURE SUBROUTINE remove_dupl_intvec( Obj )
+MODULE PURE SUBROUTINE IntVec_Append_2( Obj, Value )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: Value( : )
+END SUBROUTINE IntVec_Append_2
+END INTERFACE
+
+INTERFACE
+MODULE PURE SUBROUTINE IntVec_Append_3( Obj, AnotherObj )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+  CLASS( IntVector_ ), INTENT( IN ) :: AnotherObj
+END SUBROUTINE IntVec_Append_3
+END INTERFACE
+
+INTERFACE Append
+  MODULE PROCEDURE IntVec_Append_1, IntVec_Append_2, IntVec_Append_3
+END INTERFACE Append
+
+PUBLIC :: Append
+
+!----------------------------------------------------------------------------
+!                                                 RemoveDuplicates@setMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE IntVec_RemoveDuplicates_1( Obj )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+END SUBROUTINE IntVec_RemoveDuplicates_1
+END INTERFACE
+
+INTERFACE
+MODULE PURE SUBROUTINE IntVec_RemoveDuplicates_2( Obj )
   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Obj( : )
-END SUBROUTINE remove_dupl_intvec
+END SUBROUTINE IntVec_RemoveDuplicates_2
 END INTERFACE
 
 INTERFACE RemoveDuplicates
-  MODULE PROCEDURE remove_duplicates, remove_dupl_intvec
+  MODULE PROCEDURE IntVec_RemoveDuplicates_1, IntVec_RemoveDuplicates_2
 END INTERFACE RemoveDuplicates
 
 PUBLIC :: RemoveDuplicates
@@ -690,25 +727,97 @@ PUBLIC :: RemoveDuplicates
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION repeat_int( Val, rtimes ) RESULT( Ans )
+MODULE PURE FUNCTION IntVec_Repeat_1( Val, rtimes ) RESULT( Ans )
   INTEGER( I4B ), INTENT( IN ) :: Val( : )
   INTEGER( I4B ), INTENT( IN ) :: rtimes
   INTEGER( I4B ) :: Ans( SIZE( Val ) * rtimes )
-END FUNCTION repeat_int
+END FUNCTION IntVec_Repeat_1
 END INTERFACE
 
 INTERFACE
-MODULE PURE FUNCTION repeat_obj( Obj, rtimes ) RESULT( Ans )
+MODULE PURE FUNCTION IntVec_Repeat_2( Obj, rtimes ) RESULT( Ans )
   TYPE( IntVector_ ), INTENT( IN ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: rtimes
-  INTEGER( I4B ) :: Ans( SIZE( Obj % Val ) * rtimes )
-END FUNCTION repeat_obj
+  INTEGER( I4B ) :: Ans( SIZE( Obj%Val ) * rtimes )
+END FUNCTION IntVec_Repeat_2
 END INTERFACE
 
 INTERFACE Repeat
-  MODULE PROCEDURE repeat_int, repeat_obj
+  MODULE PROCEDURE IntVec_Repeat_1, IntVec_Repeat_2
 END INTERFACE Repeat
 
 PUBLIC :: Repeat
+
+!----------------------------------------------------------------------------
+!                                                        H_CONCAT@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	18 June 2021
+! summary: Horizontally concat two integer vectors and returns a new integer vector
+
+INTERFACE
+MODULE PURE FUNCTION IntVec_H_CONCAT_1( vec1, vec2 ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: vec1( : )
+  INTEGER( I4B ), INTENT( IN ) :: vec2( : )
+  INTEGER( I4B ) :: ans( size(vec1) + size(vec2) )
+END FUNCTION IntVec_H_CONCAT_1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        H_CONCAT@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	18 June 2021
+! summary: Horizontally concat a IntVec data type to another IntVec datatype.
+
+INTERFACE
+MODULE PURE FUNCTION IntVec_H_CONCAT_2( obj1, obj2 ) RESULT( Ans )
+  TYPE( IntVector_ ), INTENT( IN ) :: obj1
+  TYPE( IntVector_ ), INTENT( IN ) :: obj2
+  TYPE( IntVector_ ) :: ans
+END FUNCTION IntVec_H_CONCAT_2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        H_CONCAT@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	18 June 2021
+! summary: Horizontally concat a integer vector to a IntVec datatype.
+
+INTERFACE
+MODULE PURE FUNCTION IntVec_H_CONCAT_3( vec1, obj2 ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: vec1( : )
+  TYPE( IntVector_ ), INTENT( IN ) :: obj2
+  TYPE( IntVector_ ) :: ans
+END FUNCTION IntVec_H_CONCAT_3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        H_CONCAT@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	18 June 2021
+! summary: Horizontally concat a integer vector to a IntVec datatype.
+
+INTERFACE
+MODULE PURE FUNCTION IntVec_H_CONCAT_4( obj1, vec2 ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: vec2( : )
+  TYPE( IntVector_ ), INTENT( IN ) :: obj1
+  TYPE( IntVector_ ) :: ans
+END FUNCTION IntVec_H_CONCAT_4
+END INTERFACE
+
+
+INTERFACE H_CONCAT
+  MODULE PROCEDURE IntVec_H_CONCAT_1, IntVec_H_CONCAT_2, &
+    & IntVec_H_CONCAT_3, IntVec_H_CONCAT_4
+END INTERFACE H_CONCAT
+
+PUBLIC :: H_CONCAT
 
 END MODULE IntVector_Method
