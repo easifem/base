@@ -35,12 +35,16 @@ END PROCEDURE Initiate_ref_Pyramid
 !                                                      ReferencePyramid
 !----------------------------------------------------------------------------
 MODULE PROCEDURE reference_Pyramid
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( Obj, NSD )
-  END IF
+  CALL Initiate( Obj, NSD, XiJ )
 END PROCEDURE reference_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                      ReferencePyramid
+!----------------------------------------------------------------------------
+MODULE PROCEDURE reference_Pyramid_Pointer
+  ALLOCATE( Obj )
+  CALL Initiate( Obj, NSD, XiJ )
+END PROCEDURE reference_Pyramid_Pointer
 
 !----------------------------------------------------------------------------
 !                                                             LagrangeElement

@@ -362,11 +362,11 @@ END INTERFACE
 !
 ! This subroutine set sparsity pattern of `sparsematrix_`
 ! This will finally set the data into
-! - `Obj % A(:)`
-! - `Obj % IA(:)`,
-! - `Obj % JA(:)`
-! in CSR format. This routine also set data inside `Obj % ColSize(:)` and
-! `Obj % RowSize(:) `, and `Obj % DiagIndx(:)`
+! - `Obj%A(:)`
+! - `Obj%IA(:)`,
+! - `Obj%JA(:)`
+! in CSR format. This routine also set data inside `Obj%ColSize(:)` and
+! `Obj%RowSize(:) `, and `Obj%DiagIndx(:)`
 
 
 INTERFACE
@@ -585,7 +585,7 @@ PUBLIC :: RemoveDuplicates
 !<---    2 eliminate duplicates and perform partial ordering
 !<---    3 eliminate duplicates and sort entries in increasing order of
 !<---    col indices
-!<--- Values  .true. work on Obj % A too, otherwise dont touch Obj % A
+!<--- Values  .true. work on Obj%A too, otherwise dont touch Obj%A
 !<--- INDU contains pointers to upper triangle
 
 INTERFACE

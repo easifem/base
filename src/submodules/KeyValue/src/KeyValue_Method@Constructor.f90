@@ -28,9 +28,9 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate1
-  Obj % DataType = Real_Rank_0
-  Obj % Key = Key
-  Obj % Value = RESHAPE( [Value], [1,1] )
+  Obj%DataType = Real_Rank_0
+  Obj%Key = Key
+  Obj%Value = RESHAPE( [Value], [1,1] )
 END PROCEDURE Initiate1
 
 !----------------------------------------------------------------------------
@@ -38,9 +38,9 @@ END PROCEDURE Initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate2
-  Obj % DataType = Real_Rank_0
-  Obj % Key = Key
-  Obj % Value = RESHAPE( [Value], [1,1] )
+  Obj%DataType = Real_Rank_0
+  Obj%Key = Key
+  Obj%Value = RESHAPE( [Value], [1,1] )
 END PROCEDURE Initiate2
 
 !----------------------------------------------------------------------------
@@ -48,9 +48,9 @@ END PROCEDURE Initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate3
-  Obj % DataType =  Real_Rank_1
-  Obj % Key = Key
-  Obj % Value = RESHAPE( Value, [SIZE( Value ), 1] )
+  Obj%DataType =  Real_Rank_1
+  Obj%Key = Key
+  Obj%Value = RESHAPE( Value, [SIZE( Value ), 1] )
 END PROCEDURE Initiate3
 
 !----------------------------------------------------------------------------
@@ -58,9 +58,9 @@ END PROCEDURE Initiate3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate4
-  Obj % DataType = Real_Rank_1
-  Obj % Key = Key
-  Obj % Value = RESHAPE( Value, [SIZE( Value ), 1] )
+  Obj%DataType = Real_Rank_1
+  Obj%Key = Key
+  Obj%Value = RESHAPE( Value, [SIZE( Value ), 1] )
 END PROCEDURE Initiate4
 
 !----------------------------------------------------------------------------
@@ -68,9 +68,9 @@ END PROCEDURE Initiate4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate5
-  Obj % DataType = Real_Rank_2
-  Obj % Key = Key
-  Obj % Value = Value
+  Obj%DataType = Real_Rank_2
+  Obj%Key = Key
+  Obj%Value = Value
 END PROCEDURE Initiate5
 
 !----------------------------------------------------------------------------
@@ -78,9 +78,9 @@ END PROCEDURE Initiate5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate6
-  Obj % DataType = Real_Rank_2
-  Obj % Key = Key
-  Obj % Value = Value
+  Obj%DataType = Real_Rank_2
+  Obj%Key = Key
+  Obj%Value = Value
 END PROCEDURE Initiate6
 
 !----------------------------------------------------------------------------
@@ -88,9 +88,9 @@ END PROCEDURE Initiate6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate7
-  Obj % DataType = Int_Rank_0
-  Obj % Key = Key
-  Obj % Value = RESHAPE( [Value], [1,1] )
+  Obj%DataType = Int_Rank_0
+  Obj%Key = Key
+  Obj%Value = RESHAPE( [Value], [1,1] )
 END PROCEDURE Initiate7
 
 !----------------------------------------------------------------------------
@@ -98,9 +98,9 @@ END PROCEDURE Initiate7
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate8
-  Obj % DataType = Int_Rank_0
-  Obj % Key = Key
-  Obj % Value = REAL( RESHAPE( [Value], [1,1] ), DFP )
+  Obj%DataType = Int_Rank_0
+  Obj%Key = Key
+  Obj%Value = REAL( RESHAPE( [Value], [1,1] ), DFP )
 END PROCEDURE Initiate8
 
 !----------------------------------------------------------------------------
@@ -108,9 +108,9 @@ END PROCEDURE Initiate8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate9
-  Obj % DataType = Int_Rank_1
-  Obj % Key = Key
-  Obj % Value = REAL( RESHAPE( Value, [SIZE( Value ), 1 ] ), DFP )
+  Obj%DataType = Int_Rank_1
+  Obj%Key = Key
+  Obj%Value = REAL( RESHAPE( Value, [SIZE( Value ), 1 ] ), DFP )
 END PROCEDURE Initiate9
 
 !----------------------------------------------------------------------------
@@ -118,9 +118,9 @@ END PROCEDURE Initiate9
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate10
-  Obj % DataType = Int_Rank_1
-  Obj % Key = Key
-  Obj % Value = REAL( RESHAPE( Value, [SIZE( Value ), 1 ] ), DFP )
+  Obj%DataType = Int_Rank_1
+  Obj%Key = Key
+  Obj%Value = REAL( RESHAPE( Value, [SIZE( Value ), 1 ] ), DFP )
 END PROCEDURE Initiate10
 
 !----------------------------------------------------------------------------
@@ -128,9 +128,9 @@ END PROCEDURE Initiate10
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate11
-  Obj % DataType = Int_Rank_2
-  Obj % Key = Key
-  Obj % Value = REAL( Value, DFP )
+  Obj%DataType = Int_Rank_2
+  Obj%Key = Key
+  Obj%Value = REAL( Value, DFP )
 END PROCEDURE Initiate11
 
 !----------------------------------------------------------------------------
@@ -138,9 +138,9 @@ END PROCEDURE Initiate11
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate12
-  Obj % DataType = Int_Rank_2
-  Obj % Key = Key
-  Obj % Value = REAL( Value, DFP )
+  Obj%DataType = Int_Rank_2
+  Obj%Key = Key
+  Obj%Value = REAL( Value, DFP )
 END PROCEDURE Initiate12
 
 !----------------------------------------------------------------------------
@@ -148,10 +148,10 @@ END PROCEDURE Initiate12
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate13
-  Obj % DataType = Obj2 % DataType
-  Obj % Key = Obj2 % Key
-  IF( ALLOCATED( Obj2 % Value ) ) THEN
-    Obj % Value = Obj2 % Value
+  Obj%DataType = Obj2%DataType
+  Obj%Key = Obj2%Key
+  IF( ALLOCATED( Obj2%Value ) ) THEN
+    Obj%Value = Obj2%Value
   END IF
 END PROCEDURE Initiate13
 
@@ -262,7 +262,7 @@ MODULE PROCEDURE keyvalue_display
   I = stdout
 
   IF( PRESENT( UnitNo ) ) I = UnitNo
-  SELECT CASE( Obj % DataType )
+  SELECT CASE( Obj%DataType )
   CASE( REAL_RANK_0 )
     s = "Rank0"
   CASE( REAL_RANK_1 )
@@ -278,11 +278,11 @@ MODULE PROCEDURE keyvalue_display
   END SELECT
 
   IF( LEN_TRIM( msg ) .NE.  0 ) CALL Display( msg, I )
-  IF( ALLOCATED( Obj % Value ) ) THEN
-    CALL Display( Obj % Value, &
-      & s // " :: " // TRIM( Obj % Key % Raw ) // " :: ", UnitNo = I )
+  IF( ALLOCATED( Obj%Value ) ) THEN
+    CALL Display( Obj%Value, &
+      & s // " :: " // TRIM( Obj%Key%Raw ) // " :: ", UnitNo = I )
   ELSE
-    CALL Display(  s // " :: " // TRIM( Obj % Key % Raw ) // " :: ", UnitNo = I )
+    CALL Display(  s // " :: " // TRIM( Obj%Key%Raw ) // " :: ", UnitNo = I )
   END IF
 END PROCEDURE keyvalue_display
 
@@ -309,7 +309,7 @@ END PROCEDURE mp_display
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Equal1
-  Ans = Obj % Key .EQ. String( Key )
+  Ans = Obj%Key .EQ. String( Key )
 END PROCEDURE Equal1
 
 !----------------------------------------------------------------------------
@@ -317,7 +317,7 @@ END PROCEDURE Equal1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Equal2
-  Ans = Obj % Key .EQ. String( Key )
+  Ans = Obj%Key .EQ. String( Key )
 END PROCEDURE Equal2
 
 !----------------------------------------------------------------------------
@@ -325,7 +325,7 @@ END PROCEDURE Equal2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Equal3
-  Ans = Obj % Key .EQ. Key
+  Ans = Obj%Key .EQ. Key
 END PROCEDURE Equal3
 
 !----------------------------------------------------------------------------
@@ -333,7 +333,7 @@ END PROCEDURE Equal3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Equal4
-  Ans = Obj % Key .EQ. Key
+  Ans = Obj%Key .EQ. Key
 END PROCEDURE Equal4
 
 !----------------------------------------------------------------------------
@@ -341,7 +341,7 @@ END PROCEDURE Equal4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE keyvalue_deallocate
-  IF(  ALLOCATED( Obj % Value )  ) DEALLOCATE( Obj % Value )
+  IF(  ALLOCATED( Obj%Value )  ) DEALLOCATE( Obj%Value )
 END PROCEDURE keyvalue_deallocate
 
 END SUBMODULE Constructor

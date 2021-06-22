@@ -32,14 +32,14 @@ MODULE PROCEDURE display_obj
     I = StdOut
   END IF
   IF( LEN_TRIM( msg ) .NE. 0 ) WRITE( I, "(A)" ) "#" // TRIM( msg )
-  WRITE( I, "( A, L6 )" )    "Convergence: ", Obj % Converged
-  WRITE( I, "( A, I6 )" )    "Maximum Iteration: ", Obj % MaxIter
-  WRITE( I, "( A, I6 )" )    "Total Iteration Taken: ", Obj % IterationNumber
-  WRITE( I, "( A, G17.6 )" ) "Tolerance: ", Obj % Tolerance
-  WRITE( I, "( A, G17.6 )" ) "Error At Start: ", Obj % ErrorAtStart
-  WRITE( I, "( A, G17.6 )" ) "Error At End: ", Obj % ErrorAtEnd
+  WRITE( I, "( A, L6 )" )    "Convergence: ", Obj%Converged
+  WRITE( I, "( A, I6 )" )    "Maximum Iteration: ", Obj%MaxIter
+  WRITE( I, "( A, I6 )" )    "Total Iteration Taken: ", Obj%IterationNumber
+  WRITE( I, "( A, G17.6 )" ) "Tolerance: ", Obj%Tolerance
+  WRITE( I, "( A, G17.6 )" ) "Error At Start: ", Obj%ErrorAtStart
+  WRITE( I, "( A, G17.6 )" ) "Error At End: ", Obj%ErrorAtEnd
   WRITE( I, "( A, G17.6 )" ) "Time Taken: ", &
-    & Obj % TimeAtEnd - Obj % TimeAtStart
+    & Obj%TimeAtEnd - Obj%TimeAtStart
 END PROCEDURE display_obj
 
 END SUBMODULE IO

@@ -186,6 +186,8 @@ MODULE PURE SUBROUTINE LagrangeElement_Line( RefElem, Order, Obj )
 END SUBROUTINE LagrangeElement_Line
 END INTERFACE
 
+PUBLIC :: LagrangeElement_Line
+
 !----------------------------------------------------------------------------
 !                                                      MeasureSimplex@Line
 !----------------------------------------------------------------------------

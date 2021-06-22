@@ -44,7 +44,7 @@
         I = 6
     END IF
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL BlankLines( UnitNo = I )
         WRITE( I, "(A)" ) "Stress_ Object is not initiated "
@@ -60,11 +60,11 @@
     CALL EqualLine( UnitNo = I )
     CALL BlankLines( UnitNo = I )
 
-    WRITE( I, "(A, I2)" ) "NSD = ", Obj % NSD
+    WRITE( I, "(A, I2)" ) "NSD = ", Obj%NSD
     CALL BlankLines( UnitNo = I )
-    WRITE( I, "(A, A)" ) "Stress Type = ", TRIM( Obj % StressType )
+    WRITE( I, "(A, A)" ) "Stress Type = ", TRIM( Obj%StressType )
 
-    CALL Display_Array( MatFromVoigtVec( Obj % V, "Stress" ), "Stress "  )
+    CALL Display_Array( MatFromVoigtVec( Obj%V, "Stress" ), "Stress "  )
 
     CALL DashLine( UnitNo = I )
 

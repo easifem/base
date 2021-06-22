@@ -27,7 +27,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Obj - Obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     ! Define intent of dummy variables
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj2
@@ -36,8 +36,8 @@
     ! Define internal variables
     INTEGER( I4B ) :: N1, N2
 
-    IF( .NOT. ALLOCATED( Obj % C ) &
-        .OR. .NOT. ALLOCATED( Obj2 % C ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%C ) &
+        .OR. .NOT. ALLOCATED( Obj2%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
@@ -56,16 +56,16 @@
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
         "Obj - Obj2", &
-        "The Shape of Obj % C and Obj2 % C are not Compatible, &
+        "The Shape of Obj%C and Obj2%C are not Compatible, &
         Program Stopped!!!"&
         )
-        STOP 
+        STOP
 
     END IF
 
     ALLOCATE( Obj_Minus_Obj( N1, N1 ) )
 
-    Obj_Minus_Obj = Obj % C - Obj2 % C
+    Obj_Minus_Obj = Obj%C - Obj2%C
 
  END FUNCTION Obj_Minus_Obj
 
@@ -78,7 +78,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Obj - Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     ! Define intent of dummy variables
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
     REAL( DFP ), INTENT( IN ) :: Mat( :, : )
@@ -87,7 +87,7 @@
     ! Define internal variables
     INTEGER( I4B ) :: N1, N2
 
-    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
@@ -106,16 +106,16 @@
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
         "Obj - Mat", &
-        "The Shape of Obj % C and Mat are not Compatible, &
+        "The Shape of Obj%C and Mat are not Compatible, &
         Program Stopped!!!"&
         )
-        STOP 
+        STOP
 
     END IF
 
     ALLOCATE( Obj_Minus_Mat( N1, N1 ) )
 
-    Obj_Minus_Mat = Obj % C - Mat
+    Obj_Minus_Mat = Obj%C - Mat
 
  END FUNCTION Obj_Minus_Mat
 
@@ -128,7 +128,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Mat - Obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     ! Define intent of dummy variables
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
     REAL( DFP ), INTENT( IN ) :: Mat( :, : )
@@ -147,7 +147,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Obj - Scalar
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     ! Define intent of dummy variables
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
     REAL( DFP ), INTENT( IN ) :: Scalar
@@ -156,7 +156,7 @@
     ! Define internal variables
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
@@ -169,7 +169,7 @@
 
     N = .SIZE. Obj
     ALLOCATE( Obj_Minus_Scalar( N, N ) )
-    Obj_Minus_Scalar = Obj % C - Scalar
+    Obj_Minus_Scalar = Obj%C - Scalar
 
  END FUNCTION Obj_Minus_Scalar
 
@@ -182,7 +182,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Scalar - Obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     ! Define intent of dummy variables
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
     REAL( DFP ), INTENT( IN ) :: Scalar

@@ -30,8 +30,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_shape
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Ans(1) = SIZE( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Ans(1) = SIZE( Obj%Val )
   ELSE
     Ans = 0
   END IF
@@ -63,7 +63,7 @@ END PROCEDURE allocate_data
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE deallocate_data
-  IF( ALLOCATED( Obj % Val ) ) DEALLOCATE( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) DEALLOCATE( Obj%Val )
 END PROCEDURE deallocate_data
 
 !----------------------------------------------------------------------------
@@ -103,9 +103,9 @@ END PROCEDURE initiate_obj_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj_ab
-  IF( ALLOCATED( Obj % Val ) ) DEALLOCATE( Obj % Val )
-  ALLOCATE( Obj % Val( a:b ) )
-  Obj % Val = 0.0_DFP
+  IF( ALLOCATED( Obj%Val ) ) DEALLOCATE( Obj%Val )
+  ALLOCATE( Obj%Val( a:b ) )
+  Obj%Val = 0.0_DFP
   CALL setTotalDimension( Obj, 1_I4B )
 END PROCEDURE initiate_obj_ab
 

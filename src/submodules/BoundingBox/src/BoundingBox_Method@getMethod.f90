@@ -28,7 +28,7 @@ CONTAINS
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getXmin
-  Ans = Obj % Box( 1, 1 )
+  Ans = Obj%Box( 1, 1 )
 END PROCEDURE getXmin
 
 !-----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ END PROCEDURE getXmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getXmax
-  Ans = Obj % Box( 2, 1 )
+  Ans = Obj%Box( 2, 1 )
 END PROCEDURE getXmax
 
 !-----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ END PROCEDURE getXmax
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getYmin
-  Ans =  Obj % Box( 1, 2 )
+  Ans =  Obj%Box( 1, 2 )
 END PROCEDURE getYmin
 
 !-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ END PROCEDURE getYmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getYmax
-  Ans = Obj % Box( 2, 2 )
+  Ans = Obj%Box( 2, 2 )
 END PROCEDURE getYmax
 
 !-----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ END PROCEDURE getYmax
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getZmin
-  Ans = Obj % Box( 1, 3 )
+  Ans = Obj%Box( 1, 3 )
 END PROCEDURE getZmin
 
 !-----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ END PROCEDURE getZmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getZmax
-  Ans = Obj % Box( 2, 3 )
+  Ans = Obj%Box( 2, 3 )
 END PROCEDURE getZmax
 
 
@@ -157,8 +157,8 @@ MODULE PROCEDURE get_intersection
   REAL( DFP ) :: Min1, Max1, Min2, Max2
   LOGICAL( LGT ) :: Right
 
-  Ans % NSD = MAX( Obj % NSD, Obj2 % NSD )
-  Ans % Box = 0.0_DFP
+  Ans%NSD = MAX( Obj%NSD, Obj2%NSD )
+  Ans%Box = 0.0_DFP
 
   IF( Obj .isIntersect. Obj2 ) THEN
     Min1 = .Xmin. Obj; Max1 = .Xmax. Obj
@@ -202,7 +202,7 @@ MODULE PROCEDURE get_union
   ! Define Internal variables
   REAL( DFP ) :: Val, Val1, Val2
 
-  Ans % NSD = MAX( Obj % NSD, Obj2 % NSD )
+  Ans%NSD = MAX( Obj%NSD, Obj2%NSD )
 
   Val1 = .Xmin. Obj; Val2 = .Xmin. Obj2
   Val = MIN( Val1, Val2 )
@@ -231,9 +231,9 @@ END PROCEDURE get_union
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_Center
-  Ans( 1 ) = SUM( Obj % Box( :, 1 ) ) / 2.0_DFP
-  Ans( 2 ) = SUM( Obj % Box( :, 2 ) ) / 2.0_DFP
-  Ans( 3 ) = SUM( Obj % Box( :, 3 ) ) / 2.0_DFP
+  Ans( 1 ) = SUM( Obj%Box( :, 1 ) ) / 2.0_DFP
+  Ans( 2 ) = SUM( Obj%Box( :, 2 ) ) / 2.0_DFP
+  Ans( 3 ) = SUM( Obj%Box( :, 3 ) ) / 2.0_DFP
 END PROCEDURE get_Center
 
 !----------------------------------------------------------------------------

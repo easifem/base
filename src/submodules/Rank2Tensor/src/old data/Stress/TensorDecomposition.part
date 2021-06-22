@@ -30,18 +30,18 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     USE Rank2Tensor_Class
-    
+
     ! Define Intent of dummy variables
     CLASS( Stress_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_SymmetricPart
 
     ! Define internal variables
-    TYPE( Rank2Tensor_ ) :: T 
+    TYPE( Rank2Tensor_ ) :: T
     T = Obj
     m_SymmetricPart = SymmetricPart( T )
 
-    CALL T % DeallocateData( )
-    
+    CALL T%DeallocateData( )
+
  END FUNCTION m_SymmetricPart
 
 !------------------------------------------------------------------------------
@@ -61,11 +61,11 @@
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_AntiSymmetricPart
 
     ! Define internal variables
-    TYPE( Rank2Tensor_ ) :: T 
+    TYPE( Rank2Tensor_ ) :: T
     T = Obj
     m_AntiSymmetricPart = AntiSymmetricPart( T )
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION m_AntiSymmetricPart
 
@@ -78,7 +78,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1. - Hydrostatic part of Tensor :: Trace( T ) / 3
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     USE Rank2Tensor_Class
 
     ! Define Intent of dummy variables
@@ -86,12 +86,12 @@
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_HydrostaticPart
 
     ! Define internal variables
-    TYPE( Rank2Tensor_ ) :: T 
+    TYPE( Rank2Tensor_ ) :: T
     T = Obj
 
     m_HydrostaticPart = HydrostaticPart( T )
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION m_HydrostaticPart
 
@@ -104,7 +104,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1. - Deviatoric part of stress
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     USE Rank2Tensor_Class
 
     ! Define Intent of dummy variables
@@ -112,12 +112,12 @@
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_DeviatoricPart
 
     ! Define internal variables
-    TYPE( Rank2Tensor_ ) :: T 
+    TYPE( Rank2Tensor_ ) :: T
     T = Obj
 
     m_DeviatoricPart = DeviatoricPart( T )
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION m_DeviatoricPart
 

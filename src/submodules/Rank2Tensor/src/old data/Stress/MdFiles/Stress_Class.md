@@ -23,12 +23,12 @@
 **Initiate** subroutine
 
 ```fortran
-CALL Obj % Initiate( Vec, StresType )
-CALL Obj % Initiate( Mat, VoigtLen, StressType )
-CALL Obj % Initiate( Mat, StressType )
-CALL Obj % Initiate( Obj2 )
-CALL Obj % Initiate( TensorObj, VoigtLen, StressType )
-CALL Obj % Initiate( TensorObj, StressType )
+CALL Obj%Initiate( Vec, StresType )
+CALL Obj%Initiate( Mat, VoigtLen, StressType )
+CALL Obj%Initiate( Mat, StressType )
+CALL Obj%Initiate( Obj2 )
+CALL Obj%Initiate( TensorObj, VoigtLen, StressType )
+CALL Obj%Initiate( TensorObj, StressType )
 ```
 
 **Stress** function
@@ -53,13 +53,13 @@ Obj => Stress_Pointer( TensorObj, VoigtLen, StressType )
 Obj => Stress_Pointer( TensorObj, StressType )
 ```
 
-### Getting the length of `Obj % V`
+### Getting the length of `Obj%V`
 
 ```fortran
 tSize = .SIZE. Obj
 ```
 
-The program stops if the `Obj % V` is not allocated.
+The program stops if the `Obj%V` is not allocated.
 
 ### Getting the Stress Tensor in Voigt Form
 
@@ -67,7 +67,7 @@ Many times we need to get the stress tensor in voigt vector form with appropriat
 
 ```fortran
 Vec = Obj .Shape. M
-``` 
+```
 
 Note that M should belong to the list {1,2,3,4,6}.
 
@@ -107,7 +107,7 @@ The above call copies the content of `Obj` into the 3 by 3 array.
 Vec = Obj
 ```
 
-The above call copies the content of the `Obj` into the vector. The length of the returned vector is same as the length of `Obj % V`
+The above call copies the content of the `Obj` into the vector. The length of the returned vector is same as the length of `Obj%V`
 
 ```fortran
 Obj = Mat

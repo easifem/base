@@ -77,7 +77,7 @@ CONTAINS
     integer, intent(in), optional :: unit, lbound(:)
     type(settings) :: SE
     call get_SE(SE, title, shape(x), fmt, advance, lbound, sep, style, trim, unit, orient)
-    if (SE % row) then
+    if (SE%row) then
       call disp_log1(title, reshape(x, (/1, size(x)/)), SE)
     else
       call disp_log1(title, reshape(x, (/size(x), 1/)), SE)
@@ -108,17 +108,17 @@ CONTAINS
     logical(log1),  intent(in)    :: x(:,:)
     type(settings), intent(inout) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
-    if (SE % w <= 0 .or. SE % trm) then
-      SE % ed = '(L1)'
+    if (SE%w <= 0 .or. SE%trm) then
+      SE%ed = '(L1)'
       if (size(x) == 0) then
         wid = 0
       else
         wid = 1
       endif
-      SE % w = 1
-      nbl = SE % w - wid
+      SE%w = 1
+      nbl = SE%w - wid
     else
-      wid = SE % w
+      wid = SE%w
       nbl = 0
     endif
     call tobox_log1(title, x, SE, wid, nbl)
@@ -130,16 +130,16 @@ CONTAINS
     type(settings), intent(inout) :: SE
     integer,        intent(inout) :: wid(:)
     integer,        intent(inout) :: nbl(:)
-    character(SE % w)  :: s(size(x,1))
+    character(SE%w)  :: s(size(x,1))
     integer            :: m, n, lin1, i, j, wleft, widp(size(wid))
     character, pointer :: boxp(:,:)
     m = size(x,1)
     n = size(x,2)
     call preparebox(title, SE, m, n, wid, widp, lin1, wleft, boxp)
     do j=1,n
-      if (m > 0) write(s, SE % ed) (x(i,j), i=1,m)
+      if (m > 0) write(s, SE%ed) (x(i,j), i=1,m)
       call copytobox(s, lin1, wid(j), widp(j), nbl(j), boxp,  wleft)
-      if (j<n) call copyseptobox(SE % sep(1:SE % lsep), m, lin1, boxp,  wleft)
+      if (j<n) call copyseptobox(SE%sep(1:SE%lsep), m, lin1, boxp,  wleft)
     enddo
     call finishbox(title, SE, boxp)
   end subroutine tobox_log1
@@ -160,7 +160,7 @@ CONTAINS
 
   function tostring_log1(x) result(st)
     logical(log1), intent(in)                          :: x(:)
-    character(1 + (size(x) - 1)*(1 + tosset % seplen)) :: st
+    character(1 + (size(x) - 1)*(1 + tosset%seplen)) :: st
     st = tostring_f_log1(x, 'L1')
   end function tostring_log1
 
@@ -175,7 +175,7 @@ CONTAINS
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w <= 0) then; st = errormsg; return; endif
     write(sa, fmt1) x
-    if (tosset % trimb == 'YES') sa = adjustl(sa)
+    if (tosset%trimb == 'YES') sa = adjustl(sa)
     call tostring_get(sa, st)
   end function tostring_f_log1
 
@@ -187,9 +187,9 @@ CONTAINS
     character(nnblk(fmt)+2)    :: fmt1
     call readfmt(fmt, fmt1, w, d, gedit)
     if (w <= 0) then; wtot = len(errormsg); return; endif
-    if (tosset % trimb == 'YES') wtot = size(x)
-    if (tosset % trimb == 'NO' ) wtot = w*size(x)
-    wtot = wtot + (size(x) - 1)*(tosset % seplen)
+    if (tosset%trimb == 'YES') wtot = size(x)
+    if (tosset%trimb == 'NO' ) wtot = w*size(x)
+    wtot = wtot + (size(x) - 1)*(tosset%seplen)
   end function len_f_log1
 
   pure function widthmax_log1(fmt) result(w)

@@ -370,7 +370,7 @@ END PROCEDURE Element_Order
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Order_RefElem
-  Ans = RefElem % Order
+  Ans = RefElem%Order
 END PROCEDURE Element_Order_RefElem
 
 !----------------------------------------------------------------------------
@@ -545,9 +545,9 @@ MODULE PROCEDURE isQuadrangle
   END SELECT
 END PROCEDURE isQuadrangle
 
-!-----------------------------------------------------------------------------
-!                                                              isTetrahedron
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                            isTetrahedron
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE isTetrahedron
   SELECT CASE( ElemType )
@@ -653,19 +653,19 @@ MODULE PROCEDURE Elem_Topology
 
 END PROCEDURE Elem_Topology
 
-!-----------------------------------------------------------------------------
-!                                                                 FacetMatrix
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                               FacetMatrix
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Facet_Matrix_RefElem
   INTEGER( I4B ) :: XiCell, T( 4 ), i, istart, iend, max_nns, nns, tFacet
 
   T( 1 ) = 0
   DO i = 2, 4
-    T( i ) = SUM( RefElem % EntityCounts( 1 : i - 1 ) )
+    T( i ) = SUM( RefElem%EntityCounts( 1 : i - 1 ) )
   END DO
 
-  XiCell = RefElem % XiDimension
+  XiCell = RefElem%XiDimension
   SELECT CASE( XiCell )
   CASE( 1 )
     tFacet = 2
@@ -677,19 +677,19 @@ MODULE PROCEDURE Facet_Matrix_RefElem
     FM = 0
 
     DO i = 0, tFacet-1
-      FM( i+1, 1 ) = RefElem % Topology( iStart + i ) % Name
-      FM( i+1, 2 ) = RefElem % Topology( iStart + i ) % XiDimension
-      nns = SIZE( RefElem % Topology( iStart + i ) % Nptrs )
+      FM( i+1, 1 ) = RefElem%Topology( iStart + i )%Name
+      FM( i+1, 2 ) = RefElem%Topology( iStart + i )%XiDimension
+      nns = SIZE( RefElem%Topology( iStart + i )%Nptrs )
       FM( i+1, 3 ) = nns
-      FM( i+1, 4 : (3 + nns) ) = RefElem % Topology( iStart + i ) % Nptrs
+      FM( i+1, 4 : (3 + nns) ) = RefElem%Topology( iStart + i )%Nptrs
     END DO
   CASE( 2, 3 )
-    tFacet = RefElem % EntityCounts( XiCell )
+    tFacet = RefElem%EntityCounts( XiCell )
     istart = T( XiCell ) + 1
     iend = T( XiCell ) + tFacet
     max_nns = 0
     DO i = istart, iend
-      nns = SIZE( RefElem % Topology( i ) % Nptrs )
+      nns = SIZE( RefElem%Topology( i )%Nptrs )
       IF( max_nns .LT. nns ) max_nns = nns
     END DO
 
@@ -697,23 +697,126 @@ MODULE PROCEDURE Facet_Matrix_RefElem
     FM = 0
 
     DO i = 0, tFacet-1
-      FM( i+1, 1 ) = RefElem % Topology( iStart + i ) % Name
-      FM( i+1, 2 ) = RefElem % Topology( iStart + i ) % XiDimension
-      nns = SIZE( RefElem % Topology( iStart + i ) % Nptrs )
+      FM( i+1, 1 ) = RefElem%Topology( iStart + i )%Name
+      FM( i+1, 2 ) = RefElem%Topology( iStart + i )%XiDimension
+      nns = SIZE( RefElem%Topology( iStart + i )%Nptrs )
       FM( i+1, 3 ) = nns
-      FM( i+1, 4 : (3 + nns) ) = RefElem % Topology( iStart + i ) % Nptrs
+      FM( i+1, 4 : (3 + nns) ) = RefElem%Topology( iStart + i )%Nptrs
     END DO
   END SELECT
 END PROCEDURE Facet_Matrix_RefElem
 
-!-----------------------------------------------------------------------------
-!                                                                 FacetMatrix
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                             FacetElements
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElem_FacetElements
+  INTEGER( I4B ) :: tFacet, ii, xiCell, T( 4 ), istart, iend, tsize, jj
+  INTEGER( I4B ), ALLOCATABLE :: nptrs( : )
+  TYPE( ReferenceTopology_ ) :: topo
+
+  xiCell = refelem%xidimension
+  SELECT CASE( xiCell )
+  CASE( 1 )
+    tFacet = 2
+    ALLOCATE( ans( tFacet ) )
+    DO ii = 1, tFacet
+      nptrs = refelem%Topology(ii)%nptrs
+      ans( ii )%xij = refelem%xij(:, nptrs)
+      ans( ii )%EntityCounts = [1,0,0,0]
+      ans( ii )%xidimension = 0
+      ans( ii )%Name = Point
+      ans( ii )%Order = 0
+      ans( ii )%NSD = refelem%nsd
+      ALLOCATE( ans( ii )%Topology( 1 ) )
+      ans( ii )%Topology( 1 ) = ReferenceTopology( nptrs=nptrs, name=Point )
+      ans( ii )%LagrangeElement => null()
+    END DO
+  CASE( 2 )
+    tFacet = refelem%EntityCounts( xicell )
+    ALLOCATE( ans( tFacet ) )
+
+    T( 1 ) = 0
+    DO ii = 2, 4
+      T( ii ) = SUM( refelem%EntityCounts( 1 : ii - 1 ) )
+    END DO
+    istart = T( XiCell ) + 1
+    iend = T( XiCell ) + tFacet
+
+    DO ii = 1, tFacet
+      topo = refelem%Topology( iStart + ii - 1)
+      nptrs = topo%nptrs
+      ans( ii )%xidimension = topo%Xidimension
+      ans( ii )%Name = topo%Name
+      ans( ii )%xij = refelem%xij(:, nptrs )
+      ans( ii )%Order = ElementOrder( ElemType = topo%Name )
+      ans( ii )%NSD = refelem%nsd
+
+      ans( ii )%EntityCounts = [SIZE(nptrs),1,0,0]
+      tsize = SIZE( nptrs ) + 1
+      ALLOCATE( ans( ii )%Topology( tsize ) )
+
+      DO jj = 1, SIZE( nptrs )
+        ans( ii )%Topology( jj ) = ReferenceTopology( nptrs=nptrs(jj:jj), name=Point )
+      END DO
+
+      ans( ii )%Topology( tsize ) = ReferenceTopology( nptrs=nptrs, name=ans( ii )%Name )
+    END DO
+  CASE( 3 )
+    tFacet = refelem%EntityCounts( xicell )
+    ALLOCATE( ans( tFacet ) )
+
+    T( 1 ) = 0
+    DO ii = 2, 4
+      T( ii ) = SUM( refelem%EntityCounts( 1 : ii - 1 ) )
+    END DO
+    istart = T( XiCell ) + 1
+    iend = T( XiCell ) + tFacet
+
+    DO ii = 1, tFacet
+      topo = refelem%Topology( iStart + ii - 1 )
+      nptrs = topo%nptrs
+      ans( ii )%xidimension = topo%Xidimension
+      ans( ii )%Name = topo%Name
+      ans( ii )%xij = refelem%xij(:, nptrs )
+      ans( ii )%Order = ElementOrder( ElemType = topo%Name )
+      ans( ii )%NSD = refelem%nsd
+
+      ans( ii )%EntityCounts = TotalEntities( topo%Name )
+
+      tsize = SUM( ans( ii )%EntityCounts )
+      ALLOCATE( ans( ii )%Topology( tsize ) )
+
+      ! points
+      DO jj = 1, ans( ii )%EntityCounts( 1 )
+        ans( ii )%Topology( jj ) = ReferenceTopology( nptrs=nptrs(jj:jj), name=Point )
+      END DO
+
+      ! lines
+      jj = ans( ii )%EntityCounts( 1 )
+      tsize = jj + ans( ii )%EntityCounts( 2 )
+      ans( ii )%Topology( jj+1 : tsize ) = FacetTopology( ElemType=ans(ii)%name, Nptrs=nptrs )
+
+      ! surface
+      ans( ii )%Topology( tsize ) = ReferenceTopology( nptrs=nptrs, name=ans( ii )%Name )
+    END DO
+  END SELECT
+
+  IF( ALLOCATED( nptrs ) ) DEALLOCATE( nptrs )
+END PROCEDURE RefElem_FacetElements
+
+!----------------------------------------------------------------------------
+!                                                            LocalNodeCoord
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Local_NodeCoord
   IF( ALLOCATED( NodeCoord ) ) DEALLOCATE( NodeCoord )
 
   SELECT CASE( ElemType )
+    CASE( Point1 )
+      ALLOCATE( NodeCoord( 3, 1 ) )
+      NodeCoord = 0.0_DFP
+
     CASE( Line2 )
       ALLOCATE( NodeCoord( 3, 2 ) )
       NodeCoord = 0.0_DFP
@@ -1077,7 +1180,7 @@ END PROCEDURE Local_NodeCoord
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Local_NodeCoord_RefElem
-  IF( ALLOCATED( RefElem % XiJ ) ) NodeCoord = RefElem % XiJ
+  IF( ALLOCATED( RefElem%XiJ ) ) NodeCoord = RefElem%XiJ
 END PROCEDURE Local_NodeCoord_RefElem
 
 !----------------------------------------------------------------------------
@@ -1087,6 +1190,8 @@ END PROCEDURE Local_NodeCoord_RefElem
 MODULE PROCEDURE Measure_Simplex
   Ans = 0.0_DFP
   SELECT TYPE ( RefElem )
+  TYPE IS ( ReferencePoint_ )
+    Ans = Measure_Simplex_Point( RefElem, XiJ )
   TYPE IS ( ReferenceLine_ )
     Ans = Measure_Simplex_Line( RefElem, XiJ )
   TYPE IS ( ReferenceTriangle_ )
@@ -1110,6 +1215,8 @@ END PROCEDURE Measure_Simplex
 
 MODULE PROCEDURE Element_Quality
   SELECT TYPE( refelem )
+  CLASS IS (ReferencePoint_)
+    Ans = Point_quality( refelem, xij, measure )
   CLASS IS (ReferenceLine_)
     Ans = Line_quality( refelem, xij, measure )
   CLASS IS (ReferenceTriangle_)
@@ -1150,4 +1257,335 @@ MODULE PROCEDURE contains_point
   END SELECT
 END PROCEDURE contains_point
 
+!----------------------------------------------------------------------------
+!                                                       TotalEntities
+!----------------------------------------------------------------------------
+
+
+MODULE PROCEDURE RefElem_TotalEntities
+  SELECT CASE( ElemType )
+  CASE( Point1 )
+    ans = 0
+    ans( 1 ) = 1
+  CASE( Line2 )
+    ans = [2,1,0,0]
+  CASE( Triangle3 )
+    ans = [3,3,1,0]
+  CASE( Quadrangle4 )
+    ans = [4, 4, 1, 0]
+  CASE( Tetrahedron4 )
+    ans = [4, 6, 4, 1]
+  CASE( Hexahedron8 )
+    ans = [8, 12, 6, 1]
+  CASE( Prism6 )
+    ans = [6, 9, 5, 1]
+  CASE( Pyramid5 )
+    ans = [5, 8, 5, 1]
+  !! Order=2 elements
+  CASE( Line3 )
+    ans = [3,1,0,0]
+  CASE( Triangle6 )
+    ans = [6,3,1,0]
+  CASE( Quadrangle9 )
+    ans = [9,4,1,0]
+  CASE( Quadrangle8 )
+    ans = [8,4,1,0]
+  CASE( Tetrahedron10 )
+    ans = [10, 6, 4, 1]
+  CASE( Hexahedron20 )
+    ans = [20, 12, 6, 1]
+  CASE( Hexahedron27 )
+    ans = [27, 12, 6, 1]
+  CASE( Prism15 )
+    ans = [15, 9, 5, 1]
+  CASE( Prism18 )
+    ans = [18, 9, 5, 1]
+  CASE( Pyramid13 )
+    ans = [13, 8, 5, 1]
+  CASE( Pyramid14 )
+    ans = [14, 8, 5, 1]
+  CASE( Triangle9 )
+    ans = [9,3,1,0]
+  CASE( Triangle10 )
+    ans = [10,3,1,0]
+  CASE( Triangle12 )
+    ans = [12,3,1,0]
+  CASE( Triangle15a )
+    ans = [15,3,1,0]
+  CASE( Triangle15b )
+    ans = [15,3,1,0]
+  CASE( Triangle21 )
+    ans = [21,3,1,0]
+  CASE( Line4 )
+    ans = [4,1,0,0]
+  CASE( Line5 )
+    ans = [5,1,0,0]
+  CASE( Line6 )
+    ans = [6,1,0,0]
+  CASE( Tetrahedron20 )
+    ans = [20, 6, 4, 1]
+  CASE( Tetrahedron35 )
+    ans = [35, 6, 4, 1]
+  CASE( Tetrahedron56 )
+    ans = [56, 6, 4, 1]
+  CASE( Hexahedron64 )
+    ans = [64, 6, 4, 1]
+  CASE( Hexahedron125 )
+    ans = [125, 6, 4, 1]
+  END SELECT
+END PROCEDURE RefElem_TotalEntities
+
+!----------------------------------------------------------------------------
+!                                                      FacetTopology
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElem_FacetTopology
+  SELECT CASE( ElemType )
+  CASE( Line2 )
+    ALLOCATE( ans( 2 ) )
+    ans( 1 )%nptrs = Nptrs( 1:1 )
+    ans( 1 )%name = point
+    ans( 1 )%xidimension = 0
+
+    ans( 2 )%nptrs = Nptrs( 2:2 )
+    ans( 2 )%name = point
+    ans( 2 )%xidimension = 0
+
+  CASE( Triangle3 )
+    ALLOCATE( ans( 3 ) )
+    ans( 1 )%nptrs = Nptrs([1,2])
+    ans( 2 )%nptrs = Nptrs([2,3])
+    ans( 3 )%nptrs = Nptrs([3,1])
+
+    ans( 1:3 )%Xidimension = 1
+    ans( 1:3 )%name = line2
+
+  CASE( Quadrangle4 )
+    ALLOCATE( ans( 4 ) )
+    ans( 1 )%nptrs = Nptrs([1,2])
+    ans( 2 )%nptrs = Nptrs([2,3])
+    ans( 3 )%nptrs = Nptrs([3,4])
+    ans( 4 )%nptrs = Nptrs([4,1])
+    ans( 1: )%Xidimension = 1
+    ans( 1: )%name = line2
+  CASE( Tetrahedron4 )
+    ALLOCATE( ans( 4 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,3])
+    ans( 2 )%nptrs = Nptrs([3,1,4])
+    ans( 3 )%nptrs = Nptrs([4,2,3])
+    ans( 4 )%nptrs = Nptrs([1,2,4])
+    ans( : )%Xidimension = 2
+    ans( : )%name = Triangle3
+
+  CASE( Hexahedron8 )
+    ALLOCATE( ans( 6 ) )
+    ans( 1 )%nptrs = Nptrs([1,4,3,2])
+    ans( 2 )%nptrs = Nptrs([1,5,8,4])
+    ans( 3 )%nptrs = Nptrs([5,6,7,8])
+    ans( 4 )%nptrs = Nptrs([2,3,7,6])
+    ans( 5 )%nptrs = Nptrs([3,4,8,7])
+    ans( 6 )%nptrs = Nptrs([1,2,6,5])
+    ans( : )%Xidimension = 2
+    ans( : )%name = Quadrangle4
+  CASE( Prism6 )
+    ALLOCATE( ans( 5 ) )
+    ans( 1 )%nptrs = Nptrs([5,4,1,2])
+    ans( 2 )%nptrs = Nptrs([4,6,3,1])
+    ans( 3 )%nptrs = Nptrs([2,3,6,5])
+    ans( 4 )%nptrs = Nptrs([1,3,2])
+    ans( 5 )%nptrs = Nptrs([4,5,6])
+    ans( : )%Xidimension = 2
+    ans( 1:3 )%name = Quadrangle4
+    ans( 4:5 )%name = Triangle3
+  CASE( Pyramid5 )
+    ALLOCATE( ans( 5 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,5])
+    ans( 2 )%nptrs = Nptrs([2,3,5])
+    ans( 3 )%nptrs = Nptrs([3,4,5])
+    ans( 4 )%nptrs = Nptrs([1,5,4])
+    ans( 5 )%nptrs = Nptrs([4,3,2,1])
+    ans( : )%Xidimension = 2
+    ans( 1:4 )%name = Triangle3
+    ans( 5 )%name = Quadrangle4
+  !! Order=2 elements
+  CASE( Line3 )
+    ALLOCATE( ans( 2 ) )
+    ans( 1 )%nptrs = Nptrs( [1] )
+    ans( 1 )%name = point
+    ans( 1 )%xidimension = 0
+
+    ans( 2 )%nptrs = Nptrs( [2] )
+    ans( 2 )%name = point
+    ans( 2 )%xidimension = 0
+  CASE( Triangle6 )
+    ALLOCATE( ans( 3 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,4])
+    ans( 2 )%nptrs = Nptrs([2,3,5])
+    ans( 3 )%nptrs = Nptrs([3,1,6])
+
+    ans( 1:3 )%Xidimension = 1
+    ans( 1:3 )%name = line3
+
+  CASE( Quadrangle9 )
+    ALLOCATE( ans( 4 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,5])
+    ans( 2 )%nptrs = Nptrs([2,3,6])
+    ans( 3 )%nptrs = Nptrs([3,4,7])
+    ans( 4 )%nptrs = Nptrs([4,1,8])
+    ans( 1: )%Xidimension = 1
+    ans( 1: )%name = line3
+
+  CASE( Quadrangle8 )
+    ALLOCATE( ans( 4 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,5])
+    ans( 2 )%nptrs = Nptrs([2,3,6])
+    ans( 3 )%nptrs = Nptrs([3,4,7])
+    ans( 4 )%nptrs = Nptrs([4,1,8])
+    ans( 1: )%Xidimension = 1
+    ans( 1: )%name = line3
+
+  CASE( Tetrahedron10 )
+    ALLOCATE( ans( 4 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,3,5,6,7])
+    ans( 2 )%nptrs = Nptrs([3,1,4,7,8,10])
+    ans( 3 )%nptrs = Nptrs([4,2,3,9,6,10])
+    ans( 4 )%nptrs = Nptrs([1,2,4,5,9,8])
+    ans( : )%Xidimension = 2
+    ans( : )%name = Triangle6
+
+  CASE( Hexahedron20 )
+    ALLOCATE( ans( 6 ) )
+    ans( 1 )%nptrs = Nptrs([1,4,3,2,10,14,12,9])
+    ans( 2 )%nptrs = Nptrs([1,5,8,4,11,18,16,10])
+    ans( 3 )%nptrs = Nptrs([5,6,7,8,17,19,20,18])
+    ans( 4 )%nptrs = Nptrs([2,3,7,6,12,15,19,13])
+    ans( 5 )%nptrs = Nptrs([3,4,8,7,14,16,20,15])
+    ans( 6 )%nptrs = Nptrs([1,2,6,5,9,13,17,11])
+    ans( : )%Xidimension = 2
+    ans( : )%name = Quadrangle8
+  CASE( Hexahedron27 )
+    ALLOCATE( ans( 6 ) )
+    ans( 1 )%nptrs = Nptrs([1,4,3,2,10,14,12,9,21])
+    ans( 2 )%nptrs = Nptrs([1,5,8,4,11,18,16,10,23])
+    ans( 3 )%nptrs = Nptrs([5,6,7,8,17,19,20,18,26])
+    ans( 4 )%nptrs = Nptrs([2,3,7,6,12,15,19,13,24])
+    ans( 5 )%nptrs = Nptrs([3,4,8,7,14,16,20,15,25])
+    ans( 6 )%nptrs = Nptrs([1,2,6,5,9,13,17,11,22])
+    ans( : )%Xidimension = 2
+    ans( : )%name = Quadrangle9
+  CASE( Prism15 )
+    ALLOCATE( ans( 5 ) )
+    ans( 1 )%nptrs = Nptrs([5,4,1,2,13,9,7,11])
+    ans( 2 )%nptrs = Nptrs([4,6,3,1,14,12,8,9])
+    ans( 3 )%nptrs = Nptrs([2,3,6,5,10,12,15,11])
+    ans( 4 )%nptrs = Nptrs([1,3,2,8,10,7])
+    ans( 5 )%nptrs = Nptrs([4,5,6,13,15,14])
+    ans( : )%Xidimension = 2
+    ans( 1:3 )%name = Quadrangle8
+    ans( 4:5 )%name = Triangle6
+
+  CASE( Prism18 )
+    ALLOCATE( ans( 5 ) )
+    ans( 1 )%nptrs = Nptrs([5,4,1,2,13,9,7,11,16])
+    ans( 2 )%nptrs = Nptrs([4,6,3,1,14,12,8,9,17])
+    ans( 3 )%nptrs = Nptrs([2,3,6,5,10,12,15,11,18])
+    ans( 4 )%nptrs = Nptrs([1,3,2,8,10,7])
+    ans( 5 )%nptrs = Nptrs([4,5,6,13,15,14])
+    ans( : )%Xidimension = 2
+    ans( 1:3 )%name = Quadrangle9
+    ans( 4:5 )%name = Triangle6
+
+  CASE( Pyramid13 )
+    ALLOCATE( ans( 5 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,5,6,10,8])
+    ans( 2 )%nptrs = Nptrs([2,3,5,9,12,10])
+    ans( 3 )%nptrs = Nptrs([3,4,5,11,13,12])
+    ans( 4 )%nptrs = Nptrs([1,5,4,8,13,7])
+    ans( 5 )%nptrs = Nptrs([4,3,2,1,11,9,6,7])
+    ans( : )%Xidimension = 2
+    ans( 1:4 )%name = Triangle6
+    ans( 5 )%name = Quadrangle8
+
+  CASE( Pyramid14 )
+    ALLOCATE( ans( 5 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,5,6,10,8])
+    ans( 2 )%nptrs = Nptrs([2,3,5,9,12,10])
+    ans( 3 )%nptrs = Nptrs([3,4,5,11,13,12])
+    ans( 4 )%nptrs = Nptrs([1,5,4,8,13,7])
+    ans( 5 )%nptrs = Nptrs([4,3,2,1,11,9,6,7,13])
+    ans( : )%Xidimension = 2
+    ans( 1:4 )%name = Triangle6
+    ans( 5 )%name = Quadrangle9
+
+  CASE( Triangle9 )
+    ALLOCATE( ans( 3 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,4,5])
+    ans( 2 )%nptrs = Nptrs([2,3,6,7])
+    ans( 3 )%nptrs = Nptrs([3,1,8,9])
+
+    ans( 1:3 )%Xidimension = 1
+    ans( 1:3 )%name = line4
+
+  CASE( Triangle10 )
+    ALLOCATE( ans( 3 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,4,5])
+    ans( 2 )%nptrs = Nptrs([2,3,6,7])
+    ans( 3 )%nptrs = Nptrs([3,1,8,9])
+
+    ans( 1:3 )%Xidimension = 1
+    ans( 1:3 )%name = line4
+
+  CASE( Triangle12 )
+    ALLOCATE( ans( 3 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,4,5,6])
+    ans( 2 )%nptrs = Nptrs([2,3,7,8,9])
+    ans( 3 )%nptrs = Nptrs([3,1,10,11,12])
+
+    ans( 1:3 )%Xidimension = 1
+    ans( 1:3 )%name = line5
+
+  CASE( Triangle15a )
+    ALLOCATE( ans( 3 ) )
+    ans( 1 )%nptrs = Nptrs([1,2,4,5,6])
+    ans( 2 )%nptrs = Nptrs([2,3,7,8,9])
+    ans( 3 )%nptrs = Nptrs([3,1,10,11,12])
+
+    ans( 1:3 )%Xidimension = 1
+    ans( 1:3 )%name = line5
+
+  CASE( Line4 )
+    ALLOCATE( ans( 2 ) )
+    ans( 1 )%nptrs = Nptrs( [1] )
+    ans( 1 )%name = point
+    ans( 1 )%xidimension = 0
+
+    ans( 2 )%nptrs = Nptrs( [2] )
+    ans( 2 )%name = point
+    ans( 2 )%xidimension = 0
+
+  CASE( Line5 )
+    ALLOCATE( ans( 2 ) )
+    ans( 1 )%nptrs = Nptrs( [1] )
+    ans( 1 )%name = point
+    ans( 1 )%xidimension = 0
+
+    ans( 2 )%nptrs = Nptrs( [2] )
+    ans( 2 )%name = point
+    ans( 2 )%xidimension = 0
+
+  CASE( Line6 )
+    ALLOCATE( ans( 2 ) )
+    ans( 1 )%nptrs = Nptrs( [1] )
+    ans( 1 )%name = point
+    ans( 1 )%xidimension = 0
+
+    ans( 2 )%nptrs = Nptrs( [2] )
+    ans( 2 )%name = point
+    ans( 2 )%xidimension = 0
+
+  CASE( Triangle15b, Triangle21, Tetrahedron20, Tetrahedron35, &
+    & Tetrahedron56, Hexahedron64, Hexahedron125 )
+
+  END SELECT
+END PROCEDURE RefElem_FacetTopology
 END SUBMODULE Geometry

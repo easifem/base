@@ -15,11 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 MODULE GlobalData
-  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY : stdin => input_unit, &
-    & stdout => output_unit, stderr => error_unit
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY : input_unit, &
+    & output_unit, error_unit
   IMPLICIT NONE
   PUBLIC
   SAVE
+
+  INTEGER, PARAMETER :: stdin = input_unit
+  INTEGER, PARAMETER :: stdout = output_unit
+  INTEGER, PARAMETER :: stderr = output_unit
 
   INTEGER, PARAMETER :: endianL = 1
   INTEGER, PARAMETER :: endianB = 0

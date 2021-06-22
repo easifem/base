@@ -16,8 +16,8 @@ MODULE PROCEDURE dof_setValue_1
   tdof = .tdof. Obj
   n = SIZE( Nptrs ); m = SIZE( Val )
 
-  ASSOCIATE( vm => Obj % ValMap )
-    SELECT CASE( Obj %  StorageFMT )
+  ASSOCIATE( vm => Obj%ValMap )
+    SELECT CASE( Obj% StorageFMT )
     CASE( dof_FMT )
       IF( m .NE. n ) THEN
         IF( m .EQ. 1 ) THEN
@@ -81,9 +81,9 @@ END PROCEDURE dof_setValue_1
 
 MODULE PROCEDURE dof_setValue_2
   INTEGER( I4B ) :: n, m, tdof
-  tdof = Obj % Map( SIZE( Obj % Map, 1 ), 4 ); n = SIZE(Nptrs); m=SIZE(Val)
-  ASSOCIATE( vm => Obj % ValMap )
-    SELECT CASE( Obj % StorageFMT )
+  tdof = Obj%Map( SIZE( Obj%Map, 1 ), 4 ); n = SIZE(Nptrs); m=SIZE(Val)
+  ASSOCIATE( vm => Obj%ValMap )
+    SELECT CASE( Obj%StorageFMT )
     CASE( dof_FMT )
       IF( m .EQ. n ) THEN
         Vec( vm( dofno ) - 1 + Nptrs ) = Val( : )
@@ -110,8 +110,8 @@ MODULE PROCEDURE dof_addValue_1
   tdof = .tdof. Obj
   n = SIZE( Nptrs ); m = SIZE( Val )
 
-  ASSOCIATE( vm => Obj % ValMap )
-    SELECT CASE( Obj %  StorageFMT )
+  ASSOCIATE( vm => Obj%ValMap )
+    SELECT CASE( Obj% StorageFMT )
 
     CASE( dof_FMT )
 
@@ -220,10 +220,10 @@ END PROCEDURE dof_addValue_1
 MODULE PROCEDURE dof_addValue_2
   INTEGER( I4B ) :: n, m, tdof
 
-  tdof = Obj % Map( SIZE( Obj % Map, 1 ), 4 ); n = SIZE(Nptrs); m=SIZE(Val)
+  tdof = Obj%Map( SIZE( Obj%Map, 1 ), 4 ); n = SIZE(Nptrs); m=SIZE(Val)
 
-  ASSOCIATE( vm => Obj % ValMap )
-    SELECT CASE( Obj % StorageFMT )
+  ASSOCIATE( vm => Obj%ValMap )
+    SELECT CASE( Obj%StorageFMT )
 
     CASE( dof_FMT )
 

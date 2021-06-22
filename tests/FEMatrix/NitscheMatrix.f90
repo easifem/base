@@ -15,14 +15,14 @@ implicit none
   cell => element_pointer( NPTRS = [1,2,3], Mat_Type = 1, RefElem = refelem )
   refelem => ReferenceLine_Pointer( NSD = 2 )
   obj => facetelement_pointer( nptrs = [2,3], Mat_type = 1, refelem =  refelem )
-  obj % cell => cell
-  call obj % setFacetLocalID( 2 )
+  obj%cell => cell
+  call obj%setFacetLocalID( 2 )
 
-  quad = GaussLegendreQuadrature( refelem = obj % refelem, &
+  quad = GaussLegendreQuadrature( refelem = obj%refelem, &
     & order = 2 )
   call display( quad, 'quad')
 
-  call obj % getElemShapeData( elemsd = elemsd, quad = quad, xiJ = xiJ, &
+  call obj%getElemShapeData( elemsd = elemsd, quad = quad, xiJ = xiJ, &
     & ContinuityType = TypeH1, InterpolType = TypeLagrangeInterpolation )
   call display( elemsd, 'elemsd' )
 

@@ -39,8 +39,8 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T1, T2
 
-    IF( .NOT. ALLOCATED( Obj % V ) &
-        .OR. .NOT. ALLOCATED( Obj2 % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) &
+        .OR. .NOT. ALLOCATED( Obj2%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -58,8 +58,8 @@
 
     Obj_Otimes_Obj = T1 .otimes. T2
 
-    CALL T1 % DeallocateData( )
-    CALL T2 % DeallocateData( )
+    CALL T1%DeallocateData( )
+    CALL T2%DeallocateData( )
 
  END FUNCTION Obj_Otimes_Obj
 
@@ -85,7 +85,7 @@
     INTEGER( I4B ) :: N
     REAL ( DFP ) :: DummyMat( 3, 3 )
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -98,7 +98,7 @@
     N = SIZE( Mat, 1 )
 
     IF( SIZE( Mat, 2 ) .NE. N .OR. N .GT. 3 ) THEN
-        
+
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
                         "Obj_Otimes_Mat()", &
@@ -117,7 +117,7 @@
 
     Obj_Otimes_Mat = T .Otimes. DummyMat
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Obj_Otimes_Mat
 
@@ -144,7 +144,7 @@
     INTEGER( I4B ) :: N
     REAL ( DFP ) :: DummyMat( 3, 3 )
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -157,7 +157,7 @@
     N = SIZE( Mat, 1 )
 
     IF( SIZE( Mat, 2 ) .NE. N .OR. N .GT. 3 ) THEN
-        
+
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
                         "Mat_Otimes_Obj()", &
@@ -176,7 +176,7 @@
 
     Mat_Otimes_Obj = DummyMat .Otimes. T
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Mat_Otimes_Obj
 
@@ -201,7 +201,7 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -215,7 +215,7 @@
 
     Obj_Otimes_Tensor = T .Otimes. TensorObj
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Obj_Otimes_Tensor
 
@@ -240,7 +240,7 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -254,7 +254,7 @@
 
     Tensor_Otimes_Obj = TensorObj .Otimes. T
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Tensor_Otimes_Obj
 
@@ -279,7 +279,7 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T1, T2
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -290,7 +290,7 @@
 
     END IF
 
-    IF( SIZE( Vec ) .GT. 6 ) THEN 
+    IF( SIZE( Vec ) .GT. 6 ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -304,11 +304,11 @@
 
     T1 = Obj
     T2 = Rank2Tensor( Vec, "Stress")
-    
+
     Obj_Otimes_Vec = T1 .Otimes. T2
 
-    CALL T1 % DeallocateData( )
-    CALL T2 % DeallocateData( )
+    CALL T1%DeallocateData( )
+    CALL T2%DeallocateData( )
 
  END FUNCTION Obj_Otimes_Vec
 
@@ -333,7 +333,7 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T1, T2
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -344,7 +344,7 @@
 
     END IF
 
-    IF( SIZE( Vec ) .GT. 6 ) THEN 
+    IF( SIZE( Vec ) .GT. 6 ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -358,11 +358,11 @@
 
     T1 = Obj
     T2 = Rank2Tensor( Vec, "Stress")
-    
+
     Vec_Otimes_Obj = T2 .Otimes. T1
 
-    CALL T1 % DeallocateData( )
-    CALL T2 % DeallocateData( )
+    CALL T1%DeallocateData( )
+    CALL T2%DeallocateData( )
 
  END FUNCTION Vec_Otimes_Obj
 
@@ -388,7 +388,7 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T1, T2
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -399,7 +399,7 @@
 
     END IF
 
-    IF( SIZE( Vec ) .GT. 6 ) THEN 
+    IF( SIZE( Vec ) .GT. 6 ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Otimes.part", &
@@ -413,10 +413,10 @@
 
     T1 = Obj
     T2 = Rank2Tensor( Vec, VoigtType )
-    
+
     m_Obj_Otimes_Vec = T1 .Otimes. T2
 
-    CALL T1 % DeallocateData( )
-    CALL T2 % DeallocateData( )
+    CALL T1%DeallocateData( )
+    CALL T2%DeallocateData( )
 
  END FUNCTION m_Obj_Otimes_Vec

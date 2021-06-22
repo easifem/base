@@ -132,7 +132,7 @@ END FUNCTION get_shape
 PURE FUNCTION get_tdimension( Obj ) RESULT( Ans )
   CLASS( AbstractArray_ ), INTENT( IN ) :: Obj
   INTEGER( I4B ) :: Ans
-  Ans = Obj % tDimension
+  Ans = Obj%tDimension
 END FUNCTION get_tdimension
 
 !----------------------------------------------------------------------------
@@ -149,7 +149,7 @@ END FUNCTION get_tdimension
 PURE SUBROUTINE set_tdimension( Obj, tDimension )
   CLASS( AbstractArray_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: tDimension
-  Obj % tDimension = tDimension
+  Obj%tDimension = tDimension
 END SUBROUTINE set_tdimension
 
 END MODULE AbstractArray_Method

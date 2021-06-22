@@ -20,6 +20,20 @@ use easifemBase
 implicit none
 contains
 
+subroutine test0
+  type( ReferenceTriangle_ ) :: obj
+  type( ReferenceElement_ ), ALLOCATABLE :: facetElems( : )
+  INTEGER( I4B ) :: ii
+
+  CALL initiate( obj, nsd = 2 )
+  facetElems = FacetElements( obj )
+
+  DO ii = 1, size( facetElems )
+    CALL display( facetElems( ii ), "facetElements( " // str( ii, .true.) // " ) = " )
+    CALL Blanklines( NOL = 4 )
+  END DO
+end
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -44,6 +58,5 @@ end module
 program main
 use test_ReferenceElement
 implicit none
-call test1
-call BlankLines(nol=3)
+call test0
 end program main

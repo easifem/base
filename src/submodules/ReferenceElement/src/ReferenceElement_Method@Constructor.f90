@@ -29,9 +29,9 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_topology
-  Obj % Nptrs = Nptrs
-  Obj % Name = Name
-  Obj % XiDimension = XiDimension( Name )
+  Obj%Nptrs = Nptrs
+  Obj%Name = Name
+  Obj%XiDimension = XiDimension( Name )
 END PROCEDURE reference_topology
 
 !----------------------------------------------------------------------------
@@ -39,9 +39,9 @@ END PROCEDURE reference_topology
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE deallocatedata_ref_topology
-  IF( ALLOCATED( Obj % Nptrs ) ) DEALLOCATE( Obj % Nptrs )
-  Obj % Name = -1
-  Obj % XiDimension = -1
+  IF( ALLOCATED( Obj%Nptrs ) ) DEALLOCATE( Obj%Nptrs )
+  Obj%Name = -1
+  Obj%XiDimension = -1
 END PROCEDURE deallocatedata_ref_topology
 
 !----------------------------------------------------------------------------
@@ -49,8 +49,8 @@ END PROCEDURE deallocatedata_ref_topology
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE tNodes_RefTopo
-  IF( ALLOCATED( Obj % Nptrs ) ) THEN
-    Ans = SIZE( Obj % Nptrs )
+  IF( ALLOCATED( Obj%Nptrs ) ) THEN
+    Ans = SIZE( Obj%Nptrs )
   ELSE
     Ans = 0
   END IF
@@ -61,8 +61,8 @@ END PROCEDURE tNodes_RefTopo
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE tNodes_RefElem
-  IF( ALLOCATED( Obj % XiJ ) ) THEN
-    Ans = SIZE( Obj % XiJ, 2 )
+  IF( ALLOCATED( Obj%XiJ ) ) THEN
+    Ans = SIZE( Obj%XiJ, 2 )
   ELSE
     Ans = 0
   END IF
@@ -73,12 +73,12 @@ END PROCEDURE tNodes_RefElem
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE deallocatedata_ref_elem
-  IF( ALLOCATED( Obj % XiJ ) ) DEALLOCATE( Obj % XiJ )
-  Obj % EntityCounts = 0
-  IF( ALLOCATED( Obj % Topology ) ) DEALLOCATE( Obj % Topology )
-  Obj % XiDimension = -1
-  Obj % Name = -1
-  Obj % NSD = -1
+  IF( ALLOCATED( Obj%XiJ ) ) DEALLOCATE( Obj%XiJ )
+  Obj%EntityCounts = 0
+  IF( ALLOCATED( Obj%Topology ) ) DEALLOCATE( Obj%Topology )
+  Obj%XiDimension = -1
+  Obj%Name = -1
+  Obj%NSD = -1
 END PROCEDURE deallocatedata_ref_elem
 
 !----------------------------------------------------------------------------
@@ -86,17 +86,25 @@ END PROCEDURE deallocatedata_ref_elem
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE init_refelem
-  IF( ALLOCATED( AnotherObj % XiJ ) ) Obj % XiJ = AnotherObj % XiJ
-  Obj % EntityCounts = AnotherObj % EntityCounts
-  Obj % XiDimension = AnotherObj % XiDimension
-  Obj % NSD = AnotherObj % NSD
-  Obj % Order = AnotherObj % Order
-  Obj % Name = AnotherObj % Name
-  IF( ALLOCATED( AnotherObj % Topology ) ) THEN
-    Obj % Topology = AnotherObj % Topology
+  IF( ALLOCATED( AnotherObj%XiJ ) ) Obj%XiJ = AnotherObj%XiJ
+  Obj%EntityCounts = AnotherObj%EntityCounts
+  Obj%XiDimension = AnotherObj%XiDimension
+  Obj%NSD = AnotherObj%NSD
+  Obj%Order = AnotherObj%Order
+  Obj%Name = AnotherObj%Name
+  IF( ALLOCATED( AnotherObj%Topology ) ) THEN
+    Obj%Topology = AnotherObj%Topology
   END IF
-  Obj % LagrangeElement => AnotherObj % LagrangeElement
+  Obj%LagrangeElement => AnotherObj%LagrangeElement
 END PROCEDURE init_refelem
+
+!----------------------------------------------------------------------------
+!                                                              getNptrs
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElem_getNptrs
+  ans = obj%Topology( SUM(obj%EntityCounts) )%nptrs
+END PROCEDURE RefElem_getNptrs
 
 !----------------------------------------------------------------------------
 !

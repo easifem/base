@@ -12,7 +12,7 @@
 !
 !   Type:: Part of Module
 !
-!   Description ::  
+!   Description ::
 !       -   This part includes subroutine for getting Eshelby Stress from
 !           any other Stress Measures
 !   Hosting File ::
@@ -43,7 +43,7 @@
     REAL( DFP ), ALLOCATABLE :: InvF( :, : )
     REAL( DFP ) :: J
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
             "Stress_Class.f90>>EshelbyStress.part", &
@@ -57,7 +57,7 @@
 
     T = Obj
 
-    SELECT CASE( TRIM( Obj % StressType ) )
+    SELECT CASE( TRIM( Obj%StressType ) )
 
         CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
 
@@ -65,7 +65,7 @@
             InvF = .Inv. F
             getEshelbyStress = (.transpose. F ) .matmul. ( T .matmul. TRANSPOSE( InvF ) )
             getEshelbyStress = J * getEshelbyStress
-            
+
         CASE( "Kirchhoff", "kirchhoff", "Tau", "kirchoff", "Kirchoff", "tau" )
 
             InvF = .Inv. F
@@ -88,19 +88,19 @@
             CALL Err_Msg( &
                 "Stress_Class.f90>>EshelbyStress.part", &
                 "getEshelbyStress( Obj, F )", &
-                "No case found for Obj % StressType. &
+                "No case found for Obj%StressType. &
                 Program Stopped!!!" &
             )
             STOP
 
     END SELECT
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
     IF( ALLOCATED( InvF ) ) DEALLOCATE( InvF )
 
  END FUNCTION getEshelbyStress
 
 !------------------------------------------------------------------------------
-!                                                         
+!
 !------------------------------------------------------------------------------
 

@@ -12,7 +12,7 @@
 !
 !   Type:: Part of Module
 !
-!   Description ::  
+!   Description ::
 !       -   This part includes subroutine for getting Pk1 Stress from
 !           any other Stress Measures
 !   Hosting File ::
@@ -43,7 +43,7 @@
     REAL( DFP ) :: J
     REAL( DFP ), ALLOCATABLE :: InvF( :, : )
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
             "Stress_Class.f90>>Pk1Stress.part", &
@@ -57,7 +57,7 @@
 
     T = Obj
 
-    SELECT CASE( TRIM( Obj % StressType ) )
+    SELECT CASE( TRIM( Obj%StressType ) )
 
         CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
 
@@ -65,7 +65,7 @@
             InvF = .INV. F
             getPk1Stress = T .matmul. TRANSPOSE( InvF )
             getPk1Stress = J * getPk1Stress
-            
+
         CASE( "Kirchhoff", "kirchhoff", "Tau", "kirchoff", "Kirchoff", "tau" )
 
             InvF = .INV. F
@@ -82,7 +82,7 @@
         CASE( "Eshelby-Like", "Eshelby", "EshelbyLike", "M", "m" )
 
             InvF = .INV. F
-            getPk1Stress = TRANSPOSE( InvF ) .matmul. T 
+            getPk1Stress = TRANSPOSE( InvF ) .matmul. T
 
 
         CASE DEFAULT
@@ -90,19 +90,19 @@
             CALL Err_Msg( &
                 "Stress_Class.f90>>Pk1Stress.part", &
                 "getPk1Stress( Obj, F ), Obj .pkOne. F, Obj .PI. F", &
-                "No case found for Obj % StressType. &
+                "No case found for Obj%StressType. &
                 Program Stopped!!!" &
             )
             STOP
 
     END SELECT
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
     IF( ALLOCATED( InvF ) ) DEALLOCATE( InvF )
 
  END FUNCTION getPk1Stress
 
 !------------------------------------------------------------------------------
-!                                                         
+!
 !------------------------------------------------------------------------------
 

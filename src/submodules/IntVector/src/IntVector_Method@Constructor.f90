@@ -30,8 +30,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_shape
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Ans(1) = SIZE( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Ans(1) = SIZE( Obj%Val )
   ELSE
     Ans = 0
   END IF
@@ -42,8 +42,8 @@ END PROCEDURE get_shape
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_size
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Ans = SIZE( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Ans = SIZE( Obj%Val )
   ELSE
     Ans = 0
   END IF
@@ -63,7 +63,7 @@ END PROCEDURE allocate_data
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE deallocate_data
-  IF( ALLOCATED( Obj % Val ) ) DEALLOCATE( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) DEALLOCATE( Obj%Val )
 END PROCEDURE deallocate_data
 
 !----------------------------------------------------------------------------
@@ -103,9 +103,9 @@ END PROCEDURE initiate_obj_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj_ab
-  IF( ALLOCATED( Obj % Val ) ) DEALLOCATE( Obj % Val )
-  ALLOCATE( Obj % Val( a:b ) )
-  Obj % Val = 0
+  IF( ALLOCATED( Obj%Val ) ) DEALLOCATE( Obj%Val )
+  ALLOCATE( Obj%Val( a:b ) )
+  Obj%Val = 0
   CALL setTotalDimension( Obj, 1_I4B )
 END PROCEDURE initiate_obj_ab
 
@@ -132,7 +132,7 @@ END PROCEDURE Constructor_1
 
 MODULE PROCEDURE Constructor_Int
   ALLOCATE( Obj )
-  Obj % Val = Val
+  Obj%Val = Val
   CALL setTotalDimension( Obj , 1_I4B )
 END PROCEDURE Constructor_Int
 
@@ -141,7 +141,7 @@ END PROCEDURE Constructor_Int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ConstructorInt
-  Obj % Val = Val
+  Obj%Val = Val
   CALL setTotalDimension( Obj , 1_I4B )
 END PROCEDURE ConstructorInt
 
@@ -151,7 +151,7 @@ END PROCEDURE ConstructorInt
 
 MODULE PROCEDURE Constructor_Real
   ALLOCATE( Obj )
-  Obj % Val = Val
+  Obj%Val = Val
   CALL setTotalDimension( Obj , 1_I4B )
 END PROCEDURE Constructor_Real
 
@@ -160,7 +160,7 @@ END PROCEDURE Constructor_Real
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ConstructorReal
-  Obj % Val = Val
+  Obj%Val = Val
   CALL setTotalDimension( Obj , 1_I4B )
 END PROCEDURE ConstructorReal
 

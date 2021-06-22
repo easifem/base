@@ -51,7 +51,7 @@ subroutine test2
   allocate( col( tnodes ), row( tnodes ) )
   row = [1,2,3]
   do i = 1, tnodes
-    col( i ) % val = [1,2,3,4]
+    col( i )%val = [1,2,3,4]
   end do
   call setsparsity( obj, Row, Col )
   call setsparsity( obj )

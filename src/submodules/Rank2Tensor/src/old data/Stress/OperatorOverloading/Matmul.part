@@ -38,8 +38,8 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) &
-        .OR. .NOT. ALLOCATED( Obj2 % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) &
+        .OR. .NOT. ALLOCATED( Obj2%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Matmul.part", &
@@ -52,8 +52,8 @@
 
     END IF
 
-    CALL Obj % getStress( Mat1 )
-    CALL Obj % getStress( Mat2 )
+    CALL Obj%getStress( Mat1 )
+    CALL Obj%getStress( Mat2 )
 
     CALL Display_Array( Mat1, "Debug:: Obj_matmul_Obj :: Mat1 =")
 
@@ -83,7 +83,7 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Matmul.part", &
@@ -100,7 +100,7 @@
 
     Obj_matmul_Mat = T .matmul. Mat2
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Obj_matmul_Mat
 
@@ -124,7 +124,7 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Matmul.part", &
@@ -156,7 +156,7 @@
 
     Obj_matmul_Vec = T .matmul. Vec
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Obj_matmul_Vec
 
@@ -180,7 +180,7 @@
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Matmul.part", &
@@ -212,7 +212,7 @@
 
     Vec_matmul_Obj = Vec .matmul. T
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Vec_matmul_Obj
 
@@ -238,7 +238,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Matmul.part", &
@@ -251,7 +251,7 @@
 
     T = Obj
     Mat_matmul_Obj = Mat2 .matmul. T
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Mat_matmul_Obj
 
@@ -277,7 +277,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Matmul.part", &
@@ -290,7 +290,7 @@
 
     T = Obj
     Obj_matmul_Tensor = T .matmul. TensorObj
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Obj_matmul_Tensor
 
@@ -316,7 +316,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                         "Stress_Class.f90>>Matmul.part", &
@@ -329,6 +329,6 @@
 
     T = Obj
     Tensor_matmul_Obj = TensorObj .matmul. T
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
 
  END FUNCTION Tensor_matmul_Obj

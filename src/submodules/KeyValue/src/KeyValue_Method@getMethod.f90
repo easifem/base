@@ -28,7 +28,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getKey1
-  Key = TRIM( Obj % Key % Raw )
+  Key = TRIM( Obj%Key%Raw )
 END PROCEDURE getKey1
 
 !----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ END PROCEDURE getKey1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getKey2
-  Key = Obj % Key
+  Key = Obj%Key
 END PROCEDURE getKey2
 
 !----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ END PROCEDURE getKey2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue1
-  Value = Obj % Value( 1, 1 )
+  Value = Obj%Value( 1, 1 )
 END PROCEDURE getValue1
 
 !----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ END PROCEDURE getValue1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue2
-  Value = Obj % Value( :, 1 )
+  Value = Obj%Value( :, 1 )
 END PROCEDURE getValue2
 
 !----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ END PROCEDURE getValue2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue3
-  Value = Obj % Value
+  Value = Obj%Value
 END PROCEDURE getValue3
 
 !----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ END PROCEDURE getValue3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue4
-  Value = INT( Obj % Value( 1, 1 ) )
+  Value = INT( Obj%Value( 1, 1 ) )
 END PROCEDURE getValue4
 
 !----------------------------------------------------------------------------
@@ -76,7 +76,7 @@ END PROCEDURE getValue4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue5
-  Value = INT( Obj % Value( :, 1 ) )
+  Value = INT( Obj%Value( :, 1 ) )
 END PROCEDURE getValue5
 
 !----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ END PROCEDURE getValue5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue6
-  Value = INT( Obj % Value )
+  Value = INT( Obj%Value )
 END PROCEDURE getValue6
 
 !----------------------------------------------------------------------------

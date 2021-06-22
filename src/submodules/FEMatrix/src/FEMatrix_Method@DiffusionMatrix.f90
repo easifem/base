@@ -29,16 +29,16 @@ MODULE PROCEDURE Space_DiffusionMatrix
   REAL( DFP ), ALLOCATABLE :: RealVal( : )
   INTEGER( I4B ) :: i, j, nsd
 
-  i = SIZE( Test % N, 1 )
-  j = SIZE( Trial % N, 1 )
+  i = SIZE( Test%N, 1 )
+  j = SIZE( Trial%N, 1 )
   ALLOCATE( Ans( i, j ) ); Ans = 0.0_DFP
-  nsd = Trial % RefElem % NSD
-  RealVal = Trial % Js * Trial % Ws * Trial % Thickness
-  DO i = 1, SIZE( Trial % N, 2 )
+  nsd = Trial%RefElem%NSD
+  RealVal = Trial%Js * Trial%Ws * Trial%Thickness
+  DO i = 1, SIZE( Trial%N, 2 )
     DO j = 1, nsd
       Ans = Ans + &
-        & OUTERPROD( a = Test % dNdXt( :, j, i ), b = &
-        & Trial % dNdXt( :, j, i ) ) &
+        & OUTERPROD( a = Test%dNdXt( :, j, i ), b = &
+        & Trial%dNdXt( :, j, i ) ) &
         & * RealVal( i )
     END DO
   END DO
@@ -59,15 +59,15 @@ MODULE PROCEDURE Space_DiffusionMatrix_K
   INTEGER( I4B ), ALLOCATABLE :: S( : )
 
   S = SHAPE( K )
-  ALLOCATE( KBar( S(1), S(2), SIZE( Trial % N, 2 ) ) )
+  ALLOCATE( KBar( S(1), S(2), SIZE( Trial%N, 2 ) ) )
   CALL getInterpolation( Obj=Trial, Interpol=KBar, Val=K )
-  RealVal = Trial % Js * Trial % Ws * Trial % Thickness
-  ALLOCATE( Ans( SIZE( Test % N, 1 ), SIZE( Trial % N, 1 ) ) )
+  RealVal = Trial%Js * Trial%Ws * Trial%Thickness
+  ALLOCATE( Ans( SIZE( Test%N, 1 ), SIZE( Trial%N, 1 ) ) )
   Ans = 0.0_DFP
-  DO i = 1, SIZE( Trial % N, 2 )
+  DO i = 1, SIZE( Trial%N, 2 )
     Ans = Ans + RealVal( i ) * MATMUL( &
-      & MATMUL( Test % dNdXt( :, :, i ), KBar( :, :, i ) ), &
-      & TRANSPOSE( Trial % dNdXt( :, :, i ) ) )
+      & MATMUL( Test%dNdXt( :, :, i ), KBar( :, :, i ) ), &
+      & TRANSPOSE( Trial%dNdXt( :, :, i ) ) )
   END DO
   DEALLOCATE( KBar, RealVal, S )
   IF( PRESENT( nCopy ) ) THEN
@@ -85,10 +85,10 @@ MODULE PROCEDURE Space_DiffusionMatrix_C
 
   CALL getProjectionOfdNdXt( Obj=Test, cdNdXt=C1Bar, Val=C1 )
   CALL getProjectionOfdNdXt( Obj=Trial, cdNdXt=C2Bar, Val=C2 )
-  RealVal = Trial % Js * Trial % Ws * Trial % Thickness
-  ALLOCATE( Ans ( SIZE( Test % N, 1 ), SIZE( Trial % N, 1 ) ) )
+  RealVal = Trial%Js * Trial%Ws * Trial%Thickness
+  ALLOCATE( Ans ( SIZE( Test%N, 1 ), SIZE( Trial%N, 1 ) ) )
   Ans = 0.0_DFP
-  DO i = 1, SIZE( Trial % N, 2 )
+  DO i = 1, SIZE( Trial%N, 2 )
     Ans = Ans + RealVal( i ) * OUTERPROD( C1Bar( :, i ), C2Bar( :, i ) )
   END DO
   IF( PRESENT( nCopy  ) ) THEN
@@ -105,21 +105,21 @@ MODULE PROCEDURE st_diffusionMatrix
   REAL( DFP ), ALLOCATABLE :: Mat4(:,:,:,:), RealVal( : )
   INTEGER( I4B ) :: ips, ipt, a, b
 
-  ALLOCATE( Mat4( SIZE( Test( 1 ) % N, 1  ), &
-    & SIZE( Trial( 1 ) % N, 1 ), &
-    & SIZE( Test( 1 ) % T ), &
-    & SIZE( Trial( 1 ) % T ) ) )
+  ALLOCATE( Mat4( SIZE( Test( 1 )%N, 1  ), &
+    & SIZE( Trial( 1 )%N, 1 ), &
+    & SIZE( Test( 1 )%T ), &
+    & SIZE( Trial( 1 )%T ) ) )
   Mat4 = 0.0_DFP
 
   DO ipt = 1, SIZE( Trial )
     RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
       & * Trial(ipt)%Wt * Trial(ipt)%Jt
     DO ips = 1, SIZE( Test )
-      DO b = 1, SIZE( Trial(1) % T )
-        DO a = 1, SIZE( Test(1) % T )
+      DO b = 1, SIZE( Trial(1)%T )
+        DO a = 1, SIZE( Test(1)%T )
           Mat4( :, :, a, b ) = Mat4( :, :, a, b ) + RealVal( ips ) &
-            & * MATMUL( Test( ipt ) % dNTdXt( :, a, :, ips ), &
-            & TRANSPOSE( Trial( ipt ) % dNTdXt( :, b, :, ips ) ) )
+            & * MATMUL( Test( ipt )%dNTdXt( :, a, :, ips ), &
+            & TRANSPOSE( Trial( ipt )%dNTdXt( :, b, :, ips ) ) )
         END DO
       END DO
     END DO
@@ -142,20 +142,20 @@ MODULE PROCEDURE st_diffusionMatrix_K
   REAL( DFP ), ALLOCATABLE :: KBar(:,:,:,:)
   INTEGER( I4B ) :: ips, ipt, a, b
 
-  ALLOCATE( Mat4( SIZE( Test( 1 ) % N, 1  ), &
-    & SIZE( Trial( 1 ) % N, 1 ), &
-    & SIZE( Test( 1 ) % T ), &
-    & SIZE( Trial( 1 ) % T ) ) )
+  ALLOCATE( Mat4( SIZE( Test( 1 )%N, 1  ), &
+    & SIZE( Trial( 1 )%N, 1 ), &
+    & SIZE( Test( 1 )%T ), &
+    & SIZE( Trial( 1 )%T ) ) )
   Mat4 = 0.0_DFP
   CALL getInterpolation( Obj=Trial, Val=K, Interpol=KBar )
   DO ipt = 1, SIZE( Trial )
     RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
       & * Trial(ipt)%Wt * Trial(ipt)%Jt
     DO ips = 1, SIZE( Test )
-      DO b = 1, SIZE( Trial(1) % T )
+      DO b = 1, SIZE( Trial(1)%T )
         Dummy = RealVal( ips ) * MATMUL(KBar(:,:,ips,ipt), &
           & TRANSPOSE(Trial(ipt)%dNTdXt(:,b,:,ips)))
-        DO a = 1, SIZE( Test(1) % T )
+        DO a = 1, SIZE( Test(1)%T )
           Mat4( :, :, a, b ) = Mat4( :, :, a, b ) +  &
             & MATMUL( Test(ipt)%dNTdXt(:,a,:,ips), Dummy )
         END DO
@@ -180,10 +180,10 @@ MODULE PROCEDURE st_diffusionMatrix_C
   INTEGER( I4B ) :: ips, ipt, a, b
 
   ALLOCATE( &
-    & Mat4( SIZE( Test( 1 ) % N, 1  ), &
-    & SIZE( Trial( 1 ) % N, 1 ), &
-    & SIZE( Test( 1 ) % T ), &
-    & SIZE( Trial( 1 ) % T ) ) )
+    & Mat4( SIZE( Test( 1 )%N, 1  ), &
+    & SIZE( Trial( 1 )%N, 1 ), &
+    & SIZE( Test( 1 )%T ), &
+    & SIZE( Trial( 1 )%T ) ) )
   Mat4 = 0.0_DFP
   DO ipt = 1, SIZE( Trial )
     RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
@@ -191,8 +191,8 @@ MODULE PROCEDURE st_diffusionMatrix_C
     CALL getProjectionOfdNTdXt(Obj=Test(ipt), cdNTdXt=c1dNTdXt, Val=C1)
     CALL getProjectionOfdNTdXt(Obj=Trial(ipt), cdNTdXt=c2dNTdXt, Val=C2)
     DO ips = 1, SIZE( Test )
-      DO b = 1, SIZE( Trial(1) % T )
-        DO a = 1, SIZE( Test(1) % T )
+      DO b = 1, SIZE( Trial(1)%T )
+        DO a = 1, SIZE( Test(1)%T )
           Mat4( :, :, a, b ) = Mat4( :, :, a, b ) +  &
             & RealVal( ips ) * &
             & OUTERPROD( a=c1dNTdXt(:,a,ips), b=c2dNTdXt(:,b,ips))

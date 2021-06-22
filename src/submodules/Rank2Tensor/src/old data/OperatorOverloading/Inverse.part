@@ -33,7 +33,7 @@ FUNCTION f_inverse_1( Mat )
     Error_Flag = .FALSE.
 
     CALL INV( A = Mat, INVA = f_inverse_1 )
-    
+
     CALL Check_Error(                                       &
     "Rank2Tensor_Class.f90>>Inverse.part>>f_inverse_1()",   &
     "Traceback ---> CALL INV( A = Mat, INVA = Mat )"        &
@@ -55,8 +55,8 @@ FUNCTION m_inverse_1( Obj )
 
     Error_Flag = .FALSE.
 
-    CALL INV( A = Obj % T, INVA = m_inverse_1 )
-    
+    CALL INV( A = Obj%T, INVA = m_inverse_1 )
+
     CALL Check_Error(                                       &
     "Rank2Tensor_Class.f90>>Inverse.part>>m_inverse_1()",   &
     "Traceback ---> CALL INV( A = Mat, INVA = Mat )"        &

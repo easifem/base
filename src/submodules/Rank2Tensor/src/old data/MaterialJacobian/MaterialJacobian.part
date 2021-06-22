@@ -25,14 +25,14 @@
  FUNCTION Constructor1( N )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Constructor1 % C( N, N )
+!       1.  Allocate the Constructor1%C( N, N )
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
     TYPE( MaterialJacobian_ ) :: Constructor1
     INTEGER( I4B ), INTENT( IN ) :: N
 
-    CALL Constructor1 % Initiate( N )
+    CALL Constructor1%Initiate( N )
 
  END FUNCTION Constructor1
 
@@ -43,7 +43,7 @@
  FUNCTION Constructor2( N, Fill )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Constructor2 % C( N, N ) with all entries fill
+!       1.  Allocate the Constructor2%C( N, N ) with all entries fill
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -51,7 +51,7 @@
     INTEGER( I4B ), INTENT( IN ) :: N
     REAL( DFP ), INTENT( IN ) :: Fill
 
-    CALL Constructor2 % Initiate( N, Fill )
+    CALL Constructor2%Initiate( N, Fill )
 
  END FUNCTION Constructor2
 
@@ -62,14 +62,14 @@
  FUNCTION Constructor3( Mat )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Constructor3 % C( :, : ) = Mat
+!       1.  Allocate the Constructor3%C( :, : ) = Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
     TYPE( MaterialJacobian_ ) :: Constructor3
     REAL( DFP ), INTENT( IN ) :: Mat( :, : )
 
-    CALL Constructor3 % Initiate( Mat )
+    CALL Constructor3%Initiate( Mat )
 
  END FUNCTION Constructor3
 
@@ -80,7 +80,7 @@
  FUNCTION Constructor4( N, StressType, StrainType, RateType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Constructor4 % C is N, with other details
+!       1.  Size of Constructor4%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -88,7 +88,7 @@
     INTEGER( I4B ), INTENT( IN ) :: N
     TYPE( String_ ), INTENT( IN ) :: StressType, StrainType, RateType
 
-    CALL Constructor4 % Initiate( N, StressType, StrainType, RateType )
+    CALL Constructor4%Initiate( N, StressType, StrainType, RateType )
 
  END FUNCTION Constructor4
 
@@ -99,7 +99,7 @@
  FUNCTION Constructor5( N, StressType, StrainType, RateType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Constructor5 % C is N, with other details
+!       1.  Size of Constructor5%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -107,7 +107,7 @@
     INTEGER( I4B ), INTENT( IN ) :: N
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType, StrainType, RateType
 
-    CALL Constructor5 % Initiate( N, StressType, StrainType, RateType )
+    CALL Constructor5%Initiate( N, StressType, StrainType, RateType )
 
  END FUNCTION Constructor5
 
@@ -118,7 +118,7 @@
  FUNCTION Constructor6( N, Names )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Constructor6 % C is N, with other details
+!       1.  Size of Constructor6%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -126,7 +126,7 @@
     INTEGER( I4B ), INTENT( IN ) :: N
     TYPE( String_ ), INTENT( IN ) :: Names( 3 )
 
-    CALL Constructor6 % Initiate( N, Names )
+    CALL Constructor6%Initiate( N, Names )
 
  END FUNCTION Constructor6
 
@@ -137,7 +137,7 @@
  FUNCTION Constructor7( N, Names )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Constructor7 % C( N, N ) with all entries fill
+!       1.  Allocate the Constructor7%C( N, N ) with all entries fill
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -145,7 +145,7 @@
     INTEGER( I4B ), INTENT( IN ) :: N
     CHARACTER( LEN = * ), INTENT( IN ) :: Names( 3 )
 
-    CALL Constructor7 % Initiate( N, Names )
+    CALL Constructor7%Initiate( N, Names )
 
  END FUNCTION Constructor7
 

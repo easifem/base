@@ -13,7 +13,7 @@
 !   TYPE :: Part of the program
 !
 !   DESCRIPTION
-!       -   method to access Obj % stress field
+!       -   method to access Obj%stress field
 !   HOSTING FILE
 !       -   Stress_Class.f90
 !
@@ -26,7 +26,7 @@
  FUNCTION getStressType( Obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Returns the Obj % StressType
+!       1.  Returns the Obj%StressType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -34,7 +34,7 @@
     CHARACTER( LEN = 50 ) :: getStressType
 
 
-    getStressType = TRIM( Obj % StressType )
+    getStressType = TRIM( Obj%StressType )
 
  END FUNCTION getStressType
 
@@ -45,13 +45,13 @@
  SUBROUTINE setStressType( Obj, StressType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Returns the Obj % StressType
+!       1.  Returns the Obj%StressType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
     CLASS( Stress_ ), INTENT( INOUT ) :: Obj
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
 
-    Obj % StressType = TRIM( StressType )
+    Obj%StressType = TRIM( StressType )
 
  END SUBROUTINE setStressType

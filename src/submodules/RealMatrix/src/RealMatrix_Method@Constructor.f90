@@ -25,8 +25,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_shape
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    Ans = SHAPE( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Ans = SHAPE( Obj%Val )
   ELSE
     Ans = 0
   END IF
@@ -39,8 +39,8 @@ END PROCEDURE get_shape
 MODULE PROCEDURE get_size
   !Define internal variables
   INTEGER( I4B ) :: S( 2 )
-  IF( ALLOCATED( Obj % Val ) ) THEN
-    S = SHAPE( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    S = SHAPE( Obj%Val )
     IF( PRESENT( Dims ) ) THEN
       Ans = S( Dims )
     ELSE
@@ -65,7 +65,7 @@ END PROCEDURE allocate_data
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Deallocate_Data
-  IF( ALLOCATED( Obj % Val ) ) DEALLOCATE( Obj % Val )
+  IF( ALLOCATED( Obj%Val ) ) DEALLOCATE( Obj%Val )
   CALL setTotalDimension( Obj, 0 )
 END PROCEDURE Deallocate_Data
 
@@ -104,7 +104,7 @@ END PROCEDURE initiate_obj_vector_b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj_val
-  Obj % Val = Val
+  Obj%Val = Val
   CALL setTotalDimension( Obj, 2_I4B )
 END PROCEDURE initiate_obj_val
 
@@ -160,7 +160,7 @@ MODULE PROCEDURE eye_obj
   INTEGER( I4B ) :: i
   CALL Initiate( Ans, [m,m] )
   DO i = 1, m
-    Ans % Val ( i, i ) = 1.0
+    Ans%Val ( i, i ) = 1.0
   END DO
 END PROCEDURE eye_obj
 
@@ -244,7 +244,7 @@ END PROCEDURE sym_array
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE sym_obj
-  Ans % Val = 0.5_DFP * ( Obj % Val + TRANSPOSE( Obj % Val ) )
+  Ans%Val = 0.5_DFP * ( Obj%Val + TRANSPOSE( Obj%Val ) )
 END PROCEDURE sym_obj
 
 !----------------------------------------------------------------------------
@@ -260,7 +260,7 @@ END PROCEDURE SkewSym_array
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SkewSym_obj
-  Ans % Val = 0.5_DFP * ( Obj % Val - TRANSPOSE( Obj % Val ) )
+  Ans%Val = 0.5_DFP * ( Obj%Val - TRANSPOSE( Obj%Val ) )
 END PROCEDURE SkewSym_obj
 
 !----------------------------------------------------------------------------
@@ -307,7 +307,7 @@ END PROCEDURE realmat_make_diag_copy2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_make_diag_copy3
-  CALL realmat_make_diag_copy1( Mat = Mat % Val, nCopy = nCopy )
+  CALL realmat_make_diag_copy1( Mat = Mat%Val, nCopy = nCopy )
 END PROCEDURE realmat_make_diag_copy3
 
 !----------------------------------------------------------------------------
@@ -315,7 +315,7 @@ END PROCEDURE realmat_make_diag_copy3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_make_diag_copy4
-  CALL realmat_make_diag_copy2( From = From % Val, To = To % Val, &
+  CALL realmat_make_diag_copy2( From = From%Val, To = To%Val, &
     & nCopy = nCopy )
 END PROCEDURE realmat_make_diag_copy4
 

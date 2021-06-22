@@ -21,11 +21,11 @@
 The subroutine `Initiate()` can be used to create the `DeformationGradient_` class.
 
 ```fortran
-CALL Obj % Initiate( )
-CALL Obj % Initiate( Mat2( :, : ) )
-CALL Obj % Initiate( Scalar )
-CALL Obj % Initiate( VoigtVec, VoigtType )
-CALL Obj % Initiate( Obj2 )
+CALL Obj%Initiate( )
+CALL Obj%Initiate( Mat2( :, : ) )
+CALL Obj%Initiate( Scalar )
+CALL Obj%Initiate( VoigtVec, VoigtType )
+CALL Obj%Initiate( Obj2 )
 ```
 
 In addition we can use the function `DeformationGradient()` which returns the `DeformationGradient_` type.
@@ -54,7 +54,7 @@ Obj = Mat2( :, : )
 
 ### Deallocating the Object
 
-We can call `Obj % DeallocateData()`
+We can call `Obj%DeallocateData()`
 
 ### Getting the Rotation part
 

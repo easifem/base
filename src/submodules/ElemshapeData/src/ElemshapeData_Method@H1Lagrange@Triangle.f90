@@ -29,10 +29,10 @@ MODULE PROCEDURE Triangle_H1_Lagrange
   INTEGER( I4B ) :: nips
   REAL( DFP ), ALLOCATABLE :: XiEta( :, : )
 
-  CALL Initiate( Obj % RefElem, RefElem )
-  CALL getQuadraturePoints( Obj = Quad, Point = XiEta,  Weight = Obj % Ws )
-  Obj % Quad = Quad
-  nips = SIZE( Obj % Ws )
+  CALL Initiate( Obj%RefElem, RefElem )
+  CALL getQuadraturePoints( Obj = Quad, Point = XiEta,  Weight = Obj%Ws )
+  Obj%Quad = Quad
+  nips = SIZE( Obj%Ws )
 
   SELECT CASE( RefElem%order )
 
@@ -45,17 +45,17 @@ MODULE PROCEDURE Triangle_H1_Lagrange
       INTEGER( I4B ) :: ips
       !         ....................................         !
 
-      call AllocateData( obj = obj, nsd = refelem % nsd, &
-        & xidim = refelem % xidimension, nns = 3, nips = nips )
+      call AllocateData( obj = obj, nsd = refelem%nsd, &
+        & xidim = refelem%xidimension, nns = 3, nips = nips )
 
-      Obj % N( 1, : ) = 1.0_DFP - xieta( 1, : ) - xieta( 2, : )
-      Obj % N( 2, : ) = xieta( 1, : )
-      Obj % N( 3, : ) = xieta( 2, : )
+      Obj%N( 1, : ) = 1.0_DFP - xieta( 1, : ) - xieta( 2, : )
+      Obj%N( 2, : ) = xieta( 1, : )
+      Obj%N( 3, : ) = xieta( 2, : )
 
-      Obj % dNdXi( :, :, 1  ) = RESHAPE( [ -1.0, 1.0, 0.0, -1.0, 0.0, 1.0 ], &
+      Obj%dNdXi( :, :, 1  ) = RESHAPE( [ -1.0, 1.0, 0.0, -1.0, 0.0, 1.0 ], &
         & [3, 2] )
       DO ips = 2, nips
-        Obj % dNdXi( :, :, ips ) = Obj % dNdXi( :, :, 1 )
+        Obj%dNdXi( :, :, ips ) = Obj%dNdXi( :, :, 1 )
       END DO
     END BLOCK
 
@@ -71,20 +71,20 @@ MODULE PROCEDURE Triangle_H1_Lagrange
       INTEGER( I4B ) :: ips
       !         ....................................         !
 
-      call AllocateData( obj = obj, nsd = refelem % nsd, &
-        & xidim = refelem % xidimension, nns = 6, nips = nips )
+      call AllocateData( obj = obj, nsd = refelem%nsd, &
+        & xidim = refelem%xidimension, nns = 6, nips = nips )
 
       dldxi = RESHAPE( [ -1.0, 1.0, 0.0, -1.0, 0.0, 1.0 ], [3, 2] )
       l1( : ) = 1.0_DFP - xieta( 1, : ) - xieta( 2, : )
       l2( : ) = xieta( 1, : )
       l3( : ) = xieta( 2, : )
 
-      Obj % N( 1, : ) = l1 * ( 2.0 * l1 - 1.0 )
-      Obj % N( 2, : ) = l2 * ( 2.0 * l2 - 1.0 )
-      Obj % N( 3, : ) = l3 * ( 2.0 * l3 - 1.0 )
-      Obj % N( 4, : ) = l1 * l2
-      Obj % N( 5, : ) = l2 * l3
-      Obj % N( 6, : ) = l3 * l1
+      Obj%N( 1, : ) = l1 * ( 2.0 * l1 - 1.0 )
+      Obj%N( 2, : ) = l2 * ( 2.0 * l2 - 1.0 )
+      Obj%N( 3, : ) = l3 * ( 2.0 * l3 - 1.0 )
+      Obj%N( 4, : ) = l1 * l2
+      Obj%N( 5, : ) = l2 * l3
+      Obj%N( 6, : ) = l3 * l1
 
       DO ips = 1, nips
         dndl = RESHAPE( &
@@ -96,7 +96,7 @@ MODULE PROCEDURE Triangle_H1_Lagrange
               & l2( ips ), l1( ips )   &
               & ], [6, 3] &
           & )
-        Obj % dNdXi( :, :, ips ) = MATMUL( dndl, dldxi )
+        Obj%dNdXi( :, :, ips ) = MATMUL( dndl, dldxi )
       END DO
     END BLOCK
 
@@ -108,8 +108,8 @@ MODULE PROCEDURE Triangle_H1_Lagrange
       INTEGER( I4B ) :: ips
       !         ....................................         !
 
-      call AllocateData( obj = obj, nsd = refelem % nsd, &
-        & xidim = refelem % xidimension, nns = 10, nips = nips )
+      call AllocateData( obj = obj, nsd = refelem%nsd, &
+        & xidim = refelem%xidimension, nns = 10, nips = nips )
 
       a1 = 1.0/3.0; a2 = 2.0/3.0
       dldxi = RESHAPE( [ -1.0, 1.0, 0.0, -1.0, 0.0, 1.0 ], [3, 2] )
@@ -118,7 +118,7 @@ MODULE PROCEDURE Triangle_H1_Lagrange
       l3( : ) = xieta( 2, : )
 
 
-      Obj % N( 1, : ) = &
+      Obj%N( 1, : ) = &
         &   ( l1 - a2 ) &
         & * ( l1 - a1 ) &
         & * ( l1 - 0.0_DFP ) &
@@ -126,7 +126,7 @@ MODULE PROCEDURE Triangle_H1_Lagrange
         & / ( 1.0_DFP - a1 ) &
         & / ( 1.0_DFP - 0.0_DFP )
 
-      Obj % N( 2, : ) = &
+      Obj%N( 2, : ) = &
         &   ( l2 - a2 ) &
         & * ( l2 - a1 ) &
         & * ( l2 - 0.0_DFP ) &
@@ -134,7 +134,7 @@ MODULE PROCEDURE Triangle_H1_Lagrange
         & / ( 1.0_DFP - a1 ) &
         & / ( 1.0_DFP - 0.0_DFP )
 
-      Obj % N( 3, : ) = &
+      Obj%N( 3, : ) = &
         &   ( l3 - a2 ) &
         & * ( l3 - a1 ) &
         & * ( l3 - 0.0_DFP ) &
@@ -142,13 +142,13 @@ MODULE PROCEDURE Triangle_H1_Lagrange
         & / ( 1.0_DFP - a1 ) &
         & / ( 1.0_DFP - 0.0_DFP )
 
-      Obj % N( 4, : )  = l1 * l2 * ( l1 - a1 )
-      Obj % N( 5, : )  = l1 * l2 * ( l2 - a1 )
-      Obj % N( 6, : )  = l2 * l3 * ( l2 - a1 )
-      Obj % N( 7, : )  = l2 * l3 * ( l3 - a1 )
-      Obj % N( 8, : )  = l3 * l1 * ( l3 - a1 )
-      Obj % N( 9, : )  = l3 * l1 * ( l1 - a1 )
-      Obj % N( 10, : ) = l1 * l2 * l3
+      Obj%N( 4, : )  = l1 * l2 * ( l1 - a1 )
+      Obj%N( 5, : )  = l1 * l2 * ( l2 - a1 )
+      Obj%N( 6, : )  = l2 * l3 * ( l2 - a1 )
+      Obj%N( 7, : )  = l2 * l3 * ( l3 - a1 )
+      Obj%N( 8, : )  = l3 * l1 * ( l3 - a1 )
+      Obj%N( 9, : )  = l3 * l1 * ( l1 - a1 )
+      Obj%N( 10, : ) = l1 * l2 * l3
 
       DO ips = 1, nips
         dndl = RESHAPE( &
@@ -170,7 +170,7 @@ MODULE PROCEDURE Triangle_H1_Lagrange
           & ], &
           & [10, 3] &
         & )
-        Obj % dNdXi( :, :, ips ) = MATMUL( dndl, dldxi )
+        Obj%dNdXi( :, :, ips ) = MATMUL( dndl, dldxi )
       END DO
     END BLOCK
   END SELECT

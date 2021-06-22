@@ -39,9 +39,9 @@ MODULE PROCEDURE display_ref_topo
   IF( LEN_TRIM( Msg ) .NE. 0 ) THEN
     WRITE( I, "(A)" ) "#" // TRIM( Msg )
   END IF
-  WRITE( I, "(A)" ) "ElemType : " // TRIM( ElementName( Obj % Name ) )
-  WRITE( I, "(A)" ) "XiDim : " // TRIM( INT2STR( Obj % XiDimension ) )
-  CALL Display( Obj % Nptrs,  "Nptrs : ")
+  WRITE( I, "(A)" ) "ElemType : " // TRIM( ElementName( Obj%Name ) )
+  WRITE( I, "(A)" ) "XiDim : " // TRIM( INT2STR( Obj%XiDimension ) )
+  CALL Display( Obj%Nptrs,  "Nptrs : ")
 END PROCEDURE display_ref_topo
 
 !----------------------------------------------------------------------------

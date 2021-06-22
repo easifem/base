@@ -31,14 +31,14 @@ MODULE PROCEDURE Space_StiffnessMatrix_Cijkl
   INTEGER( I4B ), ALLOCATABLE :: S( : ), Indx( :, : )
   LOGICAL( LGT ) :: isNodal
 
-  nns1 = SIZE( Test % N, 1 )
-  nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 )
-  nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 )
+  nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 )
+  nsd = Trial%RefElem%NSD
 
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
 
-  IF( Cijkl % DefineOn .EQ. Nodal ) THEN
+  IF( Cijkl%DefineOn .EQ. Nodal ) THEN
     isNodal = .TRUE.
   ELSE
     isNodal = .FALSE.
@@ -46,7 +46,7 @@ MODULE PROCEDURE Space_StiffnessMatrix_Cijkl
 
   S = SHAPE( Cijkl )
 
-  SELECT CASE( Cijkl % VarType )
+  SELECT CASE( Cijkl%VarType )
   CASE( Constant )
     ALLOCATE( CBar( S( 1 ), S( 2 ), nips ) )
     CBar( :, :, 1 ) = getValues( Cijkl, TypeFEVariableMatrix, &
@@ -79,7 +79,7 @@ MODULE PROCEDURE Space_StiffnessMatrix_Cijkl
 
   BMat1 = 0.0_DFP; BMat2 = 0.0_DFP
 
-  RealVal = Trial % Ws * Trial % js * Trial % Thickness
+  RealVal = Trial%Ws * Trial%js * Trial%Thickness
 
   Do ips = 1, nips
     DO j = 1, nsd
@@ -91,9 +91,9 @@ MODULE PROCEDURE Space_StiffnessMatrix_Cijkl
 
     DO i = 1, nsd
       BMat1( (i-1) * nns1 + 1 : i * nns1, (i-1) * nsd + 1 : i * nsd ) = &
-        & Test % dNdXt( :, :, ips )
+        & Test%dNdXt( :, :, ips )
       BMat2( (i-1) * nns2 + 1 : i * nns2, (i-1) * nsd + 1 : i * nsd ) = &
-        & Trial % dNdXt( :, :, ips )
+        & Trial%dNdXt( :, :, ips )
     END DO
 
     Ans = Ans + RealVal( ips ) * MATMUL( &
@@ -116,25 +116,25 @@ MODULE PROCEDURE Space_StiffnessMatrix_Lambda
   INTEGER( I4B ) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
   LOGICAL( LGT ) :: isLambdaNodal, isMunodal
 
-  nns1 = SIZE( Test % N, 1 )
-  nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 )
-  nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 )
+  nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 )
+  nsd = Trial%RefElem%NSD
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
 
-  IF( Lambda % DefineOn .EQ. Nodal ) THEN
+  IF( Lambda%DefineOn .EQ. Nodal ) THEN
     isLambdaNodal = .TRUE.
   ELSE
     isLambdaNodal = .FALSE.
   END IF
 
-  IF( Mu % DefineOn .EQ. Nodal ) THEN
+  IF( Mu%DefineOn .EQ. Nodal ) THEN
     isMuNodal = .TRUE.
   ELSE
     isMuNodal = .FALSE.
   END IF
 
-  SELECT CASE( Lambda % VarType )
+  SELECT CASE( Lambda%VarType )
   CASE( Constant )
     ALLOCATE( LambdaBar( nips ) )
     LambdaBar = getValues( Lambda, TypeFEVariableScalar, &
@@ -148,7 +148,7 @@ MODULE PROCEDURE Space_StiffnessMatrix_Lambda
     END IF
   END SELECT
 
-  SELECT CASE( Mu % VarType )
+  SELECT CASE( Mu%VarType )
   CASE( Constant )
     ALLOCATE( MuBar( nips ) )
     MuBar = getValues( Mu, TypeFEVariableScalar, TypeFEVariableConstant )
@@ -162,7 +162,7 @@ MODULE PROCEDURE Space_StiffnessMatrix_Lambda
     DEALLOCATE( RealVal )
   END SELECT
 
-  RealVal = Trial % Ws * Trial % Js * Trial % Thickness
+  RealVal = Trial%Ws * Trial%Js * Trial%Thickness
 
   DO ips = 1, nips
     Real1 = MuBar( ips ) * RealVal( ips )
@@ -175,15 +175,15 @@ MODULE PROCEDURE Space_StiffnessMatrix_Lambda
       DO i = 1, nsd
         r1 = r2 + 1; r2 = i * nns1
         IF( i .EQ. j ) THEN
-          Ke11 = Real1 * MATMUL( Test % dNdXt( :, :, ips ), &
-            & TRANSPOSE( Trial % dNdXt( :, :, ips ) ) ) &
-            & + Real2 * OUTERPROD( Test % dNdXt( :, i, ips ), &
-            & Trial % dNdXt( :, i, ips ) )
+          Ke11 = Real1 * MATMUL( Test%dNdXt( :, :, ips ), &
+            & TRANSPOSE( Trial%dNdXt( :, :, ips ) ) ) &
+            & + Real2 * OUTERPROD( Test%dNdXt( :, i, ips ), &
+            & Trial%dNdXt( :, i, ips ) )
         ELSE
-          Ke11 = Real3 * OUTERPROD( Test % dNdXt( :, i, ips ), &
-            & Trial % dNdXt( :, j, ips ) ) &
+          Ke11 = Real3 * OUTERPROD( Test%dNdXt( :, i, ips ), &
+            & Trial%dNdXt( :, j, ips ) ) &
             + Real1 * &
-            & OUTERPROD( Test % dNdXt( :, j, ips ), Trial % dNdXt( :, i, ips ) )
+            & OUTERPROD( Test%dNdXt( :, j, ips ), Trial%dNdXt( :, i, ips ) )
         END IF
         Ans( r1:r2, c1:c2 ) = Ans( r1:r2, c1:c2 ) + Ke11
       END DO
@@ -204,17 +204,17 @@ MODULE PROCEDURE space_stiffnessmatrix_LamMu
   REAL( DFP ), ALLOCATABLE :: RealVal( : ), Ke11( :, : )
   REAL( DFP ) :: Real1, Real2, Real3
 
-  nns1 = SIZE( Test % N, 1 )
-  nns2 = SIZE( Trial % N, 1 )
-  nips = SIZE( Trial % N, 2 )
-  nsd = Trial % RefElem % NSD
+  nns1 = SIZE( Test%N, 1 )
+  nns2 = SIZE( Trial%N, 1 )
+  nips = SIZE( Trial%N, 2 )
+  nsd = Trial%RefElem%NSD
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
 
-  ! RealVal = Trial % Ws * Trial % Thickness * Trial % Js**(1.0 - ENuJXi( 4 ))
+  ! RealVal = Trial%Ws * Trial%Thickness * Trial%Js**(1.0 - ENuJXi( 4 ))
   ! Lambda = ENuJXi( 1 ) * ENuJXi( 2 ) / ( 1.0 - ENuJXi( 2 ) ) &
   !   & / ( 1.0 - 2.0 * ENuJXi( 2 ) ) * ENuJXi( 3 )**ENuJXi( 4 )
   ! Mu = ENuJXi( 1 ) / 2.0 / ( 1.0 + ENuJXi( 2 ) ) * ENuJXi( 3 )**ENuJXi( 4 )
-  RealVal = Trial % Ws * Trial % Thickness * Trial % Js
+  RealVal = Trial%Ws * Trial%Thickness * Trial%Js
 
   DO ips = 1, nips
     Real1 = Mu * RealVal( ips )
@@ -227,16 +227,16 @@ MODULE PROCEDURE space_stiffnessmatrix_LamMu
       DO i = 1, nsd
         r1 = r2 + 1; r2 = i * nns1
         IF( i .EQ. j ) THEN
-          Ke11 = Real1 * MATMUL( Test % dNdXt( :, :, ips ), &
-            & TRANSPOSE( Trial % dNdXt( :, :, ips ) ) ) &
-            & + Real2 * OUTERPROD( Test % dNdXt( :, i, ips ), &
-            & Trial % dNdXt( :, i, ips ) )
+          Ke11 = Real1 * MATMUL( Test%dNdXt( :, :, ips ), &
+            & TRANSPOSE( Trial%dNdXt( :, :, ips ) ) ) &
+            & + Real2 * OUTERPROD( Test%dNdXt( :, i, ips ), &
+            & Trial%dNdXt( :, i, ips ) )
         ELSE
-          Ke11 = Real3 * OUTERPROD( Test % dNdXt( :, i, ips ), &
-            & Trial % dNdXt( :, j, ips ) ) &
+          Ke11 = Real3 * OUTERPROD( Test%dNdXt( :, i, ips ), &
+            & Trial%dNdXt( :, j, ips ) ) &
             + Real1 * &
-            & OUTERPROD( Test % dNdXt( :, j, ips ), &
-              & Trial % dNdXt( :, i, ips ) )
+            & OUTERPROD( Test%dNdXt( :, j, ips ), &
+              & Trial%dNdXt( :, i, ips ) )
         END IF
         Ans( r1:r2, c1:c2 ) = Ans( r1:r2, c1:c2 ) + Ke11
       END DO

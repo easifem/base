@@ -13,7 +13,7 @@
 !   TYPE :: Part of the program
 !
 !   DESCRIPTION
-!       -   Contraction Operator is defined for Material Jacobian and 
+!       -   Contraction Operator is defined for Material Jacobian and
 !           tensor
 !   HOSTING FILE
 !       -   MaterialJacobian_Class.f90
@@ -28,7 +28,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Obj .Contraction. Tensor
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     USE Rank2Tensor_Class
     USE Voigt
 
@@ -40,7 +40,7 @@
     ! Define intent of dummy variables
     REAL( DFP ), ALLOCATABLE :: Vec( : )
 
-    CALL TensorObj % getTensor( Vec, "Strain" )
+    CALL TensorObj%getTensor( Vec, "Strain" )
     Vec = MATMUL( Obj .Cijkl. SIZE(Vec), Vec )
     Contraction_1 = MatFromVoigtVec( Vec, "Stress" )
     DEALLOCATE( Vec )
@@ -56,7 +56,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Tensor .Contraction. Obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     USE Rank2Tensor_Class
     USE Voigt
 
@@ -68,7 +68,7 @@
     ! Define intent of dummy variables
     REAL( DFP ), ALLOCATABLE :: Vec( : )
 
-    CALL TensorObj % getTensor( Vec, "Strain" )
+    CALL TensorObj%getTensor( Vec, "Strain" )
     Vec = MATMUL( TRANSPOSE( Obj .Cijkl. SIZE( Vec ) ), Vec )
     Contraction_2 = MatFromVoigtVec( Vec, "Stress" )
     DEALLOCATE( Vec )
@@ -84,7 +84,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Obj .Contraction. Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     USE Rank2Tensor_Class
     USE Voigt
 
@@ -98,7 +98,7 @@
 
     TensorObj = Mat
     Contraction_3 = Contraction_1( Obj, TensorObj )
-    CALL TensorObj % DeallocateData( )
+    CALL TensorObj%DeallocateData( )
 
  END FUNCTION Contraction_3
 
@@ -111,7 +111,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !   1.  Mat .Contraction. Obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    
+
     USE Rank2Tensor_Class
     USE Voigt
 
@@ -125,6 +125,6 @@
 
     TensorObj = Mat
     Contraction_4 = Contraction_2( TensorObj, Obj )
-    CALL TensorObj % DeallocateData( )
+    CALL TensorObj%DeallocateData( )
 
  END FUNCTION Contraction_4

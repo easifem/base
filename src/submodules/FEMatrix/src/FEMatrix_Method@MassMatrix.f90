@@ -30,11 +30,11 @@ MODULE PROCEDURE Space_MassMatrix
   INTEGER( I4B ) :: nns1, nns2, nips, ips
   LOGICAL( LGT ) :: isNodal
 
-  nns1 = SIZE( Test % N, 1 )
-  nns2 = SIZE( Trial % N, 1 )
+  nns1 = SIZE( Test%N, 1 )
+  nns2 = SIZE( Trial%N, 1 )
   ALLOCATE( Ans( nns1, nns2 ) )
   Ans = 0.0_DFP
-  nips = SIZE( Trial % N, 2 )
+  nips = SIZE( Trial%N, 2 )
   ALLOCATE( RhoBar( nips ) )
 
   ! making rho at quadrature
@@ -45,13 +45,13 @@ MODULE PROCEDURE Space_MassMatrix
   END IF
 
   ! performing scalar computation
-  RealVal = Trial % Js * Trial % Ws * Trial % Thickness * RhoBar
+  RealVal = Trial%Js * Trial%Ws * Trial%Thickness * RhoBar
   DEALLOCATE( RhoBar )
 
   ! performing outerproduct
   DO ips = 1, nips
     Ans = Ans + &
-      & OUTERPROD( a = Test % N( :, ips ), b = Trial % N( :, ips ) ) &
+      & OUTERPROD( a = Test%N( :, ips ), b = Trial%N( :, ips ) ) &
       & * RealVal( ips )
   END DO
   IF( ALLOCATED( RealVal ) ) DEALLOCATE( RealVal )
@@ -74,12 +74,12 @@ MODULE PROCEDURE st_massMatrix_a
   INTEGER( I4B ) :: a, b, ipt, ips
 
   ALLOCATE( &
-    & Mat4( SIZE( Test( 1 ) % N, 1 ), &
-    & SIZE( Trial( 1 ) % N, 1 ), &
-    & SIZE( Test( 1 ) % T ), &
-    & SIZE( Trial( 1 ) % T ) ) )
+    & Mat4( SIZE( Test( 1 )%N, 1 ), &
+    & SIZE( Trial( 1 )%N, 1 ), &
+    & SIZE( Test( 1 )%T ), &
+    & SIZE( Trial( 1 )%T ) ) )
   Mat4 = 0.0_DFP
-  ALLOCATE( RhoBar( SIZE( Trial( 1 ) % N, 2 ), SIZE( Trial ) ) )
+  ALLOCATE( RhoBar( SIZE( Trial( 1 )%N, 2 ), SIZE( Trial ) ) )
 
   IF( PRESENT( Rho ) ) THEN
     CALL getInterpolation( Obj=Trial, Val=Rho, Interpol=RhoBar )
@@ -91,13 +91,13 @@ MODULE PROCEDURE st_massMatrix_a
     DO ipt = 1, SIZE( Trial )
       RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
         & * RhoBar(:,ipt) * Trial(ipt)%Wt * Trial(ipt)%Jt
-      DO ips = 1, SIZE( Trial(1) % N, 2 )
-        DO b = 1, SIZE( Trial(1) % T )
-          DO a = 1, SIZE( Test(1) % T )
+      DO ips = 1, SIZE( Trial(1)%N, 2 )
+        DO b = 1, SIZE( Trial(1)%T )
+          DO a = 1, SIZE( Test(1)%T )
             Mat4(:,:,a,b) = Mat4(:,:,a,b) &
               & + RealVal(ips) &
-              & * Test(ipt) % T(a) &
-              & * Trial(ipt) % T(b) &
+              & * Test(ipt)%T(a) &
+              & * Trial(ipt)%T(b) &
               & * OUTERPROD( a=Test(ipt)%N(:,ips), b=Trial(ipt)%N(:,ips) )
           END DO
         END DO
@@ -108,9 +108,9 @@ MODULE PROCEDURE st_massMatrix_a
     DO ipt = 1, SIZE( Trial )
       RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
         & * RhoBar(:,ipt) * Trial(ipt)%Wt * Trial(ipt)%Jt
-      DO ips = 1, SIZE( Trial(1) % N, 2 )
-        DO b = 1, SIZE( Trial(1) % T )
-          DO a = 1, SIZE( Test(1) % T )
+      DO ips = 1, SIZE( Trial(1)%N, 2 )
+        DO b = 1, SIZE( Trial(1)%T )
+          DO a = 1, SIZE( Test(1)%T )
             Mat4(:,:,a,b) = Mat4(:,:,a,b) &
               & + RealVal(ips) &
               & * OUTERPROD( a=Test(ipt)%dNTdt( :, a, ips ), &
@@ -123,12 +123,12 @@ MODULE PROCEDURE st_massMatrix_a
     DO ipt = 1, SIZE( Trial )
       RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
         & * RhoBar(:,ipt) * Trial(ipt)%Wt * Trial(ipt)%Jt
-      DO ips = 1, SIZE( Trial(1) % N, 2 )
-        DO b = 1, SIZE( Trial(1) % T )
-          DO a = 1, SIZE( Test(1) % T )
+      DO ips = 1, SIZE( Trial(1)%N, 2 )
+        DO b = 1, SIZE( Trial(1)%T )
+          DO a = 1, SIZE( Test(1)%T )
             Mat4(:,:,a,b) = Mat4(:,:,a,b) &
               & + RealVal(ips) &
-              & * Test(ipt) % T(a) &
+              & * Test(ipt)%T(a) &
               & * OUTERPROD( a=Test(ipt)%N( :, ips ), &
                   & b=Trial(ipt)%dNTdt( :, b, ips ) )
           END DO
@@ -139,12 +139,12 @@ MODULE PROCEDURE st_massMatrix_a
     DO ipt = 1, SIZE( Trial )
       RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
         & * RhoBar(:,ipt) * Trial(ipt)%Wt * Trial(ipt)%Jt
-      DO ips = 1, SIZE( Trial(1) % N, 2 )
-        DO b = 1, SIZE( Trial(1) % T )
-          DO a = 1, SIZE( Test(1) % T )
+      DO ips = 1, SIZE( Trial(1)%N, 2 )
+        DO b = 1, SIZE( Trial(1)%T )
+          DO a = 1, SIZE( Test(1)%T )
             Mat4(:,:,a,b) = Mat4(:,:,a,b) &
               & + RealVal(ips) &
-              & * Trial(ipt) % T(b) &
+              & * Trial(ipt)%T(b) &
               & * OUTERPROD( a=Test(ipt)%dNTdt( :, a, ips ), &
                   & b=Trial(ipt)%N( :,ips ) )
           END DO

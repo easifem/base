@@ -37,7 +37,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % T ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
 
         CALL Err_Msg(   &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -50,7 +50,7 @@
 
     END IF
 
-    TensorTimesScalar_1 = Obj % T * Scalar
+    TensorTimesScalar_1 = Obj%T * Scalar
 
  END FUNCTION TensorTimesScalar_1
 !
@@ -72,7 +72,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % T ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -85,7 +85,7 @@
 
     END IF
 
-    TensorTimesScalar_2 = Obj % T * Scalar
+    TensorTimesScalar_2 = Obj%T * Scalar
 
  END FUNCTION TensorTimesScalar_2
 !
@@ -107,7 +107,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % T ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
 
         CALL Err_Msg(   &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -120,7 +120,7 @@
 
     END IF
 
-    TensorTimesScalar_3 = Obj % T * Scalar
+    TensorTimesScalar_3 = Obj%T * Scalar
 
  END FUNCTION TensorTimesScalar_3
 !
@@ -142,7 +142,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % T ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -155,7 +155,7 @@
 
     END IF
 
-    TensorTimesScalar_4 = Obj % T * Scalar
+    TensorTimesScalar_4 = Obj%T * Scalar
 
  END FUNCTION TensorTimesScalar_4
 !
@@ -176,8 +176,8 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % T ) &
-        .OR. .NOT. ALLOCATED( Obj2 % T ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%T ) &
+        .OR. .NOT. ALLOCATED( Obj2%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -190,7 +190,7 @@
 
     END IF
 
-    TensorTimesTensor = Obj % T * Obj2 % T
+    TensorTimesTensor = Obj%T * Obj2%T
 
  END FUNCTION TensorTimesTensor
 !
@@ -216,7 +216,7 @@
 
     TensorTimesVector = 0.0_DFP
 
-    IF( .NOT. ALLOCATED( Obj % T ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -233,15 +233,15 @@
 
         CASE( 1 )
 
-            TensorTimesVector( 1 ) = Obj % T( 1, 1 ) * Vec( 1 )
+            TensorTimesVector( 1 ) = Obj%T( 1, 1 ) * Vec( 1 )
 
         CASE( 2 )
 
-            TensorTimesVector( 1 : 2 ) = MATMUL( Obj % T( 1:2, 1:2 ), Vec( 1:2 ) )
-            
+            TensorTimesVector( 1 : 2 ) = MATMUL( Obj%T( 1:2, 1:2 ), Vec( 1:2 ) )
+
         CASE( 3 )
 
-            TensorTimesVector = MATMUL( Obj % T, Vec )
+            TensorTimesVector = MATMUL( Obj%T, Vec )
 
     END SELECT
 
@@ -270,7 +270,7 @@
 
     VectorTimesTensor = 0.0_DFP
 
-    IF( .NOT. ALLOCATED( Obj % T ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -287,15 +287,15 @@
 
         CASE( 1 )
 
-            VectorTimesTensor( 1 ) = Obj % T( 1, 1 ) * Vec( 1 )
+            VectorTimesTensor( 1 ) = Obj%T( 1, 1 ) * Vec( 1 )
 
         CASE( 2 )
 
-            VectorTimesTensor( 1 : 2 ) = MATMUL( TRANSPOSE( Obj % T( 1:2, 1:2 ) ), Vec( 1:2 ) )
-            
+            VectorTimesTensor( 1 : 2 ) = MATMUL( TRANSPOSE( Obj%T( 1:2, 1:2 ) ), Vec( 1:2 ) )
+
         CASE( 3 )
 
-            VectorTimesTensor = MATMUL( TRANSPOSE( Obj % T ), Vec )
+            VectorTimesTensor = MATMUL( TRANSPOSE( Obj%T ), Vec )
 
     END SELECT
 
@@ -319,7 +319,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % T ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -332,7 +332,7 @@
 
     END IF
 
-    TensorTimesMat = Obj % T * Mat
+    TensorTimesMat = Obj%T * Mat
 
  END FUNCTION TensorTimesMat
 !
@@ -354,7 +354,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % T ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>Asterics.part", &
@@ -367,7 +367,7 @@
 
     END IF
 
-    MatTimesTensor = Obj % T * Mat
+    MatTimesTensor = Obj%T * Mat
 
  END FUNCTION MatTimesTensor
 !

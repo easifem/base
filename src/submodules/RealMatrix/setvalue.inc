@@ -8,7 +8,7 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine set `Obj % Val` to `Val`
+! This subroutine set `Obj%Val` to `Val`
 
 MODULE PURE SUBROUTINE realmat_setValues_1( Obj, Val )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
@@ -21,8 +21,8 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine set values in `Obj % Val`
-! `Obj % Val( i, j ) = Val`
+! This subroutine set values in `Obj%Val`
+! `Obj%Val( i, j ) = Val`
 
 MODULE PURE SUBROUTINE realmat_setValues_2( Obj, Val, Row, Col )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
@@ -36,7 +36,7 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine set values in `Obj % Val`
+! This subroutine set values in `Obj%Val`
 
 MODULE PURE SUBROUTINE realmat_setValues_3( Obj, Val, Row, Col )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
@@ -50,7 +50,7 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine set values in `Obj % val`
+! This subroutine set values in `Obj%val`
 ! - If `ExtraOption=0` then diagonal values are set; and `Indx` denotes
 !   diagonal number with `0` being the main diagonal
 ! - If `Extraoption=1` then row values are set; `Indx` then denotes row number
@@ -68,7 +68,7 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine set values in `Obj % val`
+! This subroutine set values in `Obj%val`
 ! - If `ExtraOption=0` then diagonal values are set; and `Indx` denotes
 !   diagonal number with `0` being the main diagonal
 ! - If `Extraoption=1` then row values are set; `Indx` then denotes row number
@@ -98,10 +98,10 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%Val`
 !
 ! ```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%val = obj%val *Op* scale * val
 ! ```
 
 MODULE PURE SUBROUTINE realmat_addVal_1( Obj, Val, Scale, Op )
@@ -118,10 +118,10 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%Val`
 !
 ! ```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%val = obj%val *Op* scale * val
 ! ```
 
 
@@ -138,10 +138,10 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%Val`
 !
 ! ```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%val = obj%val *Op* scale * val
 ! ```
 
 MODULE PURE SUBROUTINE realmat_addVal_3( Obj, Val, Row, Col, Scale, Op )
@@ -157,10 +157,10 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%Val`
 !
 ! ```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%val = obj%val *Op* scale * val
 ! ```
 
 MODULE PURE SUBROUTINE realmat_addVal_4( Obj, Val, Indx, ExtraOption, Scale, Op )
@@ -176,10 +176,10 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine adds contribution in values of `Obj % Val`
+! This subroutine adds contribution in values of `Obj%Val`
 !
 ! ```fortran
-! obj % val = obj % val *Op* scale * val
+! obj%val = obj%val *Op* scale * val
 ! ```
 
 MODULE PURE SUBROUTINE realmat_addVal_5( Obj, Val, Indx, ExtraOption, Scale, Op )

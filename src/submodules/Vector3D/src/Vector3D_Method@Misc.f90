@@ -110,7 +110,7 @@ END PROCEDURE Norm2_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_UnitVector
-  Ans = Obj % Val / NORM2( Obj % Val )
+  Ans = Obj%Val / NORM2( Obj%Val )
 END PROCEDURE get_UnitVector
 
 !----------------------------------------------------------------------------
@@ -126,7 +126,7 @@ END PROCEDURE get_angle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_projection_vector_obj
-  Ans = (DOT_PRODUCT( u, v ) / DOT_PRODUCT( v, v )) * v % val
+  Ans = (DOT_PRODUCT( u, v ) / DOT_PRODUCT( v, v )) * v%val
 END PROCEDURE get_projection_vector_obj
 
 !----------------------------------------------------------------------------
@@ -134,7 +134,7 @@ END PROCEDURE get_projection_vector_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getNormal_Vector
-  Ans = u % val - (DOT_PRODUCT( u, v ) / DOT_PRODUCT( v, v )) * v % val
+  Ans = u%val - (DOT_PRODUCT( u, v ) / DOT_PRODUCT( v, v )) * v%val
 END PROCEDURE getNormal_Vector
 
 !----------------------------------------------------------------------------

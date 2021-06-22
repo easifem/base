@@ -13,9 +13,9 @@
 !   TYPE :: Part of the program
 !
 !   DESCRIPTION
-!       -   Operators to access the Obj % C are defined
+!       -   Operators to access the Obj%C are defined
 !       -   .Cijkl.
-!       -   .AT. 
+!       -   .AT.
 !   HOSTING FILE
 !       -   MaterialJacobian_Class.f90
 !==============================================================================
@@ -27,19 +27,19 @@
  FUNCTION Cijkl_1( Obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Operator .Cijkl. , Mat = .Cijkl. Obj returns Obj % C
+!       1.  Operator .Cijkl. , Mat = .Cijkl. Obj returns Obj%C
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
     CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
     REAL( DFP ), ALLOCATABLE :: Cijkl_1( :, : )
 
-    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>OperatorOverloading/Cijkl.part", &
         " .Cijkl. Obj", &
-        "Obj % C is not allocated, Program Stopped!!!"&
+        "Obj%C is not allocated, Program Stopped!!!"&
         )
 
         STOP
@@ -47,7 +47,7 @@
     END IF
 
     IF( ALLOCATED( Cijkl_1 ) ) DEALLOCATE( Cijkl_1 )
-    Cijkl_1 = Obj % C
+    Cijkl_1 = Obj%C
 
  END FUNCTION Cijkl_1
 
@@ -58,7 +58,7 @@
  FUNCTION Cijkl_2( Obj, Indx )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .Cijkl. Indx, Returns Obj % C( Indx( 1 ), Obj % C( Indx( 2 )) )
+!       1.  Obj .Cijkl. Indx, Returns Obj%C( Indx( 1 ), Obj%C( Indx( 2 )) )
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -68,12 +68,12 @@
 
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>OperatorOverloading/Cijkl.part", &
         " Obj .Cijkl. Index", &
-        "Obj % C is not allocated, Program Stopped!!!"&
+        "Obj%C is not allocated, Program Stopped!!!"&
         )
 
         STOP
@@ -94,7 +94,7 @@
 
     END IF
 
-    Cijkl_2 = Obj % C( Indx( 1 ), Indx( 2 ) )
+    Cijkl_2 = Obj%C( Indx( 1 ), Indx( 2 ) )
 
  END FUNCTION Cijkl_2
 
@@ -105,7 +105,7 @@
  FUNCTION Cijkl_4( Obj, Indx )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .Cijkl. Indx, Returns Obj % C( Indx( 1 ), Obj % C( Indx( 2 )) )
+!       1.  Obj .Cijkl. Indx, Returns Obj%C( Indx( 1 ), Obj%C( Indx( 2 )) )
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     USE Voigt
@@ -119,12 +119,12 @@
     INTEGER( I4B ), ALLOCATABLE :: IndxMat( :, : )
     REAL( DFP ), ALLOCATABLE :: C( :, : )
 
-    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>OperatorOverloading/Cijkl.part", &
         " Obj .Cijkl. Index", &
-        "Obj % C is not allocated, Program Stopped!!!"&
+        "Obj%C is not allocated, Program Stopped!!!"&
         )
 
         STOP
@@ -168,26 +168,26 @@
 
         CASE( 6 )
 
-            Cijkl_4 = Obj % C( IndxMat( i, j ), IndxMat( k, l ) )
+            Cijkl_4 = Obj%C( IndxMat( i, j ), IndxMat( k, l ) )
 
         CASE( 4 )
 
-            C = Mat6_From_Mat4( Obj % C )
+            C = Mat6_From_Mat4( Obj%C )
             Cijkl_4 = C( IndxMat( i, j ), IndxMat( k, l ) )
 
         CASE( 3 )
 
-            C = Mat6_From_Mat3( Obj % C )
+            C = Mat6_From_Mat3( Obj%C )
             Cijkl_4 = C( IndxMat( i, j ), IndxMat( k, l ) )
 
         CASE( 2 )
 
-            C = Mat6_From_Mat2( Obj % C )
+            C = Mat6_From_Mat2( Obj%C )
             Cijkl_4 = C( IndxMat( i, j ), IndxMat( k, l ) )
 
 
         CASE( 1 )
-            C = Mat6_From_Mat1( Obj % C )
+            C = Mat6_From_Mat1( Obj%C )
             Cijkl_4 = C( IndxMat( i, j ), IndxMat( k, l ) )
 
         CASE DEFAULT
@@ -195,7 +195,7 @@
             CALL Err_Msg( &
             "MaterialJacobian_Class.f90>>OperatorOverloading/Cijkl.part", &
             " Obj .Cijkl. Index", &
-            "No Case Found for shape of Stored Obj % C, Program Stopped!!!"&
+            "No Case Found for shape of Stored Obj%C, Program Stopped!!!"&
             )
             STOP
 
@@ -214,7 +214,7 @@
  FUNCTION Cijkl( Obj, Indx )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .Cijkl. Indx, Returns Obj % C( Indx( 1 ), Obj % C( Indx( 2 )) )
+!       1.  Obj .Cijkl. Indx, Returns Obj%C( Indx( 1 ), Obj%C( Indx( 2 )) )
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -224,13 +224,13 @@
 
     SELECT CASE( SIZE( Indx ) )
 
-        CASE( 2 ) 
+        CASE( 2 )
 
             Cijkl = Cijkl_2( Obj, Indx )
 
         CASE( 4 )
 
-            Cijkl = Cijkl_4( Obj, Indx ) 
+            Cijkl = Cijkl_4( Obj, Indx )
 
         CASE DEFAULT
 
@@ -247,7 +247,7 @@
  FUNCTION Cijkl_5( Obj, M )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .Cijkl. Indx, Returns Obj % C( Indx( 1 ), Obj % C( Indx( 2 )) )
+!       1.  Obj .Cijkl. Indx, Returns Obj%C( Indx( 1 ), Obj%C( Indx( 2 )) )
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     USE Voigt
@@ -259,12 +259,12 @@
 
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>OperatorOverloading/Cijkl.part", &
         " Obj .Cijkl. Index", &
-        "Obj % C is not allocated, Program Stopped!!!"&
+        "Obj%C is not allocated, Program Stopped!!!"&
         )
 
         STOP
@@ -281,23 +281,23 @@
 
                 CASE( 6 )
 
-                    Cijkl_5 = Obj % C
+                    Cijkl_5 = Obj%C
 
                 CASE( 4 )
 
-                    Cijkl_5 = Mat4_From_Mat6( Obj % C )
+                    Cijkl_5 = Mat4_From_Mat6( Obj%C )
 
                 CASE( 3 )
 
-                    Cijkl_5 = Mat3_From_Mat6( Obj % C )
+                    Cijkl_5 = Mat3_From_Mat6( Obj%C )
 
                 CASE( 2 )
 
-                    Cijkl_5 = Mat2_From_Mat6( Obj % C )
+                    Cijkl_5 = Mat2_From_Mat6( Obj%C )
 
                 CASE( 1 )
 
-                    Cijkl_5( 1, 1 ) = Obj % C( 1, 1 )
+                    Cijkl_5( 1, 1 ) = Obj%C( 1, 1 )
 
 
             END SELECT
@@ -308,23 +308,23 @@
 
                 CASE( 6 )
 
-                    Cijkl_5 = Mat6_From_Mat4( Obj % C )
+                    Cijkl_5 = Mat6_From_Mat4( Obj%C )
 
                 CASE( 4 )
 
-                    Cijkl_5 =  Obj % C 
+                    Cijkl_5 =  Obj%C
 
                 CASE( 3 )
 
-                    Cijkl_5 = Mat3_From_Mat4( Obj % C )
+                    Cijkl_5 = Mat3_From_Mat4( Obj%C )
 
                 CASE( 2 )
 
-                    Cijkl_5 = Mat2_From_Mat4( Obj % C )
+                    Cijkl_5 = Mat2_From_Mat4( Obj%C )
 
                 CASE( 1 )
 
-                    Cijkl_5( 1, 1 ) = Obj % C( 1, 1 )
+                    Cijkl_5( 1, 1 ) = Obj%C( 1, 1 )
 
 
             END SELECT
@@ -335,23 +335,23 @@
 
                 CASE( 6 )
 
-                    Cijkl_5 = Mat6_From_Mat3( Obj % C )
+                    Cijkl_5 = Mat6_From_Mat3( Obj%C )
 
                 CASE( 4 )
 
-                    Cijkl_5 =  Mat4_From_Mat3( Obj % C )
+                    Cijkl_5 =  Mat4_From_Mat3( Obj%C )
 
                 CASE( 3 )
 
-                    Cijkl_5 = Obj % C
+                    Cijkl_5 = Obj%C
 
                 CASE( 2 )
 
-                    Cijkl_5 = Mat2_From_Mat3( Obj % C )
+                    Cijkl_5 = Mat2_From_Mat3( Obj%C )
 
                 CASE( 1 )
 
-                    Cijkl_5( 1, 1 ) = Obj % C( 1, 1 )
+                    Cijkl_5( 1, 1 ) = Obj%C( 1, 1 )
 
 
             END SELECT
@@ -362,23 +362,23 @@
 
                 CASE( 6 )
 
-                    Cijkl_5 = Mat6_From_Mat2( Obj % C )
+                    Cijkl_5 = Mat6_From_Mat2( Obj%C )
 
                 CASE( 4 )
 
-                    Cijkl_5 =  Mat4_From_Mat2( Obj % C )
+                    Cijkl_5 =  Mat4_From_Mat2( Obj%C )
 
                 CASE( 3 )
 
-                    Cijkl_5 = Mat3_From_Mat2( Obj % C )
+                    Cijkl_5 = Mat3_From_Mat2( Obj%C )
 
                 CASE( 2 )
 
-                    Cijkl_5 = Obj % C
+                    Cijkl_5 = Obj%C
 
                 CASE( 1 )
 
-                    Cijkl_5( 1, 1 ) = Obj % C( 1, 1 )
+                    Cijkl_5( 1, 1 ) = Obj%C( 1, 1 )
 
 
             END SELECT
@@ -389,23 +389,23 @@
 
                 CASE( 6 )
 
-                    Cijkl_5 = Mat6_From_Mat1( Obj % C )
+                    Cijkl_5 = Mat6_From_Mat1( Obj%C )
 
                 CASE( 4 )
 
-                    Cijkl_5 =  Mat4_From_Mat1( Obj % C )
+                    Cijkl_5 =  Mat4_From_Mat1( Obj%C )
 
                 CASE( 3 )
 
-                    Cijkl_5 = Mat3_From_Mat1( Obj % C )
+                    Cijkl_5 = Mat3_From_Mat1( Obj%C )
 
                 CASE( 2 )
 
-                    Cijkl_5 = Mat2_From_Mat1( Obj % C )
+                    Cijkl_5 = Mat2_From_Mat1( Obj%C )
 
                 CASE( 1 )
 
-                    Cijkl_5( 1, 1 ) = Obj % C( 1, 1 )
+                    Cijkl_5( 1, 1 ) = Obj%C( 1, 1 )
 
 
             END SELECT
@@ -415,7 +415,7 @@
             CALL Err_Msg( &
             "MaterialJacobian_Class.f90>>OperatorOverloading/Cijkl.part", &
             " Obj .Cijkl. Index", &
-            "No Case Found for shape of Stored Obj % C, Program Stopped!!!"&
+            "No Case Found for shape of Stored Obj%C, Program Stopped!!!"&
             )
             STOP
 

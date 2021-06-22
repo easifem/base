@@ -40,7 +40,7 @@
 
     Str = .StressType. Obj
 
-    CALL Obj % Initiate( TensorObj, Str )
+    CALL Obj%Initiate( TensorObj, Str )
 
  END SUBROUTINE Obj_From_Tensor
 
@@ -64,7 +64,7 @@
 
     Str = .StressType. Obj
 
-    CALL Obj % Initiate( Mat, Str )
+    CALL Obj%Initiate( Mat, Str )
 
  END SUBROUTINE Obj_From_Mat
 
@@ -88,7 +88,7 @@
 
     Str = .StressType. Obj
 
-    CALL Obj % Initiate( Vec, Str )
+    CALL Obj%Initiate( Vec, Str )
 
  END SUBROUTINE Obj_From_Vec
 

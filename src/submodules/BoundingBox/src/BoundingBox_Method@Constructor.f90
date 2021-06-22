@@ -33,14 +33,14 @@ CONTAINS
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_1
-  Obj % Box = 0.0_DFP
-  Obj % NSD = NSD
-  Obj % Box( 1, 1 ) = lim( 1 ) !xmin
-  Obj % Box( 1, 2 ) = lim( 3 ) !ymin
-  Obj % Box( 1, 3 ) = lim( 5 ) !zmin
-  Obj % Box( 2, 1 ) = lim( 2 ) !xmax
-  Obj % Box( 2, 2 ) = lim( 4 ) !ymax
-  Obj % Box( 2, 3 ) = lim( 6 ) !zmax
+  Obj%Box = 0.0_DFP
+  Obj%NSD = NSD
+  Obj%Box( 1, 1 ) = lim( 1 ) !xmin
+  Obj%Box( 1, 2 ) = lim( 3 ) !ymin
+  Obj%Box( 1, 3 ) = lim( 5 ) !zmin
+  Obj%Box( 2, 1 ) = lim( 2 ) !xmax
+  Obj%Box( 2, 2 ) = lim( 4 ) !ymax
+  Obj%Box( 2, 3 ) = lim( 6 ) !zmax
 END PROCEDURE initiate_1
 
 !-----------------------------------------------------------------------------
@@ -48,8 +48,8 @@ END PROCEDURE initiate_1
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_2
-  Obj % Box = AnotherObj % Box
-  Obj % NSD = AnotherObj % NSD
+  Obj%Box = AnotherObj%Box
+  Obj%NSD = AnotherObj%NSD
 END PROCEDURE initiate_2
 
 !-----------------------------------------------------------------------------
@@ -126,7 +126,7 @@ MODULE PROCEDURE display_obj
 
   WRITE( I, "(A)" ) "Type :: BoundingBox_"
   CALL BlankLines( I )
-  WRITE( I, "(A, I4)" ) "NSD :: ", Obj % NSD
+  WRITE( I, "(A, I4)" ) "NSD :: ", Obj%NSD
   WRITE( I, "(A, G15.7)" ) "Xmin :: ", .Xmin. Obj
   WRITE( I, "(A, G15.7)" ) "Xmax :: ", .Xmax. Obj
   WRITE( I, "(A, G15.7)" ) "Ymin :: ", .Ymin. Obj

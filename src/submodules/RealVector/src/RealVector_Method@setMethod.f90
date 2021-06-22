@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_1
-  CALL Append( Obj % Val, Value )
+  CALL Append( Obj%Val, Value )
 END PROCEDURE Append_1
 
 !----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ END PROCEDURE Append_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_2
-  CALL Append( Obj % Val, Value )
+  CALL Append( Obj%Val, Value )
 END PROCEDURE Append_2
 
 !----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ END PROCEDURE Append_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_3
-  CALL Append( Obj % Val, AnotherObj % Val )
+  CALL Append( Obj%Val, AnotherObj%Val )
 END PROCEDURE Append_3
 
 !----------------------------------------------------------------------------
@@ -53,11 +53,11 @@ END PROCEDURE Append_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE setValue_1
-  IF( ALLOCATED( Obj % Val ) ) THEN
+  IF( ALLOCATED( Obj%Val ) ) THEN
     IF( SIZE( Value) .EQ. 1 ) THEN
-      Obj % Val( Indx ) = Value( 1 )
+      Obj%Val( Indx ) = Value( 1 )
     ELSE
-      Obj % Val( Indx ) = Value
+      Obj%Val( Indx ) = Value
     END IF
   END IF
 END PROCEDURE setValue_1

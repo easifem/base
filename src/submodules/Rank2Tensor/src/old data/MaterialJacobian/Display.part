@@ -42,7 +42,7 @@
         I = 6
     END IF
 
-    IF( .NOT. ALLOCATED( Obj % C ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
 
         CALL BlankLines( UnitNo = I )
         WRITE( I, "(A)" ) "MaterialJacobian_ Object is Empty"
@@ -57,15 +57,15 @@
     CALL EqualLine( UnitNo = I )
     CALL BlankLines( UnitNo = I )
 
-    CALL Display_Array( Obj % C, "C" )
+    CALL Display_Array( Obj%C, "C" )
 
     WRITE( I, "(A)" ) "Stress Type"
-    CALL Obj % StressType % Display( I )
+    CALL Obj%StressType%Display( I )
 
     WRITE( I, "(A)" ) "Strain Type"
-    CALL Obj % StrainType % Display( I )
+    CALL Obj%StrainType%Display( I )
 
     WRITE( I, "(A)" ) "Rate Type"
-    CALL Obj % RateType % Display( )
+    CALL Obj%RateType%Display( )
 
  END SUBROUTINE Display

@@ -9,8 +9,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_tNodes
-  IF( ALLOCATED( Obj % Map ) ) THEN
-    Ans = Obj % Map( SIZE( Obj % Map, 1 ), 6 )
+  IF( ALLOCATED( Obj%Map ) ) THEN
+    Ans = Obj%Map( SIZE( Obj%Map, 1 ), 6 )
   ELSE
     Ans = 0
   END IF
@@ -22,8 +22,8 @@ END PROCEDURE get_tNodes
 
 MODULE PROCEDURE get_tNodes_idof
   Ans = 0
-  IF( ALLOCATED( Obj % ValMap ) ) THEN
-    Ans = Obj % ValMap( idof + 1 ) - Obj % ValMap( idof )
+  IF( ALLOCATED( Obj%ValMap ) ) THEN
+    Ans = Obj%ValMap( idof + 1 ) - Obj%ValMap( idof )
   ELSE
     Ans = 0
   END IF
@@ -34,8 +34,8 @@ END PROCEDURE get_tNodes_idof
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_tDOF
-  IF( ALLOCATED( Obj % Map ) ) THEN
-    Ans = Obj % Map( SIZE( Obj % Map, 1 ), 4 )
+  IF( ALLOCATED( Obj%Map ) ) THEN
+    Ans = Obj%Map( SIZE( Obj%Map, 1 ), 4 )
   ELSE
     Ans = 0
   END IF
@@ -49,9 +49,9 @@ MODULE PROCEDURE get_tDOF_iname
   INTEGER( I4B ) :: i, k
 
   k = ICHAR( Name )
-  IF( ALLOCATED( Obj % Map ) ) THEN
-    DO i = 1, SIZE( Obj % Map, 1 )
-      IF( Obj % Map( i, 1 ) .EQ. k ) Ans = Obj % Map( i, 4 )
+  IF( ALLOCATED( Obj%Map ) ) THEN
+    DO i = 1, SIZE( Obj%Map, 1 )
+      IF( Obj%Map( i, 1 ) .EQ. k ) Ans = Obj%Map( i, 4 )
     END DO
   ELSE
     Ans = 0
@@ -63,8 +63,8 @@ END PROCEDURE get_tDOF_iname
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_tNames
-  IF( ALLOCATED( Obj % Map ) ) THEN
-    Ans = SIZE( Obj % Map, 1 ) - 1
+  IF( ALLOCATED( Obj%Map ) ) THEN
+    Ans = SIZE( Obj%Map, 1 ) - 1
   ELSE
     Ans = 0
   END IF
@@ -77,11 +77,11 @@ END PROCEDURE get_tNames
 MODULE PROCEDURE dof_all_names
   INTEGER( I4B ) :: ii, n
 
-  n = SIZE( Obj % Map, 1 ) - 1
+  n = SIZE( Obj%Map, 1 ) - 1
   ALLOCATE( Ans( n ) )
 
   DO ii = 1, n
-    Ans( ii ) = ACHAR( Obj % Map( ii, 1 ) )
+    Ans( ii ) = ACHAR( Obj%Map( ii, 1 ) )
   END DO
 END PROCEDURE dof_all_names
 
@@ -90,7 +90,7 @@ END PROCEDURE dof_all_names
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_single_name
-  Ans = ACHAR( Obj % Map( ii, 1 ) )
+  Ans = ACHAR( Obj%Map( ii, 1 ) )
 END PROCEDURE dof_single_name
 
 !----------------------------------------------------------------------------
@@ -99,11 +99,11 @@ END PROCEDURE dof_single_name
 
 MODULE PROCEDURE get_index_of_name
   INTEGER( I4B ) :: n, i, ic
-  n = SIZE( Obj % Map, 1 ) - 1
+  n = SIZE( Obj%Map, 1 ) - 1
   ic = ICHAR( Name )
   Ans = 0
   DO i =1, n
-    IF( Obj % Map( i, 1 ) .EQ. ic ) THEN
+    IF( Obj%Map( i, 1 ) .EQ. ic ) THEN
       Ans = i
       EXIT
     END IF
@@ -116,10 +116,10 @@ END PROCEDURE get_index_of_name
 
 MODULE PROCEDURE get_tspace_compo
   INTEGER( I4B ) :: n, i
-  n = SIZE( Obj % Map, 1 ) - 1
+  n = SIZE( Obj%Map, 1 ) - 1
   Ans = 0
   DO i = 1, n
-    IF( Obj % Map( i, 2 ) .GT. 0 ) Ans = Ans + 1
+    IF( Obj%Map( i, 2 ) .GT. 0 ) Ans = Ans + 1
   END DO
 END PROCEDURE get_tspace_compo
 
@@ -129,10 +129,10 @@ END PROCEDURE get_tspace_compo
 
 MODULE PROCEDURE get_tTime_compo
   INTEGER( I4B ) :: n, i
-  n = SIZE( Obj % Map, 1 ) - 1
+  n = SIZE( Obj%Map, 1 ) - 1
   Ans = 0
   DO i = 1, n
-    IF( Obj % Map( i, 3 ) .GT. 1 ) Ans = Ans + 1
+    IF( Obj%Map( i, 3 ) .GT. 1 ) Ans = Ans + 1
   END DO
 END PROCEDURE get_tTime_compo
 
@@ -143,7 +143,7 @@ END PROCEDURE get_tTime_compo
 MODULE PROCEDURE get_arrayvalues_single_vec
   INTEGER( I4B ) :: m, n, i, k, tdof
 
-  ASSOCIATE( Map => Obj % Map, vm => Obj % ValMap )
+  ASSOCIATE( Map => Obj%Map, vm => Obj%ValMap )
     !
     IF( PRESENT( Nptrs ) ) THEN
       m = SIZE( dofno )
@@ -151,7 +151,7 @@ MODULE PROCEDURE get_arrayvalues_single_vec
       k = m * n
       call reallocate( v, k )
 
-      SELECT CASE( Obj % StorageFMT )
+      SELECT CASE( Obj%StorageFMT )
 
       CASE( dof_FMT )
 
@@ -204,7 +204,7 @@ MODULE PROCEDURE get_arrayvalues_single_vec
       END DO
       CALL reallocate( v, k )
 
-      SELECT CASE( Obj % StorageFMT )
+      SELECT CASE( Obj%StorageFMT )
 
       CASE( dof_FMT )
 
@@ -284,7 +284,7 @@ END PROCEDURE arrayvalues_single_vec
 MODULE PROCEDURE get_arrayvalues_array
   INTEGER( I4B ) :: m, n, i, k, tdof
 
-  ASSOCIATE( Map => Obj % Map, vm => Obj % ValMap )
+  ASSOCIATE( Map => Obj%Map, vm => Obj%ValMap )
 
     k = vm( dofno( 1 ) + 1 ) - vm( dofno( 1 ) )
     m = SIZE( dofno )
@@ -298,7 +298,7 @@ MODULE PROCEDURE get_arrayvalues_array
       CALL reallocate( v, m, k )
     END IF
 
-    SELECT CASE( Obj % StorageFMT )
+    SELECT CASE( Obj%StorageFMT )
     CASE( dof_FMT )
 
       tdof = .tdof. Obj

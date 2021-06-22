@@ -33,7 +33,7 @@
     CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: Transpose_1
 
-    IF( .NOT. ALLOCATED( Obj % T )  ) THEN
+    IF( .NOT. ALLOCATED( Obj%T )  ) THEN
 
         CALL Err_Msg(                                                      &
                        "Rank2Tensor_Class.f90>>OperatorOverloading.part",  &
@@ -47,7 +47,7 @@
     END IF
 
 
-    Transpose_1 = TRANSPOSE( Obj % T )
+    Transpose_1 = TRANSPOSE( Obj%T )
 
  END FUNCTION Transpose_1
 

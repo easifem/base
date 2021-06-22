@@ -12,7 +12,7 @@
 !
 !   Type:: Part of Module
 !
-!   Description ::  
+!   Description ::
 !       -   This part includes subroutine for getting PK2 Stress from
 !           any other Stress Measures
 !   Hosting File ::
@@ -43,7 +43,7 @@
     REAL( DFP ) :: J
     REAL( DFP ), ALLOCATABLE :: InvF( :, : )
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
             "Stress_Class.f90>>Pk2Stress.part", &
@@ -57,7 +57,7 @@
 
     T = Obj
 
-    SELECT CASE( TRIM( Obj % StressType ) )
+    SELECT CASE( TRIM( Obj%StressType ) )
 
         CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
 
@@ -65,7 +65,7 @@
             InvF = .INV. F
             getPK2Stress = ( InvF .matmul. T ) .matmul. TRANSPOSE( InvF )
             getPK2Stress = J * getPK2Stress
-            
+
         CASE( "Kirchhoff", "kirchhoff", "Tau", "kirchoff", "Kirchoff", "tau" )
 
             InvF = .INV. F
@@ -91,19 +91,19 @@
             CALL Err_Msg( &
                 "Stress_Class.f90>>Pk2Stress.part", &
                 "getPK2Stress( Obj, F ), Obj .pkTwo. F, Obj .S. F", &
-                "No case found for Obj % StressType. &
+                "No case found for Obj%StressType. &
                 Program Stopped!!!" &
             )
             STOP
 
     END SELECT
 
-    CALL T % DeallocateData( )
+    CALL T%DeallocateData( )
     IF( ALLOCATED( InvF ) ) DEALLOCATE( InvF )
 
  END FUNCTION getPK2Stress
 
 !------------------------------------------------------------------------------
-!                                                         
+!
 !------------------------------------------------------------------------------
 

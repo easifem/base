@@ -35,7 +35,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg(   &
                        "Stress_Class.f90>>Asterics.part", &
@@ -48,12 +48,12 @@
 
     END IF
 
-    ObjTimesScalar_1 = MatFromVoigtVec(Obj % V * Scalar, "Stress")
+    ObjTimesScalar_1 = MatFromVoigtVec(Obj%V * Scalar, "Stress")
 
     CALL Check_Error( &
     "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
     "Traceback ---> &
-    ObjTimesScalar_1 = MatFromVoigtVec(Obj % V * Scalar,")
+    ObjTimesScalar_1 = MatFromVoigtVec(Obj%V * Scalar,")
 
  END FUNCTION ObjTimesScalar_1
 
@@ -74,7 +74,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
@@ -87,12 +87,12 @@
 
     END IF
 
-    ScalarTimesObj_1 = MatFromVoigtVec(Obj % V * Scalar, "Stress")
+    ScalarTimesObj_1 = MatFromVoigtVec(Obj%V * Scalar, "Stress")
 
     CALL Check_Error( &
     "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
     "Traceback ---> &
-    ScalarTimesObj_1 = MatFromVoigtVec(Obj % V * Scalar,")
+    ScalarTimesObj_1 = MatFromVoigtVec(Obj%V * Scalar,")
 
  END FUNCTION ScalarTimesObj_1
 !
@@ -113,7 +113,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg(   &
                        "Stress_Class.f90>>Asterics.part", &
@@ -126,12 +126,12 @@
 
     END IF
 
-    ObjTimesScalar_2 = MatFromVoigtVec(Obj % V * Scalar, "Stress")
+    ObjTimesScalar_2 = MatFromVoigtVec(Obj%V * Scalar, "Stress")
 
     CALL Check_Error( &
     "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
     "Traceback ---> &
-    ObjTimesScalar_2 = MatFromVoigtVec(Obj % V * Scalar,")
+    ObjTimesScalar_2 = MatFromVoigtVec(Obj%V * Scalar,")
 
  END FUNCTION ObjTimesScalar_2
 
@@ -152,7 +152,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg(  &
                        "Stress_Class.f90>>Asterics.part", &
@@ -165,12 +165,12 @@
 
     END IF
 
-    ScalarTimesObj_2 = MatFromVoigtVec(Obj % V * Scalar, "Stress")
+    ScalarTimesObj_2 = MatFromVoigtVec(Obj%V * Scalar, "Stress")
 
     CALL Check_Error( &
     "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
     "Traceback ---> &
-    ScalarTimesObj_2 = MatFromVoigtVec(Obj % V * Scalar,")
+    ScalarTimesObj_2 = MatFromVoigtVec(Obj%V * Scalar,")
 
  END FUNCTION ScalarTimesObj_2
 
@@ -181,7 +181,7 @@
  FUNCTION ObjTimesObj( Obj, Obj2 )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       Obj % V * Obj % V
+!       Obj%V * Obj%V
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
@@ -190,8 +190,8 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) &
-        .OR. .NOT. ALLOCATED( Obj2 % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) &
+        .OR. .NOT. ALLOCATED( Obj2%V ) ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
@@ -205,12 +205,12 @@
 
     END IF
 
-    IF( SIZE( Obj % V ) .NE. SIZE( Obj2 % V ) ) THEN 
+    IF( SIZE( Obj%V ) .NE. SIZE( Obj2%V ) ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
                         "Obj * Obj2 ", &
-                        "The size of Obj % V and Obj2 % V must be the same. &
+                        "The size of Obj%V and Obj2%V must be the same. &
                         Program Stopped !!!" &
                     )
         Error_Flag = .TRUE.
@@ -219,12 +219,12 @@
 
     END IF
 
-    ObjTimesObj = MatFromVoigtVec( Obj % V * Obj2 % V, "Stress" )
+    ObjTimesObj = MatFromVoigtVec( Obj%V * Obj2%V, "Stress" )
 
     CALL Check_Error( &
     "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
     "Traceback ---> &
-    ObjTimesObj = MatFromVoigtVec( Obj % V * Obj2 % V,")
+    ObjTimesObj = MatFromVoigtVec( Obj%V * Obj2%V,")
 
  END FUNCTION ObjTimesObj
 
@@ -248,7 +248,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN 
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg(  &
                        "Stress_Class.f90>>Asterics.part", &
@@ -264,7 +264,7 @@
 
     m = SIZE( Mat, 1 )
 
-    IF( SIZE( Mat, 2 ) .NE. m .OR. m .GT. 3 ) THEN 
+    IF( SIZE( Mat, 2 ) .NE. m .OR. m .GT. 3 ) THEN
 
         CALL Err_Msg(  &
                        "Stress_Class.f90>>Asterics.part", &
@@ -279,12 +279,12 @@
 
     END IF
 
-    ObjTimesMat = MatFromVoigtVec( Obj % V, "Stress" )
+    ObjTimesMat = MatFromVoigtVec( Obj%V, "Stress" )
 
     CALL Check_Error( &
     "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
     "Traceback ---> &
-    ObjTimesMat = MatFromVoigtVec( Obj % V,")
+    ObjTimesMat = MatFromVoigtVec( Obj%V,")
 
     n = MIN( m, 3 )
 
@@ -386,7 +386,7 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj % V ) ) THEN
+    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
@@ -402,7 +402,7 @@
 
     m = SIZE( Vec )
 
-    IF( m .GT. 6 ) THEN 
+    IF( m .GT. 6 ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
@@ -412,7 +412,7 @@
                     )
         Error_Flag = .TRUE.
 
-        STOP 
+        STOP
 
     END IF
 

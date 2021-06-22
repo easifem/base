@@ -31,7 +31,7 @@ CONTAINS
 MODULE PROCEDURE display_obj
   INTEGER( I4B ) :: I, j
 
-  IF( .NOT. ALLOCATED( Obj % Points ) ) RETURN
+  IF( .NOT. ALLOCATED( Obj%Points ) ) RETURN
   IF( PRESENT( UnitNo ) ) THEN
     I = UnitNo
   ELSE
@@ -42,10 +42,10 @@ MODULE PROCEDURE display_obj
   CALL Blanklines( UnitNo = I )
   WRITE( I, "(A)" ) "          Weights    |      Points       "
   WRITE( I, "(A)" ) "-----------------------------------------"
-  DO j = 1, SIZE( Obj % Points, 2 )
-    WRITE( I,"( 2X, G15.8, 2X" // TRIM( INT2STR( Obj % tXi ) ) // "G15.8 )")&
-      & Obj % Points( Obj % tXi + 1, j ), &
-      & Obj % Points( 1 : Obj % tXi, j )
+  DO j = 1, SIZE( Obj%Points, 2 )
+    WRITE( I,"( 2X, G15.8, 2X" // TRIM( INT2STR( Obj%tXi ) ) // "G15.8 )")&
+      & Obj%Points( Obj%tXi + 1, j ), &
+      & Obj%Points( 1 : Obj%tXi, j )
   END DO
   WRITE( I, "(A)" ) "-----------------------------------------"
 END PROCEDURE display_obj
