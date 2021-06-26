@@ -43,6 +43,22 @@ MODULE PROCEDURE get_size
 END PROCEDURE get_size
 
 !----------------------------------------------------------------------------
+!                                                         getTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vec3D_getTotalDimension
+  ans = obj%tDimension
+END PROCEDURE Vec3D_getTotalDimension
+
+!----------------------------------------------------------------------------
+!                                                        setTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Vec3D_setTotalDimension
+  obj%tDimension = tDimension
+END PROCEDURE Vec3D_setTotalDimension
+
+!----------------------------------------------------------------------------
 !                                                                   ALLOCATE
 !----------------------------------------------------------------------------
 

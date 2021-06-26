@@ -50,6 +50,22 @@ MODULE PROCEDURE get_size
 END PROCEDURE get_size
 
 !----------------------------------------------------------------------------
+!                                                         getTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RealVec_getTotalDimension
+  ans = obj%tDimension
+END PROCEDURE RealVec_getTotalDimension
+
+!----------------------------------------------------------------------------
+!                                                        setTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RealVec_setTotalDimension
+  obj%tDimension = tDimension
+END PROCEDURE RealVec_setTotalDimension
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

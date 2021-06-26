@@ -49,10 +49,10 @@ MODULE PROCEDURE Append_3
 END PROCEDURE Append_3
 
 !----------------------------------------------------------------------------
-!                                                                 setMethod
+!                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE setValue_1
+MODULE PROCEDURE realVec_setValue1
   IF( ALLOCATED( Obj%Val ) ) THEN
     IF( SIZE( Value) .EQ. 1 ) THEN
       Obj%Val( Indx ) = Value( 1 )
@@ -60,6 +60,49 @@ MODULE PROCEDURE setValue_1
       Obj%Val( Indx ) = Value
     END IF
   END IF
-END PROCEDURE setValue_1
+END PROCEDURE realVec_setValue1
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_setValue2
+  IF( ALLOCATED( Obj%Val ) ) THEN
+      Obj%Val( : ) = Value
+  END IF
+END PROCEDURE realVec_setValue2
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_setValue3
+  IF( ALLOCATED( Obj%Val ) ) THEN
+      Obj%Val = Value
+  END IF
+END PROCEDURE realVec_setValue3
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_setValue4
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Obj%Val( istart:iend:stride ) = Value
+  END IF
+END PROCEDURE realVec_setValue4
+
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_setValue5
+  IF( ALLOCATED( Obj%Val ) ) THEN
+    Obj%Val( istart:iend:stride ) = Value
+  END IF
+END PROCEDURE realVec_setValue5
+
+
 
 END SUBMODULE setMethod

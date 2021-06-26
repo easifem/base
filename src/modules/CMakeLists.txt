@@ -45,9 +45,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/AbstractArray/CMakeLists.txt)
 #AbstractMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/AbstractMatrix/CMakeLists.txt)
 
-#AbstractVector
-include(${CMAKE_CURRENT_LIST_DIR}/AbstractVector/CMakeLists.txt)
-
 # BoundingBox
 include(${CMAKE_CURRENT_LIST_DIR}/BoundingBox/CMakeLists.txt)
 

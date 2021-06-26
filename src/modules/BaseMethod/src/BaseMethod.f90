@@ -46,7 +46,6 @@ MODULE BaseMethod
   USE Random_Method
   USE AbstractArray_Method
   USE AbstractMatrix_Method
-  USE AbstractVector_Method
   USE BoundingBox_Method
   USE IntVector_Method
   USE IndexValue_Method
