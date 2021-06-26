@@ -75,6 +75,56 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
+!                                                TotalDimension@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: 	Returns the total dimension of an array
+!
+!### Introduction
+!
+! This function returns the total dimension (or rank) of an array,
+
+INTERFACE
+MODULE PURE FUNCTION RealVec_getTotalDimension( obj ) RESULT( Ans )
+  TYPE( RealVector_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ) :: ans
+END FUNCTION RealVec_getTotalDimension
+END INTERFACE
+
+INTERFACE getTotalDimension
+  MODULE PROCEDURE RealVec_getTotalDimension
+END INTERFACE getTotalDimension
+
+PUBLIC :: getTotalDimension
+
+!----------------------------------------------------------------------------
+!                                             setTotalDimension@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: 	This subroutine set the total dimension (rank) of an array
+!
+!### Introduction
+!
+! This subroutine sets the rank(total dimension) of an array
+
+INTERFACE
+MODULE PURE SUBROUTINE RealVec_setTotalDimension( Obj, tDimension )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: tDimension
+END SUBROUTINE RealVec_setTotalDimension
+END INTERFACE
+
+INTERFACE setTotalDimension
+  MODULE PROCEDURE RealVec_setTotalDimension
+END INTERFACE setTotalDimension
+
+PUBLIC :: setTotalDimension
+
+!----------------------------------------------------------------------------
 !                                                   AllocateData@Constructor
 !----------------------------------------------------------------------------
 
@@ -613,7 +663,6 @@ END INTERFACE SHALLOWCOPY
 
 PUBLIC :: SHALLOWCOPY
 
-
 !----------------------------------------------------------------------------
 !                                                     ArrayValues@GetMethod
 !----------------------------------------------------------------------------
@@ -706,7 +755,6 @@ MODULE PURE FUNCTION f_getValuesFromTriplet_Int( Obj, iStart, iEnd, Stride, &
   INTEGER(I4B), ALLOCATABLE :: Val( : )
 END FUNCTION f_getValuesFromTriplet_Int
 END INTERFACE
-
 
 !----------------------------------------------------------------------------
 !                                                     ArrayValues@GetMethod
@@ -1483,18 +1531,81 @@ PUBLIC :: Append
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE setValue_1( Obj, Indx, Value )
+MODULE SUBROUTINE realVec_setValue1( Obj, Indx, Value )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
   REAL( DFP ), INTENT( IN ) :: Value( : )
-END SUBROUTINE setValue_1
+END SUBROUTINE realVec_setValue1
 END INTERFACE
 
-INTERFACE SetValue
-  MODULE PROCEDURE setValue_1
+!----------------------------------------------------------------------------
+!                                                         setValue@SetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Set all values to given scalar
+
+INTERFACE
+MODULE SUBROUTINE realVec_setValue2( Obj,  Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+  REAL( DFP ), INTENT( IN ) :: Value
+END SUBROUTINE realVec_setValue2
 END INTERFACE
 
-PUBLIC :: SetValue
+!----------------------------------------------------------------------------
+!                                                         setValue@SetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Set all values by given vector
+
+INTERFACE
+MODULE SUBROUTINE realVec_setValue3( Obj,  Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+  REAL( DFP ), INTENT( IN ) :: Value( : )
+END SUBROUTINE realVec_setValue3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         setValue@SetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Set range of values to a scalar
+
+INTERFACE
+MODULE SUBROUTINE realVec_setValue4( Obj,  istart, iend, stride, Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: istart, iend, stride
+  REAL( DFP ), INTENT( IN ) :: Value
+END SUBROUTINE realVec_setValue4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         setValue@SetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Set range of values to a vector
+
+INTERFACE
+MODULE SUBROUTINE realVec_setValue5( Obj,  istart, iend, stride, Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: istart, iend, stride
+  REAL( DFP ), INTENT( IN ) :: Value( : )
+END SUBROUTINE realVec_setValue5
+END INTERFACE
+
+INTERFACE Set
+  MODULE PROCEDURE realVec_setValue1, realVec_setValue2, realVec_setValue3, &
+    & realVec_setValue4, realVec_setValue5
+END INTERFACE Set
+
+PUBLIC :: Set
 
 !----------------------------------------------------------------------------
 !                                                                 Display@IO
@@ -1528,9 +1639,5 @@ INTERFACE Display
 END INTERFACE Display
 
 PUBLIC :: Display
-
-!----------------------------------------------------------------------------
-!                                                                 Contains
-!----------------------------------------------------------------------------
 
 END MODULE RealVector_Method

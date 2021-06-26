@@ -75,6 +75,56 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
+!                                                TotalDimension@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: 	Returns the total dimension of an array
+!
+!### Introduction
+!
+! This function returns the total dimension (or rank) of an array,
+
+INTERFACE
+MODULE PURE FUNCTION IntVec_getTotalDimension( obj ) RESULT( Ans )
+  TYPE( IntVector_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ) :: ans
+END FUNCTION IntVec_getTotalDimension
+END INTERFACE
+
+INTERFACE getTotalDimension
+  MODULE PROCEDURE IntVec_getTotalDimension
+END INTERFACE getTotalDimension
+
+PUBLIC :: getTotalDimension
+
+!----------------------------------------------------------------------------
+!                                             setTotalDimension@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: 	This subroutine set the total dimension (rank) of an array
+!
+!### Introduction
+!
+! This subroutine sets the rank(total dimension) of an array
+
+INTERFACE
+MODULE PURE SUBROUTINE IntVec_setTotalDimension( Obj, tDimension )
+  CLASS( IntVector_ ), INTENT( INOUT ) :: Obj
+  INTEGER( I4B ), INTENT( IN ) :: tDimension
+END SUBROUTINE IntVec_setTotalDimension
+END INTERFACE
+
+INTERFACE setTotalDimension
+  MODULE PROCEDURE IntVec_setTotalDimension
+END INTERFACE setTotalDimension
+
+PUBLIC :: setTotalDimension
+
+!----------------------------------------------------------------------------
 !                                                   AllocateData@Constructor
 !----------------------------------------------------------------------------
 

@@ -50,6 +50,22 @@ MODULE PROCEDURE get_size
 END PROCEDURE get_size
 
 !----------------------------------------------------------------------------
+!                                                         getTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IntVec_getTotalDimension
+  ans = obj%tDimension
+END PROCEDURE IntVec_getTotalDimension
+
+!----------------------------------------------------------------------------
+!                                                        setTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IntVec_setTotalDimension
+  obj%tDimension = tDimension
+END PROCEDURE IntVec_setTotalDimension
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

@@ -59,9 +59,9 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_st_dof( Obj, tNodes, Names, SpaceCompo, &
+MODULE PURE SUBROUTINE initiate_st_dof( obj, tNodes, Names, SpaceCompo, &
   & TimeCompo, StorageFMT )
-  CLASS( DOF_ ), INTENT( INOUT ) :: Obj
+  CLASS( DOF_ ), INTENT( INOUT ) :: obj
     !! degree of freedom object
   INTEGER( I4B ), INTENT( IN ) :: tNodes( : )
     !! number of nodes for each physical variable
@@ -93,10 +93,10 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_val( Val, Obj )
+MODULE PURE SUBROUTINE initiate_val( Val, obj )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
-    !! This vector will be initiated by using Obj
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+    !! This vector will be initiated by using obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
     !! DOF object
 END SUBROUTINE initiate_val
 END INTERFACE
@@ -119,9 +119,9 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_realvector_scalar( Val, Obj )
+MODULE PURE SUBROUTINE initiate_realvector_scalar( Val, obj )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Val
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
 END SUBROUTINE initiate_realvector_scalar
 END INTERFACE
 
@@ -133,9 +133,9 @@ INTERFACE
 ! This subroutine initiate a vector of [[realvector_]] object
 ! Each entry Val( idof ) denotes degree of freedom `idof`
 
-MODULE PURE SUBROUTINE initiate_realvector_vector( Val, Obj )
+MODULE PURE SUBROUTINE initiate_realvector_vector( Val, obj )
   TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
 END SUBROUTINE initiate_realvector_vector
 END INTERFACE
 
@@ -147,9 +147,9 @@ INTERFACE
 ! This subroutine initiate two fortran vectors using  the information
 ! stored inside the [[dof_]] object
 
-MODULE PURE SUBROUTINE initiate_2val( Val1, Val2, Obj )
+MODULE PURE SUBROUTINE initiate_2val( Val1, Val2, obj )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: Val1( : ), Val2( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
 END SUBROUTINE initiate_2val
 END INTERFACE
 
@@ -177,8 +177,8 @@ INTERFACE
 ! for more see [[dof_]]
 
 MODULE PURE FUNCTION Constructor1( tNodes, Names, SpaceCompo, TimeCompo, &
-  & StorageFMT ) RESULT( Obj )
-  TYPE(DOF_) :: Obj
+  & StorageFMT ) RESULT( obj )
+  TYPE(DOF_) :: obj
   INTEGER( I4B ), INTENT( IN ) :: tNodes( : ), SpaceCompo( : ), &
     & TimeCompo( : ), StorageFMT
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Names( : )
@@ -205,8 +205,8 @@ INTERFACE
 ! for more see [[dof_]]
 
 MODULE FUNCTION Constructor_1( tNodes, Names, SpaceCompo, TimeCompo, &
-  & StorageFMT ) RESULT( Obj )
-  CLASS(DOF_), POINTER :: Obj
+  & StorageFMT ) RESULT( obj )
+  CLASS(DOF_), POINTER :: obj
     !! [[dof_]] object
   INTEGER( I4B ), INTENT( IN ) :: tNodes( : )
     !! total number of nodes for each dof
@@ -239,8 +239,8 @@ INTERFACE
 !
 ! This subroutine deallocates the data in [[dof_]] object
 
-MODULE PURE SUBROUTINE deallocate_data( Obj )
-  CLASS(DOF_), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE deallocate_data( obj )
+  CLASS(DOF_), INTENT( INOUT ) :: obj
 END SUBROUTINE deallocate_data
 END INTERFACE
 
@@ -262,8 +262,8 @@ INTERFACE
 !
 ! This subroutine display the content of [[dof_]] object
 
-MODULE SUBROUTINE display_obj( Obj, msg, UnitNo )
-  CLASS(DOF_), INTENT( IN ) :: Obj
+MODULE SUBROUTINE display_obj( obj, msg, UnitNo )
+  CLASS(DOF_), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 END SUBROUTINE display_obj
@@ -272,9 +272,9 @@ END INTERFACE
 INTERFACE
 !! Display content of fortran vec with [[DOF_]] object info
 
-MODULE SUBROUTINE dof_display_vec( Vec, Obj, msg, unitno )
+MODULE SUBROUTINE dof_display_vec( Vec, obj, msg, unitno )
   REAL( DFP ), INTENT( IN ) :: Vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitno
 END SUBROUTINE dof_display_vec
@@ -288,122 +288,131 @@ END INTERFACE Display
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
-!                                                            tNodes@getMethod
+!                                                           tNodes@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This function returns the total length of the vector which stores the dof stored inside `obj`.
+
 INTERFACE
-!! This function returns the total number of nodes
-
-!> authors: Dr. Vikas Sharma
-!
-!  This function returns the total length of the vector which stores the
-! dof stored inside `obj`.
-
-  MODULE PURE FUNCTION get_tNodes( Obj ) RESULT( Ans )
-    CLASS( DOF_ ), INTENT( IN ) :: Obj
+  MODULE PURE FUNCTION dof_tNodes1( obj ) RESULT( Ans )
+    CLASS( DOF_ ), INTENT( IN ) :: obj
     INTEGER( I4B ) :: Ans
-  END FUNCTION get_tNodes
+  END FUNCTION dof_tNodes1
 END INTERFACE
-
-INTERFACE OPERATOR( .tNodes. )
-  MODULE PROCEDURE get_tNodes
-END INTERFACE
-
-PUBLIC :: OPERATOR( .tNodes. )
-
-INTERFACE SIZE
-  MODULE PROCEDURE get_tNodes
-END INTERFACE SIZE
-
-PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
 !                                                           tNodes@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This function returns the total number of nodes
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This function returns the total number of nodes
 !
-! This subroutine returns the size of a given degree of freedom
+!### Introduction
+! This function returns the total number of nodes for a given degree of
+! freedom number
+! idof should be lesser than the total degree of freedom
 
-MODULE PURE FUNCTION get_tNodes_idof( Obj, idof ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+INTERFACE
+MODULE PURE FUNCTION dof_tNodes2( obj, idof ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: idof
   INTEGER( I4B ) :: Ans
-END FUNCTION get_tNodes_idof
+END FUNCTION dof_tNodes2
 END INTERFACE
 
 INTERFACE OPERATOR( .tNodes. )
-  MODULE PROCEDURE get_tNodes_idof
+  MODULE PROCEDURE dof_tNodes1, dof_tNodes2
 END INTERFACE
 
+PUBLIC :: OPERATOR( .tNodes. )
+
 INTERFACE SIZE
-  MODULE PROCEDURE get_tNodes_idof
+  MODULE PROCEDURE dof_tNodes1, dof_tNodes2
 END INTERFACE SIZE
+
+PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
 !                                                             tDOF@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This function returns the total number of degree of freedom
+
 INTERFACE
-!! This function returns the total number of degree of freedom
-
-!> authors: Dr. Vikas Sharma
-!
-! This function returns the total dof
-
-  MODULE PURE FUNCTION get_tDOF( Obj ) RESULT( Ans )
-    CLASS( DOF_ ), INTENT( IN ) :: Obj
+  MODULE PURE FUNCTION dof_tdof1( obj ) RESULT( Ans )
+    CLASS( DOF_ ), INTENT( IN ) :: obj
     INTEGER( I4B ) :: Ans
-  END FUNCTION get_tDOF
+  END FUNCTION dof_tdof1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           tDOF@getMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This subroutine returns the total number of degrees of freedom
+!
+!### Introduction
+! This function returns the total number of degrees of freedom in a physical variable.
+! The physical variable is specified by using its name.
+
+INTERFACE
+MODULE PURE FUNCTION dof_tdof2( obj, Name ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  CHARACTER( LEN = 1 ), INTENT( IN ) :: Name
+  INTEGER( I4B ) :: Ans
+END FUNCTION dof_tdof2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           tDOF@getMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This subroutine returns the total number of degrees of freedom
+!
+!### Introduction
+! This function returns the total number of degrees of freedom in a physical variable.
+! The physical variable is specified by using its name.
+
+INTERFACE
+MODULE PURE FUNCTION dof_tdof3( obj, ivar ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ) :: Ans
+END FUNCTION dof_tdof3
 END INTERFACE
 
 INTERFACE OPERATOR( .tDOF. )
-  MODULE PROCEDURE get_tDOF
+  MODULE PROCEDURE dof_tdof1, dof_tdof2, dof_tdof3
 END INTERFACE
 
 PUBLIC :: OPERATOR( .tDOF. )
 
-INTERFACE
-!! This subroutine returns the total number of degrees of freedom
-
-!> authors: Dr. Vikas Sharma
-!
-! This function returns the total number of dof in given physical name
-
-MODULE PURE FUNCTION get_tDOF_iname( Obj, Name ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
-  CHARACTER( LEN = 1 ), INTENT( IN ) :: Name
-  INTEGER( I4B ) :: Ans
-END FUNCTION get_tDOF_iname
-END INTERFACE
-
-INTERFACE OPERATOR( .tDOF. )
-  MODULE PROCEDURE get_tDOF_iname
-END INTERFACE OPERATOR( .tDOF. )
-
 !----------------------------------------------------------------------------
-!                                                            tNames@getMethod
+!                                                           tNames@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This subroutine returns the total number of names in dof object
+
 INTERFACE
-!! This subroutine returns the total number of names
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine returns the total number of names or total number of
-! physical quantities
-
-MODULE PURE FUNCTION get_tNames( Obj ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION dof_tNames( obj ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans
-END FUNCTION get_tNames
+END FUNCTION dof_tNames
 END INTERFACE
 
 INTERFACE OPERATOR( .tNames. )
-  MODULE PROCEDURE get_tNames
+  MODULE PROCEDURE dof_tNames
 END INTERFACE
 
 PUBLIC :: OPERATOR( .tNames. )
@@ -412,62 +421,197 @@ PUBLIC :: OPERATOR( .tNames. )
 !                                                           Names@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This function returns the name of all physical variables stored in obj
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This function returns the name of all physical variables stored in obj
 
-MODULE PURE FUNCTION dof_all_names( Obj ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+INTERFACE
+MODULE PURE FUNCTION dof_names1( obj ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = 1 ), ALLOCATABLE :: Ans( : )
-END FUNCTION dof_all_names
+END FUNCTION dof_names1
 END INTERFACE
 
-INTERFACE
-!! This function returns the name of a physical variable
+!----------------------------------------------------------------------------
+!                                                           Names@getMethod
+!----------------------------------------------------------------------------
 
-MODULE PURE FUNCTION dof_single_name( Obj, ii ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This function returns the name of a physical variable
+!
+!### Introduction
+! This function returns the name of a physical variable
+! The physical variable is given by its number ii, i.e., the first, second, third, and so on, physical variable.
+
+INTERFACE
+MODULE PURE FUNCTION dof_names2( obj, ii ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: ii
   CHARACTER( LEN = 1 ), ALLOCATABLE :: Ans
-END FUNCTION dof_single_name
+END FUNCTION dof_names2
 END INTERFACE
 
 INTERFACE OPERATOR( .Names. )
-  MODULE PROCEDURE dof_all_names, dof_single_name
+  MODULE PROCEDURE dof_names1, dof_names2
 END INTERFACE OPERATOR( .Names. )
 
 PUBLIC :: OPERATOR( .Names. )
 
 !----------------------------------------------------------------------------
-!                                                         IndexOF@getMethod
+!                                                     NameToIndex@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Return the index of a physical variable
+
 INTERFACE
-MODULE PURE FUNCTION get_index_of_name( Obj, Name ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION NameToIndex( obj, Name ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Name
   INTEGER( I4B ) :: Ans
-END FUNCTION get_index_of_name
+END FUNCTION NameToIndex
 END INTERFACE
 
-INTERFACE IndexOf
-  MODULE PROCEDURE get_index_of_name
-END INTERFACE IndexOf
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
 
-PUBLIC :: IndexOf
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the indices for node number `nodeNum`
+!
+!### Introduction
+! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+
+INTERFACE
+MODULE PURE FUNCTION dof_getIndex1( obj, nodeNum ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodeNum
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION dof_getIndex1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the indices for node number `nodeNum`
+!
+!### Introduction
+! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+
+INTERFACE
+MODULE PURE FUNCTION dof_getIndex2( obj, nodeNum, iVar ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodeNum
+  INTEGER( I4B ), INTENT( IN ) :: iVar
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION dof_getIndex2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the indices for node number `nodeNum`
+!
+!### Introduction
+! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+
+INTERFACE
+MODULE PURE FUNCTION dof_getIndex3( obj, nodeNum, varName ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodeNum
+  CHARACTER( LEN = 1 ), INTENT( IN ) :: varName
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION dof_getIndex3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the indices for node number `nodeNum`
+!
+!### Introduction
+! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+
+INTERFACE
+MODULE PURE FUNCTION dof_getIndex4( obj, nodeNum ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodeNum( : )
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION dof_getIndex4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the indices for node number `nodeNum`
+!
+!### Introduction
+! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+
+INTERFACE
+MODULE PURE FUNCTION dof_getIndex5( obj, nodeNum, iVar ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodeNum( : )
+  INTEGER( I4B ), INTENT( IN ) :: iVar
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION dof_getIndex5
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the indices for node number `nodeNum`
+!
+!### Introduction
+! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+
+INTERFACE
+MODULE PURE FUNCTION dof_getIndex6( obj, nodeNum, varName ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodeNum( : )
+  CHARACTER( LEN = 1 ), INTENT( IN ) :: varName
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION dof_getIndex6
+END INTERFACE
+
+INTERFACE getIndex
+  MODULE PROCEDURE dof_getIndex1, dof_getIndex2, dof_getIndex3, &
+      & dof_getIndex4, dof_getIndex5, dof_getIndex6
+END INTERFACE getIndex
+
+PUBLIC :: getIndex
 
 !----------------------------------------------------------------------------
 !                                                tSpaceComponents@getMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION get_tspace_compo( Obj ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION dof_tSpaceComponents( obj ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans
-END FUNCTION get_tspace_compo
+END FUNCTION dof_tSpaceComponents
 END INTERFACE
 
 INTERFACE OPERATOR( .tSpaceComponents. )
-  MODULE PROCEDURE get_tspace_compo
+  MODULE PROCEDURE dof_tSpaceComponents
 END INTERFACE
 
 PUBLIC :: OPERATOR( .tSpaceComponents. )
@@ -477,14 +621,14 @@ PUBLIC :: OPERATOR( .tSpaceComponents. )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION get_tTime_compo( Obj ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION dof_tTimeComponents( obj ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans
-END FUNCTION get_tTime_compo
+END FUNCTION dof_tTimeComponents
 END INTERFACE
 
 INTERFACE OPERATOR( .tTimeComponents. )
-  MODULE PROCEDURE get_tTime_compo
+  MODULE PROCEDURE dof_tTimeComponents
 END INTERFACE
 
 PUBLIC :: OPERATOR( .tTimeComponents. )
@@ -493,21 +637,22 @@ PUBLIC :: OPERATOR( .tTimeComponents. )
 !                                                   getArrayValues@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Returns the values of degrees of freedom in a single vector
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the values of degrees of freedom in a single vector
 !
+!### Introduction
 ! This subroutine extracts the values of from `val` corresponding to
 ! degrees of freedom specified by `DOFNo(:)` and return it in `V`
 !
 ! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`
 
-MODULE PURE SUBROUTINE get_arrayvalues_single_vec( v, Val, Obj, DOFNo, &
+INTERFACE
+MODULE PURE SUBROUTINE get_arrayvalues_single_vec( v, Val, obj, DOFNo, &
   & StorageFMT, Nptrs )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: v( : )
   REAL( DFP ), INTENT( IN ) :: Val( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT(IN ) :: DOFNo( : ), StorageFMT
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: Nptrs( : )
 END SUBROUTINE get_arrayvalues_single_vec
@@ -523,11 +668,11 @@ PUBLIC :: getArrayValues
 !                                                   getArrayValues@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Returns the values of degrees of freedom in a 2D array
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the values of degrees of freedom in a 2D array
 !
+!### Introduction
 ! This subroutine extracts the values of from `val` corresponding to
 ! degrees of freedom specified by `DOFNo(:)` and return it in `V(:,:)`
 ! Values in `Val(:,:)` are stored in xiJ format.
@@ -536,10 +681,11 @@ INTERFACE
 ! then it will set the third component to 0
 !
 
-MODULE PURE SUBROUTINE get_arrayvalues_array( v, Val, Obj, DOFNo, force3D )
+INTERFACE
+MODULE PURE SUBROUTINE get_arrayvalues_array( v, Val, obj, DOFNo, force3D )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: v( :, : )
   REAL( DFP ), INTENT( IN ) :: Val( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT(IN ) :: DOFNo( : )
   LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: force3D
 END SUBROUTINE get_arrayvalues_array
@@ -554,10 +700,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION arrayvalues_single_vec( Val, Obj, DOFNo, &
+  MODULE PURE FUNCTION arrayvalues_single_vec( Val, obj, DOFNo, &
     & StorageFMT, Nptrs, Force3D )  RESULT( Ans )
     REAL( DFP ), INTENT( IN ) :: Val( : )
-    CLASS( DOF_ ), INTENT( IN ) :: Obj
+    CLASS( DOF_ ), INTENT( IN ) :: obj
     INTEGER( I4B ), INTENT(IN ) :: DOFNo( : ), StorageFMT
     INTEGER( I4B ), INTENT( IN ), OPTIONAL :: Nptrs( : )
     LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: force3D
@@ -575,16 +721,17 @@ PUBLIC :: ArrayValues
 !                                                        setValue@setMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Set values in a vector of real numbers
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Set values in a vector of real numbers
+!
+!### Introduction
 !
 ! This subroutine is designed to set the values in a vector of real number
 !
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `Vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-! - `Val` denotes the nodal values of all dof defined inside `Obj`. Once
+! - `Val` denotes the nodal values of all dof defined inside `obj`. Once
 ! storage pattern in `Val` can be `FMT_DOF` or `FMT_Nodes`.
 ! - To tackle this `Conversion`  can be set to `DOFToNodes`, `NodesToDOF`
 ! or `NONE`.
@@ -595,9 +742,10 @@ INTERFACE
 ! - If `SIZE(val)=tDOF*Size(Nptrs)` then each dof will be set to
 ! corresponding val
 
-MODULE PURE SUBROUTINE dof_setValue_1( Vec, Obj, Nptrs, Val, Conversion )
+INTERFACE
+MODULE PURE SUBROUTINE dof_setValue_1( Vec, obj, Nptrs, Val, Conversion )
   REAL( DFP ), INTENT( INOUT ) :: Vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Nptrs( : ), Conversion( 1 )
   REAL( DFP ), INTENT( IN ) :: Val( : )
 END SUBROUTINE dof_setValue_1
@@ -615,9 +763,9 @@ INTERFACE
 !
 ! This subroutine effectivily performes `Vec( Nptrs ) = Val`
 
-MODULE PURE SUBROUTINE dof_setValue_2( Vec, Obj, Nptrs, Val, dofno )
+MODULE PURE SUBROUTINE dof_setValue_2( Vec, obj, Nptrs, Val, dofno )
   REAL( DFP ), INTENT( INOUT ) :: Vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Nptrs( : )
   REAL( DFP ), INTENT( IN ) :: Val( : )
   INTEGER( I4B ), INTENT( IN ) :: dofno
@@ -631,7 +779,6 @@ END INTERFACE setValue
 
 PUBLIC :: setValue
 
-
 !----------------------------------------------------------------------------
 !                                                 addContribution@setMethod
 !----------------------------------------------------------------------------
@@ -644,7 +791,7 @@ INTERFACE
 ! This subroutine is designed to add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
 ! inside `Vec`. This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-! - `Val` denotes the nodal values of all dof defined inside `Obj`. Once
+! - `Val` denotes the nodal values of all dof defined inside `obj`. Once
 ! storage pattern in `Val` can be `FMT_DOF` or `FMT_Nodes`.
 ! - To tackle this `Conversion`  can be set to `DOFToNodes`, `NodesToDOF`
 ! or `NONE`.
@@ -652,10 +799,10 @@ INTERFACE
 ! This subroutine effectivily performes
 ! `Vec( Nptrs ) = Vec(Nptrs) + scale * Val`
 
-MODULE PURE SUBROUTINE dof_addValue_1( Vec, Obj, Nptrs, Val, scale, &
+MODULE PURE SUBROUTINE dof_addValue_1( Vec, obj, Nptrs, Val, scale, &
   & Conversion )
   REAL( DFP ), INTENT( INOUT ) :: Vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Nptrs( : ), Conversion( 1 )
   REAL( DFP ), INTENT( IN ) :: Val( : ), scale
 END SUBROUTINE dof_addValue_1
@@ -674,9 +821,9 @@ INTERFACE
 ! This subroutine effectivily performes
 ! `Vec( Nptrs ) = Vec(Nptrs) + scale * Val`
 
-MODULE PURE SUBROUTINE dof_addValue_2( Vec, Obj, Nptrs, Val, scale, dofno )
+MODULE PURE SUBROUTINE dof_addValue_2( Vec, obj, Nptrs, Val, scale, dofno )
   REAL( DFP ), INTENT( INOUT ) :: Vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: Obj
+  CLASS( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Nptrs( : )
   REAL( DFP ), INTENT( IN ) :: Val( : ), scale
   INTEGER( I4B ), INTENT( IN ) :: dofno

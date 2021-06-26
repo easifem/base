@@ -243,21 +243,21 @@ END TYPE SparseMatrixPointer_
 
 PUBLIC :: SparseMatrixPointer_
 
-!----------------------------------------------------------------------------
-!                                                          AbstractVector_
-!----------------------------------------------------------------------------
+! !----------------------------------------------------------------------------
+! !                                                          AbstractVector_
+! !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! Abstract vector type
-TYPE, EXTENDS( AbstractArray_ ) :: AbstractVector_
-END TYPE AbstractVector_
+! !> authors: Dr. Vikas Sharma
+! !
+! ! Abstract vector type
+! TYPE, EXTENDS( AbstractArray_ ) :: AbstractVector_
+! END TYPE AbstractVector_
 
-PUBLIC :: AbstractVector_
+! PUBLIC :: AbstractVector_
 
-TYPE :: AbstractVectorPointer_
-  CLASS( AbstractVector_ ), POINTER :: Ptr => NULL( )
-END TYPE AbstractVectorPointer_
+! TYPE :: AbstractVectorPointer_
+!   CLASS( AbstractVector_ ), POINTER :: Ptr => NULL( )
+! END TYPE AbstractVectorPointer_
 
 !----------------------------------------------------------------------------
 !                                                             IntVector_
@@ -270,7 +270,8 @@ END TYPE AbstractVectorPointer_
 !
 !{!pages/IntVector.md!}s
 
-TYPE, EXTENDS( AbstractVector_ ) :: IntVector_
+TYPE :: IntVector_
+  INTEGER( I4B ) :: tDimension = 1_I4B
   INTEGER( I4B ), ALLOCATABLE :: Val( : )
 END TYPE IntVector_
 
@@ -296,7 +297,8 @@ PUBLIC :: IntVectorPointer_
 !{!pages/RealVector.md!}
 !
 
-TYPE, EXTENDS( AbstractVector_ ) :: RealVector_
+TYPE :: RealVector_
+  INTEGER( I4B ) :: tDimension = 1_I4B
   REAL( DFP ), ALLOCATABLE :: Val( : )
 END TYPE RealVector_
 
@@ -325,7 +327,8 @@ PUBLIC :: RealVectorPointer_
 !
 !{!pages/Vector3D.md!}
 
-TYPE, EXTENDS( AbstractVector_ ) :: Vector3D_
+TYPE :: Vector3D_
+  INTEGER( I4B ) :: tDimension = 1_I4B
   REAL( DFP ) :: Val(3)
 END TYPE Vector3D_
 
@@ -379,14 +382,14 @@ TYPE :: DOF_
     !! Encapsulation of information of DOF
   INTEGER( I4B ), ALLOCATABLE :: ValMap( : )
     !! Val map
-  INTEGER( I4B ) :: StorageFMT = Nodes_FMT
+  INTEGER( I4B ) :: StorageFMT = FMT_NODES
     !! Storage format
 END TYPE DOF_
 
 PUBLIC :: DOF_
 
 TYPE( DOF_ ), PUBLIC, PARAMETER :: TypeDOF = DOF_( MAP=NULL(), &
-  ValMap=NULL(),  StorageFMT = Nodes_FMT )
+  ValMap=NULL(),  StorageFMT = FMT_NODES )
 
 TYPE :: DOFPointer_
   CLASS( DOF_ ), POINTER :: Ptr => NULL( )
