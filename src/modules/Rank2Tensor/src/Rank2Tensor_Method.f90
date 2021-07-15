@@ -46,9 +46,9 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE init_by_rank2( Obj, Obj2 )
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE SUBROUTINE init_by_rank2( obj, obj2 )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
 END SUBROUTINE init_by_rank2
 END INTERFACE
 
@@ -73,8 +73,8 @@ END INTERFACE
 ! call display( obj, "test2: ")
 !```
 INTERFACE
-MODULE PURE SUBROUTINE init_by_mat( Obj, Mat, isSym )
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE init_by_mat( obj, Mat, isSym )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Mat( 3, 3 )
   LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isSym
 END SUBROUTINE init_by_mat
@@ -104,8 +104,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE init_by_voigt( Obj, V )
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE init_by_voigt( obj, V )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
   CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: V
 END SUBROUTINE init_by_voigt
 END INTERFACE
@@ -119,8 +119,8 @@ END INTERFACE
 ! summary: Initiates [[VoigtRank2Tensor_]] from a [[Rank2Tensor_]]
 
 INTERFACE
-MODULE PURE SUBROUTINE init_voigt_from_r2tensor( Obj, T, VoigtType )
-  CLASS( VoigtRank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE init_voigt_from_r2tensor( obj, T, VoigtType )
+  CLASS( VoigtRank2Tensor_ ), INTENT( INOUT ) :: obj
   CLASS( Rank2Tensor_ ), INTENT( IN ) :: T
   INTEGER( I4B ), INTENT( IN ) :: VoigtType
 END SUBROUTINE init_voigt_from_r2tensor
@@ -284,8 +284,8 @@ PUBLIC :: Rank2Tensor_Pointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE r2tensor_eq_mat( Obj, Mat )
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE r2tensor_eq_mat( obj, Mat )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Mat( 3, 3 )
 END SUBROUTINE r2tensor_eq_mat
 END INTERFACE
@@ -313,9 +313,9 @@ END INTERFACE
 
 
 INTERFACE
-MODULE PURE SUBROUTINE mat_eq_r2tensor( Mat, Obj )
+MODULE PURE SUBROUTINE mat_eq_r2tensor( Mat, obj )
   REAL( DFP ), INTENT( INOUT ) :: Mat( 3, 3 )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
 END SUBROUTINE mat_eq_r2tensor
 END INTERFACE
 
@@ -345,9 +345,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE voigt_eq_r2tensor( V, Obj )
+MODULE PURE SUBROUTINE voigt_eq_r2tensor( V, obj )
   CLASS( VoigtRank2Tensor_ ), INTENT( INOUT ) :: V
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
 END SUBROUTINE voigt_eq_r2tensor
 END INTERFACE
 
@@ -378,8 +378,8 @@ END INTERFACE
 ! call display( obj, "test9: Isotropic=")
 !```
 INTERFACE
-MODULE PURE SUBROUTINE identity_rank2( Obj )
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE identity_rank2( obj )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE identity_rank2
 END INTERFACE
 
@@ -411,8 +411,8 @@ PUBLIC :: IdentityTensor
 ! call display( obj, "test9: Isotropic=")
 !```
 INTERFACE
-MODULE PURE SUBROUTINE Ones_rank2( Obj )
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Ones_rank2( obj )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE Ones_rank2
 END INTERFACE
 
@@ -445,8 +445,8 @@ PUBLIC :: Ones
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Zeros_rank2( Obj )
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Zeros_rank2( obj )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE Zeros_rank2
 END INTERFACE
 
@@ -479,8 +479,8 @@ PUBLIC :: Zeros
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE isotropic_rank2( Obj, Lambda )
-  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE isotropic_rank2( obj, Lambda )
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Lambda
 END SUBROUTINE isotropic_rank2
 END INTERFACE
@@ -500,8 +500,8 @@ PUBLIC :: IsotropicTensor
 ! summary: 	Returns true if symmetric
 
 INTERFACE
-MODULE PURE FUNCTION isSym_rank2( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION isSym_rank2( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   LOGICAL( LGT ) :: Ans
 END FUNCTION isSym_rank2
 END INTERFACE
@@ -521,8 +521,8 @@ PUBLIC :: isSym
 ! summary: 	Returns true of deviatoric tensor
 
 INTERFACE
-MODULE PURE FUNCTION isDeviatoric_rank2( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION isDeviatoric_rank2( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   LOGICAL( LGT ) :: Ans
 END FUNCTION isDeviatoric_rank2
 END INTERFACE
@@ -542,8 +542,8 @@ PUBLIC :: isDeviatoric
 ! summary: 	Returns pointer to a newly created instance of [[DeformationGradient_]]
 
 INTERFACE
-MODULE PURE FUNCTION F_constructor1( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: Obj
+MODULE PURE FUNCTION F_constructor1( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: obj
   TYPE( DeformationGradient_ ) :: Ans
 END FUNCTION F_constructor1
 END INTERFACE
@@ -563,8 +563,8 @@ PUBLIC :: DeformationGradient
 ! summary: 	Returns pointer to a newly created instance of [[DeformationGradient_]]
 
 INTERFACE
-MODULE PURE FUNCTION F_constructor_1( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: Obj
+MODULE PURE FUNCTION F_constructor_1( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), OPTIONAL, INTENT( IN ) :: obj
   CLASS( DeformationGradient_ ), POINTER :: Ans
 END FUNCTION F_constructor_1
 END INTERFACE
@@ -668,9 +668,9 @@ PUBLIC :: RightCauchyGreen_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE inv_rank2( Obj, InvObj )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
-  CLASS( Rank2Tensor_ ), INTENT( INOUT) :: InvObj
+MODULE PURE SUBROUTINE inv_rank2( obj, Invobj )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
+  CLASS( Rank2Tensor_ ), INTENT( INOUT) :: Invobj
 END SUBROUTINE inv_rank2
 END INTERFACE
 
@@ -689,8 +689,8 @@ PUBLIC :: INV
 ! summary: 	Transpose of a tensor
 
 INTERFACE
-MODULE PURE FUNCTION obj_transpose( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION obj_transpose( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_transpose
 END INTERFACE
@@ -724,8 +724,8 @@ PUBLIC :: TRANSPOSE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION sym_r2t( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION sym_r2t( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION sym_r2t
 END INTERFACE
@@ -758,8 +758,8 @@ PUBLIC :: Sym
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Skewsym_r2t( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Skewsym_r2t( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION Skewsym_r2t
 END INTERFACE
@@ -779,8 +779,8 @@ PUBLIC :: SkewSym
 ! summary: Display the content of [[Rank2Tensor_]]
 
 INTERFACE
-MODULE SUBROUTINE display_obj( Obj, Msg, UnitNo )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE display_obj( obj, Msg, UnitNo )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 END SUBROUTINE display_obj
@@ -819,8 +819,8 @@ PUBLIC :: Display
 !```
 
 INTERFACE
-MODULE PURE FUNCTION trace_obj( Obj, Power ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION trace_obj( obj, Power ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: Power
   REAL( DFP ) :: Ans
 END FUNCTION trace_obj
@@ -859,8 +859,8 @@ PUBLIC :: Trace
 !```
 
 INTERFACE
-MODULE PURE FUNCTION j2_obj( Obj, isDeviatoric ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION j2_obj( obj, isDeviatoric ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isDeviatoric
   REAL( DFP ) :: Ans
 END FUNCTION j2_obj
@@ -900,8 +900,8 @@ PUBLIC :: J2
 !```
 
 INTERFACE
-MODULE PURE FUNCTION j3_obj( Obj, isDeviatoric ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION j3_obj( obj, isDeviatoric ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isDeviatoric
   REAL( DFP ) :: Ans
 END FUNCTION j3_obj
@@ -935,8 +935,8 @@ PUBLIC :: J3
 !```
 
 INTERFACE
-MODULE PURE FUNCTION det_obj( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION det_obj( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   REAL( DFP ) :: Ans
 END FUNCTION det_obj
 END INTERFACE
@@ -1003,8 +1003,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION theta_obj( Obj, LodeType, isDeviatoric ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION theta_obj( obj, LodeType, isDeviatoric ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: LodeType
   LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isDeviatoric
   REAL( DFP ) :: Ans
@@ -1027,7 +1027,7 @@ PUBLIC :: LodeAngle
 !
 !### Introduction
 ! This function returns the isotropic part of a tensor, which is given by
-! $$Isotropic(Obj) = \frac{1}{3} Trace(Obj)$$
+! $$Isotropic(obj) = \frac{1}{3} Trace(obj)$$
 !
 !### Usage
 !
@@ -1040,8 +1040,8 @@ PUBLIC :: LodeAngle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION iso_part_obj( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION iso_part_obj( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION iso_part_obj
 END INTERFACE
@@ -1072,8 +1072,8 @@ PUBLIC :: Iso
 ! $$Dev(T) = T - Iso(T)$$
 
 INTERFACE
-MODULE PURE FUNCTION dev_part_obj( Obj ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION dev_part_obj( obj ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION dev_part_obj
 END INTERFACE
@@ -1119,8 +1119,8 @@ PUBLIC :: Dev
 !```
 
 INTERFACE
-MODULE PURE FUNCTION invariants_rank2( Obj, isDeviatoric ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION invariants_rank2( obj, isDeviatoric ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isDeviatoric
   REAL( DFP ) :: Ans( 3 )
 END FUNCTION invariants_rank2
@@ -1166,8 +1166,8 @@ PUBLIC :: Invariants
 !```
 
 INTERFACE
-MODULE SUBROUTINE eigen_r2t( Obj, QR, WR, QI, WI )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE eigen_r2t( obj, QR, WR, QI, WI )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ) :: QR( 3, 3 ), WR( 3 )
   REAL( DFP ), OPTIONAL, INTENT( INOUT ) :: QI( 3, 3 ), WI( 3 )
 END SUBROUTINE eigen_r2t
@@ -1199,12 +1199,12 @@ PUBLIC :: Eigen
 ! type( Rank2Tensor_ ) :: obj, R, U, V
 ! real( dfp ) :: mat( 3, 3 ) = reshape( [1.0, -0.333, 0.959, 0.495, 1.0, 0.0, 0.5, -0.247, 1.5], [3,3] )
 ! call initiate( obj, mat, isSym=.false. )
-! call PolarDecomp( Obj, R, U, V )
+! call PolarDecomp( obj, R, U, V )
 !```
 
 INTERFACE
-MODULE SUBROUTINE pd_r2t( Obj, R, U, V )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE pd_r2t( obj, R, U, V )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: R
   CLASS( Rank2Tensor_ ), INTENT( INOUT) :: U
   CLASS( Rank2Tensor_ ), INTENT( INOUT) :: V
@@ -1226,8 +1226,8 @@ PUBLIC :: PolarDecomp
 ! summary: Returns the contraction of tensor
 
 INTERFACE
-MODULE PURE FUNCTION r2_contract_r2( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1, Obj2
+MODULE PURE FUNCTION r2_contract_r2( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1, obj2
   REAL( DFP ) :: Ans
 END FUNCTION r2_contract_r2
 END INTERFACE
@@ -1241,9 +1241,9 @@ END INTERFACE
 ! summary: Returns the contraction of a rank2 tensor and voigt rank2 tensor
 
 INTERFACE
-MODULE PURE FUNCTION r2_contract_voigt_r2( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION r2_contract_voigt_r2( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: obj2
   REAL( DFP ) :: Ans
 END FUNCTION r2_contract_voigt_r2
 END INTERFACE
@@ -1257,9 +1257,9 @@ END INTERFACE
 ! summary: Returns contraction of aa voigt rank2 tensor and rank2 tensor
 
 INTERFACE
-MODULE PURE FUNCTION voigt_r2_contract_r2( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION voigt_r2_contract_r2( obj1, obj2 ) RESULT( Ans )
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   REAL( DFP ) :: Ans
 END FUNCTION voigt_r2_contract_r2
 END INTERFACE
@@ -1273,9 +1273,9 @@ END INTERFACE
 ! summary: Returns contraction of two voigt rank tensor
 
 INTERFACE
-MODULE PURE FUNCTION voigt_r2_contract_voigt_r2( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION voigt_r2_contract_voigt_r2( obj1, obj2 ) RESULT( Ans )
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: obj1
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: obj2
   REAL( DFP ) :: Ans
 END FUNCTION voigt_r2_contract_voigt_r2
 END INTERFACE
@@ -1317,9 +1317,9 @@ PUBLIC :: Contraction
 !```
 
 INTERFACE
-MODULE PURE FUNCTION obj_add_obj( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_add_obj( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_add_obj
 END INTERFACE
@@ -1347,9 +1347,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION obj_add_scalar( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  REAL( DFP ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_add_scalar( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  REAL( DFP ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_add_scalar
 END INTERFACE
@@ -1377,9 +1377,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION scalar_add_obj( Obj1, Obj2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION scalar_add_obj( obj1, obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION scalar_add_obj
 END INTERFACE
@@ -1413,9 +1413,9 @@ PUBLIC :: OPERATOR( + )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION obj_minus_obj( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_minus_obj( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_minus_obj
 END INTERFACE
@@ -1443,9 +1443,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION obj_minus_scalar( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  REAL( DFP ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_minus_scalar( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  REAL( DFP ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_minus_scalar
 END INTERFACE
@@ -1473,9 +1473,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION scalar_minus_obj( Obj1, Obj2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION scalar_minus_obj( obj1, obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION scalar_minus_obj
 END INTERFACE
@@ -1510,9 +1510,9 @@ PUBLIC :: OPERATOR( - )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION obj_times_obj( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_times_obj( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_times_obj
 END INTERFACE
@@ -1540,9 +1540,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION obj_times_scalar( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  REAL( DFP ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_times_scalar( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  REAL( DFP ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_times_scalar
 END INTERFACE
@@ -1570,9 +1570,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION scalar_times_obj( Obj1, Obj2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION scalar_times_obj( obj1, obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION scalar_times_obj
 END INTERFACE
@@ -1588,9 +1588,9 @@ PUBLIC :: OPERATOR( * )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION obj_div_obj( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_div_obj( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_div_obj
 END INTERFACE
@@ -1600,9 +1600,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION obj_div_scalar( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  REAL( DFP ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_div_scalar( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  REAL( DFP ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_div_scalar
 END INTERFACE
@@ -1612,9 +1612,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION scalar_div_obj( Obj1, Obj2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION scalar_div_obj( obj1, obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION scalar_div_obj
 END INTERFACE
@@ -1630,9 +1630,9 @@ PUBLIC :: OPERATOR( / )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION obj_matmul_obj( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION obj_matmul_obj( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   TYPE( Rank2Tensor_ ) :: Ans
 END FUNCTION obj_matmul_obj
 END INTERFACE
@@ -1642,9 +1642,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION obj_matmul_vec( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj1
-  REAL( DFP ), INTENT( IN ) :: Obj2( 3 )
+MODULE PURE FUNCTION obj_matmul_vec( obj1, obj2 ) RESULT( Ans )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj1
+  REAL( DFP ), INTENT( IN ) :: obj2( 3 )
   REAL( DFP ) :: Ans( 3 )
 END FUNCTION obj_matmul_vec
 END INTERFACE
@@ -1654,9 +1654,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION vec_matmul_obj( Obj1, Obj2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj1( 3 )
-  CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION vec_matmul_obj( obj1, obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: obj1( 3 )
+  CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj2
   REAL( DFP ) :: Ans( 3 )
 END FUNCTION vec_matmul_obj
 END INTERFACE

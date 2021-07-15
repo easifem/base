@@ -37,9 +37,9 @@ END PROCEDURE Initiate_ref_Tetrahedron
 
 MODULE PROCEDURE reference_Tetrahedron
   IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
+    CALL Initiate( obj, NSD, XiJ )
   ELSE
-    CALL Initiate( Obj, NSD )
+    CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Tetrahedron
 
@@ -48,11 +48,11 @@ END PROCEDURE reference_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Tetrahedron_Pointer
-  ALLOCATE( Obj )
+  ALLOCATE( obj )
   IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
+    CALL Initiate( obj, NSD, XiJ )
   ELSE
-    CALL Initiate( Obj, NSD )
+    CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Tetrahedron_Pointer
 

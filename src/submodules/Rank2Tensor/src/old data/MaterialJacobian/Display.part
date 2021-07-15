@@ -23,14 +23,14 @@
 !                                                                      Display
 !------------------------------------------------------------------------------
 
- SUBROUTINE Display( Obj, UnitNo )
+ SUBROUTINE Display( obj, UnitNo )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  Display the content
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 
     !   Define internal variables
@@ -42,10 +42,10 @@
         I = 6
     END IF
 
-    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL BlankLines( UnitNo = I )
-        WRITE( I, "(A)" ) "MaterialJacobian_ Object is Empty"
+        WRITE( I, "(A)" ) "MaterialJacobian_ object is Empty"
         CALL BlankLines( UnitNo = I )
         RETURN
 
@@ -57,15 +57,15 @@
     CALL EqualLine( UnitNo = I )
     CALL BlankLines( UnitNo = I )
 
-    CALL Display_Array( Obj%C, "C" )
+    CALL Display_Array( obj%C, "C" )
 
     WRITE( I, "(A)" ) "Stress Type"
-    CALL Obj%StressType%Display( I )
+    CALL obj%StressType%Display( I )
 
     WRITE( I, "(A)" ) "Strain Type"
-    CALL Obj%StrainType%Display( I )
+    CALL obj%StrainType%Display( I )
 
     WRITE( I, "(A)" ) "Rate Type"
-    CALL Obj%RateType%Display( )
+    CALL obj%RateType%Display( )
 
  END SUBROUTINE Display

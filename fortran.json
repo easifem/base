@@ -193,7 +193,7 @@
 	"procedure": {
 		"prefix": "proc",
 		"description": "procedure",
-		"body": "PROCEDURE, PUBLIC, PASS( Obj ) :: $1",
+		"body": "PROCEDURE, PUBLIC, PASS( obj ) :: $1",
 	},
 	"moduleprocedure":{
 		"prefix": "mp",
@@ -225,8 +225,8 @@
 		"description": "display",
 		"body": [
 			"INTERFACE",
-			"MODULE SUBROUTINE ${NAME1}( Obj, Msg, UnitNo )",
-			"\tCLASS( ${NAME2} ), INTENT( IN ) :: Obj",
+			"MODULE SUBROUTINE ${NAME1}( obj, Msg, UnitNo )",
+			"\tCLASS( ${NAME2} ), INTENT( IN ) :: obj",
 			"\tCHARACTER( LEN = * ), INTENT( IN ) :: Msg",
 			"\tINTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo",
 			"END SUBROUTINE ${NAME1}",

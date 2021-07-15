@@ -23,8 +23,8 @@
     IMPLICIT NONE
 
     PRIVATE
-    
-    PUBLIC :: Stress_, Stress, Stress_Pointer 
+
+    PUBLIC :: Stress_, Stress, Stress_Pointer
 
 
 !------------------------------------------------------------------------------
@@ -63,7 +63,7 @@
 
         ! StressType.part
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: getStressType, setStressType
+        PROCEDURE, PUBLIC, PASS( obj ) :: getStressType, setStressType
         GENERIC, PUBLIC :: OPERATOR( .StressType. ) => getStressType
         GENERIC, PUBLIC :: ASSIGNMENT( = ) => setStressType
 
@@ -76,100 +76,100 @@
         GENERIC, PUBLIC :: getStress => s_getStress_1, s_getStress_2, &
         s_getStress_5
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: s_getStress_3, s_getStress_4, &
+        PROCEDURE, PUBLIC, PASS( obj ) :: s_getStress_3, s_getStress_4, &
         s_getStress_6
         GENERIC, PUBLIC :: ASSIGNMENT( = ) => s_getStress_3, s_getStress_4, &
         s_getStress_6
 
         ! OperatorOverloading/Addition.part
 
-        PROCEDURE, PUBLIC, PASS :: Obj_Add_Obj
-        PROCEDURE, PUBLIC, PASS :: Obj_Add_Mat
-        PROCEDURE, PUBLIC, PASS :: Obj_Add_Vec
-        PROCEDURE, PUBLIC, PASS :: Obj_Add_Scalar
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Mat_Add_Obj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Vec_Add_Obj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Scalar_Add_Obj
-        
-        GENERIC, PUBLIC :: OPERATOR( + ) => Obj_Add_Mat, Obj_Add_Obj, &
-        Mat_Add_Obj, Obj_Add_Vec, Vec_Add_Obj, Scalar_Add_Obj, &
-        Obj_Add_Scalar
+        PROCEDURE, PUBLIC, PASS :: obj_Add_obj
+        PROCEDURE, PUBLIC, PASS :: obj_Add_Mat
+        PROCEDURE, PUBLIC, PASS :: obj_Add_Vec
+        PROCEDURE, PUBLIC, PASS :: obj_Add_Scalar
+        PROCEDURE, PUBLIC, PASS( obj ) :: Mat_Add_obj
+        PROCEDURE, PUBLIC, PASS( obj ) :: Vec_Add_obj
+        PROCEDURE, PUBLIC, PASS( obj ) :: Scalar_Add_obj
 
-        PROCEDURE, PUBLIC, PASS :: Obj_Minus_Obj
-        PROCEDURE, PUBLIC, PASS :: Obj_Minus_Mat
-        PROCEDURE, PUBLIC, PASS :: Obj_Minus_Vec
-        PROCEDURE, PUBLIC, PASS :: Obj_Minus_Scalar
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Mat_Minus_Obj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Vec_Minus_Obj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Scalar_Minus_Obj
+        GENERIC, PUBLIC :: OPERATOR( + ) => obj_Add_Mat, obj_Add_obj, &
+        Mat_Add_obj, obj_Add_Vec, Vec_Add_obj, Scalar_Add_obj, &
+        obj_Add_Scalar
 
-        GENERIC, PUBLIC :: OPERATOR( - ) => Obj_Minus_Mat, Obj_Minus_Obj, &
-        Mat_Minus_Obj, Obj_Minus_Vec, Vec_Minus_Obj, Scalar_Minus_Obj, &
-        Obj_Minus_Scalar
+        PROCEDURE, PUBLIC, PASS :: obj_Minus_obj
+        PROCEDURE, PUBLIC, PASS :: obj_Minus_Mat
+        PROCEDURE, PUBLIC, PASS :: obj_Minus_Vec
+        PROCEDURE, PUBLIC, PASS :: obj_Minus_Scalar
+        PROCEDURE, PUBLIC, PASS( obj ) :: Mat_Minus_obj
+        PROCEDURE, PUBLIC, PASS( obj ) :: Vec_Minus_obj
+        PROCEDURE, PUBLIC, PASS( obj ) :: Scalar_Minus_obj
+
+        GENERIC, PUBLIC :: OPERATOR( - ) => obj_Minus_Mat, obj_Minus_obj, &
+        Mat_Minus_obj, obj_Minus_Vec, Vec_Minus_obj, Scalar_Minus_obj, &
+        obj_Minus_Scalar
 
 
         ! OperatorOverloading/Assignment.part
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Obj_From_Tensor, &
-        Obj_From_Mat, Obj_From_Vec
+        PROCEDURE, PUBLIC, PASS( obj ) :: obj_From_Tensor, &
+        obj_From_Mat, obj_From_Vec
 
-        GENERIC, PUBLIC :: ASSIGNMENT( = ) => Obj_From_Tensor, &
-        Obj_From_Mat, Obj_From_Vec
+        GENERIC, PUBLIC :: ASSIGNMENT( = ) => obj_From_Tensor, &
+        obj_From_Mat, obj_From_Vec
 
 
         ! OperatorOverLoading/Asterics.part
 
-        PROCEDURE, PUBLIC, PASS :: ObjTimesScalar_1
-        PROCEDURE, PUBLIC, PASS :: ObjTimesScalar_2
-        PROCEDURE, PUBLIC, PASS :: ObjTimesObj
-        PROCEDURE, PUBLIC, PASS :: ObjTimesMat
-        PROCEDURE, PUBLIC, PASS :: ObjTimesVector
-        PROCEDURE, PUBLIC, PASS :: ObjTimesTensor
-        PROCEDURE, PUBLIC, PASS( Obj ) :: ScalarTimesObj_1
-        PROCEDURE, PUBLIC, PASS( Obj ) :: ScalarTimesObj_2
-        PROCEDURE, PUBLIC, PASS( Obj ) :: MatTimesObj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: VectorTimesObj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: TensorTimesObj
+        PROCEDURE, PUBLIC, PASS :: objTimesScalar_1
+        PROCEDURE, PUBLIC, PASS :: objTimesScalar_2
+        PROCEDURE, PUBLIC, PASS :: objTimesobj
+        PROCEDURE, PUBLIC, PASS :: objTimesMat
+        PROCEDURE, PUBLIC, PASS :: objTimesVector
+        PROCEDURE, PUBLIC, PASS :: objTimesTensor
+        PROCEDURE, PUBLIC, PASS( obj ) :: ScalarTimesobj_1
+        PROCEDURE, PUBLIC, PASS( obj ) :: ScalarTimesobj_2
+        PROCEDURE, PUBLIC, PASS( obj ) :: MatTimesobj
+        PROCEDURE, PUBLIC, PASS( obj ) :: VectorTimesobj
+        PROCEDURE, PUBLIC, PASS( obj ) :: TensorTimesobj
 
-        GENERIC, PUBLIC :: OPERATOR( * ) => ObjTimesScalar_1, &
-        ObjTimesScalar_2, ObjTimesObj, ObjTimesMat, ScalarTimesObj_1, &
-        ScalarTimesObj_2, MatTimesObj, ObjTimesVector, VectorTimesObj, &
-        TensorTimesObj, ObjTimesTensor
+        GENERIC, PUBLIC :: OPERATOR( * ) => objTimesScalar_1, &
+        objTimesScalar_2, objTimesobj, objTimesMat, ScalarTimesobj_1, &
+        ScalarTimesobj_2, MatTimesobj, objTimesVector, VectorTimesobj, &
+        TensorTimesobj, objTimesTensor
 
 
         ! OperatorOverLoading/Matmul.part
 
-        PROCEDURE, PUBLIC, PASS :: Obj_matmul_Obj
-        PROCEDURE, PUBLIC, PASS :: Obj_matmul_Mat
-        PROCEDURE, PUBLIC, PASS :: Obj_matmul_Tensor
-        PROCEDURE, PUBLIC, PASS :: Obj_matmul_Vec
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Mat_matmul_Obj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Tensor_matmul_Obj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Vec_matmul_Obj
+        PROCEDURE, PUBLIC, PASS :: obj_matmul_obj
+        PROCEDURE, PUBLIC, PASS :: obj_matmul_Mat
+        PROCEDURE, PUBLIC, PASS :: obj_matmul_Tensor
+        PROCEDURE, PUBLIC, PASS :: obj_matmul_Vec
+        PROCEDURE, PUBLIC, PASS( obj ) :: Mat_matmul_obj
+        PROCEDURE, PUBLIC, PASS( obj ) :: Tensor_matmul_obj
+        PROCEDURE, PUBLIC, PASS( obj ) :: Vec_matmul_obj
 
-        GENERIC, PUBLIC :: OPERATOR( .matmul. ) => Obj_matmul_Obj , &
-        Obj_matmul_Mat, Obj_matmul_Tensor, Mat_matmul_Obj, &
-        Tensor_matmul_Obj, Obj_matmul_Vec, Vec_matmul_Obj
+        GENERIC, PUBLIC :: OPERATOR( .matmul. ) => obj_matmul_obj , &
+        obj_matmul_Mat, obj_matmul_Tensor, Mat_matmul_obj, &
+        Tensor_matmul_obj, obj_matmul_Vec, Vec_matmul_obj
 
 
         ! OperatorOverLoading/Otimes.part
 
-        PROCEDURE, PUBLIC, PASS :: Obj_Otimes_Obj
-        PROCEDURE, PUBLIC, PASS :: Obj_Otimes_Mat
-        PROCEDURE, PUBLIC, PASS :: Obj_Otimes_Tensor
-        PROCEDURE, PUBLIC, PASS :: Obj_Otimes_Vec
-        PROCEDURE, PUBLIC, PASS :: m_Obj_Otimes_Vec
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Mat_Otimes_Obj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Tensor_Otimes_Obj
-        PROCEDURE, PUBLIC, PASS( Obj ) :: Vec_Otimes_Obj
+        PROCEDURE, PUBLIC, PASS :: obj_Otimes_obj
+        PROCEDURE, PUBLIC, PASS :: obj_Otimes_Mat
+        PROCEDURE, PUBLIC, PASS :: obj_Otimes_Tensor
+        PROCEDURE, PUBLIC, PASS :: obj_Otimes_Vec
+        PROCEDURE, PUBLIC, PASS :: m_obj_Otimes_Vec
+        PROCEDURE, PUBLIC, PASS( obj ) :: Mat_Otimes_obj
+        PROCEDURE, PUBLIC, PASS( obj ) :: Tensor_Otimes_obj
+        PROCEDURE, PUBLIC, PASS( obj ) :: Vec_Otimes_obj
 
-        GENERIC, PUBLIC :: OPERATOR( .Otimes. ) => Obj_Otimes_Obj, &
-        Obj_Otimes_Mat, Obj_Otimes_Tensor, Mat_Otimes_Obj, &
-        Tensor_Otimes_Obj, Vec_Otimes_Obj, Obj_Otimes_Vec
+        GENERIC, PUBLIC :: OPERATOR( .Otimes. ) => obj_Otimes_obj, &
+        obj_Otimes_Mat, obj_Otimes_Tensor, Mat_Otimes_obj, &
+        Tensor_Otimes_obj, Vec_Otimes_obj, obj_Otimes_Vec
 
-        GENERIC, PUBLIC :: Otimes => Obj_Otimes_Obj, &
-        Obj_Otimes_Mat, Obj_Otimes_Tensor, Obj_Otimes_Vec, &
-        m_Obj_Otimes_Vec
+        GENERIC, PUBLIC :: Otimes => obj_Otimes_obj, &
+        obj_Otimes_Mat, obj_Otimes_Tensor, obj_Otimes_Vec, &
+        m_obj_Otimes_Vec
 
 
         ! OperatorOverLoading/Invariant.part
@@ -181,7 +181,7 @@
         PROCEDURE, PUBLIC, PASS :: Invar_I2
         GENERIC, PUBLIC :: Invariant_I2 => Invar_I2
         GENERIC, PUBLIC :: OPERATOR( .Itwo. ) => Invar_I2
-        
+
         PROCEDURE, PUBLIC, PASS :: Invar_I3
         GENERIC, PUBLIC :: Invariant_I3 => Invar_I3
         GENERIC, PUBLIC :: OPERATOR( .Ithree. ) => Invar_I3
@@ -189,7 +189,7 @@
         PROCEDURE, PUBLIC, PASS :: Invar_J2
         GENERIC, PUBLIC :: Invariant_J2 => Invar_J2
         GENERIC, PUBLIC :: OPERATOR( .Jtwo. ) => Invar_J2
-        
+
         PROCEDURE, PUBLIC, PASS :: Invar_J3
         GENERIC, PUBLIC :: Invariant_J3 => Invar_J3
         GENERIC, PUBLIC :: OPERATOR( .Jthree. ) => Invar_J3
@@ -217,7 +217,7 @@
 
         ! OperatorOverLoading/Shape.part
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: VoigtVector_1
+        PROCEDURE, PUBLIC, PASS( obj ) :: VoigtVector_1
         GENERIC, PUBLIC :: OPERATOR( .Shape. ) => VoigtVector_1
 
 
@@ -229,7 +229,7 @@
 
         PROCEDURE, PUBLIC, PASS :: EigenValues
         GENERIC, PUBLIC :: OPERATOR( .EigenValues. ) => EigenValues
-        
+
         PROCEDURE, PUBLIC, PASS :: PrincipalValue
         GENERIC, PUBLIC :: OPERATOR( .PrincipalValue. ) => PrincipalValue
 
@@ -250,7 +250,7 @@
 
         GENERIC, PUBLIC :: OPERATOR( .AntiSym. ) => m_AntiSymmetricPart
         GENERIC, PUBLIC :: OPERATOR( .AntiSymmetricPart. ) => m_AntiSymmetricPart
-        
+
         PROCEDURE, PUBLIC, PASS :: m_HydrostaticPart
         GENERIC, PUBLIC :: HydrostaticPart => m_HydrostaticPart
 
@@ -269,31 +269,31 @@
 
         ! CauchyStress.part
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: getCauchyStress
+        PROCEDURE, PUBLIC, PASS( obj ) :: getCauchyStress
         GENERIC, PUBLIC :: OPERATOR( .Cauchy.) => getCauchyStress
         GENERIC, PUBLIC :: OPERATOR( .Sigma.) => getCauchyStress
 
         ! Pk2Stress.part
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: getPK2Stress
+        PROCEDURE, PUBLIC, PASS( obj ) :: getPK2Stress
         GENERIC, PUBLIC :: OPERATOR( .pkTWO. ) => getPK2Stress
         GENERIC, PUBLIC :: OPERATOR( .S. ) => getPK2Stress
 
         ! Pk1Stress.part
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: getPK1Stress
+        PROCEDURE, PUBLIC, PASS( obj ) :: getPK1Stress
         GENERIC, PUBLIC :: OPERATOR( .pkONE. ) => getPK1Stress
         GENERIC, PUBLIC :: OPERATOR( .PI. ) => getPK1Stress
 
         ! KirchhoffStress.part
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: getKirchhoffStress
+        PROCEDURE, PUBLIC, PASS( obj ) :: getKirchhoffStress
         GENERIC, PUBLIC :: OPERATOR( .Kirchhoff. ) => getKirchhoffStress
         GENERIC, PUBLIC :: OPERATOR( .Tau. ) => getKirchhoffStress
 
         ! EshelbyStress.part
 
-        PROCEDURE, PUBLIC, PASS( Obj ) :: getEshelbyStress
+        PROCEDURE, PUBLIC, PASS( obj ) :: getEshelbyStress
         GENERIC, PUBLIC :: OPERATOR( .Eshelby. ) => getEshelbyStress
         GENERIC, PUBLIC :: OPERATOR( .M. ) => getEshelbyStress
 
@@ -347,7 +347,7 @@
 #include "./Pk1Stress.part"
 #include "./KirchhoffStress.part"
 #include "./EshelbyStress.part"
-    
+
  END MODULE Stress_Class
 
 !------------------------------------------------------------------------------

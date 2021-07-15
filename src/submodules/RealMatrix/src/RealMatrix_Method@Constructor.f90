@@ -25,8 +25,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_shape
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    Ans = SHAPE( Obj%Val )
+  IF( ALLOCATED( obj%Val ) ) THEN
+    Ans = SHAPE( obj%Val )
   ELSE
     Ans = 0
   END IF
@@ -39,8 +39,8 @@ END PROCEDURE get_shape
 MODULE PROCEDURE get_size
   !Define internal variables
   INTEGER( I4B ) :: S( 2 )
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    S = SHAPE( Obj%Val )
+  IF( ALLOCATED( obj%Val ) ) THEN
+    S = SHAPE( obj%Val )
     IF( PRESENT( Dims ) ) THEN
       Ans = S( Dims )
     ELSE
@@ -52,12 +52,28 @@ MODULE PROCEDURE get_size
 END PROCEDURE get_size
 
 !----------------------------------------------------------------------------
+!                                                         getTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE get_tdimension
+  ans = obj%tDimension
+END PROCEDURE get_tdimension
+
+!----------------------------------------------------------------------------
+!                                                         setTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE set_tdimension
+  obj%tDimension = tDimension
+END PROCEDURE set_tdimension
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE allocate_data
-  CALL Reallocate( Obj%Val, Dims(1), Dims(2) )
-  CALL setTotalDimension( Obj, 2_I4B )
+  CALL Reallocate( obj%Val, Dims(1), Dims(2) )
+  CALL setTotalDimension( obj, 2_I4B )
 END PROCEDURE allocate_data
 
 !----------------------------------------------------------------------------
@@ -65,8 +81,8 @@ END PROCEDURE allocate_data
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Deallocate_Data
-  IF( ALLOCATED( Obj%Val ) ) DEALLOCATE( Obj%Val )
-  CALL setTotalDimension( Obj, 0 )
+  IF( ALLOCATED( obj%Val ) ) DEALLOCATE( obj%Val )
+  CALL setTotalDimension( obj, 0 )
 END PROCEDURE Deallocate_Data
 
 !----------------------------------------------------------------------------
@@ -74,7 +90,7 @@ END PROCEDURE Deallocate_Data
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj
-  CALL AllocateData( Obj, Dims )
+  CALL AllocateData( obj, Dims )
 END PROCEDURE initiate_obj
 
 !----------------------------------------------------------------------------
@@ -83,8 +99,8 @@ END PROCEDURE initiate_obj
 
 MODULE PROCEDURE initiate_obj_vector_a
   INTEGER( I4B ) :: j
-  DO j = 1, SIZE( Obj )
-    CALL AllocateData( Obj( j ), Dims )
+  DO j = 1, SIZE( obj )
+    CALL AllocateData( obj( j ), Dims )
   END DO
 END PROCEDURE initiate_obj_vector_a
 
@@ -94,8 +110,8 @@ END PROCEDURE initiate_obj_vector_a
 
 MODULE PROCEDURE initiate_obj_vector_b
   INTEGER( I4B ) :: j
-  DO j = 1, SIZE( Obj )
-    CALL AllocateData( Obj( j ), Dims( j, : ) )
+  DO j = 1, SIZE( obj )
+    CALL AllocateData( obj( j ), Dims( j, : ) )
   END DO
 END PROCEDURE initiate_obj_vector_b
 
@@ -104,8 +120,8 @@ END PROCEDURE initiate_obj_vector_b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj_val
-  Obj%Val = Val
-  CALL setTotalDimension( Obj, 2_I4B )
+  obj%Val = Val
+  CALL setTotalDimension( obj, 2_I4B )
 END PROCEDURE initiate_obj_val
 
 !----------------------------------------------------------------------------
@@ -113,7 +129,7 @@ END PROCEDURE initiate_obj_val
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Constructor1
-  CALL Initiate( Obj, Dims )
+  CALL Initiate( obj, Dims )
 END PROCEDURE Constructor1
 
 !----------------------------------------------------------------------------
@@ -236,7 +252,7 @@ END PROCEDURE convert_mat4_to_mat2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE sym_array
-  Ans = 0.5_DFP * ( Obj + TRANSPOSE( Obj ) )
+  Ans = 0.5_DFP * ( obj + TRANSPOSE( obj ) )
 END PROCEDURE sym_array
 
 !----------------------------------------------------------------------------
@@ -244,7 +260,7 @@ END PROCEDURE sym_array
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE sym_obj
-  Ans%Val = 0.5_DFP * ( Obj%Val + TRANSPOSE( Obj%Val ) )
+  Ans%Val = 0.5_DFP * ( obj%Val + TRANSPOSE( obj%Val ) )
 END PROCEDURE sym_obj
 
 !----------------------------------------------------------------------------
@@ -252,7 +268,7 @@ END PROCEDURE sym_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SkewSym_array
-  Ans = 0.5_DFP * ( Obj - TRANSPOSE( Obj ) )
+  Ans = 0.5_DFP * ( obj - TRANSPOSE( obj ) )
 END PROCEDURE SkewSym_array
 
 !----------------------------------------------------------------------------
@@ -260,7 +276,7 @@ END PROCEDURE SkewSym_array
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SkewSym_obj
-  Ans%Val = 0.5_DFP * ( Obj%Val - TRANSPOSE( Obj%Val ) )
+  Ans%Val = 0.5_DFP * ( obj%Val - TRANSPOSE( obj%Val ) )
 END PROCEDURE SkewSym_obj
 
 !----------------------------------------------------------------------------
@@ -325,24 +341,24 @@ END PROCEDURE realmat_make_diag_copy4
 
 MODULE PROCEDURE realmat_random_number
   IF( PRESENT( m ) .AND. PRESENT( n ) ) THEN
-    CALL Reallocate( Obj%Val, m, n )
-    CALL RANDOM_NUMBER( Obj%Val )
+    CALL Reallocate( obj%Val, m, n )
+    CALL RANDOM_NUMBER( obj%Val )
     RETURN
   END IF
 
   IF( PRESENT( m ) ) THEN
-    CALL Reallocate( Obj%Val, m, m )
-    CALL RANDOM_NUMBER( Obj%Val )
+    CALL Reallocate( obj%Val, m, m )
+    CALL RANDOM_NUMBER( obj%Val )
     RETURN
   END IF
 
   IF( PRESENT( n ) ) THEN
-    CALL Reallocate( Obj%Val, n, n )
-    CALL RANDOM_NUMBER( Obj%Val )
+    CALL Reallocate( obj%Val, n, n )
+    CALL RANDOM_NUMBER( obj%Val )
     RETURN
   END IF
 
-  CALL RANDOM_NUMBER( Obj%Val )
+  CALL RANDOM_NUMBER( obj%Val )
 
 END PROCEDURE realmat_random_number
 

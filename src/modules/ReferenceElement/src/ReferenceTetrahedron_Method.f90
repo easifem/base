@@ -41,8 +41,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Tetrahedron( Obj, NSD, XiJ )
-  CLASS( ReferenceTetrahedron_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_ref_Tetrahedron( obj, NSD, XiJ )
+  CLASS( ReferenceTetrahedron_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
 END SUBROUTINE initiate_ref_Tetrahedron
@@ -57,10 +57,10 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Tetrahedron( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Tetrahedron( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferenceTetrahedron_ ) :: Obj
+  TYPE( ReferenceTetrahedron_ ) :: obj
 END FUNCTION reference_Tetrahedron
 END INTERFACE
 
@@ -75,10 +75,10 @@ PUBLIC :: ReferenceTetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Tetrahedron_Pointer( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Tetrahedron_Pointer( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceTetrahedron_ ), POINTER :: Obj
+  CLASS( ReferenceTetrahedron_ ), POINTER :: obj
 END FUNCTION reference_Tetrahedron_Pointer
 END INTERFACE
 
@@ -93,10 +93,10 @@ PUBLIC :: ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Tetrahedron( RefElem, Order, Obj )
+MODULE PURE SUBROUTINE LagrangeElement_Tetrahedron( RefElem, Order, obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: Obj
+  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE LagrangeElement_Tetrahedron
 END INTERFACE
 

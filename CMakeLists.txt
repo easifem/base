@@ -196,7 +196,7 @@ TARGET_LINK_LIBRARIES(
   "$<$<BOOL:${OpenMP_FOUND}>:${OpenMP_Fortran_LIBRARIES}>"
 )
 
-FOREACH(p LAPACK95 PENF BeFoR64 FACE StringiFor FPL)
+FOREACH(p LAPACK95 PENF BeFoR64 FACE StringiFor FPL Sparsekit)
   FIND_PACKAGE( ${p} REQUIRED )
   IF( ${p}_FOUND )
   GET_TARGET_PROPERTY(
@@ -208,12 +208,14 @@ FOREACH(p LAPACK95 PENF BeFoR64 FACE StringiFor FPL)
   TARGET_LINK_LIBRARIES(
     ${PROJECT_NAME}
     PUBLIC
-    ${p}::${p} )
+    ${p}::${p}
+  )
 
   TARGET_INCLUDE_DIRECTORIES(
     ${PROJECT_NAME}
     PUBLIC
-    "${${p}_INCLUDEDIR}" )
+    "${${p}_INCLUDEDIR}"
+  )
 ELSE()
   MESSAGE(STATUS "${p} not found")
 ENDIF()

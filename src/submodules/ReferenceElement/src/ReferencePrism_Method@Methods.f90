@@ -37,9 +37,9 @@ END PROCEDURE Initiate_ref_Prism
 
 MODULE PROCEDURE reference_Prism
   IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
+    CALL Initiate( obj, NSD, XiJ )
   ELSE
-    CALL Initiate( Obj, NSD )
+    CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Prism
 
@@ -48,11 +48,11 @@ END PROCEDURE reference_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Prism_Pointer
-  ALLOCATE( Obj )
+  ALLOCATE( obj )
   IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
+    CALL Initiate( obj, NSD, XiJ )
   ELSE
-    CALL Initiate( Obj, NSD )
+    CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Prism_Pointer
 

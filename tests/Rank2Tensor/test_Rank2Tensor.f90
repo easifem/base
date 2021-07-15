@@ -216,7 +216,7 @@ subroutine test13
   type( Rank2Tensor_ ) :: obj, R, U, V
   real( dfp ) :: mat( 3, 3 ) = reshape( [1.0, -0.333, 0.959, 0.495, 1.0, 0.0, 0.5, -0.247, 1.5], [3,3] )
   call initiate( obj, mat, isSym=.false. )
-  call PolarDecomp( Obj, R, U, V )
+  call PolarDecomp( obj, R, U, V )
   call display( obj, "test13: obj=")
   call display( R, "test13: R=" )
   call display( U, "test13: U=" )

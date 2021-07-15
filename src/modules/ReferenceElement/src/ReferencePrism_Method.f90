@@ -41,8 +41,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Prism( Obj, NSD, XiJ )
-  CLASS( ReferencePrism_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_ref_Prism( obj, NSD, XiJ )
+  CLASS( ReferencePrism_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
 END SUBROUTINE initiate_ref_Prism
@@ -57,10 +57,10 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Prism( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Prism( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferencePrism_ ) :: Obj
+  TYPE( ReferencePrism_ ) :: obj
 END FUNCTION reference_Prism
 END INTERFACE
 
@@ -75,10 +75,10 @@ PUBLIC :: ReferencePrism
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Prism_Pointer( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Prism_Pointer( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferencePrism_ ), POINTER :: Obj
+  CLASS( ReferencePrism_ ), POINTER :: obj
 END FUNCTION reference_Prism_Pointer
 END INTERFACE
 
@@ -93,10 +93,10 @@ PUBLIC :: ReferencePrism_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Prism( RefElem, Order, Obj )
+MODULE PURE SUBROUTINE LagrangeElement_Prism( RefElem, Order, obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: Obj
+  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE LagrangeElement_Prism
 END INTERFACE
 

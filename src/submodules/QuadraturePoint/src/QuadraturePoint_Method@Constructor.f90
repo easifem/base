@@ -30,8 +30,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj
-  Obj%Points = Points
-  Obj%tXi = SIZE( Points, 1 ) - 1
+  obj%Points = Points
+  obj%tXi = SIZE( Points, 1 ) - 1
     !! No of row minus one
 END PROCEDURE initiate_obj
 
@@ -40,8 +40,8 @@ END PROCEDURE initiate_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj_txi
-  Obj%tXi = tXi
-  CALL Reallocate( Obj%Points, tXi + 1, tPoints )
+  obj%tXi = tXi
+  CALL Reallocate( obj%Points, tXi + 1, tPoints )
 END PROCEDURE initiate_obj_txi
 
 !----------------------------------------------------------------------------
@@ -49,14 +49,14 @@ END PROCEDURE initiate_obj_txi
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Constructor1
-  Obj%Points = Points
-  Obj%tXi = SIZE( Points, 1 ) - 1
+  obj%Points = Points
+  obj%tXi = SIZE( Points, 1 ) - 1
 END PROCEDURE Constructor1
 
 MODULE PROCEDURE Constructor_1
-  ALLOCATE( Obj )
-  Obj%Points = Points
-  Obj%tXi = SIZE( Points, 1 ) - 1
+  ALLOCATE( obj )
+  obj%Points = Points
+  obj%tXi = SIZE( Points, 1 ) - 1
 END PROCEDURE Constructor_1
 
 !----------------------------------------------------------------------------
@@ -64,8 +64,8 @@ END PROCEDURE Constructor_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Deallocate_Data
-  IF( ALLOCATED( Obj%Points ) ) DEALLOCATE( Obj%Points )
-  Obj%tXi = -1
+  IF( ALLOCATED( obj%Points ) ) DEALLOCATE( obj%Points )
+  obj%tXi = -1
 END PROCEDURE Deallocate_Data
 
 !----------------------------------------------------------------------------
@@ -74,9 +74,9 @@ END PROCEDURE Deallocate_Data
 
 MODULE PROCEDURE size_obj
   IF( Dims .EQ. 1 ) THEN
-    Ans = SIZE( Obj%Points, 1 )
+    Ans = SIZE( obj%Points, 1 )
   ELSE IF( Dims .EQ. 2 ) THEN
-    Ans = SIZE( Obj%Points, 2 )
+    Ans = SIZE( obj%Points, 2 )
   ELSE
     Ans = 0
   END IF
@@ -88,8 +88,8 @@ END PROCEDURE size_obj
 
 MODULE PROCEDURE getQP1
   Point = 0.0_DFP
-  Point( 1 : Obj%tXi ) = Obj%Points( 1 : Obj%tXi, Num )
-  Weight = Obj%Points( Obj%tXi + 1, Num )
+  Point( 1 : obj%tXi ) = obj%Points( 1 : obj%tXi, Num )
+  Weight = obj%Points( obj%tXi + 1, Num )
 END PROCEDURE getQP1
 
 !----------------------------------------------------------------------------
@@ -98,10 +98,10 @@ END PROCEDURE getQP1
 
 MODULE PROCEDURE getQP2
   INTEGER( I4B ) :: n
-  n = SIZE( Obj%Points, 2 ) !#column
+  n = SIZE( obj%Points, 2 ) !#column
   CALL Reallocate( Point, 3, n )
-  Point( 1 : Obj%tXi, 1:n ) = Obj%Points( 1 : Obj%tXi, 1:n )
-  Weight = Obj%Points( Obj%tXi + 1, 1:n )
+  Point( 1 : obj%tXi, 1:n ) = obj%Points( 1 : obj%tXi, 1:n )
+  Weight = obj%Points( obj%tXi + 1, 1:n )
 END PROCEDURE getQP2
 
 END SUBMODULE Constructor

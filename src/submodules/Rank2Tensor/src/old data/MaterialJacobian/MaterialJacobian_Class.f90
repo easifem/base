@@ -24,14 +24,14 @@
 
     PRIVATE
     PUBLIC :: MaterialJacobian_, MaterialJacobian, MaterialJacobian_Pointer
-    
+
 !------------------------------------------------------------------------------
 !                                                            MaterialJacobian_
 !------------------------------------------------------------------------------
 
  TYPE :: MaterialJacobian_
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   Material Jacobian Class                                                               
+!   Material Jacobian Class
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     REAL( DFP ), ALLOCATABLE :: C( :, : )
@@ -41,7 +41,7 @@
 
         ! Constructor.part
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: Initiate1, Initiate2, &
+            PROCEDURE, PUBLIC, PASS( obj ) :: Initiate1, Initiate2, &
             Initiate3, Initiate4, Initiate5, Initiate6, &
             Initiate7, getSize, DeallocateData, Initiate8
 
@@ -54,7 +54,7 @@
 
         ! Names.part
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: setStressType1, setStressType2,&
+            PROCEDURE, PUBLIC, PASS( obj ) :: setStressType1, setStressType2,&
             setStrainType1, setStrainType2, setRateType1, setRateType2, &
             getStressType, getStrainType, getRateType
 
@@ -69,15 +69,15 @@
 
         ! getCijkl.part
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: getCijkl, Obj2Mat, &
+            PROCEDURE, PUBLIC, PASS( obj ) :: getCijkl, obj2Mat, &
             getCijkl_Pointer, Cijkl_Pointer
 
-            GENERIC, PUBLIC :: ASSIGNMENT( = ) => Obj2Mat
-            
+            GENERIC, PUBLIC :: ASSIGNMENT( = ) => obj2Mat
+
 
         ! OperatorOverloading/ .Cijkl.
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: Cijkl_1, Cijkl_2, &
+            PROCEDURE, PUBLIC, PASS( obj ) :: Cijkl_1, Cijkl_2, &
             Cijkl_4, Cijkl, Cijkl_5
 
             GENERIC, PUBLIC :: OPERATOR( .Cijkl. ) => Cijkl_1, Cijkl, &
@@ -87,7 +87,7 @@
 
         ! OperatorOverloading/Contraction
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: Contraction_1, Contraction_2, &
+            PROCEDURE, PUBLIC, PASS( obj ) :: Contraction_1, Contraction_2, &
             Contraction_3, Contraction_4
 
             GENERIC, PUBLIC :: OPERATOR( .Contraction. ) => &
@@ -95,36 +95,36 @@
 
         ! OperatorOverloading/Asterics
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: Obj_Times_Scalar, Scalar_Times_Obj
+            PROCEDURE, PUBLIC, PASS( obj ) :: obj_Times_Scalar, Scalar_Times_obj
 
-            GENERIC, PUBLIC :: OPERATOR( * ) => Obj_Times_Scalar, &
-            Scalar_Times_Obj
+            GENERIC, PUBLIC :: OPERATOR( * ) => obj_Times_Scalar, &
+            Scalar_Times_obj
 
 
         ! OperatorOverloading/Matmul
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: Obj_Matmul_Vec, Vec_Matmul_Obj
+            PROCEDURE, PUBLIC, PASS( obj ) :: obj_Matmul_Vec, Vec_Matmul_obj
 
-            GENERIC, PUBLIC :: OPERATOR( .matmul. ) => Obj_Matmul_Vec, &
-            Vec_Matmul_Obj
+            GENERIC, PUBLIC :: OPERATOR( .matmul. ) => obj_Matmul_Vec, &
+            Vec_Matmul_obj
 
 
         ! OperatorOverloading/Addition
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: Obj_Add_Obj, Obj_Add_Mat, &
-            Mat_Add_Obj, Obj_Add_Scalar, Scalar_Add_Obj
+            PROCEDURE, PUBLIC, PASS( obj ) :: obj_Add_obj, obj_Add_Mat, &
+            Mat_Add_obj, obj_Add_Scalar, Scalar_Add_obj
 
-            GENERIC, PUBLIC :: OPERATOR( + ) => Obj_Add_Obj, Obj_Add_Mat, &
-            Mat_Add_Obj, Obj_Add_Scalar, Scalar_Add_Obj
+            GENERIC, PUBLIC :: OPERATOR( + ) => obj_Add_obj, obj_Add_Mat, &
+            Mat_Add_obj, obj_Add_Scalar, Scalar_Add_obj
 
 
         ! OperatorOverloading/Subtraction
 
-            PROCEDURE, PUBLIC, PASS( Obj ) :: Obj_Minus_Obj, Obj_Minus_Mat, &
-            Mat_Minus_Obj, Obj_Minus_Scalar, Scalar_Minus_Obj
+            PROCEDURE, PUBLIC, PASS( obj ) :: obj_Minus_obj, obj_Minus_Mat, &
+            Mat_Minus_obj, obj_Minus_Scalar, Scalar_Minus_obj
 
-            GENERIC, PUBLIC :: OPERATOR( - ) => Obj_Minus_Obj, Obj_Minus_Mat, &
-            Mat_Minus_Obj, Obj_Minus_Scalar, Scalar_Minus_Obj
+            GENERIC, PUBLIC :: OPERATOR( - ) => obj_Minus_obj, obj_Minus_Mat, &
+            Mat_Minus_obj, obj_Minus_Scalar, Scalar_Minus_obj
 
 
         ! Display.part
@@ -134,21 +134,21 @@
  END TYPE MaterialJacobian_
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!                                                                  
+!
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     INTERFACE MaterialJacobian
         MODULE PROCEDURE Constructor1, Constructor2, Constructor3, &
-        Constructor4, Constructor5, Constructor6, Constructor7 
+        Constructor4, Constructor5, Constructor6, Constructor7
     END INTERFACE
 
     INTERFACE MaterialJacobian_Pointer
         MODULE PROCEDURE Constructor_1, Constructor_2, Constructor_3, &
-        Constructor_4, Constructor_5, Constructor_6, Constructor_7 
+        Constructor_4, Constructor_5, Constructor_6, Constructor_7
     END INTERFACE
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!                                                                  
+!
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
  CONTAINS

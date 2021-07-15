@@ -25,17 +25,17 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj
-  IF( PRESENT( MaxIter ) ) Obj%MaxIter = MaxIter
-  IF( PRESENT( IterationNumber ) ) Obj%IterationNumber = IterationNumber
-  IF( PRESENT( ConvergenceType ) ) Obj%ConvergenceType = ConvergenceType
-  IF( PRESENT( ConvergenceIn ) ) Obj%ConvergenceIn = ConvergenceIn
-  IF( PRESENT( NormType ) ) Obj%NormType = NormType
-  IF( PRESENT( Tolerance ) ) Obj%Tolerance = Tolerance
-  IF( PRESENT( ErrorAtEnd ) ) Obj%ErrorAtEnd = ErrorAtEnd
-  IF( PRESENT( ErrorAtStart ) ) Obj%ErrorAtStart = ErrorAtStart
-  IF( PRESENT( TimeAtStart ) ) Obj%TimeAtStart = TimeAtStart
-  IF( PRESENT( TimeAtEnd ) ) Obj%TimeAtEnd = TimeAtEnd
-  IF( PRESENT( Converged ) ) Obj%Converged = Converged
+  IF( PRESENT( MaxIter ) ) obj%MaxIter = MaxIter
+  IF( PRESENT( IterationNumber ) ) obj%IterationNumber = IterationNumber
+  IF( PRESENT( ConvergenceType ) ) obj%ConvergenceType = ConvergenceType
+  IF( PRESENT( ConvergenceIn ) ) obj%ConvergenceIn = ConvergenceIn
+  IF( PRESENT( NormType ) ) obj%NormType = NormType
+  IF( PRESENT( Tolerance ) ) obj%Tolerance = Tolerance
+  IF( PRESENT( ErrorAtEnd ) ) obj%ErrorAtEnd = ErrorAtEnd
+  IF( PRESENT( ErrorAtStart ) ) obj%ErrorAtStart = ErrorAtStart
+  IF( PRESENT( TimeAtStart ) ) obj%TimeAtStart = TimeAtStart
+  IF( PRESENT( TimeAtEnd ) ) obj%TimeAtEnd = TimeAtEnd
+  IF( PRESENT( Converged ) ) obj%Converged = Converged
 END PROCEDURE initiate_obj
 
 !----------------------------------------------------------------------------
@@ -43,15 +43,15 @@ END PROCEDURE initiate_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE is_converged
-  SELECT CASE( Obj%ConvergenceType )
+  SELECT CASE( obj%ConvergenceType )
   CASE( RelativeConvergence )
-    IF( Obj%ErrorAtEnd .LE. Obj%Tolerance * Obj%ErrorAtStart ) THEN
+    IF( obj%ErrorAtEnd .LE. obj%Tolerance * obj%ErrorAtStart ) THEN
       Ans = .TRUE.
     ELSE
       Ans = .FALSE.
     END IF
   CASE( AbsoluteConvergence )
-    IF( Obj%ErrorAtEnd .LE. Obj%Tolerance ) THEN
+    IF( obj%ErrorAtEnd .LE. obj%Tolerance ) THEN
       Ans = .TRUE.
     ELSE
       Ans = .FALSE.

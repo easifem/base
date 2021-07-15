@@ -26,10 +26,10 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Constructor1( Indx, Val ) RESULT( Obj )
+  MODULE PURE FUNCTION Constructor1( Indx, Val ) RESULT( obj )
     INTEGER( I4B ), INTENT( IN ) :: Indx
     REAL( DFP ), INTENT( IN ) :: Val
-    TYPE(IndexValue_) :: Obj
+    TYPE(IndexValue_) :: obj
   END FUNCTION Constructor1
 END INTERFACE
 
@@ -38,10 +38,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Constructor2( Indx, Val ) RESULT( Obj )
+  MODULE PURE FUNCTION Constructor2( Indx, Val ) RESULT( obj )
     INTEGER( I4B ), INTENT( IN ) :: Indx( : )
     REAL( DFP ), INTENT( IN ) :: Val( : )
-    TYPE(IndexValue_), ALLOCATABLE :: Obj( : )
+    TYPE(IndexValue_), ALLOCATABLE :: obj( : )
   END FUNCTION Constructor2
 END INTERFACE
 
@@ -50,10 +50,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Constructor3( Indx, Val ) RESULT( Obj )
+  MODULE PURE FUNCTION Constructor3( Indx, Val ) RESULT( obj )
     INTEGER( I4B ), INTENT( IN ) :: Indx( : )
     REAL( DFP ), INTENT( IN ) :: Val
-    TYPE(IndexValue_), ALLOCATABLE :: Obj( : )
+    TYPE(IndexValue_), ALLOCATABLE :: obj( : )
   END FUNCTION Constructor3
 END INTERFACE
 

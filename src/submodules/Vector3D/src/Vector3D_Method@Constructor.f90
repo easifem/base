@@ -63,8 +63,8 @@ END PROCEDURE Vec3D_setTotalDimension
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE allocate_data
-  Obj%Val=0.0_DFP
-  CALL setTotalDimension( Obj, 1_I4B )
+  obj%Val=0.0_DFP
+  CALL setTotalDimension( obj, 1_I4B )
 END PROCEDURE allocate_data
 
 !----------------------------------------------------------------------------
@@ -72,8 +72,8 @@ END PROCEDURE allocate_data
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE deallocate_data
-  Obj%Val=0.0_DFP
-  CALL setTotalDimension( Obj, 1_I4B )
+  obj%Val=0.0_DFP
+  CALL setTotalDimension( obj, 1_I4B )
 END PROCEDURE deallocate_data
 
 
@@ -84,15 +84,15 @@ END PROCEDURE deallocate_data
 MODULE PROCEDURE initiate_obj_from_val
   SELECT CASE( SIZE( Val ) )
   CASE( 1 )
-    Obj%Val(1) = Val(1)
-    Obj%Val(2) = 0.0_DFP
-    Obj%Val(3) = 0.0_DFP
+    obj%Val(1) = Val(1)
+    obj%Val(2) = 0.0_DFP
+    obj%Val(3) = 0.0_DFP
   CASE( 2 )
-    Obj%Val(1) = Val(1)
-    Obj%Val(2) = Val(2)
-    Obj%Val(3) = 0.0_DFP
+    obj%Val(1) = Val(1)
+    obj%Val(2) = Val(2)
+    obj%Val(3) = 0.0_DFP
   CASE DEFAULT
-    Obj%Val = Val( 1:3 )
+    obj%Val = Val( 1:3 )
   END SELECT
 END PROCEDURE initiate_obj_from_val
 
@@ -101,7 +101,7 @@ END PROCEDURE initiate_obj_from_val
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_obj_from_obj
-  Obj%Val = AnotherObj%Val
+  obj%Val = Anotherobj%Val
 END PROCEDURE initiate_obj_from_obj
 
 !----------------------------------------------------------------------------
@@ -118,7 +118,7 @@ END PROCEDURE Constructor1
 
 MODULE PROCEDURE Constructor_1
   ALLOCATE( Ans )
-  CALL Initiate(Obj=Ans, Val=Val)
+  CALL Initiate(obj=Ans, Val=Val)
 END PROCEDURE Constructor_1
 
 !----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ END PROCEDURE Constructor_1
 
 MODULE PROCEDURE Constructor_2
   ALLOCATE( Ans )
-  CALL Initiate( Obj=Ans, AnotherObj=Obj )
+  CALL Initiate( obj=Ans, Anotherobj=obj )
 END PROCEDURE Constructor_2
 
 !----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ END PROCEDURE Constructor_2
 MODULE PROCEDURE Display_obj
   INTEGER( I4B ) :: i
   i = Input(default=stdout, option=unitNo)
-  CALL Display( Val=Obj%Val, msg=msg, UnitNo = i)
+  CALL Display( Val=obj%Val, msg=msg, UnitNo = i)
 END PROCEDURE Display_obj
 
 END SUBMODULE Constructor

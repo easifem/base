@@ -23,15 +23,15 @@
 !                                                         Tensor_Dyadic_Tensor
 !------------------------------------------------------------------------------
 
- FUNCTION Tensor_Dyadic_Tensor( Obj, Obj2 )
+ FUNCTION Tensor_Dyadic_Tensor( obj, obj2 )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .otimes. Obj2
+!       1.  obj .otimes. obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
 
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj, Obj2
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj, obj2
     REAL( DFP ), DIMENSION( 6, 6 ) :: Tensor_Dyadic_Tensor
 
     ! Define internal variables
@@ -42,12 +42,12 @@
 
     Tensor_Dyadic_Tensor = 0.0_DFP
 
-    IF( .NOT. ALLOCATED( Obj%T ) .OR. .NOT. ALLOCATED( Obj2%T ) ) THEN
+    IF( .NOT. ALLOCATED( obj%T ) .OR. .NOT. ALLOCATED( obj2%T ) ) THEN
 
         CALL Err_Msg(                                                      &
                        "Rank2Tensor_Class.f90>>Otimes.part",  &
                         ".Otimes.()",                          &
-                        "Tensor_ Obj is/are not allocated. Program Stopped"&
+                        "Tensor_ obj is/are not allocated. Program Stopped"&
                     )
         Error_Flag = .TRUE.
 
@@ -55,12 +55,12 @@
 
     END IF
 
-    IF( .NOT. Obj%isSymmetric( ) .OR. .NOT. Obj2%isSymmetric( ) ) THEN
+    IF( .NOT. obj%isSymmetric( ) .OR. .NOT. obj2%isSymmetric( ) ) THEN
 
         CALL Err_Msg(                                                      &
                        "Rank2Tensor_Class.f90>>Otimes.part",  &
                         ".Otimes.()",                          &
-                        "Tensor_ Obj is/are not symmmetric.Program Stopped"&
+                        "Tensor_ obj is/are not symmmetric.Program Stopped"&
                     )
         Error_Flag = .TRUE.
 
@@ -81,8 +81,8 @@
         DO J = 1, SIZE( Index, 1 )
 
             Tensor_Dyadic_Tensor( I, J ) =                                   &
-                                    Obj%T( Index( I, 1 ), Index( I, 2 )  ) &
-                                  * Obj2%T( Index( J, 1 ), Index( J, 2 )  )
+                                    obj%T( Index( I, 1 ), Index( I, 2 )  ) &
+                                  * obj2%T( Index( J, 1 ), Index( J, 2 )  )
 
         END DO
 
@@ -94,14 +94,14 @@
 !                                                            Tensor_Dyadic_Mat
 !------------------------------------------------------------------------------
 
- FUNCTION Tensor_Dyadic_Mat( Obj, Mat )
+ FUNCTION Tensor_Dyadic_Mat( obj, Mat )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .otimes. Mat
+!       1.  obj .otimes. Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
     REAL( DFP ), DIMENSION( 6, 6 ) :: Tensor_Dyadic_Mat
 
@@ -113,12 +113,12 @@
 
     Tensor_Dyadic_Mat = 0.0_DFP
 
-    IF( .NOT. ALLOCATED( Obj%T )  ) THEN
+    IF( .NOT. ALLOCATED( obj%T )  ) THEN
 
         CALL Err_Msg(                                                      &
                        "Rank2Tensor_Class.f90>>Otimes.part",  &
                         ".Otimes.()",                             &
-                        "Tensor_ Obj is not allocated. Program Stopped"    &
+                        "Tensor_ obj is not allocated. Program Stopped"    &
                     )
         Error_Flag = .TRUE.
 
@@ -126,12 +126,12 @@
 
     END IF
 
-    IF( .NOT. Obj%isSymmetric( ) .OR. .NOT. isSymmetric( Mat ) ) THEN
+    IF( .NOT. obj%isSymmetric( ) .OR. .NOT. isSymmetric( Mat ) ) THEN
 
         CALL Err_Msg(                                                      &
                        "Rank2Tensor_Class.f90>>Otimes.part",  &
                         ".Otimes.()",                          &
-                        "Tensor_ Obj is/are not symmmetric.Program Stopped"&
+                        "Tensor_ obj is/are not symmmetric.Program Stopped"&
                     )
         Error_Flag = .TRUE.
 
@@ -152,7 +152,7 @@
         DO J = 1, SIZE( Index, 1 )
 
             Tensor_Dyadic_Mat( I, J ) =                                      &
-                                    Obj%T( Index( I, 1 ), Index( I, 2 )  ) &
+                                    obj%T( Index( I, 1 ), Index( I, 2 )  ) &
                                   * Mat( Index( J, 1 ), Index( J, 2 )  )
 
         END DO
@@ -165,15 +165,15 @@
 !                                                            Mat_Dyadic_Tensor
 !------------------------------------------------------------------------------
 !
- FUNCTION Mat_Dyadic_Tensor( Mat, Obj )
+ FUNCTION Mat_Dyadic_Tensor( Mat, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Mat .otimes. Obj
+!       1.  Mat .otimes. obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
 
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
     REAL( DFP ), DIMENSION( 6, 6 ) :: Mat_Dyadic_Tensor
 
@@ -185,12 +185,12 @@
 
     Mat_Dyadic_Tensor = 0.0_DFP
 
-    IF( .NOT. ALLOCATED( Obj%T )  ) THEN
+    IF( .NOT. ALLOCATED( obj%T )  ) THEN
 
         CALL Err_Msg(                                                      &
                        "Rank2Tensor_Class.f90>>Otimes.part",  &
                         ".Otimes.",                             &
-                        "Tensor_ Obj is not allocated. Program Stopped"    &
+                        "Tensor_ obj is not allocated. Program Stopped"    &
                     )
         Error_Flag = .TRUE.
 
@@ -198,12 +198,12 @@
 
     END IF
 
-    IF( .NOT. Obj%isSymmetric( ) .OR. .NOT. isSymmetric( Mat ) ) THEN
+    IF( .NOT. obj%isSymmetric( ) .OR. .NOT. isSymmetric( Mat ) ) THEN
 
         CALL Err_Msg(                                                      &
                        "Rank2Tensor_Class.f90>>Otimes.part",  &
                         ".Otimes.",                             &
-                        "Tensor_ Obj is/are not symmmetric.Program Stopped"&
+                        "Tensor_ obj is/are not symmmetric.Program Stopped"&
                     )
         Error_Flag = .TRUE.
 
@@ -225,7 +225,7 @@
 
             Mat_Dyadic_Tensor( I, J ) =                                      &
                                     Mat( Index( I, 1 ), Index( I, 2 )  ) &
-                                  * Obj%T( Index( J, 1 ), Index( J, 2 )  )
+                                  * obj%T( Index( J, 1 ), Index( J, 2 )  )
 
         END DO
 
@@ -240,7 +240,7 @@
  FUNCTION Mat_Dyadic_Mat( Mat, Mat2 )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Mat .otimes. Obj
+!       1.  Mat .otimes. obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables

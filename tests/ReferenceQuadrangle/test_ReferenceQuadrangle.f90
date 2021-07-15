@@ -46,9 +46,9 @@ subroutine test4
   class( ReferenceElement_ ), pointer :: obj_ptr => null()
   type( ReferenceQuadrangle_ ) :: obj
   obj_ptr => referenceQuadrangle_pointer( nsd = 2 )
-  call obj_ptr%LagrangeElement( order = 2, HighOrderObj = obj )
+  call obj_ptr%LagrangeElement( order = 2, HighOrderobj = obj )
   call display( obj, "higher order obj : ")
-  call obj_ptr%LagrangeElement( order = 3, HighOrderObj = obj )
+  call obj_ptr%LagrangeElement( order = 3, HighOrderobj = obj )
   call display( obj, "3rd order obj : ")
 end
 

@@ -34,7 +34,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE trace_obj
-  ASSOCIATE( T => Obj%T )
+  ASSOCIATE( T => obj%T )
   IF( PRESENT( Power ) ) THEN
     SELECT CASE( Power )
     CASE( 1 )
@@ -58,9 +58,9 @@ MODULE PROCEDURE j2_obj
   LOGICAL( LGT ) :: isDev
   isDev = INPUT( default = .FALSE., option = isDeviatoric )
   IF( isDev ) THEN
-    Ans = 0.5_DFP * Trace(Obj=Obj, Power=2)
+    Ans = 0.5_DFP * Trace(obj=obj, Power=2)
   ELSE
-    ASSOCIATE( T => Obj%T )
+    ASSOCIATE( T => obj%T )
       Ans = ( T_11 - T_22 ) ** 2 &
         & + ( T_22 - T_33 ) ** 2 &
         & + ( T_33 - T_11 ) ** 2 &
@@ -78,9 +78,9 @@ MODULE PROCEDURE j3_obj
   LOGICAL( LGT ) :: isDev
   isDev = INPUT( default = .FALSE., option = isDeviatoric )
   IF( isDev ) THEN
-    Ans = det( Obj )
+    Ans = det( obj )
   ELSE
-    Ans = det( Deviatoric( Obj ) )
+    Ans = det( Deviatoric( obj ) )
   END IF
 END PROCEDURE j3_obj
 
@@ -89,7 +89,7 @@ END PROCEDURE j3_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE det_obj
-  ASSOCIATE( T => Obj%T )
+  ASSOCIATE( T => obj%T )
     Ans = T(1,1)*(T(2,2)*T(3,3)-T(2,3)*T(3,2)) &
           & - T(1,2)*(T(2,1)*T(3,3)-T(2,3)*T(3,1)) &
           & + T(1,3)*(T(2,1)*T(3,2)-T(3,1)*T(2,2))
@@ -120,8 +120,8 @@ END PROCEDURE theta_obj_j2j3
 
 MODULE PROCEDURE theta_obj
   Ans = LodeAngle(LodeType=LodeType, &
-    & J2=J2( Obj, isDeviatoric ), &
-    & J3=J3( Obj, isDeviatoric ) )
+    & J2=J2( obj, isDeviatoric ), &
+    & J3=J3( obj, isDeviatoric ) )
 END PROCEDURE theta_obj
 
 !----------------------------------------------------------------------------
@@ -129,7 +129,7 @@ END PROCEDURE theta_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE iso_part_obj
-  CALL IsotropicTensor( Obj=Ans, Lambda=Trace( Obj ) / 3.0_DFP )
+  CALL IsotropicTensor( obj=Ans, Lambda=Trace( obj ) / 3.0_DFP )
 END PROCEDURE iso_part_obj
 
 !----------------------------------------------------------------------------
@@ -139,12 +139,12 @@ END PROCEDURE iso_part_obj
 MODULE PROCEDURE dev_part_obj
   REAL( DFP ) :: a
   ASSOCIATE( T => Ans%T )
-  a = Trace( Obj ) / 3.0_DFP
+  a = Trace( obj ) / 3.0_DFP
   T = 0.0_DFP
   T_11 = a
   T_22 = a
   T_33 = a
-  T = -T + Obj%T
+  T = -T + obj%T
   END ASSOCIATE
 END PROCEDURE dev_part_obj
 
@@ -158,12 +158,12 @@ MODULE PROCEDURE invariants_rank2
   isDev = INPUT( default = .FALSE., option=isDeviatoric )
   IF( isDev ) THEN
     Ans( 1 ) = 0.0
-    Ans( 2 ) = 0.5_DFP * Contraction( Obj, TRANSPOSE( obj ) )
-    Ans( 3 ) = Det( Obj )
+    Ans( 2 ) = 0.5_DFP * Contraction( obj, TRANSPOSE( obj ) )
+    Ans( 3 ) = Det( obj )
   ELSE
-    Ans( 1 ) = Trace( Obj )
-    Ans( 2 ) = 0.5_DFP * ( Ans( 1 ) ** 2 -  Trace( Obj, Power=2 ) )
-    Ans( 3 ) = Det( Obj )
+    Ans( 1 ) = Trace( obj )
+    Ans( 2 ) = 0.5_DFP * ( Ans( 1 ) ** 2 -  Trace( obj, Power=2 ) )
+    Ans( 3 ) = Det( obj )
   END IF
 END PROCEDURE invariants_rank2
 
@@ -173,11 +173,11 @@ END PROCEDURE invariants_rank2
 
 MODULE PROCEDURE eigen_r2t
   REAL( DFP ) :: Mat( 3, 3 )
-  Mat = Obj%T
-  IF( Obj%isSym ) THEN
+  Mat = obj%T
+  IF( obj%isSym ) THEN
     CALL JacobiMethod( Mat=Mat, EigenValues=WR, EigenVectors=QR, MaxIter = 20)
   ELSE
-    CALL spectral_r2t( Obj%T, QR=QR, WR=WR, QI=QI, WI=WI )
+    CALL spectral_r2t( obj%T, QR=QR, WR=WR, QI=QI, WI=WI )
   END IF
 END PROCEDURE eigen_r2t
 
@@ -227,7 +227,7 @@ END SUBROUTINE spectral_r2t
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE pd_r2t
-  CALL PD( Mat=Obj%T, R=R%T, U=U%T, V=V%T )
+  CALL PD( Mat=obj%T, R=R%T, U=U%T, V=V%T )
   U%isSym = .TRUE.
   V%isSym = .TRUE.
 END PROCEDURE pd_r2t

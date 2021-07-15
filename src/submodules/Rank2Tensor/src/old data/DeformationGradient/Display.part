@@ -23,7 +23,7 @@
 !                                                                      Display
 !------------------------------------------------------------------------------
 
- SUBROUTINE Display( Obj, UnitNo )
+ SUBROUTINE Display( obj, UnitNo )
 
     USE Utility, ONLY: Display_Array
 
@@ -33,7 +33,7 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( DeformationGradient_ ), INTENT( IN ) :: Obj
+    CLASS( DeformationGradient_ ), INTENT( IN ) :: obj
     INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 
     ! Define internal variables
@@ -45,10 +45,10 @@
         I = 6
     END IF
 
-    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL BlankLines( UnitNo = I )
-        WRITE( I, "(A)" ) "DeformationGradient_ Object is not initiated "
+        WRITE( I, "(A)" ) "DeformationGradient_ object is not initiated "
         WRITE( I, "(A)" ) "Nothing to show "
         CALL BlankLines( UnitNo = I )
         RETURN
@@ -57,7 +57,7 @@
 
     CALL BlankLines( UnitNo = I )
     CALL EqualLine( UnitNo = I )
-    WRITE( I, "(5X, A)" ) "|||| Deformation Gradient Obj Data ||||"
+    WRITE( I, "(5X, A)" ) "|||| Deformation Gradient obj Data ||||"
     CALL EqualLine( UnitNo = I )
     CALL BlankLines( UnitNo = I )
 
@@ -69,47 +69,47 @@
 
     DO j = 1, 3
 
-        WRITE( I, "(4x, 3G17.7)" ) Obj%T( j, : )
+        WRITE( I, "(4x, 3G17.7)" ) obj%T( j, : )
 
     END DO
     CALL BlankLines( UnitNo = I )
 
-    WRITE( I, "(A, I2 )" ) "NSD = ", Obj%NSD
+    WRITE( I, "(A, I2 )" ) "NSD = ", obj%NSD
     CALL BlankLines( UnitNo = I )
 
-    IF( ALLOCATED( Obj%R ) ) THEN
+    IF( ALLOCATED( obj%R ) ) THEN
 
-        CALL Display_Array( Obj%R, " R ", I )
-
-    END IF
-
-    IF( ALLOCATED( Obj%U ) ) THEN
-
-        CALL Display_Array( Obj%U, " U ", I )
+        CALL Display_Array( obj%R, " R ", I )
 
     END IF
 
-    IF( ALLOCATED( Obj%V ) ) THEN
+    IF( ALLOCATED( obj%U ) ) THEN
 
-        CALL Display_Array( Obj%V, " V ", I )
-
-    END IF
-
-    IF( ALLOCATED( Obj%EigenVal ) ) THEN
-
-        CALL Display_Array( Obj%EigenVal, " EigenValues ", I )
+        CALL Display_Array( obj%U, " U ", I )
 
     END IF
 
-    IF( ALLOCATED( Obj%EigenVec_U ) ) THEN
+    IF( ALLOCATED( obj%V ) ) THEN
 
-        CALL Display_Array( Obj%EigenVec_U, " Eigen Vectors of U ", I )
+        CALL Display_Array( obj%V, " V ", I )
 
     END IF
 
-    IF( ALLOCATED( Obj%EigenVec_V ) ) THEN
+    IF( ALLOCATED( obj%EigenVal ) ) THEN
 
-        CALL Display_Array( Obj%EigenVec_V, " Eigen Vectors of V ", I )
+        CALL Display_Array( obj%EigenVal, " EigenValues ", I )
+
+    END IF
+
+    IF( ALLOCATED( obj%EigenVec_U ) ) THEN
+
+        CALL Display_Array( obj%EigenVec_U, " Eigen Vectors of U ", I )
+
+    END IF
+
+    IF( ALLOCATED( obj%EigenVec_V ) ) THEN
+
+        CALL Display_Array( obj%EigenVec_V, " Eigen Vectors of V ", I )
 
     END IF
 

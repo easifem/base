@@ -42,62 +42,62 @@ MODULE PROCEDURE display_obj
   CALL Display( msg, UnitNo = I )
   CALL Blanklines( UnitNo = I )
   CALL Display( "SHAPE FUNCTION IN SPACE ::", UnitNo = I )
-  CALL Display( Obj%Quad, "Quadrature Point", I )
-  IF( ALLOCATED( Obj%N ) ) THEN
+  CALL Display( obj%Quad, "Quadrature Point", I )
+  IF( ALLOCATED( obj%N ) ) THEN
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%N, "Obj%N", I )
+    CALL Display( obj%N, "obj%N", I )
   END IF
-  IF( ALLOCATED( Obj%dNdXi ) ) THEN
+  IF( ALLOCATED( obj%dNdXi ) ) THEN
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%dNdXi, "Obj%dNdXi", I )
+    CALL Display( obj%dNdXi, "obj%dNdXi", I )
   END IF
-  IF( ALLOCATED( Obj%dNdXt ) ) THEN
+  IF( ALLOCATED( obj%dNdXt ) ) THEN
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%dNdXt, "Obj%dNdXt", I )
+    CALL Display( obj%dNdXt, "obj%dNdXt", I )
   END IF
-  IF( ALLOCATED( Obj%Jacobian ) ) THEN
+  IF( ALLOCATED( obj%Jacobian ) ) THEN
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%Jacobian, "Obj%Jacobian", I )
+    CALL Display( obj%Jacobian, "obj%Jacobian", I )
   END IF
-  IF( ALLOCATED( Obj%Js ) ) THEN
+  IF( ALLOCATED( obj%Js ) ) THEN
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%Js, "Obj%Js", I )
+    CALL Display( obj%Js, "obj%Js", I )
   END IF
-  IF( ALLOCATED( Obj%Thickness ) ) THEN
+  IF( ALLOCATED( obj%Thickness ) ) THEN
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%Thickness, "Obj%Thickness", I )
+    CALL Display( obj%Thickness, "obj%Thickness", I )
   END IF
-  IF( ALLOCATED( Obj%Coord ) ) THEN
+  IF( ALLOCATED( obj%Coord ) ) THEN
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%Coord, "Obj%Coord", I )
+    CALL Display( obj%Coord, "obj%Coord", I )
   END IF
-  IF( ALLOCATED( Obj%Normal ) ) THEN
+  IF( ALLOCATED( obj%Normal ) ) THEN
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%Normal, "Obj%Normal", I )
+    CALL Display( obj%Normal, "obj%Normal", I )
   END IF
-  SELECT TYPE( Obj )
+  SELECT TYPE( obj )
   TYPE IS (STElemShapeData_)
     CALL Blanklines( UnitNo = I )
     CALL Display( "SHAPE FUNCTION IN TIME ::", UnitNo = I )
     CALL Blanklines( UnitNo = I )
-    CALL Display( Obj%Jt, "Obj%Jt :: ", UnitNo = I  )
-    CALL Display( Obj%Theta, "Obj%Theta :: ", UnitNo = I  )
-    CALL Display( Obj%Wt, "Obj%Wt :: ", UnitNo = I  )
-    IF( ALLOCATED( Obj%T ) ) THEN
+    CALL Display( obj%Jt, "obj%Jt :: ", UnitNo = I  )
+    CALL Display( obj%Theta, "obj%Theta :: ", UnitNo = I  )
+    CALL Display( obj%Wt, "obj%Wt :: ", UnitNo = I  )
+    IF( ALLOCATED( obj%T ) ) THEN
       CALL Blanklines( UnitNo = I )
-      CALL Display( Obj%T, "Obj%T", UnitNo = I )
+      CALL Display( obj%T, "obj%T", UnitNo = I )
     END IF
-    IF( ALLOCATED( Obj%dTdTheta ) ) THEN
+    IF( ALLOCATED( obj%dTdTheta ) ) THEN
     CALL Blanklines( UnitNo = I )
-      CALL Display( Obj%dTdTheta, "Obj%dTdTheta", UnitNo = I )
+      CALL Display( obj%dTdTheta, "obj%dTdTheta", UnitNo = I )
     END IF
-    IF( ALLOCATED( Obj%dNTdt ) ) THEN
+    IF( ALLOCATED( obj%dNTdt ) ) THEN
       CALL Blanklines( UnitNo = I )
-      CALL Display( Obj%dNTdt, "Obj%dNTdt", UnitNo = I )
+      CALL Display( obj%dNTdt, "obj%dNTdt", UnitNo = I )
     END IF
-    IF( ALLOCATED( Obj%dNTdXt ) ) THEN
+    IF( ALLOCATED( obj%dNTdXt ) ) THEN
       CALL Blanklines( UnitNo = I )
-      CALL Display( Obj%dNTdXt, "Obj%dNTdXt", UnitNo = I )
+      CALL Display( obj%dNTdXt, "obj%dNTdXt", UnitNo = I )
     END IF
   END SELECT
 END PROCEDURE display_obj

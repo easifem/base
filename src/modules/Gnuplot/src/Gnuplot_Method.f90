@@ -1,7 +1,7 @@
 !----------------------------------------------------------------------------
 !    GnuPlot Interface
 !----------------------------------------------------------------------------
-!    Purpose:   Object Based Interface to GnuPlot from Fortran (ogpf)
+!    Purpose:   object Based Interface to GnuPlot from Fortran (ogpf)
 !    Platform:  Windows XP/Vista/7/10
 !               (It should work on other platforms, see the finalize_plot
 !                 subroutine below)

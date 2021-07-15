@@ -11,7 +11,7 @@ project(${project_name})
 enable_language(Fortran)
 
 add_library(${project_name}obj
-  OBJECT
+  objECT
   mod2.f90
   mod1.f90
 )
@@ -20,7 +20,7 @@ set_target_properties(${project_name}obj
   POSITION_INDEPENDENT_CODE 1
 )
 add_library(
-  ${project_name}lib STATIC $<TARGET_OBJECTS:${project_name}obj>)
+  ${project_name}lib STATIC $<TARGET_objECTS:${project_name}obj>)
 
 add_executable(main main.f90)
 target_link_libraries(main ${project_name}lib)

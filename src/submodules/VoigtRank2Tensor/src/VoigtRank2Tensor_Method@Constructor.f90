@@ -25,9 +25,9 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE init_from_vec
-ASSOCIATE( V => Obj%V, Scale => Obj%Scale )
+ASSOCIATE( V => obj%V, Scale => obj%Scale )
   V = 0.0_DFP
-  Obj%VoigtType = VoigtType
+  obj%VoigtType = VoigtType
   V( 1:6 ) = Vec( 1:6 )
   SELECT CASE( VoigtType )
   CASE( StrainTypeVoigt )
@@ -43,8 +43,8 @@ END PROCEDURE init_from_vec
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE init_from_mat
-ASSOCIATE( V => Obj%V, Scale => Obj%Scale )
-  Obj%VoigtType = VoigtType
+ASSOCIATE( V => obj%V, Scale => obj%Scale )
+  obj%VoigtType = VoigtType
   V( 1 ) = T( 1, 1 )
   V( 2 ) = T( 2, 2 )
   V( 3 ) = T( 3, 3 )
@@ -74,7 +74,7 @@ END PROCEDURE constructor1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE constructor2
-  CALL Initiate( Obj=Ans, T=T, VoigtType=VoigtType )
+  CALL Initiate( obj=Ans, T=T, VoigtType=VoigtType )
 END PROCEDURE constructor2
 
 !----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ END PROCEDURE constructor2
 
 MODULE PROCEDURE constructor_1
   ALLOCATE( Ans )
-  CALL Initiate( Obj=Ans, Vec=Vec, VoigtType = VoigtType )
+  CALL Initiate( obj=Ans, Vec=Vec, VoigtType = VoigtType )
 END PROCEDURE constructor_1
 
 !----------------------------------------------------------------------------
@@ -92,7 +92,7 @@ END PROCEDURE constructor_1
 
 MODULE PROCEDURE constructor_2
   ALLOCATE( Ans )
-  CALL Initiate( Obj=Ans, T=T, VoigtType=VoigtType )
+  CALL Initiate( obj=Ans, T=T, VoigtType=VoigtType )
 END PROCEDURE constructor_2
 
 !----------------------------------------------------------------------------
@@ -100,7 +100,7 @@ END PROCEDURE constructor_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE mat_eq_obj
-  ASSOCIATE( V => Obj%V, Scale => Obj%Scale )
+  ASSOCIATE( V => obj%V, Scale => obj%Scale )
   T = 0.0_DFP
   T( 1, 1 ) = V( 1 )
   T( 2, 2 ) = V( 2 )
@@ -119,7 +119,7 @@ END PROCEDURE mat_eq_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vec_eq_obj
-  vec = Obj%V
+  vec = obj%V
 END PROCEDURE vec_eq_obj
 
 END SUBMODULE Constructor

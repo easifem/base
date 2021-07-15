@@ -55,8 +55,8 @@ PRIVATE
 !@endtodo
 
 INTERFACE
-MODULE  FUNCTION ASUMScalar( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE  FUNCTION ASUMScalar( obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   REAL( DFP ) :: Ans
 END FUNCTION ASUMScalar
 END INTERFACE
@@ -118,8 +118,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE  FUNCTION ASUMvector( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
+MODULE  FUNCTION ASUMvector( obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
   REAL( DFP ) :: Ans
 END FUNCTION ASUMvector
 END INTERFACE
@@ -350,7 +350,7 @@ END INTERFACE
 ! summary: 	This routine copies one vector into another
 !
 !### Introduction
-! This subroutine copy an instance of [[RealVector_]] in another fortran vector, i.e. `Val=Obj`
+! This subroutine copy an instance of [[RealVector_]] in another fortran vector, i.e. `Val=obj`
 !
 !@note
 ! 	This subroutine internally calls [[intrinsicCOPYintrinsic]]. Also `Val` is allocatable.
@@ -388,12 +388,12 @@ END INTERFACE
 ! summary: 	This routine copies one vector into another
 !
 !### Introduction
-! This subroutine copy a vector of [[RealVector_]] into another vector, i.e. `Obj1=Obj2` see the figure below:
+! This subroutine copy a vector of [[RealVector_]] into another vector, i.e. `obj1=obj2` see the figure below:
 !
 ! <img src=|media|/vector_copy_vector.jpg alt="drawing" style="max-width:500px;"/>
 !
 !@note
-! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine. Also note that `Obj1` and `Obj2` are vectors of [[RealVector_]] data type.
+! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine. Also note that `obj1` and `obj2` are vectors of [[RealVector_]] data type.
 !@endnote
 !
 !
@@ -518,8 +518,8 @@ PUBLIC :: Compact
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTscalar( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj1, Obj2
+MODULE PURE FUNCTION scalarDOTscalar( obj1, obj2 ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj1, obj2
   REAL( DFP ) :: Ans
 END FUNCTION scalarDOTscalar
 END INTERFACE
@@ -541,9 +541,9 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTintrinsic( Obj, Val ) RESULT( Ans )
+MODULE PURE FUNCTION scalarDOTintrinsic( obj, Val ) RESULT( Ans )
   REAL ( DFP ), INTENT( IN ) :: Val( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   REAL( DFP ) :: Ans
 END FUNCTION scalarDOTintrinsic
 END INTERFACE
@@ -565,8 +565,8 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION vectorDOTvector( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj1( : ), Obj2( : )
+MODULE PURE FUNCTION vectorDOTvector( obj1, obj2 ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj1( : ), obj2( : )
   REAL( DFP ) :: Ans
 END FUNCTION vectorDOTvector
 END INTERFACE
@@ -588,8 +588,8 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION vectorDOTscalar( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj1( : ), Obj2
+MODULE PURE FUNCTION vectorDOTscalar( obj1, obj2 ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj1( : ), obj2
   REAL( DFP ) :: Ans
 END FUNCTION vectorDOTscalar
 END INTERFACE
@@ -613,8 +613,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTvector( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj1, Obj2( : )
+MODULE PURE FUNCTION scalarDOTvector( obj1, obj2 ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj1, obj2( : )
   REAL( DFP ) :: Ans
 END FUNCTION scalarDOTvector
 END INTERFACE
@@ -655,12 +655,12 @@ PUBLIC :: DOT
 !### Usage
 !
 !```fortran
-!	s = NORM2(Obj)
+!	s = NORM2(obj)
 !```
 
 INTERFACE
-MODULE PURE FUNCTION NRM2scalar( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION NRM2scalar( obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   REAL( DFP ) :: Ans
 END FUNCTION NRM2scalar
 END INTERFACE
@@ -690,8 +690,8 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION NRM2vector( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
+MODULE PURE FUNCTION NRM2vector( obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
   REAL( DFP ) :: Ans
 END FUNCTION NRM2vector
 END INTERFACE

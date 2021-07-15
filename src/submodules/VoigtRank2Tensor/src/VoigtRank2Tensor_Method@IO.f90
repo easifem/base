@@ -26,10 +26,10 @@ CONTAINS
 
 MODULE PROCEDURE display_obj
   INTEGER( I4B ) :: I, j
-  ASSOCIATE( V => Obj%V )
+  ASSOCIATE( V => obj%V )
     I = INPUT( option=UnitNo, Default=StdOut )
     WRITE( I, "(A)" ) "# " // TRIM( Msg )
-    SELECT CASE( Obj%VoigtType )
+    SELECT CASE( obj%VoigtType )
     CASE( StressTypeVoigt )
       WRITE( I, "(A)" ) "Stress Like Voigt Type"
     CASE( StrainTypeVoigt )

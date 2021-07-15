@@ -20,56 +20,56 @@
 !==============================================================================
 
 !------------------------------------------------------------------------------
-!                                                       Obj_Times_Scalar
+!                                                       obj_Times_Scalar
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Times_Scalar( Obj, Scalar )
+ FUNCTION obj_Times_Scalar( obj, Scalar )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Obj .Contraction. Tensor
+!   1.  obj .Contraction. Tensor
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Scalar
-    REAL( DFP ), ALLOCATABLE :: Obj_Times_Scalar( :, : )
+    REAL( DFP ), ALLOCATABLE :: obj_Times_Scalar( :, : )
 
     ! Define internal variables
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Asterics.part", &
-        "Obj * Scalar", &
-        "Obj  is not initiated, Program Stopped!!!"&
+        "obj * Scalar", &
+        "obj  is not initiated, Program Stopped!!!"&
         )
         STOP
 
     END IF
 
-    N = .SIZE. Obj
-    ALLOCATE( Obj_Times_Scalar( N, N ) )
-    Obj_Times_Scalar = Obj%C * Scalar
+    N = .SIZE. obj
+    ALLOCATE( obj_Times_Scalar( N, N ) )
+    obj_Times_Scalar = obj%C * Scalar
 
- END FUNCTION Obj_Times_Scalar
+ END FUNCTION obj_Times_Scalar
 
 !------------------------------------------------------------------------------
-!                                                            Scalar_Times_Obj
+!                                                            Scalar_Times_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Scalar_Times_Obj( Scalar, Obj )
+ FUNCTION Scalar_Times_obj( Scalar, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Obj .Contraction. Tensor
+!   1.  obj .Contraction. Tensor
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Scalar
-    REAL( DFP ), ALLOCATABLE :: Scalar_Times_Obj( :, : )
+    REAL( DFP ), ALLOCATABLE :: Scalar_Times_obj( :, : )
 
-    Scalar_Times_Obj  = Obj_Times_Scalar( Obj, Scalar )
+    Scalar_Times_obj  = obj_Times_Scalar( obj, Scalar )
 
- END FUNCTION Scalar_Times_Obj
+ END FUNCTION Scalar_Times_obj
 

@@ -28,32 +28,32 @@ CONTAINS
 !                                                                 setMethod
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_SetValue_1
-  IF( ALLOCATED( Obj%Val ) ) THEN
+MODULE PROCEDURE intVec_set1
+  IF( ALLOCATED( obj%Val ) ) THEN
     IF( SIZE( Value ) .EQ. 1 ) THEN
-      Obj%Val( Indx ) = Value( 1 )
+      obj%Val( Indx ) = Value( 1 )
     ELSE
-      Obj%Val( Indx ) = Value
+      obj%Val( Indx ) = Value
     END IF
   END IF
-END PROCEDURE IntVec_SetValue_1
+END PROCEDURE intVec_set1
 
 !----------------------------------------------------------------------------
 !                                                                 setMethod
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVec_SetValue_2
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    Obj%Val(Indx) = Value
+MODULE PROCEDURE intVec_set2
+  IF( ALLOCATED( obj%Val ) ) THEN
+    obj%Val(Indx) = Value
   END IF
-END PROCEDURE IntVec_SetValue_2
+END PROCEDURE intVec_set2
 
 !----------------------------------------------------------------------------
 !                                                                     Append
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_1
-  CALL Append( Obj%Val, Value )
+  CALL Append( obj%Val, Value )
 END PROCEDURE IntVec_Append_1
 
 !----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ END PROCEDURE IntVec_Append_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_2
-  CALL Append( Obj%Val, Value )
+  CALL Append( obj%Val, Value )
 END PROCEDURE IntVec_Append_2
 
 !----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ END PROCEDURE IntVec_Append_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_3
-  CALL Append( Obj%Val, AnotherObj%Val )
+  CALL Append( obj%Val, Anotherobj%Val )
 END PROCEDURE IntVec_Append_3
 
 !----------------------------------------------------------------------------
@@ -81,22 +81,22 @@ MODULE PROCEDURE IntVec_RemoveDuplicates_1
   INTEGER( I4B ) :: i,k, j, N
   INTEGER( I4B ), ALLOCATABLE :: Res( : )
 
-  IF( ALLOCATED( Obj%Val )  ) THEN
+  IF( ALLOCATED( obj%Val )  ) THEN
 
-    N = SIZE ( Obj%Val )
+    N = SIZE ( obj%Val )
     ALLOCATE( Res( N ) )
     Res = 0
-    Res( 1 ) = Obj%Val ( 1 )
+    Res( 1 ) = obj%Val ( 1 )
     k = 1
 
     DO i = 2, N
-      IF( .NOT. ANY( Res .EQ. Obj%Val( i ) ) ) THEN
+      IF( .NOT. ANY( Res .EQ. obj%Val( i ) ) ) THEN
         k = k + 1
-        Res( k ) = Obj%Val( i )
+        Res( k ) = obj%Val( i )
       END IF
     END DO
 
-    Obj%Val = Res( 1 : k )
+    obj%Val = Res( 1 : k )
     DEALLOCATE( Res )
 
   END IF
@@ -112,22 +112,22 @@ MODULE PROCEDURE IntVec_RemoveDuplicates_2
   INTEGER( I4B ) :: i,k, j, N
   INTEGER( I4B ), ALLOCATABLE :: Res( : )
 
-  IF( ALLOCATED( Obj )  ) THEN
+  IF( ALLOCATED( obj )  ) THEN
 
-    N = SIZE ( Obj )
+    N = SIZE ( obj )
     ALLOCATE( Res( N ) )
     Res = 0
-    Res( 1 ) = Obj ( 1 )
+    Res( 1 ) = obj ( 1 )
     k = 1
 
     DO i = 2, N
-      IF( .NOT. ANY( Res .EQ. Obj( i ) ) ) THEN
+      IF( .NOT. ANY( Res .EQ. obj( i ) ) ) THEN
         k = k + 1
-        Res( k ) = Obj( i )
+        Res( k ) = obj( i )
       END IF
     END DO
 
-    Obj = Res( 1 : k )
+    obj = Res( 1 : k )
     DEALLOCATE( Res )
 
   END IF
@@ -152,7 +152,7 @@ END PROCEDURE IntVec_Repeat_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Repeat_2
-  Ans = Repeat( Obj%Val, rtimes )
+  Ans = Repeat( obj%Val, rtimes )
 END PROCEDURE IntVec_Repeat_2
 
 !----------------------------------------------------------------------------

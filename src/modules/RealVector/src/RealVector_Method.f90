@@ -40,14 +40,14 @@ PRIVATE
 ! summary: 	This function returns the shape of [[RealVector_]]
 
 INTERFACE
-MODULE PURE FUNCTION get_shape( Obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_shape( obj ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans( 1 )
-END FUNCTION get_shape
+END FUNCTION realVec_shape
 END INTERFACE
 
 INTERFACE Shape
-  MODULE PROCEDURE get_shape
+  MODULE PROCEDURE realVec_shape
 END INTERFACE Shape
 
 PUBLIC :: Shape
@@ -61,15 +61,15 @@ PUBLIC :: Shape
 ! summary: 	This function returns the size of [[RealVector_]]
 
 INTERFACE
-MODULE PURE FUNCTION get_size( Obj, Dims ) RESULT( Ans )
-  TYPE( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_size( obj, Dims ) RESULT( Ans )
+  TYPE( RealVector_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: Dims
   INTEGER( I4B ) :: Ans
-END FUNCTION get_size
+END FUNCTION realVec_size
 END INTERFACE
 
 INTERFACE SIZE
-  MODULE PROCEDURE get_size
+  MODULE PROCEDURE realVec_size
 END INTERFACE SIZE
 
 PUBLIC :: SIZE
@@ -112,8 +112,8 @@ PUBLIC :: getTotalDimension
 ! This subroutine sets the rank(total dimension) of an array
 
 INTERFACE
-MODULE PURE SUBROUTINE RealVec_setTotalDimension( Obj, tDimension )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE RealVec_setTotalDimension( obj, tDimension )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: tDimension
 END SUBROUTINE RealVec_setTotalDimension
 END INTERFACE
@@ -145,14 +145,14 @@ PUBLIC :: setTotalDimension
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Allocate_Data( Obj, Dims )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realVec_AllocateData( obj, Dims )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Dims
-END SUBROUTINE Allocate_Data
+END SUBROUTINE realVec_AllocateData
 END INTERFACE
 
 INTERFACE AllocateData
-  MODULE PROCEDURE Allocate_Data
+  MODULE PROCEDURE realVec_AllocateData
 END INTERFACE AllocateData
 
 PUBLIC :: AllocateData
@@ -166,13 +166,13 @@ PUBLIC :: AllocateData
 ! summary: 	This subroutine deallocates the data in [[RealVector_]]
 
 INTERFACE
-MODULE PURE SUBROUTINE Deallocate_Data( Obj )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
-END SUBROUTINE Deallocate_Data
+MODULE PURE SUBROUTINE realVec_DeallocateData( obj )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
+END SUBROUTINE realVec_DeallocateData
 END INTERFACE
 
 INTERFACE DeallocateData
-  MODULE PROCEDURE Deallocate_Data
+  MODULE PROCEDURE realVec_DeallocateData
 END INTERFACE DeallocateData
 
 PUBLIC :: DeallocateData
@@ -192,14 +192,14 @@ PUBLIC :: DeallocateData
 !@endnote
 !
 ! ```fortran
-! CALL Initiate(Obj, 5)
+! CALL Initiate(obj, 5)
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj( Obj, tSize )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realVec_initiate1( obj, tSize )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: tSize
-END SUBROUTINE initiate_obj
+END SUBROUTINE realVec_initiate1
 
 END INTERFACE
 
@@ -214,7 +214,7 @@ END INTERFACE
 !### Introduction
 ! This subroutine allocate the memory for a vector of type [[RealVector_]]
 !@note
-! The size of `Obj` would be same as the size of `tSize`
+! The size of `obj` would be same as the size of `tSize`
 !@endnote
 !
 !
@@ -225,15 +225,15 @@ END INTERFACE
 ! call display("test2")
 ! call equalline()
 ! call initiate(obj, [10,10,5,5])
-! call display( obj, "initiate Obj(:)=")
+! call display( obj, "initiate obj(:)=")
 ! call dashline()
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_vector( Obj, tSize )
-  TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT ) :: Obj( : )
+MODULE PURE SUBROUTINE realVec_Initiate2( obj, tSize )
+  TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT ) :: obj( : )
   INTEGER( I4B ), INTENT( IN ) :: tSize( : )
-END SUBROUTINE initiate_obj_vector
+END SUBROUTINE realVec_Initiate2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -257,15 +257,15 @@ END INTERFACE
 ! call equalline()
 ! call initiate(obj, 2, 10)
 ! obj%val(2) = 1.0_DFP
-! call display( obj, "initiate Obj(a:b)=")
+! call display( obj, "initiate obj(a:b)=")
 ! call dashline()
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_ab( Obj, a, b )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realVec_Initiate3( obj, a, b )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: a, b
-END SUBROUTINE initiate_obj_ab
+END SUBROUTINE realVec_Initiate3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -277,7 +277,7 @@ END INTERFACE
 ! summary: 	Generic subroutine to initiate [[RealVector_]]
 
 INTERFACE Initiate
-  MODULE PROCEDURE initiate_obj, initiate_obj_vector, initiate_obj_ab
+  MODULE PROCEDURE realVec_initiate1, realVec_initiate2, realVec_initiate3
 END INTERFACE Initiate
 
 PUBLIC :: Initiate
@@ -307,10 +307,10 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE SUBROUTINE random_number_obj( Obj, tsize )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE SUBROUTINE realVec_Random_Number1( obj, tsize )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: tsize
-END SUBROUTINE random_number_obj
+END SUBROUTINE realVec_Random_Number1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -326,7 +326,7 @@ END INTERFACE
 ! This routine calls `RANDOM_NUMBER` to generate a random instnance of [[RealVector_]]
 !
 !@note
-! 	Here argument `Obj` is a vector of [[RealVector_]] data-types.
+! 	Here argument `obj` is a vector of [[RealVector_]] data-types.
 !@endnote
 !
 !### Usage
@@ -341,20 +341,20 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE SUBROUTINE random_number_obj_vec( Obj, tsize )
-  TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT) :: Obj(:)
+MODULE SUBROUTINE realVec_Random_Number2( obj, tsize )
+  TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT) :: obj(:)
   INTEGER( I4B ), INTENT( IN ) :: tsize( : )
-END SUBROUTINE random_number_obj_vec
+END SUBROUTINE realVec_Random_Number2
 END INTERFACE
 
 INTERFACE RANDOM_NUMBER
-  MODULE PROCEDURE random_number_obj, random_number_obj_vec
+  MODULE PROCEDURE realVec_Random_Number1, realVec_Random_Number2
 END INTERFACE RANDOM_NUMBER
 
 PUBLIC :: RANDOM_NUMBER
 
 !----------------------------------------------------------------------------
-!                                                         Vector@Constructor
+!                                                    RealVector@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -377,10 +377,10 @@ PUBLIC :: RANDOM_NUMBER
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Constructor1( tSize ) RESULT( Obj )
-  TYPE( RealVector_ ) :: Obj
+MODULE PURE FUNCTION realVec_Constructor1( tSize ) RESULT( obj )
+  TYPE( RealVector_ ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: tSize
-END FUNCTION Constructor1
+END FUNCTION realVec_Constructor1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -414,10 +414,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Constructor2( Val ) RESULT( Obj )
-  TYPE( RealVector_ ) :: Obj
-  INTEGER(I4B), INTENT( IN ) :: Val( : )
-END FUNCTION Constructor2
+MODULE PURE FUNCTION realVec_Constructor2( Val ) RESULT( obj )
+  TYPE( RealVector_ ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: Val( : )
+END FUNCTION realVec_Constructor2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -452,10 +452,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Constructor3( Val ) RESULT( Obj )
-  TYPE( RealVector_ ) :: Obj
-  REAL(DFP), INTENT( IN ) :: Val( : )
-END FUNCTION Constructor3
+MODULE PURE FUNCTION realVec_Constructor3( Val ) RESULT( obj )
+  TYPE( RealVector_ ) :: obj
+  REAL( DFP ), INTENT( IN ) :: Val( : )
+END FUNCTION realVec_Constructor3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -463,13 +463,13 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE RealVector
-  MODULE PROCEDURE Constructor1, Constructor2, Constructor3
+  MODULE PROCEDURE realVec_Constructor1, realVec_Constructor2, realVec_Constructor3
 END INTERFACE RealVector
 
 PUBLIC :: RealVector
 
 !----------------------------------------------------------------------------
-!                                                 Vector_Pointer@Constructor
+!                                             RealVector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -494,10 +494,10 @@ PUBLIC :: RealVector
 
 
 INTERFACE
-MODULE PURE FUNCTION Constructor_1( tSize ) RESULT( Obj )
-  CLASS( RealVector_ ), POINTER :: Obj
+MODULE PURE FUNCTION realVec_Constructor_1( tSize ) RESULT( obj )
+  CLASS( RealVector_ ), POINTER :: obj
   INTEGER( I4B ), INTENT( IN ) :: tSize
-END FUNCTION Constructor_1
+END FUNCTION realVec_Constructor_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -531,10 +531,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Constructor_2( Val ) RESULT( Obj )
-  CLASS( RealVector_ ), POINTER :: Obj
-  INTEGER(I4B), INTENT( IN ) :: Val( : )
-END FUNCTION Constructor_2
+MODULE PURE FUNCTION realVec_Constructor_2( Val ) RESULT( obj )
+  CLASS( RealVector_ ), POINTER :: obj
+  INTEGER( I4B ), INTENT( IN ) :: Val( : )
+END FUNCTION realVec_Constructor_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -568,10 +568,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Constructor_3( Val ) RESULT( Obj )
-  CLASS( RealVector_ ), POINTER :: Obj
-  REAL(DFP), INTENT( IN ) :: Val( : )
-END FUNCTION Constructor_3
+MODULE PURE FUNCTION realVec_Constructor_3( Val ) RESULT( obj )
+  CLASS( RealVector_ ), POINTER :: obj
+  REAL( DFP ), INTENT( IN ) :: Val( : )
+END FUNCTION realVec_Constructor_3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -579,92 +579,226 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE RealVector_Pointer
-  MODULE PROCEDURE Constructor_1, Constructor_2, Constructor_3
+  MODULE PROCEDURE realVec_Constructor_1, realVec_Constructor_2, realVec_Constructor_3
 END INTERFACE RealVector_Pointer
 
 PUBLIC :: RealVector_Pointer
 
+!----------------------------------------------------------------------------
+!                                                    SHALLOWCOPY@Constructor
+!----------------------------------------------------------------------------
 
-!----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
-!----------------------------------------------------------------------------
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 |June 2021
+! summary: Copy only the structure for Y = X
 
 INTERFACE
-MODULE PURE SUBROUTINE intrinsicSHALLOWCOPYintrinsic( Y, X )
+MODULE PURE SUBROUTINE realVec_SHALLOWCOPY1( Y, X )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
   REAL( DFP ), INTENT( IN ) :: X( : )
-END SUBROUTINE intrinsicSHALLOWCOPYintrinsic
+END SUBROUTINE realVec_SHALLOWCOPY1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
+!                                                    SHALLOWCOPY@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 |June 2021
+! summary: Copy only the structure for Y = X
+
 INTERFACE
-MODULE PURE SUBROUTINE scalarSHALLOWCOPYscalar( Y, X )
+MODULE PURE SUBROUTINE realVec_SHALLOWCOPY2( Y, X )
   TYPE( RealVector_ ), INTENT( INOUT ) :: Y
   CLASS( RealVector_ ), INTENT( IN ) :: X
-END SUBROUTINE scalarSHALLOWCOPYscalar
+END SUBROUTINE realVec_SHALLOWCOPY2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
+!                                                    SHALLOWCOPY@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 |June 2021
+! summary: Copy only the structure for Y = X
+
 INTERFACE
-MODULE PURE SUBROUTINE vectorSHALLOWCOPYvector( Y, X )
+MODULE PURE SUBROUTINE realVec_SHALLOWCOPY3( Y, X )
   TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Y( : )
   CLASS( RealVector_ ), INTENT( IN ) :: X( : )
-END SUBROUTINE vectorSHALLOWCOPYvector
+END SUBROUTINE realVec_SHALLOWCOPY3
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
+!                                                    SHALLOWCOPY@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 |June 2021
+! summary: Copy only the structure for Y = X
+
 INTERFACE
-MODULE PURE SUBROUTINE scalarSHALLOWCOPYvector( Y, X )
+MODULE PURE SUBROUTINE realVec_SHALLOWCOPY4( Y, X )
   TYPE( RealVector_ ), INTENT( INOUT ) :: Y
   CLASS( RealVector_ ), INTENT( IN ) :: X( : )
-END SUBROUTINE scalarSHALLOWCOPYvector
+END SUBROUTINE realVec_SHALLOWCOPY4
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
+!                                                    SHALLOWCOPY@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 |June 2021
+! summary: Copy only the structure for Y = X
+
 INTERFACE
-MODULE SUBROUTINE scalarSHALLOWCOPYintrinsic( Y, X )
+MODULE PURE SUBROUTINE realVec_SHALLOWCOPY5( Y, X )
   CLASS( RealVector_ ), INTENT( INOUT ) :: Y
   REAL( DFP ), INTENT( IN ) :: X( : )
-END SUBROUTINE scalarSHALLOWCOPYintrinsic
+END SUBROUTINE realVec_SHALLOWCOPY5
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
+!                                                    SHALLOWCOPY@Constructor
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 |June 2021
+! summary: Copy only the structure for Y = X
 
 INTERFACE
-MODULE PURE SUBROUTINE intrinsicSHALLOWCOPYscalar( Y, X )
+MODULE PURE SUBROUTINE realVec_SHALLOWCOPY6( Y, X )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
   CLASS( RealVector_ ), INTENT( IN ) :: X
-END SUBROUTINE intrinsicSHALLOWCOPYscalar
+END SUBROUTINE realVec_SHALLOWCOPY6
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          SHALLOWCOPY@BLAS1
+!                                                    SHALLOWCOPY@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 |June 2021
+! summary: Copy only the structure for Y = X
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_SHALLOWCOPY7( Y, X )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
+END SUBROUTINE realVec_SHALLOWCOPY7
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    SHALLOWCOPY@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE SHALLOWCOPY
-  MODULE PROCEDURE intrinsicSHALLOWCOPYintrinsic, scalarSHALLOWCOPYscalar, &
-    & vectorSHALLOWCOPYvector, scalarSHALLOWCOPYvector, &
-    & scalarSHALLOWCOPYintrinsic
+  MODULE PROCEDURE realVec_SHALLOWCOPY1, realVec_SHALLOWCOPY2, &
+    & realVec_SHALLOWCOPY3, realVec_SHALLOWCOPY4, realVec_SHALLOWCOPY5, &
+    & realVec_SHALLOWCOPY6, realVec_SHALLOWCOPY7
 END INTERFACE SHALLOWCOPY
 
 PUBLIC :: SHALLOWCOPY
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                         Assign@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_assign1( lhs, rhs )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: lhs
+  CLASS( RealVector_ ), INTENT( IN ) :: rhs
+END SUBROUTINE realVec_assign1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Assign@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_assign2( lhs, rhs )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: lhs
+  CLASS( RealVector_ ), INTENT( IN ) :: rhs( : )
+END SUBROUTINE realVec_assign2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Assign@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_assign3( lhs, rhs )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: lhs
+  REAL( DFP ), INTENT( IN ) :: rhs( : )
+END SUBROUTINE realVec_assign3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Assign@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_assign4( lhs, rhs )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: rhs
+END SUBROUTINE realVec_assign4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Assign@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_assign5( lhs, rhs )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: rhs( : )
+END SUBROUTINE realVec_assign5
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Assign@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_assign6( lhs, rhs )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: lhs
+  INTEGER( I4B ), INTENT( IN ) :: rhs( : )
+END SUBROUTINE realVec_assign6
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Assign@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_assign7( lhs, rhs )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: rhs
+END SUBROUTINE realVec_assign7
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Assign@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_assign8( lhs, rhs )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: rhs( : )
+END SUBROUTINE realVec_assign8
+END INTERFACE
+
+INTERFACE ASSIGNMENT( = )
+  MODULE PROCEDURE realVec_assign1, realVec_assign2, realVec_assign3, &
+    & realVec_assign4, realVec_assign5, realVec_assign6, realVec_assign7, &
+    & realVec_assign8
+END INTERFACE ASSIGNMENT( = )
+
+PUBLIC :: ASSIGNMENT( = )
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -677,24 +811,24 @@ PUBLIC :: SHALLOWCOPY
 ! type(_obj_) :: obj
 ! integer( i4b ), allocatable :: nptrs( : )
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! nptrs = ArrayValues(obj, 1_I4B )
+! nptrs = get(obj, 1_I4B )
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1_I4B)
+! nptrs = get(obj, [2,3,4], 1_I4B)
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1_I4B)
+! nptrs = get(obj, 1,10, 2, 1_I4B)
 ! call display( nptrs, "nptrs =")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValues_Int( Obj, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
-  INTEGER(I4B), INTENT( IN ) :: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION f_getValues_Int
+MODULE PURE FUNCTION realVec_get1( obj, DataType ) RESULT( ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: DataType
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                              get@GetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -707,25 +841,25 @@ END INTERFACE
 ! type(_obj_) :: obj
 ! integer( i4b ), allocatable :: nptrs( : )
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! nptrs = ArrayValues(obj, 1_I4B )
+! nptrs = get(obj, 1_I4B )
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1_I4B)
+! nptrs = get(obj, [2,3,4], 1_I4B)
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1_I4B)
+! nptrs = get(obj, 1,10, 2, 1_I4B)
 ! call display( nptrs, "nptrs =")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getSectionValues_Int( Obj, Indx, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_get2( obj, Indx, DataType ) RESULT( ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  INTEGER(I4B), INTENT( IN ):: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION f_getSectionValues_Int
+  INTEGER( I4B ), INTENT( IN ):: DataType
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -738,26 +872,26 @@ END INTERFACE
 ! type(_obj_) :: obj
 ! integer( i4b ), allocatable :: nptrs( : )
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! nptrs = ArrayValues(obj, 1_I4B )
+! nptrs = get(obj, 1_I4B )
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1_I4B)
+! nptrs = get(obj, [2,3,4], 1_I4B)
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1_I4B)
+! nptrs = get(obj, 1,10, 2, 1_I4B)
 ! call display( nptrs, "nptrs =")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValuesFromTriplet_Int( Obj, iStart, iEnd, Stride, &
-  & DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_get3( obj, iStart, iEnd, Stride, &
+  & DataType ) RESULT( ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  INTEGER(I4B), INTENT( IN ):: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION f_getValuesFromTriplet_Int
+  INTEGER( I4B ), INTENT( IN ):: DataType
+  INTEGER( I4B ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get3
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                              get@GetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -770,24 +904,24 @@ END INTERFACE
 ! type(_obj_) :: obj
 ! real( dfp ), allocatable :: nptrs( : )
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! nptrs = ArrayValues(obj, 1.0_DFP )
+! nptrs = get(obj, 1.0_DFP )
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1.0_DFP)
+! nptrs = get(obj, [2,3,4], 1.0_DFP)
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1.0_DFP)
+! nptrs = get(obj, 1,10, 2, 1.0_DFP)
 ! call display( nptrs, "nptrs =")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValues_Real( Obj, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
-  REAL(DFP), INTENT( IN ) :: DataType
-  REAL(DFP), ALLOCATABLE :: Val( : )
-END FUNCTION f_getValues_Real
+MODULE PURE FUNCTION realVec_get4( obj, DataType ) RESULT( ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
+  REAL( DFP ), INTENT( IN ) :: DataType
+  REAL( DFP ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get4
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -800,25 +934,25 @@ END INTERFACE
 ! type(_obj_) :: obj
 ! real( dfp ), allocatable :: nptrs( : )
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! nptrs = ArrayValues(obj, 1.0_DFP )
+! nptrs = get(obj, 1.0_DFP )
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1.0_DFP)
+! nptrs = get(obj, [2,3,4], 1.0_DFP)
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1.0_DFP)
+! nptrs = get(obj, 1,10, 2, 1.0_DFP)
 ! call display( nptrs, "nptrs =")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getSectionValues_Real( Obj, Indx, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_get5( obj, Indx, DataType ) RESULT( ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  REAL(DFP), INTENT( IN ):: DataType
-  REAL(DFP), ALLOCATABLE :: Val( : )
-END FUNCTION f_getSectionValues_Real
+  REAL( DFP ), INTENT( IN ):: DataType
+  REAL( DFP ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get5
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                              get@GetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -831,26 +965,335 @@ END INTERFACE
 ! type(_obj_) :: obj
 ! real( dfp ), allocatable :: nptrs( : )
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! nptrs = ArrayValues(obj, 1.0_DFP )
+! nptrs = get(obj, 1.0_DFP )
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1.0_DFP)
+! nptrs = get(obj, [2,3,4], 1.0_DFP)
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1.0_DFP)
+! nptrs = get(obj, 1,10, 2, 1.0_DFP)
 ! call display( nptrs, "nptrs =")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValuesFromTriplet_Real( Obj, iStart, iEnd, Stride, &
-  & DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_get6( obj, iStart, iEnd, Stride, &
+  & DataType ) RESULT( ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  REAL(DFP), INTENT( IN ):: DataType
-  REAL(DFP), ALLOCATABLE :: Val( : )
-END FUNCTION f_getValuesFromTriplet_Real
+  REAL( DFP ), INTENT( IN ):: DataType
+  REAL( DFP ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get6
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                     get@GetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: This function returns the vector of integer from [[RealVector_]]
+!
+!### Usage
+!
+!```fortran
+! subroutine test11
+! type(_obj_) :: obj( 3 )
+! integer( I4B ), allocatable :: nptrs( : )
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, 1_I4B )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], 1_I4B)
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, 1_I4B)
+! call display( nptrs, "nptrs =")
+! end
+!```
+
+INTERFACE
+MODULE PURE FUNCTION realVec_get7( obj, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: DataType
+  INTEGER( I4B ), ALLOCATABLE :: Val( : )
+END FUNCTION realVec_get7
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns a vector of integer from [[RealVector_]]
+!
+!### Usage
+!
+!```fortran
+! subroutine test11
+! type(_obj_) :: obj( 3 )
+! integer( I4B ), allocatable :: nptrs( : )
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, 1_I4B )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], 1_I4B)
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, 1_I4B)
+! call display( nptrs, "nptrs =")
+! end
+!```
+
+INTERFACE
+MODULE PURE FUNCTION realVec_get8( obj, Indx, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: DataType
+  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
+  INTEGER( I4B ), ALLOCATABLE :: Val( : )
+END FUNCTION realVec_get8
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns an integer vector from [[RealVector_]]
+!
+!### Usage
+!
+!```fortran
+! subroutine test11
+! type(_obj_) :: obj( 3 )
+! integer( I4B ), allocatable :: nptrs( : )
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, 1_I4B )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], 1_I4B)
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, 1_I4B)
+! call display( nptrs, "nptrs =")
+! end
+!```
+
+INTERFACE
+MODULE PURE FUNCTION realVec_get9( obj, iStart, iEnd, &
+  & Stride, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
+  INTEGER( I4B ), INTENT( IN ):: DataType
+  INTEGER( I4B ), ALLOCATABLE :: Val( : )
+END FUNCTION realVec_get9
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns a vector of real from [[RealVector_]]
+!
+!### Usage
+!
+!```fortran
+! type(_obj_) :: obj( 3 )
+! real( dfp ), allocatable :: nptrs( : )
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, 1.0_DFP )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], 1.0_DFP )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, 1.0_DFP )
+! call display( nptrs, "nptrs =")
+!```
+
+INTERFACE
+MODULE PURE FUNCTION realVec_get10( obj, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  REAL( DFP ), INTENT( IN ) :: DataType
+  REAL( DFP ), ALLOCATABLE :: Val( : )
+END FUNCTION realVec_get10
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     get@GetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns a vector of real from [[RealVector_]]
+!
+!### Usage
+!
+!```fortran
+! type(_obj_) :: obj( 3 )
+! real( dfp ), allocatable :: nptrs( : )
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, 1.0_DFP )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], 1.0_DFP )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, 1.0_DFP )
+! call display( nptrs, "nptrs =")
+!```
+
+INTERFACE
+MODULE PURE FUNCTION realVec_get11( obj, Indx, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  REAL( DFP ), INTENT( IN ) :: DataType
+  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
+  REAL( DFP ), ALLOCATABLE :: Val( : )
+END FUNCTION realVec_get11
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns a vector of real from [[RealVector_]]
+!
+!### Usage
+!
+!```fortran
+! type(_obj_) :: obj( 3 )
+! real( dfp ), allocatable :: nptrs( : )
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, 1.0_DFP )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], 1.0_DFP )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, 1.0_DFP )
+! call display( nptrs, "nptrs =")
+!```
+
+INTERFACE
+MODULE PURE FUNCTION realVec_get12( obj, iStart, iEnd, Stride, &
+  & DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
+  REAL( DFP ), INTENT( IN ):: DataType
+  REAL( DFP ), ALLOCATABLE :: Val( : )
+END FUNCTION realVec_get12
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns the instance of [[RealVector_]]
+!
+!### Introduction
+! This function returns an scalar instance of [[RealVector_]] by combining different entries of a vector of [[RealVector_]]
+!
+!### Usage
+!
+!```fortran
+! type(_obj_) :: obj( 3 ), nptrs
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, TypeRealVector )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], TypeRealVector )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, TypeRealVector )
+! call display( nptrs, "nptrs =")
+!```
+
+INTERFACE
+MODULE PURE FUNCTION realVec_get13( obj, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  TYPE( RealVector_ ), INTENT( IN ) :: DataType
+  TYPE( RealVector_ ) :: Val
+END FUNCTION realVec_get13
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns the instance of [[RealVector_]]
+!
+!### Introduction
+! This function returns the instance of [[RealVector_]] from the vector of [[RealVector_]].
+!
+!### Usage
+!
+!```fortran
+! type(_obj_) :: obj( 3 ), nptrs
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, TypeRealVector )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], TypeRealVector )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, TypeRealVector )
+! call display( nptrs, "nptrs =")
+!```
+
+MODULE PURE FUNCTION realVec_get14( obj, Indx, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
+  TYPE( RealVector_ ), INTENT( IN ) :: DataType
+  TYPE( RealVector_ ) :: Val
+END FUNCTION realVec_get14
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns the instance of [[RealVector_]]
+!
+!### Introduction
+! This function returns the instance of [[RealVector_]] from the vector of [[RealVector_]].
+!
+!### Usage
+!
+!```fortran
+! type(_obj_) :: obj( 3 ), nptrs
+! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
+! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
+! obj(3) = RealVector([21,22,23,24,25])
+! nptrs = get(obj, TypeRealVector )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, [2,3,4], TypeRealVector )
+! call display( nptrs, "nptrs =")
+! nptrs = get(obj, 1,10, 2, TypeRealVector )
+! call display( nptrs, "nptrs =")
+!```
+
+INTERFACE
+MODULE PURE FUNCTION realVec_get15( obj, iStart, iEnd, Stride, &
+  & DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
+  TYPE( RealVector_ ), INTENT( IN ) :: DataType
+  TYPE( RealVector_ ) :: Val
+END FUNCTION realVec_get15
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -859,7 +1302,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This function returns an instance of [[RealVector_]] by using selective from `Obj`
+! This function returns an instance of [[RealVector_]] by using selective from `obj`
 !
 !### Usage
 !
@@ -868,23 +1311,23 @@ END INTERFACE
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
 ! nptrs = obj
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], TypeRealVector)
+! nptrs = get(obj, [2,3,4], TypeRealVector)
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, TypeRealVector)
+! nptrs = get(obj, 1,10, 2, TypeRealVector)
 ! call display( nptrs, "nptrs =")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getSectionValues_self( Obj, Indx, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_get16( obj, Indx, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   TYPE( RealVector_ ), INTENT( IN ) :: DataType
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
   TYPE( RealVector_ ) :: Val
-END FUNCTION f_getSectionValues_self
+END FUNCTION realVec_get16
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -902,360 +1345,52 @@ END INTERFACE
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
 ! nptrs = obj
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], TypeRealVector)
+! nptrs = get(obj, [2,3,4], TypeRealVector)
 ! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, TypeRealVector)
+! nptrs = get(obj, 1,10, 2, TypeRealVector)
 ! call display( nptrs, "nptrs =")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValuesFromTriplet_self( Obj, iStart, iEnd, Stride, &
+MODULE PURE FUNCTION realVec_get17( obj, iStart, iEnd, Stride, &
   & DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   TYPE( RealVector_ ), INTENT( IN ) :: DataType
   INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
   TYPE( RealVector_ ) :: Val
-END FUNCTION f_getValuesFromTriplet_self
+END FUNCTION realVec_get17
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: This function returns the vector of integer from [[RealVector_]]
-!
-!### Usage
-!
-!```fortran
-! subroutine test11
-! type(_obj_) :: obj( 3 )
-! integer( I4B ), allocatable :: nptrs( : )
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, 1_I4B )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1_I4B)
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1_I4B)
-! call display( nptrs, "nptrs =")
-! end
-!```
-
-INTERFACE
-MODULE PURE FUNCTION f_getARRAYValues_Int( Obj, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  INTEGER(I4B), INTENT( IN ) :: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION f_getARRAYValues_Int
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This function returns a vector of integer from [[RealVector_]]
-!
-!### Usage
-!
-!```fortran
-! subroutine test11
-! type(_obj_) :: obj( 3 )
-! integer( I4B ), allocatable :: nptrs( : )
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, 1_I4B )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1_I4B)
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1_I4B)
-! call display( nptrs, "nptrs =")
-! end
-!```
-
-INTERFACE
-MODULE PURE FUNCTION f_getARRAYSectionValues_Int( Obj, Indx, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  INTEGER(I4B), INTENT( IN ) :: DataType
-  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION f_getARRAYSectionValues_Int
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This function returns an integer vector from [[RealVector_]]
-!
-!### Usage
-!
-!```fortran
-! subroutine test11
-! type(_obj_) :: obj( 3 )
-! integer( I4B ), allocatable :: nptrs( : )
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, 1_I4B )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1_I4B)
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1_I4B)
-! call display( nptrs, "nptrs =")
-! end
-!```
-
-INTERFACE
-MODULE PURE FUNCTION f_getARRAYValuesFromTriplet_Int( Obj, iStart, iEnd, &
-  & Stride, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  INTEGER(I4B), INTENT( IN ):: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION f_getARRAYValuesFromTriplet_Int
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This function returns a vector of real from [[RealVector_]]
-!
-!### Usage
-!
-!```fortran
-! type(_obj_) :: obj( 3 )
-! real( dfp ), allocatable :: nptrs( : )
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, 1.0_DFP )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1.0_DFP )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1.0_DFP )
-! call display( nptrs, "nptrs =")
-!```
-
-INTERFACE
-MODULE PURE FUNCTION f_getARRAYValues_Real( Obj, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  REAL(DFP), INTENT( IN ) :: DataType
-  REAL(DFP), ALLOCATABLE :: Val( : )
-END FUNCTION f_getARRAYValues_Real
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This function returns a vector of real from [[RealVector_]]
-!
-!### Usage
-!
-!```fortran
-! type(_obj_) :: obj( 3 )
-! real( dfp ), allocatable :: nptrs( : )
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, 1.0_DFP )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1.0_DFP )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1.0_DFP )
-! call display( nptrs, "nptrs =")
-!```
-
-INTERFACE
-MODULE PURE FUNCTION f_getARRAYSectionValues_Real( Obj, Indx, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  REAL(DFP), INTENT( IN ) :: DataType
-  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  REAL(DFP), ALLOCATABLE :: Val( : )
-END FUNCTION f_getARRAYSectionValues_Real
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This function returns a vector of real from [[RealVector_]]
-!
-!### Usage
-!
-!```fortran
-! type(_obj_) :: obj( 3 )
-! real( dfp ), allocatable :: nptrs( : )
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, 1.0_DFP )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], 1.0_DFP )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, 1.0_DFP )
-! call display( nptrs, "nptrs =")
-!```
-
-INTERFACE
-MODULE PURE FUNCTION f_getARRAYValuesFromTriplet_Real( Obj, iStart, iEnd, Stride, &
-  & DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  REAL(DFP), INTENT( IN ):: DataType
-  REAL(DFP), ALLOCATABLE :: Val( : )
-END FUNCTION f_getARRAYValuesFromTriplet_Real
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This function returns the instance of [[RealVector_]]
-!
-!### Introduction
-! This function returns an scalar instance of [[RealVector_]] by combining different entries of a vector of [[RealVector_]]
-!
-!### Usage
-!
-!```fortran
-! type(_obj_) :: obj( 3 ), nptrs
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, TypeRealVector )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], TypeRealVector )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, TypeRealVector )
-! call display( nptrs, "nptrs =")
-!```
-
-INTERFACE
-MODULE PURE FUNCTION f_getARRAYValues_self( Obj, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  TYPE( RealVector_ ), INTENT( IN ) :: DataType
-  TYPE( RealVector_ ) :: Val
-END FUNCTION f_getARRAYValues_self
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This function returns the instance of [[RealVector_]]
-!
-!### Introduction
-! This function returns the instance of [[RealVector_]] from the vector of [[RealVector_]].
-!
-!### Usage
-!
-!```fortran
-! type(_obj_) :: obj( 3 ), nptrs
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, TypeRealVector )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], TypeRealVector )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, TypeRealVector )
-! call display( nptrs, "nptrs =")
-!```
-
-MODULE PURE FUNCTION f_getARRAYSectionValues_self( Obj, Indx, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  TYPE( RealVector_ ), INTENT( IN ) :: DataType
-  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  TYPE( RealVector_ ) :: Val
-END FUNCTION f_getARRAYSectionValues_self
+MODULE PURE FUNCTION realVec_get18( obj, indx, DataType ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: indx
+  REAL( DFP ), INTENT( IN ):: DataType
+  REAL( DFP ) :: val
+END FUNCTION realVec_get18
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
+!                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This function returns the instance of [[RealVector_]]
-!
-!### Introduction
-! This function returns the instance of [[RealVector_]] from the vector of [[RealVector_]].
-!
-!### Usage
-!
-!```fortran
-! type(_obj_) :: obj( 3 ), nptrs
-! obj(1) = RealVector([1,2,3,4,5,6,7,8,9,10])
-! obj(2) = RealVector([11,12,13,14,15,16,17,18,19,20])
-! obj(3) = RealVector([21,22,23,24,25])
-! nptrs = ArrayValues(obj, TypeRealVector )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, [2,3,4], TypeRealVector )
-! call display( nptrs, "nptrs =")
-! nptrs = ArrayValues(obj, 1,10, 2, TypeRealVector )
-! call display( nptrs, "nptrs =")
-!```
-
-INTERFACE
-MODULE PURE FUNCTION f_getARRAYValuesFromTriplet_self( Obj, iStart, iEnd, Stride, &
-  & DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
-  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  TYPE( RealVector_ ), INTENT( IN ) :: DataType
-  TYPE( RealVector_ ) :: Val
-END FUNCTION f_getARRAYValuesFromTriplet_self
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     ArrayValues@GetMethod
-!----------------------------------------------------------------------------
-
-INTERFACE ArrayValues
+INTERFACE get
   MODULE PROCEDURE &
-    & f_getSectionValues_self, &
-    & f_getValuesFromTriplet_self, &
-    & f_getARRAYValues_self, &
-    & f_getARRAYSectionValues_self, &
-    & f_getARRAYValuesFromTriplet_self, &
-    & f_getValues_Int, &
-    & f_getSectionValues_Int, &
-    & f_getValuesFromTriplet_Int, &
-    & f_getARRAYValues_Int, &
-    & f_getARRAYSectionValues_Int, &
-    & f_getARRAYValuesFromTriplet_Int, &
-    & f_getValues_Real, &
-    & f_getSectionValues_Real, &
-    & f_getValuesFromTriplet_Real, &
-    & f_getARRAYValues_Real, &
-    & f_getARRAYSectionValues_Real, &
-    & f_getARRAYValuesFromTriplet_Real
-END INTERFACE
+    & realVec_get1, realVec_get2, realVec_get3, realVec_get4, &
+    & realVec_get5, realVec_get6, realVec_get7, realVec_get8, &
+    & realVec_get9, realVec_get10, realVec_get11, realVec_get12, &
+    & realVec_get13, realVec_get14, realVec_get15, realVec_get16,&
+    & realVec_get17, realVec_get18
+END INTERFACE get
 
-PUBLIC :: ArrayValues
+PUBLIC :: get
 
 !----------------------------------------------------------------------------
-!                                                    ArrayPointers@getMethod
+!                                                    getPointer@getMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1269,28 +1404,57 @@ PUBLIC :: ArrayValues
 !
 !```fortran
 ! type(_obj_) :: obj
-! real(dfp), pointer :: ptr( : ) => null()
+! REAL( DFP ), pointer :: ptr( : ) => null()
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! ptr => ArrayValuesPointer(obj, 1.0_DFP)
+! ptr => getPointer(obj)
 ! call display( ptr, "ptr =" )
 !```
 
 INTERFACE
-MODULE FUNCTION f_getPointer_Real( Obj, DataType ) RESULT( Val )
-  CLASS( RealVector_ ), INTENT( IN ), TARGET :: Obj
-  REAL( DFP ), INTENT( IN ) :: DataType
+MODULE FUNCTION realVec_getPointer1( obj ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ), TARGET :: obj
   REAL( DFP ), POINTER :: Val( : )
-END FUNCTION f_getPointer_Real
+END FUNCTION realVec_getPointer1
 END INTERFACE
-
-INTERFACE ArrayValuesPointer
-  MODULE PROCEDURE f_getPointer_Real
-END INTERFACE
-
-PUBLIC :: ArrayValuesPointer
 
 !----------------------------------------------------------------------------
-!                                                           IndexOf@getMethod
+!                                                    getPointer@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	28 Feb 2021
+! summary: 	This function returns the pointer to vector of real numbers stored inside [[RealVector_]]
+!
+!### Introduction
+! This function returns the pointer to vector of real numbers stored inside [[RealVector_]] for a given degree of freedom
+!
+!### Usage
+!
+!```fortran
+! type(_obj_) :: obj
+! REAL( DFP ), pointer :: ptr( : ) => null()
+! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
+! ptr => getPointer(obj)
+! call display( ptr, "ptr =" )
+!```
+
+INTERFACE
+MODULE FUNCTION realVec_getPointer2( obj, dofobj, dofno ) RESULT( Val )
+  CLASS( RealVector_ ), INTENT( IN ), TARGET :: obj
+  TYPE( DOF_ ), INTENT( IN ) :: dofobj
+  INTEGER( I4B ), INTENT( IN ) :: dofno
+  REAL( DFP ), POINTER :: Val( : )
+END FUNCTION realVec_getPointer2
+END INTERFACE
+
+INTERFACE getPointer
+  MODULE PROCEDURE realVec_getPointer1, realVec_getPointer2
+END INTERFACE
+
+PUBLIC :: getPointer
+
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1306,17 +1470,17 @@ PUBLIC :: ArrayValuesPointer
 !```fortran
 ! type(_obj_) :: obj
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! call display( LOC(Obj=Obj, Value=6.0_DFP ), "LOC =" )
-! call display( LOC(Obj=Obj, Value=[6.0_DFP, 5.0_DFP] ), "LOC =" )
+! call display( LOC(obj=obj, Value=6.0_DFP ), "LOC =" )
+! call display( LOC(obj=obj, Value=[6.0_DFP, 5.0_DFP] ), "LOC =" )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION IndexOf_1( Obj, Value, tol ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_getIndex1( obj, Value, tol ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value
   REAL( DFP ), OPTIONAL, INTENT( IN ) :: tol
   INTEGER( I4B ) :: Ans
-END FUNCTION IndexOf_1
+END FUNCTION realVec_getIndex1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1337,17 +1501,17 @@ END INTERFACE
 !```fortran
 ! type(_obj_) :: obj
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! call display( LOC(Obj=Obj, Value=6.0_DFP ), "LOC =" )
-! call display( LOC(Obj=Obj, Value=[6.0_DFP, 5.0_DFP] ), "LOC =" )
+! call display( LOC(obj=obj, Value=6.0_DFP ), "LOC =" )
+! call display( LOC(obj=obj, Value=[6.0_DFP, 5.0_DFP] ), "LOC =" )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION IndexOf_2( Obj, Value, tol ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_getIndex2( obj, Value, tol ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value( : )
   REAL( DFP ), OPTIONAL, INTENT( IN ) :: tol
   INTEGER( I4B ), ALLOCATABLE :: Ans( : )
-END FUNCTION IndexOf_2
+END FUNCTION realVec_getIndex2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1358,14 +1522,14 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This generic function returns the location of value in [[RealVector_]]
 !
-INTERFACE LOC
-  MODULE PROCEDURE IndexOf_1, IndexOf_2
-END INTERFACE LOC
+INTERFACE getIndex
+  MODULE PROCEDURE realVec_getIndex1, realVec_getIndex2
+END INTERFACE getIndex
 
-PUBLIC :: LOC
+PUBLIC :: getIndex
 
 !----------------------------------------------------------------------------
-!                                                         isPresentgetMethod
+!                                                       isPresent@getMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1378,17 +1542,17 @@ PUBLIC :: LOC
 !```fortran
 ! type(_obj_) :: obj
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! call display( isPresent(Obj=Obj, Value=6.0_DFP ), "LOC =" )
-! ! call display( isPresent(Obj=Obj, Value=[6.0_DFP, 5.0_DFP] ), "LOC =" )
+! call display( isPresent(obj=obj, Value=6.0_DFP ), "LOC =" )
+! ! call display( isPresent(obj=obj, Value=[6.0_DFP, 5.0_DFP] ), "LOC =" )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION isPresent_1( Obj, Value, tol ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_isPresent1( obj, Value, tol ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value
   REAL( DFP ), OPTIONAL, INTENT( IN ) :: tol
   LOGICAL( LGT ) :: Ans
-END FUNCTION isPresent_1
+END FUNCTION realVec_isPresent1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1404,17 +1568,17 @@ END INTERFACE
 !```fortran
 ! type(_obj_) :: obj
 ! obj = RealVector([1,2,3,4,5,6,7,8,9,10])
-! call display( isPresent(Obj=Obj, Value=6.0_DFP ), "LOC =" )
-! ! call display( isPresent(Obj=Obj, Value=[6.0_DFP, 5.0_DFP] ), "LOC =" )
+! call display( isPresent(obj=obj, Value=6.0_DFP ), "LOC =" )
+! ! call display( isPresent(obj=obj, Value=[6.0_DFP, 5.0_DFP] ), "LOC =" )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION isPresent_2( Obj, Value, tol ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION realVec_isPresent2( obj, Value, tol ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value( : )
   REAL( DFP ), OPTIONAL, INTENT( IN ) :: tol
   LOGICAL( LGT ), ALLOCATABLE :: Ans( : )
-END FUNCTION isPresent_2
+END FUNCTION realVec_isPresent2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1422,7 +1586,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE isPresent
-  MODULE PROCEDURE isPresent_1, isPresent_2
+  MODULE PROCEDURE realVec_isPresent1, realVec_isPresent2
 END INTERFACE isPresent
 
 PUBLIC :: isPresent
@@ -1451,10 +1615,10 @@ PUBLIC :: isPresent
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Append_1( Obj, Value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realVec_Append1( obj, Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value
-END SUBROUTINE Append_1
+END SUBROUTINE realVec_Append1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1481,10 +1645,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Append_2( Obj, Value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realVec_Append2( obj, Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value( : )
-END SUBROUTINE Append_2
+END SUBROUTINE realVec_Append2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1511,35 +1675,35 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Append_3( Obj, AnotherObj )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
-  CLASS( RealVector_ ), INTENT( IN ) :: AnotherObj
-END SUBROUTINE Append_3
+MODULE PURE SUBROUTINE realVec_Append3( obj, Anotherobj )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
+  CLASS( RealVector_ ), INTENT( IN ) :: Anotherobj
+END SUBROUTINE realVec_Append3
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                          Append@setMethod
 !----------------------------------------------------------------------------
 INTERFACE Append
-  MODULE PROCEDURE Append_1, Append_2, Append_3
+  MODULE PROCEDURE realVec_Append1, realVec_Append2, realVec_Append3
 END INTERFACE Append
 
 PUBLIC :: Append
 
 !----------------------------------------------------------------------------
-!                                                         setValue@SetMethod
+!                                                              set@SetMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE realVec_setValue1( Obj, Indx, Value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE SUBROUTINE realVec_set1( obj, Indx, Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
   REAL( DFP ), INTENT( IN ) :: Value( : )
-END SUBROUTINE realVec_setValue1
+END SUBROUTINE realVec_set1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                         setValue@SetMethod
+!                                                              set@SetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1547,14 +1711,14 @@ END INTERFACE
 ! summary: Set all values to given scalar
 
 INTERFACE
-MODULE SUBROUTINE realVec_setValue2( Obj,  Value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE SUBROUTINE realVec_set2( obj,  Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value
-END SUBROUTINE realVec_setValue2
+END SUBROUTINE realVec_set2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                         setValue@SetMethod
+!                                                              set@SetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1562,14 +1726,14 @@ END INTERFACE
 ! summary: Set all values by given vector
 
 INTERFACE
-MODULE SUBROUTINE realVec_setValue3( Obj,  Value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE SUBROUTINE realVec_set3( obj,  Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value( : )
-END SUBROUTINE realVec_setValue3
+END SUBROUTINE realVec_set3
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                         setValue@SetMethod
+!                                                              set@SetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1577,15 +1741,15 @@ END INTERFACE
 ! summary: Set range of values to a scalar
 
 INTERFACE
-MODULE SUBROUTINE realVec_setValue4( Obj,  istart, iend, stride, Value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE SUBROUTINE realVec_set4( obj,  istart, iend, stride, Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: istart, iend, stride
   REAL( DFP ), INTENT( IN ) :: Value
-END SUBROUTINE realVec_setValue4
+END SUBROUTINE realVec_set4
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                         setValue@SetMethod
+!                                                              set@SetMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1593,16 +1757,16 @@ END INTERFACE
 ! summary: Set range of values to a vector
 
 INTERFACE
-MODULE SUBROUTINE realVec_setValue5( Obj,  istart, iend, stride, Value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Obj
+MODULE SUBROUTINE realVec_set5( obj,  istart, iend, stride, Value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: istart, iend, stride
   REAL( DFP ), INTENT( IN ) :: Value( : )
-END SUBROUTINE realVec_setValue5
+END SUBROUTINE realVec_set5
 END INTERFACE
 
 INTERFACE Set
-  MODULE PROCEDURE realVec_setValue1, realVec_setValue2, realVec_setValue3, &
-    & realVec_setValue4, realVec_setValue5
+  MODULE PROCEDURE realVec_set1, realVec_set2, realVec_set3, &
+    & realVec_set4, realVec_set5
 END INTERFACE Set
 
 PUBLIC :: Set
@@ -1612,11 +1776,11 @@ PUBLIC :: Set
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE Obj_Scalar_Display( Obj, msg, UnitNo )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE realVec_display1( obj, msg, UnitNo )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-END SUBROUTINE Obj_Scalar_Display
+END SUBROUTINE realVec_display1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1624,18 +1788,18 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE Obj_Vector_Display ( Obj, msg, UnitNo )
-  CLASS( RealVector_ ), INTENT( IN ) :: Obj( : )
+MODULE SUBROUTINE realVec_display2 ( obj, msg, UnitNo )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-END SUBROUTINE Obj_Vector_Display
+END SUBROUTINE realVec_display2
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                                 Display@IO
 !----------------------------------------------------------------------------
 INTERFACE Display
-  MODULE PROCEDURE Obj_Scalar_Display, Obj_Vector_Display
+  MODULE PROCEDURE realVec_display1, realVec_display2
 END INTERFACE Display
 
 PUBLIC :: Display

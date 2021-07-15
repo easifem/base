@@ -25,7 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_interpol_scalar
-  Interpol = MATMUL( Val, Obj%N )
+  Interpol = MATMUL( Val, obj%N )
 END PROCEDURE get_interpol_scalar
 
 !----------------------------------------------------------------------------
@@ -38,16 +38,16 @@ MODULE PROCEDURE get_interpol_fevar_scalar
     Interpol = getValues( Val, TypeFEVariableScalar, TypeFEVariableConstant )
   CASE( Space )
     IF( Val%DefineOn .Eq. Nodal ) THEN
-      Interpol = Interpolation( Obj, &
+      Interpol = Interpolation( obj, &
         & getValues( Val, TypeFEVariableScalar, TypeFEVariableSpace ) )
     ELSE
       Interpol = getValues( Val, TypeFEVariableScalar, TypeFEVariableSpace )
     END IF
   CASE( SpaceTime )
-    SELECT TYPE( Obj )
+    SELECT TYPE( obj )
     TYPE IS (STElemShapeData_ )
       IF( Val%DefineOn .EQ. Nodal ) THEN
-        Interpol = STInterpolation( Obj, &
+        Interpol = STInterpolation( obj, &
         & getValues( Val, TypeFEVariableScalar, TypeFEVariableSpaceTime ) )
       END  IF
     END SELECT
@@ -59,7 +59,7 @@ END PROCEDURE get_interpol_fevar_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_interpol_vector
-  Interpol = MATMUL( Val, Obj%N )
+  Interpol = MATMUL( Val, obj%N )
 END PROCEDURE get_interpol_vector
 
 !----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ END PROCEDURE get_interpol_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_interpol_matrix
-  Interpol = MATMUL( Val, Obj%N )
+  Interpol = MATMUL( Val, obj%N )
 END PROCEDURE get_interpol_matrix
 
 !----------------------------------------------------------------------------
@@ -81,14 +81,14 @@ SELECT CASE( Val%VarType )
 
     Interpol( :, :, 1 ) = getValues( Val, TypeFEVariableMatrix, &
       & TypeFEVariableConstant )
-    DO i = 2, SIZE(Obj%N,2)
+    DO i = 2, SIZE(obj%N,2)
       Interpol( :, :, i ) = Interpol( :, :, 1 )
     END DO
 
   CASE( Space )
 
     IF( Val%DefineOn .EQ. Nodal  ) THEN
-      Interpol = Interpolation( Obj, &
+      Interpol = Interpolation( obj, &
         & getValues( Val, TypeFEVariableMatrix, TypeFEVariableSpace ) )
     ELSE
       Interpol = getValues( Val, TypeFEVariableMatrix, TypeFEVariableSpace )
@@ -96,10 +96,10 @@ SELECT CASE( Val%VarType )
 
   CASE( SpaceTime )
 
-    SELECT TYPE( Obj )
+    SELECT TYPE( obj )
     TYPE IS (STElemShapeData_)
       IF( Val%DefineOn .EQ. Nodal  ) THEN
-        Interpol = STInterpolation( Obj, &
+        Interpol = STInterpolation( obj, &
           & getValues( Val, TypeFEVariableMatrix, TypeFEVariableSpaceTime ) )
       END IF
     END SELECT
@@ -112,7 +112,7 @@ END PROCEDURE get_interpol_fevar_matrix
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE interpol_scalar
-  Interpol = MATMUL( Val, Obj%N )
+  Interpol = MATMUL( Val, obj%N )
 END PROCEDURE interpol_scalar
 
 !----------------------------------------------------------------------------
@@ -120,7 +120,7 @@ END PROCEDURE interpol_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE interpol_vector
-  Interpol = MATMUL( Val, Obj%N )
+  Interpol = MATMUL( Val, obj%N )
 END PROCEDURE interpol_vector
 
 !----------------------------------------------------------------------------
@@ -128,7 +128,7 @@ END PROCEDURE interpol_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE interpol_matrix
-  Interpol = MATMUL( Val, Obj%N )
+  Interpol = MATMUL( Val, obj%N )
 END PROCEDURE interpol_matrix
 
 !----------------------------------------------------------------------------
@@ -136,7 +136,7 @@ END PROCEDURE interpol_matrix
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_get_interpol_scalar
-  Interpol = MATMUL( MATMUL( Val, Obj%T ), Obj%N )
+  Interpol = MATMUL( MATMUL( Val, obj%T ), obj%N )
 END PROCEDURE stsd_get_interpol_scalar
 
 !----------------------------------------------------------------------------
@@ -151,22 +151,22 @@ MODULE PROCEDURE stsd_get_interpol_fevar_scalar
     Interpol = getValues( Val, TypeFEVariableScalar, TypeFEVariableConstant )
   CASE( Space )
     IF( Val%DefineOn .Eq. Nodal ) THEN
-      Interpol( :, 1 ) = Interpolation( Obj(1), &
+      Interpol( :, 1 ) = Interpolation( obj(1), &
           & getValues( Val, TypeFEVariableScalar, TypeFEVariableSpace ) )
-      DO ii = 2, SIZE( Obj )
+      DO ii = 2, SIZE( obj )
         Interpol( :, ii ) = Interpol( :, 1 )
       END DO
     ELSE
       Interpol( :, 1 ) = getValues( Val, TypeFEVariableScalar,&
         & TypeFEVariableSpace )
-      DO ii = 2, SIZE( Obj )
+      DO ii = 2, SIZE( obj )
         Interpol( :, ii ) = Interpol( :, 1 )
       END DO
     END IF
   CASE( SpaceTime )
     IF( Val%DefineOn .Eq. Nodal ) THEN
-      DO ii = 1, SIZE( Obj )
-        Interpol( :, ii ) = STInterpolation( Obj( ii ), &
+      DO ii = 1, SIZE( obj )
+        Interpol( :, ii ) = STInterpolation( obj( ii ), &
           & getValues( Val, TypeFEVariableScalar, TypeFEVariableSpaceTime ) )
       END DO
     ELSE
@@ -181,7 +181,7 @@ END PROCEDURE stsd_get_interpol_fevar_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_get_interpol_vector
-  Interpol = MATMUL( MATMUL(Val, Obj%T), Obj%N )
+  Interpol = MATMUL( MATMUL(Val, obj%T), obj%N )
 END PROCEDURE stsd_get_interpol_vector
 
 !----------------------------------------------------------------------------
@@ -189,7 +189,7 @@ END PROCEDURE stsd_get_interpol_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_get_interpol_matrix
-  Interpol = MATMUL( MATMUL(Val, Obj%T), Obj%N )
+  Interpol = MATMUL( MATMUL(Val, obj%T), obj%N )
 END PROCEDURE stsd_get_interpol_matrix
 
 !----------------------------------------------------------------------------
@@ -211,7 +211,7 @@ MODULE PROCEDURE stsd_get_interpol_fevar_matrix
     END DO
   CASE( Space )
     IF( Val%DefineOn .Eq. Nodal ) THEN
-      Interpol( :, :, :, 1 ) = Interpolation( Obj(1), &
+      Interpol( :, :, :, 1 ) = Interpolation( obj(1), &
           & getValues( Val, TypeFEVariableMatrix, TypeFEVariableSpace ) )
       DO ii = 2, SIZE( Interpol, 4 )
         Interpol( :, :, :, ii ) = Interpol( :, :, :, 1 )
@@ -226,7 +226,7 @@ MODULE PROCEDURE stsd_get_interpol_fevar_matrix
   CASE( SpaceTime )
     IF( Val%DefineOn .Eq. Nodal ) THEN
       DO ii = 1, SIZE( Interpol, 4 )
-        Interpol( :, :, :, ii ) = STInterpolation( Obj( ii ), &
+        Interpol( :, :, :, ii ) = STInterpolation( obj( ii ), &
           & getValues( Val, TypeFEVariableMatrix, TypeFEVariableSpaceTime ) )
       END DO
     ELSE
@@ -241,7 +241,7 @@ END PROCEDURE stsd_get_interpol_fevar_matrix
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_interpol_scalar
-  Interpol = MATMUL( MATMUL( Val, Obj%T ), Obj%N )
+  Interpol = MATMUL( MATMUL( Val, obj%T ), obj%N )
 END PROCEDURE stsd_interpol_scalar
 
 !----------------------------------------------------------------------------
@@ -249,7 +249,7 @@ END PROCEDURE stsd_interpol_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_interpol_vector
-  Interpol = MATMUL( MATMUL(Val, Obj%T), Obj%N )
+  Interpol = MATMUL( MATMUL(Val, obj%T), obj%N )
 END PROCEDURE stsd_interpol_vector
 
 !----------------------------------------------------------------------------
@@ -257,7 +257,7 @@ END PROCEDURE stsd_interpol_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_interpol_matrix
-  Interpol = MATMUL( MATMUL(Val, Obj%T), Obj%N )
+  Interpol = MATMUL( MATMUL(Val, obj%T), obj%N )
 END PROCEDURE stsd_interpol_matrix
 
 !----------------------------------------------------------------------------
@@ -265,7 +265,7 @@ END PROCEDURE stsd_interpol_matrix
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getLocalGradient_scalar
-  dPhidXi = MATMUL( Val, Obj%dNdXi )
+  dPhidXi = MATMUL( Val, obj%dNdXi )
 END PROCEDURE getLocalGradient_scalar
 
 !----------------------------------------------------------------------------
@@ -273,7 +273,7 @@ END PROCEDURE getLocalGradient_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getLocalGradient_vector
-  dVdXi = MATMUL( Val, Obj%dNdXi )
+  dVdXi = MATMUL( Val, obj%dNdXi )
 END PROCEDURE getLocalGradient_vector
 
 !----------------------------------------------------------------------------
@@ -281,7 +281,7 @@ END PROCEDURE getLocalGradient_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_getLocalGradient_scalar
-  dPhidXi = MATMUL( MATMUL(Val, Obj%T), Obj%dNdXi )
+  dPhidXi = MATMUL( MATMUL(Val, obj%T), obj%dNdXi )
 END PROCEDURE stsd_getLocalGradient_scalar
 
 !----------------------------------------------------------------------------
@@ -289,7 +289,7 @@ END PROCEDURE stsd_getLocalGradient_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_getLocalGradient_vector
-  dVdXi = MATMUL( MATMUL(Val,Obj%T), Obj%dNdXi )
+  dVdXi = MATMUL( MATMUL(Val,obj%T), obj%dNdXi )
 END PROCEDURE stsd_getLocalGradient_vector
 
 !----------------------------------------------------------------------------
@@ -297,10 +297,10 @@ END PROCEDURE stsd_getLocalGradient_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getSpatialGradient_scalar
-  IF( Obj%refelem%nsd .EQ. obj%refelem%xidimension ) THEN
-    dPhidXt = MATMUL( Val, Obj%dNdXt )
+  IF( obj%refelem%nsd .EQ. obj%refelem%xidimension ) THEN
+    dPhidXt = MATMUL( Val, obj%dNdXt )
   ELSE
-    CALL Reallocate( dPhidXt, Obj%refelem%xidimension,size(Obj%N,2) )
+    CALL Reallocate( dPhidXt, obj%refelem%xidimension,size(obj%N,2) )
   END IF
 END PROCEDURE getSpatialGradient_scalar
 
@@ -309,11 +309,11 @@ END PROCEDURE getSpatialGradient_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getSpatialGradient_vector
-  IF( Obj%refelem%nsd .EQ. obj%refelem%xidimension ) THEN
-    dVdXt = MATMUL( Val, Obj%dNdXt )
+  IF( obj%refelem%nsd .EQ. obj%refelem%xidimension ) THEN
+    dVdXt = MATMUL( Val, obj%dNdXt )
   ELSE
-    CALL Reallocate( dVdXt, Obj%refelem%nsd, Obj%refelem%xidimension, &
-      & size(Obj%N,2) )
+    CALL Reallocate( dVdXt, obj%refelem%nsd, obj%refelem%xidimension, &
+      & size(obj%N,2) )
   END IF
 END PROCEDURE getSpatialGradient_vector
 
@@ -322,10 +322,10 @@ END PROCEDURE getSpatialGradient_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_getSpatialGradient_scalar
-  IF( Obj%refelem%nsd .EQ. obj%refelem%xidimension ) THEN
-    dPhidXt = MATMUL( MATMUL(Val,Obj%T), Obj%dNdXt )
+  IF( obj%refelem%nsd .EQ. obj%refelem%xidimension ) THEN
+    dPhidXt = MATMUL( MATMUL(Val,obj%T), obj%dNdXt )
   ELSE
-    CALL Reallocate( dPhidXt, Obj%refelem%xidimension,size(Obj%N,2) )
+    CALL Reallocate( dPhidXt, obj%refelem%xidimension,size(obj%N,2) )
   END IF
 END PROCEDURE stsd_getSpatialGradient_scalar
 
@@ -334,11 +334,11 @@ END PROCEDURE stsd_getSpatialGradient_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_getSpatialGradient_vector
-  IF( Obj%refelem%nsd .EQ. obj%refelem%xidimension ) THEN
-    dVdXt = MATMUL( MATMUL(Val,Obj%T), Obj%dNdXt )
+  IF( obj%refelem%nsd .EQ. obj%refelem%xidimension ) THEN
+    dVdXt = MATMUL( MATMUL(Val,obj%T), obj%dNdXt )
   ELSE
-    CALL Reallocate( dVdXt, Obj%refelem%nsd, Obj%refelem%xidimension, &
-      & size(Obj%N,2) )
+    CALL Reallocate( dVdXt, obj%refelem%nsd, obj%refelem%xidimension, &
+      & size(obj%N,2) )
   END IF
 END PROCEDURE stsd_getSpatialGradient_vector
 
@@ -349,9 +349,9 @@ END PROCEDURE stsd_getSpatialGradient_vector
 MODULE PROCEDURE getProjectionOfdNdXt_spacevalues
   ! Define internal variables
   INTEGER( I4B ) :: i
-  CALL Reallocate( cdNdXt, SIZE(Obj%N,1), SIZE(Obj%N,2) )
-  DO i = 1, SIZE(Obj%N,2)
-    cdNdXt( :, i ) = MATMUL( Obj%dNdXt( :, :, i ), Val )
+  CALL Reallocate( cdNdXt, SIZE(obj%N,1), SIZE(obj%N,2) )
+  DO i = 1, SIZE(obj%N,2)
+    cdNdXt( :, i ) = MATMUL( obj%dNdXt( :, :, i ), Val )
   END DO
 END PROCEDURE getProjectionOfdNdXt_spacevalues
 
@@ -369,7 +369,7 @@ MODULE PROCEDURE getProjectionOfdNdXt_fevar
 
   CASE( Constant )
 
-    CALL Reallocate( CBar, Obj%refelem%nsd, SIZE(Obj%N,2) )
+    CALL Reallocate( CBar, obj%refelem%nsd, SIZE(obj%N,2) )
     CBar( :, 1 ) = getValues( Val, TypeVariableVector, TypeVariableConstant )
     DO ii = 2, SIZE(CBar,2)
       CBar( :, ii ) = CBar( :, 1 )
@@ -378,7 +378,7 @@ MODULE PROCEDURE getProjectionOfdNdXt_fevar
   CASE( Space )
 
     IF( Val%DefineOn .EQ. Nodal ) THEN
-      CALL getInterpolation( Obj=Obj, Interpol = CBar, &
+      CALL getInterpolation( obj=obj, Interpol = CBar, &
         & Val = getValues( Val, TypeVariableVector, TypeVariableSpace ) )
     ELSE
       CBar = getValues( Val, TypeVariableVector, TypeVariableSpace )
@@ -386,17 +386,17 @@ MODULE PROCEDURE getProjectionOfdNdXt_fevar
 
   CASE( SpaceTime )
 
-    SELECT TYPE( Obj )
+    SELECT TYPE( obj )
     TYPE IS ( STElemShapeData_ )
-      CALL getInterpolation( Obj=Obj, Interpol = CBar, &
+      CALL getInterpolation( obj=obj, Interpol = CBar, &
         & Val = getValues( Val, TypeVariableVector, TypeVariableSpaceTime ) )
     END SELECT
 
   END SELECT
 
-  CALL Reallocate( cdNdXt, SIZE(Obj%N,1), SIZE(Obj%N,2) )
-  DO ii = 1, SIZE(Obj%N,2)
-    cdNdXt( :, ii ) = MATMUL( Obj%dNdXt( :, :, ii ), CBar( :, ii ) )
+  CALL Reallocate( cdNdXt, SIZE(obj%N,1), SIZE(obj%N,2) )
+  DO ii = 1, SIZE(obj%N,2)
+    cdNdXt( :, ii ) = MATMUL( obj%dNdXt( :, :, ii ), CBar( :, ii ) )
   END DO
 
   IF( ALLOCATED( CBar ) ) DEALLOCATE( CBar )
@@ -409,9 +409,9 @@ END PROCEDURE getProjectionOfdNdXt_fevar
 
 MODULE PROCEDURE getProjectionOfdNTdXt_constvector
   INTEGER( I4B ) :: ii
-  CALL Reallocate( cdNTdXt, SIZE(Obj%N,1), SIZE(Obj%T), SIZE(Obj%N,2) )
-  DO ii = 1, SIZE(Obj%N,2)
-    cdNTdXt( :, :, ii ) = MATMUL( Obj%dNTdXt( :, :, :, ii ), Val )
+  CALL Reallocate( cdNTdXt, SIZE(obj%N,1), SIZE(obj%T), SIZE(obj%N,2) )
+  DO ii = 1, SIZE(obj%N,2)
+    cdNTdXt( :, :, ii ) = MATMUL( obj%dNTdXt( :, :, :, ii ), Val )
   END DO
 END PROCEDURE getProjectionOfdNTdXt_constvector
 
@@ -425,7 +425,7 @@ MODULE PROCEDURE getProjectionOfdNTdXt_fevar
 
   SELECT CASE( Val%VarType )
   CASE( Constant )
-    CALL Reallocate( CBar, Obj%refelem%nsd, SIZE(Obj%N,2) )
+    CALL Reallocate( CBar, obj%refelem%nsd, SIZE(obj%N,2) )
     CBar(:,1) = getValues( Val, TypeVariableVector, TypeVariableConstant )
     DO ii = 2, SIZE( CBar, 2 )
       CBar( ii, : ) = CBar( :, 1 )
@@ -434,7 +434,7 @@ MODULE PROCEDURE getProjectionOfdNTdXt_fevar
   CASE( Space )
 
     IF( Val%DefineOn .EQ. Nodal ) THEN
-      CALL getInterpolation( Obj=Obj, Interpol = CBar, &
+      CALL getInterpolation( obj=obj, Interpol = CBar, &
         & Val = getValues( Val, TypeVariableVector, TypeVariableSpace ) )
     ELSE
       CBar = getValues( Val, TypeVariableVector, TypeVariableSpace )
@@ -442,14 +442,14 @@ MODULE PROCEDURE getProjectionOfdNTdXt_fevar
 
   CASE( SpaceTime )
 
-    CALL getInterpolation( Obj=Obj, Interpol = CBar, &
+    CALL getInterpolation( obj=obj, Interpol = CBar, &
       & Val = getValues( Val, TypeVariableVector, TypeVariableSpaceTime ) )
 
   END SELECT
 
-  CALL Reallocate( cdNTdXt, SIZE(Obj%N,1), SIZE(Obj%T), SIZE(Obj%N,2) )
-  DO ii = 1, SIZE(Obj%N,2)
-    cdNTdXt( :, :, ii ) = MATMUL( Obj%dNTdXt( :, :, :, ii ), CBar( :, ii ) )
+  CALL Reallocate( cdNTdXt, SIZE(obj%N,1), SIZE(obj%T), SIZE(obj%N,2) )
+  DO ii = 1, SIZE(obj%N,2)
+    cdNTdXt( :, :, ii ) = MATMUL( obj%dNTdXt( :, :, :, ii ), CBar( :, ii ) )
   END DO
 
   DEALLOCATE( CBar )
@@ -464,10 +464,10 @@ MODULE PROCEDURE getUnitNormal_scalar
   REAL( DFP ), ALLOCATABLE :: dPhidX( :, : ), PhiBar( : ), Norm_L2_Phi( : )
   INTEGER( I4B ) :: NSD, n, i
 
-  CALL getInterpolation( Obj = Obj, Val = Val, Interpol = PhiBar )
-  CALL getSpatialGradient( Obj = Obj, dPhidXt = dPhidX, Val = Val )
-  n = SIZE( Obj%N, 2 )
-  NSD = Obj%RefElem%NSD
+  CALL getInterpolation( obj = obj, Val = Val, Interpol = PhiBar )
+  CALL getSpatialGradient( obj = obj, dPhidXt = dPhidX, Val = Val )
+  n = SIZE( obj%N, 2 )
+  NSD = obj%RefElem%NSD
   IF( ALLOCATED( R ) ) THEN
     IF( ANY( SHAPE( R ) .NE. [ NSD, n ] ) ) THEN
       DEALLOCATE( R )
@@ -508,13 +508,13 @@ MODULE PROCEDURE getUnitNormal_vector
   INTEGER( I4B ) :: NSD, n, i
 
 
-  CALL getInterpolation( Obj = Obj, Interpol = VBar, Val = Val )
-  CALL getSpatialGradient( Obj = Obj, dVdXt = dVdX, Val = Val )
+  CALL getInterpolation( obj = obj, Interpol = VBar, Val = Val )
+  CALL getSpatialGradient( obj = obj, dVdXt = dVdX, Val = Val )
   ! Norm_L2_VBar = SQRT( SUM( VBar ** 2, DIM = 2 ) )
   Norm_L2_VBar = NORM2( VBar, DIM = 2 )
 
-  n = SIZE( Obj%N, 2 )
-  NSD = Obj%RefElem%NSD
+  n = SIZE( obj%N, 2 )
+  NSD = obj%RefElem%NSD
   IF( ALLOCATED( R ) ) THEN
     IF( ANY( SHAPE( R ) .NE. [ NSD, n ] ) ) THEN
       DEALLOCATE( R )

@@ -43,8 +43,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj( Obj, nsd, xidim, nns, nips )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_obj( obj, nsd, xidim, nns, nips )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
     !! object to be returned
   INTEGER( I4B ), INTENT( IN ) :: nsd
     !! spatial dimension
@@ -76,7 +76,7 @@ PUBLIC :: AllocateData
 !
 ! * This subroutine initiate the time shape function data in [[stelemshapedata_]].
 ! * For the effeciency purpose, user should supply an instance of [[Elemshapedata_]] on time element. This object will have information of location time shape function data such as `T, dTdtheta` etc.
-! * This routine uses `elemsd` to  set `Obj%T`, `Obj%dTdTheta`, `Obj%Jt`, `Obj%Wt`, `Obj%Theta`.
+! * This routine uses `elemsd` to  set `obj%T`, `obj%dTdTheta`, `obj%Jt`, `obj%Wt`, `obj%Theta`.
 ! * The following examples shows how to use it.
 !
 !### Usage
@@ -86,8 +86,8 @@ PUBLIC :: AllocateData
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_initiate( Obj, elemsd )
-  TYPE( STElemShapeData_ ), ALLOCATABLE, INTENT( INOUT ) :: Obj( : )
+MODULE PURE SUBROUTINE stsd_initiate( obj, elemsd )
+  TYPE( STElemShapeData_ ), ALLOCATABLE, INTENT( INOUT ) :: obj( : )
   TYPE( ElemShapeData_ ), INTENT( IN ) :: elemsd
     !! It has information about location shape function for time element
 END SUBROUTINE stsd_initiate
@@ -118,8 +118,8 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE deallocate_data( Obj )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE deallocate_data( obj )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE deallocate_data
 END INTERFACE
 
@@ -147,8 +147,8 @@ PUBLIC :: DeallocateData
 !```
 
 INTERFACE
-MODULE SUBROUTINE display_obj( Obj, Msg, UnitNo )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE display_obj( obj, Msg, UnitNo )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 END SUBROUTINE display_obj
@@ -182,8 +182,8 @@ PUBLIC :: Display
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE set_thickness( Obj, Val, N )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE set_thickness( obj, Val, N )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
     !! Nodal values of thickness
   REAL( DFP ), INTENT( IN ) :: N( :, : )
@@ -207,8 +207,8 @@ END INTERFACE
 ! $$d = d_{I}^{a} N^{I} T_{a}$$
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_thickness( Obj, Val, N, T )
-  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE stsd_set_thickness( obj, Val, N, T )
+  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
     !! Space-time nodal values of thickness
   REAL( DFP ), INTENT( IN ) :: N(:,:)
@@ -245,8 +245,8 @@ PUBLIC :: setThickness
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE set_coord( Obj, Val, N )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE set_coord( obj, Val, N )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
     !! Nodal coordinates in `xiJ` format
   REAL( DFP ), INTENT( IN ) :: N(:,:)
@@ -270,8 +270,8 @@ END INTERFACE
 ! $$x=x_{I}^{a} N^I T_a$$
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_coord( Obj, Val, N, T )
-  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE stsd_set_coord( obj, Val, N, T )
+  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
     !! space-time Nodal coordinates in `xiJ` format
   REAL( DFP ), INTENT( IN ) :: N( :, : ), T( : )
@@ -294,8 +294,8 @@ PUBLIC :: setBarycentricCoord
 ! summary: This subroutine set the determinent of jacobian
 
 INTERFACE
-MODULE PURE SUBROUTINE set_Js( Obj )
-  CLASS( ElemShapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE set_Js( obj )
+  CLASS( ElemShapeData_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE set_Js
 END INTERFACE
 
@@ -320,8 +320,8 @@ PUBLIC setJs
 ! set before calling this  subroutine.
 
 INTERFACE
-MODULE PURE SUBROUTINE set_dNdXt_internally( Obj )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE set_dNdXt_internally( obj )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE set_dNdXt_internally
 END INTERFACE
 
@@ -346,8 +346,8 @@ PUBLIC :: setdNdXt
 ! $$\frac{d x_i}{d \xi_j} = x_{iI}\frac{d N^I}{d \xi_j}$$
 
 INTERFACE
-MODULE PURE SUBROUTINE set_jacobian( Obj, Val, dNdXi )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE set_jacobian( obj, Val, dNdXi )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
     !! nodal coordinates in `xiJ` format
   REAL( DFP ), INTENT( IN ) :: dNdXi( :, :, : )
@@ -376,8 +376,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_jacobian( Obj, Val, dNdXi, T )
-  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE stsd_set_jacobian( obj, Val, dNdXi, T )
+  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
     !! Space time nodal values of coordinates
   REAL( DFP ), INTENT( IN ) :: dNdXi(:,:,:)
@@ -412,8 +412,8 @@ PUBLIC :: setJacobian
 ! \hat{v}_{k} $$
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_dNTdt( Obj, Val )
-  CLASS( STElemShapeData_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE stsd_set_dNTdt( obj, Val )
+  CLASS( STElemShapeData_ ), INTENT( INOUT) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
     !! Space-time nodal values
 END SUBROUTINE stsd_set_dNTdt
@@ -450,8 +450,8 @@ PUBLIC :: setdNTdt
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_dNTdXt_internally( Obj )
-  CLASS( STElemShapeData_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE stsd_set_dNTdXt_internally( obj )
+  CLASS( STElemShapeData_ ), INTENT( INOUT) :: obj
   !! Space-time nodal values
 END SUBROUTINE stsd_set_dNTdXt_internally
 END INTERFACE
@@ -484,13 +484,13 @@ PUBLIC :: setdNTdXt
 ! elements
 !
 !@note
-! In case `Obj` is instance of [[stelemshapedata_]] then `val` will denotes
+! In case `obj` is instance of [[stelemshapedata_]] then `val` will denotes
 ! coordinates of spatial nodes at some time in [tn, tn+1]
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE set_value( Obj, Val, N, dNdXi )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE set_value( obj, Val, N, dNdXi )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
     !! Spatial nodal coordinates
   REAL( DFP ), INTENT( IN ) :: N(:, :)
@@ -529,8 +529,8 @@ END INTERFACE
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_value( Obj, Val, N, T, dNdXi )
-  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE stsd_set_value( obj, Val, N, T, dNdXi )
+  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
     !! Spatial nodal coordinates
   REAL( DFP ), INTENT( IN ) :: N( :, : )
@@ -561,8 +561,8 @@ PUBLIC :: setValue
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE set_normal( Obj )
-  CLASS( ElemShapeData_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE set_normal( obj )
+  CLASS( ElemShapeData_ ), INTENT( INOUT) :: obj
 END SUBROUTINE set_normal
 END INTERFACE
 
@@ -594,8 +594,8 @@ PUBLIC :: setNormal
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_scalar( Obj, Interpol, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE get_interpol_scalar( obj, Interpol, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( : )
     !! Interpolation value of `val` at integration points
   REAL( DFP ), INTENT( IN ) :: Val( : )
@@ -611,8 +611,8 @@ END INTERFACE
 ! date: 4 March 2021
 ! summary: T
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_fevar_scalar( Obj, Interpol, Val )
-  CLASS(ElemShapeData_), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE get_interpol_fevar_scalar( obj, Interpol, Val )
+  CLASS(ElemShapeData_), INTENT( IN ) :: obj
   TYPE( FEVariable_ ), INTENT( IN ) :: Val
   REAL( DFP ), INTENT(INOUT) :: Interpol(:)
 END SUBROUTINE get_interpol_fevar_scalar
@@ -634,8 +634,8 @@ END INTERFACE
 ! $$u_{i}=u_{iI}N^{I}$$
 
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_vector( Obj, Interpol, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE get_interpol_vector( obj, Interpol, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, : )
     !! Interpol(:,ips) => interpolation value at integration points
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
@@ -661,8 +661,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_matrix( Obj, Interpol, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE get_interpol_matrix( obj, Interpol, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, :, : )
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
     !! nodal value of matrix
@@ -680,8 +680,8 @@ END INTERFACE
 ! This subroutine performs interpolation of matrix
 
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_fevar_matrix( Obj, Interpol, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE get_interpol_fevar_matrix( obj, Interpol, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ) :: Interpol( :, :, : )
   TYPE( FEVariable_), INTENT( IN ) :: Val
 END SUBROUTINE get_interpol_fevar_matrix
@@ -708,8 +708,8 @@ PUBLIC :: getInterpolation
 ! This function returns interpolation of scalar
 
 INTERFACE
-MODULE PURE FUNCTION interpol_scalar( Obj, Val ) RESULT( Interpol )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION interpol_scalar( obj, Val ) RESULT( Interpol )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   REAL( DFP ), ALLOCATABLE :: Interpol( : )
 END FUNCTION interpol_scalar
@@ -734,8 +734,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION interpol_vector( Obj, Val ) RESULT( Interpol )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION interpol_vector( obj, Val ) RESULT( Interpol )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   REAL( DFP ), ALLOCATABLE :: Interpol( :, : )
 END FUNCTION interpol_vector
@@ -760,8 +760,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION interpol_matrix( Obj, Val ) RESULT( Interpol )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION interpol_matrix( obj, Val ) RESULT( Interpol )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
   REAL( DFP ), ALLOCATABLE :: Interpol( :, :, : )
 END FUNCTION interpol_matrix
@@ -785,8 +785,8 @@ INTERFACE
 ! This subroutine performs interpolation of a scalar from its space-time nodal
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
-MODULE PURE SUBROUTINE stsd_get_interpol_scalar( Obj, Interpol, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE stsd_get_interpol_scalar( obj, Interpol, Val )
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( : )
     !! Interpolation value of `val` at integration points
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
@@ -799,8 +799,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_get_interpol_fevar_scalar( Obj, Interpol, Val )
-  CLASS(STElemShapeData_), INTENT( IN ) :: Obj( : )
+MODULE PURE SUBROUTINE stsd_get_interpol_fevar_scalar( obj, Interpol, Val )
+  CLASS(STElemShapeData_), INTENT( IN ) :: obj( : )
   TYPE( FEVariable_ ), INTENT( IN ) :: Val
   REAL( DFP ), INTENT(INOUT) :: Interpol(:, :)
 END SUBROUTINE stsd_get_interpol_fevar_scalar
@@ -819,8 +819,8 @@ INTERFACE
 ! nodal values
 !
 ! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
-MODULE PURE SUBROUTINE stsd_get_interpol_vector( Obj, Interpol, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE stsd_get_interpol_vector( obj, Interpol, Val )
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, : )
     !! Interpol(:,ips) => interpolation value at integration points
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
@@ -839,8 +839,8 @@ INTERFACE
 !
 ! This subroutine performs interpolation of matrix from its space-time
 ! nodal values
-MODULE PURE SUBROUTINE stsd_get_interpol_matrix( Obj, Interpol, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE stsd_get_interpol_matrix( obj, Interpol, Val )
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, :, : )
   REAL( DFP ), INTENT( IN ) :: Val( :, :, :, : )
     !! nodal value of matrix
@@ -852,8 +852,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_get_interpol_fevar_matrix( Obj, Interpol, Val )
-  CLASS(STElemShapeData_), INTENT( IN ) :: Obj( : )
+MODULE PURE SUBROUTINE stsd_get_interpol_fevar_matrix( obj, Interpol, Val )
+  CLASS(STElemShapeData_), INTENT( IN ) :: obj( : )
   TYPE( FEVariable_ ), INTENT( IN ) :: Val
   REAL( DFP ), INTENT(INOUT) :: Interpol(:, :, :, :)
 END SUBROUTINE stsd_get_interpol_fevar_matrix
@@ -881,8 +881,8 @@ INTERFACE
 ! This function performs interpolation of a scalar from its space-time nodal
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
-MODULE PURE FUNCTION stsd_interpol_scalar( Obj, Val ) RESULT(interpol)
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION stsd_interpol_scalar( obj, Val ) RESULT(interpol)
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
     !! space-time nodal values of scalar
   REAL( DFP ), ALLOCATABLE :: Interpol( : )
@@ -903,8 +903,8 @@ INTERFACE
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
-MODULE PURE FUNCTION stsd_interpol_vector( Obj, Val ) RESULT(interpol)
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION stsd_interpol_vector( obj, Val ) RESULT(interpol)
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
     !! spatial nodal values of vector
   REAL( DFP ), ALLOCATABLE :: Interpol( :, : )
@@ -925,8 +925,8 @@ INTERFACE
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
-MODULE PURE FUNCTION stsd_interpol_matrix( Obj, Val ) RESULT(interpol)
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION stsd_interpol_matrix( obj, Val ) RESULT(interpol)
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, :, : )
     !! spatial nodal values of matrix
   REAL( DFP ), ALLOCATABLE :: Interpol( :, :, : )
@@ -954,8 +954,8 @@ INTERFACE
 ! $$\frac{\partial \phi }{\partial \xi_{i} } =\phi_{I} \frac{\partial N^{I}}
 ! {\partial \xi_{i} }$$
 
-MODULE PURE SUBROUTINE getLocalGradient_scalar( Obj, dPhidXi, Val )
-  CLASS( ElemShapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getLocalGradient_scalar( obj, dPhidXi, Val )
+  CLASS( ElemShapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXi( :, : )
   REAL( DFP ), INTENT( IN ) :: Val( : )
     !! Space nodal values of scalar
@@ -972,8 +972,8 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This subroutine returns the local gradient of a vector
-MODULE PURE SUBROUTINE getLocalGradient_vector( Obj, dVdXi, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getLocalGradient_vector( obj, dVdXi, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dVdXi( :, :, : )
     !! local gradient at integration points
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
@@ -995,8 +995,8 @@ INTERFACE
 !
 ! $$\frac{\partial \phi }{\partial \xi_{i} } =\phi^{a}_{I} T_{a}\frac
 !{\partial N^{I}}{\partial \xi_{i} }$$
-MODULE PURE SUBROUTINE stsd_getLocalGradient_scalar( Obj, dPhidXi, Val )
-  CLASS( STElemShapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE stsd_getLocalGradient_scalar( obj, dPhidXi, Val )
+  CLASS( STElemShapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXi( :, : )
     !! local gradient of scalar
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
@@ -1015,8 +1015,8 @@ INTERFACE
 !
 ! This subroutine returns the local gradient of a vector using space-time
 ! nodal coordinates
-MODULE PURE SUBROUTINE stsd_getLocalGradient_vector( Obj, dVdXi, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE stsd_getLocalGradient_vector( obj, dVdXi, Val )
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dVdXi( :, :, : )
     !! local gradient at integration points
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
@@ -1044,8 +1044,8 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This subroutine returns the spatial gradient of a vector
-MODULE PURE SUBROUTINE getSpatialGradient_vector( Obj, dVdXt, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getSpatialGradient_vector( obj, dVdXt, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dVdXt( :, :, : )
     !! spatial gradient of `val` at integration points
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
@@ -1063,8 +1063,8 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This subroutine returns the spatial gradient of scalar
-MODULE PURE SUBROUTINE getSpatialGradient_scalar( Obj, dPhidXt, Val )
-  CLASS( ElemShapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getSpatialGradient_scalar( obj, dPhidXt, Val )
+  CLASS( ElemShapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXt( :, : )
     !! Spatial gradient of scalar
   REAL( DFP ), INTENT( IN ) :: Val( : )
@@ -1082,8 +1082,8 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This subroutine returns the spatial gradient of scalar
-MODULE PURE SUBROUTINE stsd_getSpatialGradient_scalar( Obj, dPhidXt, Val )
-  CLASS( STElemShapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE stsd_getSpatialGradient_scalar( obj, dPhidXt, Val )
+  CLASS( STElemShapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXt( :, : )
     !! Spatial gradient of scalar
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
@@ -1102,8 +1102,8 @@ INTERFACE
 !
 ! This subroutine returns the spatial gradient of a vector from its
 ! space-time nodal values
-MODULE PURE SUBROUTINE stsd_getSpatialGradient_vector( Obj, dVdXt, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE stsd_getSpatialGradient_vector( obj, dVdXt, Val )
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dVdXt( :, :, : )
     !! spatial gradient of `val` at integration points
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
@@ -1133,8 +1133,8 @@ INTERFACE
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 !
-MODULE PURE SUBROUTINE getProjectionOfdNdXt_spacevalues( Obj, cdNdXt, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getProjectionOfdNdXt_spacevalues( obj, cdNdXt, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: cdNdXt( :, : )
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
   REAL( DFP ), INTENT( IN ) :: Val( : )
@@ -1156,8 +1156,8 @@ INTERFACE
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 !
-MODULE PURE SUBROUTINE getProjectionOfdNdXt_fevar( Obj, cdNdXt, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getProjectionOfdNdXt_fevar( obj, cdNdXt, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: cdNdXt( :, : )
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
   CLASS( FEVariable_ ), INTENT( IN ) :: Val
@@ -1187,8 +1187,8 @@ INTERFACE
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 !
-MODULE PURE SUBROUTINE getProjectionOfdNTdXt_constvector( Obj, cdNTdXt, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getProjectionOfdNTdXt_constvector( obj, cdNTdXt, Val )
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: cdNTdXt( :, :, : )
     !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
   REAL( DFP ), INTENT( IN ) :: Val( : )
@@ -1210,8 +1210,8 @@ INTERFACE
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 !
-MODULE PURE SUBROUTINE getProjectionOfdNTdXt_fevar( Obj, cdNTdXt, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getProjectionOfdNTdXt_fevar( obj, cdNTdXt, Val )
+  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: cdNTdXt( :, :, : )
     !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
   TYPE( FEVariable_ ), INTENT( IN ) :: Val
@@ -1245,8 +1245,8 @@ INTERFACE
 !  $$\nabla \vert phi \vert / \vert (\nabla \vert phi \vert) \vert$$
 !
 
-MODULE PURE SUBROUTINE getUnitNormal_scalar( Obj, R, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getUnitNormal_scalar( obj, R, Val )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: R( :, : )
   REAL( DFP ), INTENT( IN ) :: Val( : )
 END SUBROUTINE getUnitNormal_scalar
@@ -1257,8 +1257,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE getUnitNormal_vector( Obj, R, Val )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE getUnitNormal_vector( obj, R, Val )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT  ) :: R( :, : )
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
 END SUBROUTINE getUnitNormal_vector
@@ -1275,9 +1275,9 @@ PUBLIC :: getUnitNormal
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE H1_Lagrange( Obj, Quad, RefElem, &
+MODULE PURE SUBROUTINE H1_Lagrange( obj, Quad, RefElem, &
   & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   CLASS( H1_ ), INTENT( IN ) :: ContinuityType

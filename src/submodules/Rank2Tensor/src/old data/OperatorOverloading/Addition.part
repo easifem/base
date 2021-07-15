@@ -19,202 +19,202 @@
 !==============================================================================
 
 !------------------------------------------------------------------------------
-!                                                                    Obj_Add_Obj
+!                                                                    obj_Add_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Add_Obj( Obj, Obj2 )
+ FUNCTION obj_Add_obj( obj, obj2 )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .otimes. Obj2
+!       1.  obj .otimes. obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj, Obj2
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj, obj2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: obj_Add_obj
 
-    Obj_Add_Obj = Obj%T + Obj2%T
+    obj_Add_obj = obj%T + obj2%T
 
- END FUNCTION Obj_Add_Obj
+ END FUNCTION obj_Add_obj
 
 !------------------------------------------------------------------------------
-!                                                                  Obj_Add_Mat
+!                                                                  obj_Add_Mat
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Add_Mat( Obj, Mat )
+ FUNCTION obj_Add_Mat( obj, Mat )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .otimes. Obj2
+!       1.  obj .otimes. obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Mat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: obj_Add_Mat
 
-    Obj_Add_Mat = Obj%T + Mat
+    obj_Add_Mat = obj%T + Mat
 
- END FUNCTION Obj_Add_Mat
+ END FUNCTION obj_Add_Mat
 
 !------------------------------------------------------------------------------
-!                                                                  Mat_Add_Obj
+!                                                                  Mat_Add_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Mat_Add_Obj( Mat, Obj )
+ FUNCTION Mat_Add_obj( Mat, obj )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .otimes. Obj2
+!       1.  obj .otimes. obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_Add_Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_Add_obj
 
-    Mat_Add_Obj = Obj%T + Mat
+    Mat_Add_obj = obj%T + Mat
 
- END FUNCTION Mat_Add_Obj
+ END FUNCTION Mat_Add_obj
 
 
 !------------------------------------------------------------------------------
-!                                                               Obj_Add_Scalar
+!                                                               obj_Add_Scalar
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Add_Scalar( Obj, S )
+ FUNCTION obj_Add_Scalar( obj, S )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj + Vec
+!       1.  obj + Vec
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: S
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Add_Scalar
+    REAL( DFP ), DIMENSION( 3, 3 ) :: obj_Add_Scalar
 
-    Obj_Add_Scalar = Obj%T + S
+    obj_Add_Scalar = obj%T + S
 
- END FUNCTION Obj_Add_Scalar
+ END FUNCTION obj_Add_Scalar
 
 !------------------------------------------------------------------------------
-!                                                               Obj_Add_Scalar
+!                                                               obj_Add_Scalar
 !------------------------------------------------------------------------------
 
- FUNCTION Scalar_Add_Obj( S, Obj )
+ FUNCTION Scalar_Add_obj( S, obj )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj + Vec
+!       1.  obj + Vec
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: S
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Scalar_Add_Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Scalar_Add_obj
 
-    Scalar_Add_Obj = Obj_Add_Scalar( Obj, S )
+    Scalar_Add_obj = obj_Add_Scalar( obj, S )
 
- END FUNCTION Scalar_Add_Obj
+ END FUNCTION Scalar_Add_obj
 
 !------------------------------------------------------------------------------
-!                                                                  Obj_Minus_Obj
+!                                                                  obj_Minus_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Minus_Obj( Obj, Obj2 )
+ FUNCTION obj_Minus_obj( obj, obj2 )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .otimes. Obj2
+!       1.  obj .otimes. obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj, Obj2
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj, obj2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: obj_Minus_obj
 
-    Obj_Minus_Obj = Obj%T - Obj2%T
+    obj_Minus_obj = obj%T - obj2%T
 
- END FUNCTION Obj_Minus_Obj
+ END FUNCTION obj_Minus_obj
 
 !------------------------------------------------------------------------------
-!                                                                  Obj_Minus_Mat
+!                                                                  obj_Minus_Mat
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Minus_Mat( Obj, Mat )
+ FUNCTION obj_Minus_Mat( obj, Mat )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .otimes. Obj2
+!       1.  obj .otimes. obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Mat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: obj_Minus_Mat
 
-    Obj_Minus_Mat = Obj%T - Mat
+    obj_Minus_Mat = obj%T - Mat
 
- END FUNCTION Obj_Minus_Mat
+ END FUNCTION obj_Minus_Mat
 
 !------------------------------------------------------------------------------
-!                                                                  Mat_Minus_Obj
+!                                                                  Mat_Minus_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Mat_Minus_Obj( Mat, Obj )
+ FUNCTION Mat_Minus_obj( Mat, obj )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj .otimes. Obj2
+!       1.  obj .otimes. obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( IN ) :: Mat
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_Minus_Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Mat_Minus_obj
 
-    Mat_Minus_Obj = Mat - Obj%T
+    Mat_Minus_obj = Mat - obj%T
 
- END FUNCTION Mat_Minus_Obj
+ END FUNCTION Mat_Minus_obj
 
 !------------------------------------------------------------------------------
-!                                                               Obj_Minus_Scalar
+!                                                               obj_Minus_Scalar
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Minus_Scalar( Obj, S )
+ FUNCTION obj_Minus_Scalar( obj, S )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj + Vec
+!       1.  obj + Vec
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: S
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Obj_Minus_Scalar
+    REAL( DFP ), DIMENSION( 3, 3 ) :: obj_Minus_Scalar
 
-    Obj_Minus_Scalar = Obj%T - S
+    obj_Minus_Scalar = obj%T - S
 
- END FUNCTION Obj_Minus_Scalar
+ END FUNCTION obj_Minus_Scalar
 
 !------------------------------------------------------------------------------
-!                                                               Scalar_Minus_Obj
+!                                                               Scalar_Minus_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Scalar_Minus_Obj( S, Obj )
+ FUNCTION Scalar_Minus_obj( S, obj )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj + Vec
+!       1.  obj + Vec
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: S
-    REAL( DFP ), DIMENSION( 3, 3 ) :: Scalar_Minus_Obj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: Scalar_Minus_obj
 
-    Scalar_Minus_Obj = -Obj_Minus_Scalar( Obj, S )
+    Scalar_Minus_obj = -obj_Minus_Scalar( obj, S )
 
- END FUNCTION Scalar_Minus_Obj
+ END FUNCTION Scalar_Minus_obj
 
 

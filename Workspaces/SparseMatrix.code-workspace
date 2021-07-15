@@ -1,13 +1,16 @@
 {
 	"folders": [
 		{
-			"path": "../src/modules/SparseMatrix"
+			"path": "../src/modules/CSRMatrix"
 		},
 		{
-			"path": "../src/submodules/SparseMatrix"
+			"path": "../src/modules/CSRSparsity"
 		},
 		{
-			"path": "../../easifem-extpkgs/Sparsekit"
+			"path": "../src/submodules/CSRMatrix"
+		},
+		{
+			"path": "../src/submodules/CSRSparsity"
 		}
 	]
 }

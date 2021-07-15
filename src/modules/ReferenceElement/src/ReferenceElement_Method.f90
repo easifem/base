@@ -30,8 +30,8 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE display_ref_elem( Obj, msg, unitno )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE display_ref_elem( obj, msg, unitno )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitno
 END SUBROUTINE display_ref_elem
@@ -42,8 +42,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE display_ref_topo( Obj, msg, unitno )
-  CLASS( ReferenceTopology_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE display_ref_topo( obj, msg, unitno )
+  CLASS( ReferenceTopology_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitno
 END SUBROUTINE display_ref_topo
@@ -89,8 +89,8 @@ PUBLIC :: Display
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_topology( Nptrs, Name ) RESULT( Obj )
-  TYPE( ReferenceTopology_ ) :: Obj
+MODULE PURE FUNCTION reference_topology( Nptrs, Name ) RESULT( obj )
+  TYPE( ReferenceTopology_ ) :: obj
   INTEGER( I4B), INTENT( IN ) :: Nptrs( : )
   INTEGER( I4B), INTENT( IN ) :: Name
 END FUNCTION reference_topology
@@ -120,8 +120,8 @@ PUBLIC :: ReferenceTopology
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE deallocatedata_ref_topology( Obj )
-  CLASS( ReferenceTopology_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE deallocatedata_ref_topology( obj )
+  CLASS( ReferenceTopology_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE deallocatedata_ref_topology
 END INTERFACE
 
@@ -149,8 +149,8 @@ PUBLIC :: DeallocateData
 !```
 
 INTERFACE
-MODULE PURE FUNCTION tNodes_RefTopo( Obj ) RESULT( Ans )
-  CLASS( ReferenceTopology_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION tNodes_RefTopo( obj ) RESULT( Ans )
+  CLASS( ReferenceTopology_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans
 END FUNCTION tNodes_RefTopo
 END INTERFACE
@@ -168,8 +168,8 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION tNodes_RefElem( Obj ) RESULT( Ans )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION tNodes_RefElem( obj ) RESULT( Ans )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans
 END FUNCTION tNodes_RefElem
 END INTERFACE
@@ -199,8 +199,8 @@ PUBLIC :: OPERATOR( .NNE. )
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE deallocatedata_ref_elem( Obj )
-  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE deallocatedata_ref_elem( obj )
+  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE deallocatedata_ref_elem
 END INTERFACE
 
@@ -219,7 +219,7 @@ END INTERFACE
 !### Introduction
 !
 ! This subroutine copies one reference element into other
-! This subroutine also defines an assignment operator for `Obj1=Obj2` type opertions
+! This subroutine also defines an assignment operator for `obj1=obj2` type opertions
 !
 !### Usage
 !
@@ -228,9 +228,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE init_refelem( Obj, AnotherObj )
-  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: Obj
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: AnotherObj
+MODULE PURE SUBROUTINE init_refelem( obj, Anotherobj )
+  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: Anotherobj
 END SUBROUTINE init_refelem
 END INTERFACE
 

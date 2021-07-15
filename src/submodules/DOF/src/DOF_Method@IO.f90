@@ -27,7 +27,7 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE display_obj
+MODULE PROCEDURE dof_Display1
   INTEGER( I4B ) :: I, n, j
   IF( PRESENT( UnitNo ) ) THEN
     I = UnitNo
@@ -40,9 +40,9 @@ MODULE PROCEDURE display_obj
     WRITE( I, "(A)" ) TRIM( msg )
   END IF
 
-  IF( ALLOCATED( Obj%Map ) ) THEN
+  IF( ALLOCATED( obj%Map ) ) THEN
     CALL DashLine( UnitNo = I )
-    ASSOCIATE( Map => Obj%Map, ValMap => Obj%ValMap )
+    ASSOCIATE( Map => obj%Map, ValMap => obj%ValMap )
       n = SIZE( Map, 1 ) - 1
       CALL BlankLines( I, 1 )
       WRITE( I, "(A, I4 )") "Number of Physical Quantities :: ", n
@@ -57,23 +57,23 @@ MODULE PROCEDURE display_obj
         WRITE( I, "(A, I4)") "Time Components :: ", Map( j, 3 )
         WRITE( I, "(A, I6)") "Total Nodes :: ", Map( j, 6 )
       END DO
-      SELECT CASE( Obj%StorageFMT )
+      SELECT CASE( obj%StorageFMT )
       CASE( dof_FMT )
         WRITE( I, "(A)") "Storage Format :: DOF"
       CASE( Nodes_FMT )
         WRITE( I, "(A)") "Storage Format :: Nodes"
       END SELECT
-      CALL Display( Obj%ValMap, "Value Map :: " )
+      CALL Display( obj%ValMap, "Value Map :: " )
     END ASSOCIATE
     CALL DashLine( UnitNo = I )
   END IF
-END PROCEDURE display_obj
+END PROCEDURE dof_Display1
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_display_vec
+MODULE PROCEDURE dof_display2
   INTEGER( I4B ) :: I, j, n, tdof, idof, k
 
   IF( PRESENT( UnitNo ) ) THEN
@@ -82,37 +82,37 @@ MODULE PROCEDURE dof_display_vec
     I = stdout
   END IF
 
-  tdof = .tdof. Obj
+  tdof = .tdof. obj
 
-  CALL Display( Obj, 'Degree of freedom info=', Unitno = I )
+  CALL Display( obj, 'Degree of freedom info=', Unitno = I )
 
-  n = SIZE( Obj%Map, 1 ) - 1
+  n = SIZE( obj%Map, 1 ) - 1
 
-  SELECT CASE( Obj%StorageFMT )
+  SELECT CASE( obj%StorageFMT )
   CASE( FMT_Nodes  )
 
     DO j = 1, n
 
       CALL BlankLines( UnitNo = I )
-      WRITE( I, "(4X, A)" ) "VAR : "//ACHAR( Obj%Map( j, 1 )  )
+      WRITE( I, "(4X, A)" ) "VAR : "//ACHAR( obj%Map( j, 1 )  )
 
-      DO idof = Obj%Map( j, 5 ), Obj%Map( j+1, 5 ) - 1
+      DO idof = obj%Map( j, 5 ), obj%Map( j+1, 5 ) - 1
         WRITE( I, "( 6X, A )", ADVANCE="NO" ) "--------------"
       END DO
       WRITE( I, "(A)", ADVANCE="YES" ) " "
 
-      DO idof = Obj%Map( j, 5 ), Obj%Map( j+1, 5 ) - 1
+      DO idof = obj%Map( j, 5 ), obj%Map( j+1, 5 ) - 1
         WRITE( I, "(6X, 4X, A, 4X )", ADVANCE="NO" ) "DOF-"//TRIM( INT2STR( idof ) )
       END DO
       WRITE( I, "(A)", ADVANCE="YES" ) " "
 
-      DO idof = Obj%Map( j, 5 ), Obj%Map( j+1, 5 ) - 1
+      DO idof = obj%Map( j, 5 ), obj%Map( j+1, 5 ) - 1
         WRITE( I, "( 6X, A )", ADVANCE="NO" ) "--------------"
       END DO
       WRITE( I, "(A)", ADVANCE="YES" ) " "
 
-      DO k = 1, Obj%Map( j,  6)
-        DO idof = Obj%Map( j, 5 ), Obj%Map( j+1, 5 ) - 1
+      DO k = 1, obj%Map( j,  6)
+        DO idof = obj%Map( j, 5 ), obj%Map( j+1, 5 ) - 1
           WRITE( I, "(I6, 2X, G10.2, 2X )", ADVANCE="NO" ) k, &
             & Vec(  ( k - 1 ) * tdof + idof )
         END DO
@@ -122,6 +122,15 @@ MODULE PROCEDURE dof_display_vec
 
   CASE( FMT_DOF )
   END SELECT
-END PROCEDURE dof_display_vec
+END PROCEDURE dof_display2
 
+!----------------------------------------------------------------------------
+!                                                                 Display
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_display3
+  IF( ALLOCATED( vec%val )  ) THEN
+    CALL Display( vec=vec%val, obj=obj, msg=msg, unitNo=unitNo  )
+  END IF
+END PROCEDURE dof_display3
 END SUBMODULE IO

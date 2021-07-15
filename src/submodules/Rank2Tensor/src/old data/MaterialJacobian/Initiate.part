@@ -23,28 +23,28 @@
 !                                                                     getSize
 !------------------------------------------------------------------------------
 
- INTEGER( I4B ) FUNCTION getSize( Obj )
+ INTEGER( I4B ) FUNCTION getSize( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Returns the size of Obj%C
+!       1.  Returns the size of obj%C
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
 
-    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Initiate.part", &
-        "getSize(), .Size. Obj", &
-        "Obj%C is not allocated, Program Stopped!!!"&
+        "getSize(), .Size. obj", &
+        "obj%C is not allocated, Program Stopped!!!"&
         )
 
         STOP
 
     END IF
 
-    getSize = SIZE( Obj%C, 1 )
+    getSize = SIZE( obj%C, 1 )
 
  END FUNCTION getSize
 
@@ -52,16 +52,16 @@
 !                                                                    DeallocateData
 !------------------------------------------------------------------------------
 
- SUBROUTINE DeallocateData( Obj )
+ SUBROUTINE DeallocateData( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  Deallocate Data
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
 
  END SUBROUTINE DeallocateData
 
@@ -69,19 +69,19 @@
 !                                                                    Initiate1
 !------------------------------------------------------------------------------
 
- SUBROUTINE Initiate1( Obj, N )
+ SUBROUTINE Initiate1( obj, N )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Obj%C( N, N )
+!       1.  Allocate the obj%C( N, N )
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: N
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
-    ALLOCATE( Obj%C( N, N ) )
-    Obj%C = 0.0_DFP
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
+    ALLOCATE( obj%C( N, N ) )
+    obj%C = 0.0_DFP
 
  END SUBROUTINE Initiate1
 
@@ -89,20 +89,20 @@
 !                                                                    Initiate2
 !------------------------------------------------------------------------------
 
- SUBROUTINE Initiate2( Obj, N, Fill )
+ SUBROUTINE Initiate2( obj, N, Fill )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Obj%C( N, N ) with all entries fill
+!       1.  Allocate the obj%C( N, N ) with all entries fill
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: N
     REAL( DFP ), INTENT( IN ) :: Fill
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
-    ALLOCATE( Obj%C( N, N ) )
-    Obj%C = Fill
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
+    ALLOCATE( obj%C( N, N ) )
+    obj%C = Fill
 
  END SUBROUTINE Initiate2
 
@@ -110,18 +110,18 @@
 !                                                                    Initiate3
 !------------------------------------------------------------------------------
 
- SUBROUTINE Initiate3( Obj, Mat )
+ SUBROUTINE Initiate3( obj, Mat )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Obj%C( :, : ) = Mat
+!       1.  Allocate the obj%C( :, : ) = Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Mat( :, : )
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
-    Obj%C = Mat
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
+    obj%C = Mat
 
  END SUBROUTINE Initiate3
 
@@ -129,24 +129,24 @@
 !                                                                   Initiate4
 !------------------------------------------------------------------------------
 
- SUBROUTINE Initiate4( Obj, N, StressType, StrainType, RateType )
+ SUBROUTINE Initiate4( obj, N, StressType, StrainType, RateType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Obj%C is N, with other details
+!       1.  Size of obj%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: N
     TYPE( String_ ), INTENT( IN ) :: StressType, StrainType, RateType
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
-    ALLOCATE( Obj%C( N, N ) )
-    Obj%C = 0.0_DFP
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
+    ALLOCATE( obj%C( N, N ) )
+    obj%C = 0.0_DFP
 
-    Obj%StressType = StressType
-    Obj%StrainType = StrainType
-    Obj%RateType = RateType
+    obj%StressType = StressType
+    obj%StrainType = StrainType
+    obj%RateType = RateType
 
  END SUBROUTINE Initiate4
 
@@ -154,24 +154,24 @@
 !                                                                   Initiate5
 !------------------------------------------------------------------------------
 
- SUBROUTINE Initiate5( Obj, N, StressType, StrainType, RateType )
+ SUBROUTINE Initiate5( obj, N, StressType, StrainType, RateType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Obj%C is N, with other details
+!       1.  Size of obj%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: N
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType, StrainType, RateType
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
-    ALLOCATE( Obj%C( N, N ) )
-    Obj%C = 0.0_DFP
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
+    ALLOCATE( obj%C( N, N ) )
+    obj%C = 0.0_DFP
 
-    Obj%StressType = StressType
-    Obj%StrainType = StrainType
-    Obj%RateType = RateType
+    obj%StressType = StressType
+    obj%StrainType = StrainType
+    obj%RateType = RateType
 
  END SUBROUTINE Initiate5
 
@@ -179,24 +179,24 @@
 !                                                                   Initiate6
 !------------------------------------------------------------------------------
 
- SUBROUTINE Initiate6( Obj, N, Names )
+ SUBROUTINE Initiate6( obj, N, Names )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Size of Obj%C is N, with other details
+!       1.  Size of obj%C is N, with other details
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: N
     TYPE( String_ ), INTENT( IN ) :: Names( 3 )
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
-    ALLOCATE( Obj%C( N, N ) )
-    Obj%C = 0.0_DFP
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
+    ALLOCATE( obj%C( N, N ) )
+    obj%C = 0.0_DFP
 
-    Obj%StressType = Names( 1 )
-    Obj%StrainType = Names( 2 )
-    Obj%RateType = Names( 3 )
+    obj%StressType = Names( 1 )
+    obj%StrainType = Names( 2 )
+    obj%RateType = Names( 3 )
 
  END SUBROUTINE Initiate6
 
@@ -204,24 +204,24 @@
 !                                                                   Initiate7
 !------------------------------------------------------------------------------
 
- SUBROUTINE Initiate7( Obj, N, Names )
+ SUBROUTINE Initiate7( obj, N, Names )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Allocate the Obj%C( N, N ) with all entries fill
+!       1.  Allocate the obj%C( N, N ) with all entries fill
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: N
     CHARACTER( LEN = * ), INTENT( IN ) :: Names( 3 )
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
-    ALLOCATE( Obj%C( N, N ) )
-    Obj%C = 0.0_DFP
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
+    ALLOCATE( obj%C( N, N ) )
+    obj%C = 0.0_DFP
 
-    Obj%StressType = Names( 1 )
-    Obj%StrainType = Names( 2 )
-    Obj%RateType = Names( 3 )
+    obj%StressType = Names( 1 )
+    obj%StrainType = Names( 2 )
+    obj%RateType = Names( 3 )
 
  END SUBROUTINE Initiate7
 
@@ -229,27 +229,27 @@
 !                                                                   Initiate8
 !------------------------------------------------------------------------------
 
- SUBROUTINE Initiate8( Obj, Obj2 )
+ SUBROUTINE Initiate8( obj, obj2 )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Copy Obj2 into Obj
+!       1.  Copy obj2 into obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj2
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj2
 
-    IF( ALLOCATED( Obj%C ) ) DEALLOCATE( Obj%C )
+    IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
 
-    IF( ALLOCATED( Obj2%C ) ) THEN
+    IF( ALLOCATED( obj2%C ) ) THEN
 
-        Obj%C = Obj2%C
+        obj%C = obj2%C
 
     END IF
 
-    Obj%StressType = Obj2%StressType
-    Obj%StrainType = Obj2%StrainType
-    Obj%RateType = Obj2%RateType
+    obj%StressType = obj2%StressType
+    obj%StrainType = obj2%StrainType
+    obj%RateType = obj2%RateType
 
  END SUBROUTINE Initiate8
 

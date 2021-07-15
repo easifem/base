@@ -142,7 +142,7 @@ end program main
 !   & extension = ".txt" )
 ! call write( obj=obj, val= [1.0, 2.0, 3.0], row=.true. )
 ! call write( obj=obj, val= eye3, transpose=.false. )
-! tlines = TotalLines( Obj )
+! tlines = TotalLines( obj )
 ! call display( tlines, "tlines :: ")
 ! end block
 

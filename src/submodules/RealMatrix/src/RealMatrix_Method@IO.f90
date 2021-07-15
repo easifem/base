@@ -28,25 +28,25 @@ CONTAINS
 !                                                                   Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Display_Obj
+MODULE PROCEDURE Display_obj
   INTEGER( I4B ) :: I
   I = Input( option=UnitNo, default=stdout )
   IF( LEN_TRIM( msg ) .NE. 0 ) WRITE( I, "(A)") "#" // TRIM( Msg )
-  CALL Display( Obj%Val, "", I )
-END PROCEDURE Display_Obj
+  CALL Display( obj%Val, "", I )
+END PROCEDURE Display_obj
 
 !----------------------------------------------------------------------------
 !                                                                   Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Display_Obj_vec
+MODULE PROCEDURE Display_obj_vec
   INTEGER( I4B ) :: I, j
   I = Input( option=UnitNo, default=stdout )
   IF( LEN_TRIM( msg ) .NE. 0 ) WRITE( I, "(A)") "#" // TRIM( Msg )
-  DO j = 1, SIZE( Obj )
-    CALL Display( Obj( j )%Val, "", I )
+  DO j = 1, SIZE( obj )
+    CALL Display( obj( j )%Val, "", I )
     CALL Blanklines( UnitNo = I, NOL = 1 )
   END DO
-END PROCEDURE Display_Obj_vec
+END PROCEDURE Display_obj_vec
 
 END SUBMODULE IO

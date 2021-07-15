@@ -60,8 +60,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_1( Obj, nsd, lim )
-  CLASS( BoundingBox_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_1( obj, nsd, lim )
+  CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
     !! Instance of bounding box
   INTEGER( I4B ), INTENT( IN ) :: NSD
     !! Spatial dimension
@@ -91,9 +91,9 @@ END INTERFACE
 
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_2( Obj, AnotherObj )
-    CLASS( BoundingBox_ ), INTENT( INOUT) :: Obj
-    CLASS( BoundingBox_ ), INTENT( IN) :: AnotherObj
+MODULE PURE SUBROUTINE initiate_2( obj, Anotherobj )
+    CLASS( BoundingBox_ ), INTENT( INOUT) :: obj
+    CLASS( BoundingBox_ ), INTENT( IN) :: Anotherobj
 END SUBROUTINE initiate_2
 END INTERFACE
 
@@ -161,9 +161,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Constructor2( AnotherObj ) RESULT( Ans )
+MODULE PURE FUNCTION Constructor2( Anotherobj ) RESULT( Ans )
     TYPE( BoundingBox_ ) :: Ans
-    CLASS( BoundingBox_ ), INTENT( IN ) :: AnotherObj
+    CLASS( BoundingBox_ ), INTENT( IN ) :: Anotherobj
 END FUNCTION Constructor2
 END INTERFACE
 
@@ -265,7 +265,7 @@ END INTERFACE
 ! summary: 	This function returns the pointer to an instance of [[BoundingBox_]]
 !
 !### Introduction
-! This function returns the pointer to an instance of [[BoundingBox_]] by copying contents from `AnotherObj`
+! This function returns the pointer to an instance of [[BoundingBox_]] by copying contents from `Anotherobj`
 !
 !### Usage
 !```fortran
@@ -278,9 +278,9 @@ END INTERFACE
 
 
 INTERFACE
-MODULE FUNCTION Constructor_2( AnotherObj ) RESULT( Ans )
+MODULE FUNCTION Constructor_2( Anotherobj ) RESULT( Ans )
     CLASS( BoundingBox_ ), POINTER :: Ans
-    CLASS( BoundingBox_ ), INTENT( IN ) :: AnotherObj
+    CLASS( BoundingBox_ ), INTENT( IN ) :: Anotherobj
 END FUNCTION Constructor_2
 END INTERFACE
 
@@ -299,8 +299,8 @@ PUBLIC :: BoundingBox_Pointer
 ! summary: 	This subroutine displays the content of [[BoundingBox_]]
 
 INTERFACE
-MODULE SUBROUTINE display_obj( Obj, msg, unitno )
-    CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE display_obj( obj, msg, unitno )
+    CLASS( BoundingBox_ ), INTENT( IN ) :: obj
     CHARACTER( LEN = * ), INTENT( IN ) :: msg
     INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitNo
 END SUBROUTINE display_obj
@@ -321,8 +321,8 @@ PUBLIC :: Display
 ! summary: 	This subroutine set the Xmin in bounding box
 
 INTERFACE
-MODULE PURE SUBROUTINE setXmin( Obj, Val )
-    CLASS( BoundingBox_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE setXmin( obj, Val )
+    CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Val
 END SUBROUTINE setXmin
 END INTERFACE
@@ -336,8 +336,8 @@ END INTERFACE
 ! summary: 	This subroutine set the Xmax in bounding box
 
 INTERFACE
-MODULE PURE SUBROUTINE setXmax( Obj, Val )
-    CLASS( BoundingBox_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE setXmax( obj, Val )
+    CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Val
 END SUBROUTINE setXmax
 END INTERFACE
@@ -351,8 +351,8 @@ END INTERFACE
 ! summary: 	This subroutine set the Ymin in bounding box
 
 INTERFACE
-MODULE PURE SUBROUTINE setYmin( Obj, Val )
-    CLASS( BoundingBox_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE setYmin( obj, Val )
+    CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Val
 END SUBROUTINE setYmin
 END INTERFACE
@@ -366,8 +366,8 @@ END INTERFACE
 ! summary: 	This subroutine set the Ymax of bounding box
 
 INTERFACE
-MODULE PURE SUBROUTINE setYmax( Obj, Val )
-    CLASS( BoundingBox_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE setYmax( obj, Val )
+    CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Val
 END SUBROUTINE setYmax
 END INTERFACE
@@ -381,8 +381,8 @@ END INTERFACE
 ! summary: 	This subroutine set the Zmin of bounding box
 
 INTERFACE
-MODULE PURE SUBROUTINE setZmin( Obj, Val )
-    CLASS( BoundingBox_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE setZmin( obj, Val )
+    CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Val
 END SUBROUTINE setZmin
 END INTERFACE
@@ -396,8 +396,8 @@ END INTERFACE
 ! summary: 	This subroutine set the Zmax of bounding box
 
 INTERFACE
-MODULE PURE SUBROUTINE setZmax( Obj, Val )
-    CLASS( BoundingBox_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE setZmax( obj, Val )
+    CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Val
 END SUBROUTINE setZmax
 END INTERFACE
@@ -417,8 +417,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION getXmin( Obj ) RESULT( Ans )
-    CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION getXmin( obj ) RESULT( Ans )
+    CLASS( BoundingBox_ ), INTENT( IN ) :: obj
     REAL( DFP ) :: Ans
 END FUNCTION getXmin
 END INTERFACE
@@ -445,8 +445,8 @@ PUBLIC :: Operator( .Xmin. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION getXmax( Obj ) RESULT( Ans )
-    CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION getXmax( obj ) RESULT( Ans )
+    CLASS( BoundingBox_ ), INTENT( IN ) :: obj
     REAL( DFP ) :: Ans
 END FUNCTION getXmax
 END INTERFACE
@@ -472,8 +472,8 @@ PUBLIC :: Operator( .Xmax. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION getYmin( Obj ) RESULT( Ans )
-    CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION getYmin( obj ) RESULT( Ans )
+    CLASS( BoundingBox_ ), INTENT( IN ) :: obj
     REAL( DFP ) :: Ans
 END FUNCTION getYmin
 END INTERFACE
@@ -499,8 +499,8 @@ PUBLIC :: Operator( .Ymin. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION getYmax( Obj ) RESULT( Ans )
-    CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION getYmax( obj ) RESULT( Ans )
+    CLASS( BoundingBox_ ), INTENT( IN ) :: obj
     REAL( DFP ) :: Ans
 END FUNCTION getYmax
 END INTERFACE
@@ -527,8 +527,8 @@ PUBLIC :: Operator( .Ymax. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION getZmin( Obj ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION getZmin( obj ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj
   REAL( DFP ) :: Ans
 END FUNCTION getZmin
 END INTERFACE
@@ -554,8 +554,8 @@ PUBLIC :: Operator( .Zmin. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION getZmax( Obj ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION getZmax( obj ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj
   REAL( DFP ) :: Ans
 END FUNCTION getZmax
 END INTERFACE
@@ -579,8 +579,8 @@ PUBLIC :: Operator( .Zmax. )
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION is_intersect_in_X( Obj, Obj2 ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj, Obj2
+MODULE PURE FUNCTION is_intersect_in_X( obj, obj2 ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj, obj2
   LOGICAL( LGT ) :: Ans
 END FUNCTION is_intersect_in_X
 END INTERFACE
@@ -604,8 +604,8 @@ PUBLIC :: isIntersectInX
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION is_intersect_in_Y( Obj, Obj2 ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj, Obj2
+MODULE PURE FUNCTION is_intersect_in_Y( obj, obj2 ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj, obj2
   LOGICAL( LGT ) :: Ans
 END FUNCTION is_intersect_in_Y
 END INTERFACE
@@ -629,8 +629,8 @@ PUBLIC :: isIntersectInY
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION is_intersect_in_Z( Obj, Obj2 ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj, Obj2
+MODULE PURE FUNCTION is_intersect_in_Z( obj, obj2 ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj, obj2
   LOGICAL( LGT ) :: Ans
 END FUNCTION is_intersect_in_Z
 END INTERFACE
@@ -655,8 +655,8 @@ PUBLIC :: isIntersectInZ
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION is_intersect( Obj, Obj2 ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj, Obj2
+MODULE PURE FUNCTION is_intersect( obj, obj2 ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj, obj2
   LOGICAL( LGT ) :: Ans
 END FUNCTION is_intersect
 END INTERFACE
@@ -689,8 +689,8 @@ PUBLIC :: isIntersect
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION get_intersection( Obj, Obj2 ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj, Obj2
+MODULE PURE FUNCTION get_intersection( obj, obj2 ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj, obj2
   TYPE( BoundingBox_ ) :: Ans
 END FUNCTION get_intersection
 END INTERFACE
@@ -723,8 +723,8 @@ PUBLIC :: Intersection
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION get_Union( Obj, Obj2 ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj, Obj2
+MODULE PURE FUNCTION get_Union( obj, obj2 ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj, obj2
   TYPE( BoundingBox_ ) :: Ans
 END FUNCTION get_Union
 END INTERFACE
@@ -758,8 +758,8 @@ PUBLIC :: Union
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION get_Center( Obj ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION get_Center( obj ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj
   REAL( DFP ) :: Ans( 3 )
 END FUNCTION get_Center
 END INTERFACE
@@ -793,8 +793,8 @@ PUBLIC :: OPERATOR(.Center.)
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION is_Inside( Obj, Val ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION is_Inside( obj, Val ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   LOGICAL( LGT ) :: Ans
 END FUNCTION is_Inside
@@ -829,8 +829,8 @@ PUBLIC :: isInside
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION get_nptrs( Obj, xij ) RESULT( Ans )
-  CLASS( BoundingBox_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION get_nptrs( obj, xij ) RESULT( Ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: xij( :, : )
   INTEGER( I4B ), ALLOCATABLE :: Ans( : )
 END FUNCTION get_nptrs

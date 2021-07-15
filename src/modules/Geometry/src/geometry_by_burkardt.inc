@@ -12212,7 +12212,7 @@ subroutine plane_exp_project_3d ( p1, p2, p3, pf, n, po, pp, ivis )
 
     else
 !
-!  Compute ALPHA, the angle between (OBJECT-FOCUS) and (NEAREST-FOCUS).
+!  Compute ALPHA, the angle between (objECT-FOCUS) and (NEAREST-FOCUS).
 !
       alpha = angle_rad_3d ( po(1:3,i), pf(1:3), pn(1:3) )
 
@@ -12223,7 +12223,7 @@ subroutine plane_exp_project_3d ( p1, p2, p3, pf, n, po, pp, ivis )
 
       else
 !
-!  BETA is Dist(NEAREST-FOCUS) / ( Cos(ALPHA)*Dist(OBJECT-FOCUS) )
+!  BETA is Dist(NEAREST-FOCUS) / ( Cos(ALPHA)*Dist(objECT-FOCUS) )
 !
         beta = disfn / ( cos ( alpha ) * disfo )
 

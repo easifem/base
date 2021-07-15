@@ -39,9 +39,9 @@ MODULE PROCEDURE display_ref_topo
   IF( LEN_TRIM( Msg ) .NE. 0 ) THEN
     WRITE( I, "(A)" ) "#" // TRIM( Msg )
   END IF
-  WRITE( I, "(A)" ) "ElemType : " // TRIM( ElementName( Obj%Name ) )
-  WRITE( I, "(A)" ) "XiDim : " // TRIM( INT2STR( Obj%XiDimension ) )
-  CALL Display( Obj%Nptrs,  "Nptrs : ")
+  WRITE( I, "(A)" ) "ElemType : " // TRIM( ElementName( obj%Name ) )
+  WRITE( I, "(A)" ) "XiDim : " // TRIM( INT2STR( obj%XiDimension ) )
+  CALL Display( obj%Nptrs,  "Nptrs : ")
 END PROCEDURE display_ref_topo
 
 !----------------------------------------------------------------------------
@@ -61,20 +61,20 @@ MODULE PROCEDURE display_ref_elem
   IF( LEN_TRIM( Msg ) .NE. 0 ) THEN
     WRITE( I, "(A)" ) "#" // TRIM( Msg )
   END IF
-  CALL Display( "ElemType : "// trim( ElementName( Obj%Name ) ), I )
-  CALL Display( Obj%XiDimension, "XiDimension :: ", UnitNo = I )
-  CALL Display( Obj%NSD, "NSD : ", UnitNo = I )
-  CALL Display( Obj%Order, "Order : ", UnitNo = I )
-  CALL Display( Obj%EntityCounts( 1 ), "EntityCounts(0) : ", UnitNo = I )
-  CALL Display( Obj%EntityCounts( 2 ), "EntityCounts(1) : ", UnitNo = I )
-  CALL Display( Obj%EntityCounts( 3 ), "EntityCounts(2) : ", UnitNo = I )
-  CALL Display( Obj%EntityCounts( 4 ), "EntityCounts(3) : ", UnitNo = I )
-  DO j = 1, SIZE( Obj%XiJ, 2 )
-    CALL Display( Obj%XiJ( :, j), &
+  CALL Display( "ElemType : "// trim( ElementName( obj%Name ) ), I )
+  CALL Display( obj%XiDimension, "XiDimension :: ", UnitNo = I )
+  CALL Display( obj%NSD, "NSD : ", UnitNo = I )
+  CALL Display( obj%Order, "Order : ", UnitNo = I )
+  CALL Display( obj%EntityCounts( 1 ), "EntityCounts(0) : ", UnitNo = I )
+  CALL Display( obj%EntityCounts( 2 ), "EntityCounts(1) : ", UnitNo = I )
+  CALL Display( obj%EntityCounts( 3 ), "EntityCounts(2) : ", UnitNo = I )
+  CALL Display( obj%EntityCounts( 4 ), "EntityCounts(3) : ", UnitNo = I )
+  DO j = 1, SIZE( obj%XiJ, 2 )
+    CALL Display( obj%XiJ( :, j), &
       & "Node( " // trim( str( j, .true. ) ) // " ) : " )
   END DO
-  DO j = 1, SIZE( Obj%Topology )
-    CALL Display( Obj%Topology( j ), &
+  DO j = 1, SIZE( obj%Topology )
+    CALL Display( obj%Topology( j ), &
       & "Topology( " // TRIM( INT2STR( j ) ) // " ) : ", I )
   END DO
 END PROCEDURE display_ref_elem

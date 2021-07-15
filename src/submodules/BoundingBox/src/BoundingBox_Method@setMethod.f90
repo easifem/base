@@ -28,7 +28,7 @@ CONTAINS
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE setXmin
-  Obj%Box( 1, 1 ) = Val
+  obj%Box( 1, 1 ) = Val
 END PROCEDURE setXmin
 
 !-----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ END PROCEDURE setXmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE setXmax
-  Obj%Box( 2, 1 ) = Val
+  obj%Box( 2, 1 ) = Val
 END PROCEDURE setXmax
 
 !-----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ END PROCEDURE setXmax
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE setYmin
-  Obj%Box( 1, 2 ) = Val
+  obj%Box( 1, 2 ) = Val
 END PROCEDURE setYmin
 
 !-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ END PROCEDURE setYmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE setYmax
-  Obj%Box( 2, 2 ) = Val
+  obj%Box( 2, 2 ) = Val
 END PROCEDURE setYmax
 
 !-----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ END PROCEDURE setYmax
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE setZmin
-  Obj%Box( 1, 3 ) = Val
+  obj%Box( 1, 3 ) = Val
 END PROCEDURE setZmin
 
 !-----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ END PROCEDURE setZmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE setZmax
-  Obj%Box( 2, 3 ) = Val
+  obj%Box( 2, 3 ) = Val
 END PROCEDURE setZmax
 
 END SUBMODULE setMethod

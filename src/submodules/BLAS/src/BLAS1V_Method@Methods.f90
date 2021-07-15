@@ -34,17 +34,17 @@ MODULE PROCEDURE ASUMscalar
   INTEGER ( I4B ) :: Indx( 4 )
 
   !! small data
-  IF( (SIZE( Obj%Val ) .LE. SMALL_VECTOR_LEN) &
+  IF( (SIZE( obj%Val ) .LE. SMALL_VECTOR_LEN) &
     & .OR. (OMP%STATE .EQ. OMP_THREADS_FORKED) ) THEN
-    Ans = ASUM( Obj%Val )
+    Ans = ASUM( obj%Val )
   !! big data
   ELSE
     !> create threads and share the work
     Ans = 0.0_DFP
     !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(Indx) REDUCTION( +: Ans )
     CALL OMP_INITIATE
-    Indx = OMP_Partition( SIZE( Obj%Val ), OMP%NUM_THREADS )
-    Ans = Ans + ASUM( Obj%Val( _tr_ ) )
+    Indx = OMP_Partition( SIZE( obj%Val ), OMP%NUM_THREADS )
+    Ans = Ans + ASUM( obj%Val( _tr_ ) )
     CALL OMP_FINALIZE
     !$OMP END PARALLEL
   END IF
@@ -60,18 +60,18 @@ MODULE PROCEDURE ASUMvector
   IF( OMP%STATE .EQ. OMP_THREADS_FORKED ) THEN
     !> already forked
     Ans = 0.0
-    DO i = 1, SIZE( Obj )
+    DO i = 1, SIZE( obj )
       !> Calling BLAS routine
-      Ans = Ans + ASUM( Obj( i )%Val )
+      Ans = Ans + ASUM( obj( i )%Val )
     END DO
   ELSE
     !> forking
     Ans = 0.0_DFP
     !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i, Indx) REDUCTION( +: Ans )
     CALL OMP_INITIATE
-    DO i = 1, SIZE(Obj)
-      Indx = OMP_Partition( SIZE( Obj(i)%Val ), OMP%NUM_THREADS )
-      Ans = Ans + ASUM( Obj(i)%Val( _tr_ ) )
+    DO i = 1, SIZE(obj)
+      Indx = OMP_Partition( SIZE( obj(i)%Val ), OMP%NUM_THREADS )
+      Ans = Ans + ASUM( obj(i)%Val( _tr_ ) )
     END DO
     CALL OMP_FINALIZE
     !$OMP END PARALLEL
@@ -302,14 +302,14 @@ END PROCEDURE Compact_Int_1
 !                                                                       DOT
 !----------------------------------------------------------------------------
 
-PURE FUNCTION inner_dot( Obj1, Obj2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj1( : )
-  REAL( DFP ), INTENT( IN ) :: Obj2( : )
+PURE FUNCTION inner_dot( obj1, obj2 ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: obj1( : )
+  REAL( DFP ), INTENT( IN ) :: obj2( : )
   REAL( DFP ) :: Ans
-  IF( SIZE( Obj1 ) .LE. SMALL_VECTOR_LEN ) THEN
-    Ans = DOT_PRODUCT( Obj1, Obj2 )
+  IF( SIZE( obj1 ) .LE. SMALL_VECTOR_LEN ) THEN
+    Ans = DOT_PRODUCT( obj1, obj2 )
   ELSE
-    Ans = DOT( Obj1, Obj2 )
+    Ans = DOT( obj1, obj2 )
   END IF
 END FUNCTION inner_dot
 
@@ -318,7 +318,7 @@ END FUNCTION inner_dot
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarDOTscalar
-  Ans = inner_dot(Obj1%Val, Obj2%Val)
+  Ans = inner_dot(obj1%Val, obj2%Val)
 END PROCEDURE scalarDOTscalar
 
 !----------------------------------------------------------------------------
@@ -326,7 +326,7 @@ END PROCEDURE scalarDOTscalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalarDOTintrinsic
-  Ans = inner_dot(Obj%val, val)
+  Ans = inner_dot(obj%val, val)
 END PROCEDURE scalarDOTintrinsic
 
 !----------------------------------------------------------------------------
@@ -336,8 +336,8 @@ END PROCEDURE scalarDOTintrinsic
 MODULE PROCEDURE vectorDOTvector
   INTEGER( I4B ) :: i
   Ans = 0.0
-  DO i = 1, SIZE( Obj1 )
-    Ans = Ans + DOT( Obj1( i ), Obj2( i ) )
+  DO i = 1, SIZE( obj1 )
+    Ans = Ans + DOT( obj1( i ), obj2( i ) )
   END DO
 END PROCEDURE vectorDOTvector
 
@@ -348,8 +348,8 @@ END PROCEDURE vectorDOTvector
 MODULE PROCEDURE vectorDOTscalar
   INTEGER( I4B ) :: i
   Ans = 0.0
-  DO i = 1, SIZE( Obj1 )
-    Ans = Ans + DOT( Obj1( i )%Val, Obj2%Val )
+  DO i = 1, SIZE( obj1 )
+    Ans = Ans + DOT( obj1( i )%Val, obj2%Val )
   END DO
 END PROCEDURE vectorDOTscalar
 
@@ -360,8 +360,8 @@ END PROCEDURE vectorDOTscalar
 MODULE PROCEDURE scalarDOTvector
   INTEGER( I4B ) :: i
   Ans = 0.0
-  DO i = 1, SIZE( Obj2 )
-    Ans = Ans + DOT( Obj1%Val, Obj2( i )%Val )
+  DO i = 1, SIZE( obj2 )
+    Ans = Ans + DOT( obj1%Val, obj2( i )%Val )
   END DO
 END PROCEDURE scalarDOTvector
 
@@ -384,7 +384,7 @@ END FUNCTION inner_nrm2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE NRM2scalar
-  Ans = inner_nrm2(Obj%Val)
+  Ans = inner_nrm2(obj%Val)
 END PROCEDURE NRM2scalar
 
 !----------------------------------------------------------------------------
@@ -392,7 +392,7 @@ END PROCEDURE NRM2scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE NRM2vector
-  Ans = SQRT( DOT( Obj, Obj ) )
+  Ans = SQRT( DOT( obj, obj ) )
 END PROCEDURE NRM2vector
 
 

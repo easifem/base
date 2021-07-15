@@ -19,175 +19,175 @@
 !==============================================================================
 
 !------------------------------------------------------------------------------
-!                                                                Obj_Minus_Obj
+!                                                                obj_Minus_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Minus_Obj( Obj, Obj2 )
+ FUNCTION obj_Minus_obj( obj, obj2 )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Obj - Obj2
+!   1.  obj - obj2
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj2
-    REAL( DFP ), ALLOCATABLE :: Obj_Minus_Obj( :, : )
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj2
+    REAL( DFP ), ALLOCATABLE :: obj_Minus_obj( :, : )
 
     ! Define internal variables
     INTEGER( I4B ) :: N1, N2
 
-    IF( .NOT. ALLOCATED( Obj%C ) &
-        .OR. .NOT. ALLOCATED( Obj2%C ) ) THEN
+    IF( .NOT. ALLOCATED( obj%C ) &
+        .OR. .NOT. ALLOCATED( obj2%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
-        "Obj - Obj2", &
-        "Obj or Obj2 is/are not initiated, Program Stopped!!!"&
+        "obj - obj2", &
+        "obj or obj2 is/are not initiated, Program Stopped!!!"&
         )
         STOP
 
     END IF
 
-    N1 = .SIZE. Obj
-    N2 = .SIZE. Obj2
+    N1 = .SIZE. obj
+    N2 = .SIZE. obj2
 
     IF( N1 .NE. N2 ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
-        "Obj - Obj2", &
-        "The Shape of Obj%C and Obj2%C are not Compatible, &
+        "obj - obj2", &
+        "The Shape of obj%C and obj2%C are not Compatible, &
         Program Stopped!!!"&
         )
         STOP
 
     END IF
 
-    ALLOCATE( Obj_Minus_Obj( N1, N1 ) )
+    ALLOCATE( obj_Minus_obj( N1, N1 ) )
 
-    Obj_Minus_Obj = Obj%C - Obj2%C
+    obj_Minus_obj = obj%C - obj2%C
 
- END FUNCTION Obj_Minus_Obj
+ END FUNCTION obj_Minus_obj
 
 !------------------------------------------------------------------------------
-!                                                                Obj_Minus_Mat
+!                                                                obj_Minus_Mat
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Minus_Mat( Obj, Mat )
+ FUNCTION obj_Minus_Mat( obj, Mat )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Obj - Mat
+!   1.  obj - Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Mat( :, : )
-    REAL( DFP ), ALLOCATABLE :: Obj_Minus_Mat( :, : )
+    REAL( DFP ), ALLOCATABLE :: obj_Minus_Mat( :, : )
 
     ! Define internal variables
     INTEGER( I4B ) :: N1, N2
 
-    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
-        "Obj - Mat", &
-        "Obj is not initiated, Program Stopped!!!"&
+        "obj - Mat", &
+        "obj is not initiated, Program Stopped!!!"&
         )
         STOP
 
     END IF
 
-    N1 = .SIZE. Obj
+    N1 = .SIZE. obj
     N2 = SIZE( Mat, 1 )
 
     IF( N1 .NE. N2 ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
-        "Obj - Mat", &
-        "The Shape of Obj%C and Mat are not Compatible, &
+        "obj - Mat", &
+        "The Shape of obj%C and Mat are not Compatible, &
         Program Stopped!!!"&
         )
         STOP
 
     END IF
 
-    ALLOCATE( Obj_Minus_Mat( N1, N1 ) )
+    ALLOCATE( obj_Minus_Mat( N1, N1 ) )
 
-    Obj_Minus_Mat = Obj%C - Mat
+    obj_Minus_Mat = obj%C - Mat
 
- END FUNCTION Obj_Minus_Mat
+ END FUNCTION obj_Minus_Mat
 
 !------------------------------------------------------------------------------
-!                                                                Mat_Minus_Obj
+!                                                                Mat_Minus_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Mat_Minus_Obj( Mat, Obj )
+ FUNCTION Mat_Minus_obj( Mat, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Mat - Obj
+!   1.  Mat - obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Mat( :, : )
-    REAL( DFP ), ALLOCATABLE :: Mat_Minus_Obj( :, : )
+    REAL( DFP ), ALLOCATABLE :: Mat_Minus_obj( :, : )
 
-    Mat_Minus_Obj = -Obj_Minus_Mat( Obj, Mat )
+    Mat_Minus_obj = -obj_Minus_Mat( obj, Mat )
 
- END FUNCTION Mat_Minus_Obj
+ END FUNCTION Mat_Minus_obj
 
 !------------------------------------------------------------------------------
-!                                                             Obj_Minus_Scalar
+!                                                             obj_Minus_Scalar
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_Minus_Scalar( Obj, Scalar )
+ FUNCTION obj_Minus_Scalar( obj, Scalar )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Obj - Scalar
+!   1.  obj - Scalar
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Scalar
-    REAL( DFP ), ALLOCATABLE :: Obj_Minus_Scalar( :, : )
+    REAL( DFP ), ALLOCATABLE :: obj_Minus_Scalar( :, : )
 
     ! Define internal variables
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>Subtraction.part", &
-        "Obj - Mat", &
-        "Obj is not initiated, Program Stopped!!!"&
+        "obj - Mat", &
+        "obj is not initiated, Program Stopped!!!"&
         )
         STOP
 
     END IF
 
-    N = .SIZE. Obj
-    ALLOCATE( Obj_Minus_Scalar( N, N ) )
-    Obj_Minus_Scalar = Obj%C - Scalar
+    N = .SIZE. obj
+    ALLOCATE( obj_Minus_Scalar( N, N ) )
+    obj_Minus_Scalar = obj%C - Scalar
 
- END FUNCTION Obj_Minus_Scalar
+ END FUNCTION obj_Minus_Scalar
 
 !------------------------------------------------------------------------------
-!                                                             Scalar_Minus_Obj
+!                                                             Scalar_Minus_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Scalar_Minus_Obj( Scalar, Obj )
+ FUNCTION Scalar_Minus_obj( Scalar, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Scalar - Obj
+!   1.  Scalar - obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Scalar
-    REAL( DFP ), ALLOCATABLE :: Scalar_Minus_Obj( :, : )
+    REAL( DFP ), ALLOCATABLE :: Scalar_Minus_obj( :, : )
 
-    Scalar_Minus_Obj = -Obj_Minus_Scalar( Obj, Scalar )
+    Scalar_Minus_obj = -obj_Minus_Scalar( obj, Scalar )
 
- END FUNCTION Scalar_Minus_Obj
+ END FUNCTION Scalar_Minus_obj

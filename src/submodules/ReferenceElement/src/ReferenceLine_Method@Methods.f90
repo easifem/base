@@ -31,23 +31,23 @@ CONTAINS
 MODULE PROCEDURE initiate_ref_Line
   INTEGER( I4B ) :: s( 2 )
   IF( PRESENT( XiJ ) ) THEN
-    CALL Reallocate( Obj%XiJ, 3, 2 )
+    CALL Reallocate( obj%XiJ, 3, 2 )
     s = SHAPE( XiJ )
-    Obj%XiJ( 1:s(1), 1:s(2) ) = XiJ(:,:)
+    obj%XiJ( 1:s(1), 1:s(2) ) = XiJ(:,:)
   ELSE
-    Obj%XiJ = RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] )
+    obj%XiJ = RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] )
   END IF
-  Obj%EntityCounts = [2, 1, 0, 0]
-  Obj%XiDimension = 1
-  Obj%Order = 1
-  Obj%NSD = NSD
-  Obj%Name = Line2
-  IF( ALLOCATED( Obj%Topology ) ) DEALLOCATE( Obj%Topology )
-  ALLOCATE( Obj%Topology( 3 ) )
-  Obj%Topology( 1 ) = ReferenceTopology( [1], Point )
-  Obj%Topology( 2 ) = ReferenceTopology( [2], Point )
-  Obj%Topology( 3 ) = ReferenceTopology( [1, 2], Line2 )
-  Obj%LagrangeElement => LagrangeElement_Line
+  obj%EntityCounts = [2, 1, 0, 0]
+  obj%XiDimension = 1
+  obj%Order = 1
+  obj%NSD = NSD
+  obj%Name = Line2
+  IF( ALLOCATED( obj%Topology ) ) DEALLOCATE( obj%Topology )
+  ALLOCATE( obj%Topology( 3 ) )
+  obj%Topology( 1 ) = ReferenceTopology( [1], Point )
+  obj%Topology( 2 ) = ReferenceTopology( [2], Point )
+  obj%Topology( 3 ) = ReferenceTopology( [1, 2], Line2 )
+  obj%LagrangeElement => LagrangeElement_Line
 END PROCEDURE initiate_ref_Line
 
 !----------------------------------------------------------------------------
@@ -56,9 +56,9 @@ END PROCEDURE initiate_ref_Line
 
 MODULE PROCEDURE reference_Line
   IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
+    CALL Initiate( obj, NSD, XiJ )
   ELSE
-    CALL Initiate( Obj, NSD )
+    CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Line
 
@@ -67,11 +67,11 @@ END PROCEDURE reference_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Line_Pointer_1
-  ALLOCATE( Obj )
+  ALLOCATE( obj )
   IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
+    CALL Initiate( obj, NSD, XiJ )
   ELSE
-    CALL Initiate( Obj, NSD )
+    CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Line_Pointer_1
 
@@ -176,18 +176,18 @@ END FUNCTION EquidistanceLIP_Line
 MODULE PROCEDURE LagrangeElement_Line
   ! Define internal variables
   INTEGER( I4B ) :: nns, i
-  Obj%XiJ = EquidistanceLIP_Line( XiJ = RefElem%XiJ, Order = Order)
-  Obj%NSD = RefElem%NSD
-  nns = SIZE( Obj%XiJ, 2 )
-  Obj%EntityCounts = [nns, 1, 0, 0]
-  Obj%XiDimension = 1
-  Obj%Order = Order
-  Obj%Name = ElementType( "Line" // TRIM( INT2STR( nns ) ) )
-  ALLOCATE( Obj%Topology( nns + 1 ) )
+  obj%XiJ = EquidistanceLIP_Line( XiJ = RefElem%XiJ, Order = Order)
+  obj%NSD = RefElem%NSD
+  nns = SIZE( obj%XiJ, 2 )
+  obj%EntityCounts = [nns, 1, 0, 0]
+  obj%XiDimension = 1
+  obj%Order = Order
+  obj%Name = ElementType( "Line" // TRIM( INT2STR( nns ) ) )
+  ALLOCATE( obj%Topology( nns + 1 ) )
   DO CONCURRENT (i=1:nns)
-    Obj%Topology( i ) = ReferenceTopology( [i], Point )
+    obj%Topology( i ) = ReferenceTopology( [i], Point )
   END DO
-  Obj%Topology( nns + 1 ) = ReferenceTopology( [(i, i=1,nns)], Obj%Name )
+  obj%Topology( nns + 1 ) = ReferenceTopology( [(i, i=1,nns)], obj%Name )
 END PROCEDURE LagrangeElement_Line
 
 !----------------------------------------------------------------------------

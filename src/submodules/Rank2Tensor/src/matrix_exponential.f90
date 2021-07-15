@@ -461,7 +461,7 @@ end
 !                                                               m_TensorEXP_1
 !------------------------------------------------------------------------------
 
- FUNCTION m_TensorEXP_1( Obj, t, m )
+ FUNCTION m_TensorEXP_1( obj, t, m )
 
 !   Description
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
@@ -472,7 +472,7 @@ end
 
     ! Define Intent of dummy variables
 
-    CLASS( Rank2Tensor_ ), INTENT( IN ) ::  Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) ::  obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_TensorEXP_1
     INTEGER( I4B ), INTENT( IN ), OPTIONAL :: m
     REAL( DFP ), INTENT( IN ) :: t
@@ -480,7 +480,7 @@ end
     ! Define internal variables
     REAL( DFP ), ALLOCATABLE :: Mat( :, : )
 
-    Mat = Obj
+    Mat = obj
 
     IF( PRESENT( m ) ) THEN
 

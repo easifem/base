@@ -33,17 +33,8 @@ include(${CMAKE_CURRENT_LIST_DIR}/BaseType/CMakeLists.txt)
 #BaseType
 include(${CMAKE_CURRENT_LIST_DIR}/OpenMP/CMakeLists.txt)
 
-#File
-include(${CMAKE_CURRENT_LIST_DIR}/File/CMakeLists.txt)
-
 #Random
 include(${CMAKE_CURRENT_LIST_DIR}/Random/CMakeLists.txt)
-
-#AbstractArray
-include(${CMAKE_CURRENT_LIST_DIR}/AbstractArray/CMakeLists.txt)
-
-#AbstractMatrix
-include(${CMAKE_CURRENT_LIST_DIR}/AbstractMatrix/CMakeLists.txt)
 
 # BoundingBox
 include(${CMAKE_CURRENT_LIST_DIR}/BoundingBox/CMakeLists.txt)
@@ -102,8 +93,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
 #Rank2Tensor
 include(${CMAKE_CURRENT_LIST_DIR}/Rank2Tensor/CMakeLists.txt)
 
-#SparseMatrix
-include(${CMAKE_CURRENT_LIST_DIR}/SparseMatrix/CMakeLists.txt)
+#CSRSparsity
+include(${CMAKE_CURRENT_LIST_DIR}/CSRSparsity/CMakeLists.txt)
+
+#CSRMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/CSRMatrix/CMakeLists.txt)
 
 # # #Lapack
 # # include(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)

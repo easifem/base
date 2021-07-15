@@ -25,7 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE set_thickness
-  Obj%Thickness = MATMUL( Val, N )
+  obj%Thickness = MATMUL( Val, N )
 END PROCEDURE set_thickness
 
 !----------------------------------------------------------------------------
@@ -33,7 +33,7 @@ END PROCEDURE set_thickness
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_set_thickness
-  CALL setThickness( Obj=Obj, Val = MATMUL( Val, T ), N=N )
+  CALL setThickness( obj=obj, Val = MATMUL( Val, T ), N=N )
 END PROCEDURE stsd_set_thickness
 
 !----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ END PROCEDURE stsd_set_thickness
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE set_coord
-  Obj%Coord = MATMUL( Val, N )
+  obj%Coord = MATMUL( Val, N )
 END PROCEDURE set_coord
 
 !----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ END PROCEDURE set_coord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_set_coord
-  CALL setBarycentricCoord( Obj=Obj, Val=MATMUL( Val, T ), N=N )
+  CALL setBarycentricCoord( obj=obj, Val=MATMUL( Val, T ), N=N )
 END PROCEDURE stsd_set_coord
 
 !----------------------------------------------------------------------------
@@ -61,22 +61,22 @@ MODULE PROCEDURE set_Js
   INTEGER( I4B ) :: xidim, nsd, nips, ips
   REAL( DFP ) :: aa, bb, ab
 
-  xidim = Obj%RefElem%XiDimension
-  nsd = Obj%RefElem%nsd
-  nips = SIZE( Obj%N, 2 )
+  xidim = obj%RefElem%XiDimension
+  nsd = obj%RefElem%nsd
+  nips = SIZE( obj%N, 2 )
 
   DO ips = 1, nips
     IF( nsd .EQ. xidim ) THEN
-      Obj%Js( ips ) = det( Obj%Jacobian( :, :, ips ) )
+      obj%Js( ips ) = det( obj%Jacobian( :, :, ips ) )
     ELSE IF( xidim .EQ. 1 .AND. xidim .NE. nsd ) THEN
-      Obj%Js( ips ) = &
-        & SQRT( DOT_PRODUCT( Obj%Jacobian( :, 1, ips ), &
-        & Obj%Jacobian( :, 1, ips ) ) )
+      obj%Js( ips ) = &
+        & SQRT( DOT_PRODUCT( obj%Jacobian( :, 1, ips ), &
+        & obj%Jacobian( :, 1, ips ) ) )
     ELSE IF( xidim .EQ. 2 .AND. xidim .NE. nsd ) THEN
-      aa = DOT_PRODUCT( Obj%Jacobian( :, 1, ips ), Obj%Jacobian(:,1,ips))
-      bb = DOT_PRODUCT( Obj%Jacobian( :, 2, ips ), Obj%Jacobian(:,2,ips))
-      ab = DOT_PRODUCT( Obj%Jacobian( :, 1, ips ), Obj%Jacobian(:,2,ips))
-      Obj%Js( ips ) = SQRT( aa * bb - ab * ab )
+      aa = DOT_PRODUCT( obj%Jacobian( :, 1, ips ), obj%Jacobian(:,1,ips))
+      bb = DOT_PRODUCT( obj%Jacobian( :, 2, ips ), obj%Jacobian(:,2,ips))
+      ab = DOT_PRODUCT( obj%Jacobian( :, 1, ips ), obj%Jacobian(:,2,ips))
+      obj%Js( ips ) = SQRT( aa * bb - ab * ab )
     END IF
   END DO
 END PROCEDURE set_Js
@@ -90,18 +90,18 @@ MODULE PROCEDURE set_dNdXt_internally
   INTEGER( I4B ) :: NSD, XiDim, ips, nips
   REAL( DFP ), ALLOCATABLE :: InvJacobian( :, :, : )
 
-  NSD = Obj%RefElem%NSD
-  XiDim = Obj%RefElem%XiDimension
+  NSD = obj%RefElem%NSD
+  XiDim = obj%RefElem%XiDimension
   IF( NSD .NE. XiDim ) THEN
-    Obj%dNdXt = 0.0_DFP
+    obj%dNdXt = 0.0_DFP
   ELSE
     ! Compute inverse of Jacobian
-    nips = SIZE( Obj%N, 2 )
+    nips = SIZE( obj%N, 2 )
     ALLOCATE( InvJacobian( NSD, NSD, nips ) )
-    CALL Inv( InvA = InvJacobian, A = Obj%Jacobian )
+    CALL Inv( InvA = InvJacobian, A = obj%Jacobian )
     DO ips = 1, nips
-      Obj%dNdXt( :, :, ips ) = &
-        & MATMUL( Obj%dNdXi( :, :, ips ), InvJacobian( :, :, ips ) )
+      obj%dNdXt( :, :, ips ) = &
+        & MATMUL( obj%dNdXi( :, :, ips ), InvJacobian( :, :, ips ) )
     END DO
     DEALLOCATE( InvJacobian )
   END IF
@@ -112,7 +112,7 @@ END PROCEDURE set_dNdXt_internally
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE set_Jacobian
-  Obj%jacobian = MATMUL( Val, dNdXi )
+  obj%jacobian = MATMUL( Val, dNdXi )
 END PROCEDURE set_Jacobian
 
 !----------------------------------------------------------------------------
@@ -120,7 +120,7 @@ END PROCEDURE set_Jacobian
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_set_jacobian
-  Obj%jacobian = MATMUL( MATMUL( Val, T ), dNdXi)
+  obj%jacobian = MATMUL( MATMUL( Val, T ), dNdXi)
 END PROCEDURE stsd_set_jacobian
 
 !----------------------------------------------------------------------------
@@ -132,12 +132,12 @@ MODULE PROCEDURE stsd_set_dNTdt
   INTEGER( I4B ) :: ip
 
   !! get mesh velocity at space integration points
-  v = MATMUL(MATMUL( Val, Obj%dTdTheta/Obj%Jt ), Obj%N )
-  CALL Reallocate( Obj%dNTdt, SIZE( Obj%N, 1 ),  SIZE( Obj%T ), &
-    & SIZE( Obj%N, 2 ) )
-  DO ip = 1, SIZE( Obj%N, 2 )
-    Obj%dNTdt( :, :, ip ) = OUTERPROD(Obj%N(:,ip), Obj%dTdTheta/Obj%Jt) &
-      & - MATMUL( Obj%dNTdXt(:,:,:,ip), v(:,ip) )
+  v = MATMUL(MATMUL( Val, obj%dTdTheta/obj%Jt ), obj%N )
+  CALL Reallocate( obj%dNTdt, SIZE( obj%N, 1 ),  SIZE( obj%T ), &
+    & SIZE( obj%N, 2 ) )
+  DO ip = 1, SIZE( obj%N, 2 )
+    obj%dNTdt( :, :, ip ) = OUTERPROD(obj%N(:,ip), obj%dTdTheta/obj%Jt) &
+      & - MATMUL( obj%dNTdXt(:,:,:,ip), v(:,ip) )
   END DO
 END PROCEDURE stsd_set_dNTdt
 
@@ -149,20 +149,20 @@ MODULE PROCEDURE stsd_set_dNTdXt_internally
   INTEGER( I4B ) :: ip, j
   REAL( DFP ), ALLOCATABLE :: Q(:,:), Temp(:,:)
 
-  CALL Reallocate( Obj%dNTdXt, SIZE(Obj%N,1), SIZE(Obj%T), &
-    & SIZE(Obj%Jacobian,1), SIZE(Obj%N,2) )
+  CALL Reallocate( obj%dNTdXt, SIZE(obj%N,1), SIZE(obj%T), &
+    & SIZE(obj%Jacobian,1), SIZE(obj%N,2) )
 
-  IF( Obj%RefElem%XiDimension .NE. Obj%RefElem%NSD ) THEN
+  IF( obj%RefElem%XiDimension .NE. obj%RefElem%NSD ) THEN
     RETURN
   END IF
 
-  Q = Obj%Jacobian(:,:,1)
+  Q = obj%Jacobian(:,:,1)
 
-  DO ip = 1, SIZE(Obj%N,2)
-    CALL INV( A=Obj%Jacobian(:,:,ip), INVA=Q)
-    Temp = MATMUL( Obj%dNdXi(:,:,ip), Q )
+  DO ip = 1, SIZE(obj%N,2)
+    CALL INV( A=obj%Jacobian(:,:,ip), INVA=Q)
+    Temp = MATMUL( obj%dNdXi(:,:,ip), Q )
     DO j = 1, SIZE(Q,1)
-      Obj%dNTdXt(:,:,j,ip) = OUTERPROD( Temp(:,j), Obj%T )
+      obj%dNTdXt(:,:,j,ip) = OUTERPROD( Temp(:,j), obj%T )
     END DO
   END DO
 
@@ -175,10 +175,10 @@ END PROCEDURE stsd_set_dNTdXt_internally
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE set_value
-  CALL setJacobian( Obj = Obj, Val= Val, dNdXi=dNdXi )
-  CALL setJs( Obj = Obj )
-  CALL setdNdXt( Obj = Obj )
-  CALL setBarycentricCoord( Obj = Obj, Val = Val, N=N )
+  CALL setJacobian( obj = obj, Val= Val, dNdXi=dNdXi )
+  CALL setJs( obj = obj )
+  CALL setdNdXt( obj = obj )
+  CALL setBarycentricCoord( obj = obj, Val = Val, N=N )
 END PROCEDURE set_value
 
 !----------------------------------------------------------------------------
@@ -186,12 +186,12 @@ END PROCEDURE set_value
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_set_value
-  CALL setJacobian( Obj = Obj, Val= Val, dNdXi=dNdXi, T=T)
-  CALL setJs( Obj = Obj )
-  CALL setdNdXt( Obj = Obj )
-  CALL setBarycentricCoord( Obj = Obj, Val = Val, N=N, T=T )
-  CALL setdNTdXt( Obj = Obj )
-  CALL setdNTdt( Obj = Obj, Val = Val )
+  CALL setJacobian( obj = obj, Val= Val, dNdXi=dNdXi, T=T)
+  CALL setJs( obj = obj )
+  CALL setdNdXt( obj = obj )
+  CALL setBarycentricCoord( obj = obj, Val = Val, N=N, T=T )
+  CALL setdNTdXt( obj = obj )
+  CALL setdNTdt( obj = obj, Val = Val )
 END PROCEDURE stsd_set_value
 
 !----------------------------------------------------------------------------
@@ -205,12 +205,12 @@ MODULE PROCEDURE set_normal
   vec = 0.0_DFP
   vec( 3, 2 ) = 1.0_DFP
 
-  xidim = Obj%RefElem%XiDimension
+  xidim = obj%RefElem%XiDimension
   nsd = obj%refElem%nsd
 
   DO i = 1, SIZE(obj%N,2)
-    Vec( 1:nsd, 1:xidim ) = Obj%Jacobian( 1:nsd, 1:xidim, i )
-    Obj%Normal( :, i ) = &
+    Vec( 1:nsd, 1:xidim ) = obj%Jacobian( 1:nsd, 1:xidim, i )
+    obj%Normal( :, i ) = &
       & VectorProduct( Vec(:, 1), Vec(:, 2) ) / obj%Js(i)
   END DO
 END PROCEDURE set_normal

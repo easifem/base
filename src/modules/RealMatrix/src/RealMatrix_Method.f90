@@ -45,8 +45,8 @@ PRIVATE
 ! ```
 
 INTERFACE
-MODULE SUBROUTINE Display_obj( Obj, Msg, UnitNo )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE Display_obj( obj, Msg, UnitNo )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
 END SUBROUTINE Display_obj
@@ -71,8 +71,8 @@ END INTERFACE
 ! ```
 
 INTERFACE
-MODULE SUBROUTINE Display_obj_vec( Obj, Msg, UnitNo )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj( : )
+MODULE SUBROUTINE Display_obj_vec( obj, Msg, UnitNo )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: Msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
 END SUBROUTINE Display_obj_vec
@@ -99,12 +99,12 @@ PUBLIC :: Display
 !### Usage
 !
 ! ```fortran
-!	s = Shape( Obj )
+!	s = Shape( obj )
 ! ```
 
 INTERFACE
-MODULE PURE FUNCTION get_shape( Obj ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION get_shape( obj ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans( 2 )
 END FUNCTION get_shape
 END INTERFACE
@@ -133,14 +133,14 @@ PUBLIC :: Shape
 !### Usage
 !
 !```fortran
-!	trow = SIZE( Obj, 1 )
-! tcol = SIZE( Obj, 2 )
-! t = SIZE( Obj )
+!	trow = SIZE( obj, 1 )
+! tcol = SIZE( obj, 2 )
+! t = SIZE( obj )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION get_size( Obj, Dims ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION get_size( obj, Dims ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: Dims
   INTEGER( I4B ) :: Ans
 END FUNCTION get_size
@@ -151,6 +151,56 @@ INTERFACE Size
 END INTERFACE Size
 
 PUBLIC :: Size
+
+!----------------------------------------------------------------------------
+!                                                           TotalDimension
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: 	Returns the total dimension of an array
+!
+!### Introduction
+!
+! This function returns the total dimension (or rank) of an array,
+
+INTERFACE
+MODULE PURE FUNCTION get_tdimension( obj ) RESULT( Ans )
+  CLASS( RealMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ) :: Ans
+END FUNCTION get_tdimension
+END INTERFACE
+
+INTERFACE TotalDimension
+  MODULE PROCEDURE get_tdimension
+END INTERFACE TotalDimension
+
+PUBLIC :: TotalDimension
+
+!----------------------------------------------------------------------------
+!                                                          setTotalDimension
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	23 Feb 2021
+! summary: 	This subroutine set the total dimension (rank) of an array
+!
+!### Introduction
+!
+! This subroutine sets the rank(total dimension) of an array
+
+INTERFACE
+MODULE PURE SUBROUTINE set_tdimension( obj, tDimension )
+  CLASS( RealMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: tDimension
+END SUBROUTINE set_tdimension
+END INTERFACE
+
+INTERFACE setTotalDimension
+  MODULE PROCEDURE set_tdimension
+END INTERFACE setTotalDimension
+
+PUBLIC :: setTotalDimension
 
 !----------------------------------------------------------------------------
 !                                                  AllocateData@Constructor
@@ -164,13 +214,13 @@ PUBLIC :: Size
 !### Usage
 !
 ! ```fortran
-!	call allocateData( Obj, Dims )
+!	call allocateData( obj, Dims )
 ! ```
 
 
 INTERFACE
-MODULE PURE SUBROUTINE Allocate_Data( Obj, Dims )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Allocate_Data( obj, Dims )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Dims(2)
 END SUBROUTINE Allocate_Data
 
@@ -192,17 +242,17 @@ PUBLIC :: AllocateData
 !
 !### Introduction
 !
-! This routine deallocates data stored in Obj
+! This routine deallocates data stored in obj
 !
 !### Usage
 !
 ! ```fortran
-!	call deallocateData( Obj )
+!	call deallocateData( obj )
 ! ```
 
 INTERFACE
-MODULE PURE SUBROUTINE Deallocate_Data( Obj )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Deallocate_Data( obj )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE Deallocate_Data
 END INTERFACE
 
@@ -218,7 +268,7 @@ PUBLIC :: DeallocateData
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
-! summary: This subroutine initiate `Obj` with shape `Dims`
+! summary: This subroutine initiate `obj` with shape `Dims`
 !
 !### Usage
 !
@@ -228,8 +278,8 @@ PUBLIC :: DeallocateData
 ! The above call will initiate a matrix of shape (2,3)
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj( Obj, Dims )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_obj( obj, Dims )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Dims( 2 )
 END SUBROUTINE initiate_obj
 END INTERFACE
@@ -251,8 +301,8 @@ END INTERFACE
 ! The above call will initiate `obj` vector of matrices of shape (2,3)
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_vector_a( Obj, Dims )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj( : )
+MODULE PURE SUBROUTINE initiate_obj_vector_a( obj, Dims )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj( : )
   INTEGER( I4B ), INTENT( IN ) :: Dims( 2 )
 END SUBROUTINE initiate_obj_vector_a
 END INTERFACE
@@ -271,7 +321,7 @@ END INTERFACE
 ! different shapes given in `Dims`
 ! - `Dims` has two columns; the first column denotes the number of rows, and
 ! second column denotes the number of columns in a matrix
-! - irow of `Dims` corresponds to the shape of `Obj(irow)`
+! - irow of `Dims` corresponds to the shape of `obj(irow)`
 ! - in this way `SIZE(obj)` should be equal to the SIZE(Dims, 1)
 !
 !### Usage
@@ -291,8 +341,8 @@ END INTERFACE
 ! - The above call will initiate a obj( 3 ) with shape (4,4)
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_vector_b( Obj, Dims )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj( : )
+MODULE PURE SUBROUTINE initiate_obj_vector_b( obj, Dims )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj( : )
   INTEGER( I4B ), INTENT( IN ) :: Dims( :, : )
 END SUBROUTINE initiate_obj_vector_b
 END INTERFACE
@@ -303,7 +353,7 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
-! summary: This subroutine performs `Obj%l = Val`, i.e., initiate `Obj` with `Val`
+! summary: This subroutine performs `obj%l = Val`, i.e., initiate `obj` with `Val`
 !
 !### Usage
 !
@@ -312,8 +362,8 @@ END INTERFACE
 ! ```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_val( Obj, Val )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE initiate_obj_val( obj, Val )
+  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
 END SUBROUTINE initiate_obj_val
 END INTERFACE
@@ -354,8 +404,8 @@ PUBLIC :: ASSIGNMENT( = )
 !```
 
 INTERFACE
-  MODULE PURE FUNCTION Constructor1( Dims ) RESULT( Obj )
-    TYPE( RealMatrix_ ) :: Obj
+  MODULE PURE FUNCTION Constructor1( Dims ) RESULT( obj )
+    TYPE( RealMatrix_ ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: Dims( 2 )
   END FUNCTION Constructor1
 END INTERFACE
@@ -587,8 +637,8 @@ PUBLIC :: Convert
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Constructor_1( Dims ) RESULT( Obj )
-  CLASS( RealMatrix_ ), POINTER :: Obj
+MODULE PURE FUNCTION Constructor_1( Dims ) RESULT( obj )
+  CLASS( RealMatrix_ ), POINTER :: obj
   INTEGER( I4B ), INTENT( IN ) :: Dims( 2 )
 END FUNCTION Constructor_1
 END INTERFACE
@@ -606,21 +656,21 @@ PUBLIC :: RealMatrix_Pointer
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
-! summary: Return sym(Obj) = 0.5*(Obj + transpose( Obj ) )
+! summary: Return sym(obj) = 0.5*(obj + transpose( obj ) )
 !
 !### Introduction
 !
-! Return symmetric part of Obj
+! Return symmetric part of obj
 !
 !### Usage
 !
 ! ```fortran
-!	realMat = Sym( Obj )
+!	realMat = Sym( obj )
 ! ```
 
 INTERFACE
-MODULE PURE FUNCTION sym_obj( Obj ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION sym_obj( obj ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
     !! Real matrix
   TYPE( RealMatrix_ ) :: Ans
     !! Symmetric real matrix
@@ -633,23 +683,23 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
-! summary: 	 Return sym(Obj) = 0.5*(Obj + transpose( Obj ) )
+! summary: 	 Return sym(obj) = 0.5*(obj + transpose( obj ) )
 !
 !### Introduction
 !
-! Return symmetric part of Obj
+! Return symmetric part of obj
 !
 !### Usage
 !
 !```fortran
-!	realMat = Sym( Obj )
+!	realMat = Sym( obj )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION sym_array( Obj ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj( :, : )
+MODULE PURE FUNCTION sym_array( obj ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: obj( :, : )
     !! Two dimensiona array
-  REAL( DFP ) :: Ans( SIZE( Obj, 1 ), SIZE( Obj, 2 ) )
+  REAL( DFP ) :: Ans( SIZE( obj, 1 ), SIZE( obj, 2 ) )
     !! Symmetric array
 END FUNCTION sym_array
 END INTERFACE
@@ -666,17 +716,17 @@ PUBLIC :: SYM
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
-! summary: Return SkewSymmetric part of Obj
+! summary: Return SkewSymmetric part of obj
 !
 !### Usage
 !
 !```fortran
-!	realMat = SkewSym( Obj )
+!	realMat = SkewSym( obj )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION SkewSym_obj( Obj ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION SkewSym_obj( obj ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
     !! Real matrix
   TYPE( RealMatrix_ ) :: Ans
     !! SkewSymmetric real matrix
@@ -689,23 +739,23 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
-! summary: 	Return SkewSym(Obj) = 0.5*(Obj + transpose( Obj ) )
+! summary: 	Return SkewSym(obj) = 0.5*(obj + transpose( obj ) )
 !
 !### Introduction
 !
-! Return SkewSymmetric part of Obj
+! Return SkewSymmetric part of obj
 !
 !### Usage
 !
 !```fortran
-!	realMat = SkewSym( Obj )
+!	realMat = SkewSym( obj )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION SkewSym_array( Obj ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Obj( :, : )
+MODULE PURE FUNCTION SkewSym_array( obj ) RESULT( Ans )
+  REAL( DFP ), INTENT( IN ) :: obj( :, : )
     !! Two dimensiona array
-  REAL( DFP ) :: Ans( SIZE( Obj, 1 ), SIZE( Obj, 2 ) )
+  REAL( DFP ) :: Ans( SIZE( obj, 1 ), SIZE( obj, 2 ) )
     !! SkewSymmetric array
 END FUNCTION SkewSym_array
 END INTERFACE
@@ -832,7 +882,7 @@ PUBLIC :: MakeDiagonalCopies
 !
 !### Introduction
 !
-! This subroutine set values in `Obj%Val` to random
+! This subroutine set values in `obj%Val` to random
 ! - This subroutine calls `RANDOM_NUMBER()` function from Fortran
 !
 !### Usage
@@ -842,8 +892,8 @@ PUBLIC :: MakeDiagonalCopies
 !```
 
 INTERFACE
-MODULE SUBROUTINE realmat_random_number( Obj, m, n )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE SUBROUTINE realmat_random_number( obj, m, n )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: m, n
 END SUBROUTINE realmat_random_number
 END INTERFACE
@@ -881,17 +931,17 @@ PUBLIC :: TestMatrix
 !
 !### Introduction
 !
-! This function returns the value stored in `Obj%l` in a 2D fortran array
+! This function returns the value stored in `obj%l` in a 2D fortran array
 !
 !### Usage
 !
 !```fortran
-!	Val = ArrayValues( Obj, 1.0_dfp )
+!	Val = ArrayValues( obj, 1.0_dfp )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValues_Real( Obj, DataType ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION f_getValues_Real( obj, DataType ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: DataType
   REAL( DFP ), ALLOCATABLE :: Ans( :, : )
 END FUNCTION f_getValues_Real
@@ -907,26 +957,26 @@ END INTERFACE
 !
 !### Introduction
 !
-! This function returns a section of `Obj%l` in a 2D fortran array. This
-! is equivalent to `Val = Obj%l(RIndx, CIndx)`
+! This function returns a section of `obj%l` in a 2D fortran array. This
+! is equivalent to `Val = obj%l(RIndx, CIndx)`
 !
 !### Usage
 !
 !```fortran
 ! integer( i4b ) :: r( 2 ), c( 2 )
-! type( RealMatrix_ ) :: Obj
-! call initiate( Obj, [4,4] )
+! type( RealMatrix_ ) :: obj
+! call initiate( obj, [4,4] )
 ! call random_number( obj ); r=[1,2]; c=[2,3]
-! Val = ArrayValues( Obj, R, C, 1.0_dfp )
+! Val = ArrayValues( obj, R, C, 1.0_dfp )
 !```
 !
-! The above call will return `Obj%Val[1:2, 2:3]`
+! The above call will return `obj%Val[1:2, 2:3]`
 
 
 INTERFACE
-MODULE PURE FUNCTION f_getSectionValues_Real( Obj, RIndx, CIndx, DataType ) &
+MODULE PURE FUNCTION f_getSectionValues_Real( obj, RIndx, CIndx, DataType ) &
   & RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: RIndx( : ), CIndx( : )
   REAL( DFP ), INTENT( IN ) :: DataType
   REAL( DFP ), ALLOCATABLE :: Ans( :, : )
@@ -943,25 +993,25 @@ END INTERFACE
 !
 !### Introduction
 !
-! This function returns a section of `Obj%l` in a 2D fortran array. This
-! is equivalent to `Val = Obj%l(is:ie:s, is:ie:s)`
+! This function returns a section of `obj%l` in a 2D fortran array. This
+! is equivalent to `Val = obj%l(is:ie:s, is:ie:s)`
 !
 !### Usage
 !
 !```fortran
 ! integer( i4b ) :: r( 2 ), c( 2 )
-! type( RealMatrix_ ) :: Obj
-! call initiate( Obj, [4,4] )
+! type( RealMatrix_ ) :: obj
+! call initiate( obj, [4,4] )
 ! call random_number( obj )
-! Val = ArrayValues( Obj, 1, 2, 1, 1.0_dfp )
+! Val = ArrayValues( obj, 1, 2, 1, 1.0_dfp )
 !```
 !
-! The above call will return `Obj%Val[1:2:1, 1:2:1]`
+! The above call will return `obj%Val[1:2:1, 1:2:1]`
 
 INTERFACE
-MODULE PURE FUNCTION f_getValuesFromTriplet_Real( Obj, iStart, iEnd, Stride, &
+MODULE PURE FUNCTION f_getValuesFromTriplet_Real( obj, iStart, iEnd, Stride, &
   & DataType ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
   REAL( DFP ), INTENT( IN ) :: DataType
   REAL( DFP ), ALLOCATABLE :: Ans( :, : )
@@ -978,7 +1028,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This function is essentially copy method `Ans=Obj`
+! This function is essentially copy method `Ans=obj`
 !
 !### Usage
 !
@@ -987,8 +1037,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValues_self( Obj, DataType ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION f_getValues_self( obj, DataType ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   TYPE( RealMatrix_ ), INTENT( IN ) :: DataType
   TYPE( RealMatrix_ ) :: Ans
 END FUNCTION f_getValues_self
@@ -1004,7 +1054,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This function is essentially copy method `Ans=Obj(RIndx, CIndx)`
+! This function is essentially copy method `Ans=obj(RIndx, CIndx)`
 !
 !### Usage
 !
@@ -1013,9 +1063,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getSectionValues_Self( Obj, RIndx, CIndx, DataType ) &
+MODULE PURE FUNCTION f_getSectionValues_Self( obj, RIndx, CIndx, DataType ) &
   & RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: RIndx( : ), CIndx( : )
   TYPE( RealMatrix_ ), INTENT( IN ) :: DataType
   TYPE( RealMatrix_ ) :: Ans
@@ -1031,7 +1081,7 @@ END INTERFACE
 ! summary: Returns [[RealMatrix_]] obj from a section of [[realmatrix_]]
 !
 !### Introduction
-! 	This function is essentially copy method `Ans=Obj(is:ie, is:ie)`
+! 	This function is essentially copy method `Ans=obj(is:ie, is:ie)`
 !
 !### Usage
 !
@@ -1040,9 +1090,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValuesFromTriplet_self( Obj, iStart, iEnd, &
+MODULE PURE FUNCTION f_getValuesFromTriplet_self( obj, iStart, iEnd, &
   & Stride, DataType ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
   TYPE( RealMatrix_ ), INTENT( IN ) :: DataType
   TYPE( RealMatrix_ ) :: Ans
@@ -1059,7 +1109,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This function combines all [[realmatrix_]] value of `Obj` and
+! This function combines all [[realmatrix_]] value of `obj` and
 ! returns a 2D fortrn array
 !
 !### Usage
@@ -1069,8 +1119,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION f_getValues_1( Obj, DataType ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj( :, : )
+MODULE PURE FUNCTION f_getValues_1( obj, DataType ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj( :, : )
   REAL( DFP ), INTENT( IN ) :: DataType
   REAL( DFP ), ALLOCATABLE :: Ans( :, : )
 END FUNCTION f_getValues_1
@@ -1085,7 +1135,7 @@ END FUNCTION f_getValues_1
 !
 !### Introduction
 !
-! This function combines all [[realmatrix_]] value of `Obj` and
+! This function combines all [[realmatrix_]] value of `obj` and
 ! returns a [[realmatrix_]] object
 !
 !### Usage
@@ -1094,8 +1144,8 @@ END FUNCTION f_getValues_1
 !
 !```
 
-MODULE PURE FUNCTION f_getValues_2( Obj, DataType ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj( :, : )
+MODULE PURE FUNCTION f_getValues_2( obj, DataType ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj( :, : )
   TYPE( RealMatrix_ ), INTENT( IN ) :: DataType
   TYPE( RealMatrix_ ) :: Ans
 END FUNCTION f_getValues_2
@@ -1129,10 +1179,10 @@ PUBLIC :: ArrayValues
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Copy_Obj_to_Val( From, To )
+MODULE PURE SUBROUTINE Copy_obj_to_Val( From, To )
   TYPE( RealMatrix_ ), INTENT( IN ) :: From
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: To( :, : )
-END SUBROUTINE Copy_Obj_to_Val
+END SUBROUTINE Copy_obj_to_Val
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1155,10 +1205,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Copy_Obj_to_Obj( From, To )
+MODULE PURE SUBROUTINE Copy_obj_to_obj( From, To )
   TYPE( RealMatrix_ ), INTENT( IN ) :: From
   TYPE( RealMatrix_ ), INTENT( INOUT) :: To
-END SUBROUTINE Copy_Obj_to_Obj
+END SUBROUTINE Copy_obj_to_obj
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1180,10 +1230,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Copy_Val_to_Obj( From, To )
+MODULE PURE SUBROUTINE Copy_Val_to_obj( From, To )
   REAL( DFP ), INTENT( IN ) :: From( :, : )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: To
-END SUBROUTINE Copy_Val_to_Obj
+END SUBROUTINE Copy_Val_to_obj
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1191,13 +1241,13 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE COPY
-  MODULE PROCEDURE Copy_Obj_to_Val, Copy_Obj_to_Obj, Copy_Val_to_Obj
+  MODULE PROCEDURE Copy_obj_to_Val, Copy_obj_to_obj, Copy_Val_to_obj
 END INTERFACE COPY
 
 PUBLIC :: COPY
 
 INTERFACE CONVERT
-  MODULE PROCEDURE Copy_Obj_to_Val, Copy_Obj_to_Obj, Copy_Val_to_Obj
+  MODULE PROCEDURE Copy_obj_to_Val, Copy_obj_to_obj, Copy_Val_to_obj
 END INTERFACE CONVERT
 
 !----------------------------------------------------------------------------
@@ -1220,8 +1270,8 @@ END INTERFACE CONVERT
 !```
 
 INTERFACE
-MODULE FUNCTION f_getPointer_Real( Obj, DataType ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ), TARGET :: Obj
+MODULE FUNCTION f_getPointer_Real( obj, DataType ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ), TARGET :: obj
   REAL( DFP ), INTENT( IN ) :: DataType
   REAL( DFP ), POINTER :: Ans( :, : )
 END FUNCTION f_getPointer_Real
@@ -1243,7 +1293,7 @@ PUBLIC :: ArrayPointer
 !
 !### Introduction
 !
-! This subroutine set `Obj%l` to `Val`
+! This subroutine set `obj%l` to `Val`
 !
 !### Usage
 !
@@ -1252,8 +1302,8 @@ PUBLIC :: ArrayPointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_setValues_1( Obj, Val )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realmat_setValues_1( obj, Val )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
 END SUBROUTINE realmat_setValues_1
 END INTERFACE
@@ -1269,8 +1319,8 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine set values in `Obj%l`
-! `Obj%l( i, j ) = Val`
+! This subroutine set values in `obj%l`
+! `obj%l( i, j ) = Val`
 !
 !### Usage
 !
@@ -1278,8 +1328,8 @@ INTERFACE
 !
 !```
 
-MODULE PURE SUBROUTINE realmat_setValues_2( Obj, Val, Row, Col )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realmat_setValues_2( obj, Val, Row, Col )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val
   INTEGER( I4B ), INTENT( IN ) :: Col, Row
 END SUBROUTINE realmat_setValues_2
@@ -1295,12 +1345,12 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine set values in `Obj%l`
+! This subroutine set values in `obj%l`
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_setValues_3( Obj, Val, Row, Col )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realmat_setValues_3( obj, Val, Row, Col )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   INTEGER( I4B ), INTENT( IN ) :: Col( : ), Row( : )
 END SUBROUTINE realmat_setValues_3
@@ -1316,7 +1366,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine set values in `Obj%l`
+! This subroutine set values in `obj%l`
 ! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx` denotes diagonal number with `0` being the main diagonal
 ! - If `Extraoption=MATRIX_ROW` then row values are set; `Indx` then denotes row number
 ! - If `Extraoption=MATRIX_COLUMN` then col values are set; `Indx` then denotes col number
@@ -1328,8 +1378,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_setValues_4( Obj, Val, Indx, ExtraOption )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realmat_setValues_4( obj, Val, Indx, ExtraOption )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   INTEGER( I4B ), INTENT( IN ) :: Indx
   INTEGER( I4B ), INTENT( IN ) :: ExtraOption
@@ -1346,7 +1396,7 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine set values in `Obj%l`
+! This subroutine set values in `obj%l`
 ! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx` denotes the diagonal number with `0` being the main diagonal
 ! - If `Extraoption=ROW` then row values are set; `Indx` then denotes row number
 ! - If `Extraoption=COLUMN` then col values are set; `Indx` then denotes col number
@@ -1358,8 +1408,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_setValues_5( Obj, Val, Indx, ExtraOption )
-  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE realmat_setValues_5( obj, Val, Indx, ExtraOption )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   INTEGER( I4B ), INTENT( IN ) :: Indx ( : ), ExtraOption
 END SUBROUTINE realmat_setValues_5
@@ -1386,7 +1436,7 @@ PUBLIC :: setValues
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj%l`. This subroutine performs following task:
+! This subroutine adds contribution in values of `obj%l`. This subroutine performs following task:
 !
 ! $$obj = obj <op> scale * val $$
 !
@@ -1397,8 +1447,8 @@ PUBLIC :: setValues
 !@endtodo
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_1( Obj, Val, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE realmat_addVal_1( obj, Val, Scale, Op )
+  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   REAL( DFP ), INTENT( IN ) :: Scale
     !! Scaling for `Val`
@@ -1417,15 +1467,15 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj%l`
+! This subroutine adds contribution in values of `obj%l`
 !
 !```fortran
 ! obj%l = obj%v%*Op* scale * val
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_2( Obj, Val, Row, Col, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE realmat_addVal_2( obj, Val, Row, Col, Scale, Op )
+  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
   REAL( DFP ), INTENT( IN ) :: Val
   REAL( DFP ), INTENT( IN ) :: Scale
   INTEGER( I4B ), INTENT( IN ) :: Row
@@ -1444,15 +1494,15 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj%l`
+! This subroutine adds contribution in values of `obj%l`
 !
 !```fortran
 ! obj%l = obj%v%*Op* scale * val
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_3( Obj, Val, Row, Col, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE realmat_addVal_3( obj, Val, Row, Col, Scale, Op )
+  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   REAL( DFP ), INTENT( IN ) :: Scale
   INTEGER( I4B ), INTENT( IN ) :: Row( : )
@@ -1471,15 +1521,15 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj%l`
+! This subroutine adds contribution in values of `obj%l`
 !
 ! ```fortran
 ! obj%l = obj%v%*Op* scale * val
 ! ```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_4( Obj, Val, Indx, ExtraOption, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE realmat_addVal_4( obj, Val, Indx, ExtraOption, Scale, Op )
+  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx
   INTEGER( I4B ), INTENT( IN ) :: ExtraOption
@@ -1497,15 +1547,15 @@ END INTERFACE
 !
 !### Introduction
 !
-! This subroutine adds contribution in values of `Obj%l`
+! This subroutine adds contribution in values of `obj%l`
 !
 !```fortran
 ! obj%l = obj%v%*Op* scale * val
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_5( Obj, Val, Indx, ExtraOption, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE realmat_addVal_5( obj, Val, Indx, ExtraOption, Scale, Op )
+  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
   INTEGER( I4B ), INTENT( IN ) :: ExtraOption
@@ -1525,8 +1575,8 @@ PUBLIC :: addContribution
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION MatMul_1( Obj1, Obj2 ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj1, Obj2
+MODULE PURE FUNCTION MatMul_1( obj1, obj2 ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj1, obj2
   TYPE( RealMatrix_ ) :: Ans
 END FUNCTION MatMul_1
 END INTERFACE
@@ -1536,8 +1586,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION MatMul_2( Obj, Vec ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION MatMul_2( obj, Vec ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Vec( : )
   REAL( DFP ), ALLOCATABLE :: Ans( : )
 END FUNCTION MatMul_2
@@ -1548,8 +1598,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION MatMul_3( Obj, Vec ) RESULT( Ans )
-  TYPE( RealMatrix_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION MatMul_3( obj, Vec ) RESULT( Ans )
+  TYPE( RealMatrix_ ), INTENT( IN ) :: obj
   TYPE( RealVector_ ), INTENT( IN ) :: Vec
   TYPE( RealVector_ ) :: Ans
 END FUNCTION MatMul_3

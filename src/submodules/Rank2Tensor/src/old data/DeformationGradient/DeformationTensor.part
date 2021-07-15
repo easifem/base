@@ -23,19 +23,19 @@
 !                                                           m_RightCauchyGreen
 !------------------------------------------------------------------------------
 
- FUNCTION m_RightCauchyGreen( Obj )
+ FUNCTION m_RightCauchyGreen( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  m_RightCauchyGreen = F^T F
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( DeformationGradient_ ), INTENT( IN ) :: Obj
+    CLASS( DeformationGradient_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_RightCauchyGreen
 
     ! Define internal variables
 
-    m_RightCauchyGreen = ( .transpose. Obj ) .matmul. Obj
+    m_RightCauchyGreen = ( .transpose. obj ) .matmul. obj
 
  END FUNCTION m_RightCauchyGreen
 
@@ -63,19 +63,19 @@
 !                                                           m_LeftCauchyGreen
 !------------------------------------------------------------------------------
 
- FUNCTION m_LeftCauchyGreen( Obj )
+ FUNCTION m_LeftCauchyGreen( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  m_LeftCauchyGreen = FF^T
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( DeformationGradient_ ), INTENT( IN ) :: Obj
+    CLASS( DeformationGradient_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_LeftCauchyGreen
 
     ! Define internal variables
 
-    m_LeftCauchyGreen = Obj .matmul. ( .transpose. Obj )
+    m_LeftCauchyGreen = obj .matmul. ( .transpose. obj )
 
  END FUNCTION m_LeftCauchyGreen
 

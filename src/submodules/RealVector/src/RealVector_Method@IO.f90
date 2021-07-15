@@ -28,26 +28,30 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Obj_Scalar_Display
+MODULE PROCEDURE realVec_display1
   INTEGER( I4B ) :: I
   I = Input( option=UnitNo, default=stdout)
   CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : " // TRIM(ADJUSTL(STR( fm=FI4B, n=SIZE(Obj) ))), unitNo = I )
-  CALL Display( Val = Obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
-END PROCEDURE Obj_Scalar_Display
+  CALL Display( msg = "size : " // TRIM(ADJUSTL(STR( fm=FI4B, n=SIZE(obj) ))), unitNo = I )
+  CALL Display( Val = obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
+END PROCEDURE realVec_display1
 
 !----------------------------------------------------------------------------
 !                                                                 Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Obj_Vector_Display
+MODULE PROCEDURE realVec_display2
   INTEGER( I4B ) :: j, I
   I = Input( option=UnitNo, default=stdout)
   CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : ", val = SIZE( Obj ), unitNo = I )
-  DO j = 1, SIZE( Obj )
-    CALL Display( Obj( j ), msg = "( " // TRIM(ADJUSTL(STR(fm=FI4B, n=j))) // " ) ",unitNo = I )
+  CALL Display( msg = "size : ", val = SIZE( obj ), unitNo = I )
+  DO j = 1, SIZE( obj )
+    CALL Display( obj( j ), msg = "( " // TRIM(ADJUSTL(STR(fm=FI4B, n=j))) // " ) ",unitNo = I )
   END DO
-END PROCEDURE Obj_Vector_Display
+END PROCEDURE realVec_display2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE IO

@@ -48,12 +48,12 @@ PRIVATE
 !### Usage
 !
 !```fortran
-! s = SHAPE(Obj)
+! s = SHAPE(obj)
 !```
 
 INTERFACE
-MODULE PURE FUNCTION get_shape( Obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION get_shape( obj ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans( 1 )
 END FUNCTION get_shape
 END INTERFACE
@@ -73,8 +73,8 @@ PUBLIC :: Shape
 ! summary: 	This routine returns the size of [[Vector3D_]]
 
 INTERFACE
-MODULE PURE FUNCTION get_size( Obj, Dims ) RESULT( Ans )
-  TYPE( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION get_size( obj, Dims ) RESULT( Ans )
+  TYPE( Vector3D_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: Dims
   INTEGER( I4B ) :: Ans
 END FUNCTION get_size
@@ -124,8 +124,8 @@ PUBLIC :: getTotalDimension
 ! This subroutine sets the rank(total dimension) of an array
 
 INTERFACE
-MODULE PURE SUBROUTINE Vec3D_setTotalDimension( Obj, tDimension )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Vec3D_setTotalDimension( obj, tDimension )
+  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: tDimension
 END SUBROUTINE Vec3D_setTotalDimension
 END INTERFACE
@@ -149,8 +149,8 @@ PUBLIC :: setTotalDimension
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE Allocate_Data( Obj, Dims )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Allocate_Data( obj, Dims )
+  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Dims
 END SUBROUTINE Allocate_Data
 END INTERFACE
@@ -170,8 +170,8 @@ PUBLIC :: AllocateData
 ! summary: 	This subroutine reset the instance of [[Vector3D_]]
 
 INTERFACE
-MODULE PURE SUBROUTINE Deallocate_Data( Obj )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Deallocate_Data( obj )
+  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE Deallocate_Data
 END INTERFACE
 
@@ -204,8 +204,8 @@ PUBLIC :: DeallocateData
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_from_val( Obj, Val )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_obj_from_val( obj, Val )
+  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
 END SUBROUTINE initiate_obj_from_val
 END INTERFACE
@@ -232,9 +232,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_from_obj( Obj, AnotherObj )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: Obj
-  CLASS( Vector3D_ ), INTENT( IN ) :: AnotherObj
+MODULE PURE SUBROUTINE initiate_obj_from_obj( obj, Anotherobj )
+  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
+  CLASS( Vector3D_ ), INTENT( IN ) :: Anotherobj
 END SUBROUTINE initiate_obj_from_obj
 END INTERFACE
 
@@ -355,8 +355,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE FUNCTION Constructor_2( Obj ) RESULT( Ans )
-  TYPE( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE FUNCTION Constructor_2( obj ) RESULT( Ans )
+  TYPE( Vector3D_ ), INTENT( IN ) :: obj
   CLASS( Vector3D_ ), POINTER :: Ans
 END FUNCTION Constructor_2
 END INTERFACE
@@ -388,11 +388,11 @@ PUBLIC :: Vector3D_Pointer
 !```
 
 INTERFACE
-MODULE SUBROUTINE Display_Obj( Obj, Msg, UnitNo )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE Display_obj( obj, Msg, UnitNo )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-END SUBROUTINE Display_Obj
+END SUBROUTINE Display_obj
 END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
@@ -400,7 +400,7 @@ END INTERFACE
 ! summary: 	Generic routine to display an object
 
 INTERFACE Display
-  MODULE PROCEDURE Display_Obj
+  MODULE PROCEDURE Display_obj
 END INTERFACE Display
 
 PUBLIC :: Display
@@ -429,9 +429,9 @@ PUBLIC :: Display
 !```
 
 INTERFACE
-MODULE PURE FUNCTION dot_product_1( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj1
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION dot_product_1( obj1, obj2 ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj1
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj2
   REAL( DFP ) :: Ans
 END FUNCTION dot_product_1
 END INTERFACE
@@ -461,8 +461,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION dot_product_2( Obj, Val ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION dot_product_2( obj, Val ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   REAL( DFP ) :: Ans
 END FUNCTION dot_product_2
@@ -493,8 +493,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION dot_product_3( Val, Obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION dot_product_3( Val, obj ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   REAL( DFP ) :: Ans
 END FUNCTION dot_product_3
@@ -587,9 +587,9 @@ PUBLIC :: OPERATOR(.DOT. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION vector_product_1( Obj1, Obj2 ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj1
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj2
+MODULE PURE FUNCTION vector_product_1( obj1, obj2 ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj1
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj2
   TYPE( Vector3D_ ) :: Ans
 END FUNCTION vector_product_1
 END INTERFACE
@@ -618,13 +618,13 @@ END INTERFACE
 ! CALL Display( obj, "obj1 = " )
 ! CALL Display( val, "val = " )
 ! CALL Display( Vector_PRODUCT( obj=obj, val=val ), "vector_product = " )
-! CALL Display( Obj .X. val, "vector_product = " )
+! CALL Display( obj .X. val, "vector_product = " )
 ! CALL DotLine()
 !```
 
 INTERFACE
-MODULE PURE FUNCTION vector_product_2( Obj, Val ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION vector_product_2( obj, Val ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   TYPE( Vector3D_ ) :: Ans
 END FUNCTION vector_product_2
@@ -654,13 +654,13 @@ END INTERFACE
 ! CALL Display( obj, "obj1 = " )
 ! CALL Display( val, "val = " )
 ! CALL Display( Vector_PRODUCT( obj=obj, val=val ), "vector_product = " )
-! CALL Display( Obj .X. val, "vector_product = " )
+! CALL Display( obj .X. val, "vector_product = " )
 ! CALL DotLine()
 !```
 
 INTERFACE
-MODULE PURE FUNCTION vector_product_3( Val, Obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION vector_product_3( Val, obj ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   TYPE( Vector3D_ ) :: Ans
 END FUNCTION vector_product_3
@@ -692,7 +692,7 @@ END INTERFACE
 ! CALL Equalline()
 ! CALL Display( "test11" )
 ! CALL Display( Vector_PRODUCT( obj1, obj2, obj3 ), "vector_product = " )
-! CALL Display( Obj1 .X. (Obj2 .X. Obj3), "vector_product = " )
+! CALL Display( obj1 .X. (obj2 .X. obj3), "vector_product = " )
 ! CALL DotLine()
 !```
 
@@ -751,13 +751,13 @@ PUBLIC :: OPERATOR(.X.)
 ! CALL Equalline()
 ! CALL Display( "test13" )
 ! CALL Display( NORM2( obj ), "NORM2 = " )
-! CALL Display( .NORM. obj, ".Norm. Obj = ")
+! CALL Display( .NORM. obj, ".Norm. obj = ")
 ! CALL DotLine()
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Norm2_obj( Obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Norm2_obj( obj ) RESULT( Ans )
+  CLASS( Vector3D_ ), INTENT( IN ) :: obj
   REAL( DFP ) :: Ans
 END FUNCTION Norm2_obj
 END INTERFACE

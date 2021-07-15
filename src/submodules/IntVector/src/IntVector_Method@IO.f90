@@ -28,27 +28,27 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntscalarDisplay
-  INTEGER( I4B ) :: I
+MODULE PROCEDURE intVec_Display1
+  INTEGER( I4B ) :: j, I
   I = Input( option=UnitNo, default=stdout)
   CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : ", val = SIZE( Obj ), unitNo = I )
-  CALL Display( Val = Obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
-END PROCEDURE IntscalarDisplay
+  CALL Display( msg = "size : ", val = SIZE( obj ), unitNo = I )
+  DO j = 1, SIZE( obj )
+    CALL Display( obj( j ), msg = "( " // TRIM(STR( fm=FI4B, n=j )) // " ) ", &
+      & unitNo = I )
+  END DO
+END PROCEDURE intVec_Display1
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IntVectorDisplay
-  INTEGER( I4B ) :: j, I
+MODULE PROCEDURE intVec_Display2
+  INTEGER( I4B ) :: I
   I = Input( option=UnitNo, default=stdout)
   CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : ", val = SIZE( Obj ), unitNo = I )
-  DO j = 1, SIZE( Obj )
-    CALL Display( Obj( j ), msg = "( " // TRIM(STR( fm=FI4B, n=j )) // " ) ", &
-      & unitNo = I )
-  END DO
-END PROCEDURE IntVectorDisplay
+  CALL Display( msg = "size : ", val = SIZE( obj ), unitNo = I )
+  CALL Display( Val = obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
+END PROCEDURE intVec_Display2
 
 END SUBMODULE IO

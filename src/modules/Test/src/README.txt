@@ -160,7 +160,7 @@ you an idea of what failed.
 What would you rather see?
 
 ok 34 - basic standard variance
-not ok 35 - root mean square 
+not ok 35 - root mean square
 ok 36 - volt == ampere * ohm
 
 or
@@ -435,7 +435,7 @@ There is a curious lack of Fortran test libraries written
 in Fortran itself. They usually requires a preprocessor or a
 scripting language to do collection, preprocessing, transcription
 and processing of the tests. Examples of popular ones are Fruit,
-ftunit, pFUnit, flibs, FortUnit, FUnit, and ObjecxxFTK:
+ftunit, pFUnit, flibs, FortUnit, FUnit, and objecxxFTK:
 
  * Fruit (fortranxunit): Fortran Unit Test Framework, BSD-like
    license, requires Ruby, active in 2015,
@@ -447,7 +447,7 @@ ftunit, pFUnit, flibs, FortUnit, FUnit, and ObjecxxFTK:
  * FortUnit: GPLv2 license, requires Perl, stopped in 2004 and
    seems gone (no source),
  * FUnit: requires Ruby, stopped in 2009,
- * ObjecxxFTK: requires Python; perpetual, royalty-free license
+ * objecxxFTK: requires Python; perpetual, royalty-free license
    for source allowing client modifications - modest license fee.
 
 Fortran-testanything is pure Modern Fortran, and does not require
