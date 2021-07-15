@@ -25,232 +25,254 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValues_Int
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    Val = Obj%Val
+MODULE PROCEDURE realVec_get1
+  IF( ALLOCATED( obj%Val ) ) THEN
+    ans = obj%Val
   END IF
-END PROCEDURE f_getValues_Int
+END PROCEDURE realVec_get1
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getSectionValues_Int
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    Val = Obj%Val( Indx )
+MODULE PROCEDURE realVec_get2
+  IF( ALLOCATED( obj%Val ) ) THEN
+    ans = obj%Val( Indx )
   END IF
-END PROCEDURE f_getSectionValues_Int
+END PROCEDURE realVec_get2
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValuesFromTriplet_Int
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    Val = Obj%Val( iStart:iEnd:Stride )
+MODULE PROCEDURE realVec_get3
+  IF( ALLOCATED( obj%Val ) ) THEN
+    ans = obj%Val( iStart:iEnd:Stride )
   END IF
-END PROCEDURE f_getValuesFromTriplet_Int
+END PROCEDURE realVec_get3
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValues_Real
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    CALL Reallocate( Val, SIZE( Obj ) )
-    CALL COPY( Y=Val, X=Obj%Val )
+MODULE PROCEDURE realVec_get4
+  IF( ALLOCATED( obj%Val ) ) THEN
+    ans = obj
   END IF
-END PROCEDURE f_getValues_Real
+END PROCEDURE realVec_get4
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getSectionValues_Real
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    CALL Reallocate( Val, SIZE(Indx ) )
-    CALL COPY( Y=Val, X=Obj%Val(Indx) )
+MODULE PROCEDURE realVec_get5
+  IF( ALLOCATED( obj%Val ) ) THEN
+    CALL Reallocate( ans, SIZE(Indx ) )
+    CALL COPY( Y=ans, X=obj%Val(Indx) )
   END IF
-END PROCEDURE f_getSectionValues_Real
+END PROCEDURE realVec_get5
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                       get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValuesFromTriplet_Real
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    Val = Obj%Val ( iStart:iEnd:Stride )
+MODULE PROCEDURE realVec_get6
+  IF( ALLOCATED( obj%Val ) ) THEN
+    ans = obj%Val ( iStart:iEnd:Stride )
   END IF
-END PROCEDURE f_getValuesFromTriplet_Real
+END PROCEDURE realVec_get6
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                       get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYValues_Int
+MODULE PROCEDURE realVec_get7
   INTEGER( I4B ) :: N, i, tNodes, r1, r2
-  N = SIZE( Obj )
+  N = SIZE( obj )
   tNodes = 0
   DO i = 1, N
-    tNodes = tNodes + SIZE( Obj( i )%Val )
+    tNodes = tNodes + SIZE( obj( i )%Val )
   END DO
   ALLOCATE( Val( tNodes ) )
   tNodes = 0; r1 = 0; r2 = 0
   DO i = 1, N
-    r1 = r2 + 1; r2 = r2 + SIZE( Obj( i )%Val )
-    Val( r1 : r2 ) = Obj( i )%Val
+    r1 = r2 + 1; r2 = r2 + SIZE( obj( i )%Val )
+    Val( r1 : r2 ) = obj( i )%Val
   END DO
-END PROCEDURE f_getARRAYValues_Int
+END PROCEDURE realVec_get7
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                       get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYSectionValues_Int
+MODULE PROCEDURE realVec_get8
   INTEGER( I4B ) :: N, i, M
-  N = SIZE( Obj )
+  N = SIZE( obj )
   M = SIZE( Indx )
   ALLOCATE( Val( N * M ) )
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( Indx )
+    Val( ( i - 1 ) * M + 1 : i * M ) = obj( i )%Val( Indx )
   END DO
-END PROCEDURE f_getARRAYSectionValues_Int
+END PROCEDURE realVec_get8
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                       get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYValuesFromTriplet_Int
+MODULE PROCEDURE realVec_get9
   INTEGER( I4B ) :: N, i, M
-  N = SIZE( Obj )
+  N = SIZE( obj )
   M = 1 + ( iEnd - iStart ) / Stride
   ALLOCATE( Val( M * N ) )
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( iStart:iEnd:Stride )
+    Val( ( i - 1 ) * M + 1 : i * M ) = obj( i )%Val( iStart:iEnd:Stride )
   END DO
-END PROCEDURE f_getARRAYValuesFromTriplet_Int
+END PROCEDURE realVec_get9
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYValues_Real
+MODULE PROCEDURE realVec_get10
   INTEGER( I4B ) :: N, i, tNodes, r1, r2
-  N = SIZE( Obj )
+  N = SIZE( obj )
   tNodes = 0
   DO i = 1, N
-    tNodes = tNodes + SIZE( Obj( i )%Val )
+    tNodes = tNodes + SIZE( obj( i )%Val )
   END DO
   ALLOCATE( Val( tNodes ) )
   tNodes = 0; r1 = 0; r2 = 0
   DO i = 1, N
-    r1 = r2 + 1; r2 = r2 + SIZE( Obj( i )%Val )
-    Val( r1 : r2 ) = Obj( i )%Val
+    r1 = r2 + 1; r2 = r2 + SIZE( obj( i )%Val )
+    Val( r1 : r2 ) = obj( i )%Val
   END DO
-END PROCEDURE f_getARRAYValues_Real
+END PROCEDURE realVec_get10
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYSectionValues_Real
+MODULE PROCEDURE realVec_get11
   INTEGER( I4B ) :: N, i, M
-  N = SIZE( Obj )
+  N = SIZE( obj )
   M = SIZE( Indx )
   ALLOCATE( Val( M * N ) )
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( Indx )
+    Val( ( i - 1 ) * M + 1 : i * M ) = obj( i )%Val( Indx )
   END DO
-END PROCEDURE f_getARRAYSectionValues_Real
+END PROCEDURE realVec_get11
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYValuesFromTriplet_Real
+MODULE PROCEDURE realVec_get12
   INTEGER( I4B ) :: N, i, M
-  N = SIZE( Obj )
+  N = SIZE( obj )
   M = 1 + ( iEnd - iStart ) / Stride
   ALLOCATE( Val( M * N ) )
   DO i = 1, N
-    Val( ( i - 1 ) * M + 1 : i * M ) = Obj( i )%Val( iStart:iEnd:Stride )
+    Val( ( i - 1 ) * M + 1 : i * M ) = obj( i )%Val( iStart:iEnd:Stride )
   END DO
-END PROCEDURE f_getARRAYValuesFromTriplet_Real
+END PROCEDURE realVec_get12
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                       get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getSectionValues_self
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    ! CALL COPY( Y=Val, X=Obj%Val( Indx ) )
-    STOP
-  END IF
-END PROCEDURE f_getSectionValues_self
+MODULE PROCEDURE realVec_get13
+  val = get(obj=obj, dataType=1.0_DFP)
+END PROCEDURE realVec_get13
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValuesFromTriplet_self
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    ! CALL COPY( Y=Val, X=Obj%Val( iStart:iEnd:Stride ) )
-    STOP
-  END IF
-END PROCEDURE f_getValuesFromTriplet_self
+MODULE PROCEDURE realVec_get14
+  val = get(obj=obj, Indx=Indx, dataType=1.0_DFP)
+END PROCEDURE realVec_get14
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYValues_self
-  ! CALL COPY( Y=Val, X=ArrayValues( Obj, TypeReal64 ) )
-  STOP
-END PROCEDURE f_getARRAYValues_self
+MODULE PROCEDURE realVec_get15
+  val = get(obj=obj, istart=istart, iend=iend, stride=stride,  &
+    & dataType=1.0_DFP)
+END PROCEDURE realVec_get15
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYSectionValues_self
-  ! CALL COPY( Y=Val, X=ArrayValues( Obj, Indx, TypeReal64 ) )
-  STOP
-END PROCEDURE f_getARRAYSectionValues_self
+MODULE PROCEDURE realVec_get16
+  val = get( obj=obj, indx=indx, dataType = 1.0_DFP )
+END PROCEDURE realVec_get16
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                       get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getARRAYValuesFromTriplet_self
-  ! CALL COPY( Y=Val, X=ArrayValues( Obj, iStart, iEnd, Stride, TypeReal64 ) )
-  STOP
-END PROCEDURE f_getARRAYValuesFromTriplet_self
+MODULE PROCEDURE realVec_get17
+  val = get(obj=obj, istart=istart, iend=iend, stride=stride,  &
+    & dataType=1.0_DFP)
+END PROCEDURE realVec_get17
 
 !----------------------------------------------------------------------------
-!                                                               ArrayPointers
+!                                                                       get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getPointer_Real
-  Val => Obj%Val
-END PROCEDURE f_getPointer_Real
+MODULE PROCEDURE realVec_get18
+  val = obj%val( indx )
+END PROCEDURE realVec_get18
+
+!----------------------------------------------------------------------------
+!                                                               getPointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_getPointer1
+  Val => obj%Val
+END PROCEDURE realVec_getPointer1
+
+!----------------------------------------------------------------------------
+!                                                               getPointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_getPointer2
+  INTEGER( I4B ) :: tdof, aa, ss
+
+  tdof = .tdof. dofobj
+
+  SELECT CASE( dofobj%storageFMT )
+  CASE( NODES_FMT )
+    aa = dofno
+    ! bb = SIZE( obj )
+    ss = tdof
+    Val => obj%Val(aa::ss)
+  CASE( DOF_FMT )
+    aa = dofobj%valMap( dofno )
+    ss = dofobj%valMap(dofno+1) - 1
+    Val => obj%Val(aa:ss)
+  END SELECT
+END PROCEDURE realVec_getPointer2
 
 !----------------------------------------------------------------------------
 !                                                                     IndexOf
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IndexOf_1
-  Ans = MINLOC( ABS( Obj%Val - Value ), 1 )
-END PROCEDURE IndexOf_1
+MODULE PROCEDURE realVec_getIndex1
+  Ans = MINLOC( ABS( obj%Val - Value ), 1 )
+END PROCEDURE realVec_getIndex1
 
 !----------------------------------------------------------------------------
 !                                                                     IndexOf
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE IndexOf_2
-  ! Ans = MINLOC( ABS( Obj%Val - Value ), 1 )
+MODULE PROCEDURE realVec_getIndex2
+  ! Ans = MINLOC( ABS( obj%Val - Value ), 1 )
   INTEGER( I4B ) :: i, j, m
   LOGICAL( LGT ), ALLOCATABLE :: Search( : )
   REAL( DFP ) :: tol0
@@ -260,40 +282,40 @@ MODULE PROCEDURE IndexOf_2
   ALLOCATE( Search( m ), Ans( m ) )
   Search = .TRUE.
   Ans = 0
-  DO i = 1, SIZE( Obj%Val )
+  DO i = 1, SIZE( obj%Val )
     DO j = 1, m
       IF( Search( j ) ) THEN
-        IF( ABS(Value(j) - Obj%Val(i)) .LE. tol0  ) THEN
+        IF( ABS(Value(j) - obj%Val(i)) .LE. tol0  ) THEN
           Search( j ) = .FALSE.
           Ans( j ) = i
         END IF
       END IF
     END DO
   END DO
-END PROCEDURE IndexOf_2
+END PROCEDURE realVec_getIndex2
 
 !----------------------------------------------------------------------------
 !                                                                  isPresent
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE isPresent_1
+MODULE PROCEDURE realVec_isPresent1
   INTEGER( I4B ) :: i
   REAL( DFP ) :: tol0
   Ans = .FALSE.
   tol0 = INPUT( default = REAL(1.0E-10, DFP), option = tol )
-  DO i = 1, SIZE( Obj%Val )
-    IF( ABS( Obj%Val(i) - Value ) .LE. tol0 ) THEN
+  DO i = 1, SIZE( obj%Val )
+    IF( ABS( obj%Val(i) - Value ) .LE. tol0 ) THEN
       Ans = .TRUE.
       EXIT
     END IF
   END DO
-END PROCEDURE isPresent_1
+END PROCEDURE realVec_isPresent1
 
 !----------------------------------------------------------------------------
 !                                                                  isPresent
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE isPresent_2
+MODULE PROCEDURE realVec_isPresent2
   INTEGER( I4B ) :: i, m, j
   REAL( DFP ) :: tol0
   LOGICAL( LGT ), ALLOCATABLE :: Search( : )
@@ -303,16 +325,16 @@ MODULE PROCEDURE isPresent_2
   ALLOCATE( Ans( m ), Search( m ) )
   Search = .TRUE.
   Ans = .FALSE.
-  DO i = 1, SIZE( Obj%Val )
+  DO i = 1, SIZE( obj%Val )
     DO j = 1, m
       IF( Search( j ) ) THEN
-        IF( ABS( Value(j) - Obj%Val(i) ) .LE. tol0 ) THEN
+        IF( ABS( Value(j) - obj%Val(i) ) .LE. tol0 ) THEN
           Search( j ) = .FALSE.
           Ans( j ) = .TRUE.
         END IF
       END IF
     END DO
   END DO
-END PROCEDURE isPresent_2
+END PROCEDURE realVec_isPresent2
 
 END SUBMODULE getMethod

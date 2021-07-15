@@ -28,7 +28,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getKey1
-  Key = TRIM( Obj%Key%Raw )
+  Key = TRIM( obj%Key%Raw )
 END PROCEDURE getKey1
 
 !----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ END PROCEDURE getKey1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getKey2
-  Key = Obj%Key
+  Key = obj%Key
 END PROCEDURE getKey2
 
 !----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ END PROCEDURE getKey2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue1
-  Value = Obj%Value( 1, 1 )
+  Value = obj%Value( 1, 1 )
 END PROCEDURE getValue1
 
 !----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ END PROCEDURE getValue1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue2
-  Value = Obj%Value( :, 1 )
+  Value = obj%Value( :, 1 )
 END PROCEDURE getValue2
 
 !----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ END PROCEDURE getValue2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue3
-  Value = Obj%Value
+  Value = obj%Value
 END PROCEDURE getValue3
 
 !----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ END PROCEDURE getValue3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue4
-  Value = INT( Obj%Value( 1, 1 ) )
+  Value = INT( obj%Value( 1, 1 ) )
 END PROCEDURE getValue4
 
 !----------------------------------------------------------------------------
@@ -76,7 +76,7 @@ END PROCEDURE getValue4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue5
-  Value = INT( Obj%Value( :, 1 ) )
+  Value = INT( obj%Value( :, 1 ) )
 END PROCEDURE getValue5
 
 !----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ END PROCEDURE getValue5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getValue6
-  Value = INT( Obj%Value )
+  Value = INT( obj%Value )
 END PROCEDURE getValue6
 
 !----------------------------------------------------------------------------
@@ -94,8 +94,8 @@ END PROCEDURE getValue6
 MODULE PROCEDURE Index1
   INTEGER( I4B ) :: I
   Ans = 0
-  DO I = 1, SIZE( Obj )
-    IF( Obj( I ) .EQ. Key  ) THEN
+  DO I = 1, SIZE( obj )
+    IF( obj( I ) .EQ. Key  ) THEN
       Ans = I
       EXIT
     END IF
@@ -109,8 +109,8 @@ END PROCEDURE Index1
 MODULE PROCEDURE Index2
   INTEGER( I4B ) :: I
   Ans = 0
-  DO I = 1, SIZE( Obj )
-    IF( Obj( I ) .EQ. Key  ) THEN
+  DO I = 1, SIZE( obj )
+    IF( obj( I ) .EQ. Key  ) THEN
       Ans = I
       EXIT
     END IF
@@ -124,8 +124,8 @@ END PROCEDURE Index2
 MODULE PROCEDURE Present1
   INTEGER( I4B ) :: I
   Ans = .FALSE.
-  DO I = 1, SIZE( Obj )
-    IF( Obj( I ) .EQ. Key  ) THEN
+  DO I = 1, SIZE( obj )
+    IF( obj( I ) .EQ. Key  ) THEN
       Ans = .TRUE.
       EXIT
     END IF
@@ -139,8 +139,8 @@ END PROCEDURE Present1
 MODULE PROCEDURE Present2
   INTEGER( I4B ) :: I
   Ans = .FALSE.
-  DO I = 1, SIZE( Obj )
-    IF( Obj( I ) .EQ. Key  ) THEN
+  DO I = 1, SIZE( obj )
+    IF( obj( I ) .EQ. Key  ) THEN
       Ans = .TRUE.
       EXIT
     END IF
@@ -155,8 +155,8 @@ MODULE PROCEDURE Contains1
   INTEGER( I4B ) :: I
 
   Ans = .FALSE.
-  DO I = 1, SIZE( Obj )
-    IF( Obj( I ) .EQ. Key  ) THEN
+  DO I = 1, SIZE( obj )
+    IF( obj( I ) .EQ. Key  ) THEN
       Ans = .TRUE.
       EXIT
     END IF
@@ -171,8 +171,8 @@ END PROCEDURE Contains1
 MODULE PROCEDURE Contains2
   INTEGER( I4B ) :: I
   Ans = .FALSE.
-  DO I = 1, SIZE( Obj )
-    IF( Obj( I ) .EQ. Key  ) THEN
+  DO I = 1, SIZE( obj )
+    IF( obj( I ) .EQ. Key  ) THEN
       Ans = .TRUE.
       EXIT
     END IF

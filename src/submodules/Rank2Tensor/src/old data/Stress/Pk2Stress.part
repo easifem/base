@@ -23,18 +23,18 @@
 !                                                              getPK2Stress
 !------------------------------------------------------------------------------
 
- FUNCTION getPK2Stress( Obj, F )
+ FUNCTION getPK2Stress( obj, F )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  This subroutine computes the Cauchy stress from given stress type
-!       2.  FObj is Deformation Gradient object.
+!       2.  Fobj is Deformation Gradient object.
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     USE Rank2Tensor_Class
     USE DeformationGradient_Class
 
     !  Define arguments of dummy argument
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     TYPE( DeformationGradient_ ), INTENT( IN ) :: F
     REAL( DFP ), ALLOCATABLE :: getPK2Stress( :, : )
 
@@ -43,21 +43,21 @@
     REAL( DFP ) :: J
     REAL( DFP ), ALLOCATABLE :: InvF( :, : )
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
             "Stress_Class.f90>>Pk2Stress.part", &
-            "getPK2Stress(), Obj.pkTwo.F, Obj.S.F", &
-            "Stress_ Object is not initiated. &
+            "getPK2Stress(), obj.pkTwo.F, obj.S.F", &
+            "Stress_ object is not initiated. &
             Program Stopped !!!" &
         )
         STOP
 
     END IF
 
-    T = Obj
+    T = obj
 
-    SELECT CASE( TRIM( Obj%StressType ) )
+    SELECT CASE( TRIM( obj%StressType ) )
 
         CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
 
@@ -90,8 +90,8 @@
 
             CALL Err_Msg( &
                 "Stress_Class.f90>>Pk2Stress.part", &
-                "getPK2Stress( Obj, F ), Obj .pkTwo. F, Obj .S. F", &
-                "No case found for Obj%StressType. &
+                "getPK2Stress( obj, F ), obj .pkTwo. F, obj .S. F", &
+                "No case found for obj%StressType. &
                 Program Stopped!!!" &
             )
             STOP

@@ -148,7 +148,7 @@ subroutine test10
   CALL Display( obj, "obj1 = " )
   CALL Display( val, "val = " )
   CALL Display( Vector_PRODUCT( obj=obj, val=val ), "vector_product = " )
-  CALL Display( Obj .X. val, "vector_product = " )
+  CALL Display( obj .X. val, "vector_product = " )
   CALL DotLine()
 end
 
@@ -164,7 +164,7 @@ subroutine test11
   CALL Equalline()
   CALL Display( "test11" )
   CALL Display( Vector_PRODUCT( obj1, obj2, obj3 ), "vector_product = " )
-  CALL Display( Obj1 .X. (Obj2 .X. Obj3), "vector_product = " )
+  CALL Display( obj1 .X. (obj2 .X. obj3), "vector_product = " )
   CALL DotLine()
 end
 
@@ -193,7 +193,7 @@ subroutine test13
   CALL Equalline()
   CALL Display( "test13" )
   CALL Display( NORM2( obj ), "NORM2 = " )
-  CALL Display( .NORM. obj, ".Norm. Obj = ")
+  CALL Display( .NORM. obj, ".Norm. obj = ")
   CALL DotLine()
 end
 

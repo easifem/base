@@ -24,13 +24,13 @@ CONTAINS
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_st_dof
+MODULE PROCEDURE dof_initiate1
   INTEGER( I4B ) :: n, i, k, j
 
-  Obj%StorageFMT = StorageFMT; n = SIZE( Names )
+  obj%StorageFMT = StorageFMT; n = SIZE( Names )
 
-  CALL reallocate( Obj%Map, n + 1, 6 )
-  ASSOCIATE( Map => Obj%Map )
+  CALL reallocate( obj%Map, n + 1, 6 )
+  ASSOCIATE( Map => obj%Map )
     !
     !<- Names in ascii code
     Map( 1:n, 1 ) = ICHAR( Names( 1:n ) )
@@ -65,57 +65,47 @@ MODULE PROCEDURE initiate_st_dof
     Map( n+1, 6 ) = SUM( Map( 1:n, 6 ) * Map( 1:n, 4 ) )
     !
     !<- ValMap( tDOF + 1, 2 )
-    CALL Reallocate( Obj%ValMap, Map( n + 1, 4 ) + 1 )
-    Obj%ValMap( 1 ) = 1; k = 1
+    CALL Reallocate( obj%ValMap, Map( n + 1, 4 ) + 1 )
+    obj%ValMap( 1 ) = 1; k = 1
     DO i = 1, n
       DO j = 1, Map( i, 4 )
         k = k + 1
-        Obj%ValMap( k ) = Obj%ValMap( k-1 ) + Map( i, 6 )
+        obj%ValMap( k ) = obj%ValMap( k-1 ) + Map( i, 6 )
       END DO
     END DO
   END ASSOCIATE
-END PROCEDURE initiate_st_dof
+END PROCEDURE dof_initiate1
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_val
+MODULE PROCEDURE dof_initiate2
   INTEGER( I4B ) :: tNodes
-  tNodes = .tNodes. Obj
+  tNodes = .tNodes. obj
   CALL Reallocate( Val, tNodes )
-END PROCEDURE initiate_val
-
-!----------------------------------------------------------------------------
-!                                                                 Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE initiate_2val
-  INTEGER( I4B ) :: tNodes
-  tNodes = .tNodes. Obj
-  CALL Reallocate( Val1, tNodes, Val2, tNodes )
-END PROCEDURE initiate_2val
+END PROCEDURE dof_initiate2
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_realvector_scalar
+MODULE PROCEDURE dof_initiate3
   INTEGER( I4B ) :: tNodes
-  tNodes = .tNodes. Obj
+  tNodes = .tNodes. obj
   CALL Reallocate( Val%Val, tNodes )
-END PROCEDURE initiate_realvector_scalar
+END PROCEDURE dof_initiate3
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_realvector_vector
+MODULE PROCEDURE dof_initiate4
   INTEGER( I4B ) :: tDOF, i, n
   INTEGER( I4B ), ALLOCATABLE :: tNodes( : )
   !
-  ASSOCIATE( Map => Obj%Map )
-    tDOF = .tDOF. Obj
+  ASSOCIATE( Map => obj%Map )
+    tDOF = .tDOF. obj
     ALLOCATE( tNodes( tDOF ) )
     n = SIZE( Map, 1 )
     DO i = 1, n-1
@@ -124,35 +114,45 @@ MODULE PROCEDURE initiate_realvector_vector
     CALL Initiate( Val, tNodes )
     DEALLOCATE( tNodes )
   END ASSOCIATE
-END PROCEDURE initiate_realvector_vector
+END PROCEDURE dof_initiate4
+
+!----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_initiate5
+  INTEGER( I4B ) :: tNodes
+  tNodes = .tNodes. obj
+  CALL Reallocate( Val1, tNodes, Val2, tNodes )
+END PROCEDURE dof_initiate5
 
 !----------------------------------------------------------------------------
 !                                                                        DOF
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Constructor1
-  CALL Initiate( Obj = Obj, Names = Names, tNodes = tNodes, &
+MODULE PROCEDURE dof_Constructor1
+  CALL Initiate( obj = obj, Names = Names, tNodes = tNodes, &
     & SpaceCompo = SpaceCompo, TimeCompo = TimeCompo, StorageFMT = StorageFMT)
-END PROCEDURE Constructor1
+END PROCEDURE dof_Constructor1
 
 !----------------------------------------------------------------------------
 !                                                                 DOF_Pointer
 !----------------------------------------------------------------------------
-MODULE PROCEDURE Constructor_1
-  ALLOCATE( Obj )
-  CALL Initiate( Obj = Obj, Names = Names, tNodes = tNodes, &
+MODULE PROCEDURE dof_Constructor_1
+  ALLOCATE( obj )
+  CALL Initiate( obj = obj, Names = Names, tNodes = tNodes, &
     & SpaceCompo = SpaceCompo, TimeCompo = TimeCompo, &
     & StorageFMT = StorageFMT)
-END PROCEDURE Constructor_1
+END PROCEDURE dof_Constructor_1
 
 !----------------------------------------------------------------------------
 !                                                             DeallocateData
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE deallocate_data
-  IF( ALLOCATED( Obj%Map ) ) DEALLOCATE( Obj%Map )
-  IF( ALLOCATED( Obj%ValMap ) ) DEALLOCATE( Obj%ValMap )
-END PROCEDURE deallocate_data
+MODULE PROCEDURE dof_DeallocateData
+  IF( ALLOCATED( obj%Map ) ) DEALLOCATE( obj%Map )
+  IF( ALLOCATED( obj%ValMap ) ) DEALLOCATE( obj%ValMap )
+END PROCEDURE dof_DeallocateData
 
 
 END SUBMODULE Constructor

@@ -24,53 +24,13 @@ USE GlobalData
 USE StringiFor, ONLY: String
 IMPLICIT NONE
 PRIVATE
-
 PUBLIC :: String
 
 TYPE( String ), PUBLIC, PARAMETER :: TypeString = String(raw=NULL())
-
 TYPE :: StringPointer_
   CLASS( String ), POINTER :: Ptr => NULL()
 END TYPE StringPointer_
-
 PUBLIC :: StringPointer_
-
-!----------------------------------------------------------------------------
-!                                                                      File_
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
-! summary: This data type is defined for the IO operation.
-!
-!{!pages/File.md}
-
-TYPE :: File_
-  TYPE( String ) :: FileName
-  TYPE( String ) :: Path
-  TYPE( String ) :: Extension
-  TYPE( String ) :: ACTION
-  TYPE( String ) :: STATUS
-  TYPE( String ) :: ACCESS
-  INTEGER( I4B ) :: UnitNo=1
-  INTEGER( I4B ) :: WriteNo=1
-  INTEGER( I4B ) :: IOSTAT=1
-  LOGICAL( LGT ) :: isOpen = .FALSE.
-  LOGICAL( LGT ) :: isBinary = .FALSE.
-  CHARACTER( LEN = 1 ) :: Comment = "#"
-  CHARACTER( LEN = 1 ) :: Separator = ","
-  CHARACTER( LEN = 2 ) :: Delimiter = "\n"
-END TYPE File_
-
-PUBLIC :: File_
-
-TYPE( File_ ), PUBLIC, PARAMETER :: TypeFile = File_( )
-
-TYPE :: FilePointer_
-  CLASS( File_ ), POINTER :: Ptr => NULL( )
-END TYPE FilePointer_
-
-PUBLIC :: FilePointer_
 
 !----------------------------------------------------------------------------
 !                                                               BoundingBox_
@@ -116,56 +76,6 @@ END TYPE BoundingBoxPointer_
 PUBLIC :: BoundingBoxPointer_
 
 !----------------------------------------------------------------------------
-!                                                           AbstractArray_
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-! date: 23 Feb 2021
-! summary: Abstract data type for array, matrix, and vectors
-!
-!{!pages/AbstractArray.md!}
-
-TYPE :: AbstractArray_
-  INTEGER( I4B ) :: tDimension = 0_I4B
-END TYPE AbstractArray_
-
-PUBLIC :: AbstractArray_
-
-!> authors: Dr. Vikas Sharma
-! date: 23 Feb 2021
-! summary: Data-type to contain the pointer to [[AbstractArray_]] data type
-
-TYPE :: AbstractArrayPointer_
-  CLASS( AbstractArray_ ), POINTER :: Ptr => NULL( )
-END TYPE AbstractArrayPointer_
-
-PUBLIC :: AbstractArrayPointer_
-
-!----------------------------------------------------------------------------
-!                                                          AbstractMatrix_
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: Abstract matrix denotes a 2D array
-!
-!{!pages/AbstractArray.md!}
-TYPE, EXTENDS( AbstractArray_ ) :: AbstractMatrix_
-  CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
-END TYPE AbstractMatrix_
-
-PUBLIC :: AbstractMatrix_
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	A pointer to [[AbstractMatrix_]] data type
-TYPE :: AbstractMatrixPointer_
-  CLASS( AbstractMatrix_ ), POINTER :: Ptr => NULL( )
-END TYPE AbstractMatrixPointer_
-
-PUBLIC :: AbstractMatrixPointer_
-
-!----------------------------------------------------------------------------
 !                                                                    Matrix_
 !----------------------------------------------------------------------------
 
@@ -175,7 +85,9 @@ PUBLIC :: AbstractMatrixPointer_
 !
 !{!pages/RealMatrix.md!}
 
-TYPE, EXTENDS( AbstractMatrix_ ) :: RealMatrix_
+TYPE :: RealMatrix_
+  INTEGER( I4B ) :: tDimension = 0_I4B
+  CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
   REAL( DFP ), ALLOCATABLE :: Val( :, : )
 END TYPE RealMatrix_
 
@@ -190,74 +102,6 @@ TYPE :: RealMatrixPointer_
 END TYPE RealMatrixPointer_
 
 PUBLIC :: RealMatrixPointer_
-
-!----------------------------------------------------------------------------
-!                                                              SparseMatrix_
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	User data type for handling sparse matrices
-!
-!{!pages/SparseMatrix.md}
-
-TYPE, EXTENDS( AbstractMatrix_ ) :: SparseMatrix_
-  TYPE( IntVector_ ), ALLOCATABLE :: Row( : )
-  INTEGER( I4B ), ALLOCATABLE :: IA( : )
-  INTEGER( I4B ), ALLOCATABLE :: JA( : )
-  INTEGER( I4B ), ALLOCATABLE :: ColSize( : )
-  INTEGER( I4B ), ALLOCATABLE :: RowSize( : )
-  INTEGER( I4B ), ALLOCATABLE :: DiagIndx( : )
-  INTEGER( I4B ), ALLOCATABLE :: IndexUT( : )
-  INTEGER( I4B ), ALLOCATABLE :: tNodes( : )
-  REAL( DFP ), ALLOCATABLE :: A( : )
-  REAL( DFP ), ALLOCATABLE :: Diag( : )
-  INTEGER( I4B ) :: tDOF = 1
-  INTEGER( I4B ) :: nnz = 0
-  INTEGER( I4B ) :: ncol = 0
-  INTEGER( I4B ) :: nrow=0
-  !CHARACTER( LEN = 5 ) :: MatrixProp='UNSYM'
-  INTEGER( I4B ) :: StorageFMT = Nodes_FMT
-  LOGICAL( LGT ) :: isSorted = .FALSE.
-END TYPE SparseMatrix_
-
-PUBLIC :: SparseMatrix_
-
-TYPE( SparseMatrix_ ), PUBLIC, PARAMETER :: &
-  & TypeSparseMatrix = SparseMatrix_( &
-  & Row = NULL( ), &
-  & IA = NULL( ), &
-  & JA = NULL( ), &
-  & ColSize = NULL( ), &
-  & RowSize = NULL( ), &
-  & DiagIndx = NULL( ), &
-  & IndexUT = NULL( ), &
-  & tNodes = NULL( ), &
-  & A = NULL( ), &
-  & Diag = NULL( ) &
-  & )
-
-TYPE :: SparseMatrixPointer_
-  CLASS( SparseMatrix_ ), POINTER :: Ptr => NULL( )
-END TYPE SparseMatrixPointer_
-
-PUBLIC :: SparseMatrixPointer_
-
-! !----------------------------------------------------------------------------
-! !                                                          AbstractVector_
-! !----------------------------------------------------------------------------
-
-! !> authors: Dr. Vikas Sharma
-! !
-! ! Abstract vector type
-! TYPE, EXTENDS( AbstractArray_ ) :: AbstractVector_
-! END TYPE AbstractVector_
-
-! PUBLIC :: AbstractVector_
-
-! TYPE :: AbstractVectorPointer_
-!   CLASS( AbstractVector_ ), POINTER :: Ptr => NULL( )
-! END TYPE AbstractVectorPointer_
 
 !----------------------------------------------------------------------------
 !                                                             IntVector_
@@ -396,6 +240,88 @@ TYPE :: DOFPointer_
 END TYPE DOFPointer_
 
 PUBLIC :: DOFPointer_
+
+
+!----------------------------------------------------------------------------
+!                                                               CSRSparsity_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 13 June 2021
+! summary: User data type for handling the sparsity pattern
+!
+!### Introduction
+! - IA : size of IA is number of rows in the sparse matrix. It contains indice
+! for accessing the entries in JA. For example, IA( iRow )
+! to IA( iRow + 1 ) - 1 are indices of entries of matrix of iRow.
+!
+! - JA : size of JA is NNZ. JA contains the column indices.
+!
+! - ColSize : contains the number of nonzero entries in each row
+!
+! - DiagIndx : contains the indices of diagonal entries
+!
+! - IndexUT : contains the index of upper triangular part
+
+TYPE :: CSRSparsity_
+  INTEGER( I4B ), ALLOCATABLE :: IA( : )
+  INTEGER( I4B ), ALLOCATABLE :: JA( : )
+  INTEGER( I4B ), ALLOCATABLE :: ColSize( : )
+  INTEGER( I4B ), ALLOCATABLE :: RowSize( : )
+  INTEGER( I4B ), ALLOCATABLE :: DiagIndx( : )
+  TYPE( IntVector_ ), ALLOCATABLE :: Row( : )
+  INTEGER( I4B ) :: nnz = 0
+  INTEGER( I4B ) :: ncol = 0
+  INTEGER( I4B ) :: nrow = 0
+  LOGICAL( LGT ) :: isSorted = .FALSE.
+  LOGICAL( LGT ) :: isInitiated = .FALSE.
+  LOGICAL( LGT ) :: isSparsityLock = .FALSE.
+  TYPE( DOF_ ) :: dof
+END TYPE CSRSparsity_
+
+PUBLIC :: CSRSparsity_
+
+TYPE( CSRSparsity_ ), PUBLIC, PARAMETER :: TypeCSRSparsity = &
+  & CSRSparsity_( IA=NULL(), JA=NULL(), ColSize=NULL(), RowSize=NULL(), &
+  & DiagIndx=NULL(), Row=NULL() )
+
+TYPE :: CSRSparsityPointer_
+  CLASS( CSRSparsity_ ), POINTER :: ptr => NULL()
+END TYPE CSRSparsityPointer_
+
+PUBLIC :: CSRSparsityPointer_
+
+!----------------------------------------------------------------------------
+!                                                             CSRMatrix_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	User data type for handling CSR matrices
+!
+!{!pages/CSRMatrix.md}
+
+TYPE :: CSRMatrix_
+  LOGICAL( LGT ) :: csrOwnership = .FALSE.
+    !! This variable, if true, denotes that csr is allocated inside the obj
+  INTEGER( I4B ) :: tDimension = 2_I4B
+  CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
+  REAL( DFP ), ALLOCATABLE :: Val( :, : )
+  REAL( DFP ), ALLOCATABLE :: A( : )
+  REAL( DFP ), ALLOCATABLE :: Diag( : )
+  TYPE( CSRSparsity_ ), POINTER :: csr => NULL()
+END TYPE CSRMatrix_
+
+PUBLIC :: CSRMatrix_
+
+TYPE( CSRMatrix_ ), PUBLIC, PARAMETER :: TypeCSRMatrix = &
+  & CSRMatrix_(Val=NULL(), A=NULL(), Diag=NULL())
+
+TYPE :: CSRMatrixPointer_
+  CLASS( CSRMatrix_ ), POINTER :: Ptr => NULL( )
+END TYPE CSRMatrixPointer_
+
+PUBLIC :: CSRMatrixPointer_
 
 !----------------------------------------------------------------------------
 !                                                             IterationData_
@@ -674,7 +600,7 @@ TYPE :: ReferenceElement_
     !! Number of spatial dimensions
   TYPE( ReferenceTopology_ ), ALLOCATABLE :: Topology( : )
     !! Topology information of 0D, 1, 2, 3D entities
-  PROCEDURE(lag_elem_refelem), POINTER, PASS( Obj ) :: LagrangeElement=>NULL()
+  PROCEDURE(lag_elem_refelem), POINTER, PASS( obj ) :: LagrangeElement=>NULL()
     !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
@@ -687,11 +613,11 @@ END TYPE ReferenceElementPointer_
 PUBLIC :: ReferenceElementPointer_
 
 INTERFACE
-  PURE SUBROUTINE lag_elem_refelem(Obj, Order, HighOrderObj)
+  PURE SUBROUTINE lag_elem_refelem(obj, Order, HighOrderobj)
     IMPORT :: ReferenceElement_, I4B
-    CLASS( ReferenceElement_ ), INTENT( IN ) :: Obj
+    CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: Order
-    CLASS( ReferenceElement_ ), INTENT( INOUT ) :: HighOrderObj
+    CLASS( ReferenceElement_ ), INTENT( INOUT ) :: HighOrderobj
   END SUBROUTINE lag_elem_refelem
 END INTERFACE
 

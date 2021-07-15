@@ -42,7 +42,7 @@
 !                                                                      m_Det_1
 !------------------------------------------------------------------------------
 
- FUNCTION m_Det_1( Obj )
+ FUNCTION m_Det_1( obj )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
@@ -51,10 +51,10 @@
 
     USE Utility, ONLY : Det
 
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ) :: m_Det_1
 
-    m_Det_1 = Det( Obj%T )
+    m_Det_1 = Det( obj%T )
 
  END FUNCTION m_Det_1
 

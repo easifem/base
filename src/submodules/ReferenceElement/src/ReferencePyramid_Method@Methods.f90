@@ -35,15 +35,15 @@ END PROCEDURE Initiate_ref_Pyramid
 !                                                      ReferencePyramid
 !----------------------------------------------------------------------------
 MODULE PROCEDURE reference_Pyramid
-  CALL Initiate( Obj, NSD, XiJ )
+  CALL Initiate( obj, NSD, XiJ )
 END PROCEDURE reference_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                      ReferencePyramid
 !----------------------------------------------------------------------------
 MODULE PROCEDURE reference_Pyramid_Pointer
-  ALLOCATE( Obj )
-  CALL Initiate( Obj, NSD, XiJ )
+  ALLOCATE( obj )
+  CALL Initiate( obj, NSD, XiJ )
 END PROCEDURE reference_Pyramid_Pointer
 
 !----------------------------------------------------------------------------

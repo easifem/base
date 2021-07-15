@@ -13,8 +13,8 @@
 !   TYPE :: Part of the program
 !
 !   DESCRIPTION
-!       -   Methods to access the Obj%stressType Obj%StrainType
-!           Obj%RateType
+!       -   Methods to access the obj%stressType obj%StrainType
+!           obj%RateType
 !   HOSTING FILE
 !       -   MaterialJacobian_Class.f90
 !
@@ -24,16 +24,16 @@
 !                                                               setStressType1
 !------------------------------------------------------------------------------
 
- SUBROUTINE setStressType1( Obj, StressType )
+ SUBROUTINE setStressType1( obj, StressType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  set the Obj%StressType
+!       1.  set the obj%StressType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     CHARACTER( LEN = * ), INTENT( IN ) :: StressType
 
-    Obj%StressType = StressType
+    obj%StressType = StressType
 
  END SUBROUTINE setStressType1
 
@@ -41,16 +41,16 @@
 !                                                               setStressType2
 !------------------------------------------------------------------------------
 
- SUBROUTINE setStressType2( Obj, StressType )
+ SUBROUTINE setStressType2( obj, StressType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  set the Obj%StressType
+!       1.  set the obj%StressType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     TYPE( String_ ), INTENT( IN ) :: StressType
 
-    Obj%StressType = StressType
+    obj%StressType = StressType
 
  END SUBROUTINE setStressType2
 
@@ -58,16 +58,16 @@
 !                                                               setStrainType1
 !------------------------------------------------------------------------------
 
- SUBROUTINE setStrainType1( Obj, StrainType )
+ SUBROUTINE setStrainType1( obj, StrainType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  set the Obj%StrainType
+!       1.  set the obj%StrainType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     CHARACTER( LEN = * ), INTENT( IN ) :: StrainType
 
-    Obj%StrainType = StrainType
+    obj%StrainType = StrainType
 
  END SUBROUTINE setStrainType1
 
@@ -75,16 +75,16 @@
 !                                                               setStrainType2
 !------------------------------------------------------------------------------
 
- SUBROUTINE setStrainType2( Obj, StrainType )
+ SUBROUTINE setStrainType2( obj, StrainType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  set the Obj%StrainType
+!       1.  set the obj%StrainType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     TYPE( String_ ), INTENT( IN ) :: StrainType
 
-    Obj%StrainType = StrainType
+    obj%StrainType = StrainType
 
  END SUBROUTINE setStrainType2
 
@@ -92,16 +92,16 @@
 !                                                               setRateType1
 !------------------------------------------------------------------------------
 
- SUBROUTINE setRateType1( Obj, RateType )
+ SUBROUTINE setRateType1( obj, RateType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  set the Obj%RateType
+!       1.  set the obj%RateType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     CHARACTER( LEN = * ), INTENT( IN ) :: RateType
 
-    Obj%RateType = RateType
+    obj%RateType = RateType
 
  END SUBROUTINE setRateType1
 
@@ -109,16 +109,16 @@
 !                                                               setRateType2
 !------------------------------------------------------------------------------
 
- SUBROUTINE setRateType2( Obj, RateType )
+ SUBROUTINE setRateType2( obj, RateType )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  set the Obj%RateType
+!       1.  set the obj%RateType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( INOUT ) :: obj
     TYPE( String_ ), INTENT( IN ) :: RateType
 
-    Obj%RateType = RateType
+    obj%RateType = RateType
 
  END SUBROUTINE setRateType2
 
@@ -126,16 +126,16 @@
 !                                                               getStressType
 !------------------------------------------------------------------------------
 
- FUNCTION getStressType( Obj )
+ FUNCTION getStressType( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  get the Obj%StressType
+!       1.  get the obj%StressType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     TYPE( String_ ) :: getStressType
 
-    getStressType = Obj%StressType
+    getStressType = obj%StressType
 
  END FUNCTION getStressType
 
@@ -143,16 +143,16 @@
 !                                                               getStrainType
 !------------------------------------------------------------------------------
 
- FUNCTION getStrainType( Obj )
+ FUNCTION getStrainType( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  get the Obj%StrainType
+!       1.  get the obj%StrainType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     TYPE( String_ ) :: getStrainType
 
-    getStrainType = Obj%StrainType
+    getStrainType = obj%StrainType
 
  END FUNCTION getStrainType
 
@@ -160,15 +160,15 @@
 !                                                               getRateType
 !------------------------------------------------------------------------------
 
- FUNCTION getRateType( Obj )
+ FUNCTION getRateType( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  get the Obj%RateType
+!       1.  get the obj%RateType
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     TYPE( String_ ) :: getRateType
 
-    getRateType = Obj%RateType
+    getRateType = obj%RateType
 
  END FUNCTION getRateType

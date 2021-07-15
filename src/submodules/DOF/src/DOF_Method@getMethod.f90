@@ -270,7 +270,7 @@ END PROCEDURE dof_tTimeComponents
 !                                                             getArrayValues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE get_arrayvalues_single_vec
+MODULE PROCEDURE dof_getValue1
   INTEGER( I4B ) :: m, n, i, k, tdof
 
   ASSOCIATE( Map => obj%Map, vm => obj%ValMap )
@@ -279,15 +279,14 @@ MODULE PROCEDURE get_arrayvalues_single_vec
       m = SIZE( dofno )
       n = SIZE( Nptrs )
       k = m * n
-      call reallocate( v, k )
+      CALL Reallocate( v, k )
 
       SELECT CASE( obj%StorageFMT )
 
-      CASE( dof_FMT )
+      CASE( DOF_FMT )
 
-        ! is storage pattern is different make transformation
+        ! If the storage pattern is different make transformation
         IF( StorageFMT .EQ. nodes_FMT ) THEN
-
           tdof = .tdof. obj
           DO i = 1, m
             DO k = 1, n
@@ -337,22 +336,17 @@ MODULE PROCEDURE get_arrayvalues_single_vec
       SELECT CASE( obj%StorageFMT )
 
       CASE( dof_FMT )
-
         ! convert if different storage
         IF( StorageFMT .EQ. nodes_FMT ) THEN
-
           tdof = .tdof. obj
           m = SIZE( dofno )
-
           DO i = 1, m
             n = vm( dofno( i ) + 1 ) - vm( dofno( i )  )
             DO k = 1, n
               v( ( k-1 ) * m + i ) = Val( k + vm( dofno( i ) ) - 1 )
             END DO
           END DO
-
         ELSE
-
           m = 0; n = 0
           DO i = 1, SIZE( dofno )
             m = n + 1
@@ -363,55 +357,34 @@ MODULE PROCEDURE get_arrayvalues_single_vec
         END IF
 
       CASE( Nodes_FMT )
-
         tdof = .tdof. obj
-        m = SIZE( dofno );
-
+        m = SIZE( dofno )
         IF( StorageFMT .EQ. dof_FMT ) THEN
-
           n = vm( 2 ) - vm( 1 )
           DO i = 1, n
             DO k = 1, m
               v( (k-1) * n + i ) = Val( (i-1)*tdof + dofno( k ) )
             END DO
           END DO
-
         ELSE
-
           DO i = 1, vm( 2 ) - vm( 1 )
             DO k = 1, m
               v( ( i - 1 ) * m + k ) &
                 & = Val( ( i - 1 ) * tdof + dofno( k ) )
             END DO
           END DO
-
         END IF
       END SELECT
     END IF
-    !
   END ASSOCIATE
 
-END PROCEDURE get_arrayvalues_single_vec
-
-!----------------------------------------------------------------------------
-!                                                                ArrayValues
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE arrayvalues_single_vec
-  IF( PRESENT( Nptrs ) ) THEN
-    CALL getArrayValues( v=Ans, Val=Val, obj=obj, dofno=dofno, &
-      & Nptrs = Nptrs, StorageFMT = StorageFMT )
-  ELSE
-    CALL getArrayValues( v=Ans, Val=Val, obj=obj, dofno=dofno, &
-      & StorageFMT = StorageFMT )
-  END IF
-END PROCEDURE arrayvalues_single_vec
+END PROCEDURE dof_getValue1
 
 !----------------------------------------------------------------------------
 !                                                             getArrayValues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE get_arrayvalues_array
+MODULE PROCEDURE dof_getValue2
   INTEGER( I4B ) :: m, n, i, k, tdof
 
   ASSOCIATE( Map => obj%Map, vm => obj%ValMap )
@@ -452,6 +425,33 @@ MODULE PROCEDURE get_arrayvalues_array
 
   END ASSOCIATE
 
-END PROCEDURE get_arrayvalues_array
+END PROCEDURE dof_getValue2
+
+!----------------------------------------------------------------------------
+!                                                                 getVlaue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_getValue3
+  CALL getValue(v=v, val=val%val, obj=obj, dofNo=dofNO, &
+    & storageFMT=storageFMT, nptrs=nptrs)
+END PROCEDURE dof_getValue3
+
+!----------------------------------------------------------------------------
+!                                                                 getVlaue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_getValue4
+  CALL getValue(v=v, val=val%val, obj=obj, dofNo=dofNO, &
+    & force3D=force3D )
+END PROCEDURE dof_getValue4
+
+!----------------------------------------------------------------------------
+!                                                                ArrayValues
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_get1
+  CALL getValue( v=Ans, Val=Val, obj=obj, dofno=dofno, &
+    & Nptrs = Nptrs, StorageFMT = StorageFMT )
+END PROCEDURE dof_get1
 
 END SUBMODULE GetMethod

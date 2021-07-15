@@ -2,8 +2,8 @@
 
 ## ToDo
 
-* Extend Assignment operator for `Obj = Mat`. This should not change the stress type
-* Extend Assignment operator for `Obj = Vec`. This should not change the stress type
+* Extend Assignment operator for `obj = Mat`. This should not change the stress type
+* Extend Assignment operator for `obj = Vec`. This should not change the stress type
 
 ## Structure
 
@@ -18,55 +18,55 @@
 
 ## Getting Started
 
-### Constructing the Object
+### Constructing the object
 
 **Initiate** subroutine
 
 ```fortran
-CALL Obj%Initiate( Vec, StresType )
-CALL Obj%Initiate( Mat, VoigtLen, StressType )
-CALL Obj%Initiate( Mat, StressType )
-CALL Obj%Initiate( Obj2 )
-CALL Obj%Initiate( TensorObj, VoigtLen, StressType )
-CALL Obj%Initiate( TensorObj, StressType )
+CALL obj%Initiate( Vec, StresType )
+CALL obj%Initiate( Mat, VoigtLen, StressType )
+CALL obj%Initiate( Mat, StressType )
+CALL obj%Initiate( obj2 )
+CALL obj%Initiate( Tensorobj, VoigtLen, StressType )
+CALL obj%Initiate( Tensorobj, StressType )
 ```
 
 **Stress** function
 
 ```fortran
-Obj = Stress( Vec, StresType )
-Obj = Stress( Mat, VoigtLen, StressType )
-Obj = Stress( Mat, StressType )
-Obj = Stress( Obj2 )
-Obj = Stress( TensorObj, VoigtLen, StressType )
-Obj = Stress( TensorObj, StressType )
+obj = Stress( Vec, StresType )
+obj = Stress( Mat, VoigtLen, StressType )
+obj = Stress( Mat, StressType )
+obj = Stress( obj2 )
+obj = Stress( Tensorobj, VoigtLen, StressType )
+obj = Stress( Tensorobj, StressType )
 ```
 
 **Stress_Pointer** function
 
 ```fortran
-Obj => Stress_Pointer( Vec, StresType )
-Obj => Stress_Pointer( Mat, VoigtLen, StressType )
-Obj => Stress_Pointer( Mat, StressType )
-Obj => Stress_Pointer( Obj2 )
-Obj => Stress_Pointer( TensorObj, VoigtLen, StressType )
-Obj => Stress_Pointer( TensorObj, StressType )
+obj => Stress_Pointer( Vec, StresType )
+obj => Stress_Pointer( Mat, VoigtLen, StressType )
+obj => Stress_Pointer( Mat, StressType )
+obj => Stress_Pointer( obj2 )
+obj => Stress_Pointer( Tensorobj, VoigtLen, StressType )
+obj => Stress_Pointer( Tensorobj, StressType )
 ```
 
-### Getting the length of `Obj%V`
+### Getting the length of `obj%V`
 
 ```fortran
-tSize = .SIZE. Obj
+tSize = .SIZE. obj
 ```
 
-The program stops if the `Obj%V` is not allocated.
+The program stops if the `obj%V` is not allocated.
 
 ### Getting the Stress Tensor in Voigt Form
 
-Many times we need to get the stress tensor in voigt vector form with appropriate length. When we use `Obj = Mat` then the voigt vector length will be 6 even if the Mat retpresent the 2D, Rank-2 tensor. Therefore, it is very important to get voigt vector of correct length. For this we have designed the operator called `.Shape.`. `Obj .Shape. M` will return voigt vector of length M.
+Many times we need to get the stress tensor in voigt vector form with appropriate length. When we use `obj = Mat` then the voigt vector length will be 6 even if the Mat retpresent the 2D, Rank-2 tensor. Therefore, it is very important to get voigt vector of correct length. For this we have designed the operator called `.Shape.`. `obj .Shape. M` will return voigt vector of length M.
 
 ```fortran
-Vec = Obj .Shape. M
+Vec = obj .Shape. M
 ```
 
 Note that M should belong to the list {1,2,3,4,6}.
@@ -75,54 +75,54 @@ Note that M should belong to the list {1,2,3,4,6}.
 ### Assignment Operator
 
 ```fortran
-Obj = Obj2
-TensorObj = Obj
-Mat = Obj
-Vec = Obj
-Obj = Mat
-Obj = TensorObj
-Obj = Vec
+obj = obj2
+Tensorobj = obj
+Mat = obj
+Vec = obj
+obj = Mat
+obj = Tensorobj
+obj = Vec
 ```
 
 ```fortran
-Obj = Obj2
+obj = obj2
 ```
 
-The above call we copy `Obj2` into `Obj`
+The above call we copy `obj2` into `obj`
 
 
 ```fortran
-TensorObj = Obj
+Tensorobj = obj
 ```
 
-The above call copies the content of `Obj` into  Rank2Tensor_ class object `TensorObj`
+The above call copies the content of `obj` into  Rank2Tensor_ class object `Tensorobj`
 
 ```fortran
-Mat = Obj
+Mat = obj
 ```
 
-The above call copies the content of `Obj` into the 3 by 3 array.
+The above call copies the content of `obj` into the 3 by 3 array.
 
 ```fortran
-Vec = Obj
+Vec = obj
 ```
 
-The above call copies the content of the `Obj` into the vector. The length of the returned vector is same as the length of `Obj%V`
+The above call copies the content of the `obj` into the vector. The length of the returned vector is same as the length of `obj%V`
 
 ```fortran
-Obj = Mat
+obj = Mat
 ```
 
-The above call copies the content of `Mat` into the stress object `Obj`. The `StressType` remains unchanged.
+The above call copies the content of `Mat` into the stress object `obj`. The `StressType` remains unchanged.
 
 ```fortran
-Obj = Vec
+obj = Vec
 ```
 
-The above call copies the content of the `Vec` into the stress object `Obj`. The `StressType` remains unchanged.
+The above call copies the content of the `Vec` into the stress object `obj`. The `StressType` remains unchanged.
 
 ```fortran
-Obj = TensorObj
+obj = Tensorobj
 ```
 
-The above call copies the content of the `Rank2Tensor_` object into the stress Object `Obj`. The `StressType` remains unchanged.
+The above call copies the content of the `Rank2Tensor_` object into the stress object `obj`. The `StressType` remains unchanged.

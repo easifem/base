@@ -55,8 +55,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Triangle( Obj, NSD, XiJ )
-  CLASS( ReferenceTriangle_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_ref_Triangle( obj, NSD, XiJ )
+  CLASS( ReferenceTriangle_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
 END SUBROUTINE initiate_ref_Triangle
@@ -94,10 +94,10 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Triangle(NSD, XiJ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Triangle(NSD, XiJ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferenceTriangle_ ) :: Obj
+  TYPE( ReferenceTriangle_ ) :: obj
 END FUNCTION reference_Triangle
 END INTERFACE
 
@@ -133,10 +133,10 @@ PUBLIC :: ReferenceTriangle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Triangle_pointer(NSD, XiJ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Triangle_pointer(NSD, XiJ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceTriangle_ ), POINTER :: Obj
+  CLASS( ReferenceTriangle_ ), POINTER :: obj
 END FUNCTION reference_Triangle_pointer
 END INTERFACE
 
@@ -167,18 +167,18 @@ PUBLIC :: ReferenceTriangle_Pointer
 !   class( ReferenceElement_ ), pointer :: obj_ptr => null()
 !   type( ReferenceTriangle_ ) :: obj
 !   obj_ptr => referenceTriangle_pointer( nsd = 2 )
-!   call obj_ptr%LagrangeElement( order = 2, HighOrderObj = obj )
+!   call obj_ptr%LagrangeElement( order = 2, HighOrderobj = obj )
 !   call display( obj, "higher order obj : ")
-!   call obj_ptr%LagrangeElement( order = 3, HighOrderObj = obj )
+!   call obj_ptr%LagrangeElement( order = 3, HighOrderobj = obj )
 !   call display( obj, "3rd order obj : ")
 ! end
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Triangle( RefElem, Order, Obj )
+MODULE PURE SUBROUTINE LagrangeElement_Triangle( RefElem, Order, obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS( ReferenceElement_ ), INTENT( INOUT) ::  Obj
+  CLASS( ReferenceElement_ ), INTENT( INOUT) ::  obj
 END SUBROUTINE LagrangeElement_Triangle
 END INTERFACE
 
@@ -259,7 +259,7 @@ END INTERFACE Area
 PUBLIC :: Area
 
 !----------------------------------------------------------------------------
-!                                                        AreaVector@Triangle
+!                                                        ArealVector@Triangle
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -267,18 +267,18 @@ PUBLIC :: Area
 ! summary: Returns the area vector
 
 INTERFACE
-MODULE FUNCTION triangle_areaVector( refelem, xij ) RESULT( Ans )
+MODULE FUNCTION triangle_arealVector( refelem, xij ) RESULT( Ans )
   CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
   REAL( DFP ), INTENT( IN ) :: xij(:,:)
   REAL( DFP ) :: Ans( 3 )
-END FUNCTION triangle_areaVector
+END FUNCTION triangle_arealVector
 END INTERFACE
 
-INTERFACE AreaVector
-  MODULE PROCEDURE triangle_areaVector
-END INTERFACE AreaVector
+INTERFACE ArealVector
+  MODULE PROCEDURE triangle_arealVector
+END INTERFACE ArealVector
 
-PUBLIC :: AreaVector
+PUBLIC :: ArealVector
 
 !----------------------------------------------------------------------------
 !                                                      Barycentric@Triangle

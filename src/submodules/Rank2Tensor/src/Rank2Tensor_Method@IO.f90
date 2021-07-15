@@ -25,7 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE display_obj
-  CALL Display( Obj%T, MSG=MSG, &
+  CALL Display( obj%T, MSG=MSG, &
     & UnitNo=INPUT( default = stdout, option=UnitNo ) )
 END PROCEDURE display_obj
 

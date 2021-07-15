@@ -29,36 +29,36 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Obj_add_Obj
-  Ans%T = Obj1%T + Obj2%T
-  IF( Obj1%isSym .AND. Obj2%isSym ) Ans%isSym = .TRUE.
+MODULE PROCEDURE obj_add_obj
+  Ans%T = obj1%T + obj2%T
+  IF( obj1%isSym .AND. obj2%isSym ) Ans%isSym = .TRUE.
 END PROCEDURE
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Obj_add_Scalar
-  Ans%T = Obj1%T + Obj2
-  Ans%isSym = Obj1%isSym
+MODULE PROCEDURE obj_add_Scalar
+  Ans%T = obj1%T + obj2
+  Ans%isSym = obj1%isSym
 END PROCEDURE
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Scalar_add_Obj
-  Ans%T = Obj1 + Obj2%T
-  Ans%isSym = Obj2%isSym
+MODULE PROCEDURE Scalar_add_obj
+  Ans%T = obj1 + obj2%T
+  Ans%isSym = obj2%isSym
 END PROCEDURE
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Obj_minus_Obj
-  Ans%T = Obj1%T - Obj2%T
-  IF( Obj1%isSym .AND. Obj2%isSym ) Ans%isSym = .TRUE.
+MODULE PROCEDURE obj_minus_obj
+  Ans%T = obj1%T - obj2%T
+  IF( obj1%isSym .AND. obj2%isSym ) Ans%isSym = .TRUE.
 
 END PROCEDURE
 
@@ -66,18 +66,18 @@ END PROCEDURE
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Obj_minus_Scalar
-  Ans%T = Obj1%T - Obj2
-  Ans%isSym = Obj1%isSym
+MODULE PROCEDURE obj_minus_Scalar
+  Ans%T = obj1%T - obj2
+  Ans%isSym = obj1%isSym
 END PROCEDURE
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Scalar_minus_Obj
-  Ans%T = Obj1 - Obj2%T
-  Ans%isSym = Obj2%isSym
+MODULE PROCEDURE Scalar_minus_obj
+  Ans%T = obj1 - obj2%T
+  Ans%isSym = obj2%isSym
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_times_obj
-  Ans%T = Obj1%T * Obj2%T
+  Ans%T = obj1%T * obj2%T
 END PROCEDURE obj_times_obj
 
 !----------------------------------------------------------------------------
@@ -93,8 +93,8 @@ END PROCEDURE obj_times_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_times_scalar
-  Ans%T = Obj1%T * Obj2
-  Ans%isSym = Obj1%isSym
+  Ans%T = obj1%T * obj2
+  Ans%isSym = obj1%isSym
 END PROCEDURE obj_times_scalar
 
 !----------------------------------------------------------------------------
@@ -102,8 +102,8 @@ END PROCEDURE obj_times_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalar_times_obj
-  Ans%T = Obj1 * Obj2%T
-  Ans%isSym = Obj2%isSym
+  Ans%T = obj1 * obj2%T
+  Ans%isSym = obj2%isSym
 END PROCEDURE scalar_times_obj
 
 !----------------------------------------------------------------------------
@@ -111,7 +111,7 @@ END PROCEDURE scalar_times_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_div_obj
-  Ans%T = Obj1%T / Obj2%T
+  Ans%T = obj1%T / obj2%T
 END PROCEDURE obj_div_obj
 
 !----------------------------------------------------------------------------
@@ -119,8 +119,8 @@ END PROCEDURE obj_div_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_div_scalar
-  Ans%T = Obj1%T / Obj2
-  Ans%isSym = Obj1%isSym
+  Ans%T = obj1%T / obj2
+  Ans%isSym = obj1%isSym
 END PROCEDURE obj_div_scalar
 
 !----------------------------------------------------------------------------
@@ -128,8 +128,8 @@ END PROCEDURE obj_div_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE scalar_div_obj
-  Ans%T = Obj1 / Obj2%T
-  Ans%isSym = Obj2%isSym
+  Ans%T = obj1 / obj2%T
+  Ans%isSym = obj2%isSym
 END PROCEDURE scalar_div_obj
 
 !----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ END PROCEDURE scalar_div_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_matmul_obj
-  Ans%T = MATMUL( Obj1%T, Obj2%T )
+  Ans%T = MATMUL( obj1%T, obj2%T )
 END PROCEDURE obj_matmul_obj
 
 !----------------------------------------------------------------------------
@@ -145,7 +145,7 @@ END PROCEDURE obj_matmul_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_matmul_vec
-  Ans = MATMUL( Obj1%T, Obj2 )
+  Ans = MATMUL( obj1%T, obj2 )
 END PROCEDURE obj_matmul_vec
 
 !----------------------------------------------------------------------------
@@ -153,7 +153,7 @@ END PROCEDURE obj_matmul_vec
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vec_matmul_obj
-  Ans = MATMUL( Obj1, Obj2%T )
+  Ans = MATMUL( obj1, obj2%T )
 END PROCEDURE vec_matmul_obj
 
 !----------------------------------------------------------------------------

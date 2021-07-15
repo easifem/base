@@ -28,10 +28,10 @@ MODULE PROCEDURE Quadrangle_H1_Lagrange
   INTEGER( I4B ) :: nips
   REAL( DFP ), ALLOCATABLE :: XiEta( :, : )
 
-  CALL Initiate( Obj%RefElem, RefElem )
-  CALL getQuadraturePoints( Obj = Quad, Point = XiEta,  Weight = Obj%Ws )
-  Obj%Quad = Quad
-  nips = SIZE( Obj%Ws )
+  CALL Initiate( obj%RefElem, RefElem )
+  CALL getQuadraturePoints( obj = Quad, Point = XiEta,  Weight = obj%Ws )
+  obj%Quad = Quad
+  nips = SIZE( obj%Ws )
 
   SELECT CASE( refelem%order )
   CASE( 1 )

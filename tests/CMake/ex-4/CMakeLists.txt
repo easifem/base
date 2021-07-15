@@ -30,5 +30,5 @@ add_library(${project_name}lib
   mod1.f90
 )
 #add_library(
-#  ${project_name}lib SHARED $<TARGET_OBJECTS:${project_name}obj>)
+#  ${project_name}lib SHARED $<TARGET_objECTS:${project_name}obj>)
 

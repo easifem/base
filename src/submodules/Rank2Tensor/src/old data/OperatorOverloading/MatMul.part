@@ -23,7 +23,7 @@
 !                                                          MatMul_1
 !------------------------------------------------------------------------------
 !
- FUNCTION MatMul_1( Obj, Obj2 )
+ FUNCTION MatMul_1( obj, obj2 )
 !
 !   DESCRIPTION
 !------------------------------------------------------------------------------
@@ -31,19 +31,19 @@
 !------------------------------------------------------------------------------
 !
 !   Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj, Obj2
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj, obj2
     REAL( DFP ), DIMENSION( 3, 3 ) :: MatMul_1
 
     Error_Flag = .FALSE.
 
 #ifdef DEBUG_VER
-    IF( .NOT. ALLOCATED( Obj%T ) &
-        .OR. .NOT. ALLOCATED( Obj2%T ) ) THEN
+    IF( .NOT. ALLOCATED( obj%T ) &
+        .OR. .NOT. ALLOCATED( obj2%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>OperatorOverloading.part", &
                         "MatMul_1()",                          &
-                        "Tensor_ Obj is/are not allocated. Program Stopped"&
+                        "Tensor_ obj is/are not allocated. Program Stopped"&
                     )
         Error_Flag = .TRUE.
 
@@ -51,7 +51,7 @@
 
     END IF
 #endif
-    MatMul_1 = MATMUL( Obj%T,  Obj2%T )
+    MatMul_1 = MATMUL( obj%T,  obj2%T )
 
  END FUNCTION MatMul_1
 !
@@ -59,15 +59,15 @@
 !                                                          MatMul_2
 !------------------------------------------------------------------------------
 !
- FUNCTION MatMul_2( Obj, Mat2 )
+ FUNCTION MatMul_2( obj, Mat2 )
 !
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  -  Obj .matmul. Mat
+!       1.  -  obj .matmul. Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !
 !   Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat2
     REAL( DFP ), DIMENSION( 3, 3 ) :: MatMul_2
 
@@ -76,12 +76,12 @@
     Error_Flag = .FALSE.
 
 #ifdef DEBUG_VER
-    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>OperatorOverloading.part", &
                         "MatMul_2()",                          &
-                        "Tensor_ Obj is not allocated. Program Stopped"   &
+                        "Tensor_ obj is not allocated. Program Stopped"   &
                     )
         Error_Flag = .TRUE.
 
@@ -97,15 +97,15 @@
 
         CASE( 1 )
 
-            MatMul_2( 1, 1 ) = Obj%T( 1, 1 ) * Mat2( 1, 1 )
+            MatMul_2( 1, 1 ) = obj%T( 1, 1 ) * Mat2( 1, 1 )
 
         CASE( 2 )
 
-            MatMul_2( 1:2, 1:2 ) = MATMUL(Obj%T( 1:2, 1:2 ), Mat2( 1:2, 1:2 ))
+            MatMul_2( 1:2, 1:2 ) = MATMUL(obj%T( 1:2, 1:2 ), Mat2( 1:2, 1:2 ))
 
         CASE DEFAULT
 
-            MatMul_2( 1:3, 1:3 ) = MATMUL(Obj%T( 1:3, 1:3 ), Mat2( 1:3, 1:3 ))
+            MatMul_2( 1:3, 1:3 ) = MATMUL(obj%T( 1:3, 1:3 ), Mat2( 1:3, 1:3 ))
 
     END SELECT
 
@@ -115,15 +115,15 @@
 !                                                                  MatMul_3
 !------------------------------------------------------------------------------
 !
- FUNCTION MatMul_3( Mat2, Obj )
+ FUNCTION MatMul_3( Mat2, obj )
 !
 !   DESCRIPTION
 !------------------------------------------------------------------------------
-!       1.  -  Mat .matmul. Obj
+!       1.  -  Mat .matmul. obj
 !------------------------------------------------------------------------------
 !
 !   Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat2
     REAL( DFP ), DIMENSION( 3, 3 ) :: MatMul_3
 
@@ -132,12 +132,12 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%T ) ) THEN
+    IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
                        "Rank2Tensor_Class.f90>>OperatorOverloading.part", &
                         "MatMul_3()",                          &
-                        "Tensor_ Obj is not allocated. Program Stopped"   &
+                        "Tensor_ obj is not allocated. Program Stopped"   &
                     )
         Error_Flag = .TRUE.
 
@@ -152,15 +152,15 @@
 
         CASE( 1 )
 
-            MatMul_3( 1, 1 ) = Obj%T( 1, 1 ) * Mat2( 1, 1 )
+            MatMul_3( 1, 1 ) = obj%T( 1, 1 ) * Mat2( 1, 1 )
 
         CASE( 2 )
 
-            MatMul_3( 1:2, 1:2 ) = MATMUL( Mat2( 1:2, 1:2 ), Obj%T( 1:2, 1:2 ) )
+            MatMul_3( 1:2, 1:2 ) = MATMUL( Mat2( 1:2, 1:2 ), obj%T( 1:2, 1:2 ) )
 
         CASE DEFAULT
 
-            MatMul_3( 1:3, 1:3 ) = MATMUL( Mat2( 1:3, 1:3 ), Obj%T( 1:3, 1:3 ) )
+            MatMul_3( 1:3, 1:3 ) = MATMUL( Mat2( 1:3, 1:3 ), obj%T( 1:3, 1:3 ) )
 
     END SELECT
 

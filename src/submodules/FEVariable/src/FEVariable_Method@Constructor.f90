@@ -25,26 +25,26 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fe_deallocate
-  IF( ALLOCATED( Obj%R1 ) ) DEALLOCATE( Obj%R1 )
-  IF( ALLOCATED( Obj%R2 ) ) DEALLOCATE( Obj%R2 )
-  IF( ALLOCATED( Obj%R3 ) ) DEALLOCATE( Obj%R3 )
-  IF( ALLOCATED( Obj%R4 ) ) DEALLOCATE( Obj%R4 )
-  Obj%R0 = 0.0_DFP
-  Obj%DefineOn = 0
-  Obj%VarType = 0
-  Obj%Rank = 0
-  Obj%CaseType = 0
+  IF( ALLOCATED( obj%R1 ) ) DEALLOCATE( obj%R1 )
+  IF( ALLOCATED( obj%R2 ) ) DEALLOCATE( obj%R2 )
+  IF( ALLOCATED( obj%R3 ) ) DEALLOCATE( obj%R3 )
+  IF( ALLOCATED( obj%R4 ) ) DEALLOCATE( obj%R4 )
+  obj%R0 = 0.0_DFP
+  obj%DefineOn = 0
+  obj%VarType = 0
+  obj%Rank = 0
+  obj%CaseType = 0
 END PROCEDURE fe_deallocate
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Scalar_Constant
-  Obj%R0 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Scalar
-  Obj%VarType = Constant
-  Obj%CaseType = 1
+  obj%R0 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Scalar
+  obj%VarType = Constant
+  obj%CaseType = 1
 END PROCEDURE Nodal_Scalar_Constant
 
 !----------------------------------------------------------------------------
@@ -52,11 +52,11 @@ END PROCEDURE Nodal_Scalar_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Scalar_Space
-  Obj%R1 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Scalar
-  Obj%VarType = Space
-  Obj%CaseType = 2
+  obj%R1 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Scalar
+  obj%VarType = Space
+  obj%CaseType = 2
 END PROCEDURE Nodal_Scalar_Space
 
 !----------------------------------------------------------------------------
@@ -64,11 +64,11 @@ END PROCEDURE Nodal_Scalar_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Scalar_Spacetime
-  Obj%R2 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Scalar
-  Obj%VarType = Spacetime
-  Obj%CaseType = 3
+  obj%R2 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Scalar
+  obj%VarType = Spacetime
+  obj%CaseType = 3
 END PROCEDURE Nodal_Scalar_Spacetime
 
 !----------------------------------------------------------------------------
@@ -76,11 +76,11 @@ END PROCEDURE Nodal_Scalar_Spacetime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Vector_Constant
-  Obj%R1 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Vector
-  Obj%VarType = Constant
-  Obj%CaseType = 4
+  obj%R1 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Vector
+  obj%VarType = Constant
+  obj%CaseType = 4
 END PROCEDURE Nodal_Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -88,11 +88,11 @@ END PROCEDURE Nodal_Vector_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Vector_Space
-  Obj%R2 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Vector
-  Obj%VarType = Space
-  Obj%CaseType = 5
+  obj%R2 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Vector
+  obj%VarType = Space
+  obj%CaseType = 5
 END PROCEDURE Nodal_Vector_Space
 
 !----------------------------------------------------------------------------
@@ -100,11 +100,11 @@ END PROCEDURE Nodal_Vector_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Vector_Spacetime
-  Obj%R3 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Vector
-  Obj%VarType = Spacetime
-  Obj%CaseType = 6
+  obj%R3 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Vector
+  obj%VarType = Spacetime
+  obj%CaseType = 6
 END PROCEDURE Nodal_Vector_Spacetime
 
 !----------------------------------------------------------------------------
@@ -112,11 +112,11 @@ END PROCEDURE Nodal_Vector_Spacetime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Matrix_Constant
-  Obj%R2 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Matrix
-  Obj%VarType = Constant
-  Obj%CaseType = 7
+  obj%R2 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Matrix
+  obj%VarType = Constant
+  obj%CaseType = 7
 END PROCEDURE Nodal_Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -124,11 +124,11 @@ END PROCEDURE Nodal_Matrix_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Matrix_Space
-  Obj%R3 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Matrix
-  Obj%VarType = Space
-  Obj%CaseType = 8
+  obj%R3 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Matrix
+  obj%VarType = Space
+  obj%CaseType = 8
 END PROCEDURE Nodal_Matrix_Space
 
 !----------------------------------------------------------------------------
@@ -136,11 +136,11 @@ END PROCEDURE Nodal_Matrix_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Matrix_Spacetime
-  Obj%R4 = Val
-  Obj%DefineOn = Nodal
-  Obj%Rank = Matrix
-  Obj%VarType = Spacetime
-  Obj%CaseType = 9
+  obj%R4 = Val
+  obj%DefineOn = Nodal
+  obj%Rank = Matrix
+  obj%VarType = Spacetime
+  obj%CaseType = 9
 END PROCEDURE Nodal_Matrix_Spacetime
 
 !----------------------------------------------------------------------------
@@ -148,11 +148,11 @@ END PROCEDURE Nodal_Matrix_Spacetime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_Constant
-  Obj%R0 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Scalar
-  Obj%VarType = Constant
-  Obj%CaseType = 10
+  obj%R0 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Scalar
+  obj%VarType = Constant
+  obj%CaseType = 10
 END PROCEDURE Quadrature_Scalar_Constant
 
 !----------------------------------------------------------------------------
@@ -160,11 +160,11 @@ END PROCEDURE Quadrature_Scalar_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_Space
-  Obj%R1 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Scalar
-  Obj%VarType = Space
-  Obj%CaseType = 11
+  obj%R1 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Scalar
+  obj%VarType = Space
+  obj%CaseType = 11
 END PROCEDURE Quadrature_Scalar_Space
 
 !----------------------------------------------------------------------------
@@ -172,11 +172,11 @@ END PROCEDURE Quadrature_Scalar_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_Spacetime
-  Obj%R2 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Scalar
-  Obj%VarType = Spacetime
-  Obj%CaseType = 12
+  obj%R2 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Scalar
+  obj%VarType = Spacetime
+  obj%CaseType = 12
 END PROCEDURE Quadrature_Scalar_Spacetime
 
 !----------------------------------------------------------------------------
@@ -184,11 +184,11 @@ END PROCEDURE Quadrature_Scalar_Spacetime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Constant
-  Obj%R1 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Vector
-  Obj%VarType = Constant
-  Obj%CaseType = 13
+  obj%R1 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Vector
+  obj%VarType = Constant
+  obj%CaseType = 13
 END PROCEDURE Quadrature_Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -196,11 +196,11 @@ END PROCEDURE Quadrature_Vector_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Space
-  Obj%R2 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Vector
-  Obj%VarType = Space
-  Obj%CaseType = 14
+  obj%R2 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Vector
+  obj%VarType = Space
+  obj%CaseType = 14
 END PROCEDURE Quadrature_Vector_Space
 
 !----------------------------------------------------------------------------
@@ -208,11 +208,11 @@ END PROCEDURE Quadrature_Vector_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Spacetime
-  Obj%R3 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Vector
-  Obj%VarType = Spacetime
-  Obj%CaseType = 15
+  obj%R3 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Vector
+  obj%VarType = Spacetime
+  obj%CaseType = 15
 END PROCEDURE Quadrature_Vector_Spacetime
 
 !----------------------------------------------------------------------------
@@ -220,11 +220,11 @@ END PROCEDURE Quadrature_Vector_Spacetime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Constant
-  Obj%R2 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Matrix
-  Obj%VarType = Constant
-  Obj%CaseType = 16
+  obj%R2 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Matrix
+  obj%VarType = Constant
+  obj%CaseType = 16
 END PROCEDURE Quadrature_Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -232,11 +232,11 @@ END PROCEDURE Quadrature_Matrix_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Space
-  Obj%R3 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Matrix
-  Obj%VarType = Space
-  Obj%CaseType = 17
+  obj%R3 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Matrix
+  obj%VarType = Space
+  obj%CaseType = 17
 END PROCEDURE Quadrature_Matrix_Space
 
 !----------------------------------------------------------------------------
@@ -244,11 +244,11 @@ END PROCEDURE Quadrature_Matrix_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Spacetime
-  Obj%R4 = Val
-  Obj%DefineOn = Quadrature
-  Obj%Rank = Matrix
-  Obj%VarType = Spacetime
-  Obj%CaseType = 18
+  obj%R4 = Val
+  obj%DefineOn = Quadrature
+  obj%Rank = Matrix
+  obj%VarType = Spacetime
+  obj%CaseType = 18
 END PROCEDURE Quadrature_Matrix_Spacetime
 
 END SUBMODULE Constructor

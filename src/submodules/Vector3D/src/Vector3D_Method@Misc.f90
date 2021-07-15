@@ -30,7 +30,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dot_product_1
-  Ans = DOT_PRODUCT( Obj1%Val, Obj2%Val )
+  Ans = DOT_PRODUCT( obj1%Val, obj2%Val )
 END PROCEDURE dot_product_1
 
 !----------------------------------------------------------------------------
@@ -39,9 +39,9 @@ END PROCEDURE dot_product_1
 
 MODULE PROCEDURE dot_product_2
   IF( SIZE( Val ) .LT. 3 ) THEN
-    Ans = DOT_PRODUCT( Obj, Vector3D( Val ) )
+    Ans = DOT_PRODUCT( obj, Vector3D( Val ) )
   ELSE
-    Ans = DOT_PRODUCT( Obj%Val, Val(1:3) )
+    Ans = DOT_PRODUCT( obj%Val, Val(1:3) )
   END IF
 END PROCEDURE dot_product_2
 
@@ -50,7 +50,7 @@ END PROCEDURE dot_product_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dot_product_3
-  Ans = DOT_PRODUCT(Obj=Obj, Val=Val)
+  Ans = DOT_PRODUCT(obj=obj, Val=Val)
 END PROCEDURE dot_product_3
 
 !----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ END PROCEDURE dot_product_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vector_product_1
-  Ans = Vector_Product(Obj1%val, Obj2%val)
+  Ans = Vector_Product(obj1%val, obj2%val)
 END PROCEDURE vector_product_1
 
 !----------------------------------------------------------------------------
@@ -75,9 +75,9 @@ END PROCEDURE vector_product_1
 
 MODULE PROCEDURE vector_product_2
   IF( SIZE( Val ) .LT. 3 ) THEN
-    Ans = VECTOR_PRODUCT( Obj, Vector3D( Val ) )
+    Ans = VECTOR_PRODUCT( obj, Vector3D( Val ) )
   ELSE
-    Ans = VECTOR_PRODUCT( Obj%Val, Val(1:3) )
+    Ans = VECTOR_PRODUCT( obj%Val, Val(1:3) )
   END IF
 END PROCEDURE vector_product_2
 
@@ -86,7 +86,7 @@ END PROCEDURE vector_product_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vector_product_3
-  Ans = VECTOR_PRODUCT(Obj=Obj, Val=Val)
+  Ans = VECTOR_PRODUCT(obj=obj, Val=Val)
 END PROCEDURE vector_product_3
 
 !----------------------------------------------------------------------------
@@ -102,7 +102,7 @@ END PROCEDURE vector_product_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Norm2_obj
-  Ans = SQRT( DOT_PRODUCT( Obj%Val, Obj%Val ) )
+  Ans = SQRT( DOT_PRODUCT( obj%Val, obj%Val ) )
 END PROCEDURE Norm2_obj
 
 !----------------------------------------------------------------------------
@@ -110,7 +110,7 @@ END PROCEDURE Norm2_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_UnitVector
-  Ans = Obj%Val / NORM2( Obj%Val )
+  Ans = obj%Val / NORM2( obj%Val )
 END PROCEDURE get_UnitVector
 
 !----------------------------------------------------------------------------

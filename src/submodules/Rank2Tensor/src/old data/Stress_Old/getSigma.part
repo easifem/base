@@ -1,15 +1,15 @@
 !
 !------------------------------------------------------------------------------
-!                   Author      :   Vikas sharma                            
-!                   Position    :   Doctral Student                                       
-!                   Institute   :   Kyoto Univeristy, Japan                        
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
 !                   Program name:   getSigma.part
 !                   Last Update :   March-29-2017
-!                                                               
+!
 !------------------------------------------------------------------------------
 !                           Details of Program
 !==============================================================================
-! 
+!
 !   Type    ::  Part of the Code
 !
 !   Info    ::  -   Part of the code; Initiate the Sigma object
@@ -28,7 +28,7 @@
 !
 !   Description
 !------------------------------------------------------------------------------
-!       1.  - get the Sigma Object
+!       1.  - get the Sigma object
 !
 !------------------------------------------------------------------------------
 !  Define arguments of dummy argument

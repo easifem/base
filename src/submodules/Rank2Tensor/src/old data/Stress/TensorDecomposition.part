@@ -23,7 +23,7 @@
 !                                                               m_SymmetricPart
 !------------------------------------------------------------------------------
 !
- FUNCTION m_SymmetricPart( Obj )
+ FUNCTION m_SymmetricPart( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1. - Symmetric part of Tensor, method
@@ -32,12 +32,12 @@
     USE Rank2Tensor_Class
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_SymmetricPart
 
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
-    T = Obj
+    T = obj
     m_SymmetricPart = SymmetricPart( T )
 
     CALL T%DeallocateData( )
@@ -48,7 +48,7 @@
 !                                                          m_AntiSymmetricPart
 !------------------------------------------------------------------------------
 !
- FUNCTION m_AntiSymmetricPart( Obj )
+ FUNCTION m_AntiSymmetricPart( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1. - AntiSymmetric part of Tensor, method
@@ -57,12 +57,12 @@
     USE Rank2Tensor_Class
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_AntiSymmetricPart
 
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
-    T = Obj
+    T = obj
     m_AntiSymmetricPart = AntiSymmetricPart( T )
 
     CALL T%DeallocateData( )
@@ -73,7 +73,7 @@
 !                                                           m_HydrostaticPart
 !------------------------------------------------------------------------------
 
- FUNCTION m_HydrostaticPart( Obj )
+ FUNCTION m_HydrostaticPart( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1. - Hydrostatic part of Tensor :: Trace( T ) / 3
@@ -82,12 +82,12 @@
     USE Rank2Tensor_Class
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_HydrostaticPart
 
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
-    T = Obj
+    T = obj
 
     m_HydrostaticPart = HydrostaticPart( T )
 
@@ -99,7 +99,7 @@
 !                                                            m_DeviatoricPart
 !------------------------------------------------------------------------------
 
- FUNCTION m_DeviatoricPart( Obj )
+ FUNCTION m_DeviatoricPart( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1. - Deviatoric part of stress
@@ -108,12 +108,12 @@
     USE Rank2Tensor_Class
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_DeviatoricPart
 
     ! Define internal variables
     TYPE( Rank2Tensor_ ) :: T
-    T = Obj
+    T = obj
 
     m_DeviatoricPart = DeviatoricPart( T )
 

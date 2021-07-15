@@ -39,7 +39,7 @@ MODULE PROCEDURE Space_MassMatrix
 
   ! making rho at quadrature
   IF( PRESENT( Rho ) ) THEN
-    CALL getInterpolation( Obj=Trial, Val=Rho, Interpol=RhoBar )
+    CALL getInterpolation( obj=Trial, Val=Rho, Interpol=RhoBar )
   ELSE
     RhoBar = 1.0_DFP
   END IF
@@ -82,7 +82,7 @@ MODULE PROCEDURE st_massMatrix_a
   ALLOCATE( RhoBar( SIZE( Trial( 1 )%N, 2 ), SIZE( Trial ) ) )
 
   IF( PRESENT( Rho ) ) THEN
-    CALL getInterpolation( Obj=Trial, Val=Rho, Interpol=RhoBar )
+    CALL getInterpolation( obj=Trial, Val=Rho, Interpol=RhoBar )
   ELSE
     RhoBar = 1.0_DFP
   END IF

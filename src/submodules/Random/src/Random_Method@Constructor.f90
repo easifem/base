@@ -65,7 +65,7 @@ END PROCEDURE getRandom
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SaveRandom
-  CALL RANDOM_SEED( put=Obj%Random_INT_SEED )
+  CALL RANDOM_SEED( put=obj%Random_INT_SEED )
 END PROCEDURE SaveRandom
 
 !----------------------------------------------------------------------------
@@ -110,7 +110,7 @@ END PROCEDURE getRandomInteger
 
 MODULE PROCEDURE select_random_int_from_vec
   INTEGER( I4B ) :: posi
-  posi = getRandomInteger( Obj, From=1, To=size(Val) )
+  posi = getRandomInteger( obj, From=1, To=size(Val) )
   Ans=Val(posi)
 END PROCEDURE select_random_int_from_vec
 
@@ -120,8 +120,8 @@ END PROCEDURE select_random_int_from_vec
 
 MODULE PROCEDURE select_random_int_from_array
   INTEGER( I4B ) :: i1, i2
-  i1 = getRandomInteger( Obj, From=1, To=SIZE(Val,1) )
-  i2 = getRandomInteger( Obj, From=1, To=SIZE(Val,2) )
+  i1 = getRandomInteger( obj, From=1, To=SIZE(Val,1) )
+  i2 = getRandomInteger( obj, From=1, To=SIZE(Val,2) )
   Ans = Val( i1, i2 )
 END PROCEDURE select_random_int_from_array
 
@@ -131,7 +131,7 @@ END PROCEDURE select_random_int_from_array
 
 MODULE PROCEDURE select_random_real_from_vec
   INTEGER( I4B ) :: posi
-  posi = getRandomInteger( Obj, From=1, To=size(Val) )
+  posi = getRandomInteger( obj, From=1, To=size(Val) )
   Ans=Val(posi)
 END PROCEDURE select_random_real_from_vec
 
@@ -141,8 +141,8 @@ END PROCEDURE select_random_real_from_vec
 
 MODULE PROCEDURE select_random_real_from_array
   INTEGER( I4B ) :: i1, i2
-  i1 = getRandomInteger( Obj, From=1, To=SIZE(Val,1) )
-  i2 = getRandomInteger( Obj, From=1, To=SIZE(Val,2) )
+  i1 = getRandomInteger( obj, From=1, To=SIZE(Val,1) )
+  i2 = getRandomInteger( obj, From=1, To=SIZE(Val,2) )
   Ans = Val( i1, i2 )
 END PROCEDURE select_random_real_from_array
 

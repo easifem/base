@@ -52,8 +52,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE init_from_vec( Obj, Vec, VoigtType )
-  CLASS( VoigtRank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE init_from_vec( obj, Vec, VoigtType )
+  CLASS( VoigtRank2Tensor_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Vec( 6 )
   INTEGER( I4B ), INTENT( IN ) :: VoigtType
 END SUBROUTINE init_from_vec
@@ -82,8 +82,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE init_from_mat( Obj, T, VoigtType )
-  CLASS( VoigtRank2Tensor_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE init_from_mat( obj, T, VoigtType )
+  CLASS( VoigtRank2Tensor_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: T( 3, 3 )
   INTEGER( I4B ), INTENT( IN ) :: VoigtType
 END SUBROUTINE init_from_mat
@@ -249,9 +249,9 @@ PUBLIC :: VoigtRank2Tensor_Pointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE mat_eq_obj( T, Obj )
+MODULE PURE SUBROUTINE mat_eq_obj( T, obj )
   REAL( DFP ), INTENT( INOUT ) :: T( 3, 3 )
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: obj
 END SUBROUTINE mat_eq_obj
 END INTERFACE
 
@@ -260,9 +260,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE vec_eq_obj( vec, Obj )
+MODULE PURE SUBROUTINE vec_eq_obj( vec, obj )
   REAL( DFP ), INTENT( INOUT ) :: vec( 6 )
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: obj
 END SUBROUTINE vec_eq_obj
 END INTERFACE
 
@@ -281,8 +281,8 @@ PUBLIC :: ASSIGNMENT( = )
 ! summary: This routine displays the content of [[VoigtRank2Tensor_]]
 
 INTERFACE
-MODULE SUBROUTINE display_obj( Obj, Msg, UnitNo )
-  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE display_obj( obj, Msg, UnitNo )
+  CLASS( VoigtRank2Tensor_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 END SUBROUTINE display_obj

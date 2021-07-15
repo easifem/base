@@ -28,7 +28,7 @@ CONTAINS
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getXmin
-  Ans = Obj%Box( 1, 1 )
+  Ans = obj%Box( 1, 1 )
 END PROCEDURE getXmin
 
 !-----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ END PROCEDURE getXmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getXmax
-  Ans = Obj%Box( 2, 1 )
+  Ans = obj%Box( 2, 1 )
 END PROCEDURE getXmax
 
 !-----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ END PROCEDURE getXmax
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getYmin
-  Ans =  Obj%Box( 1, 2 )
+  Ans =  obj%Box( 1, 2 )
 END PROCEDURE getYmin
 
 !-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ END PROCEDURE getYmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getYmax
-  Ans = Obj%Box( 2, 2 )
+  Ans = obj%Box( 2, 2 )
 END PROCEDURE getYmax
 
 !-----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ END PROCEDURE getYmax
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getZmin
-  Ans = Obj%Box( 1, 3 )
+  Ans = obj%Box( 1, 3 )
 END PROCEDURE getZmin
 
 !-----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ END PROCEDURE getZmin
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE getZmax
-  Ans = Obj%Box( 2, 3 )
+  Ans = obj%Box( 2, 3 )
 END PROCEDURE getZmax
 
 
@@ -81,8 +81,8 @@ MODULE PROCEDURE is_intersect_in_X
   REAL( DFP ) :: Min1, Max1, Min2, Max2
   LOGICAL( LGT ) :: Left, Right
 
-  Min1 = .Xmin. Obj; Max1 = .Xmax. Obj
-  Min2 = .Xmin. Obj2; Max2 = .Xmax. Obj2
+  Min1 = .Xmin. obj; Max1 = .Xmax. obj
+  Min2 = .Xmin. obj2; Max2 = .Xmax. obj2
 
   Right = ( Min2 .GE. Min1 ) .AND. ( Min2 .LE. Max1 )
   Left = ( Max2 .GE. Min1 ) .AND. ( Max2 .LE. Max1 )
@@ -103,8 +103,8 @@ MODULE PROCEDURE is_intersect_in_Y
   REAL( DFP ) :: Min1, Max1, Min2, Max2
   LOGICAL( LGT ) :: Left, Right
 
-  Min1 = .Ymin. Obj; Max1 = .Ymax. Obj
-  Min2 = .Ymin. Obj2; Max2 = .Ymax. Obj2
+  Min1 = .Ymin. obj; Max1 = .Ymax. obj
+  Min2 = .Ymin. obj2; Max2 = .Ymax. obj2
 
   Right = ( Min2 .GE. Min1 ) .AND. ( Min2 .LE. Max1 )
   Left = ( Max2 .GE. Min1 ) .AND. ( Max2 .LE. Max1 )
@@ -125,8 +125,8 @@ MODULE PROCEDURE is_intersect_in_Z
   REAL( DFP ) :: Min1, Max1, Min2, Max2
   LOGICAL( LGT ) :: Left, Right
 
-  Min1 = .Zmin. Obj; Max1 = .Zmax. Obj
-  Min2 = .Zmin. Obj2; Max2 = .Zmax. Obj2
+  Min1 = .Zmin. obj; Max1 = .Zmax. obj
+  Min2 = .Zmin. obj2; Max2 = .Zmax. obj2
 
   Right = ( Min2 .GE. Min1 ) .AND. ( Min2 .LE. Max1 )
   Left = ( Max2 .GE. Min1 ) .AND. ( Max2 .LE. Max1 )
@@ -143,9 +143,9 @@ END PROCEDURE is_intersect_in_Z
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE is_intersect
-  Ans = isIntersectInX( Obj, Obj2 ) &
-    & .AND. isIntersectInY( Obj, Obj2 ) &
-    & .AND. isIntersectInZ( Obj, Obj2 )
+  Ans = isIntersectInX( obj, obj2 ) &
+    & .AND. isIntersectInY( obj, obj2 ) &
+    & .AND. isIntersectInZ( obj, obj2 )
 END PROCEDURE is_intersect
 
 !----------------------------------------------------------------------------
@@ -157,12 +157,12 @@ MODULE PROCEDURE get_intersection
   REAL( DFP ) :: Min1, Max1, Min2, Max2
   LOGICAL( LGT ) :: Right
 
-  Ans%NSD = MAX( Obj%NSD, Obj2%NSD )
+  Ans%NSD = MAX( obj%NSD, obj2%NSD )
   Ans%Box = 0.0_DFP
 
-  IF( Obj .isIntersect. Obj2 ) THEN
-    Min1 = .Xmin. Obj; Max1 = .Xmax. Obj
-    Min2 = .Xmin. Obj2; Max2 = .Xmax. Obj2
+  IF( obj .isIntersect. obj2 ) THEN
+    Min1 = .Xmin. obj; Max1 = .Xmax. obj
+    Min2 = .Xmin. obj2; Max2 = .Xmax. obj2
     Right = ( Min2 .GE. Min1 ) .AND. ( Min2 .LE. Max1 )
     IF( Right ) THEN
       CALL setXmin( Ans, Min2 )
@@ -171,8 +171,8 @@ MODULE PROCEDURE get_intersection
       CALL setXmin( Ans, Min1 )
       CALL setXmax( Ans, Max2 )
     END IF
-    Min1 = .Ymin. Obj; Max1 = .Ymax. Obj
-    Min2 = .Ymin. Obj2; Max2 = .Ymax. Obj2
+    Min1 = .Ymin. obj; Max1 = .Ymax. obj
+    Min2 = .Ymin. obj2; Max2 = .Ymax. obj2
     Right = ( Min2 .GE. Min1 ) .AND. ( Min2 .LE. Max1 )
     IF( Right ) THEN
       CALL setYmin( Ans, Min2 )
@@ -181,8 +181,8 @@ MODULE PROCEDURE get_intersection
       CALL setYmin( Ans, Min1 )
       CALL setYmax( Ans, Max2 )
     END IF
-    Min1 = .Zmin. Obj; Max1 = .Zmax. Obj
-    Min2 = .Zmin. Obj2; Max2 = .Zmax. Obj2
+    Min1 = .Zmin. obj; Max1 = .Zmax. obj
+    Min2 = .Zmin. obj2; Max2 = .Zmax. obj2
     Right = ( Min2 .GE. Min1 ) .AND. ( Min2 .LE. Max1 )
     IF( Right ) THEN
       CALL setZmin( Ans, Min2 )
@@ -202,26 +202,26 @@ MODULE PROCEDURE get_union
   ! Define Internal variables
   REAL( DFP ) :: Val, Val1, Val2
 
-  Ans%NSD = MAX( Obj%NSD, Obj2%NSD )
+  Ans%NSD = MAX( obj%NSD, obj2%NSD )
 
-  Val1 = .Xmin. Obj; Val2 = .Xmin. Obj2
+  Val1 = .Xmin. obj; Val2 = .Xmin. obj2
   Val = MIN( Val1, Val2 )
   CALL SetXMin( Ans, Val )
-  Val1 = .Xmax. Obj; Val2 = .Xmax. Obj2
+  Val1 = .Xmax. obj; Val2 = .Xmax. obj2
   Val = MAX( Val1, Val2 )
   CALL SetXMax( Ans, Val )
 
-  Val1 = .Ymin. Obj; Val2 = .Ymin. Obj2
+  Val1 = .Ymin. obj; Val2 = .Ymin. obj2
   Val = MIN( Val1, Val2 )
   CALL SetYMin( Ans, Val )
-  Val1 = .Ymax. Obj; Val2 = .Ymax. Obj2
+  Val1 = .Ymax. obj; Val2 = .Ymax. obj2
   Val = MAX( Val1, Val2 )
   CALL SetYMax( Ans, Val )
 
-  Val1 = .Zmin. Obj; Val2 = .Zmin. Obj2
+  Val1 = .Zmin. obj; Val2 = .Zmin. obj2
   Val = MIN( Val1, Val2 )
   CALL SetZMin( Ans, Val )
-  Val1 = .Zmax. Obj; Val2 = .Zmax. Obj2
+  Val1 = .Zmax. obj; Val2 = .Zmax. obj2
   Val = MAX( Val1, Val2 )
   CALL SetZMax( Ans, Val )
 END PROCEDURE get_union
@@ -231,9 +231,9 @@ END PROCEDURE get_union
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE get_Center
-  Ans( 1 ) = SUM( Obj%Box( :, 1 ) ) / 2.0_DFP
-  Ans( 2 ) = SUM( Obj%Box( :, 2 ) ) / 2.0_DFP
-  Ans( 3 ) = SUM( Obj%Box( :, 3 ) ) / 2.0_DFP
+  Ans( 1 ) = SUM( obj%Box( :, 1 ) ) / 2.0_DFP
+  Ans( 2 ) = SUM( obj%Box( :, 2 ) ) / 2.0_DFP
+  Ans( 3 ) = SUM( obj%Box( :, 3 ) ) / 2.0_DFP
 END PROCEDURE get_Center
 
 !----------------------------------------------------------------------------
@@ -253,7 +253,7 @@ MODULE PROCEDURE is_Inside
 
     CASE( 1 )
 
-      Min1 = .Xmin. Obj; Max1 = .Xmax. Obj
+      Min1 = .Xmin. obj; Max1 = .Xmax. obj
       IF( Val( 1 ) .GE. Min1 .AND. Val( 1 ) .LE. Max1 ) THEN
         Ans = .TRUE.
       ELSE
@@ -262,14 +262,14 @@ MODULE PROCEDURE is_Inside
 
     CASE( 2 )
 
-      Min1 = .Xmin. Obj; Max1 = .Xmax. Obj
+      Min1 = .Xmin. obj; Max1 = .Xmax. obj
       IF( Val( 1 ) .GE. Min1 .AND. Val( 1 ) .LE. Max1 ) THEN
         Ans1 = .TRUE.
       ELSE
         Ans2 = .FALSE.
       END IF
 
-      Min1 = .Ymin. Obj; Max1 = .Ymax. Obj
+      Min1 = .Ymin. obj; Max1 = .Ymax. obj
       IF( Val( 2 ) .GE. Min1 .AND. Val( 2 ) .LE. Max1 ) THEN
         Ans2 = .TRUE.
       ELSE
@@ -284,21 +284,21 @@ MODULE PROCEDURE is_Inside
 
     CASE DEFAULT
 
-      Min1 = .Xmin. Obj; Max1 = .Xmax. Obj
+      Min1 = .Xmin. obj; Max1 = .Xmax. obj
       IF( Val( 1 ) .GE. Min1 .AND. Val( 1 ) .LE. Max1 ) THEN
         Ans1 = .TRUE.
       ELSE
         Ans1 = .FALSE.
       END IF
 
-      Min1 = .Ymin. Obj; Max1 = .Ymax. Obj
+      Min1 = .Ymin. obj; Max1 = .Ymax. obj
       IF( Val( 2 ) .GE. Min1 .AND. Val( 2 ) .LE. Max1 ) THEN
         Ans2 = .TRUE.
       ELSE
         Ans2 = .FALSE.
       END IF
 
-      Min1 = .Zmin. Obj; Max1 = .Zmax. Obj
+      Min1 = .Zmin. obj; Max1 = .Zmax. obj
       IF( Val( 3 ) .GE. Min1 .AND. Val( 3 ) .LE. Max1 ) THEN
         Ans3 = .TRUE.
       ELSE
@@ -327,7 +327,7 @@ MODULE PROCEDURE get_nptrs
   ALLOCATE( msk( n ), Indx( n ) )
 
   DO i = 1, n
-    msk( i ) = isInside( Obj, xij( :, i ) )
+    msk( i ) = isInside( obj, xij( :, i ) )
     Indx( i ) = i
   END DO
 

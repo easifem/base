@@ -41,8 +41,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Hexahedron( Obj, NSD, XiJ )
-  CLASS( ReferenceHexahedron_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_ref_Hexahedron( obj, NSD, XiJ )
+  CLASS( ReferenceHexahedron_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
 END SUBROUTINE initiate_ref_Hexahedron
@@ -57,10 +57,10 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Hexahedron( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Hexahedron( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferenceHexahedron_ ) :: Obj
+  TYPE( ReferenceHexahedron_ ) :: obj
 END FUNCTION reference_Hexahedron
 END INTERFACE
 
@@ -75,10 +75,10 @@ PUBLIC :: ReferenceHexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Hexahedron_Pointer( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Hexahedron_Pointer( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceHexahedron_ ), POINTER :: Obj
+  CLASS( ReferenceHexahedron_ ), POINTER :: obj
 END FUNCTION reference_Hexahedron_Pointer
 END INTERFACE
 
@@ -93,10 +93,10 @@ PUBLIC :: ReferenceHexahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Hexahedron( RefElem, Order, Obj )
+MODULE PURE SUBROUTINE LagrangeElement_Hexahedron( RefElem, Order, obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: Obj
+  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE LagrangeElement_Hexahedron
 END INTERFACE
 

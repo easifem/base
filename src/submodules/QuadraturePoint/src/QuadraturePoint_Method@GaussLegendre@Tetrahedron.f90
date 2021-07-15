@@ -173,7 +173,7 @@ MODULE PROCEDURE getGaussLegendreQPTetrahedron1
         & 0.002238739739614, 0.193746475248804, 0.730313427807538, 0.037970048471829, &
         & 0.002238739739614], [   4 ,   45] )
   END SELECT
-  CALL Initiate( Obj, Points )
+  CALL Initiate( obj, Points )
   DEALLOCATE( Points )
 END PROCEDURE getGaussLegendreQPTetrahedron1
 
@@ -372,7 +372,7 @@ MODULE PROCEDURE getGaussLegendreQPTetrahedron2
         & 0.002238739739614], [   4 ,   45] )
   END SELECT
 
-  CALL Initiate( Obj, Points )
+  CALL Initiate( obj, Points )
   DEALLOCATE( Points )
 END PROCEDURE getGaussLegendreQPTetrahedron2
 

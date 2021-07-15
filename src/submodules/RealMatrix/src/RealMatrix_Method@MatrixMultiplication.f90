@@ -26,7 +26,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MatMul_1
-  Ans%Val = MATMUL( Obj1%Val, Obj2%Val )
+  Ans%Val = MATMUL( obj1%Val, obj2%Val )
   CALL SetTotalDimension( Ans, 2_I4B )
 END PROCEDURE MatMul_1
 
@@ -35,7 +35,7 @@ END PROCEDURE MatMul_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MatMul_2
-  Ans = MATMUL( Obj%Val, Vec )
+  Ans = MATMUL( obj%Val, Vec )
 END PROCEDURE MatMul_2
 
 !----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ END PROCEDURE MatMul_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MatMul_3
-  Ans = RealVector( MATMUL( Obj%Val, Vec%Val ) )
+  Ans = RealVector( MATMUL( obj%Val, Vec%Val ) )
 END PROCEDURE MatMul_3
 
 END SUBMODULE MatrixMultiplication

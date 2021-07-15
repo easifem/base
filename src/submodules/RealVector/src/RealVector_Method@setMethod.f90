@@ -28,80 +28,80 @@ CONTAINS
 !                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Append_1
-  CALL Append( Obj%Val, Value )
-END PROCEDURE Append_1
+MODULE PROCEDURE realVec_Append1
+  CALL Append( obj%Val, Value )
+END PROCEDURE realVec_Append1
 
 !----------------------------------------------------------------------------
 !                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Append_2
-  CALL Append( Obj%Val, Value )
-END PROCEDURE Append_2
+MODULE PROCEDURE realVec_Append2
+  CALL Append( obj%Val, Value )
+END PROCEDURE realVec_Append2
 
 !----------------------------------------------------------------------------
 !                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Append_3
-  CALL Append( Obj%Val, AnotherObj%Val )
-END PROCEDURE Append_3
+MODULE PROCEDURE realVec_Append3
+  CALL Append( obj%Val, Anotherobj%Val )
+END PROCEDURE realVec_Append3
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_setValue1
-  IF( ALLOCATED( Obj%Val ) ) THEN
+MODULE PROCEDURE realVec_set1
+  IF( ALLOCATED( obj%Val ) ) THEN
     IF( SIZE( Value) .EQ. 1 ) THEN
-      Obj%Val( Indx ) = Value( 1 )
+      obj%Val( Indx ) = Value( 1 )
     ELSE
-      Obj%Val( Indx ) = Value
+      obj%Val( Indx ) = Value
     END IF
   END IF
-END PROCEDURE realVec_setValue1
+END PROCEDURE realVec_set1
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_setValue2
-  IF( ALLOCATED( Obj%Val ) ) THEN
-      Obj%Val( : ) = Value
+MODULE PROCEDURE realVec_set2
+  IF( ALLOCATED( obj%Val ) ) THEN
+      obj%Val( : ) = Value
   END IF
-END PROCEDURE realVec_setValue2
+END PROCEDURE realVec_set2
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_setValue3
-  IF( ALLOCATED( Obj%Val ) ) THEN
-      Obj%Val = Value
+MODULE PROCEDURE realVec_set3
+  IF( ALLOCATED( obj%Val ) ) THEN
+      obj%Val = Value
   END IF
-END PROCEDURE realVec_setValue3
+END PROCEDURE realVec_set3
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_setValue4
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    Obj%Val( istart:iend:stride ) = Value
+MODULE PROCEDURE realVec_set4
+  IF( ALLOCATED( obj%Val ) ) THEN
+    obj%Val( istart:iend:stride ) = Value
   END IF
-END PROCEDURE realVec_setValue4
+END PROCEDURE realVec_set4
 
 
 !----------------------------------------------------------------------------
 !                                                                       set
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_setValue5
-  IF( ALLOCATED( Obj%Val ) ) THEN
-    Obj%Val( istart:iend:stride ) = Value
+MODULE PROCEDURE realVec_set5
+  IF( ALLOCATED( obj%Val ) ) THEN
+    obj%Val( istart:iend:stride ) = Value
   END IF
-END PROCEDURE realVec_setValue5
+END PROCEDURE realVec_set5
 
 
 

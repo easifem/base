@@ -69,11 +69,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	call initiate( Obj, Key = 'E', Value = 1.0_dfp )
+!	call initiate( obj, Key = 'E', Value = 1.0_dfp )
 ! ```
 
-MODULE PURE SUBROUTINE Initiate1( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate1( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   REAL( DFP ), INTENT( IN ) :: Value
 END SUBROUTINE Initiate1
@@ -95,11 +95,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	call initiate( Obj, Key = string('E'), Value = 1.0_dfp )
+!	call initiate( obj, Key = string('E'), Value = 1.0_dfp )
 ! ```
 
-MODULE PURE SUBROUTINE Initiate2( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate2( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
   REAL( DFP ), INTENT( IN ) :: Value
 END SUBROUTINE Initiate2
@@ -118,8 +118,8 @@ INTERFACE
 ! - `Key = char`
 ! - `Value = Real Rank 1`
 
-MODULE PURE SUBROUTINE Initiate3( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate3( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   REAL( DFP ), INTENT( IN ) :: Value( : )
 END SUBROUTINE Initiate3
@@ -138,8 +138,8 @@ INTERFACE
 ! - `Key = String`
 ! - `Value = Real Rank 1`
 
-MODULE PURE SUBROUTINE Initiate4( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate4( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
   REAL( DFP ), INTENT( IN ) :: Value( : )
 END SUBROUTINE Initiate4
@@ -158,8 +158,8 @@ INTERFACE
 ! - `Key = char`
 ! - `Value = Real Rank 2`
 
-MODULE PURE SUBROUTINE Initiate5( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate5( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   REAL( DFP ), INTENT( IN ) :: Value( :, : )
 END SUBROUTINE Initiate5
@@ -178,8 +178,8 @@ INTERFACE
 ! - `Key = String`
 ! - `Value = Real Rank 2`
 
-MODULE PURE SUBROUTINE Initiate6( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate6( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
   REAL( DFP ), INTENT( IN ) :: Value( :, : )
 END SUBROUTINE Initiate6
@@ -198,8 +198,8 @@ INTERFACE
 ! - `Key = char`
 ! - `Value = Int Rank 0`
 
-MODULE PURE SUBROUTINE Initiate7( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate7( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   INTEGER( I4B ), INTENT( IN ) :: Value
 END SUBROUTINE Initiate7
@@ -218,8 +218,8 @@ INTERFACE
 ! - `Key = String`
 ! - `Value = Int Rank 0`
 
-MODULE PURE SUBROUTINE Initiate8( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate8( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
   INTEGER( I4B ), INTENT( IN ) :: Value
 END SUBROUTINE Initiate8
@@ -238,8 +238,8 @@ INTERFACE
 ! - `Key = char`
 ! - `Value = Int Rank 1`
 
-MODULE PURE SUBROUTINE Initiate9( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate9( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   INTEGER( I4B ), INTENT( IN ) :: Value( : )
 END SUBROUTINE Initiate9
@@ -258,8 +258,8 @@ INTERFACE
 ! - `Key = string`
 ! - `Value = Int Rank 1`
 
-MODULE PURE SUBROUTINE Initiate10( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate10( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
   INTEGER( I4B ), INTENT( IN ) :: Value( : )
 END SUBROUTINE Initiate10
@@ -278,8 +278,8 @@ INTERFACE
 ! - `Key = char`
 ! - `Value = Int Rank 2`
 
-MODULE PURE SUBROUTINE Initiate11( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate11( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   INTEGER( I4B ), INTENT( IN ) :: Value( :, : )
 END SUBROUTINE Initiate11
@@ -298,8 +298,8 @@ INTERFACE
 ! - `Key = string`
 ! - `Value = Int Rank 2`
 
-MODULE PURE SUBROUTINE Initiate12( Obj, Key, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE Initiate12( obj, Key, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
   INTEGER( I4B ), INTENT( IN ) :: Value( :, : )
 END SUBROUTINE Initiate12
@@ -316,9 +316,9 @@ INTERFACE
 !
 ! This suborutine constructs [[keyvalue_]] object
 
-MODULE PURE SUBROUTINE Initiate13( Obj, Obj2 )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
-  CLASS( keyValue_ ), INTENT( IN ) :: Obj2
+MODULE PURE SUBROUTINE Initiate13( obj, obj2 )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
+  CLASS( keyValue_ ), INTENT( IN ) :: obj2
 END SUBROUTINE Initiate13
 END INTERFACE
 
@@ -509,8 +509,8 @@ PUBLIC :: KeyValue
 
 
 INTERFACE
-MODULE PURE FUNCTION Contains2( Obj, Key ) RESULT( Ans )
-  TYPE( KeyValue_ ), INTENT( IN ) :: Obj( : )
+MODULE PURE FUNCTION Contains2( obj, Key ) RESULT( Ans )
+  TYPE( KeyValue_ ), INTENT( IN ) :: obj( : )
   TYPE( String ), INTENT( IN ) :: Key
   LOGICAL( LGT ) :: Ans
 END FUNCTION Contains2
@@ -682,8 +682,8 @@ PUBLIC :: KeyValue_Pointer
 INTERFACE
 !! This subroutine display contents of [[keyvalue_]]
 
-MODULE SUBROUTINE keyvalue_display( Obj, msg, UnitNo )
-  CLASS( keyValue_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE keyvalue_display( obj, msg, UnitNo )
+  CLASS( keyValue_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 END SUBROUTINE keyvalue_display
@@ -696,8 +696,8 @@ END INTERFACE
 INTERFACE
 !! Display content of vector of [[keyvalue_]]
 
-MODULE SUBROUTINE mp_display( Obj, msg, unitno )
-  TYPE( keyvalue_ ), INTENT( IN ) :: Obj( : )
+MODULE SUBROUTINE mp_display( obj, msg, unitno )
+  TYPE( keyvalue_ ), INTENT( IN ) :: obj( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 END SUBROUTINE mp_display
@@ -717,8 +717,8 @@ PUBLIC :: Display
 INTERFACE
 !! Function to check equality in [[keyvalue_]]
 
-MODULE ELEMENTAL FUNCTION Equal1( Obj, Key ) RESULT( Ans )
-  CLASS( KeyValue_ ), INTENT( IN ) :: Obj
+MODULE ELEMENTAL FUNCTION Equal1( obj, Key ) RESULT( Ans )
+  CLASS( KeyValue_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   LOGICAL( LGT ) :: Ans
 END FUNCTION Equal1
@@ -731,8 +731,8 @@ END INTERFACE
 INTERFACE
 !! Function to check equality in [[keyvalue_]]
 
-MODULE ELEMENTAL FUNCTION Equal2( Key, Obj ) RESULT( Ans )
-  CLASS( KeyValue_ ), INTENT( IN ) :: Obj
+MODULE ELEMENTAL FUNCTION Equal2( Key, obj ) RESULT( Ans )
+  CLASS( KeyValue_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   LOGICAL( LGT ) :: Ans
 END FUNCTION Equal2
@@ -745,8 +745,8 @@ END INTERFACE
 INTERFACE
 !! Function to check equality in [[keyvalue_]]
 
-MODULE ELEMENTAL FUNCTION Equal3( Obj, Key ) RESULT( Ans )
-  CLASS( KeyValue_ ), INTENT( IN ) :: Obj
+MODULE ELEMENTAL FUNCTION Equal3( obj, Key ) RESULT( Ans )
+  CLASS( KeyValue_ ), INTENT( IN ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
   LOGICAL( LGT ) :: Ans
 END FUNCTION Equal3
@@ -759,8 +759,8 @@ END INTERFACE
 INTERFACE
 !! Function to check equality in [[keyvalue_]]
 
-MODULE ELEMENTAL FUNCTION Equal4( Key, Obj ) RESULT( Ans )
-  CLASS( KeyValue_ ), INTENT( IN ) :: Obj
+MODULE ELEMENTAL FUNCTION Equal4( Key, obj ) RESULT( Ans )
+  CLASS( KeyValue_ ), INTENT( IN ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
   LOGICAL( LGT ) :: Ans
 END FUNCTION Equal4
@@ -777,8 +777,8 @@ PUBLIC :: OPERATOR( .EQ. )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE keyvalue_deallocate( Obj )
-  CLASS( KeyValue_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE keyvalue_deallocate( obj )
+  CLASS( KeyValue_ ), INTENT( INOUT) :: obj
 END SUBROUTINE keyvalue_deallocate
 END INTERFACE
 
@@ -804,11 +804,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	Obj = 1.0_dfp
+!	obj = 1.0_dfp
 ! ```
 
-MODULE PURE SUBROUTINE SetValue1( Obj, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE SetValue1( obj, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value
 END SUBROUTINE SetValue1
 END INTERFACE
@@ -827,11 +827,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	Obj = vec1
+!	obj = vec1
 ! ```
 
-MODULE PURE SUBROUTINE SetValue2( Obj, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE SetValue2( obj, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value( : )
 END SUBROUTINE SetValue2
 END INTERFACE
@@ -850,11 +850,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	Obj = mat
+!	obj = mat
 ! ```
 
-MODULE PURE SUBROUTINE SetValue3( Obj, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE SetValue3( obj, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Value( :, : )
 END SUBROUTINE SetValue3
 END INTERFACE
@@ -873,11 +873,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	Obj = intval
+!	obj = intval
 ! ```
 
-MODULE PURE SUBROUTINE SetValue4( Obj, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE SetValue4( obj, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Value
 END SUBROUTINE SetValue4
 END INTERFACE
@@ -896,11 +896,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	Obj = intvec
+!	obj = intvec
 ! ```
 
-MODULE PURE SUBROUTINE SetValue5( Obj, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE SetValue5( obj, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Value( : )
 END SUBROUTINE SetValue5
 END INTERFACE
@@ -919,11 +919,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	Obj = intmat
+!	obj = intmat
 ! ```
 
-MODULE PURE SUBROUTINE SetValue6( Obj, Value )
-  CLASS( keyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE SetValue6( obj, Value )
+  CLASS( keyValue_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Value( :, : )
 END SUBROUTINE SetValue6
 END INTERFACE
@@ -957,11 +957,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	Obj = "hello"
+!	obj = "hello"
 ! ```
 
-MODULE PURE SUBROUTINE setKey1( Obj, Key )
-  CLASS( KeyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE setKey1( obj, Key )
+  CLASS( KeyValue_ ), INTENT( INOUT ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
 END SUBROUTINE setKey1
 END INTERFACE
@@ -980,11 +980,11 @@ INTERFACE
 !### Usage
 !
 ! ```fortran
-!	Obj = string( "hello" )
+!	obj = string( "hello" )
 ! ```
 
-MODULE PURE SUBROUTINE setKey2( Obj, Key )
-  CLASS( KeyValue_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE setKey2( obj, Key )
+  CLASS( KeyValue_ ), INTENT( INOUT ) :: obj
   TYPE( String ), INTENT( IN ) :: Key
 END SUBROUTINE setKey2
 END INTERFACE
@@ -1008,9 +1008,9 @@ INTERFACE
 !! Subroutine that append `keyvalue_` instance to an array of [[keyvalue_]]
 !! type
 
-MODULE PURE SUBROUTINE keyvalue_append( Obj, KeyValObj )
-  TYPE( KeyValue_ ), ALLOCATABLE, INTENT( INOUT ) :: Obj( : )
-  TYPE( KeyValue_), INTENT( IN ) :: KeyValObj
+MODULE PURE SUBROUTINE keyvalue_append( obj, KeyValobj )
+  TYPE( KeyValue_ ), ALLOCATABLE, INTENT( INOUT ) :: obj( : )
+  TYPE( KeyValue_), INTENT( IN ) :: KeyValobj
 END SUBROUTINE keyvalue_append
 END INTERFACE
 
@@ -1028,8 +1028,8 @@ PUBLIC :: Append
 INTERFACE
 !! get key from [[keyvalue_]]
 
-MODULE PURE SUBROUTINE getKey1( Key, Obj )
-  CLASS( KeyValue_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getKey1( Key, obj )
+  CLASS( KeyValue_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( INOUT ) :: Key
 END SUBROUTINE getKey1
 END INTERFACE
@@ -1041,8 +1041,8 @@ END INTERFACE
 INTERFACE
 !! get key from [[keyvalue_]]
 
-MODULE PURE SUBROUTINE getKey2( Key, Obj )
-  CLASS( KeyValue_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getKey2( Key, obj )
+  CLASS( KeyValue_ ), INTENT( IN ) :: obj
   TYPE( String ), INTENT( INOUT ) :: Key
 END SUBROUTINE getKey2
 END INTERFACE
@@ -1065,8 +1065,8 @@ END INTERFACE ASSIGNMENT( = )
 INTERFACE
 !! getValue from [[keyvalue_]]
 
-MODULE PURE SUBROUTINE getValue1( Value, Obj )
-  CLASS( keyValue_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getValue1( Value, obj )
+  CLASS( keyValue_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ) :: Value
 END SUBROUTINE getValue1
 END INTERFACE
@@ -1078,8 +1078,8 @@ END INTERFACE
 INTERFACE
 !! getValue from [[keyvalue_]]
 
-MODULE PURE SUBROUTINE getValue2( Value, Obj )
-  CLASS( keyValue_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getValue2( Value, obj )
+  CLASS( keyValue_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Value( : )
 END SUBROUTINE getValue2
 END INTERFACE
@@ -1091,8 +1091,8 @@ END INTERFACE
 INTERFACE
 !! getValue from [[keyvalue_]]
 
-MODULE PURE SUBROUTINE getValue3( Value, Obj )
-  CLASS( keyValue_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getValue3( Value, obj )
+  CLASS( keyValue_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Value( :, : )
 END SUBROUTINE getValue3
 END INTERFACE
@@ -1104,8 +1104,8 @@ END INTERFACE
 INTERFACE
 !! getValue from [[keyvalue_]]
 
-MODULE PURE SUBROUTINE getValue4( Value, Obj )
-  CLASS( keyValue_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getValue4( Value, obj )
+  CLASS( keyValue_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( INOUT ) :: Value
 END SUBROUTINE getValue4
 END INTERFACE
@@ -1117,8 +1117,8 @@ END INTERFACE
 INTERFACE
 !! getValue from [[keyvalue_]]
 
-MODULE PURE SUBROUTINE getValue5( Value, Obj )
-  CLASS( keyValue_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getValue5( Value, obj )
+  CLASS( keyValue_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Value( : )
 END SUBROUTINE getValue5
 END INTERFACE
@@ -1130,8 +1130,8 @@ END INTERFACE
 INTERFACE
 !! getValue from [[keyvalue_]]
 
-MODULE PURE SUBROUTINE getValue6( Value, Obj )
-  CLASS( keyValue_ ), INTENT( IN ) :: Obj
+MODULE PURE SUBROUTINE getValue6( Value, obj )
+  CLASS( keyValue_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Value( :, : )
 END SUBROUTINE getValue6
 END INTERFACE
@@ -1154,8 +1154,8 @@ END INTERFACE ASSIGNMENT( = )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Index1( Obj, Key ) RESULT( Ans )
-  TYPE( KeyValue_ ), INTENT( IN ) :: Obj( : )
+MODULE PURE FUNCTION Index1( obj, Key ) RESULT( Ans )
+  TYPE( KeyValue_ ), INTENT( IN ) :: obj( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   INTEGER( I4B ) :: Ans
 END FUNCTION Index1
@@ -1166,8 +1166,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Index2( Obj, Key ) RESULT( Ans )
-  TYPE( KeyValue_ ), INTENT( IN ) :: Obj( : )
+MODULE PURE FUNCTION Index2( obj, Key ) RESULT( Ans )
+  TYPE( KeyValue_ ), INTENT( IN ) :: obj( : )
   TYPE( String ), INTENT( IN ) :: Key
   INTEGER( I4B ) :: Ans
 END FUNCTION Index2
@@ -1190,8 +1190,8 @@ PUBLIC :: OPERATOR( .INDEX. )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Present1( Key, Obj ) RESULT( Ans )
-  TYPE( KeyValue_ ), INTENT( IN ) :: Obj( : )
+MODULE PURE FUNCTION Present1( Key, obj ) RESULT( Ans )
+  TYPE( KeyValue_ ), INTENT( IN ) :: obj( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   LOGICAL( LGT ) :: Ans
 END FUNCTION Present1
@@ -1202,8 +1202,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Present2( Key, Obj ) RESULT( Ans )
-  TYPE( KeyValue_ ), INTENT( IN ) :: Obj( : )
+MODULE PURE FUNCTION Present2( Key, obj ) RESULT( Ans )
+  TYPE( KeyValue_ ), INTENT( IN ) :: obj( : )
   TYPE( String ), INTENT( IN ) :: Key
   LOGICAL( LGT ) :: Ans
 END FUNCTION Present2
@@ -1214,8 +1214,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Contains1( Obj, Key ) RESULT( Ans )
-  TYPE( KeyValue_ ), INTENT( IN ) :: Obj( : )
+MODULE PURE FUNCTION Contains1( obj, Key ) RESULT( Ans )
+  TYPE( KeyValue_ ), INTENT( IN ) :: obj( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: Key
   LOGICAL( LGT ) :: Ans
 END FUNCTION Contains1

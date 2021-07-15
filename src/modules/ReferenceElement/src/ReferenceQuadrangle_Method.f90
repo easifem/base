@@ -51,8 +51,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Quadrangle( Obj, NSD, XiJ )
-  CLASS( ReferenceQuadrangle_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_ref_Quadrangle( obj, NSD, XiJ )
+  CLASS( ReferenceQuadrangle_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
 END SUBROUTINE initiate_ref_Quadrangle
@@ -88,10 +88,10 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Quadrangle( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Quadrangle( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferenceQuadrangle_ ) :: Obj
+  TYPE( ReferenceQuadrangle_ ) :: obj
 END FUNCTION reference_Quadrangle
 END INTERFACE
 
@@ -125,10 +125,10 @@ PUBLIC :: ReferenceQuadrangle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Quadrangle_Pointer( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Quadrangle_Pointer( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceQuadrangle_ ), POINTER :: Obj
+  CLASS( ReferenceQuadrangle_ ), POINTER :: obj
 END FUNCTION reference_Quadrangle_Pointer
 END INTERFACE
 
@@ -153,18 +153,18 @@ PUBLIC :: ReferenceQuadrangle_Pointer
 !   class( ReferenceElement_ ), pointer :: obj_ptr => null()
 !   type( ReferenceQuadrangle_ ) :: obj
 !   obj_ptr => referenceQuadrangle_pointer( nsd = 2 )
-!   call obj_ptr%LagrangeElement( order = 2, HighOrderObj = obj )
+!   call obj_ptr%LagrangeElement( order = 2, HighOrderobj = obj )
 !   call display( obj, "higher order obj : ")
-!   call obj_ptr%LagrangeElement( order = 3, HighOrderObj = obj )
+!   call obj_ptr%LagrangeElement( order = 3, HighOrderobj = obj )
 !   call display( obj, "3rd order obj : ")
 ! end
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Quadrangle( RefElem, Order, Obj )
+MODULE PURE SUBROUTINE LagrangeElement_Quadrangle( RefElem, Order, obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: Obj
+  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE LagrangeElement_Quadrangle
 END INTERFACE
 

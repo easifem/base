@@ -23,18 +23,18 @@
 !                                                              getCauchyStress
 !------------------------------------------------------------------------------
 
- FUNCTION getCauchyStress( Obj, F )
+ FUNCTION getCauchyStress( obj, F )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  This subroutine computes the Cauchy stress from given stress type
-!       2.  FObj is Deformation Gradient object.
+!       2.  Fobj is Deformation Gradient object.
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     USE Rank2Tensor_Class
     USE DeformationGradient_Class
 
     !  Define arguments of dummy argument
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     TYPE( DeformationGradient_ ), INTENT( IN ) :: F
     REAL( DFP ), ALLOCATABLE :: getCauchyStress( :, : )
 
@@ -42,21 +42,21 @@
     TYPE( Rank2Tensor_ ) :: T
     REAL( DFP ) :: J
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
             "Stress_Class.f90>>CauchyStress.part", &
             "getCauchyStress()", &
-            "Stress_ Object is not initiated. &
+            "Stress_ object is not initiated. &
             Program Stopped !!!" &
         )
         STOP
 
     END IF
 
-    T = Obj
+    T = obj
 
-    SELECT CASE( TRIM( Obj%StressType ) )
+    SELECT CASE( TRIM( obj%StressType ) )
 
         CASE( "Cauchy", "cauchy", "Sigma", "sigma" )
 
@@ -91,8 +91,8 @@
 
             CALL Err_Msg( &
                 "Stress_Class.f90>>CauchyStress.part", &
-                "getCauchyStress( Obj, F )", &
-                "No case found for Obj%StressType. &
+                "getCauchyStress( obj, F )", &
+                "No case found for obj%StressType. &
                 Program Stopped!!!" &
             )
             STOP

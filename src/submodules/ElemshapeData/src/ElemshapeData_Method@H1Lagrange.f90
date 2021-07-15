@@ -33,9 +33,9 @@ IMPLICIT NONE
 ! * The order of shape functions are also included inside the refelem
 
 INTERFACE
-MODULE PURE SUBROUTINE Line_H1_Lagrange( Obj, Quad, RefElem, &
+MODULE PURE SUBROUTINE Line_H1_Lagrange( obj, Quad, RefElem, &
   & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
     !! Quadrature points where shapefunctions will be evaluated
   CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
@@ -56,9 +56,9 @@ END INTERFACE
 ! summary: This subroutine computes the shape functions given by Lagrange polynomials over reference triangle element
 
 INTERFACE
-MODULE PURE SUBROUTINE Triangle_H1_Lagrange( Obj, Quad, RefElem, &
+MODULE PURE SUBROUTINE Triangle_H1_Lagrange( obj, Quad, RefElem, &
   & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
   CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
   CLASS( H1_ ), INTENT( IN ) :: ContinuityType
@@ -71,9 +71,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Quadrangle_H1_Lagrange( Obj, Quad, RefElem, &
+MODULE PURE SUBROUTINE Quadrangle_H1_Lagrange( obj, Quad, RefElem, &
   & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
   CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
   CLASS( H1_ ), INTENT( IN ) :: ContinuityType
@@ -86,9 +86,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Tetrahedron_H1_Lagrange( Obj, Quad, RefElem, &
+MODULE PURE SUBROUTINE Tetrahedron_H1_Lagrange( obj, Quad, RefElem, &
   & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
   CLASS( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
   CLASS( H1_ ), INTENT( IN ) :: ContinuityType
@@ -101,9 +101,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Hexahedron_H1_Lagrange( Obj, Quad, RefElem, &
+MODULE PURE SUBROUTINE Hexahedron_H1_Lagrange( obj, Quad, RefElem, &
   & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
   CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
   CLASS( H1_ ), INTENT( IN ) :: ContinuityType
@@ -116,9 +116,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Prism_H1_Lagrange( Obj, Quad, RefElem, &
+MODULE PURE SUBROUTINE Prism_H1_Lagrange( obj, Quad, RefElem, &
   & ContinuityType, InterpolType)
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
   CLASS( ReferencePrism_ ), INTENT( IN ) :: RefElem
   CLASS( H1_ ), INTENT( IN ) :: ContinuityType
@@ -131,9 +131,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Pyramid_H1_Lagrange( Obj, Quad, RefElem, &
+MODULE PURE SUBROUTINE Pyramid_H1_Lagrange( obj, Quad, RefElem, &
   & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: Obj
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
   CLASS( ReferencePyramid_ ), INTENT( IN ) :: RefElem
   CLASS( H1_ ), INTENT( IN ) :: ContinuityType
@@ -154,25 +154,25 @@ CONTAINS
 MODULE PROCEDURE H1_Lagrange
   SELECT TYPE( refelem )
   TYPE IS ( ReferenceLine_ )
-    CALL Line_H1_Lagrange( Obj=Obj, Quad=Quad, RefElem=RefElem, &
+    CALL Line_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
       & ContinuityType=ContinuityType, InterpolType=InterpolType )
   TYPE IS ( ReferenceTriangle_ )
-    CALL Triangle_H1_Lagrange( Obj=Obj, Quad=Quad, RefElem=RefElem, &
+    CALL Triangle_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
       & ContinuityType=ContinuityType, InterpolType=InterpolType )
   TYPE IS ( ReferenceQuadrangle_ )
-    CALL Quadrangle_H1_Lagrange( Obj=Obj, Quad=Quad, RefElem=RefElem, &
+    CALL Quadrangle_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
       & ContinuityType=ContinuityType, InterpolType=InterpolType )
   TYPE IS ( ReferenceTetrahedron_ )
-    CALL Tetrahedron_H1_Lagrange( Obj=Obj, Quad=Quad, RefElem=RefElem, &
+    CALL Tetrahedron_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
       & ContinuityType=ContinuityType, InterpolType=InterpolType )
   TYPE IS ( ReferenceHexahedron_ )
-    CALL Hexahedron_H1_Lagrange( Obj=Obj, Quad=Quad, RefElem=RefElem, &
+    CALL Hexahedron_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
       & ContinuityType=ContinuityType, InterpolType=InterpolType )
   TYPE IS ( ReferencePrism_ )
-    CALL Prism_H1_Lagrange( Obj=Obj, Quad=Quad, RefElem=RefElem, &
+    CALL Prism_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
       & ContinuityType=ContinuityType, InterpolType=InterpolType )
   TYPE IS ( ReferencePyramid_ )
-    CALL Pyramid_H1_Lagrange( Obj=Obj, Quad=Quad, RefElem=RefElem, &
+    CALL Pyramid_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
       & ContinuityType=ContinuityType, InterpolType=InterpolType )
   END SELECT
 END PROCEDURE H1_Lagrange

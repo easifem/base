@@ -33,11 +33,11 @@ MODULE PROCEDURE RealVectorDisplay
   INTEGER( I4B ) :: i, max_size
   type(hdf5_file) :: h5f
   type(File_) :: aFile
-  INTEGER( I4B ) :: sizes(SIZE(Obj))
-  REAL( DFP ) :: val( SIZE( Obj ) )
+  INTEGER( I4B ) :: sizes(SIZE(obj))
+  REAL( DFP ) :: val( SIZE( obj ) )
 
-  DO i = 1, SIZE( Obj )
-    sizes(i) = SIZE(Obj(i))
+  DO i = 1, SIZE( obj )
+    sizes(i) = SIZE(obj(i))
   END DO
 
   max_size = MAXVAL( sizes )
@@ -58,14 +58,14 @@ MODULE PROCEDURE RealVectorDisplay
         & filename= trim(path)//trim(filename)//trim(extension), &
         & status='new', action='w', comp_lvl=1)
 
-      DO i = 1, SIZE(Obj)
+      DO i = 1, SIZE(obj)
         call h5f%write( '/' // TRIM(msg) // '/comp[' &
-          & // TRIM(INT2STR(i)) // ']', Obj(i)%Val )
+          & // TRIM(INT2STR(i)) // ']', obj(i)%Val )
       END DO
       call h5f%finalize()
 
     CASE( '.txt' )
-      CALL OpenFileToWrite(Obj=afile, filename=filename, path=path, &
+      CALL OpenFileToWrite(obj=afile, filename=filename, path=path, &
         & extension='.txt')
       CALL Write_data( afile%UnitNo )
       CALL CloseFile(afile)
@@ -90,8 +90,8 @@ MODULE PROCEDURE RealVectorDisplay
 
     DO i = 1, max_size
       val = 0.0_DFP
-      DO j = 1, SIZE( Obj )
-        IF( i .LE. sizes( j ) ) val( j ) = Obj(j)%Val(i)
+      DO j = 1, SIZE( obj )
+        IF( i .LE. sizes( j ) ) val( j ) = obj(j)%Val(i)
       END DO
 
       WRITE( UnitNo, * ) val
@@ -107,17 +107,17 @@ END PROCEDURE RealVectorDisplay
 
 MODULE PROCEDURE RealscalarDisplay
   IF( PRESENT( UnitNo ) ) THEN
-    CALL Display( Obj%Val, UnitNo = UnitNo, msg=msg )
+    CALL Display( obj%Val, UnitNo = UnitNo, msg=msg )
     RETURN
   END IF
 
   IF( PRESENT( filename ) ) THEN
-    CALL Display( Obj%Val, msg=msg, filename=filename, &
+    CALL Display( obj%Val, msg=msg, filename=filename, &
       & extension=extension, path=path )
     RETURN
   END IF
 
-  CALL Display( Obj%Val, msg=msg, unitNo = stdout)
+  CALL Display( obj%Val, msg=msg, unitNo = stdout)
 
 END PROCEDURE RealscalarDisplay
 

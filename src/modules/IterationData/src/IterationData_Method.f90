@@ -26,10 +26,10 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj( Obj, MaxIter, IterationNumber, &
+MODULE PURE SUBROUTINE initiate_obj( obj, MaxIter, IterationNumber, &
   & Tolerance, ErrorAtStart, ErrorAtEnd, TimeAtStart, TimeAtEnd, &
   & ConvergenceType, ConvergenceIn, NormType, Converged )
-  TYPE( IterationData_ ), INTENT( INOUT ) :: Obj
+  TYPE( IterationData_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: MaxIter
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: IterationNumber
   REAL( DFP ), INTENT( IN ), OPTIONAL :: Tolerance
@@ -55,8 +55,8 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION is_converged( Obj ) RESULT( Ans )
-  TYPE( IterationData_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION is_converged( obj ) RESULT( Ans )
+  TYPE( IterationData_ ), INTENT( IN ) :: obj
   LOGICAL( LGT ) :: Ans
 END FUNCTION is_converged
 END INTERFACE
@@ -72,8 +72,8 @@ PUBLIC :: isConverged
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE Display_obj( Obj, msg, UnitNo )
-  TYPE( IterationData_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE Display_obj( obj, msg, UnitNo )
+  TYPE( IterationData_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
 END SUBROUTINE Display_obj

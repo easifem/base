@@ -26,8 +26,8 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE initRandom( Obj )
-  CLASS( Random_ ), INTENT( INOUT) :: Obj
+MODULE SUBROUTINE initRandom( obj )
+  CLASS( Random_ ), INTENT( INOUT) :: obj
 END SUBROUTINE initRandom
 END INTERFACE
 
@@ -42,8 +42,8 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION getRandom( Obj, distribution ) RESULT( Ans )
-  CLASS( Random_ ), INTENT( IN ) :: Obj
+MODULE FUNCTION getRandom( obj, distribution ) RESULT( Ans )
+  CLASS( Random_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: distribution
   REAL( DFP ) :: Ans
 END FUNCTION getRandom
@@ -60,8 +60,8 @@ PUBLIC :: RandomValue
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE SaveRandom( Obj )
-  CLASS( Random_ ), INTENT( INOUT) :: Obj
+MODULE SUBROUTINE SaveRandom( obj )
+  CLASS( Random_ ), INTENT( INOUT) :: obj
 END SUBROUTINE SaveRandom
 END INTERFACE
 
@@ -72,8 +72,8 @@ PUBLIC :: SaveRandom
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION uniformRandom( Obj, From, To ) RESULT( Ans )
-  CLASS( Random_ ), INTENT( IN ) :: Obj
+MODULE FUNCTION uniformRandom( obj, From, To ) RESULT( Ans )
+  CLASS( Random_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: From, To
   REAL( DFP ) :: Ans
 END FUNCTION uniformRandom
@@ -90,8 +90,8 @@ END INTERFACE RandomValue
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION getRandomInteger( Obj, From, To ) RESULT( Ans )
-  CLASS( Random_ ), INTENT( IN ) ::  Obj
+MODULE FUNCTION getRandomInteger( obj, From, To ) RESULT( Ans )
+  CLASS( Random_ ), INTENT( IN ) ::  obj
   INTEGER( I4B ), INTENT( IN ) ::  From, To
   INTEGER( I4B ) :: Ans
 END FUNCTION getRandomInteger
@@ -106,32 +106,32 @@ END INTERFACE RandomValue
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION select_random_int_from_vec( Obj, Val ) RESULT( Ans )
-  CLASS( Random_ ), INTENT( IN ) :: Obj
+MODULE FUNCTION select_random_int_from_vec( obj, Val ) RESULT( Ans )
+  CLASS( Random_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Val( : )
   INTEGER( I4B ) :: Ans
 END FUNCTION select_random_int_from_vec
 END INTERFACE
 
 INTERFACE
-MODULE FUNCTION select_random_int_from_array( Obj, Val ) RESULT( Ans )
-  CLASS( Random_ ), INTENT( IN ) :: Obj
+MODULE FUNCTION select_random_int_from_array( obj, Val ) RESULT( Ans )
+  CLASS( Random_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Val( :, : )
   INTEGER( I4B ) :: Ans
 END FUNCTION select_random_int_from_array
 END INTERFACE
 
 INTERFACE
-MODULE FUNCTION select_random_real_from_vec( Obj, Val ) RESULT( Ans )
-  CLASS( Random_ ), INTENT( IN ) :: Obj
+MODULE FUNCTION select_random_real_from_vec( obj, Val ) RESULT( Ans )
+  CLASS( Random_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   REAL( DFP ) :: Ans
 END FUNCTION select_random_real_from_vec
 END INTERFACE
 
 INTERFACE
-MODULE FUNCTION select_random_real_from_array( Obj, Val ) RESULT( Ans )
-  CLASS( Random_ ), INTENT( IN ) :: Obj
+MODULE FUNCTION select_random_real_from_array( obj, Val ) RESULT( Ans )
+  CLASS( Random_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   REAL( DFP ) :: Ans
 END FUNCTION select_random_real_from_array

@@ -25,7 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_setValues_1
-  Obj%Val = Val
+  obj%Val = Val
 END PROCEDURE realmat_setValues_1
 
 !----------------------------------------------------------------------------
@@ -33,7 +33,7 @@ END PROCEDURE realmat_setValues_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_setValues_2
-  Obj%Val( Row, Col ) = Val
+  obj%Val( Row, Col ) = Val
 END PROCEDURE realmat_setValues_2
 
 !----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ END PROCEDURE realmat_setValues_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_setValues_3
-  Obj%Val( Row, Col ) = Val
+  obj%Val( Row, Col ) = Val
 END PROCEDURE realmat_setValues_3
 
 !----------------------------------------------------------------------------
@@ -55,22 +55,22 @@ MODULE PROCEDURE realmat_setValues_4
   CASE( MATRIX_DIAGONAL )
     ! diagonal
     IF( Indx .LT. 0 ) THEN
-      DO i = 1, SIZE( Obj%Val, 2 ) + Indx
-        Obj%Val( i-Indx, i ) = Val( i )
+      DO i = 1, SIZE( obj%Val, 2 ) + Indx
+        obj%Val( i-Indx, i ) = Val( i )
       END DO
     ELSE
-      DO i = 1, SIZE( Obj%Val, 1 ) - Indx
-        Obj%Val( i, i+Indx ) = Val( i )
+      DO i = 1, SIZE( obj%Val, 1 ) - Indx
+        obj%Val( i, i+Indx ) = Val( i )
       END DO
     END IF
   CASE( MATRIX_ROW )
     ! row
-    IF( Indx .LE. SIZE( Obj%Val, 1 ) ) THEN
-      Obj%Val( Indx, 1:SIZE( Val ) ) = Val
+    IF( Indx .LE. SIZE( obj%Val, 1 ) ) THEN
+      obj%Val( Indx, 1:SIZE( Val ) ) = Val
     END IF
   CASE( MATRIX_COLUMN )
-    IF( Indx .LE. SIZE( Obj%Val, 2 ) ) THEN
-      Obj%Val( 1:SIZE( Val ), Indx ) = Val
+    IF( Indx .LE. SIZE( obj%Val, 2 ) ) THEN
+      obj%Val( 1:SIZE( Val ), Indx ) = Val
     END IF
   END SELECT
 END PROCEDURE realmat_setValues_4
@@ -87,24 +87,24 @@ MODULE PROCEDURE realmat_setValues_5
     ! diagonal
     DO j = 1, SIZE( Indx )
       IF( Indx( j ) .LT. 0 ) THEN
-        DO i = 1, SIZE( Obj%Val, 2 ) + Indx( j )
-          Obj%Val( i-Indx( j ), i ) = Val( i, j )
+        DO i = 1, SIZE( obj%Val, 2 ) + Indx( j )
+          obj%Val( i-Indx( j ), i ) = Val( i, j )
         END DO
       ELSE
-        DO i = 1, SIZE( Obj%Val, 1 ) - Indx( j )
-          Obj%Val( i, i+Indx( j ) ) = Val( i, j )
+        DO i = 1, SIZE( obj%Val, 1 ) - Indx( j )
+          obj%Val( i, i+Indx( j ) ) = Val( i, j )
         END DO
       END IF
     END DO
   CASE( MATRIX_ROW )
     ! row
     DO j = 1, SIZE( Indx )
-      Obj%Val( Indx( j ), : ) = Val( j, : )
+      obj%Val( Indx( j ), : ) = Val( j, : )
     END DO
   CASE( MATRIX_COLUMN )
     ! col
     DO j = 1, SIZE( Indx )
-      Obj%Val( :, Indx( j ) ) = Val( :, j )
+      obj%Val( :, Indx( j ) ) = Val( :, j )
     END DO
   END SELECT
 END PROCEDURE realmat_setValues_5
@@ -117,16 +117,16 @@ MODULE PROCEDURE realmat_addVal_1
   SELECT CASE( IACHAR( Op ) )
   CASE( 43 )
     ! +
-    Obj%Val = Obj%Val + Scale * Val
+    obj%Val = obj%Val + Scale * Val
   CASE( 45 )
     ! -
-    Obj%Val = Obj%Val - Scale * Val
+    obj%Val = obj%Val - Scale * Val
   CASE( 42 )
     ! *
-    Obj%Val = Scale * (Obj%Val  * Val)
+    obj%Val = Scale * (obj%Val  * Val)
   CASE( 47 )
     ! /
-    Obj%Val = ( Obj%Val / Val ) / Scale
+    obj%Val = ( obj%Val / Val ) / Scale
   END SELECT
 END PROCEDURE realmat_addVal_1
 
@@ -138,16 +138,16 @@ MODULE PROCEDURE realmat_addVal_2
   SELECT CASE( IACHAR( Op ) )
   CASE( 43 )
     ! +
-    Obj%Val( Row, Col ) = Obj%Val( Row, Col ) + Scale * Val
+    obj%Val( Row, Col ) = obj%Val( Row, Col ) + Scale * Val
   CASE( 45 )
     ! -
-    Obj%Val( Row, Col ) = Obj%Val( Row, Col ) - Scale * Val
+    obj%Val( Row, Col ) = obj%Val( Row, Col ) - Scale * Val
   CASE( 42 )
     ! *
-    Obj%Val( Row, Col ) = Scale * Obj%Val( Row, Col ) * Val
+    obj%Val( Row, Col ) = Scale * obj%Val( Row, Col ) * Val
   CASE( 47 )
     ! /
-    Obj%Val( Row, Col ) = Obj%Val( Row, Col ) / Val / Scale
+    obj%Val( Row, Col ) = obj%Val( Row, Col ) / Val / Scale
   END SELECT
 END PROCEDURE realmat_addVal_2
 
@@ -159,16 +159,16 @@ MODULE PROCEDURE realmat_addVal_3
   SELECT CASE( IACHAR( Op ) )
   CASE( 43 )
     ! +
-    Obj%Val( Row, Col ) = Obj%Val( Row, Col ) + Scale * Val
+    obj%Val( Row, Col ) = obj%Val( Row, Col ) + Scale * Val
   CASE( 45 )
     ! -
-    Obj%Val( Row, Col ) = Obj%Val( Row, Col ) - Scale * Val
+    obj%Val( Row, Col ) = obj%Val( Row, Col ) - Scale * Val
   CASE( 42 )
     ! *
-    Obj%Val( Row, Col ) = Scale * Obj%Val( Row, Col ) * Val
+    obj%Val( Row, Col ) = Scale * obj%Val( Row, Col ) * Val
   CASE( 47 )
     ! /
-    Obj%Val( Row, Col ) = Obj%Val( Row, Col ) / Val / Scale
+    obj%Val( Row, Col ) = obj%Val( Row, Col ) / Val / Scale
   END SELECT
 END PROCEDURE realmat_addVal_3
 
@@ -184,23 +184,23 @@ MODULE PROCEDURE realmat_addVal_4
     CASE( MATRIX_DIAGONAL )
       ! diagonal
       IF( Indx .LT. 0 ) THEN
-        DO i = 1, SIZE( Obj%Val, 2 ) + Indx
-          Obj%Val( i-Indx, i ) = Obj%Val( i-Indx, i ) + Scale * Val( i )
+        DO i = 1, SIZE( obj%Val, 2 ) + Indx
+          obj%Val( i-Indx, i ) = obj%Val( i-Indx, i ) + Scale * Val( i )
         END DO
       ELSE
-        DO i = 1, SIZE( Obj%Val, 1 ) - Indx
-          Obj%Val( i, i+Indx ) = Obj%Val( i, i+Indx ) + Scale * Val( i )
+        DO i = 1, SIZE( obj%Val, 1 ) - Indx
+          obj%Val( i, i+Indx ) = obj%Val( i, i+Indx ) + Scale * Val( i )
         END DO
       END IF
     CASE( MATRIX_ROW )
       ! row
-      IF( Indx .LE. SIZE( Obj%Val, 1 ) ) THEN
-        Obj%Val( Indx, 1:SIZE( Val ) ) = Obj%Val( Indx, 1:SIZE( Val ) ) &
+      IF( Indx .LE. SIZE( obj%Val, 1 ) ) THEN
+        obj%Val( Indx, 1:SIZE( Val ) ) = obj%Val( Indx, 1:SIZE( Val ) ) &
           & + Scale * Val
       END IF
     CASE( MATRIX_COLUMN )
-      IF( Indx .LE. SIZE( Obj%Val, 2 ) ) THEN
-        Obj%Val( 1:SIZE( Val ), Indx ) = Obj%Val( 1:SIZE( Val ), Indx ) &
+      IF( Indx .LE. SIZE( obj%Val, 2 ) ) THEN
+        obj%Val( 1:SIZE( Val ), Indx ) = obj%Val( 1:SIZE( Val ), Indx ) &
           & + Scale * Val
       END IF
     END SELECT
@@ -209,23 +209,23 @@ MODULE PROCEDURE realmat_addVal_4
     CASE( 0 )
       ! diagonal
       IF( Indx .LT. 0 ) THEN
-        DO i = 1, SIZE( Obj%Val, 2 ) + Indx
-          Obj%Val( i-Indx, i ) = Obj%Val( i-Indx, i ) - Scale * Val( i )
+        DO i = 1, SIZE( obj%Val, 2 ) + Indx
+          obj%Val( i-Indx, i ) = obj%Val( i-Indx, i ) - Scale * Val( i )
         END DO
       ELSE
-        DO i = 1, SIZE( Obj%Val, 1 ) - Indx
-          Obj%Val( i, i+Indx ) = Obj%Val( i, i+Indx ) - Scale * Val( i )
+        DO i = 1, SIZE( obj%Val, 1 ) - Indx
+          obj%Val( i, i+Indx ) = obj%Val( i, i+Indx ) - Scale * Val( i )
         END DO
       END IF
     CASE( 1 )
       ! row
-      IF( Indx .LE. SIZE( Obj%Val, 1 ) ) THEN
-        Obj%Val( Indx, 1:SIZE( Val ) ) = Obj%Val( Indx, 1:SIZE( Val ) ) &
+      IF( Indx .LE. SIZE( obj%Val, 1 ) ) THEN
+        obj%Val( Indx, 1:SIZE( Val ) ) = obj%Val( Indx, 1:SIZE( Val ) ) &
           & - Scale * Val
       END IF
     CASE( 2 )
-      IF( Indx .LE. SIZE( Obj%Val, 2 ) ) THEN
-        Obj%Val( 1:SIZE( Val ), Indx ) = Obj%Val( 1:SIZE( Val ), Indx ) &
+      IF( Indx .LE. SIZE( obj%Val, 2 ) ) THEN
+        obj%Val( 1:SIZE( Val ), Indx ) = obj%Val( 1:SIZE( Val ), Indx ) &
           & - Scale * Val
       END IF
     END SELECT
@@ -234,23 +234,23 @@ MODULE PROCEDURE realmat_addVal_4
     CASE( MATRIX_DIAGONAL )
       ! diagonal
       IF( Indx .LT. 0 ) THEN
-        DO i = 1, SIZE( Obj%Val, 2 ) + Indx
-          Obj%Val( i-Indx, i ) = Obj%Val( i-Indx, i ) * Scale * Val( i )
+        DO i = 1, SIZE( obj%Val, 2 ) + Indx
+          obj%Val( i-Indx, i ) = obj%Val( i-Indx, i ) * Scale * Val( i )
         END DO
       ELSE
-        DO i = 1, SIZE( Obj%Val, 1 ) - Indx
-          Obj%Val( i, i+Indx ) = Obj%Val( i, i+Indx ) * Scale * Val( i )
+        DO i = 1, SIZE( obj%Val, 1 ) - Indx
+          obj%Val( i, i+Indx ) = obj%Val( i, i+Indx ) * Scale * Val( i )
         END DO
       END IF
     CASE( MATRIX_ROW )
       ! row
-      IF( Indx .LE. SIZE( Obj%Val, 1 ) ) THEN
-        Obj%Val( Indx, 1:SIZE( Val ) ) = Obj%Val( Indx, 1:SIZE( Val ) ) &
+      IF( Indx .LE. SIZE( obj%Val, 1 ) ) THEN
+        obj%Val( Indx, 1:SIZE( Val ) ) = obj%Val( Indx, 1:SIZE( Val ) ) &
           & * Scale * Val
       END IF
     CASE( MATRIX_COLUMN )
-      IF( Indx .LE. SIZE( Obj%Val, 2 ) ) THEN
-        Obj%Val( 1:SIZE( Val ), Indx ) = Obj%Val( 1:SIZE( Val ), Indx ) &
+      IF( Indx .LE. SIZE( obj%Val, 2 ) ) THEN
+        obj%Val( 1:SIZE( Val ), Indx ) = obj%Val( 1:SIZE( Val ), Indx ) &
           & * Scale * Val
       END IF
     END SELECT
@@ -259,23 +259,23 @@ MODULE PROCEDURE realmat_addVal_4
     CASE( MATRIX_DIAGONAL )
       ! diagonal
       IF( Indx .LT. 0 ) THEN
-        DO i = 1, SIZE( Obj%Val, 2 ) + Indx
-          Obj%Val( i-Indx, i ) = Obj%Val( i-Indx, i ) / Scale / Val( i )
+        DO i = 1, SIZE( obj%Val, 2 ) + Indx
+          obj%Val( i-Indx, i ) = obj%Val( i-Indx, i ) / Scale / Val( i )
         END DO
       ELSE
-        DO i = 1, SIZE( Obj%Val, 1 ) - Indx
-          Obj%Val( i, i+Indx ) = Obj%Val( i, i+Indx ) / Scale / Val( i )
+        DO i = 1, SIZE( obj%Val, 1 ) - Indx
+          obj%Val( i, i+Indx ) = obj%Val( i, i+Indx ) / Scale / Val( i )
         END DO
       END IF
     CASE( MATRIX_ROW )
       ! row
-      IF( Indx .LE. SIZE( Obj%Val, 1 ) ) THEN
-        Obj%Val( Indx, 1:SIZE( Val ) ) = Obj%Val( Indx, 1:SIZE( Val ) ) &
+      IF( Indx .LE. SIZE( obj%Val, 1 ) ) THEN
+        obj%Val( Indx, 1:SIZE( Val ) ) = obj%Val( Indx, 1:SIZE( Val ) ) &
           & / Scale / Val
       END IF
     CASE( MATRIX_COLUMN )
-      IF( Indx .LE. SIZE( Obj%Val, 2 ) ) THEN
-        Obj%Val( 1:SIZE( Val ), Indx ) = Obj%Val( 1:SIZE( Val ), Indx ) &
+      IF( Indx .LE. SIZE( obj%Val, 2 ) ) THEN
+        obj%Val( 1:SIZE( Val ), Indx ) = obj%Val( 1:SIZE( Val ), Indx ) &
           & / Scale / Val
       END IF
     END SELECT
@@ -296,13 +296,13 @@ MODULE PROCEDURE realmat_addVal_5
       ! diagonal
       DO j = 1, SIZE( Indx )
         IF( Indx( j ) .LT. 0 ) THEN
-          DO i = 1, SIZE( Obj%Val, 2 ) + Indx( j )
-            Obj%Val( i-Indx( j ), i ) = Obj%Val( i-Indx( j ), i ) &
+          DO i = 1, SIZE( obj%Val, 2 ) + Indx( j )
+            obj%Val( i-Indx( j ), i ) = obj%Val( i-Indx( j ), i ) &
               & + Scale * Val( i, j )
           END DO
         ELSE
-          DO i = 1, SIZE( Obj%Val, 1 ) - Indx( j )
-            Obj%Val( i, i+Indx( j ) ) = Obj%Val( i, i+Indx( j ) ) + &
+          DO i = 1, SIZE( obj%Val, 1 ) - Indx( j )
+            obj%Val( i, i+Indx( j ) ) = obj%Val( i, i+Indx( j ) ) + &
               & Scale * Val( i, j )
           END DO
         END IF
@@ -310,13 +310,13 @@ MODULE PROCEDURE realmat_addVal_5
     CASE( MATRIX_ROW )
       ! row
       DO j = 1, SIZE( Indx )
-        Obj%Val( Indx( j ), : ) = Obj%Val( Indx( j ), : ) + &
+        obj%Val( Indx( j ), : ) = obj%Val( Indx( j ), : ) + &
           & Scale * Val( j, : )
       END DO
     CASE( MATRIX_COLUMN )
       ! col
       DO j = 1, SIZE( Indx )
-        Obj%Val( :, Indx( j ) ) = Obj%Val( :, Indx( j ) ) + &
+        obj%Val( :, Indx( j ) ) = obj%Val( :, Indx( j ) ) + &
           & Scale  * Val( :, j )
       END DO
     END SELECT
@@ -327,13 +327,13 @@ MODULE PROCEDURE realmat_addVal_5
       ! diagonal
       DO j = 1, SIZE( Indx )
         IF( Indx( j ) .LT. 0 ) THEN
-          DO i = 1, SIZE( Obj%Val, 2 ) + Indx( j )
-            Obj%Val( i-Indx( j ), i ) = Obj%Val( i-Indx( j ), i ) &
+          DO i = 1, SIZE( obj%Val, 2 ) + Indx( j )
+            obj%Val( i-Indx( j ), i ) = obj%Val( i-Indx( j ), i ) &
               & - Scale * Val( i, j )
           END DO
         ELSE
-          DO i = 1, SIZE( Obj%Val, 1 ) - Indx( j )
-            Obj%Val( i, i+Indx( j ) ) = Obj%Val( i, i+Indx( j ) ) - &
+          DO i = 1, SIZE( obj%Val, 1 ) - Indx( j )
+            obj%Val( i, i+Indx( j ) ) = obj%Val( i, i+Indx( j ) ) - &
               & Scale * Val( i, j )
           END DO
         END IF
@@ -341,13 +341,13 @@ MODULE PROCEDURE realmat_addVal_5
     CASE( MATRIX_ROW )
       ! row
       DO j = 1, SIZE( Indx )
-        Obj%Val( Indx( j ), : ) = Obj%Val( Indx( j ), : ) - &
+        obj%Val( Indx( j ), : ) = obj%Val( Indx( j ), : ) - &
           & Scale * Val( j, : )
       END DO
     CASE( MATRIX_COLUMN )
       ! col
       DO j = 1, SIZE( Indx )
-        Obj%Val( :, Indx( j ) ) = Obj%Val( :, Indx( j ) ) - &
+        obj%Val( :, Indx( j ) ) = obj%Val( :, Indx( j ) ) - &
           & Scale  * Val( :, j )
       END DO
     END SELECT
@@ -358,13 +358,13 @@ MODULE PROCEDURE realmat_addVal_5
       ! diagonal
       DO j = 1, SIZE( Indx )
         IF( Indx( j ) .LT. 0 ) THEN
-          DO i = 1, SIZE( Obj%Val, 2 ) + Indx( j )
-            Obj%Val( i-Indx( j ), i ) = Obj%Val( i-Indx( j ), i ) * &
+          DO i = 1, SIZE( obj%Val, 2 ) + Indx( j )
+            obj%Val( i-Indx( j ), i ) = obj%Val( i-Indx( j ), i ) * &
               & Scale * Val( i, j )
           END DO
         ELSE
-          DO i = 1, SIZE( Obj%Val, 1 ) - Indx( j )
-            Obj%Val( i, i+Indx( j ) ) = Obj%Val( i, i+Indx( j ) ) * &
+          DO i = 1, SIZE( obj%Val, 1 ) - Indx( j )
+            obj%Val( i, i+Indx( j ) ) = obj%Val( i, i+Indx( j ) ) * &
               & Scale * Val( i, j )
           END DO
         END IF
@@ -372,13 +372,13 @@ MODULE PROCEDURE realmat_addVal_5
     CASE( MATRIX_ROW )
       ! row
       DO j = 1, SIZE( Indx )
-        Obj%Val( Indx( j ), : ) = Obj%Val( Indx( j ), : ) * &
+        obj%Val( Indx( j ), : ) = obj%Val( Indx( j ), : ) * &
           & Scale * Val( j, : )
       END DO
     CASE( MATRIX_COLUMN )
       ! col
       DO j = 1, SIZE( Indx )
-        Obj%Val( :, Indx( j ) ) = Obj%Val( :, Indx( j ) ) * &
+        obj%Val( :, Indx( j ) ) = obj%Val( :, Indx( j ) ) * &
           & Scale  * Val( :, j )
       END DO
     END SELECT
@@ -389,13 +389,13 @@ MODULE PROCEDURE realmat_addVal_5
       ! diagonal
       DO j = 1, SIZE( Indx )
         IF( Indx( j ) .LT. 0 ) THEN
-          DO i = 1, SIZE( Obj%Val, 2 ) + Indx( j )
-            Obj%Val( i-Indx( j ), i ) = Obj%Val( i-Indx( j ), i ) / &
+          DO i = 1, SIZE( obj%Val, 2 ) + Indx( j )
+            obj%Val( i-Indx( j ), i ) = obj%Val( i-Indx( j ), i ) / &
               & Scale / Val( i, j )
           END DO
         ELSE
-          DO i = 1, SIZE( Obj%Val, 1 ) - Indx( j )
-            Obj%Val( i, i+Indx( j ) ) = Obj%Val( i, i+Indx( j ) ) / &
+          DO i = 1, SIZE( obj%Val, 1 ) - Indx( j )
+            obj%Val( i, i+Indx( j ) ) = obj%Val( i, i+Indx( j ) ) / &
               & Scale / Val( i, j )
           END DO
         END IF
@@ -403,13 +403,13 @@ MODULE PROCEDURE realmat_addVal_5
     CASE( MATRIX_ROW )
       ! row
       DO j = 1, SIZE( Indx )
-        Obj%Val( Indx( j ), : ) = Obj%Val( Indx( j ), : ) / &
+        obj%Val( Indx( j ), : ) = obj%Val( Indx( j ), : ) / &
           & Scale / Val( j, : )
       END DO
     CASE( MATRIX_COLUMN )
       ! col
       DO j = 1, SIZE( Indx )
-        Obj%Val( :, Indx( j ) ) = Obj%Val( :, Indx( j ) ) / &
+        obj%Val( :, Indx( j ) ) = obj%Val( :, Indx( j ) ) / &
           & Scale / Val( :, j )
       END DO
     END SELECT

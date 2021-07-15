@@ -48,13 +48,13 @@ PRIVATE
 ! type( ReferenceLine_ ) :: obj1
 ! real( dfp ) :: xij( 3, 2 )
 ! call random_number( xij )
-! call initiate( Obj=obj1, NSD=3, xij )
+! call initiate( obj=obj1, NSD=3, xij )
 ! call display( obj1, "obj1 : " )
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Line( Obj, NSD, XiJ )
-  CLASS( ReferenceLine_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_ref_Line( obj, NSD, XiJ )
+  CLASS( ReferenceLine_ ), INTENT( INOUT ) :: obj
     !! The instance
   INTEGER( I4B ), INTENT( IN ) :: NSD
     !! Spatial dimension of the problem
@@ -95,10 +95,10 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_line(NSD, XiJ) RESULT( Obj )
+MODULE PURE FUNCTION reference_line(NSD, XiJ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferenceLine_ ) :: Obj
+  TYPE( ReferenceLine_ ) :: obj
 END FUNCTION reference_line
 END INTERFACE
 
@@ -134,10 +134,10 @@ PUBLIC :: ReferenceLine
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_line_pointer_1(NSD, XiJ) RESULT( Obj )
+MODULE PURE FUNCTION reference_line_pointer_1(NSD, XiJ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceLine_ ), POINTER :: Obj
+  CLASS( ReferenceLine_ ), POINTER :: obj
 END FUNCTION reference_line_pointer_1
 END INTERFACE
 
@@ -169,19 +169,19 @@ PUBLIC :: ReferenceLine_Pointer
 ! type( ReferenceLine_ ) :: obj1, obj3
 ! real( dfp ) :: xij( 3, 2 )
 ! call random_number( xij )
-! call initiate( Obj=obj1, NSD=3, XiJ=xij )
+! call initiate( obj=obj1, NSD=3, XiJ=xij )
 ! call display( obj1, "obj1 : " )
-! call obj1%LagrangeElement( Order=2, HighOrderObj=obj3 ) <---
+! call obj1%LagrangeElement( Order=2, HighOrderobj=obj3 ) <---
 ! call display( obj3, "Second Order Lagrange Element : ")
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Line( RefElem, Order, Obj )
+MODULE PURE SUBROUTINE LagrangeElement_Line( RefElem, Order, obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
     !! Linear line element
   INTEGER( I4B ), INTENT( IN ) :: Order
     !! Order or generated element
-  CLASS( ReferenceElement_ ),  INTENT( INOUT ) ::  Obj
+  CLASS( ReferenceElement_ ),  INTENT( INOUT ) ::  obj
     !! High order lagrange line element
 END SUBROUTINE LagrangeElement_Line
 END INTERFACE
@@ -207,7 +207,7 @@ PUBLIC :: LagrangeElement_Line
 ! type( ReferenceLine_ ) :: obj
 ! real( dfp ) :: xij( 3, 2 )
 ! call random_number( xij )
-! call initiate( Obj=obj, NSD=3, XiJ=xij )
+! call initiate( obj=obj, NSD=3, XiJ=xij )
 ! call display( MeasureSimplex(obj, obj%xij), "Measure :: ")
 !```
 

@@ -19,7 +19,7 @@ call initiate( obj = obj, quad = quad, refelem = refelem, &
 ! block
 !   real( dfp ) :: thickness( 3 )
 !   thickness = 2; call display( thickness, 'thickness' )
-!   call setThickness( obj, thickness ) 
+!   call setThickness( obj, thickness )
 !   call display( obj, 'obj' )
 ! end block
 

@@ -24,65 +24,65 @@ CONTAINS
 !                                                                 Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Display_Obj
+MODULE PROCEDURE Display_obj
   INTEGER( I4B ) :: I
 
   I = stdout
   IF( PRESENT( UnitNo ) ) I = UnitNo
   IF( LEN_TRIM( Msg ) .NE. 0 ) WRITE( I, "(A)" ) TRIM( Msg )
 
-  SELECT CASE( Obj%Rank )
+  SELECT CASE( obj%Rank )
   CASE( Scalar )
     WRITE( I, "(A)") "RANK :: 0 (SCALAR)"
 
-    SELECT CASE( Obj%VarType )
+    SELECT CASE( obj%VarType )
     CASE( Constant )
       WRITE( I, "(A)") "CONTSTANT IN SPACE-TIME"
-      CALL Display( Obj%R0, 'VALUE' )
+      CALL Display( obj%R0, 'VALUE' )
 
     CASE( Space )
       WRITE( I, "(A)") "VARIABLE IN SPACE ONLY"
-      CALL Display( Obj%R1, 'VALUE' )
+      CALL Display( obj%R1, 'VALUE' )
 
     CASE( SpaceTime )
       WRITE( I, "(A)") "VARIABLE IN SPACE AND TIME"
-      CALL Display( Obj%R2, 'VALUE' )
+      CALL Display( obj%R2, 'VALUE' )
     END SELECT
 
   CASE( Vector )
     WRITE( I, "(A)") "RANK :: 1 (VECTOR)"
 
-    SELECT CASE( Obj%VarType )
+    SELECT CASE( obj%VarType )
     CASE( Constant )
       WRITE( I, "(A)") "CONTSTANT IN SPACE-TIME"
-      CALL Display( Obj%R1, 'VALUE' )
+      CALL Display( obj%R1, 'VALUE' )
 
     CASE( Space )
       WRITE( I, "(A)") "VARIABLE IN SPACE ONLY"
-      CALL Display( Obj%R2, 'VALUE' )
+      CALL Display( obj%R2, 'VALUE' )
 
     CASE( SpaceTime )
       WRITE( I, "(A)") "VARIABLE IN SPACE AND TIME"
-      CALL Display( Obj%R3, 'VALUE' )
+      CALL Display( obj%R3, 'VALUE' )
     END SELECT
 
   CASE( Matrix )
     WRITE( I, "(A)") "RANK :: 2 (MATRIX)"
 
-    SELECT CASE( Obj%VarType )
+    SELECT CASE( obj%VarType )
     CASE( Constant )
       WRITE( I, "(A)") "CONTSTANT IN SPACE-TIME"
-      CALL Display( Obj%R2, 'VALUE' )
+      CALL Display( obj%R2, 'VALUE' )
 
     CASE( Space )
       WRITE( I, "(A)") "VARIABLE IN SPACE ONLY"
-      CALL Display( Obj%R3, 'VALUE' )
+      CALL Display( obj%R3, 'VALUE' )
 
     CASE( SpaceTime )
       WRITE( I, "(A)") "VARIABLE IN SPACE AND TIME"
-      CALL Display( Obj%R4, 'VALUE' )
+      CALL Display( obj%R4, 'VALUE' )
     END SELECT
   END SELECT
-END PROCEDURE Display_Obj
+END PROCEDURE Display_obj
 
 END SUBMODULE IO

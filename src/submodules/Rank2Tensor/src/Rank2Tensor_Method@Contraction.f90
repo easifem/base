@@ -38,7 +38,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE r2_contract_r2
-  Ans = SUM( Obj1%T * Obj2%T )
+  Ans = SUM( obj1%T * obj2%T )
 END PROCEDURE r2_contract_r2
 
 !----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ END PROCEDURE r2_contract_r2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE r2_contract_voigt_r2
-  ASSOCIATE( T => Obj1%T, V => Obj2%V, Scale => Obj2%Scale )
+  ASSOCIATE( T => obj1%T, V => obj2%V, Scale => obj2%Scale )
   Ans = T_11 * V( 1 ) &
     & + T_22 * V( 2 ) &
     & + T_33 * V( 3 ) &
@@ -61,7 +61,7 @@ END PROCEDURE r2_contract_voigt_r2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE voigt_r2_contract_r2
-  Ans = r2_contract_voigt_r2( Obj1=Obj2, Obj2=Obj1 )
+  Ans = r2_contract_voigt_r2( obj1=obj2, obj2=obj1 )
 END PROCEDURE voigt_r2_contract_r2
 
 !----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ END PROCEDURE voigt_r2_contract_r2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE voigt_r2_contract_voigt_r2
-  ASSOCIATE( A => Obj1%V, B => Obj2%V, S1 => Obj1%Scale, S2 => Obj2%Scale )
+  ASSOCIATE( A => obj1%V, B => obj2%V, S1 => obj1%Scale, S2 => obj2%Scale )
     Ans = A( 1 ) * B( 1 ) + A( 2 ) * B( 2 ) + A( 3 ) * B( 3 ) &
       & + 2.0 * S1 * S2 * ( A( 4 ) * B( 4 ) &
       & + A( 5 ) * B( 5 ) + A( 6 ) * B( 6 ) )

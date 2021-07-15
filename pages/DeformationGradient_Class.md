@@ -18,32 +18,32 @@ This documentation is old. Update it.
 
 ## Getting Started
 
-### Constructing the Object
+### Constructing the object
 
 The subroutine `Initiate()` can be used to create the `DeformationGradient_` class.
 
 ```fortran
-CALL Obj%Initiate( )
-CALL Obj%Initiate( Mat2( :, : ) )
-CALL Obj%Initiate( Scalar )
-CALL Obj%Initiate( VoigtVec, VoigtType )
-CALL Obj%Initiate( Obj2 )
+CALL obj%Initiate( )
+CALL obj%Initiate( Mat2( :, : ) )
+CALL obj%Initiate( Scalar )
+CALL obj%Initiate( VoigtVec, VoigtType )
+CALL obj%Initiate( obj2 )
 ```
 
 In addition we can use the function `DeformationGradient()` which returns the `DeformationGradient_` type.
 
 ```fortran
-Obj = DeformationGradient( )
-Obj = DeformationGradient( Mat2, FULL )
-Obj = DeformationGradient( Mat2 )
+obj = DeformationGradient( )
+obj = DeformationGradient( Mat2, FULL )
+obj = DeformationGradient( Mat2 )
 ```
 
 We have also defined function `DeformationGradient_Pointer()` that returns the pointer to the `DeformationGradient_` pointer.
 
 ```fortran
-Obj = DeformationGradient_Pointer( )
-Obj = DeformationGradient_Pointer( Mat2, FULL )
-Obj = DeformationGradient_Pointer( Mat2 )
+obj = DeformationGradient_Pointer( )
+obj = DeformationGradient_Pointer( Mat2, FULL )
+obj = DeformationGradient_Pointer( Mat2 )
 ```
 
 Here `Full` can be `True` or `False`. If `True` then `R, U, V, EigenVal, EigenVec_U, EigenVec_V` all will be computed.
@@ -51,29 +51,29 @@ Here `Full` can be `True` or `False`. If `True` then `R, U, V, EigenVal, EigenVe
 We can also use `Assignment Operator( = )`
 
 ```fortran
-Obj = Mat2( :, : )
+obj = Mat2( :, : )
 ```
 
-### Deallocating the Object
+### Deallocating the object
 
-We can call `Obj%DeallocateData()`
+We can call `obj%DeallocateData()`
 
 ### Getting the Rotation part
 
 ```fortran
-R = .R. Obj
+R = .R. obj
 ```
 
 ### Getting the Right Stretch Tensor
 
 ```fortran
-U = .U. Obj
+U = .U. obj
 ```
 
 ### Getting the Left Stretch Tensor
 
 ```fortran
-V = .V. Obj
+V = .V. obj
 ```
 
 ### Getting the EigenValues of F, U, V
@@ -81,50 +81,50 @@ V = .V. Obj
 Not that U and V are similar tensor, therefore, F, U, V all have same eigenvalues.
 
 ```fortran
-Val = .EigenValues. Obj
+Val = .EigenValues. obj
 ```
 
 ### Getting the EigenVectors of U and V
 
 ```fortran
-P( :, : ) = .EigenVectorsU. Obj
-P( :, : ) = .EigenVectorsV. Obj
+P( :, : ) = .EigenVectorsU. obj
+P( :, : ) = .EigenVectorsV. obj
 ```
 
 ### Getting the Jacobian
 
 ```fortran
-J = .J. Obj
+J = .J. obj
 ```
 
 ### Getting Right and Left Cauchy Green Deformation Tensor
 
 ```fortran
-C = RightCauchyGreen( Obj )
+C = RightCauchyGreen( obj )
 C = RightCauchyGreen( Mat )
-C = .C. Obj
+C = .C. obj
 C = .C. Mat
 ```
 
 ```fortran
-B = LeftCauchyGreen( Obj )
+B = LeftCauchyGreen( obj )
 B = LeftCauchyGreen( Mat )
-B = .B. Obj
+B = .B. obj
 B = .B. Mat
 ```
 
 ### Getting the Strain
 
 ```fortran
-E = GreenStrain( Obj )
+E = GreenStrain( obj )
 E = GreenStrain( Mat )
-E = .GreenStrain. Obj
+E = .GreenStrain. obj
 E = .GreenStrain. Mat
 ```
 
 ```fortran
-e = AlmansiStrain( Obj )
+e = AlmansiStrain( obj )
 e = AlmansiStrain( Mat )
-e = .AlmansiStrain. Obj
+e = .AlmansiStrain. obj
 e = .AlmansiStrain. Mat
 ```

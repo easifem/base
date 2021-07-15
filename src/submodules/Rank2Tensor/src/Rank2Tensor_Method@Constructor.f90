@@ -25,19 +25,19 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE init_by_rank2
-  Obj%T = Obj2%T
-  Obj%isSym = Obj2%isSym
+  obj%T = obj2%T
+  obj%isSym = obj2%isSym
 END PROCEDURE init_by_rank2
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE init_by_mat
-  Obj%T = Mat
+  obj%T = Mat
   IF( PRESENT( isSym ) ) THEN
-    Obj%isSym = isSym
+    obj%isSym = isSym
   ELSE
-    Obj%isSym = .FALSE.
+    obj%isSym = .FALSE.
   END IF
 END PROCEDURE init_by_mat
 
@@ -46,8 +46,8 @@ END PROCEDURE init_by_mat
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE init_by_voigt
-  Obj%T = V
-  Obj%isSym = .TRUE.
+  obj%T = V
+  obj%isSym = .TRUE.
 END PROCEDURE init_by_voigt
 
 !----------------------------------------------------------------------------
@@ -55,7 +55,7 @@ END PROCEDURE init_by_voigt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE init_voigt_from_r2tensor
-  CALL Initiate( Obj, T=T%T, VoigtType=VoigtType)
+  CALL Initiate( obj, T=T%T, VoigtType=VoigtType)
 END PROCEDURE init_voigt_from_r2tensor
 
 !----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ END PROCEDURE init_voigt_from_r2tensor
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE r2t_by_mat
-  CALL Initiate( Obj=Ans, Mat=Mat, isSym=isSym )
+  CALL Initiate( obj=Ans, Mat=Mat, isSym=isSym )
 END PROCEDURE r2t_by_mat
 
 !----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ END PROCEDURE r2t_by_mat
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE r2t_by_voigt
-  CALL Initiate( Obj=Ans, V=V )
+  CALL Initiate( obj=Ans, V=V )
 END PROCEDURE r2t_by_voigt
 
 !----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ END PROCEDURE r2t_by_voigt
 
 MODULE PROCEDURE ptr_r2t_by_mat
   ALLOCATE( Ans )
-  CALL Initiate( Obj=Ans, Mat=Mat, isSym=isSym )
+  CALL Initiate( obj=Ans, Mat=Mat, isSym=isSym )
 END PROCEDURE ptr_r2t_by_mat
 
 !----------------------------------------------------------------------------
@@ -89,7 +89,7 @@ END PROCEDURE ptr_r2t_by_mat
 
 MODULE PROCEDURE ptr_r2t_by_voigt
   ALLOCATE( Ans )
-  CALL Initiate( Obj=Ans, V=V )
+  CALL Initiate( obj=Ans, V=V )
 END PROCEDURE ptr_r2t_by_voigt
 
 !----------------------------------------------------------------------------
@@ -97,7 +97,7 @@ END PROCEDURE ptr_r2t_by_voigt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE r2tensor_eq_mat
-  CALL Initiate( Obj=Obj, Mat=Mat )
+  CALL Initiate( obj=obj, Mat=Mat )
 END PROCEDURE r2tensor_eq_mat
 
 !----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ END PROCEDURE r2tensor_eq_mat
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE mat_eq_r2tensor
-  Mat = Obj%T
+  Mat = obj%T
 END PROCEDURE mat_eq_r2tensor
 
 !----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ END PROCEDURE mat_eq_r2tensor
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE voigt_eq_r2tensor
-  CALL Initiate( Obj=V, T=Obj%T, VoigtType=StressTypeVoigt)
+  CALL Initiate( obj=V, T=obj%T, VoigtType=StressTypeVoigt)
 END PROCEDURE voigt_eq_r2tensor
 
 !----------------------------------------------------------------------------
@@ -121,7 +121,7 @@ END PROCEDURE voigt_eq_r2tensor
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE identity_rank2
-  CALL Initiate( Obj=Obj, Mat=Eye3, isSym=.TRUE. )
+  CALL Initiate( obj=obj, Mat=Eye3, isSym=.TRUE. )
 END PROCEDURE identity_rank2
 
 !----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ END PROCEDURE identity_rank2
 MODULE PROCEDURE ones_rank2
   REAL( DFP ) :: T( 3, 3 )
   T = 1.0_DFP
-  CALL Initiate( Obj=Obj, Mat=T, isSym=.TRUE. )
+  CALL Initiate( obj=obj, Mat=T, isSym=.TRUE. )
 END PROCEDURE ones_rank2
 
 !----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ END PROCEDURE ones_rank2
 MODULE PROCEDURE zeros_rank2
   REAL( DFP ) :: T( 3, 3 )
   T = 0.0_DFP
-  CALL Initiate( Obj=Obj, Mat=T, isSym=.TRUE. )
+  CALL Initiate( obj=obj, Mat=T, isSym=.TRUE. )
 END PROCEDURE zeros_rank2
 
 !----------------------------------------------------------------------------
@@ -149,7 +149,7 @@ END PROCEDURE zeros_rank2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE isotropic_rank2
-  CALL Initiate( Obj=Obj, Mat=Lambda*Eye3, isSym=.TRUE. )
+  CALL Initiate( obj=obj, Mat=Lambda*Eye3, isSym=.TRUE. )
 END PROCEDURE isotropic_rank2
 
 !----------------------------------------------------------------------------
@@ -157,10 +157,10 @@ END PROCEDURE isotropic_rank2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE sym_r2t
-  IF( Obj%isSym ) THEN
-    CALL Initiate( Obj=Ans, Mat=Obj%T, isSym = .TRUE. )
+  IF( obj%isSym ) THEN
+    CALL Initiate( obj=Ans, Mat=obj%T, isSym = .TRUE. )
   ELSE
-    CALL Initiate( Obj=Ans, Mat=SYM( Obj%T ), isSym = .TRUE. )
+    CALL Initiate( obj=Ans, Mat=SYM( obj%T ), isSym = .TRUE. )
   END IF
 END PROCEDURE sym_r2t
 
@@ -169,7 +169,7 @@ END PROCEDURE sym_r2t
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE skewsym_r2t
-  CALL Initiate( Obj=Ans, Mat=SkewSym(Obj%T), isSym=.FALSE. )
+  CALL Initiate( obj=Ans, Mat=SkewSym(obj%T), isSym=.FALSE. )
 END PROCEDURE skewsym_r2t
 
 !----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ END PROCEDURE skewsym_r2t
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_transpose
-  CALL Initiate( Ans, Mat = TRANSPOSE(Obj%T), isSym=Obj%isSym )
+  CALL Initiate( Ans, Mat = TRANSPOSE(obj%T), isSym=obj%isSym )
 END PROCEDURE obj_transpose
 
 !----------------------------------------------------------------------------
@@ -185,7 +185,7 @@ END PROCEDURE obj_transpose
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE isSym_rank2
-  Ans = Obj%isSym
+  Ans = obj%isSym
 END PROCEDURE isSym_rank2
 
 !----------------------------------------------------------------------------
@@ -193,7 +193,7 @@ END PROCEDURE isSym_rank2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE isDeviatoric_rank2
-  Ans = ABS( Obj%T(1,1)+Obj%T(2,2)+Obj%T(3,3) ) .LE. 1.0E-12
+  Ans = ABS( obj%T(1,1)+obj%T(2,2)+obj%T(3,3) ) .LE. 1.0E-12
 END PROCEDURE isDeviatoric_rank2
 
 !----------------------------------------------------------------------------
@@ -201,8 +201,8 @@ END PROCEDURE isDeviatoric_rank2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE inv_rank2
-  CALL INV( A=Obj%T, InvA=InvObj%T )
-  InvObj%isSym = Obj%isSym
+  CALL INV( A=obj%T, InvA=Invobj%T )
+  Invobj%isSym = obj%isSym
 END PROCEDURE inv_rank2
 
 !----------------------------------------------------------------------------
@@ -210,8 +210,8 @@ END PROCEDURE inv_rank2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE F_constructor1
-  IF( PRESENT( Obj ) ) THEN
-    CALL initiate( Ans, Obj )
+  IF( PRESENT( obj ) ) THEN
+    CALL initiate( Ans, obj )
   END IF
 END PROCEDURE F_constructor1
 
@@ -221,7 +221,7 @@ END PROCEDURE F_constructor1
 
 MODULE PROCEDURE F_constructor_1
   ALLOCATE( Ans )
-  Ans = DeformationGradient( Obj )
+  Ans = DeformationGradient( obj )
 END PROCEDURE F_constructor_1
 
 !----------------------------------------------------------------------------

@@ -44,8 +44,6 @@ MODULE BaseMethod
   USE Utility
   USE BaseType
   USE Random_Method
-  USE AbstractArray_Method
-  USE AbstractMatrix_Method
   USE BoundingBox_Method
   USE IntVector_Method
   USE IndexValue_Method
@@ -67,10 +65,10 @@ MODULE BaseMethod
   USE QuadraturePoint_Method
   USE FEVariable_Method
   USE Elemshapedata_Method
-  USE File_Method
   USE RealMatrix_Method
   USE FEMatrix_Method
   USE Rank2Tensor_Method
   USE VoigtRank2Tensor_Method
-  USE SparseMatrix_Method
+  USE CSRSparsity_Method
+  USE CSRMatrix_Method
 END MODULE BaseMethod

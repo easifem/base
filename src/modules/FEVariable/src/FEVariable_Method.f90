@@ -25,15 +25,15 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE Display_Obj( Obj, Msg, UnitNo )
-  TYPE( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE SUBROUTINE Display_obj( obj, Msg, UnitNo )
+  TYPE( FEVariable_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: Msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
 END SUBROUTINE Display_obj
 END INTERFACE
 
 INTERFACE Display
-  MODULE PROCEDURE Display_Obj
+  MODULE PROCEDURE Display_obj
 END INTERFACE Display
 
 PUBLIC :: Display
@@ -43,8 +43,8 @@ PUBLIC :: Display
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE fe_deallocate( Obj )
-  TYPE( FEVariable_ ), INTENT( INOUT) :: Obj
+MODULE PURE SUBROUTINE fe_deallocate( obj )
+  TYPE( FEVariable_ ), INTENT( INOUT) :: obj
 END SUBROUTINE fe_deallocate
 END INTERFACE
 
@@ -60,8 +60,8 @@ PUBLIC :: DeallocateData
 
 INTERFACE
 MODULE PURE FUNCTION Nodal_Scalar_Constant( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val
   CLASS( FEVariableScalar_ ), INTENT( IN ) :: Rank
   CLASS( FEVariableConstant_ ), INTENT( IN ) :: VarType
@@ -79,8 +79,8 @@ PUBLIC :: NodalVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Nodal_Scalar_Space( Val, Rank, VarType ) RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+MODULE PURE FUNCTION Nodal_Scalar_Space( Val, Rank, VarType ) RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   TYPE( FEVariableScalar_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
@@ -96,8 +96,8 @@ END INTERFACE NodalVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Nodal_Scalar_SpaceTime( Val, Rank, VarType ) RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+MODULE PURE FUNCTION Nodal_Scalar_SpaceTime( Val, Rank, VarType ) RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   TYPE( FEVariableScalar_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
@@ -114,8 +114,8 @@ END INTERFACE NodalVariable
 
 INTERFACE
 MODULE PURE FUNCTION Nodal_Vector_Constant( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableConstant_ ), INTENT( IN ) :: VarType
@@ -131,8 +131,8 @@ END INTERFACE NodalVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Nodal_Vector_Space( Val, Rank, VarType ) RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+MODULE PURE FUNCTION Nodal_Vector_Space( Val, Rank, VarType ) RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
@@ -149,8 +149,8 @@ END INTERFACE NodalVariable
 
 INTERFACE
 MODULE PURE FUNCTION Nodal_Vector_SpaceTime( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
@@ -167,8 +167,8 @@ END INTERFACE NodalVariable
 
 INTERFACE
 MODULE PURE FUNCTION Nodal_Matrix_Constant( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableConstant_ ), INTENT( IN ) :: VarType
@@ -184,8 +184,8 @@ END INTERFACE NodalVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Nodal_Matrix_Space( Val, Rank, VarType ) RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+MODULE PURE FUNCTION Nodal_Matrix_Space( Val, Rank, VarType ) RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
@@ -202,8 +202,8 @@ END INTERFACE NodalVariable
 
 INTERFACE
 MODULE PURE FUNCTION Nodal_Matrix_SpaceTime( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, :, : )
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
@@ -220,8 +220,8 @@ END INTERFACE NodalVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Scalar_Constant( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val
   TYPE( FEVariableScalar_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableConstant_ ), INTENT( IN ) :: VarType
@@ -240,8 +240,8 @@ PUBLIC :: QuadratureVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Scalar_Space( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   TYPE( FEVariableScalar_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
@@ -258,8 +258,8 @@ END INTERFACE QuadratureVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Scalar_SpaceTime( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   TYPE( FEVariableScalar_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
@@ -276,8 +276,8 @@ END INTERFACE QuadratureVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Vector_Constant( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableConstant_ ), INTENT( IN ) :: VarType
@@ -294,8 +294,8 @@ END INTERFACE QuadratureVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Vector_Space( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
@@ -312,8 +312,8 @@ END INTERFACE QuadratureVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Vector_SpaceTime( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
@@ -330,8 +330,8 @@ END INTERFACE QuadratureVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Matrix_Constant( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableConstant_ ), INTENT( IN ) :: VarType
@@ -348,8 +348,8 @@ END INTERFACE QuadratureVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Matrix_Space( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
@@ -366,8 +366,8 @@ END INTERFACE QuadratureVariable
 
 INTERFACE
 MODULE PURE FUNCTION Quadrature_Matrix_SpaceTime( Val, Rank, VarType ) &
-  & RESULT( Obj )
-  TYPE( FEVariable_ ) :: Obj
+  & RESULT( obj )
+  TYPE( FEVariable_ ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, :, : )
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
@@ -383,15 +383,15 @@ END INTERFACE QuadratureVariable
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Size_obj( Obj, Dim ) RESULT( Ans )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Size_obj( obj, Dim ) RESULT( Ans )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Dim
   INTEGER( I4B ) :: Ans
-END FUNCTION Size_Obj
+END FUNCTION Size_obj
 END INTERFACE
 
 INTERFACE SIZE
-  MODULE PROCEDURE Size_Obj
+  MODULE PROCEDURE Size_obj
 END INTERFACE SIZE
 
 PUBLIC :: SIZE
@@ -401,14 +401,14 @@ PUBLIC :: SIZE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Shape_obj( Obj ) RESULT( Ans )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Shape_obj( obj ) RESULT( Ans )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), ALLOCATABLE :: Ans( : )
-END FUNCTION Shape_Obj
+END FUNCTION Shape_obj
 END INTERFACE
 
 INTERFACE Shape
-  MODULE PROCEDURE Shape_Obj
+  MODULE PROCEDURE Shape_obj
 END INTERFACE Shape
 
 PUBLIC :: Shape
@@ -418,8 +418,8 @@ PUBLIC :: Shape
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Scalar_Constant( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Scalar_Constant( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableScalar_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableConstant_ ), INTENT( IN ) :: VarType
   REAL( DFP ) :: Val
@@ -437,8 +437,8 @@ PUBLIC :: getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Scalar_Space( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Scalar_Space( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableScalar_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
   REAL( DFP ), ALLOCATABLE :: Val( : )
@@ -454,8 +454,8 @@ END INTERFACE getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Scalar_SpaceTime( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Scalar_SpaceTime( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableScalar_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
   REAL( DFP ), ALLOCATABLE :: Val( :, : )
@@ -471,8 +471,8 @@ END INTERFACE getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Vector_Constant( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Vector_Constant( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableConstant_ ), INTENT( IN ) :: VarType
   REAL( DFP ), ALLOCATABLE :: Val( : )
@@ -488,8 +488,8 @@ END INTERFACE getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Vector_Space( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Vector_Space( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
   REAL( DFP ), ALLOCATABLE :: Val( :, :  )
@@ -505,8 +505,8 @@ END INTERFACE getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Vector_SpaceTime( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Vector_SpaceTime( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableVector_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
   REAL( DFP ), ALLOCATABLE :: Val( :, :, :  )
@@ -522,8 +522,8 @@ END INTERFACE getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Matrix_Constant( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Matrix_Constant( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableConstant_ ), INTENT( IN ) :: VarType
   REAL( DFP ), ALLOCATABLE :: Val( :, : )
@@ -539,8 +539,8 @@ END INTERFACE getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Matrix_Space( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Matrix_Space( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpace_ ), INTENT( IN ) :: VarType
   REAL( DFP ), ALLOCATABLE :: Val( :, :, :  )
@@ -556,8 +556,8 @@ END INTERFACE getValues
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Matrix_SpaceTime( Obj, Rank, VarType ) RESULT( Val )
-  CLASS( FEVariable_ ), INTENT( IN ) :: Obj
+MODULE PURE FUNCTION Matrix_SpaceTime( obj, Rank, VarType ) RESULT( Val )
+  CLASS( FEVariable_ ), INTENT( IN ) :: obj
   TYPE( FEVariableMatrix_ ), INTENT( IN ) :: Rank
   TYPE( FEVariableSpaceTime_ ), INTENT( IN ) :: VarType
   REAL( DFP ), ALLOCATABLE :: Val( :, :, :, : )

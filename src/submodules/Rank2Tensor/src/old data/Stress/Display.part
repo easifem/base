@@ -23,7 +23,7 @@
 !                                                                      Display
 !------------------------------------------------------------------------------
 
- SUBROUTINE Display( Obj, UnitNo )
+ SUBROUTINE Display( obj, UnitNo )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  -  Display Stress Tensor
@@ -32,7 +32,7 @@
     USE Utility, ONLY : Display_Array
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
 
     ! Define internal variables
@@ -44,10 +44,10 @@
         I = 6
     END IF
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL BlankLines( UnitNo = I )
-        WRITE( I, "(A)" ) "Stress_ Object is not initiated "
+        WRITE( I, "(A)" ) "Stress_ object is not initiated "
         WRITE( I, "(A)" ) "Nothing to show "
         CALL BlankLines( UnitNo = I )
         RETURN
@@ -56,15 +56,15 @@
 
     CALL BlankLines( UnitNo = I )
     CALL EqualLine( UnitNo = I )
-    WRITE( I, "(12X, A)" ) "|||| Stress Obj Data ||||"
+    WRITE( I, "(12X, A)" ) "|||| Stress obj Data ||||"
     CALL EqualLine( UnitNo = I )
     CALL BlankLines( UnitNo = I )
 
-    WRITE( I, "(A, I2)" ) "NSD = ", Obj%NSD
+    WRITE( I, "(A, I2)" ) "NSD = ", obj%NSD
     CALL BlankLines( UnitNo = I )
-    WRITE( I, "(A, A)" ) "Stress Type = ", TRIM( Obj%StressType )
+    WRITE( I, "(A, A)" ) "Stress Type = ", TRIM( obj%StressType )
 
-    CALL Display_Array( MatFromVoigtVec( Obj%V, "Stress" ), "Stress "  )
+    CALL Display_Array( MatFromVoigtVec( obj%V, "Stress" ), "Stress "  )
 
     CALL DashLine( UnitNo = I )
 

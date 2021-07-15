@@ -27,7 +27,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE setKey1
-  Obj%Key = Key
+  obj%Key = Key
 END PROCEDURE setKey1
 
 !----------------------------------------------------------------------------
@@ -35,7 +35,7 @@ END PROCEDURE setKey1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE setKey2
-  Obj%Key = Key
+  obj%Key = Key
 END PROCEDURE setKey2
 
 !----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ END PROCEDURE setKey2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SetValue1
-  CALL Initiate( Obj, Obj%Key, Value )
+  CALL Initiate( obj, obj%Key, Value )
 END PROCEDURE SetValue1
 
 !----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ END PROCEDURE SetValue1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SetValue2
-  CALL Initiate( Obj, Obj%Key, Value )
+  CALL Initiate( obj, obj%Key, Value )
 END PROCEDURE SetValue2
 
 !----------------------------------------------------------------------------
@@ -59,7 +59,7 @@ END PROCEDURE SetValue2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SetValue3
-  CALL Initiate( Obj, Obj%Key, Value )
+  CALL Initiate( obj, obj%Key, Value )
 END PROCEDURE SetValue3
 
 !----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ END PROCEDURE SetValue3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SetValue4
-  CALL Initiate( Obj, Obj%Key, Value )
+  CALL Initiate( obj, obj%Key, Value )
 END PROCEDURE SetValue4
 
 !----------------------------------------------------------------------------
@@ -75,7 +75,7 @@ END PROCEDURE SetValue4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SetValue5
-  CALL Initiate( Obj, Obj%Key, Value )
+  CALL Initiate( obj, obj%Key, Value )
 END PROCEDURE SetValue5
 
 !----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ END PROCEDURE SetValue5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SetValue6
-  CALL Initiate( Obj, Obj%Key, Value )
+  CALL Initiate( obj, obj%Key, Value )
 END PROCEDURE SetValue6
 
 !----------------------------------------------------------------------------
@@ -94,13 +94,13 @@ MODULE PROCEDURE keyvalue_append
   INTEGER( I4B ) :: I, Indx, tSize
   LOGICAL( LGT ) :: isPresent
 
-  IF( .NOT. ALLOCATED( Obj ) ) THEN
-    ALLOCATE( Obj( 1 ) )
-    Obj( 1 ) = KeyValObj
+  IF( .NOT. ALLOCATED( obj ) ) THEN
+    ALLOCATE( obj( 1 ) )
+    obj( 1 ) = KeyValobj
   ELSE
-    tSize = SIZE( Obj )
+    tSize = SIZE( obj )
     DO  I = 1, tSize
-      isPresent = Obj( I ) .EQ. KeyValObj%Key
+      isPresent = obj( I ) .EQ. KeyValobj%Key
       IF( isPresent ) THEN
         Indx = I
         EXIT
@@ -109,25 +109,25 @@ MODULE PROCEDURE keyvalue_append
 
     IF( isPresent ) THEN
 
-      Obj( Indx ) = KeyValObj
+      obj( Indx ) = KeyValobj
 
     ELSE
 
       BLOCK
-        TYPE( keyvalue_ ) :: DummyObj( tSize )
+        TYPE( keyvalue_ ) :: Dummyobj( tSize )
 
         DO I = 1, tSize
-          DummyObj( I ) = Obj( I )
+          Dummyobj( I ) = obj( I )
         END DO
 
-        DEALLOCATE( Obj )
-        ALLOCATE( Obj( tSize + 1 ) )
+        DEALLOCATE( obj )
+        ALLOCATE( obj( tSize + 1 ) )
 
         DO I = 1, tSize
-          Obj( I ) = DummyObj( I )
+          obj( I ) = Dummyobj( I )
         END DO
 
-        Obj( tSize + 1 ) = KeyValObj
+        obj( tSize + 1 ) = KeyValobj
 
       END BLOCK
     END IF

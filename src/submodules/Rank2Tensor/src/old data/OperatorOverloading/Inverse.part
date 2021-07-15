@@ -45,17 +45,17 @@ END FUNCTION f_inverse_1
 !                                                                  m_inverse_1
 !------------------------------------------------------------------------------
 
-FUNCTION m_inverse_1( Obj )
+FUNCTION m_inverse_1( obj )
 
     USE Utility, ONLY : INV
 
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_inverse_1
 
 
     Error_Flag = .FALSE.
 
-    CALL INV( A = Obj%T, INVA = m_inverse_1 )
+    CALL INV( A = obj%T, INVA = m_inverse_1 )
 
     CALL Check_Error(                                       &
     "Rank2Tensor_Class.f90>>Inverse.part>>m_inverse_1()",   &

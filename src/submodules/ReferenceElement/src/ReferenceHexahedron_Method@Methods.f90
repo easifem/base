@@ -37,9 +37,9 @@ END PROCEDURE Initiate_ref_Hexahedron
 
 MODULE PROCEDURE reference_Hexahedron
   IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
+    CALL Initiate( obj, NSD, XiJ )
   ELSE
-    CALL Initiate( Obj, NSD )
+    CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Hexahedron
 
@@ -48,11 +48,11 @@ END PROCEDURE reference_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Hexahedron_Pointer
-  ALLOCATE( Obj )
+  ALLOCATE( obj )
   IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( Obj, NSD, XiJ )
+    CALL Initiate( obj, NSD, XiJ )
   ELSE
-    CALL Initiate( Obj, NSD )
+    CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Hexahedron_Pointer
 

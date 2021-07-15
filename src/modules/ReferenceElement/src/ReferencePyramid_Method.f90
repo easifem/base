@@ -41,8 +41,8 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Pyramid( Obj, NSD, XiJ )
-  CLASS( ReferencePyramid_ ), INTENT( INOUT ) :: Obj
+MODULE PURE SUBROUTINE initiate_ref_Pyramid( obj, NSD, XiJ )
+  CLASS( ReferencePyramid_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
 END SUBROUTINE initiate_ref_Pyramid
@@ -57,10 +57,10 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Pyramid( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Pyramid( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferencePyramid_ ) :: Obj
+  TYPE( ReferencePyramid_ ) :: obj
 END FUNCTION reference_Pyramid
 END INTERFACE
 
@@ -75,10 +75,10 @@ PUBLIC :: ReferencePyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Pyramid_Pointer( NSD, XiJ ) RESULT( Obj )
+MODULE PURE FUNCTION reference_Pyramid_Pointer( NSD, XiJ ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
   REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferencePyramid_ ), POINTER :: Obj
+  CLASS( ReferencePyramid_ ), POINTER :: obj
 END FUNCTION reference_Pyramid_Pointer
 END INTERFACE
 
@@ -93,10 +93,10 @@ PUBLIC :: ReferencePyramid_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Pyramid( RefElem, Order, Obj )
+MODULE PURE SUBROUTINE LagrangeElement_Pyramid( RefElem, Order, obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: Obj
+  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE LagrangeElement_Pyramid
 END INTERFACE
 

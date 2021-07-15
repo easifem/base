@@ -23,19 +23,19 @@
 !                                                               m_GreenStrain
 !------------------------------------------------------------------------------
 
- FUNCTION m_GreenStrain( Obj )
+ FUNCTION m_GreenStrain( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  m_GreenStrain = 0.5 * ( F^T F - I )
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( DeformationGradient_ ), INTENT( IN ) :: Obj
+    CLASS( DeformationGradient_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_GreenStrain
 
     ! Define internal variables
 
-    m_GreenStrain = 0.5_DFP * ( (( .transpose. Obj ) .matmul. Obj) - Eye3 )
+    m_GreenStrain = 0.5_DFP * ( (( .transpose. obj ) .matmul. obj) - Eye3 )
 
  END FUNCTION m_GreenStrain
 
@@ -63,20 +63,20 @@
 !                                                              m_AlmansiStrain
 !------------------------------------------------------------------------------
 
- FUNCTION m_AlmansiStrain( Obj )
+ FUNCTION m_AlmansiStrain( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  m_AlmansiStrain
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( DeformationGradient_ ), INTENT( IN ) :: Obj
+    CLASS( DeformationGradient_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: m_AlmansiStrain
 
     ! Define internal variables
     REAL( DFP ), ALLOCATABLE :: B( :, : ), InvB( :, : )
 
-    B = .B. Obj
+    B = .B. obj
     InvB = .Inv. B
 
     m_AlmansiStrain = 0.5_DFP * ( Eye3 - InvB )

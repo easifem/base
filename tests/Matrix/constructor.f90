@@ -1,4 +1,4 @@
-program main 
+program main
 use basetype
 use basemethod
 implicit none
@@ -6,19 +6,19 @@ implicit none
 ! block
 !   type(realmatrix_) :: obj
 !   call allocateData(obj, [2,3])
-!   call display( obj, "obj")  
+!   call display( obj, "obj")
 ! end block
 
 ! block
 !   type(realmatrix_) :: obj
 !   call initiate(obj, [2,3])
-!   call display( obj, "obj")  
+!   call display( obj, "obj")
 ! end block
 
 ! block
 !   type(realmatrix_) :: obj( 3 )
 !   call initiate(obj, [2,3])
-!   call display( obj, "obj")  
+!   call display( obj, "obj")
 ! end block
 
 real(dfp) :: randMatt( 4, 5 )

@@ -19,76 +19,76 @@
 !==============================================================================
 
 !------------------------------------------------------------------------------
-!                                                              Obj_From_Tensor
+!                                                              obj_From_Tensor
 !------------------------------------------------------------------------------
 
- SUBROUTINE Obj_From_Tensor( Obj, TensorObj )
+ SUBROUTINE obj_From_Tensor( obj, Tensorobj )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj = TensorObj
+!       1.  obj = Tensorobj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     USE Rank2Tensor_Class
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
+    CLASS( Stress_ ), INTENT( INOUT ) :: obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Tensorobj
 
     ! Define internal variables
     CHARACTER( LEN = 50 ) :: Str
 
-    Str = .StressType. Obj
+    Str = .StressType. obj
 
-    CALL Obj%Initiate( TensorObj, Str )
+    CALL obj%Initiate( Tensorobj, Str )
 
- END SUBROUTINE Obj_From_Tensor
+ END SUBROUTINE obj_From_Tensor
 
 !------------------------------------------------------------------------------
-!                                                              Obj_From_Mat
+!                                                              obj_From_Mat
 !------------------------------------------------------------------------------
 
- SUBROUTINE Obj_From_Mat( Obj, Mat )
+ SUBROUTINE obj_From_Mat( obj, Mat )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj = Mat
+!       1.  obj = Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    CLASS( Stress_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Mat( :, : )
 
     ! Define internal variables
     CHARACTER( LEN = 50 ) :: Str
 
-    Str = .StressType. Obj
+    Str = .StressType. obj
 
-    CALL Obj%Initiate( Mat, Str )
+    CALL obj%Initiate( Mat, Str )
 
- END SUBROUTINE Obj_From_Mat
+ END SUBROUTINE obj_From_Mat
 
 !------------------------------------------------------------------------------
-!                                                              Obj_From_Vec
+!                                                              obj_From_Vec
 !------------------------------------------------------------------------------
 
- SUBROUTINE Obj_From_Vec( Obj, Vec )
+ SUBROUTINE obj_From_Vec( obj, Vec )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Obj = Vec
+!       1.  obj = Vec
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( INOUT ) :: Obj
+    CLASS( Stress_ ), INTENT( INOUT ) :: obj
     REAL( DFP ), INTENT( IN ) :: Vec( : )
 
     ! Define internal variables
     CHARACTER( LEN = 50 ) :: Str
 
-    Str = .StressType. Obj
+    Str = .StressType. obj
 
-    CALL Obj%Initiate( Vec, Str )
+    CALL obj%Initiate( Vec, Str )
 
- END SUBROUTINE Obj_From_Vec
+ END SUBROUTINE obj_From_Vec
 

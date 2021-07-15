@@ -24,8 +24,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Constructor1
-Obj%Indx = Indx
-  Obj%Val = Val
+obj%Indx = Indx
+  obj%Val = Val
 END PROCEDURE Constructor1
 
 !----------------------------------------------------------------------------
@@ -35,10 +35,10 @@ END PROCEDURE Constructor1
 MODULE PROCEDURE Constructor2
   INTEGER( I4B ) :: n, i
   n = SIZE( Indx )
-  ALLOCATE( Obj( n ) )
+  ALLOCATE( obj( n ) )
   DO i = 1, n
-    Obj( i )%Indx = Indx( i )
-    Obj( i )%Val = Val( i )
+    obj( i )%Indx = Indx( i )
+    obj( i )%Val = Val( i )
   END DO
 END PROCEDURE Constructor2
 
@@ -49,10 +49,10 @@ END PROCEDURE Constructor2
 MODULE PROCEDURE Constructor3
   INTEGER( I4B ) :: n, i
   n = SIZE( Indx )
-  ALLOCATE( Obj( n ) )
+  ALLOCATE( obj( n ) )
   DO i = 1, n
-    Obj( i )%Indx = Indx( i )
-    Obj( i )%Val = Val
+    obj( i )%Indx = Indx( i )
+    obj( i )%Val = Val
   END DO
 END PROCEDURE Constructor3
 

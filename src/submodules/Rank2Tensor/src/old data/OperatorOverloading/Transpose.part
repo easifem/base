@@ -22,7 +22,7 @@
 !                                                                  Transpose_1
 !------------------------------------------------------------------------------
 
- FUNCTION Transpose_1( Obj )
+ FUNCTION Transpose_1( obj )
 
 !   DESCRIPTION
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
@@ -30,15 +30,15 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ) :: Transpose_1
 
-    IF( .NOT. ALLOCATED( Obj%T )  ) THEN
+    IF( .NOT. ALLOCATED( obj%T )  ) THEN
 
         CALL Err_Msg(                                                      &
                        "Rank2Tensor_Class.f90>>OperatorOverloading.part",  &
                         ".Transpose.()",                                   &
-                        "Tensor_ Obj is not allocated. Program Stopped"    &
+                        "Tensor_ obj is not allocated. Program Stopped"    &
                     )
         Error_Flag = .TRUE.
 
@@ -47,7 +47,7 @@
     END IF
 
 
-    Transpose_1 = TRANSPOSE( Obj%T )
+    Transpose_1 = TRANSPOSE( obj%T )
 
  END FUNCTION Transpose_1
 

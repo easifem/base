@@ -19,28 +19,28 @@
 !==============================================================================
 
 !------------------------------------------------------------------------------
-!                                                          ObjTimesScalar_1
+!                                                          objTimesScalar_1
 !------------------------------------------------------------------------------
 
- FUNCTION ObjTimesScalar_1( Obj, Scalar )
+ FUNCTION objTimesScalar_1( obj, Scalar )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!           Obj * Scalar
+!           obj * Scalar
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Scalar
-    REAL( DFP ), DIMENSION( 3, 3 ) :: ObjTimesScalar_1
+    REAL( DFP ), DIMENSION( 3, 3 ) :: objTimesScalar_1
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(   &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Obj * Real", &
-                        "Stress_ Obj is not allocated. Program Stopped" &
+                        "obj * Real", &
+                        "Stress_ obj is not allocated. Program Stopped" &
                     )
         Error_Flag = .TRUE.
 
@@ -48,38 +48,38 @@
 
     END IF
 
-    ObjTimesScalar_1 = MatFromVoigtVec(Obj%V * Scalar, "Stress")
+    objTimesScalar_1 = MatFromVoigtVec(obj%V * Scalar, "Stress")
 
     CALL Check_Error( &
-    "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
+    "Stress_Class.f90>>Asterics.part>>obj*Scalar", &
     "Traceback ---> &
-    ObjTimesScalar_1 = MatFromVoigtVec(Obj%V * Scalar,")
+    objTimesScalar_1 = MatFromVoigtVec(obj%V * Scalar,")
 
- END FUNCTION ObjTimesScalar_1
+ END FUNCTION objTimesScalar_1
 
 !------------------------------------------------------------------------------
-!                                                            ScalarTimesObj_1
+!                                                            ScalarTimesobj_1
 !------------------------------------------------------------------------------
 
- FUNCTION ScalarTimesObj_1( Scalar, Obj )
+ FUNCTION ScalarTimesobj_1( Scalar, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!           Scalar*Obj
+!           Scalar*obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Scalar
-    REAL( DFP ), DIMENSION( 3, 3 ) :: ScalarTimesObj_1
+    REAL( DFP ), DIMENSION( 3, 3 ) :: ScalarTimesobj_1
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Real * Obj",&
-                        "Stress_ Obj is not allocated. Program Stopped" &
+                        "Real * obj",&
+                        "Stress_ obj is not allocated. Program Stopped" &
                     )
         Error_Flag = .TRUE.
 
@@ -87,38 +87,38 @@
 
     END IF
 
-    ScalarTimesObj_1 = MatFromVoigtVec(Obj%V * Scalar, "Stress")
+    ScalarTimesobj_1 = MatFromVoigtVec(obj%V * Scalar, "Stress")
 
     CALL Check_Error( &
-    "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
+    "Stress_Class.f90>>Asterics.part>>obj*Scalar", &
     "Traceback ---> &
-    ScalarTimesObj_1 = MatFromVoigtVec(Obj%V * Scalar,")
+    ScalarTimesobj_1 = MatFromVoigtVec(obj%V * Scalar,")
 
- END FUNCTION ScalarTimesObj_1
+ END FUNCTION ScalarTimesobj_1
 !
 !------------------------------------------------------------------------------
-!                                                          ObjTimesScalar_2
+!                                                          objTimesScalar_2
 !------------------------------------------------------------------------------
 !
- FUNCTION ObjTimesScalar_2( Obj, Scalar )
+ FUNCTION objTimesScalar_2( obj, Scalar )
 !
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: Scalar
-    REAL( DFP ), DIMENSION( 3, 3 ) :: ObjTimesScalar_2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: objTimesScalar_2
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(   &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Obj * Integer", &
-                        "Stress_ Obj is not allocated. Program Stopped" &
+                        "obj * Integer", &
+                        "Stress_ obj is not allocated. Program Stopped" &
                     )
         Error_Flag = .TRUE.
 
@@ -126,38 +126,38 @@
 
     END IF
 
-    ObjTimesScalar_2 = MatFromVoigtVec(Obj%V * Scalar, "Stress")
+    objTimesScalar_2 = MatFromVoigtVec(obj%V * Scalar, "Stress")
 
     CALL Check_Error( &
-    "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
+    "Stress_Class.f90>>Asterics.part>>obj*Scalar", &
     "Traceback ---> &
-    ObjTimesScalar_2 = MatFromVoigtVec(Obj%V * Scalar,")
+    objTimesScalar_2 = MatFromVoigtVec(obj%V * Scalar,")
 
- END FUNCTION ObjTimesScalar_2
+ END FUNCTION objTimesScalar_2
 
 !------------------------------------------------------------------------------
-!                                                          ScalarTimesObj_2
+!                                                          ScalarTimesobj_2
 !------------------------------------------------------------------------------
 
- FUNCTION ScalarTimesObj_2( Scalar, Obj )
+ FUNCTION ScalarTimesobj_2( Scalar, obj )
 !
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     INTEGER( I4B ), INTENT( IN ) :: Scalar
-    REAL( DFP ), DIMENSION( 3, 3 ) :: ScalarTimesObj_2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: ScalarTimesobj_2
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(  &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Integer * Obj", &
-                        "Stress_ Obj is not allocated. Program Stopped" &
+                        "Integer * obj", &
+                        "Stress_ obj is not allocated. Program Stopped" &
                     )
         Error_Flag = .TRUE.
 
@@ -165,38 +165,38 @@
 
     END IF
 
-    ScalarTimesObj_2 = MatFromVoigtVec(Obj%V * Scalar, "Stress")
+    ScalarTimesobj_2 = MatFromVoigtVec(obj%V * Scalar, "Stress")
 
     CALL Check_Error( &
-    "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
+    "Stress_Class.f90>>Asterics.part>>obj*Scalar", &
     "Traceback ---> &
-    ScalarTimesObj_2 = MatFromVoigtVec(Obj%V * Scalar,")
+    ScalarTimesobj_2 = MatFromVoigtVec(obj%V * Scalar,")
 
- END FUNCTION ScalarTimesObj_2
+ END FUNCTION ScalarTimesobj_2
 
 !------------------------------------------------------------------------------
-!                                                          ObjTimesObj
+!                                                          objTimesobj
 !------------------------------------------------------------------------------
 
- FUNCTION ObjTimesObj( Obj, Obj2 )
+ FUNCTION objTimesobj( obj, obj2 )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       Obj%V * Obj%V
+!       obj%V * obj%V
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj, Obj2
-    REAL( DFP ), DIMENSION( 3, 3 ) :: ObjTimesObj
+    CLASS( Stress_ ), INTENT( IN ) :: obj, obj2
+    REAL( DFP ), DIMENSION( 3, 3 ) :: objTimesobj
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) &
-        .OR. .NOT. ALLOCATED( Obj2%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) &
+        .OR. .NOT. ALLOCATED( obj2%V ) ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Obj * Obj", &
-                        "Stress_ Obj is/are not allocated. &
+                        "obj * obj", &
+                        "Stress_ obj is/are not allocated. &
                         Program Stopped !!!" &
                     )
         Error_Flag = .TRUE.
@@ -205,12 +205,12 @@
 
     END IF
 
-    IF( SIZE( Obj%V ) .NE. SIZE( Obj2%V ) ) THEN
+    IF( SIZE( obj%V ) .NE. SIZE( obj2%V ) ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Obj * Obj2 ", &
-                        "The size of Obj%V and Obj2%V must be the same. &
+                        "obj * obj2 ", &
+                        "The size of obj%V and obj2%V must be the same. &
                         Program Stopped !!!" &
                     )
         Error_Flag = .TRUE.
@@ -219,41 +219,41 @@
 
     END IF
 
-    ObjTimesObj = MatFromVoigtVec( Obj%V * Obj2%V, "Stress" )
+    objTimesobj = MatFromVoigtVec( obj%V * obj2%V, "Stress" )
 
     CALL Check_Error( &
-    "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
+    "Stress_Class.f90>>Asterics.part>>obj*Scalar", &
     "Traceback ---> &
-    ObjTimesObj = MatFromVoigtVec( Obj%V * Obj2%V,")
+    objTimesobj = MatFromVoigtVec( obj%V * obj2%V,")
 
- END FUNCTION ObjTimesObj
+ END FUNCTION objTimesobj
 
 !------------------------------------------------------------------------------
-!                                                               ObjTimesMat
+!                                                               objTimesMat
 !------------------------------------------------------------------------------
 
- FUNCTION ObjTimesMat( Obj, Mat )
+ FUNCTION objTimesMat( obj, Mat )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       Obj * Mat
+!       obj * Mat
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
-    REAL( DFP ), DIMENSION( 3, 3 ) :: ObjTimesMat
+    REAL( DFP ), DIMENSION( 3, 3 ) :: objTimesMat
 
     ! Define internal variables
     INTEGER( I4B ) :: m, n
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(  &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Obj * Mat", &
-                        "Stress_ Obj not allocated. &
+                        "obj * Mat", &
+                        "Stress_ obj not allocated. &
                         Program Stopped !!!" &
                     )
         Error_Flag = .TRUE.
@@ -268,7 +268,7 @@
 
         CALL Err_Msg(  &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Obj * Mat", &
+                        "obj * Mat", &
                         "Mat should be a square matrix of shape &
                         (3,3), (2,2), (1,1). &
                         Program Stopped !!!" &
@@ -279,106 +279,106 @@
 
     END IF
 
-    ObjTimesMat = MatFromVoigtVec( Obj%V, "Stress" )
+    objTimesMat = MatFromVoigtVec( obj%V, "Stress" )
 
     CALL Check_Error( &
-    "Stress_Class.f90>>Asterics.part>>Obj*Scalar", &
+    "Stress_Class.f90>>Asterics.part>>obj*Scalar", &
     "Traceback ---> &
-    ObjTimesMat = MatFromVoigtVec( Obj%V,")
+    objTimesMat = MatFromVoigtVec( obj%V,")
 
     n = MIN( m, 3 )
 
-    ObjTimesMat( 1:n, 1:n )  = ObjTimesMat( 1:n, 1:n )  * Mat( 1:n, 1:n )
+    objTimesMat( 1:n, 1:n )  = objTimesMat( 1:n, 1:n )  * Mat( 1:n, 1:n )
 
- END FUNCTION ObjTimesMat
+ END FUNCTION objTimesMat
 
 !------------------------------------------------------------------------------
-!                                                               MatTimesObj
+!                                                               MatTimesobj
 !------------------------------------------------------------------------------
 
- FUNCTION MatTimesObj( Mat, Obj )
+ FUNCTION MatTimesobj( Mat, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       Mat * obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
-    REAL( DFP ), DIMENSION( 3, 3 ) :: MatTimesObj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: MatTimesobj
 
-    MatTimesObj = ObjTimesMat( Obj, Mat )
+    MatTimesobj = objTimesMat( obj, Mat )
 
- END FUNCTION MatTimesObj
+ END FUNCTION MatTimesobj
 
 !------------------------------------------------------------------------------
-!                                                               ObjTimesTensor
+!                                                               objTimesTensor
 !------------------------------------------------------------------------------
 
- FUNCTION ObjTimesTensor( Obj, TensorObj )
+ FUNCTION objTimesTensor( obj, Tensorobj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       Obj * TensorObj
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-
-    USE Rank2Tensor_Class
-
-    ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
-    REAL( DFP ), DIMENSION( 3, 3 ) :: ObjTimesTensor
-
-    REAL( DFP ), ALLOCATABLE :: Mat( :, : )
-
-    Mat = TensorObj
-
-    ObjTimesTensor = ObjTimesMat( Obj, Mat )
-
-    DEALLOCATE( Mat )
-
- END FUNCTION ObjTimesTensor
-
-!------------------------------------------------------------------------------
-!                                                               TensorTimesObj
-!------------------------------------------------------------------------------
-
- FUNCTION TensorTimesObj( TensorObj, Obj )
-
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       Obj * TensorObj
+!       obj * Tensorobj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     USE Rank2Tensor_Class
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
-    CLASS( Rank2Tensor_ ), INTENT( IN ) :: TensorObj
-    REAL( DFP ), DIMENSION( 3, 3 ) :: TensorTimesObj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Tensorobj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: objTimesTensor
 
     REAL( DFP ), ALLOCATABLE :: Mat( :, : )
 
-    Mat = TensorObj
+    Mat = Tensorobj
 
-    TensorTimesObj = ObjTimesMat( Obj, Mat )
+    objTimesTensor = objTimesMat( obj, Mat )
 
     DEALLOCATE( Mat )
 
- END FUNCTION TensorTimesObj
+ END FUNCTION objTimesTensor
 
 !------------------------------------------------------------------------------
-!                                                              ObjTimesVector
+!                                                               TensorTimesobj
 !------------------------------------------------------------------------------
 
- FUNCTION ObjTimesVector( Obj, Vec )
+ FUNCTION TensorTimesobj( Tensorobj, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       Obj * VoigtVec
+!       obj * Tensorobj
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Rank2Tensor_Class
+
+    ! Define intent of dummy variables
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    CLASS( Rank2Tensor_ ), INTENT( IN ) :: Tensorobj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: TensorTimesobj
+
+    REAL( DFP ), ALLOCATABLE :: Mat( :, : )
+
+    Mat = Tensorobj
+
+    TensorTimesobj = objTimesMat( obj, Mat )
+
+    DEALLOCATE( Mat )
+
+ END FUNCTION TensorTimesobj
+
+!------------------------------------------------------------------------------
+!                                                              objTimesVector
+!------------------------------------------------------------------------------
+
+ FUNCTION objTimesVector( obj, Vec )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!       obj * VoigtVec
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
-    REAL( DFP ), DIMENSION( 3, 3 ) :: ObjTimesVector
+    REAL( DFP ), DIMENSION( 3, 3 ) :: objTimesVector
 
     ! Define internal variables
     INTEGER( I4B ) :: m
@@ -386,12 +386,12 @@
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Obj * Vector", &
-                        "Stress_ Obj is not allocated. &
+                        "obj * Vector", &
+                        "Stress_ obj is not allocated. &
                         Program Stopped !!!" &
                     )
         Error_Flag = .TRUE.
@@ -406,7 +406,7 @@
 
         CALL Err_Msg( &
                        "Stress_Class.f90>>Asterics.part", &
-                        "Obj * Vector", &
+                        "obj * Vector", &
                         "The Length of Vec should be less than or equal to 6. &
                         Program Stopped !!!" &
                     )
@@ -419,27 +419,27 @@
     DummyVec = 1.0_DFP
     DummyVec( 1 : m ) = Vec( 1 : m )
 
-    ObjTimesVector = ObjTimesMat( Obj, MatFromVoigtVec( DummyVec, "Stress" ) )
+    objTimesVector = objTimesMat( obj, MatFromVoigtVec( DummyVec, "Stress" ) )
 
- END FUNCTION ObjTimesVector
+ END FUNCTION objTimesVector
 
 !------------------------------------------------------------------------------
-!                                                            VectorTimesObj
+!                                                            VectorTimesobj
 !------------------------------------------------------------------------------
 
- FUNCTION VectorTimesObj( Vec, Obj )
+ FUNCTION VectorTimesobj( Vec, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       VoigtVec * obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: Vec
-    REAL( DFP ), DIMENSION( 3, 3 ) :: VectorTimesObj
+    REAL( DFP ), DIMENSION( 3, 3 ) :: VectorTimesobj
 
     ! Define internal variables
 
-    VectorTimesObj = ObjTimesVector( Obj, Vec )
+    VectorTimesobj = objTimesVector( obj, Vec )
 
- END FUNCTION VectorTimesObj
+ END FUNCTION VectorTimesobj

@@ -23,24 +23,24 @@
 !                                                                s_getStress_1
 !------------------------------------------------------------------------------
 
- SUBROUTINE s_getStress_1( Obj, T )
+ SUBROUTINE s_getStress_1( obj, T )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  T = Obj%T
+!       1.  T = obj%T
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), ALLOCATABLE, DIMENSION( :, : ), INTENT( INOUT ) :: T
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "s_getStress_1()",&
-                      "Stress Obj is Not Initiated" &
+                      "Stress obj is Not Initiated" &
                     )
         Error_Flag = .TRUE.
         RETURN
@@ -48,7 +48,7 @@
     END IF
 
     IF( ALLOCATED( T )  ) DEALLOCATE( T )
-    T = MatFromVoigtVec( Obj%V, "Stress" )
+    T = MatFromVoigtVec( obj%V, "Stress" )
 
 END SUBROUTINE s_getStress_1
 
@@ -56,24 +56,24 @@ END SUBROUTINE s_getStress_1
 !                                                                s_getStress_2
 !------------------------------------------------------------------------------
 
- SUBROUTINE s_getStress_2( Obj, Vec )
+ SUBROUTINE s_getStress_2( obj, Vec )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!       1.  Vec = Obj%V
+!       1.  Vec = obj%V
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), ALLOCATABLE, DIMENSION( : ), INTENT( INOUT ) :: Vec
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "s_getStress_2()",&
-                      "Stress Obj is Not Initiated" &
+                      "Stress obj is Not Initiated" &
                     )
         Error_Flag = .TRUE.
         RETURN
@@ -83,7 +83,7 @@ END SUBROUTINE s_getStress_1
 
     IF( ALLOCATED( Vec )  ) DEALLOCATE( Vec )
 
-    Vec = Obj%V
+    Vec = obj%V
 
  END SUBROUTINE s_getStress_2
 
@@ -91,35 +91,35 @@ END SUBROUTINE s_getStress_1
 !                                                                s_getStress_3
 !------------------------------------------------------------------------------
 
- SUBROUTINE s_getStress_3( T, Obj )
+ SUBROUTINE s_getStress_3( T, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  -  For overloading the Assignment operator
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     !   Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), DIMENSION( 3, 3 ), INTENT( OUT ) :: T
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "Assignement Operator( = )",&
-                      "Stress Obj is Not Initiated, &
+                      "Stress obj is Not Initiated, &
                       Program Stopped !!!" &
                     )
         STOP
 
     END IF
 
-    T = MatFromVoigtVec( Obj%V, "Stress" )
+    T = MatFromVoigtVec( obj%V, "Stress" )
 
     CALL Check_Error( &
     "Stress_Class.f90>>getStress.part>>Assignemnt Operator", &
-    "Traceback ---> T = MatFromVoigtVec( Obj%V " &
+    "Traceback ---> T = MatFromVoigtVec( obj%V " &
     )
 
  END SUBROUTINE s_getStress_3
@@ -128,24 +128,24 @@ END SUBROUTINE s_getStress_1
 !                                                                s_getStress_4
 !------------------------------------------------------------------------------
 
- SUBROUTINE s_getStress_4( Vec, Obj )
+ SUBROUTINE s_getStress_4( Vec, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  -  For overloading the Assignment operator
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     !   Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     REAL( DFP ), ALLOCATABLE, DIMENSION( : ), INTENT( OUT ) :: Vec
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "Assignement Operator( = )",&
-                      "Stress Obj is Not Initiated, &
+                      "Stress obj is Not Initiated, &
                       Program Stopped !!!" &
                     )
         STOP
@@ -154,7 +154,7 @@ END SUBROUTINE s_getStress_1
 
     IF( ALLOCATED( Vec ) ) DEALLOCATE( Vec )
 
-    Vec = Obj%V
+    Vec = obj%V
 
  END SUBROUTINE s_getStress_4
 
@@ -162,7 +162,7 @@ END SUBROUTINE s_getStress_1
 !                                                                s_getStress_5
 !------------------------------------------------------------------------------
 
- SUBROUTINE s_getStress_5( Obj, TensorObj )
+ SUBROUTINE s_getStress_5( obj, Tensorobj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  -  Returns the tensor object
@@ -171,25 +171,25 @@ END SUBROUTINE s_getStress_1
     USE Rank2Tensor_Class
 
     !   Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
-    CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: TensorObj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Tensorobj
 
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "s_getStress_5",&
-                      "Stress Obj is Not Initiated, &
+                      "Stress obj is Not Initiated, &
                       Program Stopped !!!" &
                     )
         STOP
 
     END IF
 
-    CALL TensorObj%Initiate( Obj%V, "Stress" )
+    CALL Tensorobj%Initiate( obj%V, "Stress" )
 
  END SUBROUTINE s_getStress_5
 
@@ -197,7 +197,7 @@ END SUBROUTINE s_getStress_1
 !                                                                s_getStress_6
 !------------------------------------------------------------------------------
 
- SUBROUTINE s_getStress_6( TensorObj, Obj )
+ SUBROUTINE s_getStress_6( Tensorobj, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  -  Returns the tensor object
@@ -206,23 +206,23 @@ END SUBROUTINE s_getStress_1
     USE Rank2Tensor_Class
 
     !   Define intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
-    CLASS( Rank2Tensor_ ), INTENT( OUT ) :: TensorObj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
+    CLASS( Rank2Tensor_ ), INTENT( OUT ) :: Tensorobj
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg(  &
                       "Stress_Class.f90>>getStress.part",&
                       "Assignment Operator( = )",&
-                      "Stress Obj is Not Initiated, &
+                      "Stress obj is Not Initiated, &
                       Program Stopped !!!" &
                     )
         STOP
 
     END IF
 
-    CALL TensorObj%Initiate( Obj%V, "Stress" )
+    CALL Tensorobj%Initiate( obj%V, "Stress" )
 
  END SUBROUTINE s_getStress_6

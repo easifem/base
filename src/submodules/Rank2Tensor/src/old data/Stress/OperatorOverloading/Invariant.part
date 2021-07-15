@@ -23,7 +23,7 @@
 !                                                                  Invar_I1
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Invar_I1( Obj )
+ REAL( DFP ) FUNCTION Invar_I1( obj )
 
     USE Rank2Tensor_Class
 
@@ -33,26 +33,26 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
     TYPE( Rank2Tensor_ ) :: T
 
     Error_Flag = .FALSE.
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
         "Stress_Class.f90>>Invariant.part", &
         "Invar_I1()", &
-        "Stress_ Object is not allocated. &
+        "Stress_ object is not allocated. &
         Program Stopped !!!")
 
         STOP
 
     END IF
 
-    T = Obj
+    T = obj
     Invar_I1 = Trace( T )
     CALL T%DeallocateData( )
 
@@ -62,7 +62,7 @@
 !                                                                  Invar_I2
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Invar_I2( Obj )
+ REAL( DFP ) FUNCTION Invar_I2( obj )
 
     USE Rank2Tensor_Class
 
@@ -72,24 +72,24 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
         "Stress_Class.f90>>Invariant.part", &
         "Invar_I2()", &
-        "Stress_ Object is not allocated. &
+        "Stress_ object is not allocated. &
         Program Stopped !!!")
 
         STOP
 
     END IF
 
-    T = Obj
+    T = obj
     Invar_I2 = Invariant_I2( T )
     CALL T%DeallocateData( )
 
@@ -99,7 +99,7 @@
 !                                                                  Invar_I3
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Invar_I3( Obj )
+ REAL( DFP ) FUNCTION Invar_I3( obj )
 
     USE Rank2Tensor_Class
 
@@ -109,24 +109,24 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
         "Stress_Class.f90>>Invariant.part", &
         "Invar_I3()", &
-        "Stress_ Object is not allocated. &
+        "Stress_ object is not allocated. &
         Program Stopped !!!")
 
         STOP
 
     END IF
 
-    T = Obj
+    T = obj
     Invar_I3 = Invariant_I3( T )
     CALL T%DeallocateData( )
 
@@ -136,7 +136,7 @@
 !                                                                  Invar_J2
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Invar_J2( Obj )
+ REAL( DFP ) FUNCTION Invar_J2( obj )
 
     USE Rank2Tensor_Class
 
@@ -146,24 +146,24 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
         "Stress_Class.f90>>Invariant.part", &
         "Invar_J2()", &
-        "Stress_ Object is not allocated. &
+        "Stress_ object is not allocated. &
         Program Stopped !!!")
 
         STOP
 
     END IF
 
-    T = Obj
+    T = obj
     Invar_J2 = Invariant_J2( T )
     CALL T%DeallocateData( )
 
@@ -173,7 +173,7 @@
 !                                                                  Invar_J3
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Invar_J3( Obj )
+ REAL( DFP ) FUNCTION Invar_J3( obj )
 
     USE Rank2Tensor_Class
 
@@ -183,24 +183,24 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
     TYPE( Rank2Tensor_ ) :: T
 
-    IF( .NOT. ALLOCATED( Obj%V ) ) THEN
+    IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
         "Stress_Class.f90>>Invariant.part", &
         "Invar_J3()", &
-        "Stress_ Object is not allocated. &
+        "Stress_ object is not allocated. &
         Program Stopped !!!")
 
         STOP
 
     END IF
 
-    T = Obj
+    T = obj
     Invar_J3 = Invariant_J3( T )
     CALL T%DeallocateData( )
 
@@ -210,7 +210,7 @@
 !                                                                    Sigma_m
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Sigma_m( Obj )
+ REAL( DFP ) FUNCTION Sigma_m( obj )
 
     USE Rank2Tensor_Class
 
@@ -220,11 +220,11 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
 
-    Sigma_m = Invar_I1( Obj ) / 3.0_DFP
+    Sigma_m = Invar_I1( obj ) / 3.0_DFP
 
  END FUNCTION Sigma_m
 
@@ -232,7 +232,7 @@
 !                                                              Sigma_Bar
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Sigma_Bar( Obj )
+ REAL( DFP ) FUNCTION Sigma_Bar( obj )
 
     USE Rank2Tensor_Class
 
@@ -242,11 +242,11 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
 
-    Sigma_Bar = SQRT( Invar_J2( Obj ) * 3.0_DFP )
+    Sigma_Bar = SQRT( Invar_J2( obj ) * 3.0_DFP )
 
  END FUNCTION Sigma_Bar
 
@@ -254,7 +254,7 @@
 !                                                                     Invar_Z
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Invar_Z( Obj )
+ REAL( DFP ) FUNCTION Invar_Z( obj )
 
     USE Rank2Tensor_Class
 
@@ -264,11 +264,11 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
 
-    Invar_Z = Sigma_m( Obj ) / SQRT( 3.0_DFP )
+    Invar_Z = Sigma_m( obj ) / SQRT( 3.0_DFP )
 
  END FUNCTION Invar_Z
 
@@ -276,7 +276,7 @@
 !                                                                     Invar_r
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Invar_r( Obj )
+ REAL( DFP ) FUNCTION Invar_r( obj )
 
     USE Rank2Tensor_Class
 
@@ -286,11 +286,11 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
     ! Define internal variabless
 
-    Invar_r = SQRT( 2.0_DFP * Invar_J2( Obj ) )
+    Invar_r = SQRT( 2.0_DFP * Invar_J2( obj ) )
 
  END FUNCTION Invar_r
 
@@ -298,7 +298,7 @@
 !                                                              m_Invar_LodeAngle
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION m_Invar_LodeAngle( Obj, LodeAngleType )
+ REAL( DFP ) FUNCTION m_Invar_LodeAngle( obj, LodeAngleType )
 
     USE Rank2Tensor_Class
 
@@ -308,13 +308,13 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
     CHARACTER( LEN = * ), INTENT( IN ) :: LodeAngleType
 
     TYPE( Rank2Tensor_ ) :: T
 
-!   Check the existence of Obj
-    T = Obj
+!   Check the existence of obj
+    T = obj
     m_Invar_LodeAngle = LodeAngle( T, LodeAngleType )
 
     CALL T%DeallocateData( )
@@ -325,7 +325,7 @@
 !                                                              Invar_LodeAngle
 !------------------------------------------------------------------------------
 
- REAL( DFP ) FUNCTION Invar_LodeAngle( Obj )
+ REAL( DFP ) FUNCTION Invar_LodeAngle( obj )
 
 !   Description
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
@@ -334,9 +334,9 @@
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define Intent of dummy variables
-    CLASS( Stress_ ), INTENT( IN ) :: Obj
+    CLASS( Stress_ ), INTENT( IN ) :: obj
 
-    Invar_LodeAngle = m_Invar_LodeAngle( Obj, "Sine" )
+    Invar_LodeAngle = m_Invar_LodeAngle( obj, "Sine" )
 
  END FUNCTION Invar_LodeAngle
 

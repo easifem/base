@@ -31,19 +31,19 @@ CONTAINS
 MODULE PROCEDURE refPoint_Initiate
   INTEGER( I4B ) :: s( 2 )
 
-  CALL Reallocate( Obj%XiJ, 3, 1 )
+  CALL Reallocate( obj%XiJ, 3, 1 )
   IF( PRESENT( XiJ ) ) THEN
-    Obj%XiJ = XiJ
+    obj%XiJ = XiJ
   END IF
-  Obj%EntityCounts = [1, 0, 0, 0]
-  Obj%XiDimension = 0
-  Obj%Order = 0
-  Obj%NSD = NSD
-  Obj%Name = Point1
-  IF( ALLOCATED( Obj%Topology ) ) DEALLOCATE( Obj%Topology )
-  ALLOCATE( Obj%Topology( 1 ) )
-  Obj%Topology( 1 ) = ReferenceTopology( [1], Point )
-  Obj%LagrangeElement => LagrangeElement_Point
+  obj%EntityCounts = [1, 0, 0, 0]
+  obj%XiDimension = 0
+  obj%Order = 0
+  obj%NSD = NSD
+  obj%Name = Point1
+  IF( ALLOCATED( obj%Topology ) ) DEALLOCATE( obj%Topology )
+  ALLOCATE( obj%Topology( 1 ) )
+  obj%Topology( 1 ) = ReferenceTopology( [1], Point )
+  obj%LagrangeElement => LagrangeElement_Point
 END PROCEDURE refPoint_Initiate
 
 !----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ END PROCEDURE refPoint_Initiate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refPoint_Constructor1
-  CALL Initiate( Obj, NSD, XiJ )
+  CALL Initiate( obj, NSD, XiJ )
 END PROCEDURE refPoint_Constructor1
 
 !----------------------------------------------------------------------------
@@ -59,8 +59,8 @@ END PROCEDURE refPoint_Constructor1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refPoint_Constructor_1
-  ALLOCATE( Obj )
-  CALL Initiate( Obj, NSD, XiJ )
+  ALLOCATE( obj )
+  CALL Initiate( obj, NSD, XiJ )
 END PROCEDURE refPoint_Constructor_1
 
 !----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ END PROCEDURE refPoint_Constructor_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeElement_Point
-  CALL Initiate( obj=obj, anotherObj=refelem )
+  CALL Initiate( obj=obj, anotherobj=refelem )
 END PROCEDURE LagrangeElement_Point
 
 !----------------------------------------------------------------------------

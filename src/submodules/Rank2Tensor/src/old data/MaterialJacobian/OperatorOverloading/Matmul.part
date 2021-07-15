@@ -20,72 +20,72 @@
 !==============================================================================
 
 !------------------------------------------------------------------------------
-!                                                       Obj_matmul_Vec
+!                                                       obj_matmul_Vec
 !------------------------------------------------------------------------------
 
- FUNCTION Obj_matmul_Vec( Obj, Vec )
+ FUNCTION obj_matmul_Vec( obj, Vec )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Obj .matmul. Vec
+!   1.  obj .matmul. Vec
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Vec( : )
-    REAL( DFP ), ALLOCATABLE :: Obj_matmul_Vec( : )
+    REAL( DFP ), ALLOCATABLE :: obj_matmul_Vec( : )
 
     ! Define internal variables
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>matmul.part", &
-        "Obj .matmul. Vec", &
-        "Obj  is not initiated, Program Stopped!!!"&
+        "obj .matmul. Vec", &
+        "obj  is not initiated, Program Stopped!!!"&
         )
         STOP
 
     END IF
 
     N = SIZE( Vec )
-    ALLOCATE( Obj_matmul_Vec( N ) )
-    Obj_matmul_Vec = MATMUL( Obj .Cijkl. N, Vec )
+    ALLOCATE( obj_matmul_Vec( N ) )
+    obj_matmul_Vec = MATMUL( obj .Cijkl. N, Vec )
 
- END FUNCTION Obj_matmul_Vec
+ END FUNCTION obj_matmul_Vec
 
 !------------------------------------------------------------------------------
-!                                                              Vec_matmul_Obj
+!                                                              Vec_matmul_obj
 !------------------------------------------------------------------------------
 
- FUNCTION Vec_matmul_Obj( Vec, Obj )
+ FUNCTION Vec_matmul_obj( Vec, obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  Vec .matmul. Obj
+!   1.  Vec .matmul. obj
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
     ! Define intent of dummy variables
-    CLASS( MaterialJacobian_ ), INTENT( IN ) :: Obj
+    CLASS( MaterialJacobian_ ), INTENT( IN ) :: obj
     REAL( DFP ), INTENT( IN ) :: Vec( : )
-    REAL( DFP ), ALLOCATABLE :: Vec_matmul_Obj( : )
+    REAL( DFP ), ALLOCATABLE :: Vec_matmul_obj( : )
 
     ! Define internal variables
     INTEGER( I4B ) :: N
 
-    IF( .NOT. ALLOCATED( Obj%C ) ) THEN
+    IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL Err_Msg( &
         "MaterialJacobian_Class.f90>>matmul.part", &
-        "Obj .matmul. Vec", &
-        "Obj  is not initiated, Program Stopped!!!"&
+        "obj .matmul. Vec", &
+        "obj  is not initiated, Program Stopped!!!"&
         )
         STOP
 
     END IF
 
     N = SIZE( Vec )
-    ALLOCATE( Vec_matmul_Obj( N ) )
+    ALLOCATE( Vec_matmul_obj( N ) )
 
-    Vec_matmul_Obj = MATMUL( TRANSPOSE( Obj .Cijkl. N ), Vec )
+    Vec_matmul_obj = MATMUL( TRANSPOSE( obj .Cijkl. N ), Vec )
 
- END FUNCTION Vec_matmul_Obj
+ END FUNCTION Vec_matmul_obj

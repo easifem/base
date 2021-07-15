@@ -7,47 +7,47 @@
  |   2.0000000     |   0.0000000     |
 
 
-## Obj%N( :, : )=
+## obj%N( :, : )=
 
           -0.000000
            0.000000
            1.000000
 
 
-## Obj%dNdXi( :, :, 1 )( :, : )=
+## obj%dNdXi( :, :, 1 )( :, : )=
 
          -0.5000000
           0.5000000
           -0.000000
 
 
-## Obj%dNdXt( :, :, 1 )( :, : )=
+## obj%dNdXt( :, :, 1 )( :, : )=
 
            0.000000
            0.000000
            0.000000
 
 
-## Obj%Jacobian( :, :, 1 )( :, : )=
+## obj%Jacobian( :, :, 1 )( :, : )=
 
            0.000000
 
 
-## Obj%Js( : ) =
+## obj%Js( : ) =
 
            0.000000
 
 
-## Obj%Thickness( : ) =
+## obj%Thickness( : ) =
 
            0.000000
 
 
-## Obj%Coord( :, : )=
+## obj%Coord( :, : )=
 
            0.000000
 
-## Obj%RefElem
+## obj%RefElem
   - Element Type :: Line3
   - XiDimension  ::    1
   - NSD  ::    1
@@ -64,22 +64,22 @@
  |    2 |    1.000000     |    0.000000     |    0.000000     |
  |    3 |    0.000000     |    0.000000     |    0.000000     |
 
-## Obj%Topology( 1 )
+## obj%Topology( 1 )
   - Element Type :: Point1
   - XiDimension  ::    0
   - Nptrs  ::    1
 
-## Obj%Topology( 2 )
+## obj%Topology( 2 )
   - Element Type :: Point1
   - XiDimension  ::    0
   - Nptrs  ::    2
 
-## Obj%Topology( 3 )
+## obj%Topology( 3 )
   - Element Type :: Point1
   - XiDimension  ::    0
   - Nptrs  ::    3
 
-## Obj%Topology( 4 )
+## obj%Topology( 4 )
   - Element Type :: Line3
   - XiDimension  ::    1
   - Nptrs  ::    1   2   3
