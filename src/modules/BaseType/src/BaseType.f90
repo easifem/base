@@ -306,16 +306,13 @@ TYPE :: CSRMatrix_
     !! This variable, if true, denotes that csr is allocated inside the obj
   INTEGER( I4B ) :: tDimension = 2_I4B
   CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
-  REAL( DFP ), ALLOCATABLE :: Val( :, : )
   REAL( DFP ), ALLOCATABLE :: A( : )
-  REAL( DFP ), ALLOCATABLE :: Diag( : )
   TYPE( CSRSparsity_ ), POINTER :: csr => NULL()
 END TYPE CSRMatrix_
 
 PUBLIC :: CSRMatrix_
 
-TYPE( CSRMatrix_ ), PUBLIC, PARAMETER :: TypeCSRMatrix = &
-  & CSRMatrix_(Val=NULL(), A=NULL(), Diag=NULL())
+TYPE( CSRMatrix_ ), PUBLIC, PARAMETER :: TypeCSRMatrix = CSRMatrix_(A=NULL())
 
 TYPE :: CSRMatrixPointer_
   CLASS( CSRMatrix_ ), POINTER :: Ptr => NULL( )
