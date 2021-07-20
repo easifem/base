@@ -50,15 +50,18 @@ MODULE PROCEDURE csr_setSparsity1
     STOP
   END IF
 
+  IF( .NOT. ALLOCATED( obj%row ) ) &
+    & ALLOCATE( obj%row( obj%nrow ) )
+
   tdof = .tdof. obj%dof
+  n = SIZE( Col )
+
   IF( tdof .EQ. 1 ) THEN
-    obj%nnz = obj%nnz + SIZE( Col )
+    obj%nnz = obj%nnz + n
     n2ntemp = SORT( Col )
     CALL APPEND( obj%Row( Row ), n2ntemp )
   ELSE
-    n = SIZE( Col )
     ALLOCATE( n2ntemp( n * tdof ) )
-
     IF( obj%dof%StorageFMT .EQ. NODES_FMT ) THEN
       DO a = 1, n
         DO b = 1, tdof
@@ -79,7 +82,6 @@ MODULE PROCEDURE csr_setSparsity1
           n2ntemp( ( b - 1 ) * n + a ) = ( b - 1 ) * m + Col( a )
         END DO
       END DO
-
       n = n * tdof
       n2ntemp = SORT( n2ntemp )
       DO b = 1, tdof

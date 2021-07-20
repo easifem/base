@@ -29,12 +29,13 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csr_initiate1
+  INTEGER( I4B ) :: tNodes
   IF( obj%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is already initiated!", &
       & "CSRSparsity_Method@Constructor.f90", &
       & "csr_initiate1()", &
-      & 32, stderr )
+      & __LINE__, stderr )
     STOP
   END IF
   obj%nnz = 0
@@ -42,6 +43,15 @@ MODULE PROCEDURE csr_initiate1
   obj%nrow = nrow
   IF( PRESENT( dof ) ) THEN
     obj%dof = dof
+    tnodes = .tNodes. dof
+    IF( tnodes .NE. MAX( nrow, ncol ) ) THEN
+      CALL ErrorMSG( &
+      & "Size of the matrix does not conform with the dof data!", &
+      & "CSRSparsity_Method@Constructor.f90", &
+      & "csr_initiate1()", &
+      & __LINE__, stderr )
+    STOP
+    END IF
   ELSE
     CALL initiate( obj=obj%dof, tNodes=[nrow], names=['K'], &
       & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )

@@ -128,6 +128,15 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 July 2021
+! summary: Initiate by copying
+!
+!### Introduction
+! This routine initiates obj by copying contents from obj2
+! This routine uses `obj2%csr => obj%csr`
+! Also, csrOwenrsip is set to false.
+
 INTERFACE
 MODULE SUBROUTINE csrMat_initiate4( obj, obj2 )
   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
@@ -652,9 +661,9 @@ END INTERFACE
 ! `A(:), IA(:), JA(:)` denotes CSR format.
 
 INTERFACE
-MODULE PURE SUBROUTINE crsMat_Convert( From, To )
-  TYPE( CSRMatrix_ ), INTENT( IN ) :: From
+MODULE PURE SUBROUTINE crsMat_Convert( To, From )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: To( :, : )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: From
 END SUBROUTINE crsMat_Convert
 END INTERFACE
 
@@ -663,6 +672,10 @@ INTERFACE Convert
 END INTERFACE Convert
 
 PUBLIC :: Convert
+
+INTERFACE ASSIGNMENT( = )
+  MODULE PROCEDURE crsMat_Convert
+END INTERFACE ASSIGNMENT( = )
 
 !----------------------------------------------------------------------------
 !                                                           ColumnSORT@Unary
@@ -987,241 +1000,666 @@ END INTERFACE getUpperTriangle
 PUBLIC :: getUpperTriangle
 
 !----------------------------------------------------------------------------
-!                                                              Matvec@MatVec
+!                                                        getILUT@ILUTMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 14 July 2021
-! summary: This routine performs matrix-vector multiplication
+! date: 18 July 2021
+! summary: Returns the ILUT precondition
 !
 !### Introduction
-! y = A*x
-
-INTERFACE
-MODULE SUBROUTINE csrMat_MatVec( obj, x, y, matvectype )
-  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: x( : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: y( : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: matvectype
-END SUBROUTINE csrMat_MatVec
-END INTERFACE
-
-INTERFACE MatVec
-  MODULE PROCEDURE csrMat_MatVec
-END INTERFACE MatVec
-
-PUBLIC :: MatVec
-
-!----------------------------------------------------------------------------
-!                                                              Matmul@MatVec
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 July 2021
-! summary: Matrix vector multiplication
-
-INTERFACE
-MODULE FUNCTION csrMat_Matmul( obj, x, matvectype ) RESULT( Ans )
-  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: x( : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: matvectype
-  REAL( DFP ) :: Ans( SIZE( x ) )
-END FUNCTION csrMat_Matmul
-END INTERFACE
-
-INTERFACE Matmul
-  MODULE PROCEDURE csrMat_Matmul
-END INTERFACE Matmul
-
-PUBLIC :: Matmul
-
-!----------------------------------------------------------------------------
-!                                                              LSolve@LinAlg
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 July 2021
-! summary: Solve Lx = y by forward elimination technique will be used
+! This routine builds the ILUT precondition. Incomplete LU factorization with dual truncation mechanism.
 !
-!### Introduction
-! This subroutine Solve Lx = y by forward elimination technique will be used
-! Here L is lower triangular matrix with unit diag in CSR format
-
-INTERFACE
-MODULE SUBROUTINE csrMat_LSolve( obj, x, y )
-  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-    !! Sparse matrix
-  REAL( DFP ), INTENT( IN ) :: y( : )
-    !! This contains RHS
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
-    !! This contains solution
-END SUBROUTINE csrMat_LSolve
-END INTERFACE
-
-INTERFACE LSolve
-  MODULE PROCEDURE csrMat_LSolve
-END INTERFACE LSolve
-
-PUBLIC :: LSolve
-
-!----------------------------------------------------------------------------
-!                                                              USolve@LinAlg
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 July 2021
-! summary: Solve Ux = y by backward elimination technique will be used
+! - `obj` matrix stored in Compressed Sparse Row format.
+! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U will have a maximum of lfil elements (excluding the diagonal element). lfil must be .ge. 0.
+! - `droptol` = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
 !
-!### Introduction
-!- This subroutine solve Ux = y by backward elimination technique will be used
-! - Here U is upper triangular matrix with unit diag in CSR format
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+!
+! The diagonal elements of the input matrix must be nonzero (at least 'structurally'). Dual drop strategy works as follows:
+!
+! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+! - Keeping only the largest `lfil` elements in the ith row of L and the largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
+! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on keeping the largest elements in each row  of `L` and `U`.
+! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold strategy (however, fill-in is then mpredictible).
 
 INTERFACE
-MODULE SUBROUTINE csrMat_USolve( obj, x, y )
-  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-    !! Sparse matrix in upper triangle form
-  REAL( DFP ), INTENT( IN ) :: y( : )
-    !! RHS
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
-    !! Solution
-END SUBROUTINE csrMat_USolve
-END INTERFACE
-
-INTERFACE USolve
-  MODULE PROCEDURE csrMat_USolve
-END INTERFACE USolve
-
-PUBLIC :: USolve
-
-!----------------------------------------------------------------------------
-!                                                                ILUT@LinAlg
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 14 July 2021
-! summary: Returns incomplete LU decomposition
-
-INTERFACE
-MODULE SUBROUTINE csrMat_ILUT( obj, alu, jlu, ju, ierr, droptol, lfil )
-  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: jlu( : ), ju( : )
-  INTEGER( I4B ), INTENT( INOUT) :: ierr
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: lfil
-END SUBROUTINE csrMat_ILUT
-END INTERFACE
-
-INTERFACE ILUT
-  MODULE PROCEDURE csrMat_ILUT
-END INTERFACE ILUT
-
-PUBLIC :: ILUT
-
-!----------------------------------------------------------------------------
-!                                                              ILUTP@LinAlg
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE csrMat_ILUTP( obj, alu, jlu, ju, iperm, ierr, droptol, &
-    & permtol, lfil, mbloc )
+MODULE SUBROUTINE csrMat_getILUT1( obj, ALU, JLU, JU, lfil, droptol )
   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: jlu( : ), ju( : ), iperm( : )
-  INTEGER( I4B ), INTENT( INOUT) :: ierr
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, permtol
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: lfil, mbloc
-END SUBROUTINE csrMat_ILUTP
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ALU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JLU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JU( : )
+  INTEGER( I4B ), INTENT( IN ) :: lfil
+  REAL( DFP ), INTENT( IN ) :: droptol
+END SUBROUTINE csrMat_getILUT1
 END INTERFACE
 
-INTERFACE ILUTP
-  MODULE PROCEDURE csrMat_ILUTP
-END INTERFACE ILUTP
-
-PUBLIC :: ILUTP
-
 !----------------------------------------------------------------------------
-!                                                               ILUD@LinAlg
+!                                                        getILUT@ILUTMethods
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUT precondition
+!
+!### Introduction
+! This routine builds the ILUT precondition. Incomplete LU factorization with dual truncation mechanism.
+!
+! - `obj` matrix stored in Compressed Sparse Row format.
+! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U will have a maximum of lfil elements (excluding the diagonal element). lfil must be .ge. 0.
+! - `droptol` = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
+!
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+!
+! The diagonal elements of the input matrix must be nonzero (at least 'structurally'). Dual drop strategy works as follows:
+!
+! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+! - Keeping only the largest `lfil` elements in the ith row of L and the largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
+! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on keeping the largest elements in each row  of `L` and `U`.
+! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold strategy (however, fill-in is then mpredictible).
 
 INTERFACE
-MODULE SUBROUTINE csrMat_ILUD( obj, alu, jlu, ju, ierr, alpha, droptol )
-  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: jlu( : ), ju( : )
-  INTEGER( I4B ), INTENT( INOUT) :: ierr
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, alpha
-END SUBROUTINE csrMat_ILUD
-END INTERFACE
-
-INTERFACE ILUD
-  MODULE PROCEDURE csrMat_ILUD
-END INTERFACE ILUD
-
-PUBLIC :: ILUD
-
-!----------------------------------------------------------------------------
-!                                                              ILUDP@LinAlg
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE SUBROUTINE csrMat_ILUDP( obj, alu, jlu, ju, iperm, ierr, droptol, &
-    & permtol, alpha, mbloc )
+MODULE SUBROUTINE csrMat_getILUT2( obj, Pmat, lfil, droptol )
   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: jlu( : ), ju( : ), iperm( : )
-  INTEGER( I4B ), INTENT( INOUT) :: ierr
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, permtol, alpha
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: mbloc
-END SUBROUTINE csrMat_ILUDP
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: Pmat
+  INTEGER( I4B ), INTENT( IN ) :: lfil
+  REAL( DFP ), INTENT( IN ) :: droptol
+END SUBROUTINE csrMat_getILUT2
 END INTERFACE
 
-INTERFACE ILUDP
-  MODULE PROCEDURE csrMat_ILUDP
-END INTERFACE ILUDP
+INTERFACE getILUT
+  MODULE PROCEDURE csrMat_getILUT1, csrMat_getILUT2
+END INTERFACE getILUT
 
-PUBLIC :: ILUDP
+PUBLIC :: getILUT
 
 !----------------------------------------------------------------------------
-!                                                            LUSOLVE@LinAlg
+!                                                       getILUTP@ILUTMethods
 !----------------------------------------------------------------------------
 
-! LUx = y
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUT precondition
+!
+!### Introduction
+! This routine builds the ILUTP precondition. ILUT with pivoting, incomplete LU factorization with dual truncation mechanism
+!
+! - `obj` matrix stored in Compressed Sparse Row format.
+! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U will have a maximum of lfil elements (excluding the diagonal element). lfil must be .ge. 0.
+! - `droptol` = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
+! - `permtol` = tolerance ratio used to determine whether or not to permute two columns.  At step i columns i and j are permuted when
+!
+! `abs(a(i,j))*permtol .gt. abs(a(i,i))`.
+!
+! - permtol=0 implies never permute; good values 0.1 to 0.01
+!
+! - `mbloc` = if desired, permuting can be done only within the diagonal blocks of size mbloc. Useful for PDE problems with several degrees of freedom.. If feature not wanted take mbloc=n.
+!
+! `iperm` = contains the permutation arrays. iperm(1:n) = old numbers of unknowns iperm(n+1:2*n) = reverse permutation = new unknowns.
+!
+! TO AVOID PERMUTING THE SOLUTION VECTORS ARRAYS FOR EACH LU-SOLVE, THE MATRIX A IS PERMUTED ON RETURN. All column indices are changed. SIMILARLY FOR THE U MATRIX. To permute the matrix back to its original state use the loop:
+!
+! ```fortran
+!   do k=ia(1), ia(n+1)-1
+!      ja(k) = iperm(ja(k))
+!   enddo
+! ```
+!
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+!
+! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+! - Keeping only the largest `lfil` elements in the ith row of L and the largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
+! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on keeping the largest elements in each row  of `L` and `U`.
+! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold strategy (however, fill-in is then mpredictible).
+
 INTERFACE
-MODULE SUBROUTINE csrMat_LUSOLVE( x, y, alu, jlu, ju )
-  REAL( DFP ), INTENT( IN ) :: y ( : ), alu( : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
-  INTEGER( I4B ), INTENT( IN ) :: jlu( : ), ju( : )
-END SUBROUTINE csrMat_LUSOLVE
+MODULE SUBROUTINE csrMat_getILUTP1( obj, ALU, JLU, JU, lfil, droptol, &
+  & permtol, mbloc, IPERM )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ALU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JLU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JU( : )
+  INTEGER( I4B ), INTENT( IN ) :: lfil
+  REAL( DFP ), INTENT( IN ) :: droptol
+  REAL( DFP ), INTENT( IN ) :: permtol
+  INTEGER( I4B ), INTENT( IN ) :: mbloc
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IPERM( : )
+END SUBROUTINE csrMat_getILUTP1
 END INTERFACE
 
-INTERFACE LUSOLVE
-MODULE PROCEDURE csrMat_LUSOLVE
-END INTERFACE LUSOLVE
-
-PUBLIC :: LUSOLVE
-
 !----------------------------------------------------------------------------
-!                                                     Sparsekit_LUTSOLVE@ILUT
+!                                                       getILUTP@ILUTMethods
 !----------------------------------------------------------------------------
 
-!(LU)^T x = y
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUT precondition
+!
+!### Introduction
+! This routine builds the ILUTP precondition. ILUT with pivoting, incomplete LU factorization with dual truncation mechanism
+!
+! - `obj` matrix stored in Compressed Sparse Row format.
+! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U will have a maximum of lfil elements (excluding the diagonal element). lfil must be .ge. 0.
+! - `droptol` = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
+! - `permtol` = tolerance ratio used to determine whether or not to permute two columns.  At step i columns i and j are permuted when
+!
+! `abs(a(i,j))*permtol .gt. abs(a(i,i))`.
+!
+! - permtol=0 implies never permute; good values 0.1 to 0.01
+!
+! - `mbloc` = if desired, permuting can be done only within the diagonal blocks of size mbloc. Useful for PDE problems with several degrees of freedom.. If feature not wanted take mbloc=n.
+!
+! `iperm` = contains the permutation arrays. iperm(1:n) = old numbers of unknowns iperm(n+1:2*n) = reverse permutation = new unknowns.
+!
+! TO AVOID PERMUTING THE SOLUTION VECTORS ARRAYS FOR EACH LU-SOLVE, THE MATRIX A IS PERMUTED ON RETURN. All column indices are changed. SIMILARLY FOR THE U MATRIX. To permute the matrix back to its original state use the loop:
+!
+! ```fortran
+!   do k=ia(1), ia(n+1)-1
+!      ja(k) = iperm(ja(k))
+!   enddo
+! ```
+!
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+!
+! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+! - Keeping only the largest `lfil` elements in the ith row of L and the largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
+! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on keeping the largest elements in each row  of `L` and `U`.
+! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold strategy (however, fill-in is then mpredictible).
+
 INTERFACE
-MODULE SUBROUTINE lutsol_alu( x, y, alu, jlu, ju )
-  REAL( DFP ), INTENT( IN ) :: y( : ), alu( : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
-  INTEGER( I4B ), INTENT( IN ) :: jlu( : ), ju( : )
-END SUBROUTINE lutsol_alu
+MODULE SUBROUTINE csrMat_getILUTP2( obj, Pmat, lfil, droptol, permtol, &
+  & mbloc, IPERM )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: Pmat
+  INTEGER( I4B ), INTENT( IN ) :: lfil
+  REAL( DFP ), INTENT( IN ) :: droptol
+  REAL( DFP ), INTENT( IN ) :: permtol
+  INTEGER( I4B ), INTENT( IN ) :: mbloc
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IPERM( : )
+END SUBROUTINE csrMat_getILUTP2
 END INTERFACE
 
-INTERFACE Sparsekit_LUTSOLVE
-  MODULE PROCEDURE lutsol_alu
-END INTERFACE Sparsekit_LUTSOLVE
+INTERFACE getILUTP
+  MODULE PROCEDURE csrMat_getILUTP1, csrMat_getILUTP2
+END INTERFACE getILUTP
 
-PUBLIC :: Sparsekit_LUTSOLVE
+PUBLIC :: getILUTP
+
+!----------------------------------------------------------------------------
+!                                                       getILUTD@ILUTMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUT precondition
+!
+!### Introduction
+! This routine computes the ILU factorization with standard threshold dropping: at ith step of elimination, an element a(i,j) in row i is dropped if it satisfies the criterion:
+!
+!
+! - abs(a(i,j)) < tol, that is, average magnitude of elements in row i of A
+! - There is no control on memory size required for the factors as is done in ILUT.
+! - This routines computes also various diagonal compensation ILU's such MILU. These are defined through the parameter `alph`
+!
+! - alph = diagonal compensation parameter, alph*(sum of all dropped out elements in a given row) is added to the diagonal element of U of the factorization
+!   - alph = 0 means the scheme is ILU with threshold,
+!   - alph = 1 means the scheme is MILU with threshold.
+! - droptol = Threshold parameter for dropping small terms in the factorization. During the elimination, a term a(i,j) is dropped whenever abs(a(i,j)) .lt. tol * [weighted norm of row i]. Here weighted norm = 1-norm / number of nnz elements in the row.
+! - `obj` matrix stored in Compressed Sparse Row format.
+!
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+!
+! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getILUD1( obj, ALU, JLU, JU, alpha, droptol )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ALU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JLU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JU( : )
+  REAL( DFP ), INTENT( IN ) :: alpha
+  REAL( DFP ), INTENT( IN ) :: droptol
+END SUBROUTINE csrMat_getILUD1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          ILUD@ILUTMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUT precondition
+!
+!### Introduction
+! This routine computes the ILU factorization with standard threshold dropping: at ith step of elimination, an element a(i,j) in row i is dropped if it satisfies the criterion:
+!
+!
+! - abs(a(i,j)) < tol, that is, average magnitude of elements in row i of A
+! - There is no control on memory size required for the factors as is done in ILUT.
+! - This routines computes also various diagonal compensation ILU's such MILU. These are defined through the parameter `alph`
+!
+! - alph = diagonal compensation parameter, alph*(sum of all dropped out elements in a given row) is added to the diagonal element of U of the factorization
+!   - alph = 0 means the scheme is ILU with threshold,
+!   - alph = 1 means the scheme is MILU with threshold.
+! - droptol = Threshold parameter for dropping small terms in the factorization. During the elimination, a term a(i,j) is dropped whenever abs(a(i,j)) .lt. tol * [weighted norm of row i]. Here weighted norm = 1-norm / number of nnz elements in the row.
+! - `obj` matrix stored in Compressed Sparse Row format.
+!
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+!
+! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getILUD2( obj, Pmat, alpha, droptol )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: Pmat
+  REAL( DFP ), INTENT( IN ) :: alpha
+  REAL( DFP ), INTENT( IN ) :: droptol
+END SUBROUTINE csrMat_getILUD2
+END INTERFACE
+
+INTERFACE getILUD
+  MODULE PROCEDURE csrMat_getILUD1, csrMat_getILUD2
+END INTERFACE getILUD
+
+PUBLIC :: getILUD
+
+!----------------------------------------------------------------------------
+!                                                       getILUDP@ILUTMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUDP precondition
+!
+!### Introduction
+!
+! This routine computes ILUDP preconditioner, incomplete LU factorization with standard droppoing strategy.
+!
+! - `droptol` = tolerance used for dropping elements in L and U. elements are dropped if they are .lt. norm(row) x droptol row = row being eliminated
+! - `permtol` = tolerance ratio used for determning whether to permute two columns.  Two columns are permuted only when abs(a(i,j))*permtol .gt. abs(a(i,i)) [0 --> never permute; good values 0.1 to 0.01]
+! - `mbloc` = if desired, permuting can be done only within the diagonal blocks of size mbloc. Useful for PDE problems with several degrees of freedom.. If feature not wanted take mbloc=n.
+!
+! - iperm   = contains the permutation arrays, iperm(1:n) = old numbers of unknowns, iperm(n+1:2*n) = reverse permutation = new unknowns.
+!
+! - abs(a(i,j)) < droptol, that is, average magnitude of elements in row i of A
+! - alph = diagonal compensation parameter, alph*(sum of all dropped out elements in a given row) is added to the diagonal element of U of the factorization
+!   - alph = 0 means the scheme is ILU with threshold,
+!   - alph = 1 means the scheme is MILU with threshold.
+! - droptol = Threshold parameter for dropping small terms in the factorization. During the elimination, a term a(i,j) is dropped whenever abs(a(i,j)) .lt. droptol * [weighted norm of row i]. Here weighted norm = 1-norm / number of nnz elements in the row.
+! - `obj` matrix stored in Compressed Sparse Row format.
+!
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+!
+! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getILUDP1( obj, ALU, JLU, JU, alpha, droptol, &
+  & permtol, mbloc, IPERM )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ALU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JLU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JU( : )
+  REAL( DFP ), INTENT( IN ) :: alpha
+  REAL( DFP ), INTENT( IN ) :: droptol
+  REAL( DFP ), INTENT( IN ) :: permtol
+  INTEGER( I4B ), INTENT( IN ) :: mbloc
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IPERM( : )
+END SUBROUTINE csrMat_getILUDP1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     getILUTDP@ILUTMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUDP precondition
+!
+!### Introduction
+!
+! This routine computes ILUDP preconditioner, incomplete LU factorization with standard droppoing strategy.
+!
+! - `droptol` = tolerance used for dropping elements in L and U. elements are dropped if they are .lt. norm(row) x droptol row = row being eliminated
+! - `permtol` = tolerance ratio used for determning whether to permute two columns.  Two columns are permuted only when abs(a(i,j))*permtol .gt. abs(a(i,i)) [0 --> never permute; good values 0.1 to 0.01]
+! - `mbloc` = if desired, permuting can be done only within the diagonal blocks of size mbloc. Useful for PDE problems with several degrees of freedom.. If feature not wanted take mbloc=n.
+!
+! - iperm   = contains the permutation arrays, iperm(1:n) = old numbers of unknowns, iperm(n+1:2*n) = reverse permutation = new unknowns.
+!
+! - abs(a(i,j)) < droptol, that is, average magnitude of elements in row i of A
+! - alph = diagonal compensation parameter, alph*(sum of all dropped out elements in a given row) is added to the diagonal element of U of the factorization
+!   - alph = 0 means the scheme is ILU with threshold,
+!   - alph = 1 means the scheme is MILU with threshold.
+! - droptol = Threshold parameter for dropping small terms in the factorization. During the elimination, a term a(i,j) is dropped whenever abs(a(i,j)) .lt. droptol * [weighted norm of row i]. Here weighted norm = 1-norm / number of nnz elements in the row.
+! - `obj` matrix stored in Compressed Sparse Row format.
+!
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+!
+! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getILUDP2( obj, Pmat, alpha, droptol, &
+  & permtol, mbloc, IPERM )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: Pmat
+  REAL( DFP ), INTENT( IN ) :: alpha
+  REAL( DFP ), INTENT( IN ) :: droptol
+  REAL( DFP ), INTENT( IN ) :: permtol
+  INTEGER( I4B ), INTENT( IN ) :: mbloc
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IPERM( : )
+END SUBROUTINE csrMat_getILUDP2
+END INTERFACE
+
+INTERFACE getILUDP
+  MODULE PROCEDURE csrMat_getILUDP1, csrMat_getILUDP2
+END INTERFACE getILUDP
+
+PUBLIC :: getILUDP
+
+!----------------------------------------------------------------------------
+!                                                       getILUK@ILUTMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUK precondition
+!
+!### Introduction
+!
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getILUK1( obj, ALU, JLU, JU, lfil, LEVS )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ALU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JLU( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: JU( : )
+  INTEGER( I4B ), INTENT( IN ) :: lfil
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: LEVS( : )
+END SUBROUTINE csrMat_getILUK1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       getILUK@ILUTMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 18 July 2021
+! summary: Returns the ILUK precondition
+!
+!### Introduction
+!
+! This routine returns the ILU WITH LEVEL OF FILL-IN OF K (ILU(k))
+!
+! - `lfil` = integer. The fill-in parameter. Each element whose leve-of-fill exceeds lfil during the ILU process is dropped. lfil must be .ge. 0
+! - droptol = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
+! - `ALU,JLU` = matrix stored in Modified Sparse Row (MSR) format containing the L and U factors together. The diagonal (stored in alu(1:n) ) is inverted. Each i-th row of the `ALU,JLU` matrix contains the i-th row of L (excluding the diagonal entry=1) followed by the i-th row of `U`.
+! - `JU` = integer array of length n containing the pointers to the beginning of each row of `U` in the matrix `ALU,JLU`.
+! - `LEVS` = integer (work) array of size `IWK`, which contains the levels of each element in `ALU, JLU`.
+!
+!@note
+! This is not implemented efficiently storage-wise. For example: Only the part of the array levs(*) associated with the U-matrix is needed in the routine.. So some storage can be saved if needed. The levels of fills in the LU matrix are output for information only -- they are not needed by LU-solve.
+!@endnote
+
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getILUK2( obj, Pmat, lfil, LEVS )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: Pmat
+  INTEGER( I4B ), INTENT( IN ) :: lfil
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: LEVS( : )
+END SUBROUTINE csrMat_getILUK2
+END INTERFACE
+
+INTERFACE getILUK
+  MODULE PROCEDURE csrMat_getILUK1, csrMat_getILUK2
+END INTERFACE getILUK
+
+PUBLIC :: getILUK
+
+!----------------------------------------------------------------------------
+! !                                                              Matvec@MatVec
+! !----------------------------------------------------------------------------
+
+! !> authors: Vikas Sharma, Ph. D.
+! ! date: 14 July 2021
+! ! summary: This routine performs matrix-vector multiplication
+! !
+! !### Introduction
+! ! y = A*x
+
+! INTERFACE
+! MODULE SUBROUTINE csrMat_MatVec( obj, x, y, matvectype )
+!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+!   REAL( DFP ), INTENT( IN ) :: x( : )
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: y( : )
+!   CHARACTER( LEN = * ), INTENT( IN ) :: matvectype
+! END SUBROUTINE csrMat_MatVec
+! END INTERFACE
+
+! INTERFACE MatVec
+!   MODULE PROCEDURE csrMat_MatVec
+! END INTERFACE MatVec
+
+! PUBLIC :: MatVec
+
+! !----------------------------------------------------------------------------
+! !                                                              Matmul@MatVec
+! !----------------------------------------------------------------------------
+
+! !> authors: Vikas Sharma, Ph. D.
+! ! date: 14 July 2021
+! ! summary: Matrix vector multiplication
+
+! INTERFACE
+! MODULE FUNCTION csrMat_Matmul( obj, x, matvectype ) RESULT( Ans )
+!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+!   REAL( DFP ), INTENT( IN ) :: x( : )
+!   CHARACTER( LEN = * ), INTENT( IN ) :: matvectype
+!   REAL( DFP ) :: Ans( SIZE( x ) )
+! END FUNCTION csrMat_Matmul
+! END INTERFACE
+
+! INTERFACE Matmul
+!   MODULE PROCEDURE csrMat_Matmul
+! END INTERFACE Matmul
+
+! PUBLIC :: Matmul
+
+! !----------------------------------------------------------------------------
+! !                                                              LSolve@LinAlg
+! !----------------------------------------------------------------------------
+
+! !> authors: Vikas Sharma, Ph. D.
+! ! date: 14 July 2021
+! ! summary: Solve Lx = y by forward elimination technique will be used
+! !
+! !### Introduction
+! ! This subroutine Solve Lx = y by forward elimination technique will be used
+! ! Here L is lower triangular matrix with unit diag in CSR format
+
+! INTERFACE
+! MODULE SUBROUTINE csrMat_LSolve( obj, x, y )
+!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+!     !! Sparse matrix
+!   REAL( DFP ), INTENT( IN ) :: y( : )
+!     !! This contains RHS
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
+!     !! This contains solution
+! END SUBROUTINE csrMat_LSolve
+! END INTERFACE
+
+! INTERFACE LSolve
+!   MODULE PROCEDURE csrMat_LSolve
+! END INTERFACE LSolve
+
+! PUBLIC :: LSolve
+
+! !----------------------------------------------------------------------------
+! !                                                              USolve@LinAlg
+! !----------------------------------------------------------------------------
+
+! !> authors: Vikas Sharma, Ph. D.
+! ! date: 14 July 2021
+! ! summary: Solve Ux = y by backward elimination technique will be used
+! !
+! !### Introduction
+! !- This subroutine solve Ux = y by backward elimination technique will be used
+! ! - Here U is upper triangular matrix with unit diag in CSR format
+
+! INTERFACE
+! MODULE SUBROUTINE csrMat_USolve( obj, x, y )
+!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+!     !! Sparse matrix in upper triangle form
+!   REAL( DFP ), INTENT( IN ) :: y( : )
+!     !! RHS
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
+!     !! Solution
+! END SUBROUTINE csrMat_USolve
+! END INTERFACE
+
+! INTERFACE USolve
+!   MODULE PROCEDURE csrMat_USolve
+! END INTERFACE USolve
+
+! PUBLIC :: USolve
+
+! !----------------------------------------------------------------------------
+! !                                                                ILUT@LinAlg
+! !----------------------------------------------------------------------------
+
+! !> authors: Vikas Sharma, Ph. D.
+! ! date: 14 July 2021
+! ! summary: Returns incomplete LU decomposition
+
+! INTERFACE
+! MODULE SUBROUTINE csrMat_ILUT( obj, alu, jlu, ju, ierr, droptol, lfil )
+!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
+!   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: jlu( : ), ju( : )
+!   INTEGER( I4B ), INTENT( INOUT) :: ierr
+!   REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol
+!   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: lfil
+! END SUBROUTINE csrMat_ILUT
+! END INTERFACE
+
+! INTERFACE ILUT
+!   MODULE PROCEDURE csrMat_ILUT
+! END INTERFACE ILUT
+
+! PUBLIC :: ILUT
+
+! !----------------------------------------------------------------------------
+! !                                                              ILUTP@LinAlg
+! !----------------------------------------------------------------------------
+
+! INTERFACE
+! MODULE SUBROUTINE csrMat_ILUTP( obj, alu, jlu, ju, iperm, ierr, droptol, &
+!     & permtol, lfil, mbloc )
+!   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
+!   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: jlu( : ), ju( : ), iperm( : )
+!   INTEGER( I4B ), INTENT( INOUT) :: ierr
+!   REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, permtol
+!   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: lfil, mbloc
+! END SUBROUTINE csrMat_ILUTP
+! END INTERFACE
+
+! INTERFACE ILUTP
+!   MODULE PROCEDURE csrMat_ILUTP
+! END INTERFACE ILUTP
+
+! PUBLIC :: ILUTP
+
+! !----------------------------------------------------------------------------
+! !                                                               ILUD@LinAlg
+! !----------------------------------------------------------------------------
+
+! INTERFACE
+! MODULE SUBROUTINE csrMat_ILUD( obj, alu, jlu, ju, ierr, alpha, droptol )
+!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
+!   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: jlu( : ), ju( : )
+!   INTEGER( I4B ), INTENT( INOUT) :: ierr
+!   REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, alpha
+! END SUBROUTINE csrMat_ILUD
+! END INTERFACE
+
+! INTERFACE ILUD
+!   MODULE PROCEDURE csrMat_ILUD
+! END INTERFACE ILUD
+
+! PUBLIC :: ILUD
+
+! !----------------------------------------------------------------------------
+! !                                                              ILUDP@LinAlg
+! !----------------------------------------------------------------------------
+
+! INTERFACE
+! MODULE SUBROUTINE csrMat_ILUDP( obj, alu, jlu, ju, iperm, ierr, droptol, &
+!     & permtol, alpha, mbloc )
+!   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
+!   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: jlu( : ), ju( : ), iperm( : )
+!   INTEGER( I4B ), INTENT( INOUT) :: ierr
+!   REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, permtol, alpha
+!   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: mbloc
+! END SUBROUTINE csrMat_ILUDP
+! END INTERFACE
+
+! INTERFACE ILUDP
+!   MODULE PROCEDURE csrMat_ILUDP
+! END INTERFACE ILUDP
+
+! PUBLIC :: ILUDP
+
+! !----------------------------------------------------------------------------
+! !                                                            LUSOLVE@LinAlg
+! !----------------------------------------------------------------------------
+
+! ! LUx = y
+! INTERFACE
+! MODULE SUBROUTINE csrMat_LUSOLVE( x, y, alu, jlu, ju )
+!   REAL( DFP ), INTENT( IN ) :: y ( : ), alu( : )
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
+!   INTEGER( I4B ), INTENT( IN ) :: jlu( : ), ju( : )
+! END SUBROUTINE csrMat_LUSOLVE
+! END INTERFACE
+
+! INTERFACE LUSOLVE
+! MODULE PROCEDURE csrMat_LUSOLVE
+! END INTERFACE LUSOLVE
+
+! PUBLIC :: LUSOLVE
+
+! !----------------------------------------------------------------------------
+! !                                                             LUTSOLVE@ILUT
+! !----------------------------------------------------------------------------
+
+! !(LU)^T x = y
+! INTERFACE
+! MODULE SUBROUTINE csrMat_LUTSOLVE( x, y, alu, jlu, ju )
+!   REAL( DFP ), INTENT( IN ) :: y( : ), alu( : )
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
+!   INTEGER( I4B ), INTENT( IN ) :: jlu( : ), ju( : )
+! END SUBROUTINE csrMat_LUTSOLVE
+! END INTERFACE
+
+! INTERFACE LUTSOLVE
+!   MODULE PROCEDURE csrMat_LUTSOLVE
+! END INTERFACE LUTSOLVE
+
+! PUBLIC :: LUTSOLVE
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
 
 END MODULE CSRMatrix_Method

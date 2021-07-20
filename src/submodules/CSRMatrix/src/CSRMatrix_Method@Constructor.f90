@@ -34,7 +34,6 @@ MODULE PROCEDURE csrMat_initiate1
   IF( PRESENT( matrixProp ) ) obj%matrixProp = TRIM( matrixProp )
   ALLOCATE( obj%csr )
   CALL Initiate( obj=obj%csr, ncol=ncol, nrow=nrow, dof=dof )
-  CALL Reallocate( obj%Diag, obj%csr%nrow )
   CALL Reallocate( obj%A, obj%csr%nnz )
   CALL setTotalDimension( obj, 2_I4B )
 END PROCEDURE csrMat_initiate1
@@ -56,7 +55,6 @@ MODULE PROCEDURE csrMat_initiate2
   obj%csrOwnership = .FALSE.
   IF( PRESENT( matrixProp ) ) obj%matrixProp = TRIM( matrixProp )
   obj%csr => csr
-  CALL Reallocate( obj%Diag, obj%csr%nrow )
   CALL Reallocate( obj%A, obj%csr%nnz )
   CALL setTotalDimension( obj, 2_I4B )
 END PROCEDURE csrMat_initiate2
@@ -71,7 +69,6 @@ MODULE PROCEDURE csrMat_initiate3
   ALLOCATE( obj%csr )
   CALL Initiate( obj=obj%csr, IA=IA, JA=JA )
   obj%A = A
-  CALL Reallocate( obj%Diag, obj%csr%nrow )
   CALL setTotalDimension( obj, 2_I4B )
   CALL setSparsity( obj )
 END PROCEDURE csrMat_initiate3
@@ -86,8 +83,6 @@ MODULE PROCEDURE csrMat_Initiate4
   obj%csrOwnership = .FALSE.
   obj%matrixProp = obj2%matrixProp
   IF( ALLOCATED( obj2%A ) ) obj%A = obj2%A
-  IF( ALLOCATED( obj2%Diag ) ) obj%Diag = obj2%Diag
-  IF( ALLOCATED( obj2%Val ) ) obj%Val = obj2%Val
 END PROCEDURE csrMat_Initiate4
 
 !----------------------------------------------------------------------------
@@ -180,9 +175,7 @@ MODULE PROCEDURE csrMat_DeallocateData
   obj%csrOwnership = .FALSE.
   obj%tDimension = 2
   obj%MatrixProp = 'UNSYM'
-  IF( ALLOCATED( obj%val ) ) DEALLOCATE( obj%val )
   IF( ALLOCATED( obj%A ) ) DEALLOCATE( obj%A )
-  IF( ALLOCATED( obj%Diag ) ) DEALLOCATE( obj%Diag )
 END PROCEDURE csrMat_DeallocateData
 
 END SUBMODULE Constructor
