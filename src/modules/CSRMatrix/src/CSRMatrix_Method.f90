@@ -625,6 +625,40 @@ END INTERFACE Add
 PUBLIC :: Add
 
 !----------------------------------------------------------------------------
+!                                                          isSquare@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION csrMat_isSquare( obj ) RESULT( Ans )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  LOGICAL( LGT ) :: ans
+END FUNCTION csrMat_isSquare
+END INTERFACE
+
+INTERFACE isSquare
+  MODULE PROCEDURE csrMat_isSquare
+END INTERFACE isSquare
+
+PUBLIC :: isSquare
+
+!----------------------------------------------------------------------------
+!                                                       isRectangle@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION csrMat_isRectangle( obj ) RESULT( Ans )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  LOGICAL( LGT ) :: ans
+END FUNCTION csrMat_isRectangle
+END INTERFACE
+
+INTERFACE isRectangle
+  MODULE PROCEDURE csrMat_isRectangle
+END INTERFACE isRectangle
+
+PUBLIC :: isRectangle
+
+!----------------------------------------------------------------------------
 !                                                              Convert@Unary
 !----------------------------------------------------------------------------
 
@@ -1424,30 +1458,165 @@ END INTERFACE getILUK
 PUBLIC :: getILUK
 
 !----------------------------------------------------------------------------
-! !                                                              Matvec@MatVec
-! !----------------------------------------------------------------------------
+!                                                    LUSOLVE@LUsolveMethods
+!----------------------------------------------------------------------------
 
-! !> authors: Vikas Sharma, Ph. D.
-! ! date: 14 July 2021
-! ! summary: This routine performs matrix-vector multiplication
-! !
-! !### Introduction
-! ! y = A*x
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 Jul 2021
+! summary: This routine solves the LU x = y
+!
+! This routine solves the system `LU x = y`, given an LU decomposition of a matrix stored in (`ALU, JLU, JU`) modified sparse row format (MSR).
+! This ALU, JLU, JU are created by calling ILUT methods described above
 
-! INTERFACE
-! MODULE SUBROUTINE csrMat_MatVec( obj, x, y, matvectype )
-!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-!   REAL( DFP ), INTENT( IN ) :: x( : )
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: y( : )
-!   CHARACTER( LEN = * ), INTENT( IN ) :: matvectype
-! END SUBROUTINE csrMat_MatVec
-! END INTERFACE
+INTERFACE
+MODULE SUBROUTINE csrMat_LUSOLVE( sol, rhs, alu, jlu, ju )
+  REAL( DFP ), INTENT( INOUT) :: sol( : )
+  REAL( DFP ), INTENT( IN ) :: rhs( : )
+  REAL( DFP ), INTENT( IN ) :: alu( : )
+  INTEGER( I4B ), INTENT( IN ) :: jlu( : )
+  INTEGER( I4B ), INTENT( IN ) :: ju( : )
+END SUBROUTINE csrMat_LUSOLVE
+END INTERFACE
 
-! INTERFACE MatVec
-!   MODULE PROCEDURE csrMat_MatVec
-! END INTERFACE MatVec
+INTERFACE LUSOLVE
+MODULE PROCEDURE csrMat_LUSOLVE
+END INTERFACE LUSOLVE
 
-! PUBLIC :: MatVec
+PUBLIC :: LUSOLVE
+
+!----------------------------------------------------------------------------
+!                                                             LUTSOLVE@ILUT
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 Jul 2021
+! summary: This routine solves the (LU)^T x = y
+!
+! This routine solves the system `(LU)^T x = y`, given an LU decomposition of a matrix stored in (`ALU, JLU, JU`) modified sparse row format (MSR).
+! This ALU, JLU, JU are created by calling ILUT methods described above
+
+INTERFACE
+MODULE SUBROUTINE csrMat_LUTSOLVE( sol, rhs, alu, jlu, ju )
+  REAL( DFP ), INTENT( INOUT) :: sol( : )
+  REAL( DFP ), INTENT( IN ) :: rhs( : )
+  REAL( DFP ), INTENT( IN ) :: alu( : )
+  INTEGER( I4B ), INTENT( IN ) :: jlu( : )
+  INTEGER( I4B ), INTENT( IN ) :: ju( : )
+END SUBROUTINE csrMat_LUTSOLVE
+END INTERFACE
+
+INTERFACE LUTSOLVE
+  MODULE PROCEDURE csrMat_LUTSOLVE
+END INTERFACE LUTSOLVE
+
+PUBLIC :: LUTSOLVE
+
+!----------------------------------------------------------------------------
+!                                                         AMatVec1@MatvecMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 july 2021
+! summary: This routine computes y = A*x
+
+INTERFACE
+MODULE SUBROUTINE csrMat_AMatVec1( obj, x, y )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  REAL( DFP ), INTENT( IN ) :: x( : )
+  REAL( DFP ), INTENT( INOUT ) :: y( : )
+END SUBROUTINE csrMat_AMatVec1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         AMatVec2@MatvecMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 july 2021
+! summary: This routine computes y = A*x, A is in MSR format
+
+INTERFACE
+MODULE SUBROUTINE csrMat_AMatVec2( A, JA, x, y )
+  REAL( DFP ) , INTENT( IN ) :: A( : )
+  INTEGER( I4B ), INTENT( IN ) :: JA( : )
+  REAL( DFP ), INTENT( IN ) :: x( : )
+  REAL( DFP ), INTENT( INOUT ) :: y( : )
+END SUBROUTINE csrMat_AMatVec2
+END INTERFACE
+
+INTERFACE AMatVec
+  MODULE PROCEDURE csrMat_AMatVec1, csrMat_AMatVec2
+END INTERFACE AMatVec
+
+PUBLIC :: AMatVec
+
+!----------------------------------------------------------------------------
+!                                                   AtMatvec@MatvecMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 july 2021
+! summary: This routine computes y = A*x
+
+INTERFACE
+MODULE SUBROUTINE csrMat_AtMatvec( obj, x, y )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  REAL( DFP ), INTENT( IN ) :: x( : )
+  REAL( DFP ), INTENT( INOUT ) :: y( : )
+END SUBROUTINE csrMat_AtMatvec
+END INTERFACE
+
+INTERFACE AtMatvec
+  MODULE PROCEDURE csrMat_AtMatvec
+END INTERFACE AtMatvec
+
+PUBLIC :: AtMatvec
+
+!----------------------------------------------------------------------------
+!                                                          Matvec@MatVec
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 July 2021
+! summary: This routine performs matrix-vector multiplication
+!
+!### Introduction
+! y = A*x
+
+INTERFACE
+MODULE SUBROUTINE csrMat_MatVec1( obj, x, y, transp )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  REAL( DFP ), INTENT( IN ) :: x( : )
+  REAL( DFP ), INTENT( INOUT ) :: y( : )
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: transp
+END SUBROUTINE csrMat_MatVec1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          Matvec@MatVec
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 July 2021
+! summary: This routine performs matrix-vector multiplication
+!
+!### Introduction
+! y = A*x
+
+INTERFACE
+MODULE SUBROUTINE csrMat_MatVec2( A, JA, x, y )
+  REAL( DFP ) , INTENT( IN ) :: A( : )
+  INTEGER( I4B ), INTENT( IN ) :: JA( : )
+  REAL( DFP ), INTENT( IN ) :: x( : )
+  REAL( DFP ), INTENT( INOUT ) :: y( : )
+END SUBROUTINE csrMat_MatVec2
+END INTERFACE
+
+INTERFACE MatVec
+  MODULE PROCEDURE csrMat_MatVec1, csrMat_MatVec2
+END INTERFACE MatVec
+
+PUBLIC :: MatVec
 
 ! !----------------------------------------------------------------------------
 ! !                                                              Matmul@MatVec
@@ -1529,133 +1698,6 @@ PUBLIC :: getILUK
 ! END INTERFACE USolve
 
 ! PUBLIC :: USolve
-
-! !----------------------------------------------------------------------------
-! !                                                                ILUT@LinAlg
-! !----------------------------------------------------------------------------
-
-! !> authors: Vikas Sharma, Ph. D.
-! ! date: 14 July 2021
-! ! summary: Returns incomplete LU decomposition
-
-! INTERFACE
-! MODULE SUBROUTINE csrMat_ILUT( obj, alu, jlu, ju, ierr, droptol, lfil )
-!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
-!   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: jlu( : ), ju( : )
-!   INTEGER( I4B ), INTENT( INOUT) :: ierr
-!   REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol
-!   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: lfil
-! END SUBROUTINE csrMat_ILUT
-! END INTERFACE
-
-! INTERFACE ILUT
-!   MODULE PROCEDURE csrMat_ILUT
-! END INTERFACE ILUT
-
-! PUBLIC :: ILUT
-
-! !----------------------------------------------------------------------------
-! !                                                              ILUTP@LinAlg
-! !----------------------------------------------------------------------------
-
-! INTERFACE
-! MODULE SUBROUTINE csrMat_ILUTP( obj, alu, jlu, ju, iperm, ierr, droptol, &
-!     & permtol, lfil, mbloc )
-!   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
-!   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: jlu( : ), ju( : ), iperm( : )
-!   INTEGER( I4B ), INTENT( INOUT) :: ierr
-!   REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, permtol
-!   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: lfil, mbloc
-! END SUBROUTINE csrMat_ILUTP
-! END INTERFACE
-
-! INTERFACE ILUTP
-!   MODULE PROCEDURE csrMat_ILUTP
-! END INTERFACE ILUTP
-
-! PUBLIC :: ILUTP
-
-! !----------------------------------------------------------------------------
-! !                                                               ILUD@LinAlg
-! !----------------------------------------------------------------------------
-
-! INTERFACE
-! MODULE SUBROUTINE csrMat_ILUD( obj, alu, jlu, ju, ierr, alpha, droptol )
-!   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
-!   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: jlu( : ), ju( : )
-!   INTEGER( I4B ), INTENT( INOUT) :: ierr
-!   REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, alpha
-! END SUBROUTINE csrMat_ILUD
-! END INTERFACE
-
-! INTERFACE ILUD
-!   MODULE PROCEDURE csrMat_ILUD
-! END INTERFACE ILUD
-
-! PUBLIC :: ILUD
-
-! !----------------------------------------------------------------------------
-! !                                                              ILUDP@LinAlg
-! !----------------------------------------------------------------------------
-
-! INTERFACE
-! MODULE SUBROUTINE csrMat_ILUDP( obj, alu, jlu, ju, iperm, ierr, droptol, &
-!     & permtol, alpha, mbloc )
-!   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: alu( : )
-!   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: jlu( : ), ju( : ), iperm( : )
-!   INTEGER( I4B ), INTENT( INOUT) :: ierr
-!   REAL( DFP ), OPTIONAL, INTENT( IN ) :: droptol, permtol, alpha
-!   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: mbloc
-! END SUBROUTINE csrMat_ILUDP
-! END INTERFACE
-
-! INTERFACE ILUDP
-!   MODULE PROCEDURE csrMat_ILUDP
-! END INTERFACE ILUDP
-
-! PUBLIC :: ILUDP
-
-! !----------------------------------------------------------------------------
-! !                                                            LUSOLVE@LinAlg
-! !----------------------------------------------------------------------------
-
-! ! LUx = y
-! INTERFACE
-! MODULE SUBROUTINE csrMat_LUSOLVE( x, y, alu, jlu, ju )
-!   REAL( DFP ), INTENT( IN ) :: y ( : ), alu( : )
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
-!   INTEGER( I4B ), INTENT( IN ) :: jlu( : ), ju( : )
-! END SUBROUTINE csrMat_LUSOLVE
-! END INTERFACE
-
-! INTERFACE LUSOLVE
-! MODULE PROCEDURE csrMat_LUSOLVE
-! END INTERFACE LUSOLVE
-
-! PUBLIC :: LUSOLVE
-
-! !----------------------------------------------------------------------------
-! !                                                             LUTSOLVE@ILUT
-! !----------------------------------------------------------------------------
-
-! !(LU)^T x = y
-! INTERFACE
-! MODULE SUBROUTINE csrMat_LUTSOLVE( x, y, alu, jlu, ju )
-!   REAL( DFP ), INTENT( IN ) :: y( : ), alu( : )
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
-!   INTEGER( I4B ), INTENT( IN ) :: jlu( : ), ju( : )
-! END SUBROUTINE csrMat_LUTSOLVE
-! END INTERFACE
-
-! INTERFACE LUTSOLVE
-!   MODULE PROCEDURE csrMat_LUTSOLVE
-! END INTERFACE LUTSOLVE
-
-! PUBLIC :: LUTSOLVE
 
 !----------------------------------------------------------------------------
 !

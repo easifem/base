@@ -24,6 +24,32 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
+subroutine test0
+  type( csrmatrix_ ) :: obj
+  integer( i4b ) :: i
+  type( IntVector_ ) :: IA, JA, JU
+  type( RealVector_ ) :: A, rhs, sol
+  type( RealMatrix_ ) :: Amat
+  !
+  CALL display( 'testing ILUD')
+  IA = [1,3,6,9,10,13]
+  JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+  A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+  call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+  Amat%val = obj
+  rhs = MATMUL( Amat, [1.0_DFP, 2.0_DFP, 3.0_DFP, 0.0_DFP, 0.0_DFP] )
+  call display( rhs, "rhs = ")
+  call getILUD( obj, A%val, JA%val, JU%val, 0.0_DFP, 1.0D-8 )
+  call initiate( sol, 5 )
+  call LUSOLVE( sol=sol%val, rhs=rhs%val, alu=a%val, jlu=ja%val, ju=ju%val)
+  call display( sol, "solution = ")
+  call deallocateData( obj )
+end subroutine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 subroutine test16
   type( csrmatrix_ ) :: obj, obj2
   integer( i4b ) :: i
@@ -53,7 +79,7 @@ subroutine test15
   type( RealVector_ ) :: A
   type( RealMatrix_ ) :: Amat
   !
-  CALL display( 'testing ILUTP')
+  CALL display( 'testing ILUD')
   IA = [1,3,6,9,10,13]
   JA = [1,4,1,2,4,2,3,5,4,5,3,2]
   A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]

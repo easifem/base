@@ -11,7 +11,10 @@ target_sources(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/CSRMatrix_Method@Constructor.f90
   ${src_path}/CSRMatrix_Method@setMethod.f90
+  ${src_path}/CSRMatrix_Method@getMethod.f90
   ${src_path}/CSRMatrix_Method@IO.f90
   ${src_path}/CSRMatrix_Method@Unary.f90
   ${src_path}/CSRMatrix_Method@ILUTMethods.f90
+  ${src_path}/CSRMatrix_Method@LUsolveMethods.f90
+  ${src_path}/CSRMatrix_Method@MatvecMethods.f90
 )
