@@ -24,7 +24,145 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-subroutine test0
+subroutine test16
+  type( csrmatrix_ ) :: obj, obj2
+  integer( i4b ) :: i
+  type( IntVector_ ) :: IA, JA, JU, IPERM
+  type( RealVector_ ) :: A
+  type( RealMatrix_ ) :: Amat
+  !
+  CALL display( 'testing ILUDP')
+  IA = [1,3,6,9,10,13]
+  JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+  A = 1.0_DFP*[10.0,-1.0,-2.0,0.1,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+  call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+  call getILUDP( obj, obj2, 0.0_DFP, 1.0D-8, 0.1_DFP, 5, IPERM%val )
+  Amat%val=obj2
+  call display( Amat, "ILUDP = " )
+  call deallocateData( obj )
+end subroutine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test15
+  type( csrmatrix_ ) :: obj, obj2
+  integer( i4b ) :: i
+  type( IntVector_ ) :: IA, JA, JU
+  type( RealVector_ ) :: A
+  type( RealMatrix_ ) :: Amat
+  !
+  CALL display( 'testing ILUTP')
+  IA = [1,3,6,9,10,13]
+  JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+  A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+  call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+  call getILUD( obj, obj2, 0.0_DFP, 1.0D-8 )
+  Amat%val=obj2
+  call display( Amat, "ILUD = " )
+  call deallocateData( obj )
+end subroutine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test14
+  type( csrmatrix_ ) :: obj, obj2
+  integer( i4b ) :: i
+  type( IntVector_ ) :: IA, JA, JU, IPERM
+  type( RealVector_ ) :: A
+  type( RealMatrix_ ) :: Amat
+  !
+  CALL display( 'testing ILUTP')
+  IA = [1,3,6,9,10,13]
+  JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+  A = 1.0_DFP*[10.0,-1.0,-2.0,0.1,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+  call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+  call getILUTP( obj, obj2, 5, 1.0D-8, 0.1_DFP, 5, IPERM%val )
+  Amat%val=obj
+  call display( Amat, "SparseMatrix after ILUTP call = " )
+  call display( IPERM, "IPERM = " )
+  Amat%val=obj2
+  call display( Amat, "ILUTP = " )
+  call deallocateData( obj )
+end subroutine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test13
+  type( csrmatrix_ ) :: obj, obj2
+  integer( i4b ) :: i
+  type( IntVector_ ) :: IA, JA, JU, IPERM
+  type( RealVector_ ) :: A
+  type( RealMatrix_ ) :: Amat
+  !
+  CALL display( 'testing ILUTP')
+  IA = [1,3,6,9,10,13]
+  JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+  A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+  call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+  call display( obj, "Sparse matrix = " )
+  call getILUTP( obj, A%val, JA%val, JU%val, 5, 1.0D-8, 0.0_DFP, 6, IPERM%val )
+  call display( A, "A = ")
+  call display( JA, "JA = ")
+  call display( JU, "JU = ")
+  call deallocateData( obj )
+end subroutine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test12
+  type( csrmatrix_ ) :: obj, obj2
+  integer( i4b ) :: i
+  type( IntVector_ ) :: IA, JA, JU
+  type( RealVector_ ) :: A
+  type( RealMatrix_ ) :: Amat
+  !
+  CALL display( 'testing ILUT')
+  IA = [1,3,6,9,10,13]
+  JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+  A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+  call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+  call getILUT( obj, obj2, 5, 1.0D-8 )
+  ! call display( obj2, "Sparse matrix = " )
+  Amat%val = obj2
+  call display( Amat, "LU Sparse matrix = " )
+  call deallocateData( obj )
+end subroutine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test11
+  type( csrmatrix_ ) :: obj, obj2
+  integer( i4b ) :: i
+  type( IntVector_ ) :: IA, JA, JU
+  type( RealVector_ ) :: A
+  CALL display( 'testing ILUT')
+  IA = [1,3,6,9,10,13]
+  JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+  A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+  call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+  call display( obj, "Sparse matrix = " )
+  call getILUT( obj, A%val, JA%val, JU%val, 5, 1.0D-8 )
+  call display( A, "A = ")
+  call display( JA, "JA = ")
+  call display( JU, "JU = ")
+  call deallocateData( obj )
+end subroutine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test10
   type( csrmatrix_ ) :: obj, obj2
   integer( i4b ) :: i
   type( IntVector_ ) :: IA, JA

@@ -53,7 +53,7 @@ MODULE PROCEDURE csrMat_setSparsity3
     IF( m .NE. obj%csr%nnz ) THEN
       tempA = obj%A
       CALL Reallocate( obj%A, obj%csr%nnz )
-      IF( SIZE(obj%A) .LT. obj%csr%nnz ) THEN
+      IF( SIZE(obj%A) .LT. SIZE( tempA ) ) THEN
         obj%A( 1:SIZE( tempA ) ) = tempA( : )
       ELSE
         obj%A( 1:obj%csr%nnz ) =  tempA( 1:obj%csr%nnz )
@@ -63,7 +63,7 @@ MODULE PROCEDURE csrMat_setSparsity3
   ELSE
     CALL Reallocate( obj%A, obj%csr%nnz )
   END IF
-  !
+
   IF( .NOT. obj%csr%isSparsityLock ) CALL setSparsity( obj%csr )
   !> Sort entries according to their column index
   CALL CSORT( obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, &

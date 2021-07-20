@@ -26,6 +26,37 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 subroutine test0
+  type( CSRSparsity_ ) :: obj
+  type( dof_ ) :: dofobj
+  integer( i4b ) :: i
+  call initiate( obj=dofobj, tNodes=[12], names=['K'], &
+    & spaceCompo=[3], timeCompo=[2], storageFMT=DOF_FMT )
+  call initiate( obj, ncol=12*6, nrow=12*6, dof=dofobj )
+  call setsparsity( obj, 1, [1,2,6,5] )
+  call setsparsity( obj, 2, [2,1,3,5,6,7] )
+  call setsparsity( obj, 3, [3,2,4,6,7,8] )
+  call setsparsity( obj, 4, [4,3,7,8] )
+  call setsparsity( obj, 5, [5,1,9,2,6,10] )
+  call setsparsity( obj, 6, [6,2,10,1,5,9,3,7,11] )
+  call setsparsity( obj, 7, [7,6,8,2,3,4,10,11,12] )
+  call setsparsity( obj, 8, [8,4,12,3,7,11] )
+  call setsparsity( obj, 9, [9,5,6,10] )
+  call setsparsity( obj, 10, [10,9,11,5,6,7] )
+  call setsparsity( obj, 11, [11,10,12,6,7,8] )
+  call setsparsity( obj, 12, [12,7,8,11] )
+  call setSparsity(obj)
+  call display( obj, "obj=" )
+  call display( shape(obj), "shape(obj) = " )
+  call display( size(obj), "size(obj) = " )
+  call display( getNNZ(obj), "getNNZ(obj) = " )
+  call DeallocateData( obj )
+end subroutine
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+subroutine test2
   type( csrSparsity_) :: csr
   integer( i4b ) :: i
   type( IntVector_ ) :: IA, JA
