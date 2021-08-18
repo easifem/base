@@ -36,35 +36,15 @@ MODULE PROCEDURE csr_Display
   CALL Display( obj%ncol, "NCOL : ", unitno=i )
   CALL Display( obj%nrow, "NROW : ", unitno=i )
   CALL Display( obj%dof, "DOF : ", unitno=i )
-
   IF( ALLOCATED( obj%IA ) ) THEN
     CALL Display( obj%IA, "IA : ", unitno=i )
   ELSE
     CALL Display( "IA is not allocated" )
   END IF
-
   IF( ALLOCATED( obj%JA ) ) THEN
     CALL Display( obj%JA, "JA : ", unitno=i )
   ELSE
     CALL Display( "JA is not allocated" )
-  END IF
-
-  IF( ALLOCATED( obj%ColSize ) ) THEN
-    CALL Display( obj%ColSize, "ColSize : ", unitno=i )
-  ELSE
-    CALL Display( "ColSize is not allocated" )
-  END IF
-
-  IF( ALLOCATED( obj%RowSize ) ) THEN
-    CALL Display( obj%RowSize, "RowSize : ", unitno=i )
-  ELSE
-    CALL Display( "RowSize is not allocated" )
-  END IF
-
-  IF( ALLOCATED( obj%DiagIndx ) ) THEN
-    CALL Display( obj%DiagIndx, "DiagIndx : ", unitno=i )
-  ELSE
-    CALL Display( "DiagIndx is not allocated" )
   END IF
 END PROCEDURE csr_Display
 

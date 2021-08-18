@@ -56,8 +56,7 @@ MODULE PROCEDURE csr_initiate1
     CALL initiate( obj=obj%dof, tNodes=[nrow], names=['K'], &
       & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )
   END IF
-  CALL Reallocate( obj%IA, nrow + 1, obj%RowSize, nrow, &
-    & obj%ColSize, ncol, obj%DiagIndx, nrow )
+  CALL Reallocate( obj%IA, nrow + 1 )
   IF( ALLOCATED( obj%row ) ) DEALLOCATE( obj%row )
   IF( ALLOCATED( obj%JA ) ) DEALLOCATE( obj%JA )
   obj%isInitiated = .TRUE.
@@ -79,9 +78,6 @@ MODULE PROCEDURE csr_initiate2
   obj%isSparsityLock = obj2%isSparsityLock
   IF( ALLOCATED( obj2%IA ) ) obj%IA = obj2%IA
   IF( ALLOCATED( obj2%JA ) ) obj%JA = obj2%JA
-  IF( ALLOCATED( obj2%ColSize ) ) obj%ColSize = obj2%ColSize
-  IF( ALLOCATED( obj2%RowSize ) ) obj%RowSize = obj2%RowSize
-  IF( ALLOCATED( obj2%DiagIndx ) ) obj%DiagIndx = obj2%DiagIndx
   IF( ALLOCATED( obj%row ) ) THEN
     n = SIZE( obj%row )
     DO ii = 1, n
@@ -143,9 +139,6 @@ END PROCEDURE csr_getNNZ
 MODULE PROCEDURE csr_DeallocateData
   IF( ALLOCATED( obj%IA ) ) DEALLOCATE( obj%IA )
   IF( ALLOCATED( obj%JA ) ) DEALLOCATE( obj%JA )
-  IF( ALLOCATED( obj%ColSize ) ) DEALLOCATE( obj%ColSize )
-  IF( ALLOCATED( obj%RowSize ) ) DEALLOCATE( obj%RowSize )
-  IF( ALLOCATED( obj%DiagIndx ) ) DEALLOCATE( obj%DiagIndx )
   IF( ALLOCATED( obj%Row ) ) DEALLOCATE( obj%Row )
   CALL DeallocateData( obj%dof )
   obj%nnz =  0

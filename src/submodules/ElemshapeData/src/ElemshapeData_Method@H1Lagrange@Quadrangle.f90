@@ -35,14 +35,14 @@ MODULE PROCEDURE Quadrangle_H1_Lagrange
 
   SELECT CASE( refelem%order )
   CASE( 1 )
-    call AllocateData( obj = obj, nsd = refelem%nsd, &
+    CALL AllocateData( obj = obj, nsd = refelem%nsd, &
       & xidim = refelem%xidimension, nns = 4, nips = nips )
-
+    !
     obj%N( 1, : ) = (1.0_DFP - XiEta( 1, : ) )*(1.0_DFP - XiEta( 2, : ) )/4.0_DFP
     obj%N( 2, : ) = (1.0_DFP + XiEta( 1, : ) )*(1.0_DFP - XiEta( 2, : ) )/4.0_DFP
     obj%N( 3, : ) = (1.0_DFP + XiEta( 1, : ) )*(1.0_DFP + XiEta( 2, : ) )/4.0_DFP
     obj%N( 4, : ) = (1.0_DFP - XiEta( 1, : ) )*(1.0_DFP + XiEta( 2, : ) )/4.0_DFP
-
+    !
     obj%dNdXi( 1, 1, : ) = -(1.0_DFP - XiEta( 2, : ))/4.0_DFP
     obj%dNdXi( 1, 2, : ) = -(1.0_DFP - XiEta( 1, : ))/4.0_DFP
     obj%dNdXi( 2, 1, : ) =  (1.0_DFP - XiEta( 2, : ))/4.0_DFP
@@ -51,7 +51,6 @@ MODULE PROCEDURE Quadrangle_H1_Lagrange
     obj%dNdXi( 3, 2, : ) =  (1.0_DFP + XiEta( 1, : ))/4.0_DFP
     obj%dNdXi( 4, 1, : ) = -(1.0_DFP + XiEta( 2, : ))/4.0_DFP
     obj%dNdXi( 4, 2, : ) =  (1.0_DFP - XiEta( 1, : ))/4.0_DFP
-
   CASE DEFAULT
   END SELECT
   DEALLOCATE( XiEta )

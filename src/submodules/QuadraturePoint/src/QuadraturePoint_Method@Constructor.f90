@@ -29,50 +29,54 @@ CONTAINS
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_obj
+MODULE PROCEDURE quad_initiate1
   obj%Points = Points
   obj%tXi = SIZE( Points, 1 ) - 1
     !! No of row minus one
-END PROCEDURE initiate_obj
+END PROCEDURE quad_initiate1
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_obj_txi
+MODULE PROCEDURE quad_initiate2
   obj%tXi = tXi
   CALL Reallocate( obj%Points, tXi + 1, tPoints )
-END PROCEDURE initiate_obj_txi
+END PROCEDURE quad_initiate2
 
 !----------------------------------------------------------------------------
 !                                                            QuadraturePoint
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Constructor1
+MODULE PROCEDURE quad_Constructor1
   obj%Points = Points
   obj%tXi = SIZE( Points, 1 ) - 1
-END PROCEDURE Constructor1
+END PROCEDURE quad_Constructor1
 
-MODULE PROCEDURE Constructor_1
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Pointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_Constructor_1
   ALLOCATE( obj )
   obj%Points = Points
   obj%tXi = SIZE( Points, 1 ) - 1
-END PROCEDURE Constructor_1
+END PROCEDURE quad_Constructor_1
 
 !----------------------------------------------------------------------------
 !                                                            DeallocateData
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Deallocate_Data
+MODULE PROCEDURE quad_DeallocateData
   IF( ALLOCATED( obj%Points ) ) DEALLOCATE( obj%Points )
   obj%tXi = -1
-END PROCEDURE Deallocate_Data
+END PROCEDURE quad_DeallocateData
 
 !----------------------------------------------------------------------------
 !                                                                       SIZE
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE size_obj
+MODULE PROCEDURE quad_Size
   IF( Dims .EQ. 1 ) THEN
     Ans = SIZE( obj%Points, 1 )
   ELSE IF( Dims .EQ. 2 ) THEN
@@ -80,28 +84,36 @@ MODULE PROCEDURE size_obj
   ELSE
     Ans = 0
   END IF
-END PROCEDURE size_obj
+END PROCEDURE quad_Size
+
+!----------------------------------------------------------------------------
+!                                                  getTotalQuadraturePoints
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_getTotalQuadraturePoints
+  Ans = SIZE( obj, 2 )
+END PROCEDURE quad_getTotalQuadraturePoints
 
 !----------------------------------------------------------------------------
 !                                                         getQuadraturePoint
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getQP1
+MODULE PROCEDURE quad_GetQuadraturePoints1
   Point = 0.0_DFP
   Point( 1 : obj%tXi ) = obj%Points( 1 : obj%tXi, Num )
   Weight = obj%Points( obj%tXi + 1, Num )
-END PROCEDURE getQP1
+END PROCEDURE quad_GetQuadraturePoints1
 
 !----------------------------------------------------------------------------
 !                                                         getQuadraturePoint
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getQP2
+MODULE PROCEDURE quad_GetQuadraturePoints2
   INTEGER( I4B ) :: n
   n = SIZE( obj%Points, 2 ) !#column
   CALL Reallocate( Point, 3, n )
   Point( 1 : obj%tXi, 1:n ) = obj%Points( 1 : obj%tXi, 1:n )
   Weight = obj%Points( obj%tXi + 1, 1:n )
-END PROCEDURE getQP2
+END PROCEDURE quad_GetQuadraturePoints2
 
 END SUBMODULE Constructor

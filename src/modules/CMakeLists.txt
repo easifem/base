@@ -18,6 +18,12 @@ include(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
 #GlobalData
 include(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
 
+#MetisInterface
+include(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
+
+#CInterface
+include(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
+
 #Display
 include(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)
 

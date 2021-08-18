@@ -111,6 +111,29 @@ MODULE PROCEDURE csrMat_Initiate5
 END PROCEDURE csrMat_Initiate5
 
 !----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_Initiate6
+  IF( ASSOCIATED( obj%csr ) ) THEN
+    CALL ErrorMSG( &
+      & MSG = "obj%csr is associated.", &
+      & FILE="CSRMatrix_Method@Constructor.f90", &
+      & ROUTINE="csrMat_Initiate6()", &
+      & LINE = __LINE__, &
+      & unitNo = stdout )
+    STOP
+  END IF
+  !
+  ALLOCATE( obj%csr )
+  obj%csr = obj2%csr
+  obj%tDimension = obj2%tDimension
+  obj%csrOwnership = .FALSE.
+  obj%matrixProp = obj2%matrixProp
+  IF( ALLOCATED( obj2%A ) ) obj%A = obj2%A
+END PROCEDURE csrMat_Initiate6
+
+!----------------------------------------------------------------------------
 !                                                                     Shape
 !----------------------------------------------------------------------------
 

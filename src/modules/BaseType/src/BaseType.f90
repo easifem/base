@@ -222,11 +222,11 @@ PUBLIC :: IndexValuePointer_
 !{!pages/DOF.md!}
 
 TYPE :: DOF_
-  INTEGER( I4B ), ALLOCATABLE :: MAP( :, : )
+  INTEGER( I4B ), ALLOCATABLE :: map( :, : )
     !! Encapsulation of information of DOF
-  INTEGER( I4B ), ALLOCATABLE :: ValMap( : )
+  INTEGER( I4B ), ALLOCATABLE :: valMap( : )
     !! Val map
-  INTEGER( I4B ) :: StorageFMT = FMT_NODES
+  INTEGER( I4B ) :: storageFMT = FMT_NODES
     !! Storage format
 END TYPE DOF_
 
@@ -240,6 +240,23 @@ TYPE :: DOFPointer_
 END TYPE DOFPointer_
 
 PUBLIC :: DOFPointer_
+
+!----------------------------------------------------------------------------
+!                                                            SparseOrdering
+!----------------------------------------------------------------------------
+
+TYPE :: SparseMatrixReOrdering_
+  CHARACTER( LEN = 10 ) :: name
+  INTEGER( I4B ), ALLOCATABLE :: PERM(:)
+  INTEGER( I4B ), ALLOCATABLE :: IPERM(:)
+END TYPE SparseMatrixReOrdering_
+
+PUBLIC :: SparseMatrixReOrdering_
+
+TYPE( SparseMatrixReOrdering_ ), PUBLIC, PARAMETER :: &
+  & TypeSparseMatrixReOrdering = &
+  & SparseMatrixReOrdering_( name='', PERM=NULL(), &
+  & IPERM=NULL() )
 
 !----------------------------------------------------------------------------
 !                                                               CSRSparsity_
@@ -265,10 +282,7 @@ PUBLIC :: DOFPointer_
 TYPE :: CSRSparsity_
   INTEGER( I4B ), ALLOCATABLE :: IA( : )
   INTEGER( I4B ), ALLOCATABLE :: JA( : )
-  INTEGER( I4B ), ALLOCATABLE :: ColSize( : )
-  INTEGER( I4B ), ALLOCATABLE :: RowSize( : )
-  INTEGER( I4B ), ALLOCATABLE :: DiagIndx( : )
-  TYPE( IntVector_ ), ALLOCATABLE :: Row( : )
+  TYPE( IntVector_ ), ALLOCATABLE :: row( : )
   INTEGER( I4B ) :: nnz = 0
   INTEGER( I4B ) :: ncol = 0
   INTEGER( I4B ) :: nrow = 0
@@ -281,8 +295,7 @@ END TYPE CSRSparsity_
 PUBLIC :: CSRSparsity_
 
 TYPE( CSRSparsity_ ), PUBLIC, PARAMETER :: TypeCSRSparsity = &
-  & CSRSparsity_( IA=NULL(), JA=NULL(), ColSize=NULL(), RowSize=NULL(), &
-  & DiagIndx=NULL(), Row=NULL() )
+  & CSRSparsity_( IA=NULL(), JA=NULL(), Row=NULL() )
 
 TYPE :: CSRSparsityPointer_
   CLASS( CSRSparsity_ ), POINTER :: ptr => NULL()
@@ -304,7 +317,7 @@ TYPE :: CSRMatrix_
   LOGICAL( LGT ) :: csrOwnership = .FALSE.
     !! This variable, if true, denotes that csr is allocated inside the obj
   INTEGER( I4B ) :: tDimension = 2_I4B
-  CHARACTER( LEN = 5 ) :: MatrixProp = 'UNSYM'
+  CHARACTER( LEN = 5 ) :: matrixProp = 'UNSYM'
   REAL( DFP ), ALLOCATABLE :: A( : )
   TYPE( CSRSparsity_ ), POINTER :: csr => NULL()
 END TYPE CSRMatrix_

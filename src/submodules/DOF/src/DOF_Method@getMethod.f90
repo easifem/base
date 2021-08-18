@@ -454,4 +454,23 @@ MODULE PROCEDURE dof_get1
     & Nptrs = Nptrs, StorageFMT = StorageFMT )
 END PROCEDURE dof_get1
 
+!----------------------------------------------------------------------------
+!                                                                 EQ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_isEqual
+  ans = .TRUE.
+  IF( obj1%storageFMT .NE. obj2%storageFMT ) ans = .FALSE.
+  IF( ANY( obj1%map( :, 2: ) .NE. obj2%map( :, 2: ) ) ) ans = .FALSE.
+  IF( ANY( obj1%valmap .NE. obj2%valmap ) ) ans = .FALSE.
+END PROCEDURE dof_isEqual
+
+!----------------------------------------------------------------------------
+!                                                                 NE
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_isNE
+  ans = .NOT. ( dof_isEqual( obj1, obj2 ) )
+END PROCEDURE dof_isNE
+
 END SUBMODULE GetMethod

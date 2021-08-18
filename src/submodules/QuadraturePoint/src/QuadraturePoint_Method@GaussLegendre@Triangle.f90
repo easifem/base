@@ -20,7 +20,7 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                    Triangle
+!                                                                  Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPTriangle1
@@ -49,7 +49,7 @@ MODULE PROCEDURE getGaussLegendreQPTriangle1
 END PROCEDURE getGaussLegendreQPTriangle1
 
 !----------------------------------------------------------------------------
-!                                                                    Triangle
+!                                                                  Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPTriangle2

@@ -127,6 +127,16 @@ MODULE PROCEDURE dof_initiate5
 END PROCEDURE dof_initiate5
 
 !----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_initiate6
+  obj1%StorageFMT = obj2%StorageFMT
+  IF( ALLOCATED( obj2%valmap ) ) obj1%valmap = obj2%valmap
+  IF( ALLOCATED( obj2%map ) ) obj1%map = obj2%map
+END PROCEDURE dof_initiate6
+
+!----------------------------------------------------------------------------
 !                                                                        DOF
 !----------------------------------------------------------------------------
 

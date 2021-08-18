@@ -246,6 +246,94 @@ MODULE PROCEDURE csrMat_getUpperTriangle
 END PROCEDURE csrMat_getUpperTriangle
 
 !----------------------------------------------------------------------------
+!                                                                PermuteRow
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_PermuteRow
+  INTEGER( I4B ) :: nrow, job
+  nrow = SIZE( obj, 1 ); job = 1
+  IF( PRESENT( isValues ) ) THEN
+    IF( .NOT. isValues ) job = 0
+  END IF
+  CALL initiate( ans, obj, .TRUE. )
+  CALL RPERM( nrow, obj%A, obj%csr%JA, obj%csr%IA, ans%A, ans%csr%JA, &
+    & ans%csr%IA, PERM, job )
+END PROCEDURE csrMat_PermuteRow
+
+!----------------------------------------------------------------------------
+!                                                            PermuteColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_PermuteColumn
+  INTEGER( I4B ) :: nrow, job
+  nrow = SIZE( obj, 1 ); job = 1
+  IF( PRESENT( isValues ) ) THEN
+    IF( .NOT. isValues ) job = 0
+  END IF
+  CALL initiate( ans, obj, .TRUE. )
+  CALL CPERM( nrow, obj%A, obj%csr%JA, obj%csr%IA, ans%A, ans%csr%JA, &
+    & ans%csr%IA, PERM, job )
+END PROCEDURE csrMat_PermuteColumn
+
+!----------------------------------------------------------------------------
+!                                                                   Permute
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_Permute
+  INTEGER( I4B ) :: nrow, job
+  LOGICAL( LGT ) :: isSymPERM
+  !
+  nrow = SIZE( obj, 1 )
+  CALL initiate( ans, obj, .TRUE. )
+  !
+  IF( PRESENT( symPERM ) ) THEN
+    isSymPERM = symPERM
+  ELSE
+    isSymPERM = .FALSE.
+  END IF
+  !
+  IF( PRESENT( rowPERM ) .AND. PRESENT( colPERM ) ) THEN
+    job = 3
+    IF( PRESENT( isValues ) ) THEN
+      IF( .NOT. isValues ) job = 4
+    END IF
+    CALL DPERM( nrow, obj%A, obj%csr%JA, obj%csr%IA, ans%A, &
+      & ans%csr%JA, ans%csr%IA, rowPERM, colPERM, job )
+    RETURN
+  END IF
+  !
+  IF( PRESENT( rowPERM ) ) THEN
+    IF( isSymPERM  ) THEN
+      job = 1
+      IF( PRESENT( isValues ) ) THEN
+        IF( .NOT. isValues ) job = 2
+      END IF
+      CALL DPERM( nrow, obj%A, obj%csr%JA, obj%csr%IA, ans%A, &
+        & ans%csr%JA, ans%csr%IA, rowPERM, rowPERM, job )
+      RETURN
+    ELSE
+      ans = PermuteRow( obj=obj, PERM=rowPERM, isValues = isValues )
+      RETURN
+    END IF
+  END IF
+  !
+  IF( PRESENT( colPERM ) ) THEN
+    IF( isSymPERM  ) THEN
+      job = 1
+      IF( PRESENT( isValues ) ) THEN
+        IF( .NOT. isValues ) job = 2
+      END IF
+      CALL DPERM( nrow, obj%A, obj%csr%JA, obj%csr%IA, ans%A, &
+        & ans%csr%JA, ans%csr%IA, colPERM, colPERM, job )
+      RETURN
+    ELSE
+      ans = PermuteColumn( obj=obj, PERM=colPERM, isValues = isValues )
+      RETURN
+    END IF
+  END IF
+END PROCEDURE csrMat_Permute
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 END SUBMODULE Unary

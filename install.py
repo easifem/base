@@ -46,6 +46,27 @@ else:
       print("====================================")
 
     cmake_def = ""
+    cmake_def += " -DUSE_METIS=ON"
+    if(installRequest("METIS")):
+      print("====================================")
+      cwd = os.getcwd()
+      extpkgs_dir = os.getenv('HOME') + "/easifem-extpkgs"
+      os.makedirs(extpkgs_dir, exist_ok=True)
+      os.chdir( extpkgs_dir )
+      os.system(
+          f"git clone --branch master https://github.com/KarypisLab/METIS.git")
+      os.chdir(extpkgs_dir + "/METIS")
+      os.system(
+          f"git clone --branch master https://github.com/KarypisLab/GKlib.git")
+      metis_def = "config shared=1 prefix=${EASIFEM_EXTPKGS}"
+      # metis_def += " gklib_path=" + os.getcwd() + "/GKlib"
+      print( "METIS_DEF = " + metis_def )
+      os.system( f"make {metis_def}")
+      os.system( f"make install")
+      print("METIS IS INSTALLED [OK!]")
+      os.chdir(cwd)
+      print("====================================")
+
     opt = getOption("USE_OpenMP", ["ON", "OFF"] )
     if( opt == " " ): opt="ON"
     cmake_def += " -DUSE_OpenMP=" + opt
@@ -62,7 +83,6 @@ else:
 
     opt = getOption("CMAKE_INSTALL_PREFIX", ["${PREFIX}"])
     if(opt == " "):
-        #   opt = "${HOME}/PENF"
         opt = "${EASIFEM_BASE}"
     cmake_def += " -DCMAKE_INSTALL_PREFIX=" + opt
 
