@@ -63,6 +63,24 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
+MODULE PURE FUNCTION getGaussLegendreQPQuadrangle1( RefElem, Order)RESULT(obj)
+  INTEGER( I4B ), INTENT( IN ) :: Order
+  TYPE( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
+  TYPE( QuadraturePoint_ ) :: obj
+END FUNCTION getGaussLegendreQPQuadrangle1
+
+MODULE PURE FUNCTION getGaussLegendreQPQuadrangle2( RefElem, NIPS)RESULT(obj)
+  INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
+  TYPE( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
+  TYPE( QuadraturePoint_ ) :: obj
+END FUNCTION getGaussLegendreQPQuadrangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                GaussLegendre@GaussLegendre
+!----------------------------------------------------------------------------
+
+INTERFACE
 MODULE PURE FUNCTION getGaussLegendreQPTriangle2( RefElem, NIPS ) RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
   TYPE( ReferenceTriangle_ ), INTENT( IN ) :: RefElem

@@ -165,6 +165,27 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 25 July 2021
+! summary: Initiate an instance of [[DOF_]] by copying other object
+
+INTERFACE
+MODULE PURE SUBROUTINE dof_initiate6( obj1, obj2 )
+  CLASS( DOF_ ), INTENT( INOUT ) :: obj1
+  CLASS( DOF_ ), INTENT( IN ) :: obj2
+END SUBROUTINE dof_initiate6
+END INTERFACE
+
+INTERFACE ASSIGNMENT( = )
+  MODULE PROCEDURE dof_initiate6
+END INTERFACE ASSIGNMENT( = )
+
+PUBLIC :: ASSIGNMENT( = )
+
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
+
 !> Generic interface to initiate Fortran vectors or [[RealVector_]] from
 ! [[DOF_]] object
 INTERFACE Initiate
@@ -173,7 +194,8 @@ INTERFACE Initiate
     & dof_initiate2, &
     & dof_initiate3, &
     & dof_initiate4, &
-    & dof_initiate5
+    & dof_initiate5, &
+    & dof_initiate6
 END INTERFACE Initiate
 
 PUBLIC :: Initiate
@@ -430,6 +452,29 @@ INTERFACE OPERATOR( .tDOF. )
 END INTERFACE
 
 PUBLIC :: OPERATOR( .tDOF. )
+
+!----------------------------------------------------------------------------
+!                                                       getNodeLoc@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the location of node
+
+INTERFACE
+MODULE PURE FUNCTION dof_getNodeLoc( obj, inode, idof ) RESULT( Ans )
+  TYPE( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  INTEGER( I4B ) :: ans
+END FUNCTION dof_getNodeLoc
+END INTERFACE
+
+INTERFACE getNodeLoc
+  MODULE PROCEDURE dof_getNodeLoc
+END INTERFACE getNodeLoc
+
+PUBLIC :: getNodeLoc
 
 !----------------------------------------------------------------------------
 !                                                           tNames@getMethod
@@ -808,6 +853,42 @@ INTERFACE get
 END INTERFACE get
 
 PUBLIC :: get
+
+!----------------------------------------------------------------------------
+!                                                               EQ@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION dof_isEqual( obj1, obj2 ) RESULT( Ans )
+  TYPE( DOF_ ), INTENT( IN ) :: obj1
+  TYPE( DOF_ ), INTENT( IN ) :: obj2
+  LOGICAL( LGT ) :: ans
+END FUNCTION dof_isEqual
+END INTERFACE
+
+INTERFACE OPERATOR( .EQ. )
+  MODULE PROCEDURE dof_isEqual
+END INTERFACE OPERATOR( .EQ. )
+
+PUBLIC :: OPERATOR( .EQ. )
+
+!----------------------------------------------------------------------------
+!                                                               NE@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION dof_isNE( obj1, obj2 ) RESULT( Ans )
+  TYPE( DOF_ ), INTENT( IN ) :: obj1
+  TYPE( DOF_ ), INTENT( IN ) :: obj2
+  LOGICAL( LGT ) :: ans
+END FUNCTION dof_isNE
+END INTERFACE
+
+INTERFACE OPERATOR( .NE. )
+  MODULE PROCEDURE dof_isNE
+END INTERFACE OPERATOR( .NE. )
+
+PUBLIC :: OPERATOR( .NE. )
 
 !----------------------------------------------------------------------------
 !                                                             set@setMethod

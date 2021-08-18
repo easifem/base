@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AMatvec1
-  CALL AMUX( SIZE( y ), x, y, obj%A, obj%csr%Ja, obj%csr%IA )
+  CALL AMUX( SIZE( y ), x, y, obj%A, obj%csr%JA, obj%csr%IA )
 END PROCEDURE csrMat_AMatvec1
 
 !----------------------------------------------------------------------------

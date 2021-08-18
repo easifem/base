@@ -37,13 +37,13 @@ MODULE PROCEDURE csrMat_getILUT1
   nnz = getNNZ( obj )
   ALLOCATE( JW( 2*s(1) ), W( s(1) + 1 ) )
   CALL Reallocate( JU, s(1) )
-  IWK = 2*nnz
+  IWK = 1.1*nnz
   DO
     CALL Reallocate( ALU, IWK, JLU, IWK )
     CALL ILUT( s(1), obj%A, obj%csr%JA, obj%csr%IA, lfil, droptol, &
       & ALU, JLU, JU, IWK, W, JW, ierr )
     IF( ierr .EQ. -2 .OR. ierr .EQ. -3 ) THEN
-      IWK = 2*IWK
+      IWK = 1.2*IWK
     ELSE
       EXIT
     END IF
@@ -131,14 +131,14 @@ MODULE PROCEDURE csrMat_getILUTP1
   nnz = getNNZ( obj )
   ALLOCATE( JW( 2*s(1) ), W( s(1) ) )
   CALL Reallocate( JU, s(1), IPERM, 2*s(1) )
-  IWK = 2*nnz
+  IWK = 1.1*nnz
   !
   DO
     CALL Reallocate( ALU, IWK, JLU, IWK )
     CALL ILUTP( s(1), obj%A, obj%csr%JA, obj%csr%IA, lfil, droptol, &
       & permtol, mbloc, ALU, JLU, JU, IWK, W, JW, IPERM, ierr )
     IF( ierr .EQ. -2 .OR. ierr .EQ. -3 ) THEN
-      IWK = 2*IWK
+      IWK = 1.2*IWK
     ELSE
       EXIT
     END IF
@@ -230,14 +230,14 @@ MODULE PROCEDURE csrMat_getILUD1
   nnz = getNNZ( obj )
   ALLOCATE( JW( 2*s(1) ), W( 2*s(1) ) )
   CALL Reallocate( JU, s(1) )
-  IWK = 2*nnz
+  IWK = 1.1*nnz
   !
   DO
     CALL Reallocate( ALU, IWK, JLU, IWK )
     CALL ILUD(s(1),obj%A,obj%csr%JA,obj%csr%IA,alpha,droptol,ALU,JLU,JU,&
       & IWK,W,JW,ierr)
     IF( ierr .EQ. -2 .OR. ierr .EQ. -3 ) THEN
-      IWK = 2*IWK
+      IWK = 1.2*IWK
     ELSE
       EXIT
     END IF
@@ -309,14 +309,14 @@ MODULE PROCEDURE csrMat_getILUDP1
   nnz = getNNZ( obj )
   ALLOCATE( JW( 2*s(1) ), W( 2*s(1) ) )
   CALL Reallocate( JU, s(1), IPERM, 2*s(1) )
-  IWK = 2*nnz
+  IWK = 1.1*nnz
   !
   DO
     CALL Reallocate( ALU, IWK, JLU, IWK )
     CALL ILUDP(s(1),obj%A,obj%csr%JA,obj%csr%IA,alpha,droptol,permtol,&
       & mbloc,ALU,JLU,JU,IWK,W,JW,IPERM,ierr)
     IF( ierr .EQ. -2 .OR. ierr .EQ. -3 ) THEN
-      IWK = 2*IWK
+      IWK = 1.2*IWK
     ELSE
       EXIT
     END IF
@@ -390,14 +390,14 @@ MODULE PROCEDURE csrMat_getILUK1
   nnz = getNNZ( obj )
   ALLOCATE( JW( 3*s(1) ), W( s(1) ) )
   CALL Reallocate( JU, s(1) )
-  IWK = 2*nnz
+  IWK = 1.1*nnz
   !
   DO
     CALL Reallocate( ALU, IWK, JLU, IWK, LEVS, IWK )
     CALL ILUK(s(1),obj%A,obj%csr%JA,obj%csr%IA,lfil,ALU,JLU,JU,LEVS,&
       & IWK,W,JW,ierr)
     IF( ierr .EQ. -2 .OR. ierr .EQ. -3 ) THEN
-      IWK = 2*IWK
+      IWK = 1.2*IWK
     ELSE
       EXIT
     END IF

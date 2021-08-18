@@ -35,6 +35,8 @@ PRIVATE
 !### Introduction
 ! 	This subroutine allocates the memory for various matrices in the object. This subroutine belongs to the generic interface called `AllocateData()`.
 !
+! - This routine also belongs to generic routien called `initiate`
+!
 !
 !### Usage
 !
@@ -159,6 +161,34 @@ INTERFACE Display
 END INTERFACE Display
 
 PUBLIC :: Display
+
+!----------------------------------------------------------------------------
+!                                                        Initiate@H1Lagrange
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1_Lagrange( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1_ ), INTENT( IN ) :: continuityType
+  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1_Lagrange
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1_Lagrange
+END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                                     setThickness@setMethod
@@ -1269,25 +1299,6 @@ INTERFACE getUnitNormal
 END INTERFACE getUnitNormal
 
 PUBLIC :: getUnitNormal
-
-!----------------------------------------------------------------------------
-!                                                        Initiate@H1Lagrange
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE H1_Lagrange( obj, Quad, RefElem, &
-  & ContinuityType, InterpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: Quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  CLASS( H1_ ), INTENT( IN ) :: ContinuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: InterpolType
-END SUBROUTINE H1_Lagrange
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE H1_Lagrange
-END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                                                   Contains

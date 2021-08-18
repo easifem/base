@@ -52,28 +52,82 @@ END PROCEDURE csrMat_Display
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_SPY
-  INTEGER( I4B ) :: nrow, ncol, mode, ptitle, nlines
-  INTEGER( I4B ), ALLOCATABLE :: lines( : )
-  REAL( DFP ) :: size
-  CHARACTER( LEN = 2 ) :: munt
+  INTEGER( I4B ):: i, nrow, j, m, ncol, nnz, unitno, a, b
+  CHARACTER( LEN = 256 ) :: scripFile
+  LOGICAL( LGT ) :: isOpen
+
+  OPEN( FILE=trim(filename)//".txt", NEWUNIT=unitno, STATUS="REPLACE", &
+    & ACTION="WRITE" )
   nrow = obj%csr%nrow
   ncol = obj%csr%ncol
-  mode = 0
-  ptitle = 0
-  size = 6
-  munt = 'in'
-  IF( obj%csr%dof%storageFMT .EQ. NODES_FMT ) THEN
-    nlines = 1
-    ALLOCATE( lines( nlines ) )
-    lines = 1
-  ELSE
-    nlines = .tdof. obj%csr%dof
-    ALLOCATE( lines( nlines ) )
-    lines( 1 ) = obj%csr%dof%valmap( 1 )
-    lines( 2:nlines ) = obj%csr%dof%valmap( 2:nlines ) - 1
-  END IF
-  CALL PSPLTM(nrow,ncol,mode,obj%csr%ja,obj%csr%ia,msg,ptitle,size,munt, &
-    & nlines,lines,unitNo)
+  nnz = obj%csr%nnz
+  WRITE( unitNo, "(A, I6)" ) '#m = ', nrow
+  WRITE( unitNo, "(A, I6)" ) '#n = ', ncol
+  WRITE( unitNo, "(A, I8)" ) '#nnz = ', nnz
+  DO i = 1, nrow
+    DO j = obj%csr%IA( i ), obj%csr%IA( i + 1 ) - 1
+      WRITE( unitNo,  '(I6, 2X, I6, 2X, G14.6)') &
+        & obj%csr%JA( j ), i, obj%A( j )
+    END DO
+  END DO
+  CLOSE( unitno )
+  OPEN( FILE=trim(filename)//".gp", NEWUNIT=unitno, STATUS="REPLACE", &
+    & ACTION="WRITE" )
+  WRITE( unitNo, '(A)' ) '# Gnuplot script file'
+  WRITE( unitNo, '(A)' ) '# Author :: Vikas Sharma'
+  WRITE( unitNo, '(A)' ) &
+    & '# From :: EASIFEM'
+  WRITE( unitNo, '(A)' ) &
+    & "set terminal postscript eps enhance color font 'Helvetica,10'"
+  WRITE( unitNo, '(A)' ) &
+    & "set output '"//TRIM(filename)// ".eps'"
+  WRITE( unitNo, '(A)' ) &
+    & "set xlabel 'Col(J)'"
+  WRITE( unitNo, '(A)' ) "set ylabel 'Row(I)'"
+  WRITE( unitNo, '(A)' ) "set size ratio -1"
+  WRITE( unitNo, '(A)' ) &
+    & "set title 'NNZ = "//TRIM( INT2STR( nnz ) )// "'"
+  a = 1 - ncol * 0.1
+  b = ncol + ncol * 0.1
+  WRITE( unitNo, '(A)' ) &
+    & 'set xrange['// TRIM( INT2STR( a ) ) // ':'  &
+    & // TRIM( INT2STR( b ) ) // "]"
+
+  a = 1 - nrow * 0.1
+  b = nrow + nrow * 0.1
+  WRITE( unitNo, '(A)' ) &
+    & 'set yrange['// TRIM( INT2STR( b ) ) // ':'  &
+    & // TRIM( INT2STR( a ) ) // "]"
+
+  WRITE( unitNo, '(A)' ) 'set mxtics 5'
+  WRITE( unitNo, '(A)' ) 'set mytics 5'
+  WRITE( unitNo, '(A)' ) 'set grid xtics ytics mxtics mytics'
+  WRITE( unitNo, "(A)" ) &
+    & "plot" // "'"// TRIM(filename)//".txt" // "' with points pt 7 ps 1.0"
+  CLOSE( unitno )
 END PROCEDURE csrMat_SPY
 
+!----------------------------------------------------------------------------
+!                                                                 IMPORT
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_IMPORT
+  INTEGER( I4B ) :: unitNo, nrow, ncol, nnz, ii
+  INTEGER( I4B ), ALLOCATABLE :: ROW( : ), COL( : ), IA( : ), JA( : )
+  REAL( DFP ), ALLOCATABLE :: A( : ), X( : )
+  TYPE( String ) :: aline
+  !
+  OPEN( FILE=filename, NEWUNIT=unitNo, STATUS="OLD", ACTION="READ" )
+  CALL aline%read_line( unit=unitNo )
+  READ( unitNo, * ) nrow, ncol, nnz
+  ALLOCATE( ROW( nnz ), COL( nnz ), X( nnz ) )
+  DO ii = 1, nnz
+    READ( unitNo, * ) ROW( ii ), COL( ii ), X( ii )
+  END DO
+  ALLOCATE( IA( nrow + 1 ), JA( nnz ), A( nnz ) )
+  CALL COOCSR( nrow, nnz, X, ROW, COL, A, JA, IA )
+  CALL Initiate( obj=obj, A=A, IA=IA, JA=JA )
+  DEALLOCATE( ROW, COL, X, IA, JA, A )
+  CLOSE( unitNo )
+END PROCEDURE csrMat_IMPORT
 END SUBMODULE IO

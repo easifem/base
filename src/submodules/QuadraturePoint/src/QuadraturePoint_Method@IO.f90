@@ -28,7 +28,7 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE display_obj
+MODULE PROCEDURE quad_Display
   INTEGER( I4B ) :: I, j
 
   IF( .NOT. ALLOCATED( obj%Points ) ) RETURN
@@ -48,6 +48,6 @@ MODULE PROCEDURE display_obj
       & obj%Points( 1 : obj%tXi, j )
   END DO
   WRITE( I, "(A)" ) "-----------------------------------------"
-END PROCEDURE display_obj
+END PROCEDURE quad_Display
 
 END SUBMODULE IO

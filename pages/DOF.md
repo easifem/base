@@ -7,9 +7,22 @@ metdata: concrete, high-level
 status: stable
 version: v1.0.0
 
+## Structure
+
+```fortran
+TYPE :: DOF_
+  INTEGER( I4B ), ALLOCATABLE :: map( :, : )
+    !! Encapsulation of information of DOF
+  INTEGER( I4B ), ALLOCATABLE :: valMap( : )
+    !! Val map
+  INTEGER( I4B ) :: storageFMT = FMT_NODES
+    !! Storage format
+END TYPE DOF_
+```
+
 ## Introduction
 
-DOF_ object type is defined to encapsulate the properties of nodal degrees of freedom. There are different ways to understand the concept of DOF. For example, a vector $\textbf{v}$ in three dimension space defines three degrees of freedom at each spatial nodes of the mesh (this corresponds to $v_x, v_y, v_z$.
+`DOF_` object type is defined to encapsulate the properties of nodal degrees of freedom. There are different ways to understand the concept of DOF. For example, a vector $\textbf{v}$ in three dimension space defines three degrees of freedom at each spatial nodes of the mesh (this corresponds to $v_x, v_y, v_z$.
 
 Now, there arises two ways to store the nodal values of the physical variable (here, $\textbf{v}$).
 

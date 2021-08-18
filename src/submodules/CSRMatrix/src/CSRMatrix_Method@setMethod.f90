@@ -47,10 +47,13 @@ END PROCEDURE csrMat_setSparsity2
 MODULE PROCEDURE csrMat_setSparsity3
   REAL( DFP ), ALLOCATABLE :: tempA( : )
   INTEGER( I4B ) :: m
-
+  !
+  IF( .NOT. obj%csr%isSparsityLock ) CALL setSparsity( obj%csr )
   IF( ALLOCATED( obj%A ) ) THEN
     m = SIZE(obj%A)
-    IF( m .NE. obj%csr%nnz ) THEN
+    IF( m .EQ. 0 ) THEN
+      CALL Reallocate( obj%A, obj%csr%nnz )
+    ELSE IF ( m .NE. obj%csr%nnz ) THEN
       tempA = obj%A
       CALL Reallocate( obj%A, obj%csr%nnz )
       IF( SIZE(obj%A) .LT. SIZE( tempA ) ) THEN
@@ -63,18 +66,15 @@ MODULE PROCEDURE csrMat_setSparsity3
   ELSE
     CALL Reallocate( obj%A, obj%csr%nnz )
   END IF
-
-  IF( .NOT. obj%csr%isSparsityLock ) CALL setSparsity( obj%csr )
   !> Sort entries according to their column index
-  CALL CSORT( obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, &
-    & .TRUE. )
+  CALL CSORT( obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, .TRUE. )
   obj%csr%isSorted = .TRUE.
   obj%csr%isSparsityLock = .FALSE.
   CALL setSparsity( obj%csr )
 END PROCEDURE csrMat_setSparsity3
 
 !----------------------------------------------------------------------------
-!                                                                   setValue
+!                                                                   set
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -87,7 +87,7 @@ END PROCEDURE csrMat_setSparsity3
 ! - Usually `val` denotes the element matrix
 ! - Symbolic we are performing following task `obj(nptrs, nptrs)=val`
 
-PURE SUBROUTINE setValueInternally( obj, nptrs, val )
+PURE SUBROUTINE setInternally( obj, nptrs, val )
   TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
   INTEGER( I4B ), INTENT( IN ) :: nptrs( : )
   REAL( DFP ), INTENT( IN ) :: val( :, : )
@@ -123,10 +123,10 @@ PURE SUBROUTINE setValueInternally( obj, nptrs, val )
     END DO
   END DO
   DEALLOCATE( row )
-END SUBROUTINE setValueInternally
+END SUBROUTINE setInternally
 
 !----------------------------------------------------------------------------
-!                                                                 setValue
+!                                                                 set
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_set1
@@ -150,17 +150,53 @@ MODULE PROCEDURE csrMat_set1
         & nns = SIZE( nptrs ), tDOF = tdof )
     END IF
   END SELECT
-  CALL setValueInternally( obj, nptrs, Mat )
+  CALL setInternally( obj, nptrs, Mat )
   IF( ALLOCATED( Mat ) ) DEALLOCATE( Mat )
 END PROCEDURE csrMat_set1
 
 !----------------------------------------------------------------------------
-!                                                                 setValue
+!                                                                 set
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_set2
   obj%A( : ) = val
 END PROCEDURE csrMat_set2
+
+!----------------------------------------------------------------------------
+!                                                                 set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_set3
+  INTEGER( I4B ) :: i,j
+  DO j = obj%csr%IA( iRow ), obj%csr%IA( iRow+1 ) - 1
+    IF( obj%csr%JA(j) .EQ. iColumn ) obj%A( j ) = val
+  END DO
+END PROCEDURE csrMat_set3
+
+!----------------------------------------------------------------------------
+!                                                                 set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_set4
+  INTEGER( I4B ) :: irow, icolumn
+  irow=getNodeLoc(obj=obj%csr%dof, inode=rowNodeNum, idof=rowDOF)
+  icolumn=getNodeLoc(obj=obj%csr%dof, inode=colNodeNum, idof=colDOF)
+  CALL set(obj=obj, irow=irow, icolumn=icolumn, val=val)
+END PROCEDURE csrMat_set4
+
+!----------------------------------------------------------------------------
+!                                                                 set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_set5
+  REAL( DFP ), ALLOCATABLE :: mat( :, : )
+  INTEGER( I4B ) :: tdof
+  tdof = .tdof. obj%csr%dof
+  ALLOCATE( mat( tdof*SIZE(nptrs), tdof*SIZE(nptrs) ) )
+  mat=val
+  CALL setInternally( obj, nptrs, mat )
+  IF( ALLOCATED( mat ) ) DEALLOCATE( mat )
+END PROCEDURE csrMat_set5
 
 !----------------------------------------------------------------------------
 !                                                            addContribution
@@ -211,10 +247,10 @@ PURE SUBROUTINE addContributionInternally( obj, nptrs, val, Scale )
 END SUBROUTINE addContributionInternally
 
 !----------------------------------------------------------------------------
-!                                                           addContribution
+!                                                                     add
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_Add
+MODULE PROCEDURE csrMat_add1
   REAL( DFP ), ALLOCATABLE :: mat( :, : )
   INTEGER( I4B ) :: tdof
   !
@@ -239,7 +275,151 @@ MODULE PROCEDURE csrMat_Add
   END SELECT
   CALL addContributionInternally( obj, nptrs, mat, Scale )
   IF( ALLOCATED( mat ) ) DEALLOCATE( mat )
-END PROCEDURE csrMat_Add
+END PROCEDURE csrMat_add1
+
+!----------------------------------------------------------------------------
+!                                                                     add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_add2
+  obj%A( : ) = obj%A( : ) + scale * val
+END PROCEDURE csrMat_add2
+
+!----------------------------------------------------------------------------
+!                                                                 add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_add3
+  INTEGER( I4B ) :: i,j
+  DO j = obj%csr%IA( iRow ), obj%csr%IA( iRow+1 ) - 1
+    IF( obj%csr%JA(j) .EQ. iColumn ) obj%A( j ) = obj%A( j ) + scale*val
+  END DO
+END PROCEDURE csrMat_add3
+
+!----------------------------------------------------------------------------
+!                                                                 add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_add4
+  INTEGER( I4B ) :: irow, icolumn
+  irow=getNodeLoc(obj=obj%csr%dof, inode=rowNodeNum, idof=rowDOF)
+  icolumn=getNodeLoc(obj=obj%csr%dof, inode=colNodeNum, idof=colDOF)
+  CALL add(obj=obj, irow=irow, icolumn=icolumn, val=val, scale=scale)
+END PROCEDURE csrMat_add4
+
+!----------------------------------------------------------------------------
+!                                                                 add
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_add5
+  REAL( DFP ), ALLOCATABLE :: mat( :, : )
+  INTEGER( I4B ) :: tdof
+  tdof = .tdof. obj%csr%dof
+  ALLOCATE( mat( tdof*SIZE(nptrs), tdof*SIZE(nptrs) ) )
+  mat=val
+  CALL addContributionInternally( obj=obj, nptrs=nptrs, val=mat, scale=scale )
+  DEALLOCATE( mat )
+END PROCEDURE csrMat_add5
+!----------------------------------------------------------------------------
+!                                                                    setRow
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setRow1
+  INTEGER( I4B ) :: a, b
+  IF( SIZE( val ) .LT. obj%csr%ncol .OR. iRow .GT. SIZE(obj, 1) ) THEN
+    CALL ErrorMSG( Msg="SIZE of val vector should be same as number of col &
+    & in sparse matrix or iRow is out of bound", &
+    & File = "CSRMatrix_Method@setMethod.f90", &
+    & Routine = "csrMat_setRow1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  a = obj%csr%IA( iRow )
+  b = obj%csr%IA( iRow+1 ) - 1
+  obj%A( a:b ) = val(obj%csr%JA(a:b))
+END PROCEDURE csrMat_setRow1
+
+!----------------------------------------------------------------------------
+!                                                                    setRow
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setRow2
+  INTEGER( I4B ) :: irow
+  irow = getNodeLoc(obj=obj%csr%dof, inode=inode, idof=idof)
+  CALL csrMat_setRow1( obj=obj, irow=irow, val=val )
+END PROCEDURE csrMat_setRow2
+
+!----------------------------------------------------------------------------
+!                                                                    setRow
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setRow3
+  INTEGER( I4B ) :: a, b
+  a = obj%csr%IA( iRow )
+  b = obj%csr%IA( iRow+1 ) - 1
+  obj%A( a:b ) = val
+END PROCEDURE csrMat_setRow3
+
+!----------------------------------------------------------------------------
+!                                                                    setRow
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setRow4
+  INTEGER( I4B ) :: irow
+  irow = getNodeLoc(obj=obj%csr%dof, inode=inode, idof=idof)
+  CALL csrMat_setRow3( obj=obj, irow=irow, val=val )
+END PROCEDURE csrMat_setRow4
+
+!----------------------------------------------------------------------------
+!                                                                  setColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setColumn1
+  INTEGER( I4B ) :: i, j
+  IF( SIZE( val ) .LT. obj%csr%nrow .OR. iColumn .GT. SIZE(obj, 2) ) THEN
+    CALL ErrorMSG( Msg="SIZE of column vector should be same as number of rows in sparse matrix", &
+    & File = "CSRMatrix_Method@setMethod.f90", &
+    & Routine = "csrMat_setColumn1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  DO i = 1, obj%csr%nrow
+    DO j = obj%csr%IA( i ), obj%csr%IA( i+1 ) - 1
+      IF( obj%csr%JA(j) .EQ. iColumn ) obj%A( j ) = val( i )
+    END DO
+  END DO
+END PROCEDURE csrMat_setColumn1
+
+!----------------------------------------------------------------------------
+!                                                                  setColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setColumn2
+  INTEGER( I4B ) :: icolumn
+  icolumn = getNodeLoc(obj=obj%csr%dof, inode=inode, idof=idof)
+  CALL csrMat_setColumn1( obj=obj, icolumn=icolumn, val=val )
+END PROCEDURE csrMat_setColumn2
+
+!----------------------------------------------------------------------------
+!                                                                 setColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setColumn3
+  INTEGER( I4B ) :: i, j
+  DO i = 1, obj%csr%nrow
+    DO j = obj%csr%IA( i ), obj%csr%IA( i+1 ) - 1
+      IF( obj%csr%JA(j) .EQ. iColumn ) obj%A( j ) = val
+    END DO
+  END DO
+END PROCEDURE csrMat_setColumn3
+
+!----------------------------------------------------------------------------
+!                                                                  setColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setColumn4
+  INTEGER( I4B ) :: icolumn
+  icolumn = getNodeLoc(obj=obj%csr%dof, inode=inode, idof=idof)
+  CALL csrMat_setColumn3( obj=obj, icolumn=icolumn, val=val )
+END PROCEDURE csrMat_setColumn4
 
 !----------------------------------------------------------------------------
 !

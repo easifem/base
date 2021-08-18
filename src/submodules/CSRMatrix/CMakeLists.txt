@@ -17,4 +17,4 @@ target_sources(
   ${src_path}/CSRMatrix_Method@ILUTMethods.f90
   ${src_path}/CSRMatrix_Method@LUsolveMethods.f90
   ${src_path}/CSRMatrix_Method@MatvecMethods.f90
-)
+  ${src_path}/CSRMatrix_Method@ReorderingMethod.f90 )

@@ -23,8 +23,10 @@ MODULE CSRMatrix_Method
 USE GlobalData
 USE BaseType
 IMPLICIT NONE
-
 PRIVATE
+
+INTEGER( I4B ), PARAMETER, PUBLIC :: SPARSE_FMT_CSR = 0
+INTEGER( I4B ), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
@@ -49,7 +51,7 @@ PRIVATE
 
 INTERFACE
 MODULE SUBROUTINE csrMat_initiate1( obj, ncol, nrow, dof, matrixProp )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: ncol
     !! number of columns in sparse matrix
   INTEGER( I4B ), INTENT( IN ) :: nrow
@@ -94,7 +96,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE csrMat_initiate2( obj, csr, matrixProp )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   TYPE( CSRSparsity_ ), TARGET, INTENT( IN ) :: csr
     !! number of columns in sparse matrix
     !! number of rows in sparse matrix
@@ -117,7 +119,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE csrMat_initiate3( obj, A, IA, JA, MatrixProp )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: A( : )
   INTEGER( I4B ), INTENT( IN ) :: IA( : ), JA( : )
   CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: MatrixProp
@@ -161,9 +163,26 @@ MODULE SUBROUTINE csrMat_initiate5( obj, obj2, i1, i2, j1, j2 )
 END SUBROUTINE csrMat_initiate5
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                      Initiate@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 July 2021
+! summary: This routine initiates an instance of sparse matrix by copying
+! the content of another object obj2
+
+INTERFACE
+MODULE SUBROUTINE csrMat_initiate6( obj, obj2, hardCopy )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj2
+  LOGICAL( LGT ), INTENT( IN ) :: hardCopy
+END SUBROUTINE csrMat_initiate6
+END INTERFACE
+
 INTERFACE Initiate
   MODULE PROCEDURE csrMat_initiate1, csrMat_initiate2, csrMat_initiate3, &
-    & csrMat_initiate4, csrMat_initiate5
+    & csrMat_initiate4, csrMat_initiate5, csrMat_initiate6
 END INTERFACE Initiate
 
 PUBLIC :: Initiate
@@ -307,7 +326,7 @@ PUBLIC :: getNNZ
 
 INTERFACE
 MODULE SUBROUTINE csrMat_AllocateData( obj, Dims, MatrixProp )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ),  INTENT( IN ) :: Dims( 2 )
   CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: MatrixProp
 END SUBROUTINE csrMat_AllocateData
@@ -329,7 +348,7 @@ PUBLIC :: AllocateData
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_DeallocateData( obj )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE csrMat_DeallocateData
 END INTERFACE
 
@@ -375,10 +394,9 @@ PUBLIC :: Display
 ! summary: 	This subroutine prints the structure of sparse matrix in pdf format.
 
 INTERFACE
-MODULE SUBROUTINE csrMat_SPY( obj, msg, unitNo )
+MODULE SUBROUTINE csrMat_SPY( obj, filename )
   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ) ::  unitNo
+  CHARACTER( LEN = * ), INTENT( IN ) :: filename
 END SUBROUTINE csrMat_SPY
 END INTERFACE
 
@@ -387,6 +405,28 @@ INTERFACE SPY
 END INTERFACE SPY
 
 PUBLIC :: SPY
+
+!----------------------------------------------------------------------------
+!                                                                 IMPORT@IO
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 28 Jul 2021
+! summary: Import sparse matrix from a file
+
+INTERFACE
+MODULE SUBROUTINE csrMat_Import( obj, fileName, matFormat )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: fileName
+  INTEGER( I4B ), INTENT( IN ) :: matFormat
+END SUBROUTINE csrMat_Import
+END INTERFACE
+
+INTERFACE Import
+  MODULE PROCEDURE csrMat_Import
+END INTERFACE Import
+
+PUBLIC :: Import
 
 !----------------------------------------------------------------------------
 !                                                      setSparsity@setMethod
@@ -433,7 +473,7 @@ PUBLIC :: SPY
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setSparsity1( obj, row, col )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: row
   INTEGER( I4B ), INTENT( IN ) :: col( : )
 END SUBROUTINE csrMat_setSparsity1
@@ -481,7 +521,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setSparsity2( obj, row, col )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: row( : )
   TYPE( IntVector_ ), INTENT( IN ) :: col( : )
 END SUBROUTINE csrMat_setSparsity2
@@ -536,7 +576,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setSparsity3( obj )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE csrMat_setSparsity3
 END INTERFACE
 
@@ -564,7 +604,7 @@ PUBLIC :: setSparsity
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_set1( obj, nptrs, val, storageFMT )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: nptrs( : )
   REAL( DFP ), INTENT( IN ) :: val( :, : )
   INTEGER( I4B ), INTENT( IN ) :: storageFMT
@@ -577,17 +617,91 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
-! summary: 	This subroutine set all values of [[sparsematrix_]] to given scalar value
+! summary: 	This subroutine set all values of sparse matrix to given scalar value
+!
+!### Introduction
+! This routine sets all values of sparse matrix to given value.
+! This routine is used to define an assignment operator. Therefore, we can call this routine by `obj=val`.
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_set2( obj, Val )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val
 END SUBROUTINE csrMat_set2
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                             set@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This subroutine set a single entry of sparse matrix
+!
+!### Introduction
+! This subroutine sets a single entry of sparse matrix.
+! Before using this subroutien the user should be aware of the storage pattern of degree of freedom. However, if total number of degrees of freedom is one then there is not need to worry. In my opinion, this routine should be avoided by general user.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE csrMat_set3( obj, irow, icolumn, Val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: irow
+  INTEGER( I4B ), INTENT( IN ) :: icolumn
+  REAL( DFP ), INTENT( IN ) :: Val
+END SUBROUTINE csrMat_set3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             set@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This subroutine sets the specific row and column entry to a given value
+!
+!### Introduction
+! This routine sets the specific row and column entry to a given value.
+! The row and column index is calculated by using (rowNodeNum, rowDOF) and (colNodeNum, colDOF), respectively.
+! After computing the irow and icolumn (internally) this routine calls, `csrMat_set3`.
+
+INTERFACE
+MODULE PURE SUBROUTINE csrMat_set4( obj, rowNodeNum, colNodeNum, rowDOF, &
+  & colDOF, Val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: rowNodeNum
+  INTEGER( I4B ), INTENT( IN ) :: colNodeNum
+  INTEGER( I4B ), INTENT( IN ) :: rowDOF
+  INTEGER( I4B ), INTENT( IN ) :: colDOF
+  REAL( DFP ), INTENT( IN ) :: Val
+END SUBROUTINE csrMat_set4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            set@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: This subroutine sets selected values in sparse matrix
+!
+!### Introduction
+!
+! This subroutine sets selected values of the sparse matrix to the scalar value `val`
+!
+! This routine corresponds to `obj(nptrs) = val`
+
+INTERFACE
+MODULE PURE SUBROUTINE csrMat_set5( obj, nptrs, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nptrs( : )
+  REAL( DFP ), INTENT( IN ) :: val
+END SUBROUTINE csrMat_set5
+END INTERFACE
+
 INTERFACE set
-  MODULE PROCEDURE csrMat_set1, csrMat_set2
+  MODULE PROCEDURE csrMat_set1, csrMat_set2, csrMat_set3, csrMat_set4, &
+    & csrMat_set5
 END INTERFACE set
 
 PUBLIC :: set
@@ -605,24 +719,280 @@ END INTERFACE ASSIGNMENT( = )
 ! summary: This subroutine add contribution
 
 INTERFACE
-MODULE PURE SUBROUTINE csrMat_Add( obj, Nptrs, Val, Scale, StorageFMT )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Nptrs( : )
+MODULE PURE SUBROUTINE csrMat_add1( obj, nptrs, val, scale, storageFMT )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nptrs( : )
     !! Node numbers
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+  REAL( DFP ), INTENT( IN ) :: val( :, : )
     !! Element finite element matrix
-  REAL( DFP ), INTENT( IN ) :: Scale
+  REAL( DFP ), INTENT( IN ) :: scale
     !! Scale is used to scale the Val before adding it to the obj
-  INTEGER( I4B ), INTENT( IN ) :: StorageFMT
+  INTEGER( I4B ), INTENT( IN ) :: storageFMT
     !! Storage format of element finite matrix
-END SUBROUTINE csrMat_Add
+END SUBROUTINE csrMat_add1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             add@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This subroutine adds all values of sparse matrix to given scalar value
+!
+!### Introduction
+! This routine adds all values of sparse matrix to given value.
+! This routine signifies `obj=obj+scale*val`.
+
+INTERFACE
+MODULE PURE SUBROUTINE csrMat_add2( obj, val, scale )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  REAL( DFP ), INTENT( IN ) :: val
+  REAL( DFP ), INTENT( IN ) :: scale
+END SUBROUTINE csrMat_add2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             add@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This subroutine adds a single entry of sparse matrix
+!
+!### Introduction
+! This subroutine adds a single entry of sparse matrix.
+! Before using this subroutien the user should be aware of the storage pattern of degree of freedom. However, if total number of degrees of freedom is one then there is not need to worry. In my opinion, this routine should be avoided by general user.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE csrMat_add3( obj, irow, icolumn, val, scale )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: irow
+  INTEGER( I4B ), INTENT( IN ) :: icolumn
+  REAL( DFP ), INTENT( IN ) :: val
+  REAL( DFP ), INTENT( IN ) :: scale
+END SUBROUTINE csrMat_add3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             add@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This subroutine sets the specific row and column entry to a given value
+!
+!### Introduction
+! This routine sets the specific row and column entry to a given value.
+! The row and column index is calculated by using (rowNodeNum, rowDOF) and (colNodeNum, colDOF), respectively.
+! After computing the irow and icolumn (internally) this routine calls, `csrMat_set3`.
+
+INTERFACE
+MODULE PURE SUBROUTINE csrMat_add4( obj, rowNodeNum, colNodeNum, rowDOF, &
+  & colDOF, val, scale )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: rowNodeNum
+  INTEGER( I4B ), INTENT( IN ) :: colNodeNum
+  INTEGER( I4B ), INTENT( IN ) :: rowDOF
+  INTEGER( I4B ), INTENT( IN ) :: colDOF
+  REAL( DFP ), INTENT( IN ) :: val
+  REAL( DFP ), INTENT( IN ) :: scale
+END SUBROUTINE csrMat_add4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            add@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: This subroutine add the selected value in sparse matrix
+
+INTERFACE
+MODULE PURE SUBROUTINE csrMat_add5( obj, nptrs, val, scale )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nptrs( : )
+  REAL( DFP ), INTENT( IN ) :: val
+  REAL( DFP ), INTENT( IN ) :: scale
+END SUBROUTINE csrMat_add5
 END INTERFACE
 
 INTERFACE Add
-  MODULE PROCEDURE csrMat_Add
+  MODULE PROCEDURE csrMat_add1, csrMat_add2, csrMat_add3, csrMat_add4, csrMat_add5
 END INTERFACE Add
 
 PUBLIC :: Add
+
+!----------------------------------------------------------------------------
+!                                                          setRow@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine sets the the row of a sparse matrix
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setRow1( obj, irow, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: irow
+  REAL( DFP ), INTENT( IN ) :: val( : )
+END SUBROUTINE csrMat_setRow1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          setRow@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine set the row of a sparse matrix
+!
+!### Introduction
+! This routine sets the row of a sparse matrix. The row index is calculated using the inode and idof.
+! inode is the node number
+! idof is the degree of freedom number
+! irow calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setRow2( obj, inode, idof, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( IN ) :: val( : )
+END SUBROUTINE csrMat_setRow2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          setRow@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine sets the the row of a sparse matrix
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setRow3( obj, irow, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: irow
+  REAL( DFP ), INTENT( IN ) :: val
+END SUBROUTINE csrMat_setRow3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          setRow@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine set the row of a sparse matrix
+!
+!### Introduction
+! This routine sets the row of a sparse matrix. The row index is calculated using the inode and idof.
+! inode is the node number
+! idof is the degree of freedom number
+! irow calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setRow4( obj, inode, idof, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( IN ) :: val
+END SUBROUTINE csrMat_setRow4
+END INTERFACE
+
+INTERFACE setRow
+  MODULE PROCEDURE csrMat_setRow1, csrMat_setRow2, csrMat_setRow3, &
+    & csrMat_setRow4
+END INTERFACE setRow
+
+PUBLIC :: setRow
+
+!----------------------------------------------------------------------------
+!                                                       setColumn@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine sets the Column of a sparse matrix
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setColumn1( obj, iColumn, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: iColumn
+  REAL( DFP ), INTENT( IN ) :: val( : )
+END SUBROUTINE csrMat_setColumn1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       setColumn@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine sets the Column of a sparse matrix
+!
+!### Introduction
+! This routine sets the Column of a sparse matrix. The Column index is calculated using the inode and idof.
+! inode is the node number
+! idof is the degree of freedom number
+! iColumn calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setColumn2( obj, inode, idof, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( IN ) :: val( : )
+END SUBROUTINE csrMat_setColumn2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       setColumn@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine sets the Column of a sparse matrix
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setColumn3( obj, iColumn, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: iColumn
+  REAL( DFP ), INTENT( IN ) :: val
+END SUBROUTINE csrMat_setColumn3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       setColumn@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine sets the Column of a sparse matrix
+!
+!### Introduction
+! This routine sets the Column of a sparse matrix. The Column index is calculated using the inode and idof.
+! inode is the node number
+! idof is the degree of freedom number
+! iColumn calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setColumn4( obj, inode, idof, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( IN ) :: val
+END SUBROUTINE csrMat_setColumn4
+END INTERFACE
+
+INTERFACE setColumn
+  MODULE PROCEDURE csrMat_setColumn1, csrMat_setColumn2, csrMat_setColumn3,&
+    & csrMat_setColumn4
+END INTERFACE setColumn
+
+PUBLIC :: setColumn
 
 !----------------------------------------------------------------------------
 !                                                          isSquare@getMethod
@@ -657,6 +1027,104 @@ INTERFACE isRectangle
 END INTERFACE isRectangle
 
 PUBLIC :: isRectangle
+
+!----------------------------------------------------------------------------
+!                                                          getRow@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the row of a sparse matrix
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getRow1( obj, irow, val, scale, addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: irow
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getRow1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          getRow@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the row of a sparse matrix
+!
+!### Introduction
+! This routine returns the row of a sparse matrix. The row index is calculated using the inode and idof.
+! inode is the node number
+! idof is the degree of freedom number
+! irow calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getRow2( obj, inode, idof, val, scale, addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getRow2
+END INTERFACE
+
+INTERFACE getRow
+  MODULE PROCEDURE csrMat_getRow1, csrMat_getRow2
+END INTERFACE getRow
+
+PUBLIC :: getRow
+
+!----------------------------------------------------------------------------
+!                                                       getColumn@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the Column of a sparse matrix
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getColumn1( obj, iColumn, val, scale, addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: iColumn
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getColumn1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       getColumn@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the Column of a sparse matrix
+!
+!### Introduction
+! This routine returns the Column of a sparse matrix. The Column index is calculated using the inode and idof.
+! inode is the node number
+! idof is the degree of freedom number
+! iColumn calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getColumn2( obj, inode, idof, val, scale, addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getColumn2
+END INTERFACE
+
+INTERFACE getColumn
+  MODULE PROCEDURE csrMat_getColumn1, csrMat_getColumn2
+END INTERFACE getColumn
+
+PUBLIC :: getColumn
 
 !----------------------------------------------------------------------------
 !                                                              Convert@Unary
@@ -696,7 +1164,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE crsMat_Convert( To, From )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: To( :, : )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: To( :, : )
   TYPE( CSRMatrix_ ), INTENT( IN ) :: From
 END SUBROUTINE crsMat_Convert
 END INTERFACE
@@ -777,7 +1245,7 @@ PUBLIC :: RemoveDuplicates
 
 INTERFACE
 MODULE SUBROUTINE csrMat_Clean( obj, isValues, ExtraOption )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isValues
     !! If .TRUE. then values will be touched, otherwise they remain
     !! untouched by this subroutine
@@ -806,7 +1274,7 @@ PUBLIC :: Clean
 INTERFACE
 MODULE SUBROUTINE csrMat_Copy( From, To )
   TYPE( CSRMatrix_ ), INTENT( IN ) :: From
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: To
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: To
 END SUBROUTINE csrMat_Copy
 END INTERFACE
 
@@ -1034,7 +1502,81 @@ END INTERFACE getUpperTriangle
 PUBLIC :: getUpperTriangle
 
 !----------------------------------------------------------------------------
-!                                                        getILUT@ILUTMethods
+!                                                         PermuteRow@Unary
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 28 July 2021
+! summary: Permute the rows of sparse matrix
+
+INTERFACE
+MODULE FUNCTION csrMat_permuteRow( obj, PERM, isValues ) &
+  & RESULT( ans )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: PERM( : )
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isValues
+  TYPE( CSRMatrix_ ) :: ans
+END FUNCTION csrMat_permuteRow
+END INTERFACE
+
+INTERFACE PermuteRow
+  MODULE PROCEDURE csrMat_permuteRow
+END INTERFACE PermuteRow
+
+PUBLIC :: PermuteRow
+
+!----------------------------------------------------------------------------
+!                                                        PermuteColumn@Unary
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 28 July 2021
+! summary: Permute the columns of sparse matrix
+
+INTERFACE
+MODULE FUNCTION csrMat_permuteColumn( obj, PERM, isValues ) &
+  & RESULT( ans )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: PERM( : )
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isValues
+  TYPE( CSRMatrix_ ) :: ans
+END FUNCTION csrMat_permuteColumn
+END INTERFACE
+
+INTERFACE PermuteColumn
+  MODULE PROCEDURE csrMat_permuteColumn
+END INTERFACE PermuteColumn
+
+PUBLIC :: PermuteColumn
+
+!----------------------------------------------------------------------------
+!                                                             Permute@Unary
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 28 July 2021
+! summary: Permute the columns of sparse matrix
+
+INTERFACE
+MODULE FUNCTION csrMat_permute( obj, rowPERM, colPERM, &
+  & isValues, symPERM ) RESULT( ans )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: rowPERM( : )
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: colPERM( : )
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isValues
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: symPERM
+  TYPE( CSRMatrix_ ) :: ans
+END FUNCTION csrMat_permute
+END INTERFACE
+
+INTERFACE Permute
+  MODULE PROCEDURE csrMat_permute
+END INTERFACE Permute
+
+PUBLIC :: Permute
+
+!----------------------------------------------------------------------------
+!                                                       getILUT@ILUTMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1070,7 +1612,7 @@ END SUBROUTINE csrMat_getILUT1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                        getILUT@ILUTMethods
+!                                                       getILUT@ILUTMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1110,7 +1652,7 @@ END INTERFACE getILUT
 PUBLIC :: getILUT
 
 !----------------------------------------------------------------------------
-!                                                       getILUTP@ILUTMethods
+!                                                      getILUTP@ILUTMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1165,7 +1707,7 @@ END SUBROUTINE csrMat_getILUTP1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                       getILUTP@ILUTMethods
+!                                                      getILUTP@ILUTMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1470,7 +2012,7 @@ PUBLIC :: getILUK
 
 INTERFACE
 MODULE SUBROUTINE csrMat_LUSOLVE( sol, rhs, alu, jlu, ju )
-  REAL( DFP ), INTENT( INOUT) :: sol( : )
+  REAL( DFP ), INTENT( INOUT ) :: sol( : )
   REAL( DFP ), INTENT( IN ) :: rhs( : )
   REAL( DFP ), INTENT( IN ) :: alu( : )
   INTEGER( I4B ), INTENT( IN ) :: jlu( : )
@@ -1497,7 +2039,7 @@ PUBLIC :: LUSOLVE
 
 INTERFACE
 MODULE SUBROUTINE csrMat_LUTSOLVE( sol, rhs, alu, jlu, ju )
-  REAL( DFP ), INTENT( INOUT) :: sol( : )
+  REAL( DFP ), INTENT( INOUT ) :: sol( : )
   REAL( DFP ), INTENT( IN ) :: rhs( : )
   REAL( DFP ), INTENT( IN ) :: alu( : )
   INTEGER( I4B ), INTENT( IN ) :: jlu( : )
@@ -1512,7 +2054,7 @@ END INTERFACE LUTSOLVE
 PUBLIC :: LUTSOLVE
 
 !----------------------------------------------------------------------------
-!                                                         AMatVec1@MatvecMethods
+!                                                    AMatVec1@MatvecMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1528,7 +2070,7 @@ END SUBROUTINE csrMat_AMatVec1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                         AMatVec2@MatvecMethods
+!                                                    AMatVec2@MatvecMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1551,7 +2093,7 @@ END INTERFACE AMatVec
 PUBLIC :: AMatVec
 
 !----------------------------------------------------------------------------
-!                                                   AtMatvec@MatvecMethods
+!                                                     AtMatvec@MatvecMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1573,7 +2115,7 @@ END INTERFACE AtMatvec
 PUBLIC :: AtMatvec
 
 !----------------------------------------------------------------------------
-!                                                          Matvec@MatVec
+!                                                             Matvec@MatVec
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1593,7 +2135,7 @@ END SUBROUTINE csrMat_MatVec1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          Matvec@MatVec
+!                                                             Matvec@MatVec
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1619,7 +2161,7 @@ END INTERFACE MatVec
 PUBLIC :: MatVec
 
 ! !----------------------------------------------------------------------------
-! !                                                              Matmul@MatVec
+! !                                                           Matmul@MatVec
 ! !----------------------------------------------------------------------------
 
 ! !> authors: Vikas Sharma, Ph. D.
@@ -1642,7 +2184,7 @@ PUBLIC :: MatVec
 ! PUBLIC :: Matmul
 
 ! !----------------------------------------------------------------------------
-! !                                                              LSolve@LinAlg
+! !                                                          LSolve@LinAlg
 ! !----------------------------------------------------------------------------
 
 ! !> authors: Vikas Sharma, Ph. D.
@@ -1659,7 +2201,7 @@ PUBLIC :: MatVec
 !     !! Sparse matrix
 !   REAL( DFP ), INTENT( IN ) :: y( : )
 !     !! This contains RHS
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: x( : )
 !     !! This contains solution
 ! END SUBROUTINE csrMat_LSolve
 ! END INTERFACE
@@ -1671,7 +2213,7 @@ PUBLIC :: MatVec
 ! PUBLIC :: LSolve
 
 ! !----------------------------------------------------------------------------
-! !                                                              USolve@LinAlg
+! !                                                           USolve@LinAlg
 ! !----------------------------------------------------------------------------
 
 ! !> authors: Vikas Sharma, Ph. D.
@@ -1688,7 +2230,7 @@ PUBLIC :: MatVec
 !     !! Sparse matrix in upper triangle form
 !   REAL( DFP ), INTENT( IN ) :: y( : )
 !     !! RHS
-!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: x( : )
+!   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: x( : )
 !     !! Solution
 ! END SUBROUTINE csrMat_USolve
 ! END INTERFACE
@@ -1698,6 +2240,62 @@ PUBLIC :: MatVec
 ! END INTERFACE USolve
 
 ! PUBLIC :: USolve
+
+!----------------------------------------------------------------------------
+!                                             NestedDissect@ReoderingMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 28 July 2021
+! summary: Nested dissection using Metis library
+INTERFACE
+MODULE SUBROUTINE csrMat_NestedDissect( reorder, csrMat )
+  TYPE( SparseMatrixReOrdering_ ), INTENT( INOUT ) :: reorder
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: csrMat
+END SUBROUTINE csrMat_NestedDissect
+END INTERFACE
+
+INTERFACE NestedDissect
+  MODULE PROCEDURE csrMat_NestedDissect
+END INTERFACE NestedDissect
+
+PUBLIC :: NestedDissect
+
+!----------------------------------------------------------------------------
+!                                                   Display@ReorderingMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 28 July 2021
+! summary: Display the content of SparseMatrixReordering
+INTERFACE
+MODULE SUBROUTINE csrMat_reorderDisplay( obj, msg, unitNo )
+  TYPE( SparseMatrixReOrdering_ ), INTENT( IN ) :: obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: msg
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitNo
+END SUBROUTINE csrMat_reorderDisplay
+END INTERFACE
+
+INTERFACE Display
+  MODULE PROCEDURE csrMat_reorderDisplay
+END INTERFACE Display
+
+!----------------------------------------------------------------------------
+!                                                   Permute@ReorderingMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION csrMat_Permute2( obj, rowPERM, colPERM ) RESULT( Ans )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  TYPE( SparseMatrixReOrdering_ ), INTENT( IN ) :: rowPERM
+  TYPE( SparseMatrixReOrdering_ ), INTENT( IN ) :: colPERM
+  TYPE( CSRMatrix_ ) :: ans
+END FUNCTION csrMat_Permute2
+END INTERFACE
+
+INTERFACE Permute
+  MODULE PROCEDURE csrMat_Permute2
+END INTERFACE Permute
 
 !----------------------------------------------------------------------------
 !

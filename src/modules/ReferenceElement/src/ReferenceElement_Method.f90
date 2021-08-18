@@ -50,7 +50,7 @@ END SUBROUTINE display_ref_topo
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                        Display@Constructor
+!                                                                Display@IO
 !----------------------------------------------------------------------------
 
 INTERFACE Display
@@ -89,15 +89,15 @@ PUBLIC :: Display
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_topology( Nptrs, Name ) RESULT( obj )
+MODULE PURE FUNCTION refelem_ReferenceTopology( Nptrs, Name ) RESULT( obj )
   TYPE( ReferenceTopology_ ) :: obj
   INTEGER( I4B), INTENT( IN ) :: Nptrs( : )
   INTEGER( I4B), INTENT( IN ) :: Name
-END FUNCTION reference_topology
+END FUNCTION refelem_ReferenceTopology
 END INTERFACE
 
 INTERFACE ReferenceTopology
-  MODULE PROCEDURE reference_topology
+  MODULE PROCEDURE refelem_ReferenceTopology
 END INTERFACE ReferenceTopology
 
 PUBLIC :: ReferenceTopology
@@ -120,13 +120,33 @@ PUBLIC :: ReferenceTopology
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE deallocatedata_ref_topology( obj )
+MODULE PURE SUBROUTINE refelem_DeallocateData1( obj )
   CLASS( ReferenceTopology_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE deallocatedata_ref_topology
+END SUBROUTINE refelem_DeallocateData1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                 DeallocateData@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	1 March 2021
+! summary: 	This routine deallocates the data stored inside the [[ReferenceElement_]]
+!
+!### Usage
+!
+!```fortran
+!	todo
+!```
+
+INTERFACE
+MODULE PURE SUBROUTINE refelem_DeallocateData2( obj )
+  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
+END SUBROUTINE refelem_DeallocateData2
 END INTERFACE
 
 INTERFACE DeallocateData
-  MODULE PROCEDURE deallocatedata_ref_topology
+  MODULE PROCEDURE refelem_DeallocateData1, refelem_DeallocateData2
 END INTERFACE
 
 PUBLIC :: DeallocateData
@@ -149,10 +169,10 @@ PUBLIC :: DeallocateData
 !```
 
 INTERFACE
-MODULE PURE FUNCTION tNodes_RefTopo( obj ) RESULT( Ans )
+MODULE PURE FUNCTION refelem_NNE1( obj ) RESULT( Ans )
   CLASS( ReferenceTopology_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans
-END FUNCTION tNodes_RefTopo
+END FUNCTION refelem_NNE1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -168,10 +188,10 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION tNodes_RefElem( obj ) RESULT( Ans )
+MODULE PURE FUNCTION refelem_NNE2( obj ) RESULT( Ans )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
   INTEGER( I4B ) :: Ans
-END FUNCTION tNodes_RefElem
+END FUNCTION refelem_NNE2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -179,34 +199,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE OPERATOR( .NNE. )
-  MODULE PROCEDURE tNodes_RefTopo, tNodes_RefElem
+  MODULE PROCEDURE refelem_NNE1, refelem_NNE2
 END INTERFACE
 
 PUBLIC :: OPERATOR( .NNE. )
-
-!----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
-! summary: 	This routine deallocates the data stored inside the [[ReferenceElement_]]
-!
-!### Usage
-!
-!```fortran
-!	todo
-!```
-
-INTERFACE
-MODULE PURE SUBROUTINE deallocatedata_ref_elem( obj )
-  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE deallocatedata_ref_elem
-END INTERFACE
-
-INTERFACE DeallocateData
-  MODULE PROCEDURE deallocatedata_ref_elem
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
@@ -228,23 +224,40 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE init_refelem( obj, Anotherobj )
+MODULE PURE SUBROUTINE refelem_Initiate1( obj, Anotherobj )
   CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
   CLASS( ReferenceElement_ ), INTENT( IN ) :: Anotherobj
-END SUBROUTINE init_refelem
+END SUBROUTINE refelem_Initiate1
 END INTERFACE
 
 INTERFACE Initiate
-  MODULE PROCEDURE init_refelem
+  MODULE PROCEDURE refelem_Initiate1
 END INTERFACE Initiate
 
 PUBLIC :: Initiate
 
 INTERFACE ASSIGNMENT( = )
-  MODULE PROCEDURE init_refelem
+  MODULE PROCEDURE refelem_Initiate1
 END INTERFACE
 
 PUBLIC :: ASSIGNMENT( = )
+
+!----------------------------------------------------------------------------
+!                                   ReferenceElement_Pointer@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION refelem_constructor_1( xidim, nsd, elemType ) RESULT( Ans )
+  INTEGER( I4B ),INTENT( IN ) :: xidim, nsd, elemType
+  CLASS( ReferenceElement_ ), POINTER :: ans
+END FUNCTION refelem_constructor_1
+END INTERFACE
+
+INTERFACE ReferenceElement_Pointer
+  MODULE PROCEDURE refelem_constructor_1
+END INTERFACE ReferenceElement_Pointer
+
+PUBLIC :: ReferenceElement_Pointer
 
 !----------------------------------------------------------------------------
 !                                                       getNptrs@Construcor
@@ -255,14 +268,14 @@ PUBLIC :: ASSIGNMENT( = )
 ! summary: Returns the node numbers of reference element
 
 INTERFACE
-MODULE PURE FUNCTION RefElem_getNptrs( obj ) RESULT( Ans )
+MODULE PURE FUNCTION refelem_getNptrs( obj ) RESULT( Ans )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), ALLOCATABLE :: ans( : )
-END FUNCTION RefElem_getNptrs
+END FUNCTION refelem_getNptrs
 END INTERFACE
 
 INTERFACE getConnectivity
-  MODULE PROCEDURE RefElem_getNptrs
+  MODULE PROCEDURE refelem_getNptrs
 END INTERFACE getConnectivity
 
 PUBLIC :: getConnectivity

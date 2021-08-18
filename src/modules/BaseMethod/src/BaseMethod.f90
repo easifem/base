@@ -28,6 +28,8 @@ MODULE BaseMethod
 #ifdef USE_OpenMP
   USE OMP_LIB
 #endif
+  USE CInterface
+  USE MetisInterface
   USE EASIFEM_BLAS
   USE F95_LAPACK
   USE OpenMP_Method

@@ -31,7 +31,6 @@ CONTAINS
 MODULE PROCEDURE csr_setSparsity1
   INTEGER( I4B ) :: n, a, b, m, tdof
   INTEGER( I4B ), ALLOCATABLE :: n2ntemp( : )
-
   IF( .NOT. obj%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is not initiated!", &
@@ -40,7 +39,6 @@ MODULE PROCEDURE csr_setSparsity1
       & __LINE__, stderr )
     STOP
   END IF
-
   IF( obj%isSparsityLock ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
@@ -49,13 +47,9 @@ MODULE PROCEDURE csr_setSparsity1
       & __LINE__, stderr )
     STOP
   END IF
-
-  IF( .NOT. ALLOCATED( obj%row ) ) &
-    & ALLOCATE( obj%row( obj%nrow ) )
-
+  IF( .NOT. ALLOCATED( obj%row ) ) ALLOCATE( obj%row( obj%nrow ) )
   tdof = .tdof. obj%dof
   n = SIZE( Col )
-
   IF( tdof .EQ. 1 ) THEN
     obj%nnz = obj%nnz + n
     n2ntemp = SORT( Col )
@@ -111,7 +105,7 @@ END PROCEDURE csr_setSparsity2
 
 MODULE PROCEDURE csr_setSparsity3
   INTEGER( I4B ) :: i, j, k
-
+  INTEGER( I4B ), ALLOCATABLE :: intvec( : )
   IF( .NOT. obj%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is not initiated!", &
@@ -120,18 +114,16 @@ MODULE PROCEDURE csr_setSparsity3
       & __LINE__, stderr )
     STOP
   END IF
-
   IF( obj%isSparsityLock ) THEN
     CALL WarningMSG( &
       & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
       & "CSRSparsity_Method@setMethods.f90", &
-      & "csr_setSparsity1()", &
+      & "csr_setSparsity3()", &
       & __LINE__, stderr )
     RETURN
   ELSE
     obj%isSparsityLock = .TRUE.
   END IF
-
   !<--- Remove duplicate entries in obj%Row( irow )%Col
   IF( ALLOCATED( obj%Row ) ) THEN
     k = 0
@@ -154,26 +146,17 @@ MODULE PROCEDURE csr_setSparsity3
     END DO
     DEALLOCATE( obj%Row )
   END IF
-
   j = SIZE( obj%JA )
   IF( j .GT. obj%nnz ) THEN
-    obj%ColSize = obj%JA( 1 : obj%nnz )
+    intvec = obj%JA( 1 : obj%nnz )
     CALL Reallocate( obj%JA, obj%nnz )
-    obj%JA = obj%ColSize
-    CALL Reallocate( obj%ColSize, obj%ncol )
+    obj%JA = intvec
+    CALL Reallocate( intvec, obj%ncol )
   END IF
-
-  DO i = 1, obj%nrow
-    obj%RowSize( i ) = obj%IA( i + 1 ) - obj%IA( i )
-    IF( obj%RowSize( i ) .NE. 0 ) THEN
-      DO j = obj%IA( i ), obj%IA( i + 1 ) - 1
-        obj%ColSize( obj%JA( j ) ) = &
-        & obj%ColSize( obj%JA( j ) ) + 1
-        IF( obj%JA( j ) .EQ. i ) obj%DiagIndx( i ) =j
-      END DO
-    END IF
-  END DO
-
 END PROCEDURE csr_setSparsity3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE setMethods
