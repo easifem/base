@@ -341,14 +341,34 @@ PUBLIC :: CSRMatrixPointer_
 ! Data-type to handle iteration parameters
 
 TYPE :: IterationData_
-  INTEGER( I4B ) :: MaxIter = 100, IterationNumber = 0
-  REAL( DFP ) :: Tolerance = 1.0E-5
-  REAL( DFP ) :: ErrorAtStart = 0.0, ErrorAtEnd = 0.0
-  REAL( DFP ) :: TimeAtStart = 0.0 , TimeAtEnd = 0.0
+  INTEGER( I4B ) :: MaxIter = 100
+    !! Maximum number of iterations allowed
+  INTEGER( I4B ) :: IterationNumber = 0
+    !! Iteration number
+  REAL( DFP ) :: ResidualError0 = 0.0
+    !! Initial Residual error
+  REAL( DFP ) :: ResidualError = 0.0
+    !! Current residual error
+  REAL( DFP ) :: ResidualTolerance = 1.0E-5
+    !! Tolerance for checking convergence in residual
+  REAL( DFP ) :: SolutionError0 = 0.0
+    !! Initial solution error
+  REAL( DFP ) :: SolutionError = 0.0
+    !! Current solution error
+  REAL( DFP ) :: SolutionTolerance = 1.0E-5
+    !! Tolerance for checking convergence in solution
   INTEGER( I4B ) :: ConvergenceType = RelativeConvergence
+    !! Type of convergence
   INTEGER( I4B ) :: ConvergenceIn = ConvergenceInRes
+    !! Check Convergence in solution and/ or residual
   INTEGER( I4B ) :: NormType = NormL2
+    !! Error norm type
   LOGICAL( LGT ) :: Converged = .FALSE.
+    !! Status of convergence
+  REAL( DFP ) :: TimeAtStart = 0.0
+    !! Starting time
+  REAL( DFP ) :: TimeAtEnd = 0.0
+    !! Present time
 END TYPE IterationData_
 
 PUBLIC :: IterationData_

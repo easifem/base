@@ -20,5 +20,6 @@ target_sources(
   ${src_path}/Utility@MatrixMul.f90
   ${src_path}/Utility@Assert.f90
   ${src_path}/Utility@Approx.f90
+  ${src_path}/Utility@HashingMethod.f90
   ${src_path}/Utility@Misc.f90
 )

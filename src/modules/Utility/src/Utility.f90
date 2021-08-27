@@ -2824,4 +2824,32 @@ END INTERFACE IMINLOC
 
 PUBLIC :: IMINLOC
 
+!----------------------------------------------------------------------------
+!                                                              StringToUID
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 Aug 2021
+! summary: This function returns a unique number for a given string
+!
+!### Introduction
+! This function returns a unique number for a given string
+!
+! Reference
+!  https://cp-algorithms.com/string/string-hashing.html
+
+INTERFACE
+MODULE FUNCTION StringToUID_PolyRoll( charVar ) RESULT( Ans )
+  CHARACTER( LEN = * ), INTENT( IN ) :: charVar
+  INTEGER( I4B ) :: ans
+END FUNCTION StringToUID_PolyRoll
+END INTERFACE
+
+INTERFACE StringToUID
+  MODULE PROCEDURE StringToUID_PolyRoll
+END INTERFACE StringToUID
+
+PUBLIC :: StringToUID
+
+
 END MODULE Utility
