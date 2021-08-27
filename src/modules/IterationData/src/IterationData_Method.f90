@@ -26,43 +26,63 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj( obj, MaxIter, IterationNumber, &
-  & Tolerance, ErrorAtStart, ErrorAtEnd, TimeAtStart, TimeAtEnd, &
-  & ConvergenceType, ConvergenceIn, NormType, Converged )
+MODULE PURE SUBROUTINE iterdata_Initiate( obj, MaxIter, IterationNumber, &
+  & ResidualError0, ResidualError, ResidualTolerance, SolutionError0, &
+  & SolutionError, SolutionTolerance, ConvergenceType, &
+  & ConvergenceIn, NormType, Converged, TimeAtStart, TimeAtEnd )
   TYPE( IterationData_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: MaxIter
   INTEGER( I4B ), INTENT( IN ), OPTIONAL :: IterationNumber
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: Tolerance
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: ErrorAtStart
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: ErrorAtEnd
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: TimeAtStart
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: TimeAtEnd
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: ConvergenceType
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: ConvergenceIn
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: NormType
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: ResidualError0
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: ResidualError
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: ResidualTolerance
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: SolutionError0
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: SolutionError
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: SolutionTolerance
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: ConvergenceType
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: ConvergenceIn
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: NormType
   LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: Converged
-END SUBROUTINE initiate_obj
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: TimeAtStart
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: TimeAtEnd
+END SUBROUTINE iterdata_Initiate
 END INTERFACE
 
 INTERFACE Initiate
-  MODULE PROCEDURE initiate_obj
+  MODULE PROCEDURE iterdata_Initiate
 END INTERFACE Initiate
 
 PUBLIC :: Initiate
+
+!----------------------------------------------------------------------------
+!                                                              DeallocateData
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE SUBROUTINE iterdata_DeallocateData( obj )
+  TYPE( IterationData_ ), INTENT( INOUT ) :: obj
+END SUBROUTINE iterdata_DeallocateData
+END INTERFACE
+
+INTERFACE DeallocateData
+  MODULE PROCEDURE iterdata_DeallocateData
+END INTERFACE DeallocateData
+
+PUBLIC :: DeallocateData
 
 !----------------------------------------------------------------------------
 !                                                    isConverged@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION is_converged( obj ) RESULT( Ans )
+MODULE PURE FUNCTION iterdata_isConverged( obj ) RESULT( Ans )
   TYPE( IterationData_ ), INTENT( IN ) :: obj
   LOGICAL( LGT ) :: Ans
-END FUNCTION is_converged
+END FUNCTION iterdata_isConverged
 END INTERFACE
 
 INTERFACE isConverged
-  MODULE PROCEDURE is_converged
+  MODULE PROCEDURE iterdata_isConverged
 END INTERFACE isConverged
 
 PUBLIC :: isConverged
@@ -72,15 +92,15 @@ PUBLIC :: isConverged
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE Display_obj( obj, msg, UnitNo )
+MODULE SUBROUTINE iterdata_Display( obj, msg, UnitNo )
   TYPE( IterationData_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-END SUBROUTINE Display_obj
+END SUBROUTINE iterdata_Display
 END INTERFACE
 
 INTERFACE Display
-  MODULE PROCEDURE Display_obj
+  MODULE PROCEDURE iterdata_Display
 END INTERFACE Display
 
 PUBLIC :: Display

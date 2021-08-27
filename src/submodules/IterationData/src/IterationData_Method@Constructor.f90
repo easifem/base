@@ -24,40 +24,63 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_obj
+MODULE PROCEDURE iterdata_Initiate
   IF( PRESENT( MaxIter ) ) obj%MaxIter = MaxIter
   IF( PRESENT( IterationNumber ) ) obj%IterationNumber = IterationNumber
+  IF( PRESENT( ResidualError0 ) ) obj%ResidualError0 = ResidualError0
+  IF( PRESENT( ResidualError ) ) obj%ResidualError = ResidualError
+  IF( PRESENT( ResidualTolerance ) ) obj%ResidualTolerance = ResidualTolerance
+  IF( PRESENT( SolutionError0 ) ) obj%SolutionError0 = SolutionError0
+  IF( PRESENT( SolutionError ) ) obj%SolutionError = SolutionError
+  IF( PRESENT( SolutionTolerance ) ) obj%SolutionTolerance = SolutionTolerance
   IF( PRESENT( ConvergenceType ) ) obj%ConvergenceType = ConvergenceType
   IF( PRESENT( ConvergenceIn ) ) obj%ConvergenceIn = ConvergenceIn
   IF( PRESENT( NormType ) ) obj%NormType = NormType
-  IF( PRESENT( Tolerance ) ) obj%Tolerance = Tolerance
-  IF( PRESENT( ErrorAtEnd ) ) obj%ErrorAtEnd = ErrorAtEnd
-  IF( PRESENT( ErrorAtStart ) ) obj%ErrorAtStart = ErrorAtStart
+  IF( PRESENT( Converged ) ) obj%Converged = Converged
   IF( PRESENT( TimeAtStart ) ) obj%TimeAtStart = TimeAtStart
   IF( PRESENT( TimeAtEnd ) ) obj%TimeAtEnd = TimeAtEnd
-  IF( PRESENT( Converged ) ) obj%Converged = Converged
-END PROCEDURE initiate_obj
+END PROCEDURE iterdata_Initiate
 
+!----------------------------------------------------------------------------
+!                                                           DeallocateData
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE iterdata_DeallocateData
+  obj%MaxIter = 0
+  obj%IterationNumber = 0
+  obj%ResidualError = 0.0
+  obj%ResidualError0 = 0.0
+  obj%ResidualTolerance = 0.0
+  obj%SolutionError = 0.0
+  obj%SolutionError0 = 0.0
+  obj%SolutionTolerance = 0.0
+  obj%ConvergenceType = 0
+  obj%ConvergenceIn = 0
+  obj%NormType = 0
+  obj%Converged = .FALSE.
+  obj%TimeAtStart = 0.0
+  obj%TimeAtEnd = 0.0
+END PROCEDURE iterdata_DeallocateData
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE is_converged
-  SELECT CASE( obj%ConvergenceType )
-  CASE( RelativeConvergence )
-    IF( obj%ErrorAtEnd .LE. obj%Tolerance * obj%ErrorAtStart ) THEN
-      Ans = .TRUE.
-    ELSE
-      Ans = .FALSE.
-    END IF
-  CASE( AbsoluteConvergence )
-    IF( obj%ErrorAtEnd .LE. obj%Tolerance ) THEN
-      Ans = .TRUE.
-    ELSE
-      Ans = .FALSE.
-    END IF
-  END SELECT
-END PROCEDURE is_converged
+MODULE PROCEDURE iterdata_isConverged
+  ! SELECT CASE( obj%ConvergenceType )
+  ! CASE( RelativeConvergence )
+  !   IF( obj%ErrorAtEnd .LE. obj%Tolerance * obj%ErrorAtStart ) THEN
+  !     Ans = .TRUE.
+  !   ELSE
+  !     Ans = .FALSE.
+  !   END IF
+  ! CASE( AbsoluteConvergence )
+  !   IF( obj%ErrorAtEnd .LE. obj%Tolerance ) THEN
+  !     Ans = .TRUE.
+  !   ELSE
+  !     Ans = .FALSE.
+  !   END IF
+  ! END SELECT
+END PROCEDURE iterdata_isConverged
 
 !----------------------------------------------------------------------------
 !
