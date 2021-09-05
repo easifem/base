@@ -142,4 +142,5 @@ MODULE PROCEDURE split_char
   end if
 END PROCEDURE split_char
 
+
 END SUBMODULE FunctionalFortran

@@ -25,7 +25,7 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                  AllocateData@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -45,7 +45,7 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj( obj, nsd, xidim, nns, nips )
+MODULE PURE SUBROUTINE elemsd_AllocateData( obj, nsd, xidim, nns, nips )
   CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
     !! object to be returned
   INTEGER( I4B ), INTENT( IN ) :: nsd
@@ -56,15 +56,42 @@ MODULE PURE SUBROUTINE initiate_obj( obj, nsd, xidim, nns, nips )
     !! number of nodes in element
   INTEGER( I4B ), INTENT( IN ) :: nips
     !! number of integration points
-END SUBROUTINE initiate_obj
+END SUBROUTINE elemsd_AllocateData
 END INTERFACE
 
 INTERFACE AllocateData
-  MODULE PROCEDURE initiate_obj
+  MODULE PROCEDURE elemsd_AllocateData
 END INTERFACE AllocateData
 
 PUBLIC :: AllocateData
 
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE SUBROUTINE elemsd_initiate( obj, quad, refElem, continuityType, &
+  & interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CHARACTER( LEN = * ), INTENT( IN ) :: continuityType
+  CHARACTER( LEN = * ), INTENT( IN ) :: interpolType
+END SUBROUTINE elemsd_initiate
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE elemsd_initiate
+END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
@@ -120,16 +147,58 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE deallocate_data( obj )
+MODULE PURE SUBROUTINE elemsd_DeallocateData( obj )
   CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE deallocate_data
+END SUBROUTINE elemsd_DeallocateData
 END INTERFACE
 
 INTERFACE DeallocateData
-    MODULE PROCEDURE deallocate_data
+    MODULE PROCEDURE elemsd_DeallocateData
 END INTERFACE DeallocateData
 
 PUBLIC :: DeallocateData
+
+!----------------------------------------------------------------------------
+!                                             BaseInterpolation@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	30 Aug 2021
+! summary: This routine returns a pointer to a child of [[BaseInterpolation_]]
+
+INTERFACE
+MODULE FUNCTION elemsd_BaseInterpolation( childName ) RESULT( Ans )
+  CHARACTER( LEN = * ), INTENT( IN ) :: childName
+  CLASS( BaseInterpolation_ ), POINTER :: ans
+END FUNCTION elemsd_BaseInterpolation
+END INTERFACE
+
+INTERFACE BaseInterpolation
+  MODULE PROCEDURE elemsd_BaseInterpolation
+END INTERFACE BaseInterpolation
+
+PUBLIC :: BaseInterpolation
+
+!----------------------------------------------------------------------------
+!                                             BaseContinuity@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	30 Aug 2021
+! summary: This routine returns a pointer to a child of [[BaseContinuity_]]
+
+INTERFACE
+MODULE FUNCTION elemsd_BaseContinuity( childName ) RESULT( Ans )
+  CHARACTER( LEN = * ), INTENT( IN ) :: childName
+  CLASS( BaseContinuity_ ), POINTER :: ans
+END FUNCTION elemsd_BaseContinuity
+END INTERFACE
+
+INTERFACE BaseContinuity
+  MODULE PROCEDURE elemsd_BaseContinuity
+END INTERFACE BaseContinuity
+
+PUBLIC :: BaseContinuity
 
 !----------------------------------------------------------------------------
 !                                                                Display@IO
@@ -188,6 +257,429 @@ END INTERFACE
 
 INTERFACE Initiate
   MODULE PROCEDURE H1_Lagrange
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                          Initiate@H1Hermit
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1_Hermit( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1_ ), INTENT( IN ) :: continuityType
+  CLASS( HermitInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1_Hermit
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1_Hermit
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                    Initiate@H1Serendipity
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1_Serendipity( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1_ ), INTENT( IN ) :: continuityType
+  CLASS( SerendipityInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1_Serendipity
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1_Serendipity
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                    Initiate@H1Hierarchy
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1_Hierarchy( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1_ ), INTENT( IN ) :: continuityType
+  CLASS( HierarchyInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1_Hierarchy
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1_Hierarchy
+END INTERFACE Initiate
+
+
+!----------------------------------------------------------------------------
+!                                                        Initiate@H1DivLagrange
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1Div_Lagrange( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1Div_ ), INTENT( IN ) :: continuityType
+  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1Div_Lagrange
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1Div_Lagrange
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                          Initiate@H1DivHermit
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1Div_Hermit( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1Div_ ), INTENT( IN ) :: continuityType
+  CLASS( HermitInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1Div_Hermit
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1Div_Hermit
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                    Initiate@H1DivSerendipity
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1Div_Serendipity( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1Div_ ), INTENT( IN ) :: continuityType
+  CLASS( SerendipityInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1Div_Serendipity
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1Div_Serendipity
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                    Initiate@H1DivHierarchy
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1Div_Hierarchy( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1Div_ ), INTENT( IN ) :: continuityType
+  CLASS( HierarchyInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1Div_Hierarchy
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1Div_Hierarchy
+END INTERFACE Initiate
+
+
+!----------------------------------------------------------------------------
+!                                                  Initiate@H1CurlLagrange
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1Curl_Lagrange( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1Curl_ ), INTENT( IN ) :: continuityType
+  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1Curl_Lagrange
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1Curl_Lagrange
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                     Initiate@H1CurlHermit
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1Curl_Hermit( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1Curl_ ), INTENT( IN ) :: continuityType
+  CLASS( HermitInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1Curl_Hermit
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1Curl_Hermit
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                Initiate@H1CurlSerendipity
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1Curl_Serendipity( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1Curl_ ), INTENT( IN ) :: continuityType
+  CLASS( SerendipityInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1Curl_Serendipity
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1Curl_Serendipity
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                    Initiate@H1CurlHierarchy
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE H1Curl_Hierarchy( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( H1Curl_ ), INTENT( IN ) :: continuityType
+  CLASS( HierarchyInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE H1Curl_Hierarchy
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE H1Curl_Hierarchy
+END INTERFACE Initiate
+
+
+!----------------------------------------------------------------------------
+!                                                  Initiate@DGLagrange
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE DG_Lagrange( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( DG_ ), INTENT( IN ) :: continuityType
+  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE DG_Lagrange
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE DG_Lagrange
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                     Initiate@DGHermit
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE DG_Hermit( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( DG_ ), INTENT( IN ) :: continuityType
+  CLASS( HermitInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE DG_Hermit
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE DG_Hermit
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                Initiate@DGSerendipity
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE DG_Serendipity( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( DG_ ), INTENT( IN ) :: continuityType
+  CLASS( SerendipityInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE DG_Serendipity
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE DG_Serendipity
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                    Initiate@DGHierarchy
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiate the shape data
+!
+!### Introduction
+!
+! This routine initiates the shape function related data inside the element.
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE DG_Hierarchy( obj, quad, refElem, &
+  & continuityType, interpolType )
+  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+  CLASS( DG_ ), INTENT( IN ) :: continuityType
+  CLASS( HierarchyInterpolation_ ), INTENT( IN ) :: interpolType
+END SUBROUTINE DG_Hierarchy
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE DG_Hierarchy
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------

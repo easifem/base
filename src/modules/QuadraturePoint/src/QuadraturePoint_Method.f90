@@ -59,8 +59,51 @@ MODULE PURE SUBROUTINE quad_initiate2( obj, tXi, tPoints )
 END SUBROUTINE quad_initiate2
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiates the quadrature points
+
+INTERFACE
+MODULE PURE SUBROUTINE quad_initiate3( obj, refElem, order, QuadratureType )
+  TYPE( QuadraturePoint_ ), INTENT( INOUT ) :: obj
+    !! Total number of xidimension
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+    !! Reference element
+  INTEGER( I4B ), INTENT( IN ) :: order
+    !! Order of integrand
+  CHARACTER( LEN = * ), INTENT( IN ) :: quadratureType
+    !! Total number quadrature points
+END SUBROUTINE quad_initiate3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiates the quadrature points
+
+INTERFACE
+MODULE PURE SUBROUTINE quad_initiate4( obj, refElem, NIPS, QuadratureType )
+  TYPE( QuadraturePoint_ ), INTENT( INOUT ) :: obj
+    !! Total number of xidimension
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
+    !! Reference element
+  INTEGER( I4B ), INTENT( IN ) :: NIPS(1)
+    !! Order of integrand
+  CHARACTER( LEN = * ), INTENT( IN ) :: quadratureType
+    !! Total number quadrature points
+END SUBROUTINE quad_initiate4
+END INTERFACE
+
 INTERFACE Initiate
-  MODULE PROCEDURE quad_initiate1, quad_initiate2
+  MODULE PROCEDURE quad_initiate1, quad_initiate2, quad_initiate3, &
+    & quad_initiate4
 END INTERFACE
 
 PUBLIC :: Initiate

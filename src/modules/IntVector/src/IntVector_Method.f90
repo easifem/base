@@ -311,6 +311,29 @@ END INTERFACE ASSIGNMENT( = )
 PUBLIC :: ASSIGNMENT( = )
 
 !----------------------------------------------------------------------------
+!                                                  isAllocated@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION intVec_isAllocated( obj ) RESULT( Ans )
+  CLASS( IntVector_ ), INTENT( IN ) :: obj
+  LOGICAL( LGT ) :: ans
+END FUNCTION intVec_isAllocated
+END INTERFACE
+
+INTERFACE isAllocated
+  MODULE PROCEDURE intVec_isAllocated
+END INTERFACE isAllocated
+
+PUBLIC :: isAllocated
+
+INTERFACE isInitiated
+  MODULE PROCEDURE intVec_isAllocated
+END INTERFACE isInitiated
+
+PUBLIC :: isInitiated
+
+!----------------------------------------------------------------------------
 !                                                      IntVector@Constructor
 !----------------------------------------------------------------------------
 

@@ -248,53 +248,59 @@ PUBLIC :: DiffusionMatrix
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Space_StiffnessMatrix_Cijkl( Test, Trial, Cijkl ) &
+MODULE PURE FUNCTION femat_StiffnessMatrix1( Test, Trial, Cijkl ) &
   & RESULT( Ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: Test, Trial
   CLASS( FEVariable_ ), INTENT( IN ) :: Cijkl
   REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-END FUNCTION Space_StiffnessMatrix_Cijkl
+END FUNCTION femat_StiffnessMatrix1
 END INTERFACE
-
-INTERFACE StiffnessMatrix
-  MODULE PROCEDURE Space_StiffnessMatrix_Cijkl
-END INTERFACE StiffnessMatrix
-
-PUBLIC :: StiffnessMatrix
 
 !----------------------------------------------------------------------------
 !                                            StiffnessMatrix@StiffnessMatrix
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Space_StiffnessMatrix_Lambda( Test, Trial, Lambda, Mu ) &
+MODULE PURE FUNCTION femat_StiffnessMatrix2( Test, Trial, Lambda, Mu ) &
   & RESULT( Ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: Test, Trial
   CLASS( FEVariable_ ), INTENT( IN ) :: Lambda, Mu
   REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-END FUNCTION Space_StiffnessMatrix_Lambda
+END FUNCTION femat_StiffnessMatrix2
 END INTERFACE
-
-INTERFACE StiffnessMatrix
-  MODULE PROCEDURE Space_StiffnessMatrix_Lambda
-END INTERFACE StiffnessMatrix
 
 !----------------------------------------------------------------------------
 !                                            StiffnessMatrix@StiffnessMatrix
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Space_StiffnessMatrix_LamMu( Test, Trial, Lambda,  &
+MODULE PURE FUNCTION femat_StiffnessMatrix3( Test, Trial, Lambda,  &
   & Mu) RESULT( Ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: Test, Trial
   REAL( DFP ), INTENT( IN ) :: Lambda, Mu
   REAL( DFP ), ALLOCATABLE :: Ans( :, : )
-END FUNCTION Space_StiffnessMatrix_LamMu
+END FUNCTION femat_StiffnessMatrix3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            StiffnessMatrix@StiffnessMatrix
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION femat_StiffnessMatrix4( Test, Trial, Cijkl ) &
+  & RESULT( Ans )
+  CLASS( ElemshapeData_ ), INTENT( IN ) :: Test, Trial
+  REAL( DFP ), INTENT( IN ) :: Cijkl( :, : )
+  REAL( DFP ), ALLOCATABLE :: Ans( :, : )
+END FUNCTION femat_StiffnessMatrix4
 END INTERFACE
 
 INTERFACE StiffnessMatrix
-  MODULE PROCEDURE Space_StiffnessMatrix_LamMu
+  MODULE PROCEDURE femat_StiffnessMatrix1, femat_StiffnessMatrix2, &
+    & femat_StiffnessMatrix3, femat_StiffnessMatrix4
 END INTERFACE StiffnessMatrix
+
+PUBLIC :: StiffnessMatrix
 
 !----------------------------------------------------------------------------
 !                                                NitscheMatrix@NitscheMatrix

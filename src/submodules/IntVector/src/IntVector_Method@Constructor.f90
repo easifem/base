@@ -144,6 +144,18 @@ MODULE PROCEDURE intVec_initiate5
 END PROCEDURE intVec_initiate5
 
 !----------------------------------------------------------------------------
+!                                                       intVec_isAllocated
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intVec_isAllocated
+  IF( ALLOCATED( obj%Val ) ) THEN
+    ans = .TRUE.
+  ELSE
+    ans = .FALSE.
+  END IF
+END PROCEDURE intVec_isAllocated
+
+!----------------------------------------------------------------------------
 !                                                                     Vector
 !----------------------------------------------------------------------------
 

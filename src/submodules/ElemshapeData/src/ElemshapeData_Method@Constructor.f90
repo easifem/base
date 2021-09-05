@@ -28,7 +28,7 @@ CONTAINS
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_obj
+MODULE PROCEDURE elemsd_AllocateData
   CALL reallocate( obj%N, nns, nips )
   CALL reallocate( obj%dNdXi, nns, xidim, nips )
   CALL reallocate( obj%Normal, 3, nips )
@@ -38,7 +38,7 @@ MODULE PROCEDURE initiate_obj
   CALL reallocate( obj%Thickness, nips )
   obj%Thickness = 1.0_DFP
   CALL reallocate( obj%Coord, nsd, nips )
-END PROCEDURE initiate_obj
+END PROCEDURE elemsd_AllocateData
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
@@ -64,7 +64,7 @@ END PROCEDURE stsd_initiate
 !                                                             DeallocateData
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE deallocate_data
+MODULE PROCEDURE elemsd_DeallocateData
   IF( ALLOCATED( obj%Normal ) ) DEALLOCATE( obj%Normal )
   IF( ALLOCATED( obj%N ) ) DEALLOCATE( obj%N )
   IF( ALLOCATED( obj%dNdXi ) ) DEALLOCATE( obj%dNdXi )
@@ -83,7 +83,227 @@ MODULE PROCEDURE deallocate_data
     IF( ALLOCATED( obj%dNTdt ) ) DEALLOCATE( obj%dNTdt )
     IF( ALLOCATED( obj%dNTdXt ) ) DEALLOCATE( obj%dNTdXt )
   END SELECT
-END PROCEDURE deallocate_data
+END PROCEDURE elemsd_DeallocateData
+
+!----------------------------------------------------------------------------
+!                                                         BaseInterpolation
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_BaseInterpolation
+  SELECT CASE( TRIM( childName ) )
+  CASE( "LagrangeInterpolation" )
+    ALLOCATE( LagrangeInterpolation_ :: ans )
+  CASE( "HermitInterpolation" )
+    ALLOCATE( HermitInterpolation_ :: ans )
+  CASE( "SerendipityInterpolation" )
+    ALLOCATE( SerendipityInterpolation_ :: ans )
+  CASE( "HierarchyInterpolation" )
+    ALLOCATE( HierarchyInterpolation_ :: ans )
+  CASE DEFAULT
+    CALL ErrorMSG( &
+      & Msg="Unknown child name of BaseInterpolation.", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_BaseInterpolation()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+  END SELECT
+END PROCEDURE elemsd_BaseInterpolation
+
+!----------------------------------------------------------------------------
+!                                                            BaseContinuity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_BaseContinuity
+  SELECT CASE( TRIM( childName ) )
+  CASE( "H1" )
+    ALLOCATE( H1_ :: ans )
+  CASE( "H1Div" )
+    ALLOCATE( H1Div_ :: ans )
+  CASE( "H1Curl" )
+    ALLOCATE( H1Curl_ :: ans )
+  CASE( "DG" )
+    ALLOCATE( DG_ :: ans )
+  CASE DEFAULT
+    CALL ErrorMSG( &
+      & Msg="Unknown child name of BaseContinuity.", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_BaseContinuity()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+  END SELECT
+END PROCEDURE elemsd_BaseContinuity
+
+!----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_Initiate
+  SELECT CASE( TRIM( interpolType ) // TRIM( continuityType )  )
+  CASE( "LagrangeInterpolation" // "H1" )
+    CALL H1_Lagrange( obj=obj, quad=quad, refElem=refElem, &
+      & continuityType=TypeH1, interpolType=TypeLagrangeInterpolation )
+
+  CASE( "LagrangeInterpolation" // "H1Div" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: LagrangeInterpolation &
+      & BaseContinuityType: H1Div", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "LagrangeInterpolation" // "H1Curl" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: LagrangeInterpolation &
+      & BaseContinuityType: H1Curl", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "LagrangeInterpolation" // "DG" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: LagrangeInterpolation &
+      & BaseContinuityType: DG", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "HermitInterpolation" // "H1" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: HermitInterpolation &
+      & BaseContinuityType: H1", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "HermitInterpolation" // "H1Div" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: HermitInterpolation &
+      & BaseContinuityType: H1Div", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "HermitInterpolation" // "H1Curl" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: HermitInterpolation &
+      & BaseContinuityType: H1Curl", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "HermitInterpolation" // "DG" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: HermitInterpolation &
+      & BaseContinuityType: DG", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "SerendipityInterpolation" // "H1" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: SerendipityInterpolation &
+      & BaseContinuityType: H1", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "SerendipityInterpolation" // "H1Div" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: SerendipityInterpolation &
+      & BaseContinuityType: H1Div", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "SerendipityInterpolation" // "H1Curl" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: SerendipityInterpolation &
+      & BaseContinuityType: H1Curl", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "SerendipityInterpolation" // "DG" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: SerendipityInterpolation &
+      & BaseContinuityType: DG", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "HierarchyInterpolation" // "H1" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: HierarchyInterpolation &
+      & BaseContinuityType: H1", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "HierarchyInterpolation" // "H1Div" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: HierarchyInterpolation &
+      & BaseContinuityType: H1Div", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "HierarchyInterpolation" // "H1Curl" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: HierarchyInterpolation &
+      & BaseContinuityType: H1Curl", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE( "HierarchyInterpolation" // "DG" )
+    CALL ErrorMSG( &
+      & Msg="BaseInterpolation: HierarchyInterpolation &
+      & BaseContinuityType: DG", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+    STOP
+
+  CASE DEFAULT
+    CALL ErrorMSG( &
+      & Msg="Unknown child name of BaseInterpolation &
+      & and BaseContinuityType", &
+      & File = "ElemshapeData_Method@Constructor.f90", &
+      & Routine = "elemsd_Initiate()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+  END SELECT
+
+END PROCEDURE elemsd_Initiate
 
 END SUBMODULE Constructor
 

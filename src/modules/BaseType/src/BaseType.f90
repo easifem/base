@@ -280,15 +280,15 @@ TYPE( SparseMatrixReOrdering_ ), PUBLIC, PARAMETER :: &
 ! - IndexUT : contains the index of upper triangular part
 
 TYPE :: CSRSparsity_
-  INTEGER( I4B ), ALLOCATABLE :: IA( : )
-  INTEGER( I4B ), ALLOCATABLE :: JA( : )
-  TYPE( IntVector_ ), ALLOCATABLE :: row( : )
   INTEGER( I4B ) :: nnz = 0
   INTEGER( I4B ) :: ncol = 0
   INTEGER( I4B ) :: nrow = 0
   LOGICAL( LGT ) :: isSorted = .FALSE.
   LOGICAL( LGT ) :: isInitiated = .FALSE.
   LOGICAL( LGT ) :: isSparsityLock = .FALSE.
+  INTEGER( I4B ), ALLOCATABLE :: IA( : )
+  INTEGER( I4B ), ALLOCATABLE :: JA( : )
+  TYPE( IntVector_ ), ALLOCATABLE :: row( : )
   TYPE( DOF_ ) :: dof
 END TYPE CSRSparsity_
 
@@ -1022,22 +1022,22 @@ TYPE( HierarchyInterpolation_ ), PARAMETER, PUBLIC :: &
   & TypeHierarchyInterpolation = HierarchyInterpolation_()
 
 !----------------------------------------------------------------------------
-!                                                          BasisContinuity_
+!                                                          BaseContinuity_
 !----------------------------------------------------------------------------
 
-TYPE :: BasisContinuity_
-END TYPE BasisContinuity_
+TYPE :: BaseContinuity_
+END TYPE BaseContinuity_
 
-PUBLIC :: BasisContinuity_
+PUBLIC :: BaseContinuity_
 
-TYPE( BasisContinuity_ ), PARAMETER, PUBLIC :: &
-  & TypeBasisContinuity = BasisContinuity_( )
+TYPE( BaseContinuity_ ), PARAMETER, PUBLIC :: &
+  & TypeBaseContinuity = BaseContinuity_( )
 
 !----------------------------------------------------------------------------
 !                                                                     H1_
 !----------------------------------------------------------------------------
 
-TYPE, EXTENDS( BasisContinuity_ ) :: H1_
+TYPE, EXTENDS( BaseContinuity_ ) :: H1_
 END TYPE H1_
 
 PUBLIC :: H1_
@@ -1049,7 +1049,7 @@ TYPE( H1_ ), PARAMETER, PUBLIC :: &
 !                                                                   H1DIV_
 !----------------------------------------------------------------------------
 
-TYPE, EXTENDS( BasisContinuity_ ) :: H1DIV_
+TYPE, EXTENDS( BaseContinuity_ ) :: H1DIV_
 END TYPE H1DIV_
 
 PUBLIC :: H1DIV_
@@ -1061,7 +1061,7 @@ TYPE( H1DIV_ ), PARAMETER, PUBLIC :: &
 !                                                                   H1CURL_
 !----------------------------------------------------------------------------
 
-TYPE, EXTENDS( BasisContinuity_ ) :: H1CURL_
+TYPE, EXTENDS( BaseContinuity_ ) :: H1CURL_
 END TYPE H1CURL_
 
 PUBLIC :: H1CURL_
@@ -1073,7 +1073,7 @@ TYPE( H1CURL_ ), PARAMETER, PUBLIC :: &
 !                                                                      DG_
 !----------------------------------------------------------------------------
 
-TYPE, EXTENDS( BasisContinuity_ ) :: DG_
+TYPE, EXTENDS( BaseContinuity_ ) :: DG_
 END TYPE DG_
 
 PUBLIC :: DG_
@@ -1148,6 +1148,7 @@ PUBLIC :: ShapeDataPointer_
 !> authors: Dr. Vikas Sharma
 !
 ! This class extends [[shapedata_]] class to space-time FEM applcation
+
 TYPE, EXTENDS( ShapeData_ ):: STShapeData_
   REAL( DFP ) :: Theta = 0.0
   REAL( DFP ) :: Wt = 0.0
@@ -1373,5 +1374,50 @@ END TYPE OpenMP_
 TYPE( OpenMP_ ), PARAMETER, PUBLIC :: TypeOpenMP=OpenMP_()
 TYPE( OpenMP_ ), PUBLIC :: OMP
 !$OMP THREADPRIVATE( OMP )
+
+
+!----------------------------------------------------------------------------
+!                                                       Function Inerfaces
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_SpaceTimeFunction( x, t ) RESULT( ans )
+    IMPORT
+    ! CLASS( DirichletBC_ ), INTENT( IN ) :: obj
+    REAL( DFP ), INTENT( IN ) :: x( : )
+    REAL( DFP ), INTENT( IN ) :: t
+    REAL( DFP ) :: ans
+  END FUNCTION iface_SpaceTimeFunction
+END INTERFACE
+
+PUBLIC :: iface_SpaceTimeFunction
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_SpaceFunction( x ) RESULT( ans )
+    IMPORT
+    REAL( DFP ), INTENT( IN ) :: x( : )
+    REAL( DFP ) :: ans
+  END FUNCTION iface_SpaceFunction
+END INTERFACE
+
+PUBLIC :: iface_SpaceFunction
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_TimeFunction( t ) RESULT( ans )
+    IMPORT
+    REAL( DFP ), INTENT( IN ) :: t
+    REAL( DFP ) :: ans
+  END FUNCTION iface_TimeFunction
+END INTERFACE
+
+PUBLIC :: iface_TimeFunction
 
 END MODULE BaseType
