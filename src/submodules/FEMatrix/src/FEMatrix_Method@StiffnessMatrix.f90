@@ -24,7 +24,7 @@ CONTAINS
 !                                                           StiffnessMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Space_StiffnessMatrix_Cijkl
+MODULE PROCEDURE femat_StiffnessMatrix1
   REAL( DFP ), ALLOCATABLE :: RealVal( : ), CBar( :, :, : ), &
     & Dummy( :, :, : ), Ce( :, : ), BMat1( :, : ), BMat2( :, : )
   INTEGER( I4B ) :: nips, nns1, nns2, i, j, ips, nsd
@@ -102,38 +102,35 @@ MODULE PROCEDURE Space_StiffnessMatrix_Cijkl
   END DO
 
   DEALLOCATE( BMat1, BMat2, Indx, Ce, CBar, RealVal, S )
-END PROCEDURE Space_StiffnessMatrix_Cijkl
+END PROCEDURE femat_StiffnessMatrix1
 
 !----------------------------------------------------------------------------
 !                                                           StiffnessMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Space_StiffnessMatrix_Lambda
+MODULE PROCEDURE femat_StiffnessMatrix2
   ! Define internal variable
   REAL( DFP ), ALLOCATABLE :: LambdaBar( : ), MuBar( : ), Dummy( : ), &
     & RealVal( : ), Ke11( :, : )
   REAL( DFP ) :: Real1, Real2, Real3
   INTEGER( I4B ) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
   LOGICAL( LGT ) :: isLambdaNodal, isMunodal
-
+  !>
   nns1 = SIZE( Test%N, 1 )
   nns2 = SIZE( Trial%N, 1 )
   nips = SIZE( Trial%N, 2 )
   nsd = Trial%RefElem%NSD
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
-
   IF( Lambda%DefineOn .EQ. Nodal ) THEN
     isLambdaNodal = .TRUE.
   ELSE
     isLambdaNodal = .FALSE.
   END IF
-
   IF( Mu%DefineOn .EQ. Nodal ) THEN
     isMuNodal = .TRUE.
   ELSE
     isMuNodal = .FALSE.
   END IF
-
   SELECT CASE( Lambda%VarType )
   CASE( Constant )
     ALLOCATE( LambdaBar( nips ) )
@@ -147,7 +144,6 @@ MODULE PROCEDURE Space_StiffnessMatrix_Lambda
       LambdaBar = RealVal
     END IF
   END SELECT
-
   SELECT CASE( Mu%VarType )
   CASE( Constant )
     ALLOCATE( MuBar( nips ) )
@@ -161,14 +157,11 @@ MODULE PROCEDURE Space_StiffnessMatrix_Lambda
     END IF
     DEALLOCATE( RealVal )
   END SELECT
-
   RealVal = Trial%Ws * Trial%Js * Trial%Thickness
-
   DO ips = 1, nips
     Real1 = MuBar( ips ) * RealVal( ips )
     Real2 = ( LambdaBar( ips ) + MuBar( ips ) ) * RealVal( ips )
     Real3 = LambdaBar( ips ) * RealVal( ips )
-
     c1 = 0; c2 = 0;
     DO j = 1, nsd
       c1 = c2 + 1; c2 = j*nns2; r1 = 0; r2 = 0
@@ -189,38 +182,27 @@ MODULE PROCEDURE Space_StiffnessMatrix_Lambda
       END DO
     END DO
   END DO
-
   DEALLOCATE( RealVal, Ke11, LambdaBar, MuBar )
-
-END PROCEDURE Space_StiffnessMatrix_Lambda
+END PROCEDURE femat_StiffnessMatrix2
 
 !----------------------------------------------------------------------------
 !                                                            Stiffnessmatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE space_stiffnessmatrix_LamMu
-
+MODULE PROCEDURE femat_StiffnessMatrix3
   INTEGER( I4B ) :: nns1, nns2, nips, ips, nsd, c1, c2, r1, r2, i, j
   REAL( DFP ), ALLOCATABLE :: RealVal( : ), Ke11( :, : )
   REAL( DFP ) :: Real1, Real2, Real3
-
   nns1 = SIZE( Test%N, 1 )
   nns2 = SIZE( Trial%N, 1 )
   nips = SIZE( Trial%N, 2 )
   nsd = Trial%RefElem%NSD
   ALLOCATE( Ans( nns1 * nsd, nns2 * nsd ) ); Ans = 0.0_DFP
-
-  ! RealVal = Trial%Ws * Trial%Thickness * Trial%Js**(1.0 - ENuJXi( 4 ))
-  ! Lambda = ENuJXi( 1 ) * ENuJXi( 2 ) / ( 1.0 - ENuJXi( 2 ) ) &
-  !   & / ( 1.0 - 2.0 * ENuJXi( 2 ) ) * ENuJXi( 3 )**ENuJXi( 4 )
-  ! Mu = ENuJXi( 1 ) / 2.0 / ( 1.0 + ENuJXi( 2 ) ) * ENuJXi( 3 )**ENuJXi( 4 )
   RealVal = Trial%Ws * Trial%Thickness * Trial%Js
-
   DO ips = 1, nips
     Real1 = Mu * RealVal( ips )
     Real2 = ( Lambda + Mu ) * RealVal( ips )
     Real3 = Lambda * RealVal( ips )
-
     c1 = 0; c2 = 0;
     DO j = 1, nsd
       c1 = c2 + 1; c2 = j*nns2; r1 = 0; r2 = 0
@@ -242,9 +224,14 @@ MODULE PROCEDURE space_stiffnessmatrix_LamMu
       END DO
     END DO
   END DO
-
   DEALLOCATE( RealVal, Ke11 )
+END PROCEDURE femat_StiffnessMatrix3
 
-END PROCEDURE space_stiffnessmatrix_LamMu
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE femat_StiffnessMatrix4
+END PROCEDURE femat_StiffnessMatrix4
 
 END SUBMODULE StiffnessMatrix

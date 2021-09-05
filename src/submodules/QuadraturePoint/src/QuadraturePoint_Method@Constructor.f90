@@ -45,6 +45,28 @@ MODULE PROCEDURE quad_initiate2
 END PROCEDURE quad_initiate2
 
 !----------------------------------------------------------------------------
+!                                                                   Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_initiate3
+  SELECT CASE( TRIM( quadratureType ) )
+  CASE( "GaussLegendre" )
+    obj = GaussLegendreQuadrature( refElem=refElem, order=order)
+  END SELECT
+END PROCEDURE quad_initiate3
+
+!----------------------------------------------------------------------------
+!                                                                   Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_initiate4
+  SELECT CASE( TRIM( quadratureType ) )
+  CASE( "GaussLegendre" )
+    obj = GaussLegendreQuadrature( refElem=refElem, nips=nips)
+  END SELECT
+END PROCEDURE quad_initiate4
+
+!----------------------------------------------------------------------------
 !                                                            QuadraturePoint
 !----------------------------------------------------------------------------
 

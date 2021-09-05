@@ -1,6 +1,0 @@
-
-#### CMake
-
-#### Python
-
-#### Homebrew

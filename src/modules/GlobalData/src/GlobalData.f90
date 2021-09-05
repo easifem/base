@@ -286,8 +286,6 @@ MODULE GlobalData
   INTEGER( I4B ), PARAMETER :: AbsoluteConvergence = 2, ConvergenceInSol = 2
   INTEGER( I4B ), PARAMETER :: NormL1=1, NormL2=2, NormInfinity=3
 
-  ! Precondition sides
-  INTEGER( I4B ), PARAMETER :: NoPrecond = 0, PrecondLeft = 1, PrecondRight = 2
   ! Type of shape functions
   INTEGER( I4B ), PARAMETER   ::  LagrangePolynomial = 1
   INTEGER( I4B ), PARAMETER   ::  SerendipityPolynomial = 2
@@ -364,16 +362,6 @@ MODULE GlobalData
   ! Read material data from ?
   INTEGER( I4B ), PARAMETER :: PhysicalTag = 1
   INTEGER( I4B ), PARAMETER :: GeometryTag = 2
-
-  ! Constraint type
-  INTEGER( I4B ), PARAMETER ::  StrongBC = 1, &
-                              NitscheBC = 2, &
-                              LagrangeMultiplierBC = 3, &
-                              PenaltyBC = 4, &
-                              AugmentedBC = 5
-
-  ! Symmetric and Skewsymmertic Nitsche Formulation
-  INTEGER( I4B ), PARAMETER :: SkewSymNitsch = 1, SymNitsche = 2
 
   ! ScalarDOF
   INTEGER( I4B ), PARAMETER :: ScalarDOF = -1
@@ -466,11 +454,14 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_DBCG=27
 INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_DBICG=27
 INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_DQGMRES=28
 
+! Precondition sides
+INTEGER( I4B ), PARAMETER :: NoPrecond = 0
+INTEGER( I4B ), PARAMETER :: PrecondLeft = 1
+INTEGER( I4B ), PARAMETER :: PrecondRight = 2
 INTEGER( I4B ), PARAMETER, PUBLIC :: NO_PRECONDITION = 0
 INTEGER( I4B ), PARAMETER, PUBLIC :: LEFT_PRECONDITION = 1
 INTEGER( I4B ), PARAMETER, PUBLIC :: RIGHT_PRECONDITION = 2
 INTEGER( I4B ), PARAMETER, PUBLIC :: LEFT_RIGHT_PRECONDITION = 3
-
 INTEGER( I4B ), PARAMETER, PUBLIC :: PRECOND_NONE = 0
 INTEGER( I4B ), PARAMETER, PUBLIC :: PRECOND_JACOBI = 1
 INTEGER( I4B ), PARAMETER, PUBLIC :: PRECOND_ILUK = 2
@@ -494,4 +485,38 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: PETSC = 4
 INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_SERIAL = 5
 INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_OMP = 6
 INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_MPI = 7
+
+
+  ! Constraint type
+  INTEGER( I4B ), PARAMETER ::  StrongBC = 1
+  INTEGER( I4B ), PARAMETER ::  NitscheBC = 2
+  INTEGER( I4B ), PARAMETER ::  LagrangeMultiplierBC = 3
+  INTEGER( I4B ), PARAMETER ::  PenaltyBC = 4
+  INTEGER( I4B ), PARAMETER ::  AugmentedBC = 5
+  ! Symmetric and Skewsymmertic Nitsche Formulation
+  INTEGER( I4B ), PARAMETER :: SkewSymNitsch = 1, SymNitsche = 2
+
+  CHARACTER(LEN=*),PARAMETER :: BLANK=" "
+    !! Character representing a space symbol
+  CHARACTER(LEN=*),PARAMETER :: BANG="!"
+    !! Character representing a comment symbol
+  CHARACTER(LEN=*),PARAMETER :: DOT="."
+    !! Character representing a period
+  CHARACTER(LEN=*),PARAMETER :: FSLASH="/"
+    !! Character representing a forward slash
+  CHARACTER(LEN=*),PARAMETER :: BSLASH="\"
+    !! Character representing a backward slash
+  CHARACTER(LEN=*),PARAMETER :: COLON=":"
+    !! Character representing a colon
+#ifdef WIN32
+  CHARACTER(LEN=*),PARAMETER :: SLASH=BSLASH
+    !! This is needed for doxygen to parse correctly
+    !! The slash symbol used by the file system
+    !! (BLASH for Windows, FSLASH for everything else)
+#else
+  CHARACTER(LEN=*),PARAMETER :: SLASH=FSLASH
+    !! The slash symbol used by the file system
+    !! (BLASH for Windows, FSLASH for everything else)
+#endif
+
 END MODULE GlobalData

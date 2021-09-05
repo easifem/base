@@ -21,4 +21,19 @@ target_sources(
   ${src_path}/ElemshapeData_Method@H1Lagrange@Hexahedron.f90
   ${src_path}/ElemshapeData_Method@H1Lagrange@Prism.f90
   ${src_path}/ElemshapeData_Method@H1Lagrange@Pyramid.f90
+  ${src_path}/ElemshapeData_Method@H1Serendipity.f90
+  ${src_path}/ElemshapeData_Method@H1Hermit.f90
+  ${src_path}/ElemshapeData_Method@H1Hierarchy.f90
+  ${src_path}/ElemshapeData_Method@H1DivLagrange.f90
+  ${src_path}/ElemshapeData_Method@H1DivSerendipity.f90
+  ${src_path}/ElemshapeData_Method@H1DivHermit.f90
+  ${src_path}/ElemshapeData_Method@H1DivHierarchy.f90
+  ${src_path}/ElemshapeData_Method@H1CurlLagrange.f90
+  ${src_path}/ElemshapeData_Method@H1CurlSerendipity.f90
+  ${src_path}/ElemshapeData_Method@H1CurlHermit.f90
+  ${src_path}/ElemshapeData_Method@H1CurlHierarchy.f90
+  ${src_path}/ElemshapeData_Method@DGLagrange.f90
+  ${src_path}/ElemshapeData_Method@DGSerendipity.f90
+  ${src_path}/ElemshapeData_Method@DGHermit.f90
+  ${src_path}/ElemshapeData_Method@DGHierarchy.f90
 )
