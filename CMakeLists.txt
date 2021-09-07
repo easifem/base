@@ -220,15 +220,22 @@ FOREACH(p LAPACK95 PENF BeFoR64 FACE StringiFor Sparsekit)
     ${p}::${p}
   )
 
-  TARGET_INCLUDE_DIRECTORIES(
-    ${PROJECT_NAME}
-    PUBLIC
-    "${${p}_INCLUDEDIR}"
-  )
+  ## The code given below creates a lot of duplicate include dir in easifemBaseTargets
+  # TARGET_INCLUDE_DIRECTORIES(
+  #   ${PROJECT_NAME}
+  #   PUBLIC
+  #   "${${p}_INCLUDEDIR}"
+  # )
 ELSE()
   MESSAGE(STATUS "${p} not found")
 ENDIF()
 ENDFOREACH()
+
+TARGET_INCLUDE_DIRECTORIES(
+  ${PROJECT_NAME}
+  PUBLIC
+  "$ENV{EASIFEM_EXTPKGS}/include"
+)
 
 ###############################
 ###### I N S T A L L ##########

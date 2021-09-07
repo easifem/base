@@ -16,6 +16,7 @@
 !
 
 SUBMODULE (Utility) StringMethods
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: IOSTAT_END
 IMPLICIT NONE
 CONTAINS
 
@@ -258,7 +259,6 @@ END PROCEDURE FindReplace_chars
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getField_chars
-  INTEGER( I4B ) :: ierrout
   INTEGER( I4B ) :: j,ioerr,nf
   CHARACTER(LEN=LEN(chars)) :: temp,temp2
 
@@ -270,22 +270,131 @@ MODULE PROCEDURE getField_chars
     !we don't want this to occur. We only want it to parse for '*'
     !and ' ' characters. So if slashes are present we treat things
     !differently.
-    IF(isPresent (temp,FSLASH)) THEN
-      !Temporarily change the FSLASH character to a BSLASH character
+    IF(isPresent(temp,CHAR_FSLASH)) THEN
+      !Temporarily change the CHAR_FSLASH character to a BSLASH character
       !to get correct parsing behavior
-      CALL strrep(temp,FSLASH,BSLASH)
+      CALL FindReplace(temp,CHAR_FSLASH,CHAR_BSLASH)
       READ(temp,*,IOSTAT=ioerr) (temp2,j=1,i)
-      CALL strrep(temp,BSLASH,FSLASH)
-      CALL strrep(temp2,BSLASH,FSLASH)
+      CALL FindReplace(temp,CHAR_BSLASH,CHAR_FSLASH)
+      CALL FindReplace(temp2,CHAR_BSLASH,CHAR_FSLASH)
     ELSE
       READ(temp,*,IOSTAT=ioerr) (temp2,j=1,i)
     ENDIF
     field=TRIM(temp2)
-    IF(PRESENT(ierrout)) ierrout=ioerr
+    IF(PRESENT(ierr)) ierr=ioerr
   ELSE
-    IF(PRESENT(ierrout)) ierrout=IOSTAT_END
+    IF(PRESENT(ierr)) ierr=IOSTAT_END
   ENDIF
 END PROCEDURE getField_chars
+
+!----------------------------------------------------------------------------
+!                                                                  SlashRep
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE SlashRep_chars
+  INTEGER( I4B ) :: i
+  DO i=1,LEN_TRIM(chars)
+#ifdef WIN32
+    IF(chars(i:i) == CHAR_FSLASH) chars(i:i)=CHAR_SLASH
+#else
+    IF(chars(i:i) == CHAR_BSLASH) chars(i:i)=CHAR_SLASH
+#endif
+  END DO
+END PROCEDURE SlashRep_chars
+
+!----------------------------------------------------------------------------
+!                                                              getFileParts
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getFileParts_chars
+  INTEGER( I4B ) :: i
+  CALL getPath_chars(chars,path)
+  CALL getFileName_chars(chars,fname)
+  DO i=LEN_TRIM(fname),1,-1
+    IF(fname(i:i) .EQ. CHAR_DOT) THEN
+      fname=fname(1:i-1)
+      EXIT
+    ENDIF
+  ENDDO
+  CALL getFileNameExt_chars(chars,ext)
+END PROCEDURE getFileParts_chars
+
+!----------------------------------------------------------------------------
+!                                                                   getPath
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getPath_chars
+  CHARACTER(LEN=LEN(chars)) :: chars2
+  INTEGER(I4B) :: i
+  !>
+  chars2=chars
+  CALL SlashRep(chars2)
+  path=''
+  DO i=LEN_TRIM(chars2),1,-1
+    IF(chars2(i:i) .EQ. CHAR_SLASH) THEN
+      path=chars2(1:i)
+      EXIT
+    ENDIF
+  END DO
+END PROCEDURE getPath_chars
+
+!----------------------------------------------------------------------------
+!                                                               getExtension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getExtension_chars
+  ! Define internal variables
+  INTEGER( I4B ) :: n,m
+  ext="       "
+  n=0
+  n = INDEX(char,".", back=.true.)
+  m = len(char)
+  ext(1:m-n+1) = char(n+1:m)
+END PROCEDURE getExtension_chars
+
+!----------------------------------------------------------------------------
+!                                                              getFileName
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getFileName_chars
+  CHARACTER(LEN=LEN(chars)) :: chars2
+  INTEGER( I4B ) :: i
+  chars2=chars
+  CALL SlashRep(chars2)
+  fname=chars
+  DO i=LEN_TRIM(chars2),1,-1
+    IF(chars2(i:i) .EQ. CHAR_SLASH) THEN
+      fname=chars2(i+1:LEN_TRIM(chars2))
+      EXIT
+    ENDIF
+  ENDDO
+END PROCEDURE getFileName_chars
+
+!----------------------------------------------------------------------------
+!                                                            getFileNameExt
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getFileNameExt_chars
+  CHARACTER(LEN=LEN(chars)) :: chars2
+  INTEGER( I4B ) :: i,SLASHloc
+
+  chars2=chars
+  CALL SlashRep(chars2)
+    ext=''
+  SLASHloc=1
+  DO i=LEN_TRIM(chars2),1,-1
+    IF(chars2(i:i) == CHAR_SLASH) THEN
+      SLASHloc=i
+      EXIT
+    ENDIF
+  END DO
+  DO i=LEN_TRIM(chars2),SLASHloc,-1
+    IF(chars2(i:i) == CHAR_DOT) THEN
+      ext=chars2(i:LEN_TRIM(chars2))
+      EXIT
+    ENDIF
+  END DO
+END PROCEDURE getFileNameExt_chars
 
 END SUBMODULE StringMethods
 

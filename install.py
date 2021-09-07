@@ -32,41 +32,9 @@ if _os == 'Windows':
     #print("Please use Windows Subsystem Linux(WSL) ")
     #print("Installation DONE!!")
 else:
-    if(installRequest("OpenBLAS")):
-      print("====================================")
-      cwd = os.getcwd()
-      extpkgs_dir = os.getenv('HOME') + "/easifem-extpkgs"
-      os.makedirs(extpkgs_dir, exist_ok=True)
-      os.chdir( extpkgs_dir )
-      os.system(f"git clone --branch develop https://github.com/xianyi/OpenBLAS.git")
-      os.chdir(extpkgs_dir + "/OpenBLAS")
-      openblas_def = "-S ./ -B build -DCMAKE_INSTALL_PREFIX=${EASIFEM_EXTPKGS} -DBUILD_WITHOUT_LAPACK=OFF -DBUILD_WITHOUT_CBLAS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DNOFORTRAN=OFF"
-      os.system( f"cmake {openblas_def}")
-      os.chdir(cwd)
-      print("====================================")
 
     cmake_def = ""
     cmake_def += " -DUSE_METIS=ON"
-    if(installRequest("METIS")):
-      print("====================================")
-      cwd = os.getcwd()
-      extpkgs_dir = os.getenv('HOME') + "/easifem-extpkgs"
-      os.makedirs(extpkgs_dir, exist_ok=True)
-      os.chdir( extpkgs_dir )
-      os.system(
-          f"git clone --branch master https://github.com/KarypisLab/METIS.git")
-      os.chdir(extpkgs_dir + "/METIS")
-      os.system(
-          f"git clone --branch master https://github.com/KarypisLab/GKlib.git")
-      metis_def = "config shared=1 prefix=${EASIFEM_EXTPKGS}"
-      # metis_def += " gklib_path=" + os.getcwd() + "/GKlib"
-      print( "METIS_DEF = " + metis_def )
-      os.system( f"make {metis_def}")
-      os.system( f"make install")
-      print("METIS IS INSTALLED [OK!]")
-      os.chdir(cwd)
-      print("====================================")
-
     opt = getOption("USE_OpenMP", ["ON", "OFF"] )
     if( opt == " " ): opt="ON"
     cmake_def += " -DUSE_OpenMP=" + opt

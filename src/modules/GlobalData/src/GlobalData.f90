@@ -496,25 +496,25 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_MPI = 7
   ! Symmetric and Skewsymmertic Nitsche Formulation
   INTEGER( I4B ), PARAMETER :: SkewSymNitsch = 1, SymNitsche = 2
 
-  CHARACTER(LEN=*),PARAMETER :: BLANK=" "
+  CHARACTER(LEN=*),PARAMETER :: CHAR_BLANK=" "
     !! Character representing a space symbol
-  CHARACTER(LEN=*),PARAMETER :: BANG="!"
+  CHARACTER(LEN=*),PARAMETER :: CHAR_BANG="!"
     !! Character representing a comment symbol
-  CHARACTER(LEN=*),PARAMETER :: DOT="."
+  CHARACTER(LEN=*),PARAMETER :: CHAR_DOT="."
     !! Character representing a period
-  CHARACTER(LEN=*),PARAMETER :: FSLASH="/"
+  CHARACTER(LEN=*),PARAMETER :: CHAR_FSLASH="/"
     !! Character representing a forward slash
-  CHARACTER(LEN=*),PARAMETER :: BSLASH="\"
+  CHARACTER(LEN=*),PARAMETER :: CHAR_BSLASH="\"
     !! Character representing a backward slash
-  CHARACTER(LEN=*),PARAMETER :: COLON=":"
+  CHARACTER(LEN=*),PARAMETER :: CHAR_COLON=":"
     !! Character representing a colon
 #ifdef WIN32
-  CHARACTER(LEN=*),PARAMETER :: SLASH=BSLASH
+  CHARACTER(LEN=*),PARAMETER :: CHAR_SLASH=CHAR_BSLASH
     !! This is needed for doxygen to parse correctly
     !! The slash symbol used by the file system
     !! (BLASH for Windows, FSLASH for everything else)
 #else
-  CHARACTER(LEN=*),PARAMETER :: SLASH=FSLASH
+  CHARACTER(LEN=*),PARAMETER :: CHAR_SLASH=CHAR_FSLASH
     !! The slash symbol used by the file system
     !! (BLASH for Windows, FSLASH for everything else)
 #endif
