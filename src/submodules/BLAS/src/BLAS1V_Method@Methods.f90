@@ -337,7 +337,7 @@ MODULE PROCEDURE vectorDOTvector
   INTEGER( I4B ) :: i
   Ans = 0.0
   DO i = 1, SIZE( obj1 )
-    Ans = Ans + DOT( obj1( i ), obj2( i ) )
+    Ans = Ans + DOT_PRODUCT( obj1( i ), obj2( i ) )
   END DO
 END PROCEDURE vectorDOTvector
 
@@ -349,7 +349,7 @@ MODULE PROCEDURE vectorDOTscalar
   INTEGER( I4B ) :: i
   Ans = 0.0
   DO i = 1, SIZE( obj1 )
-    Ans = Ans + DOT( obj1( i )%Val, obj2%Val )
+    Ans = Ans + DOT_PRODUCT( obj1( i )%Val, obj2%Val )
   END DO
 END PROCEDURE vectorDOTscalar
 
@@ -361,7 +361,7 @@ MODULE PROCEDURE scalarDOTvector
   INTEGER( I4B ) :: i
   Ans = 0.0
   DO i = 1, SIZE( obj2 )
-    Ans = Ans + DOT( obj1%Val, obj2( i )%Val )
+    Ans = Ans + DOT_PRODUCT( obj1%Val, obj2( i )%Val )
   END DO
 END PROCEDURE scalarDOTvector
 
@@ -392,7 +392,7 @@ END PROCEDURE NRM2scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE NRM2vector
-  Ans = SQRT( DOT( obj, obj ) )
+  Ans = SQRT( DOT_PRODUCT( obj, obj ) )
 END PROCEDURE NRM2vector
 
 

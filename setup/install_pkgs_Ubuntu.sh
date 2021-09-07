@@ -21,12 +21,12 @@ echo "=========================================="
 echo "running: apt install -y git"
 sudo apt install -y git
 echo "=========================================="
-echo "running: apt install -y gcc-10"
-sudo apt install -y gcc-10
-sudo apt install -y g++-10
+echo "running: apt install -y gcc"
+sudo apt install -y gcc
+sudo apt install -y g++
 echo "=========================================="
-echo "running: apt install -y gfortran-10"
-sudo apt install -y gfortran-10
+echo "running: apt install -y gfortran"
+sudo apt install -y gfortran
 echo "=========================================="
 echo "running: apt install -y python3"
 sudo apt install -y python3

@@ -627,12 +627,12 @@ END INTERFACE
 ! date: 	25 Feb 2021
 ! summary: 	This generic routine computes dot product
 
-INTERFACE DOT
+INTERFACE DOT_PRODUCT
   MODULE PROCEDURE scalarDOTscalar, vectorDOTvector, vectorDOTscalar, &
     & scalarDOTvector, scalarDOTintrinsic
-END INTERFACE DOT
+END INTERFACE DOT_PRODUCT
 
-PUBLIC :: DOT
+PUBLIC :: DOT_PRODUCT
 
 !----------------------------------------------------------------------------
 !                                                                Norm2@BLAS1

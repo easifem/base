@@ -148,7 +148,8 @@ PUBLIC :: OPERATOR( .ARROXLE. )
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	3 April 2021
-! summary: 	Defines the operation when comparing two single precision reals with .APPROXGE.
+! summary: 	Defines the operation when comparing two single precision reals 
+! with .APPROXGE.
 
 INTERFACE
 MODULE ELEMENTAL FUNCTION approxge_real(r1,r2) RESULT(Ans)
@@ -170,7 +171,8 @@ PUBLIC :: OPERATOR( .ARROXGE. )
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	3 April 2021
-! summary: 	Defines the operation when comparing two single precision reals with SOFTEQ
+! summary: 	Defines the operation when comparing two single precision reals 
+! with SOFTEQ
 
 INTERFACE
 MODULE ELEMENTAL FUNCTION softeq_real(r1,r2,tol) RESULT(Ans)
@@ -192,7 +194,8 @@ PUBLIC :: SOFTEQ
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	3 April 2021
-! summary: 	Defines the operation when comparing two single precision reals with SOFTEQR
+! summary: 	Defines the operation when comparing two single precision reals 
+! with SOFTEQR
 
 INTERFACE
 MODULE ELEMENTAL FUNCTION softeqr_real(r1,r2,tol) RESULT(Ans)
@@ -215,7 +218,8 @@ PUBLIC :: SOFTEQR
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	3 April 2021
-! summary: 	Defines the operation when comparing two single precision reals with SOFTLE
+! summary: 	Defines the operation when comparing two single precision reals 
+! with SOFTLE
 
 INTERFACE
 MODULE ELEMENTAL FUNCTION softle_real(r1,r2,tol) RESULT(Ans)
@@ -389,7 +393,8 @@ PUBLIC :: isNumeric
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
-! summary: Returns a vector of reals given `start`,  `end`,  and `increment` values.
+! summary: Returns a vector of reals given `start`,  `end`,  and `increment` 
+! values.
 !
 !### Introduction
 !
@@ -631,7 +636,6 @@ PUBLIC :: UpperCase
 !                                                  toUpperCase@StringMethods
 !----------------------------------------------------------------------------
 
-
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
 ! summary: 	Returns the upperCase version of chars
@@ -741,10 +745,12 @@ PUBLIC :: isBlank
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
-! summary: Returns number of substrings contained in input string 'chars' delimited by white space.
+! summary: Returns number of substrings contained in input string 'chars' 
+! delimited by white space.
 !
 !### Introduction
-! Returns number of substrings contained in input string 'chars' delimited by white space.
+! Returns number of substrings contained in input string 'chars' delimited by 
+! white space.
 ! This routien has been adopted from
 ! [https://github.com/CASL/Futility/blob/master/src/IO_Strings.f90](https://github.com/CASL/Futility/blob/master/src/IO_Strings.f90)
 !
@@ -768,7 +774,8 @@ PUBLIC :: numStrings
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 sept 2021
-! summary: Returns the total number of times the substring pattern is found in the main string
+! summary: Returns the total number of times the substring pattern is 
+! found in the main string
 
 INTERFACE
 MODULE PURE FUNCTION numMatchStr_chars( chars, pattern ) RESULT( Ans )
@@ -875,6 +882,23 @@ PUBLIC :: FindReplace
 !                                                    getField@StringMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 8 sept 2021
+! summary: Replaces a substring pattern with a different substring in a string
+!
+!### Introduction
+! Replaces a substring pattern with a different substring in a string.
+! - chars the string which will have substrings replaced.
+! - findp the substring pattern to find and replace
+! - repp the new substring that will be replace parts of string
+!
+!@note
+! repp can be larger than @c findp and as long as the size of string can
+! accomodate the increased length of all replacements. Trailing and preceding
+! spaces are counted in all strings.
+!@endnote
+
+
 INTERFACE
 MODULE PURE SUBROUTINE getField_chars( i,chars,field,ierr )
   INTEGER(I4B),INTENT(IN) :: i
@@ -889,6 +913,134 @@ INTERFACE getField
 END INTERFACE getField
 
 PUBLIC :: getField
+
+!----------------------------------------------------------------------------
+!                                                    SlashRep@StringMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 8 sept 2021
+! summary: routine replaces slash character in file path names with
+! the system appropriate file separator slash.
+!
+!### Introduction
+! This routine returns the path, filename, and extension.
+
+INTERFACE
+MODULE PURE SUBROUTINE SlashRep_chars( chars )
+  CHARACTER( LEN = * ), INTENT( INOUT ) :: chars
+END SUBROUTINE SlashRep_chars
+END INTERFACE
+
+INTERFACE SlashRep
+  MODULE PROCEDURE SlashRep_chars
+END INTERFACE SlashRep
+
+PUBLIC :: SlashRep
+
+!----------------------------------------------------------------------------
+!                                                getFileParts@StringMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 8 sept 2021
+! summary: Returns the path,filename, and extension
+!
+!### Introduction
+! This routine returns the path, filename, and extension.
+
+INTERFACE
+MODULE PURE SUBROUTINE getFileParts_chars( chars,path,fname,ext )
+  CHARACTER(LEN=*),INTENT(IN) :: chars
+  CHARACTER(LEN=*),INTENT(OUT) :: path
+  CHARACTER(LEN=*),INTENT(OUT) :: fname
+  CHARACTER(LEN=*),INTENT(OUT) :: ext
+END SUBROUTINE getFileParts_chars
+END INTERFACE
+
+INTERFACE getFileParts
+  MODULE PROCEDURE getFileParts_chars
+END INTERFACE getFileParts
+
+PUBLIC :: getFileParts
+
+!----------------------------------------------------------------------------
+!                                                getPath@StringMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE getPath_chars( chars,path )
+  CHARACTER(LEN=*),INTENT(IN) :: chars
+  CHARACTER(LEN=*),INTENT(OUT) :: path
+END SUBROUTINE getPath_chars
+END INTERFACE
+
+INTERFACE getPath
+  MODULE PROCEDURE getPath_chars
+END INTERFACE getPath
+
+PUBLIC :: getPath
+
+!----------------------------------------------------------------------------
+!                                                getFileName@StringMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE getFileName_chars( chars,fname )
+  CHARACTER(LEN=*),INTENT(IN) :: chars
+  CHARACTER(LEN=*),INTENT(OUT) :: fname
+END SUBROUTINE getFileName_chars
+END INTERFACE
+
+INTERFACE getFileName
+  MODULE PROCEDURE getFileName_chars
+END INTERFACE getFileName
+
+PUBLIC :: getFileName
+
+!----------------------------------------------------------------------------
+!                                           getFileNameExt@StringMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE getFileNameExt_chars( chars,ext )
+  CHARACTER(LEN=*),INTENT(IN) :: chars
+  CHARACTER(LEN=*),INTENT(OUT) :: ext
+END SUBROUTINE getFileNameExt_chars
+END INTERFACE
+
+INTERFACE getFileNameExt
+  MODULE PROCEDURE getFileNameExt_chars
+END INTERFACE getFileNameExt
+
+PUBLIC :: getFileNameExt
+
+!----------------------------------------------------------------------------
+!                                                getExtension@StringMethods
+!----------------------------------------------------------------------------
+
+!> authors: Dr. Vikas Sharma
+!
+! This function get the extension from a file
+!
+! ## Usage
+! ```fortran
+! call display( getExtension("helloworld.f90") .EQ. "f90", &
+! & msg="test1:: ")
+! ```
+
+INTERFACE
+MODULE FUNCTION getExtension_chars( char ) RESULT(ext)
+  CHARACTER( LEN=* ), INTENT( IN ) :: char
+  CHARACTER(7) :: ext
+END FUNCTION
+END INTERFACE
+
+INTERFACE getExtension
+  MODULE PROCEDURE getExtension_chars
+END INTERFACE getExtension
+
+PUBLIC :: getExtension
 
 !----------------------------------------------------------------------------
 !                                                     Reallocate@Reallocate
@@ -2783,29 +2935,6 @@ INTERFACE Inv
 END INTERFACE Inv
 
 PUBLIC :: INV
-
-!----------------------------------------------------------------------------
-!                                                         getExtension@MISC
-!----------------------------------------------------------------------------
-
-!> authors: Dr. Vikas Sharma
-!
-! This function get the extension from a file
-!
-! ## Usage
-! ```fortran
-! call display( getExtension("helloworld.f90") .EQ. "f90", &
-! & msg="test1:: ")
-! ```
-
-INTERFACE
-MODULE FUNCTION getExtension( char ) RESULT(ext)
-  CHARACTER( LEN=* ), INTENT( IN ) :: char
-  CHARACTER(7) :: ext
-END FUNCTION
-END INTERFACE
-
-PUBLIC :: getExtension
 
 !----------------------------------------------------------------------------
 !                                                               Radian@MISC

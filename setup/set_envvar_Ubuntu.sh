@@ -8,6 +8,16 @@
 #
 #--------------------------------------------------------------
 
+#!/bin/sh
+# This is a setup script for installing EASIFEM-base library.
+# (c) 2021, Dr Vikas Sharma, all rights reserved
+#
+#
+# Log (dd/mm/yyyy)
+# 15/02/2021 this document was created
+#
+#--------------------------------------------------------------
+
 SHELL_=${SHELL}
 if [[ $SHELL_ =~ .*zsh.* ]]
 then
@@ -17,7 +27,6 @@ if [[ $SHELL_ =~ .*bash.* ]]
 then
   BP=${HOME}/.bashrc
 fi
-echo $BP
 
 if [ -f "${BP}" ]
 then
@@ -40,26 +49,22 @@ else
 fi
 
 prefix=${HOME}
-echo "easifem_prefix=${prefix}" >> ${ERC}
-echo "export EASIFEM_BASE=${prefix}/.easifem/base/" >> ${ERC}
-echo "export EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs/" >> ${ERC}
-export EASIFEM_CLASSES=${prefix}/.easifem/classes/
-export EASIFEM_KERNEL=${prefix}/.easifem/kernel/
-mkdir -p ${EASIFEM_EXTPKGS}
-mkdir -p ${EASIFEM_BASE}
+EASIFEM_BASE=${prefix}/.easifem/base
+EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs
+EASIFEM_CLASSES=${prefix}/.easifem/classes
+EASIFEM_MATERIALS=${prefix}/.easifem/materials
+EASIFEM_KERNELS=${prefix}/.easifem/kernels
+
+echo "export EASIFEM_BASE=${prefix}/.easifem/base" >> ${ERC}
+echo "export EASIFEM_EXTPKGS=${prefix}/.easifem/extpkgs" >> ${ERC}
+echo "export EASIFEM_CLASSES=${prefix}/.easifem/classes" >> ${ERC}
+echo "export EASIFEM_MATERIALS=${prefix}/.easifem/materials" >> ${ERC}
+echo "export EASIFEM_KERNELS=${prefix}/.easifem/kernels" >> ${ERC}
+
 echo "mkdir -p ${EASIFEM_EXTPKGS}" >> ${ERC}
 echo "mkdir -p ${EASIFEM_BASE}" >> ${ERC}
-echo "export CC=/usr/bin/gcc-10" >> ${ERC}
-echo "export CXX=/usr/bin/g++-10" >> ${ERC}
-echo "export CPP=/usr/bin/cpp-10" >> ${ERC}
-echo "export LD=/usr/bin/gcc-10" >> ${ERC}
-echo "export FC=/usr/bin/gfortran-10" >> ${ERC}
-echo "alias c++=/usr/bin/c++-10" >> ${ERC}
-echo "alias g++=/usr/bin/g++-10" >> ${ERC}
-echo "alias gcc=/usr/bin/gcc-10" >> ${ERC}
-echo "alias cpp=/usr/bin/cpp-10" >> ${ERC}
-echo "alias ld=/usr/bin/gcc-10" >> ${ERC}
-echo "alias cc=/usr/bin/gcc-10" >> ${ERC}
-echo "alias gfortran=/usr/bin/gfortran-10" >> ${ERC}
+echo "mkdir -p ${EASIFEM_CLASSES}" >> ${ERC}
+echo "mkdir -p ${EASIFEM_KERNELS}" >> ${ERC}
+
 echo "source ${ERC}" >> ${BP}
 source ${BP}

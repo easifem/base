@@ -19,21 +19,6 @@ SUBMODULE( Utility ) Misc
 IMPLICIT NONE
 CONTAINS
 
-
-!----------------------------------------------------------------------------
-!                                                               getExtension
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE getExtension
-  ! Define internal variables
-  integer(int32) :: n,m
-  ext="       "
-  n=0
-  n = index(char,".", back=.true.)
-  m = len(char)
-  ext(1:m-n+1) = char(n+1:m)
-END PROCEDURE
-
 !----------------------------------------------------------------------------
 !                                                                     Radian
 !----------------------------------------------------------------------------
