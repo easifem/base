@@ -486,7 +486,6 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_SERIAL = 5
 INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_OMP = 6
 INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_MPI = 7
 
-
   ! Constraint type
   INTEGER( I4B ), PARAMETER ::  StrongBC = 1
   INTEGER( I4B ), PARAMETER ::  NitscheBC = 2
@@ -504,7 +503,7 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_MPI = 7
     !! Character representing a period
   CHARACTER(LEN=*),PARAMETER :: CHAR_FSLASH="/"
     !! Character representing a forward slash
-  CHARACTER(LEN=*),PARAMETER :: CHAR_BSLASH="\"
+  CHARACTER(LEN=*),PARAMETER :: CHAR_BSLASH=ACHAR(92)
     !! Character representing a backward slash
   CHARACTER(LEN=*),PARAMETER :: CHAR_COLON=":"
     !! Character representing a colon
@@ -518,5 +517,13 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: LIS_MPI = 7
     !! The slash symbol used by the file system
     !! (BLASH for Windows, FSLASH for everything else)
 #endif
+
+CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_SPACE=' '
+  !! Character constant for a single space
+CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_CR=CHAR(13)
+  !! Character constant for a carraige return
+CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_LF=CHAR(10)
+  !! Character constant for a line feed
+CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_TAB=CHAR(9)
 
 END MODULE GlobalData
