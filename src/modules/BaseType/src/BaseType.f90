@@ -28,7 +28,7 @@ PUBLIC :: String
 
 TYPE( String ), PUBLIC, PARAMETER :: TypeString = String(raw=NULL())
 TYPE :: StringPointer_
-  CLASS( String ), POINTER :: Ptr => NULL()
+  CLASS( String ), POINTER :: ptr => NULL()
 END TYPE StringPointer_
 PUBLIC :: StringPointer_
 

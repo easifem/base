@@ -1,15 +1,13 @@
-!----------------------------------------------------------------------------
+!-------------------------------------------------------------------------------
 !    GnuPlot Interface
-!----------------------------------------------------------------------------
-!    Purpose:   object Based Interface to GnuPlot from Fortran (ogpf)
+!-------------------------------------------------------------------------------
+!    Purpose:   Object Based Interface to GnuPlot from Fortran (ogpf)
 !    Platform:  Windows XP/Vista/7/10
-!               (It should work on other platforms, see the finalize_plot
-!                 subroutine below)
+!               (It should work on other platforms, see the finalize_plot subroutine below)
 !    Language:  Fortran 2003 and 2008
 !    Requires:  1. Fortran 2003 compiler (e.g gfortran 5, IVF 12.1, ...)
 !                  There is only two more features needs Fortran 2008 standard
-!                  execute_command_line and passing internal function as
-!                  argument.
+!                  execute_command_line and passing internal function as argument.
 !               2. gnuplot 5 and higher (other previous version can be used
 !    Author:    Mohammad Rahmani
 !               Chem Eng Dep., Amirkabir Uni. of Tech
@@ -30,8 +28,7 @@
 
 ! Revision 0.22
 ! Date: Mar 9th, 2018
-! - a new procedure called use_extra_configuration is used to set general
-!   gnuplot settings
+! - a new procedure called use_extra_configuration is used to set general gnuplot settings
 ! - new type for labels (xlabel, ylabel, zlabel, title,...)
 ! - all lables now accept text color, font name, font size, rorate by degree
 ! - Secondary axes can use different scale (linear or logarithmic)
@@ -55,8 +52,7 @@
 !  - linespec for plor2d_matrix_vs_plot now is a single dynamic string
 !  - splot now uses datablok instead of inline data
 !  - meshgrid now support full grid vector
-!  - arange a numpy similar function to create a range in the form of
-!    [xa, xa+dx, xa+2*dx, ...]
+!  - arange a numpy similar function to create a range in the form of [xa, xa+dx, xa+2*dx, ...]
 !  - new num2str routines
 
 
@@ -69,15 +65,14 @@
 ! Revision:  0.18
 ! Date:     Dec 22th, 2017
 !   Major revision
-!   - The dynamic string allocation of Fortran 2003 is used
-!   (some old compilers does not support this capability)
+!   - The dynamic string allocation of Fortran 2003 is used (some old compilers
+!     does not support this capability)
 !   - Multiple windows plot now supported
 !   - Multiplot now supported
 !   - Gnuplot script file extension is changed from .plt to .gp
 !   - Default window size (canvas) changed to 640x480
 !   - Persist set to on (true) by default
-!   - A separate subroutine is used now to create the output file for
-!     gnuplot commands
+!   - A separate subroutine is used now to create the output file for gnuplot commands
 !   - A separate subroutine is used now to finalize the output
 
 !
@@ -86,18 +81,15 @@
 ! Revision:  0.17
 ! Date:     Dec 18th, 2017
 !   Minor corrections
-!   - Correct the meshgrid for wrong dy calculation when ygv is sent by
-!     two elements.
-!   - Remove the subroutine ErrHandler (development postponed to future
-!     release)
+!   - Correct the meshgrid for wrong dy calculation when ygv is sent by two elements.
+!   - Remove the subroutine ErrHandler (development postponed to future release)
 
 
 ! Revision:  0.16
 ! Date:     Feb 11th, 2016
 !   Minor corrections
 !   Correct the lspec processing in plot2D_matrix_vs_vector
-!   Now, it is possible to send less line specification and gpf will cycle
-!   through lspec
+!   Now, it is possible to send less line specification and gpf will cycle through lspec
 
 ! Revision:  0.15
 ! Date:     Apr 20th, 2012
@@ -123,8 +115,7 @@
 ! Date:     Feb 9th, 2012
 !   Minor corrections
 !   New semilogx, semilogy, loglog methods
-!   New options method, allow to be called several times to set the gnuplot
-!   options
+!   New options method, allow to be called several times to set the gnuplot options
 
 
 
@@ -141,186 +132,157 @@
 ! Date:     Jan 5th, 2012
 ! First object-based version
 
-MODULE GNUPLOT_METHOD
+MODULE OGPF
+USE GlobalData, ONLY: wp=>DFP, sp=>Real32, dp=>Real64
+IMPLICIT NONE
+PRIVATE
+! Library information
+CHARACTER(LEN=*), PARAMETER :: md_name = 'ogpf libray'
+CHARACTER(LEN=*), PARAMETER :: md_rev  = 'Rev. 0.22 of March 9th, 2018'
+CHARACTER(LEN=*), PARAMETER :: md_lic  = 'Licence: MIT'
 
-  implicit none
-  private
-  ! public :: arange, linspace, meshgrid, wp, num2str
-  public :: linspace, meshgrid
-
-  integer, parameter :: sp = kind( 1.0 )
-  !! sp: kind for single precision
-  integer, parameter :: dp = kind( 1.0d0 )
-  !! dp: kind for double precision
-  integer, parameter :: wp = dp
-  !! wp: kind for working precision (set to either sp or dp)
-
-  ! Library information
-  character(len=*), parameter :: md_name = 'ogpf libray'
-  character(len=*), parameter :: md_rev  = 'Rev. 0.22 of March 9th, 2018'
-  character(len=*), parameter :: md_lic  = 'Licence: MIT'
-
-  ! ogpf Configuration parameters
-  ! The terminal and font have been set for Windows operating system
-  ! Correct to meet the requirements on other OS like Linux and Mac.
-  character(len=*), parameter ::  gnuplot_term_type = 'qt'
-  !! Output terminal
-  character(len=*), parameter ::  gnuplot_term_font = 'Helvetica,10'
-  !! font
-  character(len=*), parameter ::  gnuplot_term_size = '640,480'
-  !! plot window size
-  character(len=*), parameter :: gnuplot_output_filename='ogpf_temp_script.gp'
-  !! temporary file for output
-  ! extra configuration can be set using ogpf object
-
-  !> convert integer, real, double precision into string
-  interface num2str
-      module procedure num2str_i4
-      module procedure num2str_r4
-      module procedure num2str_r8
-  end interface
-
-  !> 0.22
-  ! tplabel is a structure for gnuplot labels including
-  ! title, xlabel, x2label, ylabel, ...
-  integer, parameter, private :: NOT_INITIALIZED = -32000
+! ogpf Configuration parameters
+! The terminal and font have been set for Windows operating system
+! Correct to meet the requirements on other OS like Linux and Mac.
+CHARACTER(LEN=*), PARAMETER ::  gnuplot_term_type = 'wxt'
+!! Output terminal
+CHARACTER(LEN=*), PARAMETER ::  gnuplot_term_font = 'verdana,10'
+!! font
+CHARACTER(LEN=*), PARAMETER ::  gnuplot_term_size = '640,480'
+!! '960,840'                  ! plot window size
+CHARACTER(LEN=*), PARAMETER ::  gnuplot_output_filename='ogpf_temp_script.gp' !! temporary file for output
+!! extra configuration can be set using ogpf object
 
 !----------------------------------------------------------------------------
-!                                                                    tplabel
-!----------------------------------------------------------------------------
-  type tplabel
-      logical                       :: has_label = .false.
-      character(len=:), allocatable :: lbltext
-      character(len=:), allocatable :: lblcolor
-      character(len=:), allocatable :: lblfontname
-      integer                       :: lblfontsize = NOT_INITIALIZED
-      integer                       :: lblrotate   = NOT_INITIALIZED
-  end type tplabel
-
-!----------------------------------------------------------------------------
-!                                                                       gpf
+!
 !----------------------------------------------------------------------------
 
-!> the gpf class implement the object for using gnuplot from fortran in a
-! semi-interactive mode!
-! the fortran actually do the job and write out the commands and data in a
-! single file and then
+! module procedure
+! convert integer, real, double precision into string
+INTERFACE num2str
+  MODULE PROCEDURE num2str_i4, num2str_r4, num2str_r8
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> 0.22
+! tplabel is a structure for gnuplot labels including
+! title, xlabel, x2label, ylabel, ...
+INTEGER, PARAMETER, PRIVATE :: NOT_INITIALIZED = -32000
+TYPE TPLABEL
+  LOGICAL                       :: has_label = .false.
+  CHARACTER(LEN=:), ALLOCATABLE :: lbltext
+  CHARACTER(LEN=:), ALLOCATABLE :: lblcolor
+  CHARACTER(LEN=:), ALLOCATABLE :: lblfontname
+  INTEGER :: lblfontsize = NOT_INITIALIZED
+  INTEGER :: lblrotate   = NOT_INITIALIZED
+END TYPE TPLABEL
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! the gpf class implement the object for using gnuplot from fortran in a semi-interactive mode!
+! the fortran actually do the job and write out the commands and data in a single file and then
 ! calls the gnuplot by shell command to plot the data
 
-  type, public :: gpf
-    private
-    !> 0.22
-    type(tplabel) :: tpplottitle
-    type(tplabel) :: tpxlabel
-    type(tplabel) :: tpx2label
-    type(tplabel) :: tpylabel
-    type(tplabel) :: tpy2label
-    type(tplabel) :: tpzlabel
-
-    character(len=:), allocatable  :: txtoptions
+TYPE, PUBLIC :: GPF
+  PRIVATE
+  !> 0.22
+  TYPE(TPLABEL) :: tpplottitle
+  TYPE(TPLABEL) :: tpxlabel
+  TYPE(TPLABEL) :: tpx2label
+  TYPE(TPLABEL) :: tpylabel
+  TYPE(TPLABEL) :: tpy2label
+  TYPE(TPLABEL) :: tpzlabel
+  CHARACTER(LEN=:), ALLOCATABLE  :: txtoptions
     !! a long string to store all type of gnuplot options
-    character(len=:), allocatable  :: txtscript
+  CHARACTER(LEN=:), ALLOCATABLE  :: txtscript
     !! a long string to store gnuplot script
-    character(len=:), allocatable  :: txtdatastyle
+  CHARACTER(LEN=:), ALLOCATABLE  :: txtdatastyle
     !! lines, points, linepoints
-
-    logical :: hasxrange      = .false.
-    logical :: hasx2range     = .false.
-    logical :: hasyrange      = .false.
-    logical :: hasy2range     = .false.
-    logical :: haszrange      = .false.
-    logical :: hasoptions     = .false.
-    logical :: hasanimation   = .false.
-    logical :: hasfilename    = .false.
-    logical :: hasfileopen    = .false.
-
-    real(wp)           :: xrange(2), yrange(2), zrange(2)
-    real(wp)           :: x2range(2), y2range(2)
-    character(len=8)   :: plotscale
-
-    ! multiplot parameters
-    logical :: hasmultiplot = .false.
-    integer :: multiplot_rows
-    integer :: multiplot_cols
-    integer :: multiplot_total_plots
-
-    ! animation
-    integer  :: pause_seconds = 0
+  LOGICAL :: hasxrange      = .false.
+  LOGICAL :: hasx2range     = .false.
+  LOGICAL :: hasyrange      = .false.
+  LOGICAL :: hasy2range     = .false.
+  LOGICAL :: haszrange      = .false.
+  LOGICAL :: hasoptions     = .false.
+  LOGICAL :: hasanimation   = .false.
+  LOGICAL :: hasfilename    = .false.
+  LOGICAL :: hasfileopen    = .false.
+  REAL(wp)           :: xrange(2), yrange(2), zrange(2)
+  REAL(wp)           :: x2range(2), y2range(2)
+  CHARACTER(len=8)   :: plotscale
+  ! multiplot parameters
+  LOGICAL :: hasmultiplot = .false.
+  INTEGER :: multiplot_rows
+  INTEGER :: multiplot_cols
+  INTEGER :: multiplot_total_plots
+  ! animation
+  INTEGER  :: pause_seconds = 0
     !! keep plot on screen for this value in seconds
-    integer                         :: frame_number
+  INTEGER :: frame_number
     !! frame number in animation
-
-    ! use for debugging and error handling
-    character(len=:), allocatable   :: msg
-    !!Message from plot procedures
-    integer                         :: status=0
+  ! use for debugging and error handling
+  CHARACTER(LEN=:), ALLOCATABLE   :: msg
+    !! Message from plot procedures
+  INTEGER :: status=0
     !!Status from plot procedures
-
-    integer                         :: file_unit
+  INTEGER :: file_unit
     !! file unit identifier
-    character(len=:), allocatable   :: txtfilename
+  CHARACTER(LEN=:), ALLOCATABLE   :: txtfilename
     !! the name of physical file to write the gnuplot script
+  ! ogpf preset configuration (kind of gnuplot initialization)
+  LOGICAL :: preset_configuration = .true.
+  CONTAINS
+  PRIVATE
+  ! local private procedures
+  PROCEDURE, PASS, PRIVATE :: preset_gnuplot_config
+  PROCEDURE, PASS, PRIVATE :: plot2d_vector_vs_vector
+  PROCEDURE, PASS, PRIVATE :: plot2d_matrix_vs_vector
+  PROCEDURE, PASS, PRIVATE :: plot2d_matrix_vs_matrix
+  PROCEDURE, PASS, PRIVATE :: semilogxv
+  PROCEDURE, PASS, PRIVATE :: semilogxm
+  PROCEDURE, PASS, PRIVATE :: semilogyv
+  PROCEDURE, PASS, PRIVATE :: semilogym
+  PROCEDURE, PASS, PRIVATE :: loglogv
+  PROCEDURE, PASS, PRIVATE :: loglogm
+  !> 0.22
+  PROCEDURE, PASS, PRIVATE :: set_label
+  ! public procedures
+  PROCEDURE, PASS, PUBLIC :: options      => set_options
+  PROCEDURE, PASS, PUBLIC :: title        => set_plottitle
+  PROCEDURE, PASS, PUBLIC :: xlabel       => set_xlabel
+  PROCEDURE, PASS, PUBLIC :: x2label      => set_x2label
+  PROCEDURE, PASS, PUBLIC :: ylabel       => set_ylabel
+  PROCEDURE, PASS, PUBLIC :: y2label      => set_y2label
+  PROCEDURE, PASS, PUBLIC :: zlabel       => set_zlabel
+  PROCEDURE, PASS, PUBLIC :: axis         => set_axis
+  PROCEDURE, PASS, PUBLIC :: axis_sc      => set_secondary_axis
+  PROCEDURE, PASS, PUBLIC :: filename     => set_filename
+  PROCEDURE, PASS, PUBLIC :: reset        => reset_to_defaults
+  PROCEDURE, PASS, PUBLIC :: preset       => use_preset_configuration
+  PROCEDURE, PASS, PUBLIC :: multiplot  => sub_multiplot
+  GENERIC, PUBLIC :: plot => &
+    & plot2d_vector_vs_vector, &
+    & plot2d_matrix_vs_vector, &
+    & plot2d_matrix_vs_matrix
+  GENERIC, PUBLIC :: semilogx   => semilogxv, semilogxm
+  GENERIC, PUBLIC :: semilogy   => semilogyv, semilogym
+  GENERIC, PUBLIC :: loglog     => loglogv, loglogm
+  PROCEDURE, PASS, PUBLIC :: surf       => splot  ! 3D surface plot
+  PROCEDURE, PASS, PUBLIC :: lplot      => lplot3d  ! 3D line plot
+  PROCEDURE, PASS, PUBLIC :: contour    => cplot  ! contour plot
+  PROCEDURE, PASS, PUBLIC :: fplot      => function_plot
+  PROCEDURE, PASS, PUBLIC :: add_script => addscript
+  PROCEDURE, PASS, PUBLIC :: run_script => runscript
+  PROCEDURE, PASS, PUBLIC :: animation_start => sub_animation_start
+  PROCEDURE, PASS, PUBLIC :: animation_show  => sub_animation_show
+END TYPE GPF
 
-    ! ogpf preset configuration (kind of gnuplot initialization)
-    logical :: preset_configuration = .true.
-
-    contains
-      private
-
-      ! local private procedures
-      procedure, pass, private :: preset_gnuplot_config
-
-      procedure, pass, private :: plot2d_vector_vs_vector
-      procedure, pass, private :: plot2d_matrix_vs_vector
-      procedure, pass, private :: plot2d_matrix_vs_matrix
-
-      procedure, pass, private :: semilogxv
-      procedure, pass, private :: semilogxm
-      procedure, pass, private :: semilogyv
-      procedure, pass, private :: semilogym
-      procedure, pass, private :: loglogv
-      procedure, pass, private :: loglogm
-
-      !> 0.22
-      procedure, pass, private :: set_label
-
-      ! public procedures
-      procedure, pass, public :: options      => set_options
-      procedure, pass, public :: title        => set_plottitle
-      procedure, pass, public :: xlabel       => set_xlabel
-      procedure, pass, public :: x2label      => set_x2label
-      procedure, pass, public :: ylabel       => set_ylabel
-      procedure, pass, public :: y2label      => set_y2label
-      procedure, pass, public :: zlabel       => set_zlabel
-      procedure, pass, public :: axis         => set_axis
-      procedure, pass, public :: axis_sc      => set_secondary_axis
-      procedure, pass, public :: filename     => set_filename
-      procedure, pass, public :: reset        => reset_to_defaults
-      procedure, pass, public :: preset       => use_preset_configuration
-
-
-      procedure, pass, public :: multiplot  => sub_multiplot
-      generic, public         :: plot       => plot2d_vector_vs_vector, &
-                                                plot2d_matrix_vs_vector, &
-                                                plot2d_matrix_vs_matrix
-      generic, public         :: semilogx   => semilogxv, semilogxm
-      generic, public         :: semilogy   => semilogyv, semilogym
-      generic, public         :: loglog     => loglogv, loglogm
-
-      procedure, pass, public :: surf       => splot  ! 3D surface plot
-      procedure, pass, public :: contour    => cplot  ! contour plot
-
-      procedure, pass, public :: fplot      => function_plot
-
-      procedure, pass, public :: add_script => addscript
-      procedure, pass, public :: run_script => runscript
-
-      procedure, pass, public :: animation_start => sub_animation_start
-      procedure, pass, public :: animation_show  => sub_animation_show
-
-  end type gpf
-
-contains
+CONTAINS
 
     !!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     !!> Section One: Set/Get Methods for ogpf object
@@ -367,12 +329,13 @@ contains
         class(gpf):: this
         character(len=*), intent(in) :: stropt
 
+        if(.not.allocated(this%txtoptions))this%txtoptions=''
         if (len_trim(this%txtoptions) == 0 ) then
             this%txtoptions = '' ! initialize string
         end if
         if ( len_trim(stropt)>0 ) then
             this%txtoptions = this%txtoptions // splitstr(stropt)
-        end if
+          end if
 
         this%hasoptions=.true.
 
@@ -565,6 +528,10 @@ contains
 
         if (present(font_name)) then
             label%lblfontname = font_name
+        else
+            if(.not.allocated(label%lblfontname))then
+                label%lblfontname = ''
+            endif
         end if
 
         if (present(font_size)) then
@@ -1295,6 +1262,100 @@ contains
         !: End of cplot
     end subroutine cplot
 
+     subroutine lplot3d(this, x, y, z, lspec, palette)
+         !..............................................................................
+         ! lplot3d create a line plot in 3d
+         ! datablock is used instead of  gnuplot inline file "-"
+         !..............................................................................
+
+         class(gpf):: this
+         ! Input vector
+         real(wp),  intent(in)            :: x(:)
+         real(wp),  intent(in), optional  :: y(:)
+         real(wp),  intent(in), optional  :: z(:)
+         character(len=*),  intent(in), optional   ::  lspec
+         character(len=*),  intent(in), optional   ::  palette
+
+         !   Local variables
+         !----------------------------------------------------------------------
+         integer:: ncx
+         integer:: nrx
+         integer:: i
+         integer:: j
+         logical:: xyz_data
+         character(len=80)::  pltstring
+         character(len=*), parameter ::  datablock = '$xyz'
+
+         pltstring=''
+         !   Check the input data
+         nrx=size(x)
+         if (present(y) .and. present(z)) then
+             xyz_data=.true.
+         elseif (present(y)) then
+             print*, "gpf error: Z matrix was not sent to 3D plot routine"
+             return
+         else
+             xyz_data=.false.
+         end if
+
+         ! set default line style for 3D plot, can be overwritten
+         this%txtdatastyle = 'lines'
+         ! create the script file for writing gnuplot commands and data
+         call create_outputfile(this)
+
+         ! Write titles and other annotations
+         call processcmd(this)
+
+         ! Write xy data into file
+         write ( this%file_unit, '(a)' ) '#data x y z'
+         ! Rev 0.20
+         ! write the $xyz datablocks
+         write( this%file_unit, '(a)' )  datablock // ' << EOD'
+         if (xyz_data) then
+             do i=1, nrx
+                 write ( this%file_unit, * ) x(i), y(i), z(i)
+             enddo
+             write( this%file_unit, '(a)' )  !put an empty line
+             write ( this%file_unit, '(a)' ) 'EOD'  !end of datablock
+         else !only Z has been sent (i.e. single matrix data)
+             do i=1, nrx
+                 write ( this%file_unit, * ) i, x(i)
+             enddo
+             write( this%file_unit, '(a)' )  !put an empty line
+             write ( this%file_unit, '(a)' ) 'EOD'  !end of datablock
+         end if
+
+
+         !write the color palette into gnuplot script file
+         if (present(palette)) then
+             write ( this%file_unit, '(a)' )  color_palettes(palette)
+             write ( this%file_unit, '(a)' )  'set pm3d' ! a conflict with lspec
+         end if
+
+
+         if ( present(lspec) ) then
+             if (hastitle(lspec)) then
+                 pltstring='splot ' // datablock // ' ' // trim(lspec) // 'with lines'
+             else
+                 pltstring='splot ' // datablock // ' notitle '//trim(lspec) // 'with lines'
+             end if
+         else
+             pltstring='splot ' // datablock // ' notitle with lines'
+         end if
+
+         write ( this%file_unit, '(a)' ) trim(pltstring)
+
+
+         !> Rev 0.2: animation
+         ! if there is no animation finalize
+         if (.not. (this%hasanimation)) then
+             call finalize_plot(this)
+         else
+             write(this%file_unit, '(a, I2)') 'pause ', this%pause_seconds
+         end if
+
+         !: End of lplot3d
+     end subroutine lplot3d
 
     subroutine function_plot(this, func,xrange,np)
         !..............................................................................
@@ -1613,6 +1674,7 @@ contains
         class(gpf)                   :: this
         character(len=*), intent(in) :: strcmd
 
+        if (.not.allocated(this%txtscript)) this%txtscript=''
         if (len_trim(this%txtscript) == 0 ) then
             this%txtscript = '' ! initialize string
         end if
@@ -1748,37 +1810,37 @@ contains
         ! write the plot style for data
         ! this is used only when 3D plots (splot, cplot) is used
         if (allocated(this%txtdatastyle)) then
-            write ( this%file_unit, '(a)' ) 'set style data '//this%txtdatastyle  !set data style
-            write ( this%file_unit, '(a)' )  ! emptyline
+            write ( this%file_unit, '("set style data ", a)' ) this%txtdatastyle
+            write ( this%file_unit, '(a)' )
         end if
 
 
         ! Write options
         if ( this%hasoptions ) then
-            write( unit = this%file_unit, fmt= '(a)') ' '
-            write( unit = this%file_unit, fmt= '(a)') '# options'
-            write( unit = this%file_unit, fmt= '(a)') this%txtoptions
-            write ( this%file_unit, '(a)' )  ! emptyline
+            write ( this%file_unit, '(" ")' )
+            write ( this%file_unit, '("# options")' )
+            write ( this%file_unit, '(a)' ) this%txtoptions
+            write ( this%file_unit, '(a)' )
         end if
 
         ! Check with plot scale: i.e linear, logx, logy, or log xy
-        write( unit = this%file_unit, fmt= '(a)') ' '
-        write( unit = this%file_unit, fmt= '(a)') '# plot scale'
+        write( this%file_unit, '(" ")' )
+        write( this%file_unit, '("# plot scale")' )
         select case (this%plotscale)
             case ('semilogx')
-                write ( this%file_unit, '(a)' ) 'set logscale  x'
+                write ( this%file_unit, '("set logscale  x")' )
             case ('semilogy')
-                write ( this%file_unit, '(a)' ) 'set logscale  y'
+                write ( this%file_unit, '("set logscale  y")' )
             case ('loglog')
-                write ( this%file_unit, '(a)' ) 'set logscale  xy'
+                write ( this%file_unit, '("set logscale  xy")' )
             case default !for no setting
                 !pass
         end select
 
         !!>0.22
         ! write annotation
-        write( unit = this%file_unit, fmt= '(a)') ' '
-        write( unit = this%file_unit, fmt= '(a)') '# Annotation: title and labels'
+        write ( this%file_unit, '(" ")' )
+        write ( this%file_unit, '("# Annotation: title and labels")' )
         call write_label(this, 'plot_title')
         call write_label(this, 'xlabel'    )
         call write_label(this, 'x2label'   )
@@ -1787,27 +1849,27 @@ contains
         call write_label(this, 'zlabel'    )
 
         ! axes range
-        write( unit = this%file_unit, fmt= '(a)') ' '
-        write( unit = this%file_unit, fmt= '(a)') '# axes setting'
+        write ( this%file_unit, '(" ")')
+        write ( this%file_unit, '("# axes setting")')
         if (this%hasxrange) then
-            write ( this%file_unit, '(a,f0.0,a,f0.0,a)' ) 'set xrange [',this%xrange(1),':',this%xrange(2),']'
+            write ( this%file_unit, '("set xrange [",G0,":",G0,"]")' ) this%xrange
         end if
         if (this%hasyrange) then
-            write ( this%file_unit, '(a,f0.0,a,f0.0,a)' ) 'set yrange [',this%yrange(1),':',this%yrange(2),']'
+            write ( this%file_unit, '("set yrange [",G0,":",G0,"]")' ) this%yrange
         end if
         if (this%haszrange) then
-            write ( this%file_unit, '(a,f0.0,a,f0.0,a)' ) 'set zrange [',this%zrange(1),':',this%zrange(2),']'
+            write ( this%file_unit, '("set zrange [",G0,":",G0,"]")' ) this%zrange
         end if
 
         ! secondary axes range
         if (this%hasx2range) then
-            write ( this%file_unit, '(a,f0.0,a,f0.0,a)' ) 'set x2range [',this%x2range(1),':',this%x2range(2),']'
+            write ( this%file_unit, '("set x2range [",G0,":",G0,"]")' ) this%x2range
         end if
         if (this%hasy2range) then
-            write ( this%file_unit, '(a,f0.0,a,f0.0,a)' ) 'set y2range [',this%y2range(1),':',this%y2range(2),']'
+            write ( this%file_unit, '("set y2range [",G0,":",G0,"]")' ) this%y2range
         end if
         ! finish by new line
-        write ( this%file_unit, '(a)' )  ! emptyline
+        write ( this%file_unit, '(a)' ) ! emptyline
 
     end subroutine processcmd
 
@@ -2162,7 +2224,33 @@ contains
         this%hasfileopen = .false.        ! reset file open flag
         this%hasanimation = .false.
         ! Use shell command to run gnuplot
-        call execute_command_line ('gnuplot -persist ' // this%txtfilename)  !   Now plot the results
+        if (get_os_type() == 1) then
+            call execute_command_line ('wgnuplot -persist ' // this%txtfilename)  !   Now plot the results
+        else
+            call execute_command_line ('gnuplot -persist ' // this%txtfilename)  !   Now plot the results
+        end if
+    contains
+        integer function get_os_type() result(r)
+            !! Returns one of OS_WINDOWS, others
+            !! At first, the environment variable `OS` is checked, which is usually
+            !! found on Windows.
+            !! Copy from fpm/fpm_environment: https://github.com/fortran-lang/fpm/blob/master/src/fpm_environment.f90
+            character(len=32) :: val
+            integer :: length, rc
+
+            integer, parameter :: OS_OTHERS = 0
+            integer, parameter :: OS_WINDOWS = 1
+
+            r = OS_OTHERS
+            ! Check environment variable `OS`.
+            call get_environment_variable('OS', val, length, rc)
+
+            if (rc == 0 .and. length > 0 .and. index(val, 'Windows_NT') > 0) then
+                r = OS_WINDOWS
+                return
+            end if
+
+        end function
 
     end subroutine finalize_plot
 
@@ -2289,7 +2377,7 @@ contains
         strtmp=trim (adjustl(strin) )
 
         ! 2. count the number substrings separated by delimiter
-        n = count( [ (strtmp(i:i), i=1, len_trim(strtmp)) ] == delimiter_)
+        n = count( [ (strtmp(i:i)== delimiter_, i=1, len_trim(strtmp)) ] )
 
         ! 3. allocate the output string array
         allocate(strarray(n+1))
@@ -2335,7 +2423,7 @@ contains
         ! num2str_int: converts integer number to string
         !..............................................................................
 
-        integer(kind=4), intent(in)     :: number_in
+        integer(kind=kind(1)), intent(in)     :: number_in
         character(len=:), allocatable   :: num2str_i4
 
         ! local variable
@@ -2351,7 +2439,7 @@ contains
         ! strfmt is the optional format string
         !..............................................................................
 
-        real(kind=4), intent(in)                :: number_in
+        real(kind=sp), intent(in)                :: number_in
         character(len=*), intent(in), optional  :: strfmt
         character(len=:), allocatable           :: num2str_r4
 
@@ -2376,7 +2464,7 @@ contains
         ! strfmt is the optional format string
         !..............................................................................
 
-        real(kind=8), intent(in)                :: number_in
+        real(kind=dp), intent(in)                :: number_in
         character(len=*), intent(in), optional  :: strfmt
         character(len=:), allocatable           :: num2str_r8
 
@@ -2571,4 +2659,4 @@ contains
 
 
     !End of ogpf
-END MODULE GNUPLOT_METHOD
+end module ogpf

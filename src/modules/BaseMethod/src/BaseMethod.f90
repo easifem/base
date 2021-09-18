@@ -34,11 +34,14 @@ MODULE BaseMethod
   USE F95_LAPACK
   USE OpenMP_Method
   USE StringiFor
-  USE PENF, ONLY: STR
+  USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
+    & str_ucs4, str, strz, cton, bstr, bcton, check_endian, digit, &
+    & penf_Init, penf_print
+  USE BeFoR64
   USE FACE
   USE FPL
-  USE GNUPLOT_Method
   USE GlobalData
+  USE OGPF
   USE Test_Method
   USE DISPMODULE
   USE Display_Method
