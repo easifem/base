@@ -246,18 +246,42 @@ MODULE GlobalData
 #endif
 
   ! Bits/bytes memory requirements (REAL variables (R?P) must be computed at runtime)
-  INTEGER(Int16) :: BIReal128
-  INTEGER(Int8) :: BIReal64
-  INTEGER(Int8) :: BIReal32
-  INTEGER(Int8) :: BIFloat !default in bits
-  INTEGER(Int8) :: BIReal !default in bits
-  INTEGER(Int8) :: BIDFP !default in bytes
-  INTEGER(Int16) :: BYReal128
-  INTEGER(Int8) :: BYReal64
-  INTEGER(Int8) :: BYReal32
-  INTEGER(Int8) :: BYFloat !default
-  INTEGER(Int8) :: BYReal !default
-  INTEGER(Int8) :: BYDFP !default
+#ifdef USE_Real128
+  INTEGER(Int16), PARAMETER :: BIReal128=STORAGE_SIZE(MaxReal128)
+#else
+  INTEGER(Int16), PARAMETER :: BIReal128=STORAGE_SIZE(MaxReal64)
+#endif
+
+  INTEGER(Int8), PARAMETER :: BIReal64=STORAGE_SIZE(MaxReal64)
+  INTEGER(Int8), PARAMETER :: BIReal32=STORAGE_SIZE(MaxReal32)
+
+#ifdef USE_Real64
+  INTEGER(Int8), PARAMETER :: BIFloat=BIReal64 !default in bits
+  INTEGER(Int8), PARAMETER :: BIReal=BIReal64 !default in bits
+  INTEGER(Int8), PARAMETER :: BIDFP=BIReal64 !default in bytes
+#else
+  INTEGER(Int8), PARAMETER :: BIFloat=BIReal32 !default in bits
+  INTEGER(Int8), PARAMETER :: BIReal=BIReal32 !default in bits
+  INTEGER(Int8), PARAMETER :: BIDFP=BIReal32 !default in bytes
+#endif
+
+#ifdef USE_Real128
+  INTEGER(Int16), PARAMETER :: BYReal128=BIReal128/8_Int16
+#else
+    INTEGER(Int16), PARAMETER :: BYReal128=BIReal128/8_Int16
+#endif
+  INTEGER(Int8), PARAMETER :: BYReal64=BIReal64/8_Int16
+  INTEGER(Int8), PARAMETER :: BYReal32=BIReal32/8_Int16
+
+#ifdef USE_Real64
+  INTEGER(Int8), PARAMETER :: BYFloat=BYReal64
+  INTEGER(Int8), PARAMETER :: BYReal=BYReal64 !default
+  INTEGER(Int8), PARAMETER :: BYDFP=BYReal64 !default
+#else
+  INTEGER(Int8), PARAMETER :: BYFloat=BYReal32
+  INTEGER(Int8), PARAMETER :: BYReal=BYReal32 !default
+  INTEGER(Int8), PARAMETER :: BYDFP=BYReal32 !default
+#endif
 
   INTEGER(Int64), PARAMETER :: BIInt64 = bit_size(MaxInt64)
   INTEGER(Int32), PARAMETER :: BIInt32 = bit_size(MaxInt32)

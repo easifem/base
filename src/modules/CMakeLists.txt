@@ -18,6 +18,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
 #GlobalData
 include(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
 
+#Gnuplot
+include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
+
 #MetisInterface
 include(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
 
@@ -89,9 +92,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/RealMatrix/CMakeLists.txt)
 
 #FEMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
-
-#Gnuplot
-include(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 
 #VoigtRank2Tensor
 include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)

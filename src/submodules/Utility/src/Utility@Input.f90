@@ -33,19 +33,31 @@ MODULE PROCEDURE input_Int
   ELSE
     Ans=default
   ENDIF
-END PROCEDURE
+END PROCEDURE input_Int
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE input_Real
+MODULE PROCEDURE input_Real64
   IF(PRESENT(option) )THEN
     val=option
   ELSE
     val=default
   ENDIF
-END PROCEDURE
+END PROCEDURE input_Real64
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE input_Real32
+  IF(PRESENT(option) )THEN
+    val=option
+  ELSE
+    val=default
+  ENDIF
+END PROCEDURE input_Real32
 
 !----------------------------------------------------------------------------
 !                                                                      Input
@@ -57,19 +69,31 @@ MODULE PROCEDURE input_IntVec
   ELSE
     val=default
   ENDIF
-END PROCEDURE
+END PROCEDURE input_IntVec
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE input_Realvec
+MODULE PROCEDURE input_Real64vec
   IF( PRESENT(option) )THEN
     val=option
   ELSE
     val=default
   ENDIF
-END PROCEDURE
+END PROCEDURE input_Real64vec
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE input_Real32vec
+  IF( PRESENT(option) )THEN
+    val=option
+  ELSE
+    val=default
+  ENDIF
+END PROCEDURE input_Real32vec
 
 !----------------------------------------------------------------------------
 !                                                                      Input
@@ -81,19 +105,31 @@ MODULE PROCEDURE input_IntArray
   ELSE
     val = default
   ENDIF
-END PROCEDURE
+END PROCEDURE input_IntArray
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE input_RealArray
+MODULE PROCEDURE input_Real64Array
   IF(PRESENT(option) )THEN
     val = option
   ELSE
     val = default
   ENDIF
-END PROCEDURE
+END PROCEDURE input_Real64Array
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE input_Real32Array
+  IF(PRESENT(option) )THEN
+    val = option
+  ELSE
+    val = default
+  ENDIF
+END PROCEDURE input_Real32Array
 
 !----------------------------------------------------------------------------
 !                                                                      Input
@@ -105,7 +141,7 @@ MODULE PROCEDURE input_String
   ELSE
     val=TRIM(default)
   ENDIF
-END PROCEDURE
+END PROCEDURE input_String
 
 !----------------------------------------------------------------------------
 !                                                                      Input
@@ -117,7 +153,10 @@ MODULE PROCEDURE input_logical
   ELSE
     val=default
   ENDIF
-END PROCEDURE
+END PROCEDURE input_logical
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Input

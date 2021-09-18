@@ -387,207 +387,6 @@ END INTERFACE
 
 PUBLIC :: isNumeric
 
-
-!----------------------------------------------------------------------------
-!                                                  ExpMesh@FunctionalFortran
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 16 Sept 2021
-! summary: Exponential mesh
-
-INTERFACE
-MODULE PURE FUNCTION ExpMesh_Real64( rmin, rmax, a, N ) RESULT( Ans )
-  REAL( Real64 ), INTENT( IN ) :: rmin
-    !! left end of 1D domain
-  REAL( Real64 ), INTENT( IN ) :: rmax
-    !! right end of 1D domain
-  REAL( Real64 ), INTENT( IN ) :: a
-    !! Ratio of largest to smallest element, a should be positive
-    !! a = 1, then we get uniform mesh
-  INTEGER( I4B ), INTENT( IN ) :: N
-    !! Number of elements present in mesh
-  REAL( Real64 ) :: ans( N+1 )
-    !! Number of nodes in mesh
-END FUNCTION ExpMesh_Real64
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                  ExpMesh@FunctionalFortran
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 16 Sept 2021
-! summary: Exponential mesh
-
-INTERFACE
-MODULE PURE FUNCTION ExpMesh_Real32( rmin, rmax, a, N ) RESULT( Ans )
-  REAL( Real32 ), INTENT( IN ) :: rmin
-    !! left end of 1D domain
-  REAL( Real32 ), INTENT( IN ) :: rmax
-    !! right end of 1D domain
-  REAL( Real32 ), INTENT( IN ) :: a
-    !! Ratio of largest to smallest element, a should be positive
-    !! a = 1, then we get uniform mesh
-  INTEGER( I4B ), INTENT( IN ) :: N
-    !! Number of elements present in mesh
-  REAL( Real32 ) :: ans( N+1 )
-    !! Number of nodes in mesh
-END FUNCTION ExpMesh_Real32
-END INTERFACE
-
-INTERFACE ExpMesh
-  MODULE PROCEDURE ExpMesh_Real32, ExpMesh_Real64
-END INTERFACE ExpMesh
-
-PUBLIC :: ExpMesh
-
-!----------------------------------------------------------------------------
-!                                                  Linspace@FunctionalFortran
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 16 Sept 2021
-! summary: linspace
-
-INTERFACE
-MODULE PURE FUNCTION Linspace_Real64( a, b, N ) RESULT( Ans )
-  REAL( Real64 ), INTENT( IN ) :: a
-    !! left end of 1D domain
-  REAL( Real64 ), INTENT( IN ) :: b
-    !! right end of 1D domain
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: N
-    !! Number of points including a and b
-  REAL( Real64 ), ALLOCATABLE :: ans( : )
-    !! Number of nodes in mesh
-END FUNCTION Linspace_Real64
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                  Linspace@FunctionalFortran
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 16 Sept 2021
-! summary: Returns a linearly spaced vector
-!
-!### Introduction
-! Returns a linearly spaced vector with n points in [a, b]
-! if n is omitted, 100 points will be considered
-
-INTERFACE
-MODULE PURE FUNCTION Linspace_Real32( a, b, N ) RESULT( Ans )
-  REAL( Real32 ), INTENT( IN ) :: a
-    !! left end of 1D domain
-  REAL( Real32 ), INTENT( IN ) :: b
-    !! right end of 1D domain
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: N
-    !! Number of points including a and b
-  REAL( Real32 ), ALLOCATABLE :: ans( : )
-    !! Number of nodes in mesh
-END FUNCTION Linspace_Real32
-END INTERFACE
-
-
-INTERFACE Linspace
-  MODULE PROCEDURE Linspace_Real32, Linspace_Real64
-END INTERFACE Linspace
-
-PUBLIC :: Linspace
-
-!----------------------------------------------------------------------------
-!                                                  MeshGrid@FunctionalFortran
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 16 Sept 2021
-! summary: meshgrid generate mesh grid over a rectangular domain of [xmin xmax, ymin, ymax]
-!
-!### Introduction
-!
-! Meshgrid generate mesh grid over a rectangular domain of [xmin xmax, ymin, ymax]
-! - xgv, ygv are grid vectors in form of full grid data
-! - X and Y are matrix each of size [ny by nx] contains the grid data.
-! - The coordinates of point (i,j) is [X(i,j), Y(i,j)]
-!
-!### Usage
-!
-!```fortran
-! call meshgrid(X, Y, [0.,1.,2.,3.],[5.,6.,7.,8.])
-!
-!  X =
-!  [0.0, 1.0, 2.0, 3.0,
-!   0.0, 1.0, 2.0, 3.0,
-!   0.0, 1.0, 2.0, 3.0,
-!   0.0, 1.0, 2.0, 3.0]
-!
-! Y =
-! [ 5.0, 5.0, 5.0, 5.0,
-!   6.0, 6.0, 6.0, 6.0,
-!   7.0, 7.0, 7.0, 7.0,
-!   8.0, 8.0, 8.0, 8.0]
-!```
-
-INTERFACE
-MODULE PURE SUBROUTINE MeshGrid2D_Real64( x, y, xgv, ygv )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: x( :, : )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: y( :, : )
-  REAL( Real64 ), INTENT( IN ) :: xgv( : )
-  REAL( Real64 ), INTENT( IN ) :: ygv( : )
-END SUBROUTINE MeshGrid2D_Real64
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                MeshGrid@FunctionalFortran
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE MeshGrid2D_Real32( x, y, xgv, ygv )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: x( :, : )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: y( :, : )
-  REAL( Real32 ), INTENT( IN ) :: xgv( : )
-  REAL( Real32 ), INTENT( IN ) :: ygv( : )
-END SUBROUTINE MeshGrid2D_Real32
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                               MeshGrid@FunctionalFortran
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE MeshGrid3D_Real64( x, y, z, xgv, ygv, zgv )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: x( :, :, : )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: y( :, :, : )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: z( :, :, : )
-  REAL( Real64 ), INTENT( IN ) :: xgv( : )
-  REAL( Real64 ), INTENT( IN ) :: ygv( : )
-  REAL( Real64 ), INTENT( IN ) :: zgv( : )
-END SUBROUTINE MeshGrid3D_Real64
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                               MeshGrid@FunctionalFortran
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE MeshGrid3D_Real32( x, y, z, xgv, ygv, zgv )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: x( :, :, : )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: y( :, :, : )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: z( :, :, : )
-  REAL( Real32 ), INTENT( IN ) :: xgv( : )
-  REAL( Real32 ), INTENT( IN ) :: ygv( : )
-  REAL( Real32 ), INTENT( IN ) :: zgv( : )
-END SUBROUTINE MeshGrid3D_Real32
-END INTERFACE
-
-
-INTERFACE MeshGrid
-  MODULE PROCEDURE MeshGrid2D_Real32, MeshGrid2D_Real64, &
-    & MeshGrid3D_Real32, MeshGrid3D_Real64
-END INTERFACE MeshGrid
-
-PUBLIC :: MeshGrid
-
 !----------------------------------------------------------------------------
 !                                                   arange@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -596,40 +395,18 @@ PUBLIC :: MeshGrid
 ! date: 	3 March 2021
 ! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
 ! values.
+!
+!### Introduction
+!
 
 INTERFACE
-MODULE PURE FUNCTION arange_Real64( istart, iend, increment ) result( Ans )
-  REAL( Real64 ), INTENT( IN ) :: istart
-    !! Start value of the array
-  REAL( Real64 ), INTENT( IN ) :: iend
-    !! End value of the array
-  REAL( Real64 ), INTENT( IN ), OPTIONAL :: increment
-    !! Array increment
-  REAL( Real64 ), DIMENSION( : ), ALLOCATABLE :: Ans
-END FUNCTION arange_Real64
+MODULE PURE FUNCTION arange_real( istart, iend, increment ) result( Ans )
+  REAL( DFP ), INTENT( IN ) :: istart !! Start value of the array
+  REAL( DFP ), INTENT( IN ) :: iend !! End value of the array
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: increment !! Array increment
+  REAL( DFP ), DIMENSION( : ), ALLOCATABLE :: Ans
+END FUNCTION
 END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                   arange@FunctionalFortran
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
-! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
-! values.
-
-INTERFACE
-MODULE PURE FUNCTION arange_Real32( istart, iend, increment ) result( Ans )
-  REAL( Real32 ), INTENT( IN ) :: istart
-    !! Start value of the array
-  REAL( Real32 ), INTENT( IN ) :: iend
-    !! End value of the array
-  REAL( Real32 ), INTENT( IN ), OPTIONAL :: increment
-    !! Array increment
-  REAL( Real32 ), DIMENSION( : ), ALLOCATABLE :: Ans
-END FUNCTION arange_Real32
-END INTERFACE
-
 
 !----------------------------------------------------------------------------
 !                                                    arangeFunctionalFortran
@@ -661,7 +438,7 @@ END FUNCTION
 END INTERFACE
 
 INTERFACE arange
-  MODULE PROCEDURE arange_int, arange_real64, arange_Real32
+  MODULE PROCEDURE arange_int, arange_real
 END INTERFACE arange
 
 PUBLIC arange
@@ -3014,23 +2791,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real64(default,option) RESULT(val)
-  REAL( Real64 ),INTENT(in) :: default
-  REAL( Real64 ),OPTIONAL,INTENT(in)::option
-  REAL( Real64 ) :: val
-END FUNCTION input_Real64
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                               Input@Input
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION input_Real32(default,option) RESULT(val)
-  REAL( Real32 ),INTENT(in) :: default
-  REAL( Real32 ),OPTIONAL,INTENT(in)::option
-  REAL( Real32 ) :: val
-END FUNCTION input_Real32
+MODULE PURE FUNCTION input_Real(default,option) RESULT(val)
+  REAL(DFP),INTENT(in) :: default
+  REAL(DFP),OPTIONAL,INTENT(in)::option
+  REAL(DFP) :: val
+END FUNCTION input_Real
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3050,22 +2815,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real64vec( default, option ) RESULT( val )
-  REAL( Real64 ), INTENT( IN ) :: default(:)
-  REAL( Real64 ), OPTIONAL,INTENT( IN ) :: option(:)
-  REAL( Real64 ), ALLOCATABLE :: val(:)
-END FUNCTION
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                               Input@Input
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION input_Real32vec( default, option ) RESULT( val )
-  REAL( Real32 ), INTENT( IN ) :: default(:)
-  REAL( Real32 ), OPTIONAL,INTENT( IN ) :: option(:)
-  REAL( Real32 ), ALLOCATABLE :: val(:)
+MODULE PURE FUNCTION input_Realvec( default, option ) RESULT( val )
+  REAL( DFP ), INTENT( IN ) :: default(:)
+  REAL( DFP ), OPTIONAL,INTENT( IN ) :: option(:)
+  REAL( DFP ), ALLOCATABLE :: val(:)
 END FUNCTION
 END INTERFACE
 
@@ -3086,22 +2839,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real64Array(default,option) RESULT(val)
-  REAL( Real64 ), INTENT( IN ) :: default(:,:)
-  REAL( Real64 ), OPTIONAL,INTENT( IN )::option(:,:)
-  REAL( Real64 ), ALLOCATABLE :: val(:,:)
-END FUNCTION
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Input@Input
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION input_Real32Array(default,option) RESULT(val)
-  REAL( Real32 ), INTENT( IN ) :: default(:,:)
-  REAL( Real32 ), OPTIONAL,INTENT( IN )::option(:,:)
-  REAL( Real32 ), ALLOCATABLE :: val(:,:)
+MODULE PURE FUNCTION input_RealArray(default,option) RESULT(val)
+  REAL( DFP ), INTENT( IN ) :: default(:,:)
+  REAL( DFP ), OPTIONAL,INTENT( IN )::option(:,:)
+  REAL( DFP ), ALLOCATABLE :: val(:,:)
 END FUNCTION
 END INTERFACE
 
@@ -3134,10 +2875,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE Input
-  MODULE PROCEDURE input_Int,input_Real64, input_Real32, input_IntVec, &
-    & input_Real64Vec, input_Real32Vec, input_IntArray, &
-    & input_Real64Array, input_Real32Array, input_String, &
-    & input_logical
+  MODULE PROCEDURE input_Int,input_Real,input_IntVec,input_RealVec,input_IntArray,input_RealArray,input_String,input_logical
 END INTERFACE Input
 
 PUBLIC :: Input
@@ -3328,14 +3066,11 @@ PUBLIC :: ExecuteCommand
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION getUnitNo_1( ) RESULT( ans )
-  INTEGER( I4B ) :: ans
-END FUNCTION getUnitNo_1
+MODULE FUNCTION getUnitNo( Str )
+  INTEGER( I4B ) :: getUnitNo
+  CHARACTER( LEN = * ), INTENT( IN ) :: Str
+END FUNCTION
 END INTERFACE
-
-INTERFACE getUnitNo
-  MODULE PROCEDURE getUnitNo_1
-END INTERFACE getUnitNo
 
 PUBLIC :: getUnitNo
 
@@ -3530,7 +3265,21 @@ END INTERFACE StringToUID
 PUBLIC :: StringToUID
 
 !----------------------------------------------------------------------------
-!
+!                                                 MeshExp@SimpleMeshMethods
 !----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PROCEDURE ExpMesh( rmin, rmax, a, N ) RESULT(  ans )
+  REAL( DFP ), INTENT( IN ) :: rmin
+    !! left end of the mesh
+  REAL( DFP ), INTENT( IN ) :: rmax
+    !! right end of the mesh
+  REAL( DFP ), INTENT( IN ) :: a
+  INTEGER( I4B ), INTENT( IN ) :: N
+    !! Number of elements in mesh
+  REAL( DFP ) :: ans( N+1 )
+    !! nodes mesh
+END PROCEDURE ExpMesh
+END INTERFACE
 
 END MODULE Utility

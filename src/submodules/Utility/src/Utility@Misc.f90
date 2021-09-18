@@ -115,7 +115,7 @@ END PROCEDURE
 !                                                                 getUnitNo
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getUnitNo
+MODULE PROCEDURE getUnitNo_1
   ! Define internal variables
   LOGICAL( LGT ) :: isOpen, isExist
   INTEGER( I4B ) :: Imin, Imax, I
@@ -130,13 +130,13 @@ MODULE PROCEDURE getUnitNo
   IF( isOpen .OR. .NOT. isExist ) THEN
     CALL ErrorMsg( &
       & File = __FILE__, &
-      & Routine = "getUnitNo()", &
+      & Routine = "getUnitNo_1()", &
       & Line = __LINE__, &
       & MSG = " cannot find a valid unit number; Program Stopped" )
     STOP
   END IF
-  getUnitNo = I
-END PROCEDURE getUnitNo
+  ans = I
+END PROCEDURE getUnitNo_1
 
 !----------------------------------------------------------------------------
 !                                                                 Factorial
