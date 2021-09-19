@@ -58,6 +58,6 @@ else:
 
     print( "CMAKE DEF : ", cmake_def )
 
-    os.system( f"cmake -S ./ -B ./build {cmake_def}")
-    os.system(f"cmake --build ./build --target install" )
+    os.system( f"cmake -S ./ -B ~/temp/easifem-base/build {cmake_def}")
+    os.system(f"cmake --build ~/temp/easifem-base/build --target install" )
     print("Installation DONE!!")
