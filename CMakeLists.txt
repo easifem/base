@@ -208,29 +208,15 @@ TARGET_LINK_LIBRARIES(
 FOREACH(p LAPACK95 PENF BeFoR64 FACE StringiFor Sparsekit)
   FIND_PACKAGE( ${p} REQUIRED )
   IF( ${p}_FOUND )
-  GET_TARGET_PROPERTY(
-    ${p}_INCLUDEDIR
-    ${p}::${p}
-    INTERFACE_INCLUDE_DIRECTORIES)
-  MESSAGE(STATUS "${p} found")
-
   TARGET_LINK_LIBRARIES(
     ${PROJECT_NAME}
     PUBLIC
     ${p}::${p}
   )
-
-  ## The code given below creates a lot of duplicate include dir in easifemBaseTargets
-  # TARGET_INCLUDE_DIRECTORIES(
-  #   ${PROJECT_NAME}
-  #   PUBLIC
-  #   "${${p}_INCLUDEDIR}"
-  # )
 ELSE()
   MESSAGE(STATUS "${p} not found")
 ENDIF()
 ENDFOREACH()
-
 TARGET_INCLUDE_DIRECTORIES(
   ${PROJECT_NAME}
   PUBLIC
