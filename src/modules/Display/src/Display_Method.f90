@@ -23,54 +23,118 @@
 ! [[Display_Method]] module consists small routines related
 ! to displaying the fortran variables on the screen
 
-
 MODULE Display_Method
 USE GlobalData
 USE DISPMODULE
+USE FACE
 IMPLICIT NONE
 PRIVATE
 INTEGER( I4B ), PARAMETER :: minRow = 4, minCol = 4
 PUBLIC :: Display, BlankLines, DashLine
 PUBLIC :: DotLine, EqualLine
 PUBLIC :: TIMESTAMP
+PUBLIC :: setDisplayProfile
 
-CHARACTER( LEN = 30 ) :: equal = "=============================="
-CHARACTER( LEN = 30 ) :: dot  =  ".............................."
-CHARACTER( LEN = 30 ) :: dash =  "------------------------------"
+CHARACTER( LEN = * ), PARAMETER :: equal = "=============================="
+CHARACTER( LEN = * ), PARAMETER :: dot  =  ".............................."
+CHARACTER( LEN = * ), PARAMETER :: dash =  "------------------------------"
+CHARACTER( LEN = * ), PARAMETER :: COLOR_FG = "CYAN"
+CHARACTER( LEN = * ), PARAMETER :: COLOR_BG = "BLACK"
+CHARACTER( LEN = * ), PARAMETER :: COLOR_STYLE = "BOLD_ON"
+
+TYPE( DISP_SETTINGS ), PUBLIC, PARAMETER :: &
+  & DisplayProfileTerminal = DISP_SETTINGS(&
+  & advance="YES", matsep=" ", orient="COL", style="UNDERLINE", &
+  & trim="AUTO", ZEROAS="." )
+TYPE( DISP_SETTINGS ), PUBLIC, PARAMETER :: &
+  & DisplayProfilePrint = DISP_SETTINGS(&
+  & advance="YES", matsep=" ", orient="COL", style="LEFT", &
+  & trim="AUTO", ZEROAS="" )
+TYPE( DISP_SETTINGS ), PARAMETER :: DisplayProfileOriginal = DISP_SETTINGS()
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
+
 INTERFACE Display
   MODULE PROCEDURE &
     & Display_Str, &
     & Display_Str2, &
-    & Display_Real, &
-    & Display_Int, &
+    & Display_Real64, &
+    & Display_Real32, &
+    & Display_Int8, &
+    & Display_Int16, &
+    & Display_Int32, &
+    & Display_Int64, &
     & Display_Logical, &
-    & Display_Vector_Real, &
-    & Display_Vector_Int, &
-    & Display_Mat2_Real, &
-    & Display_Mat2_Int, &
-    & Display_Mat3_Real, &
-    & Display_Mat4_Real
+    & Display_Vector_Real64, &
+    & Display_Vector_Real32, &
+    & Display_Vector_Int8, &
+    & Display_Vector_Int16, &
+    & Display_Vector_Int32, &
+    & Display_Vector_Int64, &
+    & Display_Mat2_Real64, &
+    & Display_Mat2_Real32, &
+    & Display_Mat2_Int64, &
+    & Display_Mat2_Int32, &
+    & Display_Mat2_Int16, &
+    & Display_Mat2_Int8, &
+    & Display_Mat3_Real64, &
+    & Display_Mat3_Real32, &
+    & Display_Mat3_Int64, &
+    & Display_Mat3_Int32, &
+    & Display_Mat3_Int16, &
+    & Display_Mat3_Int8, &
+    & Display_Mat4_Real64, &
+    & Display_Mat4_Real32, &
+    & Display_Mat4_Int64, &
+    & Display_Mat4_Int32, &
+    & Display_Mat4_Int16, &
+    & Display_Mat4_Int8
 END INTERFACE
 
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                          setDisplayProfile
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This routine sets the display profile
+
+SUBROUTINE setDisplayProfile( DispProfile, advance, digmax, &
+  & matsep, orient, sep, style, unit, zeroas )
+  TYPE( DISP_SETTINGS ), INTENT( IN ) :: DispProfile
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: advance
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: digmax
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: matsep
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: sep
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: style
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unit
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: zeroas
+  !> internal variables
+  CALL DISP_SET( DispProfile )
+  CALL DISP_SET( advance=advance, digmax=digmax, matsep=matsep, &
+    & orient=orient, sep=sep, style=style, unit=unit, zeroas=zeroas )
+END SUBROUTINE setDisplayProfile
+
+!----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine Displays the string
 !
-! This subroutine Displays the string
+!### Introduction
+! This routine displays a string
 !
-! ## usage
-! ```fortran
+!## usage
+!```fortran
 ! CALL Display( msg="hello world", unitno=stdout )
-! ```
-!
+!```
 
 SUBROUTINE Display_Str( msg, unitno )
   ! Dummt arguments
@@ -78,279 +142,386 @@ SUBROUTINE Display_Str( msg, unitno )
   !! input message
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitno
   !! unit no
-
   ! Internal variables
   INTEGER( I4B ) :: i
-
   if( PRESENT( unitno ) ) then
     i = unitno
   ELSE
     i = stdout
   END IF
-
-  call disp( title = '', &
-    & x = msg, &
-    & FMT = 'a', &
-    & unit = i, &
-    & style = 'left' )
-
+  CALL disp( title="", &
+    & x=TRIM(colorize( msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
+    & style=COLOR_STYLE)), &
+    & FMT = 'a', unit = i, style="left" )
 END SUBROUTINE Display_Str
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This routine prints a string; msg=val
+!
+!### Introduction
 !
 !  This routine prints a string; msg=val
 !
-! ## Usage
-! ```fortran
-!   CALL Display( val=" world!", msg="hello", stdout)
-! ```
+!## Usage
+!```fortran
+!  CALL Display( val=" world!", msg="hello", stdout)
+!```
 
 SUBROUTINE Display_Str2( val, msg, unitno )
   CHARACTER( LEN = * ), INTENT( IN ) :: val
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitno
-
-  INTEGER( I4B ) :: i
-
-  if( PRESENT( unitno ) ) then
-    i = unitno
-  ELSE
-    i = stdout
-  END IF
-
-  call disp( title = '', &
-    & x = trim(msg) // trim(val), &
-    & FMT = 'a', &
-    & unit = i, &
-    & style = 'left' )
-
+  ! internal variables
+  CALL Display( msg=TRIM(msg)//TRIM(val), unitNo=unitNo )
 END SUBROUTINE Display_Str2
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: 	This subroutine display a scalar real number
+!
+!### Introduction
 !
 ! This subroutine display a scalar real number
 !
-! ## Usage
+!## Usage
 !
-! ```fortran
+!```fortran
 ! call display( val=1.0_DFP, msg="var=", unitno=stdout)
-! ```
+!```
 
-SUBROUTINE Display_Real( val, msg, unitNo )
+SUBROUTINE Display_Real64( val, msg, unitNo )
   ! Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  REAL( DFP ), INTENT( IN ) :: val
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  ! Define internal variables
-  INTEGER( I4B ) :: I
-  !
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
-  call disp( title = msg, x = val, unit = I, style = 'left' )
-
-END SUBROUTINE Display_Real
+  REAL( Real64 ), INTENT( IN ) :: val
+#include "./Display_Scalar.inc"
+END SUBROUTINE Display_Real64
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: 	This subroutine display a scalar real number
+!
+!### Introduction
+!
+! This subroutine display a scalar real number
+!
+!## Usage
+!
+!```fortran
+! call display( val=1.0_DFP, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Real32( val, msg, unitNo )
+  ! Define intent of dummy variables
+  REAL( Real32 ), INTENT( IN ) :: val
+#include "./Display_Scalar.inc"
+END SUBROUTINE Display_Real32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a scalar integer number
+!
+!### Introduction
 !
 ! This subroutine display a scalar integer number
 !
-! ## Usage
+!## Usage
 !
-! ```fortran
-! call display( val=1.0_I4B, msg="var=", unitno=stdout)
-! ```
+!```fortran
+!  call display( val=1.0_I4B, msg="var=", unitno=stdout)
+!```
 
-SUBROUTINE Display_Int( val, msg, unitNo )
+SUBROUTINE Display_Int64( val, msg, unitNo )
   ! Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ) :: val
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  ! Define internal variables
-  INTEGER( I4B ) :: I
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
-  call disp( title = msg, x = val, unit = I, style = 'left' )
-
-END SUBROUTINE Display_Int
+  INTEGER( Int64 ), INTENT( IN ) :: val
+#include "./Display_Scalar.inc"
+END SUBROUTINE Display_Int64
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a scalar integer number
+!
+!### Introduction
+!
+! This subroutine display a scalar integer number
+!
+!## Usage
+!
+!```fortran
+!  call display( val=1.0_I4B, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Int32( val, msg, unitNo )
+  ! Define intent of dummy variables
+  INTEGER( Int32 ), INTENT( IN ) :: val
+#include "./Display_Scalar.inc"
+END SUBROUTINE Display_Int32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a scalar integer number
+!
+!### Introduction
+!
+! This subroutine display a scalar integer number
+!
+!## Usage
+!
+!```fortran
+!  call display( val=1.0_I4B, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Int16( val, msg, unitNo )
+  ! Define intent of dummy variables
+  INTEGER( Int16 ), INTENT( IN ) :: val
+#include "./Display_Scalar.inc"
+END SUBROUTINE Display_Int16
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a scalar integer number
+!
+!### Introduction
+!
+! This subroutine display a scalar integer number
+!
+!## Usage
+!
+!```fortran
+!  call display( val=1.0_I4B, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Int8( val, msg, unitNo )
+  ! Define intent of dummy variables
+  INTEGER( Int8 ), INTENT( IN ) :: val
+#include "./Display_Scalar.inc"
+END SUBROUTINE Display_Int8
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a scalar logical variable
+!
+!### Introduction
 !
 ! This subroutine display a scalar logical variable
 !
-! ## Usage
+!## Usage
 !
-! ```fortran
-! call display( val=.TRUE., msg="var=", unitno=stdout)
-! ```
+!```fortran
+!  call display( val=.TRUE., msg="var=", unitno=stdout)
+!```
 
 SUBROUTINE Display_Logical( val, msg, unitNo )
   ! Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
   LOGICAL( LGT ), INTENT( IN ) :: val
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  ! Define internal variables
-  INTEGER( I4B ) :: I
-  !
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
-  call disp( title = msg, x = val, unit = I, style = 'left' )
-
+#include "./Display_Scalar.inc"
 END SUBROUTINE Display_Logical
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a vector of real numbers
 !
-! This subroutine display a vector of real numbers
+!### Introduction
+!  This subroutine display a vector of real numbers
 !
-! ## Usage
-! ```fortran
+!
+!### Usage
+!
+!```fortran
 ! real( dfp ) :: vec(10)
 ! call RANDOM_NUMBER(vec)
 ! call display( val=vec, msg="var=", unitno=stdout)
 ! call display( val=vec, msg="var=", unitno=stdout, orient="col")
-! ```
+!```
 
-SUBROUTINE Display_Vector_Real( val, msg, unitNo, orient, full )
-
+SUBROUTINE Display_Vector_Real64( val, msg, unitNo, orient, full )
   ! Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  !! Unit number
-  REAL( DFP ), INTENT( IN ) :: val( : )
-  !! vector of real numbers
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  !! message
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
-  !! orient=row => rowwise printing
-  !! orient=col =>  columnwise printing
-  LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
-  !! logical variable to print the whole vector
-
-  ! Define internal variables
-  INTEGER( I4B ) :: I
-  CHARACTER( LEN = 3 ) :: orient_
-
-  IF( PRESENT( unitNo ) ) THEN
-    I = unitNo
-  ELSE
-    I = stdout
-  END IF
-
-  IF( PRESENT( full ) ) THEN
-    ! do nothing for now
-  END IF
-
-  IF( PRESENT( orient ) ) THEN
-    IF( orient(1:1) .EQ. "r" .OR. orient(1:1) .EQ. "R" ) THEN
-      orient_ = "row"
-    ELSE
-      orient_ = "col"
-    END IF
-  ELSE
-    orient_ = "row"
-  END IF
-
-  call disp( &
-    & title = msg, &
-    & x= val, &
-    & unit = I, &
-    ! & style = 'underline & pad', &
-    & style = 'left', &
-    & orient = orient_ &
-  )
-
-END SUBROUTINE Display_Vector_Real
+  REAL( Real64 ), INTENT( IN ) :: val( : )
+    !! vector of real numbers
+#include "./Display_Vector.inc"
+END SUBROUTINE Display_Vector_Real64
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a vector of real numbers
+!
+!### Introduction
+!  This subroutine display a vector of real numbers
+!
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: vec(10)
+! call RANDOM_NUMBER(vec)
+! call display( val=vec, msg="var=", unitno=stdout)
+! call display( val=vec, msg="var=", unitno=stdout, orient="col")
+!```
+
+SUBROUTINE Display_Vector_Real32( val, msg, unitNo, orient, full )
+  ! Define intent of dummy variables
+  REAL( Real32 ), INTENT( IN ) :: val( : )
+#include "./Display_Vector.inc"
+END SUBROUTINE Display_Vector_Real32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary:  This subroutine display a vector of integer numbers
+!
+!### Introduction
 !
 ! This subroutine display a vector of integer numbers
 !
-! ## Usage
-! ```fortran
+!### Usage
+!
+!```fortran
 ! real( dfp ) :: vec(10)
 ! call RANDOM_NUMBER(vec)
 ! call display( val=vec, msg="var=", unitno=stdout)
 ! call display( val=vec, msg="var=", unitno=stdout, orient="col")
-! ```
+!```
 
-SUBROUTINE Display_Vector_Int( val, msg, unitNo, orient, full )
-
+SUBROUTINE Display_Vector_Int32( val, msg, unitNo, orient, full )
   ! Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  !! Unit number
-  INTEGER( I4B ), INTENT( IN ) :: val( : )
+  INTEGER( Int32 ), INTENT( IN ) :: val( : )
   !! vector of real numbers
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  !! message
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
-  !! orient=row => rowwise printing
-  !! orient=col =>  columnwise printing
-  LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
-  !! logical variable to print the whole vector
-
-  ! Define internal variables
-  INTEGER( I4B ) :: I
-  CHARACTER( LEN = 3 ) :: orient_
-
-  IF( PRESENT( unitNo ) ) THEN
-    I = unitNo
-  ELSE
-    I = stdout
-  END IF
-
-  IF( PRESENT( full ) ) THEN
-    ! do nothing for now
-  END IF
-
-  IF( PRESENT( orient ) ) THEN
-    IF( orient(1:1) .EQ. "r" .OR. orient(1:1) .EQ. "R" ) THEN
-      orient_ = "row"
-    ELSE
-      orient_ = "col"
-    END IF
-  ELSE
-    orient_ = "row"
-  END IF
-
-  call disp( &
-    & title = msg, &
-    & x= val, &
-    & unit = I, &
-    ! & style = 'underline & pad', &
-    & style = 'left', &
-    & orient = orient_ &
-  )
-END SUBROUTINE Display_Vector_Int
+#include "./Display_Vector.inc"
+END SUBROUTINE Display_Vector_Int32
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary:  This subroutine display a vector of integer numbers
 !
-! This subroutine display a matrix of real numbers
+!### Introduction
+!
+! This subroutine display a vector of integer numbers
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: vec(10)
+! call RANDOM_NUMBER(vec)
+! call display( val=vec, msg="var=", unitno=stdout)
+! call display( val=vec, msg="var=", unitno=stdout, orient="col")
+!```
+
+SUBROUTINE Display_Vector_Int64( val, msg, unitNo, orient, full )
+  ! Define intent of dummy variables
+  INTEGER( Int64 ), INTENT( IN ) :: val( : )
+  !! vector of real numbers
+#include "./Display_Vector.inc"
+END SUBROUTINE Display_Vector_Int64
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary:  This subroutine display a vector of integer numbers
+!
+!### Introduction
+!
+! This subroutine display a vector of integer numbers
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: vec(10)
+! call RANDOM_NUMBER(vec)
+! call display( val=vec, msg="var=", unitno=stdout)
+! call display( val=vec, msg="var=", unitno=stdout, orient="col")
+!```
+
+SUBROUTINE Display_Vector_Int16( val, msg, unitNo, orient, full )
+  ! Define intent of dummy variables
+  INTEGER( Int16 ), INTENT( IN ) :: val( : )
+#include "./Display_Vector.inc"
+END SUBROUTINE Display_Vector_Int16
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary:  This subroutine display a vector of integer numbers
+!
+!### Introduction
+!
+! This subroutine display a vector of integer numbers
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: vec(10)
+! call RANDOM_NUMBER(vec)
+! call display( val=vec, msg="var=", unitno=stdout)
+! call display( val=vec, msg="var=", unitno=stdout, orient="col")
+!```
+
+SUBROUTINE Display_Vector_Int8( val, msg, unitNo, orient, full )
+  ! Define intent of dummy variables
+  INTEGER( Int8 ), INTENT( IN ) :: val( : )
+#include "./Display_Vector.inc"
+END SUBROUTINE Display_Vector_Int8
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a matrix of real numbers
+!
+!### Introduction
 !
 ! ## Usage
 ! ```fortran
@@ -359,28 +530,34 @@ END SUBROUTINE Display_Vector_Int
 ! call display( val=mat, msg="var=", unitno=stdout)
 ! ```
 
-SUBROUTINE Display_Mat2_Real( Val, msg, unitNo, full )
+SUBROUTINE Display_Mat2_Real64( Val, msg, unitNo, full )
   !   Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Val
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
-  !   Define internal variables
-  INTEGER( I4B ) :: I
+  REAL( Real64 ), DIMENSION( :, : ), INTENT( IN ) :: Val
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Real64
 
-  IF( PRESENT( unitNo ) ) THEN
-    I = unitNo
-  ELSE
-    I = stdout
-  END IF
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
 
-  call disp( title = msg, &
-    & x= val, &
-    & unit = I, &
-    & style = 'left', &
-    & sep = ' ', &
-    & advance = 'double' )
-END SUBROUTINE Display_Mat2_Real
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine display a matrix of real numbers
+!
+!### Introduction
+!
+! ## Usage
+! ```fortran
+! real( dfp ) :: mat(10, 10)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat2_Real32( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  REAL( Real32 ), DIMENSION( :, : ), INTENT( IN ) :: Val
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Real32
 
 !----------------------------------------------------------------------------
 !                                                                    Display
@@ -398,34 +575,87 @@ END SUBROUTINE Display_Mat2_Real
 ! call display( val=mat, msg="var=", unitno=stdout)
 ! ```
 
-SUBROUTINE Display_Mat2_Int( Val, msg, unitNo, full )
-
+SUBROUTINE Display_Mat2_Int64( Val, msg, unitNo, full )
   !   Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  INTEGER( I4B ), INTENT( IN ) :: Val( :, : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
-
-  !   Define internal variables
-  INTEGER( I4B ) :: I
-
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
-
-  call disp( &
-    & title = msg, &
-    & x= val, &
-    & unit = I, &
-    & style = 'left', &
-    & sep = ' ', &
-    & advance = 'double' )
-END SUBROUTINE Display_Mat2_Int
+  INTEGER( Int64 ), DIMENSION( :, : ), INTENT( IN ) :: Val
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Int64
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
+
 !> authors: Dr. Vikas Sharma
+!
+! This subroutine display a matrix of real numbers
+!
+! ## Usage
+! ```fortran
+! integer( i4b ) :: mat(10, 10)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat2_Int32( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  INTEGER( Int32 ), DIMENSION( :, : ), INTENT( IN ) :: Val
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Int32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a matrix of real numbers
+!
+! ## Usage
+! ```fortran
+! integer( i4b ) :: mat(10, 10)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat2_Int16( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  INTEGER( Int16 ), DIMENSION( :, : ), INTENT( IN ) :: Val
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Int16
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+
+!> authors: Dr. Vikas Sharma
+!
+! This subroutine display a matrix of real numbers
+!
+! ## Usage
+! ```fortran
+! integer( i4b ) :: mat(10, 10)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat2_Int8( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  INTEGER( Int8 ), DIMENSION( :, : ), INTENT( IN ) :: Val
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Int8
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the contents of a rank 3 array.
+!
+!### Introduction
 !
 ! This subroutine displays the contents of a rank 3 array.
 !
@@ -436,37 +666,152 @@ END SUBROUTINE Display_Mat2_Int
 ! call display( val=mat, msg="var=", unitno=stdout)
 !```
 
-SUBROUTINE Display_Mat3_Real( Val, msg, unitNo )
-
+SUBROUTINE Display_Mat3_Real64( Val, msg, unitNo, full )
   !   Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  !   Define internal variables
-  INTEGER( I4B ) :: I, J
-
-  IF( PRESENT( unitNo ) ) THEN
-    I = unitNo
-  ELSE
-    I =stdout
-  END IF
-
-  DO J = 1, SIZE( Val, 3 )
-    CALL Display( Val( :, :, J ), &
-      & TRIM( msg ) //"( :, :, "//TRIM( Int2Str( J ) ) // " ) = ", I )
-  END DO
-
-END SUBROUTINE Display_Mat3_Real
+  REAL( Real64 ), INTENT( IN ) :: Val( :, :, : )
+#include "./Display_Mat3.inc"
+END SUBROUTINE Display_Mat3_Real64
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the contents of a rank 3 array.
+!
+!### Introduction
+!
+! This subroutine displays the contents of a rank 3 array.
+!
+! ## Usage
+!```fortran
+! real( dfp ) :: mat(5, 5, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat3_Real32( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  REAL( Real32 ), INTENT( IN ) :: Val( :, :, : )
+#include "./Display_Mat3.inc"
+END SUBROUTINE Display_Mat3_Real32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the contents of a rank 3 array.
+!
+!### Introduction
+!
+! This subroutine displays the contents of a rank 3 array.
+!
+! ## Usage
+!```fortran
+! real( dfp ) :: mat(5, 5, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat3_Int64( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  INTEGER( Int64 ), INTENT( IN ) :: Val( :, :, : )
+#include "./Display_Mat3.inc"
+END SUBROUTINE Display_Mat3_Int64
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the contents of a rank 3 array.
+!
+!### Introduction
+!
+! This subroutine displays the contents of a rank 3 array.
+!
+! ## Usage
+!```fortran
+! real( dfp ) :: mat(5, 5, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat3_Int32( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  INTEGER( Int32 ), INTENT( IN ) :: Val( :, :, : )
+#include "./Display_Mat3.inc"
+END SUBROUTINE Display_Mat3_Int32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the contents of a rank 3 array.
+!
+!### Introduction
+!
+! This subroutine displays the contents of a rank 3 array.
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: mat(5, 5, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat3_Int16( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  INTEGER( Int16 ), INTENT( IN ) :: Val( :, :, : )
+#include "./Display_Mat3.inc"
+END SUBROUTINE Display_Mat3_Int16
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the contents of a rank 3 array.
+!
+!### Introduction
+!
+! This subroutine displays the contents of a rank 3 array.
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: mat(5, 5, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat3_Int8( Val, msg, unitNo, full )
+  !   Define intent of dummy variables
+  INTEGER( Int8 ), INTENT( IN ) :: Val( :, :, : )
+#include "./Display_Mat3.inc"
+END SUBROUTINE Display_Mat3_Int8
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the content of rank4 matrix
+!
+!### Introduction
 !
 ! This subroutine displays the content of rank4 matrix
 !
-! ## Usage
+!### Usage
 !
 !```fortran
 ! real( dfp ) :: mat(3, 3, 2, 2)
@@ -474,41 +819,149 @@ END SUBROUTINE Display_Mat3_Real
 ! call display( val=mat, msg="var=", unitno=stdout)
 !```
 
-SUBROUTINE Display_Mat4_Real( Val, msg, unitNo )
+SUBROUTINE Display_Mat4_Real64( Val, msg, unitNo, full )
+  ! Define intent of dummy variables
+  REAL( Real64 ), INTENT( IN ) :: Val( :, :, :, : )
+#include "./Display_Mat4.inc"
+END SUBROUTINE Display_Mat4_Real64
 
-  !   Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, :, : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  !   Define internal variables
-  INTEGER( I4B ) :: I, J, K
-  !
-  I = stdout
-  IF( PRESENT( unitNo ) ) I = unitNo
-  !
-  DO K = 1, SIZE( Val, 4 )
-    DO J = 1, SIZE( Val, 3 )
-    CALL Display( Val( :, :, J, K ), &
-      & TRIM( msg ) &
-      & // "( :, :, " &
-      & // TRIM( Int2Str( J ) ) &
-      & // ", " &
-      & // TRIM( Int2Str( K ) ) &
-      & // " ) = " &
-      & , I )
-    END DO
-  END DO
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
 
-END SUBROUTINE Display_Mat4_Real
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the content of rank4 matrix
+!
+!### Introduction
+!
+! This subroutine displays the content of rank4 matrix
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: mat(3, 3, 2, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat4_Real32( Val, msg, unitNo, full )
+  ! Define intent of dummy variables
+  REAL( Real32 ), INTENT( IN ) :: Val( :, :, :, : )
+#include "./Display_Mat4.inc"
+END SUBROUTINE Display_Mat4_Real32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the content of rank4 matrix
+!
+!### Introduction
+!
+! This subroutine displays the content of rank4 matrix
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: mat(3, 3, 2, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat4_Int64( Val, msg, unitNo, full )
+  ! Define intent of dummy variables
+  INTEGER( Int64 ), INTENT( IN ) :: Val( :, :, :, : )
+#include "./Display_Mat4.inc"
+END SUBROUTINE Display_Mat4_Int64
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the content of rank4 matrix
+!
+!### Introduction
+!
+! This subroutine displays the content of rank4 matrix
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: mat(3, 3, 2, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat4_Int32( Val, msg, unitNo, full )
+  ! Define intent of dummy variables
+  INTEGER( Int32 ), INTENT( IN ) :: Val( :, :, :, : )
+#include "./Display_Mat4.inc"
+END SUBROUTINE Display_Mat4_Int32
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the content of rank4 matrix
+!
+!### Introduction
+!
+! This subroutine displays the content of rank4 matrix
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: mat(3, 3, 2, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat4_Int16( Val, msg, unitNo, full )
+  ! Define intent of dummy variables
+  INTEGER( Int16 ), INTENT( IN ) :: Val( :, :, :, : )
+#include "./Display_Mat4.inc"
+END SUBROUTINE Display_Mat4_Int16
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This subroutine displays the content of rank4 matrix
+!
+!### Introduction
+!
+! This subroutine displays the content of rank4 matrix
+!
+!### Usage
+!
+!```fortran
+! real( dfp ) :: mat(3, 3, 2, 2)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+!```
+
+SUBROUTINE Display_Mat4_Int8( Val, msg, unitNo, full )
+  ! Define intent of dummy variables
+  INTEGER( Int8 ), INTENT( IN ) :: Val( :, :, :, : )
+#include "./Display_Mat4.inc"
+END SUBROUTINE Display_Mat4_Int8
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! This function converts integer to character
-!
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 Sept 2021
+! summary: This function converts integer to character
 
 FUNCTION Int2Str( I )
   ! Define intent of dummy arguments
@@ -516,7 +969,6 @@ FUNCTION Int2Str( I )
   CHARACTER( LEN = 15 ) :: Int2Str
   ! Define internal variables
   CHARACTER( LEN = 15 ) :: Str
-
   WRITE( Str, "(I15)" ) I
   Int2Str = TRIM( ADJUSTL( Str ) )
 END FUNCTION Int2Str

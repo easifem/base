@@ -12,11 +12,12 @@ MODULE DISP_I2MOD
 
   ! ******************************** DECLARATIONS ********************************************
   USE DISPMODULE_UTIL
+  USE GlobalData, ONLY: Int16
+  IMPLICIT NONE
+  PRIVATE
 
   PUBLIC DISP
   PUBLIC TOSTRING
-
-  PRIVATE
 
   interface Display
     module procedure disp_s_byt2, disp_ts_byt2, disp_v_byt2, disp_tv_byt2, disp_m_byt2, disp_tm_byt2
@@ -30,7 +31,8 @@ MODULE DISP_I2MOD
     module procedure tostring_byt2, tostring_f_byt2, tostring_s_byt2, tostring_sf_byt2
   end interface
 
-  integer, parameter :: byt2 = selected_int_kind(4)
+  ! integer, parameter :: byt2 = selected_int_kind(4)
+  integer, parameter :: byt2 = Int16
 
 CONTAINS
 

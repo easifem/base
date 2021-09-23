@@ -1,40 +1,33 @@
+! Add-on module to DISPMODULE to display 1-byte integers
+! (assuming that these are obtained with selected_int_kind(2))
+!
+! This module is obtained by copying the section DEFAULT INTEGER PROCEDURES from
+! dispmodule.f90, replacing dint with byte and 'default integer' with 1-byte
+! integer (only appears in comments), and adding the DECLARATIONS section below.
+!
+! Copyright (c) 2008, Kristj�n J�nasson, Dept. of Computer Science, University of
+! Iceland (jonasson@hi.is). This software is free. For details see the file README.
+
 MODULE DISP_I1MOD
+USE DISPMODULE_UTIL
+USE GlobalData, ONLY: Int8
+IMPLICIT NONE
+PRIVATE
+PUBLIC DISP
+PUBLIC TOSTRING
 
-  ! Add-on module to DISPMODULE to display 1-byte integers
-  ! (assuming that these are obtained with selected_int_kind(2))
-  !
-  ! This module is obtained by copying the section DEFAULT INTEGER PROCEDURES from
-  ! dispmodule.f90, replacing dint with byte and 'default integer' with 1-byte
-  ! integer (only appears in comments), and adding the DECLARATIONS section below.
-  !
-  ! Copyright (c) 2008, Kristj�n J�nasson, Dept. of Computer Science, University of
-  ! Iceland (jonasson@hi.is). This software is free. For details see the file README.
+interface disp
+  module procedure disp_s_byte, disp_ts_byte, disp_v_byte, disp_tv_byte, disp_m_byte, disp_tm_byte
+end interface
 
-  ! ******************************** DECLARATIONS ********************************************
-  use dispmodule_util
+interface tostring
+  module procedure tostring_byte, tostring_f_byte, tostring_s_byte, tostring_sf_byte
+end interface
 
-  PUBLIC DISP
-  PUBLIC TOSTRING
-
-  PRIVATE
-
-  interface Display
-    module procedure disp_s_byte, disp_ts_byte, disp_v_byte, disp_tv_byte, disp_m_byte, disp_tm_byte
-  end interface
-
-  interface disp
-    module procedure disp_s_byte, disp_ts_byte, disp_v_byte, disp_tv_byte, disp_m_byte, disp_tm_byte
-  end interface
-
-  interface tostring
-    module procedure tostring_byte, tostring_f_byte, tostring_s_byte, tostring_sf_byte
-  end interface
-
-  integer, parameter :: byte = selected_int_kind(2)
+integer, parameter :: byte = Int8
 
 CONTAINS
 
-  ! ******************************** 1-BYTE INTEGER PROCEDURES *******************************
   subroutine disp_s_byte(x, fmt, advance, sep, trim, unit, zeroas)
     ! 1-byte integer scalar without title
     character(*), intent(in), optional :: fmt, advance, sep, trim, zeroas
@@ -66,7 +59,7 @@ CONTAINS
     integer(byte), intent(in) :: x
     integer, intent(in), optional :: unit
     call disp_tm_byte(title, reshape((/x/), (/1, 1/)), fmt, advance, sep=sep, style=style, trim=trim, unit=unit, &
-         zeroas=zeroas)
+      zeroas=zeroas)
   end subroutine disp_ts_byte
 
   subroutine disp_tv_byte(title, x, fmt, advance, lbound, sep, style, trim, unit, orient, zeroas)
@@ -269,6 +262,5 @@ CONTAINS
       w = maxval(len_trim(sx))
     end if
   end function widthmax_byte
-  ! ************************************* END OF 1-BYTE INTEGER PROCEDURES ******************************************
 
 END MODULE DISP_I1MOD

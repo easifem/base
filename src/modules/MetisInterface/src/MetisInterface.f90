@@ -16,6 +16,7 @@
 
 MODULE MetisInterface
 USE GlobalData
+USE ISO_C_BINDING
 USE CInterface
 USE ErrorHandling
 IMPLICIT NONE
@@ -28,7 +29,6 @@ PUBLIC :: METISPartMeshDual
 PUBLIC :: METISPartMeshNodal
 PUBLIC :: METISMeshToDual
 PUBLIC :: METISMeshToNodal
-
 #include "./MetisInterface.inc"
 CONTAINS
 
