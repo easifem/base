@@ -10,10 +10,8 @@ MODULE DISP_L1MOD
   ! Copyright (c) 2008, Kristj�n J�nasson, Dept. of Computer Science, University of
   ! Iceland (jonasson@hi.is). This software is free. For details see the file README.
 
-  ! ******************************** DECLARATIONS ********************************************
-
   use dispmodule_util
-
+  USE GlobalData, ONLY: LGT
   PUBLIC DISP
   PUBLIC TOSTRING
 
@@ -31,7 +29,7 @@ MODULE DISP_L1MOD
     module procedure tostring_log1, tostring_f_log1, tostring_s_log1, tostring_sf_log1
   end interface
 
-  integer, parameter :: log1 = 1  ! hopefully logical(1) is byte
+  integer, parameter :: log1 = LGT  ! hopefully logical(1) is byte
 
 CONTAINS
 

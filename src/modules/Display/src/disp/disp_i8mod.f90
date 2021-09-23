@@ -10,17 +10,13 @@ MODULE DISP_I8MOD
   ! Copyright (c) 2008, Kristj�n J�nasson, Dept. of Computer Science, University of
   ! Iceland (jonasson@hi.is). This software is free. For details see the file README.
 
-  ! ******************************** DECLARATIONS ********************************************
-  use dispmodule_util
+  USE DISPMODULE_UTIL
+  use GlobalData, ONLY: Int64
 
   PUBLIC DISP
   PUBLIC TOSTRING
 
   PRIVATE
-
-  interface Display
-    module procedure disp_s_byt8, disp_ts_byt8, disp_v_byt8, disp_tv_byt8, disp_m_byt8, disp_tm_byt8
-  end interface
 
   interface disp
     module procedure disp_s_byt8, disp_ts_byt8, disp_v_byt8, disp_tv_byt8, disp_m_byt8, disp_tm_byt8
@@ -30,7 +26,7 @@ MODULE DISP_I8MOD
     module procedure tostring_byt8, tostring_f_byt8, tostring_s_byt8, tostring_sf_byt8
   end interface
 
-  integer, parameter :: byt8 = selected_int_kind(18)
+  integer, parameter :: byt8 = Int64
 
 CONTAINS
 
@@ -66,7 +62,7 @@ CONTAINS
     integer(byt8), intent(in) :: x
     integer, intent(in), optional :: unit
     call disp_tm_byt8(title, reshape((/x/), (/1, 1/)), fmt, advance, sep=sep, style=style, trim=trim, unit=unit, &
-         zeroas=zeroas)
+      zeroas=zeroas)
   end subroutine disp_ts_byt8
 
   subroutine disp_tv_byt8(title, x, fmt, advance, lbound, sep, style, trim, unit, orient, zeroas)

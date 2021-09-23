@@ -15,7 +15,10 @@ target_sources(
   ${src_path}/disp/disp_i4mod.f90
   ${src_path}/disp/disp_i8mod.f90
   ${src_path}/disp/disp_l1mod.f90
+  ${src_path}/disp/disp_r4mod.f90
+  ${src_path}/disp/disp_r8mod.f90
   ${src_path}/disp/disp_r16mod.f90
+  ${src_path}/disp/disp_charmod.f90
   ${src_path}/disp/dispmodule_util.f90
   ${src_path}/disp/dispmodule.f90
   ${src_path}/disp/putstrmodule.f90

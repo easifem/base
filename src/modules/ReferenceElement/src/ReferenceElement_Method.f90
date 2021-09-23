@@ -754,7 +754,7 @@ END INTERFACE TotalEntities
 PUBLIC :: TotalEntities
 
 !----------------------------------------------------------------------------
-!                                            FacetTopology@Geometry
+!                                                    FacetTopology@Geometry
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.

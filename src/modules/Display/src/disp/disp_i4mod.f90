@@ -11,16 +11,12 @@ MODULE DISP_I4MOD
   ! Iceland (jonasson@hi.is). This software is free. For details see the file README.
 
   ! ******************************** DECLARATIONS ********************************************
-  use dispmodule_util
-
+  USE dispmodule_util
+  USE GlobalData, ONLY: Int32
+  IMPLICIT NONE
+  PRIVATE
   PUBLIC DISP
   PUBLIC TOSTRING
-
-  PRIVATE
-
-  interface Display
-    module procedure disp_s_byt4, disp_ts_byt4, disp_v_byt4, disp_tv_byt4, disp_m_byt4, disp_tm_byt4
-  end interface
 
   interface disp
     module procedure disp_s_byt4, disp_ts_byt4, disp_v_byt4, disp_tv_byt4, disp_m_byt4, disp_tm_byt4
@@ -30,7 +26,7 @@ MODULE DISP_I4MOD
     module procedure tostring_byt4, tostring_f_byt4, tostring_s_byt4, tostring_sf_byt4
   end interface
 
-  integer, parameter :: byt4 = selected_int_kind(9)
+  integer, parameter :: byt4 = Int32
 
 CONTAINS
 
