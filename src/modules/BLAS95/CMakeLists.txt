@@ -9,6 +9,6 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/EASIFEM_F77_BLAS.f90
-  ${src_path}/EASIFEM_BLAS.f90
+  ${src_path}/EASIFEM_F77_BLAS.F90
+  ${src_path}/EASIFEM_BLAS.F90
 )

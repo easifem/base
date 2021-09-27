@@ -9,7 +9,7 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/BoundingBox_Method@Constructor.f90
-  ${src_path}/BoundingBox_Method@setMethod.f90
-  ${src_path}/BoundingBox_Method@getMethod.f90
+  ${src_path}/BoundingBox_Method@Constructor.F90
+  ${src_path}/BoundingBox_Method@setMethod.F90
+  ${src_path}/BoundingBox_Method@getMethod.F90
 )

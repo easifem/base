@@ -9,15 +9,15 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/QuadraturePoint_Method@IO.f90
-  ${src_path}/QuadraturePoint_Method@Constructor.f90
-  ${src_path}/QuadraturePoint_Method@GaussLegendre.f90
-  ${src_path}/QuadraturePoint_Method@GaussLegendre@Line.f90
-  ${src_path}/QuadraturePoint_Method@GaussLegendre@Triangle.f90
-  ${src_path}/QuadraturePoint_Method@GaussLegendre@Quadrangle.f90
-  ${src_path}/QuadraturePoint_Method@GaussLegendre@Tetrahedron.f90
-  ${src_path}/QuadraturePoint_Method@GaussLegendre@Hexahedron.f90
-  ${src_path}/QuadraturePoint_Method@GaussLegendre@Prism.f90
-  ${src_path}/QuadraturePoint_Method@GaussLegendre@Pyramid.f90
+  ${src_path}/QuadraturePoint_Method@IO.F90
+  ${src_path}/QuadraturePoint_Method@Constructor.F90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre.F90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre@Line.F90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre@Triangle.F90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre@Quadrangle.F90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre@Tetrahedron.F90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre@Hexahedron.F90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre@Prism.F90
+  ${src_path}/QuadraturePoint_Method@GaussLegendre@Pyramid.F90
 )
 

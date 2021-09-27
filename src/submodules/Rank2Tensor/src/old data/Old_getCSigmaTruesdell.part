@@ -14,7 +14,7 @@
 !
 !   Info::  -   This module includes subroutine for tensor operations
 !
-!   Hosting File :- Tensor.f90
+!   Hosting File :- Tensor.F90
 !
 !
 !==============================================================================
@@ -60,7 +60,7 @@
 ! Flag-1
         CALL getCauchyStress( Sigma = Sigma, Stress = Stress, &
         StressType = StressType )
-        CALL Check_Error( "Utility>>Tensor.f90>>getCSigmaTruesdell.part", &
+        CALL Check_Error( "Utility>>Tensor.F90>>getCSigmaTruesdell.part", &
         "getCSigmaTruesdell() >> Flag-1" )
     END IF
 !
@@ -205,7 +205,7 @@
 ! Flag-4
             CALL Matrix2Voigt( Mat = DummyMat, VoigtVec = B( :, M ), &
             VoigtType = "Strain" )
-            CALL Check_Error( "Utility>>Tensor.f90>>getCSigmaTruesdell.part", &
+            CALL Check_Error( "Utility>>Tensor.F90>>getCSigmaTruesdell.part", &
             "getCSigmaTruesdell() >> Flag-4" )
         END DO
 

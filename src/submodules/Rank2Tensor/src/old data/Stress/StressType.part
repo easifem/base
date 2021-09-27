@@ -15,7 +15,7 @@
 !   DESCRIPTION
 !       -   method to access obj%stress field
 !   HOSTING FILE
-!       -   Stress_Class.f90
+!       -   Stress_Class.F90
 !
 !==============================================================================
 

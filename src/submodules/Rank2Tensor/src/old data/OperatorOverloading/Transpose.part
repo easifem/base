@@ -15,7 +15,7 @@
 !   DESCRIPTION
 !       -   Tensor class is defined
 !   HOSTING FILE
-!       -   Rank2Tensor_Class.f90
+!       -   Rank2Tensor_Class.F90
 !==============================================================================
 
 !------------------------------------------------------------------------------
@@ -36,7 +36,7 @@
     IF( .NOT. ALLOCATED( obj%T )  ) THEN
 
         CALL Err_Msg(                                                      &
-                       "Rank2Tensor_Class.f90>>OperatorOverloading.part",  &
+                       "Rank2Tensor_Class.F90>>OperatorOverloading.part",  &
                         ".Transpose.()",                                   &
                         "Tensor_ obj is not allocated. Program Stopped"    &
                     )

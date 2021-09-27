@@ -15,7 +15,7 @@
 !   DESCRIPTION
 !       -   Material Jacobian class is defined
 !   HOSTING FILE
-!       -   MaterialJacobian_Class.f90
+!       -   MaterialJacobian_Class.F90
 !
 !==============================================================================
 

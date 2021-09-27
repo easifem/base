@@ -9,6 +9,6 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/VoigtRank2Tensor_Method@Constructor.f90
-  ${src_path}/VoigtRank2Tensor_Method@IO.f90
+  ${src_path}/VoigtRank2Tensor_Method@Constructor.F90
+  ${src_path}/VoigtRank2Tensor_Method@IO.F90
 )

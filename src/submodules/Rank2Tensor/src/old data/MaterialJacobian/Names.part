@@ -16,7 +16,7 @@
 !       -   Methods to access the obj%stressType obj%StrainType
 !           obj%RateType
 !   HOSTING FILE
-!       -   MaterialJacobian_Class.f90
+!       -   MaterialJacobian_Class.F90
 !
 !==============================================================================
 

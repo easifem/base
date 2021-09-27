@@ -15,7 +15,7 @@
 !   DESCRIPTION
 !       -   Tensor class is defined
 !   HOSTING FILE
-!       -   Rank2Tensor_Class.f90
+!       -   Rank2Tensor_Class.F90
 !
 !==============================================================================
 !
@@ -40,7 +40,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(   &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "TensorTimesScalar_1()", &
                         "Tensor_ obj is not allocated. Program Stopped" &
                     )
@@ -75,7 +75,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "TensorTimesScalar_2()",                          &
                         "Tensor_ obj is not allocated. Program Stopped"                   &
                     )
@@ -110,7 +110,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(   &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "TensorTimesScalar_3()", &
                         "Tensor_ obj is not allocated. Program Stopped" &
                     )
@@ -145,7 +145,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "TensorTimesScalar_4()",                          &
                         "Tensor_ obj is not allocated. Program Stopped"   &
                     )
@@ -180,7 +180,7 @@
         .OR. .NOT. ALLOCATED( obj2%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "TensorTimesTensor()",                          &
                         "Tensor_ obj is/are not allocated. Program Stopped" &
                     )
@@ -219,7 +219,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "TensorTimesVector()",                            &
                         "Tensor_ obj is not allocated. Program Stopped"   &
                     )
@@ -273,7 +273,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "VectorTimesTensor()",                            &
                         "Tensor_ obj is not allocated. Program Stopped"   &
                     )
@@ -322,7 +322,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "TensorTimesMat()",                          &
                         "Tensor_ obj not allocated. Program Stopped" &
                     )
@@ -357,7 +357,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>Asterics.part", &
+                       "Rank2Tensor_Class.F90>>Asterics.part", &
                         "MatTimesTensor()",                          &
                         "Tensor_ obj not allocated. Program Stopped" &
                     )

@@ -46,7 +46,7 @@
     IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
-            "Stress_Class.f90>>Pk2Stress.part", &
+            "Stress_Class.F90>>Pk2Stress.part", &
             "getPK2Stress(), obj.pkTwo.F, obj.S.F", &
             "Stress_ object is not initiated. &
             Program Stopped !!!" &
@@ -89,7 +89,7 @@
         CASE DEFAULT
 
             CALL Err_Msg( &
-                "Stress_Class.f90>>Pk2Stress.part", &
+                "Stress_Class.F90>>Pk2Stress.part", &
                 "getPK2Stress( obj, F ), obj .pkTwo. F, obj .S. F", &
                 "No case found for obj%StressType. &
                 Program Stopped!!!" &

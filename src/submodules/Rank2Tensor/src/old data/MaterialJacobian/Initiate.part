@@ -15,7 +15,7 @@
 !   DESCRIPTION
 !       -   MaterialJacobian class is defined
 !   HOSTING FILE
-!       -   MaterialJacobian_Class.f90
+!       -   MaterialJacobian_Class.F90
 !
 !==============================================================================
 
@@ -35,7 +35,7 @@
     IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL Err_Msg( &
-        "MaterialJacobian_Class.f90>>Initiate.part", &
+        "MaterialJacobian_Class.F90>>Initiate.part", &
         "getSize(), .Size. obj", &
         "obj%C is not allocated, Program Stopped!!!"&
         )

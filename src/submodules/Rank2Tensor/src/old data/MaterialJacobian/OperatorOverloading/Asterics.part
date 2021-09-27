@@ -16,7 +16,7 @@
 !       -   Asterics Operator is defined for Material Jacobian and
 !           tensor
 !   HOSTING FILE
-!       -   MaterialJacobian_Class.f90
+!       -   MaterialJacobian_Class.F90
 !==============================================================================
 
 !------------------------------------------------------------------------------
@@ -40,7 +40,7 @@
     IF( .NOT. ALLOCATED( obj%C ) ) THEN
 
         CALL Err_Msg( &
-        "MaterialJacobian_Class.f90>>Asterics.part", &
+        "MaterialJacobian_Class.F90>>Asterics.part", &
         "obj * Scalar", &
         "obj  is not initiated, Program Stopped!!!"&
         )

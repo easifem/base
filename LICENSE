@@ -43,7 +43,7 @@ This fortran library handles IO with vtk files. [Read more](https://github.com/s
 This fortran project, which is developed by [Michael Hirsch](https://github.com/scivision), can handle IO with hdf5 files. [Read more](https://github.com/geospace-code/h5fortran.git).
 
 (7) OGPF
-This is program creates an interface between modern fortran and gnuplot. This is a useful library for visualising fortran data using gnuplot. [Read more](https://github.com/kookma/ogpf). In easifem this is renamed as `Gnuplot_Method.f90`.
+This is program creates an interface between modern fortran and gnuplot. This is a useful library for visualising fortran data using gnuplot. [Read more](https://github.com/kookma/ogpf). In easifem this is renamed as `Gnuplot_Method.F90`.
 
 (8) Sparsekit
 
@@ -63,5 +63,5 @@ This is libray can handle exceptions in fortran. Source: https://github.com/CASL
 
 (12) Fortran-TestAnything
 
-It is a library for testing fortran program. Source : https://github.com/dennisdjensen/fortran-testanything. The original name of the program is changed from Test.f90 to Test_Method.f90 to confirm the coding standards of easifem.
+It is a library for testing fortran program. Source : https://github.com/dennisdjensen/fortran-testanything. The original name of the program is changed from Test.F90 to Test_Method.F90 to confirm the coding standards of easifem.
 

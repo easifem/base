@@ -59,7 +59,7 @@
 ! Flag-1
     CALL getCauchyStress( Sigma = Sigma, Stress = Stress, &
     StressType = StressType )
-    CALL Check_Error( "Utility>>Tensor.f90>>getCDash.part", &
+    CALL Check_Error( "Utility>>Tensor.F90>>getCDash.part", &
     "getCDash() >> Flag-1" )
 !
     C = 0.0_DFP
@@ -137,7 +137,7 @@ SELECT CASE( SIZE( C, 1 ) )
             C ( 1, 1 ) = d2 * Sigma( 1, 1 )
 ! Flag-2
     CASE DEFAULT
-        CALL Err_Msg( "Utility>>Tensor.f90>>getCDash.part", &
+        CALL Err_Msg( "Utility>>Tensor.F90>>getCDash.part", &
         "getCDash(), Flag-2", " Unknown Shape of C matrix " )
  END SELECT
 !

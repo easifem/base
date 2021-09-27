@@ -15,7 +15,7 @@
 !   DESCRIPTION
 !       -   Addition of Stress tensor, returns (3,3) array
 !   HOSTING FILE
-!       -   Rank2Tensor_Class.f90
+!       -   Rank2Tensor_Class.F90
 !==============================================================================
 
 !------------------------------------------------------------------------------

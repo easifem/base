@@ -41,7 +41,7 @@
     IF( SIZE( u ) .NE. SIZE( v ) ) THEN
 
         CALL Err_Msg( &
-        "Tensor_Class.f90>>VectorOperations.part", &
+        "Tensor_Class.F90>>VectorOperations.part", &
         "VectorProduct( u, v )", &
         "The size of u and v must be same; &
         & it should be either 2 or 3; PROGRAM STOPPED!!")
@@ -69,7 +69,7 @@
         CASE DEFAULT
 
             CALL Err_Msg( &
-            "Tensor_Class.f90>>VectorOperations.part", &
+            "Tensor_Class.F90>>VectorOperations.part", &
             "VectorProduct()", &
             "No case found for the size of u and v; &
             & it should be either 2 or 3; PROGRAM STOPPED!!")
@@ -156,7 +156,7 @@
     IF( Norm_u .EQ. 0.0_DFP .OR. Norm_v .EQ. 0.0_DFP ) THEN
 
         CALL Err_Msg( &
-        "Rank2Tensor_Class.f90>>VectorOperations.part", &
+        "Rank2Tensor_Class.F90>>VectorOperations.part", &
         "getAngle()", &
         "Either u or v is/are zero, Angle Not Defined, Program Stopped!")
         STOP
@@ -192,7 +192,7 @@
     IF( Norm_u .EQ. 0.0_DFP .OR. Norm_v .EQ. 0.0_DFP ) THEN
 
         CALL Err_Msg( &
-        "Rank2Tensor_Class.f90>>VectorOperations.part", &
+        "Rank2Tensor_Class.F90>>VectorOperations.part", &
         "getProjection()", &
         "Either u or v is/are zero, projection is not defined, &
         Program Stopped!")
@@ -228,7 +228,7 @@
     IF( Norm_u .EQ. 0.0_DFP ) THEN
 
         CALL Err_Msg( &
-        "Rank2Tensor_Class.f90>>VectorOperations.part", &
+        "Rank2Tensor_Class.F90>>VectorOperations.part", &
         "UnitVector()", &
         "U vector is zero, projection is not defined, &
         Program Stopped!")
