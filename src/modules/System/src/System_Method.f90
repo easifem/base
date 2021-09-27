@@ -159,11 +159,13 @@
 !          o Posix90 (doc),
 !          o flib.a platform/files and directories,
 !          o fortranposix.
+
 module  System_Method
 use,intrinsic     :: iso_c_binding,   only : c_float, c_int, c_char
 use,intrinsic     :: iso_c_binding,   only : c_ptr, c_f_pointer, c_null_char, c_null_ptr
 use,intrinsic     :: iso_c_binding
-use,intrinsic     :: iso_fortran_env, only : int8, int16, int32, int64 !!, real32, real64, real128, dp=>real128
+use,intrinsic     :: iso_fortran_env, only : int8, int16, int32, int64
+!!, real32, real64, real128, dp=>real128
 
 implicit none
 private
@@ -2471,7 +2473,7 @@ end function system_link
 !!    the pathname pointed to by path and shall decrement the link count of
 !!    the file referenced by the link.
 !!
-!!    When the file's link count becomes 0 and no process has the file open,
+!!    When the files link count becomes 0 and no process has the file open,
 !!    the space occupied by the file shall be freed and the file shall no
 !!    longer be accessible. If one or more processes have the file open when
 !!    the last link is removed, the link shall be removed before unlink()
@@ -2484,7 +2486,7 @@ end function system_link
 !!
 !!    Upon successful completion, unlink() shall mark for update the last
 !!    data modification and last file status change timestamps of the parent
-!!    directory. Also, if the file's link count is not 0, the last file status
+!!    directory. Also, if the file link count is not 0, the last file status
 !!    change timestamp of the file shall be marked for update.
 !!
 !!    Values for flag are constructed by a bitwise-inclusive OR of flags from
@@ -2677,13 +2679,13 @@ end function system_getumask
 !!    if(system_rmdir(DIRNAME).ne.0)then
 !!       call system_perror('*demo_system_perror*:'//DIRNAME)
 !!    endif
-!!    write(*,'(a)')"That's all Folks!"
+!!    write(*,'(a)')"That is all Folks!"
 !!    end program demo_system_perror
 !!
 !!   Expected results:
 !!
 !!    *demo_system_perror*:/NOT/THERE/OR/ANYWHERE: No such file or directory
-!!    That's all Folks!
+!!    That is all Folks!
 subroutine system_perror(prefix)
 use, intrinsic :: iso_fortran_env, only : ERROR_UNIT, INPUT_UNIT, OUTPUT_UNIT     ! access computing environment
 
@@ -3016,7 +3018,7 @@ end function system_rename
 !!        and if the group ID of the file does not match the effective
 !!        group ID or one of the supplementary group IDs and if the file
 !!        is a regular file, bit S_ISGID (set-group-ID on execution) in the
-!!        file's mode shall be cleared upon successful return from chmod().
+!!        file mode shall be cleared upon successful return from chmod().
 !!
 !!        Additional implementation-defined restrictions may cause the
 !!        S_ISUID and S_ISGID bits in mode to be ignored.
@@ -3284,7 +3286,7 @@ end function system_rmdir
 !!    The file permission bits of the new FIFO are initialized from mode.
 !!
 !!    The file permission bits of the mode argument are modified by the
-!!    process' file creation mask.
+!!    process file creation mask.
 !!
 !!    When bits in mode other than the file permission bits are set, the
 !!    effect is implementation-defined.
@@ -3292,16 +3294,16 @@ end function system_rmdir
 !!    If path names a symbolic link, mkfifo() shall fail and set errno to
 !!    [EEXIST].
 !!
-!!    The FIFO's user ID will be set to the process' effective user ID.
+!!    The FIFOs user ID will be set to the process effective user ID.
 !!
-!!    The FIFO's group ID shall be set to the group ID of the parent
+!!    The FIFOs group ID shall be set to the group ID of the parent
 !!    directory or to the effective group ID of the process.
 !!
-!!    Implementations shall provide a way to initialize the FIFO's group
+!!    Implementations shall provide a way to initialize the FIFOs group
 !!    ID to the group ID of the parent directory.
 !!
 !!    Implementations may, but need not, provide an implementation-defined
-!!    way to initialize the FIFO's group ID to the effective group ID of
+!!    way to initialize the FIFOs group ID to the effective group ID of
 !!    the calling process.
 !!
 !!    Upon successful completion, mkfifo() shall mark for update the
@@ -4182,8 +4184,10 @@ integer,intent(out),optional    :: ierr
 end subroutine system_clearenv
 !--subroutine system_clearenv(ierr)
 !--! clearenv(3c) not available on some systems I tried
-!--! Found reference that if it is unavailable the assignment "environ = NULL;" will probably do but emulating instead
-!--$@ (#)M_system::system_clearenv(3f): call clearenv(3c) to clear environment"
+!--! Found reference that if it is unavailable the assignment
+! "environ = NULL;" will probably do but emulating instead
+!--$@ (#)M_system::system_clearenv(3f): call clearenv(3c) to clear
+! "environment"
 !--integer,intent(out),optional :: ierr
 !--   integer                   :: ierr_local
 !--
@@ -4989,8 +4993,8 @@ end function C2F_string
 !!       VALUES(2) Inode number
 !!       VALUES(3) File mode
 !!       VALUES(4) Number of links
-!!       VALUES(5) Owner's uid
-!!       VALUES(6) Owner's gid
+!!       VALUES(5) Owner uid
+!!       VALUES(6) Owner gid
 !!       VALUES(7) ID of device containing directory entry for file (0 if not available)
 !!       VALUES(8) File size (bytes)
 !!       VALUES(9) Last access time as a Unix Epoch time rounded to seconds
@@ -5026,9 +5030,11 @@ end function C2F_string
 !!    character(len=*),parameter :: fmt_date='year-month-day hour:minute:second'
 !!
 !!    integer(kind=int64) :: &
-!!     Device_ID, Inode_number,     File_mode, Number_of_links, Owner_uid,        &
-!!     Owner_gid, Directory_device, File_size, Last_access,     Last_modification,&
-!!     Last_status_change,  Preferred_block_size,  Number_of_blocks_allocated
+!!     Device_ID, Inode_number,     File_mode, Number_of_links,
+!! Owner_uid,        &
+!!     Owner_gid, Directory_device, File_size, Last_access,
+!! Last_modification,&
+!! Last_status_change,  Preferred_block_size,  Number_of_blocks_allocated
 !!    equivalence                                    &
 !!       ( buff(1)  , Device_ID                  ) , &
 !!       ( buff(2)  , Inode_number               ) , &
@@ -5083,8 +5089,8 @@ end function C2F_string
 !!    Inode number:                1407374886070599
 !!    File mode (octal):                        100750
 !!    Number of links:             1
-!!    Owner's uid/username:        18 SYSTEM
-!!    Owner's gid/group:           18 SYSTEM
+!!    Owner uid/username:        18 SYSTEM
+!!    Owner gid/group:           18 SYSTEM
 !!    Device where located:        0
 !!    File size(bytes):            824
 !!    Last access time:            1557983191 2019-05-16 01:06:31
