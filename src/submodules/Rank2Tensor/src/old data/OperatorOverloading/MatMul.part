@@ -15,7 +15,7 @@
 !   DESCRIPTION
 !       -   Tensor class is defined
 !   HOSTING FILE
-!       -   Rank2Tensor_Class.f90
+!       -   Rank2Tensor_Class.F90
 !
 !==============================================================================
 
@@ -41,7 +41,7 @@
         .OR. .NOT. ALLOCATED( obj2%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>OperatorOverloading.part", &
+                       "Rank2Tensor_Class.F90>>OperatorOverloading.part", &
                         "MatMul_1()",                          &
                         "Tensor_ obj is/are not allocated. Program Stopped"&
                     )
@@ -79,7 +79,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>OperatorOverloading.part", &
+                       "Rank2Tensor_Class.F90>>OperatorOverloading.part", &
                         "MatMul_2()",                          &
                         "Tensor_ obj is not allocated. Program Stopped"   &
                     )
@@ -135,7 +135,7 @@
     IF( .NOT. ALLOCATED( obj%T ) ) THEN
 
         CALL Err_Msg(                                                     &
-                       "Rank2Tensor_Class.f90>>OperatorOverloading.part", &
+                       "Rank2Tensor_Class.F90>>OperatorOverloading.part", &
                         "MatMul_3()",                          &
                         "Tensor_ obj is not allocated. Program Stopped"   &
                     )
@@ -245,7 +245,7 @@
     IF( SIZE( Mat1, 2 ) .NE. SIZE( Mat2, 1 ) ) THEN
 
         CALL Err_Msg( &
-        "Rank2Tensor_Class.f90>>MatMul.part>", &
+        "Rank2Tensor_Class.F90>>MatMul.part>", &
         "Mat .matmul. Mat", &
         "Matrix multiplication is not compatible, Program Stopped!!!" &
         )

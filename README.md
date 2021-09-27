@@ -38,8 +38,8 @@ The vision of EASIFEM is to ease the coding part of FEM. This library can be emp
 
 1. EASIFEM-base contains the fundamental user defined data-types and their methods, which are necessary for implementation of numerical methods such as finite element/volume/difference method, material point method, particle finite element method, random finite element method, among others.
 2. EASIFEM-base is the lowest layer on which the entire landscape of EASIFEM resides.
-3. All user defined data-types are included in a module called `baseType.f90`
-4. Methods of a data-type, let us say XXX, are defined in a module, `XXX_method.f90` . It is noteworthy that this module only contains the interface of the method. Actual implementations are given in the submodules, `XXX_method@SubmoduleName.f90`. Modules are kept in a directory called `/modules` and submodules are kept in `/submodules`
+3. All user defined data-types are included in a module called `baseType.F90`
+4. Methods of a data-type, let us say XXX, are defined in a module, `XXX_method.F90` . It is noteworthy that this module only contains the interface of the method. Actual implementations are given in the submodules, `XXX_method@SubmoduleName.F90`. Modules are kept in a directory called `/modules` and submodules are kept in `/submodules`
 
 Details of data-types and methods included in EASIFEM-base can be found [here](https://www.notion.so/d1490ecc9fa84e75ac9731c1f8538e67).
 

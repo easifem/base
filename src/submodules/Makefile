@@ -8,9 +8,9 @@ WRC="windres"
 PRJTK="sfprjtk"
 RM=rm -f
 
-IDIR=-I/Applications/SimplyFortran/SimplyFortran.app/Contents/Resources/gcc/include/ -I/usr/local/include -I/Users/vikassharma/Dropbox/easifem-base/include -I/Users/vikassharma/Dropbox/easifem-extpkgs/include -I/Users/vikassharma/include 
+IDIR=-I/Applications/SimplyFortran/SimplyFortran.app/Contents/Resources/gcc/include/ -I/usr/local/include -I/Users/vikassharma/Dropbox/easifem-base/include -I/Users/vikassharma/Dropbox/easifem-extpkgs/include -I/Users/vikassharma/include
 
-LDIR=-L/Applications/SimplyFortran/SimplyFortran.app/Contents/Resources/gcc/lib/ 
+LDIR=-L/Applications/SimplyFortran/SimplyFortran.app/Contents/Resources/gcc/lib/
 
 
 OPTFLAGS= -g
@@ -25,39 +25,39 @@ PRJ_CFLAGS=
 
 PRJ_LFLAGS= -lsfopenblas
 
-FFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_FFLAGS) -J../../include 
+FFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_FFLAGS) -J../../include
 
 CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 
-"../../lib/BaseType@AdditionalMethods.o": "BaseType@AdditionalMethods.f90"
-	@echo Compiling BaseType@AdditionalMethods.f90
-	@$(FC) -c -o "../../lib/BaseType@AdditionalMethods.o" $(FFLAGS) "BaseType@AdditionalMethods.f90"
+"../../lib/BaseType@AdditionalMethods.o": "BaseType@AdditionalMethods.F90"
+	@echo Compiling BaseType@AdditionalMethods.F90
+	@$(FC) -c -o "../../lib/BaseType@AdditionalMethods.o" $(FFLAGS) "BaseType@AdditionalMethods.F90"
 
-"../../lib/BoundingBox_Method@Constructor.o": "BoundingBox/BoundingBox_Method@Constructor.f90"
-	@echo Compiling BoundingBox/BoundingBox_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/BoundingBox_Method@Constructor.o" $(FFLAGS) "BoundingBox/BoundingBox_Method@Constructor.f90"
+"../../lib/BoundingBox_Method@Constructor.o": "BoundingBox/BoundingBox_Method@Constructor.F90"
+	@echo Compiling BoundingBox/BoundingBox_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/BoundingBox_Method@Constructor.o" $(FFLAGS) "BoundingBox/BoundingBox_Method@Constructor.F90"
 
-"../../lib/Buffer_Method@Methods.o": "Buffer/Buffer_Method@Methods.f90"
-	@echo Compiling Buffer/Buffer_Method@Methods.f90
-	@$(FC) -c -o "../../lib/Buffer_Method@Methods.o" $(FFLAGS) "Buffer/Buffer_Method@Methods.f90"
+"../../lib/Buffer_Method@Methods.o": "Buffer/Buffer_Method@Methods.F90"
+	@echo Compiling Buffer/Buffer_Method@Methods.F90
+	@$(FC) -c -o "../../lib/Buffer_Method@Methods.o" $(FFLAGS) "Buffer/Buffer_Method@Methods.F90"
 
-"../../lib/DOF_Method@Constructor.o": "DOF/DOF_Method@Constructor.f90"
-	@echo Compiling DOF/DOF_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/DOF_Method@Constructor.o" $(FFLAGS) "DOF/DOF_Method@Constructor.f90"
+"../../lib/DOF_Method@Constructor.o": "DOF/DOF_Method@Constructor.F90"
+	@echo Compiling DOF/DOF_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/DOF_Method@Constructor.o" $(FFLAGS) "DOF/DOF_Method@Constructor.F90"
 "../../include/DOF_Method@Constructor.smod" : "../../lib/DOF_Method@Constructor.o" .EXISTSONLY
-	@echo Compiling DOF/DOF_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/DOF_Method@Constructor.o" $(FFLAGS) "DOF/DOF_Method@Constructor.f90"
+	@echo Compiling DOF/DOF_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/DOF_Method@Constructor.o" $(FFLAGS) "DOF/DOF_Method@Constructor.F90"
 
-"../../lib/DOF_Method@GetMethod.o": "DOF/DOF_Method@GetMethod.f90"
-	@echo Compiling DOF/DOF_Method@GetMethod.f90
-	@$(FC) -c -o "../../lib/DOF_Method@GetMethod.o" $(FFLAGS) "DOF/DOF_Method@GetMethod.f90"
+"../../lib/DOF_Method@GetMethod.o": "DOF/DOF_Method@GetMethod.F90"
+	@echo Compiling DOF/DOF_Method@GetMethod.F90
+	@$(FC) -c -o "../../lib/DOF_Method@GetMethod.o" $(FFLAGS) "DOF/DOF_Method@GetMethod.F90"
 "../../include/DOF_Method@GetMethod.smod" : "../../lib/DOF_Method@GetMethod.o" .EXISTSONLY
-	@echo Compiling DOF/DOF_Method@GetMethod.f90
-	@$(FC) -c -o "../../lib/DOF_Method@GetMethod.o" $(FFLAGS) "DOF/DOF_Method@GetMethod.f90"
+	@echo Compiling DOF/DOF_Method@GetMethod.F90
+	@$(FC) -c -o "../../lib/DOF_Method@GetMethod.o" $(FFLAGS) "DOF/DOF_Method@GetMethod.F90"
 
-"../../lib/DOF_Method@setMethod.o": "DOF/DOF_Method@setMethod.f90"
-	@echo Compiling DOF/DOF_Method@setMethod.f90
-	@$(FC) -c -o "../../lib/DOF_Method@setMethod.o" $(FFLAGS) "DOF/DOF_Method@setMethod.f90"
+"../../lib/DOF_Method@setMethod.o": "DOF/DOF_Method@setMethod.F90"
+	@echo Compiling DOF/DOF_Method@setMethod.F90
+	@$(FC) -c -o "../../lib/DOF_Method@setMethod.o" $(FFLAGS) "DOF/DOF_Method@setMethod.F90"
 
 "../../lib/dsyevc3.o": "Vector/Tensor/Rank2Tensor/dsyevc3.f"
 	@echo Compiling Vector/Tensor/Rank2Tensor/dsyevc3.f
@@ -75,290 +75,290 @@ CFLAGS=$(SPECIALFLAGS) $(OPTFLAGS) $(PRJ_CFLAGS)
 	@echo Compiling Vector/Tensor/Rank2Tensor/dsytrd3.f
 	@$(FC) -c -o "../../lib/dsytrd3.o" $(FFLAGS) "Vector/Tensor/Rank2Tensor/dsytrd3.f"
 
-"../../lib/ElemshapeData_Method@Constructor.o": "ElemshapeData/ElemshapeData_Method@Constructor.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@Constructor.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@Constructor.f90"
+"../../lib/ElemshapeData_Method@Constructor.o": "ElemshapeData/ElemshapeData_Method@Constructor.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@Constructor.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@Constructor.F90"
 
-"../../lib/ElemshapeData_Method@getMethod.o": "ElemshapeData/ElemshapeData_Method@getMethod.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@getMethod.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@getMethod.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@getMethod.f90"
+"../../lib/ElemshapeData_Method@getMethod.o": "ElemshapeData/ElemshapeData_Method@getMethod.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@getMethod.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@getMethod.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@getMethod.F90"
 
-"../../lib/ElemshapeData_Method@H1Lagrange.o": "ElemshapeData/ElemshapeData_Method@H1Lagrange.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@H1Lagrange.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@H1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@H1Lagrange.f90"
+"../../lib/ElemshapeData_Method@H1Lagrange.o": "ElemshapeData/ElemshapeData_Method@H1Lagrange.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@H1Lagrange.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@H1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@H1Lagrange.F90"
 
-"../../lib/ElemshapeData_Method@HexahedronH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@HexahedronH1Lagrange.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@HexahedronH1Lagrange.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@HexahedronH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@HexahedronH1Lagrange.f90"
+"../../lib/ElemshapeData_Method@HexahedronH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@HexahedronH1Lagrange.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@HexahedronH1Lagrange.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@HexahedronH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@HexahedronH1Lagrange.F90"
 
-"../../lib/ElemshapeData_Method@LineH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@LineH1Lagrange.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@LineH1Lagrange.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@LineH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@LineH1Lagrange.f90"
+"../../lib/ElemshapeData_Method@LineH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@LineH1Lagrange.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@LineH1Lagrange.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@LineH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@LineH1Lagrange.F90"
 
-"../../lib/ElemshapeData_Method@PrismH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@PrismH1Lagrange.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@PrismH1Lagrange.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@PrismH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@PrismH1Lagrange.f90"
+"../../lib/ElemshapeData_Method@PrismH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@PrismH1Lagrange.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@PrismH1Lagrange.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@PrismH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@PrismH1Lagrange.F90"
 
-"../../lib/ElemshapeData_Method@PyramidH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@PyramidH1Lagrange.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@PyramidH1Lagrange.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@PyramidH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@PyramidH1Lagrange.f90"
+"../../lib/ElemshapeData_Method@PyramidH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@PyramidH1Lagrange.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@PyramidH1Lagrange.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@PyramidH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@PyramidH1Lagrange.F90"
 
-"../../lib/ElemshapeData_Method@QuadrangleH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@QuadrangleH1Lagrange.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@QuadrangleH1Lagrange.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@QuadrangleH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@QuadrangleH1Lagrange.f90"
+"../../lib/ElemshapeData_Method@QuadrangleH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@QuadrangleH1Lagrange.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@QuadrangleH1Lagrange.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@QuadrangleH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@QuadrangleH1Lagrange.F90"
 
-"../../lib/ElemshapeData_Method@setMethod.o": "ElemshapeData/ElemshapeData_Method@setMethod.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@setMethod.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@setMethod.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@setMethod.f90"
+"../../lib/ElemshapeData_Method@setMethod.o": "ElemshapeData/ElemshapeData_Method@setMethod.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@setMethod.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@setMethod.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@setMethod.F90"
 
-"../../lib/ElemshapeData_Method@TetrahedronH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@TetrahedronH1Lagrange.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@TetrahedronH1Lagrange.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@TetrahedronH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@TetrahedronH1Lagrange.f90"
+"../../lib/ElemshapeData_Method@TetrahedronH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@TetrahedronH1Lagrange.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@TetrahedronH1Lagrange.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@TetrahedronH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@TetrahedronH1Lagrange.F90"
 
-"../../lib/ElemshapeData_Method@TriangleH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@TriangleH1Lagrange.f90"
-	@echo Compiling ElemshapeData/ElemshapeData_Method@TriangleH1Lagrange.f90
-	@$(FC) -c -o "../../lib/ElemshapeData_Method@TriangleH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@TriangleH1Lagrange.f90"
+"../../lib/ElemshapeData_Method@TriangleH1Lagrange.o": "ElemshapeData/ElemshapeData_Method@TriangleH1Lagrange.F90"
+	@echo Compiling ElemshapeData/ElemshapeData_Method@TriangleH1Lagrange.F90
+	@$(FC) -c -o "../../lib/ElemshapeData_Method@TriangleH1Lagrange.o" $(FFLAGS) "ElemshapeData/ElemshapeData_Method@TriangleH1Lagrange.F90"
 
-"../../lib/FEMatrix_Module@DiffusionMatrix.o": "FEMatrix/FEMatrix_Module@DiffusionMatrix.f90"
-	@echo Compiling FEMatrix/FEMatrix_Module@DiffusionMatrix.f90
-	@$(FC) -c -o "../../lib/FEMatrix_Module@DiffusionMatrix.o" $(FFLAGS) "FEMatrix/FEMatrix_Module@DiffusionMatrix.f90"
+"../../lib/FEMatrix_Module@DiffusionMatrix.o": "FEMatrix/FEMatrix_Module@DiffusionMatrix.F90"
+	@echo Compiling FEMatrix/FEMatrix_Module@DiffusionMatrix.F90
+	@$(FC) -c -o "../../lib/FEMatrix_Module@DiffusionMatrix.o" $(FFLAGS) "FEMatrix/FEMatrix_Module@DiffusionMatrix.F90"
 
-"../../lib/FEMatrix_Module@MassMatrix.o": "FEMatrix/FEMatrix_Module@MassMatrix.f90"
-	@echo Compiling FEMatrix/FEMatrix_Module@MassMatrix.f90
-	@$(FC) -c -o "../../lib/FEMatrix_Module@MassMatrix.o" $(FFLAGS) "FEMatrix/FEMatrix_Module@MassMatrix.f90"
+"../../lib/FEMatrix_Module@MassMatrix.o": "FEMatrix/FEMatrix_Module@MassMatrix.F90"
+	@echo Compiling FEMatrix/FEMatrix_Module@MassMatrix.F90
+	@$(FC) -c -o "../../lib/FEMatrix_Module@MassMatrix.o" $(FFLAGS) "FEMatrix/FEMatrix_Module@MassMatrix.F90"
 
-"../../lib/FEMatrix_Module@NitscheMatrix.o": "FEMatrix/FEMatrix_Module@NitscheMatrix.f90"
-	@echo Compiling FEMatrix/FEMatrix_Module@NitscheMatrix.f90
-	@$(FC) -c -o "../../lib/FEMatrix_Module@NitscheMatrix.o" $(FFLAGS) "FEMatrix/FEMatrix_Module@NitscheMatrix.f90"
+"../../lib/FEMatrix_Module@NitscheMatrix.o": "FEMatrix/FEMatrix_Module@NitscheMatrix.F90"
+	@echo Compiling FEMatrix/FEMatrix_Module@NitscheMatrix.F90
+	@$(FC) -c -o "../../lib/FEMatrix_Module@NitscheMatrix.o" $(FFLAGS) "FEMatrix/FEMatrix_Module@NitscheMatrix.F90"
 
-"../../lib/FEMatrix_Module@StiffnessMatrix.o": "FEMatrix/FEMatrix_Module@StiffnessMatrix.f90"
-	@echo Compiling FEMatrix/FEMatrix_Module@StiffnessMatrix.f90
-	@$(FC) -c -o "../../lib/FEMatrix_Module@StiffnessMatrix.o" $(FFLAGS) "FEMatrix/FEMatrix_Module@StiffnessMatrix.f90"
+"../../lib/FEMatrix_Module@StiffnessMatrix.o": "FEMatrix/FEMatrix_Module@StiffnessMatrix.F90"
+	@echo Compiling FEMatrix/FEMatrix_Module@StiffnessMatrix.F90
+	@$(FC) -c -o "../../lib/FEMatrix_Module@StiffnessMatrix.o" $(FFLAGS) "FEMatrix/FEMatrix_Module@StiffnessMatrix.F90"
 
-"../../lib/FEVariable_Method@Constructor.o": "FEVariable/FEVariable_Method@Constructor.f90"
-	@echo Compiling FEVariable/FEVariable_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/FEVariable_Method@Constructor.o" $(FFLAGS) "FEVariable/FEVariable_Method@Constructor.f90"
+"../../lib/FEVariable_Method@Constructor.o": "FEVariable/FEVariable_Method@Constructor.F90"
+	@echo Compiling FEVariable/FEVariable_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/FEVariable_Method@Constructor.o" $(FFLAGS) "FEVariable/FEVariable_Method@Constructor.F90"
 
-"../../lib/FEVariable_Method@GetMethod.o": "FEVariable/FEVariable_Method@GetMethod.f90"
-	@echo Compiling FEVariable/FEVariable_Method@GetMethod.f90
-	@$(FC) -c -o "../../lib/FEVariable_Method@GetMethod.o" $(FFLAGS) "FEVariable/FEVariable_Method@GetMethod.f90"
+"../../lib/FEVariable_Method@GetMethod.o": "FEVariable/FEVariable_Method@GetMethod.F90"
+	@echo Compiling FEVariable/FEVariable_Method@GetMethod.F90
+	@$(FC) -c -o "../../lib/FEVariable_Method@GetMethod.o" $(FFLAGS) "FEVariable/FEVariable_Method@GetMethod.F90"
 
-"../../lib/File_Method@Constructor.o": "File/File_Method@Constructor.f90"
-	@echo Compiling File/File_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/File_Method@Constructor.o" $(FFLAGS) "File/File_Method@Constructor.f90"
+"../../lib/File_Method@Constructor.o": "File/File_Method@Constructor.F90"
+	@echo Compiling File/File_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/File_Method@Constructor.o" $(FFLAGS) "File/File_Method@Constructor.F90"
 
-"../../lib/File_Method@Inquire.o": "File/File_Method@Inquire.f90"
-	@echo Compiling File/File_Method@Inquire.f90
-	@$(FC) -c -o "../../lib/File_Method@Inquire.o" $(FFLAGS) "File/File_Method@Inquire.f90"
+"../../lib/File_Method@Inquire.o": "File/File_Method@Inquire.F90"
+	@echo Compiling File/File_Method@Inquire.F90
+	@$(FC) -c -o "../../lib/File_Method@Inquire.o" $(FFLAGS) "File/File_Method@Inquire.F90"
 
-"../../lib/File_Method@ReadMethods.o": "File/File_Method@ReadMethods.f90"
-	@echo Compiling File/File_Method@ReadMethods.f90
-	@$(FC) -c -o "../../lib/File_Method@ReadMethods.o" $(FFLAGS) "File/File_Method@ReadMethods.f90"
+"../../lib/File_Method@ReadMethods.o": "File/File_Method@ReadMethods.F90"
+	@echo Compiling File/File_Method@ReadMethods.F90
+	@$(FC) -c -o "../../lib/File_Method@ReadMethods.o" $(FFLAGS) "File/File_Method@ReadMethods.F90"
 
-"../../lib/File_Method@WriteMethods.o": "File/File_Method@WriteMethods.f90"
-	@echo Compiling File/File_Method@WriteMethods.f90
-	@$(FC) -c -o "../../lib/File_Method@WriteMethods.o" $(FFLAGS) "File/File_Method@WriteMethods.f90"
+"../../lib/File_Method@WriteMethods.o": "File/File_Method@WriteMethods.F90"
+	@echo Compiling File/File_Method@WriteMethods.F90
+	@$(FC) -c -o "../../lib/File_Method@WriteMethods.o" $(FFLAGS) "File/File_Method@WriteMethods.F90"
 "../../include/File_Method@WriteMethods.smod" : "../../lib/File_Method@WriteMethods.o" .EXISTSONLY
-	@echo Compiling File/File_Method@WriteMethods.f90
-	@$(FC) -c -o "../../lib/File_Method@WriteMethods.o" $(FFLAGS) "File/File_Method@WriteMethods.f90"
+	@echo Compiling File/File_Method@WriteMethods.F90
+	@$(FC) -c -o "../../lib/File_Method@WriteMethods.o" $(FFLAGS) "File/File_Method@WriteMethods.F90"
 
-"../../lib/GE_Lapack_Method@Eigenvalue.o": "Lapack/GE_Lapack_Method@Eigenvalue.f90"
-	@echo Compiling Lapack/GE_Lapack_Method@Eigenvalue.f90
-	@$(FC) -c -o "../../lib/GE_Lapack_Method@Eigenvalue.o" $(FFLAGS) "Lapack/GE_Lapack_Method@Eigenvalue.f90"
+"../../lib/GE_Lapack_Method@Eigenvalue.o": "Lapack/GE_Lapack_Method@Eigenvalue.F90"
+	@echo Compiling Lapack/GE_Lapack_Method@Eigenvalue.F90
+	@$(FC) -c -o "../../lib/GE_Lapack_Method@Eigenvalue.o" $(FFLAGS) "Lapack/GE_Lapack_Method@Eigenvalue.F90"
 
-"../../lib/GE_Lapack_Method@LinearSolve.o": "Lapack/GE_Lapack_Method@LinearSolve.f90"
-	@echo Compiling Lapack/GE_Lapack_Method@LinearSolve.f90
-	@$(FC) -c -o "../../lib/GE_Lapack_Method@LinearSolve.o" $(FFLAGS) "Lapack/GE_Lapack_Method@LinearSolve.f90"
+"../../lib/GE_Lapack_Method@LinearSolve.o": "Lapack/GE_Lapack_Method@LinearSolve.F90"
+	@echo Compiling Lapack/GE_Lapack_Method@LinearSolve.F90
+	@$(FC) -c -o "../../lib/GE_Lapack_Method@LinearSolve.o" $(FFLAGS) "Lapack/GE_Lapack_Method@LinearSolve.F90"
 
-"../../lib/GE_Lapack_Method@LU.o": "Lapack/GE_Lapack_Method@LU.f90"
-	@echo Compiling Lapack/GE_Lapack_Method@LU.f90
-	@$(FC) -c -o "../../lib/GE_Lapack_Method@LU.o" $(FFLAGS) "Lapack/GE_Lapack_Method@LU.f90"
+"../../lib/GE_Lapack_Method@LU.o": "Lapack/GE_Lapack_Method@LU.F90"
+	@echo Compiling Lapack/GE_Lapack_Method@LU.F90
+	@$(FC) -c -o "../../lib/GE_Lapack_Method@LU.o" $(FFLAGS) "Lapack/GE_Lapack_Method@LU.F90"
 
-"../../lib/IndexValue_Method@Constructor.o": "IterationData/IndexValue_Method@Constructor.f90"
-	@echo Compiling IterationData/IndexValue_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/IndexValue_Method@Constructor.o" $(FFLAGS) "IterationData/IndexValue_Method@Constructor.f90"
+"../../lib/IndexValue_Method@Constructor.o": "IterationData/IndexValue_Method@Constructor.F90"
+	@echo Compiling IterationData/IndexValue_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/IndexValue_Method@Constructor.o" $(FFLAGS) "IterationData/IndexValue_Method@Constructor.F90"
 "../../include/IndexValue_Method@Constructor.smod" : "../../lib/IndexValue_Method@Constructor.o" .EXISTSONLY
-	@echo Compiling IterationData/IndexValue_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/IndexValue_Method@Constructor.o" $(FFLAGS) "IterationData/IndexValue_Method@Constructor.f90"
+	@echo Compiling IterationData/IndexValue_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/IndexValue_Method@Constructor.o" $(FFLAGS) "IterationData/IndexValue_Method@Constructor.F90"
 
-"../../lib/IntVector_Method@Constructor.o": "Vector/IntVector/IntVector_Method@Constructor.f90"
-	@echo Compiling Vector/IntVector/IntVector_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/IntVector_Method@Constructor.o" $(FFLAGS) "Vector/IntVector/IntVector_Method@Constructor.f90"
+"../../lib/IntVector_Method@Constructor.o": "Vector/IntVector/IntVector_Method@Constructor.F90"
+	@echo Compiling Vector/IntVector/IntVector_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/IntVector_Method@Constructor.o" $(FFLAGS) "Vector/IntVector/IntVector_Method@Constructor.F90"
 
-"../../lib/IntVector_Method@GetMethod.o": "Vector/IntVector/IntVector_Method@GetMethod.f90"
-	@echo Compiling Vector/IntVector/IntVector_Method@GetMethod.f90
-	@$(FC) -c -o "../../lib/IntVector_Method@GetMethod.o" $(FFLAGS) "Vector/IntVector/IntVector_Method@GetMethod.f90"
+"../../lib/IntVector_Method@GetMethod.o": "Vector/IntVector/IntVector_Method@GetMethod.F90"
+	@echo Compiling Vector/IntVector/IntVector_Method@GetMethod.F90
+	@$(FC) -c -o "../../lib/IntVector_Method@GetMethod.o" $(FFLAGS) "Vector/IntVector/IntVector_Method@GetMethod.F90"
 
-"../../lib/IntVector_Method@SetMethods.o": "Vector/IntVector/IntVector_Method@SetMethods.f90"
-	@echo Compiling Vector/IntVector/IntVector_Method@SetMethods.f90
-	@$(FC) -c -o "../../lib/IntVector_Method@SetMethods.o" $(FFLAGS) "Vector/IntVector/IntVector_Method@SetMethods.f90"
+"../../lib/IntVector_Method@SetMethods.o": "Vector/IntVector/IntVector_Method@SetMethods.F90"
+	@echo Compiling Vector/IntVector/IntVector_Method@SetMethods.F90
+	@$(FC) -c -o "../../lib/IntVector_Method@SetMethods.o" $(FFLAGS) "Vector/IntVector/IntVector_Method@SetMethods.F90"
 
-"../../lib/IterationData_Method@Constructor.o": "IterationData/IterationData_Method@Constructor.f90"
-	@echo Compiling IterationData/IterationData_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/IterationData_Method@Constructor.o" $(FFLAGS) "IterationData/IterationData_Method@Constructor.f90"
+"../../lib/IterationData_Method@Constructor.o": "IterationData/IterationData_Method@Constructor.F90"
+	@echo Compiling IterationData/IterationData_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/IterationData_Method@Constructor.o" $(FFLAGS) "IterationData/IterationData_Method@Constructor.F90"
 
-"../../lib/KeyValue_Method@Constructor.o": "KeyValue/KeyValue_Method@Constructor.f90"
-	@echo Compiling KeyValue/KeyValue_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/KeyValue_Method@Constructor.o" $(FFLAGS) "KeyValue/KeyValue_Method@Constructor.f90"
+"../../lib/KeyValue_Method@Constructor.o": "KeyValue/KeyValue_Method@Constructor.F90"
+	@echo Compiling KeyValue/KeyValue_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/KeyValue_Method@Constructor.o" $(FFLAGS) "KeyValue/KeyValue_Method@Constructor.F90"
 
-"../../lib/KeyValue_Method@getMethod.o": "KeyValue/KeyValue_Method@getMethod.f90"
-	@echo Compiling KeyValue/KeyValue_Method@getMethod.f90
-	@$(FC) -c -o "../../lib/KeyValue_Method@getMethod.o" $(FFLAGS) "KeyValue/KeyValue_Method@getMethod.f90"
+"../../lib/KeyValue_Method@getMethod.o": "KeyValue/KeyValue_Method@getMethod.F90"
+	@echo Compiling KeyValue/KeyValue_Method@getMethod.F90
+	@$(FC) -c -o "../../lib/KeyValue_Method@getMethod.o" $(FFLAGS) "KeyValue/KeyValue_Method@getMethod.F90"
 
-"../../lib/KeyValue_Method@SetMethod.o": "KeyValue/KeyValue_Method@SetMethod.f90"
-	@echo Compiling KeyValue/KeyValue_Method@SetMethod.f90
-	@$(FC) -c -o "../../lib/KeyValue_Method@SetMethod.o" $(FFLAGS) "KeyValue/KeyValue_Method@SetMethod.f90"
+"../../lib/KeyValue_Method@SetMethod.o": "KeyValue/KeyValue_Method@SetMethod.F90"
+	@echo Compiling KeyValue/KeyValue_Method@SetMethod.F90
+	@$(FC) -c -o "../../lib/KeyValue_Method@SetMethod.o" $(FFLAGS) "KeyValue/KeyValue_Method@SetMethod.F90"
 
-"../../lib/matrix_exponential.o": "Vector/Tensor/Rank2Tensor/matrix_exponential.f90"
-	@echo Compiling Vector/Tensor/Rank2Tensor/matrix_exponential.f90
-	@$(FC) -c -o "../../lib/matrix_exponential.o" $(FFLAGS) "Vector/Tensor/Rank2Tensor/matrix_exponential.f90"
+"../../lib/matrix_exponential.o": "Vector/Tensor/Rank2Tensor/matrix_exponential.F90"
+	@echo Compiling Vector/Tensor/Rank2Tensor/matrix_exponential.F90
+	@$(FC) -c -o "../../lib/matrix_exponential.o" $(FFLAGS) "Vector/Tensor/Rank2Tensor/matrix_exponential.F90"
 
-"../../lib/QuadraturePoint_Method@Constructor.o": "QuadraturePoint/QuadraturePoint_Method@Constructor.f90"
-	@echo Compiling QuadraturePoint/QuadraturePoint_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/QuadraturePoint_Method@Constructor.o" $(FFLAGS) "QuadraturePoint/QuadraturePoint_Method@Constructor.f90"
+"../../lib/QuadraturePoint_Method@Constructor.o": "QuadraturePoint/QuadraturePoint_Method@Constructor.F90"
+	@echo Compiling QuadraturePoint/QuadraturePoint_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/QuadraturePoint_Method@Constructor.o" $(FFLAGS) "QuadraturePoint/QuadraturePoint_Method@Constructor.F90"
 
-"../../lib/QuadraturePoint_Method@GaussLegendre.o": "QuadraturePoint/QuadraturePoint_Method@GaussLegendre.f90" "QuadraturePoint/GaussLegendre/QuadDataLine.inc" "QuadraturePoint/GaussLegendre/QuadDataTriangle.inc"
-	@echo Compiling QuadraturePoint/QuadraturePoint_Method@GaussLegendre.f90
-	@$(FC) -c -o "../../lib/QuadraturePoint_Method@GaussLegendre.o" $(FFLAGS) "QuadraturePoint/QuadraturePoint_Method@GaussLegendre.f90"
+"../../lib/QuadraturePoint_Method@GaussLegendre.o": "QuadraturePoint/QuadraturePoint_Method@GaussLegendre.F90" "QuadraturePoint/GaussLegendre/QuadDataLine.inc" "QuadraturePoint/GaussLegendre/QuadDataTriangle.inc"
+	@echo Compiling QuadraturePoint/QuadraturePoint_Method@GaussLegendre.F90
+	@$(FC) -c -o "../../lib/QuadraturePoint_Method@GaussLegendre.o" $(FFLAGS) "QuadraturePoint/QuadraturePoint_Method@GaussLegendre.F90"
 
-"../../lib/Random_Method@Constructor.o": "Random/Random_Method@Constructor.f90"
-	@echo Compiling Random/Random_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/Random_Method@Constructor.o" $(FFLAGS) "Random/Random_Method@Constructor.f90"
+"../../lib/Random_Method@Constructor.o": "Random/Random_Method@Constructor.F90"
+	@echo Compiling Random/Random_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/Random_Method@Constructor.o" $(FFLAGS) "Random/Random_Method@Constructor.F90"
 
-"../../lib/Rank2Tensor_Method@Constructor.o": "Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Constructor.f90"
-	@echo Compiling Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/Rank2Tensor_Method@Constructor.o" $(FFLAGS) "Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Constructor.f90"
+"../../lib/Rank2Tensor_Method@Constructor.o": "Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Constructor.F90"
+	@echo Compiling Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/Rank2Tensor_Method@Constructor.o" $(FFLAGS) "Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Constructor.F90"
 
-"../../lib/Rank2Tensor_Method@Operation.o": "Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Operation.f90"
-	@echo Compiling Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Operation.f90
-	@$(FC) -c -o "../../lib/Rank2Tensor_Method@Operation.o" $(FFLAGS) "Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Operation.f90"
+"../../lib/Rank2Tensor_Method@Operation.o": "Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Operation.F90"
+	@echo Compiling Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Operation.F90
+	@$(FC) -c -o "../../lib/Rank2Tensor_Method@Operation.o" $(FFLAGS) "Vector/Tensor/Rank2Tensor/Rank2Tensor_Method@Operation.F90"
 
-"../../lib/RealMatrix_Method@BLAS.o": "Matrix/RealMatrix/RealMatrix_Method@BLAS.f90"
-	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@BLAS.f90
-	@$(FC) -c -o "../../lib/RealMatrix_Method@BLAS.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@BLAS.f90"
+"../../lib/RealMatrix_Method@BLAS.o": "Matrix/RealMatrix/RealMatrix_Method@BLAS.F90"
+	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@BLAS.F90
+	@$(FC) -c -o "../../lib/RealMatrix_Method@BLAS.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@BLAS.F90"
 
-"../../lib/RealMatrix_Method@Constructor.o": "Matrix/RealMatrix/RealMatrix_Method@Constructor.f90"
-	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/RealMatrix_Method@Constructor.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@Constructor.f90"
+"../../lib/RealMatrix_Method@Constructor.o": "Matrix/RealMatrix/RealMatrix_Method@Constructor.F90"
+	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/RealMatrix_Method@Constructor.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@Constructor.F90"
 "../../include/RealMatrix_Method@Constructor.smod" : "../../lib/RealMatrix_Method@Constructor.o" .EXISTSONLY
-	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/RealMatrix_Method@Constructor.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@Constructor.f90"
+	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/RealMatrix_Method@Constructor.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@Constructor.F90"
 
-"../../lib/RealMatrix_Method@getValues.o": "Matrix/RealMatrix/RealMatrix_Method@getValues.f90"
-	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@getValues.f90
-	@$(FC) -c -o "../../lib/RealMatrix_Method@getValues.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@getValues.f90"
+"../../lib/RealMatrix_Method@getValues.o": "Matrix/RealMatrix/RealMatrix_Method@getValues.F90"
+	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@getValues.F90
+	@$(FC) -c -o "../../lib/RealMatrix_Method@getValues.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@getValues.F90"
 
-"../../lib/RealMatrix_Method@LAPACK.o": "Matrix/RealMatrix/RealMatrix_Method@LAPACK.f90"
-	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@LAPACK.f90
-	@$(FC) -c -o "../../lib/RealMatrix_Method@LAPACK.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@LAPACK.f90"
+"../../lib/RealMatrix_Method@LAPACK.o": "Matrix/RealMatrix/RealMatrix_Method@LAPACK.F90"
+	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@LAPACK.F90
+	@$(FC) -c -o "../../lib/RealMatrix_Method@LAPACK.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@LAPACK.F90"
 
-"../../lib/RealMatrix_Method@MatrixMultiplication.o": "Matrix/RealMatrix/RealMatrix_Method@MatrixMultiplication.f90"
-	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@MatrixMultiplication.f90
-	@$(FC) -c -o "../../lib/RealMatrix_Method@MatrixMultiplication.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@MatrixMultiplication.f90"
+"../../lib/RealMatrix_Method@MatrixMultiplication.o": "Matrix/RealMatrix/RealMatrix_Method@MatrixMultiplication.F90"
+	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@MatrixMultiplication.F90
+	@$(FC) -c -o "../../lib/RealMatrix_Method@MatrixMultiplication.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@MatrixMultiplication.F90"
 
-"../../lib/RealMatrix_Method@setValues.o": "Matrix/RealMatrix/RealMatrix_Method@setValues.f90"
-	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@setValues.f90
-	@$(FC) -c -o "../../lib/RealMatrix_Method@setValues.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@setValues.f90"
+"../../lib/RealMatrix_Method@setValues.o": "Matrix/RealMatrix/RealMatrix_Method@setValues.F90"
+	@echo Compiling Matrix/RealMatrix/RealMatrix_Method@setValues.F90
+	@$(FC) -c -o "../../lib/RealMatrix_Method@setValues.o" $(FFLAGS) "Matrix/RealMatrix/RealMatrix_Method@setValues.F90"
 
-"../../lib/RealVector_Method@BLAS1.o": "Vector/RealVector/RealVector_Method@BLAS1.f90"
-	@echo Compiling Vector/RealVector/RealVector_Method@BLAS1.f90
-	@$(FC) -c -o "../../lib/RealVector_Method@BLAS1.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@BLAS1.f90"
+"../../lib/RealVector_Method@BLAS1.o": "Vector/RealVector/RealVector_Method@BLAS1.F90"
+	@echo Compiling Vector/RealVector/RealVector_Method@BLAS1.F90
+	@$(FC) -c -o "../../lib/RealVector_Method@BLAS1.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@BLAS1.F90"
 
-"../../lib/RealVector_Method@Constructor.o": "Vector/RealVector/RealVector_Method@Constructor.f90"
-	@echo Compiling Vector/RealVector/RealVector_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/RealVector_Method@Constructor.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@Constructor.f90"
+"../../lib/RealVector_Method@Constructor.o": "Vector/RealVector/RealVector_Method@Constructor.F90"
+	@echo Compiling Vector/RealVector/RealVector_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/RealVector_Method@Constructor.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@Constructor.F90"
 
-"../../lib/RealVector_Method@GetMethod.o": "Vector/RealVector/RealVector_Method@GetMethod.f90"
-	@echo Compiling Vector/RealVector/RealVector_Method@GetMethod.f90
-	@$(FC) -c -o "../../lib/RealVector_Method@GetMethod.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@GetMethod.f90"
+"../../lib/RealVector_Method@GetMethod.o": "Vector/RealVector/RealVector_Method@GetMethod.F90"
+	@echo Compiling Vector/RealVector/RealVector_Method@GetMethod.F90
+	@$(FC) -c -o "../../lib/RealVector_Method@GetMethod.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@GetMethod.F90"
 
-"../../lib/RealVector_Method@IO.o": "Vector/RealVector/RealVector_Method@IO.f90"
-	@echo Compiling Vector/RealVector/RealVector_Method@IO.f90
-	@$(FC) -c -o "../../lib/RealVector_Method@IO.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@IO.f90"
+"../../lib/RealVector_Method@IO.o": "Vector/RealVector/RealVector_Method@IO.F90"
+	@echo Compiling Vector/RealVector/RealVector_Method@IO.F90
+	@$(FC) -c -o "../../lib/RealVector_Method@IO.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@IO.F90"
 
-"../../lib/RealVector_Method@SetMethods.o": "Vector/RealVector/RealVector_Method@SetMethods.f90"
-	@echo Compiling Vector/RealVector/RealVector_Method@SetMethods.f90
-	@$(FC) -c -o "../../lib/RealVector_Method@SetMethods.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@SetMethods.f90"
+"../../lib/RealVector_Method@SetMethods.o": "Vector/RealVector/RealVector_Method@SetMethods.F90"
+	@echo Compiling Vector/RealVector/RealVector_Method@SetMethods.F90
+	@$(FC) -c -o "../../lib/RealVector_Method@SetMethods.o" $(FFLAGS) "Vector/RealVector/RealVector_Method@SetMethods.F90"
 
-"../../lib/ReferenceElement_Method@Constructor.o": "ReferenceElement/ReferenceElement_Method@Constructor.f90"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@Constructor.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@Constructor.f90"
+"../../lib/ReferenceElement_Method@Constructor.o": "ReferenceElement/ReferenceElement_Method@Constructor.F90"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@Constructor.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@Constructor.F90"
 
-"../../lib/ReferenceElement_Method@Geometry.o": "ReferenceElement/ReferenceElement_Method@Geometry.f90"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@Geometry.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@Geometry.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@Geometry.f90"
+"../../lib/ReferenceElement_Method@Geometry.o": "ReferenceElement/ReferenceElement_Method@Geometry.F90"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@Geometry.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@Geometry.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@Geometry.F90"
 
-"../../lib/ReferenceElement_Method@HexahedronMethods.o": "ReferenceElement/ReferenceElement_Method@HexahedronMethods.f90" "ReferenceElement/modified_burkardt.inc"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@HexahedronMethods.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@HexahedronMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@HexahedronMethods.f90"
+"../../lib/ReferenceElement_Method@HexahedronMethods.o": "ReferenceElement/ReferenceElement_Method@HexahedronMethods.F90" "ReferenceElement/modified_burkardt.inc"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@HexahedronMethods.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@HexahedronMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@HexahedronMethods.F90"
 
-"../../lib/ReferenceElement_Method@Lagrange.o": "ReferenceElement/ReferenceElement_Method@Lagrange.f90"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@Lagrange.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@Lagrange.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@Lagrange.f90"
+"../../lib/ReferenceElement_Method@Lagrange.o": "ReferenceElement/ReferenceElement_Method@Lagrange.F90"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@Lagrange.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@Lagrange.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@Lagrange.F90"
 
-"../../lib/ReferenceElement_Method@LineMethods.o": "ReferenceElement/ReferenceElement_Method@LineMethods.f90"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@LineMethods.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@LineMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@LineMethods.f90"
+"../../lib/ReferenceElement_Method@LineMethods.o": "ReferenceElement/ReferenceElement_Method@LineMethods.F90"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@LineMethods.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@LineMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@LineMethods.F90"
 
-"../../lib/ReferenceElement_Method@PrismMethods.o": "ReferenceElement/ReferenceElement_Method@PrismMethods.f90" "ReferenceElement/modified_burkardt.inc"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@PrismMethods.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@PrismMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@PrismMethods.f90"
+"../../lib/ReferenceElement_Method@PrismMethods.o": "ReferenceElement/ReferenceElement_Method@PrismMethods.F90" "ReferenceElement/modified_burkardt.inc"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@PrismMethods.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@PrismMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@PrismMethods.F90"
 
-"../../lib/ReferenceElement_Method@PyramidMethods.o": "ReferenceElement/ReferenceElement_Method@PyramidMethods.f90" "ReferenceElement/modified_burkardt.inc"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@PyramidMethods.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@PyramidMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@PyramidMethods.f90"
+"../../lib/ReferenceElement_Method@PyramidMethods.o": "ReferenceElement/ReferenceElement_Method@PyramidMethods.F90" "ReferenceElement/modified_burkardt.inc"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@PyramidMethods.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@PyramidMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@PyramidMethods.F90"
 
-"../../lib/ReferenceElement_Method@QuadrangleMethods.o": "ReferenceElement/ReferenceElement_Method@QuadrangleMethods.f90" "ReferenceElement/modified_burkardt.inc"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@QuadrangleMethods.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@QuadrangleMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@QuadrangleMethods.f90"
+"../../lib/ReferenceElement_Method@QuadrangleMethods.o": "ReferenceElement/ReferenceElement_Method@QuadrangleMethods.F90" "ReferenceElement/modified_burkardt.inc"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@QuadrangleMethods.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@QuadrangleMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@QuadrangleMethods.F90"
 
-"../../lib/ReferenceElement_Method@TetrahedronMethods.o": "ReferenceElement/ReferenceElement_Method@TetrahedronMethods.f90" "ReferenceElement/modified_burkardt.inc"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@TetrahedronMethods.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@TetrahedronMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@TetrahedronMethods.f90"
+"../../lib/ReferenceElement_Method@TetrahedronMethods.o": "ReferenceElement/ReferenceElement_Method@TetrahedronMethods.F90" "ReferenceElement/modified_burkardt.inc"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@TetrahedronMethods.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@TetrahedronMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@TetrahedronMethods.F90"
 
-"../../lib/ReferenceElement_Method@TriangleMethods.o": "ReferenceElement/ReferenceElement_Method@TriangleMethods.f90" "ReferenceElement/modified_burkardt.inc"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@TriangleMethods.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@TriangleMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@TriangleMethods.f90"
+"../../lib/ReferenceElement_Method@TriangleMethods.o": "ReferenceElement/ReferenceElement_Method@TriangleMethods.F90" "ReferenceElement/modified_burkardt.inc"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@TriangleMethods.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@TriangleMethods.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@TriangleMethods.F90"
 
-"../../lib/ReferenceElement_Method@VTK.o": "ReferenceElement/ReferenceElement_Method@VTK.f90"
-	@echo Compiling ReferenceElement/ReferenceElement_Method@VTK.f90
-	@$(FC) -c -o "../../lib/ReferenceElement_Method@VTK.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@VTK.f90"
+"../../lib/ReferenceElement_Method@VTK.o": "ReferenceElement/ReferenceElement_Method@VTK.F90"
+	@echo Compiling ReferenceElement/ReferenceElement_Method@VTK.F90
+	@$(FC) -c -o "../../lib/ReferenceElement_Method@VTK.o" $(FFLAGS) "ReferenceElement/ReferenceElement_Method@VTK.F90"
 
-"../../lib/SparseMatrix_Method@BLASSM.o": "SparseMatrix/SparseMatrix_Method@BLASSM.f90"
-	@echo Compiling SparseMatrix/SparseMatrix_Method@BLASSM.f90
-	@$(FC) -c -o "../../lib/SparseMatrix_Method@BLASSM.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@BLASSM.f90"
+"../../lib/SparseMatrix_Method@BLASSM.o": "SparseMatrix/SparseMatrix_Method@BLASSM.F90"
+	@echo Compiling SparseMatrix/SparseMatrix_Method@BLASSM.F90
+	@$(FC) -c -o "../../lib/SparseMatrix_Method@BLASSM.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@BLASSM.F90"
 
-"../../lib/SparseMatrix_Method@Constructor.o": "SparseMatrix/SparseMatrix_Method@Constructor.f90"
-	@echo Compiling SparseMatrix/SparseMatrix_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/SparseMatrix_Method@Constructor.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@Constructor.f90"
+"../../lib/SparseMatrix_Method@Constructor.o": "SparseMatrix/SparseMatrix_Method@Constructor.F90"
+	@echo Compiling SparseMatrix/SparseMatrix_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/SparseMatrix_Method@Constructor.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@Constructor.F90"
 
-"../../lib/SparseMatrix_Method@ILUT.o": "SparseMatrix/SparseMatrix_Method@ILUT.f90"
-	@echo Compiling SparseMatrix/SparseMatrix_Method@ILUT.f90
-	@$(FC) -c -o "../../lib/SparseMatrix_Method@ILUT.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@ILUT.f90"
+"../../lib/SparseMatrix_Method@ILUT.o": "SparseMatrix/SparseMatrix_Method@ILUT.F90"
+	@echo Compiling SparseMatrix/SparseMatrix_Method@ILUT.F90
+	@$(FC) -c -o "../../lib/SparseMatrix_Method@ILUT.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@ILUT.F90"
 
-"../../lib/SparseMatrix_Method@IO.o": "SparseMatrix/SparseMatrix_Method@IO.f90"
-	@echo Compiling SparseMatrix/SparseMatrix_Method@IO.f90
-	@$(FC) -c -o "../../lib/SparseMatrix_Method@IO.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@IO.f90"
+"../../lib/SparseMatrix_Method@IO.o": "SparseMatrix/SparseMatrix_Method@IO.F90"
+	@echo Compiling SparseMatrix/SparseMatrix_Method@IO.F90
+	@$(FC) -c -o "../../lib/SparseMatrix_Method@IO.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@IO.F90"
 
-"../../lib/SparseMatrix_Method@MatVec.o": "SparseMatrix/SparseMatrix_Method@MatVec.f90"
-	@echo Compiling SparseMatrix/SparseMatrix_Method@MatVec.f90
-	@$(FC) -c -o "../../lib/SparseMatrix_Method@MatVec.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@MatVec.f90"
+"../../lib/SparseMatrix_Method@MatVec.o": "SparseMatrix/SparseMatrix_Method@MatVec.F90"
+	@echo Compiling SparseMatrix/SparseMatrix_Method@MatVec.F90
+	@$(FC) -c -o "../../lib/SparseMatrix_Method@MatVec.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@MatVec.F90"
 
-"../../lib/SparseMatrix_Method@setMethod.o": "SparseMatrix/SparseMatrix_Method@setMethod.f90"
-	@echo Compiling SparseMatrix/SparseMatrix_Method@setMethod.f90
-	@$(FC) -c -o "../../lib/SparseMatrix_Method@setMethod.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@setMethod.f90"
+"../../lib/SparseMatrix_Method@setMethod.o": "SparseMatrix/SparseMatrix_Method@setMethod.F90"
+	@echo Compiling SparseMatrix/SparseMatrix_Method@setMethod.F90
+	@$(FC) -c -o "../../lib/SparseMatrix_Method@setMethod.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@setMethod.F90"
 
-"../../lib/SparseMatrix_Method@Unary.o": "SparseMatrix/SparseMatrix_Method@Unary.f90"
-	@echo Compiling SparseMatrix/SparseMatrix_Method@Unary.f90
-	@$(FC) -c -o "../../lib/SparseMatrix_Method@Unary.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@Unary.f90"
+"../../lib/SparseMatrix_Method@Unary.o": "SparseMatrix/SparseMatrix_Method@Unary.F90"
+	@echo Compiling SparseMatrix/SparseMatrix_Method@Unary.F90
+	@$(FC) -c -o "../../lib/SparseMatrix_Method@Unary.o" $(FFLAGS) "SparseMatrix/SparseMatrix_Method@Unary.F90"
 
-"../../lib/VoigtRank2Tensor_Method@Constructor.o": "Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@Constructor.f90"
-	@echo Compiling Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@Constructor.f90
-	@$(FC) -c -o "../../lib/VoigtRank2Tensor_Method@Constructor.o" $(FFLAGS) "Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@Constructor.f90"
+"../../lib/VoigtRank2Tensor_Method@Constructor.o": "Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@Constructor.F90"
+	@echo Compiling Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@Constructor.F90
+	@$(FC) -c -o "../../lib/VoigtRank2Tensor_Method@Constructor.o" $(FFLAGS) "Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@Constructor.F90"
 
-"../../lib/VoigtRank2Tensor_Method@GetMethod.o": "Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@GetMethod.f90"
-	@echo Compiling Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@GetMethod.f90
-	@$(FC) -c -o "../../lib/VoigtRank2Tensor_Method@GetMethod.o" $(FFLAGS) "Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@GetMethod.f90"
+"../../lib/VoigtRank2Tensor_Method@GetMethod.o": "Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@GetMethod.F90"
+	@echo Compiling Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@GetMethod.F90
+	@$(FC) -c -o "../../lib/VoigtRank2Tensor_Method@GetMethod.o" $(FFLAGS) "Vector/Tensor/VoigtRank2Tensor/VoigtRank2Tensor_Method@GetMethod.F90"
 
 clean: .SYMBOLIC
 	@echo Deleting ../../lib/BaseType@AdditionalMethods.o and related files

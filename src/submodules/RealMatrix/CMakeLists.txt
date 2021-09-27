@@ -9,10 +9,10 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/RealMatrix_Method@IO.f90
-  ${src_path}/RealMatrix_Method@Constructor.f90
-  ${src_path}/RealMatrix_Method@getValues.f90
-  ${src_path}/RealMatrix_Method@setValues.f90
-  ${src_path}/RealMatrix_Method@MatrixMultiplication.f90
-  ${src_path}/RealMatrix_Method@LAPACK.f90
+  ${src_path}/RealMatrix_Method@IO.F90
+  ${src_path}/RealMatrix_Method@Constructor.F90
+  ${src_path}/RealMatrix_Method@getValues.F90
+  ${src_path}/RealMatrix_Method@setValues.F90
+  ${src_path}/RealMatrix_Method@MatrixMultiplication.F90
+  ${src_path}/RealMatrix_Method@LAPACK.F90
 )

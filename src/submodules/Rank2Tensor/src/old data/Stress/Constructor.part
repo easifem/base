@@ -15,7 +15,7 @@
 !   DESCRIPTION
 !       -   Deformation Gradient class is defined
 !   HOSTING FILE
-!       -   Stress_Class.f90
+!       -   Stress_Class.F90
 !
 !==============================================================================
 
@@ -93,7 +93,7 @@
     ELSE
 
         CALL Err_Msg( &
-        "Stress_Class.f90>>Constructor.part", &
+        "Stress_Class.F90>>Constructor.part", &
         ".Size. obj", &
         "obj%V is not allocated, Program Stopped!!!"&
         )
@@ -185,7 +185,7 @@
     Vec = VoigtVec( Mat, VoigtLen, "Stress")
 
     CALL Check_Error( &
-    "Stress_Class.f90>>Constructor.f90>>Initiate()", &
+    "Stress_Class.F90>>Constructor.F90>>Initiate()", &
     "Traceback ---> obj%V = VoigtVec( Mat, VoigtLen,'Stress') " )
 
     CALL obj%Initiate1( Vec = Vec, StressType = StressType )

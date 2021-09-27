@@ -15166,7 +15166,7 @@ subroutine points_plot ( file_name, node_num, node_xy, node_label )
   end if
 
   write ( file_unit, '(a)' ) '%!PS-Adobe-3.0 EPSF-3.0'
-  write ( file_unit, '(a)' ) '%%Creator: points_plot.f90'
+  write ( file_unit, '(a)' ) '%%Creator: points_plot.F90'
   write ( file_unit, '(a)' ) '%%Title: ' // trim ( file_name )
   write ( file_unit, '(a)' ) '%%Pages: 1'
   write ( file_unit, '(a,i3,2x,i3,2x,i3,2x,i3)' ) '%%BoundingBox: ', &

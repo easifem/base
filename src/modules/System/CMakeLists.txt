@@ -9,6 +9,6 @@
 set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 target_sources(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/System_Method.f90
+  ${src_path}/System_Method.F90
   ${src_path}/System_Method.c
 )

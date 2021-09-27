@@ -45,7 +45,7 @@
     IF( .NOT. ALLOCATED( obj%V ) ) THEN
 
         CALL Err_Msg( &
-            "Stress_Class.f90>>KirchhoffStress.part", &
+            "Stress_Class.F90>>KirchhoffStress.part", &
             "getKirchhoffStress()", &
             "Stress_ object is not initiated. &
             Program Stopped !!!" &
@@ -82,7 +82,7 @@
         CASE DEFAULT
 
             CALL Err_Msg( &
-                "Stress_Class.f90>>KirchhoffStress.part", &
+                "Stress_Class.F90>>KirchhoffStress.part", &
                 "getKirchhoffStress( obj, F )", &
                 "No case found for obj%StressType. &
                 Program Stopped!!!" &

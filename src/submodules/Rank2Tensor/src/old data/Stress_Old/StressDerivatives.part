@@ -1,21 +1,21 @@
 !
 !------------------------------------------------------------------------------
-!                   Author      :   Vikas sharma                            
-!                   Position    :   Doctral Student                                       
-!                   Institute   :   Kyoto Univeristy, Japan                        
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
 !                   Program name:   StressDerivatives.part
 !                   Last Update :   March-29-2017
-!                                                               
+!
 !------------------------------------------------------------------------------
 !                           Details of Program
 !==============================================================================
-! 
+!
 !   Type    ::  Part of the Code
 !
 !   Info    ::  -   Part of the code;
 !
 !   Hosting File
-!           ::  -   Stress_Class.f90
+!           ::  -   Stress_Class.F90
 !
 !==============================================================================
 !
@@ -62,7 +62,7 @@
  SUBROUTINE getDJ2Dsigma(Stress, DJ2, Voigt)
 !   Description
 !------------------------------------------------------------------------------
-!       1   -   If voigt is true then Kinematic-Voigt notatio is followed 
+!       1   -   If voigt is true then Kinematic-Voigt notatio is followed
 !               If Voigt is true then
 !               DJ2 = [s11, s22, s33, 2*s12, 2*s23, 2*s13]
 !
