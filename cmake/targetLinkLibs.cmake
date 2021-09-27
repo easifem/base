@@ -1,0 +1,12 @@
+FOREACH(p LAPACK95 PENF BeFoR64 FACE StringiFor FPL Sparsekit)
+  FIND_PACKAGE( ${p} REQUIRED )
+  IF( ${p}_FOUND )
+  MESSAGE(STATUS "${p} found")
+  TARGET_LINK_LIBRARIES(
+    ${PROJECT_NAME}
+    PUBLIC
+    ${p}::${p} )
+ELSE()
+  MESSAGE(STATUS "${p} not found")
+ENDIF()
+ENDFOREACH()
