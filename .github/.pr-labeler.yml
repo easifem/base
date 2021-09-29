@@ -1,0 +1,4 @@
+utility: utility/*
+sparsematrix: sparsematrix/*
+working: ['working/*', 'work/*']
+linalg: ['sparsematrix/*', 'sparse/*', 'monolish/*', 'blas/*', 'lapack/*']
