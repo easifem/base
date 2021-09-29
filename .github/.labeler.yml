@@ -1,0 +1,8 @@
+easifemBase:
+- src/**/*
+
+modules:
+- src/modules/**/*
+
+submodules:
+- src/submodules/**/*
