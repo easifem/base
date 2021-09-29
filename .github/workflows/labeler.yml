@@ -5,8 +5,9 @@
 # file with configuration.  For more information, see:
 # https://github.com/actions/labeler
 
-name: Labeler
-on: [pull_request]
+name: "Pull Request Labeler"
+on:
+- pull_request_target
 
 jobs:
   label:
@@ -17,6 +18,6 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: actions/labeler@v2
+    - uses: actions/labeler@v3
       with:
-        repo-token: "${{ secrets.GH_TOKEN }}"
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
