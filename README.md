@@ -1,5 +1,6 @@
 ## EASIFEM-BASE
-[![GitHub release](https://img.shields.io/github/release/vickysharma0812/easifem-base.svg?style=plastic)](https://github.com/vickysharma0812/easifem-base/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/vickysharma0812/easifem-base.svg?style=plastic)](https://github.com/vickysharma0812/easifem-base/releases/latest) 
+[![PR Labeler](https://github.com/vickysharma0812/easifem-base/actions/workflows/pr-labeler.yml/badge.svg)](https://github.com/vickysharma0812/easifem-base/actions/workflows/pr-labeler.yml)
 
 - [EASIFEM-BASE](#easifem-base)
 - [Status](#status)
