@@ -88,9 +88,19 @@ END INTERFACE
 !
 ! This subroutine initiate a fortran vector of real using the information stored inside [[DOF_]] object.
 !
-!@todo
-!usage
-!@endtodo
+!
+!### Usage
+!
+!```fortran
+! !... code above ...!
+! ! Initiate the [[DOF_]] object.
+!
+! CALL initiate( obj=obj%dof, tNodes=tNodes, names=names_char, &
+!   & spaceCompo=spaceCompo, timeCompo=timeCompo, storageFMT=storageFMT )
+! ! Initiate [[RealVector_]]
+!
+! CALL initiate( val=obj%realVec, obj=obj%dof )
+!```
 
 INTERFACE
 MODULE PURE SUBROUTINE dof_initiate2( Val, obj )
@@ -114,9 +124,18 @@ END INTERFACE
 ! This subroutine initiate [[RealVector_]] using the information stored inside
 ! [[dof_]] object
 !
-!@todo
-!usage
-!@endtodo
+!### Usage
+!
+!```fortran
+! !... code above ...!
+! ! Initiate the [[DOF_]] object.
+!
+! CALL initiate( obj=obj%dof, tNodes=tNodes, names=names_char, &
+!   & spaceCompo=spaceCompo, timeCompo=timeCompo, storageFMT=storageFMT )
+! ! Initiate [[RealVector_]]
+!
+! CALL initiate( val=obj%realVec, obj=obj%dof )
+!```
 
 INTERFACE
 MODULE PURE SUBROUTINE dof_initiate3( Val, obj )
