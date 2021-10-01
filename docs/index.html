@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <meta name="description" content="A frame work for Expandable And Scalable Infrastructure for Finite Element Methods">
+    
+    <meta name="author" content="Vikas Sharma" >
+    <link rel="icon" href="./favicon.png">
+
+    <title> EASIFEM-BASE </title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/pygments.css" rel="stylesheet">
+    <link href="./css/font-awesome.min.css" rel="stylesheet">
+    <link href="./css/local.css" rel="stylesheet">
+    
+    <link  href="./tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="./js/jquery-2.1.3.min.js"></script>
+    <script src="./js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="./index.html">EASIFEM-BASE </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+        
+            <li><a href='./page/index.html'>easifemBase</a></li>
+      
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          
+              
+            <li><a href="./lists/files.html">Source Files</a></li>
+        
+        
+        
+            <li><a href="./lists/modules.html">Modules</a></li>
+        
+            
+                                
+            <li><a href="./lists/procedures.html">Procedures</a></li>
+        
+        
+            <li><a href="./lists/absint.html">Abstract Interfaces</a></li>
+               
+            <li><a href="./lists/types.html">Derived Types</a></li>
+        
+               
+        
+        
+            </ul>
+        
+            </li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="./lists/files.html">Source Files</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="./lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="./lists/procedures.html">Procedures</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="./lists/absint.html">Abstract Interfaces</a></li>
+                             
+<li class="visible-xs hidden-sm visible-lg"><a href="./lists/types.html">Derived Types</a></li>
+
+
+
+
+          </ul>
+        
+        <form action="./search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <p>A frame work for Expandable And Scalable Infrastructure for Finite Element Methods</p>
+        	 
+	<p> Find us on&hellip;</p>
+        <p>
+			 
+          <a class="btn btn-lg btn-primary" href="https://github.com/vickysharma0812/easifem-base" role="button">GitHub</a>
+			 
+			 
+			 
+			 
+			 
+          <a class="btn btn-lg btn-primary" href="http://www.easifem.com" role="button">The Web</a>
+			 
+	         
+			 
+          <a class="btn btn-lg btn-danger" style="float:right" href="https://github.com/vickysharma0812/easifem-base" role="button">Download the Source</a>
+			 
+        </p>
+      </div>
+
+      <div class="row" id='text'>
+		  
+        <div class="col-md-8">
+		  
+          <h1>EASIFEM-BASE</h1>
+          <h2 id="easifem-base">EASIFEM-BASE</h2>
+<p><a href="https://github.com/vickysharma0812/easifem-base/actions/workflows/pr-labeler.yml"><img alt="PR Labeler" src="https://github.com/vickysharma0812/easifem-base/actions/workflows/pr-labeler.yml/badge.svg"></a></p>
+<ul>
+<li><a href="#easifem-base">EASIFEM-BASE</a></li>
+<li><a href="#status">Status</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#vision">VISION</a></li>
+<li><a href="#easifem-base-1">EASIFEM-BASE</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#run-on-cloud">Run on Cloud</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#credits">Credits</a></li>
+<li><a href="#license">License</a></li>
+</ul>
+<h2 id="status">Status</h2>
+<p><a href="https://github.com/vickysharma0812/easifem-base/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/vickysharma0812/easifem-base.png?style=plastic"></a>
+<a href="https://github.com/vickysharma0812/easifem-base/stars"><img alt="GitHub stars" src="https://img.shields.io/github/stars/vickysharma0812/easifem-base.png?style=plastic"></a>
+<a href="https://github.com/vickysharma0812/easifem-base/license"><img alt="GitHub license" src="https://img.shields.io/github/license/vickysharma0812/easifem-base.png?style=plastic"></a></p>
+<h2 id="introduction">Introduction</h2>
+<p>EASIFEM stands for <strong>E</strong>xpandable <strong>A</strong>nd <strong>S</strong>calable <strong>I</strong>nfrastructure for <strong>F</strong>inite <strong>E</strong>lement <strong>M</strong>ethod. EASIFEM is designed by using <a href="https://fortran-lang.org/">Modern-Fortran</a> programming language.</p>
+<ul>
+<li>It is a framework for writing for developing Finite Element Programs for solving partial differential equations.</li>
+<li>It is written in Modern Fortran.</li>
+<li>The design of EASIFEM is simple and effective; it employs both object oriented paradigm and multi-dispatch paradigm.</li>
+<li>It will be useful for students, teachers, and researchers working in the area of finite element method.</li>
+<li>The library is still in development state, which means the new features will be added to the library as time-passes without hurting the backward compatibility of EASIFEM.</li>
+</ul>
+<h2 id="vision">VISION</h2>
+<p>The vision of EASIFEM is to ease the coding part of FEM. This library can be employed for developing FEM code for complex problems including multi-physics and multiphase couplings. In future, EASIFEM, will include interfaces with the available open-source programs and new kernels for solving program related to geotechnical and earthquake engineering, dynamic soil-structure interaction (e.g., wind-turbine and its foundation), large deformation analysis of soils (e.g., rainfall induced slope failure, soil liquefaction, mud-flow, etc.), geo-environmental problems, soil physics, reactive transport, carbon-storage, to name a few.</p>
+<h2 id="easifem-base_1">EASIFEM-BASE</h2>
+<ol>
+<li>EASIFEM-base contains the fundamental user defined data-types and their methods, which are necessary for implementation of numerical methods such as finite element/volume/difference method, material point method, particle finite element method, random finite element method, among others.</li>
+<li>EASIFEM-base is the lowest layer on which the entire landscape of EASIFEM resides.</li>
+<li>All user defined data-types are included in a module called <code>baseType.F90</code></li>
+<li>Methods of a data-type, let us say XXX, are defined in a module, <code>XXX_method.F90</code> . It is noteworthy that this module only contains the interface of the method. Actual implementations are given in the submodules, <code>XXX_method@SubmoduleName.F90</code>. Modules are kept in a directory called <code>/modules</code> and submodules are kept in <code>/submodules</code></li>
+</ol>
+<p>Details of data-types and methods included in EASIFEM-base can be found <a href="https://www.notion.so/d1490ecc9fa84e75ac9731c1f8538e67">here</a>.</p>
+<h2 id="installation">Installation</h2>
+<ul>
+<li><a href="pages/Installation_MacOS.md">Install easifemBASE on MacOSX</a></li>
+<li><a href="pages/Installation_Linux.md">Installtion easifemBASE on Linux</a></li>
+<li><a href="pages/Installation_Windows.md">Installtion easifemBASE on Windows</a></li>
+</ul>
+<h3 id="run-on-cloud">Run on Cloud</h3>
+<h2 id="usage">Usage</h2>
+<h2 id="dependencies">Dependencies</h2>
+<p><a href="pages/Extpkgs.md">External packages used in easifemBASE</a></p>
+<h2 id="contributing">Contributing</h2>
+<h2 id="credits">Credits</h2>
+<h2 id="license">License</h2>
+<p><a href="LICENSE">License</a></p>
+<!-- FORD features two macros to make it easier to provide intradocumentation links. These are `.` which gets replaced by the project URL, and `./media`, which gets replaced by the (absolute) path to the media directory in the output. you can also use `favicon:` -->
+        </div>
+		  
+        <div class="col-md-4">
+	  <div class="well">
+          <h2>Developer Info</h2>
+          <h4>Vikas Sharma</h4>
+          
+          <p>Ph. D.
+Graduate School of Agriculture, Kyoto University,
+Kyoto, Japan</p>
+			   
+            <div class="text-center"><div class="btn-group" role="group">
+              
+              <a class="btn btn-lg btn-primary" href="mailto:vickysharma0812@gmail.com"><i class="fa fa-envelope fa-lg"></i></a>
+              
+              
+              
+              <a class="btn btn-lg btn-primary" href="https://vickysharma0812.github.io/"><i class="fa fa-github fa-lg"></i></a>
+              
+              
+				  
+              
+              
+              
+              
+            </div></div>
+            
+       </div>
+       </div>
+       
+      </div>
+      
+      
+      
+      
+      
+      
+		
+        
+      <div class="row">
+        
+        <div class="col-xs-6 col-sm-3">
+              <h3>Source Files</h3>
+              <ul>
+                    <li><a href='./sourcefile/basemethod.f90.html'>BaseMethod.F90</a></li>
+                  
+                    <li><a href='./sourcefile/basetype.f90.html'>BaseType.F90</a></li>
+                  
+                    <li><a href='./sourcefile/blas1f_method.f90.html'>BLAS1F_Method.F90</a></li>
+                  
+                    <li><a href='./sourcefile/blas1m_method.f90.html'>BLAS1M_Method.F90</a></li>
+                  
+                    <li><a href='./sourcefile/blas1v_method.f90.html'>BLAS1V_Method.F90</a></li>
+                  
+                    <li><a href='./sourcefile/blas2_method.f90.html'>BLAS2_Method.F90</a></li>
+                  
+                    <li><a href='./sourcefile/blas3_method.f90.html'>BLAS3_Method.F90</a></li>
+                  
+                    <li><a href='./sourcefile/boundingbox_method.f90.html'>BoundingBox_Method.F90</a></li>
+                  
+                    <li><a href='./sourcefile/cinterface.f90.html'>CInterface.F90</a></li>
+                  
+                    <li><a href='./sourcefile/csrmatrix_method.f90.html'>CSRMatrix_Method.F90</a></li>
+                  </ul>
+          </div>
+        
+          
+		  <div class="col-xs-6 col-sm-3">
+              <h3>Modules</h3>
+              <ul>
+                    <li><a href='./module/basemethod.html'>BaseMethod</a></li>
+                  
+                    <li><a href='./module/basetype.html'>BaseType</a></li>
+                  
+                    <li><a href='./module/blas1v_method.html'>BLAS1V_Method</a></li>
+                  
+                    <li><a href='./module/boundingbox_method.html'>BoundingBox_Method</a></li>
+                  
+                    <li><a href='./module/cinterface.html'>CInterface</a></li>
+                  
+                    <li><a href='./module/csrmatrix_method.html'>CSRMatrix_Method</a></li>
+                  
+                    <li><a href='./module/csrsparsity_method.html'>CSRSparsity_Method</a></li>
+                  
+                    <li><a href='./module/disp_charmod.html'>DISP_CHARMOD</a></li>
+                  
+                    <li><a href='./module/disp_i1mod.html'>DISP_I1MOD</a></li>
+                  
+                    <li><a href='./module/disp_i2mod.html'>DISP_I2MOD</a></li>
+                  </ul>
+          </div>
+          
+          
+		  <div class="col-xs-6 col-sm-3">
+              <h3>Procedures</h3>
+              <ul>
+                    <li><a href='./interface/add.html'>Add</a></li>
+                  
+                    <li><a href='./interface/add.html'>add</a></li>
+                  
+                    <li><a href='./interface/addcontribution.html'>addContribution</a></li>
+                  
+                    <li><a href='./proc/addscript.html'>addscript</a></li>
+                  
+                    <li><a href='./interface/allocate_data.html'>Allocate_Data</a></li>
+                  
+                    <li><a href='./interface/allocate_data~2.html'>Allocate_Data</a></li>
+                  
+                    <li><a href='./interface/allocatedata.html'>AllocateData</a></li>
+                  
+                    <li><a href='./interface/allocatedata~2.html'>AllocateData</a></li>
+                  
+                    <li><a href='./interface/allocatedata~3.html'>AllocateData</a></li>
+                  
+                    <li><a href='./interface/allocatedata~4.html'>AllocateData</a></li>
+                  </ul>
+          </div>
+          
+          
+		  <div class="col-xs-6 col-sm-3">
+              <h3>Derived Types</h3>
+              <ul>
+                    <li><a href='./type/almansistrain_.html'>AlmansiStrain_</a></li>
+                  
+                    <li><a href='./type/almansistrainpointer_.html'>AlmansiStrainPointer_</a></li>
+                  
+                    <li><a href='./type/basecontinuity_.html'>BaseContinuity_</a></li>
+                  
+                    <li><a href='./type/baseinterpolation_.html'>BaseInterpolation_</a></li>
+                  
+                    <li><a href='./type/boundingbox_.html'>BoundingBox_</a></li>
+                  
+                    <li><a href='./type/boundingboxpointer_.html'>BoundingBoxPointer_</a></li>
+                  
+                    <li><a href='./type/boxlist.html'>boxlist</a></li>
+                  
+                    <li><a href='./type/boxnode.html'>boxnode</a></li>
+                  
+                    <li><a href='./type/csrmatrix_.html'>CSRMatrix_</a></li>
+                  
+                    <li><a href='./type/csrmatrixpointer_.html'>CSRMatrixPointer_</a></li>
+                  </ul>
+          </div>
+          
+      </div>
+      
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>EASIFEM-BASE was developed by Vikas Sharma<br>&copy; 2021 <a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a>
+                                          </p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+             on 2021-10-02 00:01  
+            
+          </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="./js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="./tipuesearch/tipuesearch_content.js"></script>
+    <script src="./tipuesearch/tipuesearch_set.js"></script>
+    <script src="./tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>

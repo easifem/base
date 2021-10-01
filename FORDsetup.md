@@ -19,12 +19,12 @@ github: https://vickysharma0812.github.io/
 author_pic:
 twitter:
 website:
-graph: false #time consuming
-source: false #time consuming
+graph: true #time consuming
+source: true #time consuming
 display: public
          protected
          private
-page: false
+page: true
 sort: alpha
 coloured_edges: true
 extra_filetypes:  inc !

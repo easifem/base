@@ -1,0 +1,10443 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <meta name="description" content="A frame work for Expandable And Scalable Infrastructure for Finite Element Methods">
+    
+    <meta name="author" content="Vikas Sharma" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>ElemshapeData_Method &ndash; EASIFEM-BASE</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">EASIFEM-BASE </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+        
+            <li><a href='../page/index.html'>easifemBase</a></li>
+      
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          
+              
+            <li><a href="../lists/files.html">Source Files</a></li>
+        
+        
+        
+            <li><a href="../lists/modules.html">Modules</a></li>
+        
+            
+                                
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+        
+        
+            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+               
+            <li><a href="../lists/types.html">Derived Types</a></li>
+        
+               
+        
+        
+            </ul>
+        
+            </li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                             
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+
+
+
+
+          </ul>
+        
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+  
+  <div class="row">
+    <h1>ElemshapeData_Method 
+    <small>Module</small>
+    
+    </h1>
+    
+<div class="row">
+  <div class="col-lg-12">
+<div class="well well-sm">
+  <ul class="list-inline" style="margin-bottom:0px;display:inline">
+     
+     
+    <li><i class="fa fa-calendar-o"></i> 1 March 2021</li>
+     
+     
+    <li><i class="fa fa-legal"></i> <a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></li> 
+     
+     
+     
+    
+    
+     <li><i class="fa fa-list-ol"></i>
+       <a data-toggle="tooltip"
+    data-placement="bottom" data-html="true"
+    title=" 3.1% of total for modules and submodules.">639 statements</a>
+     </li> 
+     
+     
+     
+    <li><i class="fa fa-code"></i><a href="../src/ElemshapeData_Method.F90"> Source File</a></li>
+     
+     
+  </ul>
+  <ol class="breadcrumb in-well text-right">
+  
+    
+     <li><a href='../sourcefile/elemshapedata_method.f90.html'>ElemshapeData_Method.F90</a></li>
+    
+  
+     <li class="active">ElemshapeData_Method</li>
+  </ol>
+</div>
+</div>
+</div>
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    
+<div id="sidebar">
+  
+<h3>Contents</h3>
+ 
+
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-0">Interfaces</a></h3></div>
+  <div id="inters-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-allocatedata~4">AllocateData</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-basecontinuity">BaseContinuity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-baseinterpolation">BaseInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-dg_hermit">DG_Hermit</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-dg_hierarchy">DG_Hierarchy</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-dg_lagrange">DG_Lagrange</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-dg_serendipity">DG_Serendipity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-deallocatedata~9">DeallocateData</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-display~17">Display</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1curl_hermit">H1Curl_Hermit</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1curl_hierarchy">H1Curl_Hierarchy</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1curl_lagrange">H1Curl_Lagrange</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1curl_serendipity">H1Curl_Serendipity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1div_hermit">H1Div_Hermit</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1div_hierarchy">H1Div_Hierarchy</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1div_lagrange">H1Div_Lagrange</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1div_serendipity">H1Div_Serendipity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1_hermit">H1_Hermit</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1_hierarchy">H1_Hierarchy</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1_lagrange">H1_Lagrange</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1_serendipity">H1_Serendipity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~22">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~23">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~24">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~25">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~26">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~27">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~28">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~29">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~30">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~31">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~32">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~33">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~34">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~35">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~36">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~37">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~38">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~39">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-interpolation">Interpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stinterpolation">STInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-display_obj~4">display_obj</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_allocatedata">elemsd_AllocateData</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_basecontinuity">elemsd_BaseContinuity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_baseinterpolation">elemsd_BaseInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_deallocatedata">elemsd_DeallocateData</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_initiate">elemsd_initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getinterpolation">getInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getinterpolation~2">getInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getlocalgradient">getLocalGradient</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getlocalgradient_scalar">getLocalGradient_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getlocalgradient_vector">getLocalGradient_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdntdxt">getProjectionOfdNTdXt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdntdxt_constvector">getProjectionOfdNTdXt_constvector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdntdxt_fevar">getProjectionOfdNTdXt_fevar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdndxt">getProjectionOfdNdXt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdndxt_fevar">getProjectionOfdNdXt_fevar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdndxt_spacevalues">getProjectionOfdNdXt_spacevalues</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getspatialgradient">getSpatialGradient</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getspatialgradient_scalar">getSpatialGradient_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getspatialgradient_vector">getSpatialGradient_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getunitnormal">getUnitNormal</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getunitnormal_scalar">getUnitNormal_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getunitnormal_vector">getUnitNormal_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_fevar_matrix">get_interpol_fevar_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_fevar_scalar">get_interpol_fevar_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_matrix">get_interpol_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_scalar">get_interpol_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_vector">get_interpol_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-interpol_matrix">interpol_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-interpol_scalar">interpol_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-interpol_vector">interpol_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setbarycentriccoord">setBarycentricCoord</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setjacobian">setJacobian</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setjs">setJs</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setnormal">setNormal</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setthickness">setThickness</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setvalue~2">setValue</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_js">set_Js</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_coord">set_coord</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_dndxt_internally">set_dNdXt_internally</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_jacobian">set_jacobian</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_normal">set_normal</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_thickness">set_thickness</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_value">set_value</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setdntdxt">setdNTdXt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setdntdt">setdNTdt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setdndxt">setdNdXt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_getlocalgradient_scalar">stsd_getLocalGradient_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_getlocalgradient_vector">stsd_getLocalGradient_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_getspatialgradient_scalar">stsd_getSpatialGradient_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_getspatialgradient_vector">stsd_getSpatialGradient_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_fevar_matrix">stsd_get_interpol_fevar_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_fevar_scalar">stsd_get_interpol_fevar_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_matrix">stsd_get_interpol_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_scalar">stsd_get_interpol_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_vector">stsd_get_interpol_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_initiate">stsd_initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_interpol_matrix">stsd_interpol_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_interpol_scalar">stsd_interpol_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_interpol_vector">stsd_interpol_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_coord">stsd_set_coord</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_dntdxt_internally">stsd_set_dNTdXt_internally</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_dntdt">stsd_set_dNTdt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_jacobian">stsd_set_jacobian</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_thickness">stsd_set_thickness</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_value">stsd_set_value</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    
+      <br>
+    
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Uses</h3>
+      </div>
+      <ul class="list-group">
+      
+      <li class="list-group-item">
+  <ul class="list-inline">
+    
+    <li><a href='../module/globaldata.html'>GlobalData</a></li>
+    
+    <li><a href='../module/basetype.html'>BaseType</a></li>
+    
+  </ul>
+      </li>
+      
+      
+      
+      </ul>
+    </div>
+    
+
+    
+    
+
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+      
+<h3>Contents</h3>
+ 
+
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-1">Interfaces</a></h3></div>
+  <div id="inters-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-allocatedata~4">AllocateData</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-basecontinuity">BaseContinuity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-baseinterpolation">BaseInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-dg_hermit">DG_Hermit</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-dg_hierarchy">DG_Hierarchy</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-dg_lagrange">DG_Lagrange</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-dg_serendipity">DG_Serendipity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-deallocatedata~9">DeallocateData</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-display~17">Display</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1curl_hermit">H1Curl_Hermit</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1curl_hierarchy">H1Curl_Hierarchy</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1curl_lagrange">H1Curl_Lagrange</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1curl_serendipity">H1Curl_Serendipity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1div_hermit">H1Div_Hermit</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1div_hierarchy">H1Div_Hierarchy</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1div_lagrange">H1Div_Lagrange</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1div_serendipity">H1Div_Serendipity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1_hermit">H1_Hermit</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1_hierarchy">H1_Hierarchy</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1_lagrange">H1_Lagrange</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-h1_serendipity">H1_Serendipity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~22">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~23">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~24">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~25">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~26">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~27">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~28">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~29">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~30">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~31">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~32">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~33">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~34">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~35">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~36">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~37">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~38">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-initiate~39">Initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-interpolation">Interpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stinterpolation">STInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-display_obj~4">display_obj</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_allocatedata">elemsd_AllocateData</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_basecontinuity">elemsd_BaseContinuity</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_baseinterpolation">elemsd_BaseInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_deallocatedata">elemsd_DeallocateData</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-elemsd_initiate">elemsd_initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getinterpolation">getInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getinterpolation~2">getInterpolation</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getlocalgradient">getLocalGradient</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getlocalgradient_scalar">getLocalGradient_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getlocalgradient_vector">getLocalGradient_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdntdxt">getProjectionOfdNTdXt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdntdxt_constvector">getProjectionOfdNTdXt_constvector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdntdxt_fevar">getProjectionOfdNTdXt_fevar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdndxt">getProjectionOfdNdXt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdndxt_fevar">getProjectionOfdNdXt_fevar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getprojectionofdndxt_spacevalues">getProjectionOfdNdXt_spacevalues</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getspatialgradient">getSpatialGradient</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getspatialgradient_scalar">getSpatialGradient_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getspatialgradient_vector">getSpatialGradient_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getunitnormal">getUnitNormal</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getunitnormal_scalar">getUnitNormal_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-getunitnormal_vector">getUnitNormal_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_fevar_matrix">get_interpol_fevar_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_fevar_scalar">get_interpol_fevar_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_matrix">get_interpol_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_scalar">get_interpol_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-get_interpol_vector">get_interpol_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-interpol_matrix">interpol_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-interpol_scalar">interpol_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-interpol_vector">interpol_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setbarycentriccoord">setBarycentricCoord</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setjacobian">setJacobian</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setjs">setJs</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setnormal">setNormal</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setthickness">setThickness</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setvalue~2">setValue</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_js">set_Js</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_coord">set_coord</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_dndxt_internally">set_dNdXt_internally</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_jacobian">set_jacobian</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_normal">set_normal</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_thickness">set_thickness</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-set_value">set_value</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setdntdxt">setdNTdXt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setdntdt">setdNTdt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-setdndxt">setdNdXt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_getlocalgradient_scalar">stsd_getLocalGradient_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_getlocalgradient_vector">stsd_getLocalGradient_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_getspatialgradient_scalar">stsd_getSpatialGradient_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_getspatialgradient_vector">stsd_getSpatialGradient_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_fevar_matrix">stsd_get_interpol_fevar_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_fevar_scalar">stsd_get_interpol_fevar_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_matrix">stsd_get_interpol_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_scalar">stsd_get_interpol_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_get_interpol_vector">stsd_get_interpol_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_initiate">stsd_initiate</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_interpol_matrix">stsd_interpol_matrix</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_interpol_scalar">stsd_interpol_scalar</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_interpol_vector">stsd_interpol_vector</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_coord">stsd_set_coord</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_dntdxt_internally">stsd_set_dNTdXt_internally</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_dntdt">stsd_set_dNTdt</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_jacobian">stsd_set_jacobian</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_thickness">stsd_set_thickness</a>
+      
+      <a class="list-group-item" href="../module/elemshapedata_method.html#interface-stsd_set_value">stsd_set_value</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+    
+
+    
+    
+    
+    
+    
+    <section>
+   <h2>Interfaces</h2>
+   
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-allocatedata~4"></span><h3>public interface <a href='../interface/allocatedata~4.html'>AllocateData</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/elemsd_allocatedata.html'>elemsd_AllocateData</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine allocate the memory for various matrices in the object</p><a href="../interface/elemsd_allocatedata.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-basecontinuity"></span><h3>public interface <a href='../interface/basecontinuity.html'>BaseContinuity</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/elemsd_basecontinuity.html'>elemsd_BaseContinuity</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>30 Aug 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine returns a pointer to a child of <a href="../type/basecontinuity_.html">BaseContinuity_</a></p><a href="../interface/elemsd_basecontinuity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-baseinterpolation"></span><h3>public interface <a href='../interface/baseinterpolation.html'>BaseInterpolation</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/elemsd_baseinterpolation.html'>elemsd_BaseInterpolation</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>30 Aug 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine returns a pointer to a child of <a href="../type/baseinterpolation_.html">BaseInterpolation_</a></p><a href="../interface/elemsd_baseinterpolation.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-dg_hermit"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/dg_hermit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine DG_Hermit(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(DG_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(HermitInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-dg_hierarchy"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/dg_hierarchy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine DG_Hierarchy(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(DG_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(HierarchyInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-dg_lagrange"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/dg_lagrange.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine DG_Lagrange(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(DG_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(LagrangeInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-dg_serendipity"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/dg_serendipity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine DG_Serendipity(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(DG_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(SerendipityInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-deallocatedata~9"></span><h3>public interface <a href='../interface/deallocatedata~9.html'>DeallocateData</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/elemsd_deallocatedata.html'>elemsd_DeallocateData</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine deallocates the data stored inside <a href="../type/elemshapedata_.html">ElemShapeData_</a></p><a href="../interface/elemsd_deallocatedata.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-display~17"></span><h3>public interface <a href='../interface/display~17.html'>Display</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/display_obj~4.html'>display_obj</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine display the content of <a href="../type/elemshapedata_.html">ElemShapeData_</a> and <a href="../type/stelemshapedata_.html">STElemShapeData_</a></p><a href="../interface/display_obj~4.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1curl_hermit"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1curl_hermit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1Curl_Hermit(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1Curl_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(HermitInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1curl_hierarchy"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1curl_hierarchy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1Curl_Hierarchy(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1Curl_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(HierarchyInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1curl_lagrange"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1curl_lagrange.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1Curl_Lagrange(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1Curl_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(LagrangeInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1curl_serendipity"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1curl_serendipity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1Curl_Serendipity(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1Curl_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(SerendipityInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1div_hermit"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1div_hermit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1Div_Hermit(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1Div_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(HermitInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1div_hierarchy"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1div_hierarchy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1Div_Hierarchy(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1Div_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(HierarchyInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1div_lagrange"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1div_lagrange.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1Div_Lagrange(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1Div_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(LagrangeInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1div_serendipity"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1div_serendipity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1Div_Serendipity(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1Div_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(SerendipityInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1_hermit"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1_hermit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1_Hermit(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(HermitInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1_hierarchy"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1_hierarchy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1_Hierarchy(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(HierarchyInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1_lagrange"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1_lagrange.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1_Lagrange(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(LagrangeInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-h1_serendipity"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/h1_serendipity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine H1_Serendipity(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(H1_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(SerendipityInterpolation_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~22"></span><h3>public interface <a href='../interface/initiate~22.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/elemsd_initiate.html'>elemsd_initiate</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/elemsd_initiate.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~23"></span><h3>private interface <a href='../interface/initiate~23.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_initiate.html'>stsd_initiate</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine initiate time shape function data in <a href="../type/stelemshapedata_.html">STElemShapeData_</a></p><a href="../interface/stsd_initiate.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~24"></span><h3>private interface <a href='../interface/initiate~24.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1_lagrange.html'>H1_Lagrange</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1_lagrange.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~25"></span><h3>private interface <a href='../interface/initiate~25.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1_hermit.html'>H1_Hermit</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1_hermit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~26"></span><h3>private interface <a href='../interface/initiate~26.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1_serendipity.html'>H1_Serendipity</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1_serendipity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~27"></span><h3>private interface <a href='../interface/initiate~27.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1_hierarchy.html'>H1_Hierarchy</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1_hierarchy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~28"></span><h3>private interface <a href='../interface/initiate~28.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1div_lagrange.html'>H1Div_Lagrange</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1div_lagrange.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~29"></span><h3>private interface <a href='../interface/initiate~29.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1div_hermit.html'>H1Div_Hermit</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1div_hermit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~30"></span><h3>private interface <a href='../interface/initiate~30.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1div_serendipity.html'>H1Div_Serendipity</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1div_serendipity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~31"></span><h3>private interface <a href='../interface/initiate~31.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1div_hierarchy.html'>H1Div_Hierarchy</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1div_hierarchy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~32"></span><h3>private interface <a href='../interface/initiate~32.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1curl_lagrange.html'>H1Curl_Lagrange</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1curl_lagrange.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~33"></span><h3>private interface <a href='../interface/initiate~33.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1curl_hermit.html'>H1Curl_Hermit</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1curl_hermit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~34"></span><h3>private interface <a href='../interface/initiate~34.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1curl_serendipity.html'>H1Curl_Serendipity</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1curl_serendipity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~35"></span><h3>private interface <a href='../interface/initiate~35.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/h1curl_hierarchy.html'>H1Curl_Hierarchy</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/h1curl_hierarchy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~36"></span><h3>private interface <a href='../interface/initiate~36.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/dg_lagrange.html'>DG_Lagrange</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/dg_lagrange.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~37"></span><h3>private interface <a href='../interface/initiate~37.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/dg_hermit.html'>DG_Hermit</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/dg_hermit.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~38"></span><h3>private interface <a href='../interface/initiate~38.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/dg_serendipity.html'>DG_Serendipity</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/dg_serendipity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-initiate~39"></span><h3>private interface <a href='../interface/initiate~39.html'>Initiate</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/dg_hierarchy.html'>DG_Hierarchy</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 July 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This routine initiate the shape data</p><a href="../interface/dg_hierarchy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-interpolation"></span><h3>public interface <a href='../interface/interpolation.html'>Interpolation</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/interpol_scalar.html'>interpol_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This function returns the interpolation of a scalar</p><a href="../interface/interpol_scalar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/interpol_vector.html'>interpol_vector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This function returns the interpolation of vector</p><a href="../interface/interpol_vector.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/interpol_matrix.html'>interpol_matrix</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This function returns the interpolation of matrix</p><a href="../interface/interpol_matrix.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stinterpolation"></span><h3>private interface <a href='../interface/stinterpolation.html'>STInterpolation</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_interpol_scalar.html'>stsd_interpol_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This function performs interpolations of scalar</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_interpol_vector.html'>stsd_interpol_vector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This function performs interpolations of vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_interpol_matrix.html'>stsd_interpol_matrix</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This function performs interpolations of matrix</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-display_obj~4"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine display the content of <a href="../type/elemshapedata_.html">ElemShapeData_</a> and <a href="../type/stelemshapedata_.html">STElemShapeData_</a></p><a href="../interface/display_obj~4.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private module subroutine display_obj(obj, Msg, UnitNo)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Msg</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>UnitNo</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-elemsd_allocatedata"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine allocate the memory for various matrices in the object</p><a href="../interface/elemsd_allocatedata.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine elemsd_AllocateData(obj, nsd, xidim, nns, nips)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td><p>object to be returned</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nsd</strong></td><td><p>spatial dimension</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>xidim</strong></td><td><p>xidimension</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nns</strong></td><td><p>number of nodes in element</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nips</strong></td><td><p>number of integration points</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-elemsd_basecontinuity"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private module function elemsd_BaseContinuity(childName) result(ans)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>childName</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>class(BaseContinuity_),
+  POINTER</small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-elemsd_baseinterpolation"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private module function elemsd_BaseInterpolation(childName) result(ans)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>childName</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>class(BaseInterpolation_),
+  POINTER</small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-elemsd_deallocatedata"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine deallocates the data stored inside <a href="../type/elemshapedata_.html">ElemShapeData_</a></p><a href="../interface/elemsd_deallocatedata.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine elemsd_DeallocateData(obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-elemsd_initiate"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This routine initiate the shape data</p><a href="../interface/elemsd_initiate.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private module subroutine elemsd_initiate(obj, quad, refElem, continuityType, interpolType)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(QuadraturePoint_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>quad</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ReferenceElement_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>refElem</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>continuityType</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>interpolType</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getinterpolation"></span><h3>public interface <a href='../interface/getinterpolation.html'>getInterpolation</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/get_interpol_scalar.html'>get_interpol_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine performs interpolations</p><a href="../interface/get_interpol_scalar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/get_interpol_vector.html'>get_interpol_vector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine performs interpolation of a vector</p><a href="../interface/get_interpol_vector.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/get_interpol_matrix.html'>get_interpol_matrix</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine performs interpolation of matrix</p><a href="../interface/get_interpol_matrix.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/get_interpol_fevar_scalar.html'>get_interpol_fevar_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>T</p><a href="../interface/get_interpol_fevar_scalar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/get_interpol_fevar_matrix.html'>get_interpol_fevar_matrix</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine performs interpolation of matrix</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getinterpolation~2"></span><h3>private interface <a href='../interface/getinterpolation~2.html'>getInterpolation</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_get_interpol_scalar.html'>stsd_get_interpol_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine performs interpolations of scalar</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_get_interpol_vector.html'>stsd_get_interpol_vector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine performs interpolation of a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_get_interpol_matrix.html'>stsd_get_interpol_matrix</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine performs interpolation of matrix</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_get_interpol_fevar_scalar.html'>stsd_get_interpol_fevar_scalar</a>()
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_get_interpol_fevar_matrix.html'>stsd_get_interpol_fevar_matrix</a>()
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getlocalgradient"></span><h3>private interface <a href='../interface/getlocalgradient.html'>getLocalGradient</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getlocalgradient_scalar.html'>getLocalGradient_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine returns the local gradient of a scalar</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getlocalgradient_vector.html'>getLocalGradient_vector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine returns the local gradient of a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_getlocalgradient_scalar.html'>stsd_getLocalGradient_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine returns the local gradient of a scalar</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_getlocalgradient_vector.html'>stsd_getLocalGradient_vector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine returns the local gradient of a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getlocalgradient_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the local gradient of a scalar</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getLocalGradient_scalar(obj, dPhidXi, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the local gradient of a scalar from space
+nodal values</p><a href="../interface/getlocalgradient_scalar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemShapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dPhidXi</strong>(:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:)</td><td><p>Space nodal values of scalar</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getlocalgradient_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the local gradient of a vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getLocalGradient_vector(obj, dVdXi, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the local gradient of a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dVdXi</strong>(:,:,:)</td><td><p>local gradient at integration points</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>nodal values of vector in <code>xiJ</code> format</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getprojectionofdntdxt"></span><h3>public interface <a href='../interface/getprojectionofdntdxt.html'>getProjectionOfdNTdXt</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getprojectionofdntdxt_constvector.html'>getProjectionOfdNTdXt_constvector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine computes the projection of dNTdXt on a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getprojectionofdntdxt_fevar.html'>getProjectionOfdNTdXt_fevar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine computes the projection of dNTdXt on a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getprojectionofdntdxt_constvector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine computes the projection of dNTdXt on a vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getProjectionOfdNTdXt_constvector(obj, cdNTdXt, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine computes the projcetion cdNTdXt on the vector <code>Val</code>
+Here the vector <code>Val</code> is constant in space and time</p><a href="../interface/getprojectionofdntdxt_constvector.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>cdNTdXt</strong>(:,:,:)</td><td><p>returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:)</td><td><p>constant value of vector</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getprojectionofdntdxt_fevar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine computes the projection of dNTdXt on a vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getProjectionOfdNTdXt_fevar(obj, cdNTdXt, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine computes the projcetion cdNTdXt on the vector <code>Val</code>
+Here the vector <code>Val</code> is constant in space and time</p><a href="../interface/getprojectionofdntdxt_fevar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>cdNTdXt</strong>(:,:,:)</td><td><p>returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(FEVariable_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong></td><td><p>constant value of vector</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getprojectionofdndxt"></span><h3>public interface <a href='../interface/getprojectionofdndxt.html'>getProjectionOfdNdXt</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getprojectionofdndxt_spacevalues.html'>getProjectionOfdNdXt_spacevalues</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine computes the projection of dNdXt on a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getprojectionofdndxt_fevar.html'>getProjectionOfdNdXt_fevar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine computes the projection of dNdXt on a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getprojectionofdndxt_fevar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine computes the projection of dNdXt on a vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getProjectionOfdNdXt_fevar(obj, cdNdXt, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine computes the projcetion cdNdXt on the vector <code>Val</code>
+Here the vector <code>Val</code> is constant in space and time</p><a href="../interface/getprojectionofdndxt_fevar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>cdNdXt</strong>(:,:)</td><td><p>returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(FEVariable_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong></td><td><p>constant value of vector</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getprojectionofdndxt_spacevalues"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine computes the projection of dNdXt on a vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getProjectionOfdNdXt_spacevalues(obj, cdNdXt, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine computes the projcetion cdNdXt on the vector <code>Val</code>
+Here the vector <code>Val</code> is constant in space and time</p><a href="../interface/getprojectionofdndxt_spacevalues.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>cdNdXt</strong>(:,:)</td><td><p>returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:)</td><td><p>constant value of vector</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getspatialgradient"></span><h3>public interface <a href='../interface/getspatialgradient.html'>getSpatialGradient</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getspatialgradient_scalar.html'>getSpatialGradient_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine returns the spatial gradient of scalar</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getspatialgradient_vector.html'>getSpatialGradient_vector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine returns the spatial gradient of vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_getspatialgradient_scalar.html'>stsd_getSpatialGradient_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine returns the spatial gradient of scalar</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_getspatialgradient_vector.html'>stsd_getSpatialGradient_vector</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine returns the spatial gradient of vector</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getspatialgradient_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the spatial gradient of scalar</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getSpatialGradient_scalar(obj, dPhidXt, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the spatial gradient of scalar</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemShapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dPhidXt</strong>(:,:)</td><td><p>Spatial gradient of scalar</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:)</td><td><p>Nodal values of scalar</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getspatialgradient_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the spatial gradient of vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getSpatialGradient_vector(obj, dVdXt, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the spatial gradient of a vector</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dVdXt</strong>(:,:,:)</td><td><p>spatial gradient of <code>val</code> at integration points</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>nodal values of vector in <code>xiJ</code> format</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getunitnormal"></span><h3>public interface <a href='../interface/getunitnormal.html'>getUnitNormal</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getunitnormal_vector.html'>getUnitNormal_vector</a>()
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/getunitnormal_scalar.html'>getUnitNormal_scalar</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+
+
+<p>This subroutine can be used in SUPG formulation</p>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getunitnormal_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine can be used in SUPG formulation</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getUnitNormal_scalar(obj, R, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This routine can be used in the SUPG formulation</p><a href="../interface/getunitnormal_scalar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>R</strong>(:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-getunitnormal_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine getUnitNormal_vector(obj, R, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>R</strong>(:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-get_interpol_fevar_matrix"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine performs interpolation of matrix</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine get_interpol_fevar_matrix(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Interpol</strong>(:,:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(FEVariable_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-get_interpol_fevar_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine get_interpol_fevar_scalar(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemShapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Interpol</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(FEVariable_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-get_interpol_matrix"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine performs interpolation of matrix</p><a href="../interface/get_interpol_matrix.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine get_interpol_matrix(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Interpol</strong>(:,:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>nodal value of matrix</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-get_interpol_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine performs interpolations</p><a href="../interface/get_interpol_scalar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine get_interpol_scalar(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Interpol</strong>(:)</td><td><p>Interpolation value of <code>val</code> at integration points</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:)</td><td><p>spatial nodal values of scalar</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-get_interpol_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine performs interpolation of a vector</p><a href="../interface/get_interpol_vector.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine get_interpol_vector(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Interpol</strong>(:,:)</td><td><p>Interpol(:,ips) =&gt; interpolation value at integration points</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>nodal values of vector in <code>xiJ</code> format</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-interpol_matrix"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function returns the interpolation of matrix</p><a href="../interface/interpol_matrix.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module function interpol_matrix(obj, Val) result(Interpol)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>real(kind=DFP),
+  ALLOCATABLE, (:,:,:)</small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-interpol_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function returns the interpolation of a scalar</p><a href="../interface/interpol_scalar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module function interpol_scalar(obj, Val) result(Interpol)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>real(kind=DFP),
+  ALLOCATABLE, (:)</small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-interpol_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function returns the interpolation of vector</p><a href="../interface/interpol_vector.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module function interpol_vector(obj, Val) result(Interpol)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>real(kind=DFP),
+  ALLOCATABLE, (:,:)</small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setbarycentriccoord"></span><h3>public interface <a href='../interface/setbarycentriccoord.html'>setBarycentricCoord</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/set_coord.html'>set_coord</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set the Barycentric coordinates</p><a href="../interface/set_coord.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_set_coord.html'>stsd_set_coord</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set the Barycentric coordinates</p><a href="../interface/stsd_set_coord.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setjacobian"></span><h3>public interface <a href='../interface/setjacobian.html'>setJacobian</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/set_jacobian.html'>set_jacobian</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set the jacobian</p><a href="../interface/set_jacobian.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_set_jacobian.html'>stsd_set_jacobian</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set the jacobian using space-time nodal coords</p><a href="../interface/stsd_set_jacobian.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setjs"></span><h3>public interface <a href='../interface/setjs.html'>setJs</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/set_js.html'>set_Js</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set the determinent of jacobian</p><a href="../interface/set_js.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setnormal"></span><h3>public interface <a href='../interface/setnormal.html'>setNormal</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/set_normal.html'>set_normal</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine sets the normal vector</p><a href="../interface/set_normal.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setthickness"></span><h3>public interface <a href='../interface/setthickness.html'>setThickness</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/set_thickness.html'>set_thickness</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set the thickness field</p><a href="../interface/set_thickness.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_set_thickness.html'>stsd_set_thickness</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set the thickness field</p><a href="../interface/stsd_set_thickness.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setvalue~2"></span><h3>public interface <a href='../interface/setvalue~2.html'>setValue</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/set_value.html'>set_value</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set parameters defined on physical element</p><a href="../interface/set_value.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_set_value.html'>stsd_set_value</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set parameters defined on physical element</p><a href="../interface/stsd_set_value.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_js"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine set_Js(obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemShapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_coord"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the Barycentric coordinates</p><a href="../interface/set_coord.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine set_coord(obj, Val, N)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>Nodal coordinates in <code>xiJ</code> format</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>N</strong>(:,:)</td><td><p>When element is not an isoparametric we can supply N.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_dndxt_internally"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set $\frac{d N}{d X_t}$ internally</p><a href="../interface/set_dndxt_internally.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine set_dNdXt_internally(obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_jacobian"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the jacobian</p><a href="../interface/set_jacobian.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine set_jacobian(obj, Val, dNdXi)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>nodal coordinates in <code>xiJ</code> format</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dNdXi</strong>(:,:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_normal"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine sets the normal vector</p><a href="../interface/set_normal.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine set_normal(obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemShapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_thickness"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the thickness field</p><a href="../interface/set_thickness.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine set_thickness(obj, Val, N)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:)</td><td><p>Nodal values of thickness</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>N</strong>(:,:)</td><td><p>Shape function values at quadrature points</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-set_value"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set parameters defined on physical element</p><a href="../interface/set_value.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine set_value(obj, Val, N, dNdXi)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(ElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>Spatial nodal coordinates</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>N</strong>(:,:)</td><td><p>Shape function for geometry</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dNdXi</strong>(:,:,:)</td><td><p>Local derivative of shape functions for geometry</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setdntdxt"></span><h3>public interface <a href='../interface/setdntdxt.html'>setdNTdXt</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_set_dntdxt_internally.html'>stsd_set_dNTdXt_internally</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set <code>dNTdXt</code> by using internal data</p><a href="../interface/stsd_set_dntdxt_internally.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setdntdt"></span><h3>public interface <a href='../interface/setdntdt.html'>setdNTdt</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/stsd_set_dntdt.html'>stsd_set_dNTdt</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set <code>dNTdt</code> by using the space-time nodal values</p><a href="../interface/stsd_set_dntdt.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-setdndxt"></span><h3>public interface <a href='../interface/setdndxt.html'>setdNdXt</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private interface <a href='../interface/set_dndxt_internally.html'>set_dNdXt_internally</a>()
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>4 March 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This subroutine set $\frac{d N}{d X_t}$ internally</p><a href="../interface/set_dndxt_internally.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      <em>None</em>
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_getlocalgradient_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the local gradient of a scalar</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_getLocalGradient_scalar(obj, dPhidXi, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the local gradient of a scalar from space
+ time nodal values</p><a href="../interface/stsd_getlocalgradient_scalar.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemShapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dPhidXi</strong>(:,:)</td><td><p>local gradient of scalar</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>space-time nodal values</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_getlocalgradient_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the local gradient of a vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_getLocalGradient_vector(obj, dVdXi, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the local gradient of a vector using space-time
+nodal coordinates</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dVdXi</strong>(:,:,:)</td><td><p>local gradient at integration points</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>space-time nodal values of vector in <code>xiJa</code> format</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_getspatialgradient_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the spatial gradient of scalar</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_getSpatialGradient_scalar(obj, dPhidXt, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the spatial gradient of scalar</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemShapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dPhidXt</strong>(:,:)</td><td><p>Spatial gradient of scalar</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>space-time Nodal values of scalar</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_getspatialgradient_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine returns the spatial gradient of vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_getSpatialGradient_vector(obj, dVdXt, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine returns the spatial gradient of a vector from its
+space-time nodal values</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>dVdXt</strong>(:,:,:)</td><td><p>spatial gradient of <code>val</code> at integration points</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>space-time nodal values of vector in <code>xiJa</code> format</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_get_interpol_fevar_matrix"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_get_interpol_fevar_matrix(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemShapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Interpol</strong>(:,:,:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(FEVariable_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_get_interpol_fevar_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_get_interpol_fevar_scalar(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemShapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Interpol</strong>(:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(FEVariable_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_get_interpol_matrix"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine performs interpolation of matrix</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_get_interpol_matrix(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine performs interpolation of matrix from its space-time
+nodal values</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Interpol</strong>(:,:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:,:)</td><td><p>nodal value of matrix</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_get_interpol_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine performs interpolations of scalar</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_get_interpol_scalar(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine performs interpolation of a scalar from its space-time nodal
+values.
+<script type="math/tex; mode=display">u=u^{a}_{I}N^{I}T_{a}</script>
+</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Interpol</strong>(:)</td><td><p>Interpolation value of <code>val</code> at integration points</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>spatial nodal values of scalar</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_get_interpol_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine performs interpolation of a vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_get_interpol_vector(obj, Interpol, Val)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This subroutine performs interpolation of a vector from its space-time
+nodal values</p><a href="../interface/stsd_get_interpol_vector.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>Interpol</strong>(:,:)</td><td><p>Interpol(:,ips) =&gt; interpolation value at integration points</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>space-time nodal values of vector in <code>xiJa</code> format</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_initiate"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine initiate time shape function data in <a href="../type/stelemshapedata_.html">STElemShapeData_</a></p><a href="../interface/stsd_initiate.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_initiate(obj, elemsd)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(STElemShapeData_),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>obj</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(ElemShapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>elemsd</strong></td><td><p>It has information about location shape function for time element</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_interpol_matrix"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function performs interpolations of matrix</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module function stsd_interpol_matrix(obj, Val) result(Interpol)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function performs interpolation of a matrix from its space-time nodal
+values.
+<script type="math/tex; mode=display">u=u^{a}_{I}N^{I}T_{a}</script>
+</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:,:)</td><td><p>spatial nodal values of matrix</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>real(kind=DFP),
+  ALLOCATABLE, (:,:,:)</small></h4>
+  <p>Interpolation value of <code>val</code> at integration points</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_interpol_scalar"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function performs interpolations of scalar</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module function stsd_interpol_scalar(obj, Val) result(Interpol)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function performs interpolation of a scalar from its space-time nodal
+values.
+<script type="math/tex; mode=display">u=u^{a}_{I}N^{I}T_{a}</script>
+</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>space-time nodal values of scalar</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>real(kind=DFP),
+  ALLOCATABLE, (:)</small></h4>
+  <p>Interpolation value of <code>val</code> at integration points</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_interpol_vector"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function performs interpolations of vector</p>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module function stsd_interpol_vector(obj, Val) result(Interpol)
+    
+    
+   
+</h3>
+    
+
+
+
+<p>This function performs interpolation of a vector from its space-time nodal
+values.
+<script type="math/tex; mode=display">u=u^{a}_{I}N^{I}T_{a}</script>
+</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>spatial nodal values of vector</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>real(kind=DFP),
+  ALLOCATABLE, (:,:)</small></h4>
+  <p>Interpolation value of <code>val</code> at integration points</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_set_coord"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the Barycentric coordinates</p><a href="../interface/stsd_set_coord.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_set_coord(obj, Val, N, T)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>space-time Nodal coordinates in <code>xiJ</code> format</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>N</strong>(:,:)</td><td><p>N and T are required to handle non isoparametric elements</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>T</strong>(:)</td><td><p>N and T are required to handle non isoparametric elements</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_set_dntdxt_internally"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set <code>dNTdXt</code> by using internal data</p><a href="../interface/stsd_set_dntdxt_internally.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_set_dNTdXt_internally(obj)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemShapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td><p>Space-time nodal values</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_set_dntdt"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set <code>dNTdt</code> by using the space-time nodal values</p><a href="../interface/stsd_set_dntdt.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_set_dNTdt(obj, Val)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemShapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>Space-time nodal values</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_set_jacobian"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the jacobian using space-time nodal coords</p><a href="../interface/stsd_set_jacobian.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_set_jacobian(obj, Val, dNdXi, T)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>Space time nodal values of coordinates</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dNdXi</strong>(:,:,:)</td><td><p>Local derivative of shape function for geometry</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>T</strong>(:)</td><td><p>Shape function for time element</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_set_thickness"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set the thickness field</p><a href="../interface/stsd_set_thickness.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_set_thickness(obj, Val, N, T)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:)</td><td><p>Space-time nodal values of thickness</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>N</strong>(:,:)</td><td><p>Shape function at spatial quadrature</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>T</strong>(:)</td><td><p>Shape function at temporal quadrature</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-stsd_set_value"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This subroutine set parameters defined on physical element</p><a href="../interface/stsd_set_value.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private pure module subroutine stsd_set_value(obj, Val, N, T, dNdXi)
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>class(STElemshapeData_),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>obj</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Val</strong>(:,:,:)</td><td><p>Spatial nodal coordinates</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>N</strong>(:,:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>T</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dNdXi</strong>(:,:,:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+    </section>
+  <br>
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    </div>
+  </div>
+
+  
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>EASIFEM-BASE was developed by Vikas Sharma<br>&copy; 2021 <a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a>
+                                          </p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+             on 2021-10-02 00:01  
+            
+          </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>

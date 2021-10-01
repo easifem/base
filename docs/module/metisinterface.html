@@ -1,0 +1,4778 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <meta name="description" content="A frame work for Expandable And Scalable Infrastructure for Finite Element Methods">
+    
+    <meta name="author" content="Vikas Sharma" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>MetisInterface &ndash; EASIFEM-BASE</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">EASIFEM-BASE </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+        
+            <li><a href='../page/index.html'>easifemBase</a></li>
+      
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          
+              
+            <li><a href="../lists/files.html">Source Files</a></li>
+        
+        
+        
+            <li><a href="../lists/modules.html">Modules</a></li>
+        
+            
+                                
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+        
+        
+            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+               
+            <li><a href="../lists/types.html">Derived Types</a></li>
+        
+               
+        
+        
+            </ul>
+        
+            </li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                             
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+
+
+
+
+          </ul>
+        
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+  
+  <div class="row">
+    <h1>MetisInterface 
+    <small>Module</small>
+    
+    </h1>
+    
+<div class="row">
+  <div class="col-lg-12">
+<div class="well well-sm">
+  <ul class="list-inline" style="margin-bottom:0px;display:inline">
+     
+     
+     
+    <li><i class="fa fa-legal"></i> <a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></li> 
+     
+     
+     
+    
+    
+     <li><i class="fa fa-list-ol"></i>
+       <a data-toggle="tooltip"
+    data-placement="bottom" data-html="true"
+    title=" 2.7% of total for modules and submodules.">567 statements</a>
+     </li> 
+     
+     
+     
+    <li><i class="fa fa-code"></i><a href="../src/MetisInterface.F90"> Source File</a></li>
+     
+     
+  </ul>
+  <ol class="breadcrumb in-well text-right">
+  
+    
+     <li><a href='../sourcefile/metisinterface.f90.html'>MetisInterface.F90</a></li>
+    
+  
+     <li class="active">MetisInterface</li>
+  </ol>
+</div>
+</div>
+</div>
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    
+<div id="sidebar">
+  
+<h3>Contents</h3>
+ 
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#vars-0">Variables</a></h3></div>
+  <div id="vars-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-max_metis_options">MAX_METIS_OPTIONS</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ccorder_default">METIS_CCORDER_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_compress_default">METIS_COMPRESS_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_contig_default">METIS_CONTIG_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ctype_default">METIS_CTYPE_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ctype_rm">METIS_CTYPE_RM</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ctype_shem">METIS_CTYPE_SHEM</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_coarsen">METIS_DBG_COARSEN</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_conninfo">METIS_DBG_CONNINFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_contiginfo">METIS_DBG_CONTIGINFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_info">METIS_DBG_INFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_ipart">METIS_DBG_IPART</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_memory">METIS_DBG_MEMORY</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_moveinfo">METIS_DBG_MOVEINFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_refine">METIS_DBG_REFINE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_sepinfo">METIS_DBG_SEPINFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_time">METIS_DBG_TIME</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_error">METIS_ERROR</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_error_input">METIS_ERROR_INPUT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_error_memory">METIS_ERROR_MEMORY</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_default">METIS_IPTYPE_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_edge">METIS_IPTYPE_EDGE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_grow">METIS_IPTYPE_GROW</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_metisrb">METIS_IPTYPE_METISRB</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_node">METIS_IPTYPE_NODE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_random">METIS_IPTYPE_RANDOM</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_minconn_default">METIS_MINCONN_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ncuts_default">METIS_NCUTS_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_niter_default">METIS_NITER_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_nseps_default">METIS_NSEPS_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_numbering_c">METIS_NUMBERING_C</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_numbering_default">METIS_NUMBERING_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_numbering_fortran">METIS_NUMBERING_FORTRAN</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_objtype_cut">METIS_OBJTYPE_CUT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_objtype_default">METIS_OBJTYPE_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_objtype_node">METIS_OBJTYPE_NODE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_objtype_vol">METIS_OBJTYPE_VOL</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ok">METIS_OK</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ccorder">METIS_OPTION_CCORDER</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_compress">METIS_OPTION_COMPRESS</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_contig">METIS_OPTION_CONTIG</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ctype">METIS_OPTION_CTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_dbglvl">METIS_OPTION_DBGLVL</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_iptype">METIS_OPTION_IPTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_minconn">METIS_OPTION_MINCONN</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ncuts">METIS_OPTION_NCUTS</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_niter">METIS_OPTION_NITER</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_no2hop">METIS_OPTION_NO2HOP</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_nseps">METIS_OPTION_NSEPS</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_numbering">METIS_OPTION_NUMBERING</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_objtype">METIS_OPTION_OBJTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_pfactor">METIS_OPTION_PFACTOR</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ptype">METIS_OPTION_PTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_rtype">METIS_OPTION_RTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_seed">METIS_OPTION_SEED</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ufactor">METIS_OPTION_UFACTOR</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_pfactor_default">METIS_PFACTOR_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ptype_default">METIS_PTYPE_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ptype_kway">METIS_PTYPE_KWAY</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ptype_rb">METIS_PTYPE_RB</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_rtype_fm">METIS_RTYPE_FM</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_rtype_greedy">METIS_RTYPE_GREEDY</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_rtype_sep1sided">METIS_RTYPE_SEP1SIDED</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_rtype_sep2sided">METIS_RTYPE_SEP2SIDED</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-0">Interfaces</a></h3></div>
+  <div id="inters-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_free">METIS_Free</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_meshtodual">METIS_MeshToDual</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_meshtonodal">METIS_MeshToNodal</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_nodend">METIS_NodeND</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_partgraphkway">METIS_PartGraphKway</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_partgraphrecursive">METIS_PartGraphRecursive</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_partmeshdual">METIS_PartMeshDual</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_partmeshnodal">METIS_PartMeshNodal</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_setdefaultoptions">METIS_SetDefaultOptions</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#subs-0">Subroutines</a></h3></div>
+  <div class="list-group">
+    <div id="subs-0" class="panel-collapse collapse">
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metismeshtodual">METISMeshToDual</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metismeshtonodal">METISMeshToNodal</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metispartgraphkway">METISPartGraphKway</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metispartgraphrecursive">METISPartGraphRecursive</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metispartmeshdual">METISPartMeshDual</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metispartmeshnodal">METISPartMeshNodal</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metisnodend">MetisNodeND</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metissetdefaultoptions">MetisSetDefaultOptions</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    
+      <br>
+    
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Uses</h3>
+      </div>
+      <ul class="list-group">
+      
+      <li class="list-group-item">
+  <ul class="list-inline">
+    
+    <li><a href='../module/errorhandling.html'>ErrorHandling</a></li>
+    
+    <li><a href="http://fortranwiki.org/fortran/show/iso_c_binding">iso_c_binding</a></li>
+    
+    <li><a href='../module/cinterface.html'>CInterface</a></li>
+    
+    <li><a href='../module/globaldata.html'>GlobalData</a></li>
+    
+  </ul>
+      </li>
+      
+      
+      
+      </ul>
+    </div>
+    
+
+    
+    
+
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+      
+<h3>Contents</h3>
+ 
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#vars-1">Variables</a></h3></div>
+  <div id="vars-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-max_metis_options">MAX_METIS_OPTIONS</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ccorder_default">METIS_CCORDER_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_compress_default">METIS_COMPRESS_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_contig_default">METIS_CONTIG_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ctype_default">METIS_CTYPE_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ctype_rm">METIS_CTYPE_RM</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ctype_shem">METIS_CTYPE_SHEM</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_coarsen">METIS_DBG_COARSEN</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_conninfo">METIS_DBG_CONNINFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_contiginfo">METIS_DBG_CONTIGINFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_info">METIS_DBG_INFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_ipart">METIS_DBG_IPART</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_memory">METIS_DBG_MEMORY</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_moveinfo">METIS_DBG_MOVEINFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_refine">METIS_DBG_REFINE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_sepinfo">METIS_DBG_SEPINFO</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_dbg_time">METIS_DBG_TIME</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_error">METIS_ERROR</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_error_input">METIS_ERROR_INPUT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_error_memory">METIS_ERROR_MEMORY</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_default">METIS_IPTYPE_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_edge">METIS_IPTYPE_EDGE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_grow">METIS_IPTYPE_GROW</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_metisrb">METIS_IPTYPE_METISRB</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_node">METIS_IPTYPE_NODE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_iptype_random">METIS_IPTYPE_RANDOM</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_minconn_default">METIS_MINCONN_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ncuts_default">METIS_NCUTS_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_niter_default">METIS_NITER_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_nseps_default">METIS_NSEPS_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_numbering_c">METIS_NUMBERING_C</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_numbering_default">METIS_NUMBERING_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_numbering_fortran">METIS_NUMBERING_FORTRAN</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_objtype_cut">METIS_OBJTYPE_CUT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_objtype_default">METIS_OBJTYPE_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_objtype_node">METIS_OBJTYPE_NODE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_objtype_vol">METIS_OBJTYPE_VOL</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ok">METIS_OK</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ccorder">METIS_OPTION_CCORDER</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_compress">METIS_OPTION_COMPRESS</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_contig">METIS_OPTION_CONTIG</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ctype">METIS_OPTION_CTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_dbglvl">METIS_OPTION_DBGLVL</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_iptype">METIS_OPTION_IPTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_minconn">METIS_OPTION_MINCONN</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ncuts">METIS_OPTION_NCUTS</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_niter">METIS_OPTION_NITER</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_no2hop">METIS_OPTION_NO2HOP</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_nseps">METIS_OPTION_NSEPS</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_numbering">METIS_OPTION_NUMBERING</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_objtype">METIS_OPTION_OBJTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_pfactor">METIS_OPTION_PFACTOR</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ptype">METIS_OPTION_PTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_rtype">METIS_OPTION_RTYPE</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_seed">METIS_OPTION_SEED</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_option_ufactor">METIS_OPTION_UFACTOR</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_pfactor_default">METIS_PFACTOR_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ptype_default">METIS_PTYPE_DEFAULT</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ptype_kway">METIS_PTYPE_KWAY</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_ptype_rb">METIS_PTYPE_RB</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_rtype_fm">METIS_RTYPE_FM</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_rtype_greedy">METIS_RTYPE_GREEDY</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_rtype_sep1sided">METIS_RTYPE_SEP1SIDED</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#variable-metis_rtype_sep2sided">METIS_RTYPE_SEP2SIDED</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-1">Interfaces</a></h3></div>
+  <div id="inters-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_free">METIS_Free</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_meshtodual">METIS_MeshToDual</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_meshtonodal">METIS_MeshToNodal</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_nodend">METIS_NodeND</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_partgraphkway">METIS_PartGraphKway</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_partgraphrecursive">METIS_PartGraphRecursive</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_partmeshdual">METIS_PartMeshDual</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_partmeshnodal">METIS_PartMeshNodal</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#interface-metis_setdefaultoptions">METIS_SetDefaultOptions</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#subs-1">Subroutines</a></h3></div>
+  <div class="list-group">
+    <div id="subs-1" class="panel-collapse collapse">
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metismeshtodual">METISMeshToDual</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metismeshtonodal">METISMeshToNodal</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metispartgraphkway">METISPartGraphKway</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metispartgraphrecursive">METISPartGraphRecursive</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metispartmeshdual">METISPartMeshDual</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metispartmeshnodal">METISPartMeshNodal</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metisnodend">MetisNodeND</a>
+      
+      <a class="list-group-item" href="../module/metisinterface.html#proc-metissetdefaultoptions">MetisSetDefaultOptions</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+    
+
+    
+    <section>
+    <h2>Variables</h2>
+    
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th>
+
+<th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-max_metis_options"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>MAX_METIS_OPTIONS</strong></td><td> =</td><td>40</td><td><p>Maximum number of METSI OPTIONS</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ccorder_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_CCORDER_DEFAULT</strong></td><td> =</td><td>0</td><td><p>Specifies if the connected components of the graph should first be identifies and ordered separately.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_compress_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_COMPRESS_DEFAULT</strong></td><td> =</td><td>0</td><td><p>Specifies that the graph should be compressed by combining togethervertices that have identical adjacency lists.
+O- does not compress
+1 compress</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_contig_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_CONTIG_DEFAULT</strong></td><td> =</td><td>0</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ctype_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_CTYPE_DEFAULT</strong></td><td> =</td><td>METIS_CTYPE_RM</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ctype_rm"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_CTYPE_RM</strong></td><td> =</td><td>0</td><td><p>Random matching.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ctype_shem"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_CTYPE_SHEM</strong></td><td> =</td><td>1</td><td><p>Sorted heavy-edge matching.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_coarsen"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_COARSEN</strong></td><td> =</td><td>4</td><td><p>Shothe coarsening progress.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_conninfo"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_CONNINFO</strong></td><td> =</td><td>128</td><td><p>Shoinfo on minimization of subdomain connectivity.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_contiginfo"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_CONTIGINFO</strong></td><td> =</td><td>256</td><td><p>Shoinfo on elimination of connected components.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_info"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_INFO</strong></td><td> =</td><td>1</td><td><p>Shows various diagnostic messages.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_ipart"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_IPART</strong></td><td> =</td><td>16</td><td><p>Shoinfo on initial partitioning.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_memory"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_MEMORY</strong></td><td> =</td><td>2048</td><td><p>Shoinfo related to wspace allocation.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_moveinfo"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_MOVEINFO</strong></td><td> =</td><td>32</td><td><p>Shoinfo on vertex moves during refinement.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_refine"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_REFINE</strong></td><td> =</td><td>8</td><td><p>Shothe refinement progress.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_sepinfo"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_SEPINFO</strong></td><td> =</td><td>64</td><td><p>Shoinfo on vertex moves during sep refinement.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_dbg_time"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_DBG_TIME</strong></td><td> =</td><td>2</td><td><p>Perform timing analysis.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_error"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_ERROR</strong></td><td> =</td><td>-4</td><td><p>Flag to indicate undocumented error</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_error_input"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_ERROR_INPUT</strong></td><td> =</td><td>-2</td><td><p>Flag to indicate that there is erro during input output</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_error_memory"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_ERROR_MEMORY</strong></td><td> =</td><td>-3</td><td><p>Flag to indicate error due to the insufficient memory.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_iptype_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_IPTYPE_DEFAULT</strong></td><td> =</td><td>METIS_IPTYPE_GROW</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_iptype_edge"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_IPTYPE_EDGE</strong></td><td> =</td><td>2</td><td><p>derives separator form an edge cut.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_iptype_grow"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_IPTYPE_GROW</strong></td><td> =</td><td>0</td><td><p>grows bisection using a greedy strategy.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_iptype_metisrb"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_IPTYPE_METISRB</strong></td><td> =</td><td>4</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_iptype_node"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_IPTYPE_NODE</strong></td><td> =</td><td>3</td><td><p>grows bisection using a greedy node-based strategy.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_iptype_random"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_IPTYPE_RANDOM</strong></td><td> =</td><td>1</td><td><p>computes bisection at random followed by a refinement.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_minconn_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_MINCONN_DEFAULT</strong></td><td> =</td><td>0</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ncuts_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_NCUTS_DEFAULT</strong></td><td> =</td><td>1</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_niter_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_NITER_DEFAULT</strong></td><td> =</td><td>10</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_nseps_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_NSEPS_DEFAULT</strong></td><td> =</td><td>1</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_numbering_c"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_NUMBERING_C</strong></td><td> =</td><td>0</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_numbering_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_NUMBERING_DEFAULT</strong></td><td> =</td><td>1</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_numbering_fortran"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_NUMBERING_FORTRAN</strong></td><td> =</td><td>1</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_objtype_cut"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OBJTYPE_CUT</strong></td><td> =</td><td>0</td><td><p>Edge-cut minimization.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_objtype_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OBJTYPE_DEFAULT</strong></td><td> =</td><td>METIS_OBJTYPE_CUT</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_objtype_node"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OBJTYPE_NODE</strong></td><td> =</td><td>2</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_objtype_vol"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OBJTYPE_VOL</strong></td><td> =</td><td>1</td><td><p>Total communication volume minimization.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ok"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OK</strong></td><td> =</td><td>1</td><td><p>Flag to indicate that there is no error</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_ccorder"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_CCORDER</strong></td><td> =</td><td>13</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_compress"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_COMPRESS</strong></td><td> =</td><td>12</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_contig"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_CONTIG</strong></td><td> =</td><td>11</td><td><p>Specifies that the partitioning routines should try to produce partitionsthat are contigous. If the input graph is not connected then this option is ignored
+- 0 does not force contiguous partition
+- 1 does force contingous partition</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_ctype"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_CTYPE</strong></td><td> =</td><td>2</td><td><p>Specifies the matching scheme to be used during coarsening. Possible
+values are as follows:</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_dbglvl"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_DBGLVL</strong></td><td> =</td><td>5</td><td><p>Specifies the amount of progress/debugging information will be printed during the execution of the algorithms. The default value is 0 (no debugging/progress information). A non-zero value can be supplied that is obtained by a bit-wise OR of the following values</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_iptype"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_IPTYPE</strong></td><td> =</td><td>3</td><td><p>Specify the algorithm used during the initial partitioning of the mesh</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_minconn"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_MINCONN</strong></td><td> =</td><td>10</td><td><p>Specifies that the partitioning routines should try to minimize the maximum degree of the subdomain graph, i.e., the graph in which each partition is a node, and edges connect subdomains with a shared interface.
+0 Does not explicitly minimize the maximum connectivity
+1 explicitly minimize the maximum connectivity</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_ncuts"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_NCUTS</strong></td><td> =</td><td>7</td><td><p>Specifies the number of different partitionings that it will compute. The final partitioning is the one that achieves the best edgecut or communication volume. Default is 1</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_niter"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_NITER</strong></td><td> =</td><td>6</td><td><p>Specifies the number of iterations for the refinement algorithm.
+Default value is 10</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_no2hop"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_NO2HOP</strong></td><td> =</td><td>9</td><td><p>Specifies that the coarsening will not perform any 2–hop matchings when the standard matching approach fails to sufficiently coarsen the graph. The 2–hop matching is very effective for graphs with power-law degree distributions.
+- 0 means perform 2-hop matching
+- 1 means do not perform 2-hop matching</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_nseps"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_NSEPS</strong></td><td> =</td><td>15</td><td><p>Specifies the number of different separators that it will compute at each level of nested dissection. The final separator that is used is the smallest one. Default is 1</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_numbering"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_NUMBERING</strong></td><td> =</td><td>17</td><td><p>Used to indicate which numbering scheme is used for the adjacency structure of a graph or the element-node structure of a mesh.
+The possible values are 0 for C-style, and 1 for Fortran style</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_objtype"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_OBJTYPE</strong></td><td> =</td><td>1</td><td><p>Specifies the objective type, two values are possible: Edge-cut, which
+minimizes the communication time, and Total communication volume</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_pfactor"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_PFACTOR</strong></td><td> =</td><td>14</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_ptype"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_PTYPE</strong></td><td> =</td><td>0</td><td><p>It specifies the type of partitioning method; The possible values are
+given below.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_rtype"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_RTYPE</strong></td><td> =</td><td>4</td><td><p>Specify the algorithm used for refinement.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_seed"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_SEED</strong></td><td> =</td><td>8</td><td><p>Specifies the seed for the random number generator.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_option_ufactor"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_OPTION_UFACTOR</strong></td><td> =</td><td>16</td><td><p>Specifies the maximum allowed load imbalance among the partitions. A
+value of x indicates that the allowed load imbalance is (1 + x)=1000.
+The load imbalance for the jth constraint is defined to be maxi(w[j; i])
+=t[j; i]), where w[j; i] is the fraction of the overall weight of the
+jth constraint that is assigned to the ith partition and t[j; i] is the
+desired target weight of the jth constraint for the ith partition (i.e.,
+that specified via -tpwgts). For -ptype=rb, the default value is 1 (i.e.
+, load imbalance of 1.001) and for -ptype=kway, the default value is 30
+(i.e., load imbalance of 1.03).</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_pfactor_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_PFACTOR_DEFAULT</strong></td><td> =</td><td>0</td><td><p>Specifies the minimum degree of the vertices that will be ordered last.
+If the specified value is x &gt; 0, then
+any vertices with a degree greater than 0.1<em>x</em>(average degree) are removed from the graph, an ordering of
+the rest of the vertices is computed, and an overall ordering is computed by ordering the removed vertices
+at the end of the overall ordering. For example if x = 40, and the average degree is 5, then the algorithm
+will remove all vertices with degree greater than 20. The vertices that are removed are ordered last (i.e.,
+they are automatically placed in the top-level separator). Good values are often in the range of 60 to 200
+(i.e., 6 to 20 times more than the average). Default value is 0, indicating that no vertices are removed.
+Used to control whether or not the ordering algorithm should remove any vertices with high degree (i.e.,
+dense columns). This is particularly helpful for certain classes of LP matrices, in which there a few vertices
+that are connected to many other vertices. By removing these vertices prior to ordering, the quality and the
+amount of time required to do the ordering improves</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ptype_default"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_PTYPE_DEFAULT</strong></td><td> =</td><td>METIS_PTYPE_KWAY</td><td><p>Default value of METIS_OPTION_PTYPE</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ptype_kway"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_PTYPE_KWAY</strong></td><td> =</td><td>1</td><td><p>Multilevel k-way partitioning. DEFAULT</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_ptype_rb"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_PTYPE_RB</strong></td><td> =</td><td>0</td><td><p>Multilevel recursive bisectioning.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_rtype_fm"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_RTYPE_FM</strong></td><td> =</td><td>0</td><td><p>FM-basecut refinement.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_rtype_greedy"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_RTYPE_GREEDY</strong></td><td> =</td><td>1</td><td><p>Greedy-based cut and volume refinement.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_rtype_sep1sided"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_RTYPE_SEP1SIDED</strong></td><td> =</td><td>3</td><td><p>One-sidenode FM refinement.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-metis_rtype_sep2sided"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>METIS_RTYPE_SEP2SIDED</strong></td><td> =</td><td>2</td><td><p>Two-sidenode FM refinement.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+    </section>
+    <br>
+    
+    
+    
+    
+    
+    <section>
+   <h2>Interfaces</h2>
+   
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_free"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Frees the memory that was allocated by either the <a href="../interface/metis_meshtodual.html">METIS_MeshToDual</a> or the
+  <a href="../interface/metis_meshtonodal.html">METIS_MeshToNodal</a> routines for returning the dual or nodal graph of a mesh.</p><a href="../interface/metis_free.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_Free(ptr) result(ans) bind(C,NAME="METIS_Free")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td></td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>ptr</strong></td><td><p>The pointer to be freed. This pointer should be one of the <code>xadj</code> or <code>adjncy</code>, arrays returned by METIS&rsquo; API routines</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p><code>METIS_OK</code> Indicates that the function returned normally.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_meshtodual"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function is used to generate the dual graph of a mesh.</p><a href="../interface/metis_meshtodual.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_MeshToDual(ne, nn, eptr, eind, ncommon, numflag, xadj, adjncy) result(Ans) bind(C,NAME="METIS_MeshToDual")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ne</strong></td><td><p>The number of elements in the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nn</strong></td><td><p>The number of nodes in the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>eptr</strong>(*)</td><td><p>The pair of arrays storing the mesh as described in
+Section 5.6 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>eind</strong>(*)</td><td><p>The pair of arrays storing the mesh as described in
+Section 5.6 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ncommon</strong></td><td><p>Specifies the number of common nodes that two elements must have in order to put an edge between them in the dual graph. Given two elements e1 and e2, containing n1 and n2 nodes, respectively, then an edge will connect the vertices in the dual graph corresponding to e1 and e2 if the number of common nodes between them is greater than or equal to min(ncommon; n1 − 1; n2 − 1). The default value is 1, indicating that two elements will be connected via an edge as long as they share one node. However, this will tend to create too many edges (increasing the memory and time requirements of the partitioning). The user should select higher values that are better suited for the element types of the mesh that wants to partition. For example, for tetrahedron meshes, ncommon should be 3, which creates an edge between two tets when they share a triangular face (i.e., 3 nodes)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>numflag</strong></td><td><p>Used to indicate which numbering scheme is used for <code>eptr</code> and <code>eind</code>.
+The possible values are: <br />
+0 - C-style numbering is assumed that starts from 0 <br />
+1 - Fortran-style numbering is assumed that starts from 1</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>xadj</strong></td><td><p>These arrays store the adjacency structure of the generated dual graph. The format of the adjacency structure is described in Section 5.5 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>. Memory for these arrays is allocated by METIS’ API using the standard malloc function. It is the responsibility of the application to free this memory by calling free. METIS provides the METIS Free that is a wrapper to C’s free function.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>adjncy</strong></td><td><p>These arrays store the adjacency structure of the generated dual graph. The format of the adjacency structure is described in Section 5.5 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>. Memory for these arrays is allocated by METIS’ API using the standard malloc function. It is the responsibility of the application to free this memory by calling free. METIS provides the METIS Free that is a wrapper to C’s free function.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p><code>METIS_OK</code> - Indicates that the function returned normally.<br />
+<code>METIS_ERROR_INPUT</code> - Indicates an input error.<br />
+<code>METIS_ERROR_MEMORY</code> - Indicates that it could not allocate the required memory.<br />
+<code>METIS_ERROR</code> - Indicates some other type of error.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_meshtonodal"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function is used to generate the nodal graph of a mesh.</p><a href="../interface/metis_meshtonodal.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_MeshToNodal(ne, nn, eptr, eind, numflag, xadj, adjncy) result(ans) bind(C,name="METIS_MeshToNodal")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ne</strong></td><td><p>The number of elements in the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nn</strong></td><td><p>The number of nodes in the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>eptr</strong>(*)</td><td><p>The pair of arrays storing the mesh as described in Section 5.6 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>eind</strong>(*)</td><td><p>The pair of arrays storing the mesh as described in Section 5.6 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>numflag</strong></td><td><p>Used to indicate which numbering scheme is used for <code>eptr</code> and <code>eind</code>.
+The possible values are:
+0 - C-style numbering is assumed that starts from 0
+1 - Fortran-style numbering is assumed that starts from 1</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>xadj</strong></td><td><p>These arrays store the adjacency structure of the generated dual graph. The format of the adjacency structure is described in Section 5.5 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>. Memory for these arrays is allocated by METIS’ API using the standard malloc function. It is the responsibility of the application to free this memory by calling free. METIS provides the METIS Free that is a wrapper to C’s free function.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>adjncy</strong></td><td><p>These arrays store the adjacency structure of the generated dual graph. The format of the adjacency structure is described in Section 5.5 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>. Memory for these arrays is allocated by METIS’ API using the standard malloc function. It is the responsibility of the application to free this memory by calling free. METIS provides the METIS Free that is a wrapper to C’s free function.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p><code>METIS_OK</code> - Indicates that the function returned normally.
+<code>METIS_ERROR_INPUT</code> - Indicates an input error.
+<code>METIS_ERROR_MEMORY</code> - Indicates that it could not allocate the required memory.
+<code>METIS_ERROR</code> - Indicates some other type of error.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_nodend"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function computes fill reducing orderings of sparse matrices using the multilevel nested dissection algorithm.</p><a href="../interface/metis_nodend.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_NodeND(nvtxs, xadj, adjncy, vwgt, options, perm, iperm) result(ans) bind(C, NAME="METIS_NodeND" )
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nvtxs</strong></td><td><p>The number of vertices in the graph.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>xadj</strong>(*)</td><td><p>The adjacency structure of the graph as described in Section 5.5 of
+the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>adjncy</strong>(*)</td><td><p>The adjacency structure of the graph as described in Section 5.5 of
+the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vwgt</strong></td><td><p>An array of size <code>nvtxs</code> specifying the weights of the vertices.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>options</strong></td><td><p>This is the array of options as described in Section 5.4 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>. See description for valid options.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>perm</strong>(nvtxs)</td><td><p>These are vectors, each of size nvtxs. Upon successful completion,
+they store the fill-reducing permutation and inverse-permutation. Let
+A be the original matrix and $A<em>$ be the permuted matrix.
+The arrays <code>perm</code> and <code>iperm</code> are defined as follows.
+Row (or, column) $i$ of $A</em>$ is the <code>perm[i]</code> row (column) of A,
+and row (column) $i$ of $A$ is the <code>iperm[i]</code> row (column) of A0.
+The numbering of this vector starts from either 0 or 1,
+depending on the value of options[METIS OPTION NUMBERING]</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>iperm</strong>(nvtxs)</td><td><p>These are vectors, each of size nvtxs. Upon successful completion,
+they store the fill-reducing permutation and inverse-permutation. Let
+A be the original matrix and $A<em>$ be the permuted matrix.
+The arrays <code>perm</code> and <code>iperm</code> are defined as follows.
+Row (or, column) $i$ of $A</em>$ is the <code>perm[i]</code> row (column) of A,
+and row (column) $i$ of $A$ is the <code>iperm[i]</code> row (column) of A0.
+The numbering of this vector starts from either 0 or 1,
+depending on the value of options[METIS OPTION NUMBERING]</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p><code>METIS_OK</code> - Indicates that the function returned normally.<br />
+<code>METIS_ERROR_INPUT</code> - Indicates an input error.<br />
+<code>METIS_ERROR_MEMORY</code> - Indicates that it could not allocate the required memory.<br />
+<code>METIS_ERROR</code> - Indicates some other type of error.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_partgraphkway"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function is used to partition a graph into <code>nparts</code> parts using multilevel k-way partitioning.</p><a href="../interface/metis_partgraphkway.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_PartGraphKway(nvtxs, ncon, xadj, adjncy, vwgt, vsize, adjwgt, nparts, tpwgts, ubvec, options, objval, part) result(ans) bind(C, NAME="METIS_PartGraphKway" )
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nvtxs</strong></td><td><p>The number of vertices in the graph.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ncon</strong></td><td><p>The number of balancing constraints on each node.
+It should be atleast 1.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>xadj</strong>(*)</td><td><p>The adjacency structure of the graph as described in
+section 5.5 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>adjncy</strong>(*)</td><td><p>The adjacency structure of the graph as described in
+section 5.5 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vwgt</strong></td><td><p>The weights of the vertices as described in Section 5.5 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vsize</strong></td><td><p>The size of the vertices for computing the total communication volume
+ as described in section 5.7 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>adjwgt</strong></td><td><p>The weights of the edges as describe in Section 5.5 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nparts</strong></td><td><p>The number of parts to partition the graph.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>tpwgts</strong></td><td><p>This is an array pf size<code>nparts*ncon</code> that specifies the desired
+weight for each partition and constraint.
+The target partition weight for the ith partition and
+jth constraint is specified at <code>tpwgts[i*ncon+j]</code>.
+The numbering for both partition and constraints starts from 0.
+For each constraint, the sum of the <code>tpwgts[]</code> entries must be 1.0.
+If not present, the graph is divided equally among the partitions.
+More in the description.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>ubvec</strong></td><td><p>An array of size <code>ncon</code> that specifies the allowed load imbalance
+for each constraint.
+For the <code>i</code>-th partition and <code>j</code>-th constraint the allowed
+weight is the <code>ubvec(j)*tpwgts(i*ncon+j)</code>
+fraction of the <code>j</code>-th&rsquo;s constraint total weight.
+If not present, the load imbalance
+tolerance is 1.001 (for <code>ncon = 1</code>) or 1.01 (for <code>ncon &gt; 1</code>).</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>options</strong></td><td><p>An array of options as described in Section 5.4 of the METIS manual.
+See description for valid options.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>objval</strong></td><td><p>Upon successful completion, this variable stores the edge-cut or the
+total communication volume of the partitioning
+solution. The value returned depends on the partitioning&rsquo;s objective
+function.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>part</strong>(nvtxs)</td><td><p>This is a vector of size <code>nvtxs</code> that upon successful completion
+stores the partition vector of the graph.
+The numbering of this vector starts from either 0 or 1,
+depending on the value of <code>options(METIS_OPTION_NUMBERING)</code>.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p>Error code
+<code>METIS_OK</code> - Indicates that the function returned normally.
+<code>METIS_ERROR_INPUT</code> - Indicates an input error.
+<code>METIS_ERROR_MEMORY</code> - Indicates that it could not allocate the required memory.
+<code>METIS_ERROR</code> - Indicates some other type of error.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_partgraphrecursive"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>this function is used to partition a graph into <code>nparts</code></p><a href="../interface/metis_partgraphrecursive.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_PartGraphRecursive(nvtxs, ncon, xadj, adjncy, vwgt, vsize, adjwgt, nparts, tpwgts, ubvec, options, objval, part) result(ans) bind(C, name="METIS_PartGraphRecursive")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nvtxs</strong></td><td><p>The number of vertices in the graph.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ncon</strong></td><td><p>The number of balancing constraints on each node.
+It should be atleast 1.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>xadj</strong>(*)</td><td><p>The adjacency structure of the graph as described in
+section 5.5 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>adjncy</strong>(*)</td><td><p>The adjacency structure of the graph as described in
+section 5.5 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vwgt</strong></td><td><p>The weights of the vertices as described in Section 5.5 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vsize</strong></td><td><p>The size of the vertices for computing the total communication volume
+ as described in section 5.7 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>adjwgt</strong></td><td><p>The weights of the edges as describe in Section 5.5 of the
+<a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nparts</strong></td><td><p>The number of parts to partition the graph.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>tpwgts</strong></td><td><p>This is an array pf size<code>nparts*ncon</code> that specifies the desired
+weight for each partition and constraint.
+The target partition weight for the ith partition and
+jth constraint is specified at <code>tpwgts[i*ncon+j]</code>.
+The numbering for both partition and constraints starts from 0.
+For each constraint, the sum of the <code>tpwgts[]</code> entries must be 1.0.
+If not present, the graph is divided equally among the partitions.
+More in the description.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>ubvec</strong></td><td><p>An array of size <code>ncon</code> that specifies the allowed load imbalance
+for each constraint.
+For the <code>i</code>-th partition and <code>j</code>-th constraint the allowed
+weight is the <code>ubvec(j)*tpwgts(i*ncon+j)</code>
+fraction of the <code>j</code>-th&rsquo;s constraint total weight.
+If not present, the load imbalance
+tolerance is 1.001 (for <code>ncon = 1</code>) or 1.01 (for <code>ncon &gt; 1</code>).</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>options</strong></td><td><p>An array of options as described in Section 5.4 of the METIS manual.
+See description for valid options.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>objval</strong></td><td><p>Upon successful completion, this variable stores the edge-cut or the
+total communication volume of the partitioning
+solution. The value returned depends on the partitioning&rsquo;s objective
+function.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>part</strong>(nvtxs)</td><td><p>This is a vector of size <code>nvtxs</code> that upon successful completion
+stores the partition vector of the graph.
+The numbering of this vector starts from either 0 or 1,
+depending on the value of <code>options(METIS_OPTION_NUMBERING)</code>.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p>Error code
+<code>METIS_OK</code> - Indicates that the function returned normally.
+<code>METIS_ERROR_INPUT</code> - Indicates an input error.
+<code>METIS_ERROR_MEMORY</code> - Indicates that it could not allocate the required memory.
+<code>METIS_ERROR</code> - Indicates some other type of error.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_partmeshdual"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function is used to partition a mesh into <code>nparts</code> parts based on a partitioning of the mesh&rsquo;s dual graph.</p><a href="../interface/metis_partmeshdual.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_PartMeshDual(ne, nn, eptr, eind, vwgt, vsize, ncommon, nparts, tpwgts, options, objval, epart, npart) result(ans) bind(C, NAME="METIS_PartMeshDual")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ne</strong></td><td><p>The number of elements in the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nn</strong></td><td><p>The number of nodes in the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>eptr</strong>(*)</td><td><p>The pair of arrays storing the mesh as described in Section 5.6 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>eind</strong>(*)</td><td><p>The pair of arrays storing the mesh as described in Section 5.6 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vwgt</strong></td><td><p>An array of size <code>ne</code> specifying the weights of the elements. If not present, all elements have an equal weight.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vsize</strong></td><td><p>An array of size <code>ne</code> specifying the size of the elements that is used
+for computing the total comunication volume as described in Section 5.7 of the  <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.
+If not present, the objective is cut or all elements have an equal size.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ncommon</strong></td><td><p>Specifies the number of common nodes that two elements must have in order to put an edge between them in the dual graph. Given two elements e1 and e2, containing n1 and n2 nodes, respectively, then an edge will connect the vertices in the dual graph corresponding to e1 and e2 if the number of common nodes between them is greater than or equal to min(ncommon; n1 − 1; n2 − 1). The default value is 1, indicating that two elements will be connected via an edge as long as they share one node. However, this will tend to create too many edges (increasing the memory and time requirements of the partitioning). The user should select higher values that are better suited for the element types of the mesh that wants to partition. For example, for tetrahedron meshes, ncommon should be 3, which creates an edge between two tets when they share a triangular face (i.e., 3 nodes)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nparts</strong></td><td><p>The number of parts to partition the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>tpwgts</strong></td><td><p>An array of size <code>nparts</code> that specifies the desired weight for each partition. The <em>target partition weight</em> for the <code>i</code>-th partition is specified at <code>tpwgts(i)</code> (the numbering for the
+partitions starts from 0). The sum of the <code>tpwgts</code> entries must be 1.0.
+If not present, the graph is divided equally among the partitions.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>options</strong></td><td><p>An array of options as described in Section 5.4 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>. See description for valid options.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>objval</strong></td><td><p>Upon successful completion, this variable stores either the edgecut or the total communication
+volume of the dual graph&rsquo;s partitioning.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>epart</strong>(ne)</td><td><p>A vector of size <code>ne</code> that upon successful completion stores the partition vector for the elements
+of the mesh. The numbering of this vector starts from either 0 or 1, depending on the value of
+<code>options(METIS_OPTION_NUMBERING)</code>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>npart</strong>(nn)</td><td><p>A vector of size <code>nn</code> that upon successful completion stores the partition vector for the nodes
+of the mesh. The numbering of this vector starts from either 0 or 1, depending on the value of
+<code>options(METIS_OPTION_NUMBERING)</code>.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p><code>METIS_OK</code> - Indicates that the function returned normally.<br />
+<code>METIS_ERROR_INPUT</code> - Indicates an input error.<br />
+<code>METIS_ERROR_MEMORY</code> - Indicates that it could not allocate the required memory.<br />
+<code>METIS_ERROR</code> - Indicates some other type of error.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_partmeshnodal"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>This function us used to partition a mesh into <code>nparts</code> parts based on a partitioning of the mesh&rsquo;s nodal graph.</p><a href="../interface/metis_partmeshnodal.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_PartMeshNodal(ne, nn, eptr, eind, vwgt, vsize, nparts, tpwgts, options, objval, epart, npart) result(ans) bind(C, NAME="METIS_PartMeshNodal" )
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ne</strong></td><td><p>The number of elements in the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nn</strong></td><td><p>The number of nodes in the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>eptr</strong>(*)</td><td><p>The pair of arrays storing the mesh as described in Section 5.6 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>eind</strong>(*)</td><td><p>The pair of arrays storing the mesh as described in Section 5.6 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vwgt</strong></td><td><p>An array of size <code>nn</code> specifying weights of the nodes. If not passed, all nodes have an equal weight.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>vsize</strong></td><td><p>An array of size <code>nn</code> specifying the size of the nodes that is used for computing the
+total comunication volume as described in Section 5.7 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>. If not passed,
+the objective is cut or all nodes have an equal size.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>nparts</strong></td><td><p>The number of parts to partition the mesh.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>tpwgts</strong></td><td><p>An array of size <code>nparts</code> that specifies the desired weight for each partition. The <em>target
+partition weight</em> for the <code>i</code>-th partition is specified at <code>tpwgts(i)</code> (the numbering for the
+partitions starts from 0). The sum of the <code>tpwgts</code> entries must be 1.0. If not passed, the graph
+is divided equally among the partitions.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>options</strong></td><td><p>An array of options as described in Section 5.4 of the <a href="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/manual.pdf">manual</a>. See description for valid options.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>objval</strong></td><td><p>Upon successful completion, this variable stores either the edgecut or the total communication
+volume of the nodal graph&rsquo;s partitioning.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>epart</strong>(ne)</td><td><p>A vector of size <code>ne</code> that upon successful completion stores the partition vector for the elements
+of the mesh. The numbering of this vector starts from either 0 or 1, depending on the value of
+<code>options(METIS_OPTION_NUMBERING)</code>.</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>npart</strong>(nn)</td><td><p>A vector of size <code>nn</code> that upon successful completion stores the partition vector for the nodes
+of the mesh. The numbering of this vector starts from either 0 or 1, depending on the value of
+<code>options(METIS_OPTION_NUMBERING)</code>.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p><code>METIS_OK</code> - Indicates that the function returned normally.
+<code>METIS_ERROR_INPUT</code> - Indicates an input error.
+<code>METIS_ERROR_MEMORY</code> - Indicates that it could not allocate the required memory.
+<code>METIS_ERROR</code> - Indicates some other type of error.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-metis_setdefaultoptions"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Initializes the options array into its default values.</p><a href="../interface/metis_setdefaultoptions.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function METIS_SetDefaultOptions(options) result(ans) bind(C,name="METIS_SetDefaultOptions")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>options</strong>(MAX_METIS_OPTIONS)</td><td><p>The array of options that will be initialized.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=I4B)
+  </small></h4>
+  <p><code>METIS_OK</code> - Indicates that the function returned normally.</p>
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+    </section>
+  <br>
+    
+
+    
+    
+    
+    
+    
+
+    
+    <section>
+    <h2>Subroutines</h2>
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-metismeshtodual"></span><h3>
+public subroutine <a href='../proc/metismeshtodual.html'>METISMeshToDual</a>(NE, NN, NCOMMON, EPTR, EIND, XADJ, ADJNCY, NUMFLAG)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NE</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NN</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NCOMMON</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EPTR</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EIND</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>XADJ</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>ADJNCY</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>NUMFLAG</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-metismeshtonodal"></span><h3>
+public subroutine <a href='../proc/metismeshtonodal.html'>METISMeshToNodal</a>(NE, NN, EPTR, EIND, XADJ, ADJNCY, NUMFLAG)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NE</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NN</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EPTR</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EIND</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>XADJ</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>ALLOCATABLE</td><td>::</td>
+  <td><strong>ADJNCY</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>NUMFLAG</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-metispartgraphkway"></span><h3>
+public subroutine <a href='../proc/metispartgraphkway.html'>METISPartGraphKway</a>(NCON, NPARTS, OBJVAL, PART, XADJ, ADJNCY, OPTIONS, VWGT, VSIZE, ADJWGT, TPWGTS, UBVEC)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NCON</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NPARTS</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>OBJVAL</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>PART</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XADJ</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ADJNCY</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>OPTIONS</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VWGT</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VSIZE</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>ADJWGT</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>TPWGTS</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>UBVEC</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-metispartgraphrecursive"></span><h3>
+public subroutine <a href='../proc/metispartgraphrecursive.html'>METISPartGraphRecursive</a>(NCON, NPARTS, OBJVAL, PART, XADJ, ADJNCY, OPTIONS, VWGT, VSIZE, ADJWGT, TPWGTS, UBVEC)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NCON</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NPARTS</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>OBJVAL</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>PART</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XADJ</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ADJNCY</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>OPTIONS</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VWGT</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VSIZE</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>ADJWGT</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>TPWGTS</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>UBVEC</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-metispartmeshdual"></span><h3>
+public subroutine <a href='../proc/metispartmeshdual.html'>METISPartMeshDual</a>(NCOMMON, NPARTS, OBJVAL, EPART, NPART, EPTR, EIND, OPTIONS, VWGT, VSIZE, TPWGTS)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NCOMMON</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NPARTS</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>OBJVAL</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EPART</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NPART</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EPTR</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EIND</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>OPTIONS</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VWGT</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VSIZE</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>TPWGTS</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-metispartmeshnodal"></span><h3>
+public subroutine <a href='../proc/metispartmeshnodal.html'>METISPartMeshNodal</a>(NPARTS, OBJVAL, EPART, NPART, EPTR, EIND, OPTIONS, VWGT, VSIZE, TPWGTS)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NPARTS</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>OBJVAL</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EPART</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>NPART</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EPTR</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>EIND</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>OPTIONS</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VWGT</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VSIZE</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=DFP),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>TPWGTS</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-metisnodend"></span><h3>
+public subroutine <a href='../proc/metisnodend.html'>MetisNodeND</a>(XADJ, ADJNCY, PERM, IPERM, OPTIONS, VWGT)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>28 Jul 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This function computes fill reducing orderings of sparse matrices using the multilevel nested dissection algorithm.</p><a href="../proc/metisnodend.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>XADJ</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ADJNCY</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>PERM</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>IPERM</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>OPTIONS</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td>TARGET</td><td>::</td>
+  <td><strong>VWGT</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-metissetdefaultoptions"></span><h3>
+public subroutine <a href='../proc/metissetdefaultoptions.html'>MetisSetDefaultOptions</a>(Options)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>Options</strong>(:)</td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    </section>    
+    <br>
+    
+    
+    
+    </div>
+  </div>
+
+  
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>EASIFEM-BASE was developed by Vikas Sharma<br>&copy; 2021 <a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a>
+                                          </p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+             on 2021-10-02 00:01  
+            
+          </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>

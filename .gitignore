@@ -13,7 +13,7 @@
 *.drawio
 *.log
 vscode-settings
-docs/
+# docs/
 media/
 include/
 lib/

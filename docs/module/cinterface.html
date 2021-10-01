@@ -1,0 +1,5938 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <meta name="description" content="A frame work for Expandable And Scalable Infrastructure for Finite Element Methods">
+    
+    <meta name="author" content="Vikas Sharma" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>CInterface &ndash; EASIFEM-BASE</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">EASIFEM-BASE </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+        
+            <li><a href='../page/index.html'>easifemBase</a></li>
+      
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          
+              
+            <li><a href="../lists/files.html">Source Files</a></li>
+        
+        
+        
+            <li><a href="../lists/modules.html">Modules</a></li>
+        
+            
+                                
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+        
+        
+            <li><a href="../lists/absint.html">Abstract Interfaces</a></li>
+               
+            <li><a href="../lists/types.html">Derived Types</a></li>
+        
+               
+        
+        
+            </ul>
+        
+            </li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/absint.html">Abstract Interfaces</a></li>
+                             
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+
+
+
+
+          </ul>
+        
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+  
+  <div class="row">
+    <h1>CInterface 
+    <small>Module</small>
+    
+    </h1>
+    
+<div class="row">
+  <div class="col-lg-12">
+<div class="well well-sm">
+  <ul class="list-inline" style="margin-bottom:0px;display:inline">
+     
+     
+     
+    <li><i class="fa fa-legal"></i> <a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></li> 
+     
+     
+     
+    
+    
+     <li><i class="fa fa-list-ol"></i>
+       <a data-toggle="tooltip"
+    data-placement="bottom" data-html="true"
+    title=" 2.1% of total for modules and submodules.">437 statements</a>
+     </li> 
+     
+     
+     
+    <li><i class="fa fa-code"></i><a href="../src/CInterface.F90"> Source File</a></li>
+     
+     
+  </ul>
+  <ol class="breadcrumb in-well text-right">
+  
+    
+     <li><a href='../sourcefile/cinterface.f90.html'>CInterface.F90</a></li>
+    
+  
+     <li class="active">CInterface</li>
+  </ol>
+</div>
+</div>
+</div>
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    
+<div id="sidebar">
+  
+<h3>Contents</h3>
+ 
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#vars-0">Variables</a></h3></div>
+  <div id="vars-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_enum">C_ENUM</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_long_int">C_LONG_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_long_long_int">C_LONG_LONG_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_short_int">C_SHORT_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_ssize_t">C_SSIZE_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint16_t">C_UINT16_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint32_t">C_UINT32_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint64_t">C_UINT64_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint8_t">C_UINT8_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uintmax_t">C_UINTMAX_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_fast16_t">C_UINT_FAST16_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_fast32_t">C_UINT_FAST32_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_fast64_t">C_UINT_FAST64_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_fast8_t">C_UINT_FAST8_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_least16_t">C_UINT_LEAST16_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_least32_t">C_UINT_LEAST32_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_least64_t">C_UINT_LEAST64_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_least8_t">C_UINT_LEAST8_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned">C_UNSIGNED</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_char">C_UNSIGNED_CHAR</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_int">C_UNSIGNED_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_long">C_UNSIGNED_LONG</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_long_int">C_UNSIGNED_LONG_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_long_long">C_UNSIGNED_LONG_LONG</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_long_long_int">C_UNSIGNED_LONG_LONG_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_short">C_UNSIGNED_SHORT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_short_int">C_UNSIGNED_SHORT_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-nul">NUL</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-0">Interfaces</a></h3></div>
+  <div id="inters-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-assignment%28%3D%29~3">ASSIGNMENT(=)</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c2fortran">C2Fortran</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c2fortran~2">C2Fortran</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_f_string">C_F_STRING</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memcpy">C_MEMCPY</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_ptr_to_int_vec">C_PTR_TO_INT_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_ptr_to_real_vec">C_PTR_TO_Real_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_calloc">C_calloc</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_free">C_free</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_malloc">C_malloc</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memchr">C_memchr</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memcmp">C_memcmp</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memmove">C_memmove</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memset">C_memset</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_realloc">C_realloc</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strcat">C_strcat</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strcmp">C_strcmp</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strcpy">C_strcpy</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strlen">C_strlen</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strncat">C_strncat</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strncmp">C_strncmp</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strncpy">C_strncpy</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-f_c_string">F_C_STRING</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-fortrantoc">FortranToC</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#funcs-0">Functions</a></h3></div>
+  <div id="funcs-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_associated_pure">C_ASSOCIATED_PURE</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_string_alloc">C_STRING_ALLOC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_string_value">C_STRING_VALUE</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_strlen_safe">C_STRLEN_SAFE</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-f_c_string_dup">F_C_STRING_DUP</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#subs-0">Subroutines</a></h3></div>
+  <div class="list-group">
+    <div id="subs-0" class="panel-collapse collapse">
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_f_string_chars">C_F_string_chars</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_int16_vec">C_PTR_TO_Int16_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_int32_vec">C_PTR_TO_Int32_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_int64_vec">C_PTR_TO_Int64_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_int8_vec">C_PTR_TO_Int8_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_real32_vec">C_PTR_TO_Real32_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_real64_vec">C_PTR_TO_Real64_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_string_free">C_STRING_FREE</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-f_c_string_chars">F_C_STRING_CHARS</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-f_c_string_ptr">F_C_STRING_PTR</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-f_string_assign_c_string">F_string_assign_C_string</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    
+      <br>
+    
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Uses</h3>
+      </div>
+      <ul class="list-group">
+      
+      <li class="list-group-item">
+  <ul class="list-inline">
+    
+    <li>StringiFor</li>
+    
+    <li><a href="http://fortranwiki.org/fortran/show/iso_c_binding">iso_c_binding</a></li>
+    
+    <li><a href='../module/globaldata.html'>GlobalData</a></li>
+    
+  </ul>
+      </li>
+      
+      
+      
+      </ul>
+    </div>
+    
+
+    
+    
+
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+      
+<h3>Contents</h3>
+ 
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#vars-1">Variables</a></h3></div>
+  <div id="vars-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_enum">C_ENUM</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_long_int">C_LONG_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_long_long_int">C_LONG_LONG_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_short_int">C_SHORT_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_ssize_t">C_SSIZE_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint16_t">C_UINT16_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint32_t">C_UINT32_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint64_t">C_UINT64_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint8_t">C_UINT8_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uintmax_t">C_UINTMAX_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_fast16_t">C_UINT_FAST16_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_fast32_t">C_UINT_FAST32_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_fast64_t">C_UINT_FAST64_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_fast8_t">C_UINT_FAST8_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_least16_t">C_UINT_LEAST16_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_least32_t">C_UINT_LEAST32_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_least64_t">C_UINT_LEAST64_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_uint_least8_t">C_UINT_LEAST8_T</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned">C_UNSIGNED</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_char">C_UNSIGNED_CHAR</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_int">C_UNSIGNED_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_long">C_UNSIGNED_LONG</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_long_int">C_UNSIGNED_LONG_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_long_long">C_UNSIGNED_LONG_LONG</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_long_long_int">C_UNSIGNED_LONG_LONG_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_short">C_UNSIGNED_SHORT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-c_unsigned_short_int">C_UNSIGNED_SHORT_INT</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#variable-nul">NUL</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#inters-1">Interfaces</a></h3></div>
+  <div id="inters-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-assignment%28%3D%29~3">ASSIGNMENT(=)</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c2fortran">C2Fortran</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c2fortran~2">C2Fortran</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_f_string">C_F_STRING</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memcpy">C_MEMCPY</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_ptr_to_int_vec">C_PTR_TO_INT_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_ptr_to_real_vec">C_PTR_TO_Real_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_calloc">C_calloc</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_free">C_free</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_malloc">C_malloc</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memchr">C_memchr</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memcmp">C_memcmp</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memmove">C_memmove</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_memset">C_memset</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_realloc">C_realloc</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strcat">C_strcat</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strcmp">C_strcmp</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strcpy">C_strcpy</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strlen">C_strlen</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strncat">C_strncat</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strncmp">C_strncmp</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-c_strncpy">C_strncpy</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-f_c_string">F_C_STRING</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#interface-fortrantoc">FortranToC</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#funcs-1">Functions</a></h3></div>
+  <div id="funcs-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_associated_pure">C_ASSOCIATED_PURE</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_string_alloc">C_STRING_ALLOC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_string_value">C_STRING_VALUE</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_strlen_safe">C_STRLEN_SAFE</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-f_c_string_dup">F_C_STRING_DUP</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#subs-1">Subroutines</a></h3></div>
+  <div class="list-group">
+    <div id="subs-1" class="panel-collapse collapse">
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_f_string_chars">C_F_string_chars</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_int16_vec">C_PTR_TO_Int16_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_int32_vec">C_PTR_TO_Int32_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_int64_vec">C_PTR_TO_Int64_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_int8_vec">C_PTR_TO_Int8_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_real32_vec">C_PTR_TO_Real32_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_ptr_to_real64_vec">C_PTR_TO_Real64_VEC</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-c_string_free">C_STRING_FREE</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-f_c_string_chars">F_C_STRING_CHARS</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-f_c_string_ptr">F_C_STRING_PTR</a>
+      
+      <a class="list-group-item" href="../module/cinterface.html#proc-f_string_assign_c_string">F_string_assign_C_string</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+    
+
+    
+    <section>
+    <h2>Variables</h2>
+    
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th>
+
+<th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_enum"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_ENUM</strong></td><td> =</td><td>C_INT</td><td><p>a C enum may not always be a standard C int</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_long_int"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_LONG_INT</strong></td><td> =</td><td>C_LONG</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_long_long_int"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_LONG_LONG_INT</strong></td><td> =</td><td>C_LONG_LONG</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_short_int"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_SHORT_INT</strong></td><td> =</td><td>C_SHORT</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_ssize_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_SSIZE_T</strong></td><td> =</td><td>C_SIZE_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint16_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT16_T</strong></td><td> =</td><td>C_INT16_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint32_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT32_T</strong></td><td> =</td><td>C_INT32_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint64_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT64_T</strong></td><td> =</td><td>C_INT64_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint8_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT8_T</strong></td><td> =</td><td>C_INT8_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uintmax_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINTMAX_T</strong></td><td> =</td><td>C_INTMAX_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint_fast16_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT_FAST16_T</strong></td><td> =</td><td>C_INT_FAST16_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint_fast32_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT_FAST32_T</strong></td><td> =</td><td>C_INT_FAST32_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint_fast64_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT_FAST64_T</strong></td><td> =</td><td>C_INT_FAST64_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint_fast8_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT_FAST8_T</strong></td><td> =</td><td>C_INT_FAST8_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint_least16_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT_LEAST16_T</strong></td><td> =</td><td>C_INT_LEAST16_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint_least32_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT_LEAST32_T</strong></td><td> =</td><td>C_INT_LEAST32_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint_least64_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT_LEAST64_T</strong></td><td> =</td><td>C_INT_LEAST64_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_uint_least8_t"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UINT_LEAST8_T</strong></td><td> =</td><td>C_INT_LEAST8_T</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED</strong></td><td> =</td><td>C_INT</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned_char"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED_CHAR</strong></td><td> =</td><td>C_SIGNED_CHAR</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned_int"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED_INT</strong></td><td> =</td><td>C_UNSIGNED</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned_long"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED_LONG</strong></td><td> =</td><td>C_LONG</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned_long_int"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED_LONG_INT</strong></td><td> =</td><td>C_LONG</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned_long_long"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED_LONG_LONG</strong></td><td> =</td><td>C_LONG_LONG</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned_long_long_int"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED_LONG_LONG_INT</strong></td><td> =</td><td>C_LONG_LONG</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned_short"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED_SHORT</strong></td><td> =</td><td>C_SHORT</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-c_unsigned_short_int"></span>integer(kind=I4B),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>C_UNSIGNED_SHORT_INT</strong></td><td> =</td><td>C_SHORT</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-nul"></span>character(kind=C_CHAR,len=1),</td>
+  
+  <td>public,</td>
+  <td>parameter</td><td>::</td>
+  <td><strong>NUL</strong></td><td> =</td><td>C_NULL_CHAR</td><td><p>C string terminator alais using the 3-letter ASCII name.
+The C_ prefix is not used because it is just an ASCII character.
+In C, &ldquo;char&rdquo; is distinct from &ldquo;signed char&rdquo;, unlike integers.
+The plain &ldquo;char&rdquo; type is specific for text/string values, whereas
+&ldquo;signed char&rdquo; should indicate 1-byte integer data.
+Most ISO-C systems have wide chars &ldquo;wchar_t&rdquo;, but Fortran compilers
+have limited support for different character kinds. UTF encoding
+adds more complexity. This should be updated as Fortran compilers
+include support for more character types.</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+    </section>
+    <br>
+    
+    
+    
+    
+    
+    <section>
+   <h2>Interfaces</h2>
+   
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-assignment%28%3D%29~3"></span><h3>private interface <a href='../interface/assignment%28%3D%29~3.html'>ASSIGNMENT(=)</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/f_string_assign_c_string.html'>F_string_assign_C_string</a>(F_string, C_string)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Set a fixed-length Fortran string to the value of a C string.</p><a href="../proc/f_string_assign_c_string.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c2fortran"></span><h3>public interface <a href='../interface/c2fortran.html'>C2Fortran</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/f_string_assign_c_string.html'>F_string_assign_C_string</a>(F_string, C_string)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Set a fixed-length Fortran string to the value of a C string.</p><a href="../proc/f_string_assign_c_string.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_f_string_chars.html'>C_F_string_chars</a>(C_string, F_string)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a C string, passed as a char-array reference, to a Fortran string.</p><a href="../proc/c_f_string_chars.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(kind=C_CHAR,len=1),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong>(*)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c2fortran~2"></span><h3>private interface <a href='../interface/c2fortran~2.html'>C2Fortran</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_int8_vec.html'>C_PTR_TO_Int8_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int8_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int8),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_int16_vec.html'>C_PTR_TO_Int16_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int16_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int16),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_int32_vec.html'>C_PTR_TO_Int32_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int32_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int32),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_int64_vec.html'>C_PTR_TO_Int64_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int64_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int64),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_real32_vec.html'>C_PTR_TO_Real32_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to real vector</p><a href="../proc/c_ptr_to_real32_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=Real32),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_real64_vec.html'>C_PTR_TO_Real64_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to real vector</p><a href="../proc/c_ptr_to_real64_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=Real64),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_f_string"></span><h3>public interface <a href='../interface/c_f_string.html'>C_F_STRING</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/f_string_assign_c_string.html'>F_string_assign_C_string</a>(F_string, C_string)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Set a fixed-length Fortran string to the value of a C string.</p><a href="../proc/f_string_assign_c_string.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_f_string_chars.html'>C_F_string_chars</a>(C_string, F_string)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a C string, passed as a char-array reference, to a Fortran string.</p><a href="../proc/c_f_string_chars.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(kind=C_CHAR,len=1),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong>(*)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_memcpy"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Copy N bytes of SRC to DEST, no aliasing or overlapping allowed.</p><a href="../interface/c_memcpy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_MEMCPY(dest, src, n) result(result) bind(C,name="memcpy")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_VOID_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>dest</strong></td><td><p>target=intent(out)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_VOID_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>src</strong></td><td><p>target=INTENT(IN)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>n</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_VOID_PTR)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_ptr_to_int_vec"></span><h3>public interface <a href='../interface/c_ptr_to_int_vec.html'>C_PTR_TO_INT_VEC</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_int8_vec.html'>C_PTR_TO_Int8_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int8_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int8),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_int16_vec.html'>C_PTR_TO_Int16_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int16_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int16),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_int32_vec.html'>C_PTR_TO_Int32_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int32_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int32),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_int64_vec.html'>C_PTR_TO_Int64_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int64_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int64),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_ptr_to_real_vec"></span><h3>public interface <a href='../interface/c_ptr_to_real_vec.html'>C_PTR_TO_Real_VEC</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_real32_vec.html'>C_PTR_TO_Real32_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to real vector</p><a href="../proc/c_ptr_to_real32_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=Real32),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/c_ptr_to_real64_vec.html'>C_PTR_TO_Real64_VEC</a>(vec, cptr)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to real vector</p><a href="../proc/c_ptr_to_real64_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=Real64),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_calloc"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>CAlloc function</p><a href="../interface/c_calloc.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_calloc(nmemb, size) bind(C,name="calloc")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>nmemb</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>size</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(c_void_ptr)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_free"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <a href="../interface/c_free.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public subroutine C_free(ptr) bind(C,name="0")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_void_ptr),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>ptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_malloc"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <a href="../interface/c_malloc.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_malloc(size) bind(C,name="malloc")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>size</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(c_void_ptr)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_memchr"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Search N bytes of S for C.</p><a href="../interface/c_memchr.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public pure function C_memchr(s, c, n) result(result) bind(C,name="memchr")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_void_ptr),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_int),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>c</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>n</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_void_ptr)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_memcmp"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Compare N bytes of S1 and S2.</p><a href="../interface/c_memcmp.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public pure function C_memcmp(s1, s2, n) result(result) bind(C,name="memcmp")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_void_ptr),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s1</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_void_ptr),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s2</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>n</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=C_int)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_memmove"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Copy N bytes of SRC to DEST, guaranteeing correct behavior for overlapping strings.</p><a href="../interface/c_memmove.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_memmove(dest, src, n) result(result) bind(C,name="memmove")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_void_ptr),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>dest</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_void_ptr),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>src</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>n</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_void_ptr)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_memset"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Set N bytes of S to C.</p><a href="../interface/c_memset.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_memset(s, c, n) result(result) bind(C,name="memset")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_void_ptr),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_int),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>c</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>n</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_void_ptr)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_realloc"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <a href="../interface/c_realloc.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private function C_realloc(ptr, size) bind(C,name="realloc")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_void_ptr),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>ptr</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>size</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(c_void_ptr)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_strcat"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Append SRC onto DEST.</p><a href="../interface/c_strcat.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_strcat(dest, src) result(result) bind(C,name="strcat")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>dest</strong></td><td><p>target=intent(out)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>src</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_CHAR_PTR)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_strcmp"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Compare S1 and S2.</p><a href="../interface/c_strcmp.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public pure function C_strcmp(s1, s2) result(result) bind(C,name="strcmp")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s1</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s2</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=C_int)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_strcpy"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Copy SRC to DEST.</p><a href="../interface/c_strcpy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_strcpy(dest, src) result(result) bind(C,name="strcpy")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>dest</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>src</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_CHAR_PTR)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_strlen"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Return the length of S.</p><a href="../interface/c_strlen.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public pure function C_strlen(s) result(result) bind(C,name="strlen")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=C_SIZE_T)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_strncat"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Append no more than N characters from SRC onto DEST.</p><a href="../interface/c_strncat.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_strncat(dest, src, n) result(result) bind(C,name="strncat")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>dest</strong></td><td><p>target=intent(out)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>src</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>n</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_CHAR_PTR)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_strncmp"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Compare N characters of S1 and S2.</p><a href="../interface/c_strncmp.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public pure function C_strncmp(s1, s2, n) result(result) bind(C,name="strncmp")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s1</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s2</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>n</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=C_int)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-c_strncpy"></span><h3>interface 
+    
+  </h3></div>
+  
+  <div class="panel-body">
+    
+    <p>Copy no more than N characters of SRC to DEST.</p><a href="../interface/c_strncpy.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+  </div>
+  
+  <ul class="list-group">
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+public function C_strncpy(dest, src, n) result(result) bind(C,name="strncpy")
+    
+    
+   
+</h3>
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>value</td><td>::</td>
+  <td><strong>dest</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>value</td><td>::</td>
+  <td><strong>src</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>value</td><td>::</td>
+  <td><strong>n</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_CHAR_PTR)
+  </small></h4>
+  
+    
+
+    </li>
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-f_c_string"></span><h3>public interface <a href='../interface/f_c_string.html'>F_C_STRING</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/f_c_string_chars.html'>F_C_STRING_CHARS</a>(F_string, C_string, C_string_len)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a Fortran string to a C string passed by char-array reference.</p><a href="../proc/f_c_string_chars.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(kind=C_CHAR,len=1),</td>
+  <td>intent(out),</td>
+  <td></td>
+  
+  <td>DIMENSION(*)</td><td>::</td>
+  <td><strong>C_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string_len</strong></td><td><p>Max string length,
+INCLUDING THE TERMINAL NUL</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/f_c_string_ptr.html'>F_C_STRING_PTR</a>(F_string, C_string, C_string_len)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a Fortran string to an allocated C string pointer.</p><a href="../proc/f_c_string_ptr.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong></td><td><p>target = intent(out)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string_len</strong></td><td><p>Max string length,
+INCLUDING THE TERMINAL NUL</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+     
+<div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="interface-fortrantoc"></span><h3>public interface <a href='../interface/fortrantoc.html'>FortranToC</a>
+    
+  </h3></div>
+  
+  <ul class="list-group">
+  
+  
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/f_c_string_chars.html'>F_C_STRING_CHARS</a>(F_string, C_string, C_string_len)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a Fortran string to a C string passed by char-array reference.</p><a href="../proc/f_c_string_chars.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(kind=C_CHAR,len=1),</td>
+  <td>intent(out),</td>
+  <td></td>
+  
+  <td>DIMENSION(*)</td><td>::</td>
+  <td><strong>C_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string_len</strong></td><td><p>Max string length,
+INCLUDING THE TERMINAL NUL</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+    <li class="list-group-item">
+    
+    
+    <h3>
+private subroutine <a href='../proc/f_c_string_ptr.html'>F_C_STRING_PTR</a>(F_string, C_string, C_string_len)
+    
+    
+   
+</h3>
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a Fortran string to an allocated C string pointer.</p><a href="../proc/f_c_string_ptr.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong></td><td><p>target = intent(out)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string_len</strong></td><td><p>Max string length,
+INCLUDING THE TERMINAL NUL</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+    </li>
+  
+  
+  </ul>
+</div>
+
+    
+    </section>
+  <br>
+    
+
+    
+    
+    
+    
+     
+    <section>
+    <h2>Functions</h2>
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_associated_pure"></span><h3>
+public pure function <a href='../proc/c_associated_pure.html'>C_ASSOCIATED_PURE</a>(ptr) result(associated)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_ptr),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>logical
+  </small></h4>
+  
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_string_alloc"></span><h3>
+public function <a href='../proc/c_string_alloc.html'>C_STRING_ALLOC</a>(length) result(C_String)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Allocate memory space and return C string</p><a href="../proc/c_string_alloc.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=C_SIZE_T),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>length</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_PTR)
+  </small></h4>
+  
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_string_value"></span><h3>
+public function <a href='../proc/c_string_value.html'>C_STRING_VALUE</a>(C_string) result(F_string)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Returns the value of target of C string</p><a href="../proc/c_string_value.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>character(len=C_STRLEN_SAFE)
+  </small></h4>
+  
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_strlen_safe"></span><h3>
+public pure function <a href='../proc/c_strlen_safe.html'>C_STRLEN_SAFE</a>(s) result(length)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>This function returns length of string</p><a href="../proc/c_strlen_safe.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>VALUE</td><td>::</td>
+  <td><strong>s</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>integer(kind=C_SIZE_T)
+  </small></h4>
+  
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-f_c_string_dup"></span><h3>
+public function <a href='../proc/f_c_string_dup.html'>F_C_STRING_DUP</a>(F_string, length) result(C_string)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Convert Fortran string to C string</p><a href="../proc/f_c_string_dup.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>length</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  
+  
+  
+  
+     <h4>Return Value <small>type(C_PTR)
+  </small></h4>
+  
+    
+
+  </div>
+  </div>
+
+    
+    </section>
+    <br>
+    
+
+    
+    <section>
+    <h2>Subroutines</h2>
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_f_string_chars"></span><h3>
+private subroutine <a href='../proc/c_f_string_chars.html'>C_F_string_chars</a>(C_string, F_string)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a C string, passed as a char-array reference, to a Fortran string.</p><a href="../proc/c_f_string_chars.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(kind=C_CHAR,len=1),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong>(*)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_ptr_to_int16_vec"></span><h3>
+private subroutine <a href='../proc/c_ptr_to_int16_vec.html'>C_PTR_TO_Int16_VEC</a>(vec, cptr)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int16_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int16),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_ptr_to_int32_vec"></span><h3>
+private subroutine <a href='../proc/c_ptr_to_int32_vec.html'>C_PTR_TO_Int32_VEC</a>(vec, cptr)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int32_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int32),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_ptr_to_int64_vec"></span><h3>
+private subroutine <a href='../proc/c_ptr_to_int64_vec.html'>C_PTR_TO_Int64_VEC</a>(vec, cptr)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int64_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int64),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_ptr_to_int8_vec"></span><h3>
+private subroutine <a href='../proc/c_ptr_to_int8_vec.html'>C_PTR_TO_Int8_VEC</a>(vec, cptr)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to integer vector</p><a href="../proc/c_ptr_to_int8_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=Int8),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_ptr_to_real32_vec"></span><h3>
+private subroutine <a href='../proc/c_ptr_to_real32_vec.html'>C_PTR_TO_Real32_VEC</a>(vec, cptr)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to real vector</p><a href="../proc/c_ptr_to_real32_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=Real32),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_ptr_to_real64_vec"></span><h3>
+private subroutine <a href='../proc/c_ptr_to_real64_vec.html'>C_PTR_TO_Real64_VEC</a>(vec, cptr)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Converts C pointer to real vector</p><a href="../proc/c_ptr_to_real64_vec.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=Real64),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>vec</strong>(:)</td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>cptr</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-c_string_free"></span><h3>
+public subroutine <a href='../proc/c_string_free.html'>C_STRING_FREE</a>(string)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_PTR),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-f_c_string_chars"></span><h3>
+private subroutine <a href='../proc/f_c_string_chars.html'>F_C_STRING_CHARS</a>(F_string, C_string, C_string_len)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a Fortran string to a C string passed by char-array reference.</p><a href="../proc/f_c_string_chars.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(kind=C_CHAR,len=1),</td>
+  <td>intent(out),</td>
+  <td></td>
+  
+  <td>DIMENSION(*)</td><td>::</td>
+  <td><strong>C_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string_len</strong></td><td><p>Max string length,
+INCLUDING THE TERMINAL NUL</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-f_c_string_ptr"></span><h3>
+private subroutine <a href='../proc/f_c_string_ptr.html'>F_C_STRING_PTR</a>(F_string, C_string, C_string_len)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Copy a Fortran string to an allocated C string pointer.</p><a href="../proc/f_c_string_ptr.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong></td><td><p>target = intent(out)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer(kind=I4B),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string_len</strong></td><td><p>Max string length,
+INCLUDING THE TERMINAL NUL</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-f_string_assign_c_string"></span><h3>
+private subroutine <a href='../proc/f_string_assign_c_string.html'>F_string_assign_C_string</a>(F_string, C_string)
+    
+    
+   
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+  <dl class="dl-horizontal">
+    
+    
+    <dt>Date</dt><dd>23 Sept 2021</dd>
+    
+    
+    <dt>License</dt><dd><a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a></dd>
+    
+    
+    
+    
+  </dl>
+
+
+
+<p>Set a fixed-length Fortran string to the value of a C string.</p><a href="../proc/f_string_assign_c_string.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>character(len=*),</td>
+  <td>intent(out)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>F_string</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>type(C_CHAR_PTR),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>C_string</strong></td><td></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    </section>    
+    <br>
+    
+    
+    
+    </div>
+  </div>
+
+  
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>EASIFEM-BASE was developed by Vikas Sharma<br>&copy; 2021 <a rel="license" href="http://www.gnu.org/licenses/old-licenses/fdl-1.2.en.html">GNU Free Documentation License</a>
+                                          </p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+             on 2021-10-02 00:01  
+            
+          </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>
