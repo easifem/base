@@ -20,7 +20,7 @@ INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
 LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
 !   Define internal variables
 INTEGER( I4B ) :: I
-
+CALL setDefaultSettings
 IF( PRESENT( unitNo ) ) THEN; I = unitNo; ELSE; I = stdout; END IF
 CALL DISP( &
   & title = TRIM(colorize( msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &

@@ -19,6 +19,7 @@ CHARACTER( LEN = * ), INTENT( IN ) :: msg
 INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
 ! Define internal variables
 INTEGER( I4B ) :: I
+CALL setDefaultSettings
 I = stdout; IF( PRESENT( unitNo ) ) I = unitNo
 CALL DISP( &
   & title=TRIM(colorize( msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &

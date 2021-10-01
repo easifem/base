@@ -28,6 +28,7 @@ LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
 ! Define internal variables
 INTEGER( I4B ) :: I
 CHARACTER( LEN = 3 ) :: orient_
+CALL setDefaultSettings
 !> main
 IF( PRESENT( unitNo ) ) THEN
   I = unitNo

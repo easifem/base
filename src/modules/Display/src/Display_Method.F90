@@ -51,6 +51,7 @@ TYPE( DISP_SETTINGS ), PUBLIC, PARAMETER :: &
   & advance="YES", matsep=" ", orient="COL", style="LEFT", &
   & trim="AUTO", ZEROAS="" )
 TYPE( DISP_SETTINGS ), PARAMETER :: DisplayProfileOriginal = DISP_SETTINGS()
+LOGICAL( LGT ), SAVE :: defaultSettingSet = .FALSE.
 
 !----------------------------------------------------------------------------
 !                                                                    Display
@@ -94,6 +95,19 @@ INTERFACE Display
 END INTERFACE
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                         setDefaultSetting
+!----------------------------------------------------------------------------
+
+SUBROUTINE setDefaultSettings
+  IF( defaultSettingSet ) THEN
+    RETURN
+  ELSE
+    CALL DISP_SET( DisplayProfileTerminal )
+    defaultSettingSet = .TRUE.
+  END IF
+END SUBROUTINE setDefaultSettings
 
 !----------------------------------------------------------------------------
 !                                                          setDisplayProfile
@@ -144,6 +158,7 @@ SUBROUTINE Display_Str( msg, unitno )
   !! unit no
   ! Internal variables
   INTEGER( I4B ) :: i
+  CALL setDefaultSettings
   if( PRESENT( unitno ) ) then
     i = unitno
   ELSE
