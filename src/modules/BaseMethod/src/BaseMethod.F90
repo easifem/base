@@ -39,7 +39,7 @@ MODULE BaseMethod
     & penf_Init, penf_print
   USE BeFoR64
   USE FACE
-  ! USE FPL
+  USE FPL
   USE GlobalData
   USE OGPF
   USE Test_Method
