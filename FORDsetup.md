@@ -6,14 +6,10 @@ project_website: http://www.easifem.com
 license: gfdl
 project_dir: ./src
 media_dir: ./media
-page_dir: ./pages
-output_dir: ./docs
+page_dir: ${pages}/docs/easifemBase
+output_dir: ${pages}/docs/FORD/easifemBase
 exclude_dir:  ./src/submodules/
               ./src/modules/BLAS95/
-              ./src/modules/LAPACK95/
-              ./src/modules/H5Fortran/
-              ./src/modules/Szaghi/
-              ./src/modules/Display/
 author: Vikas Sharma
 author_description: Ph. D.
 	Graduate School of Agriculture, Kyoto University,
@@ -24,11 +20,11 @@ author_pic:
 twitter:
 website:
 graph: false #time consuming
-source: true #time consuming
+source: false #time consuming
 display: public
          protected
          private
-page: true
+page: false
 sort: alpha
 coloured_edges: true
 extra_filetypes:  inc !
@@ -40,7 +36,7 @@ predocmark_alt: >
 predocmark: <
 docmark_alt: *
 docmark: !
-fpp_extensions: f90
+fpp_extensions: F90
 preprocesses: true
 
 {!./README.md!}
