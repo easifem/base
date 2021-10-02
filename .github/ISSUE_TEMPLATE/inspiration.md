@@ -2,7 +2,8 @@
 name: Inspiration
 about: Tell us about other projects so that we can use it in easifemBase
 title: "[Inspiration]"
-labels: Inspiration
+labels: 'Inspiration'
+        'wishlist'
 assignees: vickysharma0812
 
 ---
