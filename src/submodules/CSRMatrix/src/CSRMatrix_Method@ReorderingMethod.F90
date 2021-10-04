@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( CSRMatrix_Method ) ReorderingMethod
+SUBMODULE(CSRMatrix_Method) ReorderingMethod
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

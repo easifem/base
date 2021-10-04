@@ -19,7 +19,7 @@
 ! date: 	25 Feb 2021
 ! summary: 	This submodule contains the contructor methods for [[IntVector_]]
 
-SUBMODULE ( IntVector_Method ) Constructor
+SUBMODULE ( IntVector_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( FEMatrix_Method ) MassMatrix
+SUBMODULE(FEMatrix_Method) MassMatrix
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

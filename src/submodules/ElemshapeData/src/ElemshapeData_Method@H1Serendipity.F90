@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( ElemShapeData_Method ) H1Serendipity
+SUBMODULE(ElemShapeData_Method) H1Serendipity
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

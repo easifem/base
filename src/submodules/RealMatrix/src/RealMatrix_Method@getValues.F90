@@ -1,4 +1,4 @@
-SUBMODULE( RealMatrix_Method ) getValues
+SUBMODULE(RealMatrix_Method) getValues
 USE BaseMethod
 IMPLICIT NONE
 

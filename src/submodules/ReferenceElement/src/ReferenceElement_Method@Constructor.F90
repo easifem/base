@@ -19,7 +19,7 @@
 ! date: 1 March 2021
 ! summary: This submodule contains constructor methods of [[ReferenceElement_]]
 
-SUBMODULE( ReferenceElement_Method ) Constructor
+SUBMODULE(ReferenceElement_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

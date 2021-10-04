@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( DOF_Method ) setMethod
+SUBMODULE(DOF_Method) setMethod
   !! This submodule defines the methods for setting/changing values in
   !! fortran real vector using [[dof_]] object
 

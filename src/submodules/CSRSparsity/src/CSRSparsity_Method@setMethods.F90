@@ -19,7 +19,7 @@
 ! date: 13 Jul 2021
 ! summary: Input output related methods
 
-SUBMODULE( CSRSparsity_Method ) setMethods
+SUBMODULE(CSRSparsity_Method) setMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

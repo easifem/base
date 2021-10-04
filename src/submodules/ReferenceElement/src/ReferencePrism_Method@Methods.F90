@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: This submodule defines methods for [[ReferencePrism_]]
 
-SUBMODULE( ReferencePrism_Method ) Methods
+SUBMODULE(ReferencePrism_Method) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: 	This submodule contains methods for [[ReferencePoint_]]
 
-SUBMODULE( ReferencePoint_Method ) Methods
+SUBMODULE(ReferencePoint_Method) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

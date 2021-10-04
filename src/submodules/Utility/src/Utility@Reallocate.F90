@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	Methods for reallocating arrays
 
-SUBMODULE( Utility ) Reallocate
+SUBMODULE(Utility ) Reallocate
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

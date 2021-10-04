@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( ElemShapeData_Method ) DGLagrange
+SUBMODULE(ElemShapeData_Method) DGLagrange
 IMPLICIT NONE
 CONTAINS
 

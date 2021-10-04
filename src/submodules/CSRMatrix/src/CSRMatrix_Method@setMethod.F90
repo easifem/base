@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains method for setting values in [[CSRMatrix_]]
 
-SUBMODULE( CSRMatrix_Method ) setMethod
+SUBMODULE(CSRMatrix_Method) setMethod
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

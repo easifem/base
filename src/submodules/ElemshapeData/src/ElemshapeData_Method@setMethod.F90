@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( ElemshapeData_Method ) setMethod
+SUBMODULE(ElemshapeData_Method) setMethod
 USE BaseMethod
 IMPLICIT NONE
 

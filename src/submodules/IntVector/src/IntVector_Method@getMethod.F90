@@ -20,7 +20,7 @@
 ! date: 	25 Feb 2021
 ! summary: This submodule implements get methods of [[IntVector_]]
 
-SUBMODULE ( IntVector_Method ) getMethod
+SUBMODULE ( IntVector_Method) getMethod
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

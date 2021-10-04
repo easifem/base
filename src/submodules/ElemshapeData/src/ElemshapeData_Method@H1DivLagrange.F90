@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( ElemShapeData_Method ) H1DivLagrange
+SUBMODULE(ElemShapeData_Method) H1DivLagrange
 IMPLICIT NONE
 CONTAINS
 

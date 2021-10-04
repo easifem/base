@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains outerprod
 
-SUBMODULE( Utility ) PROD
+SUBMODULE(Utility ) PROD
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

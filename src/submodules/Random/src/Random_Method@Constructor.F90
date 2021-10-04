@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( Random_Method ) Constructor
+SUBMODULE(Random_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE( CSRMatrix_Method ) ILUTMethods
+SUBMODULE(CSRMatrix_Method) ILUTMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

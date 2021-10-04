@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: VTK format element
 
-SUBMODULE( ReferenceElement_Method ) VTK
+SUBMODULE(ReferenceElement_Method) VTK
 IMPLICIT NONE
 
 INTEGER( I4B ), PARAMETER :: &

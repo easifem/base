@@ -20,7 +20,7 @@
 ! summary: 	This submodule contains the implementation of construction relted methods defined inside [[Vector3D_Method]] module.
 !
 
-SUBMODULE( Vector3D_Method ) Constructor
+SUBMODULE(Vector3D_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

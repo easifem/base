@@ -19,7 +19,7 @@
 ! date: 	7 March 2021
 ! summary: This module contains IO methods for [[RealMatrix_]]
 
-SUBMODULE( RealMatrix_Method ) IO
+SUBMODULE(RealMatrix_Method) IO
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

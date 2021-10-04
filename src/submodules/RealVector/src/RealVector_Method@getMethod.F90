@@ -19,7 +19,7 @@
 ! date: 	25 Feb 2021
 ! summary: 	This submodule contains get methods of [[RealVector_]]
 
-SUBMODULE ( RealVector_Method ) getMethod
+SUBMODULE ( RealVector_Method) getMethod
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

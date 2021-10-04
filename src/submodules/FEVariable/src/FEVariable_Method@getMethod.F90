@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( FEVariable_Method ) GetMethod
+SUBMODULE(FEVariable_Method) GetMethod
 IMPLICIT NONE
 CONTAINS
 

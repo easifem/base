@@ -19,7 +19,7 @@
 ! date: 13 July 2021
 ! summary: 	Methods related to CSR sparsity
 
-SUBMODULE( CSRSparsity_Method ) Constructor
+SUBMODULE(CSRSparsity_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

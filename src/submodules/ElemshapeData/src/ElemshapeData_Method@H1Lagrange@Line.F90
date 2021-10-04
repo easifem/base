@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( ElemshapeData_Method : H1Lagrange ) Line
+SUBMODULE(ElemshapeData_Method : H1Lagrange ) Line
 USE BaseMethod
 IMPLICIT NONE
 

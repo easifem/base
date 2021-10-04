@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( IterationData_Method ) Constructor
+SUBMODULE(IterationData_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

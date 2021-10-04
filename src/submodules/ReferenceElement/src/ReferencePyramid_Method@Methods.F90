@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: 	This submodule contians methods for [[ReferencePyramid_]]
 
-SUBMODULE( ReferencePyramid_Method ) Methods
+SUBMODULE(ReferencePyramid_Method) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

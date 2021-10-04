@@ -19,7 +19,7 @@
 ! date: 	1 March 2021
 ! summary: 	This submodule contains IO methods for [[ReferenceElement_]]
 
-SUBMODULE( ReferenceElement_Method ) IO
+SUBMODULE(ReferenceElement_Method) IO
 USE BaseMethod
 CONTAINS
 

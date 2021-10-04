@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( QuadraturePoint_Method:GaussLegendre ) Hexahedron
+SUBMODULE(QuadraturePoint_Method:GaussLegendre ) Hexahedron
 IMPLICIT NONE
 CONTAINS
 

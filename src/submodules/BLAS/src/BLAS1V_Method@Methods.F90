@@ -19,7 +19,7 @@
 ! date: 	25 Feb 2021
 ! summary: 	This submodule  implements BLAS1 methods of [[RealVector_]]
 
-SUBMODULE ( BLAS1V_Method ) Methods
+SUBMODULE ( BLAS1V_Method) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

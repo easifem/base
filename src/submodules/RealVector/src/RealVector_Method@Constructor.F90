@@ -19,7 +19,7 @@
 ! date: 25 Feb 2021
 ! summary: This module contains constructor methods of [[RealVector_]]
 
-SUBMODULE ( RealVector_Method ) Constructor
+SUBMODULE ( RealVector_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 

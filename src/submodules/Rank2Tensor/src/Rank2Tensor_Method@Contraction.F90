@@ -19,7 +19,7 @@
 ! date: 	17 March 2021
 ! summary: 	Submodules for computing the contraction
 
-SUBMODULE( Rank2Tensor_Method ) Contraction
+SUBMODULE(Rank2Tensor_Method) Contraction
 USE BaseMethod
 #define T_11 T( 1, 1 )
 #define T_12 T( 1, 2 )

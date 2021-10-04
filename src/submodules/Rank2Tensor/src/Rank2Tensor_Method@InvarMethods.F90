@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( Rank2Tensor_Method ) InvarMethods
+SUBMODULE(Rank2Tensor_Method) InvarMethods
 USE BaseMethod
 #define T_11 T( 1, 1 )
 #define T_12 T( 1, 2 )

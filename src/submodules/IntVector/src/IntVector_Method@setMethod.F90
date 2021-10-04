@@ -19,7 +19,7 @@
 ! date: 	25 Feb 2021
 ! summary: 	This submodule implements set methods of [[IntVector_]]
 
-SUBMODULE( IntVector_Method ) setMethod
+SUBMODULE(IntVector_Method) setMethod
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

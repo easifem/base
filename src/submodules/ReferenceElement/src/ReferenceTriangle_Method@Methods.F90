@@ -19,7 +19,7 @@
 ! date: 	2 March 2021
 ! summary: This submodule contains methods for [[ReferenceTriangle_]]
 
-SUBMODULE( ReferenceTriangle_Method ) Methods
+SUBMODULE(ReferenceTriangle_Method) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

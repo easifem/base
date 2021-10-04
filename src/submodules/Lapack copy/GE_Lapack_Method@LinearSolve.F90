@@ -1,4 +1,4 @@
-SUBMODULE( GE_Lapack_Method ) LinearSolve
+SUBMODULE(GE_Lapack_Method) LinearSolve
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

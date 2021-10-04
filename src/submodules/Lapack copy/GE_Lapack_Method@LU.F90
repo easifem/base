@@ -1,4 +1,4 @@
-SUBMODULE( GE_Lapack_Method ) LU
+SUBMODULE(GE_Lapack_Method) LU
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

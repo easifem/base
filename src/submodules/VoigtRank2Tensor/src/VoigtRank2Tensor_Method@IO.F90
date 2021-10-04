@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>.
 !
 
-SUBMODULE( VoigtRank2Tensor_Method ) IO
+SUBMODULE(VoigtRank2Tensor_Method) IO
 Use BaseMethod
 IMPLICIT NONE
 CONTAINS

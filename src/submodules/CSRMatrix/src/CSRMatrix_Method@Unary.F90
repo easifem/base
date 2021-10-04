@@ -62,7 +62,7 @@
 ! | `CSRKVSTC`|  Finds block column partitioning of matrix in CSR format   |
 ! | `KVSTMERGE`| Merges block partitionings, for conformal row/col pattern |
 
-SUBMODULE( CSRMatrix_Method ) Unary
+SUBMODULE(CSRMatrix_Method) Unary
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

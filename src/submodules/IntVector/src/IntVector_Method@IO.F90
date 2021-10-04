@@ -19,7 +19,7 @@
 ! date: 	28 Feb 2021
 ! summary: 	This submodule contains Input/Output methods for [[IntVector_]]
 
-SUBMODULE( IntVector_Method ) IO
+SUBMODULE(IntVector_Method) IO
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

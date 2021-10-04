@@ -6,9 +6,9 @@
 # 16/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 
-target_sources(
+TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/disp/disp_i1mod.F90
   ${src_path}/disp/disp_i2mod.F90
