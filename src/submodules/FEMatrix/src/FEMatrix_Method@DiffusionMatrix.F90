@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( FEMatrix_Method ) DiffusionMatrix
+SUBMODULE(FEMatrix_Method) DiffusionMatrix
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

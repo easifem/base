@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( FEMatrix_Method ) NitscheMatrix
+SUBMODULE(FEMatrix_Method) NitscheMatrix
 USE BaseMethod
 IMPLICIT NONE
 

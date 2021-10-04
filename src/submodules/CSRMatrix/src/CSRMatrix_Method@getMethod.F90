@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE( CSRMatrix_Method ) getMethod
+SUBMODULE(CSRMatrix_Method) getMethod
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

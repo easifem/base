@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( VoigtRank2Tensor_Method ) Constructor
+SUBMODULE(VoigtRank2Tensor_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

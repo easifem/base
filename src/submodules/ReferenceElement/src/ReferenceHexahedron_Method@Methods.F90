@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: This module contains method for [[ReferenceHexahedron_]]
 
-SUBMODULE( ReferenceHexahedron_Method ) Methods
+SUBMODULE(ReferenceHexahedron_Method) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

@@ -23,7 +23,7 @@
 !
 ! This submodule of [[BoiundingBox_Method]] implements the method defined in the parent module
 
-SUBMODULE( BoundingBox_Method ) Constructor
+SUBMODULE(BoundingBox_Method) Constructor
 USE Display_Method, ONLY: BlankLines
 IMPLICIT NONE
 CONTAINS

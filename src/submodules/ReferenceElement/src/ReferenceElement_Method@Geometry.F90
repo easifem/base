@@ -19,7 +19,7 @@
 ! date: 1 March 2021
 ! summary: This sumodule contains method for geometry
 
-SUBMODULE( ReferenceElement_Method ) Geometry
+SUBMODULE(ReferenceElement_Method) Geometry
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

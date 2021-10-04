@@ -19,7 +19,7 @@
 ! date: 	25 Feb 2021
 ! summary: 	This submodule contains set methods of [[RealVector_]]
 
-SUBMODULE( RealVector_Method ) setMethod
+SUBMODULE(RealVector_Method) setMethod
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

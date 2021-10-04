@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( RealMatrix_Method ) MatrixMultiplication
+SUBMODULE(RealMatrix_Method) MatrixMultiplication
 USE BaseMethod
 IMPLICIT NONE
 

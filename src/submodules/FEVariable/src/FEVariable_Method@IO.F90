@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( FEVariable_Method ) IO
+SUBMODULE(FEVariable_Method) IO
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

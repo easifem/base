@@ -1,4 +1,4 @@
-SUBMODULE( GE_Lapack_Method ) EigenValue
+SUBMODULE(GE_Lapack_Method) EigenValue
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

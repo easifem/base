@@ -20,7 +20,7 @@
 ! summary: This submodule contains the methods for IO of [[elemshapedata_]] and [[stelemshapedata_]]
 !
 
-SUBMODULE( ElemshapeData_Method ) IO
+SUBMODULE(ElemshapeData_Method) IO
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

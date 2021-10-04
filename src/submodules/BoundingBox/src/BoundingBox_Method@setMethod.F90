@@ -19,7 +19,7 @@
 ! date: 	23 Feb 2021
 ! summary: This submodule of [[BoundingBox_Method]] implements set methods defined in parent module
 
-SUBMODULE( BoundingBox_Method ) setMethod
+SUBMODULE(BoundingBox_Method) setMethod
 IMPLICIT NONE
 CONTAINS
 

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( QuadraturePoint_Method:GaussLegendre ) Prism
+SUBMODULE(QuadraturePoint_Method:GaussLegendre ) Prism
 IMPLICIT NONE
 CONTAINS
 

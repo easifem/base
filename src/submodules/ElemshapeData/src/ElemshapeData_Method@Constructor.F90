@@ -19,7 +19,7 @@
 ! date: 4 March 2021
 ! summary: 	This submodule contains constructor method for [[ElemshapeData_]] and [[STElemShapeData_]]
 
-SUBMODULE( ElemshapeData_Method ) Constructor
+SUBMODULE(ElemshapeData_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 

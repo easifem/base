@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>.
 !
 
-SUBMODULE( Rank2Tensor_Method ) IO
+SUBMODULE(Rank2Tensor_Method) IO
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

@@ -19,7 +19,7 @@
 ! date: 	3 April 2021
 ! summary: 	Assert functions
 
-SUBMODULE( Utility ) Assert
+SUBMODULE(Utility ) Assert
 IMPLICIT NONE
 CONTAINS
 

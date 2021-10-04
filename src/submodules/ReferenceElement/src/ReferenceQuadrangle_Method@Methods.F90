@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: This submodule contains method for [[ReferenceQuadrangle_]]
 
-SUBMODULE( ReferenceQuadrangle_Method ) Methods
+SUBMODULE(ReferenceQuadrangle_Method) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

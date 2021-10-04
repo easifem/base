@@ -18,7 +18,7 @@
 ! date: 	23 Feb 2021
 ! summary: 	This submodule contains implementation of get method for [[BoundingBox_]] data type which are defined in [[BoundingBox_Method]] module.
 
-SUBMODULE( BoundingBox_Method ) getMethod
+SUBMODULE(BoundingBox_Method) getMethod
 IMPLICIT NONE
 CONTAINS
 

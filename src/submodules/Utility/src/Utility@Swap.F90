@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains method for swaping
 
-SUBMODULE( Utility ) SWAP
+SUBMODULE(Utility ) SWAP
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

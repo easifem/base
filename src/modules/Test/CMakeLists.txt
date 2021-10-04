@@ -5,9 +5,9 @@
 # 16/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 
-target_sources(
+TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/Test_Method.F90
 )

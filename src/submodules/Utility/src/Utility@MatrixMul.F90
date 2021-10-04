@@ -19,7 +19,7 @@
 ! date: 	3 April 2021
 ! summary: 	Methods for matrix multiplication
 
-SUBMODULE( Utility ) MatrixMul
+SUBMODULE(Utility ) MatrixMul
 IMPLICIT NONE
 CONTAINS
 

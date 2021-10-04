@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( ElemShapeData_Method ) H1DivHierarchy
+SUBMODULE(ElemShapeData_Method) H1DivHierarchy
 IMPLICIT NONE
 CONTAINS
 

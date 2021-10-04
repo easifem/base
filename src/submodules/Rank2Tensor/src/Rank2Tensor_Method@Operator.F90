@@ -19,7 +19,7 @@
 ! date: 	17 March 2021
 ! summary: 	This subroutine contains algebraic operator
 
-SUBMODULE( Rank2Tensor_Method ) Operator
+SUBMODULE(Rank2Tensor_Method) Operator
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

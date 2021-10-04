@@ -18,7 +18,7 @@
 ! date: 	4 March 2021
 ! summary: This submodule contains implementation of construction methods [[keyvalue_]]
 
-SUBMODULE( KeyValue_Method ) Constructor
+SUBMODULE(KeyValue_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 

@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains method for constructing [[CSRMatrix_]]
 
-SUBMODULE( CSRMatrix_Method ) Constructor
+SUBMODULE(CSRMatrix_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

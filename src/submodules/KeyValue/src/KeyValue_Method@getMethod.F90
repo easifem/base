@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( KeyValue_Method ) getMethod
+SUBMODULE(KeyValue_Method) getMethod
   !! This submodule includes implementation of method to set values in
   !! [[keyvalue_]]
 USE BaseMethod

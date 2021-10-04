@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains the sorting routine
 
-SUBMODULE( Utility ) SORT
+SUBMODULE(Utility ) SORT
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

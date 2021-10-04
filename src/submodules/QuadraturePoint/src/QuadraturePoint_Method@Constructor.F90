@@ -19,7 +19,7 @@
 ! date: 	3 March 2021
 ! summary: 	This submodule contains information constructor methods for [[QuadraturePoint_]]
 
-SUBMODULE( QuadraturePoint_Method ) Constructor
+SUBMODULE(QuadraturePoint_Method) Constructor
 USE BaseMethod
 IMPLICIT NONE
 

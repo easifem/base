@@ -19,7 +19,7 @@
 ! date: 	24 Feb 2021
 ! summary: 	This submodule implements the methods of [[Vector3D_]] which are defined in [[Vector3D_Method]] module.
 
-SUBMODULE( Vector3D_Method ) Misc
+SUBMODULE(Vector3D_Method) Misc
 USE BaseMethod
 IMPLICIT NONE
 

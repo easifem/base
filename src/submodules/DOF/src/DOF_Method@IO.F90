@@ -19,7 +19,7 @@
 ! date: 	28 Feb 2021
 ! summary: 	This submodule contains IO method for [[DOF_]]
 
-SUBMODULE( DOF_Method ) IO
+SUBMODULE(DOF_Method) IO
 USE BaseMethod
 CONTAINS
 

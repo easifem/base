@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( Utility ) Append
+SUBMODULE(Utility ) Append
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

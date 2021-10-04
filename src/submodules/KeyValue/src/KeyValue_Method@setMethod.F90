@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-SUBMODULE( KeyValue_Method ) setMethod
+SUBMODULE(KeyValue_Method) setMethod
   !! This submodule includes implementation of method to set values in
   !! [[keyvalue_]]
 USE BaseMethod

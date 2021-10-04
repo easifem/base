@@ -19,7 +19,7 @@
 ! date: 	3 April 2021
 ! summary: 	Methods for determining determinent and inverse of small matrix
 
-SUBMODULE( Utility ) Inverse
+SUBMODULE(Utility ) Inverse
 IMPLICIT NONE
 CONTAINS
 !----------------------------------------------------------------------------

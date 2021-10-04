@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: 	This submodule contains methods for [[ReferenceLine_]]
 
-SUBMODULE( ReferenceLine_Method ) Methods
+SUBMODULE(ReferenceLine_Method) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS

@@ -6,8 +6,8 @@
 # 23/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-set(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-target_sources(
+SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/BoundingBox_Method@Constructor.F90
   ${src_path}/BoundingBox_Method@setMethod.F90

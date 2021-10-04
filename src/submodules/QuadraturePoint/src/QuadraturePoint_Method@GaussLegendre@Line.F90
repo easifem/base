@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE( QuadraturePoint_Method:GaussLegendre ) Line
+SUBMODULE(QuadraturePoint_Method:GaussLegendre ) Line
 IMPLICIT NONE
 CONTAINS
 
