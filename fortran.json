@@ -101,7 +101,7 @@
 		"prefix": "intro",
 		"description": "introduction ",
 		"body": [
-			"!### Introduction",
+			"!# Introduction",
 			"! \t$0",
 		],
 	},

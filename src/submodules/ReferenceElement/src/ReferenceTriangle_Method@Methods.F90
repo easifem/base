@@ -86,7 +86,7 @@ END PROCEDURE reference_Triangle_Pointer
 ! date: 1 March 2021
 ! summary: 	This subroutine generate Lagrange points on triangle
 !
-!### Introduction
+!# Introduction
 ! * Returns equidistant points on triangle for lagrange interpolation
 !	* Nodecoord is a 2D array with 3 rows
 !	* first row is xi, second row is eta, third row is zeta

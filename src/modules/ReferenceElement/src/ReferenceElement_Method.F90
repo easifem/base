@@ -67,7 +67,7 @@ PUBLIC :: Display
 ! date: 	1 March 2021
 ! summary: 	This function returns the instance of [[ReferenceTopology_]]
 !
-!### Introduction
+!# Introduction
 ! 	This function returns the instance of [[ReferenceTopology_]].
 ! The possible valaues of Name can be
 !
@@ -212,7 +212,7 @@ PUBLIC :: OPERATOR( .NNE. )
 ! date: 	2 March 2021
 ! summary: 	This subroutine copies one reference element into other
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine copies one reference element into other
 ! This subroutine also defines an assignment operator for `obj1=obj2` type opertions

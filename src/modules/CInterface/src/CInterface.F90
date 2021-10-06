@@ -72,7 +72,7 @@ INTEGER( I4B ), PUBLIC, PARAMETER :: C_UNSIGNED_LONG_LONG_INT = C_LONG_LONG
 ! date: 23 Sept 2021
 ! summary: Copy N bytes of SRC to DEST, no aliasing or overlapping allowed.
 !
-!### Introduction
+!# Introduction
 !
 ! Copy N bytes of SRC to DEST, no aliasing or overlapping allowed.
 !
@@ -104,7 +104,7 @@ PUBLIC :: C_MEMCPY
 ! date: 23 Sept 2021
 ! summary: Copy N bytes of SRC to DEST, guaranteeing correct behavior for overlapping strings.
 !
-!### Introduction
+!# Introduction
 ! Copy N bytes of SRC to DEST, guaranteeing correct behavior for overlapping strings.
 !
 !
@@ -134,7 +134,7 @@ PUBLIC :: C_memmove
 ! date: 23 Sept 2021
 ! summary: Set N bytes of S to C.
 !
-!### Introduction
+!# Introduction
 ! Set N bytes of S to C.
 !
 !### CInterface
@@ -163,7 +163,7 @@ PUBLIC :: C_memset
 ! date: 23 Sept 2021
 ! summary: Compare N bytes of S1 and S2.
 !
-!### Introduction
+!# Introduction
 ! Compare N bytes of S1 and S2.
 !
 !### CInterface
@@ -192,7 +192,7 @@ PUBLIC :: C_memcmp
 ! date: 23 Sept 2021
 ! summary: Search N bytes of S for C.
 !
-!### Introduction
+!# Introduction
 ! Search N bytes of S for C.
 !
 !### CInterface
@@ -221,7 +221,7 @@ PUBLIC :: C_memchr
 ! date: 23 Sept 2021
 ! summary: Copy SRC to DEST.
 !
-!### Introduction
+!# Introduction
 ! Copy SRC to DEST.
 !
 !### CInterface
@@ -249,7 +249,7 @@ PUBLIC :: C_strcpy
 ! date: 23 Sept 2021
 ! summary: Copy no more than N characters of SRC to DEST.
 !
-!### Introduction
+!# Introduction
 ! Copy no more than N characters of SRC to DEST.
 !
 !
@@ -279,7 +279,7 @@ PUBLIC :: C_strncpy
 ! date: 23 Sept 2021
 ! summary: Append SRC onto DEST.
 !
-!### Introduction
+!# Introduction
 ! Append SRC onto DEST.
 !
 !
@@ -309,7 +309,7 @@ PUBLIC :: C_strcat
 ! date: 23 Sept 2021
 ! summary: Append no more than N characters from SRC onto DEST.
 !
-!### Introduction
+!# Introduction
 ! Append no more than N characters from SRC onto DEST.
 !
 !### CInterface
@@ -339,7 +339,7 @@ PUBLIC :: C_strncat
 ! date: 23 Sept 2021
 ! summary: Compare S1 and S2.
 !
-!### Introduction
+!# Introduction
 ! Compare S1 and S2.
 !
 !### CInterface
@@ -367,7 +367,7 @@ PUBLIC :: C_strcmp
 ! date: 23 Sept 2021
 ! summary: Compare N characters of S1 and S2.
 !
-!### Introduction
+!# Introduction
 ! Compare N characters of S1 and S2.
 !
 !### CInterface
@@ -396,7 +396,7 @@ PUBLIC :: C_strncmp
 ! date: 23 Sept 2021
 ! summary: Return the length of S.
 !
-!### Introduction
+!# Introduction
 ! Return the length of S.
 !
 !### CInterface
@@ -423,7 +423,7 @@ PUBLIC :: C_strlen
 ! date: 23 Sept 2021
 ! summary: CAlloc function
 !
-!### Introduction
+!# Introduction
 ! CAlloc function.
 !
 !### CInterface
@@ -617,7 +617,7 @@ END FUNCTION C_ASSOCIATED_PURE
 ! date: 23 Sept 2021
 ! summary: Set a fixed-length Fortran string to the value of a C string.
 !
-!### Introduction
+!# Introduction
 ! Copy a C string, passed by pointer, to a Fortran string.
 ! If the C pointer is NULL, the Fortran string is blanked.
 ! C_string must be NUL terminated, or at least as long as F_string.
@@ -651,7 +651,7 @@ END SUBROUTINE F_string_assign_C_string
 ! date: 23 Sept 2021
 ! summary: Copy a C string, passed as a char-array reference, to a Fortran string.
 !
-!### Introduction
+!# Introduction
 !
 ! Copy a C string, passed by pointer, to a Fortran string.
 ! If the C pointer is NULL, the Fortran string is blanked.
@@ -680,7 +680,7 @@ END SUBROUTINE C_F_string_chars
 ! date: 23 Sept 2021
 ! summary: Copy a Fortran string to an allocated C string pointer.
 !
-!### Introduction
+!# Introduction
 !
 ! Copy a Fortran string to an allocated C string pointer.
 ! If the C pointer is NULL, no action is taken. (Maybe auto allocate via libc call?)
@@ -719,7 +719,7 @@ END SUBROUTINE F_C_STRING_PTR
 ! date: 23 Sept 2021
 ! summary: Copy a Fortran string to a C string passed by char-array reference.
 !
-!### Introduction
+!# Introduction
 !
 ! Copy a Fortran string to a C string passed by char-array reference.
 ! If the length is not passed, the C string must be at least: len(F_string)+1

@@ -34,7 +34,7 @@ PRIVATE
 ! date: 6 March 2021
 ! summary: Display content of [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays content of [[RealMatrix_]]
 !
@@ -60,7 +60,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Display content of [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays content of [[RealMatrix_]]
 !
@@ -92,7 +92,7 @@ PUBLIC :: Display
 ! date: 	6 March 2021
 ! summary: Return shape of [[RealMatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function return shape of [[RealMatrix_]]
 !
@@ -123,7 +123,7 @@ PUBLIC :: Shape
 ! date: 6 March 2021
 ! summary: Return size of [[RealMatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function return size of `RealMatrix_`
 ! - If `Dims` is present and equal to 1 then total number of rows (m)
@@ -160,7 +160,7 @@ PUBLIC :: Size
 ! date: 	23 Feb 2021
 ! summary: 	Returns the total dimension of an array
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the total dimension (or rank) of an array,
 
@@ -185,7 +185,7 @@ PUBLIC :: TotalDimension
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the total dimension (rank) of an array
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets the rank(total dimension) of an array
 
@@ -240,7 +240,7 @@ PUBLIC :: AllocateData
 ! date: 6 March 2021
 ! summary: Deallocate data in [[RealMatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This routine deallocates data stored in obj
 !
@@ -315,7 +315,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Initiate an instance of [[RealMatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine initiate vector of [[realmatrix_]] with matrices of
 ! different shapes given in `Dims`
@@ -393,7 +393,7 @@ PUBLIC :: ASSIGNMENT( = )
 ! date: 6 March 2021
 ! summary: Constructor function for [[RealMatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns an instance of [[realmatrix_]]
 !
@@ -530,7 +530,7 @@ PUBLIC :: Eye
 ! date: 6 March 2021
 ! summary: Rearrange the degrees of freedom in a finite element matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine changes the storage pattern of a two-d matrix
 !  - Usually element matrix in easifem are stored in `FMT_DOF`
@@ -567,7 +567,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Rearrange the dofs in finite element matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine changes the storage pattern of a two-d matrix
 !  - Usually element matrix in easifem are stored in `FMT_DOF`
@@ -604,7 +604,7 @@ END INTERFACE
 ! date: 6 March 2021
 ! summary: This subroutine converts rank4  matrix to rank2 matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine converts a rank4 matrix to rank2 matrix
 !
@@ -658,7 +658,7 @@ PUBLIC :: RealMatrix_Pointer
 ! date: 	6 March 2021
 ! summary: Return sym(obj) = 0.5*(obj + transpose( obj ) )
 !
-!### Introduction
+!# Introduction
 !
 ! Return symmetric part of obj
 !
@@ -685,7 +685,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: 	 Return sym(obj) = 0.5*(obj + transpose( obj ) )
 !
-!### Introduction
+!# Introduction
 !
 ! Return symmetric part of obj
 !
@@ -741,7 +741,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: 	Return SkewSym(obj) = 0.5*(obj + transpose( obj ) )
 !
-!### Introduction
+!# Introduction
 !
 ! Return SkewSymmetric part of obj
 !
@@ -774,7 +774,7 @@ PUBLIC :: SkewSym
 ! date: 6 March 2021
 ! summary: Make diagonal copies of Matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine makes `ncopy` diagonal copies of `Mat` The size of `Mat` on return is nCopy * SIZE( Mat, 1 )
 !
@@ -846,7 +846,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Make diagonal copies of Matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine makes `ncopy` diagonal copies of `Mat`
 !
@@ -880,7 +880,7 @@ PUBLIC :: MakeDiagonalCopies
 ! date: 6 March 2021
 ! summary: Set a values in [[realmatrix_]] obj to random values
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set values in `obj%Val` to random
 ! - This subroutine calls `RANDOM_NUMBER()` function from Fortran
@@ -929,7 +929,7 @@ PUBLIC :: TestMatrix
 ! date: 6 March 2021
 ! summary: Returns the values of [[RealMatrix_]] obj in 2D array
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the value stored in `obj%l` in a 2D fortran array
 !
@@ -955,7 +955,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: 	 Returns the values of [[RealMatrix_]] obj in 2D array
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns a section of `obj%l` in a 2D fortran array. This
 ! is equivalent to `Val = obj%l(RIndx, CIndx)`
@@ -991,7 +991,7 @@ END INTERFACE
 ! date: 6 March 2021
 ! summary: Returns the values of [[RealMatrix_]] obj in 2D array
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns a section of `obj%l` in a 2D fortran array. This
 ! is equivalent to `Val = obj%l(is:ie:s, is:ie:s)`
@@ -1026,7 +1026,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Returns [[RealMatrix_]] obj from [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function is essentially copy method `Ans=obj`
 !
@@ -1052,7 +1052,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Returns [[RealMatrix_]] obj from a section of [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function is essentially copy method `Ans=obj(RIndx, CIndx)`
 !
@@ -1080,7 +1080,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Returns [[RealMatrix_]] obj from a section of [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 ! 	This function is essentially copy method `Ans=obj(is:ie, is:ie)`
 !
 !### Usage
@@ -1107,7 +1107,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Returns values in 2D fortran array from [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function combines all [[realmatrix_]] value of `obj` and
 ! returns a 2D fortrn array
@@ -1133,7 +1133,7 @@ END FUNCTION f_getValues_1
 ! date: 	6 March 2021
 ! summary: Returns [[realmatrix_]] object from a 2D array of [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function combines all [[realmatrix_]] value of `obj` and
 ! returns a [[realmatrix_]] object
@@ -1167,7 +1167,7 @@ PUBLIC :: ArrayValues
 ! date: 	6 March 2021
 ! summary: Copy from [[realmatrix_]] to 2D fortran array
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine copy the contents of [[realmatrix_]] object into a 2D
 ! fortran array
@@ -1193,7 +1193,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Copy from [[realmatrix_]] to another [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine copy the contents of [[realmatrix_]] object to another
 ! [[realmatrix_]] object
@@ -1219,7 +1219,7 @@ END INTERFACE
 ! date:  6 March 2021
 ! summary: Copy from 2D fortran array to [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine copy the contents of a 2D fortran array to [[realmatrix_]] object
 !
@@ -1258,7 +1258,7 @@ END INTERFACE CONVERT
 ! date: 	6 March 2021
 ! summary: Get pointer to the values stored inside [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the pointer to the values stored inside the
 ! [[realmatrix_]]
@@ -1291,7 +1291,7 @@ PUBLIC :: ArrayPointer
 ! date: 	6 March 2021
 ! summary: Add values in [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set `obj%l` to `Val`
 !
@@ -1343,7 +1343,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: 	 Set values in [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set values in `obj%l`
 !
@@ -1364,7 +1364,7 @@ END INTERFACE
 ! date: 6 March 2021
 ! summary: Set values in [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set values in `obj%l`
 ! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx` denotes diagonal number with `0` being the main diagonal
@@ -1394,7 +1394,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Set values in [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set values in `obj%l`
 ! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx` denotes the diagonal number with `0` being the main diagonal
@@ -1434,7 +1434,7 @@ PUBLIC :: setValues
 ! date: 	6 March 2021
 ! summary: 	 Add contribution in values of [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine adds contribution in values of `obj%l`. This subroutine performs following task:
 !
@@ -1465,7 +1465,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Add contribution in values of [[Realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine adds contribution in values of `obj%l`
 !
@@ -1492,7 +1492,7 @@ END INTERFACE
 ! date: 6 March 2021
 ! summary: Add contribution in values of [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine adds contribution in values of `obj%l`
 !
@@ -1519,7 +1519,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Add contribution in values of [[Realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine adds contribution in values of `obj%l`
 !
@@ -1545,7 +1545,7 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Add contribution in values of [[realmatrix_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine adds contribution in values of `obj%l`
 !

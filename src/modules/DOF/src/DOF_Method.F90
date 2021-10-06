@@ -19,7 +19,7 @@
 ! date: 	23 Feb 2021
 ! summary: 	This module contains methods of [[DOF_]] object
 !
-!### Introduction
+!# Introduction
 !This module contains methods for derived type called [[DOF_]]
 
 MODULE DOF_Method
@@ -36,7 +36,7 @@ PRIVATE
 ! date: 	23 Feb 2021
 ! summary: This subroutine initiate [[DOF_]] object
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine initiate [[DOF_]] object
 !
@@ -84,7 +84,7 @@ END INTERFACE
 ! date: 	23 Feb 2021
 ! summary: Initiate a fortran vector using [[DOF_]] object
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine initiate a fortran vector of real using the information stored inside [[DOF_]] object.
 !
@@ -119,7 +119,7 @@ END INTERFACE
 ! date: 	23 Feb 2021
 ! summary: Initiate [[RealVector_]] using [[dof_]] object
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine initiate [[RealVector_]] using the information stored inside
 ! [[dof_]] object
@@ -386,7 +386,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: This function returns the total number of nodes
 !
-!### Introduction
+!# Introduction
 ! This function returns the total number of nodes for a given degree of
 ! freedom number
 ! idof should be lesser than the total degree of freedom
@@ -434,7 +434,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: This subroutine returns the total number of degrees of freedom
 !
-!### Introduction
+!# Introduction
 ! This function returns the total number of degrees of freedom in a physical variable.
 ! The physical variable is specified by using its name.
 
@@ -454,7 +454,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: This subroutine returns the total number of degrees of freedom
 !
-!### Introduction
+!# Introduction
 ! This function returns the total number of degrees of freedom in a physical variable.
 ! The physical variable is specified by using its name.
 
@@ -539,7 +539,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: This function returns the name of a physical variable
 !
-!### Introduction
+!# Introduction
 ! This function returns the name of a physical variable
 ! The physical variable is given by its number ii, i.e., the first, second, third, and so on, physical variable.
 
@@ -581,7 +581,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodeNum`
 !
-!### Introduction
+!# Introduction
 ! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
@@ -600,7 +600,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodeNum`
 !
-!### Introduction
+!# Introduction
 ! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
@@ -620,7 +620,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodeNum`
 !
-!### Introduction
+!# Introduction
 ! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
@@ -640,7 +640,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodeNum`
 !
-!### Introduction
+!# Introduction
 ! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
@@ -659,7 +659,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodeNum`
 !
-!### Introduction
+!# Introduction
 ! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
@@ -679,7 +679,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodeNum`
 !
-!### Introduction
+!# Introduction
 ! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
@@ -740,7 +740,7 @@ PUBLIC :: OPERATOR( .tTimeComponents. )
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
-!### Introduction
+!# Introduction
 ! This subroutine extracts the values of from `val` corresponding to
 ! degrees of freedom specified by `DOFNo(:)` and return it in `V`
 !
@@ -765,7 +765,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a 2D array
 !
-!### Introduction
+!# Introduction
 ! This subroutine extracts all the values of from `val` corresponding to
 ! degrees of freedom specified by `DOFNo(:)` and return it in `V(:,:)`
 ! Values in `Val(:,:)` are stored in xiJ format.
@@ -792,7 +792,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
-!### Introduction
+!# Introduction
 ! This subroutine extracts the values of from `val` corresponding to
 ! degrees of freedom specified by `DOFNo(:)` and return it in `V`
 !
@@ -817,7 +817,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a 2D array
 !
-!### Introduction
+!# Introduction
 ! This subroutine extracts all the values of from `val` corresponding to
 ! degrees of freedom specified by `DOFNo(:)` and return it in `V(:,:)`
 ! Values in `Val(:,:)` are stored in xiJ format.
@@ -917,7 +917,7 @@ PUBLIC :: OPERATOR( .NE. )
 ! date: 26 June 2021
 ! summary: Set values in a vector of real numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine is designed to set the values in a vector of real number
 !
@@ -952,7 +952,7 @@ END INTERFACE
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine is designed to set the values in a vector of real number.
 ! This subroutine handles only those entries which belongs to the
@@ -982,7 +982,7 @@ END INTERFACE
 ! date: 26 June 2021
 ! summary: Set values in a vector of real numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine is designed to set the values in a vector of real number
 !
@@ -1017,7 +1017,7 @@ END INTERFACE
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine is designed to set the values in a vector of real number.
 ! This subroutine handles only those entries which belongs to the
@@ -1054,7 +1054,7 @@ PUBLIC :: set
 ! date: 27 June 2021
 ! summary: 	 Set values in a vector of real numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine is designed to add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom
@@ -1085,7 +1085,7 @@ END INTERFACE
 ! date: 	27 June 2021
 ! summary: 	add values in a vector of real numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine is designed to add values in a vector of real number
 ! - [[DOF_]] object `obj` contains the storage pattern of degrees of freedom

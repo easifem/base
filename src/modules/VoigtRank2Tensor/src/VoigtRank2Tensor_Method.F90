@@ -33,7 +33,7 @@ PRIVATE
 ! date: 13 March 2021
 ! summary: Initiate [[VoigtRank2Tensor_]] using Vector
 !
-!### Introduction
+!# Introduction
 !
 ! Initiate [[VoigtRank2Tensor_]] from a given vector.
 !

@@ -82,7 +82,7 @@ PUBLIC :: SIZE
 ! date: 	23 Feb 2021
 ! summary: 	Returns the total dimension of an array
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the total dimension (or rank) of an array,
 
@@ -107,7 +107,7 @@ PUBLIC :: getTotalDimension
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the total dimension (rank) of an array
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets the rank(total dimension) of an array
 

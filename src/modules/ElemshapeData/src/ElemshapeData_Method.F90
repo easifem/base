@@ -32,7 +32,7 @@ PRIVATE
 ! date: 	4 March 2021
 ! summary: This subroutine allocate the memory for various matrices in the object
 !
-!### Introduction
+!# Introduction
 ! 	This subroutine allocates the memory for various matrices in the object. This subroutine belongs to the generic interface called `AllocateData()`.
 !
 ! - This routine also belongs to generic routien called `initiate`
@@ -73,7 +73,7 @@ PUBLIC :: AllocateData
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -101,7 +101,7 @@ END INTERFACE Initiate
 ! date: 	4 March 2021
 ! summary: This subroutine initiate time shape function data in [[stelemshapedata_]]
 !
-!### Introduction
+!# Introduction
 !
 ! * This subroutine initiate the time shape function data in [[stelemshapedata_]].
 ! * For the effeciency purpose, user should supply an instance of [[Elemshapedata_]] on time element. This object will have information of location time shape function data such as `T, dTdtheta` etc.
@@ -136,7 +136,7 @@ PUBLIC :: Initiate
 ! date: 	4 March 2021
 ! summary: This subroutine deallocates the data stored inside [[elemshapedata_]]
 !
-!### Introduction
+!# Introduction
 ! 	This routine deallocates the data stored inside [[elemshapedata_]]. This routine belongs to `AllocateData()`
 !
 !
@@ -208,7 +208,7 @@ PUBLIC :: BaseContinuity
 ! date: 	4 March 2021
 ! summary: This subroutine display the content of [[elemshapedata_]] and [[stelemshapedata_]]
 !
-!### Introduction
+!# Introduction
 ! 	This subroutine displays the content of [[elemshapedata_]] and [[stelemshapedata_]] on screen. this routine belongs to `Display()`.
 !
 !### Usage
@@ -239,7 +239,7 @@ PUBLIC :: Display
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -267,7 +267,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -295,7 +295,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -323,7 +323,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -352,7 +352,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -380,7 +380,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -408,7 +408,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -436,7 +436,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -465,7 +465,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -493,7 +493,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -521,7 +521,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -549,7 +549,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -578,7 +578,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -606,7 +606,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -634,7 +634,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -662,7 +662,7 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiates the shape function related data inside the element.
 !
@@ -690,7 +690,7 @@ END INTERFACE Initiate
 ! date: 	4 March
 ! summary: This subroutine set the thickness field
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set the `thickness` field
 ! Here `Val` denotes the nodal value of thickeness
@@ -721,7 +721,7 @@ END INTERFACE
 ! date: 	4 March 2021
 ! summary: This subroutine set the thickness field
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set the `thickness` field
 ! Here `Val` denotes the space-time nodal value of thickeness
@@ -754,7 +754,7 @@ PUBLIC :: setThickness
 ! date: 	4 March 2021
 ! summary: This subroutine set the Barycentric coordinates
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set the barycentric coordinates
 !
@@ -784,7 +784,7 @@ END INTERFACE
 ! date: 	4 March 2021
 ! summary: This subroutine set the Barycentric coordinates
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set the barycentric coordinates by using
 ! space-time nodal coordinates
@@ -835,7 +835,7 @@ PUBLIC setJs
 ! date: 4 March 2021
 ! summary: This subroutine set $\frac{d N}{d X_t}$ internally
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine will internally set `dNdXt`.
 ! It use the inverse of jacobian stored internally, so make sure jacobian is
@@ -861,7 +861,7 @@ PUBLIC :: setdNdXt
 ! date: 4 March 2021
 ! summary: This subroutine set the jacobian
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set the jacobian by using the nodal coordinates
 !
@@ -884,7 +884,7 @@ END INTERFACE
 ! date: 4 March 2021
 ! summary: This subroutine set the jacobian using space-time nodal coords
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set the jacobian by using space-time nodal coords, `dNdXi`
 ! `T` are used to handle non-isoparameteric elements.
@@ -923,7 +923,7 @@ PUBLIC :: setJacobian
 ! date: 4 March 2021
 ! summary: This subroutine set `dNTdt` by using the space-time nodal values
 !
-!### Introduction
+!# Introduction
 !
 ! - This subroutine set `dNTdt` by using space-time nodal values
 ! - It is important to note that `dNTdXt` should be allocated before calling
@@ -955,7 +955,7 @@ PUBLIC :: setdNTdt
 ! date: 4 March 2021
 ! summary: This subroutine set `dNTdXt` by using internal data
 !
-!### Introduction
+!# Introduction
 !
 ! * This subroutine set `dNTdXt` by using internal data
 ! * This subroutine uses inverse of Jacobian, therefore, before calling
@@ -992,7 +992,7 @@ PUBLIC :: setdNTdXt
 ! date: 4 March 2021
 ! summary: This subroutine set parameters defined on physical element
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set parameters defined on physical element
 !
@@ -1030,7 +1030,7 @@ END INTERFACE
 ! date: 4 March 2021
 ! summary: This subroutine set parameters defined on physical element
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine set parameters defined on physical element
 !
@@ -1102,7 +1102,7 @@ PUBLIC :: setNormal
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolations
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine performs interpolation of a scalar from its spatial nodal
 ! values.
@@ -1148,7 +1148,7 @@ END INTERFACE
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolation of a vector
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine performs interpolation of a vector from its spatial
 ! nodal values
@@ -1173,7 +1173,7 @@ END INTERFACE
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolation of matrix
 !
-!### Introduction
+!# Introduction
 ! This subroutine performs interpolation of matrix
 !
 !### Usage
@@ -1225,7 +1225,7 @@ PUBLIC :: getInterpolation
 ! date: 4 March 2021
 ! summary: This function returns the interpolation of a scalar
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns interpolation of scalar
 
@@ -1245,7 +1245,7 @@ END INTERFACE
 ! date: 4 March 2021
 ! summary: This function returns the interpolation of vector
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the interpolation of vectors
 !
@@ -1271,7 +1271,7 @@ END INTERFACE
 ! date: 4 March 2021
 ! summary: This function returns the interpolation of matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the interpolation of matrix
 !

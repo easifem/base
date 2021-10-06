@@ -240,7 +240,7 @@ END PROCEDURE pd_r2t
 ! date: 	17 March 2021
 ! summary: 	Polar decomposition
 !
-!### Introduction
+!# Introduction
 ! 	This subroutine calculates the polar decomposition
 ! * Ref: Higham and Noferini, 2015 Algorithm 3.1 for NSD = 3
 ! * PDType = 1 for F = RU; and 2 for F = VR

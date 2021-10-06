@@ -74,7 +74,7 @@ END INTERFACE
 ! date: 	14 July 2021
 ! summary: This subroutine construct the `CSRMatrix_` object
 !
-!### Introduction
+!# Introduction
 ! This subroutine initiates an instance of [[CSRMatrix_]]. The object so created does not own the ownership of `obj%csr`. Instead it points to a [[CSRSparsity_]] object which is supplied by the user.
 !
 !@note
@@ -134,7 +134,7 @@ END INTERFACE
 ! date: 16 July 2021
 ! summary: Initiate by copying
 !
-!### Introduction
+!# Introduction
 ! This routine initiates obj by copying contents from obj2
 ! This routine uses `obj2%csr => obj%csr`
 ! Also, csrOwenrsip is set to false.
@@ -222,7 +222,7 @@ PUBLIC :: Shape
 ! date: 	22 March 2021
 ! summary: This function returns the size of sparse matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the size of sparse matrix
 ! If Dims equal to 1 then total number of rows are returned
@@ -314,7 +314,7 @@ PUBLIC :: getNNZ
 ! date: 	22 March 2021
 ! summary: 	This subroutine creates memeory space for the sparse matrix object
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine creates memory space for the sparse matrix
 !
@@ -366,7 +366,7 @@ PUBLIC :: DeallocateData
 ! date: 	22 March 2021
 ! summary: 	 This subroutine display the content of sparse matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display the content of sparse matrix
 ! - In this subroutine `dump` routine from sparsekit lib is called
@@ -436,7 +436,7 @@ PUBLIC :: Import
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set the sparsity pattern of a given row
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets the sparsity pattern of a given row
 !  - If `obj%tdof` is equal to 1, then `Col` is sorted in increasing order,
@@ -487,7 +487,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	 This subroutine sets the sparsity pattern of a given row
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets the sparsity pattern of a given row
 ! This subroutine calls `csrMat_setSparsity1`
@@ -535,7 +535,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set sparsity pattern of `sparsematrix_`
 !
-!### Introduction
+!# Introduction
 !
 ! authors: Dr. Vikas Sharma
 !
@@ -595,7 +595,7 @@ PUBLIC :: setSparsity
 ! date: 	22 March 2021
 ! summary: This subroutine set the value in sparse matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets the values in sparse matrix
 ! - Usually `Val(:,:)` represents the element finite element matrix
@@ -619,7 +619,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This subroutine set all values of sparse matrix to given scalar value
 !
-!### Introduction
+!# Introduction
 ! This routine sets all values of sparse matrix to given value.
 ! This routine is used to define an assignment operator. Therefore, we can call this routine by `obj=val`.
 
@@ -638,7 +638,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This subroutine set a single entry of sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This subroutine sets a single entry of sparse matrix.
 ! Before using this subroutien the user should be aware of the storage pattern of degree of freedom. However, if total number of degrees of freedom is one then there is not need to worry. In my opinion, this routine should be avoided by general user.
 !
@@ -660,7 +660,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This subroutine sets the specific row and column entry to a given value
 !
-!### Introduction
+!# Introduction
 ! This routine sets the specific row and column entry to a given value.
 ! The row and column index is calculated by using (rowNodeNum, rowDOF) and (colNodeNum, colDOF), respectively.
 ! After computing the irow and icolumn (internally) this routine calls, `csrMat_set3`.
@@ -685,7 +685,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: This subroutine sets selected values in sparse matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets selected values of the sparse matrix to the scalar value `val`
 !
@@ -740,7 +740,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This subroutine adds all values of sparse matrix to given scalar value
 !
-!### Introduction
+!# Introduction
 ! This routine adds all values of sparse matrix to given value.
 ! This routine signifies `obj=obj+scale*val`.
 
@@ -760,7 +760,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This subroutine adds a single entry of sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This subroutine adds a single entry of sparse matrix.
 ! Before using this subroutien the user should be aware of the storage pattern of degree of freedom. However, if total number of degrees of freedom is one then there is not need to worry. In my opinion, this routine should be avoided by general user.
 !
@@ -783,7 +783,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This subroutine sets the specific row and column entry to a given value
 !
-!### Introduction
+!# Introduction
 ! This routine sets the specific row and column entry to a given value.
 ! The row and column index is calculated by using (rowNodeNum, rowDOF) and (colNodeNum, colDOF), respectively.
 ! After computing the irow and icolumn (internally) this routine calls, `csrMat_set3`.
@@ -848,7 +848,7 @@ END INTERFACE
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This routine sets the row of a sparse matrix. The row index is calculated using the inode and idof.
 ! inode is the node number
 ! idof is the degree of freedom number
@@ -887,7 +887,7 @@ END INTERFACE
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This routine sets the row of a sparse matrix. The row index is calculated using the inode and idof.
 ! inode is the node number
 ! idof is the degree of freedom number
@@ -933,7 +933,7 @@ END INTERFACE
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This routine sets the Column of a sparse matrix. The Column index is calculated using the inode and idof.
 ! inode is the node number
 ! idof is the degree of freedom number
@@ -972,7 +972,7 @@ END INTERFACE
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This routine sets the Column of a sparse matrix. The Column index is calculated using the inode and idof.
 ! inode is the node number
 ! idof is the degree of freedom number
@@ -1054,7 +1054,7 @@ END INTERFACE
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This routine returns the row of a sparse matrix. The row index is calculated using the inode and idof.
 ! inode is the node number
 ! idof is the degree of freedom number
@@ -1103,7 +1103,7 @@ END INTERFACE
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This routine returns the Column of a sparse matrix. The Column index is calculated using the inode and idof.
 ! inode is the node number
 ! idof is the degree of freedom number
@@ -1134,7 +1134,7 @@ PUBLIC :: getColumn
 ! date: 	22 March 2021
 ! summary: 	 This subroutine converts sparsematrix to dense storage
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine converts sparsematrix into a dense storage format
 ! `A(:), IA(:), JA(:)` denotes CSR format.
@@ -1157,7 +1157,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	 This subroutine converts sparsematrix to dense storage
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine converts sparsematrix to dense storage format
 ! `A(:), IA(:), JA(:)` denotes CSR format.
@@ -1187,7 +1187,7 @@ END INTERFACE ASSIGNMENT( = )
 ! date: 	23 March 2021
 ! summary: Sort column of row
 !
-!### Introduction
+!# Introduction
 ! This routine sorts the elements of a matrix (stored in Compressed
 ! Sparse Row Format) in increasing order of their column indices within
 ! each row. It uses insertion sort algorithm
@@ -1240,7 +1240,7 @@ PUBLIC :: RemoveDuplicates
 ! date: 14 July 2021
 ! summary: Performs different tasks related to cleaning of sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This routine performs tasks related to the cleaning of sparse matrix.
 
 INTERFACE
@@ -1314,7 +1314,7 @@ PUBLIC :: Get
 ! date: 15 July, 2021
 ! summary: This routine removes any elements whose absolute value is small from an input matrix A and puts the resulting matrix in B.
 !
-!### Introduction
+!# Introduction
 !
 ! - `option` = integer. used to determine strategy chosen by caller to drop elements from matrix A.
 ! - `option` = 1, Elements whose absolute value is less than the drop tolerance are removed.
@@ -1367,7 +1367,7 @@ PUBLIC :: DropEntry
 ! date: 15 July 2021
 ! summary: Transpose of the sparse matrix
 !
-!### Introduction
+!# Introduction
 ! In-place transposition routine. This subroutine transposes a matrix stored in compressed sparse row format. the transposition is done in place in that the arrays a,ja,ia c of the transpose are overwritten onto the original arrays.
 !
 !### Usage
@@ -1407,7 +1407,7 @@ PUBLIC :: getTRANSPOSE
 ! date: 15 July 2021
 ! summary: Returns the diagonal of sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This subroutine returns the diagonal entries of sparse matrix.
 !
 ! - offset: containing the offset of the wanted diagonal the diagonal extracted is the one corresponding to the entries `a(i,j)` with `j-i = ioff`. thus `ioff = 0` means the main diagonal
@@ -1461,7 +1461,7 @@ PUBLIC :: getDiagonal
 ! date: 15 July 2021
 ! summary: Returns the lower part of the sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This subroutine returns the lower part of the sparse matrix.
 
 INTERFACE
@@ -1485,7 +1485,7 @@ PUBLIC :: getLowerTriangle
 ! date: 15 July 2021
 ! summary: Returns the Upper part of the sparse matrix
 !
-!### Introduction
+!# Introduction
 ! This subroutine returns the Upper part of the sparse matrix.
 
 INTERFACE
@@ -1583,7 +1583,7 @@ PUBLIC :: Permute
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
-!### Introduction
+!# Introduction
 ! This routine builds the ILUT precondition. Incomplete LU factorization with dual truncation mechanism.
 !
 ! - `obj` matrix stored in Compressed Sparse Row format.
@@ -1619,7 +1619,7 @@ END INTERFACE
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
-!### Introduction
+!# Introduction
 ! This routine builds the ILUT precondition. Incomplete LU factorization with dual truncation mechanism.
 !
 ! - `obj` matrix stored in Compressed Sparse Row format.
@@ -1659,7 +1659,7 @@ PUBLIC :: getILUT
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
-!### Introduction
+!# Introduction
 ! This routine builds the ILUTP precondition. ILUT with pivoting, incomplete LU factorization with dual truncation mechanism
 !
 ! - `obj` matrix stored in Compressed Sparse Row format.
@@ -1714,7 +1714,7 @@ END INTERFACE
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
-!### Introduction
+!# Introduction
 ! This routine builds the ILUTP precondition. ILUT with pivoting, incomplete LU factorization with dual truncation mechanism
 !
 ! - `obj` matrix stored in Compressed Sparse Row format.
@@ -1773,7 +1773,7 @@ PUBLIC :: getILUTP
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
-!### Introduction
+!# Introduction
 ! This routine computes the ILU factorization with standard threshold dropping: at ith step of elimination, an element a(i,j) in row i is dropped if it satisfies the criterion:
 !
 !
@@ -1811,7 +1811,7 @@ END INTERFACE
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
-!### Introduction
+!# Introduction
 ! This routine computes the ILU factorization with standard threshold dropping: at ith step of elimination, an element a(i,j) in row i is dropped if it satisfies the criterion:
 !
 !
@@ -1853,7 +1853,7 @@ PUBLIC :: getILUD
 ! date: 18 July 2021
 ! summary: Returns the ILUDP precondition
 !
-!### Introduction
+!# Introduction
 !
 ! This routine computes ILUDP preconditioner, incomplete LU factorization with standard droppoing strategy.
 !
@@ -1898,7 +1898,7 @@ END INTERFACE
 ! date: 18 July 2021
 ! summary: Returns the ILUDP precondition
 !
-!### Introduction
+!# Introduction
 !
 ! This routine computes ILUDP preconditioner, incomplete LU factorization with standard droppoing strategy.
 !
@@ -1947,7 +1947,7 @@ PUBLIC :: getILUDP
 ! date: 18 July 2021
 ! summary: Returns the ILUK precondition
 !
-!### Introduction
+!# Introduction
 !
 
 INTERFACE
@@ -1969,7 +1969,7 @@ END INTERFACE
 ! date: 18 July 2021
 ! summary: Returns the ILUK precondition
 !
-!### Introduction
+!# Introduction
 !
 ! This routine returns the ILU WITH LEVEL OF FILL-IN OF K (ILU(k))
 !
@@ -2122,7 +2122,7 @@ PUBLIC :: AtMatvec
 ! date: 14 July 2021
 ! summary: This routine performs matrix-vector multiplication
 !
-!### Introduction
+!# Introduction
 ! y = A*x
 
 INTERFACE
@@ -2142,7 +2142,7 @@ END INTERFACE
 ! date: 14 July 2021
 ! summary: This routine performs matrix-vector multiplication
 !
-!### Introduction
+!# Introduction
 ! y = A*x
 
 INTERFACE
@@ -2191,7 +2191,7 @@ PUBLIC :: MatVec
 ! ! date: 14 July 2021
 ! ! summary: Solve Lx = y by forward elimination technique will be used
 ! !
-! !### Introduction
+! !# Introduction
 ! ! This subroutine Solve Lx = y by forward elimination technique will be used
 ! ! Here L is lower triangular matrix with unit diag in CSR format
 
@@ -2220,7 +2220,7 @@ PUBLIC :: MatVec
 ! ! date: 14 July 2021
 ! ! summary: Solve Ux = y by backward elimination technique will be used
 ! !
-! !### Introduction
+! !# Introduction
 ! !- This subroutine solve Ux = y by backward elimination technique will be used
 ! ! - Here U is upper triangular matrix with unit diag in CSR format
 

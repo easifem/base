@@ -33,7 +33,7 @@ PRIVATE
 ! date: 	1 March 2021
 ! summary: This subroutine constructs an instance of point reference element
 !
-!### Introduction
+!# Introduction
 ! This routine constructs an instance of [[ReferencePoint_]] element
 !
 ! - `XiJ` denotes the nodal coordinate, if it is not present than zero is used.
@@ -77,7 +77,7 @@ PUBLIC :: Initiate
 ! date: 	3 March 2021
 ! summary: This routine constructs an instance of Point reference element
 !
-!### Introduction
+!# Introduction
 ! This routine constructs an instance of [[ReferencePoint_]] element
 !
 ! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [0.0, 0.0, 0.0], [3, 1] ) is used.
@@ -116,7 +116,7 @@ PUBLIC :: ReferencePoint
 ! date: 	3 March 2021
 ! summary: This routine constructs a pointer to an instance of point reference element
 !
-!### Introduction
+!# Introduction
 ! This routine constructs a pointer to an instance of [[ReferencePoint_]] element, and returns this pointer
 !
 ! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [ 0.0_DFP, 0.0_DFP, 0.0_DFP], [3, 1] ) is used.
@@ -155,7 +155,7 @@ PUBLIC :: ReferencePoint_Pointer
 ! date: 1 March 2021
 ! summary: This function returns lagrange element on point
 !
-!### Introduction
+!# Introduction
 ! Returns lagrange point element.
 !
 !### Usage
@@ -191,7 +191,7 @@ PUBLIC :: LagrangeElement_Point
 ! date: 	3 March 2021
 ! summary: 	This function returns the measure of linear point element
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the measure of point element. Its generic form is given by [[ReferenceElement_Method:MeasureSimplex]]
 !

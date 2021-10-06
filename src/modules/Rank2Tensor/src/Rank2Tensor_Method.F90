@@ -33,7 +33,7 @@ PRIVATE
 ! date: 13 March 2021
 ! summary: Initiates [[Rank2Tensor_]] from another [[Rank2Tensor_]]
 !
-!### Introduction
+!# Introduction
 ! 	Initiates [[Rank2Tensor_]] from another [[Rank2Tensor_]]
 !
 !@note
@@ -709,7 +709,7 @@ PUBLIC :: TRANSPOSE
 ! date: 14 March 2021
 ! summary: Returns the symmetric part of a rank2 tensor
 !
-!### Introduction
+!# Introduction
 ! Returns the symmetric part of the tensor
 !
 !
@@ -744,7 +744,7 @@ PUBLIC :: Sym
 ! date: 14 March 2021
 ! summary: Returns the skew symmetric part of the tensor
 !
-!### Introduction
+!# Introduction
 ! Returns the skew symmetric part of the tensor.
 !
 !### Usage
@@ -800,7 +800,7 @@ PUBLIC :: Display
 ! date: 14 March 2021
 ! summary: Returns trace of a tensor
 !
-!### Introduction
+!# Introduction
 ! Trace of a tensor is given by
 ! $$Tr(A) = A_{ii}$$
 ! Trace of $A^2$ is given by
@@ -840,7 +840,7 @@ PUBLIC :: Trace
 ! date: 14 March 2021
 ! summary: Returns J2 invariant of tensor
 !
-!### Introduction
+!# Introduction
 ! $J_2$ is given by
 ! $$J_{2}\left( A\right)  =\frac{1}{2} tr\left( dev^{2}\left( A\right)  \right)$$
 !
@@ -880,7 +880,7 @@ PUBLIC :: J2
 ! date: 14 March 2021
 ! summary: Returns J3 invarinat of a tensor
 !
-!### Introduction
+!# Introduction
 ! $J_3$ is an invariant of a tensor, which is given by
 !
 ! $$J_{3}\left( A\right)  =Det\left( Dev\left( A\right)  \right)$$
@@ -921,7 +921,7 @@ PUBLIC :: J3
 ! date: 14 March 2021
 ! summary: Returns the Determinant of a tensor
 !
-!### Introduction
+!# Introduction
 ! This function returns the Determinant of a tensor.
 !
 !### Usage
@@ -955,7 +955,7 @@ PUBLIC :: Det
 ! date: 14 March 2021
 ! summary: Returns lode angle
 !
-!### Introduction
+!# Introduction
 ! This function calculates the Lode angle $\theta$ from the invariants $J_2$ and $J_3$, which is given by:
 !
 !$$ cos3\theta =\frac{3\sqrt{3} J_{3}}{2J_{2}\sqrt{J_{2}}} $$
@@ -984,7 +984,7 @@ END INTERFACE
 ! date: 14 March 2021
 ! summary: Returns the Lode angle
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the lode angle.
 ! Lode angle can be described using two ways. Sin and Cosine. This can be selected by using the input parameter `LodeType` which can be `SineLode` and `CosineLode`
@@ -1025,7 +1025,7 @@ PUBLIC :: LodeAngle
 ! date: 14 March 2021
 ! summary: Returns the isotropic part of the tensor
 !
-!### Introduction
+!# Introduction
 ! This function returns the isotropic part of a tensor, which is given by
 ! $$Isotropic(obj) = \frac{1}{3} Trace(obj)$$
 !
@@ -1066,7 +1066,7 @@ PUBLIC :: Iso
 ! date: 14 March 2021
 ! summary: Returns the Deviatoric part of the tensor
 !
-!### Introduction
+!# Introduction
 !This function returns the Deviatoric part of the tensor, which is given by
 !
 ! $$Dev(T) = T - Iso(T)$$
@@ -1098,7 +1098,7 @@ PUBLIC :: Dev
 ! date: 14 March 2021
 ! summary: Returns invariant of [[Rank2Tensor_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the invariant of [[Rank2Tensor_]].
 ! If the tensor is not a Deviatoric tensor then following invariants are returned:
@@ -1140,7 +1140,7 @@ PUBLIC :: Invariants
 ! date: 14 March 2021
 ! summary: Returns the eigen vector and eigen value of the tensor.
 !
-!### Introduction
+!# Introduction
 ! 	This subroutine returns the eigen values and eigen vectors of a tensor.
 ! If the tensor is symmetric then the eigenvalues and eigenvectors are real
 ! and `QI` and `WI` are not required. However, if the tensor is not symmetric
@@ -1187,7 +1187,7 @@ PUBLIC :: Eigen
 ! date: 	17 March 2021
 ! summary: 	This subroutine provides polar decomposition of a tensor.
 !
-!### Introduction
+!# Introduction
 ! 	This subroutine provides right polar decomposition of a tensor, which is
 ! given by
 !

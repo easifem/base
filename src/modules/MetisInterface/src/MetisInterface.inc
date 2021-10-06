@@ -272,7 +272,7 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: METIS_NUMBERING_C = 0
 ! date: 27 July 2021
 ! summary: Initializes the options array into its default values.
 !
-!### Introduction
+!# Introduction
 ! Initializes the options array into its default values.
 !
 !@note
@@ -306,7 +306,7 @@ PUBLIC :: METIS_SetDefaultOptions
 ! date: 27 July 2021
 ! summary: This function computes fill reducing orderings of sparse matrices using the multilevel nested dissection algorithm.
 !
-!### Introduction
+!# Introduction
 ! This function computes fill reducing orderings of sparse matrices using the
 ! multilevel nested dissection algorithm.
 !
@@ -377,7 +377,7 @@ PUBLIC :: METIS_NodeND
 ! summary: this function is used to partition a graph into `nparts`
 ! parts using recursive bisection.
 !
-!### Introduction
+!# Introduction
 ! This function is used to partition a graph into `nparts` parts using
 ! recursive bisection.
 !
@@ -473,7 +473,7 @@ PUBLIC :: METIS_PartGraphRecursive
 ! date: 27 July 2021
 ! summary: This function is used to partition a graph into `nparts` parts using multilevel k-way partitioning.
 !
-!### Introduction
+!# Introduction
 !
 ! This function is used to partition a graph into `nparts` parts using multilevel k-way partitioning.
 !
@@ -572,7 +572,7 @@ PUBLIC :: METIS_PartGraphKway
 ! date: 27 July 2021
 ! summary: This function is used to partition a mesh into `nparts` parts based on a partitioning of the mesh's dual graph.
 !
-!### Introduction
+!# Introduction
 ! This function is used to partition a mesh into `nparts` parts based on a partitioning of the mesh's dual graph.
 !
 ! This program first converts the mesh into either a dual graph (i.e., each element becomes a graph vertex) or a nodal graph (i.e., each node becomes a graph vertex), and then uses the graph partitioning API routines to partition this graph. METIS utilizes a flexible approach for creating a graph for a finite element mesh, which allows it to handle meshes with different and possibly mixed element types (e.g., triangles, tetrahedra, hexahedra, etc.). The functionality provided by mpmetis is achieved by the METIS PartMeshNodal and METIS PartMeshDual API routines
@@ -654,7 +654,7 @@ PUBLIC :: METIS_PartMeshDual
 ! date: 28 July 2021
 ! summary: This function us used to partition a mesh into `nparts` parts based on a partitioning of the mesh's nodal graph.
 !
-!### Introduction
+!# Introduction
 ! This function us used to partition a mesh into `nparts` parts based on a
 !  partitioning of the mesh's nodal graph.
 !
@@ -732,7 +732,7 @@ PUBLIC :: METIS_PartMeshNodal
 ! date: 27 July 2021
 ! summary: 	This function is used to generate the dual graph of a mesh.
 !
-!### Introduction
+!# Introduction
 ! This function is used to generate the dual graph of a mesh.
 !
 !@note
@@ -794,7 +794,7 @@ PUBLIC :: METIS_MeshToDual
 ! date: 27 July 2021
 ! summary: This function is used to generate the nodal graph of a mesh.
 !
-!### Introduction
+!# Introduction
 ! This function is used to generate the nodal graph of a mesh.
 !
 !@note
