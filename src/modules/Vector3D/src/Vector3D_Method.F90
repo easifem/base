@@ -19,7 +19,7 @@
 ! date: 	24 Feb 2021
 ! summary: This module contains method for [[Vector3D_]] data type
 !
-!### Introduction
+!# Introduction
 !This module contains method for [[Vector3D_]] data type. It contains following submodules:
 !
 ! * `Vector3D_Method@Constructor.F90`
@@ -42,7 +42,7 @@ PRIVATE
 ! date: 	24 Feb 2021
 ! summary: 	This function returns the shape of [[Vector3D_]]
 !
-!### Introduction
+!# Introduction
 ! This routine returns the shape of [[Vector3D_]]
 !
 !### Usage
@@ -94,7 +94,7 @@ PUBLIC :: SIZE
 ! date: 	23 Feb 2021
 ! summary: 	Returns the total dimension of an array
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the total dimension (or rank) of an array,
 
@@ -119,7 +119,7 @@ PUBLIC :: getTotalDimension
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the total dimension (rank) of an array
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets the rank(total dimension) of an array
 
@@ -144,7 +144,7 @@ PUBLIC :: setTotalDimension
 ! date: 	24 Feb 2021
 ! summary: 	This routine allocate the data for [[Vector3D_]]
 !
-!### Introduction
+!# Introduction
 ! This subroutine reset the instance of [[Vector3D_]] to zero
 !
 
@@ -189,7 +189,7 @@ PUBLIC :: DeallocateData
 ! date: 	24 Feb 2021
 ! summary: 	This routine initiate the instance of [[Vector3D_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This routine initiate the instance of [[Vector3D_]]. If `Val` is 1D or 2D vector then the rest of the components of instance of [[Vector3D_]] will be set to zero. If `SIZE(Val)>=4` then only first 3 components are used to construct the instance.
 !
@@ -218,7 +218,7 @@ END INTERFACE
 ! date: 	24 Feb 2021
 ! summary: 	This routine initiate the instance of [[Vector3D_]] from another object, basically it is a copy operation
 !
-!### Introduction
+!# Introduction
 ! This routine initiate the instance of [[Vector3D_]] from another object, basically it is a copy operation.
 !
 !
@@ -284,7 +284,7 @@ PUBLIC :: ASSIGNMENT(=)
 ! date: 24 Feb 2021
 ! summary: Function to create an instance of [[vector3d_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function creates an instance of [[vector3d_]] from given fortran vector of real numbers
 !
@@ -322,7 +322,7 @@ PUBLIC :: Vector3D
 ! date: 	24 Feb 2021
 ! summary: 	This function returns the pointer to an instance of [[Vector3D_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns pointer to an instance of [[Vector3D_]]
 !
@@ -508,7 +508,7 @@ END INTERFACE
 ! date: 	25 Feb 2021
 ! summary: 	This function returns the box product (triple scalar product) of three vector.
 !
-!### Introduction
+!# Introduction
 !
 ! Box product or triple scalar product is defined as:
 !
@@ -567,7 +567,7 @@ PUBLIC :: OPERATOR(.DOT. )
 ! date: 	24 Feb 2021
 ! summary: 	This function computes the vector product
 !
-!### Introduction
+!# Introduction
 !
 ! Ths function computes the vector product of two [[Vector3D_]] object and returns another [[Vector3D_]] object.
 !
@@ -602,7 +602,7 @@ END INTERFACE
 ! date: 	24 Feb 2021
 ! summary: 	This function computes the vector product
 !
-!### Introduction
+!# Introduction
 !
 ! Ths function computes the vector product of a [[Vector3D_]] object and a fortran vector, and returns another [[Vector3D_]] object.
 !
@@ -638,7 +638,7 @@ END INTERFACE
 ! date: 	24 Feb 2021
 ! summary: 	This function computes the vector product
 !
-!### Introduction
+!# Introduction
 !
 ! Ths function computes the vector product of a [[Vector3D_]] object and a fortran vector, and returns another [[Vector3D_]] object.
 !
@@ -674,7 +674,7 @@ END INTERFACE
 ! date: 	25 Feb 2021
 ! summary: 	This function performs vector triple product
 !
-!### Introduction
+!# Introduction
 !
 ! This function performs vector triple product, and returns the resultant [[Vector3D_]] object;
 !
@@ -737,7 +737,7 @@ PUBLIC :: OPERATOR(.X.)
 ! date: 25 Feb 2021
 ! summary: This function creates Norm2 of a vector
 !
-!### Introduction
+!# Introduction
 ! This function computes second norm of [[vector3d_]] object.
 !
 ! $$\vert \mathbf(u) \vert = \sqrt{\matbf{u} \cdot \mathbf{v}}$$
@@ -821,7 +821,7 @@ PUBLIC :: OPERATOR( .HAT. )
 ! date:  25 Feb 2021
 ! summary: 	This function returns the angle beteen two vectors
 !
-!### Introduction
+!# Introduction
 ! Angle between two vectors $\mathbf{u}$ and $\mathbf{v}$ is given by:
 !
 ! $$\cos \theta = \frac{\mathbf{u} \cdot \mathbf{v}}{\vert \mathbf{u} \vert \cdot \vert \mathbf{v} \vert}$$
@@ -871,7 +871,7 @@ PUBLIC :: Angle
 ! date: 	25 Feb 2021
 ! summary: 	Returns the vector of projection from u onto v
 !
-!### Introduction
+!# Introduction
 ! Projetion of a vector $\mathbf{u}$ on \mathbf{v} is given by
 !
 ! $$\mathbf{p} =\left( \frac{\bf{u}\cdot \bf{v}}{\bf{v} \cdot \bf{v}} \right) \bf{v}$$
@@ -933,7 +933,7 @@ PUBLIC :: OPERATOR( .Parallel. )
 ! date: 	25 Feb 2021
 ! summary: Returns the component of u normal to v.
 !
-!### Introduction
+!# Introduction
 !
 ! The component of u normal to v is given by:
 !
@@ -976,7 +976,7 @@ PUBLIC :: Normal
 ! date: 	25 Feb 2021
 ! summary: 	Returns the projection from u onto v
 !
-!### Introduction
+!# Introduction
 ! Projetion of a vector $\mathbf{u}$ on \mathbf{v} is given by
 !
 ! $$p = \mathbf{u} \cdot \hat{\mathbf{v}}$$

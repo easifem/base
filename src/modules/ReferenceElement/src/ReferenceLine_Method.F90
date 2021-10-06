@@ -33,7 +33,7 @@ PRIVATE
 ! date: 	1 March 2021
 ! summary: This subroutine constructs an instance of line reference element
 !
-!### Introduction
+!# Introduction
 ! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
 !
 ! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
@@ -77,7 +77,7 @@ PUBLIC :: Initiate
 ! date: 	3 March 2021
 ! summary: This routine constructs an instance of line reference element
 !
-!### Introduction
+!# Introduction
 ! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
 !
 ! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
@@ -116,7 +116,7 @@ PUBLIC :: ReferenceLine
 ! date: 	3 March 2021
 ! summary: This routine constructs an instance of line reference element
 !
-!### Introduction
+!# Introduction
 ! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
 !
 ! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
@@ -159,7 +159,7 @@ PUBLIC :: ReferenceLine_Pointer
 ! date: 1 March 2021
 ! summary: This function returns lagrange element on line
 !
-!### Introduction
+!# Introduction
 ! Returns lagrange line element of higher order. By lagrange element we means
 ! standard finite elements, with equi-distance lagrange interpolation points.
 !
@@ -196,7 +196,7 @@ PUBLIC :: LagrangeElement_Line
 ! date: 	3 March 2021
 ! summary: 	This function returns the measure of linear line element
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the measure of linear line element. Its generic form is given by [[ReferenceElement_Method:MeasureSimplex]]
 !

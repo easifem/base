@@ -34,7 +34,7 @@ PRIVATE
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This function computes the absolute sum of a vector
-!### Introduction
+!# Introduction
 !
 ! This function computes the absolute sum of a vector.
 !
@@ -68,7 +68,7 @@ END INTERFACE
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This function computes the absolute sum of a vector
-!### Introduction
+!# Introduction
 !
 ! This function computes the absolute sum of a vector.
 !
@@ -138,7 +138,7 @@ PUBLIC :: ASUM
 ! date: 	8 March 2021
 ! summary: This subroutine computes AXPY
 !
-!### Introduction
+!# Introduction
 ! 	This subroutine performs following task
 !
 ! $$Y=Y+A*X$$
@@ -182,7 +182,7 @@ END INTERFACE
 ! date: 	8 March 2021
 ! summary: This subroutine computes AXPY
 !
-!### Introduction
+!# Introduction
 ! 	This subroutine performs following task
 !
 ! $$Y=Y+A*X$$
@@ -216,7 +216,7 @@ END INTERFACE
 ! date: 	8 March 2021
 ! summary: This subroutine computes AXPY
 !
-!### Introduction
+!# Introduction
 ! This subroutine performs `AXPY` operation. It performs the following task.
 !
 ! $$Y(i)=Y(i)+A(i)*X(i)$$
@@ -273,7 +273,7 @@ PUBLIC :: AXPY
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
-!### Introduction
+!# Introduction
 ! This subroutine copies one [[RealVector_]] object into another object, i.e. `Y=X`. See figure given below:
 !
 ! <img src=|media|/scalar_copy_scalar.jpg alt="drawing" style="max-width:500px;"/>
@@ -312,7 +312,7 @@ END INTERFACE
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
-!### Introduction
+!# Introduction
 ! This subroutine copy a fortran vector into [[RealVector_]] obj, i.e. `Y=X`
 !
 !@note
@@ -349,7 +349,7 @@ END INTERFACE
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
-!### Introduction
+!# Introduction
 ! This subroutine copy an instance of [[RealVector_]] in another fortran vector, i.e. `Val=obj`
 !
 !@note
@@ -387,7 +387,7 @@ END INTERFACE
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
-!### Introduction
+!# Introduction
 ! This subroutine copy a vector of [[RealVector_]] into another vector, i.e. `obj1=obj2` see the figure below:
 !
 ! <img src=|media|/vector_copy_vector.jpg alt="drawing" style="max-width:500px;"/>
@@ -430,7 +430,7 @@ END INTERFACE
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
-!### Introduction
+!# Introduction
 ! This subroutine copies a vector of [[RealVector_]] into a scalar instance of [[RealVector_]]. See Figure below:
 !
 ! <img src=|media|/scalar_copy_vector.jpg alt="drawing" style="max-width:500px;"/>
@@ -457,7 +457,7 @@ END INTERFACE
 ! date: 	26 Feb 2021
 ! summary: 	This is generic subroutine for copying.
 !
-!### Introduction
+!# Introduction
 ! See
 ! * [[intrinsicCOPYintrinsic]]
 ! * [[scalarCOPYscalar]]
@@ -642,7 +642,7 @@ PUBLIC :: DOT_PRODUCT
 ! date: 	25 Feb 2021
 ! summary: 	This function computes Euclidean norm of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 !
 ! L2 norm of a vector is give by
 !
@@ -673,7 +673,7 @@ END INTERFACE
 ! date: 	25 Feb 2021
 ! summary: 	This routine computes the L2 norm of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This routine computes L2 norm of a vector of [[RealVector_]].
 !

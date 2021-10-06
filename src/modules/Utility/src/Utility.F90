@@ -39,7 +39,7 @@ INTEGER( I4B ), PARAMETER :: NPAR_POLYTERM=8
 ! date: 	3 Apr 2021
 ! summary: 	returns bool logical indicating if a and b are approximately equal
 !
-!### Introduction
+!# Introduction
 ! This routine just does a simple absolute comparison using an epsilon that is
 ! a compile time constant. It should be used whenever possible because it has
 ! the least overhead. However, it is not appropriate to use when a and b
@@ -72,7 +72,7 @@ PUBLIC :: OPERATOR( .APPROXEQA. )
 ! date: 	3 April 2021
 ! summary: returns bool logical indicating if a and b are approximately equal
 !
-!### Introduction
+!# Introduction
 ! This performs a relative comparison by scaling the default epsilon value to
 ! the size of the larger of the two. It should be used when @c and @b are of
 ! the same magnitude and very large or very small. If either @c a or @c b is
@@ -99,7 +99,7 @@ PUBLIC :: OPERATOR( .APPROXEQR. )
 ! date: 	3 Apr 2021
 ! summary: 	returns bool logical indicating if a and b are approximately equal
 !
-!### Introduction
+!# Introduction
 ! This performs a comparison of the binary representation of the two reals
 ! to compare the binary units in the last place (ULP). If the two reals differ
 ! on the floating point number line by 10 or less representable floating point
@@ -471,7 +471,7 @@ END INTERFACE
 ! date: 16 Sept 2021
 ! summary: Returns a linearly spaced vector
 !
-!### Introduction
+!# Introduction
 ! Returns a linearly spaced vector with n points in [a, b]
 ! if n is omitted, 100 points will be considered
 
@@ -503,7 +503,7 @@ PUBLIC :: Linspace
 ! date: 16 Sept 2021
 ! summary: meshgrid generate mesh grid over a rectangular domain of [xmin xmax, ymin, ymax]
 !
-!### Introduction
+!# Introduction
 !
 ! Meshgrid generate mesh grid over a rectangular domain of [xmin xmax, ymin, ymax]
 ! - xgv, ygv are grid vectors in form of full grid data
@@ -639,7 +639,7 @@ END INTERFACE
 ! date: 	3 March 2021
 ! summary: Returns a vector of integer
 !
-!### Introduction
+!# Introduction
 ! Returns an array of integers given `istart`,  `iend`,  and `increment` values.
 ! Default value of increment is 1
 ! This function belongs to the generic function [[Utility:arange]]
@@ -766,7 +766,7 @@ PUBLIC :: TAIL
 ! date: 	22 March 2021
 ! summary: 	Returns the first half of the array `x` if `section == 1`,
 !
-!### Introduction
+!# Introduction
 !
 ! Returns the first half of the array `x` if `section == 1`, the second half
 ! of the array `x` if `section == 2`, and an empty array otherwise. If `size
@@ -790,7 +790,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	Returns the first half of the array `x` if `section == 1`,
 !
-!### Introduction
+!# Introduction
 !
 ! Returns the first half of the array `x` if `section == 1`, the second half
 ! of the array `x` if `section == 2`, and an empty array otherwise. If `size
@@ -813,7 +813,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	Returns the first half of the array `x` if `section == 1`,
 !
-!### Introduction
+!# Introduction
 !
 ! Returns the first half of the array `x` if `section == 1`, the second half
 ! of the array `x` if `section == 2`, and an empty array otherwise. If `size
@@ -971,7 +971,7 @@ PUBLIC :: isBlank
 ! summary: Returns number of substrings contained in input string 'chars'
 ! delimited by white space.
 !
-!### Introduction
+!# Introduction
 ! Returns number of substrings contained in input string 'chars' delimited by
 ! white space.
 ! This routien has been adopted from
@@ -1022,7 +1022,7 @@ PUBLIC :: numMatchStr
 ! date: 5 sept 2021
 ! summary: Returns whether or not a substring pattern is found within string
 !
-!### Introduction
+!# Introduction
 ! Returns whether or not a substring pattern is found within string
 !
 !@note
@@ -1075,7 +1075,7 @@ PUBLIC :: strFind
 ! date: 5 sept 2021
 ! summary: Replaces a substring pattern with a different substring in a string
 !
-!### Introduction
+!# Introduction
 ! Replaces a substring pattern with a different substring in a string.
 ! - chars the string which will have substrings replaced.
 ! - findp the substring pattern to find and replace
@@ -1109,7 +1109,7 @@ PUBLIC :: FindReplace
 ! date: 8 sept 2021
 ! summary: Replaces a substring pattern with a different substring in a string
 !
-!### Introduction
+!# Introduction
 ! Replaces a substring pattern with a different substring in a string.
 ! - chars the string which will have substrings replaced.
 ! - findp the substring pattern to find and replace
@@ -1146,7 +1146,7 @@ PUBLIC :: getField
 ! summary: routine replaces slash character in file path names with
 ! the system appropriate file separator slash.
 !
-!### Introduction
+!# Introduction
 ! This routine returns the path, filename, and extension.
 
 INTERFACE
@@ -1169,7 +1169,7 @@ PUBLIC :: SlashRep
 ! date: 8 sept 2021
 ! summary: Returns the path,filename, and extension
 !
-!### Introduction
+!# Introduction
 ! This routine returns the path, filename, and extension.
 
 INTERFACE
@@ -2026,7 +2026,7 @@ PUBLIC :: Reallocate
 ! date: 	22 March 2021
 ! summary: 	 This FUNCTION evaluate vectors product
 !
-!### Introduction
+!# Introduction
 ! 	This FUNCTION evaluate vectors products
 ! $$\mathbf{ans} = \mathbf{a} \times \mathbf{b}$$
 
@@ -2064,7 +2064,7 @@ PUBLIC :: VectorProduct
 ! date: 	22 March 2021
 ! summary: 	This FUNCTION returns outerproduct(matrix) of two vectors
 !
-!### Introduction
+!# Introduction
 !
 ! $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
 
@@ -2084,7 +2084,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This FUNCTION returns outerproduct
 !
-!### Introduction
+!# Introduction
 !
 ! This FUNCTION returns outerproduct(matrix) of two vectors
 ! - $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
@@ -2107,7 +2107,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This FUNCTION returns outerproduct
 !
-!### Introduction
+!# Introduction
 !
 ! This FUNCTION returns outerprod between a matrix and a vector
 ! `Ans(:,:,i) = a(:,:) * b(i)`
@@ -2128,7 +2128,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This FUNCTION returns outerproduct
 !
-!### Introduction
+!# Introduction
 !
 ! This FUNCTION evaluate outerproduct between a 3D matrix and a vector
 ! - `Ans( :, :, :,  I ) = a( :, :, : ) * b( I )`
@@ -2149,7 +2149,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	This FUNCTION returns outerproduct
 !
-!### Introduction
+!# Introduction
 !
 ! This FUNCTION evaluates outer product between a matrix and two vector
 !
@@ -2463,7 +2463,7 @@ PUBLIC :: SWAP
 ! date: 3 April 2021
 ! summary: matmul for rank3  and rank1 array
 !
-!### Introduction
+!# Introduction
 !
 ! This fuction performs following task
 ! `Ans(:,:) = a1(:,:,a)*a2(a)`
@@ -2484,7 +2484,7 @@ END INTERFACE
 ! date: 3 April 2021
 ! summary: matmul for rank1 and rank3 array
 !
-!### Introduction
+!# Introduction
 !
 ! This fuction performs following task
 ! `Ans(i,j) = a1(a)*a2(a,i,j)`
@@ -2504,7 +2504,7 @@ END INTERFACE
 ! date: 	3 April 2021
 ! summary: 	matmul for rank2 and rank3 array
 !
-!### Introduction
+!# Introduction
 !
 ! This fuction performs following task
 ! `Ans(i,j,ip) = a1(i,I)*a2(I,j,ip)`
@@ -2524,7 +2524,7 @@ END INTERFACE
 ! date: 	3 April 2021
 ! summary: 	matmul for rank4 and rank1 array
 !
-!### Introduction
+!# Introduction
 !
 ! `Ans(:,:,:) = a1(:,:,:,a)*a2(a)`
 
@@ -2543,7 +2543,7 @@ END INTERFACE
 ! date: 	3 April 2021
 ! summary: 	matmul for rank3 and rank2
 !
-!### Introduction
+!# Introduction
 ! This fuction performs following task
 ! `Ans(i,j,ip) = a1(i,j,I)*a2(I,ip)`
 
@@ -3265,7 +3265,7 @@ PUBLIC :: Degrees
 ! date: 	3 April 2021
 ! summary: 	This subroutine search the location of nearest point to x in the array of coordinates; Array
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine search the location of nearest point to x in the
 ! array of coordinates; Array
@@ -3510,7 +3510,7 @@ PUBLIC :: IMINLOC
 ! date: 	22 Aug 2021
 ! summary: This function returns a unique number for a given string
 !
-!### Introduction
+!# Introduction
 ! This function returns a unique number for a given string
 !
 ! Reference

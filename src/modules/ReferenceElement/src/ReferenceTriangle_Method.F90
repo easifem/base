@@ -33,7 +33,7 @@ PRIVATE
 ! date: 	3 March 2021
 ! summary: This routine constructs an instance of [[ReferenceTriangle_]]
 !
-!### Introduction
+!# Introduction
 ! * This routine contructs an instance of [[ReferenceTriangle_]]
 ! * User can specify the coordinates of the trinagle
 !@note
@@ -76,7 +76,7 @@ PUBLIC :: Initiate
 ! date: 	3 March 2021
 ! summary: This function returns an instance of [[ReferenceTriangle_]]
 !
-!### Introduction
+!# Introduction
 ! * This routine contructs an instance of [[ReferenceTriangle_]]
 ! * User can specify the coordinates of the trinagle
 !@note
@@ -115,7 +115,7 @@ PUBLIC :: ReferenceTriangle
 ! date: 	3 March 2021
 ! summary: This function returns an instance of [[ReferenceTriangle_]]
 !
-!### Introduction
+!# Introduction
 ! * This routine contructs an instance of [[ReferenceTriangle_]]
 ! * User can specify the coordinates of the trinagle
 !@note
@@ -154,7 +154,7 @@ PUBLIC :: ReferenceTriangle_Pointer
 ! date: 1 March 2021
 ! summary: Returns lagrange Triangle element of higher order
 !
-!### Introduction
+!# Introduction
 ! 	This routine retuns the lagrance element of higher order
 ! This routine will be called by [[ReferenceTriangle_:LagrangeElement]]
 ! Currently upto 3rd order triangle elements are supported.
@@ -190,7 +190,7 @@ END INTERFACE
 ! date: 5 March 2021
 ! summary: Returns the measure of linear triangle
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the measure of linear triangle. This function belongs to the generic function [[ReferenceElement_Method:MeasureSimplex]].
 !

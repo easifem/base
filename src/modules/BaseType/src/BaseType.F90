@@ -266,7 +266,7 @@ TYPE( SparseMatrixReOrdering_ ), PUBLIC, PARAMETER :: &
 ! date: 13 June 2021
 ! summary: User data type for handling the sparsity pattern
 !
-!### Introduction
+!# Introduction
 ! - IA : size of IA is number of rows in the sparse matrix. It contains indice
 ! for accessing the entries in JA. For example, IA( iRow )
 ! to IA( iRow + 1 ) - 1 are indices of entries of matrix of iRow.
@@ -459,7 +459,7 @@ PUBLIC :: DeformationGradientPointer_
 ! date: 	22 March 2021
 ! summary: 	Left Cauchy Green Deformation tensor
 !
-!### Introduction
+!# Introduction
 ! 	This data tyoe defines Left Cauchy Green Deformation tensor, which is an Eulerian tensor. It is symmetric and given by
 !
 ! $$b=F F^{T}=V^2$$
@@ -488,7 +488,7 @@ PUBLIC :: LeftCauchyGreenPointer_
 ! date: 	22 March 2021
 ! summary: 	Right Cauchy Green Deformation tensor
 !
-!### Introduction
+!# Introduction
 ! 	This data tyoe defines Right Cauchy Green Deformation tensor, which is an Eulerian tensor. It is symmetric and given by
 !
 ! $$b=F F^{T}=V^2$$

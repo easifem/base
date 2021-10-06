@@ -59,7 +59,7 @@ END SUBROUTINE MetisSetDefaultOptions
 ! date: 28 Jul 2021
 ! summary: This function computes fill reducing orderings of sparse matrices using the multilevel nested dissection algorithm.
 !
-!### Introduction
+!# Introduction
 !
 ! This function computes fill reducing orderings of sparse matrices using the multilevel nested dissection algorithm.
 !

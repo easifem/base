@@ -142,7 +142,7 @@ END SUBROUTINE setDisplayProfile
 ! date: 21 Sept 2021
 ! summary: This subroutine Displays the string
 !
-!### Introduction
+!# Introduction
 ! This routine displays a string
 !
 !## usage
@@ -178,7 +178,7 @@ END SUBROUTINE Display_Str
 ! date: 21 Sept 2021
 ! summary: This routine prints a string; msg=val
 !
-!### Introduction
+!# Introduction
 !
 !  This routine prints a string; msg=val
 !
@@ -203,7 +203,7 @@ END SUBROUTINE Display_Str2
 ! date: 21 Sept 2021
 ! summary: 	This subroutine display a scalar real number
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a scalar real number
 !
@@ -227,7 +227,7 @@ END SUBROUTINE Display_Real64
 ! date: 21 Sept 2021
 ! summary: 	This subroutine display a scalar real number
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a scalar real number
 !
@@ -251,7 +251,7 @@ END SUBROUTINE Display_Real32
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar integer number
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a scalar integer number
 !
@@ -275,7 +275,7 @@ END SUBROUTINE Display_Int64
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar integer number
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a scalar integer number
 !
@@ -299,7 +299,7 @@ END SUBROUTINE Display_Int32
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar integer number
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a scalar integer number
 !
@@ -323,7 +323,7 @@ END SUBROUTINE Display_Int16
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar integer number
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a scalar integer number
 !
@@ -347,7 +347,7 @@ END SUBROUTINE Display_Int8
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar logical variable
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a scalar logical variable
 !
@@ -371,7 +371,7 @@ END SUBROUTINE Display_Logical
 ! date: 21 Sept 2021
 ! summary: This subroutine display a vector of real numbers
 !
-!### Introduction
+!# Introduction
 !  This subroutine display a vector of real numbers
 !
 !
@@ -399,7 +399,7 @@ END SUBROUTINE Display_Vector_Real64
 ! date: 21 Sept 2021
 ! summary: This subroutine display a vector of real numbers
 !
-!### Introduction
+!# Introduction
 !  This subroutine display a vector of real numbers
 !
 !
@@ -426,7 +426,7 @@ END SUBROUTINE Display_Vector_Real32
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a vector of integer numbers
 !
@@ -454,7 +454,7 @@ END SUBROUTINE Display_Vector_Int32
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a vector of integer numbers
 !
@@ -482,7 +482,7 @@ END SUBROUTINE Display_Vector_Int64
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a vector of integer numbers
 !
@@ -509,7 +509,7 @@ END SUBROUTINE Display_Vector_Int16
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine display a vector of integer numbers
 !
@@ -536,7 +536,7 @@ END SUBROUTINE Display_Vector_Int8
 ! date: 21 Sept 2021
 ! summary: This subroutine display a matrix of real numbers
 !
-!### Introduction
+!# Introduction
 !
 ! ## Usage
 ! ```fortran
@@ -559,7 +559,7 @@ END SUBROUTINE Display_Mat2_Real64
 ! date: 21 Sept 2021
 ! summary: This subroutine display a matrix of real numbers
 !
-!### Introduction
+!# Introduction
 !
 ! ## Usage
 ! ```fortran
@@ -670,7 +670,7 @@ END SUBROUTINE Display_Mat2_Int8
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the contents of a rank 3 array.
 !
@@ -695,7 +695,7 @@ END SUBROUTINE Display_Mat3_Real64
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the contents of a rank 3 array.
 !
@@ -720,7 +720,7 @@ END SUBROUTINE Display_Mat3_Real32
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the contents of a rank 3 array.
 !
@@ -745,7 +745,7 @@ END SUBROUTINE Display_Mat3_Int64
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the contents of a rank 3 array.
 !
@@ -770,7 +770,7 @@ END SUBROUTINE Display_Mat3_Int32
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the contents of a rank 3 array.
 !
@@ -796,7 +796,7 @@ END SUBROUTINE Display_Mat3_Int16
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the contents of a rank 3 array.
 !
@@ -822,7 +822,7 @@ END SUBROUTINE Display_Mat3_Int8
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the content of rank4 matrix
 !
@@ -848,7 +848,7 @@ END SUBROUTINE Display_Mat4_Real64
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the content of rank4 matrix
 !
@@ -874,7 +874,7 @@ END SUBROUTINE Display_Mat4_Real32
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the content of rank4 matrix
 !
@@ -900,7 +900,7 @@ END SUBROUTINE Display_Mat4_Int64
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the content of rank4 matrix
 !
@@ -926,7 +926,7 @@ END SUBROUTINE Display_Mat4_Int32
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the content of rank4 matrix
 !
@@ -952,7 +952,7 @@ END SUBROUTINE Display_Mat4_Int16
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine displays the content of rank4 matrix
 !

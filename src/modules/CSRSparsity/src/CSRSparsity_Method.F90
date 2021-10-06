@@ -33,7 +33,7 @@ PRIVATE
 ! date: 	22 March 2021
 ! summary: This subroutine constructs the CSR sparsity object
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine initiate the instance of [[CSRSparsity_]] object
 
@@ -95,7 +95,7 @@ PUBLIC :: ASSIGNMENT( = )
 ! date: 	22 March 2021
 ! summary: 	This function returns the shape of the sparse matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the shape of sparse matrix
 
@@ -120,7 +120,7 @@ PUBLIC :: Shape
 ! date: 	22 March 2021
 ! summary: This function returns the size of sparse matrix
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the size of sparse matrix
 ! If Dims equal to 1 then total number of rows are returned
@@ -213,7 +213,7 @@ PUBLIC :: Display
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set the sparsity pattern of a given row
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets the sparsity pattern of a given row
 ! - If `obj%tdof` is equal to 1, then `Col` is sorted in increasing order,
@@ -253,7 +253,7 @@ END INTERFACE
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set sparsity pattern of `CSRSparsity_`
 !
-!### Introduction
+!# Introduction
 ! This subroutine set sparsity pattern of `CSRSparsity_`
 ! This will finally set the data into
 ! - `obj%IA(:)`,

@@ -82,7 +82,7 @@ PUBLIC :: SIZE
 ! date: 	23 Feb 2021
 ! summary: 	Returns the total dimension of an array
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the total dimension (or rank) of an array,
 
@@ -107,7 +107,7 @@ PUBLIC :: getTotalDimension
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the total dimension (rank) of an array
 !
-!### Introduction
+!# Introduction
 !
 ! This subroutine sets the rank(total dimension) of an array
 
@@ -185,7 +185,7 @@ PUBLIC :: DeallocateData
 ! date: 	27 Feb 2021
 ! summary: 	This subroutine allocates the memory for [[RealVector_]]
 !
-!### Introduction This subroutine allocates the memeory for [[RealVector_]]
+!# Introduction This subroutine allocates the memeory for [[RealVector_]]
 !
 !@note
 ! 	This subroutine is an alias for [[Allocate_Data]]
@@ -211,7 +211,7 @@ END INTERFACE
 ! date: 	27 Feb 2021
 ! summary: This subroutine allocate the memory for a vector of type [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This subroutine allocate the memory for a vector of type [[RealVector_]]
 !@note
 ! The size of `obj` would be same as the size of `tSize`
@@ -244,7 +244,7 @@ END INTERFACE
 ! date: 	27 Feb 2021
 ! summary: This subroutine allocate the memory for an instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This subroutine allocate the memory for an instance of [[RealVector_]].
 ! User can specify the lowerbounds and upper bounds.
 !
@@ -290,7 +290,7 @@ PUBLIC :: Initiate
 ! date: 	28 Feb 2021
 ! summary: 	This routine computes radom_number
 !
-!### Introduction
+!# Introduction
 !
 ! This routine calls `RANDOM_NUMBER` to generate a random instnance of [[RealVector_]]
 !
@@ -321,7 +321,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This routine computes radom_number
 !
-!### Introduction
+!# Introduction
 !
 ! This routine calls `RANDOM_NUMBER` to generate a random instnance of [[RealVector_]]
 !
@@ -361,7 +361,7 @@ PUBLIC :: RANDOM_NUMBER
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns an instance of [[RealVector_]]
 !
@@ -391,7 +391,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns an instance of [[RealVector_]] by copying the contents of a fortran integer vector.
 !
 !@note
@@ -429,7 +429,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns an instance of [[RealVector_]] by copying the contents of a fortran real vector.
 !
 !@note
@@ -476,7 +476,7 @@ PUBLIC :: RealVector
 ! date: 	28 Feb 2021
 ! summary: 	This function returnt the pointer to a newly created instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returnt the pointer to a newly created instance of [[RealVector_]]
 !
 !### Usage
@@ -508,7 +508,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the pointer to an instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns a pointer to an newly created instance of [[RealVector_]] by copying the contents of a fortran integer vector.
 !
 !@note
@@ -545,7 +545,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the pointer to an instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns a pointer to an newly created instance of [[RealVector_]] by copying the contents of a fortran real vector.
 !
 !@note
@@ -1195,7 +1195,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns an scalar instance of [[RealVector_]] by combining different entries of a vector of [[RealVector_]]
 !
 !### Usage
@@ -1230,7 +1230,7 @@ INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns the instance of [[RealVector_]] from the vector of [[RealVector_]].
 !
 !### Usage
@@ -1264,7 +1264,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns the instance of [[RealVector_]] from the vector of [[RealVector_]].
 !
 !### Usage
@@ -1300,7 +1300,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns an instance of [[RealVector_]] by using selective from `obj`
 !
@@ -1334,7 +1334,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns the instance of [[RealVector_]] using istart, iend, stride values
 !
 !
@@ -1397,7 +1397,7 @@ PUBLIC :: get
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the pointer to vector of real numbers stored inside [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns the pointer to vector of real numbers stored inside [[RealVector_]]
 !
 !### Usage
@@ -1425,7 +1425,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the pointer to vector of real numbers stored inside [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 ! This function returns the pointer to vector of real numbers stored inside [[RealVector_]] for a given degree of freedom
 !
 !### Usage
@@ -1461,7 +1461,7 @@ PUBLIC :: getPointer
 ! date: 	28 Feb 2021
 ! summary: This function finds the location of Value inside the [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function finds the location of `Value` inside the instance of [[RealVector_]]
 !
@@ -1491,7 +1491,7 @@ END INTERFACE
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the location of values inside the [[RealVector_]]
 !
-!### Introduction
+!# Introduction
 !
 ! This function returns the nearest location of values inside the [[RealVector_]]
 !
