@@ -567,6 +567,40 @@ PUBLIC :: Display
 !> authors: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the total length of the vector
+!
+!# Introduction
+!
+! Returns the total length of the vector.
+!
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ) :: obj
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/.tNodes.
+! !
+! CALL Display(     .tNodes. obj, '.tNodes. obj [30] : ' )
+! CALL Display( obj .tNodes. 1, 'obj .tNodes. 1 [10] : ' )
+! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
+! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION dof_tNodes1( obj ) RESULT( Ans )
@@ -588,6 +622,35 @@ END INTERFACE
 ! This function returns the total number of nodes for a given degree of
 ! freedom number
 ! idof should be lesser than the total degree of freedom
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ) :: obj
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/.tNodes.
+! !
+! CALL Display(     .tNodes. obj, '.tNodes. obj [30] : ' )
+! CALL Display( obj .tNodes. 1, 'obj .tNodes. 1 [10] : ' )
+! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
+! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_tNodes2( obj, idof ) RESULT( Ans )
@@ -597,14 +660,74 @@ MODULE PURE FUNCTION dof_tNodes2( obj, idof ) RESULT( Ans )
 END FUNCTION dof_tNodes2
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                           tNodes@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This function returns the total number of nodes
+!
+!# Introduction
+!
+! This function returns the total number of nodes for a given degree of
+! freedom number
+! idof should be lesser than the total degree of freedom
+!
+!## Usage
+!
+!```fortran
+!
+!```
+
+INTERFACE
+MODULE PURE FUNCTION dof_tNodes3( obj, varName ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: varName
+  INTEGER( I4B ) :: Ans
+END FUNCTION dof_tNodes3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           tNodes@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This function returns the total number of nodes
+!
+!# Introduction
+!
+! This function returns the total number of nodes for a given degree of
+! freedom number
+! idof should be lesser than the total degree of freedom
+!
+!## Usage
+!
+!```fortran
+!
+!```
+
+INTERFACE
+MODULE PURE FUNCTION dof_tNodes4( obj, idof ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: idof( : )
+  INTEGER( I4B ) :: Ans
+END FUNCTION dof_tNodes4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 INTERFACE OPERATOR( .tNodes. )
-  MODULE PROCEDURE dof_tNodes1, dof_tNodes2
+  MODULE PROCEDURE dof_tNodes1, dof_tNodes2, dof_tNodes3, dof_tNodes4
 END INTERFACE
 
 PUBLIC :: OPERATOR( .tNodes. )
 
 INTERFACE SIZE
-  MODULE PROCEDURE dof_tNodes1, dof_tNodes2
+  MODULE PROCEDURE dof_tNodes1, dof_tNodes2, dof_tNodes3, dof_tNodes4
 END INTERFACE SIZE
 
 PUBLIC :: SIZE
@@ -616,6 +739,35 @@ PUBLIC :: SIZE
 !> authors: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This function returns the total number of degree of freedom
+!
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ) :: obj
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/.tNodes.
+! !
+! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
+! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
+! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
   MODULE PURE FUNCTION dof_tdof1( obj ) RESULT( Ans )
@@ -636,6 +788,34 @@ END INTERFACE
 ! This function returns the total number of degrees of freedom in a
 ! physical variable.
 ! The physical variable is specified by using its name.
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ) :: obj
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/.tNodes.
+! !
+! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
+! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
+! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_tdof2( obj, Name ) RESULT( Ans )
@@ -657,6 +837,34 @@ END INTERFACE
 ! This function returns the total number of degrees of freedom in a
 ! physical variable.
 ! The physical variable is specified by using its name.
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ) :: obj
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/.tNodes.
+! !
+! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
+! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
+! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_tdof3( obj, ivar ) RESULT( Ans )
@@ -1070,7 +1278,8 @@ PUBLIC :: OPERATOR( .tTimeComponents. )
 ! This subroutine extracts the values of from `val` corresponding to
 ! degrees of freedom specified by `DOFNo(:)` and return it in `V`
 !
-! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage format of returned vector.
+! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage
+! format of returned vector.
 
 INTERFACE
 MODULE PURE SUBROUTINE dof_getValue1( v, val, obj, dofNO, storageFMT, nptrs )
@@ -1122,7 +1331,8 @@ END INTERFACE
 ! This subroutine extracts the values of from `val` corresponding to
 ! degrees of freedom specified by `DOFNo(:)` and return it in `V`
 !
-! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage format of returned vector.
+! - `StorageFMT` can be 'Nodes_FMT' or `DOF_FMT`. It specify the storage
+! format of returned vector.
 
 INTERFACE
 MODULE PURE SUBROUTINE dof_getValue3( v, val, obj, dofNO, storageFMT, nptrs )

@@ -19,7 +19,7 @@
 ! date: 13 July 2021
 ! summary: 	Methods related to CSR sparsity
 
-SUBMODULE(CSRSparsity_Method) Constructor
+SUBMODULE(CSRSparsity_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -42,7 +42,6 @@ MODULE PROCEDURE csr_initiate1
   obj%ncol = ncol
   obj%nrow = nrow
   IF( PRESENT( dof ) ) THEN
-    obj%dof = dof
     tnodes = .tNodes. dof
     IF( tnodes .NE. MAX( nrow, ncol ) ) THEN
       CALL ErrorMSG( &
@@ -52,6 +51,7 @@ MODULE PROCEDURE csr_initiate1
       & __LINE__, stderr )
     STOP
     END IF
+    obj%dof = dof
   ELSE
     CALL initiate( obj=obj%dof, tNodes=[nrow], names=['K'], &
       & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )
@@ -98,6 +98,40 @@ MODULE PROCEDURE csr_Initiate3
   obj%IA = IA
   obj%JA = JA
 END PROCEDURE csr_Initiate3
+
+!----------------------------------------------------------------------------
+!                                                                CSRSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_constructor1
+  CALL Initiate(obj=ans, ncol=ncol, nrow=nrow, dof=dof)
+END PROCEDURE csr_constructor1
+
+!----------------------------------------------------------------------------
+!                                                                CSRSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_constructor2
+  CALL Initiate(obj=ans, IA=IA, JA=JA)
+END PROCEDURE csr_constructor2
+
+!----------------------------------------------------------------------------
+!                                                                CSRSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_constructor_1
+  ALLOCATE( CSRSparsity_:: ans )
+  CALL Initiate(obj=ans, ncol=ncol, nrow=nrow, dof=dof)
+END PROCEDURE csr_constructor_1
+
+!----------------------------------------------------------------------------
+!                                                                CSRSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_constructor_2
+  ALLOCATE( CSRSparsity_:: ans )
+  CALL Initiate(obj=ans, IA=IA, JA=JA)
+END PROCEDURE csr_constructor_2
 
 !----------------------------------------------------------------------------
 !                                                                     Shape
@@ -149,4 +183,4 @@ MODULE PROCEDURE csr_DeallocateData
   obj%isInitiated = .FALSE.
 END PROCEDURE csr_DeallocateData
 
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods
