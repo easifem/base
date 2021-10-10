@@ -188,10 +188,10 @@ PUBLIC :: DeallocateData
 !# Introduction This subroutine allocates the memeory for [[RealVector_]]
 !
 !@note
-! 	This subroutine is an alias for [[Allocate_Data]]
+! This subroutine is an alias for [[Allocate_Data]]
 !@endnote
 !
-! ```fortran
+!```fortran
 ! CALL Initiate(obj, 5)
 !```
 

@@ -18,11 +18,16 @@
 CHARACTER( LEN = * ), INTENT( IN ) :: msg
 INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
 LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
+CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: advance
 !   Define internal variables
 INTEGER( I4B ) :: I
 CALL setDefaultSettings
 IF( PRESENT( unitNo ) ) THEN; I = unitNo; ELSE; I = stdout; END IF
+#ifdef COLOR_DISP
 CALL DISP( &
   & title = TRIM(colorize( msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
   & style=COLOR_STYLE)), &
-  & x= val, unit = I )
+  & x= val, unit = I, advance=advance )
+#else
+CALL DISP( title = msg, x= val, unit = I, advance=advance )
+#endif

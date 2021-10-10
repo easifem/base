@@ -40,8 +40,10 @@ PRIVATE
 !
 ! This subroutine initiate [[DOF_]] object
 !
-!- If the size of all physical variables are equal then set tNodes = [tNodes] otherwise we need to provide size of each dof
-!- For a scalar physical variable such as pressure and temperature, `spaceCompo` is set to -1.
+!- If the size of all physical variables are equal then set
+! tNodes = [tNodes] otherwise we need to provide size of each dof
+!- For a scalar physical variable such as pressure and temperature,
+! `spaceCompo` is set to -1.
 !- For a time independent physical variable `TimeCompo` is set to 1.
 !- The size of `Names`, `SpaceCompo`, `TimeCompo` should be same
 !
@@ -53,9 +55,29 @@ PRIVATE
 !### Usage
 !
 !```fortran
-!	type( dof_ ) :: obj
-! call initiate( obj, tNodes = [10], Names = ['x', 'y'], &
-!   & SpaceCompo = [3,3], TimeCompo = [1,1], StorageFMT = FMT_Nodes )
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+!
+! ! [[DOF_]]
+!
+! TYPE( DOF_ ) :: obj
+!
+! ! #DOF_/Initiate
+!
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+!
+! CALL Display( .tDOF. obj, "tDOF : " )
+!
+! ! #DOF_/Display
+!
+! CALL Display( obj .tDOF. "U", "tDOF of U : " )
+!
+! ! #DOF_/DeallocateData
+!
+! CALL DeallocateData( obj )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -65,14 +87,14 @@ MODULE PURE SUBROUTINE dof_initiate1( obj, tNodes, Names, SpaceCompo, &
     !! degree of freedom object
   INTEGER( I4B ), INTENT( IN ) :: tNodes( : )
     !! number of nodes for each physical variable
+  CHARACTER( LEN = 1 ), INTENT( IN ) :: Names( : )
+    !! Names of each physical variable
   INTEGER( I4B ), INTENT( IN ) :: SpaceCompo( : )
     !! Space component of each physical variable
   INTEGER( I4B ), INTENT( IN ) :: TimeCompo( : )
     !! Time component of each physical variable
   INTEGER( I4B ), INTENT( IN ) :: StorageFMT
     !! Storage format `FMT_DOF`, `FMT_Nodes`
-  CHARACTER( LEN = 1 ), INTENT( IN ) :: Names( : )
-    !! Names of each physical variable
 END SUBROUTINE dof_initiate1
 END INTERFACE
 
@@ -86,20 +108,38 @@ END INTERFACE
 !
 !# Introduction
 !
-! This subroutine initiate a fortran vector of real using the information stored inside [[DOF_]] object.
-!
+! This subroutine initiates a fortran vector (rank-1 fortran array ) of
+! real using the information stored inside [[DOF_]] object. This subroutine
+! gets the size of array from the [[DOF_]] object and then reallocates
+! `Val` and set its all values to zero.
 !
 !### Usage
 !
 !```fortran
-! !... code above ...!
-! ! Initiate the [[DOF_]] object.
-!
-! CALL initiate( obj=obj%dof, tNodes=tNodes, names=names_char, &
-!   & spaceCompo=spaceCompo, timeCompo=timeCompo, storageFMT=storageFMT )
-! ! Initiate [[RealVector_]]
-!
-! CALL initiate( val=obj%realVec, obj=obj%dof )
+! PROGRAM main
+! ! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ) :: obj
+! REAL( DFP ), ALLOCATABLE :: val( : )
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( Val=val, obj=obj )
+! !
+! CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -122,19 +162,37 @@ END INTERFACE
 !# Introduction
 !
 ! This subroutine initiate [[RealVector_]] using the information stored inside
-! [[dof_]] object
+! [[dof_]] object. It gets the information of total size of [[RealVector_]]
+! from [[DOF_]] and call [[RealVector_Method:Initiate]] routine.
+! All values of [[RealVector_]] is set to zero.
 !
-!### Usage
+!## Usage
 !
 !```fortran
-! !... code above ...!
-! ! Initiate the [[DOF_]] object.
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
 !
-! CALL initiate( obj=obj%dof, tNodes=tNodes, names=names_char, &
-!   & spaceCompo=spaceCompo, timeCompo=timeCompo, storageFMT=storageFMT )
-! ! Initiate [[RealVector_]]
+! ! [[DOF_]], [[RealVector_]]
 !
-! CALL initiate( val=obj%realVec, obj=obj%dof )
+! TYPE( DOF_ ) :: obj
+! TYPE(RealVector_) :: val
+!
+! ! #DOF_/Initiate
+!
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+!
+! ! #DOF_/Initiate
+!
+! CALL Initiate( Val=val, obj=obj )
+!
+! CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
+!
+! ! #DOF_/DeallocateData
+!
+! CALL DeallocateData( obj )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -148,14 +206,48 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Initiate a vector of [[realvector_]] from [[dof_]] object
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 10 Oct, 2021
+! summary: Initiate a vector of [[realvector_]] from [[dof_]] object
 !
-! This subroutine initiate a vector of [[realvector_]] object
-! Each entry Val( idof ) denotes degree of freedom `idof`
+!# Introduction
+!
+! This subroutine initiates a vector of [[realvector_]] object.
+! The size of `Val` will be total number of degrees of freedom inside
+! the [[DOF_]] object. Therefore, each `Val( idof )` denotes the
+! nodal vector of correrponding to a degree of freedom number `idof`
+!
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]], [[RealVector_]]
+! !
+! TYPE( DOF_ ) :: obj
+! TYPE(RealVector_), ALLOCATABLE :: val( : )
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( Val=val, obj=obj )
+! !
+! CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
+INTERFACE
 MODULE PURE SUBROUTINE dof_initiate4( Val, obj )
   TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
   CLASS( DOF_ ), INTENT( IN ) :: obj
@@ -166,14 +258,16 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Initiate two fortran vectors using [[dof_]] object
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 10 Oct, 2021
+! summary: Initiate two fortran vectors using [[dof_]] object
 !
-! This subroutine initiate two fortran vectors using  the information
-! stored inside the [[dof_]] object
+!# Introduction
+!
+! This subroutine can initiate two fortran vectors (rank-1 fortran arrays)
+! using  the information stored inside the [[DOF_]] object
 
+INTERFACE
 MODULE PURE SUBROUTINE dof_initiate5( Val1, Val2, obj )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: Val1( : ), Val2( : )
   CLASS( DOF_ ), INTENT( IN ) :: obj
@@ -187,6 +281,17 @@ END INTERFACE
 !> authors: Vikas Sharma, Ph. D.
 ! date: 25 July 2021
 ! summary: Initiate an instance of [[DOF_]] by copying other object
+!
+!# Introduction
+!
+! This routine copy obj2 into obj1. It also define an assignment operator
+!
+!
+!## Usage
+!
+!```fortran
+! obj1 = obj2
+!```
 
 INTERFACE
 MODULE PURE SUBROUTINE dof_initiate6( obj1, obj2 )
@@ -223,14 +328,44 @@ PUBLIC :: Initiate
 !                                                            DOF@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Constructor for [[dof_]] object
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 10 oct 2021
+! summary: 	 Constructor for [[dof_]] object
 !
-! This function return instance of [[dof_]]
+!# Introduction
+!
+! This function return instance of [[DOF_]]
+! This function calls [[DOF_Method:DOF_Initiate1]] method
 ! for more see [[dof_]]
+!
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ) :: obj
+! !
+! ! #DOF_/Initiate
+! !
+! obj = DOF( tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/Display
+! !
+! CALL Display( obj, "DOF() : " )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
+INTERFACE
 MODULE PURE FUNCTION dof_Constructor1( tNodes, Names, SpaceCompo, TimeCompo, &
   & StorageFMT ) RESULT( obj )
   TYPE(DOF_) :: obj
@@ -251,14 +386,43 @@ PUBLIC :: DOF
 !                                                     DOF_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Constructor for [[dof_]] object
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 10 Oct, 2021
+! summary: Returns pointer to newly created [[dof_]] object
+!
+!# Introduction
 !
 ! This function returns the pointer to instance of [[dof_]] object
 ! for more see [[dof_]]
+!
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ), POINTER :: obj
+! !
+! ! #DOF_/Initiate
+! !
+! obj => DOF_POINTER( tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/Display
+! !
+! CALL Display( obj, "DOF() : " )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
+INTERFACE
 MODULE FUNCTION dof_Constructor_1( tNodes, Names, SpaceCompo, TimeCompo, &
   & StorageFMT ) RESULT( obj )
   CLASS(DOF_), POINTER :: obj
@@ -287,13 +451,15 @@ PUBLIC :: DOF_Pointer
 !                                                 DeallocateData@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! Deallocate data in [[dof_]]
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: Oct 10, 2021
+! summary: Deallocate data in [[dof_]]
 !
-! This subroutine deallocates the data in [[dof_]] object
+!# Introduction
+!
+! This subroutine deallocates the data in [[DOF_]] object
 
+INTERFACE
 MODULE PURE SUBROUTINE dof_DeallocateData( obj )
   CLASS(DOF_), INTENT( INOUT ) :: obj
 END SUBROUTINE dof_DeallocateData
@@ -307,7 +473,7 @@ END INTERFACE DeallocateData
 PUBLIC :: DeallocateData
 
 !----------------------------------------------------------------------------
-!                                                                Display@IO
+!                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -323,12 +489,43 @@ END SUBROUTINE dof_Display1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                                Display@IO
+!                                                          Display@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 29 June 2021
 ! summary: Display content of fortran vec with [[DOF_]] object info
+!
+!
+!## Usage
+!
+!```fortran
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! !
+! ! [[DOF_]]
+! !
+! TYPE( DOF_ ) :: obj
+! REAL( DFP ), ALLOCATABLE :: val( : )
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! !
+! ! #DOF_/Initiate
+! !
+! CALL Initiate( Val=val, obj=obj )
+! val(1:10) = 1; val(11:20)=2; val(21:)=3
+! !
+! CALL Display( Val, obj, "CALL Initiate( Val=val, obj=obj ) : " )
+! !
+! ! #DOF_/DeallocateData
+! !
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE SUBROUTINE dof_Display2( Vec, obj, msg, unitno )
@@ -340,7 +537,7 @@ END SUBROUTINE dof_Display2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                                Display@IO
+!                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -369,7 +566,7 @@ PUBLIC :: Display
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: This function returns the total length of the vector which stores the dof stored inside `obj`.
+! summary: Returns the total length of the vector
 
 INTERFACE
   MODULE PURE FUNCTION dof_tNodes1( obj ) RESULT( Ans )
@@ -387,6 +584,7 @@ END INTERFACE
 ! summary: This function returns the total number of nodes
 !
 !# Introduction
+!
 ! This function returns the total number of nodes for a given degree of
 ! freedom number
 ! idof should be lesser than the total degree of freedom
@@ -435,7 +633,8 @@ END INTERFACE
 ! summary: This subroutine returns the total number of degrees of freedom
 !
 !# Introduction
-! This function returns the total number of degrees of freedom in a physical variable.
+! This function returns the total number of degrees of freedom in a
+! physical variable.
 ! The physical variable is specified by using its name.
 
 INTERFACE
@@ -455,7 +654,8 @@ END INTERFACE
 ! summary: This subroutine returns the total number of degrees of freedom
 !
 !# Introduction
-! This function returns the total number of degrees of freedom in a physical variable.
+! This function returns the total number of degrees of freedom in a
+! physical variable.
 ! The physical variable is specified by using its name.
 
 INTERFACE
@@ -479,18 +679,54 @@ PUBLIC :: OPERATOR( .tDOF. )
 !> authors: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
+!
+!# Introduction
+!
+! This routine is like [[DOF_Method:getIndex]].
+! However, it does not return the index of all degrees of freedom of
+! a given physical variable. Instead, it returns the index of location of
+! degree of freedom number `idof` for a given node number `inode`.
+!
+! Note that `inode` should be lesser than the total number of nodes
+! defined for dof number `idof`.
+!
+! Also node that idofs are continuously numbered, so if there are two
+! or more physical variables, then idof of the second or later physical
+! variables will not start from 1.
 
 INTERFACE
-MODULE PURE FUNCTION dof_getNodeLoc( obj, inode, idof ) RESULT( Ans )
+MODULE PURE FUNCTION dof_getNodeLoc1( obj, inode, idof ) RESULT( Ans )
   TYPE( DOF_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: inode
   INTEGER( I4B ), INTENT( IN ) :: idof
   INTEGER( I4B ) :: ans
-END FUNCTION dof_getNodeLoc
+END FUNCTION dof_getNodeLoc1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       getNodeLoc@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the location of node
+!
+!# Introduction
+!
+! ans(1) : istart
+! ans(2) : iend
+! ans(3) : stride
+
+INTERFACE
+MODULE PURE FUNCTION dof_getNodeLoc2( obj, idof ) RESULT( Ans )
+  TYPE( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  INTEGER( I4B ) :: ans(3)
+END FUNCTION dof_getNodeLoc2
 END INTERFACE
 
 INTERFACE getNodeLoc
-  MODULE PROCEDURE dof_getNodeLoc
+  MODULE PROCEDURE dof_getNodeLoc1, dof_getNodeLoc2
 END INTERFACE getNodeLoc
 
 PUBLIC :: getNodeLoc
@@ -501,7 +737,7 @@ PUBLIC :: getNodeLoc
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: This subroutine returns the total number of names in dof object
+! summary: Returns the total number of names in dof object
 
 INTERFACE
 MODULE PURE FUNCTION dof_tNames( obj ) RESULT( Ans )
@@ -522,7 +758,7 @@ PUBLIC :: OPERATOR( .tNames. )
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
-! summary: This function returns the name of all physical variables stored in obj
+! summary: Returns the name of all physical variables stored in obj
 
 INTERFACE
 MODULE PURE FUNCTION dof_names1( obj ) RESULT( Ans )
@@ -540,8 +776,10 @@ END INTERFACE
 ! summary: This function returns the name of a physical variable
 !
 !# Introduction
+!
 ! This function returns the name of a physical variable
-! The physical variable is given by its number ii, i.e., the first, second, third, and so on, physical variable.
+! The physical variable is given by its number ii, i.e., the first, second,
+! third, and so on, physical variable.
 
 INTERFACE
 MODULE PURE FUNCTION dof_names2( obj, ii ) RESULT( Ans )
@@ -582,7 +820,25 @@ END INTERFACE
 ! summary: Returns the indices for node number `nodeNum`
 !
 !# Introduction
-! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+!
+! - This function returns a vector of integers (indices) for a
+! a given node number.
+! - The size of these indices is equal to the total number of DOF in obj
+! - The returned indices represents the degrees of freedom defined on
+! each node.
+! - It is user's responsibility to ensure that for every physical variable
+! the `nodeNumber` is lesser than the total number of
+! nodes defined for that physical variable.
+! - The returned indices can be used for getting the dof (all dof)
+! defined on the nodeNum.
+! - The returned indiced can be used to extract values from an instance of
+! [[RealVector_]] or fortran vector of real numbers.
+!
+!@note
+! 	The size of returned vector `ans` will be the total number of
+! degrees of freedom in the [[DOF_]] object
+!@endnote
+!
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex1( obj, nodeNum ) RESULT( Ans )
@@ -601,7 +857,21 @@ END INTERFACE
 ! summary: Returns the indices for node number `nodeNum`
 !
 !# Introduction
-! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+!
+! - This function returns a vector of integers (indices) for a
+! a given node number and a given physical Variable.
+! - The physical variable is defined by an `iVar`
+! - The size of these indices is equal to the total number of DOF
+! defined for the `iVar` physical variable.
+! - The returned indices represents the degrees of freedom of
+! physical variable `ivar` defined on each node.
+! - It is user's responsibility to ensure that for the selected physical var
+! the `nodeNumber` is lesser than the total number of
+! nodes defined for that physical variable.
+! - The returned indices can be used for getting the dof (all dof)
+! defined on the nodeNum for the given physical variable.
+! - The returned indices can be used to extract values from an instance of
+! [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex2( obj, nodeNum, iVar ) RESULT( Ans )
@@ -621,7 +891,22 @@ END INTERFACE
 ! summary: Returns the indices for node number `nodeNum`
 !
 !# Introduction
-! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+!
+! - This function returns a vector of integers (indices) for a
+! a given node number and a given physical Variable.
+! - The physical variable is defined by an `varName`
+! - The size of these indices is equal to the total number of DOF
+! defined for the `varName` physical variable.
+! - The returned indices represents the degrees of freedom of
+! physical variable `varName` defined on each node.
+! - It is user's responsibility to ensure that for the selected physical var
+! the `nodeNumber` is lesser than the total number of
+! nodes defined for that physical variable.
+! - The returned indices can be used for getting the dof (all dof)
+! defined on the nodeNum for the given physical variable.
+! - The returned indices can be used to extract values from an instance of
+! [[RealVector_]] or fortran vector of real numbers.
+
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex3( obj, nodeNum, varName ) RESULT( Ans )
@@ -641,7 +926,20 @@ END INTERFACE
 ! summary: Returns the indices for node number `nodeNum`
 !
 !# Introduction
-! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+!
+! - This function returns a vector of integers (indices) for a
+! given list of node number.
+! - The size of these indices is equal to the total number of DOF in obj
+! times the size of nodeNum(:)
+! - The returned indices represents the degrees of freedom defined on
+! each nodes.
+! - It is user's responsibility to ensure that for every physical variable
+! the `nodeNumber` is lesser than the total number of
+! nodes defined for that physical variable.
+! - The returned indices can be used for getting the dof (all dof)
+! defined on the nodeNum.
+! - The returned indiced can be used to extract values from an instance of
+! [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex4( obj, nodeNum ) RESULT( Ans )
@@ -660,7 +958,21 @@ END INTERFACE
 ! summary: Returns the indices for node number `nodeNum`
 !
 !# Introduction
-! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+!
+! - This function returns a vector of integers (indices) for a
+! a given node number and a given physical Variable.
+! - The physical variable is defined by an `iVar`
+! - The size of these indices is equal to the total number of DOF
+! defined for the `iVar` physical variable.
+! - The returned indices represents the degrees of freedom of
+! physical variable `ivar` defined on each node.
+! - It is user's responsibility to ensure that for the selected physical var
+! the `nodeNumber` is lesser than the total number of
+! nodes defined for that physical variable.
+! - The returned indices can be used for getting the dof (all dof)
+! defined on the nodeNum for the given physical variable.
+! - The returned indices can be used to extract values from an instance of
+! [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex5( obj, nodeNum, iVar ) RESULT( Ans )
@@ -680,7 +992,21 @@ END INTERFACE
 ! summary: Returns the indices for node number `nodeNum`
 !
 !# Introduction
-! This function returns the indices of a given node number. This indices can be used for getting all the dof defined on that nodeNum. The returned indiced can be used to extract values from the [[RealVector_]] or fortran vector of real numbers.
+!
+! - This function returns a vector of integers (indices) for a
+! a given node number and a given physical Variable.
+! - The physical variable is defined by an `varName`
+! - The size of these indices is equal to the total number of DOF
+! defined for the `varName` physical variable.
+! - The returned indices represents the degrees of freedom of
+! physical variable `varName` defined on each node.
+! - It is user's responsibility to ensure that for the selected physical var
+! the `nodeNumber` is lesser than the total number of
+! nodes defined for that physical variable.
+! - The returned indices can be used for getting the dof (all dof)
+! defined on the nodeNum for the given physical variable.
+! - The returned indices can be used to extract values from an instance of
+! [[RealVector_]] or fortran vector of real numbers.
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex6( obj, nodeNum, varName ) RESULT( Ans )

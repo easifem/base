@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(DOF_Method) setMethod
+SUBMODULE(DOF_Method) setMethods
   !! This submodule defines the methods for setting/changing values in
   !! fortran real vector using [[dof_]] object
 
@@ -281,19 +281,4 @@ MODULE PROCEDURE dof_add2
   END ASSOCIATE
 END PROCEDURE dof_add2
 
-!----------------------------------------------------------------------------
-!                                                               getNodeLoc
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE dof_getNodeLoc
-  INTEGER( I4B ) :: tdof, tnodes
-  tdof = .tdof. obj
-  IF( obj%storageFMT .EQ. NODES_FMT ) THEN
-    ans = (inode-1)*tdof + idof
-  ELSE
-    tnodes = obj .tNodes. idof
-    ans = (idof-1)*tnodes + inode
-  END IF
-END PROCEDURE dof_getNodeLoc
-
-END SUBMODULE setMethod
+END SUBMODULE setMethods

@@ -25,6 +25,7 @@ CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
 !! orient=col =>  columnwise printing
 LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
 !! logical variable to print the whole vector
+CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: advance
 ! Define internal variables
 INTEGER( I4B ) :: I
 CHARACTER( LEN = 3 ) :: orient_
@@ -47,7 +48,11 @@ IF( PRESENT( orient ) ) THEN
 ELSE
   orient_ = "col"
 END IF
+#ifdef COLOR_DISP
 CALL DISP( &
   & title=TRIM(colorize( msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
   & style=COLOR_STYLE)), &
-  & x=val, unit = I, orient = orient_ )
+  & x=val, unit = I, orient = orient_, advance=advance )
+#else
+CALL DISP( title=msg, x=val, unit = I, orient = orient_, advance=advance )
+#endif
