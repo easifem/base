@@ -104,7 +104,46 @@ END PROCEDURE csr_setSparsity2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csr_setSparsity3
-
+  INTEGER( I4B ) :: ii
+  INTEGER( I4B ), ALLOCATABLE :: n2ntemp( : ), rowIndex( : )
+  !> main
+  !> check
+  IF( .NOT. obj%isInitiated ) THEN
+    CALL ErrorMSG( &
+      & "Instance of CSRSparsity is not initiated!", &
+      & "CSRSparsity_Method@setMethods.F90", &
+      & "csr_setSparsity3()", &
+      & __LINE__, stderr )
+    STOP
+  END IF
+  !> check
+  IF( obj%isSparsityLock ) THEN
+    CALL ErrorMSG( &
+      & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
+      & "CSRSparsity_Method@setMethods.F90", &
+      & "csr_setSparsity3()", &
+      & __LINE__, stderr )
+    STOP
+  END IF
+  !> check
+  IF( obj%dof%StorageFMT .EQ. NODES_FMT ) THEN
+    CALL ErrorMSG( &
+      & "This subroutine works for storage format FMT_DOF, only", &
+      & "CSRSparsity_Method@setMethods.F90", &
+      & "csr_setSparsity3()", &
+      & __LINE__, stderr )
+    STOP
+  END IF
+  !> some pruning
+  IF( .NOT. ALLOCATED( obj%row ) ) ALLOCATE( obj%row( obj%nrow ) )
+  n2ntemp = SORT( getIndex( obj=obj%dof, nodeNum=Col, iVar=jvar ) )
+  rowIndex = SORT( getIndex( obj=obj%dof, nodeNum=Row, iVar=ivar ) )
+  obj%nnz = obj%nnz + SIZE(Col) * (obj%dof .tdof. jvar) * SIZE(rowIndex)
+  DO ii = 1, SIZE(rowIndex)
+    CALL APPEND( obj%Row( rowIndex(ii) ), n2ntemp )
+  END DO
+  IF( ALLOCATED( n2ntemp ) ) DEALLOCATE( n2ntemp )
+  IF( ALLOCATED( rowIndex ) ) DEALLOCATE( rowIndex )
 END PROCEDURE csr_setSparsity3
 
 !----------------------------------------------------------------------------
