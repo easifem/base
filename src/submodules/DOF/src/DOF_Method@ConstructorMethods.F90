@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(DOF_Method) Constructor
+SUBMODULE(DOF_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -26,9 +26,8 @@ CONTAINS
 
 MODULE PROCEDURE dof_initiate1
   INTEGER( I4B ) :: n, i, k, j
-
+  !> main
   obj%StorageFMT = StorageFMT; n = SIZE( Names )
-
   CALL reallocate( obj%Map, n + 1, 6 )
   ASSOCIATE( Map => obj%Map )
     !
@@ -81,9 +80,7 @@ END PROCEDURE dof_initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_initiate2
-  INTEGER( I4B ) :: tNodes
-  tNodes = .tNodes. obj
-  CALL Reallocate( Val, tNodes )
+  CALL Reallocate( Val, .tNodes. obj )
 END PROCEDURE dof_initiate2
 
 !----------------------------------------------------------------------------
@@ -91,9 +88,7 @@ END PROCEDURE dof_initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_initiate3
-  INTEGER( I4B ) :: tNodes
-  tNodes = .tNodes. obj
-  CALL Reallocate( Val%Val, tNodes )
+  CALL Initiate( obj=val, tSize= (.tNodes. obj))
 END PROCEDURE dof_initiate3
 
 !----------------------------------------------------------------------------
@@ -101,14 +96,12 @@ END PROCEDURE dof_initiate3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_initiate4
-  INTEGER( I4B ) :: tDOF, i, n
+  INTEGER( I4B ) :: i
   INTEGER( I4B ), ALLOCATABLE :: tNodes( : )
-  !
+  ! main
   ASSOCIATE( Map => obj%Map )
-    tDOF = .tDOF. obj
-    ALLOCATE( tNodes( tDOF ) )
-    n = SIZE( Map, 1 )
-    DO i = 1, n-1
+    ALLOCATE( tNodes( .tDOF. obj ) )
+    DO i = 1, SIZE( Map, 1 ) - 1
       tNodes( Map( i, 5 ) : Map( i + 1, 5 ) - 1 ) = Map( i, 6 )
     END DO
     CALL Initiate( Val, tNodes )
@@ -164,5 +157,4 @@ MODULE PROCEDURE dof_DeallocateData
   IF( ALLOCATED( obj%ValMap ) ) DEALLOCATE( obj%ValMap )
 END PROCEDURE dof_DeallocateData
 
-
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods

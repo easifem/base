@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(DOF_Method) GetMethod
+SUBMODULE(DOF_Method) GetMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -63,7 +63,6 @@ END PROCEDURE dof_tdof1
 
 MODULE PROCEDURE dof_tdof2
   INTEGER( I4B ) :: i, k
-
   k = ICHAR( Name )
   IF( ALLOCATED( obj%Map ) ) THEN
     DO i = 1, SIZE( obj%Map, 1 ) - 1
@@ -88,6 +87,33 @@ MODULE PROCEDURE dof_tdof3
     Ans = 0
   END IF
 END PROCEDURE dof_tdof3
+
+!----------------------------------------------------------------------------
+!                                                               getNodeLoc
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_getNodeLoc1
+  INTEGER( I4B ) :: tdof, tnodes
+  tdof = .tdof. obj
+  IF( obj%storageFMT .EQ. NODES_FMT ) THEN
+    ans = (inode-1)*tdof + idof
+  ELSE
+    tnodes = obj .tNodes. idof
+    ans = (idof-1)*tnodes + inode
+  END IF
+END PROCEDURE dof_getNodeLoc1
+
+!----------------------------------------------------------------------------
+!                                                               getNodeLoc
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_getNodeLoc2
+  IF( obj%storageFMT .EQ. NODES_FMT ) THEN
+    ans = [idof, .tnodes. obj, .tdof. obj ]
+  ELSE
+    ans = [obj%valmap( idof ), obj%valmap(idof+1)-1, 1 ]
+  END IF
+END PROCEDURE dof_getNodeLoc2
 
 !----------------------------------------------------------------------------
 !                                                                     tNames
@@ -473,4 +499,4 @@ MODULE PROCEDURE dof_isNE
   ans = .NOT. ( dof_isEqual( obj1, obj2 ) )
 END PROCEDURE dof_isNE
 
-END SUBMODULE GetMethod
+END SUBMODULE GetMethods

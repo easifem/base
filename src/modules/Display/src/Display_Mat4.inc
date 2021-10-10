@@ -18,6 +18,7 @@
 CHARACTER( LEN = * ), INTENT( IN ) :: msg
 INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
 LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: full
+CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: advance
 ! Define internal variables
 INTEGER( I4B ) :: J, K
 DO K = 1, SIZE( Val, 4 )
@@ -29,6 +30,6 @@ DO K = 1, SIZE( Val, 4 )
     & // ", " &
     & // TRIM( Int2Str( K ) ) &
     & // " ) = " &
-    & , unitNo=unitNo, full=full )
+    & , unitNo=unitNo, full=full, advance=advance )
   END DO
 END DO
