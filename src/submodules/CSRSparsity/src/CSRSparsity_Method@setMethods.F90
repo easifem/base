@@ -104,13 +104,21 @@ END PROCEDURE csr_setSparsity2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csr_setSparsity3
+
+END PROCEDURE csr_setSparsity3
+
+!----------------------------------------------------------------------------
+!                                                                setSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_setSparsity_final
   INTEGER( I4B ) :: i, j, k
   INTEGER( I4B ), ALLOCATABLE :: intvec( : )
   IF( .NOT. obj%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is not initiated!", &
       & "CSRSparsity_Method@setMethods.F90", &
-      & "csr_setSparsity3()", &
+      & "csr_setSparsity_final()", &
       & __LINE__, stderr )
     STOP
   END IF
@@ -118,7 +126,7 @@ MODULE PROCEDURE csr_setSparsity3
     CALL WarningMSG( &
       & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
       & "CSRSparsity_Method@setMethods.F90", &
-      & "csr_setSparsity3()", &
+      & "csr_setSparsity_final()", &
       & __LINE__, stderr )
     RETURN
   ELSE
@@ -153,7 +161,7 @@ MODULE PROCEDURE csr_setSparsity3
     obj%JA = intvec
     CALL Reallocate( intvec, obj%ncol )
   END IF
-END PROCEDURE csr_setSparsity3
+END PROCEDURE csr_setSparsity_final
 
 !----------------------------------------------------------------------------
 !

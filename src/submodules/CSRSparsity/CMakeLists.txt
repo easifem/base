@@ -9,7 +9,7 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/CSRSparsity_Method@Constructor.F90
-  ${src_path}/CSRSparsity_Method@IO.F90
+  ${src_path}/CSRSparsity_Method@ConstructorMethods.F90
+  ${src_path}/CSRSparsity_Method@IOMethods.F90
   ${src_path}/CSRSparsity_Method@setMethods.F90
 )

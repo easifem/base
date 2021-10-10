@@ -19,7 +19,7 @@
 ! date: 13 Jul 2021
 ! summary: Input output related methods
 
-SUBMODULE(CSRSparsity_Method) IO
+SUBMODULE(CSRSparsity_Method) IOMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -48,4 +48,4 @@ MODULE PROCEDURE csr_Display
   END IF
 END PROCEDURE csr_Display
 
-END SUBMODULE IO
+END SUBMODULE IOMethods

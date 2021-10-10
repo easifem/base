@@ -266,18 +266,7 @@ TYPE( SparseMatrixReOrdering_ ), PUBLIC, PARAMETER :: &
 ! date: 13 June 2021
 ! summary: User data type for handling the sparsity pattern
 !
-!# Introduction
-! - IA : size of IA is number of rows in the sparse matrix. It contains indice
-! for accessing the entries in JA. For example, IA( iRow )
-! to IA( iRow + 1 ) - 1 are indices of entries of matrix of iRow.
-!
-! - JA : size of JA is NNZ. JA contains the column indices.
-!
-! - ColSize : contains the number of nonzero entries in each row
-!
-! - DiagIndx : contains the indices of diagonal entries
-!
-! - IndexUT : contains the index of upper triangular part
+!{!pages/CSRSparsity_.md!}
 
 TYPE :: CSRSparsity_
   INTEGER( I4B ) :: nnz = 0

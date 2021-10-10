@@ -46,6 +46,26 @@ MODULE PROCEDURE dof_tNodes2
 END PROCEDURE dof_tNodes2
 
 !----------------------------------------------------------------------------
+!                                                                     tNodes
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_tNodes3
+  ans = obj .tNodes. NameToIndex( obj, varName )
+END PROCEDURE dof_tNodes3
+
+!----------------------------------------------------------------------------
+!                                                                     tNodes
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_tNodes4
+  INTEGER( I4B ) :: ii
+  Ans = 0
+  DO ii = 1, SIZE( idof )
+    Ans = Ans + (obj .tNodes. idof( ii ))
+  END DO
+END PROCEDURE dof_tNodes4
+
+!----------------------------------------------------------------------------
 !                                                                       tDOF
 !----------------------------------------------------------------------------
 
