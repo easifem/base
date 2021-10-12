@@ -19,13 +19,13 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains method for setting values in [[CSRMatrix_]]
 
-SUBMODULE(CSRMatrix_Method) setMethod
+SUBMODULE(CSRMatrix_Method) setMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                               setSparsity
+!                                                                setSparsity
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setSparsity1
@@ -45,6 +45,22 @@ END PROCEDURE csrMat_setSparsity2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setSparsity3
+  CALL setSparsity( obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar )
+END PROCEDURE csrMat_setSparsity3
+
+!----------------------------------------------------------------------------
+!                                                                setSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setSparsity4
+  CALL setSparsity( obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar )
+END PROCEDURE csrMat_setSparsity4
+
+!----------------------------------------------------------------------------
+!                                                                setSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_setSparsity_final
   REAL( DFP ), ALLOCATABLE :: tempA( : )
   INTEGER( I4B ) :: m
   !
@@ -71,10 +87,10 @@ MODULE PROCEDURE csrMat_setSparsity3
   obj%csr%isSorted = .TRUE.
   obj%csr%isSparsityLock = .FALSE.
   CALL setSparsity( obj%csr )
-END PROCEDURE csrMat_setSparsity3
+END PROCEDURE csrMat_setSparsity_final
 
 !----------------------------------------------------------------------------
-!                                                                   set
+!                                                                       set
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -126,13 +142,13 @@ PURE SUBROUTINE setInternally( obj, nptrs, val )
 END SUBROUTINE setInternally
 
 !----------------------------------------------------------------------------
-!                                                                 set
+!                                                                       set
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_set1
   REAL( DFP ), ALLOCATABLE :: Mat( :, : )
   INTEGER( I4B ) :: tdof
-
+  !> main
   tdof = .tdof. obj%csr%dof
   SELECT CASE( storageFMT )
   CASE( NODES_FMT )
@@ -155,7 +171,7 @@ MODULE PROCEDURE csrMat_set1
 END PROCEDURE csrMat_set1
 
 !----------------------------------------------------------------------------
-!                                                                 set
+!                                                                        set
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_set2
@@ -163,7 +179,7 @@ MODULE PROCEDURE csrMat_set2
 END PROCEDURE csrMat_set2
 
 !----------------------------------------------------------------------------
-!                                                                 set
+!                                                                        set
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_set3
@@ -174,7 +190,7 @@ MODULE PROCEDURE csrMat_set3
 END PROCEDURE csrMat_set3
 
 !----------------------------------------------------------------------------
-!                                                                 set
+!                                                                        set
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_set4
@@ -185,7 +201,7 @@ MODULE PROCEDURE csrMat_set4
 END PROCEDURE csrMat_set4
 
 !----------------------------------------------------------------------------
-!                                                                 set
+!                                                                        set
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_set5
@@ -247,7 +263,7 @@ PURE SUBROUTINE addContributionInternally( obj, nptrs, val, Scale )
 END SUBROUTINE addContributionInternally
 
 !----------------------------------------------------------------------------
-!                                                                     add
+!                                                                       add
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_add1
@@ -278,7 +294,7 @@ MODULE PROCEDURE csrMat_add1
 END PROCEDURE csrMat_add1
 
 !----------------------------------------------------------------------------
-!                                                                     add
+!                                                                        add
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_add2
@@ -286,7 +302,7 @@ MODULE PROCEDURE csrMat_add2
 END PROCEDURE csrMat_add2
 
 !----------------------------------------------------------------------------
-!                                                                 add
+!                                                                        add
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_add3
@@ -297,7 +313,7 @@ MODULE PROCEDURE csrMat_add3
 END PROCEDURE csrMat_add3
 
 !----------------------------------------------------------------------------
-!                                                                 add
+!                                                                        add
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_add4
@@ -308,7 +324,7 @@ MODULE PROCEDURE csrMat_add4
 END PROCEDURE csrMat_add4
 
 !----------------------------------------------------------------------------
-!                                                                 add
+!                                                                       add
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_add5
@@ -320,8 +336,9 @@ MODULE PROCEDURE csrMat_add5
   CALL addContributionInternally( obj=obj, nptrs=nptrs, val=mat, scale=scale )
   DEALLOCATE( mat )
 END PROCEDURE csrMat_add5
+
 !----------------------------------------------------------------------------
-!                                                                    setRow
+!                                                                     setRow
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setRow1
@@ -376,9 +393,10 @@ END PROCEDURE csrMat_setRow4
 MODULE PROCEDURE csrMat_setColumn1
   INTEGER( I4B ) :: i, j
   IF( SIZE( val ) .LT. obj%csr%nrow .OR. iColumn .GT. SIZE(obj, 2) ) THEN
-    CALL ErrorMSG( Msg="SIZE of column vector should be same as number of rows in sparse matrix", &
-    & File = "CSRMatrix_Method@setMethod.F90", &
-    & Routine = "csrMat_setColumn1", Line= __LINE__ , UnitNo=stdout )
+    CALL ErrorMSG( Msg="SIZE of column vector should be same as number of &
+      & rows in sparse matrix", &
+      & File = "CSRMatrix_Method@setMethod.F90", &
+      & Routine = "csrMat_setColumn1", Line= __LINE__ , UnitNo=stdout )
     RETURN
   END IF
   DO i = 1, obj%csr%nrow
@@ -425,4 +443,4 @@ END PROCEDURE csrMat_setColumn4
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE setMethod
+END SUBMODULE setMethods

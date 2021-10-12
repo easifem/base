@@ -22,7 +22,10 @@
 !
 !###Introduction
 !
-! This module contains methods of [[IntVector_]] data type. This module only contains the definition of the interfaces of these methods. The actual implementation is given inside the submodules. This modules has following submodules:
+! This module contains methods of [[IntVector_]] data type.
+! This module only contains the definition of the interfaces of these
+! methods. The actual implementation is given inside the submodules. This
+! modules has following submodules:
 !
 
 MODULE IntVector_Method
@@ -174,10 +177,11 @@ PUBLIC :: DeallocateData
 ! summary: Display the content of [[IntVector_]]
 
 INTERFACE
-MODULE SUBROUTINE intVec_Display1 ( obj, msg, UnitNo )
+MODULE SUBROUTINE intVec_Display1 ( obj, msg, UnitNo, orient )
   CLASS( IntVector_ ), INTENT( IN ) :: obj( : )
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
 END SUBROUTINE intVec_Display1
 END INTERFACE
 
@@ -190,10 +194,11 @@ END INTERFACE
 ! summary: Display the content of [[IntVector_]]
 
 INTERFACE
-MODULE SUBROUTINE intVec_Display2 ( obj, msg, UnitNo )
+MODULE SUBROUTINE intVec_Display2 ( obj, msg, UnitNo, orient )
   CLASS( IntVector_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
 END SUBROUTINE intVec_Display2
 END INTERFACE
 

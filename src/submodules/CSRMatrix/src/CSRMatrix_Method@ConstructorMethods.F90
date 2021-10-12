@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains method for constructing [[CSRMatrix_]]
 
-SUBMODULE(CSRMatrix_Method) Constructor
+SUBMODULE(CSRMatrix_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -46,7 +46,7 @@ MODULE PROCEDURE csrMat_initiate2
   IF( .NOT. csr%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is not initiated!", &
-      & "CSRMatrix_Method@Constructor.F90", &
+      & "CSRMatrix_Method@ConstructorMethods.F90", &
       & "csrMat_initiate2()", &
       & __LINE__, stderr )
     STOP
@@ -100,6 +100,7 @@ MODULE PROCEDURE csrMat_Initiate5
   nnz = obj2%csr%nnz
   ALLOCATE( A( nnz ), IA( nrow+1 ), JA( nnz ) )
   A = 0.0; IA = 0; JA = 0
+  !> calling from Sparsekit
   CALL SUBMAT(job,i1,i2,j1,j2,obj2%A,obj2%csr%JA,obj2%csr%IA,&
     & nrow,ncol,A,JA,IA)
   nnz = IA( nrow+1 ) - 1
@@ -118,7 +119,7 @@ MODULE PROCEDURE csrMat_Initiate6
   IF( ASSOCIATED( obj%csr ) ) THEN
     CALL ErrorMSG( &
       & MSG = "obj%csr is associated.", &
-      & FILE="CSRMatrix_Method@Constructor.F90", &
+      & FILE="CSRMatrix_Method@ConstructorMethods.F90", &
       & ROUTINE="csrMat_Initiate6()", &
       & LINE = __LINE__, &
       & unitNo = stdout )
@@ -128,7 +129,7 @@ MODULE PROCEDURE csrMat_Initiate6
   ALLOCATE( obj%csr )
   obj%csr = obj2%csr
   obj%tDimension = obj2%tDimension
-  obj%csrOwnership = .FALSE.
+  obj%csrOwnership = .TRUE.
   obj%matrixProp = obj2%matrixProp
   IF( ALLOCATED( obj2%A ) ) obj%A = obj2%A
 END PROCEDURE csrMat_Initiate6
@@ -201,4 +202,4 @@ MODULE PROCEDURE csrMat_DeallocateData
   IF( ALLOCATED( obj%A ) ) DEALLOCATE( obj%A )
 END PROCEDURE csrMat_DeallocateData
 
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods

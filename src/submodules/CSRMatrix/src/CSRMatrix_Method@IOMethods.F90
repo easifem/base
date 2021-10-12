@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE(CSRMatrix_Method) IO
+SUBMODULE(CSRMatrix_Method) IOMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -130,4 +130,4 @@ MODULE PROCEDURE csrMat_IMPORT
   DEALLOCATE( ROW, COL, X, IA, JA, A )
   CLOSE( unitNo )
 END PROCEDURE csrMat_IMPORT
-END SUBMODULE IO
+END SUBMODULE IOMethods

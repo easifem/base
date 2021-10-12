@@ -474,6 +474,24 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
+! summary: 	 This subroutine sets the sparsity pattern of a given row
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity4( obj, Row, Col, iVar, jVar )
+  TYPE( CSRSparsity_ ), INTENT( INOUT) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: Row( : )
+  TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
+  INTEGER( I4B ), INTENT( IN ) :: iVar
+  INTEGER( I4B ), INTENT( IN ) :: jVar
+END SUBROUTINE csr_setSparsity4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      setSparsity@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
 ! summary: 	 This subroutine set sparsity pattern of `CSRSparsity_`
 !
 !# Introduction
@@ -496,7 +514,7 @@ END INTERFACE
 
 INTERFACE setSparsity
   MODULE PROCEDURE csr_setSparsity1, csr_setSparsity2, csr_setSparsity3,  &
-    & csr_setSparsity_final
+    & csr_setSparsity4, csr_setSparsity_final
 END INTERFACE setSparsity
 
 PUBLIC :: setSparsity

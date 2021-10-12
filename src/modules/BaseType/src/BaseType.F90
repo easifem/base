@@ -300,7 +300,7 @@ PUBLIC :: CSRSparsityPointer_
 ! date: 	22 March 2021
 ! summary: 	User data type for handling CSR matrices
 !
-!{!pages/CSRMatrix.md}
+!{!pages/CSRMatrix_.md}
 
 TYPE :: CSRMatrix_
   LOGICAL( LGT ) :: csrOwnership = .FALSE.

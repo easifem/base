@@ -36,17 +36,19 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1
 ! date: 	14 July 2021
 ! summary: This subroutine construct the `CSRMatrix_` object
 !
+!# Introduction
+!
+! This routine constructs an instance of [[CSRMatrix_]].
 !
 !### Usage
 !
 !```fortran
-  ! type( csrmatrix_ ) :: obj
-  ! type( dof_ ) :: dofobj
-  ! integer( i4b ) :: i, unitNo
-
-  ! call initiate( obj=dofobj, tNodes=[12], names=['K'], &
-  !   & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )
-  ! call initiate( obj, ncol=12, nrow=12, dof=dofobj )
+! type( csrmatrix_ ) :: obj
+! type( dof_ ) :: dofobj
+! integer( i4b ) :: i, unitNo
+! call initiate( obj=dofobj, tNodes=[12], names=['K'], &
+!   & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )
+! call initiate( obj, ncol=12, nrow=12, dof=dofobj )
 !```
 
 INTERFACE
@@ -75,23 +77,27 @@ END INTERFACE
 ! summary: This subroutine construct the `CSRMatrix_` object
 !
 !# Introduction
-! This subroutine initiates an instance of [[CSRMatrix_]]. The object so created does not own the ownership of `obj%csr`. Instead it points to a [[CSRSparsity_]] object which is supplied by the user.
+! This subroutine initiates an instance of [[CSRMatrix_]]. The object so
+! created does not own the ownership of `obj%csr`. Instead it points to a
+! [[CSRSparsity_]] object which is supplied by the user.
 !
 !@note
-! 	The object `csr` should be initiated by the user before sending it to CSR matrix via this routine. This is because this routine uses information such as ncol, nrow, nnz from the csr.
+! The object `csr` should be initiated by the user before sending it to
+! CSR matrix via this routine. This is because this routine uses information
+! such as ncol, nrow, nnz from the csr.
 !@endnote
 !
 !### Usage
 !
 !```fortran
-  ! type( csrmatrix_ ) :: obj
-  ! type( csrSparsity_ ) :: csr
-  ! type( dof_ ) :: dofobj
-  ! integer( i4b ) :: i, unitNo
-  ! !
-  ! call initiate( obj=dofobj, tNodes=[12], names=['K'], &
-  !   & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )
-  ! call initiate( csr, ncol=12, nrow=12, dof=dofobj )
+! type( csrmatrix_ ) :: obj
+! type( csrSparsity_ ) :: csr
+! type( dof_ ) :: dofobj
+! integer( i4b ) :: i, unitNo
+! !
+! call initiate( obj=dofobj, tNodes=[12], names=['K'], &
+!   & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )
+! call initiate( csr, ncol=12, nrow=12, dof=dofobj )
 !```
 
 INTERFACE
@@ -138,6 +144,7 @@ END INTERFACE
 ! This routine initiates obj by copying contents from obj2
 ! This routine uses `obj2%csr => obj%csr`
 ! Also, csrOwenrsip is set to false.
+! This routine is used in defining the assignment operator.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_initiate4( obj, obj2 )
@@ -152,7 +159,11 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
-! summary: This returns a sigle value from the matrix
+! summary: Initiates a submatrix
+!
+!# Introduction
+!
+! This routine initiates a submatrix.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_initiate5( obj, obj2, i1, i2, j1, j2 )
@@ -533,6 +544,59 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
+! summary: 	 This subroutine set the sparsity pattern of a given row
+!
+!# Introduction
+!
+! This subroutine sets the sparsity pattern of a given row
+!  - If `obj%tdof` is equal to 1, then `Col` is sorted in increasing order,
+! and appended to `obj%Row(Row)`
+! - If `obj%tdof` is not equal to 1, then based on the storage format and
+! `Col` connectivity information is generated.
+!
+!## Usage
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setSparsity3( obj, row, col, ivar, jvar )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: row
+  INTEGER( I4B ), INTENT( IN ) :: col( : )
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+END SUBROUTINE csrMat_setSparsity3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      setSparsity@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	 This subroutine sets the sparsity pattern of a given row
+!
+!# Introduction
+!
+! This subroutine sets the sparsity pattern of a given row
+! This subroutine calls `csrMat_setSparsity1`
+!
+!## Usage
+
+INTERFACE
+MODULE SUBROUTINE csrMat_setSparsity4( obj, row, col, ivar, jvar )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: row( : )
+  TYPE( IntVector_ ), INTENT( IN ) :: col( : )
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+END SUBROUTINE csrMat_setSparsity4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      setSparsity@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
 ! summary: 	 This subroutine set sparsity pattern of `sparsematrix_`
 !
 !# Introduction
@@ -541,21 +605,21 @@ END INTERFACE
 !
 ! This subroutine set sparsity pattern of `sparsematrix_`
 ! This will finally set the data into
+!
 ! - `obj%A(:)`
-! - `obj%IA(:)`,
+! - `obj%IA(:)`
 ! - `obj%JA(:)`
 ! in CSR format. This routine also set data inside `obj%ColSize(:)` and
 ! `obj%RowSize(:) `, and `obj%DiagIndx(:)`
 !
-!### Usage
+!## Usage
+!
 !```fortran
 ! program main
 !   use easifem
 !   implicit none
-!
 !   type( sparsematrix_ ) :: obj
 !   real( dfp ), allocatable :: val( :, : )
-!
 !   call initiate( obj = obj, tdof = 2, tnodes = [8], storageFMT=DOF_FMT )
 !   call setsparsity( obj = obj, row = 1, col = [1,2,7] )
 !   call setsparsity( obj = obj, row = 2, col = [2,1,3,6,7,8] )
@@ -575,14 +639,19 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE SUBROUTINE csrMat_setSparsity3( obj )
+MODULE SUBROUTINE csrMat_setSparsity_final( obj )
   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE csrMat_setSparsity3
+END SUBROUTINE csrMat_setSparsity_final
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 INTERFACE setSparsity
-  MODULE PROCEDURE csrMat_setSparsity1, csrMat_setSparsity2, &
-    & csrMat_setSparsity3
+  MODULE PROCEDURE csrMat_setSparsity1, csrMat_setSparsity2,  &
+    & csrMat_setSparsity3, csrMat_setSparsity4, &
+    & csrMat_setSparsity_final
 END INTERFACE setSparsity
 
 PUBLIC :: setSparsity
@@ -597,10 +666,15 @@ PUBLIC :: setSparsity
 !
 !# Introduction
 !
-! This subroutine sets the values in sparse matrix
+! This subroutine sets the values in sparse matrix.
+!
+!$$
+! obj(Nptrs,Nptrs)=Val(:,:)
+!$$
+!
 ! - Usually `Val(:,:)` represents the element finite element matrix
 ! - `StorageFMT` denotes the storage format of Val; `Nodes_FMT` or `DOF_FMT`
-! - Commonly element finite element matrix is stored with `DOF_FMT`
+! - Usually, element matrix is stored with `DOF_FMT`
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_set1( obj, nptrs, val, storageFMT )
@@ -617,11 +691,12 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
-! summary: 	This subroutine set all values of sparse matrix to given scalar value
+! summary: 	Sets all values of sparse matrix to given scalar value
 !
 !# Introduction
 ! This routine sets all values of sparse matrix to given value.
-! This routine is used to define an assignment operator. Therefore, we can call this routine by `obj=val`.
+! This routine is used to define an assignment operator. Therefore, we can
+! call this routine by `obj=val`.
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_set2( obj, Val )
@@ -636,12 +711,19 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
-! summary: 	This subroutine set a single entry of sparse matrix
+! summary: Sets a single entry of sparse matrix
 !
 !# Introduction
-! This subroutine sets a single entry of sparse matrix.
-! Before using this subroutien the user should be aware of the storage pattern of degree of freedom. However, if total number of degrees of freedom is one then there is not need to worry. In my opinion, this routine should be avoided by general user.
 !
+! - This subroutine sets a single entry of sparse matrix.
+! - Before using this routine the user should be aware of the storage
+! pattern of degree of freedom.
+! - However, if total number of degrees of freedom is one then there is not
+! need to worry.
+!
+!@warning
+! This routine should be avoided by general user.
+!@endwarning
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_set3( obj, irow, icolumn, Val )
@@ -658,22 +740,36 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
-! summary: 	This subroutine sets the specific row and column entry to a given value
+! summary: 	Sets the specific row and column entry to a given value
 !
 !# Introduction
-! This routine sets the specific row and column entry to a given value.
-! The row and column index is calculated by using (rowNodeNum, rowDOF) and (colNodeNum, colDOF), respectively.
-! After computing the irow and icolumn (internally) this routine calls, `csrMat_set3`.
+!
+! - This routine sets the specific row and column entry to a given value.
+! - The irow and icolumn index in [[CSRMatrix_]] are calculated by using
+! (rowNodeNum, rowDOF) and (colNodeNum, colDOF), respectively.
+! - To do the above task, the routine employs [[DOF_Method:getNodeLoc]] method
+! - After computing the irow and icolumn (internally) this routine calls,
+! `csrMat_set3`.
+!
+!@note
+! General user should prefer this routine over
+! [[CSRMatrix_Method:csrMat_set3]]
+!@endnote
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_set4( obj, rowNodeNum, colNodeNum, rowDOF, &
   & colDOF, Val )
   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: rowNodeNum
+    !! row node number
   INTEGER( I4B ), INTENT( IN ) :: colNodeNum
+    !! column node number
   INTEGER( I4B ), INTENT( IN ) :: rowDOF
+    !! row degree of freedom
   INTEGER( I4B ), INTENT( IN ) :: colDOF
+    !! col degree of freedom
   REAL( DFP ), INTENT( IN ) :: Val
+    !! scalar value to be set
 END SUBROUTINE csrMat_set4
 END INTERFACE
 
@@ -687,7 +783,8 @@ END INTERFACE
 !
 !# Introduction
 !
-! This subroutine sets selected values of the sparse matrix to the scalar value `val`
+! This subroutine sets selected values of the sparse matrix to the scalar
+! value `val`
 !
 ! This routine corresponds to `obj(nptrs) = val`
 
@@ -738,7 +835,7 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
-! summary: 	This subroutine adds all values of sparse matrix to given scalar value
+! summary: 	Adds all values of sparse matrix to given scalar value
 !
 !# Introduction
 ! This routine adds all values of sparse matrix to given value.
@@ -761,9 +858,12 @@ END INTERFACE
 ! summary: 	This subroutine adds a single entry of sparse matrix
 !
 !# Introduction
-! This subroutine adds a single entry of sparse matrix.
-! Before using this subroutien the user should be aware of the storage pattern of degree of freedom. However, if total number of degrees of freedom is one then there is not need to worry. In my opinion, this routine should be avoided by general user.
 !
+! This subroutine adds a single entry of sparse matrix.
+! Before using this subroutien the user should be aware of the storage
+! pattern of degree of freedom. However, if total number of degrees of
+! freedom is one then there is not need to worry. In my opinion, this routine
+! should be avoided by general user.
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_add3( obj, irow, icolumn, val, scale )
@@ -781,12 +881,15 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
-! summary: 	This subroutine sets the specific row and column entry to a given value
+! summary: Sets the specific row and column entry to a given value
 !
 !# Introduction
+!
 ! This routine sets the specific row and column entry to a given value.
-! The row and column index is calculated by using (rowNodeNum, rowDOF) and (colNodeNum, colDOF), respectively.
-! After computing the irow and icolumn (internally) this routine calls, `csrMat_set3`.
+! The row and column index is calculated by using (rowNodeNum, rowDOF) and
+! (colNodeNum, colDOF), respectively.
+! After computing the irow and icolumn (internally) this routine calls,
+! `csrMat_set3`.
 
 INTERFACE
 MODULE PURE SUBROUTINE csrMat_add4( obj, rowNodeNum, colNodeNum, rowDOF, &
@@ -819,7 +922,8 @@ END SUBROUTINE csrMat_add5
 END INTERFACE
 
 INTERFACE Add
-  MODULE PROCEDURE csrMat_add1, csrMat_add2, csrMat_add3, csrMat_add4, csrMat_add5
+  MODULE PROCEDURE csrMat_add1, csrMat_add2, csrMat_add3, csrMat_add4, &
+    & csrMat_add5
 END INTERFACE Add
 
 PUBLIC :: Add
@@ -849,10 +953,12 @@ END INTERFACE
 ! summary: This routine set the row of a sparse matrix
 !
 !# Introduction
-! This routine sets the row of a sparse matrix. The row index is calculated using the inode and idof.
-! inode is the node number
-! idof is the degree of freedom number
-! irow calculated from inode and idof depends upon the storageFMT.
+!
+! - This routine sets the row of a sparse matrix. The row index is
+! calculated using the inode and idof.
+! - `inode` is the node number
+! - `idof` is the degree of freedom number
+! - `irow` calculated from inode and idof depends upon the storageFMT.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setRow2( obj, inode, idof, val )
@@ -888,10 +994,12 @@ END INTERFACE
 ! summary: This routine set the row of a sparse matrix
 !
 !# Introduction
-! This routine sets the row of a sparse matrix. The row index is calculated using the inode and idof.
-! inode is the node number
-! idof is the degree of freedom number
-! irow calculated from inode and idof depends upon the storageFMT.
+!
+! - This routine sets the row of a sparse matrix. The row index is calculated
+! using the inode and idof.
+! - inode is the node number
+! - idof is the degree of freedom number
+! - irow calculated from inode and idof depends upon the storageFMT.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setRow4( obj, inode, idof, val )
@@ -934,10 +1042,12 @@ END INTERFACE
 ! summary: This routine sets the Column of a sparse matrix
 !
 !# Introduction
-! This routine sets the Column of a sparse matrix. The Column index is calculated using the inode and idof.
-! inode is the node number
-! idof is the degree of freedom number
-! iColumn calculated from inode and idof depends upon the storageFMT.
+!
+! - This routine sets the Column of a sparse matrix. The Column index is
+! calculated using the inode and idof.
+! - inode is the node number
+! - idof is the degree of freedom number
+! - iColumn calculated from inode and idof depends upon the storageFMT.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setColumn2( obj, inode, idof, val )
@@ -973,10 +1083,12 @@ END INTERFACE
 ! summary: This routine sets the Column of a sparse matrix
 !
 !# Introduction
-! This routine sets the Column of a sparse matrix. The Column index is calculated using the inode and idof.
-! inode is the node number
-! idof is the degree of freedom number
-! iColumn calculated from inode and idof depends upon the storageFMT.
+!
+! - This routine sets the Column of a sparse matrix. The Column index is
+! calculated using the inode and idof.
+! - inode is the node number
+! - idof is the degree of freedom number
+! - iColumn calculated from inode and idof depends upon the storageFMT.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setColumn4( obj, inode, idof, val )
@@ -1055,10 +1167,12 @@ END INTERFACE
 ! summary: This routine returns the row of a sparse matrix
 !
 !# Introduction
-! This routine returns the row of a sparse matrix. The row index is calculated using the inode and idof.
-! inode is the node number
-! idof is the degree of freedom number
-! irow calculated from inode and idof depends upon the storageFMT.
+!
+! - This routine returns the row of a sparse matrix. The row index is
+! calculated using the inode and idof.
+! - `inode` is the node number
+! - `idof` is the degree of freedom number
+! - `irow` calculated from inode and idof depends upon the storageFMT.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getRow2( obj, inode, idof, val, scale, addContribution )
@@ -1104,13 +1218,16 @@ END INTERFACE
 ! summary: This routine returns the Column of a sparse matrix
 !
 !# Introduction
-! This routine returns the Column of a sparse matrix. The Column index is calculated using the inode and idof.
-! inode is the node number
-! idof is the degree of freedom number
-! iColumn calculated from inode and idof depends upon the storageFMT.
+!
+! - This routine returns the Column of a sparse matrix. The Column index is
+! calculated using the inode and idof.
+! - `inode` is the node number
+! - `idof` is the degree of freedom number
+! - `iColumn` calculated from inode and idof depends upon the storageFMT.
 
 INTERFACE
-MODULE SUBROUTINE csrMat_getColumn2( obj, inode, idof, val, scale, addContribution )
+MODULE SUBROUTINE csrMat_getColumn2( obj, inode, idof, val, scale,  &
+  & addContribution )
   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: inode
   INTEGER( I4B ), INTENT( IN ) :: idof
@@ -1188,15 +1305,16 @@ END INTERFACE ASSIGNMENT( = )
 ! summary: Sort column of row
 !
 !# Introduction
-! This routine sorts the elements of a matrix (stored in Compressed
+!
+! - This routine sorts the elements of a matrix (stored in Compressed
 ! Sparse Row Format) in increasing order of their column indices within
 ! each row. It uses insertion sort algorithm
 !
-! `values`= logical indicating whether or not the real values a(*) must
+! - `values`= logical indicating whether or not the real values a(*) must
 ! also be permuted. IF (.not. values) then the array a is not
 ! touched by csort and can be a dummy array.
 !
-! Default value of `SortValue` is true.
+! - Default value of `SortValue` is true.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_ColumnSORT( obj, isValues )
@@ -1316,32 +1434,36 @@ PUBLIC :: Get
 !
 !# Introduction
 !
-! - `option` = integer. used to determine strategy chosen by caller to drop elements from matrix A.
-! - `option` = 1, Elements whose absolute value is less than the drop tolerance are removed.
-! - `option` = 2, Elements whose absolute value is less than the product of the drop tolerance and the Euclidean norm of the row are removed.
-! - `option` = 3, Elements whose absolute value is less that the product of the drop tolerance and the largest element in the row are removed.
+! - `option` = integer. used to determine strategy chosen by caller to drop
+!  elements from matrix A.
+! - `option` = 1, Elements whose absolute value is less than the drop
+! tolerance are removed.
+! - `option` = 2, Elements whose absolute value is less than the product of
+! the drop tolerance and the Euclidean norm of the row are removed.
+! - `option` = 3, Elements whose absolute value is less that the product of
+! the drop tolerance and the largest element in the row are removed.
 ! - `droptol` = real. drop tolerance used for dropping strategy.
 !
 !
-!### Usage
+!## Usage
 !
 !```fortran
-  ! type( csrmatrix_ ) :: obj, obj2
-  ! integer( i4b ) :: i
-  ! type( IntVector_ ) :: IA, JA
-  ! type( RealVector_ ) :: A
-  ! CALL display( 'testing DropEntry IA, JA, A')
-  ! IA = [1,3,6,9,10,13]
-  ! JA = [1,4,1,2,4,2,3,5,4,5,3,2]
-  ! A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
-  ! call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
-  ! ! call setSparsity(obj) !! Not required
-  ! call DropEntry(objIn=obj, objOut=obj2, dropTol=4.0_DFP)
-  ! call display( obj2, "obj2=" )
-  ! call DropEntry(objIn=obj, objOut=obj, dropTol=4.0_DFP)
-  ! call display( obj, "obj=" )
-  ! call deallocateData( obj )
-  ! call deallocateData( obj2 )
+! type( csrmatrix_ ) :: obj, obj2
+! integer( i4b ) :: i
+! type( IntVector_ ) :: IA, JA
+! type( RealVector_ ) :: A
+! CALL display( 'testing DropEntry IA, JA, A')
+! IA = [1,3,6,9,10,13]
+! JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+! A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+! call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+! ! call setSparsity(obj) !! Not required
+! call DropEntry(objIn=obj, objOut=obj2, dropTol=4.0_DFP)
+! call display( obj2, "obj2=" )
+! call DropEntry(objIn=obj, objOut=obj, dropTol=4.0_DFP)
+! call display( obj, "obj=" )
+! call deallocateData( obj )
+! call deallocateData( obj2 )
 !```
 
 INTERFACE
@@ -1368,23 +1490,27 @@ PUBLIC :: DropEntry
 ! summary: Transpose of the sparse matrix
 !
 !# Introduction
-! In-place transposition routine. This subroutine transposes a matrix stored in compressed sparse row format. the transposition is done in place in that the arrays a,ja,ia c of the transpose are overwritten onto the original arrays.
 !
-!### Usage
+! In-place transposition routine. This subroutine transposes a matrix stored
+! in compressed sparse row format. the transposition is done in place in that
+! the arrays a,ja,ia c of the transpose are overwritten onto the original
+! arrays.
+!
+!## Usage
 !
 !```fortran
-  ! type( csrmatrix_ ) :: obj
-  ! integer( i4b ) :: i
-  ! type( IntVector_ ) :: IA, JA
-  ! type( RealVector_ ) :: A
-  ! CALL display( 'testing TRANSPOSE')
-  ! IA = [1,3,6,9,10,13]
-  ! JA = [1,4,1,2,4,2,3,5,4,5,3,2]
-  ! A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
-  ! call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
-  ! call getTranspose(obj)
-  ! call display( obj, "obj=" )
-  ! call deallocateData( obj )
+! type( csrmatrix_ ) :: obj
+! integer( i4b ) :: i
+! type( IntVector_ ) :: IA, JA
+! type( RealVector_ ) :: A
+! CALL display( 'testing TRANSPOSE')
+! IA = [1,3,6,9,10,13]
+! JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+! A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+! call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+! call getTranspose(obj)
+! call display( obj, "obj=" )
+! call deallocateData( obj )
 !```
 
 INTERFACE
@@ -1408,34 +1534,41 @@ PUBLIC :: getTRANSPOSE
 ! summary: Returns the diagonal of sparse matrix
 !
 !# Introduction
+!
 ! This subroutine returns the diagonal entries of sparse matrix.
 !
-! - offset: containing the offset of the wanted diagonal the diagonal extracted is the one corresponding to the entries `a(i,j)` with `j-i = ioff`. thus `ioff = 0` means the main diagonal
-! - `diag` : real*8 array of length nrow containing the wanted diagonal. diag contains the diagonal (`a(i,j),j-i = ioff`) as defined above.
-! - `idiag` = integer array of  length `len`, containing the poisitions in the original arrays `a` and `ja` of the diagonal elements collected in `diag`. A zero entry in `idiag(i)` means that there was no entry found in row i belonging to the diagonal.
+! - offset: containing the offset of the wanted diagonal the diagonal
+! extracted is the one corresponding to the entries `a(i,j)` with `j-i =
+! ioff`. thus `ioff = 0` means the main diagonal
+! - `diag` : real*8 array of length nrow containing the wanted diagonal. diag
+! contains the diagonal (`a(i,j),j-i = ioff`) as defined above.
+! - `idiag` = integer array of  length `len`, containing the poisitions in
+! the original arrays `a` and `ja` of the diagonal elements collected in
+! `diag`. A zero entry in `idiag(i)` means that there was no entry found in
+! row i belonging to the diagonal.
 !
-!### Usage
+!## Usage
 !
 !```fortran
-  ! type( csrmatrix_ ) :: obj
-  ! integer( i4b ) :: i
-  ! type( IntVector_ ) :: IA, JA
-  ! type( RealVector_ ) :: A
-  ! CALL display( 'testing getDiagonal')
-  ! IA = [1,3,6,9,10,13]
-  ! JA = [1,4,1,2,4,2,3,5,4,5,3,2]
-  ! A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
-  ! call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
-  ! call getDiagonal( obj=obj, diag=A%val, idiag=IA%val, offset=0 )
-  ! call display( A, "diag=")
-  ! call display( IA, "idiag=")
-  ! call getDiagonal( obj=obj, diag=A%val, idiag=IA%val, offset=-1 )
-  ! call display( A, "diag=")
-  ! call display( IA, "idiag=")
-  ! call getDiagonal( obj=obj, diag=A%val, idiag=IA%val, offset=2 )
-  ! call display( A, "diag=")
-  ! call display( IA, "idiag=")
-  ! call deallocateData( obj )
+! type( csrmatrix_ ) :: obj
+! integer( i4b ) :: i
+! type( IntVector_ ) :: IA, JA
+! type( RealVector_ ) :: A
+! CALL display( 'testing getDiagonal')
+! IA = [1,3,6,9,10,13]
+! JA = [1,4,1,2,4,2,3,5,4,5,3,2]
+! A = 1.0_DFP*[10.0,-1.0,-2.0,11.0,-3.0,-4.0,12.0,-5.0,13.0,14.0,-9.0,-8.0]
+! call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
+! call getDiagonal( obj=obj, diag=A%val, idiag=IA%val, offset=0 )
+! call display( A, "diag=")
+! call display( IA, "idiag=")
+! call getDiagonal( obj=obj, diag=A%val, idiag=IA%val, offset=-1 )
+! call display( A, "diag=")
+! call display( IA, "idiag=")
+! call getDiagonal( obj=obj, diag=A%val, idiag=IA%val, offset=2 )
+! call display( A, "diag=")
+! call display( IA, "idiag=")
+! call deallocateData( obj )
 !```
 
 INTERFACE
@@ -1462,6 +1595,7 @@ PUBLIC :: getDiagonal
 ! summary: Returns the lower part of the sparse matrix
 !
 !# Introduction
+!
 ! This subroutine returns the lower part of the sparse matrix.
 
 INTERFACE
@@ -1486,6 +1620,7 @@ PUBLIC :: getLowerTriangle
 ! summary: Returns the Upper part of the sparse matrix
 !
 !# Introduction
+!
 ! This subroutine returns the Upper part of the sparse matrix.
 
 INTERFACE
@@ -1584,21 +1719,36 @@ PUBLIC :: Permute
 ! summary: Returns the ILUT precondition
 !
 !# Introduction
-! This routine builds the ILUT precondition. Incomplete LU factorization with dual truncation mechanism.
+!
+! This routine builds the ILUT precondition. Incomplete LU factorization with
+! dual truncation mechanism.
 !
 ! - `obj` matrix stored in Compressed Sparse Row format.
-! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U will have a maximum of lfil elements (excluding the diagonal element). lfil must be .ge. 0.
-! - `droptol` = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
+! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U
+! will have a maximum of lfil elements (excluding the diagonal element). lfil
+! must be .ge. 0.
+! - `droptol` = real*8. Sets the threshold for dropping small terms in the
+! factorization. See below for details on dropping strategy.
 !
-! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
-! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing
+! the L and U factors together. The diagonal (stored in ALU(1:n) ) is
+! inverted. Each ith row of the ALU,JLU matrix contains the ith row of L
+! (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning
+! of each row of U in the matrix ALU,JLU.
 !
-! The diagonal elements of the input matrix must be nonzero (at least 'structurally'). Dual drop strategy works as follows:
+! The diagonal elements of the input matrix must be nonzero (at least
+! 'structurally'). Dual drop strategy works as follows:
 !
-! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
-! - Keeping only the largest `lfil` elements in the ith row of L and the largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
-! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on keeping the largest elements in each row  of `L` and `U`.
-! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold strategy (however, fill-in is then mpredictible).
+! - Theresholding in L and U as set by `droptol`. Any element whose
+! MAGNITUDE is less than some tolerance (relative to the abs value of
+! diagonal element in U) is dropped.
+! - Keeping only the largest `lfil` elements in the ith row of L and the
+! largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
+! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on
+! keeping the largest elements in each row  of `L` and `U`.
+! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold
+! strategy (however, fill-in is then mpredictible).
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUT1( obj, ALU, JLU, JU, lfil, droptol )
@@ -1620,21 +1770,35 @@ END INTERFACE
 ! summary: Returns the ILUT precondition
 !
 !# Introduction
-! This routine builds the ILUT precondition. Incomplete LU factorization with dual truncation mechanism.
+! This routine builds the ILUT precondition. Incomplete LU factorization with
+! dual truncation mechanism.
 !
 ! - `obj` matrix stored in Compressed Sparse Row format.
-! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U will have a maximum of lfil elements (excluding the diagonal element). lfil must be .ge. 0.
-! - `droptol` = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
+! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U
+! will have a maximum of lfil elements (excluding the diagonal element). lfil
+! must be .ge. 0.
+! - `droptol` = real*8. Sets the threshold for dropping small terms in the
+! factorization. See below for details on dropping strategy.
 !
-! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
-! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+! - `ALU`,`JLU`, matrix stored in Modified Sparse Row (MSR) Format containing
+! the L and U factors together. The diagonal (stored in ALU(1:n) ) is
+! inverted. Each ith row of the ALU,JLU matrix contains the ith row of L
+! (excluding the diagonal entry=1) followed by the ith row of U.
+! - `JU` = integer array of length n containing the pointers to the beginning
+! of each row of U in the matrix ALU,JLU.
 !
-! The diagonal elements of the input matrix must be nonzero (at least 'structurally'). Dual drop strategy works as follows:
+! The diagonal elements of the input matrix must be nonzero (at least
+! 'structurally'). Dual drop strategy works as follows:
 !
-! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
-! - Keeping only the largest `lfil` elements in the ith row of L and the largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
-! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on keeping the largest elements in each row  of `L` and `U`.
-! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold strategy (however, fill-in is then mpredictible).
+! - Theresholding in L and U as set by `droptol`. Any element whose
+! MAGNITUDE is less than some tolerance (relative to the abs value of
+! diagonal element in U) is dropped.
+! - Keeping only the largest `lfil` elements in the ith row of L and the
+! largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
+! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on
+! keeping the largest elements in each row  of `L` and `U`.
+! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold
+! strategy (however, fill-in is then mpredictible).
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUT2( obj, Pmat, lfil, droptol )
@@ -1660,36 +1824,56 @@ PUBLIC :: getILUT
 ! summary: Returns the ILUT precondition
 !
 !# Introduction
-! This routine builds the ILUTP precondition. ILUT with pivoting, incomplete LU factorization with dual truncation mechanism
+! This routine builds the ILUTP precondition. ILUT with pivoting, incomplete
+! LU factorization with dual truncation mechanism
 !
 ! - `obj` matrix stored in Compressed Sparse Row format.
-! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U will have a maximum of lfil elements (excluding the diagonal element). lfil must be .ge. 0.
-! - `droptol` = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
-! - `permtol` = tolerance ratio used to determine whether or not to permute two columns.  At step i columns i and j are permuted when
+! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U
+! will have a maximum of lfil elements (excluding the diagonal element). lfil
+! must be .ge. 0.
+! - `droptol` = real*8. Sets the threshold for dropping small terms in the
+! factorization. See below for details on dropping strategy.
+! - `permtol` = tolerance ratio used to determine whether or not to permute
+! two columns.  At step i columns i and j are permuted when
 !
 ! `abs(a(i,j))*permtol .gt. abs(a(i,i))`.
 !
 ! - permtol=0 implies never permute; good values 0.1 to 0.01
 !
-! - `mbloc` = if desired, permuting can be done only within the diagonal blocks of size mbloc. Useful for PDE problems with several degrees of freedom.. If feature not wanted take mbloc=n.
+! - `mbloc` = if desired, permuting can be done only within the diagonal
+! blocks of size mbloc. Useful for PDE problems with several degrees of
+! freedom.. If feature not wanted take mbloc=n.
 !
-! `iperm` = contains the permutation arrays. iperm(1:n) = old numbers of unknowns iperm(n+1:2*n) = reverse permutation = new unknowns.
+! `iperm` = contains the permutation arrays. iperm(1:n) = old numbers of
+! unknowns iperm(n+1:2*n) = reverse permutation = new unknowns.
 !
-! TO AVOID PERMUTING THE SOLUTION VECTORS ARRAYS FOR EACH LU-SOLVE, THE MATRIX A IS PERMUTED ON RETURN. All column indices are changed. SIMILARLY FOR THE U MATRIX. To permute the matrix back to its original state use the loop:
+! TO AVOID PERMUTING THE SOLUTION VECTORS ARRAYS FOR EACH LU-SOLVE, THE
+! MATRIX A IS PERMUTED ON RETURN. All column indices are changed. SIMILARLY
+! FOR THE U MATRIX. To permute the matrix back to its original state use the
+! loop:
 !
-! ```fortran
-!   do k=ia(1), ia(n+1)-1
-!      ja(k) = iperm(ja(k))
-!   enddo
-! ```
+!```fortran
+!  do k=ia(1), ia(n+1)-1
+!    ja(k) = iperm(ja(k))
+!  enddo
+!```
 !
-! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
-! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing
+! the L and U factors together. The diagonal (stored in ALU(1:n) ) is
+! inverted. Each ith row of the ALU,JLU matrix contains the ith row of L
+! (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning
+! of each row of U in the matrix ALU,JLU.
 !
-! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
-! - Keeping only the largest `lfil` elements in the ith row of L and the largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
-! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on keeping the largest elements in each row  of `L` and `U`.
-! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold strategy (however, fill-in is then mpredictible).
+! - Theresholding in L and U as set by `droptol`. Any element whose
+! MAGNITUDE is less than some tolerance (relative to the abs value of
+! diagonal element in U) is dropped.
+! - Keeping only the largest `lfil` elements in the ith row of L and the
+! largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
+! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on
+! keeping the largest elements in each row  of `L` and `U`.
+! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold
+! strategy (however, fill-in is then mpredictible).
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUTP1( obj, ALU, JLU, JU, lfil, droptol, &
@@ -1715,36 +1899,56 @@ END INTERFACE
 ! summary: Returns the ILUT precondition
 !
 !# Introduction
-! This routine builds the ILUTP precondition. ILUT with pivoting, incomplete LU factorization with dual truncation mechanism
+! This routine builds the ILUTP precondition. ILUT with pivoting, incomplete
+! LU factorization with dual truncation mechanism
 !
 ! - `obj` matrix stored in Compressed Sparse Row format.
-! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U will have a maximum of lfil elements (excluding the diagonal element). lfil must be .ge. 0.
-! - `droptol` = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
-! - `permtol` = tolerance ratio used to determine whether or not to permute two columns.  At step i columns i and j are permuted when
+! - `lfil` = integer. The fill-in parameter. Each row of L and each row of U
+! will have a maximum of lfil elements (excluding the diagonal element). lfil
+! must be .ge. 0.
+! - `droptol` = real*8. Sets the threshold for dropping small terms in the
+! factorization. See below for details on dropping strategy.
+! - `permtol` = tolerance ratio used to determine whether or not to permute
+! two columns.  At step i columns i and j are permuted when
 !
 ! `abs(a(i,j))*permtol .gt. abs(a(i,i))`.
 !
 ! - permtol=0 implies never permute; good values 0.1 to 0.01
 !
-! - `mbloc` = if desired, permuting can be done only within the diagonal blocks of size mbloc. Useful for PDE problems with several degrees of freedom.. If feature not wanted take mbloc=n.
+! - `mbloc` = if desired, permuting can be done only within the diagonal
+! blocks of size mbloc. Useful for PDE problems with several degrees of
+! freedom.. If feature not wanted take mbloc=n.
 !
-! `iperm` = contains the permutation arrays. iperm(1:n) = old numbers of unknowns iperm(n+1:2*n) = reverse permutation = new unknowns.
+! `iperm` = contains the permutation arrays. iperm(1:n) = old numbers of
+! unknowns iperm(n+1:2*n) = reverse permutation = new unknowns.
 !
-! TO AVOID PERMUTING THE SOLUTION VECTORS ARRAYS FOR EACH LU-SOLVE, THE MATRIX A IS PERMUTED ON RETURN. All column indices are changed. SIMILARLY FOR THE U MATRIX. To permute the matrix back to its original state use the loop:
+! TO AVOID PERMUTING THE SOLUTION VECTORS ARRAYS FOR EACH LU-SOLVE, THE
+! MATRIX A IS PERMUTED ON RETURN. All column indices are changed. SIMILARLY
+! FOR THE U MATRIX. To permute the matrix back to its original state use the
+! loop:
 !
-! ```fortran
-!   do k=ia(1), ia(n+1)-1
-!      ja(k) = iperm(ja(k))
-!   enddo
-! ```
+!```fortran
+!  do k=ia(1), ia(n+1)-1
+!     ja(k) = iperm(ja(k))
+!  enddo
+!```
 !
-! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
-! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing
+! the L and U factors together. The diagonal (stored in ALU(1:n) ) is
+! inverted. Each ith row of the ALU,JLU matrix contains the ith row of L
+! (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning
+! of each row of U in the matrix ALU,JLU.
 !
-! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
-! - Keeping only the largest `lfil` elements in the ith row of L and the largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
-! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on keeping the largest elements in each row  of `L` and `U`.
-! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold strategy (however, fill-in is then mpredictible).
+! - Theresholding in L and U as set by `droptol`. Any element whose
+! MAGNITUDE is less than some tolerance (relative to the abs value of
+! diagonal element in U) is dropped.
+! - Keeping only the largest `lfil` elements in the ith row of L and the
+! largest `lfil` elements in the ith row of `U` (excluding diagonal elements).
+! - Flexibility: one  can use  `droptol=0` to get  a strategy  based on
+! keeping the largest elements in each row  of `L` and `U`.
+! - Taking `droptol .ne. 0` but `lfil=n` will give the usual threshold
+! strategy (however, fill-in is then mpredictible).
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUTP2( obj, Pmat, lfil, droptol, permtol, &
@@ -1774,23 +1978,37 @@ PUBLIC :: getILUTP
 ! summary: Returns the ILUT precondition
 !
 !# Introduction
-! This routine computes the ILU factorization with standard threshold dropping: at ith step of elimination, an element a(i,j) in row i is dropped if it satisfies the criterion:
-!
+! This routine computes the ILU factorization with standard threshold
+! dropping: at ith step of elimination, an element a(i,j) in row i is dropped
+! if it satisfies the criterion:
 !
 ! - abs(a(i,j)) < tol, that is, average magnitude of elements in row i of A
-! - There is no control on memory size required for the factors as is done in ILUT.
-! - This routines computes also various diagonal compensation ILU's such MILU. These are defined through the parameter `alph`
+! - There is no control on memory size required for the factors as is done in
+! ILUT.
+! - This routines computes also various diagonal compensation ILU's such
+! MILU. These are defined through the parameter `alph`
 !
-! - alph = diagonal compensation parameter, alph*(sum of all dropped out elements in a given row) is added to the diagonal element of U of the factorization
+! - alph = diagonal compensation parameter, alph*(sum of all dropped out
+! elements in a given row) is added to the diagonal element of U of the
+! factorization
 !   - alph = 0 means the scheme is ILU with threshold,
 !   - alph = 1 means the scheme is MILU with threshold.
-! - droptol = Threshold parameter for dropping small terms in the factorization. During the elimination, a term a(i,j) is dropped whenever abs(a(i,j)) .lt. tol * [weighted norm of row i]. Here weighted norm = 1-norm / number of nnz elements in the row.
+! - droptol = Threshold parameter for dropping small terms in the
+! factorization. During the elimination, a term a(i,j) is dropped whenever abs
+! (a(i,j)) .lt. tol * [weighted norm of row i]. Here weighted norm = 1-norm /
+! number of nnz elements in the row.
 ! - `obj` matrix stored in Compressed Sparse Row format.
 !
-! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
-! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing
+! the L and U factors together. The diagonal (stored in ALU(1:n) ) is
+! inverted. Each ith row of the ALU,JLU matrix contains the ith row of L
+! (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning
+! of each row of U in the matrix ALU,JLU.
 !
-! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+! - Theresholding in L and U as set by `droptol`. Any element whose
+! MAGNITUDE is less than some tolerance (relative to the abs value of
+! diagonal element in U) is dropped.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUD1( obj, ALU, JLU, JU, alpha, droptol )
@@ -1812,23 +2030,38 @@ END INTERFACE
 ! summary: Returns the ILUT precondition
 !
 !# Introduction
-! This routine computes the ILU factorization with standard threshold dropping: at ith step of elimination, an element a(i,j) in row i is dropped if it satisfies the criterion:
 !
+! This routine computes the ILU factorization with standard threshold
+! dropping: at ith step of elimination, an element a(i,j) in row i is dropped
+! if it satisfies the criterion:
 !
 ! - abs(a(i,j)) < tol, that is, average magnitude of elements in row i of A
-! - There is no control on memory size required for the factors as is done in ILUT.
-! - This routines computes also various diagonal compensation ILU's such MILU. These are defined through the parameter `alph`
+! - There is no control on memory size required for the factors as is done in
+! ILUT.
+! - This routines computes also various diagonal compensation ILU's such
+! MILU. These are defined through the parameter `alph`
 !
-! - alph = diagonal compensation parameter, alph*(sum of all dropped out elements in a given row) is added to the diagonal element of U of the factorization
+! - alph = diagonal compensation parameter, alph*(sum of all dropped out
+! elements in a given row) is added to the diagonal element of U of the
+! factorization
 !   - alph = 0 means the scheme is ILU with threshold,
 !   - alph = 1 means the scheme is MILU with threshold.
-! - droptol = Threshold parameter for dropping small terms in the factorization. During the elimination, a term a(i,j) is dropped whenever abs(a(i,j)) .lt. tol * [weighted norm of row i]. Here weighted norm = 1-norm / number of nnz elements in the row.
+! - droptol = Threshold parameter for dropping small terms in the
+! factorization. During the elimination, a term a(i,j) is dropped whenever abs
+! (a(i,j)) .lt. tol * [weighted norm of row i]. Here weighted norm = 1-norm /
+! number of nnz elements in the row.
 ! - `obj` matrix stored in Compressed Sparse Row format.
 !
-! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
-! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing
+! the L and U factors together. The diagonal (stored in ALU(1:n) ) is
+! inverted. Each ith row of the ALU,JLU matrix contains the ith row of L
+! (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning
+! of each row of U in the matrix ALU,JLU.
 !
-! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+! - Theresholding in L and U as set by `droptol`. Any element whose
+! MAGNITUDE is less than some tolerance (relative to the abs value of
+! diagonal element in U) is dropped.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUD2( obj, Pmat, alpha, droptol )
@@ -1855,25 +2088,44 @@ PUBLIC :: getILUD
 !
 !# Introduction
 !
-! This routine computes ILUDP preconditioner, incomplete LU factorization with standard droppoing strategy.
+! This routine computes ILUDP preconditioner, incomplete LU factorization
+! with standard droppoing strategy.
 !
-! - `droptol` = tolerance used for dropping elements in L and U. elements are dropped if they are .lt. norm(row) x droptol row = row being eliminated
-! - `permtol` = tolerance ratio used for determning whether to permute two columns.  Two columns are permuted only when abs(a(i,j))*permtol .gt. abs(a(i,i)) [0 --> never permute; good values 0.1 to 0.01]
-! - `mbloc` = if desired, permuting can be done only within the diagonal blocks of size mbloc. Useful for PDE problems with several degrees of freedom.. If feature not wanted take mbloc=n.
+! - `droptol` = tolerance used for dropping elements in L and U. elements are
+! dropped if they are .lt. norm(row) x droptol row = row being eliminated
+! - `permtol` = tolerance ratio used for determning whether to permute two
+! columns.  Two columns are permuted only when abs(a(i,j))*permtol .gt. abs(a
+! (i,i)) [0 --> never permute; good values 0.1 to 0.01]
+! - `mbloc` = if desired, permuting can be done only within the diagonal
+! blocks of size mbloc. Useful for PDE problems with several degrees of
+! freedom.. If feature not wanted take mbloc=n.
 !
-! - iperm   = contains the permutation arrays, iperm(1:n) = old numbers of unknowns, iperm(n+1:2*n) = reverse permutation = new unknowns.
+! - iperm   = contains the permutation arrays, iperm(1:n) = old numbers of
+! unknowns, iperm(n+1:2*n) = reverse permutation = new unknowns.
 !
-! - abs(a(i,j)) < droptol, that is, average magnitude of elements in row i of A
-! - alph = diagonal compensation parameter, alph*(sum of all dropped out elements in a given row) is added to the diagonal element of U of the factorization
+! - abs(a(i,j)) < droptol, that is, average magnitude of elements in row i
+! of A
+! - alph = diagonal compensation parameter, alph*(sum of all dropped out
+! elements in a given row) is added to the diagonal element of U of the
+! factorization
 !   - alph = 0 means the scheme is ILU with threshold,
 !   - alph = 1 means the scheme is MILU with threshold.
-! - droptol = Threshold parameter for dropping small terms in the factorization. During the elimination, a term a(i,j) is dropped whenever abs(a(i,j)) .lt. droptol * [weighted norm of row i]. Here weighted norm = 1-norm / number of nnz elements in the row.
+! - droptol = Threshold parameter for dropping small terms in the
+! factorization. During the elimination, a term a(i,j) is dropped whenever abs
+! (a(i,j)) .lt. droptol * [weighted norm of row i]. Here weighted norm =
+! 1-norm / number of nnz elements in the row.
 ! - `obj` matrix stored in Compressed Sparse Row format.
 !
-! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
-! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing
+! the L and U factors together. The diagonal (stored in ALU(1:n) ) is
+! inverted. Each ith row of the ALU,JLU matrix contains the ith row of L
+! (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning
+! of each row of U in the matrix ALU,JLU.
 !
-! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+! - Theresholding in L and U as set by `droptol`. Any element whose
+! MAGNITUDE is less than some tolerance (relative to the abs value of
+! diagonal element in U) is dropped.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUDP1( obj, ALU, JLU, JU, alpha, droptol, &
@@ -1900,25 +2152,44 @@ END INTERFACE
 !
 !# Introduction
 !
-! This routine computes ILUDP preconditioner, incomplete LU factorization with standard droppoing strategy.
+! This routine computes ILUDP preconditioner, incomplete LU factorization
+! with standard droppoing strategy.
 !
-! - `droptol` = tolerance used for dropping elements in L and U. elements are dropped if they are .lt. norm(row) x droptol row = row being eliminated
-! - `permtol` = tolerance ratio used for determning whether to permute two columns.  Two columns are permuted only when abs(a(i,j))*permtol .gt. abs(a(i,i)) [0 --> never permute; good values 0.1 to 0.01]
-! - `mbloc` = if desired, permuting can be done only within the diagonal blocks of size mbloc. Useful for PDE problems with several degrees of freedom.. If feature not wanted take mbloc=n.
+! - `droptol` = tolerance used for dropping elements in L and U. elements are
+! dropped if they are .lt. norm(row) x droptol row = row being eliminated
+! - `permtol` = tolerance ratio used for determning whether to permute two
+! columns.  Two columns are permuted only when abs(a(i,j))*permtol .gt. abs(a
+! (i,i)) [0 --> never permute; good values 0.1 to 0.01]
+! - `mbloc` = if desired, permuting can be done only within the diagonal
+! blocks of size mbloc. Useful for PDE problems with several degrees of
+! freedom.. If feature not wanted take mbloc=n.
 !
-! - iperm   = contains the permutation arrays, iperm(1:n) = old numbers of unknowns, iperm(n+1:2*n) = reverse permutation = new unknowns.
+! - iperm   = contains the permutation arrays, iperm(1:n) = old numbers of
+! unknowns, iperm(n+1:2*n) = reverse permutation = new unknowns.
 !
-! - abs(a(i,j)) < droptol, that is, average magnitude of elements in row i of A
-! - alph = diagonal compensation parameter, alph*(sum of all dropped out elements in a given row) is added to the diagonal element of U of the factorization
+! - abs(a(i,j)) < droptol, that is, average magnitude of elements in row i of
+! A
+! - alph = diagonal compensation parameter, alph*(sum of all dropped out
+! elements in a given row) is added to the diagonal element of U of the
+! factorization
 !   - alph = 0 means the scheme is ILU with threshold,
 !   - alph = 1 means the scheme is MILU with threshold.
-! - droptol = Threshold parameter for dropping small terms in the factorization. During the elimination, a term a(i,j) is dropped whenever abs(a(i,j)) .lt. droptol * [weighted norm of row i]. Here weighted norm = 1-norm / number of nnz elements in the row.
+! - droptol = Threshold parameter for dropping small terms in the
+! factorization. During the elimination, a term a(i,j) is dropped whenever abs
+! (a(i,j)) .lt. droptol * [weighted norm of row i]. Here weighted norm =
+! 1-norm / number of nnz elements in the row.
 ! - `obj` matrix stored in Compressed Sparse Row format.
 !
-! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing the L and U factors together. The diagonal (stored in ALU(1:n) ) is inverted. Each ith row of the ALU,JLU matrix contains the ith row of L (excluding the diagonal entry=1) followed by the ith row of U.
-! - JU = integer array of length n containing the pointers to the beginning of each row of U in the matrix ALU,JLU.
+! - `ALU,JLU`, matrix stored in Modified Sparse Row (MSR) Format containing
+! the L and U factors together. The diagonal (stored in ALU(1:n) ) is
+! inverted. Each ith row of the ALU,JLU matrix contains the ith row of L
+! (excluding the diagonal entry=1) followed by the ith row of U.
+! - JU = integer array of length n containing the pointers to the beginning
+! of each row of U in the matrix ALU,JLU.
 !
-! - Theresholding in L and U as set by `droptol`. Any element whose  MAGNITUDE is less than some tolerance (relative to the abs value of diagonal element in U) is dropped.
+! - Theresholding in L and U as set by `droptol`. Any element whose
+! MAGNITUDE is less than some tolerance (relative to the abs value of
+! diagonal element in U) is dropped.
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUDP2( obj, Pmat, alpha, droptol, &
@@ -1973,16 +2244,26 @@ END INTERFACE
 !
 ! This routine returns the ILU WITH LEVEL OF FILL-IN OF K (ILU(k))
 !
-! - `lfil` = integer. The fill-in parameter. Each element whose leve-of-fill exceeds lfil during the ILU process is dropped. lfil must be .ge. 0
-! - droptol = real*8. Sets the threshold for dropping small terms in the factorization. See below for details on dropping strategy.
-! - `ALU,JLU` = matrix stored in Modified Sparse Row (MSR) format containing the L and U factors together. The diagonal (stored in alu(1:n) ) is inverted. Each i-th row of the `ALU,JLU` matrix contains the i-th row of L (excluding the diagonal entry=1) followed by the i-th row of `U`.
-! - `JU` = integer array of length n containing the pointers to the beginning of each row of `U` in the matrix `ALU,JLU`.
-! - `LEVS` = integer (work) array of size `IWK`, which contains the levels of each element in `ALU, JLU`.
+! - `lfil` = integer. The fill-in parameter. Each element whose leve-of-fill
+! exceeds lfil during the ILU process is dropped. lfil must be .ge. 0
+! - droptol = real*8. Sets the threshold for dropping small terms in the
+! factorization. See below for details on dropping strategy.
+! - `ALU,JLU` = matrix stored in Modified Sparse Row (MSR) format containing
+! the L and U factors together. The diagonal (stored in alu(1:n) ) is
+! inverted. Each i-th row of the `ALU,JLU` matrix contains the i-th row of L
+! (excluding the diagonal entry=1) followed by the i-th row of `U`.
+! - `JU` = integer array of length n containing the pointers to the beginning
+! of each row of `U` in the matrix `ALU,JLU`.
+! - `LEVS` = integer (work) array of size `IWK`, which contains the levels of
+! each element in `ALU, JLU`.
 !
 !@note
-! This is not implemented efficiently storage-wise. For example: Only the part of the array levs(*) associated with the U-matrix is needed in the routine.. So some storage can be saved if needed. The levels of fills in the LU matrix are output for information only -- they are not needed by LU-solve.
+! This is not implemented efficiently storage-wise. For example: Only the
+! part of the array levs(*) associated with the U-matrix is needed in the
+! routine.. So some storage can be saved if needed. The levels of fills in
+! the LU matrix are output for information only -- they are not needed by
+! LU-solve.
 !@endnote
-
 
 INTERFACE
 MODULE SUBROUTINE csrMat_getILUK2( obj, Pmat, lfil, LEVS )
@@ -2007,7 +2288,8 @@ PUBLIC :: getILUK
 ! date: 20 Jul 2021
 ! summary: This routine solves the LU x = y
 !
-! This routine solves the system `LU x = y`, given an LU decomposition of a matrix stored in (`ALU, JLU, JU`) modified sparse row format (MSR).
+! This routine solves the system `LU x = y`, given an LU decomposition of a
+! matrix stored in (`ALU, JLU, JU`) modified sparse row format (MSR).
 ! This ALU, JLU, JU are created by calling ILUT methods described above
 
 INTERFACE
@@ -2034,7 +2316,8 @@ PUBLIC :: LUSOLVE
 ! date: 20 Jul 2021
 ! summary: This routine solves the (LU)^T x = y
 !
-! This routine solves the system `(LU)^T x = y`, given an LU decomposition of a matrix stored in (`ALU, JLU, JU`) modified sparse row format (MSR).
+! This routine solves the system `(LU)^T x = y`, given an LU decomposition of
+! a matrix stored in (`ALU, JLU, JU`) modified sparse row format (MSR).
 ! This ALU, JLU, JU are created by calling ILUT methods described above
 
 INTERFACE
@@ -2194,7 +2477,7 @@ PUBLIC :: MatVec
 ! !# Introduction
 ! ! This subroutine Solve Lx = y by forward elimination technique will be used
 ! ! Here L is lower triangular matrix with unit diag in CSR format
-
+!
 ! INTERFACE
 ! MODULE SUBROUTINE csrMat_LSolve( obj, x, y )
 !   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
@@ -2205,14 +2488,14 @@ PUBLIC :: MatVec
 !     !! This contains solution
 ! END SUBROUTINE csrMat_LSolve
 ! END INTERFACE
-
+!
 ! INTERFACE LSolve
 !   MODULE PROCEDURE csrMat_LSolve
 ! END INTERFACE LSolve
-
+!
 ! PUBLIC :: LSolve
 
-! !----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 ! !                                                           USolve@LinAlg
 ! !----------------------------------------------------------------------------
 
@@ -2221,7 +2504,8 @@ PUBLIC :: MatVec
 ! ! summary: Solve Ux = y by backward elimination technique will be used
 ! !
 ! !# Introduction
-! !- This subroutine solve Ux = y by backward elimination technique will be used
+! !- This subroutine solve Ux = y by backward elimination technique will be
+! ! used
 ! ! - Here U is upper triangular matrix with unit diag in CSR format
 
 ! INTERFACE

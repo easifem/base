@@ -29,22 +29,24 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csr_Display
-  INTEGER( I4B ) :: i
-  i = INPUT( Default=stdout, Option=UnitNo )
-  CALL Display( Msg, unitno=i )
-  CALL Display( obj%nnz, "NNZ : ", unitno=i )
-  CALL Display( obj%ncol, "NCOL : ", unitno=i )
-  CALL Display( obj%nrow, "NROW : ", unitno=i )
-  CALL Display( obj%dof, "DOF : ", unitno=i )
+  CALL Display( Msg, unitNo=unitNo )
+  CALL Display( obj%nnz, "# NNZ : ", unitNo=unitNo )
+  CALL Display( obj%ncol, "# NCOL : ", unitNo=unitNo )
+  CALL Display( obj%nrow, "# NROW : ", unitNo=unitNo )
+  CALL Display( obj%dof, "# DOF : ", unitNo=unitNo )
   IF( ALLOCATED( obj%IA ) ) THEN
-    CALL Display( obj%IA, "IA : ", unitno=i )
+    CALL Display( obj%IA, "# IA : ", unitNo=unitNo, advance="NO" )
   ELSE
-    CALL Display( "IA is not allocated" )
+    CALL Display( "# IA is not allocated", UnitNo=UnitNo )
   END IF
   IF( ALLOCATED( obj%JA ) ) THEN
-    CALL Display( obj%JA, "JA : ", unitno=i )
+    CALL Display( obj%JA, "# JA : ", unitNo=unitNo, advance="NO" )
   ELSE
-    CALL Display( "JA is not allocated" )
+    CALL Display( "# JA is not allocated", UnitNo=UnitNo )
+  END IF
+  CALL Display( "", unitNo=UnitNo, advance=.TRUE. )
+  IF( ALLOCATED( obj%row ) ) THEN
+    CALL Display( obj%row, "# ROW : ", unitNo=unitNo, orient="ROW" )
   END IF
 END PROCEDURE csr_Display
 
