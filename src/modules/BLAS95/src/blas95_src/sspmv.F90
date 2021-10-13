@@ -37,7 +37,7 @@ PURE SUBROUTINE SSPMV_F95(AP,X,Y,UPLO,ALPHA,BETA)
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: AP(:)
     REAL(WP), INTENT(IN) :: X(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'SPMV'

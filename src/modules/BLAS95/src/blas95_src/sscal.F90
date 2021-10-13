@@ -30,7 +30,7 @@ PURE SUBROUTINE SSCAL_F95(X,A)
     ! <<< Scalar arguments >>>
     REAL(WP), INTENT(IN) :: A
     ! <<< Array arguments >>>
-    REAL(WP), INTENT(INOUT) :: X(:)
+    REAL(WP), INTENT(INOUT ) :: X(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'SCAL'

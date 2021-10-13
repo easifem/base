@@ -104,7 +104,7 @@ END PROCEDURE csrMat_setSparsity_final
 ! - Symbolic we are performing following task `obj(nptrs, nptrs)=val`
 
 PURE SUBROUTINE setInternally( obj, nptrs, val )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: nptrs( : )
   REAL( DFP ), INTENT( IN ) :: val( :, : )
   ! Internal variables
@@ -223,7 +223,7 @@ END PROCEDURE csrMat_set5
 ! summary: This subroutine add contribution
 
 PURE SUBROUTINE addContributionInternally( obj, nptrs, val, Scale )
-  TYPE( CSRMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: nptrs( : )
   REAL( DFP ), INTENT( IN ) :: val( :, : )
   REAL( DFP ), INTENT( IN ) :: Scale

@@ -28,8 +28,8 @@ PURE SUBROUTINE ZSWAP_F95(X,Y)
     ! <<< Kind parameter >>>
     INTEGER, PARAMETER :: WP = KIND(1.0D0)
     ! <<< Array arguments >>>
-    COMPLEX(WP), INTENT(INOUT) :: X(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y(:)
+    COMPLEX(WP), INTENT(INOUT ) :: X(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'SWAP'

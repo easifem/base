@@ -33,7 +33,7 @@ PURE SUBROUTINE DSYR_F95(A,X,UPLO,ALPHA)
     CHARACTER(LEN=1), INTENT(IN), OPTIONAL :: UPLO
     REAL(WP), INTENT(IN), OPTIONAL :: ALPHA
     ! <<< Array arguments >>>
-    REAL(WP), INTENT(INOUT) :: A(:,:)
+    REAL(WP), INTENT(INOUT ) :: A(:,:)
     REAL(WP), INTENT(IN) :: X(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>

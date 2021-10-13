@@ -778,7 +778,7 @@ PUBLIC :: OPERATOR( .EQ. )
 
 INTERFACE
 MODULE PURE SUBROUTINE keyvalue_deallocate( obj )
-  CLASS( KeyValue_ ), INTENT( INOUT) :: obj
+  CLASS( KeyValue_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE keyvalue_deallocate
 END INTERFACE
 

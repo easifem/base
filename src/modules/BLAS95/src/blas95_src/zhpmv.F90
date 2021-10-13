@@ -37,7 +37,7 @@ PURE SUBROUTINE ZHPMV_F95(AP,X,Y,UPLO,ALPHA,BETA)
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: AP(:)
     COMPLEX(WP), INTENT(IN) :: X(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'HPMV'

@@ -41,7 +41,7 @@ PURE SUBROUTINE DGEMMT_F95(A,B,C,UPLO,TRANSA,TRANSB,ALPHA,BETA)
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: A(:,:)
     REAL(WP), INTENT(IN) :: B(:,:)
-    REAL(WP), INTENT(INOUT) :: C(:,:)
+    REAL(WP), INTENT(INOUT ) :: C(:,:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=5), PARAMETER :: SRNAME = 'GEMMT'

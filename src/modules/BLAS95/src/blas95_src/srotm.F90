@@ -28,8 +28,8 @@ PURE SUBROUTINE SROTM_F95(X,Y,PARAM)
     ! <<< Kind parameter >>>
     INTEGER, PARAMETER :: WP = KIND(1.0E0)
     ! <<< Array arguments >>>
-    REAL(WP), INTENT(INOUT) :: X(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: X(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     REAL(WP), INTENT(IN) :: PARAM(5)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>

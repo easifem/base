@@ -659,7 +659,7 @@ PUBLIC :: getPointer
 INTERFACE
 MODULE PURE SUBROUTINE obj_convert_int( From, To )
   CLASS( IntVector_ ), INTENT( IN ) :: From
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT) :: To( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: To( : )
 END SUBROUTINE obj_convert_int
 END INTERFACE
 

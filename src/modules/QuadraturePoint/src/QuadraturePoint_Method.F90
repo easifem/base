@@ -51,7 +51,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE quad_initiate2( obj, tXi, tPoints )
-  CLASS( QuadraturePoint_ ), INTENT( INOUT) :: obj
+  CLASS( QuadraturePoint_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: tXi
     !! Total number of xidimension
   INTEGER( I4B ), INTENT( IN ) :: tPoints

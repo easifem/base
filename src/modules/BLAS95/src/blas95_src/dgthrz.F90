@@ -30,7 +30,7 @@ PURE SUBROUTINE DGTHRZ_F95(X,INDX,Y)
     ! <<< Array arguments >>>
     REAL(WP), INTENT(OUT) :: X(:)
     INTEGER, INTENT(IN) :: INDX(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=5), PARAMETER :: SRNAME = 'GTHRZ'

@@ -37,7 +37,7 @@ PURE SUBROUTINE CHEMV_F95(A,X,Y,UPLO,ALPHA,BETA)
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: A(:,:)
     COMPLEX(WP), INTENT(IN) :: X(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'HEMV'

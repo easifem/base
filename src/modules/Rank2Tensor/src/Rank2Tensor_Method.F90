@@ -670,7 +670,7 @@ PUBLIC :: RightCauchyGreen_Pointer
 INTERFACE
 MODULE PURE SUBROUTINE inv_rank2( obj, Invobj )
   CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
-  CLASS( Rank2Tensor_ ), INTENT( INOUT) :: Invobj
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: Invobj
 END SUBROUTINE inv_rank2
 END INTERFACE
 
@@ -1206,8 +1206,8 @@ INTERFACE
 MODULE SUBROUTINE pd_r2t( obj, R, U, V )
   CLASS( Rank2Tensor_ ), INTENT( IN ) :: obj
   CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: R
-  CLASS( Rank2Tensor_ ), INTENT( INOUT) :: U
-  CLASS( Rank2Tensor_ ), INTENT( INOUT) :: V
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: U
+  CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: V
 END SUBROUTINE pd_r2t
 END INTERFACE
 

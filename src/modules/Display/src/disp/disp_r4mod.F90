@@ -111,7 +111,7 @@ CONTAINS
     ! snglruple precision item
     character(*),   intent(in)    :: title
     real(sngl),     intent(in)    :: x(:,:)
-    type(settings), intent(inout) :: SE
+    type(settings), intent(INOUT ) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
     call find_editdesc_sngl(x, SE, wid, nbl) ! determine also SE%w
     call tobox_sngl(title, x, SE, wid, nbl)
@@ -121,9 +121,9 @@ CONTAINS
     ! Write snglruple precision matrix to box
     character(*),   intent(in)    :: title   ! title
     real(sngl),     intent(in)    :: x(:,:)  ! item
-    type(settings), intent(inout) :: SE      ! settings
-    integer,        intent(inout) :: wid(:)  ! widths of columns
-    integer,        intent(inout) :: nbl(:)  ! number of blanks to trim from left
+    type(settings), intent(INOUT ) :: SE      ! settings
+    integer,        intent(INOUT ) :: wid(:)  ! widths of columns
+    integer,        intent(INOUT ) :: nbl(:)  ! number of blanks to trim from left
     character(SE%w)  :: s(size(x,1))
     integer            :: lin1, j, wleft, m, n, widp(size(wid))
     character, pointer :: boxp(:,:)
@@ -171,7 +171,7 @@ CONTAINS
     ! ES format in fmt but overflows with F format (the feature has been tested through
     ! manual changes to the program).
     real(sngl),     intent(in)    :: x(:,:)         ! Item to be written
-    type(settings), intent(inout) :: SE             ! Settings
+    type(settings), intent(INOUT ) :: SE             ! Settings
     integer,        intent(out)   :: wid(size(x,2)) ! Widths of individual columns
     integer,        intent(out)   :: nbl(size(x,2)) ! Blanks to trim from left of individual columns
     integer :: expmax, expmin, ww, dd, dmx
@@ -433,7 +433,7 @@ CONTAINS
     ! snglruple precision item
     character(*),   intent(in)    :: title
     complex(sngl),  intent(in)    :: x(:,:)
-    type(settings), intent(inout) :: SE, SEim
+    type(settings), intent(INOUT ) :: SE, SEim
     integer,        intent(in)    :: n
     integer, dimension(n) :: widre(n), widim(n), nblre(n), nblim(n)
     call find_editdesc_sngl(real(x), SE, widre, nblre)         ! determine also SE%w
@@ -446,7 +446,7 @@ CONTAINS
     character(*),   intent(in)    :: title
     complex(sngl),  intent(in)    :: x(:,:)
     integer,        intent(in)    :: m, n, widre(:), widim(:), nblre(:), nblim(:)
-    type(settings), intent(inout) :: SE, SEim
+    type(settings), intent(INOUT ) :: SE, SEim
     character(SE%w)   :: s(m)
     character(SEim%w) :: sim(m)
     character(3)        :: sgn(m)

@@ -142,7 +142,7 @@ CONTAINS
     type(settings), intent(in)    :: SE        ! Settings
     integer,        intent(in)    :: m         ! Row count of matrix
     integer,        intent(in)    :: n         ! Column count of matrix
-    integer,        intent(inout) :: wid(:)    ! widths of columns in matrix
+    integer,        intent(INOUT ) :: wid(:)    ! widths of columns in matrix
     integer,        intent(out)   :: widp(:)   ! widths of columns in box (max(wid, width of col nums))
     integer,        intent(out)   :: lin1      ! Row number where matrix begins (tsty='left' 0, 'pad' 1, 'underline' 2)
     integer,        intent(out)   :: wleft     ! Number of spaces on left of matrix (when tsty is left or title long)
@@ -211,8 +211,8 @@ CONTAINS
     character(*), intent(in)    :: s(:)        ! the strings to copy
     integer,      intent(in)    :: lin1, widj  ! first line in box to copy to, width of column
     integer,      intent(in)    :: nblj, widpj ! number of blank characters to trim from left of s, offset to next col
-    character,    intent(inout) :: boxp(:,:)   ! the box to accept the column
-    integer,      intent(inout) :: wleft       ! number of char-columns in box already written to
+    character,    intent(INOUT ) :: boxp(:,:)   ! the box to accept the column
+    integer,      intent(INOUT ) :: wleft       ! number of char-columns in box already written to
     integer i, j
     wleft = wleft + widpj - widj
     forall(i = 1:widj, j=1:size(s)) boxp(wleft+i, j+lin1-1) = s(j)(i+nblj:i+nblj)
@@ -223,8 +223,8 @@ CONTAINS
     ! Copy column separator to boxp; update wleft
     character(*), intent(in)    :: sep
     integer,      intent(in)    :: m, lin1
-    character,    intent(inout) :: boxp(:,:)
-    integer,      intent(inout) :: wleft
+    character,    intent(INOUT ) :: boxp(:,:)
+    integer,      intent(INOUT ) :: wleft
     integer i, j
     forall(i = 1:len(sep), j=1:m) boxp(wleft+i, j+lin1-1) = sep(i:i)
     wleft = wleft + len(sep)
@@ -236,8 +236,8 @@ CONTAINS
     integer,      intent(in)    :: wid(:)    ! widths of columns in matrix
     integer,      intent(in)    :: widp(:)   ! widths of columns in box (max(wid, width of col nums))
     integer,      intent(in)    :: lsep      ! width of column separator
-    character,    intent(inout) :: boxp(:,:) ! receives the numbers
-    integer,      intent(inout) :: lin1      ! line number in box to copy to
+    character,    intent(INOUT ) :: boxp(:,:) ! receives the numbers
+    integer,      intent(INOUT ) :: lin1      ! line number in box to copy to
     integer ls(size(s)), rmargmax, k, i, lmargin, j
     !
     ls = len_trim(s)
@@ -256,7 +256,7 @@ CONTAINS
     ! Finish creating a box and display it if advancing is turned on
     character(*),   intent(in)    :: title     ! The title to use for the matrix
     type(settings), intent(in)    :: SE        ! Settings
-    character,      intent(inout) :: boxp(:,:) ! The box
+    character,      intent(INOUT ) :: boxp(:,:) ! The box
     !
     integer i, wt, w, wpadright, wpadleft ! index, width of title, width of box and spacing on either side of it
     integer lin1 ! line to put left title
@@ -285,7 +285,7 @@ CONTAINS
   subroutine find_editdesc_real(exp, expm, dmx,  edesc, flen, ndec, posit)
     ! Subroutine of find_editdesc_sngl and find_editdesc_dble
     integer,       intent(in)    :: expm, dmx
-    integer,       intent(inout) :: exp
+    integer,       intent(INOUT ) :: exp
     character(14), intent(out)   :: edesc
     integer,       intent(out)   :: flen, ndec
     logical,       intent(in)    :: posit
@@ -350,7 +350,7 @@ CONTAINS
 
   pure subroutine replace_w(fmt, wnew)
     ! Change e.g. '(F0.3)' to '(F5.3)'. Works also for '(SS,I0)' to '(SS,I5)'. If wnew > 999, set it to 999
-    character(*), intent(inout) :: fmt
+    character(*), intent(INOUT ) :: fmt
     integer, intent(in) :: wnew
     integer :: k0, k1, k2, k3
     character(3) rw
@@ -548,7 +548,7 @@ CONTAINS
     ! otherwise right-adjusted. Nans, and infs are right adjusted.
     ! NOTE: There are compiler bugs in current versions of both the Absoft and the Pathscale compilers
     ! so the merge calls (commented out below) had to be replaced with do loops.
-    character(*), intent(inout) :: s(:)
+    character(*), intent(INOUT ) :: s(:)
     logical     , intent(in)    :: maskz(:), masknan(:), maskinf(:), maskminf(:)
     character(*), intent(in)    :: zas
     optional                    :: masknan, maskminf, maskinf
@@ -683,7 +683,7 @@ CONTAINS
     ! Trim trailing zeros and possibly decimal point from fractional part.
     ! If sa = '52.2000E12' on entry then it is returned as '52.2E12   '.
     ! Whether trimming is actually done depends on tosset, gedit and w.
-    character(*), intent(inout) :: sa
+    character(*), intent(INOUT ) :: sa
     logical, intent(in) :: gedit
     integer, intent(in) :: w
     integer k, k2, k3
@@ -703,7 +703,7 @@ CONTAINS
     ! Trim trailing zeros and possibly decimal point from fractional part.
     ! If sa = '52.2000E12' on entry then it is returned as '52.2E12   '.
     ! Whether trimming is actually done depends on tosset, gedit and w.
-    character(*), intent(inout) :: sa(:)
+    character(*), intent(INOUT ) :: sa(:)
     logical, intent(in) :: gedit
     integer, intent(in) :: w
     integer i

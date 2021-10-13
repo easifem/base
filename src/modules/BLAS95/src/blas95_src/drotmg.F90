@@ -28,9 +28,9 @@ PURE SUBROUTINE DROTMG_F95(D1,D2,X1,Y1,PARAM)
     ! <<< Kind parameter >>>
     INTEGER, PARAMETER :: WP = KIND(1.0D0)
     ! <<< Scalar arguments >>>
-    REAL(WP), INTENT(INOUT) :: D1
-    REAL(WP), INTENT(INOUT) :: D2
-    REAL(WP), INTENT(INOUT) :: X1
+    REAL(WP), INTENT(INOUT ) :: D1
+    REAL(WP), INTENT(INOUT ) :: D2
+    REAL(WP), INTENT(INOUT ) :: X1
     REAL(WP), INTENT(IN) :: Y1
     ! <<< Array arguments >>>
     REAL(WP), INTENT(OUT) :: PARAM(5)

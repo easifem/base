@@ -34,7 +34,7 @@ PURE SUBROUTINE SAXPBY_F95(X,Y,ALPHA,BETA)
     REAL(WP), INTENT(IN), OPTIONAL :: BETA
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: X(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=5), PARAMETER :: SRNAME = 'AXPBY'

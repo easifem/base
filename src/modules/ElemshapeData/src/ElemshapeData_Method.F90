@@ -935,7 +935,7 @@ PUBLIC :: setJacobian
 
 INTERFACE
 MODULE PURE SUBROUTINE stsd_set_dNTdt( obj, Val )
-  CLASS( STElemShapeData_ ), INTENT( INOUT) :: obj
+  CLASS( STElemShapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
     !! Space-time nodal values
 END SUBROUTINE stsd_set_dNTdt
@@ -973,7 +973,7 @@ PUBLIC :: setdNTdt
 
 INTERFACE
 MODULE PURE SUBROUTINE stsd_set_dNTdXt_internally( obj )
-  CLASS( STElemShapeData_ ), INTENT( INOUT) :: obj
+  CLASS( STElemShapeData_ ), INTENT( INOUT ) :: obj
   !! Space-time nodal values
 END SUBROUTINE stsd_set_dNTdXt_internally
 END INTERFACE
@@ -1084,7 +1084,7 @@ PUBLIC :: setValue
 
 INTERFACE
 MODULE PURE SUBROUTINE set_normal( obj )
-  CLASS( ElemShapeData_ ), INTENT( INOUT) :: obj
+  CLASS( ElemShapeData_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE set_normal
 END INTERFACE
 
@@ -1136,7 +1136,7 @@ INTERFACE
 MODULE PURE SUBROUTINE get_interpol_fevar_scalar( obj, Interpol, Val )
   CLASS(ElemShapeData_), INTENT( IN ) :: obj
   TYPE( FEVariable_ ), INTENT( IN ) :: Val
-  REAL( DFP ), INTENT(INOUT) :: Interpol(:)
+  REAL( DFP ), INTENT(INOUT ) :: Interpol(:)
 END SUBROUTINE get_interpol_fevar_scalar
 END INTERFACE
 
@@ -1324,7 +1324,7 @@ INTERFACE
 MODULE PURE SUBROUTINE stsd_get_interpol_fevar_scalar( obj, Interpol, Val )
   CLASS(STElemShapeData_), INTENT( IN ) :: obj( : )
   TYPE( FEVariable_ ), INTENT( IN ) :: Val
-  REAL( DFP ), INTENT(INOUT) :: Interpol(:, :)
+  REAL( DFP ), INTENT(INOUT ) :: Interpol(:, :)
 END SUBROUTINE stsd_get_interpol_fevar_scalar
 END INTERFACE
 
@@ -1377,7 +1377,7 @@ INTERFACE
 MODULE PURE SUBROUTINE stsd_get_interpol_fevar_matrix( obj, Interpol, Val )
   CLASS(STElemShapeData_), INTENT( IN ) :: obj( : )
   TYPE( FEVariable_ ), INTENT( IN ) :: Val
-  REAL( DFP ), INTENT(INOUT) :: Interpol(:, :, :, :)
+  REAL( DFP ), INTENT(INOUT ) :: Interpol(:, :, :, :)
 END SUBROUTINE stsd_get_interpol_fevar_matrix
 END INTERFACE
 

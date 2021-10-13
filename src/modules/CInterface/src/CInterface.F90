@@ -848,7 +848,7 @@ END FUNCTION C_STRING_ALLOC
 !----------------------------------------------------------------------------
 
 SUBROUTINE C_STRING_FREE(string)
-  TYPE(C_PTR), INTENT(INOUT) :: string
+  TYPE(C_PTR), INTENT(INOUT ) :: string
   IF( C_ASSOCIATED( string ) ) THEN
     CALL C_FREE(string)
     string = C_NULL_PTR

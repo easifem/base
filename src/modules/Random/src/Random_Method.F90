@@ -27,7 +27,7 @@ PRIVATE
 
 INTERFACE
 MODULE SUBROUTINE initRandom( obj )
-  CLASS( Random_ ), INTENT( INOUT) :: obj
+  CLASS( Random_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE initRandom
 END INTERFACE
 
@@ -61,7 +61,7 @@ PUBLIC :: RandomValue
 
 INTERFACE
 MODULE SUBROUTINE SaveRandom( obj )
-  CLASS( Random_ ), INTENT( INOUT) :: obj
+  CLASS( Random_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE SaveRandom
 END INTERFACE
 

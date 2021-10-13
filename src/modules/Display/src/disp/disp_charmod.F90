@@ -128,7 +128,7 @@ end subroutine disp_tm_dchr
 subroutine disp_dchr(title, x, SE)
   ! Default character item to box
   character(*), intent(in)      :: title, x(:,:)
-  type(settings), intent(inout) :: SE
+  type(settings), intent(INOUT ) :: SE
   character(13)                 :: edesc
   character, pointer            :: boxp(:,:)
   integer                       :: m, n, j, lin1, wleft, lx, w

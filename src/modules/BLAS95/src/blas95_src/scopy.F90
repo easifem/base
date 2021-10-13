@@ -29,7 +29,7 @@ PURE SUBROUTINE SCOPY_F95(X,Y)
     INTEGER, PARAMETER :: WP = KIND(1.0E0)
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: X(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'COPY'

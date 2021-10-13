@@ -36,7 +36,7 @@ PURE SUBROUTINE CTPMV_F95(AP,X,UPLO,TRANS,DIAG)
     CHARACTER(LEN=1), INTENT(IN), OPTIONAL :: DIAG
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: AP(:)
-    COMPLEX(WP), INTENT(INOUT) :: X(:)
+    COMPLEX(WP), INTENT(INOUT ) :: X(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'TPMV'

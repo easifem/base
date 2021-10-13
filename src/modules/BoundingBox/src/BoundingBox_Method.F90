@@ -17,12 +17,12 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
-! summary: [[BoundingBox_Method]] module consists method for data type [[BoundingBox_]]
+! summary: [[BoundingBox_Method]] module consists method for[[BoundingBox_]]
 !
 !# Introduction
-! This module consists method for data type [[BoundingBox_]]. These methods are included in following submoudles:
+! This module consists method for data type [[BoundingBox_]]. These methods
+! are included in following submoudles:
 !- `BoundingBox_Method@Constructor`
-!
 
 MODULE BoundingBox_Method
 USE GlobalData, ONLY: DFP, I4B, LGT, stdout
@@ -54,7 +54,8 @@ PRIVATE
 !```fortran
 ! subroutine test
 !   type(BoundingBox_) :: obj
-!   call initiate( obj, nsd = 2, lim=[0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP] )
+!   call initiate( obj, nsd = 2, lim=[0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.
+! 0_DFP, 0.0_DFP] )
 !   call display( obj, msg="test1" )
 ! end subroutine test
 !```
@@ -76,14 +77,16 @@ END INTERFACE
 !
 !# Introduction
 !
-! This subroutine initiate the instance of [[BoundingBox_]] from another instance. It is basically a copy command.
+! This subroutine initiate the instance of [[BoundingBox_]] from another
+! instance. It is basically a copy command.
 !
 !### Usage
 !
 !```fortran
 ! subroutine test2
 !   type(BoundingBox_) :: obj, obj2
-!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP] )
+!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
+! 0_DFP] )
 !   call initiate(obj2, obj)
 !   call display( obj2, msg="test2")
 ! end subroutine test2
@@ -92,7 +95,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE initiate_2( obj, Anotherobj )
-    CLASS( BoundingBox_ ), INTENT( INOUT) :: obj
+    CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
     CLASS( BoundingBox_ ), INTENT( IN) :: Anotherobj
 END SUBROUTINE initiate_2
 END INTERFACE
@@ -126,7 +129,8 @@ PUBLIC :: Initiate
 !```fortran
 ! subroutine test3
 !   type(BoundingBox_) :: obj
-!   obj = BoundingBox( nsd = 2, lim=[0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP] )
+!   obj = BoundingBox( nsd = 2, lim=[0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.
+! 0_DFP, 0.0_DFP] )
 !   call display( obj, msg="test1" )
 ! end subroutine test3
 !```
@@ -154,7 +158,8 @@ END INTERFACE
 !```fortran
 ! subroutine test4
 !   type(BoundingBox_) :: obj, obj2
-!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP] )
+!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
+! 0_DFP] )
 !   obj2 = BoundingBox(obj)
 !   call display( obj2, msg="test2")
 ! end subroutine test4
@@ -177,13 +182,15 @@ INTERFACE
 ! summary: 	This function creates an instance of [[BoundingBox_]]
 !
 !# Introduction
-! This function creates an instance of [[BoundingBox_]]. In this function NSD is determined from SIZE(xij, 1).
+! This function creates an instance of [[BoundingBox_]]. In this function NSD
+! is determined from SIZE(xij, 1).
 !
 !### Usage
 !```fortran
 ! subroutine test5
 !   type(BoundingBox_) :: obj
-!   obj = boundingBox(RESHAPE([0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [2,3]))
+!   obj = boundingBox(RESHAPE([0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
+! 0_DFP], [2,3]))
 !   call display(obj, "test5")
 ! end subroutine test5
 !```
@@ -205,7 +212,8 @@ END INTERFACE
 ! summary: 	Generic function to create Bounding box
 !
 !# Introduction
-! This is a generic function to create the instance of [[BoundingBox_]]. Following interfaces are avaiables:
+! This is a generic function to create the instance of [[BoundingBox_]].
+! Following interfaces are avaiables:
 !
 !```fortran
 !obj=boundingBox(nsd, lim)
@@ -245,8 +253,8 @@ PUBLIC :: BoundingBox
 ! subroutine test6
 !   type(BoundingBox_) :: obj
 !   type(BoundingBox_), pointer :: obj2
-
-!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP] )
+!   call initiate( obj, 2, [0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.
+! 0_DFP] )
 !   obj2 => BoundingBox_Pointer(obj)
 !   call display( obj2, msg="test6")
 ! end subroutine test6
@@ -265,13 +273,15 @@ END INTERFACE
 ! summary: 	This function returns the pointer to an instance of [[BoundingBox_]]
 !
 !# Introduction
-! This function returns the pointer to an instance of [[BoundingBox_]] by copying contents from `Anotherobj`
+! This function returns the pointer to an instance of [[BoundingBox_]] by
+! copying contents from `Anotherobj`
 !
 !### Usage
 !```fortran
 ! subroutine test7
 !   type(BoundingBox_), pointer :: obj
-!   obj => BoundingBox_Pointer(nsd=3, lim=[0.0_DFP, 1.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP])
+!   obj => BoundingBox_Pointer(nsd=3, lim=[0.0_DFP, 1.0_DFP, 0.0_DFP, 1.
+! 0_DFP, 0.0_DFP, 0.0_DFP])
 !   call display(obj, "test7")
 ! end subroutine test7
 !```
@@ -289,6 +299,22 @@ INTERFACE BoundingBox_Pointer
 END INTERFACE BoundingBox_Pointer
 
 PUBLIC :: BoundingBox_Pointer
+
+!----------------------------------------------------------------------------
+!                                                DeallocateData@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE SUBROUTINE BB_DeallocateData( obj )
+  CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
+END SUBROUTINE BB_DeallocateData
+END INTERFACE
+
+INTERFACE DeallocateData
+  MODULE PROCEDURE BB_DeallocateData
+END INTERFACE DeallocateData
+
+PUBLIC :: DeallocateData
 
 !----------------------------------------------------------------------------
 !                                                        Display@Constructor

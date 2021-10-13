@@ -178,7 +178,7 @@ INTERFACE
 MODULE PURE SUBROUTINE LagrangeElement_Triangle( RefElem, Order, obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS( ReferenceElement_ ), INTENT( INOUT) ::  obj
+  CLASS( ReferenceElement_ ), INTENT( INOUT ) ::  obj
 END SUBROUTINE LagrangeElement_Triangle
 END INTERFACE
 
@@ -558,7 +558,7 @@ INTERFACE
 MODULE SUBROUTINE triangle_get_nearest_point( refelem, xij, x, xn, dist )
   CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
   REAL( DFP ) , INTENT( IN ) :: xij(:,:), x(:)
-  REAL( DFP ) , INTENT (INOUT) :: xn(:)
+  REAL( DFP ) , INTENT (INOUT ) :: xn(:)
   REAL( DFP ), INTENT (OUT) :: dist
 END SUBROUTINE triangle_get_nearest_point
 END INTERFACE

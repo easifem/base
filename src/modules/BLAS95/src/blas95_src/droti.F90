@@ -33,7 +33,7 @@ PURE SUBROUTINE DROTI_F95(X,INDX,Y,C,S)
     REAL(WP), INTENT(IN) :: C
     REAL(WP), INTENT(IN) :: S
     ! <<< Array arguments >>>
-    REAL(WP), INTENT(INOUT) :: X(:)
+    REAL(WP), INTENT(INOUT ) :: X(:)
     INTEGER, INTENT(IN) :: INDX(:)
     REAL(WP), INTENT(IN) :: Y(:)
     ! <<< Local declarations >>>

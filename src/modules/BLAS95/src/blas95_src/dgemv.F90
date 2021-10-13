@@ -37,7 +37,7 @@ PURE SUBROUTINE DGEMV_F95(A,X,Y,ALPHA,BETA,TRANS)
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: A(:,:)
     REAL(WP), INTENT(IN) :: X(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'GEMV'

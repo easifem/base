@@ -269,7 +269,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE dof_initiate5( Val1, Val2, obj )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: Val1( : ), Val2( : )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val1( : ), Val2( : )
   CLASS( DOF_ ), INTENT( IN ) :: obj
 END SUBROUTINE dof_initiate5
 END INTERFACE

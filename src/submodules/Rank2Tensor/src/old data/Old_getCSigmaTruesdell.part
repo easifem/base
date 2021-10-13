@@ -32,7 +32,7 @@
 !       1.  This Function computes "CsigmaTruesdell" which is used in
 !           Linearization of virtual work.
 !           StressType is for Stress Tensor
-!       2.  C has INTENT(INOUT)
+!       2.  C has INTENT(INOUT )
 !       3.  Stress Rate Type provides information to the program about the
 !           type of C matrix. Sigma( StressRateType ) = C:d
 !       4.  Note Changes will appear in C

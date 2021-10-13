@@ -104,7 +104,7 @@ CONTAINS
     ! Write 1-byte logical to box or unit
     character(*),   intent(in)    :: title
     logical(log1),  intent(in)    :: x(:,:)
-    type(settings), intent(inout) :: SE
+    type(settings), intent(INOUT ) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
     if (SE%w <= 0 .or. SE%trm) then
       SE%ed = '(L1)'
@@ -125,9 +125,9 @@ CONTAINS
   subroutine tobox_log1(title, x, SE, wid, nbl)
     character(*),   intent(in)    :: title
     logical(log1),  intent(in)    :: x(:,:)
-    type(settings), intent(inout) :: SE
-    integer,        intent(inout) :: wid(:)
-    integer,        intent(inout) :: nbl(:)
+    type(settings), intent(INOUT ) :: SE
+    integer,        intent(INOUT ) :: wid(:)
+    integer,        intent(INOUT ) :: nbl(:)
     character(SE%w)  :: s(size(x,1))
     integer            :: m, n, lin1, i, j, wleft, widp(size(wid))
     character, pointer :: boxp(:,:)

@@ -38,7 +38,7 @@ PURE SUBROUTINE DSYRK_F95(A,C,UPLO,TRANS,ALPHA,BETA)
     REAL(WP), INTENT(IN), OPTIONAL :: BETA
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: A(:,:)
-    REAL(WP), INTENT(INOUT) :: C(:,:)
+    REAL(WP), INTENT(INOUT ) :: C(:,:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'SYRK'

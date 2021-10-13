@@ -105,7 +105,7 @@ INTERFACE
 ! ```
 
 MODULE PURE SUBROUTINE realmat_addVal_1( obj, Val, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : ), Scale
     !! Scaling for `Val`
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
@@ -126,7 +126,7 @@ INTERFACE
 
 
 MODULE PURE SUBROUTINE realmat_addVal_2( obj, Val, Row, Col, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val, Scale
   INTEGER( I4B ), INTENT( IN ) :: Row, Col
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
@@ -145,7 +145,7 @@ INTERFACE
 ! ```
 
 MODULE PURE SUBROUTINE realmat_addVal_3( obj, Val, Row, Col, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Row( : ), Col( : )
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
@@ -164,7 +164,7 @@ INTERFACE
 ! ```
 
 MODULE PURE SUBROUTINE realmat_addVal_4( obj, Val, Indx, ExtraOption, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx, ExtraOption
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
@@ -183,7 +183,7 @@ INTERFACE
 ! ```
 
 MODULE PURE SUBROUTINE realmat_addVal_5( obj, Val, Indx, ExtraOption, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx( : ), ExtraOption
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op

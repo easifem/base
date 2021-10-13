@@ -39,7 +39,7 @@ PURE SUBROUTINE CHEMM_F95(A,B,C,SIDE,UPLO,ALPHA,BETA)
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: A(:,:)
     COMPLEX(WP), INTENT(IN) :: B(:,:)
-    COMPLEX(WP), INTENT(INOUT) :: C(:,:)
+    COMPLEX(WP), INTENT(INOUT ) :: C(:,:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'HEMM'
