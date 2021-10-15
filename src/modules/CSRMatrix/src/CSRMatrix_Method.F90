@@ -1108,6 +1108,23 @@ END INTERFACE setColumn
 PUBLIC :: setColumn
 
 !----------------------------------------------------------------------------
+!                                                   getDOFPointer@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION csrMat_getDOFPointer( obj ) RESULT( Ans )
+  TYPE( CSRMatrix_ ), TARGET, INTENT( IN ) :: obj
+  CLASS( DOF_ ), POINTER :: Ans
+END FUNCTION csrMat_getDOFPointer
+END INTERFACE
+
+INTERFACE getDOFPointer
+  MODULE PROCEDURE csrMat_getDOFPointer
+END INTERFACE getDOFPointer
+
+PUBLIC :: getDOFPointer
+
+!----------------------------------------------------------------------------
 !                                                          isSquare@getMethod
 !----------------------------------------------------------------------------
 
