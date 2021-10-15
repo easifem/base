@@ -17,14 +17,21 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
-! summary: 	[[BaseMethod]] module contains the modules related to data types defined inside the [[BaseType]] module.
+! summary: Modules related to [[BaseType]] module.
 !
 !# Introduction
-! This module contains the modules related to data types which are defined inside the [[BaseType]] module. This module should be compiled before compilation of any submodule because almost all the submodules of user defined data type methods uses [[BaseMethod]] module. Further, after adding aa new user defined data type inside [[BaseType]] module, its method should be included here.
-!
+! This module contains the modules related to data types which are defined
+! inside the [[BaseType]] module. This module should be compiled before
+! compilation of any submodule because almost all the submodules of user
+! defined data type methods uses [[BaseMethod]] module. Further, after adding
+! a new user defined data type inside [[BaseType]] module, its method should
+! be included here.
 
 MODULE BaseMethod
   USE System_Method
+#ifdef USE_PLPLOT
+  USE PLPLOT
+#endif
 #ifdef USE_OpenMP
   USE OMP_LIB
 #endif

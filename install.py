@@ -47,6 +47,11 @@ else:
           opt = '"Ninja"'
       cmake_def += " -G " + opt
 
+      opt = getOption("USE_PLPLOT", ["ON", "OFF"])
+      if(opt == " "):
+          opt = "ON"
+      cmake_def += " -DUSE_PLPLOT=" + opt
+
       opt = getOption("USE_OpenMP", ["ON", "OFF"])
       if(opt == " "):
           opt = "ON"
@@ -67,7 +72,7 @@ else:
           opt = "${EASIFEM_BASE}"
       cmake_def += " -DCMAKE_INSTALL_PREFIX=" + opt
     else:
-      cmake_def += ' -G "Ninja" -DUSE_OpenMP:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE}'
+      cmake_def += ' -G "Ninja" -DUSE_OpenMP:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SHARED_LIBS:BOOL=ON -DUSE_PLPLOT:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE}'
 
     cmake_def += " -DUSE_Int32=ON -DUSE_Real64=ON"
 

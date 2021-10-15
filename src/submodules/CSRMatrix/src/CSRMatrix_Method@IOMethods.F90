@@ -52,18 +52,105 @@ END PROCEDURE csrMat_Display
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_SPY
-  INTEGER( I4B ):: i, nrow, j, m, ncol, nnz, unitno, a, b
+  SELECT CASE( TRIM(ext))
+  CASE( "gp", ".gp", ".GP", "GP" )
+    CALL csrMat_SPY_gnuplot(obj, filename)
+  CASE( "pdf", ".pdf" )
+    CALL csrMat_SPY_PLPLOT(obj, filename, ext, "pdf")
+  CASE( "svg", ".svg" )
+    CALL csrMat_SPY_PLPLOT(obj, filename, ext, "svg")
+  CASE( "eps", ".eps" )
+    CALL csrMat_SPY_PLPLOT(obj, filename, ext, "epscairo")
+  CASE( "png", ".png" )
+    CALL csrMat_SPY_PLPLOT(obj, filename, ext, "pngcairo")
+  CASE( "ps", ".ps" )
+    CALL csrMat_SPY_PLPLOT(obj, filename, ext, "ps")
+  CASE DEFAULT
+  END SELECT
+END PROCEDURE csrMat_SPY
+
+!----------------------------------------------------------------------------
+!                                                    csrMat_SPY_PLPLOT
+!----------------------------------------------------------------------------
+
+SUBROUTINE csrMat_SPY_PLPLOT( obj, filename, ext, driver )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: filename
+  CHARACTER( LEN = * ), INTENT( IN ) :: ext
+  CHARACTER( LEN = * ), INTENT( IN ) :: driver
+  !> Internal
+  REAL( DFP ), ALLOCATABLE :: X( : ), Y( : ) !, A( : )!
+  REAL( DFP ) :: xmin, xmax, ymin, ymax
+  INTEGER( I4B ) :: ii, jj, kk
+
+  CALL Reallocate( X, obj%csr%nnz, Y, obj%csr%nnz )
+  kk = 0
+  DO ii = 1, obj%csr%nrow
+    DO jj = obj%csr%IA( ii ), obj%csr%IA( ii + 1 ) - 1
+      kk = kk + 1
+      X(kk) = obj%csr%JA( jj )
+      Y(kk) = ii
+      ! A(kk) = obj%A(jj)
+    END DO
+  END DO
+
+  xmin = 1 - obj%csr%ncol * 0.1
+  xmax = obj%csr%ncol + obj%csr%ncol * 0.1
+
+  ymin = obj%csr%nrow + obj%csr%nrow * 0.1
+  ymax = 1 - obj%csr%nrow * 0.1
+
+  CALL PLSDEV( TRIM(driver) )
+  IF( ext(1:1) .EQ. "." ) THEN
+    CALL PLSFNAM( TRIM(filename)//TRIM(ext) )
+  ELSE
+    CALL PLSFNAM( TRIM(filename)//"."//TRIM(ext) )
+  END IF
+  !>
+  CALL PLSCOLBG(255,255,255)
+  CALL PLINIT
+  CALL PLSCOL0(0,0,0,0)
+  CALL PLCOL0(0)
+  CALL PLENV( xmin, xmax, ymin, ymax, 2, 0 )
+  CALL PLBOX( 'bcgnst', 0.0_DFP, 2, 'bcgnstv', 0.0_DFP, 2 )
+  CALL PLLAB( "COLUMN", "ROW", "STRUCTURE OF SPARSE MATRIX" )
+  CALL PLSSYM(0.0_DFP, 0.4_DFP)
+  CALL PLCOL0(9)
+  CALL PLPOIN( X, Y, 3 )
+  CALL PLEND
+  IF( ALLOCATED(X) ) DEALLOCATE(X)
+  IF( ALLOCATED(Y) ) DEALLOCATE(Y)
+  ! IF( ALLOCATED(A) ) DEALLOCATE(A)
+END SUBROUTINE csrMat_SPY_PLPLOT
+
+!----------------------------------------------------------------------------
+!                                                        csrMat_SPY_gnuplot
+!----------------------------------------------------------------------------
+
+SUBROUTINE csrMat_SPY_gnuplot( obj, filename )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  CHARACTER( LEN = * ), INTENT( IN ) :: filename
+  ! internal variable
+  INTEGER( I4B ):: i, nrow, j, m, ncol, nnz, unitno, a, b, IOSTAT
   CHARACTER( LEN = 256 ) :: scripFile
   LOGICAL( LGT ) :: isOpen
-
-  OPEN( FILE=trim(filename)//".txt", NEWUNIT=unitno, STATUS="REPLACE", &
-    & ACTION="WRITE" )
-  nrow = obj%csr%nrow
-  ncol = obj%csr%ncol
-  nnz = obj%csr%nnz
-  WRITE( unitNo, "(A, I6)" ) '#m = ', nrow
-  WRITE( unitNo, "(A, I6)" ) '#n = ', ncol
-  WRITE( unitNo, "(A, I8)" ) '#nnz = ', nnz
+  !> main
+  OPEN( FILE=TRIM(filename)//".txt", NEWUNIT=unitno, STATUS="REPLACE", &
+    & ACTION="WRITE", IOSTAT=IOSTAT )
+  !> check
+  IF( IOSTAT .NE. 0 ) THEN
+    CALL ErrorMSG( Msg="Error opening " // TRIM(filename)//".txt file",  &
+      & File=__FILE__ , Routine="csrMat_SPY_gnuplot()",  &
+      & LINE = __LINE__ )
+    STOP
+  END IF
+  nrow = obj%csr%nrow; ncol = obj%csr%ncol; nnz = obj%csr%nnz
+  CALL Display( "#m = " // TOSTRING( nrow ), unitNo=unitNo )
+  CALL Display( "#n = " // TOSTRING( ncol ), unitNo=unitNo )
+  CALL Display( "#nnz = " // TOSTRING( nnz ), unitNo=unitNo )
+  !> write data in txt file
+  !> columns are in x direction
+  !> rows are in y direction
   DO i = 1, nrow
     DO j = obj%csr%IA( i ), obj%csr%IA( i + 1 ) - 1
       WRITE( unitNo,  '(I6, 2X, I6, 2X, G14.6)') &
@@ -71,33 +158,57 @@ MODULE PROCEDURE csrMat_SPY
     END DO
   END DO
   CLOSE( unitno )
+  !> open gnuplot script file
   OPEN( FILE=trim(filename)//".gp", NEWUNIT=unitno, STATUS="REPLACE", &
-    & ACTION="WRITE" )
-  WRITE( unitNo, '(A)' ) '# Gnuplot script file'
-  WRITE( unitNo, '(A)' ) '# Author :: Vikas Sharma'
-  WRITE( unitNo, '(A)' ) &
-    & '# From :: EASIFEM'
-  WRITE( unitNo, '(A)' ) &
-    & "set terminal postscript eps enhance color font 'Helvetica,10'"
-  WRITE( unitNo, '(A)' ) &
-    & "set output '"//TRIM(filename)// ".eps'"
-  WRITE( unitNo, '(A)' ) &
-    & "set xlabel 'Col(J)'"
-  WRITE( unitNo, '(A)' ) "set ylabel 'Row(I)'"
-  WRITE( unitNo, '(A)' ) "set size ratio -1"
-  WRITE( unitNo, '(A)' ) &
-    & "set title 'NNZ = "//TRIM( INT2STR( nnz ) )// "'"
+    & ACTION="WRITE", IOSTAT=IOSTAT )
+  !> check
+  IF( IOSTAT .NE. 0 ) THEN
+    CALL ErrorMSG( Msg="Error opening " // TRIM(filename)//".gp file",  &
+      & File=__FILE__ , Routine="csrMat_SPY_gnuplot()",  &
+      & LINE = __LINE__ )
+    STOP
+  END IF
+  CALL Display( '# Gnuplot script file', unitNo=unitNo )
+  CALL Display( '# Generated by :: EASIFEM', unitNo=unitNo )
+  CALL Display( &
+    & "set terminal postscript eps enhance color font 'Helvetica,10'", &
+    & unitNo=unitNo )
+
+  CALL Display( &
+    & "set output '"//TRIM(filename)// ".eps'", &
+    & unitNo=unitNo )
+
+  CALL Display( &
+    & "set xlabel 'Col(J)'", &
+    & unitNo=unitNo )
+
+  CALL Display( &
+    & "set ylabel 'Row(I)'", &
+    & unitNo=unitNo )
+
+  CALL Display( &
+    & "set size ratio -1", &
+    & unitNo=unitNo )
+
+  CALL Display( &
+    & "set title 'NNZ = "//TRIM( INT2STR( nnz ) )// "'", &
+    & unitNo=unitNo )
+
   a = 1 - ncol * 0.1
   b = ncol + ncol * 0.1
-  WRITE( unitNo, '(A)' ) &
-    & 'set xrange['// TRIM( INT2STR( a ) ) // ':'  &
-    & // TRIM( INT2STR( b ) ) // "]"
+
+  CALL Display( &
+    & 'set xrange['// TOSTRING( a )  // ':'  &
+    & // TOSTRING( b ) // "]", &
+    & unitNo=unitNo )
 
   a = 1 - nrow * 0.1
   b = nrow + nrow * 0.1
-  WRITE( unitNo, '(A)' ) &
-    & 'set yrange['// TRIM( INT2STR( b ) ) // ':'  &
-    & // TRIM( INT2STR( a ) ) // "]"
+
+  CALL Display( &
+    & 'set yrange['// TOSTRING( b ) // ':'  &
+    & // TOSTRING( a ) // "]", &
+    & unitNo=unitNo )
 
   WRITE( unitNo, '(A)' ) 'set mxtics 5'
   WRITE( unitNo, '(A)' ) 'set mytics 5'
@@ -105,7 +216,7 @@ MODULE PROCEDURE csrMat_SPY
   WRITE( unitNo, "(A)" ) &
     & "plot" // "'"// TRIM(filename)//".txt" // "' with points pt 7 ps 1.0"
   CLOSE( unitno )
-END PROCEDURE csrMat_SPY
+END SUBROUTINE csrMat_SPY_gnuplot
 
 !----------------------------------------------------------------------------
 !                                                                 IMPORT

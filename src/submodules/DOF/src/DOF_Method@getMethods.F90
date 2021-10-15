@@ -300,6 +300,26 @@ MODULE PROCEDURE dof_tSpaceComponents
 END PROCEDURE dof_tSpaceComponents
 
 !----------------------------------------------------------------------------
+!                                                            SpaceComponents
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_SpaceComponents1
+  INTEGER( I4B ) :: n, i
+  CALL Reallocate( ans, SIZE( obj%Map, 1 ) - 1 )
+  DO i = 1, SIZE(ans)
+    Ans( i ) = obj%Map( i, 2 )
+  END DO
+END PROCEDURE dof_SpaceComponents1
+
+!----------------------------------------------------------------------------
+!                                                            SpaceComponents
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_SpaceComponents2
+  ans = obj%Map( ivar, 2 )
+END PROCEDURE dof_SpaceComponents2
+
+!----------------------------------------------------------------------------
 !                                                            tTimeComponents
 !----------------------------------------------------------------------------
 
@@ -311,6 +331,26 @@ MODULE PROCEDURE dof_tTimeComponents
     IF( obj%Map( i, 3 ) .GT. 1 ) Ans = Ans + 1
   END DO
 END PROCEDURE dof_tTimeComponents
+
+!----------------------------------------------------------------------------
+!                                                            TimeComponents
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_TimeComponents1
+  INTEGER( I4B ) :: n, i
+  CALL Reallocate( ans, SIZE( obj%Map, 1 ) - 1 )
+  DO i = 1, SIZE(ans)
+    Ans( i ) = obj%Map( i, 3 )
+  END DO
+END PROCEDURE dof_TimeComponents1
+
+!----------------------------------------------------------------------------
+!                                                            TimeComponents
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_TimeComponents2
+  ans = obj%Map( ivar, 3 )
+END PROCEDURE dof_TimeComponents2
 
 !----------------------------------------------------------------------------
 !                                                             getArrayValues

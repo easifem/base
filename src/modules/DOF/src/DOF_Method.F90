@@ -1250,6 +1250,35 @@ END INTERFACE
 PUBLIC :: OPERATOR( .tSpaceComponents. )
 
 !----------------------------------------------------------------------------
+!                                                SpaceComponents@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION dof_SpaceComponents1( obj ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), ALLOCATABLE :: Ans( : )
+END FUNCTION dof_SpaceComponents1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                SpaceComponents@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION dof_SpaceComponents2( obj,ivar) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ) :: ans
+END FUNCTION dof_SpaceComponents2
+END INTERFACE
+
+INTERFACE OPERATOR( .SpaceComponents. )
+  MODULE PROCEDURE dof_SpaceComponents1, dof_SpaceComponents2
+END INTERFACE
+
+PUBLIC :: OPERATOR( .SpaceComponents. )
+
+!----------------------------------------------------------------------------
 !                                                tTimeComponents@getMethod
 !----------------------------------------------------------------------------
 
@@ -1265,6 +1294,35 @@ INTERFACE OPERATOR( .tTimeComponents. )
 END INTERFACE
 
 PUBLIC :: OPERATOR( .tTimeComponents. )
+
+!----------------------------------------------------------------------------
+!                                                TimeComponents@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION dof_TimeComponents1( obj ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), ALLOCATABLE :: Ans( : )
+END FUNCTION dof_TimeComponents1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                TimeComponents@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION dof_TimeComponents2( obj, ivar ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ) :: Ans
+END FUNCTION dof_TimeComponents2
+END INTERFACE
+
+INTERFACE OPERATOR( .TimeComponents. )
+  MODULE PROCEDURE dof_TimeComponents1, dof_TimeComponents2
+END INTERFACE
+
+PUBLIC :: OPERATOR( .TimeComponents. )
 
 !----------------------------------------------------------------------------
 !                                                        getValue@getMethod

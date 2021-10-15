@@ -405,9 +405,10 @@ PUBLIC :: Display
 ! summary: 	This subroutine prints the structure of sparse matrix in pdf format.
 
 INTERFACE
-MODULE SUBROUTINE csrMat_SPY( obj, filename )
+MODULE SUBROUTINE csrMat_SPY( obj, filename, ext )
   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
   CHARACTER( LEN = * ), INTENT( IN ) :: filename
+  CHARACTER( LEN = * ), INTENT( IN ) :: ext
 END SUBROUTINE csrMat_SPY
 END INTERFACE
 

@@ -630,7 +630,6 @@ MODULE PURE FUNCTION arange_Real32( istart, iend, increment ) result( Ans )
 END FUNCTION arange_Real32
 END INTERFACE
 
-
 !----------------------------------------------------------------------------
 !                                                    arangeFunctionalFortran
 !----------------------------------------------------------------------------
