@@ -109,6 +109,80 @@ MODULE PROCEDURE csrMat_getRow2
 END PROCEDURE csrMat_getRow2
 
 !----------------------------------------------------------------------------
+!                                                               getBlockRow
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_getBlockRow1
+  INTEGER( I4B ) :: jj, c(3), col_start, col_end
+  REAL( DFP ) :: alpha
+  CLASS( DOF_ ), POINTER :: dofobj
+  !>check
+  IF( SIZE( val ) .LT. obj%csr%ncol ) THEN
+    CALL ErrorMSG(  &
+      & Msg="SIZE of row vector should be less than the number of col &
+      & in sparse matrix", &
+      & File = "CSRMatrix_Method@getMethod.F90", &
+      & Routine = "csrMat_getBlockRow1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  !>check
+  IF( iRow .GT. SIZE(obj, 1) ) THEN
+    CALL ErrorMSG(  &
+      & Msg="iRow is out of Bound", &
+      & File = "CSRMatrix_Method@getMethod.F90", &
+      & Routine = "csrMat_getBlockRow1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  !>check
+  dofobj => getDOFPointer( obj )
+  IF( jvar .GT. (.tNames. dofobj) ) THEN
+    CALL ErrorMSG(  &
+      & Msg="jVar is out of Bound", &
+      & File = "CSRMatrix_Method@getMethod.F90", &
+      & Routine = "csrMat_getBlockRow1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  !>check
+  IF( (.StorageFMT. obj ) .NE. FMT_DOF ) THEN
+    CALL ErrorMSG(  &
+      & Msg="For this rotuine storage format should FMT_DOF", &
+      & File = "CSRMatrix_Method@getMethod.F90", &
+      & Routine = "csrMat_getBlockRow1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  ! start, end, stride
+  c = getNodeLoc( dofobj, (dofobj .DOFStartIndex. jvar) )
+  col_start = c( 1 ) ! start
+  c = getNodeLoc( dofobj, (dofobj .DOFEndIndex. jvar) )
+  col_end = c( 2 ) ! end
+  IF( PRESENT( addContribution ) ) THEN
+    alpha = INPUT( Default=1.0_DFP, Option=scale )
+    DO jj = obj%csr%IA( iRow ), obj%csr%IA( iRow+1 ) - 1
+      IF( jj .GE. col_start .AND. jj .LE. col_end ) &
+        & val(obj%csr%JA(jj)) = val(obj%csr%JA(jj)) + alpha * obj%A(jj)
+    END DO
+  ELSE
+    val = 0.0_DFP
+    DO jj = obj%csr%IA( iRow ), obj%csr%IA( iRow+1 ) - 1
+      IF( jj .GE. col_start .AND. jj .LE. col_end ) &
+        & val(obj%csr%JA(jj)) = obj%A(jj)
+    END DO
+  END IF
+END PROCEDURE csrMat_getBlockRow1
+
+!----------------------------------------------------------------------------
+!                                                               getBlockRow
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_getBlockRow2
+  CALL csrMat_getBlockRow1(  &
+    & obj=obj, &
+    & jvar=jvar
+    & irow=getNodeLoc( obj=obj%csr%dof, idof=idof, inode=inode), &
+    & val=val, scale=scale, addContribution=addContribution )
+END PROCEDURE csrMat_getBlockRow2
+
+!----------------------------------------------------------------------------
 !                                                                 getColumn
 !----------------------------------------------------------------------------
 

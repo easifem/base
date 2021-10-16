@@ -1257,6 +1257,67 @@ END INTERFACE getRow
 PUBLIC :: getRow
 
 !----------------------------------------------------------------------------
+!                                                     getBlockRow@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the row of a sparse matrix
+!
+!# Introduction
+! This routine returns the row of given block
+! This routineis designed to handle block matrices
+! jvar is the column number for the block address.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getBlockRow1( obj, jvar, irow, val, scale, &
+  & addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  INTEGER( I4B ), INTENT( IN ) :: irow
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getBlockRow1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    getBlockRow@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the row of a sparse matrix
+!
+!# Introduction
+!
+! - This routine returns the row of a sparse matrix. The row index is
+! calculated using the inode and idof.
+! - `inode` is the node number
+! - `idof` is the degree of freedom number of ivar
+! - `irow` calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getBlockRow2( obj, ivar, jvar, inode, idof, &
+  & val, scale, addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getBlockRow2
+END INTERFACE
+
+INTERFACE getBlockRow
+  MODULE PROCEDURE csrMat_getBlockRow1, csrMat_getBlockRow2
+END INTERFACE getBlockRow
+
+PUBLIC :: getBlockRow
+
+!----------------------------------------------------------------------------
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
@@ -1308,6 +1369,63 @@ INTERFACE getColumn
 END INTERFACE getColumn
 
 PUBLIC :: getColumn
+
+!----------------------------------------------------------------------------
+!                                                  getBlockColumn@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the Column of a sparse matrix
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getBlockColumn1( obj, ivar, jvar, iColumn, &
+  & val, scale, addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  INTEGER( I4B ), INTENT( IN ) :: iColumn
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getBlockColumn1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                  getBlockColumn@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the Column of a sparse matrix
+!
+!# Introduction
+!
+! - This routine returns the Column of a sparse matrix. The Column index is
+! calculated using the inode and idof.
+! - `inode` is the node number
+! - `idof` is the degree of freedom number
+! - `iColumn` calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getBlockColumn2( obj, ivar, jvar, inode, idof, &
+  & val, scale,  addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getBlockColumn2
+END INTERFACE
+
+INTERFACE getBlockColumn
+  MODULE PROCEDURE csrMat_getBlockColumn1, csrMat_getBlockColumn2
+END INTERFACE getBlockColumn
+
+PUBLIC :: getBlockColumn
 
 !----------------------------------------------------------------------------
 !                                                              Convert@Unary

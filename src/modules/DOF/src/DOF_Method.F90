@@ -519,6 +519,50 @@ END INTERFACE Display
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
+!                                                  DOFStartIndex@getMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: returns obj%map( ivar, 5 )
+
+INTERFACE
+MODULE PURE FUNCTION dof_DOFStartIndex( obj, ivar ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ) :: ans
+END FUNCTION dof_DOFStartIndex
+END INTERFACE
+
+INTERFACE OPERATOR(.DOFStartIndex.)
+  MODULE PROCEDURE dof_DOFStartIndex
+END INTERFACE OPERATOR(.DOFStartIndex.)
+
+PUBLIC :: OPERATOR(.DOFStartIndex.)
+
+!----------------------------------------------------------------------------
+!                                                  DOFEndIndex@getMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: returns obj%map( ivar+1, 5 ) - 1
+
+INTERFACE
+MODULE PURE FUNCTION dof_DOFEndIndex( obj, ivar ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ) :: ans
+END FUNCTION dof_DOFEndIndex
+END INTERFACE
+
+INTERFACE OPERATOR(.DOFEndIndex.)
+  MODULE PROCEDURE dof_DOFEndIndex
+END INTERFACE OPERATOR(.DOFEndIndex.)
+
+PUBLIC :: OPERATOR(.DOFEndIndex.)
+
+!----------------------------------------------------------------------------
 !                                                           tNodes@getMethod
 !----------------------------------------------------------------------------
 
@@ -1319,6 +1363,11 @@ END INTERFACE
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
+
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
+
 !> authors: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodeNum`
@@ -1467,6 +1516,37 @@ END INTERFACE
 ! defined on the nodeNum for the given physical variable.
 ! - The returned indices can be used to extract values from an instance of
 ! [[RealVector_]] or fortran vector of real numbers.
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex5( obj, nodeNum, iVar ) RESULT( Ans )

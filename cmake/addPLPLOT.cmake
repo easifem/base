@@ -5,7 +5,12 @@ IF( ${PROJECT_NAME} MATCHES "easifemBase" )
     LIST( APPEND TARGET_COMPILE_DEF "-DUSE_PLPLOT" )
     IF( UNIX )
       IF(APPLE)
-        SET( GMSH_LIBRARIES "$ENV{EASIFEM_EXTPKGS}/lib/libgmsh.dylib"  )
+        SET(PLPLOT_INCLUDE_DIR
+          "/usr/local/lib/fortran/modules/plplot" )
+        SET(PLPLOT_LIBRARY
+          "/usr/local/lib/libplplot.dylib" )
+        SET(PLPLOT_FORTRAN_LIBRARY
+          "/usr/local/lib/libplplotfortran.dylib" )
       ELSE()
         SET(PLPLOT_INCLUDE_DIR
           "$ENV{EASIFEM_EXTPKGS}/lib/fortran/modules/plplot" )
