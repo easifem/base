@@ -25,6 +25,14 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                            getMatrixProp
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_getMatrixProp
+  ans = TRIM( obj%matrixProp )
+END PROCEDURE csrMat_getMatrixProp
+
+!----------------------------------------------------------------------------
 !                                                              getDOFPointer
 !----------------------------------------------------------------------------
 
@@ -106,7 +114,8 @@ MODULE PROCEDURE csrMat_getColumn1
   INTEGER( I4B ) :: i, j
   REAL( DFP ) :: alpha
   IF( SIZE( val ) .LT. obj%csr%nrow .OR. iColumn .GT. SIZE(obj, 2) ) THEN
-    CALL ErrorMSG( Msg="SIZE of column vector should be same as number of rows in sparse matrix", &
+    CALL ErrorMSG( Msg="SIZE of column vector should be same as number of &
+    & rows in sparse matrix", &
     & File = "CSRMatrix_Method@getMethod.F90", &
     & Routine = "csrMat_getColumn1", Line= __LINE__ , UnitNo=stdout )
     RETURN

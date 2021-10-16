@@ -1108,6 +1108,29 @@ END INTERFACE setColumn
 PUBLIC :: setColumn
 
 !----------------------------------------------------------------------------
+!                                                   getMatrixProp@getMethod
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION csrMat_getMatrixProp( obj ) RESULT( Ans )
+  TYPE( CSRMatrix_ ), TARGET, INTENT( IN ) :: obj
+  CHARACTER( LEN = 5 ) :: ans
+END FUNCTION csrMat_getMatrixProp
+END INTERFACE
+
+INTERFACE OPERATOR( .MatrixProp. )
+  MODULE PROCEDURE csrMat_getMatrixProp
+END INTERFACE OPERATOR( .MatrixProp. )
+
+PUBLIC :: OPERATOR( .MatrixProp. )
+
+INTERFACE getMatrixProp
+  MODULE PROCEDURE csrMat_getMatrixProp
+END INTERFACE getMatrixProp
+
+PUBLIC :: getMatrixProp
+
+!----------------------------------------------------------------------------
 !                                                   getDOFPointer@getMethod
 !----------------------------------------------------------------------------
 
