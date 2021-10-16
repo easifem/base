@@ -39,7 +39,7 @@ PURE SUBROUTINE SSYMM_F95(A,B,C,SIDE,UPLO,ALPHA,BETA)
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: A(:,:)
     REAL(WP), INTENT(IN) :: B(:,:)
-    REAL(WP), INTENT(INOUT) :: C(:,:)
+    REAL(WP), INTENT(INOUT ) :: C(:,:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'SYMM'

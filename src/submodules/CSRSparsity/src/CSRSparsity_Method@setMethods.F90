@@ -29,8 +29,10 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csr_setSparsity1
-  INTEGER( I4B ) :: n, a, b, m, tdof
-  INTEGER( I4B ), ALLOCATABLE :: n2ntemp( : )
+  INTEGER( I4B ) :: ii !n, a, b, m, tdof
+  INTEGER( I4B ), ALLOCATABLE :: n2ntemp( : ), rowIndex( : )
+  !> main
+  !> check
   IF( .NOT. obj%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is not initiated!", &
@@ -39,6 +41,7 @@ MODULE PROCEDURE csr_setSparsity1
       & __LINE__, stderr )
     STOP
   END IF
+  !> check
   IF( obj%isSparsityLock ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
@@ -48,44 +51,14 @@ MODULE PROCEDURE csr_setSparsity1
     STOP
   END IF
   IF( .NOT. ALLOCATED( obj%row ) ) ALLOCATE( obj%row( obj%nrow ) )
-  tdof = .tdof. obj%dof
-  n = SIZE( Col )
-  IF( tdof .EQ. 1 ) THEN
-    obj%nnz = obj%nnz + n
-    n2ntemp = SORT( Col )
-    CALL APPEND( obj%Row( Row ), n2ntemp )
-  ELSE
-    ALLOCATE( n2ntemp( n * tdof ) )
-    IF( obj%dof%StorageFMT .EQ. NODES_FMT ) THEN
-      DO a = 1, n
-        DO b = 1, tdof
-          n2ntemp( ( a - 1 ) * tdof + b ) = ( Col( a ) - 1 ) * tdof + b
-        END DO
-      END DO
-      n = n * tdof
-      n2ntemp = SORT( n2ntemp )
-      DO b = 1, tdof
-        obj%nnz = obj%nnz + n
-        CALL APPEND( obj%Row( ( Row - 1 ) * tdof + b ), n2ntemp )
-      END DO
-      DEALLOCATE( n2ntemp )
-    ELSE
-      DO b = 1, tdof
-        m = obj%dof%valmap( b+1 ) - obj%dof%valmap( b )
-        DO a = 1, n
-          n2ntemp( ( b - 1 ) * n + a ) = ( b - 1 ) * m + Col( a )
-        END DO
-      END DO
-      n = n * tdof
-      n2ntemp = SORT( n2ntemp )
-      DO b = 1, tdof
-        m = obj%dof%valmap( b+1 ) - obj%dof%valmap( b )
-        obj%nnz = obj%nnz + n
-        CALL APPEND( obj%Row( ( b - 1 )*m + Row ), n2ntemp )
-      END DO
-      DEALLOCATE( n2ntemp )
-    END IF
-  END IF
+  n2ntemp = SORT( getIndex( obj=obj%dof, nodeNum=Col ) )
+  rowIndex = SORT( getIndex( obj=obj%dof, nodeNum=Row ) )
+  obj%nnz = obj%nnz + SIZE(Col) * ( .tdof. obj%dof ) * SIZE(rowIndex)
+  DO ii = 1, SIZE(rowIndex)
+    CALL APPEND( obj%Row( rowIndex(ii) ), n2ntemp )
+  END DO
+  IF( ALLOCATED( n2ntemp ) ) DEALLOCATE( n2ntemp )
+  IF( ALLOCATED( rowIndex ) ) DEALLOCATE( rowIndex )
 END PROCEDURE csr_setSparsity1
 
 !----------------------------------------------------------------------------
@@ -145,6 +118,17 @@ MODULE PROCEDURE csr_setSparsity3
   IF( ALLOCATED( n2ntemp ) ) DEALLOCATE( n2ntemp )
   IF( ALLOCATED( rowIndex ) ) DEALLOCATE( rowIndex )
 END PROCEDURE csr_setSparsity3
+
+!----------------------------------------------------------------------------
+!                                                                setSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_setSparsity4
+  INTEGER( I4B ) :: i
+  DO i = 1, SIZE( Row )
+    CALL setSparsity( obj, Row( i ), Col( i )%Val, ivar, jvar )
+  END DO
+END PROCEDURE csr_setSparsity4
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity

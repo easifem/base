@@ -34,7 +34,7 @@ PURE SUBROUTINE CAXPBY_F95(X,Y,ALPHA,BETA)
     COMPLEX(WP), INTENT(IN), OPTIONAL :: BETA
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: X(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=5), PARAMETER :: SRNAME = 'AXPBY'

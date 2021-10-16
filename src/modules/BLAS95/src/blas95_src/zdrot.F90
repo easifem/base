@@ -31,8 +31,8 @@ PURE SUBROUTINE ZDROT_F95(X,Y,C,S)
     REAL(WP), INTENT(IN) :: C
     REAL(WP), INTENT(IN) :: S
     ! <<< Array arguments >>>
-    COMPLEX(WP), INTENT(INOUT) :: X(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y(:)
+    COMPLEX(WP), INTENT(INOUT ) :: X(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=3), PARAMETER :: SRNAME = 'ROT'

@@ -31,7 +31,7 @@ PURE SUBROUTINE DGER_F95(A,X,Y,ALPHA)
     ! <<< Scalar arguments >>>
     REAL(WP), INTENT(IN), OPTIONAL :: ALPHA
     ! <<< Array arguments >>>
-    REAL(WP), INTENT(INOUT) :: A(:,:)
+    REAL(WP), INTENT(INOUT ) :: A(:,:)
     REAL(WP), INTENT(IN) :: X(:)
     REAL(WP), INTENT(IN) :: Y(:)
     ! <<< Local declarations >>>

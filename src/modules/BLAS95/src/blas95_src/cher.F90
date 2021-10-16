@@ -33,7 +33,7 @@ PURE SUBROUTINE CHER_F95(A,X,UPLO,ALPHA)
     CHARACTER(LEN=1), INTENT(IN), OPTIONAL :: UPLO
     REAL(WP), INTENT(IN), OPTIONAL :: ALPHA
     ! <<< Array arguments >>>
-    COMPLEX(WP), INTENT(INOUT) :: A(:,:)
+    COMPLEX(WP), INTENT(INOUT ) :: A(:,:)
     COMPLEX(WP), INTENT(IN) :: X(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>

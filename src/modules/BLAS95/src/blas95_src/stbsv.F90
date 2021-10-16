@@ -36,7 +36,7 @@ PURE SUBROUTINE STBSV_F95(A,X,UPLO,TRANS,DIAG)
     CHARACTER(LEN=1), INTENT(IN), OPTIONAL :: DIAG
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: A(:,:)
-    REAL(WP), INTENT(INOUT) :: X(:)
+    REAL(WP), INTENT(INOUT ) :: X(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'TBSV'

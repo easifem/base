@@ -342,7 +342,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE realVec_Random_Number2( obj, tsize )
-  TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT) :: obj(:)
+  TYPE( RealVector_ ), ALLOCATABLE, INTENT( INOUT ) :: obj(:)
   INTEGER( I4B ), INTENT( IN ) :: tsize( : )
 END SUBROUTINE realVec_Random_Number2
 END INTERFACE

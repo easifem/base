@@ -363,7 +363,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE initiate_obj_val( obj, Val )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
 END SUBROUTINE initiate_obj_val
 END INTERFACE
@@ -617,7 +617,7 @@ END INTERFACE
 INTERFACE
 MODULE PURE SUBROUTINE convert_mat4_to_mat2( From, To )
   REAL( DFP ), INTENT( IN ) :: From( :, :, :, : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: To( :, : )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: To( :, : )
 END SUBROUTINE convert_mat4_to_mat2
 END INTERFACE
 
@@ -810,7 +810,7 @@ END INTERFACE
 INTERFACE
 MODULE PURE SUBROUTINE realmat_make_diag_copy2( From, To, nCopy )
   REAL( DFP ),  INTENT( IN ) :: From( :, : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT) :: To( :, : )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: To( :, : )
   INTEGER( I4B ), INTENT( IN ) :: nCopy
 END SUBROUTINE realmat_make_diag_copy2
 END INTERFACE
@@ -833,7 +833,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE realmat_make_diag_copy3(  Mat, ncopy )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: Mat
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: Mat
   INTEGER( I4B ), INTENT( IN ) :: ncopy
 END SUBROUTINE realmat_make_diag_copy3
 END INTERFACE
@@ -859,7 +859,7 @@ END INTERFACE
 INTERFACE
 MODULE PURE SUBROUTINE realmat_make_diag_copy4( From, To, nCopy )
   TYPE( RealMatrix_ ),  INTENT( IN ) :: From
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: To
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: To
   INTEGER( I4B ), INTENT( IN ) :: nCopy
 END SUBROUTINE realmat_make_diag_copy4
 END INTERFACE
@@ -1207,7 +1207,7 @@ END INTERFACE
 INTERFACE
 MODULE PURE SUBROUTINE Copy_obj_to_obj( From, To )
   TYPE( RealMatrix_ ), INTENT( IN ) :: From
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: To
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: To
 END SUBROUTINE Copy_obj_to_obj
 END INTERFACE
 
@@ -1448,7 +1448,7 @@ PUBLIC :: setValues
 
 INTERFACE
 MODULE PURE SUBROUTINE realmat_addVal_1( obj, Val, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   REAL( DFP ), INTENT( IN ) :: Scale
     !! Scaling for `Val`
@@ -1475,7 +1475,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE realmat_addVal_2( obj, Val, Row, Col, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val
   REAL( DFP ), INTENT( IN ) :: Scale
   INTEGER( I4B ), INTENT( IN ) :: Row
@@ -1502,7 +1502,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE realmat_addVal_3( obj, Val, Row, Col, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   REAL( DFP ), INTENT( IN ) :: Scale
   INTEGER( I4B ), INTENT( IN ) :: Row( : )
@@ -1529,7 +1529,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE realmat_addVal_4( obj, Val, Indx, ExtraOption, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx
   INTEGER( I4B ), INTENT( IN ) :: ExtraOption
@@ -1555,7 +1555,7 @@ END INTERFACE
 
 INTERFACE
 MODULE PURE SUBROUTINE realmat_addVal_5( obj, Val, Indx, ExtraOption, Scale, Op )
-  TYPE( RealMatrix_ ), INTENT( INOUT) :: obj
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
   INTEGER( I4B ), INTENT( IN ) :: ExtraOption

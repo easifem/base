@@ -28,8 +28,8 @@ PURE SUBROUTINE DSWAP_F95(X,Y)
     ! <<< Kind parameter >>>
     INTEGER, PARAMETER :: WP = KIND(1.0D0)
     ! <<< Array arguments >>>
-    REAL(WP), INTENT(INOUT) :: X(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: X(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'SWAP'

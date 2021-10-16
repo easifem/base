@@ -149,7 +149,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE csr_initiate2( obj, obj2 )
-  TYPE( CSRSparsity_ ), INTENT( INOUT) :: obj
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
   TYPE( CSRSparsity_ ), INTENT( IN ) :: obj2
 END SUBROUTINE csr_initiate2
 END INTERFACE
@@ -181,7 +181,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE csr_initiate3( obj, IA, JA )
-  TYPE( CSRSparsity_ ), INTENT( INOUT) :: obj
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: IA( : ), JA( : )
 END SUBROUTINE csr_initiate3
 END INTERFACE
@@ -377,7 +377,7 @@ PUBLIC :: getNNZ
 
 INTERFACE
 MODULE PURE SUBROUTINE csr_DeallocateData( obj )
-  TYPE( CSRSparsity_ ), INTENT( INOUT) :: obj
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE csr_DeallocateData
 END INTERFACE
 
@@ -428,7 +428,7 @@ PUBLIC :: Display
 
 INTERFACE
 MODULE SUBROUTINE csr_setSparsity1( obj, Row, Col )
-  TYPE( CSRSparsity_ ), INTENT( INOUT) :: obj
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Row
   INTEGER( I4B ), INTENT( IN ) :: Col( : )
 END SUBROUTINE csr_setSparsity1
@@ -444,7 +444,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE csr_setSparsity2( obj, Row, Col )
-  TYPE( CSRSparsity_ ), INTENT( INOUT) :: obj
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Row( : )
   TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
 END SUBROUTINE csr_setSparsity2
@@ -474,6 +474,24 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
+! summary: 	 This subroutine sets the sparsity pattern of a given row
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity4( obj, Row, Col, iVar, jVar )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: Row( : )
+  TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
+  INTEGER( I4B ), INTENT( IN ) :: iVar
+  INTEGER( I4B ), INTENT( IN ) :: jVar
+END SUBROUTINE csr_setSparsity4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      setSparsity@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
 ! summary: 	 This subroutine set sparsity pattern of `CSRSparsity_`
 !
 !# Introduction
@@ -486,7 +504,7 @@ END INTERFACE
 
 INTERFACE
 MODULE SUBROUTINE csr_setSparsity_final( obj )
-  TYPE( CSRSparsity_ ), INTENT( INOUT) :: obj
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE csr_setSparsity_final
 END INTERFACE
 
@@ -496,7 +514,7 @@ END INTERFACE
 
 INTERFACE setSparsity
   MODULE PROCEDURE csr_setSparsity1, csr_setSparsity2, csr_setSparsity3,  &
-    & csr_setSparsity_final
+    & csr_setSparsity4, csr_setSparsity_final
 END INTERFACE setSparsity
 
 PUBLIC :: setSparsity

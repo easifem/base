@@ -168,7 +168,7 @@
 	"intentinout": {
 		"prefix": "inout",
 		"description": "intent in out",
-		"body": "INTENT( INOUT) :: $1",
+		"body": "INTENT( INOUT ) :: $1",
 	},
 	"generic": {
 		"prefix": "generic",

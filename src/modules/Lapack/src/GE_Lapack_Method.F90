@@ -148,7 +148,7 @@ INTERFACE
       !! General square matrix
     REAL( DFP ), INTENT( IN ) :: b( :, : )
       !! RHS of Ax=b
-    REAL( DFP ), INTENT( INOUT) :: x( :, : )
+    REAL( DFP ), INTENT( INOUT ) :: x( :, : )
       !! Unknown vector
   END SUBROUTINE gesv_2
 END INTERFACE
@@ -185,7 +185,7 @@ INTERFACE
 MODULE SUBROUTINE gels_1( A, b, x )
   REAL( DFP ), INTENT( IN ) :: A( :, : )
   REAL( DFP ), INTENT( IN ) :: b( : )
-  REAL( DFP ), INTENT( INOUT) :: x( : )
+  REAL( DFP ), INTENT( INOUT ) :: x( : )
 END SUBROUTINE gels_1
 END INTERFACE
 
@@ -214,7 +214,7 @@ INTERFACE
 MODULE SUBROUTINE gels_2( A, b, x )
   REAL( DFP ), INTENT( IN ) :: A( :, : )
   REAL( DFP ), INTENT( IN ) :: b( :, : )
-  REAL( DFP ), INTENT( INOUT) :: x( :, : )
+  REAL( DFP ), INTENT( INOUT ) :: x( :, : )
 END SUBROUTINE gels_2
 END INTERFACE
 
@@ -312,13 +312,13 @@ INTERFACE
 MODULE SUBROUTINE gelss_1( A, b, x )
   REAL( DFP ), INTENT( IN ) :: A( :, : )
   REAL( DFP ), INTENT( IN ) :: b( : )
-  REAL( DFP ), INTENT( INOUT) :: x( : )
+  REAL( DFP ), INTENT( INOUT ) :: x( : )
 END SUBROUTINE gelss_1
 
 MODULE SUBROUTINE gelss_2( A, b, x )
   REAL( DFP ), INTENT( IN ) :: A( :, : )
   REAL( DFP ), INTENT( IN ) :: b( :, : )
-  REAL( DFP ), INTENT( INOUT) :: x( :, : )
+  REAL( DFP ), INTENT( INOUT ) :: x( :, : )
 END SUBROUTINE gelss_2
 
 END INTERFACE

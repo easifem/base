@@ -36,8 +36,8 @@ PURE SUBROUTINE SGEM2VU_F95(A,X1,X2,Y1,Y2,ALPHA,BETA)
     REAL(WP), INTENT(IN) :: A(:,:)
     REAL(WP), INTENT(IN) :: X1(:)
     REAL(WP), INTENT(IN) :: X2(:)
-    REAL(WP), INTENT(INOUT) :: Y1(:)
-    REAL(WP), INTENT(INOUT) :: Y2(:)
+    REAL(WP), INTENT(INOUT ) :: Y1(:)
+    REAL(WP), INTENT(INOUT ) :: Y2(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=5), PARAMETER :: SRNAME = 'GEM2V'

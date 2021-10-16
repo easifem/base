@@ -40,7 +40,7 @@ PURE SUBROUTINE DTRMM_F95(A,B,SIDE,UPLO,TRANSA,DIAG,ALPHA)
     REAL(WP), INTENT(IN), OPTIONAL :: ALPHA
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: A(:,:)
-    REAL(WP), INTENT(INOUT) :: B(:,:)
+    REAL(WP), INTENT(INOUT ) :: B(:,:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'TRMM'

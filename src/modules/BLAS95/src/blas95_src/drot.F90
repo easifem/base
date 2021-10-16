@@ -31,8 +31,8 @@ PURE SUBROUTINE DROT_F95(X,Y,C,S)
     REAL(WP), INTENT(IN) :: C
     REAL(WP), INTENT(IN) :: S
     ! <<< Array arguments >>>
-    REAL(WP), INTENT(INOUT) :: X(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: X(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=3), PARAMETER :: SRNAME = 'ROT'

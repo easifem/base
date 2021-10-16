@@ -33,7 +33,7 @@ PURE SUBROUTINE SSPR_F95(AP,X,UPLO,ALPHA)
     CHARACTER(LEN=1), INTENT(IN), OPTIONAL :: UPLO
     REAL(WP), INTENT(IN), OPTIONAL :: ALPHA
     ! <<< Array arguments >>>
-    REAL(WP), INTENT(INOUT) :: AP(:)
+    REAL(WP), INTENT(INOUT ) :: AP(:)
     REAL(WP), INTENT(IN) :: X(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>

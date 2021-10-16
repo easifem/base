@@ -38,7 +38,7 @@ PURE SUBROUTINE ZHERK_F95(A,C,UPLO,TRANS,ALPHA,BETA)
     REAL(WP), INTENT(IN), OPTIONAL :: BETA
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: A(:,:)
-    COMPLEX(WP), INTENT(INOUT) :: C(:,:)
+    COMPLEX(WP), INTENT(INOUT ) :: C(:,:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'HERK'

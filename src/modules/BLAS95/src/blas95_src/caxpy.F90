@@ -32,7 +32,7 @@ PURE SUBROUTINE CAXPY_F95(X,Y,A)
     COMPLEX(WP), INTENT(IN), OPTIONAL :: A
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: X(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'AXPY'

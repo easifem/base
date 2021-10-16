@@ -31,7 +31,7 @@ PURE SUBROUTINE ZGERU_F95(A,X,Y,ALPHA)
     ! <<< Scalar arguments >>>
     COMPLEX(WP), INTENT(IN), OPTIONAL :: ALPHA
     ! <<< Array arguments >>>
-    COMPLEX(WP), INTENT(INOUT) :: A(:,:)
+    COMPLEX(WP), INTENT(INOUT ) :: A(:,:)
     COMPLEX(WP), INTENT(IN) :: X(:)
     COMPLEX(WP), INTENT(IN) :: Y(:)
     ! <<< Local declarations >>>

@@ -30,7 +30,7 @@ PURE SUBROUTINE CGTHRZ_F95(X,INDX,Y)
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(OUT) :: X(:)
     INTEGER, INTENT(IN) :: INDX(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=5), PARAMETER :: SRNAME = 'GTHRZ'

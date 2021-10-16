@@ -32,7 +32,7 @@ PURE SUBROUTINE SAXPY_F95(X,Y,A)
     REAL(WP), INTENT(IN), OPTIONAL :: A
     ! <<< Array arguments >>>
     REAL(WP), INTENT(IN) :: X(:)
-    REAL(WP), INTENT(INOUT) :: Y(:)
+    REAL(WP), INTENT(INOUT ) :: Y(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'AXPY'

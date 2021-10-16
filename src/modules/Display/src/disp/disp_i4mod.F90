@@ -102,7 +102,7 @@ CONTAINS
     ! 4-byte integer item
     character(*),   intent(in)    :: title
     integer(byt4),  intent(in)    :: x(:,:)
-    type(settings), intent(inout) :: SE
+    type(settings), intent(INOUT ) :: SE
     integer wid(size(x,2)), nbl(size(x,2))
     call find_editdesc_byt4(x, SE, wid, nbl) ! determine also SE%w
     call tobox_byt4(title, x, SE, wid, nbl)
@@ -112,9 +112,9 @@ CONTAINS
     ! Write 4-byte integer matrix to box
     character(*),   intent(in)    :: title
     integer(byt4),  intent(in)    :: x(:,:)
-    type(settings), intent(inout) :: SE
-    integer,        intent(inout) :: wid(:)
-    integer,        intent(inout) :: nbl(:)
+    type(settings), intent(INOUT ) :: SE
+    integer,        intent(INOUT ) :: wid(:)
+    integer,        intent(INOUT ) :: nbl(:)
     character(SE%w)  :: s(size(x,1))
     integer            :: lin1, j, wleft, m, n, widp(size(wid))
     character, pointer :: boxp(:,:)
@@ -133,7 +133,7 @@ CONTAINS
   subroutine find_editdesc_byt4(x, SE, wid, nbl)
     ! Determine SE%ed, SE%w (unless specified) and wid
     integer(byt4),  intent(in)    :: x(:,:)
-    type(settings), intent(inout) :: SE
+    type(settings), intent(INOUT ) :: SE
     integer,        intent(out)   :: wid(size(x,2)), nbl(size(x,2))
     !
     integer(byt4) xmaxv(size(x,2)), xminv(size(x,2)), xp, xm

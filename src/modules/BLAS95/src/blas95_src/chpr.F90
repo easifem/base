@@ -33,7 +33,7 @@ PURE SUBROUTINE CHPR_F95(AP,X,UPLO,ALPHA)
     CHARACTER(LEN=1), INTENT(IN), OPTIONAL :: UPLO
     REAL(WP), INTENT(IN), OPTIONAL :: ALPHA
     ! <<< Array arguments >>>
-    COMPLEX(WP), INTENT(INOUT) :: AP(:)
+    COMPLEX(WP), INTENT(INOUT ) :: AP(:)
     COMPLEX(WP), INTENT(IN) :: X(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>

@@ -26,8 +26,8 @@ PURE SUBROUTINE SROTG_F95(A,B,C,S)
     ! <<< Kind parameter >>>
     INTEGER, PARAMETER :: WP = KIND(1.0E0)
     ! <<< Scalar arguments >>>
-    REAL(WP), INTENT(INOUT) :: A
-    REAL(WP), INTENT(INOUT) :: B
+    REAL(WP), INTENT(INOUT ) :: A
+    REAL(WP), INTENT(INOUT ) :: B
     REAL(WP), INTENT(OUT) :: C
     REAL(WP), INTENT(OUT) :: S
     ! <<< Local declarations >>>

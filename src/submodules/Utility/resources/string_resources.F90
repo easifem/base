@@ -126,7 +126,7 @@
 
 !     subroutine StringReplace(FindS, RepS, S)
 !     character(LEN=*), intent(in) :: FindS, RepS
-!     character(LEN=:), allocatable, intent(inout) :: S
+!     character(LEN=:), allocatable, intent(INOUT ) :: S
 !     integer i
 
 !     i = index(S,FindS)
@@ -212,7 +212,7 @@
 !     end function StrToInt
 
 !     subroutine StringAppend(S,X)
-!     character(LEN=:), allocatable, intent(inout) :: S
+!     character(LEN=:), allocatable, intent(INOUT ) :: S
 !     class(*), intent(in) :: X
 
 !     if (.not. allocated(S)) S=''

@@ -44,7 +44,7 @@ PUBLIC :: Display
 
 INTERFACE
 MODULE PURE SUBROUTINE fe_deallocate( obj )
-  TYPE( FEVariable_ ), INTENT( INOUT) :: obj
+  TYPE( FEVariable_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE fe_deallocate
 END INTERFACE
 

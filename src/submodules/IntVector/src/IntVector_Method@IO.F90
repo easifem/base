@@ -29,13 +29,14 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_Display1
-  INTEGER( I4B ) :: j, I
-  I = Input( option=UnitNo, default=stdout)
-  CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : ", val = SIZE( obj ), unitNo = I )
+  INTEGER( I4B ) :: j
+  CALL Display( msg = "# " // TRIM(msg), unitNo = unitNo )
+  CALL Display( msg = "# size : ", val = SIZE( obj ), unitNo = unitNo )
   DO j = 1, SIZE( obj )
-    CALL Display( obj( j ), msg = "( " // TRIM(STR( fm=FI4B, n=j )) // " ) ", &
-      & unitNo = I )
+    CALL Display( obj( j ),  &
+      & msg = "# " // TRIM(msg) // "( "   &
+      & // TOSTRING(j) // " ) ", &
+      & unitNo = UnitNo, orient=orient )
   END DO
 END PROCEDURE intVec_Display1
 
@@ -44,11 +45,11 @@ END PROCEDURE intVec_Display1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_Display2
-  INTEGER( I4B ) :: I
-  I = Input( option=UnitNo, default=stdout)
-  CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : ", val = SIZE( obj ), unitNo = I )
-  CALL Display( Val = obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
+  IF( isAllocated( obj )) THEN
+    CALL Display( msg = "# " // TRIM(msg), unitNo = unitNo )
+    CALL Display( msg = "size : ", val = SIZE( obj ), unitNo = unitNo )
+    CALL Display( Val = obj%Val, msg='', unitNo=unitNo, orient=orient )
+  END IF
 END PROCEDURE intVec_Display2
 
 END SUBMODULE IO

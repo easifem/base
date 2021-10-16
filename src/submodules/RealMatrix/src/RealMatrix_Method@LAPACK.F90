@@ -122,7 +122,7 @@ MODULE PROCEDURE eig_jacobi_method
   CONTAINS
 
   PURE SUBROUTINE jrotate(a1,a2)
-      REAL(DFP), DIMENSION(:), INTENT(INOUT) :: a1,a2
+      REAL(DFP), DIMENSION(:), INTENT(INOUT ) :: a1,a2
       REAL(DFP), DIMENSION(SIZE(a1)) :: wk1
       wk1(:)=a1(:)
       a1(:)=a1(:)-s*(a2(:)+a1(:)*tau)
@@ -150,8 +150,8 @@ MODULE PROCEDURE eig_jacobi_method
   END SUBROUTINE unit_matrix
 
   PURE SUBROUTINE SortEigenValues( EigenValues , EigenVectors )
-    REAL( DFP ), DIMENSION(:), INTENT(INOUT) :: EigenValues
-    REAL( DFP ), DIMENSION(:,:), INTENT(INOUT) :: EigenVectors
+    REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: EigenValues
+    REAL( DFP ), DIMENSION(:,:), INTENT(INOUT ) :: EigenVectors
     INTEGER(I4B) :: i, j, n
 
     n = SIZE( EigenValues )

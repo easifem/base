@@ -39,7 +39,7 @@ PURE SUBROUTINE CGEMM3M_F95(A,B,C,TRANSA,TRANSB,ALPHA,BETA)
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: A(:,:)
     COMPLEX(WP), INTENT(IN) :: B(:,:)
-    COMPLEX(WP), INTENT(INOUT) :: C(:,:)
+    COMPLEX(WP), INTENT(INOUT ) :: C(:,:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=6), PARAMETER :: SRNAME = 'GEMM3M'

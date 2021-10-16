@@ -40,7 +40,7 @@ PURE SUBROUTINE CTRSM_F95(A,B,SIDE,UPLO,TRANSA,DIAG,ALPHA)
     COMPLEX(WP), INTENT(IN), OPTIONAL :: ALPHA
     ! <<< Array arguments >>>
     COMPLEX(WP), INTENT(IN) :: A(:,:)
-    COMPLEX(WP), INTENT(INOUT) :: B(:,:)
+    COMPLEX(WP), INTENT(INOUT ) :: B(:,:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=4), PARAMETER :: SRNAME = 'TRSM'

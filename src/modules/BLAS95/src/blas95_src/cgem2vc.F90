@@ -36,8 +36,8 @@ PURE SUBROUTINE CGEM2VC_F95(A,X1,X2,Y1,Y2,ALPHA,BETA)
     COMPLEX(WP), INTENT(IN) :: A(:,:)
     COMPLEX(WP), INTENT(IN) :: X1(:)
     COMPLEX(WP), INTENT(IN) :: X2(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y1(:)
-    COMPLEX(WP), INTENT(INOUT) :: Y2(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y1(:)
+    COMPLEX(WP), INTENT(INOUT ) :: Y2(:)
     ! <<< Local declarations >>>
     ! <<< Parameters >>>
     CHARACTER(LEN=5), PARAMETER :: SRNAME = 'GEM2V'

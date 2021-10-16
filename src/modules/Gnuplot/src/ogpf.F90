@@ -2094,7 +2094,7 @@ CONTAINS
         !..............................................................................
 
         ! Rev 0.18
-        class(gpf), intent(inout)   :: this
+        class(gpf), intent(INOUT )   :: this
 
         if (this%hasfileopen) then
             ! there is nothing to do, file has been already open!
