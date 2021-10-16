@@ -1265,7 +1265,8 @@ PUBLIC :: getRow
 ! summary: This routine returns the Column of a sparse matrix
 
 INTERFACE
-MODULE SUBROUTINE csrMat_getColumn1( obj, iColumn, val, scale, addContribution )
+MODULE SUBROUTINE csrMat_getColumn1( obj, iColumn, val, scale, &
+  & addContribution )
   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: iColumn
   REAL( DFP ), INTENT( INOUT ) :: val( : )

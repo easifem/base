@@ -865,8 +865,7 @@ PUBLIC :: OPERATOR( .tDOF. )
 !   TYPE( DOF_ ) :: obj
 !   !> main
 !   ! #DOF/Initiate
-!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"],
-! spaceCompo=[3,1],  &
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
 !     & timeCompo=[2,2], storageFMT = FMT_DOF )
 !   ! #DOF/getNodeLoc
 !   CALL Display( getNodeLoc(obj, 1, 1), 'getNodeLoc(obj, 1, 1) [1] : ' )
@@ -877,6 +876,19 @@ PUBLIC :: OPERATOR( .tDOF. )
 !   CALL Display( getNodeLoc(obj, 1, 6), 'getNodeLoc(obj, 1, 6) [101] : ' )
 !   CALL Display( getNodeLoc(obj, 1, 7), 'getNodeLoc(obj, 1, 7) [121] : ' )
 !   CALL Display( getNodeLoc(obj, 1, 8), 'getNodeLoc(obj, 1, 8) [131] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 1), 'getNodeLoc(obj, 10, 1) [10] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 2), 'getNodeLoc(obj, 10, 2) [30] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 3), 'getNodeLoc(obj, 10, 3) [50] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 4), 'getNodeLoc(obj, 10, 4) [70] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 5), 'getNodeLoc(obj, 10, 5) [90] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 6), 'getNodeLoc(obj, 10, 6) [110] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 7), 'getNodeLoc(obj, 10, 7) [130] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 8), 'getNodeLoc(obj, 10, 8) [140] : ' )
+!   CALL Display( getNodeLoc(obj, 1), 'getNodeLoc(obj, 1) [1,20,1] : ' )
+!   CALL Display( getNodeLoc(obj, 2), 'getNodeLoc(obj, 2) [21,40,1] : ' )
+!   CALL Display( getNodeLoc(obj, 3), 'getNodeLoc(obj, 3) [41,60,1] : ' )
+!   CALL Display( getNodeLoc(obj, 7), 'getNodeLoc(obj, 7) [121,130,1] : ' )
+!   CALL Display( getNodeLoc(obj, 8), 'getNodeLoc(obj, 7) [131,140,1] : ' )
 !   ! #DOF/DeallocateData
 !   CALL DeallocateData( obj )
 ! END PROGRAM main
@@ -893,7 +905,7 @@ PUBLIC :: OPERATOR( .tDOF. )
 !   TYPE( DOF_ ) :: obj
 !   !> main
 !   ! #DOF/Initiate
-!   CALL Initiate( obj, tNodes=[20, 20], names=["V", "P"], spaceCompo=[3,1],  &
+!  CALL Initiate( obj, tNodes=[20, 20], names=["V", "P"], spaceCompo=[3,1], &
 !     & timeCompo=[2,2], storageFMT = FMT_NODES )
 !   ! #DOF/getNodeLoc
 !   CALL Display( getNodeLoc(obj, 1, 1), 'getNodeLoc(obj, 1, 1) [1] : ' )
@@ -904,6 +916,11 @@ PUBLIC :: OPERATOR( .tDOF. )
 !   CALL Display( getNodeLoc(obj, 1, 6), 'getNodeLoc(obj, 1, 6) [6] : ' )
 !   CALL Display( getNodeLoc(obj, 1, 7), 'getNodeLoc(obj, 1, 7) [7] : ' )
 !   CALL Display( getNodeLoc(obj, 1, 8), 'getNodeLoc(obj, 1, 8) [8] : ' )
+!   CALL Display( getNodeLoc(obj, 1), 'getNodeLoc(obj, 1) [1,160,8] : ' )
+!   CALL Display( getNodeLoc(obj, 2), 'getNodeLoc(obj, 2) [2,160,8] : ' )
+!   CALL Display( getNodeLoc(obj, 3), 'getNodeLoc(obj, 3) [3,160,8] : ' )
+!   CALL Display( getNodeLoc(obj, 7), 'getNodeLoc(obj, 7) [7,160,8] : ' )
+!   CALL Display( getNodeLoc(obj, 8), 'getNodeLoc(obj, 7) [8,160,8] : ' )
 !   ! #DOF/DeallocateData
 !   CALL DeallocateData( obj )
 ! END PROGRAM main
@@ -931,6 +948,77 @@ END INTERFACE
 ! ans(1) : istart
 ! ans(2) : iend
 ! ans(3) : stride
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_DOF )
+!   ! #DOF/getNodeLoc
+!   CALL Display( getNodeLoc(obj, 1, 1), 'getNodeLoc(obj, 1, 1) [1] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 2), 'getNodeLoc(obj, 1, 2) [21] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 3), 'getNodeLoc(obj, 1, 3) [41] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 4), 'getNodeLoc(obj, 1, 4) [61] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 5), 'getNodeLoc(obj, 1, 5) [81] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 6), 'getNodeLoc(obj, 1, 6) [101] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 7), 'getNodeLoc(obj, 1, 7) [121] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 8), 'getNodeLoc(obj, 1, 8) [131] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 1), 'getNodeLoc(obj, 10, 1) [10] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 2), 'getNodeLoc(obj, 10, 2) [30] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 3), 'getNodeLoc(obj, 10, 3) [50] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 4), 'getNodeLoc(obj, 10, 4) [70] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 5), 'getNodeLoc(obj, 10, 5) [90] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 6), 'getNodeLoc(obj, 10, 6) [110] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 7), 'getNodeLoc(obj, 10, 7) [130] : ' )
+!   CALL Display( getNodeLoc(obj, 10, 8), 'getNodeLoc(obj, 10, 8) [140] : ' )
+!   CALL Display( getNodeLoc(obj, 1), 'getNodeLoc(obj, 1) [1,20,1] : ' )
+!   CALL Display( getNodeLoc(obj, 2), 'getNodeLoc(obj, 2) [21,40,1] : ' )
+!   CALL Display( getNodeLoc(obj, 3), 'getNodeLoc(obj, 3) [41,60,1] : ' )
+!   CALL Display( getNodeLoc(obj, 7), 'getNodeLoc(obj, 7) [121,130,1] : ' )
+!   CALL Display( getNodeLoc(obj, 8), 'getNodeLoc(obj, 7) [131,140,1] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!  CALL Initiate( obj, tNodes=[20, 20], names=["V", "P"], spaceCompo=[3,1], &
+!     & timeCompo=[2,2], storageFMT = FMT_NODES )
+!   ! #DOF/getNodeLoc
+!   CALL Display( getNodeLoc(obj, 1, 1), 'getNodeLoc(obj, 1, 1) [1] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 2), 'getNodeLoc(obj, 1, 2) [2] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 3), 'getNodeLoc(obj, 1, 3) [3] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 4), 'getNodeLoc(obj, 1, 4) [4] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 5), 'getNodeLoc(obj, 1, 5) [5] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 6), 'getNodeLoc(obj, 1, 6) [6] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 7), 'getNodeLoc(obj, 1, 7) [7] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 8), 'getNodeLoc(obj, 1, 8) [8] : ' )
+!   CALL Display( getNodeLoc(obj, 1), 'getNodeLoc(obj, 1) [1,160,8] : ' )
+!   CALL Display( getNodeLoc(obj, 2), 'getNodeLoc(obj, 2) [2,160,8] : ' )
+!   CALL Display( getNodeLoc(obj, 3), 'getNodeLoc(obj, 3) [3,160,8] : ' )
+!   CALL Display( getNodeLoc(obj, 7), 'getNodeLoc(obj, 7) [7,160,8] : ' )
+!   CALL Display( getNodeLoc(obj, 8), 'getNodeLoc(obj, 7) [8,160,8] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
 
 INTERFACE
 MODULE PURE FUNCTION dof_getNodeLoc2( obj, idof ) RESULT( Ans )
@@ -953,6 +1041,29 @@ PUBLIC :: getNodeLoc
 !> authors: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the total number of names in dof object
+!
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_DOF )
+!   ! #DOF/.tNames.
+!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
+!   ! #DOF/.Names.
+!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
+!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_tNames( obj ) RESULT( Ans )
@@ -974,6 +1085,29 @@ PUBLIC :: OPERATOR( .tNames. )
 !> authors: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the name of all physical variables stored in obj
+!
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_DOF )
+!   ! #DOF/.tNames.
+!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
+!   ! #DOF/.Names.
+!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
+!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_names1( obj ) RESULT( Ans )
@@ -995,6 +1129,28 @@ END INTERFACE
 ! This function returns the name of a physical variable
 ! The physical variable is given by its number ii, i.e., the first, second,
 ! third, and so on, physical variable.
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_DOF )
+!   ! #DOF/.tNames.
+!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
+!   ! #DOF/.Names.
+!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
+!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_names2( obj, ii ) RESULT( Ans )
@@ -1054,6 +1210,37 @@ END INTERFACE
 ! degrees of freedom in the [[DOF_]] object
 !@endnote
 !
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex1( obj, nodeNum ) RESULT( Ans )
@@ -1087,6 +1274,37 @@ END INTERFACE
 ! defined on the nodeNum for the given physical variable.
 ! - The returned indices can be used to extract values from an instance of
 ! [[RealVector_]] or fortran vector of real numbers.
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex2( obj, nodeNum, iVar ) RESULT( Ans )
@@ -1121,7 +1339,37 @@ END INTERFACE
 ! defined on the nodeNum for the given physical variable.
 ! - The returned indices can be used to extract values from an instance of
 ! [[RealVector_]] or fortran vector of real numbers.
-
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex3( obj, nodeNum, varName ) RESULT( Ans )
@@ -1155,6 +1403,37 @@ END INTERFACE
 ! defined on the nodeNum.
 ! - The returned indiced can be used to extract values from an instance of
 ! [[RealVector_]] or fortran vector of real numbers.
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex4( obj, nodeNum ) RESULT( Ans )
@@ -1222,6 +1501,37 @@ END INTERFACE
 ! defined on the nodeNum for the given physical variable.
 ! - The returned indices can be used to extract values from an instance of
 ! [[RealVector_]] or fortran vector of real numbers.
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex6( obj, nodeNum, varName ) RESULT( Ans )
@@ -1243,6 +1553,41 @@ PUBLIC :: getIndex
 !                                                tSpaceComponents@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: Returns the total physical variable which have space-compo
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
 INTERFACE
 MODULE PURE FUNCTION dof_tSpaceComponents( obj ) RESULT( Ans )
   CLASS( DOF_ ), INTENT( IN ) :: obj
@@ -1260,6 +1605,41 @@ PUBLIC :: OPERATOR( .tSpaceComponents. )
 !                                                SpaceComponents@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: Returns the space components of each physical vars
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
 INTERFACE
 MODULE PURE FUNCTION dof_SpaceComponents1( obj ) RESULT( Ans )
   CLASS( DOF_ ), INTENT( IN ) :: obj
@@ -1270,6 +1650,41 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !                                                SpaceComponents@getMethod
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: Returns the space component of a given physical vars
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_SpaceComponents2( obj,ivar) RESULT( Ans )
@@ -1289,6 +1704,41 @@ PUBLIC :: OPERATOR( .SpaceComponents. )
 !                                                tTimeComponents@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: Returns the total physical var which has time compo
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
 INTERFACE
 MODULE PURE FUNCTION dof_tTimeComponents( obj ) RESULT( Ans )
   CLASS( DOF_ ), INTENT( IN ) :: obj
@@ -1306,6 +1756,41 @@ PUBLIC :: OPERATOR( .tTimeComponents. )
 !                                                TimeComponents@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: Returns the timecompo
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
 INTERFACE
 MODULE PURE FUNCTION dof_TimeComponents1( obj ) RESULT( Ans )
   CLASS( DOF_ ), INTENT( IN ) :: obj
@@ -1316,6 +1801,41 @@ END INTERFACE
 !----------------------------------------------------------------------------
 !                                                TimeComponents@getMethod
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: Returns the timecompo
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_TimeComponents2( obj, ivar ) RESULT( Ans )

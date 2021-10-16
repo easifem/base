@@ -80,7 +80,8 @@ MODULE PROCEDURE csrMat_getRow1
   INTEGER( I4B ) :: a, b
   REAL( DFP ) :: alpha
   IF( SIZE( val ) .LT. obj%csr%ncol .OR. iRow .GT. SIZE(obj, 1) ) THEN
-    CALL ErrorMSG( Msg="SIZE of row vector should be same as number of col &
+    CALL ErrorMSG(  &
+    & Msg="SIZE of row vector should be same as number of col &
     & in sparse matrix or iRow is out of bound", &
     & File = "CSRMatrix_Method@getMethod.F90", &
     & Routine = "csrMat_getRow1", Line= __LINE__ , UnitNo=stdout )
@@ -102,16 +103,9 @@ END PROCEDURE csrMat_getRow1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getRow2
-  INTEGER( I4B ) :: irow, tdof, tnodes
-  tdof = .tdof. obj%csr%dof
-  IF( (.storageFMT. obj) .EQ. FMT_NODES ) THEN
-    irow = (inode-1)*tdof + idof
-  ELSE
-    tnodes = obj%csr%dof .tNodes. idof
-    irow = (idof-1)*tnodes + inode
-  END IF
-  CALL csrMat_getRow1( obj=obj, irow=irow, val=val, scale=scale, &
-    & addContribution=addContribution )
+  CALL csrMat_getRow1( obj=obj, &
+    & irow=getNodeLoc( obj=obj%csr%dof, idof=idof, inode=inode), &
+    & val=val, scale=scale, addContribution=addContribution )
 END PROCEDURE csrMat_getRow2
 
 !----------------------------------------------------------------------------
@@ -122,7 +116,8 @@ MODULE PROCEDURE csrMat_getColumn1
   INTEGER( I4B ) :: i, j
   REAL( DFP ) :: alpha
   IF( SIZE( val ) .LT. obj%csr%nrow .OR. iColumn .GT. SIZE(obj, 2) ) THEN
-    CALL ErrorMSG( Msg="SIZE of column vector should be same as number of &
+    CALL ErrorMSG( &
+    & Msg="SIZE of column vector should be same as number of &
     & rows in sparse matrix", &
     & File = "CSRMatrix_Method@getMethod.F90", &
     & Routine = "csrMat_getColumn1", Line= __LINE__ , UnitNo=stdout )
@@ -150,15 +145,9 @@ END PROCEDURE csrMat_getColumn1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getColumn2
-  INTEGER( I4B ) :: iColumn, tdof, tnodes
-  tdof = .tdof. obj%csr%dof
-  IF( obj%csr%dof%storageFMT .EQ. NODES_FMT ) THEN
-    iColumn = (inode-1)*tdof + idof
-  ELSE
-    tnodes = obj%csr%dof .tNodes. idof
-    iColumn = (idof-1)*tnodes + inode
-  END IF
-  CALL csrMat_getColumn1( obj=obj, iColumn=iColumn, val=val, scale=scale, &
+  CALL csrMat_getColumn1( obj=obj, &
+    & iColumn=getNodeLoc( obj=obj%csr%dof, idof=idof, inode=inode), &
+    & val=val, scale=scale, &
     & addContribution=addContribution )
 END PROCEDURE csrMat_getColumn2
 
