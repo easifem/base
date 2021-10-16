@@ -113,13 +113,10 @@ END PROCEDURE dof_tdof3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_getNodeLoc1
-  INTEGER( I4B ) :: tdof, tnodes
-  tdof = .tdof. obj
   IF( obj%storageFMT .EQ. NODES_FMT ) THEN
-    ans = (inode-1)*tdof + idof
+    ans = (inode-1)*(.tdof. obj) + idof
   ELSE
-    tnodes = obj .tNodes. idof
-    ans = (idof-1)*tnodes + inode
+    ans = obj%valmap(idof) + inode - 1
   END IF
 END PROCEDURE dof_getNodeLoc1
 

@@ -25,6 +25,14 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                             getStorageFMT
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_getStorageFMT
+  ans = obj%csr%dof%storageFMT
+END PROCEDURE csrMat_getStorageFMT
+
+!----------------------------------------------------------------------------
 !                                                            getMatrixProp
 !----------------------------------------------------------------------------
 
@@ -96,7 +104,7 @@ END PROCEDURE csrMat_getRow1
 MODULE PROCEDURE csrMat_getRow2
   INTEGER( I4B ) :: irow, tdof, tnodes
   tdof = .tdof. obj%csr%dof
-  IF( obj%csr%dof%storageFMT .EQ. NODES_FMT ) THEN
+  IF( (.storageFMT. obj) .EQ. FMT_NODES ) THEN
     irow = (inode-1)*tdof + idof
   ELSE
     tnodes = obj%csr%dof .tNodes. idof

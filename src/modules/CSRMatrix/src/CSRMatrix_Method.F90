@@ -1108,6 +1108,29 @@ END INTERFACE setColumn
 PUBLIC :: setColumn
 
 !----------------------------------------------------------------------------
+!                                                  getStorageFMT@getMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION csrMat_getStorageFMT( obj ) RESULT( Ans )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ) :: ans
+END FUNCTION csrMat_getStorageFMT
+END INTERFACE
+
+INTERFACE getStorageFMT
+  MODULE PROCEDURE csrMat_getStorageFMT
+END INTERFACE getStorageFMT
+
+PUBLIC :: getStorageFMT
+
+INTERFACE OPERATOR(.storageFMT. )
+  MODULE PROCEDURE csrMat_getStorageFMT
+END INTERFACE OPERATOR(.storageFMT. )
+
+PUBLIC :: OPERATOR(.storageFMT. )
+
+!----------------------------------------------------------------------------
 !                                                   getMatrixProp@getMethod
 !----------------------------------------------------------------------------
 
@@ -1216,7 +1239,8 @@ END INTERFACE
 ! - `irow` calculated from inode and idof depends upon the storageFMT.
 
 INTERFACE
-MODULE SUBROUTINE csrMat_getRow2( obj, inode, idof, val, scale, addContribution )
+MODULE SUBROUTINE csrMat_getRow2( obj, inode, idof, val, scale, &
+  & addContribution )
   TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: inode
   INTEGER( I4B ), INTENT( IN ) :: idof

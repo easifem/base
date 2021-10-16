@@ -58,24 +58,19 @@ PRIVATE
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-!
+! !
 ! ! [[DOF_]]
-!
+! !
 ! TYPE( DOF_ ) :: obj
-!
-! ! #DOF_/Initiate
-!
+! ! #DOF/Initiate
 ! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-!
-! CALL Display( .tDOF. obj, "tDOF : " )
-!
-! ! #DOF_/Display
-!
-! CALL Display( obj .tDOF. "U", "tDOF of U : " )
-!
-! ! #DOF_/DeallocateData
-!
+! CALL Display( obj, "obj : " )
+! ! #DOF/Display
+! CALL Display( .tNames. obj, '.tNames. obj : ' )
+! CALL Display( .tNodes. obj, '.tNodes. obj : ' )
+! CALL Display( .tDOF. obj, '.tDOF. obj : ' )
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -116,29 +111,20 @@ END INTERFACE
 !### Usage
 !
 !```fortran
+! [[DOF_]]
 ! PROGRAM main
-! ! USE easifemBase
-! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
-! TYPE( DOF_ ) :: obj
-! REAL( DFP ), ALLOCATABLE :: val( : )
-! !
-! ! #DOF_/Initiate
-! !
-! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
-!   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/Initiate
-! !
-! CALL Initiate( Val=val, obj=obj )
-! !
-! CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
-! !
-! ! #DOF_/DeallocateData
-! !
-! CALL DeallocateData( obj )
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   REAL( DFP ), ALLOCATABLE :: val( : )
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!     & timeCompo=[1], storageFMT = FMT_DOF )
+!   ! #DOF/Initiate
+!   CALL Initiate( Val=val, obj=obj )
+!   CALL Display( obj, "CALL Initiate( Val=val, obj=obj ) : " )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
 
@@ -169,29 +155,20 @@ END INTERFACE
 !## Usage
 !
 !```fortran
+! [[DOF_]], [[RealVector_]]
 ! PROGRAM main
-! USE easifemBase
-! IMPLICIT NONE
-!
-! ! [[DOF_]], [[RealVector_]]
-!
-! TYPE( DOF_ ) :: obj
-! TYPE(RealVector_) :: val
-!
-! ! #DOF_/Initiate
-!
-! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
-!   & timeCompo=[1], storageFMT = FMT_DOF )
-!
-! ! #DOF_/Initiate
-!
-! CALL Initiate( Val=val, obj=obj )
-!
-! CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
-!
-! ! #DOF_/DeallocateData
-!
-! CALL DeallocateData( obj )
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   TYPE(RealVector_) :: val
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!     & timeCompo=[1], storageFMT = FMT_DOF )
+!   ! #DOF/Initiate
+!   CALL Initiate( Val=val, obj=obj )
+!   CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
 
@@ -221,29 +198,20 @@ END INTERFACE
 !## Usage
 !
 !```fortran
-! PROGRAM main
-! USE easifemBase
-! IMPLICIT NONE
-! !
 ! ! [[DOF_]], [[RealVector_]]
-! !
-! TYPE( DOF_ ) :: obj
-! TYPE(RealVector_), ALLOCATABLE :: val( : )
-! !
-! ! #DOF_/Initiate
-! !
-! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
-!   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/Initiate
-! !
-! CALL Initiate( Val=val, obj=obj )
-! !
-! CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
-! !
-! ! #DOF_/DeallocateData
-! !
-! CALL DeallocateData( obj )
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   TYPE(RealVector_), ALLOCATABLE :: val( : )
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!     & timeCompo=[1], storageFMT = FMT_DOF )
+!   ! #DOF/Initiate
+!   CALL Initiate( Val=val, obj=obj )
+!   CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
 
@@ -290,7 +258,21 @@ END INTERFACE
 !## Usage
 !
 !```fortran
-! obj1 = obj2
+! ! [[DOF_]], [[RealVector_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj, anotherObj
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!     & timeCompo=[1], storageFMT = FMT_DOF )
+!   ! #DOF/Initiate
+!   anotherObj=obj
+!   CALL Display( anotherObj, "anotherObj=obj : " )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+!   CALL DeallocateData( anotherObj )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -342,25 +324,17 @@ PUBLIC :: Initiate
 !## Usage
 !
 !```fortran
+! ! [[DOF_]]
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
 ! TYPE( DOF_ ) :: obj
-! !
-! ! #DOF_/Initiate
-! !
+! ! #DOF/Initiate
 ! obj = DOF( tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/Display
-! !
+! ! #DOF/Display
 ! CALL Display( obj, "DOF() : " )
-! !
-! ! #DOF_/DeallocateData
-! !
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -399,25 +373,17 @@ PUBLIC :: DOF
 !## Usage
 !
 !```fortran
+! ! [[DOF_]]
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
 ! TYPE( DOF_ ), POINTER :: obj
-! !
-! ! #DOF_/Initiate
-! !
+! ! #DOF/Initiate
 ! obj => DOF_POINTER( tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/Display
-! !
+! ! #DOF/Display
 ! CALL Display( obj, "DOF() : " )
-! !
-! ! #DOF_/DeallocateData
-! !
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -500,29 +466,21 @@ END INTERFACE
 !## Usage
 !
 !```fortran
+! ! [[DOF_]]
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
 ! TYPE( DOF_ ) :: obj
 ! REAL( DFP ), ALLOCATABLE :: val( : )
-! !
-! ! #DOF_/Initiate
-! !
+! ! main
+! ! #DOF/Initiate
 ! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/Initiate
-! !
+! ! #DOF/Initiate
 ! CALL Initiate( Val=val, obj=obj )
 ! val(1:10) = 1; val(11:20)=2; val(21:)=3
-! !
 ! CALL Display( Val, obj, "CALL Initiate( Val=val, obj=obj ) : " )
-! !
-! ! #DOF_/DeallocateData
-! !
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -576,28 +534,21 @@ PUBLIC :: Display
 !## Usage
 !
 !```fortran
+! ! [[DOF_]]
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
 ! TYPE( DOF_ ) :: obj
-! !
-! ! #DOF_/Initiate
-! !
+! ! #DOF/Initiate
 ! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/.tNodes.
-! !
+! ! #DOF/.tNodes.
 ! CALL Display(     .tNodes. obj, '.tNodes. obj [30] : ' )
 ! CALL Display( obj .tNodes. 1, 'obj .tNodes. 1 [10] : ' )
 ! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
 ! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
-! !
-! ! #DOF_/DeallocateData
-! !
+! CALL Display( obj .tNodes. [1,2,3], 'obj .tNodes. [1,2,3] [30] : ' )
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -626,28 +577,21 @@ END INTERFACE
 !## Usage
 !
 !```fortran
+! ! [[DOF_]]
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
 ! TYPE( DOF_ ) :: obj
-! !
-! ! #DOF_/Initiate
-! !
+! ! #DOF/Initiate
 ! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/.tNodes.
-! !
+! ! #DOF/.tNodes.
 ! CALL Display(     .tNodes. obj, '.tNodes. obj [30] : ' )
 ! CALL Display( obj .tNodes. 1, 'obj .tNodes. 1 [10] : ' )
 ! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
 ! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
-! !
-! ! #DOF_/DeallocateData
-! !
+! CALL Display( obj .tNodes. [1,2,3], 'obj .tNodes. [1,2,3] [30] : ' )
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -677,7 +621,23 @@ END INTERFACE
 !## Usage
 !
 !```fortran
-!
+! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! ! #DOF/.tNodes.
+! CALL Display(     .tNodes. obj, '.tNodes. obj [30] : ' )
+! CALL Display( obj .tNodes. 1, 'obj .tNodes. 1 [10] : ' )
+! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
+! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
+! CALL Display( obj .tNodes. [1,2,3], 'obj .tNodes. [1,2,3] [30] : ' )
+! ! #DOF/DeallocateData
+! CALL DeallocateData( obj )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -705,7 +665,23 @@ END INTERFACE
 !## Usage
 !
 !```fortran
-!
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
+!   & timeCompo=[1], storageFMT = FMT_DOF )
+! ! #DOF/.tNodes.
+! CALL Display(     .tNodes. obj, '.tNodes. obj [30] : ' )
+! CALL Display( obj .tNodes. 1, 'obj .tNodes. 1 [10] : ' )
+! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
+! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
+! CALL Display( obj .tNodes. [1,2,3], 'obj .tNodes. [1,2,3] [30] : ' )
+! ! #DOF/DeallocateData
+! CALL DeallocateData( obj )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -744,27 +720,19 @@ PUBLIC :: SIZE
 !## Usage
 !
 !```fortran
+! ! [[DOF_]]
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
 ! TYPE( DOF_ ) :: obj
-! !
-! ! #DOF_/Initiate
-! !
+! ! #DOF/Initiate
 ! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/.tNodes.
-! !
+! ! #DOF/.tNodes.
 ! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
 ! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
 ! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
-! !
-! ! #DOF_/DeallocateData
-! !
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -792,27 +760,19 @@ END INTERFACE
 !## Usage
 !
 !```fortran
+! ! [[DOF_]]
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
 ! TYPE( DOF_ ) :: obj
-! !
-! ! #DOF_/Initiate
-! !
+! ! #DOF/Initiate
 ! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/.tNodes.
-! !
+! ! #DOF/.tNodes.
 ! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
 ! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
 ! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
-! !
-! ! #DOF_/DeallocateData
-! !
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -841,27 +801,19 @@ END INTERFACE
 !## Usage
 !
 !```fortran
+! ! [[DOF_]]
 ! PROGRAM main
 ! USE easifemBase
 ! IMPLICIT NONE
-! !
-! ! [[DOF_]]
-! !
 ! TYPE( DOF_ ) :: obj
-! !
-! ! #DOF_/Initiate
-! !
+! ! #DOF/Initiate
 ! CALL Initiate( obj, tNodes=[10], names=["U"], spaceCompo=[3],  &
 !   & timeCompo=[1], storageFMT = FMT_DOF )
-! !
-! ! #DOF_/.tNodes.
-! !
+! ! #DOF/.tNodes.
 ! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
 ! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
 ! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
-! !
-! ! #DOF_/DeallocateData
-! !
+! ! #DOF/DeallocateData
 ! CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
@@ -901,6 +853,61 @@ PUBLIC :: OPERATOR( .tDOF. )
 ! Also node that idofs are continuously numbered, so if there are two
 ! or more physical variables, then idof of the second or later physical
 ! variables will not start from 1.
+!
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"],
+! spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_DOF )
+!   ! #DOF/getNodeLoc
+!   CALL Display( getNodeLoc(obj, 1, 1), 'getNodeLoc(obj, 1, 1) [1] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 2), 'getNodeLoc(obj, 1, 2) [21] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 3), 'getNodeLoc(obj, 1, 3) [41] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 4), 'getNodeLoc(obj, 1, 4) [61] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 5), 'getNodeLoc(obj, 1, 5) [81] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 6), 'getNodeLoc(obj, 1, 6) [101] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 7), 'getNodeLoc(obj, 1, 7) [121] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 8), 'getNodeLoc(obj, 1, 8) [131] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+!
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 20], names=["V", "P"], spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_NODES )
+!   ! #DOF/getNodeLoc
+!   CALL Display( getNodeLoc(obj, 1, 1), 'getNodeLoc(obj, 1, 1) [1] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 2), 'getNodeLoc(obj, 1, 2) [2] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 3), 'getNodeLoc(obj, 1, 3) [3] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 4), 'getNodeLoc(obj, 1, 4) [4] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 5), 'getNodeLoc(obj, 1, 5) [5] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 6), 'getNodeLoc(obj, 1, 6) [6] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 7), 'getNodeLoc(obj, 1, 7) [7] : ' )
+!   CALL Display( getNodeLoc(obj, 1, 8), 'getNodeLoc(obj, 1, 8) [8] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_getNodeLoc1( obj, inode, idof ) RESULT( Ans )
