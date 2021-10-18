@@ -114,7 +114,7 @@ SUBROUTINE csrMat_SPY_PLPLOT( obj, filename, ext, driver )
   CALL PLENV( xmin, xmax, ymin, ymax, 2, 0 )
   CALL PLBOX( 'bcgnst', 0.0_DFP, 2, 'bcgnstv', 0.0_DFP, 2 )
   CALL PLLAB( "COLUMN", "ROW", "STRUCTURE OF SPARSE MATRIX" )
-  CALL PLSSYM(0.0_DFP, 0.4_DFP)
+  CALL PLSSYM(0.0_DFP, 0.8_DFP)
   CALL PLCOL0(9)
   CALL PLPOIN( X, Y, 3 )
   CALL PLEND

@@ -519,6 +519,50 @@ END INTERFACE Display
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
+!                                                  DOFStartIndex@getMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: returns obj%map( ivar, 5 )
+
+INTERFACE
+MODULE PURE FUNCTION dof_DOFStartIndex( obj, ivar ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ) :: ans
+END FUNCTION dof_DOFStartIndex
+END INTERFACE
+
+INTERFACE OPERATOR(.DOFStartIndex.)
+  MODULE PROCEDURE dof_DOFStartIndex
+END INTERFACE OPERATOR(.DOFStartIndex.)
+
+PUBLIC :: OPERATOR(.DOFStartIndex.)
+
+!----------------------------------------------------------------------------
+!                                                  DOFEndIndex@getMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: returns obj%map( ivar+1, 5 ) - 1
+
+INTERFACE
+MODULE PURE FUNCTION dof_DOFEndIndex( obj, ivar ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ) :: ans
+END FUNCTION dof_DOFEndIndex
+END INTERFACE
+
+INTERFACE OPERATOR(.DOFEndIndex.)
+  MODULE PROCEDURE dof_DOFEndIndex
+END INTERFACE OPERATOR(.DOFEndIndex.)
+
+PUBLIC :: OPERATOR(.DOFEndIndex.)
+
+!----------------------------------------------------------------------------
 !                                                           tNodes@getMethod
 !----------------------------------------------------------------------------
 
@@ -833,6 +877,154 @@ END INTERFACE
 PUBLIC :: OPERATOR( .tDOF. )
 
 !----------------------------------------------------------------------------
+!                                                           tNames@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the total number of names in dof object
+!
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_DOF )
+!   ! #DOF/.tNames.
+!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
+!   ! #DOF/.Names.
+!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
+!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
+INTERFACE
+MODULE PURE FUNCTION dof_tNames( obj ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ) :: Ans
+END FUNCTION dof_tNames
+END INTERFACE
+
+INTERFACE OPERATOR( .tNames. )
+  MODULE PROCEDURE dof_tNames
+END INTERFACE
+
+PUBLIC :: OPERATOR( .tNames. )
+
+!----------------------------------------------------------------------------
+!                                                           Names@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Returns the name of all physical variables stored in obj
+!
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_DOF )
+!   ! #DOF/.tNames.
+!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
+!   ! #DOF/.Names.
+!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
+!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
+INTERFACE
+MODULE PURE FUNCTION dof_names1( obj ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  CHARACTER( LEN = 1 ), ALLOCATABLE :: Ans( : )
+END FUNCTION dof_names1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           Names@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: This function returns the name of a physical variable
+!
+!# Introduction
+!
+! This function returns the name of a physical variable
+! The physical variable is given by its number ii, i.e., the first, second,
+! third, and so on, physical variable.
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( DOF_ ) :: obj
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
+!     & timeCompo=[2,2], storageFMT = FMT_DOF )
+!   ! #DOF/.tNames.
+!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
+!   ! #DOF/.Names.
+!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
+!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
+!   ! #DOF/DeallocateData
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
+INTERFACE
+MODULE PURE FUNCTION dof_names2( obj, ii ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ii
+  CHARACTER( LEN = 1 ), ALLOCATABLE :: Ans
+END FUNCTION dof_names2
+END INTERFACE
+
+INTERFACE OPERATOR( .Names. )
+  MODULE PROCEDURE dof_names1, dof_names2
+END INTERFACE OPERATOR( .Names. )
+
+PUBLIC :: OPERATOR( .Names. )
+
+!----------------------------------------------------------------------------
+!                                                     NameToIndex@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 26 June 2021
+! summary: Return the index of a physical variable
+
+INTERFACE
+MODULE PURE FUNCTION NameToIndex( obj, Name ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  CHARACTER( LEN = 1 ), INTENT( IN ) :: Name
+  INTEGER( I4B ) :: Ans
+END FUNCTION NameToIndex
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
@@ -865,7 +1057,7 @@ PUBLIC :: OPERATOR( .tDOF. )
 !   TYPE( DOF_ ) :: obj
 !   !> main
 !   ! #DOF/Initiate
-!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
+! CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
 !     & timeCompo=[2,2], storageFMT = FMT_DOF )
 !   ! #DOF/getNodeLoc
 !   CALL Display( getNodeLoc(obj, 1, 1), 'getNodeLoc(obj, 1, 1) [1] : ' )
@@ -1033,154 +1225,6 @@ INTERFACE getNodeLoc
 END INTERFACE getNodeLoc
 
 PUBLIC :: getNodeLoc
-
-!----------------------------------------------------------------------------
-!                                                           tNames@getMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 26 June 2021
-! summary: Returns the total number of names in dof object
-!
-!
-!## Usage
-!
-!```fortran
-! ! [[DOF_]]
-! PROGRAM main
-!   USE easifemBase
-!   IMPLICIT NONE
-!   TYPE( DOF_ ) :: obj
-!   !> main
-!   ! #DOF/Initiate
-!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
-!     & timeCompo=[2,2], storageFMT = FMT_DOF )
-!   ! #DOF/.tNames.
-!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
-!   ! #DOF/.Names.
-!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
-!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
-! END PROGRAM main
-!```
-
-INTERFACE
-MODULE PURE FUNCTION dof_tNames( obj ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans
-END FUNCTION dof_tNames
-END INTERFACE
-
-INTERFACE OPERATOR( .tNames. )
-  MODULE PROCEDURE dof_tNames
-END INTERFACE
-
-PUBLIC :: OPERATOR( .tNames. )
-
-!----------------------------------------------------------------------------
-!                                                           Names@getMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 26 June 2021
-! summary: Returns the name of all physical variables stored in obj
-!
-!
-!## Usage
-!
-!```fortran
-! ! [[DOF_]]
-! PROGRAM main
-!   USE easifemBase
-!   IMPLICIT NONE
-!   TYPE( DOF_ ) :: obj
-!   !> main
-!   ! #DOF/Initiate
-!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
-!     & timeCompo=[2,2], storageFMT = FMT_DOF )
-!   ! #DOF/.tNames.
-!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
-!   ! #DOF/.Names.
-!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
-!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
-! END PROGRAM main
-!```
-
-INTERFACE
-MODULE PURE FUNCTION dof_names1( obj ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = 1 ), ALLOCATABLE :: Ans( : )
-END FUNCTION dof_names1
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                           Names@getMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 26 June 2021
-! summary: This function returns the name of a physical variable
-!
-!# Introduction
-!
-! This function returns the name of a physical variable
-! The physical variable is given by its number ii, i.e., the first, second,
-! third, and so on, physical variable.
-!
-!## Usage
-!
-!```fortran
-! ! [[DOF_]]
-! PROGRAM main
-!   USE easifemBase
-!   IMPLICIT NONE
-!   TYPE( DOF_ ) :: obj
-!   !> main
-!   ! #DOF/Initiate
-!   CALL Initiate( obj, tNodes=[20, 10], names=["V", "P"], spaceCompo=[3,1],  &
-!     & timeCompo=[2,2], storageFMT = FMT_DOF )
-!   ! #DOF/.tNames.
-!   CALL Display( .tNames. obj, '.tNames. obj [2] : ' )
-!   ! #DOF/.Names.
-!   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
-!   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
-! END PROGRAM main
-!```
-
-INTERFACE
-MODULE PURE FUNCTION dof_names2( obj, ii ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ii
-  CHARACTER( LEN = 1 ), ALLOCATABLE :: Ans
-END FUNCTION dof_names2
-END INTERFACE
-
-INTERFACE OPERATOR( .Names. )
-  MODULE PROCEDURE dof_names1, dof_names2
-END INTERFACE OPERATOR( .Names. )
-
-PUBLIC :: OPERATOR( .Names. )
-
-!----------------------------------------------------------------------------
-!                                                     NameToIndex@getMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 26 June 2021
-! summary: Return the index of a physical variable
-
-INTERFACE
-MODULE PURE FUNCTION NameToIndex( obj, Name ) RESULT( Ans )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = 1 ), INTENT( IN ) :: Name
-  INTEGER( I4B ) :: Ans
-END FUNCTION NameToIndex
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                         getIndex@getMethod
@@ -1467,6 +1511,37 @@ END INTERFACE
 ! defined on the nodeNum for the given physical variable.
 ! - The returned indices can be used to extract values from an instance of
 ! [[RealVector_]] or fortran vector of real numbers.
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE PURE FUNCTION dof_getIndex5( obj, nodeNum, iVar ) RESULT( Ans )
@@ -1542,9 +1617,120 @@ MODULE PURE FUNCTION dof_getIndex6( obj, nodeNum, varName ) RESULT( Ans )
 END FUNCTION dof_getIndex6
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: Returns the index
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1, idof=1 ),  "[5] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1, idof=2 ),  "[25] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1, idof=3 ),  "[45] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
+INTERFACE
+MODULE PURE FUNCTION dof_getIndex7( obj, nodeNum, iVar, idof ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodeNum
+  INTEGER( I4B ), INTENT( IN ) :: iVar
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  INTEGER( I4B ) :: ans
+END FUNCTION dof_getIndex7
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         getIndex@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Oct 2021
+! summary: Returns the index
+!
+!## Usage
+!
+!```fortran
+! ! [[DOF_]]
+! PROGRAM main
+! USE easifemBase
+! IMPLICIT NONE
+! TYPE( DOF_ ) :: obj
+! ! #DOF/Initiate
+! CALL Initiate( obj, tNodes=[20, 10], &
+!   & names=["V", "P"], spaceCompo=[3, 1], &
+!   & timeCompo=[1, 1], storageFMT = FMT_DOF )
+! ! #DOF/GetIndex
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1 ),  "[5, 25, 45] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="V" ), '[5, 25, 45] : ' )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=2 ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, varName="P" ), "[65] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=1 ),  "[10, 30, 50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1, idof=1 ),  "[5] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1, idof=2 ),  "[25] : " )
+! CALL Display( &
+!   & GetIndex( obj, nodeNum=5, iVar=1, idof=3 ),  "[45] : " )
+! CALL DeallocateData( obj )
+! END PROGRAM main
+!```
+
+INTERFACE
+MODULE PURE FUNCTION dof_getIndex8( obj, nodeNum, iVar, idof ) RESULT( Ans )
+  CLASS( DOF_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodeNum( : )
+  INTEGER( I4B ), INTENT( IN ) :: iVar
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  INTEGER( I4B ) :: ans( SIZE(nodeNum) )
+END FUNCTION dof_getIndex8
+END INTERFACE
+
 INTERFACE getIndex
   MODULE PROCEDURE dof_getIndex1, dof_getIndex2, dof_getIndex3, &
-      & dof_getIndex4, dof_getIndex5, dof_getIndex6
+    & dof_getIndex4, dof_getIndex5, dof_getIndex6, dof_getIndex7,  &
+    & dof_getIndex8
 END INTERFACE getIndex
 
 PUBLIC :: getIndex

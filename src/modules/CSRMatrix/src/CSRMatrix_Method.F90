@@ -370,7 +370,7 @@ END INTERFACE DeallocateData
 PUBLIC :: DeallocateData
 
 !----------------------------------------------------------------------------
-!                                                                 Display@IO
+!                                                        Display@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -397,7 +397,7 @@ END INTERFACE Display
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
-!                                                                     Spy@IO
+!                                                       Spy@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -419,7 +419,7 @@ END INTERFACE SPY
 PUBLIC :: SPY
 
 !----------------------------------------------------------------------------
-!                                                                 IMPORT@IO
+!                                                          IMPORT@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -441,7 +441,7 @@ END INTERFACE Import
 PUBLIC :: Import
 
 !----------------------------------------------------------------------------
-!                                                      setSparsity@setMethod
+!                                                    setSparsity@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -458,29 +458,28 @@ PUBLIC :: Import
 !
 !### Usage
 !```fortran
-! program main
-!   use easifem
-!   implicit none
-!
-!   type( sparsematrix_ ) :: obj
-!   real( dfp ), allocatable :: val( :, : )
-!
-!   call initiate( obj = obj, tdof = 2, tnodes = [8], storageFMT=DOF_FMT )
-!   call setsparsity( obj = obj, row = 1, col = [1,2,7] )
-!   call setsparsity( obj = obj, row = 2, col = [2,1,3,6,7,8] )
-!   call setsparsity( obj = obj, row = 3, col = [3, 2, 4, 8] )
-!   call setsparsity( obj = obj, row = 4, col = [4,3,5,8] )
-!   call setsparsity( obj = obj, row = 5, col = [5,4,6,8] )
-!   call setsparsity( obj = obj, row = 6, col = [6,2,5,7,8] )
-!   call setsparsity( obj = obj, row = 7, col = [7,1,2,6] )
-!   call setsparsity( obj = obj, row = 8, col = [8,2,3,4,5,6] )
-!   call setsparsity( obj = obj )
-!   allocate( val( 6, 6 ) )
-!   call RANDOM_NUMBER( val )
-!   call display( val, "val")
-!   call setValue( obj=obj, nptrs=[1,2,7], val=val, storageFMT=DOF_FMT )
-!   call display( obj, "obj" )
-! end program main
+! ! [[CSRMatrix_]], [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( CSRMatrix_ ) :: obj
+!   TYPE( DOF_ ) :: dofobj
+!   INTEGER( I4B ) :: i, unitNo
+!   !> main
+!   CALL Initiate( obj=dofobj, tNodes=[5], names=['K'], &
+!     & spaceCompo=[2], timeCompo=[1], storageFMT=FMT_DOF )
+!   CALL Initiate( obj, ncol=(.tnodes. dofobj), &
+!     & nrow=(.tnodes. dofobj), dof=dofobj )
+!   CALL Setsparsity( obj, 1, [1,2,3,5] )
+!   CALL Setsparsity( obj, 2, [2,1,3] )
+!   CALL Setsparsity( obj, 3, [3,1,2,4,5] )
+!   CALL Setsparsity( obj, 4, [4,3,5] )
+!   CALL Setsparsity( obj, 5, [5,1,3,4] )
+!   CALL SetSparsity(obj)
+!   obj = 2.0_DFP
+!   CALL SPY( obj, "test_6", ".svg" )
+!   CALL DeallocateData( obj )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -506,29 +505,28 @@ END INTERFACE
 !
 !### Usage
 !```fortran
-! program main
-!   use easifem
-!   implicit none
-!
-!   type( sparsematrix_ ) :: obj
-!   real( dfp ), allocatable :: val( :, : )
-!
-!   call initiate( obj = obj, tdof = 2, tnodes = [8], storageFMT=DOF_FMT )
-!   call setsparsity( obj = obj, row = 1, col = [1,2,7] )
-!   call setsparsity( obj = obj, row = 2, col = [2,1,3,6,7,8] )
-!   call setsparsity( obj = obj, row = 3, col = [3, 2, 4, 8] )
-!   call setsparsity( obj = obj, row = 4, col = [4,3,5,8] )
-!   call setsparsity( obj = obj, row = 5, col = [5,4,6,8] )
-!   call setsparsity( obj = obj, row = 6, col = [6,2,5,7,8] )
-!   call setsparsity( obj = obj, row = 7, col = [7,1,2,6] )
-!   call setsparsity( obj = obj, row = 8, col = [8,2,3,4,5,6] )
-!   call setsparsity( obj = obj )
-!   allocate( val( 6, 6 ) )
-!   call RANDOM_NUMBER( val )
-!   call display( val, "val")
-!   call setValue( obj=obj, nptrs=[1,2,7], val=val, storageFMT=DOF_FMT )
-!   call display( obj, "obj" )
-! end program main
+! ! [[CSRMatrix_]], [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( CSRMatrix_ ) :: obj
+!   TYPE( DOF_ ) :: dofobj
+!   INTEGER( I4B ) :: i, unitNo
+!   !> main
+!   CALL Initiate( obj=dofobj, tNodes=[5], names=['K'], &
+!     & spaceCompo=[2], timeCompo=[1], storageFMT=FMT_DOF )
+!   CALL Initiate( obj, ncol=(.tnodes. dofobj), &
+!     & nrow=(.tnodes. dofobj), dof=dofobj )
+!   CALL Setsparsity( obj, 1, [1,2,3,5] )
+!   CALL Setsparsity( obj, 2, [2,1,3] )
+!   CALL Setsparsity( obj, 3, [3,1,2,4,5] )
+!   CALL Setsparsity( obj, 4, [4,3,5] )
+!   CALL Setsparsity( obj, 5, [5,1,3,4] )
+!   CALL SetSparsity(obj)
+!   obj = 2.0_DFP
+!   CALL SPY( obj, "test_6", ".svg" )
+!   CALL DeallocateData( obj )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -556,6 +554,67 @@ END INTERFACE
 ! `Col` connectivity information is generated.
 !
 !## Usage
+!
+!```fortran
+! ! [[CSRMatrix_]], [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( CSRMatrix_ ) :: obj
+!   TYPE( DOF_ ) :: dofobj
+!   INTEGER( I4B ) :: i, unitNo
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj=dofobj, tNodes=[12, 5], names=['V', 'P'], &
+!     & spaceCompo=[2, 1], timeCompo=[1,1], storageFMT=FMT_DOF )
+!   ! #CSRMatrix/Initiate
+!   CALL Initiate( obj, ncol=(.tnodes. dofobj), &
+!     & nrow=(.tnodes. dofobj), dof=dofobj )
+!   ! #CSRMatrix/SetSparsity
+!   CALL SetSparsity( obj, 1, [1,2,3,5,6,7,10,11,12], 1, 1 )
+!   CALL SetSparsity( obj, 2, [2,1,3,6,7,11], 1, 1 )
+!   CALL SetSparsity( obj, 3, [3,1,2,4,5,6,7,11,8,9,12,10], 1, 1 )
+!   CALL SetSparsity( obj, 4, [4,3,5,8,9,12], 1, 1 )
+!   CALL SetSparsity( obj, 5, [5,1,3,4,10,11,8,9,12], 1, 1 )
+!   CALL SetSparsity( obj, 6, [6,1,2,3,7,11], 1, 1 )
+!   CALL SetSparsity( obj, 7, [7,1,2,3,6,7,11], 1, 1 )
+!   CALL SetSparsity( obj, 8, [8,3,4,5,8,9,12], 1, 1 )
+!   CALL SetSparsity( obj, 9, [9,3,4,5,8,9,12], 1, 1 )
+!   CALL SetSparsity( obj, 10, [10,1,3,5,11,12], 1, 1 )
+!   CALL SetSparsity( obj, 11, [11,1,2,3,5,6,7,12,10], 1, 1 )
+!   CALL SetSparsity( obj, 12, [12,1,3,4,5,10,11,8,9], 1, 1 )
+!   !>
+!   CALL SetSparsity( obj, 1, [1,2,3,5], 1, 2 )
+!   CALL SetSparsity( obj, 2, [2,1,3], 1, 2 )
+!   CALL SetSparsity( obj, 3, [3,1,2,4,5], 1, 2 )
+!   CALL SetSparsity( obj, 4, [4,3,5], 1, 2 )
+!   CALL SetSparsity( obj, 5, [5,1,3,4], 1, 2 )
+!   CALL SetSparsity( obj, 6, [1,2,3], 1, 2 )
+!   CALL SetSparsity( obj, 7, [1,2,3], 1, 2 )
+!   CALL SetSparsity( obj, 8, [3,4,5], 1, 2 )
+!   CALL SetSparsity( obj, 9, [3,4,5], 1, 2 )
+!   CALL SetSparsity( obj, 10, [1,3,5], 1, 2 )
+!   CALL SetSparsity( obj, 11, [1,2,3,5], 1, 2 )
+!   CALL SetSparsity( obj, 12, [1,3,4,5], 1, 2 )
+!   !>
+!   CALL SetSparsity( obj, 1, [1,2,3,5,6,7,10,11,12], 2, 1 )
+!   CALL SetSparsity( obj, 2, [2,1,3,6,7,11], 2, 1 )
+!   CALL SetSparsity( obj, 3, [3,1,2,4,5,6,7,11,8,9,12,10], 2, 1 )
+!   CALL SetSparsity( obj, 4, [4,3,5,12,8,9], 2, 1 )
+!   CALL SetSparsity( obj, 5, [5,1,3,4,10,11,8,9,12], 2, 1 )
+!   !>
+!   CALL SetSparsity( obj, 1, [1,2,3,5], 2, 2 )
+!   CALL SetSparsity( obj, 2, [2,1,3], 2, 2 )
+!   CALL SetSparsity( obj, 3, [3,1,2,4,5], 2, 2 )
+!   CALL SetSparsity( obj, 4, [4,3,5], 2, 2 )
+!   CALL SetSparsity( obj, 5, [5,1,3,4], 2, 2 )
+!   !>
+!   CALL SetSparsity(obj)
+!   obj = 2.0_DFP
+!   CALL SPY( obj, "test_7", ".svg" )
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setSparsity3( obj, row, col, ivar, jvar )
@@ -580,7 +639,69 @@ END INTERFACE
 ! This subroutine sets the sparsity pattern of a given row
 ! This subroutine calls `csrMat_setSparsity1`
 !
+!
 !## Usage
+!
+!```fortran
+! ! [[CSRMatrix_]], [[DOF_]]
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( CSRMatrix_ ) :: obj
+!   TYPE( DOF_ ) :: dofobj
+!   INTEGER( I4B ) :: i, unitNo
+!   !> main
+!   ! #DOF/Initiate
+!   CALL Initiate( obj=dofobj, tNodes=[12, 5], names=['V', 'P'], &
+!     & spaceCompo=[2, 1], timeCompo=[1,1], storageFMT=FMT_DOF )
+!   ! #CSRMatrix/Initiate
+!   CALL Initiate( obj, ncol=(.tnodes. dofobj), &
+!     & nrow=(.tnodes. dofobj), dof=dofobj )
+!   ! #CSRMatrix/SetSparsity
+!   CALL SetSparsity( obj, 1, [1,2,3,5,6,7,10,11,12], 1, 1 )
+!   CALL SetSparsity( obj, 2, [2,1,3,6,7,11], 1, 1 )
+!   CALL SetSparsity( obj, 3, [3,1,2,4,5,6,7,11,8,9,12,10], 1, 1 )
+!   CALL SetSparsity( obj, 4, [4,3,5,8,9,12], 1, 1 )
+!   CALL SetSparsity( obj, 5, [5,1,3,4,10,11,8,9,12], 1, 1 )
+!   CALL SetSparsity( obj, 6, [6,1,2,3,7,11], 1, 1 )
+!   CALL SetSparsity( obj, 7, [7,1,2,3,6,7,11], 1, 1 )
+!   CALL SetSparsity( obj, 8, [8,3,4,5,8,9,12], 1, 1 )
+!   CALL SetSparsity( obj, 9, [9,3,4,5,8,9,12], 1, 1 )
+!   CALL SetSparsity( obj, 10, [10,1,3,5,11,12], 1, 1 )
+!   CALL SetSparsity( obj, 11, [11,1,2,3,5,6,7,12,10], 1, 1 )
+!   CALL SetSparsity( obj, 12, [12,1,3,4,5,10,11,8,9], 1, 1 )
+!   !>
+!   CALL SetSparsity( obj, 1, [1,2,3,5], 1, 2 )
+!   CALL SetSparsity( obj, 2, [2,1,3], 1, 2 )
+!   CALL SetSparsity( obj, 3, [3,1,2,4,5], 1, 2 )
+!   CALL SetSparsity( obj, 4, [4,3,5], 1, 2 )
+!   CALL SetSparsity( obj, 5, [5,1,3,4], 1, 2 )
+!   CALL SetSparsity( obj, 6, [1,2,3], 1, 2 )
+!   CALL SetSparsity( obj, 7, [1,2,3], 1, 2 )
+!   CALL SetSparsity( obj, 8, [3,4,5], 1, 2 )
+!   CALL SetSparsity( obj, 9, [3,4,5], 1, 2 )
+!   CALL SetSparsity( obj, 10, [1,3,5], 1, 2 )
+!   CALL SetSparsity( obj, 11, [1,2,3,5], 1, 2 )
+!   CALL SetSparsity( obj, 12, [1,3,4,5], 1, 2 )
+!   !>
+!   CALL SetSparsity( obj, 1, [1,2,3,5,6,7,10,11,12], 2, 1 )
+!   CALL SetSparsity( obj, 2, [2,1,3,6,7,11], 2, 1 )
+!   CALL SetSparsity( obj, 3, [3,1,2,4,5,6,7,11,8,9,12,10], 2, 1 )
+!   CALL SetSparsity( obj, 4, [4,3,5,12,8,9], 2, 1 )
+!   CALL SetSparsity( obj, 5, [5,1,3,4,10,11,8,9,12], 2, 1 )
+!   !>
+!   CALL SetSparsity( obj, 1, [1,2,3,5], 2, 2 )
+!   CALL SetSparsity( obj, 2, [2,1,3], 2, 2 )
+!   CALL SetSparsity( obj, 3, [3,1,2,4,5], 2, 2 )
+!   CALL SetSparsity( obj, 4, [4,3,5], 2, 2 )
+!   CALL SetSparsity( obj, 5, [5,1,3,4], 2, 2 )
+!   !>
+!   CALL SetSparsity(obj)
+!   obj = 2.0_DFP
+!   CALL SPY( obj, "test_7", ".svg" )
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE SUBROUTINE csrMat_setSparsity4( obj, row, col, ivar, jvar )
@@ -1257,6 +1378,67 @@ END INTERFACE getRow
 PUBLIC :: getRow
 
 !----------------------------------------------------------------------------
+!                                                     getBlockRow@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the row of a sparse matrix
+!
+!# Introduction
+! This routine returns the row of given block
+! This routineis designed to handle block matrices
+! jvar is the column number for the block address.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getBlockRow1( obj, jvar, irow, val, scale, &
+  & addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  INTEGER( I4B ), INTENT( IN ) :: irow
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getBlockRow1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    getBlockRow@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the row of a sparse matrix
+!
+!# Introduction
+!
+! - This routine returns the row of a sparse matrix. The row index is
+! calculated using the inode and idof.
+! - `inode` is the node number
+! - `idof` is the degree of freedom number of ivar
+! - `irow` calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getBlockRow2( obj, ivar, jvar, inode, idof, &
+  & val, scale, addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getBlockRow2
+END INTERFACE
+
+INTERFACE getBlockRow
+  MODULE PROCEDURE csrMat_getBlockRow1, csrMat_getBlockRow2
+END INTERFACE getBlockRow
+
+PUBLIC :: getBlockRow
+
+!----------------------------------------------------------------------------
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
@@ -1308,6 +1490,62 @@ INTERFACE getColumn
 END INTERFACE getColumn
 
 PUBLIC :: getColumn
+
+!----------------------------------------------------------------------------
+!                                                  getBlockColumn@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the Column of a sparse matrix
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getBlockColumn1( obj, ivar, iColumn, &
+  & val, scale, addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: iColumn
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getBlockColumn1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                  getBlockColumn@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 24 July 2021
+! summary: This routine returns the Column of a sparse matrix
+!
+!# Introduction
+!
+! - This routine returns the Column of a sparse matrix. The Column index is
+! calculated using the inode and idof.
+! - `inode` is the node number
+! - `idof` is the degree of freedom number
+! - `iColumn` calculated from inode and idof depends upon the storageFMT.
+
+INTERFACE
+MODULE SUBROUTINE csrMat_getBlockColumn2( obj, ivar, jvar, inode, idof, &
+  & val, scale,  addContribution )
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  INTEGER( I4B ), INTENT( IN ) :: inode
+  INTEGER( I4B ), INTENT( IN ) :: idof
+  REAL( DFP ), INTENT( INOUT ) :: val( : )
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: scale
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: addContribution
+END SUBROUTINE csrMat_getBlockColumn2
+END INTERFACE
+
+INTERFACE getBlockColumn
+  MODULE PROCEDURE csrMat_getBlockColumn1, csrMat_getBlockColumn2
+END INTERFACE getBlockColumn
+
+PUBLIC :: getBlockColumn
 
 !----------------------------------------------------------------------------
 !                                                              Convert@Unary
