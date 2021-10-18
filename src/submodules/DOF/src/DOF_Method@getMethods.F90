@@ -262,14 +262,22 @@ END PROCEDURE dof_getIndex3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_getIndex4
-  INTEGER( I4B ) :: jj, ii, tdof
-  tdof = .tdof. obj
-  ALLOCATE( ans( tdof * SIZE( nodeNum ) ) )
-  ans = 0
-  DO ii = 1, SIZE( nodeNum )
-    ans( (ii-1) * tdof + 1 : ii*tdof ) = getIndex( obj=obj, &
-      & nodeNum=nodeNum(ii) )
-  END DO
+  INTEGER( I4B ) :: jj, ii, tdof, nn
+  !> main
+  tdof = .tdof. obj; nn = SIZE(nodeNum); ALLOCATE(ans(tdof*nn)); ans = 0
+  SELECT CASE( obj%storageFMT )
+  CASE( FMT_NODES )
+    DO ii = 1, nn
+      ans( (ii-1)*tdof+1:ii*tdof ) = getIndex( obj=obj, &
+        & nodeNum=nodeNum(ii) )
+    END DO
+  CASE DEFAULT
+    DO jj = 1, tdof
+      DO ii = 1, nn
+        ans((jj-1)*nn + ii ) = getNodeLoc(obj=obj, inode=nodeNum(ii), idof=jj)
+      END DO
+    END DO
+  END SELECT
 END PROCEDURE dof_getIndex4
 
 !----------------------------------------------------------------------------
@@ -277,15 +285,26 @@ END PROCEDURE dof_getIndex4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_getIndex5
-  INTEGER( I4B ) :: jj, ii, tdof
-
-  tdof = obj .tdof. iVar
-  ALLOCATE( ans( tdof * SIZE( nodeNum ) ) )
-  ans = 0
-  DO ii = 1, SIZE( nodeNum )
-    ans( (ii-1) * tdof + 1 : ii*tdof ) = getIndex( obj=obj, &
-    & nodeNum=nodeNum(ii), iVar=iVar )
-  END DO
+  INTEGER( I4B ) :: jj, ii, tdof, nn
+  !> main
+  tdof = obj .tdof. iVar; nn=SIZE(nodeNum); ALLOCATE( ans(tdof*nn)); ans=0
+  SELECT CASE( obj%storageFMT )
+  CASE( FMT_NODES )
+    DO ii = 1, nn
+      ans( (ii-1) * tdof + 1 : ii*tdof ) = getIndex( obj=obj, &
+      & nodeNum=nodeNum(ii), iVar=iVar )
+    END DO
+  CASE DEFAULT
+    tdof = 0 ! usign tdof as counter
+    DO jj = ( obj .DOFStartIndex. ivar), (obj .DOFEndIndex. ivar)
+      tdof=tdof+1
+      DO ii = 1, nn
+        ans((tdof-1)*nn + ii ) = getNodeLoc(obj=obj, inode=nodeNum(ii),  &
+          & idof=jj)
+        ! here tdof is local counter
+      END DO
+    END DO
+  END SELECT
 END PROCEDURE dof_getIndex5
 
 !----------------------------------------------------------------------------
@@ -293,9 +312,8 @@ END PROCEDURE dof_getIndex5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_getIndex6
-  INTEGER( I4B ) :: iVar
-  iVar = NameToIndex( obj, varName )
-  ans = getIndex( obj=obj, iVar=iVar, nodeNum=nodeNum )
+  ans = getIndex( obj=obj, iVar=NameToIndex( obj, varName ), &
+    & nodeNum=nodeNum )
 END PROCEDURE dof_getIndex6
 
 !----------------------------------------------------------------------------

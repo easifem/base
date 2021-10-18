@@ -109,37 +109,59 @@ PURE SUBROUTINE setInternally( obj, nptrs, val )
   REAL( DFP ), INTENT( IN ) :: val( :, : )
   ! Internal variables
   INTEGER( I4B ), ALLOCATABLE :: row( : )
-  INTEGER( I4B ) :: i, j, k, n, tdof, m
-
-  n = SIZE( nptrs ); tdof = .tdof. obj%csr%dof
-  ALLOCATE( row( tdof*n ) )
-  IF( (.StorageFMT. obj) .EQ. FMT_NODES ) THEN
-    DO i = 1, n
-      DO j = 1, tdof
-        row(( i-1 )*tdof + j ) = (nptrs( i ) - 1)*tdof + j
-      END DO
-    END DO
-  ELSE
-    DO j = 1, tdof
-      m = obj%csr%dof%valmap( j + 1 ) - obj%csr%dof%valmap( j )
-      DO i = 1, n
-        row( ( j-1 )*n + i ) = ( j-1 )*m + nptrs( i )
-      END DO
-    END DO
-  END IF
-  !
-  DO i =1, SIZE( row )
-    DO k = 1, SIZE( row )
-      DO j = obj%csr%IA( row( i ) ), obj%csr%IA( row( i ) + 1 ) - 1
-        IF( obj%csr%JA( j ) .EQ. row( k ) ) THEN
-          obj%A( j ) = val( i, k )
+  INTEGER( I4B ) :: ii, jj, kk
+  !> main
+  row = getIndex( obj=obj%csr%dof, nodeNum=Nptrs )
+  DO ii =1, SIZE( row )
+    DO kk = 1, SIZE( row )
+      DO jj = obj%csr%IA( row( ii ) ), obj%csr%IA( row( ii ) + 1 ) - 1
+        IF( obj%csr%JA( jj ) .EQ. row( kk ) ) THEN
+          obj%A( jj ) = val( ii, kk )
           EXIT
         END IF
       END DO
     END DO
   END DO
-  DEALLOCATE( row )
+  IF( ALLOCATED( row ) ) DEALLOCATE( row )
 END SUBROUTINE setInternally
+
+! PURE SUBROUTINE setInternally( obj, nptrs, val )
+!   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+!   INTEGER( I4B ), INTENT( IN ) :: nptrs( : )
+!   REAL( DFP ), INTENT( IN ) :: val( :, : )
+!   ! Internal variables
+!   INTEGER( I4B ), ALLOCATABLE :: row( : )
+!   INTEGER( I4B ) :: i, j, k, n, tdof, m
+!   !> main
+!   n = SIZE( nptrs ); tdof = .tdof. obj%csr%dof
+!   ALLOCATE( row( tdof*n ) )
+!   IF( (.StorageFMT. obj) .EQ. FMT_NODES ) THEN
+!     DO i = 1, n
+!       DO j = 1, tdof
+!         row(( i-1 )*tdof + j ) = (nptrs( i ) - 1)*tdof + j
+!       END DO
+!     END DO
+!   ELSE
+!     DO j = 1, tdof
+!       m = obj%csr%dof%valmap( j + 1 ) - obj%csr%dof%valmap( j )
+!       DO i = 1, n
+!         row( ( j-1 )*n + i ) = ( j-1 )*m + nptrs( i )
+!       END DO
+!     END DO
+!   END IF
+!   !
+!   DO i =1, SIZE( row )
+!     DO k = 1, SIZE( row )
+!       DO j = obj%csr%IA( row( i ) ), obj%csr%IA( row( i ) + 1 ) - 1
+!         IF( obj%csr%JA( j ) .EQ. row( k ) ) THEN
+!           obj%A( j ) = val( i, k )
+!           EXIT
+!         END IF
+!       END DO
+!     END DO
+!   END DO
+!   DEALLOCATE( row )
+! END SUBROUTINE setInternally
 
 !----------------------------------------------------------------------------
 !                                                                       set
@@ -156,50 +178,30 @@ END SUBROUTINE setInternally
 ! - Symbolic we are performing following task `obj(nptrs, nptrs)=val`
 
 PURE SUBROUTINE setBlockInternally( obj, iNptrs, jNptrs, ivar, jvar, val )
-  ! TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  ! INTEGER( I4B ), INTENT( IN ) :: iNptrs( : )
-  ! INTEGER( I4B ), INTENT( IN ) :: jNptrs( : )
-  ! INTEGER( I4B ), INTENT( IN ) :: ivar
-  ! INTEGER( I4B ), INTENT( IN ) :: jvar
-  ! REAL( DFP ), INTENT( IN ) :: val( :, : )
-  ! ! Internal variables
-  ! INTEGER( I4B ), ALLOCATABLE :: row( : ), column( : )
-  ! INTEGER( I4B ) :: tnptrs_i, tnptrs_j, tdof_i, tdof_j, i, j
-  ! !> main
-  ! tnptrs_i = SIZE( iNptrs );
-  ! tnptrs_j = SIZE( jNptrs );
-  ! tdof_i = obj%csr%dof .tdof. ivar
-  ! tdof_j = obj%csr%dof .tdof. jvar
-  ! CALL Reallocate( row, tnptrs_i*tdof_i, col, tnptrs_j*tdof_j )
-  ! !>
-  ! IF( (.StorageFMT. obj) .EQ. FMT_NODES ) THEN
-  !   DO i = 1, tnptrs_i
-  !     DO j = 1, tdof_i
-  !       row( ( i-1 )*tdof_i + j ) = getIndex(obj=obj%csr%dof,  &
-  !         & nodeNum=iNptrs(i), ivar=ivar, idof=j )
-  !     END DO
-  !   END DO
-  ! ELSE
-  !   DO j = 1, tdof_i
-  !     m = obj%csr%dof .tnodes. j
-  !     DO i = 1, tnptrs_i
-  !       row( ( j-1 )*tnptrs_i + i ) = getIndex(obj=obj%csr%dof,  &
-  !         & nodeNum=iNptrs(i), ivar=ivar, idof=j )ptrs( i )
-  !     END DO
-  !   END DO
-  ! END IF
-  ! !
-  ! DO i =1, SIZE( row )
-  !   DO k = 1, SIZE( row )
-  !     DO j = obj%csr%IA( row( i ) ), obj%csr%IA( row( i ) + 1 ) - 1
-  !       IF( obj%csr%JA( j ) .EQ. row( k ) ) THEN
-  !         obj%A( j ) = val( i, k )
-  !         EXIT
-  !       END IF
-  !     END DO
-  !   END DO
-  ! END DO
-  ! DEALLOCATE( row )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: iNptrs( : )
+  INTEGER( I4B ), INTENT( IN ) :: jNptrs( : )
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  REAL( DFP ), INTENT( IN ) :: val( :, : )
+  ! Internal variables
+  INTEGER( I4B ), ALLOCATABLE :: row( : ), col( : )
+  INTEGER( I4B ) :: ii,jj,kk
+  !> main
+  row = getIndex( obj=obj%csr%dof, nodeNum=iNptrs, ivar=ivar )
+  col = getIndex( obj=obj%csr%dof, nodeNum=jNptrs, ivar=jvar )
+  DO ii =1, SIZE( row )
+    DO kk = 1, SIZE( col )
+      DO jj = obj%csr%IA( row( ii ) ), obj%csr%IA( row( ii ) + 1 ) - 1
+        IF( obj%csr%JA( jj ) .EQ. col( kk ) ) THEN
+          obj%A( jj ) = val( ii, kk )
+          EXIT
+        END IF
+      END DO
+    END DO
+  END DO
+  IF(ALLOCATED(row) ) DEALLOCATE( row )
+  IF(ALLOCATED(col) ) DEALLOCATE( col )
 END SUBROUTINE setBlockInternally
 
 !----------------------------------------------------------------------------
