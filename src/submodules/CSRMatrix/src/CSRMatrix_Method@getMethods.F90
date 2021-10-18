@@ -177,8 +177,8 @@ END PROCEDURE csrMat_getBlockRow1
 MODULE PROCEDURE csrMat_getBlockRow2
   CALL csrMat_getBlockRow1(  &
     & obj=obj, &
-    & jvar=jvar
-    & irow=getNodeLoc( obj=obj%csr%dof, idof=idof, inode=inode), &
+    & jvar=jvar, &
+    & irow=getIndex(obj=obj%csr%dof, idof=idof, nodeNum=inode, ivar=ivar), &
     & val=val, scale=scale, addContribution=addContribution )
 END PROCEDURE csrMat_getBlockRow2
 
@@ -224,5 +224,83 @@ MODULE PROCEDURE csrMat_getColumn2
     & val=val, scale=scale, &
     & addContribution=addContribution )
 END PROCEDURE csrMat_getColumn2
+
+!----------------------------------------------------------------------------
+!                                                            getBlockColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_getBlockColumn1
+  INTEGER( I4B ) :: jj, ii, c(3), row_start, row_end
+  REAL( DFP ) :: alpha
+  CLASS( DOF_ ), POINTER :: dofobj
+  !>check
+  IF( SIZE( val ) .LT. obj%csr%nrow ) THEN
+    CALL ErrorMSG(  &
+      & Msg="SIZE of column vector is less than the number of row &
+      & in sparse matrix", &
+      & File = "CSRMatrix_Method@getMethod.F90", &
+      & Routine = "csrMat_getBlockColumn1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  !>check
+  IF( iColumn .GT. SIZE(obj, 2) ) THEN
+    CALL ErrorMSG(  &
+      & Msg="iColumn is out of Bound", &
+      & File = "CSRMatrix_Method@getMethod.F90", &
+      & Routine = "csrMat_getBlockColumn1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  !>check
+  dofobj => getDOFPointer( obj )
+  IF( ivar .GT. (.tNames. dofobj) ) THEN
+    CALL ErrorMSG(  &
+      & Msg="ivar is out of Bound", &
+      & File = "CSRMatrix_Method@getMethod.F90", &
+      & Routine = "csrMat_getBlockColumn1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  !>check
+  IF( (.StorageFMT. obj ) .NE. FMT_DOF ) THEN
+    CALL ErrorMSG(  &
+      & Msg="For this rotuine storage format should FMT_DOF", &
+      & File = "CSRMatrix_Method@getMethod.F90", &
+      & Routine = "csrMat_getBlockColumn1", Line= __LINE__ , UnitNo=stdout )
+    RETURN
+  END IF
+  ! start, end, stride
+  c = getNodeLoc( dofobj, (dofobj .DOFStartIndex. ivar) )
+  row_start = c( 1 ) ! start
+  c = getNodeLoc( dofobj, (dofobj .DOFEndIndex. ivar) )
+  row_end = c( 2 ) ! end
+  IF( PRESENT( addContribution ) ) THEN
+    alpha = INPUT( Default=1.0_DFP, Option=scale )
+    DO ii = row_start, row_end
+      val( ii ) = 0.0_DFP
+      DO jj = obj%csr%IA( ii ), obj%csr%IA( ii+1 ) - 1
+        IF( obj%csr%JA(jj) .EQ. iColumn ) val(ii) = val(ii)+alpha*obj%A(jj)
+      END DO
+    END DO
+  ELSE
+    DO ii = row_start, row_end
+      val( ii ) = 0.0_DFP
+      DO jj = obj%csr%IA( ii ), obj%csr%IA( ii+1 ) - 1
+        IF( obj%csr%JA(jj) .EQ. iColumn ) val( ii ) = obj%A( jj )
+      END DO
+    END DO
+  END IF
+END PROCEDURE csrMat_getBlockColumn1
+
+!----------------------------------------------------------------------------
+!                                                            getBlockColumn
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_getBlockColumn2
+  CALL csrMat_getBlockColumn1(  &
+    & obj=obj, &
+    & ivar=ivar, &
+    & iColumn=getIndex(obj=obj%csr%dof, idof=idof, &
+    & nodeNum=inode, ivar=jvar), &
+    & val=val, scale=scale, addContribution=addContribution )
+END PROCEDURE csrMat_getBlockColumn2
 
 END SUBMODULE getMethods

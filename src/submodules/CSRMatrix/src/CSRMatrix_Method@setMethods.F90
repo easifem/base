@@ -17,7 +17,7 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
-! summary: 	This submodule contains method for setting values in [[CSRMatrix_]]
+! summary: It contains method for setting values in [[CSRMatrix_]]
 
 SUBMODULE(CSRMatrix_Method) setMethods
 USE BaseMethod
@@ -113,7 +113,7 @@ PURE SUBROUTINE setInternally( obj, nptrs, val )
 
   n = SIZE( nptrs ); tdof = .tdof. obj%csr%dof
   ALLOCATE( row( tdof*n ) )
-  IF( obj%csr%dof%storageFMT .EQ. NODES_FMT ) THEN
+  IF( (.StorageFMT. obj) .EQ. FMT_NODES ) THEN
     DO i = 1, n
       DO j = 1, tdof
         row(( i-1 )*tdof + j ) = (nptrs( i ) - 1)*tdof + j
@@ -145,21 +145,82 @@ END SUBROUTINE setInternally
 !                                                                       set
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: This subroutine set the value in [[CSRMatrix_]]
+!
+!# Introduction
+! This subroutine sets the value in [[CSRMatrix_]]
+! - Shape( val ) = [SIZE(nptrs)*tdof, SIZE(nptrs)*tdof]
+! - Usually `val` denotes the element matrix
+! - Symbolic we are performing following task `obj(nptrs, nptrs)=val`
+
+PURE SUBROUTINE setBlockInternally( obj, iNptrs, jNptrs, ivar, jvar, val )
+  ! TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  ! INTEGER( I4B ), INTENT( IN ) :: iNptrs( : )
+  ! INTEGER( I4B ), INTENT( IN ) :: jNptrs( : )
+  ! INTEGER( I4B ), INTENT( IN ) :: ivar
+  ! INTEGER( I4B ), INTENT( IN ) :: jvar
+  ! REAL( DFP ), INTENT( IN ) :: val( :, : )
+  ! ! Internal variables
+  ! INTEGER( I4B ), ALLOCATABLE :: row( : ), column( : )
+  ! INTEGER( I4B ) :: tnptrs_i, tnptrs_j, tdof_i, tdof_j, i, j
+  ! !> main
+  ! tnptrs_i = SIZE( iNptrs );
+  ! tnptrs_j = SIZE( jNptrs );
+  ! tdof_i = obj%csr%dof .tdof. ivar
+  ! tdof_j = obj%csr%dof .tdof. jvar
+  ! CALL Reallocate( row, tnptrs_i*tdof_i, col, tnptrs_j*tdof_j )
+  ! !>
+  ! IF( (.StorageFMT. obj) .EQ. FMT_NODES ) THEN
+  !   DO i = 1, tnptrs_i
+  !     DO j = 1, tdof_i
+  !       row( ( i-1 )*tdof_i + j ) = getIndex(obj=obj%csr%dof,  &
+  !         & nodeNum=iNptrs(i), ivar=ivar, idof=j )
+  !     END DO
+  !   END DO
+  ! ELSE
+  !   DO j = 1, tdof_i
+  !     m = obj%csr%dof .tnodes. j
+  !     DO i = 1, tnptrs_i
+  !       row( ( j-1 )*tnptrs_i + i ) = getIndex(obj=obj%csr%dof,  &
+  !         & nodeNum=iNptrs(i), ivar=ivar, idof=j )ptrs( i )
+  !     END DO
+  !   END DO
+  ! END IF
+  ! !
+  ! DO i =1, SIZE( row )
+  !   DO k = 1, SIZE( row )
+  !     DO j = obj%csr%IA( row( i ) ), obj%csr%IA( row( i ) + 1 ) - 1
+  !       IF( obj%csr%JA( j ) .EQ. row( k ) ) THEN
+  !         obj%A( j ) = val( i, k )
+  !         EXIT
+  !       END IF
+  !     END DO
+  !   END DO
+  ! END DO
+  ! DEALLOCATE( row )
+END SUBROUTINE setBlockInternally
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE csrMat_set1
   REAL( DFP ), ALLOCATABLE :: Mat( :, : )
   INTEGER( I4B ) :: tdof
   !> main
   tdof = .tdof. obj%csr%dof
   SELECT CASE( storageFMT )
-  CASE( NODES_FMT )
-    IF( obj%csr%dof%storageFMT .EQ. NODES_FMT ) THEN
+  CASE( FMT_NODES )
+    IF( (.StorageFMT. obj) .EQ. FMT_NODES ) THEN
       Mat = val
     ELSE
       CALL Convert( From = val, To = Mat, Conversion = NodesToDOF, &
         & nns = SIZE( nptrs ), tDOF = tdof )
     END IF
-  CASE( DOF_FMT )
-    IF( obj%csr%dof%storageFMT .EQ. DOF_FMT ) THEN
+  CASE( FMT_DOF )
+    IF( (.StorageFMT. obj) .EQ. FMT_DOF ) THEN
       Mat=val
     ELSE
       CALL Convert( From = val, To = Mat, Conversion = DofToNodes, &
@@ -207,8 +268,8 @@ END PROCEDURE csrMat_set4
 MODULE PROCEDURE csrMat_set5
   REAL( DFP ), ALLOCATABLE :: mat( :, : )
   INTEGER( I4B ) :: tdof
-  tdof = .tdof. obj%csr%dof
-  ALLOCATE( mat( tdof*SIZE(nptrs), tdof*SIZE(nptrs) ) )
+  tdof = .tdof. (obj%csr%dof)
+  CALL Reallocate( mat, tdof, tdof )
   mat=val
   CALL setInternally( obj, nptrs, mat )
   IF( ALLOCATED( mat ) ) DEALLOCATE( mat )
@@ -234,7 +295,7 @@ PURE SUBROUTINE addContributionInternally( obj, nptrs, val, Scale )
   n = SIZE( nptrs ); tdof = .tdof. obj%csr%dof
   ALLOCATE( row( tdof*n ) )
   !
-  IF( obj%csr%dof%storageFMT .EQ. NODES_FMT ) THEN
+  IF( obj%csr%dof%storageFMT .EQ. FMT_NODES ) THEN
     DO i = 1, n
       DO j = 1, tdof
         row( ( i - 1 ) * tdof + j ) = ( nptrs( i ) - 1 ) * tdof + j
@@ -272,15 +333,15 @@ MODULE PROCEDURE csrMat_add1
   !
   tdof = .tdof. obj%csr%dof
   SELECT CASE( storageFMT )
-  CASE( NODES_FMT )
-    IF( obj%csr%dof%storageFMT .EQ. NODES_FMT ) THEN
+  CASE( FMT_NODES )
+    IF( obj%csr%dof%storageFMT .EQ. FMT_NODES ) THEN
       mat = val
     ELSE
       CALL Convert( From = val, To = mat, Conversion = NodesToDOF, &
         & nns = SIZE( nptrs ), tDOF = tdof )
     END IF
-  CASE( DOF_FMT )
-    IF( obj%csr%dof%storageFMT .EQ. DOF_FMT ) THEN
+  CASE( FMT_DOF )
+    IF( obj%csr%dof%storageFMT .EQ. FMT_DOF ) THEN
       mat=val
     ELSE
       CALL Convert( From = val, To = mat, Conversion = DofToNodes, &

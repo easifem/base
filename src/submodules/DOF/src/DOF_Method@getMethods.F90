@@ -220,7 +220,6 @@ MODULE PROCEDURE dof_getIndex1
       ans( ii ) = (nodeNum - 1) * jj + ii
     END DO
   END SELECT
-
 END PROCEDURE dof_getIndex1
 
 !----------------------------------------------------------------------------
@@ -298,6 +297,34 @@ MODULE PROCEDURE dof_getIndex6
   iVar = NameToIndex( obj, varName )
   ans = getIndex( obj=obj, iVar=iVar, nodeNum=nodeNum )
 END PROCEDURE dof_getIndex6
+
+!----------------------------------------------------------------------------
+!                                                                getIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_getIndex7
+  INTEGER( I4B ) :: ii
+  !> main
+  SELECT CASE( obj%storageFMT )
+  CASE( DOF_FMT )
+    ii = obj%map( iVar, 5) - 1 + idof
+    ans = obj%ValMap( ii ) + nodeNum - 1
+  CASE( NODES_FMT )
+    ii = obj%map( iVar, 5) - 1 + idof
+    ans = (nodeNum-1)*(.tdof. obj) + ii
+  END SELECT
+END PROCEDURE dof_getIndex7
+
+!----------------------------------------------------------------------------
+!                                                                getIndex
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE dof_getIndex8
+  INTEGER( I4B ) :: ii
+  DO ii = 1, SIZE(nodeNum)
+    ans( ii ) = getIndex( obj=obj, nodeNum=nodeNum(ii), ivar=ivar, idof=idof)
+  END DO
+END PROCEDURE dof_getIndex8
 
 !----------------------------------------------------------------------------
 !                                                            tSpaceComponents
