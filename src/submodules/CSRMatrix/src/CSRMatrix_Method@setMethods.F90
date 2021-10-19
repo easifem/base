@@ -167,47 +167,6 @@ END SUBROUTINE setInternally
 !                                                                       set
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: This subroutine set the value in [[CSRMatrix_]]
-!
-!# Introduction
-! This subroutine sets the value in [[CSRMatrix_]]
-! - Shape( val ) = [SIZE(nptrs)*tdof, SIZE(nptrs)*tdof]
-! - Usually `val` denotes the element matrix
-! - Symbolic we are performing following task `obj(nptrs, nptrs)=val`
-
-PURE SUBROUTINE setBlockInternally( obj, iNptrs, jNptrs, ivar, jvar, val )
-  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: iNptrs( : )
-  INTEGER( I4B ), INTENT( IN ) :: jNptrs( : )
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: jvar
-  REAL( DFP ), INTENT( IN ) :: val( :, : )
-  ! Internal variables
-  INTEGER( I4B ), ALLOCATABLE :: row( : ), col( : )
-  INTEGER( I4B ) :: ii,jj,kk
-  !> main
-  row = getIndex( obj=obj%csr%dof, nodeNum=iNptrs, ivar=ivar )
-  col = getIndex( obj=obj%csr%dof, nodeNum=jNptrs, ivar=jvar )
-  DO ii =1, SIZE( row )
-    DO kk = 1, SIZE( col )
-      DO jj = obj%csr%IA( row( ii ) ), obj%csr%IA( row( ii ) + 1 ) - 1
-        IF( obj%csr%JA( jj ) .EQ. col( kk ) ) THEN
-          obj%A( jj ) = val( ii, kk )
-          EXIT
-        END IF
-      END DO
-    END DO
-  END DO
-  IF(ALLOCATED(row) ) DEALLOCATE( row )
-  IF(ALLOCATED(col) ) DEALLOCATE( col )
-END SUBROUTINE setBlockInternally
-
-!----------------------------------------------------------------------------
-!                                                                       set
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE csrMat_set1
   REAL( DFP ), ALLOCATABLE :: Mat( :, : )
   INTEGER( I4B ) :: tdof
@@ -276,6 +235,56 @@ MODULE PROCEDURE csrMat_set5
   CALL setInternally( obj, nptrs, mat )
   IF( ALLOCATED( mat ) ) DEALLOCATE( mat )
 END PROCEDURE csrMat_set5
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: This subroutine set the value in [[CSRMatrix_]]
+!
+!# Introduction
+! This subroutine sets the value in [[CSRMatrix_]]
+! - Shape( val ) = [SIZE(nptrs)*tdof, SIZE(nptrs)*tdof]
+! - Usually `val` denotes the element matrix
+! - Symbolic we are performing following task `obj(nptrs, nptrs)=val`
+
+PURE SUBROUTINE setBlockInternally( obj, iNptrs, jNptrs, ivar, jvar, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: iNptrs( : )
+  INTEGER( I4B ), INTENT( IN ) :: jNptrs( : )
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  REAL( DFP ), INTENT( IN ) :: val( :, : )
+  ! Internal variables
+  INTEGER( I4B ), ALLOCATABLE :: row( : ), col( : )
+  INTEGER( I4B ) :: ii,jj,kk
+  !> main
+  row = getIndex( obj=obj%csr%dof, nodeNum=iNptrs, ivar=ivar )
+  col = getIndex( obj=obj%csr%dof, nodeNum=jNptrs, ivar=jvar )
+  DO ii =1, SIZE( row )
+    DO kk = 1, SIZE( col )
+      DO jj = obj%csr%IA( row( ii ) ), obj%csr%IA( row( ii ) + 1 ) - 1
+        IF( obj%csr%JA( jj ) .EQ. col( kk ) ) THEN
+          obj%A( jj ) = val( ii, kk )
+          EXIT
+        END IF
+      END DO
+    END DO
+  END DO
+  IF(ALLOCATED(row) ) DEALLOCATE( row )
+  IF(ALLOCATED(col) ) DEALLOCATE( col )
+END SUBROUTINE setBlockInternally
+
+!----------------------------------------------------------------------------
+!                                                                       set
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_set6
+  CALL setBlockInternally(obj=obj, iNptrs=iNptrs, jNptrs=jNptrs, &
+    & ivar=ivar, jvar=jvar, val=val  )
+END PROCEDURE csrMat_set6
 
 !----------------------------------------------------------------------------
 !                                                            addContribution
