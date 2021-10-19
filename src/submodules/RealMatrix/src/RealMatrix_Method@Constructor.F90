@@ -187,8 +187,8 @@ END PROCEDURE eye_obj
 MODULE PROCEDURE convert_doftonodes
   INTEGER( I4B ) :: m, inode, idof, i, j
   INTEGER( I4B ), ALLOCATABLE :: T( :, : )
-
-  m = nns * tdof
+  !> main
+  m = nns*tdof
   ALLOCATE( T( m, m ) )
   T = Eye( m, TypeInt )
   SELECT CASE( Conversion )
@@ -213,7 +213,6 @@ MODULE PROCEDURE convert_doftonodes
   END SELECT
   to = MATMUL( TRANSPOSE( T ), MATMUL( from, T ) )
   DEALLOCATE( T )
-
 END PROCEDURE convert_doftonodes
 
 !----------------------------------------------------------------------------

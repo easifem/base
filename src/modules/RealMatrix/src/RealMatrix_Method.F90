@@ -539,7 +539,13 @@ PUBLIC :: Eye
 ! [[SparseMatrix_]].
 !
 ! > This subroutine converts changes the storage format of dense matrix.
-! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global ! matrix/ tanmat, may be stored in `Nodes_FMT`.
+! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global
+! matrix/ tanmat, may be stored in `Nodes_FMT`.
+!
+!@note
+! All dof should have the same order of interpolation, therefore,
+! this routine works when matrix is square.
+!@endnote
 !
 !### Usage
 !
@@ -555,7 +561,7 @@ MODULE PURE SUBROUTINE convert_DofToNodes( From, To, Conversion, nns, tdof )
     !! Matrix is desired format
   INTEGER( I4B ), INTENT( IN ) :: Conversion
     !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nns, tdof
+  INTEGER( I4B ), INTENT( IN ) :: nns, tdof
 END SUBROUTINE convert_DofToNodes
 END INTERFACE
 
@@ -576,7 +582,8 @@ END INTERFACE
 ! [[SparseMatrix_]].
 !
 ! > This subroutine converts changes the storage format of dense matrix.
-! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global ! matrix/ tanmat, may be stored in `Nodes_FMT`.
+! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global
+! matrix/ tanmat, may be stored in `Nodes_FMT`.
 !
 !### Usage
 !
@@ -592,7 +599,7 @@ MODULE PURE SUBROUTINE realmat_convert_doftonodes(  From, To, Conversion, &
     !! Matrix in one format
   INTEGER( I4B ), INTENT( IN ) :: Conversion
     !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nns, tdof
+  INTEGER( I4B ), INTENT( IN ) :: nns, tdof
 END SUBROUTINE realmat_convert_doftonodes
 END INTERFACE
 
@@ -1367,9 +1374,12 @@ END INTERFACE
 !# Introduction
 !
 ! This subroutine set values in `obj%l`
-! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx` denotes diagonal number with `0` being the main diagonal
-! - If `Extraoption=MATRIX_ROW` then row values are set; `Indx` then denotes row number
-! - If `Extraoption=MATRIX_COLUMN` then col values are set; `Indx` then denotes col number
+! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx`
+! denotes diagonal number with `0` being the main diagonal
+! - If `Extraoption=MATRIX_ROW` then row values are set; `Indx` then denotes
+! row number
+! - If `Extraoption=MATRIX_COLUMN` then col values are set; `Indx` then
+! denotes col number
 !
 !### Usage
 !
@@ -1397,9 +1407,12 @@ END INTERFACE
 !# Introduction
 !
 ! This subroutine set values in `obj%l`
-! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx` denotes the diagonal number with `0` being the main diagonal
-! - If `Extraoption=ROW` then row values are set; `Indx` then denotes row number
-! - If `Extraoption=COLUMN` then col values are set; `Indx` then denotes col number
+! - If `ExtraOption=MATRIX_DIAGONAL` then diagonal values are set; and `Indx`
+! denotes the diagonal number with `0` being the main diagonal
+! - If `Extraoption=ROW` then row values are set; `Indx` then denotes row
+! number
+! - If `Extraoption=COLUMN` then col values are set; `Indx` then denotes col
+! number
 !
 !### Usage
 !
@@ -1436,7 +1449,8 @@ PUBLIC :: setValues
 !
 !# Introduction
 !
-! This subroutine adds contribution in values of `obj%l`. This subroutine performs following task:
+! This subroutine adds contribution in values of `obj%l`. This subroutine
+! performs following task:
 !
 ! $$obj = obj <op> scale * val $$
 !
@@ -1554,7 +1568,8 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_5( obj, Val, Indx, ExtraOption, Scale, Op )
+MODULE PURE SUBROUTINE realmat_addVal_5( obj, Val, Indx, ExtraOption, &
+  & Scale, Op )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )

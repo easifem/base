@@ -918,9 +918,40 @@ MODULE PURE SUBROUTINE csrMat_set5( obj, nptrs, val )
 END SUBROUTINE csrMat_set5
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!                                                            set@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: This subroutine set the value in sparse matrix
+!
+!# Introduction
+!
+! This subroutine sets the values in block sparse matrix. The storage pattern
+! of both sparse matrix and val (the element matrix) should be
+! in `FMT_DOF`.
+!
+!$$
+! obj(Nptrs,Nptrs)=Val(:,:)
+!$$
+!
+
+INTERFACE
+MODULE PURE SUBROUTINE csrMat_set6( obj, iNptrs, jNptrs,  &
+  & ivar, jvar, val )
+  TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: iNptrs( : )
+  INTEGER( I4B ), INTENT( IN ) :: jNptrs( : )
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+  REAL( DFP ), INTENT( IN ) :: val( :, : )
+END SUBROUTINE csrMat_set6
+END INTERFACE
+
 INTERFACE set
   MODULE PROCEDURE csrMat_set1, csrMat_set2, csrMat_set3, csrMat_set4, &
-    & csrMat_set5
+    & csrMat_set5, csrMat_set6
 END INTERFACE set
 
 PUBLIC :: set
