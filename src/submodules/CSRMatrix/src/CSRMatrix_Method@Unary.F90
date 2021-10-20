@@ -71,7 +71,7 @@ CONTAINS
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE crsMat_convert_internally
+MODULE PROCEDURE crsMat_Convert1
   INTEGER( I4B ) :: i, j, nrow
   nrow = SIZE( IA ) - 1
   CALL Reallocate( mat, nrow, nrow )
@@ -80,17 +80,26 @@ MODULE PROCEDURE crsMat_convert_internally
       mat( i, JA( j ) ) = A( j )
     END DO
   END DO
-END PROCEDURE crsMat_convert_internally
+END PROCEDURE crsMat_Convert1
 
 !----------------------------------------------------------------------------
 !                                                                    Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE crsMat_Convert
-  INTEGER( I4B ) :: i, j
-  CALL crsMat_convert_internally( A=From%A, IA=From%csr%IA, JA=From%csr%JA, &
+MODULE PROCEDURE crsMat_Convert2
+  CALL crsMat_Convert1( A=From%A, IA=From%csr%IA, JA=From%csr%JA, &
     & mat=To )
-END PROCEDURE crsMat_Convert
+END PROCEDURE crsMat_Convert2
+
+!----------------------------------------------------------------------------
+!                                                                    Convert
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE crsMat_Convert3
+  CALL Convert( A=From%A, IA=From%csr%IA, JA=From%csr%JA, &
+    & mat=To%val )
+  CALL setTotalDimension( To, 2_I4B )
+END PROCEDURE crsMat_Convert3
 
 !----------------------------------------------------------------------------
 !                                                                    ColSORT
