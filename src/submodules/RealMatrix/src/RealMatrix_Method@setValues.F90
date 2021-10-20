@@ -24,31 +24,31 @@ CONTAINS
 !                                                                 setValues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_setValues_1
+MODULE PROCEDURE realmat_set_1
   obj%Val = Val
-END PROCEDURE realmat_setValues_1
+END PROCEDURE realmat_set_1
 
 !----------------------------------------------------------------------------
 !                                                                 setValues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_setValues_2
+MODULE PROCEDURE realmat_set_2
   obj%Val( Row, Col ) = Val
-END PROCEDURE realmat_setValues_2
+END PROCEDURE realmat_set_2
 
 !----------------------------------------------------------------------------
 !                                                                 setValues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_setValues_3
+MODULE PROCEDURE realmat_set_3
   obj%Val( Row, Col ) = Val
-END PROCEDURE realmat_setValues_3
+END PROCEDURE realmat_set_3
 
 !----------------------------------------------------------------------------
 !                                                                 setValues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_setValues_4
+MODULE PROCEDURE realmat_set_4
   INTEGER( I4B ) :: i
   !
   SELECT CASE( ExtraOption )
@@ -73,13 +73,13 @@ MODULE PROCEDURE realmat_setValues_4
       obj%Val( 1:SIZE( Val ), Indx ) = Val
     END IF
   END SELECT
-END PROCEDURE realmat_setValues_4
+END PROCEDURE realmat_set_4
 
 !----------------------------------------------------------------------------
 !                                                                  setValues
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_setValues_5
+MODULE PROCEDURE realmat_set_5
   INTEGER( I4B ) :: i, j
   !
   SELECT CASE( ExtraOption )
@@ -107,13 +107,21 @@ MODULE PROCEDURE realmat_setValues_5
       obj%Val( :, Indx( j ) ) = Val( :, j )
     END DO
   END SELECT
-END PROCEDURE realmat_setValues_5
+END PROCEDURE realmat_set_5
+
+!----------------------------------------------------------------------------
+!                                                                  setValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realmat_set_6
+  obj%Val=1.0_DFP
+END PROCEDURE realmat_set_6
 
 !----------------------------------------------------------------------------
 !                                                            addContribution
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_addVal_1
+MODULE PROCEDURE realmat_add_1
   SELECT CASE( IACHAR( Op ) )
   CASE( 43 )
     ! +
@@ -128,13 +136,13 @@ MODULE PROCEDURE realmat_addVal_1
     ! /
     obj%Val = ( obj%Val / Val ) / Scale
   END SELECT
-END PROCEDURE realmat_addVal_1
+END PROCEDURE realmat_add_1
 
 !----------------------------------------------------------------------------
 !                                                            addContribution
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_addVal_2
+MODULE PROCEDURE realmat_add_2
   SELECT CASE( IACHAR( Op ) )
   CASE( 43 )
     ! +
@@ -149,13 +157,13 @@ MODULE PROCEDURE realmat_addVal_2
     ! /
     obj%Val( Row, Col ) = obj%Val( Row, Col ) / Val / Scale
   END SELECT
-END PROCEDURE realmat_addVal_2
+END PROCEDURE realmat_add_2
 
 !----------------------------------------------------------------------------
-!                                                           realmat_addVal_3
+!                                                           realmat_add_3
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_addVal_3
+MODULE PROCEDURE realmat_add_3
   SELECT CASE( IACHAR( Op ) )
   CASE( 43 )
     ! +
@@ -170,13 +178,13 @@ MODULE PROCEDURE realmat_addVal_3
     ! /
     obj%Val( Row, Col ) = obj%Val( Row, Col ) / Val / Scale
   END SELECT
-END PROCEDURE realmat_addVal_3
+END PROCEDURE realmat_add_3
 
 !----------------------------------------------------------------------------
-!                                                           realmat_addVal_4
+!                                                           realmat_add_4
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_addVal_4
+MODULE PROCEDURE realmat_add_4
   INTEGER( I4B ) :: i
   SELECT CASE( IACHAR( Op ) )
   CASE( 43 )
@@ -280,13 +288,13 @@ MODULE PROCEDURE realmat_addVal_4
       END IF
     END SELECT
   END SELECT
-END PROCEDURE realmat_addVal_4
+END PROCEDURE realmat_add_4
 
 !----------------------------------------------------------------------------
 !                                                           addContribution
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_addVal_5
+MODULE PROCEDURE realmat_add_5
   INTEGER( I4B ) :: i, j
   !
   SELECT CASE( IACHAR( Op ) )
@@ -414,6 +422,6 @@ MODULE PROCEDURE realmat_addVal_5
       END DO
     END SELECT
   END SELECT
-END PROCEDURE realmat_addVal_5
+END PROCEDURE realmat_add_5
 
 END SUBMODULE setValues

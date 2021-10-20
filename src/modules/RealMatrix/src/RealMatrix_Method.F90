@@ -278,10 +278,33 @@ PUBLIC :: DeallocateData
 ! The above call will initiate a matrix of shape (2,3)
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj( obj, Dims )
+MODULE PURE SUBROUTINE realmat_initiate1( obj, Dims )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: Dims( 2 )
-END SUBROUTINE initiate_obj
+END SUBROUTINE realmat_initiate1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       Initiate@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine initiate `obj` with shape `Dims`
+!
+!### Usage
+!
+!```fortran
+!	call initiate( obj, [2,3] )
+!```
+! The above call will initiate a matrix of shape (2,3)
+
+INTERFACE
+MODULE PURE SUBROUTINE realmat_initiate2( obj, nrow, ncol )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nrow
+  INTEGER( I4B ), INTENT( IN ) :: ncol
+END SUBROUTINE realmat_initiate2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -290,7 +313,7 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
-! summary: 	This subroutine initiate vector of [[realmatrix_]] with shape `Dims`
+! summary: 	Initiate vector of [[realmatrix_]] with shape `Dims`
 !
 !### Usage
 !
@@ -301,10 +324,10 @@ END INTERFACE
 ! The above call will initiate `obj` vector of matrices of shape (2,3)
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_vector_a( obj, Dims )
+MODULE PURE SUBROUTINE realmat_initiate3( obj, Dims )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj( : )
   INTEGER( I4B ), INTENT( IN ) :: Dims( 2 )
-END SUBROUTINE initiate_obj_vector_a
+END SUBROUTINE realmat_initiate3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -341,10 +364,10 @@ END INTERFACE
 ! - The above call will initiate a obj( 3 ) with shape (4,4)
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_vector_b( obj, Dims )
+MODULE PURE SUBROUTINE realmat_initiate4( obj, Dims )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj( : )
   INTEGER( I4B ), INTENT( IN ) :: Dims( :, : )
-END SUBROUTINE initiate_obj_vector_b
+END SUBROUTINE realmat_initiate4
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -362,10 +385,10 @@ END INTERFACE
 ! ```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_val( obj, Val )
+MODULE PURE SUBROUTINE realmat_initiate5( obj, Val )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
-END SUBROUTINE initiate_obj_val
+END SUBROUTINE realmat_initiate5
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -373,14 +396,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE Initiate
-  MODULE PROCEDURE initiate_obj_vector_a, initiate_obj_vector_b, &
-    & initiate_obj, initiate_obj_val
+  MODULE PROCEDURE realmat_initiate1, realmat_initiate2, &
+    & realmat_initiate3, realmat_initiate4, realmat_initiate5
 END INTERFACE Initiate
 
 PUBLIC :: Initiate
 
 INTERFACE ASSIGNMENT( = )
-  MODULE PROCEDURE initiate_obj_val
+  MODULE PROCEDURE realmat_initiate5
 END INTERFACE
 
 PUBLIC :: ASSIGNMENT( = )
@@ -434,10 +457,10 @@ PUBLIC :: RealMatrix
 !```
 
 INTERFACE
-MODULE PURE FUNCTION eye_int( m, DataType ) RESULT( Ans )
+MODULE PURE FUNCTION realMat_eye1( m, DataType ) RESULT( Ans )
   INTEGER( I4B ), INTENT( IN ) :: m, DataType
   INTEGER( I4B ) :: Ans( m, m )
-END FUNCTION eye_int
+END FUNCTION realMat_eye1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -457,11 +480,11 @@ INTERFACE
 !	e = eye( 5, 1.0_dfp )
 ! ```
 
-MODULE PURE FUNCTION eye_real( m, DataType ) RESULT( Ans )
+MODULE PURE FUNCTION realMat_eye2( m, DataType ) RESULT( Ans )
   INTEGER( I4B ), INTENT( IN ) :: m
-  REAL( DFP ) :: Ans( m, m )
-  REAL( DFP ), INTENT( IN ) :: DataType
-END FUNCTION eye_real
+  REAL( Real64 ) :: Ans( m, m )
+  REAL( Real64 ), INTENT( IN ) :: DataType
+END FUNCTION realMat_eye2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -481,11 +504,11 @@ INTERFACE
 !	obj = eye( 3, typeRealMatrix )
 ! ```
 
-MODULE PURE FUNCTION eye_obj( m, DataType ) RESULT( Ans )
+MODULE PURE FUNCTION realMat_eye3( m, DataType ) RESULT( Ans )
   INTEGER( I4B ), INTENT( IN ) :: m
-  TYPE( RealMatrix_ ) :: Ans
   TYPE( RealMatrix_ ), INTENT( IN ) ::  DataType
-END FUNCTION eye_obj
+  TYPE( RealMatrix_ ) :: Ans
+END FUNCTION realMat_eye3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -505,10 +528,34 @@ INTERFACE
 !	e = eye( 4 )
 ! ```
 
-MODULE PURE FUNCTION eye_real_b( m ) RESULT( Ans )
+MODULE PURE FUNCTION realMat_eye4( m ) RESULT( Ans )
   INTEGER( I4B ), INTENT( IN ) :: m
   REAL( DFP ) :: Ans( m, m )
-END FUNCTION eye_real_b
+END FUNCTION realMat_eye4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            Eye@Constructor
+!----------------------------------------------------------------------------
+
+INTERFACE
+!! Return identity matrix of real numbers
+
+!> authors: Dr. Vikas Sharma
+!
+! This function returns identity matrux of reals
+!
+!### Usage
+!
+! ```fortran
+!	e = eye( 5, 1.0_dfp )
+! ```
+
+MODULE PURE FUNCTION realMat_eye5( m, DataType ) RESULT( Ans )
+  INTEGER( I4B ), INTENT( IN ) :: m
+  REAL( Real32 ) :: Ans( m, m )
+  REAL( Real32 ), INTENT( IN ) :: DataType
+END FUNCTION realMat_eye5
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -517,7 +564,8 @@ END INTERFACE
 
 !> Generic interface for obtaining identity matrix in array or [[realmatrix_]]
 INTERFACE Eye
-  MODULE PROCEDURE eye_int, eye_obj, eye_real, eye_real_b
+  MODULE PROCEDURE realMat_eye1, realMat_eye3, realMat_eye2, realMat_eye4,  &
+    & realMat_eye5
 END INTERFACE Eye
 
 PUBLIC :: Eye
@@ -783,7 +831,8 @@ PUBLIC :: SkewSym
 !
 !# Introduction
 !
-! This subroutine makes `ncopy` diagonal copies of `Mat` The size of `Mat` on return is nCopy * SIZE( Mat, 1 )
+! This subroutine makes `ncopy` diagonal copies of `Mat` The size of `Mat` on
+! return is nCopy * SIZE( Mat, 1 )
 !
 !### Usage
 !
@@ -830,7 +879,8 @@ END INTERFACE
 ! date: 	6 March 2021
 ! summary: Make diagonal copies of [[realmatrix_]]
 !
-! This subroutine makes `ncopy` diagonal copies of `Mat`, The size of `Mat` on return is nCopy * SIZE( Mat, 1 )
+! This subroutine makes `ncopy` diagonal copies of `Mat`, The size of `Mat`
+! on return is nCopy * SIZE( Mat, 1 )
 !
 !### Usage
 !
@@ -1309,10 +1359,10 @@ PUBLIC :: ArrayPointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_setValues_1( obj, Val )
+MODULE PURE SUBROUTINE realmat_set_1( obj, Val )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
-END SUBROUTINE realmat_setValues_1
+END SUBROUTINE realmat_set_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1335,11 +1385,11 @@ INTERFACE
 !
 !```
 
-MODULE PURE SUBROUTINE realmat_setValues_2( obj, Val, Row, Col )
+MODULE PURE SUBROUTINE realmat_set_2( obj, Val, Row, Col )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val
   INTEGER( I4B ), INTENT( IN ) :: Col, Row
-END SUBROUTINE realmat_setValues_2
+END SUBROUTINE realmat_set_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1356,11 +1406,11 @@ END INTERFACE
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_setValues_3( obj, Val, Row, Col )
+MODULE PURE SUBROUTINE realmat_set_3( obj, Val, Row, Col )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   INTEGER( I4B ), INTENT( IN ) :: Col( : ), Row( : )
-END SUBROUTINE realmat_setValues_3
+END SUBROUTINE realmat_set_3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1388,12 +1438,12 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_setValues_4( obj, Val, Indx, ExtraOption )
+MODULE PURE SUBROUTINE realmat_set_4( obj, Val, Indx, ExtraOption )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : )
   INTEGER( I4B ), INTENT( IN ) :: Indx
   INTEGER( I4B ), INTENT( IN ) :: ExtraOption
-END SUBROUTINE realmat_setValues_4
+END SUBROUTINE realmat_set_4
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1421,23 +1471,53 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_setValues_5( obj, Val, Indx, ExtraOption )
+MODULE PURE SUBROUTINE realmat_set_5( obj, Val, Indx, ExtraOption )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   INTEGER( I4B ), INTENT( IN ) :: Indx ( : ), ExtraOption
-END SUBROUTINE realmat_setValues_5
+END SUBROUTINE realmat_set_5
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                        setValues@setValues
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	6 March 2021
+! summary: Add values in [[realmatrix_]]
+!
+!# Introduction
+!
+! This subroutine set `obj%l` to `Val`
+!
+!### Usage
+!
+!```fortran
+!
+!```
+
+INTERFACE
+MODULE PURE SUBROUTINE realmat_set_6( obj, Val )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
+  REAL( DFP ), INTENT( IN ) :: Val
+END SUBROUTINE realmat_set_6
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-INTERFACE setValues
-  MODULE PROCEDURE realmat_setValues_1, realmat_setValues_2, &
-    & realmat_setValues_3, realmat_setValues_4, &
-    & realmat_setValues_5
-END INTERFACE setValues
 
-PUBLIC :: setValues
+INTERFACE set
+  MODULE PROCEDURE realmat_set_1, realmat_set_2, &
+    & realmat_set_3, realmat_set_4, &
+    & realmat_set_5, realmat_set_6
+END INTERFACE set
+
+PUBLIC :: set
+
+INTERFACE ASSIGNMENT(=)
+  MODULE PROCEDURE realmat_set_6
+END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                                  addContribution@setValues
@@ -1461,14 +1541,14 @@ PUBLIC :: setValues
 !@endtodo
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_1( obj, Val, Scale, Op )
+MODULE PURE SUBROUTINE realmat_add_1( obj, Val, Scale, Op )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   REAL( DFP ), INTENT( IN ) :: Scale
     !! Scaling for `Val`
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
     !! operator symbol; `+, -, *, /`
-END SUBROUTINE realmat_addVal_1
+END SUBROUTINE realmat_add_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1488,14 +1568,14 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_2( obj, Val, Row, Col, Scale, Op )
+MODULE PURE SUBROUTINE realmat_add_2( obj, Val, Row, Col, Scale, Op )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val
   REAL( DFP ), INTENT( IN ) :: Scale
   INTEGER( I4B ), INTENT( IN ) :: Row
   INTEGER( I4B ), INTENT( IN ) :: Col
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
-END SUBROUTINE realmat_addVal_2
+END SUBROUTINE realmat_add_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1515,14 +1595,14 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_3( obj, Val, Row, Col, Scale, Op )
+MODULE PURE SUBROUTINE realmat_add_3( obj, Val, Row, Col, Scale, Op )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
   REAL( DFP ), INTENT( IN ) :: Scale
   INTEGER( I4B ), INTENT( IN ) :: Row( : )
   INTEGER( I4B ), INTENT( IN ) :: Col( : )
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
-END SUBROUTINE realmat_addVal_3
+END SUBROUTINE realmat_add_3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1542,13 +1622,13 @@ END INTERFACE
 ! ```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_4( obj, Val, Indx, ExtraOption, Scale, Op )
+MODULE PURE SUBROUTINE realmat_add_4( obj, Val, Indx, ExtraOption, Scale, Op )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx
   INTEGER( I4B ), INTENT( IN ) :: ExtraOption
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
-END SUBROUTINE realmat_addVal_4
+END SUBROUTINE realmat_add_4
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1568,22 +1648,22 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_addVal_5( obj, Val, Indx, ExtraOption, &
+MODULE PURE SUBROUTINE realmat_add_5( obj, Val, Indx, ExtraOption, &
   & Scale, Op )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : ), Scale
   INTEGER( I4B ), INTENT( IN ) :: Indx( : )
   INTEGER( I4B ), INTENT( IN ) :: ExtraOption
   CHARACTER( LEN = 1 ), INTENT( IN ) :: Op
-END SUBROUTINE realmat_addVal_5
+END SUBROUTINE realmat_add_5
 END INTERFACE
 
-INTERFACE addContribution
-  MODULE PROCEDURE realmat_addVal_1, realmat_addVal_2, realmat_addVal_3, &
-    & realmat_addVal_4, realmat_addVal_5
-END INTERFACE addContribution
+INTERFACE add
+  MODULE PROCEDURE realmat_add_1, realmat_add_2, realmat_add_3, &
+    & realmat_add_4, realmat_add_5
+END INTERFACE add
 
-PUBLIC :: addContribution
+PUBLIC :: add
 
 !----------------------------------------------------------------------------
 !                                                MatMul@MatrixMultiplication

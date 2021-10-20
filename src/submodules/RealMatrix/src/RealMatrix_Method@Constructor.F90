@@ -89,40 +89,48 @@ END PROCEDURE Deallocate_Data
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_obj
+MODULE PROCEDURE realmat_initiate1
   CALL AllocateData( obj, Dims )
-END PROCEDURE initiate_obj
+END PROCEDURE realmat_initiate1
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_obj_vector_a
+MODULE PROCEDURE realmat_initiate2
+  CALL AllocateData( obj, [nrow, ncol] )
+END PROCEDURE realmat_initiate2
+
+!----------------------------------------------------------------------------
+!                                                                   Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realmat_initiate3
   INTEGER( I4B ) :: j
   DO j = 1, SIZE( obj )
     CALL AllocateData( obj( j ), Dims )
   END DO
-END PROCEDURE initiate_obj_vector_a
+END PROCEDURE realmat_initiate3
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_obj_vector_b
+MODULE PROCEDURE realmat_initiate4
   INTEGER( I4B ) :: j
   DO j = 1, SIZE( obj )
     CALL AllocateData( obj( j ), Dims( j, : ) )
   END DO
-END PROCEDURE initiate_obj_vector_b
+END PROCEDURE realmat_initiate4
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE initiate_obj_val
+MODULE PROCEDURE realmat_initiate5
   obj%Val = Val
   CALL setTotalDimension( obj, 2_I4B )
-END PROCEDURE initiate_obj_val
+END PROCEDURE realmat_initiate5
 
 !----------------------------------------------------------------------------
 !                                                                     Matrix
@@ -136,49 +144,61 @@ END PROCEDURE Constructor1
 !                                                                        Eye
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE eye_int
+MODULE PROCEDURE realMat_eye1
   INTEGER( I4B ) :: i
   Ans = 0_I4B
   DO i = 1, m
     Ans( i, i ) = 1
   END DO
-END PROCEDURE eye_int
+END PROCEDURE realMat_eye1
 
 !----------------------------------------------------------------------------
 !                                                                        Eye
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE eye_real
+MODULE PROCEDURE realMat_eye2
   INTEGER( I4B ) :: i
   Ans = 0.0
   DO i = 1, m
     Ans( i, i ) = 1.0
   END DO
-END PROCEDURE eye_real
+END PROCEDURE realMat_eye2
 
 !----------------------------------------------------------------------------
 !                                                                        Eye
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE eye_real_b
-  INTEGER( I4B ) :: i
-  Ans = 0.0
-  DO i = 1, m
-    Ans( i, i ) = 1.0
-  END DO
-END PROCEDURE eye_real_b
-
-!----------------------------------------------------------------------------
-!                                                                        Eye
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE eye_obj
+MODULE PROCEDURE realMat_eye3
   INTEGER( I4B ) :: i
   CALL Initiate( Ans, [m,m] )
   DO i = 1, m
     Ans%Val ( i, i ) = 1.0
   END DO
-END PROCEDURE eye_obj
+END PROCEDURE realMat_eye3
+
+!----------------------------------------------------------------------------
+!                                                                        Eye
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realMat_eye4
+  INTEGER( I4B ) :: i
+  Ans = 0.0
+  DO i = 1, m
+    Ans( i, i ) = 1.0
+  END DO
+END PROCEDURE realMat_eye4
+
+!----------------------------------------------------------------------------
+!                                                                        Eye
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realMat_eye5
+  INTEGER( I4B ) :: i
+  Ans = 0.0
+  DO i = 1, m
+    Ans( i, i ) = 1.0
+  END DO
+END PROCEDURE realMat_eye5
 
 !----------------------------------------------------------------------------
 !                                                                    Convert
