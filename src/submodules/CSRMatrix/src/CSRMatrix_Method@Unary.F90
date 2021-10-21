@@ -215,11 +215,10 @@ END PROCEDURE csrMat_Transpose
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getDiagonal
-  INTEGER( I4B ) :: len, off
-  off = INPUT( option=offset, default=0 )
+  INTEGER( I4B ) :: len0
   CALL Reallocate( diag, obj%csr%nrow, idiag, obj%csr%nrow )
   CALL GETDIA(obj%csr%nrow,obj%csr%ncol,0,obj%A,obj%csr%JA,obj%csr%IA,&
-    & len,diag,idiag,off)
+    & len0,diag,idiag,INPUT( option=offset, default=0 ))
 END PROCEDURE csrMat_getDiagonal
 
 !----------------------------------------------------------------------------

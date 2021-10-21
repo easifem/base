@@ -43,7 +43,7 @@
 MODULE KeyValue_Method
 USE BaseType
 USE GlobalData
-USE StringiFor
+USE String_Class, ONLY:String
 IMPLICIT NONE
 PRIVATE
 INTEGER, PARAMETER :: REAL_RANK_0 = 0

@@ -21,10 +21,9 @@
 
 MODULE BaseType
 USE GlobalData
-USE StringiFor, ONLY: String
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
-PUBLIC :: String
 
 TYPE( String ), PUBLIC, PARAMETER :: TypeString = String(raw=NULL())
 TYPE :: StringPointer_

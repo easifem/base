@@ -28,10 +28,15 @@
 ! be included here.
 
 MODULE BaseMethod
+  USE String_Class
+  USE String_Method
+  USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
+    & str_ucs4, str, strz, cton, bstr, bcton, check_endian, digit, &
+    & penf_Init, penf_print
+  USE BeFoR64
+  USE FACE
+  USE FPL
   USE System_Method
-#ifdef USE_PLPLOT
-  USE PLPLOT
-#endif
 #ifdef USE_OpenMP
   USE OMP_LIB
 #endif
@@ -40,13 +45,6 @@ MODULE BaseMethod
   USE EASIFEM_BLAS
   USE F95_LAPACK
   USE OpenMP_Method
-  USE StringiFor
-  USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
-    & str_ucs4, str, strz, cton, bstr, bcton, check_endian, digit, &
-    & penf_Init, penf_print
-  USE BeFoR64
-  USE FACE
-  USE FPL
   USE GlobalData
   USE OGPF
   USE Test_Method
