@@ -1593,12 +1593,12 @@ PUBLIC :: getBlockColumn
 ! This subroutine can be used for debuggin purpose.
 
 INTERFACE
-MODULE PURE SUBROUTINE crsMat_convert_internally( A, IA, JA, mat )
+MODULE PURE SUBROUTINE crsMat_Convert1( A, IA, JA, mat )
   REAL( DFP ), INTENT( IN )    :: A( : )
   INTEGER( I4B ), INTENT( IN ) :: IA( : )
   INTEGER( I4B ), INTENT( IN ) :: JA( : )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: mat( :, : )
-END SUBROUTINE crsMat_convert_internally
+END SUBROUTINE crsMat_Convert1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1615,20 +1615,40 @@ END INTERFACE
 ! `A(:), IA(:), JA(:)` denotes CSR format.
 
 INTERFACE
-MODULE PURE SUBROUTINE crsMat_Convert( To, From )
+MODULE PURE SUBROUTINE crsMat_Convert2( To, From )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: To( :, : )
   TYPE( CSRMatrix_ ), INTENT( IN ) :: From
-END SUBROUTINE crsMat_Convert
+END SUBROUTINE crsMat_Convert2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                              Convert@Unary
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	 This subroutine converts sparsematrix to dense storage
+!
+!# Introduction
+!
+! This subroutine converts sparsematrix to dense storage format
+! `A(:), IA(:), JA(:)` denotes CSR format.
+
+INTERFACE
+MODULE PURE SUBROUTINE crsMat_Convert3( To, From )
+  TYPE( RealMatrix_ ), INTENT( INOUT ) :: To
+  TYPE( CSRMatrix_ ), INTENT( IN ) :: From
+END SUBROUTINE crsMat_Convert3
 END INTERFACE
 
 INTERFACE Convert
-  MODULE PROCEDURE crsMat_Convert
+  MODULE PROCEDURE crsMat_Convert1, crsMat_Convert2, crsMat_Convert3
 END INTERFACE Convert
 
 PUBLIC :: Convert
 
 INTERFACE ASSIGNMENT( = )
-  MODULE PROCEDURE crsMat_Convert
+  MODULE PROCEDURE crsMat_Convert2, crsMat_Convert3
 END INTERFACE ASSIGNMENT( = )
 
 !----------------------------------------------------------------------------

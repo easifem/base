@@ -265,11 +265,7 @@ MODULE GlobalData
   INTEGER(Int8), PARAMETER :: BIDFP=BIReal32 !default in bytes
 #endif
 
-#ifdef USE_Real128
   INTEGER(Int16), PARAMETER :: BYReal128=BIReal128/8_Int16
-#else
-    INTEGER(Int16), PARAMETER :: BYReal128=BIReal128/8_Int16
-#endif
   INTEGER(Int8), PARAMETER :: BYReal64=BIReal64/8_Int16
   INTEGER(Int8), PARAMETER :: BYReal32=BIReal32/8_Int16
 

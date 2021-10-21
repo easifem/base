@@ -16,7 +16,7 @@
 
 MODULE CInterface
 USE GlobalData
-USE StringiFor, ONLY: String
+USE String_Class, ONLY: String
 USE, INTRINSIC :: ISO_C_Binding, C_PTR=>C_PTR, &
   & C_CHAR_PTR => C_PTR, C_CONST_CHAR_PTR => C_PTR, &
   & C_void_ptr => C_PTR, C_CONST_VOID_PTR => C_PTR

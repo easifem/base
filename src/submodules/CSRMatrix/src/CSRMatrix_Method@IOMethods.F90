@@ -21,6 +21,9 @@
 
 SUBMODULE(CSRMatrix_Method) IOMethods
 USE BaseMethod
+#ifdef USE_PLPLOT
+  USE PLPLOT
+#endif
 IMPLICIT NONE
 CONTAINS
 
@@ -78,11 +81,12 @@ SUBROUTINE csrMat_SPY_PLPLOT( obj, filename, ext, driver )
   CHARACTER( LEN = * ), INTENT( IN ) :: filename
   CHARACTER( LEN = * ), INTENT( IN ) :: ext
   CHARACTER( LEN = * ), INTENT( IN ) :: driver
+#ifdef USE_PLPLOT
   !> Internal
   REAL( DFP ), ALLOCATABLE :: X( : ), Y( : ) !, A( : )!
   REAL( DFP ) :: xmin, xmax, ymin, ymax
   INTEGER( I4B ) :: ii, jj, kk
-
+  !> main
   CALL Reallocate( X, obj%csr%nnz, Y, obj%csr%nnz )
   kk = 0
   DO ii = 1, obj%csr%nrow
@@ -93,13 +97,12 @@ SUBROUTINE csrMat_SPY_PLPLOT( obj, filename, ext, driver )
       ! A(kk) = obj%A(jj)
     END DO
   END DO
-
+  !
   xmin = 1 - obj%csr%ncol * 0.1
   xmax = obj%csr%ncol + obj%csr%ncol * 0.1
-
   ymin = obj%csr%nrow + obj%csr%nrow * 0.1
   ymax = 1 - obj%csr%nrow * 0.1
-
+  !
   CALL PLSDEV( TRIM(driver) )
   IF( ext(1:1) .EQ. "." ) THEN
     CALL PLSFNAM( TRIM(filename)//TRIM(ext) )
@@ -121,6 +124,7 @@ SUBROUTINE csrMat_SPY_PLPLOT( obj, filename, ext, driver )
   IF( ALLOCATED(X) ) DEALLOCATE(X)
   IF( ALLOCATED(Y) ) DEALLOCATE(Y)
   ! IF( ALLOCATED(A) ) DEALLOCATE(A)
+#endif
 END SUBROUTINE csrMat_SPY_PLPLOT
 
 !----------------------------------------------------------------------------
