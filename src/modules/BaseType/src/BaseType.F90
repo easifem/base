@@ -148,7 +148,7 @@ END TYPE RealVector_
 PUBLIC :: RealVector_
 
 TYPE(RealVector_), PUBLIC, PARAMETER :: TypeRealVector = RealVector_( &
-tDimension = 1_I4B, Val = NULL( ) )
+  & tDimension = 1_I4B, Val = NULL( ) )
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
@@ -477,7 +477,8 @@ PUBLIC :: LeftCauchyGreenPointer_
 ! summary: 	Right Cauchy Green Deformation tensor
 !
 !# Introduction
-! 	This data tyoe defines Right Cauchy Green Deformation tensor, which is an Eulerian tensor. It is symmetric and given by
+! This data tyoe defines Right Cauchy Green Deformation tensor, which is an
+! Eulerian tensor. It is symmetric and given by
 !
 ! $$b=F F^{T}=V^2$$
 !
@@ -815,13 +816,6 @@ PUBLIC :: FEVariable_
 TYPE( FEVariable_ ), PARAMETER, PUBLIC :: TypeFEVariable = &
   & FEVariable_( R1 = NULL( ), R2 = NULL( ), R3 = NULL( ), &
   & R4 = NULL( ) )
-
-INTEGER( I4B ), PARAMETER, PUBLIC :: Constant = 0
-INTEGER( I4B ), PARAMETER, PUBLIC :: Space = 1
-INTEGER( I4B ), PARAMETER, PUBLIC :: SpaceTime = 2
-INTEGER( I4B ), PARAMETER, PUBLIC :: Time= 3
-INTEGER( I4B ), PARAMETER, PUBLIC :: Scalar = 0, Vector = 1, Matrix = 2
-INTEGER( I4B ), PARAMETER, PUBLIC :: Nodal = 1, Quadrature = 2
 
 !----------------------------------------------------------------------------
 !                                                         FEVariableConstant_
@@ -1349,7 +1343,7 @@ TYPE( Random_ ), PARAMETER, PUBLIC :: &
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	9 March 2021
-! summary: 	This data type is defined to handle compatibility between OpenMP and EASIFEM
+! summary: 	OpenMP and EASIFEM
 TYPE :: OpenMP_
   INTEGER( I4B ) :: Rank = 0
   INTEGER( I4B ) :: NUM_THREADS = 1
