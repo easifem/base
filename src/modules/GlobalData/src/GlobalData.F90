@@ -13,7 +13,6 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 MODULE GlobalData
   USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY : input_unit, &
     & output_unit, error_unit
@@ -474,4 +473,16 @@ MODULE GlobalData
   CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_LF=CHAR(10)
     !! Character constant for a line feed
   CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_TAB=CHAR(9)
+
+  INTEGER( I4B ), PARAMETER, PUBLIC :: Constant = 1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: Space = 2
+  INTEGER( I4B ), PARAMETER, PUBLIC :: Time= 3
+  INTEGER( I4B ), PARAMETER, PUBLIC :: SpaceTime = 4
+  INTEGER( I4B ), PARAMETER, PUBLIC :: SolutionDependent = 5
+  !>
+  INTEGER( I4B ), PARAMETER, PUBLIC :: Scalar = 1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: Vector = 2
+  INTEGER( I4B ), PARAMETER, PUBLIC :: Matrix = 3
+  INTEGER( I4B ), PARAMETER, PUBLIC :: Nodal = 1
+  INTEGER( I4B ), PARAMETER, PUBLIC :: Quadrature = 2
 END MODULE GlobalData
