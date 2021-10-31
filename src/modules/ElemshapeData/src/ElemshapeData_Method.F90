@@ -16,7 +16,7 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
-! summary: This module implements methods related to [[elemShapeData_]] datatype
+! summary: Methods related to [[elemShapeData_]] datatype
 
 MODULE ElemshapeData_Method
 USE BaseType
@@ -30,10 +30,11 @@ PRIVATE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	4 March 2021
-! summary: This subroutine allocate the memory for various matrices in the object
+! summary: Allocate the memory for various matrices in the object
 !
 !# Introduction
-! 	This subroutine allocates the memory for various matrices in the object. This subroutine belongs to the generic interface called `AllocateData()`.
+! This subroutine allocates the memory for various matrices in the object.
+! This subroutine belongs to the generic interface called `AllocateData()`.
 !
 ! - This routine also belongs to generic routien called `initiate`
 !
@@ -99,13 +100,17 @@ END INTERFACE Initiate
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	4 March 2021
-! summary: This subroutine initiate time shape function data in [[stelemshapedata_]]
+! summary: Initiate time shape function data in [[stelemshapedata_]]
 !
 !# Introduction
 !
-! * This subroutine initiate the time shape function data in [[stelemshapedata_]].
-! * For the effeciency purpose, user should supply an instance of [[Elemshapedata_]] on time element. This object will have information of location time shape function data such as `T, dTdtheta` etc.
-! * This routine uses `elemsd` to  set `obj%T`, `obj%dTdTheta`, `obj%Jt`, `obj%Wt`, `obj%Theta`.
+! * This subroutine initiate the time shape function data in
+! [[stelemshapedata_]].
+! * For the effeciency purpose, user should supply an instance of
+! [[Elemshapedata_]] on time element. This object will have information of
+! location time shape function data such as `T, dTdtheta` etc.
+! * This routine uses `elemsd` to  set `obj%T`, `obj%dTdTheta`, `obj%Jt`,
+! `obj%Wt`, `obj%Theta`.
 ! * The following examples shows how to use it.
 !
 !### Usage
@@ -134,10 +139,11 @@ PUBLIC :: Initiate
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	4 March 2021
-! summary: This subroutine deallocates the data stored inside [[elemshapedata_]]
+! summary: Deallocates the data stored inside [[elemshapedata_]]
 !
 !# Introduction
-! 	This routine deallocates the data stored inside [[elemshapedata_]]. This routine belongs to `AllocateData()`
+! 	This routine deallocates the data stored inside [[elemshapedata_]]. This
+! routine belongs to `AllocateData()`
 !
 !
 !### Usage

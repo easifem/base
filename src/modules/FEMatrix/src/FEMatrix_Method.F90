@@ -70,11 +70,13 @@ END INTERFACE
 !
 !# Introduction
 !
-! This subroutine makes space matrix in space domain, Here Rho $\rho$ is a finite element variable. Following expression can be evaluated
+! This subroutine makes space matrix in space domain, Here Rho $\rho$ is a
+!  finite element variable. Following expression can be evaluated
 !
 ! $$\int_{\Omega } N^{I}T_{a}\rho N^{J}T_{b}d\Omega$$
 ! $$\iint \frac{\partial N^{I}T_{a}}{\partial t} \rho N^{J}T_{b}d\Omega dt$$
-! $$\iint \frac{\partial N^{I}T_{a}}{\partial t} \rho \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
+! $$\iint \frac{\partial N^{I}T_{a}}{\partial t} \rho
+! \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
 ! $$\iint N^{I}T_{a}\rho \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
 !
 !### Usage

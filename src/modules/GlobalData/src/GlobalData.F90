@@ -479,6 +479,7 @@ MODULE GlobalData
   INTEGER( I4B ), PARAMETER, PUBLIC :: Time= 3
   INTEGER( I4B ), PARAMETER, PUBLIC :: SpaceTime = 4
   INTEGER( I4B ), PARAMETER, PUBLIC :: SolutionDependent = 5
+  INTEGER( I4B ), PARAMETER, PUBLIC :: RandomSpace = 6
   !>
   INTEGER( I4B ), PARAMETER, PUBLIC :: Scalar = 1
   INTEGER( I4B ), PARAMETER, PUBLIC :: Vector = 2
