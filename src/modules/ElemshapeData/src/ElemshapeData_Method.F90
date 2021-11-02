@@ -33,16 +33,36 @@ PRIVATE
 ! summary: Allocate the memory for various matrices in the object
 !
 !# Introduction
+!
 ! This subroutine allocates the memory for various matrices in the object.
 ! This subroutine belongs to the generic interface called `AllocateData()`.
 !
-! - This routine also belongs to generic routien called `initiate`
-!
+!@note
+! This routine also belongs to generic routien called `initiate`
+!@endnote
 !
 !### Usage
 !
 !```fortran
-!
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( ElemshapeData_ ) :: obj
+!   TYPE( QuadraturePoint_ ) :: quad
+!   TYPE( ReferenceLine_ ) :: refelem
+!   INTEGER( I4B  ), PARAMETER :: nsd=1, order=1
+!   !> main
+!   ! #ReferenceLine/ReferenceLine
+!   ! #ReferenceLine
+!   refelem = ReferenceLine( nsd = nsd )
+!   ! #GaussLegendreQuadrature
+!   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
+!   CALL AllocateData( obj = obj, nsd = refelem%nsd, &
+!     & xidim = refelem%xidimension, nns = 2, nips = 1 )
+!   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
+!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
+!   CALL Display( obj, "obj" )
+! END PROGRAM main
 !```
 
 INTERFACE
@@ -66,6 +86,12 @@ END INTERFACE AllocateData
 
 PUBLIC :: AllocateData
 
+INTERFACE Allocate
+  MODULE PROCEDURE elemsd_AllocateData
+END INTERFACE Allocate
+
+PUBLIC :: Allocate
+
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
@@ -78,6 +104,29 @@ PUBLIC :: AllocateData
 !
 ! This routine initiates the shape function related data inside the element.
 !
+!## Usage
+!
+!```fortran
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( ElemshapeData_ ) :: obj
+!   TYPE( QuadraturePoint_ ) :: quad
+!   TYPE( ReferenceLine_ ) :: refelem
+!   INTEGER( I4B  ), PARAMETER :: nsd=1, order=1
+!   !> main
+!   ! #ReferenceLine/ReferenceLine
+!   ! #ReferenceLine
+!   refelem = ReferenceLine( nsd = nsd )
+!   ! #GaussLegendreQuadrature
+!   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
+!   CALL AllocateData( obj = obj, nsd = refelem%nsd, &
+!     & xidim = refelem%xidimension, nns = 2, nips = 1 )
+!   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
+!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
+!   CALL Display( obj, "obj" )
+! END PROGRAM main
+!```
 
 INTERFACE
 MODULE SUBROUTINE elemsd_initiate( obj, quad, refElem, continuityType, &
@@ -159,7 +208,7 @@ END SUBROUTINE elemsd_DeallocateData
 END INTERFACE
 
 INTERFACE DeallocateData
-    MODULE PROCEDURE elemsd_DeallocateData
+  MODULE PROCEDURE elemsd_DeallocateData
 END INTERFACE DeallocateData
 
 PUBLIC :: DeallocateData
@@ -212,10 +261,11 @@ PUBLIC :: BaseContinuity
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	4 March 2021
-! summary: This subroutine display the content of [[elemshapedata_]] and [[stelemshapedata_]]
+! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
 !
 !# Introduction
-! 	This subroutine displays the content of [[elemshapedata_]] and [[stelemshapedata_]] on screen. this routine belongs to `Display()`.
+! 	This subroutine displays the content of [[elemshapedata_]] and
+! [[stelemshapedata_]] on screen. this routine belongs to `Display()`.
 !
 !### Usage
 !
@@ -351,7 +401,7 @@ END INTERFACE Initiate
 
 
 !----------------------------------------------------------------------------
-!                                                        Initiate@H1DivLagrange
+!                                                    Initiate@H1DivLagrange
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -379,7 +429,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@H1DivHermit
+!                                                       Initiate@H1DivHermit
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -407,7 +457,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1DivSerendipity
+!                                                  Initiate@H1DivSerendipity
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -991,7 +1041,7 @@ END INTERFACE setdNTdXt
 PUBLIC :: setdNTdXt
 
 !----------------------------------------------------------------------------
-!                                                         setValue@setMethod
+!                                                             Set@setMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1017,7 +1067,7 @@ PUBLIC :: setdNTdXt
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE set_value( obj, Val, N, dNdXi )
+MODULE PURE SUBROUTINE elemsd_set1( obj, Val, N, dNdXi )
   CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, : )
     !! Spatial nodal coordinates
@@ -1025,11 +1075,11 @@ MODULE PURE SUBROUTINE set_value( obj, Val, N, dNdXi )
     !! Shape function for geometry
   REAL( DFP ), INTENT( IN ) :: dNdXi( :, :, : )
     !! Local derivative of shape functions for geometry
-END SUBROUTINE set_value
+END SUBROUTINE elemsd_set1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                         setValue@setMethod
+!                                                             set@setMethod
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1057,21 +1107,21 @@ END INTERFACE
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_value( obj, Val, N, T, dNdXi )
+MODULE PURE SUBROUTINE stelemsd_set1( obj, Val, N, T, dNdXi )
   CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
     !! Spatial nodal coordinates
   REAL( DFP ), INTENT( IN ) :: N( :, : )
   REAL( DFP ), INTENT( IN ) :: T( : )
   REAL( DFP ), INTENT( IN ) :: dNdXi( :, :, : )
-END SUBROUTINE stsd_set_value
+END SUBROUTINE stelemsd_set1
 END INTERFACE
 
-INTERFACE setValue
-  MODULE PROCEDURE set_value, stsd_set_value
-END INTERFACE setValue
+INTERFACE set
+  MODULE PROCEDURE elemsd_set1, stelemsd_set1
+END INTERFACE set
 
-PUBLIC :: setValue
+PUBLIC :: set
 
 !----------------------------------------------------------------------------
 !                                                       setNormal@setMethod
@@ -1305,14 +1355,17 @@ PUBLIC :: Interpolation
 !                                               getSTInterpolation@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine performs interpolations of scalar
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 Nov 2021
+! summary: This subroutine performs interpolations of scalar
+!
+!# Introduction
 !
 ! This subroutine performs interpolation of a scalar from its space-time nodal
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
+
+INTERFACE
 MODULE PURE SUBROUTINE stsd_get_interpol_scalar( obj, Interpol, Val )
   CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( : )
@@ -1338,15 +1391,18 @@ END INTERFACE
 !                                               getSTInterpolation@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine performs interpolation of a vector
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 Nov 2021
+! summary: This subroutine performs interpolation of a vector
+!
+!# Introduction
 !
 ! This subroutine performs interpolation of a vector from its space-time
 ! nodal values
 !
 ! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
+
+INTERFACE
 MODULE PURE SUBROUTINE stsd_get_interpol_vector( obj, Interpol, Val )
   CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, : )
@@ -1360,13 +1416,16 @@ END INTERFACE
 !                                               getSTInterpolation@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine performs interpolation of matrix
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 Nov 2021
+! summary: This subroutine performs interpolation of matrix
+!
+!# Introduction
 !
 ! This subroutine performs interpolation of matrix from its space-time
 ! nodal values
+
+INTERFACE
 MODULE PURE SUBROUTINE stsd_get_interpol_matrix( obj, Interpol, Val )
   CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, :, : )
@@ -1523,6 +1582,7 @@ INTERFACE
 !
 ! $$\frac{\partial \phi }{\partial \xi_{i} } =\phi^{a}_{I} T_{a}\frac
 !{\partial N^{I}}{\partial \xi_{i} }$$
+
 MODULE PURE SUBROUTINE stsd_getLocalGradient_scalar( obj, dPhidXi, Val )
   CLASS( STElemShapeData_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXi( :, : )
