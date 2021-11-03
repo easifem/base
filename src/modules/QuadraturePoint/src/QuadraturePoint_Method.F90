@@ -37,7 +37,9 @@ MODULE PURE SUBROUTINE quad_initiate1( obj, Points )
   CLASS( QuadraturePoint_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: Points( :, : )
     !! Points contains the quadrature points and weights
-    !! Points( :, ipoint ) contains quadrature points and weights of ipoint quadrature point. The last row contains the weight. The rest of the rows contains the coordinates of quadrature.
+    !! Points( :, ipoint ) contains quadrature points and weights of ipoint
+    !! quadrature point. The last row contains the weight. The rest of the
+    !! rows contains the coordinates of quadrature.
 END SUBROUTINE quad_initiate1
 END INTERFACE
 
@@ -136,7 +138,7 @@ PUBLIC :: QuadraturePoint
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
-! summary: This routine returns a pointer to a newly created instance of quadrature points
+! summary: Returns a pointer to a newly created instance of quadrature points
 
 INTERFACE
 MODULE PURE FUNCTION quad_Constructor_1( Points ) RESULT( obj )
@@ -280,7 +282,6 @@ PUBLIC :: Display
 ! date: 23 July 2021
 ! summary: 	Returns the Gauss Legendre Quadrature points based on given order
 
-
 INTERFACE
 MODULE PURE FUNCTION getGaussLegendreQP1( RefElem, Order ) RESULT( obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
@@ -295,12 +296,13 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
-! summary: 	Returns the Gauss Legendre Quadrature points based on number of integration points
+! summary: 	Returns the Gauss-Legendre Quadrature points
 
 INTERFACE
 MODULE PURE FUNCTION getGaussLegendreQP2( RefElem, NIPS ) RESULT( obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
+    !! number of integration points
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQP2
 END INTERFACE

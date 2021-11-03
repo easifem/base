@@ -174,25 +174,25 @@ END PROCEDURE stsd_set_dNTdXt_internally
 !                                                                   setValue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE set_value
+MODULE PROCEDURE elemsd_set1
   CALL setJacobian( obj = obj, Val= Val, dNdXi=dNdXi )
   CALL setJs( obj = obj )
   CALL setdNdXt( obj = obj )
   CALL setBarycentricCoord( obj = obj, Val = Val, N=N )
-END PROCEDURE set_value
+END PROCEDURE elemsd_set1
 
 !----------------------------------------------------------------------------
 !                                                                   setValue
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE stsd_set_value
+MODULE PROCEDURE stelemsd_set1
   CALL setJacobian( obj = obj, Val= Val, dNdXi=dNdXi, T=T)
   CALL setJs( obj = obj )
   CALL setdNdXt( obj = obj )
   CALL setBarycentricCoord( obj = obj, Val = Val, N=N, T=T )
   CALL setdNTdXt( obj = obj )
   CALL setdNTdt( obj = obj, Val = Val )
-END PROCEDURE stsd_set_value
+END PROCEDURE stelemsd_set1
 
 !----------------------------------------------------------------------------
 !                                                                 setNormal
