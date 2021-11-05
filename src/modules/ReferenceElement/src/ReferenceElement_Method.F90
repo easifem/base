@@ -30,11 +30,11 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE display_ref_elem( obj, msg, unitno )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitno
-END SUBROUTINE display_ref_elem
+  MODULE SUBROUTINE display_ref_elem(obj, msg, unitno)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    CHARACTER(LEN=*), INTENT(IN) :: msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
+  END SUBROUTINE display_ref_elem
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -42,11 +42,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE display_ref_topo( obj, msg, unitno )
-  CLASS( ReferenceTopology_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitno
-END SUBROUTINE display_ref_topo
+  MODULE SUBROUTINE display_ref_topo(obj, msg, unitno)
+    CLASS(ReferenceTopology_), INTENT(IN) :: obj
+    CHARACTER(LEN=*), INTENT(IN) :: msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
+  END SUBROUTINE display_ref_topo
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -64,11 +64,11 @@ PUBLIC :: Display
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
-! summary: 	This function returns the instance of [[ReferenceTopology_]]
+! date:         1 March 2021
+! summary:         This function returns the instance of [[ReferenceTopology_]]
 !
 !# Introduction
-! 	This function returns the instance of [[ReferenceTopology_]].
+!         This function returns the instance of [[ReferenceTopology_]].
 ! The possible valaues of Name can be
 !
 ! * `Line, Line2, Line3, Line4, Line5, Line6`
@@ -89,11 +89,11 @@ PUBLIC :: Display
 !```
 
 INTERFACE
-MODULE PURE FUNCTION refelem_ReferenceTopology( Nptrs, Name ) RESULT( obj )
-  TYPE( ReferenceTopology_ ) :: obj
-  INTEGER( I4B), INTENT( IN ) :: Nptrs( : )
-  INTEGER( I4B), INTENT( IN ) :: Name
-END FUNCTION refelem_ReferenceTopology
+  MODULE PURE FUNCTION refelem_ReferenceTopology(Nptrs, Name) RESULT(obj)
+    TYPE(ReferenceTopology_) :: obj
+    INTEGER(I4B), INTENT(IN) :: Nptrs(:)
+    INTEGER(I4B), INTENT(IN) :: Name
+  END FUNCTION refelem_ReferenceTopology
 END INTERFACE
 
 INTERFACE ReferenceTopology
@@ -107,8 +107,8 @@ PUBLIC :: ReferenceTopology
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
-! summary: 	This subroutine reset the instance of [[ReferenceTopology_]]
+! date:         1 March 2021
+! summary:         This subroutine reset the instance of [[ReferenceTopology_]]
 !
 !### Usage
 !
@@ -120,9 +120,9 @@ PUBLIC :: ReferenceTopology
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE refelem_DeallocateData1( obj )
-  CLASS( ReferenceTopology_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE refelem_DeallocateData1
+  MODULE PURE SUBROUTINE refelem_DeallocateData1(obj)
+    CLASS(ReferenceTopology_), INTENT(INOUT) :: obj
+  END SUBROUTINE refelem_DeallocateData1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -130,19 +130,19 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
-! summary: 	This routine deallocates the data stored inside the [[ReferenceElement_]]
+! date:         1 March 2021
+! summary:         This routine deallocates the data stored inside the [[ReferenceElement_]]
 !
 !### Usage
 !
 !```fortran
-!	todo
+!        todo
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE refelem_DeallocateData2( obj )
-  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE refelem_DeallocateData2
+  MODULE PURE SUBROUTINE refelem_DeallocateData2(obj)
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+  END SUBROUTINE refelem_DeallocateData2
 END INTERFACE
 
 INTERFACE DeallocateData
@@ -156,8 +156,8 @@ PUBLIC :: DeallocateData
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
-! summary: 	This function returns the totat nodes inside the referenc topology
+! date:         1 March 2021
+! summary:         This function returns the totat nodes inside the referenc topology
 !
 !### Usage
 !
@@ -169,10 +169,10 @@ PUBLIC :: DeallocateData
 !```
 
 INTERFACE
-MODULE PURE FUNCTION refelem_NNE1( obj ) RESULT( Ans )
-  CLASS( ReferenceTopology_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans
-END FUNCTION refelem_NNE1
+  MODULE PURE FUNCTION refelem_NNE1(obj) RESULT(Ans)
+    CLASS(ReferenceTopology_), INTENT(IN) :: obj
+    INTEGER(I4B) :: Ans
+  END FUNCTION refelem_NNE1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -180,37 +180,37 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
-! summary: 	This function returns the total number of nodes in the reference element
+! date: 1 March 2021
+! summary: Returns the total number of nodes in the reference element
 !
 !@todo
 ! usage
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION refelem_NNE2( obj ) RESULT( Ans )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans
-END FUNCTION refelem_NNE2
+  MODULE PURE FUNCTION refelem_NNE2(obj) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    INTEGER(I4B) :: Ans
+  END FUNCTION refelem_NNE2
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                            NNE@Constructor
 !----------------------------------------------------------------------------
 
-INTERFACE OPERATOR( .NNE. )
+INTERFACE OPERATOR(.NNE.)
   MODULE PROCEDURE refelem_NNE1, refelem_NNE2
 END INTERFACE
 
-PUBLIC :: OPERATOR( .NNE. )
+PUBLIC :: OPERATOR(.NNE.)
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	2 March 2021
-! summary: 	This subroutine copies one reference element into other
+! date: 2 March 2021
+! summary: This subroutine copies one reference element into other
 !
 !# Introduction
 !
@@ -220,14 +220,14 @@ PUBLIC :: OPERATOR( .NNE. )
 !### Usage
 !
 !```fortran
-!	todo
+!        todo
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE refelem_Initiate1( obj, Anotherobj )
-  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: Anotherobj
-END SUBROUTINE refelem_Initiate1
+  MODULE PURE SUBROUTINE refelem_Initiate1(obj, Anotherobj)
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    CLASS(ReferenceElement_), INTENT(IN) :: Anotherobj
+  END SUBROUTINE refelem_Initiate1
 END INTERFACE
 
 INTERFACE Initiate
@@ -236,21 +236,21 @@ END INTERFACE Initiate
 
 PUBLIC :: Initiate
 
-INTERFACE ASSIGNMENT( = )
+INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE refelem_Initiate1
 END INTERFACE
 
-PUBLIC :: ASSIGNMENT( = )
+PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                   ReferenceElement_Pointer@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION refelem_constructor_1( xidim, nsd, elemType ) RESULT( Ans )
-  INTEGER( I4B ),INTENT( IN ) :: xidim, nsd, elemType
-  CLASS( ReferenceElement_ ), POINTER :: ans
-END FUNCTION refelem_constructor_1
+  MODULE FUNCTION refelem_constructor_1(xidim, nsd, elemType) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: xidim, nsd, elemType
+    CLASS(ReferenceElement_), POINTER :: ans
+  END FUNCTION refelem_constructor_1
 END INTERFACE
 
 INTERFACE ReferenceElement_Pointer
@@ -268,10 +268,10 @@ PUBLIC :: ReferenceElement_Pointer
 ! summary: Returns the node numbers of reference element
 
 INTERFACE
-MODULE PURE FUNCTION refelem_getNptrs( obj ) RESULT( Ans )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), ALLOCATABLE :: ans( : )
-END FUNCTION refelem_getNptrs
+  MODULE PURE FUNCTION refelem_getNptrs(obj) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    INTEGER(I4B), ALLOCATABLE :: ans(:)
+  END FUNCTION refelem_getNptrs
 END INTERFACE
 
 INTERFACE getConnectivity
@@ -288,10 +288,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns element name in integer from element name
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Element_Type( ElemName ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: ElemName
-  INTEGER( I4B ) :: Ans
-END FUNCTION Element_Type
+  MODULE PURE FUNCTION Element_Type(ElemName) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: ElemName
+    INTEGER(I4B) :: Ans
+  END FUNCTION Element_Type
 END INTERFACE
 
 INTERFACE ElementType
@@ -308,10 +308,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns element name in character from element number/type
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Element_Name( ElemType ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-  CHARACTER( LEN = 50 ) :: Ans
-END FUNCTION Element_Name
+  MODULE PURE FUNCTION Element_Name(ElemType) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: ElemType
+    CHARACTER(LEN=50) :: Ans
+  END FUNCTION Element_Name
 END INTERFACE
 
 INTERFACE ElementName
@@ -328,10 +328,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns total numbers of nodes present in a given element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Total_Nodes_In_Element(ElemType) RESULT( Ans )
-  INTEGER( I4B ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION Total_Nodes_In_Element
+  MODULE PURE FUNCTION Total_Nodes_In_Element(ElemType) RESULT(Ans)
+    INTEGER(I4B) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION Total_Nodes_In_Element
 END INTERFACE
 
 INTERFACE TotalNodesInElement
@@ -348,10 +348,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns the order of an element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Element_Order( ElemType ) RESULT( Ans )
-  INTEGER( I4B ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION Element_Order
+  MODULE PURE FUNCTION Element_Order(ElemType) RESULT(Ans)
+    INTEGER(I4B) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION Element_Order
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -362,10 +362,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns the order of an element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Element_Order_RefElem( RefElem ) RESULT( Ans )
-  INTEGER( I4B ) :: Ans
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-END FUNCTION Element_Order_RefElem
+  MODULE PURE FUNCTION Element_Order_RefElem(RefElem) RESULT(Ans)
+    INTEGER(I4B) :: Ans
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+  END FUNCTION Element_Order_RefElem
 END INTERFACE
 
 INTERFACE ElementOrder
@@ -382,10 +382,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns the xidimension of an element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Elem_XiDimension( ElemType ) RESULT( Ans )
-  INTEGER( I4B ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION Elem_XiDimension
+  MODULE PURE FUNCTION Elem_XiDimension(ElemType) RESULT(Ans)
+    INTEGER(I4B) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION Elem_XiDimension
 END INTERFACE
 
 INTERFACE XiDimension
@@ -402,10 +402,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a volume element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isVolume( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isVolume
+  MODULE PURE FUNCTION isVolume(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isVolume
 END INTERFACE
 
 PUBLIC :: isVolume
@@ -418,10 +418,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Surface element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isSurface( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isSurface
+  MODULE PURE FUNCTION isSurface(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isSurface
 END INTERFACE
 
 PUBLIC :: isSurface
@@ -434,10 +434,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Line element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isLine( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isLine
+  MODULE PURE FUNCTION isLine(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isLine
 END INTERFACE
 
 PUBLIC :: isLine
@@ -450,10 +450,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Point element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isPoint( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isPoint
+  MODULE PURE FUNCTION isPoint(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isPoint
 END INTERFACE
 
 PUBLIC :: isPoint
@@ -466,10 +466,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Triangle element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isTriangle( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isTriangle
+  MODULE PURE FUNCTION isTriangle(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isTriangle
 END INTERFACE
 
 PUBLIC :: isTriangle
@@ -482,10 +482,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Quadrangle element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isQuadrangle( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isQuadrangle
+  MODULE PURE FUNCTION isQuadrangle(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isQuadrangle
 END INTERFACE
 
 PUBLIC :: isQuadrangle
@@ -498,10 +498,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Tetrahedron element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isTetrahedron( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isTetrahedron
+  MODULE PURE FUNCTION isTetrahedron(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isTetrahedron
 END INTERFACE
 
 PUBLIC :: isTetrahedron
@@ -514,10 +514,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Hexahedron element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isHexahedron( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isHexahedron
+  MODULE PURE FUNCTION isHexahedron(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isHexahedron
 END INTERFACE
 
 PUBLIC :: isHexahedron
@@ -530,10 +530,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Prism element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isPrism( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isPrism
+  MODULE PURE FUNCTION isPrism(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isPrism
 END INTERFACE
 
 PUBLIC :: isPrism
@@ -546,10 +546,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a Pyramid element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isPyramid( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isPyramid
+  MODULE PURE FUNCTION isPyramid(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isPyramid
 END INTERFACE
 
 PUBLIC :: isPyramid
@@ -562,10 +562,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !  1. Returns true if element is a SerendipityElement element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION isSerendipityElement( ElemType ) RESULT( Ans )
-  LOGICAL( LGT ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION isSerendipityElement
+  MODULE PURE FUNCTION isSerendipityElement(ElemType) RESULT(Ans)
+    LOGICAL(LGT) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION isSerendipityElement
 END INTERFACE
 
 PUBLIC :: isSerendipityElement
@@ -582,10 +582,10 @@ INTERFACE
 !     Quadrangle
 !     Tetrahedron
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Elem_Topology( ElemType ) RESULT( Ans )
-  INTEGER( I4B ) :: Ans
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END FUNCTION Elem_Topology
+  MODULE PURE FUNCTION Elem_Topology(ElemType) RESULT(Ans)
+    INTEGER(I4B) :: Ans
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END FUNCTION Elem_Topology
 END INTERFACE
 
 INTERFACE ElementTopology
@@ -607,10 +607,10 @@ INTERFACE
 ! Third column => NNS
 ! 4 to NNS + 3 => Local Nptrs
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Facet_Matrix_RefElem( RefElem ) RESULT( FM )
-  INTEGER( I4B ), ALLOCATABLE :: FM( :, : )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-END FUNCTION Facet_Matrix_RefElem
+  MODULE PURE FUNCTION Facet_Matrix_RefElem(RefElem) RESULT(FM)
+    INTEGER(I4B), ALLOCATABLE :: FM(:, :)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+  END FUNCTION Facet_Matrix_RefElem
 END INTERFACE
 
 INTERFACE FacetMatrix
@@ -624,14 +624,14 @@ PUBLIC :: FacetMatrix
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	16 June 2021
+! date:         16 June 2021
 ! summary: This routine returns the facet elements
 
 INTERFACE
-MODULE PURE FUNCTION RefElem_FacetElements( RefElem ) RESULT( ans )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  TYPE( ReferenceElement_ ), ALLOCATABLE :: ans( : )
-END FUNCTION RefElem_FacetElements
+  MODULE PURE FUNCTION RefElem_FacetElements(RefElem) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
+  END FUNCTION RefElem_FacetElements
 END INTERFACE
 
 INTERFACE FacetElements
@@ -649,11 +649,11 @@ INTERFACE
 ! This routine will be removed in near future
 ! This routine is not included in generic LocalNodeCoord routine
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE SUBROUTINE Local_NodeCoord( NodeCoord, ElemType )
-  ! Define intent of dummy variables
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: NodeCoord( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-END SUBROUTINE Local_NodeCoord
+  MODULE PURE SUBROUTINE Local_NodeCoord(NodeCoord, ElemType)
+    ! Define intent of dummy variables
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: NodeCoord(:, :)
+    INTEGER(I4B), INTENT(IN) :: ElemType
+  END SUBROUTINE Local_NodeCoord
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -664,10 +664,10 @@ INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 ! Returns the local NodeCoord of an element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-MODULE PURE FUNCTION Local_NodeCoord_RefElem( RefElem ) RESULT( NodeCoord )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), ALLOCATABLE :: NodeCoord( :, : )
-END FUNCTION Local_NodeCoord_RefElem
+  MODULE PURE FUNCTION Local_NodeCoord_RefElem(RefElem) RESULT(NodeCoord)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    REAL(DFP), ALLOCATABLE :: NodeCoord(:, :)
+  END FUNCTION Local_NodeCoord_RefElem
 END INTERFACE
 
 INTERFACE LocalNodeCoord
@@ -681,11 +681,11 @@ PUBLIC :: LocalNodeCoord
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex
+  MODULE PURE FUNCTION Measure_Simplex(RefElem, XiJ) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    REAL(DFP), INTENT(IN) :: XiJ(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex
 END INTERFACE
 
 INTERFACE MeasureSimplex
@@ -699,12 +699,12 @@ PUBLIC :: MeasureSimplex
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Element_Quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION Element_Quality
+  MODULE FUNCTION Element_Quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION Element_Quality
 END INTERFACE
 
 INTERFACE ElementQuality
@@ -718,12 +718,12 @@ PUBLIC :: ElementQuality
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION contains_point( refelem , xij, x ) RESULT( Ans )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij( :, : )
-  REAL( DFP ), INTENT( IN ) :: x(:)
-  LOGICAL( LGT ) :: Ans
-END FUNCTION contains_point
+  MODULE FUNCTION contains_point(refelem, xij, x) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP), INTENT(IN) :: x(:)
+    LOGICAL(LGT) :: Ans
+  END FUNCTION contains_point
 END INTERFACE
 
 INTERFACE ContainsPoint
@@ -737,14 +737,14 @@ PUBLIC :: ContainsPoint
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	16 June 2021
-! summary: 	Total entities present in an element
+! date:         16 June 2021
+! summary:         Total entities present in an element
 
 INTERFACE
-MODULE PURE FUNCTION RefElem_TotalEntities( ElemType ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-  INTEGER( I4B ) :: ans( 4 )
-END FUNCTION RefElem_TotalEntities
+  MODULE PURE FUNCTION RefElem_TotalEntities(ElemType) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: ElemType
+    INTEGER(I4B) :: ans(4)
+  END FUNCTION RefElem_TotalEntities
 END INTERFACE
 
 INTERFACE TotalEntities
@@ -758,15 +758,15 @@ PUBLIC :: TotalEntities
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	16 June 2021
-! summary: 	This routine returns the facet topology of the given element type
+! date:         16 June 2021
+! summary:         This routine returns the facet topology of the given element type
 
 INTERFACE
-MODULE PURE FUNCTION RefElem_FacetTopology( ElemType, Nptrs ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-  INTEGER( I4B ), INTENT( IN ) :: Nptrs( : )
-  TYPE( ReferenceTopology_ ), ALLOCATABLE :: ans( : )
-END FUNCTION RefElem_FacetTopology
+  MODULE PURE FUNCTION RefElem_FacetTopology(ElemType, Nptrs) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: ElemType
+    INTEGER(I4B), INTENT(IN) :: Nptrs(:)
+    TYPE(ReferenceTopology_), ALLOCATABLE :: ans(:)
+  END FUNCTION RefElem_FacetTopology
 END INTERFACE
 
 INTERFACE FacetTopology
@@ -780,11 +780,11 @@ PUBLIC :: FacetTopology
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE get_vtk_elemType( ElemType, vtk_type, nptrs )
-  INTEGER( I4B ), INTENT( IN ) :: ElemType
-  INTEGER( Int8 ), INTENT (OUT) :: vtk_type
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: nptrs( : )
-END SUBROUTINE get_vtk_elemType
+  MODULE PURE SUBROUTINE get_vtk_elemType(ElemType, vtk_type, nptrs)
+    INTEGER(I4B), INTENT(IN) :: ElemType
+    INTEGER(Int8), INTENT(OUT) :: vtk_type
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: nptrs(:)
+  END SUBROUTINE get_vtk_elemType
 END INTERFACE
 
 INTERFACE getVTKelementType
