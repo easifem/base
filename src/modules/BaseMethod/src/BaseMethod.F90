@@ -44,6 +44,7 @@ MODULE BaseMethod
   USE MetisInterface
   USE EASIFEM_BLAS
   USE F95_LAPACK
+  USE F77_LAPACK
   USE OpenMP_Method
   USE GlobalData
   USE OGPF

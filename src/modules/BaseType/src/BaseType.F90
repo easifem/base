@@ -35,11 +35,11 @@ PUBLIC :: StringPointer_
 !                                                               BoundingBox_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
+!> authors: Vikas Sharma, Ph. D.
 ! summary: A data type to represent a bounding box;
 !
-!{!pages/BoundingBox.md!}
+!{!pages/BoundingBox_.md!}
 
 TYPE :: BoundingBox_
   INTEGER(I4B) :: NSD
@@ -65,7 +65,7 @@ TYPE(BoundingBox_), PUBLIC, PARAMETER :: TypeBoundingBox = &
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 23 Feb 2021
-! summary:         [[BoundingBoxPointer_]] is a user defined data type which contains the pointer to the [[BoundingBox_]] data type.
+! summary: Contains the pointer to the [[BoundingBox_]] data type.
 
 TYPE :: BoundingBoxPointer_
   CLASS(BoundingBoxPointer_), POINTER :: Ptr => NULL()
@@ -81,7 +81,7 @@ PUBLIC :: BoundingBoxPointer_
 ! date:         25 Feb 2021
 ! summary: A data type for an Array of rank 2 of real numbers
 !
-!{!pages/RealMatrix.md!}
+!{!pages/RealMatrix_.md!}
 
 TYPE :: RealMatrix_
   INTEGER(I4B) :: tDimension = 0_I4B
@@ -109,7 +109,7 @@ PUBLIC :: RealMatrixPointer_
 ! date:         24 Feb 2021
 ! summary:         A data type to contain fortran vector of integer numbers
 !
-!{!pages/IntVector.md!}s
+!{!pages/IntVector_.md!}
 
 TYPE :: IntVector_
   INTEGER(I4B) :: tDimension = 1_I4B
@@ -135,7 +135,7 @@ PUBLIC :: IntVectorPointer_
 ! date:         24 Feb 2021
 ! summary:         A data type to contain fortran vector of real numbers
 !
-!{!pages/RealVector.md!}
+!{!pages/RealVector_.md!}
 !
 
 TYPE :: RealVector_
@@ -163,8 +163,8 @@ PUBLIC :: RealVectorPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 24 Feb 2021
 ! summary: Data type for 3D vectors
+! date: 24 Feb 2021
 !
 !{!pages/Vector3D.md!}
 
@@ -177,6 +177,10 @@ PUBLIC :: Vector3D_
 
 TYPE(Vector3D_), PUBLIC, PARAMETER :: TypeVector3D = Vector3D_( &
   & tDimension=1_I4B, Val=[0.0_DFP, 0.0_DFP, 0.0_DFP])
+
+!----------------------------------------------------------------------------
+!                                                            Vector3DPointer_
+!----------------------------------------------------------------------------
 
 TYPE :: Vector3DPointer_
   CLASS(Vector3D_), POINTER :: Ptr => NULL()
@@ -576,7 +580,7 @@ PUBLIC :: SmallStrainPointer_
 ! date:         1 March 2021
 ! summary:         This data type is defined to handle reference topology
 !
-!{!pages/ReferenceElement.md}
+!{!pages/ReferenceElement_.md}
 
 TYPE :: ReferenceTopology_
   INTEGER(I4B), ALLOCATABLE :: Nptrs(:)
@@ -600,23 +604,24 @@ PUBLIC :: ReferenceTopologyPointer_
 ! date:         2 March 2021
 ! summary:         An abstract data type for Reference Element
 !
-!{!pages/ReferenceElement.md}
+!{!pages/ReferenceElement_.md}
+
 TYPE :: ReferenceElement_
-  REAL(DFP), ALLOCATABLE :: XiJ(:, :)
+  REAL(DFP), ALLOCATABLE :: xiJ(:, :)
     !! Node coord
-  INTEGER(I4B) :: EntityCounts(4)
+  INTEGER(I4B) :: entityCounts(4)
     !! Number of 0D, 1D, 2D, 3D entities
-  INTEGER(I4B) :: XiDimension
+  INTEGER(I4B) :: xiDimension
     !! Xidimension
-  INTEGER(I4B) :: Name
+  INTEGER(I4B) :: name
     !! Name of the element
-  INTEGER(I4B) :: Order
+  INTEGER(I4B) :: order
     !! Order of element
-  INTEGER(I4B) :: NSD
+  INTEGER(I4B) :: nsd
     !! Number of spatial dimensions
-  TYPE(ReferenceTopology_), ALLOCATABLE :: Topology(:)
+  TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities
-  PROCEDURE(lag_elem_refelem), POINTER, PASS(obj) :: LagrangeElement => NULL()
+  PROCEDURE(lag_elem_refelem), POINTER, PASS(obj) :: lagrangeElement => NULL()
     !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
@@ -787,13 +792,13 @@ TYPE(ReferencePyramid_), PARAMETER, PUBLIC :: TypeReferencePyramid &
 TYPE :: KeyValue_
   INTEGER(I4B) :: DataType = 0
   TYPE(String) :: Key
-  REAL(DFP), ALLOCATABLE :: Value(:, :)
+  REAL(DFP), ALLOCATABLE :: VALUE(:, :)
 END TYPE KeyValue_
 
 PUBLIC :: KeyValue_
 
 TYPE(KeyValue_), PARAMETER, PUBLIC :: TypeKeyValue = &
-  & KeyValue_(Value=NULL())
+  & KeyValue_(VALUE=NULL())
 
 !----------------------------------------------------------------------------
 !                                                                FEVariable_
@@ -1062,6 +1067,27 @@ TYPE(DG_), PARAMETER, PUBLIC :: &
   & TypeDG = DG_()
 
 !----------------------------------------------------------------------------
+!                                                                 Derivative
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-06
+! update: 2021-11-06
+! summary: Derivative class contains symbols for derivatives
+
+TYPE :: Derivative_
+  CHARACTER(LEN=1) :: NONE = ' '
+  CHARACTER(LEN=2) :: dt = 'dt'
+  CHARACTER(LEN=2) :: dx = 'dx'
+  CHARACTER(LEN=3) :: dxi = 'dxi'
+  CHARACTER(LEN=3) :: dxj = 'dxj'
+  INTEGER(I4B) :: order = 1
+END TYPE Derivative_
+
+TYPE(Derivative_), PARAMETER, PUBLIC :: FirstDerivative = &
+     & Derivative_(order=1)
+
+!----------------------------------------------------------------------------
 !                                                            ElementData_
 !----------------------------------------------------------------------------
 
@@ -1158,8 +1184,8 @@ PUBLIC :: STShapeDataPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         4 March 2021
-! summary:         Datatype for data defined at all gauss points of an elements
+! date: 4 March 2021
+! summary: Datatype for data defined at all gauss points of an elements
 !
 !{!pages/ElemshapeData_.md}
 TYPE :: ElemShapeData_
@@ -1218,7 +1244,7 @@ PUBLIC :: ElemShapeDataPointer_
 !
 ! ## How to initiate local shape data
 !
-! ```fortran
+!```fortran
 ! program main
 !   !! This program shows how to use space-time element shape data
 ! use easifem

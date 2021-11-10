@@ -363,8 +363,8 @@ INTERFACE
 !  1. Returns the order of an element
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION Element_Order_RefElem(RefElem) RESULT(Ans)
-    INTEGER(I4B) :: Ans
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    INTEGER(I4B) :: Ans
   END FUNCTION Element_Order_RefElem
 END INTERFACE
 
@@ -373,6 +373,12 @@ INTERFACE ElementOrder
 END INTERFACE ElementOrder
 
 PUBLIC :: ElementOrder
+
+INTERFACE OPERATOR(.order.)
+  MODULE PROCEDURE Element_Order_RefElem, Element_Order
+END INTERFACE OPERATOR(.order.)
+
+PUBLIC :: OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
 !                                                      XiDimension@Geometry
@@ -574,29 +580,53 @@ PUBLIC :: isSerendipityElement
 !                                                   ElementTopology@Geometry
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-10
+! update: 2021-11-10
+! summary: Return the element topology
+!
+!# Introduction
+!
+! This routine returns the topology of the reference element
+!  - Line
+!  - Triangle
+!  - Quadrangle
+!  - Tetrahedron
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!   1.  This will return the element topology
-!     Line
-!     Triangle
-!     Quadrangle
-!     Tetrahedron
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-  MODULE PURE FUNCTION Elem_Topology(ElemType) RESULT(Ans)
-    INTEGER(I4B) :: Ans
+  MODULE PURE FUNCTION refelem_ElementTopology1(ElemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION Elem_Topology
+    INTEGER(I4B) :: Ans
+  END FUNCTION refelem_ElementTopology1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   ElementTopology@Geometry
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION refelem_ElementTopology2(obj) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    INTEGER(I4B) :: Ans
+  END FUNCTION refelem_ElementTopology2
 END INTERFACE
 
 INTERFACE ElementTopology
-  MODULE PROCEDURE Elem_Topology
+  MODULE PROCEDURE refelem_ElementTopology1, refelem_ElementTopology2
 END INTERFACE ElementTopology
 
 PUBLIC :: ElementTopology
 
+INTERFACE OPERATOR(.topology.)
+  MODULE PROCEDURE refelem_ElementTopology1, refelem_ElementTopology2
+END INTERFACE OPERATOR(.topology.)
+
+PUBLIC :: OPERATOR(.topology.)
+
 !----------------------------------------------------------------------------
 !                                                       FacetMatrix@Geometry
 !----------------------------------------------------------------------------
+
 INTERFACE
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 ! Returns the facet matrix
