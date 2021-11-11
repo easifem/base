@@ -9,8 +9,8 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/IntVector_Method@Constructor.F90
-  ${src_path}/IntVector_Method@IO.F90
-  ${src_path}/IntVector_Method@setMethod.F90
-  ${src_path}/IntVector_Method@getMethod.F90
+  ${src_path}/IntVector_Method@ConstructorMethods.F90
+  ${src_path}/IntVector_Method@IOMethods.F90
+  ${src_path}/IntVector_Method@SetMethods.F90
+  ${src_path}/IntVector_Method@GetMethods.F90
 )

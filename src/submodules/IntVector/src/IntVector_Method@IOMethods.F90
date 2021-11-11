@@ -16,10 +16,10 @@
 !
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This submodule contains Input/Output methods for [[IntVector_]]
+! date:         28 Feb 2021
+! summary:         This submodule contains Input/Output methods for [[IntVector_]]
 
-SUBMODULE(IntVector_Method) IO
+SUBMODULE(IntVector_Method) IOMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,15 +29,15 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_Display1
-  INTEGER( I4B ) :: j
-  CALL Display( msg = "# " // TRIM(msg), unitNo = unitNo )
-  CALL Display( msg = "# size : ", val = SIZE( obj ), unitNo = unitNo )
-  DO j = 1, SIZE( obj )
-    CALL Display( obj( j ),  &
-      & msg = "# " // TRIM(msg) // "( "   &
-      & // TOSTRING(j) // " ) ", &
-      & unitNo = UnitNo, orient=orient )
-  END DO
+INTEGER(I4B) :: j
+CALL Display(msg="# "//TRIM(msg), unitNo=unitNo)
+CALL Display(msg="# size : ", val=SIZE(obj), unitNo=unitNo)
+DO j = 1, SIZE(obj)
+  CALL Display(obj(j),  &
+    & msg="# "//TRIM(msg)//"( "   &
+    & //TOSTRING(j)//" ) ", &
+    & unitNo=UnitNo, orient=orient)
+END DO
 END PROCEDURE intVec_Display1
 
 !----------------------------------------------------------------------------
@@ -45,11 +45,11 @@ END PROCEDURE intVec_Display1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_Display2
-  IF( isAllocated( obj )) THEN
-    CALL Display( msg = "# " // TRIM(msg), unitNo = unitNo )
-    CALL Display( msg = "size : ", val = SIZE( obj ), unitNo = unitNo )
-    CALL Display( Val = obj%Val, msg='', unitNo=unitNo, orient=orient )
-  END IF
+IF (isAllocated(obj)) THEN
+  CALL Display(msg="# "//TRIM(msg), unitNo=unitNo)
+  CALL Display(msg="size : ", val=SIZE(obj), unitNo=unitNo)
+  CALL Display(Val=obj%Val, msg='', unitNo=unitNo, orient=orient)
+END IF
 END PROCEDURE intVec_Display2
 
-END SUBMODULE IO
+END SUBMODULE IOMethods
