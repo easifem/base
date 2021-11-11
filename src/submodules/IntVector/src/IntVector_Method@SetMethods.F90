@@ -16,26 +16,34 @@
 !
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This submodule implements set methods of [[IntVector_]]
+! date:         25 Feb 2021
+! summary:         This submodule implements set methods of [[IntVector_]]
 
-SUBMODULE(IntVector_Method) setMethod
+SUBMODULE(IntVector_Method) SetMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                        setTotalDimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IntVec_setTotalDimension
+obj%tDimension = tDimension
+END PROCEDURE IntVec_setTotalDimension
 
 !----------------------------------------------------------------------------
 !                                                                 setMethod
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_set1
-  IF( ALLOCATED( obj%Val ) ) THEN
-    IF( SIZE( Value ) .EQ. 1 ) THEN
-      obj%Val( Indx ) = Value( 1 )
-    ELSE
-      obj%Val( Indx ) = Value
-    END IF
+IF (ALLOCATED(obj%Val)) THEN
+  IF (SIZE(Value) .EQ. 1) THEN
+    obj%Val(Indx) = Value(1)
+  ELSE
+    obj%Val(Indx) = Value
   END IF
+END IF
 END PROCEDURE intVec_set1
 
 !----------------------------------------------------------------------------
@@ -43,9 +51,9 @@ END PROCEDURE intVec_set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_set2
-  IF( ALLOCATED( obj%Val ) ) THEN
-    obj%Val(Indx) = Value
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  obj%Val(Indx) = Value
+END IF
 END PROCEDURE intVec_set2
 
 !----------------------------------------------------------------------------
@@ -53,7 +61,7 @@ END PROCEDURE intVec_set2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_1
-  CALL Append( obj%Val, Value )
+CALL Append(obj%Val, Value)
 END PROCEDURE IntVec_Append_1
 
 !----------------------------------------------------------------------------
@@ -61,7 +69,7 @@ END PROCEDURE IntVec_Append_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_2
-  CALL Append( obj%Val, Value )
+CALL Append(obj%Val, Value)
 END PROCEDURE IntVec_Append_2
 
 !----------------------------------------------------------------------------
@@ -69,7 +77,7 @@ END PROCEDURE IntVec_Append_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_3
-  CALL Append( obj%Val, Anotherobj%Val )
+CALL Append(obj%Val, Anotherobj%Val)
 END PROCEDURE IntVec_Append_3
 
 !----------------------------------------------------------------------------
@@ -77,29 +85,29 @@ END PROCEDURE IntVec_Append_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_RemoveDuplicates_1
-  ! Define internal variables
-  INTEGER( I4B ) :: i,k, j, N
-  INTEGER( I4B ), ALLOCATABLE :: Res( : )
+! Define internal variables
+INTEGER(I4B) :: i, k, j, N
+INTEGER(I4B), ALLOCATABLE :: Res(:)
 
-  IF( ALLOCATED( obj%Val )  ) THEN
+IF (ALLOCATED(obj%Val)) THEN
 
-    N = SIZE ( obj%Val )
-    ALLOCATE( Res( N ) )
-    Res = 0
-    Res( 1 ) = obj%Val ( 1 )
-    k = 1
+  N = SIZE(obj%Val)
+  ALLOCATE (Res(N))
+  Res = 0
+  Res(1) = obj%Val(1)
+  k = 1
 
-    DO i = 2, N
-      IF( .NOT. ANY( Res .EQ. obj%Val( i ) ) ) THEN
-        k = k + 1
-        Res( k ) = obj%Val( i )
-      END IF
-    END DO
+  DO i = 2, N
+    IF (.NOT. ANY(Res .EQ. obj%Val(i))) THEN
+      k = k + 1
+      Res(k) = obj%Val(i)
+    END IF
+  END DO
 
-    obj%Val = Res( 1 : k )
-    DEALLOCATE( Res )
+  obj%Val = Res(1:k)
+  DEALLOCATE (Res)
 
-  END IF
+END IF
 
 END PROCEDURE IntVec_RemoveDuplicates_1
 
@@ -108,29 +116,29 @@ END PROCEDURE IntVec_RemoveDuplicates_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_RemoveDuplicates_2
-  ! Define internal variables
-  INTEGER( I4B ) :: i,k, j, N
-  INTEGER( I4B ), ALLOCATABLE :: Res( : )
+! Define internal variables
+INTEGER(I4B) :: i, k, j, N
+INTEGER(I4B), ALLOCATABLE :: Res(:)
 
-  IF( ALLOCATED( obj )  ) THEN
+IF (ALLOCATED(obj)) THEN
 
-    N = SIZE ( obj )
-    ALLOCATE( Res( N ) )
-    Res = 0
-    Res( 1 ) = obj ( 1 )
-    k = 1
+  N = SIZE(obj)
+  ALLOCATE (Res(N))
+  Res = 0
+  Res(1) = obj(1)
+  k = 1
 
-    DO i = 2, N
-      IF( .NOT. ANY( Res .EQ. obj( i ) ) ) THEN
-        k = k + 1
-        Res( k ) = obj( i )
-      END IF
-    END DO
+  DO i = 2, N
+    IF (.NOT. ANY(Res .EQ. obj(i))) THEN
+      k = k + 1
+      Res(k) = obj(i)
+    END IF
+  END DO
 
-    obj = Res( 1 : k )
-    DEALLOCATE( Res )
+  obj = Res(1:k)
+  DEALLOCATE (Res)
 
-  END IF
+END IF
 
 END PROCEDURE IntVec_RemoveDuplicates_2
 
@@ -139,12 +147,12 @@ END PROCEDURE IntVec_RemoveDuplicates_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Repeat_1
-  INTEGER( I4B ) :: n, i
-  n = SIZE( Val )
-  Ans( 1 : n ) = Val
-  DO i = 1, rtimes-1
-    Ans( i * n + 1: ( i + 1 ) * n ) = Val
-  END DO
+INTEGER(I4B) :: n, i
+n = SIZE(Val)
+Ans(1:n) = Val
+DO i = 1, rtimes - 1
+  Ans(i * n + 1:(i + 1) * n) = Val
+END DO
 END PROCEDURE IntVec_Repeat_1
 
 !----------------------------------------------------------------------------
@@ -152,7 +160,7 @@ END PROCEDURE IntVec_Repeat_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Repeat_2
-  Ans = Repeat( obj%Val, rtimes )
+Ans = Repeat(obj%Val, rtimes)
 END PROCEDURE IntVec_Repeat_2
 
 !----------------------------------------------------------------------------
@@ -160,11 +168,11 @@ END PROCEDURE IntVec_Repeat_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_H_CONCAT_1
-  INTEGER( I4B ) :: s1, s2
-  s1 = SIZe( vec1 )
-  s2 = SIZe( vec2 )
-  ans( 1:s1 ) = vec1( : )
-  ans( s1+1: ) = vec2( : )
+INTEGER(I4B) :: s1, s2
+s1 = SIZe(vec1)
+s2 = SIZe(vec2)
+ans(1:s1) = vec1(:)
+ans(s1 + 1:) = vec2(:)
 END PROCEDURE IntVec_H_CONCAT_1
 
 !----------------------------------------------------------------------------
@@ -172,12 +180,12 @@ END PROCEDURE IntVec_H_CONCAT_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_H_CONCAT_2
-  INTEGER( I4B ) :: s1, s2
-  s1 = SIZE( obj1 )
-  s2 = SIZE( obj2 )
-  CALL Initiate( ans, s1+s2 )
-  ans%val(1:s1) = obj1%val(:)
-  ans%val(s1+1:) = obj2%val(:)
+INTEGER(I4B) :: s1, s2
+s1 = SIZE(obj1)
+s2 = SIZE(obj2)
+CALL Initiate(ans, s1 + s2)
+ans%val(1:s1) = obj1%val(:)
+ans%val(s1 + 1:) = obj2%val(:)
 END PROCEDURE IntVec_H_CONCAT_2
 
 !----------------------------------------------------------------------------
@@ -185,12 +193,12 @@ END PROCEDURE IntVec_H_CONCAT_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_H_CONCAT_3
-  INTEGER( I4B ) :: s1, s2
-  s1 = SIZE( vec1 )
-  s2 = SIZE( obj2 )
-  CALL Initiate( ans, s1+s2 )
-  ans%val(1:s1) = vec1(:)
-  ans%val(s1+1:) = obj2%val(:)
+INTEGER(I4B) :: s1, s2
+s1 = SIZE(vec1)
+s2 = SIZE(obj2)
+CALL Initiate(ans, s1 + s2)
+ans%val(1:s1) = vec1(:)
+ans%val(s1 + 1:) = obj2%val(:)
 END PROCEDURE IntVec_H_CONCAT_3
 
 !----------------------------------------------------------------------------
@@ -198,12 +206,12 @@ END PROCEDURE IntVec_H_CONCAT_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_H_CONCAT_4
-  INTEGER( I4B ) :: s1, s2
-  s1 = SIZE( obj1 )
-  s2 = SIZE( vec2 )
-  CALL Initiate( ans, s1+s2 )
-  ans%val(1:s1) = obj1%val(:)
-  ans%val(s1+1:) = vec2(:)
+INTEGER(I4B) :: s1, s2
+s1 = SIZE(obj1)
+s2 = SIZE(vec2)
+CALL Initiate(ans, s1 + s2)
+ans%val(1:s1) = obj1%val(:)
+ans%val(s1 + 1:) = vec2(:)
 END PROCEDURE IntVec_H_CONCAT_4
 
-END SUBMODULE setMethod
+END SUBMODULE SetMethods

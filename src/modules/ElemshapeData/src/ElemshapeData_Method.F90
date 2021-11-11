@@ -29,7 +29,7 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	4 March 2021
+! date:         4 March 2021
 ! summary: Allocate the memory for various matrices in the object
 !
 !# Introduction
@@ -43,41 +43,21 @@ PRIVATE
 !
 !### Usage
 !
-!```fortran
-! PROGRAM main
-!   USE easifemBase
-!   IMPLICIT NONE
-!   TYPE( ElemshapeData_ ) :: obj
-!   TYPE( QuadraturePoint_ ) :: quad
-!   TYPE( ReferenceLine_ ) :: refelem
-!   INTEGER( I4B  ), PARAMETER :: nsd=1, order=1
-!   !> main
-!   ! #ReferenceLine/ReferenceLine
-!   ! #ReferenceLine
-!   refelem = ReferenceLine( nsd = nsd )
-!   ! #GaussLegendreQuadrature
-!   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
-!   CALL AllocateData( obj = obj, nsd = refelem%nsd, &
-!     & xidim = refelem%xidimension, nns = 2, nips = 1 )
-!   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
-!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
-!   CALL Display( obj, "obj" )
-! END PROGRAM main
-!```
+! See [[ElementshapeData_:elemsd_initiate]] for usage.
 
 INTERFACE
-MODULE PURE SUBROUTINE elemsd_AllocateData( obj, nsd, xidim, nns, nips )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
+  MODULE PURE SUBROUTINE elemsd_AllocateData(obj, nsd, xidim, nns, nips)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! object to be returned
-  INTEGER( I4B ), INTENT( IN ) :: nsd
+    INTEGER(I4B), INTENT(IN) :: nsd
     !! spatial dimension
-  INTEGER( I4B ), INTENT( IN ) :: xidim
+    INTEGER(I4B), INTENT(IN) :: xidim
     !! xidimension
-  INTEGER( I4B ), INTENT( IN ) :: nns
+    INTEGER(I4B), INTENT(IN) :: nns
     !! number of nodes in element
-  INTEGER( I4B ), INTENT( IN ) :: nips
+    INTEGER(I4B), INTENT(IN) :: nips
     !! number of integration points
-END SUBROUTINE elemsd_AllocateData
+  END SUBROUTINE elemsd_AllocateData
 END INTERFACE
 
 INTERFACE AllocateData
@@ -104,9 +84,12 @@ PUBLIC :: Allocate
 !
 ! This routine initiates the shape function related data inside the element.
 !
-!## Usage
+!### Usage
 !
 !```fortran
+! ! authors: Vikas Sharma, Ph. D.
+! ! date: 31 Oct 2021
+! ! summary: Testing for Line1
 ! PROGRAM main
 !   USE easifemBase
 !   IMPLICIT NONE
@@ -114,29 +97,92 @@ PUBLIC :: Allocate
 !   TYPE( QuadraturePoint_ ) :: quad
 !   TYPE( ReferenceLine_ ) :: refelem
 !   INTEGER( I4B  ), PARAMETER :: nsd=1, order=1
+!   REAL( DFP ), PARAMETER :: xij(3,2) = RESHAPE([-1,0,0,1,0,0],[3,2])
 !   !> main
 !   ! #ReferenceLine/ReferenceLine
 !   ! #ReferenceLine
 !   refelem = ReferenceLine( nsd = nsd )
 !   ! #GaussLegendreQuadrature
 !   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
-!   CALL AllocateData( obj = obj, nsd = refelem%nsd, &
+!   CALL Allocate( obj = obj, nsd = refelem%nsd, &
 !     & xidim = refelem%xidimension, nns = 2, nips = 1 )
+!   ! #ReferenceElement/Initiate
+!   ! #ReferenceLine/Initiate
 !   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
 !     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
+!   ! #ReferenceLine/Set
+!   ! #ReferenceElement/Set
+!   CALL Set( obj=obj, val=xij(1:nsd, :), N=obj%N, dNdXi=obj%dNdXi )
 !   CALL Display( obj, "obj" )
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+! !> authors: Vikas Sharma, Ph. D.
+! ! date: 31 Oct 2021
+! ! summary: Testing for Line2
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( ElemshapeData_ ) :: obj
+!   TYPE( QuadraturePoint_ ) :: quad
+!   TYPE( ReferenceLine_ ) :: refelem
+!   INTEGER( I4B  ), PARAMETER :: nsd=1, order=2
+!   REAL( DFP ), PARAMETER :: xij(3,2) = RESHAPE([-1,0,0,1,0,0],[3,2])
+!   !> main
+!   ! #ReferenceLine/ReferenceLine
+!   ! #ReferenceLine
+!   refelem = ReferenceLine( nsd = nsd )
+!   ! #GaussLegendreQuadrature
+!   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
+!   CALL Allocate( obj = obj, nsd = refelem%nsd, &
+!     & xidim = refelem%xidimension, nns = 2, nips = 1 )
+!   ! #ReferenceElement/Initiate
+!   ! #ReferenceLine/Initiate
+!   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
+!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
+!   ! #ReferenceLine/Set
+!   ! #ReferenceElement/Set
+!   CALL Set( obj=obj, val=xij(1:nsd, :), N=obj%N, dNdXi=obj%dNdXi )
+!   CALL Display( obj, "obj" )
+!   CALL DeallocateData( obj )
+! END PROGRAM main
+! !> authors: Vikas Sharma, Ph. D.
+! ! date: 2021-11-01
+! ! update: 2021-11-01
+! ! summary: Testing [[ElemshapeData_]] for Triangle3 element
+! PROGRAM main
+!   USE easifemBase
+!   IMPLICIT NONE
+!   TYPE( ElemshapeData_ ) :: obj
+!   TYPE( QuadraturePoint_ ) :: quad
+!   TYPE( ReferenceTriangle_ ) :: refelem
+!   INTEGER( I4B  ), PARAMETER :: nsd=2, order=1
+!   REAL( DFP ), PARAMETER :: xij(3,3) = RESHAPE([0,0,0,1,0,0,0,1,0],[3,3])
+!   !name
+!   ! #ReferenceTriangle
+!   refelem = ReferenceTriangle( nsd = nsd )
+!   ! #GaussLegendreQuadrature
+!   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
+!   CALL ALLOCATE( obj = obj, nsd = refelem%nsd, &
+!     & xidim = refelem%xidimension, nns = 3, nips = 1 )
+!   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
+!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
+!   ! #ReferenceTriangle/Set
+!   ! #ReferenceElement/Set
+!   CALL Set( obj=obj, val=xij(1:nsd, :), N=obj%N, dNdXi=obj%dNdXi )
+!   CALL Display( obj, "obj" )
+!   CALL DeallocateData( obj )
 ! END PROGRAM main
 !```
 
 INTERFACE
-MODULE SUBROUTINE elemsd_initiate( obj, quad, refElem, continuityType, &
-  & interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CHARACTER( LEN = * ), INTENT( IN ) :: continuityType
-  CHARACTER( LEN = * ), INTENT( IN ) :: interpolType
-END SUBROUTINE elemsd_initiate
+  MODULE SUBROUTINE elemsd_initiate(obj, quad, refElem, continuityType, &
+    & interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CHARACTER(LEN=*), INTENT(IN) :: continuityType
+    CHARACTER(LEN=*), INTENT(IN) :: interpolType
+  END SUBROUTINE elemsd_initiate
 END INTERFACE
 
 INTERFACE Initiate
@@ -148,32 +194,39 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	4 March 2021
+! date: 4 March 2021
 ! summary: Initiate time shape function data in [[stelemshapedata_]]
 !
 !# Introduction
-!
-! * This subroutine initiate the time shape function data in
-! [[stelemshapedata_]].
-! * For the effeciency purpose, user should supply an instance of
-! [[Elemshapedata_]] on time element. This object will have information of
-! location time shape function data such as `T, dTdtheta` etc.
-! * This routine uses `elemsd` to  set `obj%T`, `obj%dTdTheta`, `obj%Jt`,
+
+! - This subroutine initiates the shape-function data related to time
+! domain in the instance of [[stelemshapedata_]].
+! - User should provide an instance of [[Elemshapedata_]] elemsd,
+! - The `elemsd`, actually contains the information of
+! the shape-function in the time domain
+! - The shape-function data in the time domain is
+!   - $T$
+!   - $\frac{dT}{d\theta}$
+!   - ...
+!@note
+! This routine uses `elemsd` to  set `obj%T`, `obj%dTdTheta`, `obj%Jt`,
 ! `obj%Wt`, `obj%Theta`.
-! * The following examples shows how to use it.
+!@endnote
+!
 !
 !### Usage
+! TODO Add usage for [[ElemshapeData_:stsd_initiate]]
 !
 !```fortran
 !
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_initiate( obj, elemsd )
-  TYPE( STElemShapeData_ ), ALLOCATABLE, INTENT( INOUT ) :: obj( : )
-  TYPE( ElemShapeData_ ), INTENT( IN ) :: elemsd
+  MODULE PURE SUBROUTINE stsd_initiate(obj, elemsd)
+    TYPE(STElemShapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    TYPE(ElemShapeData_), INTENT(IN) :: elemsd
     !! It has information about location shape function for time element
-END SUBROUTINE stsd_initiate
+  END SUBROUTINE stsd_initiate
 END INTERFACE
 
 INTERFACE Initiate
@@ -187,24 +240,23 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	4 March 2021
+! date:         4 March 2021
 ! summary: Deallocates the data stored inside [[elemshapedata_]]
 !
 !# Introduction
-! 	This routine deallocates the data stored inside [[elemshapedata_]]. This
+!
+! This routine deallocates the data stored inside [[elemshapedata_]]. This
 ! routine belongs to `AllocateData()`
 !
 !
 !### Usage
 !
-!```fortran
-!
-!```
+! See [[ElemshapeData_:elemsd_initiate]]
 
 INTERFACE
-MODULE PURE SUBROUTINE elemsd_DeallocateData( obj )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE elemsd_DeallocateData
+  MODULE PURE SUBROUTINE elemsd_DeallocateData(obj)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+  END SUBROUTINE elemsd_DeallocateData
 END INTERFACE
 
 INTERFACE DeallocateData
@@ -218,14 +270,14 @@ PUBLIC :: DeallocateData
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	30 Aug 2021
+! date:         30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseInterpolation_]]
 
 INTERFACE
-MODULE FUNCTION elemsd_BaseInterpolation( childName ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: childName
-  CLASS( BaseInterpolation_ ), POINTER :: ans
-END FUNCTION elemsd_BaseInterpolation
+  MODULE FUNCTION elemsd_BaseInterpolation(childName) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: childName
+    CLASS(BaseInterpolation_), POINTER :: ans
+  END FUNCTION elemsd_BaseInterpolation
 END INTERFACE
 
 INTERFACE BaseInterpolation
@@ -239,14 +291,14 @@ PUBLIC :: BaseInterpolation
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	30 Aug 2021
+! date:         30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseContinuity_]]
 
 INTERFACE
-MODULE FUNCTION elemsd_BaseContinuity( childName ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: childName
-  CLASS( BaseContinuity_ ), POINTER :: ans
-END FUNCTION elemsd_BaseContinuity
+  MODULE FUNCTION elemsd_BaseContinuity(childName) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: childName
+    CLASS(BaseContinuity_), POINTER :: ans
+  END FUNCTION elemsd_BaseContinuity
 END INTERFACE
 
 INTERFACE BaseContinuity
@@ -260,11 +312,11 @@ PUBLIC :: BaseContinuity
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	4 March 2021
+! date:         4 March 2021
 ! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
 !
 !# Introduction
-! 	This subroutine displays the content of [[elemshapedata_]] and
+!         This subroutine displays the content of [[elemshapedata_]] and
 ! [[stelemshapedata_]] on screen. this routine belongs to `Display()`.
 !
 !### Usage
@@ -274,11 +326,11 @@ PUBLIC :: BaseContinuity
 !```
 
 INTERFACE
-MODULE SUBROUTINE display_obj( obj, Msg, UnitNo )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: Msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-END SUBROUTINE display_obj
+  MODULE SUBROUTINE display_obj(obj, Msg, UnitNo)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    CHARACTER(LEN=*), INTENT(IN) :: Msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
+  END SUBROUTINE display_obj
 END INTERFACE
 
 INTERFACE Display
@@ -301,14 +353,14 @@ PUBLIC :: Display
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1_Lagrange( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1_ ), INTENT( IN ) :: continuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1_Lagrange
+  MODULE PURE SUBROUTINE H1_Lagrange(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1_), INTENT(IN) :: continuityType
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1_Lagrange
 END INTERFACE
 
 INTERFACE Initiate
@@ -329,14 +381,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1_Hermit( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1_ ), INTENT( IN ) :: continuityType
-  CLASS( HermitInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1_Hermit
+  MODULE PURE SUBROUTINE H1_Hermit(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1_), INTENT(IN) :: continuityType
+    CLASS(HermitInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1_Hermit
 END INTERFACE
 
 INTERFACE Initiate
@@ -357,14 +409,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1_Serendipity( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1_ ), INTENT( IN ) :: continuityType
-  CLASS( SerendipityInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1_Serendipity
+  MODULE PURE SUBROUTINE H1_Serendipity(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1_), INTENT(IN) :: continuityType
+    CLASS(SerendipityInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1_Serendipity
 END INTERFACE
 
 INTERFACE Initiate
@@ -385,20 +437,19 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1_Hierarchy( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1_ ), INTENT( IN ) :: continuityType
-  CLASS( HierarchyInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1_Hierarchy
+  MODULE PURE SUBROUTINE H1_Hierarchy(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1_), INTENT(IN) :: continuityType
+    CLASS(HierarchyInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1_Hierarchy
 END INTERFACE
 
 INTERFACE Initiate
   MODULE PROCEDURE H1_Hierarchy
 END INTERFACE Initiate
-
 
 !----------------------------------------------------------------------------
 !                                                    Initiate@H1DivLagrange
@@ -414,14 +465,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1Div_Lagrange( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1Div_ ), INTENT( IN ) :: continuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1Div_Lagrange
+  MODULE PURE SUBROUTINE H1Div_Lagrange(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1Div_), INTENT(IN) :: continuityType
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1Div_Lagrange
 END INTERFACE
 
 INTERFACE Initiate
@@ -442,14 +493,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1Div_Hermit( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1Div_ ), INTENT( IN ) :: continuityType
-  CLASS( HermitInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1Div_Hermit
+  MODULE PURE SUBROUTINE H1Div_Hermit(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1Div_), INTENT(IN) :: continuityType
+    CLASS(HermitInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1Div_Hermit
 END INTERFACE
 
 INTERFACE Initiate
@@ -470,14 +521,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1Div_Serendipity( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1Div_ ), INTENT( IN ) :: continuityType
-  CLASS( SerendipityInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1Div_Serendipity
+  MODULE PURE SUBROUTINE H1Div_Serendipity(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1Div_), INTENT(IN) :: continuityType
+    CLASS(SerendipityInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1Div_Serendipity
 END INTERFACE
 
 INTERFACE Initiate
@@ -498,20 +549,19 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1Div_Hierarchy( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1Div_ ), INTENT( IN ) :: continuityType
-  CLASS( HierarchyInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1Div_Hierarchy
+  MODULE PURE SUBROUTINE H1Div_Hierarchy(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1Div_), INTENT(IN) :: continuityType
+    CLASS(HierarchyInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1Div_Hierarchy
 END INTERFACE
 
 INTERFACE Initiate
   MODULE PROCEDURE H1Div_Hierarchy
 END INTERFACE Initiate
-
 
 !----------------------------------------------------------------------------
 !                                                  Initiate@H1CurlLagrange
@@ -527,14 +577,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1Curl_Lagrange( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1Curl_ ), INTENT( IN ) :: continuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1Curl_Lagrange
+  MODULE PURE SUBROUTINE H1Curl_Lagrange(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1Curl_), INTENT(IN) :: continuityType
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1Curl_Lagrange
 END INTERFACE
 
 INTERFACE Initiate
@@ -555,14 +605,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1Curl_Hermit( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1Curl_ ), INTENT( IN ) :: continuityType
-  CLASS( HermitInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1Curl_Hermit
+  MODULE PURE SUBROUTINE H1Curl_Hermit(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1Curl_), INTENT(IN) :: continuityType
+    CLASS(HermitInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1Curl_Hermit
 END INTERFACE
 
 INTERFACE Initiate
@@ -583,14 +633,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1Curl_Serendipity( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1Curl_ ), INTENT( IN ) :: continuityType
-  CLASS( SerendipityInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1Curl_Serendipity
+  MODULE PURE SUBROUTINE H1Curl_Serendipity(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1Curl_), INTENT(IN) :: continuityType
+    CLASS(SerendipityInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1Curl_Serendipity
 END INTERFACE
 
 INTERFACE Initiate
@@ -611,20 +661,19 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE H1Curl_Hierarchy( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( H1Curl_ ), INTENT( IN ) :: continuityType
-  CLASS( HierarchyInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE H1Curl_Hierarchy
+  MODULE PURE SUBROUTINE H1Curl_Hierarchy(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(H1Curl_), INTENT(IN) :: continuityType
+    CLASS(HierarchyInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE H1Curl_Hierarchy
 END INTERFACE
 
 INTERFACE Initiate
   MODULE PROCEDURE H1Curl_Hierarchy
 END INTERFACE Initiate
-
 
 !----------------------------------------------------------------------------
 !                                                  Initiate@DGLagrange
@@ -640,14 +689,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE DG_Lagrange( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( DG_ ), INTENT( IN ) :: continuityType
-  CLASS( LagrangeInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE DG_Lagrange
+  MODULE PURE SUBROUTINE DG_Lagrange(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(DG_), INTENT(IN) :: continuityType
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE DG_Lagrange
 END INTERFACE
 
 INTERFACE Initiate
@@ -668,14 +717,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE DG_Hermit( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( DG_ ), INTENT( IN ) :: continuityType
-  CLASS( HermitInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE DG_Hermit
+  MODULE PURE SUBROUTINE DG_Hermit(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(DG_), INTENT(IN) :: continuityType
+    CLASS(HermitInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE DG_Hermit
 END INTERFACE
 
 INTERFACE Initiate
@@ -696,14 +745,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE DG_Serendipity( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( DG_ ), INTENT( IN ) :: continuityType
-  CLASS( SerendipityInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE DG_Serendipity
+  MODULE PURE SUBROUTINE DG_Serendipity(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(DG_), INTENT(IN) :: continuityType
+    CLASS(SerendipityInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE DG_Serendipity
 END INTERFACE
 
 INTERFACE Initiate
@@ -724,14 +773,14 @@ END INTERFACE Initiate
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE DG_Hierarchy( obj, quad, refElem, &
-  & continuityType, interpolType )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: quad
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
-  CLASS( DG_ ), INTENT( IN ) :: continuityType
-  CLASS( HierarchyInterpolation_ ), INTENT( IN ) :: interpolType
-END SUBROUTINE DG_Hierarchy
+  MODULE PURE SUBROUTINE DG_Hierarchy(obj, quad, refElem, &
+    & continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(DG_), INTENT(IN) :: continuityType
+    CLASS(HierarchyInterpolation_), INTENT(IN) :: interpolType
+  END SUBROUTINE DG_Hierarchy
 END INTERFACE
 
 INTERFACE Initiate
@@ -743,7 +792,7 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	4 March
+! date:         4 March
 ! summary: This subroutine set the thickness field
 !
 !# Introduction
@@ -760,13 +809,13 @@ END INTERFACE Initiate
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE set_thickness( obj, Val, N )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
+  MODULE PURE SUBROUTINE set_thickness(obj, Val, N)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
     !! Nodal values of thickness
-  REAL( DFP ), INTENT( IN ) :: N( :, : )
+    REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function values at quadrature points
-END SUBROUTINE set_thickness
+  END SUBROUTINE set_thickness
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -774,7 +823,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	4 March 2021
+! date:         4 March 2021
 ! summary: This subroutine set the thickness field
 !
 !# Introduction
@@ -785,15 +834,15 @@ END INTERFACE
 ! $$d = d_{I}^{a} N^{I} T_{a}$$
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_thickness( obj, Val, N, T )
-  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+  MODULE PURE SUBROUTINE stsd_set_thickness(obj, Val, N, T)
+    CLASS(STElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! Space-time nodal values of thickness
-  REAL( DFP ), INTENT( IN ) :: N(:,:)
+    REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function at spatial quadrature
-  REAL( DFP ), INTENT( IN ) :: T(:)
+    REAL(DFP), INTENT(IN) :: T(:)
     !! Shape function at temporal quadrature
-END SUBROUTINE stsd_set_thickness
+  END SUBROUTINE stsd_set_thickness
 END INTERFACE
 
 INTERFACE setThickness
@@ -807,7 +856,7 @@ PUBLIC :: setThickness
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	4 March 2021
+! date:         4 March 2021
 ! summary: This subroutine set the Barycentric coordinates
 !
 !# Introduction
@@ -823,13 +872,13 @@ PUBLIC :: setThickness
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE set_coord( obj, Val, N )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+  MODULE PURE SUBROUTINE set_coord(obj, Val, N)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! Nodal coordinates in `xiJ` format
-  REAL( DFP ), INTENT( IN ) :: N(:,:)
+    REAL(DFP), INTENT(IN) :: N(:, :)
     !! When element is not an isoparametric we can supply N.
-END SUBROUTINE set_coord
+  END SUBROUTINE set_coord
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -837,7 +886,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	4 March 2021
+! date:         4 March 2021
 ! summary: This subroutine set the Barycentric coordinates
 !
 !# Introduction
@@ -848,13 +897,13 @@ END INTERFACE
 ! $$x=x_{I}^{a} N^I T_a$$
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_coord( obj, Val, N, T )
-  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+  MODULE PURE SUBROUTINE stsd_set_coord(obj, Val, N, T)
+    CLASS(STElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! space-time Nodal coordinates in `xiJ` format
-  REAL( DFP ), INTENT( IN ) :: N( :, : ), T( : )
+    REAL(DFP), INTENT(IN) :: N(:, :), T(:)
     !! N and T are required to handle non isoparametric elements
-END SUBROUTINE stsd_set_coord
+  END SUBROUTINE stsd_set_coord
 END INTERFACE
 
 INTERFACE setBarycentricCoord
@@ -872,9 +921,9 @@ PUBLIC :: setBarycentricCoord
 ! summary: This subroutine set the determinent of jacobian
 
 INTERFACE
-MODULE PURE SUBROUTINE set_Js( obj )
-  CLASS( ElemShapeData_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE set_Js
+  MODULE PURE SUBROUTINE set_Js(obj)
+    CLASS(ElemShapeData_), INTENT(INOUT) :: obj
+  END SUBROUTINE set_Js
 END INTERFACE
 
 INTERFACE setJs
@@ -898,9 +947,9 @@ PUBLIC setJs
 ! set before calling this  subroutine.
 
 INTERFACE
-MODULE PURE SUBROUTINE set_dNdXt_internally( obj )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE set_dNdXt_internally
+  MODULE PURE SUBROUTINE set_dNdXt_internally(obj)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+  END SUBROUTINE set_dNdXt_internally
 END INTERFACE
 
 INTERFACE setdNdXt
@@ -924,12 +973,12 @@ PUBLIC :: setdNdXt
 ! $$\frac{d x_i}{d \xi_j} = x_{iI}\frac{d N^I}{d \xi_j}$$
 
 INTERFACE
-MODULE PURE SUBROUTINE set_jacobian( obj, Val, dNdXi )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+  MODULE PURE SUBROUTINE set_jacobian(obj, Val, dNdXi)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! nodal coordinates in `xiJ` format
-  REAL( DFP ), INTENT( IN ) :: dNdXi( :, :, : )
-END SUBROUTINE set_jacobian
+    REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
+  END SUBROUTINE set_jacobian
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -954,15 +1003,15 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_jacobian( obj, Val, dNdXi, T )
-  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+  MODULE PURE SUBROUTINE stsd_set_jacobian(obj, Val, dNdXi, T)
+    CLASS(STElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! Space time nodal values of coordinates
-  REAL( DFP ), INTENT( IN ) :: dNdXi(:,:,:)
+    REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
     !! Local derivative of shape function for geometry
-  REAL( DFP ), INTENT( IN ) :: T(:)
+    REAL(DFP), INTENT(IN) :: T(:)
     !! Shape function for time element
-END SUBROUTINE stsd_set_jacobian
+  END SUBROUTINE stsd_set_jacobian
 END INTERFACE
 
 INTERFACE setJacobian
@@ -990,11 +1039,11 @@ PUBLIC :: setJacobian
 ! \hat{v}_{k} $$
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_dNTdt( obj, Val )
-  CLASS( STElemShapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+  MODULE PURE SUBROUTINE stsd_set_dNTdt(obj, Val)
+    CLASS(STElemShapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! Space-time nodal values
-END SUBROUTINE stsd_set_dNTdt
+  END SUBROUTINE stsd_set_dNTdt
 END INTERFACE
 
 INTERFACE setdNTdt
@@ -1028,10 +1077,10 @@ PUBLIC :: setdNTdt
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_set_dNTdXt_internally( obj )
-  CLASS( STElemShapeData_ ), INTENT( INOUT ) :: obj
+  MODULE PURE SUBROUTINE stsd_set_dNTdXt_internally(obj)
+    CLASS(STElemShapeData_), INTENT(INOUT) :: obj
   !! Space-time nodal values
-END SUBROUTINE stsd_set_dNTdXt_internally
+  END SUBROUTINE stsd_set_dNTdXt_internally
 END INTERFACE
 
 INTERFACE setdNTdXt
@@ -1067,15 +1116,15 @@ PUBLIC :: setdNTdXt
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE elemsd_set1( obj, Val, N, dNdXi )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+  MODULE PURE SUBROUTINE elemsd_set1(obj, Val, N, dNdXi)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! Spatial nodal coordinates
-  REAL( DFP ), INTENT( IN ) :: N(:, :)
+    REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function for geometry
-  REAL( DFP ), INTENT( IN ) :: dNdXi( :, :, : )
+    REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
     !! Local derivative of shape functions for geometry
-END SUBROUTINE elemsd_set1
+  END SUBROUTINE elemsd_set1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1107,14 +1156,14 @@ END INTERFACE
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE stelemsd_set1( obj, Val, N, T, dNdXi )
-  CLASS( STElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+  MODULE PURE SUBROUTINE stelemsd_set1(obj, Val, N, T, dNdXi)
+    CLASS(STElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! Spatial nodal coordinates
-  REAL( DFP ), INTENT( IN ) :: N( :, : )
-  REAL( DFP ), INTENT( IN ) :: T( : )
-  REAL( DFP ), INTENT( IN ) :: dNdXi( :, :, : )
-END SUBROUTINE stelemsd_set1
+    REAL(DFP), INTENT(IN) :: N(:, :)
+    REAL(DFP), INTENT(IN) :: T(:)
+    REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
+  END SUBROUTINE stelemsd_set1
 END INTERFACE
 
 INTERFACE set
@@ -1139,9 +1188,9 @@ PUBLIC :: set
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE set_normal( obj )
-  CLASS( ElemShapeData_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE set_normal
+  MODULE PURE SUBROUTINE set_normal(obj)
+    CLASS(ElemShapeData_), INTENT(INOUT) :: obj
+  END SUBROUTINE set_normal
 END INTERFACE
 
 INTERFACE setNormal
@@ -1172,13 +1221,13 @@ PUBLIC :: setNormal
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_scalar( obj, Interpol, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( : )
+  MODULE PURE SUBROUTINE get_interpol_scalar(obj, Interpol, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:)
     !! Interpolation value of `val` at integration points
-  REAL( DFP ), INTENT( IN ) :: Val( : )
+    REAL(DFP), INTENT(IN) :: Val(:)
     !! spatial nodal values of scalar
-END SUBROUTINE get_interpol_scalar
+  END SUBROUTINE get_interpol_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1189,11 +1238,11 @@ END INTERFACE
 ! date: 4 March 2021
 ! summary: T
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_fevar_scalar( obj, Interpol, Val )
-  CLASS(ElemShapeData_), INTENT( IN ) :: obj
-  TYPE( FEVariable_ ), INTENT( IN ) :: Val
-  REAL( DFP ), INTENT(INOUT ) :: Interpol(:)
-END SUBROUTINE get_interpol_fevar_scalar
+  MODULE PURE SUBROUTINE get_interpol_fevar_scalar(obj, Interpol, Val)
+    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    TYPE(FEVariable_), INTENT(IN) :: Val
+    REAL(DFP), INTENT(INOUT) :: Interpol(:)
+  END SUBROUTINE get_interpol_fevar_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1212,13 +1261,13 @@ END INTERFACE
 ! $$u_{i}=u_{iI}N^{I}$$
 
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_vector( obj, Interpol, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, : )
+  MODULE PURE SUBROUTINE get_interpol_vector(obj, Interpol, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :)
     !! Interpol(:,ips) => interpolation value at integration points
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! nodal values of vector in `xiJ` format
-END SUBROUTINE get_interpol_vector
+  END SUBROUTINE get_interpol_vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1239,12 +1288,12 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_matrix( obj, Interpol, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, :, : )
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+  MODULE PURE SUBROUTINE get_interpol_matrix(obj, Interpol, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :, :)
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! nodal value of matrix
-END SUBROUTINE get_interpol_matrix
+  END SUBROUTINE get_interpol_matrix
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1258,11 +1307,11 @@ END INTERFACE
 ! This subroutine performs interpolation of matrix
 
 INTERFACE
-MODULE PURE SUBROUTINE get_interpol_fevar_matrix( obj, Interpol, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( INOUT ) :: Interpol( :, :, : )
-  TYPE( FEVariable_), INTENT( IN ) :: Val
-END SUBROUTINE get_interpol_fevar_matrix
+  MODULE PURE SUBROUTINE get_interpol_fevar_matrix(obj, Interpol, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :)
+    TYPE(FEVariable_), INTENT(IN) :: Val
+  END SUBROUTINE get_interpol_fevar_matrix
 END INTERFACE
 
 INTERFACE getInterpolation
@@ -1286,11 +1335,11 @@ PUBLIC :: getInterpolation
 ! This function returns interpolation of scalar
 
 INTERFACE
-MODULE PURE FUNCTION interpol_scalar( obj, Val ) RESULT( Interpol )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-  REAL( DFP ), ALLOCATABLE :: Interpol( : )
-END FUNCTION interpol_scalar
+  MODULE PURE FUNCTION interpol_scalar(obj, Val) RESULT(Interpol)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), ALLOCATABLE :: Interpol(:)
+  END FUNCTION interpol_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1312,11 +1361,11 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION interpol_vector( obj, Val ) RESULT( Interpol )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
-  REAL( DFP ), ALLOCATABLE :: Interpol( :, : )
-END FUNCTION interpol_vector
+  MODULE PURE FUNCTION interpol_vector(obj, Val) RESULT(Interpol)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), ALLOCATABLE :: Interpol(:, :)
+  END FUNCTION interpol_vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1338,11 +1387,11 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION interpol_matrix( obj, Val ) RESULT( Interpol )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
-  REAL( DFP ), ALLOCATABLE :: Interpol( :, :, : )
-END FUNCTION interpol_matrix
+  MODULE PURE FUNCTION interpol_matrix(obj, Val) RESULT(Interpol)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), ALLOCATABLE :: Interpol(:, :, :)
+  END FUNCTION interpol_matrix
 END INTERFACE
 
 INTERFACE Interpolation
@@ -1366,13 +1415,13 @@ PUBLIC :: Interpolation
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_get_interpol_scalar( obj, Interpol, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( : )
+  MODULE PURE SUBROUTINE stsd_get_interpol_scalar(obj, Interpol, Val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:)
     !! Interpolation value of `val` at integration points
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! spatial nodal values of scalar
-END SUBROUTINE stsd_get_interpol_scalar
+  END SUBROUTINE stsd_get_interpol_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1380,11 +1429,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_get_interpol_fevar_scalar( obj, Interpol, Val )
-  CLASS(STElemShapeData_), INTENT( IN ) :: obj( : )
-  TYPE( FEVariable_ ), INTENT( IN ) :: Val
-  REAL( DFP ), INTENT(INOUT ) :: Interpol(:, :)
-END SUBROUTINE stsd_get_interpol_fevar_scalar
+  MODULE PURE SUBROUTINE stsd_get_interpol_fevar_scalar(obj, Interpol, Val)
+    CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
+    TYPE(FEVariable_), INTENT(IN) :: Val
+    REAL(DFP), INTENT(INOUT) :: Interpol(:, :)
+  END SUBROUTINE stsd_get_interpol_fevar_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1403,13 +1452,13 @@ END INTERFACE
 ! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_get_interpol_vector( obj, Interpol, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, : )
+  MODULE PURE SUBROUTINE stsd_get_interpol_vector(obj, Interpol, Val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :)
     !! Interpol(:,ips) => interpolation value at integration points
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
-END SUBROUTINE stsd_get_interpol_vector
+  END SUBROUTINE stsd_get_interpol_vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1426,12 +1475,12 @@ END INTERFACE
 ! nodal values
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_get_interpol_matrix( obj, Interpol, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: Interpol( :, :, : )
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, :, : )
+  MODULE PURE SUBROUTINE stsd_get_interpol_matrix(obj, Interpol, Val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :, :)
+    REAL(DFP), INTENT(IN) :: Val(:, :, :, :)
     !! nodal value of matrix
-END SUBROUTINE stsd_get_interpol_matrix
+  END SUBROUTINE stsd_get_interpol_matrix
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1439,11 +1488,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE stsd_get_interpol_fevar_matrix( obj, Interpol, Val )
-  CLASS(STElemShapeData_), INTENT( IN ) :: obj( : )
-  TYPE( FEVariable_ ), INTENT( IN ) :: Val
-  REAL( DFP ), INTENT(INOUT ) :: Interpol(:, :, :, :)
-END SUBROUTINE stsd_get_interpol_fevar_matrix
+  MODULE PURE SUBROUTINE stsd_get_interpol_fevar_matrix(obj, Interpol, Val)
+    CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
+    TYPE(FEVariable_), INTENT(IN) :: Val
+    REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :, :)
+  END SUBROUTINE stsd_get_interpol_fevar_matrix
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1468,13 +1517,13 @@ INTERFACE
 ! This function performs interpolation of a scalar from its space-time nodal
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
-MODULE PURE FUNCTION stsd_interpol_scalar( obj, Val ) RESULT(interpol)
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+  MODULE PURE FUNCTION stsd_interpol_scalar(obj, Val) RESULT(interpol)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! space-time nodal values of scalar
-  REAL( DFP ), ALLOCATABLE :: Interpol( : )
+    REAL(DFP), ALLOCATABLE :: Interpol(:)
     !! Interpolation value of `val` at integration points
-END FUNCTION stsd_interpol_scalar
+  END FUNCTION stsd_interpol_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1490,13 +1539,13 @@ INTERFACE
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
-MODULE PURE FUNCTION stsd_interpol_vector( obj, Val ) RESULT(interpol)
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+  MODULE PURE FUNCTION stsd_interpol_vector(obj, Val) RESULT(interpol)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! spatial nodal values of vector
-  REAL( DFP ), ALLOCATABLE :: Interpol( :, : )
+    REAL(DFP), ALLOCATABLE :: Interpol(:, :)
     !! Interpolation value of `val` at integration points
-END FUNCTION stsd_interpol_vector
+  END FUNCTION stsd_interpol_vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1512,13 +1561,13 @@ INTERFACE
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
-MODULE PURE FUNCTION stsd_interpol_matrix( obj, Val ) RESULT(interpol)
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, :, : )
+  MODULE PURE FUNCTION stsd_interpol_matrix(obj, Val) RESULT(interpol)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :, :, :)
     !! spatial nodal values of matrix
-  REAL( DFP ), ALLOCATABLE :: Interpol( :, :, : )
+    REAL(DFP), ALLOCATABLE :: Interpol(:, :, :)
     !! Interpolation value of `val` at integration points
-END FUNCTION stsd_interpol_matrix
+  END FUNCTION stsd_interpol_matrix
 END INTERFACE
 
 INTERFACE STInterpolation
@@ -1541,12 +1590,12 @@ INTERFACE
 ! $$\frac{\partial \phi }{\partial \xi_{i} } =\phi_{I} \frac{\partial N^{I}}
 ! {\partial \xi_{i} }$$
 
-MODULE PURE SUBROUTINE getLocalGradient_scalar( obj, dPhidXi, Val )
-  CLASS( ElemShapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXi( :, : )
-  REAL( DFP ), INTENT( IN ) :: Val( : )
+  MODULE PURE SUBROUTINE getLocalGradient_scalar(obj, dPhidXi, Val)
+    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
+    REAL(DFP), INTENT(IN) :: Val(:)
     !! Space nodal values of scalar
-END SUBROUTINE getLocalGradient_scalar
+  END SUBROUTINE getLocalGradient_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1559,13 +1608,13 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This subroutine returns the local gradient of a vector
-MODULE PURE SUBROUTINE getLocalGradient_vector( obj, dVdXi, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dVdXi( :, :, : )
+  MODULE PURE SUBROUTINE getLocalGradient_vector(obj, dVdXi, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXi(:, :, :)
     !! local gradient at integration points
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! nodal values of vector in `xiJ` format
-END SUBROUTINE getLocalGradient_vector
+  END SUBROUTINE getLocalGradient_vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1583,13 +1632,13 @@ INTERFACE
 ! $$\frac{\partial \phi }{\partial \xi_{i} } =\phi^{a}_{I} T_{a}\frac
 !{\partial N^{I}}{\partial \xi_{i} }$$
 
-MODULE PURE SUBROUTINE stsd_getLocalGradient_scalar( obj, dPhidXi, Val )
-  CLASS( STElemShapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXi( :, : )
+  MODULE PURE SUBROUTINE stsd_getLocalGradient_scalar(obj, dPhidXi, Val)
+    CLASS(STElemShapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
     !! local gradient of scalar
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! space-time nodal values
-END SUBROUTINE stsd_getLocalGradient_scalar
+  END SUBROUTINE stsd_getLocalGradient_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1603,13 +1652,13 @@ INTERFACE
 !
 ! This subroutine returns the local gradient of a vector using space-time
 ! nodal coordinates
-MODULE PURE SUBROUTINE stsd_getLocalGradient_vector( obj, dVdXi, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dVdXi( :, :, : )
+  MODULE PURE SUBROUTINE stsd_getLocalGradient_vector(obj, dVdXi, Val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXi(:, :, :)
     !! local gradient at integration points
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
-END SUBROUTINE stsd_getLocalGradient_vector
+  END SUBROUTINE stsd_getLocalGradient_vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1632,13 +1681,13 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This subroutine returns the spatial gradient of a vector
-MODULE PURE SUBROUTINE getSpatialGradient_vector( obj, dVdXt, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dVdXt( :, :, : )
+  MODULE PURE SUBROUTINE getSpatialGradient_vector(obj, dVdXt, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXt(:, :, :)
     !! spatial gradient of `val` at integration points
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! nodal values of vector in `xiJ` format
-END SUBROUTINE getSpatialGradient_vector
+  END SUBROUTINE getSpatialGradient_vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1651,13 +1700,13 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This subroutine returns the spatial gradient of scalar
-MODULE PURE SUBROUTINE getSpatialGradient_scalar( obj, dPhidXt, Val )
-  CLASS( ElemShapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXt( :, : )
+  MODULE PURE SUBROUTINE getSpatialGradient_scalar(obj, dPhidXt, Val)
+    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
     !! Spatial gradient of scalar
-  REAL( DFP ), INTENT( IN ) :: Val( : )
+    REAL(DFP), INTENT(IN) :: Val(:)
     !! Nodal values of scalar
-END SUBROUTINE getSpatialGradient_scalar
+  END SUBROUTINE getSpatialGradient_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1670,13 +1719,13 @@ INTERFACE
 !> authors: Dr. Vikas Sharma
 !
 ! This subroutine returns the spatial gradient of scalar
-MODULE PURE SUBROUTINE stsd_getSpatialGradient_scalar( obj, dPhidXt, Val )
-  CLASS( STElemShapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dPhidXt( :, : )
+  MODULE PURE SUBROUTINE stsd_getSpatialGradient_scalar(obj, dPhidXt, Val)
+    CLASS(STElemShapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
     !! Spatial gradient of scalar
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :)
     !! space-time Nodal values of scalar
-END SUBROUTINE stsd_getSpatialGradient_scalar
+  END SUBROUTINE stsd_getSpatialGradient_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1690,13 +1739,13 @@ INTERFACE
 !
 ! This subroutine returns the spatial gradient of a vector from its
 ! space-time nodal values
-MODULE PURE SUBROUTINE stsd_getSpatialGradient_vector( obj, dVdXt, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: dVdXt( :, :, : )
+  MODULE PURE SUBROUTINE stsd_getSpatialGradient_vector(obj, dVdXt, Val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXt(:, :, :)
     !! spatial gradient of `val` at integration points
-  REAL( DFP ), INTENT( IN ) :: Val( :, :, : )
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
-END SUBROUTINE stsd_getSpatialGradient_vector
+  END SUBROUTINE stsd_getSpatialGradient_vector
 END INTERFACE
 
 INTERFACE getSpatialGradient
@@ -1721,13 +1770,13 @@ INTERFACE
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 !
-MODULE PURE SUBROUTINE getProjectionOfdNdXt_spacevalues( obj, cdNdXt, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: cdNdXt( :, : )
+  MODULE PURE SUBROUTINE getProjectionOfdNdXt_spacevalues(obj, cdNdXt, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
-  REAL( DFP ), INTENT( IN ) :: Val( : )
+    REAL(DFP), INTENT(IN) :: Val(:)
     !! constant value of vector
-END SUBROUTINE getProjectionOfdNdXt_spacevalues
+  END SUBROUTINE getProjectionOfdNdXt_spacevalues
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1744,13 +1793,13 @@ INTERFACE
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 !
-MODULE PURE SUBROUTINE getProjectionOfdNdXt_fevar( obj, cdNdXt, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: cdNdXt( :, : )
+  MODULE PURE SUBROUTINE getProjectionOfdNdXt_fevar(obj, cdNdXt, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
-  CLASS( FEVariable_ ), INTENT( IN ) :: Val
+    CLASS(FEVariable_), INTENT(IN) :: Val
     !! constant value of vector
-END SUBROUTINE getProjectionOfdNdXt_fevar
+  END SUBROUTINE getProjectionOfdNdXt_fevar
 END INTERFACE
 
 INTERFACE getProjectionOfdNdXt
@@ -1775,13 +1824,13 @@ INTERFACE
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 !
-MODULE PURE SUBROUTINE getProjectionOfdNTdXt_constvector( obj, cdNTdXt, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: cdNTdXt( :, :, : )
+  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_constvector(obj, cdNTdXt, Val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :)
     !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
-  REAL( DFP ), INTENT( IN ) :: Val( : )
+    REAL(DFP), INTENT(IN) :: Val(:)
     !! constant value of vector
-END SUBROUTINE getProjectionOfdNTdXt_constvector
+  END SUBROUTINE getProjectionOfdNTdXt_constvector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1798,13 +1847,13 @@ INTERFACE
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 !
-MODULE PURE SUBROUTINE getProjectionOfdNTdXt_fevar( obj, cdNTdXt, Val )
-  CLASS( STElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: cdNTdXt( :, :, : )
+  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_fevar(obj, cdNTdXt, Val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :)
     !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
-  TYPE( FEVariable_ ), INTENT( IN ) :: Val
+    TYPE(FEVariable_), INTENT(IN) :: Val
     !! constant value of vector
-END SUBROUTINE getProjectionOfdNTdXt_fevar
+  END SUBROUTINE getProjectionOfdNTdXt_fevar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1833,11 +1882,11 @@ INTERFACE
 !  $$\nabla \vert phi \vert / \vert (\nabla \vert phi \vert) \vert$$
 !
 
-MODULE PURE SUBROUTINE getUnitNormal_scalar( obj, R, Val )
-  CLASS( ElemshapeData_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: R( :, : )
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-END SUBROUTINE getUnitNormal_scalar
+  MODULE PURE SUBROUTINE getUnitNormal_scalar(obj, R, Val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
+    REAL(DFP), INTENT(IN) :: Val(:)
+  END SUBROUTINE getUnitNormal_scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1845,11 +1894,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE getUnitNormal_vector( obj, R, Val )
-  CLASS( ElemshapeData_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT  ) :: R( :, : )
-  REAL( DFP ), INTENT( IN ) :: Val( :, : )
-END SUBROUTINE getUnitNormal_vector
+  MODULE PURE SUBROUTINE getUnitNormal_vector(obj, R, Val)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
+    REAL(DFP), INTENT(IN) :: Val(:, :)
+  END SUBROUTINE getUnitNormal_vector
 END INTERFACE
 
 INTERFACE getUnitNormal

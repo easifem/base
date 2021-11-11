@@ -17,8 +17,8 @@
 !
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This module contains methods of [[IntVector_]] data type.
+! date:         24 Feb 2021
+! summary:         This module contains methods of [[IntVector_]] data type.
 !
 !###Introduction
 !
@@ -39,14 +39,14 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	Returns shape of the vector
+! date: 25 Feb 2021
+! summary: Returns shape of the vector
 
 INTERFACE
-MODULE PURE FUNCTION intVec_shape( obj ) RESULT( Ans )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans( 1 )
-END FUNCTION intVec_shape
+  MODULE PURE FUNCTION intVec_shape(obj) RESULT(Ans)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B) :: Ans(1)
+  END FUNCTION intVec_shape
 END INTERFACE
 
 INTERFACE Shape
@@ -60,15 +60,15 @@ PUBLIC :: Shape
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	Returns size of the vector
+! date:         25 Feb 2021
+! summary:         Returns size of the vector
 
 INTERFACE
-MODULE PURE FUNCTION intVec_Size( obj, Dims ) RESULT( Ans )
-  TYPE( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: Dims
-  INTEGER( I4B ) :: Ans
-END FUNCTION intVec_Size
+  MODULE PURE FUNCTION intVec_Size(obj, Dims) RESULT(Ans)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: Dims
+    INTEGER(I4B) :: Ans
+  END FUNCTION intVec_Size
 END INTERFACE
 
 INTERFACE SIZE
@@ -82,18 +82,18 @@ PUBLIC :: SIZE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	23 Feb 2021
-! summary: 	Returns the total dimension of an array
+! date:         23 Feb 2021
+! summary:         Returns the total dimension of an array
 !
 !# Introduction
 !
 ! This function returns the total dimension (or rank) of an array,
 
 INTERFACE
-MODULE PURE FUNCTION IntVec_getTotalDimension( obj ) RESULT( Ans )
-  TYPE( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: ans
-END FUNCTION IntVec_getTotalDimension
+  MODULE PURE FUNCTION IntVec_getTotalDimension(obj) RESULT(Ans)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans
+  END FUNCTION IntVec_getTotalDimension
 END INTERFACE
 
 INTERFACE getTotalDimension
@@ -103,44 +103,22 @@ END INTERFACE getTotalDimension
 PUBLIC :: getTotalDimension
 
 !----------------------------------------------------------------------------
-!                                             setTotalDimension@Constructor
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	23 Feb 2021
-! summary: 	This subroutine set the total dimension (rank) of an array
-!
-!# Introduction
-!
-! This subroutine sets the rank(total dimension) of an array
-
-INTERFACE
-MODULE PURE SUBROUTINE IntVec_setTotalDimension( obj, tDimension )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: tDimension
-END SUBROUTINE IntVec_setTotalDimension
-END INTERFACE
-
-INTERFACE setTotalDimension
-  MODULE PROCEDURE IntVec_setTotalDimension
-END INTERFACE setTotalDimension
-
-PUBLIC :: setTotalDimension
-
-!----------------------------------------------------------------------------
 !                                                   AllocateData@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date:  25 Feb 2021
-! summary: 	Allocate memory for the vector
+! summary:         Allocate memory for the vector
 
 INTERFACE
-MODULE PURE SUBROUTINE intVec_AllocateData( obj, Dims )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Dims
-END SUBROUTINE intVec_AllocateData
+  MODULE PURE SUBROUTINE intVec_AllocateData(obj, Dims)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: Dims
+  END SUBROUTINE intVec_AllocateData
 END INTERFACE
+
+!! TODO
+!! Replace AllocateData --> Allocate
 
 INTERFACE AllocateData
   MODULE PROCEDURE intVec_AllocateData
@@ -148,19 +126,27 @@ END INTERFACE AllocateData
 
 PUBLIC :: AllocateData
 
+INTERFACE ALLOCATE
+  MODULE PROCEDURE intVec_AllocateData
+END INTERFACE ALLOCATE
+
+PUBLIC :: ALLOCATE
+
 !----------------------------------------------------------------------------
-!                                                 DeAllocateData@Constructor
+!                                                 DeallocateData@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	Deallocate memory occupied by IntVector
+! date:         25 Feb 2021
+! summary:         Deallocate memory occupied by IntVector
 
 INTERFACE
-MODULE PURE SUBROUTINE intVec_DeallocateData( obj )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE intVec_DeallocateData
+  MODULE PURE SUBROUTINE intVec_DeallocateData(obj)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+  END SUBROUTINE intVec_DeallocateData
 END INTERFACE
+
+!! TODO Rename DeallocateData to Deallocate
 
 INTERFACE DeallocateData
   MODULE PROCEDURE intVec_DeallocateData
@@ -168,74 +154,24 @@ END INTERFACE DeallocateData
 
 PUBLIC :: DeallocateData
 
-!----------------------------------------------------------------------------
-!                                                                 Display@IO
-!----------------------------------------------------------------------------
+INTERFACE DEALLOCATE
+  MODULE PROCEDURE intVec_DeallocateData
+END INTERFACE DEALLOCATE
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: Display the content of [[IntVector_]]
-
-INTERFACE
-MODULE SUBROUTINE intVec_Display1 ( obj, msg, UnitNo, orient )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj( : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
-END SUBROUTINE intVec_Display1
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 Display@IO
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: Display the content of [[IntVector_]]
-
-INTERFACE
-MODULE SUBROUTINE intVec_Display2 ( obj, msg, UnitNo, orient )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
-END SUBROUTINE intVec_Display2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                Display@IO
-!----------------------------------------------------------------------------
-
-INTERFACE Display
-  MODULE PROCEDURE intVec_Display1, intVec_Display2
-END INTERFACE Display
-
-PUBLIC :: Display
+PUBLIC :: DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                        Initiate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine initiates the [[IntVector_]]
-!
-!
-!### Usage
-!
-!```fortran
-! type(IntVector_) :: obj
-! call display( "test1" )
-! call EqualLine()
-! call initiate(obj=obj, tSize=10)
-! call display( obj, msg = "test1")
-! call DashLine()
-!```
+! date:         25 Feb 2021
+! summary:         This routine initiates the [[IntVector_]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE intVec_initiate1( obj, tSize )
-    CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-    INTEGER( I4B ), INTENT( IN ) :: tSize
+  MODULE PURE SUBROUTINE intVec_initiate1(obj, tSize)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: tSize
   END SUBROUTINE intVec_initiate1
 END INTERFACE
 
@@ -245,26 +181,12 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 25 Feb 2021
-! summary: 	This routine initiates the vector of [[IntVector_]]
-!
-!
-!### Usage
-!
-!```fortran
-! type(IntVector_), allocatable :: obj( : )
-! integer( I4B ) :: tsize( 4 )
-! tsize = [5,5,10,10]
-! call display( "test2" )
-! call EqualLine()
-! call initiate(obj=obj, tSize=tsize)
-! call display( obj, msg = "test2")
-! call DashLine()
-!```
+! summary:         This routine initiates the vector of [[IntVector_]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE intVec_initiate2( obj, tSize )
-    TYPE( IntVector_ ), ALLOCATABLE, INTENT( INOUT ) :: obj( : )
-    INTEGER( I4B ), INTENT( IN ) :: tSize( : )
+  MODULE PURE SUBROUTINE intVec_initiate2(obj, tSize)
+    TYPE(IntVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: tSize(:)
   END SUBROUTINE intVec_initiate2
 END INTERFACE
 
@@ -272,10 +194,15 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Initiates an instance on [[IntVector_]] with lower & upper bounds
+
 INTERFACE
-  MODULE PURE SUBROUTINE intVec_initiate3( obj, a, b )
-    CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-    INTEGER( I4B ), INTENT( IN ) :: a, b
+  MODULE PURE SUBROUTINE intVec_initiate3(obj, a, b)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: a, b
   END SUBROUTINE intVec_initiate3
 END INTERFACE
 
@@ -283,10 +210,15 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Initiates an instance by using a vector of integers
+
 INTERFACE
-  MODULE PURE SUBROUTINE intVec_initiate4( obj, val )
-    CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-    INTEGER( I4B ), INTENT( IN ) :: val( : )
+  MODULE PURE SUBROUTINE intVec_initiate4(obj, val)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: val(:)
   END SUBROUTINE intVec_initiate4
 END INTERFACE
 
@@ -294,13 +226,17 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Initiates an instance by using a vector of real numbers
+
 INTERFACE
-  MODULE PURE SUBROUTINE intVec_initiate5( obj, val )
-    CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-    REAL( DFP ), INTENT( IN ) :: val( : )
+  MODULE PURE SUBROUTINE intVec_initiate5(obj, val)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: val(:)
   END SUBROUTINE intVec_initiate5
 END INTERFACE
-
 
 INTERFACE Initiate
   MODULE PROCEDURE intVec_initiate1, intVec_initiate2, intVec_initiate3, &
@@ -309,21 +245,26 @@ END INTERFACE Initiate
 
 PUBLIC :: Initiate
 
-INTERFACE ASSIGNMENT( = )
+INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE intVec_initiate4, intVec_initiate5
-END INTERFACE ASSIGNMENT( = )
+END INTERFACE ASSIGNMENT(=)
 
-PUBLIC :: ASSIGNMENT( = )
+PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                                  isAllocated@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Returns true if the instance is allocated
+
 INTERFACE
-MODULE PURE FUNCTION intVec_isAllocated( obj ) RESULT( Ans )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  LOGICAL( LGT ) :: ans
-END FUNCTION intVec_isAllocated
+  MODULE PURE FUNCTION intVec_isAllocated(obj) RESULT(Ans)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION intVec_isAllocated
 END INTERFACE
 
 INTERFACE isAllocated
@@ -342,33 +283,51 @@ PUBLIC :: isInitiated
 !                                                      IntVector@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: IntVector returns an instance of [[IntVector_]] of given size
+
 INTERFACE
-MODULE PURE FUNCTION intVec_Constructor1( tSize ) RESULT( obj )
-  TYPE( IntVector_ ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: tSize
-END FUNCTION intVec_Constructor1
+  MODULE PURE FUNCTION intVec_Constructor1(tSize) RESULT(obj)
+    TYPE(IntVector_) :: obj
+    INTEGER(I4B), INTENT(IN) :: tSize
+  END FUNCTION intVec_Constructor1
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                      IntVector@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Convert a integer vector into [[IntVector_]]
+
 INTERFACE
-MODULE PURE FUNCTION intVec_Constructor2( Val ) RESULT( obj )
-  TYPE( IntVector_ ) :: obj
-  INTEGER(I4B), INTENT( IN ) :: Val( : )
-END FUNCTION intVec_Constructor2
+  MODULE PURE FUNCTION intVec_Constructor2(Val) RESULT(obj)
+    TYPE(IntVector_) :: obj
+    INTEGER(I4B), INTENT(IN) :: Val(:)
+  END FUNCTION intVec_Constructor2
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                      IntVector@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Converts a real vector into [[IntVector_]]
+!
+! TODO Implement IntVector method for Int4, Int8, Int16, Int32
+! Real32, Real64
+!
 INTERFACE
-MODULE PURE FUNCTION intVec_Constructor3( Val ) RESULT( obj )
-  TYPE( IntVector_ ) :: obj
-  REAL(DFP), INTENT( IN ) :: Val( : )
-END FUNCTION intVec_Constructor3
+  MODULE PURE FUNCTION intVec_Constructor3(Val) RESULT(obj)
+    TYPE(IntVector_) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+  END FUNCTION intVec_Constructor3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -386,33 +345,48 @@ PUBLIC :: IntVector
 !                                                 Vector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Returns the pointer to an instance of [[IntVector_]] of tsize
+
 INTERFACE
-MODULE PURE FUNCTION intVec_Constructor_1( tSize ) RESULT( obj )
-  CLASS( IntVector_ ), POINTER :: obj
-  INTEGER( I4B ), INTENT( IN ) :: tSize
-END FUNCTION intVec_Constructor_1
+  MODULE PURE FUNCTION intVec_Constructor_1(tSize) RESULT(obj)
+    CLASS(IntVector_), POINTER :: obj
+    INTEGER(I4B), INTENT(IN) :: tSize
+  END FUNCTION intVec_Constructor_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                 Vector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Converts integer vector into [[intvector_]] and returns the pointer
+
 INTERFACE
-MODULE PURE FUNCTION intVec_Constructor_2( Val ) RESULT( obj )
-CLASS( IntVector_ ), POINTER :: obj
-  INTEGER(I4B), INTENT( IN ) :: Val( : )
-END FUNCTION intVec_Constructor_2
+  MODULE PURE FUNCTION intVec_Constructor_2(Val) RESULT(obj)
+    CLASS(IntVector_), POINTER :: obj
+    INTEGER(I4B), INTENT(IN) :: Val(:)
+  END FUNCTION intVec_Constructor_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                 Vector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Converts real vector into [[intvector_]] and returns the pointer
+
 INTERFACE
-MODULE PURE FUNCTION intVec_Constructor_3( Val ) RESULT( obj )
-  CLASS( IntVector_ ), POINTER :: obj
-  REAL(DFP), INTENT( IN ) :: Val( : )
-END FUNCTION intVec_Constructor_3
+  MODULE PURE FUNCTION intVec_Constructor_3(Val) RESULT(obj)
+    CLASS(IntVector_), POINTER :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+  END FUNCTION intVec_Constructor_3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -420,21 +394,201 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE IntVector_Pointer
-  MODULE PROCEDURE intVec_Constructor_1, intVec_Constructor_2, intVec_Constructor_3
+  MODULE PROCEDURE intVec_Constructor_1, intVec_Constructor_2, &
+       & intVec_Constructor_3
 END INTERFACE IntVector_Pointer
 
 PUBLIC :: IntVector_Pointer
 
 !----------------------------------------------------------------------------
-!                                                             get@GetMethod
+!                                                                 Display@IO
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date:         25 Feb 2021
+! summary: Display the content of [[IntVector_]]
+
 INTERFACE
-MODULE PURE FUNCTION intVec_get_1( obj, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  TYPE( IntVector_ ), INTENT( IN ) :: DataType
-  TYPE( IntVector_ ) :: Val
-END FUNCTION intVec_get_1
+  MODULE SUBROUTINE intVec_Display1(obj, msg, UnitNo, orient)
+    CLASS(IntVector_), INTENT(IN) :: obj(:)
+    CHARACTER(LEN=*), INTENT(IN) :: msg
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: orient
+  END SUBROUTINE intVec_Display1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 Display@IO
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date:         25 Feb 2021
+! summary: Display the content of [[IntVector_]]
+
+INTERFACE
+  MODULE SUBROUTINE intVec_Display2(obj, msg, UnitNo, orient)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    CHARACTER(LEN=*), INTENT(IN) :: msg
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: orient
+  END SUBROUTINE intVec_Display2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                Display@IO
+!----------------------------------------------------------------------------
+
+INTERFACE Display
+  MODULE PROCEDURE intVec_Display1, intVec_Display2
+END INTERFACE Display
+
+PUBLIC :: Display
+
+!----------------------------------------------------------------------------
+!                                                  Operator(.in.)@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Returns true if a integer set is inside another
+
+INTERFACE
+  MODULE PURE FUNCTION intVec_in1(intvec1, intvec2) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: intvec1(:)
+    INTEGER(I4B), INTENT(IN) :: intvec2(:)
+    LOGICAL(LGT) :: ans
+  END FUNCTION intVec_in1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                  Operator(.in.)@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Returns true if a integer set is inside another
+
+INTERFACE
+  MODULE PURE FUNCTION intVec_in2(obj1, obj2) RESULT(Ans)
+    CLASS(IntVector_), INTENT(IN) :: obj1
+    CLASS(IntVector_), INTENT(IN) :: obj2
+    LOGICAL(LGT) :: ans
+  END FUNCTION intVec_in2
+END INTERFACE
+
+INTERFACE OPERATOR(.in.)
+  MODULE PROCEDURE intVec_in1, intVec_in2
+END INTERFACE OPERATOR(.in.)
+
+PUBLIC :: OPERATOR(.in.)
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Returns IntVector instance
+
+INTERFACE
+  MODULE PURE FUNCTION intVec_get_1(obj, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    TYPE(IntVector_), INTENT(IN) :: DataType
+    TYPE(IntVector_) :: Val
+  END FUNCTION intVec_get_1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Returns an instance of [[intvector_]], obj(indx)
+
+INTERFACE
+  MODULE PURE FUNCTION intVec_get_2(obj, Indx, DataType) &
+    & RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    TYPE(IntVector_), INTENT(IN) :: DataType
+    INTEGER(I4B), INTENT(IN) :: Indx(:)
+    TYPE(IntVector_) :: Val
+  END FUNCTION intVec_get_2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Returns the value using triplets.
+
+INTERFACE
+  MODULE PURE FUNCTION intVec_get_3(obj, istart, iend, &
+    & stride, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    TYPE(IntVector_), INTENT(IN) :: DataType
+    !! an instance of [[IntVector_]]
+    INTEGER(I4B), INTENT(IN) :: istart
+    !! starting index value
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: iend, stride
+    !! iend is optional, default value is size(obj)
+    !! stride is optional,  default value is 1.
+    TYPE(IntVector_) :: Val
+    !! returned value
+  END FUNCTION intVec_get_3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: converts a vector of [[intvector_]] into a scalar instance.
+!
+!
+!# Introduction
+!
+! Converts a vector of [[intvector_]] into a scalar instance.
+! something like following is done.
+!
+! obj = obj(1) // obj(2) // obj(3) ...
+!
+! The size of val is size(obj(1)) + size(obj(2)) + ...
+
+INTERFACE
+  MODULE PURE FUNCTION intVec_get_4(obj, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj(:)
+    TYPE(IntVector_), INTENT(IN) :: DataType
+    TYPE(IntVector_) :: Val
+  END FUNCTION intVec_get_4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             get@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Serialized the vector of [[IntVector_]], select values by indx
+
+INTERFACE
+  MODULE PURE FUNCTION intVec_get_5(obj, Indx, DataType) &
+    & RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj(:)
+    TYPE(IntVector_), INTENT(IN) :: DataType
+    INTEGER(I4B), INTENT(IN) :: Indx(:)
+    TYPE(IntVector_) :: Val
+  END FUNCTION intVec_get_5
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -442,13 +596,13 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_get_2( obj, Indx, DataType ) &
-  & RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  TYPE( IntVector_ ), INTENT( IN ) :: DataType
-  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  TYPE( IntVector_ ) :: Val
-END FUNCTION intVec_get_2
+  MODULE PURE FUNCTION intVec_get_6(obj, iStart, iEnd, &
+    & Stride, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
+    TYPE(IntVector_), INTENT(IN) :: DataType
+    TYPE(IntVector_) :: Val
+  END FUNCTION intVec_get_6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -456,13 +610,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_get_3( obj, iStart, iEnd, &
-  & Stride, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  TYPE( IntVector_ ), INTENT( IN ) :: DataType
-  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  TYPE( IntVector_ ) :: Val
-END FUNCTION intVec_get_3
+  MODULE PURE FUNCTION intVec_get_7(obj, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: DataType
+    INTEGER(I4B), ALLOCATABLE :: Val(:)
+  END FUNCTION intVec_get_7
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -470,11 +622,13 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_get_4( obj, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj( : )
-  TYPE( IntVector_ ), INTENT( IN ) :: DataType
-  TYPE( IntVector_ ) :: Val
-END FUNCTION intVec_get_4
+  MODULE PURE FUNCTION intVec_get_8(obj, Indx, DataType) &
+    & RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: Indx(:)
+    INTEGER(I4B), INTENT(IN) :: DataType
+    INTEGER(I4B), ALLOCATABLE :: Val(:)
+  END FUNCTION intVec_get_8
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -482,13 +636,13 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_get_5( obj, Indx, DataType ) &
-  & RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj( : )
-  TYPE( IntVector_ ), INTENT( IN ) :: DataType
-  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  TYPE( IntVector_ ) :: Val
-END FUNCTION intVec_get_5
+  MODULE PURE FUNCTION intVec_get_9(obj, iStart, iEnd, Stride,&
+    & DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
+    INTEGER(I4B), INTENT(IN) :: DataType
+    INTEGER(I4B), ALLOCATABLE :: Val(:)
+  END FUNCTION intVec_get_9
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -496,13 +650,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_get_6( obj, iStart, iEnd, &
-  & Stride, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj( : )
-  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  TYPE( IntVector_ ), INTENT( IN ) :: DataType
-  TYPE( IntVector_ ) :: Val
-END FUNCTION intVec_get_6
+  MODULE PURE FUNCTION intVec_get_10(obj, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: DataType
+    INTEGER(I4B), ALLOCATABLE :: Val(:)
+  END FUNCTION intVec_get_10
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -510,11 +662,13 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_get_7( obj, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER(I4B), INTENT( IN ) :: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION intVec_get_7
+  MODULE PURE FUNCTION intVec_get_11(obj, Indx, DataType) &
+    & RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: DataType
+    INTEGER(I4B), INTENT(IN) :: Indx(:)
+    INTEGER(I4B), ALLOCATABLE :: Val(:)
+  END FUNCTION intVec_get_11
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -522,13 +676,13 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_get_8( obj, Indx, DataType ) &
-  & RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  INTEGER(I4B), INTENT( IN ):: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION intVec_get_8
+  MODULE PURE FUNCTION intVec_get_12(obj, iStart, iEnd, &
+    & Stride, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
+    INTEGER(I4B), INTENT(IN) :: DataType
+    INTEGER(I4B), ALLOCATABLE :: Val(:)
+  END FUNCTION intVec_get_12
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -536,66 +690,12 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_get_9( obj, iStart, iEnd, Stride,&
-  & DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  INTEGER(I4B), INTENT( IN ):: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION intVec_get_9
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                             get@GetMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION intVec_get_10( obj, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj( : )
-  INTEGER(I4B), INTENT( IN ) :: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION intVec_get_10
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                             get@GetMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION intVec_get_11( obj, Indx, DataType ) &
-  & RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj( : )
-  INTEGER(I4B), INTENT( IN ) :: DataType
-  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION intVec_get_11
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                             get@GetMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION intVec_get_12( obj, iStart, iEnd, &
-  & Stride, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj( : )
-  INTEGER( I4B ), INTENT( IN ) :: iStart, iEnd, Stride
-  INTEGER(I4B), INTENT( IN ):: DataType
-  INTEGER(I4B), ALLOCATABLE :: Val( : )
-END FUNCTION intVec_get_12
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                             get@GetMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE FUNCTION intVec_get_13( obj, indx, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: indx
-  INTEGER(I4B), INTENT( IN ):: DataType
-  INTEGER(I4B) :: val
-END FUNCTION intVec_get_13
+  MODULE PURE FUNCTION intVec_get_13(obj, indx, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: indx
+    INTEGER(I4B), INTENT(IN) :: DataType
+    INTEGER(I4B) :: val
+  END FUNCTION intVec_get_13
 END INTERFACE
 
 INTERFACE get
@@ -612,26 +712,26 @@ PUBLIC :: get
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE IntVec_assign_a( Val, obj )
-  INTEGER(I4B), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-END SUBROUTINE IntVec_assign_a
+  MODULE PURE SUBROUTINE IntVec_assign_a(Val, obj)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: Val(:)
+    CLASS(IntVector_), INTENT(IN) :: obj
+  END SUBROUTINE IntVec_assign_a
 END INTERFACE
 
-INTERFACE ASSIGNMENT( = )
+INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE IntVec_assign_a
-END INTERFACE ASSIGNMENT( = )
+END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                                     getPointers@getMethod
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION intVec_getPointer_1( obj, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ), TARGET :: obj
-  TYPE( IntVector_ ), INTENT( IN ) :: DataType
-  TYPE( IntVector_ ), POINTER :: Val
-END FUNCTION intVec_getPointer_1
+  MODULE FUNCTION intVec_getPointer_1(obj, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN), TARGET :: obj
+    TYPE(IntVector_), INTENT(IN) :: DataType
+    TYPE(IntVector_), POINTER :: Val
+  END FUNCTION intVec_getPointer_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -639,11 +739,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION intVec_getPointer_2( obj, DataType ) RESULT( Val )
-  CLASS( IntVector_ ), INTENT( IN ), TARGET :: obj
-  INTEGER(I4B), INTENT( IN ) :: DataType
-  INTEGER(I4B), POINTER :: Val( : )
-END FUNCTION intVec_getPointer_2
+  MODULE FUNCTION intVec_getPointer_2(obj, DataType) RESULT(Val)
+    CLASS(IntVector_), INTENT(IN), TARGET :: obj
+    INTEGER(I4B), INTENT(IN) :: DataType
+    INTEGER(I4B), POINTER :: Val(:)
+  END FUNCTION intVec_getPointer_2
 END INTERFACE
 
 INTERFACE getPointer
@@ -657,10 +757,10 @@ PUBLIC :: getPointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE obj_convert_int( From, To )
-  CLASS( IntVector_ ), INTENT( IN ) :: From
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: To( : )
-END SUBROUTINE obj_convert_int
+  MODULE PURE SUBROUTINE obj_convert_int(From, To)
+    CLASS(IntVector_), INTENT(IN) :: From
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: To(:)
+  END SUBROUTINE obj_convert_int
 END INTERFACE
 
 INTERFACE Convert
@@ -674,11 +774,11 @@ PUBLIC :: Convert
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_getIndex1( obj, Value ) RESULT( Ans )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Value
-  INTEGER( I4B ) :: Ans
-END FUNCTION intVec_getIndex1
+  MODULE PURE FUNCTION intVec_getIndex1(obj, VALUE) RESULT(Ans)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: VALUE
+    INTEGER(I4B) :: Ans
+  END FUNCTION intVec_getIndex1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -686,11 +786,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_getIndex2( obj, Value ) RESULT( Ans )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Value( : )
-  INTEGER( I4B ), ALLOCATABLE :: Ans( : )
-END FUNCTION intVec_getIndex2
+  MODULE PURE FUNCTION intVec_getIndex2(obj, VALUE) RESULT(Ans)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: VALUE(:)
+    INTEGER(I4B), ALLOCATABLE :: Ans(:)
+  END FUNCTION intVec_getIndex2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -698,11 +798,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_getIndex3( obj, Value ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: obj( : )
-  INTEGER( I4B ), INTENT( IN ) :: Value
-  INTEGER( I4B ) :: Ans
-END FUNCTION intVec_getIndex3
+  MODULE PURE FUNCTION intVec_getIndex3(obj, VALUE) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: VALUE
+    INTEGER(I4B) :: Ans
+  END FUNCTION intVec_getIndex3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -710,11 +810,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_getIndex4( obj, Value ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: obj( : )
-  INTEGER( I4B ), INTENT( IN ) :: Value( : )
-  INTEGER( I4B ), ALLOCATABLE :: Ans( : )
-END FUNCTION intVec_getIndex4
+  MODULE PURE FUNCTION intVec_getIndex4(obj, VALUE) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: obj(:)
+    INTEGER(I4B), INTENT(IN) :: VALUE(:)
+    INTEGER(I4B), ALLOCATABLE :: Ans(:)
+  END FUNCTION intVec_getIndex4
 END INTERFACE
 
 INTERFACE getIndex
@@ -729,11 +829,11 @@ PUBLIC :: getIndex
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_isPresent1( obj, Value ) RESULT( Ans )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Value
-  LOGICAL( LGT ) :: Ans
-END FUNCTION intVec_isPresent1
+  MODULE PURE FUNCTION intVec_isPresent1(obj, VALUE) RESULT(Ans)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: VALUE
+    LOGICAL(LGT) :: Ans
+  END FUNCTION intVec_isPresent1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -741,11 +841,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION intVec_isPresent2( obj, Value ) RESULT( Ans )
-  CLASS( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Value( : )
-  LOGICAL( LGT ), ALLOCATABLE :: Ans( : )
-END FUNCTION intVec_isPresent2
+  MODULE PURE FUNCTION intVec_isPresent2(obj, VALUE) RESULT(Ans)
+    CLASS(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: VALUE(:)
+    LOGICAL(LGT), ALLOCATABLE :: Ans(:)
+  END FUNCTION intVec_isPresent2
 END INTERFACE
 
 INTERFACE isPresent
@@ -755,6 +855,31 @@ END INTERFACE isPresent
 PUBLIC :: isPresent
 
 !----------------------------------------------------------------------------
+!                                             setTotalDimension@Constructor
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 Feb 2021
+! summary: This subroutine set the total dimension (rank) of an array
+!
+!# Introduction
+!
+! This subroutine sets the rank(total dimension) of an array
+
+INTERFACE
+  MODULE PURE SUBROUTINE IntVec_setTotalDimension(obj, tDimension)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: tDimension
+  END SUBROUTINE IntVec_setTotalDimension
+END INTERFACE
+
+INTERFACE setTotalDimension
+  MODULE PROCEDURE IntVec_setTotalDimension
+END INTERFACE setTotalDimension
+
+PUBLIC :: setTotalDimension
+
+!----------------------------------------------------------------------------
 !                                                        setValue@SetMethod
 !----------------------------------------------------------------------------
 
@@ -763,11 +888,11 @@ PUBLIC :: isPresent
 ! summary: set the value in IntVector
 
 INTERFACE
-MODULE PURE SUBROUTINE intVec_set1( obj, Indx, Value )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Indx( : )
-  INTEGER( I4B ), INTENT( IN ) :: Value( : )
-END SUBROUTINE intVec_set1
+  MODULE PURE SUBROUTINE intVec_set1(obj, Indx, VALUE)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: Indx(:)
+    INTEGER(I4B), INTENT(IN) :: VALUE(:)
+  END SUBROUTINE intVec_set1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -779,11 +904,11 @@ END INTERFACE
 ! summary: set the value in IntVector
 
 INTERFACE
-MODULE PURE SUBROUTINE intVec_set2( obj, Indx, Value )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Indx
-  INTEGER( I4B ), INTENT( IN ) :: Value
-END SUBROUTINE intVec_set2
+  MODULE PURE SUBROUTINE intVec_set2(obj, Indx, VALUE)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: Indx
+    INTEGER(I4B), INTENT(IN) :: VALUE
+  END SUBROUTINE intVec_set2
 END INTERFACE
 
 INTERFACE set
@@ -797,10 +922,10 @@ PUBLIC :: set
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE IntVec_Append_1( obj, Value )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Value
-END SUBROUTINE IntVec_Append_1
+  MODULE PURE SUBROUTINE IntVec_Append_1(obj, VALUE)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: VALUE
+  END SUBROUTINE IntVec_Append_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -808,10 +933,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE IntVec_Append_2( obj, Value )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Value( : )
-END SUBROUTINE IntVec_Append_2
+  MODULE PURE SUBROUTINE IntVec_Append_2(obj, VALUE)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: VALUE(:)
+  END SUBROUTINE IntVec_Append_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -819,10 +944,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE IntVec_Append_3( obj, Anotherobj )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-  CLASS( IntVector_ ), INTENT( IN ) :: Anotherobj
-END SUBROUTINE IntVec_Append_3
+  MODULE PURE SUBROUTINE IntVec_Append_3(obj, Anotherobj)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+    CLASS(IntVector_), INTENT(IN) :: Anotherobj
+  END SUBROUTINE IntVec_Append_3
 END INTERFACE
 
 INTERFACE Append
@@ -836,15 +961,15 @@ PUBLIC :: Append
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE IntVec_RemoveDuplicates_1( obj )
-  CLASS( IntVector_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE IntVec_RemoveDuplicates_1
+  MODULE PURE SUBROUTINE IntVec_RemoveDuplicates_1(obj)
+    CLASS(IntVector_), INTENT(INOUT) :: obj
+  END SUBROUTINE IntVec_RemoveDuplicates_1
 END INTERFACE
 
 INTERFACE
-MODULE PURE SUBROUTINE IntVec_RemoveDuplicates_2( obj )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: obj( : )
-END SUBROUTINE IntVec_RemoveDuplicates_2
+  MODULE PURE SUBROUTINE IntVec_RemoveDuplicates_2(obj)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+  END SUBROUTINE IntVec_RemoveDuplicates_2
 END INTERFACE
 
 INTERFACE RemoveDuplicates
@@ -858,19 +983,19 @@ PUBLIC :: RemoveDuplicates
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION IntVec_Repeat_1( Val, rtimes ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: Val( : )
-  INTEGER( I4B ), INTENT( IN ) :: rtimes
-  INTEGER( I4B ) :: Ans( SIZE( Val ) * rtimes )
-END FUNCTION IntVec_Repeat_1
+  MODULE PURE FUNCTION IntVec_Repeat_1(Val, rtimes) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: rtimes
+    INTEGER(I4B) :: Ans(SIZE(Val) * rtimes)
+  END FUNCTION IntVec_Repeat_1
 END INTERFACE
 
 INTERFACE
-MODULE PURE FUNCTION IntVec_Repeat_2( obj, rtimes ) RESULT( Ans )
-  TYPE( IntVector_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: rtimes
-  INTEGER( I4B ) :: Ans( SIZE( obj%Val ) * rtimes )
-END FUNCTION IntVec_Repeat_2
+  MODULE PURE FUNCTION IntVec_Repeat_2(obj, rtimes) RESULT(Ans)
+    TYPE(IntVector_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: rtimes
+    INTEGER(I4B) :: Ans(SIZE(obj%Val) * rtimes)
+  END FUNCTION IntVec_Repeat_2
 END INTERFACE
 
 INTERFACE Repeat
@@ -884,15 +1009,15 @@ PUBLIC :: Repeat
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	18 June 2021
+! date:         18 June 2021
 ! summary: Horizontally concat two integer vectors and returns a new integer vector
 
 INTERFACE
-MODULE PURE FUNCTION IntVec_H_CONCAT_1( vec1, vec2 ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: vec1( : )
-  INTEGER( I4B ), INTENT( IN ) :: vec2( : )
-  INTEGER( I4B ) :: ans( size(vec1) + size(vec2) )
-END FUNCTION IntVec_H_CONCAT_1
+  MODULE PURE FUNCTION IntVec_H_CONCAT_1(vec1, vec2) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: vec1(:)
+    INTEGER(I4B), INTENT(IN) :: vec2(:)
+    INTEGER(I4B) :: ans(SIZE(vec1) + SIZE(vec2))
+  END FUNCTION IntVec_H_CONCAT_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -900,15 +1025,15 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	18 June 2021
+! date:         18 June 2021
 ! summary: Horizontally concat a IntVec data type to another IntVec datatype.
 
 INTERFACE
-MODULE PURE FUNCTION IntVec_H_CONCAT_2( obj1, obj2 ) RESULT( Ans )
-  TYPE( IntVector_ ), INTENT( IN ) :: obj1
-  TYPE( IntVector_ ), INTENT( IN ) :: obj2
-  TYPE( IntVector_ ) :: ans
-END FUNCTION IntVec_H_CONCAT_2
+  MODULE PURE FUNCTION IntVec_H_CONCAT_2(obj1, obj2) RESULT(Ans)
+    TYPE(IntVector_), INTENT(IN) :: obj1
+    TYPE(IntVector_), INTENT(IN) :: obj2
+    TYPE(IntVector_) :: ans
+  END FUNCTION IntVec_H_CONCAT_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -916,15 +1041,15 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	18 June 2021
+! date:         18 June 2021
 ! summary: Horizontally concat a integer vector to a IntVec datatype.
 
 INTERFACE
-MODULE PURE FUNCTION IntVec_H_CONCAT_3( vec1, obj2 ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: vec1( : )
-  TYPE( IntVector_ ), INTENT( IN ) :: obj2
-  TYPE( IntVector_ ) :: ans
-END FUNCTION IntVec_H_CONCAT_3
+  MODULE PURE FUNCTION IntVec_H_CONCAT_3(vec1, obj2) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: vec1(:)
+    TYPE(IntVector_), INTENT(IN) :: obj2
+    TYPE(IntVector_) :: ans
+  END FUNCTION IntVec_H_CONCAT_3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -932,17 +1057,16 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	18 June 2021
+! date:         18 June 2021
 ! summary: Horizontally concat a integer vector to a IntVec datatype.
 
 INTERFACE
-MODULE PURE FUNCTION IntVec_H_CONCAT_4( obj1, vec2 ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: vec2( : )
-  TYPE( IntVector_ ), INTENT( IN ) :: obj1
-  TYPE( IntVector_ ) :: ans
-END FUNCTION IntVec_H_CONCAT_4
+  MODULE PURE FUNCTION IntVec_H_CONCAT_4(obj1, vec2) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: vec2(:)
+    TYPE(IntVector_), INTENT(IN) :: obj1
+    TYPE(IntVector_) :: ans
+  END FUNCTION IntVec_H_CONCAT_4
 END INTERFACE
-
 
 INTERFACE H_CONCAT
   MODULE PROCEDURE IntVec_H_CONCAT_1, IntVec_H_CONCAT_2, &
