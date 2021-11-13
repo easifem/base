@@ -384,18 +384,36 @@ PUBLIC :: OPERATOR(.order.)
 !                                                      XiDimension@Geometry
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-13
+! update: 2021-11-13
+! summary: Returns the xidimension of an element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns the xidimension of an element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-  MODULE PURE FUNCTION Elem_XiDimension(ElemType) RESULT(Ans)
+  MODULE PURE FUNCTION Elem_XiDimension1(ElemType) RESULT(Ans)
     INTEGER(I4B) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
-  END FUNCTION Elem_XiDimension
+  END FUNCTION Elem_XiDimension1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       Xidimension@Geometry
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-13
+! update: 2021-11-13
+! summary: Returns xidimension of the reference element
+
+INTERFACE
+  MODULE PURE FUNCTION Elem_Xidimension2(obj) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans
+  END FUNCTION Elem_Xidimension2
 END INTERFACE
 
 INTERFACE XiDimension
-  MODULE PROCEDURE Elem_XiDimension
+  MODULE PROCEDURE Elem_XiDimension1, Elem_Xidimension2
 END INTERFACE XiDimension
 
 PUBLIC :: XiDimension
