@@ -15,26 +15,25 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility ) Append
+SUBMODULE(Utility) Append
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
-
 
 !----------------------------------------------------------------------------
 !                                                                     Append
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_I1
-  INTEGER(I4B),  ALLOCATABLE :: Dummy( : )
-  INTEGER(I4B) :: tSize
-  IF( .NOT. ALLOCATED( A ) ) THEN
-    A = [Entry]
-  ELSE
-    tSize = SIZE( A ); ALLOCATE( Dummy( tSize + 1 ) )
-    Dummy( 1 : tSize ) = A; Dummy( tSize + 1 ) = Entry
-    CALL MOVE_ALLOC( From = Dummy, To = A )
-  END IF
+INTEGER(I4B), ALLOCATABLE :: Dummy(:)
+INTEGER(I4B) :: tSize
+IF (.NOT. ALLOCATED(A)) THEN
+  A = [Entry]
+ELSE
+  tSize = SIZE(A); ALLOCATE (Dummy(tSize + 1))
+  Dummy(1:tSize) = A; Dummy(tSize + 1) = Entry
+  CALL MOVE_ALLOC(From=Dummy, To=A)
+END IF
 END PROCEDURE Append_I1
 
 !----------------------------------------------------------------------------
@@ -42,16 +41,22 @@ END PROCEDURE Append_I1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_I2
-  INTEGER(I4B),  ALLOCATABLE :: Dummy( : )
-  INTEGER(I4B) :: n, m
-  !
-  IF( .NOT. ALLOCATED( A ) ) THEN
+INTEGER(I4B), ALLOCATABLE :: Dummy(:)
+INTEGER(I4B) :: n, m
+!
+IF (.NOT. ALLOCATED(A)) THEN
+  if (size(entry) .ne. 0) then
     A = Entry
-  ELSE
-    m = SIZE( Entry ); n = SIZE( A )
-    ALLOCATE( Dummy( n + m ) ); Dummy( 1 : n ) = A; Dummy( n+1 : ) = Entry
-    CALL MOVE_ALLOC( From = Dummy, To = A )
-  END IF
+  else
+    allocate (A(0))
+  end if
+ELSE
+  if (size(entry) .ne. 0) then
+    m = SIZE(Entry); n = SIZE(A)
+    ALLOCATE (Dummy(n + m)); Dummy(1:n) = A; Dummy(n + 1:) = Entry
+    CALL MOVE_ALLOC(From=Dummy, To=A)
+  end if
+END IF
 END PROCEDURE Append_I2
 
 !----------------------------------------------------------------------------
@@ -59,15 +64,15 @@ END PROCEDURE Append_I2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_R1
-  REAL(DFP),  ALLOCATABLE :: Dummy( : )
-  INTEGER(I4B) :: n
-  IF( .NOT. ALLOCATED( A ) ) THEN
-    A = [Entry]
-  ELSE
-    n = SIZE( A ); ALLOCATE( Dummy( n + 1 ) )
-    Dummy( 1 : n ) = A; Dummy( 1 + n ) = Entry
-    CALL MOVE_ALLOC( From = Dummy, TO = A )
-  END IF
+REAL(DFP), ALLOCATABLE :: Dummy(:)
+INTEGER(I4B) :: n
+IF (.NOT. ALLOCATED(A)) THEN
+  A = [Entry]
+ELSE
+  n = SIZE(A); ALLOCATE (Dummy(n + 1))
+  Dummy(1:n) = A; Dummy(1 + n) = Entry
+  CALL MOVE_ALLOC(From=Dummy, TO=A)
+END IF
 END PROCEDURE Append_R1
 
 !----------------------------------------------------------------------------
@@ -75,15 +80,21 @@ END PROCEDURE Append_R1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Append_R2
-  REAL(DFP),  ALLOCATABLE :: Dummy( : )
-  INTEGER(I4B) :: n, m
-  IF( .NOT. ALLOCATED( A ) ) THEN
+REAL(DFP), ALLOCATABLE :: Dummy(:)
+INTEGER(I4B) :: n, m
+IF (.NOT. ALLOCATED(A)) THEN
+  if (size(entry) .ne. 0) then
     A = Entry
-  ELSE
-    m = SIZE( Entry ); n = SIZE( A ); ALLOCATE( Dummy( n + m ) )
-    Dummy( 1 : n ) = A; Dummy( 1 + n : ) = Entry
-    CALL MOVE_ALLOC( FROM = Dummy, TO = A )
-  END IF
+  else
+    allocate (A(0))
+  end if
+ELSE
+  if (size(entry) .ne. 0) then
+    m = SIZE(Entry); n = SIZE(A)
+    ALLOCATE (Dummy(n + m)); Dummy(1:n) = A; Dummy(n + 1:) = Entry
+    CALL MOVE_ALLOC(From=Dummy, To=A)
+  end if
+END IF
 END PROCEDURE Append_R2
 
 END SUBMODULE Append

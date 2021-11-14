@@ -377,8 +377,7 @@ END PROCEDURE Element_Order_RefElem
 !                                                               XiDimension
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Elem_XiDimension
-
+MODULE PROCEDURE Elem_XiDimension1
 SELECT CASE (ElemType)
 CASE (Tetrahedron4, &
       Hexahedron8, &
@@ -396,9 +395,7 @@ CASE (Tetrahedron4, &
       Tetrahedron56, &
       Hexahedron64, &
       Hexahedron125)
-
   Ans = 3
-
 CASE (Triangle3, &
       Triangle6, &
       Triangle9, &
@@ -410,24 +407,25 @@ CASE (Triangle3, &
       Quadrangle4, &
       Quadrangle8, &
       Quadrangle9)
-
   Ans = 2
-
 CASE (Line2, &
       Line3, &
       Line4, &
       Line5, &
       Line6)
-
   Ans = 1
-
 CASE DEFAULT
-
   Ans = 0
-
 END SELECT
+END PROCEDURE Elem_XiDimension1
 
-END PROCEDURE Elem_XiDimension
+!----------------------------------------------------------------------------
+!                                                                Xidimension
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Elem_Xidimension2
+ans = obj%xidimension
+END PROCEDURE Elem_Xidimension2
 
 !----------------------------------------------------------------------------
 !                                                                 isVolume
@@ -650,7 +648,7 @@ END PROCEDURE refelem_ElementTopology1
 
 MODULE PROCEDURE refelem_ElementTopology2
 ans = refelem_ElementTopology1(obj%name)
-end procedure refelem_ElementTopology2
+END PROCEDURE refelem_ElementTopology2
 
 !----------------------------------------------------------------------------
 !                                                               FacetMatrix
@@ -725,7 +723,7 @@ CASE (1)
     ans(ii)%NSD = refelem%nsd
     ALLOCATE (ans(ii)%Topology(1))
     ans(ii)%Topology(1) = ReferenceTopology(nptrs=nptrs, name=Point)
-    ans(ii)%LagrangeElement => null()
+    ans(ii)%LagrangeElement => NULL()
   END DO
 CASE (2)
   tFacet = refelem%EntityCounts(xicell)
