@@ -79,100 +79,6 @@ PUBLIC :: Allocate
 !> authors: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
-!
-!# Introduction
-!
-! This routine initiates the shape function related data inside the element.
-!
-!### Usage
-!
-!```fortran
-! ! authors: Vikas Sharma, Ph. D.
-! ! date: 31 Oct 2021
-! ! summary: Testing for Line1
-! PROGRAM main
-!   USE easifemBase
-!   IMPLICIT NONE
-!   TYPE( ElemshapeData_ ) :: obj
-!   TYPE( QuadraturePoint_ ) :: quad
-!   TYPE( ReferenceLine_ ) :: refelem
-!   INTEGER( I4B  ), PARAMETER :: nsd=1, order=1
-!   REAL( DFP ), PARAMETER :: xij(3,2) = RESHAPE([-1,0,0,1,0,0],[3,2])
-!   !> main
-!   ! #ReferenceLine/ReferenceLine
-!   ! #ReferenceLine
-!   refelem = ReferenceLine( nsd = nsd )
-!   ! #GaussLegendreQuadrature
-!   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
-!   CALL Allocate( obj = obj, nsd = refelem%nsd, &
-!     & xidim = refelem%xidimension, nns = 2, nips = 1 )
-!   ! #ReferenceElement/Initiate
-!   ! #ReferenceLine/Initiate
-!   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
-!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
-!   ! #ReferenceLine/Set
-!   ! #ReferenceElement/Set
-!   CALL Set( obj=obj, val=xij(1:nsd, :), N=obj%N, dNdXi=obj%dNdXi )
-!   CALL Display( obj, "obj" )
-!   CALL DeallocateData( obj )
-! END PROGRAM main
-! !> authors: Vikas Sharma, Ph. D.
-! ! date: 31 Oct 2021
-! ! summary: Testing for Line2
-! PROGRAM main
-!   USE easifemBase
-!   IMPLICIT NONE
-!   TYPE( ElemshapeData_ ) :: obj
-!   TYPE( QuadraturePoint_ ) :: quad
-!   TYPE( ReferenceLine_ ) :: refelem
-!   INTEGER( I4B  ), PARAMETER :: nsd=1, order=2
-!   REAL( DFP ), PARAMETER :: xij(3,2) = RESHAPE([-1,0,0,1,0,0],[3,2])
-!   !> main
-!   ! #ReferenceLine/ReferenceLine
-!   ! #ReferenceLine
-!   refelem = ReferenceLine( nsd = nsd )
-!   ! #GaussLegendreQuadrature
-!   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
-!   CALL Allocate( obj = obj, nsd = refelem%nsd, &
-!     & xidim = refelem%xidimension, nns = 2, nips = 1 )
-!   ! #ReferenceElement/Initiate
-!   ! #ReferenceLine/Initiate
-!   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
-!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
-!   ! #ReferenceLine/Set
-!   ! #ReferenceElement/Set
-!   CALL Set( obj=obj, val=xij(1:nsd, :), N=obj%N, dNdXi=obj%dNdXi )
-!   CALL Display( obj, "obj" )
-!   CALL DeallocateData( obj )
-! END PROGRAM main
-! !> authors: Vikas Sharma, Ph. D.
-! ! date: 2021-11-01
-! ! update: 2021-11-01
-! ! summary: Testing [[ElemshapeData_]] for Triangle3 element
-! PROGRAM main
-!   USE easifemBase
-!   IMPLICIT NONE
-!   TYPE( ElemshapeData_ ) :: obj
-!   TYPE( QuadraturePoint_ ) :: quad
-!   TYPE( ReferenceTriangle_ ) :: refelem
-!   INTEGER( I4B  ), PARAMETER :: nsd=2, order=1
-!   REAL( DFP ), PARAMETER :: xij(3,3) = RESHAPE([0,0,0,1,0,0,0,1,0],[3,3])
-!   !name
-!   ! #ReferenceTriangle
-!   refelem = ReferenceTriangle( nsd = nsd )
-!   ! #GaussLegendreQuadrature
-!   quad = GaussLegendreQuadrature( refelem = refelem, order = order )
-!   CALL ALLOCATE( obj = obj, nsd = refelem%nsd, &
-!     & xidim = refelem%xidimension, nns = 3, nips = 1 )
-!   CALL Initiate( obj = obj, quad = quad, refelem = refelem, &
-!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
-!   ! #ReferenceTriangle/Set
-!   ! #ReferenceElement/Set
-!   CALL Set( obj=obj, val=xij(1:nsd, :), N=obj%N, dNdXi=obj%dNdXi )
-!   CALL Display( obj, "obj" )
-!   CALL DeallocateData( obj )
-! END PROGRAM main
-!```
 
 INTERFACE
   MODULE SUBROUTINE elemsd_initiate(obj, quad, refElem, continuityType, &
@@ -215,7 +121,8 @@ END INTERFACE Initiate
 !
 !
 !### Usage
-! TODO Add usage for [[ElemshapeData_:stsd_initiate]]
+!
+! - [ ] TODO Add usage for [[ElemshapeData_:stsd_initiate]]
 !
 !```fortran
 !
@@ -248,10 +155,6 @@ PUBLIC :: Initiate
 ! This routine deallocates the data stored inside [[elemshapedata_]]. This
 ! routine belongs to `AllocateData()`
 !
-!
-!### Usage
-!
-! See [[ElemshapeData_:elemsd_initiate]]
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_DeallocateData(obj)
@@ -318,12 +221,6 @@ PUBLIC :: BaseContinuity
 !# Introduction
 !         This subroutine displays the content of [[elemshapedata_]] and
 ! [[stelemshapedata_]] on screen. this routine belongs to `Display()`.
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
   MODULE SUBROUTINE display_obj(obj, Msg, UnitNo)
