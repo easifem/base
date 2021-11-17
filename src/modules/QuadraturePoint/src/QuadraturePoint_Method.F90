@@ -154,7 +154,7 @@ END INTERFACE QuadraturePoint_Pointer
 PUBLIC :: QuadraturePoint_Pointer
 
 !----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -162,16 +162,16 @@ PUBLIC :: QuadraturePoint_Pointer
 ! summary: Deallocates the data stored inside the quadrature point
 
 INTERFACE
-MODULE PURE SUBROUTINE quad_DeallocateData(obj)
+MODULE PURE SUBROUTINE quad_Deallocate(obj)
   CLASS( QuadraturePoint_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE quad_DeallocateData
+END SUBROUTINE quad_Deallocate
 END INTERFACE
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE quad_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE quad_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                           SIZE@Constructor

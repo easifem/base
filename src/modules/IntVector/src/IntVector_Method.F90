@@ -133,7 +133,7 @@ END INTERFACE ALLOCATE
 PUBLIC :: ALLOCATE
 
 !----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -141,24 +141,18 @@ PUBLIC :: ALLOCATE
 ! summary:         Deallocate memory occupied by IntVector
 
 INTERFACE
-  MODULE PURE SUBROUTINE intVec_DeallocateData(obj)
+  MODULE PURE SUBROUTINE intVec_Deallocate(obj)
     CLASS(IntVector_), INTENT(INOUT) :: obj
-  END SUBROUTINE intVec_DeallocateData
+  END SUBROUTINE intVec_Deallocate
 END INTERFACE
 
-!! TODO Rename DeallocateData to Deallocate
+!! TODO Rename Deallocate to Deallocate
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE intVec_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE intVec_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
-
-INTERFACE DEALLOCATE
-  MODULE PROCEDURE intVec_DeallocateData
-END INTERFACE DEALLOCATE
-
-PUBLIC :: DEALLOCATE
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                        Initiate@Constructor

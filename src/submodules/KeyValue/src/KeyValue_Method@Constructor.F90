@@ -337,7 +337,7 @@ MODULE PROCEDURE Equal4
 END PROCEDURE Equal4
 
 !----------------------------------------------------------------------------
-!                                                             DeallocateData
+!                                                             Deallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE keyvalue_deallocate

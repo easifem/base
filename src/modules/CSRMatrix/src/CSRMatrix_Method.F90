@@ -350,7 +350,7 @@ END INTERFACE AllocateData
 PUBLIC :: AllocateData
 
 !----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -358,16 +358,16 @@ PUBLIC :: AllocateData
 ! summary: 	 This subroutine deallocates the data
 
 INTERFACE
-MODULE PURE SUBROUTINE csrMat_DeallocateData( obj )
+MODULE PURE SUBROUTINE csrMat_Deallocate( obj )
   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE csrMat_DeallocateData
+END SUBROUTINE csrMat_Deallocate
 END INTERFACE
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE csrMat_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE csrMat_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                        Display@IOMethods
@@ -478,7 +478,7 @@ PUBLIC :: Import
 !   CALL SetSparsity(obj)
 !   obj = 2.0_DFP
 !   CALL SPY( obj, "test_6", ".svg" )
-!   CALL DeallocateData( obj )
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -525,7 +525,7 @@ END INTERFACE
 !   CALL SetSparsity(obj)
 !   obj = 2.0_DFP
 !   CALL SPY( obj, "test_6", ".svg" )
-!   CALL DeallocateData( obj )
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -612,7 +612,7 @@ END INTERFACE
 !   CALL SetSparsity(obj)
 !   obj = 2.0_DFP
 !   CALL SPY( obj, "test_7", ".svg" )
-!   CALL DeallocateData( obj )
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -699,7 +699,7 @@ END INTERFACE
 !   CALL SetSparsity(obj)
 !   obj = 2.0_DFP
 !   CALL SPY( obj, "test_7", ".svg" )
-!   CALL DeallocateData( obj )
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1817,8 +1817,8 @@ PUBLIC :: Get
 ! call display( obj2, "obj2=" )
 ! call DropEntry(objIn=obj, objOut=obj, dropTol=4.0_DFP)
 ! call display( obj, "obj=" )
-! call deallocateData( obj )
-! call deallocateData( obj2 )
+! call Deallocate( obj )
+! call Deallocate( obj2 )
 !```
 
 INTERFACE
@@ -1865,7 +1865,7 @@ PUBLIC :: DropEntry
 ! call initiate( obj=obj, A=A%val, IA=IA%val, JA=JA%val )
 ! call getTranspose(obj)
 ! call display( obj, "obj=" )
-! call deallocateData( obj )
+! call Deallocate( obj )
 !```
 
 INTERFACE
@@ -1923,7 +1923,7 @@ PUBLIC :: getTRANSPOSE
 ! call getDiagonal( obj=obj, diag=A%val, idiag=IA%val, offset=2 )
 ! call display( A, "diag=")
 ! call display( IA, "idiag=")
-! call deallocateData( obj )
+! call Deallocate( obj )
 !```
 
 INTERFACE

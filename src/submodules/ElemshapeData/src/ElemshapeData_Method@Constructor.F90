@@ -61,10 +61,10 @@ MODULE PROCEDURE stsd_initiate
 END PROCEDURE stsd_initiate
 
 !----------------------------------------------------------------------------
-!                                                             DeallocateData
+!                                                             Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_DeallocateData
+MODULE PROCEDURE elemsd_Deallocate
   IF( ALLOCATED( obj%Normal ) ) DEALLOCATE( obj%Normal )
   IF( ALLOCATED( obj%N ) ) DEALLOCATE( obj%N )
   IF( ALLOCATED( obj%dNdXi ) ) DEALLOCATE( obj%dNdXi )
@@ -74,8 +74,8 @@ MODULE PROCEDURE elemsd_DeallocateData
   IF( ALLOCATED( obj%Ws ) ) DEALLOCATE( obj%Ws )
   IF( ALLOCATED( obj%Thickness ) ) DEALLOCATE( obj%Thickness )
   IF( ALLOCATED( obj%Coord ) ) DEALLOCATE( obj%Coord )
-  CALL DeallocateData( obj%Quad )
-  CALL DeallocateData( obj%RefElem )
+  CALL Deallocate( obj%Quad )
+  CALL Deallocate( obj%RefElem )
   SELECT TYPE( obj )
   TYPE IS (STElemShapeData_)
     IF( ALLOCATED( obj%T ) ) DEALLOCATE( obj%T )
@@ -83,7 +83,7 @@ MODULE PROCEDURE elemsd_DeallocateData
     IF( ALLOCATED( obj%dNTdt ) ) DEALLOCATE( obj%dNTdt )
     IF( ALLOCATED( obj%dNTdXt ) ) DEALLOCATE( obj%dNTdXt )
   END SELECT
-END PROCEDURE elemsd_DeallocateData
+END PROCEDURE elemsd_Deallocate
 
 !----------------------------------------------------------------------------
 !                                                         BaseInterpolation

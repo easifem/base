@@ -40,7 +40,7 @@
     T = obj
     m_SymmetricPart = SymmetricPart( T )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION m_SymmetricPart
 
@@ -65,7 +65,7 @@
     T = obj
     m_AntiSymmetricPart = AntiSymmetricPart( T )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION m_AntiSymmetricPart
 
@@ -91,7 +91,7 @@
 
     m_HydrostaticPart = HydrostaticPart( T )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION m_HydrostaticPart
 
@@ -117,7 +117,7 @@
 
     m_DeviatoricPart = DeviatoricPart( T )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION m_DeviatoricPart
 

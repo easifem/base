@@ -49,10 +49,10 @@
  END FUNCTION getSize
 
 !------------------------------------------------------------------------------
-!                                                                    DeallocateData
+!                                                                    Deallocate
 !------------------------------------------------------------------------------
 
- SUBROUTINE DeallocateData( obj )
+ SUBROUTINE Deallocate( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  Deallocate Data
@@ -63,7 +63,7 @@
 
     IF( ALLOCATED( obj%C ) ) DEALLOCATE( obj%C )
 
- END SUBROUTINE DeallocateData
+ END SUBROUTINE Deallocate
 
 !------------------------------------------------------------------------------
 !                                                                    Initiate1

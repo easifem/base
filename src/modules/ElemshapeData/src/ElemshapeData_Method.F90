@@ -143,7 +143,7 @@ END INTERFACE Initiate
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -157,16 +157,16 @@ PUBLIC :: Initiate
 !
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_DeallocateData(obj)
+  MODULE PURE SUBROUTINE elemsd_Deallocate(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-  END SUBROUTINE elemsd_DeallocateData
+  END SUBROUTINE elemsd_Deallocate
 END INTERFACE
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE elemsd_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE elemsd_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                             BaseInterpolation@Constructor

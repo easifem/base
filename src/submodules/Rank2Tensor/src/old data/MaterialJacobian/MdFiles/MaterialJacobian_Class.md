@@ -107,7 +107,7 @@ RateType = .RateType. obj
 
 ### Geting the values of `obj%C`
 
-We can get the size of `obj%C` using the operator called `.SIZE.` and we can deallocate the data using the routine called `obj%DeallocateData()`.
+We can get the size of `obj%C` using the operator called `.SIZE.` and we can deallocate the data using the routine called `obj%Deallocate()`.
 
 We can access the values using both subroutines and functions.
 

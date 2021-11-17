@@ -55,7 +55,7 @@
         GENERIC, PUBLIC :: ASSIGNMENT( = ) => Initiate3
 
         PROCEDURE, PUBLIC, PASS :: isInitiated
-        PROCEDURE, PUBLIC, PASS :: DeallocateData
+        PROCEDURE, PUBLIC, PASS :: Deallocate
         PROCEDURE, PUBLIC, PASS :: getVoigtLen
         GENERIC, PUBLIC :: OPERATOR( .SIZE. ) => getVoigtLen
         PROCEDURE, PUBLIC, PASS :: getNSD, setNSD

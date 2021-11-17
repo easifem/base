@@ -55,20 +55,20 @@ END INTERFACE Initiate
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                              DeallocateData
+!                                                              Deallocate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE iterdata_DeallocateData( obj )
+MODULE SUBROUTINE iterdata_Deallocate( obj )
   TYPE( IterationData_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE iterdata_DeallocateData
+END SUBROUTINE iterdata_Deallocate
 END INTERFACE
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE iterdata_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE iterdata_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                    isConverged@Constructor

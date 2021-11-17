@@ -773,7 +773,7 @@ END INTERFACE OPERATOR( .EQ. )
 PUBLIC :: OPERATOR( .EQ. )
 
 !----------------------------------------------------------------------------
-!                                                             DeallocateData
+!                                                             Deallocate
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -782,11 +782,11 @@ MODULE PURE SUBROUTINE keyvalue_deallocate( obj )
 END SUBROUTINE keyvalue_deallocate
 END INTERFACE
 
-INTERFACE DeallocateData
+INTERFACE Deallocate
   MODULE PROCEDURE keyvalue_deallocate
-END INTERFACE DeallocateData
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 
 

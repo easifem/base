@@ -142,7 +142,7 @@ private
         procedure, non_overridable, public :: isSubList      => ParameterList_isSubList
         procedure, non_overridable, public :: GetAsString    => ParameterList_GetAsString
         procedure, non_overridable, public :: Free           => ParameterList_Free
-        generic, public :: DeallocateData => Free
+        generic, public :: Deallocate => Free
         procedure, non_overridable, public :: Print          => ParameterList_Print
         procedure, non_overridable, public :: Display        => ParameterList_Display
         procedure, non_overridable, public :: Length         => ParameterList_Length

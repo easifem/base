@@ -79,9 +79,9 @@ PRIVATE
 ! !
 ! CALL Display( obj, "CSRSparsity : " )
 ! !
-! ! #CSRSparsity_/DeallocateData
+! ! #CSRSparsity_/Deallocate
 ! !
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 !
@@ -114,9 +114,9 @@ PRIVATE
 ! !
 ! CALL Display( obj, "CSRSparsity : " )
 ! !
-! ! #CSRSparsity_/DeallocateData
+! ! #CSRSparsity_/Deallocate
 ! !
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -368,7 +368,7 @@ END INTERFACE getNNZ
 PUBLIC :: getNNZ
 
 !----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -376,16 +376,16 @@ PUBLIC :: getNNZ
 ! summary: 	 This subroutine deallocates the data
 
 INTERFACE
-MODULE PURE SUBROUTINE csr_DeallocateData( obj )
+MODULE PURE SUBROUTINE csr_Deallocate( obj )
   TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE csr_DeallocateData
+END SUBROUTINE csr_Deallocate
 END INTERFACE
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE csr_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE csr_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                         Display@IOMethods

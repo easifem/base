@@ -158,7 +158,7 @@ END INTERFACE AllocateData
 PUBLIC :: AllocateData
 
 !----------------------------------------------------------------------------
-!                                                 DeAllocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -166,16 +166,16 @@ PUBLIC :: AllocateData
 ! summary: 	This subroutine deallocates the data in [[RealVector_]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realVec_DeallocateData( obj )
+MODULE PURE SUBROUTINE realVec_Deallocate( obj )
   CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE realVec_DeallocateData
+END SUBROUTINE realVec_Deallocate
 END INTERFACE
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE realVec_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE realVec_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor

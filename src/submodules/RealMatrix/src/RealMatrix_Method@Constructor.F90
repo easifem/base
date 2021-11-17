@@ -77,7 +77,7 @@ MODULE PROCEDURE allocate_data
 END PROCEDURE allocate_data
 
 !----------------------------------------------------------------------------
-!                                                             DeallocateData
+!                                                             Deallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Deallocate_Data

@@ -91,7 +91,7 @@
 
     END SELECT
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION getKirchhoffStress
 

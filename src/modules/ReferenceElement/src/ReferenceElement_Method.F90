@@ -103,7 +103,7 @@ END INTERFACE ReferenceTopology
 PUBLIC :: ReferenceTopology
 
 !----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -116,17 +116,17 @@ PUBLIC :: ReferenceTopology
 ! type( ReferenceTopology_ ) :: obj
 ! obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
 ! call display( obj, "obj=")
-! call deallocatedata( obj ) !<------
+! call Deallocate( obj ) !<------
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE refelem_DeallocateData1(obj)
+  MODULE PURE SUBROUTINE refelem_Deallocate1(obj)
     CLASS(ReferenceTopology_), INTENT(INOUT) :: obj
-  END SUBROUTINE refelem_DeallocateData1
+  END SUBROUTINE refelem_Deallocate1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -140,16 +140,16 @@ END INTERFACE
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE refelem_DeallocateData2(obj)
+  MODULE PURE SUBROUTINE refelem_Deallocate2(obj)
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
-  END SUBROUTINE refelem_DeallocateData2
+  END SUBROUTINE refelem_Deallocate2
 END INTERFACE
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE refelem_DeallocateData1, refelem_DeallocateData2
+INTERFACE Deallocate
+  MODULE PROCEDURE refelem_Deallocate1, refelem_Deallocate2
 END INTERFACE
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                           NNE@Constructor

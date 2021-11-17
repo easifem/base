@@ -117,7 +117,7 @@ The above call will make tensor object from other tensor object.
 
 ```fortran
 CALL obj%isInitiated( )
-CALL obj%DeallocateData( )
+CALL obj%Deallocate( )
 ```
 
 ### Setting and getting the NSD
@@ -1633,7 +1633,7 @@ Type-4
     T = Rank2Tensor( A, VoigtType )
     DoubleDot_Product4 = SUM( T*obj )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION DoubleDot_Product4
 ```
@@ -1649,7 +1649,7 @@ Type-5
     TYPE( Rank2Tensor_ ) :: T
     T = Rank2Tensor( B, VoigtType )
     DoubleDot_Product5 = SUM( T * A )
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
  END FUNCTION DoubleDot_Product5
 ```
 
@@ -1663,8 +1663,8 @@ Type-6
     T1 = Rank2Tensor( A, VoigtType_A )
     T2 = Rank2Tensor( B, VoigtType_B )
     DoubleDot_Product6 = SUM( T1 * T2 )
-    CALL T1%DeallocateData( )
-    CALL T2%DeallocateData( )
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
  END FUNCTION DoubleDot_Product6
 ```
 

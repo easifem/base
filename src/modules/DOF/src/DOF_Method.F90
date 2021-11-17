@@ -70,8 +70,8 @@ PRIVATE
 ! CALL Display( .tNames. obj, '.tNames. obj : ' )
 ! CALL Display( .tNodes. obj, '.tNodes. obj : ' )
 ! CALL Display( .tDOF. obj, '.tDOF. obj : ' )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -123,8 +123,8 @@ END INTERFACE
 !   ! #DOF/Initiate
 !   CALL Initiate( Val=val, obj=obj )
 !   CALL Display( obj, "CALL Initiate( Val=val, obj=obj ) : " )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -167,8 +167,8 @@ END INTERFACE
 !   ! #DOF/Initiate
 !   CALL Initiate( Val=val, obj=obj )
 !   CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -210,8 +210,8 @@ END INTERFACE
 !   ! #DOF/Initiate
 !   CALL Initiate( Val=val, obj=obj )
 !   CALL Display( Val, "CALL Initiate( Val=val, obj=obj ) : " )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -269,9 +269,9 @@ END INTERFACE
 !   ! #DOF/Initiate
 !   anotherObj=obj
 !   CALL Display( anotherObj, "anotherObj=obj : " )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
-!   CALL DeallocateData( anotherObj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
+!   CALL Deallocate( anotherObj )
 ! END PROGRAM main
 !```
 
@@ -334,8 +334,8 @@ PUBLIC :: Initiate
 !   & timeCompo=[1], storageFMT = FMT_DOF )
 ! ! #DOF/Display
 ! CALL Display( obj, "DOF() : " )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -383,8 +383,8 @@ PUBLIC :: DOF
 !   & timeCompo=[1], storageFMT = FMT_DOF )
 ! ! #DOF/Display
 ! CALL Display( obj, "DOF() : " )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -414,7 +414,7 @@ END INTERFACE DOF_Pointer
 PUBLIC :: DOF_Pointer
 
 !----------------------------------------------------------------------------
-!                                                 DeallocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -426,17 +426,17 @@ PUBLIC :: DOF_Pointer
 ! This subroutine deallocates the data in [[DOF_]] object
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_DeallocateData( obj )
+MODULE PURE SUBROUTINE dof_Deallocate( obj )
   CLASS(DOF_), INTENT( INOUT ) :: obj
-END SUBROUTINE dof_DeallocateData
+END SUBROUTINE dof_Deallocate
 END INTERFACE
 
 !> Generic interface to deallocate data in [[dof_]]
-INTERFACE DeallocateData
-  MODULE PROCEDURE dof_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE dof_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                         Display@IOMethods
@@ -480,8 +480,8 @@ END INTERFACE
 ! CALL Initiate( Val=val, obj=obj )
 ! val(1:10) = 1; val(11:20)=2; val(21:)=3
 ! CALL Display( Val, obj, "CALL Initiate( Val=val, obj=obj ) : " )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -592,8 +592,8 @@ PUBLIC :: OPERATOR(.DOFEndIndex.)
 ! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
 ! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
 ! CALL Display( obj .tNodes. [1,2,3], 'obj .tNodes. [1,2,3] [30] : ' )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -635,8 +635,8 @@ END INTERFACE
 ! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
 ! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
 ! CALL Display( obj .tNodes. [1,2,3], 'obj .tNodes. [1,2,3] [30] : ' )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -679,8 +679,8 @@ END INTERFACE
 ! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
 ! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
 ! CALL Display( obj .tNodes. [1,2,3], 'obj .tNodes. [1,2,3] [30] : ' )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -723,8 +723,8 @@ END INTERFACE
 ! CALL Display( obj .tNodes. 2, 'obj .tNodes. 2 [10] : ' )
 ! CALL Display( obj .tNodes. 3, 'obj .tNodes. 3 [10] : ' )
 ! CALL Display( obj .tNodes. [1,2,3], 'obj .tNodes. [1,2,3] [30] : ' )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -776,8 +776,8 @@ PUBLIC :: SIZE
 ! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
 ! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
 ! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -816,8 +816,8 @@ END INTERFACE
 ! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
 ! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
 ! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -857,8 +857,8 @@ END INTERFACE
 ! CALL Display(     .tDOF. obj, '.tDOF. obj [3] : ' )
 ! CALL Display( obj .tDOF. 1,   'obj .tDOF. 1 [3] : ' )
 ! CALL Display( obj .tDOF. 'U', 'obj .tDOF. "U" [3] : ' )
-! ! #DOF/DeallocateData
-! CALL DeallocateData( obj )
+! ! #DOF/Deallocate
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -902,8 +902,8 @@ PUBLIC :: OPERATOR( .tDOF. )
 !   ! #DOF/.Names.
 !   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
 !   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -946,8 +946,8 @@ PUBLIC :: OPERATOR( .tNames. )
 !   ! #DOF/.Names.
 !   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
 !   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -989,8 +989,8 @@ END INTERFACE
 !   ! #DOF/.Names.
 !   CALL Display( obj .Names. 1,   'obj .Names. 1 ["V"] : ' )
 !   CALL Display( obj .Names. 2,   'obj .Names. 2 ["P"] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1081,8 +1081,8 @@ END INTERFACE
 !   CALL Display( getNodeLoc(obj, 3), 'getNodeLoc(obj, 3) [41,60,1] : ' )
 !   CALL Display( getNodeLoc(obj, 7), 'getNodeLoc(obj, 7) [121,130,1] : ' )
 !   CALL Display( getNodeLoc(obj, 8), 'getNodeLoc(obj, 7) [131,140,1] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 !
@@ -1113,8 +1113,8 @@ END INTERFACE
 !   CALL Display( getNodeLoc(obj, 3), 'getNodeLoc(obj, 3) [3,160,8] : ' )
 !   CALL Display( getNodeLoc(obj, 7), 'getNodeLoc(obj, 7) [7,160,8] : ' )
 !   CALL Display( getNodeLoc(obj, 8), 'getNodeLoc(obj, 7) [8,160,8] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1175,8 +1175,8 @@ END INTERFACE
 !   CALL Display( getNodeLoc(obj, 3), 'getNodeLoc(obj, 3) [41,60,1] : ' )
 !   CALL Display( getNodeLoc(obj, 7), 'getNodeLoc(obj, 7) [121,130,1] : ' )
 !   CALL Display( getNodeLoc(obj, 8), 'getNodeLoc(obj, 7) [131,140,1] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 !
@@ -1206,8 +1206,8 @@ END INTERFACE
 !   CALL Display( getNodeLoc(obj, 3), 'getNodeLoc(obj, 3) [3,160,8] : ' )
 !   CALL Display( getNodeLoc(obj, 7), 'getNodeLoc(obj, 7) [7,160,8] : ' )
 !   CALL Display( getNodeLoc(obj, 8), 'getNodeLoc(obj, 7) [8,160,8] : ' )
-!   ! #DOF/DeallocateData
-!   CALL DeallocateData( obj )
+!   ! #DOF/Deallocate
+!   CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1295,7 +1295,7 @@ PUBLIC :: getNodeLoc
 ! CALL OK( ALL(indx .EQ. [25]), "test11.12 : " )
 ! indx = [GetIndex( obj, nodeNum=5, iVar=1, idof=3 )]
 ! CALL OK( ALL(indx .EQ. [45]), "test11.13 : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1371,7 +1371,7 @@ END INTERFACE
 ! CALL OK( ALL(indx .EQ. [25]), "test11.12 : " )
 ! indx = [GetIndex( obj, nodeNum=5, iVar=1, idof=3 )]
 ! CALL OK( ALL(indx .EQ. [45]), "test11.13 : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1448,7 +1448,7 @@ END INTERFACE
 ! CALL OK( ALL(indx .EQ. [25]), "test11.12 : " )
 ! indx = [GetIndex( obj, nodeNum=5, iVar=1, idof=3 )]
 ! CALL OK( ALL(indx .EQ. [45]), "test11.13 : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1525,7 +1525,7 @@ END INTERFACE
 ! CALL OK( ALL(indx .EQ. [25]), "test11.12 : " )
 ! indx = [GetIndex( obj, nodeNum=5, iVar=1, idof=3 )]
 ! CALL OK( ALL(indx .EQ. [45]), "test11.13 : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1602,7 +1602,7 @@ END INTERFACE
 ! CALL OK( ALL(indx .EQ. [25]), "test11.12 : " )
 ! indx = [GetIndex( obj, nodeNum=5, iVar=1, idof=3 )]
 ! CALL OK( ALL(indx .EQ. [45]), "test11.13 : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1680,7 +1680,7 @@ END INTERFACE
 ! CALL OK( ALL(indx .EQ. [25]), "test11.12 : " )
 ! indx = [GetIndex( obj, nodeNum=5, iVar=1, idof=3 )]
 ! CALL OK( ALL(indx .EQ. [45]), "test11.13 : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1741,7 +1741,7 @@ END INTERFACE
 ! CALL OK( ALL(indx .EQ. [25]), "test11.12 : " )
 ! indx = [GetIndex( obj, nodeNum=5, iVar=1, idof=3 )]
 ! CALL OK( ALL(indx .EQ. [45]), "test11.13 : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1803,7 +1803,7 @@ END INTERFACE
 ! CALL OK( ALL(indx .EQ. [25]), "test11.12 : " )
 ! indx = [GetIndex( obj, nodeNum=5, iVar=1, idof=3 )]
 ! CALL OK( ALL(indx .EQ. [45]), "test11.13 : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1860,7 +1860,7 @@ PUBLIC :: getIndex
 !   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
 ! CALL Display( &
 !   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1912,7 +1912,7 @@ PUBLIC :: OPERATOR( .tSpaceComponents. )
 !   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
 ! CALL Display( &
 !   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -1958,7 +1958,7 @@ END INTERFACE
 !   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
 ! CALL Display( &
 !   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -2011,7 +2011,7 @@ PUBLIC :: OPERATOR( .SpaceComponents. )
 !   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
 ! CALL Display( &
 !   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -2063,7 +2063,7 @@ PUBLIC :: OPERATOR( .tTimeComponents. )
 !   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
 ! CALL Display( &
 !   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 
@@ -2109,7 +2109,7 @@ END INTERFACE
 !   & GetIndex( obj, nodeNum=10, iVar=2 ), "[70] : " )
 ! CALL Display( &
 !   & GetIndex( obj, nodeNum=[5,10], iVar=1 ),  "[5,25,45,10,30,50] : " )
-! CALL DeallocateData( obj )
+! CALL Deallocate( obj )
 ! END PROGRAM main
 !```
 

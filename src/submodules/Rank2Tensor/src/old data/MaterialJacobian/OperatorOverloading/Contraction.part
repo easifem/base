@@ -98,7 +98,7 @@
 
     Tensorobj = Mat
     Contraction_3 = Contraction_1( obj, Tensorobj )
-    CALL Tensorobj%DeallocateData( )
+    CALL Tensorobj%Deallocate( )
 
  END FUNCTION Contraction_3
 
@@ -125,6 +125,6 @@
 
     Tensorobj = Mat
     Contraction_4 = Contraction_2( Tensorobj, obj )
-    CALL Tensorobj%DeallocateData( )
+    CALL Tensorobj%Deallocate( )
 
  END FUNCTION Contraction_4

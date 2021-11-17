@@ -143,7 +143,7 @@ END FUNCTION EquidistanceLIP_Quadrangle
 MODULE PROCEDURE LagrangeElement_Quadrangle
   INTEGER( I4B ) :: NNS, I
 
-  CALL DeallocateData( obj )
+  CALL Deallocate( obj )
   SELECT CASE( Order )
   CASE( 1 )
     CALL Initiate( obj=obj, Anotherobj=RefElem )

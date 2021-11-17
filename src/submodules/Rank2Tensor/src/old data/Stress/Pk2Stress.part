@@ -98,7 +98,7 @@
 
     END SELECT
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
     IF( ALLOCATED( InvF ) ) DEALLOCATE( InvF )
 
  END FUNCTION getPK2Stress

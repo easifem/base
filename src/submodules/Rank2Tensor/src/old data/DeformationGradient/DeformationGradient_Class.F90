@@ -49,7 +49,7 @@
         ! Constructor.part
 
             PROCEDURE, PUBLIC, PASS :: Initiate2, Initiate5
-            PROCEDURE, PUBLIC, PASS :: DeallocateData
+            PROCEDURE, PUBLIC, PASS :: Deallocate
 
         ! Component.part
 

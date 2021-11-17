@@ -43,7 +43,7 @@
 
             PROCEDURE, PUBLIC, PASS( obj ) :: Initiate1, Initiate2, &
             Initiate3, Initiate4, Initiate5, Initiate6, &
-            Initiate7, getSize, DeallocateData, Initiate8
+            Initiate7, getSize, Deallocate, Initiate8
 
             GENERIC, PUBLIC :: Initiate => Initiate1, Initiate2, &
             Initiate3, Initiate4, Initiate5, Initiate6, &

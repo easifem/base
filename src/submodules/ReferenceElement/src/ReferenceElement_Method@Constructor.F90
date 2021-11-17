@@ -35,27 +35,27 @@ MODULE PROCEDURE refelem_ReferenceTopology
 END PROCEDURE refelem_ReferenceTopology
 
 !----------------------------------------------------------------------------
-!                                                            DeallocateData
+!                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE refelem_DeallocateData1
+MODULE PROCEDURE refelem_Deallocate1
   IF( ALLOCATED( obj%Nptrs ) ) DEALLOCATE( obj%Nptrs )
   obj%Name = -1
   obj%XiDimension = -1
-END PROCEDURE refelem_DeallocateData1
+END PROCEDURE refelem_Deallocate1
 
 !----------------------------------------------------------------------------
-!                                                            DeallocateData
+!                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE refelem_DeallocateData2
+MODULE PROCEDURE refelem_Deallocate2
   IF( ALLOCATED( obj%XiJ ) ) DEALLOCATE( obj%XiJ )
   obj%EntityCounts = 0
   IF( ALLOCATED( obj%Topology ) ) DEALLOCATE( obj%Topology )
   obj%XiDimension = -1
   obj%Name = -1
   obj%NSD = -1
-END PROCEDURE refelem_DeallocateData2
+END PROCEDURE refelem_Deallocate2
 
 !----------------------------------------------------------------------------
 !                                                                        NNE
@@ -120,7 +120,7 @@ MODULE PROCEDURE refelem_constructor_1
       ALLOCATE( ReferenceLine_ :: ans )
       CALL refelem%LagrangeElement( order=elemOrder, &
         & HighOrderObj=ans )
-      CALL DeallocateData( refelem ); DEALLOCATE( refelem );refelem => NULL()
+      CALL Deallocate( refelem ); DEALLOCATE( refelem );refelem => NULL()
     ELSE
       ans => ReferenceLine_Pointer(nsd=nsd)
     END IF
@@ -132,7 +132,7 @@ MODULE PROCEDURE refelem_constructor_1
         ALLOCATE( ReferenceTriangle_ :: ans )
         CALL refelem%LagrangeElement( order=elemOrder, &
           & HighOrderObj=ans )
-        CALL DeallocateData( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
       ELSE
         ans => ReferenceTriangle_Pointer(nsd=nsd)
       END IF
@@ -142,7 +142,7 @@ MODULE PROCEDURE refelem_constructor_1
         ALLOCATE( ReferenceQuadrangle_ :: ans )
         CALL refelem%LagrangeElement( order=elemOrder, &
           & HighOrderObj=ans )
-        CALL DeallocateData( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
       ELSE
         ans => ReferenceQuadrangle_Pointer(nsd=nsd)
       END IF
@@ -155,7 +155,7 @@ MODULE PROCEDURE refelem_constructor_1
         ALLOCATE( ReferenceTetrahedron_ :: ans )
         CALL refelem%LagrangeElement( order=elemOrder, &
           & HighOrderObj=ans )
-        CALL DeallocateData( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
       ELSE
         ans => ReferenceTetrahedron_Pointer(nsd=nsd)
       END IF
@@ -165,7 +165,7 @@ MODULE PROCEDURE refelem_constructor_1
         ALLOCATE( ReferenceHexahedron_ :: ans )
         CALL refelem%LagrangeElement( order=elemOrder, &
           & HighOrderObj=ans )
-        CALL DeallocateData( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
       ELSE
         ans => ReferenceHexahedron_Pointer(nsd=nsd)
       END IF
@@ -175,7 +175,7 @@ MODULE PROCEDURE refelem_constructor_1
         ALLOCATE( ReferencePrism_ :: ans )
         CALL refelem%LagrangeElement( order=elemOrder, &
           & HighOrderObj=ans )
-        CALL DeallocateData( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
       ELSE
         ans => ReferencePrism_Pointer(nsd=nsd)
       END IF
@@ -185,7 +185,7 @@ MODULE PROCEDURE refelem_constructor_1
         ALLOCATE( ReferencePyramid_ :: ans )
         CALL refelem%LagrangeElement( order=elemOrder, &
           & HighOrderObj=ans )
-        CALL DeallocateData( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
       ELSE
         ans => ReferencePyramid_Pointer(nsd=nsd)
       END IF
