@@ -10,7 +10,7 @@ SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/Utility@Sort.F90
-  ${src_path}/Utility@Swap.F90
+  ${src_path}/Utility@SwapMethods.F90
   ${src_path}/Utility@Reallocate.F90
   ${src_path}/Utility@Prod.F90
   ${src_path}/Utility@FunctionalFortran.F90

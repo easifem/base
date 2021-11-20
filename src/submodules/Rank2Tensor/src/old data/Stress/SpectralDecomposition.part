@@ -61,7 +61,7 @@
     CALL T%Eigens( EigenValues = Eigenvalues, EigenVectors = EigenVectors )"&
     )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END SUBROUTINE Eigens
 
@@ -102,7 +102,7 @@ REAL( DFP ) FUNCTION  PrincipalValue( obj )
 
     PrincipalValue = Tensor_PrincipalValue( T )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
 END FUNCTION  PrincipalValue
 
@@ -128,7 +128,7 @@ REAL( DFP ) FUNCTION SpectralRadius( obj )
 
     SpectralRadius = Tensor_SpectralRadius( T )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
 END FUNCTION SpectralRadius
 

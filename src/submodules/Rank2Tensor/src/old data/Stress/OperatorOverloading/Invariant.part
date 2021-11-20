@@ -54,7 +54,7 @@
 
     T = obj
     Invar_I1 = Trace( T )
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Invar_I1
 
@@ -91,7 +91,7 @@
 
     T = obj
     Invar_I2 = Invariant_I2( T )
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Invar_I2
 
@@ -128,7 +128,7 @@
 
     T = obj
     Invar_I3 = Invariant_I3( T )
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Invar_I3
 
@@ -165,7 +165,7 @@
 
     T = obj
     Invar_J2 = Invariant_J2( T )
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Invar_J2
 
@@ -202,7 +202,7 @@
 
     T = obj
     Invar_J3 = Invariant_J3( T )
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Invar_J3
 
@@ -317,7 +317,7 @@
     T = obj
     m_Invar_LodeAngle = LodeAngle( T, LodeAngleType )
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION m_Invar_LodeAngle
 

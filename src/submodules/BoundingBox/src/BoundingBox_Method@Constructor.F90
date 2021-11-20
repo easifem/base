@@ -114,13 +114,13 @@ MODULE PROCEDURE Constructor_2
 END PROCEDURE Constructor_2
 
 !----------------------------------------------------------------------------
-!                                                          DeallocateData
+!                                                          Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE BB_DeallocateData
+MODULE PROCEDURE BB_Deallocate
   obj%NSD=0
   obj%Box=0.0_DFP
-END PROCEDURE BB_DeallocateData
+END PROCEDURE BB_Deallocate
 
 !----------------------------------------------------------------------------
 !                                                                     Display

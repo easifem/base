@@ -149,12 +149,12 @@ MODULE PROCEDURE dof_Constructor_1
 END PROCEDURE dof_Constructor_1
 
 !----------------------------------------------------------------------------
-!                                                             DeallocateData
+!                                                             Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE dof_DeallocateData
+MODULE PROCEDURE dof_Deallocate
   IF( ALLOCATED( obj%Map ) ) DEALLOCATE( obj%Map )
   IF( ALLOCATED( obj%ValMap ) ) DEALLOCATE( obj%ValMap )
-END PROCEDURE dof_DeallocateData
+END PROCEDURE dof_Deallocate
 
 END SUBMODULE ConstructorMethods

@@ -58,8 +58,8 @@
 
     obj_Otimes_obj = T1 .otimes. T2
 
-    CALL T1%DeallocateData( )
-    CALL T2%DeallocateData( )
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
 
  END FUNCTION obj_Otimes_obj
 
@@ -117,7 +117,7 @@
 
     obj_Otimes_Mat = T .Otimes. DummyMat
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION obj_Otimes_Mat
 
@@ -176,7 +176,7 @@
 
     Mat_Otimes_obj = DummyMat .Otimes. T
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Mat_Otimes_obj
 
@@ -215,7 +215,7 @@
 
     obj_Otimes_Tensor = T .Otimes. Tensorobj
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION obj_Otimes_Tensor
 
@@ -254,7 +254,7 @@
 
     Tensor_Otimes_obj = Tensorobj .Otimes. T
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Tensor_Otimes_obj
 
@@ -307,8 +307,8 @@
 
     obj_Otimes_Vec = T1 .Otimes. T2
 
-    CALL T1%DeallocateData( )
-    CALL T2%DeallocateData( )
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
 
  END FUNCTION obj_Otimes_Vec
 
@@ -361,8 +361,8 @@
 
     Vec_Otimes_obj = T2 .Otimes. T1
 
-    CALL T1%DeallocateData( )
-    CALL T2%DeallocateData( )
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
 
  END FUNCTION Vec_Otimes_obj
 
@@ -416,7 +416,7 @@
 
     m_obj_Otimes_Vec = T1 .Otimes. T2
 
-    CALL T1%DeallocateData( )
-    CALL T2%DeallocateData( )
+    CALL T1%Deallocate( )
+    CALL T2%Deallocate( )
 
  END FUNCTION m_obj_Otimes_Vec

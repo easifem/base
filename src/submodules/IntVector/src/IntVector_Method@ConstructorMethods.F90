@@ -70,9 +70,9 @@ END PROCEDURE intVec_AllocateData
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_DeallocateData
+MODULE PROCEDURE intVec_Deallocate
 IF (ALLOCATED(obj%Val)) DEALLOCATE (obj%Val)
-END PROCEDURE intVec_DeallocateData
+END PROCEDURE intVec_Deallocate
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate

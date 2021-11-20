@@ -233,7 +233,7 @@ END INTERFACE AllocateData
 PUBLIC :: AllocateData
 
 !----------------------------------------------------------------------------
-!                                                  DeallocateData@Constructor
+!                                                  Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -247,7 +247,7 @@ PUBLIC :: AllocateData
 !### Usage
 !
 ! ```fortran
-!	call deallocateData( obj )
+!	call Deallocate( obj )
 ! ```
 
 INTERFACE
@@ -256,11 +256,11 @@ MODULE PURE SUBROUTINE Deallocate_Data( obj )
 END SUBROUTINE Deallocate_Data
 END INTERFACE
 
-INTERFACE DeallocateData
+INTERFACE Deallocate
   MODULE PROCEDURE Deallocate_Data
-END INTERFACE DeallocateData
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor

@@ -54,7 +54,7 @@ obj = Mat2( :, : )
 
 ### Deallocating the object
 
-We can call `obj%DeallocateData()`
+We can call `obj%Deallocate()`
 
 ### Getting the Rotation part
 

@@ -162,7 +162,7 @@ END INTERFACE AllocateData
 PUBLIC :: AllocateData
 
 !----------------------------------------------------------------------------
-!                                                 DeAllocateData@Constructor
+!                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -175,11 +175,11 @@ MODULE PURE SUBROUTINE Deallocate_Data( obj )
 END SUBROUTINE Deallocate_Data
 END INTERFACE
 
-INTERFACE DeallocateData
+INTERFACE Deallocate
   MODULE PROCEDURE Deallocate_Data
-END INTERFACE DeallocateData
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor

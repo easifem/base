@@ -167,20 +167,20 @@ MODULE PROCEDURE csr_getNNZ
 END PROCEDURE csr_getNNZ
 
 !----------------------------------------------------------------------------
-!                                                            DeallocateData
+!                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csr_DeallocateData
+MODULE PROCEDURE csr_Deallocate
   IF( ALLOCATED( obj%IA ) ) DEALLOCATE( obj%IA )
   IF( ALLOCATED( obj%JA ) ) DEALLOCATE( obj%JA )
   IF( ALLOCATED( obj%Row ) ) DEALLOCATE( obj%Row )
-  CALL DeallocateData( obj%dof )
+  CALL Deallocate( obj%dof )
   obj%nnz =  0
   obj%nrow = 0
   obj%ncol = 0
   obj%isSorted = .FALSE.
   obj%isSparsityLock = .FALSE.
   obj%isInitiated = .FALSE.
-END PROCEDURE csr_DeallocateData
+END PROCEDURE csr_Deallocate
 
 END SUBMODULE ConstructorMethods

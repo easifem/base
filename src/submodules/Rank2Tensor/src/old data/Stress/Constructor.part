@@ -20,10 +20,10 @@
 !==============================================================================
 
 !------------------------------------------------------------------------------
-!                                                               DeallocateData
+!                                                               Deallocate
 !------------------------------------------------------------------------------
 
- SUBROUTINE DeallocateData( obj )
+ SUBROUTINE Deallocate( obj )
 
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 !       1.  Deallocate the data
@@ -33,7 +33,7 @@
     CLASS( Stress_ ), INTENT( INOUT ) :: obj
     IF( ALLOCATED( obj%V ) ) DEALLOCATE( obj%V )
 
- END SUBROUTINE DeallocateData
+ END SUBROUTINE Deallocate
 
 !------------------------------------------------------------------------------
 !                                                                  isInitiated

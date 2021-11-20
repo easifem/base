@@ -42,10 +42,10 @@ MODULE PROCEDURE iterdata_Initiate
 END PROCEDURE iterdata_Initiate
 
 !----------------------------------------------------------------------------
-!                                                           DeallocateData
+!                                                           Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE iterdata_DeallocateData
+MODULE PROCEDURE iterdata_Deallocate
   obj%MaxIter = 0
   obj%IterationNumber = 0
   obj%ResidualError = 0.0
@@ -60,7 +60,7 @@ MODULE PROCEDURE iterdata_DeallocateData
   obj%Converged = .FALSE.
   obj%TimeAtStart = 0.0
   obj%TimeAtEnd = 0.0
-END PROCEDURE iterdata_DeallocateData
+END PROCEDURE iterdata_Deallocate
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------

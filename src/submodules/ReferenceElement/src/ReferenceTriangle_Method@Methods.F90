@@ -451,7 +451,7 @@ END FUNCTION EquidistanceLIP_Triangle
 MODULE PROCEDURE LagrangeElement_Triangle
   INTEGER( I4B ) :: I, NNS, NSD
 
-  CALL DeallocateData( obj )
+  CALL Deallocate( obj )
   obj%XiJ = EquidistanceLIP_Triangle( RefElem%XiJ(1:3, 1:3), Order )
   NSD = RefElem%NSD
   obj%LagrangeElement => RefElem%LagrangeElement

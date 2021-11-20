@@ -301,20 +301,20 @@ END INTERFACE BoundingBox_Pointer
 PUBLIC :: BoundingBox_Pointer
 
 !----------------------------------------------------------------------------
-!                                                DeallocateData@Constructor
+!                                                Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE BB_DeallocateData( obj )
+MODULE PURE SUBROUTINE BB_Deallocate( obj )
   CLASS( BoundingBox_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE BB_DeallocateData
+END SUBROUTINE BB_Deallocate
 END INTERFACE
 
-INTERFACE DeallocateData
-  MODULE PROCEDURE BB_DeallocateData
-END INTERFACE DeallocateData
+INTERFACE Deallocate
+  MODULE PROCEDURE BB_Deallocate
+END INTERFACE Deallocate
 
-PUBLIC :: DeallocateData
+PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
 !                                                        Display@Constructor

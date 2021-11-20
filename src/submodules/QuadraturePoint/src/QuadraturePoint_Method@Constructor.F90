@@ -86,13 +86,13 @@ MODULE PROCEDURE quad_Constructor_1
 END PROCEDURE quad_Constructor_1
 
 !----------------------------------------------------------------------------
-!                                                            DeallocateData
+!                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE quad_DeallocateData
+MODULE PROCEDURE quad_Deallocate
   IF( ALLOCATED( obj%Points ) ) DEALLOCATE( obj%Points )
   obj%tXi = -1
-END PROCEDURE quad_DeallocateData
+END PROCEDURE quad_Deallocate
 
 !----------------------------------------------------------------------------
 !                                                                       SIZE

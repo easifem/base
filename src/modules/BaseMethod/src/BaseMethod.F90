@@ -42,9 +42,15 @@ MODULE BaseMethod
 #endif
   USE CInterface
   USE MetisInterface
+#ifdef USE_BLAS95
   USE EASIFEM_BLAS
+#endif
+
+#ifdef USE_LAPACK95
   USE F95_LAPACK
   USE F77_LAPACK
+#endif
+
   USE OpenMP_Method
   USE GlobalData
   USE OGPF

@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_initiate1
-  CALL DeallocateData( obj )
+  CALL Deallocate( obj )
   obj%csrOwnership = .TRUE.
   IF( PRESENT( matrixProp ) ) obj%matrixProp = TRIM( matrixProp )
   ALLOCATE( obj%csr )
@@ -51,7 +51,7 @@ MODULE PROCEDURE csrMat_initiate2
       & __LINE__, stderr )
     STOP
   END IF
-  CALL DeallocateData( obj )
+  CALL Deallocate( obj )
   obj%csrOwnership = .FALSE.
   IF( PRESENT( matrixProp ) ) obj%matrixProp = TRIM( matrixProp )
   obj%csr => csr
@@ -191,15 +191,15 @@ MODULE PROCEDURE csrMat_AllocateData
 END PROCEDURE csrMat_AllocateData
 
 !----------------------------------------------------------------------------
-!                                                            DeallocateData
+!                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_DeallocateData
+MODULE PROCEDURE csrMat_Deallocate
   NULLIFY( obj%csr )
   obj%csrOwnership = .FALSE.
   obj%tDimension = 2
   obj%MatrixProp = 'UNSYM'
   IF( ALLOCATED( obj%A ) ) DEALLOCATE( obj%A )
-END PROCEDURE csrMat_DeallocateData
+END PROCEDURE csrMat_Deallocate
 
 END SUBMODULE ConstructorMethods

@@ -78,9 +78,9 @@ END PROCEDURE realVec_AllocateData
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_DeallocateData
+MODULE PROCEDURE realVec_Deallocate
   IF( ALLOCATED( obj%Val ) ) DEALLOCATE( obj%Val )
-END PROCEDURE realVec_DeallocateData
+END PROCEDURE realVec_Deallocate
 
 !----------------------------------------------------------------------------
 !                                                                  Initiate

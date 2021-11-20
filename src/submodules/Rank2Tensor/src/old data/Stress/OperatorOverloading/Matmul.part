@@ -100,7 +100,7 @@
 
     obj_matmul_Mat = T .matmul. Mat2
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION obj_matmul_Mat
 
@@ -156,7 +156,7 @@
 
     obj_matmul_Vec = T .matmul. Vec
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION obj_matmul_Vec
 
@@ -212,7 +212,7 @@
 
     Vec_matmul_obj = Vec .matmul. T
 
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Vec_matmul_obj
 
@@ -251,7 +251,7 @@
 
     T = obj
     Mat_matmul_obj = Mat2 .matmul. T
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Mat_matmul_obj
 
@@ -290,7 +290,7 @@
 
     T = obj
     obj_matmul_Tensor = T .matmul. Tensorobj
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION obj_matmul_Tensor
 
@@ -329,6 +329,6 @@
 
     T = obj
     Tensor_matmul_obj = Tensorobj .matmul. T
-    CALL T%DeallocateData( )
+    CALL T%Deallocate( )
 
  END FUNCTION Tensor_matmul_obj
