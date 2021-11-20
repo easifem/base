@@ -16,7 +16,7 @@
 !
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	6 March 2021
+! date: 6 March 2021
 ! summary: This module contains method to construct finite element matrices
 
 MODULE FEMatrix_Method
@@ -40,11 +40,6 @@ PRIVATE
 !
 ! $$\int_{\Omega } N^{I}\rho N^{J}d\Omega$$
 !
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
 MODULE PURE FUNCTION Space_MassMatrix( Test, Trial, Rho, nCopy ) RESULT( Ans )
@@ -79,11 +74,6 @@ END INTERFACE
 ! \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
 ! $$\iint N^{I}T_{a}\rho \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
 !
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
 MODULE PURE FUNCTION st_massMatrix_a( Test, Trial, Rho, Term1, Term2, nCopy )&
@@ -173,11 +163,6 @@ END INTERFACE
 ! $$\int^{}_{\Omega } \frac{\partial N^{I}}{\partial x_{i}} c_i
 !\frac{\partial N^{J}}{\partial x_{j}} c_j d\Omega$$
 !
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
 MODULE PURE FUNCTION Space_DiffusionMatrix_C( Test, Trial, C1, C2, nCopy ) &

@@ -6,9 +6,12 @@
 # 26/02/2021 this file was created
 #-----------------------------------------------------------------------
 
-SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-TARGET_SOURCES(
-  ${PROJECT_NAME} PRIVATE
-  ${src_path}/EASIFEM_F77_BLAS.F90
-  ${src_path}/EASIFEM_BLAS.F90
-)
+IF( USE_BLAS95 )
+    LIST( APPEND TARGET_COMPILE_DEF "-DUSE_BLAS95" )
+    SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+    TARGET_SOURCES(
+      ${PROJECT_NAME} PRIVATE
+      ${src_path}/EASIFEM_F77_BLAS.F90
+      ${src_path}/EASIFEM_BLAS.F90
+    )
+ENDIF()

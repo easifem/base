@@ -24,20 +24,20 @@ USE ISO_C_BINDING
 IMPLICIT NONE
 
 PRIVATE
-INTEGER( I4B ), PARAMETER :: NPAR_ARTH=16,NPAR2_ARTH=8
-INTEGER( I4B ), PARAMETER :: NPAR_GEOP=4,NPAR2_GEOP=2
-INTEGER( I4B ), PARAMETER :: NPAR_CUMSUM=16
-INTEGER( I4B ), PARAMETER :: NPAR_CUMPROD=8
-INTEGER( I4B ), PARAMETER :: NPAR_POLY=8
-INTEGER( I4B ), PARAMETER :: NPAR_POLYTERM=8
+INTEGER(I4B), PARAMETER :: NPAR_ARTH = 16, NPAR2_ARTH = 8
+INTEGER(I4B), PARAMETER :: NPAR_GEOP = 4, NPAR2_GEOP = 2
+INTEGER(I4B), PARAMETER :: NPAR_CUMSUM = 16
+INTEGER(I4B), PARAMETER :: NPAR_CUMPROD = 8
+INTEGER(I4B), PARAMETER :: NPAR_POLY = 8
+INTEGER(I4B), PARAMETER :: NPAR_POLYTERM = 8
 
 !----------------------------------------------------------------------------
 !                                                            APPROXEQ@APPROX
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 Apr 2021
-! summary: 	returns bool logical indicating if a and b are approximately equal
+! date:         3 Apr 2021
+! summary:         returns bool logical indicating if a and b are approximately equal
 !
 !# Introduction
 ! This routine just does a simple absolute comparison using an epsilon that is
@@ -47,29 +47,29 @@ INTEGER( I4B ), PARAMETER :: NPAR_POLYTERM=8
 !
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION approxeq_abs_real(a,b) RESULT(ans)
-  REAL( DFP ), INTENT( IN ) :: a, b
-  LOGICAL( LGT ) :: ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION approxeq_abs_real(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a, b
+    LOGICAL(LGT) :: ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE OPERATOR(.APPROXEQ.)
   MODULE PROCEDURE approxeq_abs_real
-ENDINTERFACE
+END INTERFACE
 
 INTERFACE OPERATOR(.APPROXEQA.)
   MODULE PROCEDURE approxeq_abs_real
 END INTERFACE
 
-PUBLIC :: OPERATOR( .APPROXEQ. )
-PUBLIC :: OPERATOR( .APPROXEQA. )
+PUBLIC :: OPERATOR(.APPROXEQ.)
+PUBLIC :: OPERATOR(.APPROXEQA.)
 
 !----------------------------------------------------------------------------
 !                                                           APPROXR@APPROX
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
+! date:         3 April 2021
 ! summary: returns bool logical indicating if a and b are approximately equal
 !
 !# Introduction
@@ -79,25 +79,25 @@ PUBLIC :: OPERATOR( .APPROXEQA. )
 ! zero (exactly) then this routine is equivalent to an absolute comparison.
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION approxeq_rel_real(a,b) RESULT(Ans)
-  REAL( DFP ),INTENT(IN) :: a,b
-  LOGICAL( LGT ) :: Ans
-END FUNCTION approxeq_rel_real
+  MODULE ELEMENTAL FUNCTION approxeq_rel_real(a, b) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a, b
+    LOGICAL(LGT) :: Ans
+  END FUNCTION approxeq_rel_real
 END INTERFACE
 
-INTERFACE OPERATOR( .APPROXEQR. )
+INTERFACE OPERATOR(.APPROXEQR.)
   MODULE PROCEDURE approxeq_rel_real
 END INTERFACE
 
-PUBLIC :: OPERATOR( .APPROXEQR. )
+PUBLIC :: OPERATOR(.APPROXEQR.)
 
 !----------------------------------------------------------------------------
 !                                                          APPROXEQF@APPROX
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 Apr 2021
-! summary: 	returns bool logical indicating if a and b are approximately equal
+! date:         3 Apr 2021
+! summary:         returns bool logical indicating if a and b are approximately equal
 !
 !# Introduction
 ! This performs a comparison of the binary representation of the two reals
@@ -105,17 +105,16 @@ PUBLIC :: OPERATOR( .APPROXEQR. )
 ! on the floating point number line by 10 or less representable floating point
 ! reals then they are considered equal. In theory, this is the most appropriate comparison to use, but will break down near zero.
 
-
 INTERFACE
-MODULE ELEMENTAL FUNCTION approxeq_ulp_real(a,b) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) :: a, b
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION approxeq_ulp_real(a, b) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a, b
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE OPERATOR(.APPROXEQF.)
   MODULE PROCEDURE approxeq_ulp_real
-ENDINTERFACE
+END INTERFACE
 
 PUBLIC :: OPERATOR(.APPROXEQF.)
 
@@ -124,67 +123,67 @@ PUBLIC :: OPERATOR(.APPROXEQF.)
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 Apr 2021
-! summary: 	Defines the operation when comparing two single precision reals
+! date:         3 Apr 2021
+! summary:         Defines the operation when comparing two single precision reals
 ! with .APPROXLE.
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION approxle_real( r1, r2 ) RESULT( Ans )
-  REAL( DFP ),INTENT(IN) :: r1
-  REAL( DFP ),INTENT(IN) :: r2
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION approxle_real(r1, r2) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: r1
+    REAL(DFP), INTENT(IN) :: r2
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
-INTERFACE OPERATOR( .ARROXLE. )
+INTERFACE OPERATOR(.ARROXLE.)
   MODULE PROCEDURE approxle_real
 END INTERFACE
 
-PUBLIC :: OPERATOR( .ARROXLE. )
+PUBLIC :: OPERATOR(.ARROXLE.)
 
 !----------------------------------------------------------------------------
 !                                                            APPROXGE@APPROX
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	Defines the operation when comparing two single precision reals
+! date:         3 April 2021
+! summary:         Defines the operation when comparing two single precision reals
 ! with .APPROXGE.
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION approxge_real(r1,r2) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) :: r1
-  REAL( DFP ), INTENT( IN ) :: r2
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION approxge_real(r1, r2) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: r1
+    REAL(DFP), INTENT(IN) :: r2
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
-INTERFACE OPERATOR( .ARROXGE. )
+INTERFACE OPERATOR(.ARROXGE.)
   MODULE PROCEDURE approxge_real
 END INTERFACE
 
-PUBLIC :: OPERATOR( .ARROXGE. )
+PUBLIC :: OPERATOR(.ARROXGE.)
 
 !----------------------------------------------------------------------------
 !                                                              SOFTEQ@APPROX
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	Defines the operation when comparing two single precision reals
+! date:         3 April 2021
+! summary:         Defines the operation when comparing two single precision reals
 ! with SOFTEQ
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION softeq_real(r1,r2,tol) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) :: r1
-  REAL( DFP ), INTENT( IN ) :: r2
-  REAL( DFP ), INTENT( IN ) :: tol
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION softeq_real(r1, r2, tol) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: r1
+    REAL(DFP), INTENT(IN) :: r2
+    REAL(DFP), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 INTERFACE SOFTEQ
   MODULE PROCEDURE softeq_real
-ENDINTERFACE
+END INTERFACE
 
 PUBLIC :: SOFTEQ
 
@@ -193,17 +192,17 @@ PUBLIC :: SOFTEQ
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	Defines the operation when comparing two single precision reals
+! date:         3 April 2021
+! summary:         Defines the operation when comparing two single precision reals
 ! with SOFTEQR
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION softeqr_real(r1,r2,tol) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) :: r1
-  REAL( DFP ), INTENT( IN ) :: r2
-  REAL( DFP ), INTENT( IN ) :: tol
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION softeqr_real(r1, r2, tol) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: r1
+    REAL(DFP), INTENT(IN) :: r2
+    REAL(DFP), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE SOFTEQR
@@ -217,17 +216,17 @@ PUBLIC :: SOFTEQR
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	Defines the operation when comparing two single precision reals
+! date:         3 April 2021
+! summary:         Defines the operation when comparing two single precision reals
 ! with SOFTLE
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION softle_real(r1,r2,tol) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) :: r1
-  REAL( DFP ), INTENT( IN ) :: r2
-  REAL( DFP ), INTENT( IN ) :: tol
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION softle_real(r1, r2, tol) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: r1
+    REAL(DFP), INTENT(IN) :: r2
+    REAL(DFP), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE SOFTLE
@@ -241,16 +240,16 @@ PUBLIC :: SOFTLE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
+! date:         3 April 2021
 ! summary: Defines the operation when comparing two single precision reals with SOFTLT
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION softlt_real(r1,r2,tol) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) :: r1
-  REAL( DFP ), INTENT( IN ) :: r2
-  REAL( DFP ), INTENT( IN ) :: tol
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION softlt_real(r1, r2, tol) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: r1
+    REAL(DFP), INTENT(IN) :: r2
+    REAL(DFP), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE SOFTLT
@@ -264,12 +263,12 @@ PUBLIC :: SOFTLT
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION softge_real(r1,r2,tol) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) :: r1
-  REAL( DFP ), INTENT( IN ) :: r2
-  REAL( DFP ), INTENT( IN ) :: tol
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION softge_real(r1, r2, tol) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: r1
+    REAL(DFP), INTENT(IN) :: r2
+    REAL(DFP), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE SOFTGE
@@ -283,12 +282,12 @@ PUBLIC :: SOFTGE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION softgt_real(r1,r2,tol) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) :: r1
-  REAL( DFP ), INTENT( IN ) :: r2
-  REAL( DFP ), INTENT( IN ) :: tol
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION softgt_real(r1, r2, tol) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: r1
+    REAL(DFP), INTENT(IN) :: r2
+    REAL(DFP), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE SOFTGT
@@ -302,11 +301,11 @@ PUBLIC :: SOFTGT
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION equalto_logical(l1,l2) RESULT(Ans)
-  LOGICAL( LGT ), INTENT( IN ) :: l1
-  LOGICAL( LGT ), INTENT( IN ) :: l2
-  LOGICAL( LGT )  :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION equalto_logical(l1, l2) RESULT(Ans)
+    LOGICAL(LGT), INTENT(IN) :: l1
+    LOGICAL(LGT), INTENT(IN) :: l2
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE OPERATOR(==)
@@ -320,11 +319,11 @@ PUBLIC :: OPERATOR(==)
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION notequalto_logical(l1,l2) RESULT( Ans )
-  LOGICAL( LGT ), INTENT( IN ) :: l1
-  LOGICAL( LGT ), INTENT( IN ) :: l2
-  LOGICAL( LGT ) :: Ans
-END FUNCTION
+  MODULE ELEMENTAL FUNCTION notequalto_logical(l1, l2) RESULT(Ans)
+    LOGICAL(LGT), INTENT(IN) :: l1
+    LOGICAL(LGT), INTENT(IN) :: l2
+    LOGICAL(LGT) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE OPERATOR(/=)
@@ -338,10 +337,10 @@ PUBLIC :: OPERATOR(/=)
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE ELEMENTAL SUBROUTINE assign_char_to_int(i,c)
-  INTEGER( I4B ), INTENT( OUT ) :: i
-  CHARACTER( LEN=* ), INTENT( IN ) :: c
-END SUBROUTINE
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_int(i, c)
+    INTEGER(I4B), INTENT(OUT) :: i
+    CHARACTER(LEN=*), INTENT(IN) :: c
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -349,10 +348,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE ELEMENTAL SUBROUTINE assign_char_to_bool(b,c)
-  LOGICAL( LGT ), INTENT( OUT ) :: b
-  CHARACTER( LEN=* ), INTENT( IN ) :: c
-END SUBROUTINE
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_bool(b, c)
+    LOGICAL(LGT), INTENT(OUT) :: b
+    CHARACTER(LEN=*), INTENT(IN) :: c
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -360,17 +359,17 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE ELEMENTAL SUBROUTINE assign_char_to_real(s,c)
-  REAL( DFP ), INTENT( OUT ) :: s
-  CHARACTER( LEN=* ), INTENT( IN ) :: c
-END SUBROUTINE
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_real(s, c)
+    REAL(DFP), INTENT(OUT) :: s
+    CHARACTER(LEN=*), INTENT(IN) :: c
+  END SUBROUTINE
 END INTERFACE
 
 INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE assign_char_to_int
   MODULE PROCEDURE assign_char_to_bool
   MODULE PROCEDURE assign_char_to_real
-ENDINTERFACE
+END INTERFACE
 
 PUBLIC :: ASSIGNMENT(=)
 
@@ -379,15 +378,14 @@ PUBLIC :: ASSIGNMENT(=)
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION isNumeric(char_str) RESULT(bool)
-  CHARACTER( LEN=* ),INTENT( IN ) :: char_str
-  LOGICAL( LGT ) :: bool
-END FUNCTION
+  MODULE FUNCTION isNumeric(char_str) RESULT(bool)
+    CHARACTER(LEN=*), INTENT(IN) :: char_str
+    LOGICAL(LGT) :: bool
+  END FUNCTION
 END INTERFACE
 
 PUBLIC :: isNumeric
 
-
 !----------------------------------------------------------------------------
 !                                                  ExpMesh@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -397,19 +395,19 @@ PUBLIC :: isNumeric
 ! summary: Exponential mesh
 
 INTERFACE
-MODULE PURE FUNCTION ExpMesh_Real64( rmin, rmax, a, N ) RESULT( Ans )
-  REAL( Real64 ), INTENT( IN ) :: rmin
+  MODULE PURE FUNCTION ExpMesh_Real64(rmin, rmax, a, N) RESULT(Ans)
+    REAL(Real64), INTENT(IN) :: rmin
     !! left end of 1D domain
-  REAL( Real64 ), INTENT( IN ) :: rmax
+    REAL(Real64), INTENT(IN) :: rmax
     !! right end of 1D domain
-  REAL( Real64 ), INTENT( IN ) :: a
+    REAL(Real64), INTENT(IN) :: a
     !! Ratio of largest to smallest element, a should be positive
     !! a = 1, then we get uniform mesh
-  INTEGER( I4B ), INTENT( IN ) :: N
+    INTEGER(I4B), INTENT(IN) :: N
     !! Number of elements present in mesh
-  REAL( Real64 ) :: ans( N+1 )
+    REAL(Real64) :: ans(N + 1)
     !! Number of nodes in mesh
-END FUNCTION ExpMesh_Real64
+  END FUNCTION ExpMesh_Real64
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -421,19 +419,19 @@ END INTERFACE
 ! summary: Exponential mesh
 
 INTERFACE
-MODULE PURE FUNCTION ExpMesh_Real32( rmin, rmax, a, N ) RESULT( Ans )
-  REAL( Real32 ), INTENT( IN ) :: rmin
+  MODULE PURE FUNCTION ExpMesh_Real32(rmin, rmax, a, N) RESULT(Ans)
+    REAL(Real32), INTENT(IN) :: rmin
     !! left end of 1D domain
-  REAL( Real32 ), INTENT( IN ) :: rmax
+    REAL(Real32), INTENT(IN) :: rmax
     !! right end of 1D domain
-  REAL( Real32 ), INTENT( IN ) :: a
+    REAL(Real32), INTENT(IN) :: a
     !! Ratio of largest to smallest element, a should be positive
     !! a = 1, then we get uniform mesh
-  INTEGER( I4B ), INTENT( IN ) :: N
+    INTEGER(I4B), INTENT(IN) :: N
     !! Number of elements present in mesh
-  REAL( Real32 ) :: ans( N+1 )
+    REAL(Real32) :: ans(N + 1)
     !! Number of nodes in mesh
-END FUNCTION ExpMesh_Real32
+  END FUNCTION ExpMesh_Real32
 END INTERFACE
 
 INTERFACE ExpMesh
@@ -451,16 +449,16 @@ PUBLIC :: ExpMesh
 ! summary: linspace
 
 INTERFACE
-MODULE PURE FUNCTION Linspace_Real64( a, b, N ) RESULT( Ans )
-  REAL( Real64 ), INTENT( IN ) :: a
+  MODULE PURE FUNCTION Linspace_Real64(a, b, N) RESULT(Ans)
+    REAL(Real64), INTENT(IN) :: a
     !! left end of 1D domain
-  REAL( Real64 ), INTENT( IN ) :: b
+    REAL(Real64), INTENT(IN) :: b
     !! right end of 1D domain
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: N
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
     !! Number of points including a and b
-  REAL( Real64 ), ALLOCATABLE :: ans( : )
+    REAL(Real64), ALLOCATABLE :: ans(:)
     !! Number of nodes in mesh
-END FUNCTION Linspace_Real64
+  END FUNCTION Linspace_Real64
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -476,18 +474,17 @@ END INTERFACE
 ! if n is omitted, 100 points will be considered
 
 INTERFACE
-MODULE PURE FUNCTION Linspace_Real32( a, b, N ) RESULT( Ans )
-  REAL( Real32 ), INTENT( IN ) :: a
+  MODULE PURE FUNCTION Linspace_Real32(a, b, N) RESULT(Ans)
+    REAL(Real32), INTENT(IN) :: a
     !! left end of 1D domain
-  REAL( Real32 ), INTENT( IN ) :: b
+    REAL(Real32), INTENT(IN) :: b
     !! right end of 1D domain
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: N
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
     !! Number of points including a and b
-  REAL( Real32 ), ALLOCATABLE :: ans( : )
+    REAL(Real32), ALLOCATABLE :: ans(:)
     !! Number of nodes in mesh
-END FUNCTION Linspace_Real32
+  END FUNCTION Linspace_Real32
 END INTERFACE
-
 
 INTERFACE Linspace
   MODULE PROCEDURE Linspace_Real32, Linspace_Real64
@@ -529,12 +526,12 @@ PUBLIC :: Linspace
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE MeshGrid2D_Real64( x, y, xgv, ygv )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: x( :, : )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: y( :, : )
-  REAL( Real64 ), INTENT( IN ) :: xgv( : )
-  REAL( Real64 ), INTENT( IN ) :: ygv( : )
-END SUBROUTINE MeshGrid2D_Real64
+  MODULE PURE SUBROUTINE MeshGrid2D_Real64(x, y, xgv, ygv)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: x(:, :)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: y(:, :)
+    REAL(Real64), INTENT(IN) :: xgv(:)
+    REAL(Real64), INTENT(IN) :: ygv(:)
+  END SUBROUTINE MeshGrid2D_Real64
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -542,12 +539,12 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE MeshGrid2D_Real32( x, y, xgv, ygv )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: x( :, : )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: y( :, : )
-  REAL( Real32 ), INTENT( IN ) :: xgv( : )
-  REAL( Real32 ), INTENT( IN ) :: ygv( : )
-END SUBROUTINE MeshGrid2D_Real32
+  MODULE PURE SUBROUTINE MeshGrid2D_Real32(x, y, xgv, ygv)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: x(:, :)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: y(:, :)
+    REAL(Real32), INTENT(IN) :: xgv(:)
+    REAL(Real32), INTENT(IN) :: ygv(:)
+  END SUBROUTINE MeshGrid2D_Real32
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -555,14 +552,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE MeshGrid3D_Real64( x, y, z, xgv, ygv, zgv )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: x( :, :, : )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: y( :, :, : )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: z( :, :, : )
-  REAL( Real64 ), INTENT( IN ) :: xgv( : )
-  REAL( Real64 ), INTENT( IN ) :: ygv( : )
-  REAL( Real64 ), INTENT( IN ) :: zgv( : )
-END SUBROUTINE MeshGrid3D_Real64
+  MODULE PURE SUBROUTINE MeshGrid3D_Real64(x, y, z, xgv, ygv, zgv)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: x(:, :, :)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: y(:, :, :)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: z(:, :, :)
+    REAL(Real64), INTENT(IN) :: xgv(:)
+    REAL(Real64), INTENT(IN) :: ygv(:)
+    REAL(Real64), INTENT(IN) :: zgv(:)
+  END SUBROUTINE MeshGrid3D_Real64
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -570,16 +567,15 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE MeshGrid3D_Real32( x, y, z, xgv, ygv, zgv )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: x( :, :, : )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: y( :, :, : )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: z( :, :, : )
-  REAL( Real32 ), INTENT( IN ) :: xgv( : )
-  REAL( Real32 ), INTENT( IN ) :: ygv( : )
-  REAL( Real32 ), INTENT( IN ) :: zgv( : )
-END SUBROUTINE MeshGrid3D_Real32
+  MODULE PURE SUBROUTINE MeshGrid3D_Real32(x, y, z, xgv, ygv, zgv)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: x(:, :, :)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: y(:, :, :)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: z(:, :, :)
+    REAL(Real32), INTENT(IN) :: xgv(:)
+    REAL(Real32), INTENT(IN) :: ygv(:)
+    REAL(Real32), INTENT(IN) :: zgv(:)
+  END SUBROUTINE MeshGrid3D_Real32
 END INTERFACE
-
 
 INTERFACE MeshGrid
   MODULE PROCEDURE MeshGrid2D_Real32, MeshGrid2D_Real64, &
@@ -593,20 +589,20 @@ PUBLIC :: MeshGrid
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
 ! values.
 
 INTERFACE
-MODULE PURE FUNCTION arange_Real64( istart, iend, increment ) result( Ans )
-  REAL( Real64 ), INTENT( IN ) :: istart
+  MODULE PURE FUNCTION arange_Real64(istart, iend, increment) result(Ans)
+    REAL(Real64), INTENT(IN) :: istart
     !! Start value of the array
-  REAL( Real64 ), INTENT( IN ) :: iend
+    REAL(Real64), INTENT(IN) :: iend
     !! End value of the array
-  REAL( Real64 ), INTENT( IN ), OPTIONAL :: increment
+    REAL(Real64), INTENT(IN), OPTIONAL :: increment
     !! Array increment
-  REAL( Real64 ), DIMENSION( : ), ALLOCATABLE :: Ans
-END FUNCTION arange_Real64
+    REAL(Real64), DIMENSION(:), ALLOCATABLE :: Ans
+  END FUNCTION arange_Real64
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -614,20 +610,20 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
 ! values.
 
 INTERFACE
-MODULE PURE FUNCTION arange_Real32( istart, iend, increment ) result( Ans )
-  REAL( Real32 ), INTENT( IN ) :: istart
+  MODULE PURE FUNCTION arange_Real32(istart, iend, increment) result(Ans)
+    REAL(Real32), INTENT(IN) :: istart
     !! Start value of the array
-  REAL( Real32 ), INTENT( IN ) :: iend
+    REAL(Real32), INTENT(IN) :: iend
     !! End value of the array
-  REAL( Real32 ), INTENT( IN ), OPTIONAL :: increment
+    REAL(Real32), INTENT(IN), OPTIONAL :: increment
     !! Array increment
-  REAL( Real32 ), DIMENSION( : ), ALLOCATABLE :: Ans
-END FUNCTION arange_Real32
+    REAL(Real32), DIMENSION(:), ALLOCATABLE :: Ans
+  END FUNCTION arange_Real32
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -635,7 +631,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: Returns a vector of integer
 !
 !# Introduction
@@ -646,17 +642,17 @@ END INTERFACE
 !### Usage
 !
 !```fortran
-!	arange(1,10,1)
+!        arange(1,10,1)
 ! arange(1,10,2)
 !```
 
 INTERFACE
-MODULE PURE FUNCTION arange_int (istart, iend, increment) result(Ans)
-  integer(i4b), intent(in) :: istart
-  integer(i4b), intent(in) :: iend
-  integer(i4b), intent(in), optional :: increment
-  integer(i4b), dimension(:), allocatable :: Ans
-END FUNCTION
+  MODULE PURE FUNCTION arange_int(istart, iend, increment) result(Ans)
+    integer(i4b), intent(in) :: istart
+    integer(i4b), intent(in) :: iend
+    integer(i4b), intent(in), optional :: increment
+    integer(i4b), dimension(:), allocatable :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE arange
@@ -670,14 +666,14 @@ PUBLIC arange
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Returns the first element of array `x`.
+! date:         22 March 2021
+! summary:         Returns the first element of array `x`.
 
 INTERFACE
-MODULE PURE FUNCTION head_int(x) RESULT(Ans)
-  INTEGER( I4B ), INTENT( IN ) ::  x( : )
-  INTEGER( I4B ) :: Ans
-END FUNCTION
+  MODULE PURE FUNCTION head_int(x) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: x(:)
+    INTEGER(I4B) :: Ans
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -685,15 +681,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Returns the first element of array `x`.
-
+! date:         22 March 2021
+! summary:         Returns the first element of array `x`.
 
 INTERFACE
-MODULE PURE FUNCTION head_real(x) RESULT(Ans)
-  REAL( DFP ), INTENT( IN ) ::  x( : )
-  REAL( DFP ) :: Ans
-END FUNCTION
+  MODULE PURE FUNCTION head_real(x) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: Ans
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -701,15 +696,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Returns the first element of array `x`.
-
+! date:         22 March 2021
+! summary:         Returns the first element of array `x`.
 
 INTERFACE
-MODULE PURE FUNCTION head_char( x ) RESULT(Ans)
-  CHARACTER( LEN = * ), INTENT( IN ) :: x
-  CHARACTER( LEN = 1 ) :: Ans
-END FUNCTION
+  MODULE PURE FUNCTION head_char(x) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: x
+    CHARACTER(LEN=1) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE HEAD
@@ -723,10 +717,10 @@ PUBLIC :: HEAD
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION tail_int( x ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: x( : )
-  INTEGER( I4B ) :: Ans(SIZE(x)-1)
-END FUNCTION tail_int
+  MODULE PURE FUNCTION tail_int(x) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: x(:)
+    INTEGER(I4B) :: Ans(SIZE(x) - 1)
+  END FUNCTION tail_int
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -734,10 +728,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION tail_real( x ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: x( : )
-  REAL( DFP ) :: Ans(SIZE(x)-1)
-END FUNCTION tail_real
+  MODULE PURE FUNCTION tail_real(x) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: Ans(SIZE(x) - 1)
+  END FUNCTION tail_real
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -745,10 +739,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION tail_char( x ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: x
-  CHARACTER( LEN = LEN(x) - 1 ) :: Ans
-END FUNCTION tail_char
+  MODULE PURE FUNCTION tail_char(x) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: x
+    CHARACTER(LEN=LEN(x) - 1) :: Ans
+  END FUNCTION tail_char
 END INTERFACE
 
 INTERFACE TAIL
@@ -762,8 +756,8 @@ PUBLIC :: TAIL
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Returns the first half of the array `x` if `section == 1`,
+! date:         22 March 2021
+! summary:         Returns the first half of the array `x` if `section == 1`,
 !
 !# Introduction
 !
@@ -772,13 +766,12 @@ PUBLIC :: TAIL
 ! (x) == 1`,  `split(x, 1)`  returns and empty array,  and `split(x, 2)`
 ! returns `x(1)`.
 
-
 INTERFACE
-MODULE PURE FUNCTION split_int( x, section ) RESULT( Ans )
-  INTEGER( I4B ), DIMENSION( : ), INTENT(IN) :: x !! Input array
-  INTEGER( I4B ), INTENT(IN) :: section !! Array section to return
-  INTEGER( I4B ), DIMENSION( : ), ALLOCATABLE :: Ans
-END FUNCTION split_int
+  MODULE PURE FUNCTION split_int(x, section) RESULT(Ans)
+    INTEGER(I4B), DIMENSION(:), INTENT(IN) :: x !! Input array
+    INTEGER(I4B), INTENT(IN) :: section !! Array section to return
+    INTEGER(I4B), DIMENSION(:), ALLOCATABLE :: Ans
+  END FUNCTION split_int
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -786,8 +779,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Returns the first half of the array `x` if `section == 1`,
+! date:         22 March 2021
+! summary:         Returns the first half of the array `x` if `section == 1`,
 !
 !# Introduction
 !
@@ -797,11 +790,11 @@ END INTERFACE
 ! returns `x(1)`.
 
 INTERFACE
-MODULE PURE FUNCTION split_real( x, section ) RESULT( Ans )
-  REAL( DFP ), DIMENSION( : ), INTENT(IN) :: x !! Input array
-  INTEGER( I4B ), INTENT(IN) :: section !! Array section to return
-  REAL( DFP ), DIMENSION( : ), ALLOCATABLE :: Ans
-END FUNCTION split_real
+  MODULE PURE FUNCTION split_real(x, section) RESULT(Ans)
+    REAL(DFP), DIMENSION(:), INTENT(IN) :: x !! Input array
+    INTEGER(I4B), INTENT(IN) :: section !! Array section to return
+    REAL(DFP), DIMENSION(:), ALLOCATABLE :: Ans
+  END FUNCTION split_real
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -809,8 +802,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Returns the first half of the array `x` if `section == 1`,
+! date:         22 March 2021
+! summary:         Returns the first half of the array `x` if `section == 1`,
 !
 !# Introduction
 !
@@ -820,11 +813,11 @@ END INTERFACE
 ! returns `x(1)`.
 
 INTERFACE
-MODULE PURE FUNCTION split_char( x, section ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: x !! Input array
-  INTEGER( I4B ), INTENT( IN ) :: section !! Array section to return
-  CHARACTER( LEN = : ), ALLOCATABLE :: Ans
-END FUNCTION split_char
+  MODULE PURE FUNCTION split_char(x, section) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: x !! Input array
+    INTEGER(I4B), INTENT(IN) :: section !! Array section to return
+    CHARACTER(LEN=:), ALLOCATABLE :: Ans
+  END FUNCTION split_char
 END INTERFACE
 
 INTERFACE SPLIT
@@ -839,13 +832,13 @@ PUBLIC :: SPLIT
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
-! summary: 	Returns the upperCase version of chars
+! summary:         Returns the upperCase version of chars
 
 INTERFACE
-MODULE PURE FUNCTION UpperCase_char( chars ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: chars
-  CHARACTER( LEN = LEN(chars) ):: ans
-END FUNCTION UpperCase_char
+  MODULE PURE FUNCTION UpperCase_char(chars) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=LEN(chars)) :: ans
+  END FUNCTION UpperCase_char
 END INTERFACE
 
 INTERFACE UpperCase
@@ -860,12 +853,12 @@ PUBLIC :: UpperCase
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
-! summary: 	Returns the upperCase version of chars
+! summary:         Returns the upperCase version of chars
 
 INTERFACE
-MODULE PURE SUBROUTINE ToUpperCase_Char( chars )
-  CHARACTER( LEN = * ), INTENT( INOUT ) ::chars
-ENDSUBROUTINE ToUpperCase_Char
+  MODULE PURE SUBROUTINE ToUpperCase_Char(chars)
+    CHARACTER(LEN=*), INTENT(INOUT) :: chars
+  END SUBROUTINE ToUpperCase_Char
 END INTERFACE
 
 INTERFACE toUpperCase
@@ -880,13 +873,13 @@ PUBLIC :: toUpperCase
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
-! summary: 	Returns the LowerCase version of chars
+! summary:         Returns the LowerCase version of chars
 
 INTERFACE
-MODULE PURE FUNCTION LowerCase_char( chars ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: chars
-  CHARACTER( LEN = LEN(chars) ):: ans
-END FUNCTION LowerCase_char
+  MODULE PURE FUNCTION LowerCase_char(chars) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=LEN(chars)) :: ans
+  END FUNCTION LowerCase_char
 END INTERFACE
 
 INTERFACE LowerCase
@@ -899,15 +892,14 @@ PUBLIC :: LowerCase
 !                                                  toLowerCase@StringMethods
 !----------------------------------------------------------------------------
 
-
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
-! summary: 	Returns the LowerCase version of chars
+! summary:         Returns the LowerCase version of chars
 
 INTERFACE
-MODULE PURE SUBROUTINE ToLowerCase_Char( chars )
-  CHARACTER( LEN = * ), INTENT( INOUT ) ::chars
-ENDSUBROUTINE ToLowerCase_Char
+  MODULE PURE SUBROUTINE ToLowerCase_Char(chars)
+    CHARACTER(LEN=*), INTENT(INOUT) :: chars
+  END SUBROUTINE ToLowerCase_Char
 END INTERFACE
 
 INTERFACE toLowerCase
@@ -920,16 +912,15 @@ PUBLIC :: toLowerCase
 !                                                  isWhiteChar@StringMethods
 !----------------------------------------------------------------------------
 
-
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
-! summary: 	Returns true if the char is a space(32) or a tab(9).
+! summary:         Returns true if the char is a space(32) or a tab(9).
 
 INTERFACE
-MODULE PURE FUNCTION isWhiteChar_char( char ) RESULT( Ans )
-  CHARACTER( LEN = 1 ), INTENT( IN ) :: char
-  LOGICAL( LGT ) :: ans
-END FUNCTION isWhiteChar_char
+  MODULE PURE FUNCTION isWhiteChar_char(char) RESULT(Ans)
+    CHARACTER(LEN=1), INTENT(IN) :: char
+    LOGICAL(LGT) :: ans
+  END FUNCTION isWhiteChar_char
 END INTERFACE
 
 INTERFACE isWhiteChar
@@ -942,16 +933,15 @@ PUBLIC :: isWhiteChar
 !                                                  isBlank@StringMethods
 !----------------------------------------------------------------------------
 
-
 !> authors: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
-! summary: 	Returns true of the entire string is blank
+! summary:         Returns true of the entire string is blank
 
 INTERFACE
-MODULE PURE FUNCTION isBlank_chars( chars ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: chars
-  LOGICAL( LGT ) :: ans
-END FUNCTION isBlank_chars
+  MODULE PURE FUNCTION isBlank_chars(chars) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    LOGICAL(LGT) :: ans
+  END FUNCTION isBlank_chars
 END INTERFACE
 
 INTERFACE isBlank
@@ -959,7 +949,6 @@ INTERFACE isBlank
 END INTERFACE isBlank
 
 PUBLIC :: isBlank
-
 
 !----------------------------------------------------------------------------
 !                                                    numString@StringMethods
@@ -978,10 +967,10 @@ PUBLIC :: isBlank
 !
 
 INTERFACE
-MODULE PURE FUNCTION numStrings_chars( chars ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: chars
-  INTEGER( I4B ) :: ans
-END FUNCTION numStrings_chars
+  MODULE PURE FUNCTION numStrings_chars(chars) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    INTEGER(I4B) :: ans
+  END FUNCTION numStrings_chars
 END INTERFACE
 
 INTERFACE numStrings
@@ -1000,11 +989,11 @@ PUBLIC :: numStrings
 ! found in the main string
 
 INTERFACE
-MODULE PURE FUNCTION numMatchStr_chars( chars, pattern ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: chars
-  CHARACTER( LEN = * ), INTENT( IN ) :: pattern
-  INTEGER( I4B ) :: ans
-END FUNCTION numMatchStr_chars
+  MODULE PURE FUNCTION numMatchStr_chars(chars, pattern) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=*), INTENT(IN) :: pattern
+    INTEGER(I4B) :: ans
+  END FUNCTION numMatchStr_chars
 END INTERFACE
 
 INTERFACE numMatchStr
@@ -1030,11 +1019,11 @@ PUBLIC :: numMatchStr
 !@endnote
 
 INTERFACE
-MODULE PURE FUNCTION isPresent_chars( chars, pattern ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: chars
-  CHARACTER( LEN = * ), INTENT( IN ) :: pattern
-  LOGICAL( LGT ) :: ans
-END FUNCTION isPresent_chars
+  MODULE PURE FUNCTION isPresent_chars(chars, pattern) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=*), INTENT(IN) :: pattern
+    LOGICAL(LGT) :: ans
+  END FUNCTION isPresent_chars
 END INTERFACE
 
 INTERFACE isPresent
@@ -1051,13 +1040,12 @@ PUBLIC :: isPresent
 ! date: 5 sept 2021
 ! summary: Function returns the indices in a string where substring pattern
 
-
 INTERFACE
-MODULE PURE SUBROUTINE strFind_chars( chars,pattern,indices )
-  CHARACTER(LEN=*),INTENT(IN) :: chars
-  CHARACTER(LEN=*),INTENT(IN) :: pattern
-  INTEGER(I4B),ALLOCATABLE,INTENT(OUT) :: indices(:)
-END SUBROUTINE strFind_chars
+  MODULE PURE SUBROUTINE strFind_chars(chars, pattern, indices)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=*), INTENT(IN) :: pattern
+    INTEGER(I4B), ALLOCATABLE, INTENT(OUT) :: indices(:)
+  END SUBROUTINE strFind_chars
 END INTERFACE
 
 INTERFACE strFind
@@ -1087,11 +1075,11 @@ PUBLIC :: strFind
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE FindReplace_chars( chars, findp, repp )
-  CHARACTER(LEN=*),INTENT(INOUT ) :: chars
-  CHARACTER(LEN=*),INTENT(IN) :: findp
-  CHARACTER(LEN=*),INTENT(IN) :: repp
-END SUBROUTINE FindReplace_chars
+  MODULE PURE SUBROUTINE FindReplace_chars(chars, findp, repp)
+    CHARACTER(LEN=*), INTENT(INOUT) :: chars
+    CHARACTER(LEN=*), INTENT(IN) :: findp
+    CHARACTER(LEN=*), INTENT(IN) :: repp
+  END SUBROUTINE FindReplace_chars
 END INTERFACE
 
 INTERFACE FindReplace
@@ -1120,14 +1108,13 @@ PUBLIC :: FindReplace
 ! spaces are counted in all strings.
 !@endnote
 
-
 INTERFACE
-MODULE PURE SUBROUTINE getField_chars( i,chars,field,ierr )
-  INTEGER(I4B),INTENT(IN) :: i
-  CHARACTER(LEN=*),INTENT(IN) :: chars
-  CHARACTER(LEN=:),ALLOCATABLE,INTENT(OUT) :: field
-  INTEGER(I4B),INTENT(OUT),OPTIONAL :: ierr
-END SUBROUTINE getField_chars
+  MODULE PURE SUBROUTINE getField_chars(i, chars, field, ierr)
+    INTEGER(I4B), INTENT(IN) :: i
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=:), ALLOCATABLE, INTENT(OUT) :: field
+    INTEGER(I4B), INTENT(OUT), OPTIONAL :: ierr
+  END SUBROUTINE getField_chars
 END INTERFACE
 
 INTERFACE getField
@@ -1149,9 +1136,9 @@ PUBLIC :: getField
 ! This routine returns the path, filename, and extension.
 
 INTERFACE
-MODULE PURE SUBROUTINE SlashRep_chars( chars )
-  CHARACTER( LEN = * ), INTENT( INOUT ) :: chars
-END SUBROUTINE SlashRep_chars
+  MODULE PURE SUBROUTINE SlashRep_chars(chars)
+    CHARACTER(LEN=*), INTENT(INOUT) :: chars
+  END SUBROUTINE SlashRep_chars
 END INTERFACE
 
 INTERFACE SlashRep
@@ -1172,12 +1159,12 @@ PUBLIC :: SlashRep
 ! This routine returns the path, filename, and extension.
 
 INTERFACE
-MODULE PURE SUBROUTINE getFileParts_chars( chars,path,fname,ext )
-  CHARACTER(LEN=*),INTENT(IN) :: chars
-  CHARACTER(LEN=*),INTENT(OUT) :: path
-  CHARACTER(LEN=*),INTENT(OUT) :: fname
-  CHARACTER(LEN=*),INTENT(OUT) :: ext
-END SUBROUTINE getFileParts_chars
+  MODULE PURE SUBROUTINE getFileParts_chars(chars, path, fname, ext)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=*), INTENT(OUT) :: path
+    CHARACTER(LEN=*), INTENT(OUT) :: fname
+    CHARACTER(LEN=*), INTENT(OUT) :: ext
+  END SUBROUTINE getFileParts_chars
 END INTERFACE
 
 INTERFACE getFileParts
@@ -1191,10 +1178,10 @@ PUBLIC :: getFileParts
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE getPath_chars( chars,path )
-  CHARACTER(LEN=*),INTENT(IN) :: chars
-  CHARACTER(LEN=*),INTENT(OUT) :: path
-END SUBROUTINE getPath_chars
+  MODULE PURE SUBROUTINE getPath_chars(chars, path)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=*), INTENT(OUT) :: path
+  END SUBROUTINE getPath_chars
 END INTERFACE
 
 INTERFACE getPath
@@ -1208,10 +1195,10 @@ PUBLIC :: getPath
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE getFileName_chars( chars,fname )
-  CHARACTER(LEN=*),INTENT(IN) :: chars
-  CHARACTER(LEN=*),INTENT(OUT) :: fname
-END SUBROUTINE getFileName_chars
+  MODULE PURE SUBROUTINE getFileName_chars(chars, fname)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=*), INTENT(OUT) :: fname
+  END SUBROUTINE getFileName_chars
 END INTERFACE
 
 INTERFACE getFileName
@@ -1225,10 +1212,10 @@ PUBLIC :: getFileName
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE getFileNameExt_chars( chars,ext )
-  CHARACTER(LEN=*),INTENT(IN) :: chars
-  CHARACTER(LEN=*),INTENT(OUT) :: ext
-END SUBROUTINE getFileNameExt_chars
+  MODULE PURE SUBROUTINE getFileNameExt_chars(chars, ext)
+    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(LEN=*), INTENT(OUT) :: ext
+  END SUBROUTINE getFileNameExt_chars
 END INTERFACE
 
 INTERFACE getFileNameExt
@@ -1252,10 +1239,10 @@ PUBLIC :: getFileNameExt
 ! ```
 
 INTERFACE
-MODULE FUNCTION getExtension_chars( char ) RESULT(ext)
-  CHARACTER( LEN=* ), INTENT( IN ) :: char
-  CHARACTER(7) :: ext
-END FUNCTION
+  MODULE FUNCTION getExtension_chars(char) RESULT(ext)
+    CHARACTER(LEN=*), INTENT(IN) :: char
+    CHARACTER(7) :: ext
+  END FUNCTION
 END INTERFACE
 
 INTERFACE getExtension
@@ -1269,10 +1256,10 @@ PUBLIC :: getExtension
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R1( Mat, row )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: row
-END SUBROUTINE Reallocate_Real64_R1
+  MODULE PURE SUBROUTINE Reallocate_Real64_R1(Mat, row)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: row
+  END SUBROUTINE Reallocate_Real64_R1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1280,10 +1267,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R1b( Mat, s )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Real64_R1b
+  MODULE PURE SUBROUTINE Reallocate_Real64_R1b(Mat, s)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real64_R1b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1291,10 +1278,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R1( Mat, row )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: row
-END SUBROUTINE Reallocate_Real32_R1
+  MODULE PURE SUBROUTINE Reallocate_Real32_R1(Mat, row)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: row
+  END SUBROUTINE Reallocate_Real32_R1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1302,10 +1289,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R1b( Mat, s )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real32_R1b
+  MODULE PURE SUBROUTINE Reallocate_Real32_R1b(Mat, s)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real32_R1b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1313,10 +1300,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R2( Mat, row, col )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: row, col
-END SUBROUTINE Reallocate_Real64_R2
+  MODULE PURE SUBROUTINE Reallocate_Real64_R2(Mat, row, col)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: row, col
+  END SUBROUTINE Reallocate_Real64_R2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1324,10 +1311,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R2b( Mat, s )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Real64_R2b
+  MODULE PURE SUBROUTINE Reallocate_Real64_R2b(Mat, s)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real64_R2b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1335,10 +1322,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R2( Mat, row, col )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: row, col
-END SUBROUTINE Reallocate_Real32_R2
+  MODULE PURE SUBROUTINE Reallocate_Real32_R2(Mat, row, col)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: row, col
+  END SUBROUTINE Reallocate_Real32_R2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1346,10 +1333,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R2b( Mat, s )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Real32_R2b
+  MODULE PURE SUBROUTINE Reallocate_Real32_R2b(Mat, s)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real32_R2b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1357,10 +1344,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R3( Mat, i1, i2, i3 )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
-END SUBROUTINE Reallocate_Real64_R3
+  MODULE PURE SUBROUTINE Reallocate_Real64_R3(Mat, i1, i2, i3)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3
+  END SUBROUTINE Reallocate_Real64_R3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1368,10 +1355,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R3b( Mat, s )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Real64_R3b
+  MODULE PURE SUBROUTINE Reallocate_Real64_R3b(Mat, s)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real64_R3b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1379,10 +1366,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R3( Mat, i1, i2, i3 )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
-END SUBROUTINE Reallocate_Real32_R3
+  MODULE PURE SUBROUTINE Reallocate_Real32_R3(Mat, i1, i2, i3)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3
+  END SUBROUTINE Reallocate_Real32_R3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1390,10 +1377,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R3b( Mat, s )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Real32_R3b
+  MODULE PURE SUBROUTINE Reallocate_Real32_R3b(Mat, s)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real32_R3b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1401,10 +1388,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R4 ( Mat, i1, i2, i3, i4 )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
-END SUBROUTINE Reallocate_Real64_R4
+  MODULE PURE SUBROUTINE Reallocate_Real64_R4(Mat, i1, i2, i3, i4)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4
+  END SUBROUTINE Reallocate_Real64_R4
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1412,10 +1399,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R4b( Mat, s )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real64_R4b
+  MODULE PURE SUBROUTINE Reallocate_Real64_R4b(Mat, s)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real64_R4b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1423,10 +1410,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R4 ( Mat, i1, i2, i3, i4 )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
-END SUBROUTINE Reallocate_Real32_R4
+  MODULE PURE SUBROUTINE Reallocate_Real32_R4(Mat, i1, i2, i3, i4)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4
+  END SUBROUTINE Reallocate_Real32_R4
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1434,10 +1421,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R4b( Mat, s )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real32_R4b
+  MODULE PURE SUBROUTINE Reallocate_Real32_R4b(Mat, s)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real32_R4b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1445,10 +1432,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R5 ( Mat, i1, i2, i3, i4, i5 )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5
-END SUBROUTINE Reallocate_Real64_R5
+  MODULE PURE SUBROUTINE Reallocate_Real64_R5(Mat, i1, i2, i3, i4, i5)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5
+  END SUBROUTINE Reallocate_Real64_R5
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1456,10 +1443,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R5b( Mat, s )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real64_R5b
+  MODULE PURE SUBROUTINE Reallocate_Real64_R5b(Mat, s)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real64_R5b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1467,10 +1454,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R5( Mat, i1, i2, i3, i4, i5 )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5
-END SUBROUTINE Reallocate_Real32_R5
+  MODULE PURE SUBROUTINE Reallocate_Real32_R5(Mat, i1, i2, i3, i4, i5)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5
+  END SUBROUTINE Reallocate_Real32_R5
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1478,10 +1465,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R5b( Mat, s )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real32_R5b
+  MODULE PURE SUBROUTINE Reallocate_Real32_R5b(Mat, s)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real32_R5b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1489,10 +1476,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R6 ( Mat, i1, i2, i3, i4, i5, i6 )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6
-END SUBROUTINE Reallocate_Real64_R6
+  MODULE PURE SUBROUTINE Reallocate_Real64_R6(Mat, i1, i2, i3, i4, i5, i6)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6
+  END SUBROUTINE Reallocate_Real64_R6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1500,10 +1487,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R6b( Mat, s )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real64_R6b
+  MODULE PURE SUBROUTINE Reallocate_Real64_R6b(Mat, s)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real64_R6b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1511,10 +1498,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R6( Mat, i1, i2, i3, i4, i5, i6 )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6
-END SUBROUTINE Reallocate_Real32_R6
+  MODULE PURE SUBROUTINE Reallocate_Real32_R6(Mat, i1, i2, i3, i4, i5, i6)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6
+  END SUBROUTINE Reallocate_Real32_R6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1522,10 +1509,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R6b( Mat, s )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real32_R6b
+  MODULE PURE SUBROUTINE Reallocate_Real32_R6b(Mat, s)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real32_R6b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1533,11 +1520,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R7 ( Mat, i1, i2, i3, i4, i5, &
-  & i6, i7 )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6, i7
-END SUBROUTINE Reallocate_Real64_R7
+  MODULE PURE SUBROUTINE Reallocate_Real64_R7(Mat, i1, i2, i3, i4, i5, &
+    & i6, i7)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6, i7
+  END SUBROUTINE Reallocate_Real64_R7
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1545,10 +1532,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R7b( Mat, s )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real64_R7b
+  MODULE PURE SUBROUTINE Reallocate_Real64_R7b(Mat, s)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real64_R7b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1556,10 +1543,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R7( Mat, i1, i2, i3, i4, i5, i6, i7)
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6, i7
-END SUBROUTINE Reallocate_Real32_R7
+  MODULE PURE SUBROUTINE Reallocate_Real32_R7(Mat, i1, i2, i3, i4, i5, i6, i7)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6, i7
+  END SUBROUTINE Reallocate_Real32_R7
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1567,10 +1554,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R7b( Mat, s )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Real32_R7b
+  MODULE PURE SUBROUTINE Reallocate_Real32_R7b(Mat, s)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Real32_R7b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1578,10 +1565,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R1( Mat, row )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: row
-END SUBROUTINE Reallocate_Int64_R1
+  MODULE PURE SUBROUTINE Reallocate_Int64_R1(Mat, row)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: row
+  END SUBROUTINE Reallocate_Int64_R1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1589,10 +1576,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R1b( Mat, s )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Int64_R1b
+  MODULE PURE SUBROUTINE Reallocate_Int64_R1b(Mat, s)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int64_R1b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1600,10 +1587,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R1( Mat, row )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: row
-END SUBROUTINE Reallocate_Int32_R1
+  MODULE PURE SUBROUTINE Reallocate_Int32_R1(Mat, row)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: row
+  END SUBROUTINE Reallocate_Int32_R1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1611,10 +1598,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R1b( Mat, s )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int32_R1b
+  MODULE PURE SUBROUTINE Reallocate_Int32_R1b(Mat, s)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int32_R1b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1622,10 +1609,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R2( Mat, row, col )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: row, col
-END SUBROUTINE Reallocate_Int64_R2
+  MODULE PURE SUBROUTINE Reallocate_Int64_R2(Mat, row, col)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: row, col
+  END SUBROUTINE Reallocate_Int64_R2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1633,10 +1620,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R2b( Mat, s )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Int64_R2b
+  MODULE PURE SUBROUTINE Reallocate_Int64_R2b(Mat, s)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int64_R2b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1644,10 +1631,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R2( Mat, row, col )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: row, col
-END SUBROUTINE Reallocate_Int32_R2
+  MODULE PURE SUBROUTINE Reallocate_Int32_R2(Mat, row, col)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: row, col
+  END SUBROUTINE Reallocate_Int32_R2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1655,10 +1642,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R2b( Mat, s )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Int32_R2b
+  MODULE PURE SUBROUTINE Reallocate_Int32_R2b(Mat, s)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int32_R2b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1666,10 +1653,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R3( Mat, i1, i2, i3 )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
-END SUBROUTINE Reallocate_Int64_R3
+  MODULE PURE SUBROUTINE Reallocate_Int64_R3(Mat, i1, i2, i3)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3
+  END SUBROUTINE Reallocate_Int64_R3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1677,10 +1664,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R3b( Mat, s )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Int64_R3b
+  MODULE PURE SUBROUTINE Reallocate_Int64_R3b(Mat, s)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int64_R3b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1688,10 +1675,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R3( Mat, i1, i2, i3 )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3
-END SUBROUTINE Reallocate_Int32_R3
+  MODULE PURE SUBROUTINE Reallocate_Int32_R3(Mat, i1, i2, i3)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3
+  END SUBROUTINE Reallocate_Int32_R3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1699,10 +1686,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R3b( Mat, s )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s(:)
-END SUBROUTINE Reallocate_Int32_R3b
+  MODULE PURE SUBROUTINE Reallocate_Int32_R3b(Mat, s)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int32_R3b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1710,10 +1697,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R4 ( Mat, i1, i2, i3, i4 )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
-END SUBROUTINE Reallocate_Int64_R4
+  MODULE PURE SUBROUTINE Reallocate_Int64_R4(Mat, i1, i2, i3, i4)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4
+  END SUBROUTINE Reallocate_Int64_R4
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1721,10 +1708,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R4b( Mat, s )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int64_R4b
+  MODULE PURE SUBROUTINE Reallocate_Int64_R4b(Mat, s)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int64_R4b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1732,10 +1719,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R4 ( Mat, i1, i2, i3, i4 )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4
-END SUBROUTINE Reallocate_Int32_R4
+  MODULE PURE SUBROUTINE Reallocate_Int32_R4(Mat, i1, i2, i3, i4)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4
+  END SUBROUTINE Reallocate_Int32_R4
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1743,10 +1730,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R4b( Mat, s )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int32_R4b
+  MODULE PURE SUBROUTINE Reallocate_Int32_R4b(Mat, s)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int32_R4b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1754,10 +1741,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R5 ( Mat, i1, i2, i3, i4, i5 )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5
-END SUBROUTINE Reallocate_Int64_R5
+  MODULE PURE SUBROUTINE Reallocate_Int64_R5(Mat, i1, i2, i3, i4, i5)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5
+  END SUBROUTINE Reallocate_Int64_R5
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1765,10 +1752,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R5b( Mat, s )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int64_R5b
+  MODULE PURE SUBROUTINE Reallocate_Int64_R5b(Mat, s)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int64_R5b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1776,10 +1763,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R5( Mat, i1, i2, i3, i4, i5 )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5
-END SUBROUTINE Reallocate_Int32_R5
+  MODULE PURE SUBROUTINE Reallocate_Int32_R5(Mat, i1, i2, i3, i4, i5)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5
+  END SUBROUTINE Reallocate_Int32_R5
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1787,10 +1774,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R5b( Mat, s )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int32_R5b
+  MODULE PURE SUBROUTINE Reallocate_Int32_R5b(Mat, s)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int32_R5b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1798,10 +1785,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R6 ( Mat, i1, i2, i3, i4, i5, i6 )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6
-END SUBROUTINE Reallocate_Int64_R6
+  MODULE PURE SUBROUTINE Reallocate_Int64_R6(Mat, i1, i2, i3, i4, i5, i6)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6
+  END SUBROUTINE Reallocate_Int64_R6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1809,10 +1796,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R6b( Mat, s )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int64_R6b
+  MODULE PURE SUBROUTINE Reallocate_Int64_R6b(Mat, s)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int64_R6b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1820,10 +1807,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R6( Mat, i1, i2, i3, i4, i5, i6 )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6
-END SUBROUTINE Reallocate_Int32_R6
+  MODULE PURE SUBROUTINE Reallocate_Int32_R6(Mat, i1, i2, i3, i4, i5, i6)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6
+  END SUBROUTINE Reallocate_Int32_R6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1831,10 +1818,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R6b( Mat, s )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int32_R6b
+  MODULE PURE SUBROUTINE Reallocate_Int32_R6b(Mat, s)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int32_R6b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1842,11 +1829,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R7 ( Mat, i1, i2, i3, i4, i5, &
-  & i6, i7 )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6, i7
-END SUBROUTINE Reallocate_Int64_R7
+  MODULE PURE SUBROUTINE Reallocate_Int64_R7(Mat, i1, i2, i3, i4, i5, &
+    & i6, i7)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6, i7
+  END SUBROUTINE Reallocate_Int64_R7
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1854,10 +1841,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int64_R7b( Mat, s )
-  INTEGER( Int64 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int64_R7b
+  MODULE PURE SUBROUTINE Reallocate_Int64_R7b(Mat, s)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int64_R7b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1865,10 +1852,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R7( Mat, i1, i2, i3, i4, i5, i6, i7)
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: i1, i2, i3, i4, i5, i6, i7
-END SUBROUTINE Reallocate_Int32_R7
+  MODULE PURE SUBROUTINE Reallocate_Int32_R7(Mat, i1, i2, i3, i4, i5, i6, i7)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: i1, i2, i3, i4, i5, i6, i7
+  END SUBROUTINE Reallocate_Int32_R7
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1876,10 +1863,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R7b( Mat, s )
-  INTEGER( Int32 ), ALLOCATABLE, INTENT( INOUT ) :: Mat( :, :, :, :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( : )
-END SUBROUTINE Reallocate_Int32_R7b
+  MODULE PURE SUBROUTINE Reallocate_Int32_R7b(Mat, s)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: Mat(:, :, :, :, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+  END SUBROUTINE Reallocate_Int32_R7b
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1887,14 +1874,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Int32_R1_6( Vec1, n1, Vec2, n2, Vec3, &
-  & n3, Vec4, n4, Vec5, n5, Vec6, n6 )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Vec1( : ), Vec2( : )
-  INTEGER( I4B ), ALLOCATABLE, OPTIONAL, INTENT( INOUT ) :: Vec3( : ), &
-    & Vec4( : ), Vec5( : ), Vec6( : )
-  INTEGER( I4B ), INTENT( IN ) :: n1, n2
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
-END SUBROUTINE Reallocate_Int32_R1_6
+  MODULE PURE SUBROUTINE Reallocate_Int32_R1_6(Vec1, n1, Vec2, n2, Vec3, &
+    & n3, Vec4, n4, Vec5, n5, Vec6, n6)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: Vec1(:), Vec2(:)
+    INTEGER(I4B), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: Vec3(:), &
+      & Vec4(:), Vec5(:), Vec6(:)
+    INTEGER(I4B), INTENT(IN) :: n1, n2
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: n3, n4, n5, n6
+  END SUBROUTINE Reallocate_Int32_R1_6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1902,14 +1889,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_R1_6( Vec1, n1, Vec2, &
-  & n2, Vec3, n3, Vec4, n4, Vec5, n5, Vec6, n6 )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Vec1( : ), Vec2( : )
-  REAL( Real64 ), ALLOCATABLE, OPTIONAL, INTENT( INOUT ) :: Vec3( : ), &
-    & Vec4( : ), Vec5( : ), Vec6( : )
-  INTEGER( I4B ), INTENT( IN ) :: n1, n2
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
-END SUBROUTINE Reallocate_Real64_R1_6
+  MODULE PURE SUBROUTINE Reallocate_Real64_R1_6(Vec1, n1, Vec2, &
+    & n2, Vec3, n3, Vec4, n4, Vec5, n5, Vec6, n6)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: Vec1(:), Vec2(:)
+    REAL(Real64), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: Vec3(:), &
+      & Vec4(:), Vec5(:), Vec6(:)
+    INTEGER(I4B), INTENT(IN) :: n1, n2
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: n3, n4, n5, n6
+  END SUBROUTINE Reallocate_Real64_R1_6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1917,14 +1904,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_R1_6( Vec1, n1, Vec2, &
-  & n2, Vec3, n3, Vec4, n4, Vec5, n5, Vec6, n6 )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Vec1( : ), Vec2( : )
-  REAL( Real32 ), ALLOCATABLE, OPTIONAL, INTENT( INOUT ) :: Vec3( : ), &
-    & Vec4( : ), Vec5( : ), Vec6( : )
-  INTEGER( I4B ), INTENT( IN ) :: n1, n2
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: n3, n4, n5, n6
-END SUBROUTINE Reallocate_Real32_R1_6
+  MODULE PURE SUBROUTINE Reallocate_Real32_R1_6(Vec1, n1, Vec2, &
+    & n2, Vec3, n3, Vec4, n4, Vec5, n5, Vec6, n6)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: Vec1(:), Vec2(:)
+    REAL(Real32), ALLOCATABLE, OPTIONAL, INTENT(INOUT) :: Vec3(:), &
+      & Vec4(:), Vec5(:), Vec6(:)
+    INTEGER(I4B), INTENT(IN) :: n1, n2
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: n3, n4, n5, n6
+  END SUBROUTINE Reallocate_Real32_R1_6
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1932,11 +1919,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_AIJ( A, nA, IA, nIA, JA, nJA )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : ), JA( : )
-  INTEGER( I4B ), INTENT( IN ) :: nA, nIA, nJA
-END SUBROUTINE Reallocate_Real64_AIJ
+  MODULE PURE SUBROUTINE Reallocate_Real64_AIJ(A, nA, IA, nIA, JA, nJA)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: IA(:), JA(:)
+    INTEGER(I4B), INTENT(IN) :: nA, nIA, nJA
+  END SUBROUTINE Reallocate_Real64_AIJ
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1944,11 +1931,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_AIJ( A, nA, IA, nIA, JA, nJA )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : ), JA( : )
-  INTEGER( I4B ), INTENT( IN ) :: nA, nIA, nJA
-END SUBROUTINE Reallocate_Real32_AIJ
+  MODULE PURE SUBROUTINE Reallocate_Real32_AIJ(A, nA, IA, nIA, JA, nJA)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: IA(:), JA(:)
+    INTEGER(I4B), INTENT(IN) :: nA, nIA, nJA
+  END SUBROUTINE Reallocate_Real32_AIJ
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1956,11 +1943,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real64_AI( A, nA, IA, nIA )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : )
-  INTEGER( I4B ), INTENT( IN ) :: nA, nIA
-END SUBROUTINE Reallocate_Real64_AI
+  MODULE PURE SUBROUTINE Reallocate_Real64_AI(A, nA, IA, nIA)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: IA(:)
+    INTEGER(I4B), INTENT(IN) :: nA, nIA
+  END SUBROUTINE Reallocate_Real64_AI
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1968,11 +1955,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Reallocate_Real32_AI( A, nA, IA, nIA )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: IA( : )
-  INTEGER( I4B ), INTENT( IN ) :: nA, nIA
-END SUBROUTINE Reallocate_Real32_AI
+  MODULE PURE SUBROUTINE Reallocate_Real32_AI(A, nA, IA, nIA)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: IA(:)
+    INTEGER(I4B), INTENT(IN) :: nA, nIA
+  END SUBROUTINE Reallocate_Real32_AI
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2022,19 +2009,19 @@ PUBLIC :: Reallocate
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This FUNCTION evaluate vectors product
+! date:         22 March 2021
+! summary:          This FUNCTION evaluate vectors product
 !
 !# Introduction
-! 	This FUNCTION evaluate vectors products
+!         This FUNCTION evaluate vectors products
 ! $$\mathbf{ans} = \mathbf{a} \times \mathbf{b}$$
 
 INTERFACE
-MODULE PURE FUNCTION vec_prod( a, b ) RESULT( c )
-  ! Define INTENT of dummy argument
-  REAL( DFP ), INTENT( IN ) :: a( 3 ), b( 3 )
-  REAL( DFP ) :: c( 3 )
-END FUNCTION vec_prod
+  MODULE PURE FUNCTION vec_prod(a, b) RESULT(c)
+    ! Define INTENT of dummy argument
+    REAL(DFP), INTENT(IN) :: a(3), b(3)
+    REAL(DFP) :: c(3)
+  END FUNCTION vec_prod
 END INTERFACE
 
 INTERFACE Cross_Product
@@ -2060,28 +2047,27 @@ PUBLIC :: VectorProduct
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This FUNCTION returns outerproduct(matrix) of two vectors
+! date:         22 March 2021
+! summary:         This FUNCTION returns outerproduct(matrix) of two vectors
 !
 !# Introduction
 !
 ! $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
 
 INTERFACE
-MODULE PURE FUNCTION OUTERPROD1_1( a,b ) RESULT( Ans )
-  REAL(DFP), DIMENSION(:), INTENT(IN) :: a,b
-  REAL(DFP), DIMENSION(SIZE(a),SIZE(b)) :: Ans
-END FUNCTION
+  MODULE PURE FUNCTION OUTERPROD1_1(a, b) RESULT(Ans)
+    REAL(DFP), DIMENSION(:), INTENT(IN) :: a, b
+    REAL(DFP), DIMENSION(SIZE(a), SIZE(b)) :: Ans
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This FUNCTION returns outerproduct
+! date:         22 March 2021
+! summary:         This FUNCTION returns outerproduct
 !
 !# Introduction
 !
@@ -2090,12 +2076,12 @@ END INTERFACE
 ! - If `Sym` is .true. THEN symmetric part is returned
 
 INTERFACE
-MODULE PURE FUNCTION OUTERPROD1_1_sym(a,b, Sym) RESULT( Ans )
-  ! Define INTENT of dummy variables
-  REAL(DFP), INTENT(IN) :: a ( : ), b ( : )
-  REAL(DFP), DIMENSION(SIZE(a),SIZE(b)) :: Ans
-  LOGICAL( LGT ), INTENT( IN ) :: Sym
-END FUNCTION
+  MODULE PURE FUNCTION OUTERPROD1_1_sym(a, b, Sym) RESULT(Ans)
+    ! Define INTENT of dummy variables
+    REAL(DFP), INTENT(IN) :: a(:), b(:)
+    REAL(DFP), DIMENSION(SIZE(a), SIZE(b)) :: Ans
+    LOGICAL(LGT), INTENT(IN) :: Sym
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2103,8 +2089,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This FUNCTION returns outerproduct
+! date:         22 March 2021
+! summary:         This FUNCTION returns outerproduct
 !
 !# Introduction
 !
@@ -2112,11 +2098,11 @@ END INTERFACE
 ! `Ans(:,:,i) = a(:,:) * b(i)`
 
 INTERFACE
-MODULE PURE FUNCTION OUTERPROD2_1(a,b) RESULT( Ans )
-    REAL(DFP), INTENT(IN) :: a( :, : )
-    REAL(DFP), INTENT(IN) :: b( : )
-    REAL(DFP) :: Ans( SIZE( a, 1 ), SIZE( a, 2 ), SIZE(b) )
-END FUNCTION
+  MODULE PURE FUNCTION OUTERPROD2_1(a, b) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP) :: Ans(SIZE(a, 1), SIZE(a, 2), SIZE(b))
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2124,8 +2110,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This FUNCTION returns outerproduct
+! date:         22 March 2021
+! summary:         This FUNCTION returns outerproduct
 !
 !# Introduction
 !
@@ -2133,11 +2119,11 @@ END INTERFACE
 ! - `Ans( :, :, :,  I ) = a( :, :, : ) * b( I )`
 
 INTERFACE
-MODULE PURE FUNCTION OUTERPROD3_1(a,b) RESULT( Ans )
-  REAL(DFP), INTENT( IN ) :: a(:,:,:)
-  REAL(DFP), INTENT( IN ) :: b(:)
-  REAL(DFP) :: Ans( SIZE( a, 1 ), SIZE( a, 2 ), SIZE( a, 3 ), SIZE(  b ) )
-END FUNCTION
+  MODULE PURE FUNCTION OUTERPROD3_1(a, b) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a(:, :, :)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP) :: Ans(SIZE(a, 1), SIZE(a, 2), SIZE(a, 3), SIZE(b))
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2145,8 +2131,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This FUNCTION returns outerproduct
+! date:         22 March 2021
+! summary:         This FUNCTION returns outerproduct
 !
 !# Introduction
 !
@@ -2155,11 +2141,11 @@ END INTERFACE
 ! $$Ans = a \otimes b \otimes c$$
 
 INTERFACE
-MODULE PURE FUNCTION OUTERPROD2_11(a,b,c) RESULT( ANS )
-  REAL(DFP), INTENT( IN ) :: a( :, : )
-  REAL(DFP), INTENT( IN ) :: b( : ), c( : )
-  REAL(DFP) :: ANS( SIZE( a, 1 ), SIZE( a, 2 ), SIZE( b ), SIZE(  c ) )
-END FUNCTION
+  MODULE PURE FUNCTION OUTERPROD2_11(a, b, c) RESULT(ANS)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:), c(:)
+    REAL(DFP) :: ANS(SIZE(a, 1), SIZE(a, 2), SIZE(b), SIZE(c))
+  END FUNCTION
 END INTERFACE
 
 INTERFACE OUTERPROD
@@ -2174,14 +2160,14 @@ PUBLIC :: OUTERPROD
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Append scalar INTEGER  to  INTEGER  vec tor
+! date:         22 March 2021
+! summary:         Append scalar INTEGER  to  INTEGER  vec tor
 
 INTERFACE
-MODULE PURE SUBROUTINE Append_I1( A, Entry )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER( I4B ), INTENT( IN ) :: Entry
-END SUBROUTINE
+  MODULE PURE SUBROUTINE Append_I1(A, Entry)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: Entry
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2189,14 +2175,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Append vector of INTEGER to INTEGER vector
+! date:         22 March 2021
+! summary:         Append vector of INTEGER to INTEGER vector
 
 INTERFACE
-MODULE PURE SUBROUTINE Append_I2( A, Entry )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  INTEGER( I4B ), INTENT( IN ) :: Entry( : )
-END SUBROUTINE
+  MODULE PURE SUBROUTINE Append_I2(A, Entry)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: Entry(:)
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2204,14 +2190,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Append scalar REAL to the REAL vector
+! date:         22 March 2021
+! summary:         Append scalar REAL to the REAL vector
 
 INTERFACE
-MODULE PURE SUBROUTINE Append_R1( A, Entry )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  REAL( DFP ), INTENT( IN ) :: Entry
-END SUBROUTINE
+  MODULE PURE SUBROUTINE Append_R1(A, Entry)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    REAL(DFP), INTENT(IN) :: Entry
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2219,14 +2205,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Append vector of REAL to REAL-vector
+! date:         22 March 2021
+! summary:         Append vector of REAL to REAL-vector
 
 INTERFACE
-MODULE PURE SUBROUTINE Append_R2( A, Entry )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: A( : )
-  REAL( DFP ), INTENT( IN ) :: Entry( : )
-END SUBROUTINE
+  MODULE PURE SUBROUTINE Append_R2(A, Entry)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    REAL(DFP), INTENT(IN) :: Entry(:)
+  END SUBROUTINE
 END INTERFACE
 
 INTERFACE Append
@@ -2241,11 +2227,11 @@ PUBLIC :: Append
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION assert_eq2(n1,n2,string)
-  CHARACTER(LEN=*), INTENT(IN) :: string
-  INTEGER( I4B ), INTENT(IN) :: n1,n2
-  INTEGER( I4B ) :: assert_eq2
-END FUNCTION
+  MODULE FUNCTION assert_eq2(n1, n2, string)
+    CHARACTER(LEN=*), INTENT(IN) :: string
+    INTEGER(I4B), INTENT(IN) :: n1, n2
+    INTEGER(I4B) :: assert_eq2
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2253,11 +2239,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION assert_eq3(n1,n2,n3,string)
-  CHARACTER(LEN=*), INTENT(IN) :: string
-  INTEGER( I4B ), INTENT(IN) :: n1,n2,n3
-  INTEGER( I4B ) :: assert_eq3
-END FUNCTION
+  MODULE FUNCTION assert_eq3(n1, n2, n3, string)
+    CHARACTER(LEN=*), INTENT(IN) :: string
+    INTEGER(I4B), INTENT(IN) :: n1, n2, n3
+    INTEGER(I4B) :: assert_eq3
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2265,11 +2251,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION assert_eq4(n1,n2,n3,n4,string)
-  CHARACTER(LEN=*), INTENT(IN) :: string
-  INTEGER( I4B ), INTENT(IN) :: n1,n2,n3,n4
-  INTEGER( I4B ) :: assert_eq4
-END FUNCTION
+  MODULE FUNCTION assert_eq4(n1, n2, n3, n4, string)
+    CHARACTER(LEN=*), INTENT(IN) :: string
+    INTEGER(I4B), INTENT(IN) :: n1, n2, n3, n4
+    INTEGER(I4B) :: assert_eq4
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2277,11 +2263,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION assert_eqn(nn,string)
-  CHARACTER( LEN=* ), INTENT( IN ) :: string
-  INTEGER( I4B ), DIMENSION( : ), INTENT(IN) :: nn
-  INTEGER( I4B ):: assert_eqn
-END FUNCTION
+  MODULE FUNCTION assert_eqn(nn, string)
+    CHARACTER(LEN=*), INTENT(IN) :: string
+    INTEGER(I4B), DIMENSION(:), INTENT(IN) :: nn
+    INTEGER(I4B) :: assert_eqn
+  END FUNCTION
 END INTERFACE
 
 INTERFACE assert_eq
@@ -2295,12 +2281,12 @@ PUBLIC :: ASSERT_EQ
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE assert_shape_2( Mat, s, msg, file, line, routine )
-  REAL( DFP ), INTENT( IN ) :: Mat( :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( 2 )
-  INTEGER( I4B ), INTENT( IN ) :: line
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
-END SUBROUTINE
+  MODULE SUBROUTINE assert_shape_2(Mat, s, msg, file, line, routine)
+    REAL(DFP), INTENT(IN) :: Mat(:, :)
+    INTEGER(I4B), INTENT(IN) :: s(2)
+    INTEGER(I4B), INTENT(IN) :: line
+    CHARACTER(LEN=*), INTENT(IN) :: msg, file, routine
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2308,12 +2294,12 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE assert_shape_3( Mat, s,  msg, file, line, routine )
-  REAL( DFP ), INTENT( IN ) :: Mat( :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( 3 )
-  INTEGER( I4B ), INTENT( IN ) :: line
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
-END SUBROUTINE
+  MODULE SUBROUTINE assert_shape_3(Mat, s, msg, file, line, routine)
+    REAL(DFP), INTENT(IN) :: Mat(:, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(3)
+    INTEGER(I4B), INTENT(IN) :: line
+    CHARACTER(LEN=*), INTENT(IN) :: msg, file, routine
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2321,12 +2307,12 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE assert_shape_4( Mat, s, msg, file, line, routine )
-  REAL( DFP ), INTENT( IN ) :: Mat( :, :, :, : )
-  INTEGER( I4B ), INTENT( IN ) :: s( 4 )
-  INTEGER( I4B ), INTENT( IN ) :: line
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg, file, routine
-END SUBROUTINE
+  MODULE SUBROUTINE assert_shape_4(Mat, s, msg, file, line, routine)
+    REAL(DFP), INTENT(IN) :: Mat(:, :, :, :)
+    INTEGER(I4B), INTENT(IN) :: s(4)
+    INTEGER(I4B), INTENT(IN) :: line
+    CHARACTER(LEN=*), INTENT(IN) :: msg, file, routine
+  END SUBROUTINE
 END INTERFACE
 
 INTERFACE ASSERT
@@ -2336,123 +2322,388 @@ END INTERFACE ASSERT
 PUBLIC :: ASSERT
 
 !----------------------------------------------------------------------------
-!                                                                  SWAP@SWAP
+!                                                           SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Swap two integer
+! date: 22 March 2021
+! summary: Swap two integer
 
 INTERFACE
-MODULE PURE SUBROUTINE swap_i( a, b )
-  INTEGER( I4B ), INTENT( INOUT ) :: a, b
-END SUBROUTINE swap_i
+  MODULE PURE SUBROUTINE swap_i(a, b)
+    INTEGER(I4B), INTENT(INOUT) :: a, b
+  END SUBROUTINE swap_i
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                                  SWAP@SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Swap two real
-
-INTERFACE
-MODULE PURE SUBROUTINE swap_r( a, b )
-  REAL( DFP ), INTENT( INOUT ) :: a, b
-END SUBROUTINE swap_r
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                  SWAP@SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Swap two real
-
-INTERFACE
-MODULE PURE SUBROUTINE swap_rv( a, b )
-  REAL(DFP), INTENT(INOUT ) :: a(:), b(:)
-END SUBROUTINE swap_rv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                  SWAP@SWAP
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Subroutine for interchanging two complex numbers
-
-INTERFACE
-MODULE PURE SUBROUTINE swap_c( a, b )
-  COMPLEX(DFPC), INTENT(INOUT ) :: a,b
-END SUBROUTINE swap_c
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 SWAP@SWAP
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE swap_cv( a, b )
-  COMPLEX(DFPC), INTENT(INOUT ) :: a(:), b(:)
-END SUBROUTINE swap_cv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 SWAP@SWAP
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE swap_cm( a, b )
-  COMPLEX(DFPC), INTENT(INOUT ) :: a(:,:), b(:,:)
-END SUBROUTINE swap_cm
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 SWAP@SWAP
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE masked_swap_rs( a, b, mask )
-  REAL(DFP), INTENT(INOUT ) :: a,b
-  LOGICAL(LGT), INTENT(IN) :: mask
-END SUBROUTINE masked_swap_rs
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 SWAP@SWAP
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE masked_swap_rv( a, b, mask )
-  REAL(DFP), INTENT(INOUT ) :: a( : ), b( : )
-  LOGICAL(LGT), INTENT(IN) :: mask( : )
-END SUBROUTINE masked_swap_rv
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 SWAP@SWAP
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE masked_swap_rm( a, b, mask )
-  REAL(DFP), INTENT(INOUT ) :: a( :, : ), b( :, : )
-  LOGICAL(LGT), INTENT(IN) :: mask( :, : )
-END SUBROUTINE masked_swap_rm
-END INTERFACE
-
-!>
-! Generic subroutine for swapping
-! swap_rv and swap_cv have been removed... they belong to EASIFEM_BLAS now
 INTERFACE SWAP
-  MODULE PROCEDURE swap_i,swap_r,swap_c,swap_cm, &
-    & masked_swap_rs, masked_swap_rv, masked_swap_rm
+  MODULE PROCEDURE swap_i
 END INTERFACE
 
 PUBLIC :: SWAP
+
+!----------------------------------------------------------------------------
+!                                                            SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 22 March 2021
+! summary: Swap two real
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_r32(a, b)
+    REAL(Real32), INTENT(INOUT) :: a, b
+  END SUBROUTINE swap_r32
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_r32
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 22 March 2021
+! summary: Swap two real
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_r64(a, b)
+    REAL(Real64), INTENT(INOUT) :: a, b
+  END SUBROUTINE swap_r64
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_r64
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 22 March 2021
+! summary: Swap two vectors of real, if blas95 is used then ignore it.
+
+#ifndef USE_BLAS95
+INTERFACE
+  MODULE PURE SUBROUTINE swap_r32v(a, b)
+    REAL(Real32), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE swap_r32v
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_r32v
+END INTERFACE SWAP
+#endif
+
+!----------------------------------------------------------------------------
+!                                                            SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 22 March 2021
+! summary: Swap two vectors of real
+
+#ifndef USE_BLAS95
+INTERFACE
+  MODULE PURE SUBROUTINE swap_r64v(a, b)
+    REAL(Real64), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE swap_r64v
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_r64v
+END INTERFACE SWAP
+#endif
+
+!----------------------------------------------------------------------------
+!                                                            SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date:         22 March 2021
+! summary:         Subroutine for interchanging two complex numbers
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_c(a, b)
+    COMPLEX(DFPC), INTENT(INOUT) :: a, b
+  END SUBROUTINE swap_c
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_c
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+#ifndef USE_BLAS95
+INTERFACE
+  MODULE PURE SUBROUTINE swap_cv(a, b)
+    COMPLEX(DFPC), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE swap_cv
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_cv
+END INTERFACE SWAP
+#endif
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_cm(a, b)
+    COMPLEX(DFPC), INTENT(INOUT) :: a(:, :), b(:, :)
+  END SUBROUTINE swap_cm
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_cm
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_swap_r32s(a, b, mask)
+    REAL(Real32), INTENT(INOUT) :: a, b
+    LOGICAL(LGT), INTENT(IN) :: mask
+  END SUBROUTINE masked_swap_r32s
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE masked_swap_r32s
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_swap_r64s(a, b, mask)
+    REAL(Real64), INTENT(INOUT) :: a, b
+    LOGICAL(LGT), INTENT(IN) :: mask
+  END SUBROUTINE masked_swap_r64s
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE masked_swap_r64s
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_swap_r32v(a, b, mask)
+    REAL(Real32), INTENT(INOUT) :: a(:), b(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
+  END SUBROUTINE masked_swap_r32v
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE masked_swap_r32v
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_swap_r64v(a, b, mask)
+    REAL(Real64), INTENT(INOUT) :: a(:), b(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
+  END SUBROUTINE masked_swap_r64v
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE masked_swap_r64v
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_swap_r32m(a, b, mask)
+    REAL(Real32), INTENT(INOUT) :: a(:, :), b(:, :)
+    LOGICAL(LGT), INTENT(IN) :: mask(:, :)
+  END SUBROUTINE masked_swap_r32m
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE masked_swap_r32m
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_swap_r64m(a, b, mask)
+    REAL(Real64), INTENT(INOUT) :: a(:, :), b(:, :)
+    LOGICAL(LGT), INTENT(IN) :: mask(:, :)
+  END SUBROUTINE masked_swap_r64m
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE masked_swap_r64m
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-20
+! update: 2021-11-20
+! summary: Swap the index, it is like taking transpose.
+!
+!# Introduction
+!
+! - This routine returns an matrix by chaning the dimensions of input matrix
+! `b`.
+! - This routine does not check the shape, so make sure the shape of
+! `a` and `b` are appropriate,.
+!
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_index1(a, b, i1, i2)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
+     !! the returned array
+    REAL(Real32), INTENT(IN) :: b(:, :)
+     !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+     !! index 1 is swapped with index `i1`
+     !! make sure i1 is lesser than or equal to 2
+    INTEGER(I4B), INTENT(IN) :: i2
+     !! index 2 is swapped with index `i2`
+     !! make sure i2 is less than or equal to 2
+  END SUBROUTINE swap_index1
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_index1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-20
+! update: 2021-11-20
+! summary: Swap the index, it is like taking transpose.
+!
+!# Introduction
+!
+! - This routine returns an matrix by chaning the dimensions of input matrix
+! `b`.
+! - This routine does not check the shape, so make sure the shape of
+! `a` and `b` are appropriate,.
+!
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_index2(a, b, i1, i2)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
+     !! the returned array
+    REAL(Real64), INTENT(IN) :: b(:, :)
+     !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+     !! index 1 is swapped with index `i1`
+     !! make sure i1 is lesser than or equal to 2
+    INTEGER(I4B), INTENT(IN) :: i2
+     !! index 2 is swapped with index `i2`
+     !! make sure i2 is less than or equal to 2
+  END SUBROUTINE swap_index2
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_index2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-20
+! update: 2021-11-20
+! summary: Swap the index, it is like taking transpose.
+!
+!# Introduction
+!
+! - This routine returns an matrix by chaning the dimensions of input matrix
+! `b`.
+! - This routine does not check the shape, so make sure the shape of
+! `a` and `b` are appropriate,.
+!
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_index3(a, b, i1, i2, i3)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :)
+     !! the returned array
+    REAL(Real32), INTENT(IN) :: b(:, :, :)
+     !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+     !! index 1 is swapped with index `i1`
+     !! make sure i1 is lesser than or equal to 3
+    INTEGER(I4B), INTENT(IN) :: i2
+     !! index 2 is swapped with index `i2`
+     !! make sure i2 is less than or equal to 3
+    INTEGER(I4B), INTENT(IN) :: i3
+     !! index 3 is swapped with index `i3`
+     !! make sure i3 is less than or equal to 3
+  END SUBROUTINE swap_index3
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_index3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-20
+! update: 2021-11-20
+! summary: Swap the index, it is like taking transpose.
+!
+!# Introduction
+!
+! - This routine returns an matrix by chaning the dimensions of input matrix
+! `b`.
+! - This routine does not check the shape, so make sure the shape of
+! `a` and `b` are appropriate,.
+!
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_index4(a, b, i1, i2, i3)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :)
+     !! the returned array
+    REAL(Real64), INTENT(IN) :: b(:, :, :)
+     !! input array, it will be untouched
+    INTEGER(I4B), INTENT(IN) :: i1
+     !! index 1 is swapped with index `i1`
+     !! make sure i1 is lesser than or equal to 3
+    INTEGER(I4B), INTENT(IN) :: i2
+     !! index 2 is swapped with index `i2`
+     !! make sure i2 is less than or equal to 3
+    INTEGER(I4B), INTENT(IN) :: i3
+     !! index 3 is swapped with index `i3`
+     !! make sure i3 is less than or equal to 3
+  END SUBROUTINE swap_index4
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_index4
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                             Matmul@Matmul
@@ -2468,12 +2719,11 @@ PUBLIC :: SWAP
 ! `Ans(:,:) = a1(:,:,a)*a2(a)`
 
 INTERFACE
-MODULE PURE FUNCTION matmul_r3_r1( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( :, :, : ), a2( : )
-  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ) )
-END FUNCTION
+  MODULE PURE FUNCTION matmul_r3_r1(a1, a2) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :), a2(:)
+    REAL(DFP) :: Ans(size(a1, 1), size(a1, 2))
+  END FUNCTION
 END INTERFACE
-
 
 !----------------------------------------------------------------------------
 !                                                              Matmul@Matmul
@@ -2489,10 +2739,10 @@ END INTERFACE
 ! `Ans(i,j) = a1(a)*a2(a,i,j)`
 
 INTERFACE
-MODULE PURE FUNCTION matmul_r1_r3( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( : ), a2( :, :, : )
-  REAL( DFP ) :: Ans( size( a2, 2 ), size( a2, 3 ) )
-END FUNCTION
+  MODULE PURE FUNCTION matmul_r1_r3(a1, a2) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a1(:), a2(:, :, :)
+    REAL(DFP) :: Ans(size(a2, 2), size(a2, 3))
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2500,8 +2750,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	matmul for rank2 and rank3 array
+! date:         3 April 2021
+! summary:         matmul for rank2 and rank3 array
 !
 !# Introduction
 !
@@ -2509,10 +2759,10 @@ END INTERFACE
 ! `Ans(i,j,ip) = a1(i,I)*a2(I,j,ip)`
 
 INTERFACE
-MODULE PURE FUNCTION matmul_r2_r3( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( :, : ), a2( :, :, : )
-  REAL( DFP ) :: Ans( size( a1, 1 ), size( a2, 2 ), size( a2, 3 ) )
-END FUNCTION
+  MODULE PURE FUNCTION matmul_r2_r3(a1, a2) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a1(:, :), a2(:, :, :)
+    REAL(DFP) :: Ans(size(a1, 1), size(a2, 2), size(a2, 3))
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2520,18 +2770,18 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	matmul for rank4 and rank1 array
+! date:         3 April 2021
+! summary:         matmul for rank4 and rank1 array
 !
 !# Introduction
 !
 ! `Ans(:,:,:) = a1(:,:,:,a)*a2(a)`
 
 INTERFACE
-MODULE PURE FUNCTION matmul_r4_r1( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( :, :, :, : ), a2( : )
-  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ), size( a1, 3 ) )
-END FUNCTION
+  MODULE PURE FUNCTION matmul_r4_r1(a1, a2) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :, :), a2(:)
+    REAL(DFP) :: Ans(size(a1, 1), size(a1, 2), size(a1, 3))
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2539,18 +2789,18 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	matmul for rank3 and rank2
+! date:         3 April 2021
+! summary:         matmul for rank3 and rank2
 !
 !# Introduction
 ! This fuction performs following task
 ! `Ans(i,j,ip) = a1(i,j,I)*a2(I,ip)`
 
 INTERFACE
-MODULE PURE FUNCTION matmul_r3_r2( a1, a2 ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: a1( :, :, : ), a2( :, : )
-  REAL( DFP ) :: Ans( size( a1, 1 ), size( a1, 2 ), size( a2, 2 ) )
-END FUNCTION
+  MODULE PURE FUNCTION matmul_r3_r2(a1, a2) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :), a2(:, :)
+    REAL(DFP) :: Ans(size(a1, 1), size(a1, 2), size(a2, 2))
+  END FUNCTION
 END INTERFACE
 
 INTERFACE MATMUL
@@ -2565,13 +2815,13 @@ PUBLIC :: MATMUL
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Heap sort
+! date:         22 March 2021
+! summary:         Heap sort
 
 INTERFACE
-MODULE PURE SUBROUTINE HEAPSORT_INT( array )
-  INTEGER( I4B ), INTENT( INOUT ) :: array( : )
-END SUBROUTINE HEAPSORT_INT
+  MODULE PURE SUBROUTINE HEAPSORT_INT(array)
+    INTEGER(I4B), INTENT(INOUT) :: array(:)
+  END SUBROUTINE HEAPSORT_INT
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2579,9 +2829,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE HEAPSORT_REAL( array )
-  REAL( DFP ), INTENT( INOUT ) :: array( : )
-END SUBROUTINE HEAPSORT_REAL
+  MODULE PURE SUBROUTINE HEAPSORT_REAL(array)
+    REAL(DFP), INTENT(INOUT) :: array(:)
+  END SUBROUTINE HEAPSORT_REAL
 END INTERFACE
 
 INTERFACE HeapSort
@@ -2595,10 +2845,10 @@ PUBLIC :: HeapSort
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort1vectR(vect1, low, high)
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE quickSort1vectR
+  MODULE RECURSIVE SUBROUTINE quickSort1vectR(vect1, low, high)
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE quickSort1vectR
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2606,10 +2856,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort1vectI(vect1, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE quickSort1vectI
+  MODULE RECURSIVE SUBROUTINE quickSort1vectI(vect1, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE quickSort1vectI
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2617,11 +2867,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort2vectIR(vect1, vect2, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect2
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+  MODULE RECURSIVE SUBROUTINE quickSort2vectIR(vect1, vect2, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2629,11 +2879,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort2vectII(vect1, vect2, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect2
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+  MODULE RECURSIVE SUBROUTINE quickSort2vectII(vect1, vect2, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2641,11 +2891,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort2vectRI(vect1, vect2, low, high)
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect2
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+  MODULE RECURSIVE SUBROUTINE quickSort2vectRI(vect1, vect2, low, high)
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2653,11 +2903,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort2vectRR(vect1, vect2, low, high)
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect2
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+  MODULE RECURSIVE SUBROUTINE quickSort2vectRR(vect1, vect2, low, high)
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2665,10 +2915,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort3vectIII(vect1, vect2, vect3, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2, vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+ MODULE RECURSIVE SUBROUTINE quickSort3vectIII(vect1, vect2, vect3, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2676,11 +2926,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort3vectIIR(vect1, vect2, vect3, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+ MODULE RECURSIVE SUBROUTINE quickSort3vectIIR(vect1, vect2, vect3, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2688,11 +2938,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort3vectIRR(vect1, vect2, vect3, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect2, vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+ MODULE RECURSIVE SUBROUTINE quickSort3vectIRR(vect1, vect2, vect3, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2700,11 +2950,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort3vectIRI(vect1, vect2, vect3, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect3
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect2
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+ MODULE RECURSIVE SUBROUTINE quickSort3vectIRI(vect1, vect2, vect3, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2712,10 +2962,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort3vectRRR(vect1, vect2, vect3, low, high)
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2, vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+ MODULE RECURSIVE SUBROUTINE quickSort3vectRRR(vect1, vect2, vect3, low, high)
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2723,11 +2973,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort3vectRRI(vect1, vect2, vect3, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect3
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+ MODULE RECURSIVE SUBROUTINE quickSort3vectRRI(vect1, vect2, vect3, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect3
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2735,11 +2985,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort3vectRIR(vect1, vect2, vect3, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect2
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+ MODULE RECURSIVE SUBROUTINE quickSort3vectRIR(vect1, vect2, vect3, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2747,11 +2997,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort3vectRII(vect1, vect2, vect3, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect2, vect3
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+ MODULE RECURSIVE SUBROUTINE quickSort3vectRII(vect1, vect2, vect3, low, high)
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2760,9 +3010,9 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectIIII(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2, vect3, vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3, vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2771,10 +3021,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectIIIR(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2, vect3
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2783,10 +3033,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectIIRI(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2, vect4
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect4
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2795,10 +3045,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectIIRR(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect3, vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect3, vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2807,10 +3057,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectIRRR(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect2, vect3, vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2, vect3, vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2819,10 +3069,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectIRRI(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect4
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect2, vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect4
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2831,10 +3081,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectIRIR(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect3
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect2, vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2, vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2843,10 +3093,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectIRII(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect3, vect4
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect2
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect3, vect4
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2855,9 +3105,9 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectRRRR(vect1, vect2, vect3, vect4, low, high)
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2, vect3, vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3, vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2866,10 +3116,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectRRRI(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect4
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2, vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect4
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2878,10 +3128,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectRRIR(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect3
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2, vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect3
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2890,10 +3140,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectRRII(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect3, vect4
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect2
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect3, vect4
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2902,10 +3152,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectRIRR(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect2
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect3, vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect3, vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2914,10 +3164,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectRIRI(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect2, vect4
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect3
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2, vect4
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2926,10 +3176,10 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectRIIR(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect2, vect3
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1, vect4
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect4
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2938,12 +3188,11 @@ END INTERFACE
 
 INTERFACE
 MODULE RECURSIVE SUBROUTINE quickSort4vectRIII(vect1, vect2, vect3, vect4, low, high)
-  INTEGER( I4B ), DIMENSION(:), INTENT(INOUT ) :: vect2, vect3, vect4
-  REAL( DFP ), DIMENSION(:), INTENT(INOUT ) :: vect1
-  INTEGER( I4B ), INTENT(IN) :: low, high
-END SUBROUTINE
+    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2, vect3, vect4
+    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE
 END INTERFACE
-
 
 INTERFACE QUICKSORT
   MODULE PROCEDURE quickSort1vectI, quickSort1vectR, quickSort2vectII, &
@@ -2965,14 +3214,14 @@ PUBLIC :: QUICKSORT
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Recursive quicksort using binary tree pivot.
+! date:         22 March 2021
+! summary:         Recursive quicksort using binary tree pivot.
 
 INTERFACE
-MODULE PURE RECURSIVE FUNCTION SORT_INT( x ) RESULT( Ans )
-  INTEGER( I4B ), DIMENSION(:), INTENT( IN ) :: x
-  INTEGER( I4B ), DIMENSION( SIZE(x) ) :: Ans
-END FUNCTION SORT_INT
+  MODULE PURE RECURSIVE FUNCTION SORT_INT(x) RESULT(Ans)
+    INTEGER(I4B), DIMENSION(:), INTENT(IN) :: x
+    INTEGER(I4B), DIMENSION(SIZE(x)) :: Ans
+  END FUNCTION SORT_INT
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -2980,14 +3229,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Recursive quicksort using binary tree pivot.
+! date:         22 March 2021
+! summary:         Recursive quicksort using binary tree pivot.
 
 INTERFACE
-MODULE PURE RECURSIVE FUNCTION SORT_REAL( x ) RESULT( Ans )
-  REAL( DFP ), DIMENSION(:), INTENT( IN ) :: x
-  REAL( DFP ), DIMENSION( SIZE(x) ) :: Ans
-END FUNCTION SORT_REAL
+  MODULE PURE RECURSIVE FUNCTION SORT_REAL(x) RESULT(Ans)
+    REAL(DFP), DIMENSION(:), INTENT(IN) :: x
+    REAL(DFP), DIMENSION(SIZE(x)) :: Ans
+  END FUNCTION SORT_REAL
 END INTERFACE
 
 INTERFACE SORT
@@ -3001,11 +3250,11 @@ PUBLIC :: SORT
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_int( default, option ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: default
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: option
-  INTEGER( I4B ) :: Ans
-END FUNCTION input_int
+  MODULE PURE FUNCTION input_int(default, option) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: default
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: option
+    INTEGER(I4B) :: Ans
+  END FUNCTION input_int
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3013,11 +3262,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real64(default,option) RESULT(val)
-  REAL( Real64 ),INTENT(in) :: default
-  REAL( Real64 ),OPTIONAL,INTENT(in)::option
-  REAL( Real64 ) :: val
-END FUNCTION input_Real64
+  MODULE PURE FUNCTION input_Real64(default, option) RESULT(val)
+    REAL(Real64), INTENT(in) :: default
+    REAL(Real64), OPTIONAL, INTENT(in) :: option
+    REAL(Real64) :: val
+  END FUNCTION input_Real64
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3025,11 +3274,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real32(default,option) RESULT(val)
-  REAL( Real32 ),INTENT(in) :: default
-  REAL( Real32 ),OPTIONAL,INTENT(in)::option
-  REAL( Real32 ) :: val
-END FUNCTION input_Real32
+  MODULE PURE FUNCTION input_Real32(default, option) RESULT(val)
+    REAL(Real32), INTENT(in) :: default
+    REAL(Real32), OPTIONAL, INTENT(in) :: option
+    REAL(Real32) :: val
+  END FUNCTION input_Real32
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3037,11 +3286,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_IntVec( default, option ) RESULT( val )
-  INTEGER( I4B ), INTENT( IN ) :: default(:)
-  INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:)
-  INTEGER( I4B ), ALLOCATABLE :: val(:)
-END FUNCTION
+  MODULE PURE FUNCTION input_IntVec(default, option) RESULT(val)
+    INTEGER(I4B), INTENT(IN) :: default(:)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: option(:)
+    INTEGER(I4B), ALLOCATABLE :: val(:)
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3049,11 +3298,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real64vec( default, option ) RESULT( val )
-  REAL( Real64 ), INTENT( IN ) :: default(:)
-  REAL( Real64 ), OPTIONAL,INTENT( IN ) :: option(:)
-  REAL( Real64 ), ALLOCATABLE :: val(:)
-END FUNCTION
+  MODULE PURE FUNCTION input_Real64vec(default, option) RESULT(val)
+    REAL(Real64), INTENT(IN) :: default(:)
+    REAL(Real64), OPTIONAL, INTENT(IN) :: option(:)
+    REAL(Real64), ALLOCATABLE :: val(:)
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3061,11 +3310,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real32vec( default, option ) RESULT( val )
-  REAL( Real32 ), INTENT( IN ) :: default(:)
-  REAL( Real32 ), OPTIONAL,INTENT( IN ) :: option(:)
-  REAL( Real32 ), ALLOCATABLE :: val(:)
-END FUNCTION
+  MODULE PURE FUNCTION input_Real32vec(default, option) RESULT(val)
+    REAL(Real32), INTENT(IN) :: default(:)
+    REAL(Real32), OPTIONAL, INTENT(IN) :: option(:)
+    REAL(Real32), ALLOCATABLE :: val(:)
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3073,11 +3322,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_IntArray(default,option) RESULT(val)
-  INTEGER( I4B ), INTENT( IN ) :: default(:,:)
-  INTEGER( I4B ), OPTIONAL, INTENT( IN )::option(:,:)
-  INTEGER( I4B ), ALLOCATABLE :: val(:,:)
-END FUNCTION
+  MODULE PURE FUNCTION input_IntArray(default, option) RESULT(val)
+    INTEGER(I4B), INTENT(IN) :: default(:, :)
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: option(:, :)
+    INTEGER(I4B), ALLOCATABLE :: val(:, :)
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3085,11 +3334,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real64Array(default,option) RESULT(val)
-  REAL( Real64 ), INTENT( IN ) :: default(:,:)
-  REAL( Real64 ), OPTIONAL,INTENT( IN )::option(:,:)
-  REAL( Real64 ), ALLOCATABLE :: val(:,:)
-END FUNCTION
+  MODULE PURE FUNCTION input_Real64Array(default, option) RESULT(val)
+    REAL(Real64), INTENT(IN) :: default(:, :)
+    REAL(Real64), OPTIONAL, INTENT(IN) :: option(:, :)
+    REAL(Real64), ALLOCATABLE :: val(:, :)
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3097,11 +3346,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_Real32Array(default,option) RESULT(val)
-  REAL( Real32 ), INTENT( IN ) :: default(:,:)
-  REAL( Real32 ), OPTIONAL,INTENT( IN )::option(:,:)
-  REAL( Real32 ), ALLOCATABLE :: val(:,:)
-END FUNCTION
+  MODULE PURE FUNCTION input_Real32Array(default, option) RESULT(val)
+    REAL(Real32), INTENT(IN) :: default(:, :)
+    REAL(Real32), OPTIONAL, INTENT(IN) :: option(:, :)
+    REAL(Real32), ALLOCATABLE :: val(:, :)
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3109,11 +3358,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_String(default,option) RESULT(val)
-  CHARACTER( LEN=* ), INTENT( IN ) :: default
-  CHARACTER( LEN=* ), OPTIONAL, INTENT( IN )::option
-  CHARACTER( 200 )  :: val
-END FUNCTION
+  MODULE PURE FUNCTION input_String(default, option) RESULT(val)
+    CHARACTER(LEN=*), INTENT(IN) :: default
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: option
+    CHARACTER(200) :: val
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3121,11 +3370,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION input_logical(default,option) RESULT(val)
-  LOGICAL( LGT ), INTENT( IN ) :: default
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN )::option
-  LOGICAL( LGT )  :: val
-END FUNCTION
+  MODULE PURE FUNCTION input_logical(default, option) RESULT(val)
+    LOGICAL(LGT), INTENT(IN) :: default
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: option
+    LOGICAL(LGT) :: val
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3133,7 +3382,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE Input
-  MODULE PROCEDURE input_Int,input_Real64, input_Real32, input_IntVec, &
+  MODULE PROCEDURE input_Int, input_Real64, input_Real32, input_IntVec, &
     & input_Real64Vec, input_Real32Vec, input_IntArray, &
     & input_Real64Array, input_Real32Array, input_String, &
     & input_logical
@@ -3146,10 +3395,10 @@ PUBLIC :: Input
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION det_2D( A ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: A( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION det_2D
+  MODULE PURE FUNCTION det_2D(A) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: A(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION det_2D
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3157,10 +3406,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION det_3D( A ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: A( :, :, : )
-  REAL( DFP ), ALLOCATABLE :: Ans( : )
-END FUNCTION det_3D
+  MODULE PURE FUNCTION det_3D(A) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: A(:, :, :)
+    REAL(DFP), ALLOCATABLE :: Ans(:)
+  END FUNCTION det_3D
 END INTERFACE
 
 INTERFACE Det
@@ -3174,10 +3423,10 @@ PUBLIC :: DET
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Inv_2D( invA, A )
-  REAL( DFP ), INTENT( INOUT ) :: invA( :, : )
-  REAL( DFP ), INTENT( IN ) :: A( :, : )
-END SUBROUTINE
+  MODULE PURE SUBROUTINE Inv_2D(invA, A)
+    REAL(DFP), INTENT(INOUT) :: invA(:, :)
+    REAL(DFP), INTENT(IN) :: A(:, :)
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3185,14 +3434,14 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE Inv_3D( invA, A )
-  REAL( DFP ), INTENT( INOUT ) :: invA( :, :, : )
-  REAL( DFP ), INTENT( IN ) :: A( :, :, : )
-END SUBROUTINE
+  MODULE PURE SUBROUTINE Inv_3D(invA, A)
+    REAL(DFP), INTENT(INOUT) :: invA(:, :, :)
+    REAL(DFP), INTENT(IN) :: A(:, :, :)
+  END SUBROUTINE
 END INTERFACE
 
 INTERFACE Inv
-    MODULE PROCEDURE Inv_2D, Inv_3D
+  MODULE PROCEDURE Inv_2D, Inv_3D
 END INTERFACE Inv
 
 PUBLIC :: INV
@@ -3206,10 +3455,10 @@ PUBLIC :: INV
 ! Convert degrees into radian
 
 INTERFACE
-MODULE PURE FUNCTION radian_dfp( deg ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: deg
-  REAL( DFP ) :: Ans
-END FUNCTION
+  MODULE PURE FUNCTION radian_dfp(deg) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: deg
+    REAL(DFP) :: Ans
+  END FUNCTION
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -3221,10 +3470,10 @@ END INTERFACE
 ! Converts degrees into radian
 
 INTERFACE
-MODULE PURE FUNCTION radian_int( deg ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: deg
-  REAL( DFP ) :: Ans
-END FUNCTION
+  MODULE PURE FUNCTION radian_int(deg) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: deg
+    REAL(DFP) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE radian
@@ -3243,10 +3492,10 @@ PUBLIC :: radian
 ! Belongs to `Degrees`
 
 INTERFACE
-MODULE PURE FUNCTION degrees_dfp( rad ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: rad
-  REAL( DFP ) :: Ans
-END FUNCTION
+  MODULE PURE FUNCTION degrees_dfp(rad) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: rad
+    REAL(DFP) :: Ans
+  END FUNCTION
 END INTERFACE
 
 INTERFACE Degrees
@@ -3255,14 +3504,13 @@ END INTERFACE Degrees
 
 PUBLIC :: Degrees
 
-
 !----------------------------------------------------------------------------
 !                                                                 @MISC
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	This subroutine search the location of nearest point to x in the array of coordinates; Array
+! date:         3 April 2021
+! summary:         This subroutine search the location of nearest point to x in the array of coordinates; Array
 !
 !# Introduction
 !
@@ -3282,12 +3530,12 @@ PUBLIC :: Degrees
 !```
 
 INTERFACE
-MODULE FUNCTION Loc_Nearest_Point( Array, x )  RESULT( id )
-  REAL( DFP ), INTENT( IN ) :: Array( :, : )
+  MODULE FUNCTION Loc_Nearest_Point(Array, x) RESULT(id)
+    REAL(DFP), INTENT(IN) :: Array(:, :)
   !! Nodal coordinates in XiJ format
-  REAL( DFP ), INTENT( IN ) :: x( : )
-  INTEGER( I4B ) :: id
-END FUNCTION
+    REAL(DFP), INTENT(IN) :: x(:)
+    INTEGER(I4B) :: id
+  END FUNCTION
 END INTERFACE
 
 INTERFACE LOC_NearestPoint
@@ -3307,13 +3555,13 @@ PUBLIC :: SearchNearestCoord
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	This subroutine run a system commoand on terminal
+! date:         3 April 2021
+! summary:         This subroutine run a system commoand on terminal
 
 INTERFACE
-MODULE SUBROUTINE exe_cmd( CMD, Str )
-  CHARACTER( LEN = * ), INTENT( IN ) :: CMD, Str
-END SUBROUTINE
+  MODULE SUBROUTINE exe_cmd(CMD, Str)
+    CHARACTER(LEN=*), INTENT(IN) :: CMD, Str
+  END SUBROUTINE
 END INTERFACE
 
 INTERFACE ExecuteCommand
@@ -3327,9 +3575,9 @@ PUBLIC :: ExecuteCommand
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION getUnitNo_1( ) RESULT( ans )
-  INTEGER( I4B ) :: ans
-END FUNCTION getUnitNo_1
+  MODULE FUNCTION getUnitNo_1() RESULT(ans)
+    INTEGER(I4B) :: ans
+  END FUNCTION getUnitNo_1
 END INTERFACE
 
 INTERFACE getUnitNo
@@ -3343,14 +3591,14 @@ PUBLIC :: getUnitNo
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
+! date:         3 April 2021
 ! summary: This FUNCTION computes the factorial of an INTEGER
 
 INTERFACE
-MODULE RECURSIVE FUNCTION Factorial( N ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: N
-  INTEGER( I4B ) :: Ans
-END FUNCTION
+  MODULE RECURSIVE FUNCTION Factorial(N) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: N
+    INTEGER(I4B) :: Ans
+  END FUNCTION
 END INTERFACE
 
 PUBLIC :: Factorial
@@ -3360,14 +3608,14 @@ PUBLIC :: Factorial
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	Convert INTEGER  to  string
+! date:         3 April 2021
+! summary:         Convert INTEGER  to  string
 
 INTERFACE
-MODULE PURE FUNCTION Int2Str( I )
-  INTEGER( I4B ), INTENT( IN ) :: I
-  CHARACTER( LEN = 15 ) :: Int2Str
-END FUNCTION
+  MODULE PURE FUNCTION Int2Str(I)
+    INTEGER(I4B), INTENT(IN) :: I
+    CHARACTER(LEN=15) :: Int2Str
+  END FUNCTION
 END INTERFACE
 
 PUBLIC :: Int2Str
@@ -3377,17 +3625,17 @@ PUBLIC :: Int2Str
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION SP2Str( I )
-  REAL( SP ), INTENT( IN ) :: I
-  CHARACTER( LEN = 20 ) :: SP2Str
-END FUNCTION
+  MODULE FUNCTION SP2Str(I)
+    REAL(SP), INTENT(IN) :: I
+    CHARACTER(LEN=20) :: SP2Str
+  END FUNCTION
 END INTERFACE
 
 INTERFACE
-MODULE FUNCTION DP2Str( I )
-  REAL( DP ), INTENT( IN ) :: I
-  CHARACTER( LEN = 20 ) :: DP2Str
-END FUNCTION
+  MODULE FUNCTION DP2Str(I)
+    REAL(DP), INTENT(IN) :: I
+    CHARACTER(LEN=20) :: DP2Str
+  END FUNCTION
 END INTERFACE
 
 INTERFACE Real2Str
@@ -3401,26 +3649,26 @@ PUBLIC :: Real2Str
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION arth_r(first,increment,n)
-  REAL( SP ), INTENT( IN ) :: first,increment
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( SP ) :: arth_r( n )
-END FUNCTION
+  MODULE PURE FUNCTION arth_r(first, increment, n)
+    REAL(SP), INTENT(IN) :: first, increment
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(SP) :: arth_r(n)
+  END FUNCTION
 END INTERFACE
 
 INTERFACE
-MODULE PURE FUNCTION arth_d(first,increment,n)
-  REAL( DP ), INTENT(IN) :: first,increment
-  INTEGER( I4B ), INTENT(IN) :: n
-  REAL( DP ) :: arth_d( n )
-END FUNCTION
+  MODULE PURE FUNCTION arth_d(first, increment, n)
+    REAL(DP), INTENT(IN) :: first, increment
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DP) :: arth_d(n)
+  END FUNCTION
 END INTERFACE
 
 INTERFACE
-MODULE PURE FUNCTION arth_i(first,increment,n)
-  INTEGER( I4B ), INTENT( IN ) :: first,increment,n
-  INTEGER( I4B ) :: arth_i( n )
-END FUNCTION
+  MODULE PURE FUNCTION arth_i(first, increment, n)
+    INTEGER(I4B), INTENT(IN) :: first, increment, n
+    INTEGER(I4B) :: arth_i(n)
+  END FUNCTION
 END INTERFACE
 
 INTERFACE ARTH
@@ -3434,24 +3682,24 @@ PUBLIC :: ARTH
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION outerdIFf_r(a,b)
-  REAL( SP ), DIMENSION(:), INTENT(IN) :: a,b
-  REAL( SP ), DIMENSION(size(a),size(b)) :: outerdIFf_r
-END FUNCTION
+  MODULE PURE FUNCTION outerdIFf_r(a, b)
+    REAL(SP), DIMENSION(:), INTENT(IN) :: a, b
+    REAL(SP), DIMENSION(size(a), size(b)) :: outerdIFf_r
+  END FUNCTION
 END INTERFACE
 
 INTERFACE
-MODULE PURE FUNCTION outerdIFf_d(a,b)
-  REAL( DP ), DIMENSION(:), INTENT(IN) :: a,b
-  REAL( DP ), DIMENSION(size(a),size(b)) :: outerdIFf_d
-END FUNCTION
+  MODULE PURE FUNCTION outerdIFf_d(a, b)
+    REAL(DP), DIMENSION(:), INTENT(IN) :: a, b
+    REAL(DP), DIMENSION(size(a), size(b)) :: outerdIFf_d
+  END FUNCTION
 END INTERFACE
 
 INTERFACE
-MODULE PURE FUNCTION outerdIFf_i(a,b)
-  INTEGER( I4B ), DIMENSION(:), INTENT(IN) :: a,b
-  INTEGER( I4B ), DIMENSION(size(a),size(b)) :: outerdIFf_i
-END FUNCTION
+  MODULE PURE FUNCTION outerdIFf_i(a, b)
+    INTEGER(I4B), DIMENSION(:), INTENT(IN) :: a, b
+    INTEGER(I4B), DIMENSION(size(a), size(b)) :: outerdIFf_i
+  END FUNCTION
 END INTERFACE
 
 INTERFACE outerDIFF
@@ -3465,21 +3713,21 @@ PUBLIC :: outerDIFF
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION imaxloc_r(arr)
-  REAL( DFP ), INTENT( IN ) :: arr( : )
-  INTEGER( I4B ) :: imaxloc_r
-END FUNCTION
+  MODULE PURE FUNCTION imaxloc_r(arr)
+    REAL(DFP), INTENT(IN) :: arr(:)
+    INTEGER(I4B) :: imaxloc_r
+  END FUNCTION
 END INTERFACE
 
 INTERFACE
-MODULE PURE FUNCTION imaxloc_i(iarr)
-  INTEGER( I4B ), INTENT( IN ) :: iarr( : )
-  INTEGER( I4B ) :: imaxloc_i
-END FUNCTION
+  MODULE PURE FUNCTION imaxloc_i(iarr)
+    INTEGER(I4B), INTENT(IN) :: iarr(:)
+    INTEGER(I4B) :: imaxloc_i
+  END FUNCTION
 END INTERFACE
 
 INTERFACE IMAXLOC
-  MODULE PROCEDURE imaxloc_r,imaxloc_i
+  MODULE PROCEDURE imaxloc_r, imaxloc_i
 END INTERFACE
 
 PUBLIC :: IMAXLOC
@@ -3489,10 +3737,10 @@ PUBLIC :: IMAXLOC
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION iminloc_r(arr)
-  REAL( DFP ), INTENT( IN ) :: arr( : )
-  INTEGER( I4B ) :: iminloc_r
-END FUNCTION
+  MODULE FUNCTION iminloc_r(arr)
+    REAL(DFP), INTENT(IN) :: arr(:)
+    INTEGER(I4B) :: iminloc_r
+  END FUNCTION
 END INTERFACE
 
 INTERFACE IMINLOC
@@ -3506,7 +3754,7 @@ PUBLIC :: IMINLOC
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 	22 Aug 2021
+! date:         22 Aug 2021
 ! summary: This function returns a unique number for a given string
 !
 !# Introduction
@@ -3516,10 +3764,10 @@ PUBLIC :: IMINLOC
 !  https://cp-algorithms.com/string/string-hashing.html
 
 INTERFACE
-MODULE FUNCTION StringToUID_PolyRoll( charVar ) RESULT( Ans )
-  CHARACTER( LEN = * ), INTENT( IN ) :: charVar
-  INTEGER( I4B ) :: ans
-END FUNCTION StringToUID_PolyRoll
+  MODULE FUNCTION StringToUID_PolyRoll(charVar) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: charVar
+    INTEGER(I4B) :: ans
+  END FUNCTION StringToUID_PolyRoll
 END INTERFACE
 
 INTERFACE StringToUID
