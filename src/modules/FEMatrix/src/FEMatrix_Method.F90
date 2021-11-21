@@ -26,7 +26,7 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                       MassMatrix@MassMatrix
+!                                              MassMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -56,7 +56,7 @@ END FUNCTION Space_MassMatrix
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                                 MassMatrix
+!                                              MassMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -69,10 +69,10 @@ END INTERFACE
 !  finite element variable. Following expression can be evaluated
 !
 ! $$\int_{\Omega } N^{I}T_{a}\rho N^{J}T_{b}d\Omega$$
-! $$\iint \frac{\partial N^{I}T_{a}}{\partial t} \rho N^{J}T_{b}d\Omega dt$$
-! $$\iint \frac{\partial N^{I}T_{a}}{\partial t} \rho
+! $$\int \frac{\partial N^{I}T_{a}}{\partial t} \rho N^{J}T_{b}d\Omega dt$$
+! $$\int \frac{\partial N^{I}T_{a}}{\partial t} \rho
 ! \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
-! $$\iint N^{I}T_{a}\rho \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
+! $$\int N^{I}T_{a}\rho \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
 !
 
 INTERFACE
@@ -82,11 +82,15 @@ MODULE PURE FUNCTION st_massMatrix_a( Test, Trial, Rho, Term1, Term2, nCopy )&
   CLASS( STElemshapeData_ ), INTENT( IN ) :: Trial(:)
   TYPE( FEVariable_ ), OPTIONAL, INTENT( IN ) :: Rho
   INTEGER( I4B ), INTENT( IN ) :: Term1
-    !! If 0 then time derivative in first term true, otherwise false
+    !! If 0 then time derivative in first term is absent
+    !! If 1 then first order time derivative is present in first term
   INTEGER( I4B ), INTENT( IN ) :: Term2
-    !! If 0 then time derivative in second term true, otherwise false
+    !! If 0 then time derivative in second term absent
+    !! If 1 then first order time derivative is present in the second term
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
+    !! number of diagonal copies
   REAL( DFP ), ALLOCATABLE :: Ans( :, : )
+    !! returned finite element matrix.
 END FUNCTION st_massMatrix_a
 END INTERFACE
 
