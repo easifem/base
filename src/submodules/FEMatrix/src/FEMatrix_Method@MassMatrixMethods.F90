@@ -24,85 +24,84 @@ CONTAINS
 !                                                                MassMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Space_MassMatrix
-! Define internal variable
-REAL(DFP), ALLOCATABLE :: RealVal(:), RhoBar(:)
+MODULE PROCEDURE MassMatrix_1
+!! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:), rhobar(:)
 INTEGER(I4B) :: nns1, nns2, nips, ips
 LOGICAL(LGT) :: isNodal
-  !! main
-nns1 = SIZE(Test%N, 1)
-nns2 = SIZE(Trial%N, 1)
-ALLOCATE (Ans(nns1, nns2))
-Ans = 0.0_DFP
-nips = SIZE(Trial%N, 2)
-ALLOCATE (RhoBar(nips))
+!! main
+nns1 = SIZE(test%N, 1)
+nns2 = SIZE(trial%N, 1)
+ALLOCATE (ans(nns1, nns2))
+ans = 0.0_DFP
+nips = SIZE(trial%N, 2)
+ALLOCATE (rhobar(nips))
   !!
   !! making rho at quadrature
   !!
-IF (PRESENT(Rho)) THEN
-  CALL getInterpolation(obj=Trial, Val=Rho, Interpol=RhoBar)
+IF (PRESENT(rho)) THEN
+  CALL getInterpolation(obj=trial, val=rho, interpol=rhobar)
 ELSE
-  RhoBar = 1.0_DFP
+  rhobar = 1.0_DFP
 END IF
   !!
   !! performing scalar computation
   !!
-RealVal = Trial%Js * Trial%Ws * Trial%Thickness * RhoBar
-DEALLOCATE (RhoBar)
+realval = trial%js * trial%ws * trial%thickness * rhobar
   !!
   !! performing outerproduct
   !!
 DO ips = 1, nips
-  Ans = Ans + &
-    & OUTERPROD(a=Test%N(:, ips), b=Trial%N(:, ips)) &
-    & * RealVal(ips)
+  ans = ans + &
+    & OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips)) &
+    & * realval(ips)
 END DO
-IF (ALLOCATED(RealVal)) DEALLOCATE (RealVal)
   !!
   !! making n-diagonal copies
   !!
 IF (PRESENT(nCopy)) THEN
-  CALL MakeDiagonalCopies(Ans, nCopy)
+  CALL MakeDiagonalCopies(ans, nCopy)
 END IF
-
-END PROCEDURE Space_MassMatrix
+DEALLOCATE (rhobar)
+IF (ALLOCATED(realval)) DEALLOCATE (realval)
+END PROCEDURE MassMatrix_1
 
 !----------------------------------------------------------------------------
 !                                                                  MassMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE st_massMatrix_a
+MODULE PROCEDURE MassMatrix_2
 REAL(DFP), ALLOCATABLE :: Mat4(:, :, :, :)
-REAL(DFP), ALLOCATABLE :: RhoBar(:, :)
-REAL(DFP), ALLOCATABLE ::RealVal(:)
+REAL(DFP), ALLOCATABLE :: rhobar(:, :)
+REAL(DFP), ALLOCATABLE ::realval(:)
 INTEGER(I4B) :: a, b, ipt, ips
 !! main
-CALL Reallocate( Mat4, SIZE(Test(1)%N, 1),  SIZE(Trial(1)%N, 1), &
-     & SIZE(Test(1)%T), SIZE(Trial(1)%T) )
-CALL Reallocate( RhoBar, SIZE(Trial(1)%N, 2), SIZE(Trial) )
+CALL Reallocate( Mat4, SIZE(test(1)%N, 1),  SIZE(trial(1)%N, 1), &
+     & SIZE(test(1)%T), SIZE(trial(1)%T) )
+CALL Reallocate( rhobar, SIZE(trial(1)%N, 2), SIZE(trial) )
 !!
-!! get Rho at the quadrature points
+!! get rho at the quadrature points
 !!
-IF (PRESENT(Rho)) THEN
-  CALL getInterpolation(obj=Trial, Val=Rho, Interpol=RhoBar)
+IF (PRESENT(rho)) THEN
+  CALL getInterpolation(obj=trial, val=rho, interpol=rhobar)
 ELSE
-  RhoBar = 1.0_DFP
+  rhobar = 1.0_DFP
 END IF
 !!
 !! $$\int_{\Omega } N^{I}T_{a}\rho N^{J}T_{b}d\Omega$$
 !!
 IF (Term1 .EQ. 0 .AND. Term2 .EQ. 0) THEN
-  DO ipt = 1, SIZE(Trial)
-    RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
-     & * RhoBar(:, ipt) * Trial(ipt)%Wt * Trial(ipt)%Jt
-    DO ips = 1, SIZE(Trial(1)%N, 2)
-      DO b = 1, SIZE(Trial(1)%T)
-        DO a = 1, SIZE(Test(1)%T)
+  DO ipt = 1, SIZE(trial)
+    realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
+     & * rhobar(:, ipt) * trial(ipt)%Wt * trial(ipt)%Jt
+    DO ips = 1, SIZE(trial(1)%N, 2)
+      DO b = 1, SIZE(trial(1)%T)
+        DO a = 1, SIZE(test(1)%T)
           Mat4(:, :, a, b) = Mat4(:, :, a, b) &
-            & + RealVal(ips) &
-            & * Test(ipt)%T(a) &
-            & * Trial(ipt)%T(b) &
-            & * OUTERPROD(a=Test(ipt)%N(:, ips), b=Trial(ipt)%N(:, ips))
+            & + realval(ips) &
+            & * test(ipt)%T(a) &
+            & * trial(ipt)%T(b) &
+            & * OUTERPROD(a=test(ipt)%N(:, ips), b=trial(ipt)%N(:, ips))
         END DO
       END DO
     END DO
@@ -112,16 +111,16 @@ IF (Term1 .EQ. 0 .AND. Term2 .EQ. 0) THEN
 !! \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
 !!
 ELSE IF (Term1 .EQ. 1 .AND. Term2 .EQ. 1) THEN
-  DO ipt = 1, SIZE(Trial)
-    RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
-     & * RhoBar(:, ipt) * Trial(ipt)%Wt * Trial(ipt)%Jt
-    DO ips = 1, SIZE(Trial(1)%N, 2)
-      DO b = 1, SIZE(Trial(1)%T)
-        DO a = 1, SIZE(Test(1)%T)
+  DO ipt = 1, SIZE(trial)
+    realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
+     & * rhobar(:, ipt) * trial(ipt)%Wt * trial(ipt)%Jt
+    DO ips = 1, SIZE(trial(1)%N, 2)
+      DO b = 1, SIZE(trial(1)%T)
+        DO a = 1, SIZE(test(1)%T)
           Mat4(:, :, a, b) = Mat4(:, :, a, b) &
-            & + RealVal(ips) &
-            & * OUTERPROD(a=Test(ipt)%dNTdt(:, a, ips), &
-                & b=Trial(ipt)%dNTdt(:, b, ips))
+            & + realval(ips) &
+            & * OUTERPROD(a=test(ipt)%dNTdt(:, a, ips), &
+                & b=trial(ipt)%dNTdt(:, b, ips))
         END DO
       END DO
     END DO
@@ -130,17 +129,17 @@ ELSE IF (Term1 .EQ. 1 .AND. Term2 .EQ. 1) THEN
 !! $$\int \frac{\partial N^{I}T_{a}}{\partial t} \rho N^{J}T_{b}d\Omega dt$$
 !!
 ELSE IF (Term1 .EQ. 0 .AND. Term2 .EQ. 1) THEN
-  DO ipt = 1, SIZE(Trial)
-    RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
-     & * RhoBar(:, ipt) * Trial(ipt)%Wt * Trial(ipt)%Jt
-    DO ips = 1, SIZE(Trial(1)%N, 2)
-      DO b = 1, SIZE(Trial(1)%T)
-        DO a = 1, SIZE(Test(1)%T)
+  DO ipt = 1, SIZE(trial)
+    realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
+     & * rhobar(:, ipt) * trial(ipt)%Wt * trial(ipt)%Jt
+    DO ips = 1, SIZE(trial(1)%N, 2)
+      DO b = 1, SIZE(trial(1)%T)
+        DO a = 1, SIZE(test(1)%T)
           Mat4(:, :, a, b) = Mat4(:, :, a, b) &
-            & + RealVal(ips) &
-            & * Test(ipt)%T(a) &
-            & * OUTERPROD(a=Test(ipt)%N(:, ips), &
-                & b=Trial(ipt)%dNTdt(:, b, ips))
+            & + realval(ips) &
+            & * test(ipt)%T(a) &
+            & * OUTERPROD(a=test(ipt)%N(:, ips), &
+                & b=trial(ipt)%dNTdt(:, b, ips))
         END DO
       END DO
     END DO
@@ -149,17 +148,17 @@ ELSE IF (Term1 .EQ. 0 .AND. Term2 .EQ. 1) THEN
 !! $$\int N^{I}T_{a}\rho \frac{\partial N^{J}T_{b}}{\partial t} d\Omega dt$$
 !!
 ELSE IF (Term1 .EQ. 1 .AND. Term2 .EQ. 0) THEN
-  DO ipt = 1, SIZE(Trial)
-    RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
-     & * RhoBar(:, ipt) * Trial(ipt)%Wt * Trial(ipt)%Jt
-    DO ips = 1, SIZE(Trial(1)%N, 2)
-      DO b = 1, SIZE(Trial(1)%T)
-        DO a = 1, SIZE(Test(1)%T)
+  DO ipt = 1, SIZE(trial)
+    realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
+     & * rhobar(:, ipt) * trial(ipt)%Wt * trial(ipt)%Jt
+    DO ips = 1, SIZE(trial(1)%N, 2)
+      DO b = 1, SIZE(trial(1)%T)
+        DO a = 1, SIZE(test(1)%T)
           Mat4(:, :, a, b) = Mat4(:, :, a, b) &
-            & + RealVal(ips) &
-            & * Trial(ipt)%T(b) &
-            & * OUTERPROD(a=Test(ipt)%dNTdt(:, a, ips), &
-                & b=Trial(ipt)%N(:, ips))
+            & + realval(ips) &
+            & * trial(ipt)%T(b) &
+            & * OUTERPROD(a=test(ipt)%dNTdt(:, a, ips), &
+                & b=trial(ipt)%N(:, ips))
         END DO
       END DO
     END DO
@@ -168,16 +167,16 @@ END IF
 !!
 !! Convert mat4 to mat2
 !!
-CALL Convert(From=Mat4, To=Ans)
+CALL Convert(From=Mat4, To=ans)
 !!
 !! Make diagonal copies
 !!
 IF (PRESENT(nCopy)) THEN
-  CALL MakeDiagonalCopies(Ans, nCopy)
+  CALL MakeDiagonalCopies(ans, nCopy)
 END IF
 !!
-DEALLOCATE (Mat4, RhoBar, RealVal)
-END PROCEDURE st_massMatrix_a
+DEALLOCATE (Mat4, rhobar, realval)
+END PROCEDURE MassMatrix_2
 
 !----------------------------------------------------------------------------
 !

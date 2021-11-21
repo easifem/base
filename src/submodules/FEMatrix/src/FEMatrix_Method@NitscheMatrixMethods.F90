@@ -44,12 +44,12 @@ SELECT CASE (Lambda%VarType)
 CASE (Constant)
 
   ALLOCATE (LamBar(nips))
-  LamBar = getValues(Lambda, TypeFEVariableScalar, &
+  LamBar = Get(Lambda, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = getValues(Lambda, TypeFEVariableScalar, &
+  RealVal = Get(Lambda, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
   IF (isLamNod) THEN
@@ -63,12 +63,12 @@ SELECT CASE (Mu%VarType)
 CASE (Constant)
 
   ALLOCATE (MuBar(nips))
-  MuBar = getValues(Mu, TypeFEVariableScalar, &
+  MuBar = Get(Mu, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = getValues(Mu, TypeFEVariableScalar, &
+  RealVal = Get(Mu, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
   IF (isMuNod) THEN
@@ -82,7 +82,7 @@ SELECT CASE (Evec%VarType)
 CASE (Constant)
 
   ALLOCATE (EvecBar(nsd, nips))
-  EvecBar(:, 1) = getValues(Evec, TypeFEVariableVector, &
+  EvecBar(:, 1) = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
     EvecBar(:, i) = EvecBar(:, 1)
@@ -90,7 +90,7 @@ CASE (Constant)
 
 CASE (Space)
 
-  Ans = getValues(Evec, TypeFEVariableVector, &
+  Ans = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
 
   IF (isEvecNod) THEN
@@ -155,7 +155,7 @@ SELECT CASE (Evec%VarType)
 CASE (Constant)
 
   ALLOCATE (EvecBar(nsd, nips))
-  EvecBar(1, :) = getValues(Evec, TypeFEVariableVector, &
+  EvecBar(1, :) = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
     EvecBar(i, :) = EvecBar(1, :)
@@ -163,7 +163,7 @@ CASE (Constant)
 
 CASE (Space)
 
-  Ans = getValues(Evec, TypeFEVariableVector, &
+  Ans = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
 
   IF (isEvecNod) THEN
@@ -265,12 +265,12 @@ SELECT CASE (Lambda%VarType)
 CASE (Constant)
 
   ALLOCATE (LamBar(nips))
-  LamBar = getValues(Lambda, TypeFEVariableScalar, &
+  LamBar = Get(Lambda, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = getValues(Lambda, TypeFEVariableScalar, &
+  RealVal = Get(Lambda, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
   IF (Lambda%DefineOn .EQ. Nodal) THEN
@@ -284,12 +284,12 @@ SELECT CASE (Mu%VarType)
 CASE (Constant)
 
   ALLOCATE (MuBar(nips))
-  MuBar = getValues(Mu, TypeFEVariableScalar, &
+  MuBar = Get(Mu, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = getValues(Mu, TypeFEVariableScalar, &
+  RealVal = Get(Mu, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
   IF (Mu%DefineOn .EQ. Nodal) THEN
@@ -354,12 +354,12 @@ SELECT CASE (Alpha%VarType)
 CASE (Constant)
 
   ALLOCATE (AlphaBar(nips))
-  AlphaBar = getValues(Alpha, TypeFEVariableScalar, &
+  AlphaBar = Get(Alpha, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = getValues(Alpha, TypeFEVariableScalar, &
+  RealVal = Get(Alpha, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
   IF (isAlphaNod) THEN
@@ -373,7 +373,7 @@ SELECT CASE (Evec%VarType)
 CASE (Constant)
 
   ALLOCATE (EvecBar(nsd, nips))
-  EvecBar(1, :) = getValues(Evec, TypeFEVariableVector, &
+  EvecBar(1, :) = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
     EvecBar(i, :) = EvecBar(1, :)
@@ -381,7 +381,7 @@ CASE (Constant)
 
 CASE (Space)
 
-  Ans = getValues(Evec, TypeFEVariableVector, &
+  Ans = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
 
   IF (isEvecNod) THEN
@@ -437,7 +437,7 @@ SELECT CASE (Evec%VarType)
 CASE (Constant)
 
   ALLOCATE (EvecBar(nsd, nips))
-  EvecBar(1, :) = getValues(Evec, TypeFEVariableVector, &
+  EvecBar(1, :) = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
     EvecBar(i, :) = EvecBar(1, :)
@@ -445,7 +445,7 @@ CASE (Constant)
 
 CASE (Space)
 
-  Ans = getValues(Evec, TypeFEVariableVector, &
+  Ans = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
 
   IF (isEvecNod) THEN

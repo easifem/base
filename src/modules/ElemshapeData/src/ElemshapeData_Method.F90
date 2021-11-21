@@ -1657,52 +1657,59 @@ PUBLIC :: getSpatialGradient
 !                                            getProjectionOfdNdXt@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine computes the projection of dNdXt on a vector
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-21
+! update: 2021-11-21
+! summary: Computes $\frac{dN}{dx_k}c_k$
+!
+!# Introduction
 !
 ! This subroutine computes the projcetion cdNdXt on the vector `Val`
 ! Here the vector `Val` is constant in space and time
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
-!
-  MODULE PURE SUBROUTINE getProjectionOfdNdXt_spacevalues(obj, cdNdXt, Val)
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetProjectionOfdNdXt_1(obj, cdNdXt, Val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
     REAL(DFP), INTENT(IN) :: Val(:)
     !! constant value of vector
-  END SUBROUTINE getProjectionOfdNdXt_spacevalues
+  END SUBROUTINE elemsd_GetProjectionOfdNdXt_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                            getProjectionOfdNdXt@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine computes the projection of dNdXt on a vector
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-21
+! update: 2021-11-21
+! summary: computes the projection of dNdXt on a vector
+!
+!# Introduction
 !
 ! This subroutine computes the projcetion cdNdXt on the vector `Val`
 ! Here the vector `Val` is constant in space and time
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
-!
-  MODULE PURE SUBROUTINE getProjectionOfdNdXt_fevar(obj, cdNdXt, Val)
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetProjectionOfdNdXt_2(obj, cdNdXt, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! ElemshapeData object
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
-    CLASS(FEVariable_), INTENT(IN) :: Val
+    CLASS(FEVariable_), INTENT(IN) :: val
     !! constant value of vector
-  END SUBROUTINE getProjectionOfdNdXt_fevar
+  END SUBROUTINE elemsd_GetProjectionOfdNdXt_2
 END INTERFACE
 
 INTERFACE getProjectionOfdNdXt
   MODULE PROCEDURE &
-    & getProjectionOfdNdXt_spacevalues,&
-    & getProjectionOfdNdXt_fevar
+    & elemsd_GetProjectionOfdNdXt_1,&
+    & elemsd_GetProjectionOfdNdXt_2
 END INTERFACE getProjectionOfdNdXt
 
 PUBLIC :: getProjectionOfdNdXt
@@ -1721,11 +1728,11 @@ INTERFACE
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 !
-  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_constvector(obj, cdNTdXt, Val)
+  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_constvector(obj, cdNTdXt, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :)
     !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
-    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), INTENT(IN) :: val(:)
     !! constant value of vector
   END SUBROUTINE getProjectionOfdNTdXt_constvector
 END INTERFACE
@@ -1744,11 +1751,11 @@ INTERFACE
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 !
-  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_fevar(obj, cdNTdXt, Val)
+  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_fevar(obj, cdNTdXt, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :)
     !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
-    TYPE(FEVariable_), INTENT(IN) :: Val
+    TYPE(FEVariable_), INTENT(IN) :: val
     !! constant value of vector
   END SUBROUTINE getProjectionOfdNTdXt_fevar
 END INTERFACE
@@ -1779,10 +1786,10 @@ INTERFACE
 !  $$\nabla \vert phi \vert / \vert (\nabla \vert phi \vert) \vert$$
 !
 
-  MODULE PURE SUBROUTINE getUnitNormal_scalar(obj, R, Val)
+  MODULE PURE SUBROUTINE getUnitNormal_scalar(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), INTENT(IN) :: val(:)
   END SUBROUTINE getUnitNormal_scalar
 END INTERFACE
 
@@ -1791,10 +1798,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE getUnitNormal_vector(obj, R, Val)
+  MODULE PURE SUBROUTINE getUnitNormal_vector(obj, R, val)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
   END SUBROUTINE getUnitNormal_vector
 END INTERFACE
 

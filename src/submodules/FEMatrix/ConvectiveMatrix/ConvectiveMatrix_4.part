@@ -1,0 +1,52 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   ConvectiveMatrix_4.part
+!                   Last Update :   Nov-19-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    ConvectiveMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getConvectiveMatrix_4
+!------------------------------------------------------------------------------
+
+SUBROUTINE getConvectiveMatrix_4( Obj, C, Term1, Term2, nCopy )
+
+  !.    .    .    .    .    .    .    .    .    .    .    .    .    .    .    .
+  !       1.  -   Returns mass matrix; C is a 2D array of Space Nodal Values
+  !               The first index is for spatial component and second index is 
+  !               is for spatial nodal values.
+  !.    .    .    .    .    .    .    .    .    .    .    .    .    .    .    .
+
+    ! Define intent of dummy variables
+#ifdef SpaceMat
+    CLASS( SpaceMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+    CLASS( ConvectiveMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+  REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: C
+  INTEGER( I4B ), INTENT( IN ) :: Term1, Term2, nCopy  
+
+  CALL Obj % getConvectiveMatrix( C, Term1, Term2 )
+  CALL Obj % MakeDiagonalCopies( nCopy )
+  
+END SUBROUTINE getConvectiveMatrix_4
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FEVariable_Method) GetMethod
+SUBMODULE(FEVariable_Method) GetMethods
 IMPLICIT NONE
 CONTAINS
 
@@ -24,28 +24,28 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Size_obj
-  SELECT CASE( obj%Rank )
-  CASE( Scalar )
-    Ans = 1
-  CASE( Vector )
-    SELECT CASE( obj%VarType )
-    CASE( Constant )
-      Ans = SIZE( obj%R1 )
-    CASE( Space )
-      Ans = SIZE( obj%R2, 1 )
-    CASE( SpaceTime )
-      Ans = SIZE( obj%R3, 1 )
-    END SELECT
-  CASE( Matrix )
-    SELECT CASE( obj%VarType )
-    CASE( Constant )
-      Ans = SIZE( obj%R2, Dim )
-    CASE( Space )
-      Ans = SIZE( obj%R3, Dim )
-    CASE( SpaceTime )
-      Ans = SIZE( obj%R4, Dim )
-    END SELECT
+SELECT CASE (obj%Rank)
+CASE (Scalar)
+  Ans = 1
+CASE (Vector)
+  SELECT CASE (obj%VarType)
+  CASE (Constant)
+    Ans = SIZE(obj%R1)
+  CASE (Space)
+    Ans = SIZE(obj%R2, 1)
+  CASE (SpaceTime)
+    Ans = SIZE(obj%R3, 1)
   END SELECT
+CASE (Matrix)
+  SELECT CASE (obj%VarType)
+  CASE (Constant)
+    Ans = SIZE(obj%R2, Dim)
+  CASE (Space)
+    Ans = SIZE(obj%R3, Dim)
+  CASE (SpaceTime)
+    Ans = SIZE(obj%R4, Dim)
+  END SELECT
+END SELECT
 END PROCEDURE Size_obj
 
 !----------------------------------------------------------------------------
@@ -53,35 +53,35 @@ END PROCEDURE Size_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Shape_obj
-  SELECT CASE( obj%Rank )
-  CASE( Scalar )
-    SELECT CASE( obj%VarType )
-    CASE( Constant )
-      Ans = [1]
-    CASE( Space )
-      Ans = SHAPE( obj%R1 )
-    CASE( SpaceTime )
-      Ans = SHAPE( obj%R2 )
-    END SELECT
-  CASE( Vector )
-    SELECT CASE( obj%VarType )
-    CASE( Constant )
-      Ans = SHAPE( obj%R1 )
-    CASE( Space )
-      Ans = SHAPE( obj%R2 )
-    CASE( SpaceTime )
-      Ans = SHAPE( obj%R3 )
-    END SELECT
-  CASE( Matrix )
-    SELECT CASE( obj%VarType )
-    CASE( Constant )
-      Ans = SHAPE( obj%R2 )
-    CASE( Space )
-      Ans = SHAPE( obj%R3 )
-    CASE( SpaceTime )
-      Ans = SHAPE( obj%R4 )
-    END SELECT
+SELECT CASE (obj%Rank)
+CASE (Scalar)
+  SELECT CASE (obj%VarType)
+  CASE (Constant)
+    Ans = [1]
+  CASE (Space)
+    Ans = SHAPE(obj%R1)
+  CASE (SpaceTime)
+    Ans = SHAPE(obj%R2)
   END SELECT
+CASE (Vector)
+  SELECT CASE (obj%VarType)
+  CASE (Constant)
+    Ans = SHAPE(obj%R1)
+  CASE (Space)
+    Ans = SHAPE(obj%R2)
+  CASE (SpaceTime)
+    Ans = SHAPE(obj%R3)
+  END SELECT
+CASE (Matrix)
+  SELECT CASE (obj%VarType)
+  CASE (Constant)
+    Ans = SHAPE(obj%R2)
+  CASE (Space)
+    Ans = SHAPE(obj%R3)
+  CASE (SpaceTime)
+    Ans = SHAPE(obj%R4)
+  END SELECT
+END SELECT
 END PROCEDURE Shape_obj
 
 !----------------------------------------------------------------------------
@@ -89,7 +89,7 @@ END PROCEDURE Shape_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Constant
-  Val = obj%R0
+Val = obj%R0
 END PROCEDURE Scalar_Constant
 
 !----------------------------------------------------------------------------
@@ -97,7 +97,7 @@ END PROCEDURE Scalar_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Space
-  Val = obj%R1
+Val = obj%R1
 END PROCEDURE Scalar_Space
 
 !----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ END PROCEDURE Scalar_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_SpaceTime
-  Val = obj%R2
+Val = obj%R2
 END PROCEDURE Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ END PROCEDURE Scalar_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Constant
-  Val = obj%R1
+Val = obj%R1
 END PROCEDURE Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -121,7 +121,7 @@ END PROCEDURE Vector_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Space
-  Val = obj%R2
+Val = obj%R2
 END PROCEDURE Vector_Space
 
 !----------------------------------------------------------------------------
@@ -129,7 +129,7 @@ END PROCEDURE Vector_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_SpaceTime
-  Val = obj%R3
+Val = obj%R3
 END PROCEDURE Vector_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ END PROCEDURE Vector_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Constant
-  Val = obj%R2
+Val = obj%R2
 END PROCEDURE Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -145,7 +145,7 @@ END PROCEDURE Matrix_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Space
-  Val = obj%R3
+Val = obj%R3
 END PROCEDURE Matrix_Space
 
 !----------------------------------------------------------------------------
@@ -153,7 +153,7 @@ END PROCEDURE Matrix_Space
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_SpaceTime
-  Val = obj%R4
+Val = obj%R4
 END PROCEDURE Matrix_SpaceTime
 
-END SUBMODULE GetMethod
+END SUBMODULE GetMethods

@@ -49,13 +49,13 @@ S = SHAPE(Cijkl)
 SELECT CASE (Cijkl%VarType)
 CASE (Constant)
   ALLOCATE (CBar(S(1), S(2), nips))
-  CBar(:, :, 1) = getValues(Cijkl, TypeFEVariableMatrix, &
+  CBar(:, :, 1) = Get(Cijkl, TypeFEVariableMatrix, &
     & TypeFEVariableConstant)
   DO i = 2, nips
     CBar(:, :, i) = CBar(:, :, 1)
   END DO
 CASE (Space)
-  Dummy = getValues(Cijkl, TypeFEVariableMatrix, TypeFEVariableSpace)
+  Dummy = Get(Cijkl, TypeFEVariableMatrix, TypeFEVariableSpace)
   IF (isNodal) THEN
     CBar = Interpolation(Trial, Dummy)
   ELSE
@@ -134,10 +134,10 @@ END IF
 SELECT CASE (Lambda%VarType)
 CASE (Constant)
   ALLOCATE (LambdaBar(nips))
-  LambdaBar = getValues(Lambda, TypeFEVariableScalar, &
+  LambdaBar = Get(Lambda, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 CASE (Space)
-  RealVal = getValues(Lambda, TypeFEVariableScalar, TypeFEVariableSpace)
+  RealVal = Get(Lambda, TypeFEVariableScalar, TypeFEVariableSpace)
   IF (isLambdaNodal) THEN
     LambdaBar = Interpolation(Trial, RealVal)
   ELSE
@@ -147,9 +147,9 @@ END SELECT
 SELECT CASE (Mu%VarType)
 CASE (Constant)
   ALLOCATE (MuBar(nips))
-  MuBar = getValues(Mu, TypeFEVariableScalar, TypeFEVariableConstant)
+  MuBar = Get(Mu, TypeFEVariableScalar, TypeFEVariableConstant)
 CASE (Space)
-  RealVal = getValues(Mu, TypeFEVariableScalar, TypeFEVariableSpace)
+  RealVal = Get(Mu, TypeFEVariableScalar, TypeFEVariableSpace)
   IF (isMuNodal) THEN
     MuBar = Interpolation(Trial, RealVal)
   ELSE

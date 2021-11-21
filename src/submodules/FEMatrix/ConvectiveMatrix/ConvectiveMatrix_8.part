@@ -1,0 +1,52 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   ConvectiveMatrix_8.part
+!                   Last Update :   Nov-20-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    ConvectiveMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getConvectiveMatrix_8
+!------------------------------------------------------------------------------
+
+SUBROUTINE getConvectiveMatrix_8( Obj, Term1, Term2, XType, nCopy )
+
+  !.    .    .    .    .    .    .    .    .    .    .    .    .    .    .    .
+  !       1.  -   Returns mass matrix; C is a 2D array of Space Nodal Values
+  !               The first index is for spatial component and second index is 
+  !               is for spatial nodal values.
+  !.    .    .    .    .    .    .    .    .    .    .    .    .    .    .    .
+
+  ! Define intent of dummy variables
+#ifdef SpaceMat
+  CLASS( SpaceMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( ConvectiveMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+  INTEGER( I4B ), INTENT( IN ) :: Term1, Term2, nCopy
+  CHARACTER( LEN = * ), INTENT( IN ) :: XType
+
+  CALL Obj % getConvectiveMatrix( Term1, Term2, XType )
+  CALL Obj % MakeDiagonalCopies( nCopy )
+
+END SUBROUTINE getConvectiveMatrix_8
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+
