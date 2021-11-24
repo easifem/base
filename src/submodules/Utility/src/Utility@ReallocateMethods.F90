@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	Methods for reallocating arrays
 
-SUBMODULE(Utility ) Reallocate
+SUBMODULE(Utility) ReallocateMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -421,6 +421,54 @@ MODULE PROCEDURE Reallocate_Int32_R1b
   CALL Reallocate_Int32_R1( mat, s(1) )
 END PROCEDURE Reallocate_Int32_R1b
 
+!----------------------------------------------------------------------------
+!                                                                 Reallocate2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Int16_R1
+  IF( ALLOCATED( Mat ) ) THEN
+    IF( SIZE( Mat ) .NE. row ) THEN
+      DEALLOCATE( Mat )
+      ALLOCATE( Mat( row ) )
+    END IF
+  ELSE
+    ALLOCATE( Mat( row ) )
+  END IF
+  Mat = 0
+END PROCEDURE Reallocate_Int16_R1
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Int16_R1b
+  CALL Reallocate_Int16_R1( mat, s(1) )
+END PROCEDURE Reallocate_Int16_R1b
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Int8_R1
+  IF( ALLOCATED( Mat ) ) THEN
+    IF( SIZE( Mat ) .NE. row ) THEN
+      DEALLOCATE( Mat )
+      ALLOCATE( Mat( row ) )
+    END IF
+  ELSE
+    ALLOCATE( Mat( row ) )
+  END IF
+  Mat = 0
+END PROCEDURE Reallocate_Int8_R1
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Int8_R1b
+  CALL Reallocate_Int8_R1( mat, s(1) )
+END PROCEDURE Reallocate_Int8_R1b
+
 !-----------------------------------------------------------------------------
 !                                                                 Reallocate1
 !-----------------------------------------------------------------------------
@@ -468,6 +516,54 @@ END PROCEDURE Reallocate_Int32_R2
 MODULE PROCEDURE Reallocate_Int32_R2b
   CALL Reallocate_Int32_R2( mat, s(1), s(2) )
 END PROCEDURE Reallocate_Int32_R2b
+
+!-----------------------------------------------------------------------------
+!                                                                 Reallocate1
+!-----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Int16_R2
+  IF( ALLOCATED( Mat ) ) THEN
+    IF( (SIZE( Mat, 1 ) .NE. row) .OR. (SIZE( Mat, 2 ) .NE. col) ) THEN
+      DEALLOCATE( Mat )
+      ALLOCATE( Mat( row, col ) )
+    END IF
+  ELSE
+    ALLOCATE( Mat( row, col ) )
+  END IF
+  Mat = 0
+END PROCEDURE Reallocate_Int16_R2
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Int16_R2b
+  CALL Reallocate_Int16_R2( mat, s(1), s(2) )
+END PROCEDURE Reallocate_Int16_R2b
+
+!-----------------------------------------------------------------------------
+!                                                                 Reallocate1
+!-----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Int8_R2
+  IF( ALLOCATED( Mat ) ) THEN
+    IF( (SIZE( Mat, 1 ) .NE. row) .OR. (SIZE( Mat, 2 ) .NE. col) ) THEN
+      DEALLOCATE( Mat )
+      ALLOCATE( Mat( row, col ) )
+    END IF
+  ELSE
+    ALLOCATE( Mat( row, col ) )
+  END IF
+  Mat = 0
+END PROCEDURE Reallocate_Int8_R2
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Reallocate_Int8_R2b
+  CALL Reallocate_Int8_R2( mat, s(1), s(2) )
+END PROCEDURE Reallocate_Int8_R2b
 
 !---------------------------------------------------------------------------
 !                                                                 Reallocate
@@ -1068,4 +1164,4 @@ MODULE PROCEDURE Reallocate_Real32_AI
   IA = 0
 END PROCEDURE Reallocate_Real32_AI
 
-END SUBMODULE Reallocate
+END SUBMODULE ReallocateMethods

@@ -13,4 +13,6 @@ TARGET_SOURCES(
   ${src_path}/FEMatrix_Method@MassMatrixMethods.F90
   ${src_path}/FEMatrix_Method@StiffnessMatrixMethods.F90
   ${src_path}/FEMatrix_Method@NitscheMatrixMethods.F90
+  ${src_path}/FEMatrix_Method@ConvectiveMatrixMethods.F90
+  ${src_path}/FEMatrix_Method@STConvectiveMatrixMethods.F90
   )

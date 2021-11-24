@@ -15,44 +15,64 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-submodule(FEMatrix_Method) ConvectiveMatrixMethods
-implicit none
-contains
+SUBMODULE(FEMatrix_Method) ConvectiveMatrixMethods
+USE BaseMethod
+IMPLICIT NONE
+CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                     getConvectiveMatrix_1
+!                                                           ConvectiveMatrix
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-21
-! update: 2021-11-21
-! summary: returns the convective matrix
+MODULE PROCEDURE ConvectiveMatrix_1
+#include "./ConvectiveMatrix_1.inc"
+END PROCEDURE ConvectiveMatrix_1
 
-subroutine getConvectiveMatrix_1(test, trial, C, Term1, Term2)
-  !! Define internal variables
-  integer(I4B) :: nips, ips
-  real(DFP), allocatable :: cdNdXt(:), realVal(:)
-  !! main
-  call Reallocate(ans, size(test%N, 1), size(trial%N, 1))
-  nips = size(trial%N, 2)
+!----------------------------------------------------------------------------
+!                                                           ConvectiveMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ConvectiveMatrix_1b
+#include "./ConvectiveMatrix_1.inc"
+END PROCEDURE ConvectiveMatrix_1b
+
+!----------------------------------------------------------------------------
+!                                                           ConvectiveMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ConvectiveMatrix_2
+!! Define internal variables
+INTEGER(I4B) :: nips, ips
+REAL(DFP), ALLOCATABLE :: realval(:), cbar(:)
+!! main
+CALL Reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+nips = SIZE(trial%N, 2)
+IF (PRESENT(c)) THEN
+  CALL Reallocate(cbar, nips)
+  CALL GetInterpolation(obj=trial, val=c, interpol=cbar)
+  realval = trial%js * trial%ws * trial%thickness * cbar
+ELSE
   realval = trial%js * trial%ws * trial%thickness
-  !! make cdNdXt based upon the case.
-  if (term1 .eq. 1 .and. term2 .eq. 0) then
-    call test%getProjectionOfdNdXt(cdNdXt=cdNdXt, val=c)
-    do ips = 1, size(trial%N, 2)
-      ans = ans + outerprod(a=cdNdXt(:, ips), &
-           & b=trial%N(:, ips)) * realval(ips)
-    end do
-  else if (term1 .eq. 0 .and. term2 .eq. 1) then
-    call trial%getProjectionOfdNdXt(cdNdXt=cdNdXt, val=c)
-    do ips = 1, size(trial%N, 2)
-      ans = ans + outerprod(a=test%N(:, ips), &
-           & b=cdNdXt(:, ips)) * realval(ips)
-    end do
-  end if
- !! cleanup
-  deallocate (cdNdXt)
+END IF
+!!
+IF (term1 .EQ. 1 .AND. term2 .EQ. 0) THEN
+  DO ips = 1, nips
+    ans = ans + outerprod(a=test%dNdXt(:, dim, ips), &
+         & b=trial%N(:, ips)) * realval(ips)
+  END DO
+ELSE IF (term1 .EQ. 0 .AND. term2 .EQ. 1) THEN
+  DO ips = 1, nips
+    ans = ans + outerprod(a=test%N(:, ips), &
+         & b=trial%dNdXt(:, dim, ips)) * realval(ips)
+  END DO
+END IF
+!! cleanup
+IF (ALLOCATED(realval)) DEALLOCATE (realval)
+IF (ALLOCATED(cbar)) DEALLOCATE (cbar)
+END PROCEDURE ConvectiveMatrix_2
 
-end subroutine getConvectiveMatrix_1
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-end submodule ConvectiveMatrixMethods
+END SUBMODULE ConvectiveMatrixMethods

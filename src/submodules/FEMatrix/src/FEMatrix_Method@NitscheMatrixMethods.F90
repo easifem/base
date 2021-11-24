@@ -418,48 +418,38 @@ END PROCEDURE space_nitsche_mat_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE space_nitsche_mat_4
-
 LOGICAL(LGT) :: isEvecNod
 INTEGER(I4B) :: nns1, nns2, nsd, nips, ips, i, j, r1, r2, c1, c2
 REAL(DFP), ALLOCATABLE :: EvecBar(:, :), RealVal(:)
 REAL(DFP), ALLOCATABLE :: DummyMat(:, :)
-
+!!
 nns1 = SIZE(Test%N, 1); nns2 = SIZE(Trial%N, 1)
 nips = SIZE(Trial%N, 2); nsd = Trial%RefElem%NSD
-
 IF (Evec%DefineOn .EQ. Nodal) THEN
   isEvecNod = .TRUE.
 ELSE
   isEvecNod = .FALSE.
 END IF
-
 SELECT CASE (Evec%VarType)
 CASE (Constant)
-
   ALLOCATE (EvecBar(nsd, nips))
   EvecBar(1, :) = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
     EvecBar(i, :) = EvecBar(1, :)
   END DO
-
 CASE (Space)
-
   Ans = Get(Evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
-
   IF (isEvecNod) THEN
     EvecBar = Interpolation(Trial, Ans)
   ELSE
     EvecBar = Ans
   END IF
-
   DEALLOCATE (Ans)
 END SELECT
-
 RealVal = Trial%Ws * Trial%Js * Trial%Thickness * Alpha
 ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
-
 DO ips = 1, nips
   DummyMat = RealVal(ips) * &
     & OUTERPROD(a=Test%N(:, ips), b=Trial%N(:, ips))
@@ -473,7 +463,6 @@ DO ips = 1, nips
     END DO
   END DO
 END DO
-
 DEALLOCATE (EvecBar, RealVal, DummyMat)
 END PROCEDURE space_nitsche_mat_4
 
