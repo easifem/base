@@ -24,187 +24,167 @@ CONTAINS
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Space_DiffusionMatrix
+MODULE PROCEDURE DiffusionMatrix_1
 ! Define internal variable
-REAL(DFP), ALLOCATABLE :: RealVal(:)
-INTEGER(I4B) :: i, j, nsd
-
-i = SIZE(Test%N, 1)
-j = SIZE(Trial%N, 1)
-ALLOCATE (Ans(i, j)); Ans = 0.0_DFP
-nsd = Trial%RefElem%NSD
-RealVal = Trial%Js * Trial%Ws * Trial%Thickness
-DO i = 1, SIZE(Trial%N, 2)
-  DO j = 1, nsd
-    Ans = Ans + &
-      & OUTERPROD(a=Test%dNdXt(:, j, i), b= &
-      & Trial%dNdXt(:, j, i)) &
-      & * RealVal(i)
-  END DO
+REAL(DFP), ALLOCATABLE :: realval(:)
+INTEGER(I4B) :: i
+!! main
+call reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+realval = trial%js * trial%ws * trial%thickness
+DO i = 1, SIZE(trial%N, 2)
+   ans = ans + realval(i) * matmul(test%dNdXt(:,:,i), &
+        & transpose(trial%dNdXt(:,:,i)))
+  ! DO j = 1, trial%refelem%NSD
+  !   ans = ans + &
+  !     & OUTERPROD(a=test%dNdXt(:, j, i), b= &
+  !     & trial%dNdXt(:, j, i)) &
+  !     & * realval(i)
+  ! END DO
 END DO
-DEALLOCATE (RealVal)
-IF (PRESENT(nCopy)) THEN
-  CALL MakeDiagonalCopies(Ans, nCopy)
-END IF
-END PROCEDURE Space_DiffusionMatrix
+DEALLOCATE (realval)
+END PROCEDURE DiffusionMatrix_1
 
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Space_DiffusionMatrix_K
-
-REAL(DFP), ALLOCATABLE :: KBar(:, :, :), RealVal(:)
+MODULE PROCEDURE DiffusionMatrix_2
+REAL(DFP), ALLOCATABLE :: KBar(:, :, :), realval(:)
 INTEGER(I4B) :: i
 INTEGER(I4B), ALLOCATABLE :: S(:)
 
 S = SHAPE(K)
-ALLOCATE (KBar(S(1), S(2), SIZE(Trial%N, 2)))
-CALL getInterpolation(obj=Trial, Interpol=KBar, Val=K)
-RealVal = Trial%Js * Trial%Ws * Trial%Thickness
-ALLOCATE (Ans(SIZE(Test%N, 1), SIZE(Trial%N, 1)))
-Ans = 0.0_DFP
-DO i = 1, SIZE(Trial%N, 2)
-  Ans = Ans + RealVal(i) * MATMUL( &
-    & MATMUL(Test%dNdXt(:, :, i), KBar(:, :, i)), &
-    & TRANSPOSE(Trial%dNdXt(:, :, i)))
+ALLOCATE (KBar(S(1), S(2), SIZE(trial%N, 2)))
+CALL getInterpolation(obj=trial, Interpol=KBar, Val=K)
+realval = trial%Js * trial%Ws * trial%Thickness
+ALLOCATE (ans(SIZE(test%N, 1), SIZE(trial%N, 1)))
+ans = 0.0_DFP
+DO i = 1, SIZE(trial%N, 2)
+  ans = ans + realval(i) * MATMUL( &
+    & MATMUL(test%dNdXt(:, :, i), KBar(:, :, i)), &
+    & TRANSPOSE(trial%dNdXt(:, :, i)))
 END DO
-DEALLOCATE (KBar, RealVal, S)
-IF (PRESENT(nCopy)) THEN
-  CALL MakeDiagonalCopies(Ans, nCopy)
-END IF
-END PROCEDURE Space_DiffusionMatrix_K
+DEALLOCATE (KBar, realval, S)
+END PROCEDURE DiffusionMatrix_2
 
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Space_DiffusionMatrix_C
-REAL(DFP), ALLOCATABLE :: C1Bar(:, :), C2Bar(:, :), RealVal(:)
+MODULE PROCEDURE DiffusionMatrix_3
+REAL(DFP), ALLOCATABLE :: C1Bar(:, :), C2Bar(:, :), realval(:)
 INTEGER(I4B) :: i
 
-CALL getProjectionOfdNdXt(obj=Test, cdNdXt=C1Bar, Val=C1)
-CALL getProjectionOfdNdXt(obj=Trial, cdNdXt=C2Bar, Val=C2)
-RealVal = Trial%Js * Trial%Ws * Trial%Thickness
-ALLOCATE (Ans(SIZE(Test%N, 1), SIZE(Trial%N, 1)))
-Ans = 0.0_DFP
-DO i = 1, SIZE(Trial%N, 2)
-  Ans = Ans + RealVal(i) * OUTERPROD(C1Bar(:, i), C2Bar(:, i))
+CALL getProjectionOfdNdXt(obj=test, cdNdXt=C1Bar, Val=C1)
+CALL getProjectionOfdNdXt(obj=trial, cdNdXt=C2Bar, Val=C2)
+realval = trial%Js * trial%Ws * trial%Thickness
+ALLOCATE (ans(SIZE(test%N, 1), SIZE(trial%N, 1)))
+ans = 0.0_DFP
+DO i = 1, SIZE(trial%N, 2)
+  ans = ans + realval(i) * OUTERPROD(C1Bar(:, i), C2Bar(:, i))
 END DO
-IF (PRESENT(nCopy)) THEN
-  CALL MakeDiagonalCopies(Ans, nCopy)
-END IF
-DEALLOCATE (RealVal, C1Bar, C2Bar)
-END PROCEDURE Space_DiffusionMatrix_C
+DEALLOCATE (realval, C1Bar, C2Bar)
+END PROCEDURE DiffusionMatrix_3
 
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE st_diffusionMatrix
-REAL(DFP), ALLOCATABLE :: Mat4(:, :, :, :), RealVal(:)
+MODULE PROCEDURE mat2_STDiffusionMatrix_1
+REAL(DFP), ALLOCATABLE :: Mat4(:, :, :, :), realval(:)
 INTEGER(I4B) :: ips, ipt, a, b
 
-ALLOCATE (Mat4(SIZE(Test(1)%N, 1), &
-  & SIZE(Trial(1)%N, 1), &
-  & SIZE(Test(1)%T), &
-  & SIZE(Trial(1)%T)))
+ALLOCATE (Mat4(SIZE(test(1)%N, 1), &
+  & SIZE(trial(1)%N, 1), &
+  & SIZE(test(1)%T), &
+  & SIZE(trial(1)%T)))
 Mat4 = 0.0_DFP
 
-DO ipt = 1, SIZE(Trial)
-  RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
-   & * Trial(ipt)%Wt * Trial(ipt)%Jt
-  DO ips = 1, SIZE(Test)
-    DO b = 1, SIZE(Trial(1)%T)
-      DO a = 1, SIZE(Test(1)%T)
-        Mat4(:, :, a, b) = Mat4(:, :, a, b) + RealVal(ips) &
-          & * MATMUL(Test(ipt)%dNTdXt(:, a, :, ips), &
-          & TRANSPOSE(Trial(ipt)%dNTdXt(:, b, :, ips)))
+DO ipt = 1, SIZE(trial)
+  realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
+   & * trial(ipt)%Wt * trial(ipt)%Jt
+  DO ips = 1, SIZE(test)
+    DO b = 1, SIZE(trial(1)%T)
+      DO a = 1, SIZE(test(1)%T)
+        Mat4(:, :, a, b) = Mat4(:, :, a, b) + realval(ips) &
+          & * MATMUL(test(ipt)%dNTdXt(:, a, :, ips), &
+          & TRANSPOSE(trial(ipt)%dNTdXt(:, b, :, ips)))
       END DO
     END DO
   END DO
 END DO
-CALL Convert(From=Mat4, To=Ans)
-IF (PRESENT(nCopy)) THEN
-  CALL MakeDiagonalCopies(Ans, nCopy)
-END IF
-DEALLOCATE (Mat4, RealVal)
-END PROCEDURE st_diffusionMatrix
+CALL Convert(From=Mat4, To=ans)
+DEALLOCATE (Mat4, realval)
+END PROCEDURE mat2_STDiffusionMatrix_1
 
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE st_diffusionMatrix_K
+MODULE PROCEDURE mat2_STDiffusionMatrix_2
 REAL(DFP), ALLOCATABLE :: Mat4(:, :, :, :)
-REAL(DFP), ALLOCATABLE :: RealVal(:)
+REAL(DFP), ALLOCATABLE :: realval(:)
 REAL(DFP), ALLOCATABLE :: Dummy(:, :)
 REAL(DFP), ALLOCATABLE :: KBar(:, :, :, :)
 INTEGER(I4B) :: ips, ipt, a, b
 
-ALLOCATE (Mat4(SIZE(Test(1)%N, 1), &
-  & SIZE(Trial(1)%N, 1), &
-  & SIZE(Test(1)%T), &
-  & SIZE(Trial(1)%T)))
+ALLOCATE (Mat4(SIZE(test(1)%N, 1), &
+  & SIZE(trial(1)%N, 1), &
+  & SIZE(test(1)%T), &
+  & SIZE(trial(1)%T)))
 Mat4 = 0.0_DFP
-CALL getInterpolation(obj=Trial, Val=K, Interpol=KBar)
-DO ipt = 1, SIZE(Trial)
-  RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
-   & * Trial(ipt)%Wt * Trial(ipt)%Jt
-  DO ips = 1, SIZE(Test)
-    DO b = 1, SIZE(Trial(1)%T)
-      Dummy = RealVal(ips) * MATMUL(KBar(:, :, ips, ipt), &
-        & TRANSPOSE(Trial(ipt)%dNTdXt(:, b, :, ips)))
-      DO a = 1, SIZE(Test(1)%T)
+CALL getInterpolation(obj=trial, Val=K, Interpol=KBar)
+DO ipt = 1, SIZE(trial)
+  realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
+   & * trial(ipt)%Wt * trial(ipt)%Jt
+  DO ips = 1, SIZE(test)
+    DO b = 1, SIZE(trial(1)%T)
+      Dummy = realval(ips) * MATMUL(KBar(:, :, ips, ipt), &
+        & TRANSPOSE(trial(ipt)%dNTdXt(:, b, :, ips)))
+      DO a = 1, SIZE(test(1)%T)
         Mat4(:, :, a, b) = Mat4(:, :, a, b) +  &
-          & MATMUL(Test(ipt)%dNTdXt(:, a, :, ips), Dummy)
+          & MATMUL(test(ipt)%dNTdXt(:, a, :, ips), Dummy)
       END DO
     END DO
   END DO
 END DO
-CALL Convert(From=Mat4, To=Ans)
-IF (PRESENT(nCopy)) THEN
-  CALL MakeDiagonalCopies(Ans, nCopy)
-END IF
-DEALLOCATE (Mat4, RealVal, KBar, Dummy)
-END PROCEDURE st_diffusionMatrix_K
+CALL Convert(From=Mat4, To=ans)
+DEALLOCATE (Mat4, realval, KBar, Dummy)
+END PROCEDURE mat2_STDiffusionMatrix_2
 
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE st_diffusionMatrix_C
+MODULE PROCEDURE mat2_STDiffusionMatrix_3
 REAL(DFP), ALLOCATABLE :: Mat4(:, :, :, :)
-REAL(DFP), ALLOCATABLE :: RealVal(:)
+REAL(DFP), ALLOCATABLE :: realval(:)
 REAL(DFP), ALLOCATABLE :: c1dNTdXt(:, :, :), c2dNTdXT(:, :, :)
 INTEGER(I4B) :: ips, ipt, a, b
 
 ALLOCATE ( &
-  & Mat4(SIZE(Test(1)%N, 1), &
-  & SIZE(Trial(1)%N, 1), &
-  & SIZE(Test(1)%T), &
-  & SIZE(Trial(1)%T)))
+  & Mat4(SIZE(test(1)%N, 1), &
+  & SIZE(trial(1)%N, 1), &
+  & SIZE(test(1)%T), &
+  & SIZE(trial(1)%T)))
 Mat4 = 0.0_DFP
-DO ipt = 1, SIZE(Trial)
-  RealVal = Trial(ipt)%Js * Trial(ipt)%Ws * Trial(ipt)%Thickness &
-   & * Trial(ipt)%Wt * Trial(ipt)%Jt
-  CALL getProjectionOfdNTdXt(obj=Test(ipt), cdNTdXt=c1dNTdXt, Val=C1)
-  CALL getProjectionOfdNTdXt(obj=Trial(ipt), cdNTdXt=c2dNTdXt, Val=C2)
-  DO ips = 1, SIZE(Test)
-    DO b = 1, SIZE(Trial(1)%T)
-      DO a = 1, SIZE(Test(1)%T)
+DO ipt = 1, SIZE(trial)
+  realval = trial(ipt)%Js * trial(ipt)%Ws * trial(ipt)%Thickness &
+   & * trial(ipt)%Wt * trial(ipt)%Jt
+  CALL getProjectionOfdNTdXt(obj=test(ipt), cdNTdXt=c1dNTdXt, Val=C1)
+  CALL getProjectionOfdNTdXt(obj=trial(ipt), cdNTdXt=c2dNTdXt, Val=C2)
+  DO ips = 1, SIZE(test)
+    DO b = 1, SIZE(trial(1)%T)
+      DO a = 1, SIZE(test(1)%T)
         Mat4(:, :, a, b) = Mat4(:, :, a, b) +  &
-          & RealVal(ips) * &
+          & realval(ips) * &
           & OUTERPROD(a=c1dNTdXt(:, a, ips), b=c2dNTdXt(:, b, ips))
       END DO
     END DO
   END DO
 END DO
-CALL Convert(From=Mat4, To=Ans)
-IF (PRESENT(nCopy)) THEN
-  CALL MakeDiagonalCopies(Ans, nCopy)
-END IF
-DEALLOCATE (Mat4, RealVal, c1dNTdXt, c2dNTdXT)
-END PROCEDURE st_diffusionMatrix_C
+CALL Convert(From=Mat4, To=ans)
+DEALLOCATE (Mat4, realval, c1dNTdXt, c2dNTdXT)
+END PROCEDURE mat2_STDiffusionMatrix_3
 
 END SUBMODULE DiffusionMatrixMethods
