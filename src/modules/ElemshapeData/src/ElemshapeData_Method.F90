@@ -66,11 +66,11 @@ END INTERFACE AllocateData
 
 PUBLIC :: AllocateData
 
-INTERFACE Allocate
+INTERFACE ALLOCATE
   MODULE PROCEDURE elemsd_AllocateData
-END INTERFACE Allocate
+END INTERFACE ALLOCATE
 
-PUBLIC :: Allocate
+PUBLIC :: ALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
@@ -162,11 +162,11 @@ INTERFACE
   END SUBROUTINE elemsd_Deallocate
 END INTERFACE
 
-INTERFACE Deallocate
+INTERFACE DEALLOCATE
   MODULE PROCEDURE elemsd_Deallocate
-END INTERFACE Deallocate
+END INTERFACE DEALLOCATE
 
-PUBLIC :: Deallocate
+PUBLIC :: DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                             BaseInterpolation@Constructor
@@ -1077,12 +1077,6 @@ PUBLIC :: set
 ! date: 4 March 2021
 ! summary: This subroutine sets the normal vector
 !
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
   MODULE PURE SUBROUTINE set_normal(obj)
@@ -1097,7 +1091,7 @@ END INTERFACE setNormal
 PUBLIC :: setNormal
 
 !----------------------------------------------------------------------------
-!                                                 getInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1111,39 +1105,58 @@ PUBLIC :: setNormal
 !
 ! $$u=u_{I}N^{I}$$
 !
-!### Usage
-!
-!```fortran
-!
-!```
+! - TODO Make it work when the size of val is not the same as NNS
 
 INTERFACE
-  MODULE PURE SUBROUTINE get_interpol_scalar(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_1(obj, Interpol, Val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:)
     !! Interpolation value of `val` at integration points
     REAL(DFP), INTENT(IN) :: Val(:)
     !! spatial nodal values of scalar
-  END SUBROUTINE get_interpol_scalar
+  END SUBROUTINE elemsd_getInterpolation_1
 END INTERFACE
 
+INTERFACE getInterpolation
+  MODULE PROCEDURE elemsd_getInterpolation_1
+END INTERFACE getInterpolation
+
+PUBLIC :: getInterpolation
+
 !----------------------------------------------------------------------------
-!                                                getInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: T
+! summary: returns the interpolation of scalar FEVariable
+!
+!# Introduction
+!
+! Returns the interpolation of scalar variable
+! The scalalar variable can be+
+!
+! - constant
+! - spatial nodal values
+! - spatial quadrature values
+! - space-time nodal values
+!
+! NOTE This routine calls [[Interpolation]] function from the same module.
+!
 INTERFACE
-  MODULE PURE SUBROUTINE get_interpol_fevar_scalar(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_2(obj, Interpol, Val)
     CLASS(ElemShapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Interpol(:)
     TYPE(FEVariable_), INTENT(IN) :: Val
-    REAL(DFP), INTENT(INOUT) :: Interpol(:)
-  END SUBROUTINE get_interpol_fevar_scalar
+  END SUBROUTINE elemsd_getInterpolation_2
 END INTERFACE
 
+INTERFACE getInterpolation
+  MODULE PROCEDURE elemsd_getInterpolation_2
+END INTERFACE getInterpolation
+
 !----------------------------------------------------------------------------
-!                                                 getInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1158,183 +1171,136 @@ END INTERFACE
 ! $$u_{i}=u_{iI}N^{I}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE get_interpol_vector(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_3(obj, Interpol, Val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :)
     !! Interpol(:,ips) => interpolation value at integration points
     REAL(DFP), INTENT(IN) :: Val(:, :)
     !! nodal values of vector in `xiJ` format
-  END SUBROUTINE get_interpol_vector
+  END SUBROUTINE elemsd_getInterpolation_3
 END INTERFACE
 
+INTERFACE getInterpolation
+  MODULE PROCEDURE elemsd_getInterpolation_3
+END INTERFACE getInterpolation
+
 !----------------------------------------------------------------------------
-!                                                 getInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolation of matrix
-!
-!# Introduction
-! This subroutine performs interpolation of matrix
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
-  MODULE PURE SUBROUTINE get_interpol_matrix(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_4(obj, Interpol, Val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :, :)
     REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! nodal value of matrix
-  END SUBROUTINE get_interpol_matrix
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                 getInterpolation@getMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This subroutine performs interpolation of matrix
-!
-! This subroutine performs interpolation of matrix
-
-INTERFACE
-  MODULE PURE SUBROUTINE get_interpol_fevar_matrix(obj, Interpol, Val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :)
-    TYPE(FEVariable_), INTENT(IN) :: Val
-  END SUBROUTINE get_interpol_fevar_matrix
+  END SUBROUTINE elemsd_getInterpolation_4
 END INTERFACE
 
 INTERFACE getInterpolation
-  MODULE PROCEDURE get_interpol_scalar, get_interpol_vector, &
-    & get_interpol_matrix, get_interpol_fevar_scalar, &
-    & get_interpol_fevar_matrix
+  MODULE PROCEDURE elemsd_getInterpolation_4
 END INTERFACE getInterpolation
 
-PUBLIC :: getInterpolation
-
 !----------------------------------------------------------------------------
-!                                                    Interpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This function returns the interpolation of a scalar
+! summary: This subroutine performs interpolation of matrix FEVariable
 !
 !# Introduction
 !
-! This function returns interpolation of scalar
+! This routine performs interpolation of matrix [[FEVariable_]]
+!
+! TODO  Test this routine [[elemsd_getInterpolation_5]],
+!       make Interpol allocatable
 
 INTERFACE
-  MODULE PURE FUNCTION interpol_scalar(obj, Val) RESULT(Interpol)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_5(obj, Interpol, Val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:)
-    REAL(DFP), ALLOCATABLE :: Interpol(:)
-  END FUNCTION interpol_scalar
+    REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :)
+    TYPE(FEVariable_), INTENT(IN) :: Val
+  END SUBROUTINE elemsd_getInterpolation_5
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                    Interpolation@getMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This function returns the interpolation of vector
-!
-!# Introduction
-!
-! This function returns the interpolation of vectors
-!
-!### Usage
-!
-!```fortran
-!
-!```
-
-INTERFACE
-  MODULE PURE FUNCTION interpol_vector(obj, Val) RESULT(Interpol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :)
-    REAL(DFP), ALLOCATABLE :: Interpol(:, :)
-  END FUNCTION interpol_vector
-END INTERFACE
+INTERFACE getInterpolation
+  MODULE PROCEDURE elemsd_getInterpolation_5
+END INTERFACE getInterpolation
 
 !----------------------------------------------------------------------------
-!                                                    Interpolation@getMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This function returns the interpolation of matrix
-!
-!# Introduction
-!
-! This function returns the interpolation of matrix
-!
-!### Usage
-!
-!```fortran
-!
-!```
-
-INTERFACE
-  MODULE PURE FUNCTION interpol_matrix(obj, Val) RESULT(Interpol)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
-    REAL(DFP), ALLOCATABLE :: Interpol(:, :, :)
-  END FUNCTION interpol_matrix
-END INTERFACE
-
-INTERFACE Interpolation
-  MODULE PROCEDURE interpol_scalar, interpol_vector, interpol_matrix
-END INTERFACE Interpolation
-
-PUBLIC :: Interpolation
-
-!----------------------------------------------------------------------------
-!                                               getSTInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 1 Nov 2021
-! summary: This subroutine performs interpolations of scalar
+! summary: This subroutine performs interpolations of scalar nodal values
 !
 !# Introduction
 !
 ! This subroutine performs interpolation of a scalar from its space-time nodal
 ! values.
+!
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
+!
+! The resultant represents the interpolation value of `val` at
+! spatial-quadrature points
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_get_interpol_scalar(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_6(obj, Interpol, Val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:)
-    !! Interpolation value of `val` at integration points
+    !! Interpolation value of `val` at spatial-quadrature points
     REAL(DFP), INTENT(IN) :: Val(:, :)
-    !! spatial nodal values of scalar
-  END SUBROUTINE stsd_get_interpol_scalar
+    !! space-time nodal values of scalar
+  END SUBROUTINE elemsd_getInterpolation_6
 END INTERFACE
 
+INTERFACE getInterpolation
+  MODULE PROCEDURE elemsd_getInterpolation_6
+END INTERFACE getInterpolation
+
 !----------------------------------------------------------------------------
-!                                                getInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 Nov 2021
+! summary: This subroutine performs interpolations of scalar FEVariable
+!
+!# Introduction
+!
+! This subroutine performs interpolation of a scalar [[FEVariable_]]
+! The FE Variable can be a
+!
+! - constant
+! - spatial nodal values
+! - spatial quadrature values
+! - space-time nodal values
+!
+! $$u=u^{a}_{I}N^{I}T_{a}$$
+!
+! The resultant represents the interpolation value of `val` at
+! spatial-quadrature points
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_get_interpol_fevar_scalar(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_7(obj, interpol, val)
     CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
-    TYPE(FEVariable_), INTENT(IN) :: Val
-    REAL(DFP), INTENT(INOUT) :: Interpol(:, :)
-  END SUBROUTINE stsd_get_interpol_fevar_scalar
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+  END SUBROUTINE elemsd_getInterpolation_7
 END INTERFACE
 
+INTERFACE getInterpolation
+  MODULE PROCEDURE elemsd_getInterpolation_7
+END INTERFACE getInterpolation
+
 !----------------------------------------------------------------------------
-!                                               getSTInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1349,17 +1315,21 @@ END INTERFACE
 ! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_get_interpol_vector(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_8(obj, Interpol, Val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :)
     !! Interpol(:,ips) => interpolation value at integration points
     REAL(DFP), INTENT(IN) :: Val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
-  END SUBROUTINE stsd_get_interpol_vector
+  END SUBROUTINE elemsd_getInterpolation_8
 END INTERFACE
 
+INTERFACE getInterpolation
+  MODULE PROCEDURE elemsd_getInterpolation_8
+END INTERFACE getInterpolation
+
 !----------------------------------------------------------------------------
-!                                               getSTInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -1372,48 +1342,113 @@ END INTERFACE
 ! nodal values
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_get_interpol_matrix(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_9(obj, Interpol, Val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :, :)
     REAL(DFP), INTENT(IN) :: Val(:, :, :, :)
-    !! nodal value of matrix
-  END SUBROUTINE stsd_get_interpol_matrix
+    !! space-time nodal value of matrix
+  END SUBROUTINE elemsd_getInterpolation_9
 END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                getInterpolation@getMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE SUBROUTINE stsd_get_interpol_fevar_matrix(obj, Interpol, Val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
-    TYPE(FEVariable_), INTENT(IN) :: Val
-    REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :, :)
-  END SUBROUTINE stsd_get_interpol_fevar_matrix
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 INTERFACE getInterpolation
-  MODULE PROCEDURE stsd_get_interpol_scalar, stsd_get_interpol_vector, &
-    & stsd_get_interpol_matrix, stsd_get_interpol_fevar_scalar, &
-    & stsd_get_interpol_fevar_matrix
+   MODULE PROCEDURE elemsd_getInterpolation_9
 END INTERFACE getInterpolation
 
 !----------------------------------------------------------------------------
-!                                                 STInterpolation@getMethod
+!                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-!! This function performs interpolations of scalar
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_10(obj, Interpol, Val)
+    CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
+    TYPE(FEVariable_), INTENT(IN) :: Val
+    REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :, :)
+  END SUBROUTINE elemsd_getInterpolation_10
+END INTERFACE
 
-!> authors: Dr. Vikas Sharma
+INTERFACE getInterpolation
+   MODULE PROCEDURE elemsd_getInterpolation_10
+END INTERFACE getInterpolation
+
+!----------------------------------------------------------------------------
+!                                              Interpolation@InterpolMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This function returns the interpolation of a scalar
+
+INTERFACE
+  MODULE PURE FUNCTION interpol_scalar(obj, Val) RESULT(Interpol)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), ALLOCATABLE :: Interpol(:)
+  END FUNCTION interpol_scalar
+END INTERFACE
+
+INTERFACE Interpolation
+  MODULE PROCEDURE interpol_scalar
+END INTERFACE Interpolation
+
+PUBLIC :: Interpolation
+
+!----------------------------------------------------------------------------
+!                                              Interpolation@InterpolMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This function returns the interpolation of vector
+
+INTERFACE
+  MODULE PURE FUNCTION interpol_vector(obj, Val) RESULT(Interpol)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), ALLOCATABLE :: Interpol(:, :)
+  END FUNCTION interpol_vector
+END INTERFACE
+
+INTERFACE Interpolation
+  MODULE PROCEDURE interpol_vector
+END INTERFACE Interpolation
+
+!----------------------------------------------------------------------------
+!                                              Interpolation@InterpolMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This function returns the interpolation of matrix
+
+INTERFACE
+  MODULE PURE FUNCTION interpol_matrix(obj, Val) RESULT(Interpol)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), ALLOCATABLE :: Interpol(:, :, :)
+  END FUNCTION interpol_matrix
+END INTERFACE
+
+INTERFACE Interpolation
+  MODULE PROCEDURE interpol_matrix
+END INTERFACE Interpolation
+
+!----------------------------------------------------------------------------
+!                                            STInterpolation@InterpolMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-23
+! update: 2021-11-23
+! summary: This function performs interpolations of scalar
+!
+!# Introduction
 !
 ! This function performs interpolation of a scalar from its space-time nodal
 ! values.
+!
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
+
+INTERFACE
   MODULE PURE FUNCTION stsd_interpol_scalar(obj, Val) RESULT(interpol)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: Val(:, :)
@@ -1423,8 +1458,14 @@ INTERFACE
   END FUNCTION stsd_interpol_scalar
 END INTERFACE
 
+INTERFACE STInterpolation
+  MODULE PROCEDURE stsd_interpol_scalar
+END INTERFACE STInterpolation
+
+PUBLIC :: STInterpolation
+
 !----------------------------------------------------------------------------
-!                                                 STInterpolation@getMethod
+!                                            STInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1445,8 +1486,12 @@ INTERFACE
   END FUNCTION stsd_interpol_vector
 END INTERFACE
 
+INTERFACE STInterpolation
+  MODULE PROCEDURE stsd_interpol_vector
+END INTERFACE STInterpolation
+
 !----------------------------------------------------------------------------
-!                                                 STInterpolation@getMethod
+!                                            STInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1468,8 +1513,7 @@ INTERFACE
 END INTERFACE
 
 INTERFACE STInterpolation
-  MODULE PROCEDURE stsd_interpol_scalar, stsd_interpol_vector, &
-    & stsd_interpol_matrix
+  MODULE PROCEDURE stsd_interpol_matrix
 END INTERFACE STInterpolation
 
 !----------------------------------------------------------------------------
@@ -1657,52 +1701,59 @@ PUBLIC :: getSpatialGradient
 !                                            getProjectionOfdNdXt@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine computes the projection of dNdXt on a vector
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-21
+! update: 2021-11-21
+! summary: Computes $\frac{dN}{dx_k}c_k$
+!
+!# Introduction
 !
 ! This subroutine computes the projcetion cdNdXt on the vector `Val`
 ! Here the vector `Val` is constant in space and time
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
-!
-  MODULE PURE SUBROUTINE getProjectionOfdNdXt_spacevalues(obj, cdNdXt, Val)
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetProjectionOfdNdXt_1(obj, cdNdXt, Val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
     REAL(DFP), INTENT(IN) :: Val(:)
     !! constant value of vector
-  END SUBROUTINE getProjectionOfdNdXt_spacevalues
+  END SUBROUTINE elemsd_GetProjectionOfdNdXt_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                            getProjectionOfdNdXt@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine computes the projection of dNdXt on a vector
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-21
+! update: 2021-11-21
+! summary: computes the projection of dNdXt on a vector
+!
+!# Introduction
 !
 ! This subroutine computes the projcetion cdNdXt on the vector `Val`
 ! Here the vector `Val` is constant in space and time
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
-!
-  MODULE PURE SUBROUTINE getProjectionOfdNdXt_fevar(obj, cdNdXt, Val)
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetProjectionOfdNdXt_2(obj, cdNdXt, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! ElemshapeData object
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
-    CLASS(FEVariable_), INTENT(IN) :: Val
+    CLASS(FEVariable_), INTENT(IN) :: val
     !! constant value of vector
-  END SUBROUTINE getProjectionOfdNdXt_fevar
+  END SUBROUTINE elemsd_GetProjectionOfdNdXt_2
 END INTERFACE
 
 INTERFACE getProjectionOfdNdXt
   MODULE PROCEDURE &
-    & getProjectionOfdNdXt_spacevalues,&
-    & getProjectionOfdNdXt_fevar
+    & elemsd_GetProjectionOfdNdXt_1,&
+    & elemsd_GetProjectionOfdNdXt_2
 END INTERFACE getProjectionOfdNdXt
 
 PUBLIC :: getProjectionOfdNdXt
@@ -1711,23 +1762,24 @@ PUBLIC :: getProjectionOfdNdXt
 !                                            getProjectionOfdNTdXt@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine computes the projection of dNTdXt on a vector
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-23
+! update: 2021-11-23
+! summary: Computes the projection of dNTdXt on a vector
 !
 ! This subroutine computes the projcetion cdNTdXt on the vector `Val`
 ! Here the vector `Val` is constant in space and time
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
-!
-  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_constvector(obj, cdNTdXt, Val)
+
+INTERFACE
+  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_1(obj, cdNTdXt, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :)
     !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
-    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), INTENT(IN) :: val(:)
     !! constant value of vector
-  END SUBROUTINE getProjectionOfdNTdXt_constvector
+  END SUBROUTINE getProjectionOfdNTdXt_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1744,13 +1796,13 @@ INTERFACE
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 !
-  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_fevar(obj, cdNTdXt, Val)
+  MODULE PURE SUBROUTINE getProjectionOfdNTdXt_2(obj, cdNTdXt, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNTdXt(:, :, :)
     !! returned $c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$
-    TYPE(FEVariable_), INTENT(IN) :: Val
+    TYPE(FEVariable_), INTENT(IN) :: val
     !! constant value of vector
-  END SUBROUTINE getProjectionOfdNTdXt_fevar
+  END SUBROUTINE getProjectionOfdNTdXt_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1759,8 +1811,8 @@ END INTERFACE
 
 INTERFACE getProjectionOfdNTdXt
   MODULE PROCEDURE &
-    & getProjectionOfdNTdXt_constvector, &
-    & getProjectionOfdNTdXt_fevar
+    & getProjectionOfdNTdXt_1, &
+    & getProjectionOfdNTdXt_2
 END INTERFACE getProjectionOfdNTdXt
 
 PUBLIC :: getProjectionOfdNTdXt
@@ -1779,10 +1831,10 @@ INTERFACE
 !  $$\nabla \vert phi \vert / \vert (\nabla \vert phi \vert) \vert$$
 !
 
-  MODULE PURE SUBROUTINE getUnitNormal_scalar(obj, R, Val)
+  MODULE PURE SUBROUTINE getUnitNormal_scalar(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), INTENT(IN) :: val(:)
   END SUBROUTINE getUnitNormal_scalar
 END INTERFACE
 
@@ -1791,10 +1843,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE getUnitNormal_vector(obj, R, Val)
+  MODULE PURE SUBROUTINE getUnitNormal_vector(obj, R, val)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
   END SUBROUTINE getUnitNormal_vector
 END INTERFACE
 

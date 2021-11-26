@@ -1,0 +1,229 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   ConvectiveMatrix_31.part
+!                   Last Update :   Nov-20-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    STConvectiveMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getConvectiveMatrix_31
+!------------------------------------------------------------------------------
+
+ SUBROUTINE getConvectiveMatrix_31( Obj, A, A0, Term1, Term2, MultiVar )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  A, A0 ( :, :, : )
+!   2.  Term1, Term2 {dt, dx, dy, dz}
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Utility, ONLY : OUTERPROD
+
+    ! Define intent of dummy variables
+#ifdef STMat
+    CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+    CLASS( STConvectiveMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+    REAL( DFP ), DIMENSION( :, :, : ), INTENT( IN ) :: A, A0
+    CHARACTER( LEN = * ), INTENT( IN ) :: Term1, Term2
+    LOGICAL( LGT ), INTENT( IN ) :: MultiVar
+
+    ! Define internal variables
+#ifdef DEBUG_VER
+    INTEGER( I4B ) :: NNS, NNT, NIPS, NIPT, NSD
+#endif
+    INTEGER( I4B ) :: IPS
+    REAL( DFP ), ALLOCATABLE :: Mat3( :, :, : )
+
+#ifdef DEBUG_VER
+    Error_Flag = .FALSE.
+    IF( .NOT. Obj % isInitiated( ) ) THEN
+        CALL Err_Msg( &
+        "STConvectiveMatrix_Class.f90", &
+        "getConvectiveMatrix_31()", &
+        "STMassMatrix_ Object is not Initiated" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+    END IF
+
+    NNS = Obj % SD( 1,1 ) % getNNS( )
+    NNT = Obj % SD( 1,1 ) % getNNT( ) 
+    NIPS = Obj % getNIPS( )
+    NIPT = Obj % getNIPT( )
+    NSD = Obj % SD( 1, 1 ) % getNSD( )
+
+    IF( SIZE( A, 3 ) .NE. NIPS  ) THEN 
+
+        CALL Err_Msg( &
+        "STConvectiveMatrix_Class.f90", &
+        "getConvectiveMatrix_31()", &
+        "The Shape of A matrix must be ( *, *, NIPS)" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+    IF( SIZE( A0, 3 ) .NE. NIPS ) THEN 
+
+        CALL Err_Msg( &
+        "STConvectiveMatrix_Class.f90", &
+        "getConvectiveMatrix_31()", &
+        "The Shape of A0 matrix must be ( *, *, NIPS )" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+    IF( SIZE( A, 1 ) .NE. SIZE( A, 2 ) ) THEN 
+
+        CALL Err_Msg( &
+        "STConvectiveMatrix_Class.f90", &
+        "getConvectiveMatrix_31()", &
+        "The size of first and second dimension of A must be same" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+    IF( SIZE( A0, 1 ) .NE. SIZE( A0, 2 ) ) THEN 
+
+        CALL Err_Msg( &
+        "STConvectiveMatrix_Class.f90", &
+        "getConvectiveMatrix_31()", &
+        "The size of first and second dimension of A0 must be same" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+
+    END IF
+
+    SELECT CASE( TRIM( ADJUSTL( Term1 ) ) )
+        
+        CASE( "dX", "dx", "dx1", "dX1", "X", "x", "x1", "X1" )
+
+            IF( NSD .LT. 1 ) THEN 
+        
+                CALL Err_Msg( &
+                "STConvectiveMatrix_Class.f90", &
+                "getConvectiveMatrix_31()", &
+                "Term1 is dx therefore NSD should be &
+                & greater than or equal to 1" &
+                )
+                Error_Flag = .TRUE.
+                RETURN
+        
+            END IF
+        
+        CASE( "Y", "y", "x2", "X2", "dY", "dy", "dx2", "dX2" )
+
+            IF( NSD .LT. 2 ) THEN 
+        
+                CALL Err_Msg( &
+                "STConvectiveMatrix_Class.f90", &
+                "getConvectiveMatrix_31()", &
+                "Term1 is dy therefore NSD should be greater than 1" &
+                )
+                Error_Flag = .TRUE.
+                RETURN
+        
+            END IF
+
+        CASE( "Z", "z", "x3", "X3", "dZ", "dz", "dx3", "dX3" )
+
+            IF( NSD .LT. 3 ) THEN 
+        
+                CALL Err_Msg( &
+                "STConvectiveMatrix_Class.f90", &
+                "getConvectiveMatrix_31()", &
+                "Term1 is dz therefore NSD should be greater than 2" &
+                )
+                Error_Flag = .TRUE.
+                RETURN
+        
+            END IF
+
+    END SELECT
+
+    SELECT CASE( TRIM( ADJUSTL( Term2 ) ) )
+        
+        CASE( "dX", "dx", "dx1", "dX1", "X", "x", "x1", "X1" )
+
+            IF( NSD .LT. 1 ) THEN 
+        
+                CALL Err_Msg( &
+                "STConvectiveMatrix_Class.f90", &
+                "getConvectiveMatrix_31()", &
+                "Term2 is dx therefore NSD should be &
+                & greater than or equal to 1" &
+                )
+                Error_Flag = .TRUE.
+                RETURN
+        
+            END IF
+        
+        CASE( "Y", "y", "x2", "X2", "dY", "dy", "dx2", "dX2" )
+
+            IF( NSD .LT. 2 ) THEN 
+        
+                CALL Err_Msg( &
+                "STConvectiveMatrix_Class.f90", &
+                "getConvectiveMatrix_31()", &
+                "Term2 is dy therefore NSD should be greater than 1" &
+                )
+                Error_Flag = .TRUE.
+                RETURN
+        
+            END IF
+
+        CASE( "Z", "z", "x3", "X3", "dZ", "dz", "dx3", "dX3" )
+
+            IF( NSD .LT. 3 ) THEN 
+        
+                CALL Err_Msg( &
+                "STConvectiveMatrix_Class.f90", &
+                "getConvectiveMatrix_31()", &
+                "Term2 is dz therefore NSD should be greater than 2" &
+                )
+                Error_Flag = .TRUE.
+                RETURN
+        
+            END IF
+
+    END SELECT
+#endif
+
+    ALLOCATE( Mat3( SIZE( A, 1 ), SIZE( A, 2 ), SIZE( A, 3 ) ) )
+
+    DO IPS = 1, SIZE( A, 3 )
+        Mat3( :, :, IPS ) = MATMUL( TRANSPOSE( A0( :,:,IPS ) ), A( :, :, IPS ) )
+    END DO
+
+    CALL Obj % getConvectiveMatrix( A = Mat3, Term1 = Term1, Term2 = Term2, MultiVar = MultiVar )
+
+    DEALLOCATE( Mat3 )
+
+ END SUBROUTINE getConvectiveMatrix_31
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

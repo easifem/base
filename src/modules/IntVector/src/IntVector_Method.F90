@@ -1003,8 +1003,8 @@ PUBLIC :: Repeat
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         18 June 2021
-! summary: Horizontally concat two integer vectors and returns a new integer vector
+! date: 18 June 2021
+! summary: Horizontally concat two integer vectors
 
 INTERFACE
   MODULE PURE FUNCTION IntVec_H_CONCAT_1(vec1, vec2) RESULT(Ans)
@@ -1020,7 +1020,7 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date:         18 June 2021
-! summary: Horizontally concat a IntVec data type to another IntVec datatype.
+! summary: Horizontally concat two [[IntVector_]]
 
 INTERFACE
   MODULE PURE FUNCTION IntVec_H_CONCAT_2(obj1, obj2) RESULT(Ans)

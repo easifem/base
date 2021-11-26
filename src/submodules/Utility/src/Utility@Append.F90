@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) Append
+SUBMODULE(Utility) AppendMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -97,4 +97,4 @@ ELSE
 END IF
 END PROCEDURE Append_R2
 
-END SUBMODULE Append
+END SUBMODULE AppendMethods

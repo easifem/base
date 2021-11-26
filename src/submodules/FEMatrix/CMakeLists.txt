@@ -9,8 +9,10 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/FEMatrix_Method@DiffusionMatrix.F90
-  ${src_path}/FEMatrix_Method@MassMatrix.F90
-  ${src_path}/FEMatrix_Method@StiffnessMatrix.F90
-  ${src_path}/FEMatrix_Method@NitscheMatrix.F90
-)
+  ${src_path}/FEMatrix_Method@DiffusionMatrixMethods.F90
+  ${src_path}/FEMatrix_Method@MassMatrixMethods.F90
+  ${src_path}/FEMatrix_Method@StiffnessMatrixMethods.F90
+  ${src_path}/FEMatrix_Method@NitscheMatrixMethods.F90
+  ${src_path}/FEMatrix_Method@ConvectiveMatrixMethods.F90
+  ${src_path}/FEMatrix_Method@STConvectiveMatrixMethods.F90
+  )
