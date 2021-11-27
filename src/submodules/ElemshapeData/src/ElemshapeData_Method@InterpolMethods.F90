@@ -25,7 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getInterpolation_1
-Interpol = MATMUL(Val, obj%N)
+Interpol = MATMUL(val, obj%N)
 END PROCEDURE elemsd_getInterpolation_1
 
 !----------------------------------------------------------------------------
@@ -33,23 +33,23 @@ END PROCEDURE elemsd_getInterpolation_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getInterpolation_2
-SELECT CASE (Val%VarType)
+SELECT CASE (val%VarType)
 CASE (Constant)
   CALL Reallocate(Interpol, SIZE(obj%N, 2))
-  Interpol = Get(Val, TypeFEVariableScalar, TypeFEVariableConstant)
+  Interpol = Get(val, TypeFEVariableScalar, TypeFEVariableConstant)
 CASE (Space)
-  IF (Val%DefineOn .EQ. Nodal) THEN
+  IF (val%DefineOn .EQ. Nodal) THEN
     Interpol = Interpolation(obj, &
-      & Get(Val, TypeFEVariableScalar, TypeFEVariableSpace))
+      & Get(val, TypeFEVariableScalar, TypeFEVariableSpace))
   ELSE
-    Interpol = Get(Val, TypeFEVariableScalar, TypeFEVariableSpace)
+    Interpol = Get(val, TypeFEVariableScalar, TypeFEVariableSpace)
   END IF
 CASE (SpaceTime)
   SELECT TYPE (obj)
   TYPE IS (STElemShapeData_)
-    IF (Val%DefineOn .EQ. Nodal) THEN
+    IF (val%DefineOn .EQ. Nodal) THEN
       Interpol = STInterpolation(obj, &
-        & Get(Val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
+        & Get(val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
     END IF
   END SELECT
 END SELECT
@@ -60,7 +60,7 @@ END PROCEDURE elemsd_getInterpolation_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getInterpolation_3
-Interpol = MATMUL(Val, obj%N)
+Interpol = MATMUL(val, obj%N)
 END PROCEDURE elemsd_getInterpolation_3
 
 !----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ END PROCEDURE elemsd_getInterpolation_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getInterpolation_4
-Interpol = MATMUL(Val, obj%N)
+Interpol = MATMUL(val, obj%N)
 END PROCEDURE elemsd_getInterpolation_4
 
 !----------------------------------------------------------------------------
@@ -77,26 +77,26 @@ END PROCEDURE elemsd_getInterpolation_4
 
 MODULE PROCEDURE elemsd_getInterpolation_5
 INTEGER(I4B) :: i
-SELECT CASE (Val%VarType)
+SELECT CASE (val%VarType)
 CASE (Constant)
-  Interpol(:, :, 1) = Get(Val, TypeFEVariableMatrix, &
+  Interpol(:, :, 1) = Get(val, TypeFEVariableMatrix, &
     & TypeFEVariableConstant)
   DO i = 2, SIZE(obj%N, 2)
     Interpol(:, :, i) = Interpol(:, :, 1)
   END DO
 CASE (Space)
-  IF (Val%DefineOn .EQ. Nodal) THEN
+  IF (val%DefineOn .EQ. Nodal) THEN
     Interpol = Interpolation(obj, &
-      & Get(Val, TypeFEVariableMatrix, TypeFEVariableSpace))
+      & Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
   ELSE
-    Interpol = Get(Val, TypeFEVariableMatrix, TypeFEVariableSpace)
+    Interpol = Get(val, TypeFEVariableMatrix, TypeFEVariableSpace)
   END IF
 CASE (SpaceTime)
   SELECT TYPE (obj)
   TYPE IS (STElemShapeData_)
-    IF (Val%DefineOn .EQ. Nodal) THEN
+    IF (val%DefineOn .EQ. Nodal) THEN
       Interpol = STInterpolation(obj, &
-        & Get(Val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
+        & Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
     END IF
   END SELECT
 END SELECT
@@ -107,7 +107,7 @@ END PROCEDURE elemsd_getInterpolation_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getInterpolation_6
-Interpol = MATMUL(MATMUL(Val, obj%T), obj%N)
+Interpol = MATMUL(MATMUL(val, obj%T), obj%N)
 END PROCEDURE elemsd_getInterpolation_6
 
 !----------------------------------------------------------------------------
@@ -118,31 +118,31 @@ MODULE PROCEDURE elemsd_getInterpolation_7
 INTEGER(I4B) :: ii
 !! main
 CALL Reallocate(interpol, SIZE(obj(1)%N, 2), SIZE(obj))
-SELECT CASE (Val%VarType)
+SELECT CASE (val%VarType)
 CASE (Constant)
-  Interpol = Get(Val, TypeFEVariableScalar, TypeFEVariableConstant)
+  Interpol = Get(val, TypeFEVariableScalar, TypeFEVariableConstant)
 CASE (Space)
-  IF (Val%DefineOn .EQ. Nodal) THEN
+  IF (val%DefineOn .EQ. Nodal) THEN
     Interpol(:, 1) = Interpolation(obj(1), &
-        & Get(Val, TypeFEVariableScalar, TypeFEVariableSpace))
+        & Get(val, TypeFEVariableScalar, TypeFEVariableSpace))
     DO ii = 2, SIZE(obj)
       Interpol(:, ii) = Interpol(:, 1)
     END DO
   ELSE
-    Interpol(:, 1) = Get(Val, TypeFEVariableScalar,&
+    Interpol(:, 1) = Get(val, TypeFEVariableScalar,&
       & TypeFEVariableSpace)
     DO ii = 2, SIZE(obj)
       Interpol(:, ii) = Interpol(:, 1)
     END DO
   END IF
 CASE (SpaceTime)
-  IF (Val%DefineOn .EQ. Nodal) THEN
+  IF (val%DefineOn .EQ. Nodal) THEN
     DO ii = 1, SIZE(obj)
       Interpol(:, ii) = STInterpolation(obj(ii), &
-        & Get(Val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
+        & Get(val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
     END DO
   ELSE
-    Interpol = Get(Val, TypeFEVariableScalar, &
+    Interpol = Get(val, TypeFEVariableScalar, &
       & TypeFEVariableSpaceTime)
   END IF
 END SELECT
@@ -153,7 +153,7 @@ END PROCEDURE elemsd_getInterpolation_7
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getInterpolation_8
-Interpol = MATMUL(MATMUL(Val, obj%T), obj%N)
+Interpol = MATMUL(MATMUL(val, obj%T), obj%N)
 END PROCEDURE elemsd_getInterpolation_8
 
 !----------------------------------------------------------------------------
@@ -161,7 +161,7 @@ END PROCEDURE elemsd_getInterpolation_8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getInterpolation_9
-Interpol = MATMUL(MATMUL(Val, obj%T), obj%N)
+Interpol = MATMUL(MATMUL(val, obj%T), obj%N)
 END PROCEDURE elemsd_getInterpolation_9
 
 !----------------------------------------------------------------------------
@@ -171,9 +171,9 @@ END PROCEDURE elemsd_getInterpolation_9
 MODULE PROCEDURE elemsd_getInterpolation_10
 INTEGER(I4B) :: ii, jj
 !! main
-SELECT CASE (Val%VarType)
+SELECT CASE (val%VarType)
 CASE (Constant)
-  Interpol(:, :, 1, 1) = Get(Val, TypeFEVariableMatrix,&
+  Interpol(:, :, 1, 1) = Get(val, TypeFEVariableMatrix,&
     & TypeFEVariableConstant)
   DO jj = 1, SIZE(Interpol, 4)
     DO ii = 1, SIZE(Interpol, 3)
@@ -182,38 +182,72 @@ CASE (Constant)
     END DO
   END DO
 CASE (Space)
-  IF (Val%DefineOn .EQ. Nodal) THEN
+  IF (val%DefineOn .EQ. Nodal) THEN
     Interpol(:, :, :, 1) = Interpolation(obj(1), &
-        & Get(Val, TypeFEVariableMatrix, TypeFEVariableSpace))
+        & Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
     DO ii = 2, SIZE(Interpol, 4)
       Interpol(:, :, :, ii) = Interpol(:, :, :, 1)
     END DO
   ELSE
-    Interpol(:, :, :, 1) = Get(Val, TypeFEVariableMatrix,&
+    Interpol(:, :, :, 1) = Get(val, TypeFEVariableMatrix,&
       & TypeFEVariableSpace)
     DO ii = 2, SIZE(Interpol, 4)
       Interpol(:, :, :, ii) = Interpol(:, :, :, 1)
     END DO
   END IF
 CASE (SpaceTime)
-  IF (Val%DefineOn .EQ. Nodal) THEN
+  IF (val%DefineOn .EQ. Nodal) THEN
     DO ii = 1, SIZE(Interpol, 4)
       Interpol(:, :, :, ii) = STInterpolation(obj(ii), &
-        & Get(Val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
+        & Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
     END DO
   ELSE
-    Interpol = Get(Val, TypeFEVariableMatrix, &
+    Interpol = Get(val, TypeFEVariableMatrix, &
       & TypeFEVariableSpaceTime)
   END IF
 END SELECT
 END PROCEDURE elemsd_getInterpolation_10
 
 !----------------------------------------------------------------------------
+!                                                           getInterpolation
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_getInterpolation_11
+REAL(DFP), ALLOCATABLE :: realvec(:)
+INTEGER(I4B) :: ii
+!! main
+SELECT CASE (val%VarType)
+CASE (Constant)
+  realvec = Get(val, TypeFEVariableVector, TypeFEVariableConstant)
+  CALL Reallocate(Interpol, SIZE(realvec), SIZE(obj%N, 2))
+  DO ii = 1, SIZE(Interpol, 2)
+    interpol(:, ii) = realvec
+  END DO
+  DEALLOCATE(realvec)
+CASE (Space)
+  IF (val%DefineOn .EQ. Nodal) THEN
+    Interpol = Interpolation(obj, &
+      & Get(val, TypeFEVariableVector, TypeFEVariableSpace))
+  ELSE
+    Interpol = Get(val, TypeFEVariableVector, TypeFEVariableSpace)
+  END IF
+CASE (SpaceTime)
+  SELECT TYPE (obj)
+  TYPE IS (STElemShapeData_)
+    IF (val%DefineOn .EQ. Nodal) THEN
+      Interpol = STInterpolation(obj, &
+        & Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime))
+    END IF
+  END SELECT
+END SELECT
+END PROCEDURE elemsd_getInterpolation_11
+
+!----------------------------------------------------------------------------
 !                                                              Interpolation
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE interpol_scalar
-Interpol = MATMUL(Val, obj%N)
+Interpol = MATMUL(val, obj%N)
 END PROCEDURE interpol_scalar
 
 !----------------------------------------------------------------------------
@@ -221,7 +255,7 @@ END PROCEDURE interpol_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE interpol_vector
-Interpol = MATMUL(Val, obj%N)
+Interpol = MATMUL(val, obj%N)
 END PROCEDURE interpol_vector
 
 !----------------------------------------------------------------------------
@@ -229,14 +263,14 @@ END PROCEDURE interpol_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE interpol_matrix
-Interpol = MATMUL(Val, obj%N)
+Interpol = MATMUL(val, obj%N)
 END PROCEDURE interpol_matrix
 !----------------------------------------------------------------------------
 !                                                            STInterpolation
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_interpol_scalar
-Interpol = MATMUL(MATMUL(Val, obj%T), obj%N)
+Interpol = MATMUL(MATMUL(val, obj%T), obj%N)
 END PROCEDURE stsd_interpol_scalar
 
 !----------------------------------------------------------------------------
@@ -244,7 +278,7 @@ END PROCEDURE stsd_interpol_scalar
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_interpol_vector
-Interpol = MATMUL(MATMUL(Val, obj%T), obj%N)
+Interpol = MATMUL(MATMUL(val, obj%T), obj%N)
 END PROCEDURE stsd_interpol_vector
 
 !----------------------------------------------------------------------------
@@ -252,7 +286,7 @@ END PROCEDURE stsd_interpol_vector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_interpol_matrix
-Interpol = MATMUL(MATMUL(Val, obj%T), obj%N)
+Interpol = MATMUL(MATMUL(val, obj%T), obj%N)
 END PROCEDURE stsd_interpol_matrix
 
 END SUBMODULE InterpolMethods
