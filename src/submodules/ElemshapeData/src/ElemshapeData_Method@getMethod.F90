@@ -21,88 +21,6 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                           getLocalGradient
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE getLocalGradient_scalar
-dPhidXi = MATMUL(Val, obj%dNdXi)
-END PROCEDURE getLocalGradient_scalar
-
-!----------------------------------------------------------------------------
-!                                                           getLocalGradient
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE getLocalGradient_vector
-dVdXi = MATMUL(Val, obj%dNdXi)
-END PROCEDURE getLocalGradient_vector
-
-!----------------------------------------------------------------------------
-!                                                           getLocalGradient
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE stsd_getLocalGradient_scalar
-dPhidXi = MATMUL(MATMUL(Val, obj%T), obj%dNdXi)
-END PROCEDURE stsd_getLocalGradient_scalar
-
-!----------------------------------------------------------------------------
-!                                                           getLocalGradient
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE stsd_getLocalGradient_vector
-dVdXi = MATMUL(MATMUL(Val, obj%T), obj%dNdXi)
-END PROCEDURE stsd_getLocalGradient_vector
-
-!----------------------------------------------------------------------------
-!                                                         getSpatialGradient
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE getSpatialGradient_scalar
-IF (obj%refelem%nsd .EQ. obj%refelem%xidimension) THEN
-  dPhidXt = MATMUL(Val, obj%dNdXt)
-ELSE
-  CALL Reallocate(dPhidXt, obj%refelem%xidimension, SIZE(obj%N, 2))
-END IF
-END PROCEDURE getSpatialGradient_scalar
-
-!----------------------------------------------------------------------------
-!                                                         getSpatialGradient
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE getSpatialGradient_vector
-IF (obj%refelem%nsd .EQ. obj%refelem%xidimension) THEN
-  dVdXt = MATMUL(Val, obj%dNdXt)
-ELSE
-  CALL Reallocate(dVdXt, obj%refelem%nsd, obj%refelem%xidimension, &
-    & SIZE(obj%N, 2))
-END IF
-END PROCEDURE getSpatialGradient_vector
-
-!----------------------------------------------------------------------------
-!                                                         getSpatialGradient
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE stsd_getSpatialGradient_scalar
-IF (obj%refelem%nsd .EQ. obj%refelem%xidimension) THEN
-  dPhidXt = MATMUL(MATMUL(Val, obj%T), obj%dNdXt)
-ELSE
-  CALL Reallocate(dPhidXt, obj%refelem%xidimension, SIZE(obj%N, 2))
-END IF
-END PROCEDURE stsd_getSpatialGradient_scalar
-
-!----------------------------------------------------------------------------
-!                                                         getSpatialGradient
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE stsd_getSpatialGradient_vector
-IF (obj%refelem%nsd .EQ. obj%refelem%xidimension) THEN
-  dVdXt = MATMUL(MATMUL(Val, obj%T), obj%dNdXt)
-ELSE
-  CALL Reallocate(dVdXt, obj%refelem%nsd, obj%refelem%xidimension, &
-    & SIZE(obj%N, 2))
-END IF
-END PROCEDURE stsd_getSpatialGradient_vector
-
-!----------------------------------------------------------------------------
 !                                                       getProjectionOfdNdXt
 !----------------------------------------------------------------------------
 
@@ -205,87 +123,50 @@ END PROCEDURE getProjectionOfdNTdXt_2
 !                                                             getUnitNormal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getUnitNormal_scalar
-! Define internal variables
-REAL(DFP), ALLOCATABLE :: dPhidX(:, :), PhiBar(:), Norm_L2_Phi(:)
-INTEGER(I4B) :: NSD, n, i
-
-CALL getInterpolation(obj=obj, Val=Val, Interpol=PhiBar)
-CALL getSpatialGradient(obj=obj, dPhidXt=dPhidX, Val=Val)
-n = SIZE(obj%N, 2)
-NSD = obj%RefElem%NSD
-IF (ALLOCATED(R)) THEN
-  IF (ANY(SHAPE(R) .NE. [NSD, n])) THEN
-    DEALLOCATE (R)
-    ALLOCATE (R(NSD, n))
-  END IF
-ELSE
-  ALLOCATE (R(NSD, n))
-END IF
-R = 0.0_DFP
-
-Norm_L2_Phi = SQRT(SUM(dPhidX**2, Dim=2))
-
-DO i = 1, n
-  IF (Norm_L2_Phi(i) .GT. zero) THEN
-    IF (PhiBar(i) .GE. 0.0_DFP) THEN
-      R(:, i) = dPhidX(:, i) / Norm_L2_Phi(i)
-    ELSE
-      R(:, i) = -dPhidX(:, i) / Norm_L2_Phi(i)
-    END IF
-  END IF
-END DO
-
-IF (ALLOCATED(dPhidX)) DEALLOCATE (dPhidX)
-IF (ALLOCATED(PhiBar)) DEALLOCATE (PhiBar)
-IF (ALLOCATED(Norm_L2_Phi)) DEALLOCATE (Norm_L2_Phi)
-
-END PROCEDURE getUnitNormal_scalar
+MODULE PROCEDURE getUnitNormal_1
+#include "./getUnitNormal_1.inc"
+END PROCEDURE getUnitNormal_1
 
 !----------------------------------------------------------------------------
 !                                                             getUnitNormal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getUnitNormal_vector
-! Define internal variables
-REAL(DFP), ALLOCATABLE :: dVdX(:, :, :), VBar(:, :), MatVec(:), &
-  & Norm_L2_VBar(:)
-REAL(DFP) :: Norm_L2_MatVec
-INTEGER(I4B) :: NSD, n, i
+MODULE PROCEDURE getUnitNormal_2
+#include "./getUnitNormal_2.inc"
+END PROCEDURE getUnitNormal_2
 
-CALL getInterpolation(obj=obj, Interpol=VBar, Val=Val)
-CALL getSpatialGradient(obj=obj, dVdXt=dVdX, Val=Val)
-! Norm_L2_VBar = SQRT( SUM( VBar ** 2, DIM = 2 ) )
-Norm_L2_VBar = NORM2(VBar, DIM=2)
+!----------------------------------------------------------------------------
+!                                                             getUnitNormal
+!----------------------------------------------------------------------------
 
-n = SIZE(obj%N, 2)
-NSD = obj%RefElem%NSD
-IF (ALLOCATED(R)) THEN
-  IF (ANY(SHAPE(R) .NE. [NSD, n])) THEN
-    DEALLOCATE (R)
-    ALLOCATE (R(NSD, n))
-  END IF
-ELSE
-  ALLOCATE (R(NSD, n))
+MODULE PROCEDURE getUnitNormal_3
+IF (val%rank .EQ. scalar) THEN
+  CALL scalar_getUnitNormal_3(obj=obj, r=r, val=val)
+ELSEIF (val%rank .EQ. vector) THEN
+  CALL vector_getUnitNormal_3(obj=obj, r=r, val=val)
 END IF
-R = 0.0_DFP
+END PROCEDURE getUnitNormal_3
 
-DO i = 1, n
-  IF (Norm_L2_VBar(i) .GT. Zero) THEN
-    VBar(:, i) = VBar(:, i) / Norm_L2_VBar(i)
-    MatVec = MATMUL(VBar(:, i), dVdX(:, :, i))
-    Norm_L2_MatVec = NORM2(MatVec)
-    IF (Norm_L2_MatVec .GT. Zero) THEN
-      R(:, i) = MatVec / Norm_L2_MatVec
-    END IF
-  END IF
-END DO
+!----------------------------------------------------------------------------
+!                                                             getUnitNormal
+!----------------------------------------------------------------------------
 
-IF (ALLOCATED(dVdX)) DEALLOCATE (dVdX)
-IF (ALLOCATED(VBar)) DEALLOCATE (VBar)
-IF (ALLOCATED(MatVec)) DEALLOCATE (MatVec)
-IF (ALLOCATED(Norm_L2_VBar)) DEALLOCATE (Norm_L2_VBar)
+PURE SUBROUTINE scalar_getUnitNormal_3(obj, r, val)
+  CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: r(:, :)
+  TYPE(FEVariable_), INTENT(IN) :: val
+#include "./getUnitNormal_1.inc"
+END SUBROUTINE scalar_getUnitNormal_3
 
-END PROCEDURE getUnitNormal_vector
+!----------------------------------------------------------------------------
+!                                                             getUnitNormal
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE vector_getUnitNormal_3(obj, r, val)
+  CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: r(:, :)
+  TYPE(FEVariable_), INTENT(IN) :: val
+#include "./getUnitNormal_2.inc"
+END SUBROUTINE vector_getUnitNormal_3
 
 END SUBMODULE getMethod
