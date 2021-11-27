@@ -805,13 +805,13 @@ TYPE(KeyValue_), PARAMETER, PUBLIC :: TypeKeyValue = &
 !----------------------------------------------------------------------------
 
 TYPE :: FEVariable_
-  REAL(DFP), ALLOCATABLE :: R1(:), R2(:, :), R3(:, :, :), &
-    & R4(:, :, :, :)
-  REAL(DFP) :: R0 = 0.
-  INTEGER(I4B) :: DefineOn = 0 !Nodal, Quadrature
-  INTEGER(I4B) :: VarType = 0 !Space, SpaceTime, Constant
-  INTEGER(I4B) :: Rank = 0 ! Scalar, Vector, Matrix
-  INTEGER(I4B) :: CaseType = 0
+  REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :), &
+    & r4(:, :, :, :)
+  REAL(DFP) :: r0 = 0.
+  INTEGER(I4B) :: defineOn = 0 !Nodal, Quadrature
+  INTEGER(I4B) :: varType = 0 !Space, SpaceTime, Constant
+  INTEGER(I4B) :: rank = 0 ! Scalar, Vector, Matrix
+  INTEGER(I4B) :: caseType = 0
 END TYPE FEVariable_
 
 PUBLIC :: FEVariable_
