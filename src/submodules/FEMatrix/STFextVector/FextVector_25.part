@@ -1,0 +1,142 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   FextVector_25.part
+!                   Last Update :   Nov-23-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!       -   Space Interpolation of scalar and vector
+!
+!   HOSTING FILE
+!       -    STFextVector_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                              getFextVector_25
+!------------------------------------------------------------------------------
+
+SUBROUTINE getFextVector_25( Obj, Fext, FextType, Term1 )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !   1. Fext Space nodal values
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  ! Define intent of dummy variables
+#ifdef STMat
+  CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( STFextVector_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+
+  REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Fext
+  CHARACTER( LEN = * ), INTENT( IN ) :: FextType, Term1
+
+  ! Define internal variables
+  INTEGER( I4B ) :: NNS, NNT, NIPS, NIPT, IPS, IPT, a, Indx, M
+  REAL( DFP ), ALLOCATABLE :: Fbar( : )
+  REAL( DFP ) :: RealVal
+  CLASS( STShapeData_ ), POINTER :: SD
+  LOGICAL( LGT ) :: isFNodal
+
+
+#ifdef DEBUG_VER    
+  Error_Flag = .FALSE.
+  IF( .NOT. Obj % isInitiated( ) ) THEN
+     CALL Err_Msg("STFextVector_Class.f90", &
+          "getFextVector_25(), Flag-1", &
+          "STFextVector_ Object is not Initiated" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NNS = Obj % SD( 1,1 ) % getNNS( )
+  NNT = Obj % SD( 1,1 ) % getNNT( ) 
+  NIPS = Obj % getNIPS( )
+  NIPT = Obj % getNIPT( )
+
+#ifdef DEBUG_VER
+  IF( SIZE( Fext, 2 ) .NE. NNS .AND. SIZE( Fext, 2 ) .NE. NIPS ) THEN
+     CALL Err_Msg("STFextVector_Class.f90", &
+          "getFextVector_25(), Flag-2", &
+          "The SIZE( Fext, 2 ) should be equal to NNS or NIPS" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  isFNodal = .TRUE.
+  SELECT CASE( TRIM( ADJUSTL( FextType ) ) )
+  CASE( 'Quad', 'QuadPoints', 'Quad Points', & 
+       & 'Integration', 'Integration Points', 'IntegrationPoints' )
+     isFNodal = .FALSE.
+  END SELECT
+
+  SELECT CASE( TRIM( ADJUSTL( Term1 ) ) )
+  CASE( 'dx', 'dx1', 'dX', 'dX1', 'x', 'X', 'x1', 'X1' )
+     Indx = 1_I4B
+
+  CASE( 'dy', 'dx2', 'dY', 'dX2', 'y', 'Y', 'x2', 'X2' )
+     Indx = 2_I4B
+
+  CASE( 'dz', 'dx3', 'dZ', 'dX3', 'z', 'Z', 'x3', 'X3' )
+     Indx = 3_I4B
+
+  CASE DEFAULT
+     Indx = 0_I4B
+
+  END SELECT
+
+  M = SIZE( Fext, 1 )
+  ALLOCATE( Fbar( M ) )
+  IF( ALLOCATED( Obj % Vec3 ) ) DEALLOCATE( Obj % Vec3 )
+  ALLOCATE( Obj % Vec3( M, NNS, NNT ) )
+  Obj % Vec3 = 0.0_DFP
+
+  DO IPT = 1, NIPT
+     DO IPS = 1, NIPS
+        SD => Obj % SD( IPS, IPT )
+        RealVal = SD % Ws * SD % Wt * SD % Js_Xi2Xt * SD % Jt &
+             & * SD % Thickness
+
+        IF( isFNodal ) THEN
+           CALL SD % getInterpolationOfVector( &
+                & SpaceNodalValues = Fext, Val = Fbar )
+        ELSE
+           Fbar = Fext( :, IPS )
+        END IF
+
+        IF( Indx .EQ. 0 ) THEN
+           DO a = 1, M
+              Obj % Vec3( a, :, : ) = Obj % Vec3( a, :, : ) + &
+                   & RealVal * Fbar( a ) * SD % dNTdt
+           END DO
+        ELSE
+           DO a = 1, M
+              Obj % Vec3( a, :, : ) = Obj % Vec3( a, :, : ) + &
+                   & RealVal * Fbar( a ) * SD % dNTdXt( :, Indx, : )
+           END DO
+        END IF
+
+     END DO
+  END DO
+
+  DEALLOCATE( Fbar )
+  NULLIFY( SD )
+
+END SUBROUTINE getFextVector_25
+!
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+!

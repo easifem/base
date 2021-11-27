@@ -152,7 +152,7 @@ END PROCEDURE getUnitNormal_3
 !----------------------------------------------------------------------------
 
 PURE SUBROUTINE scalar_getUnitNormal_3(obj, r, val)
-  CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+  CLASS(ElemshapeData_), INTENT(IN) :: obj
   REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: r(:, :)
   TYPE(FEVariable_), INTENT(IN) :: val
 #include "./getUnitNormal_1.inc"
@@ -163,10 +163,48 @@ END SUBROUTINE scalar_getUnitNormal_3
 !----------------------------------------------------------------------------
 
 PURE SUBROUTINE vector_getUnitNormal_3(obj, r, val)
-  CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+  CLASS(ElemshapeData_), INTENT(IN) :: obj
   REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: r(:, :)
   TYPE(FEVariable_), INTENT(IN) :: val
 #include "./getUnitNormal_2.inc"
 END SUBROUTINE vector_getUnitNormal_3
+
+!----------------------------------------------------------------------------
+!                                                               getSUPGParam
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_getSUPGParam
+INTEGER(I4B) :: ii
+REAL(DFP) :: t1, t2, t3
+REAL(DFP), ALLOCATABLE :: p(:, :), r(:, :), q(:, :), ans(:), nubar(:)
+type(FEVariable_) :: rvar
+!! main
+CALL GetProjectionOfdNdXt(obj=obj, cdNdXt=p, val=c)
+CALL GetUnitNormal(obj=obj, val=val, r=r)
+rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
+CALL GetProjectionOfdNdXt(obj=obj, cdNdXt=q, val=rvar)
+CALL GetInterpolation(obj=obj, val=nu, interpol=nubar)
+!!
+IF (dt .GT. zero) THEN
+  t2 = 2.0_DFP / dt
+ELSE
+  t2 = 0.0_DFP
+END IF
+!!
+CALL reallocate(ans, SIZE(obj%N, 2))
+DO ii = 1, SIZE(ans)
+  t1 = SUM(ABS(p(:, ii)))
+  t3 = nubar(ii) * (SUM(ABS(q(:, ii))))**2
+  ans(ii) = SQRT(1.0_DFP / (t1**2 + t2**2 + t3**2))
+END DO
+tau = QuadratureVariable(ans, TypeFEVariableScalar, TypeFEVariableSpace)
+!! cleanup
+IF(ALLOCATED(p)) DEALLOCATE(p)
+IF(ALLOCATED(r)) DEALLOCATE(r)
+IF(ALLOCATED(q)) DEALLOCATE(q)
+IF(ALLOCATED(ans)) DEALLOCATE(ans)
+IF(ALLOCATED(nubar)) DEALLOCATE(nubar)
+CALL Deallocate(rvar)
+END PROCEDURE elemsd_getSUPGParam
 
 END SUBMODULE getMethod

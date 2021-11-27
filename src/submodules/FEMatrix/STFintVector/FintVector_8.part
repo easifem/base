@@ -1,0 +1,103 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   FintVector_8.part
+!                   Last Update :   March-25-2018
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!       -   Method for computing the Spacetime Fint vector
+!       -   Internal force vector for alpha-beta v-STFEM
+!
+!   HOSTING FILE
+!       -    STFintVector_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                              getFintVector_8
+!------------------------------------------------------------------------------
+
+SUBROUTINE getFintVector_8( Obj, CData, TimeVector, beta_STFEM )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !       1.  Returns element Sigma;
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  USE ConstitutiveData_Class
+  USE Stress_Class
+
+  ! Define intent of dummy variables
+#ifdef STMat
+  CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( STFintVector_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+
+  CLASS( ConstitutiveData_ ), INTENT( IN ), TARGET :: CData( :, : )
+  REAL( DFP ), INTENT( IN ) :: beta_STFEM, TimeVector( 2 )
+
+  ! Define internal variables
+  INTEGER( I4B ) :: NIPS, NIPT, IPS, IPT, N, NSD
+  REAL( DFP ), ALLOCATABLE :: Sigma( :, :, : )
+
+#ifdef DEBUG_VER
+  Error_Flag = .FALSE.
+  IF( .NOT. Obj % isInitiated( ) ) THEN
+     CALL Err_Msg( &
+          "STFintVector_Class.f90", &
+          "getFintVector_8(Obj, CData)", &
+          "STFintVector_ Object is not Initiated" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NSD = Obj % SD( 1,1 ) % getNSD( )
+  NIPS = Obj % getNIPS( )
+  NIPT = Obj % getNIPT( )
+
+#ifdef DEBUG_VER
+  IF( SIZE( CData, 1 ) .NE. NIPS .OR. SIZE( CData, 2 ) .NE. NIPT ) THEN
+     CALL Err_Msg( &
+          "STFintVector_Class.f90", &
+          "getFintVector_8(Obj, CData)", &
+          "The Shape of CData is not compatible" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  SELECT CASE( NSD )
+  CASE( 3 )
+     N = 6
+  CASE( 2 )
+     N = 4
+  CASE( 1 )
+     N = 1
+  END SELECT
+
+  ALLOCATE( Sigma( N, NIPS, NIPT ) )
+  DO IPT = 1, NIPT
+     DO IPS = 1, NIPS
+        Sigma( :, IPS, IPT ) = CData( IPS, IPT ) % S .Shape. N
+     END DO
+  END DO
+
+  CALL Obj % getFintVector( Sigma, TimeVector, beta_STFEM )
+  DEALLOCATE( Sigma )
+
+END SUBROUTINE getFintVector_8
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

@@ -29,17 +29,11 @@ MODULE PROCEDURE DiffusionMatrix_1
 REAL(DFP), ALLOCATABLE :: realval(:)
 INTEGER(I4B) :: i
 !! main
-call reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
 realval = trial%js * trial%ws * trial%thickness
 DO i = 1, SIZE(trial%N, 2)
-   ans = ans + realval(i) * matmul(test%dNdXt(:,:,i), &
-        & transpose(trial%dNdXt(:,:,i)))
-  ! DO j = 1, trial%refelem%NSD
-  !   ans = ans + &
-  !     & OUTERPROD(a=test%dNdXt(:, j, i), b= &
-  !     & trial%dNdXt(:, j, i)) &
-  !     & * realval(i)
-  ! END DO
+  ans = ans + realval(i) * MATMUL(test%dNdXt(:, :, i), &
+       & TRANSPOSE(trial%dNdXt(:, :, i)))
 END DO
 DEALLOCATE (realval)
 END PROCEDURE DiffusionMatrix_1
@@ -49,22 +43,30 @@ END PROCEDURE DiffusionMatrix_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_2
-REAL(DFP), ALLOCATABLE :: KBar(:, :, :), realval(:)
-INTEGER(I4B) :: i
-INTEGER(I4B), ALLOCATABLE :: S(:)
-
-S = SHAPE(K)
-ALLOCATE (KBar(S(1), S(2), SIZE(trial%N, 2)))
-CALL getInterpolation(obj=trial, Interpol=KBar, Val=K)
-realval = trial%Js * trial%Ws * trial%Thickness
-ALLOCATE (ans(SIZE(test%N, 1), SIZE(trial%N, 1)))
-ans = 0.0_DFP
-DO i = 1, SIZE(trial%N, 2)
-  ans = ans + realval(i) * MATMUL( &
-    & MATMUL(test%dNdXt(:, :, i), KBar(:, :, i)), &
-    & TRANSPOSE(trial%dNdXt(:, :, i)))
-END DO
-DEALLOCATE (KBar, realval, S)
+REAL(DFP), ALLOCATABLE :: kbar(:, :, :), realval(:), cbar(:)
+INTEGER(I4B) :: ii
+!! main
+SELECT CASE (.rank.k)
+CASE (scalar)
+  CALL getInterpolation(obj=trial, Interpol=cbar, val=k)
+  realval = trial%js * trial%ws * trial%thickness * cbar
+  CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+  DO ii = 1, SIZE(trial%N, 2)
+    ans = ans + realval(ii) * MATMUL(test%dNdXt(:, :, ii), &
+         & TRANSPOSE(trial%dNdXt(:, :, ii)))
+  END DO
+  DEALLOCATE (cbar, realval)
+CASE (matrix)
+  CALL getInterpolation(obj=trial, Interpol=kbar, val=k)
+  realval = trial%js * trial%ws * trial%thickness
+  CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+  DO ii = 1, SIZE(trial%N, 2)
+    ans = ans + realval(ii) * MATMUL(&
+        & MATMUL(test%dNdXt(:, :, ii), kbar(:, :, ii)), &
+        & TRANSPOSE(trial%dNdXt(:, :, ii)))
+  END DO
+  DEALLOCATE (kbar, realval)
+END SELECT
 END PROCEDURE DiffusionMatrix_2
 
 !----------------------------------------------------------------------------
@@ -72,18 +74,29 @@ END PROCEDURE DiffusionMatrix_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_3
-REAL(DFP), ALLOCATABLE :: C1Bar(:, :), C2Bar(:, :), realval(:)
-INTEGER(I4B) :: i
-
-CALL getProjectionOfdNdXt(obj=test, cdNdXt=C1Bar, Val=C1)
-CALL getProjectionOfdNdXt(obj=trial, cdNdXt=C2Bar, Val=C2)
-realval = trial%Js * trial%Ws * trial%Thickness
-ALLOCATE (ans(SIZE(test%N, 1), SIZE(trial%N, 1)))
-ans = 0.0_DFP
-DO i = 1, SIZE(trial%N, 2)
-  ans = ans + realval(i) * OUTERPROD(C1Bar(:, i), C2Bar(:, i))
-END DO
-DEALLOCATE (realval, C1Bar, C2Bar)
+REAL(DFP), ALLOCATABLE :: c1bar(:, :), c2bar(:, :), realval(:), kbar(:,:,:)
+INTEGER(I4B) :: ii
+!! main
+CALL reallocate(ans, SIZE(test%N,1), SIZE(trial%N,1))
+IF((.rank. c1) .EQ. Vector .AND. (.rank. c2) .EQ. Vector) THEN
+  CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=c1)
+  CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=c2)
+  realval = trial%js * trial%ws * trial%thickness
+  DO ii = 1, SIZE(trial%N, 2)
+    ans = ans + realval(ii) * OUTERPROD(c1bar(:, ii), c2bar(:, ii))
+  END DO
+  DEALLOCATE(c1bar, c2bar, realval)
+ELSEIF((.rank. c1) .EQ. Scalar .AND. (.rank. c2) .EQ. Matrix) THEN
+  CALL getInterpolation(obj=trial, Interpol=realval, val=c1)
+  CALL getInterpolation(obj=trial, Interpol=kbar, val=c2)
+  realval = trial%js * trial%ws * trial%thickness * realval
+  DO ii = 1, SIZE(cbar)
+    ans = ans + realval(ii) * MATMUL(&
+        & MATMUL(test%dNdXt(:, :, ii), kbar(:, :, ii)), &
+        & TRANSPOSE(trial%dNdXt(:, :, ii)))
+  END DO
+  DEALLOCATE(realval, kbar)
+END IF
 END PROCEDURE DiffusionMatrix_3
 
 !----------------------------------------------------------------------------

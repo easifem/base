@@ -130,8 +130,8 @@ END INTERFACE Initiate
 
 INTERFACE
   MODULE PURE SUBROUTINE stsd_initiate(obj, elemsd)
-    TYPE(STElemShapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
-    TYPE(ElemShapeData_), INTENT(IN) :: elemsd
+    TYPE(STElemshapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    TYPE(ElemshapeData_), INTENT(IN) :: elemsd
     !! It has information about location shape function for time element
   END SUBROUTINE stsd_initiate
 END INTERFACE
@@ -819,7 +819,7 @@ PUBLIC :: setBarycentricCoord
 
 INTERFACE
   MODULE PURE SUBROUTINE set_Js(obj)
-    CLASS(ElemShapeData_), INTENT(INOUT) :: obj
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
   END SUBROUTINE set_Js
 END INTERFACE
 
@@ -937,7 +937,7 @@ PUBLIC :: setJacobian
 
 INTERFACE
   MODULE PURE SUBROUTINE stsd_set_dNTdt(obj, val)
-    CLASS(STElemShapeData_), INTENT(INOUT) :: obj
+    CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space-time nodal values
   END SUBROUTINE stsd_set_dNTdt
@@ -975,7 +975,7 @@ PUBLIC :: setdNTdt
 
 INTERFACE
   MODULE PURE SUBROUTINE stsd_set_dNTdXt_internally(obj)
-    CLASS(STElemShapeData_), INTENT(INOUT) :: obj
+    CLASS(STElemshapeData_), INTENT(INOUT) :: obj
   !! Space-time nodal values
   END SUBROUTINE stsd_set_dNTdXt_internally
 END INTERFACE
@@ -1080,7 +1080,7 @@ PUBLIC :: set
 
 INTERFACE
   MODULE PURE SUBROUTINE set_normal(obj)
-    CLASS(ElemShapeData_), INTENT(INOUT) :: obj
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
   END SUBROUTINE set_normal
 END INTERFACE
 
@@ -1145,7 +1145,7 @@ PUBLIC :: getInterpolation
 !
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_getInterpolation_2(obj, Interpol, val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Interpol(:)
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_2
@@ -1223,7 +1223,7 @@ END INTERFACE getInterpolation
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_getInterpolation_5(obj, Interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Interpol(:, :, :)
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_5
 END INTERFACE
@@ -1289,7 +1289,7 @@ END INTERFACE getInterpolation
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_getInterpolation_7(obj, interpol, val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :)
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_7
@@ -1360,7 +1360,7 @@ END INTERFACE getInterpolation
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_getInterpolation_10(obj, Interpol, val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :, :)
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_10
@@ -1392,7 +1392,7 @@ END INTERFACE getInterpolation
 !
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_getInterpolation_11(obj, Interpol, val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Interpol(:, :)
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_11
@@ -1562,7 +1562,7 @@ END INTERFACE STInterpolation
 !
 INTERFACE
   MODULE PURE SUBROUTINE getLocalGradient_1(obj, dPhidXi, val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
     REAL(DFP), INTENT(IN) :: val(:)
     !! Space nodal values of scalar
@@ -1620,7 +1620,7 @@ END INTERFACE getLocalGradient
 INTERFACE
 
   MODULE PURE SUBROUTINE getLocalGradient_3(obj, dPhidXi, val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
     !! local gradient of scalar
     !! first index = space component of xi
@@ -1684,7 +1684,7 @@ END INTERFACE getLocalGradient
 !
 INTERFACE
   MODULE PURE SUBROUTINE getLocalGradient_5(obj, dPhidXi, val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
     TYPE(FEVariable_), INTENT(IN) :: val
     !! Space nodal values of scalar
@@ -1740,7 +1740,7 @@ END INTERFACE getLocalGradient
 
 INTERFACE
   MODULE PURE SUBROUTINE getSpatialGradient_1(obj, dPhidXt, val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
     !! Spatial gradient of scalar
     REAL(DFP), INTENT(IN) :: val(:)
@@ -1788,7 +1788,7 @@ END INTERFACE getSpatialGradient
 
 INTERFACE
   MODULE PURE SUBROUTINE getSpatialGradient_3(obj, dPhidXt, val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
     !! Spatial gradient of scalar
     REAL(DFP), INTENT(IN) :: val(:, :)
@@ -1834,7 +1834,7 @@ END INTERFACE getSpatialGradient
 
 INTERFACE
   MODULE PURE SUBROUTINE getSpatialGradient_5(obj, dPhidXt, val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
     !! Spatial gradient of scalar
     TYPE(FEVariable_), INTENT(IN) :: val
@@ -2037,7 +2037,7 @@ PUBLIC :: getUnitNormal
 
 INTERFACE
   MODULE PURE SUBROUTINE getUnitNormal_2(obj, R, val)
-    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
     REAL(DFP), INTENT(IN) :: val(:, :)
   END SUBROUTINE getUnitNormal_2
@@ -2065,7 +2065,7 @@ END INTERFACE getUnitNormal
 
 INTERFACE
   MODULE PURE SUBROUTINE getUnitNormal_3(obj, R, val)
-    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE getUnitNormal_3
@@ -2074,6 +2074,33 @@ END INTERFACE
 INTERFACE getUnitNormal
   MODULE PROCEDURE getUnitNormal_3
 END INTERFACE getUnitNormal
+
+!----------------------------------------------------------------------------
+!                                                   GetSUPGParam@UtilMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the SUPG param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUPGParam(obj, tau, c, val, nu, dt, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariable_), INTENT(IN) :: val
+    TYPE(FEVariable_), INTENT(IN) :: nu
+    REAL(DFP), INTENT(IN) :: dt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE elemsd_GetSUPGParam
+END INTERFACE
+
+INTERFACE GetSUPGParam
+  MODULE PROCEDURE elemsd_GetSUPGParam
+END INTERFACE GetSUPGParam
+
+PUBLIC :: GetSUPGParam
 
 !----------------------------------------------------------------------------
 !                                                                   Contains

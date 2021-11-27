@@ -1,0 +1,50 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   DiffusionMatrix_2.part
+!                   Last Update :   Nov-20-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    STDiffusionMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getDiffusionMatrix_2
+!------------------------------------------------------------------------------
+
+ SUBROUTINE getDiffusionMatrix_2( Obj, nCopy )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Returns mass matrix; C is a 2D array of STNodal Values
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+
+    ! Define intent of dummy variables
+#ifdef STMat
+    CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+    CLASS( STDiffusionMatrix_ ), INTENT( INOUT ), TARGET ::  Obj    
+#endif
+    INTEGER( I4B ), INTENT( IN ) :: nCopy
+
+    CALL Obj  % getDiffusionMatrix( )
+    CALL Obj % MakeDiagonalCopies( nCopy )
+
+ END SUBROUTINE getDiffusionMatrix_2
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

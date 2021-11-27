@@ -13,7 +13,6 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
 SUBMODULE(FEVariable_Method) GetMethods
 IMPLICIT NONE
@@ -23,137 +22,185 @@ CONTAINS
 !                                                                      Size
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Size_obj
-SELECT CASE (obj%Rank)
+MODULE PROCEDURE fevar_Size
+SELECT CASE (obj%rank)
 CASE (Scalar)
-  Ans = 1
+  ans = 1
 CASE (Vector)
-  SELECT CASE (obj%VarType)
+  SELECT CASE (obj%vartype)
   CASE (Constant)
-    Ans = SIZE(obj%R1)
+    ans = SIZE(obj%r1)
   CASE (Space)
-    Ans = SIZE(obj%R2, 1)
+    ans = SIZE(obj%r2, 1)
   CASE (SpaceTime)
-    Ans = SIZE(obj%R3, 1)
+    ans = SIZE(obj%r3, 1)
   END SELECT
 CASE (Matrix)
-  SELECT CASE (obj%VarType)
+  SELECT CASE (obj%vartype)
   CASE (Constant)
-    Ans = SIZE(obj%R2, Dim)
+    ans = SIZE(obj%r2, Dim)
   CASE (Space)
-    Ans = SIZE(obj%R3, Dim)
+    ans = SIZE(obj%r3, Dim)
   CASE (SpaceTime)
-    Ans = SIZE(obj%R4, Dim)
+    ans = SIZE(obj%r4, Dim)
   END SELECT
 END SELECT
-END PROCEDURE Size_obj
+END PROCEDURE fevar_Size
 
 !----------------------------------------------------------------------------
 !                                                                      Shape
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Shape_obj
-SELECT CASE (obj%Rank)
+MODULE PROCEDURE fevar_Shape
+SELECT CASE (obj%rank)
 CASE (Scalar)
-  SELECT CASE (obj%VarType)
+  SELECT CASE (obj%vartype)
   CASE (Constant)
-    Ans = [1]
+    ans = [1]
   CASE (Space)
-    Ans = SHAPE(obj%R1)
+    ans = SHAPE(obj%r1)
   CASE (SpaceTime)
-    Ans = SHAPE(obj%R2)
+    ans = SHAPE(obj%r2)
   END SELECT
 CASE (Vector)
-  SELECT CASE (obj%VarType)
+  SELECT CASE (obj%vartype)
   CASE (Constant)
-    Ans = SHAPE(obj%R1)
+    ans = SHAPE(obj%r1)
   CASE (Space)
-    Ans = SHAPE(obj%R2)
+    ans = SHAPE(obj%r2)
   CASE (SpaceTime)
-    Ans = SHAPE(obj%R3)
+    ans = SHAPE(obj%r3)
   END SELECT
 CASE (Matrix)
-  SELECT CASE (obj%VarType)
+  SELECT CASE (obj%vartype)
   CASE (Constant)
-    Ans = SHAPE(obj%R2)
+    ans = SHAPE(obj%r2)
   CASE (Space)
-    Ans = SHAPE(obj%R3)
+    ans = SHAPE(obj%r3)
   CASE (SpaceTime)
-    Ans = SHAPE(obj%R4)
+    ans = SHAPE(obj%r4)
   END SELECT
 END SELECT
-END PROCEDURE Shape_obj
+END PROCEDURE fevar_Shape
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                                      rank
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_rank
+ans = obj%rank
+END PROCEDURE fevar_rank
+
+!----------------------------------------------------------------------------
+!                                                                    vartype
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_vartype
+ans = obj%vartype
+END PROCEDURE fevar_vartype
+
+!----------------------------------------------------------------------------
+!                                                                   defineon
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_defineon
+ans = obj%defineon
+END PROCEDURE fevar_defineon
+
+!----------------------------------------------------------------------------
+!                                                            isNodalVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_isNodalVariable
+IF (obj%defineon .EQ. nodal) THEN
+  ans = .TRUE.
+ELSE
+  ans = .FALSE.
+END IF
+END PROCEDURE fevar_isNodalVariable
+
+!----------------------------------------------------------------------------
+!                                                            isNodalVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE fevar_isQuadratureVariable
+IF (obj%defineon .EQ. nodal) THEN
+  ans = .FALSE.
+ELSE
+  ans = .TRUE.
+END IF
+END PROCEDURE fevar_isQuadratureVariable
+
+!----------------------------------------------------------------------------
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Constant
-Val = obj%R0
+val = obj%r0
 END PROCEDURE Scalar_Constant
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Space
-Val = obj%R1
+val = obj%r1
 END PROCEDURE Scalar_Space
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_SpaceTime
-Val = obj%R2
+val = obj%r2
 END PROCEDURE Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Constant
-Val = obj%R1
+val = obj%r1
 END PROCEDURE Vector_Constant
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Space
-Val = obj%R2
+val = obj%r2
 END PROCEDURE Vector_Space
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_SpaceTime
-Val = obj%R3
+val = obj%r3
 END PROCEDURE Vector_SpaceTime
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Constant
-Val = obj%R2
+val = obj%r2
 END PROCEDURE Matrix_Constant
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Space
-Val = obj%R3
+val = obj%r3
 END PROCEDURE Matrix_Space
 
 !----------------------------------------------------------------------------
-!                                                            getNodalValues
+!                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_SpaceTime
-Val = obj%R4
+val = obj%r4
 END PROCEDURE Matrix_SpaceTime
 
 END SUBMODULE GetMethods
