@@ -90,7 +90,7 @@ ELSEIF((.rank. c1) .EQ. Scalar .AND. (.rank. c2) .EQ. Matrix) THEN
   CALL getInterpolation(obj=trial, Interpol=realval, val=c1)
   CALL getInterpolation(obj=trial, Interpol=kbar, val=c2)
   realval = trial%js * trial%ws * trial%thickness * realval
-  DO ii = 1, SIZE(cbar)
+  DO ii = 1, SIZE(realval)
     ans = ans + realval(ii) * MATMUL(&
         & MATMUL(test%dNdXt(:, :, ii), kbar(:, :, ii)), &
         & TRANSPOSE(trial%dNdXt(:, :, ii)))
@@ -98,6 +98,25 @@ ELSEIF((.rank. c1) .EQ. Scalar .AND. (.rank. c2) .EQ. Matrix) THEN
   DEALLOCATE(realval, kbar)
 END IF
 END PROCEDURE DiffusionMatrix_3
+
+!----------------------------------------------------------------------------
+!                                                            DiffusionMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiffusionMatrix_4
+REAL(DFP), ALLOCATABLE :: c1bar(:, :), c2bar(:, :), realval(:)
+INTEGER(I4B) :: ii
+!! main
+CALL reallocate(ans, SIZE(test%N,1), SIZE(trial%N,1))
+CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=c1)
+CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=c2)
+CALL getInterpolation(obj=trial, interpol=realval, val=c)
+realval = trial%js * trial%ws * trial%thickness * realval
+DO ii = 1, SIZE(trial%N, 2)
+  ans = ans + realval(ii) * OUTERPROD(c1bar(:, ii), c2bar(:, ii))
+END DO
+DEALLOCATE(c1bar, c2bar, realval)
+END PROCEDURE DiffusionMatrix_4
 
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
