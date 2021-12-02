@@ -128,6 +128,46 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! This function returns the diffusion matrix in space domain
+!
+! $$
+! \int^{}_{\Omega } \frac{\partial N^{I}}{\partial x_{i}} c_i
+!\frac{\partial N^{J}}{\partial x_{j}} c_j d\Omega
+! $$
+!
+
+INTERFACE
+  MODULE PURE FUNCTION DiffusionMatrix_4(test, trial, c1, c2, c) &
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! test function
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    !! trial function
+    CLASS(FEVariable_), INTENT(IN) :: c1
+    !! It should be a vector variable
+    CLASS(FEVariable_), INTENT(IN) :: c2
+    !! It should be a vector variable
+    CLASS(FEVariable_), INTENT(IN) :: c
+    !! It should be a scalar variable
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! diffusion matrix
+  END FUNCTION DiffusionMatrix_4
+END INTERFACE
+
+INTERFACE DiffusionMatrix
+  MODULE PROCEDURE DiffusionMatrix_4
+END INTERFACE DiffusionMatrix
+
+!----------------------------------------------------------------------------
+!                                     DiffusionMatrix@DiffusionMatrixMethods
+!----------------------------------------------------------------------------
+
 INTERFACE
   MODULE PURE FUNCTION mat2_STDiffusionMatrix_1(test, trial) &
        & RESULT(ans)
