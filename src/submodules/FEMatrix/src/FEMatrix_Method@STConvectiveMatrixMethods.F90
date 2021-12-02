@@ -61,6 +61,61 @@ IF (ALLOCATED(mat4)) DEALLOCATE (mat4)
 END PROCEDURE Mat2_STConvectiveMatrix_1b
 
 !----------------------------------------------------------------------------
+!                                                         STConvectiveMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Mat4_STConvectiveMatrix_2
+
+SELECT CASE (term1)
+
+CASE (DEL_NONE)
+
+  IF (dim .EQ. DEL_X_ALL) THEN
+    CALL case2_STConvectiveMatrix_2(ans=ans, test=test, trial=trial, &
+        & term1=term1, term2=term2, dim=dim, c=c)
+  ELSE
+    CALL case1_STConvectiveMatrix_2(ans=ans, test=test, trial=trial, &
+         & term1=term1, term2=term2, dim=dim, c=c)
+  END IF
+
+CASE (DEL_X, DEL_Y, DEL_Z)
+
+  select case (term2)
+  case (DEL_NONE)
+      CALL case1_STConvectiveMatrix_2(ans=ans, test=test, trial=trial, &
+           & term1=term1, term2=term2, dim=dim, c=c)
+  case (DEL_Dt)
+
+  end select
+
+CASE( DEL_X_ALL )
+
+CASE (DEL_Dt)
+
+END SELECT
+
+! IF (dim .GT. 0) THEN
+!   CALL case1_STConvectiveMatrix_2(ans=ans, test=test, trial=trial, &
+!        & term1=term1, term2=term2, dim=dim, c=c)
+! ELSE
+!   CALL case2_STConvectiveMatrix_2(ans=ans, test=test, trial=trial, &
+!        & term1=term1, term2=term2, dim=dim, c=c)
+! END IF
+END PROCEDURE Mat4_STConvectiveMatrix_2
+
+!----------------------------------------------------------------------------
+!                                                           ConvectiveMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Mat2_STConvectiveMatrix_2
+REAL(DFP), ALLOCATABLE :: mat4(:, :, :, :)
+mat4 = STConvectiveMatrix(test=test, trial=trial, term1=term1, &
+     & term2=term2, dim=dim, c=c)
+CALL convert(from=mat4, to=ans)
+IF (ALLOCATED(mat4)) DEALLOCATE (mat4)
+END PROCEDURE Mat2_STConvectiveMatrix_2
+
+!----------------------------------------------------------------------------
 !                                                           ConvectiveMatrix
 !----------------------------------------------------------------------------
 
@@ -171,9 +226,9 @@ PURE SUBROUTINE case2_STConvectiveMatrix_2(ans, test, trial, term1, &
            & SIZE(m1, 3), SIZE(m1, 4))
       DO ll = 1, SIZE(ans, 4)
         DO kk = 1, SIZE(ans, 3)
-           ans(:, :, kk, ll) = ColConcat( &
-                & a=ColConcat(a=m1(:, :, kk, ll), b=m2(:, :, kk, ll)), &
-                & b=m3(:,:,kk,ll))
+          ans(:, :, kk, ll) = ColConcat( &
+               & a=ColConcat(a=m1(:, :, kk, ll), b=m2(:, :, kk, ll)), &
+               & b=m3(:, :, kk, ll))
         END DO
       END DO
     ELSE IF (term1 .EQ. 1 .AND. term2 .EQ. 0) THEN
@@ -181,42 +236,15 @@ PURE SUBROUTINE case2_STConvectiveMatrix_2(ans, test, trial, term1, &
            & SIZE(m1, 3), SIZE(m1, 4))
       DO ll = 1, SIZE(ans, 4)
         DO kk = 1, SIZE(ans, 3)
-           ans(:, :, kk, ll) = RowConcat( &
-                & a=RowConcat(a=m1(:, :, kk, ll), b=m2(:, :, kk, ll)), &
-                & b=m3(:,:,kk,ll))
+          ans(:, :, kk, ll) = RowConcat( &
+               & a=RowConcat(a=m1(:, :, kk, ll), b=m2(:, :, kk, ll)), &
+               & b=m3(:, :, kk, ll))
         END DO
       END DO
     END IF
     DEALLOCATE (m1, m2, m3)
   END SELECT
 END SUBROUTINE case2_STConvectiveMatrix_2
-
-!----------------------------------------------------------------------------
-!                                                           ConvectiveMatrix
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE Mat2_STConvectiveMatrix_2
-REAL(DFP), ALLOCATABLE :: mat4(:, :, :, :)
-mat4 = STConvectiveMatrix(test=test, trial=trial, term1=term1, &
-     & term2=term2, dim=dim, c=c)
-CALL convert(from=mat4, to=ans)
-IF (ALLOCATED(mat4)) DEALLOCATE (mat4)
-END PROCEDURE Mat2_STConvectiveMatrix_2
-
-!----------------------------------------------------------------------------
-!                                                         STConvectiveMatrix
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE Mat4_STConvectiveMatrix_2
-IF (dim .GT. 0) THEN
-  CALL case1_STConvectiveMatrix_2(ans=ans, test=test, trial=trial, &
-       & term1=term1, term2=term2, dim=dim, c=c)
-ELSE
-  CALL case2_STConvectiveMatrix_2(ans=ans, test=test, trial=trial, &
-       & term1=term1, term2=term2, dim=dim, c=c)
-END IF
-END PROCEDURE Mat4_STConvectiveMatrix_2
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
