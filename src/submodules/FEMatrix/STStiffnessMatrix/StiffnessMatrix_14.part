@@ -1,0 +1,106 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   StiffnessMatrix_14.part
+!                   Last Update :   Jan-06-2018
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!       -   Space time stiffness matrix for alpha-beta v-ST/FEM
+!       -   beta_STFEM is beta => 
+!       -   Effective coefficient will be beta_STFEM * dt
+!
+!   HOSTING FILE
+!       -    STStiffnessMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getStiffnessMatrix_14
+!------------------------------------------------------------------------------
+
+SUBROUTINE getStiffnessMatrix_14( Obj, CData, TimeVector, IntegrationSide, &
+     & beta_STFEM )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !       1.  -   Returns Stiffness matrix
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  USE ConstitutiveData_Class
+  USE MaterialJacobian_Class
+
+  ! Define intent of dummy variables
+#ifdef STMat
+  CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( STStiffnessMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+  TYPE( ConstitutiveData_ ), INTENT( IN ), TARGET :: CData( :, : )
+  REAL( DFP ), INTENT( IN ) :: TimeVector( 2 ), beta_STFEM
+  CHARACTER( LEN = * ), INTENT( IN ) :: IntegrationSide
+
+  ! Define internal variables
+  REAL( DFP ), ALLOCATABLE :: Cijkl( :, :, :, : )
+  INTEGER( I4B ) :: NIPS, NIPT, IPS, IPT, NSD, N
+
+#ifdef DEBUG_VER
+  Error_Flag = .FALSE.
+  IF( .NOT. Obj % isInitiated( ) ) THEN
+     CALL Err_Msg( &
+          "STStiffnessMatrix_Class.f90", &
+          "getStiffnessMatrix(Obj, CData)", &
+          "STStiffnessMatrix_ Object is not Initiated" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NIPS = .NIPS. Obj
+  NIPT = .NIPT. Obj
+
+#ifdef DEBUG_VER
+  IF( SIZE( CData, 1 ) .NE. NIPS .OR. SIZE( CData, 2 ) .NE. NIPT ) THEN
+     CALL Err_Msg( &
+          "STStiffnessMatrix_Class.f90", &
+          "getStiffnessMatrix(Obj, CData)", &
+          "The Shape Of CData is not compatible" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NSD = Obj % SD( 1, 1 ) % getNSD( )
+
+  SELECT CASE( NSD )
+  CASE( 3 )
+     N = 6
+  CASE( 2 )
+     N = 4
+  CASE( 1 )
+     N = 1
+  END SELECT
+
+  ! Make Cijkl
+  ALLOCATE( Cijkl( N, N, NIPS, NIPT ) )
+  DO IPT = 1, NIPT
+     DO IPS = 1, NIPS
+        Cijkl( :, :, IPS, IPT ) = CData( IPS, IPT ) % C .Cijkl. N
+     END DO
+  END DO
+  CALL Obj % getStiffnessMatrix( Cijkl, TimeVector, IntegrationSide, beta_STFEM )
+  DEALLOCATE( Cijkl )
+
+END SUBROUTINE getStiffnessMatrix_14
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

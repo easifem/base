@@ -1,0 +1,52 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   MassMatrix_7.part
+!                   Last Update :   Nov-15-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!       -   Space Interpolation of scalar and vector
+!
+!   HOSTING FILE
+!       -    MassMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                              getMassMatrix_7
+!------------------------------------------------------------------------------
+
+SUBROUTINE getMassMatrix_7( Obj, rho, Term1, Term2, nCopy )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !       1.  Returns mass matrix
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  ! Define intent of dummy variables
+#ifdef STMat
+  CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( STMassMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+
+  REAL( DFP ), INTENT( IN ) :: rho
+  INTEGER( I4B ), INTENT( IN ) :: nCopy, Term1, Term2
+
+  CALL Obj % getMassMatrix_1( rho, Term1, Term2 )
+  CALL Obj % MakeDiagonalCopies( nCopy )
+
+END SUBROUTINE getMassMatrix_7
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

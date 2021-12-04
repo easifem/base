@@ -1,0 +1,251 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   MassMatrix_18.part
+!                   Last Update :   Feb-09-2018
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!       -   Space Interpolation of scalar and vector
+!
+!   HOSTING FILE
+!       -    MassMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                             getMassMatrix_18
+!------------------------------------------------------------------------------
+
+ SUBROUTINE getMassMatrix_18( Obj, U, Term1, Term2 )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Returns mass matrix
+!   2.  dCdU( :, : ) does not changes in space and time
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    USE Utility, ONLY : OUTERPROD
+
+    ! Define intent of dummy variables
+#ifdef STMat
+    CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+    CLASS( STMassMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+
+    REAL( DFP ), INTENT( IN ) :: U( :, :, : )
+    INTEGER( I4B ), INTENT( IN ) :: Term1, Term2
+    
+    ! Define internal variables
+    INTEGER( I4B ) :: NNS, NNT, NIPS, NIPT, IPS, IPT, NSD, &
+                      a, b, r1, r2, c1, c2, p, q
+    REAL( DFP ), ALLOCATABLE :: Mat2( :, : ), dUdX( :, : )
+    REAL( DFP ) :: RealVal, RealVal1, RealVal2
+
+    INTEGER( I4B ), ALLOCATABLE :: Indx( :, : )
+
+    CLASS( STShapeData_ ), POINTER :: SD => NULL( )
+    
+    Error_Flag = .FALSE.
+
+    ! !   Flag-1
+#ifdef DEBUG_VER
+    IF( .NOT. Obj % isInitiated( ) ) THEN
+
+        CALL Err_Msg( &
+        "STMassMatrix_Class.f90", &
+        "getMassMatrix_18(), Flag-1", &
+        "STMassMatrix_ Object is not Initiated" &
+        )
+        Error_Flag = .TRUE.
+        RETURN
+    
+    END IF
+#endif
+
+    NNS = SIZE( Obj % SD( 1,1 ) % N )
+    NNT = SIZE( Obj % SD( 1,1 ) % T )
+    NIPS = SIZE( Obj % SD, 1 )
+    NIPT = SIZE( Obj % SD, 2 )
+    NSD = Obj % SD( 1, 1 ) % getNSD( )
+
+    ! Make Indx
+
+    ALLOCATE( Indx( NSD, 2 ) )
+
+    DO p = 1, NSD
+        Indx( p, 1 ) = ( p - 1 ) * NNS + 1
+        Indx( p, 2 ) = p * NNS
+    END DO
+
+    IF( ALLOCATED( Obj % Mat4 ) ) DEALLOCATE( Obj % Mat4 )
+    ALLOCATE( Obj % Mat4( NNS*NSD, NNS*NSD, NNT, NNT ) )
+
+    Obj % Mat4 = 0.0_DFP;
+
+    SELECT CASE( Term1 )
+
+    CASE( 1 )
+
+        SELECT CASE( Term2 )
+
+            !( 1, 0 )
+            CASE( 0 )
+
+                DO IPT= 1, NIPT
+
+                    DO IPS = 1, NIPS
+
+                        SD => Obj % SD( IPS, IPT )
+
+                        RealVal1 = SD % Ws * SD % Wt * SD % Js_Xi2Xt * SD % Jt * SD % Thickness
+
+                        ! Compute dUdx
+                        dUdX = SD .dVdXt. U
+
+                        DO a = 1, NNT
+
+                            ! Compute the outerproduct
+                            Mat2 = OUTERPROD( a = SD % dNTdt( :, a ), b = SD % N )
+
+                            DO b = 1, NNT
+
+                                RealVal2 = RealVal1 * SD % T( b )
+
+                                DO q = 1, NSD
+
+                                    c1 = Indx( q, 1 ); c2 = Indx( q, 2 )
+
+                                    DO p = 1, NSD
+
+                                        r1 = Indx( p, 1 ); r2 = Indx( p, 2 )
+
+                                        RealVal = RealVal2 * dUdX( p, q )
+
+                                        Obj % Mat4( r1:r2, c1:c2, a, b ) = &
+                                                Obj % Mat4( r1:r2, c1:c2, a, b ) &
+                                                + Mat2 * RealVal
+
+                                    END DO
+
+                                END DO
+                                
+                            END DO
+
+                        END DO
+
+
+                    END DO
+
+                END DO
+
+                NULLIFY( SD )
+
+#ifdef DEBUG_VER
+            CASE DEFAULT
+
+                CALL Err_Msg( &
+                "STMassMatrix_Class.f90", &
+                "getMassMatrix_18(), Flag-1", &
+                "Unknown value of Term2; It should be 1 or 0" &
+                )
+                Error_Flag = .TRUE.
+                RETURN
+#endif
+        END SELECT
+
+    CASE( 0 )
+
+        SELECT CASE( Term2 )
+
+            !( 0, 0 )
+            CASE( 0 )
+
+                DO IPT= 1, NIPT
+
+                    DO IPS = 1, NIPS
+
+                        SD => Obj % SD( IPS, IPT )
+
+                        RealVal1 = SD % Ws * SD % Wt * SD % Js_Xi2Xt * SD % Jt * SD % Thickness
+
+                        ! Compute dUdx
+                        dUdX = SD .dVdXt. U; 
+                        
+                        Mat2 = OUTERPROD( SD % N, SD % N )
+
+                        DO a = 1, NNT
+
+                            DO b = 1, NNT
+
+                                RealVal2 = RealVal1 * SD % T( a ) * SD % T( b )
+
+                                DO q = 1, NSD
+
+                                    c1 = Indx( q, 1 ); c2 = Indx( q, 2 )
+
+                                    DO p = 1, NSD
+
+                                        r1 = Indx( p, 1 ); r2 = Indx( p, 2 )
+
+                                        RealVal = RealVal2 * dUdX( p, q )
+
+                                        Obj % Mat4( r1:r2, c1:c2, a, b ) = &
+                                                Obj % Mat4( r1:r2, c1:c2, a, b ) &
+                                                + Mat2 * RealVal
+
+                                    END DO
+
+                                END DO
+
+                            END DO
+
+                        END DO
+
+                    END DO
+
+                END DO
+#ifdef DEBUG_VER
+            CASE DEFAULT
+
+                CALL Err_Msg( &
+                "STMassMatrix_Class.f90", &
+                "getMassMatrix_18(), Flag-1", &
+                "Unknown value of Term2; It should be 1 or 0" )
+                Error_Flag = .TRUE.
+                RETURN
+#endif 
+        END SELECT
+
+#ifdef DEBUG_VER
+    CASE DEFAULT
+
+        CALL Err_Msg( &
+        "STMassMatrix_Class.f90", &
+        "getMassMatrix_18(), Flag-1", &
+        "Unknown value of Term1; It should be 1 or 0" )
+        Error_Flag = .TRUE.
+        RETURN
+#endif
+    END SELECT
+    
+    SD => NULL( )
+    IF( ALLOCATED( Obj % Mat2 ) ) DEALLOCATE( Obj % Mat2 )
+    IF( ALLOCATED( Indx ) ) DEALLOCATE( Indx )
+    IF( ALLOCATED( Mat2 ) ) DEALLOCATE( Mat2 )
+    IF( ALLOCATED( dUdX ) ) DEALLOCATE( dUdX )
+
+ END SUBROUTINE getMassMatrix_18
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

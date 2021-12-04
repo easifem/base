@@ -1,0 +1,138 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   FintVector_1.part
+!                   Last Update :   Jan-04-2018
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!       -   Method for computing the Spacetime Fint vector
+!       -   Internal force vector for alpha-beta v-STFEM
+!
+!   HOSTING FILE
+!       -    STFintVector_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                              getFintVector_7
+!------------------------------------------------------------------------------
+
+SUBROUTINE getFintVector_7( Obj, Sigma, TimeVector, beta_STFEM )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !       1.  Returns element Sigma;
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  USE Voigt, ONLY : MatFromVoigtVec
+
+  ! Define intent of dummy variables
+#ifdef STMat
+  CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( STFintVector_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+
+  REAL( DFP ), DIMENSION( :, :, : ), INTENT( IN ) :: Sigma
+  REAL( DFP ), INTENT( IN ) :: beta_STFEM, TimeVector( 2 )
+
+  ! Define internal variables
+  INTEGER( I4B ) :: NNS, NNT, NIPS, NIPT, IPS, IPT, I, NSD, J
+
+  REAL( DFP ), ALLOCATABLE :: S( :, : ), Mat( :, : ), T( : )
+  REAL( DFP ) :: RealVal, beta, t1, t2
+  TYPE( STElemShapeData_ ), TARGET :: STElemSD2
+  CLASS( STShapeData_ ), POINTER :: SD
+
+#ifdef DEBUG_VER
+  Error_Flag = .FALSE.
+  IF( .NOT. Obj % isInitiated( ) ) THEN
+     CALL Err_Msg( &
+          "STFintVector_Class.f90", &
+          "getFintVector_7(Obj, Sigma)", &
+          "STFintVector_ Object is not Initiated" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NNS = Obj % SD( 1,1 ) % getNNS( )
+  NNT = Obj % SD( 1,1 ) % getNNT( ) 
+  NSD = Obj % SD( 1,1 ) % getNSD( )
+  NIPS = Obj % getNIPS( )
+  NIPT = Obj % getNIPT( )
+
+#ifdef DEBUG_VER
+  IF( SIZE( Sigma, 2 ) .NE. NIPS .OR. SIZE( Sigma, 3 ) .NE. NIPT ) THEN
+     CALL Err_Msg( &
+          "STFintVector_Class.f90", &
+          "getFintVector_7(Obj, Sigma)", &
+          "The SIZE( Sigma, 2 ) should be equal to NIPS, &
+          & The SIZE( Sigma, 3 ) should be equal to NIPT" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  IF( ALLOCATED( Obj % Vec3 ) ) DEALLOCATE( Obj % Vec3 )
+  ALLOCATE( Obj % Vec3( NSD, NNS, NNT ) )
+  Obj % Vec3 = 0.0_DFP
+
+  t1 = TimeVector( 1 )
+  t2 = TimeVector( 2 )
+  beta = beta_STFEM * ( t2 - t1 )
+
+  CALL STElemSD2 % Initiate( Obj )
+  DO IPT = 1, NIPT
+     DO IPS = 1, NIPS
+        SD => STElemSD2 % SD( IPS, IPT )
+        T  = SD % dTdTheta / SD % Jt
+        CALL SD % setT( T )
+        CALL SD % setdNTdXt( )
+     END DO
+  END DO
+
+  DO IPT = 1, NIPT
+     DO IPS = 1, NIPS
+
+        SD => STElemSD2 % SD( IPS, IPT ) 
+
+        RealVal = Obj % SD( IPS, IPT ) % Ws &
+             & * Obj % SD( IPS, IPT ) % Wt &
+             & * Obj % SD( IPS, IPT ) % Js_Xi2Xt &
+             & * Obj % SD( IPS, IPT ) % Jt &
+             & * Obj % SD( IPS, IPT ) % Thickness &
+             & * beta
+
+        S = MatFromVoigtVec( Sigma( :, IPS, IPT ), "Stress" )
+
+        DO i = 1, NSD
+           Mat = S( i, 1 ) * SD % dNTdXt( :, 1, : )
+           DO j = 2, NSD
+              Mat = Mat + S( i, j ) * SD % dNTdXt( :, j, : )
+           END DO
+           Obj % Vec3(i, :, : ) = Obj % Vec3( i, :, : ) & 
+                & + Mat * RealVal
+        END DO
+
+     END DO
+
+  END DO
+
+  NULLIFY( SD )
+  DEALLOCATE( Mat, T, S, STElemSD2 % SD )
+
+END SUBROUTINE getFintVector_7
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

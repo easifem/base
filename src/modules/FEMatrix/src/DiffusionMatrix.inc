@@ -62,7 +62,13 @@ END INTERFACE DiffusionMatrix
 ! \int^{}_{\Omega } \frac{\partial N^{I}}{\partial x_{i}} k_{ij}
 ! \frac{\partial N^{J}}{\partial x_{j}} d\Omega
 ! $$
-
+!
+!
+! $$
+! \int^{}_{\Omega } \frac{\partial N^{I}}{\partial x_{i}} k
+! \frac{\partial N^{J}}{\partial x_{i}} d\Omega
+! $$
+!
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_2(test, trial, k) &
     & RESULT(ans)
@@ -98,14 +104,64 @@ END INTERFACE DiffusionMatrix
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_3(test, trial, c1, c2) &
     & RESULT(ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
-    CLASS(FEVariable_), INTENT(IN) :: c1, c2
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! test function
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    !! trial function
+    CLASS(FEVariable_), INTENT(IN) :: c1
+    !! It can be vector variable
+    !! representing a velocity/ direction
+    CLASS(FEVariable_), INTENT(IN) :: c2
+    !! It can be vector variable representing some sort of velocity
+    !! Or it can be a matrix representing some sort of
+    !! diffusion/diffusivity matrix/tensor
     REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! diffusion matrix
   END FUNCTION DiffusionMatrix_3
 END INTERFACE
 
 INTERFACE DiffusionMatrix
   MODULE PROCEDURE DiffusionMatrix_3
+END INTERFACE DiffusionMatrix
+
+!----------------------------------------------------------------------------
+!                                     DiffusionMatrix@DiffusionMatrixMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! This function returns the diffusion matrix in space domain
+!
+! $$
+! \int^{}_{\Omega } \frac{\partial N^{I}}{\partial x_{i}} c_i
+!\frac{\partial N^{J}}{\partial x_{j}} c_j d\Omega
+! $$
+!
+
+INTERFACE
+  MODULE PURE FUNCTION DiffusionMatrix_4(test, trial, c1, c2, c) &
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! test function
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    !! trial function
+    CLASS(FEVariable_), INTENT(IN) :: c1
+    !! It should be a vector variable
+    CLASS(FEVariable_), INTENT(IN) :: c2
+    !! It should be a vector variable
+    CLASS(FEVariable_), INTENT(IN) :: c
+    !! It should be a scalar variable
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! diffusion matrix
+  END FUNCTION DiffusionMatrix_4
+END INTERFACE
+
+INTERFACE DiffusionMatrix
+  MODULE PROCEDURE DiffusionMatrix_4
 END INTERFACE DiffusionMatrix
 
 !----------------------------------------------------------------------------

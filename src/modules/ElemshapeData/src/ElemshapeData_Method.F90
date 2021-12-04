@@ -130,8 +130,8 @@ END INTERFACE Initiate
 
 INTERFACE
   MODULE PURE SUBROUTINE stsd_initiate(obj, elemsd)
-    TYPE(STElemShapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
-    TYPE(ElemShapeData_), INTENT(IN) :: elemsd
+    TYPE(STElemshapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    TYPE(ElemshapeData_), INTENT(IN) :: elemsd
     !! It has information about location shape function for time element
   END SUBROUTINE stsd_initiate
 END INTERFACE
@@ -695,7 +695,7 @@ END INTERFACE Initiate
 !# Introduction
 !
 ! This subroutine set the `thickness` field
-! Here `Val` denotes the nodal value of thickeness
+! Here `val` denotes the nodal value of thickeness
 !
 ! $$d = d_{I} N^{I}$$
 !
@@ -706,9 +706,9 @@ END INTERFACE Initiate
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_thickness(obj, Val, N)
+  MODULE PURE SUBROUTINE set_thickness(obj, val, N)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), INTENT(IN) :: val(:)
     !! Nodal values of thickness
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function values at quadrature points
@@ -726,14 +726,14 @@ END INTERFACE
 !# Introduction
 !
 ! This subroutine set the `thickness` field
-! Here `Val` denotes the space-time nodal value of thickeness
+! Here `val` denotes the space-time nodal value of thickeness
 !
 ! $$d = d_{I}^{a} N^{I} T_{a}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_thickness(obj, Val, N, T)
+  MODULE PURE SUBROUTINE stsd_set_thickness(obj, val, N, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
     !! Space-time nodal values of thickness
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function at spatial quadrature
@@ -769,9 +769,9 @@ PUBLIC :: setThickness
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_coord(obj, Val, N)
+  MODULE PURE SUBROUTINE set_coord(obj, val, N)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
     !! Nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! When element is not an isoparametric we can supply N.
@@ -794,9 +794,9 @@ END INTERFACE
 ! $$x=x_{I}^{a} N^I T_a$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_coord(obj, Val, N, T)
+  MODULE PURE SUBROUTINE stsd_set_coord(obj, val, N, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time Nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: N(:, :), T(:)
     !! N and T are required to handle non isoparametric elements
@@ -819,7 +819,7 @@ PUBLIC :: setBarycentricCoord
 
 INTERFACE
   MODULE PURE SUBROUTINE set_Js(obj)
-    CLASS(ElemShapeData_), INTENT(INOUT) :: obj
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
   END SUBROUTINE set_Js
 END INTERFACE
 
@@ -870,9 +870,9 @@ PUBLIC :: setdNdXt
 ! $$\frac{d x_i}{d \xi_j} = x_{iI}\frac{d N^I}{d \xi_j}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_jacobian(obj, Val, dNdXi)
+  MODULE PURE SUBROUTINE set_jacobian(obj, val, dNdXi)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
   END SUBROUTINE set_jacobian
@@ -900,9 +900,9 @@ END INTERFACE
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_jacobian(obj, Val, dNdXi, T)
+  MODULE PURE SUBROUTINE stsd_set_jacobian(obj, val, dNdXi, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space time nodal values of coordinates
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
     !! Local derivative of shape function for geometry
@@ -936,9 +936,9 @@ PUBLIC :: setJacobian
 ! \hat{v}_{k} $$
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_dNTdt(obj, Val)
-    CLASS(STElemShapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+  MODULE PURE SUBROUTINE stsd_set_dNTdt(obj, val)
+    CLASS(STElemshapeData_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space-time nodal values
   END SUBROUTINE stsd_set_dNTdt
 END INTERFACE
@@ -975,7 +975,7 @@ PUBLIC :: setdNTdt
 
 INTERFACE
   MODULE PURE SUBROUTINE stsd_set_dNTdXt_internally(obj)
-    CLASS(STElemShapeData_), INTENT(INOUT) :: obj
+    CLASS(STElemshapeData_), INTENT(INOUT) :: obj
   !! Space-time nodal values
   END SUBROUTINE stsd_set_dNTdXt_internally
 END INTERFACE
@@ -998,7 +998,7 @@ PUBLIC :: setdNTdXt
 !
 ! This subroutine set parameters defined on physical element
 !
-! * `Val` denotes nodal coordinates of element in `xiJ` format
+! * `val` denotes nodal coordinates of element in `xiJ` format
 ! * This subroutine will call
 !     - `setJacobian`
 !     - `setJs`
@@ -1013,9 +1013,9 @@ PUBLIC :: setdNTdXt
 !@endnote
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_set1(obj, Val, N, dNdXi)
+  MODULE PURE SUBROUTINE elemsd_set1(obj, val, N, dNdXi)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
     !! Spatial nodal coordinates
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function for geometry
@@ -1036,7 +1036,7 @@ END INTERFACE
 !
 ! This subroutine set parameters defined on physical element
 !
-! * `Val` denotes coordinates of the space-time element in `xiJa` format
+! * `val` denotes coordinates of the space-time element in `xiJa` format
 ! * The facility of supplying `N`, `T`, and `dNdXi` allows us to handle
 ! non-isoparametric element
 ! * This subroutine will call
@@ -1053,9 +1053,9 @@ END INTERFACE
 !@endnote
 
 INTERFACE
-  MODULE PURE SUBROUTINE stelemsd_set1(obj, Val, N, T, dNdXi)
+  MODULE PURE SUBROUTINE stelemsd_set1(obj, val, N, T, dNdXi)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Spatial nodal coordinates
     REAL(DFP), INTENT(IN) :: N(:, :)
     REAL(DFP), INTENT(IN) :: T(:)
@@ -1080,7 +1080,7 @@ PUBLIC :: set
 
 INTERFACE
   MODULE PURE SUBROUTINE set_normal(obj)
-    CLASS(ElemShapeData_), INTENT(INOUT) :: obj
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
   END SUBROUTINE set_normal
 END INTERFACE
 
@@ -1108,11 +1108,11 @@ PUBLIC :: setNormal
 ! - TODO Make it work when the size of val is not the same as NNS
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_1(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_1(obj, Interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:)
     !! Interpolation value of `val` at integration points
-    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), INTENT(IN) :: val(:)
     !! spatial nodal values of scalar
   END SUBROUTINE elemsd_getInterpolation_1
 END INTERFACE
@@ -1144,10 +1144,10 @@ PUBLIC :: getInterpolation
 ! NOTE This routine calls [[Interpolation]] function from the same module.
 !
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_2(obj, Interpol, Val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_2(obj, Interpol, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Interpol(:)
-    TYPE(FEVariable_), INTENT(IN) :: Val
+    TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_2
 END INTERFACE
 
@@ -1171,11 +1171,11 @@ END INTERFACE getInterpolation
 ! $$u_{i}=u_{iI}N^{I}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_3(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_3(obj, Interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :)
     !! Interpol(:,ips) => interpolation value at integration points
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal values of vector in `xiJ` format
   END SUBROUTINE elemsd_getInterpolation_3
 END INTERFACE
@@ -1193,10 +1193,10 @@ END INTERFACE getInterpolation
 ! summary: This subroutine performs interpolation of matrix
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_4(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_4(obj, Interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :, :)
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! nodal value of matrix
   END SUBROUTINE elemsd_getInterpolation_4
 END INTERFACE
@@ -1221,10 +1221,10 @@ END INTERFACE getInterpolation
 !       make Interpol allocatable
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_5(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_5(obj, Interpol, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :)
-    TYPE(FEVariable_), INTENT(IN) :: Val
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Interpol(:, :, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_5
 END INTERFACE
 
@@ -1251,11 +1251,11 @@ END INTERFACE getInterpolation
 ! spatial-quadrature points
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_6(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_6(obj, Interpol, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:)
     !! Interpolation value of `val` at spatial-quadrature points
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
     !! space-time nodal values of scalar
   END SUBROUTINE elemsd_getInterpolation_6
 END INTERFACE
@@ -1289,7 +1289,7 @@ END INTERFACE getInterpolation
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_getInterpolation_7(obj, interpol, val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: interpol(:, :)
     TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_7
@@ -1315,11 +1315,11 @@ END INTERFACE getInterpolation
 ! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_8(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_8(obj, Interpol, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :)
     !! Interpol(:,ips) => interpolation value at integration points
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
   END SUBROUTINE elemsd_getInterpolation_8
 END INTERFACE
@@ -1342,16 +1342,16 @@ END INTERFACE getInterpolation
 ! nodal values
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_9(obj, Interpol, Val)
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_9(obj, Interpol, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: Interpol(:, :, :)
-    REAL(DFP), INTENT(IN) :: Val(:, :, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     !! space-time nodal value of matrix
   END SUBROUTINE elemsd_getInterpolation_9
 END INTERFACE
 
 INTERFACE getInterpolation
-   MODULE PROCEDURE elemsd_getInterpolation_9
+  MODULE PROCEDURE elemsd_getInterpolation_9
 END INTERFACE getInterpolation
 
 !----------------------------------------------------------------------------
@@ -1359,15 +1359,47 @@ END INTERFACE getInterpolation
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_getInterpolation_10(obj, Interpol, Val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj(:)
-    TYPE(FEVariable_), INTENT(IN) :: Val
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_10(obj, Interpol, val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     REAL(DFP), INTENT(INOUT) :: Interpol(:, :, :, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
   END SUBROUTINE elemsd_getInterpolation_10
 END INTERFACE
 
 INTERFACE getInterpolation
-   MODULE PROCEDURE elemsd_getInterpolation_10
+  MODULE PROCEDURE elemsd_getInterpolation_10
+END INTERFACE getInterpolation
+
+!----------------------------------------------------------------------------
+!                                           getInterpolation@InterpolMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: returns the interpolation of vector FEVariable
+!
+!# Introduction
+!
+! Returns the interpolation of vector variable
+! The vector variable can be+
+!
+! - constant
+! - spatial nodal values
+! - spatial quadrature values
+! - space-time nodal values
+!
+! NOTE This routine calls [[Interpolation]] function from the same module.
+!
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_getInterpolation_11(obj, Interpol, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Interpol(:, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+  END SUBROUTINE elemsd_getInterpolation_11
+END INTERFACE
+
+INTERFACE getInterpolation
+  MODULE PROCEDURE elemsd_getInterpolation_11
 END INTERFACE getInterpolation
 
 !----------------------------------------------------------------------------
@@ -1379,9 +1411,9 @@ END INTERFACE getInterpolation
 ! summary: This function returns the interpolation of a scalar
 
 INTERFACE
-  MODULE PURE FUNCTION interpol_scalar(obj, Val) RESULT(Interpol)
+  MODULE PURE FUNCTION interpol_scalar(obj, val) RESULT(Interpol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), INTENT(IN) :: val(:)
     REAL(DFP), ALLOCATABLE :: Interpol(:)
   END FUNCTION interpol_scalar
 END INTERFACE
@@ -1401,9 +1433,9 @@ PUBLIC :: Interpolation
 ! summary: This function returns the interpolation of vector
 
 INTERFACE
-  MODULE PURE FUNCTION interpol_vector(obj, Val) RESULT(Interpol)
+  MODULE PURE FUNCTION interpol_vector(obj, val) RESULT(Interpol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
     REAL(DFP), ALLOCATABLE :: Interpol(:, :)
   END FUNCTION interpol_vector
 END INTERFACE
@@ -1421,9 +1453,9 @@ END INTERFACE Interpolation
 ! summary: This function returns the interpolation of matrix
 
 INTERFACE
-  MODULE PURE FUNCTION interpol_matrix(obj, Val) RESULT(Interpol)
+  MODULE PURE FUNCTION interpol_matrix(obj, val) RESULT(Interpol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     REAL(DFP), ALLOCATABLE :: Interpol(:, :, :)
   END FUNCTION interpol_matrix
 END INTERFACE
@@ -1449,9 +1481,9 @@ END INTERFACE Interpolation
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
 INTERFACE
-  MODULE PURE FUNCTION stsd_interpol_scalar(obj, Val) RESULT(interpol)
+  MODULE PURE FUNCTION stsd_interpol_scalar(obj, val) RESULT(interpol)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), INTENT(IN) :: val(:, :)
     !! space-time nodal values of scalar
     REAL(DFP), ALLOCATABLE :: Interpol(:)
     !! Interpolation value of `val` at integration points
@@ -1477,9 +1509,9 @@ INTERFACE
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
-  MODULE PURE FUNCTION stsd_interpol_vector(obj, Val) RESULT(interpol)
+  MODULE PURE FUNCTION stsd_interpol_vector(obj, val) RESULT(interpol)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! spatial nodal values of vector
     REAL(DFP), ALLOCATABLE :: Interpol(:, :)
     !! Interpolation value of `val` at integration points
@@ -1503,9 +1535,9 @@ INTERFACE
 ! values.
 ! $$u=u^{a}_{I}N^{I}T_{a}$$
 
-  MODULE PURE FUNCTION stsd_interpol_matrix(obj, Val) RESULT(interpol)
+  MODULE PURE FUNCTION stsd_interpol_matrix(obj, val) RESULT(interpol)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(IN) :: Val(:, :, :, :)
+    REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     !! spatial nodal values of matrix
     REAL(DFP), ALLOCATABLE :: Interpol(:, :, :)
     !! Interpolation value of `val` at integration points
@@ -1520,182 +1552,322 @@ END INTERFACE STInterpolation
 !                                                 getLocalGradient@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine returns the local gradient of a scalar
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine returns the local gradient of a scalar from space
-! nodal values
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the local gradient of a scalar
 !
 ! $$\frac{\partial \phi }{\partial \xi_{i} } =\phi_{I} \frac{\partial N^{I}}
 ! {\partial \xi_{i} }$$
-
-  MODULE PURE SUBROUTINE getLocalGradient_scalar(obj, dPhidXi, Val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
-    REAL(DFP), INTENT(IN) :: Val(:)
-    !! Space nodal values of scalar
-  END SUBROUTINE getLocalGradient_scalar
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                 getLocalGradient@getMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! This subroutine returns the local gradient of a vector
-
-!> authors: Dr. Vikas Sharma
 !
-! This subroutine returns the local gradient of a vector
-  MODULE PURE SUBROUTINE getLocalGradient_vector(obj, dVdXi, Val)
+INTERFACE
+  MODULE PURE SUBROUTINE getLocalGradient_1(obj, dPhidXi, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXi(:, :, :)
-    !! local gradient at integration points
-    REAL(DFP), INTENT(IN) :: Val(:, :)
-    !! nodal values of vector in `xiJ` format
-  END SUBROUTINE getLocalGradient_vector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                 getLocalGradient@getMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! This subroutine returns the local gradient of a scalar
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine returns the local gradient of a scalar from space
-! time nodal values
-!
-! $$\frac{\partial \phi }{\partial \xi_{i} } =\phi^{a}_{I} T_{a}\frac
-!{\partial N^{I}}{\partial \xi_{i} }$$
-
-  MODULE PURE SUBROUTINE stsd_getLocalGradient_scalar(obj, dPhidXi, Val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
-    !! local gradient of scalar
-    REAL(DFP), INTENT(IN) :: Val(:, :)
-    !! space-time nodal values
-  END SUBROUTINE stsd_getLocalGradient_scalar
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! Space nodal values of scalar
+  END SUBROUTINE getLocalGradient_1
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                 getLocalGradient@getMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! This subroutine returns the local gradient of a vector
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine returns the local gradient of a vector using space-time
-! nodal coordinates
-  MODULE PURE SUBROUTINE stsd_getLocalGradient_vector(obj, dVdXi, Val)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXi(:, :, :)
-    !! local gradient at integration points
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
-    !! space-time nodal values of vector in `xiJa` format
-  END SUBROUTINE stsd_getLocalGradient_vector
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                           getLocalGradient
-!----------------------------------------------------------------------------
 INTERFACE getLocalGradient
-  MODULE PROCEDURE getLocalGradient_scalar, getLocalGradient_vector, &
-    & stsd_getLocalGradient_scalar, stsd_getLocalGradient_vector
+  MODULE PROCEDURE getLocalGradient_1
 END INTERFACE getLocalGradient
 
-! PUBLIC :: getLocalGradient/
+PUBLIC :: getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                               getSpatialGradient@getMethod
+!                                                 getLocalGradient@getMethod
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the local gradient of a vector
 
 INTERFACE
-!! This subroutine returns the spatial gradient of vector
-
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine returns the spatial gradient of a vector
-  MODULE PURE SUBROUTINE getSpatialGradient_vector(obj, dVdXt, Val)
+  MODULE PURE SUBROUTINE getLocalGradient_2(obj, dVdXi, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXt(:, :, :)
-    !! spatial gradient of `val` at integration points
-    REAL(DFP), INTENT(IN) :: Val(:, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXi(:, :, :)
+    !! local gradient at integration points
+    !! first index: space component of V
+    !! second index: space component of x
+    !! third index: integration point
+    REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal values of vector in `xiJ` format
-  END SUBROUTINE getSpatialGradient_vector
+    !! row index: space component
+    !! col index: node number
+  END SUBROUTINE getLocalGradient_2
 END INTERFACE
 
+INTERFACE getLocalGradient
+  MODULE PROCEDURE getLocalGradient_2
+END INTERFACE getLocalGradient
+
 !----------------------------------------------------------------------------
-!                                               getSpatialGradient@getMethod
+!                                                 getLocalGradient@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine returns the spatial gradient of scalar
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the local gradient of a scalar
 !
-! This subroutine returns the spatial gradient of scalar
-  MODULE PURE SUBROUTINE getSpatialGradient_scalar(obj, dPhidXt, Val)
-    CLASS(ElemShapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
-    !! Spatial gradient of scalar
-    REAL(DFP), INTENT(IN) :: Val(:)
-    !! Nodal values of scalar
-  END SUBROUTINE getSpatialGradient_scalar
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                               getSpatialGradient@getMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! This subroutine returns the spatial gradient of scalar
-
-!> authors: Dr. Vikas Sharma
+! $$
+! \frac{\partial \phi }{\partial \xi_{i} } =\phi^{a}_{I} T_{a}\frac
+! {\partial N^{I}}{\partial \xi_{i} }
+!$$
 !
-! This subroutine returns the spatial gradient of scalar
-  MODULE PURE SUBROUTINE stsd_getSpatialGradient_scalar(obj, dPhidXt, Val)
-    CLASS(STElemShapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
-    !! Spatial gradient of scalar
-    REAL(DFP), INTENT(IN) :: Val(:, :)
-    !! space-time Nodal values of scalar
-  END SUBROUTINE stsd_getSpatialGradient_scalar
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                               getSpatialGradient@getMethod
-!----------------------------------------------------------------------------
-
 INTERFACE
-!! This subroutine returns the spatial gradient of vector
 
-!> authors: Dr. Vikas Sharma
-!
-! This subroutine returns the spatial gradient of a vector from its
-! space-time nodal values
-  MODULE PURE SUBROUTINE stsd_getSpatialGradient_vector(obj, dVdXt, Val)
+  MODULE PURE SUBROUTINE getLocalGradient_3(obj, dPhidXi, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXt(:, :, :)
-    !! spatial gradient of `val` at integration points
-    REAL(DFP), INTENT(IN) :: Val(:, :, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
+    !! local gradient of scalar
+    !! first index = space component of xi
+    !! second index= integration point in space
+    REAL(DFP), INTENT(IN) :: val(:, :)
+    !! space-time nodal values of scalar
+    !! first index = space node
+    !! second index = time node
+  END SUBROUTINE getLocalGradient_3
+END INTERFACE
+
+INTERFACE getLocalGradient
+  MODULE PROCEDURE getLocalGradient_3
+END INTERFACE getLocalGradient
+
+!----------------------------------------------------------------------------
+!                                                 getLocalGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the local gradient of a vector
+!
+! $$
+! \frac{\partial v_{i} }{\partial \xi_{j} } =v^{a}_{iI} T_{a}\frac
+! {\partial N^{I}}{\partial \xi_{j} }
+!$$
+!
+INTERFACE
+  MODULE PURE SUBROUTINE getLocalGradient_4(obj, dVdXi, val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXi(:, :, :)
+    !! local gradient at integration points
+    !! first index : space compo of V
+    !! second index: space compo of Xi
+    !! third index: integration point in space
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
-  END SUBROUTINE stsd_getSpatialGradient_vector
+    !! first index: space compo
+    !! second index: space node
+    !! third index: time node
+  END SUBROUTINE getLocalGradient_4
+END INTERFACE
+
+INTERFACE getLocalGradient
+  MODULE PROCEDURE getLocalGradient_4
+END INTERFACE getLocalGradient
+
+!----------------------------------------------------------------------------
+!                                                 getLocalGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the local gradient of a scalar
+!
+! $$\frac{\partial \phi }{\partial \xi_{i} } =\phi_{I} \frac{\partial N^{I}}
+! {\partial \xi_{i} }$$
+!
+INTERFACE
+  MODULE PURE SUBROUTINE getLocalGradient_5(obj, dPhidXi, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXi(:, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+    !! Space nodal values of scalar
+  END SUBROUTINE getLocalGradient_5
+END INTERFACE
+
+INTERFACE getLocalGradient
+  MODULE PROCEDURE getLocalGradient_5
+END INTERFACE getLocalGradient
+
+!----------------------------------------------------------------------------
+!                                                 getLocalGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the local gradient of a vector
+!
+! $$
+! \frac{\partial v_{i} }{\partial \xi_{j} } =v^{a}_{iI} T_{a}\frac
+! {\partial N^{I}}{\partial \xi_{j} }
+! $$
+!
+INTERFACE
+  MODULE PURE SUBROUTINE getLocalGradient_6(obj, dVdXi, val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXi(:, :, :)
+    !! local gradient at integration points
+    !! first index : space compo of V
+    !! second index: space compo of Xi
+    !! third index: integration point in space
+    TYPE(FEVariable_), INTENT(IN) :: val
+    !! space-time nodal values of vector in `xiJa` format
+    !! first index: space compo
+    !! second index: space node
+    !! third index: time node
+  END SUBROUTINE getLocalGradient_6
+END INTERFACE
+
+INTERFACE getLocalGradient
+  MODULE PROCEDURE getLocalGradient_6
+END INTERFACE getLocalGradient
+
+!----------------------------------------------------------------------------
+!                                               getSpatialGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the spatial gradient of scalar
+
+INTERFACE
+  MODULE PURE SUBROUTINE getSpatialGradient_1(obj, dPhidXt, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
+    !! Spatial gradient of scalar
+    REAL(DFP), INTENT(IN) :: val(:)
+    !! Nodal values of scalar
+  END SUBROUTINE getSpatialGradient_1
 END INTERFACE
 
 INTERFACE getSpatialGradient
-  MODULE PROCEDURE getSpatialGradient_scalar, getSpatialGradient_vector, &
-    & stsd_getSpatialGradient_scalar, &
-      & stsd_getSpatialGradient_vector
+  MODULE PROCEDURE getSpatialGradient_1
 END INTERFACE getSpatialGradient
 
 PUBLIC :: getSpatialGradient
+
+!----------------------------------------------------------------------------
+!                                               getSpatialGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the spatial gradient of vector
+
+INTERFACE
+  MODULE PURE SUBROUTINE getSpatialGradient_2(obj, dVdXt, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXt(:, :, :)
+    !! spatial gradient of `val` at integration points
+    REAL(DFP), INTENT(IN) :: val(:, :)
+    !! nodal values of vector in `xiJ` format
+  END SUBROUTINE getSpatialGradient_2
+END INTERFACE
+
+INTERFACE getSpatialGradient
+  MODULE PROCEDURE getSpatialGradient_2
+END INTERFACE getSpatialGradient
+
+!----------------------------------------------------------------------------
+!                                               getSpatialGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the spatial gradient of scalar
+
+INTERFACE
+  MODULE PURE SUBROUTINE getSpatialGradient_3(obj, dPhidXt, val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
+    !! Spatial gradient of scalar
+    REAL(DFP), INTENT(IN) :: val(:, :)
+    !! space-time Nodal values of scalar
+  END SUBROUTINE getSpatialGradient_3
+END INTERFACE
+
+INTERFACE getSpatialGradient
+  MODULE PROCEDURE getSpatialGradient_3
+END INTERFACE getSpatialGradient
+
+!----------------------------------------------------------------------------
+!                                               getSpatialGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the spatial gradient of scalar
+!
+INTERFACE
+  MODULE PURE SUBROUTINE getSpatialGradient_4(obj, dVdXt, val)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXt(:, :, :)
+    !! spatial gradient of `val` at integration points
+    REAL(DFP), INTENT(IN) :: val(:, :, :)
+    !! space-time nodal values of vector in `xiJa` format
+  END SUBROUTINE getSpatialGradient_4
+END INTERFACE
+
+INTERFACE getSpatialGradient
+  MODULE PROCEDURE getSpatialGradient_4
+END INTERFACE getSpatialGradient
+
+!----------------------------------------------------------------------------
+!                                               getSpatialGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the spatial gradient of scalar
+
+INTERFACE
+  MODULE PURE SUBROUTINE getSpatialGradient_5(obj, dPhidXt, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dPhidXt(:, :)
+    !! Spatial gradient of scalar
+    TYPE(FEVariable_), INTENT(IN) :: val
+    !! Nodal values of scalar
+  END SUBROUTINE getSpatialGradient_5
+END INTERFACE
+
+INTERFACE getSpatialGradient
+  MODULE PROCEDURE getSpatialGradient_5
+END INTERFACE getSpatialGradient
+
+!----------------------------------------------------------------------------
+!                                               getSpatialGradient@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine returns the spatial gradient of scalar
+!
+INTERFACE
+  MODULE PURE SUBROUTINE getSpatialGradient_6(obj, dVdXt, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: dVdXt(:, :, :)
+    !! spatial gradient of `val` at integration points
+    TYPE(FEVariable_), INTENT(IN) :: val
+    !! space-time nodal values of vector in `xiJa` format
+  END SUBROUTINE getSpatialGradient_6
+END INTERFACE
+
+INTERFACE getSpatialGradient
+  MODULE PROCEDURE getSpatialGradient_6
+END INTERFACE getSpatialGradient
 
 !----------------------------------------------------------------------------
 !                                            getProjectionOfdNdXt@getMethod
@@ -1708,17 +1880,17 @@ PUBLIC :: getSpatialGradient
 !
 !# Introduction
 !
-! This subroutine computes the projcetion cdNdXt on the vector `Val`
-! Here the vector `Val` is constant in space and time
+! This subroutine computes the projcetion cdNdXt on the vector `val`
+! Here the vector `val` is constant in space and time
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetProjectionOfdNdXt_1(obj, cdNdXt, Val)
+  MODULE PURE SUBROUTINE elemsd_GetProjectionOfdNdXt_1(obj, cdNdXt, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
-    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP), INTENT(IN) :: val(:)
     !! constant value of vector
   END SUBROUTINE elemsd_GetProjectionOfdNdXt_1
 END INTERFACE
@@ -1734,8 +1906,8 @@ END INTERFACE
 !
 !# Introduction
 !
-! This subroutine computes the projcetion cdNdXt on the vector `Val`
-! Here the vector `Val` is constant in space and time
+! This subroutine computes the projcetion cdNdXt on the vector `val`
+! Here the vector `val` is constant in space and time
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 
@@ -1767,8 +1939,8 @@ PUBLIC :: getProjectionOfdNdXt
 ! update: 2021-11-23
 ! summary: Computes the projection of dNTdXt on a vector
 !
-! This subroutine computes the projcetion cdNTdXt on the vector `Val`
-! Here the vector `Val` is constant in space and time
+! This subroutine computes the projcetion cdNTdXt on the vector `val`
+! Here the vector `val` is constant in space and time
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 
@@ -1791,8 +1963,8 @@ INTERFACE
 
 !> authors: Dr. Vikas Sharma
 !
-! This subroutine computes the projcetion cdNTdXt on the vector `Val`
-! Here the vector `Val` is constant in space and time
+! This subroutine computes the projcetion cdNTdXt on the vector `val`
+! Here the vector `val` is constant in space and time
 !
 ! $$P^{I,a}=c_{i}\frac{\partial N^{I} T_a}{\partial x_{i}}$$
 !
@@ -1821,40 +1993,114 @@ PUBLIC :: getProjectionOfdNTdXt
 !                                                    getUnitNormal@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This subroutine can be used in SUPG formulation
-
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine can be used in SUPG formulation
+!
+!# Introduction
 !
 ! This routine can be used in the SUPG formulation
 !
 !  $$\nabla \vert phi \vert / \vert (\nabla \vert phi \vert) \vert$$
-!
 
-  MODULE PURE SUBROUTINE getUnitNormal_scalar(obj, R, val)
+INTERFACE
+  MODULE PURE SUBROUTINE getUnitNormal_1(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
     REAL(DFP), INTENT(IN) :: val(:)
-  END SUBROUTINE getUnitNormal_scalar
+    !! spatial nodal values of scalar
+  END SUBROUTINE getUnitNormal_1
 END INTERFACE
+
+INTERFACE getUnitNormal
+  MODULE PROCEDURE getUnitNormal_1
+END INTERFACE getUnitNormal
+
+PUBLIC :: getUnitNormal
 
 !----------------------------------------------------------------------------
 !                                                    getUnitNormal@getMethod
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine can be used in SUPG formulation
+!
+!# Introduction
+!
+! This routine can be used in the SUPG formulation, here
+! val is spatial nodal values of a vector.
+!
+!  $$\nabla \Vert mathbf{v}  \Vert / \Vert (\nabla \Vert mathbf{v} \Vert) \Vert$$
+
 INTERFACE
-  MODULE PURE SUBROUTINE getUnitNormal_vector(obj, R, val)
-    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+  MODULE PURE SUBROUTINE getUnitNormal_2(obj, R, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
     REAL(DFP), INTENT(IN) :: val(:, :)
-  END SUBROUTINE getUnitNormal_vector
+  END SUBROUTINE getUnitNormal_2
 END INTERFACE
 
 INTERFACE getUnitNormal
-  MODULE PROCEDURE getUnitNormal_vector, getUnitNormal_scalar
+  MODULE PROCEDURE getUnitNormal_2
 END INTERFACE getUnitNormal
 
-PUBLIC :: getUnitNormal
+!----------------------------------------------------------------------------
+!                                                    getUnitNormal@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-26
+! update: 2021-11-26
+! summary: This subroutine can be used in SUPG formulation
+!
+!# Introduction
+!
+! This routine can be used in the SUPG formulation, here
+! val is spatial nodal values of a vector.
+!
+!  $$\nabla \Vert mathbf{v}  \Vert / \Vert (\nabla \Vert mathbf{v} \Vert) \Vert$$
+
+INTERFACE
+  MODULE PURE SUBROUTINE getUnitNormal_3(obj, R, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
+    TYPE(FEVariable_), INTENT(IN) :: val
+  END SUBROUTINE getUnitNormal_3
+END INTERFACE
+
+INTERFACE getUnitNormal
+  MODULE PROCEDURE getUnitNormal_3
+END INTERFACE getUnitNormal
+
+!----------------------------------------------------------------------------
+!                                                   GetSUPGParam@UtilMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the SUPG param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUPGParam(obj, tau, c, val, nu, dt, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariable_), INTENT(IN) :: val
+    TYPE(FEVariable_), INTENT(IN) :: nu
+    REAL(DFP), INTENT(IN) :: dt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE elemsd_GetSUPGParam
+END INTERFACE
+
+INTERFACE GetSUPGParam
+  MODULE PROCEDURE elemsd_GetSUPGParam
+END INTERFACE GetSUPGParam
+
+PUBLIC :: GetSUPGParam
 
 !----------------------------------------------------------------------------
 !                                                                   Contains
