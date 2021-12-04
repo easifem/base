@@ -176,169 +176,6 @@ END INTERFACE ConvectiveMatrix
 ! N^{J}T_{b}}{\partial x_{j}}d\Omega dt
 ! $$
 !
-INTERFACE
-  MODULE FUNCTION Mat4_STConvectiveMatrix_1(test, trial, c, term1, term2) &
-       & RESULT(ans)
-    CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CLASS(STElemshapeData_), INTENT(IN) :: trial(:)
-    TYPE(FEVariable_), INTENT(IN) :: c
-    !! convective velocity, it can be
-    !! - nodal/quadrature  variable
-    !!    - constant
-    !!    - space
-    !!    - time
-    !!    - spacetime
-    INTEGER(I4B), INTENT(IN) :: term1
-    !! If 0 then first order space derivative in first term is absent
-    !! If 1 then first order space derivative is present in first term
-    INTEGER(I4B), INTENT(IN) :: term2
-    !! If 0 then first order space derivative in second term absent
-    !! If 1 then first order space derivative is present in the second term
-    REAL(DFP), ALLOCATABLE :: ans(:, :, :, :)
-    !! returned finite element matrix.
-  END FUNCTION Mat4_STConvectiveMatrix_1
-END INTERFACE
-
-INTERFACE STConvectiveMatrix
-  MODULE PROCEDURE Mat4_STConvectiveMatrix_1
-END INTERFACE STConvectiveMatrix
-
-!----------------------------------------------------------------------------
-!                                    STConvectiveMatrix@STConvectiveMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-23
-! update: 2021-11-23
-! summary: Returns the space-time convective matrix in rank4 array
-!
-!# Introduction
-!
-! This is same as [[Mat4_STConvectiveMatrix_1]] , but here velocity is
-! constant. This is just to remove some overhead in simple cases.
-
-INTERFACE
-  MODULE FUNCTION Mat4_STConvectiveMatrix_1b(test, trial, c, term1, term2) &
-       & RESULT(ans)
-    CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CLASS(STElemshapeData_), INTENT(IN) :: trial(:)
-    REAL(DFP), INTENT(IN) :: c(:)
-    !! constant convective velocity
-    INTEGER(I4B), INTENT(IN) :: term1
-    !! If 1 then first order space derivative is present in first term
-    INTEGER(I4B), INTENT(IN) :: term2
-    !! If 0 then time derivative in second term absent
-    !! If 1 then first order time derivative is present in the second term
-    REAL(DFP), ALLOCATABLE :: ans(:, :, :, :)
-    !! returned finite element matrix.
-  END FUNCTION Mat4_STConvectiveMatrix_1b
-END INTERFACE
-
-INTERFACE STConvectiveMatrix
-  MODULE PROCEDURE Mat4_STConvectiveMatrix_1b
-END INTERFACE STConvectiveMatrix
-
-!----------------------------------------------------------------------------
-!                                         ConvectiveMatrix@MassMatrixMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-22
-! update: 2021-11-22
-! summary: Returns the space-time convective matrix
-!
-!# Introduction
-!
-! $$
-!   M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-!   {{c_j}\frac{{\partial {N^I}{T_a}}}{{\partial {x_j}}} \cdot
-!   {N^J}{T_b}d\Omega dt} } }
-! $$
-!
-! $$
-! M\left(I,J,a,b\right)=\int_{I_{n}}\int_{\Omega}N^{I}T_{a}c_{j}\frac{\partial
-! N^{J}T_{b}}{\partial x_{j}}d\Omega dt
-! $$
-
-INTERFACE
-  MODULE FUNCTION Mat2_STConvectiveMatrix_1(test, trial, c, term1, term2) &
-       & RESULT(ans)
-    CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CLASS(STElemshapeData_), INTENT(IN) :: trial(:)
-    TYPE(FEVariable_), INTENT(IN) :: c
-    !! convective velocity, it can be
-    !! - nodal/quadrature  variable
-    !!    - constant
-    !!    - space
-    !!    - time
-    !!    - spacetime
-    INTEGER(I4B), INTENT(IN) :: term1
-    !! If 1 then first order space derivative is present in first term
-    INTEGER(I4B), INTENT(IN) :: term2
-    !! If 0 then time derivative in second term absent
-    !! If 1 then first order time derivative is present in the second term
-    REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! returned finite element matrix.
-  END FUNCTION Mat2_STConvectiveMatrix_1
-END INTERFACE
-
-INTERFACE ConvectiveMatrix
-  MODULE PROCEDURE Mat2_STConvectiveMatrix_1
-END INTERFACE ConvectiveMatrix
-
-!----------------------------------------------------------------------------
-!                                      STConvectiveMatrix@STConvectiveMatrix
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-23
-! update: 2021-11-23
-! summary: Returns space-time convective matrix in Rank2 array
-!
-!# Introduction
-!
-! This rotuine is same as [[Mat2_STConvectiveMatrix_1]], but here
-! convective velocity is constant.
-! It removes some overhead.
-
-INTERFACE
-  MODULE FUNCTION Mat2_STConvectiveMatrix_1b(test, trial, c, term1, term2) &
-       & RESULT(ans)
-    CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    CLASS(STElemshapeData_), INTENT(IN) :: trial(:)
-    REAL(DFP), INTENT(IN) :: c(:)
-    !! convective velocity, it can be
-    !! - nodal/quadrature  variable
-    !!    - constant
-    !!    - space
-    !!    - time
-    !!    - spacetime
-    INTEGER(I4B), INTENT(IN) :: term1
-    !! If 1 then first order space derivative is present in first term
-    INTEGER(I4B), INTENT(IN) :: term2
-    !! If 0 then time derivative in second term absent
-    !! If 1 then first order time derivative is present in the second term
-    REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! returned finite element matrix.
-  END FUNCTION Mat2_STConvectiveMatrix_1b
-END INTERFACE
-
-INTERFACE ConvectiveMatrix
-  MODULE PROCEDURE Mat2_STConvectiveMatrix_1b
-END INTERFACE ConvectiveMatrix
-
-!----------------------------------------------------------------------------
-!                                      STConvectiveMatrix@STConvectiveMatrix
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-23
-! update: 2021-11-23
-! summary: Returns space-time convective matrix in rank4 array
-!
-!
-!# Introduction
-!
 ! $$
 ! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
 ! {\frac{{\partial {N^I}{T_a}}}{{\partial x}} c \cdot {N^J}{T_b}d\Omega dt} } }
@@ -382,14 +219,18 @@ END INTERFACE ConvectiveMatrix
 ! {{N^J}{T_b} c \cdot
 ! \frac{{\partial {N^J}{T_b}}}{{\partial x_{i}}}d\Omega dt} } }
 ! $$
-
 INTERFACE
-  MODULE PURE FUNCTION Mat4_STConvectiveMatrix_2(test, trial, term1, &
-       & term2, dim, c) RESULT(Ans)
+  MODULE FUNCTION Mat4_STConvectiveMatrix_1(test, trial, c, term1, term2, &
+       & projectOn) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
-    !! test function
     CLASS(STElemshapeData_), INTENT(IN) :: trial(:)
-    !! trial function
+    TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: c
+    !! convective velocity, it can be
+    !! - nodal/quadrature  variable
+    !!    - constant
+    !!    - space
+    !!    - time
+    !!    - spacetime
     INTEGER(I4B), INTENT(IN) :: term1
     !! term1 denotes first order derivative in space or time
     !! DEL_NONE => no derivative
@@ -400,51 +241,42 @@ INTERFACE
     !! DEL_NONE => no derivative
     !! DEL_X, DEL_Y, DEL_Z => space derivative
     !! DEL_t => time derivative
-    INTEGER(I4B), INTENT(IN) :: dim
-    !! it has one of the following values
-    !! DEL_x => dx
-    !! DEL_y => dy
-    !! DEL_z => dz
-    !! DEL_X_ALL => [dx, dy, dz]
-    TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: c
-    !! a scalar finite element variable
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: projectOn
+    !! "trial" take projection of C on trial
+    !! "test" take projection of C on test
     REAL(DFP), ALLOCATABLE :: ans(:, :, :, :)
-    !! returned finte element matrix
-  END FUNCTION Mat4_STConvectiveMatrix_2
+    !! returned finite element matrix.
+  END FUNCTION Mat4_STConvectiveMatrix_1
 END INTERFACE
 
 INTERFACE STConvectiveMatrix
-  MODULE PROCEDURE Mat4_STConvectiveMatrix_2
+  MODULE PROCEDURE Mat4_STConvectiveMatrix_1
 END INTERFACE STConvectiveMatrix
 
 !----------------------------------------------------------------------------
-!                                      STConvectiveMatrix@STConvectiveMatrix
+!                                         ConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-24
-! update: 2021-11-24
-! summary: Returns the space-time convective matrix in a rank-2 array.
+! date: 2021-11-22
+! update: 2021-11-22
+! summary: Returns the space-time convective matrix
 !
-!# Introduction
+! See [[Mat4_STConvectiveMatrix_1]]
 !
-! This routine works similar to [[Mat4_STConvectiveMatrix_2]] but it
-! returns a rank2 array.
-!
-
 INTERFACE
-  MODULE PURE FUNCTION Mat2_STConvectiveMatrix_2(test, trial, term1, &
-       & term2, dim, c) RESULT(Ans)
+  MODULE FUNCTION Mat2_STConvectiveMatrix_1(test, trial, c, term1, term2, projectOn) &
+       & RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: test(:)
     CLASS(STElemshapeData_), INTENT(IN) :: trial(:)
+    TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: c
     INTEGER(I4B), INTENT(IN) :: term1
     INTEGER(I4B), INTENT(IN) :: term2
-    INTEGER(I4B), INTENT(IN) :: dim
-    TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: c
+    CHARACTER(LEN=*), INTENT(IN) :: projectOn
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  END FUNCTION Mat2_STConvectiveMatrix_2
+  END FUNCTION Mat2_STConvectiveMatrix_1
 END INTERFACE
 
 INTERFACE ConvectiveMatrix
-  MODULE PROCEDURE Mat2_STConvectiveMatrix_2
+  MODULE PROCEDURE Mat2_STConvectiveMatrix_1
 END INTERFACE ConvectiveMatrix
