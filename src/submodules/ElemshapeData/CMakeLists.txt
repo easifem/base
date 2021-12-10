@@ -12,6 +12,7 @@ TARGET_SOURCES(
   ${src_path}/ElemshapeData_Method@Constructor.F90
   ${src_path}/ElemshapeData_Method@IO.F90
   ${src_path}/ElemshapeData_Method@getMethod.F90
+  ${src_path}/ElemshapeData_Method@ProjectionMethods.F90
   ${src_path}/ElemshapeData_Method@InterpolMethods.F90
   ${src_path}/ElemshapeData_Method@GradientMethods.F90
   ${src_path}/ElemshapeData_Method@setMethod.F90
