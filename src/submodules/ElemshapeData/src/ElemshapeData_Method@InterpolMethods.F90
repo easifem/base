@@ -130,16 +130,13 @@ CASE (Space)
   IF (val%DefineOn .EQ. Nodal) THEN
     interpol(:, 1) = interpolation(obj(1), &
         & Get(val, TypeFEVariableScalar, TypeFEVariableSpace))
-    DO ii = 2, SIZE(obj)
-      interpol(:, ii) = interpol(:, 1)
-    END DO
   ELSE
     interpol(:, 1) = Get(val, TypeFEVariableScalar,&
       & TypeFEVariableSpace)
-    DO ii = 2, SIZE(obj)
-      interpol(:, ii) = interpol(:, 1)
-    END DO
   END IF
+  DO ii = 2, SIZE(obj)
+    interpol(:, ii) = interpol(:, 1)
+  END DO
 CASE (SpaceTime)
   IF (val%DefineOn .EQ. Nodal) THEN
     DO ii = 1, SIZE(obj)

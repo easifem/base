@@ -14,14 +14,15 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-
-! Define internal variables
-REAL(DFP), ALLOCATABLE :: dp(:, :, :), p(:, :), mv(:), &
-  & pnorm(:)
+!! Define internal variables
+REAL(DFP), ALLOCATABLE :: dp(:, :, :)
+REAL(DFP), ALLOCATABLE :: p(:, :)
+REAL(DFP), ALLOCATABLE :: mv(:)
+REAL(DFP), ALLOCATABLE :: pnorm(:)
 REAL(DFP) :: nrm
 INTEGER(I4B) :: i
 !! main
-!! get interpolation of vector nodal values
+!! interpolate the vector
 CALL getInterpolation(obj=obj, Interpol=p, Val=val)
 !! get gradient of nodal values
 CALL getSpatialGradient(obj=obj, dVdXt=dp, Val=val)
