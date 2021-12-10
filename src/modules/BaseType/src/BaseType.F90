@@ -804,6 +804,13 @@ TYPE(KeyValue_), PARAMETER, PUBLIC :: TypeKeyValue = &
 !                                                                FEVariable_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-08
+! update: 2021-12-08
+! summary: Finite element variable
+!
+! {!pages/FEVariable_.md!}
+
 TYPE :: FEVariable_
   REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :), &
     & r4(:, :, :, :)
@@ -1183,7 +1190,8 @@ PUBLIC :: STShapeDataPointer_
 ! date: 4 March 2021
 ! summary: Datatype for data defined at all gauss points of an elements
 !
-!{!pages/ElemshapeData_.md}
+!{!pages/ElemshapeData_.md!}
+!
 TYPE :: ElemShapeData_
   REAL(DFP), ALLOCATABLE :: N(:, :)
     !! Shape function value `N(I,ips)`
@@ -1233,59 +1241,18 @@ PUBLIC :: ElemShapeDataPointer_
 !                                                           STElemShapeData_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-08
+! update: 2021-12-08
+! summary: Space-time shape function data
+!
+! {!pages/STElemshapeData_.md!}
+
 !> authors: Dr. Vikas Sharma
 !
 ! This data type contains shapefunction related data defined
 ! at all gauss points of an elements
 !
-! ## How to initiate local shape data
-!
-!```fortran
-! program main
-!   !! This program shows how to use space-time element shape data
-! use easifem
-! implicit none
-!
-!   !line order 1
-!   type( stelemshapedata_ ), allocatable :: obj( : )
-!   type( elemshapedata_ ) :: elemsd
-!   type( quadraturepoint_ ) :: quad
-!   class( referenceElement_ ), pointer :: refelem
-!   integer( i4b ) :: orderInTime, ii
-!   real( dfp ) :: xiJ( 1, 2 )
-!
-!   orderInTime = 2
-!   ALLOCATE( ReferenceLine_ :: refelem )
-!   refelem = ReferenceLine( nsd = 1 )
-!
-!   quad = GaussLegendreQuadrature(refelem=refelem,order=orderInTime )
-!
-!   ! higher order lagrange element
-!   SELECT TYPE( refelem )
-!   TYPE IS ( ReferenceLine_  )
-!     refelem = LagrangeElement( refelem = refelem, order = 1 )
-!   END SELECT
-!
-!   call initiate( &
-!     & obj = elemsd, quad = quad, refelem = refelem, &
-!     & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
-!
-!   call initiate( obj = obj, elemsd = elemsd )
-!
-!   !! Generating shape functions for space element
-!   ALLOCATE( ReferenceTriangle_ :: refelem )
-!   refelem = ReferenceTriangle( nsd = 2 )
-!
-!   quad = GaussLegendreQuadrature( refelem=refelem, order = 2 )
-!
-!   do ii = 1, size( obj )
-!     call initiate( &
-!       & obj = obj( ii ), quad = quad, refelem = refelem, &
-!       & ContinuityType= typeH1, InterpolType = TypeLagrangeInterpolation )
-!     call display( obj( ii ), "ii :: "// str( ii ) )
-!   end do
-! end program
-!```
 
 TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
   REAL(DFP) :: Wt = 0.0
