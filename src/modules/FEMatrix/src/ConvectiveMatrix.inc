@@ -163,62 +163,8 @@ END INTERFACE ConvectiveMatrix
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
 !
-!# Introduction
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {{c_j}\frac{{\partial {N^I}{T_a}}}{{\partial {x_j}}} \cdot
-! {N^J}{T_b}d\Omega dt} } }
-! $$
-!
-! $$
-! M\left(I,J,a,b\right)=\int_{I_{n}}\int_{\Omega}N^{I}T_{a}c_{j}\frac{\partial
-! N^{J}T_{b}}{\partial x_{j}}d\Omega dt
-! $$
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {\frac{{\partial {N^I}{T_a}}}{{\partial x}} c \cdot {N^J}{T_b}d\Omega dt} } }
-! $$
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {\frac{{\partial {N^I}{T_a}}}{{\partial y}} c \cdot {N^J}{T_b}d\Omega dt} } }
-! $$
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {\frac{{\partial {N^I}{T_a}}}{{\partial z}} c \cdot {N^J}{T_b}d\Omega dt} } }
-! $$
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {{N^J}{T_b} c \cdot  \frac{{\partial {N^J}{T_b}}}{{\partial x}}d\Omega dt} } }
-! $$
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {{N^J}{T_b} c \cdot \frac{{\partial {N^J}{T_b}}}{{\partial y}}d\Omega dt} } }
-! $$
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {{N^J}{T_b} c \cdot \frac{{\partial {N^J}{T_b}}}{{\partial z}}d\Omega dt} } }
-! $$
-!
-! NOTE If `dim` is -1 then this routine performs the following task
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {\frac{{\partial {N^I}{T_a}}}{{\partial x_{i}}} c \cdot
-! {N^J}{T_b}d\Omega dt} } }
-! $$
-!
-! $$
-! M\left( {I,J,a,b} \right) =  {\int_{{I_n}}^{} {\int_\Omega ^{}
-! {{N^J}{T_b} c \cdot
-! \frac{{\partial {N^J}{T_b}}}{{\partial x_{i}}}d\Omega dt} } }
-! $$
+! See
+! {!pages/STConvectiveMatrix_.md !}
 INTERFACE
   MODULE FUNCTION Mat4_STConvectiveMatrix_1(test, trial, c, term1, term2, &
        & projectOn) RESULT(ans)
@@ -254,6 +200,48 @@ INTERFACE STConvectiveMatrix
 END INTERFACE STConvectiveMatrix
 
 !----------------------------------------------------------------------------
+!                                       STConvectiveMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-22
+! update: 2021-11-22
+! summary: Returns the space-time convective matrix in rank-4 array
+!
+! See
+! {!pages/STConvectiveMatrix_.md !}
+INTERFACE
+  MODULE FUNCTION Mat4_STConvectiveMatrix_2(test, trial, rho, c, term1, term2, &
+       & projectOn) RESULT(ans)
+    CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+    CLASS(STElemshapeData_), INTENT(IN) :: trial(:)
+    TYPE(FEVariable_), INTENT(IN) :: rho
+    !! Scalar FE variable
+    TYPE(FEVariable_), INTENT(IN) :: c
+    !! convective velocity, vector FEVariable,
+    INTEGER(I4B), INTENT(IN) :: term1
+    !! term1 denotes first order derivative in space or time
+    !! DEL_NONE => no derivative
+    !! DEL_X, DEL_Y, DEL_Z, DEL_X_ALL => space derivative
+    !! DEL_t => time derivative
+    INTEGER(I4B), INTENT(IN) :: term2
+    !! term2 denotes first order derivative in space or time
+    !! DEL_NONE => no derivative
+    !! DEL_X, DEL_Y, DEL_Z, DEL_X_ALL => space derivative
+    !! DEL_t => time derivative
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: projectOn
+    !! "trial" take projection of C on trial
+    !! "test" take projection of C on test
+    REAL(DFP), ALLOCATABLE :: ans(:, :, :, :)
+    !! returned finite element matrix.
+  END FUNCTION Mat4_STConvectiveMatrix_2
+END INTERFACE
+
+INTERFACE STConvectiveMatrix
+  MODULE PROCEDURE Mat4_STConvectiveMatrix_2
+END INTERFACE STConvectiveMatrix
+
+!----------------------------------------------------------------------------
 !                                         ConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
@@ -272,11 +260,40 @@ INTERFACE
     TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: c
     INTEGER(I4B), INTENT(IN) :: term1
     INTEGER(I4B), INTENT(IN) :: term2
-    CHARACTER(LEN=*), INTENT(IN) :: projectOn
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: projectOn
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION Mat2_STConvectiveMatrix_1
 END INTERFACE
 
 INTERFACE ConvectiveMatrix
   MODULE PROCEDURE Mat2_STConvectiveMatrix_1
+END INTERFACE ConvectiveMatrix
+
+!----------------------------------------------------------------------------
+!                                         ConvectiveMatrix@MassMatrixMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-06
+! update: 2021-12-06
+! summary: Returns the space-time convective matrix
+!
+! See [[Mat4_STConvectiveMatrix_2]]
+!
+INTERFACE
+  MODULE FUNCTION Mat2_STConvectiveMatrix_2(test, trial, rho, c, &
+       & term1, term2, projectOn) RESULT(ans)
+    CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+    CLASS(STElemshapeData_), INTENT(IN) :: trial(:)
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariable_), INTENT(IN) :: rho
+    INTEGER(I4B), INTENT(IN) :: term1
+    INTEGER(I4B), INTENT(IN) :: term2
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: projectOn
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION Mat2_STConvectiveMatrix_2
+END INTERFACE
+
+INTERFACE ConvectiveMatrix
+  MODULE PROCEDURE Mat2_STConvectiveMatrix_2
 END INTERFACE ConvectiveMatrix
