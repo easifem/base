@@ -39,11 +39,6 @@ PRIVATE
 !@note
 ! 	This routine also used in assignment(=) operator
 !@endnote
-!
-!### Usage
-!
-!```fortran
-!```
 
 INTERFACE
 MODULE PURE SUBROUTINE init_by_rank2( obj, obj2 )
@@ -72,6 +67,7 @@ END INTERFACE
 ! call initiate( obj, sym(mat), .true.)
 ! call display( obj, "test2: ")
 !```
+
 INTERFACE
 MODULE PURE SUBROUTINE init_by_mat( obj, Mat, isSym )
   CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
@@ -206,7 +202,7 @@ PUBLIC :: Rank2Tensor
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
-! summary: This function returns the pointer to an newly created instance of [[Rank2Tensor_]].
+! summary: returns the pointer to an newly created instance of [[Rank2Tensor_]].
 !
 !### Usage
 !
@@ -235,7 +231,7 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
-! summary: This function returns a pointer to a newly created instance of [[Rank2Tensor_]]
+! summary: returns a pointer to a newly created instance of [[Rank2Tensor_]]
 !
 !### Usage
 !
@@ -310,7 +306,6 @@ END INTERFACE
 ! mat = 0.0; mat = obj
 ! call display( mat, "test7: mat=")
 !```
-
 
 INTERFACE
 MODULE PURE SUBROUTINE mat_eq_r2tensor( Mat, obj )
@@ -390,37 +385,24 @@ END INTERFACE IdentityTensor
 PUBLIC :: IdentityTensor
 
 !----------------------------------------------------------------------------
-!                                                     OnesTensor@constructor
+!                                                 getOnesTensor@constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns a second order tensor with all entry one
-!
-!### Usage
-!
-!```fortran
-! type( Rank2Tensor_ ) :: obj
-! call IdentityTensor(obj)
-! call display( obj, "test9: IdentityTensor=")
-! call Ones(obj)
-! call display( obj, "test9: Ones=")
-! call Zeros(obj)
-! call display( obj, "test9: Zeros=")
-! call IsotropicTensor(obj, 2.0_DFP)
-! call display( obj, "test9: Isotropic=")
-!```
+
 INTERFACE
-MODULE PURE SUBROUTINE Ones_rank2( obj )
+MODULE PURE SUBROUTINE rank2_getOnes( obj )
   CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE Ones_rank2
+END SUBROUTINE rank2_getOnes
 END INTERFACE
 
-INTERFACE Ones
-  MODULE PROCEDURE Ones_rank2
-END INTERFACE Ones
+INTERFACE getOnes
+  MODULE PROCEDURE rank2_getOnes
+END INTERFACE getOnes
 
-PUBLIC :: Ones
+PUBLIC :: getOnes
 
 !----------------------------------------------------------------------------
 !                                                   ZerosTensor@constructor
@@ -445,16 +427,16 @@ PUBLIC :: Ones
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE Zeros_rank2( obj )
+MODULE PURE SUBROUTINE rank2_getZeros( obj )
   CLASS( Rank2Tensor_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE Zeros_rank2
+END SUBROUTINE rank2_getZeros
 END INTERFACE
 
-INTERFACE Zeros
-  MODULE PROCEDURE Zeros_rank2
-END INTERFACE Zeros
+INTERFACE getZeros
+  MODULE PROCEDURE rank2_getZeros
+END INTERFACE getZeros
 
-PUBLIC :: Zeros
+PUBLIC :: getZeros
 
 !----------------------------------------------------------------------------
 !                                                IsotropicTensor@constructor
