@@ -444,53 +444,6 @@ PUBLIC :: RealMatrix
 !                                                            Eye@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 	6 March 2021
-! summary: Return an identity matrix of an integers
-!
-! This function returns an identity matrix of type integer
-!
-!### Usage
-!
-!```fortran
-!	i = eye( 2, 1_I4B )
-!```
-
-INTERFACE
-MODULE PURE FUNCTION realMat_eye1( m, DataType ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: m, DataType
-  INTEGER( I4B ) :: Ans( m, m )
-END FUNCTION realMat_eye1
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                            Eye@Constructor
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! Return identity matrix of real numbers
-
-!> authors: Dr. Vikas Sharma
-!
-! This function returns identity matrux of reals
-!
-!### Usage
-!
-! ```fortran
-!	e = eye( 5, 1.0_dfp )
-! ```
-
-MODULE PURE FUNCTION realMat_eye2( m, DataType ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: m
-  REAL( Real64 ) :: Ans( m, m )
-  REAL( Real64 ), INTENT( IN ) :: DataType
-END FUNCTION realMat_eye2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                            Eye@Constructor
-!----------------------------------------------------------------------------
-
 INTERFACE
 !! Return identity matrix of type [[realmatrix_]]
 
@@ -504,114 +457,18 @@ INTERFACE
 !	obj = eye( 3, typeRealMatrix )
 ! ```
 
-MODULE PURE FUNCTION realMat_eye3( m, DataType ) RESULT( Ans )
+MODULE PURE FUNCTION realMat_eye1( m, DataType ) RESULT( Ans )
   INTEGER( I4B ), INTENT( IN ) :: m
   TYPE( RealMatrix_ ), INTENT( IN ) ::  DataType
   TYPE( RealMatrix_ ) :: Ans
-END FUNCTION realMat_eye3
+END FUNCTION realMat_eye1
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                            Eye@Constructor
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! Return identity matrix of real number
-
-!> authors: Dr. Vikas Sharma
-!
-! This function returns the identity matrix of real numbers
-!
-!### Usage
-!
-! ```fortran
-!	e = eye( 4 )
-! ```
-
-MODULE PURE FUNCTION realMat_eye4( m ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: m
-  REAL( DFP ) :: Ans( m, m )
-END FUNCTION realMat_eye4
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                            Eye@Constructor
-!----------------------------------------------------------------------------
-
-INTERFACE
-!! Return identity matrix of real numbers
-
-!> authors: Dr. Vikas Sharma
-!
-! This function returns identity matrux of reals
-!
-!### Usage
-!
-! ```fortran
-!	e = eye( 5, 1.0_dfp )
-! ```
-
-MODULE PURE FUNCTION realMat_eye5( m, DataType ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: m
-  REAL( Real32 ) :: Ans( m, m )
-  REAL( Real32 ), INTENT( IN ) :: DataType
-END FUNCTION realMat_eye5
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                            Eye@Constructor
-!----------------------------------------------------------------------------
-
-!> Generic interface for obtaining identity matrix in array or [[realmatrix_]]
 INTERFACE Eye
-  MODULE PROCEDURE realMat_eye1, realMat_eye3, realMat_eye2, realMat_eye4,  &
-    & realMat_eye5
+  MODULE PROCEDURE realMat_eye1
 END INTERFACE Eye
 
 PUBLIC :: Eye
-
-!----------------------------------------------------------------------------
-!                                                        Convert@Constructor
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 6 March 2021
-! summary: Rearrange the degrees of freedom in a finite element matrix
-!
-!# Introduction
-!
-! This subroutine changes the storage pattern of a two-d matrix
-!  - Usually element matrix in easifem are stored in `FMT_DOF`
-!  - Global matrices/tanmat, however, are stored in `FMT_Nodes`
-!  - This subroutine is, therefore, in settings or adding values in
-! [[SparseMatrix_]].
-!
-! > This subroutine converts changes the storage format of dense matrix.
-! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global
-! matrix/ tanmat, may be stored in `Nodes_FMT`.
-!
-!@note
-! All dof should have the same order of interpolation, therefore,
-! this routine works when matrix is square.
-!@endnote
-!
-!### Usage
-!
-!```fortran
-!	call Convert( From, To, DOFToNodes, nns, tdof )
-!```
-
-INTERFACE
-MODULE PURE SUBROUTINE convert_DofToNodes( From, To, Conversion, nns, tdof )
-  REAL( DFP ), INTENT( IN ) :: From( :, : )
-    !! Matrix in one format
-  REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: To( :, : )
-    !! Matrix is desired format
-  INTEGER( I4B ), INTENT( IN ) :: Conversion
-    !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
-  INTEGER( I4B ), INTENT( IN ) :: nns, tdof
-END SUBROUTINE convert_DofToNodes
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                        Convert@Constructor
@@ -633,13 +490,9 @@ END INTERFACE
 ! Usually, elemental finite element matrix is stored in `DOF_FMT`, and global
 ! matrix/ tanmat, may be stored in `Nodes_FMT`.
 !
-!### Usage
-!
-!```fortran
-!```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_convert_doftonodes(  From, To, Conversion, &
+MODULE PURE SUBROUTINE realmat_convert_1(  From, To, Conversion, &
   & nns, tdof )
   TYPE( RealMatrix_ ), INTENT( IN ) :: From
     !! Matrix in one format
@@ -648,41 +501,11 @@ MODULE PURE SUBROUTINE realmat_convert_doftonodes(  From, To, Conversion, &
   INTEGER( I4B ), INTENT( IN ) :: Conversion
     !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
   INTEGER( I4B ), INTENT( IN ) :: nns, tdof
-END SUBROUTINE realmat_convert_doftonodes
+END SUBROUTINE realmat_convert_1
 END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                        Convert@Constructor
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 6 March 2021
-! summary: This subroutine converts rank4  matrix to rank2 matrix
-!
-!# Introduction
-!
-! This subroutine converts a rank4 matrix to rank2 matrix
-!
-!### Usage
-!
-!```fortran
-!
-!```
-
-INTERFACE
-MODULE PURE SUBROUTINE convert_mat4_to_mat2( From, To )
-  REAL( DFP ), INTENT( IN ) :: From( :, :, :, : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: To( :, : )
-END SUBROUTINE convert_mat4_to_mat2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                        Convert@Constructor
-!----------------------------------------------------------------------------
 
 INTERFACE Convert
-  MODULE PROCEDURE convert_DofToNodes, realmat_convert_doftonodes, &
-    & convert_mat4_to_mat2
+  MODULE PROCEDURE realmat_convert_1
 END INTERFACE Convert
 
 PUBLIC :: Convert
@@ -889,7 +712,7 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE realmat_make_diag_copy3(  Mat, ncopy )
+MODULE PURE SUBROUTINE realmat_make_diag_copy3( Mat, ncopy )
   TYPE( RealMatrix_ ), INTENT( INOUT ) :: Mat
   INTEGER( I4B ), INTENT( IN ) :: ncopy
 END SUBROUTINE realmat_make_diag_copy3
@@ -922,9 +745,10 @@ END SUBROUTINE realmat_make_diag_copy4
 END INTERFACE
 
 INTERFACE MakeDiagonalCopies
-  MODULE PROCEDURE realmat_make_diag_copy1, realmat_make_diag_copy2, &
-      & realmat_make_diag_copy3, &
-      & realmat_make_diag_copy4
+  MODULE PROCEDURE realmat_make_diag_copy1, &
+    & realmat_make_diag_copy2, &
+    & realmat_make_diag_copy3, &
+    & realmat_make_diag_copy4
 END INTERFACE MakeDiagonalCopies
 
 PUBLIC :: MakeDiagonalCopies
