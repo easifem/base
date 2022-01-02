@@ -15,24 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 6 March 2021
-! summary: This module contains method to construct finite element matrices
-
 MODULE FEMatrix_Method
-USE BaseType
-USE GlobalData
-IMPLICIT NONE
-PRIVATE
-
-#include "./MassMatrix.inc"
-#include "./DiffusionMatrix.inc"
-#include "./StiffnessMatrix.inc"
-#include "./NitscheMatrix.inc"
-#include "./ConvectiveMatrix.inc"
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
+USE MassMatrix_Method
+USE STMassMatrix_Method
+USE DiffusionMatrix_Method
+USE STDiffusionMatrix_Method
+USE ConvectiveMatrix_Method
+USE STConvectiveMatrix_Method
+USE StiffnessMatrix_Method
+USE NitscheMatrix_Method
 END MODULE FEMatrix_Method
