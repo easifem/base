@@ -811,136 +811,187 @@ TYPE(KeyValue_), PARAMETER, PUBLIC :: TypeKeyValue = &
 !
 ! {!pages/FEVariable_.md!}
 
+INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVariable = 6
+
 TYPE :: FEVariable_
-  REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :), &
-    & r4(:, :, :, :)
-  REAL(DFP) :: r0 = 0.
-  INTEGER(I4B) :: defineOn = 0 !Nodal, Quadrature
-  INTEGER(I4B) :: varType = 0 !Space, SpaceTime, Constant
-  INTEGER(I4B) :: rank = 0 ! Scalar, Vector, Matrix
+  REAL(DFP), ALLOCATABLE :: val(:)
+  !! values
+  INTEGER(I4B) :: s(MAX_RANK_FEVariable) = 0
+  !! shape of the data
+  INTEGER(I4B) :: defineOn = 0
+  !! Nodal: nodal values
+  !! Quadrature: quadrature values
+  INTEGER(I4B) :: varType = 0
+  !! Space
+  !! Time
+  !! SpaceTime
+  !! Constant
+  INTEGER(I4B) :: rank = 0
+  !! Scalar
+  !! Vector
+  !! Matrix
   INTEGER(I4B) :: caseType = 0
 END TYPE FEVariable_
 
 PUBLIC :: FEVariable_
 
-TYPE(FEVariable_), PARAMETER, PUBLIC :: TypeFEVariable = &
-  & FEVariable_(R1=NULL(), R2=NULL(), R3=NULL(), &
-  & R4=NULL())
+TYPE(FEVariable_), PARAMETER, PUBLIC ::TypeFEVariable=FEVariable_(val=NULL())
 
 !----------------------------------------------------------------------------
 !                                                         FEVariableConstant_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: FEVariable Constant
+
 TYPE :: FEVariableConstant_
-  INTEGER(I4B) :: Val = 1
+!! INTEGER(I4B) :: Val = 1
 END TYPE FEVariableConstant_
 
 PUBLIC :: FEVariableConstant_
 
 TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeFEVariableConstant = &
-  & FEVariableConstant_(1_I4B)
+     & FEVariableConstant_()
+
 TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeVariableConstant = &
-  & FEVariableConstant_(1_I4B)
+     & FEVariableConstant_()
+
 
 !----------------------------------------------------------------------------
 !                                                           FEVariableSpace_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: FEVariable Space
+!
 TYPE :: FEVariableSpace_
-  INTEGER(I4B) :: Val = 2
+!! INTEGER(I4B) :: Val = 2
 END TYPE FEVariableSpace_
 
 PUBLIC :: FEVariableSpace_
 
 TYPE(FEVariableSpace_), PARAMETER, PUBLIC :: TypeFEVariableSpace = &
-  & FEVariableSpace_(2_I4B)
+  & FEVariableSpace_()
 TYPE(FEVariableSpace_), PARAMETER, PUBLIC :: TypeVariableSpace = &
-  & FEVariableSpace_(2_I4B)
+  & FEVariableSpace_()
 
 !----------------------------------------------------------------------------
 !                                                       FEVariableSpaceTime_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: FEVariable Space time
+
 TYPE :: FEVariableSpaceTime_
-  INTEGER(I4B) :: Val = 3
+!! INTEGER(I4B) :: Val = 3
 END TYPE FEVariableSpaceTime_
 
 PUBLIC :: FEVariableSpaceTime_
 
 TYPE(FEVariableSpaceTime_), PARAMETER, PUBLIC :: &
-  & TypeFEVariableSpaceTime = FEVariableSpaceTime_(3_I4B)
+  & TypeFEVariableSpaceTime = FEVariableSpaceTime_()
 TYPE(FEVariableSpaceTime_), PARAMETER, PUBLIC :: &
-  & TypeVariableSpaceTime = FEVariableSpaceTime_(3_I4B)
+  & TypeVariableSpaceTime = FEVariableSpaceTime_()
 
 !----------------------------------------------------------------------------
 !                                                            FEVariableTime_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: FEVariable time
+
 TYPE :: FEVariableTime_
-  INTEGER(I4B) :: Val = 4
+!! INTEGER(I4B) :: Val = 4
 END TYPE FEVariableTime_
 
 PUBLIC :: FEVariableTime_
 
 TYPE(FEVariableTime_), PARAMETER, PUBLIC :: TypeFEVariableTime = &
-  & FEVariableTime_(4_I4B)
+  & FEVariableTime_()
+
 TYPE(FEVariableTime_), PARAMETER, PUBLIC :: TypeVariableTime = &
-  & FEVariableTime_(4_I4B)
+  & FEVariableTime_()
 
 !----------------------------------------------------------------------------
 !                                                          FEVariableScalar_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: FEVariable scalar
+
 TYPE :: FEVariableScalar_
-  INTEGER(I4B) :: Val = 0
+!!  INTEGER(I4B) :: Val = 0
 END TYPE FEVariableScalar_
 
 PUBLIC :: FEVariableScalar_
 
 TYPE(FEVariableScalar_), PARAMETER, PUBLIC :: &
-  & TypeFEVariableScalar = FEVariableScalar_(0_I4B)
+  & TypeFEVariableScalar = FEVariableScalar_()
+
 TYPE(FEVariableScalar_), PARAMETER, PUBLIC :: &
-  & TypeVariableScalar = FEVariableScalar_(0_I4B)
+  & TypeVariableScalar = FEVariableScalar_()
 
 !----------------------------------------------------------------------------
 !                                                          FEVariableVector_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: FEVariable vector
+
 TYPE :: FEVariableVector_
-  INTEGER(I4B) :: Val = 1
+!!  INTEGER(I4B) :: Val = 1
 END TYPE FEVariableVector_
 
 PUBLIC :: FEVariableVector_
 
 TYPE(FEVariableVector_), PARAMETER, PUBLIC :: &
-  & TypeFEVariableVector = FEVariableVector_(1_I4B)
+  & TypeFEVariableVector = FEVariableVector_()
+
 TYPE(FEVariableVector_), PARAMETER, PUBLIC :: &
-  & TypeVariableVector = FEVariableVector_(1_I4B)
+  & TypeVariableVector = FEVariableVector_()
 
 !----------------------------------------------------------------------------
 !                                                          FEVariableMatrix_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: FEVariable matrix
+
 TYPE :: FEVariableMatrix_
-  INTEGER(I4B) :: Val = 2
+!!  INTEGER(I4B) :: Val = 2
 END TYPE FEVariableMatrix_
 
 PUBLIC :: FEVariableMatrix_
 
 TYPE(FEVariableMatrix_), PARAMETER, PUBLIC :: &
-  & TypeFEVariableMatrix = FEVariableMatrix_(2_I4B)
+  & TypeFEVariableMatrix = FEVariableMatrix_()
 TYPE(FEVariableMatrix_), PARAMETER, PUBLIC :: &
-  & TypeVariableMatrix = FEVariableMatrix_(2_I4B)
+  & TypeVariableMatrix = FEVariableMatrix_()
 
 !----------------------------------------------------------------------------
 !                                                           QuadraturePoint_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-10
+! update: 2021-12-10
+! summary: Quadrature points for numerical integration
 !
-! [[QuadraturePoint_]] data type contains the quadrature point information
-!
-!{!pages/QuadraturePoint.md}
+!{!pages/QuadraturePoint_.md!}
 
 TYPE :: QuadraturePoint_
   REAL(DFP), ALLOCATABLE :: Points(:, :)
@@ -948,8 +999,10 @@ TYPE :: QuadraturePoint_
 END TYPE QuadraturePoint_
 
 PUBLIC :: QuadraturePoint_
+
 TYPE(QuadraturePoint_), PUBLIC, PARAMETER :: &
   & TypeQuadraturePoint = QuadraturePoint_(Points=NULL())
+
 TYPE :: QuadraturePointPointer_
   CLASS(QuadraturePoint_), POINTER :: Ptr => NULL()
 END TYPE QuadraturePointPointer_
@@ -1082,13 +1135,13 @@ TYPE(DG_), PARAMETER, PUBLIC :: &
 ! update: 2021-11-06
 ! summary: Derivative class contains symbols for derivatives
 
-INTEGER(I4B), parameter, public :: DEL_NONE = 0
-INTEGER(I4B), parameter, public :: DEL_X = 1
-INTEGER(I4B), parameter, public :: DEL_Y = 2
-INTEGER(I4B), parameter, public :: DEL_Z = 3
-INTEGER(I4B), parameter, public :: DEL_X_ALL = 4
+INTEGER(I4B), PARAMETER, PUBLIC :: DEL_NONE = 0
+INTEGER(I4B), PARAMETER, PUBLIC :: DEL_X = 1
+INTEGER(I4B), PARAMETER, PUBLIC :: DEL_Y = 2
+INTEGER(I4B), PARAMETER, PUBLIC :: DEL_Z = 3
+INTEGER(I4B), PARAMETER, PUBLIC :: DEL_X_ALL = 4
 !!
-INTEGER(I4B), parameter, public :: DEL_t = -1
+INTEGER(I4B), PARAMETER, PUBLIC :: DEL_t = -1
 
 !----------------------------------------------------------------------------
 !                                                            ElementData_
@@ -1267,6 +1320,7 @@ TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
     !! Local shape function derivative in time domain
   REAL(DFP), ALLOCATABLE :: dNTdt(:, :, :)
   REAL(DFP), ALLOCATABLE :: dNTdXt(:, :, :, :)
+    !! (I,a,i,ips)
 END TYPE STElemShapeData_
 
 PUBLIC :: STElemShapeData_
