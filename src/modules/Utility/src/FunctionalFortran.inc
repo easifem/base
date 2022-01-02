@@ -14,8 +14,14 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-
-
+PUBLIC :: ExpMesh
+PUBLIC :: Linspace
+PUBLIC :: MeshGrid
+PUBLIC :: arange
+PUBLIC :: HEAD
+PUBLIC :: TAIL
+PUBLIC :: SPLIT
+!
 !----------------------------------------------------------------------------
 !                                                  ExpMesh@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -39,6 +45,10 @@ INTERFACE
     !! Number of nodes in mesh
   END FUNCTION ExpMesh_Real64
 END INTERFACE
+
+INTERFACE ExpMesh
+  MODULE PROCEDURE ExpMesh_Real64
+END INTERFACE ExpMesh
 
 !----------------------------------------------------------------------------
 !                                                  ExpMesh@FunctionalFortran
@@ -65,10 +75,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE ExpMesh
-  MODULE PROCEDURE ExpMesh_Real32, ExpMesh_Real64
+  MODULE PROCEDURE ExpMesh_Real32
 END INTERFACE ExpMesh
-
-PUBLIC :: ExpMesh
 
 !----------------------------------------------------------------------------
 !                                                  Linspace@FunctionalFortran
@@ -90,6 +98,10 @@ INTERFACE
     !! Number of nodes in mesh
   END FUNCTION Linspace_Real64
 END INTERFACE
+
+INTERFACE Linspace
+  MODULE PROCEDURE Linspace_Real64
+END INTERFACE Linspace
 
 !----------------------------------------------------------------------------
 !                                                  Linspace@FunctionalFortran
@@ -117,10 +129,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE Linspace
-  MODULE PROCEDURE Linspace_Real32, Linspace_Real64
+  MODULE PROCEDURE Linspace_Real32
 END INTERFACE Linspace
-
-PUBLIC :: Linspace
 
 !----------------------------------------------------------------------------
 !                                                  MeshGrid@FunctionalFortran
@@ -165,6 +175,10 @@ INTERFACE
   END SUBROUTINE MeshGrid2D_Real64
 END INTERFACE
 
+INTERFACE MeshGrid
+  MODULE PROCEDURE MeshGrid2D_Real64
+END INTERFACE MeshGrid
+
 !----------------------------------------------------------------------------
 !                                                MeshGrid@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -177,6 +191,10 @@ INTERFACE
     REAL(Real32), INTENT(IN) :: ygv(:)
   END SUBROUTINE MeshGrid2D_Real32
 END INTERFACE
+
+INTERFACE MeshGrid
+  MODULE PROCEDURE MeshGrid2D_Real32
+END INTERFACE MeshGrid
 
 !----------------------------------------------------------------------------
 !                                               MeshGrid@FunctionalFortran
@@ -192,6 +210,10 @@ INTERFACE
     REAL(Real64), INTENT(IN) :: zgv(:)
   END SUBROUTINE MeshGrid3D_Real64
 END INTERFACE
+
+INTERFACE MeshGrid
+  MODULE PROCEDURE MeshGrid3D_Real64
+END INTERFACE MeshGrid
 
 !----------------------------------------------------------------------------
 !                                               MeshGrid@FunctionalFortran
@@ -209,11 +231,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE MeshGrid
-  MODULE PROCEDURE MeshGrid2D_Real32, MeshGrid2D_Real64, &
-    & MeshGrid3D_Real32, MeshGrid3D_Real64
+  MODULE PROCEDURE MeshGrid3D_Real32
 END INTERFACE MeshGrid
-
-PUBLIC :: MeshGrid
 
 !----------------------------------------------------------------------------
 !                                                   arange@FunctionalFortran
@@ -225,7 +244,7 @@ PUBLIC :: MeshGrid
 ! values.
 
 INTERFACE
-  MODULE PURE FUNCTION arange_Real64(istart, iend, increment) result(Ans)
+  MODULE PURE FUNCTION arange_Real64(istart, iend, increment) RESULT(Ans)
     REAL(Real64), INTENT(IN) :: istart
     !! Start value of the array
     REAL(Real64), INTENT(IN) :: iend
@@ -236,6 +255,10 @@ INTERFACE
   END FUNCTION arange_Real64
 END INTERFACE
 
+INTERFACE arange
+  MODULE PROCEDURE arange_Real64
+END INTERFACE arange
+
 !----------------------------------------------------------------------------
 !                                                   arange@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -246,7 +269,7 @@ END INTERFACE
 ! values.
 
 INTERFACE
-  MODULE PURE FUNCTION arange_Real32(istart, iend, increment) result(Ans)
+  MODULE PURE FUNCTION arange_Real32(istart, iend, increment) RESULT(Ans)
     REAL(Real32), INTENT(IN) :: istart
     !! Start value of the array
     REAL(Real32), INTENT(IN) :: iend
@@ -256,6 +279,10 @@ INTERFACE
     REAL(Real32), DIMENSION(:), ALLOCATABLE :: Ans
   END FUNCTION arange_Real32
 END INTERFACE
+
+INTERFACE arange
+  MODULE PROCEDURE arange_Real32
+END INTERFACE arange
 
 !----------------------------------------------------------------------------
 !                                                    arangeFunctionalFortran
@@ -278,19 +305,17 @@ END INTERFACE
 !```
 
 INTERFACE
-  MODULE PURE FUNCTION arange_int(istart, iend, increment) result(Ans)
-    integer(i4b), intent(in) :: istart
-    integer(i4b), intent(in) :: iend
-    integer(i4b), intent(in), optional :: increment
-    integer(i4b), dimension(:), allocatable :: Ans
+  MODULE PURE FUNCTION arange_int(istart, iend, increment) RESULT(Ans)
+    INTEGER(i4b), INTENT(in) :: istart
+    INTEGER(i4b), INTENT(in) :: iend
+    INTEGER(i4b), INTENT(in), OPTIONAL :: increment
+    INTEGER(i4b), DIMENSION(:), ALLOCATABLE :: Ans
   END FUNCTION
 END INTERFACE
 
 INTERFACE arange
-  MODULE PROCEDURE arange_int, arange_real64, arange_Real32
+  MODULE PROCEDURE arange_int
 END INTERFACE arange
-
-PUBLIC arange
 
 !----------------------------------------------------------------------------
 !                                                     Head@FunctionalFortran
@@ -307,6 +332,10 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+INTERFACE HEAD
+  MODULE PROCEDURE head_int
+END INTERFACE HEAD
+
 !----------------------------------------------------------------------------
 !                                                     Head@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -319,8 +348,12 @@ INTERFACE
   MODULE PURE FUNCTION head_real(x) RESULT(Ans)
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: Ans
-  END FUNCTION
+  END FUNCTION head_real
 END INTERFACE
+
+INTERFACE HEAD
+  MODULE PROCEDURE head_real
+END INTERFACE HEAD
 
 !----------------------------------------------------------------------------
 !                                                     Head@FunctionalFortran
@@ -338,10 +371,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE HEAD
-  MODULE PROCEDURE head_real, head_int, head_char
+  MODULE PROCEDURE head_char
 END INTERFACE HEAD
-
-PUBLIC :: HEAD
 
 !----------------------------------------------------------------------------
 !                                                     Tail@FunctionalFortran
@@ -354,6 +385,10 @@ INTERFACE
   END FUNCTION tail_int
 END INTERFACE
 
+INTERFACE TAIL
+  MODULE PROCEDURE tail_int
+END INTERFACE TAIL
+
 !----------------------------------------------------------------------------
 !                                                     Tail@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -364,6 +399,10 @@ INTERFACE
     REAL(DFP) :: Ans(SIZE(x) - 1)
   END FUNCTION tail_real
 END INTERFACE
+
+INTERFACE TAIL
+  MODULE PROCEDURE tail_real
+END INTERFACE TAIL
 
 !----------------------------------------------------------------------------
 !                                                     Tail@FunctionalFortran
@@ -377,10 +416,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE TAIL
-  MODULE PROCEDURE tail_int, tail_real, tail_char
+  MODULE PROCEDURE tail_char
 END INTERFACE TAIL
-
-PUBLIC :: TAIL
 
 !----------------------------------------------------------------------------
 !                                                    SPLIT@FunctionalFortran
@@ -405,6 +442,10 @@ INTERFACE
   END FUNCTION split_int
 END INTERFACE
 
+INTERFACE SPLIT
+  MODULE PROCEDURE split_int
+END INTERFACE SPLIT
+
 !----------------------------------------------------------------------------
 !                                                    SPLIT@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -427,6 +468,10 @@ INTERFACE
     REAL(DFP), DIMENSION(:), ALLOCATABLE :: Ans
   END FUNCTION split_real
 END INTERFACE
+
+INTERFACE SPLIT
+  MODULE PROCEDURE split_real
+END INTERFACE SPLIT
 
 !----------------------------------------------------------------------------
 !                                                    SPLIT@FunctionalFortran
@@ -452,7 +497,5 @@ INTERFACE
 END INTERFACE
 
 INTERFACE SPLIT
-  MODULE PROCEDURE split_int, split_char, split_real
+  MODULE PROCEDURE split_char
 END INTERFACE SPLIT
-
-PUBLIC :: SPLIT
