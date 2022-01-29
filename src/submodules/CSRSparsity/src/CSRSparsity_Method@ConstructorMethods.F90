@@ -54,7 +54,7 @@ MODULE PROCEDURE csr_initiate1
     obj%dof = dof
   ELSE
     CALL initiate( obj=obj%dof, tNodes=[nrow], names=['K'], &
-      & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )
+      & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT )
   END IF
   CALL Reallocate( obj%IA, nrow + 1 )
   IF( ALLOCATED( obj%row ) ) DEALLOCATE( obj%row )
@@ -173,6 +173,7 @@ END PROCEDURE csr_getNNZ
 MODULE PROCEDURE csr_Deallocate
   IF( ALLOCATED( obj%IA ) ) DEALLOCATE( obj%IA )
   IF( ALLOCATED( obj%JA ) ) DEALLOCATE( obj%JA )
+  IF( ALLOCATED( obj%DiagIndx ) ) DEALLOCATE( obj%DiagIndx )
   IF( ALLOCATED( obj%Row ) ) DEALLOCATE( obj%Row )
   CALL Deallocate( obj%dof )
   obj%nnz =  0
