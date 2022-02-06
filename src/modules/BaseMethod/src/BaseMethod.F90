@@ -84,6 +84,7 @@ MODULE BaseMethod
   USE Elemshapedata_Method
   USE RealMatrix_Method
   USE FEMatrix_Method
+  USE FEVector_Method
   USE Rank2Tensor_Method
   USE VoigtRank2Tensor_Method
   USE CSRSparsity_Method
