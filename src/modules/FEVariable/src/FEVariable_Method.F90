@@ -28,6 +28,12 @@ PRIVATE
 #include "./Subtraction.inc"
 #include "./Multiplication.inc"
 #include "./Division.inc"
+#include "./Power.inc"
+#include "./SQRT.inc"
+#include "./ABS.inc"
+#include "./DOT_PRODUCT.inc"
+#include "./NORM2.inc"
+#include "./EQUAL.inc"
 
 !----------------------------------------------------------------------------
 !                                                   Addition@OperatorMethods
