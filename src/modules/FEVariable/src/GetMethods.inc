@@ -31,7 +31,7 @@ PUBLIC :: Get
 INTERFACE
   MODULE PURE FUNCTION fevar_Size(obj, Dim) RESULT(Ans)
     CLASS(FEVariable_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: Dim
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Dim
     INTEGER(I4B) :: Ans
   END FUNCTION fevar_Size
 END INTERFACE
