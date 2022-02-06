@@ -15,168 +15,72 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: getUnitNormal
-PUBLIC :: GetSUPGParam
+PUBLIC :: getNormal
 
 !----------------------------------------------------------------------------
-!                                                    getUnitNormal@getMethod
+!                                                                 GetNormal
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-26
-! update: 2021-11-26
-! summary: This subroutine can be used in SUPG formulation
-!
-!# Introduction
-!
-! This routine can be used in the SUPG formulation
-!
-!  $$\nabla \vert phi \vert / \vert (\nabla \vert phi \vert) \vert$$
+! date: 28 Jan 2022
+! update: 28 Jan 2022
+! summary: This routine returns the normal vector stored in [[ElemShapeData_]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE getUnitNormal_1(obj, R, val)
+  MODULE PURE SUBROUTINE elemsd_getNormal_1(obj, normal, nsd)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    REAL(DFP), INTENT(IN) :: val(:)
-    !! spatial nodal values of scalar
-  END SUBROUTINE getUnitNormal_1
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: normal(:, :)
+    !! normal(1:3, 1:nip) = obj%normal
+    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nsd
+  END SUBROUTINE elemsd_getNormal_1
 END INTERFACE
 
-INTERFACE getUnitNormal
-  MODULE PROCEDURE getUnitNormal_1
-END INTERFACE getUnitNormal
+INTERFACE getNormal
+  MODULE PROCEDURE elemsd_getNormal_1
+END INTERFACE getNormal
 
 !----------------------------------------------------------------------------
-!                                                    getUnitNormal@getMethod
+!                                                                 GetNormal
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-26
-! update: 2021-11-26
-! summary: This subroutine can be used in SUPG formulation
-!
-!# Introduction
-!
-! This routine can be used in the SUPG formulation, here
-! val is spatial nodal values of a vector.
-!
-! $$
-! \nabla \Vert mathbf{v}  \Vert / \Vert (\nabla \Vert mathbf{v} \Vert) \Vert
-! $$
+! date: 28 Jan 2022
+! update: 28 Jan 2022
+! summary: This routine returns the normal vector stored in [[ElemShapeData_]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE getUnitNormal_2(obj, R, val)
+  MODULE PURE SUBROUTINE elemsd_getNormal_2(obj, normal, nsd)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    REAL(DFP), INTENT(IN) :: val(:, :)
-    !! spatial nodal values of velocity
-  END SUBROUTINE getUnitNormal_2
+    TYPE(FEVariable_), INTENT(INOUT) :: normal
+    !! normal(1:3, 1:nip) = obj%normal
+    !! Quadrature, Vector, Space
+    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nsd
+  END SUBROUTINE elemsd_getNormal_2
 END INTERFACE
 
-INTERFACE getUnitNormal
-  MODULE PROCEDURE getUnitNormal_2
-END INTERFACE getUnitNormal
+INTERFACE getNormal
+  MODULE PROCEDURE elemsd_getNormal_2
+END INTERFACE getNormal
 
 !----------------------------------------------------------------------------
-!                                                    getUnitNormal@getMethod
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-26
-! update: 2021-11-26
-! summary: This subroutine can be used in SUPG formulation
-!
-!# Introduction
-!
-! This routine can be used in the SUPG formulation, here
-! val is spatial nodal values of a vector.
-!
-! $$
-! \nabla \Vert mathbf{v}  \Vert / \Vert
-! (\nabla \Vert mathbf{v} \Vert) \Vert
-! $$
-
-INTERFACE
-  MODULE PURE SUBROUTINE getUnitNormal_3(obj, R, val)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    TYPE(FEVariable_), INTENT(IN) :: val
-    !! it can be scalar or vector fe variable
-  END SUBROUTINE getUnitNormal_3
-END INTERFACE
-
-INTERFACE getUnitNormal
-  MODULE PROCEDURE getUnitNormal_3
-END INTERFACE getUnitNormal
-
-!----------------------------------------------------------------------------
-!                                                   GetSUPGParam@GetMethods
+!                                                                 GetNormal
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-27
-! update: 2021-11-27
-! summary: Returns the SUPG param
+! date: 28 Jan 2022
+! update: 28 Jan 2022
+! summary: This routine returns the normal vector stored in [[ElemShapeData_]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetSUPGParam(obj, tau, c, val, nu, dt, opt)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    !! It can be an instance of ElemshapeData_ or STElemshapeData_
-    TYPE(FEVariable_), INTENT(INOUT) :: tau
-    !! Stabilization parameter
-    !! Quadrature FEVariable
-    !! varType=Space
-    TYPE(FEVariable_), INTENT(IN) :: c
-    !! Convective velocity => Vector variable
-    TYPE(FEVariable_), INTENT(IN) :: val
-    !! solution, it can be scalar or vector variable
-    TYPE(FEVariable_), INTENT(IN) :: nu
-    !! diffusivity
-    !! In case of NSE it should be mu/rho
-    REAL(DFP), OPTIONAL, INTENT(IN) :: dt
-    !! time step size
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! futuristic options
-  END SUBROUTINE elemsd_GetSUPGParam
-END INTERFACE
-
-INTERFACE GetSUPGParam
-  MODULE PROCEDURE elemsd_GetSUPGParam
-END INTERFACE GetSUPGParam
-
-!----------------------------------------------------------------------------
-!                                                   GetSUPGParam@GetMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-27
-! update: 2021-11-27
-! summary: Returns the SUPG param
-
-INTERFACE
-  MODULE PURE SUBROUTINE stelemsd_GetSUPGParam(obj, tau, c, val, nu, dt, opt)
+  MODULE PURE SUBROUTINE elemsd_getNormal_3(obj, normal, nsd)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    !! space-time shape data
-    TYPE(FEVariable_), INTENT(INOUT) :: tau
-    !! Stabilization parameter
-    !! Quadrature type
-    !! SpaceTime
-    TYPE(FEVariable_), INTENT(IN) :: c
-    !! convective velocity
-    !! vector FEVariable
-    TYPE(FEVariable_), INTENT(IN) :: val
-    !! solution
-    !! scalar or vector FEVariable
-    TYPE(FEVariable_), INTENT(IN) :: nu
-    !! kinematic diffusivity
-    !! Scalar FEVariable
-    REAL(DFP), OPTIONAL, INTENT(IN) :: dt
-    !! time step size
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! futuristic options
-  END SUBROUTINE stelemsd_GetSUPGParam
+    TYPE(FEVariable_), INTENT(INOUT) :: normal
+    !! normal(1:3, 1:nip) = obj%normal
+    !! Quadrature, Vector, SpaceTime
+    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nsd
+  END SUBROUTINE elemsd_getNormal_3
 END INTERFACE
 
-INTERFACE GetSUPGParam
-  MODULE PROCEDURE stelemsd_GetSUPGParam
-END INTERFACE GetSUPGParam
+INTERFACE getNormal
+  MODULE PROCEDURE elemsd_getNormal_3
+END INTERFACE getNormal
