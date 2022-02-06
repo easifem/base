@@ -26,25 +26,25 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE iterdata_Initiate( obj, MaxIter, IterationNumber, &
-  & ResidualError0, ResidualError, ResidualTolerance, SolutionError0, &
-  & SolutionError, SolutionTolerance, ConvergenceType, &
-  & ConvergenceIn, NormType, Converged, TimeAtStart, TimeAtEnd )
+MODULE PURE SUBROUTINE iterdata_Initiate( obj, maxIter, iterationNumber, &
+  & residualError0, residualError, residualTolerance, solutionError0, &
+  & solutionError, solutionTolerance, convergenceType, &
+  & convergenceIn, normType, converged, timeAtStart, timeAtEnd )
   TYPE( IterationData_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: MaxIter
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: IterationNumber
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: ResidualError0
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: ResidualError
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: ResidualTolerance
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: SolutionError0
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: SolutionError
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: SolutionTolerance
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: ConvergenceType
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: ConvergenceIn
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: NormType
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: Converged
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: TimeAtStart
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: TimeAtEnd
+  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: maxIter
+  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: iterationNumber
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: residualError0
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: residualError
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: residualTolerance
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: solutionError0
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: solutionError
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: solutionTolerance
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: convergenceType
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: convergenceIn
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: normType
+  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: converged
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: timeAtStart
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: timeAtEnd
 END SUBROUTINE iterdata_Initiate
 END INTERFACE
 
