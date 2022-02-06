@@ -70,8 +70,8 @@ END INTERFACE OPERATOR(*)
 
 INTERFACE
   MODULE PURE FUNCTION fevar_Multiplication3(val, obj1) RESULT(Ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj1
     REAL(DFP), INTENT(IN) :: val
+    CLASS(FEVariable_), INTENT(IN) :: obj1
     TYPE(FEVariable_) :: ans
   END FUNCTION fevar_Multiplication3
 END INTERFACE
