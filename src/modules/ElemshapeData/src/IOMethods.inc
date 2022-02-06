@@ -15,28 +15,49 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+PUBLIC :: Display
+
 !----------------------------------------------------------------------------
 !                                                                Display@IO
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         4 March 2021
+! date: 4 March 2021
 ! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
 !
 !# Introduction
-!         This subroutine displays the content of [[elemshapedata_]] and
+!
+! This subroutine displays the content of [[elemshapedata_]] and
 ! [[stelemshapedata_]] on screen. this routine belongs to `Display()`.
 
 INTERFACE
-  MODULE SUBROUTINE display_obj(obj, Msg, UnitNo)
+  MODULE SUBROUTINE elemsd_display_1(obj, Msg, UnitNo)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     CHARACTER(LEN=*), INTENT(IN) :: Msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
-  END SUBROUTINE display_obj
+  END SUBROUTINE elemsd_display_1
 END INTERFACE
 
 INTERFACE Display
-  MODULE PROCEDURE display_obj
+  MODULE PROCEDURE elemsd_display_1
 END INTERFACE Display
 
-PUBLIC :: Display
+!----------------------------------------------------------------------------
+!                                                                Display@IO
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
+
+INTERFACE
+  MODULE SUBROUTINE elemsd_display_2(obj, Msg, UnitNo)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    CHARACTER(LEN=*), INTENT(IN) :: Msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
+  END SUBROUTINE elemsd_display_2
+END INTERFACE
+
+INTERFACE Display
+  MODULE PROCEDURE elemsd_display_2
+END INTERFACE Display
