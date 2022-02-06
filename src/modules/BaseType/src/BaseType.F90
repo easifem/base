@@ -278,6 +278,7 @@ TYPE :: CSRSparsity_
   LOGICAL(LGT) :: isSparsityLock = .FALSE.
   INTEGER(I4B), ALLOCATABLE :: IA(:)
   INTEGER(I4B), ALLOCATABLE :: JA(:)
+  INTEGER(I4B), ALLOCATABLE :: idiag(:)
   TYPE(IntVector_), ALLOCATABLE :: row(:)
   TYPE(DOF_) :: dof
 END TYPE CSRSparsity_
@@ -323,7 +324,7 @@ END TYPE CSRMatrixPointer_
 PUBLIC :: CSRMatrixPointer_
 
 !----------------------------------------------------------------------------
-!                                                             IterationData_
+!                                                            IterationData_
 !----------------------------------------------------------------------------
 
 !> authors: Dr. Vikas Sharma
@@ -331,34 +332,39 @@ PUBLIC :: CSRMatrixPointer_
 ! Data-type to handle iteration parameters
 
 TYPE :: IterationData_
-  INTEGER(I4B) :: MaxIter = 100
+  INTEGER(I4B) :: maxIter = 100
     !! Maximum number of iterations allowed
-  INTEGER(I4B) :: IterationNumber = 0
+  INTEGER(I4B) :: iterationNumber = 1
     !! Iteration number
-  REAL(DFP) :: ResidualError0 = 0.0
+  REAL(DFP) :: residualError0 = 0.0
     !! Initial Residual error
-  REAL(DFP) :: ResidualError = 0.0
+  REAL(DFP) :: residualError = 0.0
     !! Current residual error
-  REAL(DFP) :: ResidualTolerance = 1.0E-5
+  REAL(DFP) :: residualTolerance = 1.0E-5
     !! Tolerance for checking convergence in residual
-  REAL(DFP) :: SolutionError0 = 0.0
+  REAL(DFP) :: solutionError0 = 0.0
     !! Initial solution error
-  REAL(DFP) :: SolutionError = 0.0
+  REAL(DFP) :: solutionError = 0.0
     !! Current solution error
-  REAL(DFP) :: SolutionTolerance = 1.0E-5
+  REAL(DFP) :: solutionTolerance = 1.0E-5
     !! Tolerance for checking convergence in solution
-  INTEGER(I4B) :: ConvergenceType = RelativeConvergence
+  INTEGER(I4B) :: convergenceType = RelativeConvergence
     !! Type of convergence
-  INTEGER(I4B) :: ConvergenceIn = ConvergenceInRes
+  INTEGER(I4B) :: convergenceIn = ConvergenceInRes
     !! Check Convergence in solution and/ or residual
-  INTEGER(I4B) :: NormType = NormL2
+  INTEGER(I4B) :: normType = NormL2
     !! Error norm type
-  LOGICAL(LGT) :: Converged = .FALSE.
+  LOGICAL(LGT) :: converged = .FALSE.
     !! Status of convergence
-  REAL(DFP) :: TimeAtStart = 0.0
+  REAL(DFP) :: timeAtStart = 0.0
     !! Starting time
-  REAL(DFP) :: TimeAtEnd = 0.0
+  REAL(DFP) :: timeAtEnd = 0.0
     !! Present time
+  REAL(DFP), ALLOCATABLE :: convergenceData(:,:)
+    !! history of convergence data
+    !! each column corresponding to a iteration
+  TYPE(String), ALLOCATABLE :: header( : )
+    !! header for convergenceData
 END TYPE IterationData_
 
 PUBLIC :: IterationData_
@@ -830,7 +836,6 @@ TYPE :: FEVariable_
   !! Scalar
   !! Vector
   !! Matrix
-  INTEGER(I4B) :: caseType = 0
 END TYPE FEVariable_
 
 PUBLIC :: FEVariable_
