@@ -50,6 +50,7 @@ PRIVATE
 #include "./DivergenceMethods.inc"
 #include "./ProjectionMethods.inc"
 #include "./GetMethods.inc"
+#include "./StabilizationParamMethods.inc"
 
 !----------------------------------------------------------------------------
 !                                                                   Contains
