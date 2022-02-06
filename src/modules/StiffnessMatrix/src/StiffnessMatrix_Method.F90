@@ -15,6 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This module contains method to construct finite element matrices
+
+MODULE StiffnessMatrix_Method
+USE BaseType
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: StiffnessMatrix
 
 !----------------------------------------------------------------------------
@@ -30,6 +40,10 @@ INTERFACE
   END FUNCTION femat_StiffnessMatrix1
 END INTERFACE
 
+INTERFACE StiffnessMatrix
+  MODULE PROCEDURE femat_StiffnessMatrix1
+END INTERFACE StiffnessMatrix
+
 !----------------------------------------------------------------------------
 !                                     StiffnessMatrix@StiffnessMatrixMethods
 !----------------------------------------------------------------------------
@@ -42,6 +56,10 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: Ans(:, :)
   END FUNCTION femat_StiffnessMatrix2
 END INTERFACE
+
+INTERFACE StiffnessMatrix
+  MODULE PROCEDURE femat_StiffnessMatrix2
+END INTERFACE StiffnessMatrix
 
 !----------------------------------------------------------------------------
 !                                     StiffnessMatrix@StiffnessMatrixMethods
@@ -56,6 +74,10 @@ INTERFACE
   END FUNCTION femat_StiffnessMatrix3
 END INTERFACE
 
+INTERFACE StiffnessMatrix
+  MODULE PROCEDURE femat_StiffnessMatrix3
+END INTERFACE StiffnessMatrix
+
 !----------------------------------------------------------------------------
 !                                     StiffnessMatrix@StiffnessMatrixMethods
 !----------------------------------------------------------------------------
@@ -69,11 +91,12 @@ INTERFACE
   END FUNCTION femat_StiffnessMatrix4
 END INTERFACE
 
+INTERFACE StiffnessMatrix
+  MODULE PROCEDURE femat_StiffnessMatrix4
+END INTERFACE StiffnessMatrix
+
 !----------------------------------------------------------------------------
-!                                     StiffnessMatrix@StiffnessMatrixMethods
+!
 !----------------------------------------------------------------------------
 
-INTERFACE StiffnessMatrix
-  MODULE PROCEDURE femat_StiffnessMatrix1, femat_StiffnessMatrix2, &
-    & femat_StiffnessMatrix3, femat_StiffnessMatrix4
-END INTERFACE StiffnessMatrix
+END MODULE StiffnessMatrix_Method

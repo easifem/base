@@ -15,6 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This module contains method to construct finite element matrices
+
+MODULE NitscheMatrix_Method
+USE BaseType
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: NitscheMatrix
 
 !----------------------------------------------------------------------------
@@ -30,6 +40,27 @@ INTERFACE
   END FUNCTION space_nitsche_mat_1
 END INTERFACE
 
+INTERFACE NitscheMatrix
+  MODULE PROCEDURE space_nitsche_mat_1
+END INTERFACE NitscheMatrix
+
+!----------------------------------------------------------------------------
+!                                         NitscheMatrix@NitscheMatrixMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION space_nitsche_mat_2(Test, Trial, Alpha, Evec) &
+    & RESULT(Ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
+    CLASS(FEVariable_), INTENT(IN) :: Alpha, Evec
+    REAL(DFP), ALLOCATABLE :: Ans(:, :)
+  END FUNCTION space_nitsche_mat_2
+END INTERFACE
+
+INTERFACE NitscheMatrix
+  MODULE PROCEDURE space_nitsche_mat_2
+END INTERFACE NitscheMatrix
+
 !----------------------------------------------------------------------------
 !                                         NitscheMatrix@NitscheMatrixMethods
 !----------------------------------------------------------------------------
@@ -44,46 +75,9 @@ INTERFACE
   END FUNCTION space_nitsche_mat_3
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                         NitscheMatrix@NitscheMatrixMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_5(Test, Trial, Lambda, Mu, isNoSlip)&
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    REAL(DFP), INTENT(IN) :: Lambda, Mu
-    LOGICAL(LGT), INTENT(IN) :: isNoSlip
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
-  END FUNCTION space_nitsche_mat_5
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                         NitscheMatrix@NitscheMatrixMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_7(Test, Trial, Lambda, Mu, isNoSlip)&
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    CLASS(FEVariable_), INTENT(IN) :: Lambda, Mu
-    LOGICAL(LGT), INTENT(IN) :: isNoSlip
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
-  END FUNCTION space_nitsche_mat_7
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                         NitscheMatrix@NitscheMatrixMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_2(Test, Trial, Alpha, Evec) &
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    CLASS(FEVariable_), INTENT(IN) :: Alpha, Evec
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
-  END FUNCTION space_nitsche_mat_2
-END INTERFACE
+INTERFACE NitscheMatrix
+  MODULE PROCEDURE space_nitsche_mat_3
+END INTERFACE NitscheMatrix
 
 !----------------------------------------------------------------------------
 !                                         NitscheMatrix@NitscheMatrixMethods
@@ -99,12 +93,48 @@ INTERFACE
   END FUNCTION space_nitsche_mat_4
 END INTERFACE
 
+INTERFACE NitscheMatrix
+  MODULE PROCEDURE space_nitsche_mat_4
+END INTERFACE NitscheMatrix
+
 !----------------------------------------------------------------------------
 !                                         NitscheMatrix@NitscheMatrixMethods
 !----------------------------------------------------------------------------
 
+INTERFACE
+  MODULE PURE FUNCTION space_nitsche_mat_5(Test, Trial, Lambda, Mu, isNoSlip)&
+    & RESULT(Ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
+    REAL(DFP), INTENT(IN) :: Lambda, Mu
+    LOGICAL(LGT), INTENT(IN) :: isNoSlip
+    REAL(DFP), ALLOCATABLE :: Ans(:, :)
+  END FUNCTION space_nitsche_mat_5
+END INTERFACE
+
 INTERFACE NitscheMatrix
-  MODULE PROCEDURE space_nitsche_mat_1, space_nitsche_mat_2, &
-    & space_nitsche_mat_3, space_nitsche_mat_4, space_nitsche_mat_5, &
-    & space_nitsche_mat_7
+  MODULE PROCEDURE space_nitsche_mat_5
 END INTERFACE NitscheMatrix
+
+!----------------------------------------------------------------------------
+!                                         NitscheMatrix@NitscheMatrixMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION space_nitsche_mat_7(Test, Trial, Lambda, Mu, isNoSlip)&
+    & RESULT(Ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
+    CLASS(FEVariable_), INTENT(IN) :: Lambda, Mu
+    LOGICAL(LGT), INTENT(IN) :: isNoSlip
+    REAL(DFP), ALLOCATABLE :: Ans(:, :)
+  END FUNCTION space_nitsche_mat_7
+END INTERFACE
+
+INTERFACE NitscheMatrix
+  MODULE PROCEDURE space_nitsche_mat_7
+END INTERFACE NitscheMatrix
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE NitscheMatrix_Method

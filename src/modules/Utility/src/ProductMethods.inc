@@ -15,6 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+PUBLIC :: OUTERPROD
+PUBLIC :: Cross_Product
+PUBLIC :: Vector_Product
+PUBLIC :: VectorProduct
 
 !----------------------------------------------------------------------------
 !                                            Cross_Product@ProductMethods
@@ -48,19 +52,13 @@ INTERFACE Cross_Product
   MODULE PROCEDURE vectorProduct_1, vectorProduct_2
 END INTERFACE Cross_Product
 
-PUBLIC :: Cross_Product
-
 INTERFACE Vector_Product
   MODULE PROCEDURE vectorProduct_1, vectorProduct_2
 END INTERFACE Vector_Product
 
-PUBLIC :: Vector_Product
-
 INTERFACE VectorProduct
   MODULE PROCEDURE vectorProduct_1, vectorProduct_2
 END INTERFACE VectorProduct
-
-PUBLIC :: VectorProduct
 
 !----------------------------------------------------------------------------
 !                                                   OUTERPROD@ProductMethods
@@ -75,17 +73,15 @@ PUBLIC :: VectorProduct
 ! $$\mathbf{ans} = \mathbf{a} \otimes \mathbf{b}$$
 
 INTERFACE
-  MODULE PURE FUNCTION outerprod_1(a, b) RESULT(Ans)
+  MODULE PURE FUNCTION outerprod_r1r1(a, b) RESULT(ans)
     REAL(DFP), DIMENSION(:), INTENT(IN) :: a, b
-    REAL(DFP), DIMENSION(SIZE(a), SIZE(b)) :: Ans
-  END FUNCTION outerprod_1
+    REAL(DFP), DIMENSION(SIZE(a), SIZE(b)) :: ans
+  END FUNCTION outerprod_r1r1
 END INTERFACE
 
 INTERFACE OUTERPROD
-   MODULE PROCEDURE outerprod_1
+  MODULE PROCEDURE outerprod_r1r1
 END INTERFACE OUTERPROD
-
-PUBLIC :: OUTERPROD
 
 !----------------------------------------------------------------------------
 !                                                  OUTERPROD@ProductMethods
@@ -102,16 +98,106 @@ PUBLIC :: OUTERPROD
 ! - If `Sym` is .true. THEN symmetric part is returned
 
 INTERFACE
-  MODULE PURE FUNCTION outerprod_2(a, b, Sym) RESULT(Ans)
+  MODULE PURE FUNCTION outerprod_r1r1s(a, b, Sym) RESULT(ans)
     ! Define INTENT of dummy variables
     REAL(DFP), INTENT(IN) :: a(:), b(:)
-    REAL(DFP), DIMENSION(SIZE(a), SIZE(b)) :: Ans
+    REAL(DFP), DIMENSION(SIZE(a), SIZE(b)) :: ans
     LOGICAL(LGT), INTENT(IN) :: Sym
-  END FUNCTION outerprod_2
+  END FUNCTION outerprod_r1r1s
 END INTERFACE
 
 INTERFACE OUTERPROD
-   MODULE PROCEDURE outerprod_2
+  MODULE PROCEDURE outerprod_r1r1s
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                   OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r2(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP) :: ans(SIZE(a), SIZE(b, 1), SIZE(b, 2))
+  END FUNCTION outerprod_r1r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                   OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r3(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:, :, :)
+    REAL(DFP) :: ans(SIZE(a), SIZE(b, 1), SIZE(b, 2), SIZE(b, 3))
+  END FUNCTION outerprod_r1r3
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r3
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                   OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r4(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:, :, :, :)
+    REAL(DFP) :: ans(SIZE(a), SIZE(b, 1), SIZE(b, 2), SIZE(b, 3), SIZE(b, 4))
+  END FUNCTION outerprod_r1r4
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r4
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                   OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r5(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:, :, :, :, :)
+    REAL(DFP) :: ans(&
+        & SIZE(a),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(b, 3),&
+        & SIZE(b, 4),&
+        & SIZE(b, 5))
+  END FUNCTION outerprod_r1r5
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r5
 END INTERFACE OUTERPROD
 
 !----------------------------------------------------------------------------
@@ -121,22 +207,17 @@ END INTERFACE OUTERPROD
 !> authors: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         This FUNCTION returns outerproduct
-!
-!# Introduction
-!
-! This FUNCTION returns outerprod between a matrix and a vector
-! `Ans(:,:,i) = a(:,:) * b(i)`
 
 INTERFACE
-  MODULE PURE FUNCTION outerprod_3(a, b) RESULT(Ans)
+  MODULE PURE FUNCTION outerprod_r2r1(a, b) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:, :)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP) :: Ans(SIZE(a, 1), SIZE(a, 2), SIZE(b))
-  END FUNCTION outerprod_3
+    REAL(DFP) :: ans(SIZE(a, 1), SIZE(a, 2), SIZE(b))
+  END FUNCTION outerprod_r2r1
 END INTERFACE
 
 INTERFACE OUTERPROD
-   MODULE PROCEDURE outerprod_3
+  MODULE PROCEDURE outerprod_r2r1
 END INTERFACE OUTERPROD
 
 !----------------------------------------------------------------------------
@@ -144,24 +225,235 @@ END INTERFACE OUTERPROD
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         This FUNCTION returns outerproduct
-!
-!# Introduction
-!
-! This FUNCTION evaluate outerproduct between a 3D matrix and a vector
-! - `Ans( :, :, :,  I ) = a( :, :, : ) * b( I )`
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
 
 INTERFACE
-  MODULE PURE FUNCTION outerprod_4(a, b) RESULT(Ans)
+  MODULE PURE FUNCTION outerprod_r2r2(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP) :: ans( &
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2))
+  END FUNCTION outerprod_r2r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                  OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r3(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:, :, :)
+    REAL(DFP) :: ans( &
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(b, 3))
+  END FUNCTION outerprod_r2r3
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r3
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                  OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r4(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:, :, :, :)
+    REAL(DFP) :: ans( &
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(b, 3),&
+        & SIZE(b, 4))
+  END FUNCTION outerprod_r2r4
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r4
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                  OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r3r1(a, b) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:, :, :)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP) :: Ans(SIZE(a, 1), SIZE(a, 2), SIZE(a, 3), SIZE(b))
-  END FUNCTION outerprod_4
+    REAL(DFP) :: ans(&
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(b))
+  END FUNCTION outerprod_r3r1
 END INTERFACE
 
 INTERFACE OUTERPROD
-   MODULE PROCEDURE outerprod_4
+  MODULE PROCEDURE outerprod_r3r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                  OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r3r2(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:, :, :)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP) :: ans(&
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2))
+  END FUNCTION outerprod_r3r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r3r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                  OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r3r3(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:, :, :)
+    REAL(DFP), INTENT(IN) :: b(:, :, :)
+    REAL(DFP) :: ans(&
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(b, 3))
+  END FUNCTION outerprod_r3r3
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r3r3
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                  OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r4r1(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:, :, :, :)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP) :: ans(&
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(a, 4),&
+        & SIZE(b, 1))
+  END FUNCTION outerprod_r4r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r4r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                  OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r4r2(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:, :, :, :)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP) :: ans(&
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(a, 4),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2))
+  END FUNCTION outerprod_r4r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r4r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                  OUTERPROD@ProductMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a x b
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r5r1(a, b) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:, :, :, :, :)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP) :: ans(&
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(a, 4),&
+        & SIZE(a, 5),&
+        & SIZE(b, 1))
+  END FUNCTION outerprod_r5r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r5r1
 END INTERFACE OUTERPROD
 
 !----------------------------------------------------------------------------
@@ -169,25 +461,24 @@ END INTERFACE OUTERPROD
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         This FUNCTION returns outerproduct
-!
-!# Introduction
-!
-! This FUNCTION evaluates outer product between a matrix and two vector
-!
-! $$Ans = a \otimes b \otimes c$$
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
 
 INTERFACE
-  MODULE PURE FUNCTION outerprod_5(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:, :)
-    REAL(DFP), INTENT(IN) :: b(:), c(:)
-    REAL(DFP) :: ans(SIZE(a, 1), SIZE(a, 2), SIZE(b), SIZE(c))
-  END FUNCTION outerprod_5
+  MODULE PURE FUNCTION outerprod_r1r1r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1) )
+  END FUNCTION outerprod_r1r1r1
 END INTERFACE
 
 INTERFACE OUTERPROD
-   MODULE PROCEDURE outerprod_5
+  MODULE PROCEDURE outerprod_r1r1r1
 END INTERFACE OUTERPROD
 
 !----------------------------------------------------------------------------
@@ -195,23 +486,918 @@ END INTERFACE OUTERPROD
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         This FUNCTION returns outerproduct
-!
-!# Introduction
-!
-! This FUNCTION evaluates outer product between a matrix and two vector
-!
-! $$Ans = a \otimes b \otimes c$$
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
 
 INTERFACE
-  MODULE PURE FUNCTION outerprod_6(a, b) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:, :)
+  MODULE PURE FUNCTION outerprod_r1r1r2(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2))
+  END FUNCTION outerprod_r1r1r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r1r3(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(c,3))
+  END FUNCTION outerprod_r1r1r3
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r3
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r1r4(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:,:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(c,3),&
+        & SIZE(c,4))
+  END FUNCTION outerprod_r1r1r4
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r4
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r2r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:,:)
-    REAL(DFP) :: ans(SIZE(a, 1), SIZE(a, 2), SIZE(b,1), SIZE(b,2))
-  END FUNCTION outerprod_6
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1))
+  END FUNCTION outerprod_r1r2r1
 END INTERFACE
 
 INTERFACE OUTERPROD
-   MODULE PROCEDURE outerprod_6
+  MODULE PROCEDURE outerprod_r1r2r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r2r2(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1),&
+        & SIZE(c,2))
+  END FUNCTION outerprod_r1r2r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r2r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r2r3(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:,:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(c,3))
+  END FUNCTION outerprod_r1r2r3
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r2r3
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r3r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:,:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(b,3),&
+        & SIZE(c,1))
+  END FUNCTION outerprod_r1r3r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r3r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r3r2(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:,:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(b,3),&
+        & SIZE(c,1),&
+        & SIZE(c,2))
+  END FUNCTION outerprod_r1r3r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r3r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r4r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:,:,:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(b,3),&
+        & SIZE(b,4),&
+        & SIZE(c,1))
+  END FUNCTION outerprod_r1r4r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r4r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r1r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(c,1))
+  END FUNCTION outerprod_r2r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r1r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r1r2(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2))
+  END FUNCTION outerprod_r2r1r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r1r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r1r3(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(c,3))
+  END FUNCTION outerprod_r2r1r3
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r1r3
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r2r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1))
+  END FUNCTION outerprod_r2r2r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r2r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r2r2(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1),&
+        & SIZE(c,2))
+  END FUNCTION outerprod_r2r2r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r2r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r3r1r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(a,3),&
+        & SIZE(b,1),&
+        & SIZE(c,1))
+  END FUNCTION outerprod_r3r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r3r1r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r3r1r2(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(a,3),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2))
+  END FUNCTION outerprod_r3r1r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r3r1r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r3r2r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(a,3),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1))
+  END FUNCTION outerprod_r3r2r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r3r2r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r4r1r1(a, b, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(a,3),&
+        & SIZE(a,4),&
+        & SIZE(b,1),&
+        & SIZE(c,1))
+  END FUNCTION outerprod_r4r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r4r1r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r1r1r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r1r1r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r1r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r1r1r2(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(d,1),&
+        & SIZE(d,2))
+  END FUNCTION outerprod_r1r1r1r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r1r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r1r1r3(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:,:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(d,1),&
+        & SIZE(d,2),&
+        & SIZE(d,3))
+  END FUNCTION outerprod_r1r1r1r3
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r1r3
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r1r2r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r1r1r2r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r2r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r1r2r2(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: d(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(d,1),&
+        & SIZE(d,2))
+  END FUNCTION outerprod_r1r1r2r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r2r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r1r3r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:,:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(c,3),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r1r1r3r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r1r3r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r2r1r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r1r2r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r2r1r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r2r1r2(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1),&
+        & SIZE(d,1),&
+        & SIZE(d,2))
+  END FUNCTION outerprod_r1r2r1r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r2r1r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r2r2r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r1r2r2r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r2r2r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r1r3r1r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:)
+    REAL(DFP), INTENT(IN) :: b(:,:,:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(b,3),&
+        & SIZE(c,1),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r1r3r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r1r3r1r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r1r1r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r2r1r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r1r1r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r1r1r2(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:,:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(d,1),&
+        & SIZE(d,2))
+  END FUNCTION outerprod_r2r1r1r2
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r1r1r2
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r1r2r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(c,2),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r2r1r2r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r1r2r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r2r2r1r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(b,1),&
+        & SIZE(b,2),&
+        & SIZE(c,1),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r2r2r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r2r2r1r1
+END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!                                                            OUTERPROD@PROD
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-12-19
+! update: 2021-12-19
+! summary: a b c d
+
+INTERFACE
+  MODULE PURE FUNCTION outerprod_r3r1r1r1(a, b, c, d) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: a(:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:)
+    REAL(DFP), INTENT(IN) :: c(:)
+    REAL(DFP), INTENT(IN) :: d(:)
+    REAL(DFP) :: ans( &
+        & SIZE(a,1),&
+        & SIZE(a,2),&
+        & SIZE(a,3),&
+        & SIZE(b,1),&
+        & SIZE(c,1),&
+        & SIZE(d,1))
+  END FUNCTION outerprod_r3r1r1r1
+END INTERFACE
+
+INTERFACE OUTERPROD
+  MODULE PROCEDURE outerprod_r3r1r1r1
 END INTERFACE OUTERPROD

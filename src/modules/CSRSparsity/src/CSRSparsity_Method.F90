@@ -48,8 +48,8 @@ PRIVATE
 !
 ! - tNodes = [nrow]
 ! - names= ["K"]
-! - spaceCompo= [1]
-! - timeCompo = [1]
+! - spacecompo= [1]
+! - timecompo = [1]
 ! - storageFMT = FMT_NODES
 !@endnote
 !
@@ -69,7 +69,7 @@ PRIVATE
 ! ! #DOF_/Initiate
 ! !
 ! CALL Initiate( obj=dofobj, tNodes=[12], names=['K'], &
-!   & spaceCompo=[1], timeCompo=[1], storageFMT=NODES_FMT )
+!   & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT )
 ! !
 ! ! #CSRSparsity_/Initiate
 ! !
@@ -103,7 +103,7 @@ PRIVATE
 ! ! #DOF_/Initiate
 ! !
 ! CALL Initiate( obj=dofobj, tNodes=[20, 10], names=['V', 'P'], &
-!   & spaceCompo=[3, 1], timeCompo=[1, 1], storageFMT=FMT_DOF )
+!   & spacecompo=[3, 1], timecompo=[1, 1], storageFMT=FMT_DOF )
 ! !
 ! ! #CSRSparsity_/Initiate
 ! !

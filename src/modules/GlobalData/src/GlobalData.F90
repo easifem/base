@@ -254,11 +254,17 @@ REAL(DFP), DIMENSION(3, 3) :: Eye3 = RESHAPE( &
                                 0.0_DFP, 1.0_DFP, 0.0_DFP, &
                                 0.0_DFP, 0.0_DFP, 1.0_DFP/), (/3, 3/))
 REAL(DFP), DIMENSION(2, 2) :: Eye2 = RESHAPE( &
-                             (/1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP/), (/2, 2/))
+                            (/1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP/), (/2, 2/))
 ! Parameters for iteration data
-INTEGER(I4B), PARAMETER :: RelativeConvergence = 1, ConvergenceInRes = 1
-INTEGER(I4B), PARAMETER :: AbsoluteConvergence = 2, ConvergenceInSol = 2
-INTEGER(I4B), PARAMETER :: NormL1 = 1, NormL2 = 2, NormInfinity = 3
+INTEGER(I4B), PARAMETER :: RelativeConvergence = 1
+INTEGER(I4B), PARAMETER :: AbsoluteConvergence = 2
+INTEGER(I4B), PARAMETER :: ConvergenceInRes = 1
+INTEGER(I4B), PARAMETER :: ConvergenceInSol = 2
+INTEGER(I4B), PARAMETER :: ConvergenceInResSol = 3
+INTEGER(I4B), PARAMETER :: ConvergenceInSolRes = 3
+INTEGER(I4B), PARAMETER :: NormL1 = 1
+INTEGER(I4B), PARAMETER :: NormL2 = 2
+INTEGER(I4B), PARAMETER :: NormInfinity = 3
 ! Type of shape functions
 INTEGER(I4B), PARAMETER :: LagrangePolynomial = 1
 INTEGER(I4B), PARAMETER :: SerendipityPolynomial = 2
