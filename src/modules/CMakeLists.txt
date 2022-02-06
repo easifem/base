@@ -141,6 +141,15 @@ include(${CMAKE_CURRENT_LIST_DIR}/NitscheMatrix/CMakeLists.txt)
 #FEMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/FEMatrix/CMakeLists.txt)
 
+#ForceVector
+include(${CMAKE_CURRENT_LIST_DIR}/ForceVector/CMakeLists.txt)
+
+#STForceVector
+include(${CMAKE_CURRENT_LIST_DIR}/STForceVector/CMakeLists.txt)
+
+#FEVector
+include(${CMAKE_CURRENT_LIST_DIR}/FEVector/CMakeLists.txt)
+
 #VoigtRank2Tensor
 include(${CMAKE_CURRENT_LIST_DIR}/VoigtRank2Tensor/CMakeLists.txt)
 
