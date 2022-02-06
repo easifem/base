@@ -27,15 +27,15 @@ PUBLIC :: OPERATOR(+)
 ! summary: FEVariable = FEVariable + FEVariable
 
 INTERFACE
-  MODULE PURE FUNCTION fevar_addition1(obj1, obj2) RESULT(Ans)
+  MODULE PURE FUNCTION fevar_Addition1(obj1, obj2) RESULT(Ans)
     CLASS(FEVariable_), INTENT(IN) :: obj1
     CLASS(FEVariable_), INTENT(IN) :: obj2
     TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_addition1
+  END FUNCTION fevar_Addition1
 END INTERFACE
 
 INTERFACE OPERATOR(+)
-  MODULE PROCEDURE fevar_addition1
+  MODULE PROCEDURE fevar_Addition1
 END INTERFACE OPERATOR(+)
 
 !----------------------------------------------------------------------------
@@ -48,15 +48,15 @@ END INTERFACE OPERATOR(+)
 ! summary: FEVariable = FEVariable + Real
 
 INTERFACE
-  MODULE PURE FUNCTION fevar_addition2(obj1, val) RESULT(Ans)
+  MODULE PURE FUNCTION fevar_Addition2(obj1, val) RESULT(Ans)
     CLASS(FEVariable_), INTENT(IN) :: obj1
     REAL( DFP ), INTENT(IN) :: val
     TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_addition2
+  END FUNCTION fevar_Addition2
 END INTERFACE
 
 INTERFACE OPERATOR(+)
-  MODULE PROCEDURE fevar_addition2
+  MODULE PROCEDURE fevar_Addition2
 END INTERFACE OPERATOR(+)
 
 !----------------------------------------------------------------------------
@@ -69,13 +69,13 @@ END INTERFACE OPERATOR(+)
 ! summary: FEVariable = Real + FEVariable
 
 INTERFACE
-  MODULE PURE FUNCTION fevar_addition3(val, obj1) RESULT(Ans)
+  MODULE PURE FUNCTION fevar_Addition3(val, obj1) RESULT(Ans)
     REAL( DFP ), INTENT(IN) :: val
     CLASS(FEVariable_), INTENT(IN) :: obj1
     TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_addition3
+  END FUNCTION fevar_Addition3
 END INTERFACE
 
 INTERFACE OPERATOR(+)
-  MODULE PROCEDURE fevar_addition3
+  MODULE PROCEDURE fevar_Addition3
 END INTERFACE OPERATOR(+)
