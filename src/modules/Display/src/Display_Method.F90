@@ -44,12 +44,12 @@ CHARACTER( LEN = * ), PARAMETER :: COLOR_STYLE = "BOLD_ON"
 
 TYPE( DISP_SETTINGS ), PUBLIC, PARAMETER :: &
   & DisplayProfileTerminal = DISP_SETTINGS(&
-  & advance="YES", matsep=" ", orient="COL", style="UNDERLINE", &
-  & trim="YES", ZEROAS="." )
+  & advance="YES", matsep=",", orient="COL", style="UNDERLINE", &
+  & trim="FALSE", ZEROAS="." )
 TYPE( DISP_SETTINGS ), PUBLIC, PARAMETER :: &
   & DisplayProfilePrint = DISP_SETTINGS(&
-  & advance="YES", matsep=" ", orient="COL", style="UNDERLINE", &
-  & trim="YES", ZEROAS="" )
+  & advance="YES", matsep=",", orient="COL", style="UNDERLINE", &
+  & trim="FALSE", ZEROAS="" )
 TYPE( DISP_SETTINGS ), PARAMETER :: DisplayProfileOriginal = DISP_SETTINGS()
 LOGICAL( LGT ), SAVE :: defaultSettingSet = .FALSE.
 
