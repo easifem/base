@@ -21,37 +21,37 @@ PUBLIC :: ones
 !----------------------------------------------------------------------------
 
 INTERFACE
-   MODULE PURE FUNCTION ones_1( dim1, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(Int8), INTENT(IN) :: datatype
-     INTEGER(Int8) :: ans(dim1)
-   END FUNCTION ones_1
-   !!
-   MODULE PURE FUNCTION ones_2( dim1, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(Int16), INTENT(IN) :: datatype
-     INTEGER(Int16) :: ans(dim1)
-   END FUNCTION ones_2
-   !!
-   MODULE PURE FUNCTION ones_3( dim1, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(Int32), INTENT(IN) :: datatype
-     INTEGER(Int32) :: ans(dim1)
-   END FUNCTION ones_3
-   !!
-   MODULE PURE FUNCTION ones_4( dim1, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(Int64), INTENT(IN) :: datatype
-     INTEGER(Int64) :: ans(dim1)
-   END FUNCTION ones_4
+MODULE PURE FUNCTION ones_1( dim1, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(Int8), INTENT(IN) :: datatype
+   INTEGER(Int8) :: ans(dim1)
+END FUNCTION ones_1
+!!
+MODULE PURE FUNCTION ones_2( dim1, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(Int16), INTENT(IN) :: datatype
+   INTEGER(Int16) :: ans(dim1)
+END FUNCTION ones_2
+!!
+MODULE PURE FUNCTION ones_3( dim1, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(Int32), INTENT(IN) :: datatype
+   INTEGER(Int32) :: ans(dim1)
+END FUNCTION ones_3
+!!
+MODULE PURE FUNCTION ones_4( dim1, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(Int64), INTENT(IN) :: datatype
+   INTEGER(Int64) :: ans(dim1)
+END FUNCTION ones_4
 
 #ifdef USE_Int128
-   !!
-   MODULE PURE FUNCTION ones_5( dim1, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(Int128), INTENT(IN) :: datatype
-     INTEGER(Int128) :: ans(dim1)
-   END FUNCTION ones_5
+!!
+MODULE PURE FUNCTION ones_5( dim1, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(Int128), INTENT(IN) :: datatype
+   INTEGER(Int128) :: ans(dim1)
+END FUNCTION ones_5
 #endif
 END INTERFACE
 
@@ -70,17 +70,17 @@ END INTERFACE ones
 !----------------------------------------------------------------------------
 
 INTERFACE
-   MODULE PURE FUNCTION ones_6( dim1, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     REAL(Real32), INTENT(IN) :: datatype
-     REAL(Real32) :: ans(dim1)
-   END FUNCTION ones_6
-   !!
-   MODULE PURE FUNCTION ones_7( dim1, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     REAL(Real64), INTENT(IN) :: datatype
-     REAL(Real64) :: ans(dim1)
-   END FUNCTION ones_7
+MODULE PURE FUNCTION ones_6( dim1, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   REAL(Real32), INTENT(IN) :: datatype
+   REAL(Real32) :: ans(dim1)
+END FUNCTION ones_6
+!!
+MODULE PURE FUNCTION ones_7( dim1, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   REAL(Real64), INTENT(IN) :: datatype
+   REAL(Real64) :: ans(dim1)
+END FUNCTION ones_7
 END INTERFACE
 
 INTERFACE ones
@@ -92,43 +92,44 @@ END INTERFACE ones
 !----------------------------------------------------------------------------
 
 INTERFACE
-   MODULE PURE FUNCTION ones_8( dim1, dim2, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(I4B), INTENT(IN) :: dim2
-     INTEGER(Int8), INTENT(IN) :: datatype
-     INTEGER(Int8) :: ans(dim1, dim2)
-   END FUNCTION ones_8
-   !!
-   MODULE PURE FUNCTION ones_9( dim1, dim2, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(I4B), INTENT(IN) :: dim2
-     INTEGER(Int16), INTENT(IN) :: datatype
-     INTEGER(Int16) :: ans(dim1, dim2)
-   END FUNCTION ones_9
-   !!
-   MODULE PURE FUNCTION ones_10( dim1, dim2, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(I4B), INTENT(IN) :: dim2
-     INTEGER(Int32), INTENT(IN) :: datatype
-     INTEGER(Int32) :: ans(dim1, dim2)
-   END FUNCTION ones_10
-   !!
-   MODULE PURE FUNCTION ones_11( dim1, dim2, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(I4B), INTENT(IN) :: dim2
-     INTEGER(Int64), INTENT(IN) :: datatype
-     INTEGER(Int64) :: ans(dim1, dim2)
-   END FUNCTION ones_11
-
+MODULE PURE FUNCTION ones_8( dim1, dim2, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(I4B), INTENT(IN) :: dim2
+   INTEGER(Int8), INTENT(IN) :: datatype
+   INTEGER(Int8) :: ans(dim1, dim2)
+END FUNCTION ones_8
+!!
+MODULE PURE FUNCTION ones_9( dim1, dim2, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(I4B), INTENT(IN) :: dim2
+   INTEGER(Int16), INTENT(IN) :: datatype
+   INTEGER(Int16) :: ans(dim1, dim2)
+END FUNCTION ones_9
+!!
+MODULE PURE FUNCTION ones_10( dim1, dim2, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(I4B), INTENT(IN) :: dim2
+   INTEGER(Int32), INTENT(IN) :: datatype
+   INTEGER(Int32) :: ans(dim1, dim2)
+END FUNCTION ones_10
+!!
+MODULE PURE FUNCTION ones_11( dim1, dim2, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(I4B), INTENT(IN) :: dim2
+   INTEGER(Int64), INTENT(IN) :: datatype
+   INTEGER(Int64) :: ans(dim1, dim2)
+END FUNCTION ones_11
+!!
 #ifdef USE_Int128
-   !!
-   MODULE PURE FUNCTION ones_12( dim1, dim2, datatype ) RESULT( Ans )
-     INTEGER(I4B), INTENT(IN) :: dim1
-     INTEGER(I4B), INTENT(IN) :: dim2
-     INTEGER(Int128), INTENT(IN) :: datatype
-     INTEGER(Int128) :: ans(dim1, dim2)
-   END FUNCTION ones_12
+!!
+MODULE PURE FUNCTION ones_12( dim1, dim2, datatype ) RESULT( Ans )
+   INTEGER(I4B), INTENT(IN) :: dim1
+   INTEGER(I4B), INTENT(IN) :: dim2
+   INTEGER(Int128), INTENT(IN) :: datatype
+   INTEGER(Int128) :: ans(dim1, dim2)
+END FUNCTION ones_12
 #endif
+!!
 END INTERFACE
 
 INTERFACE ones
