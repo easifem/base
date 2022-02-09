@@ -306,10 +306,10 @@ END INTERFACE arange
 
 INTERFACE
   MODULE PURE FUNCTION arange_int(istart, iend, increment) RESULT(Ans)
-    INTEGER(i4b), INTENT(in) :: istart
-    INTEGER(i4b), INTENT(in) :: iend
-    INTEGER(i4b), INTENT(in), OPTIONAL :: increment
-    INTEGER(i4b), DIMENSION(:), ALLOCATABLE :: Ans
+    INTEGER(I4B), INTENT(IN) :: istart
+    INTEGER(I4B), INTENT(IN) :: iend
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: increment
+    INTEGER(I4B), DIMENSION(:), ALLOCATABLE :: Ans
   END FUNCTION
 END INTERFACE
 
