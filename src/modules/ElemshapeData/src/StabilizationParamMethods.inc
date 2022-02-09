@@ -17,6 +17,7 @@
 
 PUBLIC :: getUnitNormal
 PUBLIC :: GetSUPGParam
+PUBLIC :: GetHRGNParam
 
 !----------------------------------------------------------------------------
 !                                                    getUnitNormal@getMethod
@@ -274,3 +275,47 @@ END INTERFACE
 INTERFACE GetSUPGParam
   MODULE PROCEDURE elemsd_GetSUPGParam4
 END INTERFACE GetSUPGParam
+
+!----------------------------------------------------------------------------
+!                                                   GetHRGNParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRGN param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRGNParam1(obj, hrgn, val, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    TYPE(FEVariable_), INTENT(INOUT) :: hrgn
+    TYPE(FEVariable_), INTENT(IN) :: val
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE elemsd_GetHRGNParam1
+END INTERFACE
+
+INTERFACE GetHRGNParam
+  MODULE PROCEDURE elemsd_GetHRGNParam1
+END INTERFACE GetHRGNParam
+
+!----------------------------------------------------------------------------
+!                                                   GetHRGNParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRGN param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRGNParam2(obj, hrgn, val, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    TYPE(FEVariable_), INTENT(INOUT) :: hrgn
+    TYPE(FEVariable_), INTENT(IN) :: val
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE elemsd_GetHRGNParam2
+END INTERFACE
+
+INTERFACE GetHRGNParam
+  MODULE PROCEDURE elemsd_GetHRGNParam2
+END INTERFACE GetHRGNParam

@@ -15,22 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 	6 March 2021
-! summary: This module contains methods for [[RealMatrix_]] data type
+PUBLIC :: Operator( .EQ. )
 
-MODULE RealMatrix_Method
-USE GlobalData
-USE BaseType
-IMPLICIT NONE
-PRIVATE
+!----------------------------------------------------------------------------
+!                                                                        EQ
+!----------------------------------------------------------------------------
 
-#include "./IOMethods.inc"
-#include "./ConstructorMethods.inc"
-#include "./GetValuesMethods.inc"
-#include "./SetValuesMethods.inc"
-#include "./MatmulMethods.inc"
-#include "./LapackMethods.inc"
-#include "./IterativeSolverMethods.inc"
+INTERFACE
+MODULE PURE FUNCTION realvec_isEqual( obj, obj2 ) RESULT( Ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
+  CLASS( RealVector_ ), INTENT( IN ) :: obj2
+  LOGICAL( LGT ) :: ans
+END FUNCTION realvec_isEqual
+END INTERFACE
 
-END MODULE RealMatrix_Method
+INTERFACE Operator( .EQ. )
+  MODULE PROCEDURE realvec_isEqual
+END INTERFACE Operator( .EQ. )
