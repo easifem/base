@@ -29,25 +29,37 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csr_Display
+  !!
   CALL Display( Msg, unitNo=unitNo )
   CALL Display( obj%nnz, "# NNZ : ", unitNo=unitNo )
   CALL Display( obj%ncol, "# NCOL : ", unitNo=unitNo )
   CALL Display( obj%nrow, "# NROW : ", unitNo=unitNo )
   CALL Display( obj%dof, "# DOF : ", unitNo=unitNo )
+  !!
   IF( ALLOCATED( obj%IA ) ) THEN
     CALL Display( obj%IA, "# IA : ", unitNo=unitNo, advance="NO" )
   ELSE
     CALL Display( "# IA is not allocated", UnitNo=UnitNo )
   END IF
+  !!
   IF( ALLOCATED( obj%JA ) ) THEN
     CALL Display( obj%JA, "# JA : ", unitNo=unitNo, advance="NO" )
   ELSE
     CALL Display( "# JA is not allocated", UnitNo=UnitNo )
   END IF
+  !!
   CALL Display( "", unitNo=UnitNo, advance=.TRUE. )
+  !!
+  IF( ALLOCATED( obj%idiag ) ) THEN
+    CALL Display( obj%idiag, "# idiag : ", unitNo=unitNo )
+  ELSE
+    CALL Display( "# idiag is not allocated", UnitNo=UnitNo )
+  END IF
+  !!
   IF( ALLOCATED( obj%row ) ) THEN
     CALL Display( obj%row, "# ROW : ", unitNo=unitNo, orient="ROW" )
   END IF
+  !!
 END PROCEDURE csr_Display
 
 END SUBMODULE IOMethods
