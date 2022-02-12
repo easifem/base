@@ -21,7 +21,6 @@ PUBLIC :: ALLOCATE
 PUBLIC :: BaseInterpolation
 PUBLIC :: BaseContinuity
 
-
 !----------------------------------------------------------------------------
 !                                                  AllocateData@Constructor
 !----------------------------------------------------------------------------
