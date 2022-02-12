@@ -17,7 +17,7 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
-! summary: 	Unary operator for [[SparseMaatrix_]]
+! summary: 	UnaryMethods operator for [[SparseMaatrix_]]
 !
 ! Following subroutines are planned to include in this module
 !
@@ -62,7 +62,7 @@
 ! | `CSRKVSTC`|  Finds block column partitioning of matrix in CSR format   |
 ! | `KVSTMERGE`| Merges block partitionings, for conformal row/col pattern |
 
-SUBMODULE(CSRMatrix_Method) Unary
+SUBMODULE(CSRMatrix_Method) UnaryMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -201,7 +201,7 @@ MODULE PROCEDURE csrMat_Transpose
   IF( ierr .NE. 0 ) THEN
     CALL ErrorMSG( &
       & "Error occured during transposing!", &
-      & "CSRMatrix_Method@Unary.F90", &
+      & "CSRMatrix_Method@UnaryMethods.F90", &
       & "csrMat_Transpose()", &
       & __LINE__, stderr )
     STOP
@@ -214,12 +214,48 @@ END PROCEDURE csrMat_Transpose
 !                                                                 getDiagonal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE csrMat_getDiagonal
+MODULE PROCEDURE csrMat_getDiagonal1
   INTEGER( I4B ) :: len0
   CALL Reallocate( diag, obj%csr%nrow, idiag, obj%csr%nrow )
   CALL GETDIA(obj%csr%nrow,obj%csr%ncol,0,obj%A,obj%csr%JA,obj%csr%IA,&
     & len0,diag,idiag,INPUT( option=offset, default=0 ))
-END PROCEDURE csrMat_getDiagonal
+END PROCEDURE csrMat_getDiagonal1
+
+!----------------------------------------------------------------------------
+!                                                                 getDiagonal
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_getDiagonal2
+  INTEGER( I4B ) :: ii
+  !!
+  !!
+  !!
+  IF( ALLOCATED( obj%csr%idiag ) ) THEN
+    !!
+    CALL Reallocate( diag, obj%csr%nrow )
+    !!
+    DO ii = 1, SIZE( diag )
+      diag( ii ) = obj%A( obj%csr%idiag( ii ) )
+    END DO
+    !!
+  ELSE
+    !!
+    CALL Reallocate( diag, obj%csr%nrow, obj%csr%idiag, obj%csr%nrow )
+    !!
+    CALL GETDIA( &
+      & obj%csr%nrow, &
+      & obj%csr%ncol, &
+      & 0, &
+      & obj%A, &
+      & obj%csr%JA, &
+      & obj%csr%IA, &
+      & ii, &
+      & diag, &
+      & obj%csr%idiag, &
+      & 0 )
+  END IF
+  !!
+END PROCEDURE csrMat_getDiagonal2
 
 !----------------------------------------------------------------------------
 !                                                          getLowerTriangle
@@ -344,4 +380,4 @@ END PROCEDURE csrMat_Permute
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-END SUBMODULE Unary
+END SUBMODULE UnaryMethods

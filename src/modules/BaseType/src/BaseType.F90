@@ -627,7 +627,7 @@ TYPE :: ReferenceElement_
     !! Number of spatial dimensions
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities
-  PROCEDURE(lag_elem_refelem), POINTER, PASS(obj) :: lagrangeElement => NULL()
+  PROCEDURE(lag_elem_refelem), POINTER, PASS(obj) :: lagrangeElement=>NULL()
     !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
@@ -1255,23 +1255,23 @@ TYPE :: ElemShapeData_
     !! Shape function value `N(I,ips)`
   REAL(DFP), ALLOCATABLE :: dNdXi(:, :, :)
     !! Local derivative of a shape function
-  REAL(DFP), ALLOCATABLE :: Jacobian(:, :, :)
+  REAL(DFP), ALLOCATABLE :: jacobian(:, :, :)
     !! Jacobian of mapping `J(:,:,ips)` also $\mathbf{F}_{\Xi x}$
-  REAL(DFP), ALLOCATABLE :: Js(:)
+  REAL(DFP), ALLOCATABLE :: js(:)
     !! Determinant of Jacobian at ips
-  REAL(DFP), ALLOCATABLE :: Ws(:)
+  REAL(DFP), ALLOCATABLE :: ws(:)
     !! Weighting functions
   REAL(DFP), ALLOCATABLE :: dNdXt(:, :, :)
     !! Spatial derivative of shape function
-  REAL(DFP), ALLOCATABLE :: Thickness(:)
+  REAL(DFP), ALLOCATABLE :: thickness(:)
     !! Thickness of element
-  REAL(DFP), ALLOCATABLE :: Coord(:, :)
+  REAL(DFP), ALLOCATABLE :: coord(:, :)
     !! Barycentric coordinate
-  REAL(DFP), ALLOCATABLE :: Normal(:, :)
+  REAL(DFP), ALLOCATABLE :: normal(:, :)
     !! Normal in case of facet element
-  TYPE(ReferenceElement_) :: RefElem !=> NULL()
+  CLASS(ReferenceElement_), POINTER :: refelem => NULL()
     !! Refererece element
-  TYPE(QuadraturePoint_) :: Quad
+  TYPE(QuadraturePoint_) :: quad
     !! Quadrature points
 END TYPE ElemShapeData_
 
@@ -1313,11 +1313,11 @@ PUBLIC :: ElemShapeDataPointer_
 !
 
 TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
-  REAL(DFP) :: Wt = 0.0
+  REAL(DFP) :: wt = 0.0
     !! Weight of gauss point in time domain
-  REAL(DFP) :: Theta = 0.0
+  REAL(DFP) :: theta = 0.0
     !! Gauss point in time domain
-  REAL(DFP) :: Jt = 0.0
+  REAL(DFP) :: jt = 0.0
     !! Jacobian $\frac{dt}{d\theta}$
   REAL(DFP), ALLOCATABLE :: T(:)
     !! Shape function in time domain
