@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains methods fors solving LU x = y
 
-SUBMODULE(CSRMatrix_Method) LUsolveMethods
+SUBMODULE(CSRMatrix_Method) LUSolveMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -40,4 +40,4 @@ MODULE PROCEDURE csrMat_LUTSOLVE
   CALL LUTSOL(SIZE(rhs), rhs, sol, alu, jlu, ju)
 END PROCEDURE csrMat_LUTSOLVE
 
-END SUBMODULE LUsolveMethods
+END SUBMODULE LUSolveMethods
