@@ -173,7 +173,7 @@ END PROCEDURE csr_getNNZ
 MODULE PROCEDURE csr_Deallocate
   IF( ALLOCATED( obj%IA ) ) DEALLOCATE( obj%IA )
   IF( ALLOCATED( obj%JA ) ) DEALLOCATE( obj%JA )
-  IF( ALLOCATED( obj%DiagIndx ) ) DEALLOCATE( obj%DiagIndx )
+  IF( ALLOCATED( obj%idiag ) ) DEALLOCATE( obj%idiag )
   IF( ALLOCATED( obj%Row ) ) DEALLOCATE( obj%Row )
   CALL Deallocate( obj%dof )
   obj%nnz =  0
