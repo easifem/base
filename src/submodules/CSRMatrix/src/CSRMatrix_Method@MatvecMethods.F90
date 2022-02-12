@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE(CSRMatrix_Method) MatvecMethods
+SUBMODULE(CSRMatrix_Method) MatVecMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -73,4 +73,4 @@ END PROCEDURE csrMat_MatVec1
 MODULE PROCEDURE csrMat_MatVec2
   CALL AMatvec( A=A, JA=JA, x=x, y=y )
 END PROCEDURE csrMat_MatVec2
-END SUBMODULE MatvecMethods
+END SUBMODULE MatVecMethods
