@@ -36,19 +36,19 @@ MODULE PROCEDURE dof_initiate1
     Map( 1 + n, 1 ) = 0
     !
     !<- Space components; -1 if scalar component like pressure
-    Map( 1:n, 2 ) = SpaceCompo
+    Map( 1:n, 2 ) = spacecompo
     Map( 1 + n, 2 ) = 0
     !
     !<- Time component; 1 if time invariant
-    Map( 1:n, 3 ) = TimeCompo
+    Map( 1:n, 3 ) = timecompo
     Map( 1 + n, 3 ) = 0
     !
     !<- tDOF for each physical name
     DO i = 1, n
-      IF( SpaceCompo( i ) .LT. 0 ) THEN
-        Map( i, 4 ) = TimeCompo( i )
+      IF( spacecompo( i ) .LT. 0 ) THEN
+        Map( i, 4 ) = timecompo( i )
       ELSE
-        Map( i, 4 ) = TimeCompo( i ) * SpaceCompo( i )
+        Map( i, 4 ) = timecompo( i ) * spacecompo( i )
       END IF
     END DO
     Map( n + 1, 4 ) = SUM( Map( 1:n, 4 ) )
@@ -88,7 +88,7 @@ END PROCEDURE dof_initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_initiate3
-  CALL Initiate( obj=val, tSize= (.tNodes. obj))
+  CALL Reallocate( Val1, .tNodes. obj, Val2, .tNodes. obj )
 END PROCEDURE dof_initiate3
 
 !----------------------------------------------------------------------------
@@ -96,55 +96,29 @@ END PROCEDURE dof_initiate3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_initiate4
-  INTEGER( I4B ) :: i
-  INTEGER( I4B ), ALLOCATABLE :: tNodes( : )
-  ! main
-  ASSOCIATE( Map => obj%Map )
-    ALLOCATE( tNodes( .tDOF. obj ) )
-    DO i = 1, SIZE( Map, 1 ) - 1
-      tNodes( Map( i, 5 ) : Map( i + 1, 5 ) - 1 ) = Map( i, 6 )
-    END DO
-    CALL Initiate( Val, tNodes )
-    DEALLOCATE( tNodes )
-  END ASSOCIATE
-END PROCEDURE dof_initiate4
-
-!----------------------------------------------------------------------------
-!                                                                 Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE dof_initiate5
-  INTEGER( I4B ) :: tNodes
-  tNodes = .tNodes. obj
-  CALL Reallocate( Val1, tNodes, Val2, tNodes )
-END PROCEDURE dof_initiate5
-
-!----------------------------------------------------------------------------
-!                                                                 Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE dof_initiate6
   obj1%StorageFMT = obj2%StorageFMT
   IF( ALLOCATED( obj2%valmap ) ) obj1%valmap = obj2%valmap
   IF( ALLOCATED( obj2%map ) ) obj1%map = obj2%map
-END PROCEDURE dof_initiate6
+END PROCEDURE dof_initiate4
 
 !----------------------------------------------------------------------------
-!                                                                        DOF
+!                                                                       DOF
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE dof_Constructor1
   CALL Initiate( obj = obj, Names = Names, tNodes = tNodes, &
-    & SpaceCompo = SpaceCompo, TimeCompo = TimeCompo, StorageFMT = StorageFMT)
+    & spacecompo = spacecompo, timecompo = timecompo, &
+    & StorageFMT = StorageFMT)
 END PROCEDURE dof_Constructor1
 
 !----------------------------------------------------------------------------
-!                                                                 DOF_Pointer
+!                                                                DOF_Pointer
 !----------------------------------------------------------------------------
+
 MODULE PROCEDURE dof_Constructor_1
   ALLOCATE( obj )
   CALL Initiate( obj = obj, Names = Names, tNodes = tNodes, &
-    & SpaceCompo = SpaceCompo, TimeCompo = TimeCompo, &
+    & spacecompo = spacecompo, timecompo = timecompo, &
     & StorageFMT = StorageFMT)
 END PROCEDURE dof_Constructor_1
 
