@@ -75,7 +75,12 @@ MODULE PROCEDURE elemsd_Deallocate
   IF( ALLOCATED( obj%Thickness ) ) DEALLOCATE( obj%Thickness )
   IF( ALLOCATED( obj%Coord ) ) DEALLOCATE( obj%Coord )
   CALL Deallocate( obj%Quad )
-  CALL Deallocate( obj%RefElem )
+  !!
+  IF( ASSOCIATED(obj%refelem ) ) THEN
+    CALL Deallocate( obj%refelem )
+    DEALLOCATE( obj%refelem ); obj%refelem => NULL()
+  END IF
+  !!
   SELECT TYPE( obj )
   TYPE IS (STElemShapeData_)
     IF( ALLOCATED( obj%T ) ) DEALLOCATE( obj%T )
@@ -139,10 +144,15 @@ END PROCEDURE elemsd_BaseContinuity
 
 MODULE PROCEDURE elemsd_Initiate
   SELECT CASE( TRIM( interpolType ) // TRIM( continuityType )  )
+  !!
+  !!
+  !!
   CASE( "LagrangeInterpolation" // "H1" )
     CALL H1_Lagrange( obj=obj, quad=quad, refElem=refElem, &
       & continuityType=TypeH1, interpolType=TypeLagrangeInterpolation )
-
+  !!
+  !!
+  !!
   CASE( "LagrangeInterpolation" // "H1Div" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: LagrangeInterpolation &
