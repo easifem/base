@@ -10,11 +10,15 @@ SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/ElemshapeData_Method@Constructor.F90
-  ${src_path}/ElemshapeData_Method@IO.F90
-  ${src_path}/ElemshapeData_Method@getMethod.F90
+  ${src_path}/ElemshapeData_Method@IOMethods.F90
+  ${src_path}/ElemshapeData_Method@GetMethods.F90
+  ${src_path}/ElemshapeData_Method@StabilizationParamMethods.F90
   ${src_path}/ElemshapeData_Method@ProjectionMethods.F90
   ${src_path}/ElemshapeData_Method@InterpolMethods.F90
+  ${src_path}/ElemshapeData_Method@LocalGradientMethods.F90
   ${src_path}/ElemshapeData_Method@GradientMethods.F90
+  ${src_path}/ElemshapeData_Method@LocalDivergenceMethods.F90
+  ${src_path}/ElemshapeData_Method@DivergenceMethods.F90
   ${src_path}/ElemshapeData_Method@setMethod.F90
   ${src_path}/ElemshapeData_Method@H1Lagrange.F90
   ${src_path}/ElemshapeData_Method@H1Lagrange@Line.F90
