@@ -11,6 +11,8 @@ TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/DOF_Method@ConstructorMethods.F90
   ${src_path}/DOF_Method@IOMethods.F90
-  ${src_path}/DOF_Method@setMethods.F90
-  ${src_path}/DOF_Method@getMethods.F90
+  ${src_path}/DOF_Method@SetMethods.F90
+  ${src_path}/DOF_Method@AddMethods.F90
+  ${src_path}/DOF_Method@GetMethods.F90
+  ${src_path}/DOF_Method@GetValueMethods.F90
 )
