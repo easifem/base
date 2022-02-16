@@ -201,18 +201,21 @@ END PROCEDURE stelemsd_set1
 MODULE PROCEDURE set_normal
   REAL( DFP ) :: vec(3, 3)
   INTEGER( I4B ) :: i, xidim, nsd
-
+  !!
+  !!
+  !!
   vec = 0.0_DFP
   vec( 3, 2 ) = 1.0_DFP
-
+  !!
   xidim = obj%RefElem%XiDimension
   nsd = obj%refElem%nsd
-
+  !!
   DO i = 1, SIZE(obj%N,2)
     Vec( 1:nsd, 1:xidim ) = obj%Jacobian( 1:nsd, 1:xidim, i )
     obj%Normal( :, i ) = &
       & VectorProduct( Vec(:, 1), Vec(:, 2) ) / obj%Js(i)
   END DO
+  !!
 END PROCEDURE set_normal
 
 !----------------------------------------------------------------------------
