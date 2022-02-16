@@ -25,7 +25,7 @@ INTEGER(I4B) :: i
 !! interpolate the vector
 CALL getInterpolation(obj=obj, Interpol=p, Val=val)
 !! get gradient of nodal values
-CALL getSpatialGradient(obj=obj, dVdXt=dp, Val=val)
+CALL getSpatialGradient(obj=obj, lg=dp, Val=val)
 pnorm = NORM2(p, DIM=1)
 CALL Reallocate(R, obj%RefElem%NSD, SIZE(obj%N, 2))
 DO i = 1, SIZE(pnorm)

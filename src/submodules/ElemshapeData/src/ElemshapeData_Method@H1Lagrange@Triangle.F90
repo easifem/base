@@ -82,19 +82,19 @@ MODULE PROCEDURE Triangle_H1_Lagrange
       obj%N( 1, : ) = l1 * ( 2.0 * l1 - 1.0 )
       obj%N( 2, : ) = l2 * ( 2.0 * l2 - 1.0 )
       obj%N( 3, : ) = l3 * ( 2.0 * l3 - 1.0 )
-      obj%N( 4, : ) = l1 * l2
-      obj%N( 5, : ) = l2 * l3
-      obj%N( 6, : ) = l3 * l1
+      obj%N( 4, : ) = 4 * l1 * l2
+      obj%N( 5, : ) = 4 * l2 * l3
+      obj%N( 6, : ) = 4 * l3 * l1
 
       DO ips = 1, nips
         dndl = RESHAPE( &
-          &   [ 4.0_DFP * l1( ips ) - 1.0_DFP, 0.0_DFP, 0.0_DFP, l2( ips ), &
-              & 0.0_DFP, l3( ips ),  &
-              & 0.0_DFP, 4.0_DFP * l2( ips ) - 1.0_DFP, 0.0_DFP, l1( ips ), &
-              & l3( ips ), 0.0_DFP,  &
-              & 0.0_DFP, 0.0_DFP, 4.0_DFP * l3( ips ) - 1.0_DFP, 0.0_DFP, &
-              & l2( ips ), l1( ips )   &
-              & ], [6, 3] &
+          & [ 4.0_DFP * l1( ips ) - 1.0_DFP, 0.0_DFP, 0.0_DFP, &
+          & 4.0*l2( ips ), 0.0_DFP, 4.0 * l3( ips ),  &
+          & 0.0_DFP, 4.0_DFP * l2( ips ) - 1.0_DFP, 0.0_DFP, &
+          & 4.0*l1( ips ), 4.0*l3( ips ), 0.0_DFP, &
+          & 0.0_DFP, 0.0_DFP, 4.0_DFP * l3( ips ) - 1.0_DFP, &
+          & 0.0_DFP, 4.0*l2( ips ), 4.0*l1( ips ) &
+          & ], [6, 3] &
           & )
         obj%dNdXi( :, :, ips ) = MATMUL( dndl, dldxi )
       END DO

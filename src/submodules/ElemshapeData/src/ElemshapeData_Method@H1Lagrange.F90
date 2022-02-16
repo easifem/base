@@ -152,29 +152,94 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE H1_Lagrange
+  !!
+  !!
+  !!
   SELECT TYPE( refelem )
+  !!
+  !!
+  !!
   TYPE IS ( ReferenceLine_ )
-    CALL Line_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
-      & ContinuityType=ContinuityType, InterpolType=InterpolType )
+    ALLOCATE( ReferenceLine_ :: obj%refelem )
+    CALL Line_H1_Lagrange( &
+      & obj=obj, &
+      & Quad=Quad, &
+      & RefElem=RefElem, &
+      & ContinuityType=ContinuityType, &
+      & InterpolType=InterpolType )
+  !!
+  !!
+  !!
   TYPE IS ( ReferenceTriangle_ )
-    CALL Triangle_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
-      & ContinuityType=ContinuityType, InterpolType=InterpolType )
+    ALLOCATE( ReferenceTriangle_ :: obj%refelem )
+    CALL Triangle_H1_Lagrange( &
+      & obj=obj, &
+      & Quad=Quad, &
+      & RefElem=RefElem, &
+      & ContinuityType=ContinuityType, &
+      & InterpolType=InterpolType )
+  !!
+  !!
+  !!
   TYPE IS ( ReferenceQuadrangle_ )
-    CALL Quadrangle_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
-      & ContinuityType=ContinuityType, InterpolType=InterpolType )
+    ALLOCATE( ReferenceQuadrangle_ :: obj%refelem )
+    CALL Quadrangle_H1_Lagrange( &
+      & obj=obj, &
+      & Quad=Quad, &
+      & RefElem=RefElem, &
+      & ContinuityType=ContinuityType, &
+      & InterpolType=InterpolType )
+  !!
+  !!
+  !!
   TYPE IS ( ReferenceTetrahedron_ )
-    CALL Tetrahedron_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
-      & ContinuityType=ContinuityType, InterpolType=InterpolType )
+    ALLOCATE( ReferenceTetrahedron_ :: obj%refelem )
+    CALL Tetrahedron_H1_Lagrange( &
+      & obj=obj, &
+      & Quad=Quad, &
+      & RefElem=RefElem, &
+      & ContinuityType=ContinuityType, &
+      & InterpolType=InterpolType )
+  !!
+  !!
+  !!
   TYPE IS ( ReferenceHexahedron_ )
-    CALL Hexahedron_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
-      & ContinuityType=ContinuityType, InterpolType=InterpolType )
+    ALLOCATE( ReferenceHexahedron_ :: obj%refelem )
+    CALL Hexahedron_H1_Lagrange( &
+      & obj=obj, &
+      & Quad=Quad, &
+      & RefElem=RefElem, &
+      & ContinuityType=ContinuityType, &
+      & InterpolType=InterpolType )
+  !!
+  !!
+  !!
   TYPE IS ( ReferencePrism_ )
-    CALL Prism_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
-      & ContinuityType=ContinuityType, InterpolType=InterpolType )
+    ALLOCATE( ReferencePrism_ :: obj%refelem )
+    CALL Prism_H1_Lagrange( &
+      & obj=obj, &
+      & Quad=Quad, &
+      & RefElem=RefElem, &
+      & ContinuityType=ContinuityType, &
+      & InterpolType=InterpolType )
+  !!
+  !!
+  !!
   TYPE IS ( ReferencePyramid_ )
-    CALL Pyramid_H1_Lagrange( obj=obj, Quad=Quad, RefElem=RefElem, &
-      & ContinuityType=ContinuityType, InterpolType=InterpolType )
+    ALLOCATE( ReferencePyramid_ :: obj%refelem )
+    CALL Pyramid_H1_Lagrange( &
+      & obj=obj, &
+      & Quad=Quad, &
+      & RefElem=RefElem, &
+      & ContinuityType=ContinuityType, &
+      & InterpolType=InterpolType )
+  !!
+  !!
+  !!
   END SELECT
+  !!
+  !!
+  !!
 END PROCEDURE H1_Lagrange
 
 END SUBMODULE H1Lagrange
