@@ -20,7 +20,7 @@ REAL(DFP), ALLOCATABLE :: dp(:, :), p(:), pnorm(:)
 INTEGER(I4B) :: ii
 !! main
 CALL getInterpolation(obj=obj, Val=val, Interpol=p)
-CALL getSpatialGradient(obj=obj, dPhidXt=dp, Val=Val)
+CALL getSpatialGradient(obj=obj, lg=dp, Val=Val)
 CALL Reallocate(R, obj%refelem%NSD, SIZE(obj%N, 2))
 pnorm = NORM2(dp, DIM=1)
 !!
