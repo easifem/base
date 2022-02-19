@@ -817,12 +817,12 @@ TYPE(KeyValue_), PARAMETER, PUBLIC :: TypeKeyValue = &
 !
 ! {!pages/FEVariable_.md!}
 
-INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVariable = 6
+INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 
 TYPE :: FEVariable_
   REAL(DFP), ALLOCATABLE :: val(:)
   !! values
-  INTEGER(I4B) :: s(MAX_RANK_FEVariable) = 0
+  INTEGER(I4B) :: s(MAX_RANK_FEVARIABLE) = 0
   !! shape of the data
   INTEGER(I4B) :: defineOn = 0
   !! Nodal: nodal values
