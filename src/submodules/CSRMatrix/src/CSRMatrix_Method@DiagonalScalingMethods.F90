@@ -27,6 +27,7 @@ MODULE PROCEDURE csrmat_DiagonalScaling_1
   REAL( DFP ), ALLOCATABLE :: diag( : )
   CALL getDiagonal( obj=obj, diag=diag )
   CALL DiagonalScaling( obj=obj, diag=diag, operator=operator, side=side)
+  IF( ALLOCATED( diag ) ) DEALLOCATE( diag )
 END PROCEDURE csrmat_DiagonalScaling_1
 
 !----------------------------------------------------------------------------
