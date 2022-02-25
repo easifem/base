@@ -11,5 +11,6 @@ TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/CSRSparsity_Method@ConstructorMethods.F90
   ${src_path}/CSRSparsity_Method@IOMethods.F90
-  ${src_path}/CSRSparsity_Method@setMethods.F90
+  ${src_path}/CSRSparsity_Method@SetMethods.F90
+  ${src_path}/CSRSparsity_Method@GetMethods.F90
 )
