@@ -276,6 +276,7 @@ TYPE :: CSRSparsity_
   LOGICAL(LGT) :: isSorted = .FALSE.
   LOGICAL(LGT) :: isInitiated = .FALSE.
   LOGICAL(LGT) :: isSparsityLock = .FALSE.
+  LOGICAL(LGT) :: isDiagStored = .FALSE.
   INTEGER(I4B), ALLOCATABLE :: IA(:)
   INTEGER(I4B), ALLOCATABLE :: JA(:)
   INTEGER(I4B), ALLOCATABLE :: idiag(:)
