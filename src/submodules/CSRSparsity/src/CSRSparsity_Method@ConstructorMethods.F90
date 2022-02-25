@@ -30,6 +30,8 @@ CONTAINS
 
 MODULE PROCEDURE csr_initiate1
   INTEGER( I4B ) :: tNodes
+  !!
+#ifdef DEBUG_VER
   IF( obj%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is already initiated!", &
@@ -38,11 +40,17 @@ MODULE PROCEDURE csr_initiate1
       & __LINE__, stderr )
     STOP
   END IF
+#endif
+  !!
   obj%nnz = 0
   obj%ncol = ncol
   obj%nrow = nrow
+  !!
   IF( PRESENT( dof ) ) THEN
+    !!
     tnodes = .tNodes. dof
+    !!
+#ifdef DEBUG_VER
     IF( tnodes .NE. MAX( nrow, ncol ) ) THEN
       CALL ErrorMSG( &
       & "Size of the matrix does not conform with the dof data!", &
@@ -51,16 +59,24 @@ MODULE PROCEDURE csr_initiate1
       & __LINE__, stderr )
     STOP
     END IF
+#endif
+    !!
     obj%dof = dof
+    !!
   ELSE
     CALL initiate( obj=obj%dof, tNodes=[nrow], names=['K'], &
       & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT )
   END IF
+  !!
   CALL Reallocate( obj%IA, nrow + 1 )
+  CALL Reallocate( obj%idiag, nrow )
+  !!
   IF( ALLOCATED( obj%row ) ) DEALLOCATE( obj%row )
   IF( ALLOCATED( obj%JA ) ) DEALLOCATE( obj%JA )
   obj%isInitiated = .TRUE.
   obj%isSparsityLock = .FALSE.
+  obj%isSorted = .FALSE.
+  obj%isDiagStored = .FALSE.
 END PROCEDURE csr_initiate1
 
 !----------------------------------------------------------------------------
@@ -73,17 +89,19 @@ MODULE PROCEDURE csr_initiate2
   obj%ncol = obj2%ncol
   obj%nrow = obj2%nrow
   obj%isSorted = obj2%isSorted
-  obj%dof = obj2%dof
   obj%isInitiated = obj2%isInitiated
   obj%isSparsityLock = obj2%isSparsityLock
+  obj%isDiagStored = obj2%isDiagStored
   IF( ALLOCATED( obj2%IA ) ) obj%IA = obj2%IA
   IF( ALLOCATED( obj2%JA ) ) obj%JA = obj2%JA
+  IF( ALLOCATED( obj2%idiag ) ) obj%idiag = obj2%idiag
   IF( ALLOCATED( obj%row ) ) THEN
     n = SIZE( obj%row )
     DO ii = 1, n
       obj%row( ii ) = obj2%row( ii )
     END DO
   END IF
+  obj%dof = obj2%dof
 END PROCEDURE csr_initiate2
 
 !----------------------------------------------------------------------------
@@ -92,11 +110,13 @@ END PROCEDURE csr_initiate2
 
 MODULE PROCEDURE csr_Initiate3
   INTEGER( I4B ) :: nrow, ncol
+  !!
   nrow = SIZE( IA ) - 1; ncol = MAXVAL( JA )
-  CALL initiate( obj=obj, nrow=nrow, ncol=ncol )
+  CALL Initiate( obj=obj, nrow=nrow, ncol=ncol )
   obj%nnz = SIZE( JA )
   obj%IA = IA
   obj%JA = JA
+  !!
 END PROCEDURE csr_Initiate3
 
 !----------------------------------------------------------------------------
@@ -134,39 +154,6 @@ MODULE PROCEDURE csr_constructor_2
 END PROCEDURE csr_constructor_2
 
 !----------------------------------------------------------------------------
-!                                                                     Shape
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE csr_shape
-  Ans = [ obj%nrow,  obj%ncol ]
-END PROCEDURE csr_shape
-
-!----------------------------------------------------------------------------
-!                                                                      Size
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE csr_size
-  IF( PRESENT( Dims ) ) THEN
-    IF( Dims .EQ. 1 ) THEN
-      Ans = obj%nrow
-    ELSE
-      Ans = obj%ncol
-    END IF
-  ELSE
-    Ans = obj%nrow * obj%ncol
-  END IF
-END PROCEDURE csr_size
-
-!----------------------------------------------------------------------------
-!                                                                      getNNZ
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE csr_getNNZ
-  INTEGER( I4B ) :: irow
-  Ans = obj%nnz
-END PROCEDURE csr_getNNZ
-
-!----------------------------------------------------------------------------
 !                                                            Deallocate
 !----------------------------------------------------------------------------
 
@@ -180,8 +167,9 @@ MODULE PROCEDURE csr_Deallocate
   obj%nrow = 0
   obj%ncol = 0
   obj%isSorted = .FALSE.
-  obj%isSparsityLock = .FALSE.
   obj%isInitiated = .FALSE.
+  obj%isSparsityLock = .FALSE.
+  obj%isDiagStored = .FALSE.
 END PROCEDURE csr_Deallocate
 
 END SUBMODULE ConstructorMethods
