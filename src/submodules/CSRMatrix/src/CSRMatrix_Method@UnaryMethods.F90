@@ -215,10 +215,8 @@ END PROCEDURE csrMat_Transpose
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getDiagonal1
-  INTEGER( I4B ) :: len0
-  CALL Reallocate( diag, obj%csr%nrow, idiag, obj%csr%nrow )
-  CALL GETDIA(obj%csr%nrow,obj%csr%ncol,0,obj%A,obj%csr%JA,obj%csr%IA,&
-    & len0,diag,idiag,INPUT( option=offset, default=0 ))
+  CALL getDiagonal( obj=obj%csr, A=obj%A, diag=diag, idiag=idiag, &
+    & offset=offset)
 END PROCEDURE csrMat_getDiagonal1
 
 !----------------------------------------------------------------------------
@@ -226,35 +224,7 @@ END PROCEDURE csrMat_getDiagonal1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getDiagonal2
-  INTEGER( I4B ) :: ii
-  !!
-  !!
-  !!
-  IF( ALLOCATED( obj%csr%idiag ) ) THEN
-    !!
-    CALL Reallocate( diag, obj%csr%nrow )
-    !!
-    DO ii = 1, SIZE( diag )
-      diag( ii ) = obj%A( obj%csr%idiag( ii ) )
-    END DO
-    !!
-  ELSE
-    !!
-    CALL Reallocate( diag, obj%csr%nrow, obj%csr%idiag, obj%csr%nrow )
-    !!
-    CALL GETDIA( &
-      & obj%csr%nrow, &
-      & obj%csr%ncol, &
-      & 0, &
-      & obj%A, &
-      & obj%csr%JA, &
-      & obj%csr%IA, &
-      & ii, &
-      & diag, &
-      & obj%csr%idiag, &
-      & 0 )
-  END IF
-  !!
+    CALL getDiagonal( obj=obj%csr, A=obj%A, diag=diag, offset=offset)
 END PROCEDURE csrMat_getDiagonal2
 
 !----------------------------------------------------------------------------
