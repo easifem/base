@@ -293,82 +293,7 @@ END INTERFACE CSRSpasityPointer
 PUBLIC :: CSRSpasityPointer
 
 !----------------------------------------------------------------------------
-!                                                          Shape@Constructor
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This function returns the shape of the sparse matrix
-!
-!# Introduction
-!
-! This function returns the shape of sparse matrix
-
-INTERFACE
-MODULE PURE FUNCTION csr_shape( obj ) RESULT( Ans )
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans( 2 )
-END FUNCTION csr_shape
-END INTERFACE
-
-INTERFACE Shape
-  MODULE PROCEDURE csr_shape
-END INTERFACE Shape
-
-PUBLIC :: Shape
-
-!----------------------------------------------------------------------------
-!                                                           Size@Constructor
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: This function returns the size of sparse matrix
-!
-!# Introduction
-!
-! This function returns the size of sparse matrix
-! If Dims equal to 1 then total number of rows are returned
-! If Dims is equal to 2 then total number of columns are return
-! If Dims is absent then nrow*ncol are returned
-
-INTERFACE
-MODULE PURE FUNCTION csr_size( obj, Dims ) RESULT( Ans )
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: Dims
-  INTEGER( I4B ) :: Ans
-END FUNCTION csr_size
-END INTERFACE
-
-INTERFACE Size
-  MODULE PROCEDURE csr_size
-END INTERFACE Size
-
-PUBLIC :: Size
-
-!----------------------------------------------------------------------------
-!                                                         getNNZ@Constructor
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Return the total number of non zero entry
-
-INTERFACE
-MODULE PURE FUNCTION csr_getNNZ( obj ) RESULT( Ans )
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans
-END FUNCTION csr_getNNZ
-END INTERFACE
-
-INTERFACE getNNZ
-  MODULE PROCEDURE csr_getNNZ
-END INTERFACE getNNZ
-
-PUBLIC :: getNNZ
-
-!----------------------------------------------------------------------------
-!                                                 Deallocate@Constructor
+!                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -411,7 +336,7 @@ END INTERFACE Display
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
-!                                                      setSparsity@setMethod
+!                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -435,7 +360,7 @@ END SUBROUTINE csr_setSparsity1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      setSparsity@setMethod
+!                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -469,7 +394,7 @@ END SUBROUTINE csr_setSparsity3
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      setSparsity@setMethod
+!                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -487,7 +412,7 @@ END SUBROUTINE csr_setSparsity4
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      setSparsity@setMethod
+!                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -518,5 +443,155 @@ INTERFACE setSparsity
 END INTERFACE setSparsity
 
 PUBLIC :: setSparsity
+
+
+!----------------------------------------------------------------------------
+!                                                          Shape@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	This function returns the shape of the sparse matrix
+!
+!# Introduction
+!
+! This function returns the shape of sparse matrix
+
+INTERFACE
+MODULE PURE FUNCTION csr_shape( obj ) RESULT( Ans )
+  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ) :: Ans( 2 )
+END FUNCTION csr_shape
+END INTERFACE
+
+INTERFACE Shape
+  MODULE PROCEDURE csr_shape
+END INTERFACE Shape
+
+PUBLIC :: Shape
+
+!----------------------------------------------------------------------------
+!                                                           Size@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: This function returns the size of sparse matrix
+!
+!# Introduction
+!
+! This function returns the size of sparse matrix
+! If Dims equal to 1 then total number of rows are returned
+! If Dims is equal to 2 then total number of columns are return
+! If Dims is absent then nrow*ncol are returned
+
+INTERFACE
+MODULE PURE FUNCTION csr_size( obj, Dims ) RESULT( Ans )
+  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: Dims
+  INTEGER( I4B ) :: Ans
+END FUNCTION csr_size
+END INTERFACE
+
+INTERFACE Size
+  MODULE PROCEDURE csr_size
+END INTERFACE Size
+
+PUBLIC :: Size
+
+!----------------------------------------------------------------------------
+!                                                        getNNZ@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	Return the total number of non zero entry
+
+INTERFACE
+MODULE PURE FUNCTION csr_getNNZ( obj ) RESULT( Ans )
+  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ) :: Ans
+END FUNCTION csr_getNNZ
+END INTERFACE
+
+INTERFACE getNNZ
+  MODULE PROCEDURE csr_getNNZ
+END INTERFACE getNNZ
+
+PUBLIC :: getNNZ
+
+!----------------------------------------------------------------------------
+!                                                         getDiagonal@Unary
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 15 July 2021
+! summary: Returns the diagonal of sparse matrix
+!
+!# Introduction
+!
+! This subroutine returns the diagonal entries of sparse matrix.
+!
+! - offset: containing the offset of the wanted diagonal the diagonal
+! extracted is the one corresponding to the entries `a(i,j)` with `j-i =
+! ioff`. thus `ioff = 0` means the main diagonal
+! - `diag` : real*8 array of length nrow containing the wanted diagonal. diag
+! contains the diagonal (`a(i,j),j-i = ioff`) as defined above.
+! - `idiag` = integer array of  length `len`, containing the poisitions in
+! the original arrays `a` and `ja` of the diagonal elements collected in
+! `diag`. A zero entry in `idiag(i)` means that there was no entry found in
+! row i belonging to the diagonal.
+
+INTERFACE
+MODULE SUBROUTINE csr_getDiagonal1( obj, A, diag, idiag, offset )
+  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
+  REAL( DFP ), INTENT( IN ) :: A( : )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: diag( : )
+  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: idiag( : )
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: offset
+END SUBROUTINE csr_getDiagonal1
+END INTERFACE
+
+INTERFACE getDiagonal
+  MODULE PROCEDURE csr_getDiagonal1
+END INTERFACE getDiagonal
+
+PUBLIC :: getDiagonal
+
+!----------------------------------------------------------------------------
+!                                                         getDiagonal@Unary
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 15 July 2021
+! summary: Returns the diagonal of sparse matrix
+!
+!# Introduction
+!
+! This subroutine returns the diagonal entries of sparse matrix.
+!
+! - offset: containing the offset of the wanted diagonal the diagonal
+! extracted is the one corresponding to the entries `a(i,j)` with `j-i =
+! ioff`. thus `ioff = 0` means the main diagonal
+! - `diag` : real*8 array of length nrow containing the wanted diagonal. diag
+! contains the diagonal (`a(i,j),j-i = ioff`) as defined above.
+! - `idiag` = integer array of  length `len`, containing the poisitions in
+! the original arrays `a` and `ja` of the diagonal elements collected in
+! `diag`. A zero entry in `idiag(i)` means that there was no entry found in
+! row i belonging to the diagonal.
+
+INTERFACE
+MODULE SUBROUTINE csr_getDiagonal2( obj, A, diag, offset )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+  REAL( DFP ), INTENT( IN ) :: A( : )
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: diag( : )
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: offset
+END SUBROUTINE csr_getDiagonal2
+END INTERFACE
+
+INTERFACE getDiagonal
+  MODULE PROCEDURE csr_getDiagonal2
+END INTERFACE getDiagonal
+
 
 END MODULE CSRSparsity_Method

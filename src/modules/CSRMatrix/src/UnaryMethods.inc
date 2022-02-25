@@ -347,9 +347,10 @@ END INTERFACE getDiagonal
 ! row i belonging to the diagonal.
 
 INTERFACE
-MODULE SUBROUTINE csrMat_getDiagonal2( obj, diag )
+MODULE SUBROUTINE csrMat_getDiagonal2( obj, diag, offset )
   TYPE( CSRMatrix_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: diag( : )
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: offset
 END SUBROUTINE csrMat_getDiagonal2
 END INTERFACE
 
