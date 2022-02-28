@@ -400,6 +400,17 @@ PUBLIC :: String
 !
 !----------------------------------------------------------------------------
 
+TYPE(String), PUBLIC, PARAMETER :: TypeString = String(raw=NULL())
+
+TYPE :: StringPointer_
+  CLASS(String), POINTER :: ptr => NULL()
+END TYPE StringPointer_
+PUBLIC :: StringPointer_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 ! internal parameters
 CHARACTER(kind=CK, len=26), PARAMETER :: UPPER_ALPHABET =  &
   & 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'

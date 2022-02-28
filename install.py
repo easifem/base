@@ -40,44 +40,44 @@ else:
     cmake_def += " -DUSE_METIS=ON"
     user_query = False
     if user_query:
-
+      ###################################
       opt = getOption("CMAKE_GENERATOR", [
                       "Unix Makefiles", "Ninja", "Ninja Multi-Config"])
       if(opt == " "):
           # opt = '"Unix Makefiles"'
           opt = '"Ninja"'
       cmake_def += " -G " + opt
-
+      ###################################
       opt = getOption("USE_PLPLOT", ["ON", "OFF"])
       if(opt == " "):
           opt = "ON"
       cmake_def += " -DUSE_PLPLOT=" + opt
-
+      ###################################
       opt = getOption("USE_BLAS95", ["ON", "OFF"])
       if(opt == " "):
           opt = "ON"
       cmake_def += " -DUSE_BLAS95=" + opt
-
+      ###################################
       opt = getOption("USE_LAPACK95", ["ON", "OFF"])
       if(opt == " "):
           opt = "ON"
       cmake_def += " -DUSE_LAPACK95=" + opt
-
+      ###################################
       opt = getOption("USE_OpenMP", ["ON", "OFF"])
       if(opt == " "):
           opt = "ON"
       cmake_def += " -DUSE_OpenMP=" + opt
-
+      ###################################
       opt = getOption("CMAKE_BUILD_TYPE", ["Release", "Debug"])
       if(opt == " "):
           opt = "Release"
       cmake_def += " -DCMAKE_BUILD_TYPE=" + opt
-
+      ###################################
       opt = getOption("BUILD_SHARED_LIBS", ["ON", "OFF"])
       if(opt == " "):
           opt = "ON"
       cmake_def += " -DBUILD_SHARED_LIBS=" + opt
-
+      ###################################
       opt = getOption("CMAKE_INSTALL_PREFIX", ["${PREFIX}"])
       if(opt == " "):
           opt = "${EASIFEM_BASE}"

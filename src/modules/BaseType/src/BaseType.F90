@@ -25,12 +25,6 @@ USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 
-TYPE(String), PUBLIC, PARAMETER :: TypeString = String(raw=NULL())
-TYPE :: StringPointer_
-  CLASS(String), POINTER :: ptr => NULL()
-END TYPE StringPointer_
-PUBLIC :: StringPointer_
-
 !----------------------------------------------------------------------------
 !                                                               BoundingBox_
 !----------------------------------------------------------------------------
@@ -371,7 +365,7 @@ END TYPE IterationData_
 PUBLIC :: IterationData_
 
 TYPE(IterationData_), PUBLIC, PARAMETER :: TypeIterationData = &
-  & IterationData_()
+  & IterationData_( header=NULL() )
 
 TYPE :: IterationDataPointer_
   CLASS(IterationData_), POINTER :: Ptr => NULL()
