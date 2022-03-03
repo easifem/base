@@ -23,7 +23,7 @@
 !
 ! This submodule of [[BoiundingBox_Method]] implements the method defined in the parent module
 
-SUBMODULE(BoundingBox_Method) Constructor
+SUBMODULE(BoundingBox_Method) ConstructorMethods
 USE Display_Method, ONLY: BlankLines
 IMPLICIT NONE
 CONTAINS
@@ -123,26 +123,21 @@ MODULE PROCEDURE BB_Deallocate
 END PROCEDURE BB_Deallocate
 
 !----------------------------------------------------------------------------
-!                                                                     Display
+!                                                               GetDiameter
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE display_obj
-  ! Define internal variable
-  INTEGER( I4B ) :: I
+MODULE PROCEDURE bbox_GetDiameter
+  REAL( DFP ) :: x1, x2, y1, y2, z1, z2
+  !!
+  x1 = .xmin. obj
+  x2 = .xmax. obj
+  y1 = .ymin. obj
+  y2 = .ymax. obj
+  z1 = .zmin. obj
+  z2 = .zmax. obj
+  !!
+  ans = MAXVAL( ABS([x1-x2, y1-y2, z1-z2]) )
+  !!
+END PROCEDURE bbox_GetDiameter
 
-  I = stdOut
-  IF( PRESENT( UnitNo ) ) I = UnitNo
-
-  WRITE( I, "(A)" ) "Type :: BoundingBox_"
-  CALL BlankLines( I )
-  WRITE( I, "(A, I4)" ) "NSD :: ", obj%NSD
-  WRITE( I, "(A, G15.7)" ) "Xmin :: ", .Xmin. obj
-  WRITE( I, "(A, G15.7)" ) "Xmax :: ", .Xmax. obj
-  WRITE( I, "(A, G15.7)" ) "Ymin :: ", .Ymin. obj
-  WRITE( I, "(A, G15.7)" ) "Ymax :: ", .Ymax. obj
-  WRITE( I, "(A, G15.7)" ) "Zmin :: ", .Zmin. obj
-  WRITE( I, "(A, G15.7)" ) "Zmax :: ", .Zmax. obj
-
-END PROCEDURE display_obj
-
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods
