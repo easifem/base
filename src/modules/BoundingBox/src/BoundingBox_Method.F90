@@ -228,7 +228,7 @@ END INTERFACE BoundingBox
 PUBLIC :: BoundingBox
 
 !----------------------------------------------------------------------------
-!                                             BoundingBox_Pointer@Constructor
+!                                            BoundingBox_Pointer@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -867,5 +867,30 @@ INTERFACE OPERATOR( .Nptrs. )
 END INTERFACE
 
 PUBLIC :: OPERATOR( .Nptrs. )
+
+!----------------------------------------------------------------------------
+!                                                    GetDiameter@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 March 2022
+! summary: Returns the diameter of the box
+
+INTERFACE
+MODULE PURE FUNCTION bbox_GetDiameter( obj ) RESULT( ans )
+  CLASS( BoundingBox_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ) :: ans
+END FUNCTION bbox_GetDiameter
+END INTERFACE
+
+INTERFACE GetDiameter
+  MODULE PROCEDURE bbox_GetDiameter
+END INTERFACE GetDiameter
+
+PUBLIC :: GetDiameter
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE BoundingBox_Method
