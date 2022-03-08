@@ -24,27 +24,24 @@ CONTAINS
 !                                                            Deallocate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE fe_deallocate
-IF (ALLOCATED(obj%R1)) DEALLOCATE (obj%R1)
-IF (ALLOCATED(obj%R2)) DEALLOCATE (obj%R2)
-IF (ALLOCATED(obj%R3)) DEALLOCATE (obj%R3)
-IF (ALLOCATED(obj%R4)) DEALLOCATE (obj%R4)
-obj%R0 = 0.0_DFP
-obj%DefineOn = 0
-obj%VarType = 0
-obj%Rank = 0
-obj%CaseType = 0
-END PROCEDURE fe_deallocate
+MODULE PROCEDURE fevar_Deallocate
+  IF (ALLOCATED(obj%val)) DEALLOCATE (obj%val)
+  obj%s = 0
+  obj%DefineOn = 0
+  obj%VarType = 0
+  obj%Rank = 0
+END PROCEDURE fevar_Deallocate
+
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Scalar_Constant
-obj%R0 = Val
-obj%DefineOn = Nodal
-obj%Rank = Scalar
-obj%VarType = Constant
-obj%CaseType = 1
+  obj%val = [val]
+  obj%s = 0
+  obj%defineon = NODAL
+  obj%rank = SCALAR
+  obj%vartype = CONSTANT
 END PROCEDURE Nodal_Scalar_Constant
 
 !----------------------------------------------------------------------------
@@ -52,23 +49,35 @@ END PROCEDURE Nodal_Scalar_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Scalar_Space
-obj%R1 = Val
-obj%DefineOn = Nodal
-obj%Rank = Scalar
-obj%VarType = Space
-obj%CaseType = 2
+  obj%val = val
+  obj%s(1) = SIZE(val)
+  obj%defineon = NODAL
+  obj%rank = SCALAR
+  obj%vartype = SPACE
 END PROCEDURE Nodal_Scalar_Space
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Nodal_Scalar_Time
+  obj%val = val
+  obj%s(1) = SIZE(val)
+  obj%defineon = NODAL
+  obj%rank = SCALAR
+  obj%vartype = TIME
+END PROCEDURE Nodal_Scalar_Time
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Nodal_Scalar_Spacetime
-obj%R2 = Val
-obj%DefineOn = Nodal
-obj%Rank = Scalar
-obj%VarType = Spacetime
-obj%CaseType = 3
+  obj%val = RESHAPE(val, [SIZE(val)])
+  obj%s(1:2) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = SCALAR
+  obj%vartype = SPACETIME
 END PROCEDURE Nodal_Scalar_Spacetime
 
 !----------------------------------------------------------------------------
@@ -76,11 +85,11 @@ END PROCEDURE Nodal_Scalar_Spacetime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Vector_Constant
-obj%R1 = Val
-obj%DefineOn = Nodal
-obj%Rank = Vector
-obj%VarType = Constant
-obj%CaseType = 4
+  obj%val = val
+  obj%s(1:1) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = VECTOR
+  obj%vartype = CONSTANT
 END PROCEDURE Nodal_Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -88,23 +97,35 @@ END PROCEDURE Nodal_Vector_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Vector_Space
-obj%R2 = Val
-obj%DefineOn = Nodal
-obj%Rank = Vector
-obj%VarType = Space
-obj%CaseType = 5
+  obj%val = RESHAPE(val, [SIZE(val)])
+  obj%s(1:2) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = VECTOR
+  obj%vartype = SPACE
 END PROCEDURE Nodal_Vector_Space
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Nodal_Vector_Time
+  obj%val = RESHAPE(val, [SIZE(val)])
+  obj%s(1:2) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = VECTOR
+  obj%vartype = TIME
+END PROCEDURE Nodal_Vector_Time
+
+!----------------------------------------------------------------------------
+!                                                             NodalVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Nodal_Vector_Spacetime
-obj%R3 = Val
-obj%DefineOn = Nodal
-obj%Rank = Vector
-obj%VarType = Spacetime
-obj%CaseType = 6
+  obj%val = RESHAPE(val, [SIZE(val)])
+  obj%s(1:3) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = VECTOR
+  obj%vartype = SPACETIME
 END PROCEDURE Nodal_Vector_Spacetime
 
 !----------------------------------------------------------------------------
@@ -112,11 +133,11 @@ END PROCEDURE Nodal_Vector_Spacetime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Matrix_Constant
-obj%R2 = Val
-obj%DefineOn = Nodal
-obj%Rank = Matrix
-obj%VarType = Constant
-obj%CaseType = 7
+  obj%val = RESHAPE(val, [SIZE(val)])
+  obj%s(1:2) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = MATRIX
+  obj%vartype = CONSTANT
 END PROCEDURE Nodal_Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -124,131 +145,179 @@ END PROCEDURE Nodal_Matrix_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Nodal_Matrix_Space
-obj%R3 = Val
-obj%DefineOn = Nodal
-obj%Rank = Matrix
-obj%VarType = Space
-obj%CaseType = 8
+  obj%val = RESHAPE(val, [SIZE(val)])
+  obj%s(1:3) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = MATRIX
+  obj%vartype = SPACE
 END PROCEDURE Nodal_Matrix_Space
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Nodal_Matrix_Spacetime
-obj%R4 = Val
-obj%DefineOn = Nodal
-obj%Rank = Matrix
-obj%VarType = Spacetime
-obj%CaseType = 9
-END PROCEDURE Nodal_Matrix_Spacetime
+MODULE PROCEDURE Nodal_Matrix_Time
+  obj%val = RESHAPE(val, [SIZE(val)])
+  obj%s(1:3) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = MATRIX
+  obj%vartype = TIME
+END PROCEDURE Nodal_Matrix_Time
 
 !----------------------------------------------------------------------------
 !                                                             NodalVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Nodal_Matrix_Spacetime
+  obj%val = RESHAPE(val, [SIZE(val)])
+  obj%s(1:4) = SHAPE(val)
+  obj%defineon = NODAL
+  obj%rank = MATRIX
+  obj%vartype = SPACETIME
+END PROCEDURE Nodal_Matrix_Spacetime
+
+!----------------------------------------------------------------------------
+!                                                        QuadratureVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Quadrature_Scalar_Constant
-obj%R0 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Scalar
-obj%VarType = Constant
-obj%CaseType = 10
+  obj%val = [val]
+  obj%s = 0
+  obj%defineon = Quadrature
+  obj%rank = SCALAR
+  obj%vartype = CONSTANT
 END PROCEDURE Quadrature_Scalar_Constant
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                        QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_Space
-obj%R1 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Scalar
-obj%VarType = Space
-obj%CaseType = 11
+obj%val = val
+obj%s(1) = SIZE(val)
+obj%defineon = Quadrature
+obj%rank = SCALAR
+obj%vartype = SPACE
 END PROCEDURE Quadrature_Scalar_Space
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                        QuadratureVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Quadrature_Scalar_Time
+obj%val = val
+obj%s(1) = SIZE(val)
+obj%defineon = Quadrature
+obj%rank = SCALAR
+obj%vartype = TIME
+END PROCEDURE Quadrature_Scalar_Time
+
+!----------------------------------------------------------------------------
+!                                                        QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Scalar_Spacetime
-obj%R2 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Scalar
-obj%VarType = Spacetime
-obj%CaseType = 12
+obj%val = reshape(val, [SIZE(val)])
+obj%s(1:2) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = SCALAR
+obj%vartype = SPACETIME
 END PROCEDURE Quadrature_Scalar_Spacetime
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                        QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Constant
-obj%R1 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Vector
-obj%VarType = Constant
-obj%CaseType = 13
+obj%val = val
+obj%s(1:1) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = VECTOR
+obj%vartype = CONSTANT
 END PROCEDURE Quadrature_Vector_Constant
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                        QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Space
-obj%R2 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Vector
-obj%VarType = Space
-obj%CaseType = 14
+obj%val = RESHAPE(val, [SIZE(val)])
+obj%s(1:2) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = VECTOR
+obj%vartype = SPACE
 END PROCEDURE Quadrature_Vector_Space
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                        QuadratureVariable
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Quadrature_Vector_Time
+obj%val = RESHAPE(val, [SIZE(val)])
+obj%s(1:2) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = VECTOR
+obj%vartype = TIME
+END PROCEDURE Quadrature_Vector_Time
+
+!----------------------------------------------------------------------------
+!                                                        QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Vector_Spacetime
-obj%R3 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Vector
-obj%VarType = Spacetime
-obj%CaseType = 15
+obj%val = RESHAPE(val, [SIZE(val)])
+obj%s(1:3) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = VECTOR
+obj%vartype = SPACETIME
 END PROCEDURE Quadrature_Vector_Spacetime
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                        QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Constant
-obj%R2 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Matrix
-obj%VarType = Constant
-obj%CaseType = 16
+obj%val = RESHAPE(val, [SIZE(val)])
+obj%s(1:2) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = MATRIX
+obj%vartype = CONSTANT
 END PROCEDURE Quadrature_Matrix_Constant
 
 !----------------------------------------------------------------------------
-!                                                         QuadratureVariable
+!                                                        QuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Quadrature_Matrix_Space
-obj%R3 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Matrix
-obj%VarType = Space
-obj%CaseType = 17
+obj%val = RESHAPE(val, [SIZE(val)])
+obj%s(1:3) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = MATRIX
+obj%vartype = SPACE
 END PROCEDURE Quadrature_Matrix_Space
 
 !----------------------------------------------------------------------------
 !                                                        QuadratureVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Quadrature_Matrix_Time
+obj%val = RESHAPE(val, [SIZE(val)])
+obj%s(1:3) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = MATRIX
+obj%vartype = TIME
+END PROCEDURE Quadrature_Matrix_Time
+
+!----------------------------------------------------------------------------
+!                                                        QuadratureVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Quadrature_Matrix_Spacetime
-obj%R4 = Val
-obj%DefineOn = Quadrature
-obj%Rank = Matrix
-obj%VarType = Spacetime
-obj%CaseType = 18
+obj%val = RESHAPE(val, [SIZE(val)])
+obj%s(1:4) = SHAPE(val)
+obj%defineon = Quadrature
+obj%rank = MATRIX
+obj%vartype = SPACETIME
 END PROCEDURE Quadrature_Matrix_Spacetime
 
 END SUBMODULE ConstructorMethods
