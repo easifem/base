@@ -23,28 +23,22 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE fevar_Size
-SELECT CASE (obj%rank)
-CASE (Scalar)
-  ans = 1
-CASE (Vector)
-  SELECT CASE (obj%vartype)
-  CASE (Constant)
-    ans = SIZE(obj%r1)
-  CASE (Space)
-    ans = SIZE(obj%r2, 1)
-  CASE (SpaceTime)
-    ans = SIZE(obj%r3, 1)
-  END SELECT
-CASE (Matrix)
-  SELECT CASE (obj%vartype)
-  CASE (Constant)
-    ans = SIZE(obj%r2, Dim)
-  CASE (Space)
-    ans = SIZE(obj%r3, Dim)
-  CASE (SpaceTime)
-    ans = SIZE(obj%r4, Dim)
-  END SELECT
-END SELECT
+  !!
+  IF( PRESENT( dim ) ) THEN
+    ans = obj%s(dim)
+  ELSE
+    !!
+    SELECT CASE (obj%rank)
+    CASE (Scalar)
+      ans = 1
+    CASE (Vector)
+      ans = obj%s(1)
+    CASE (Matrix)
+      ans = obj%s(1)*obj%s(2)
+    END SELECT
+    !!
+  END IF
+  !!
 END PROCEDURE fevar_Size
 
 !----------------------------------------------------------------------------
@@ -57,28 +51,28 @@ CASE (Scalar)
   SELECT CASE (obj%vartype)
   CASE (Constant)
     ans = [1]
-  CASE (Space)
-    ans = SHAPE(obj%r1)
+  CASE (Space, Time)
+    ans = obj%s(1:1)
   CASE (SpaceTime)
-    ans = SHAPE(obj%r2)
+    ans = obj%s(1:2)
   END SELECT
 CASE (Vector)
   SELECT CASE (obj%vartype)
   CASE (Constant)
-    ans = SHAPE(obj%r1)
-  CASE (Space)
-    ans = SHAPE(obj%r2)
+    ans = obj%s(1:1)
+  CASE (Space, Time)
+    ans = obj%s(1:2)
   CASE (SpaceTime)
-    ans = SHAPE(obj%r3)
+    ans = obj%s(1:3)
   END SELECT
 CASE (Matrix)
   SELECT CASE (obj%vartype)
   CASE (Constant)
-    ans = SHAPE(obj%r2)
-  CASE (Space)
-    ans = SHAPE(obj%r3)
+    ans = obj%s(1:2)
+  CASE (Space, Time)
+    ans = obj%s(1:3)
   CASE (SpaceTime)
-    ans = SHAPE(obj%r4)
+    ans = obj%s(1:4)
   END SELECT
 END SELECT
 END PROCEDURE fevar_Shape
@@ -136,7 +130,7 @@ END PROCEDURE fevar_isQuadratureVariable
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Constant
-val = obj%r0
+val = obj%val(1)
 END PROCEDURE Scalar_Constant
 
 !----------------------------------------------------------------------------
@@ -144,15 +138,23 @@ END PROCEDURE Scalar_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Scalar_Space
-val = obj%r1
+val = obj%val
 END PROCEDURE Scalar_Space
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Scalar_Time
+val = obj%val
+END PROCEDURE Scalar_Time
+
+!----------------------------------------------------------------------------
+!                                                            getNodalvalues
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Scalar_SpaceTime
-val = obj%r2
+val = reshape(obj%val, obj%s(1:2))
 END PROCEDURE Scalar_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -160,7 +162,7 @@ END PROCEDURE Scalar_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Constant
-val = obj%r1
+val = obj%val
 END PROCEDURE Vector_Constant
 
 !----------------------------------------------------------------------------
@@ -168,15 +170,23 @@ END PROCEDURE Vector_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Vector_Space
-val = obj%r2
+val = reshape(obj%val, obj%s(1:2))
 END PROCEDURE Vector_Space
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Vector_Time
+val = reshape(obj%val, obj%s(1:2))
+END PROCEDURE Vector_Time
+
+!----------------------------------------------------------------------------
+!                                                            getNodalvalues
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Vector_SpaceTime
-val = obj%r3
+val = reshape(obj%val, obj%s(1:3))
 END PROCEDURE Vector_SpaceTime
 
 !----------------------------------------------------------------------------
@@ -184,7 +194,7 @@ END PROCEDURE Vector_SpaceTime
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Constant
-val = obj%r2
+val = reshape(obj%val, obj%s(1:2))
 END PROCEDURE Matrix_Constant
 
 !----------------------------------------------------------------------------
@@ -192,15 +202,23 @@ END PROCEDURE Matrix_Constant
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Matrix_Space
-val = obj%r3
+val = reshape(obj%val, obj%s(1:3))
 END PROCEDURE Matrix_Space
 
 !----------------------------------------------------------------------------
 !                                                            getNodalvalues
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Matrix_Time
+val = reshape(obj%val, obj%s(1:3))
+END PROCEDURE Matrix_Time
+
+!----------------------------------------------------------------------------
+!                                                            getNodalvalues
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Matrix_SpaceTime
-val = obj%r4
+val = reshape(obj%val, obj%s(1:4))
 END PROCEDURE Matrix_SpaceTime
 
 END SUBMODULE GetMethods
