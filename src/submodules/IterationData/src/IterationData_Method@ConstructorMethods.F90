@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(IterationData_Method) Constructor
+SUBMODULE(IterationData_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -42,7 +42,7 @@ MODULE PROCEDURE iterdata_Initiate
 END PROCEDURE iterdata_Initiate
 
 !----------------------------------------------------------------------------
-!                                                           Deallocate
+!                                                                Deallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE iterdata_Deallocate
@@ -60,30 +60,120 @@ MODULE PROCEDURE iterdata_Deallocate
   obj%Converged = .FALSE.
   obj%TimeAtStart = 0.0
   obj%TimeAtEnd = 0.0
+  IF( allocated( obj%convergenceData ) ) DEALLOCATE( obj%convergenceData )
+  IF( allocated( obj%header ) ) DEALLOCATE( obj%header )
 END PROCEDURE iterdata_Deallocate
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE iterdata_isConverged
-  ! SELECT CASE( obj%ConvergenceType )
-  ! CASE( RelativeConvergence )
-  !   IF( obj%ErrorAtEnd .LE. obj%Tolerance * obj%ErrorAtStart ) THEN
-  !     Ans = .TRUE.
-  !   ELSE
-  !     Ans = .FALSE.
-  !   END IF
-  ! CASE( AbsoluteConvergence )
-  !   IF( obj%ErrorAtEnd .LE. obj%Tolerance ) THEN
-  !     Ans = .TRUE.
-  !   ELSE
-  !     Ans = .FALSE.
-  !   END IF
-  ! END SELECT
+  LOGICAL( LGT ) :: l1, l2
+  !!
+  SELECT CASE( obj%convergenceIn )
+  !!
+  !! Convergence in residual
+  !!
+  CASE( ConvergenceInRes )
+    ! !!
+    IF( obj%convergenceType .EQ. RelativeConvergence ) THEN
+      !!
+      ans = checkConvergence( &
+        & errorAtStart=obj%residualError0, &
+        & errorAtEnd=obj%residualError, &
+        & tolerance=obj%residualTolerance )
+      !!
+    ELSE
+      !!
+      ans = checkConvergence( &
+        & errorAtStart=1.0_DFP, &
+        & errorAtEnd=obj%residualError, &
+        & tolerance=obj%residualTolerance )
+      !!
+    END IF
+  !!
+  !! Convergence in sol
+  !!
+  CASE( ConvergenceInSol )
+    !!
+    IF( obj%convergenceType .EQ. RelativeConvergence ) THEN
+      !!
+      ans = checkConvergence( &
+        & errorAtStart=obj%solutionError0, &
+        & errorAtEnd=obj%solutionError, &
+        & tolerance=obj%solutionTolerance )
+      !!
+    ELSE
+      !!
+      ans = checkConvergence( &
+        & errorAtStart=1.0_DFP, &
+        & errorAtEnd=obj%solutionError, &
+        & tolerance=obj%solutionTolerance )
+      !!
+    END IF
+  !!
+  !! Convergence in both solution and residual
+  !!
+  CASE( ConvergenceInResSol )
+    !!
+    IF( obj%convergenceType .EQ. RelativeConvergence ) THEN
+      !!
+      ans = checkConvergence( &
+        & errorAtStart=obj%residualError0, &
+        & errorAtEnd=obj%residualError, &
+        & tolerance=obj%residualTolerance ) &
+        & .AND. &
+        & checkConvergence( &
+        & errorAtStart=obj%solutionError0, &
+        & errorAtEnd=obj%solutionError, &
+        & tolerance=obj%solutionTolerance )
+      !!
+    ELSE
+      !!
+      ans = checkConvergence( &
+        & errorAtStart=1.0_DFP, &
+        & errorAtEnd=obj%residualError, &
+        & tolerance=obj%residualTolerance ) &
+        & .AND. &
+        & checkConvergence( &
+        & errorAtStart=1.0_DFP, &
+        & errorAtEnd=obj%solutionError, &
+        & tolerance=obj%solutionTolerance )
+      !!
+    END IF
+  !!
+  !!
+  !!
+  END SELECT
+  !!
+  !!
+  !!
 END PROCEDURE iterdata_isConverged
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE Constructor
+PURE FUNCTION checkConvergence( errorAtStart, errorAtEnd, tolerance ) &
+  & RESULT( ans )
+  !!
+  REAL( DFP ), INTENT( IN ) :: errorAtStart
+  REAL( DFP ), INTENT( IN ) :: errorAtEnd
+  REAL( DFP ), INTENT( IN ) :: tolerance
+  LOGICAL( LGT ) :: ans
+  !!
+  !!
+  IF( errorAtEnd .LE. tolerance * errorAtStart ) THEN
+    Ans = .TRUE.
+  ELSE
+    Ans = .FALSE.
+  END IF
+  !!
+END FUNCTION checkConvergence
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END SUBMODULE ConstructorMethods
