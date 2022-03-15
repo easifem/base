@@ -19,7 +19,7 @@
 ! date: 	17 March 2021
 ! summary: Methods for pull back of rank2 tensor
 
-SUBMODULE(Rank2Tensor_Method) PushForward
+SUBMODULE(Rank2Tensor_Method) PushForwardMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -87,4 +87,4 @@ MODULE PROCEDURE PushForward_vec
   END SELECT
 END PROCEDURE PushForward_vec
 
-END SUBMODULE PushForward
+END SUBMODULE PushForwardMethods

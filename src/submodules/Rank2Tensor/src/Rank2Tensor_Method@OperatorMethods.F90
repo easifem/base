@@ -19,7 +19,7 @@
 ! date: 	17 March 2021
 ! summary: 	This subroutine contains algebraic operator
 
-SUBMODULE(Rank2Tensor_Method) Operator
+SUBMODULE(Rank2Tensor_Method) OperatorMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -160,4 +160,4 @@ END PROCEDURE vec_matmul_obj
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE Operator
+END SUBMODULE OperatorMethods

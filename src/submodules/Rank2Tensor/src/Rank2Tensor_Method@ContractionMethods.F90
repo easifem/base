@@ -19,8 +19,6 @@
 ! date: 	17 March 2021
 ! summary: 	Submodules for computing the contraction
 
-SUBMODULE(Rank2Tensor_Method) Contraction
-USE BaseMethod
 #define T_11 T( 1, 1 )
 #define T_12 T( 1, 2 )
 #define T_13 T( 1, 3 )
@@ -30,6 +28,9 @@ USE BaseMethod
 #define T_31 T( 3, 1 )
 #define T_32 T( 3, 2 )
 #define T_33 T( 3, 3 )
+
+SUBMODULE(Rank2Tensor_Method) ContractionMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -85,4 +86,4 @@ END PROCEDURE voigt_r2_contract_voigt_r2
 #undef T_31
 #undef T_32
 #undef T_33
-END SUBMODULE Contraction
+END SUBMODULE ContractionMethods

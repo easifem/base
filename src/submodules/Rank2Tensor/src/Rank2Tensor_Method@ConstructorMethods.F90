@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Rank2Tensor_Method) Constructor
+SUBMODULE(Rank2Tensor_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -128,21 +128,21 @@ END PROCEDURE identity_rank2
 !                                                                       ones
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE ones_rank2
+MODULE PROCEDURE rank2_getOnes
   REAL( DFP ) :: T( 3, 3 )
   T = 1.0_DFP
   CALL Initiate( obj=obj, Mat=T, isSym=.TRUE. )
-END PROCEDURE ones_rank2
+END PROCEDURE rank2_getOnes
 
 !----------------------------------------------------------------------------
-!                                                                       zeros
+!                                                                      zeros
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE zeros_rank2
+MODULE PROCEDURE rank2_getZeros
   REAL( DFP ) :: T( 3, 3 )
   T = 0.0_DFP
   CALL Initiate( obj=obj, Mat=T, isSym=.TRUE. )
-END PROCEDURE zeros_rank2
+END PROCEDURE rank2_getZeros
 
 !----------------------------------------------------------------------------
 !                                                             IsotropicTensor
@@ -272,4 +272,4 @@ END PROCEDURE C_constructor_1
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods
