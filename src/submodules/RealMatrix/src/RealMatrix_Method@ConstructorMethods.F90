@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE (RealMatrix_Method) Constructor
+SUBMODULE (RealMatrix_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -146,125 +146,20 @@ END PROCEDURE Constructor1
 
 MODULE PROCEDURE realMat_eye1
   INTEGER( I4B ) :: i
-  Ans = 0_I4B
-  DO i = 1, m
-    Ans( i, i ) = 1
-  END DO
-END PROCEDURE realMat_eye1
-
-!----------------------------------------------------------------------------
-!                                                                        Eye
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realMat_eye2
-  INTEGER( I4B ) :: i
-  Ans = 0.0
-  DO i = 1, m
-    Ans( i, i ) = 1.0
-  END DO
-END PROCEDURE realMat_eye2
-
-!----------------------------------------------------------------------------
-!                                                                        Eye
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realMat_eye3
-  INTEGER( I4B ) :: i
   CALL Initiate( Ans, [m,m] )
   DO i = 1, m
     Ans%Val ( i, i ) = 1.0
   END DO
-END PROCEDURE realMat_eye3
-
-!----------------------------------------------------------------------------
-!                                                                        Eye
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realMat_eye4
-  INTEGER( I4B ) :: i
-  Ans = 0.0
-  DO i = 1, m
-    Ans( i, i ) = 1.0
-  END DO
-END PROCEDURE realMat_eye4
-
-!----------------------------------------------------------------------------
-!                                                                        Eye
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realMat_eye5
-  INTEGER( I4B ) :: i
-  Ans = 0.0
-  DO i = 1, m
-    Ans( i, i ) = 1.0
-  END DO
-END PROCEDURE realMat_eye5
-
-!----------------------------------------------------------------------------
-!                                                                    Convert
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE convert_doftonodes
-  INTEGER( I4B ) :: m, inode, idof, i, j
-  INTEGER( I4B ), ALLOCATABLE :: T( :, : )
-  !> main
-  m = nns*tdof
-  ALLOCATE( T( m, m ) )
-  T = Eye( m, TypeInt )
-  SELECT CASE( Conversion )
-  CASE( DofToNodes )
-    DO inode  = 1, nns
-      DO idof = 1, tdof
-        j = (inode - 1)* tdof + idof
-        T( j, j ) = 0
-        i = (idof - 1)*nns + inode
-        T( i, j ) = 1
-      END DO
-    END DO
-  CASE( NodesToDOF )
-    DO idof = 1, tdof
-      DO inode  = 1, nns
-        j = (idof - 1)* nns + inode
-        T( j, j ) = 0
-        i = (inode - 1)* tdof + idof
-        T( i, j ) = 1
-      END DO
-    END DO
-  END SELECT
-  to = MATMUL( TRANSPOSE( T ), MATMUL( from, T ) )
-  DEALLOCATE( T )
-END PROCEDURE convert_doftonodes
+END PROCEDURE realMat_eye1
 
 !----------------------------------------------------------------------------
 !                                                                 Convert
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realmat_convert_doftonodes
+MODULE PROCEDURE realmat_convert_1
   CALL Convert( From=From%val, To=To%val, Conversion=Conversion, nns=nns, &
     & tdof=tdof )
-END PROCEDURE realmat_convert_doftonodes
-
-!----------------------------------------------------------------------------
-!                                                                   Convert
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE convert_mat4_to_mat2
-  !   Define internal variables
-  INTEGER( I4B ) :: a, b, I( 4 ), r1, r2, c1, c2
-  I = SHAPE( From )
-  CALL Reallocate( To, I(1)*I(3), I(2)*I(4) )
-  c1 = 0; c2 = 0
-  DO b = 1, I(4)
-    c1 = c2 + 1
-    c2 = b * I(2)
-    r1 = 0; r2 = 0
-    DO a = 1, I(3)
-      r1 = r2 + 1;
-      r2 = a * I(1)
-      To( r1 : r2, c1 : c2 ) = From( :, :, a, b )
-    END DO
-  END DO
-END PROCEDURE convert_mat4_to_mat2
+END PROCEDURE realmat_convert_1
 
 !----------------------------------------------------------------------------
 !                                                                       Sym
@@ -303,18 +198,16 @@ END PROCEDURE SkewSym_obj
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_make_diag_copy1
-  INTEGER( I4B ) :: I, S( 2 )
+  INTEGER( I4B ) :: I, s( 2 )
   REAL( DFP ), ALLOCATABLE :: DummyMat2( :, : )
 
-  IF( ALLOCATED( Mat ) ) THEN
-    S = SHAPE( Mat )
-    DummyMat2 = Mat
-    DEALLOCATE( Mat )
-    ALLOCATE( Mat( S( 1 )*nCopy, S( 2 )*nCopy ) )
-    Mat = 0.0_DFP
+  IF( ALLOCATED( mat ) ) THEN
+    s = SHAPE( mat )
+    DummyMat2 = mat
+    CALL Reallocate( mat, s( 1 )*nCopy, s( 2 )*nCopy )
     DO I = 1, nCopy
-        Mat( ( I - 1 ) * S( 1 ) + 1 : I * S( 1 ), &
-        & ( I - 1 ) * S( 2 ) + 1 : I * S( 2 ) ) &
+        mat( ( I - 1 ) * s( 1 ) + 1 : I * s( 1 ), &
+        & ( I - 1 ) * s( 2 ) + 1 : I * s( 2 ) ) &
         & = DummyMat2( :, : )
     END DO
     DEALLOCATE( DummyMat2 )
@@ -399,4 +292,4 @@ END PROCEDURE TestMatrix
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods

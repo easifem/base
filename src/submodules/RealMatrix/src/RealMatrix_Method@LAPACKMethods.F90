@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealMatrix_Method) LAPACK
+SUBMODULE(RealMatrix_Method) LAPACKMethods
 USE BaseMethod
 IMPLICIT NONE
 
@@ -187,4 +187,4 @@ MODULE PROCEDURE eig_jacobi_method
   ! END FUNCTION lower_triangle
 END PROCEDURE eig_jacobi_method
 
-END SUBMODULE LAPACK
+END SUBMODULE LAPACKMethods

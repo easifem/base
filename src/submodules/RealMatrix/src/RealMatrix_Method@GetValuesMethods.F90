@@ -1,82 +1,107 @@
-SUBMODULE(RealMatrix_Method) getValues
+! This program is a part of EASIFEM library
+! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
+SUBMODULE(RealMatrix_Method) GetValuesMethods
 USE BaseMethod
 IMPLICIT NONE
-
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                ArrayValues
+!                                                                Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValues_Real
+MODULE PROCEDURE realmat_get1
   Ans = obj%Val
-END PROCEDURE f_getValues_Real
+END PROCEDURE realmat_get1
 
 !----------------------------------------------------------------------------
-!                                                                ArrayValues
+!                                                                Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getSectionValues_Real
+MODULE PROCEDURE realmat_get2
   Ans = obj%Val( RIndx, CIndx )
-END PROCEDURE f_getSectionValues_Real
+END PROCEDURE realmat_get2
 
 !----------------------------------------------------------------------------
-!                                                                ArrayValues
+!                                                                Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValuesFromTriplet_Real
+MODULE PROCEDURE realmat_get3
 #define Indx iStart:iEnd:Stride
   Ans = obj%Val( Indx, Indx )
 #undef Indx
-END PROCEDURE f_getValuesFromTriplet_Real
+END PROCEDURE realmat_get3
 
 !----------------------------------------------------------------------------
-!                                                                ArrayValues
+!                                                                       Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValues_self
+MODULE PROCEDURE realmat_get4
   Ans%Val = obj%Val
   CALL SetTotalDimension( Ans, 2_I4B )
-END PROCEDURE f_getValues_self
+END PROCEDURE realmat_get4
 
 !----------------------------------------------------------------------------
-!                                                               ArrrayValues
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getSectionValues_Self
+MODULE PROCEDURE realmat_get5
   Ans%Val = obj%Val( RIndx, CIndx )
   CALL SetTotalDimension( Ans, 2_I4B )
-END PROCEDURE f_getSectionValues_Self
+END PROCEDURE realmat_get5
 
 !----------------------------------------------------------------------------
-!                                                                ArrayValues
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValuesFromTriplet_self
+MODULE PROCEDURE realmat_get6
 #define Indx iStart:iEnd:Stride
   Ans%Val= obj%Val( Indx, Indx )
 #undef Indx
   CALL SetTotalDimension( Ans, 2_I4B )
-END PROCEDURE f_getValuesFromTriplet_self
+END PROCEDURE realmat_get6
 
 !----------------------------------------------------------------------------
-!                                                                 ArrayValues
+!                                                                      Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValues_1
+MODULE PROCEDURE realmat_get7
   INTEGER( I4B ) :: s( 2 ), i, j, r1, r2, c1, c2
   INTEGER( I4B ), ALLOCATABLE :: rc( :, : )
-
-  s = SHAPE( obj ); ALLOCATE( rc( 0 : 2, 0 : ( s( 1 ) * s( 2 ) ) ) ); rc = 0
+  !!
+  !! main
+  !!
+  s = SHAPE( obj )
+  ALLOCATE( rc( 0 : 2, 0 : ( s( 1 ) * s( 2 ) ) ) )
+  rc = 0
+  !!
   DO j = 1, s( 2 )
     DO i = 1, s( 1 )
       rc( 1:2, i+( j-1 )*s( 1 ) ) = SHAPE( obj( i, j ) )
     END DO
   END DO
+  !!
   i = MAXVAL( SUM( RESHAPE( rc( 1, 1: ), SHAPE( obj ) ), 1 ) )
   j = MAXVAL( SUM( RESHAPE( rc( 2, 1: ), SHAPE( obj ) ), 2 ) )
+  !!
   ALLOCATE( Ans( i, j ) ); Ans = 0.0_DFP
+  !!
   c1 = 0; c2 = 0
+  !!
   DO j = 1, s( 2 )
     c1 = 1 + c2
     c2 = c1 + rc( 2, j ) - 1
@@ -87,49 +112,50 @@ MODULE PROCEDURE f_getValues_1
       Ans( r1:r2, c1:c2 ) = obj( i, j )%Val
     END DO
   END DO
-END PROCEDURE f_getValues_1
+  !!
+END PROCEDURE realmat_get7
 
 !----------------------------------------------------------------------------
-!                                                                 getValues
+!                                                                        Get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getValues_2
-  Ans%Val = ArrayValues( obj, TypeDFP )
+MODULE PROCEDURE realmat_get8
+  Ans%Val = Get( obj, TypeDFP )
   CALL setTotalDimension( Ans, 2_I4B )
-END PROCEDURE f_getValues_2
+END PROCEDURE realmat_get8
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Copy_obj_to_Val
+MODULE PROCEDURE realmat_copy1
   To = From%Val
-END PROCEDURE Copy_obj_to_Val
+END PROCEDURE realmat_copy1
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Copy_obj_to_obj
+MODULE PROCEDURE realmat_copy2
   To%Val = From%Val
   CALL SetTotalDimension( To, 2_I4B )
-END PROCEDURE Copy_obj_to_obj
+END PROCEDURE realmat_copy2
 
 !----------------------------------------------------------------------------
 !                                                                       Copy
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Copy_Val_to_obj
+MODULE PROCEDURE realmat_copy3
   To%Val = From
   CALL SetTotalDimension( To, 2_I4B )
-END PROCEDURE Copy_Val_to_obj
+END PROCEDURE realmat_copy3
 
 !----------------------------------------------------------------------------
 !                                                               ArrayPointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE f_getPointer_Real
+MODULE PROCEDURE realmat_getPointer
   Ans => obj%Val
-END PROCEDURE f_getPointer_Real
+END PROCEDURE realmat_getPointer
 
-END SUBMODULE getValues
+END SUBMODULE GetValuesMethods

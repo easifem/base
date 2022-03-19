@@ -15,35 +15,41 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealMatrix_Method) MatrixMultiplication
+!> authors: Vikas Sharma, Ph. D.
+! date: 	25 Feb 2021
+! summary: 	This submodule contains set methods of [[RealVector_]]
+
+SUBMODULE(RealVector_Method) AppendMethods
 USE BaseMethod
 IMPLICIT NONE
-
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                    MATMUL
+!                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE MatMul_1
-  Ans%Val = MATMUL( obj1%Val, obj2%Val )
-  CALL SetTotalDimension( Ans, 2_I4B )
-END PROCEDURE MatMul_1
+MODULE PROCEDURE realVec_Append1
+  CALL Append( obj%val, value )
+END PROCEDURE realVec_Append1
 
 !----------------------------------------------------------------------------
-!                                                                     MATMUL
+!                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE MatMul_2
-  Ans = MATMUL( obj%Val, Vec )
-END PROCEDURE MatMul_2
+MODULE PROCEDURE realVec_Append2
+  CALL Append( obj%val, value )
+END PROCEDURE realVec_Append2
 
 !----------------------------------------------------------------------------
-!                                                                     MATMUL
+!                                                                     Append
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE MatMul_3
-  Ans = RealVector( MATMUL( obj%Val, Vec%Val ) )
-END PROCEDURE MatMul_3
+MODULE PROCEDURE realVec_Append3
+  CALL Append( obj%val, Anotherobj%val )
+END PROCEDURE realVec_Append3
 
-END SUBMODULE MatrixMultiplication
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END SUBMODULE AppendMethods

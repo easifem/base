@@ -15,38 +15,35 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
-! date: 	7 March 2021
-! summary: This module contains IO methods for [[RealMatrix_]]
-
-SUBMODULE(RealMatrix_Method) IO
+SUBMODULE(RealMatrix_Method) MatmulMethods
 USE BaseMethod
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                   Display
+!                                                                    MATMUL
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Display_obj
-  INTEGER( I4B ) :: I
-  I = Input( option=UnitNo, default=stdout )
-  IF( LEN_TRIM( msg ) .NE. 0 ) WRITE( I, "(A)") "#" // TRIM( Msg )
-  CALL Display( obj%Val, "", I )
-END PROCEDURE Display_obj
+MODULE PROCEDURE realmat_MatMul1
+  Ans%Val = MATMUL( obj1%Val, obj2%Val )
+  CALL SetTotalDimension( Ans, 2_I4B )
+END PROCEDURE realmat_MatMul1
 
 !----------------------------------------------------------------------------
-!                                                                   Display
+!                                                                     MATMUL
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Display_obj_vec
-  INTEGER( I4B ) :: I, j
-  I = Input( option=UnitNo, default=stdout )
-  IF( LEN_TRIM( msg ) .NE. 0 ) WRITE( I, "(A)") "#" // TRIM( Msg )
-  DO j = 1, SIZE( obj )
-    CALL Display( obj( j )%Val, "", I )
-    CALL Blanklines( UnitNo = I, NOL = 1 )
-  END DO
-END PROCEDURE Display_obj_vec
+MODULE PROCEDURE realmat_MatMul2
+  Ans = MATMUL( obj%Val, Vec )
+END PROCEDURE realmat_MatMul2
 
-END SUBMODULE IO
+!----------------------------------------------------------------------------
+!                                                                     MATMUL
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realmat_MatMul3
+  Ans = RealVector( MATMUL( obj%Val, Vec%Val ) )
+END PROCEDURE realmat_MatMul3
+
+END SUBMODULE MatmulMethods

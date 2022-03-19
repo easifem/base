@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealMatrix_Method) setValues
+SUBMODULE(RealMatrix_Method) SetValuesMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -424,4 +424,4 @@ MODULE PROCEDURE realmat_add_5
   END SELECT
 END PROCEDURE realmat_add_5
 
-END SUBMODULE setValues
+END SUBMODULE SetValuesMethods
