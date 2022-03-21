@@ -19,7 +19,7 @@
 ! date: 	25 Feb 2021
 ! summary: 	This submodule implements IO methods of [[RealVector_]]
 
-SUBMODULE(RealVector_Method) IO
+SUBMODULE(RealVector_Method) IOMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -54,4 +54,4 @@ END PROCEDURE realVec_display2
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE IO
+END SUBMODULE IOMethods

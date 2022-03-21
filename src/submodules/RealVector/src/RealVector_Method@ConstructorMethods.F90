@@ -19,7 +19,7 @@
 ! date: 25 Feb 2021
 ! summary: This module contains constructor methods of [[RealVector_]]
 
-SUBMODULE ( RealVector_Method) Constructor
+SUBMODULE ( RealVector_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 
@@ -69,10 +69,10 @@ END PROCEDURE RealVec_setTotalDimension
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_AllocateData
+MODULE PROCEDURE realVec_Allocate
   CALL Reallocate( obj%Val, Dims )
   CALL setTotalDimension( obj, 1_I4B )
-END PROCEDURE realVec_AllocateData
+END PROCEDURE realVec_Allocate
 
 !----------------------------------------------------------------------------
 !
@@ -87,7 +87,7 @@ END PROCEDURE realVec_Deallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Initiate1
-  CALL AllocateData( obj, tSize )
+  CALL Allocate( obj, tSize )
 END PROCEDURE realVec_Initiate1
 
 !----------------------------------------------------------------------------
@@ -106,7 +106,7 @@ MODULE PROCEDURE realVec_Initiate2
     ALLOCATE( obj( n ) )
   END IF
   DO i = 1, n
-    CALL AllocateData( obj( i ), tSize( i ) )
+    CALL Allocate( obj( i ), tSize( i ) )
   END DO
 END PROCEDURE realVec_Initiate2
 
@@ -120,6 +120,40 @@ MODULE PROCEDURE realVec_Initiate3
   obj%Val = 0.0_DFP
   CALL setTotalDimension( obj, 1_I4B )
 END PROCEDURE realVec_Initiate3
+
+!----------------------------------------------------------------------------
+!                                                                   Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_Initiate4
+  CALL Initiate( obj=obj, tSize= (.tNodes. dofobj))
+END PROCEDURE realVec_Initiate4
+
+!----------------------------------------------------------------------------
+!                                                                   Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_Initiate5
+  INTEGER( I4B ) :: ii
+  INTEGER( I4B ), ALLOCATABLE :: tsize( : )
+  !!
+  !! main
+  !!
+  ASSOCIATE( Map => dofobj%Map )
+    !!
+    ALLOCATE( tsize( .tDOF. dofobj ) )
+    !!
+    DO ii = 1, SIZE( Map, 1 ) - 1
+      tsize( Map( ii, 5 ) : Map( ii + 1, 5 ) - 1 ) = Map( ii, 6 )
+    END DO
+    !!
+    CALL Initiate( obj=obj, tsize=tsize )
+    !!
+    DEALLOCATE( tsize )
+    !!
+  END ASSOCIATE
+  !!
+END PROCEDURE realVec_Initiate5
 
 !----------------------------------------------------------------------------
 !                                                             Random_Number
@@ -156,7 +190,7 @@ END PROCEDURE realVec_Random_Number2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Constructor1
-  CALL AllocateData( obj, tSize )
+  CALL Allocate( obj, tSize )
 END PROCEDURE realVec_Constructor1
 
 !----------------------------------------------------------------------------
@@ -164,7 +198,7 @@ END PROCEDURE realVec_Constructor1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Constructor2
-  CALL AllocateData( obj, SIZE( val ))
+  CALL Allocate( obj, SIZE( val ))
   CALL COPY( Y=obj%val, X=REAL(val, DFP) )
 END PROCEDURE realVec_Constructor2
 
@@ -173,7 +207,7 @@ END PROCEDURE realVec_Constructor2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Constructor3
-  CALL AllocateData( obj, SIZE( val ))
+  CALL Allocate( obj, SIZE( val ))
   CALL COPY( Y=obj%val, X=val )
 END PROCEDURE realVec_Constructor3
 
@@ -183,7 +217,7 @@ END PROCEDURE realVec_Constructor3
 
 MODULE PROCEDURE realVec_Constructor_1
   ALLOCATE( obj )
-  CALL AllocateData( obj, tSize )
+  CALL Allocate( obj, tSize )
 END PROCEDURE realVec_Constructor_1
 
 !----------------------------------------------------------------------------
@@ -192,7 +226,7 @@ END PROCEDURE realVec_Constructor_1
 
 MODULE PROCEDURE realVec_Constructor_2
   ALLOCATE( obj )
-  CALL AllocateData( obj, SIZE( val ))
+  CALL Allocate( obj, SIZE( val ))
   CALL COPY( Y=obj%val, X=REAL(val, DFP) )
 END PROCEDURE realVec_Constructor_2
 
@@ -202,175 +236,8 @@ END PROCEDURE realVec_Constructor_2
 
 MODULE PROCEDURE realVec_Constructor_3
   ALLOCATE( obj )
-    CALL AllocateData( obj, SIZE( val ))
+    CALL Allocate( obj, SIZE( val ))
   CALL COPY( Y=obj%val, X=REAL(val, DFP) )
 END PROCEDURE realVec_Constructor_3
 
-!----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_SHALLOWCOPY1
-  CALL Reallocate( Y, SIZE( X ) )
-END PROCEDURE realVec_SHALLOWCOPY1
-
-!----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_SHALLOWCOPY2
-  CALL SHALLOWCOPY( Y=Y%Val, X=X%Val )
-END PROCEDURE realVec_SHALLOWCOPY2
-
-!----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_SHALLOWCOPY3
-  INTEGER( I4B ) :: i
-  IF( ALLOCATED( Y ) ) THEN
-    IF( SIZE( Y ) .NE. SIZE( X ) ) THEN
-      DEALLOCATE( Y )
-      ALLOCATE( Y( SIZE( X ) ) )
-    END IF
-  ELSE
-    ALLOCATE( Y( SIZE( X ) ) )
-  END IF
-  DO i = 1, SIZE( Y )
-    CALL SHALLOWCOPY( Y=Y( i )%Val, X=X( i )%Val )
-  END DO
-END PROCEDURE realVec_SHALLOWCOPY3
-
-!----------------------------------------------------------------------------
-!                                                               SHALLOWCOPY
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_SHALLOWCOPY4
-  INTEGER( I4B ) :: i, tNodes
-  tNodes = 0
-  DO i = 1, SIZE( X )
-    tNodes = tNodes + SIZE( X( i )%Val )
-  END DO
-  CALL Reallocate( Y%Val, tNodes )
-END PROCEDURE realVec_SHALLOWCOPY4
-
-!----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_SHALLOWCOPY5
-  CALL SHALLOWCOPY( Y=Y%Val, X=X )
-END PROCEDURE realVec_SHALLOWCOPY5
-
-!----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_SHALLOWCOPY6
-  CALL SHALLOWCOPY( Y=Y, X=X%Val )
-END PROCEDURE realVec_SHALLOWCOPY6
-
-!----------------------------------------------------------------------------
-!                                                                 SHALLOWCOPY
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_SHALLOWCOPY7
-  INTEGER( I4B ) :: ii, m
-  m = 0
-  DO ii = 1, SIZE( X )
-    m = m + SIZE( X( ii ) )
-  END DO
-  CALL Reallocate( Y, m )
-END PROCEDURE realVec_SHALLOWCOPY7
-
-!----------------------------------------------------------------------------
-!                                                                     Assign
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_assign1
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL setTotalDimension( lhs, 1_I4B )
-  CALL COPY( Y=lhs%val, X=rhs%val )
-END PROCEDURE realVec_assign1
-
-!----------------------------------------------------------------------------
-!                                                                    Assign
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_assign2
-  INTEGER( I4B ) :: m, ii, aa
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL setTotalDimension( lhs, 1_I4B )
-  m = 0
-  DO ii = 1, SIZE( rhs )
-    aa = m + 1
-    m = m + SIZE( rhs( ii ) )
-    CALL COPY( Y=lhs%val( aa:m ), X=rhs(ii)%val )
-  END DO
-END PROCEDURE realVec_assign2
-
-!----------------------------------------------------------------------------
-!                                                                     Assign
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_assign3
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL setTotalDimension( lhs, 1_I4B )
-  CALL COPY( Y=lhs%val, X=rhs )
-END PROCEDURE realVec_assign3
-
-!----------------------------------------------------------------------------
-!                                                                     Assign
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_assign4
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL COPY( Y=lhs, X=rhs%val )
-END PROCEDURE realVec_assign4
-
-!----------------------------------------------------------------------------
-!                                                                    Assign
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_assign5
-  INTEGER( I4B ) :: m, ii, aa
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  m = 0
-  DO ii = 1, SIZE( rhs )
-    aa = m + 1
-    m = m + SIZE( rhs( ii ) )
-    CALL COPY( Y=lhs( aa:m ), X=rhs(ii)%val )
-  END DO
-END PROCEDURE realVec_assign5
-
-!----------------------------------------------------------------------------
-!                                                                    Assign
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_assign6
-  lhs = REAL( rhs, DFP )
-END PROCEDURE realVec_assign6
-
-!----------------------------------------------------------------------------
-!                                                                    Assign
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_assign7
-  REAL( DFP ), ALLOCATABLE :: dummy( : )
-  dummy = rhs
-  lhs = INT( dummy, I4B )
-  IF( ALLOCATED( dummy ) ) DEALLOCATE( dummy )
-END PROCEDURE realVec_assign7
-
-!----------------------------------------------------------------------------
-!                                                                    Assign
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE realVec_assign8
-  REAL( DFP ), ALLOCATABLE :: dummy( : )
-  dummy = rhs
-  lhs = INT( dummy, I4B )
-  IF( ALLOCATED( dummy ) ) DEALLOCATE( dummy )
-END PROCEDURE realVec_assign8
-
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods
