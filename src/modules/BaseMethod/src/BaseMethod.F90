@@ -28,20 +28,10 @@
 ! be included here.
 
 MODULE BaseMethod
-  USE String_Class
-  USE String_Method
-  USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
-    & str_ucs4, str, strz, cton, bstr, bcton, check_endian, digit, &
-    & penf_Init, penf_print
-  USE BeFoR64
-  USE FACE
-  USE FPL
-  USE System_Method
 #ifdef USE_OpenMP
   USE OMP_LIB
 #endif
-  USE CInterface
-  USE MetisInterface
+
 #ifdef USE_BLAS95
   USE EASIFEM_BLAS
 #endif
@@ -51,6 +41,21 @@ MODULE BaseMethod
   USE F77_LAPACK
 #endif
 
+#ifdef USE_FFTW
+  USE FFTW3
+#endif
+
+  USE String_Class
+  USE String_Method
+  USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
+    & str_ucs4, str, strz, cton, bstr, bcton, check_endian, digit, &
+    & penf_Init, penf_print
+  USE BeFoR64
+  USE FACE
+  USE FPL
+  USE System_Method
+  USE CInterface
+  USE MetisInterface
   USE OpenMP_Method
   USE GlobalData
   USE OGPF
