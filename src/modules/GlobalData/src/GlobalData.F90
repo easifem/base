@@ -249,11 +249,11 @@ INTEGER(Int8), PARAMETER :: BYInt8 = bit_size(MaxInt8) / 8_Int8
 INTEGER(DIP), PARAMETER :: BYInt = bit_size(MaxInt) / 8_DIP !default in bytes
 INTEGER(DIP), PARAMETER :: BYI4B = bit_size(MaxInt) / 8_DIP ! default in bytes
 REAL(DFP), PARAMETER :: Pi = 3.14159265359_DFP
-REAL(DFP), DIMENSION(3, 3) :: Eye3 = RESHAPE( &
+REAL(DFP), PARAMETER, DIMENSION(3, 3) :: Eye3 = RESHAPE( &
                               (/1.0_DFP, 0.0_DFP, 0.0_DFP, &
                                 0.0_DFP, 1.0_DFP, 0.0_DFP, &
                                 0.0_DFP, 0.0_DFP, 1.0_DFP/), (/3, 3/))
-REAL(DFP), DIMENSION(2, 2) :: Eye2 = RESHAPE( &
+REAL(DFP), PARAMETER, DIMENSION(2, 2) :: Eye2 = RESHAPE( &
                             (/1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP/), (/2, 2/))
 ! Parameters for iteration data
 INTEGER(I4B), PARAMETER :: RelativeConvergence = 1
