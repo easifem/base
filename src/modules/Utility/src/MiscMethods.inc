@@ -79,8 +79,8 @@ PUBLIC :: Degrees
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         3 April 2021
-! summary:         This subroutine search the location of nearest point to x in the array of coordinates; Array
+! date: 3 April 2021
+! summary: Search the loc of nearest point to x in the array
 !
 !# Introduction
 !
@@ -121,7 +121,7 @@ END INTERFACE SearchNearestCoord
 PUBLIC :: SearchNearestCoord
 
 !----------------------------------------------------------------------------
-!                                                                     @MISC
+!                                                        ExecuteCommand@MISC
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -248,35 +248,35 @@ END INTERFACE ARTH
 PUBLIC :: ARTH
 
 !----------------------------------------------------------------------------
-!                                                                 outerDIFF
+!                                                             outerdiff@MISC
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION outerdIFf_r(a, b)
+  MODULE PURE FUNCTION outerdiff_r(a, b)
     REAL(SP), DIMENSION(:), INTENT(IN) :: a, b
-    REAL(SP), DIMENSION(size(a), size(b)) :: outerdIFf_r
+    REAL(SP), DIMENSION(size(a), size(b)) :: outerdiff_r
   END FUNCTION
 END INTERFACE
 
 INTERFACE
-  MODULE PURE FUNCTION outerdIFf_d(a, b)
+  MODULE PURE FUNCTION outerdiff_d(a, b)
     REAL(DP), DIMENSION(:), INTENT(IN) :: a, b
-    REAL(DP), DIMENSION(size(a), size(b)) :: outerdIFf_d
+    REAL(DP), DIMENSION(size(a), size(b)) :: outerdiff_d
   END FUNCTION
 END INTERFACE
 
 INTERFACE
-  MODULE PURE FUNCTION outerdIFf_i(a, b)
+  MODULE PURE FUNCTION outerdiff_i(a, b)
     INTEGER(I4B), DIMENSION(:), INTENT(IN) :: a, b
-    INTEGER(I4B), DIMENSION(size(a), size(b)) :: outerdIFf_i
+    INTEGER(I4B), DIMENSION(size(a), size(b)) :: outerdiff_i
   END FUNCTION
 END INTERFACE
 
-INTERFACE outerDIFF
-  MODULE PROCEDURE outerdIFf_r, outerdIFf_i, outerdIFf_d
+INTERFACE outerdiff
+  MODULE PROCEDURE outerdiff_r, outerdiff_i, outerdiff_d
 END INTERFACE
 
-PUBLIC :: outerDIFF
+PUBLIC :: outerdiff
 
 !----------------------------------------------------------------------------
 !                                                              IMAXLOC@MISC
@@ -318,3 +318,48 @@ INTERFACE IMINLOC
 END INTERFACE IMINLOC
 
 PUBLIC :: IMINLOC
+
+!----------------------------------------------------------------------------
+!                                                                      IMG
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 5 March 2022
+! summary: Return imaginary part of complex value
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION IMG_1(x) RESULT(ans)
+  COMPLEX( Real32 ), INTENT( IN ) :: x
+  REAL( Real32 ) :: ans
+END FUNCTION IMG_1
+END INTERFACE
+
+INTERFACE IMG
+  MODULE PROCEDURE IMG_1
+END INTERFACE IMG
+
+!----------------------------------------------------------------------------
+!                                                                      IMG
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 5 March 2022
+! summary: Return imaginary part of complex value
+
+INTERFACE
+MODULE ELEMENTAL FUNCTION IMG_2(x) RESULT(ans)
+  COMPLEX( Real64 ), INTENT( IN ) :: x
+  REAL( Real64 ) :: ans
+END FUNCTION IMG_2
+END INTERFACE
+
+INTERFACE IMG
+  MODULE PROCEDURE IMG_2
+END INTERFACE IMG
+
+PUBLIC :: IMG
+
+!----------------------------------------------------------------------------
+!                                                            Factorial@MISC
+!----------------------------------------------------------------------------
+
