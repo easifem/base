@@ -234,7 +234,7 @@ END INTERFACE
 
 INTERFACE Initiate
   MODULE PROCEDURE intVec_initiate1, intVec_initiate2, intVec_initiate3, &
-    intVec_initiate4, intVec_initiate5
+    & intVec_initiate4, intVec_initiate5
 END INTERFACE Initiate
 
 PUBLIC :: Initiate
