@@ -1,0 +1,138 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   Constructor.part
+!                   Last Update :   Nov-20-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    STDiffusionMatrix_Class.f90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor_1
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_1( Row, Col, NIPS, NIPT )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Allocate Obj % Mat2( Row, Col ), Obj % SD( NIPS, NIPT )
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( STDiffusionMatrix_ ), POINTER ::  Constructor_1
+    INTEGER( I4B ), INTENT( IN ) :: row, col, NIPS, NIPT
+
+    ALLOCATE( Constructor_1 )
+    ALLOCATE( Constructor_1 % Mat2( row, col ) )
+    Constructor_1 % Mat2 = 0.0_DFP
+    CALL Constructor_1 % Initiate( NIPS = NIPS, NIPT = NIPT )
+
+ END FUNCTION Constructor_1
+
+!------------------------------------------------------------------------------
+!                                                                Constructor_2
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_2( I1, I2, I3, I4, NIPS, NIPT )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Allocate Obj % Mat4( I1, I2, I3, I4 ), Obj % SD( NIPS, NIPT )
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    !  Define intent of dummy variables
+    CLASS( STDiffusionMatrix_ ), POINTER ::  Constructor_2
+    INTEGER( I4B ), INTENT( IN ) :: I1, I2, I3, I4, NIPS, NIPT
+
+    ALLOCATE( Constructor_2 )
+    ALLOCATE( Constructor_2 % Mat4( I1, I2, I3, I4 ) )
+    Constructor_2 % Mat4 = 0.0_DFP
+    CALL Constructor_2 % Initiate( NIPS = NIPS, NIPT = NIPT )
+
+ END FUNCTION Constructor_2
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor_3
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor_3( )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Empty contructor
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    CLASS( STDiffusionMatrix_ ), POINTER ::  Constructor_3
+    ALLOCATE( Constructor_3 )
+
+ END FUNCTION Constructor_3
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor1
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor1( Row, Col, NIPS, NIPT )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Allocate Obj % Mat2( Row, Col ), Obj % SD( NIPS, NIPT )
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( STDiffusionMatrix_ ) ::  Constructor1
+    INTEGER( I4B ), INTENT( IN ) :: row, col, NIPS, NIPT
+
+    ALLOCATE( Constructor1 % Mat2( row, col ) )
+    Constructor1 % Mat2 = 0.0_DFP
+    CALL Constructor1 % Initiate( NIPS = NIPS, NIPT = NIPT )
+
+ END FUNCTION Constructor1
+
+!------------------------------------------------------------------------------
+!                                                                Constructor2
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor2( I1, I2, I3, I4, NIPS, NIPT )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Allocate Obj % Mat4( I1, I2, I3, I4 ), Obj % SD( NIPS, NIPT )
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    !  Define intent of dummy variables
+    TYPE( STDiffusionMatrix_ ) ::  Constructor2
+    INTEGER( I4B ), INTENT( IN ) :: I1, I2, I3, I4, NIPS, NIPT
+
+    ALLOCATE( Constructor2 % Mat4( I1, I2, I3, I4 ) )
+    Constructor2 % Mat4 = 0.0_DFP
+    CALL Constructor2 % Initiate( NIPS = NIPS, NIPT = NIPT )
+
+ END FUNCTION Constructor2
+
+!------------------------------------------------------------------------------
+!                                                                 Constructor3
+!------------------------------------------------------------------------------
+
+ FUNCTION Constructor3( )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  Empty contructor
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+    TYPE( STDiffusionMatrix_ ) ::  Constructor3
+
+ END FUNCTION Constructor3
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+
