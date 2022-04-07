@@ -28,6 +28,11 @@
 ! be included here.
 
 MODULE BaseMethod
+
+#ifdef USE_PLPLOT
+  USE PLPLOT
+#endif
+
 #ifdef USE_OpenMP
   USE OMP_LIB
 #endif
