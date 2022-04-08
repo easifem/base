@@ -21,9 +21,6 @@
 
 SUBMODULE(CSRMatrix_Method) IOMethods
 USE BaseMethod
-#ifdef USE_PLPLOT
-  USE PLPLOT
-#endif
 IMPLICIT NONE
 CONTAINS
 

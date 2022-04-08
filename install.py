@@ -68,6 +68,11 @@ else:
           opt = "ON"
       cmake_def += " -DUSE_OpenMP=" + opt
       ###################################
+      opt = getOption("USE_FFTW", ["ON", "OFF"])
+      if(opt == " "):
+          opt = "ON"
+      cmake_def += " -DUSE_FFTW=" + opt
+      ###################################
       opt = getOption("CMAKE_BUILD_TYPE", ["Release", "Debug"])
       if(opt == " "):
           opt = "Release"
@@ -83,7 +88,7 @@ else:
           opt = "${EASIFEM_BASE}"
       cmake_def += " -DCMAKE_INSTALL_PREFIX=" + opt
     else:
-      cmake_def += ' -G "Ninja" -DUSE_OpenMP:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SHARED_LIBS:BOOL=ON -DUSE_PLPLOT:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE} -DUSE_BLAS95:BOOL=ON -DUSE_LAPACK95:BOOL=ON'
+      cmake_def += ' -G "Ninja" -DUSE_OpenMP:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SHARED_LIBS:BOOL=ON -DUSE_PLPLOT:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE} -DUSE_BLAS95:BOOL=ON -DUSE_LAPACK95:BOOL=ON -DUSE_FFTW:BOOL=ON'
 
     cmake_def += " -DUSE_Int32=ON -DUSE_Real64=ON"
 

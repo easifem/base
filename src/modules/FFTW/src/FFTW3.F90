@@ -13,8 +13,8 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
+#ifdef USE_FFTW
 MODULE FFTW3
 USE, INTRINSIC :: ISO_C_BINDING
 INTEGER, PARAMETER :: C_FFTW_R2R_KIND = C_INT32_T
@@ -2228,3 +2228,4 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 END MODULE FFTW3
+#endif

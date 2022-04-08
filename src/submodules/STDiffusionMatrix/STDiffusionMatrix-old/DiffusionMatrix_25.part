@@ -1,0 +1,54 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   DiffusionMatrix_25.part
+!                   Last Update :   Nov-21-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    STDiffusionMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getDiffusionMatrix_25
+!------------------------------------------------------------------------------
+
+ SUBROUTINE getDiffusionMatrix_25( Obj, c1, c2, c1Type, c2Type, nCopy )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  c1( :, : )
+!   2.  c2( : )
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+    ! Define intent of dummy variables
+#ifdef STMat
+    CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+    CLASS( STDiffusionMatrix_ ), INTENT( INOUT ), TARGET ::  Obj    
+#endif
+    REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: c1
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: c2
+    CHARACTER( LEN = * ), INTENT( IN ) :: c1Type, c2Type
+    INTEGER( I4B ), INTENT( IN ) :: nCopy
+
+    CALL Obj % getDiffusionMatrix( c1 = c1, c2 = c2, &
+      & c1Type = c1Type, c2Type = c2Type )
+    CALL Obj % MakeDiagonalCopies( nCopy )
+
+ END SUBROUTINE getDiffusionMatrix_25
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

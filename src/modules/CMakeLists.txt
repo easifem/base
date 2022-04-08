@@ -15,6 +15,9 @@
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
+#FFTW
+include(${CMAKE_CURRENT_LIST_DIR}/FFTW/CMakeLists.txt)
+
 #PENF
 include(${CMAKE_CURRENT_LIST_DIR}/PENF/CMakeLists.txt)
 

@@ -1,0 +1,53 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   ConvectiveMatrix_28.part
+!                   Last Update :   Nov-18-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    STConvectiveMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getConvectiveMatrix_28
+!------------------------------------------------------------------------------
+
+ SUBROUTINE getConvectiveMatrix_28( Obj, C, Term1, Term2, nCopy )
+
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!   1.  C( : )
+!   2.  Term1, Term2 {dt, dx, dy, dz}
+!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+
+    ! Define intent of dummy variables
+#ifdef STMat
+    CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+    CLASS( STConvectiveMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+    REAL( DFP ), DIMENSION( : ), INTENT( IN ) :: C
+    INTEGER( I4B ), INTENT( IN ) :: nCopy
+    CHARACTER( LEN = * ), INTENT( IN ) :: Term1, Term2
+
+    CALL Obj % getConvectiveMatrix( C = C, Term1 = Term1, Term2 = Term2 )
+    CALL Obj % MakeDiagonalCopies( nCopy )
+
+ END SUBROUTINE getConvectiveMatrix_28
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+

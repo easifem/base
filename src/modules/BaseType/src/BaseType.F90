@@ -26,6 +26,31 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
+!                                                                 Math_
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 5 March 2022
+! summary: Math class
+
+TYPE :: Math_
+  REAL( DFP ) :: PI = 3.14159265359_DFP
+  REAL( DFP ) :: e  = 2.718281828459045_DFP
+  COMPLEX(DFPC) :: i = (0.0_DFP, 1.0_DFP)
+  COMPLEX(DFPC) :: j = (0.0_DFP, 1.0_DFP)
+  REAL(DFP), DIMENSION(3, 3) :: Eye3 = RESHAPE( [ &
+                                & 1.0_DFP, 0.0_DFP, 0.0_DFP, &
+                                & 0.0_DFP, 1.0_DFP, 0.0_DFP, &
+                                & 0.0_DFP, 0.0_DFP, 1.0_DFP], &
+                                & [3, 3] )
+  REAL(DFP), DIMENSION(2, 2) :: Eye2 = RESHAPE( [ &
+                              & 1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP], &
+                              & [2, 2] )
+END TYPE Math_
+
+TYPE( Math_ ), PARAMETER, PUBLIC :: Math = Math_()
+
+!----------------------------------------------------------------------------
 !                                                               BoundingBox_
 !----------------------------------------------------------------------------
 
