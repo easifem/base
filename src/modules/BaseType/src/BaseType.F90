@@ -603,8 +603,8 @@ PUBLIC :: SmallStrainPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         1 March 2021
-! summary:         This data type is defined to handle reference topology
+! date:  1 March 2021
+! summary: This data type is defined to handle reference topology
 !
 !{!pages/ReferenceElement_.md}
 
@@ -627,8 +627,8 @@ PUBLIC :: ReferenceTopologyPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         2 March 2021
-! summary:         An abstract data type for Reference Element
+! date: 2 March 2021
+! summary: An abstract data type for Reference Element
 !
 !{!pages/ReferenceElement_.md}
 
@@ -673,8 +673,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary:         This data type defines a reference point element
+! date: 3 March 2021
+! summary: This data type defines a reference point element
 !
 !{!pages/ReferencePoint.md}
 
