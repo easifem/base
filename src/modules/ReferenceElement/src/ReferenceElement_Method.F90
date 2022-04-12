@@ -64,21 +64,24 @@ PUBLIC :: Display
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         1 March 2021
-! summary:         This function returns the instance of [[ReferenceTopology_]]
+! date: 1 March 2021
+! summary: This function returns the instance of [[ReferenceTopology_]]
 !
 !# Introduction
-!         This function returns the instance of [[ReferenceTopology_]].
+! This function returns the instance of [[ReferenceTopology_]].
 ! The possible valaues of Name can be
 !
-! * `Line, Line2, Line3, Line4, Line5, Line6`
-! * `Triangle, Triangle3, Triangle6, Triangle9, Triangle10, Triangle12, Triangl15a, Triangl15b, Triangl15, Triangl21`
-! * `Quadrangle, Quadrangle4, Quadrangle9, Quadrangle8`
-! * `Tetrahedron, Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35, Tetrahedron56`
-! * `Hexahedron, Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64, Hexahedron125`
-! * `Prism, Prism6, Prism15, Prism18`
-! * `Pyramid, Pyramid5, Pyramid14, Pyramid13`
-! * `Point, Point1`
+! - `Line, Line2, Line3, Line4, Line5, Line6`
+! - `Triangle, Triangle3, Triangle6, Triangle9, Triangle10, Triangle12,
+! Triangl15a, Triangl15b, Triangl15, Triangl21`
+! - `Quadrangle, Quadrangle4, Quadrangle9, Quadrangle8`
+! - `Tetrahedron, Tetrahedron4, Tetrahedron10, Tetrahedron20, Tetrahedron35,
+! Tetrahedron56`
+! - `Hexahedron, Hexahedron8, Hexahedron27, Hexahedron20, Hexahedron64,
+! Hexahedron125`
+! - `Prism, Prism6, Prism15, Prism18`
+! - `Pyramid, Pyramid5, Pyramid14, Pyramid13`
+! - `Point, Point1`
 !
 !### Usage
 !
@@ -107,8 +110,8 @@ PUBLIC :: ReferenceTopology
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         1 March 2021
-! summary:         This subroutine reset the instance of [[ReferenceTopology_]]
+! date: 1 March 2021
+! summary: This subroutine reset the instance of [[ReferenceTopology_]]
 !
 !### Usage
 !
@@ -645,16 +648,22 @@ PUBLIC :: OPERATOR(.topology.)
 !                                                       FacetMatrix@Geometry
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 11 April 2022
+! summary: Returns the facet matrix
+!
+!# Introduction
+!
+! Returns the facet matrix of a reference element.
+!
+! - Number of rows are equal to the number of facet in an element
+! - Number of columns = MAX( NNS )
+! - First column => ElementTopology
+! - Second Column => XiDimension
+! - Third column => NNS
+! - 4 to NNS + 3 => Local Nptrs
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-! Returns the facet matrix
-! Number of rows are equal to the number of facet in an element
-! Number of columns = MAX( NNS )
-! First column => ElementTopology
-! Second Column => XiDimension
-! Third column => NNS
-! 4 to NNS + 3 => Local Nptrs
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION Facet_Matrix_RefElem(RefElem) RESULT(FM)
     INTEGER(I4B), ALLOCATABLE :: FM(:, :)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
@@ -672,7 +681,7 @@ PUBLIC :: FacetMatrix
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         16 June 2021
+! date: 16 June 2021
 ! summary: This routine returns the facet elements
 
 INTERFACE
@@ -692,11 +701,16 @@ PUBLIC :: FacetElements
 !                                                    LocalNodeCoord@Geometry
 !----------------------------------------------------------------------------
 
-INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+!> authors: Vikas Sharma, Ph. D.
+! date: 11 April 2022
+! summary: Deprecated
+!
+!# Introduction
+!
 ! This routine will be removed in near future
 ! This routine is not included in generic LocalNodeCoord routine
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+INTERFACE
   MODULE PURE SUBROUTINE Local_NodeCoord(NodeCoord, ElemType)
     ! Define intent of dummy variables
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: NodeCoord(:, :)
@@ -708,10 +722,11 @@ END INTERFACE
 !                                                    LocalNodeCoord@Geometry
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 11 April 2022
+! summary: Returns the local NodeCoord of an element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-! Returns the local NodeCoord of an element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION Local_NodeCoord_RefElem(RefElem) RESULT(NodeCoord)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
     REAL(DFP), ALLOCATABLE :: NodeCoord(:, :)
@@ -727,6 +742,10 @@ PUBLIC :: LocalNodeCoord
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 11 April 2022
+! summary: Returns measures for simplex
 
 INTERFACE
   MODULE PURE FUNCTION Measure_Simplex(RefElem, XiJ) RESULT(Ans)
@@ -745,6 +764,10 @@ PUBLIC :: MeasureSimplex
 !----------------------------------------------------------------------------
 !                                                    ElementQuality@Geometry
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 11 April 2022
+! summary: Measure the quality of the element
 
 INTERFACE
   MODULE FUNCTION Element_Quality(refelem, xij, measure) RESULT(Ans)
@@ -765,6 +788,10 @@ PUBLIC :: ElementQuality
 !                                                     ContainsPoint@geometry
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 11 April 2022
+! summary: Returns true if the given point is inside the element
+
 INTERFACE
   MODULE FUNCTION contains_point(refelem, xij, x) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
@@ -781,12 +808,12 @@ END INTERFACE ContainsPoint
 PUBLIC :: ContainsPoint
 
 !----------------------------------------------------------------------------
-!                                             TotalEntities@Geometry
+!                                                    TotalEntities@Geometry
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         16 June 2021
-! summary:         Total entities present in an element
+! date: 16 June 2021
+! summary: Total entities present in an element
 
 INTERFACE
   MODULE PURE FUNCTION RefElem_TotalEntities(ElemType) RESULT(Ans)
@@ -806,8 +833,8 @@ PUBLIC :: TotalEntities
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         16 June 2021
-! summary:         This routine returns the facet topology of the given element type
+! date: 16 June 2021
+! summary: Returns the facet topology of the given element type
 
 INTERFACE
   MODULE PURE FUNCTION RefElem_FacetTopology(ElemType, Nptrs) RESULT(Ans)

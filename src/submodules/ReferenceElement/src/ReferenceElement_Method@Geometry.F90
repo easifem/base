@@ -710,6 +710,9 @@ TYPE(ReferenceTopology_) :: topo
 !> main
 xiCell = refelem%xidimension
 SELECT CASE (xiCell)
+  !!
+  !! Reference cell is a curve
+  !!
 CASE (1)
   tFacet = 2
   ALLOCATE (ans(tFacet))
@@ -725,6 +728,9 @@ CASE (1)
     ans(ii)%Topology(1) = ReferenceTopology(nptrs=nptrs, name=Point)
     ans(ii)%LagrangeElement => NULL()
   END DO
+  !!
+  !! Reference cell is a surface
+  !!
 CASE (2)
   tFacet = refelem%EntityCounts(xicell)
   ALLOCATE (ans(tFacet))
@@ -748,8 +754,12 @@ CASE (2)
     DO jj = 1, SIZE(nptrs)
       ans(ii)%Topology(jj) = ReferenceTopology(nptrs=nptrs(jj:jj), name=Point)
     END DO
-   ans(ii)%Topology(tsize) = ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
+    ans(ii)%Topology(tsize) = &
+      & ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
   END DO
+  !!
+  !! Reference cell is a volume
+  !!
 CASE (3)
   tFacet = refelem%EntityCounts(xicell)
   ALLOCATE (ans(tFacet))
@@ -777,12 +787,16 @@ CASE (3)
     ! lines
     jj = ans(ii)%EntityCounts(1)
     tsize = jj + ans(ii)%EntityCounts(2)
-      ans( ii )%Topology( jj+1 : tsize ) = FacetTopology( ElemType=ans(ii)%name, Nptrs=nptrs )
+      ans( ii )%Topology( jj+1 : tsize ) = &
+        & FacetTopology( ElemType=ans(ii)%name, Nptrs=nptrs )
     ! surface
-   ans(ii)%Topology(tsize) = ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
+    ans(ii)%Topology(tsize) = &
+      & ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
   END DO
 END SELECT
+!!
 IF (ALLOCATED(nptrs)) DEALLOCATE (nptrs)
+!!
 END PROCEDURE RefElem_FacetElements
 
 !----------------------------------------------------------------------------
