@@ -1,0 +1,153 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   StiffnessMatrix_2.part
+!                   Last Update :   March-08-2018
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    StiffnessMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getStiffnessMatrix_2
+!------------------------------------------------------------------------------
+
+SUBROUTINE getStiffnessMatrix_2( Obj, Cijkl )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !       1.  Returns Stiffness Matrix
+  !       2.  Cijkl changes in space
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  ! Define intent of dummy variables
+#ifdef SpaceMat
+  CLASS( SpaceMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( StiffnessMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+
+  REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Cijkl
+
+  ! Define internal variables
+  INTEGER( I4B ) :: NNS, NIPS, IPS, NSD, &
+       i, j, sizeOFC
+  INTEGER( I4B ), ALLOCATABLE :: Indx( :, : )
+
+  REAL( DFP ) :: RealVal
+  REAL( DFP ), ALLOCATABLE :: Ce( :, : ), BMat( :, : )
+
+#ifdef DEBUG_VER
+  Error_Flag = .FALSE.
+  IF( .NOT. Obj % isInitiated( ) ) THEN
+     CALL Err_Msg( &
+          "StiffnessMatrix_1.f90", &
+          "getStiffnessMatrix_2( Obj, Cijkl )", &
+          "StiffnessMatrix_ Object is not Initiated" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NNS = Obj % SD( 1 ) % getNNS( )
+  NSD = Obj % SD( 1 ) % getNSD( )
+  NIPS = Obj % getNIPS( )
+
+#ifdef DEBUG_VER
+  IF( SIZE( Cijkl, 1 ) .NE. SIZE( Cijkl, 2 ) ) THEN 
+     CALL Err_Msg( &
+          "StiffnessMatrix_1.f90", &
+          "getStiffnessMatrix_2( Obj, Cijkl )", &
+          "The size of first and second dimension of Cijkl must be same" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+  SizeOfC = SIZE( Cijkl, 1 )
+  IF( NSD .EQ. 2 ) THEN
+     IF( SizeOfC .NE. 4 &
+          .AND. SizeOfC .NE. 3 ) THEN
+        CALL Err_Msg( &
+             "StiffnessMatrix_1.f90", &
+             "getStiffnessMatrix_2( Obj, Cijkl )", &
+             "In case of NSD = 2, SIZE( Cijkl, 1 ) should be &
+             & either 3, 4" )
+        Error_Flag = .TRUE.
+        RETURN
+     END IF
+  END IF
+  IF( NSD .EQ. 3 ) THEN
+     IF( SizeOfC .NE. 6 ) THEN
+        CALL Err_Msg("StiffnessMatrix_1.f90", &
+             "getStiffnessMatrix_2( Obj, Cijkl )", &
+             "In case of NSD = 3, SIZE( Cijkl, 1 ) should be &
+             & equal to 6" )
+        Error_Flag = .TRUE.
+        RETURN
+     END IF
+  END IF
+#endif
+
+  SELECT CASE( NSD )
+  CASE( 1 )
+     ALLOCATE( Indx( 1, 1 ) ) 
+     Indx = 1
+
+  CASE( 2 )
+     Indx = RESHAPE( (/1,3,3,2/), (/2,2/) )
+
+  CASE( 3 )
+     Indx = RESHAPE( (/1,4,6,4,2,5,6,5,3/), (/3,3/) )
+
+  END SELECT
+
+  IF( ALLOCATED( Obj % Mat2 ) ) DEALLOCATE( Obj % Mat2 )
+  ALLOCATE( Obj % Mat2( NNS*NSD, NNS*NSD ) )
+  Obj % Mat2 = 0.0_DFP
+
+  ALLOCATE( Ce( NSD*NSD, NSD*NSD ) )
+  ALLOCATE( BMat( NSD*NNS, NSD*NSD ) )
+  BMat = 0.0_DFP
+
+  DO j = 1, NSD
+     DO i = 1, NSD
+        Ce( (i-1) * NSD + 1 : i * NSD, (j-1) * NSD + 1 : j * NSD ) &
+             & = Cijkl( Indx( :, i ), Indx( :, j ) )
+     END DO
+  END DO
+
+  DO IPS = 1, NIPS
+
+     RealVal = Obj % SD( IPS ) % Ws &
+          & * Obj % SD( IPS ) % Js_Xi2Xt &
+          & * Obj % SD( IPS ) % Thickness
+
+     DO i = 1, NSD
+        BMat( (i-1) * NNS + 1 : i * NNS, (i-1) * NSD + 1 : i * NSD ) = &
+             & Obj % SD( IPS ) % dNdXt
+     END DO
+
+     Obj % Mat2 = Obj % Mat2 &
+          & + RealVal * MATMUL( &
+          & MATMUL( BMat, Ce ), &
+          & TRANSPOSE( BMat ) )
+
+  END DO
+
+  DEALLOCATE( BMat, Indx, Ce )
+
+END SUBROUTINE getStiffnessMatrix_2
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
