@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains the sorting routine
 
-SUBMODULE(Utility ) SORT
+SUBMODULE(Utility ) SORTMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -970,4 +970,4 @@ MODULE PROCEDURE SORT_REAL
   END IF
 END PROCEDURE SORT_REAL
 
-END SUBMODULE SORT
+END SUBMODULE SORTMethods

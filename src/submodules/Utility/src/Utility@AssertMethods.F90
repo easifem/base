@@ -19,7 +19,7 @@
 ! date: 	3 April 2021
 ! summary: 	Assert functions
 
-SUBMODULE(Utility ) Assert
+SUBMODULE(Utility ) AssertMethods
 IMPLICIT NONE
 CONTAINS
 
@@ -142,4 +142,4 @@ MODULE PROCEDURE assert_shape_4
   END IF
 END PROCEDURE assert_shape_4
 
-END SUBMODULE Assert
+END SUBMODULE AssertMethods

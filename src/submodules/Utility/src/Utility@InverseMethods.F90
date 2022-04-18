@@ -19,7 +19,7 @@
 ! date: 	3 April 2021
 ! summary: 	Methods for determining determinent and inverse of small matrix
 
-SUBMODULE(Utility ) Inverse
+SUBMODULE(Utility ) InverseMethods
 IMPLICIT NONE
 CONTAINS
 !----------------------------------------------------------------------------
@@ -164,4 +164,4 @@ MODULE PROCEDURE Inv_3D
   END DO
 END PROCEDURE Inv_3D
 
-END SUBMODULE Inverse
+END SUBMODULE InverseMethods

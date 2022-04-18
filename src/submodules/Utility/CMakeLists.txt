@@ -9,18 +9,23 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/Utility@Sort.F90
+  ${src_path}/Utility@SortMethods.F90
   ${src_path}/Utility@SwapMethods.F90
+  ${src_path}/Utility@ConvertMethods.F90
   ${src_path}/Utility@ReallocateMethods.F90
   ${src_path}/Utility@ProductMethods.F90
-  ${src_path}/Utility@FunctionalFortran.F90
+  ${src_path}/Utility@FunctionalMethods.F90
+  ${src_path}/Utility@OnesMethods.F90
+  ${src_path}/Utility@EyeMethods.F90
+  ${src_path}/Utility@DiagMethods.F90
   ${src_path}/Utility@AppendMethods.F90
-  ${src_path}/Utility@Input.F90
-  ${src_path}/Utility@Inverse.F90
-  ${src_path}/Utility@MatrixMul.F90
-  ${src_path}/Utility@Assert.F90
+  ${src_path}/Utility@InputMethods.F90
+  ${src_path}/Utility@InverseMethods.F90
+  ${src_path}/Utility@MatmulMethods.F90
+  ${src_path}/Utility@ContractionMethods.F90
+  ${src_path}/Utility@AssertMethods.F90
   ${src_path}/Utility@ApproxMethods.F90
   ${src_path}/Utility@HashingMethod.F90
-  ${src_path}/Utility@Misc.F90
+  ${src_path}/Utility@MiscMethods.F90
   ${src_path}/Utility@StringMethods.F90
 )

@@ -19,7 +19,7 @@
 ! date: 	3 April 2021
 ! summary: 	This method contains the input method
 
-SUBMODULE(Utility ) Input
+SUBMODULE(Utility ) InputMethods
 IMPLICIT NONE
 CONTAINS
 
@@ -159,4 +159,4 @@ END PROCEDURE input_logical
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE Input
+END SUBMODULE InputMethods

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) Misc
+SUBMODULE(Utility) MiscMethods
 IMPLICIT NONE
 CONTAINS
 
@@ -312,4 +312,22 @@ MODULE PROCEDURE iminloc_r
   iminloc_r=imin(1)
 END PROCEDURE iminloc_r
 
-END SUBMODULE Misc
+!----------------------------------------------------------------------------
+!                                                                       IMG
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IMG_1
+	COMPLEX( Real32 ), PARAMETER :: i=(0.0_Real32, 1.0_Real32)
+	ans = REAL(x*i, KIND=Real32)
+END PROCEDURE IMG_1
+
+!----------------------------------------------------------------------------
+!                                                                       IMG
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IMG_2
+	COMPLEX( Real64 ), PARAMETER :: i=(0.0_Real64, 1.0_Real64)
+	ans = REAL(x*i, KIND=Real64)
+END PROCEDURE IMG_2
+
+END SUBMODULE MiscMethods

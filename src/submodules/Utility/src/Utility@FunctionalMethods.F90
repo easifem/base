@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility ) FunctionalFortran
+SUBMODULE(Utility ) FunctionalMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -320,4 +320,4 @@ MODULE PROCEDURE split_char
 END PROCEDURE split_char
 
 
-END SUBMODULE FunctionalFortran
+END SUBMODULE FunctionalMethods

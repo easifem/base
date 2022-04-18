@@ -1,0 +1,98 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   StiffnessMatrix_5.part
+!                   Last Update :   Nov-23-2017
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!
+!   HOSTING FILE
+!       -    STStiffnessMatrix_Class.f90
+!
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getStiffnessMatrix_5
+!------------------------------------------------------------------------------
+
+SUBROUTINE getStiffnessMatrix_5( Obj, CData )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !       1.  Returns Stiffness matrix
+  !       2.  CData is the one dimensional array 
+  !       3.  In this case material tangent doesnot vary with the time.
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  USE ConstitutiveData_Class
+  USE MaterialJacobian_Class
+
+  ! Define intent of dummy variables
+#ifdef STMat
+  CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( STStiffnessMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+  CLASS( ConstitutiveData_ ), INTENT( IN ), TARGET :: CData( : )
+
+  ! Define internal variables
+  REAL( DFP ), ALLOCATABLE :: Cijkl( :, :, : )
+  INTEGER( I4B ) :: NIPS, IPS, NSD, N
+
+#ifdef DEBUG_VER
+  Error_Flag = .FALSE.
+  IF( .NOT. Obj % isInitiated( ) ) THEN
+     CALL Err_Msg( &
+          "STStiffnessMatrix_Class.f90", &
+          "getStiffnessMatrix_5(Obj, CData)", &
+          "STStiffnessMatrix_ Object is not Initiated" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NSD = Obj % SD( 1, 1 ) % getNSD( )
+  NIPS = Obj % getNIPS( )
+
+#ifdef DEBUG_VER
+  IF( SIZE( CData ) .NE. NIPS  ) THEN
+     CALL Err_Msg( &
+          "STStiffnessMatrix_Class.f90", &
+          "getStiffnessMatrix_5(Obj, CData)", &
+          "The Shape Of CData is not compatible" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  SELECT CASE( NSD )
+  CASE( 3 )
+     N = 6
+  CASE( 2 )
+     N = 4
+  CASE( 1 )
+     N = 1
+  END SELECT
+
+  ! Make Cijkl
+  ALLOCATE( Cijkl( N, N, NIPS ) )
+  DO IPS = 1, NIPS
+     Cijkl( :, :, IPS ) = CData( IPS ) % C .Cijkl. N
+  END DO
+  CALL Obj % getStiffnessMatrix( Cijkl )
+  DEALLOCATE( Cijkl )
+
+END SUBROUTINE getStiffnessMatrix_5
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+
