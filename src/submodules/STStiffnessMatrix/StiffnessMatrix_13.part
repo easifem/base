@@ -1,0 +1,240 @@
+!
+!------------------------------------------------------------------------------
+!                   Author      :   Vikas sharma
+!                   Position    :   Doctral Student
+!                   Institute   :   Kyoto Univeristy, Japan
+!                   Program name:   StiffnessMatrix_13.part
+!                   Last Update :   March-15-2018
+!
+!------------------------------------------------------------------------------
+!                           Details of Program
+!==============================================================================
+!
+!   TYPE    ::  Part of the Code
+!
+!   DESCRIPTION
+!       -   This code is part of the code
+!       -   Space time stiffness matrix for alpha-beta v-ST/FEM
+!       -   beta_STFEM is beta => 
+!       -   Effective coefficient will be beta_STFEM * dt
+!
+!   HOSTING FILE
+!       -    STStiffnessMatrix_Class.f90
+!==============================================================================
+
+!------------------------------------------------------------------------------
+!                                                        getStiffnessMatrix_13
+!------------------------------------------------------------------------------
+
+SUBROUTINE getStiffnessMatrix_13( Obj, Cijkl, TimeVector, IntegrationSide, &
+     & beta_STFEM )
+
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !       1.  Returns Stiffness matrix
+  !       2.  Time Integration is character it should be "left", "right"
+  !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  USE Utility, ONLY : OUTERPROD
+
+  ! Define intent of dummy variables
+#ifdef STMat
+  CLASS( SpaceTimeMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#else
+  CLASS( STStiffnessMatrix_ ), INTENT( INOUT ), TARGET ::  Obj
+#endif
+  REAL( DFP ), DIMENSION( :, :, :, : ), INTENT( IN ) :: Cijkl
+  REAL( DFP ), INTENT( IN ) :: TimeVector( 2 )
+  CHARACTER( LEN = * ), INTENT( IN ) :: IntegrationSide
+  REAL( DFP ), INTENT( IN ) :: beta_STFEM
+
+  ! Define internal variables
+  INTEGER( I4B ) :: NNS, NNT, NIPS, NIPT, IPS, IPT, aa, b, NSD, &
+       i, j, r1, r2, c1, c2, M, sizeOFC, p, q
+  REAL( DFP ), ALLOCATABLE :: dNTdXt( :, :, : ), T( : ), dNTdXt2( :, :, : ), &
+       dNTdXt3( :, :, : )
+  INTEGER( I4B ), ALLOCATABLE :: Indx( :, : )
+  REAL( DFP ) :: Ws, Js, thick, RealVal, Jt, Wt, Kij, t1, t2, Theta, beta
+  TYPE( STElemShapeData_ ), TARGET :: STElemSD, STElemSD2
+  CLASS( STShapeData_ ), POINTER :: SD => NULL( ), SD2 => NULL( )
+
+#ifdef DEBUG_VER
+  Error_Flag = .FALSE.
+  IF( .NOT. Obj % isInitiated( ) ) THEN
+     CALL Err_Msg( &
+          "STStiffnessMatrix_Class.f90", &
+          "getStiffnessMatrix_13()", &
+          "STStiffnessMatrix_ Object is not Initiated" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  NNS = Obj % SD( 1,1 ) % getNNS( )
+  NNT = Obj % SD( 1,1 ) % getNNT( )
+  NSD = Obj % SD( 1, 1 ) % getNSD( )
+  NIPS = Obj % getNIPS( )
+  NIPT = Obj % getNIPT( )
+
+#ifdef DEBUG_VER
+  IF( SIZE( Cijkl, 3 ) .NE. NIPS .OR. SIZE( Cijkl, 4 ) .NE. NIPT ) THEN 
+     CALL Err_Msg( &
+          "STStiffnessMatrix_Class.f90", &
+          "getStiffnessMatrix_13()", &
+          "The SIZE( Cijkl, 3 ) should be NIPS, &
+          & SIZE( Cijkl, 4 ) should be NIPT" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+  IF( SIZE( Cijkl, 1 ) .NE. SIZE( Cijkl, 2 ) ) THEN 
+     CALL Err_Msg( &
+          "STStiffnessMatrix_Class.f90", &
+          "getStiffnessMatrix_13()", &
+          "The size of first and second dimension of Cijkl must be same" )
+     Error_Flag = .TRUE.
+     RETURN
+  END IF
+#endif
+
+  SizeOfC = SIZE( Cijkl, 1 )
+
+#ifdef DEBUG_VER
+  IF( NSD .EQ. 2 ) THEN
+     IF( SizeOfC .NE. 4 &
+          & .AND. SizeOfC .NE. 3 ) THEN
+        CALL Err_Msg( &
+             & "STStiffnessMatrix_Class.f90", &
+             & "getStiffnessMatrix_13()", &
+             & "In case of NSD = 2, SIZE( Cijkl, 1 ) should be &
+             & either 3, 4" )
+        Error_Flag = .TRUE.
+        RETURN
+     END IF
+  END IF
+  IF( NSD .EQ. 3 ) THEN
+     IF( SizeOfC .NE. 6 ) THEN
+        CALL Err_Msg( &
+             & "STStiffnessMatrix_Class.f90", &
+             & "getStiffnessMatrix_13(), Flag-5", &
+             & "In case of NSD = 3, SIZE( Cijkl, 1 ) should be &
+             & equal to 6" )
+        Error_Flag = .TRUE.
+        RETURN
+     END IF
+  END IF
+#endif
+
+  ! Make Indx
+  SELECT CASE( NSD )
+  CASE( 1 )
+     ALLOCATE( Indx( 1, 1 ) ) 
+     Indx = 1
+  CASE( 2 ) 
+     Indx = RESHAPE( (/1,3,3,2/), (/2,2/) )
+  CASE( 3 )
+     Indx = RESHAPE( (/1,4,6,4,2,5,6,5,3/), (/3,3/) )
+  END SELECT
+
+  IF( ALLOCATED( Obj % Mat4 ) ) DEALLOCATE( Obj % Mat4 )
+  ALLOCATE( Obj % Mat4( NNS*NSD, NNS*NSD, NNT, NNT ) )
+  Obj % Mat4 = 0.0_DFP
+
+  t1 = TimeVector( 1 )
+  t2 = TimeVector( 2 )
+
+  beta = beta_STFEM * ( t2 - t1 )
+
+  ! Make copy of Obj
+  CALL STElemSD % Initiate( Obj )
+  CALL STElemSD2 % Initiate( Obj )
+
+  DO IPT = 1, NIPT
+     DO IPS = 1, NIPS
+        SD => STElemSD % SD( IPS, IPT )
+        Theta = SD % Theta
+        T = SD .TimeIntegration. [t1, t2, Theta]
+
+        CALL SD % setT( T )
+        CALL SD % setdNTdXt( )
+        SD2 => STElemSD2 % SD( IPS, IPT )
+        T  = SD2 % dTdTheta / SD2 % Jt
+        CALL SD2 % setT( T )
+        CALL SD2 % setdNTdXt( )
+     END DO
+  END DO
+
+  SD => NULL( )
+
+  DO p = 1, NSD
+     DO q = 1, NSD
+        DO aa = 1, NNT
+           DO b = 1, NNT
+              DO i = 1, M
+                 DO j = 1, M
+                    r1 = ( i - 1_I4B ) * NNS + 1_I4B
+                    r2 = i*NNS
+                    c1 = ( j - 1_I4B ) * NNS + 1_I4B
+                    c2 = j*NNS
+                    DO IPT = 1, NIPT
+                       DO IPS = 1, NIPS
+                          Kij = Cijkl( Indx( p, i ), Indx( q, j ), IPS, IPT )
+                          Ws = Obj % SD( IPS, IPT ) % getWs( )
+                          Wt = Obj % SD( IPS, IPT ) % getWt( )
+                          Js = Obj % SD( IPS, IPT ) % getJs_Xi2Xt( )
+                          Jt = Obj % SD( IPS, IPT ) % getJt( )
+                          thick = Obj % SD( IPS, IPT ) % getThickness( )
+                          CALL Obj % SD( IPS, IPT ) % getdNTdXt( dNTdXt )
+                          CALL STElemSD % SD( IPS, IPT ) % getdNTdXt( dNTdXt2 )
+                          CALL STElemSD2 % SD( IPS, IPT ) % getdNTdXt( dNTdXt3 )
+                          RealVal = Ws * Wt * Js * Jt * thick * Kij*beta
+
+                          SELECT CASE( TRIM( IntegrationSide ) )
+                          CASE( "Right", "RIGHT", "right" )
+                             Obj % Mat4( r1:r2, c1:c2, aa, b ) = &
+                                  Obj % Mat4( r1:r2, c1:c2, aa, b ) + &
+                                  OUTERPROD( a = dNTdXt3( :, p, aa ), b = dNTdXt2( :, q, b ) ) * RealVal
+
+                          CASE( "Left", "LEFT", "left" )
+                             Obj % Mat4( r1:r2, c1:c2, aa, b ) = &
+                                  Obj % Mat4( r1:r2, c1:c2, aa, b ) + &
+                                  OUTERPROD( a = dNTdXt2( :, p, aa ), b = dNTdXt3( :, q, b ) ) * RealVal
+
+                          CASE( "None", "NONE", "none" )
+                             Obj % Mat4( r1:r2, c1:c2, aa, b ) = &
+                                  Obj % Mat4( r1:r2, c1:c2, aa, b ) + &
+                                  OUTERPROD( a = dNTdXt3( :, p, aa ), b = dNTdXt( :, q, b ) ) * RealVal
+
+                          CASE DEFAULT
+                             CALL Err_Msg( &
+                                  "STStiffnessMatrix_Class.f90", &
+                                  "getStiffnessMatrix_13()", &
+                                  "No case found for given integration side" &
+                                  )
+                             Error_Flag = .TRUE.
+                             RETURN
+                          END SELECT
+                       END DO
+                    END DO
+                 END DO
+              END DO
+           END DO
+        END DO
+     END DO
+  END DO
+
+  CALL Obj % Mat2FromMat4( )
+  IF( ALLOCATED( dNTdXt ) ) DEALLOCATE( dNTdXt )
+  IF( ALLOCATED( dNTdXt2 ) ) DEALLOCATE( dNTdXt2 )
+  IF( ALLOCATED( dNTdXt3 ) ) DEALLOCATE( dNTdXt3 )
+  IF( ALLOCATED( Indx ) ) DEALLOCATE( Indx )
+  IF( ALLOCATED( T ) ) DEALLOCATE( T )
+  CALL STElemSD % DeallocateData( )
+  CALL STElemSD2 % DeallocateData( )
+  SD => NULL( ) 
+  SD2 => NULL( ) 
+
+END SUBROUTINE getStiffnessMatrix_13
+
+!------------------------------------------------------------------------------
+!
+!------------------------------------------------------------------------------
+
