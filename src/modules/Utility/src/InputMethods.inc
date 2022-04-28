@@ -15,6 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+PUBLIC :: Input
 
 !----------------------------------------------------------------------------
 !                                                               Input@Input
@@ -28,6 +29,10 @@ INTERFACE
   END FUNCTION input_int
 END INTERFACE
 
+INTERFACE Input
+  MODULE PROCEDURE input_int
+END INTERFACE Input
+
 !----------------------------------------------------------------------------
 !                                                               Input@Input
 !----------------------------------------------------------------------------
@@ -39,6 +44,10 @@ INTERFACE
     REAL(Real64) :: val
   END FUNCTION input_Real64
 END INTERFACE
+
+INTERFACE Input
+  MODULE PROCEDURE input_Real64
+END INTERFACE Input
 
 !----------------------------------------------------------------------------
 !                                                               Input@Input
@@ -52,6 +61,10 @@ INTERFACE
   END FUNCTION input_Real32
 END INTERFACE
 
+INTERFACE Input
+  MODULE PROCEDURE input_Real32
+END INTERFACE Input
+
 !----------------------------------------------------------------------------
 !                                                               Input@Input
 !----------------------------------------------------------------------------
@@ -63,6 +76,10 @@ INTERFACE
     INTEGER(I4B), ALLOCATABLE :: val(:)
   END FUNCTION
 END INTERFACE
+
+INTERFACE Input
+  MODULE PROCEDURE input_IntVec
+END INTERFACE Input
 
 !----------------------------------------------------------------------------
 !                                                               Input@Input
@@ -76,6 +93,10 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+INTERFACE Input
+  MODULE PROCEDURE input_Real64vec
+END INTERFACE Input
+
 !----------------------------------------------------------------------------
 !                                                               Input@Input
 !----------------------------------------------------------------------------
@@ -87,6 +108,10 @@ INTERFACE
     REAL(Real32), ALLOCATABLE :: val(:)
   END FUNCTION
 END INTERFACE
+
+INTERFACE Input
+  MODULE PROCEDURE input_Real32vec
+END INTERFACE Input
 
 !----------------------------------------------------------------------------
 !                                                               Input@Input
@@ -100,6 +125,10 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+INTERFACE Input
+  MODULE PROCEDURE input_IntArray
+END INTERFACE Input
+
 !----------------------------------------------------------------------------
 !                                                                Input@Input
 !----------------------------------------------------------------------------
@@ -111,6 +140,10 @@ INTERFACE
     REAL(Real64), ALLOCATABLE :: val(:, :)
   END FUNCTION
 END INTERFACE
+
+INTERFACE Input
+  MODULE PROCEDURE input_Real64Array
+END INTERFACE Input
 
 !----------------------------------------------------------------------------
 !                                                                Input@Input
@@ -124,6 +157,10 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
+INTERFACE Input
+  MODULE PROCEDURE input_Real32Array
+END INTERFACE Input
+
 !----------------------------------------------------------------------------
 !                                                                Input@Input
 !----------------------------------------------------------------------------
@@ -135,6 +172,10 @@ INTERFACE
     CHARACTER(200) :: val
   END FUNCTION
 END INTERFACE
+
+INTERFACE Input
+  MODULE PROCEDURE input_String
+END INTERFACE Input
 
 !----------------------------------------------------------------------------
 !                                                                Input@Input
@@ -148,15 +189,6 @@ INTERFACE
   END FUNCTION
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                                Input@Input
-!----------------------------------------------------------------------------
-
 INTERFACE Input
-  MODULE PROCEDURE input_Int, input_Real64, input_Real32, input_IntVec, &
-    & input_Real64Vec, input_Real32Vec, input_IntArray, &
-    & input_Real64Array, input_Real32Array, input_String, &
-    & input_logical
+  MODULE PROCEDURE input_logical
 END INTERFACE Input
-
-PUBLIC :: Input
