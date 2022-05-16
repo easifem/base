@@ -18,6 +18,9 @@
 PUBLIC :: getUnitNormal
 PUBLIC :: GetSUPGParam
 PUBLIC :: GetHRGNParam
+PUBLIC :: getSUGN3Param
+PUBLIC :: GetHRQIParam
+PUBLIC :: getSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
 !                                                    getUnitNormal@getMethod
@@ -30,14 +33,17 @@ PUBLIC :: GetHRGNParam
 !
 !# Introduction
 !
-! This routine can be used in the SUPG formulation
+! This routine can be used in the SUPG formulation:
 !
-!  $$\nabla \vert phi \vert / \vert (\nabla \vert phi \vert) \vert$$
+! $$
+! \frac{\nabla \vert \phi \vert}{\Vert \nabla \vert \phi \vert \Vert}
+! $$
 
 INTERFACE
   MODULE PURE SUBROUTINE getUnitNormal_1(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
+    !! unit vector defined over quadrature points
     REAL(DFP), INTENT(IN) :: val(:)
     !! spatial nodal values of scalar
   END SUBROUTINE getUnitNormal_1
@@ -62,13 +68,14 @@ END INTERFACE getUnitNormal
 ! val is spatial nodal values of a vector.
 !
 ! $$
-! \nabla \Vert mathbf{v}  \Vert / \Vert (\nabla \Vert mathbf{v} \Vert) \Vert
+! {\bf r}=\frac{\nabla\Vert{\bf v}\Vert}{\left|\nabla\Vert{\bf v}\Vert\right|}
 ! $$
 
 INTERFACE
   MODULE PURE SUBROUTINE getUnitNormal_2(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
+    !! unit vector defined over quadrature points
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! spatial nodal values of velocity
   END SUBROUTINE getUnitNormal_2
@@ -89,13 +96,18 @@ END INTERFACE getUnitNormal
 !
 !# Introduction
 !
-! This routine can be used in the SUPG formulation, here
-! val is spatial nodal values of a vector.
+! - This routine can be used in the SUPG formulation.
+! - `val` is the [[FEVariable_]], it can be vector or scalar
 !
 ! $$
-! \nabla \Vert mathbf{v}  \Vert / \Vert
-! (\nabla \Vert mathbf{v} \Vert) \Vert
+! \frac{\nabla \vert \phi \vert}{\Vert \nabla \vert \phi \vert \Vert}
 ! $$
+!
+! $$
+! {\bf r}=\frac{\nabla\Vert{\bf v}\Vert}{\left|\nabla\Vert{\bf v}\Vert\right|}
+! $$
+!
+
 
 INTERFACE
   MODULE PURE SUBROUTINE getUnitNormal_3(obj, R, val)
@@ -109,6 +121,497 @@ END INTERFACE
 INTERFACE getUnitNormal
   MODULE PROCEDURE getUnitNormal_3
 END INTERFACE getUnitNormal
+
+!----------------------------------------------------------------------------
+!                                                   GetHRGNParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRGN param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRGNParam1(obj, h, val, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+      !! obj can be an instance of [[STElemshapeData_]]
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h( : )
+      !! h is a scalar, and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetHRGNParam1
+END INTERFACE
+
+INTERFACE GetHRGNParam
+  MODULE PROCEDURE elemsd_GetHRGNParam1
+END INTERFACE GetHRGNParam
+
+!----------------------------------------------------------------------------
+!                                                   GetHRGNParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRGN param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRGNParam2(obj, h, val, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: h
+      !! h is a scalar, and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetHRGNParam2
+END INTERFACE
+
+INTERFACE GetHRGNParam
+  MODULE PROCEDURE elemsd_GetHRGNParam2
+END INTERFACE GetHRGNParam
+
+!----------------------------------------------------------------------------
+!                                                   GetHRGNParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRGN param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRGNParam3(obj, h, val, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+      !! Spacetime shape function data, obj(ipt) denotes data at
+      !! ipt quadrature point in time domain
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h( :, : )
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! it can be a scalar, defined on space or space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE elemsd_GetHRGNParam3
+END INTERFACE
+
+INTERFACE GetHRGNParam
+  MODULE PROCEDURE elemsd_GetHRGNParam3
+END INTERFACE GetHRGNParam
+
+!----------------------------------------------------------------------------
+!                                                   GetHRGNParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRGN param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRGNParam4(obj, h, val, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+      !! Spacetime shape function data, obj(ipt) denotes data at
+      !! ipt quadrature point in time domain
+    TYPE(FEVariable_), INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! it can be a scalar, defined on space or space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE elemsd_GetHRGNParam4
+END INTERFACE
+
+INTERFACE GetHRGNParam
+  MODULE PROCEDURE elemsd_GetHRGNParam4
+END INTERFACE GetHRGNParam
+
+
+!----------------------------------------------------------------------------
+!                                                   GetHRQIParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRQI param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam1(obj, h, val, hmax, hmin, &
+    & r, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+      !! obj can be an instance of [[STElemshapeData_]]
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h( : )
+      !! h is a scalar, and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmax( : )
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmin( : )
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r( :, : )
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetHRQIParam1
+END INTERFACE
+
+INTERFACE GetHRQIParam
+  MODULE PROCEDURE elemsd_GetHRQIParam1
+END INTERFACE GetHRQIParam
+
+!----------------------------------------------------------------------------
+!                                                   GetHRQIParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRQI param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam2(obj, h, val, hmax, &
+    & hmin, r, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: h
+      !! h is a scalar, and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax, hmin, r
+      !! h is a scalar, and defined on quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetHRQIParam2
+END INTERFACE
+
+INTERFACE GetHRQIParam
+  MODULE PROCEDURE elemsd_GetHRQIParam2
+END INTERFACE GetHRQIParam
+
+!----------------------------------------------------------------------------
+!                                                   GetHRQIParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRQI param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam3(obj, h, val, hmax, &
+    & hmin, r, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+      !! Spacetime shape function data, obj(ipt) denotes data at
+      !! ipt quadrature point in time domain
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h( :, : )
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! it can be a scalar, defined on space or space-time quadrature points
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmax( :, : )
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmin( :, : )
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r( :, :, : )
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE elemsd_GetHRQIParam3
+END INTERFACE
+
+INTERFACE GetHRQIParam
+  MODULE PROCEDURE elemsd_GetHRQIParam3
+END INTERFACE GetHRQIParam
+
+!----------------------------------------------------------------------------
+!                                                   GetHRQIParam@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the HRQI param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam4(obj, h, val, hmax, &
+    & hmin, r, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+      !! Spacetime shape function data, obj(ipt) denotes data at
+      !! ipt quadrature point in time domain
+    TYPE(FEVariable_), INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! it can be a scalar, defined on space or space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax, hmin, r
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+  END SUBROUTINE elemsd_GetHRQIParam4
+END INTERFACE
+
+INTERFACE GetHRQIParam
+  MODULE PROCEDURE elemsd_GetHRQIParam4
+END INTERFACE GetHRQIParam
+
+!----------------------------------------------------------------------------
+!                                                   getSUGN3Param@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the SUGN3 param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_1(obj, tau, val, nu, h, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+      !! tau-sugn3 is a scalar and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    TYPE(FEVariable_), INTENT(IN) :: nu
+      !! kinematic viscosity or diffusivity
+      !! scalar and defined on quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetSUGN3Param_1
+END INTERFACE
+
+INTERFACE getSUGN3Param
+  MODULE PROCEDURE elemsd_GetSUGN3Param_1
+END INTERFACE getSUGN3Param
+
+!----------------------------------------------------------------------------
+!                                                   getSUGN3Param@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 May 2022
+! update: 3 May 2022
+! summary: Returns the SUGN3 param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_2(obj, tau, val, nu, h, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj( : )
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+      !! tau-sugn3 is a scalar and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    TYPE(FEVariable_), INTENT(IN) :: nu
+      !! kinematic viscosity or diffusivity
+      !! scalar and defined on quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetSUGN3Param_2
+END INTERFACE
+
+INTERFACE getSUGN3Param
+  MODULE PROCEDURE elemsd_GetSUGN3Param_2
+END INTERFACE getSUGN3Param
+
+!----------------------------------------------------------------------------
+!                                                   getSUGN3Param@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the SUGN3 param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_3(obj, tau, val, nu, h, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+      !! tau-sugn3 is a scalar and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    REAL( DFP ), INTENT(IN) :: nu
+      !! kinematic viscosity or diffusivity
+      !! scalar and defined on quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetSUGN3Param_3
+END INTERFACE
+
+INTERFACE getSUGN3Param
+  MODULE PROCEDURE elemsd_GetSUGN3Param_3
+END INTERFACE getSUGN3Param
+
+!----------------------------------------------------------------------------
+!                                                   getSUGN3Param@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 May 2022
+! update: 3 May 2022
+! summary: Returns the SUGN3 param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_4(obj, tau, val, nu, h, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj( : )
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+      !! tau-sugn3 is a scalar and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    REAL( DFP ), INTENT(IN) :: nu
+      !! kinematic viscosity or diffusivity
+      !! scalar and defined on quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetSUGN3Param_4
+END INTERFACE
+
+INTERFACE getSUGN3Param
+  MODULE PROCEDURE elemsd_GetSUGN3Param_4
+END INTERFACE getSUGN3Param
+
+!----------------------------------------------------------------------------
+!                              getSUGN3Param_Takizawa2018@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the SUGN3 param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_1(obj, &
+    & tau, val, nu, h, hmax, hmin, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+      !! tau-sugn3 is a scalar and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    TYPE(FEVariable_), INTENT(IN) :: nu
+      !! kinematic viscosity or diffusivity
+      !! scalar and defined on quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmin
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_1
+END INTERFACE
+
+INTERFACE getSUGN3Param_Takizawa2018
+  MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_1
+END INTERFACE getSUGN3Param_Takizawa2018
+
+!----------------------------------------------------------------------------
+!                                      getSUGN3Param_Takizawa2018@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 May 2022
+! update: 3 May 2022
+! summary: Returns the SUGN3 param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_2(obj, tau, val, &
+    & nu, h, hmax, hmin, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj( : )
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+      !! tau-sugn3 is a scalar and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    TYPE(FEVariable_), INTENT(IN) :: nu
+      !! kinematic viscosity or diffusivity
+      !! scalar and defined on quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmin
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_2
+END INTERFACE
+
+INTERFACE getSUGN3Param_Takizawa2018
+  MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_2
+END INTERFACE getSUGN3Param_Takizawa2018
+
+!----------------------------------------------------------------------------
+!                                      getSUGN3Param_Takizawa2018@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-27
+! update: 2021-11-27
+! summary: Returns the SUGN3 param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_3(obj, tau, val, &
+    & nu, h, hmax, hmin, opt)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+      !! tau-sugn3 is a scalar and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    REAL( DFP ), INTENT(IN) :: nu
+      !! kinematic viscosity or diffusivity
+      !! scalar and defined on quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmin
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_3
+END INTERFACE
+
+INTERFACE getSUGN3Param_Takizawa2018
+  MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_3
+END INTERFACE getSUGN3Param_Takizawa2018
+
+!----------------------------------------------------------------------------
+!                                      getSUGN3Param_Takizawa2018@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 May 2022
+! update: 3 May 2022
+! summary: Returns the SUGN3 param
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_4(obj, tau, val, &
+    & nu, h, hmax, hmin, opt)
+    CLASS(STElemshapeData_), INTENT(IN) :: obj( : )
+      !! obj can be an instance of [[STElemshapeData_]]
+    TYPE(FEVariable_), INTENT(INOUT) :: tau
+      !! tau-sugn3 is a scalar and defined on quadrature points
+    TYPE(FEVariable_), INTENT(IN) :: val
+      !! val can be a vector or a scalar
+    REAL( DFP ), INTENT(IN) :: nu
+      !! kinematic viscosity or diffusivity
+      !! scalar and defined on quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax
+      !! scalar variable, defined on space-time quadrature points
+    TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmin
+      !! scalar variable, defined on space-time quadrature points
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+      !! currently, opt is not used, but it may be used in future
+  END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_4
+END INTERFACE
+
+INTERFACE getSUGN3Param_Takizawa2018
+  MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_4
+END INTERFACE getSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
 !                                                   GetSUPGParam@GetMethods
@@ -276,46 +779,3 @@ INTERFACE GetSUPGParam
   MODULE PROCEDURE elemsd_GetSUPGParam4
 END INTERFACE GetSUPGParam
 
-!----------------------------------------------------------------------------
-!                                                   GetHRGNParam@GetMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-27
-! update: 2021-11-27
-! summary: Returns the HRGN param
-
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRGNParam1(obj, hrgn, val, opt)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    TYPE(FEVariable_), INTENT(INOUT) :: hrgn
-    TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-  END SUBROUTINE elemsd_GetHRGNParam1
-END INTERFACE
-
-INTERFACE GetHRGNParam
-  MODULE PROCEDURE elemsd_GetHRGNParam1
-END INTERFACE GetHRGNParam
-
-!----------------------------------------------------------------------------
-!                                                   GetHRGNParam@GetMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 2021-11-27
-! update: 2021-11-27
-! summary: Returns the HRGN param
-
-INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRGNParam2(obj, hrgn, val, opt)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    TYPE(FEVariable_), INTENT(INOUT) :: hrgn
-    TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-  END SUBROUTINE elemsd_GetHRGNParam2
-END INTERFACE
-
-INTERFACE GetHRGNParam
-  MODULE PROCEDURE elemsd_GetHRGNParam2
-END INTERFACE GetHRGNParam
