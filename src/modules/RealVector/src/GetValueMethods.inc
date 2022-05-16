@@ -681,3 +681,22 @@ END INTERFACE
 INTERFACE getvalue
   MODULE PROCEDURE realvec_getvalue23
 END INTERFACE getvalue
+
+!----------------------------------------------------------------------------
+!                                                   getvalue@GetValueMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 10 May 2022
+! summary: copy a realvector into another realvector
+
+INTERFACE
+MODULE PURE SUBROUTINE realvec_getvalue24( obj, value )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
+  CLASS( RealVector_ ), INTENT( INOUT ) :: value
+END SUBROUTINE realvec_getvalue24
+END INTERFACE
+
+INTERFACE getvalue
+  MODULE PROCEDURE realvec_getvalue24
+END INTERFACE getvalue

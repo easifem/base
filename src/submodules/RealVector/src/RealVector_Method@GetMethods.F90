@@ -474,5 +474,9 @@ MODULE PROCEDURE realVec_get28
     & timecompo=timecompo ) )
   !!
 END PROCEDURE realVec_get28
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 !!
 END SUBMODULE getMethods
