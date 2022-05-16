@@ -50,10 +50,11 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
-! summary: Returns the pointer to vector of real numbers stored inside [[RealVector_]]
+! summary: Returns the pointer to vector of real numbers
 !
 !# Introduction
-! This function returns the pointer to vector of real numbers stored inside [[RealVector_]] for a given degree of freedom
+! This function returns the pointer to vector of real numbers stored
+! inside [[RealVector_]] for a given degree of freedom
 
 INTERFACE
 MODULE FUNCTION realVec_getPointer2( obj, dofobj, idof ) RESULT( val )
@@ -78,7 +79,8 @@ END INTERFACE
 !
 !# Introduction
 !
-! This function finds the location of `value` inside the instance of [[RealVector_]]
+! This function finds the location of `value` inside the instance of
+! [[RealVector_]]
 
 INTERFACE
 MODULE PURE FUNCTION realVec_getIndex1( obj, value, tol ) RESULT( Ans )
@@ -103,7 +105,8 @@ END INTERFACE getIndex
 !
 !# Introduction
 !
-! This function returns the nearest location of values inside the [[RealVector_]]
+! This function returns the nearest location of values inside the
+! [[RealVector_]]
 
 INTERFACE
 MODULE PURE FUNCTION realVec_getIndex2( obj, value, tol ) RESULT( Ans )
@@ -423,7 +426,8 @@ END INTERFACE get
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
 !# Introduction
-! This function returns an scalar instance of [[RealVector_]] by combining different entries of a vector of [[RealVector_]]
+! This function returns an scalar instance of [[RealVector_]] by
+! combining different entries of a vector of [[RealVector_]]
 
 INTERFACE
 MODULE PURE FUNCTION realVec_get13( obj, DataType ) RESULT( val )
@@ -447,7 +451,8 @@ INTERFACE
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
 !# Introduction
-! This function returns the instance of [[RealVector_]] from the vector of [[RealVector_]].
+! This function returns the instance of [[RealVector_]] from the vector of
+! [[RealVector_]].
 
 MODULE PURE FUNCTION realVec_get14( obj, nodenum, DataType ) RESULT( val )
   CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
@@ -470,7 +475,8 @@ END INTERFACE get
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
 !# Introduction
-! This function returns the instance of [[RealVector_]] from the vector of [[RealVector_]].
+! This function returns the instance of [[RealVector_]] from the vector of
+! [[RealVector_]].
 
 INTERFACE
 MODULE PURE FUNCTION realVec_get15( obj, istart, iend, stride, &
@@ -496,7 +502,8 @@ END INTERFACE get
 !
 !# Introduction
 !
-! This function returns an instance of [[RealVector_]] by using selective from `obj`
+! This function returns an instance of [[RealVector_]] by using selective
+! from `obj`
 
 INTERFACE
 MODULE PURE FUNCTION realVec_get16( obj, nodenum, DataType ) RESULT( val )
@@ -520,7 +527,8 @@ END INTERFACE get
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
 !# Introduction
-! This function returns the instance of [[RealVector_]] using istart, iend, stride values
+! This function returns the instance of [[RealVector_]] using istart, iend,
+! stride values
 
 INTERFACE
 MODULE PURE FUNCTION realVec_get17( obj, istart, iend, stride, &

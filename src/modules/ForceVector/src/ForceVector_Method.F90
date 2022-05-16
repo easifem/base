@@ -29,8 +29,16 @@ PUBLIC :: ForceVector
 
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 20 Jan 2022
+! date: 4 May 2022
 ! summary: Force vector
+!
+!# Introduction
+!
+! This subroutine computes the following expression:
+!
+! $$
+! F_{I}=\int_{\Omega}N^{I}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION ForceVector_1(test) RESULT(ans)
@@ -51,6 +59,12 @@ END INTERFACE ForceVector
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
+!
+!# Introduction
+!
+! $$
+! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION ForceVector_2(test, c, crank) RESULT(ans)
@@ -73,6 +87,14 @@ END INTERFACE ForceVector
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
+!
+!# Introduction
+!
+! This routine computes the following integral
+!
+! $$
+! F(i,I)=\int_{\Omega}v_{i}N^{I}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION ForceVector_3(test, c, crank) RESULT(ans)
@@ -91,10 +113,17 @@ END INTERFACE ForceVector
 !                                                               ForceVector
 !----------------------------------------------------------------------------
 
-
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
+!
+!# Introduction
+!
+! This routine computes the following integral
+!
+! $$
+! F(i,j,I)=\int_{\Omega}k_{ij}N^{I}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION ForceVector_4(test, c, crank) RESULT(ans)
@@ -117,6 +146,14 @@ END INTERFACE ForceVector
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
+!
+!# Introduction
+!
+! This routine computes the following integral
+!
+! $$
+! F_{I}=\int_{\Omega}\rho_{1}\rho_{2}N^{I}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION ForceVector_5(test, c1, c1rank, c2, c2rank) &
@@ -142,6 +179,14 @@ END INTERFACE ForceVector
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
+!
+!# Introduction
+!
+! This routine computes the following integral.
+!
+! $$
+!
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION ForceVector_6(test, c1, c1rank, c2, c2rank) &
@@ -167,6 +212,14 @@ END INTERFACE ForceVector
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
+!
+!# Introduction
+!
+! This routine computes the following.
+!
+! $$
+! F(i,j,I)=\int_{\Omega}\rho k_{ij}N^{I}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION ForceVector_7(test, c1, c1rank, c2, c2rank) &
