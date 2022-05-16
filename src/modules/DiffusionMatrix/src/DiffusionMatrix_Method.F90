@@ -34,6 +34,22 @@ PUBLIC :: DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! If opt is not present.
+!
+! $$
+! M(I,J)=\int\frac{\partial N^{I}}{\partial x_{i}}\frac{\partial N^{J}}
+! {\partial x_{i}}d\Omega
+! $$
+!
+! If opt is present.
+!
+! $$
+! \left[M\right]_{IJ}^{ij}=\delta_{ij}\int\frac{\partial N^{I}}
+! {\partial x_{k}}\frac{\partial N^{J}}{\partial x_{k}}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_1(test, trial, opt) RESULT(ans)
@@ -55,6 +71,14 @@ END INTERFACE DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+! M(I,J)=\int\rho\frac{\partial N^{I}}{\partial x_{i}}\frac{\partial N^{J}}
+! {\partial x_{i}}d\Omega
+! $$
+!
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_2(test, trial, k, krank, opt) &
@@ -83,6 +107,13 @@ END INTERFACE DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+! M(I,J)=\int\frac{\partial N^{I}}{\partial x_{i}}v_{i}v_{j}
+! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_3(test, trial, k, krank, opt) &
@@ -111,6 +142,13 @@ END INTERFACE DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+! M(I,J)=\int\frac{\partial N^{I}}{\partial x_{i}}k_{ij}
+! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_4(test, trial, k, krank, opt) &
@@ -140,6 +178,13 @@ END INTERFACE DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+! M(I,J)=\int\frac{\partial N^{I}}{\partial x_{i}}u_{i}v_{j}
+! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_5(test, trial, c1, c2, c1rank, &
@@ -173,6 +218,13 @@ END INTERFACE DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+! M(I,J)=\int\rho\frac{\partial N^{I}}{\partial x_{i}}k_{ij}
+! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_6(test, trial, c1, c2, c1rank, &
@@ -206,6 +258,13 @@ END INTERFACE DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+! M(I,J)=\int\rho_{1}\frac{\partial N^{I}}{\partial x_{i}}k_{ij}
+! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_7(test, trial, c1, c2, c1rank, &
@@ -239,6 +298,12 @@ END INTERFACE DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+!
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_8(test, trial, c1, c2, c1rank, &
@@ -272,6 +337,12 @@ END INTERFACE DiffusionMatrix
 !> authors: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+!
+! $$
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_9(test, trial, c1, c2, c1rank, &
@@ -430,40 +501,77 @@ INTERFACE DiffusionMatrix
   MODULE PROCEDURE DiffusionMatrix_13
 END INTERFACE DiffusionMatrix
 
-! !----------------------------------------------------------------------------
-! !                                     DiffusionMatrix@DiffusionMatrixMethods
-! !----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                     DiffusionMatrix@DiffusionMatrixMethods
+!----------------------------------------------------------------------------
 
-! !> authors: Vikas Sharma, Ph. D.
-! ! date: 6 March 2021
-! ! summary: This subroutine returns the diffusion matrix in space domain
+!> authors: Vikas Sharma, Ph. D.
+! date: 1 May 2022
+! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! If opt is [1] then:
+!
+! $$
+! \left[M\right]_{IJ}^{ij}=\int\frac{\partial N^{I}}{\partial x_{i}}
+! \frac{\partial N^{J}}{\partial x_{j}}d\Omega
+! $$
+!
+! If opt is [2] then:
+!
+! $$
+! \left[M\right]_{IJ}^{ij}=\int\frac{\partial N^{I}}{\partial x_{j}}
+! \frac{\partial N^{J}}{\partial x_{i}}d\Omega
+! $$
 
-! INTERFACE
-!   MODULE PURE FUNCTION DiffusionMatrix_14(test, trial, c1, c2, c3, &
-!     & c1rank, c2rank, c3rank ) RESULT(ans)
-!     CLASS(ElemshapeData_), INTENT(IN) :: test
-!     !! test function
-!     CLASS(ElemshapeData_), INTENT(IN) :: trial
-!     !! trial function
-!     CLASS(FEVariable_), INTENT(IN) :: c1
-!     !! Vector
-!     CLASS(FEVariable_), INTENT(IN) :: c2
-!     !! Vector
-!     CLASS(FEVariable_), INTENT(IN) :: c3
-!     !! Scalar
-!     CLASS(FEVariableVector_), INTENT(IN) :: c1rank
-!     !! Vector
-!     CLASS(FEVariableVector_), INTENT(IN) :: c2rank
-!     !! Vector
-!     CLASS(FEVariableScalar_), INTENT(IN) :: c3rank
-!     !! Scalar
-!     REAL(DFP), ALLOCATABLE :: ans(:, :)
-!     !! diffusion matrix
-!   END FUNCTION DiffusionMatrix_14
-! END INTERFACE
+INTERFACE
+  MODULE PURE FUNCTION DiffusionMatrix_14(test, trial, opt) RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    INTEGER( I4B ), INTENT( IN ) :: opt( 1 )
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION DiffusionMatrix_14
+END INTERFACE
 
-! INTERFACE DiffusionMatrix
-!   MODULE PROCEDURE DiffusionMatrix_14
-! END INTERFACE DiffusionMatrix
+INTERFACE DiffusionMatrix
+  MODULE PROCEDURE DiffusionMatrix_14
+END INTERFACE DiffusionMatrix
+
+!----------------------------------------------------------------------------
+!                                     DiffusionMatrix@DiffusionMatrixMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 6 March 2021
+! summary: This subroutine returns the diffusion matrix in space domain
+!
+!# Introduction
+!
+! $$
+! M(I,J)=\int\rho\frac{\partial N^{I}}{\partial x_{i}}\frac{\partial N^{J}}
+! {\partial x_{i}}d\Omega
+! $$
+!
+
+INTERFACE
+  MODULE PURE FUNCTION DiffusionMatrix_15(test, trial, k, krank, opt) &
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    !! test function
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    !! trial function
+    CLASS(FEVariable_), INTENT(IN) :: k
+    !! scalar
+    TYPE(FEVariableScalar_), INTENT( IN ) :: krank
+    !! scalar fe variable
+    INTEGER( I4B ), INTENT( IN ) :: opt(1)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION DiffusionMatrix_15
+END INTERFACE
+
+INTERFACE DiffusionMatrix
+  MODULE PROCEDURE DiffusionMatrix_15
+END INTERFACE DiffusionMatrix
 
 END MODULE DiffusionMatrix_Method

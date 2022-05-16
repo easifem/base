@@ -17,9 +17,9 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: 	This submodule contains constructor method for [[ElemshapeData_]] and [[STElemShapeData_]]
+! summary: Constructor method for [[ElemshapeData_]] and [[STElemShapeData_]]
 
-SUBMODULE(ElemshapeData_Method) Constructor
+SUBMODULE(ElemshapeData_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 
@@ -315,5 +315,5 @@ MODULE PROCEDURE elemsd_Initiate
 
 END PROCEDURE elemsd_Initiate
 
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods
 
