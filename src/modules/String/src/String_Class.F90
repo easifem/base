@@ -114,11 +114,13 @@ CONTAINS
     strjoin_strings_array, &
     strjoin_characters_array
     !! Return a string that is a join of an array of strings or characters;
-  !!< Return join 1D string array of an 2D array of strings or characters in columns or rows.
+    !! Return join 1D string array of an 2D array of strings or
+    !! characters in columns or rows.
   PROCEDURE, PASS(self) :: lower
     !! Return a string with all lowercase characters.
   PROCEDURE, PASS(self) :: partition
-    !! Split string at separator and return the 3 parts (before, the separator and after).
+    !! Split string at separator and return the 3 parts (before, the
+    !! separator and after).
   PROCEDURE, PASS(self) :: read_file
     !! Read a file a single string stream.
   PROCEDURE, PASS(self) :: read_line
@@ -2540,53 +2542,66 @@ ELEMENTAL FUNCTION snakecase(self, sep)
   END IF
 END FUNCTION snakecase
 
+!----------------------------------------------------------------------------
+!                                                                 Split
+!----------------------------------------------------------------------------
+
+!> authors: Szaghi
+! date: 11 May 2022
+! summary: Return a list of substring in the string
+!
+!# Introduction
+!
+! Return a list of substring in the string, using sep as the delimiter string
+!
+!@note
+! Multiple subsequent separators are collapsed to one occurrence.
+!@endnote
+!
+! @note If `max_tokens` is passed the returned number of tokens is either `max_tokens` or `max_tokens + 1`.
+!<
+!<```fortran
+!< type(string)              :: astring
+!< type(string), allocatable :: strings(:)
+!< logical                   :: test_passed(11)
+!< astring = '+ab-++cre-++cre-ab+'
+!< call astring%split(tokens=strings, sep='+')
+!< test_passed(1) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
+!< astring = 'ab-++cre-++cre-ab+'
+!< call astring%split(tokens=strings, sep='+')
+!< test_passed(2) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
+!< astring = 'ab-++cre-++cre-ab'
+!< call astring%split(tokens=strings, sep='+')
+!< test_passed(3) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
+!< astring = 'Hello '//new_line('a')//'World!'
+!< call astring%split(tokens=strings, sep=new_line('a'))
+!< test_passed(4) = (strings(1)//''=='Hello '.and.strings(2)//''=='World!')
+!< astring = 'Hello World!'
+!< call astring%split(tokens=strings)
+!< test_passed(5) = (strings(1)//''=='Hello'.and.strings(2)//''=='World!')
+!< astring = '+ab-'
+!< call astring%split(tokens=strings, sep='+')
+!< test_passed(6) = (strings(1)//''=='ab-')
+!< astring = '+ab-'
+!< call astring%split(tokens=strings, sep='-')
+!< test_passed(7) = (strings(1)//''=='+ab')
+!< astring = '+ab-+cd-'
+!< call astring%split(tokens=strings, sep='+')
+!< test_passed(8) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
+!< astring = 'ab-+cd-+'
+!< call astring%split(tokens=strings, sep='+')
+!< test_passed(9) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
+!< astring = '+ab-+cd-+'
+!< call astring%split(tokens=strings, sep='+')
+!< test_passed(10) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
+!< astring = '1-2-3-4-5-6-7-8'
+!< call astring%split(tokens=strings, sep='-', max_tokens=3)
+!< test_passed(11) = (strings(1)//''=='1'.and.strings(2)//''=='2'.and.strings(3)//''=='3'.and.strings(4)//''=='4-5-6-7-8')
+!< print '(L1)', all(test_passed)
+!<```
+!=> T <<<
+
 PURE SUBROUTINE split(self, tokens, sep, max_tokens)
-  !< Return a list of substring in the string, using sep as the delimiter string.
-  !<
-  !< @note Multiple subsequent separators are collapsed to one occurrence.
-  !<
-  !< @note If `max_tokens` is passed the returned number of tokens is either `max_tokens` or `max_tokens + 1`.
-  !<
-  !<```fortran
-  !< type(string)              :: astring
-  !< type(string), allocatable :: strings(:)
-  !< logical                   :: test_passed(11)
-  !< astring = '+ab-++cre-++cre-ab+'
-  !< call astring%split(tokens=strings, sep='+')
-  !< test_passed(1) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
-  !< astring = 'ab-++cre-++cre-ab+'
-  !< call astring%split(tokens=strings, sep='+')
-  !< test_passed(2) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
-  !< astring = 'ab-++cre-++cre-ab'
-  !< call astring%split(tokens=strings, sep='+')
-  !< test_passed(3) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
-  !< astring = 'Hello '//new_line('a')//'World!'
-  !< call astring%split(tokens=strings, sep=new_line('a'))
-  !< test_passed(4) = (strings(1)//''=='Hello '.and.strings(2)//''=='World!')
-  !< astring = 'Hello World!'
-  !< call astring%split(tokens=strings)
-  !< test_passed(5) = (strings(1)//''=='Hello'.and.strings(2)//''=='World!')
-  !< astring = '+ab-'
-  !< call astring%split(tokens=strings, sep='+')
-  !< test_passed(6) = (strings(1)//''=='ab-')
-  !< astring = '+ab-'
-  !< call astring%split(tokens=strings, sep='-')
-  !< test_passed(7) = (strings(1)//''=='+ab')
-  !< astring = '+ab-+cd-'
-  !< call astring%split(tokens=strings, sep='+')
-  !< test_passed(8) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
-  !< astring = 'ab-+cd-+'
-  !< call astring%split(tokens=strings, sep='+')
-  !< test_passed(9) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
-  !< astring = '+ab-+cd-+'
-  !< call astring%split(tokens=strings, sep='+')
-  !< test_passed(10) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
-  !< astring = '1-2-3-4-5-6-7-8'
-  !< call astring%split(tokens=strings, sep='-', max_tokens=3)
-  !< test_passed(11) = (strings(1)//''=='1'.and.strings(2)//''=='2'.and.strings(3)//''=='3'.and.strings(4)//''=='4-5-6-7-8')
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
   CLASS(string), INTENT(in) :: self           !< The string.
   TYPE(string), ALLOCATABLE, INTENT(out) :: tokens(:)      !< Tokens substring.
   CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep            !< Separator.
