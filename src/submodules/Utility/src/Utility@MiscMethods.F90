@@ -317,8 +317,8 @@ END PROCEDURE iminloc_r
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IMG_1
-	COMPLEX( Real32 ), PARAMETER :: i=(0.0_Real32, 1.0_Real32)
-	ans = REAL(x*i, KIND=Real32)
+  COMPLEX( Real32 ), PARAMETER :: i=(0.0_Real32, 1.0_Real32)
+  ans = REAL(x*i, KIND=Real32)
 END PROCEDURE IMG_1
 
 !----------------------------------------------------------------------------
@@ -326,8 +326,8 @@ END PROCEDURE IMG_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IMG_2
-	COMPLEX( Real64 ), PARAMETER :: i=(0.0_Real64, 1.0_Real64)
-	ans = REAL(x*i, KIND=Real64)
+  COMPLEX( Real64 ), PARAMETER :: i=(0.0_Real64, 1.0_Real64)
+  ans = REAL(x*i, KIND=Real64)
 END PROCEDURE IMG_2
 
 END SUBMODULE MiscMethods
