@@ -25,20 +25,22 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_1
-! Define internal variable
-REAL(DFP), ALLOCATABLE :: realval(:)
-INTEGER(I4B) :: ii
-!! main
-CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
-realval = trial%js * trial%ws * trial%thickness
-DO ii = 1, SIZE(trial%N, 2)
-  ans = ans + realval(ii) * MATMUL(test%dNdXt(:, :, ii), &
-    & TRANSPOSE(trial%dNdXt(:, :, ii)))
-END DO
-!!
-IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
-!!
-DEALLOCATE (realval)
+  REAL(DFP), ALLOCATABLE :: realval(:)
+  INTEGER(I4B) :: ii
+  !!
+  !! main
+  !!
+  CALL Reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+  realval = trial%js * trial%ws * trial%thickness
+  DO ii = 1, SIZE(trial%N, 2)
+    ans = ans + realval(ii) * MATMUL(test%dNdXt(:, :, ii), &
+      & TRANSPOSE(trial%dNdXt(:, :, ii)))
+  END DO
+  !!
+  IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
+  !!
+  DEALLOCATE (realval)
+  !!
 END PROCEDURE DiffusionMatrix_1
 
 !----------------------------------------------------------------------------
@@ -46,11 +48,11 @@ END PROCEDURE DiffusionMatrix_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_2
-  ! CALL DM_1(ans=ans, test=test, trial=trial, k=k, opt=opt)
-  !!
   REAL(DFP), ALLOCATABLE :: realval(:), kbar(:)
   INTEGER(I4B) :: ii
+  !!
   !! main
+  !!
   CALL getInterpolation(obj=trial, Interpol=kbar, val=k)
   !!
   realval = trial%js * trial%ws * trial%thickness * kbar
@@ -74,7 +76,6 @@ END PROCEDURE DiffusionMatrix_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_3
-  ! CALL DM_2(ans=ans, test=test, trial=trial, k=k, opt=opt)
   !!
   REAL(DFP), ALLOCATABLE :: c1bar(:, :), c2bar(:, :), realval(:)
   INTEGER(I4B) :: ii
@@ -82,7 +83,6 @@ MODULE PROCEDURE DiffusionMatrix_3
   !! main
   !!
   CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=k)
-  !!
   CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=k)
   !!
   realval = trial%js * trial%ws * trial%thickness
@@ -96,6 +96,7 @@ MODULE PROCEDURE DiffusionMatrix_3
   IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
   !!
   DEALLOCATE (c1bar, c2bar, realval)
+  !!
 END PROCEDURE DiffusionMatrix_3
 
 !----------------------------------------------------------------------------
@@ -126,6 +127,7 @@ MODULE PROCEDURE DiffusionMatrix_4
   DEALLOCATE (kbar, realval)
   !!
 END PROCEDURE DiffusionMatrix_4
+
 !----------------------------------------------------------------------------
 !                                                            DiffusionMatrix
 !----------------------------------------------------------------------------
@@ -183,9 +185,6 @@ END PROCEDURE DiffusionMatrix_6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_7
-  !! scalar
-  !! matrix
-  !! CALL DM_5(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
   !!
   REAL(DFP), ALLOCATABLE :: realval(:)
   REAL(DFP), ALLOCATABLE :: kbar(:, :,:)
@@ -194,9 +193,7 @@ MODULE PROCEDURE DiffusionMatrix_7
   !! main
   !!
   CALL getInterpolation(obj=trial, Interpol=realval, val=c1)
-  !!
   CALL getInterpolation(obj=trial, Interpol=kbar, val=c2)
-  !!
   realval =  realval * trial%js * trial%ws * trial%thickness
   !!
   DO ii = 1, SIZE(realval)
@@ -206,7 +203,6 @@ MODULE PROCEDURE DiffusionMatrix_7
   END DO
   !!
   IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
-  !!
   DEALLOCATE(realval, kbar)
   !!
 END PROCEDURE DiffusionMatrix_7
@@ -216,10 +212,14 @@ END PROCEDURE DiffusionMatrix_7
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_8
-  !! vector
-  !! scalar
-  ans = DiffusionMatrix(test=test, trial=trial, c1=c2, c2=c1, &
-    & c1rank=TypeFEVariableScalar, c2rank=TypeFEVariableVector, &
+  !!
+  ans = DiffusionMatrix( &
+    & test=test, &
+    & trial=trial, &
+    & c1=c2, &
+    & c2=c1, &
+    & c1rank=TypeFEVariableScalar, &
+    & c2rank=TypeFEVariableVector, &
     & opt=opt)
   !!
 END PROCEDURE DiffusionMatrix_8
@@ -229,22 +229,15 @@ END PROCEDURE DiffusionMatrix_8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_9
-  !! vector
-  !! vector
-  !! CALL DM_4(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
-  !!
   !! Internal variable
   REAL(DFP), ALLOCATABLE :: c1bar(:, :), c2bar(:, :), realval(:)
   INTEGER(I4B) :: ii
   !!
-  !!
+  !! main
   !!
   CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
-  !!
   CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=c1)
-  !!
   CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=c2)
-  !!
   realval = trial%js * trial%ws * trial%thickness
   !!
   DO ii = 1, SIZE(realval)
@@ -252,7 +245,6 @@ MODULE PROCEDURE DiffusionMatrix_9
   END DO
   !!
   IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
-  !!
   DEALLOCATE (c1bar, c2bar, realval)
   !!
 END PROCEDURE DiffusionMatrix_9
@@ -262,10 +254,6 @@ END PROCEDURE DiffusionMatrix_9
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_10
-  !! vector
-  !! matrix
-  !! CALL DM_10(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
-  !!
   !! internal variable
   REAL(DFP), ALLOCATABLE :: matbar(:, :, :)
   REAL(DFP), ALLOCATABLE :: c1bar(:, :)
@@ -302,11 +290,14 @@ END PROCEDURE DiffusionMatrix_10
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_11
-  !! matrix
-  !! scalar
-  ! CALL DM_5(ans=ans, test=test, trial=trial, c1=c2, c2=c1, opt=opt)
-  ans = DiffusionMatrix( test=test, trial=trial, c1=c2, c2=c1, &
-    & c1rank=TypeFEVariableScalar, c2rank=TypeFEVariableMatrix, opt=opt )
+  !!
+  ans = DiffusionMatrix( &
+    & test=test, &
+    & trial=trial, &
+    & c1=c2, c2=c1, &
+    & c1rank=TypeFEVariableScalar, &
+    & c2rank=TypeFEVariableMatrix, &
+    & opt=opt )
   !!
 END PROCEDURE DiffusionMatrix_11
 
@@ -315,10 +306,6 @@ END PROCEDURE DiffusionMatrix_11
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_12
-  !! matrix
-  !! vector
-  !! CALL DM_9(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
-  !!
   !! internal variable
   REAL(DFP), ALLOCATABLE :: matbar(:, :, :)
   REAL(DFP), ALLOCATABLE :: c1bar(:, :)
@@ -347,7 +334,6 @@ MODULE PROCEDURE DiffusionMatrix_12
   IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
   !!
   DEALLOCATE (c1bar, c2bar, realval, matbar)
-  !!
 END PROCEDURE DiffusionMatrix_12
 
 !----------------------------------------------------------------------------
@@ -355,21 +341,14 @@ END PROCEDURE DiffusionMatrix_12
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DiffusionMatrix_13
-  !! matrix
-  !! matrix
-  !! CALL DM_8(ans=ans, test=test, trial=trial, c1=c1, c2=c2, opt=opt)
-  !!
   !! internal variable
   REAL(DFP), ALLOCATABLE :: k1bar(:, :, :), k2bar(:, :, :), realval(:)
   INTEGER(I4B) :: ii
   !! main
   CALL getInterpolation(obj=trial, Interpol=k1bar, val=c1)
-  !!
   CALL getInterpolation(obj=trial, Interpol=k2bar, val=c2)
-  !!
-  realval = trial%js * trial%ws * trial%thickness
-  !!
   CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
+  realval = trial%js * trial%ws * trial%thickness
   !!
   DO ii = 1, SIZE(realval)
     !!
@@ -381,28 +360,189 @@ MODULE PROCEDURE DiffusionMatrix_13
   END DO
   !!
   IF (PRESENT(opt)) CALL MakeDiagonalCopies(ans, opt)
-  !!
   DEALLOCATE (k1bar, k2bar, realval)
-  !!
 END PROCEDURE DiffusionMatrix_13
 
-! !----------------------------------------------------------------------------
-! !                                                            DiffusionMatrix
-! !----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+!                                                           DiffusionMatrix
+!----------------------------------------------------------------------------
 
-! MODULE PROCEDURE DiffusionMatrix_14
-! REAL(DFP), ALLOCATABLE :: c1bar(:, :), c2bar(:, :), realval(:)
-! INTEGER(I4B) :: ii
-!   !! main
-! CALL reallocate(ans, SIZE(test%N, 1), SIZE(trial%N, 1))
-! CALL getProjectionOfdNdXt(obj=test, cdNdXt=c1bar, val=c1)
-! CALL getProjectionOfdNdXt(obj=trial, cdNdXt=c2bar, val=c2)
-! CALL getInterpolation(obj=trial, interpol=realval, val=c3)
-! realval = trial%js * trial%ws * trial%thickness * realval
-! DO ii = 1, SIZE(realval)
-!   ans = ans + realval(ii) * OUTERPROD(c1bar(:, ii), c2bar(:, ii))
-! END DO
-! DEALLOCATE (c1bar, c2bar, realval)
-! END PROCEDURE DiffusionMatrix_14
+MODULE PROCEDURE DiffusionMatrix_14
+  !!
+  SELECT CASE( opt(1) )
+  CASE( 1 )
+    CALL DiffusionMatrix_14a( test, trial, ans )
+  CASE( 2 )
+    CALL DiffusionMatrix_14b( test, trial, ans )
+  END SELECT
+  !!
+END PROCEDURE DiffusionMatrix_14
+
+!----------------------------------------------------------------------------
+!                                                           DiffusionMatrix
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE DiffusionMatrix_14a( test, trial, ans )
+  !!
+  CLASS(ElemshapeData_), INTENT(IN) :: test
+  CLASS(ElemshapeData_), INTENT(IN) :: trial
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ans( :, : )
+  !!
+  REAL(DFP), ALLOCATABLE :: realval(:), m4( :, :, :, : )
+  INTEGER(I4B) :: ii, jj, nsd, ips
+  !!
+  realval = trial%js * trial%ws * trial%thickness
+  nsd = test%refelem%nsd
+  CALL Reallocate( m4, SIZE( test%N, 1 ), SIZE( trial%N, 1 ), nsd, nsd )
+  !!
+  DO ips = 1, SIZE(trial%N, 2)
+    DO jj = 1, nsd
+      DO ii = 1, nsd
+        m4( :, :, ii, jj )  = m4( :, :, ii, jj ) &
+          & + realval( ips ) * OUTERPROD( &
+          & test%dNdXt( :, ii, ips ), &
+          & trial%dNdXt(:, jj, ips ) )
+      END DO
+    END DO
+  END DO
+  !!
+  CALL Convert( from=m4, to=ans )
+  !!
+  DEALLOCATE (realval, m4)
+  !!
+END SUBROUTINE DiffusionMatrix_14a
+
+!----------------------------------------------------------------------------
+!                                                           DiffusionMatrix
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE DiffusionMatrix_14b( test, trial, ans )
+  !!
+  CLASS(ElemshapeData_), INTENT(IN) :: test
+  CLASS(ElemshapeData_), INTENT(IN) :: trial
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ans( :, : )
+  !!
+  REAL(DFP), ALLOCATABLE :: realval(:), m4( :, :, :, : )
+  INTEGER(I4B) :: ii, jj, nsd, ips
+  !!
+  realval = trial%js * trial%ws * trial%thickness
+  nsd = test%refelem%nsd
+  CALL Reallocate( m4, SIZE( test%N, 1 ), SIZE( trial%N, 1 ), nsd, nsd )
+  !!
+  DO ips = 1, SIZE(trial%N, 2)
+    DO jj = 1, nsd
+      DO ii = 1, nsd
+        m4( :, :, ii, jj )  = m4( :, :, ii, jj ) &
+          & + realval( ips ) * OUTERPROD( &
+          & test%dNdXt( :, jj, ips ), &
+          & trial%dNdXt(:, ii, ips ) )
+      END DO
+    END DO
+  END DO
+  !!
+  CALL Convert( from=m4, to=ans )
+  !!
+  DEALLOCATE (realval, m4)
+  !!
+END SUBROUTINE DiffusionMatrix_14b
+
+!----------------------------------------------------------------------------
+!                                                           DiffusionMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiffusionMatrix_15
+  !!
+  SELECT CASE( opt(1) )
+  CASE( 1 )
+    CALL DiffusionMatrix_15a( test, trial, k, ans )
+  CASE( 2 )
+    CALL DiffusionMatrix_15b( test, trial, k, ans )
+  END SELECT
+  !!
+END PROCEDURE DiffusionMatrix_15
+
+!----------------------------------------------------------------------------
+!                                                            DiffusionMatrix
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE DiffusionMatrix_15a( test, trial, k, ans )
+  CLASS(ElemshapeData_), INTENT(IN) :: test
+  !! test function
+  CLASS(ElemshapeData_), INTENT(IN) :: trial
+  !! trial function
+  CLASS(FEVariable_), INTENT(IN) :: k
+  !! scalar
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ans( :, : )
+  !!
+  !! internal variables
+  !!
+  REAL(DFP), ALLOCATABLE :: realval(:), kbar(:), m4( :, :, :, : )
+  INTEGER(I4B) :: ii, jj, nsd, ips
+  !!
+  !! main
+  !!
+  nsd = test%refelem%nsd
+  CALL Reallocate( m4, SIZE( test%N, 1 ), SIZE( trial%N, 1 ), nsd, nsd )
+  CALL getInterpolation(obj=trial, Interpol=kbar, val=k)
+  realval = trial%js * trial%ws * trial%thickness * kbar
+  !!
+  DO ips = 1, SIZE(trial%N, 2)
+    DO jj = 1, nsd
+      DO ii = 1, nsd
+        m4( :, :, ii, jj )  = m4( :, :, ii, jj ) &
+          & + realval( ips ) * OUTERPROD( &
+          & test%dNdXt( :, ii, ips ), &
+          & trial%dNdXt(:, jj, ips ) )
+      END DO
+    END DO
+  END DO
+  !!
+  CALL Convert( from=m4, to=ans )
+  !!
+  DEALLOCATE (kbar, realval, m4)
+  !!
+END SUBROUTINE DiffusionMatrix_15a
+
+!----------------------------------------------------------------------------
+!                                                            DiffusionMatrix
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE DiffusionMatrix_15b( test, trial, k, ans )
+  CLASS(ElemshapeData_), INTENT(IN) :: test
+  !! test function
+  CLASS(ElemshapeData_), INTENT(IN) :: trial
+  !! trial function
+  CLASS(FEVariable_), INTENT(IN) :: k
+  !! scalar
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: ans( :, : )
+  !!
+  !! internal variables
+  !!
+  REAL(DFP), ALLOCATABLE :: realval(:), kbar(:), m4( :, :, :, : )
+  INTEGER(I4B) :: ii, jj, nsd, ips
+  !!
+  !! main
+  !!
+  nsd = test%refelem%nsd
+  CALL Reallocate( m4, SIZE( test%N, 1 ), SIZE( trial%N, 1 ), nsd, nsd )
+  CALL getInterpolation(obj=trial, Interpol=kbar, val=k)
+  realval = trial%js * trial%ws * trial%thickness * kbar
+  !!
+  DO ips = 1, SIZE(trial%N, 2)
+    DO jj = 1, nsd
+      DO ii = 1, nsd
+        m4( :, :, ii, jj )  = m4( :, :, ii, jj ) &
+          & + realval( ips ) * OUTERPROD( &
+          & test%dNdXt( :, jj, ips ), &
+          & trial%dNdXt(:, ii, ips ) )
+      END DO
+    END DO
+  END DO
+  !!
+  CALL Convert( from=m4, to=ans )
+  !!
+  DEALLOCATE (kbar, realval, m4)
+  !!
+END SUBROUTINE DiffusionMatrix_15b
 
 END SUBMODULE Methods
