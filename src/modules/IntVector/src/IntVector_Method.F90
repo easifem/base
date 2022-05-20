@@ -889,6 +889,12 @@ INTERFACE
   END SUBROUTINE intVec_set1
 END INTERFACE
 
+INTERFACE set
+  MODULE PROCEDURE intVec_set1
+END INTERFACE set
+
+PUBLIC :: set
+
 !----------------------------------------------------------------------------
 !                                                        setValue@SetMethod
 !----------------------------------------------------------------------------
@@ -906,10 +912,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE set
-  MODULE PROCEDURE intVec_set1, intVec_set2
+  MODULE PROCEDURE intVec_set2
 END INTERFACE set
-
-PUBLIC :: set
 
 !----------------------------------------------------------------------------
 !                                                         Append@setMethods
