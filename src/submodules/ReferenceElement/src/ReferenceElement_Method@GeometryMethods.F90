@@ -19,7 +19,7 @@
 ! date: 1 March 2021
 ! summary: This sumodule contains method for geometry
 
-SUBMODULE(ReferenceElement_Method) Geometry
+SUBMODULE(ReferenceElement_Method) GeometryMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -1581,4 +1581,9 @@ CASE (Triangle15b, Triangle21, Tetrahedron20, Tetrahedron35, &
 
 END SELECT
 END PROCEDURE RefElem_FacetTopology
-END SUBMODULE Geometry
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END SUBMODULE GeometryMethods

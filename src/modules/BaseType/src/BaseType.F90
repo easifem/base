@@ -610,8 +610,8 @@ PUBLIC :: SmallStrainPointer_
 
 TYPE :: ReferenceTopology_
   INTEGER(I4B), ALLOCATABLE :: Nptrs(:)
-  INTEGER(I4B) :: Name
-  INTEGER(I4B) :: XiDimension
+  INTEGER(I4B) :: Name = 0
+  INTEGER(I4B) :: XiDimension = 0
 END TYPE ReferenceTopology_
 
 PUBLIC :: ReferenceTopology_
@@ -635,15 +635,15 @@ PUBLIC :: ReferenceTopologyPointer_
 TYPE :: ReferenceElement_
   REAL(DFP), ALLOCATABLE :: xiJ(:, :)
     !! Node coord
-  INTEGER(I4B) :: entityCounts(4)
+  INTEGER(I4B) :: entityCounts(4) = 0
     !! Number of 0D, 1D, 2D, 3D entities
-  INTEGER(I4B) :: xiDimension
+  INTEGER(I4B) :: xiDimension = 0
     !! Xidimension
-  INTEGER(I4B) :: name
+  INTEGER(I4B) :: name = 0
     !! Name of the element
-  INTEGER(I4B) :: order
+  INTEGER(I4B) :: order = 0
     !! Order of element
-  INTEGER(I4B) :: nsd
+  INTEGER(I4B) :: nsd = 0
     !! Number of spatial dimensions
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities

@@ -26,8 +26,12 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                                Display@IO
+!                                                         Display@IOMethods
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 May 2022
+! summary: Display the ReferenceElement
 
 INTERFACE
   MODULE SUBROUTINE display_ref_elem(obj, msg, unitno)
@@ -37,9 +41,19 @@ INTERFACE
   END SUBROUTINE display_ref_elem
 END INTERFACE
 
+INTERFACE Display
+  MODULE PROCEDURE display_ref_elem
+END INTERFACE Display
+
+PUBLIC :: Display
+
 !----------------------------------------------------------------------------
-!                                                                Display@IO
+!                                                         Display@IOMethods
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 May 2022
+! summary: Display reference topology
 
 INTERFACE
   MODULE SUBROUTINE display_ref_topo(obj, msg, unitno)
@@ -49,18 +63,12 @@ INTERFACE
   END SUBROUTINE display_ref_topo
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                                Display@IO
-!----------------------------------------------------------------------------
-
 INTERFACE Display
-  MODULE PROCEDURE display_ref_elem, display_ref_topo
+  MODULE PROCEDURE display_ref_topo
 END INTERFACE Display
 
-PUBLIC :: Display
-
 !----------------------------------------------------------------------------
-!                                              ReferenceTopology@Constructor
+!                                     ReferenceTopology@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -106,7 +114,7 @@ END INTERFACE ReferenceTopology
 PUBLIC :: ReferenceTopology
 
 !----------------------------------------------------------------------------
-!                                                 Deallocate@Constructor
+!                                            Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -128,19 +136,19 @@ INTERFACE
   END SUBROUTINE refelem_Deallocate1
 END INTERFACE
 
+INTERFACE Deallocate
+  MODULE PROCEDURE refelem_Deallocate1
+END INTERFACE
+
+PUBLIC :: Deallocate
+
 !----------------------------------------------------------------------------
-!                                                 Deallocate@Constructor
+!                                            Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         1 March 2021
-! summary:         This routine deallocates the data stored inside the [[ReferenceElement_]]
-!
-!### Usage
-!
-!```fortran
-!        todo
-!```
+! date: 1 March 2021
+! summary: Deallocates the data stored inside the [[ReferenceElement_]]
 
 INTERFACE
   MODULE PURE SUBROUTINE refelem_Deallocate2(obj)
@@ -149,18 +157,16 @@ INTERFACE
 END INTERFACE
 
 INTERFACE Deallocate
-  MODULE PROCEDURE refelem_Deallocate1, refelem_Deallocate2
+  MODULE PROCEDURE refelem_Deallocate2
 END INTERFACE
 
-PUBLIC :: Deallocate
-
 !----------------------------------------------------------------------------
-!                                                           NNE@Constructor
+!                                                     NNE@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         1 March 2021
-! summary:         This function returns the totat nodes inside the referenc topology
+! date: 1 March 2021
+! summary: This function returns the totat nodes inside the referenc topology
 !
 !### Usage
 !
@@ -179,7 +185,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           NNE@Constructor
+!                                                    NNE@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -198,7 +204,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                            NNE@Constructor
+!                                                     NNE@ConstructorMethods
 !----------------------------------------------------------------------------
 
 INTERFACE OPERATOR(.NNE.)
@@ -208,7 +214,7 @@ END INTERFACE
 PUBLIC :: OPERATOR(.NNE.)
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -246,24 +252,41 @@ END INTERFACE
 PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
-!                                   ReferenceElement_Pointer@Constructor
+!                               ReferenceElement_Pointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION refelem_constructor_1(xidim, nsd, elemType) RESULT(Ans)
+  MODULE FUNCTION refelem_Constructor_1(xidim, nsd, elemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: xidim, nsd, elemType
     CLASS(ReferenceElement_), POINTER :: ans
-  END FUNCTION refelem_constructor_1
+  END FUNCTION refelem_Constructor_1
 END INTERFACE
 
 INTERFACE ReferenceElement_Pointer
-  MODULE PROCEDURE refelem_constructor_1
+  MODULE PROCEDURE refelem_Constructor_1
 END INTERFACE ReferenceElement_Pointer
 
 PUBLIC :: ReferenceElement_Pointer
 
+
 !----------------------------------------------------------------------------
-!                                                       getNptrs@Construcor
+!                                ReferenceElementPointer@ConstructorMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE FUNCTION refelem_Constructor_2( refelem ) RESULT( ans )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
+  CLASS( ReferenceElement_ ), POINTER :: ans
+END FUNCTION refelem_Constructor_2
+END INTERFACE
+
+INTERFACE ReferenceElement_Pointer
+  MODULE PROCEDURE refelem_Constructor_2
+END INTERFACE ReferenceElement_Pointer
+
+
+!----------------------------------------------------------------------------
+!                                                 getNptrs@ConstrucorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.

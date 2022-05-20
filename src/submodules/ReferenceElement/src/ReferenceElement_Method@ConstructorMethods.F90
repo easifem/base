@@ -19,7 +19,7 @@
 ! date: 1 March 2021
 ! summary: This submodule contains constructor methods of [[ReferenceElement_]]
 
-SUBMODULE(ReferenceElement_Method) Constructor
+SUBMODULE(ReferenceElement_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -194,6 +194,56 @@ MODULE PROCEDURE refelem_constructor_1
 END PROCEDURE refelem_constructor_1
 
 !----------------------------------------------------------------------------
+!                                                  ReferenceElement_Pointer
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE refelem_constructor_2
+  !!
+  INTEGER( I4B ) :: ii
+  !!
+  SELECT TYPE( refelem )
+  !!
+  TYPE IS ( ReferenceLine_ )
+    ALLOCATE( ReferenceLine_ :: ans )
+  !!
+  TYPE IS ( ReferenceTriangle_ )
+    ALLOCATE( ReferenceTriangle_ :: ans )
+  !!
+  TYPE IS ( ReferenceQuadrangle_ )
+    ALLOCATE( ReferenceQuadrangle_ :: ans )
+  !!
+  TYPE IS ( ReferenceTetrahedron_ )
+    ALLOCATE( ReferenceTetrahedron_ :: ans )
+  !!
+  TYPE IS ( ReferenceHexahedron_ )
+    ALLOCATE( ReferenceHexahedron_ :: ans )
+  !!
+  TYPE IS ( ReferencePrism_ )
+    ALLOCATE( ReferencePrism_ :: ans )
+  !!
+  TYPE IS ( ReferencePyramid_ )
+    ALLOCATE( ReferencePyramid_ :: ans )
+  !!
+  END SELECT
+  !!
+  IF( ALLOCATED( refelem%xij ) ) ans%xij=refelem%xij
+  ans%entityCounts = refelem%entityCounts
+  ans%xiDimension = refelem%xiDimension
+  ans%name = refelem%name
+  ans%order = refelem%order
+  ans%nsd = refelem%nsd
+  !!
+  IF( ALLOCATED( refelem%topology ) ) THEN
+    DO ii = 1, SIZE( refelem%topology )
+      ans%topology( ii ) = refelem%topology( ii )
+    END DO
+  END IF
+  !!
+  ans%lagrangeElement => refelem%lagrangeElement
+  !!
+END PROCEDURE refelem_constructor_2
+
+!----------------------------------------------------------------------------
 !                                                              getNptrs
 !----------------------------------------------------------------------------
 
@@ -205,4 +255,4 @@ END PROCEDURE refelem_getNptrs
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods

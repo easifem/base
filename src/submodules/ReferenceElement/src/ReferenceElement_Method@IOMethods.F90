@@ -19,7 +19,7 @@
 ! date: 	1 March 2021
 ! summary: 	This submodule contains IO methods for [[ReferenceElement_]]
 
-SUBMODULE(ReferenceElement_Method) IO
+SUBMODULE(ReferenceElement_Method) IOMethods
 USE BaseMethod
 CONTAINS
 
@@ -79,4 +79,4 @@ MODULE PROCEDURE display_ref_elem
   END DO
 END PROCEDURE display_ref_elem
 
-END SUBMODULE IO
+END SUBMODULE IOMethods

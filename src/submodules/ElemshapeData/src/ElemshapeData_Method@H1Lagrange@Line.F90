@@ -15,11 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemshapeData_Method : H1Lagrange ) Line
+SUBMODULE(ElemshapeData_Method:H1Lagrange) Line
 USE BaseMethod
 IMPLICIT NONE
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 MODULE PROCEDURE Line_H1_Lagrange
   INTEGER( I4B ) :: nips
@@ -37,13 +41,20 @@ MODULE PROCEDURE Line_H1_Lagrange
     REAL( DFP ) :: x( 2 )
     !         ....................................         !
 
-    call AllocateData( obj = obj, nsd = refelem%nsd, &
-      & xidim = refelem%xidimension, nns = 2, nips = nips )
+    call Allocate( &
+      & obj = obj, &
+      & nsd = refelem%nsd, &
+      & xidim = refelem%xidimension, &
+      & nns = 2, &
+      & nips = nips )
+    !!
     x = RefElem%XiJ( 1, 1:2 )
+    !!
     obj%N( 1, : ) = ( Xi( 1, : ) - x( 2 ) ) / ( x( 1 ) - x( 2 ) )
     obj%N( 2, : ) = 1.0_DFP - obj%N( 1, : )
     obj%dNdXi( 1, 1, : ) = 1.0_DFP / ( x( 1 ) - x( 2 ) )
     obj%dNdXi( 2, 1, : ) = 1.0_DFP / ( x( 2 ) - x( 1 ) )
+    !!
   END BLOCK
   !---------------------------------------------------------------!
   !---------------------------------------------------------------!
@@ -53,8 +64,12 @@ MODULE PROCEDURE Line_H1_Lagrange
     REAL( DFP ) :: X( 3 )
     !         ....................................         !
 
-    call AllocateData( obj = obj, nsd = refelem%nsd, &
-    & xidim = refelem%xidimension, nns = 3, nips = nips )
+    call Allocate( &
+      & obj = obj, &
+      & nsd = refelem%nsd, &
+      & xidim = refelem%xidimension, &
+      & nns = 3, &
+      & nips = nips )
 
     X = RefElem%XiJ( 1, 1:3 )
 
@@ -99,8 +114,12 @@ MODULE PROCEDURE Line_H1_Lagrange
       REAL( DFP ) :: X( 4 ), DummyReal
       !         ....................................         !
 
-      call AllocateData( obj = obj, nsd = refelem%nsd, &
-        & xidim = refelem%xidimension, nns = 4, nips = nips )
+      call Allocate( &
+        & obj = obj, &
+        & nsd = refelem%nsd, &
+        & xidim = refelem%xidimension, &
+        & nns = 4, &
+        & nips = nips )
 
       X = RefElem%XiJ( 1, 1:4 )
 
@@ -208,8 +227,12 @@ MODULE PROCEDURE Line_H1_Lagrange
       !                 define internal variables
       REAL( DFP ) :: X( 5 ), DummyReal
       !         ....................................         !
-      call AllocateData( obj = obj, nsd = refelem%nsd, &
-        & xidim = refelem%xidimension, nns = 5, nips = nips )
+      call Allocate( &
+        & obj = obj, &
+        & nsd = refelem%nsd, &
+        & xidim = refelem%xidimension, &
+        & nns = 5, &
+        & nips = nips )
 
       X = RefElem%XiJ( 1, 1:5 )
 
@@ -385,11 +408,16 @@ MODULE PROCEDURE Line_H1_Lagrange
       !                 define internal variables
       REAL( DFP ) :: X( 6 ), DummyReal
       !         ....................................         !
-
-      call AllocateData( obj = obj, nsd = refelem%nsd, &
-        & xidim = refelem%xidimension, nns = 6, nips = nips )
+      !!
+      call Allocate( &
+        & obj = obj, &
+        & nsd = refelem%nsd, &
+        & xidim = refelem%xidimension, &
+        & nns = 6, &
+        & nips = nips )
+      !!
       X = RefElem%XiJ( 1, 1:6 )
-
+      !!
       obj%N( 1, : ) = &
         &   ( Xi( 1, : ) - X( 2 ) ) &
         & * ( Xi( 1, : ) - X( 3 ) ) &
@@ -401,7 +429,7 @@ MODULE PROCEDURE Line_H1_Lagrange
         & / (     X( 1 ) - X( 4 ) ) &
         & / (     X( 1 ) - X( 5 ) ) &
         & / (     X( 1 ) - X( 6 ) )
-
+      !!
       obj%N( 2, : ) = &
         &   ( Xi( 1, : ) - X( 1 ) ) &
         & * ( Xi( 1, : ) - X( 3 ) ) &
@@ -413,7 +441,7 @@ MODULE PROCEDURE Line_H1_Lagrange
         & / (     X( 2 ) - X( 4 ) ) &
         & / (     X( 2 ) - X( 5 ) ) &
         & / (     X( 2 ) - X( 6 ) )
-
+      !!
       obj%N( 3, : ) = &
         &   ( Xi( 1, : ) - X( 1 ) ) &
         & * ( Xi( 1, : ) - X( 2 ) ) &
@@ -425,7 +453,7 @@ MODULE PROCEDURE Line_H1_Lagrange
         & / (     X( 3 ) - X( 4 ) ) &
         & / (     X( 3 ) - X( 5 ) ) &
         & / (     X( 3 ) - X( 6 ) )
-
+      !!
       obj%N( 4, : ) = &
         &   ( Xi( 1, : ) - X( 1 ) ) &
         & * ( Xi( 1, : ) - X( 2 ) ) &
@@ -437,7 +465,7 @@ MODULE PROCEDURE Line_H1_Lagrange
         & / (     X( 4 ) - X( 3 ) ) &
         & / (     X( 4 ) - X( 5 ) ) &
         & / (     X( 4 ) - X( 6 ) )
-
+      !!
       obj%N( 5, : ) = &
         &   ( Xi( 1, : ) - X( 1 ) ) &
         & * ( Xi( 1, : ) - X( 2 ) ) &
@@ -449,7 +477,7 @@ MODULE PROCEDURE Line_H1_Lagrange
         & / (     X( 5 ) - X( 3 ) ) &
         & / (     X( 5 ) - X( 4 ) ) &
         & / (     X( 5 ) - X( 6 ) )
-
+      !!
       obj%N( 6, : ) = &
         &   ( Xi( 1, : ) - X( 1 ) ) &
         & * ( Xi( 1, : ) - X( 2 ) ) &
@@ -484,17 +512,18 @@ MODULE PROCEDURE Line_H1_Lagrange
         & * ( Xi( 1, : ) - X( 3 ) ) &
         & * ( Xi( 1, : ) - X( 4 ) ) &
         & * ( Xi( 1, : ) - X( 5 ) )
-
+      !!
       DummyReal = &
         &   ( X( 1 ) - X( 2 ) ) &
         & * ( X( 1 ) - X( 3 ) ) &
         & * ( X( 1 ) - X( 4 ) ) &
         & * ( X( 1 ) - X( 5 ) ) &
         & * ( X( 1 ) - X( 6 ) )
-
+      !!
       obj%dNdXi( 1, 1, : ) = obj%dNdXi( 1, 1, : ) / DummyReal
-
+      !!
       ! 2
+      !!
       obj%dNdXi( 2, 1, : ) = &
         &   ( Xi( 1, : ) - X( 3 ) ) &
         & * ( Xi( 1, : ) - X( 4 ) ) &
@@ -516,17 +545,18 @@ MODULE PROCEDURE Line_H1_Lagrange
         & * ( Xi( 1, : ) - X( 3 ) ) &
         & * ( Xi( 1, : ) - X( 4 ) ) &
         & * ( Xi( 1, : ) - X( 5 ) )
-
+      !!
       DummyReal = &
         &   ( X( 2 ) - X( 1 ) ) &
         & * ( X( 2 ) - X( 3 ) ) &
         & * ( X( 2 ) - X( 4 ) ) &
         & * ( X( 2 ) - X( 5 ) ) &
         & * ( X( 2 ) - X( 6 ) )
-
+      !!
       obj%dNdXi( 2, 1, : ) = obj%dNdXi( 2, 1, : ) / DummyReal
-
+      !!
       ! 3
+      !!
       obj%dNdXi( 3, 1, : ) = &
         &   ( Xi( 1, : ) - X( 2 ) ) &
         & * ( Xi( 1, : ) - X( 4 ) ) &
@@ -548,17 +578,18 @@ MODULE PROCEDURE Line_H1_Lagrange
         & * ( Xi( 1, : ) - X( 2 ) ) &
         & * ( Xi( 1, : ) - X( 4 ) ) &
         & * ( Xi( 1, : ) - X( 5 ) )
-
+      !!
       DummyReal = &
         &   ( X( 3 ) - X( 1 ) ) &
         & * ( X( 3 ) - X( 2 ) ) &
         & * ( X( 3 ) - X( 4 ) ) &
         & * ( X( 3 ) - X( 5 ) ) &
         & * ( X( 3 ) - X( 6 ) )
-
+      !!
       obj%dNdXi( 3, 1, : ) = obj%dNdXi( 3, 1, : ) / DummyReal
-
+      !!
       ! 4
+      !!
       obj%dNdXi( 4, 1, : ) = &
         &   ( Xi( 1, : ) - X( 2 ) ) &
         & * ( Xi( 1, : ) - X( 3 ) ) &
@@ -580,17 +611,18 @@ MODULE PROCEDURE Line_H1_Lagrange
         & * ( Xi( 1, : ) - X( 2 ) ) &
         & * ( Xi( 1, : ) - X( 3 ) ) &
         & * ( Xi( 1, : ) - X( 5 ) )
-
+      !!
       DummyReal = &
         &   ( X( 4 ) - X( 1 ) ) &
         & * ( X( 4 ) - X( 2 ) ) &
         & * ( X( 4 ) - X( 3 ) ) &
         & * ( X( 4 ) - X( 5 ) ) &
         & * ( X( 4 ) - X( 6 ) )
-
+      !!
       obj%dNdXi( 4, 1, : ) = obj%dNdXi( 4, 1, : ) / DummyReal
-
+      !!
       ! 5
+      !!
       obj%dNdXi( 5, 1, : ) = &
       &   ( Xi( 1, : ) - X( 2 ) ) &
       & * ( Xi( 1, : ) - X( 3 ) ) &
@@ -612,17 +644,18 @@ MODULE PROCEDURE Line_H1_Lagrange
       & * ( Xi( 1, : ) - X( 2 ) ) &
       & * ( Xi( 1, : ) - X( 3 ) ) &
       & * ( Xi( 1, : ) - X( 4 ) )
-
+      !!
       DummyReal = &
         &   ( X( 5 ) - X( 1 ) ) &
         & * ( X( 5 ) - X( 2 ) ) &
         & * ( X( 5 ) - X( 3 ) ) &
         & * ( X( 5 ) - X( 4 ) ) &
         & * ( X( 5 ) - X( 6 ) )
-
+      !!
       obj%dNdXi( 5, 1, : ) = obj%dNdXi( 5, 1, : ) / DummyReal
-
+      !!
       ! 6
+      !!
       obj%dNdXi( 6, 1, : ) = &
         &   ( Xi( 1, : ) - X( 2 ) ) &
         & * ( Xi( 1, : ) - X( 3 ) ) &
@@ -644,14 +677,14 @@ MODULE PROCEDURE Line_H1_Lagrange
         & * ( Xi( 1, : ) - X( 2 ) ) &
         & * ( Xi( 1, : ) - X( 3 ) ) &
         & * ( Xi( 1, : ) - X( 4 ) )
-
+      !!
       DummyReal = &
         &   ( X( 6 ) - X( 1 ) ) &
         & * ( X( 6 ) - X( 2 ) ) &
         & * ( X( 6 ) - X( 3 ) ) &
         & * ( X( 6 ) - X( 4 ) ) &
         & * ( X( 6 ) - X( 5 ) )
-
+      !!
       obj%dNdXi( 6, 1, : ) = obj%dNdXi( 6, 1, : ) / DummyReal
     END BLOCK
   !---------------------------------------------------------------!
@@ -665,8 +698,12 @@ MODULE PROCEDURE Line_H1_Lagrange
       !         ....................................         !
 
       nns = refelem%order + 1
-      call AllocateData( obj = obj, nsd = refelem%nsd, &
-        & xidim = refelem%xidimension, nns = nns, nips = nips )
+      call Allocate( &
+        & obj = obj, &
+        & nsd = refelem%nsd, &
+        & xidim = refelem%xidimension, &
+        & nns = nns, &
+        & nips = nips )
 
       X = RefElem%XiJ( 1, 1:nns )
       obj%N = 1.0_DFP

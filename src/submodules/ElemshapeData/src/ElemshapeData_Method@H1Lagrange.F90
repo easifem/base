@@ -24,13 +24,14 @@ IMPLICIT NONE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
-! summary: This subroutine computes the shape functions given by Lagrange polynomials over reference line element
+! summary: returns the shape functions given by Lagrange polynomials
 !
 !# Introduction
 !
-! * This subroutine computes shape functions, lagrange polynomials, over reference line element
-! * The interpolation functions are defined inside the reference element itself
-! * The order of shape functions are also included inside the refelem
+! This subroutine computes shape functions, lagrange polynomials, over
+! reference line element. The interpolation functions are defined inside the
+! reference element itself. The order of shape functions are also included
+! inside the refelem
 
 INTERFACE
 MODULE PURE SUBROUTINE Line_H1_Lagrange( obj, Quad, RefElem, &
@@ -53,7 +54,7 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
-! summary: This subroutine computes the shape functions given by Lagrange polynomials over reference triangle element
+! summary: Returns the shape functions given by Lagrange polynomials
 
 INTERFACE
 MODULE PURE SUBROUTINE Triangle_H1_Lagrange( obj, Quad, RefElem, &

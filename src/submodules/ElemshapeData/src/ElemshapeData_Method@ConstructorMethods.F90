@@ -28,7 +28,7 @@ CONTAINS
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_AllocateData
+MODULE PROCEDURE elemsd_Allocate
   CALL reallocate( obj%N, nns, nips )
   CALL reallocate( obj%dNdXi, nns, xidim, nips )
   CALL reallocate( obj%Normal, 3, nips )
@@ -38,7 +38,7 @@ MODULE PROCEDURE elemsd_AllocateData
   CALL reallocate( obj%Thickness, nips )
   obj%Thickness = 1.0_DFP
   CALL reallocate( obj%Coord, nsd, nips )
-END PROCEDURE elemsd_AllocateData
+END PROCEDURE elemsd_Allocate
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
@@ -142,14 +142,19 @@ END PROCEDURE elemsd_BaseContinuity
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_Initiate
+MODULE PROCEDURE elemsd_Initiate1
+  !!
   SELECT CASE( TRIM( interpolType ) // TRIM( continuityType )  )
   !!
   !!
   !!
   CASE( "LagrangeInterpolation" // "H1" )
-    CALL H1_Lagrange( obj=obj, quad=quad, refElem=refElem, &
-      & continuityType=TypeH1, interpolType=TypeLagrangeInterpolation )
+    CALL H1_Lagrange( &
+      & obj=obj, &
+      & quad=quad, &
+      & refElem=refElem, &
+      & continuityType=TypeH1, &
+      & interpolType=TypeLagrangeInterpolation )
   !!
   !!
   !!
@@ -158,162 +163,291 @@ MODULE PROCEDURE elemsd_Initiate
       & Msg="BaseInterpolation: LagrangeInterpolation &
       & BaseContinuityType: H1Div", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "LagrangeInterpolation" // "H1Curl" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: LagrangeInterpolation &
       & BaseContinuityType: H1Curl", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "LagrangeInterpolation" // "DG" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: LagrangeInterpolation &
       & BaseContinuityType: DG", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "HermitInterpolation" // "H1" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: HermitInterpolation &
       & BaseContinuityType: H1", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "HermitInterpolation" // "H1Div" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: HermitInterpolation &
       & BaseContinuityType: H1Div", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "HermitInterpolation" // "H1Curl" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: HermitInterpolation &
       & BaseContinuityType: H1Curl", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "HermitInterpolation" // "DG" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: HermitInterpolation &
       & BaseContinuityType: DG", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "SerendipityInterpolation" // "H1" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: SerendipityInterpolation &
       & BaseContinuityType: H1", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "SerendipityInterpolation" // "H1Div" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: SerendipityInterpolation &
       & BaseContinuityType: H1Div", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "SerendipityInterpolation" // "H1Curl" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: SerendipityInterpolation &
       & BaseContinuityType: H1Curl", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "SerendipityInterpolation" // "DG" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: SerendipityInterpolation &
       & BaseContinuityType: DG", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "HierarchyInterpolation" // "H1" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: HierarchyInterpolation &
       & BaseContinuityType: H1", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "HierarchyInterpolation" // "H1Div" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: HierarchyInterpolation &
       & BaseContinuityType: H1Div", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "HierarchyInterpolation" // "H1Curl" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: HierarchyInterpolation &
       & BaseContinuityType: H1Curl", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE( "HierarchyInterpolation" // "DG" )
     CALL ErrorMSG( &
       & Msg="BaseInterpolation: HierarchyInterpolation &
       & BaseContinuityType: DG", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
     STOP
-
+  !!
+  !!
+  !!
   CASE DEFAULT
     CALL ErrorMSG( &
       & Msg="Unknown child name of BaseInterpolation &
       & and BaseContinuityType", &
       & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_Initiate()", &
+      & Routine = "elemsd_Initiate1()", &
       & Line = __LINE__ , &
       & UnitNo = stdout )
   END SELECT
+  !!
+  !!
+  !!
+END PROCEDURE elemsd_Initiate1
 
-END PROCEDURE elemsd_Initiate
+!----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_initiate2
+  IF( ALLOCATED( obj2%N ) ) obj1%N = obj2%N
+  IF( ALLOCATED( obj2%dNdXi ) ) obj1%dNdXi = obj2%dNdXi
+  IF( ALLOCATED( obj2%jacobian ) ) obj1%jacobian = obj2%jacobian
+  IF( ALLOCATED( obj2%js ) ) obj1%js = obj2%js
+  IF( ALLOCATED( obj2%ws ) ) obj1%ws = obj2%ws
+  IF( ALLOCATED( obj2%dNdXt ) ) obj1%dNdXt = obj2%dNdXt
+  IF( ALLOCATED( obj2%thickness ) ) obj1%thickness = obj2%thickness
+  IF( ALLOCATED( obj2%coord ) ) obj1%coord = obj2%coord
+  IF( ALLOCATED( obj2%normal ) ) obj1%normal = obj2%normal
+  IF( ASSOCIATED( obj2%refElem ) ) THEN
+    obj1%refElem => ReferenceElement_Pointer( obj2%refelem )
+  ELSE
+    obj1%refElem => NULL()
+  END IF
+END PROCEDURE elemsd_initiate2
+
+!----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_initiate3
+  IF( ALLOCATED( obj2%N ) ) obj1%N = obj2%N
+  IF( ALLOCATED( obj2%dNdXi ) ) obj1%dNdXi = obj2%dNdXi
+  IF( ALLOCATED( obj2%jacobian ) ) obj1%jacobian = obj2%jacobian
+  IF( ALLOCATED( obj2%js ) ) obj1%js = obj2%js
+  IF( ALLOCATED( obj2%ws ) ) obj1%ws = obj2%ws
+  IF( ALLOCATED( obj2%dNdXt ) ) obj1%dNdXt = obj2%dNdXt
+  IF( ALLOCATED( obj2%thickness ) ) obj1%thickness = obj2%thickness
+  IF( ALLOCATED( obj2%coord ) ) obj1%coord = obj2%coord
+  IF( ALLOCATED( obj2%normal ) ) obj1%normal = obj2%normal
+  IF( ASSOCIATED( obj2%refElem ) ) THEN
+    obj1%refElem => ReferenceElement_Pointer( obj2%refelem )
+  ELSE
+    obj1%refElem => NULL()
+  END IF
+END PROCEDURE elemsd_initiate3
+
+!----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_initiate4
+  IF( ALLOCATED( obj2%N ) ) obj1%N = obj2%N
+  IF( ALLOCATED( obj2%dNdXi ) ) obj1%dNdXi = obj2%dNdXi
+  IF( ALLOCATED( obj2%jacobian ) ) obj1%jacobian = obj2%jacobian
+  IF( ALLOCATED( obj2%js ) ) obj1%js = obj2%js
+  IF( ALLOCATED( obj2%ws ) ) obj1%ws = obj2%ws
+  IF( ALLOCATED( obj2%dNdXt ) ) obj1%dNdXt = obj2%dNdXt
+  IF( ALLOCATED( obj2%thickness ) ) obj1%thickness = obj2%thickness
+  IF( ALLOCATED( obj2%coord ) ) obj1%coord = obj2%coord
+  IF( ALLOCATED( obj2%normal ) ) obj1%normal = obj2%normal
+  IF( ASSOCIATED( obj2%refElem ) ) THEN
+    obj1%refElem => ReferenceElement_Pointer( obj2%refelem )
+  ELSE
+    obj1%refElem => NULL()
+  END IF
+END PROCEDURE elemsd_initiate4
+
+!----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_initiate5
+  !!
+  IF( ALLOCATED( obj2%N ) ) obj1%N = obj2%N
+  IF( ALLOCATED( obj2%dNdXi ) ) obj1%dNdXi = obj2%dNdXi
+  IF( ALLOCATED( obj2%jacobian ) ) obj1%jacobian = obj2%jacobian
+  IF( ALLOCATED( obj2%js ) ) obj1%js = obj2%js
+  IF( ALLOCATED( obj2%ws ) ) obj1%ws = obj2%ws
+  IF( ALLOCATED( obj2%dNdXt ) ) obj1%dNdXt = obj2%dNdXt
+  IF( ALLOCATED( obj2%thickness ) ) obj1%thickness = obj2%thickness
+  IF( ALLOCATED( obj2%coord ) ) obj1%coord = obj2%coord
+  IF( ALLOCATED( obj2%normal ) ) obj1%normal = obj2%normal
+  IF( ASSOCIATED( obj2%refElem ) ) THEN
+    obj1%refElem => ReferenceElement_Pointer( obj2%refelem )
+  ELSE
+    obj1%refElem => NULL()
+  END IF
+  obj1%wt = obj2%wt
+  obj1%theta = obj2%theta
+  obj1%jt = obj2%jt
+  IF( ALLOCATED( obj2%T ) ) obj1%T = obj2%T
+  IF( ALLOCATED( obj2%dTdTheta ) ) obj1%dTdTheta = obj2%dTdTheta
+  IF( ALLOCATED( obj2%dNTdt ) ) obj1%dNTdt = obj2%dNTdt
+  IF( ALLOCATED( obj2%dNTdXt ) ) obj1%dNTdXt = obj2%dNTdXt
+  !!
+END PROCEDURE elemsd_initiate5
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE ConstructorMethods
 
