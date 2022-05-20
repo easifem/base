@@ -121,11 +121,11 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE SUBROUTINE csr_initiate1( obj, ncol, nrow, dof )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ncol, nrow
-  TYPE( DOF_ ), OPTIONAL, INTENT( IN ) ::  dof
-END SUBROUTINE csr_initiate1
+  MODULE SUBROUTINE csr_initiate1( obj, ncol, nrow, dof )
+    TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+    INTEGER( I4B ), INTENT( IN ) :: ncol, nrow
+    TYPE( DOF_ ), OPTIONAL, INTENT( IN ) ::  dof
+  END SUBROUTINE csr_initiate1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -140,18 +140,12 @@ END INTERFACE
 !
 ! This subroutine copies `obj2` into `obj`, and initiates the latter one.
 ! This routine is used to define the assignment operator.
-!
-!## Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
-MODULE SUBROUTINE csr_initiate2( obj, obj2 )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj2
-END SUBROUTINE csr_initiate2
+  MODULE SUBROUTINE csr_initiate2( obj, obj2 )
+    TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+    TYPE( CSRSparsity_ ), INTENT( IN ) :: obj2
+  END SUBROUTINE csr_initiate2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -180,10 +174,10 @@ END INTERFACE
 
 
 INTERFACE
-MODULE SUBROUTINE csr_initiate3( obj, IA, JA )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: IA( : ), JA( : )
-END SUBROUTINE csr_initiate3
+  MODULE SUBROUTINE csr_initiate3( obj, IA, JA )
+    TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+    INTEGER( I4B ), INTENT( IN ) :: IA( : ), JA( : )
+  END SUBROUTINE csr_initiate3
 END INTERFACE
 
 INTERFACE Initiate
@@ -211,12 +205,12 @@ PUBLIC :: ASSIGNMENT( = )
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE
-MODULE FUNCTION csr_constructor1( nrow, ncol, dof ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: nrow
-  INTEGER( I4B ), INTENT( IN ) :: ncol
-  TYPE( DOF_ ), OPTIONAL, INTENT( IN ) :: dof
-  TYPE( CSRSparsity_ ) :: ans
-END FUNCTION csr_constructor1
+  MODULE FUNCTION csr_constructor1( nrow, ncol, dof ) RESULT( Ans )
+    INTEGER( I4B ), INTENT( IN ) :: nrow
+    INTEGER( I4B ), INTENT( IN ) :: ncol
+    TYPE( DOF_ ), OPTIONAL, INTENT( IN ) :: dof
+    TYPE( CSRSparsity_ ) :: ans
+  END FUNCTION csr_constructor1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -232,11 +226,11 @@ END INTERFACE
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE
-MODULE FUNCTION csr_constructor2( IA, JA ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: IA(:)
-  INTEGER( I4B ), INTENT( IN ) :: JA(:)
-  TYPE( CSRSparsity_ ) :: ans
-END FUNCTION csr_constructor2
+  MODULE FUNCTION csr_constructor2( IA, JA ) RESULT( Ans )
+    INTEGER( I4B ), INTENT( IN ) :: IA(:)
+    INTEGER( I4B ), INTENT( IN ) :: JA(:)
+    TYPE( CSRSparsity_ ) :: ans
+  END FUNCTION csr_constructor2
 END INTERFACE
 
 INTERFACE CSRSpasity
@@ -246,7 +240,7 @@ END INTERFACE CSRSpasity
 PUBLIC :: CSRSpasity
 
 !----------------------------------------------------------------------------
-!                                            CSRSparsity@ConstructorMethods
+!                                       CSRSparsityPointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -267,7 +261,7 @@ END FUNCTION csr_constructor_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                            CSRSparsity@ConstructorMethods
+!                                      CSRSparsityPointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -328,122 +322,11 @@ MODULE SUBROUTINE csr_Display( obj, Msg, UnitNo )
 END SUBROUTINE csr_Display
 END INTERFACE
 
-
 INTERFACE Display
   MODULE PROCEDURE csr_Display
 END INTERFACE Display
 
 PUBLIC :: Display
-
-!----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine set the sparsity pattern of a given row
-!
-!# Introduction
-!
-! This subroutine sets the sparsity pattern of a given row
-! - If `obj%tdof` is equal to 1, then `Col` is sorted in increasing order,
-! and appended to `obj%Row(Row)`
-! - If `obj%tdof` is not equal to 1, then based on the storage format and
-! `Col` connectivity information is generated.
-
-INTERFACE
-MODULE SUBROUTINE csr_setSparsity1( obj, Row, Col )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Row
-  INTEGER( I4B ), INTENT( IN ) :: Col( : )
-END SUBROUTINE csr_setSparsity1
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine sets the sparsity pattern of a given row
-
-INTERFACE
-MODULE SUBROUTINE csr_setSparsity2( obj, Row, Col )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Row( : )
-  TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
-END SUBROUTINE csr_setSparsity2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 10 Oct 2021
-! summary: This subroutine sets sparsity pattern for block `CSRSparsity_`
-
-INTERFACE
-MODULE SUBROUTINE csr_setSparsity3( obj, row, col, ivar, jvar )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: row
-  INTEGER( I4B ), INTENT( IN ) :: col( : )
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: jvar
-END SUBROUTINE csr_setSparsity3
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine sets the sparsity pattern of a given row
-
-INTERFACE
-MODULE SUBROUTINE csr_setSparsity4( obj, Row, Col, iVar, jVar )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Row( : )
-  TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
-  INTEGER( I4B ), INTENT( IN ) :: iVar
-  INTEGER( I4B ), INTENT( IN ) :: jVar
-END SUBROUTINE csr_setSparsity4
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine set sparsity pattern of `CSRSparsity_`
-!
-!# Introduction
-! This subroutine set sparsity pattern of `CSRSparsity_`
-! This will finally set the data into
-! - `obj%IA(:)`,
-! - `obj%JA(:)`
-! in CSR format. This routine also set data inside `obj%ColSize(:)` and
-! `obj%RowSize(:) `, and `obj%DiagIndx(:)`
-
-INTERFACE
-MODULE SUBROUTINE csr_setSparsity_final( obj )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE csr_setSparsity_final
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE setSparsity
-  MODULE PROCEDURE csr_setSparsity1, csr_setSparsity2, csr_setSparsity3,  &
-    & csr_setSparsity4, csr_setSparsity_final
-END INTERFACE setSparsity
-
-PUBLIC :: setSparsity
-
 
 !----------------------------------------------------------------------------
 !                                                          Shape@GetMethods
@@ -500,7 +383,7 @@ END INTERFACE Size
 PUBLIC :: Size
 
 !----------------------------------------------------------------------------
-!                                                        getNNZ@GetMethods
+!                                                          getNNZ@GetMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -530,25 +413,30 @@ PUBLIC :: getNNZ
 !
 !# Introduction
 !
-! This subroutine returns the diagonal entries of sparse matrix.
+! This subroutine returns the diagonal entries of sparse matrix. This
+! Routine calls the Saad's sparse library.
 !
-! - offset: containing the offset of the wanted diagonal the diagonal
+! `offset`: containing the `offset` of the wanted diagonal. The diagonal
 ! extracted is the one corresponding to the entries `a(i,j)` with `j-i =
-! ioff`. thus `ioff = 0` means the main diagonal
-! - `diag` : real*8 array of length nrow containing the wanted diagonal. diag
-! contains the diagonal (`a(i,j),j-i = ioff`) as defined above.
-! - `idiag` = integer array of  length `len`, containing the poisitions in
-! the original arrays `a` and `ja` of the diagonal elements collected in
-! `diag`. A zero entry in `idiag(i)` means that there was no entry found in
-! row i belonging to the diagonal.
+! offset`. Therefore, `offset = 0` means the main diagonal
+!
+! `diag` : real array of length `nrow` containing the wanted diagonal. `diag`
+! contains the diagonal (`a(i,j),j-i = offset`) as defined above.
+!
+! `idiag` = integer array. It contains the poisitions of diagonal in the
+! original arrays `A`. If `idiag(i)=0` then it means that there was no
+! diagonal found in row=i.
 
 INTERFACE
 MODULE SUBROUTINE csr_getDiagonal1( obj, A, diag, idiag, offset )
   TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( IN ) :: A( : )
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: diag( : )
+    !! Diagonal entries
   INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: idiag( : )
+    !! Position of diagonal entries in `A(:)`
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: offset
+    !! offset of the wanted diagonal
 END SUBROUTINE csr_getDiagonal1
 END INTERFACE
 
@@ -570,28 +458,221 @@ PUBLIC :: getDiagonal
 !
 ! This subroutine returns the diagonal entries of sparse matrix.
 !
-! - offset: containing the offset of the wanted diagonal the diagonal
-! extracted is the one corresponding to the entries `a(i,j)` with `j-i =
-! ioff`. thus `ioff = 0` means the main diagonal
-! - `diag` : real*8 array of length nrow containing the wanted diagonal. diag
-! contains the diagonal (`a(i,j),j-i = ioff`) as defined above.
-! - `idiag` = integer array of  length `len`, containing the poisitions in
-! the original arrays `a` and `ja` of the diagonal elements collected in
-! `diag`. A zero entry in `idiag(i)` means that there was no entry found in
-! row i belonging to the diagonal.
+! This routine is similar to [[CSRSparsity_Method:csr_getDiagonal1]].
+! However, this routine does not return the position of diagonal in `A`
 
 INTERFACE
 MODULE SUBROUTINE csr_getDiagonal2( obj, A, diag, offset )
   TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
   REAL( DFP ), INTENT( IN ) :: A( : )
+    !! Sparse matrix values
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: diag( : )
+    !! Diagonal entries
   INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: offset
+    !! offset of diagonal
 END SUBROUTINE csr_getDiagonal2
 END INTERFACE
 
 INTERFACE getDiagonal
   MODULE PROCEDURE csr_getDiagonal2
 END INTERFACE getDiagonal
+
+!----------------------------------------------------------------------------
+!                                                     setSparsity@setMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	 This subroutine set the sparsity pattern of a given row
+!
+!# Introduction
+!
+! This subroutine sets the sparsity pattern of a given row
+! - If `obj%tdof` is equal to 1, then `Col` is sorted in increasing order,
+! and appended to `obj%Row(Row)`
+! - If `obj%tdof` is not equal to 1, then based on the storage format and
+! `Col` connectivity information is generated.
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity1( obj, Row, Col )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: Row
+  !! row number
+  INTEGER( I4B ), INTENT( IN ) :: Col( : )
+  !! column number
+END SUBROUTINE csr_setSparsity1
+END INTERFACE
+
+INTERFACE setSparsity
+  MODULE PROCEDURE csr_setSparsity1
+END INTERFACE setSparsity
+
+PUBLIC :: setSparsity
+
+!----------------------------------------------------------------------------
+!                                                     setSparsity@setMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	 This subroutine sets the sparsity pattern of several rows
+!
+!# Introduction
+! This routine is similar to [[CSRSparsity_Method:csr_setSparsity1]].
+! However, in this routine several rows can be given.
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity2( obj, Row, Col )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: Row( : )
+    !! row number
+  TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
+    !! column number
+END SUBROUTINE csr_setSparsity2
+END INTERFACE
+
+INTERFACE setSparsity
+  MODULE PROCEDURE csr_setSparsity2
+END INTERFACE setSparsity
+
+!----------------------------------------------------------------------------
+!                                                     setSparsity@setMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 10 Oct 2021
+! summary: This subroutine sets sparsity pattern for block `CSRSparsity_`
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity3( obj, row, col, ivar, jvar )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: row
+    !! row number
+  INTEGER( I4B ), INTENT( IN ) :: col( : )
+    !! sparsity of row, column numbers
+  INTEGER( I4B ), INTENT( IN ) :: ivar
+    !! block address (row index)
+  INTEGER( I4B ), INTENT( IN ) :: jvar
+    !! block address (col index)
+END SUBROUTINE csr_setSparsity3
+END INTERFACE
+
+INTERFACE setSparsity
+  MODULE PROCEDURE csr_setSparsity3
+END INTERFACE setSparsity
+
+!----------------------------------------------------------------------------
+!                                                     setSparsity@setMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 22 March 2021
+! summary: This subroutine sets the sparsity pattern of a given row
+!
+!# Introduction
+! This routine is similar to the [[CSRSparsity_Method:csr_setSparsity3]],
+! however, in this routine we can specify several rows and their
+! column indices.
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity4( obj, Row, Col, iVar, jVar )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: Row( : )
+    !! several row numbers
+  TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
+    !! column index for each row number
+  INTEGER( I4B ), INTENT( IN ) :: iVar
+    !! block address (row index)
+  INTEGER( I4B ), INTENT( IN ) :: jVar
+    !! block address (col index)
+END SUBROUTINE csr_setSparsity4
+END INTERFACE
+
+INTERFACE setSparsity
+  MODULE PROCEDURE csr_setSparsity4
+END INTERFACE setSparsity
+
+!----------------------------------------------------------------------------
+!                                                     setSparsity@setMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	 This subroutine set the sparsity pattern of a given row
+!
+!# Introduction
+!
+! This subroutine sets the sparsity pattern by using the graph.
+! graph( i, j ) is either 0 or 1, if zero then there is not connection
+! between row-i and row-j
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity5( obj, graph )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: graph( :, : )
+  !! graph of sparsity
+  !! If graph( i, j ) .EQ. 0, then i and j are not connected
+  !! else they are connected.
+END SUBROUTINE csr_setSparsity5
+END INTERFACE
+
+INTERFACE setSparsity
+  MODULE PROCEDURE csr_setSparsity5
+END INTERFACE setSparsity
+
+!----------------------------------------------------------------------------
+!                                                     setSparsity@setMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	 This subroutine set the sparsity pattern of a given row
+!
+!# Introduction
+!
+! This subroutine sets the sparsity pattern by using the graph.
+! graph( i, j ) is either FALSE or TRUE, if FALSE then there is not connection
+! between row-i and row-j
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity6( obj, graph )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+  LOGICAL( LGT ), INTENT( IN ) :: graph( :, : )
+  !! graph of sparsity
+  !! If graph( i, j ) .EQ. FALSE, then i and j are not connected
+  !! else they are connected.
+END SUBROUTINE csr_setSparsity6
+END INTERFACE
+
+INTERFACE setSparsity
+  MODULE PROCEDURE csr_setSparsity6
+END INTERFACE setSparsity
+
+!----------------------------------------------------------------------------
+!                                                     setSparsity@setMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 	22 March 2021
+! summary: 	 This subroutine set sparsity pattern of `CSRSparsity_`
+!
+!# Introduction
+! This subroutine set sparsity pattern of `CSRSparsity_`
+! This will finally set the data into
+! - `obj%IA(:)`,
+! - `obj%JA(:)`
+! in CSR format. This routine also set data inside `obj%ColSize(:)` and
+! `obj%RowSize(:) `, and `obj%DiagIndx(:)`
+
+INTERFACE
+MODULE SUBROUTINE csr_setSparsity_final( obj )
+  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
+END SUBROUTINE csr_setSparsity_final
+END INTERFACE
+
+INTERFACE setSparsity
+  MODULE PROCEDURE csr_setSparsity_final
+END INTERFACE setSparsity
 
 
 END MODULE CSRSparsity_Method

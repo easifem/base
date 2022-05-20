@@ -31,8 +31,11 @@ CONTAINS
 MODULE PROCEDURE csr_setSparsity1
   INTEGER( I4B ) :: ii !n, a, b, m, tdof
   INTEGER( I4B ), ALLOCATABLE :: n2ntemp( : ), rowIndex( : )
-  !> main
-  !> check
+  !!
+#ifdef DEBUG_VER
+  !!
+  !! check
+  !!
   IF( .NOT. obj%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is not initiated!", &
@@ -41,7 +44,9 @@ MODULE PROCEDURE csr_setSparsity1
       & __LINE__, stderr )
     STOP
   END IF
-  !> check
+  !!
+  !! check
+  !!
   IF( obj%isSparsityLock ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
@@ -50,15 +55,24 @@ MODULE PROCEDURE csr_setSparsity1
       & __LINE__, stderr )
     STOP
   END IF
+#endif
+  !!
   IF( .NOT. ALLOCATED( obj%row ) ) ALLOCATE( obj%row( obj%nrow ) )
-  n2ntemp = SORT( getIndex( obj=obj%dof, nodeNum=Col ) )
-  rowIndex = SORT( getIndex( obj=obj%dof, nodeNum=Row ) )
-  obj%nnz = obj%nnz + SIZE(Col) * ( .tdof. obj%dof ) * SIZE(rowIndex)
-  DO ii = 1, SIZE(rowIndex)
-    CALL APPEND( obj%Row( rowIndex(ii) ), n2ntemp )
-  END DO
+    !!
+    IF( SIZE( Col ) .GT. 0 ) THEN
+    n2ntemp = SORT( getIndex( obj=obj%dof, nodeNum=Col ) )
+    rowIndex = SORT( getIndex( obj=obj%dof, nodeNum=Row ) )
+    obj%nnz = obj%nnz + SIZE(Col) * ( .tdof. obj%dof ) * SIZE(rowIndex)
+    !!
+    DO ii = 1, SIZE(rowIndex)
+      CALL APPEND( obj%Row( rowIndex(ii) ), n2ntemp )
+    END DO
+    !!
+  END IF
+  !!
   IF( ALLOCATED( n2ntemp ) ) DEALLOCATE( n2ntemp )
   IF( ALLOCATED( rowIndex ) ) DEALLOCATE( rowIndex )
+  !!
 END PROCEDURE csr_setSparsity1
 
 !----------------------------------------------------------------------------
@@ -79,8 +93,11 @@ END PROCEDURE csr_setSparsity2
 MODULE PROCEDURE csr_setSparsity3
   INTEGER( I4B ) :: ii
   INTEGER( I4B ), ALLOCATABLE :: n2ntemp( : ), rowIndex( : )
-  !> main
-  !> check
+  !!
+#ifdef DEBUG_VER
+  !!
+  !! check
+  !!
   IF( .NOT. obj%isInitiated ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is not initiated!", &
@@ -89,7 +106,9 @@ MODULE PROCEDURE csr_setSparsity3
       & __LINE__, stderr )
     STOP
   END IF
-  !> check
+  !!
+  !! check
+  !!
   IF( obj%isSparsityLock ) THEN
     CALL ErrorMSG( &
       & "Instance of CSRSparsity is locked for setting sparsity pattern!", &
@@ -98,7 +117,9 @@ MODULE PROCEDURE csr_setSparsity3
       & __LINE__, stderr )
     STOP
   END IF
-  !> check
+  !!
+  !! check
+  !!
   IF( obj%dof%StorageFMT .EQ. NODES_FMT ) THEN
     CALL ErrorMSG( &
       & "This subroutine works for storage format FMT_DOF, only", &
@@ -107,14 +128,23 @@ MODULE PROCEDURE csr_setSparsity3
       & __LINE__, stderr )
     STOP
   END IF
-  !> some pruning
+#endif
+  !!
+  !! cleaning
+  !!
   IF( .NOT. ALLOCATED( obj%row ) ) ALLOCATE( obj%row( obj%nrow ) )
-  n2ntemp = SORT( getIndex( obj=obj%dof, nodeNum=Col, iVar=jvar ) )
-  rowIndex = SORT( getIndex( obj=obj%dof, nodeNum=Row, iVar=ivar ) )
-  obj%nnz = obj%nnz + SIZE(Col) * (obj%dof .tdof. jvar) * SIZE(rowIndex)
-  DO ii = 1, SIZE(rowIndex)
-    CALL APPEND( obj%Row( rowIndex(ii) ), n2ntemp )
-  END DO
+  !!
+  IF( SIZE( col ) .GT. 0 ) THEN
+    !!
+    n2ntemp = SORT( getIndex( obj=obj%dof, nodeNum=Col, iVar=jvar ) )
+    rowIndex = SORT( getIndex( obj=obj%dof, nodeNum=Row, iVar=ivar ) )
+    obj%nnz = obj%nnz + SIZE(Col) * (obj%dof .tdof. jvar) * SIZE(rowIndex)
+    DO ii = 1, SIZE(rowIndex)
+      CALL APPEND( obj%Row( rowIndex(ii) ), n2ntemp )
+    END DO
+    !!
+  END IF
+  !!
   IF( ALLOCATED( n2ntemp ) ) DEALLOCATE( n2ntemp )
   IF( ALLOCATED( rowIndex ) ) DEALLOCATE( rowIndex )
 END PROCEDURE csr_setSparsity3
@@ -129,6 +159,81 @@ MODULE PROCEDURE csr_setSparsity4
     CALL setSparsity( obj, Row( i ), Col( i )%Val, ivar, jvar )
   END DO
 END PROCEDURE csr_setSparsity4
+
+!----------------------------------------------------------------------------
+!                                                                 setSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_setSparsity5
+  INTEGER( I4B ), ALLOCATABLE :: row( : ), graphT( :, : )
+  TYPE( IntVector_ ), ALLOCATABLE :: col( : )
+  INTEGER( I4B ) :: ii, jj, kk, nn, nrow, ncol
+  !!
+  nrow = SIZE( graph, 1 )
+  ncol = SIZE( graph, 2 )
+  graphT = TRANSPOSE( graph )
+  !!
+  CALL Reallocate( row, nrow )
+  ALLOCATE( col( nrow ) )
+  !!
+  DO ii = 1, nrow
+    row( ii ) = ii
+    nn = COUNT( graphT( :, ii ) .NE. 0 )
+    CALL ALLOCATE( col( ii ), nn )
+    kk = 0
+    DO jj = 1, ncol
+      IF( graphT( jj, ii ) .NE. 0 ) THEN
+        kk = kk + 1
+        CALL Set( col( ii ), indx=kk, value=jj )
+      END IF
+    END DO
+  END DO
+  !!
+  CALL setSparsity(obj=obj, row=row, col=col)
+  !!
+  IF( ALLOCATED( row ) ) DEALLOCATE( row )
+  IF( ALLOCATED( col ) ) DEALLOCATE( col )
+  IF( ALLOCATED( graphT ) ) DEALLOCATE( graphT )
+  !!
+END PROCEDURE csr_setSparsity5
+
+!----------------------------------------------------------------------------
+!                                                                 setSparsity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_setSparsity6
+  INTEGER( I4B ), ALLOCATABLE :: row( : )
+  LOGICAL( LGT ), ALLOCATABLE :: graphT( :, : )
+  TYPE( IntVector_ ), ALLOCATABLE :: col( : )
+  INTEGER( I4B ) :: ii, jj, kk, nn, nrow, ncol
+  !!
+  nrow = SIZE( graph, 1 )
+  ncol = SIZE( graph, 2 )
+  graphT = TRANSPOSE( graph )
+  !!
+  CALL Reallocate( row, nrow )
+  ALLOCATE( col( nrow ) )
+  !!
+  DO ii = 1, nrow
+    row( ii ) = ii
+    nn = COUNT( graphT( :, ii ) )
+    CALL ALLOCATE( col( ii ), nn )
+    kk = 0
+    DO jj = 1, ncol
+      IF( graphT( jj, ii ) ) THEN
+        kk = kk + 1
+        CALL Set( col( ii ), indx=kk, value=jj )
+      END IF
+    END DO
+  END DO
+  !!
+  CALL setSparsity(obj=obj, row=row, col=col)
+  !!
+  IF( ALLOCATED( row ) ) DEALLOCATE( row )
+  IF( ALLOCATED( col ) ) DEALLOCATE( col )
+  IF( ALLOCATED( graphT ) ) DEALLOCATE( graphT )
+  !!
+END PROCEDURE csr_setSparsity6
 
 !----------------------------------------------------------------------------
 !                                                                setSparsity
