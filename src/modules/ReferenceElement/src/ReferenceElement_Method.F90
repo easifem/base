@@ -34,15 +34,15 @@ PRIVATE
 ! summary: Display the ReferenceElement
 
 INTERFACE
-  MODULE SUBROUTINE display_ref_elem(obj, msg, unitno)
+  MODULE SUBROUTINE refelem_Display(obj, msg, unitno)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     CHARACTER(LEN=*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
-  END SUBROUTINE display_ref_elem
+  END SUBROUTINE refelem_Display
 END INTERFACE
 
 INTERFACE Display
-  MODULE PROCEDURE display_ref_elem
+  MODULE PROCEDURE refelem_Display
 END INTERFACE Display
 
 PUBLIC :: Display
@@ -56,15 +56,15 @@ PUBLIC :: Display
 ! summary: Display reference topology
 
 INTERFACE
-  MODULE SUBROUTINE display_ref_topo(obj, msg, unitno)
+  MODULE SUBROUTINE reftopo_Display(obj, msg, unitno)
     CLASS(ReferenceTopology_), INTENT(IN) :: obj
     CHARACTER(LEN=*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
-  END SUBROUTINE display_ref_topo
+  END SUBROUTINE reftopo_Display
 END INTERFACE
 
 INTERFACE Display
-  MODULE PROCEDURE display_ref_topo
+  MODULE PROCEDURE reftopo_Display
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
@@ -76,7 +76,9 @@ END INTERFACE Display
 ! summary: This function returns the instance of [[ReferenceTopology_]]
 !
 !# Introduction
+!
 ! This function returns the instance of [[ReferenceTopology_]].
+!
 ! The possible valaues of Name can be
 !
 ! - `Line, Line2, Line3, Line4, Line5, Line6`
@@ -184,6 +186,12 @@ INTERFACE
   END FUNCTION refelem_NNE1
 END INTERFACE
 
+INTERFACE OPERATOR(.NNE.)
+  MODULE PROCEDURE refelem_NNE1
+END INTERFACE
+
+PUBLIC :: OPERATOR(.NNE.)
+
 !----------------------------------------------------------------------------
 !                                                    NNE@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -203,15 +211,9 @@ INTERFACE
   END FUNCTION refelem_NNE2
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                     NNE@ConstructorMethods
-!----------------------------------------------------------------------------
-
 INTERFACE OPERATOR(.NNE.)
-  MODULE PROCEDURE refelem_NNE1, refelem_NNE2
+  MODULE PROCEDURE refelem_NNE2
 END INTERFACE
-
-PUBLIC :: OPERATOR(.NNE.)
 
 !----------------------------------------------------------------------------
 !                                               Initiate@ConstructorMethods
@@ -224,13 +226,9 @@ PUBLIC :: OPERATOR(.NNE.)
 !# Introduction
 !
 ! This subroutine copies one reference element into other
-! This subroutine also defines an assignment operator for `obj1=obj2` type opertions
+! This subroutine also defines an assignment operator for `obj1=obj2`
+! type opertions
 !
-!### Usage
-!
-!```fortran
-!        todo
-!```
 
 INTERFACE
   MODULE PURE SUBROUTINE refelem_Initiate1(obj, Anotherobj)
@@ -255,6 +253,10 @@ PUBLIC :: ASSIGNMENT(=)
 !                               ReferenceElement_Pointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns a pointer to an instance of ReferenceElement
+
 INTERFACE
   MODULE FUNCTION refelem_Constructor_1(xidim, nsd, elemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: xidim, nsd, elemType
@@ -268,22 +270,24 @@ END INTERFACE ReferenceElement_Pointer
 
 PUBLIC :: ReferenceElement_Pointer
 
-
 !----------------------------------------------------------------------------
 !                                ReferenceElementPointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns a pointer to an instance of ReferenceElement
+
 INTERFACE
-MODULE FUNCTION refelem_Constructor_2( refelem ) RESULT( ans )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  CLASS( ReferenceElement_ ), POINTER :: ans
-END FUNCTION refelem_Constructor_2
+  MODULE FUNCTION refelem_Constructor_2( refelem ) RESULT( ans )
+    CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
+    CLASS( ReferenceElement_ ), POINTER :: ans
+  END FUNCTION refelem_Constructor_2
 END INTERFACE
 
 INTERFACE ReferenceElement_Pointer
   MODULE PROCEDURE refelem_Constructor_2
 END INTERFACE ReferenceElement_Pointer
-
 
 !----------------------------------------------------------------------------
 !                                                 getNptrs@ConstrucorMethods
@@ -307,13 +311,14 @@ END INTERFACE getConnectivity
 PUBLIC :: getConnectivity
 
 !----------------------------------------------------------------------------
-!                                                       ElementType@Geometry
+!                                               ElementType@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns element name in integer from element name
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns element name in integer from element name
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION Element_Type(ElemName) RESULT(Ans)
     CHARACTER(LEN=*), INTENT(IN) :: ElemName
     INTEGER(I4B) :: Ans
@@ -327,13 +332,15 @@ END INTERFACE ElementType
 PUBLIC :: ElementType
 
 !----------------------------------------------------------------------------
-!                                                       ElementName@Geometry
+!                                               ElementName@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns element name in character from element number/type
+
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns element name in character from element number/type
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION Element_Name(ElemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
     CHARACTER(LEN=50) :: Ans
@@ -347,13 +354,14 @@ END INTERFACE ElementName
 PUBLIC :: ElementName
 
 !----------------------------------------------------------------------------
-!                                              TotalNodesInElement@Geometry
+!                                       TotalNodesInElement@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns total numbers of nodes present in a given element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns total numbers of nodes present in a given element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION Total_Nodes_In_Element(ElemType) RESULT(Ans)
     INTEGER(I4B) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -367,13 +375,14 @@ END INTERFACE TotalNodesInElement
 PUBLIC :: TotalNodesInElement
 
 !----------------------------------------------------------------------------
-!                                                     ElementOrder@Geometry
+!                                              ElementOrder@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns the order of an element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns the order of an element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION Element_Order(ElemType) RESULT(Ans)
     INTEGER(I4B) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -381,13 +390,14 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                     ElementOrder@Geometry
+!                                              ElementOrder@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns the order of an element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns the order of an element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION Element_Order_RefElem(RefElem) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
     INTEGER(I4B) :: Ans
@@ -407,7 +417,7 @@ END INTERFACE OPERATOR(.order.)
 PUBLIC :: OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
-!                                                      XiDimension@Geometry
+!                                               XiDimension@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -423,7 +433,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                       Xidimension@Geometry
+!                                                Xidimension@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -445,13 +455,15 @@ END INTERFACE XiDimension
 PUBLIC :: XiDimension
 
 !----------------------------------------------------------------------------
-!                                                          isVolume@Geometry
+!                                                   isVolume@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a volume element
+
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a volume element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isVolume(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -461,13 +473,14 @@ END INTERFACE
 PUBLIC :: isVolume
 
 !----------------------------------------------------------------------------
-!                                                        isSurface@Geometry
+!                                                 isSurface@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Surface element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Surface element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isSurface(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -477,13 +490,14 @@ END INTERFACE
 PUBLIC :: isSurface
 
 !----------------------------------------------------------------------------
-!                                                           isLine@Geometry
+!                                                    isLine@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Line element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Line element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isLine(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -493,13 +507,14 @@ END INTERFACE
 PUBLIC :: isLine
 
 !----------------------------------------------------------------------------
-!                                                          isPoint@Geometry
+!                                                   isPoint@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Point element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Point element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isPoint(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -509,13 +524,14 @@ END INTERFACE
 PUBLIC :: isPoint
 
 !----------------------------------------------------------------------------
-!                                                        isTriangle@Geometry
+!                                                 isTriangle@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Triangle element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Triangle element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isTriangle(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -525,13 +541,14 @@ END INTERFACE
 PUBLIC :: isTriangle
 
 !----------------------------------------------------------------------------
-!                                                      isQuadrangle@Geometry
+!                                               isQuadrangle@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Quadrangle element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Quadrangle element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isQuadrangle(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -541,13 +558,14 @@ END INTERFACE
 PUBLIC :: isQuadrangle
 
 !----------------------------------------------------------------------------
-!                                                    isTetrahedron@Geometry
+!                                             isTetrahedron@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Tetrahedron element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Tetrahedron element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isTetrahedron(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -557,13 +575,14 @@ END INTERFACE
 PUBLIC :: isTetrahedron
 
 !----------------------------------------------------------------------------
-!                                                     isHexahedron@Geometry
+!                                             isHexahedron@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Hexahedron element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Hexahedron element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isHexahedron(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -573,13 +592,14 @@ END INTERFACE
 PUBLIC :: isHexahedron
 
 !----------------------------------------------------------------------------
-!                                                            isPrism@Geometry
+!                                                    isPrism@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Prism element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Prism element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isPrism(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -589,13 +609,14 @@ END INTERFACE
 PUBLIC :: isPrism
 
 !----------------------------------------------------------------------------
-!                                                         isPyramid@Geometry
+!                                                 isPyramid@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a Pyramid element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a Pyramid element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isPyramid(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -605,13 +626,14 @@ END INTERFACE
 PUBLIC :: isPyramid
 
 !----------------------------------------------------------------------------
-!                                               isSerendipityElement@Geometry
+!                                       isSerendipityElement@GeometryMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 May 2022
+! summary: Returns true if element is a SerendipityElement element
+
 INTERFACE
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-!  1. Returns true if element is a SerendipityElement element
-!.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   MODULE PURE FUNCTION isSerendipityElement(ElemType) RESULT(Ans)
     LOGICAL(LGT) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
@@ -621,7 +643,7 @@ END INTERFACE
 PUBLIC :: isSerendipityElement
 
 !----------------------------------------------------------------------------
-!                                                   ElementTopology@Geometry
+!                                           ElementTopology@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -645,7 +667,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                   ElementTopology@Geometry
+!                                           ElementTopology@GeometryMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -668,7 +690,7 @@ END INTERFACE OPERATOR(.topology.)
 PUBLIC :: OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
-!                                                       FacetMatrix@Geometry
+!                                               FacetMatrix@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -700,7 +722,7 @@ END INTERFACE FacetMatrix
 PUBLIC :: FacetMatrix
 
 !----------------------------------------------------------------------------
-!                                                     FacetElements@Geometry
+!                                             FacetElements@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -721,7 +743,7 @@ END INTERFACE FacetElements
 PUBLIC :: FacetElements
 
 !----------------------------------------------------------------------------
-!                                                    LocalNodeCoord@Geometry
+!                                            LocalNodeCoord@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -742,7 +764,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    LocalNodeCoord@Geometry
+!                                            LocalNodeCoord@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -763,7 +785,7 @@ END INTERFACE LocalNodeCoord
 PUBLIC :: LocalNodeCoord
 
 !----------------------------------------------------------------------------
-!                                                 MeasureSimplex@Geometry
+!                                         MeasureSimplex@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -785,7 +807,7 @@ END INTERFACE MeasureSimplex
 PUBLIC :: MeasureSimplex
 
 !----------------------------------------------------------------------------
-!                                                    ElementQuality@Geometry
+!                                            ElementQuality@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -808,7 +830,7 @@ END INTERFACE ElementQuality
 PUBLIC :: ElementQuality
 
 !----------------------------------------------------------------------------
-!                                                     ContainsPoint@geometry
+!                                             ContainsPoint@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -831,7 +853,7 @@ END INTERFACE ContainsPoint
 PUBLIC :: ContainsPoint
 
 !----------------------------------------------------------------------------
-!                                                    TotalEntities@Geometry
+!                                             TotalEntities@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -852,7 +874,7 @@ END INTERFACE TotalEntities
 PUBLIC :: TotalEntities
 
 !----------------------------------------------------------------------------
-!                                                    FacetTopology@Geometry
+!                                             FacetTopology@GeometryMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -874,7 +896,7 @@ END INTERFACE FacetTopology
 PUBLIC :: FacetTopology
 
 !----------------------------------------------------------------------------
-!                                                          getVTKelementType
+!                                              getVTKelementType@VTKMethods
 !----------------------------------------------------------------------------
 
 INTERFACE

@@ -34,8 +34,10 @@ PRIVATE
 ! summary: This routine constructs an instance of [[ReferenceTriangle_]]
 !
 !# Introduction
-! * This routine contructs an instance of [[ReferenceTriangle_]]
-! * User can specify the coordinates of the trinagle
+!
+! - This routine contructs an instance of [[ReferenceTriangle_]]
+! - User can specify the coordinates of the trinagle
+!
 !@note
 ! 	This routine will contruct a three node triangle. Also, SHAPE(XiJ) = [3,3]
 !@endnote
@@ -182,6 +184,8 @@ MODULE PURE SUBROUTINE LagrangeElement_Triangle( RefElem, Order, obj )
 END SUBROUTINE LagrangeElement_Triangle
 END INTERFACE
 
+PUBLIC :: LagrangeElement_Triangle
+
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Triangle
 !----------------------------------------------------------------------------
@@ -192,7 +196,8 @@ END INTERFACE
 !
 !# Introduction
 !
-! This function returns the measure of linear triangle. This function belongs to the generic function [[ReferenceElement_Method:MeasureSimplex]].
+! This function returns the measure of linear triangle. This function belongs
+! to the generic function [[ReferenceElement_Method:MeasureSimplex]].
 !
 !@note
 ! 	This function is private

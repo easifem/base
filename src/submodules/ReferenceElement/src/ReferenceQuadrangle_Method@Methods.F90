@@ -77,18 +77,13 @@ MODULE PROCEDURE reference_Quadrangle_Pointer
   END IF
 END PROCEDURE reference_Quadrangle_Pointer
 
-
-!----------------------------------------------------------------------------
-!                                                            LagrangePoints
-!----------------------------------------------------------------------------
-
 !----------------------------------------------------------------------------
 !                                                  LagrangePoints@Quadrangle
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
-! summary: This function returns coordinates of higher order Lagrange [[ReferenceQuadrangle_]] element.
+! summary: This function returns coordinates of higher order Lagrange element.
 !
 !# Introduction
 ! * Returns equidistant points on [-1,1] for lagrange interpolation
@@ -110,17 +105,25 @@ PURE FUNCTION EquidistanceLIP_Quadrangle( XiJ, Order ) RESULT( NodeCoord )
     NodeCoord( 1:3, 8 ) = 0.5_DFP * (XiJ( 1:3, 4 ) + XiJ( 1:3, 1 ))
     NodeCoord( 1:3, 9 ) = 0.5_DFP * (NodeCoord(1:3, 6) + NodeCoord( 1:3, 8 ))
   CASE( 3 )
-    NodeCoord( 1:3, 5 ) = N1(-0.5_DFP) * XiJ( 1:3, 1 ) + N2(-0.5_DFP) * XiJ( 1:3, 2 )
-    NodeCoord( 1:3, 6 ) = N1(0.5_DFP) * XiJ( 1:3, 1 ) + N2(0.5_DFP) * XiJ( 1:3, 2 )
+    NodeCoord( 1:3, 5 ) = N1(-0.5_DFP) * XiJ( 1:3, 1 ) + N2(-0.5_DFP) * &
+      & XiJ( 1:3, 2 )
+    NodeCoord( 1:3, 6 ) = N1(0.5_DFP) * XiJ( 1:3, 1 ) + N2(0.5_DFP) * &
+      & XiJ( 1:3, 2 )
 
-    NodeCoord( 1:3, 7 ) = N1(-0.5_DFP) * XiJ( 1:3, 2 ) + N2(-0.5_DFP) * XiJ( 1:3, 3 )
-    NodeCoord( 1:3, 8 ) = N1(0.5_DFP) * XiJ( 1:3, 2 ) + N2(0.5_DFP) * XiJ( 1:3, 3 )
+    NodeCoord( 1:3, 7 ) = N1(-0.5_DFP) * XiJ( 1:3, 2 ) + N2(-0.5_DFP) * &
+      & XiJ( 1:3, 3 )
+    NodeCoord( 1:3, 8 ) = N1(0.5_DFP) * XiJ( 1:3, 2 ) + N2(0.5_DFP) * &
+      & XiJ( 1:3, 3 )
 
-    NodeCoord( 1:3, 10 ) = N1(-0.5_DFP) * XiJ( 1:3, 4 ) + N2(-0.5_DFP) * XiJ( 1:3, 4 )
-    NodeCoord( 1:3, 9 ) = N1(0.5_DFP) * XiJ( 1:3, 4 ) + N2(0.5_DFP) * XiJ( 1:3, 4 )
+    NodeCoord( 1:3, 10 ) = N1(-0.5_DFP) * XiJ( 1:3, 4 ) + N2(-0.5_DFP) * &
+      & XiJ( 1:3, 4 )
+    NodeCoord( 1:3, 9 ) = N1(0.5_DFP) * XiJ( 1:3, 4 ) + N2(0.5_DFP) * &
+      & XiJ( 1:3, 4 )
 
-    NodeCoord( 1:3, 12 ) = N1(-0.5_DFP) * XiJ( 1:3, 1 ) + N2(-0.5_DFP) * XiJ( 1:3, 4 )
-    NodeCoord( 1:3, 11 ) = N1(0.5_DFP) * XiJ( 1:3, 1 ) + N2(0.5_DFP) * XiJ( 1:3, 4 )
+    NodeCoord( 1:3, 12 ) = N1(-0.5_DFP) * XiJ( 1:3, 1 ) + N2(-0.5_DFP) * &
+      & XiJ( 1:3, 4 )
+    NodeCoord( 1:3, 11 ) = N1(0.5_DFP) * XiJ( 1:3, 1 ) + N2(0.5_DFP) * &
+      & XiJ( 1:3, 4 )
   END SELECT
 
   CONTAINS

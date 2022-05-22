@@ -1019,14 +1019,14 @@ TYPE(FEVariableMatrix_), PARAMETER, PUBLIC :: &
 !{!pages/QuadraturePoint_.md!}
 
 TYPE :: QuadraturePoint_
-  REAL(DFP), ALLOCATABLE :: Points(:, :)
-  INTEGER(I4B) :: tXi = 0
+  REAL(DFP), ALLOCATABLE :: points(:, :)
+  INTEGER(I4B) :: txi = 0
 END TYPE QuadraturePoint_
 
 PUBLIC :: QuadraturePoint_
 
 TYPE(QuadraturePoint_), PUBLIC, PARAMETER :: &
-  & TypeQuadraturePoint = QuadraturePoint_(Points=NULL())
+  & TypeQuadraturePoint = QuadraturePoint_(points=NULL())
 
 TYPE :: QuadraturePointPointer_
   CLASS(QuadraturePoint_), POINTER :: Ptr => NULL()

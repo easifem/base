@@ -35,7 +35,8 @@ MODULE PROCEDURE initiate_ref_Line
     s = SHAPE( XiJ )
     obj%XiJ( 1:s(1), 1:s(2) ) = XiJ(:,:)
   ELSE
-    obj%XiJ = RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] )
+    obj%XiJ = RESHAPE( &
+      & [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] )
   END IF
   obj%EntityCounts = [2, 1, 0, 0]
   obj%XiDimension = 1

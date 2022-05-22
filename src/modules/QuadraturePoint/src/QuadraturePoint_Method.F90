@@ -25,7 +25,7 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -43,8 +43,14 @@ MODULE PURE SUBROUTINE quad_initiate1( obj, Points )
 END SUBROUTINE quad_initiate1
 END INTERFACE
 
+INTERFACE Initiate
+  MODULE PROCEDURE quad_initiate1
+END INTERFACE
+
+PUBLIC :: Initiate
+
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -61,8 +67,12 @@ MODULE PURE SUBROUTINE quad_initiate2( obj, tXi, tPoints )
 END SUBROUTINE quad_initiate2
 END INTERFACE
 
+INTERFACE Initiate
+  MODULE PROCEDURE quad_initiate2
+END INTERFACE
+
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -82,8 +92,12 @@ MODULE PURE SUBROUTINE quad_initiate3( obj, refElem, order, QuadratureType )
 END SUBROUTINE quad_initiate3
 END INTERFACE
 
+INTERFACE Initiate
+  MODULE PROCEDURE quad_initiate3
+END INTERFACE
+
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -104,14 +118,11 @@ END SUBROUTINE quad_initiate4
 END INTERFACE
 
 INTERFACE Initiate
-  MODULE PROCEDURE quad_initiate1, quad_initiate2, quad_initiate3, &
-    & quad_initiate4
+  MODULE PROCEDURE quad_initiate4
 END INTERFACE
 
-PUBLIC :: Initiate
-
 !----------------------------------------------------------------------------
-!                                              QuadraturePoint@Constructure
+!                                       QuadraturePoint@ConstructureMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -129,11 +140,10 @@ INTERFACE QuadraturePoint
   MODULE PROCEDURE quad_Constructor1
 END INTERFACE QuadraturePoint
 
-
 PUBLIC :: QuadraturePoint
 
 !----------------------------------------------------------------------------
-!                                        QuadraturePoint_Pointer@Constructor
+!                                 QuadraturePoint_Pointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -154,7 +164,7 @@ END INTERFACE QuadraturePoint_Pointer
 PUBLIC :: QuadraturePoint_Pointer
 
 !----------------------------------------------------------------------------
-!                                                 Deallocate@Constructor
+!                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -174,7 +184,7 @@ END INTERFACE Deallocate
 PUBLIC :: Deallocate
 
 !----------------------------------------------------------------------------
-!                                                           SIZE@Constructor
+!                                                           SIZE@GetMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -196,7 +206,7 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
-!                                       getTotalQuadraturePoints@Constructor
+!                                       getTotalQuadraturePoints@GetMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -218,42 +228,55 @@ END INTERFACE getTotalQuadraturePoints
 PUBLIC :: getTotalQuadraturePoints
 
 !----------------------------------------------------------------------------
-!                                             GetQuadraturePoint@Constructor
+!                                              GetQuadraturePoint@GetMethods
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine returns quadrature points
+
 INTERFACE
-MODULE PURE SUBROUTINE quad_GetQuadraturePoints1( obj, Point, Weight, Num )
+MODULE PURE SUBROUTINE quad_GetQuadraturePoints1( obj, point, weight, num )
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( INOUT ) :: Point( 3 )
-  REAL( DFP ), INTENT( INOUT ) :: Weight
-  INTEGER( I4B ), INTENT( IN ) :: Num
+  REAL( DFP ), INTENT( INOUT ) :: point( 3 )
+    !! [xi, eta, zeta]
+  REAL( DFP ), INTENT( INOUT ) :: weight
+    !! weights
+  INTEGER( I4B ), INTENT( IN ) :: num
+    !! quadrature number
 END SUBROUTINE quad_GetQuadraturePoints1
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                             GetQuadraturePoint@Constructor
-!----------------------------------------------------------------------------
-
-INTERFACE
-MODULE PURE SUBROUTINE quad_GetQuadraturePoints2( obj, Point, Weight )
-  CLASS( QuadraturePoint_ ), INTENT( IN ) :: obj
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Point( :, : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Weight( : )
-END SUBROUTINE quad_GetQuadraturePoints2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                             GetQuadraturePoint@Constructor
-!----------------------------------------------------------------------------
-
 INTERFACE GetQuadraturePoints
-  MODULE PROCEDURE quad_GetQuadraturePoints1, quad_GetQuadraturePoints2
+  MODULE PROCEDURE quad_GetQuadraturePoints1
 END INTERFACE
 
 PUBLIC :: GetQuadraturePoints
 
 !----------------------------------------------------------------------------
-!                                                               Display@IO
+!                                              GetQuadraturePoint@GetMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine returns total number of quadrature points
+
+INTERFACE
+MODULE PURE SUBROUTINE quad_GetQuadraturePoints2( obj, point, weight )
+  CLASS( QuadraturePoint_ ), INTENT( IN ) :: obj
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: point( :, : )
+    !! Point( :, j ) = [xi, eta, zeta] of jth quadrature point
+  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: weight( : )
+    !! Weight(j) weight of jth quadrature point
+END SUBROUTINE quad_GetQuadraturePoints2
+END INTERFACE
+
+INTERFACE GetQuadraturePoints
+  MODULE PROCEDURE quad_GetQuadraturePoints2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          Display@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -283,12 +306,18 @@ PUBLIC :: Display
 ! summary: 	Returns the Gauss Legendre Quadrature points based on given order
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQP1( RefElem, Order ) RESULT( obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+MODULE PURE FUNCTION getGaussLegendreQP1( refelem, Order ) RESULT( obj )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
   INTEGER( I4B ), INTENT( IN ) :: Order
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQP1
 END INTERFACE
+
+INTERFACE GaussLegendreQuadrature
+  MODULE PROCEDURE getGaussLegendreQP1
+END INTERFACE GaussLegendreQuadrature
+
+PUBLIC :: GaussLegendreQuadrature
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre
@@ -299,22 +328,16 @@ END INTERFACE
 ! summary: 	Returns the Gauss-Legendre Quadrature points
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQP2( RefElem, NIPS ) RESULT( obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+MODULE PURE FUNCTION getGaussLegendreQP2( refelem, NIPS ) RESULT( obj )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
     !! number of integration points
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQP2
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                      GaussLegendreQuadrature@GaussLegendre
-!----------------------------------------------------------------------------
-
 INTERFACE GaussLegendreQuadrature
-  MODULE PROCEDURE getGaussLegendreQP1, getGaussLegendreQP2
+  MODULE PROCEDURE getGaussLegendreQP2
 END INTERFACE GaussLegendreQuadrature
-
-PUBLIC :: GaussLegendreQuadrature
 
 END MODULE QuadraturePoint_Method

@@ -226,7 +226,6 @@ INTERFACE GetHRGNParam
   MODULE PROCEDURE elemsd_GetHRGNParam4
 END INTERFACE GetHRGNParam
 
-
 !----------------------------------------------------------------------------
 !                                                   GetHRQIParam@GetMethods
 !----------------------------------------------------------------------------

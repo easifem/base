@@ -103,12 +103,10 @@ END PROCEDURE refelem_Initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_constructor_1
-  CLASS( ReferenceElement_ ), POINTER :: refelemOut
-  !> Internal variable
   TYPE( String ) :: dsetname
   CLASS( ReferenceElement_ ), POINTER :: refelem
   INTEGER( I4B ) :: elemOrder
-
+  !!
   refelem=>NULL()
   SELECT CASE( xidim )
   CASE( 0 )
@@ -191,6 +189,7 @@ MODULE PROCEDURE refelem_constructor_1
       END IF
     END IF
   END SELECT
+  !!
 END PROCEDURE refelem_constructor_1
 
 !----------------------------------------------------------------------------
@@ -226,20 +225,7 @@ MODULE PROCEDURE refelem_constructor_2
   !!
   END SELECT
   !!
-  IF( ALLOCATED( refelem%xij ) ) ans%xij=refelem%xij
-  ans%entityCounts = refelem%entityCounts
-  ans%xiDimension = refelem%xiDimension
-  ans%name = refelem%name
-  ans%order = refelem%order
-  ans%nsd = refelem%nsd
-  !!
-  IF( ALLOCATED( refelem%topology ) ) THEN
-    DO ii = 1, SIZE( refelem%topology )
-      ans%topology( ii ) = refelem%topology( ii )
-    END DO
-  END IF
-  !!
-  ans%lagrangeElement => refelem%lagrangeElement
+  ans = refelem
   !!
 END PROCEDURE refelem_constructor_2
 

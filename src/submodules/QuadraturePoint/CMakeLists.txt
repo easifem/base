@@ -9,8 +9,9 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/QuadraturePoint_Method@IO.F90
-  ${src_path}/QuadraturePoint_Method@Constructor.F90
+  ${src_path}/QuadraturePoint_Method@IOMethods.F90
+  ${src_path}/QuadraturePoint_Method@GetMethods.F90
+  ${src_path}/QuadraturePoint_Method@ConstructorMethods.F90
   ${src_path}/QuadraturePoint_Method@GaussLegendre.F90
   ${src_path}/QuadraturePoint_Method@GaussLegendre@Line.F90
   ${src_path}/QuadraturePoint_Method@GaussLegendre@Triangle.F90

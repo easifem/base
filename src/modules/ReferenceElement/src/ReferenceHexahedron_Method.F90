@@ -25,7 +25,6 @@ USE BaseType
 IMPLICIT NONE
 PRIVATE
 
-
 !----------------------------------------------------------------------------
 !                                                       Initiate@Hexahedron
 !----------------------------------------------------------------------------
@@ -51,6 +50,8 @@ END INTERFACE
 INTERFACE Initiate
   MODULE PROCEDURE initiate_ref_Hexahedron
 END INTERFACE Initiate
+
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                            ReferenceHexahedron@Hexahedron
@@ -99,6 +100,8 @@ MODULE PURE SUBROUTINE LagrangeElement_Hexahedron( RefElem, Order, obj )
   CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE LagrangeElement_Hexahedron
 END INTERFACE
+
+PUBLIC :: LagrangeElement_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry

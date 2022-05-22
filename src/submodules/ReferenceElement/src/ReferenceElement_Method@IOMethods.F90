@@ -27,56 +27,48 @@ CONTAINS
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE display_ref_topo
-  INTEGER( I4B ) :: I
-  CHARACTER( LEN = 120 ) :: fmt
-
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = Stdout
-  END IF
-  IF( LEN_TRIM( Msg ) .NE. 0 ) THEN
-    WRITE( I, "(A)" ) "#" // TRIM( Msg )
-  END IF
-  WRITE( I, "(A)" ) "ElemType : " // TRIM( ElementName( obj%Name ) )
-  WRITE( I, "(A)" ) "XiDim : " // TRIM( INT2STR( obj%XiDimension ) )
-  CALL Display( obj%Nptrs,  "Nptrs : ")
-END PROCEDURE display_ref_topo
+MODULE PROCEDURE reftopo_Display
+  CALL Display( msg, unitno=unitno)
+  CALL Display( "# ElemType : " // TRIM( ElementName( obj%Name ) ), &
+    & unitno=unitno)
+  CALL Display( "# XiDim : " // TRIM( INT2STR( obj%XiDimension ) ) )
+  CALL Display( obj%Nptrs, "# Nptrs : ")
+END PROCEDURE reftopo_Display
 
 !----------------------------------------------------------------------------
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE display_ref_elem
+MODULE PROCEDURE refelem_Display
   ! Define internal variable
   INTEGER( I4B ) :: I, j
-  CHARACTER( LEN = 120 ) :: fmt
-
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = Stdout
-  END IF
-  IF( LEN_TRIM( Msg ) .NE. 0 ) THEN
-    WRITE( I, "(A)" ) "#" // TRIM( Msg )
-  END IF
-  CALL Display( "ElemType : "// trim( ElementName( obj%Name ) ), I )
-  CALL Display( obj%XiDimension, "XiDimension :: ", UnitNo = I )
-  CALL Display( obj%NSD, "NSD : ", UnitNo = I )
-  CALL Display( obj%Order, "Order : ", UnitNo = I )
-  CALL Display( obj%EntityCounts( 1 ), "EntityCounts(0) : ", UnitNo = I )
-  CALL Display( obj%EntityCounts( 2 ), "EntityCounts(1) : ", UnitNo = I )
-  CALL Display( obj%EntityCounts( 3 ), "EntityCounts(2) : ", UnitNo = I )
-  CALL Display( obj%EntityCounts( 4 ), "EntityCounts(3) : ", UnitNo = I )
+  !!
+  CALL Display( msg, unitno=unitno)
+  !!
+  CALL Display( "# ElemType : "// trim( ElementName( obj%Name ) ), &
+    & unitno=unitno )
+  CALL Display( obj%XiDimension, "# XiDimension :: ", &
+    & unitno=unitno  )
+  CALL Display( obj%NSD, "# NSD : ", &
+    & unitno=unitno )
+  CALL Display( obj%Order, "# Order : ", &
+    & unitno=unitno )
+  CALL Display( obj%EntityCounts( 1 ), "# EntityCounts(0) : ", &
+    & unitno=unitno )
+  CALL Display( obj%EntityCounts( 2 ), "# EntityCounts(1) : ", &
+    & unitno=unitno )
+  CALL Display( obj%EntityCounts( 3 ), "# EntityCounts(2) : ", &
+    & unitno=unitno )
+  CALL Display( obj%EntityCounts( 4 ), "# EntityCounts(3) : ", &
+    & unitno=unitno )
   DO j = 1, SIZE( obj%XiJ, 2 )
     CALL Display( obj%XiJ( :, j), &
-      & "Node( " // trim( str( j, .true. ) ) // " ) : " )
+      & "# Node( " // trim( str( j, .true. ) ) // " ) : " )
   END DO
   DO j = 1, SIZE( obj%Topology )
     CALL Display( obj%Topology( j ), &
-      & "Topology( " // TRIM( INT2STR( j ) ) // " ) : ", I )
+      & "# Topology( " // TRIM( INT2STR( j ) ) // " ) : ", I )
   END DO
-END PROCEDURE display_ref_elem
+END PROCEDURE refelem_Display
 
 END SUBMODULE IOMethods

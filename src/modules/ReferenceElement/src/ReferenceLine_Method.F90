@@ -26,7 +26,7 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                            Initiate@Line
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -34,12 +34,15 @@ PRIVATE
 ! summary: This subroutine constructs an instance of line reference element
 !
 !# Introduction
-! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+! This routine constructs an instance of [[ReferenceLine_]]
+! element of order equal to 1.
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE(
+! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note
+! that this routine creats a linear element.
 !@endnote
 !
 !### Usage
@@ -70,7 +73,7 @@ END INTERFACE Initiate
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                       ReferenceLine@Line
+!                                                     ReferenceLine@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -78,12 +81,15 @@ PUBLIC :: Initiate
 ! summary: This routine constructs an instance of line reference element
 !
 !# Introduction
-! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+! This routine constructs an instance of [[ReferenceLine_]] element of order
+! equal to 1.
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE(
+! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+! Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note
+! that this routine creats a linear element.
 !@endnote
 !
 !### Usage
@@ -109,7 +115,7 @@ END INTERFACE ReferenceLine
 PUBLIC :: ReferenceLine
 
 !----------------------------------------------------------------------------
-!                                                ReferenceLine_Pointer@Line
+!                                              ReferenceLine_Pointer@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -117,12 +123,15 @@ PUBLIC :: ReferenceLine
 ! summary: This routine constructs an instance of line reference element
 !
 !# Introduction
-! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+! This routine constructs an instance of [[ReferenceLine_]] element of order
+! equal to 1.
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE(
+! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note
+! that this routine creats a linear element.
 !@endnote
 !
 !### Usage
@@ -142,7 +151,7 @@ END FUNCTION reference_line_pointer_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                 ReferenceLine_Pointer@Line
+!                                             ReferenceLine_Pointer@Methods
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceLine_Pointer
@@ -152,7 +161,7 @@ END INTERFACE ReferenceLine_Pointer
 PUBLIC :: ReferenceLine_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       LagrangeElement@Line
+!                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -189,7 +198,7 @@ END INTERFACE
 PUBLIC :: LagrangeElement_Line
 
 !----------------------------------------------------------------------------
-!                                                      MeasureSimplex@Line
+!                                                    MeasureSimplex@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -198,7 +207,8 @@ PUBLIC :: LagrangeElement_Line
 !
 !# Introduction
 !
-! This function returns the measure of linear line element. Its generic form is given by [[ReferenceElement_Method:MeasureSimplex]]
+! This function returns the measure of linear line element. Its generic form
+! is given by [[ReferenceElement_Method:MeasureSimplex]]
 !
 !
 !### Usage
@@ -222,7 +232,7 @@ END INTERFACE
 PUBLIC :: Measure_Simplex_Line
 
 !----------------------------------------------------------------------------
-!                                                             line_quality
+!                                                      line_quality@Methods
 !----------------------------------------------------------------------------
 
 INTERFACE

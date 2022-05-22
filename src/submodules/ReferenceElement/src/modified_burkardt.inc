@@ -4,7 +4,6 @@
 !-----------------------------------------------------------------------------
 
 PURE FUNCTION R8MATDET4D ( a )
-
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   !! R8MATDET4D computes the determinant of a 4 by 4 matrix.
   !
@@ -408,13 +407,16 @@ PURE SUBROUTINE POLYHEDRONVOLUME3D ( coord, order_max, face_num, node, &
   !    Input, integer ( kind = 4 ) FACE_NUM, the number of faces of the
   !    polyhedron.
   !
-  !    Input, integer ( kind = 4 ) NODE(FACE_NUM,ORDER_MAX).  Face I is defined by
+  !    Input, integer ( kind = 4 ) NODE(FACE_NUM,ORDER_MAX).  Face I is
+  ! defined by
   !    the vertices NODE(I,1) through NODE(I,ORDER(I)).  These vertices
   !    are listed in neighboring order.
   !
-  !    Input, integer ( kind = 4 ) NODE_NUM, the number of points stored in COORD.
+  !    Input, integer ( kind = 4 ) NODE_NUM, the number of points stored in
+  ! COORD.
   !
-  !    Input, integer ( kind = 4 ) ORDER(FACE_NUM), the number of vertices making
+  !    Input, integer ( kind = 4 ) ORDER(FACE_NUM), the number of vertices
+  ! making
   !    up each face.
   !
   !    Output, real ( kind = 8 ) VOLUME, the volume of the polyhedron.

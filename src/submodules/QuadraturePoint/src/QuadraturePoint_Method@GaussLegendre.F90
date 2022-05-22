@@ -27,9 +27,9 @@ IMPLICIT NONE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPLine1( RefElem, Order ) RESULT( obj )
+MODULE PURE FUNCTION getGaussLegendreQPLine1( refelem, Order ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceLine_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceLine_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPLine1
 END INTERFACE
@@ -39,9 +39,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPLine2( RefElem, NIPS ) RESULT( obj )
+MODULE PURE FUNCTION getGaussLegendreQPLine2( refelem, NIPS ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-  TYPE( ReferenceLine_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceLine_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPLine2
 END INTERFACE
@@ -51,9 +51,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTriangle1( RefElem, Order ) RESULT(obj)
+MODULE PURE FUNCTION getGaussLegendreQPTriangle1( refelem, Order ) RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceTriangle_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPTriangle1
 END INTERFACE
@@ -63,15 +63,15 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPQuadrangle1( RefElem, Order)RESULT(obj)
+MODULE PURE FUNCTION getGaussLegendreQPQuadrangle1( refelem, Order)RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceQuadrangle_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPQuadrangle1
 
-MODULE PURE FUNCTION getGaussLegendreQPQuadrangle2( RefElem, NIPS)RESULT(obj)
+MODULE PURE FUNCTION getGaussLegendreQPQuadrangle2( refelem, NIPS)RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-  TYPE( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceQuadrangle_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPQuadrangle2
 END INTERFACE
@@ -81,9 +81,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTriangle2( RefElem, NIPS ) RESULT(obj)
+MODULE PURE FUNCTION getGaussLegendreQPTriangle2( refelem, NIPS ) RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-  TYPE( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceTriangle_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPTriangle2
 END INTERFACE
@@ -93,9 +93,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTetrahedron1( RefElem, Order)RESULT(obj)
+MODULE PURE FUNCTION getGaussLegendreQPTetrahedron1( refelem, Order)RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceTetrahedron_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPTetrahedron1
 END INTERFACE
@@ -105,9 +105,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTetrahedron2( RefElem, NIPS)RESULT(obj)
+MODULE PURE FUNCTION getGaussLegendreQPTetrahedron2( refelem, NIPS)RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-  TYPE( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceTetrahedron_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPTetrahedron2
 END INTERFACE
@@ -117,9 +117,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPyramid1( RefElem, Order)RESULT(obj)
+MODULE PURE FUNCTION getGaussLegendreQPPyramid1( refelem, Order)RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferencePyramid_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferencePyramid_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPPyramid1
 END INTERFACE
@@ -129,9 +129,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPyramid2( RefElem, NIPS)RESULT(obj)
+MODULE PURE FUNCTION getGaussLegendreQPPyramid2( refelem, NIPS)RESULT(obj)
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-  TYPE( ReferencePyramid_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferencePyramid_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPPyramid2
 END INTERFACE
@@ -141,9 +141,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPrism1( RefElem, Order ) RESULT( obj )
+MODULE PURE FUNCTION getGaussLegendreQPPrism1( refelem, Order ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferencePrism_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferencePrism_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPPrism1
 END INTERFACE
@@ -153,9 +153,9 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPrism2( RefElem, NIPS ) RESULT( obj )
+MODULE PURE FUNCTION getGaussLegendreQPPrism2( refelem, NIPS ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-  TYPE( ReferencePrism_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferencePrism_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPPrism2
 END INTERFACE
@@ -165,10 +165,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPHexahedron1( RefElem, Order ) &
+MODULE PURE FUNCTION getGaussLegendreQPHexahedron1( refelem, Order ) &
     & RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: Order
-  TYPE( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceHexahedron_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPHexahedron1
 END INTERFACE
@@ -178,10 +178,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPHexahedron2( RefElem, NIPS ) &
+MODULE PURE FUNCTION getGaussLegendreQPHexahedron2( refelem, NIPS ) &
     & RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
-  TYPE( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
+  TYPE( ReferenceHexahedron_ ), INTENT( IN ) :: refelem
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQPHexahedron2
 END INTERFACE
@@ -199,25 +199,25 @@ CONTAINS
 MODULE PROCEDURE getGaussLegendreQP1
   SELECT TYPE( refelem )
   TYPE IS ( ReferenceLine_ )
-    obj = getGaussLegendreQPLine1( RefElem = RefElem, Order = Order )
+    obj = getGaussLegendreQPLine1( refelem = refelem, Order = Order )
 
   TYPE IS ( ReferenceTriangle_ )
-    obj = getGaussLegendreQPTriangle1( RefElem = RefElem, Order = Order )
+    obj = getGaussLegendreQPTriangle1( refelem = refelem, Order = Order )
 
   TYPE IS ( ReferenceQuadrangle_ )
-    obj = getGaussLegendreQPQuadrangle1( RefElem = RefElem, Order = Order )
+    obj = getGaussLegendreQPQuadrangle1( refelem = refelem, Order = Order )
 
   TYPE IS ( ReferenceTetrahedron_ )
-    obj = getGaussLegendreQPTetrahedron1( RefElem = RefElem, Order = Order )
+    obj = getGaussLegendreQPTetrahedron1( refelem = refelem, Order = Order )
 
   TYPE IS ( ReferenceHexahedron_ )
-    obj = getGaussLegendreQPHexahedron1( RefElem = RefElem, Order = Order )
+    obj = getGaussLegendreQPHexahedron1( refelem = refelem, Order = Order )
 
   TYPE IS ( ReferencePrism_ )
-    obj = getGaussLegendreQPPrism1( RefElem = RefElem, Order = Order )
+    obj = getGaussLegendreQPPrism1( refelem = refelem, Order = Order )
 
   TYPE IS ( ReferencePyramid_ )
-    obj = getGaussLegendreQPPyramid1( RefElem = RefElem, Order = Order )
+    obj = getGaussLegendreQPPyramid1( refelem = refelem, Order = Order )
   END SELECT
 END PROCEDURE getGaussLegendreQP1
 
@@ -228,25 +228,25 @@ END PROCEDURE getGaussLegendreQP1
 MODULE PROCEDURE getGaussLegendreQP2
   SELECT TYPE( refelem )
   TYPE IS ( ReferenceLine_ )
-    obj = getGaussLegendreQPLine2( RefElem = RefElem, NIPS = NIPS )
+    obj = getGaussLegendreQPLine2( refelem = refelem, NIPS = NIPS )
 
   TYPE IS ( ReferenceTriangle_ )
-    obj = getGaussLegendreQPTriangle2( RefElem = RefElem, NIPS = NIPS )
+    obj = getGaussLegendreQPTriangle2( refelem = refelem, NIPS = NIPS )
 
   TYPE IS ( ReferenceQuadrangle_ )
-    obj = getGaussLegendreQPQuadrangle2( RefElem = RefElem, NIPS = NIPS )
+    obj = getGaussLegendreQPQuadrangle2( refelem = refelem, NIPS = NIPS )
 
   TYPE IS ( ReferenceTetrahedron_ )
-    obj = getGaussLegendreQPTetrahedron2( RefElem = RefElem, NIPS = NIPS )
+    obj = getGaussLegendreQPTetrahedron2( refelem = refelem, NIPS = NIPS )
 
   TYPE IS ( ReferenceHexahedron_ )
-    obj = getGaussLegendreQPHexahedron2( RefElem = RefElem, NIPS = NIPS )
+    obj = getGaussLegendreQPHexahedron2( refelem = refelem, NIPS = NIPS )
 
   TYPE IS ( ReferencePrism_ )
-    obj = getGaussLegendreQPPrism2( RefElem = RefElem, NIPS = NIPS )
+    obj = getGaussLegendreQPPrism2( refelem = refelem, NIPS = NIPS )
 
   TYPE IS ( ReferencePyramid_ )
-    obj = getGaussLegendreQPPyramid2( RefElem = RefElem, NIPS = NIPS )
+    obj = getGaussLegendreQPPyramid2( refelem = refelem, NIPS = NIPS )
   END SELECT
 END PROCEDURE getGaussLegendreQP2
 

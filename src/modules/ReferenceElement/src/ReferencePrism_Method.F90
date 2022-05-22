@@ -52,6 +52,8 @@ INTERFACE Initiate
   MODULE PROCEDURE initiate_ref_Prism
 END INTERFACE Initiate
 
+PUBLIC :: Initiate
+
 !----------------------------------------------------------------------------
 !                                            ReferencePrism@Prism
 !----------------------------------------------------------------------------
@@ -99,6 +101,8 @@ MODULE PURE SUBROUTINE LagrangeElement_Prism( RefElem, Order, obj )
   CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE LagrangeElement_Prism
 END INTERFACE
+
+PUBLIC :: LagrangeElement_Prism
 
 !----------------------------------------------------------------------------
 !                                                  MeasureSimplex@Geometry

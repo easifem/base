@@ -25,7 +25,6 @@ USE BaseType
 IMPLICIT NONE
 PRIVATE
 
-
 !----------------------------------------------------------------------------
 !                                                       Initiate@Pyramid
 !----------------------------------------------------------------------------
@@ -51,6 +50,8 @@ END INTERFACE
 INTERFACE Initiate
   MODULE PROCEDURE initiate_ref_Pyramid
 END INTERFACE Initiate
+
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                            ReferencePyramid@Pyramid
@@ -99,6 +100,8 @@ MODULE PURE SUBROUTINE LagrangeElement_Pyramid( RefElem, Order, obj )
   CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
 END SUBROUTINE LagrangeElement_Pyramid
 END INTERFACE
+
+PUBLIC :: LagrangeElement_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                  MeasureSimplex@Geometry

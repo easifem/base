@@ -168,6 +168,8 @@ MODULE PURE SUBROUTINE LagrangeElement_Quadrangle( RefElem, Order, obj )
 END SUBROUTINE LagrangeElement_Quadrangle
 END INTERFACE
 
+PUBLIC :: LagrangeElement_Quadrangle
+
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------

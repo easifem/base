@@ -52,6 +52,8 @@ INTERFACE Initiate
   MODULE PROCEDURE initiate_ref_Tetrahedron
 END INTERFACE Initiate
 
+PUBLIC :: Initiate
+
 !----------------------------------------------------------------------------
 !                                            ReferenceTetrahedron@Tetrahedron
 !----------------------------------------------------------------------------
@@ -100,6 +102,7 @@ MODULE PURE SUBROUTINE LagrangeElement_Tetrahedron( RefElem, Order, obj )
 END SUBROUTINE LagrangeElement_Tetrahedron
 END INTERFACE
 
+PUBLIC :: LagrangeElement_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry

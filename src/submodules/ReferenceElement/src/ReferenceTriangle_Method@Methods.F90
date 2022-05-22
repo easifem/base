@@ -755,4 +755,5 @@ END PROCEDURE triangle_quality
 !----------------------------------------------------------------------------
 
 #include "./modified_burkardt.inc"
+
 END SUBMODULE Methods
