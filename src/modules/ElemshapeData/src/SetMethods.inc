@@ -13,10 +13,17 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
-!
-! Interfaces of set methods are declared here
-!
+
+PUBLIC :: setThickness
+PUBLIC :: setBarycentricCoord
+PUBLIC :: setJs
+PUBLIC :: setdNdXt
+PUBLIC :: setJacobian
+PUBLIC :: setdNTdt
+PUBLIC :: setdNTdXt
+PUBLIC :: set
+PUBLIC :: setNormal
+
 !----------------------------------------------------------------------------
 !                                                     setThickness@setMethod
 !----------------------------------------------------------------------------
@@ -33,13 +40,17 @@
 ! $$d = d_{I} N^{I}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_thickness(obj, val, N)
+  MODULE PURE SUBROUTINE elemsd_setThickness(obj, val, N)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:)
     !! Nodal values of thickness
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! Shape function values at quadrature points
-  END SUBROUTINE set_thickness
+  END SUBROUTINE elemsd_setThickness
+END INTERFACE
+
+INTERFACE setThickness
+  MODULE PROCEDURE elemsd_setThickness
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -58,7 +69,7 @@ END INTERFACE
 ! $$d = d_{I}^{a} N^{I} T_{a}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_thickness(obj, val, N, T)
+  MODULE PURE SUBROUTINE stsd_setThickness(obj, val, N, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! Space-time nodal values of thickness
@@ -66,14 +77,12 @@ INTERFACE
     !! Shape function at spatial quadrature
     REAL(DFP), INTENT(IN) :: T(:)
     !! Shape function at temporal quadrature
-  END SUBROUTINE stsd_set_thickness
+  END SUBROUTINE stsd_setThickness
 END INTERFACE
 
 INTERFACE setThickness
-  MODULE PROCEDURE set_thickness, stsd_set_thickness
+  MODULE PROCEDURE stsd_setThickness
 END INTERFACE
-
-PUBLIC :: setThickness
 
 !----------------------------------------------------------------------------
 !                                              setBarycentricCoord@setMethod
@@ -91,14 +100,18 @@ PUBLIC :: setThickness
 !
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_coord(obj, val, N)
+  MODULE PURE SUBROUTINE elemsd_setBarycentricCoord(obj, val, N)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! Nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: N(:, :)
     !! When element is not an isoparametric we can supply N.
-  END SUBROUTINE set_coord
+  END SUBROUTINE elemsd_setBarycentricCoord
 END INTERFACE
+
+INTERFACE setBarycentricCoord
+  MODULE PROCEDURE elemsd_setBarycentricCoord
+END INTERFACE setBarycentricCoord
 
 !----------------------------------------------------------------------------
 !                                              setBarycentricCoord@setMethod
@@ -116,20 +129,18 @@ END INTERFACE
 ! $$x=x_{I}^{a} N^I T_a$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_coord(obj, val, N, T)
+  MODULE PURE SUBROUTINE stsd_setBarycentricCoord(obj, val, N, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time Nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: N(:, :), T(:)
     !! N and T are required to handle non isoparametric elements
-  END SUBROUTINE stsd_set_coord
+  END SUBROUTINE stsd_setBarycentricCoord
 END INTERFACE
 
 INTERFACE setBarycentricCoord
-  MODULE PROCEDURE set_coord, stsd_set_coord
+  MODULE PROCEDURE stsd_setBarycentricCoord
 END INTERFACE setBarycentricCoord
-
-PUBLIC :: setBarycentricCoord
 
 !----------------------------------------------------------------------------
 !                                                            setJs@setMethod
@@ -140,16 +151,14 @@ PUBLIC :: setBarycentricCoord
 ! summary: This subroutine set the determinent of jacobian
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_Js(obj)
+  MODULE PURE SUBROUTINE elemsd_setJs(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-  END SUBROUTINE set_Js
+  END SUBROUTINE elemsd_setJs
 END INTERFACE
 
 INTERFACE setJs
-  MODULE PROCEDURE set_Js
+  MODULE PROCEDURE elemsd_setJs
 END INTERFACE setJs
-
-PUBLIC setJs
 
 !----------------------------------------------------------------------------
 !                                                          setdNdXt@setMethod
@@ -166,16 +175,14 @@ PUBLIC setJs
 ! set before calling this  subroutine.
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_dNdXt_internally(obj)
+  MODULE PURE SUBROUTINE elemsd_setdNdXt(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-  END SUBROUTINE set_dNdXt_internally
+  END SUBROUTINE elemsd_setdNdXt
 END INTERFACE
 
 INTERFACE setdNdXt
-  MODULE PROCEDURE set_dNdXt_internally
+  MODULE PROCEDURE elemsd_setdNdXt
 END INTERFACE setdNdXt
-
-PUBLIC :: setdNdXt
 
 !----------------------------------------------------------------------------
 !                                                      setJacobian@setMethod
@@ -192,13 +199,17 @@ PUBLIC :: setdNdXt
 ! $$\frac{d x_i}{d \xi_j} = x_{iI}\frac{d N^I}{d \xi_j}$$
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_jacobian(obj, val, dNdXi)
+  MODULE PURE SUBROUTINE elemsd_setJacobian(obj, val, dNdXi)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal coordinates in `xiJ` format
     REAL(DFP), INTENT(IN) :: dNdXi(:, :, :)
-  END SUBROUTINE set_jacobian
+  END SUBROUTINE elemsd_setJacobian
 END INTERFACE
+
+INTERFACE setJacobian
+  MODULE PROCEDURE elemsd_setJacobian
+END INTERFACE setJacobian
 
 !----------------------------------------------------------------------------
 !                                                      setJacobian@setMethod
@@ -217,7 +228,7 @@ END INTERFACE
 !
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_jacobian(obj, val, dNdXi, T)
+  MODULE PURE SUBROUTINE stsd_setJacobian(obj, val, dNdXi, T)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space time nodal values of coordinates
@@ -225,14 +236,12 @@ INTERFACE
     !! Local derivative of shape function for geometry
     REAL(DFP), INTENT(IN) :: T(:)
     !! Shape function for time element
-  END SUBROUTINE stsd_set_jacobian
+  END SUBROUTINE stsd_setJacobian
 END INTERFACE
 
 INTERFACE setJacobian
-  MODULE PROCEDURE set_jacobian, stsd_set_jacobian
+  MODULE PROCEDURE stsd_setJacobian
 END INTERFACE setJacobian
-
-PUBLIC :: setJacobian
 
 !----------------------------------------------------------------------------
 !                                                         setdNTdt@setMethod
@@ -255,18 +264,16 @@ PUBLIC :: setJacobian
 ! $$
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_dNTdt(obj, val)
+  MODULE PURE SUBROUTINE stsd_setdNTdt(obj, val)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! Space-time nodal values
-  END SUBROUTINE stsd_set_dNTdt
+  END SUBROUTINE stsd_setdNTdt
 END INTERFACE
 
 INTERFACE setdNTdt
-  MODULE PROCEDURE stsd_set_dNTdt
+  MODULE PROCEDURE stsd_setdNTdt
 END INTERFACE setdNTdt
-
-PUBLIC :: setdNTdt
 
 !----------------------------------------------------------------------------
 !                                                        setdNTdXt@setMethod
@@ -285,25 +292,17 @@ PUBLIC :: setdNTdt
 ! $$\frac{\partial N^{I\  }T_{a}}{\partial x_{i\  }}
 ! =\frac{\partial N^{I}T_{a}}{\partial \xi_{j} } \frac{\partial \xi_{j} }
 ! {\partial x_{i}} $$
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
-  MODULE PURE SUBROUTINE stsd_set_dNTdXt_internally(obj)
+  MODULE PURE SUBROUTINE stsd_setdNTdXt(obj)
     CLASS(STElemshapeData_), INTENT(INOUT) :: obj
   !! Space-time nodal values
-  END SUBROUTINE stsd_set_dNTdXt_internally
+  END SUBROUTINE stsd_setdNTdXt
 END INTERFACE
 
 INTERFACE setdNTdXt
-  MODULE PROCEDURE stsd_set_dNTdXt_internally
+  MODULE PROCEDURE stsd_setdNTdXt
 END INTERFACE setdNTdXt
-
-PUBLIC :: setdNTdXt
 
 !----------------------------------------------------------------------------
 !                                                             Set@setMethod
@@ -342,6 +341,10 @@ INTERFACE
     !! Local derivative of shape functions for geometry
   END SUBROUTINE elemsd_set1
 END INTERFACE
+
+INTERFACE set
+  MODULE PROCEDURE elemsd_set1
+END INTERFACE set
 
 !----------------------------------------------------------------------------
 !                                                             set@setMethod
@@ -383,10 +386,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE set
-  MODULE PROCEDURE elemsd_set1, stelemsd_set1
+  MODULE PROCEDURE stelemsd_set1
 END INTERFACE set
-
-PUBLIC :: set
 
 !----------------------------------------------------------------------------
 !                                                       setNormal@setMethod
@@ -398,13 +399,11 @@ PUBLIC :: set
 !
 
 INTERFACE
-  MODULE PURE SUBROUTINE set_normal(obj)
+  MODULE PURE SUBROUTINE elemsd_setNormal(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-  END SUBROUTINE set_normal
+  END SUBROUTINE elemsd_setNormal
 END INTERFACE
 
 INTERFACE setNormal
-  MODULE PROCEDURE set_normal
+  MODULE PROCEDURE elemsd_setNormal
 END INTERFACE setNormal
-
-PUBLIC :: setNormal

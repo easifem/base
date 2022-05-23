@@ -35,13 +35,6 @@ PUBLIC :: ASSIGNMENT(=)
 ! This subroutine allocates the memory for various matrices in the object.
 ! This subroutine belongs to the generic interface called `AllocateData()`.
 !
-!@note
-! This routine also belongs to generic routien called `initiate`
-!@endnote
-!
-!### Usage
-!
-! See [[ElementshapeData_:elemsd_initiate]] for usage.
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_Allocate(obj, nsd, xidim, nns, nips)
@@ -71,11 +64,11 @@ END INTERFACE ALLOCATE
 ! summary: This routine initiate the shape data
 
 INTERFACE
-  MODULE SUBROUTINE elemsd_initiate1(obj, quad, refElem, continuityType, &
+  MODULE SUBROUTINE elemsd_initiate1(obj, quad, refelem, continuityType, &
     & interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
-    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     CHARACTER(LEN=*), INTENT(IN) :: continuityType
     CHARACTER(LEN=*), INTENT(IN) :: interpolType
   END SUBROUTINE elemsd_initiate1
@@ -243,7 +236,7 @@ END INTERFACE DEALLOCATE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         30 Aug 2021
+! date: 30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseInterpolation_]]
 
 INTERFACE
@@ -262,7 +255,7 @@ END INTERFACE BaseInterpolation
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         30 Aug 2021
+! date: 30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseContinuity_]]
 
 INTERFACE

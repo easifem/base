@@ -118,7 +118,6 @@ END INTERFACE getProjectionOfdNTdXt
 !
 !# Introduction
 !
-!
 ! This subroutine computes the projcetion cdNTdXt on the vector `val`
 ! Here the vector `val` is a vector variable
 !
