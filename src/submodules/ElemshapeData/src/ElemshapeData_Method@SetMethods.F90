@@ -15,56 +15,57 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemshapeData_Method) setMethod
+SUBMODULE(ElemshapeData_Method) SetMethods
 USE BaseMethod
 IMPLICIT NONE
 
 CONTAINS
+
 !----------------------------------------------------------------------------
 !                                                               setThickness
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE set_thickness
+MODULE PROCEDURE elemsd_setThickness
   obj%Thickness = MATMUL( Val, N )
-END PROCEDURE set_thickness
+END PROCEDURE elemsd_setThickness
 
 !----------------------------------------------------------------------------
 !                                                               setThickness
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE stsd_set_thickness
+MODULE PROCEDURE stsd_setThickness
   CALL setThickness( obj=obj, Val = MATMUL( Val, T ), N=N )
-END PROCEDURE stsd_set_thickness
+END PROCEDURE stsd_setThickness
 
 !----------------------------------------------------------------------------
 !                                                        setBarycentricCoord
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE set_coord
+MODULE PROCEDURE elemsd_setBarycentricCoord
   obj%Coord = MATMUL( Val, N )
-END PROCEDURE set_coord
+END PROCEDURE elemsd_setBarycentricCoord
 
 !----------------------------------------------------------------------------
 !                                                        setBarycentricCoord
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE stsd_set_coord
+MODULE PROCEDURE stsd_setBarycentricCoord
   CALL setBarycentricCoord( obj=obj, Val=MATMUL( Val, T ), N=N )
-END PROCEDURE stsd_set_coord
+END PROCEDURE stsd_setBarycentricCoord
 
 !----------------------------------------------------------------------------
 !                                                                      setJs
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE set_Js
+MODULE PROCEDURE elemsd_setJs
   ! Define internal variable
   INTEGER( I4B ) :: xidim, nsd, nips, ips
   REAL( DFP ) :: aa, bb, ab
-
+  !!
   xidim = obj%RefElem%XiDimension
   nsd = obj%RefElem%nsd
   nips = SIZE( obj%N, 2 )
-
+  !!
   DO ips = 1, nips
     IF( nsd .EQ. xidim ) THEN
       obj%Js( ips ) = det( obj%Jacobian( :, :, ips ) )
@@ -79,13 +80,13 @@ MODULE PROCEDURE set_Js
       obj%Js( ips ) = SQRT( aa * bb - ab * ab )
     END IF
   END DO
-END PROCEDURE set_Js
+END PROCEDURE elemsd_setJs
 
 !----------------------------------------------------------------------------
 !                                                                  setdNdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE set_dNdXt_internally
+MODULE PROCEDURE elemsd_setdNdXt
   ! Define internal variables
   INTEGER( I4B ) :: NSD, XiDim, ips, nips
   REAL( DFP ), ALLOCATABLE :: InvJacobian( :, :, : )
@@ -105,29 +106,29 @@ MODULE PROCEDURE set_dNdXt_internally
     END DO
     DEALLOCATE( InvJacobian )
   END IF
-END PROCEDURE set_dNdXt_internally
+END PROCEDURE elemsd_setdNdXt
 
 !----------------------------------------------------------------------------
 !                                                               setJacobian
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE set_Jacobian
+MODULE PROCEDURE elemsd_setJacobian
   obj%jacobian = MATMUL( Val, dNdXi )
-END PROCEDURE set_Jacobian
+END PROCEDURE elemsd_setJacobian
 
 !----------------------------------------------------------------------------
 !                                                                 setJacobian
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE stsd_set_jacobian
+MODULE PROCEDURE stsd_setJacobian
   obj%jacobian = MATMUL( MATMUL( Val, T ), dNdXi)
-END PROCEDURE stsd_set_jacobian
+END PROCEDURE stsd_setJacobian
 
 !----------------------------------------------------------------------------
 !                                                                 setdNTdt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE stsd_set_dNTdt
+MODULE PROCEDURE stsd_setdNTdt
   REAL( DFP ), ALLOCATABLE :: v( :, : )
   INTEGER( I4B ) :: ip
 
@@ -139,25 +140,26 @@ MODULE PROCEDURE stsd_set_dNTdt
     obj%dNTdt( :, :, ip ) = OUTERPROD(obj%N(:,ip), obj%dTdTheta/obj%Jt) &
       & - MATMUL( obj%dNTdXt(:,:,:,ip), v(:,ip) )
   END DO
-END PROCEDURE stsd_set_dNTdt
+END PROCEDURE stsd_setdNTdt
 
 !----------------------------------------------------------------------------
 !                                                                 setdNTdXt
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE stsd_set_dNTdXt_internally
+MODULE PROCEDURE stsd_setdNTdXt
+  !!
   INTEGER( I4B ) :: ip, j
   REAL( DFP ), ALLOCATABLE :: Q(:,:), Temp(:,:)
-
+  !!
   CALL Reallocate( obj%dNTdXt, SIZE(obj%N,1), SIZE(obj%T), &
     & SIZE(obj%Jacobian,1), SIZE(obj%N,2) )
-
+  !!
   IF( obj%RefElem%XiDimension .NE. obj%RefElem%NSD ) THEN
     RETURN
   END IF
-
+  !!
   Q = obj%Jacobian(:,:,1)
-
+  !!
   DO ip = 1, SIZE(obj%N,2)
     CALL INV( A=obj%Jacobian(:,:,ip), INVA=Q)
     Temp = MATMUL( obj%dNdXi(:,:,ip), Q )
@@ -165,10 +167,10 @@ MODULE PROCEDURE stsd_set_dNTdXt_internally
       obj%dNTdXt(:,:,j,ip) = OUTERPROD( Temp(:,j), obj%T )
     END DO
   END DO
-
+  !!
   DEALLOCATE( Q, Temp )
-
-END PROCEDURE stsd_set_dNTdXt_internally
+  !!
+END PROCEDURE stsd_setdNTdXt
 
 !----------------------------------------------------------------------------
 !                                                                   setValue
@@ -198,7 +200,7 @@ END PROCEDURE stelemsd_set1
 !                                                                 setNormal
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE set_normal
+MODULE PROCEDURE elemsd_setNormal
   REAL( DFP ) :: vec(3, 3)
   INTEGER( I4B ) :: i, xidim, nsd
   !!
@@ -216,10 +218,10 @@ MODULE PROCEDURE set_normal
       & VectorProduct( Vec(:, 1), Vec(:, 2) ) / obj%Js(i)
   END DO
   !!
-END PROCEDURE set_normal
+END PROCEDURE elemsd_setNormal
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE setMethod
+END SUBMODULE SetMethods

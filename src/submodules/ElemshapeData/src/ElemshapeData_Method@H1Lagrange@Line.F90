@@ -28,12 +28,15 @@ CONTAINS
 MODULE PROCEDURE Line_H1_Lagrange
   INTEGER( I4B ) :: nips
   REAL( DFP ), ALLOCATABLE :: Xi( :, : )
-
+  !!
   CALL Initiate( obj%RefElem, RefElem )
+  !!
   CALL getQuadraturePoints( obj = Quad, Point = Xi,  Weight = obj%Ws )
+  !!
   obj%Quad = Quad
+  !!
   nips = SIZE( obj%Ws )
-
+  !!
   SELECT CASE( refelem%order )
   CASE( 1 )
   BLOCK

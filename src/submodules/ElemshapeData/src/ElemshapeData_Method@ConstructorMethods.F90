@@ -22,8 +22,8 @@
 SUBMODULE(ElemshapeData_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
-
 CONTAINS
+
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
@@ -39,104 +39,6 @@ MODULE PROCEDURE elemsd_Allocate
   obj%Thickness = 1.0_DFP
   CALL reallocate( obj%Coord, nsd, nips )
 END PROCEDURE elemsd_Allocate
-
-!----------------------------------------------------------------------------
-!                                                                 Initiate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE stsd_initiate
-  INTEGER( I4B ) :: tip, ip
-  REAL( DFP ) :: x( 3 )
-  tip = SIZE( elemsd%N, 2 )
-  IF( ALLOCATED( obj ) ) DEALLOCATE( obj )
-  ALLOCATE( obj( tip ) )
-  DO ip = 1, tip
-    obj( ip )%T = elemsd%N( :, ip )
-    obj( ip )%dTdTheta = elemsd%dNdXi( :, 1, ip )
-    obj( ip )%Jt = elemsd%Js( ip )
-    CALL getQuadraturePoints( obj = elemsd%Quad, Weight = obj( ip )%Wt,&
-      & Num = ip, Point = x )
-    obj( ip )%Theta = x( 1 )
-  END DO
-END PROCEDURE stsd_initiate
-
-!----------------------------------------------------------------------------
-!                                                             Deallocate
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE elemsd_Deallocate
-  IF( ALLOCATED( obj%Normal ) ) DEALLOCATE( obj%Normal )
-  IF( ALLOCATED( obj%N ) ) DEALLOCATE( obj%N )
-  IF( ALLOCATED( obj%dNdXi ) ) DEALLOCATE( obj%dNdXi )
-  IF( ALLOCATED( obj%dNdXt ) ) DEALLOCATE( obj%dNdXt )
-  IF( ALLOCATED( obj%Jacobian ) ) DEALLOCATE( obj%Jacobian )
-  IF( ALLOCATED( obj%Js ) ) DEALLOCATE( obj%Js )
-  IF( ALLOCATED( obj%Ws ) ) DEALLOCATE( obj%Ws )
-  IF( ALLOCATED( obj%Thickness ) ) DEALLOCATE( obj%Thickness )
-  IF( ALLOCATED( obj%Coord ) ) DEALLOCATE( obj%Coord )
-  CALL Deallocate( obj%Quad )
-  !!
-  IF( ASSOCIATED(obj%refelem ) ) THEN
-    CALL Deallocate( obj%refelem )
-    DEALLOCATE( obj%refelem ); obj%refelem => NULL()
-  END IF
-  !!
-  SELECT TYPE( obj )
-  TYPE IS (STElemShapeData_)
-    IF( ALLOCATED( obj%T ) ) DEALLOCATE( obj%T )
-    IF( ALLOCATED( obj%dTdTheta ) ) DEALLOCATE( obj%dTdTheta )
-    IF( ALLOCATED( obj%dNTdt ) ) DEALLOCATE( obj%dNTdt )
-    IF( ALLOCATED( obj%dNTdXt ) ) DEALLOCATE( obj%dNTdXt )
-  END SELECT
-END PROCEDURE elemsd_Deallocate
-
-!----------------------------------------------------------------------------
-!                                                         BaseInterpolation
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE elemsd_BaseInterpolation
-  SELECT CASE( TRIM( childName ) )
-  CASE( "LagrangeInterpolation" )
-    ALLOCATE( LagrangeInterpolation_ :: ans )
-  CASE( "HermitInterpolation" )
-    ALLOCATE( HermitInterpolation_ :: ans )
-  CASE( "SerendipityInterpolation" )
-    ALLOCATE( SerendipityInterpolation_ :: ans )
-  CASE( "HierarchyInterpolation" )
-    ALLOCATE( HierarchyInterpolation_ :: ans )
-  CASE DEFAULT
-    CALL ErrorMSG( &
-      & Msg="Unknown child name of BaseInterpolation.", &
-      & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_BaseInterpolation()", &
-      & Line = __LINE__ , &
-      & UnitNo = stdout )
-  END SELECT
-END PROCEDURE elemsd_BaseInterpolation
-
-!----------------------------------------------------------------------------
-!                                                            BaseContinuity
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE elemsd_BaseContinuity
-  SELECT CASE( TRIM( childName ) )
-  CASE( "H1" )
-    ALLOCATE( H1_ :: ans )
-  CASE( "H1Div" )
-    ALLOCATE( H1Div_ :: ans )
-  CASE( "H1Curl" )
-    ALLOCATE( H1Curl_ :: ans )
-  CASE( "DG" )
-    ALLOCATE( DG_ :: ans )
-  CASE DEFAULT
-    CALL ErrorMSG( &
-      & Msg="Unknown child name of BaseContinuity.", &
-      & File = "ElemshapeData_Method@Constructor.F90", &
-      & Routine = "elemsd_BaseContinuity()", &
-      & Line = __LINE__ , &
-      & UnitNo = stdout )
-  END SELECT
-END PROCEDURE elemsd_BaseContinuity
 
 !----------------------------------------------------------------------------
 !                                                                 Initiate
@@ -444,6 +346,104 @@ MODULE PROCEDURE elemsd_initiate5
   IF( ALLOCATED( obj2%dNTdXt ) ) obj1%dNTdXt = obj2%dNTdXt
   !!
 END PROCEDURE elemsd_initiate5
+
+!----------------------------------------------------------------------------
+!                                                                 Initiate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE stsd_initiate
+  INTEGER( I4B ) :: tip, ip
+  REAL( DFP ) :: x( 3 )
+  tip = SIZE( elemsd%N, 2 )
+  IF( ALLOCATED( obj ) ) DEALLOCATE( obj )
+  ALLOCATE( obj( tip ) )
+  DO ip = 1, tip
+    obj( ip )%T = elemsd%N( :, ip )
+    obj( ip )%dTdTheta = elemsd%dNdXi( :, 1, ip )
+    obj( ip )%Jt = elemsd%Js( ip )
+    CALL getQuadraturePoints( obj = elemsd%Quad, Weight = obj( ip )%Wt,&
+      & Num = ip, Point = x )
+    obj( ip )%Theta = x( 1 )
+  END DO
+END PROCEDURE stsd_initiate
+
+!----------------------------------------------------------------------------
+!                                                             Deallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_Deallocate
+  IF( ALLOCATED( obj%Normal ) ) DEALLOCATE( obj%Normal )
+  IF( ALLOCATED( obj%N ) ) DEALLOCATE( obj%N )
+  IF( ALLOCATED( obj%dNdXi ) ) DEALLOCATE( obj%dNdXi )
+  IF( ALLOCATED( obj%dNdXt ) ) DEALLOCATE( obj%dNdXt )
+  IF( ALLOCATED( obj%Jacobian ) ) DEALLOCATE( obj%Jacobian )
+  IF( ALLOCATED( obj%Js ) ) DEALLOCATE( obj%Js )
+  IF( ALLOCATED( obj%Ws ) ) DEALLOCATE( obj%Ws )
+  IF( ALLOCATED( obj%Thickness ) ) DEALLOCATE( obj%Thickness )
+  IF( ALLOCATED( obj%Coord ) ) DEALLOCATE( obj%Coord )
+  CALL Deallocate( obj%Quad )
+  !!
+  IF( ASSOCIATED(obj%refelem ) ) THEN
+    CALL Deallocate( obj%refelem )
+    DEALLOCATE( obj%refelem ); obj%refelem => NULL()
+  END IF
+  !!
+  SELECT TYPE( obj )
+  TYPE IS (STElemShapeData_)
+    IF( ALLOCATED( obj%T ) ) DEALLOCATE( obj%T )
+    IF( ALLOCATED( obj%dTdTheta ) ) DEALLOCATE( obj%dTdTheta )
+    IF( ALLOCATED( obj%dNTdt ) ) DEALLOCATE( obj%dNTdt )
+    IF( ALLOCATED( obj%dNTdXt ) ) DEALLOCATE( obj%dNTdXt )
+  END SELECT
+END PROCEDURE elemsd_Deallocate
+
+!----------------------------------------------------------------------------
+!                                                         BaseInterpolation
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_BaseInterpolation
+  SELECT CASE( TRIM( childName ) )
+  CASE( "LagrangeInterpolation" )
+    ALLOCATE( LagrangeInterpolation_ :: ans )
+  CASE( "HermitInterpolation" )
+    ALLOCATE( HermitInterpolation_ :: ans )
+  CASE( "SerendipityInterpolation" )
+    ALLOCATE( SerendipityInterpolation_ :: ans )
+  CASE( "HierarchyInterpolation" )
+    ALLOCATE( HierarchyInterpolation_ :: ans )
+  CASE DEFAULT
+    CALL ErrorMSG( &
+      & Msg="Unknown child name of BaseInterpolation.", &
+      & File = "ElemshapeData_Method@Constructor.F90", &
+      & Routine = "elemsd_BaseInterpolation()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+  END SELECT
+END PROCEDURE elemsd_BaseInterpolation
+
+!----------------------------------------------------------------------------
+!                                                            BaseContinuity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_BaseContinuity
+  SELECT CASE( TRIM( childName ) )
+  CASE( "H1" )
+    ALLOCATE( H1_ :: ans )
+  CASE( "H1Div" )
+    ALLOCATE( H1Div_ :: ans )
+  CASE( "H1Curl" )
+    ALLOCATE( H1Curl_ :: ans )
+  CASE( "DG" )
+    ALLOCATE( DG_ :: ans )
+  CASE DEFAULT
+    CALL ErrorMSG( &
+      & Msg="Unknown child name of BaseContinuity.", &
+      & File = "ElemshapeData_Method@Constructor.F90", &
+      & Routine = "elemsd_BaseContinuity()", &
+      & Line = __LINE__ , &
+      & UnitNo = stdout )
+  END SELECT
+END PROCEDURE elemsd_BaseContinuity
 
 !----------------------------------------------------------------------------
 !
