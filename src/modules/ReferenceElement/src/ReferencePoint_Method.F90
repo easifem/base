@@ -153,7 +153,7 @@ END INTERFACE ReferencePoint_Pointer
 PUBLIC :: ReferencePoint_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       LagrangeElement@Methods
+!                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -176,17 +176,18 @@ PUBLIC :: ReferencePoint_Pointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Point( RefElem, Order, obj )
+MODULE PURE SUBROUTINE highOrderElement_Point( RefElem, Order, obj, ipType )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
     !! Linear line element
   INTEGER( I4B ), INTENT( IN ) :: Order
     !! Order or generated element
   CLASS( ReferenceElement_ ),  INTENT( INOUT ) ::  obj
     !! High order lagrange line element
-END SUBROUTINE LagrangeElement_Point
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highOrderElement_Point
 END INTERFACE
 
-PUBLIC :: LagrangeElement_Point
+PUBLIC :: highOrderElement_Point
 
 !----------------------------------------------------------------------------
 !                                                      MeasureSimplex@Methods
