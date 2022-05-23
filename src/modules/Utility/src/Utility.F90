@@ -48,6 +48,8 @@ INTEGER(I4B), PARAMETER :: NPAR_POLYTERM = 8
 #include "StringMethods.inc"
 #include "SwapMethods.inc"
 #include "ConvertMethods.inc"
+#include "LineInterpolationPoints.inc"
+
 
 !----------------------------------------------------------------------------
 !
