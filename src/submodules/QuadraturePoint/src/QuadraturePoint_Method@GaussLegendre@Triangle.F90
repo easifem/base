@@ -24,7 +24,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPTriangle1
-  SELECT CASE(Order)
+  SELECT CASE(order)
   CASE( 0, 1 )
     CALL Initiate( obj, TPW1 )
   CASE( 2 )
@@ -53,7 +53,7 @@ END PROCEDURE getGaussLegendreQPTriangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPTriangle2
-  SELECT CASE( NIPS( 1 ) )
+  SELECT CASE( nips( 1 ) )
   CASE( 1 )
     CALL Initiate( obj, TPW1 )
   CASE( 3 )

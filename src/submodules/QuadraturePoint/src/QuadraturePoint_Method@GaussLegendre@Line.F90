@@ -24,7 +24,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPLine1
-  SELECT CASE( Order )
+  SELECT CASE( order )
   CASE( 0, 1 )
     CALL Initiate( obj, Pw1 )
   CASE( 2, 3 )
@@ -57,7 +57,7 @@ END PROCEDURE getGaussLegendreQPLine1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPLine2
-  SELECT CASE( NIPS( 1 ) )
+  SELECT CASE( nips( 1 ) )
   CASE( 1 )
     CALL Initiate( obj, Pw1 )
   CASE( 2 )
