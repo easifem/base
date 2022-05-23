@@ -29,12 +29,13 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refPoint_Initiate
-  INTEGER( I4B ) :: s( 2 )
-
+  !!
   CALL Reallocate( obj%XiJ, 3, 1 )
+  !!
   IF( PRESENT( XiJ ) ) THEN
     obj%XiJ = XiJ
   END IF
+  !!
   obj%EntityCounts = [1, 0, 0, 0]
   obj%XiDimension = 0
   obj%Order = 0
@@ -43,7 +44,9 @@ MODULE PROCEDURE refPoint_Initiate
   IF( ALLOCATED( obj%Topology ) ) DEALLOCATE( obj%Topology )
   ALLOCATE( obj%Topology( 1 ) )
   obj%Topology( 1 ) = ReferenceTopology( [1], Point )
-  obj%LagrangeElement => LagrangeElement_Point
+  !!
+  obj%highOrderElement => highOrderElement_Point
+  !!
 END PROCEDURE refPoint_Initiate
 
 !----------------------------------------------------------------------------
@@ -67,16 +70,16 @@ END PROCEDURE refPoint_Constructor_1
 !                                                            LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeElement_Point
+MODULE PROCEDURE highOrderElement_Point
   CALL Initiate( obj=obj, anotherobj=refelem )
-END PROCEDURE LagrangeElement_Point
+END PROCEDURE highOrderElement_Point
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Point
-  Ans = 0.0_DFP
+  ans = 0.0_DFP
 END PROCEDURE Measure_Simplex_Point
 
 !----------------------------------------------------------------------------
