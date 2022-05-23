@@ -95,14 +95,15 @@ PUBLIC :: ReferencePrism_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Prism( RefElem, Order, obj )
+MODULE PURE SUBROUTINE highOrderElement_Prism( RefElem, Order, obj, ipType )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
   CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE LagrangeElement_Prism
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highOrderElement_Prism
 END INTERFACE
 
-PUBLIC :: LagrangeElement_Prism
+PUBLIC :: highOrderElement_Prism
 
 !----------------------------------------------------------------------------
 !                                                  MeasureSimplex@Geometry
