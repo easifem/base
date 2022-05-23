@@ -16,14 +16,14 @@
 !
 
 PUBLIC :: EquidistanceLIP_Line
-PUBLIC :: LIP_Line
+PUBLIC :: InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
-!                                                                  LIP_Line
+!                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION LIP_Line( xij, order, interpolType ) &
+  MODULE PURE FUNCTION InterpolationPoint_Line( xij, order, interpolType ) &
     & RESULT( nodecoord )
     !!
     REAL( DFP ), INTENT( IN ) :: xij( 3, 2 )
@@ -31,7 +31,7 @@ INTERFACE
     CHARACTER( LEN = * ), INTENT( IN ) :: interpolType
     REAL( DFP ) :: nodecoord( 3, order+1 )
     !!
-  END FUNCTION LIP_Line
+  END FUNCTION InterpolationPoint_Line
 END INTERFACE
 
 !----------------------------------------------------------------------------

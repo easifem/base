@@ -20,18 +20,18 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                 LIP_Line
+!                                                    InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LIP_Line
+MODULE PROCEDURE InterpolationPoint_Line
   SELECT CASE( interpolType )
   CASE( "LagrangeInterpolation", "Equidistance" )
     nodecoord = EquidistanceLIP_Line( xij=xij, order=order )
   END SELECT
-END PROCEDURE LIP_Line
+END PROCEDURE InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
-!                                                      EquidistanceLIP_Line
+!                                                       EquidistanceLIP_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceLIP_Line

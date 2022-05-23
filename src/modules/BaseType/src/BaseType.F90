@@ -878,10 +878,10 @@ END TYPE FEVariableConstant_
 PUBLIC :: FEVariableConstant_
 
 TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeFEVariableConstant = &
-     & FEVariableConstant_()
+  & FEVariableConstant_()
 
 TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeVariableConstant = &
-     & FEVariableConstant_()
+  & FEVariableConstant_()
 
 
 !----------------------------------------------------------------------------

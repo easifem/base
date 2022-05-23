@@ -82,7 +82,7 @@ MODULE PROCEDURE reference_Line_Pointer_1
 END PROCEDURE reference_Line_Pointer_1
 
 !----------------------------------------------------------------------------
-!                                                             LagrangeElement
+!                                                           LagrangeElement
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeElement_Line
