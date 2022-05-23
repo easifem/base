@@ -129,7 +129,7 @@ PUBLIC :: ReferenceTopology
 ! type( ReferenceTopology_ ) :: obj
 ! obj = ReferenceTopology( Nptrs = [1,2,3], Name=Triangle3 )
 ! call display( obj, "obj=")
-! call Deallocate( obj ) !<------
+! call Deallocate( obj )
 !```
 
 INTERFACE
@@ -200,9 +200,6 @@ PUBLIC :: OPERATOR(.NNE.)
 ! date: 1 March 2021
 ! summary: Returns the total number of nodes in the reference element
 !
-!@todo
-! usage
-!@endtodo
 
 INTERFACE
   MODULE PURE FUNCTION refelem_NNE2(obj) RESULT(Ans)
@@ -228,7 +225,6 @@ END INTERFACE
 ! This subroutine copies one reference element into other
 ! This subroutine also defines an assignment operator for `obj1=obj2`
 ! type opertions
-!
 
 INTERFACE
   MODULE PURE SUBROUTINE refelem_Initiate1(obj, Anotherobj)
@@ -258,9 +254,18 @@ PUBLIC :: ASSIGNMENT(=)
 ! summary: Returns a pointer to an instance of ReferenceElement
 
 INTERFACE
-  MODULE FUNCTION refelem_Constructor_1(xidim, nsd, elemType) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: xidim, nsd, elemType
+  MODULE FUNCTION refelem_Constructor_1(xidim, nsd, elemType, &
+    & ipType) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: xidim
+      !! xidimension
+    INTEGER(I4B), INTENT(IN) :: nsd
+      !! spatial dimenstion
+    INTEGER(I4B), INTENT(IN) :: elemType
+      !! element type
+    INTEGER(I4B), INTENT(IN) :: ipType
+      !! interpolationType
     CLASS(ReferenceElement_), POINTER :: ans
+      !! reference element
   END FUNCTION refelem_Constructor_1
 END INTERFACE
 
@@ -338,7 +343,6 @@ PUBLIC :: ElementType
 !> authors: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from element number/type
-
 
 INTERFACE
   MODULE PURE FUNCTION Element_Name(ElemType) RESULT(Ans)
