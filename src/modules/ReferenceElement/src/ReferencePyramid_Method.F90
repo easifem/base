@@ -32,12 +32,6 @@ PRIVATE
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
 ! summary: This subroutine for constructing the object
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
 MODULE PURE SUBROUTINE initiate_ref_Pyramid( obj, NSD, XiJ )
@@ -94,14 +88,15 @@ PUBLIC :: ReferencePyramid_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Pyramid( RefElem, Order, obj )
+MODULE PURE SUBROUTINE highOrderElement_Pyramid( RefElem, Order, obj, ipType )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
   CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE LagrangeElement_Pyramid
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highOrderElement_Pyramid
 END INTERFACE
 
-PUBLIC :: LagrangeElement_Pyramid
+PUBLIC :: highOrderElement_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                  MeasureSimplex@Geometry
