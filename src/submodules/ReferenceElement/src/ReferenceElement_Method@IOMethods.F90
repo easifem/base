@@ -29,10 +29,16 @@ CONTAINS
 
 MODULE PROCEDURE reftopo_Display
   CALL Display( msg, unitno=unitno)
-  CALL Display( "# ElemType : " // TRIM( ElementName( obj%Name ) ), &
-    & unitno=unitno)
-  CALL Display( "# XiDim : " // TRIM( INT2STR( obj%XiDimension ) ) )
-  CALL Display( obj%Nptrs, "# Nptrs : ")
+  CALL Display( &
+    & "# ElemType : " // TRIM( ElementName( obj%Name ) ), &
+    & unitno=unitno )
+  CALL Display( &
+    & "# XiDim : " // TRIM( INT2STR( obj%XiDimension ) ), &
+    & unitno=unitno )
+  CALL Display( &
+    & obj%Nptrs, &
+    & "# Nptrs : ", &
+    & unitno=unitno )
 END PROCEDURE reftopo_Display
 
 !----------------------------------------------------------------------------
@@ -47,28 +53,42 @@ MODULE PROCEDURE refelem_Display
   !!
   CALL Display( "# ElemType : "// trim( ElementName( obj%Name ) ), &
     & unitno=unitno )
+  !!
   CALL Display( obj%XiDimension, "# XiDimension :: ", &
     & unitno=unitno  )
+  !!
   CALL Display( obj%NSD, "# NSD : ", &
     & unitno=unitno )
+  !!
   CALL Display( obj%Order, "# Order : ", &
     & unitno=unitno )
+  !!
   CALL Display( obj%EntityCounts( 1 ), "# EntityCounts(0) : ", &
     & unitno=unitno )
+  !!
   CALL Display( obj%EntityCounts( 2 ), "# EntityCounts(1) : ", &
     & unitno=unitno )
+  !!
   CALL Display( obj%EntityCounts( 3 ), "# EntityCounts(2) : ", &
     & unitno=unitno )
+  !!
   CALL Display( obj%EntityCounts( 4 ), "# EntityCounts(3) : ", &
     & unitno=unitno )
+  !!
   DO j = 1, SIZE( obj%XiJ, 2 )
-    CALL Display( obj%XiJ( :, j), &
-      & "# Node( " // trim( str( j, .true. ) ) // " ) : " )
+    CALL Display( &
+      & obj%XiJ( :, j), &
+      & "# Node( " // trim( str( j, .true. ) ) // " ) : ", &
+      & unitno=unitno )
   END DO
+  !!
   DO j = 1, SIZE( obj%Topology )
-    CALL Display( obj%Topology( j ), &
-      & "# Topology( " // TRIM( INT2STR( j ) ) // " ) : ", I )
+    CALL Display( &
+      & obj%Topology( j ), &
+      & "# Topology( " // TRIM( INT2STR( j ) ) // " ) : ", &
+      & unitno=unitno )
   END DO
+  !!
 END PROCEDURE refelem_Display
 
 END SUBMODULE IOMethods

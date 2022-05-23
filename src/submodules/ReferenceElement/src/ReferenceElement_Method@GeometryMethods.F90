@@ -714,8 +714,9 @@ SELECT CASE (xiCell)
   !! Reference cell is a curve
   !!
 CASE (1)
-  tFacet = 2
-  ALLOCATE (ans(tFacet))
+  !!
+  tFacet = 2; ALLOCATE (ans(tFacet))
+  !!
   DO ii = 1, tFacet
     nptrs = refelem%Topology(ii)%nptrs
     ans(ii)%xij = refelem%xij(:, nptrs)
@@ -732,15 +733,20 @@ CASE (1)
   !! Reference cell is a surface
   !!
 CASE (2)
+  !!
   tFacet = refelem%EntityCounts(xicell)
   ALLOCATE (ans(tFacet))
   T(1) = 0
+  !!
   DO ii = 2, 4
     T(ii) = SUM(refelem%EntityCounts(1:ii - 1))
   END DO
+  !!
   istart = T(XiCell) + 1
   iend = T(XiCell) + tFacet
+  !!
   DO ii = 1, tFacet
+    !!
     topo = refelem%Topology(iStart + ii - 1)
     nptrs = topo%nptrs
     ans(ii)%xidimension = topo%Xidimension
@@ -750,25 +756,33 @@ CASE (2)
     ans(ii)%NSD = refelem%nsd
     ans(ii)%EntityCounts = [SIZE(nptrs), 1, 0, 0]
     tsize = SIZE(nptrs) + 1
+    !!
     ALLOCATE (ans(ii)%Topology(tsize))
+    !!
     DO jj = 1, SIZE(nptrs)
       ans(ii)%Topology(jj) = ReferenceTopology(nptrs=nptrs(jj:jj), name=Point)
     END DO
+    !!
     ans(ii)%Topology(tsize) = &
       & ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
+    !!
   END DO
   !!
   !! Reference cell is a volume
   !!
 CASE (3)
+  !!
   tFacet = refelem%EntityCounts(xicell)
   ALLOCATE (ans(tFacet))
   T(1) = 0
+  !!
   DO ii = 2, 4
     T(ii) = SUM(refelem%EntityCounts(1:ii - 1))
   END DO
+  !!
   istart = T(XiCell) + 1
   iend = T(XiCell) + tFacet
+  !!
   DO ii = 1, tFacet
     topo = refelem%Topology(iStart + ii - 1)
     nptrs = topo%nptrs
@@ -793,6 +807,7 @@ CASE (3)
     ans(ii)%Topology(tsize) = &
       & ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
   END DO
+  !!
 END SELECT
 !!
 IF (ALLOCATED(nptrs)) DEALLOCATE (nptrs)

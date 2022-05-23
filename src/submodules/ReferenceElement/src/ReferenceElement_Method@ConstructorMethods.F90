@@ -109,32 +109,46 @@ MODULE PROCEDURE refelem_constructor_1
   !!
   refelem=>NULL()
   SELECT CASE( xidim )
+    !!
   CASE( 0 )
     ans => ReferencePoint_Pointer(nsd=nsd)
+    !!
   CASE( 1 )
+    !!
     elemOrder = ElementOrder( elemType )
+    !!
     IF( elemOrder .NE. 1 ) THEN
+      !!
       refelem => ReferenceLine_Pointer(nsd=nsd)
       ALLOCATE( ReferenceLine_ :: ans )
       CALL refelem%LagrangeElement( order=elemOrder, &
         & HighOrderObj=ans )
       CALL Deallocate( refelem ); DEALLOCATE( refelem );refelem => NULL()
+      !!
     ELSE
       ans => ReferenceLine_Pointer(nsd=nsd)
     END IF
+    !!
   CASE( 2 )
+    !!
     elemOrder = ElementOrder( elemType )
+    !!
     IF( isTriangle( elemType ) ) THEN
+      !!
       IF( elemOrder .NE. 1 ) THEN
+        !!
         refelem => ReferenceTriangle_Pointer(nsd=nsd)
         ALLOCATE( ReferenceTriangle_ :: ans )
         CALL refelem%LagrangeElement( order=elemOrder, &
           & HighOrderObj=ans )
         CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
+        !!
       ELSE
         ans => ReferenceTriangle_Pointer(nsd=nsd)
       END IF
+      !!
     ELSE IF( isQuadrangle( elemType ) ) THEN
+      !!
       IF( elemOrder .NE. 1 ) THEN
         refelem => ReferenceQuadrangle_Pointer(nsd=nsd)
         ALLOCATE( ReferenceQuadrangle_ :: ans )
@@ -144,10 +158,15 @@ MODULE PROCEDURE refelem_constructor_1
       ELSE
         ans => ReferenceQuadrangle_Pointer(nsd=nsd)
       END IF
+      !!
     END IF
+    !!
   CASE( 3 )
+    !!
     elemOrder = ElementOrder( elemType )
+    !!
     IF( isTetrahedron( elemType ) ) THEN
+      !!
       IF( elemOrder .NE. 1 ) THEN
         refelem => ReferenceTetrahedron_Pointer(nsd=nsd)
         ALLOCATE( ReferenceTetrahedron_ :: ans )
@@ -157,7 +176,9 @@ MODULE PROCEDURE refelem_constructor_1
       ELSE
         ans => ReferenceTetrahedron_Pointer(nsd=nsd)
       END IF
+      !!
     ELSE IF( isHexahedron( elemType ) ) THEN
+      !!
       IF( elemOrder .NE. 1 ) THEN
         refelem => ReferenceHexahedron_Pointer(nsd=nsd)
         ALLOCATE( ReferenceHexahedron_ :: ans )
@@ -167,7 +188,9 @@ MODULE PROCEDURE refelem_constructor_1
       ELSE
         ans => ReferenceHexahedron_Pointer(nsd=nsd)
       END IF
+      !!
     ELSE IF( isPrism( elemType ) ) THEN
+      !!
       IF( elemOrder .NE. 1 ) THEN
         refelem => ReferencePrism_Pointer(nsd=nsd)
         ALLOCATE( ReferencePrism_ :: ans )
@@ -177,7 +200,9 @@ MODULE PROCEDURE refelem_constructor_1
       ELSE
         ans => ReferencePrism_Pointer(nsd=nsd)
       END IF
+      !!
     ELSE IF( isPyramid( elemType ) ) THEN
+      !!
       IF( elemOrder .NE. 1 ) THEN
         refelem => ReferencePyramid_Pointer(nsd=nsd)
         ALLOCATE( ReferencePyramid_ :: ans )
@@ -187,7 +212,9 @@ MODULE PROCEDURE refelem_constructor_1
       ELSE
         ans => ReferencePyramid_Pointer(nsd=nsd)
       END IF
+      !!
     END IF
+    !!
   END SELECT
   !!
 END PROCEDURE refelem_constructor_1
