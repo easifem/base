@@ -55,6 +55,7 @@ MODULE PROCEDURE refelem_Deallocate2
   obj%XiDimension = -1
   obj%Name = -1
   obj%NSD = -1
+  obj%interpolationPointType = 0
 END PROCEDURE refelem_Deallocate2
 
 !----------------------------------------------------------------------------
@@ -92,10 +93,11 @@ MODULE PROCEDURE refelem_Initiate1
   obj%NSD = Anotherobj%NSD
   obj%Order = Anotherobj%Order
   obj%Name = Anotherobj%Name
+  obj%interpolationPointType = Anotherobj%interpolationPointType
   IF( ALLOCATED( Anotherobj%Topology ) ) THEN
     obj%Topology = Anotherobj%Topology
   END IF
-  obj%LagrangeElement => Anotherobj%LagrangeElement
+  obj%highOrderElement => Anotherobj%highOrderElement
 END PROCEDURE refelem_Initiate1
 
 !----------------------------------------------------------------------------
@@ -107,10 +109,14 @@ MODULE PROCEDURE refelem_constructor_1
   CLASS( ReferenceElement_ ), POINTER :: refelem
   INTEGER( I4B ) :: elemOrder
   !!
+  !!
+  !!
   refelem=>NULL()
+  !!
   SELECT CASE( xidim )
     !!
   CASE( 0 )
+    !!
     ans => ReferencePoint_Pointer(nsd=nsd)
     !!
   CASE( 1 )
@@ -121,9 +127,15 @@ MODULE PROCEDURE refelem_constructor_1
       !!
       refelem => ReferenceLine_Pointer(nsd=nsd)
       ALLOCATE( ReferenceLine_ :: ans )
-      CALL refelem%LagrangeElement( order=elemOrder, &
-        & HighOrderObj=ans )
-      CALL Deallocate( refelem ); DEALLOCATE( refelem );refelem => NULL()
+      !!
+      CALL refelem%highOrderElement( &
+        & order=elemOrder, &
+        & ipType=ipType, &
+        & highOrderObj=ans )
+      !!
+      CALL Deallocate( refelem )
+      DEALLOCATE( refelem )
+      refelem => NULL()
       !!
     ELSE
       ans => ReferenceLine_Pointer(nsd=nsd)
@@ -139,9 +151,13 @@ MODULE PROCEDURE refelem_constructor_1
         !!
         refelem => ReferenceTriangle_Pointer(nsd=nsd)
         ALLOCATE( ReferenceTriangle_ :: ans )
-        CALL refelem%LagrangeElement( order=elemOrder, &
-          & HighOrderObj=ans )
-        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL refelem%highOrderElement( &
+          & order=elemOrder, &
+          & highOrderObj=ans, &
+          & ipType = ipType )
+        CALL Deallocate( refelem )
+        DEALLOCATE( refelem )
+        refelem => NULL()
         !!
       ELSE
         ans => ReferenceTriangle_Pointer(nsd=nsd)
@@ -150,11 +166,18 @@ MODULE PROCEDURE refelem_constructor_1
     ELSE IF( isQuadrangle( elemType ) ) THEN
       !!
       IF( elemOrder .NE. 1 ) THEN
+        !!
         refelem => ReferenceQuadrangle_Pointer(nsd=nsd)
         ALLOCATE( ReferenceQuadrangle_ :: ans )
-        CALL refelem%LagrangeElement( order=elemOrder, &
-          & HighOrderObj=ans )
-        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL refelem%highOrderElement( &
+          & order=elemOrder, &
+          & highOrderObj=ans,  &
+          & ipType=ipType )
+        !!
+        CALL Deallocate( refelem )
+        DEALLOCATE( refelem )
+        refelem => NULL()
+        !!
       ELSE
         ans => ReferenceQuadrangle_Pointer(nsd=nsd)
       END IF
@@ -168,11 +191,18 @@ MODULE PROCEDURE refelem_constructor_1
     IF( isTetrahedron( elemType ) ) THEN
       !!
       IF( elemOrder .NE. 1 ) THEN
+        !!
         refelem => ReferenceTetrahedron_Pointer(nsd=nsd)
         ALLOCATE( ReferenceTetrahedron_ :: ans )
-        CALL refelem%LagrangeElement( order=elemOrder, &
-          & HighOrderObj=ans )
-        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL refelem%highOrderElement( &
+          & order=elemOrder, &
+          & highOrderObj=ans, &
+          & ipType=ipType )
+        !!
+        CALL Deallocate( refelem )
+        DEALLOCATE( refelem )
+        refelem => NULL()
+        !!
       ELSE
         ans => ReferenceTetrahedron_Pointer(nsd=nsd)
       END IF
@@ -180,11 +210,18 @@ MODULE PROCEDURE refelem_constructor_1
     ELSE IF( isHexahedron( elemType ) ) THEN
       !!
       IF( elemOrder .NE. 1 ) THEN
+        !!
         refelem => ReferenceHexahedron_Pointer(nsd=nsd)
         ALLOCATE( ReferenceHexahedron_ :: ans )
-        CALL refelem%LagrangeElement( order=elemOrder, &
-          & HighOrderObj=ans )
-        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL refelem%highOrderElement( &
+          & order=elemOrder, &
+          & highOrderObj=ans, &
+          & ipType=ipType )
+        !!
+        CALL Deallocate( refelem )
+        DEALLOCATE( refelem )
+        refelem => NULL()
+        !!
       ELSE
         ans => ReferenceHexahedron_Pointer(nsd=nsd)
       END IF
@@ -192,11 +229,18 @@ MODULE PROCEDURE refelem_constructor_1
     ELSE IF( isPrism( elemType ) ) THEN
       !!
       IF( elemOrder .NE. 1 ) THEN
+        !!
         refelem => ReferencePrism_Pointer(nsd=nsd)
         ALLOCATE( ReferencePrism_ :: ans )
-        CALL refelem%LagrangeElement( order=elemOrder, &
-          & HighOrderObj=ans )
-        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL refelem%highOrderElement( &
+          & order=elemOrder, &
+          & highOrderObj=ans, &
+          & ipType=ipType )
+        !!
+        CALL Deallocate( refelem )
+        DEALLOCATE( refelem )
+        refelem => NULL()
+        !!
       ELSE
         ans => ReferencePrism_Pointer(nsd=nsd)
       END IF
@@ -204,11 +248,18 @@ MODULE PROCEDURE refelem_constructor_1
     ELSE IF( isPyramid( elemType ) ) THEN
       !!
       IF( elemOrder .NE. 1 ) THEN
+        !!
         refelem => ReferencePyramid_Pointer(nsd=nsd)
         ALLOCATE( ReferencePyramid_ :: ans )
-        CALL refelem%LagrangeElement( order=elemOrder, &
-          & HighOrderObj=ans )
-        CALL Deallocate( refelem );DEALLOCATE( refelem );refelem => NULL()
+        CALL refelem%highOrderElement( &
+          & order=elemOrder, &
+          & highOrderObj=ans, &
+          & ipType=ipType )
+        !!
+        CALL Deallocate( refelem )
+        DEALLOCATE( refelem )
+        refelem => NULL()
+        !!
       ELSE
         ans => ReferencePyramid_Pointer(nsd=nsd)
       END IF
@@ -216,6 +267,8 @@ MODULE PROCEDURE refelem_constructor_1
     END IF
     !!
   END SELECT
+  !!
+  ans%interpolationPointType = ipType
   !!
 END PROCEDURE refelem_constructor_1
 
