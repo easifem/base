@@ -29,22 +29,14 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_ref_Line
-  INTEGER( I4B ) :: s( 2 )
   !!
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Reallocate( obj%XiJ, 3, 2 )
-    s = SHAPE( XiJ )
-    obj%XiJ( 1:s(1), 1:s(2) ) = XiJ(:,:)
-  ELSE
-    obj%XiJ = RESHAPE( &
-      & [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], &
-      & [3, 2] )
-  END IF
+  CALL Reallocate( obj%xij, 3, 2 )
+  obj%xij = InterpolationPoint_Line( xij=xij, order=1, ipType=Equidistance )
   !!
   obj%EntityCounts = [2, 1, 0, 0]
   obj%XiDimension = 1
-  obj%Order = 1
-  obj%NSD = NSD
+  obj%order = 1
+  obj%nsd = nsd
   obj%Name = Line2
   !!
   IF( ALLOCATED( obj%Topology ) ) DEALLOCATE( obj%Topology )
@@ -52,7 +44,8 @@ MODULE PROCEDURE initiate_ref_Line
   obj%Topology( 1 ) = ReferenceTopology( [1], Point )
   obj%Topology( 2 ) = ReferenceTopology( [2], Point )
   obj%Topology( 3 ) = ReferenceTopology( [1, 2], Line2 )
-  obj%LagrangeElement => LagrangeElement_Line
+  !!
+  obj%highorderElement => highorderElement_Line
   !!
 END PROCEDURE initiate_ref_Line
 
@@ -61,11 +54,13 @@ END PROCEDURE initiate_ref_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Line
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( obj, NSD, XiJ )
+  !!
+  IF( PRESENT( xij ) ) THEN
+    CALL Initiate( obj, nsd, xij )
   ELSE
-    CALL Initiate( obj, NSD )
+    CALL Initiate( obj, nsd )
   END IF
+  !!
 END PROCEDURE reference_Line
 
 !----------------------------------------------------------------------------
@@ -73,43 +68,53 @@ END PROCEDURE reference_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Line_Pointer_1
+  !!
   ALLOCATE( obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( obj, NSD, XiJ )
+  !!
+  IF( PRESENT( xij ) ) THEN
+    CALL Initiate( obj, nsd, xij )
   ELSE
-    CALL Initiate( obj, NSD )
+    CALL Initiate( obj, nsd )
   END IF
+  !!
 END PROCEDURE reference_Line_Pointer_1
 
 !----------------------------------------------------------------------------
 !                                                           LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeElement_Line
-  ! Define internal variables
+MODULE PROCEDURE highorderElement_Line
+  !!
+  !! Define internal variables
+  !!
   INTEGER( I4B ) :: nns, i
-  obj%XiJ = EquidistanceLIP_Line( XiJ = RefElem%XiJ, Order = Order)
-  obj%NSD = RefElem%NSD
-  nns = SIZE( obj%XiJ, 2 )
+  !!
+  obj%xij = InterpolationPoint_Line( xij = refelem%xij, order = order, &
+    & ipType=ipType )
+  obj%nsd = refelem%nsd
+  nns = SIZE( obj%xij, 2 )
   obj%EntityCounts = [nns, 1, 0, 0]
   obj%XiDimension = 1
-  obj%Order = Order
+  obj%order = order
   obj%Name = ElementType( "Line" // TRIM( INT2STR( nns ) ) )
+  !!
   ALLOCATE( obj%Topology( nns + 1 ) )
   DO CONCURRENT (i=1:nns)
     obj%Topology( i ) = ReferenceTopology( [i], Point )
   END DO
+  !!
   obj%Topology( nns + 1 ) = ReferenceTopology( [(i, i=1,nns)], obj%Name )
-END PROCEDURE LagrangeElement_Line
+  !!
+END PROCEDURE highorderElement_Line
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Line
-  Ans = SQRT( ( XiJ( 1, 1 ) -  XiJ( 1, 2 ) ) ** 2 &
-    & + ( XiJ( 2, 1 ) -  XiJ( 2, 2 ) ) ** 2 &
-    & + ( XiJ( 3, 1 ) -  XiJ( 3, 2 ) ) ** 2 )
+  Ans = SQRT( ( xij( 1, 1 ) -  xij( 1, 2 ) ) ** 2 &
+    & + ( xij( 2, 1 ) -  xij( 2, 2 ) ) ** 2 &
+    & + ( xij( 3, 1 ) -  xij( 3, 2 ) ) ** 2 )
 END PROCEDURE Measure_Simplex_Line
 
 !----------------------------------------------------------------------------
