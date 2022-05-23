@@ -32,7 +32,7 @@ MODULE PROCEDURE Initiate_ref_Hexahedron
 END PROCEDURE Initiate_ref_Hexahedron
 
 !----------------------------------------------------------------------------
-!                                                      ReferenceHexahedron
+!                                                       ReferenceHexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Hexahedron
@@ -44,7 +44,7 @@ MODULE PROCEDURE reference_Hexahedron
 END PROCEDURE reference_Hexahedron
 
 !----------------------------------------------------------------------------
-!                                                      ReferenceHexahedron
+!                                                        ReferenceHexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Hexahedron_Pointer
@@ -57,11 +57,11 @@ MODULE PROCEDURE reference_Hexahedron_Pointer
 END PROCEDURE reference_Hexahedron_Pointer
 
 !----------------------------------------------------------------------------
-!                                                             LagrangeElement
+!                                                          highOrderElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeElement_Hexahedron
-END PROCEDURE LagrangeElement_Hexahedron
+MODULE PROCEDURE highorderElement_Hexahedron
+END PROCEDURE highorderElement_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex
@@ -69,7 +69,7 @@ END PROCEDURE LagrangeElement_Hexahedron
 
 MODULE PROCEDURE Measure_Simplex_Hexahedron
   INTEGER( I4B ) :: Order0( 6 ), Node0( 6, 4 ), FM( 6, 7 ), iFace, b
-
+  !!
   Order0 = [4, 4, 4, 4, 4, 4]
   FM = FacetMatrix( RefElem )
   DO iFace = 1, 6
@@ -95,4 +95,5 @@ END PROCEDURE Hexahedron_quality
 !----------------------------------------------------------------------------
 
 #include "./modified_burkardt.inc"
+
 END SUBMODULE Methods
