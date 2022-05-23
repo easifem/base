@@ -32,18 +32,12 @@ PRIVATE
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
 ! summary: This subroutine for constructing the object
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Hexahedron( obj, NSD, XiJ )
+MODULE PURE SUBROUTINE initiate_ref_Hexahedron( obj, NSD, xij )
   CLASS( ReferenceHexahedron_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij( :, : )
 END SUBROUTINE initiate_ref_Hexahedron
 END INTERFACE
 
@@ -58,9 +52,9 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Hexahedron( NSD, XiJ ) RESULT( obj )
+MODULE PURE FUNCTION reference_Hexahedron( NSD, xij ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
   TYPE( ReferenceHexahedron_ ) :: obj
 END FUNCTION reference_Hexahedron
 END INTERFACE
@@ -76,9 +70,9 @@ PUBLIC :: ReferenceHexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Hexahedron_Pointer( NSD, XiJ ) RESULT( obj )
+MODULE PURE FUNCTION reference_Hexahedron_Pointer( NSD, xij ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
   CLASS( ReferenceHexahedron_ ), POINTER :: obj
 END FUNCTION reference_Hexahedron_Pointer
 END INTERFACE
@@ -94,23 +88,25 @@ PUBLIC :: ReferenceHexahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Hexahedron( RefElem, Order, obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
+MODULE PURE SUBROUTINE highorderElement_Hexahedron( refelem, order, obj, &
+  & ipType )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
+  INTEGER( I4B ), INTENT( IN ) :: order
   CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE LagrangeElement_Hexahedron
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highorderElement_Hexahedron
 END INTERFACE
 
-PUBLIC :: LagrangeElement_Hexahedron
+PUBLIC :: highorderElement_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Hexahedron( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
+MODULE PURE FUNCTION Measure_Simplex_Hexahedron( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij( :, : )
   REAL( DFP ) :: Ans
 END FUNCTION Measure_Simplex_Hexahedron
 END INTERFACE
