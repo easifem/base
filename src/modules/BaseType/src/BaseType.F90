@@ -645,9 +645,12 @@ TYPE :: ReferenceElement_
     !! Order of element
   INTEGER(I4B) :: nsd = 0
     !! Number of spatial dimensions
+  INTEGER( I4B ) :: interpolationPointType = Equidistance
+    !! Interpolation point
+    !! Equidistance, GaussLegendre, GaussLobatto, Chebyshev
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities
-  PROCEDURE(lag_elem_refelem), POINTER, PASS(obj) :: lagrangeElement=>NULL()
+  PROCEDURE(highorder_refelem), POINTER, PASS(obj) :: highOrderElement=>NULL()
     !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
@@ -660,12 +663,13 @@ END TYPE ReferenceElementPointer_
 PUBLIC :: ReferenceElementPointer_
 
 INTERFACE
-  PURE SUBROUTINE lag_elem_refelem(obj, Order, HighOrderobj)
+  PURE SUBROUTINE highorder_refelem(obj,order, highOrderobj, ipType)
     IMPORT :: ReferenceElement_, I4B
     CLASS(ReferenceElement_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: Order
-    CLASS(ReferenceElement_), INTENT(INOUT) :: HighOrderobj
-  END SUBROUTINE lag_elem_refelem
+    INTEGER(I4B), INTENT(IN) :: order
+    CLASS(ReferenceElement_), INTENT(INOUT) :: highOrderobj
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highorder_refelem
 END INTERFACE
 
 !----------------------------------------------------------------------------
