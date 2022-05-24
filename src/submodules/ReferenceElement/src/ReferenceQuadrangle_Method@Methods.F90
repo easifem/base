@@ -29,16 +29,20 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate_ref_Quadrangle
-  IF( PRESENT( XiJ ) ) THEN
-    obj%XiJ = XiJ
-  ELSE
-    obj%XiJ =  RESHAPE( [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], [3, 4] )
-  END IF
+  !!
+  CALL Reallocate( obj%xij, 3, 4 )
+  !!
+  obj%xij = InterpolationPoint_Quadrangle(  &
+    & xij=xij, &
+    & order=1, &
+    & ipType=Equidistance )
+  !!
   obj%EntityCounts = [4, 4, 1, 0]
   obj%XiDimension = 2
   obj%Name = Quadrangle4
-  obj%Order = 1
+  obj%order = 1
   obj%NSD = NSD
+  !!
   ALLOCATE( obj%Topology( 9 ) )
   obj%Topology( 1 ) = ReferenceTopology( [1], Point )
   obj%Topology( 2 ) = ReferenceTopology( [2], Point )
@@ -49,7 +53,9 @@ MODULE PROCEDURE Initiate_ref_Quadrangle
   obj%Topology( 7 ) = ReferenceTopology( [3, 4], Line2 )
   obj%Topology( 8 ) = ReferenceTopology( [4, 1], Line2 )
   obj%Topology( 9 ) = ReferenceTopology( [1, 2, 3, 4], Quadrangle4 )
-  obj%LagrangeElement => LagrangeElement_Quadrangle
+  !!
+  obj%highorderElement => highorderElement_Quadrangle
+  !!
 END PROCEDURE Initiate_ref_Quadrangle
 
 !----------------------------------------------------------------------------
@@ -57,8 +63,8 @@ END PROCEDURE Initiate_ref_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Quadrangle
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( obj, NSD, XiJ )
+  IF( PRESENT( xij ) ) THEN
+    CALL Initiate( obj, NSD, xij )
   ELSE
     CALL Initiate( obj, NSD )
   END IF
@@ -70,94 +76,40 @@ END PROCEDURE reference_Quadrangle
 
 MODULE PROCEDURE reference_Quadrangle_Pointer
   ALLOCATE( obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( obj, NSD, XiJ )
+  IF( PRESENT( xij ) ) THEN
+    CALL Initiate( obj, NSD, xij )
   ELSE
     CALL Initiate( obj, NSD )
   END IF
 END PROCEDURE reference_Quadrangle_Pointer
 
 !----------------------------------------------------------------------------
-!                                                  LagrangePoints@Quadrangle
-!----------------------------------------------------------------------------
-
-!> authors: Vikas Sharma, Ph. D.
-! date: 3 March 2021
-! summary: This function returns coordinates of higher order Lagrange element.
-!
-!# Introduction
-! * Returns equidistant points on [-1,1] for lagrange interpolation
-!	* Nodecoord is a 2D array with 3 rows
-!	* first row is xi, second row is eta, third row is zeta
-
-PURE FUNCTION EquidistanceLIP_Quadrangle( XiJ, Order ) RESULT( NodeCoord )
-  REAL( DFP ), INTENT( IN ) :: XiJ( 3, 4 )
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  REAL( DFP ) :: NodeCoord( 3, ( Order + 1 ) ** 2 )
-
-  NodeCoord( 1:3, 1:4 ) = XiJ( 1:3, 1:4 )
-
-  SELECT CASE( Order )
-  CASE( 2 )
-    NodeCoord( 1:3, 5 ) = 0.5_DFP * (XiJ( 1:3, 1 ) + XiJ( 1:3, 2 ))
-    NodeCoord( 1:3, 6 ) = 0.5_DFP * (XiJ( 1:3, 2 ) + XiJ( 1:3, 3 ))
-    NodeCoord( 1:3, 7 ) = 0.5_DFP * (XiJ( 1:3, 3 ) + XiJ( 1:3, 4 ))
-    NodeCoord( 1:3, 8 ) = 0.5_DFP * (XiJ( 1:3, 4 ) + XiJ( 1:3, 1 ))
-    NodeCoord( 1:3, 9 ) = 0.5_DFP * (NodeCoord(1:3, 6) + NodeCoord( 1:3, 8 ))
-  CASE( 3 )
-    NodeCoord( 1:3, 5 ) = N1(-0.5_DFP) * XiJ( 1:3, 1 ) + N2(-0.5_DFP) * &
-      & XiJ( 1:3, 2 )
-    NodeCoord( 1:3, 6 ) = N1(0.5_DFP) * XiJ( 1:3, 1 ) + N2(0.5_DFP) * &
-      & XiJ( 1:3, 2 )
-
-    NodeCoord( 1:3, 7 ) = N1(-0.5_DFP) * XiJ( 1:3, 2 ) + N2(-0.5_DFP) * &
-      & XiJ( 1:3, 3 )
-    NodeCoord( 1:3, 8 ) = N1(0.5_DFP) * XiJ( 1:3, 2 ) + N2(0.5_DFP) * &
-      & XiJ( 1:3, 3 )
-
-    NodeCoord( 1:3, 10 ) = N1(-0.5_DFP) * XiJ( 1:3, 4 ) + N2(-0.5_DFP) * &
-      & XiJ( 1:3, 4 )
-    NodeCoord( 1:3, 9 ) = N1(0.5_DFP) * XiJ( 1:3, 4 ) + N2(0.5_DFP) * &
-      & XiJ( 1:3, 4 )
-
-    NodeCoord( 1:3, 12 ) = N1(-0.5_DFP) * XiJ( 1:3, 1 ) + N2(-0.5_DFP) * &
-      & XiJ( 1:3, 4 )
-    NodeCoord( 1:3, 11 ) = N1(0.5_DFP) * XiJ( 1:3, 1 ) + N2(0.5_DFP) * &
-      & XiJ( 1:3, 4 )
-  END SELECT
-
-  CONTAINS
-  PURE REAL( DFP ) FUNCTION N1( x )
-    REAL( DFP ), INTENT( IN ) ::  x
-    N1 = 0.5_DFP * ( 1.0_DFP - x )
-  END FUNCTION
-
-  PURE REAL( DFP ) FUNCTION N2( x )
-    REAL( DFP ), INTENT( IN ) ::  x
-    N2 = 0.5_DFP * ( 1.0_DFP + x )
-  END FUNCTION
-
-END FUNCTION EquidistanceLIP_Quadrangle
-
-!----------------------------------------------------------------------------
 !                                                            LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeElement_Quadrangle
+MODULE PROCEDURE highorderElement_Quadrangle
   INTEGER( I4B ) :: NNS, I
-
+  !!
   CALL Deallocate( obj )
-  SELECT CASE( Order )
+  !!
+  SELECT CASE( order )
+    !!
   CASE( 1 )
-    CALL Initiate( obj=obj, Anotherobj=RefElem )
+    !!
+    CALL Initiate( obj=obj, Anotherobj=refelem )
+    !!
   CASE( 2 )
-    obj%XiJ = EquidistanceLIP_Quadrangle( RefElem%XiJ(1:3, 1:4), Order )
+    !!
+    obj%xij = InterpolationPoint_Quadrangle( xij=refelem%xij(1:3, 1:4), &
+      & order=order, ipType=ipType )
+    !!
     NNS = 9
     obj%EntityCounts = [NNS, 4, 1, 0]
     obj%XiDimension = 2
     obj%Name = Quadrangle9
-    obj%Order = Order
-    obj%NSD = RefElem%NSD
+    obj%order = order
+    obj%NSD = refelem%NSD
+    !!
     ALLOCATE( obj%Topology( SUM( obj%EntityCounts) ) )
     DO I = 1, NNS
       obj%Topology( I ) = ReferenceTopology( [I], Point )
@@ -166,29 +118,40 @@ MODULE PROCEDURE LagrangeElement_Quadrangle
     obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 6], Line3 )
     obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 4, 7], Line3 )
     obj%Topology( NNS + 4 ) = ReferenceTopology( [4, 1, 8], Line3 )
-
-    obj%Topology( NNS + 5 ) = ReferenceTopology( [1,2,3,4,5,6,7,8,9], obj%Name )
-    obj%LagrangeElement => RefElem%LagrangeElement
+    obj%Topology( NNS + 5 ) = ReferenceTopology( [1,2,3,4,5,6,7,8,9], &
+      & obj%Name )
+    obj%highOrderElement => refelem%highOrderElement
+    !!
   CASE( 3 )
-    obj%XiJ = EquidistanceLIP_Quadrangle( RefElem%XiJ(1:3, 1:4), Order )
+    !!
+    obj%xij = InterpolationPoint_Quadrangle( &
+      & xij=refelem%xij(1:3, 1:4), &
+      & order=order, &
+      & ipType=ipType )
+    !!
     NNS = 16
     obj%EntityCounts = [NNS, 4, 1, 0]
     obj%XiDimension = 2
     obj%Name = Quadrangle16
-    obj%Order = Order
-    obj%NSD = RefElem%NSD
+    obj%order = order
+    obj%NSD = refelem%NSD
+    !!
     ALLOCATE( obj%Topology( SUM( obj%EntityCounts) ) )
     DO I = 1, NNS
       obj%Topology( I ) = ReferenceTopology( [I], Point )
     END DO
+    !!
     obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 5, 6], Line4 )
     obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 7, 8], Line4 )
     obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 4, 9, 10], Line4 )
     obj%Topology( NNS + 4 ) = ReferenceTopology( [4, 1, 11, 12], Line4 )
     obj%Topology( NNS + 5 ) = ReferenceTopology( arange(1,NNS,1), obj%Name)
-    obj%LagrangeElement => RefElem%LagrangeElement
+    !!
+    obj%highOrderElement => refelem%highOrderElement
+    !!
   END SELECT
-END PROCEDURE LagrangeElement_Quadrangle
+  !!
+END PROCEDURE highorderElement_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                              MeasureSimplex
@@ -196,9 +159,9 @@ END PROCEDURE LagrangeElement_Quadrangle
 
 MODULE PROCEDURE Measure_Simplex_Quadrangle
   IF( refelem%nsd .EQ. 2 ) THEN
-    CALL QUADAREA2D( XiJ( 1:2, 1:4 ), Ans )
+    CALL QUADAREA2D( xij( 1:2, 1:4 ), Ans )
   ELSE
-    CALL QUADAREA3D( XiJ( 1:3, 1:4 ), Ans )
+    CALL QUADAREA3D( xij( 1:3, 1:4 ), Ans )
   END IF
 END PROCEDURE Measure_Simplex_Quadrangle
 
