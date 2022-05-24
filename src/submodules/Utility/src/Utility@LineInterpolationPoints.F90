@@ -24,10 +24,17 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Line
-  SELECT CASE( interpolType )
-  CASE( "LagrangeInterpolation", "Equidistance" )
+  !!
+  SELECT CASE( ipType )
+  !!
+  CASE( Equidistance )
     nodecoord = EquidistanceLIP_Line( xij=xij, order=order )
+  CASE( GaussLegendre )
+  CASE( GaussLobatto )
+  CASE( Chebyshev )
+  !!
   END SELECT
+  !!
 END PROCEDURE InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
@@ -124,12 +131,17 @@ MODULE PROCEDURE EquidistanceLIP_Line
     !!
   END SELECT
   !!
-  DO CONCURRENT( i=1:3, j=1:order+1)
+  IF( PRESENT( xij ) ) THEN
     !!
-    nodecoord( i, j ) = 0.5_DFP * ( xij( i, 1 ) + xij( i, 2 ) ) &
+    DO CONCURRENT( i=1:3, j=1:order+1)
+      nodecoord( i, j ) = 0.5_DFP * ( xij( i, 1 ) + xij( i, 2 ) ) &
       & +  0.5_DFP * ( xij( i, 2 ) - xij( i, 1 ) ) * xi( j )
+    END DO
     !!
-  END DO
+  ELSE
+    nodecoord = 0.0_DFP
+    nodecoord( 1, : ) = xi
+  END IF
   !!
 END PROCEDURE EquidistanceLIP_Line
 
