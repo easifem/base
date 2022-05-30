@@ -26,7 +26,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_setThickness
-  obj%Thickness = MATMUL( Val, N )
+  obj%Thickness = MATMUL( val, N )
 END PROCEDURE elemsd_setThickness
 
 !----------------------------------------------------------------------------
@@ -34,7 +34,7 @@ END PROCEDURE elemsd_setThickness
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_setThickness
-  CALL setThickness( obj=obj, Val = MATMUL( Val, T ), N=N )
+  CALL setThickness( obj=obj, val = MATMUL( val, T ), N=N )
 END PROCEDURE stsd_setThickness
 
 !----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ END PROCEDURE stsd_setThickness
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_setBarycentricCoord
-  obj%Coord = MATMUL( Val, N )
+  obj%Coord = MATMUL( val, N )
 END PROCEDURE elemsd_setBarycentricCoord
 
 !----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ END PROCEDURE elemsd_setBarycentricCoord
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_setBarycentricCoord
-  CALL setBarycentricCoord( obj=obj, Val=MATMUL( Val, T ), N=N )
+  CALL setBarycentricCoord( obj=obj, val=MATMUL( val, T ), N=N )
 END PROCEDURE stsd_setBarycentricCoord
 
 !----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ END PROCEDURE elemsd_setdNdXt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_setJacobian
-  obj%jacobian = MATMUL( Val, dNdXi )
+  obj%jacobian = MATMUL( val, dNdXi )
 END PROCEDURE elemsd_setJacobian
 
 !----------------------------------------------------------------------------
@@ -121,7 +121,7 @@ END PROCEDURE elemsd_setJacobian
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_setJacobian
-  obj%jacobian = MATMUL( MATMUL( Val, T ), dNdXi)
+  obj%jacobian = MATMUL( MATMUL( val, T ), dNdXi)
 END PROCEDURE stsd_setJacobian
 
 !----------------------------------------------------------------------------
@@ -133,7 +133,7 @@ MODULE PROCEDURE stsd_setdNTdt
   INTEGER( I4B ) :: ip
 
   !! get mesh velocity at space integration points
-  v = MATMUL(MATMUL( Val, obj%dTdTheta/obj%Jt ), obj%N )
+  v = MATMUL(MATMUL( val, obj%dTdTheta/obj%Jt ), obj%N )
   CALL Reallocate( obj%dNTdt, SIZE( obj%N, 1 ),  SIZE( obj%T ), &
     & SIZE( obj%N, 2 ) )
   DO ip = 1, SIZE( obj%N, 2 )
@@ -177,23 +177,83 @@ END PROCEDURE stsd_setdNTdXt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_set1
-  CALL setJacobian( obj = obj, Val= Val, dNdXi=dNdXi )
+  CALL setJacobian( obj = obj, val= val, dNdXi=dNdXi )
   CALL setJs( obj = obj )
   CALL setdNdXt( obj = obj )
-  CALL setBarycentricCoord( obj = obj, Val = Val, N=N )
+  CALL setBarycentricCoord( obj = obj, val = val, N=N )
 END PROCEDURE elemsd_set1
 
 !----------------------------------------------------------------------------
 !                                                                   setValue
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE elemsd_set2
+  !!
+  INTEGER( I4B ), ALLOCATABLE :: facetNptrs( : )
+  !!
+  CALL setJacobian( obj = cellobj, val= cellVal, dNdXi=celldNdXi )
+  CALL setJs( obj = cellobj )
+  CALL setdNdXt( obj = cellobj )
+  CALL setBarycentricCoord( obj = cellobj, val = cellval, N=cellN )
+  !!
+  facetNptrs = getConnectivity( facetobj%refelem )
+  !!
+  CALL setJacobian( obj = facetobj, val= cellVal( :, facetNptrs ), &
+    & dNdXi=facetdNdXi )
+  CALL setJs( obj = facetobj )
+  CALL setBarycentricCoord( obj = facetobj, val = cellval( :, facetNptrs), &
+    & N=facetN )
+  !!
+  CALL setNormal( obj=facetobj )
+  !!
+  !!
+  !! gradient depends upon all nodes of the element
+  !! therefore the SIZE( dNdXt, 1 ) = NNS of cell
+  !!
+  ! CALL Reallocate( facetobj%dNdXt, SHAPE( cellobj%dNdXt) )
+  facetobj%dNdXt = cellobj%dNdXt( :, :, : )
+  !!
+  IF( ALLOCATED( facetNptrs ) ) DEALLOCATE( facetNptrs )
+  !!
+END PROCEDURE elemsd_set2
+
+!----------------------------------------------------------------------------
+!                                                                   setValue
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE elemsd_set3
+  !!
+  CALL Set( &
+    & facetobj=masterFacetObj, &
+    & cellobj=masterCellObj, &
+    & cellVal=masterCellVal, &
+    & cellN=masterCellN, &
+    & celldNdXi=masterCelldNdXi, &
+    & facetN=masterFacetN, &
+    & facetdNdXi=masterFacetdNdXi )
+  !!
+  CALL Set( &
+    & facetobj=slaveFacetObj, &
+    & cellobj=slaveCellObj, &
+    & cellVal=slaveCellVal, &
+    & cellN=slaveCellN, &
+    & celldNdXi=slaveCelldNdXi, &
+    & facetN=slaveFacetN, &
+    & facetdNdXi=slaveFacetdNdXi )
+  !!
+END PROCEDURE elemsd_set3
+
+!----------------------------------------------------------------------------
+!                                                                   setValue
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE stelemsd_set1
-  CALL setJacobian( obj = obj, Val= Val, dNdXi=dNdXi, T=T)
+  CALL setJacobian( obj = obj, val= val, dNdXi=dNdXi, T=T)
   CALL setJs( obj = obj )
   CALL setdNdXt( obj = obj )
-  CALL setBarycentricCoord( obj = obj, Val = Val, N=N, T=T )
+  CALL setBarycentricCoord( obj = obj, val = val, N=N, T=T )
   CALL setdNTdXt( obj = obj )
-  CALL setdNTdt( obj = obj, Val = Val )
+  CALL setdNTdt( obj = obj, val = val )
 END PROCEDURE stelemsd_set1
 
 !----------------------------------------------------------------------------

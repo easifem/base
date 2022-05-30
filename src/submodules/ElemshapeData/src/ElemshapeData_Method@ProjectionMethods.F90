@@ -26,13 +26,14 @@ CONTAINS
 
 MODULE PROCEDURE getProjectionOfdNdXt_1
   !! Define internal variables
-  INTEGER(I4B) :: ii
+  INTEGER(I4B) :: ii, nsd
   !!
   !! main
   !!
-  CALL Reallocate(cdNdXt, SIZE(obj%N, 1), SIZE(obj%N, 2))
-  DO ii = 1, SIZE(obj%N, 2)
-    cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), Val)
+  CALL Reallocate(cdNdXt, SIZE(obj%dNdXt, 1), SIZE(obj%dNdXt, 3))
+  nsd = SIZE(obj%dNdXt, 2)
+  DO ii = 1, SIZE(cdNdXt, 2)
+    cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), Val(1:nsd) )
   END DO
   !!
 END PROCEDURE getProjectionOfdNdXt_1
@@ -42,15 +43,16 @@ END PROCEDURE getProjectionOfdNdXt_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getProjectionOfdNdXt_2
-  INTEGER(I4B) :: ii
+  INTEGER(I4B) :: ii, nsd
   REAL(DFP), ALLOCATABLE :: cbar(:, :)
   !!
   !! main
   !!
   CALL getInterpolation(obj=obj, val=val, interpol=cbar)
-  CALL Reallocate(cdNdXt, SIZE(obj%N, 1), SIZE(obj%N, 2))
-  DO ii = 1, SIZE(obj%N, 2)
-    cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), cbar(:, ii))
+  CALL Reallocate(cdNdXt, SIZE(obj%dNdXt, 1), SIZE(obj%dNdXt, 3))
+  nsd = SIZE(obj%dNdXt, 2)
+  DO ii = 1, SIZE(cdNdXt, 2)
+    cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), cbar(1:nsd, ii))
   END DO
   !!
   DEALLOCATE (cbar)
@@ -58,18 +60,38 @@ MODULE PROCEDURE getProjectionOfdNdXt_2
 END PROCEDURE getProjectionOfdNdXt_2
 
 !----------------------------------------------------------------------------
+!                                                       getProjectionOfdNdXt
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getProjectionOfdNdXt_3
+  !! Define internal variables
+  INTEGER(I4B) :: ii, nsd
+  !!
+  !! main
+  !!
+  CALL Reallocate(cdNdXt, SIZE(obj%dNdXt, 1), SIZE(obj%dNdXt, 3))
+  nsd = SIZE(obj%dNdXt, 2)
+  DO ii = 1, SIZE(cdNdXt, 2)
+    cdNdXt(:, ii) = MATMUL(obj%dNdXt(:, :, ii), val( 1:nsd, ii ) )
+  END DO
+  !!
+END PROCEDURE getProjectionOfdNdXt_3
+
+!----------------------------------------------------------------------------
 !                                                      getProjectionOfdNTdXt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getProjectionOfdNTdXt_1
-  INTEGER(I4B) :: ii
+  INTEGER(I4B) :: ii, nsd
   !!
   !! main
   !!
-  CALL Reallocate(cdNTdXt, SIZE(obj%N, 1), SIZE(obj%T), SIZE(obj%N, 2))
+  CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
+    & SIZE(obj%dNTdXt, 4))
+  nsd = SIZE(obj%dNTdXt, 3)
   !!
-  DO ii = 1, SIZE(obj%N, 2)
-    cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), Val)
+  DO ii = 1, SIZE(cdNTdXt, 3)
+    cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), Val(1:nsd) )
   END DO
   !!
 END PROCEDURE getProjectionOfdNTdXt_1
@@ -80,16 +102,18 @@ END PROCEDURE getProjectionOfdNTdXt_1
 
 MODULE PROCEDURE getProjectionOfdNTdXt_2
   !!
-  INTEGER(I4B) :: ii
+  INTEGER(I4B) :: ii, nsd
   REAL(DFP), ALLOCATABLE :: cbar(:, :)
   !!
   !! main
   !!
   CALL getInterpolation(obj=obj, val=val, interpol=cbar)
-  CALL Reallocate(cdNTdXt, SIZE(obj%N, 1), SIZE(obj%T), SIZE(obj%N, 2))
+  CALL Reallocate(cdNTdXt, SIZE(obj%dNTdXt, 1), SIZE(obj%dNTdXt, 2), &
+    & SIZE(obj%dNTdXt, 4))
+  nsd = SIZE(obj%dNTdXt, 3)
   !!
-  DO ii = 1, SIZE(obj%N, 2)
-    cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), cbar(:, ii))
+  DO ii = 1, SIZE(cdNTdXt, 3)
+    cdNTdXt(:, :, ii) = MATMUL(obj%dNTdXt(:, :, :, ii), cbar(1:nsd, ii))
   END DO
   !!
   DEALLOCATE (cbar)
@@ -101,26 +125,33 @@ END PROCEDURE getProjectionOfdNTdXt_2
 
 MODULE PROCEDURE getProjectionOfdNTdXt_3
   !!
-  INTEGER(I4B) :: ii, jj
+  INTEGER(I4B) :: ii, jj, nsd
   REAL(DFP), ALLOCATABLE :: cbar(:, :, :)
   !!
   !! main
   !!
   CALL getInterpolation(obj=obj, val=val, interpol=cbar)
   !!
-  CALL Reallocate( &
-    & cdNTdXt, &
-    & SIZE(obj(1)%N, 1), &
-    & SIZE(obj(1)%T), &
-    & SIZE(obj(1)%N, 2), &
-    & SIZE(obj) )
+  CALL Reallocate(cdNTdXt, &
+    & SIZE(obj(1)%dNTdXt, 1), &
+    & SIZE(obj(1)%dNTdXt, 2), &
+    & SIZE(obj(1)%dNTdXt, 4), SIZE( obj ) )
+  !!
+  ! CALL Reallocate( &
+  !   & cdNTdXt, &
+  !   & SIZE(obj(1)%N, 1), &
+  !   & SIZE(obj(1)%T), &
+  !   & SIZE(obj(1)%N, 2), &
+  !   & SIZE(obj) )
+  !!
+  nsd = SIZE(obj(1)%dNTdXt, 3)
   !!
   DO jj = 1, SIZE(cbar, 3)
     DO ii = 1, SIZE(cbar, 2)
       !!
       cdNTdXt(:, :, ii, jj) = MATMUL( &
         & obj(jj)%dNTdXt(:, :, :, ii), &
-        & cbar(:, ii, jj) )
+        & cbar(1:nsd, ii, jj) )
       !!
     END DO
   END DO

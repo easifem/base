@@ -90,6 +90,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/StiffnessMatrix/CMakeLists.txt)
 #NitscheMatrix
 include(${CMAKE_CURRENT_LIST_DIR}/NitscheMatrix/CMakeLists.txt)
 
+#FacetMatrix
+include(${CMAKE_CURRENT_LIST_DIR}/FacetMatrix/CMakeLists.txt)
+
 #ForceVector
 include(${CMAKE_CURRENT_LIST_DIR}/ForceVector/CMakeLists.txt)
 
