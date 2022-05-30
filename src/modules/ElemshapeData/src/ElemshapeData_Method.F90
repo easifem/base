@@ -38,12 +38,10 @@ PRIVATE
 #include "./H1CurlHermitMethods.inc"
 #include "./H1CurlSerendipityMethods.inc"
 #include "./H1CurlHierarchyMethods.inc"
-
 #include "./DGLagrangeMethods.inc"
 #include "./DGHermitMethods.inc"
 #include "./DGSerendipityMethods.inc"
 #include "./DGHierarchyMethods.inc"
-
 #include "./SetMethods.inc"
 #include "./InterpolMethods.inc"
 #include "./LocalGradientMethods.inc"

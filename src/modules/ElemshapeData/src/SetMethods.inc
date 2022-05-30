@@ -347,6 +347,87 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
+!                                                             Set@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This subroutine set parameters defined on physical element
+!
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_set2( facetobj, cellobj, cellval, cellN, &
+    & celldNdXi, facetN, facetdNdXi )
+    CLASS(ElemshapeData_), INTENT(INOUT) :: facetobj
+    CLASS(ElemshapeData_), INTENT(INOUT) :: cellobj
+    REAL(DFP), INTENT(IN) :: cellval(:, :)
+    !! Spatial nodal coordinates
+    REAL(DFP), INTENT(IN) :: cellN(:, :)
+    REAL(DFP), INTENT(IN) :: facetN(:, :)
+    !! Shape function for geometry
+    REAL(DFP), INTENT(IN) :: celldNdXi(:, :, :)
+    REAL(DFP), INTENT(IN) :: facetdNdXi(:, :, :)
+    !! Local derivative of shape functions for geometry
+  END SUBROUTINE elemsd_set2
+END INTERFACE
+
+INTERFACE set
+  MODULE PROCEDURE elemsd_set2
+END INTERFACE set
+
+!----------------------------------------------------------------------------
+!                                                             Set@setMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: This subroutine set parameters defined on physical element
+!
+
+INTERFACE
+  MODULE PURE SUBROUTINE elemsd_set3( &
+    & masterFacetobj, &
+    & masterCellobj, &
+    & masterCellval, &
+    & masterCellN, &
+    & masterCelldNdXi, &
+    & masterFacetN, &
+    & masterFacetdNdXi, &
+    & slaveFacetobj, &
+    & slaveCellobj, &
+    & slaveCellval, &
+    & slaveCellN, &
+    & slaveCelldNdXi, &
+    & slaveFacetN, &
+    & slaveFacetdNdXi )
+    CLASS(ElemshapeData_), INTENT(INOUT) :: masterFacetobj
+    CLASS(ElemshapeData_), INTENT(INOUT) :: masterCellobj
+    REAL(DFP), INTENT(IN) :: masterCellval(:, :)
+    !! Spatial nodal coordinates
+    REAL(DFP), INTENT(IN) :: masterCellN(:, :)
+    REAL(DFP), INTENT(IN) :: masterFacetN(:, :)
+    !! Shape function for geometry
+    REAL(DFP), INTENT(IN) :: masterCelldNdXi(:, :, :)
+    REAL(DFP), INTENT(IN) :: masterFacetdNdXi(:, :, :)
+    !! Local derivative of shape functions for geometry
+    CLASS(ElemshapeData_), INTENT(INOUT) :: slaveFacetobj
+    CLASS(ElemshapeData_), INTENT(INOUT) :: slaveCellobj
+    REAL(DFP), INTENT(IN) :: slaveCellval(:, :)
+    !! Spatial nodal coordinates
+    REAL(DFP), INTENT(IN) :: slaveCellN(:, :)
+    REAL(DFP), INTENT(IN) :: slaveFacetN(:, :)
+    !! Shape function for geometry
+    REAL(DFP), INTENT(IN) :: slaveCelldNdXi(:, :, :)
+    REAL(DFP), INTENT(IN) :: slaveFacetdNdXi(:, :, :)
+    !! Local derivative of shape functions for geometry
+  END SUBROUTINE elemsd_set3
+END INTERFACE
+
+INTERFACE set
+  MODULE PROCEDURE elemsd_set3
+END INTERFACE set
+
+!----------------------------------------------------------------------------
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 

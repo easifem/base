@@ -60,7 +60,7 @@ END INTERFACE getProjectionOfdNdXt
 !# Introduction
 !
 ! This subroutine computes the projcetion cdNdXt on the vector `val`
-! Here the vector `val` is constant in space and time
+! Here the vector `val` is a finite element variable
 !
 ! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
 
@@ -71,12 +71,43 @@ INTERFACE
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
     !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
     CLASS(FEVariable_), INTENT(IN) :: val
-    !! constant value of vector
+    !! FEVariable vector
   END SUBROUTINE getProjectionOfdNdXt_2
 END INTERFACE
 
 INTERFACE getProjectionOfdNdXt
   MODULE PROCEDURE getProjectionOfdNdXt_2
+END INTERFACE getProjectionOfdNdXt
+
+!----------------------------------------------------------------------------
+!                                            getProjectionOfdNdXt@getMethod
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-21
+! update: 2021-11-21
+! summary: computes the projection of dNdXt on a vector
+!
+!# Introduction
+!
+! This subroutine computes the projcetion cdNdXt on the vector `val`
+! Here the vector `val` is constant in space and time
+!
+! $$P^{I}=c_{i}\frac{\partial N^{I}}{\partial x_{i}} $$
+
+INTERFACE
+  MODULE PURE SUBROUTINE getProjectionOfdNdXt_3(obj, cdNdXt, val)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! ElemshapeData object
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: cdNdXt(:, :)
+    !! returned $c_{i}\frac{\partial N^{I}}{\partial x_{i}}$
+    REAL(DFP), INTENT(IN) :: val(:, :)
+    !! a vector, defined over quadrature points
+  END SUBROUTINE getProjectionOfdNdXt_3
+END INTERFACE
+
+INTERFACE getProjectionOfdNdXt
+  MODULE PROCEDURE getProjectionOfdNdXt_3
 END INTERFACE getProjectionOfdNdXt
 
 !----------------------------------------------------------------------------
