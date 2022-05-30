@@ -31,4 +31,5 @@ TARGET_SOURCES(
   ${src_path}/FEVariable_Method@DotProductMethods.F90
   ${src_path}/FEVariable_Method@Norm2Methods.F90
   ${src_path}/FEVariable_Method@EqualMethods.F90
+  ${src_path}/FEVariable_Method@MeanMethods.F90
 )
