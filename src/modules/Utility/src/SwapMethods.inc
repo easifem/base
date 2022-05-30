@@ -165,6 +165,34 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
+  MODULE PURE SUBROUTINE swap_r32m(a, b)
+    REAL(Real32), INTENT(INOUT) :: a(:, :), b(:, :)
+  END SUBROUTINE swap_r32m
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_r32m
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE swap_r64m(a, b)
+    REAL(Real64), INTENT(INOUT) :: a(:, :), b(:, :)
+  END SUBROUTINE swap_r64m
+END INTERFACE
+
+INTERFACE SWAP
+  MODULE PROCEDURE swap_r64m
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           SWAP@SWAPMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
   MODULE PURE SUBROUTINE masked_swap_r32s(a, b, mask)
     REAL(Real32), INTENT(INOUT) :: a, b
     LOGICAL(LGT), INTENT(IN) :: mask
@@ -270,15 +298,15 @@ END INTERFACE
 INTERFACE
   MODULE PURE SUBROUTINE swap_index1(a, b, i1, i2)
     REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
-     !! the returned array
+      !! the returned array
     REAL(Real32), INTENT(IN) :: b(:, :)
-     !! input array, it will be untouched
+      !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
-     !! index 1 is swapped with index `i1`
-     !! make sure i1 is lesser than or equal to 2
+      !! index 1 is swapped with index `i1`
+      !! make sure i1 is lesser than or equal to 2
     INTEGER(I4B), INTENT(IN) :: i2
-     !! index 2 is swapped with index `i2`
-     !! make sure i2 is less than or equal to 2
+      !! index 2 is swapped with index `i2`
+      !! make sure i2 is less than or equal to 2
   END SUBROUTINE swap_index1
 END INTERFACE
 
