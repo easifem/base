@@ -33,11 +33,11 @@ PRIVATE
 ! summary: This routine initiates the quadrature points
 
 INTERFACE
-MODULE PURE SUBROUTINE quad_initiate1( obj, Points )
+MODULE PURE SUBROUTINE quad_initiate1( obj, points )
   CLASS( QuadraturePoint_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Points( :, : )
-    !! Points contains the quadrature points and weights
-    !! Points( :, ipoint ) contains quadrature points and weights of ipoint
+  REAL( DFP ), INTENT( IN ) :: points( :, : )
+    !! points contains the quadrature points and weights
+    !! points( :, ipoint ) contains quadrature points and weights of ipoint
     !! quadrature point. The last row contains the weight. The rest of the
     !! rows contains the coordinates of quadrature.
 END SUBROUTINE quad_initiate1
@@ -58,11 +58,11 @@ PUBLIC :: Initiate
 ! summary: This routine initiates the quadrature points
 
 INTERFACE
-MODULE PURE SUBROUTINE quad_initiate2( obj, tXi, tPoints )
+MODULE PURE SUBROUTINE quad_initiate2( obj, tXi, tpoints )
   CLASS( QuadraturePoint_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: tXi
     !! Total number of xidimension
-  INTEGER( I4B ), INTENT( IN ) :: tPoints
+  INTEGER( I4B ), INTENT( IN ) :: tpoints
     !! Total number quadrature points
 END SUBROUTINE quad_initiate2
 END INTERFACE
@@ -80,13 +80,13 @@ END INTERFACE
 ! summary: This routine initiates the quadrature points
 
 INTERFACE
-MODULE PURE SUBROUTINE quad_initiate3( obj, refElem, order, QuadratureType )
+MODULE PURE SUBROUTINE quad_initiate3( obj, refElem, order, quadratureType )
   TYPE( QuadraturePoint_ ), INTENT( INOUT ) :: obj
     !! Total number of xidimension
   CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
     !! Reference element
   INTEGER( I4B ), INTENT( IN ) :: order
-    !! Order of integrand
+    !! order of integrand
   CHARACTER( LEN = * ), INTENT( IN ) :: quadratureType
     !! Total number quadrature points
 END SUBROUTINE quad_initiate3
@@ -105,13 +105,13 @@ END INTERFACE
 ! summary: This routine initiates the quadrature points
 
 INTERFACE
-MODULE PURE SUBROUTINE quad_initiate4( obj, refElem, NIPS, QuadratureType )
+MODULE PURE SUBROUTINE quad_initiate4( obj, refElem, nips, quadratureType )
   TYPE( QuadraturePoint_ ), INTENT( INOUT ) :: obj
     !! Total number of xidimension
   CLASS( ReferenceElement_ ), INTENT( IN ) :: refElem
     !! Reference element
-  INTEGER( I4B ), INTENT( IN ) :: NIPS(1)
-    !! Order of integrand
+  INTEGER( I4B ), INTENT( IN ) :: nips(1)
+    !! order of integrand
   CHARACTER( LEN = * ), INTENT( IN ) :: quadratureType
     !! Total number quadrature points
 END SUBROUTINE quad_initiate4
@@ -130,9 +130,9 @@ END INTERFACE
 ! summary: This routine initiate an instance of quadrature points
 
 INTERFACE
-MODULE PURE FUNCTION quad_Constructor1( Points ) RESULT( obj )
+MODULE PURE FUNCTION quad_Constructor1( points ) RESULT( obj )
   TYPE( QuadraturePoint_ ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Points( :, : )
+  REAL( DFP ), INTENT( IN ) :: points( :, : )
 END FUNCTION quad_Constructor1
 END INTERFACE
 
@@ -151,9 +151,9 @@ PUBLIC :: QuadraturePoint
 ! summary: Returns a pointer to a newly created instance of quadrature points
 
 INTERFACE
-MODULE PURE FUNCTION quad_Constructor_1( Points ) RESULT( obj )
+MODULE PURE FUNCTION quad_Constructor_1( points ) RESULT( obj )
   CLASS( QuadraturePoint_ ), POINTER :: obj
-  REAL( DFP ), INTENT( IN ) :: Points( :, : )
+  REAL( DFP ), INTENT( IN ) :: points( :, : )
 END FUNCTION quad_Constructor_1
 END INTERFACE
 
@@ -192,10 +192,10 @@ PUBLIC :: Deallocate
 ! summary: This routine returns the size of obj%points,
 
 INTERFACE
-MODULE PURE FUNCTION quad_Size( obj, dims ) RESULT( Ans )
+MODULE PURE FUNCTION quad_Size( obj, dims ) RESULT( ans )
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: dims
-  INTEGER( I4B ) :: Ans
+  INTEGER( I4B ) :: ans
 END FUNCTION quad_Size
 END INTERFACE
 
@@ -206,7 +206,7 @@ END INTERFACE SIZE
 PUBLIC :: SIZE
 
 !----------------------------------------------------------------------------
-!                                       getTotalQuadraturePoints@GetMethods
+!                                       getTotalQuadraturepoints@GetMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -214,18 +214,18 @@ PUBLIC :: SIZE
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE
-MODULE PURE FUNCTION quad_getTotalQuadraturePoints( obj, dims ) RESULT( Ans )
+MODULE PURE FUNCTION quad_getTotalQuadraturepoints( obj, dims ) RESULT( ans )
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: dims
-  INTEGER( I4B ) :: Ans
-END FUNCTION quad_getTotalQuadraturePoints
+  INTEGER( I4B ) :: ans
+END FUNCTION quad_getTotalQuadraturepoints
 END INTERFACE
 
-INTERFACE getTotalQuadraturePoints
-  MODULE PROCEDURE quad_getTotalQuadraturePoints
-END INTERFACE getTotalQuadraturePoints
+INTERFACE getTotalQuadraturepoints
+  MODULE PROCEDURE quad_getTotalQuadraturepoints
+END INTERFACE getTotalQuadraturepoints
 
-PUBLIC :: getTotalQuadraturePoints
+PUBLIC :: getTotalQuadraturepoints
 
 !----------------------------------------------------------------------------
 !                                              GetQuadraturePoint@GetMethods
@@ -236,7 +236,7 @@ PUBLIC :: getTotalQuadraturePoints
 ! summary: This routine returns quadrature points
 
 INTERFACE
-MODULE PURE SUBROUTINE quad_GetQuadraturePoints1( obj, point, weight, num )
+MODULE PURE SUBROUTINE quad_GetQuadraturepoints1( obj, point, weight, num )
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: obj
   REAL( DFP ), INTENT( INOUT ) :: point( 3 )
     !! [xi, eta, zeta]
@@ -244,14 +244,14 @@ MODULE PURE SUBROUTINE quad_GetQuadraturePoints1( obj, point, weight, num )
     !! weights
   INTEGER( I4B ), INTENT( IN ) :: num
     !! quadrature number
-END SUBROUTINE quad_GetQuadraturePoints1
+END SUBROUTINE quad_GetQuadraturepoints1
 END INTERFACE
 
-INTERFACE GetQuadraturePoints
-  MODULE PROCEDURE quad_GetQuadraturePoints1
+INTERFACE GetQuadraturepoints
+  MODULE PROCEDURE quad_GetQuadraturepoints1
 END INTERFACE
 
-PUBLIC :: GetQuadraturePoints
+PUBLIC :: GetQuadraturepoints
 
 !----------------------------------------------------------------------------
 !                                              GetQuadraturePoint@GetMethods
@@ -262,17 +262,17 @@ PUBLIC :: GetQuadraturePoints
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE
-MODULE PURE SUBROUTINE quad_GetQuadraturePoints2( obj, point, weight )
+MODULE PURE SUBROUTINE quad_GetQuadraturepoints2( obj, point, weight )
   CLASS( QuadraturePoint_ ), INTENT( IN ) :: obj
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: point( :, : )
     !! Point( :, j ) = [xi, eta, zeta] of jth quadrature point
   REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: weight( : )
     !! Weight(j) weight of jth quadrature point
-END SUBROUTINE quad_GetQuadraturePoints2
+END SUBROUTINE quad_GetQuadraturepoints2
 END INTERFACE
 
-INTERFACE GetQuadraturePoints
-  MODULE PROCEDURE quad_GetQuadraturePoints2
+INTERFACE GetQuadraturepoints
+  MODULE PROCEDURE quad_GetQuadraturepoints2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -306,9 +306,9 @@ PUBLIC :: Display
 ! summary: 	Returns the Gauss Legendre Quadrature points based on given order
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQP1( refelem, Order ) RESULT( obj )
+MODULE PURE FUNCTION getGaussLegendreQP1( refelem, order ) RESULT( obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: Order
+  INTEGER( I4B ), INTENT( IN ) :: order
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQP1
 END INTERFACE
@@ -328,9 +328,9 @@ PUBLIC :: GaussLegendreQuadrature
 ! summary: 	Returns the Gauss-Legendre Quadrature points
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQP2( refelem, NIPS ) RESULT( obj )
+MODULE PURE FUNCTION getGaussLegendreQP2( refelem, nips ) RESULT( obj )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: NIPS( 1 )
+  INTEGER( I4B ), INTENT( IN ) :: nips( 1 )
     !! number of integration points
   TYPE( QuadraturePoint_ ) :: obj
 END FUNCTION getGaussLegendreQP2
