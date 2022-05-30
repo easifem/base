@@ -34,6 +34,7 @@ PRIVATE
 #include "./DOT_PRODUCT.inc"
 #include "./NORM2.inc"
 #include "./EQUAL.inc"
+#include "./Mean.inc"
 
 !----------------------------------------------------------------------------
 !                                                   Addition@OperatorMethods
