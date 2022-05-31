@@ -10,10 +10,10 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/ReferenceElement_Method@Constructor.F90
-  ${src_path}/ReferenceElement_Method@IO.F90
-  ${src_path}/ReferenceElement_Method@Geometry.F90
-  ${src_path}/ReferenceElement_Method@VTK.F90
+  ${src_path}/ReferenceElement_Method@ConstructorMethods.F90
+  ${src_path}/ReferenceElement_Method@IOMethods.F90
+  ${src_path}/ReferenceElement_Method@GeometryMethods.F90
+  ${src_path}/ReferenceElement_Method@VTKMethods.F90
   ${src_path}/ReferencePoint_Method@Methods.F90
   ${src_path}/ReferenceLine_Method@Methods.F90
   ${src_path}/ReferenceTriangle_Method@Methods.F90

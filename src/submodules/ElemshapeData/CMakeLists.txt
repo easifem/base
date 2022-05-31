@@ -12,6 +12,7 @@ TARGET_SOURCES(
   ${src_path}/ElemshapeData_Method@ConstructorMethods.F90
   ${src_path}/ElemshapeData_Method@IOMethods.F90
   ${src_path}/ElemshapeData_Method@GetMethods.F90
+  ${src_path}/ElemshapeData_Method@SetMethods.F90
   ${src_path}/ElemshapeData_Method@StabilizationParamMethods.F90
   ${src_path}/ElemshapeData_Method@ProjectionMethods.F90
   ${src_path}/ElemshapeData_Method@InterpolMethods.F90
@@ -19,7 +20,6 @@ TARGET_SOURCES(
   ${src_path}/ElemshapeData_Method@GradientMethods.F90
   ${src_path}/ElemshapeData_Method@LocalDivergenceMethods.F90
   ${src_path}/ElemshapeData_Method@DivergenceMethods.F90
-  ${src_path}/ElemshapeData_Method@setMethod.F90
   ${src_path}/ElemshapeData_Method@H1Lagrange.F90
   ${src_path}/ElemshapeData_Method@H1Lagrange@Line.F90
   ${src_path}/ElemshapeData_Method@H1Lagrange@Triangle.F90

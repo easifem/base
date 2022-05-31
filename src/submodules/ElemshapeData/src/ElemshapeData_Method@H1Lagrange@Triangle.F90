@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemshapeData_Method : H1Lagrange ) Triangle
+SUBMODULE(ElemshapeData_Method:H1Lagrange) Triangle
 USE BaseMethod
 IMPLICIT NONE
 
@@ -45,7 +45,7 @@ MODULE PROCEDURE Triangle_H1_Lagrange
       INTEGER( I4B ) :: ips
       !         ....................................         !
 
-      call AllocateData( obj = obj, nsd = refelem%nsd, &
+      CALL ALLOCATE( obj = obj, nsd = refelem%nsd, &
         & xidim = refelem%xidimension, nns = 3, nips = nips )
 
       obj%N( 1, : ) = 1.0_DFP - xieta( 1, : ) - xieta( 2, : )
@@ -71,7 +71,7 @@ MODULE PROCEDURE Triangle_H1_Lagrange
       INTEGER( I4B ) :: ips
       !         ....................................         !
 
-      call AllocateData( obj = obj, nsd = refelem%nsd, &
+      call ALLOCATE( obj = obj, nsd = refelem%nsd, &
         & xidim = refelem%xidimension, nns = 6, nips = nips )
 
       dldxi = RESHAPE( [ -1.0, 1.0, 0.0, -1.0, 0.0, 1.0 ], [3, 2] )
@@ -108,7 +108,7 @@ MODULE PROCEDURE Triangle_H1_Lagrange
       INTEGER( I4B ) :: ips
       !         ....................................         !
 
-      call AllocateData( obj = obj, nsd = refelem%nsd, &
+      call ALLOCATE( obj = obj, nsd = refelem%nsd, &
         & xidim = refelem%xidimension, nns = 10, nips = nips )
 
       a1 = 1.0/3.0; a2 = 2.0/3.0

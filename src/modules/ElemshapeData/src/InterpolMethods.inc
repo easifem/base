@@ -593,15 +593,15 @@ END INTERFACE Interpolation
 ! summary: Interpolation of FEVariable
 
 INTERFACE
-   MODULE PURE FUNCTION master_interpolation_1( obj, val ) RESULT( Ans )
-     CLASS(ElemshapeData_), INTENT(IN) :: obj
-     TYPE(FEVariable_), INTENT(IN) :: val
-     TYPE(FEVariable_) :: ans
-   END FUNCTION master_interpolation_1
+  MODULE PURE FUNCTION master_interpolation_1( obj, val ) RESULT( Ans )
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    TYPE(FEVariable_), INTENT(IN) :: val
+    TYPE(FEVariable_) :: ans
+  END FUNCTION master_interpolation_1
 END INTERFACE
 
 INTERFACE Interpolation
-   MODULE PROCEDURE master_interpolation_1
+  MODULE PROCEDURE master_interpolation_1
 END INTERFACE Interpolation
 
 !----------------------------------------------------------------------------

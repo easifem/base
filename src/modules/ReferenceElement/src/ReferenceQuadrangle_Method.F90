@@ -51,10 +51,10 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Quadrangle( obj, NSD, XiJ )
+MODULE PURE SUBROUTINE initiate_ref_Quadrangle( obj, NSD, xij )
   CLASS( ReferenceQuadrangle_ ), INTENT( INOUT ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij( :, : )
 END SUBROUTINE initiate_ref_Quadrangle
 END INTERFACE
 
@@ -88,9 +88,9 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Quadrangle( NSD, XiJ ) RESULT( obj )
+MODULE PURE FUNCTION reference_Quadrangle( NSD, xij ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
   TYPE( ReferenceQuadrangle_ ) :: obj
 END FUNCTION reference_Quadrangle
 END INTERFACE
@@ -125,9 +125,9 @@ PUBLIC :: ReferenceQuadrangle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Quadrangle_Pointer( NSD, XiJ ) RESULT( obj )
+MODULE PURE FUNCTION reference_Quadrangle_Pointer( NSD, xij ) RESULT( obj )
   INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
   CLASS( ReferenceQuadrangle_ ), POINTER :: obj
 END FUNCTION reference_Quadrangle_Pointer
 END INTERFACE
@@ -153,29 +153,33 @@ PUBLIC :: ReferenceQuadrangle_Pointer
 !   class( ReferenceElement_ ), pointer :: obj_ptr => null()
 !   type( ReferenceQuadrangle_ ) :: obj
 !   obj_ptr => referenceQuadrangle_pointer( nsd = 2 )
-!   call obj_ptr%LagrangeElement( order = 2, HighOrderobj = obj )
+!   call obj_ptr%LagrangeElement( order = 2, Highorderobj = obj )
 !   call display( obj, "higher order obj : ")
-!   call obj_ptr%LagrangeElement( order = 3, HighOrderobj = obj )
+!   call obj_ptr%LagrangeElement( order = 3, Highorderobj = obj )
 !   call display( obj, "3rd order obj : ")
 ! end
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Quadrangle( RefElem, Order, obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
+MODULE PURE SUBROUTINE highorderElement_Quadrangle( refelem, order, obj, &
+  & ipType )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
+  INTEGER( I4B ), INTENT( IN ) :: order
   CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE LagrangeElement_Quadrangle
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highorderElement_Quadrangle
 END INTERFACE
+
+PUBLIC :: highorderElement_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Quadrangle( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
+MODULE PURE FUNCTION Measure_Simplex_Quadrangle( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij( :, : )
   REAL( DFP ) :: Ans
 END FUNCTION Measure_Simplex_Quadrangle
 END INTERFACE

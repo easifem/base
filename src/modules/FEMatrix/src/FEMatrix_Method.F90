@@ -24,4 +24,5 @@ USE ConvectiveMatrix_Method
 USE STConvectiveMatrix_Method
 USE StiffnessMatrix_Method
 USE NitscheMatrix_Method
+USE FacetMatrix_Method
 END MODULE FEMatrix_Method

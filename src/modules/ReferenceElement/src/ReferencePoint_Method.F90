@@ -36,10 +36,12 @@ PRIVATE
 !# Introduction
 ! This routine constructs an instance of [[ReferencePoint_]] element
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than zero is used.
+! - `XiJ` denotes the nodal coordinate, if it is not present than zero is
+! used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
+! Also note that this routine creats a linear element.
 !@endnote
 !
 !### Usage
@@ -80,7 +82,8 @@ PUBLIC :: Initiate
 !# Introduction
 ! This routine constructs an instance of [[ReferencePoint_]] element
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [0.0, 0.0, 0.0], [3, 1] ) is used.
+! - `XiJ` denotes the nodal coordinate, if it is not present than
+! RESHAPE( [0.0, 0.0, 0.0], [3, 1] ) is used.
 !
 !@note
 ! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
@@ -109,17 +112,19 @@ END INTERFACE ReferencePoint
 PUBLIC :: ReferencePoint
 
 !----------------------------------------------------------------------------
-!                                                ReferencePoint_Pointer@Methods
+!                                             ReferencePoint_Pointer@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
-! summary: This routine constructs a pointer to an instance of point reference element
+! summary: Constructs a pointer to an instance of point reference element
 !
 !# Introduction
-! This routine constructs a pointer to an instance of [[ReferencePoint_]] element, and returns this pointer
+! This routine constructs a pointer to an instance of [[ReferencePoint_]]
+! element, and returns this pointer
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [ 0.0_DFP, 0.0_DFP, 0.0_DFP], [3, 1] ) is used.
+! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [
+! 0.0_DFP, 0.0_DFP, 0.0_DFP], [3, 1] ) is used.
 !
 !@note
 ! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
@@ -148,7 +153,7 @@ END INTERFACE ReferencePoint_Pointer
 PUBLIC :: ReferencePoint_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       LagrangeElement@Methods
+!                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -171,17 +176,18 @@ PUBLIC :: ReferencePoint_Pointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Point( RefElem, Order, obj )
+MODULE PURE SUBROUTINE highOrderElement_Point( RefElem, Order, obj, ipType )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
     !! Linear line element
   INTEGER( I4B ), INTENT( IN ) :: Order
     !! Order or generated element
   CLASS( ReferenceElement_ ),  INTENT( INOUT ) ::  obj
     !! High order lagrange line element
-END SUBROUTINE LagrangeElement_Point
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highOrderElement_Point
 END INTERFACE
 
-PUBLIC :: LagrangeElement_Point
+PUBLIC :: highOrderElement_Point
 
 !----------------------------------------------------------------------------
 !                                                      MeasureSimplex@Methods
@@ -193,7 +199,8 @@ PUBLIC :: LagrangeElement_Point
 !
 !# Introduction
 !
-! This function returns the measure of point element. Its generic form is given by [[ReferenceElement_Method:MeasureSimplex]]
+! This function returns the measure of point element. Its generic form is
+! given by [[ReferenceElement_Method:MeasureSimplex]]
 !
 !### Usage
 !

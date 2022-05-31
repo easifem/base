@@ -610,8 +610,8 @@ PUBLIC :: SmallStrainPointer_
 
 TYPE :: ReferenceTopology_
   INTEGER(I4B), ALLOCATABLE :: Nptrs(:)
-  INTEGER(I4B) :: Name
-  INTEGER(I4B) :: XiDimension
+  INTEGER(I4B) :: Name = 0
+  INTEGER(I4B) :: XiDimension = 0
 END TYPE ReferenceTopology_
 
 PUBLIC :: ReferenceTopology_
@@ -635,19 +635,22 @@ PUBLIC :: ReferenceTopologyPointer_
 TYPE :: ReferenceElement_
   REAL(DFP), ALLOCATABLE :: xiJ(:, :)
     !! Node coord
-  INTEGER(I4B) :: entityCounts(4)
+  INTEGER(I4B) :: entityCounts(4) = 0
     !! Number of 0D, 1D, 2D, 3D entities
-  INTEGER(I4B) :: xiDimension
+  INTEGER(I4B) :: xiDimension = 0
     !! Xidimension
-  INTEGER(I4B) :: name
+  INTEGER(I4B) :: name = 0
     !! Name of the element
-  INTEGER(I4B) :: order
+  INTEGER(I4B) :: order = 0
     !! Order of element
-  INTEGER(I4B) :: nsd
+  INTEGER(I4B) :: nsd = 0
     !! Number of spatial dimensions
+  INTEGER( I4B ) :: interpolationPointType = Equidistance
+    !! Interpolation point
+    !! Equidistance, GaussLegendre, GaussLobatto, Chebyshev
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities
-  PROCEDURE(lag_elem_refelem), POINTER, PASS(obj) :: lagrangeElement=>NULL()
+  PROCEDURE(highorder_refelem), POINTER, PASS(obj) :: highOrderElement=>NULL()
     !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
@@ -660,12 +663,13 @@ END TYPE ReferenceElementPointer_
 PUBLIC :: ReferenceElementPointer_
 
 INTERFACE
-  PURE SUBROUTINE lag_elem_refelem(obj, Order, HighOrderobj)
+  PURE SUBROUTINE highorder_refelem(obj,order, highOrderobj, ipType)
     IMPORT :: ReferenceElement_, I4B
     CLASS(ReferenceElement_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT(IN) :: Order
-    CLASS(ReferenceElement_), INTENT(INOUT) :: HighOrderobj
-  END SUBROUTINE lag_elem_refelem
+    INTEGER(I4B), INTENT(IN) :: order
+    CLASS(ReferenceElement_), INTENT(INOUT) :: highOrderobj
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highorder_refelem
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -878,10 +882,10 @@ END TYPE FEVariableConstant_
 PUBLIC :: FEVariableConstant_
 
 TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeFEVariableConstant = &
-     & FEVariableConstant_()
+  & FEVariableConstant_()
 
 TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeVariableConstant = &
-     & FEVariableConstant_()
+  & FEVariableConstant_()
 
 
 !----------------------------------------------------------------------------
@@ -1019,14 +1023,14 @@ TYPE(FEVariableMatrix_), PARAMETER, PUBLIC :: &
 !{!pages/QuadraturePoint_.md!}
 
 TYPE :: QuadraturePoint_
-  REAL(DFP), ALLOCATABLE :: Points(:, :)
-  INTEGER(I4B) :: tXi = 0
+  REAL(DFP), ALLOCATABLE :: points(:, :)
+  INTEGER(I4B) :: txi = 0
 END TYPE QuadraturePoint_
 
 PUBLIC :: QuadraturePoint_
 
 TYPE(QuadraturePoint_), PUBLIC, PARAMETER :: &
-  & TypeQuadraturePoint = QuadraturePoint_(Points=NULL())
+  & TypeQuadraturePoint = QuadraturePoint_(points=NULL())
 
 TYPE :: QuadraturePointPointer_
   CLASS(QuadraturePoint_), POINTER :: Ptr => NULL()

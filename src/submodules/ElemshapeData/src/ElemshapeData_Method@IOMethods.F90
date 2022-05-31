@@ -17,8 +17,7 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: This submodule contains the methods for IO of [[elemshapedata_]] and [[stelemshapedata_]]
-!
+! summary: Methods for IO of [[elemshapedata_]] and [[stelemshapedata_]]
 
 SUBMODULE(ElemshapeData_Method) IOMethods
 USE BaseMethod

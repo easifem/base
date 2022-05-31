@@ -26,7 +26,7 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                            Initiate@Line
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -34,12 +34,15 @@ PRIVATE
 ! summary: This subroutine constructs an instance of line reference element
 !
 !# Introduction
-! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+! This routine constructs an instance of [[ReferenceLine_]]
+! element of order equal to 1.
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! - `xij` denotes the nodal coordinate, if it is not present than RESHAPE(
+! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+! 	Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
+! that this routine creats a linear element.
 !@endnote
 !
 !### Usage
@@ -48,17 +51,17 @@ PRIVATE
 ! type( ReferenceLine_ ) :: obj1
 ! real( dfp ) :: xij( 3, 2 )
 ! call random_number( xij )
-! call initiate( obj=obj1, NSD=3, xij )
+! call initiate( obj=obj1, nsd=3, xij )
 ! call display( obj1, "obj1 : " )
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Line( obj, NSD, XiJ )
+MODULE PURE SUBROUTINE initiate_ref_Line( obj, nsd, xij )
   CLASS( ReferenceLine_ ), INTENT( INOUT ) :: obj
     !! The instance
-  INTEGER( I4B ), INTENT( IN ) :: NSD
+  INTEGER( I4B ), INTENT( IN ) :: nsd
     !! Spatial dimension of the problem
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij( :, : )
     !! Coords of element
 END SUBROUTINE initiate_ref_Line
 END INTERFACE
@@ -70,7 +73,7 @@ END INTERFACE Initiate
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                       ReferenceLine@Line
+!                                                     ReferenceLine@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -78,12 +81,15 @@ PUBLIC :: Initiate
 ! summary: This routine constructs an instance of line reference element
 !
 !# Introduction
-! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+! This routine constructs an instance of [[ReferenceLine_]] element of order
+! equal to 1.
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! - `xij` denotes the nodal coordinate, if it is not present than RESHAPE(
+! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+! Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
+! that this routine creats a linear element.
 !@endnote
 !
 !### Usage
@@ -95,9 +101,9 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_line(NSD, XiJ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+MODULE PURE FUNCTION reference_line(nsd, xij) RESULT( obj )
+  INTEGER( I4B ), INTENT( IN ) :: nsd
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
   TYPE( ReferenceLine_ ) :: obj
 END FUNCTION reference_line
 END INTERFACE
@@ -109,7 +115,7 @@ END INTERFACE ReferenceLine
 PUBLIC :: ReferenceLine
 
 !----------------------------------------------------------------------------
-!                                                ReferenceLine_Pointer@Line
+!                                              ReferenceLine_Pointer@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -117,12 +123,15 @@ PUBLIC :: ReferenceLine
 ! summary: This routine constructs an instance of line reference element
 !
 !# Introduction
-! This routine constructs an instance of [[ReferenceLine_]] element of order equal to 1.
+! This routine constructs an instance of [[ReferenceLine_]] element of order
+! equal to 1.
 !
-! - `XiJ` denotes the nodal coordinate, if it is not present than RESHAPE( [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
+! - `xij` denotes the nodal coordinate, if it is not present than RESHAPE(
+! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord. Also note that this routine creats a linear element.
+! 	Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
+! that this routine creats a linear element.
 !@endnote
 !
 !### Usage
@@ -134,16 +143,12 @@ PUBLIC :: ReferenceLine
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_line_pointer_1(NSD, XiJ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+MODULE PURE FUNCTION reference_line_pointer_1(nsd, xij) RESULT( obj )
+  INTEGER( I4B ), INTENT( IN ) :: nsd
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
   CLASS( ReferenceLine_ ), POINTER :: obj
 END FUNCTION reference_line_pointer_1
 END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                 ReferenceLine_Pointer@Line
-!----------------------------------------------------------------------------
 
 INTERFACE ReferenceLine_Pointer
   MODULE PROCEDURE reference_line_Pointer_1
@@ -152,7 +157,7 @@ END INTERFACE ReferenceLine_Pointer
 PUBLIC :: ReferenceLine_Pointer
 
 !----------------------------------------------------------------------------
-!                                                       LagrangeElement@Line
+!                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -169,27 +174,29 @@ PUBLIC :: ReferenceLine_Pointer
 ! type( ReferenceLine_ ) :: obj1, obj3
 ! real( dfp ) :: xij( 3, 2 )
 ! call random_number( xij )
-! call initiate( obj=obj1, NSD=3, XiJ=xij )
+! call initiate( obj=obj1, nsd=3, xij=xij )
 ! call display( obj1, "obj1 : " )
-! call obj1%LagrangeElement( Order=2, HighOrderobj=obj3 ) <---
-! call display( obj3, "Second Order Lagrange Element : ")
+! call obj1%highorderElement( order=2, Highorderobj=obj3 ) <---
+! call display( obj3, "Second order Lagrange Element : ")
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Line( RefElem, Order, obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+MODULE PURE SUBROUTINE highorderElement_Line( refelem, order, obj, &
+  & ipType )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
     !! Linear line element
-  INTEGER( I4B ), INTENT( IN ) :: Order
-    !! Order or generated element
+  INTEGER( I4B ), INTENT( IN ) :: order
+    !! order or generated element
   CLASS( ReferenceElement_ ),  INTENT( INOUT ) ::  obj
     !! High order lagrange line element
-END SUBROUTINE LagrangeElement_Line
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highorderElement_Line
 END INTERFACE
 
-PUBLIC :: LagrangeElement_Line
+PUBLIC :: highorderElement_Line
 
 !----------------------------------------------------------------------------
-!                                                      MeasureSimplex@Line
+!                                                    MeasureSimplex@Methods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -198,7 +205,8 @@ PUBLIC :: LagrangeElement_Line
 !
 !# Introduction
 !
-! This function returns the measure of linear line element. Its generic form is given by [[ReferenceElement_Method:MeasureSimplex]]
+! This function returns the measure of linear line element. Its generic form
+! is given by [[ReferenceElement_Method:MeasureSimplex]]
 !
 !
 !### Usage
@@ -207,14 +215,14 @@ PUBLIC :: LagrangeElement_Line
 ! type( ReferenceLine_ ) :: obj
 ! real( dfp ) :: xij( 3, 2 )
 ! call random_number( xij )
-! call initiate( obj=obj, NSD=3, XiJ=xij )
+! call initiate( obj=obj, nsd=3, xij=xij )
 ! call display( MeasureSimplex(obj, obj%xij), "Measure :: ")
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Line( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferenceLine_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
+MODULE PURE FUNCTION Measure_Simplex_Line( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceLine_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij( :, : )
   REAL( DFP ) :: Ans
 END FUNCTION Measure_Simplex_Line
 END INTERFACE
@@ -222,7 +230,7 @@ END INTERFACE
 PUBLIC :: Measure_Simplex_Line
 
 !----------------------------------------------------------------------------
-!                                                             line_quality
+!                                                      line_quality@Methods
 !----------------------------------------------------------------------------
 
 INTERFACE

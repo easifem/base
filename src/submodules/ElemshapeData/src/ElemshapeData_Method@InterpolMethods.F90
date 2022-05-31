@@ -153,7 +153,7 @@ END PROCEDURE scalar_getinterpolation_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE vector_getinterpolation_1
-interpol = MATMUL(val, obj%N)
+  interpol = MATMUL(val, obj%N)
 END PROCEDURE vector_getinterpolation_1
 
 !----------------------------------------------------------------------------

@@ -50,27 +50,31 @@ END PROCEDURE reference_Pyramid_Pointer
 !                                                             LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeElement_Pyramid
-END PROCEDURE LagrangeElement_Pyramid
+MODULE PROCEDURE highOrderElement_Pyramid
+END PROCEDURE highOrderElement_Pyramid
 
 !-----------------------------------------------------------------------------
 !                                                              MeasureSimplex
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Pyramid
+  !!
   INTEGER( I4B ) :: FM( 5, 7 ), Node0( 5, 4 ), Order0( 5 ), iFace, b
-
+  !!
   FM = FacetMatrix(RefElem)
+  !!
   DO iFace = 1, 5
     Order0( iFace ) = FM( iFace, 3 )
     b = Order0( iFace ) + 3
     Node0( iFace, 1:Order0( iFace ) ) = FM( iFace, 4 : b )
   END DO
+  !!
   CALL POLYHEDRONVOLUME3D( coord = XiJ( 1:3, 1:5 ), &
     & order_max = 4, face_num = 5,  &
     & node = Node0, node_num = 5, &
     & order = Order0, &
     & volume = Ans )
+  !!
 END PROCEDURE Measure_Simplex_Pyramid
 
 !----------------------------------------------------------------------------

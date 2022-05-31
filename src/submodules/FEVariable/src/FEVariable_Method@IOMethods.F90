@@ -39,7 +39,7 @@ CASE (SCALAR)
   !!
   SELECT CASE (obj%vartype)
   CASE (CONSTANT)
-    CALL Display("# VarType: CONTSTANT", unitno=unitno)
+    CALL Display("# VarType: CONSTANT", unitno=unitno)
     CALL Display(GET(obj, typeFEVariableScalar, typeFEVariableConstant), &
       & '# VALUE: ', unitno=unitno)
   !!
@@ -67,7 +67,7 @@ CASE (VECTOR)
   !!
   SELECT CASE (obj%vartype)
   CASE (CONSTANT)
-    CALL Display("# VarType: CONTSTANT", unitno=unitno)
+    CALL Display("# VarType: CONSTANT", unitno=unitno)
     CALL Display(GET(obj, typeFEVariableVector, typeFEVariableConstant), &
       & '# VALUE: ', unitno=unitno)
   !!
@@ -95,7 +95,7 @@ CASE (MATRIX)
   !!
   SELECT CASE (obj%vartype)
   CASE (CONSTANT)
-    CALL Display("# VarType: CONTSTANT", unitno=unitno)
+    CALL Display("# VarType: CONSTANT", unitno=unitno)
     CALL Display(GET(obj, typeFEVariableMatrix, typeFEVariableConstant), &
       & '# VALUE: ', unitno=unitno)
   !!

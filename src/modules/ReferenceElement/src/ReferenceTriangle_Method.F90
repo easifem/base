@@ -34,10 +34,12 @@ PRIVATE
 ! summary: This routine constructs an instance of [[ReferenceTriangle_]]
 !
 !# Introduction
-! * This routine contructs an instance of [[ReferenceTriangle_]]
-! * User can specify the coordinates of the trinagle
+!
+! - This routine contructs an instance of [[ReferenceTriangle_]]
+! - User can specify the coordinates of the trinagle
+!
 !@note
-! 	This routine will contruct a three node triangle. Also, SHAPE(XiJ) = [3,3]
+! 	This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
 !@endnote
 !
 !### Usage
@@ -55,10 +57,10 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Triangle( obj, NSD, XiJ )
+MODULE PURE SUBROUTINE initiate_ref_Triangle( obj, nsd, xij )
   CLASS( ReferenceTriangle_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
+  INTEGER( I4B ), INTENT( IN ) :: nsd
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij( :, : )
 END SUBROUTINE initiate_ref_Triangle
 END INTERFACE
 
@@ -80,7 +82,7 @@ PUBLIC :: Initiate
 ! * This routine contructs an instance of [[ReferenceTriangle_]]
 ! * User can specify the coordinates of the trinagle
 !@note
-! 	This routine will contruct a three node triangle. Also, SHAPE(XiJ) = [3,3]
+! 	This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
 !@endnote
 !
 !### Usage
@@ -94,9 +96,9 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Triangle(NSD, XiJ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+MODULE PURE FUNCTION reference_Triangle(nsd, xij) RESULT( obj )
+  INTEGER( I4B ), INTENT( IN ) :: nsd
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
   TYPE( ReferenceTriangle_ ) :: obj
 END FUNCTION reference_Triangle
 END INTERFACE
@@ -119,7 +121,7 @@ PUBLIC :: ReferenceTriangle
 ! * This routine contructs an instance of [[ReferenceTriangle_]]
 ! * User can specify the coordinates of the trinagle
 !@note
-! 	This routine will contruct a three node triangle. Also, SHAPE(XiJ) = [3,3]
+! 	This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
 !@endnote
 !
 !### Usage
@@ -133,9 +135,9 @@ PUBLIC :: ReferenceTriangle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Triangle_pointer(NSD, XiJ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
+MODULE PURE FUNCTION reference_Triangle_pointer(nsd, xij) RESULT( obj )
+  INTEGER( I4B ), INTENT( IN ) :: nsd
+  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
   CLASS( ReferenceTriangle_ ), POINTER :: obj
 END FUNCTION reference_Triangle_pointer
 END INTERFACE
@@ -167,20 +169,24 @@ PUBLIC :: ReferenceTriangle_Pointer
 !   class( ReferenceElement_ ), pointer :: obj_ptr => null()
 !   type( ReferenceTriangle_ ) :: obj
 !   obj_ptr => referenceTriangle_pointer( nsd = 2 )
-!   call obj_ptr%LagrangeElement( order = 2, HighOrderobj = obj )
+!   call obj_ptr%highorderElement( order = 2, Highorderobj = obj )
 !   call display( obj, "higher order obj : ")
-!   call obj_ptr%LagrangeElement( order = 3, HighOrderobj = obj )
+!   call obj_ptr%highorderElement( order = 3, Highorderobj = obj )
 !   call display( obj, "3rd order obj : ")
 ! end
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Triangle( RefElem, Order, obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
+MODULE PURE SUBROUTINE highorderElement_Triangle( refelem, order, obj,  &
+  & ipType )
+  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
+  INTEGER( I4B ), INTENT( IN ) :: order
   CLASS( ReferenceElement_ ), INTENT( INOUT ) ::  obj
-END SUBROUTINE LagrangeElement_Triangle
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highorderElement_Triangle
 END INTERFACE
+
+PUBLIC :: highorderElement_Triangle
 
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Triangle
@@ -192,7 +198,8 @@ END INTERFACE
 !
 !# Introduction
 !
-! This function returns the measure of linear triangle. This function belongs to the generic function [[ReferenceElement_Method:MeasureSimplex]].
+! This function returns the measure of linear triangle. This function belongs
+! to the generic function [[ReferenceElement_Method:MeasureSimplex]].
 !
 !@note
 ! 	This function is private
@@ -205,9 +212,9 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Triangle( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
+MODULE PURE FUNCTION Measure_Simplex_Triangle( refelem, xij ) RESULT( Ans )
+  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
+  REAL( DFP ), INTENT( IN ) :: xij( :, : )
   REAL( DFP ) :: Ans
 END FUNCTION Measure_Simplex_Triangle
 END INTERFACE

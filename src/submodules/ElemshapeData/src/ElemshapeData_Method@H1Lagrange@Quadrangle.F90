@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemshapeData_Method: H1Lagrange ) Quadrangle
+SUBMODULE(ElemshapeData_Method:H1Lagrange) Quadrangle
 USE BaseMethod
 IMPLICIT NONE
 
@@ -35,7 +35,7 @@ MODULE PROCEDURE Quadrangle_H1_Lagrange
 
   SELECT CASE( refelem%order )
   CASE( 1 )
-    CALL AllocateData( obj = obj, nsd = refelem%nsd, &
+    CALL Allocate( obj = obj, nsd = refelem%nsd, &
       & xidim = refelem%xidimension, nns = 4, nips = nips )
     !
     obj%N( 1, : ) = (1.0_DFP - XiEta( 1, : ) )*(1.0_DFP - XiEta( 2, : ) )/4.0_DFP

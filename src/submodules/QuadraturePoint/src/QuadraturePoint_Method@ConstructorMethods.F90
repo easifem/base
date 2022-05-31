@@ -17,9 +17,9 @@
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
-! summary: 	This submodule contains information constructor methods for [[QuadraturePoint_]]
+! summary:  Constructor methods for [[QuadraturePoint_]]
 
-SUBMODULE(QuadraturePoint_Method) Constructor
+SUBMODULE(QuadraturePoint_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
 
@@ -30,8 +30,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_initiate1
-  obj%Points = Points
-  obj%tXi = SIZE( Points, 1 ) - 1
+  obj%points = points
+  obj%tXi = SIZE( points, 1 ) - 1
     !! No of row minus one
 END PROCEDURE quad_initiate1
 
@@ -41,7 +41,7 @@ END PROCEDURE quad_initiate1
 
 MODULE PROCEDURE quad_initiate2
   obj%tXi = tXi
-  CALL Reallocate( obj%Points, tXi + 1, tPoints )
+  CALL Reallocate( obj%points, tXi + 1, tpoints )
 END PROCEDURE quad_initiate2
 
 !----------------------------------------------------------------------------
@@ -63,6 +63,8 @@ MODULE PROCEDURE quad_initiate4
   SELECT CASE( TRIM( quadratureType ) )
   CASE( "GaussLegendre" )
     obj = GaussLegendreQuadrature( refElem=refElem, nips=nips)
+  CASE( "GaussLobatto" )
+  CASE( "Chebyshev" )
   END SELECT
 END PROCEDURE quad_initiate4
 
@@ -71,8 +73,8 @@ END PROCEDURE quad_initiate4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_Constructor1
-  obj%Points = Points
-  obj%tXi = SIZE( Points, 1 ) - 1
+  obj%points = points
+  obj%tXi = SIZE( points, 1 ) - 1
 END PROCEDURE quad_Constructor1
 
 !----------------------------------------------------------------------------
@@ -81,8 +83,8 @@ END PROCEDURE quad_Constructor1
 
 MODULE PROCEDURE quad_Constructor_1
   ALLOCATE( obj )
-  obj%Points = Points
-  obj%tXi = SIZE( Points, 1 ) - 1
+  obj%points = points
+  obj%tXi = SIZE( points, 1 ) - 1
 END PROCEDURE quad_Constructor_1
 
 !----------------------------------------------------------------------------
@@ -90,52 +92,8 @@ END PROCEDURE quad_Constructor_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_Deallocate
-  IF( ALLOCATED( obj%Points ) ) DEALLOCATE( obj%Points )
+  IF( ALLOCATED( obj%points ) ) DEALLOCATE( obj%points )
   obj%tXi = -1
 END PROCEDURE quad_Deallocate
 
-!----------------------------------------------------------------------------
-!                                                                       SIZE
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE quad_Size
-  IF( Dims .EQ. 1 ) THEN
-    Ans = SIZE( obj%Points, 1 )
-  ELSE IF( Dims .EQ. 2 ) THEN
-    Ans = SIZE( obj%Points, 2 )
-  ELSE
-    Ans = 0
-  END IF
-END PROCEDURE quad_Size
-
-!----------------------------------------------------------------------------
-!                                                  getTotalQuadraturePoints
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE quad_getTotalQuadraturePoints
-  Ans = SIZE( obj, 2 )
-END PROCEDURE quad_getTotalQuadraturePoints
-
-!----------------------------------------------------------------------------
-!                                                         getQuadraturePoint
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE quad_GetQuadraturePoints1
-  Point = 0.0_DFP
-  Point( 1 : obj%tXi ) = obj%Points( 1 : obj%tXi, Num )
-  Weight = obj%Points( obj%tXi + 1, Num )
-END PROCEDURE quad_GetQuadraturePoints1
-
-!----------------------------------------------------------------------------
-!                                                         getQuadraturePoint
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE quad_GetQuadraturePoints2
-  INTEGER( I4B ) :: n
-  n = SIZE( obj%Points, 2 ) !#column
-  CALL Reallocate( Point, 3, n )
-  Point( 1 : obj%tXi, 1:n ) = obj%Points( 1 : obj%tXi, 1:n )
-  Weight = obj%Points( obj%tXi + 1, 1:n )
-END PROCEDURE quad_GetQuadraturePoints2
-
-END SUBMODULE Constructor
+END SUBMODULE ConstructorMethods

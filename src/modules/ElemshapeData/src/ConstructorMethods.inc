@@ -20,6 +20,7 @@ PUBLIC :: DEALLOCATE
 PUBLIC :: ALLOCATE
 PUBLIC :: BaseInterpolation
 PUBLIC :: BaseContinuity
+PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                                  AllocateData@Constructor
@@ -34,16 +35,9 @@ PUBLIC :: BaseContinuity
 ! This subroutine allocates the memory for various matrices in the object.
 ! This subroutine belongs to the generic interface called `AllocateData()`.
 !
-!@note
-! This routine also belongs to generic routien called `initiate`
-!@endnote
-!
-!### Usage
-!
-! See [[ElementshapeData_:elemsd_initiate]] for usage.
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_AllocateData(obj, nsd, xidim, nns, nips)
+  MODULE PURE SUBROUTINE elemsd_Allocate(obj, nsd, xidim, nns, nips)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! object to be returned
     INTEGER(I4B), INTENT(IN) :: nsd
@@ -54,21 +48,15 @@ INTERFACE
     !! number of nodes in element
     INTEGER(I4B), INTENT(IN) :: nips
     !! number of integration points
-  END SUBROUTINE elemsd_AllocateData
+  END SUBROUTINE elemsd_Allocate
 END INTERFACE
 
-INTERFACE AllocateData
-  MODULE PROCEDURE elemsd_AllocateData
-END INTERFACE AllocateData
-
-PUBLIC :: AllocateData
-
 INTERFACE ALLOCATE
-  MODULE PROCEDURE elemsd_AllocateData
+  MODULE PROCEDURE elemsd_Allocate
 END INTERFACE ALLOCATE
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -76,22 +64,114 @@ END INTERFACE ALLOCATE
 ! summary: This routine initiate the shape data
 
 INTERFACE
-  MODULE SUBROUTINE elemsd_initiate(obj, quad, refElem, continuityType, &
+  MODULE SUBROUTINE elemsd_initiate1(obj, quad, refelem, continuityType, &
     & interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
-    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     CHARACTER(LEN=*), INTENT(IN) :: continuityType
     CHARACTER(LEN=*), INTENT(IN) :: interpolType
-  END SUBROUTINE elemsd_initiate
+  END SUBROUTINE elemsd_initiate1
 END INTERFACE
 
 INTERFACE Initiate
-  MODULE PROCEDURE elemsd_initiate
+  MODULE PROCEDURE elemsd_initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Constructor
+!                                               Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 May 2022
+! summary: obj1 = obj2
+
+INTERFACE
+  MODULE SUBROUTINE elemsd_initiate2( obj1, obj2 )
+    TYPE(ElemshapeData_), INTENT( INOUT ) :: obj1
+    TYPE(ElemshapeData_), INTENT( IN ) :: obj2
+  END SUBROUTINE elemsd_initiate2
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE elemsd_initiate2
+END INTERFACE Initiate
+
+INTERFACE ASSIGNMENT( = )
+  MODULE PROCEDURE elemsd_initiate2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 May 2022
+! summary: obj1 = obj2
+
+INTERFACE
+  MODULE SUBROUTINE elemsd_initiate3( obj1, obj2 )
+    TYPE(ElemshapeData_), INTENT( INOUT ) :: obj1
+    TYPE(STElemshapeData_), INTENT( IN ) :: obj2
+  END SUBROUTINE elemsd_initiate3
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE elemsd_initiate3
+END INTERFACE Initiate
+
+INTERFACE ASSIGNMENT( = )
+  MODULE PROCEDURE elemsd_initiate3
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 May 2022
+! summary: obj1 = obj2
+
+INTERFACE
+  MODULE SUBROUTINE elemsd_initiate4( obj1, obj2 )
+    TYPE(STElemshapeData_), INTENT( INOUT ) :: obj1
+    TYPE(ElemshapeData_), INTENT( IN ) :: obj2
+  END SUBROUTINE elemsd_initiate4
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE elemsd_initiate4
+END INTERFACE Initiate
+
+INTERFACE ASSIGNMENT( = )
+  MODULE PROCEDURE elemsd_initiate4
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 20 May 2022
+! summary: obj1 = obj2
+
+INTERFACE
+  MODULE SUBROUTINE elemsd_initiate5( obj1, obj2 )
+    TYPE(STElemshapeData_), INTENT( INOUT ) :: obj1
+    TYPE(STElemshapeData_), INTENT( IN ) :: obj2
+  END SUBROUTINE elemsd_initiate5
+END INTERFACE
+
+INTERFACE Initiate
+  MODULE PROCEDURE elemsd_initiate5
+END INTERFACE Initiate
+
+INTERFACE ASSIGNMENT( = )
+  MODULE PROCEDURE elemsd_initiate5
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -128,7 +208,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                 Deallocate@Constructor
+!                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -152,11 +232,11 @@ INTERFACE DEALLOCATE
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
-!                                             BaseInterpolation@Constructor
+!                                       BaseInterpolation@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         30 Aug 2021
+! date: 30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseInterpolation_]]
 
 INTERFACE
@@ -171,11 +251,11 @@ INTERFACE BaseInterpolation
 END INTERFACE BaseInterpolation
 
 !----------------------------------------------------------------------------
-!                                             BaseContinuity@Constructor
+!                                          BaseContinuity@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         30 Aug 2021
+! date: 30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseContinuity_]]
 
 INTERFACE

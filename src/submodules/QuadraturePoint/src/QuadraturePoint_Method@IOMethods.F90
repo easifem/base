@@ -19,7 +19,7 @@
 ! date: 3 March 2021
 ! summary: This submodule contains the IO method for [[QuadraturePoint_]]
 
-SUBMODULE (QuadraturePoint_Method) IO
+SUBMODULE (QuadraturePoint_Method) IOMethods
 Use BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,25 +29,16 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_Display
-  INTEGER( I4B ) :: I, j
-
-  IF( .NOT. ALLOCATED( obj%Points ) ) RETURN
-  IF( PRESENT( UnitNo ) ) THEN
-    I = UnitNo
-  ELSE
-    I = stdout
+  !!
+  CALL Display( msg, unitno = unitno )
+  !!
+  IF( .NOT. ALLOCATED( obj%points ) ) THEN
+    RETURN
   END IF
-  CALL Blanklines( UnitNo = I )
-  CALL Display( msg, UnitNo = I )
-  CALL Blanklines( UnitNo = I )
-  WRITE( I, "(A)" ) "          Weights    |      Points       "
-  WRITE( I, "(A)" ) "-----------------------------------------"
-  DO j = 1, SIZE( obj%Points, 2 )
-    WRITE( I,"( 2X, G15.8, 2X" // TRIM( INT2STR( obj%tXi ) ) // "G15.8 )")&
-      & obj%Points( obj%tXi + 1, j ), &
-      & obj%Points( 1 : obj%tXi, j )
-  END DO
-  WRITE( I, "(A)" ) "-----------------------------------------"
+  !!
+  CALL Display( obj%points, msg="# points :", unitno=unitno)
+  CALL Display( obj%txi, msg="# txi :", unitno=unitno)
+  !!
 END PROCEDURE quad_Display
 
-END SUBMODULE IO
+END SUBMODULE IOMethods

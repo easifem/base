@@ -52,6 +52,8 @@ INTERFACE Initiate
   MODULE PROCEDURE initiate_ref_Tetrahedron
 END INTERFACE Initiate
 
+PUBLIC :: Initiate
+
 !----------------------------------------------------------------------------
 !                                            ReferenceTetrahedron@Tetrahedron
 !----------------------------------------------------------------------------
@@ -93,13 +95,16 @@ PUBLIC :: ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE LagrangeElement_Tetrahedron( RefElem, Order, obj )
+MODULE PURE SUBROUTINE highOrderElement_Tetrahedron( RefElem, Order, obj, &
+  & ipType )
   CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
   INTEGER( I4B ), INTENT( IN ) :: Order
   CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE LagrangeElement_Tetrahedron
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+END SUBROUTINE highOrderElement_Tetrahedron
 END INTERFACE
 
+PUBLIC :: highOrderElement_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry

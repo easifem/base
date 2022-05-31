@@ -60,8 +60,8 @@ END PROCEDURE reference_Prism_Pointer
 !                                                             LagrangeElement
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeElement_Prism
-END PROCEDURE LagrangeElement_Prism
+MODULE PROCEDURE highOrderElement_Prism
+END PROCEDURE highOrderElement_Prism
 
 !-----------------------------------------------------------------------------
 !                                                              MeasureSimplex

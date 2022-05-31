@@ -19,7 +19,7 @@
 ! date: 2 March 2021
 ! summary: VTK format element
 
-SUBMODULE(ReferenceElement_Method) VTK
+SUBMODULE(ReferenceElement_Method) VTKMethods
 IMPLICIT NONE
 
 INTEGER( I4B ), PARAMETER :: &
@@ -138,4 +138,4 @@ SELECT CASE( ElemType )
   END SELECT
 END PROCEDURE get_vtk_elemType
 
-END SUBMODULE VTK
+END SUBMODULE VTKMethods
