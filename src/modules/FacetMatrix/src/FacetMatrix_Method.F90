@@ -25,7 +25,10 @@ PRIVATE
 #include "./FacetMatrix2.inc"
 #include "./FacetMatrix3.inc"
 #include "./FacetMatrix4.inc"
-#include "./FacetMatrix5.inc"
-#include "./FacetMatrix6.inc"
+#include "./FacetMatrix11.inc"
+#include "./FacetMatrix12.inc"
+#include "./FacetMatrix13.inc"
+#include "./FacetMatrix14.inc"
+#include "./FacetMatrix15.inc"
 
 END MODULE FacetMatrix_Method
