@@ -24,4 +24,4 @@
 
   ans(1, 1:SIZE(a)) = a
 
-  ans(2:, 1:SIZE(b,1)) = b
+  ans(2:, 1:SIZE(b,2)) = b
