@@ -25,4 +25,4 @@
 
   ans(1:SIZE(a, 1), 1:SIZE(a, 2)) = a
 
-  ans(SIZE(a, 1) + 1:, 1:SIZE(b, 1)) = b
+  ans(SIZE(a, 1) + 1:, 1:SIZE(b, 2)) = b
