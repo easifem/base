@@ -44,6 +44,28 @@ END PROCEDURE Append_1b
 !                                                                     Append
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Append_1c
+  INTEGER(I4B) :: n
+  n = SIZE(A)
+  CALL Reallocate( C, n+1 )
+  C(1:n) = A; C(1 + n) = B
+END PROCEDURE Append_1c
+
+!----------------------------------------------------------------------------
+!                                                                    Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_1d
+  INTEGER(I4B) :: n
+  n = SIZE(A)
+  CALL Reallocate( C, n+1 )
+  C(1:n) = A; C(1 + n) = B
+END PROCEDURE Append_1d
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Append_2a
 INTEGER(I4B), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n, m
@@ -59,6 +81,44 @@ REAL(DFP), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n, m
 #include "./Append_2.inc"
 END PROCEDURE Append_2b
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_2c
+  INTEGER(I4B) :: n, m
+  !!
+  IF (SIZE(B) .NE. 0) THEN
+    m = SIZE(B)
+    n = SIZE(A)
+    CALL Reallocate( C, n+m )
+    C(1:n) = A
+    C(n + 1:) = B
+  ELSE
+    C = A
+  END IF
+  !!
+END PROCEDURE Append_2c
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_2d
+  INTEGER(I4B) :: n, m
+  !!
+  IF (SIZE(B) .NE. 0) THEN
+    m = SIZE(B)
+    n = SIZE(A)
+    CALL Reallocate( C, n+m )
+    C(1:n) = A
+    C(n + 1:) = B
+  ELSE
+    C = A
+  END IF
+  !!
+END PROCEDURE Append_2d
 
 !----------------------------------------------------------------------------
 !                                                                 colConcat
