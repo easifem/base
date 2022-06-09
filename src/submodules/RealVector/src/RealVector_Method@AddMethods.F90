@@ -373,4 +373,8 @@ END PROCEDURE realvec_add25
 !                                                                       add
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE realvec_add26
+  obj%val=obj%val+scale*value%val
+END PROCEDURE realvec_add26
+
 END SUBMODULE AddMethods

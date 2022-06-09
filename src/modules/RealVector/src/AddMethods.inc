@@ -612,3 +612,23 @@ END INTERFACE
 INTERFACE Add
   MODULE PROCEDURE realvec_add25
 END INTERFACE Add
+
+!----------------------------------------------------------------------------
+!                                                            add@addMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 9 June 2022
+! summary: obj1=obj2
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_add26( obj, value, scale )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
+  CLASS( RealVector_ ), INTENT( IN ) :: value
+  REAL( DFP ), INTENT( IN ) :: scale
+END SUBROUTINE realVec_add26
+END INTERFACE
+
+INTERFACE Add
+  MODULE PROCEDURE realVec_add26
+END INTERFACE Add
