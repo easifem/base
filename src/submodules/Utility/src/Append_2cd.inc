@@ -15,13 +15,39 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-  INTEGER(I4B) :: nrow, ncol
-
-  nrow = SIZE(b,1) + 1
-  ncol = MAX(SIZE(b,2), SIZE(a))
-
-  CALL reallocate(ans, nrow, ncol)
-
-  ans(1, 1:SIZE(a)) = a
-
-  ans(2:, 1:SIZE(b,2)) = b
+INTEGER(I4B) :: na, nb
+!!
+nb = SIZE( B )
+na = SIZE( A )
+!!
+IF( na .NE. 0 ) THEN
+  !!
+  !! na not zero
+  !!
+  IF ( nb .NE. 0) THEN
+    !!
+    !! nb not zero
+    !!
+    CALL Reallocate( C, na+nb )
+    C(1:na) = A
+    C(na + 1:) = B
+    !!
+  ELSE
+    C = A
+  END IF
+  !!
+ELSE
+  !!
+  !! na is zero
+  !!
+  IF (nb .NE. 0) THEN
+    !!
+    !! nb is zero
+    !!
+    C = B
+  ELSE
+    CALL Reallocate( C, 0 )
+  END IF
+  !!
+END IF
+!!

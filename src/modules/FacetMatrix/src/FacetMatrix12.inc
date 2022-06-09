@@ -15,10 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: FacetMatrix6
+PUBLIC :: FacetMatrix12
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -34,18 +34,19 @@ PUBLIC :: FacetMatrix6
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix6_1( elemsd ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_1( elemsd, nCopy ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix6_1
+END FUNCTION FacetMatrix12_1
 END INTERFACE
 
-INTERFACE FacetMatrix6
-  MODULE PROCEDURE FacetMatrix6_1
-END INTERFACE FacetMatrix6
+INTERFACE FacetMatrix12
+  MODULE PROCEDURE FacetMatrix12_1
+END INTERFACE FacetMatrix12
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -61,19 +62,20 @@ END INTERFACE FacetMatrix6
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix6_2( elemsd, mu ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_2( elemsd, mu, nCopy ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
   REAL( DFP ), INTENT( IN ) :: mu
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix6_2
+END FUNCTION FacetMatrix12_2
 END INTERFACE
 
-INTERFACE FacetMatrix6
-  MODULE PROCEDURE FacetMatrix6_2
-END INTERFACE FacetMatrix6
+INTERFACE FacetMatrix12
+  MODULE PROCEDURE FacetMatrix12_2
+END INTERFACE FacetMatrix12
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -89,20 +91,22 @@ END INTERFACE FacetMatrix6
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix6_3( elemsd, mu, tauvar ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_3( elemsd, mu, tauvar, nCopy ) &
+  & RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
   REAL( DFP ), INTENT( IN ) :: mu
   TYPE( FEVariable_ ), INTENT( IN ) :: tauvar
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix6_3
+END FUNCTION FacetMatrix12_3
 END INTERFACE
 
-INTERFACE FacetMatrix6
-  MODULE PROCEDURE FacetMatrix6_3
-END INTERFACE FacetMatrix6
+INTERFACE FacetMatrix12
+  MODULE PROCEDURE FacetMatrix12_3
+END INTERFACE FacetMatrix12
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -118,19 +122,20 @@ END INTERFACE FacetMatrix6
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix6_4( elemsd, mu ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_4( elemsd, mu, nCopy ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
   TYPE( FEVariable_ ), INTENT( IN ) :: mu
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix6_4
+END FUNCTION FacetMatrix12_4
 END INTERFACE
 
-INTERFACE FacetMatrix6
-  MODULE PROCEDURE FacetMatrix6_4
-END INTERFACE FacetMatrix6
+INTERFACE FacetMatrix12
+  MODULE PROCEDURE FacetMatrix12_4
+END INTERFACE FacetMatrix12
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -146,14 +151,16 @@ END INTERFACE FacetMatrix6
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix6_5( elemsd, mu, tauvar ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_5( elemsd, mu, tauvar, nCopy ) &
+  & RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
   TYPE( FEVariable_ ), INTENT( IN ) :: mu
   TYPE( FEVariable_ ), INTENT( IN ) :: tauvar
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix6_5
+END FUNCTION FacetMatrix12_5
 END INTERFACE
 
-INTERFACE FacetMatrix6
-  MODULE PROCEDURE FacetMatrix6_5
-END INTERFACE FacetMatrix6
+INTERFACE FacetMatrix12
+  MODULE PROCEDURE FacetMatrix12_5
+END INTERFACE FacetMatrix12

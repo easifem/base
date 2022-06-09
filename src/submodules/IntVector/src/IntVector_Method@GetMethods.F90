@@ -26,41 +26,53 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                  IN
+!                                                                       IN
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_in1
-INTEGER(I4B) :: ii
-ans = .TRUE.
-IF (SIZE(intvec1) .GT. SIZE(intvec2)) THEN
-  ans = .FALSE.
-  RETURN
-END IF
-!>
-DO ii = 1, SIZE(intvec1)
-  IF (.NOT. ANY(intvec1(ii) .EQ. intvec2)) THEN
-    ans = .FALSE.
-    EXIT
-  END IF
-END DO
+  ans = obj1%val.in.obj2%val
 END PROCEDURE intVec_in1
 
 !----------------------------------------------------------------------------
-!                                                                  IN
+!                                                                       IN
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE intVec_in2
-ans = obj1%val.in.obj2%val
-END PROCEDURE intVec_in2
+MODULE PROCEDURE intVec_in2a
+  ans = ANY(a .EQ. obj%val)
+END PROCEDURE intVec_in2a
+
+!----------------------------------------------------------------------------
+!                                                                       IN
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intVec_in2b
+  ans = ANY(a .EQ. obj%val)
+END PROCEDURE intVec_in2b
+
+!----------------------------------------------------------------------------
+!                                                                       IN
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intVec_in2c
+  ans = ANY(a .EQ. obj%val)
+END PROCEDURE intVec_in2c
+
+!----------------------------------------------------------------------------
+!                                                                       IN
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE intVec_in2d
+  ans = ANY(a .EQ. obj%val)
+END PROCEDURE intVec_in2d
 
 !----------------------------------------------------------------------------
 !                                                                       Get
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_1
-IF (ALLOCATED(obj%Val)) THEN
-  Val = IntVector(obj%Val)
-END IF
+  IF (ALLOCATED(obj%Val)) THEN
+    Val = IntVector(obj%Val)
+  END IF
 END PROCEDURE intVec_get_1
 
 !----------------------------------------------------------------------------
@@ -68,9 +80,9 @@ END PROCEDURE intVec_get_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_2
-IF (ALLOCATED(obj%Val)) THEN
-  Val = IntVector(obj%Val(Indx))
-END IF
+  IF (ALLOCATED(obj%Val)) THEN
+    Val = IntVector(obj%Val(Indx))
+  END IF
 END PROCEDURE intVec_get_2
 
 !----------------------------------------------------------------------------
@@ -78,12 +90,12 @@ END PROCEDURE intVec_get_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_3
-IF (ALLOCATED(obj%Val)) THEN
-  Val = IntVector(obj%Val( &
-       & istart:&
-       & Input(default=size(obj), option=iend):&
-       & Input(option=stride, default=1)))
-END IF
+  IF (ALLOCATED(obj%Val)) THEN
+    Val = IntVector(obj%Val( &
+      & istart:&
+      & Input(default=size(obj), option=iend):&
+      & Input(option=stride, default=1)))
+  END IF
 END PROCEDURE intVec_get_3
 
 !----------------------------------------------------------------------------
@@ -91,7 +103,7 @@ END PROCEDURE intVec_get_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_4
-Val = IntVector(get(obj, TypeInt))
+  Val = IntVector(get(obj, TypeInt))
 END PROCEDURE intVec_get_4
 
 !----------------------------------------------------------------------------
@@ -99,7 +111,7 @@ END PROCEDURE intVec_get_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_5
-Val = IntVector(get(obj, Indx, TypeInt))
+  Val = IntVector(get(obj, Indx, TypeInt))
 END PROCEDURE intVec_get_5
 
 !----------------------------------------------------------------------------
@@ -107,8 +119,8 @@ END PROCEDURE intVec_get_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_6
-Val = IntVector(get(obj, iStart, iEnd, Stride, &
-  & TypeInt))
+  Val = IntVector(get(obj, iStart, iEnd, Stride, &
+    & TypeInt))
 END PROCEDURE intVec_get_6
 
 !----------------------------------------------------------------------------
@@ -116,9 +128,9 @@ END PROCEDURE intVec_get_6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_7
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val
-END IF
+  IF (ALLOCATED(obj%Val)) THEN
+    Val = obj%Val
+  END IF
 END PROCEDURE intVec_get_7
 
 !----------------------------------------------------------------------------
@@ -126,9 +138,9 @@ END PROCEDURE intVec_get_7
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_8
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(Indx)
-END IF
+  IF (ALLOCATED(obj%Val)) THEN
+    Val = obj%Val(Indx)
+  END IF
 END PROCEDURE intVec_get_8
 
 !----------------------------------------------------------------------------
@@ -136,9 +148,9 @@ END PROCEDURE intVec_get_8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_9
-IF (ALLOCATED(obj%Val)) THEN
-  Val = obj%Val(iStart:iEnd:Stride)
-END IF
+  IF (ALLOCATED(obj%Val)) THEN
+    Val = obj%Val(iStart:iEnd:Stride)
+  END IF
 END PROCEDURE intVec_get_9
 
 !----------------------------------------------------------------------------
@@ -146,22 +158,21 @@ END PROCEDURE intVec_get_9
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_10
-INTEGER(I4B) :: N, i, tNodes, r1, r2
-N = SIZE(obj)
-tNodes = 0
-DO i = 1, N
-  tNodes = tNodes + SIZE(obj(i)%Val)
-END DO
-
-ALLOCATE (Val(tNodes))
-
-tNodes = 0; r1 = 0; r2 = 0
-
-DO i = 1, N
-  r1 = r2 + 1; r2 = r2 + SIZE(obj(i)%Val)
-  Val(r1:r2) = obj(i)%Val
-END DO
-
+  INTEGER(I4B) :: N, i, tNodes, r1, r2
+  N = SIZE(obj)
+  tNodes = 0
+  DO i = 1, N
+    tNodes = tNodes + SIZE(obj(i)%Val)
+  END DO
+  !!
+  ALLOCATE (Val(tNodes))
+  !!
+  tNodes = 0; r1 = 0; r2 = 0
+  DO i = 1, N
+    r1 = r2 + 1; r2 = r2 + SIZE(obj(i)%Val)
+    Val(r1:r2) = obj(i)%Val
+  END DO
+  !!
 END PROCEDURE intVec_get_10
 
 !----------------------------------------------------------------------------
@@ -169,17 +180,17 @@ END PROCEDURE intVec_get_10
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_11
-INTEGER(I4B) :: N, i, M
-
-N = SIZE(obj)
-M = SIZE(Indx)
-
-ALLOCATE (Val(N * M))
-
-DO i = 1, N
-  Val((i - 1) * M + 1:i * M) = obj(i)%Val(Indx)
-END DO
-
+  INTEGER(I4B) :: N, i, M
+  !!
+  N = SIZE(obj)
+  M = SIZE(Indx)
+  !!
+  ALLOCATE (Val(N * M))
+  !!
+  DO i = 1, N
+    Val((i - 1) * M + 1:i * M) = obj(i)%Val(Indx)
+  END DO
+  !!
 END PROCEDURE intVec_get_11
 
 !----------------------------------------------------------------------------
@@ -187,17 +198,17 @@ END PROCEDURE intVec_get_11
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_12
-INTEGER(I4B) :: N, i, M
-
-N = SIZE(obj)
-M = 1 + (iEnd - iStart) / Stride
-
-ALLOCATE (Val(M * N))
-
-DO i = 1, N
-  Val((i - 1) * M + 1:i * M) = obj(i)%Val(iStart:iEnd:Stride)
-END DO
-
+  INTEGER(I4B) :: N, i, M
+  !!
+  N = SIZE(obj)
+  M = 1 + (iEnd - iStart) / Stride
+  !!
+  ALLOCATE (Val(M * N))
+  !!
+  DO i = 1, N
+    Val((i - 1) * M + 1:i * M) = obj(i)%Val(iStart:iEnd:Stride)
+  END DO
+  !!
 END PROCEDURE intVec_get_12
 
 !----------------------------------------------------------------------------
@@ -205,7 +216,7 @@ END PROCEDURE intVec_get_12
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_13
-val = obj%val(indx)
+  val = obj%val(indx)
 END PROCEDURE intVec_get_13
 
 !----------------------------------------------------------------------------
@@ -213,7 +224,7 @@ END PROCEDURE intVec_get_13
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_assign_a
-Val = get(obj, datatype=TYPEInt)
+  Val = get(obj, datatype=TYPEInt)
 END PROCEDURE IntVec_assign_a
 
 !----------------------------------------------------------------------------
@@ -221,7 +232,7 @@ END PROCEDURE IntVec_assign_a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getPointer_1
-Val => obj
+  Val => obj
 END PROCEDURE intVec_getPointer_1
 
 !----------------------------------------------------------------------------
@@ -229,7 +240,7 @@ END PROCEDURE intVec_getPointer_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getPointer_2
-Val => obj%Val
+  Val => obj%Val
 END PROCEDURE intVec_getPointer_2
 
 !----------------------------------------------------------------------------
@@ -237,9 +248,9 @@ END PROCEDURE intVec_getPointer_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_convert_int
-IF (ALLOCATED(From%Val)) THEN
-  To = From%Val
-END IF
+  IF (ALLOCATED(From%Val)) THEN
+    To = From%Val
+  END IF
 END PROCEDURE obj_convert_int
 
 !----------------------------------------------------------------------------
@@ -247,7 +258,7 @@ END PROCEDURE obj_convert_int
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getIndex1
-Ans = MINLOC(ABS(obj%Val - VALUE), 1)
+  Ans = MINLOC(ABS(obj%Val - VALUE), 1)
 END PROCEDURE intVec_getIndex1
 
 !----------------------------------------------------------------------------
@@ -255,25 +266,26 @@ END PROCEDURE intVec_getIndex1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getIndex2
-! Ans = MINLOC( ABS( obj%Val - Value ), 1 )
-INTEGER(I4B) :: i, j, m
-LOGICAL(LGT), ALLOCATABLE :: Search(:)
-!
-m = SIZE(VALUE)
-ALLOCATE (Search(m), Ans(m))
-Search = .TRUE.
-Ans = 0
-
-DO i = 1, SIZE(obj%Val)
-  DO j = 1, m
-    IF (Search(j)) THEN
-      IF (VALUE(j) .EQ. obj%Val(i)) THEN
-        Search(j) = .FALSE.
-        Ans(j) = i
+  !! Ans = MINLOC( ABS( obj%Val - Value ), 1 )
+  INTEGER(I4B) :: i, j, m
+  LOGICAL(LGT), ALLOCATABLE :: Search(:)
+  !!
+  m = SIZE(VALUE)
+  ALLOCATE (Search(m), Ans(m))
+  Search = .TRUE.
+  Ans = 0
+  !!
+  DO i = 1, SIZE(obj%Val)
+    DO j = 1, m
+      IF (Search(j)) THEN
+        IF (VALUE(j) .EQ. obj%Val(i)) THEN
+          Search(j) = .FALSE.
+          Ans(j) = i
+        END IF
       END IF
-    END IF
+    END DO
   END DO
-END DO
+  !!
 END PROCEDURE intVec_getIndex2
 
 !----------------------------------------------------------------------------
@@ -281,7 +293,7 @@ END PROCEDURE intVec_getIndex2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getIndex3
-Ans = MINLOC(ABS(obj - VALUE), 1)
+  Ans = MINLOC(ABS(obj - VALUE), 1)
 END PROCEDURE intVec_getIndex3
 
 !----------------------------------------------------------------------------
@@ -289,25 +301,25 @@ END PROCEDURE intVec_getIndex3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getIndex4
-! Ans = MINLOC( ABS( obj%Val - Value ), 1 )
-INTEGER(I4B) :: i, j, m
-LOGICAL(LGT), ALLOCATABLE :: Search(:)
-!
-m = SIZE(VALUE)
-ALLOCATE (Search(m), Ans(m))
-Search = .TRUE.
-Ans = 0
-
-DO i = 1, SIZE(obj)
-  DO j = 1, m
-    IF (Search(j)) THEN
-      IF (VALUE(j) .EQ. obj(i)) THEN
-        Search(j) = .FALSE.
-        Ans(j) = i
+  !! Ans = MINLOC( ABS( obj%Val - Value ), 1 )
+  INTEGER(I4B) :: i, j, m
+  LOGICAL(LGT), ALLOCATABLE :: Search(:)
+  !!
+  m = SIZE(VALUE)
+  ALLOCATE (Search(m), Ans(m))
+  Search = .TRUE.
+  Ans = 0
+  !!
+  DO i = 1, SIZE(obj)
+    DO j = 1, m
+      IF (Search(j)) THEN
+        IF (VALUE(j) .EQ. obj(i)) THEN
+          Search(j) = .FALSE.
+          Ans(j) = i
+        END IF
       END IF
-    END IF
+    END DO
   END DO
-END DO
 END PROCEDURE intVec_getIndex4
 
 !----------------------------------------------------------------------------
@@ -315,14 +327,14 @@ END PROCEDURE intVec_getIndex4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_isPresent1
-INTEGER(I4B) :: i
-Ans = .FALSE.
-DO i = 1, SIZE(obj%Val)
-  IF (obj%Val(i) .EQ. VALUE) THEN
-    Ans = .TRUE.
-    EXIT
-  END IF
-END DO
+  INTEGER(I4B) :: i
+  Ans = .FALSE.
+  DO i = 1, SIZE(obj%Val)
+    IF (obj%Val(i) .EQ. VALUE) THEN
+      Ans = .TRUE.
+      EXIT
+    END IF
+  END DO
 END PROCEDURE intVec_isPresent1
 
 !----------------------------------------------------------------------------
@@ -330,24 +342,24 @@ END PROCEDURE intVec_isPresent1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_isPresent2
-INTEGER(I4B) :: i, m, j
-LOGICAL(LGT), ALLOCATABLE :: Search(:)
-m = SIZE(VALUE)
-ALLOCATE (Ans(m), Search(m))
-Search = .TRUE.
-Ans = .FALSE.
-
-DO i = 1, SIZE(obj%Val)
-  DO j = 1, m
-    IF (Search(j)) THEN
-      IF (VALUE(j) .EQ. obj%Val(i)) THEN
-        Search(j) = .FALSE.
-        Ans(j) = .TRUE.
+  INTEGER(I4B) :: i, m, j
+  LOGICAL(LGT), ALLOCATABLE :: Search(:)
+  m = SIZE(VALUE)
+  ALLOCATE (Ans(m), Search(m))
+  Search = .TRUE.
+  Ans = .FALSE.
+  !!
+  DO i = 1, SIZE(obj%Val)
+    DO j = 1, m
+      IF (Search(j)) THEN
+        IF (VALUE(j) .EQ. obj%Val(i)) THEN
+          Search(j) = .FALSE.
+          Ans(j) = .TRUE.
+        END IF
       END IF
-    END IF
+    END DO
   END DO
-END DO
-
+  !!
 END PROCEDURE intVec_isPresent2
 
 END SUBMODULE GetMethods

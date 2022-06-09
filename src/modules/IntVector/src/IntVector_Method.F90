@@ -389,7 +389,7 @@ END INTERFACE
 
 INTERFACE IntVector_Pointer
   MODULE PROCEDURE intVec_Constructor_1, intVec_Constructor_2, &
-       & intVec_Constructor_3
+    & intVec_Constructor_3
 END INTERFACE IntVector_Pointer
 
 PUBLIC :: IntVector_Pointer
@@ -448,12 +448,18 @@ PUBLIC :: Display
 ! summary: Returns true if a integer set is inside another
 
 INTERFACE
-  MODULE PURE FUNCTION intVec_in1(intvec1, intvec2) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: intvec1(:)
-    INTEGER(I4B), INTENT(IN) :: intvec2(:)
+  MODULE PURE FUNCTION intVec_in1(obj1, obj2) RESULT(Ans)
+    CLASS(IntVector_), INTENT(IN) :: obj1
+    CLASS(IntVector_), INTENT(IN) :: obj2
     LOGICAL(LGT) :: ans
   END FUNCTION intVec_in1
 END INTERFACE
+
+INTERFACE OPERATOR(.in.)
+  MODULE PROCEDURE intVec_in1
+END INTERFACE OPERATOR(.in.)
+
+PUBLIC :: OPERATOR(.in.)
 
 !----------------------------------------------------------------------------
 !                                                  Operator(.in.)@GetMethods
@@ -465,18 +471,36 @@ END INTERFACE
 ! summary: Returns true if a integer set is inside another
 
 INTERFACE
-  MODULE PURE FUNCTION intVec_in2(obj1, obj2) RESULT(Ans)
-    CLASS(IntVector_), INTENT(IN) :: obj1
-    CLASS(IntVector_), INTENT(IN) :: obj2
+  !!
+  MODULE PURE FUNCTION intVec_in2a(a, obj) RESULT(Ans)
+    INTEGER( Int8 ), INTENT( IN ) :: a
+    CLASS(IntVector_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
-  END FUNCTION intVec_in2
+  END FUNCTION intVec_in2a
+  !!
+  MODULE PURE FUNCTION intVec_in2b(a, obj) RESULT(Ans)
+    INTEGER( Int16 ), INTENT( IN ) :: a
+    CLASS(IntVector_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION intVec_in2b
+  !!
+  MODULE PURE FUNCTION intVec_in2c(a, obj) RESULT(Ans)
+    INTEGER( Int32 ), INTENT( IN ) :: a
+    CLASS(IntVector_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION intVec_in2c
+  !!
+  MODULE PURE FUNCTION intVec_in2d(a, obj) RESULT(Ans)
+    INTEGER( Int64 ), INTENT( IN ) :: a
+    CLASS(IntVector_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION intVec_in2d
+  !!
 END INTERFACE
 
 INTERFACE OPERATOR(.in.)
-  MODULE PROCEDURE intVec_in1, intVec_in2
+  MODULE PROCEDURE intVec_in2a, intVec_in2b, intVec_in2c, intVec_in2d
 END INTERFACE OPERATOR(.in.)
-
-PUBLIC :: OPERATOR(.in.)
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethods

@@ -28,20 +28,21 @@ MODULE PROCEDURE FacetMatrix2_1
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
     & G12( :, :, : ), m4( :, :, :, : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nsd
   !!
-  nns = SIZE( elemsd%N, 1 )
-  nips = SIZE( elemsd%N, 2 )
-  nsd = elemsd%refelem%nsd
-  realval = elemsd%js * elemsd%ws * elemsd%thickness
+  nns1 = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
+  nips = SIZE( elemsd%dNdXt, 3 )
   !!
   CALL getProjectionOfdNdXt( &
     & obj=elemsd, &
     & cdNdXt=masterC1, &
     & val=elemsd%normal )
   !!
-  CALL Reallocate(G12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
+  CALL Reallocate(G12, nns1, nsd, nsd)
+  CALL Reallocate(m4, nns1, nns1, nsd, nsd)
+  !!
+  realval = elemsd%js * elemsd%ws * elemsd%thickness
   !!
   DO ips = 1, nips
     !!
@@ -65,7 +66,7 @@ MODULE PROCEDURE FacetMatrix2_1
   !!
   CALL Convert( from=m4, to=ans )
   !!
-  DEALLOCATE( m4, realval, masterC1, G12 )
+  DEALLOCATE( realval, masterC1, G12, m4 )
   !!
 END PROCEDURE FacetMatrix2_1
 
@@ -77,18 +78,19 @@ MODULE PROCEDURE FacetMatrix2_2
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
     & G12( :, :, : ), m4( :, :, :, : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nsd
   !!
-  nns = SIZE( elemsd%N, 1 )
-  nips = SIZE( elemsd%N, 2 )
-  nsd = elemsd%refelem%nsd
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * mu * mu
+  nns1 = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
+  nips = SIZE( elemsd%dNdXt, 3 )
   !!
   CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=masterC1, &
     & val=elemsd%normal )
   !!
-  CALL Reallocate(G12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
+  CALL Reallocate(G12, nns1, nsd, nsd)
+  CALL Reallocate(m4, nns1, nns1, nsd, nsd)
+  !!
+  realval = elemsd%js * elemsd%ws * elemsd%thickness * mu * mu
   !!
   DO ips = 1, nips
     !!
@@ -112,7 +114,7 @@ MODULE PROCEDURE FacetMatrix2_2
   !!
   CALL Convert( from=m4, to=ans )
   !!
-  DEALLOCATE( m4, realval, masterC1, G12 )
+  DEALLOCATE( realval, masterC1, G12, m4 )
   !!
 END PROCEDURE FacetMatrix2_2
 
@@ -124,20 +126,21 @@ MODULE PROCEDURE FacetMatrix2_3
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
     & G12( :, :, : ), m4( :, :, :, : ), taubar( : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nsd
   !!
-  nns = SIZE( elemsd%N, 1 )
-  nips = SIZE( elemsd%N, 2 )
-  nsd = elemsd%refelem%nsd
+  nns1 = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
+  nips = SIZE( elemsd%dNdXt, 3 )
   !!
   CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=masterC1, &
     & val=elemsd%normal )
+  !!
   CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
   !!
   realval = elemsd%js * elemsd%ws * elemsd%thickness * taubar * mu * mu
   !!
-  CALL Reallocate(G12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
+  CALL Reallocate(G12, nns1, nsd, nsd)
+  CALL Reallocate(m4, nns1, nns1, nsd, nsd)
   !!
   DO ips = 1, nips
     !!
@@ -161,7 +164,7 @@ MODULE PROCEDURE FacetMatrix2_3
   !!
   CALL Convert( from=m4, to=ans )
   !!
-  DEALLOCATE( m4, realval, masterC1, G12, taubar )
+  DEALLOCATE( realval, masterC1, G12, taubar, m4 )
   !!
 END PROCEDURE FacetMatrix2_3
 
@@ -173,19 +176,19 @@ MODULE PROCEDURE FacetMatrix2_4
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
     & G12( :, :, : ), m4( :, :, :, : ), muBar( : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nsd
   !!
-  nns = SIZE( elemsd%N, 1 )
-  nips = SIZE( elemsd%N, 2 )
-  nsd = elemsd%refelem%nsd
+  nns1 = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
+  nips = SIZE( elemsd%dNdXt, 3 )
   !!
   CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=masterC1, val=elemsd%normal )
   CALL getInterpolation( obj=elemsd, interpol=muBar, val=mu )
   !!
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * muBar * muBar
+  CALL Reallocate(G12, nns1, nsd, nsd)
+  CALL Reallocate(m4, nns1, nns1, nsd, nsd)
   !!
-  CALL Reallocate(G12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
+  realval = elemsd%js * elemsd%ws * elemsd%thickness * muBar * muBar
   !!
   DO ips = 1, nips
     !!
@@ -209,7 +212,7 @@ MODULE PROCEDURE FacetMatrix2_4
   !!
   CALL Convert( from=m4, to=ans )
   !!
-  DEALLOCATE( m4, realval, masterC1, G12, muBar )
+  DEALLOCATE( realval, masterC1, G12, muBar, m4 )
   !!
 END PROCEDURE FacetMatrix2_4
 
@@ -222,11 +225,11 @@ MODULE PROCEDURE FacetMatrix2_5
   REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
     & G12( :, :, : ), m4( :, :, :, : ), muBar( : ), &
     & tauBar( : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nsd
   !!
-  nns = SIZE( elemsd%N, 1 )
-  nips = SIZE( elemsd%N, 2 )
-  nsd = elemsd%refelem%nsd
+  nns1 = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
+  nips = SIZE( elemsd%dNdXt, 3 )
   !!
   CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=masterC1, val=elemsd%normal )
   CALL getInterpolation( obj=elemsd, interpol=muBar, val=mu )
@@ -234,13 +237,13 @@ MODULE PROCEDURE FacetMatrix2_5
   !!
   realval = elemsd%js * elemsd%ws * elemsd%thickness * tauBar * muBar * muBar
   !!
-  CALL Reallocate(G12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
+  CALL Reallocate(G12, nns1, nsd, nsd)
+  CALL Reallocate(m4, nns1, nns1, nsd, nsd)
   !!
   DO ips = 1, nips
     !!
     G12 = OUTERPROD( masterC1( :, ips ), eye( nsd, 1.0_DFP ) ) &
-      & + OUTERPROD( elemsd%dNdXt( :, :, ips ),  &
+      & + OUTERPROD( elemsd%dNdXt( :, :, ips ), &
       & elemsd%normal( 1:nsd, ips ) )
     !!
     DO jj = 1, nsd
@@ -259,8 +262,12 @@ MODULE PROCEDURE FacetMatrix2_5
   !!
   CALL Convert( from=m4, to=ans )
   !!
-  DEALLOCATE( m4, realval, masterC1, G12, muBar, tauBar )
+  DEALLOCATE( realval, masterC1, G12, muBar, taubar, m4 )
   !!
 END PROCEDURE FacetMatrix2_5
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE FacetMatrix2Methods

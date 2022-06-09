@@ -13,15 +13,15 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
-  INTEGER(I4B) :: nrow, ncol
-
-  nrow = SIZE(b,1) + 1
-  ncol = MAX(SIZE(b,2), SIZE(a))
-
-  CALL reallocate(ans, nrow, ncol)
-
-  ans(1, 1:SIZE(a)) = a
-
-  ans(2:, 1:SIZE(b,2)) = b
+IF( mask ) THEN
+  IF (.NOT. ALLOCATED(A)) THEN
+    A = [Entry]
+  ELSE
+    n = SIZE(A); ALLOCATE (Dummy(n + 1))
+    Dummy(1:n) = A; Dummy(1 + n) = Entry
+    CALL MOVE_ALLOC(From=Dummy, TO=A)
+  END IF
+ELSE
+  IF (.NOT. ALLOCATED(A)) ALLOCATE( A( 0 ) )
+END IF

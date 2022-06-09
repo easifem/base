@@ -44,6 +44,22 @@ END PROCEDURE Append_1b
 !                                                                     Append
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Append_1c
+#include "./Append_1cd.inc"
+END PROCEDURE Append_1c
+
+!----------------------------------------------------------------------------
+!                                                                    Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_1d
+#include "./Append_1cd.inc"
+END PROCEDURE Append_1d
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Append_2a
 INTEGER(I4B), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n, m
@@ -59,6 +75,94 @@ REAL(DFP), ALLOCATABLE :: Dummy(:)
 INTEGER(I4B) :: n, m
 #include "./Append_2.inc"
 END PROCEDURE Append_2b
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_2c
+#include "./Append_2cd.inc"
+END PROCEDURE Append_2c
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_2d
+#include "./Append_2cd.inc"
+END PROCEDURE Append_2d
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_3a
+INTEGER(I4B), ALLOCATABLE :: Dummy(:)
+INTEGER(I4B) :: n
+#include "./Append_3.inc"
+END PROCEDURE Append_3a
+
+!----------------------------------------------------------------------------
+!                                                                    Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_3b
+REAL(DFP), ALLOCATABLE :: Dummy(:)
+INTEGER(I4B) :: n
+#include "./Append_3.inc"
+END PROCEDURE Append_3b
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_3c
+#include "./Append_3cd.inc"
+END PROCEDURE Append_3c
+
+!----------------------------------------------------------------------------
+!                                                                    Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_3d
+#include "./Append_3cd.inc"
+END PROCEDURE Append_3d
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_4a
+INTEGER(I4B), ALLOCATABLE :: Dummy(:)
+INTEGER(I4B) :: n, m
+#include "./Append_4.inc"
+END PROCEDURE Append_4a
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_4b
+REAL(DFP), ALLOCATABLE :: Dummy(:)
+INTEGER(I4B) :: n, m
+#include "./Append_4.inc"
+END PROCEDURE Append_4b
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_4c
+#include "./Append_4cd.inc"
+END PROCEDURE Append_4c
+
+!----------------------------------------------------------------------------
+!                                                                     Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Append_4d
+#include "./Append_4cd.inc"
+END PROCEDURE Append_4d
 
 !----------------------------------------------------------------------------
 !                                                                 colConcat

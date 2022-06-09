@@ -28,10 +28,9 @@ PUBLIC :: FacetMatrix2
 !# Introduction
 !
 ! $$
-! \int_{\Gamma_{e}\bigcap\Gamma^{h}}\tau_{E1}\left(2\mu{\bf d}\left(\delta\bar
-! {{\bf v}}\right)\cdot{\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}
-! \right)\cdot{\bf n}\right)dS&=\delta V_{iI}\left[\int_{\Gamma_{e}
-! \bigcap\Gamma^{h}}\tau_{E1}G_{12}^{Ipi}G_{12}^{Jpj}dS\right]V_{jJ}
+! \int_{\Gamma_{e}}\tau\left(2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)\cdot
+! {\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}
+! \right)dS
 ! $$
 
 INTERFACE
@@ -56,10 +55,9 @@ END INTERFACE FacetMatrix2
 !# Introduction
 !
 ! $$
-! \int_{\Gamma_{e}\bigcap\Gamma^{h}}\tau_{E1}\left(2\mu{\bf d}\left(\delta\bar
-! {{\bf v}}\right)\cdot{\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}
-! \right)\cdot{\bf n}\right)dS&=\delta V_{iI}\left[\int_{\Gamma_{e}
-! \bigcap\Gamma^{h}}\tau_{E1}G_{12}^{Ipi}G_{12}^{Jpj}dS\right]V_{jJ}
+! \int_{\Gamma_{e}}\tau\left(2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)\cdot
+! {\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}
+! \right)dS
 ! $$
 
 INTERFACE
@@ -85,10 +83,9 @@ END INTERFACE FacetMatrix2
 !# Introduction
 !
 ! $$
-! \int_{\Gamma_{e}\bigcap\Gamma^{h}}\tau_{E1}\left(2\mu{\bf d}\left(\delta\bar
-! {{\bf v}}\right)\cdot{\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}
-! \right)\cdot{\bf n}\right)dS&=\delta V_{iI}\left[\int_{\Gamma_{e}
-! \bigcap\Gamma^{h}}\tau_{E1}G_{12}^{Ipi}G_{12}^{Jpj}dS\right]V_{jJ}
+! \int_{\Gamma_{e}}\tau\left(2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)\cdot
+! {\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}
+! \right)dS
 ! $$
 
 INTERFACE
@@ -115,10 +112,9 @@ END INTERFACE FacetMatrix2
 !# Introduction
 !
 ! $$
-! \int_{\Gamma_{e}\bigcap\Gamma^{h}}\tau_{E1}\left(2\mu{\bf d}\left(\delta\bar
-! {{\bf v}}\right)\cdot{\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}
-! \right)\cdot{\bf n}\right)dS&=\delta V_{iI}\left[\int_{\Gamma_{e}
-! \bigcap\Gamma^{h}}\tau_{E1}G_{12}^{Ipi}G_{12}^{Jpj}dS\right]V_{jJ}
+! \int_{\Gamma_{e}}\tau\left(2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)\cdot
+! {\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}
+! \right)dS
 ! $$
 
 INTERFACE
@@ -144,10 +140,9 @@ END INTERFACE FacetMatrix2
 !# Introduction
 !
 ! $$
-! \int_{\Gamma_{e}\bigcap\Gamma^{h}}\tau_{E1}\left(2\mu{\bf d}\left(\delta\bar
-! {{\bf v}}\right)\cdot{\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}
-! \right)\cdot{\bf n}\right)dS&=\delta V_{iI}\left[\int_{\Gamma_{e}
-! \bigcap\Gamma^{h}}\tau_{E1}G_{12}^{Ipi}G_{12}^{Jpj}dS\right]V_{jJ}
+! \int_{\Gamma_{e}}\tau\left(2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)\cdot
+! {\bf n}\right)\cdot\left(2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}
+! \right)dS
 ! $$
 
 INTERFACE

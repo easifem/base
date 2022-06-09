@@ -15,10 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: FacetMatrix5
+PUBLIC :: FacetMatrix15
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix5
+!                                                              FacetMatrix15
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -33,22 +33,22 @@ PUBLIC :: FacetMatrix5
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix5_1( masterElemSD, slaveElemSD, &
+MODULE PURE FUNCTION FacetMatrix15_1( masterElemSD, slaveElemSD, &
   & quadMap, opt ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: masterElemSD
   CLASS( ElemshapeData_ ), INTENT( IN ) :: slaveElemSD
   INTEGER( I4B ), INTENT( IN ) :: quadMap(:)
   INTEGER( I4B ), INTENT( IN ) :: opt
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix5_1
+END FUNCTION FacetMatrix15_1
 END INTERFACE
 
-INTERFACE FacetMatrix5
-  MODULE PROCEDURE FacetMatrix5_1
-END INTERFACE FacetMatrix5
+INTERFACE FacetMatrix15
+  MODULE PROCEDURE FacetMatrix15_1
+END INTERFACE FacetMatrix15
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix5
+!                                                              FacetMatrix15
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -63,7 +63,7 @@ END INTERFACE FacetMatrix5
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix5_2( masterElemSD, slaveElemSD, &
+MODULE PURE FUNCTION FacetMatrix15_2( masterElemSD, slaveElemSD, &
   & muMaster, muSlave, quadMap, opt ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: masterElemSD
   CLASS( ElemshapeData_ ), INTENT( IN ) :: slaveElemSD
@@ -72,15 +72,15 @@ MODULE PURE FUNCTION FacetMatrix5_2( masterElemSD, slaveElemSD, &
   INTEGER( I4B ), INTENT( IN ) :: quadMap(:)
   INTEGER( I4B ), INTENT( IN ) :: opt
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix5_2
+END FUNCTION FacetMatrix15_2
 END INTERFACE
 
-INTERFACE FacetMatrix5
-  MODULE PROCEDURE FacetMatrix5_2
-END INTERFACE FacetMatrix5
+INTERFACE FacetMatrix15
+  MODULE PROCEDURE FacetMatrix15_2
+END INTERFACE FacetMatrix15
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix5
+!                                                              FacetMatrix15
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -95,7 +95,7 @@ END INTERFACE FacetMatrix5
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix5_3( masterElemSD, slaveElemSD, &
+MODULE PURE FUNCTION FacetMatrix15_3( masterElemSD, slaveElemSD, &
   & muMaster, muSlave, tauMaster, tauSlave, quadMap, opt ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: masterElemSD
   CLASS( ElemshapeData_ ), INTENT( IN ) :: slaveElemSD
@@ -106,15 +106,15 @@ MODULE PURE FUNCTION FacetMatrix5_3( masterElemSD, slaveElemSD, &
   INTEGER( I4B ), INTENT( IN ) :: quadMap(:)
   INTEGER( I4B ), INTENT( IN ) :: opt
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix5_3
+END FUNCTION FacetMatrix15_3
 END INTERFACE
 
-INTERFACE FacetMatrix5
-  MODULE PROCEDURE FacetMatrix5_3
-END INTERFACE FacetMatrix5
+INTERFACE FacetMatrix15
+  MODULE PROCEDURE FacetMatrix15_3
+END INTERFACE FacetMatrix15
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix5
+!                                                              FacetMatrix15
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -129,7 +129,7 @@ END INTERFACE FacetMatrix5
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix5_4( masterElemSD, slaveElemSD, &
+MODULE PURE FUNCTION FacetMatrix15_4( masterElemSD, slaveElemSD, &
   & muMaster, muSlave, quadMap, opt ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: masterElemSD
   CLASS( ElemshapeData_ ), INTENT( IN ) :: slaveElemSD
@@ -138,15 +138,15 @@ MODULE PURE FUNCTION FacetMatrix5_4( masterElemSD, slaveElemSD, &
   INTEGER( I4B ), INTENT( IN ) :: quadMap(:)
   INTEGER( I4B ), INTENT( IN ) :: opt
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix5_4
+END FUNCTION FacetMatrix15_4
 END INTERFACE
 
-INTERFACE FacetMatrix5
-  MODULE PROCEDURE FacetMatrix5_4
-END INTERFACE FacetMatrix5
+INTERFACE FacetMatrix15
+  MODULE PROCEDURE FacetMatrix15_4
+END INTERFACE FacetMatrix15
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix5
+!                                                              FacetMatrix15
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -161,7 +161,7 @@ END INTERFACE FacetMatrix5
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix5_5( masterElemSD, slaveElemSD, &
+MODULE PURE FUNCTION FacetMatrix15_5( masterElemSD, slaveElemSD, &
   & muMaster, muSlave, tauMaster, tauSlave, quadMap, opt ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: masterElemSD
   CLASS( ElemshapeData_ ), INTENT( IN ) :: slaveElemSD
@@ -172,15 +172,15 @@ MODULE PURE FUNCTION FacetMatrix5_5( masterElemSD, slaveElemSD, &
   INTEGER( I4B ), INTENT( IN ) :: quadMap(:)
   INTEGER( I4B ), INTENT( IN ) :: opt
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix5_5
+END FUNCTION FacetMatrix15_5
 END INTERFACE
 
-INTERFACE FacetMatrix5
-  MODULE PROCEDURE FacetMatrix5_5
-END INTERFACE FacetMatrix5
+INTERFACE FacetMatrix15
+  MODULE PROCEDURE FacetMatrix15_5
+END INTERFACE FacetMatrix15
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix5
+!                                                              FacetMatrix15
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -195,7 +195,7 @@ END INTERFACE FacetMatrix5
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix5_6( masterElemSD, slaveElemSD, &
+MODULE PURE FUNCTION FacetMatrix15_6( masterElemSD, slaveElemSD, &
   & muMaster, muSlave, tauMaster, tauSlave, quadMap, opt ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: masterElemSD
   CLASS( ElemshapeData_ ), INTENT( IN ) :: slaveElemSD
@@ -206,9 +206,9 @@ MODULE PURE FUNCTION FacetMatrix5_6( masterElemSD, slaveElemSD, &
   INTEGER( I4B ), INTENT( IN ) :: quadMap(:)
   INTEGER( I4B ), INTENT( IN ) :: opt
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
-END FUNCTION FacetMatrix5_6
+END FUNCTION FacetMatrix15_6
 END INTERFACE
 
-INTERFACE FacetMatrix5
-  MODULE PROCEDURE FacetMatrix5_6
-END INTERFACE FacetMatrix5
+INTERFACE FacetMatrix15
+  MODULE PROCEDURE FacetMatrix15_6
+END INTERFACE FacetMatrix15

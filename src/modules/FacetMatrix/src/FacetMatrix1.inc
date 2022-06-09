@@ -28,8 +28,9 @@ PUBLIC :: FacetMatrix1
 !# Introduction
 !
 ! $$
-! \int_{\Gamma_{e}}[[{\bf d}\left(\delta\bar{{\bf v}}\right)
-! \cdot{\bf n}]]\cdot[[{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}]]dS
+! \int_{\Gamma_{e}}\tau\left[2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)\cdot
+! {\bf n}\right]\cdot\left[2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}
+! \right]dS
 ! $$
 
 INTERFACE
@@ -57,8 +58,9 @@ END INTERFACE FacetMatrix1
 !# Introduction
 !
 ! $$
-! \int_{\Gamma_{e}}[[2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)
-! \cdot{\bf n}]]\cdot[[2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}]]dS
+! \int_{\Gamma_{e}}\tau\left[2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)\cdot
+! {\bf n}\right]\cdot\left[2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}
+! \right]dS
 ! $$
 
 INTERFACE
@@ -120,7 +122,7 @@ END INTERFACE FacetMatrix1
 !# Introduction
 !
 ! $$
-! \int_{\Gamma_{e}}[[2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)
+! \int_{\Gamma_{e}}\tau_{E1}[[2\mu{\bf d}\left(\delta\bar{{\bf v}}\right)
 ! \cdot{\bf n}]]\cdot[[2\mu{\bf d}\left(\bar{{\bf v}}\right)\cdot{\bf n}]]dS
 ! $$
 

@@ -15,13 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-  INTEGER(I4B) :: nrow, ncol
-
-  nrow = SIZE(b,1) + 1
-  ncol = MAX(SIZE(b,2), SIZE(a))
-
-  CALL reallocate(ans, nrow, ncol)
-
-  ans(1, 1:SIZE(a)) = a
-
-  ans(2:, 1:SIZE(b,2)) = b
+!!
+INTEGER(I4B) :: ii
+!!
+ans = .TRUE.
+IF (SIZE(a) .GT. SIZE(b)) THEN
+  ans = .FALSE.
+  RETURN
+END IF
+!!
+DO ii = 1, SIZE(a)
+  IF (.NOT. ANY(a(ii) .EQ. b)) THEN
+    ans = .FALSE.
+    EXIT
+  END IF
+END DO

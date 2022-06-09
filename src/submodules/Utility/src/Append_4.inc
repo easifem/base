@@ -15,13 +15,31 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-  INTEGER(I4B) :: nrow, ncol
+IF (.NOT. ALLOCATED(A)) THEN
+  !!
+  IF (SIZE(ENTRY) .NE. 0) THEN
+    m = COUNT( mask )
+    IF( m .NE. 0 ) THEN
+      A = PACK( ENTRY, mask )
+    ELSE
+      ALLOCATE( A(0) )
+    END IF
+  ELSE
+    ALLOCATE (A(0))
+  END IF
+  !!
+ELSE
+  !!
+  IF (SIZE(ENTRY) .NE. 0) THEN
+    m = COUNT( mask )
+    IF( m .NE. 0 ) THEN
+      n = SIZE(A)
+      ALLOCATE (Dummy(n + m))
+      Dummy(1:n) = A
+      Dummy(n + 1:) = PACK( ENTRY, mask )
+      CALL MOVE_ALLOC(From=Dummy, To=A)
+    END IF
+  END IF
+END IF
+!!
 
-  nrow = SIZE(b,1) + 1
-  ncol = MAX(SIZE(b,2), SIZE(a))
-
-  CALL reallocate(ans, nrow, ncol)
-
-  ans(1, 1:SIZE(a)) = a
-
-  ans(2:, 1:SIZE(b,2)) = b

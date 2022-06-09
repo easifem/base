@@ -27,254 +27,13 @@ CONTAINS
 MODULE PROCEDURE FacetMatrix1_1
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), masterG12( :, :, : ), slaveG12( :, :, : ), &
-    & m4( :, :, :, : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd, slaveips
+    & slaveC1( :, : ), m4( :, :, :, : ), G12( :, :, : ), i3( :, : )
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nns2, nsd, slaveips
   !!
-  nns = SIZE( masterElemSD%N, 1 )
-  nips = SIZE( masterElemSD%N, 2 )
-  nsd = masterElemSD%refelem%nsd
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
-  !!
-  CALL getProjectionOfdNdXt(obj=masterElemSD, cdNdXt=masterC1, &
-    & val=masterElemSD%normal )
-  !!
-  CALL getProjectionOfdNdXt(obj=slaveElemSD, cdNdXt=slaveC1, &
-    & val=slaveElemSD%normal )
-  !!
-  CALL Reallocate( masterG12, nns, nsd, nsd )
-  CALL Reallocate( slaveG12, nns, nsd, nsd )
-  CALL Reallocate(m4, nns, nns, nsd, nsd )
-  !!
-  DO ips = 1, nips
-    slaveips=quadMap(ips)
-    !!
-    masterG12 = OUTERPROD( masterC1( :, ips ), eye( nsd, 1.0_DFP ) ) &
-      & + OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
-      & masterElemSD%normal( 1:nsd, ips ) )
-    !!
-    slaveG12 = OUTERPROD( slaveC1( :, slaveips ), eye( nsd ) ) &
-      & + OUTERPROD( slaveElemSD%dNdXt( :, :, slaveips ), &
-      & slaveElemSD%normal( 1:nsd, slaveips ) )
-    !!
-    DO jj = 1, nsd
-      !!
-      DO ii = 1, nsd
-        !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * MATMUL( masterG12( :, :, ii ), &
-          & TRANSPOSE( slaveG12( :, :, jj ) ) )
-        !!
-      END DO
-      !!
-    END DO
-    !!
-  END DO
-  !!
-  CALL Convert( from=m4, to=ans )
-  !!
-  DEALLOCATE( m4, realval, masterC1, slaveC1, masterG12, slaveG12 )
-  !!
-END PROCEDURE FacetMatrix1_1
-
-!----------------------------------------------------------------------------
-!                                                              FacetMatrix1
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE FacetMatrix1_2
-  !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), masterG12( :, :, : ), slaveG12( :, :, : ), &
-    & m4( :, :, :, : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd, slaveips
-  !!
-  nns = SIZE( masterElemSD%N, 1 )
-  nips = SIZE( masterElemSD%N, 2 )
-  nsd = masterElemSD%refelem%nsd
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
-  !!
-  CALL getProjectionOfdNdXt(obj=masterElemSD, cdNdXt=masterC1, &
-    & val=masterElemSD%normal )
-  !!
-  CALL getProjectionOfdNdXt(obj=slaveElemSD, cdNdXt=slaveC1, &
-    & val=slaveElemSD%normal )
-  !!
-  CALL Reallocate(masterG12, nns, nsd, nsd)
-  CALL Reallocate(slaveG12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
-  !!
-  DO ips = 1, nips
-    slaveips=quadMap(ips)
-    !!
-    masterG12 = muMaster*OUTERPROD(masterC1( :, ips ), eye( nsd, 1.0_DFP )) &
-      & + muMaster*OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
-      & masterElemSD%normal( 1:nsd, ips ) )
-    !!
-    slaveG12 = muSlave*OUTERPROD( slaveC1( :, slaveips ), eye( nsd ) ) &
-      & + muSlave*OUTERPROD( slaveElemSD%dNdXt( :, :, slaveips ), &
-      & slaveElemSD%normal( 1:nsd, slaveips ) )
-    !!
-    DO jj = 1, nsd
-      !!
-      DO ii = 1, nsd
-        !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * MATMUL( masterG12( :, :, ii ), &
-          & TRANSPOSE( slaveG12( :, :, jj ) ) )
-        !!
-      END DO
-      !!
-    END DO
-    !!
-  END DO
-  !!
-  CALL Convert( from=m4, to=ans )
-  !!
-  DEALLOCATE( m4, realval, masterC1, slaveC1, masterG12, slaveG12 )
-  !!
-END PROCEDURE FacetMatrix1_2
-
-!----------------------------------------------------------------------------
-!                                                              FacetMatrix1
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE FacetMatrix1_3
-  !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), masterG12( :, :, : ), slaveG12( :, :, : ), &
-    & m4( :, :, :, : ), taubar( : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd, slaveips
-  !!
-  nns = SIZE( masterElemSD%N, 1 )
-  nips = SIZE( masterElemSD%N, 2 )
-  nsd = masterElemSD%refelem%nsd
-  !!
-  CALL getProjectionOfdNdXt(obj=masterElemSD, cdNdXt=masterC1, &
-    & val=masterElemSD%normal )
-  !!
-  CALL getProjectionOfdNdXt(obj=slaveElemSD, cdNdXt=slaveC1, &
-    & val=slaveElemSD%normal )
-  !!
-  CALL getInterpolation(obj=masterElemSD, Interpol=taubar, val=tauvar)
-  !!
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness &
-    & * taubar
-  !!
-  CALL Reallocate(masterG12, nns, nsd, nsd)
-  CALL Reallocate(slaveG12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
-  !!
-  DO ips = 1, nips
-    slaveips=quadMap(ips)
-    !!
-    masterG12=muMaster*OUTERPROD( masterC1( :, ips ), eye( nsd, 1.0_DFP ) ) &
-      & + muMaster*OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
-      & masterElemSD%normal( 1:nsd, ips ) )
-    !!
-    slaveG12 = muSlave*OUTERPROD( slaveC1( :, slaveips ), eye( nsd ) ) &
-      & + muSlave*OUTERPROD( slaveElemSD%dNdXt( :, :, slaveips ), &
-      & slaveElemSD%normal( 1:nsd, slaveips ) )
-    !!
-    DO jj = 1, nsd
-      !!
-      DO ii = 1, nsd
-        !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * MATMUL( masterG12( :, :, ii ), &
-          & TRANSPOSE( slaveG12( :, :, jj ) ) )
-        !!
-      END DO
-      !!
-    END DO
-    !!
-  END DO
-  !!
-  CALL Convert( from=m4, to=ans )
-  !!
-  DEALLOCATE( m4, realval, masterC1, slaveC1, masterG12, slaveG12, taubar )
-  !!
-END PROCEDURE FacetMatrix1_3
-
-!----------------------------------------------------------------------------
-!                                                              FacetMatrix1
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE FacetMatrix1_4
-  !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), masterG12( :, :, : ), slaveG12( :, :, : ), &
-    & m4( :, :, :, : ), muMasterBar( : ), muSlaveBar( : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd, slaveips
-  !!
-  nns = SIZE( masterElemSD%N, 1 )
-  nips = SIZE( masterElemSD%N, 2 )
-  nsd = masterElemSD%refelem%nsd
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
-  !!
-  CALL getProjectionOfdNdXt(obj=masterElemSD, cdNdXt=masterC1, &
-    & val=masterElemSD%normal )
-  CALL getProjectionOfdNdXt(obj=slaveElemSD, cdNdXt=slaveC1, &
-    & val=slaveElemSD%normal )
-  CALL getInterpolation( obj=masterElemSD, interpol=muMasterBar, &
-    & val=muMaster )
-  CALL getInterpolation( obj=slaveElemSD, interpol=muSlaveBar, &
-    & val=muSlave )
-  !!
-  CALL Reallocate(masterG12, nns, nsd, nsd)
-  CALL Reallocate(slaveG12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
-  !!
-  DO ips = 1, nips
-    slaveips=quadMap(ips)
-    !!
-    masterG12 = muMasterBar( ips ) &
-      & * OUTERPROD( masterC1( :, ips ), eye( nsd, 1.0_DFP ) ) &
-      & + muMasterBar( ips ) &
-      & * OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
-      & masterElemSD%normal( 1:nsd, ips ) )
-    !!
-    slaveG12 = muSlaveBar( slaveips ) &
-      & * OUTERPROD( slaveC1( :, slaveips ), eye( nsd ) ) &
-      & + muSlaveBar( ips ) &
-      & * OUTERPROD( slaveElemSD%dNdXt( :, :, slaveips ), &
-      & slaveElemSD%normal( 1:nsd, slaveips ) )
-    !!
-    DO jj = 1, nsd
-      !!
-      DO ii = 1, nsd
-        !!
-        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * MATMUL( masterG12( :, :, ii ), &
-          & TRANSPOSE( slaveG12( :, :, jj ) ) )
-        !!
-      END DO
-      !!
-    END DO
-    !!
-  END DO
-  !!
-  CALL Convert( from=m4, to=ans )
-  !!
-  DEALLOCATE( m4, realval, masterC1, slaveC1, masterG12, muMasterBar, &
-    & muSlaveBar, slaveG12 )
-  !!
-END PROCEDURE FacetMatrix1_4
-
-!----------------------------------------------------------------------------
-!                                                              FacetMatrix1
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE FacetMatrix1_5
-  !!
-  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
-    & slaveC1( :, : ), masterG12( :, :, : ), slaveG12( :, :, : ), &
-    & m4( :, :, :, : ), muMasterBar( : ), muSlaveBar( : ), &
-    & tauBar( : )
-  INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd, slaveips
-  !!
-  nns = SIZE( masterElemSD%N, 1 )
-  nips = SIZE( masterElemSD%N, 2 )
-  nsd = masterElemSD%refelem%nsd
+  nns1 = SIZE( masterElemSD%dNdXt, 1 )
+  nsd = SIZE( masterElemSD%dNdXt, 2 )
+  nips = SIZE( masterElemSD%dNdXt, 3 )
+  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
   !!
   CALL getProjectionOfdNdXt( &
     & obj=masterElemSD, &
@@ -286,41 +45,25 @@ MODULE PROCEDURE FacetMatrix1_5
     & cdNdXt=slaveC1, &
     & val=slaveElemSD%normal )
   !!
-  CALL getInterpolation( &
-    & obj=masterElemSD, &
-    & interpol=muMasterBar, &
-    & val=muMaster )
+  i3 = eye( nsd )
   !!
-  CALL getInterpolation( &
-    & obj=slaveElemSD, &
-    & interpol=muSlaveBar, &
-    & val=muSlave )
+  CALL Reallocate( G12, nns1+nns2, nsd, nsd )
+  CALL Reallocate( m4, nns1+nns2, nns1+nns2, nsd, nsd )
   !!
-  CALL getInterpolation( &
-    & obj=masterElemSD, &
-    & interpol=tauBar, &
-    & val=tauvar )
-  !!
-  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness &
-    * tauBar
-  !!
-  CALL Reallocate(masterG12, nns, nsd, nsd)
-  CALL Reallocate(slaveG12, nns, nsd, nsd)
-  CALL Reallocate(m4, nns, nns, nsd, nsd)
+  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
   !!
   DO ips = 1, nips
+    !!
     slaveips=quadMap(ips)
     !!
-    masterG12 = muMasterBar( ips ) &
-      & * OUTERPROD( masterC1( :, ips ), eye( nsd, 1.0_DFP ) ) &
-      & + muMasterBar( ips ) &
-      & * OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
+    G12( 1:nns1, :, : ) = OUTERPROD( &
+      & masterC1( :, ips ), i3 ) &
+      & + OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
       & masterElemSD%normal( 1:nsd, ips ) )
     !!
-    slaveG12 = muSlaveBar( slaveips ) &
-      & * OUTERPROD( slaveC1( :, slaveips ), eye( nsd ) ) &
-      & + muSlaveBar( slaveips ) &
-      & * OUTERPROD( slaveElemSD%dNdXt( :, :, slaveips ), &
+    G12( nns1+1:, :, : ) = OUTERPROD( &
+      & slaveC1( :, slaveips ), i3 ) &
+      & + OUTERPROD( slaveElemSD%dNdXt( :, :, slaveips ), &
       & slaveElemSD%normal( 1:nsd, slaveips ) )
     !!
     DO jj = 1, nsd
@@ -328,8 +71,8 @@ MODULE PROCEDURE FacetMatrix1_5
       DO ii = 1, nsd
         !!
         m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
-          & + realval( ips ) * MATMUL( masterG12( :, :, ii ), &
-          & TRANSPOSE( slaveG12( :, :, jj ) ) )
+          & + realval( ips ) * MATMUL( G12( :, :, ii ), &
+          & TRANSPOSE( G12( :, :, jj ) ) )
         !!
       END DO
       !!
@@ -339,10 +82,292 @@ MODULE PROCEDURE FacetMatrix1_5
   !!
   CALL Convert( from=m4, to=ans )
   !!
-  DEALLOCATE( m4, realval, masterC1, slaveC1, masterG12, muMasterBar, &
-    & muSlaveBar, slaveG12 )
+  DEALLOCATE( realval, masterC1, slaveC1, m4, G12, i3 )
+  !!
+END PROCEDURE FacetMatrix1_1
+
+!----------------------------------------------------------------------------
+!                                                              FacetMatrix1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetMatrix1_2
+  !!
+  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
+    & slaveC1( :, : ), m4( :, :, :, : ), G12( :, :, : ), i3( :, : )
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nns2, nsd, slaveips
+  !!
+  nns1 = SIZE( masterElemSD%dNdXt, 1 )
+  nsd = SIZE( masterElemSD%dNdXt, 2 )
+  nips = SIZE( masterElemSD%dNdXt, 3 )
+  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
+  !!
+  CALL getProjectionOfdNdXt( &
+    & obj=masterElemSD, &
+    & cdNdXt=masterC1, &
+    & val=masterElemSD%normal )
+  !!
+  CALL getProjectionOfdNdXt( &
+    & obj=slaveElemSD, &
+    & cdNdXt=slaveC1, &
+    & val=slaveElemSD%normal )
+  !!
+  i3 = eye( nsd )
+  !!
+  CALL Reallocate( G12, nns1+nns2, nsd, nsd )
+  CALL Reallocate( m4, nns1+nns2, nns1+nns2, nsd, nsd )
+  !!
+  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
+  !!
+  DO ips = 1, nips
+    !!
+    slaveips=quadMap(ips)
+    !!
+    G12( 1:nns1, :, : ) = muMaster*OUTERPROD( &
+      & masterC1( :, ips ), i3 ) &
+      & + muMaster*OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
+      & masterElemSD%normal( 1:nsd, ips ) )
+    !!
+    G12( nns1+1:, :, : ) = muSlave*OUTERPROD( &
+      & slaveC1( :, slaveips ), i3 ) &
+      & + muSlave*OUTERPROD( slaveElemSD%dNdXt( :, :, slaveips ), &
+      & slaveElemSD%normal( 1:nsd, slaveips ) )
+    !!
+    DO jj = 1, nsd
+      !!
+      DO ii = 1, nsd
+        !!
+        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
+          & + realval( ips ) * MATMUL( G12( :, :, ii ), &
+          & TRANSPOSE( G12( :, :, jj ) ) )
+        !!
+      END DO
+      !!
+    END DO
+    !!
+  END DO
+  !!
+  CALL Convert( from=m4, to=ans )
+  !!
+  DEALLOCATE( realval, masterC1, slaveC1, m4, G12, i3 )
+  !!
+END PROCEDURE FacetMatrix1_2
+
+!----------------------------------------------------------------------------
+!                                                              FacetMatrix1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetMatrix1_3
+  !!
+  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
+    & slaveC1( :, : ), m4( :, :, :, : ), G12( :, :, : ), i3( :, : ), &
+    & taubar( : )
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nns2, nsd, slaveips
+  !!
+  nns1 = SIZE( masterElemSD%dNdXt, 1 )
+  nsd = SIZE( masterElemSD%dNdXt, 2 )
+  nips = SIZE( masterElemSD%dNdXt, 3 )
+  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
+  !!
+  CALL getProjectionOfdNdXt( &
+    & obj=masterElemSD, &
+    & cdNdXt=masterC1, &
+    & val=masterElemSD%normal )
+  !!
+  CALL getProjectionOfdNdXt( &
+    & obj=slaveElemSD, &
+    & cdNdXt=slaveC1, &
+    & val=slaveElemSD%normal )
+  !!
+  CALL getInterpolation(obj=masterElemSD, Interpol=taubar, val=tauvar)
+  !!
+  i3 = eye( nsd )
+  !!
+  CALL Reallocate( G12, nns1+nns2, nsd, nsd )
+  CALL Reallocate( m4, nns1+nns2, nns1+nns2, nsd, nsd )
+  !!
+  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness &
+    & * taubar
+  !!
+  DO ips = 1, nips
+    !!
+    slaveips=quadMap(ips)
+    !!
+    G12( 1:nns1, :, : ) = muMaster*OUTERPROD( &
+      & masterC1( :, ips ), i3 ) &
+      & + muMaster*OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
+      & masterElemSD%normal( 1:nsd, ips ) )
+    !!
+    G12( nns1+1:, :, : ) = muSlave*OUTERPROD( &
+      & slaveC1( :, slaveips ), i3 ) &
+      & + muSlave*OUTERPROD( slaveElemSD%dNdXt( :, :, slaveips ), &
+      & slaveElemSD%normal( 1:nsd, slaveips ) )
+    !!
+    DO jj = 1, nsd
+      !!
+      DO ii = 1, nsd
+        !!
+        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
+          & + realval( ips ) * MATMUL( G12( :, :, ii ), &
+          & TRANSPOSE( G12( :, :, jj ) ) )
+        !!
+      END DO
+      !!
+    END DO
+    !!
+  END DO
+  !!
+  CALL Convert( from=m4, to=ans )
+  !!
+  DEALLOCATE( realval, masterC1, slaveC1, m4, G12, i3, taubar )
+  !!
+END PROCEDURE FacetMatrix1_3
+
+!----------------------------------------------------------------------------
+!                                                              FacetMatrix1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetMatrix1_4
+  !!
+  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
+    & slaveC1( :, : ), m4( :, :, :, : ), G12( :, :, : ), i3( :, : ), &
+    & muMasterBar( : ), muSlaveBar( : )
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nns2, nsd, slaveips
+  !!
+  nns1 = SIZE( masterElemSD%dNdXt, 1 )
+  nsd = SIZE( masterElemSD%dNdXt, 2 )
+  nips = SIZE( masterElemSD%dNdXt, 3 )
+  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
+  !!
+  CALL getProjectionOfdNdXt( &
+    & obj=masterElemSD, &
+    & cdNdXt=masterC1, &
+    & val=masterElemSD%normal )
+  !!
+  CALL getProjectionOfdNdXt( &
+    & obj=slaveElemSD, &
+    & cdNdXt=slaveC1, &
+    & val=slaveElemSD%normal )
+  !!
+  CALL getInterpolation( obj=masterElemSD, interpol=muMasterBar, &
+    & val=muMaster )
+  CALL getInterpolation( obj=slaveElemSD, interpol=muSlaveBar, &
+    & val=muSlave )
+  !!
+  i3 = eye( nsd )
+  !!
+  CALL Reallocate( G12, nns1+nns2, nsd, nsd )
+  CALL Reallocate( m4, nns1+nns2, nns1+nns2, nsd, nsd )
+  !!
+  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness
+  !!
+  DO ips = 1, nips
+    !!
+    slaveips=quadMap(ips)
+    !!
+    G12( 1:nns1, :, : ) = muMasterBar( ips )*OUTERPROD( &
+      & masterC1( :, ips ), i3 ) &
+      & + muMasterBar( ips )*OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
+      & masterElemSD%normal( 1:nsd, ips ) )
+    !!
+    G12( nns1+1:, :, : ) = muSlaveBar( slaveips )*OUTERPROD( &
+      & slaveC1( :, slaveips ), i3 ) &
+      & + muSlaveBar(slaveips)*OUTERPROD(slaveElemSD%dNdXt(:,:,slaveips), &
+      & slaveElemSD%normal( 1:nsd, slaveips ) )
+    !!
+    DO jj = 1, nsd
+      !!
+      DO ii = 1, nsd
+        !!
+        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
+          & + realval( ips ) * MATMUL( G12( :, :, ii ), &
+          & TRANSPOSE( G12( :, :, jj ) ) )
+        !!
+      END DO
+      !!
+    END DO
+    !!
+  END DO
+  !!
+  CALL Convert( from=m4, to=ans )
+  !!
+  DEALLOCATE( realval, masterC1, slaveC1, m4, G12, i3, muMasterBar, &
+    & muSlaveBar )
+  !!
+END PROCEDURE FacetMatrix1_4
+
+!----------------------------------------------------------------------------
+!                                                              FacetMatrix1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetMatrix1_5
+  !!
+  REAL( DFP ), ALLOCATABLE :: realval( : ), masterC1( :, : ), &
+    & slaveC1( :, : ), m4( :, :, :, : ), G12( :, :, : ), i3( :, : ), &
+    & muMasterBar( : ), muSlaveBar( : ), taubar( : )
+  INTEGER( I4B ) :: ips, ii, jj, nips, nns1, nns2, nsd, slaveips
+  !!
+  nns1 = SIZE( masterElemSD%dNdXt, 1 )
+  nsd = SIZE( masterElemSD%dNdXt, 2 )
+  nips = SIZE( masterElemSD%dNdXt, 3 )
+  nns2 = SIZE( slaveElemSD%dNdXt, 1 )
+  !!
+  CALL getProjectionOfdNdXt( &
+    & obj=masterElemSD, &
+    & cdNdXt=masterC1, &
+    & val=masterElemSD%normal )
+  !!
+  CALL getProjectionOfdNdXt( &
+    & obj=slaveElemSD, &
+    & cdNdXt=slaveC1, &
+    & val=slaveElemSD%normal )
+  !!
+  CALL getInterpolation( obj=masterElemSD, interpol=muMasterBar, &
+    & val=muMaster )
+  CALL getInterpolation( obj=slaveElemSD, interpol=muSlaveBar, &
+    & val=muSlave )
+  CALL getInterpolation( obj=masterElemSD, interpol=taubar, val=tauvar )
+  !!
+  i3 = eye( nsd )
+  !!
+  CALL Reallocate( G12, nns1+nns2, nsd, nsd )
+  CALL Reallocate( m4, nns1+nns2, nns1+nns2, nsd, nsd )
+  !!
+  realval = masterElemSD%js * masterElemSD%ws * masterElemSD%thickness &
+    & * taubar
+  !!
+  DO ips = 1, nips
+    !!
+    slaveips=quadMap(ips)
+    !!
+    G12( 1:nns1, :, : ) = muMasterBar( ips )*OUTERPROD( &
+      & masterC1( :, ips ), i3 ) &
+      & + muMasterBar( ips )*OUTERPROD( masterElemSD%dNdXt( :, :, ips ),  &
+      & masterElemSD%normal( 1:nsd, ips ) )
+    !!
+    G12( nns1+1:, :, : ) = muSlaveBar( slaveips )*OUTERPROD( &
+      & slaveC1( :, slaveips ), i3 ) &
+      & + muSlaveBar(slaveips)*OUTERPROD(slaveElemSD%dNdXt(:,:,slaveips), &
+      & slaveElemSD%normal( 1:nsd, slaveips ) )
+    !!
+    DO jj = 1, nsd
+      !!
+      DO ii = 1, nsd
+        !!
+        m4( :, :, ii, jj ) = m4( :, :, ii, jj ) &
+          & + realval( ips ) * MATMUL( G12( :, :, ii ), &
+          & TRANSPOSE( G12( :, :, jj ) ) )
+        !!
+      END DO
+      !!
+    END DO
+    !!
+  END DO
+  !!
+  CALL Convert( from=m4, to=ans )
+  !!
+  DEALLOCATE( realval, masterC1, slaveC1, m4, G12, i3, muMasterBar, &
+    & muSlaveBar, taubar )
   !!
 END PROCEDURE FacetMatrix1_5
-
 
 END SUBMODULE FacetMatrix1Methods

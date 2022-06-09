@@ -15,185 +15,143 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FacetMatrix_Method) FacetMatrix6Methods
+SUBMODULE(FacetMatrix_Method) FacetMatrix12Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE FacetMatrix6_1
+MODULE PROCEDURE FacetMatrix12_1
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : )
   INTEGER( I4B ) :: ips, nips, nns, nsd
   !!
   nns = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
   nips = SIZE( elemsd%dNdXt, 3 )
-  nsd = elemsd%refelem%nsd
+  CALL Reallocate(ans, nns, nns)
+  CALL getProjectionOfdNdXt( &
+    & obj=elemsd, &
+    & cdNdXt=C1, &
+    & val=elemsd%normal )
   realval = elemsd%js * elemsd%ws * elemsd%thickness
-  !!
-  CALL getProjectionOfdNdXt( &
-    & obj=elemsd, &
-    & cdNdXt=C1, &
-    & val=elemsd%normal )
-  !!
-  CALL Reallocate(ans, nns, nns)
-  !!
   DO ips = 1, nips
-    !!
     ans( :, : ) = ans( :, : ) &
       & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-    !!
   END DO
-  !!
-  CALL MakeDiagonalCopies(ans, nsd)
-  !!
+  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
   DEALLOCATE( realval, C1 )
   !!
-END PROCEDURE FacetMatrix6_1
+END PROCEDURE FacetMatrix12_1
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE FacetMatrix6_2
+MODULE PROCEDURE FacetMatrix12_2
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : )
   INTEGER( I4B ) :: ips, nips, nns, nsd
   !!
   nns = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
   nips = SIZE( elemsd%dNdXt, 3 )
-  nsd = elemsd%refelem%nsd
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * mu * mu
-  !!
+  CALL Reallocate(ans, nns, nns)
   CALL getProjectionOfdNdXt( &
     & obj=elemsd, &
     & cdNdXt=C1, &
     & val=elemsd%normal )
-  !!
-  CALL Reallocate(ans, nns, nns)
-  !!
+  realval = elemsd%js * elemsd%ws * elemsd%thickness * mu * mu
   DO ips = 1, nips
-    !!
     ans( :, : ) = ans( :, : ) &
       & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-    !!
   END DO
-  !!
-  CALL MakeDiagonalCopies(ans, nsd)
-  !!
+  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
   DEALLOCATE( realval, C1 )
   !!
-END PROCEDURE FacetMatrix6_2
+END PROCEDURE FacetMatrix12_2
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE FacetMatrix6_3
+MODULE PROCEDURE FacetMatrix12_3
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : ), taubar( : )
   INTEGER( I4B ) :: ips, nips, nns, nsd
   !!
   nns = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
   nips = SIZE( elemsd%dNdXt, 3 )
-  nsd = elemsd%refelem%nsd
-  !!
+  CALL Reallocate(ans, nns, nns)
   CALL getProjectionOfdNdXt( &
     & obj=elemsd, &
     & cdNdXt=C1, &
     & val=elemsd%normal )
-  !!
   CALL getInterpolation(obj=elemsd, Interpol=taubar, val=tauvar)
-  !!
   realval = elemsd%js * elemsd%ws * elemsd%thickness * taubar * mu * mu
-  !!
-  CALL Reallocate(ans, nns, nns)
-  !!
   DO ips = 1, nips
-    !!
     ans( :, : ) = ans( :, : ) &
       & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-    !!
   END DO
-  !!
-  CALL MakeDiagonalCopies(ans, nsd)
-  !!
+  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
   DEALLOCATE( realval, C1, taubar )
   !!
-END PROCEDURE FacetMatrix6_3
+END PROCEDURE FacetMatrix12_3
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE FacetMatrix6_4
+MODULE PROCEDURE FacetMatrix12_4
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : ), muBar( : )
   INTEGER( I4B ) :: ips, nips, nns, nsd
   !!
   nns = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
   nips = SIZE( elemsd%dNdXt, 3 )
-  nsd = elemsd%refelem%nsd
-  !!
-  CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal )
-  !!
-  CALL getInterpolation( obj=elemsd, interpol=muBar, val=mu )
-  !!
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * muBar * muBar
-  !!
   CALL Reallocate(ans, nns, nns)
-  !!
+  CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal )
+  CALL getInterpolation( obj=elemsd, interpol=muBar, val=mu )
+  realval = elemsd%js * elemsd%ws * elemsd%thickness * muBar * muBar
   DO ips = 1, nips
-    !!
     ans( :, : ) = ans( :, : ) &
       & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-    !!
   END DO
-  !!
-  CALL MakeDiagonalCopies(ans, nsd)
-  !!
+  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
   DEALLOCATE( realval, C1, muBar )
   !!
-END PROCEDURE FacetMatrix6_4
+END PROCEDURE FacetMatrix12_4
 
 !----------------------------------------------------------------------------
-!                                                              FacetMatrix6
+!                                                              FacetMatrix12
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE FacetMatrix6_5
+MODULE PROCEDURE FacetMatrix12_5
   !!
   REAL( DFP ), ALLOCATABLE :: realval( : ), C1( :, : ), &
     & muBar( : ), tauBar( : )
   INTEGER( I4B ) :: ips, ii, jj, nips, nns, nsd
   !!
   nns = SIZE( elemsd%dNdXt, 1 )
+  nsd = SIZE( elemsd%dNdXt, 2 )
   nips = SIZE( elemsd%dNdXt, 3 )
-  nsd = elemsd%refelem%nsd
-  !!
-  CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal )
-  !!
-  CALL getInterpolation( obj=elemsd, interpol=muBar, val=mu )
-  !!
-  CALL getInterpolation( obj=elemsd, interpol=tauBar, val=tauvar )
-  !!
-  realval = elemsd%js * elemsd%ws * elemsd%thickness * tauBar * muBar * muBar
-  !!
   CALL Reallocate(ans, nns, nns)
-  !!
+  CALL getProjectionOfdNdXt(obj=elemsd, cdNdXt=C1, val=elemsd%normal )
+  CALL getInterpolation( obj=elemsd, interpol=muBar, val=mu )
+  CALL getInterpolation( obj=elemsd, interpol=tauBar, val=tauvar )
+  realval = elemsd%js * elemsd%ws * elemsd%thickness * tauBar * muBar * muBar
   DO ips = 1, nips
-    !!
     ans( :, : ) = ans( :, : ) &
       & + realval( ips )*OUTERPROD( C1( :, ips ), C1( :, ips ) )
-    !!
   END DO
-  !!
-  CALL MakeDiagonalCopies(ans, nsd)
-  !!
+  IF( PRESENT( nCopy ) ) CALL MakeDiagonalCopies(ans, nCopy)
   DEALLOCATE( realval, C1, muBar )
   !!
-END PROCEDURE FacetMatrix6_5
+END PROCEDURE FacetMatrix12_5
 
-END SUBMODULE FacetMatrix6Methods
+END SUBMODULE FacetMatrix12Methods

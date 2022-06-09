@@ -23,5 +23,10 @@ TARGET_SOURCES(
   ${src_path}/FacetMatrix_Method@FacetMatrix3Methods.F90
   ${src_path}/FacetMatrix_Method@FacetMatrix4Methods.F90
   ${src_path}/FacetMatrix_Method@FacetMatrix5Methods.F90
-  ${src_path}/FacetMatrix_Method@FacetMatrix6Methods.F90
+  ${src_path}/FacetMatrix_Method@FacetMatrix11Methods.F90
+  ${src_path}/FacetMatrix_Method@FacetMatrix12Methods.F90
+  ${src_path}/FacetMatrix_Method@FacetMatrix13Methods.F90
+  ${src_path}/FacetMatrix_Method@FacetMatrix14Methods.F90
+  ${src_path}/FacetMatrix_Method@FacetMatrix15Methods.F90
+  ${src_path}/FacetMatrix_Method@FacetMatrix21Methods.F90
 )

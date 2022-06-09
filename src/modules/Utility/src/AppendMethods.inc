@@ -16,7 +16,9 @@
 !
 
 PUBLIC :: ColConcat
+PUBLIC :: OPERATOR( .ColConcat. )
 PUBLIC :: RowConcat
+PUBLIC :: OPERATOR( .RowConcat. )
 PUBLIC :: Append
 
 !----------------------------------------------------------------------------
@@ -37,10 +39,22 @@ INTERFACE
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
   END SUBROUTINE Append_1b
+
+  MODULE PURE SUBROUTINE Append_1c(C, A, B)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    INTEGER( I4B ), INTENT( IN ) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: B
+  END SUBROUTINE Append_1c
+
+  MODULE PURE SUBROUTINE Append_1d(C, A, B)
+    REAL( DFP ), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    REAL( DFP ), INTENT( IN ) :: A(:)
+    REAL( DFP ), INTENT(IN) :: B
+  END SUBROUTINE Append_1d
 END INTERFACE
 
 INTERFACE Append
-  MODULE PROCEDURE Append_1a, Append_1b
+  MODULE PROCEDURE Append_1a, Append_1b, Append_1c, Append_1d
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -61,10 +75,102 @@ INTERFACE
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY(:)
   END SUBROUTINE Append_2b
+
+  MODULE PURE SUBROUTINE Append_2c(C, A, B)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    INTEGER(I4B), INTENT(IN) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: B(:)
+  END SUBROUTINE Append_2c
+
+  MODULE PURE SUBROUTINE Append_2d(C, A, B)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    REAL(DFP), INTENT(IN) :: A(:)
+    REAL(DFP), INTENT(IN) :: B(:)
+  END SUBROUTINE Append_2d
 END INTERFACE
 
 INTERFACE Append
-  MODULE PROCEDURE Append_2a, Append_2b
+  MODULE PROCEDURE Append_2a, Append_2b, Append_2c, Append_2d
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      Append@AppendMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date:  22 March 2021
+! summary: Append a scalar INTEGER  to  INTEGER  vec tor
+
+INTERFACE
+  MODULE PURE SUBROUTINE Append_3a(A, ENTRY, mask)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: ENTRY
+    LOGICAL( LGT ), INTENT( IN ) :: mask
+  END SUBROUTINE Append_3a
+
+  MODULE PURE SUBROUTINE Append_3b(A, ENTRY, mask)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    REAL(DFP), INTENT(IN) :: ENTRY
+    LOGICAL( LGT ), INTENT( IN ) :: mask
+  END SUBROUTINE Append_3b
+
+  MODULE PURE SUBROUTINE Append_3c(C, A, B, mask)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    INTEGER( I4B ), INTENT( IN ) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: B
+    LOGICAL( LGT ), INTENT( IN ) :: mask
+  END SUBROUTINE Append_3c
+
+  MODULE PURE SUBROUTINE Append_3d(C, A, B, mask)
+    REAL( DFP ), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    REAL( DFP ), INTENT( IN ) :: A(:)
+    REAL( DFP ), INTENT(IN) :: B
+    LOGICAL( LGT ), INTENT( IN ) :: mask
+  END SUBROUTINE Append_3d
+END INTERFACE
+
+INTERFACE Append
+  MODULE PROCEDURE Append_3a, Append_3b, Append_3c, Append_3d
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      Append@AppendMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date:  22 March 2021
+! summary: Append two vectors of INTEGER
+
+INTERFACE
+  MODULE PURE SUBROUTINE Append_4a(A, ENTRY, mask)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: ENTRY(:)
+    LOGICAL( LGT ), INTENT( IN ) :: mask(:)
+  END SUBROUTINE Append_4a
+
+  MODULE PURE SUBROUTINE Append_4b(A, ENTRY, mask)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
+    REAL(DFP), INTENT(IN) :: ENTRY(:)
+    LOGICAL( LGT ), INTENT( IN ) :: mask(:)
+  END SUBROUTINE Append_4b
+
+  MODULE PURE SUBROUTINE Append_4c(C, A, B, mask)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    INTEGER(I4B), INTENT(IN) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: B(:)
+    LOGICAL( LGT ), INTENT( IN ) :: mask(:)
+  END SUBROUTINE Append_4c
+
+  MODULE PURE SUBROUTINE Append_4d(C, A, B, mask)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    REAL(DFP), INTENT(IN) :: A(:)
+    REAL(DFP), INTENT(IN) :: B(:)
+    LOGICAL( LGT ), INTENT( IN ) :: mask(:)
+  END SUBROUTINE Append_4d
+END INTERFACE
+
+INTERFACE Append
+  MODULE PROCEDURE Append_4a, Append_4b, Append_4c, Append_4d
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -119,6 +225,11 @@ INTERFACE ColConcat
     & colConcat_1d, colConcat_1e, colConcat_1f
 END INTERFACE ColConcat
 
+INTERFACE OPERATOR(.ColConcat.)
+  MODULE PROCEDURE colConcat_1a, colConcat_1b, colConcat_1c, &
+    & colConcat_1d, colConcat_1e, colConcat_1f
+END INTERFACE
+
 !----------------------------------------------------------------------------
 !                                                    ColConcat@AppendMethods
 !----------------------------------------------------------------------------
@@ -170,6 +281,11 @@ INTERFACE ColConcat
   MODULE PROCEDURE colConcat_2a, colConcat_2b, colConcat_2c, &
     & colConcat_2d, colConcat_2e, colConcat_2f
 END INTERFACE ColConcat
+
+INTERFACE OPERATOR(.ColConcat.)
+  MODULE PROCEDURE colConcat_2a, colConcat_2b, colConcat_2c, &
+    & colConcat_2d, colConcat_2e, colConcat_2f
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                    ColConcat@AppendMethods
@@ -223,6 +339,11 @@ INTERFACE ColConcat
     & colConcat_3d, colConcat_3e, colConcat_3f
 END INTERFACE ColConcat
 
+INTERFACE OPERATOR(.ColConcat.)
+  MODULE PROCEDURE colConcat_3a, colConcat_3b, colConcat_3c, &
+    & colConcat_3d, colConcat_3e, colConcat_3f
+END INTERFACE
+
 !----------------------------------------------------------------------------
 !                                                    ColConcat@AppendMethods
 !----------------------------------------------------------------------------
@@ -274,6 +395,11 @@ INTERFACE ColConcat
   MODULE PROCEDURE colConcat_4a, colConcat_4b, colConcat_4c, &
     & colConcat_4d, colConcat_4e, colConcat_4f
 END INTERFACE ColConcat
+
+INTERFACE OPERATOR(.ColConcat.)
+  MODULE PROCEDURE colConcat_4a, colConcat_4b, colConcat_4c, &
+    & colConcat_4d, colConcat_4e, colConcat_4f
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                    ColConcat@AppendMethods
@@ -327,6 +453,11 @@ INTERFACE rowConcat
     & rowConcat_1d, rowConcat_1e, rowConcat_1f
 END INTERFACE rowConcat
 
+INTERFACE OPERATOR(.rowConcat.)
+  MODULE PROCEDURE rowConcat_1a, rowConcat_1b, rowConcat_1c, &
+    & rowConcat_1d, rowConcat_1e, rowConcat_1f
+END INTERFACE
+
 !----------------------------------------------------------------------------
 !                                                    rowConcat@AppendMethods
 !----------------------------------------------------------------------------
@@ -378,6 +509,11 @@ INTERFACE rowConcat
   MODULE PROCEDURE rowConcat_2a, rowConcat_2b, rowConcat_2c, &
     & rowConcat_2d, rowConcat_2e, rowConcat_2f
 END INTERFACE rowConcat
+
+INTERFACE OPERATOR(.rowConcat.)
+  MODULE PROCEDURE rowConcat_2a, rowConcat_2b, rowConcat_2c, &
+    & rowConcat_2d, rowConcat_2e, rowConcat_2f
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                    rowConcat@AppendMethods
@@ -431,6 +567,11 @@ INTERFACE rowConcat
     & rowConcat_3d, rowConcat_3e, rowConcat_3f
 END INTERFACE rowConcat
 
+INTERFACE OPERATOR(.rowConcat.)
+  MODULE PROCEDURE rowConcat_3a, rowConcat_3b, rowConcat_3c, &
+    & rowConcat_3d, rowConcat_3e, rowConcat_3f
+END INTERFACE
+
 !----------------------------------------------------------------------------
 !                                                    rowConcat@AppendMethods
 !----------------------------------------------------------------------------
@@ -482,3 +623,8 @@ INTERFACE rowConcat
   MODULE PROCEDURE rowConcat_4a, rowConcat_4b, rowConcat_4c, &
     & rowConcat_4d, rowConcat_4e, rowConcat_4f
 END INTERFACE rowConcat
+
+INTERFACE OPERATOR(.rowConcat.)
+  MODULE PROCEDURE rowConcat_4a, rowConcat_4b, rowConcat_4c, &
+    & rowConcat_4d, rowConcat_4e, rowConcat_4f
+END INTERFACE
