@@ -34,8 +34,9 @@ PUBLIC :: FacetMatrix12
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix12_1( elemsd ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_1( elemsd, nCopy ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
 END FUNCTION FacetMatrix12_1
 END INTERFACE
@@ -61,9 +62,10 @@ END INTERFACE FacetMatrix12
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix12_2( elemsd, mu ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_2( elemsd, mu, nCopy ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
   REAL( DFP ), INTENT( IN ) :: mu
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
 END FUNCTION FacetMatrix12_2
 END INTERFACE
@@ -89,10 +91,12 @@ END INTERFACE FacetMatrix12
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix12_3( elemsd, mu, tauvar ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_3( elemsd, mu, tauvar, nCopy ) &
+  & RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
   REAL( DFP ), INTENT( IN ) :: mu
   TYPE( FEVariable_ ), INTENT( IN ) :: tauvar
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
 END FUNCTION FacetMatrix12_3
 END INTERFACE
@@ -118,9 +122,10 @@ END INTERFACE FacetMatrix12
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix12_4( elemsd, mu ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_4( elemsd, mu, nCopy ) RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
   TYPE( FEVariable_ ), INTENT( IN ) :: mu
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
 END FUNCTION FacetMatrix12_4
 END INTERFACE
@@ -146,10 +151,12 @@ END INTERFACE FacetMatrix12
 ! $$
 
 INTERFACE
-MODULE PURE FUNCTION FacetMatrix12_5( elemsd, mu, tauvar ) RESULT( ans )
+MODULE PURE FUNCTION FacetMatrix12_5( elemsd, mu, tauvar, nCopy ) &
+  & RESULT( ans )
   CLASS( ElemshapeData_ ), INTENT( IN ) :: elemsd
   TYPE( FEVariable_ ), INTENT( IN ) :: mu
   TYPE( FEVariable_ ), INTENT( IN ) :: tauvar
+  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: nCopy
   REAL( DFP ), ALLOCATABLE :: ans( :, : )
 END FUNCTION FacetMatrix12_5
 END INTERFACE
