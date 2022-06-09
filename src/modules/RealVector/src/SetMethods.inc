@@ -18,7 +18,7 @@
 PUBLIC :: Set
 
 !----------------------------------------------------------------------------
-!                                                            set@SetMethod
+!                                                            set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -37,7 +37,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@SetMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -57,7 +57,7 @@ END INTERFACE Set
 
 
 !----------------------------------------------------------------------------
-!                                                            set@SetMethod
+!                                                            set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -77,7 +77,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -97,7 +97,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                            set@SetMethod
+!                                                            set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -117,7 +117,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                              set@SetMethod
+!                                                              set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -137,7 +137,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@SetMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -157,7 +157,7 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -179,7 +179,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -200,7 +200,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -222,7 +222,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -244,7 +244,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -267,7 +267,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -290,7 +290,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -315,7 +315,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -340,7 +340,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -365,7 +365,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -390,7 +390,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -415,7 +415,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -440,7 +440,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -461,7 +461,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -483,7 +483,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -506,7 +506,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -531,7 +531,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -556,7 +556,7 @@ INTERFACE set
 END INTERFACE set
 
 !----------------------------------------------------------------------------
-!                                                             set@setMethod
+!                                                             set@setMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -578,4 +578,23 @@ END INTERFACE
 
 INTERFACE set
   MODULE PROCEDURE realvec_set25
+END INTERFACE set
+
+!----------------------------------------------------------------------------
+!                                                            set@setMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 9 June 2022
+! summary: obj1=obj2
+
+INTERFACE
+MODULE PURE SUBROUTINE realVec_set26( obj, value )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
+  CLASS( RealVector_ ), INTENT( IN ) :: value
+END SUBROUTINE realVec_set26
+END INTERFACE
+
+INTERFACE set
+  MODULE PROCEDURE realVec_set26
 END INTERFACE set
