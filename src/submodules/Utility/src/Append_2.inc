@@ -15,6 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+
 IF (.NOT. ALLOCATED(A)) THEN
   IF (SIZE(ENTRY) .NE. 0) THEN
     A = ENTRY
@@ -22,9 +23,18 @@ IF (.NOT. ALLOCATED(A)) THEN
     ALLOCATE (A(0))
   END IF
 ELSE
-  IF (SIZE(ENTRY) .NE. 0) THEN
-    m = SIZE(ENTRY); n = SIZE(A)
-    ALLOCATE (Dummy(n + m)); Dummy(1:n) = A; Dummy(n + 1:) = ENTRY
-    CALL MOVE_ALLOC(From=Dummy, To=A)
+  IF( SIZE( A ) .NE. 0 ) THEN
+    IF (SIZE(ENTRY) .NE. 0) THEN
+      m = SIZE(ENTRY); n = SIZE(A)
+      ALLOCATE (Dummy(n + m)); Dummy(1:n) = A; Dummy(n + 1:) = ENTRY
+      CALL MOVE_ALLOC(From=Dummy, To=A)
+    END IF
+  ELSE
+    IF (SIZE(ENTRY) .NE. 0) THEN
+      m = SIZE(ENTRY)
+      ALLOCATE (Dummy(m))
+      Dummy(1:) = ENTRY
+      CALL MOVE_ALLOC(From=Dummy, To=A)
+    END IF
   END IF
 END IF
