@@ -55,7 +55,7 @@ INTEGER(I4B), PARAMETER :: NPAR_POLYTERM = 8
 #include "HexahedronInterpolationPoints.inc"
 #include "PrismInterpolationPoints.inc"
 #include "PyramidInterpolationPoints.inc"
-
+#include "IntegerMethods.inc"
 
 !----------------------------------------------------------------------------
 !
