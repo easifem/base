@@ -87,7 +87,7 @@ TYPE(BoundingBox_), PUBLIC, PARAMETER :: TypeBoundingBox = &
 ! summary: Contains the pointer to the [[BoundingBox_]] data type.
 
 TYPE :: BoundingBoxPointer_
-  CLASS(BoundingBoxPointer_), POINTER :: Ptr => NULL()
+  CLASS(BoundingBoxPointer_), POINTER :: ptr => NULL()
 END TYPE BoundingBoxPointer_
 
 PUBLIC :: BoundingBoxPointer_
@@ -115,7 +115,7 @@ TYPE(RealMatrix_), PUBLIC, PARAMETER :: &
     & Val=NULL())
 
 TYPE :: RealMatrixPointer_
-  CLASS(RealMatrix_), POINTER :: Ptr => NULL()
+  CLASS(RealMatrix_), POINTER :: ptr => NULL()
 END TYPE RealMatrixPointer_
 
 PUBLIC :: RealMatrixPointer_
@@ -140,7 +140,7 @@ PUBLIC :: IntVector_
 TYPE(IntVector_), PUBLIC, PARAMETER :: TypeIntVector = IntVector_(Val=NULL())
 
 TYPE :: IntVectorPointer_
-  CLASS(IntVector_), POINTER :: Ptr => NULL()
+  CLASS(IntVector_), POINTER :: ptr => NULL()
 END TYPE IntVectorPointer_
 
 PUBLIC :: IntVectorPointer_
@@ -166,7 +166,7 @@ TYPE(RealVector_), PUBLIC, PARAMETER :: TypeRealVector = RealVector_( &
   & tDimension=1_I4B, Val=NULL())
 
 TYPE :: RealVectorPointer_
-  CLASS(RealVector_), POINTER :: Ptr => NULL()
+  CLASS(RealVector_), POINTER :: ptr => NULL()
 END TYPE RealVectorPointer_
 
 PUBLIC :: RealVectorPointer_
@@ -196,7 +196,7 @@ TYPE(Vector3D_), PUBLIC, PARAMETER :: TypeVector3D = Vector3D_( &
 !----------------------------------------------------------------------------
 
 TYPE :: Vector3DPointer_
-  CLASS(Vector3D_), POINTER :: Ptr => NULL()
+  CLASS(Vector3D_), POINTER :: ptr => NULL()
 END TYPE Vector3DPointer_
 
 PUBLIC :: Vector3DPointer_
@@ -220,7 +220,7 @@ TYPE(IndexValue_), PUBLIC, PARAMETER :: TypeIndexValue = &
   & IndexValue_(Indx=0, Val=0.0_DFP)
 
 TYPE :: IndexValuePointer_
-  CLASS(IndexValue_), POINTER :: Ptr => NULL()
+  CLASS(IndexValue_), POINTER :: ptr => NULL()
 END TYPE IndexValuePointer_
 
 PUBLIC :: IndexValuePointer_
@@ -249,7 +249,7 @@ PUBLIC :: DOF_
 TYPE(DOF_), PUBLIC, PARAMETER :: TypeDOF = DOF_(MAP=NULL(), ValMap=NULL())
 
 TYPE :: DOFPointer_
-  CLASS(DOF_), POINTER :: Ptr => NULL()
+  CLASS(DOF_), POINTER :: ptr => NULL()
 END TYPE DOFPointer_
 
 PUBLIC :: DOFPointer_
@@ -335,7 +335,7 @@ PUBLIC :: CSRMatrix_
 TYPE(CSRMatrix_), PUBLIC, PARAMETER :: TypeCSRMatrix = CSRMatrix_(A=NULL())
 
 TYPE :: CSRMatrixPointer_
-  CLASS(CSRMatrix_), POINTER :: Ptr => NULL()
+  CLASS(CSRMatrix_), POINTER :: ptr => NULL()
 END TYPE CSRMatrixPointer_
 
 PUBLIC :: CSRMatrixPointer_
@@ -390,7 +390,7 @@ TYPE(IterationData_), PUBLIC, PARAMETER :: TypeIterationData = &
   & IterationData_( header=NULL() )
 
 TYPE :: IterationDataPointer_
-  CLASS(IterationData_), POINTER :: Ptr => NULL()
+  CLASS(IterationData_), POINTER :: ptr => NULL()
 END TYPE IterationDataPointer_
 
 PUBLIC :: IterationDataPointer_
@@ -415,7 +415,7 @@ TYPE(VoigtRank2Tensor_), PARAMETER, PUBLIC :: &
   & TypeVoigtRank2Tensor = VoigtRank2Tensor_()
 
 TYPE :: VoigtRank2TensorPointer
-  CLASS(VoigtRank2Tensor_), POINTER :: Ptr => NULL()
+  CLASS(VoigtRank2Tensor_), POINTER :: ptr => NULL()
 END TYPE VoigtRank2TensorPointer
 
 PUBLIC :: VoigtRank2TensorPointer
@@ -442,7 +442,7 @@ TYPE(Rank2Tensor_), PARAMETER, PUBLIC :: &
   & TypeRank2Tensor = Rank2Tensor_()
 
 TYPE :: Rank2TensorPointer_
-  CLASS(Rank2Tensor_), POINTER :: Ptr => NULL()
+  CLASS(Rank2Tensor_), POINTER :: ptr => NULL()
 END TYPE Rank2TensorPointer_
 
 PUBLIC :: Rank2TensorPointer_
@@ -459,7 +459,7 @@ TYPE(DeformationGradient_), PUBLIC, PARAMETER :: &
   & TypeDeformationGradient = DeformationGradient_()
 
 TYPE :: DeformationGradientPointer_
-  CLASS(DeformationGradient_), POINTER :: Ptr => NULL()
+  CLASS(DeformationGradient_), POINTER :: ptr => NULL()
 END TYPE DeformationGradientPointer_
 
 PUBLIC :: DeformationGradientPointer_
@@ -489,7 +489,7 @@ TYPE(LeftCauchyGreen_), PUBLIC, PARAMETER :: &
   & TypeLeftCauchyGreen = LeftCauchyGreen_()
 
 TYPE :: LeftCauchyGreenPointer_
-  CLASS(LeftCauchyGreen_), POINTER :: Ptr => NULL()
+  CLASS(LeftCauchyGreen_), POINTER :: ptr => NULL()
 END TYPE LeftCauchyGreenPointer_
 
 PUBLIC :: LeftCauchyGreenPointer_
@@ -519,7 +519,7 @@ TYPE(RightCauchyGreen_), PUBLIC, PARAMETER :: &
   & TypeRightCauchyGreen = RightCauchyGreen_()
 
 TYPE :: RightCauchyGreenPointer_
-  CLASS(RightCauchyGreen_), POINTER :: Ptr => NULL()
+  CLASS(RightCauchyGreen_), POINTER :: ptr => NULL()
 END TYPE RightCauchyGreenPointer_
 
 PUBLIC :: RightCauchyGreenPointer_
@@ -537,7 +537,7 @@ TYPE(Strain_), PUBLIC, PARAMETER :: &
   & TypeStrain = Strain_()
 
 TYPE :: StrainPointer_
-  CLASS(Strain_), POINTER :: Ptr => NULL()
+  CLASS(Strain_), POINTER :: ptr => NULL()
 END TYPE StrainPointer_
 
 PUBLIC :: StrainPointer_
@@ -555,7 +555,7 @@ TYPE(AlmansiStrain_), PUBLIC, PARAMETER :: &
   & TypeAlmansiStrain = AlmansiStrain_()
 
 TYPE :: AlmansiStrainPointer_
-  CLASS(AlmansiStrain_), POINTER :: Ptr => NULL()
+  CLASS(AlmansiStrain_), POINTER :: ptr => NULL()
 END TYPE AlmansiStrainPointer_
 
 PUBLIC :: AlmansiStrainPointer_
@@ -573,7 +573,7 @@ TYPE(GreenStrain_), PUBLIC, PARAMETER :: &
   & TypeGreenStrain = GreenStrain_()
 
 TYPE :: GreenStrainPointer_
-  CLASS(GreenStrain_), POINTER :: Ptr => NULL()
+  CLASS(GreenStrain_), POINTER :: ptr => NULL()
 END TYPE GreenStrainPointer_
 
 PUBLIC :: GreenStrainPointer_
@@ -591,7 +591,7 @@ TYPE(SmallStrain_), PUBLIC, PARAMETER :: &
   & TypeSmallStrain = SmallStrain_()
 
 TYPE :: SmallStrainPointer_
-  CLASS(SmallStrain_), POINTER :: Ptr => NULL()
+  CLASS(SmallStrain_), POINTER :: ptr => NULL()
 END TYPE SmallStrainPointer_
 
 PUBLIC :: SmallStrainPointer_
@@ -607,15 +607,15 @@ PUBLIC :: SmallStrainPointer_
 !{!pages/ReferenceElement_.md}
 
 TYPE :: ReferenceTopology_
-  INTEGER(I4B), ALLOCATABLE :: Nptrs(:)
-  INTEGER(I4B) :: Name = 0
-  INTEGER(I4B) :: XiDimension = 0
+  INTEGER(I4B), ALLOCATABLE :: nptrs(:)
+  INTEGER(I4B) :: name = 0
+  INTEGER(I4B) :: xiDimension = 0
 END TYPE ReferenceTopology_
 
 PUBLIC :: ReferenceTopology_
 
 TYPE :: ReferenceTopologyPointer_
-  CLASS(ReferenceTopology_), POINTER :: Ptr => NULL()
+  CLASS(ReferenceTopology_), POINTER :: ptr => NULL()
 END TYPE ReferenceTopologyPointer_
 
 PUBLIC :: ReferenceTopologyPointer_
@@ -638,7 +638,7 @@ TYPE :: ReferenceElement_
   INTEGER(I4B) :: xiDimension = 0
     !! Xidimension
   INTEGER(I4B) :: name = 0
-    !! Name of the element
+    !! name of the element
   INTEGER(I4B) :: order = 0
     !! Order of element
   INTEGER(I4B) :: nsd = 0
@@ -655,7 +655,7 @@ END TYPE ReferenceElement_
 PUBLIC :: ReferenceElement_
 
 TYPE :: ReferenceElementPointer_
-  CLASS(ReferenceElement_), POINTER :: Ptr => NULL()
+  CLASS(ReferenceElement_), POINTER :: ptr => NULL()
 END TYPE ReferenceElementPointer_
 
 PUBLIC :: ReferenceElementPointer_
@@ -687,7 +687,7 @@ PUBLIC :: ReferencePoint_
 
 TYPE(ReferencePoint_), PARAMETER, PUBLIC :: &
   & TypeReferencePoint = ReferencePoint_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], XiDimension=0, Name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -707,7 +707,7 @@ PUBLIC :: ReferenceLine_
 
 TYPE(ReferenceLine_), PARAMETER, PUBLIC :: &
   & TypeReferenceLine = ReferenceLine_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], XiDimension=0, Name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -726,7 +726,7 @@ PUBLIC :: ReferenceTriangle_
 
 TYPE(ReferenceTriangle_), PARAMETER, PUBLIC :: &
   & TypeReferenceTriangle = ReferenceTriangle_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], XiDimension=0, Name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -747,7 +747,7 @@ PUBLIC :: ReferenceQuadrangle_
 TYPE(ReferenceQuadrangle_), PARAMETER, PUBLIC :: &
   & TypeReferenceQuadrangle &
   & = ReferenceQuadrangle_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], XiDimension=0, Name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -768,7 +768,7 @@ PUBLIC :: ReferenceTetrahedron_
 TYPE(ReferenceTetrahedron_), PARAMETER, PUBLIC :: &
   & TypeReferenceTetrahedron &
   & = ReferenceTetrahedron_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], XiDimension=0, Name=0, &
+  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], xiDimension=0, name=0, &
   & Topology=NULL(), Order=0, NSD=0)
 
 !----------------------------------------------------------------------------
@@ -791,8 +791,8 @@ TYPE(ReferenceHexahedron_), PARAMETER, PUBLIC :: &
   & = ReferenceHexahedron_( &
   & XiJ=NULL(), &
   & EntityCounts=[0, 0, 0, 0], &
-  & XiDimension=0, &
-  & Name=0, &
+  & xiDimension=0, &
+  & name=0, &
   & Topology=NULL(), &
   & Order=0, &
   & NSD=0)
@@ -816,8 +816,8 @@ TYPE(ReferencePrism_), PARAMETER, PUBLIC :: TypeReferencePrism &
   & = ReferencePrism_( &
   & XiJ=NULL(), &
   & EntityCounts=[0, 0, 0, 0], &
-  & XiDimension=0, &
-  & Name=0, &
+  & xiDimension=0, &
+  & name=0, &
   & Topology=NULL(), &
   & Order=0, &
   & NSD=0)
@@ -841,8 +841,8 @@ TYPE(ReferencePyramid_), PARAMETER, PUBLIC :: TypeReferencePyramid &
   & = ReferencePyramid_( &
   & XiJ=NULL(), &
   & EntityCounts=[0, 0, 0, 0], &
-  & XiDimension=0, &
-  & Name=0, &
+  & xiDimension=0, &
+  & name=0, &
   & Topology=NULL(), &
   & Order=0, &
   & NSD=0)
@@ -1068,7 +1068,7 @@ TYPE(QuadraturePoint_), PUBLIC, PARAMETER :: &
   & TypeQuadraturePoint = QuadraturePoint_(points=NULL())
 
 TYPE :: QuadraturePointPointer_
-  CLASS(QuadraturePoint_), POINTER :: Ptr => NULL()
+  CLASS(QuadraturePoint_), POINTER :: ptr => NULL()
 END TYPE QuadraturePointPointer_
 
 PUBLIC :: QuadraturePointPointer_
@@ -1216,7 +1216,7 @@ TYPE :: ElementData_
   INTEGER(I4B) :: NNE = -1
   INTEGER(I4B) :: NNS = -1
   INTEGER(I4B) :: NNT = -1
-  INTEGER(I4B) :: XiDimension = -1
+  INTEGER(I4B) :: xiDimension = -1
   INTEGER(I4B) :: ElemTopology = -1
   INTEGER(I4B) :: SpaceElemTopo = -1
   INTEGER(I4B) :: TimeElemTopo = -1
@@ -1229,7 +1229,7 @@ PUBLIC :: ElementData_
 TYPE(ElementData_), PARAMETER, PUBLIC :: TypeElementData = ElementData_()
 
 TYPE :: ElementDataPointer_
-  CLASS(ElementData_), POINTER :: Ptr => NULL()
+  CLASS(ElementData_), POINTER :: ptr => NULL()
 END TYPE ElementDataPointer_
 
 PUBLIC :: ElementDataPointer_
@@ -1267,7 +1267,7 @@ TYPE(ShapeData_), PARAMETER, PUBLIC :: &
     & Jacobian=NULL())
 
 TYPE :: ShapeDataPointer_
-  CLASS(ShapeDataPointer_), POINTER :: Ptr => NULL()
+  CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
 END TYPE ShapeDataPointer_
 
 PUBLIC :: ShapeDataPointer_
@@ -1299,7 +1299,7 @@ END TYPE STShapeData_
 PUBLIC :: STShapeData_
 
 TYPE :: STShapeDataPointer_
-  CLASS(STShapeData_), POINTER :: Ptr => NULL()
+  CLASS(STShapeData_), POINTER :: ptr => NULL()
 END TYPE STShapeDataPointer_
 
 PUBLIC :: STShapeDataPointer_
@@ -1354,7 +1354,7 @@ TYPE(ElemShapeData_), PUBLIC, PARAMETER :: &
   & Normal=NULL())
 
 TYPE :: ElemShapeDataPointer_
-  CLASS(ShapeDataPointer_), POINTER :: Ptr => NULL()
+  CLASS(ShapeDataPointer_), POINTER :: ptr => NULL()
 END TYPE ElemShapeDataPointer_
 
 PUBLIC :: ElemShapeDataPointer_
