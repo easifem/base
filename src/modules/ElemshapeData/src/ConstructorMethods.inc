@@ -27,13 +27,13 @@ PUBLIC :: ASSIGNMENT(=)
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         4 March 2021
+! date: 4 March 2021
 ! summary: Allocate the memory for various matrices in the object
 !
 !# Introduction
 !
 ! This subroutine allocates the memory for various matrices in the object.
-! This subroutine belongs to the generic interface called `AllocateData()`.
+! This subroutine belongs to the generic interface called `Allocate()`.
 !
 
 INTERFACE
@@ -84,7 +84,7 @@ END INTERFACE Initiate
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
-! summary: obj1 = obj2
+! summary: Copy data from an instance of elemshapedata to another instance
 
 INTERFACE
   MODULE SUBROUTINE elemsd_initiate2( obj1, obj2 )
@@ -107,7 +107,12 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
-! summary: obj1 = obj2
+! summary: Initiate an instance of ElemshapeData from STElemshapeData
+!
+!# Introduction
+!
+! This subroutine initiates an instance of ElemshapeData by copying data
+! from an instance of STElemshapeData.
 
 INTERFACE
   MODULE SUBROUTINE elemsd_initiate3( obj1, obj2 )
@@ -130,7 +135,12 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
-! summary: obj1 = obj2
+! summary: This routine initiates an instance of STElemshapeData
+!
+!# Introduction
+!
+! This routine initiate an instance of STElemshapeData by copying data
+! from the instance of ElemshapeData
 
 INTERFACE
   MODULE SUBROUTINE elemsd_initiate4( obj1, obj2 )
@@ -153,7 +163,11 @@ END INTERFACE
 
 !> authors: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
-! summary: obj1 = obj2
+! summary: Initiate an instance of STElemshapeData from instance of same class
+!
+!# Introduction
+! This routine initiates an instance of STElemshapeData by copying data
+! from the instance of STElemshapeData.
 
 INTERFACE
   MODULE SUBROUTINE elemsd_initiate5( obj1, obj2 )
@@ -212,7 +226,7 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         4 March 2021
+! date: 4 March 2021
 ! summary: Deallocates the data stored inside [[elemshapedata_]]
 !
 !# Introduction
