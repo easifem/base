@@ -30,108 +30,87 @@ CONTAINS
 
 MODULE PROCEDURE elemsd_display_1
   !!
-  CALL Blanklines( unitno=unitno )
-  !!
   CALL Display( msg, unitno=unitno )
-  !!
-  CALL Blanklines( unitno=unitno )
-  !!
   CALL Display( "# SHAPE FUNCTION IN SPACE: ", unitno=unitno )
-  !!
   CALL Display( obj%Quad, "# Quadrature Point: ", unitno=unitno )
   !!
   IF( ALLOCATED( obj%N ) ) THEN
-    CALL Blanklines( unitno=unitno )
-    CALL Display( obj%N, "# obj%N: ", unitno )
+    CALL Display( obj%N, "# N: ", unitno )
   ELSE
-    CALL Display( "# obj%N: NOT ALLOCATED", unitno )
+    CALL Display( "# N: NOT ALLOCATED", unitno )
   END IF
   !!
   IF( ALLOCATED( obj%dNdXi ) ) THEN
-    CALL Blanklines( unitno=unitno )
-    CALL Display( obj%dNdXi, "# obj%dNdXi: ", unitno )
+    CALL Display( obj%dNdXi, "# dNdXi: ", unitno )
   ELSE
-    CALL Display( "# obj%dNdXi: NOT ALLOCATED", unitno )
+    CALL Display( "# dNdXi: NOT ALLOCATED", unitno )
   END IF
   !!
   IF( ALLOCATED( obj%dNdXt ) ) THEN
-    CALL Blanklines( unitno=unitno )
-    CALL Display( obj%dNdXt, "# obj%dNdXt: ", unitno )
+    CALL Display( obj%dNdXt, "# dNdXt: ", unitno )
   ELSE
-    CALL Display( "# obj%dNdXt: NOT ALLOCATED", unitno )
+    CALL Display( "# dNdXt: NOT ALLOCATED", unitno )
   END IF
   !!
-  IF( ALLOCATED( obj%Jacobian ) ) THEN
-    CALL Blanklines( unitno=unitno )
-    CALL Display( obj%Jacobian, "# obj%Jacobian: ", unitno )
+  IF( ALLOCATED( obj%jacobian ) ) THEN
+    CALL Display( obj%Jacobian, "# jacobian: ", unitno )
   ELSE
-    CALL Display( "# obj%Jacobian: NOT ALLOCATED", unitno )
+    CALL Display( "# jacobian: NOT ALLOCATED", unitno )
   END IF
   !!
-  IF( ALLOCATED( obj%Js ) ) THEN
-    CALL Blanklines( unitno=unitno )
-    CALL Display( obj%Js, "# obj%Js: ", unitno )
+  IF( ALLOCATED( obj%js ) ) THEN
+    CALL Display( obj%js, "# js: ", unitno )
   ELSE
-    CALL Display( "# obj%Js: NOT ALLOCATED", unitno )
+    CALL Display( "# js: NOT ALLOCATED", unitno )
   END IF
   !!
-  IF( ALLOCATED( obj%Thickness ) ) THEN
-    CALL Blanklines( unitno=unitno )
-    CALL Display( obj%Thickness, "# obj%Thickness: ", unitno )
+  IF( ALLOCATED( obj%thickness ) ) THEN
+    CALL Display( obj%thickness, "# thickness: ", unitno )
   ELSE
-    CALL Display( "# obj%Thickness: NOT ALLOCATED", unitno )
+    CALL Display( "# thickness: NOT ALLOCATED", unitno )
   END IF
   !!
-  IF( ALLOCATED( obj%Coord ) ) THEN
-    CALL Blanklines( unitno=unitno )
-    CALL Display( obj%Coord, "# obj%Coord: ", unitno )
+  IF( ALLOCATED( obj%coord ) ) THEN
+    CALL Display( obj%coord, "# coord: ", unitno )
   ELSE
-    CALL Display( "# obj%Coord: NOT ALLOCATED", unitno )
+    CALL Display( "# coord: NOT ALLOCATED", unitno )
   END IF
   !!
-  IF( ALLOCATED( obj%Normal ) ) THEN
-    CALL Blanklines( unitno=unitno )
-    CALL Display( obj%Normal, "# obj%Normal: ", unitno )
+  IF( ALLOCATED( obj%normal ) ) THEN
+    CALL Display( obj%normal, "# normal: ", unitno )
   ELSE
-    CALL Display( "# obj%Normal: NOT ALLOCATED", unitno )
+    CALL Display( "# normal: NOT ALLOCATED", unitno )
   END IF
   !!
-  SELECT TYPE( obj )
-  TYPE IS (STElemShapeData_)
-    CALL Blanklines( unitno=unitno )
+  SELECT TYPE( obj ); TYPE IS (STElemShapeData_)
     CALL Display( "# SHAPE FUNCTION IN TIME: ", unitno=unitno )
-    CALL Blanklines( unitno=unitno )
     !!
-    CALL Display( obj%Jt, "# obj%Jt: ", unitno=unitno  )
-    CALL Display( obj%Theta, "# obj%Theta: ", unitno=unitno  )
-    CALL Display( obj%Wt, "# obj%Wt: ", unitno=unitno  )
+    CALL Display( obj%jt, "# jt: ", unitno=unitno  )
+    CALL Display( obj%theta, "# theta: ", unitno=unitno  )
+    CALL Display( obj%wt, "# wt: ", unitno=unitno  )
     !!
     IF( ALLOCATED( obj%T ) ) THEN
-      CALL Blanklines( unitno=unitno )
-      CALL Display( obj%T, "# obj%T: ", unitno=unitno )
+      CALL Display( obj%T, "# T: ", unitno=unitno )
     ELSE
-      CALL Display( "# obj%T: NOT ALLOCATED", unitno=unitno )
+      CALL Display( "# T: NOT ALLOCATED", unitno=unitno )
     END IF
     !!
     IF( ALLOCATED( obj%dTdTheta ) ) THEN
-    CALL Blanklines( unitno=unitno )
-      CALL Display( obj%dTdTheta, "# obj%dTdTheta: ", unitno=unitno )
+      CALL Display( obj%dTdTheta, "# dTdTheta: ", unitno=unitno )
     ELSE
-      CALL Display( "# obj%dTdTheta: NOT ALLOCATED", unitno=unitno )
+      CALL Display( "# dTdTheta: NOT ALLOCATED", unitno=unitno )
     END IF
     !!
     IF( ALLOCATED( obj%dNTdt ) ) THEN
-      CALL Blanklines( unitno=unitno )
-      CALL Display( obj%dNTdt, "# obj%dNTdt: ", unitno=unitno )
+      CALL Display( obj%dNTdt, "# dNTdt: ", unitno=unitno )
     ELSE
-      CALL Display( "# obj%dNTdt: NOT ALLOCATED", unitno=unitno )
+      CALL Display( "# dNTdt: NOT ALLOCATED", unitno=unitno )
     END IF
     !!
     IF( ALLOCATED( obj%dNTdXt ) ) THEN
-      CALL Blanklines( unitno=unitno )
-      CALL Display( obj%dNTdXt, "# obj%dNTdXt: ", unitno=unitno )
+      CALL Display( obj%dNTdXt, "# dNTdXt: ", unitno=unitno )
     ELSE
-      CALL Display( "# obj%dNTdXt: NOT ALLOCATED", unitno=unitno )
+      CALL Display( "# dNTdXt: NOT ALLOCATED", unitno=unitno )
     END IF
     !!
   END SELECT
