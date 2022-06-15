@@ -18,8 +18,9 @@
 SUBMODULE(ElemshapeData_Method:H1Lagrange) Quadrangle
 USE BaseMethod
 IMPLICIT NONE
-
+!!
 CONTAINS
+!!
 !----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
@@ -27,21 +28,28 @@ CONTAINS
 MODULE PROCEDURE Quadrangle_H1_Lagrange
   INTEGER( I4B ) :: nips
   REAL( DFP ), ALLOCATABLE :: XiEta( :, : )
-
-  CALL Initiate( obj%RefElem, RefElem )
-  CALL getQuadraturePoints( obj = Quad, Point = XiEta,  Weight = obj%Ws )
-  obj%Quad = Quad
-  nips = SIZE( obj%Ws )
-
+  !!
+  CALL Initiate( obj%refelem, refelem )
+  CALL getQuadraturePoints( obj = quad, point = XiEta,  weight = obj%ws )
+  obj%quad = quad
+  nips = SIZE( obj%ws )
+  !!
   SELECT CASE( refelem%order )
+  !!
+  !! order=1
+  !!
   CASE( 1 )
     CALL Allocate( obj = obj, nsd = refelem%nsd, &
       & xidim = refelem%xidimension, nns = 4, nips = nips )
     !
-    obj%N( 1, : ) = (1.0_DFP - XiEta( 1, : ) )*(1.0_DFP - XiEta( 2, : ) )/4.0_DFP
-    obj%N( 2, : ) = (1.0_DFP + XiEta( 1, : ) )*(1.0_DFP - XiEta( 2, : ) )/4.0_DFP
-    obj%N( 3, : ) = (1.0_DFP + XiEta( 1, : ) )*(1.0_DFP + XiEta( 2, : ) )/4.0_DFP
-    obj%N( 4, : ) = (1.0_DFP - XiEta( 1, : ) )*(1.0_DFP + XiEta( 2, : ) )/4.0_DFP
+    obj%N( 1, : ) = (1.0_DFP - XiEta( 1, : ) )*(1.0_DFP - XiEta( 2, : ) ) &
+      & /4.0_DFP
+    obj%N( 2, : ) = (1.0_DFP + XiEta( 1, : ) )*(1.0_DFP - XiEta( 2, : ) ) &
+      & /4.0_DFP
+    obj%N( 3, : ) = (1.0_DFP + XiEta( 1, : ) )*(1.0_DFP + XiEta( 2, : ) ) &
+      & /4.0_DFP
+    obj%N( 4, : ) = (1.0_DFP - XiEta( 1, : ) )*(1.0_DFP + XiEta( 2, : ) ) &
+      & /4.0_DFP
     !
     obj%dNdXi( 1, 1, : ) = -(1.0_DFP - XiEta( 2, : ))/4.0_DFP
     obj%dNdXi( 1, 2, : ) = -(1.0_DFP - XiEta( 1, : ))/4.0_DFP
@@ -54,7 +62,7 @@ MODULE PROCEDURE Quadrangle_H1_Lagrange
   CASE DEFAULT
   END SELECT
   DEALLOCATE( XiEta )
-
+  !!
 END PROCEDURE Quadrangle_H1_Lagrange
 
 END SUBMODULE Quadrangle
