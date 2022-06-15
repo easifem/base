@@ -18,7 +18,7 @@
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
-!                                                                Display@IO
+!                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -31,10 +31,10 @@ PUBLIC :: Display
 ! [[stelemshapedata_]] on screen. this routine belongs to `Display()`.
 
 INTERFACE
-  MODULE SUBROUTINE elemsd_display_1(obj, Msg, UnitNo)
+  MODULE SUBROUTINE elemsd_display_1(obj, msg, unitNo)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: Msg
-    INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
+    CHARACTER(LEN=*), INTENT(IN) :: msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   END SUBROUTINE elemsd_display_1
 END INTERFACE
 
@@ -43,7 +43,7 @@ INTERFACE Display
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
-!                                                                Display@IO
+!                                                          Display@IOMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -51,10 +51,10 @@ END INTERFACE Display
 ! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
 
 INTERFACE
-  MODULE SUBROUTINE elemsd_display_2(obj, Msg, UnitNo)
+  MODULE SUBROUTINE elemsd_display_2(obj, msg, unitNo)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    CHARACTER(LEN=*), INTENT(IN) :: Msg
-    INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
+    CHARACTER(LEN=*), INTENT(IN) :: msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   END SUBROUTINE elemsd_display_2
 END INTERFACE
 
