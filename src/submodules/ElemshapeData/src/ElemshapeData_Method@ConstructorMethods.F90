@@ -268,11 +268,7 @@ MODULE PROCEDURE elemsd_initiate2
   IF( ALLOCATED( obj2%thickness ) ) obj1%thickness = obj2%thickness
   IF( ALLOCATED( obj2%coord ) ) obj1%coord = obj2%coord
   IF( ALLOCATED( obj2%normal ) ) obj1%normal = obj2%normal
-  IF( ASSOCIATED( obj2%refElem ) ) THEN
-    obj1%refElem => ReferenceElement_Pointer( obj2%refelem )
-  ELSE
-    obj1%refElem => NULL()
-  END IF
+  obj1%refElem = obj2%refElem
 END PROCEDURE elemsd_initiate2
 
 !----------------------------------------------------------------------------
@@ -289,11 +285,7 @@ MODULE PROCEDURE elemsd_initiate3
   IF( ALLOCATED( obj2%thickness ) ) obj1%thickness = obj2%thickness
   IF( ALLOCATED( obj2%coord ) ) obj1%coord = obj2%coord
   IF( ALLOCATED( obj2%normal ) ) obj1%normal = obj2%normal
-  IF( ASSOCIATED( obj2%refElem ) ) THEN
-    obj1%refElem => ReferenceElement_Pointer( obj2%refelem )
-  ELSE
-    obj1%refElem => NULL()
-  END IF
+  obj1%refElem = obj2%refElem
 END PROCEDURE elemsd_initiate3
 
 !----------------------------------------------------------------------------
@@ -310,11 +302,7 @@ MODULE PROCEDURE elemsd_initiate4
   IF( ALLOCATED( obj2%thickness ) ) obj1%thickness = obj2%thickness
   IF( ALLOCATED( obj2%coord ) ) obj1%coord = obj2%coord
   IF( ALLOCATED( obj2%normal ) ) obj1%normal = obj2%normal
-  IF( ASSOCIATED( obj2%refElem ) ) THEN
-    obj1%refElem => ReferenceElement_Pointer( obj2%refelem )
-  ELSE
-    obj1%refElem => NULL()
-  END IF
+  obj1%refElem = obj2%refElem
 END PROCEDURE elemsd_initiate4
 
 !----------------------------------------------------------------------------
@@ -332,11 +320,7 @@ MODULE PROCEDURE elemsd_initiate5
   IF( ALLOCATED( obj2%thickness ) ) obj1%thickness = obj2%thickness
   IF( ALLOCATED( obj2%coord ) ) obj1%coord = obj2%coord
   IF( ALLOCATED( obj2%normal ) ) obj1%normal = obj2%normal
-  IF( ASSOCIATED( obj2%refElem ) ) THEN
-    obj1%refElem => ReferenceElement_Pointer( obj2%refelem )
-  ELSE
-    obj1%refElem => NULL()
-  END IF
+  obj1%refElem = obj2%refElem
   obj1%wt = obj2%wt
   obj1%theta = obj2%theta
   obj1%jt = obj2%jt
@@ -361,9 +345,12 @@ MODULE PROCEDURE stsd_initiate
     obj( ip )%T = elemsd%N( :, ip )
     obj( ip )%dTdTheta = elemsd%dNdXi( :, 1, ip )
     obj( ip )%Jt = elemsd%Js( ip )
-    CALL getQuadraturePoints( obj = elemsd%Quad, Weight = obj( ip )%Wt,&
-      & Num = ip, Point = x )
-    obj( ip )%Theta = x( 1 )
+    CALL getQuadraturePoints( &
+      & obj = elemsd%quad, &
+      & weight = obj( ip )%wt,&
+      & num = ip, &
+      & point = x )
+    obj( ip )%theta = x( 1 )
   END DO
 END PROCEDURE stsd_initiate
 
@@ -382,11 +369,7 @@ MODULE PROCEDURE elemsd_Deallocate
   IF( ALLOCATED( obj%Thickness ) ) DEALLOCATE( obj%Thickness )
   IF( ALLOCATED( obj%Coord ) ) DEALLOCATE( obj%Coord )
   CALL Deallocate( obj%Quad )
-  !!
-  IF( ASSOCIATED(obj%refelem ) ) THEN
-    CALL Deallocate( obj%refelem )
-    DEALLOCATE( obj%refelem ); obj%refelem => NULL()
-  END IF
+  CALL Deallocate( obj%refelem )
   !!
   SELECT TYPE( obj )
   TYPE IS (STElemShapeData_)
