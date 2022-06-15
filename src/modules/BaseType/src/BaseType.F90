@@ -54,7 +54,7 @@ TYPE( Math_ ), PARAMETER, PUBLIC :: Math = Math_()
 !                                                               BoundingBox_
 !----------------------------------------------------------------------------
 
-! date:         23 Feb 2021
+! date: 23 Feb 2021
 !> authors: Vikas Sharma, Ph. D.
 ! summary: A data type to represent a bounding box;
 !
@@ -97,7 +97,7 @@ PUBLIC :: BoundingBoxPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         25 Feb 2021
+! date: 25 Feb 2021
 ! summary: A data type for an Array of rank 2 of real numbers
 !
 !{!pages/RealMatrix_.md!}
@@ -137,8 +137,7 @@ END TYPE IntVector_
 
 PUBLIC :: IntVector_
 
-TYPE(IntVector_), PUBLIC, PARAMETER :: TypeIntVector = IntVector_( &
-                                       tDimension=1_I4B, Val=NULL())
+TYPE(IntVector_), PUBLIC, PARAMETER :: TypeIntVector = IntVector_(Val=NULL())
 
 TYPE :: IntVectorPointer_
   CLASS(IntVector_), POINTER :: Ptr => NULL()
@@ -151,11 +150,10 @@ PUBLIC :: IntVectorPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         24 Feb 2021
-! summary:         A data type to contain fortran vector of real numbers
+! date: 24 Feb 2021
+! summary: A data type to contain fortran vector of real numbers
 !
 !{!pages/RealVector_.md!}
-!
 
 TYPE :: RealVector_
   INTEGER(I4B) :: tDimension = 1_I4B
@@ -166,10 +164,6 @@ PUBLIC :: RealVector_
 
 TYPE(RealVector_), PUBLIC, PARAMETER :: TypeRealVector = RealVector_( &
   & tDimension=1_I4B, Val=NULL())
-
-!> authors: Vikas Sharma, Ph. D.
-! date:         24 Feb 2021
-! summary:         A data type to contain pointer to [[RealVector_]].
 
 TYPE :: RealVectorPointer_
   CLASS(RealVector_), POINTER :: Ptr => NULL()
@@ -211,9 +205,9 @@ PUBLIC :: Vector3DPointer_
 !                                                              IndexValue_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! Index value key map; useful for defining nodal boundary conditions
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 June 2022
+! summary: 	Index value keymap; useful for defining nodal boundary conditions
 
 TYPE :: IndexValue_
   INTEGER(I4B) :: Indx
@@ -236,8 +230,8 @@ PUBLIC :: IndexValuePointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         Degree of freedom object type
+! date: 23 Feb 2021
+! summary: Degree of freedom object type
 !
 !{!pages/DOF.md!}
 
@@ -252,8 +246,7 @@ END TYPE DOF_
 
 PUBLIC :: DOF_
 
-TYPE(DOF_), PUBLIC, PARAMETER :: TypeDOF = DOF_(MAP=NULL(), &
-                                          ValMap=NULL(), StorageFMT=FMT_NODES)
+TYPE(DOF_), PUBLIC, PARAMETER :: TypeDOF = DOF_(MAP=NULL(), ValMap=NULL())
 
 TYPE :: DOFPointer_
   CLASS(DOF_), POINTER :: Ptr => NULL()
@@ -264,6 +257,10 @@ PUBLIC :: DOFPointer_
 !----------------------------------------------------------------------------
 !                                                            SparseOrdering
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 June 2022
+! summary: SparseMatrix reordering scheme
 
 TYPE :: SparseMatrixReOrdering_
   CHARACTER(LEN=10) :: name
@@ -319,8 +316,8 @@ PUBLIC :: CSRSparsityPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         User data type for handling CSR matrices
+! date: 22 March 2021
+! summary: User data type for handling CSR matrices
 !
 !{!pages/CSRMatrix_.md}
 
@@ -347,9 +344,9 @@ PUBLIC :: CSRMatrixPointer_
 !                                                            IterationData_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! Data-type to handle iteration parameters
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 June 2022
+! summary: Iteration data
 
 TYPE :: IterationData_
   INTEGER(I4B) :: maxIter = 100
@@ -402,9 +399,9 @@ PUBLIC :: IterationDataPointer_
 !                                                       VoigtRank2Tensor_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! Voigt representation of rank2 tensor
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 June 2022
+! summary: Voigt representation of rank2 tensor
 
 TYPE :: VoigtRank2Tensor_
   REAL(DFP) :: V(6) = 0.0_DFP
@@ -472,11 +469,12 @@ PUBLIC :: DeformationGradientPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Left Cauchy Green Deformation tensor
+! date: 22 March 2021
+! summary: Left Cauchy Green Deformation tensor
 !
 !# Introduction
-!         This data tyoe defines Left Cauchy Green Deformation tensor, which is an Eulerian tensor. It is symmetric and given by
+! This data tyoe defines Left Cauchy Green Deformation tensor, which
+! is an Eulerian tensor. It is symmetric and given by
 !
 ! $$b=F F^{T}=V^2$$
 !
@@ -501,8 +499,8 @@ PUBLIC :: LeftCauchyGreenPointer_
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Right Cauchy Green Deformation tensor
+! date: 22 March 2021
+! summary: Right Cauchy Green Deformation tensor
 !
 !# Introduction
 ! This data tyoe defines Right Cauchy Green Deformation tensor, which is an
@@ -697,8 +695,8 @@ TYPE(ReferencePoint_), PARAMETER, PUBLIC :: &
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary:         This data type defines a reference line element
+! date: 3 March 2021
+! summary: This data type defines a reference line
 !
 !{!pages/ReferenceLine.md}
 
@@ -717,8 +715,8 @@ TYPE(ReferenceLine_), PARAMETER, PUBLIC :: &
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary:         This data type defines a reference line triangle
+! date: 3 March 2021
+! summary: This data type defines a reference triangle
 !
 !{!pages/ReferenceTriangle.md}
 TYPE, EXTENDS(ReferenceElement_) :: ReferenceTriangle_
@@ -736,8 +734,8 @@ TYPE(ReferenceTriangle_), PARAMETER, PUBLIC :: &
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary:         This data type defines a reference line quadrangle
+! date: 3 March 2021
+! summary: This data type defines a reference quadrangle
 !
 !{!pages/ReferenceQuadrangle.md}
 
@@ -756,6 +754,12 @@ TYPE(ReferenceQuadrangle_), PARAMETER, PUBLIC :: &
 !                                                    ReferenceTetrahedron_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 March 2021
+! summary: This data type defines a reference tetrahedron
+!
+!{!pages/ReferenceTetrahedron.md}
+
 TYPE, EXTENDS(ReferenceElement_) :: ReferenceTetrahedron_
 END TYPE ReferenceTetrahedron_
 
@@ -771,6 +775,12 @@ TYPE(ReferenceTetrahedron_), PARAMETER, PUBLIC :: &
 !                                                     ReferenceHexahedron_
 !----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 March 2021
+! summary: This data type defines a reference hexahedron
+!
+!{!pages/ReferenceHexahedron.md}
+
 TYPE, EXTENDS(ReferenceElement_) :: ReferenceHexahedron_
 END TYPE ReferenceHexahedron_
 
@@ -779,12 +789,23 @@ PUBLIC :: ReferenceHexahedron_
 TYPE(ReferenceHexahedron_), PARAMETER, PUBLIC :: &
   & TypeReferenceHexahedron &
   & = ReferenceHexahedron_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], XiDimension=0, Name=0, &
-  & Topology=NULL(), Order=0, NSD=0)
+  & XiJ=NULL(), &
+  & EntityCounts=[0, 0, 0, 0], &
+  & XiDimension=0, &
+  & Name=0, &
+  & Topology=NULL(), &
+  & Order=0, &
+  & NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                            ReferencePrism_
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 March 2021
+! summary: This data type defines a reference prism
+!
+!{!pages/ReferencePrism.md}
 
 TYPE, EXTENDS(ReferenceElement_) :: ReferencePrism_
 END TYPE ReferencePrism_
@@ -793,12 +814,23 @@ PUBLIC :: ReferencePrism_
 
 TYPE(ReferencePrism_), PARAMETER, PUBLIC :: TypeReferencePrism &
   & = ReferencePrism_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], XiDimension=0, Name=0, &
-  & Topology=NULL(), Order=0, NSD=0)
+  & XiJ=NULL(), &
+  & EntityCounts=[0, 0, 0, 0], &
+  & XiDimension=0, &
+  & Name=0, &
+  & Topology=NULL(), &
+  & Order=0, &
+  & NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                          ReferencePyramid_
 !----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 3 March 2021
+! summary: This data type defines a reference pyramid
+!
+!{!pages/ReferencePyramid.md}
 
 TYPE, EXTENDS(ReferenceElement_) :: ReferencePyramid_
 END TYPE ReferencePyramid_
@@ -807,17 +839,21 @@ PUBLIC :: ReferencePyramid_
 
 TYPE(ReferencePyramid_), PARAMETER, PUBLIC :: TypeReferencePyramid &
   & = ReferencePyramid_( &
-  & XiJ=NULL(), EntityCounts=[0, 0, 0, 0], &
-  & XiDimension=0, Name=0, &
-  & Topology=NULL(), Order=0, NSD=0)
+  & XiJ=NULL(), &
+  & EntityCounts=[0, 0, 0, 0], &
+  & XiDimension=0, &
+  & Name=0, &
+  & Topology=NULL(), &
+  & Order=0, &
+  & NSD=0)
 
 !----------------------------------------------------------------------------
 !                                                                 KeyValue_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! [[keyvalue_]] is a poor implementation of dict
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 June 2022
+! summary: [[keyvalue_]] is a poor implementation of dict
 
 TYPE :: KeyValue_
   INTEGER(I4B) :: DataType = 0
@@ -835,8 +871,7 @@ TYPE(KeyValue_), PARAMETER, PUBLIC :: TypeKeyValue = &
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date: 2021-12-08
-! update: 2021-12-08
+! date: 14 June 2022
 ! summary: Finite element variable
 !
 ! {!pages/FEVariable_.md!}
@@ -1177,16 +1212,21 @@ INTEGER(I4B), PARAMETER, PUBLIC :: DEL_t = -1
 !----------------------------------------------------------------------------
 
 TYPE :: ElementData_
-  INTEGER(I4B) :: NSD, NNE, NNS, NNT, XiDimension, ElemTopology, &
-    & SpaceElemTopo, TimeElemTopo, ElemType, MAT_Type
+  INTEGER(I4B) :: NSD = -1
+  INTEGER(I4B) :: NNE = -1
+  INTEGER(I4B) :: NNS = -1
+  INTEGER(I4B) :: NNT = -1
+  INTEGER(I4B) :: XiDimension = -1
+  INTEGER(I4B) :: ElemTopology = -1
+  INTEGER(I4B) :: SpaceElemTopo = -1
+  INTEGER(I4B) :: TimeElemTopo = -1
+  INTEGER(I4B) :: ElemType = -1
+  INTEGER(I4B) :: MAT_Type = -1
 END TYPE ElementData_
 
 PUBLIC :: ElementData_
 
-TYPE(ElementData_), PARAMETER, PUBLIC :: TypeElementData &
-  & = ElementData_(NSD=-1, NNE=-1, NNS=-1, NNT=-1, &
-  & XiDimension=-1, ElemTopology=-1, SpaceElemTopo=-1, &
-  & TimeElemTopo=-1, ElemType=-1, MAT_Type=-1)
+TYPE(ElementData_), PARAMETER, PUBLIC :: TypeElementData = ElementData_()
 
 TYPE :: ElementDataPointer_
   CLASS(ElementData_), POINTER :: Ptr => NULL()
@@ -1198,10 +1238,10 @@ PUBLIC :: ElementDataPointer_
 !                                                              ShapeData_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! This Class bundles all required variables(related to shapefunctions)
-! at a Gauss Point
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 June 2022
+! summary: shape function data (deprecated)
+
 TYPE :: ShapeData_
   REAL(DFP) :: Ws = 0.0_DFP
   REAL(DFP) :: Js = 0.0_DFP
@@ -1236,9 +1276,9 @@ PUBLIC :: ShapeDataPointer_
 !                                                               STShapeData_
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
-!
-! This class extends [[shapedata_]] class to space-time FEM applcation
+!> authors: Vikas Sharma, Ph. D.
+! date: 14 June 2022
+! summary: Datatype for space-time shape data
 
 TYPE, EXTENDS(ShapeData_) :: STShapeData_
   REAL(DFP) :: Theta = 0.0
@@ -1293,7 +1333,7 @@ TYPE :: ElemShapeData_
     !! Barycentric coordinate
   REAL(DFP), ALLOCATABLE :: normal(:, :)
     !! Normal in case of facet element
-  CLASS(ReferenceElement_), POINTER :: refelem => NULL()
+  TYPE(ReferenceElement_) :: refelem
     !! Refererece element
   TYPE(QuadraturePoint_) :: quad
     !! Quadrature points
@@ -1327,14 +1367,6 @@ PUBLIC :: ElemShapeDataPointer_
 ! date: 2021-12-08
 ! update: 2021-12-08
 ! summary: Space-time shape function data
-!
-! {!pages/STElemshapeData_.md!}
-
-!> authors: Dr. Vikas Sharma
-!
-! This data type contains shapefunction related data defined
-! at all gauss points of an elements
-!
 
 TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
   REAL(DFP) :: wt = 0.0
@@ -1355,19 +1387,19 @@ END TYPE STElemShapeData_
 PUBLIC :: STElemShapeData_
 TYPE(STElemShapeData_), PUBLIC, PARAMETER :: &
   & TypeSTElemShapeData = STElemShapeData_( &
-    & N=NULL(), &
-    & dNdXi=NULL(), &
-    & Jacobian=NULL(), &
-    & Js=NULL(), &
-    & Ws=NULL(), &
-    & dNdXt=NULL(), &
-    & Thickness=NULL(), &
-    & Coord=NULL(), &
-    & Normal=NULL(), &
-    & T=NULL(), &
-    & dTdTheta=NULL(), &
-    & dNTdt=NULL(), &
-    & dNTdXt=NULL())
+  & N=NULL(), &
+  & dNdXi=NULL(), &
+  & Jacobian=NULL(), &
+  & Js=NULL(), &
+  & Ws=NULL(), &
+  & dNdXt=NULL(), &
+  & Thickness=NULL(), &
+  & Coord=NULL(), &
+  & Normal=NULL(), &
+  & T=NULL(), &
+  & dTdTheta=NULL(), &
+  & dNTdt=NULL(), &
+  & dNTdXt=NULL())
 
 !----------------------------------------------------------------------------
 !                                                              Meshquality_
@@ -1404,16 +1436,16 @@ PUBLIC :: Random_
 
 TYPE(Random_), PARAMETER, PUBLIC :: &
   & TypeRandom = Random_(random_int_seed=NULL(), &
-    & random_int_vec=NULL(), &
-    & random_real_vec=NULL())
+  & random_int_vec=NULL(), &
+  & random_real_vec=NULL())
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         9 March 2021
-! summary:         OpenMP and EASIFEM
+! date: 9 March 2021
+! summary: OpenMP and EASIFEM
 TYPE :: OpenMP_
   INTEGER(I4B) :: Rank = 0
   INTEGER(I4B) :: NUM_THREADS = 1
