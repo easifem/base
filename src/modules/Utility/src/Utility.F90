@@ -33,6 +33,7 @@ INTEGER(I4B), PARAMETER :: NPAR_POLYTERM = 8
 #include "ApproxMethods.inc"
 #include "AssertMethods.inc"
 #include "FunctionalFortran.inc"
+#include "GridMethods.inc"
 #include "OnesMethods.inc"
 #include "EyeMethods.inc"
 #include "DiagMethods.inc"

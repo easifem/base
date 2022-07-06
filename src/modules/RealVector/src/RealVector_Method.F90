@@ -21,7 +21,10 @@
 !
 !###Introduction
 !
-! This module contains methods of [[RealVector_]] data type. This module only contains the definition of the interfaces of these methods. The actual implementation is given inside the submodules. This modules has following submodules:
+! This module contains methods of [[RealVector_]] data type.
+! This module only contains the definition of the interfaces of these
+! methods. The actual implementation is given inside the submodules. This
+! modules has following submodules:
 !
 !@todo Documentation, testing, usage
 
