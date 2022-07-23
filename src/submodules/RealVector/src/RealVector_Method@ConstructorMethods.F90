@@ -75,6 +75,21 @@ MODULE PROCEDURE realVec_Allocate
 END PROCEDURE realVec_Allocate
 
 !----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_Reallocate
+  IF( ALLOCATED( obj ) ) THEN
+    IF( SIZE( obj ) .NE. row ) THEN
+      DEALLOCATE( obj )
+      ALLOCATE( obj( row ) )
+    END IF
+  ELSE
+    ALLOCATE( obj( row ) )
+  END IF
+END PROCEDURE realVec_Reallocate
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
