@@ -137,7 +137,7 @@ END INTERFACE setTotalDimension
 PUBLIC :: setTotalDimension
 
 !----------------------------------------------------------------------------
-!                                                   AllocateData@Constructor
+!                                                   Allocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -155,11 +155,11 @@ MODULE PURE SUBROUTINE Allocate_Data( obj, Dims )
 END SUBROUTINE Allocate_Data
 END INTERFACE
 
-INTERFACE AllocateData
+INTERFACE Allocate
   MODULE PROCEDURE Allocate_Data
-END INTERFACE AllocateData
+END INTERFACE Allocate
 
-PUBLIC :: AllocateData
+PUBLIC :: Allocate
 
 !----------------------------------------------------------------------------
 !                                                 Deallocate@Constructor

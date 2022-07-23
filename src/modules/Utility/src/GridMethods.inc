@@ -17,6 +17,7 @@
 
 PUBLIC :: ExpMesh
 PUBLIC :: Linspace
+PUBLIC :: Logspace
 PUBLIC :: MeshGrid
 PUBLIC :: arange
 
@@ -130,6 +131,64 @@ END INTERFACE
 INTERFACE Linspace
   MODULE PROCEDURE Linspace_Real32
 END INTERFACE Linspace
+
+!----------------------------------------------------------------------------
+!                                                  Logspace@FunctionalFortran
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Sept 2021
+! summary: Logspace
+
+INTERFACE
+  MODULE PURE FUNCTION Logspace_Real64(a, b, N, endPoint, base) RESULT(Ans)
+    REAL(Real64), INTENT(IN) :: a
+    !! left end of 1D domain
+    REAL(Real64), INTENT(IN) :: b
+    !! right end of 1D domain
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
+    !! Number of points including a and b
+    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: endPoint
+    !! default is true, if true then include endpoint
+    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: base
+    !! default is 10
+    REAL(Real64), ALLOCATABLE :: ans(:)
+    !! Number of nodes in mesh
+  END FUNCTION Logspace_Real64
+END INTERFACE
+
+INTERFACE Logspace
+  MODULE PROCEDURE Logspace_Real64
+END INTERFACE Logspace
+
+!----------------------------------------------------------------------------
+!                                                  Logspace@FunctionalFortran
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 16 Sept 2021
+! summary: Logspace
+
+INTERFACE
+  MODULE PURE FUNCTION Logspace_Real32(a, b, N, endPoint, base) RESULT(Ans)
+    REAL(Real32), INTENT(IN) :: a
+    !! left end of 1D domain
+    REAL(Real32), INTENT(IN) :: b
+    !! right end of 1D domain
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
+    !! Number of points including a and b
+    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: endPoint
+    !! default is true, if true then include endpoint
+    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: base
+    !! default is 10
+    REAL(Real32), ALLOCATABLE :: ans(:)
+    !! Number of nodes in mesh
+  END FUNCTION Logspace_Real32
+END INTERFACE
+
+INTERFACE Logspace
+  MODULE PROCEDURE Logspace_Real32
+END INTERFACE Logspace
 
 !----------------------------------------------------------------------------
 !                                                  MeshGrid@FunctionalFortran

@@ -25,9 +25,18 @@ CONTAINS
 !                                                                 SHALLOWCOPY
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY1
+MODULE PROCEDURE realVec_SHALLOWCOPY1a
   CALL Reallocate( Y, SIZE( X ) )
-END PROCEDURE realVec_SHALLOWCOPY1
+END PROCEDURE realVec_SHALLOWCOPY1a
+MODULE PROCEDURE realVec_SHALLOWCOPY1b
+  CALL Reallocate( Y, SIZE( X ) )
+END PROCEDURE realVec_SHALLOWCOPY1b
+MODULE PROCEDURE realVec_SHALLOWCOPY1c
+  CALL Reallocate( Y, SIZE( X ) )
+END PROCEDURE realVec_SHALLOWCOPY1c
+MODULE PROCEDURE realVec_SHALLOWCOPY1d
+  CALL Reallocate( Y, SIZE( X ) )
+END PROCEDURE realVec_SHALLOWCOPY1d
 
 !----------------------------------------------------------------------------
 !                                                                 SHALLOWCOPY
@@ -73,29 +82,44 @@ END PROCEDURE realVec_SHALLOWCOPY4
 !                                                                 SHALLOWCOPY
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY5
+MODULE PROCEDURE realVec_SHALLOWCOPY5a
   CALL SHALLOWCOPY( Y=Y%Val, X=X )
-END PROCEDURE realVec_SHALLOWCOPY5
+END PROCEDURE realVec_SHALLOWCOPY5a
+
+MODULE PROCEDURE realVec_SHALLOWCOPY5b
+  CALL SHALLOWCOPY( Y=Y%Val, X=X )
+END PROCEDURE realVec_SHALLOWCOPY5b
 
 !----------------------------------------------------------------------------
 !                                                                 SHALLOWCOPY
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY6
+MODULE PROCEDURE realVec_SHALLOWCOPY6a
   CALL SHALLOWCOPY( Y=Y, X=X%Val )
-END PROCEDURE realVec_SHALLOWCOPY6
+END PROCEDURE realVec_SHALLOWCOPY6a
+MODULE PROCEDURE realVec_SHALLOWCOPY6b
+  CALL SHALLOWCOPY( Y=Y, X=X%Val )
+END PROCEDURE realVec_SHALLOWCOPY6b
 
 !----------------------------------------------------------------------------
 !                                                                 SHALLOWCOPY
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_SHALLOWCOPY7
+MODULE PROCEDURE realVec_SHALLOWCOPY7a
   INTEGER( I4B ) :: ii, m
   m = 0
   DO ii = 1, SIZE( X )
     m = m + SIZE( X( ii ) )
   END DO
   CALL Reallocate( Y, m )
-END PROCEDURE realVec_SHALLOWCOPY7
+END PROCEDURE realVec_SHALLOWCOPY7a
+MODULE PROCEDURE realVec_SHALLOWCOPY7b
+  INTEGER( I4B ) :: ii, m
+  m = 0
+  DO ii = 1, SIZE( X )
+    m = m + SIZE( X( ii ) )
+  END DO
+  CALL Reallocate( Y, m )
+END PROCEDURE realVec_SHALLOWCOPY7b
 
 END SUBMODULE ShallowCopyMethods

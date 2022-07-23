@@ -51,35 +51,78 @@ END PROCEDURE realVec_assign2
 !                                                                     Assign
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_assign3
+MODULE PROCEDURE realVec_assign3a
   CALL SHALLOWCOPY( Y=lhs, X=rhs )
   CALL setTotalDimension( lhs, 1_I4B )
-  CALL COPY( Y=lhs%val, X=rhs )
-END PROCEDURE realVec_assign3
+  lhs%val=rhs
+END PROCEDURE realVec_assign3a
+
+MODULE PROCEDURE realVec_assign3b
+  CALL SHALLOWCOPY( Y=lhs, X=rhs )
+  CALL setTotalDimension( lhs, 1_I4B )
+  lhs%val=rhs
+END PROCEDURE realVec_assign3b
 
 !----------------------------------------------------------------------------
 !                                                                     Assign
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_assign4
+MODULE PROCEDURE realVec_assign4a
+#ifdef USE_Real64
+  lhs=rhs%val
+#else
   CALL SHALLOWCOPY( Y=lhs, X=rhs )
   CALL COPY( Y=lhs, X=rhs%val )
-END PROCEDURE realVec_assign4
+#endif
+END PROCEDURE realVec_assign4a
+MODULE PROCEDURE realVec_assign4b
+CALL SHALLOWCOPY( Y=lhs, X=rhs )
+#ifdef USE_Real64
+  CALL COPY( Y=lhs, X=rhs%val )
+#else
+  lhs=rhs%val
+#endif
+END PROCEDURE realVec_assign4b
 
 !----------------------------------------------------------------------------
 !                                                                    Assign
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_assign5
+MODULE PROCEDURE realVec_assign5a
   INTEGER( I4B ) :: m, ii, aa
+  !!
   CALL SHALLOWCOPY( Y=lhs, X=rhs )
   m = 0
   DO ii = 1, SIZE( rhs )
     aa = m + 1
     m = m + SIZE( rhs( ii ) )
+#ifndef USE_Real64
     CALL COPY( Y=lhs( aa:m ), X=rhs(ii)%val )
+#else
+    lhs(aa:m)=rhs(ii)%val(:)
+#endif
   END DO
-END PROCEDURE realVec_assign5
+END PROCEDURE realVec_assign5a
+
+!----------------------------------------------------------------------------
+!                                                                    Assign
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_assign5b
+  INTEGER( I4B ) :: m, ii, aa
+  !!
+  CALL SHALLOWCOPY( Y=lhs, X=rhs )
+  m = 0
+  DO ii = 1, SIZE( rhs )
+    aa = m + 1
+    m = m + SIZE( rhs( ii ) )
+#ifdef USE_Real64
+    CALL COPY( Y=lhs( aa:m ), X=rhs(ii)%val )
+#else
+    lhs(aa:m)=rhs(ii)%val(:)
+#endif
+  END DO
+END PROCEDURE realVec_assign5b
 
 !----------------------------------------------------------------------------
 !                                                                    Assign

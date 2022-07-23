@@ -80,4 +80,48 @@ MODULE PROCEDURE in_2d
   ans = ANY(a .EQ. b)
 END PROCEDURE in_2d
 
+!----------------------------------------------------------------------------
+!                                                             RemoveDuplicate
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RemoveDuplicates_1a
+  INTEGER(Int8), ALLOCATABLE :: Res(:)
+#include "./RemoveDuplicates_1.inc"
+END PROCEDURE RemoveDuplicates_1a
+
+MODULE PROCEDURE RemoveDuplicates_1b
+  INTEGER(Int8), ALLOCATABLE :: Res(:)
+#include "./RemoveDuplicates_1.inc"
+END PROCEDURE RemoveDuplicates_1b
+
+MODULE PROCEDURE RemoveDuplicates_1c
+  INTEGER(Int8), ALLOCATABLE :: Res(:)
+#include "./RemoveDuplicates_1.inc"
+END PROCEDURE RemoveDuplicates_1c
+
+MODULE PROCEDURE RemoveDuplicates_1d
+  INTEGER(Int8), ALLOCATABLE :: Res(:)
+#include "./RemoveDuplicates_1.inc"
+END PROCEDURE RemoveDuplicates_1d
+
+!----------------------------------------------------------------------------
+!                                                                 Repeat
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Repeat_1a
+#include "./Repeat_1.inc"
+END PROCEDURE Repeat_1a
+
+MODULE PROCEDURE Repeat_1b
+#include "./Repeat_1.inc"
+END PROCEDURE Repeat_1b
+
+MODULE PROCEDURE Repeat_1c
+#include "./Repeat_1.inc"
+END PROCEDURE Repeat_1c
+
+MODULE PROCEDURE Repeat_1d
+#include "./Repeat_1.inc"
+END PROCEDURE Repeat_1d
+
 END SUBMODULE IntegerMethods

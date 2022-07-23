@@ -44,6 +44,7 @@ MODULE BaseMethod
 #ifdef USE_LAPACK95
   USE F95_LAPACK
   USE F77_LAPACK
+  USE Lapack_Method
 #endif
 
 #ifdef USE_FFTW

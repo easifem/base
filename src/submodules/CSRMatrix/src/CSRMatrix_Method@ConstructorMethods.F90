@@ -73,7 +73,7 @@ MODULE PROCEDURE csrMat_getNNZ
 END PROCEDURE csrMat_getNNZ
 
 !----------------------------------------------------------------------------
-!                                                               AllocateData
+!                                                               Allocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Allocate

@@ -1465,7 +1465,7 @@ TYPE(OpenMP_), PUBLIC :: OMP
 
 ABSTRACT INTERFACE
   PURE FUNCTION iface_SpaceTimeFunction(x, t) RESULT(ans)
-    IMPORT
+    IMPORT :: DFP
     ! CLASS( DirichletBC_ ), INTENT( IN ) :: obj
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(IN) :: t
@@ -1481,7 +1481,7 @@ PUBLIC :: iface_SpaceTimeFunction
 
 ABSTRACT INTERFACE
   PURE FUNCTION iface_SpaceFunction(x) RESULT(ans)
-    IMPORT
+    IMPORT :: DFP
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans
   END FUNCTION iface_SpaceFunction
@@ -1495,7 +1495,7 @@ PUBLIC :: iface_SpaceFunction
 
 ABSTRACT INTERFACE
   PURE FUNCTION iface_TimeFunction(t) RESULT(ans)
-    IMPORT
+    IMPORT :: DFP
     REAL(DFP), INTENT(IN) :: t
     REAL(DFP) :: ans
   END FUNCTION iface_TimeFunction
