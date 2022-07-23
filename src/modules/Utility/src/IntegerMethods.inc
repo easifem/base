@@ -17,6 +17,8 @@
 
 PUBLIC :: OPERATOR(.in.)
 PUBLIC :: OPERATOR(.isin.)
+PUBLIC :: RemoveDuplicates
+PUBLIC :: Repeat
 
 !----------------------------------------------------------------------------
 !                                             Operator(.in.)@IntegerMethods
@@ -150,4 +152,57 @@ INTERFACE OPERATOR(.isin.)
   MODULE PROCEDURE in_2a, in_2b, in_2c, in_2d
 END INTERFACE OPERATOR(.isin.)
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+INTERFACE
+  MODULE PURE SUBROUTINE RemoveDuplicates_1a(obj)
+    INTEGER(Int8), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+  END SUBROUTINE RemoveDuplicates_1a
+  MODULE PURE SUBROUTINE RemoveDuplicates_1b(obj)
+    INTEGER(Int16), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+  END SUBROUTINE RemoveDuplicates_1b
+  MODULE PURE SUBROUTINE RemoveDuplicates_1c(obj)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+  END SUBROUTINE RemoveDuplicates_1c
+  MODULE PURE SUBROUTINE RemoveDuplicates_1d(obj)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+  END SUBROUTINE RemoveDuplicates_1d
+END INTERFACE
+
+INTERFACE RemoveDuplicates
+  MODULE PROCEDURE RemoveDuplicates_1a, RemoveDuplicates_1b, &
+    & RemoveDuplicates_1c, RemoveDuplicates_1d
+END INTERFACE RemoveDuplicates
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION Repeat_1a(Val, rtimes) RESULT(Ans)
+    INTEGER(Int8), INTENT(IN) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: rtimes
+    INTEGER(Int8) :: Ans(SIZE(Val) * rtimes)
+  END FUNCTION Repeat_1a
+  MODULE PURE FUNCTION Repeat_1b(Val, rtimes) RESULT(Ans)
+    INTEGER(Int16), INTENT(IN) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: rtimes
+    INTEGER(Int16) :: Ans(SIZE(Val) * rtimes)
+  END FUNCTION Repeat_1b
+  MODULE PURE FUNCTION Repeat_1c(Val, rtimes) RESULT(Ans)
+    INTEGER(Int32), INTENT(IN) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: rtimes
+    INTEGER(Int32) :: Ans(SIZE(Val) * rtimes)
+  END FUNCTION Repeat_1c
+  MODULE PURE FUNCTION Repeat_1d(Val, rtimes) RESULT(Ans)
+    INTEGER(Int64), INTENT(IN) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: rtimes
+    INTEGER(Int64) :: Ans(SIZE(Val) * rtimes)
+  END FUNCTION Repeat_1d
+END INTERFACE
+
+INTERFACE Repeat
+  MODULE PROCEDURE Repeat_1a, Repeat_1b, Repeat_1c, Repeat_1d
+END INTERFACE Repeat
