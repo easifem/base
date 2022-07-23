@@ -235,15 +235,20 @@ END INTERFACE get
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
 INTERFACE
-MODULE PURE FUNCTION realVec_get4( obj, DataType ) RESULT( ans )
+MODULE PURE FUNCTION realVec_get4a( obj, DataType ) RESULT( ans )
   CLASS( RealVector_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: DataType
-  REAL( DFP ), ALLOCATABLE :: ans( : )
-END FUNCTION realVec_get4
+  REAL( Real32 ), INTENT( IN ) :: DataType
+  REAL( Real32 ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get4a
+MODULE PURE FUNCTION realVec_get4b( obj, DataType ) RESULT( ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
+  REAL( Real64 ), INTENT( IN ) :: DataType
+  REAL( Real64 ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get4b
 END INTERFACE
 
 INTERFACE get
-  MODULE PROCEDURE realVec_get4
+  MODULE PROCEDURE realVec_get4a, realVec_get4b
 END INTERFACE get
 
 !----------------------------------------------------------------------------
@@ -255,16 +260,22 @@ END INTERFACE get
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
 INTERFACE
-MODULE PURE FUNCTION realVec_get5( obj, nodenum, DataType ) RESULT( ans )
+MODULE PURE FUNCTION realVec_get5a( obj, nodenum, DataType ) RESULT( ans )
   CLASS( RealVector_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ):: DataType
-  REAL( DFP ), ALLOCATABLE :: ans( : )
-END FUNCTION realVec_get5
+  REAL( Real32 ), INTENT( IN ):: DataType
+  REAL( Real32 ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get5a
+MODULE PURE FUNCTION realVec_get5b( obj, nodenum, DataType ) RESULT( ans )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
+  REAL( Real64 ), INTENT( IN ):: DataType
+  REAL( Real64 ), ALLOCATABLE :: ans( : )
+END FUNCTION realVec_get5b
 END INTERFACE
 
 INTERFACE get
-  MODULE PROCEDURE realVec_get5
+  MODULE PROCEDURE realVec_get5a, realVec_get5b
 END INTERFACE get
 
 !----------------------------------------------------------------------------
@@ -363,15 +374,20 @@ END INTERFACE get
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
 INTERFACE
-MODULE PURE FUNCTION realVec_get10( obj, DataType ) RESULT( val )
+MODULE PURE FUNCTION realVec_get10a( obj, DataType ) RESULT( val )
   CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
-  REAL( DFP ), INTENT( IN ) :: DataType
-  REAL( DFP ), ALLOCATABLE :: val( : )
-END FUNCTION realVec_get10
+  REAL( Real32 ), INTENT( IN ) :: DataType
+  REAL( Real32 ), ALLOCATABLE :: val( : )
+END FUNCTION realVec_get10a
+MODULE PURE FUNCTION realVec_get10b( obj, DataType ) RESULT( val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  REAL( Real64 ), INTENT( IN ) :: DataType
+  REAL( Real64 ), ALLOCATABLE :: val( : )
+END FUNCTION realVec_get10b
 END INTERFACE
 
 INTERFACE get
-  MODULE PROCEDURE realVec_get10
+  MODULE PROCEDURE realVec_get10a, realVec_get10b
 END INTERFACE get
 
 !----------------------------------------------------------------------------
@@ -383,16 +399,22 @@ END INTERFACE get
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
 INTERFACE
-MODULE PURE FUNCTION realVec_get11( obj, nodenum, DataType ) RESULT( val )
+MODULE PURE FUNCTION realVec_get11a( obj, nodenum, DataType ) RESULT( val )
   CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
-  REAL( DFP ), INTENT( IN ) :: DataType
+  REAL( Real32 ), INTENT( IN ) :: DataType
   INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), ALLOCATABLE :: val( : )
-END FUNCTION realVec_get11
+  REAL( Real32 ), ALLOCATABLE :: val( : )
+END FUNCTION realVec_get11a
+MODULE PURE FUNCTION realVec_get11b( obj, nodenum, DataType ) RESULT( val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  REAL( Real64 ), INTENT( IN ) :: DataType
+  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
+  REAL( Real64 ), ALLOCATABLE :: val( : )
+END FUNCTION realVec_get11b
 END INTERFACE
 
 INTERFACE get
-  MODULE PROCEDURE realVec_get11
+  MODULE PROCEDURE realVec_get11a, realVec_get11b
 END INTERFACE get
 
 !----------------------------------------------------------------------------
@@ -404,17 +426,24 @@ END INTERFACE get
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
 INTERFACE
-MODULE PURE FUNCTION realVec_get12( obj, istart, iend, stride, &
+MODULE PURE FUNCTION realVec_get12a( obj, istart, iend, stride, &
   & DataType ) RESULT( val )
   CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
   INTEGER( I4B ), INTENT( IN ) :: istart, iend, stride
-  REAL( DFP ), INTENT( IN ):: DataType
-  REAL( DFP ), ALLOCATABLE :: val( : )
-END FUNCTION realVec_get12
+  REAL( Real32 ), INTENT( IN ):: DataType
+  REAL( Real32 ), ALLOCATABLE :: val( : )
+END FUNCTION realVec_get12a
+MODULE PURE FUNCTION realVec_get12b( obj, istart, iend, stride, &
+  & DataType ) RESULT( val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
+  INTEGER( I4B ), INTENT( IN ) :: istart, iend, stride
+  REAL( Real64 ), INTENT( IN ):: DataType
+  REAL( Real64 ), ALLOCATABLE :: val( : )
+END FUNCTION realVec_get12b
 END INTERFACE
 
 INTERFACE get
-  MODULE PROCEDURE realVec_get12
+  MODULE PROCEDURE realVec_get12a, realVec_get12b
 END INTERFACE get
 
 !----------------------------------------------------------------------------
@@ -549,16 +578,22 @@ END INTERFACE get
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION realVec_get18( obj, nodenum, DataType ) RESULT( val )
+MODULE PURE FUNCTION realVec_get18a( obj, nodenum, DataType ) RESULT( val )
   CLASS( RealVector_ ), INTENT( IN ) :: obj
   INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ):: DataType
-  REAL( DFP ) :: val
-END FUNCTION realVec_get18
+  REAL( Real32 ), INTENT( IN ):: DataType
+  REAL( Real32 ) :: val
+END FUNCTION realVec_get18a
+MODULE PURE FUNCTION realVec_get18b( obj, nodenum, DataType ) RESULT( val )
+  CLASS( RealVector_ ), INTENT( IN ) :: obj
+  INTEGER( I4B ), INTENT( IN ) :: nodenum
+  REAL( Real64 ), INTENT( IN ):: DataType
+  REAL( Real64 ) :: val
+END FUNCTION realVec_get18b
 END INTERFACE
 
 INTERFACE get
-  MODULE PROCEDURE realVec_get18
+  MODULE PROCEDURE realVec_get18a, realVec_get18b
 END INTERFACE get
 
 !----------------------------------------------------------------------------
