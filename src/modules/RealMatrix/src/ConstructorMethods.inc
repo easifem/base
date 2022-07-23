@@ -19,7 +19,7 @@ PUBLIC :: Shape
 PUBLIC :: Size
 PUBLIC :: TotalDimension
 PUBLIC :: setTotalDimension
-PUBLIC :: AllocateData
+PUBLIC :: Allocate
 PUBLIC :: Deallocate
 PUBLIC :: Initiate
 PUBLIC :: RealMatrix
@@ -145,7 +145,7 @@ INTERFACE setTotalDimension
 END INTERFACE setTotalDimension
 
 !----------------------------------------------------------------------------
-!                                           AllocateData@ConstructorMethods
+!                                           Allocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -156,7 +156,7 @@ END INTERFACE setTotalDimension
 !### Usage
 !
 ! ```fortran
-!	call allocateData( obj, Dims )
+!	call Allocate( obj, Dims )
 ! ```
 
 
@@ -168,9 +168,9 @@ END SUBROUTINE Allocate_Data
 
 END INTERFACE
 
-INTERFACE AllocateData
+INTERFACE Allocate
   MODULE PROCEDURE Allocate_Data
-END INTERFACE AllocateData
+END INTERFACE Allocate
 
 !----------------------------------------------------------------------------
 !                                             Deallocate@ConstructorMethods
