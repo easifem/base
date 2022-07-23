@@ -152,7 +152,8 @@ PUBLIC :: isBlank
 ! Returns number of substrings contained in input string 'chars' delimited by
 ! white space.
 ! This routien has been adopted from
-! [https://github.com/CASL/Futility/blob/master/src/IO_Strings.F90](https://github.com/CASL/Futility/blob/master/src/IO_Strings.F90)
+! [https://github.com/CASL/Futility/blob/master/src/IO_Strings.F90]
+! (https://github.com/CASL/Futility/blob/master/src/IO_Strings.F90)
 !
 
 INTERFACE
