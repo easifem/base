@@ -52,14 +52,19 @@ END INTERFACE ASSIGNMENT( = )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE realVec_assign3( lhs, rhs )
+MODULE PURE SUBROUTINE realVec_assign3a( lhs, rhs )
   CLASS( RealVector_ ), INTENT( INOUT ) :: lhs
-  REAL( DFP ), INTENT( IN ) :: rhs( : )
-END SUBROUTINE realVec_assign3
+  REAL( Real32 ), INTENT( IN ) :: rhs( : )
+END SUBROUTINE realVec_assign3a
+
+MODULE PURE SUBROUTINE realVec_assign3b( lhs, rhs )
+  CLASS( RealVector_ ), INTENT( INOUT ) :: lhs
+  REAL( Real64 ), INTENT( IN ) :: rhs( : )
+END SUBROUTINE realVec_assign3b
 END INTERFACE
 
 INTERFACE ASSIGNMENT( = )
-  MODULE PROCEDURE realVec_assign3
+  MODULE PROCEDURE realVec_assign3a, realVec_assign3b
 END INTERFACE ASSIGNMENT( = )
 
 !----------------------------------------------------------------------------
@@ -67,14 +72,18 @@ END INTERFACE ASSIGNMENT( = )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE realVec_assign4( lhs, rhs )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
+MODULE PURE SUBROUTINE realVec_assign4a( lhs, rhs )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
   CLASS( RealVector_ ), INTENT( IN ) :: rhs
-END SUBROUTINE realVec_assign4
+END SUBROUTINE realVec_assign4a
+MODULE PURE SUBROUTINE realVec_assign4b( lhs, rhs )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: rhs
+END SUBROUTINE realVec_assign4b
 END INTERFACE
 
 INTERFACE ASSIGNMENT( = )
-  MODULE PROCEDURE realVec_assign4
+  MODULE PROCEDURE realVec_assign4a, realVec_assign4b
 END INTERFACE ASSIGNMENT( = )
 
 !----------------------------------------------------------------------------
@@ -82,14 +91,18 @@ END INTERFACE ASSIGNMENT( = )
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE realVec_assign5( lhs, rhs )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
+MODULE PURE SUBROUTINE realVec_assign5a( lhs, rhs )
+  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
   CLASS( RealVector_ ), INTENT( IN ) :: rhs( : )
-END SUBROUTINE realVec_assign5
+END SUBROUTINE realVec_assign5a
+MODULE PURE SUBROUTINE realVec_assign5b( lhs, rhs )
+  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: lhs( : )
+  CLASS( RealVector_ ), INTENT( IN ) :: rhs( : )
+END SUBROUTINE realVec_assign5b
 END INTERFACE
 
 INTERFACE ASSIGNMENT( = )
-  MODULE PROCEDURE realVec_assign5
+  MODULE PROCEDURE realVec_assign5a, realVec_assign5b
 END INTERFACE ASSIGNMENT( = )
 
 !----------------------------------------------------------------------------
