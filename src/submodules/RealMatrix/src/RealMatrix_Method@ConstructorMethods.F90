@@ -90,7 +90,7 @@ END PROCEDURE Deallocate_Data
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_initiate1
-  CALL AllocateData( obj, Dims )
+  CALL Allocate( obj, Dims )
 END PROCEDURE realmat_initiate1
 
 !----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ END PROCEDURE realmat_initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_initiate2
-  CALL AllocateData( obj, [nrow, ncol] )
+  CALL Allocate( obj, [nrow, ncol] )
 END PROCEDURE realmat_initiate2
 
 !----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ END PROCEDURE realmat_initiate2
 MODULE PROCEDURE realmat_initiate3
   INTEGER( I4B ) :: j
   DO j = 1, SIZE( obj )
-    CALL AllocateData( obj( j ), Dims )
+    CALL Allocate( obj( j ), Dims )
   END DO
 END PROCEDURE realmat_initiate3
 
@@ -119,7 +119,7 @@ END PROCEDURE realmat_initiate3
 MODULE PROCEDURE realmat_initiate4
   INTEGER( I4B ) :: j
   DO j = 1, SIZE( obj )
-    CALL AllocateData( obj( j ), Dims( j, : ) )
+    CALL Allocate( obj( j ), Dims( j, : ) )
   END DO
 END PROCEDURE realmat_initiate4
 
