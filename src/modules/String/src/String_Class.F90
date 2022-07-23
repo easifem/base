@@ -850,7 +850,8 @@ ELEMENTAL FUNCTION scount(self, substring, ignore_isolated) RESULT(No)
       IF (.NOT. ignore_isolated_) THEN
         No = No + 1
       ELSE
-               IF (.NOT. ((c1 == 1 .AND. c2 == 1) .OR. (c1 == LEN(self%raw) - LEN(substring) + 1))) THEN
+        IF (.NOT. ((c1 == 1 .AND. c2 == 1) &
+          & .OR. (c1 == LEN(self%raw) - LEN(substring) + 1))) THEN
           No = No + 1
         END IF
       END IF
@@ -858,6 +859,10 @@ ELEMENTAL FUNCTION scount(self, substring, ignore_isolated) RESULT(No)
     END DO
   END IF
 END FUNCTION scount
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION sindex_string_string(self, substring, back) RESULT(i)
   !< Return the position of the start of the first occurrence of string `substring` as a substring in `string`, counting from one.
