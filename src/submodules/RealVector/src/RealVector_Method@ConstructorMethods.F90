@@ -19,11 +19,22 @@
 ! date: 25 Feb 2021
 ! summary: This module contains constructor methods of [[RealVector_]]
 
-SUBMODULE ( RealVector_Method) ConstructorMethods
+SUBMODULE(RealVector_Method) ConstructorMethods
 USE BaseMethod
 IMPLICIT NONE
-
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                               isAllocated
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE realVec_isAllocated
+  IF (ALLOCATED(obj%Val)) THEN
+    ans = .TRUE.
+  ELSE
+    ans = .FALSE.
+  END IF
+END PROCEDURE realVec_isAllocated
 
 !----------------------------------------------------------------------------
 !
