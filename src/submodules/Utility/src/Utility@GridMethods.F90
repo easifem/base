@@ -117,6 +117,54 @@ MODULE PROCEDURE LinSpace_Real64
 END PROCEDURE LinSpace_Real64
 
 !----------------------------------------------------------------------------
+!                                                               Linspace
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LogSpace_Real32
+  INTEGER( I4B ) :: base0, n0
+  LOGICAL( LGT ) :: endpoint0
+  REAL( Real32 ), ALLOCATABLE :: ans0( : )
+  !!
+  endpoint0 = INPUT( option=endPoint, default=.TRUE. )
+  base0 = INPUT( option=base, default=10 )
+  n0 = INPUT( option=n, default=100_I4B )
+  !!
+  IF( endpoint0 ) THEN
+    ans0 = Linspace( a=a, b=b, n=n0 )
+    ans = base0**(ans0)
+  ELSE
+    ans0 = Linspace( a=a, b=b, n=n0+1 )
+    ans = base0**(ans0(1:n0))
+  END IF
+  !!
+  IF(ALLOCATED(ans0)) DEALLOCATE( ans0 )
+END PROCEDURE LogSpace_Real32
+
+!----------------------------------------------------------------------------
+!                                                               Linspace
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LogSpace_Real64
+  INTEGER( I4B ) :: base0, n0
+  LOGICAL( LGT ) :: endpoint0
+  REAL( Real64 ), ALLOCATABLE :: ans0( : )
+  !!
+  endpoint0 = INPUT( option=endPoint, default=.TRUE. )
+  base0 = INPUT( option=base, default=10 )
+  n0 = INPUT( option=n, default=100_I4B )
+  !!
+  IF( endpoint0 ) THEN
+    ans0 = Linspace( a=a, b=b, n=n0 )
+    ans = base0**(ans0)
+  ELSE
+    ans0 = Linspace( a=a, b=b, n=n0+1 )
+    ans = base0**(ans0(1:n0))
+  END IF
+  !!
+  IF(ALLOCATED(ans0)) DEALLOCATE( ans0 )
+END PROCEDURE LogSpace_Real64
+
+!----------------------------------------------------------------------------
 !                                                                 MeshGrid
 !----------------------------------------------------------------------------
 
