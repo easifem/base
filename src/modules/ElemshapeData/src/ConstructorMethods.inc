@@ -23,7 +23,7 @@ PUBLIC :: BaseContinuity
 PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
-!                                                  AllocateData@Constructor
+!                                                  Allocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
@@ -232,7 +232,7 @@ END INTERFACE Initiate
 !# Introduction
 !
 ! This routine deallocates the data stored inside [[elemshapedata_]]. This
-! routine belongs to `AllocateData()`
+! routine belongs to `Allocate()`
 !
 
 INTERFACE
