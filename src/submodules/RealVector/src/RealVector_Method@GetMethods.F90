@@ -162,26 +162,43 @@ END PROCEDURE realVec_get3
 !                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get4
+MODULE PROCEDURE realVec_get4a
   IF( ALLOCATED( obj%val ) ) THEN
     ans = obj
   ELSE
     ALLOCATE( ans( 0 ) )
   END IF
-END PROCEDURE realVec_get4
+END PROCEDURE realVec_get4a
+
+MODULE PROCEDURE realVec_get4b
+  IF( ALLOCATED( obj%val ) ) THEN
+    ans = obj
+  ELSE
+    ALLOCATE( ans( 0 ) )
+  END IF
+END PROCEDURE realVec_get4b
 
 !----------------------------------------------------------------------------
 !                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get5
+MODULE PROCEDURE realVec_get5a
   IF( ALLOCATED( obj%val ) ) THEN
     CALL Reallocate( ans, SIZE(nodenum ) )
-    CALL COPY( Y=ans, X=obj%val(nodenum) )
+    ans=obj%val(nodenum)
   ELSE
     ALLOCATE( ans( 0 ) )
   END IF
-END PROCEDURE realVec_get5
+END PROCEDURE realVec_get5a
+
+MODULE PROCEDURE realVec_get5b
+  IF( ALLOCATED( obj%val ) ) THEN
+    CALL Reallocate( ans, SIZE(nodenum ) )
+    ans=obj%val(nodenum)
+  ELSE
+    ALLOCATE( ans( 0 ) )
+  END IF
+END PROCEDURE realVec_get5b
 
 !----------------------------------------------------------------------------
 !                                                                       get
@@ -255,7 +272,7 @@ END PROCEDURE realVec_get9
 !                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get10
+MODULE PROCEDURE realVec_get10a
   INTEGER( I4B ) :: N, i, tNodes, r1, r2
   N = SIZE( obj )
   tNodes = 0
@@ -268,13 +285,27 @@ MODULE PROCEDURE realVec_get10
     r1 = r2 + 1; r2 = r2 + SIZE( obj( i )%val )
     val( r1 : r2 ) = obj( i )%val
   END DO
-END PROCEDURE realVec_get10
+END PROCEDURE realVec_get10a
+MODULE PROCEDURE realVec_get10b
+  INTEGER( I4B ) :: N, i, tNodes, r1, r2
+  N = SIZE( obj )
+  tNodes = 0
+  DO i = 1, N
+    tNodes = tNodes + SIZE( obj( i )%val )
+  END DO
+  ALLOCATE( val( tNodes ) )
+  tNodes = 0; r1 = 0; r2 = 0
+  DO i = 1, N
+    r1 = r2 + 1; r2 = r2 + SIZE( obj( i )%val )
+    val( r1 : r2 ) = obj( i )%val
+  END DO
+END PROCEDURE realVec_get10b
 
 !----------------------------------------------------------------------------
 !                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get11
+MODULE PROCEDURE realVec_get11a
   INTEGER( I4B ) :: N, i, M
   N = SIZE( obj )
   M = SIZE( nodenum )
@@ -282,13 +313,23 @@ MODULE PROCEDURE realVec_get11
   DO i = 1, N
     val( ( i - 1 ) * M + 1 : i * M ) = obj( i )%val( nodenum )
   END DO
-END PROCEDURE realVec_get11
+END PROCEDURE realVec_get11a
+
+MODULE PROCEDURE realVec_get11b
+  INTEGER( I4B ) :: N, i, M
+  N = SIZE( obj )
+  M = SIZE( nodenum )
+  ALLOCATE( val( M * N ) )
+  DO i = 1, N
+    val( ( i - 1 ) * M + 1 : i * M ) = obj( i )%val( nodenum )
+  END DO
+END PROCEDURE realVec_get11b
 
 !----------------------------------------------------------------------------
 !                                                                        get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get12
+MODULE PROCEDURE realVec_get12a
   INTEGER( I4B ) :: N, i, M
   N = SIZE( obj )
   M = 1 + ( iEnd - iStart ) / Stride
@@ -296,7 +337,16 @@ MODULE PROCEDURE realVec_get12
   DO i = 1, N
     val( ( i - 1 ) * M + 1 : i * M ) = obj( i )%val( iStart:iEnd:Stride )
   END DO
-END PROCEDURE realVec_get12
+END PROCEDURE realVec_get12a
+MODULE PROCEDURE realVec_get12b
+  INTEGER( I4B ) :: N, i, M
+  N = SIZE( obj )
+  M = 1 + ( iEnd - iStart ) / Stride
+  ALLOCATE( val( M * N ) )
+  DO i = 1, N
+    val( ( i - 1 ) * M + 1 : i * M ) = obj( i )%val( iStart:iEnd:Stride )
+  END DO
+END PROCEDURE realVec_get12b
 
 !----------------------------------------------------------------------------
 !                                                                       get
@@ -344,9 +394,13 @@ END PROCEDURE realVec_get17
 !                                                                       get
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realVec_get18
+MODULE PROCEDURE realVec_get18a
   val = obj%val( nodenum )
-END PROCEDURE realVec_get18
+END PROCEDURE realVec_get18a
+
+MODULE PROCEDURE realVec_get18b
+  val = obj%val( nodenum )
+END PROCEDURE realVec_get18b
 
 !----------------------------------------------------------------------------
 !                                                                        get
