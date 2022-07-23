@@ -169,7 +169,7 @@ INTERFACE
   MODULE PURE FUNCTION input_String(default, option) RESULT(val)
     CHARACTER(LEN=*), INTENT(IN) :: default
     CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: option
-    CHARACTER(200) :: val
+    CHARACTER(LEN=:), ALLOCATABLE :: val
   END FUNCTION
 END INTERFACE
 
