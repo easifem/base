@@ -25,6 +25,33 @@ PUBLIC :: Initiate
 PUBLIC :: RANDOM_NUMBER
 PUBLIC :: RealVector
 PUBLIC :: RealVector_Pointer
+PUBLIC :: Reallocate
+PUBLIC :: isAllocated
+PUBLIC :: isInitiated
+
+!----------------------------------------------------------------------------
+!                                                 isAllocated@EnquireMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 2021-11-11
+! update: 2021-11-11
+! summary: Returns true if the instance is allocated
+
+INTERFACE
+  MODULE PURE FUNCTION realVec_isAllocated(obj) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION realVec_isAllocated
+END INTERFACE
+
+INTERFACE isAllocated
+  MODULE PROCEDURE realVec_isAllocated
+END INTERFACE isAllocated
+
+INTERFACE isInitiated
+  MODULE PROCEDURE realVec_isAllocated
+END INTERFACE isInitiated
 
 !----------------------------------------------------------------------------
 !                                                          Shape@Constructor
@@ -140,7 +167,7 @@ END INTERFACE Allocate
 
 INTERFACE
   MODULE PURE SUBROUTINE realVec_Reallocate(obj, row)
-    CLASS(RealVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    TYPE(RealVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: row
   END SUBROUTINE realVec_Reallocate
 END INTERFACE
