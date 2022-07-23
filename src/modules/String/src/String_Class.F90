@@ -126,7 +126,8 @@ CONTAINS
   PROCEDURE, PASS(self) :: read_line
     !! Read line (record) from a connected unit.
   PROCEDURE, PASS(self) :: read_lines
-    !! Read (all) lines (records) from a connected unit as a single ascii stream.
+    !! Read (all) lines (records) from a connected unit as a single ascii
+    !! stream.
   PROCEDURE, PASS(self) :: replace
     !! Return a string with all occurrences of substring old replaced by new.
   PROCEDURE, PASS(self) :: reverse
@@ -138,17 +139,21 @@ CONTAINS
   PROCEDURE, PASS(self) :: snakecase
     !! Return a string with all words lowercase separated by "_".
   PROCEDURE, PASS(self) :: split
-    !! Return a list of substring in the string, using sep as the delimiter string.
+    !! Return a list of substring in the string, using sep as the
+    !! delimiter string.
   PROCEDURE, PASS(self) :: split_chunked
-    !! Return a list of substring in the string, using sep as the delimiter string.
+    !! Return a list of substring in the string, using sep as the
+    !! delimiter string.
   PROCEDURE, PASS(self) :: startcase
     !! Return a string with all words capitalized, e.g. title case.
   PROCEDURE, PASS(self) :: strip
     !! Return a string with the leading and trailing characters removed.
   PROCEDURE, PASS(self) :: swapcase
-    !! Return a string with uppercase chars converted to lowercase and vice versa.
+    !! Return a string with uppercase chars converted to lowercase
+    !! and vice versa.
   PROCEDURE, PASS(self) :: tempname
-    !! Return a safe temporary name suitable for temporary file or directories.
+    !! Return a safe temporary name suitable for temporary file
+    !! or directories.
   GENERIC :: to_number => &
     to_integer_I1P, &
 #ifndef _NVF
@@ -165,7 +170,8 @@ CONTAINS
   PROCEDURE, PASS(self) :: unescape
     !! Unescape double backslashes (or custom escaped character).
   PROCEDURE, PASS(self) :: unique
-    !! Reduce to one (unique) multiple occurrences of a substring into a string.
+    !! Reduce to one (unique) multiple occurrences of a substring into
+    !! a string.
   PROCEDURE, PASS(self) :: upper
     !! Return a string with all uppercase characters.
   PROCEDURE, PASS(self) :: write_file
@@ -206,13 +212,15 @@ CONTAINS
     string_assign_real_R8P, &
     string_assign_real_R4P
       !! Assignment operator overloading.
-  GENERIC :: OPERATOR(//) => string_concat_string, &
-    string_concat_character, &
-    character_concat_string
+  GENERIC :: OPERATOR(//) => &
+    & string_concat_string, &
+    & string_concat_character, &
+    & character_concat_string
       !! Concatenation operator overloading.
-  GENERIC :: OPERATOR(.cat.) => string_concat_string_string, &
-    string_concat_character_string, &
-    character_concat_string_string
+  GENERIC :: OPERATOR(.cat.) => &
+    & string_concat_string_string, &
+    & string_concat_character_string, &
+    & character_concat_string_string
       !! Concatenation operator (string output) overloading.
   GENERIC :: OPERATOR(==) => string_eq_string, &
     string_eq_character, &
@@ -247,6 +255,7 @@ CONTAINS
     !! Unformatted input.
   GENERIC :: WRITE (unformatted) => write_unformatted
     !! Unformatted output.
+  PROCEDURE, PUBLIC, PASS( self ) :: Display => display_str
   ! private methods
   ! builtins replacements
   PROCEDURE, PRIVATE, PASS(self) :: sindex_string_string
@@ -285,9 +294,11 @@ CONTAINS
   PROCEDURE, PRIVATE, NOPASS :: strjoin_characters
     !! Return join string of an array of strings.
   PROCEDURE, PRIVATE, NOPASS :: strjoin_strings_array
-    !! Return join 1D string array of an 2D array of strings in columns or rows.
+    !! Return join 1D string array of an 2D array of strings in columns
+    !! or rows.
   PROCEDURE, PRIVATE, NOPASS :: strjoin_characters_array
-    !! Return join 1D string array of an 2D array of characters in columns or rows.
+    !! Return join 1D string array of an 2D array of characters in columns
+    !! or rows.
   PROCEDURE, PRIVATE, PASS(self) :: to_integer_I1P
     !! Cast string to integer.
 #ifndef _NVF
@@ -336,7 +347,7 @@ CONTAINS
     !! Concatenation with character (string output).
   PROCEDURE, PRIVATE, PASS(rhs) :: character_concat_string_string
     !! Concatenation with character (inverted, string output).
-  ! logical operators
+    !! logical operators
   PROCEDURE, PRIVATE, PASS(lhs) :: string_eq_string
     !! Equal to string logical operator.
   PROCEDURE, PRIVATE, PASS(lhs) :: string_eq_character
@@ -373,7 +384,7 @@ CONTAINS
     !! Greater than to character logical operator.
   PROCEDURE, PRIVATE, PASS(rhs) :: character_gt_string
     !! Greater than to character (inverted) logical operator.
-  ! IO
+    !! IO
   PROCEDURE, PRIVATE, PASS(dtv) :: read_formatted
     !! Formatted input.
   PROCEDURE, PRIVATE, PASS(dtv) :: read_delimited
@@ -1917,106 +1928,155 @@ PURE FUNCTION strjoin_strings_array(array, sep, is_col) RESULT(join)
   END IF
 END FUNCTION strjoin_strings_array
 
-   PURE FUNCTION strjoin_characters_array(array, sep, is_trim, is_col) RESULT(join)
-  !< Return a string that is a join of columns or rows of an array of characters.
-  !<
-  !< The join-separator is set equals to a null string '' if custom separator isn't specified.
-  !< The trim function is applied to array items if optional logical is_trim variable isn't set to .false.
-  !< The is_col is setup the direction of join: within default columns (.true.) or rows(.false.).
-  !<
-  !<```fortran
-  !< character(len=10)         :: chars_arr(3, 2)
-  !< logical                   :: test_passed(9)
-  !< chars_arr(:, 1) = ['one       ', 'two       ', 'three     ']
-  !< chars_arr(:, 2) = ['ONE       ', 'TWO       ', 'THREE     ']
-  !<
-  !< test_passed(1) = all( strjoin(array=chars_arr) == &
-  !<                       reshape([string('onetwothree'), string('ONETWOTHREE')], &
-  !<                       shape = [2]) )
-  !<
-  !< test_passed(2) = all( strjoin(array=chars_arr, is_trim=.false.) ==  &
-  !<                       reshape([string('one       two       three     '),  &
-  !<                                string('ONE       TWO       THREE     ')], &
-  !<                       shape = [2]) )
-  !<
-  !< test_passed(3) = all( strjoin(array=chars_arr, sep='_') == &
-  !<                       reshape([string('one_two_three'), string('ONE_TWO_THREE')], &
-  !<                       shape = [2]) )
-  !<
-  !< test_passed(4) = all( strjoin(array=chars_arr, sep='_', is_trim=.false.) ==  &
-  !<                       reshape([string('one       _two       _three     '),  &
-  !<                                string('ONE       _TWO       _THREE     ')], &
-  !<                       shape = [2]) )
-  !<
-  !< test_passed(5) = all( strjoin(array=chars_arr, is_col=.false.) == &
-  !<                       reshape([string('oneONE'), string('twoTWO'), string('threeTHREE')], &
-  !<                       shape = [3]) )
-  !<
-  !< test_passed(6) = all( strjoin(array=chars_arr, is_trim=.false., is_col=.false.) ==  &
-  !<                       reshape([string('one       ONE       '),  &
-  !<                                string('two       TWO       '),  &
-  !<                                string('three     THREE     ')], &
-  !<                       shape = [3]) )
-  !<
-  !< test_passed(7) = all( strjoin(array=chars_arr, sep='_', is_col=.false.) == &
-  !<                       reshape([string('one_ONE'), string('two_TWO'), string('three_THREE')], &
-  !<                       shape = [3]) )
-  !<
-  !< test_passed(8) = all( strjoin(array=chars_arr, sep='_', is_trim=.false., is_col=.false.) ==  &
-  !<                       reshape([string('one       _ONE       '),  &
-  !<                                string('two       _TWO       '),  &
-  !<                                string('three     _THREE     ')], &
-  !<                       shape = [3]) )
-  !<
-  !< chars_arr(2,1) = ''
-  !< test_passed(9) = all( strjoin(array=chars_arr, sep='_', is_col=.false.) ==  &
-  !<                       reshape([string('one_ONE'),  &
-  !<                                string('TWO'),  &
-  !<                                string('three_THREE')], &
-  !<                       shape = [3]) )
-  !<
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: array(1:, 1:) !< Array to be joined.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
-  LOGICAL, INTENT(in), OPTIONAL :: is_trim   !< Flag to setup trim character or not
-  LOGICAL, INTENT(in), OPTIONAL :: is_col    !< Direction: 'columns' if .true. or 'rows' if .false.
-  TYPE(string), ALLOCATABLE :: join(:)   !< The join of array.
-  CHARACTER(kind=CK, len=:), ALLOCATABLE :: slice(:)  !< The column or row slice of array
-  CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_      !< Separator, default value.
-  LOGICAL :: is_trim_  !< Flag to setup trim character or not
-  LOGICAL :: is_col_   !< Direction, default value.
-  INTEGER :: a, join_size, slice_size  !< Counter, sizes of join vector and of slice of array
-  INTEGER :: item_len  !< Length of array item (all items of character array have equal lengths)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-  item_len = LEN(array(1, 1)) !< all items of character array have equal lengths
+!> authors: Vikas Sharma, Ph. D.
+! date: 21 July 2022
+! summary: Return a string that is a join of columns or rows of an array of characters
+!
+!# Introduction
+!
+! The join-separator is set equals to a null string '' if custom separator
+! isn't specified.
+! The trim function is applied to array items if optional logical is_trim
+! variable isn't set to .false.
+! The is_col is setup the direction of join: within default columns (.true.)
+! or rows(.false.).
+!
+!```fortran
+! character(len=10)         :: chars_arr(3, 2)
+! logical                   :: test_passed(9)
+! chars_arr(:, 1) = ['one       ', 'two       ', 'three     ']
+! chars_arr(:, 2) = ['ONE       ', 'TWO       ', 'THREE     ']
+!
+! test_passed(1) = all( strjoin(array=chars_arr) == &
+!                       reshape([string('onetwothree'), string
+! ('ONETWOTHREE')], &
+!                       shape = [2]) )
+!
+! test_passed(2) = all( strjoin(array=chars_arr, is_trim=.false.) ==  &
+!                       reshape([string('one       two       three     '),  &
+!                                string('ONE       TWO       THREE     ')], &
+!                       shape = [2]) )
+!
+! test_passed(3) = all( strjoin(array=chars_arr, sep='_') == &
+!                       reshape([string('one_two_three'), string
+! ('ONE_TWO_THREE')], &
+!                       shape = [2]) )
+!
+! test_passed(4) = all( strjoin(array=chars_arr, sep='_', is_trim=.false.)
+! ==  &
+!                       reshape([string('one       _two       _three
+! '),  &
+!                                string('ONE       _TWO       _THREE
+! ')], &
+!                       shape = [2]) )
+!
+! test_passed(5) = all( strjoin(array=chars_arr, is_col=.false.) == &
+!                       reshape([string('oneONE'), string('twoTWO'), string
+! ('threeTHREE')], &
+!                       shape = [3]) )
+!
+! test_passed(6) = all( strjoin(array=chars_arr, is_trim=.false., is_col=.
+! false.) ==  &
+!                       reshape([string('one       ONE       '),  &
+!                                string('two       TWO       '),  &
+!                                string('three     THREE     ')], &
+!                       shape = [3]) )
+!
+! test_passed(7) = all( strjoin(array=chars_arr, sep='_', is_col=.false.) == &
+!                       reshape([string('one_ONE'), string('two_TWO'), string
+! ('three_THREE')], &
+!                       shape = [3]) )
+!
+! test_passed(8) = all( strjoin(array=chars_arr, sep='_', is_trim=.false.,
+! is_col=.false.) ==  &
+!                       reshape([string('one       _ONE       '),  &
+!                                string('two       _TWO       '),  &
+!                                string('three     _THREE     ')], &
+!                       shape = [3]) )
+!
+! chars_arr(2,1) = ''
+! test_passed(9) = all( strjoin(array=chars_arr, sep='_', is_col=.false.)
+! ==  &
+!                       reshape([string('one_ONE'),  &
+!                                string('TWO'),  &
+!                                string('three_THREE')], &
+!                       shape = [3]) )
+!
+! print '(L1)', all(test_passed)
+!```
+
+PURE FUNCTION strjoin_characters_array(array, sep, is_trim, is_col) &
+  & RESULT(join)
+  !!
+  CHARACTER(kind=CK, len=*), INTENT(in) :: array(1:, 1:)
+  !! Array to be joined.
+  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep
+  !! Separator.
+  LOGICAL, INTENT(in), OPTIONAL :: is_trim
+  !! Flag to setup trim character or not
+  LOGICAL, INTENT(in), OPTIONAL :: is_col
+  !! Direction: 'columns' if .true. or 'rows' if .false.
+  TYPE(string), ALLOCATABLE :: join(:)
+  !! The join of array.
+  CHARACTER(kind=CK, len=:), ALLOCATABLE :: slice(:)
+  !! The column or row slice of array
+  CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_
+  !! Separator, default value.
+  LOGICAL :: is_trim_
+  !! Flag to setup trim character or not
+  LOGICAL :: is_col_
+  !! Direction, default value.
+  INTEGER :: a, join_size, slice_size
+  !! Counter, sizes of join vector and of slice of array
+  INTEGER :: item_len
+  !! Length of array item (all items of character array have equal lengths)
+  !!
+  !!
+  item_len = LEN(array(1, 1))
+  !!
+  !! all items of character array have equal lengths
+  !!
   sep_ = ''; IF (PRESENT(sep)) sep_ = sep
   is_trim_ = .TRUE.; IF (PRESENT(is_trim)) is_trim_ = is_trim
   is_col_ = .TRUE.; IF (PRESENT(is_col)) is_col_ = is_col
-
+  !!
   IF (is_col_) THEN
     join_size = SIZE(array, dim=2)
     slice_size = SIZE(array, dim=1)
-
+    !!
     IF (.NOT. ALLOCATED(join)) ALLOCATE (join(join_size))
-         IF (.NOT. ALLOCATED(slice)) ALLOCATE (CHARACTER(len=item_len) :: slice(slice_size))
+    IF (.NOT. ALLOCATED(slice)) &
+      & ALLOCATE (CHARACTER(len=item_len) :: slice(slice_size))
+    !!
     DO a = 1, join_size
       slice(:) = array(:, a)
       join(a) = strjoin_characters(slice, sep_, is_trim_)
     END DO
+    !!
   ELSE
+    !!
     join_size = SIZE(array, dim=1)
     slice_size = SIZE(array, dim=2)
-
+    !!
     IF (.NOT. ALLOCATED(join)) ALLOCATE (join(join_size))
-         IF (.NOT. ALLOCATED(slice)) ALLOCATE (CHARACTER(len=item_len) :: slice(slice_size))
+    IF (.NOT. ALLOCATED(slice)) &
+      & ALLOCATE (CHARACTER(len=item_len) :: slice(slice_size))
+    !!
     DO a = 1, join_size
       slice(:) = array(a, :)
       join(a) = strjoin_characters(slice, sep_, is_trim_)
     END DO
   END IF
+  !!
 END FUNCTION strjoin_characters_array
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION lower(self)
   !< Return a string with all lowercase characters.
@@ -2417,7 +2477,12 @@ ELEMENTAL FUNCTION reverse(self) RESULT(reversed)
   END IF
 END FUNCTION reverse
 
-   FUNCTION search(self, tag_start, tag_end, in_string, in_character, istart, iend) RESULT(tag)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+FUNCTION search(self, tag_start, tag_end, in_string, in_character, &
+  & istart, iend) RESULT(tag)
   !< Search for *tagged* record into string, return the first record found (if any) matching the tags.
   !<
   !< Optionally, returns the indexes of tag start/end, thus this is not an `elemental` function.
@@ -2496,6 +2561,10 @@ END FUNCTION reverse
   IF (PRESENT(iend)) iend = iend_
 END FUNCTION search
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 PURE FUNCTION slice(self, istart, iend) RESULT(raw)
   !< Return the raw characters data sliced.
   !<
@@ -2516,6 +2585,10 @@ PURE FUNCTION slice(self, istart, iend) RESULT(raw)
     raw = ''
   END IF
 END FUNCTION slice
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION snakecase(self, sep)
   !< Return a string with all words lowercase separated by "_".
@@ -2558,66 +2631,84 @@ END FUNCTION snakecase
 ! Multiple subsequent separators are collapsed to one occurrence.
 !@endnote
 !
-! @note If `max_tokens` is passed the returned number of tokens is either `max_tokens` or `max_tokens + 1`.
-!<
-!<```fortran
-!< type(string)              :: astring
-!< type(string), allocatable :: strings(:)
-!< logical                   :: test_passed(11)
-!< astring = '+ab-++cre-++cre-ab+'
-!< call astring%split(tokens=strings, sep='+')
-!< test_passed(1) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
-!< astring = 'ab-++cre-++cre-ab+'
-!< call astring%split(tokens=strings, sep='+')
-!< test_passed(2) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
-!< astring = 'ab-++cre-++cre-ab'
-!< call astring%split(tokens=strings, sep='+')
-!< test_passed(3) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.strings(3)//''=='cre-ab')
-!< astring = 'Hello '//new_line('a')//'World!'
-!< call astring%split(tokens=strings, sep=new_line('a'))
-!< test_passed(4) = (strings(1)//''=='Hello '.and.strings(2)//''=='World!')
-!< astring = 'Hello World!'
-!< call astring%split(tokens=strings)
-!< test_passed(5) = (strings(1)//''=='Hello'.and.strings(2)//''=='World!')
-!< astring = '+ab-'
-!< call astring%split(tokens=strings, sep='+')
-!< test_passed(6) = (strings(1)//''=='ab-')
-!< astring = '+ab-'
-!< call astring%split(tokens=strings, sep='-')
-!< test_passed(7) = (strings(1)//''=='+ab')
-!< astring = '+ab-+cd-'
-!< call astring%split(tokens=strings, sep='+')
-!< test_passed(8) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
-!< astring = 'ab-+cd-+'
-!< call astring%split(tokens=strings, sep='+')
-!< test_passed(9) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
-!< astring = '+ab-+cd-+'
-!< call astring%split(tokens=strings, sep='+')
-!< test_passed(10) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
-!< astring = '1-2-3-4-5-6-7-8'
-!< call astring%split(tokens=strings, sep='-', max_tokens=3)
-!< test_passed(11) = (strings(1)//''=='1'.and.strings(2)//''=='2'.and.strings(3)//''=='3'.and.strings(4)//''=='4-5-6-7-8')
-!< print '(L1)', all(test_passed)
-!<```
-!=> T <<<
+!@note
+! If `max_tokens` is passed the returned number of tokens is either
+! `max_tokens` or `max_tokens + 1`.
+!@endnote
+!
+!```fortran
+! type(string)              :: astring
+! type(string), allocatable :: strings(:)
+! logical                   :: test_passed(11)
+! astring = '+ab-++cre-++cre-ab+'
+! call astring%split(tokens=strings, sep='+')
+! test_passed(1) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.
+! strings(3)//''=='cre-ab')
+! astring = 'ab-++cre-++cre-ab+'
+! call astring%split(tokens=strings, sep='+')
+! test_passed(2) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.
+! strings(3)//''=='cre-ab')
+! astring = 'ab-++cre-++cre-ab'
+! call astring%split(tokens=strings, sep='+')
+! test_passed(3) = (strings(1)//''=='ab-'.and.strings(2)//''=='cre-'.and.
+! strings(3)//''=='cre-ab')
+! astring = 'Hello '//new_line('a')//'World!'
+! call astring%split(tokens=strings, sep=new_line('a'))
+! test_passed(4) = (strings(1)//''=='Hello '.and.strings(2)//''=='World!')
+! astring = 'Hello World!'
+! call astring%split(tokens=strings)
+! test_passed(5) = (strings(1)//''=='Hello'.and.strings(2)//''=='World!')
+! astring = '+ab-'
+! call astring%split(tokens=strings, sep='+')
+! test_passed(6) = (strings(1)//''=='ab-')
+! astring = '+ab-'
+! call astring%split(tokens=strings, sep='-')
+! test_passed(7) = (strings(1)//''=='+ab')
+! astring = '+ab-+cd-'
+! call astring%split(tokens=strings, sep='+')
+! test_passed(8) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
+! astring = 'ab-+cd-+'
+! call astring%split(tokens=strings, sep='+')
+! test_passed(9) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
+! astring = '+ab-+cd-+'
+! call astring%split(tokens=strings, sep='+')
+! test_passed(10) = (strings(1)//''=='ab-'.and.strings(2)//''=='cd-')
+! astring = '1-2-3-4-5-6-7-8'
+! call astring%split(tokens=strings, sep='-', max_tokens=3)
+! test_passed(11) = (strings(1)//''=='1'.and.strings(2)//''=='2'.and.strings
+! (3)//''=='3'.and.strings(4)//''=='4-5-6-7-8')
+! print '(L1)', all(test_passed)
+!```
 
 PURE SUBROUTINE split(self, tokens, sep, max_tokens)
-  CLASS(string), INTENT(in) :: self           !< The string.
-  TYPE(string), ALLOCATABLE, INTENT(out) :: tokens(:)      !< Tokens substring.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep            !< Separator.
-  INTEGER, INTENT(in), OPTIONAL :: max_tokens     !< Fix the maximum number of returned tokens.
-  CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_           !< Separator, default value.
-  INTEGER :: No             !< Number of occurrences of sep.
-  INTEGER :: t              !< Character counter.
-  TYPE(string) :: temporary      !< Temporary storage.
-  TYPE(string), ALLOCATABLE :: temp_toks(:, :) !< Temporary tokens substring.
-
+  CLASS(string), INTENT(in) :: self
+  !! The string.
+  TYPE(string), ALLOCATABLE, INTENT(out) :: tokens(:)
+  !! Tokens substring.
+  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep
+  !! Separator.
+  INTEGER, INTENT(in), OPTIONAL :: max_tokens
+  !! Fix the maximum number of returned tokens.
+  CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_
+  !! Separator, default value.
+  INTEGER :: No
+  !! Number of occurrences of sep.
+  INTEGER :: t
+  !! Character counter.
+  TYPE(string) :: temporary
+  !! Temporary storage.
+  TYPE(string), ALLOCATABLE :: temp_toks(:, :)
+  !! Temporary tokens substring.
+  !!
+  !!
+  !!
   IF (ALLOCATED(self%raw)) THEN
+    !!
     sep_ = SPACE; IF (PRESENT(sep)) sep_ = sep
-
+    !!
     temporary = self%unique(sep_)
     No = temporary%COUNT(sep_)
-
+    !!
     IF (No > 0) THEN
       IF (PRESENT(max_tokens)) THEN
         IF (max_tokens < No .AND. max_tokens > 0) No = max_tokens
@@ -2629,7 +2720,7 @@ PURE SUBROUTINE split(self, tokens, sep, max_tokens)
           temp_toks(:, t) = temp_toks(3, t - 1)%partition(sep_)
         END DO
       END IF
-
+      !!
       IF (temp_toks(1, 1)%raw /= '' .AND. temp_toks(3, No)%raw /= '') THEN
         ALLOCATE (tokens(No + 1))
         DO t = 1, No
@@ -2657,7 +2748,7 @@ PURE SUBROUTINE split(self, tokens, sep, max_tokens)
           tokens(t - 1) = temp_toks(1, t)
         END DO
       END IF
-
+      !!
     ELSE
       ALLOCATE (tokens(1))
       tokens(1) = self
@@ -2665,36 +2756,64 @@ PURE SUBROUTINE split(self, tokens, sep, max_tokens)
   END IF
 END SUBROUTINE split
 
-PURE SUBROUTINE split_chunked(self, tokens, chunks, sep)
-  !< Return a list of substring in the string, using sep as the delimiter string, chunked (memory-efficient) algorithm.
-  !<
-  !< @note Multiple subsequent separators are collapsed to one occurrence.
-  !<
-  !< @note The split is performed in chunks of `#chunks` to avoid excessive memory consumption.
-  !<
-  !<```fortran
-  !< type(string)              :: astring
-  !< type(string), allocatable :: strings(:)
-  !< logical                   :: test_passed(1)
-  !< astring = '-1-2-3-4-5-6-7-8-'
-  !< call astring%split_chunked(tokens=strings, sep='-', chunks=3)
-  !< test_passed(1) = (strings(1)//''=='1'.and.strings(2)//''=='2'.and.strings(3)//''=='3'.and.strings(4)//''=='4'.and. &
-  !<                   strings(5)//''=='5'.and.strings(6)//''=='6'.and.strings(7)//''=='7'.and.strings(8)//''=='8')
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  TYPE(string), ALLOCATABLE, INTENT(out) :: tokens(:) !< Tokens substring.
-  INTEGER, INTENT(in) :: chunks    !< Number of chunks.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
-  CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_      !< Separator, default value.
-  INTEGER :: Nt        !< Number of actual tokens.
-  INTEGER :: t         !< Counter.
-  LOGICAL :: isok
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Szaghi
+! date: 21 July 2022
+! summary: Return substrings
+!
+!# Introduction
+!
+! Return a list of substring in the string, using sep as the delimiter
+! string, chunked (memory-efficient) algorithm.
+!
+!@note
+! Multiple subsequent separators are collapsed to one occurrence.
+!@endnote
+!
+!@note
+! The split is performed in chunks of `#chunks` to avoid excessive memory
+! consumption.
+!@endnote
+!
+!```fortran
+! type(string)              :: astring
+! type(string), allocatable :: strings(:)
+! logical                   :: test_passed(1)
+! astring = '-1-2-3-4-5-6-7-8-'
+! call astring%split_chunked(tokens=strings, sep='-', chunks=3)
+! test_passed(1) = (strings(1)//''=='1'.and.strings(2)//''=='2'.and.strings
+! (3)//''=='3'.and.strings(4)//''=='4'.and. &
+!                   strings(5)//''=='5'.and.strings(6)//''=='6'.and.strings
+! (7)//''=='7'.and.strings(8)//''=='8')
+! print '(L1)', all(test_passed)
+!```
+
+PURE SUBROUTINE split_chunked(self, tokens, chunks, sep)
+  !!
+  CLASS(string), INTENT(in) :: self
+  !! The string.
+  TYPE(string), ALLOCATABLE, INTENT(out) :: tokens(:)
+  !! Tokens substring.
+  INTEGER, INTENT(in) :: chunks
+  !! Number of chunks.
+  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep
+  !! Separator.
+  CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_
+  !! Separator, default value.
+  INTEGER :: Nt
+  !! Number of actual tokens.
+  INTEGER :: t
+  !! Counter.
+  LOGICAL :: isok
+  !!
+  !!
+  !!
   IF (ALLOCATED(self%raw)) THEN
     sep_ = SPACE; IF (PRESENT(sep)) sep_ = sep
-
+    !!
     Nt = self%COUNT(sep_)
     IF (self%start_with(prefix=sep_)) Nt = Nt - 1
     IF (self%end_with(suffix=sep_)) Nt = Nt - 1
@@ -2709,23 +2828,29 @@ PURE SUBROUTINE split_chunked(self, tokens, chunks, sep)
         EXIT
       END IF
     END DO
-
+    !!
     t = SIZE(tokens, dim=1)
     IF (tokens(t)%COUNT(sep_) > 0) THEN
       CALL split_last_token(tokens=tokens, isok=isok)
     END IF
   END IF
-
-CONTAINS
+  !!
+  CONTAINS
+  !!
   PURE SUBROUTINE split_last_token(tokens, max_tokens, isok)
-    !< Split last token.
-    TYPE(string), ALLOCATABLE, INTENT(inout) :: tokens(:)      !< Tokens substring.
-    INTEGER, INTENT(in), OPTIONAL :: max_tokens     !< Max tokens returned.
-    TYPE(string), ALLOCATABLE :: tokens_(:)     !< Temporary tokens.
-    TYPE(string), ALLOCATABLE :: tokens_swap(:) !< Swap tokens.
-    INTEGER :: Nt_            !< Number of last created tokens.
+    !! Split last token.
+    TYPE(string), ALLOCATABLE, INTENT(inout) :: tokens(:)
+    !! Tokens substring.
+    INTEGER, INTENT(in), OPTIONAL :: max_tokens
+    !! Max tokens returned.
+    TYPE(string), ALLOCATABLE :: tokens_(:)
+    !! Temporary tokens.
+    TYPE(string), ALLOCATABLE :: tokens_swap(:)
+    !! Swap tokens.
+    INTEGER :: Nt_
+    !! Number of last created tokens.
     LOGICAL, INTENT(out) :: isok
-
+    !!
     isok = .TRUE.
     CALL tokens(t)%split(tokens=tokens_, sep=sep_, max_tokens=max_tokens)
     IF (ALLOCATED(tokens_)) THEN
@@ -2742,7 +2867,12 @@ CONTAINS
       DEALLOCATE (tokens_)
     END IF
   END SUBROUTINE split_last_token
+  !!
 END SUBROUTINE split_chunked
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION startcase(self, sep)
   !< Return a string with all words capitalized, e.g. title case.
@@ -4608,6 +4738,10 @@ SUBROUTINE read_undelimited(dtv, unit, terminators, iostat, iomsg)
   END DO
 END SUBROUTINE read_undelimited
 
+!----------------------------------------------------------------------------
+!                                                                     Write
+!----------------------------------------------------------------------------
+
 SUBROUTINE write_formatted(dtv, unit, iotype, v_list, iostat, iomsg)
   !< Formatted output.
   CLASS(string), INTENT(in) :: dtv       !< The string.
@@ -4623,6 +4757,10 @@ SUBROUTINE write_formatted(dtv, unit, iotype, v_list, iostat, iomsg)
     WRITE (unit, "(A)", iostat=iostat, iomsg=iomsg) ''
   END IF
 END SUBROUTINE write_formatted
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 SUBROUTINE read_unformatted(dtv, unit, iostat, iomsg)
   !< Unformatted input.
@@ -4676,21 +4814,39 @@ ELEMENTAL FUNCTION replace_one_occurrence(self, old, NEW) RESULT(replaced)
   END IF
 END FUNCTION replace_one_occurrence
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 21 July 2021
+! summary: Get the DELIM changeable connection mode for the given unit.
+!
+!# Introduction
+!
+! If the unit is connected to an internal file, then the default value of
+! NONE is always returned.
+
 ! non type-bound-procedures
 SUBROUTINE get_delimiter_mode(unit, delim, iostat, iomsg)
-  !< Get the DELIM changeable connection mode for the given unit.
-  !<
-  !< If the unit is connected to an internal file, then the default value of NONE is always returned.
   USE, INTRINSIC :: iso_fortran_env, ONLY: iostat_inquire_internal_unit
-  INTEGER, INTENT(in) :: unit         !< The unit for the connection.
-  CHARACTER(len=1, kind=CK), INTENT(out) :: delim        !< Represents the value of the DELIM mode.
-  INTEGER, INTENT(out) :: iostat       !< IOSTAT error code, non-zero on error.
-  CHARACTER(*), INTENT(inout) :: iomsg        !< IOMSG explanatory message - only defined if iostat is non-zero.
-  CHARACTER(10) :: delim_buffer !< Buffer for INQUIRE about DELIM, sized for APOSTROHPE.
-  CHARACTER(LEN(iomsg)) :: local_iomsg  !< Local variant of iomsg, so it doesn't get inappropriately redefined.
-
-  ! get the string representation of the changeable mode
+  INTEGER, INTENT(in) :: unit
+  !! The unit for the connection.
+  CHARACTER(len=1, kind=CK), INTENT(out) :: delim
+  !! Represents the value of the DELIM mode.
+  INTEGER, INTENT(out) :: iostat
+  !! IOSTAT error code, non-zero on error.
+  CHARACTER(*), INTENT(inout) :: iomsg
+  !! IOMSG explanatory message - only defined if iostat is non-zero.
+  CHARACTER(10) :: delim_buffer
+  !! Buffer for INQUIRE about DELIM, sized for APOSTROHPE.
+  CHARACTER(LEN(iomsg)) :: local_iomsg
+  !! Local variant of iomsg, so it doesn't get inappropriately redefined.
+  !!
+  !! get the string representation of the changeable mode
+  !!
   INQUIRE (unit, delim=delim_buffer, iostat=iostat, iomsg=local_iomsg)
+  !!
   IF (iostat == iostat_inquire_internal_unit) THEN
     ! no way of determining the DELIM mode for an internal file
     iostat = 0
@@ -4710,39 +4866,65 @@ SUBROUTINE get_delimiter_mode(unit, delim, iostat, iomsg)
   END IF
 END SUBROUTINE get_delimiter_mode
 
-SUBROUTINE get_next_non_blank_character_this_record(unit, ch, iostat, iomsg)
-  !< Get the next non-blank character in the current record.
-  INTEGER, INTENT(in) :: unit   !< Logical unit.
-  CHARACTER(kind=CK, len=1), INTENT(out) :: ch     !< The non-blank character read. Not valid if IOSTAT is non-zero.
-  INTEGER, INTENT(out) :: iostat !< IO status code.
-  CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg  !< IO status message.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 21 July 2022
+! summary: Get the next non-blank character in the current record.
+
+SUBROUTINE get_next_non_blank_character_this_record(unit, ch, iostat, iomsg)
+  INTEGER, INTENT(in) :: unit
+  !! Logical unit.
+  CHARACTER(kind=CK, len=1), INTENT(out) :: ch
+  !! The non-blank character read. Not valid if IOSTAT is non-zero.
+  INTEGER, INTENT(out) :: iostat
+  !! IO status code.
+  CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg
+  !! IO status message.
+  !!
   DO
-    ! we spcify non-advancing, just in case we want this callable outside the context of a child input statement
-    ! the PAD specifier simply saves the need for the READ statement to define ch if EOR is hit
+    ! we spcify non-advancing, just in case we want this callable outside the
+    ! context of a child input statement
+    ! the PAD specifier simply saves the need for the READ statement to
+    ! define ch if EOR is hit
     ! read(unit, "(A)", iostat=iostat, iomsg=iomsg, advance='NO') ch
     ! ...but that causes ifort to blow up at runtime
     READ (unit, "(A)", iostat=iostat, iomsg=iomsg, pad='NO') ch
-    IF (iostat /= 0) RETURN
-    IF (ch /= '') EXIT
+    IF (iostat .NE. 0) RETURN
+    IF (ch .NE. '') EXIT
   END DO
 END SUBROUTINE get_next_non_blank_character_this_record
 
-SUBROUTINE get_next_non_blank_character_any_record(unit, ch, iostat, iomsg)
-  !< Get the next non-blank character, advancing records if necessary.
-  INTEGER, INTENT(in) :: unit        !< Logical unit.
-  CHARACTER(kind=CK, len=1), INTENT(out) :: ch          !< The non-blank character read. Not valid if IOSTAT is non-zero.
-  INTEGER, INTENT(out) :: iostat      !< IO status code.
-  CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg       !< IO status message.
-  CHARACTER(LEN(iomsg)) :: local_iomsg !< Local variant of iomsg, so it doesn't get inappropriately redefined.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 21 July 2022
+! summary: Get the next non-blank character, advancing records if necessary.
+
+SUBROUTINE get_next_non_blank_character_any_record(unit, ch, iostat, iomsg)
+  INTEGER, INTENT(in) :: unit
+  !! Logical unit.
+  CHARACTER(kind=CK, len=1), INTENT(out) :: ch
+  !! The non-blank character read. Not valid if IOSTAT is non-zero.
+  INTEGER, INTENT(out) :: iostat
+  !! IO status code.
+  CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg
+  !! IO status message.
+  CHARACTER(LEN(iomsg)) :: local_iomsg
+  !! Local variant of iomsg, so it doesn't get inappropriately redefined.
+  !!
   DO
-         CALL get_next_non_blank_character_this_record(unit=unit, ch=ch, iostat=iostat, iomsg=local_iomsg)
-    IF (is_iostat_eor(iostat)) THEN
+    CALL get_next_non_blank_character_this_record(unit=unit, ch=ch, &
+      & iostat=iostat, iomsg=local_iomsg)
+    IF (IS_IOSTAT_EOR(iostat)) THEN
       ! try again on the next record
       READ (unit, "(/)", iostat=iostat, iomsg=iomsg)
-      IF (iostat /= 0) RETURN
-    ELSEIF (iostat /= 0) THEN
+      IF (iostat .NE. 0) RETURN
+    ELSEIF (iostat .NE. 0) THEN
       ! some sort of problem
       iomsg = local_iomsg
       RETURN
@@ -4753,31 +4935,54 @@ SUBROUTINE get_next_non_blank_character_any_record(unit, ch, iostat, iomsg)
   END DO
 END SUBROUTINE get_next_non_blank_character_any_record
 
-SUBROUTINE get_decimal_mode(unit, decimal_point, iostat, iomsg)
-  !< Get the DECIMAL changeable connection mode for the given unit.
-  !<
-  !< If the unit is connected to an internal file, then the default value of DECIMAL is always returned. This may not be the
-  !< actual value in force at the time of the call to this procedure.
-  USE, INTRINSIC :: iso_fortran_env, ONLY: iostat_inquire_internal_unit
-  INTEGER, INTENT(in) :: unit           !< Logical unit.
-  LOGICAL, INTENT(out) :: decimal_point  !< True if the decimal mode is POINT, false otherwise.
-  INTEGER, INTENT(out) :: iostat         !< IO status code.
-  CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg          !< IO status message.
-  CHARACTER(5) :: decimal_buffer !< Buffer for INQUIRE about DECIMAL, sized for POINT or COMMA.
-  CHARACTER(LEN(iomsg)) :: local_iomsg    !< Local iomsg, so it doesn't get inappropriately redefined.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 21 July 2022
+! summary: Get the DECIMAL changeable connection mode for the given unit.
+!
+!# Introduction
+!
+! If the unit is connected to an internal file,
+! then the default value of DECIMAL is always returned.
+! This may not be the actual value in force at the time of the call
+! to this procedure.
+
+SUBROUTINE get_decimal_mode(unit, decimal_point, iostat, iomsg)
+  USE, INTRINSIC :: iso_fortran_env, ONLY: iostat_inquire_internal_unit
+  INTEGER, INTENT(in) :: unit
+  !! Logical unit.
+  LOGICAL, INTENT(out) :: decimal_point
+  !! True if the decimal mode is POINT, false otherwise.
+  INTEGER, INTENT(out) :: iostat
+  !! IO status code.
+  CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg
+  !! IO status message.
+  CHARACTER(5) :: decimal_buffer
+  !! Buffer for INQUIRE about DECIMAL, sized for POINT or COMMA.
+  CHARACTER(LEN(iomsg)) :: local_iomsg
+  !! Local iomsg, so it doesn't get inappropriately redefined.
+  !!
+  !!
   INQUIRE (unit, decimal=decimal_buffer, iostat=iostat, iomsg=local_iomsg)
-  IF (iostat == iostat_inquire_internal_unit) THEN
+  !!
+  IF (iostat .EQ. iostat_inquire_internal_unit) THEN
     ! no way of determining the decimal mode for an internal file
     iostat = 0
     decimal_point = .TRUE.
     RETURN
-  ELSE IF (iostat /= 0) THEN
+  ELSE IF (iostat .NE. 0) THEN
     iomsg = local_iomsg
     RETURN
   END IF
   decimal_point = decimal_buffer == 'POINT'
 END SUBROUTINE get_decimal_mode
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 SUBROUTINE display_str(self, msg, unitno)
   !< Display the contents of a given string
@@ -4798,8 +5003,7 @@ SUBROUTINE display_str(self, msg, unitno)
   ELSE
     i = stdout
   END IF
-  IF (len_TRIM(msg) .NE. 0) WRITE (i, "(A)") "#"//TRIM(msg)
-  WRITE (i, "(A)") self%chars()
+  WRITE (i, "(A)") TRIM(msg) // self%chars()
 END SUBROUTINE display_str
 
 PURE FUNCTION constructor1(c) RESULT(self)
@@ -4909,8 +5113,8 @@ END FUNCTION nmatchstr_2
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         9 May 2021
-! summary:         Returns the indices in a string where substring pattern are found
+! date: 9 May 2021
+! summary: Returns the indices in a string where substring pattern are found
 !
 !### Introduction
 ! Function returns the indices in a string where substring pattern is found.
