@@ -129,7 +129,7 @@ INTERFACE getNNZ
 END INTERFACE getNNZ
 
 !----------------------------------------------------------------------------
-!                                                   AllocateData@Constructor
+!                                                   Allocate@Constructor
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
