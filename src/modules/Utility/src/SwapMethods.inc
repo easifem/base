@@ -15,6 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+PUBLIC :: SWAP
 
 !----------------------------------------------------------------------------
 !                                                           SWAP@SWAPMethods
@@ -25,16 +26,23 @@
 ! summary: Swap two integer
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_i(a, b)
-    INTEGER(I4B), INTENT(INOUT) :: a, b
-  END SUBROUTINE swap_i
+  MODULE PURE SUBROUTINE swap_int8(a, b)
+    INTEGER(Int8), INTENT(INOUT) :: a, b
+  END SUBROUTINE swap_int8
+  MODULE PURE SUBROUTINE swap_Int16(a, b)
+    INTEGER(Int16), INTENT(INOUT) :: a, b
+  END SUBROUTINE swap_Int16
+  MODULE PURE SUBROUTINE swap_Int32(a, b)
+    INTEGER(Int32), INTENT(INOUT) :: a, b
+  END SUBROUTINE swap_Int32
+  MODULE PURE SUBROUTINE swap_Int64(a, b)
+    INTEGER(Int64), INTENT(INOUT) :: a, b
+  END SUBROUTINE swap_Int64
 END INTERFACE
 
 INTERFACE SWAP
-  MODULE PROCEDURE swap_i
+  MODULE PROCEDURE swap_int8, swap_Int16, swap_Int32, swap_Int64
 END INTERFACE
-
-PUBLIC :: SWAP
 
 !----------------------------------------------------------------------------
 !                                                            SWAP@SWAPMethods
