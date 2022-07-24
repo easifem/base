@@ -15,6 +15,9 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+PUBLIC :: SORT
+PUBLIC :: HeapSort
+PUBLIC :: QUICKSORT
 
 !----------------------------------------------------------------------------
 !                                                              HeapSort@Sort
@@ -25,48 +28,88 @@
 ! summary:         Heap sort
 
 INTERFACE
-  MODULE PURE SUBROUTINE HEAPSORT_INT(array)
-    INTEGER(I4B), INTENT(INOUT) :: array(:)
-  END SUBROUTINE HEAPSORT_INT
+  MODULE PURE SUBROUTINE HEAPSORT_Int8(array)
+    INTEGER(Int8), INTENT(INOUT) :: array(:)
+  END SUBROUTINE HEAPSORT_Int8
+  MODULE PURE SUBROUTINE HEAPSORT_Int16(array)
+    INTEGER(Int16), INTENT(INOUT) :: array(:)
+  END SUBROUTINE HEAPSORT_Int16
+  MODULE PURE SUBROUTINE HEAPSORT_Int32(array)
+    INTEGER(Int32), INTENT(INOUT) :: array(:)
+  END SUBROUTINE HEAPSORT_Int32
+  MODULE PURE SUBROUTINE HEAPSORT_Int64(array)
+    INTEGER(Int64), INTENT(INOUT) :: array(:)
+  END SUBROUTINE HEAPSORT_Int64
 END INTERFACE
+
+INTERFACE HEAPSORT
+  MODULE PROCEDURE HEAPSORT_Int8, HEAPSORT_Int16, HEAPSORT_Int32, &
+    & HEAPSORT_Int64
+END INTERFACE HEAPSORT
 
 !----------------------------------------------------------------------------
 !                                                             HeapSort@Sort
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE HEAPSORT_REAL(array)
-    REAL(DFP), INTENT(INOUT) :: array(:)
-  END SUBROUTINE HEAPSORT_REAL
+  MODULE PURE SUBROUTINE HEAPSORT_Real32(array)
+    REAL(Real32), INTENT(INOUT) :: array(:)
+  END SUBROUTINE HEAPSORT_Real32
+  MODULE PURE SUBROUTINE HEAPSORT_Real64(array)
+    REAL(Real64), INTENT(INOUT) :: array(:)
+  END SUBROUTINE HEAPSORT_Real64
 END INTERFACE
 
 INTERFACE HeapSort
-  MODULE PROCEDURE HEAPSORT_INT, HEAPSORT_REAL
+  MODULE PROCEDURE HEAPSORT_Real32, HEAPSORT_Real64
 END INTERFACE HeapSort
 
-PUBLIC :: HeapSort
+!----------------------------------------------------------------------------
+!                                                             QuickSort@Sort
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE RECURSIVE PURE SUBROUTINE quickSort1vectReal32(vect1, low, high)
+    REAL(Real32), INTENT(INOUT) :: vect1( : )
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE quickSort1vectReal32
+  MODULE RECURSIVE PURE SUBROUTINE quickSort1vectReal64(vect1, low, high)
+    REAL(Real64), INTENT(INOUT) :: vect1( : )
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE quickSort1vectReal64
+END INTERFACE
+
+INTERFACE QUICKSORT
+  MODULE PROCEDURE quickSort1vectReal32, quickSort1vectReal64
+END INTERFACE QUICKSORT
 
 !----------------------------------------------------------------------------
 !                                                             QuickSort@Sort
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE RECURSIVE SUBROUTINE quickSort1vectR(vect1, low, high)
-    REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1
+  MODULE RECURSIVE PURE SUBROUTINE quickSort1vectInt8(vect1, low, high)
+    INTEGER(Int8), INTENT(INOUT) :: vect1(:)
     INTEGER(I4B), INTENT(IN) :: low, high
-  END SUBROUTINE quickSort1vectR
+  END SUBROUTINE quickSort1vectInt8
+  MODULE RECURSIVE PURE SUBROUTINE quickSort1vectInt16(vect1, low, high)
+    INTEGER(Int16), INTENT(INOUT) :: vect1(:)
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE quickSort1vectInt16
+  MODULE RECURSIVE PURE SUBROUTINE quickSort1vectInt32(vect1, low, high)
+    INTEGER(Int32), INTENT(INOUT) :: vect1(:)
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE quickSort1vectInt32
+  MODULE RECURSIVE PURE SUBROUTINE quickSort1vectInt64(vect1, low, high)
+    INTEGER(Int64), INTENT(INOUT) :: vect1(:)
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE quickSort1vectInt64
 END INTERFACE
 
-!----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE RECURSIVE SUBROUTINE quickSort1vectI(vect1, low, high)
-    INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1
-    INTEGER(I4B), INTENT(IN) :: low, high
-  END SUBROUTINE quickSort1vectI
-END INTERFACE
+INTERFACE QUICKSORT
+  MODULE PROCEDURE quickSort1vectInt8, quickSort1vectInt16, &
+    & quickSort1vectInt32, quickSort1vectInt64
+END INTERFACE QUICKSORT
 
 !----------------------------------------------------------------------------
 !                                                             QuickSort@Sort
@@ -121,7 +164,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
- MODULE RECURSIVE SUBROUTINE quickSort3vectIII(vect1, vect2, vect3, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort3vectIII(vect1, vect2, vect3, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE
@@ -132,7 +175,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
- MODULE RECURSIVE SUBROUTINE quickSort3vectIIR(vect1, vect2, vect3, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort3vectIIR(vect1, vect2, vect3, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect3
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -144,7 +187,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
- MODULE RECURSIVE SUBROUTINE quickSort3vectIRR(vect1, vect2, vect3, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort3vectIRR(vect1, vect2, vect3, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -156,7 +199,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
- MODULE RECURSIVE SUBROUTINE quickSort3vectIRI(vect1, vect2, vect3, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort3vectIRI(vect1, vect2, vect3, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -168,7 +211,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
- MODULE RECURSIVE SUBROUTINE quickSort3vectRRR(vect1, vect2, vect3, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort3vectRRR(vect1, vect2, vect3, low, high)
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE
@@ -179,7 +222,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
- MODULE RECURSIVE SUBROUTINE quickSort3vectRRI(vect1, vect2, vect3, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort3vectRRI(vect1, vect2, vect3, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect3
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -191,7 +234,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
- MODULE RECURSIVE SUBROUTINE quickSort3vectRIR(vect1, vect2, vect3, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort3vectRIR(vect1, vect2, vect3, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -203,7 +246,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
- MODULE RECURSIVE SUBROUTINE quickSort3vectRII(vect1, vect2, vect3, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort3vectRII(vect1, vect2, vect3, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -215,7 +258,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectIIII(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectIIII(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3, vect4
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE
@@ -226,7 +270,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectIIIR(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectIIIR(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect4
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -238,7 +283,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectIIRI(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectIIRI(vect1, vect2, vect3, vect4, &
+    & low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect4
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect3
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -250,7 +296,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectIIRR(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectIIRR(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect3, vect4
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -262,7 +309,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectIRRR(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectIRRR(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2, vect3, vect4
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -274,7 +322,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectIRRI(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectIRRI(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect4
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -286,7 +335,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectIRIR(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectIRIR(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2, vect4
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -298,7 +348,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectIRII(vect1, vect2, vect3, vect4, low, high)
+  MODULE RECURSIVE SUBROUTINE quickSort4vectIRII(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect1, vect3, vect4
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect2
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -310,7 +361,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectRRRR(vect1, vect2, vect3, vect4, low, high)
+  MODULE RECURSIVE SUBROUTINE quickSort4vectRRRR(vect1, vect2, vect3, &
+    & vect4, low, high)
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3, vect4
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE
@@ -321,7 +373,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectRRRI(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectRRRI(vect1, vect2, vect3, vect4, &
+    & low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect4
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect3
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -333,7 +386,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectRRIR(vect1, vect2, vect3, vect4, low, high)
+MODULE RECURSIVE SUBROUTINE quickSort4vectRRIR(vect1, vect2, vect3, vect4, &
+    & low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect3
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2, vect4
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -345,7 +399,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectRRII(vect1, vect2, vect3, vect4, low, high)
+  MODULE RECURSIVE SUBROUTINE quickSort4vectRRII(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect3, vect4
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect2
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -357,7 +412,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectRIRR(vect1, vect2, vect3, vect4, low, high)
+  MODULE RECURSIVE SUBROUTINE quickSort4vectRIRR(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect3, vect4
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -369,7 +425,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectRIRI(vect1, vect2, vect3, vect4, low, high)
+  MODULE RECURSIVE SUBROUTINE quickSort4vectRIRI(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2, vect4
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect3
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -381,7 +438,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectRIIR(vect1, vect2, vect3, vect4, low, high)
+  MODULE RECURSIVE SUBROUTINE quickSort4vectRIIR(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2, vect3
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1, vect4
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -393,7 +451,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE RECURSIVE SUBROUTINE quickSort4vectRIII(vect1, vect2, vect3, vect4, low, high)
+  MODULE RECURSIVE SUBROUTINE quickSort4vectRIII(vect1, vect2, vect3, &
+    & vect4, low, high)
     INTEGER(I4B), DIMENSION(:), INTENT(INOUT) :: vect2, vect3, vect4
     REAL(DFP), DIMENSION(:), INTENT(INOUT) :: vect1
     INTEGER(I4B), INTENT(IN) :: low, high
@@ -401,7 +460,7 @@ MODULE RECURSIVE SUBROUTINE quickSort4vectRIII(vect1, vect2, vect3, vect4, low, 
 END INTERFACE
 
 INTERFACE QUICKSORT
-  MODULE PROCEDURE quickSort1vectI, quickSort1vectR, quickSort2vectII, &
+  MODULE PROCEDURE quickSort2vectII, &
     & quickSort2vectIR, quickSort2vectRR, quickSort2vectRI, &
     & quickSort3vectIII, quickSort3vectIIR, quickSort3vectIRI, &
     & quickSort3vectIRR, quickSort3vectRRR, quickSort3vectRRI, &
@@ -412,8 +471,6 @@ INTERFACE QUICKSORT
     & quickSort4vectRIRI, quickSort4vectRIRR, quickSort4vectRRII, &
     & quickSort4vectRRIR, quickSort4vectRRRI, quickSort4vectRRRR
 END INTERFACE QUICKSORT
-
-PUBLIC :: QUICKSORT
 
 !----------------------------------------------------------------------------
 !                                                                 SORT@SORT
@@ -435,8 +492,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> authors: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Recursive quicksort using binary tree pivot.
+! date: 22 March 2021
+! summary: Recursive quicksort using binary tree pivot.
 
 INTERFACE
   MODULE PURE RECURSIVE FUNCTION SORT_REAL(x) RESULT(Ans)
@@ -448,5 +505,3 @@ END INTERFACE
 INTERFACE SORT
   MODULE PROCEDURE SORT_INT, SORT_REAL
 END INTERFACE SORT
-
-PUBLIC :: SORT
