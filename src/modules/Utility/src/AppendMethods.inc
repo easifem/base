@@ -20,6 +20,128 @@ PUBLIC :: OPERATOR( .ColConcat. )
 PUBLIC :: RowConcat
 PUBLIC :: OPERATOR( .RowConcat. )
 PUBLIC :: Append
+PUBLIC :: EXPAND
+
+!----------------------------------------------------------------------------
+!                                                     Expand@IntegerMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2022
+! summary: Expand the vector
+!
+!# Introduction
+! Expand the vector and add an element.
+!
+! reference
+! https://github.com/jacobwilliams/fortran-csv-module/blob/master/src/
+! csv_utilities.f90
+
+INTERFACE
+MODULE PURE SUBROUTINE expand_int8(vec,n,chunk_size,val,finished)
+  INTEGER( Int8 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
+  INTEGER( I4B ), INTENT(INOUT) :: n
+  !! counter for last element added to `vec`.
+  !! must be initialized to `size(vec)`
+  !! (or 0 if not allocated) before first call
+  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+  !! allocate `vec` in blocks of this size (>0)
+  INTEGER( Int8 ), OPTIONAL, INTENT(IN) :: val
+  !! the value to add to `vec`
+  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+  !! set to true to return `vec`
+  !! as its correct size (`n`)
+END SUBROUTINE expand_int8
+MODULE PURE SUBROUTINE expand_int16(vec,n,chunk_size,val,finished)
+  INTEGER( Int16 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
+  INTEGER( I4B ), INTENT(INOUT) :: n
+  !! counter for last element added to `vec`.
+  !! must be initialized to `size(vec)`
+  !! (or 0 if not allocated) before first call
+  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+  !! allocate `vec` in blocks of this size (>0)
+  INTEGER( Int16 ), OPTIONAL, INTENT(IN) :: val
+  !! the value to add to `vec`
+  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+  !! set to true to return `vec`
+  !! as its correct size (`n`)
+END SUBROUTINE expand_int16
+MODULE PURE SUBROUTINE expand_int32(vec,n,chunk_size,val,finished)
+  INTEGER( Int32 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
+  INTEGER( I4B ), INTENT(INOUT) :: n
+  !! counter for last element added to `vec`.
+  !! must be initialized to `size(vec)`
+  !! (or 0 if not allocated) before first call
+  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+  !! allocate `vec` in blocks of this size (>0)
+  INTEGER( Int32 ), OPTIONAL, INTENT(IN) :: val
+  !! the value to add to `vec`
+  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+  !! set to true to return `vec`
+  !! as its correct size (`n`)
+END SUBROUTINE expand_int32
+MODULE PURE SUBROUTINE expand_int64(vec,n,chunk_size,val,finished)
+  INTEGER( Int64 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
+  INTEGER( I4B ), INTENT(INOUT) :: n
+  !! counter for last element added to `vec`.
+  !! must be initialized to `size(vec)`
+  !! (or 0 if not allocated) before first call
+  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+  !! allocate `vec` in blocks of this size (>0)
+  INTEGER( Int64 ), OPTIONAL, INTENT(IN) :: val
+  !! the value to add to `vec`
+  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+  !! set to true to return `vec`
+  !! as its correct size (`n`)
+END SUBROUTINE expand_int64
+END INTERFACE
+
+INTERFACE EXPAND
+  MODULE PROCEDURE expand_int8, expand_int16, expand_int32, expand_int64
+END INTERFACE EXPAND
+
+!----------------------------------------------------------------------------
+!                                                      Expand@AppendMethods
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 22 July 2022
+! summary: Expand the real vector
+
+INTERFACE
+MODULE PURE SUBROUTINE expand_real32(vec,n,chunk_size,val,finished)
+  REAL( Real32 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
+  INTEGER( I4B ), INTENT(INOUT) :: n
+  !! counter for last element added to `vec`.
+  !! must be initialized to `size(vec)`
+  !! (or 0 if not allocated) before first call
+  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+  !! allocate `vec` in blocks of this size (>0)
+  REAL( Real32 ), OPTIONAL, INTENT(IN) :: val
+  !! the value to add to `vec`
+  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+  !! set to true to return `vec`
+  !! as its correct size (`n`)
+END SUBROUTINE expand_real32
+MODULE PURE SUBROUTINE expand_real64(vec,n,chunk_size,val,finished)
+  REAL( Real64 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
+  INTEGER( I4B ), INTENT(INOUT) :: n
+  !! counter for last element added to `vec`.
+  !! must be initialized to `size(vec)`
+  !! (or 0 if not allocated) before first call
+  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+  !! allocate `vec` in blocks of this size (>0)
+  REAL( Real64 ), OPTIONAL, INTENT(IN) :: val
+  !! the value to add to `vec`
+  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+  !! set to true to return `vec`
+  !! as its correct size (`n`)
+END SUBROUTINE expand_real64
+END INTERFACE
+
+INTERFACE Expand
+  MODULE PROCEDURE expand_real32, expand_real64
+END INTERFACE Expand
 
 !----------------------------------------------------------------------------
 !                                                      Append@AppendMethods
