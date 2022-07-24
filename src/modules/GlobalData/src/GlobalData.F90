@@ -492,4 +492,10 @@ INTEGER(I4B), PARAMETER, PUBLIC :: Vector = 2
 INTEGER(I4B), PARAMETER, PUBLIC :: Matrix = 3
 INTEGER(I4B), PARAMETER, PUBLIC :: Nodal = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: Quadrature = 2
+
+INTEGER( I4B ), PARAMETER, PUBLIC :: MAX_CHUNK_SIZE=1024
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 END MODULE GlobalData
