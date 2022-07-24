@@ -28,12 +28,33 @@ CONTAINS
 !                                                                      SWAP
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE swap_i
-INTEGER(I4B) :: dum
-dum = a
-a = b
-b = dum
-END PROCEDURE swap_i
+MODULE PROCEDURE swap_Int8
+  INTEGER(Int8) :: dum
+  dum = a
+  a = b
+  b = dum
+END PROCEDURE swap_Int8
+
+MODULE PROCEDURE swap_Int16
+  INTEGER(Int16) :: dum
+  dum = a
+  a = b
+  b = dum
+END PROCEDURE swap_Int16
+
+MODULE PROCEDURE swap_Int32
+  INTEGER(Int32) :: dum
+  dum = a
+  a = b
+  b = dum
+END PROCEDURE swap_Int32
+
+MODULE PROCEDURE swap_Int64
+  INTEGER(Int64) :: dum
+  dum = a
+  a = b
+  b = dum
+END PROCEDURE swap_Int64
 
 !----------------------------------------------------------------------------
 !                                                                      SWAP

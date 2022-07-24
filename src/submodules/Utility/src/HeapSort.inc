@@ -15,25 +15,36 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-! Define internal variables
-INTEGER(I4B) :: ii, n, tsize
-!!
-IF ( .NOT. ALLOCATED(obj)) RETURN
-!!
-tsize = SIZE(obj); ALLOCATE (temp(tsize)); temp=obj; DEALLOCATE( obj )
-CALL QUICKSORT( temp, 1_I4B, SIZE( temp, KIND=I4B ) )
-!!
-n = 1; obj = [temp(1)]
-!!
-IF( tsize .GT. 1 ) THEN
-  DO ii = 2, tsize
-    IF( temp( ii ) .NE. temp( ii-1 ) ) THEN
-      CALL Expand( vec=obj, n=n, chunk_size=MAX_CHUNK_SIZE, &
-        & val=temp( ii )  )
-    END IF
+n = SIZE( array )
+IF( n .EQ. 1) RETURN
+l=n/2+1
+k=n
+DO WHILE( k .NE. 1 )
+  IF( l .GT. 1 ) THEN
+    l=l-1
+    t=array(L)
+  ELSE
+    t=array(k)
+    array(k)=array(1)
+    k=k-1
+    IF( k .EQ. 1 ) THEN
+      array(1)=t
+      EXIT
+    ENDIF
+  ENDIF
+  i=l
+  j=l+l
+  DO WHILE( j .LE. k )
+    IF( j .LT. k ) THEN
+      IF( array( j ) .LT. array( j+1 ) ) j=j+1
+    ENDIF
+    IF ( t .LT. array(j) ) THEN
+      array(i)=array(j)
+      i=j
+      j=j+j
+    ELSE
+      j=k+1
+    ENDIF
   END DO
-  !!
-  CALL Expand( vec=obj, n=n, chunk_size=MAX_CHUNK_SIZE, finished=.TRUE. )
-END IF
-!!
-IF( ALLOCATED( temp ) ) DEALLOCATE( temp )
+  array(i)=t
+ENDDO

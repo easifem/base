@@ -14,26 +14,34 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-
-! Define internal variables
-INTEGER(I4B) :: ii, n, tsize
 !!
-IF ( .NOT. ALLOCATED(obj)) RETURN
+!! temporary array
 !!
-tsize = SIZE(obj); ALLOCATE (temp(tsize)); temp=obj; DEALLOCATE( obj )
-CALL QUICKSORT( temp, 1_I4B, SIZE( temp, KIND=I4B ) )
-!!
-n = 1; obj = [temp(1)]
-!!
-IF( tsize .GT. 1 ) THEN
-  DO ii = 2, tsize
-    IF( temp( ii ) .NE. temp( ii-1 ) ) THEN
-      CALL Expand( vec=obj, n=n, chunk_size=MAX_CHUNK_SIZE, &
-        & val=temp( ii )  )
+IF( PRESENT(val) ) THEN
+  IF( ALLOCATED(vec) ) THEN
+    IF( n .EQ. SIZE(vec)) THEN
+      ! have to add another chunk:
+      ALLOCATE(tmp(SIZE(vec)+chunk_size))
+      tmp(1:SIZE(vec)) = vec
+      CALL MOVE_ALLOC(tmp,vec)
     END IF
-  END DO
-  !!
-  CALL Expand( vec=obj, n=n, chunk_size=MAX_CHUNK_SIZE, finished=.TRUE. )
+    n = n + 1
+  ELSE
+    ! the first element:
+    ALLOCATE(vec(chunk_size))
+    n = 1
+  END IF
+  vec(n) = val
 END IF
 !!
-IF( ALLOCATED( temp ) ) DEALLOCATE( temp )
+!!
+!!
+IF (PRESENT(finished)) THEN
+  IF (finished) THEN
+    ! set vec to actual size (n):
+    IF (ALLOCATED(tmp)) DEALLOCATE(tmp)
+    ALLOCATE(tmp(n))
+    tmp = vec(1:n)
+    CALL MOVE_ALLOC(tmp,vec)
+  END IF
+END IF

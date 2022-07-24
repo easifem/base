@@ -15,6 +15,23 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+PUBLIC :: Reallocate
+
+!----------------------------------------------------------------------------
+!                                               Reallocate@ReallocateMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE Reallocate_logical(Mat, row)
+    LOGICAL( LGT ), ALLOCATABLE, INTENT(INOUT) :: Mat(:)
+    INTEGER(I4B), INTENT(IN) :: row
+  END SUBROUTINE Reallocate_logical
+END INTERFACE
+
+INTERFACE Reallocate
+  MODULE PROCEDURE Reallocate_logical
+END INTERFACE Reallocate
+
 !----------------------------------------------------------------------------
 !                                               Reallocate@ReallocateMethods
 !----------------------------------------------------------------------------
@@ -29,8 +46,6 @@ END INTERFACE
 INTERFACE Reallocate
   MODULE PROCEDURE Reallocate_Real64_R1
 END INTERFACE Reallocate
-
-PUBLIC :: Reallocate
 
 !----------------------------------------------------------------------------
 !                                               Reallocate@ReallocateMethods

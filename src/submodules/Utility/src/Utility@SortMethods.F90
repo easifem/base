@@ -19,7 +19,7 @@
 ! date: 	22 March 2021
 ! summary: 	This submodule contains the sorting routine
 
-SUBMODULE(Utility ) SORTMethods
+SUBMODULE(Utility) SORTMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -28,138 +28,84 @@ CONTAINS
 !                                                                 HEAPSORT
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE HEAPSORT_INT
-  INTEGER( I4B ) :: n, i,k,j,l, t
-  n = SIZE( array )
-  IF( n .EQ. 1) RETURN
-  l=n/2+1
-  k=n
-  DO WHILE( k .NE. 1 )
-    IF( l .GT. 1 ) THEN
-      l=l-1
-      t=array(L)
-    ELSE
-      t=array(k)
-      array(k)=array(1)
-      k=k-1
-      IF( k .EQ. 1 ) THEN
-        array(1)=t
-        EXIT
-      ENDIF
-    ENDIF
-    i=l
-    j=l+l
-    DO WHILE( j .LE. k )
-      IF( j .LT. k ) THEN
-        IF( array( j ) .LT. array( j+1 ) ) j=j+1
-      ENDIF
-      IF ( t .LT. array(j) ) THEN
-        array(i)=array(j)
-        i=j
-        j=j+j
-      ELSE
-        j=k+1
-      ENDIF
-    END DO
-    array(i)=t
-  ENDDO
-END PROCEDURE HEAPSORT_INT
+MODULE PROCEDURE HEAPSORT_Int8
+  INTEGER( I4B ) :: n, i,k,j,l
+  INTEGER( Int8 ) :: t
+#include "./HeapSort.inc"
+END PROCEDURE HEAPSORT_Int8
+MODULE PROCEDURE HEAPSORT_Int16
+  INTEGER( I4B ) :: n, i,k,j,l
+  INTEGER( Int16 ) :: t
+#include "./HeapSort.inc"
+END PROCEDURE HEAPSORT_Int16
+MODULE PROCEDURE HEAPSORT_Int32
+  INTEGER( I4B ) :: n, i,k,j,l
+  INTEGER( Int32 ) :: t
+#include "./HeapSort.inc"
+END PROCEDURE HEAPSORT_Int32
+MODULE PROCEDURE HEAPSORT_Int64
+  INTEGER( I4B ) :: n, i,k,j,l
+  INTEGER( Int64 ) :: t
+#include "./HeapSort.inc"
+END PROCEDURE HEAPSORT_Int64
 
 !----------------------------------------------------------------------------
 !                                                                   HeapSort
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE HEAPSORT_REAL
+MODULE PROCEDURE HEAPSORT_Real32
   INTEGER( I4B ) :: n, i,k,j,l
-  REAL( DFP ) :: t
-  n = SIZE( array )
-  IF( n .EQ. 1) RETURN
-  l=n/2+1
-  k=n
-  DO WHILE( k .NE. 1 )
-    IF( l .GT. 1 ) THEN
-      l=l-1
-      t=array(L)
-    ELSE
-      t=array(k)
-      array(k)=array(1)
-      k=k-1
-      IF( k .EQ. 1 ) THEN
-        array(1)=t
-        EXIT
-      ENDIF
-    ENDIF
-    i=l
-    j=l+l
-    DO WHILE( j .LE. k )
-      IF( j .LT. k ) THEN
-        IF( array( j ) .LT. array( j+1 ) ) j=j+1
-      ENDIF
-      IF ( t .LT. array(j) ) THEN
-        array(i)=array(j)
-        i=j
-        j=j+j
-      ELSE
-        j=k+1
-      ENDIF
-    END DO
-    array(i)=t
-  ENDDO
-END PROCEDURE HEAPSORT_REAL
+  REAL( Real32 ) :: t
+#include "./HeapSort.inc"
+END PROCEDURE HEAPSORT_Real32
+MODULE PROCEDURE HEAPSORT_Real64
+  INTEGER( I4B ) :: n, i,k,j,l
+  REAL( Real64 ) :: t
+#include "./HeapSort.inc"
+END PROCEDURE HEAPSORT_Real64
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 
-MODULE PROCEDURE quickSort1vectR
-INTEGER( I4B ) i, iPivot, j
-iPivot = high
-i = low
-DO WHILE(iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL SWAP(vect1(i), vect1(iPivot-1))
-    CALL SWAP(vect1(iPivot-1), vect1(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i=i+1
-  END IF
-END DO
-if (low < high) then
-  call quickSort(vect1, low, iPivot-1)
-  call quickSort(vect1, iPivot+1, high)
-end if
-END PROCEDURE quickSort1vectR
+MODULE PROCEDURE quickSort1vectReal32
+  INTEGER( I4B ) i, iPivot
+#include "./QuickSort1Vec.inc"
+END PROCEDURE quickSort1vectReal32
+
+MODULE PROCEDURE quickSort1vectReal64
+  INTEGER( I4B ) i, iPivot
+#include "./QuickSort1Vec.inc"
+END PROCEDURE quickSort1vectReal64
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE quickSort1vectI
-  INTEGER( I4B ) i, iPivot, j
-  iPivot = high
-  i = low
-  do while(iPivot > i)
-    if (vect1(i) > vect1(iPivot)) then
-      call swap(vect1(i), vect1(iPivot-1))
-      call swap(vect1(iPivot-1), vect1(iPivot))
-      iPivot = iPivot - 1
-    else
-      i=i+1
-    end if
-  end do
-  if (low < high) then
-    call quickSort(vect1, low, iPivot-1)
-    call quickSort(vect1, iPivot+1, high)
-  end if
-END PROCEDURE
+MODULE PROCEDURE quickSort1vectInt8
+  INTEGER( I4B ) i, iPivot
+#include "./QuickSort1Vec.inc"
+END PROCEDURE quickSort1vectInt8
+MODULE PROCEDURE quickSort1vectInt16
+  INTEGER( I4B ) i, iPivot
+#include "./QuickSort1Vec.inc"
+END PROCEDURE quickSort1vectInt16
+MODULE PROCEDURE quickSort1vectInt32
+  INTEGER( I4B ) i, iPivot
+#include "./QuickSort1Vec.inc"
+END PROCEDURE quickSort1vectInt32
+MODULE PROCEDURE quickSort1vectInt64
+  INTEGER( I4B ) i, iPivot
+#include "./QuickSort1Vec.inc"
+END PROCEDURE quickSort1vectInt64
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quickSort2vectIR
-INTEGER( I4B ) i, iPivot, j
+INTEGER( I4B ) i, iPivot
 iPivot = high
 i = low
 do while(iPivot > i)
@@ -184,7 +130,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quickSort2vectII
-INTEGER( I4B ) i, iPivot, j
+INTEGER( I4B ) i, iPivot
 iPivot = high
 i = low
 do while(iPivot > i)
@@ -209,7 +155,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quickSort2vectRI
-INTEGER( I4B ) i, iPivot, j
+INTEGER( I4B ) i, iPivot
 iPivot = high
 i = low
 do while(iPivot > i)
@@ -234,7 +180,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quickSort2vectRR
-INTEGER( I4B ) i, iPivot, j
+INTEGER( I4B ) i, iPivot
 iPivot = high
 i = low
 do while(iPivot > i)
@@ -259,7 +205,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quickSort3vectIII
-INTEGER( I4B ) i, iPivot, j
+INTEGER( I4B ) i, iPivot
 iPivot = high
 i = low
 do while(iPivot > i)

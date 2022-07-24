@@ -15,25 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-! Define internal variables
-INTEGER(I4B) :: ii, n, tsize
-!!
-IF ( .NOT. ALLOCATED(obj)) RETURN
-!!
-tsize = SIZE(obj); ALLOCATE (temp(tsize)); temp=obj; DEALLOCATE( obj )
-CALL QUICKSORT( temp, 1_I4B, SIZE( temp, KIND=I4B ) )
-!!
-n = 1; obj = [temp(1)]
-!!
-IF( tsize .GT. 1 ) THEN
-  DO ii = 2, tsize
-    IF( temp( ii ) .NE. temp( ii-1 ) ) THEN
-      CALL Expand( vec=obj, n=n, chunk_size=MAX_CHUNK_SIZE, &
-        & val=temp( ii )  )
-    END IF
-  END DO
-  !!
-  CALL Expand( vec=obj, n=n, chunk_size=MAX_CHUNK_SIZE, finished=.TRUE. )
+iPivot = high
+i = low
+DO WHILE(iPivot > i)
+  IF (vect1(i) > vect1(iPivot)) THEN
+    CALL SWAP(vect1(i), vect1(iPivot-1))
+    CALL SWAP(vect1(iPivot-1), vect1(iPivot))
+    iPivot = iPivot - 1
+  ELSE
+    i=i+1
+  END IF
+END DO
+IF (low < high) THEN
+  CALL QUICKSORT(vect1, low, iPivot-1)
+  CALL QUICKSORT(vect1, iPivot+1, high)
 END IF
-!!
-IF( ALLOCATED( temp ) ) DEALLOCATE( temp )

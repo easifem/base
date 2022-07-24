@@ -25,7 +25,158 @@ USE FACE, ONLY: colorize
 USE PENF, ONLY: I1P, I2P, I4P, I8P, R4P, R8P, R16P, str
 IMPLICIT NONE
 PRIVATE
+!!
 INTEGER, PARAMETER, PUBLIC :: CK = SELECTED_CHAR_KIND('DEFAULT')
+! internal parameters
+CHARACTER(kind=CK, len=26), PARAMETER :: UPPER_ALPHABET =  &
+  & 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+CHARACTER(kind=CK, len=26), PARAMETER :: LOWER_ALPHABET =  &
+  & 'abcdefghijklmnopqrstuvwxyz'
+CHARACTER(kind=CK, len=1), PARAMETER :: SPACE = ' '
+CHARACTER(kind=CK, len=1), PARAMETER :: TAB = ACHAR(9)
+CHARACTER(kind=CK, len=1), PARAMETER :: UIX_DIR_SEP = CHAR(47)
+CHARACTER(kind=CK, len=1), PARAMETER :: BACKSLASH = CHAR(92)
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE strjoin
+  MODULE PROCEDURE strjoin_strings, strjoin_characters, &
+    & strjoin_strings_array, strjoin_characters_array
+END INTERFACE strjoin
+
+PUBLIC :: strjoin
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! builtin overloading
+INTERFACE adjustl
+  !< Builtin adjustl overloading.
+  MODULE PROCEDURE sadjustl_character
+END INTERFACE adjustl
+
+PUBLIC :: adjustl
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE adjustr
+  !< Builtin adjustr overloading.
+  MODULE PROCEDURE sadjustr_character
+END INTERFACE adjustr
+
+PUBLIC :: adjustr
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE count
+  !< Builtin count overloading.
+  MODULE PROCEDURE count_substring
+END INTERFACE
+
+PUBLIC :: count
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE index
+  MODULE PROCEDURE sindex_string_string, sindex_string_character, &
+    & sindex_character_string
+END INTERFACE index
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE len
+  MODULE PROCEDURE slen
+END INTERFACE len
+
+PUBLIC :: LEN
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE len_trim
+  !< Builtin len_trim overloading.
+  MODULE PROCEDURE slen_trim
+END INTERFACE len_trim
+
+PUBLIC :: len_trim
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE repeat
+  MODULE PROCEDURE srepeat_string_string
+END INTERFACE repeat
+
+PUBLIC :: repeat
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE scan
+  MODULE PROCEDURE sscan_string_string, sscan_string_character, &
+    & sscan_character_string
+END INTERFACE scan
+
+PUBLIC :: scan
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE trim
+  MODULE PROCEDURE strim
+END INTERFACE trim
+
+PUBLIC :: trim
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE verify
+  MODULE PROCEDURE sverify_string_string, sverify_string_character, &
+    & sverify_character_string
+END INTERFACE verify
+
+PUBLIC :: verify
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE string
+  MODULE PROCEDURE constructor1
+END INTERFACE string
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE display
+  MODULE PROCEDURE display_str
+END INTERFACE display
+
+PUBLIC :: display
+
+INTERFACE Reallocate
+  MODULE PROCEDURE String_Reallocate1
+END INTERFACE Reallocate
+
+PUBLIC :: Reallocate
 
 !----------------------------------------------------------------------------
 !
@@ -189,12 +340,14 @@ CONTAINS
     !! Return true if all characters in the string are digits.
   PROCEDURE, PASS(self) :: is_integer
     !! Return true if the string contains an integer.
-  PROCEDURE, PASS(self) :: is_lower
-    !! Return true if all characters in the string are lowercase.
   PROCEDURE, PASS(self) :: is_number
     !! Return true if the string contains a number (real or integer).
   PROCEDURE, PASS(self) :: is_real
     !! Return true if the string contains an real.
+  PROCEDURE, PASS(self) :: is_logical
+    !! Return true if the string contains logical.
+  PROCEDURE, PASS(self) :: is_lower
+    !! Return true if all characters in the string are lowercase.
   PROCEDURE, PASS(self) :: is_upper
     !! Return true if all characters in the string are uppercase.
   PROCEDURE, PASS(self) :: start_with
@@ -315,6 +468,8 @@ CONTAINS
     !! Cast string to real.
   PROCEDURE, PRIVATE, PASS(self) :: to_real_R16P
     !! Cast string to real.
+  PROCEDURE, PUBLIC, PASS( self ) :: to_logical
+    !! Convert a string to logical
   ! assignments
   PROCEDURE, PRIVATE, PASS(lhs) :: string_assign_string
     !! Assignment operator from string input.
@@ -424,20 +579,6 @@ PUBLIC :: StringPointer_
 !
 !----------------------------------------------------------------------------
 
-! internal parameters
-CHARACTER(kind=CK, len=26), PARAMETER :: UPPER_ALPHABET =  &
-  & 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-CHARACTER(kind=CK, len=26), PARAMETER :: LOWER_ALPHABET =  &
-  & 'abcdefghijklmnopqrstuvwxyz'
-CHARACTER(kind=CK, len=1), PARAMETER :: SPACE = ' '
-CHARACTER(kind=CK, len=1), PARAMETER :: TAB = ACHAR(9)
-CHARACTER(kind=CK, len=1), PARAMETER :: UIX_DIR_SEP = CHAR(47)
-CHARACTER(kind=CK, len=1), PARAMETER :: BACKSLASH = CHAR(92)
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 INTERFACE glob
   !< Overloading glob procedure.
   !<```fortran
@@ -490,141 +631,6 @@ PUBLIC :: glob
 !
 !----------------------------------------------------------------------------
 
-INTERFACE strjoin
-  MODULE PROCEDURE strjoin_strings, strjoin_characters, &
-    & strjoin_strings_array, strjoin_characters_array
-END INTERFACE strjoin
-
-PUBLIC :: strjoin
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-! builtin overloading
-INTERFACE adjustl
-  !< Builtin adjustl overloading.
-  MODULE PROCEDURE sadjustl_character
-END INTERFACE adjustl
-
-PUBLIC :: adjustl
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE adjustr
-  !< Builtin adjustr overloading.
-  MODULE PROCEDURE sadjustr_character
-END INTERFACE adjustr
-
-PUBLIC :: adjustr
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE count
-  !< Builtin count overloading.
-  MODULE PROCEDURE count_substring
-END INTERFACE
-
-PUBLIC :: count
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE index
-  MODULE PROCEDURE sindex_string_string, sindex_string_character, &
-    & sindex_character_string
-END INTERFACE index
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE len
-  MODULE PROCEDURE slen
-END INTERFACE len
-
-PUBLIC :: LEN
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE len_trim
-  !< Builtin len_trim overloading.
-  MODULE PROCEDURE slen_trim
-END INTERFACE len_trim
-
-PUBLIC :: len_trim
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE repeat
-  MODULE PROCEDURE srepeat_string_string
-END INTERFACE repeat
-
-PUBLIC :: repeat
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE scan
-  MODULE PROCEDURE sscan_string_string, sscan_string_character, &
-    & sscan_character_string
-END INTERFACE scan
-
-PUBLIC :: scan
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE trim
-  MODULE PROCEDURE strim
-END INTERFACE trim
-
-PUBLIC :: trim
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE verify
-  MODULE PROCEDURE sverify_string_string, sverify_string_character, &
-    & sverify_character_string
-END INTERFACE verify
-
-PUBLIC :: verify
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE string
-  MODULE PROCEDURE constructor1
-END INTERFACE string
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-INTERFACE display
-  MODULE PROCEDURE display_str
-END INTERFACE display
-
-PUBLIC :: display
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 CONTAINS
 ! public non TBP
 
@@ -636,7 +642,7 @@ PURE FUNCTION string_(c)
   !< print "(L1)", string('Hello World')//''=='Hello World'
   !<```
   !=> T <<<
-  CHARACTER(*), INTENT(in) :: c       !< Character.
+  CHARACTER(*), INTENT( IN ) :: c       !< Character.
   TYPE(string) :: string_ !< String.
 
   string_%raw = c
@@ -652,7 +658,7 @@ PURE FUNCTION sadjustl_character(s) RESULT(adjusted)
   !< print "(L1)", adjustl(astring)=='Hello World!   '
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: s        !< String.
+  CLASS(string), INTENT( IN ) :: s        !< String.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: adjusted !< Adjusted string.
 
   IF (ALLOCATED(s%raw)) adjusted = ADJUSTL(s%raw)
@@ -667,7 +673,7 @@ PURE FUNCTION sadjustr_character(s) RESULT(adjusted)
   !< print "(L1)", adjustr(astring)=='   Hello World!'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: s        !< String.
+  CLASS(string), INTENT( IN ) :: s        !< String.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: adjusted !< Adjusted string.
 
   IF (ALLOCATED(s%raw)) adjusted = ADJUSTR(s%raw)
@@ -680,8 +686,8 @@ ELEMENTAL FUNCTION count_substring(s, substring) RESULT(No)
   !< print "(L1)", count('hello', substring='ll')==1
   !<```
   !=> T <<<
-  CHARACTER(*), INTENT(in) :: s         !< String.
-  CHARACTER(*), INTENT(in) :: substring !< Substring.
+  CHARACTER(*), INTENT( IN ) :: s         !< String.
+  CHARACTER(*), INTENT( IN ) :: substring !< Substring.
   INTEGER(I4P) :: No        !< Number of occurrences.
   INTEGER(I4P) :: c1        !< Counters.
   INTEGER(I4P) :: c2        !< Counters.
@@ -712,9 +718,9 @@ ELEMENTAL FUNCTION sindex_character_string(s, substring, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: s         !< String.
-  TYPE(string), INTENT(in) :: substring !< Searched substring.
-  LOGICAL, INTENT(in), OPTIONAL :: back      !< Start of the last occurrence rather than the first.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: s         !< String.
+  TYPE(string), INTENT( IN ) :: substring !< Searched substring.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back      !< Start of the last occurrence rather than the first.
   INTEGER :: i         !< Result of the search.
 
   IF (ALLOCATED(substring%raw)) THEN
@@ -737,9 +743,9 @@ ELEMENTAL FUNCTION sscan_character_string(s, set, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: s    !< String.
-  TYPE(string), INTENT(in) :: set  !< Searched set.
-  LOGICAL, INTENT(in), OPTIONAL :: back !< Start of the last occurrence rather than the first.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: s    !< String.
+  TYPE(string), INTENT( IN ) :: set  !< Searched set.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back !< Start of the last occurrence rather than the first.
   INTEGER :: i    !< Result of the search.
 
   IF (ALLOCATED(set%raw)) THEN
@@ -763,9 +769,9 @@ ELEMENTAL FUNCTION sverify_character_string(s, set, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: s    !< String.
-  TYPE(string), INTENT(in) :: set  !< Searched set.
-  LOGICAL, INTENT(in), OPTIONAL :: back !< Start of the last occurrence rather than the first.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: s    !< String.
+  TYPE(string), INTENT( IN ) :: set  !< Searched set.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back !< Start of the last occurrence rather than the first.
   INTEGER :: i    !< Result of the search.
 
   IF (ALLOCATED(set%raw)) THEN
@@ -787,7 +793,7 @@ ELEMENTAL FUNCTION sadjustl(self) RESULT(adjusted)
   !< print "(L1)", astring%adjustl()//''=='Hello World!   '
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
+  CLASS(string), INTENT( IN ) :: self     !< The string.
   TYPE(string) :: adjusted !< Adjusted string.
 
   adjusted = self
@@ -803,7 +809,7 @@ ELEMENTAL FUNCTION sadjustr(self) RESULT(adjusted)
   !< print "(L1)", astring%adjustr()//''=='   Hello World!'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
+  CLASS(string), INTENT( IN ) :: self     !< The string.
   TYPE(string) :: adjusted !< Adjusted string.
 
   adjusted = self
@@ -831,9 +837,9 @@ ELEMENTAL FUNCTION scount(self, substring, ignore_isolated) RESULT(No)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self             !< The string.
-  CHARACTER(*), INTENT(in) :: substring        !< Substring.
-  LOGICAL, INTENT(in), OPTIONAL :: ignore_isolated  !< Ignore "isolated" occurrences.
+  CLASS(string), INTENT( IN ) :: self             !< The string.
+  CHARACTER(*), INTENT( IN ) :: substring        !< Substring.
+  LOGICAL, INTENT( IN ), OPTIONAL :: ignore_isolated  !< Ignore "isolated" occurrences.
   INTEGER :: No               !< Number of occurrences.
   LOGICAL :: ignore_isolated_ !< Ignore "isolated" occurrences, local variable.
   INTEGER :: c1               !< Counter.
@@ -881,9 +887,9 @@ ELEMENTAL FUNCTION sindex_string_string(self, substring, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  TYPE(string), INTENT(in) :: substring !< Searched substring.
-  LOGICAL, INTENT(in), OPTIONAL :: back      !< Start of the last occurrence rather than the first.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  TYPE(string), INTENT( IN ) :: substring !< Searched substring.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back      !< Start of the last occurrence rather than the first.
   INTEGER :: i         !< Result of the search.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -907,9 +913,9 @@ ELEMENTAL FUNCTION sindex_string_character(self, substring, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: substring !< Searched substring.
-  LOGICAL, INTENT(in), OPTIONAL :: back      !< Start of the last occurrence rather than the first.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: substring !< Searched substring.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back      !< Start of the last occurrence rather than the first.
   INTEGER :: i         !< Result of the search.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -928,7 +934,7 @@ ELEMENTAL FUNCTION slen(self) RESULT(l)
   !< print "(L1)", astring%len()==len('Hello World!   ')
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self !< The string.
+  CLASS(string), INTENT( IN ) :: self !< The string.
   INTEGER :: l    !< String length.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -947,7 +953,7 @@ ELEMENTAL FUNCTION slen_trim(self) RESULT(l)
   !< print "(L1)", astring%len_trim()==len_trim('Hello World!   ')
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self !< The string.
+  CLASS(string), INTENT( IN ) :: self !< The string.
   INTEGER :: l    !< String length.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -966,8 +972,8 @@ ELEMENTAL FUNCTION srepeat_string_string(self, ncopies) RESULT(repeated)
   !< print "(L1)", astring%repeat(5)//''=='xxxxx'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< String to be repeated.
-  INTEGER, INTENT(in) :: ncopies  !< Number of string copies.
+  CLASS(string), INTENT( IN ) :: self     !< String to be repeated.
+  INTEGER, INTENT( IN ) :: ncopies  !< Number of string copies.
   TYPE(string) :: repeated !< Repeated string.
 #ifdef _NVF
   CHARACTER(9999) :: nvf_bug  !< Work around for NVFortran bug.
@@ -990,8 +996,8 @@ ELEMENTAL FUNCTION srepeat_character_string(rstring, ncopies) RESULT(repeated)
   !< print "(L1)", astring%repeat('x', 5)//''=='xxxxx'
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rstring  !< String to be repeated.
-  INTEGER, INTENT(in) :: ncopies  !< Number of string copies.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rstring  !< String to be repeated.
+  INTEGER, INTENT( IN ) :: ncopies  !< Number of string copies.
   TYPE(string) :: repeated !< Repeated string.
 
   repeated%raw = REPEAT(string=rstring, ncopies=ncopies)
@@ -1011,9 +1017,9 @@ ELEMENTAL FUNCTION sscan_string_string(self, set, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self  !< The string.
-  TYPE(string), INTENT(in) :: set   !< Searched set.
-  LOGICAL, INTENT(in), OPTIONAL :: back  !< Start of the last occurrence rather than the first.
+  CLASS(string), INTENT( IN ) :: self  !< The string.
+  TYPE(string), INTENT( IN ) :: set   !< Searched set.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back  !< Start of the last occurrence rather than the first.
   INTEGER :: i     !< Result of the search.
 
   IF (ALLOCATED(self%raw) .AND. ALLOCATED(set%raw)) THEN
@@ -1035,9 +1041,9 @@ ELEMENTAL FUNCTION sscan_string_character(self, set, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self  !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: set   !< Searched set.
-  LOGICAL, INTENT(in), OPTIONAL :: back  !< Start of the last occurrence rather than the first.
+  CLASS(string), INTENT( IN ) :: self  !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: set   !< Searched set.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back  !< Start of the last occurrence rather than the first.
   INTEGER :: i     !< Result of the search.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -1056,7 +1062,7 @@ ELEMENTAL FUNCTION strim(self) RESULT(trimmed)
   !< print "(L1)", astring%trim()==trim('Hello World!   ')
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self    !< The string.
+  CLASS(string), INTENT( IN ) :: self    !< The string.
   TYPE(string) :: trimmed !< Trimmed string.
 
   trimmed = self
@@ -1078,9 +1084,9 @@ ELEMENTAL FUNCTION sverify_string_string(self, set, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self  !< The string.
-  TYPE(string), INTENT(in) :: set   !< Searched set.
-  LOGICAL, INTENT(in), OPTIONAL :: back  !< Start of the last occurrence rather than the first.
+  CLASS(string), INTENT( IN ) :: self  !< The string.
+  TYPE(string), INTENT( IN ) :: set   !< Searched set.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back  !< Start of the last occurrence rather than the first.
   INTEGER :: i     !< Result of the search.
 
   IF (ALLOCATED(self%raw) .AND. ALLOCATED(set%raw)) THEN
@@ -1103,9 +1109,9 @@ ELEMENTAL FUNCTION sverify_string_character(self, set, back) RESULT(i)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self  !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: set   !< Searched set.
-  LOGICAL, INTENT(in), OPTIONAL :: back  !< Start of the last occurrence rather than the first.
+  CLASS(string), INTENT( IN ) :: self  !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: set   !< Searched set.
+  LOGICAL, INTENT( IN ), OPTIONAL :: back  !< Start of the last occurrence rather than the first.
   INTEGER :: i     !< Result of the search.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -1133,8 +1139,8 @@ ELEMENTAL FUNCTION basedir(self, sep)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self    !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep     !< Directory separator.
+  CLASS(string), INTENT( IN ) :: self    !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep     !< Directory separator.
   TYPE(string) :: basedir !< Base directory name.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_    !< Separator, default value.
   INTEGER :: pos     !< Character position.
@@ -1166,10 +1172,10 @@ ELEMENTAL FUNCTION basename(self, sep, extension, strip_last_extension)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self                 !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep                  !< Directory separator.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: extension            !< File extension.
-  LOGICAL, INTENT(in), OPTIONAL :: strip_last_extension !< Flag to enable the stripping of last extension.
+  CLASS(string), INTENT( IN ) :: self                 !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep                  !< Directory separator.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: extension            !< File extension.
+  LOGICAL, INTENT( IN ), OPTIONAL :: strip_last_extension !< Flag to enable the stripping of last extension.
   TYPE(string) :: basename             !< Base file name.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_                 !< Separator, default value.
   INTEGER :: pos                  !< Character position.
@@ -1202,8 +1208,8 @@ ELEMENTAL FUNCTION camelcase(self, sep)
   !< print '(L1)', astring%camelcase()//''=='CamelCaseVar'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep       !< Separator.
   TYPE(string) :: camelcase !< Camel case string.
   TYPE(string), ALLOCATABLE :: tokens(:) !< String tokens.
 
@@ -1223,7 +1229,7 @@ ELEMENTAL FUNCTION capitalize(self) RESULT(capitalized)
   !< print '(L1)', astring%capitalize()//''=='Say all hello world!'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self        !< The string.
+  CLASS(string), INTENT( IN ) :: self        !< The string.
   TYPE(string) :: capitalized !< Upper case string.
   INTEGER :: c           !< Character counter.
 
@@ -1243,7 +1249,7 @@ PURE FUNCTION chars(self) RESULT(raw)
   !< print '(L1)', astring%chars()=='say all Hello WorLD!'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self !< The string.
+  CLASS(string), INTENT( IN ) :: self !< The string.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: raw  !< Raw characters data.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -1262,10 +1268,10 @@ PURE FUNCTION colorize_str(self, color_fg, color_bg, style) RESULT(colorized)
   !< print '(L1)', astring%colorize(color_fg='red')=='[31msay all Hello WorLD![0m'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: color_fg  !< Foreground color definition.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: color_bg  !< Background color definition.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: style     !< Style definition.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: color_fg  !< Foreground color definition.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: color_bg  !< Background color definition.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: style     !< Style definition.
   CHARACTER(len=:), ALLOCATABLE :: colorized !< Colorized string.
 
       colorized = colorize(string=self%chars(), color_fg=color_fg, color_bg=color_bg, style=style)
@@ -1282,8 +1288,8 @@ ELEMENTAL FUNCTION decode(self, codec) RESULT(decoded)
   !< print '(L1)', astring%decode(codec='base64')//''=='How are you?'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self    !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: codec   !< Encoding codec.
+  CLASS(string), INTENT( IN ) :: self    !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: codec   !< Encoding codec.
   TYPE(string) :: decoded !< Decoded string.
   TYPE(string) :: codec_u !< Encoding codec in upper case string.
 
@@ -1309,8 +1315,8 @@ ELEMENTAL FUNCTION encode(self, codec) RESULT(encoded)
   !< print '(L1)', astring%encode(codec='base64')//''=='SG93IGFyZSB5b3U/'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self    !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: codec   !< Encoding codec.
+  CLASS(string), INTENT( IN ) :: self    !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: codec   !< Encoding codec.
   TYPE(string) :: encoded !< Encoded string.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -1334,9 +1340,9 @@ ELEMENTAL FUNCTION escape(self, to_escape, esc) RESULT(escaped)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(kind=CK, len=1), INTENT(in) :: to_escape !< Character to be escaped.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: esc       !< Character used to escape.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(kind=CK, len=1), INTENT( IN ) :: to_escape !< Character to be escaped.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: esc       !< Character used to escape.
   TYPE(string) :: escaped   !< Escaped string.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: esc_      !< Character to escape, local variable.
   INTEGER :: c         !< Character counter.
@@ -1363,7 +1369,7 @@ ELEMENTAL FUNCTION extension(self)
   !< print '(L1)', astring%extension()//''=='.bz2'
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
   TYPE(string) :: extension !< Extension file name.
   INTEGER :: pos       !< Character position.
 
@@ -1388,10 +1394,10 @@ ELEMENTAL FUNCTION fill(self, width, right, filling_char) RESULT(filled)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self          !< The string.
-  INTEGER, INTENT(in) :: width         !< Final width of filled string.
-  LOGICAL, INTENT(in), OPTIONAL :: right         !< Fill on the right instead of left.
-  CHARACTER(kind=CK, len=1), INTENT(in), OPTIONAL :: filling_char  !< Filling character (default "0").
+  CLASS(string), INTENT( IN ) :: self          !< The string.
+  INTEGER, INTENT( IN ) :: width         !< Final width of filled string.
+  LOGICAL, INTENT( IN ), OPTIONAL :: right         !< Fill on the right instead of left.
+  CHARACTER(kind=CK, len=1), INTENT( IN ), OPTIONAL :: filling_char  !< Filling character (default "0").
   TYPE(string) :: filled        !< Filled string.
   LOGICAL :: right_        !< Fill on the right instead of left, local variable.
   CHARACTER(kind=CK, len=1) :: filling_char_ !< Filling character (default "0"), local variable.
@@ -1459,8 +1465,8 @@ SUBROUTINE glob_character(self, pattern, list)
   !< print '(L1)', test_passed
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self           !< The string.
-  CHARACTER(*), INTENT(in) :: pattern        !< Given pattern.
+  CLASS(string), INTENT( IN ) :: self           !< The string.
+  CHARACTER(*), INTENT( IN ) :: pattern        !< Given pattern.
   CHARACTER(len=:), ALLOCATABLE, INTENT(out) :: list(:)        !< List of matching pathnames.
   TYPE(string), ALLOCATABLE :: list_(:)       !< List of matching pathnames.
   INTEGER(I4P) :: max_len        !< Maximum length.
@@ -1517,8 +1523,8 @@ SUBROUTINE glob_string(self, pattern, list)
   !< print '(L1)', test_passed
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
-  CHARACTER(*), INTENT(in) :: pattern  !< Given pattern.
+  CLASS(string), INTENT( IN ) :: self     !< The string.
+  CHARACTER(*), INTENT( IN ) :: pattern  !< Given pattern.
   TYPE(string), ALLOCATABLE, INTENT(out) :: list(:)  !< List of matching pathnames.
   TYPE(string) :: tempfile !< Safe temporary file.
   CHARACTER(len=:), ALLOCATABLE :: tempname !< Safe temporary name.
@@ -1549,9 +1555,9 @@ ELEMENTAL FUNCTION insert_character(self, substring, pos) RESULT(inserted)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(len=*), INTENT(in) :: substring !< Substring.
-  INTEGER, INTENT(in) :: pos       !< Position from which insert substring.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(len=*), INTENT( IN ) :: substring !< Substring.
+  INTEGER, INTENT( IN ) :: pos       !< Position from which insert substring.
   TYPE(string) :: inserted  !< Inserted string.
   INTEGER :: safepos   !< Safe position from which insert substring.
 
@@ -1587,9 +1593,9 @@ ELEMENTAL FUNCTION insert_string(self, substring, pos) RESULT(inserted)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  TYPE(string), INTENT(in) :: substring !< Substring.
-  INTEGER, INTENT(in) :: pos       !< Position from which insert substring.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  TYPE(string), INTENT( IN ) :: substring !< Substring.
+  INTEGER, INTENT( IN ) :: pos       !< Position from which insert substring.
   TYPE(string) :: inserted  !< Inserted string.
   INTEGER :: safepos   !< Safe position from which insert substring.
 
@@ -1640,9 +1646,9 @@ PURE FUNCTION join_strings(self, array, sep) RESULT(join)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  TYPE(string), INTENT(in) :: array(1:) !< Array to be joined.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  TYPE(string), INTENT( IN ) :: array(1:) !< Array to be joined.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep       !< Separator.
   TYPE(string) :: join      !< The join of array.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_      !< Separator, default value.
   INTEGER :: a         !< Counter.
@@ -1699,9 +1705,9 @@ PURE FUNCTION join_characters(self, array, sep) RESULT(join)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: array(1:) !< Array to be joined.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: array(1:) !< Array to be joined.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep       !< Separator.
   TYPE(string) :: join      !< The join of array.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_      !< Separator, default value.
   INTEGER :: a         !< Counter.
@@ -1751,8 +1757,8 @@ PURE FUNCTION strjoin_strings(array, sep) RESULT(join)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: array(1:) !< Array to be joined.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
+  CLASS(string), INTENT( IN ) :: array(1:) !< Array to be joined.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep       !< Separator.
   TYPE(string) :: join      !< The join of array.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_      !< Separator, default value.
   INTEGER :: a         !< Counter.
@@ -1825,9 +1831,9 @@ PURE FUNCTION strjoin_characters(array, sep, is_trim) RESULT(join)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: array(1:) !< Array to be joined.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
-  LOGICAL, INTENT(in), OPTIONAL :: is_trim   !< Flag to setup trim character or not
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: array(1:) !< Array to be joined.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep       !< Separator.
+  LOGICAL, INTENT( IN ), OPTIONAL :: is_trim   !< Flag to setup trim character or not
   TYPE(string) :: join      !< The join of array.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_      !< Separator, default value.
   LOGICAL :: is_trim_  !< Flag to setup trim character or not
@@ -1898,9 +1904,9 @@ PURE FUNCTION strjoin_strings_array(array, sep, is_col) RESULT(join)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: array(1:, 1:) !< Array to be joined.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep  !< Separator.
-  LOGICAL, INTENT(in), OPTIONAL :: is_col  !< Direction: 'columns' if .true. or 'rows' if .false.
+  CLASS(string), INTENT( IN ) :: array(1:, 1:) !< Array to be joined.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep  !< Separator.
+  LOGICAL, INTENT( IN ), OPTIONAL :: is_col  !< Direction: 'columns' if .true. or 'rows' if .false.
   TYPE(string), ALLOCATABLE :: join(:)       !< The join of array.
   TYPE(string), ALLOCATABLE :: slice(:)      !< The column or row slice of array
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_          !< Separator, default value.
@@ -2017,13 +2023,13 @@ END FUNCTION strjoin_strings_array
 PURE FUNCTION strjoin_characters_array(array, sep, is_trim, is_col) &
   & RESULT(join)
   !!
-  CHARACTER(kind=CK, len=*), INTENT(in) :: array(1:, 1:)
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: array(1:, 1:)
   !! Array to be joined.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep
   !! Separator.
-  LOGICAL, INTENT(in), OPTIONAL :: is_trim
+  LOGICAL, INTENT( IN ), OPTIONAL :: is_trim
   !! Flag to setup trim character or not
-  LOGICAL, INTENT(in), OPTIONAL :: is_col
+  LOGICAL, INTENT( IN ), OPTIONAL :: is_col
   !! Direction: 'columns' if .true. or 'rows' if .false.
   TYPE(string), ALLOCATABLE :: join(:)
   !! The join of array.
@@ -2094,7 +2100,7 @@ ELEMENTAL FUNCTION lower(self)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self  !< The string.
+  CLASS(string), INTENT( IN ) :: self  !< The string.
   TYPE(string) :: lower !< Upper case string.
   INTEGER :: n1    !< Characters counter.
   INTEGER :: n2    !< Characters counter.
@@ -2126,8 +2132,8 @@ PURE FUNCTION partition(self, sep) RESULT(partitions)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self            !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep             !< Separator.
+  CLASS(string), INTENT( IN ) :: self            !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep             !< Separator.
   TYPE(string) :: partitions(1:3) !< Partions: before the separator, the separator itsels and
   !< after the separator.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_            !< Separator, default value.
@@ -2201,9 +2207,9 @@ SUBROUTINE read_file(self, file, is_fast, form, iostat, iomsg)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: self       !< The string.
-  CHARACTER(len=*), INTENT(in) :: file       !< File name.
-  LOGICAL, INTENT(in), OPTIONAL :: is_fast    !< Flag to enable (super) fast file reading.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: form       !< Format of unit.
+  CHARACTER(len=*), INTENT( IN ) :: file       !< File name.
+  LOGICAL, INTENT( IN ), OPTIONAL :: is_fast    !< Flag to enable (super) fast file reading.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: form       !< Format of unit.
   INTEGER, INTENT(out), OPTIONAL :: iostat     !< IO status code.
   CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg      !< IO status message.
   LOGICAL :: is_fast_   !< Flag to enable (super) fast file reading, local variable.
@@ -2305,8 +2311,8 @@ SUBROUTINE read_line(self, unit, form, iostat, iomsg)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: self    !< The string.
-  INTEGER, INTENT(in) :: unit    !< Logical unit.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: form    !< Format of unit.
+  INTEGER, INTENT( IN ) :: unit    !< Logical unit.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: form    !< Format of unit.
   INTEGER, INTENT(out), OPTIONAL :: iostat  !< IO status code.
   CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg   !< IO status message.
   TYPE(string) :: form_   !< Format of unit, local variable.
@@ -2388,8 +2394,8 @@ SUBROUTINE read_lines(self, unit, form, iostat, iomsg)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: self    !< The string.
-  INTEGER, INTENT(in) :: unit    !< Logical unit.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: form    !< Format of unit.
+  INTEGER, INTENT( IN ) :: unit    !< Logical unit.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: form    !< Format of unit.
   INTEGER, INTENT(out), OPTIONAL :: iostat  !< IO status code.
   CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg   !< IO status message.
   INTEGER :: iostat_ !< IO status code, local variable.
@@ -2431,10 +2437,10 @@ ELEMENTAL FUNCTION replace(self, old, NEW, count) RESULT(replaced)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: old      !< Old substring.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: NEW      !< New substring.
-  INTEGER, INTENT(in), OPTIONAL :: count    !< Number of old occurences to be replaced.
+  CLASS(string), INTENT( IN ) :: self     !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: old      !< Old substring.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: NEW      !< New substring.
+  INTEGER, INTENT( IN ), OPTIONAL :: count    !< Number of old occurences to be replaced.
   TYPE(string) :: replaced !< The string with old replaced by new.
   INTEGER :: r        !< Counter.
 
@@ -2468,7 +2474,7 @@ ELEMENTAL FUNCTION reverse(self) RESULT(reversed)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
+  CLASS(string), INTENT( IN ) :: self     !< The string.
   TYPE(string) :: reversed !< The reversed string.
   INTEGER :: length   !< Length of the string.
   INTEGER :: c        !< Counter.
@@ -2523,11 +2529,11 @@ FUNCTION search(self, tag_start, tag_end, in_string, in_character, &
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self         !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: tag_start    !< Start tag.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: tag_end      !< End tag.
-  TYPE(string), INTENT(in), OPTIONAL :: in_string    !< Search into this string.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: in_character !< Search into this character string.
+  CLASS(string), INTENT( IN ) :: self         !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: tag_start    !< Start tag.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: tag_end      !< End tag.
+  TYPE(string), INTENT( IN ), OPTIONAL :: in_string    !< Search into this string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: in_character !< Search into this character string.
   INTEGER, INTENT(out), OPTIONAL :: istart       !< Starting index of tag inside the string.
   INTEGER, INTENT(out), OPTIONAL :: iend         !< Ending index of tag inside the string.
   TYPE(string) :: tag          !< First tag found.
@@ -2579,9 +2585,9 @@ PURE FUNCTION slice(self, istart, iend) RESULT(raw)
   !< print "(A)", astring%slice(11,25)
   !<```
   !=> Brown fox Jumps <<<
-  CLASS(string), INTENT(in) :: self   !< The string.
-  INTEGER, INTENT(in) :: istart !< Slice start index.
-  INTEGER, INTENT(in) :: iend   !< Slice end   index.
+  CLASS(string), INTENT( IN ) :: self   !< The string.
+  INTEGER, INTENT( IN ) :: istart !< Slice start index.
+  INTEGER, INTENT( IN ) :: iend   !< Slice end   index.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: raw    !< Raw characters data.
 
   IF (ALLOCATED(self%raw)) THEN
@@ -2608,8 +2614,8 @@ ELEMENTAL FUNCTION snakecase(self, sep)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep       !< Separator.
   TYPE(string) :: snakecase !< Snake case string.
   TYPE(string), ALLOCATABLE :: tokens(:) !< String tokens.
 
@@ -2686,13 +2692,13 @@ END FUNCTION snakecase
 !```
 
 PURE SUBROUTINE split(self, tokens, sep, max_tokens)
-  CLASS(string), INTENT(in) :: self
+  CLASS(string), INTENT( IN ) :: self
   !! The string.
   TYPE(string), ALLOCATABLE, INTENT(out) :: tokens(:)
   !! Tokens substring.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep
   !! Separator.
-  INTEGER, INTENT(in), OPTIONAL :: max_tokens
+  INTEGER, INTENT( IN ), OPTIONAL :: max_tokens
   !! Fix the maximum number of returned tokens.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_
   !! Separator, default value.
@@ -2798,13 +2804,13 @@ END SUBROUTINE split
 
 PURE SUBROUTINE split_chunked(self, tokens, chunks, sep)
   !!
-  CLASS(string), INTENT(in) :: self
+  CLASS(string), INTENT( IN ) :: self
   !! The string.
   TYPE(string), ALLOCATABLE, INTENT(out) :: tokens(:)
   !! Tokens substring.
-  INTEGER, INTENT(in) :: chunks
+  INTEGER, INTENT( IN ) :: chunks
   !! Number of chunks.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep
   !! Separator.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_
   !! Separator, default value.
@@ -2846,7 +2852,7 @@ PURE SUBROUTINE split_chunked(self, tokens, chunks, sep)
     !! Split last token.
     TYPE(string), ALLOCATABLE, INTENT(inout) :: tokens(:)
     !! Tokens substring.
-    INTEGER, INTENT(in), OPTIONAL :: max_tokens
+    INTEGER, INTENT( IN ), OPTIONAL :: max_tokens
     !! Max tokens returned.
     TYPE(string), ALLOCATABLE :: tokens_(:)
     !! Temporary tokens.
@@ -2892,8 +2898,8 @@ ELEMENTAL FUNCTION startcase(self, sep)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: sep       !< Separator.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: sep       !< Separator.
   TYPE(string) :: startcase !< Start case string.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: sep_      !< Separator, default value.
   TYPE(string), ALLOCATABLE :: tokens(:) !< String tokens.
@@ -2905,6 +2911,10 @@ ELEMENTAL FUNCTION startcase(self, sep)
     startcase = startcase%join(array=tokens, sep=sep_)
   END IF
 END FUNCTION startcase
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION strip(self, remove_nulls)
   !< Return a copy of the string with the leading and trailing characters removed.
@@ -2919,8 +2929,8 @@ ELEMENTAL FUNCTION strip(self, remove_nulls)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self         !< The string.
-  LOGICAL, INTENT(in), OPTIONAL :: remove_nulls !< Remove null characters at the end.
+  CLASS(string), INTENT( IN ) :: self         !< The string.
+  LOGICAL, INTENT( IN ), OPTIONAL :: remove_nulls !< Remove null characters at the end.
   TYPE(string) :: strip        !< The stripped string.
   INTEGER :: c            !< Counter.
 
@@ -2936,6 +2946,10 @@ ELEMENTAL FUNCTION strip(self, remove_nulls)
   END IF
 END FUNCTION strip
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 ELEMENTAL FUNCTION swapcase(self)
   !< Return a copy of the string with uppercase characters converted to lowercase and vice versa.
   !<
@@ -2947,7 +2961,7 @@ ELEMENTAL FUNCTION swapcase(self)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
+  CLASS(string), INTENT( IN ) :: self     !< The string.
   TYPE(string) :: swapcase !< Upper case string.
   INTEGER :: n1       !< Characters counter.
   INTEGER :: n2       !< Characters counter.
@@ -2965,6 +2979,10 @@ ELEMENTAL FUNCTION swapcase(self)
     END DO
   END IF
 END FUNCTION swapcase
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 FUNCTION tempname(self, is_file, prefix, path)
   !< Return a safe temporary name suitable for temporary file or directories.
@@ -2992,10 +3010,10 @@ FUNCTION tempname(self, is_file, prefix, path)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self                   !< The string.
-  LOGICAL, INTENT(in), OPTIONAL :: is_file                !< True if tempname should be used for file (the default).
-  CHARACTER(*), INTENT(in), OPTIONAL :: prefix                 !< Name prefix, otherwise self is used (if allocated).
-  CHARACTER(*), INTENT(in), OPTIONAL :: path                   !< Path where file/directory should be used, default `./`.
+  CLASS(string), INTENT( IN ) :: self                   !< The string.
+  LOGICAL, INTENT( IN ), OPTIONAL :: is_file                !< True if tempname should be used for file (the default).
+  CHARACTER(*), INTENT( IN ), OPTIONAL :: prefix                 !< Name prefix, otherwise self is used (if allocated).
+  CHARACTER(*), INTENT( IN ), OPTIONAL :: path                   !< Path where file/directory should be used, default `./`.
   CHARACTER(len=:), ALLOCATABLE :: tempname               !< Safe (unique) temporary name.
   LOGICAL :: is_file_               !< True if tempname should be used for file (the default).
   CHARACTER(len=:), ALLOCATABLE :: prefix_                !< Name prefix, otherwise self is used (if allocated).
@@ -3033,145 +3051,210 @@ FUNCTION tempname(self, is_file, prefix, path)
   END DO
 END FUNCTION tempname
 
-ELEMENTAL FUNCTION to_integer_I1P(self, kind) RESULT(to_number)
-  !< Cast string to integer (I1P).
-  !<
-  !<```fortran
-  !< use penf
-  !< type(string) :: astring
-  !< integer(I1P) :: integer_
-  !< logical      :: test_passed(1)
-  !< astring = '127'
-  !< integer_ = astring%to_number(kind=1_I1P)
-  !< test_passed(1) = integer_==127_I1P
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  INTEGER(I1P), INTENT(in) :: kind      !< Mold parameter for kind detection.
-  INTEGER(I1P) :: to_number !< The number into the string.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2022
+! summary: Cast string to integer (I1P).
+!
+!# Introduction
+!
+!```fortran
+! use penf
+! type(string) :: astring
+! integer(I1P) :: integer_
+! logical      :: test_passed(1)
+! astring = '127'
+! integer_ = astring%to_number(kind=1_I1P)
+! test_passed(1) = integer_==127_I1P
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION to_integer_I1P(self, kind) RESULT(to_number)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  INTEGER(I1P), INTENT( IN ) :: kind
+  !! Mold parameter for kind detection.
+  INTEGER(I1P) :: to_number
+  !! The number into the string.
   IF (ALLOCATED(self%raw)) THEN
     IF (self%is_integer()) READ (self%raw, *) to_number
   END IF
 END FUNCTION to_integer_I1P
 
-#ifndef _NVF
-ELEMENTAL FUNCTION to_integer_I2P(self, kind) RESULT(to_number)
-  !< Cast string to integer (I2P).
-  !<
-  !<```fortran
-  !< use penf
-  !< type(string) :: astring
-  !< integer(I2P) :: integer_
-  !< logical      :: test_passed(1)
-  !< astring = '127'
-  !< integer_ = astring%to_number(kind=1_I2P)
-  !< test_passed(1) = integer_==127_I2P
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  INTEGER(I2P), INTENT(in) :: kind      !< Mold parameter for kind detection.
-  INTEGER(I2P) :: to_number !< The number into the string.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+#ifndef _NVF
+!> authors: Vikas Sharma, Ph. D.
+! date: 22 July 2023
+! summary: Cast string to integer (I2P).
+!
+!# Introduction
+!
+!```fortran
+! use penf
+! type(string) :: astring
+! integer(I2P) :: integer_
+! logical      :: test_passed(1)
+! astring = '127'
+! integer_ = astring%to_number(kind=1_I2P)
+! test_passed(1) = integer_==127_I2P
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION to_integer_I2P(self, kind) RESULT(to_number)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  INTEGER(I2P), INTENT( IN ) :: kind
+  !! Mold parameter for kind detection.
+  INTEGER(I2P) :: to_number
+  !! The number into the string.
   IF (ALLOCATED(self%raw)) THEN
     IF (self%is_integer()) READ (self%raw, *) to_number
   END IF
 END FUNCTION to_integer_I2P
 #endif
 
-ELEMENTAL FUNCTION to_integer_I4P(self, kind) RESULT(to_number)
-  !< Cast string to integer (I4P).
-  !<
-  !<```fortran
-  !< use penf
-  !< type(string) :: astring
-  !< integer(I4P) :: integer_
-  !< logical      :: test_passed(1)
-  !< astring = '127'
-  !< integer_ = astring%to_number(kind=1_I4P)
-  !< test_passed(1) = integer_==127_I4P
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  INTEGER(I4P), INTENT(in) :: kind      !< Mold parameter for kind detection.
-  INTEGER(I4P) :: to_number !< The number into the string.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2022
+! summary: Cast string to integer (I4P).
+!
+!# Introduction
+!
+!
+!```fortran
+! use penf
+! type(string) :: astring
+! integer(I4P) :: integer_
+! logical      :: test_passed(1)
+! astring = '127'
+! integer_ = astring%to_number(kind=1_I4P)
+! test_passed(1) = integer_==127_I4P
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION to_integer_I4P(self, kind) RESULT(to_number)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  INTEGER(I4P), INTENT( IN ) :: kind
+  !! Mold parameter for kind detection.
+  INTEGER(I4P) :: to_number
+  !! The number into the string.
   IF (ALLOCATED(self%raw)) THEN
     IF (self%is_integer()) READ (self%raw, *) to_number
   END IF
 END FUNCTION to_integer_I4P
 
-ELEMENTAL FUNCTION to_integer_I8P(self, kind) RESULT(to_number)
-  !< Cast string to integer (I8P).
-  !<
-  !<```fortran
-  !< use penf
-  !< type(string) :: astring
-  !< integer(I8P) :: integer_
-  !< logical      :: test_passed(1)
-  !< astring = '127'
-  !< integer_ = astring%to_number(kind=1_I8P)
-  !< test_passed(1) = integer_==127_I8P
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  INTEGER(I8P), INTENT(in) :: kind      !< Mold parameter for kind detection.
-  INTEGER(I8P) :: to_number !< The number into the string.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2023
+! summary: Cast string to integer (I8P).
+!
+!# Introduction
+!
+!```fortran
+! use penf
+! type(string) :: astring
+! integer(I8P) :: integer_
+! logical      :: test_passed(1)
+! astring = '127'
+! integer_ = astring%to_number(kind=1_I8P)
+! test_passed(1) = integer_==127_I8P
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION to_integer_I8P(self, kind) RESULT(to_number)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  INTEGER(I8P), INTENT( IN ) :: kind
+  !! Mold parameter for kind detection.
+  INTEGER(I8P) :: to_number
+  !! The number into the string.
   IF (ALLOCATED(self%raw)) THEN
     IF (self%is_integer()) READ (self%raw, *) to_number
   END IF
 END FUNCTION to_integer_I8P
 
-ELEMENTAL FUNCTION to_real_R4P(self, kind) RESULT(to_number)
-  !< Cast string to real (R4P).
-  !<
-  !<```fortran
-  !< use penf
-  !< type(string) :: astring
-  !< real(R4P)    :: real_
-  !< logical      :: test_passed(1)
-  !< astring = '3.4e9'
-  !< real_ = astring%to_number(kind=1._R4P)
-  !< test_passed(1) = real_==3.4e9_R4P
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  REAL(R4P), INTENT(in) :: kind      !< Mold parameter for kind detection.
-  REAL(R4P) :: to_number !< The number into the string.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Cast string to real (R4P).
+!
+!# Introduction
+!
+!```fortran
+! use penf
+! type(string) :: astring
+! real(R4P)    :: real_
+! logical      :: test_passed(1)
+! astring = '3.4e9'
+! real_ = astring%to_number(kind=1._R4P)
+! test_passed(1) = real_==3.4e9_R4P
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION to_real_R4P(self, kind) RESULT(to_number)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  REAL(R4P), INTENT( IN ) :: kind
+  !! Mold parameter for kind detection.
+  REAL(R4P) :: to_number
+  !! The number into the string.
   IF (ALLOCATED(self%raw)) THEN
     IF (self%is_real()) READ (self%raw, *) to_number
   END IF
 END FUNCTION to_real_R4P
 
-ELEMENTAL FUNCTION to_real_R8P(self, kind) RESULT(to_number)
-  !< Cast string to real (R8P).
-  !<
-  !<```fortran
-  !< use penf
-  !< type(string) :: astring
-  !< real(R8P)    :: real_
-  !< logical      :: test_passed(1)
-  !< astring = '3.4e9'
-  !< real_ = astring%to_number(kind=1._R8P)
-  !< test_passed(1) = real_==3.4e9_R8P
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  REAL(R8P), INTENT(in) :: kind      !< Mold parameter for kind detection.
-  REAL(R8P) :: to_number !< The number into the string.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: 	Cast string to real (R8P).
+!
+!# Introduction
+!
+!```fortran
+! use penf
+! type(string) :: astring
+! real(R8P)    :: real_
+! logical      :: test_passed(1)
+! astring = '3.4e9'
+! real_ = astring%to_number(kind=1._R8P)
+! test_passed(1) = real_==3.4e9_R8P
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION to_real_R8P(self, kind) RESULT(to_number)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  REAL(R8P), INTENT( IN ) :: kind
+  !! Mold parameter for kind detection.
+  REAL(R8P) :: to_number
+  !! The number into the string.
   IF (ALLOCATED(self%raw)) THEN
     IF (self%is_real()) READ (self%raw, *) to_number
   END IF
 END FUNCTION to_real_R8P
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION to_real_R16P(self, kind) RESULT(to_number)
   !< Cast string to real (R16P).
@@ -3187,14 +3270,55 @@ ELEMENTAL FUNCTION to_real_R16P(self, kind) RESULT(to_number)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self      !< The string.
-  REAL(R16P), INTENT(in) :: kind      !< Mold parameter for kind detection.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  REAL(R16P), INTENT( IN ) :: kind      !< Mold parameter for kind detection.
   REAL(R16P) :: to_number !< The number into the string.
 
   IF (ALLOCATED(self%raw)) THEN
     IF (self%is_real()) READ (self%raw, *) to_number
   END IF
 END FUNCTION to_real_R16P
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2022
+! summary: Convert a string to boolean
+
+ELEMENTAL FUNCTION to_logical(self) RESULT( ans )
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  LOGICAL :: ans
+  !!
+  TYPE(String) :: tmp
+    ! True and False options (all lowercase):
+  CHARACTER(LEN=*),DIMENSION(4),PARAMETER :: true_str  = ['1     ',&
+                                                          't     ',&
+                                                          'true  ',&
+                                                          '.true.']
+  CHARACTER(LEN=*),DIMENSION(4),PARAMETER :: false_str = ['0      ',&
+                                                          'f      ',&
+                                                          'false  ',&
+                                                          '.false.']
+  !!
+  IF (ALLOCATED(self%raw)) THEN
+    tmp = self%lower()
+    IF( ANY( tmp .EQ. true_str ) ) THEN
+      ans = .TRUE.
+    ELSEIF( ANY( tmp .EQ. false_str ) ) THEN
+      ans = .FALSE.
+    ELSE
+      ans = .FALSE.
+    END IF
+  END IF
+  !!
+END FUNCTION to_logical
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION unescape(self, to_unescape, unesc) RESULT(unescaped)
   !< Unescape double backslashes (or custom escaped character).
@@ -3208,12 +3332,18 @@ ELEMENTAL FUNCTION unescape(self, to_unescape, unesc) RESULT(unescaped)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self        !< The string.
-  CHARACTER(kind=CK, len=1), INTENT(in) :: to_unescape !< Character to be unescaped.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: unesc       !< Character used to unescape.
-  TYPE(string) :: unescaped   !< Escaped string.
-  CHARACTER(kind=CK, len=:), ALLOCATABLE :: unesc_      !< Character to unescape, local variable.
-  INTEGER :: c           !< Character counter.
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  CHARACTER(kind=CK, len=1), INTENT( IN ) :: to_unescape
+  !! Character to be unescaped.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: unesc
+  !! Character used to unescape.
+  TYPE(string) :: unescaped
+  !! Escaped string.
+  CHARACTER(kind=CK, len=:), ALLOCATABLE :: unesc_
+  !! Character to unescape, local variable.
+  INTEGER :: c
+  !! Character counter.
 
   IF (ALLOCATED(self%raw)) THEN
     unesc_ = ''; IF (PRESENT(unesc)) unesc_ = unesc
@@ -3237,6 +3367,10 @@ ELEMENTAL FUNCTION unescape(self, to_unescape, unesc) RESULT(unescaped)
   END IF
 END FUNCTION unescape
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 ELEMENTAL FUNCTION unique(self, substring) RESULT(uniq)
   !< Reduce to one (unique) multiple (sequential) occurrences of a substring into a string.
   !<
@@ -3251,12 +3385,17 @@ ELEMENTAL FUNCTION unique(self, substring) RESULT(uniq)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self       !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in), OPTIONAL :: substring  !< Substring which multiple occurences must be reduced to one.
-  CHARACTER(kind=CK, len=:), ALLOCATABLE :: substring_ !< Substring, default value.
-  TYPE(string) :: uniq       !< String parsed.
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ), OPTIONAL :: substring
+  !! Substring which multiple occurences must be reduced to one.
+  CHARACTER(kind=CK, len=:), ALLOCATABLE :: substring_
+  !! Substring, default value.
+  TYPE(string) :: uniq
+  !! String parsed.
 #ifdef _NVF
-  CHARACTER(9999) :: nvf_bug  !< Work around for NVFortran bug.
+  CHARACTER(9999) :: nvf_bug
+  !! Work around for NVFortran bug.
 #endif
 
   IF (ALLOCATED(self%raw)) THEN
@@ -3276,6 +3415,10 @@ ELEMENTAL FUNCTION unique(self, substring) RESULT(uniq)
   END IF
 END FUNCTION unique
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 ELEMENTAL FUNCTION upper(self)
   !< Return a string with all uppercase characters.
   !<
@@ -3287,7 +3430,7 @@ ELEMENTAL FUNCTION upper(self)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self  !< The string.
+  CLASS(string), INTENT( IN ) :: self  !< The string.
   TYPE(string) :: upper !< Upper case string.
   INTEGER :: n1    !< Characters counter.
   INTEGER :: n2    !< Characters counter.
@@ -3300,6 +3443,10 @@ ELEMENTAL FUNCTION upper(self)
     END DO
   END IF
 END FUNCTION upper
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 SUBROUTINE write_file(self, file, form, iostat, iomsg)
   !< Write a single string stream into file.
@@ -3339,9 +3486,9 @@ SUBROUTINE write_file(self, file, form, iostat, iomsg)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self    !< The string.
-  CHARACTER(len=*), INTENT(in) :: file    !< File name.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: form    !< Format of unit.
+  CLASS(string), INTENT( IN ) :: self    !< The string.
+  CHARACTER(len=*), INTENT( IN ) :: file    !< File name.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: form    !< Format of unit.
   INTEGER, INTENT(out), OPTIONAL :: iostat  !< IO status code.
   CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg   !< IO status message.
   TYPE(string) :: form_   !< Format of unit, local variable.
@@ -3363,15 +3510,19 @@ SUBROUTINE write_file(self, file, form, iostat, iomsg)
   IF (PRESENT(iomsg)) iomsg = iomsg_
 END SUBROUTINE write_file
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 SUBROUTINE write_line(self, unit, form, iostat, iomsg)
   !< Write line (record) to a connected unit.
   !<
   !< @note If the connected unit is unformatted a `new_line()` character is added at the end (if necessary) to mark the end of line.
   !<
   !< @note There is no doctests, this being tested by means of [[string:write_file]] doctests.
-  CLASS(string), INTENT(in) :: self    !< The string.
-  INTEGER, INTENT(in) :: unit    !< Logical unit.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: form    !< Format of unit.
+  CLASS(string), INTENT( IN ) :: self    !< The string.
+  INTEGER, INTENT( IN ) :: unit    !< Logical unit.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: form    !< Format of unit.
   INTEGER, INTENT(out), OPTIONAL :: iostat  !< IO status code.
   CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg   !< IO status message.
   TYPE(string) :: form_   !< Format of unit, local variable.
@@ -3397,22 +3548,42 @@ SUBROUTINE write_line(self, unit, form, iostat, iomsg)
   IF (PRESENT(iomsg)) iomsg = iomsg_
 END SUBROUTINE write_line
 
-SUBROUTINE write_lines(self, unit, form, iostat, iomsg)
-  !< Write lines (records) to a connected unit.
-  !<
-  !< This method checks if self contains more than one line (records) and writes them as lines (records).
-  !<
-  !< @note If the connected unit is unformatted a `new_line()` character is added at the end (if necessary) to mark the end of line.
-  !<
-  !< @note There is no doctests, this being tested by means of [[string:write_file]] doctests.
-  CLASS(string), INTENT(in) :: self     !< The string.
-  INTEGER, INTENT(in) :: unit     !< Logical unit.
-  CHARACTER(len=*), INTENT(in), OPTIONAL :: form     !< Format of unit.
-  INTEGER, INTENT(out), OPTIONAL :: iostat   !< IO status code.
-  CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg    !< IO status message.
-  TYPE(string), ALLOCATABLE :: lines(:) !< Lines.
-  INTEGER :: l        !< Counter.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Write lines (records) to a connected unit.
+!
+!# Introduction
+!
+!
+! This method checks if self contains more than one line (records) and writes
+! them as lines (records).
+!
+! @note If the connected unit is unformatted a `new_line()` character is
+! added at the end (if necessary) to mark the end of line.
+!
+! @note There is no doctests, this being tested by means of
+! [[string:write_file]] doctests.
+
+SUBROUTINE write_lines(self, unit, form, iostat, iomsg)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  INTEGER, INTENT( IN ) :: unit
+  !! Logical unit.
+  CHARACTER(len=*), INTENT( IN ), OPTIONAL :: form
+  !! Format of unit.
+  INTEGER, INTENT(out), OPTIONAL :: iostat
+  !! IO status code.
+  CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg
+  !! IO status message.
+  TYPE(string), ALLOCATABLE :: lines(:)
+  !! Lines.
+  INTEGER :: l
+  !! Counter.
+  !!
   IF (ALLOCATED(self%raw)) THEN
     CALL self%split(tokens=lines, sep=new_LINE('a'))
     DO l = 1, SIZE(lines, dim=1)
@@ -3421,37 +3592,55 @@ SUBROUTINE write_lines(self, unit, form, iostat, iomsg)
   END IF
 END SUBROUTINE write_lines
 
-! inquire
-ELEMENTAL FUNCTION end_with(self, suffix, start, END, ignore_null_eof)
-  !< Return true if a string ends with a specified suffix.
-  !<
-  !<```fortran
-  !< type(string) :: astring
-  !< logical      :: test_passed(5)
-  !< astring = 'Hello WorLD!'
-  !< test_passed(1) = astring%end_with(suffix='LD!').eqv..true.
-  !< test_passed(2) = astring%end_with(suffix='lD!').eqv..false.
-  !< test_passed(3) = astring%end_with(suffix='orLD!', start=5).eqv..true.
-  !< test_passed(4) = astring%end_with(suffix='orLD!', start=8, end=12).eqv..true.
-  !< test_passed(5) = astring%end_with(suffix='!').eqv..true.
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self             !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: suffix           !< Searched suffix.
-  INTEGER, INTENT(in), OPTIONAL :: start            !< Start position into the string.
-  INTEGER, INTENT(in), OPTIONAL :: END              !< End position into the string.
-  LOGICAL, INTENT(in), OPTIONAL :: ignore_null_eof  !< Ignore null character at the end of file.
-  LOGICAL :: end_with         !< Result of the test.
-  INTEGER :: start_           !< Start position into the string, local variable.
-  INTEGER :: end_             !< End position into the string, local variable.
-  LOGICAL :: ignore_null_eof_ !< Ignore null character at the end of file, local variable.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Return true if a string ends with a specified suffix.
+!
+!# Introduction
+!
+!```fortran
+! type(string) :: astring
+! logical      :: test_passed(5)
+! astring = 'Hello WorLD!'
+! test_passed(1) = astring%end_with(suffix='LD!').eqv..true.
+! test_passed(2) = astring%end_with(suffix='lD!').eqv..false.
+! test_passed(3) = astring%end_with(suffix='orLD!', start=5).eqv..true.
+! test_passed(4) = astring%end_with(suffix='orLD!', start=8, end=12).eqv..
+! true.
+! test_passed(5) = astring%end_with(suffix='!').eqv..true.
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION end_with(self, suffix, start, END, ignore_null_eof)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: suffix
+  !! Searched suffix.
+  INTEGER, INTENT( IN ), OPTIONAL :: start
+  !! Start position into the string.
+  INTEGER, INTENT( IN ), OPTIONAL :: END
+  !! End position into the string.
+  LOGICAL, INTENT( IN ), OPTIONAL :: ignore_null_eof
+  !! Ignore null character at the end of file.
+  LOGICAL :: end_with
+  !! Result of the test.
+  INTEGER :: start_
+  !! Start position into the string, local variable.
+  INTEGER :: end_
+  !! End position into the string, local variable.
+  LOGICAL :: ignore_null_eof_
+  !! Ignore null character at the end of file, local variable.
+  !!
   end_with = .FALSE.
   IF (ALLOCATED(self%raw)) THEN
     start_ = 1; IF (PRESENT(start)) start_ = start
     end_ = LEN(self%raw); IF (PRESENT(END)) end_ = END
-    ignore_null_eof_ = .FALSE.; IF (PRESENT(ignore_null_eof)) ignore_null_eof_ = ignore_null_eof
+    ignore_null_eof_ = .FALSE.;
+    IF (PRESENT(ignore_null_eof)) ignore_null_eof_ = ignore_null_eof
   IF (ignore_null_eof_ .AND. (self%raw(end_:end_) == CHAR(0))) end_ = end_ - 1
     IF (LEN(suffix) <= LEN(self%raw(start_:end_))) THEN
       end_with = self%raw(end_ - LEN(suffix) + 1:end_) == suffix
@@ -3459,41 +3648,60 @@ ELEMENTAL FUNCTION end_with(self, suffix, start, END, ignore_null_eof)
   END IF
 END FUNCTION end_with
 
-ELEMENTAL FUNCTION is_allocated(self)
-  !< Return true if the string is allocated.
-  !<
-  !<```fortran
-  !< type(string) :: astring
-  !< logical      :: test_passed(2)
-  !< test_passed(1) = astring%is_allocated().eqv..false.
-  !< astring = 'hello'
-  !< test_passed(2) = astring%is_allocated().eqv..true.
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
-  LOGICAL :: is_allocated !< Result of the test.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Return true if the string is allocated.
+!
+!# Introduction
+!
+!```fortran
+! type(string) :: astring
+! logical      :: test_passed(2)
+! test_passed(1) = astring%is_allocated().eqv..false.
+! astring = 'hello'
+! test_passed(2) = astring%is_allocated().eqv..true.
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION is_allocated(self)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  LOGICAL :: is_allocated
+  !! Result of the test.
   is_allocated = ALLOCATED(self%raw)
 END FUNCTION is_allocated
 
-ELEMENTAL FUNCTION is_digit(self)
-  !< Return true if all characters in the string are digits.
-  !<
-  !<```fortran
-  !< type(string) :: astring
-  !< logical      :: test_passed(2)
-  !< astring = '   -1212112.3 '
-  !< test_passed(1) = astring%is_digit().eqv..false.
-  !< astring = '12121123'
-  !< test_passed(2) = astring%is_digit().eqv..true.
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
-  LOGICAL :: is_digit !< Result of the test.
-  INTEGER :: c        !< Character counter.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Return true if all characters in the string are digits.
+!
+!# Introduction
+!
+!```fortran
+! type(string) :: astring
+! logical      :: test_passed(2)
+! astring = '   -1212112.3 '
+! test_passed(1) = astring%is_digit().eqv..false.
+! astring = '12121123'
+! test_passed(2) = astring%is_digit().eqv..true.
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION is_digit(self)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  LOGICAL :: is_digit
+  !! Result of the test.
+  INTEGER :: c
+  !! Character counter.
   is_digit = .FALSE.
   IF (ALLOCATED(self%raw)) THEN
     DO c = 1, LEN(self%raw)
@@ -3508,51 +3716,69 @@ ELEMENTAL FUNCTION is_digit(self)
   END IF
 END FUNCTION is_digit
 
-ELEMENTAL FUNCTION is_integer(self, allow_spaces)
-  !< Return true if the string contains an integer.
-  !<
-  !< The regular expression is `\s*[\+\-]?\d+([eE]\+?\d+)?\s*`. The parse algorithm is done in stages:
-  !<
-  !< | S0  | S1      | S2  | S3   | S4  | S5  | S6  |
-  !< |-----|---------|-----|------|-----|-----|-----|
-  !< |`\s*`|`[\+\-]?`|`\d+`|`[eE]`|`\+?`|`\d+`|`\s*`|
-  !<
-  !< Exit on stages-parsing results in:
-  !<
-  !< | S0 | S1 | S2 | S3 | S4 | S5 | S6 |
-  !< |----|----|----|----|----|----|----|
-  !< |  F |  F |  T |  F |  F |  T |  T |
-  !<
-  !< @note This implementation is courtesy of
-  !< [tomedunn](https://github.com/tomedunn/fortran-string-utility-module/blob/master/src/string_utility_module.f90#L294)
-  !<
-  !<```fortran
-  !< type(string) :: astring
-  !< logical      :: test_passed(6)
-  !< astring = '   -1212112 '
-  !< test_passed(1) = astring%is_integer().eqv..true.
-  !< astring = '   -1212112'
-  !< test_passed(2) = astring%is_integer(allow_spaces=.false.).eqv..false.
-  !< astring = '-1212112   '
-  !< test_passed(3) = astring%is_integer(allow_spaces=.false.).eqv..false.
-  !< astring = '+2e20'
-  !< test_passed(4) = astring%is_integer().eqv..true.
-  !< astring = ' -2E13 '
-  !< test_passed(5) = astring%is_integer().eqv..true.
-  !< astring = ' -2 E13 '
-  !< test_passed(6) = astring%is_integer().eqv..false.
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self          !< The string.
-  LOGICAL, INTENT(in), OPTIONAL :: allow_spaces  !< Allow leading-trailing spaces.
-  LOGICAL :: is_integer    !< Result of the test.
-  LOGICAL :: allow_spaces_ !< Allow leading-trailing spaces, local variable.
-  INTEGER :: stage         !< Stages counter.
-  INTEGER :: c             !< Character counter.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Return true if the string contains an integer.
+!
+!# Introduction
+!
+!
+! The regular expression is `\s*[\+\-]?\d+([eE]\+?\d+)?\s*`. The parse
+! algorithm is done in stages:
+!
+! | S0  | S1      | S2  | S3   | S4  | S5  | S6  |
+! |-----|---------|-----|------|-----|-----|-----|
+! |`\s*`|`[\+\-]?`|`\d+`|`[eE]`|`\+?`|`\d+`|`\s*`|
+!
+! Exit on stages-parsing results in:
+!
+! | S0 | S1 | S2 | S3 | S4 | S5 | S6 |
+! |----|----|----|----|----|----|----|
+! |  F |  F |  T |  F |  F |  T |  T |
+!
+! @note This implementation is courtesy of
+! [tomedunn](https://github.com/tomedunn/fortran-string-utility-module/blob/
+! master/src/string_utility_module.f90#L294)
+!
+!```fortran
+! type(string) :: astring
+! logical      :: test_passed(6)
+! astring = '   -1212112 '
+! test_passed(1) = astring%is_integer().eqv..true.
+! astring = '   -1212112'
+! test_passed(2) = astring%is_integer(allow_spaces=.false.).eqv..false.
+! astring = '-1212112   '
+! test_passed(3) = astring%is_integer(allow_spaces=.false.).eqv..false.
+! astring = '+2e20'
+! test_passed(4) = astring%is_integer().eqv..true.
+! astring = ' -2E13 '
+! test_passed(5) = astring%is_integer().eqv..true.
+! astring = ' -2 E13 '
+! test_passed(6) = astring%is_integer().eqv..false.
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION is_integer(self, allow_spaces)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  LOGICAL, INTENT( IN ), OPTIONAL :: allow_spaces
+  !! Allow leading-trailing spaces.
+  LOGICAL :: is_integer
+  !! Result of the test.
+  LOGICAL :: allow_spaces_
+  !! Allow leading-trailing spaces, local variable.
+  INTEGER :: stage
+  !! Stages counter.
+  INTEGER :: c
+  !! Character counter.
+  !!
   IF (ALLOCATED(self%raw)) THEN
-    allow_spaces_ = .TRUE.; IF (PRESENT(allow_spaces)) allow_spaces_ = allow_spaces
+    allow_spaces_ = .TRUE.
+    IF (PRESENT(allow_spaces)) allow_spaces_ = allow_spaces
     stage = 0
     is_integer = .TRUE.
     DO c = 1, LEN(self%raw)
@@ -3615,113 +3841,110 @@ ELEMENTAL FUNCTION is_integer(self, allow_spaces)
   END IF
 END FUNCTION is_integer
 
-ELEMENTAL FUNCTION is_lower(self)
-  !< Return true if all characters in the string are lowercase.
-  !<
-  !<```fortran
-  !< type(string) :: astring
-  !< logical      :: test_passed(3)
-  !< astring = ' Hello World'
-  !< test_passed(1) = astring%is_lower().eqv..false.
-  !< astring = ' HELLO WORLD'
-  !< test_passed(2) = astring%is_lower().eqv..false.
-  !< astring = ' hello world'
-  !< test_passed(3) = astring%is_lower().eqv..true.
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
-  LOGICAL :: is_lower !< Result of the test.
-  INTEGER :: c        !< Character counter.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-  is_lower = .FALSE.
-  IF (ALLOCATED(self%raw)) THEN
-    is_lower = .TRUE.
-    DO c = 1, LEN(self%raw)
-      IF (INDEX(UPPER_ALPHABET, self%raw(c:c)) > 0) THEN
-        is_lower = .FALSE.
-        EXIT
-      END IF
-    END DO
-  END IF
-END FUNCTION is_lower
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Return true if the string contains a number (real or integer).
+!
+!# Introduction
+!
+!```fortran
+! type(string) :: astring
+! logical      :: test_passed(7)
+! astring = '   -1212112 '
+! test_passed(1) = astring%is_number().eqv..true.
+! astring = '   -121.2112 '
+! test_passed(2) = astring%is_number().eqv..true.
+! astring = '   -1212112'
+! test_passed(3) = astring%is_number(allow_spaces=.false.).eqv..false.
+! astring = '-12121.12   '
+! test_passed(4) = astring%is_number(allow_spaces=.false.).eqv..false.
+! astring = '+2e20'
+! test_passed(5) = astring%is_number().eqv..true.
+! astring = ' -2.4E13 '
+! test_passed(6) = astring%is_number().eqv..true.
+! astring = ' -2 E13 '
+! test_passed(7) = astring%is_number().eqv..false.
+! print '(L1)', all(test_passed)
+!```
 
 ELEMENTAL FUNCTION is_number(self, allow_spaces)
-  !< Return true if the string contains a number (real or integer).
-  !<
-  !<```fortran
-  !< type(string) :: astring
-  !< logical      :: test_passed(7)
-  !< astring = '   -1212112 '
-  !< test_passed(1) = astring%is_number().eqv..true.
-  !< astring = '   -121.2112 '
-  !< test_passed(2) = astring%is_number().eqv..true.
-  !< astring = '   -1212112'
-  !< test_passed(3) = astring%is_number(allow_spaces=.false.).eqv..false.
-  !< astring = '-12121.12   '
-  !< test_passed(4) = astring%is_number(allow_spaces=.false.).eqv..false.
-  !< astring = '+2e20'
-  !< test_passed(5) = astring%is_number().eqv..true.
-  !< astring = ' -2.4E13 '
-  !< test_passed(6) = astring%is_number().eqv..true.
-  !< astring = ' -2 E13 '
-  !< test_passed(7) = astring%is_number().eqv..false.
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self         !< The string.
-  LOGICAL, INTENT(in), OPTIONAL :: allow_spaces !< Allow leading-trailing spaces.
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  LOGICAL, INTENT( IN ), OPTIONAL :: allow_spaces
+  !! Allow leading-trailing spaces.
   LOGICAL :: is_number    !< Result of the test.
-
-      is_number = (self%is_integer(allow_spaces=allow_spaces) .OR. self%is_real(allow_spaces=allow_spaces))
+  !!
+  is_number = (self%is_integer(allow_spaces=allow_spaces) &
+    & .OR. self%is_real(allow_spaces=allow_spaces))
+  !!
 END FUNCTION is_number
 
-ELEMENTAL FUNCTION is_real(self, allow_spaces)
-  !< Return true if the string contains a real.
-  !<
-  !< The regular expression is `\s*[\+\-]?\d*(|\.?\d*([deDE][\+\-]?\d+)?)\s*`. The parse algorithm is done in stages:
-  !<
-  !< | S0  | S1      | S2  | S3  | S4  | S5     | S6      | S7  | S8  |
-  !< |-----|---------|-----|-----|-----|--------|---------|-----|-----|
-  !< |`\s*`|`[\+\-]?`|`\d*`|`\.?`|`\d*`|`[deDE]`|`[\+\-]?`|`\d*`|`\s*`|
-  !<
-  !< Exit on stages-parsing results in:
-  !<
-  !< | S0 | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 |
-  !< |----|----|----|----|----|----|----|----|----|
-  !  |  F |  F |  T |  T |  T |  F |  F |  T |  T |
-  !<
-  !< @note This implementation is courtesy of
-  !< [tomedunn](https://github.com/tomedunn/fortran-string-utility-module/blob/master/src/string_utility_module.f90#L614)
-  !<
-  !<```fortran
-  !< type(string) :: astring
-  !< logical      :: test_passed(6)
-  !< astring = '   -1212112.d0 '
-  !< test_passed(1) = astring%is_real().eqv..true.
-  !< astring = '   -1212112.d0'
-  !< test_passed(2) = astring%is_real(allow_spaces=.false.).eqv..false.
-  !< astring = '-1212112.d0   '
-  !< test_passed(3) = astring%is_real(allow_spaces=.false.).eqv..false.
-  !< astring = '+2.e20'
-  !< test_passed(4) = astring%is_real().eqv..true.
-  !< astring = ' -2.01E13 '
-  !< test_passed(5) = astring%is_real().eqv..true.
-  !< astring = ' -2.01 E13 '
-  !< test_passed(6) = astring%is_real().eqv..false.
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(in) :: self              !< The string.
-  LOGICAL, INTENT(in), OPTIONAL :: allow_spaces      !< Allow leading-trailing spaces.
-  LOGICAL :: is_real           !< Result of the test.
-  LOGICAL :: allow_spaces_     !< Allow leading-trailing spaces, local variable.
-  LOGICAL :: has_leading_digit !< Check the presence of leading digits.
-  INTEGER :: stage             !< Stages counter.
-  INTEGER :: c                 !< Character counter.
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Return true if the string contains a real.
+!
+!# Introduction
+!
+! The regular expression is `\s*[\+\-]?\d*(|\.?\d*([deDE][\+\-]?\d+)?)\s*`. The parse algorithm is done in stages:
+!
+! | S0  | S1      | S2  | S3  | S4  | S5     | S6      | S7  | S8  |
+! |-----|---------|-----|-----|-----|--------|---------|-----|-----|
+! |`\s*`|`[\+\-]?`|`\d*`|`\.?`|`\d*`|`[deDE]`|`[\+\-]?`|`\d*`|`\s*`|
+!
+! Exit on stages-parsing results in:
+!
+! | S0 | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 |
+! |----|----|----|----|----|----|----|----|----|
+!  |  F |  F |  T |  T |  T |  F |  F |  T |  T |
+!
+! @note This implementation is courtesy of
+! [tomedunn](https://github.com/tomedunn/fortran-string-utility-module/blob/
+! master/src/string_utility_module.f90#L614)
+!
+!```fortran
+! type(string) :: astring
+! logical      :: test_passed(6)
+! astring = '   -1212112.d0 '
+! test_passed(1) = astring%is_real().eqv..true.
+! astring = '   -1212112.d0'
+! test_passed(2) = astring%is_real(allow_spaces=.false.).eqv..false.
+! astring = '-1212112.d0   '
+! test_passed(3) = astring%is_real(allow_spaces=.false.).eqv..false.
+! astring = '+2.e20'
+! test_passed(4) = astring%is_real().eqv..true.
+! astring = ' -2.01E13 '
+! test_passed(5) = astring%is_real().eqv..true.
+! astring = ' -2.01 E13 '
+! test_passed(6) = astring%is_real().eqv..false.
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION is_real(self, allow_spaces)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  LOGICAL, INTENT( IN ), OPTIONAL :: allow_spaces
+  !! Allow leading-trailing spaces.
+  LOGICAL :: is_real
+  !! Result of the test.
+  LOGICAL :: allow_spaces_
+  !! Allow leading-trailing spaces, local variable.
+  LOGICAL :: has_leading_digit
+  !! Check the presence of leading digits.
+  INTEGER :: stage
+  !! Stages counter.
+  INTEGER :: c
+  !! Character counter.
   IF (ALLOCATED(self%raw)) THEN
-    allow_spaces_ = .TRUE.; IF (PRESENT(allow_spaces)) allow_spaces_ = allow_spaces
+    allow_spaces_ = .TRUE.
+    IF (PRESENT(allow_spaces)) allow_spaces_ = allow_spaces
     stage = 0
     is_real = .TRUE.
     has_leading_digit = .FALSE.
@@ -3791,6 +4014,89 @@ ELEMENTAL FUNCTION is_real(self, allow_spaces)
   END IF
 END FUNCTION is_real
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2022
+! summary: Returns true if string contains boolean character
+!
+!# Introduction
+!
+
+ELEMENTAL FUNCTION is_logical(self)
+  CLASS(string), INTENT( IN ) :: self
+  !! The string.
+  LOGICAL :: is_logical
+  !!
+  TYPE(String) :: tmp
+    ! True and False options (all lowercase):
+  CHARACTER(LEN=*),DIMENSION(4),PARAMETER :: true_str  = ['1     ',&
+                                                          't     ',&
+                                                          'true  ',&
+                                                          '.true.']
+  CHARACTER(LEN=*),DIMENSION(4),PARAMETER :: false_str = ['0      ',&
+                                                          'f      ',&
+                                                          'false  ',&
+                                                          '.false.']
+  IF (ALLOCATED(self%raw)) THEN
+    tmp = self%lower()
+    IF( ANY( tmp .EQ. true_str ) ) THEN
+      is_logical = .TRUE.
+    ELSEIF( ANY( tmp .EQ. false_str ) ) THEN
+      is_logical = .FALSE.
+    ELSE
+      is_logical = .FALSE.
+    END IF
+  END IF
+  !!
+END FUNCTION is_logical
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 23 July 2022
+! summary: Return true if all characters in the string are lowercase.
+!
+!# Introduction
+!
+!
+!```fortran
+! type(string) :: astring
+! logical      :: test_passed(3)
+! astring = ' Hello World'
+! test_passed(1) = astring%is_lower().eqv..false.
+! astring = ' HELLO WORLD'
+! test_passed(2) = astring%is_lower().eqv..false.
+! astring = ' hello world'
+! test_passed(3) = astring%is_lower().eqv..true.
+! print '(L1)', all(test_passed)
+!```
+
+ELEMENTAL FUNCTION is_lower(self)
+  CLASS(string), INTENT( IN ) :: self     !< The string.
+  LOGICAL :: is_lower !< Result of the test.
+  INTEGER :: c        !< Character counter.
+
+  is_lower = .FALSE.
+  IF (ALLOCATED(self%raw)) THEN
+    is_lower = .TRUE.
+    DO c = 1, LEN(self%raw)
+      IF (INDEX(UPPER_ALPHABET, self%raw(c:c)) > 0) THEN
+        is_lower = .FALSE.
+        EXIT
+      END IF
+    END DO
+  END IF
+END FUNCTION is_lower
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 ELEMENTAL FUNCTION is_upper(self)
   !< Return true if all characters in the string are uppercase.
   !<
@@ -3806,7 +4112,7 @@ ELEMENTAL FUNCTION is_upper(self)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self     !< The string.
+  CLASS(string), INTENT( IN ) :: self     !< The string.
   LOGICAL :: is_upper !< Result of the test.
   INTEGER :: c        !< Character counter.
 
@@ -3836,10 +4142,10 @@ ELEMENTAL FUNCTION start_with(self, prefix, start, END)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self       !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: prefix     !< Searched prefix.
-  INTEGER, INTENT(in), OPTIONAL :: start      !< Start position into the string.
-  INTEGER, INTENT(in), OPTIONAL :: END        !< End position into the string.
+  CLASS(string), INTENT( IN ) :: self       !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: prefix     !< Searched prefix.
+  INTEGER, INTENT( IN ), OPTIONAL :: start      !< Start position into the string.
+  INTEGER, INTENT( IN ), OPTIONAL :: END        !< End position into the string.
   LOGICAL :: start_with !< Result of the test.
   INTEGER :: start_     !< Start position into the string, local variable.
   INTEGER :: end_       !< End position into the string, local variable.
@@ -3871,7 +4177,7 @@ PURE SUBROUTINE string_assign_string(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs !< Right hand side.
+  TYPE(string), INTENT( IN ) :: rhs !< Right hand side.
 
   IF (ALLOCATED(rhs%raw)) lhs%raw = rhs%raw
 END SUBROUTINE string_assign_string
@@ -3888,7 +4194,7 @@ PURE SUBROUTINE string_assign_character(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs !< Right hand side.
 
   lhs%raw = rhs
 END SUBROUTINE string_assign_character
@@ -3906,7 +4212,7 @@ PURE SUBROUTINE string_assign_integer_I1P(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  INTEGER(I1P), INTENT(in) :: rhs !< Right hand side.
+  INTEGER(I1P), INTENT( IN ) :: rhs !< Right hand side.
 
   lhs%raw = TRIM(str(rhs))
 END SUBROUTINE string_assign_integer_I1P
@@ -3924,7 +4230,7 @@ PURE SUBROUTINE string_assign_integer_I2P(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  INTEGER(I2P), INTENT(in) :: rhs !< Right hand side.
+  INTEGER(I2P), INTENT( IN ) :: rhs !< Right hand side.
 
   lhs%raw = TRIM(str(rhs))
 END SUBROUTINE string_assign_integer_I2P
@@ -3942,7 +4248,7 @@ PURE SUBROUTINE string_assign_integer_I4P(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  INTEGER(I4P), INTENT(in) :: rhs !< Right hand side.
+  INTEGER(I4P), INTENT( IN ) :: rhs !< Right hand side.
 
   lhs%raw = TRIM(str(rhs))
 END SUBROUTINE string_assign_integer_I4P
@@ -3960,7 +4266,7 @@ PURE SUBROUTINE string_assign_integer_I8P(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  INTEGER(I8P), INTENT(in) :: rhs !< Right hand side.
+  INTEGER(I8P), INTENT( IN ) :: rhs !< Right hand side.
 
   lhs%raw = TRIM(str(rhs))
 END SUBROUTINE string_assign_integer_I8P
@@ -3978,7 +4284,7 @@ PURE SUBROUTINE string_assign_real_R4P(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  REAL(R4P), INTENT(in) :: rhs !< Right hand side.
+  REAL(R4P), INTENT( IN ) :: rhs !< Right hand side.
 
   lhs%raw = TRIM(str(rhs))
 END SUBROUTINE string_assign_real_R4P
@@ -3996,7 +4302,7 @@ PURE SUBROUTINE string_assign_real_R8P(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  REAL(R8P), INTENT(in) :: rhs !< Right hand side.
+  REAL(R8P), INTENT( IN ) :: rhs !< Right hand side.
 
   lhs%raw = TRIM(str(rhs))
 END SUBROUTINE string_assign_real_R8P
@@ -4014,7 +4320,7 @@ PURE SUBROUTINE string_assign_real_R16P(lhs, rhs)
   !<```
   !=> T <<<
   CLASS(string), INTENT(inout) :: lhs !< Left hand side.
-  REAL(R16P), INTENT(in) :: rhs !< Right hand side.
+  REAL(R16P), INTENT( IN ) :: rhs !< Right hand side.
 
   lhs%raw = TRIM(str(rhs))
 END SUBROUTINE string_assign_real_R16P
@@ -4033,8 +4339,8 @@ PURE FUNCTION string_concat_string(lhs, rhs) RESULT(concat)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs    !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs    !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs    !< Left hand side.
+  TYPE(string), INTENT( IN ) :: rhs    !< Right hand side.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: concat !< Concatenated string.
 
   concat = ''
@@ -4055,8 +4361,8 @@ PURE FUNCTION string_concat_character(lhs, rhs) RESULT(concat)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs    !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs    !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs    !< Left hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs    !< Right hand side.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: concat !< Concatenated string.
 
   IF (ALLOCATED(lhs%raw)) THEN
@@ -4079,8 +4385,8 @@ PURE FUNCTION character_concat_string(lhs, rhs) RESULT(concat)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: lhs    !< Left hand side.
-  CLASS(string), INTENT(in) :: rhs    !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: lhs    !< Left hand side.
+  CLASS(string), INTENT( IN ) :: rhs    !< Right hand side.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: concat !< Concatenated string.
 
   IF (ALLOCATED(rhs%raw)) THEN
@@ -4105,8 +4411,8 @@ ELEMENTAL FUNCTION string_concat_string_string(lhs, rhs) RESULT(concat)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs       !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs       !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs       !< Left hand side.
+  TYPE(string), INTENT( IN ) :: rhs       !< Right hand side.
   TYPE(string) :: concat    !< Concatenated string.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: temporary !< Temporary concatenated string.
 
@@ -4131,8 +4437,8 @@ ELEMENTAL FUNCTION string_concat_character_string(lhs, rhs) RESULT(concat)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs    !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs    !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs    !< Left hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs    !< Right hand side.
   TYPE(string) :: concat !< Concatenated string.
 
   IF (ALLOCATED(lhs%raw)) THEN
@@ -4157,8 +4463,8 @@ ELEMENTAL FUNCTION character_concat_string_string(lhs, rhs) RESULT(concat)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: lhs    !< Left hand side.
-  CLASS(string), INTENT(in) :: rhs    !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: lhs    !< Left hand side.
+  CLASS(string), INTENT( IN ) :: rhs    !< Right hand side.
   TYPE(string) :: concat !< Concatenated string.
 
   IF (ALLOCATED(rhs%raw)) THEN
@@ -4185,8 +4491,8 @@ ELEMENTAL FUNCTION string_eq_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  TYPE(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw == rhs%raw
@@ -4208,8 +4514,8 @@ ELEMENTAL FUNCTION string_eq_character(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw == rhs
@@ -4231,8 +4537,8 @@ ELEMENTAL FUNCTION character_eq_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: lhs   !< Left hand side.
-  CLASS(string), INTENT(in) :: rhs   !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: lhs   !< Left hand side.
+  CLASS(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = rhs%raw == lhs
@@ -4254,8 +4560,8 @@ ELEMENTAL FUNCTION string_ne_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  TYPE(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw /= rhs%raw
@@ -4277,8 +4583,8 @@ ELEMENTAL FUNCTION string_ne_character(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw /= rhs
@@ -4300,8 +4606,8 @@ ELEMENTAL FUNCTION character_ne_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: lhs   !< Left hand side.
-  CLASS(string), INTENT(in) :: rhs   !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: lhs   !< Left hand side.
+  CLASS(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = rhs%raw /= lhs
@@ -4323,8 +4629,8 @@ ELEMENTAL FUNCTION string_lt_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  TYPE(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw < rhs%raw
@@ -4346,8 +4652,8 @@ ELEMENTAL FUNCTION string_lt_character(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw < rhs
@@ -4369,8 +4675,8 @@ ELEMENTAL FUNCTION character_lt_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: lhs   !< Left hand side.
-  CLASS(string), INTENT(in) :: rhs   !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: lhs   !< Left hand side.
+  CLASS(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs < rhs%raw
@@ -4395,8 +4701,8 @@ ELEMENTAL FUNCTION string_le_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  TYPE(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw <= rhs%raw
@@ -4421,8 +4727,8 @@ ELEMENTAL FUNCTION string_le_character(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw <= rhs
@@ -4447,8 +4753,8 @@ ELEMENTAL FUNCTION character_le_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: lhs   !< Left hand side.
-  CLASS(string), INTENT(in) :: rhs   !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: lhs   !< Left hand side.
+  CLASS(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs <= rhs%raw
@@ -4473,8 +4779,8 @@ ELEMENTAL FUNCTION string_ge_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  TYPE(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw >= rhs%raw
@@ -4499,8 +4805,8 @@ ELEMENTAL FUNCTION string_ge_character(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw >= rhs
@@ -4525,8 +4831,8 @@ ELEMENTAL FUNCTION character_ge_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: lhs   !< Left hand side.
-  CLASS(string), INTENT(in) :: rhs   !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: lhs   !< Left hand side.
+  CLASS(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs >= rhs%raw
@@ -4548,8 +4854,8 @@ ELEMENTAL FUNCTION string_gt_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  TYPE(string), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  TYPE(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw > rhs%raw
@@ -4571,8 +4877,8 @@ ELEMENTAL FUNCTION string_gt_character(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: lhs   !< Left hand side.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: rhs   !< Right hand side.
+  CLASS(string), INTENT( IN ) :: lhs   !< Left hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs%raw > rhs
@@ -4594,8 +4900,8 @@ ELEMENTAL FUNCTION character_gt_string(lhs, rhs) RESULT(is_it)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  CHARACTER(kind=CK, len=*), INTENT(in) :: lhs   !< Left hand side.
-  CLASS(string), INTENT(in) :: rhs   !< Right hand side.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: lhs   !< Left hand side.
+  CLASS(string), INTENT( IN ) :: rhs   !< Right hand side.
   LOGICAL :: is_it !< Opreator test result.
 
   is_it = lhs > rhs%raw
@@ -4609,9 +4915,9 @@ SUBROUTINE read_formatted(dtv, unit, iotype, v_list, iostat, iomsg)
   !<
   !< @bug Read listdirected with and without delimiters does not work.
   CLASS(string), INTENT(inout) :: dtv         !< The string.
-  INTEGER, INTENT(in) :: unit        !< Logical unit.
-  CHARACTER(len=*), INTENT(in) :: iotype      !< Edit descriptor.
-  INTEGER, INTENT(in) :: v_list(:)   !< Edit descriptor list.
+  INTEGER, INTENT( IN ) :: unit        !< Logical unit.
+  CHARACTER(len=*), INTENT( IN ) :: iotype      !< Edit descriptor.
+  INTEGER, INTENT( IN ) :: v_list(:)   !< Edit descriptor list.
   INTEGER, INTENT(out) :: iostat      !< IO status code.
   CHARACTER(len=*), INTENT(inout) :: iomsg       !< IO status message.
   CHARACTER(len=LEN(iomsg)) :: local_iomsg !< Local variant of iomsg, so it doesn't get inappropriately redefined.
@@ -4649,8 +4955,8 @@ SUBROUTINE read_delimited(dtv, unit, delim, iostat, iomsg)
   !<
   !< @note This does not need a doctest, it being tested by [[string::read_formatted]].
   CLASS(string), INTENT(out) :: dtv       !< The string.
-  INTEGER, INTENT(in) :: unit      !< Logical unit.
-  CHARACTER(kind=CK, len=1), INTENT(in) :: delim     !< String delimiter.
+  INTEGER, INTENT( IN ) :: unit      !< Logical unit.
+  CHARACTER(kind=CK, len=1), INTENT( IN ) :: delim     !< String delimiter.
   INTEGER, INTENT(out) :: iostat    !< IO status code.
   CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg     !< IO status message.
   CHARACTER(kind=CK, len=1) :: ch        !< A character read.
@@ -4698,7 +5004,7 @@ SUBROUTINE read_undelimited_listdirected(dtv, unit, iostat, iomsg)
   !<
   !< If input is terminated by end of record, then this procedure returns an end-of-record condition.
   CLASS(string), INTENT(inout) :: dtv           !< The string.
-  INTEGER, INTENT(in) :: unit          !< Logical unit.
+  INTEGER, INTENT( IN ) :: unit          !< Logical unit.
   INTEGER, INTENT(out) :: iostat        !< IO status code.
   CHARACTER(len=*), INTENT(inout) :: iomsg         !< IO status message.
   LOGICAL :: decimal_point !<True if DECIMAL=POINT in effect.
@@ -4714,8 +5020,8 @@ SUBROUTINE read_undelimited(dtv, unit, terminators, iostat, iomsg)
   !< If a terminator is encountered, the file position will be at that terminating character. If end of record is encountered, the
   !< file remains at end of record.
   CLASS(string), INTENT(inout) :: dtv         !< The string.
-  INTEGER, INTENT(in) :: unit        !< Logical unit.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: terminators !< Characters that are considered to terminate the string.
+  INTEGER, INTENT( IN ) :: unit        !< Logical unit.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: terminators !< Characters that are considered to terminate the string.
   !< Blanks in this string are meaningful.
   INTEGER, INTENT(out) :: iostat      !< IO status code.
   CHARACTER(len=*), INTENT(inout) :: iomsg       !< IO status message.
@@ -4749,10 +5055,10 @@ END SUBROUTINE read_undelimited
 
 SUBROUTINE write_formatted(dtv, unit, iotype, v_list, iostat, iomsg)
   !< Formatted output.
-  CLASS(string), INTENT(in) :: dtv       !< The string.
-  INTEGER, INTENT(in) :: unit      !< Logical unit.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: iotype    !< Edit descriptor.
-  INTEGER, INTENT(in) :: v_list(:) !< Edit descriptor list.
+  CLASS(string), INTENT( IN ) :: dtv       !< The string.
+  INTEGER, INTENT( IN ) :: unit      !< Logical unit.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: iotype    !< Edit descriptor.
+  INTEGER, INTENT( IN ) :: v_list(:) !< Edit descriptor list.
   INTEGER, INTENT(out) :: iostat    !< IO status code.
   CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg     !< IO status message.
 
@@ -4772,7 +5078,7 @@ SUBROUTINE read_unformatted(dtv, unit, iostat, iomsg)
   !<
   !< @bug Change temporary acks: find a more precise length of the input string and avoid the trimming!
   CLASS(string), INTENT(inout) :: dtv       !< The string.
-  INTEGER, INTENT(in) :: unit      !< Logical unit.
+  INTEGER, INTENT( IN ) :: unit      !< Logical unit.
   INTEGER, INTENT(out) :: iostat    !< IO status code.
   CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg     !< IO status message.
   CHARACTER(kind=CK, len=100) :: temporary !< Temporary storage string.
@@ -4783,8 +5089,8 @@ END SUBROUTINE read_unformatted
 
 SUBROUTINE write_unformatted(dtv, unit, iostat, iomsg)
   !< Unformatted output.
-  CLASS(string), INTENT(in) :: dtv    !< The string.
-  INTEGER, INTENT(in) :: unit   !< Logical unit.
+  CLASS(string), INTENT( IN ) :: dtv    !< The string.
+  INTEGER, INTENT( IN ) :: unit   !< Logical unit.
   INTEGER, INTENT(out) :: iostat !< IO status code.
   CHARACTER(kind=CK, len=*), INTENT(inout) :: iomsg  !< IO status message.
 
@@ -4800,9 +5106,9 @@ ELEMENTAL FUNCTION replace_one_occurrence(self, old, NEW) RESULT(replaced)
   !< Return a string with the first occurrence of substring old replaced by new.
   !<
   !< @note The doctest is not necessary, this being tested by [[string:replace]].
-  CLASS(string), INTENT(in) :: self      !< The string.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: old       !< Old substring.
-  CHARACTER(kind=CK, len=*), INTENT(in) :: NEW       !< New substring.
+  CLASS(string), INTENT( IN ) :: self      !< The string.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: old       !< Old substring.
+  CHARACTER(kind=CK, len=*), INTENT( IN ) :: NEW       !< New substring.
   TYPE(string) :: replaced  !< The string with old replaced by new.
   INTEGER :: pos       !< Position from which replace old.
 
@@ -4835,7 +5141,7 @@ END FUNCTION replace_one_occurrence
 ! non type-bound-procedures
 SUBROUTINE get_delimiter_mode(unit, delim, iostat, iomsg)
   USE, INTRINSIC :: iso_fortran_env, ONLY: iostat_inquire_internal_unit
-  INTEGER, INTENT(in) :: unit
+  INTEGER, INTENT( IN ) :: unit
   !! The unit for the connection.
   CHARACTER(len=1, kind=CK), INTENT(out) :: delim
   !! Represents the value of the DELIM mode.
@@ -4880,7 +5186,7 @@ END SUBROUTINE get_delimiter_mode
 ! summary: Get the next non-blank character in the current record.
 
 SUBROUTINE get_next_non_blank_character_this_record(unit, ch, iostat, iomsg)
-  INTEGER, INTENT(in) :: unit
+  INTEGER, INTENT( IN ) :: unit
   !! Logical unit.
   CHARACTER(kind=CK, len=1), INTENT(out) :: ch
   !! The non-blank character read. Not valid if IOSTAT is non-zero.
@@ -4911,7 +5217,7 @@ END SUBROUTINE get_next_non_blank_character_this_record
 ! summary: Get the next non-blank character, advancing records if necessary.
 
 SUBROUTINE get_next_non_blank_character_any_record(unit, ch, iostat, iomsg)
-  INTEGER, INTENT(in) :: unit
+  INTEGER, INTENT( IN ) :: unit
   !! Logical unit.
   CHARACTER(kind=CK, len=1), INTENT(out) :: ch
   !! The non-blank character read. Not valid if IOSTAT is non-zero.
@@ -4957,7 +5263,7 @@ END SUBROUTINE get_next_non_blank_character_any_record
 
 SUBROUTINE get_decimal_mode(unit, decimal_point, iostat, iomsg)
   USE, INTRINSIC :: iso_fortran_env, ONLY: iostat_inquire_internal_unit
-  INTEGER, INTENT(in) :: unit
+  INTEGER, INTENT( IN ) :: unit
   !! Logical unit.
   LOGICAL, INTENT(out) :: decimal_point
   !! True if the decimal mode is POINT, false otherwise.
@@ -4998,9 +5304,9 @@ SUBROUTINE display_str(self, msg, unitno)
   !< call display( astring, "hello-world" )
   !<```
   !=> T <<<
-  CLASS(string), INTENT(in) :: self
-  CHARACTER(len=*), INTENT(in) :: msg
-  INTEGER(i4p), OPTIONAL, INTENT(in) :: unitno
+  CLASS(string), INTENT( IN ) :: self
+  CHARACTER(len=*), INTENT( IN ) :: msg
+  INTEGER(i4p), OPTIONAL, INTENT( IN ) :: unitno
 
   INTEGER(i4p) :: i
   IF (PRESENT(unitno)) THEN
@@ -5022,7 +5328,7 @@ PURE FUNCTION constructor1(c) RESULT(self)
   !<```
   !=> T <<<
   TYPE(string) :: self
-  CLASS(*), INTENT(in) :: c
+  CLASS(*), INTENT( IN ) :: c
   SELECT TYPE (c)
   TYPE is (CHARACTER(*))
     self = c
@@ -5065,9 +5371,9 @@ END FUNCTION
 !@endnote
 
 PURE FUNCTION nmatchstr_1(obj, pattern) RESULT(ans)
-  CLASS(String), INTENT(IN) :: obj
+  CLASS(String), INTENT( IN ) :: obj
   !! the string to search
-  CHARACTER(LEN=*), INTENT(IN) :: pattern
+  CHARACTER(LEN=*), INTENT( IN ) :: pattern
   !! the pattern to be searched
   INTEGER(I4P) :: ans
   !! number of mathces
@@ -5098,9 +5404,9 @@ END FUNCTION nmatchstr_1
 !@endnote
 
 PURE FUNCTION nmatchstr_2(obj, pattern) RESULT(ans)
-  CLASS(String), INTENT(IN) :: obj
+  CLASS(String), INTENT( IN ) :: obj
   !! the string to search
-  TYPE(String), INTENT(IN) :: pattern
+  TYPE(String), INTENT( IN ) :: pattern
   !! the pattern to be searched
   INTEGER(I4P) :: ans
   !! number of mathces
@@ -5125,8 +5431,8 @@ END FUNCTION nmatchstr_2
 ! Function returns the indices in a string where substring pattern is found.
 
 PURE SUBROUTINE strfind_1(obj, pattern, indices)
-  CLASS(String), INTENT(IN) :: obj
-  CHARACTER(LEN=*), INTENT(IN) :: pattern
+  CLASS(String), INTENT( IN ) :: obj
+  CHARACTER(LEN=*), INTENT( IN ) :: pattern
   INTEGER(I4P), ALLOCATABLE, INTENT(OUT) :: indices(:)
   ! Internal variables
   INTEGER(I4P) :: i, n, m, count
@@ -5155,12 +5461,35 @@ END SUBROUTINE strfind_1
 ! Function returns the indices in a string where substring pattern is found.
 
 PURE SUBROUTINE strfind_2(obj, pattern, indices)
-  CLASS(String), INTENT(IN) :: obj
-  CLASS(String), INTENT(IN) :: pattern
+  CLASS(String), INTENT( IN ) :: obj
+  CLASS(String), INTENT( IN ) :: pattern
   INTEGER(I4P), ALLOCATABLE, INTENT(OUT) :: indices(:)
   ! Internal variables
   CALL strfind_1(obj, TRIM(pattern%chars()), indices)
 END SUBROUTINE strfind_2
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+!> authors: Vikas Sharma, Ph. D.
+! date: 23 July 2022
+! summary: Reallocate string
+
+PURE SUBROUTINE String_Reallocate1(obj, row)
+  TYPE( String ), ALLOCATABLE, INTENT( INOUT ) :: obj( : )
+  INTEGER( I4P ), INTENT( IN ) :: row
+  !!
+  IF( ALLOCATED( obj ) ) THEN
+    IF( SIZE( obj ) .NE. row ) THEN
+      DEALLOCATE( obj )
+      ALLOCATE( obj( row ) )
+    END IF
+  ELSE
+    ALLOCATE( obj( row ) )
+  END IF
+  !!
+END SUBROUTINE String_Reallocate1
 
 END MODULE String_Class
 
