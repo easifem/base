@@ -19,7 +19,6 @@ SUBMODULE(Utility) IntegerMethods
 IMPLICIT NONE
 CONTAINS
 
-
 !----------------------------------------------------------------------------
 !                                                                        IN
 !----------------------------------------------------------------------------
@@ -85,22 +84,22 @@ END PROCEDURE in_2d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RemoveDuplicates_1a
-  INTEGER(Int8), ALLOCATABLE :: Res(:)
+  INTEGER(Int8), ALLOCATABLE :: temp(:)
 #include "./RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1a
 
 MODULE PROCEDURE RemoveDuplicates_1b
-  INTEGER(Int8), ALLOCATABLE :: Res(:)
+  INTEGER(Int16), ALLOCATABLE :: temp(:)
 #include "./RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1b
 
 MODULE PROCEDURE RemoveDuplicates_1c
-  INTEGER(Int8), ALLOCATABLE :: Res(:)
+  INTEGER(Int32), ALLOCATABLE :: temp(:)
 #include "./RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1c
 
 MODULE PROCEDURE RemoveDuplicates_1d
-  INTEGER(Int8), ALLOCATABLE :: Res(:)
+  INTEGER(Int64), ALLOCATABLE :: temp(:)
 #include "./RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1d
 
