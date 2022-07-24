@@ -21,6 +21,48 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE expand_int8
+  INTEGER( Int8 ), ALLOCATABLE :: tmp( : )
+#include "./Expand.inc"
+END PROCEDURE expand_int8
+
+MODULE PROCEDURE expand_int16
+  INTEGER( Int16 ), ALLOCATABLE :: tmp( : )
+#include "./Expand.inc"
+END PROCEDURE expand_int16
+
+MODULE PROCEDURE expand_int32
+  INTEGER( Int32 ), ALLOCATABLE :: tmp( : )
+#include "./Expand.inc"
+END PROCEDURE expand_int32
+
+MODULE PROCEDURE expand_int64
+  INTEGER( Int64 ), ALLOCATABLE :: tmp( : )
+#include "./Expand.inc"
+END PROCEDURE expand_int64
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE expand_real32
+  REAL( Real32 ), ALLOCATABLE :: tmp( : )
+#include "./Expand.inc"
+END PROCEDURE expand_real32
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE expand_real64
+  REAL( Real64 ), ALLOCATABLE :: tmp( : )
+#include "./Expand.inc"
+END PROCEDURE expand_real64
+
+!----------------------------------------------------------------------------
 !                                                                     Append
 !----------------------------------------------------------------------------
 
