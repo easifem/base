@@ -28,6 +28,22 @@ CONTAINS
 !                                                                 Reallocate2
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Reallocate_logical
+  IF( ALLOCATED( Mat ) ) THEN
+    IF( SIZE( Mat ) .NE. row ) THEN
+      DEALLOCATE( Mat )
+      ALLOCATE( Mat( row ) )
+    END IF
+  ELSE
+    ALLOCATE( Mat( row ) )
+  END IF
+  Mat = .FALSE.
+END PROCEDURE Reallocate_logical
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate2
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Reallocate_Real64_R1
   IF( ALLOCATED( Mat ) ) THEN
     IF( SIZE( Mat ) .NE. row ) THEN
