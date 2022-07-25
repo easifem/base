@@ -45,6 +45,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
 #GlobalData
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
 
+#Hashing
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
+
 #Gnuplot
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 

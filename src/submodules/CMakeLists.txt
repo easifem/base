@@ -15,6 +15,9 @@
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
+#Hashing
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
+
 #Utility
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 

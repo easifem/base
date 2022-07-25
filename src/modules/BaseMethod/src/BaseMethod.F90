@@ -64,6 +64,7 @@ MODULE BaseMethod
   USE MetisInterface
   USE OpenMP_Method
   USE GlobalData
+  USE Hashing32
   USE OGPF
   USE Test_Method
   USE DISPMODULE
