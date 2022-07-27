@@ -15,9 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility ) HashingMethod
+SUBMODULE(Utility) HashingMethod
 IMPLICIT NONE
 CONTAINS
+
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -39,11 +40,11 @@ CONTAINS
 MODULE PROCEDURE StringToUID_PolyRoll
   INTEGER( I4B ), PARAMETER :: p = 53
   INTEGER( I4B ), PARAMETER :: m = 1e6 + 9
-  INTEGER( I4B ) :: p_pow, ii, aa
-
+  INTEGER( I4B ) :: p_pow, ii
+  !!
   p_pow = 1
   ans = 0
-
+  !!
   DO ii = 1, LEN_TRIM( charVar )
     ans = MOD( (ans + (ICHAR(charVar(ii:ii)) - ICHAR('A') + 1) * p_pow ), m )
     p_pow = MOD( (p_pow * p), m )
