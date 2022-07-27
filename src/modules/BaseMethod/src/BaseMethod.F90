@@ -71,6 +71,7 @@ MODULE BaseMethod
   USE Display_Method
   USE ErrorHandling
   USE Utility
+  USE PolynomialUtility
   USE BaseType
   USE Random_Method
   USE BoundingBox_Method
