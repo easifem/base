@@ -579,49 +579,53 @@ PUBLIC :: StringPointer_
 !
 !----------------------------------------------------------------------------
 
+!> authors: Stefano Zaghi, https://github.com/szaghi
+! date: 26 July 2022
+! summary: Overloading glob procedure.
+!
+!
+!```fortran
+! type(string)                  :: astring
+! character(len=:), allocatable :: alist_chr(:)
+! type(string),     allocatable :: alist_str(:)
+! integer, parameter            :: Nf=5
+! character(14)                 :: files(1:Nf)
+! integer                       :: file_unit
+! integer                       :: f
+! integer                       :: ff
+! logical                       :: test_passed
+! do f=1, Nf
+!    files(f) = astring%tempname(prefix='foo-')
+!    open(newunit=file_unit, file=files(f))
+!    write(file_unit, *)f
+!    close(unit=file_unit)
+! enddo
+! call glob(self=astring, pattern='foo-*', list=alist_chr)
+! call glob(self=astring, pattern='foo-*', list=alist_str)
+! do f=1, Nf
+!    open(newunit=file_unit, file=files(f))
+!    close(unit=file_unit, status='delete')
+! enddo
+! test_passed = .false.
+! outer_chr: do f=1, size(alist_chr, dim=1)
+!    do ff=1, Nf
+!       test_passed = alist_chr(f) == files(ff)
+!       if (test_passed) cycle outer_chr
+!    enddo
+! enddo outer_chr
+! if (test_passed) then
+!    test_passed = .false.
+!    outer_str: do f=1, size(alist_str, dim=1)
+!       do ff=1, Nf
+!          test_passed = alist_str(f) == files(ff)
+!          if (test_passed) cycle outer_str
+!       enddo
+!    enddo outer_str
+! endif
+! print '(L1)', test_passed
+!```
+
 INTERFACE glob
-  !< Overloading glob procedure.
-  !<```fortran
-  !< type(string)                  :: astring
-  !< character(len=:), allocatable :: alist_chr(:)
-  !< type(string),     allocatable :: alist_str(:)
-  !< integer, parameter            :: Nf=5
-  !< character(14)                 :: files(1:Nf)
-  !< integer                       :: file_unit
-  !< integer                       :: f
-  !< integer                       :: ff
-  !< logical                       :: test_passed
-  !< do f=1, Nf
-  !<    files(f) = astring%tempname(prefix='foo-')
-  !<    open(newunit=file_unit, file=files(f))
-  !<    write(file_unit, *)f
-  !<    close(unit=file_unit)
-  !< enddo
-  !< call glob(self=astring, pattern='foo-*', list=alist_chr)
-  !< call glob(self=astring, pattern='foo-*', list=alist_str)
-  !< do f=1, Nf
-  !<    open(newunit=file_unit, file=files(f))
-  !<    close(unit=file_unit, status='delete')
-  !< enddo
-  !< test_passed = .false.
-  !< outer_chr: do f=1, size(alist_chr, dim=1)
-  !<    do ff=1, Nf
-  !<       test_passed = alist_chr(f) == files(ff)
-  !<       if (test_passed) cycle outer_chr
-  !<    enddo
-  !< enddo outer_chr
-  !< if (test_passed) then
-  !<    test_passed = .false.
-  !<    outer_str: do f=1, size(alist_str, dim=1)
-  !<       do ff=1, Nf
-  !<          test_passed = alist_str(f) == files(ff)
-  !<          if (test_passed) cycle outer_str
-  !<       enddo
-  !<    enddo outer_str
-  !< endif
-  !< print '(L1)', test_passed
-  !<```
-  !=> T <<<
   MODULE PROCEDURE glob_character, glob_string
 END INTERFACE glob
 
@@ -647,6 +651,10 @@ PURE FUNCTION string_(c)
 
   string_%raw = c
 END FUNCTION string_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ! builtins replacements
 PURE FUNCTION sadjustl_character(s) RESULT(adjusted)
@@ -5295,27 +5303,45 @@ END SUBROUTINE get_decimal_mode
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE display_str(self, msg, unitno)
-  !< Display the contents of a given string
-  !<
-  !<```fortran
-  !< type(string) :: astring
-  !< astring = '   Hello World!'
-  !< call display( astring, "hello-world" )
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT( IN ) :: self
-  CHARACTER(len=*), INTENT( IN ) :: msg
-  INTEGER(i4p), OPTIONAL, INTENT( IN ) :: unitno
+!> authors: Vikas Sharma, Ph. D.
+! date: 25 July 2022
+! summary: 	Display the contents of a given string
+!
+!# Introduction
+!
+!```fortran
+! type(string) :: astring
+! astring = '   Hello World!'
+! call display( astring, "hello-world" )
+!```
 
+SUBROUTINE display_str(self, msg, unitno, advance)
+  CLASS(String), INTENT( IN ) :: self
+  CHARACTER(LEN=*), INTENT( IN ) :: msg
+  INTEGER(I4P), OPTIONAL, INTENT( IN ) :: unitno
+  CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: advance
+  !!
+  TYPE( String ) :: adv0
   INTEGER(i4p) :: i
+  !!
+  IF( PRESENT( advance ) ) THEN
+    adv0 = TRIM(advance)
+  ELSE
+    adv0 = "YES"
+  END IF
+  !!
   IF (PRESENT(unitno)) THEN
     i = unitno
   ELSE
     i = stdout
   END IF
-  WRITE (i, "(A)") TRIM(msg) // self%chars()
+  !!
+  WRITE (i, "(A)", ADVANCE=adv0%chars()) TRIM(msg) // self%chars()
 END SUBROUTINE display_str
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 PURE FUNCTION constructor1(c) RESULT(self)
   !< Constructor of string from intrinsic fortran data type
