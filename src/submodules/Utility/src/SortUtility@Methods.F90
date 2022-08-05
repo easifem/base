@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	This submodule contains the sorting routine
 
-SUBMODULE(Utility) SORTMethods
+SUBMODULE(SortUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -31,22 +31,22 @@ CONTAINS
 MODULE PROCEDURE HEAPSORT_Int8
   INTEGER( I4B ) :: n, i,k,j,l
   INTEGER( Int8 ) :: t
-#include "./HeapSort.inc"
+#include "./HeapSort/HeapSort.inc"
 END PROCEDURE HEAPSORT_Int8
 MODULE PROCEDURE HEAPSORT_Int16
   INTEGER( I4B ) :: n, i,k,j,l
   INTEGER( Int16 ) :: t
-#include "./HeapSort.inc"
+#include "./HeapSort/HeapSort.inc"
 END PROCEDURE HEAPSORT_Int16
 MODULE PROCEDURE HEAPSORT_Int32
   INTEGER( I4B ) :: n, i,k,j,l
   INTEGER( Int32 ) :: t
-#include "./HeapSort.inc"
+#include "./HeapSort/HeapSort.inc"
 END PROCEDURE HEAPSORT_Int32
 MODULE PROCEDURE HEAPSORT_Int64
   INTEGER( I4B ) :: n, i,k,j,l
   INTEGER( Int64 ) :: t
-#include "./HeapSort.inc"
+#include "./HeapSort/HeapSort.inc"
 END PROCEDURE HEAPSORT_Int64
 
 !----------------------------------------------------------------------------
@@ -56,12 +56,12 @@ END PROCEDURE HEAPSORT_Int64
 MODULE PROCEDURE HEAPSORT_Real32
   INTEGER( I4B ) :: n, i,k,j,l
   REAL( Real32 ) :: t
-#include "./HeapSort.inc"
+#include "./HeapSort/HeapSort.inc"
 END PROCEDURE HEAPSORT_Real32
 MODULE PROCEDURE HEAPSORT_Real64
   INTEGER( I4B ) :: n, i,k,j,l
   REAL( Real64 ) :: t
-#include "./HeapSort.inc"
+#include "./HeapSort/HeapSort.inc"
 END PROCEDURE HEAPSORT_Real64
 
 !----------------------------------------------------------------------------
@@ -71,12 +71,12 @@ END PROCEDURE HEAPSORT_Real64
 
 MODULE PROCEDURE quickSort1vectReal32
   INTEGER( I4B ) i, iPivot
-#include "./QuickSort1Vec.inc"
+#include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE quickSort1vectReal32
 
 MODULE PROCEDURE quickSort1vectReal64
   INTEGER( I4B ) i, iPivot
-#include "./QuickSort1Vec.inc"
+#include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE quickSort1vectReal64
 
 !----------------------------------------------------------------------------
@@ -85,19 +85,19 @@ END PROCEDURE quickSort1vectReal64
 
 MODULE PROCEDURE quickSort1vectInt8
   INTEGER( I4B ) i, iPivot
-#include "./QuickSort1Vec.inc"
+#include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE quickSort1vectInt8
 MODULE PROCEDURE quickSort1vectInt16
   INTEGER( I4B ) i, iPivot
-#include "./QuickSort1Vec.inc"
+#include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE quickSort1vectInt16
 MODULE PROCEDURE quickSort1vectInt32
   INTEGER( I4B ) i, iPivot
-#include "./QuickSort1Vec.inc"
+#include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE quickSort1vectInt32
 MODULE PROCEDURE quickSort1vectInt64
   INTEGER( I4B ) i, iPivot
-#include "./QuickSort1Vec.inc"
+#include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE quickSort1vectInt64
 
 !----------------------------------------------------------------------------
@@ -916,4 +916,8 @@ MODULE PROCEDURE SORT_REAL
   END IF
 END PROCEDURE SORT_REAL
 
-END SUBMODULE SORTMethods
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END SUBMODULE Methods
