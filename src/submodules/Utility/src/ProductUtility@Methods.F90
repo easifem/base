@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: This submodule contains outerprod
 
-SUBMODULE(Utility) ProductMethods
+SUBMODULE(ProductUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -497,4 +497,4 @@ MODULE PROCEDURE outerprod_r3r1r1r1
 ans = outerprod(outerprod(a, outerprod(b, c)), d)
 END PROCEDURE outerprod_r3r1r1r1
 
-END SUBMODULE ProductMethods
+END SUBMODULE Methods
