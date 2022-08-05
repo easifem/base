@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         This submodule contains method for swaping
 
-SUBMODULE(Utility) ConvertMethods
+SUBMODULE(ConvertUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -105,4 +105,4 @@ END PROCEDURE convert_3
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE ConvertMethods
+END SUBMODULE Methods
