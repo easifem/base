@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE IntegerUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: OPERATOR(.in.)
 PUBLIC :: OPERATOR(.isin.)
 PUBLIC :: RemoveDuplicates
@@ -24,7 +29,7 @@ PUBLIC :: Repeat
 !                                             Operator(.in.)@IntegerMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns true if a integer set is inside another
@@ -65,7 +70,7 @@ END INTERFACE OPERATOR(.in.)
 !                                             Operator(.in.)@IntegerMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns true if a integer set is inside another
@@ -111,7 +116,7 @@ END INTERFACE OPERATOR(.isin.)
 !                                             Operator(.in.)@IntegerMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns true if a integer set is inside another
@@ -206,3 +211,9 @@ END INTERFACE
 INTERFACE Repeat
   MODULE PROCEDURE Repeat_1a, Repeat_1b, Repeat_1c, Repeat_1d
 END INTERFACE Repeat
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE IntegerUtility
