@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 22 July 2022
 ! summary: PENF string-to-number (and viceversa) facility.
 
@@ -34,7 +34,7 @@ PUBLIC :: BSTR, BCTON
 !                                                                 STR_ASCII
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 22 July 2022
 ! summary: Convert string of any kind to ASCII string.
 
@@ -52,7 +52,7 @@ END INTERFACE STR_ASCII
 !                                                                 STR_UCS4
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 22 July 2022
 ! summary:         Convert string of any kind to UCS4 string.
 
@@ -70,7 +70,7 @@ END INTERFACE
 !                                                                      STR
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 22 July 2022
 ! summary: Convert number (real and integer) to string (number to string type
 ! casting).
@@ -99,7 +99,7 @@ END INTERFACE STR
 !                                                                 STRZ
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 22 July 2022
 ! summary: Convert integer, to string, prefixing with the right number of
 ! zeros (integer to string type casting with zero padding).
@@ -112,7 +112,7 @@ END INTERFACE
 !                                                                     CTON
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 22 July 2022
 ! summary: Convert string to number (real and integer, string to number type
 ! casting).
@@ -134,7 +134,7 @@ END INTERFACE
 !                                                                      BSTR
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 22 July 2022
 ! summary:         Convert number (real and integer) to bit-string (number to
 ! bit-string type casting).
@@ -157,7 +157,7 @@ END INTERFACE
 !                                                                     BCTON
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 22 July 2022
 ! summary: Convert bit-string to number (real and integer, bit-string to
 ! number type casting).
