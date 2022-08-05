@@ -15,12 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE ApproxUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
 
 !----------------------------------------------------------------------------
 !                                                     APPROXEQ@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  3 Apr 2021
 ! summary: returns true if a and b are approximately equal
 !
@@ -63,7 +67,7 @@ PUBLIC :: OPERATOR(.APPROXEQA.)
 !                                                     APPROXR@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: returns bool logical indicating if a and b are approximately equal
 !
@@ -92,7 +96,7 @@ PUBLIC :: OPERATOR(.APPROXEQR.)
 !                                                    APPROXEQF@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 Apr 2021
 ! summary: returns bool logical indicating if a and b are approximately equal
 !
@@ -124,7 +128,7 @@ PUBLIC :: OPERATOR(.APPROXEQF.)
 !                                                    APPROXLE@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 Apr 2021
 ! summary: Defines the operator .APPROXLE.
 !
@@ -151,7 +155,7 @@ PUBLIC :: OPERATOR(.ARROXLE.)
 !                                                    APPROXGE@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary:  Defines the operation when comparing two single precision reals
 !
@@ -176,7 +180,7 @@ PUBLIC :: OPERATOR(.ARROXGE.)
 !                                                      SOFTEQ@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Defines the operator SOFTEQ
 !
@@ -202,7 +206,7 @@ PUBLIC :: SOFTEQ
 !                                                     SOFTEQR@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Defines the operator SOFTEQR
 !
@@ -228,7 +232,7 @@ PUBLIC :: SOFTEQR
 !                                                       SOFTLE@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: SOFTLE
 
@@ -251,7 +255,7 @@ PUBLIC :: SOFTLE
 !                                                      SOFTLT@ApproxMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Defines the operation for SOFTLT
 
@@ -397,3 +401,5 @@ INTERFACE
 END INTERFACE
 
 PUBLIC :: isNumeric
+
+END MODULE ApproxUtility
