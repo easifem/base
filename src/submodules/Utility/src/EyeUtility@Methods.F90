@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) EyeMethods
+SUBMODULE(EyeUtility) Methods
 implicit none
 contains
 
@@ -67,4 +67,4 @@ MODULE PROCEDURE real_eye_3
   END DO
 END PROCEDURE real_eye_3
 
-END SUBMODULE EyeMethods
+END SUBMODULE Methods
