@@ -236,7 +236,7 @@ END PROCEDURE pd_r2t
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Polar decomposition
 !

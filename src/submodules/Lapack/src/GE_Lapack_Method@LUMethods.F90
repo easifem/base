@@ -21,14 +21,124 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                     getf2
+!                                                                     getLU
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getLU_1
-  REAL( DFP ), DIMENSION( SIZE( A, 1 ), SIZE( A, 2 ) ) :: At
-  At = A
-  CALL GETRF( A=At, IPIV=IPIV, RCOND=RCOND, NORM=NORM )
-  LU = At
+  LU = A
+  CALL GETRF( A=LU, IPIV=IPIV, RCOND=RCOND, NORM=NORM, info=info )
 END PROCEDURE getLU_1
+
+!----------------------------------------------------------------------------
+!                                                                     getLU
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getLU_2
+  CALL GETRF( A=A, IPIV=IPIV, RCOND=RCOND, NORM=NORM, info=info )
+END PROCEDURE getLU_2
+
+!----------------------------------------------------------------------------
+!                                                                 LUSolve
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LUSolve_1
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
+  !!
+  CALL GETRS( A=A, IPIV=IPIV, B=B, TRANS=TRANS, info=info )
+  !!
+END PROCEDURE LUSolve_1
+
+!----------------------------------------------------------------------------
+!                                                                 LUSolve
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LUSolve_2
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
+  !!
+  CALL GETRS( A=A, IPIV=IPIV, B=B, TRANS=TRANS, info=info )
+  !!
+END PROCEDURE LUSolve_2
+
+!----------------------------------------------------------------------------
+!                                                                 LUSolve
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LUSolve_3
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
+  !!
+  X = B
+  !!
+  CALL GETRS( A=A, IPIV=IPIV, B=X, TRANS=TRANS, info=info )
+  !!
+END PROCEDURE LUSolve_3
+
+!----------------------------------------------------------------------------
+!                                                                 LUSolve
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LUSolve_4
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
+  !!
+  X = B
+  CALL GETRS( A=A, IPIV=IPIV, B=X, TRANS=TRANS, info=info )
+  !!
+END PROCEDURE LUSolve_4
+
+!----------------------------------------------------------------------------
+!                                                                     Inv
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Inv_1
+  invA=A
+  CALL GETRI( A=invA, IPIV=IPIV, info=info )
+END PROCEDURE Inv_1
+
+!----------------------------------------------------------------------------
+!                                                                     Inv
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Inv_2
+  CALL GETRI( A=A, IPIV=IPIV, info=info )
+END PROCEDURE Inv_2
 
 END SUBMODULE LUMethods

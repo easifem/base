@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This submodule implements the methods of [[Vector3D_]] which are defined in [[Vector3D_Method]] module.
 

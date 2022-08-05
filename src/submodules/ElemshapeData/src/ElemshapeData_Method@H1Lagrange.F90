@@ -23,7 +23,7 @@ IMPLICIT NONE
 !                                                    Initiate@LineH1Lagrange
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: returns the shape functions given by Lagrange polynomials
 !
@@ -53,7 +53,7 @@ END INTERFACE
 !                                                Initiate@TriangleH1Lagrange
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: Returns the shape functions given by Lagrange polynomials
 
