@@ -15,13 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE MatmulUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: MATMUL
 
 !----------------------------------------------------------------------------
 !                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank4 and rank1 array
 !
@@ -45,7 +50,7 @@ END INTERFACE MATMUL
 !                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank4 and rank1 array
 !
@@ -69,7 +74,7 @@ END INTERFACE MATMUL
 !                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank4 and rank1 array
 !
@@ -94,7 +99,7 @@ END INTERFACE MATMUL
 !                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank4 and rank1 array
 !
@@ -119,7 +124,7 @@ END INTERFACE MATMUL
 !                                                             Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank3  and rank1 array
 !
@@ -144,7 +149,7 @@ END INTERFACE MATMUL
 !                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         matmul for rank3 and rank2
 !
@@ -169,7 +174,7 @@ END INTERFACE MATMUL
 !                                                              Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank4 and rank1 array
 !
@@ -194,7 +199,7 @@ END INTERFACE MATMUL
 !                                                              Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank4 and rank1 array
 !
@@ -219,7 +224,7 @@ END INTERFACE MATMUL
 !                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank2 and rank3 array
 !
@@ -244,7 +249,7 @@ END INTERFACE MATMUL
 !                                                               Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank2 and rank3 array
 !
@@ -270,7 +275,7 @@ END INTERFACE MATMUL
 !                                                              Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank1 and rank3 array
 !
@@ -295,7 +300,7 @@ END INTERFACE MATMUL
 !                                                              Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank1 and rank3 array
 !
@@ -320,7 +325,7 @@ END INTERFACE MATMUL
 !                                                              Matmul@Matmul
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: matmul for rank4 and rank1 array
 !
@@ -339,3 +344,9 @@ END INTERFACE
 INTERFACE MATMUL
   MODULE PROCEDURE matmul_r1_r4
 END INTERFACE MATMUL
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE MatmulUtility
