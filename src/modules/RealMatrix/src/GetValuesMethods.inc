@@ -23,7 +23,7 @@ PUBLIC :: Get
 !                                             Get@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Returns the values of [[RealMatrix_]] obj in 2D array
 !
@@ -53,7 +53,7 @@ END INTERFACE Get
 !                                              Get@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: 	 Returns the values of [[RealMatrix_]] obj in 2D array
 !
@@ -93,7 +93,7 @@ END INTERFACE Get
 !                                              Get@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Returns the values of [[RealMatrix_]] obj in 2D array
 !
@@ -132,7 +132,7 @@ END INTERFACE Get
 !                                               Get@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Returns [[RealMatrix_]] obj from [[realmatrix_]]
 !
@@ -162,7 +162,7 @@ END INTERFACE Get
 !                                               Get@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Returns [[RealMatrix_]] obj from a section of [[realmatrix_]]
 !
@@ -194,7 +194,7 @@ END INTERFACE Get
 !                                              Get@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Returns [[RealMatrix_]] obj from a section of [[realmatrix_]]
 !
@@ -225,7 +225,7 @@ END INTERFACE Get
 !                                              Get@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Returns values in 2D fortran array from [[realmatrix_]]
 !
@@ -256,7 +256,7 @@ END INTERFACE Get
 !                                              Get@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Returns [[realmatrix_]] object from a 2D array of [[realmatrix_]]
 !
@@ -287,7 +287,7 @@ END INTERFACE Get
 !                                                      Copy@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Copy from [[realmatrix_]] to 2D fortran array
 !
@@ -321,7 +321,7 @@ END INTERFACE Convert
 !                                                      Copy@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Copy from [[realmatrix_]] to another [[realmatrix_]]
 !
@@ -355,7 +355,7 @@ END INTERFACE Convert
 !                                                      Copy@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  6 March 2021
 ! summary: Copy from 2D fortran array to [[realmatrix_]]
 !
@@ -389,7 +389,7 @@ END INTERFACE Convert
 !                                             ArrayPointer@GetValuesMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Get pointer to the values stored inside [[realmatrix_]]
 !

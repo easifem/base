@@ -38,7 +38,7 @@ PUBLIC :: ASSIGNMENT( = )
 !                                                 Shape@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Return shape of [[RealMatrix_]]
 !
@@ -67,7 +67,7 @@ END INTERFACE Shape
 !                                                  Size@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Return size of [[RealMatrix_]]
 !
@@ -102,7 +102,7 @@ END INTERFACE Size
 !                                         TotalDimension@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	Returns the total dimension of an array
 !
@@ -125,7 +125,7 @@ END INTERFACE TotalDimension
 !                                               SetTotalDimension@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the total dimension (rank) of an array
 !
@@ -148,7 +148,7 @@ END INTERFACE setTotalDimension
 !                                           Allocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: 	This subroutine allocate memory for [[RealMatrix_]]
 !
@@ -176,7 +176,7 @@ END INTERFACE Allocate
 !                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Deallocate data in [[RealMatrix_]]
 !
@@ -204,7 +204,7 @@ END INTERFACE Deallocate
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine initiate `obj` with shape `Dims`
 !
@@ -230,7 +230,7 @@ END INTERFACE Initiate
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine initiate `obj` with shape `Dims`
 !
@@ -257,7 +257,7 @@ END INTERFACE Initiate
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: 	Initiate vector of [[realmatrix_]] with shape `Dims`
 !
@@ -284,7 +284,7 @@ END INTERFACE Initiate
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Initiate an instance of [[RealMatrix_]]
 !
@@ -328,7 +328,7 @@ END INTERFACE Initiate
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: This subroutine performs `obj%l = Val`, i.e., initiate `obj` with `Val`
 !
@@ -357,7 +357,7 @@ END INTERFACE
 !                                                 Matrix@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Constructor function for [[RealMatrix_]]
 !
@@ -390,7 +390,7 @@ END INTERFACE RealMatrix
 INTERFACE
 !! Return identity matrix of type [[realmatrix_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This function returns identity matrix of type [[realmatrix_]]
 !
@@ -415,7 +415,7 @@ END INTERFACE Eye
 !                                                 Convert@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Rearrange the dofs in finite element matrix
 !
@@ -469,7 +469,7 @@ END INTERFACE RealMatrix_Pointer
 !                                                    Sym@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Return sym(obj) = 0.5*(obj + transpose( obj ) )
 !
@@ -500,7 +500,7 @@ END INTERFACE SYM
 !                                                    Sym@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: 	 Return sym(obj) = 0.5*(obj + transpose( obj ) )
 !
@@ -531,7 +531,7 @@ END INTERFACE SYM
 !                                                SkewSym@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Return SkewSymmetric part of obj
 !
@@ -558,7 +558,7 @@ END INTERFACE SkewSym
 !                                                 SkewSym@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: 	Return SkewSym(obj) = 0.5*(obj + transpose( obj ) )
 !
@@ -589,7 +589,7 @@ END INTERFACE SkewSym
 !                                      MakeDiagonalCopies@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Make diagonal copies of Matrix
 !
@@ -619,7 +619,7 @@ END INTERFACE MakeDiagonalCopies
 !                                      MakeDiagonalCopies@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Make diagonal copies of Matrix
 !
@@ -647,7 +647,7 @@ END INTERFACE MakeDiagonalCopies
 !                                       MakeDiagonalCopies@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Make diagonal copies of [[realmatrix_]]
 !
@@ -675,7 +675,7 @@ END INTERFACE MakeDiagonalCopies
 !                                      MakeDiagonalCopies@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Make diagonal copies of Matrix
 !
@@ -705,7 +705,7 @@ END INTERFACE MakeDiagonalCopies
 !                                          Random_number@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Set a values in [[realmatrix_]] obj to random values
 !
@@ -735,7 +735,7 @@ END INTERFACE RANDOM_NUMBER
 !                                             TestMatrix@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	7 March 2021
 ! summary: This function returns the example matrix
 
