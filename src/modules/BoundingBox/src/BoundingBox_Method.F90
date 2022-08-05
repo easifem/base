@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: [[BoundingBox_Method]] module consists method for[[BoundingBox_]]
 !
@@ -35,7 +35,7 @@ PRIVATE
 !                                                        Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function initiatea an instance of [[BoundingBox_]].
 !
@@ -71,7 +71,7 @@ MODULE PURE SUBROUTINE initiate_1( obj, nsd, lim )
 END SUBROUTINE initiate_1
 END INTERFACE
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: Initiate the instance of [[BoundingBox_]] from the another box
 !
@@ -110,7 +110,7 @@ PUBLIC :: Initiate
 !                                                     BoundingBox@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	Function to create [[BoundingBox_]] instance
 !
@@ -147,7 +147,7 @@ END INTERFACE
 !                                                     BoundingBox@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function creates an instance of [[BoundingBox_]]
 !
@@ -177,7 +177,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function creates an instance of [[BoundingBox_]]
 !
@@ -207,7 +207,7 @@ END INTERFACE
 !                                                                 BoundingBox
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	Generic function to create Bounding box
 !
@@ -231,7 +231,7 @@ PUBLIC :: BoundingBox
 !                                            BoundingBox_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the pointer to [[BoundingBox_]] instance
 !
@@ -268,7 +268,7 @@ MODULE FUNCTION Constructor_1( nsd, lim ) RESULT( Ans )
 END FUNCTION Constructor_1
 END INTERFACE
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the pointer to an instance of [[BoundingBox_]]
 !
@@ -320,7 +320,7 @@ PUBLIC :: Deallocate
 !                                                        Display@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine displays the content of [[BoundingBox_]]
 
@@ -342,7 +342,7 @@ PUBLIC :: Display
 !                                                         setXmin@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Feb 2021
 ! summary: 	This subroutine set the Xmin in bounding box
 
@@ -357,7 +357,7 @@ END INTERFACE
 !                                                         setXmax@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the Xmax in bounding box
 
@@ -372,7 +372,7 @@ END INTERFACE
 !                                                         setYmin@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the Ymin in bounding box
 
@@ -387,7 +387,7 @@ END INTERFACE
 !                                                         setYmax@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the Ymax of bounding box
 
@@ -402,7 +402,7 @@ END INTERFACE
 !                                                         setZmin@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the Zmin of bounding box
 
@@ -417,7 +417,7 @@ END INTERFACE
 !                                                         setZmax@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the Zmax of bounding box
 
@@ -432,7 +432,7 @@ END INTERFACE
 !                                                         getXmin@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the xmin
 !
@@ -460,7 +460,7 @@ PUBLIC :: Operator( .Xmin. )
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the xmax
 !
@@ -487,7 +487,7 @@ PUBLIC :: Operator( .Xmax. )
 !                                                         getYmin@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the ymin
 !
@@ -514,7 +514,7 @@ PUBLIC :: Operator( .Ymin. )
 !                                                         getYmax@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the ymax
 !
@@ -542,7 +542,7 @@ PUBLIC :: Operator( .Ymax. )
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the zmin
 !
@@ -569,7 +569,7 @@ PUBLIC :: Operator( .Zmin. )
 !                                                         getZmax@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the zmax
 !
@@ -596,7 +596,7 @@ PUBLIC :: Operator( .Zmax. )
 !                                                  isIntersectInX@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function checks if two bounding boxes interesect in x direction
 !
@@ -621,7 +621,7 @@ PUBLIC :: isIntersectInX
 !                                                  isIntersectInY@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function checks if two bounding boxes interesect in y direction
 !
@@ -646,7 +646,7 @@ PUBLIC :: isIntersectInY
 !                                                 isIntersectInZ@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function checks if two bounding boxes interesect in z direction
 !
@@ -672,7 +672,7 @@ PUBLIC :: isIntersectInZ
 !                                                    isIntersect@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function checks if two bounding boxes interesect each other
 !
@@ -703,7 +703,7 @@ PUBLIC :: isIntersect
 !                                                  getIntersection@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the intersection bounding box of two bounding box
 !
@@ -737,7 +737,7 @@ PUBLIC :: Intersection
 !                                                         getUnion@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the union of two bounding box
 !
@@ -771,7 +771,7 @@ PUBLIC :: Union
 !                                                        getCenter@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the center of bounding box
 !
@@ -806,7 +806,7 @@ PUBLIC :: OPERATOR(.Center.)
 !                                                         isInside@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function checks if a point is inside the bounding box or not
 !
@@ -842,7 +842,7 @@ PUBLIC :: isInside
 !                                                         getNptrs@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This function returns the node numbers located inside the bounding box
 !
@@ -872,7 +872,7 @@ PUBLIC :: OPERATOR( .Nptrs. )
 !                                                    GetDiameter@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2022
 ! summary: Returns the diameter of the box
 
