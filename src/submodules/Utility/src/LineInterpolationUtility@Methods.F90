@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) LineInterpolationPoints
+SUBMODULE(LineInterpolationUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -149,4 +149,4 @@ END PROCEDURE EquidistanceLIP_Line
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE LineInterpolationPoints
+END SUBMODULE Methods
