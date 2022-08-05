@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 7 March 2021
 ! summary: This module contains BLAS1 methods for [[RealVector_]] and
 ! [[RealMatrix_]] data type.
@@ -32,7 +32,7 @@ PRIVATE
 !                                                                 ASUM@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This function computes the absolute sum of a vector
 !# Introduction
@@ -67,7 +67,7 @@ END INTERFACE
 !                                                                 ASUM@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This function computes the absolute sum of a vector
 !# Introduction
@@ -137,7 +137,7 @@ PUBLIC :: ASUM
 !                                                                  AXPY@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	8 March 2021
 ! summary: This subroutine computes AXPY
 !
@@ -183,7 +183,7 @@ END INTERFACE
 !                                                                  AXPY@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	8 March 2021
 ! summary: This subroutine computes AXPY
 !
@@ -214,7 +214,7 @@ END INTERFACE
 !                                                                  AXPY@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	8 March 2021
 ! summary: This subroutine computes AXPY
 !
@@ -273,7 +273,7 @@ PUBLIC :: AXPY
 !                                                                 COPY@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
@@ -320,7 +320,7 @@ PUBLIC :: COPY
 !                                                                 COPY@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
@@ -365,7 +365,7 @@ END INTERFACE COPY
 !                                                                 COPY@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
@@ -413,7 +413,7 @@ END INTERFACE COPY
 !                                                                 COPY@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
@@ -463,7 +463,7 @@ END INTERFACE COPY
 !                                                                 COPY@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine copies one vector into another
 !
@@ -526,7 +526,7 @@ PUBLIC :: Compact
 !                                                                 DOT@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine returns dot product of two [[RealVector_]]
 !
@@ -548,7 +548,7 @@ END INTERFACE
 !                                                                 DOT@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine computes dot product of a fortran array and scalar
 ! instance of [[RealVector_]]
@@ -573,7 +573,7 @@ END INTERFACE
 !                                                                 DOT@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routines returns the dot product of vector of
 ! [[RealVector_]] data type.
@@ -597,7 +597,7 @@ END INTERFACE
 !                                                                 DOT@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine computes dot product of a vector of [[RealVector_]]
 ! and scalar of [[RealVector_]]
@@ -621,7 +621,7 @@ END INTERFACE
 !                                                                 DOT@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine computes dot product of a scalar of [[RealVector_]]
 ! and vector of [[RealVector_]]
@@ -647,7 +647,7 @@ END INTERFACE
 !                                                                 DOT@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This generic routine computes dot product
 
@@ -662,7 +662,7 @@ PUBLIC :: DOT_PRODUCT
 !                                                                Norm2@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This function computes Euclidean norm of [[RealVector_]]
 !
@@ -693,7 +693,7 @@ END INTERFACE
 !                                                                Norm2@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine computes the L2 norm of [[RealVector_]]
 !
@@ -724,7 +724,7 @@ END INTERFACE
 !                                                                Norm2@BLAS1
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This routine computes norm2
 !
