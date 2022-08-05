@@ -21,7 +21,7 @@ PUBLIC :: FacetMatrix13
 !                                                              FacetMatrix13
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 May 2022
 ! summary: FacetMatrix  for VMS-FEM for CFD
 !
@@ -53,7 +53,7 @@ END INTERFACE FacetMatrix13
 !                                                              FacetMatrix13
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 May 2022
 ! summary: FacetMatrix  for VMS-FEM for CFD
 !
@@ -87,7 +87,7 @@ END INTERFACE FacetMatrix13
 !                                                              FacetMatrix13
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 May 2022
 ! summary: FacetMatrix  for VMS-FEM for CFD
 !
@@ -122,7 +122,7 @@ END INTERFACE FacetMatrix13
 !                                                              FacetMatrix13
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 May 2022
 ! summary: FacetMatrix  for VMS-FEM for CFD
 !
@@ -155,7 +155,7 @@ END INTERFACE FacetMatrix13
 !                                                              FacetMatrix13
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 May 2022
 ! summary: FacetMatrix  for VMS-FEM for CFD
 !
