@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
 ! summary: This module contains the methods for data type [[QuadraturePoint_]]
 
@@ -28,7 +28,7 @@ PRIVATE
 !                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine initiates the quadrature points
 
@@ -53,7 +53,7 @@ PUBLIC :: Initiate
 !                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine initiates the quadrature points
 
@@ -75,7 +75,7 @@ END INTERFACE
 !                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine initiates the quadrature points
 
@@ -100,7 +100,7 @@ END INTERFACE
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine initiates the quadrature points
 
@@ -125,7 +125,7 @@ END INTERFACE
 !                                       QuadraturePoint@ConstructureMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine initiate an instance of quadrature points
 
@@ -146,7 +146,7 @@ PUBLIC :: QuadraturePoint
 !                                 QuadraturePoint_Pointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: Returns a pointer to a newly created instance of quadrature points
 
@@ -167,7 +167,7 @@ PUBLIC :: QuadraturePoint_Pointer
 !                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: Deallocates the data stored inside the quadrature point
 
@@ -187,7 +187,7 @@ PUBLIC :: Deallocate
 !                                                           SIZE@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine returns the size of obj%points,
 
@@ -209,7 +209,7 @@ PUBLIC :: SIZE
 !                                       getTotalQuadraturepoints@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine returns total number of quadrature points
 
@@ -231,7 +231,7 @@ PUBLIC :: getTotalQuadraturepoints
 !                                              GetQuadraturePoint@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine returns quadrature points
 
@@ -257,7 +257,7 @@ PUBLIC :: GetQuadraturepoints
 !                                              GetQuadraturePoint@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine returns total number of quadrature points
 
@@ -279,7 +279,7 @@ END INTERFACE
 !                                                          Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary:  Display the content of quadrature point
 
@@ -301,7 +301,7 @@ PUBLIC :: Display
 !                                      GaussLegendreQuadrature@GaussLegendre
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: 	Returns the Gauss Legendre Quadrature points based on given order
 
@@ -323,7 +323,7 @@ PUBLIC :: GaussLegendreQuadrature
 !                                      GaussLegendreQuadrature@GaussLegendre
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: 	Returns the Gauss-Legendre Quadrature points
 
