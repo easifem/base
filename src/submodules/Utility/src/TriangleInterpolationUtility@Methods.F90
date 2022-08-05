@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) TriangleInterpolationPoints
+SUBMODULE(TriangleInterpolationUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -434,4 +434,4 @@ END PROCEDURE EquidistanceLIP_Triangle
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE TriangleInterpolationPoints
+END SUBMODULE Methods
