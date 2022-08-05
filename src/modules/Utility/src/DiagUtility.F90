@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE DiagUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: Diag
 
 !----------------------------------------------------------------------------
@@ -125,3 +130,9 @@ END INTERFACE
 INTERFACE Diag
   MODULE PROCEDURE Diag_7
 END INTERFACE Diag
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE DiagUtility
