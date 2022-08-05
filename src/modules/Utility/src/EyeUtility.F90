@@ -15,13 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE EyeUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: Eye
 
 !----------------------------------------------------------------------------
 !                                                            Eye@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Return an identity matrix of an integers
 
@@ -88,3 +93,9 @@ END INTERFACE
 INTERFACE Eye
   MODULE PROCEDURE real_eye_3
 END INTERFACE Eye
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE EyeUtility
