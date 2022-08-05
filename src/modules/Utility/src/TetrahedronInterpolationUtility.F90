@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE TetrahedronInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: InterpolationPoint_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -48,3 +53,4 @@ INTERFACE
   END FUNCTION EquidistanceLIP_Tetrahedron
 END INTERFACE
 
+END MODULE TetrahedronInterpolationUtility
