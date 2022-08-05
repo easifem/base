@@ -21,7 +21,7 @@ PUBLIC :: add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: 	 add values in a vector of real numbers
 !
@@ -58,7 +58,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: 	 add values in a vector of real numbers
 !
@@ -93,7 +93,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 June 2021
 ! summary: 	add values in a vector of real numbers
 !
@@ -126,7 +126,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: add values in a vector of real numbers
 !
@@ -158,7 +158,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: add values in a vector of real numbers
 
@@ -193,7 +193,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: add values in a vector of real numbers
 
@@ -228,7 +228,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: add values in a vector of real numbers
 
@@ -263,7 +263,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: 	 add values in a vector of real numbers
 !
@@ -298,7 +298,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 June 2021
 ! summary: 	add values in a vector of real numbers
 !
@@ -331,7 +331,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 June 2021
 ! summary: 	add values in a vector of real numbers
 !
@@ -366,7 +366,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 June 2021
 ! summary: 	add values in a vector of real numbers
 !
@@ -402,7 +402,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 June 2021
 ! summary: 	add values in a vector of real numbers
 !
@@ -438,7 +438,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 June 2021
 ! summary: 	add values in a vector of real numbers
 !
