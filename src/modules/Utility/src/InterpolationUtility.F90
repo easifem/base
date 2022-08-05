@@ -24,21 +24,21 @@ PRIVATE
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 July 2022
 ! summary: Returns vandermonde matrix
 
 INTERFACE
-MODULE PURE FUNCTION VandermondeMatrix_Real32( order, points ) RESULT( ans )
+MODULE PURE FUNCTION VandermondeMatrix_Real32( order, x ) RESULT( ans )
   INTEGER( I4B ), INTENT( IN ) :: order
-  REAL( Real32 ), INTENT( IN ) :: points( : )
-  REAL( Real32 ) :: ans( SIZE(points), order+1 )
+  REAL( Real32 ), INTENT( IN ) :: x( : )
+  REAL( Real32 ) :: ans( SIZE(x), order+1 )
 END FUNCTION VandermondeMatrix_Real32
 
-MODULE PURE FUNCTION VandermondeMatrix_Real64( order, points ) RESULT( ans )
+MODULE PURE FUNCTION VandermondeMatrix_Real64( order, x ) RESULT( ans )
   INTEGER( I4B ), INTENT( IN ) :: order
-  REAL( Real64 ), INTENT( IN ) :: points( : )
-  REAL( Real64 ) :: ans( SIZE(points), order+1 )
+  REAL( Real64 ), INTENT( IN ) :: x( : )
+  REAL( Real64 ) :: ans( SIZE(x), order+1 )
 END FUNCTION VandermondeMatrix_Real64
 END INTERFACE
 
