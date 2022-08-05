@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) PyramidInterpolationPoints
+SUBMODULE(PyramidInterpolationUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -50,4 +50,4 @@ END PROCEDURE EquidistanceLIP_Pyramid
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE PyramidInterpolationPoints
+END SUBMODULE Methods
