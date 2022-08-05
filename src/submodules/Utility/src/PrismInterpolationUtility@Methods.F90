@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) PrismInterpolationPoints
+SUBMODULE(PrismInterpolationUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -50,4 +50,4 @@ END PROCEDURE EquidistanceLIP_Prism
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE PrismInterpolationPoints
+END SUBMODULE Methods
