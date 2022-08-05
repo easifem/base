@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Methods for matrix multiplication
 
-SUBMODULE(Utility) MatmulMethods
+SUBMODULE(MatmulUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -170,4 +170,4 @@ DO ii = 2, SIZE(a1)
 END DO
 END PROCEDURE matmul_r1_r4
 
-END SUBMODULE MatmulMethods
+END SUBMODULE Methods
