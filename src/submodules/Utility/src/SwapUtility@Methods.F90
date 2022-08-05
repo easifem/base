@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         This submodule contains method for swaping
 
-SUBMODULE(Utility) SWAPMethods
+SUBMODULE(SwapUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -377,4 +377,8 @@ DO l = 1, s(4)
 END DO
 END PROCEDURE swap_index6
 
-END SUBMODULE SWAPMethods
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END SUBMODULE Methods
