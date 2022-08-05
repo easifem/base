@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) DiagMethods
+SUBMODULE(DiagUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -105,4 +105,4 @@ DO ii = 1, SIZE(a)
 END DO
 END PROCEDURE Diag_7
 
-END SUBMODULE DiagMethods
+END SUBMODULE Methods
