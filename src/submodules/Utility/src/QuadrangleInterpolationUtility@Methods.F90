@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) QuadrangleInterpolationPoints
+SUBMODULE(QuadrangleInterpolationUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -113,4 +113,4 @@ END PROCEDURE EquidistanceLIP_Quadrangle
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE QuadrangleInterpolationPoints
+END SUBMODULE Methods
