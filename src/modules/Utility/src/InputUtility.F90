@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE InputUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: Input
 
 !----------------------------------------------------------------------------
@@ -192,3 +197,9 @@ END INTERFACE
 INTERFACE Input
   MODULE PROCEDURE input_logical
 END INTERFACE Input
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE InputUtility
