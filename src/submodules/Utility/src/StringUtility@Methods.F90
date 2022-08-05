@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE (Utility) StringMethods
+SUBMODULE (StringUtility) Methods
 USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: IOSTAT_END
 IMPLICIT NONE
 CONTAINS
@@ -396,5 +396,5 @@ MODULE PROCEDURE getFileNameExt_chars
   END DO
 END PROCEDURE getFileNameExt_chars
 
-END SUBMODULE StringMethods
+END SUBMODULE Methods
 
