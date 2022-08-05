@@ -15,11 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Methods for matrix multiplication
 
-SUBMODULE(Utility) ContractionMethods
+SUBMODULE(ContractionUtility) Methods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -179,4 +180,4 @@ MODULE PROCEDURE contraction_r1_r4
 ans = matmul(a1,a2)
 END PROCEDURE contraction_r1_r4
 
-END SUBMODULE ContractionMethods
+END SUBMODULE Methods
