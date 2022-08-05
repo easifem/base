@@ -20,7 +20,7 @@ PUBLIC :: Add
 !                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 Marach 2021
 ! summary: This subroutine add contribution
 
@@ -44,7 +44,7 @@ END INTERFACE Add
 !                                                             Add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 Marach 2021
 ! summary: This subroutine add contribution
 
@@ -70,7 +70,7 @@ END INTERFACE Add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Adds all values of sparse matrix to given scalar value
 !
@@ -94,7 +94,7 @@ END INTERFACE Add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	This subroutine adds a single entry of sparse matrix
 !
@@ -124,7 +124,7 @@ END INTERFACE Add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: adds the specific row and column entry to a given value
 !
@@ -157,7 +157,7 @@ END INTERFACE Add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine add the selected value in sparse matrix
 
@@ -178,7 +178,7 @@ END INTERFACE Add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine add the value in sparse matrix
 !
@@ -214,7 +214,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	adds the specific row and column entry to a given value
 !
@@ -268,7 +268,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	adds the specific row and column entry to a given value
 
@@ -302,7 +302,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 17/01/2022
 ! summary: 	adds the specific row and column entry to a given value
 !
@@ -357,7 +357,7 @@ END INTERFACE add
 !                                                            add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 17/01/2022
 ! summary: This subroutine add the value in sparse matrix
 !
@@ -393,7 +393,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 17/01/2022
 ! summary: 	adds the specific row and column entry to a given value
 
@@ -427,7 +427,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 17/01/2022
 ! summary: 	adds the specific row and column entry to a given value
 
@@ -461,7 +461,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 17/01/2022
 ! summary: 	adds the specific row and column entry to a given value
 
@@ -495,7 +495,7 @@ END INTERFACE add
 !                                                             add@addMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 17/01/2022
 ! summary: 	adds the specific row and column entry to a given value
 

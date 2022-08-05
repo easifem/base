@@ -21,7 +21,7 @@ PUBLIC :: setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the the row of a sparse matrix
 
@@ -41,7 +41,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the the row of a sparse matrix
 
@@ -61,7 +61,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -90,7 +90,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the the row of a sparse matrix
 
@@ -110,7 +110,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the the row of a sparse matrix
 
@@ -130,7 +130,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -159,7 +159,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -189,7 +189,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -219,7 +219,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -251,7 +251,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -283,7 +283,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -315,7 +315,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -347,7 +347,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -379,7 +379,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -411,7 +411,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -443,7 +443,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -475,7 +475,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !
@@ -507,7 +507,7 @@ END INTERFACE setRow
 !                                                          setRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine set the row of a sparse matrix
 !

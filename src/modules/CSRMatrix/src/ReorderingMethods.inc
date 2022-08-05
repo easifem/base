@@ -21,7 +21,7 @@ PUBLIC :: NestedDissect
 !                                             NestedDissect@ReoderingMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 July 2021
 ! summary: Nested dissection using Metis library
 INTERFACE
@@ -39,7 +39,7 @@ END INTERFACE NestedDissect
 !                                                   Display@ReorderingMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 July 2021
 ! summary: Display the content of SparseMatrixReordering
 INTERFACE

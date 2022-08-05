@@ -21,7 +21,7 @@ PUBLIC :: GetColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -66,7 +66,7 @@ END INTERFACE getColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -110,7 +110,7 @@ END INTERFACE getColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -154,7 +154,7 @@ END INTERFACE getColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -198,7 +198,7 @@ END INTERFACE getColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -243,7 +243,7 @@ END INTERFACE getColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -288,7 +288,7 @@ END INTERFACE getColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -333,7 +333,7 @@ END INTERFACE getColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -378,7 +378,7 @@ END INTERFACE getColumn
 !                                                       getColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !

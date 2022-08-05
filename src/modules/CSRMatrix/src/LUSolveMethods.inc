@@ -21,7 +21,7 @@ PUBLIC :: LUTSOLVE
 !                                                    LUSOLVE@LUsolveMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jul 2021
 ! summary: This routine solves the LU x = y
 !
@@ -47,7 +47,7 @@ END INTERFACE LUSOLVE
 !                                                             LUTSOLVE@ILUT
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jul 2021
 ! summary: This routine solves the (LU)^T x = y
 !
@@ -74,7 +74,7 @@ END INTERFACE LUTSOLVE
 ! !                                                          LSolve@LinAlg
 ! !----------------------------------------------------------------------------
 
-! !> authors: Vikas Sharma, Ph. D.
+! !> author: Vikas Sharma, Ph. D.
 ! ! date: 14 July 2021
 ! ! summary: Solve Lx = y by forward elimination technique will be used
 ! !
@@ -103,7 +103,7 @@ END INTERFACE LUTSOLVE
 ! !                                                           USolve@LinAlg
 ! !----------------------------------------------------------------------------
 
-! !> authors: Vikas Sharma, Ph. D.
+! !> author: Vikas Sharma, Ph. D.
 ! ! date: 14 July 2021
 ! ! summary: Solve Ux = y by backward elimination technique will be used
 ! !

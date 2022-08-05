@@ -20,7 +20,7 @@ PUBLIC :: Set
 !                                                            set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine set the value in sparse matrix
 !
@@ -47,7 +47,7 @@ END INTERFACE set
 !                                                            set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine set the value in sparse matrix
 !
@@ -85,7 +85,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets all values of sparse matrix to given scalar value
 !
@@ -113,7 +113,7 @@ END INTERFACE ASSIGNMENT( = )
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: Sets a single entry of sparse matrix
 !
@@ -146,7 +146,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets the specific row and column entry to a given value
 !
@@ -195,7 +195,7 @@ END INTERFACE set
 !                                                            set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine sets selected values in sparse matrix
 !
@@ -222,7 +222,7 @@ END INTERFACE set
 !                                                            set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine set the value in sparse matrix
 !
@@ -257,7 +257,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets the specific row and column entry to a given value
 !
@@ -310,7 +310,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets the specific row and column entry to a given value
 
@@ -343,7 +343,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets the specific row and column entry to a given value
 !
@@ -397,7 +397,7 @@ END INTERFACE set
 !                                                            set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine set the value in sparse matrix
 !
@@ -432,7 +432,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets the specific row and column entry to a given value
 
@@ -465,7 +465,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets the specific row and column entry to a given value
 
@@ -498,7 +498,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets the specific row and column entry to a given value
 
@@ -531,7 +531,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Sets the specific row and column entry to a given value
 

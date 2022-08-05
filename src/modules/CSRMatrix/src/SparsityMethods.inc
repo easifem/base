@@ -21,7 +21,7 @@ PUBLIC :: SetSparsity
 !                                                    SetSparsity@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set the sparsity pattern of a given row
 !
@@ -49,7 +49,7 @@ END INTERFACE SetSparsity
 !                                                      SetSparsity@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine sets the sparsity pattern of a given row
 !
@@ -74,7 +74,7 @@ END INTERFACE SetSparsity
 !                                                      SetSparsity@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set the sparsity pattern of a given row
 !
@@ -104,7 +104,7 @@ END INTERFACE SetSparsity
 !                                                      SetSparsity@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine sets the sparsity pattern of a given row
 !
@@ -131,7 +131,7 @@ END INTERFACE SetSparsity
 !                                                      SetSparsity@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set sparsity pattern of `sparsematrix_`
 !
