@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: Modules related to [[BaseType]] module.
 !
@@ -71,7 +71,6 @@ MODULE BaseMethod
   USE Display_Method
   USE ErrorHandling
   USE Utility
-  USE PolynomialUtility
   USE BaseType
   USE Random_Method
   USE BoundingBox_Method
