@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE GridPointUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: ExpMesh
 PUBLIC :: Linspace
 PUBLIC :: Logspace
@@ -26,7 +31,7 @@ PUBLIC :: arange
 !                                                  ExpMesh@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Sept 2021
 ! summary: Exponential mesh
 
@@ -54,7 +59,7 @@ END INTERFACE ExpMesh
 !                                                  ExpMesh@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Sept 2021
 ! summary: Exponential mesh
 
@@ -82,7 +87,7 @@ END INTERFACE ExpMesh
 !                                                  Linspace@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Sept 2021
 ! summary: linspace
 
@@ -107,7 +112,7 @@ END INTERFACE Linspace
 !                                                  Linspace@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Sept 2021
 ! summary: Returns a linearly spaced vector
 !
@@ -136,7 +141,7 @@ END INTERFACE Linspace
 !                                                  Logspace@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Sept 2021
 ! summary: Logspace
 
@@ -165,7 +170,7 @@ END INTERFACE Logspace
 !                                                  Logspace@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Sept 2021
 ! summary: Logspace
 
@@ -194,7 +199,7 @@ END INTERFACE Logspace
 !                                                  MeshGrid@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Sept 2021
 ! summary: meshgrid generate mesh grid over a rectangular domain
 !
@@ -296,7 +301,7 @@ END INTERFACE MeshGrid
 !                                                   arange@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 March 2021
 ! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
 ! values.
@@ -321,7 +326,7 @@ END INTERFACE arange
 !                                                   arange@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 March 2021
 ! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
 ! values.
@@ -346,7 +351,7 @@ END INTERFACE arange
 !                                                    arangeFunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 March 2021
 ! summary: Returns a vector of integer
 !
@@ -374,3 +379,5 @@ END INTERFACE
 INTERFACE arange
   MODULE PROCEDURE arange_int
 END INTERFACE arange
+
+END MODULE GridPointUtility
