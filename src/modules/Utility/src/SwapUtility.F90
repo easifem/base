@@ -15,13 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE SwapUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: SWAP
 
 !----------------------------------------------------------------------------
 !                                                           SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Swap two integer
 
@@ -48,7 +53,7 @@ END INTERFACE
 !                                                            SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Swap two real
 
@@ -66,7 +71,7 @@ END INTERFACE
 !                                                            SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Swap two real
 
@@ -84,7 +89,7 @@ END INTERFACE
 !                                                            SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Swap two vectors of real, if blas95 is used then ignore it.
 
@@ -104,7 +109,7 @@ END INTERFACE SWAP
 !                                                            SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Swap two vectors of real
 
@@ -124,7 +129,7 @@ END INTERFACE SWAP
 !                                                            SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Subroutine for interchanging two complex numbers
 
@@ -290,7 +295,7 @@ END INTERFACE
 !                                                           SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-20
 ! update: 2021-11-20
 ! summary: Swap the index, it is like taking transpose.
@@ -326,7 +331,7 @@ END INTERFACE
 !                                                           SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-20
 ! update: 2021-11-20
 ! summary: Swap the index, it is like taking transpose.
@@ -362,7 +367,7 @@ END INTERFACE
 !                                                           SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-20
 ! update: 2021-11-20
 ! summary: Swap the index, it is like taking transpose.
@@ -401,7 +406,7 @@ END INTERFACE
 !                                                           SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-20
 ! update: 2021-11-20
 ! summary: Swap the index, it is like taking transpose.
@@ -440,7 +445,7 @@ END INTERFACE
 !                                                           SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-20
 ! update: 2021-11-20
 ! summary: Swap the index, it is like taking transpose.
@@ -481,7 +486,7 @@ END INTERFACE
 !                                                           SWAP@SWAPMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-20
 ! update: 2021-11-20
 ! summary: Swap the index, it is like taking transpose.
@@ -517,3 +522,9 @@ END INTERFACE
 INTERFACE SWAP
   MODULE PROCEDURE swap_index6
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE SwapUtility
