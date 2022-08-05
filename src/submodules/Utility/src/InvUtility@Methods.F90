@@ -15,11 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 April 2021
 ! summary: 	Methods for determining determinent and inverse of small matrix
 
-SUBMODULE(Utility ) InverseMethods
+SUBMODULE(InvUtility) Methods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 !----------------------------------------------------------------------------
@@ -164,4 +165,4 @@ MODULE PROCEDURE Inv_3D
   END DO
 END PROCEDURE Inv_3D
 
-END SUBMODULE InverseMethods
+END SUBMODULE Methods
