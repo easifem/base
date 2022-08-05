@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Methods for reallocating arrays
 
-SUBMODULE(Utility) ReallocateMethods
+SUBMODULE(ReallocateUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -1180,4 +1180,8 @@ MODULE PROCEDURE Reallocate_Real32_AI
   IA = 0
 END PROCEDURE Reallocate_Real32_AI
 
-END SUBMODULE ReallocateMethods
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END SUBMODULE Methods
