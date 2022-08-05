@@ -109,7 +109,7 @@
 		"prefix": "vikas",
 		"description": "vikas",
 		"body": [
-			"!> authors: Vikas Sharma, Ph. D.",
+			"!> author: Vikas Sharma, Ph. D.",
 			"! date: \t$1",
 			"! summary: \t$2",
 		],
