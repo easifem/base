@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) IntegerMethods
+SUBMODULE(IntegerUtility) Methods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -24,19 +25,19 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE in_1a
-#include "./In_1.inc"
+#include "./In/In_1.inc"
 END PROCEDURE in_1a
 
 MODULE PROCEDURE in_1b
-#include "./In_1.inc"
+#include "./In/In_1.inc"
 END PROCEDURE in_1b
 
 MODULE PROCEDURE in_1c
-#include "./In_1.inc"
+#include "./In/In_1.inc"
 END PROCEDURE in_1c
 
 MODULE PROCEDURE in_1d
-#include "./In_1.inc"
+#include "./In/In_1.inc"
 END PROCEDURE in_1d
 
 !----------------------------------------------------------------------------
@@ -44,19 +45,19 @@ END PROCEDURE in_1d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IsIn_1a
-#include "./IsIn_1.inc"
+#include "./In/IsIn_1.inc"
 END PROCEDURE IsIn_1a
 
 MODULE PROCEDURE IsIn_1b
-#include "./IsIn_1.inc"
+#include "./In/IsIn_1.inc"
 END PROCEDURE IsIn_1b
 
 MODULE PROCEDURE IsIn_1c
-#include "./IsIn_1.inc"
+#include "./In/IsIn_1.inc"
 END PROCEDURE IsIn_1c
 
 MODULE PROCEDURE IsIn_1d
-#include "./IsIn_1.inc"
+#include "./In/IsIn_1.inc"
 END PROCEDURE IsIn_1d
 
 !----------------------------------------------------------------------------
@@ -85,22 +86,22 @@ END PROCEDURE in_2d
 
 MODULE PROCEDURE RemoveDuplicates_1a
   INTEGER(Int8), ALLOCATABLE :: temp(:)
-#include "./RemoveDuplicates_1.inc"
+#include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1a
 
 MODULE PROCEDURE RemoveDuplicates_1b
   INTEGER(Int16), ALLOCATABLE :: temp(:)
-#include "./RemoveDuplicates_1.inc"
+#include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1b
 
 MODULE PROCEDURE RemoveDuplicates_1c
   INTEGER(Int32), ALLOCATABLE :: temp(:)
-#include "./RemoveDuplicates_1.inc"
+#include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1c
 
 MODULE PROCEDURE RemoveDuplicates_1d
   INTEGER(Int64), ALLOCATABLE :: temp(:)
-#include "./RemoveDuplicates_1.inc"
+#include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1d
 
 !----------------------------------------------------------------------------
@@ -108,19 +109,19 @@ END PROCEDURE RemoveDuplicates_1d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Repeat_1a
-#include "./Repeat_1.inc"
+#include "./Repeat/Repeat_1.inc"
 END PROCEDURE Repeat_1a
 
 MODULE PROCEDURE Repeat_1b
-#include "./Repeat_1.inc"
+#include "./Repeat/Repeat_1.inc"
 END PROCEDURE Repeat_1b
 
 MODULE PROCEDURE Repeat_1c
-#include "./Repeat_1.inc"
+#include "./Repeat/Repeat_1.inc"
 END PROCEDURE Repeat_1c
 
 MODULE PROCEDURE Repeat_1d
-#include "./Repeat_1.inc"
+#include "./Repeat/Repeat_1.inc"
 END PROCEDURE Repeat_1d
 
-END SUBMODULE IntegerMethods
+END SUBMODULE Methods
