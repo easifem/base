@@ -15,13 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE ConvertUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: Convert
 
 !----------------------------------------------------------------------------
 !                                                   Convert@ConvertMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Rearrange the degrees of freedom in a finite element matrix
 !
@@ -62,7 +67,7 @@ END INTERFACE Convert
 !                                                    Convert@ConvertMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine converts rank4  matrix to rank2 matrix
 !
@@ -82,7 +87,7 @@ END INTERFACE Convert
 !                                                    Convert@ConvertMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine converts rank4  matrix to rank2 matrix
 !
@@ -99,3 +104,9 @@ END INTERFACE
 INTERFACE Convert
   MODULE PROCEDURE convert_3
 END INTERFACE Convert
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE ConvertUtility

@@ -15,6 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+
+MODULE ProductUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: OUTERPROD
 PUBLIC :: Cross_Product
 PUBLIC :: Vector_Product
@@ -24,7 +30,7 @@ PUBLIC :: VectorProduct
 !                                            Cross_Product@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:          This FUNCTION evaluate vectors product
 !
@@ -64,7 +70,7 @@ END INTERFACE VectorProduct
 !                                                   OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         This FUNCTION returns outerproduct(matrix) of two vectors
 !
@@ -87,7 +93,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         This FUNCTION returns outerproduct
 !
@@ -114,7 +120,7 @@ END INTERFACE OUTERPROD
 !                                                   OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -135,7 +141,7 @@ END INTERFACE OUTERPROD
 !                                                   OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -156,7 +162,7 @@ END INTERFACE OUTERPROD
 !                                                   OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -177,7 +183,7 @@ END INTERFACE OUTERPROD
 !                                                   OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -204,7 +210,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         This FUNCTION returns outerproduct
 
@@ -224,7 +230,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -249,7 +255,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -275,7 +281,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -302,7 +308,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -327,7 +333,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -353,7 +359,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -380,7 +386,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -406,7 +412,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -433,7 +439,7 @@ END INTERFACE OUTERPROD
 !                                                  OUTERPROD@ProductMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a x b
@@ -460,7 +466,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -485,7 +491,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -511,7 +517,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -538,7 +544,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -566,7 +572,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -592,7 +598,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -619,7 +625,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -647,7 +653,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -674,7 +680,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -702,7 +708,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -730,7 +736,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -756,7 +762,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -783,7 +789,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -811,7 +817,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -838,7 +844,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -866,7 +872,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -893,7 +899,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -921,7 +927,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -949,7 +955,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c
@@ -977,7 +983,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1004,7 +1010,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1032,7 +1038,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1061,7 +1067,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1089,7 +1095,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1118,7 +1124,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1147,7 +1153,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1175,7 +1181,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1204,7 +1210,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1233,7 +1239,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1262,7 +1268,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1290,7 +1296,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1319,7 +1325,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1348,7 +1354,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1377,7 +1383,7 @@ END INTERFACE OUTERPROD
 !                                                            OUTERPROD@PROD
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-19
 ! update: 2021-12-19
 ! summary: a b c d
@@ -1401,3 +1407,9 @@ END INTERFACE
 INTERFACE OUTERPROD
   MODULE PROCEDURE outerprod_r3r1r1r1
 END INTERFACE OUTERPROD
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE ProductUtility

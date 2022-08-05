@@ -15,6 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+
+MODULE LineInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
@@ -47,3 +53,8 @@ INTERFACE
   END FUNCTION EquidistanceLIP_Line
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE LineInterpolationUtility

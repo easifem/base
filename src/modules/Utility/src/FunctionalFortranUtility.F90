@@ -14,6 +14,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
+
+MODULE FunctionalFortranUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: HEAD
 PUBLIC :: TAIL
 PUBLIC :: SPLIT
@@ -22,7 +28,7 @@ PUBLIC :: SPLIT
 !                                                     Head@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Returns the first element of array `x`.
 
@@ -41,7 +47,7 @@ END INTERFACE HEAD
 !                                                     Head@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Returns the first element of array `x`.
 
@@ -60,7 +66,7 @@ END INTERFACE HEAD
 !                                                     Head@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Returns the first element of array `x`.
 
@@ -124,7 +130,7 @@ END INTERFACE TAIL
 !                                                    SPLIT@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Returns the first half of the array `x` if `section == 1`
 !
@@ -151,7 +157,7 @@ END INTERFACE SPLIT
 !                                                    SPLIT@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Returns the first half of the array `x` if `section == 1`,
 !
@@ -178,7 +184,7 @@ END INTERFACE SPLIT
 !                                                    SPLIT@FunctionalFortran
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Returns the first half of the array `x` if `section == 1`,
 !
@@ -200,3 +206,9 @@ END INTERFACE
 INTERFACE SPLIT
   MODULE PROCEDURE split_char
 END INTERFACE SPLIT
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE FunctionalFortranUtility

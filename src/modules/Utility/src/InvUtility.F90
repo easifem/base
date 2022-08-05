@@ -15,6 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE InvUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
 
 !----------------------------------------------------------------------------
 !                                                         Det@InverseMethods
@@ -71,3 +75,5 @@ INTERFACE Inv
 END INTERFACE Inv
 
 PUBLIC :: INV
+
+END MODULE InvUtility

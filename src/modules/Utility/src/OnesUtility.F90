@@ -14,6 +14,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
+
+MODULE OnesUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: ones
 !
 !----------------------------------------------------------------------------
@@ -349,3 +355,9 @@ END INTERFACE
 INTERFACE ones
   MODULE PROCEDURE ones_27, ones_28
 END INTERFACE ones
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE OnesUtility

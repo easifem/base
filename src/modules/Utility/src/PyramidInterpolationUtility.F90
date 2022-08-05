@@ -15,14 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: InterpolationPoint_Hexahedron
+
+MODULE PyramidInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
+PUBLIC :: InterpolationPoint_Pyramid
 
 !----------------------------------------------------------------------------
-!                                            InterpolationPoint_Hexahedron
+!                                            InterpolationPoint_Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Hexahedron( order, ipType, xij ) &
+  MODULE PURE FUNCTION InterpolationPoint_Pyramid( order, ipType, xij ) &
     & RESULT( nodecoord )
     !!
     INTEGER( I4B ), INTENT( IN ) :: order
@@ -30,21 +36,26 @@ INTERFACE
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
     !!
-  END FUNCTION InterpolationPoint_Hexahedron
+  END FUNCTION InterpolationPoint_Pyramid
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                               EquidistanceLIP_Hexahedron
+!                                               EquidistanceLIP_Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistanceLIP_Hexahedron( order, xij ) &
+  MODULE PURE FUNCTION EquidistanceLIP_Pyramid( order, xij ) &
     & RESULT( nodecoord )
     !!
     INTEGER( I4B ), INTENT( IN ) :: order
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
     !!
-  END FUNCTION EquidistanceLIP_Hexahedron
+  END FUNCTION EquidistanceLIP_Pyramid
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE PyramidInterpolationUtility

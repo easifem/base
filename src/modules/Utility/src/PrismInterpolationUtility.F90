@@ -15,36 +15,45 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: InterpolationPoint_Quadrangle
+MODULE PrismInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+PUBLIC :: InterpolationPoint_Prism
 
 !----------------------------------------------------------------------------
-!                                                InterpolationPoint_Quadrangle
+!                                            InterpolationPoint_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Quadrangle( order, ipType, xij ) &
+  MODULE PURE FUNCTION InterpolationPoint_Prism( order, ipType, xij ) &
     & RESULT( nodecoord )
     !!
     INTEGER( I4B ), INTENT( IN ) :: order
     INTEGER( I4B ), INTENT( IN ) :: ipType
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 4 )
-    REAL( DFP ) :: nodecoord( 3, ( order + 1 ) ** 2 )
+    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
+    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
     !!
-  END FUNCTION InterpolationPoint_Quadrangle
+  END FUNCTION InterpolationPoint_Prism
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                   EquidistanceLIP_Quadrangle
+!                                               EquidistanceLIP_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistanceLIP_Quadrangle( order, xij ) &
+  MODULE PURE FUNCTION EquidistanceLIP_Prism( order, xij ) &
     & RESULT( nodecoord )
     !!
     INTEGER( I4B ), INTENT( IN ) :: order
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 4 )
-    REAL( DFP ) :: nodecoord( 3, ( order + 1 ) ** 2 )
+    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
+    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
     !!
-  END FUNCTION EquidistanceLIP_Quadrangle
+  END FUNCTION EquidistanceLIP_Prism
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE PrismInterpolationUtility

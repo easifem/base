@@ -15,36 +15,47 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: InterpolationPoint_Prism
+
+MODULE QuadrangleInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
+PUBLIC :: InterpolationPoint_Quadrangle
 
 !----------------------------------------------------------------------------
-!                                            InterpolationPoint_Prism
+!                                                InterpolationPoint_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Prism( order, ipType, xij ) &
+  MODULE PURE FUNCTION InterpolationPoint_Quadrangle( order, ipType, xij ) &
     & RESULT( nodecoord )
     !!
     INTEGER( I4B ), INTENT( IN ) :: order
     INTEGER( I4B ), INTENT( IN ) :: ipType
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
-    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
+    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 4 )
+    REAL( DFP ) :: nodecoord( 3, ( order + 1 ) ** 2 )
     !!
-  END FUNCTION InterpolationPoint_Prism
+  END FUNCTION InterpolationPoint_Quadrangle
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                               EquidistanceLIP_Prism
+!                                                   EquidistanceLIP_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistanceLIP_Prism( order, xij ) &
+  MODULE PURE FUNCTION EquidistanceLIP_Quadrangle( order, xij ) &
     & RESULT( nodecoord )
     !!
     INTEGER( I4B ), INTENT( IN ) :: order
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
-    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
+    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 4 )
+    REAL( DFP ) :: nodecoord( 3, ( order + 1 ) ** 2 )
     !!
-  END FUNCTION EquidistanceLIP_Prism
+  END FUNCTION EquidistanceLIP_Quadrangle
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE QuadrangleInterpolationUtility

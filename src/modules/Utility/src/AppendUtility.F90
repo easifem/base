@@ -16,44 +16,6 @@
 !
 
 MODULE AppendUtility
-
-  END MODULE AppendUtility! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
-!
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation, either version 3 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
-
-MODULE AppendUtility
-
-  END MODULE AppendUtility! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
-!
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation, either version 3 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
-
-MODULE AppendUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
@@ -63,13 +25,13 @@ PUBLIC :: OPERATOR( .ColConcat. )
 PUBLIC :: RowConcat
 PUBLIC :: OPERATOR( .RowConcat. )
 PUBLIC :: Append
-PUBLIC :: EXPAND
+PUBLIC :: Expand
 
 !----------------------------------------------------------------------------
 !                                                     Expand@IntegerMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2022
 ! summary: Expand the vector
 !
@@ -147,7 +109,7 @@ END INTERFACE EXPAND
 !                                                      Expand@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 July 2022
 ! summary: Expand the real vector
 
@@ -190,7 +152,7 @@ END INTERFACE Expand
 !                                                      Append@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  22 March 2021
 ! summary: Append a scalar INTEGER  to  INTEGER  vec tor
 
@@ -226,7 +188,7 @@ END INTERFACE
 !                                                      Append@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  22 March 2021
 ! summary: Append two vectors of INTEGER
 
@@ -262,7 +224,7 @@ END INTERFACE
 !                                                      Append@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  22 March 2021
 ! summary: Append a scalar INTEGER  to  INTEGER  vec tor
 
@@ -302,7 +264,7 @@ END INTERFACE
 !                                                      Append@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  22 March 2021
 ! summary: Append two vectors of INTEGER
 
@@ -342,7 +304,7 @@ END INTERFACE
 !                                                    ColConcat@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
 ! update: 2021-11-24
 ! summary: Concat columns of two vectors
@@ -399,7 +361,7 @@ END INTERFACE
 !                                                    ColConcat@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
 ! update: 2021-11-24
 ! summary: Concat columns of a matrix and a vector
@@ -456,7 +418,7 @@ END INTERFACE
 !                                                    ColConcat@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
 ! update: 2021-11-24
 ! summary: Concat columns of rank1 and rank2 array
@@ -513,7 +475,7 @@ END INTERFACE
 !                                                    ColConcat@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
 ! update: 2021-11-24
 ! summary: Concat columns of rank2 and rank2 array
@@ -570,7 +532,7 @@ END INTERFACE
 !                                                    ColConcat@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
 ! update: 2021-11-24
 ! summary: Concat rows of two vectors
@@ -627,7 +589,7 @@ END INTERFACE
 !                                                    rowConcat@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
 ! update: 2021-11-24
 ! summary: Concat rows of a matrix and a vector
@@ -684,7 +646,7 @@ END INTERFACE
 !                                                    rowConcat@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
 ! update: 2021-11-24
 ! summary: Concat rows of rank1 and rank2 array
@@ -741,7 +703,7 @@ END INTERFACE
 !                                                    rowConcat@AppendMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-24
 ! update: 2021-11-24
 ! summary: Concat rows of rank2 and rank2 array

@@ -15,36 +15,40 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: InterpolationPoint_Pyramid
+MODULE HashingUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
 
 !----------------------------------------------------------------------------
-!                                            InterpolationPoint_Pyramid
+!                                                StringToUID@HashingMethods
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:         22 Aug 2021
+! summary: This function returns a unique number for a given string
+!
+!# Introduction
+! This function returns a unique number for a given string
+!
+! Reference
+!  https://cp-algorithms.com/string/string-hashing.html
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Pyramid( order, ipType, xij ) &
-    & RESULT( nodecoord )
-    !!
-    INTEGER( I4B ), INTENT( IN ) :: order
-    INTEGER( I4B ), INTENT( IN ) :: ipType
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
-    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-    !!
-  END FUNCTION InterpolationPoint_Pyramid
+  MODULE PURE FUNCTION StringToUID_PolyRoll(charVar) RESULT(Ans)
+    CHARACTER(LEN=*), INTENT(IN) :: charVar
+    INTEGER(I4B) :: ans
+  END FUNCTION StringToUID_PolyRoll
 END INTERFACE
 
+INTERFACE StringToUID
+  MODULE PROCEDURE StringToUID_PolyRoll
+END INTERFACE StringToUID
+
+PUBLIC :: StringToUID
+
 !----------------------------------------------------------------------------
-!                                               EquidistanceLIP_Pyramid
+!
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE PURE FUNCTION EquidistanceLIP_Pyramid( order, xij ) &
-    & RESULT( nodecoord )
-    !!
-    INTEGER( I4B ), INTENT( IN ) :: order
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
-    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-    !!
-  END FUNCTION EquidistanceLIP_Pyramid
-END INTERFACE
-
+END MODULE HashingUtility

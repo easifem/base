@@ -15,12 +15,30 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE MiscUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
+PUBLIC :: radian
+PUBLIC :: Degrees
+PUBLIC :: SearchNearestCoord
+PUBLIC :: ExecuteCommand
+PUBLIC :: getUnitNo
+PUBLIC :: Factorial
+PUBLIC :: Int2Str
+PUBLIC :: Real2Str
+PUBLIC :: ARTH
+PUBLIC :: outerdiff
+PUBLIC :: IMAXLOC
+PUBLIC :: IMINLOC
+PUBLIC :: IMG
 
 !----------------------------------------------------------------------------
 !                                                               Radian@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! Convert degrees into radian
 
@@ -35,7 +53,7 @@ END INTERFACE
 !                                                               Radian@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! Converts degrees into radian
 
@@ -50,13 +68,11 @@ INTERFACE radian
   MODULE PROCEDURE radian_dfp, radian_int
 END INTERFACE
 
-PUBLIC :: radian
-
 !----------------------------------------------------------------------------
 !                                                              Degrees@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This function converts radian into degrees
 ! Belongs to `Degrees`
@@ -72,13 +88,11 @@ INTERFACE Degrees
   MODULE PROCEDURE degrees_dfp
 END INTERFACE Degrees
 
-PUBLIC :: Degrees
-
 !----------------------------------------------------------------------------
 !                                                                 @MISC
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Search the loc of nearest point to x in the array
 !
@@ -118,13 +132,11 @@ INTERFACE SearchNearestCoord
   MODULE PROCEDURE Loc_Nearest_Point
 END INTERFACE SearchNearestCoord
 
-PUBLIC :: SearchNearestCoord
-
 !----------------------------------------------------------------------------
 !                                                        ExecuteCommand@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         This subroutine run a system commoand on terminal
 
@@ -137,8 +149,6 @@ END INTERFACE
 INTERFACE ExecuteCommand
   MODULE PROCEDURE exe_cmd
 END INTERFACE ExecuteCommand
-
-PUBLIC :: ExecuteCommand
 
 !----------------------------------------------------------------------------
 !                                                             getUnitNo@MISC
@@ -154,30 +164,26 @@ INTERFACE getUnitNo
   MODULE PROCEDURE getUnitNo_1
 END INTERFACE getUnitNo
 
-PUBLIC :: getUnitNo
-
 !----------------------------------------------------------------------------
 !                                                             Factorial@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary: This FUNCTION computes the factorial of an INTEGER
 
 INTERFACE
-  MODULE RECURSIVE FUNCTION Factorial(N) RESULT(Ans)
+  MODULE PURE RECURSIVE FUNCTION Factorial(N) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: N
     INTEGER(I4B) :: Ans
   END FUNCTION
 END INTERFACE
 
-PUBLIC :: Factorial
-
 !----------------------------------------------------------------------------
 !                                                               Int2STR@MISC
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Convert INTEGER  to  string
 
@@ -187,8 +193,6 @@ INTERFACE
     CHARACTER(LEN=15) :: Int2Str
   END FUNCTION
 END INTERFACE
-
-PUBLIC :: Int2Str
 
 !----------------------------------------------------------------------------
 !                                                              Real2Str@MISC
@@ -211,8 +215,6 @@ END INTERFACE
 INTERFACE Real2Str
   MODULE PROCEDURE SP2Str, DP2Str
 END INTERFACE Real2Str
-
-PUBLIC :: Real2Str
 
 !----------------------------------------------------------------------------
 !                                                                       ARTH
@@ -245,8 +247,6 @@ INTERFACE ARTH
   MODULE PROCEDURE arth_d, arth_i, arth_r
 END INTERFACE ARTH
 
-PUBLIC :: ARTH
-
 !----------------------------------------------------------------------------
 !                                                             outerdiff@MISC
 !----------------------------------------------------------------------------
@@ -276,8 +276,6 @@ INTERFACE outerdiff
   MODULE PROCEDURE outerdiff_r, outerdiff_i, outerdiff_d
 END INTERFACE
 
-PUBLIC :: outerdiff
-
 !----------------------------------------------------------------------------
 !                                                              IMAXLOC@MISC
 !----------------------------------------------------------------------------
@@ -300,8 +298,6 @@ INTERFACE IMAXLOC
   MODULE PROCEDURE imaxloc_r, imaxloc_i
 END INTERFACE
 
-PUBLIC :: IMAXLOC
-
 !----------------------------------------------------------------------------
 !                                                                 IMIN@MISC
 !----------------------------------------------------------------------------
@@ -317,13 +313,11 @@ INTERFACE IMINLOC
   MODULE PROCEDURE iminloc_r
 END INTERFACE IMINLOC
 
-PUBLIC :: IMINLOC
-
 !----------------------------------------------------------------------------
 !                                                                      IMG
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2022
 ! summary: Return imaginary part of complex value
 
@@ -342,7 +336,7 @@ END INTERFACE IMG
 !                                                                      IMG
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2022
 ! summary: Return imaginary part of complex value
 
@@ -357,9 +351,8 @@ INTERFACE IMG
   MODULE PROCEDURE IMG_2
 END INTERFACE IMG
 
-PUBLIC :: IMG
-
 !----------------------------------------------------------------------------
 !                                                            Factorial@MISC
 !----------------------------------------------------------------------------
 
+END MODULE MiscUtility

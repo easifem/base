@@ -15,13 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE ContractionUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: Contraction
 
 !----------------------------------------------------------------------------
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Contraction for rank4 and rank1 array
 !
@@ -45,7 +50,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Contraction for rank4 and rank1 array
 !
@@ -69,7 +74,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Contraction for rank4 and rank1 array
 !
@@ -93,7 +98,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Contraction for rank4 and rank1 array
 !
@@ -117,7 +122,7 @@ END INTERFACE Contraction
 !                                                   Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank3  and rank1 array
 !
@@ -142,7 +147,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Contraction for rank3 and rank2
 !
@@ -166,7 +171,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank4 and rank1 array
 !
@@ -190,7 +195,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank4 and rank1 array
 !
@@ -214,7 +219,7 @@ END INTERFACE Contraction
 !                                                   Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank3  and rank1 array
 !
@@ -239,7 +244,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Contraction for rank3 and rank2
 !
@@ -263,7 +268,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank4 and rank1 array
 !
@@ -287,7 +292,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank4 and rank1 array
 !
@@ -311,7 +316,7 @@ END INTERFACE Contraction
 !                                                   Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank3  and rank1 array
 !
@@ -336,7 +341,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
 ! summary:         Contraction for rank3 and rank2
 !
@@ -360,7 +365,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank4 and rank1 array
 !
@@ -384,7 +389,7 @@ END INTERFACE Contraction
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Contraction for rank4 and rank1 array
 !
@@ -403,3 +408,9 @@ END INTERFACE
 INTERFACE Contraction
   MODULE PROCEDURE Contraction_r1_r4
 END INTERFACE Contraction
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE ContractionUtility
