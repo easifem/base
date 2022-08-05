@@ -268,7 +268,7 @@ INTEGER( I4B ), PARAMETER, PUBLIC :: METIS_NUMBERING_C = 0
 !                                                  METIS_SetDefaultOptions
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 July 2021
 ! summary: Initializes the options array into its default values.
 !
@@ -302,7 +302,7 @@ PUBLIC :: METIS_SetDefaultOptions
 !                                                              METIS_NodeND
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 July 2021
 ! summary: This function computes fill reducing orderings of sparse matrices using the multilevel nested dissection algorithm.
 !
@@ -372,7 +372,7 @@ PUBLIC :: METIS_NodeND
 !                                                   METIS_PartGraphRecursive
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 July 2021
 ! summary: this function is used to partition a graph into `nparts`
 ! parts using recursive bisection.
@@ -469,7 +469,7 @@ PUBLIC :: METIS_PartGraphRecursive
 !                                                       METIS_PartGraphKway
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 July 2021
 ! summary: This function is used to partition a graph into `nparts` parts using multilevel k-way partitioning.
 !
@@ -568,7 +568,7 @@ PUBLIC :: METIS_PartGraphKway
 !                                                       METIS_PartMeshDual
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 July 2021
 ! summary: This function is used to partition a mesh into `nparts` parts based on a partitioning of the mesh's dual graph.
 !
@@ -650,7 +650,7 @@ PUBLIC :: METIS_PartMeshDual
 !                                                        METIS_PartMeshNodal
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 July 2021
 ! summary: This function us used to partition a mesh into `nparts` parts based on a partitioning of the mesh's nodal graph.
 !
@@ -728,7 +728,7 @@ PUBLIC :: METIS_PartMeshNodal
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 July 2021
 ! summary: 	This function is used to generate the dual graph of a mesh.
 !
@@ -790,7 +790,7 @@ PUBLIC :: METIS_MeshToDual
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 July 2021
 ! summary: This function is used to generate the nodal graph of a mesh.
 !
