@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 June 2021
 ! summary: This submodule contains method for [[ReferencePoint_]]
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
 ! summary: This subroutine constructs an instance of point reference element
 !
@@ -75,7 +75,7 @@ PUBLIC :: Initiate
 !                                                    ReferencePoint@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: This routine constructs an instance of Point reference element
 !
@@ -115,7 +115,7 @@ PUBLIC :: ReferencePoint
 !                                             ReferencePoint_Pointer@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: Constructs a pointer to an instance of point reference element
 !
@@ -156,7 +156,7 @@ PUBLIC :: ReferencePoint_Pointer
 !                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: This function returns lagrange element on point
 !
@@ -193,7 +193,7 @@ PUBLIC :: highOrderElement_Point
 !                                                      MeasureSimplex@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: 	This function returns the measure of linear point element
 !

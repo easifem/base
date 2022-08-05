@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: This submodule contains method for [[ReferenceElement_]]
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
 ! summary: Display the ReferenceElement
 
@@ -51,7 +51,7 @@ PUBLIC :: Display
 !                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
 ! summary: Display reference topology
 
@@ -71,7 +71,7 @@ END INTERFACE Display
 !                                     ReferenceTopology@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: This function returns the instance of [[ReferenceTopology_]]
 !
@@ -119,7 +119,7 @@ PUBLIC :: ReferenceTopology
 !                                            Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: This subroutine reset the instance of [[ReferenceTopology_]]
 !
@@ -148,7 +148,7 @@ PUBLIC :: Deallocate
 !                                            Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: Deallocates the data stored inside the [[ReferenceElement_]]
 
@@ -166,7 +166,7 @@ END INTERFACE
 !                                                     NNE@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: This function returns the totat nodes inside the referenc topology
 !
@@ -196,7 +196,7 @@ PUBLIC :: OPERATOR(.NNE.)
 !                                                    NNE@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: Returns the total number of nodes in the reference element
 !
@@ -216,7 +216,7 @@ END INTERFACE
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 March 2021
 ! summary: This subroutine copies one reference element into other
 !
@@ -249,7 +249,7 @@ PUBLIC :: ASSIGNMENT(=)
 !                               ReferenceElement_Pointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns a pointer to an instance of ReferenceElement
 
@@ -279,7 +279,7 @@ PUBLIC :: ReferenceElement_Pointer
 !                                ReferenceElementPointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns a pointer to an instance of ReferenceElement
 
@@ -298,7 +298,7 @@ END INTERFACE ReferenceElement_Pointer
 !                                                 getNptrs@ConstrucorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 June 2021
 ! summary: Returns the node numbers of reference element
 
@@ -319,7 +319,7 @@ PUBLIC :: getConnectivity
 !                                               ElementType@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in integer from element name
 
@@ -340,7 +340,7 @@ PUBLIC :: ElementType
 !                                               ElementName@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns element name in character from element number/type
 
@@ -361,7 +361,7 @@ PUBLIC :: ElementName
 !                                       TotalNodesInElement@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns total numbers of nodes present in a given element
 
@@ -382,7 +382,7 @@ PUBLIC :: TotalNodesInElement
 !                                              ElementOrder@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns the order of an element
 
@@ -397,7 +397,7 @@ END INTERFACE
 !                                              ElementOrder@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns the order of an element
 
@@ -424,7 +424,7 @@ PUBLIC :: OPERATOR(.order.)
 !                                               XiDimension@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-13
 ! update: 2021-11-13
 ! summary: Returns the xidimension of an element
@@ -440,7 +440,7 @@ END INTERFACE
 !                                                Xidimension@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-13
 ! update: 2021-11-13
 ! summary: Returns xidimension of the reference element
@@ -462,7 +462,7 @@ PUBLIC :: XiDimension
 !                                                   isVolume@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a volume element
 
@@ -480,7 +480,7 @@ PUBLIC :: isVolume
 !                                                 isSurface@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Surface element
 
@@ -497,7 +497,7 @@ PUBLIC :: isSurface
 !                                                    isLine@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Line element
 
@@ -514,7 +514,7 @@ PUBLIC :: isLine
 !                                                   isPoint@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Point element
 
@@ -531,7 +531,7 @@ PUBLIC :: isPoint
 !                                                 isTriangle@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Triangle element
 
@@ -548,7 +548,7 @@ PUBLIC :: isTriangle
 !                                               isQuadrangle@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Quadrangle element
 
@@ -565,7 +565,7 @@ PUBLIC :: isQuadrangle
 !                                             isTetrahedron@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Tetrahedron element
 
@@ -582,7 +582,7 @@ PUBLIC :: isTetrahedron
 !                                             isHexahedron@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Hexahedron element
 
@@ -599,7 +599,7 @@ PUBLIC :: isHexahedron
 !                                                    isPrism@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Prism element
 
@@ -616,7 +616,7 @@ PUBLIC :: isPrism
 !                                                 isPyramid@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a Pyramid element
 
@@ -633,7 +633,7 @@ PUBLIC :: isPyramid
 !                                       isSerendipityElement@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a SerendipityElement element
 
@@ -650,7 +650,7 @@ PUBLIC :: isSerendipityElement
 !                                           ElementTopology@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-10
 ! update: 2021-11-10
 ! summary: Return the element topology
@@ -697,7 +697,7 @@ PUBLIC :: OPERATOR(.topology.)
 !                                               FacetMatrix@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 11 April 2022
 ! summary: Returns the facet matrix
 !
@@ -729,7 +729,7 @@ PUBLIC :: FacetMatrix
 !                                             FacetElements@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 June 2021
 ! summary: This routine returns the facet elements
 
@@ -750,7 +750,7 @@ PUBLIC :: FacetElements
 !                                            LocalNodeCoord@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 11 April 2022
 ! summary: Deprecated
 !
@@ -771,7 +771,7 @@ END INTERFACE
 !                                            LocalNodeCoord@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 11 April 2022
 ! summary: Returns the local NodeCoord of an element
 
@@ -792,7 +792,7 @@ PUBLIC :: LocalNodeCoord
 !                                         MeasureSimplex@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 11 April 2022
 ! summary: Returns measures for simplex
 
@@ -814,7 +814,7 @@ PUBLIC :: MeasureSimplex
 !                                            ElementQuality@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 11 April 2022
 ! summary: Measure the quality of the element
 
@@ -837,7 +837,7 @@ PUBLIC :: ElementQuality
 !                                             ContainsPoint@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 11 April 2022
 ! summary: Returns true if the given point is inside the element
 
@@ -860,7 +860,7 @@ PUBLIC :: ContainsPoint
 !                                             TotalEntities@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 June 2021
 ! summary: Total entities present in an element
 
@@ -881,7 +881,7 @@ PUBLIC :: TotalEntities
 !                                             FacetTopology@GeometryMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 June 2021
 ! summary: Returns the facet topology of the given element type
 
