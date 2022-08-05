@@ -17,5 +17,15 @@
 
 MODULE PolynomialUtility
 USE LagrangeUtility
+USE OrthogonalPolynomialUtility
+USE Chebyshev1PolynomialUtility
+USE JacobiPolynomialUtility
 USE InterpolationUtility
+USE LineInterpolationUtility
+USE TriangleInterpolationUtility
+USE QuadrangleInterpolationUtility
+USE TetrahedronInterpolationUtility
+USE HexahedronInterpolationUtility
+USE PrismInterpolationUtility
+USE PyramidInterpolationUtility
 END MODULE PolynomialUtility
