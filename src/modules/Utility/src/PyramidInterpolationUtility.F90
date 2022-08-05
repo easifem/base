@@ -15,6 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+
+MODULE PyramidInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: InterpolationPoint_Pyramid
 
 !----------------------------------------------------------------------------
@@ -48,3 +54,8 @@ INTERFACE
   END FUNCTION EquidistanceLIP_Pyramid
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE PyramidInterpolationUtility
