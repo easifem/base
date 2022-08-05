@@ -15,11 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 April 2021
 ! summary: 	Assert functions
 
-SUBMODULE(Utility ) AssertMethods
+SUBMODULE(AssertUtility) Methods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -142,4 +143,4 @@ MODULE PROCEDURE assert_shape_4
   END IF
 END PROCEDURE assert_shape_4
 
-END SUBMODULE AssertMethods
+END SUBMODULE Methods
