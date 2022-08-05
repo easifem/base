@@ -15,6 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE PrismInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
 PUBLIC :: InterpolationPoint_Prism
 
 !----------------------------------------------------------------------------
@@ -48,3 +52,8 @@ INTERFACE
   END FUNCTION EquidistanceLIP_Prism
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE PrismInterpolationUtility
