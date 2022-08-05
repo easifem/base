@@ -21,7 +21,7 @@ PUBLIC :: SHALLOWCOPY
 !                                            SHALLOWCOPY@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
@@ -56,7 +56,7 @@ END INTERFACE SHALLOWCOPY
 !                                            SHALLOWCOPY@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
@@ -75,7 +75,7 @@ END INTERFACE SHALLOWCOPY
 !                                            SHALLOWCOPY@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
@@ -94,7 +94,7 @@ END INTERFACE SHALLOWCOPY
 !                                            SHALLOWCOPY@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
@@ -113,7 +113,7 @@ END INTERFACE SHALLOWCOPY
 !                                            SHALLOWCOPY@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
@@ -136,7 +136,7 @@ END INTERFACE SHALLOWCOPY
 !                                            SHALLOWCOPY@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 
@@ -159,7 +159,7 @@ END INTERFACE SHALLOWCOPY
 !                                            SHALLOWCOPY@ShallowCopyMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 |June 2021
 ! summary: Copy only the structure for Y = X
 

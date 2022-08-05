@@ -21,7 +21,7 @@ PUBLIC :: Set
 !                                                            set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set all values to given scalar
 
@@ -40,7 +40,7 @@ END INTERFACE Set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set all values by given vector
 
@@ -60,7 +60,7 @@ END INTERFACE Set
 !                                                            set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Jan 2022
 ! summary: set selected values
 
@@ -80,7 +80,7 @@ END INTERFACE Set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -100,7 +100,7 @@ END INTERFACE set
 !                                                            set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Jan 2022
 ! summary: set selected values
 
@@ -120,7 +120,7 @@ END INTERFACE Set
 !                                                              set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set range of values to a scalar
 
@@ -140,7 +140,7 @@ END INTERFACE Set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set range of values to a vector
 
@@ -160,7 +160,7 @@ END INTERFACE Set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: See [[DOF_Method::dof_set1]]
 
@@ -182,7 +182,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: See [[DOF_Method::dof_set1]]
 
@@ -203,7 +203,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -225,7 +225,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -247,7 +247,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -270,7 +270,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -293,7 +293,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -318,7 +318,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -343,7 +343,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -368,7 +368,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -393,7 +393,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -418,7 +418,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: See [[DOF_Method::dof_set2]]
 
@@ -443,7 +443,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: See [[DOF_Method::dof_set1]]
 
@@ -464,7 +464,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: See [[DOF_Method::dof_set1]]
 
@@ -486,7 +486,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: See [[DOF_Method::dof_set1]]
 
@@ -509,7 +509,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: See [[DOF_Method::dof_set1]]
 
@@ -534,7 +534,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: See [[DOF_Method::dof_set1]]
 
@@ -559,7 +559,7 @@ END INTERFACE set
 !                                                             set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: See [[DOF_Method::dof_set1]]
 
@@ -584,7 +584,7 @@ END INTERFACE set
 !                                                            set@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 9 June 2022
 ! summary: obj1=obj2
 
