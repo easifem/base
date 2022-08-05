@@ -22,7 +22,7 @@ PUBLIC :: Get
 !                                                        getvalue@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
@@ -53,7 +53,7 @@ END INTERFACE getvalue
 !                                                              get@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a 2D array
 !
@@ -84,7 +84,7 @@ END INTERFACE getvalue
 !                                                        getvalue@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !

@@ -21,7 +21,7 @@ PUBLIC :: Display
 !                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 29 June 2021
 ! summary: 	Display content of [[dof_]]
 
@@ -41,7 +41,7 @@ END INTERFACE Display
 !                                                          Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 29 June 2021
 ! summary: Display content of fortran vec with [[DOF_]] object info
 !
@@ -85,7 +85,7 @@ END INTERFACE Display
 !                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 29 June 2021
 ! summary: Display content of fortran vec with [[DOF_]] object info
 
