@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-submodule(Utility) OnesMethods
+submodule(OnesUtility) Methods
 implicit none
 contains
 
@@ -250,4 +250,4 @@ module procedure ones_28
   ans = 1
 end procedure
 
-end submodule OnesMethods
+end submodule Methods
