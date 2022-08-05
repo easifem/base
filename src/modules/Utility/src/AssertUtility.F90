@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE AssertUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
 !----------------------------------------------------------------------------
@@ -113,3 +118,9 @@ INTERFACE ASSERT
 END INTERFACE ASSERT
 
 PUBLIC :: ASSERT
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE AssertUtility
