@@ -46,7 +46,7 @@ PUBLIC :: fibonacci_hash, odd_random_integer, universal_mult_hash
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 July 2022
 ! summary: FNV_1 hash function for rank 1 array keys of integers
 
@@ -282,7 +282,7 @@ PUBLIC :: new_nmhash32x_seed
 
 CONTAINS
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 July 2023
 ! summary: Maps the 32 bit integer `key` to an unsigned integer value with
 ! only `nbits` bits where `nbits` is less than 32
@@ -298,7 +298,7 @@ END FUNCTION fibonacci_hash
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 July 2022
 ! summary: Universal mult hash
 !
@@ -320,7 +320,7 @@ END FUNCTION universal_mult_hash
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 July 2022
 ! summary:
 !
