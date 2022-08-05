@@ -22,7 +22,7 @@ PUBLIC :: NodalVariable
 !                                              Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Deallocates the content of FEVariable
@@ -41,7 +41,7 @@ END INTERFACE DEALLOCATE
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is scalar, constant
@@ -65,7 +65,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is scalar, Space
@@ -87,7 +87,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is scalar, Time
@@ -109,7 +109,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is scalar, SpaceTime
@@ -132,7 +132,7 @@ END INTERFACE NodalVariable
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is vector, Constant
@@ -155,7 +155,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is vector, Space
@@ -177,7 +177,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is vector, Time
@@ -200,7 +200,7 @@ END INTERFACE NodalVariable
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is vector, SpaceTime
@@ -223,7 +223,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is Matrix, Constant
@@ -246,7 +246,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is Matrix, Space
@@ -268,7 +268,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is Matrix, Time
@@ -290,7 +290,7 @@ END INTERFACE NodalVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create nodal variable, which is Matrix, SpaceTime

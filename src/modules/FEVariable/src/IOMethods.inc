@@ -21,7 +21,7 @@ PUBLIC :: Display
 !                                                          Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Displays the content of [[FEVariable_]]

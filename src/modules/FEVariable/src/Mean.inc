@@ -21,7 +21,7 @@ PUBLIC :: MEAN
 !                                                          MEAN@MeanMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 May 2022
 ! summary: FEVariable = Mean( obj )
 
@@ -40,7 +40,7 @@ END INTERFACE MEAN
 !                                                          MEAN@MeanMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 May 2022
 ! summary: FEVariable = Mean( obj )
 
@@ -60,7 +60,7 @@ END INTERFACE MEAN
 !                                                          MEAN@MeanMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 May 2022
 ! summary: FEVariable = Mean( obj )
 
@@ -80,7 +80,7 @@ END INTERFACE MEAN
 !                                                          MEAN@MeanMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 May 2022
 ! summary: FEVariable = Mean( obj )
 

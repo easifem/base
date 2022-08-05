@@ -19,7 +19,7 @@
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary:  Convert real to string.
 !
@@ -46,7 +46,7 @@ end function strf_R16P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -72,7 +72,7 @@ end function strf_R8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -97,7 +97,7 @@ end function strf_R4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -122,7 +122,7 @@ end function strf_I8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -147,7 +147,7 @@ end function strf_I4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -172,7 +172,7 @@ end function strf_I2P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -198,7 +198,7 @@ end function strf_I1P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -231,20 +231,28 @@ elemental function str_R16P(n, no_sign, compact) result(str)
   !! Flag for *compacting* string encoding.
   character(DR16P) :: str
   !! Returned string containing input number.
-
+  !!
   write (str, FR16P) n               ! Casting of n to string.
-  ! if (n > 0._R16P) str(1:1) = '+'       ! Prefixing plus if n>0.
-  if (present(no_sign)) str = str(2:) ! Leaving out the sign.
+  !!
+  if (present(no_sign)) then
+    if( no_sign ) then
+      str = str(2:) ! Leaving out the sign.
+    else
+      if (n > 0._R16P) str(1:1) = '+'       ! Prefixing plus if n>0.
+    end if
+  end if
+  !!
   if (present(compact)) then
     if (compact) call compact_real_string(string=str)
   end if
+  !!
 end function str_R16P
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -276,10 +284,17 @@ elemental function str_R8P(n, no_sign, compact) result(str)
   !! Flag for *compacting* string encoding.
   character(DR8P) :: str
   !! Returned string containing input number.
-
+  !!
   write (str, FR8P) n                ! Casting of n to string.
-  ! if (n > 0._R8P) str(1:1) = '+'        ! Prefixing plus if n>0.
-  if (present(no_sign)) str = str(2:) ! Leaving out the sign.
+  !!
+  if (present(no_sign)) then
+    if( no_sign ) then
+      str = str(2:) ! Leaving out the sign.
+    else
+      if (n > 0._R8P) str(1:1) = '+'        ! Prefixing plus if n>0.
+    end if
+  end if
+  !!
   if (present(compact)) then
     if (compact) call compact_real_string(string=str)
   end if
@@ -289,7 +304,7 @@ end function str_R8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -323,8 +338,15 @@ elemental function str_R4P(n, no_sign, compact) result(str)
   !! Returned string containing input number.
   !!
   write (str, FR4P) n                ! Casting of n to string.
-  ! if (n > 0._R4P) str(1:1) = '+'        ! Prefixing plus if n>0.
-  if (present(no_sign)) str = str(2:) ! Leaving out the sign.
+  !!
+  if (present(no_sign)) then
+    if( no_sign ) then
+      str = str(2:) ! Leaving out the sign.
+    else
+      if (n > 0._R4P) str(1:1) = '+'        ! Prefixing plus if n>0.
+    end if
+  end if
+  !!
   if (present(compact)) then
     if (compact) call compact_real_string(string=str)
   end if
@@ -334,7 +356,7 @@ end function str_R4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -361,15 +383,22 @@ elemental function str_I8P(n, no_sign) result(str)
 
   write (str, FI8P) n                ! Casting of n to string.
   str = adjustl(trim(str))          ! Removing white spaces.
-  if (n >= 0_I8P) str = '+'//trim(str)  ! Prefixing plus if n>0.
-  if (present(no_sign)) str = str(2:) ! Leaving out the sign.
+  !!
+  if (present(no_sign)) then
+    if( no_sign ) then
+      str = str(2:) ! Leaving out the sign.
+    else
+      if (n >= 0_I8P) str = '+'//trim(str)  ! Prefixing plus if n>0.
+    end if
+  end if
+  !!
 end function str_I8P
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Converting integer to string.
 !
@@ -395,18 +424,25 @@ elemental function str_I4P(n, no_sign) result(str)
   !! Flag for leaving out the sign.
   character(DI4P) :: str
   !! Returned string containing input number plus padding zeros.
-
+  !!
   write (str, FI4P) n                ! Casting of n to string.
   str = adjustl(trim(str))          ! Removing white spaces.
-  ! if (n >= 0_I4P) str = '+'//trim(str)  ! Prefixing plus if n>0.
-  if (present(no_sign)) str = str(2:) ! Leaving out the sign.
+  !!
+  if (present(no_sign)) then
+    if( no_sign ) then
+      str = str(2:) ! Leaving out the sign.
+    else
+      if (n >= 0_I4P) str = '+'//trim(str)  ! Prefixing plus if n>0.
+    end if
+  end if
+  !!
 end function str_I4P
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -434,15 +470,22 @@ elemental function str_I2P(n, no_sign) result(str)
 
   write (str, FI2P) n                ! Casting of n to string.
   str = adjustl(trim(str))          ! Removing white spaces.
-  ! if (n >= 0_I2P) str = '+'//trim(str)  ! Prefixing plus if n>0.
-  if (present(no_sign)) str = str(2:) ! Leaving out the sign.
+  !!
+  if (present(no_sign)) then
+    if( no_sign ) then
+      str = str(2:) ! Leaving out the sign.
+    else
+      if (n >= 0_I2P) str = '+'//trim(str)  ! Prefixing plus if n>0.
+    end if
+  end if
+  !!
 end function str_I2P
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -471,15 +514,22 @@ elemental function str_I1P(n, no_sign) result(str)
 
   write (str, FI1P) n                ! Casting of n to string.
   str = adjustl(trim(str))          ! Removing white spaces.
-  ! if (n >= 0_I1P) str = '+'//trim(str)  ! Prefixing plus if n>0.
-  if (present(no_sign)) str = str(2:) ! Leaving out the sign.
+  !!
+  if (present(no_sign)) then
+    if( no_sign ) then
+      str = str(2:) ! Leaving out the sign.
+    else
+      if (n >= 0_I1P) str = '+'//trim(str)  ! Prefixing plus if n>0.
+    end if
+  end if
+  !!
 end function str_I1P
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert logical to string.
 !
@@ -505,7 +555,7 @@ end function str_bol
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Converting real array to string.
 !
@@ -581,7 +631,7 @@ end function str_a_R16P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real array to string.
 !
@@ -654,7 +704,7 @@ end function str_a_R8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real array to string.
 !
@@ -727,7 +777,7 @@ end function str_a_R4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer array to string.
 !
@@ -797,7 +847,7 @@ end function str_a_I8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer array to string.
 !
@@ -867,7 +917,7 @@ end function str_a_I4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer array to string.
 !
@@ -937,7 +987,7 @@ end function str_a_I2P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer array to string.
 !

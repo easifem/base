@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	9 March 2021
 ! summary: 	This module contains openmp methods
 
@@ -58,7 +58,7 @@ PUBLIC :: OMP_Finalize
 !                                                      Partition@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	9 March 2021
 ! summary: 	This function partition a vector for omp
 !

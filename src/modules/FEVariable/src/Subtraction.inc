@@ -21,7 +21,7 @@ PUBLIC :: OPERATOR(-)
 !                                            Substraction@SubstractioMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = FEVariable - FEVariable
@@ -42,7 +42,7 @@ END INTERFACE OPERATOR(-)
 !                                            Substraction@SubstractioMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = FEVariable - RealVal
@@ -63,7 +63,7 @@ END INTERFACE OPERATOR(-)
 !                                            Substraction@SubstractioMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = RealVal - FEVariable

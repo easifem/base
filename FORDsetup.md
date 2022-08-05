@@ -4,10 +4,10 @@ project_download: https://github.com/vickysharma0812/easifem-base
 project_github: https://github.com/vickysharma0812/easifem-base
 project_website: http://www.easifem.com
 license: gfdl
-project_dir: ./src
+project_dir: ./src/modules/Utility
 media_dir: ./media
-page_dir: ${pages}/docs/easifemBase
-output_dir: ${pages}/docs/FORD/easifemBase
+page_dir: ./pages
+output_dir: ${temp}/docs/FORD
 exclude_dir:  ./src/submodules/
               ./src/modules/BLAS95/
 author: Vikas Sharma
@@ -19,8 +19,8 @@ github: https://vickysharma0812.github.io/
 author_pic:
 twitter:
 website:
-graph: false #time consuming
-source: false #time consuming
+graph: false 
+source: false 
 display: public
          protected
          private

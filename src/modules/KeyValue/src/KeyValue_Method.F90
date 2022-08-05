@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This module contains interfaces of methods related to [[keyvalue_]]
 !
@@ -60,7 +60,7 @@ INTEGER, PARAMETER :: INT_RANK_2 = 5
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = char`
@@ -86,7 +86,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = string`
@@ -112,7 +112,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = char`
@@ -132,7 +132,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = String`
@@ -152,7 +152,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = char`
@@ -172,7 +172,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = String`
@@ -192,7 +192,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = char`
@@ -212,7 +212,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = String`
@@ -232,7 +232,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = char`
@@ -252,7 +252,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = string`
@@ -272,7 +272,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = char`
@@ -292,7 +292,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 ! - `Key = string`
@@ -312,7 +312,7 @@ END INTERFACE
 INTERFACE
 !! Subroutine that initiate instance of [[KeyValue_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This suborutine constructs [[keyvalue_]] object
 
@@ -797,7 +797,7 @@ PUBLIC :: Deallocate
 INTERFACE
 !! Set value in [[keyvalue_]] object
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set real scalar value in [[keyvalue_]]
 !
@@ -820,7 +820,7 @@ END INTERFACE
 INTERFACE
 !! Set value in [[keyvalue_]] object
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set real vector value in [[keyvalue_]]
 !
@@ -843,7 +843,7 @@ END INTERFACE
 INTERFACE
 !! Set value in [[keyvalue_]] object
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set real matrix value in [[keyvalue_]]
 !
@@ -866,7 +866,7 @@ END INTERFACE
 INTERFACE
 !! Set value in [[keyvalue_]] object
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set integer scalar value in [[keyvalue_]]
 !
@@ -889,7 +889,7 @@ END INTERFACE
 INTERFACE
 !! Set value in [[keyvalue_]] object
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set integer vector value in [[keyvalue_]]
 !
@@ -912,7 +912,7 @@ END INTERFACE
 INTERFACE
 !! Set value in [[keyvalue_]] object
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set integer matrix value in [[keyvalue_]]
 !
@@ -950,7 +950,7 @@ PUBLIC :: ASSIGNMENT( = )
 INTERFACE
 !! Set key in [[keyvalue_]] object
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set key in [[keyvalue_]]
 !
@@ -973,7 +973,7 @@ END INTERFACE
 INTERFACE
 !! Set key in [[keyvalue_]] object
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set key in [[keyvalue_]]
 !

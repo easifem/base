@@ -33,7 +33,7 @@ PUBLIC :: isInitiated
 !                                                 isAllocated@EnquireMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns true if the instance is allocated
@@ -57,7 +57,7 @@ END INTERFACE isInitiated
 !                                                          Shape@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 Feb 2021
 ! summary: 	This function returns the shape of [[RealVector_]]
 
@@ -76,7 +76,7 @@ END INTERFACE Shape
 !                                                           SIZE@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 Feb 2021
 ! summary: 	This function returns the size of [[RealVector_]]
 
@@ -96,7 +96,7 @@ END INTERFACE SIZE
 !                                                TotalDimension@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	Returns the total dimension of an array
 !
@@ -119,7 +119,7 @@ END INTERFACE getTotalDimension
 !                                             setTotalDimension@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the total dimension (rank) of an array
 !
@@ -142,7 +142,7 @@ END INTERFACE setTotalDimension
 !                                                   Allocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 Feb 2021
 ! summary: 	This subroutine allocates memory for [[RealVector_]]
 
@@ -161,7 +161,7 @@ END INTERFACE Allocate
 !                                                   Reallocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  25 Feb 2021
 ! summary: Allocate memory for the vector
 
@@ -180,7 +180,7 @@ END INTERFACE Reallocate
 !                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 Feb 2021
 ! summary: 	This subroutine deallocates the data in [[RealVector_]]
 
@@ -198,7 +198,7 @@ END INTERFACE Deallocate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 Feb 2021
 ! summary: 	This subroutine allocates the memory for [[RealVector_]]
 !
@@ -223,7 +223,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 Feb 2021
 ! summary: This subroutine allocate the memory for a vector of type
 ! [[RealVector_]]
@@ -249,7 +249,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	27 Feb 2021
 ! summary: This subroutine allocate the memory for an instance of
 ! [[RealVector_]]
@@ -273,7 +273,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: Initiate [[RealVector_]] using [[dof_]] object
 !
@@ -299,7 +299,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
 ! summary: Initiate a vector of [[realvector_]] from [[dof_]] object
 !
@@ -325,7 +325,7 @@ END INTERFACE Initiate
 !                                                  Random_number@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This routine computes radom_number
 !
@@ -349,7 +349,7 @@ END INTERFACE RANDOM_NUMBER
 !                                                  Random_number@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This routine computes radom_number
 !
@@ -377,7 +377,7 @@ END INTERFACE RANDOM_NUMBER
 !                                                    RealVector@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an instance of [[RealVector_]]
 !
@@ -400,7 +400,7 @@ END INTERFACE RealVector
 !                                                     RealVector@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an instance of [[RealVector_]]
 !
@@ -428,7 +428,7 @@ END INTERFACE RealVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an instance of [[RealVector_]]
 !
@@ -455,7 +455,7 @@ END INTERFACE RealVector
 !                                             RealVector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returnt the pointer to a newly created instance of
 ! [[RealVector_]]
@@ -479,7 +479,7 @@ END INTERFACE RealVector_Pointer
 !                                             RealVector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the pointer to an instance of[[RealVector_]]
 !
@@ -506,7 +506,7 @@ END INTERFACE RealVector_Pointer
 !                                             RealVector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the pointer to an instance of[[RealVector_]]
 !

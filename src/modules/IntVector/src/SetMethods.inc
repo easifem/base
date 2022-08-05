@@ -24,7 +24,7 @@ PUBLIC :: Repeat
 !                                             setTotalDimension@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Feb 2021
 ! summary: This subroutine set the total dimension (rank) of an array
 !
@@ -47,7 +47,7 @@ END INTERFACE setTotalDimension
 !                                                        setValue@SetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 17 June 2021
 ! summary: set the value in IntVector
 
@@ -67,7 +67,7 @@ END INTERFACE set
 !                                                        setValue@SetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 17 June 2021
 ! summary: set the value in IntVector
 

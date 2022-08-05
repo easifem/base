@@ -21,7 +21,7 @@ PUBLIC :: set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set values in a vector of real numbers
 !
@@ -60,7 +60,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set values in a vector of real numbers
 
@@ -81,7 +81,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 !
@@ -123,7 +123,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 
@@ -152,7 +152,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 
@@ -183,7 +183,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 
@@ -214,7 +214,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 
@@ -245,7 +245,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Set values in a vector of real numbers
 
@@ -266,7 +266,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 !
@@ -308,7 +308,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 !
@@ -351,7 +351,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 !
@@ -397,7 +397,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 !
@@ -443,7 +443,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 27 June 2021
 ! summary: Set values in a vector of real numbers
 !

@@ -25,7 +25,7 @@ PUBLIC :: getILUK
 !                                                       getILUT@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
@@ -81,7 +81,7 @@ END INTERFACE getILUT
 !                                                       getILUT@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
@@ -133,7 +133,7 @@ END INTERFACE getILUT
 !                                                      getILUTP@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
@@ -212,7 +212,7 @@ END INTERFACE getILUTP
 !                                                      getILUTP@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
@@ -289,7 +289,7 @@ END INTERFACE getILUTP
 !                                                       getILUTD@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
@@ -345,7 +345,7 @@ END INTERFACE getILUD
 !                                                          ILUD@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUT precondition
 !
@@ -400,7 +400,7 @@ END INTERFACE getILUD
 !                                                       getILUDP@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUDP precondition
 !
@@ -468,7 +468,7 @@ END INTERFACE getILUDP
 !                                                     getILUTDP@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUDP precondition
 !
@@ -534,7 +534,7 @@ END INTERFACE getILUDP
 !                                                       getILUK@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUK precondition
 
@@ -557,7 +557,7 @@ END INTERFACE getILUK
 !                                                       getILUK@ILUTMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 July 2021
 ! summary: Returns the ILUK precondition
 !

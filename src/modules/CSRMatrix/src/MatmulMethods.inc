@@ -20,7 +20,7 @@
 ! !                                                           Matmul@MatVec
 ! !----------------------------------------------------------------------------
 
-! !> authors: Vikas Sharma, Ph. D.
+! !> author: Vikas Sharma, Ph. D.
 ! ! date: 14 July 2021
 ! ! summary: Matrix vector multiplication
 

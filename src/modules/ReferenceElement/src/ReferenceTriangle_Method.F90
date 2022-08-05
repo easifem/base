@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2021
 ! summary: 	This module contains method for [[ReferenceTriangle_]] data type.
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                         Initiate@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: This routine constructs an instance of [[ReferenceTriangle_]]
 !
@@ -74,7 +74,7 @@ PUBLIC :: Initiate
 !                                                 ReferenceTriangle@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: This function returns an instance of [[ReferenceTriangle_]]
 !
@@ -113,7 +113,7 @@ PUBLIC :: ReferenceTriangle
 !                                         ReferenceTriangle_Pointer@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: This function returns an instance of [[ReferenceTriangle_]]
 !
@@ -152,7 +152,7 @@ PUBLIC :: ReferenceTriangle_Pointer
 !                                                   LagrangeElement@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: Returns lagrange Triangle element of higher order
 !
@@ -192,7 +192,7 @@ PUBLIC :: highorderElement_Triangle
 !                                                 MeasureSimplex@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2021
 ! summary: Returns the measure of linear triangle
 !
@@ -225,7 +225,7 @@ PUBLIC :: Measure_Simplex_Triangle
 !                                                            Angles@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: Returns three angles of a triangle
 
@@ -247,7 +247,7 @@ PUBLIC :: Angles
 !                                                             Area@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: 	Returns the area of triangle
 
@@ -269,7 +269,7 @@ PUBLIC :: Area
 !                                                        ArealVector@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2021
 ! summary: Returns the area vector
 
@@ -291,7 +291,7 @@ PUBLIC :: ArealVector
 !                                                      Barycentric@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: Returns the barycentric coordinates of triangle
 
@@ -314,7 +314,7 @@ PUBLIC :: Barycentric
 !                                                          Centroid@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: Returns the centroid of a triangle
 
@@ -336,7 +336,7 @@ PUBLIC :: Centroid
 !                                                      CircumCenter@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: 	Returns the circum center of the triangle
 
@@ -358,7 +358,7 @@ PUBLIC :: CircumCenter
 !                                                      CircumCircle@Triangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: Returns circum circle of triangle
 

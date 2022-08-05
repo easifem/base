@@ -15,11 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE StringUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 !----------------------------------------------------------------------------
 !                                                    UpperCase@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
 ! summary:         Returns the upperCase version of chars
 
@@ -40,7 +45,7 @@ PUBLIC :: UpperCase
 !                                                  toUpperCase@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
 ! summary:         Returns the upperCase version of chars
 
@@ -60,7 +65,7 @@ PUBLIC :: toUpperCase
 !                                                    LowerCase@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
 ! summary:         Returns the LowerCase version of chars
 
@@ -81,7 +86,7 @@ PUBLIC :: LowerCase
 !                                                  toLowerCase@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
 ! summary:         Returns the LowerCase version of chars
 
@@ -101,7 +106,7 @@ PUBLIC :: toLowerCase
 !                                                  isWhiteChar@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
 ! summary:         Returns true if the char is a space(32) or a tab(9).
 
@@ -122,7 +127,7 @@ PUBLIC :: isWhiteChar
 !                                                  isBlank@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
 ! summary:         Returns true of the entire string is blank
 
@@ -143,7 +148,7 @@ PUBLIC :: isBlank
 !                                                    numString@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 Sept 2021
 ! summary: Returns number of substrings contained in input string 'chars'
 ! delimited by white space.
@@ -173,7 +178,7 @@ PUBLIC :: numStrings
 !                                                   nmatchstr@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 sept 2021
 ! summary: Returns the total number of times the substring pattern is
 ! found in the main string
@@ -196,7 +201,7 @@ PUBLIC :: numMatchStr
 !                                                  isPresent@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 sept 2021
 ! summary: Returns whether or not a substring pattern is found within string
 !
@@ -226,7 +231,7 @@ PUBLIC :: isPresent
 !                                                       strFind@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 sept 2021
 ! summary: Function returns the indices in a string where substring pattern
 
@@ -248,7 +253,7 @@ PUBLIC :: strFind
 !                                                 FindReplace@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 sept 2021
 ! summary: Replaces a substring pattern with a different substring in a string
 !
@@ -282,7 +287,7 @@ PUBLIC :: FindReplace
 !                                                    getField@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 8 sept 2021
 ! summary: Replaces a substring pattern with a different substring in a string
 !
@@ -317,7 +322,7 @@ PUBLIC :: getField
 !                                                    SlashRep@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 8 sept 2021
 ! summary: routine replaces slash character in file path names with
 ! the system appropriate file separator slash.
@@ -341,7 +346,7 @@ PUBLIC :: SlashRep
 !                                                getFileParts@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 8 sept 2021
 ! summary: Returns the path,filename, and extension
 !
@@ -418,7 +423,7 @@ PUBLIC :: getFileNameExt
 !                                                getExtension@StringMethods
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This function get the extension from a file
 !
@@ -440,3 +445,9 @@ INTERFACE getExtension
 END INTERFACE getExtension
 
 PUBLIC :: getExtension
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE StringUtility

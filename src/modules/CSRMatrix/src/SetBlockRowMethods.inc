@@ -21,7 +21,7 @@ PUBLIC :: SetBlockRow
 !                                                     setBlockRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
@@ -42,7 +42,7 @@ END INTERFACE setBlockRow
 !                                                     setBlockRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
@@ -63,7 +63,7 @@ END INTERFACE setBlockRow
 !                                                     setBlockRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
@@ -87,7 +87,7 @@ END INTERFACE setBlockRow
 !                                                     setBlockRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
@@ -111,7 +111,7 @@ END INTERFACE setBlockRow
 !                                                     setBlockRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 
@@ -136,7 +136,7 @@ END INTERFACE setBlockRow
 !                                                     setBlockRow@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine sets the Column of a sparse matrix
 

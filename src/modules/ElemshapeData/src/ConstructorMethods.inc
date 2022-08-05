@@ -26,7 +26,7 @@ PUBLIC :: ASSIGNMENT(=)
 !                                                  Allocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: Allocate the memory for various matrices in the object
 !
@@ -59,7 +59,7 @@ END INTERFACE ALLOCATE
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 
@@ -82,7 +82,7 @@ END INTERFACE Initiate
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
 ! summary: Copy data from an instance of elemshapedata to another instance
 
@@ -105,7 +105,7 @@ END INTERFACE
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
 ! summary: Initiate an instance of ElemshapeData from STElemshapeData
 !
@@ -133,7 +133,7 @@ END INTERFACE
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
 ! summary: This routine initiates an instance of STElemshapeData
 !
@@ -161,7 +161,7 @@ END INTERFACE
 !                                               Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 May 2022
 ! summary: Initiate an instance of STElemshapeData from instance of same class
 !
@@ -188,7 +188,7 @@ END INTERFACE
 !                                                Initiate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: Initiate time shape function data in [[stelemshapedata_]]
 !
@@ -225,7 +225,7 @@ END INTERFACE Initiate
 !                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: Deallocates the data stored inside [[elemshapedata_]]
 !
@@ -249,7 +249,7 @@ END INTERFACE DEALLOCATE
 !                                       BaseInterpolation@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseInterpolation_]]
 
@@ -268,7 +268,7 @@ END INTERFACE BaseInterpolation
 !                                          BaseContinuity@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseContinuity_]]
 

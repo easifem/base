@@ -36,7 +36,7 @@ PUBLIC :: getIndex
 !                                                  DOFStartIndex@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: returns obj%map( ivar, 5 )
 
@@ -56,7 +56,7 @@ END INTERFACE OPERATOR( .DOFStartIndex. )
 !                                                  DOFEndIndex@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: returns obj%map( ivar+1, 5 ) - 1
 
@@ -76,7 +76,7 @@ END INTERFACE OPERATOR( .DOFEndIndex. )
 !                                                           tNodes@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the total length of the vector
 
@@ -99,7 +99,7 @@ END INTERFACE SIZE
 !                                                           tNodes@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This function returns the total number of nodes
 !
@@ -129,7 +129,7 @@ END INTERFACE SIZE
 !                                                           tNodes@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This function returns the total number of nodes
 !
@@ -159,7 +159,7 @@ END INTERFACE SIZE
 !                                                           tNodes@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This function returns the total number of nodes
 !
@@ -189,7 +189,7 @@ END INTERFACE SIZE
 !                                                             tDOF@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This function returns the total number of degree of freedom
 
@@ -208,7 +208,7 @@ END INTERFACE
 !                                                           tDOF@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This subroutine returns the total number of degrees of freedom
 !
@@ -233,7 +233,7 @@ END INTERFACE
 !                                                           tDOF@getMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This subroutine returns the total number of degrees of freedom
 !
@@ -258,7 +258,7 @@ END INTERFACE
 !                                                           tNames@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the total number of names in dof object
 
@@ -277,7 +277,7 @@ END INTERFACE
 !                                                           Names@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the name of all physical variables stored in obj
 
@@ -292,7 +292,7 @@ END INTERFACE
 !                                                           Names@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: This function returns the name of a physical variable
 !
@@ -318,7 +318,7 @@ END INTERFACE OPERATOR( .Names. )
 !                                                     NameToIndex@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Return the index of a physical variable
 
@@ -334,7 +334,7 @@ END INTERFACE
 !                                                tspacecomponents@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the total physical variable which have space-compo
 
@@ -353,7 +353,7 @@ END INTERFACE
 !                                                spacecomponents@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the space components of each physical vars
 
@@ -372,7 +372,7 @@ END INTERFACE
 !                                                spacecomponents@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the space component of a given physical vars
 
@@ -392,7 +392,7 @@ END INTERFACE
 !                                                ttimecomponents@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the total physical var which has time compo
 
@@ -411,7 +411,7 @@ END INTERFACE
 !                                                timecomponents@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the timecompo
 
@@ -430,7 +430,7 @@ END INTERFACE
 !                                                timecomponents@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 Oct 2021
 ! summary: Returns the timecompo
 
@@ -629,7 +629,7 @@ END INTERFACE getIDOF
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 !
@@ -667,7 +667,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 !
@@ -705,7 +705,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 !
@@ -743,7 +743,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 !
@@ -778,7 +778,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -801,7 +801,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -824,7 +824,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -848,7 +848,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -872,7 +872,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -895,7 +895,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -919,7 +919,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -943,7 +943,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -967,7 +967,7 @@ END INTERFACE getNodeLoc
 !                                                       getNodeLoc@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the location of node
 
@@ -991,7 +991,7 @@ END INTERFACE getNodeLoc
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodenum`
 !
@@ -1029,7 +1029,7 @@ END INTERFACE getIndex
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodenum`
 !
@@ -1062,7 +1062,7 @@ END INTERFACE getIndex
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodenum`
 !
@@ -1088,7 +1088,7 @@ END INTERFACE getIndex
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodenum`
 !
@@ -1115,7 +1115,7 @@ END INTERFACE getIndex
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodenum`
 !
@@ -1145,7 +1145,7 @@ END INTERFACE getIndex
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the indices for node number `nodenum`
 !

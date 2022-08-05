@@ -21,7 +21,7 @@ PUBLIC :: JacobiMethod
 !                                                         JacobiMethod@LAPACK
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: 	 Returns all the eigenvalues of symmetric matrix
 !

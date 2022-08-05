@@ -21,7 +21,7 @@ PUBLIC :: Display
 !                                                                Display@IO
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Display content of [[realmatrix_]]
 
@@ -41,7 +41,7 @@ END INTERFACE Display
 !                                                                Display@IO
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Display content of [[realmatrix_]]
 

@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------
 ! FPL (Fortran Parameter List)
-! Copyright (c) 2015 Santiago Badia, Alberto F. Martín, 
+! Copyright (c) 2015 Santiago Badia, Alberto F. Martín,
 ! Javier Principe and Víctor Sande.
 ! All rights reserved.
 !
@@ -60,7 +60,7 @@ contains
         character(*),   optional, intent(OUT) :: iomsg                !< IO error message.
         integer(I4P)                          :: iostatd              !< Real IO error.
         integer(I4P)                          :: u                    !< Real unit
-        character(500)                        :: iomsgd               !< Real IO error message.          
+        character(500)                        :: iomsgd               !< Real IO error message.
     !-----------------------------------------------------------------
         u = OUTPUT_UNIT; if(present(unit)) u = unit; iostatd = 0 ; iomsgd = ''
         write(unit=u, fmt='(A)',iostat=iostatd,iomsg=iomsgd) this%Prefix//' '//txt
@@ -83,7 +83,7 @@ contains
         character(len=:), allocatable         :: loc                  !< Warning location string
         integer(I4P)                          :: iostatd              !< Real IO error.
         integer(I4P)                          :: u                    !< Real unit
-        character(500)                        :: iomsgd               !< Real IO error message.          
+        character(500)                        :: iomsgd               !< Real IO error message.
     !-----------------------------------------------------------------
         u = ERROR_UNIT; if(present(unit)) u = unit; iostatd = 0 ; iomsgd = ''; loc=''
         if(present(file) .and. present(line)) &
@@ -108,7 +108,7 @@ contains
         character(len=:), allocatable         :: loc                  !< Error location string
         integer(I4P)                          :: iostatd              !< Real IO error.
         integer(I4P)                          :: u                    !< Real unit
-        character(500)                        :: iomsgd               !< Real IO error message.          
+        character(500)                        :: iomsgd               !< Real IO error message.
     !-----------------------------------------------------------------
         u = ERROR_UNIT; if(present(unit)) u = unit; iostatd = 0 ; iomsgd = ''
         loc = ''

@@ -28,7 +28,7 @@ PUBLIC :: ForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 May 2022
 ! summary: Force vector
 !
@@ -56,7 +56,7 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 !
@@ -84,7 +84,7 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 !
@@ -113,7 +113,7 @@ END INTERFACE ForceVector
 !                                                               ForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 !
@@ -143,7 +143,7 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 !
@@ -176,7 +176,7 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 !
@@ -209,7 +209,7 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 !

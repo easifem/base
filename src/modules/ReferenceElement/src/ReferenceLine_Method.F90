@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2021
 ! summary: This submodule contains method for [[ReferenceLine_]]
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
 ! summary: This subroutine constructs an instance of line reference element
 !
@@ -76,7 +76,7 @@ PUBLIC :: Initiate
 !                                                     ReferenceLine@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: This routine constructs an instance of line reference element
 !
@@ -118,7 +118,7 @@ PUBLIC :: ReferenceLine
 !                                              ReferenceLine_Pointer@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: This routine constructs an instance of line reference element
 !
@@ -160,7 +160,7 @@ PUBLIC :: ReferenceLine_Pointer
 !                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: This function returns lagrange element on line
 !
@@ -199,7 +199,7 @@ PUBLIC :: highorderElement_Line
 !                                                    MeasureSimplex@Methods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: 	This function returns the measure of linear line element
 !

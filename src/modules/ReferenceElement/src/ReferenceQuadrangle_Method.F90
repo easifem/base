@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: This module contains methods for [[ReferenceQuadrangle_]]
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                       Initiate@Quadrangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: Returns lagrange Quadrangle element of higher order
 !
@@ -68,7 +68,7 @@ PUBLIC :: Initiate
 !                                            ReferenceQuadrangle@Quadrangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: Returns lagrange Quadrangle element of higher order
 !
@@ -105,7 +105,7 @@ PUBLIC :: ReferenceQuadrangle
 !                                     ReferenceQuadrangle_Pointer@Quadrangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: Returns lagrange Quadrangle element of higher order
 !
@@ -142,7 +142,7 @@ PUBLIC :: ReferenceQuadrangle_Pointer
 !                                                LagrangeElement@Quadrangle
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 March 2021
 ! summary: 	Higher order lagrange elements
 !

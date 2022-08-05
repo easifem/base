@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	This module contains methods for [[CSRSparsity_]]
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine constructs the CSR sparsity object
 !
@@ -132,7 +132,7 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine construct `CSRSparsity_` object from copying
 !
@@ -152,7 +152,7 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine constructs `CSRSparsity_` object from IA, JA
 !
@@ -196,7 +196,7 @@ PUBLIC :: ASSIGNMENT( = )
 !                                            CSRSparsity@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
 ! summary: Returns an instance of [[CSRSparsity_]]
 !
@@ -217,7 +217,7 @@ END INTERFACE
 !                                            CSRSparsity@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
 ! summary: Returns an instance of [[CSRSparsity_]]
 !
@@ -243,7 +243,7 @@ PUBLIC :: CSRSpasity
 !                                       CSRSparsityPointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
 ! summary: Returns an instance of [[CSRSparsity_]]
 !
@@ -264,7 +264,7 @@ END INTERFACE
 !                                      CSRSparsityPointer@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
 ! summary: Returns an instance of [[CSRSparsity_]]
 !
@@ -290,7 +290,7 @@ PUBLIC :: CSRSpasityPointer
 !                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine deallocates the data
 
@@ -310,7 +310,7 @@ PUBLIC :: Deallocate
 !                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine display the content of sparsity
 
@@ -332,7 +332,7 @@ PUBLIC :: Display
 !                                                          Shape@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	This function returns the shape of the sparse matrix
 !
@@ -357,7 +357,7 @@ PUBLIC :: Shape
 !                                                           Size@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This function returns the size of sparse matrix
 !
@@ -386,7 +386,7 @@ PUBLIC :: Size
 !                                                          getNNZ@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Return the total number of non zero entry
 
@@ -407,7 +407,7 @@ PUBLIC :: getNNZ
 !                                                         getDiagonal@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 15 July 2021
 ! summary: Returns the diagonal of sparse matrix
 !
@@ -450,7 +450,7 @@ PUBLIC :: getDiagonal
 !                                                         getDiagonal@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 15 July 2021
 ! summary: Returns the diagonal of sparse matrix
 !
@@ -481,7 +481,7 @@ END INTERFACE getDiagonal
 !                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set the sparsity pattern of a given row
 !
@@ -513,7 +513,7 @@ PUBLIC :: setSparsity
 !                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine sets the sparsity pattern of several rows
 !
@@ -539,7 +539,7 @@ END INTERFACE setSparsity
 !                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct 2021
 ! summary: This subroutine sets sparsity pattern for block `CSRSparsity_`
 
@@ -565,7 +565,7 @@ END INTERFACE setSparsity
 !                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: This subroutine sets the sparsity pattern of a given row
 !
@@ -596,7 +596,7 @@ END INTERFACE setSparsity
 !                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set the sparsity pattern of a given row
 !
@@ -624,7 +624,7 @@ END INTERFACE setSparsity
 !                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set the sparsity pattern of a given row
 !
@@ -652,7 +652,7 @@ END INTERFACE setSparsity
 !                                                     setSparsity@setMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine set sparsity pattern of `CSRSparsity_`
 !

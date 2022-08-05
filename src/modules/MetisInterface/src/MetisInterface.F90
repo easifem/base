@@ -55,7 +55,7 @@ END SUBROUTINE MetisSetDefaultOptions
 !                                                              MetisNodeND
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 Jul 2021
 ! summary: This function computes fill reducing orderings of sparse matrices using the multilevel nested dissection algorithm.
 !

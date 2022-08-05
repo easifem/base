@@ -23,7 +23,7 @@ PUBLIC :: Import
 !                                                        Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine display the content of sparse matrix
 !
@@ -48,7 +48,7 @@ END INTERFACE Display
 !                                                              Spy@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	This subroutine prints the structure of sparse matrix in pdf format.
 
@@ -68,7 +68,7 @@ END INTERFACE SPY
 !                                                           IMPORT@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 Jul 2021
 ! summary: Import sparse matrix from a file
 

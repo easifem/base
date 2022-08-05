@@ -59,7 +59,7 @@ END INTERFACE Shape
 !                                                            rank@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the rank of FEvariable
@@ -79,7 +79,7 @@ END INTERFACE OPERATOR(.RANK.)
 !                                                        vartype@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the vartype of FEvariable
@@ -99,7 +99,7 @@ END INTERFACE OPERATOR(.varType.)
 !                                                       defineon@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the defineon of FEvariable
@@ -119,7 +119,7 @@ END INTERFACE OPERATOR(.defineon.)
 !                                                isNodalVariable@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the defineon of FEvariable
@@ -139,7 +139,7 @@ END INTERFACE isNodalVariable
 !                                            isQuadratureVariable@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the defineon of FEvariable
@@ -159,7 +159,7 @@ END INTERFACE isQuadratureVariable
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is scalar, constant
 
@@ -180,7 +180,7 @@ END INTERFACE Get
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is scalar, space
 
@@ -201,7 +201,7 @@ END INTERFACE Get
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is scalar, time
 
@@ -222,7 +222,7 @@ END INTERFACE Get
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is scalar, SpaceTime
 
@@ -243,7 +243,7 @@ END INTERFACE Get
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is vector, constant
 
@@ -264,7 +264,7 @@ END INTERFACE Get
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is vector, space
 
@@ -285,7 +285,7 @@ END INTERFACE Get
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is vector, time
 
@@ -306,7 +306,7 @@ END INTERFACE Get
 !                                                             Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is vector, spaceTime
 
@@ -327,7 +327,7 @@ END INTERFACE Get
 !                                                            Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is Matrix, Constant
 
@@ -348,7 +348,7 @@ END INTERFACE Get
 !                                                            Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is Matrix, Space
 
@@ -369,7 +369,7 @@ END INTERFACE Get
 !                                                            Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is Matrix, Time
 
@@ -390,7 +390,7 @@ END INTERFACE Get
 !                                                            Get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 Jan 2022
 ! summary: Returns value which is Matrix, SpaceTime
 

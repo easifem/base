@@ -68,7 +68,7 @@ INTEGER( I4B ), PUBLIC, PARAMETER :: C_UNSIGNED_LONG_LONG_INT = C_LONG_LONG
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Copy N bytes of SRC to DEST, no aliasing or overlapping allowed.
 !
@@ -100,7 +100,7 @@ PUBLIC :: C_MEMCPY
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Copy N bytes of SRC to DEST, guaranteeing correct behavior for overlapping strings.
 !
@@ -130,7 +130,7 @@ PUBLIC :: C_memmove
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Set N bytes of S to C.
 !
@@ -159,7 +159,7 @@ PUBLIC :: C_memset
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Compare N bytes of S1 and S2.
 !
@@ -188,7 +188,7 @@ PUBLIC :: C_memcmp
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Search N bytes of S for C.
 !
@@ -217,7 +217,7 @@ PUBLIC :: C_memchr
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Copy SRC to DEST.
 !
@@ -245,7 +245,7 @@ PUBLIC :: C_strcpy
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Copy no more than N characters of SRC to DEST.
 !
@@ -275,7 +275,7 @@ PUBLIC :: C_strncpy
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Append SRC onto DEST.
 !
@@ -305,7 +305,7 @@ PUBLIC :: C_strcat
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Append no more than N characters from SRC onto DEST.
 !
@@ -335,7 +335,7 @@ PUBLIC :: C_strncat
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Compare S1 and S2.
 !
@@ -363,7 +363,7 @@ PUBLIC :: C_strcmp
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Compare N characters of S1 and S2.
 !
@@ -392,7 +392,7 @@ PUBLIC :: C_strncmp
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Return the length of S.
 !
@@ -419,7 +419,7 @@ PUBLIC :: C_strlen
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: CAlloc function
 !
@@ -445,7 +445,7 @@ PUBLIC :: C_calloc
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary:
 !
@@ -468,7 +468,7 @@ PUBLIC :: C_malloc
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary:
 !
@@ -491,7 +491,7 @@ PUBLIC :: C_free
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary:
 !
@@ -598,7 +598,7 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary:
 
@@ -613,7 +613,7 @@ END FUNCTION C_ASSOCIATED_PURE
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Set a fixed-length Fortran string to the value of a C string.
 !
@@ -647,7 +647,7 @@ END SUBROUTINE F_string_assign_C_string
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Copy a C string, passed as a char-array reference, to a Fortran string.
 !
@@ -676,7 +676,7 @@ END SUBROUTINE C_F_string_chars
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Copy a Fortran string to an allocated C string pointer.
 !
@@ -715,7 +715,7 @@ END SUBROUTINE F_C_STRING_PTR
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Copy a Fortran string to a C string passed by char-array reference.
 !
@@ -747,7 +747,7 @@ END SUBROUTINE F_C_STRING_CHARS
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Convert Fortran string to C string
 
@@ -783,7 +783,7 @@ END FUNCTION F_C_STRING_DUP
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: This function returns length of string
 
@@ -802,7 +802,7 @@ END FUNCTION C_STRLEN_SAFE
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Returns the value of target of C string
 
@@ -826,7 +826,7 @@ END FUNCTION C_STRING_VALUE
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Allocate memory space and return C string
 
@@ -859,7 +859,7 @@ END SUBROUTINE C_STRING_FREE
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Converts C pointer to integer vector
 
@@ -884,7 +884,7 @@ END SUBROUTINE C_PTR_TO_Int8_VEC
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Converts C pointer to integer vector
 
@@ -909,7 +909,7 @@ END SUBROUTINE C_PTR_TO_Int16_VEC
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Converts C pointer to integer vector
 
@@ -934,7 +934,7 @@ END SUBROUTINE C_PTR_TO_Int32_VEC
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Converts C pointer to integer vector
 
@@ -959,7 +959,7 @@ END SUBROUTINE C_PTR_TO_Int64_VEC
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Converts C pointer to real vector
 
@@ -984,7 +984,7 @@ END SUBROUTINE C_PTR_TO_Real32_VEC
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Sept 2021
 ! summary: Converts C pointer to real vector
 

@@ -18,7 +18,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! [[Display_Method]] module consists small routines related
 ! to displaying the fortran variables on the screen
@@ -113,7 +113,7 @@ END SUBROUTINE setDefaultSettings
 !                                                          setDisplayProfile
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This routine sets the display profile
 
@@ -138,7 +138,7 @@ END SUBROUTINE setDisplayProfile
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine Displays the string
 !
@@ -203,7 +203,7 @@ END SUBROUTINE Display_Str
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This routine prints a string; msg=val
 !
@@ -229,7 +229,7 @@ END SUBROUTINE Display_Str2
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: 	This subroutine display a scalar real number
 !
@@ -253,7 +253,7 @@ END SUBROUTINE Display_Real64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: 	This subroutine display a scalar real number
 !
@@ -277,7 +277,7 @@ END SUBROUTINE Display_Real32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar integer number
 !
@@ -301,7 +301,7 @@ END SUBROUTINE Display_Int64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar integer number
 !
@@ -325,7 +325,7 @@ END SUBROUTINE Display_Int32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar integer number
 !
@@ -349,7 +349,7 @@ END SUBROUTINE Display_Int16
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar integer number
 !
@@ -373,7 +373,7 @@ END SUBROUTINE Display_Int8
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a scalar logical variable
 !
@@ -397,7 +397,7 @@ END SUBROUTINE Display_Logical
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a vector of real numbers
 !
@@ -425,7 +425,7 @@ END SUBROUTINE Display_Vector_Real64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a vector of real numbers
 !
@@ -452,7 +452,7 @@ END SUBROUTINE Display_Vector_Real32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
 !
@@ -480,7 +480,7 @@ END SUBROUTINE Display_Vector_Int32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
 !
@@ -508,7 +508,7 @@ END SUBROUTINE Display_Vector_Int64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
 !
@@ -535,7 +535,7 @@ END SUBROUTINE Display_Vector_Int16
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary:  This subroutine display a vector of integer numbers
 !
@@ -562,7 +562,7 @@ END SUBROUTINE Display_Vector_Int8
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a matrix of real numbers
 !
@@ -585,7 +585,7 @@ END SUBROUTINE Display_Mat2_Real64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine display a matrix of real numbers
 !
@@ -609,7 +609,7 @@ END SUBROUTINE Display_Mat2_Real32
 !----------------------------------------------------------------------------
 
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine display a matrix of real numbers
 !
@@ -631,7 +631,7 @@ END SUBROUTINE Display_Mat2_Int64
 !----------------------------------------------------------------------------
 
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine display a matrix of real numbers
 !
@@ -653,7 +653,7 @@ END SUBROUTINE Display_Mat2_Int32
 !----------------------------------------------------------------------------
 
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine display a matrix of real numbers
 !
@@ -675,7 +675,7 @@ END SUBROUTINE Display_Mat2_Int16
 !----------------------------------------------------------------------------
 
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine display a matrix of real numbers
 !
@@ -696,7 +696,7 @@ END SUBROUTINE Display_Mat2_Int8
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
@@ -721,7 +721,7 @@ END SUBROUTINE Display_Mat3_Real64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
@@ -746,7 +746,7 @@ END SUBROUTINE Display_Mat3_Real32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
@@ -771,7 +771,7 @@ END SUBROUTINE Display_Mat3_Int64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
@@ -796,7 +796,7 @@ END SUBROUTINE Display_Mat3_Int32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
@@ -822,7 +822,7 @@ END SUBROUTINE Display_Mat3_Int16
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the contents of a rank 3 array.
 !
@@ -848,7 +848,7 @@ END SUBROUTINE Display_Mat3_Int8
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
@@ -874,7 +874,7 @@ END SUBROUTINE Display_Mat4_Real64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
@@ -900,7 +900,7 @@ END SUBROUTINE Display_Mat4_Real32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
@@ -926,7 +926,7 @@ END SUBROUTINE Display_Mat4_Int64
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
@@ -952,7 +952,7 @@ END SUBROUTINE Display_Mat4_Int32
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
@@ -978,7 +978,7 @@ END SUBROUTINE Display_Mat4_Int16
 !                                                                    Display
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This subroutine displays the content of rank4 matrix
 !
@@ -1004,7 +1004,7 @@ END SUBROUTINE Display_Mat4_Int8
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Sept 2021
 ! summary: This function converts integer to character
 
@@ -1022,7 +1022,7 @@ END FUNCTION Int2Str
 !
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine prints blankline
 
@@ -1049,7 +1049,7 @@ END SUBROUTINE BlankLines
 !
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine prints dash line
 
@@ -1068,7 +1068,7 @@ END SUBROUTINE DashLine
 !
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine prints dot line
 
@@ -1088,7 +1088,7 @@ END SUBROUTINE DotLine
 !
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine prints equal line
 
@@ -1108,7 +1108,7 @@ END SUBROUTINE EqualLine
 !
 !----------------------------------------------------------------------------
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine prints the time stamp
 

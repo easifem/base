@@ -31,7 +31,7 @@
 !  https://cp-algorithms.com/string/string-hashing.html
 
 INTERFACE
-  MODULE FUNCTION StringToUID_PolyRoll(charVar) RESULT(Ans)
+  MODULE PURE FUNCTION StringToUID_PolyRoll(charVar) RESULT(Ans)
     CHARACTER(LEN=*), INTENT(IN) :: charVar
     INTEGER(I4B) :: ans
   END FUNCTION StringToUID_PolyRoll

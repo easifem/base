@@ -21,7 +21,7 @@ PUBLIC :: Display
 !                                                         Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
 !
@@ -46,7 +46,7 @@ END INTERFACE Display
 !                                                          Display@IOMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
 

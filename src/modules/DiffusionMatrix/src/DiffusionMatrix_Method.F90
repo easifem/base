@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This module contains method to construct finite element matrices
 
@@ -31,7 +31,7 @@ PUBLIC :: DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -68,7 +68,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -104,7 +104,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -139,7 +139,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -175,7 +175,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -215,7 +215,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -255,7 +255,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -295,7 +295,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -334,7 +334,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -373,7 +373,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 
@@ -406,7 +406,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 
@@ -439,7 +439,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 
@@ -472,7 +472,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 
@@ -505,7 +505,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 May 2022
 ! summary: This subroutine returns the diffusion matrix in space domain
 !
@@ -542,7 +542,7 @@ END INTERFACE DiffusionMatrix
 !                                     DiffusionMatrix@DiffusionMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: This subroutine returns the diffusion matrix in space domain
 !

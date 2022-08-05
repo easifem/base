@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE TriangleInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: InterpolationPoint_Triangle
 
 !----------------------------------------------------------------------------
@@ -48,3 +53,8 @@ INTERFACE
   END FUNCTION EquidistanceLIP_Triangle
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE TriangleInterpolationUtility

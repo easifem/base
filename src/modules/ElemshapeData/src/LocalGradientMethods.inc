@@ -22,7 +22,7 @@ PUBLIC :: LocalGradient
 !                                           getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a scalar
@@ -50,7 +50,7 @@ END INTERFACE getLocalGradient
 !                                           getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a vector
@@ -78,7 +78,7 @@ END INTERFACE getLocalGradient
 !                                          getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a scalar
@@ -110,7 +110,7 @@ END INTERFACE getLocalGradient
 !                                          getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a vector
@@ -144,7 +144,7 @@ END INTERFACE getLocalGradient
 !                                          getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a scalar
@@ -172,7 +172,7 @@ END INTERFACE getLocalGradient
 !                                           getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a vector
@@ -203,7 +203,7 @@ END INTERFACE getLocalGradient
 !                                           getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a vector
@@ -226,7 +226,7 @@ END INTERFACE getLocalGradient
 !                                           getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a vector
@@ -249,7 +249,7 @@ END INTERFACE getLocalGradient
 !                                           getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient of a vector
@@ -272,7 +272,7 @@ END INTERFACE getLocalGradient
 !                                           getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local gradient
@@ -300,7 +300,7 @@ END INTERFACE getLocalGradient
 !                                         getLocalGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the Local gradient

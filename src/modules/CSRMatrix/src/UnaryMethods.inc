@@ -34,7 +34,7 @@ PUBLIC :: Permute
 !                                                              Convert@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine converts sparsematrix to dense storage
 !
@@ -61,7 +61,7 @@ END INTERFACE Convert
 !                                                              Convert@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine converts sparsematrix to dense storage
 !
@@ -89,7 +89,7 @@ END INTERFACE ASSIGNMENT( = )
 !                                                              Convert@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine converts sparsematrix to dense storage
 !
@@ -117,7 +117,7 @@ END INTERFACE ASSIGNMENT( = )
 !                                                           ColumnSORT@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 March 2021
 ! summary: Sort column of row
 !
@@ -148,7 +148,7 @@ END INTERFACE ColumnSORT
 !                                                     RemoveDuplicates@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
 ! summary: Removes duplicate entries from the sparse matrix
 
@@ -167,7 +167,7 @@ END INTERFACE RemoveDuplicates
 !                                                                Clean@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
 ! summary: Performs different tasks related to cleaning of sparse matrix
 !
@@ -196,7 +196,7 @@ END INTERFACE Clean
 !                                                                 Copy@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 March 2021
 ! summary: 	Copy sparse matrix into each other
 
@@ -215,7 +215,7 @@ END INTERFACE Copy
 !                                                                 get@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
 ! summary: This returns a sigle value from the matrix
 
@@ -235,7 +235,7 @@ END INTERFACE Get
 !                                                              Filter@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 15 July, 2021
 ! summary: This routine removes any elements whose absolute value is small from an input matrix A and puts the resulting matrix in B.
 !
@@ -268,7 +268,7 @@ END INTERFACE DropEntry
 !                                                          Transpose@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 15 July 2021
 ! summary: Transpose of the sparse matrix
 !
@@ -293,7 +293,7 @@ END INTERFACE getTRANSPOSE
 !                                                         getDiagonal@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 15 July 2021
 ! summary: Returns the diagonal of sparse matrix
 !
@@ -328,7 +328,7 @@ END INTERFACE getDiagonal
 !                                                         getDiagonal@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 15 July 2021
 ! summary: Returns the diagonal of sparse matrix
 !
@@ -362,7 +362,7 @@ END INTERFACE getDiagonal
 !                                                    getLowerTriangle@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 15 July 2021
 ! summary: Returns the lower part of the sparse matrix
 !
@@ -385,7 +385,7 @@ END INTERFACE getLowerTriangle
 !                                                    getUpperTriangle@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 15 July 2021
 ! summary: Returns the Upper part of the sparse matrix
 !
@@ -408,7 +408,7 @@ END INTERFACE getUpperTriangle
 !                                                         PermuteRow@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 July 2021
 ! summary: Permute the rows of sparse matrix
 
@@ -430,7 +430,7 @@ END INTERFACE PermuteRow
 !                                                        PermuteColumn@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 July 2021
 ! summary: Permute the columns of sparse matrix
 
@@ -452,7 +452,7 @@ END INTERFACE PermuteColumn
 !                                                             Permute@Unary
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 July 2021
 ! summary: Permute the columns of sparse matrix
 

@@ -22,7 +22,7 @@
 
 INTERFACE
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! DGEES computes for an N-by-N real nonsymmetric matrix A, the
 !  eigenvalues, the real Schur form T, and, optionally, the matrix of

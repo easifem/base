@@ -21,7 +21,7 @@ PUBLIC :: Append
 !                                                          Append@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This subroutine appends value to [[RealVector_]]
 
@@ -41,7 +41,7 @@ END INTERFACE Append
 !                                                          Append@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This subroutine appends value to [[RealVector_]]
 
@@ -61,7 +61,7 @@ END INTERFACE Append
 !                                                          Append@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This subroutine appends value to [[RealVector_]]
 

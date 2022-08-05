@@ -18,7 +18,7 @@
 PUBLIC :: OPERATOR( .EQ. )
 PUBLIC :: OPERATOR( .NE. )
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = NORM2(FEVariable)
@@ -39,7 +39,7 @@ END INTERFACE OPERATOR( .EQ. )
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = NORM2(FEVariable)

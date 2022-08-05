@@ -22,7 +22,7 @@ PUBLIC :: add
 !                                                        setValues@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Add values in [[realmatrix_]]
 !
@@ -52,11 +52,11 @@ END INTERFACE set
 !----------------------------------------------------------------------------
 
 INTERFACE
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Set values in [[realmatrix_]]
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This subroutine set values in `obj%l`
 ! `obj%l( i, j ) = Val`
@@ -82,7 +82,7 @@ END INTERFACE set
 !                                                        setValues@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: 	 Set values in [[realmatrix_]]
 !
@@ -107,7 +107,7 @@ END INTERFACE set
 !                                                        setValues@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Set values in [[realmatrix_]]
 !
@@ -144,7 +144,7 @@ END INTERFACE set
 !                                                        setValues@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Set values in [[realmatrix_]]
 !
@@ -180,7 +180,7 @@ END INTERFACE set
 !                                                        setValues@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Add values in [[realmatrix_]]
 !
@@ -213,7 +213,7 @@ END INTERFACE ASSIGNMENT(=)
 !                                                  addContribution@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: 	 Add contribution in values of [[realmatrix_]]
 !
@@ -249,7 +249,7 @@ END INTERFACE add
 !                                                  addContribution@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Add contribution in values of [[Realmatrix_]]
 !
@@ -280,7 +280,7 @@ END INTERFACE add
 !                                                  addContribution@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 6 March 2021
 ! summary: Add contribution in values of [[realmatrix_]]
 !
@@ -311,7 +311,7 @@ END INTERFACE add
 !                                                  addContribution@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Add contribution in values of [[Realmatrix_]]
 !
@@ -341,7 +341,7 @@ END INTERFACE add
 !                                                  addContribution@setValues
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	6 March 2021
 ! summary: Add contribution in values of [[realmatrix_]]
 !

@@ -21,7 +21,7 @@ PUBLIC :: GetRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
@@ -62,7 +62,7 @@ END INTERFACE getRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
@@ -103,7 +103,7 @@ END INTERFACE getRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
@@ -146,7 +146,7 @@ END INTERFACE getRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
@@ -184,7 +184,7 @@ END INTERFACE getRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
@@ -223,7 +223,7 @@ END INTERFACE getRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
@@ -262,7 +262,7 @@ END INTERFACE getRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
@@ -301,7 +301,7 @@ END INTERFACE getRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !
@@ -340,7 +340,7 @@ END INTERFACE getRow
 !                                                          getRow@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the row of a sparse matrix
 !

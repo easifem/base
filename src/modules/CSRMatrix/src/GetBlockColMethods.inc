@@ -21,7 +21,7 @@ PUBLIC :: GetBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the col of a sparse matrix
 !
@@ -61,7 +61,7 @@ END INTERFACE getBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the col of a sparse matrix
 !
@@ -101,7 +101,7 @@ END INTERFACE getBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the col of a sparse matrix
 !
@@ -142,7 +142,7 @@ END INTERFACE getBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -180,7 +180,7 @@ END INTERFACE getBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -219,7 +219,7 @@ END INTERFACE getBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -258,7 +258,7 @@ END INTERFACE getBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -297,7 +297,7 @@ END INTERFACE getBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !
@@ -336,7 +336,7 @@ END INTERFACE getBlockColumn
 !                                                  getBlockColumn@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 July 2021
 ! summary: This routine returns the Column of a sparse matrix
 !

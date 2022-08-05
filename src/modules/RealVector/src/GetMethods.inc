@@ -24,7 +24,7 @@ PUBLIC :: getPointer
 !                                                    getPointer@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: Returns the pointer to vector of real numbers in [[RealVector_]]
 !
@@ -48,7 +48,7 @@ END INTERFACE
 !                                                    getPointer@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: Returns the pointer to vector of real numbers
 !
@@ -73,7 +73,7 @@ END INTERFACE
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: This function finds location of value inside the [[RealVector_]]
 !
@@ -99,7 +99,7 @@ END INTERFACE getIndex
 !                                                           IndexOf@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary:  Returns location of values inside the [[RealVector_]]
 !
@@ -125,7 +125,7 @@ END INTERFACE getIndex
 !                                                       isPresent@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	Returns true if value is present inside [[RealVector_]]
 
@@ -146,7 +146,7 @@ END INTERFACE isPresent
 !                                                         isPresentgetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary:  Returns true if value is present inside [[RealVector_]]
 
@@ -167,7 +167,7 @@ END INTERFACE isPresent
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of Integer from [[RealVector_]]
 
@@ -187,7 +187,7 @@ END INTERFACE get
 !                                                              get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of integer from [[RealVector_]]
 
@@ -208,7 +208,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of integer from [[RealVector_]]
 
@@ -230,7 +230,7 @@ END INTERFACE get
 !                                                              get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -255,7 +255,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -282,7 +282,7 @@ END INTERFACE get
 !                                                              get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -304,7 +304,7 @@ END INTERFACE get
 !                                                     get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: This function returns the vector of integer from [[RealVector_]]
 
@@ -324,7 +324,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of integer from [[RealVector_]]
 
@@ -345,7 +345,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an integer vector from [[RealVector_]]
 
@@ -369,7 +369,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -394,7 +394,7 @@ END INTERFACE get
 !                                                     get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -421,7 +421,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -450,7 +450,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
@@ -475,7 +475,7 @@ END INTERFACE get
 !----------------------------------------------------------------------------
 
 INTERFACE
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
@@ -499,7 +499,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
@@ -525,7 +525,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns an instance of [[RealVector_]]
 !
@@ -551,7 +551,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns the instance of [[RealVector_]]
 !
@@ -600,7 +600,7 @@ END INTERFACE get
 !                                                              get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -619,7 +619,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -639,7 +639,7 @@ END INTERFACE get
 !                                                              get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -660,7 +660,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -679,7 +679,7 @@ END INTERFACE get
 !                                                     get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -699,7 +699,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -720,7 +720,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -744,7 +744,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -768,7 +768,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -791,7 +791,7 @@ END INTERFACE get
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	28 Feb 2021
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 

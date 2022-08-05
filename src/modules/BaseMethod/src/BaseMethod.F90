@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: Modules related to [[BaseType]] module.
 !
@@ -64,6 +64,7 @@ MODULE BaseMethod
   USE MetisInterface
   USE OpenMP_Method
   USE GlobalData
+  USE Hashing32
   USE OGPF
   USE Test_Method
   USE DISPMODULE

@@ -21,7 +21,7 @@ PUBLIC :: SpatialGradient
 !                                        getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of scalar
@@ -44,7 +44,7 @@ END INTERFACE getSpatialGradient
 !                                        getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of vector
@@ -67,7 +67,7 @@ END INTERFACE getSpatialGradient
 !                                        getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of scalar
@@ -90,7 +90,7 @@ END INTERFACE getSpatialGradient
 !                                        getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of scalar
@@ -113,7 +113,7 @@ END INTERFACE getSpatialGradient
 !                                        getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of scalar
@@ -136,7 +136,7 @@ END INTERFACE getSpatialGradient
 !                                        getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of scalar
@@ -159,7 +159,7 @@ END INTERFACE getSpatialGradient
 !                                        getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of a matrix
@@ -182,7 +182,7 @@ END INTERFACE getSpatialGradient
 !                                        getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of a matrix
@@ -205,7 +205,7 @@ END INTERFACE getSpatialGradient
 !                                         getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient of a vector
@@ -228,7 +228,7 @@ END INTERFACE getSpatialGradient
 !                                         getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient
@@ -256,7 +256,7 @@ END INTERFACE getSpatialGradient
 !                                         getSpatialGradient@GradientMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the spatial gradient

@@ -29,7 +29,7 @@ PUBLIC :: ASSIGNMENT( = )
 !                                                          Shape@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	This function returns the shape of sparse matrix
 
@@ -48,7 +48,7 @@ END INTERFACE Shape
 !                                                           Size@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This function returns the size of sparse matrix
 !
@@ -75,7 +75,7 @@ END INTERFACE Size
 !                                                 TotalDimension@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	Returns the total dimension of an array
 
@@ -94,7 +94,7 @@ END INTERFACE TotalDimension
 !                                              setTotalDimension@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the total dimension (rank) of an array
 
@@ -113,7 +113,7 @@ END INTERFACE setTotalDimension
 !                                                         getNNZ@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Return the total number of non zero entry in the matrix
 
@@ -132,7 +132,7 @@ END INTERFACE getNNZ
 !                                                   Allocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	This subroutine creates memeory space for the sparse matrix object
 !
@@ -162,7 +162,7 @@ END INTERFACE Allocate
 !                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	 This subroutine deallocates the data
 
@@ -180,7 +180,7 @@ END INTERFACE Deallocate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	14 July 2021
 ! summary: This subroutine construct the `CSRMatrix_` object
 
@@ -209,7 +209,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	14 July 2021
 ! summary: This subroutine construct the `CSRMatrix_` object
 !
@@ -247,7 +247,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: This subroutine constructs `sparsematrix_` object from IA, JA, A
 
@@ -268,7 +268,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 16 July 2021
 ! summary: Initiate by copying
 !
@@ -297,7 +297,7 @@ END INTERFACE ASSIGNMENT( = )
 !                                                      Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
 ! summary: Initiates a submatrix
 
@@ -318,7 +318,7 @@ END INTERFACE Initiate
 !                                                      Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
 ! summary: This routine initiates an instance of sparse matrix by copying
 ! the content of another object obj2

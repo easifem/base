@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	5 March 2021
 ! summary: This module contains methods for [[ReferencePyramid_]]
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                       Initiate@Pyramid
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	1 March 2021
 ! summary: This subroutine for constructing the object
 

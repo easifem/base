@@ -23,7 +23,7 @@ PUBLIC :: AtMatvec
 !                                                    AMatVec1@MatvecMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 july 2021
 ! summary: This routine computes y = A*x
 
@@ -43,7 +43,7 @@ END INTERFACE AMatVec
 !                                                    AMatVec2@MatvecMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 july 2021
 ! summary: This routine computes y = A*x, A is in MSR format
 
@@ -64,7 +64,7 @@ END INTERFACE AMatVec
 !                                                     AtMatvec@MatvecMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 july 2021
 ! summary: This routine computes y = A*x
 
@@ -84,7 +84,7 @@ END INTERFACE AtMatvec
 !                                                             Matvec@MatVec
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
 ! summary: This routine performs matrix-vector multiplication
 !
@@ -108,7 +108,7 @@ END INTERFACE MatVec
 !                                                             Matvec@MatVec
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 July 2021
 ! summary: This routine performs matrix-vector multiplication
 !

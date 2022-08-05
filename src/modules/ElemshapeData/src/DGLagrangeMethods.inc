@@ -19,7 +19,7 @@
 !                                                       Initiate@DGLagrange
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 !

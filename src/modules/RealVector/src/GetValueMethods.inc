@@ -21,7 +21,7 @@ PUBLIC :: getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -48,7 +48,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -76,7 +76,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -105,7 +105,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -136,7 +136,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -167,7 +167,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -202,7 +202,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -235,7 +235,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -268,7 +268,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -304,7 +304,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -340,7 +340,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 19 Jan 2022
 ! summary: 	Returns a vector of real from [[RealVector_]]
 !
@@ -376,7 +376,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
@@ -407,7 +407,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
@@ -437,7 +437,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
@@ -467,7 +467,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	20 Jan 2022
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -491,7 +491,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	20 Jan 2022
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -515,7 +515,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	20 Jan 2022
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -537,7 +537,7 @@ END INTERFACE getvalue
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	20 Jan 2022
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -562,7 +562,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	20 Jan 2022
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -583,7 +583,7 @@ END INTERFACE getvalue
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	20 Jan 2022
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -605,7 +605,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	20 Jan 2022
 ! summary: 	This function returns a vector of real from [[RealVector_]]
 
@@ -629,7 +629,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
@@ -658,7 +658,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 26 June 2021
 ! summary: Returns the values of degrees of freedom in a single vector
 !
@@ -686,7 +686,7 @@ END INTERFACE getvalue
 !                                                   getvalue@GetValueMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 May 2022
 ! summary: copy a realvector into another realvector
 

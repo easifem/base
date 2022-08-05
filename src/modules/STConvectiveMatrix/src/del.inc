@@ -3,7 +3,7 @@
 !                                       STConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
@@ -41,7 +41,7 @@ END INTERFACE STConvectiveMatrix
 !                                       STConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
@@ -81,7 +81,7 @@ END INTERFACE STConvectiveMatrix
 !                                       STConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
@@ -122,7 +122,7 @@ END INTERFACE STConvectiveMatrix
 !                                       STConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
@@ -165,7 +165,7 @@ END INTERFACE STConvectiveMatrix
 !                                         ConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix
@@ -191,7 +191,7 @@ END INTERFACE ConvectiveMatrix
 !                                         ConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-06
 ! update: 2021-12-06
 ! summary: Returns the space-time convective matrix
@@ -218,7 +218,7 @@ END INTERFACE ConvectiveMatrix
 !                                         ConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix
@@ -245,7 +245,7 @@ END INTERFACE ConvectiveMatrix
 !                                         ConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-06
 ! update: 2021-12-06
 ! summary: Returns the space-time convective matrix
@@ -273,7 +273,7 @@ END INTERFACE ConvectiveMatrix
 !                                         ConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix
@@ -299,7 +299,7 @@ END INTERFACE ConvectiveMatrix
 !                                         ConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-06
 ! update: 2021-12-06
 ! summary: Returns the space-time convective matrix
@@ -378,7 +378,7 @@ END INTERFACE ConvectiveMatrix
 !                                       STConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
@@ -420,7 +420,7 @@ END INTERFACE STConvectiveMatrix
 !                                       STConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
@@ -462,7 +462,7 @@ END INTERFACE STConvectiveMatrix
 !                                       STConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
@@ -500,7 +500,7 @@ END INTERFACE STConvectiveMatrix
 !                                       STConvectiveMatrix@MassMatrixMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-22
 ! update: 2021-11-22
 ! summary: Returns the space-time convective matrix in rank-4 array
