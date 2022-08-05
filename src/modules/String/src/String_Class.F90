@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Oct 2021
 ! summary:  String datatype
 
@@ -182,7 +182,7 @@ PUBLIC :: Reallocate
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 Oct 2021
 ! summary: String data type
 !
@@ -579,7 +579,7 @@ PUBLIC :: StringPointer_
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 26 July 2022
 ! summary: Overloading glob procedure.
 !
@@ -1951,7 +1951,7 @@ END FUNCTION strjoin_strings_array
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 21 July 2022
 ! summary: Return a string that is a join of columns or rows of an array of characters
 !
@@ -2638,7 +2638,7 @@ END FUNCTION snakecase
 !                                                                 Split
 !----------------------------------------------------------------------------
 
-!> authors: Szaghi
+!> author: Szaghi
 ! date: 11 May 2022
 ! summary: Return a list of substring in the string
 !
@@ -2779,7 +2779,7 @@ END SUBROUTINE split
 !
 !----------------------------------------------------------------------------
 
-!> authors: Szaghi
+!> author: Szaghi
 ! date: 21 July 2022
 ! summary: Return substrings
 !
@@ -3063,7 +3063,7 @@ END FUNCTION tempname
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2022
 ! summary: Cast string to integer (I1P).
 !
@@ -3097,7 +3097,7 @@ END FUNCTION to_integer_I1P
 !----------------------------------------------------------------------------
 
 #ifndef _NVF
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 July 2023
 ! summary: Cast string to integer (I2P).
 !
@@ -3131,7 +3131,7 @@ END FUNCTION to_integer_I2P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2022
 ! summary: Cast string to integer (I4P).
 !
@@ -3165,7 +3165,7 @@ END FUNCTION to_integer_I4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2023
 ! summary: Cast string to integer (I8P).
 !
@@ -3198,7 +3198,7 @@ END FUNCTION to_integer_I8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Cast string to real (R4P).
 !
@@ -3231,7 +3231,7 @@ END FUNCTION to_real_R4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: 	Cast string to real (R8P).
 !
@@ -3291,7 +3291,7 @@ END FUNCTION to_real_R16P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2022
 ! summary: Convert a string to boolean
 
@@ -3560,7 +3560,7 @@ END SUBROUTINE write_line
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Write lines (records) to a connected unit.
 !
@@ -3604,7 +3604,7 @@ END SUBROUTINE write_lines
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Return true if a string ends with a specified suffix.
 !
@@ -3660,7 +3660,7 @@ END FUNCTION end_with
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Return true if the string is allocated.
 !
@@ -3687,7 +3687,7 @@ END FUNCTION is_allocated
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Return true if all characters in the string are digits.
 !
@@ -3728,7 +3728,7 @@ END FUNCTION is_digit
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Return true if the string contains an integer.
 !
@@ -3853,7 +3853,7 @@ END FUNCTION is_integer
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Return true if the string contains a number (real or integer).
 !
@@ -3895,7 +3895,7 @@ END FUNCTION is_number
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Return true if the string contains a real.
 !
@@ -4026,7 +4026,7 @@ END FUNCTION is_real
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2022
 ! summary: Returns true if string contains boolean character
 !
@@ -4065,7 +4065,7 @@ END FUNCTION is_logical
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 23 July 2022
 ! summary: Return true if all characters in the string are lowercase.
 !
@@ -5137,7 +5137,7 @@ END FUNCTION replace_one_occurrence
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 21 July 2021
 ! summary: Get the DELIM changeable connection mode for the given unit.
 !
@@ -5189,7 +5189,7 @@ END SUBROUTINE get_delimiter_mode
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 21 July 2022
 ! summary: Get the next non-blank character in the current record.
 
@@ -5220,7 +5220,7 @@ END SUBROUTINE get_next_non_blank_character_this_record
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 21 July 2022
 ! summary: Get the next non-blank character, advancing records if necessary.
 
@@ -5258,7 +5258,7 @@ END SUBROUTINE get_next_non_blank_character_any_record
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date: 21 July 2022
 ! summary: Get the DECIMAL changeable connection mode for the given unit.
 !
@@ -5303,7 +5303,7 @@ END SUBROUTINE get_decimal_mode
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 July 2022
 ! summary: 	Display the contents of a given string
 !
@@ -5383,7 +5383,7 @@ END FUNCTION
 !                                                                 NmatchStr
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 9 May 2021
 ! summary: Returns the total number of times the substring pattern is found
 !
@@ -5416,7 +5416,7 @@ END FUNCTION nmatchstr_1
 !                                                                 NmatchStr
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 9 May 2021
 ! summary: Returns the total number of times the substring pattern is found
 !
@@ -5449,7 +5449,7 @@ END FUNCTION nmatchstr_2
 !                                                                 findStr
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 9 May 2021
 ! summary: Returns the indices in a string where substring pattern are found
 !
@@ -5479,7 +5479,7 @@ END SUBROUTINE strfind_1
 !                                                                    strfind
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 9 May 2021
 ! summary: Returns the indices in a string where substring pattern are found
 !
@@ -5498,7 +5498,7 @@ END SUBROUTINE strfind_2
 !                                                                 Reallocate
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2022
 ! summary: Reallocate string
 
