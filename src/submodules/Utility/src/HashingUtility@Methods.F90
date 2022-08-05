@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) HashingMethod
+SUBMODULE(HashingUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -51,4 +51,4 @@ MODULE PROCEDURE StringToUID_PolyRoll
   END DO
 END PROCEDURE StringToUID_PolyRoll
 
-END SUBMODULE HashingMethod
+END SUBMODULE Methods
