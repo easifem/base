@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 7 July 2022
 ! summary: Lapack methods
 !
@@ -24,7 +24,7 @@
 ! This module contains linear algebra packages for fortran matrix (2D array)
 ! as well as RealMatrix Defined in EASIFEM
 ! The matrix is GE
-! This module contains 4 submodules
+! This module contains 4 submoduls
 ! - @LinearSolve
 ! - @EigenValue
 ! - @SingularValue
@@ -38,7 +38,7 @@ IMPLICIT NONE
 PRIVATE
 
 #include "./GE_LinsolveMethods.inc"
-#include "./GE_LUMethods.inc"
 !#include "./GE_EigenvalueMethods.inc"
+#include "./GE_LUMethods.inc"
 
 END MODULE GE_Lapack_Method
