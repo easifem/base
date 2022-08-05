@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: This module contains method for [[Vector3D_]] data type
 !
@@ -38,7 +38,7 @@ PRIVATE
 !                                                          Shape@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This function returns the shape of [[Vector3D_]]
 !
@@ -68,7 +68,7 @@ PUBLIC :: Shape
 !                                                           SIZE@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This routine returns the size of [[Vector3D_]]
 
@@ -90,7 +90,7 @@ PUBLIC :: SIZE
 !                                                TotalDimension@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	Returns the total dimension of an array
 !
@@ -115,7 +115,7 @@ PUBLIC :: getTotalDimension
 !                                             setTotalDimension@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This subroutine set the total dimension (rank) of an array
 !
@@ -140,7 +140,7 @@ PUBLIC :: setTotalDimension
 !                                                   Allocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This routine allocate the data for [[Vector3D_]]
 !
@@ -165,7 +165,7 @@ PUBLIC :: Allocate
 !                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This subroutine reset the instance of [[Vector3D_]]
 
@@ -185,7 +185,7 @@ PUBLIC :: Deallocate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This routine initiate the instance of [[Vector3D_]]
 !
@@ -214,7 +214,7 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This routine initiate the instance of [[Vector3D_]] from another object, basically it is a copy operation
 !
@@ -242,7 +242,7 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: Generic procedure to initiate the instance of [[Vector3D_]] object
 
@@ -256,7 +256,7 @@ PUBLIC :: Initiate
 !                                                          COPY@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	Generic procedure to copy one instance of [[Vector3D_]] into another instance
 
@@ -280,7 +280,7 @@ PUBLIC :: ASSIGNMENT(=)
 !                                                       Vector3D@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 Feb 2021
 ! summary: Function to create an instance of [[vector3d_]]
 !
@@ -304,7 +304,7 @@ MODULE PURE FUNCTION Constructor1( Val ) RESULT( Ans )
 END FUNCTION Constructor1
 END INTERFACE
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 Feb 2021
 ! summary: Generic function to create an instance of [[Vector3D_]]
 
@@ -318,7 +318,7 @@ PUBLIC :: Vector3D
 !                                              Vector3D_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This function returns the pointer to an instance of [[Vector3D_]]
 !
@@ -342,7 +342,7 @@ MODULE FUNCTION Constructor_1( Val ) RESULT( Ans )
 END FUNCTION Constructor_1
 END INTERFACE
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This function returns the pointer to an instance of [[Vector3D_]]
 !
@@ -361,7 +361,7 @@ MODULE FUNCTION Constructor_2( obj ) RESULT( Ans )
 END FUNCTION Constructor_2
 END INTERFACE
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This generic function returns pointer to an instance of [[Vector3D_]]
 
@@ -375,7 +375,7 @@ PUBLIC :: Vector3D_Pointer
 !                                                       Display@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: This subroutine display [[Vector3D_]]
 !
@@ -395,7 +395,7 @@ MODULE SUBROUTINE Display_obj( obj, Msg, UnitNo )
 END SUBROUTINE Display_obj
 END INTERFACE
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	Generic routine to display an object
 
@@ -409,7 +409,7 @@ PUBLIC :: Display
 !                                                          DOT_PRODUCT@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This funtion computes dot product of two [[Vector3D_]] object
 !
@@ -440,7 +440,7 @@ END INTERFACE
 !                                                           DOT_PRODUCT@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This funtion computes dot product of a [[Vector3D_]] object and fortran vector
 !
@@ -472,7 +472,7 @@ END INTERFACE
 !                                                          DOT_PRODUCT@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This funtion computes dot product of a [[Vector3D_]] object and fortran vector
 !
@@ -504,7 +504,7 @@ END INTERFACE
 !                                                          DOT_PRODUCT@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This function returns the box product (triple scalar product) of three vector.
 !
@@ -543,7 +543,7 @@ END INTERFACE
 !                                                          DOT_PRODUCT@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This Generic function computes dot product of [[Vector3D_]] object.
 
@@ -563,7 +563,7 @@ PUBLIC :: OPERATOR(.DOT. )
 !                                                       Vector_Product@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This function computes the vector product
 !
@@ -598,7 +598,7 @@ END INTERFACE
 !                                                       Vector_Product@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This function computes the vector product
 !
@@ -634,7 +634,7 @@ END INTERFACE
 !                                                       Vector_Product@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	24 Feb 2021
 ! summary: 	This function computes the vector product
 !
@@ -670,7 +670,7 @@ END INTERFACE
 !                                                       Vector_Product@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	This function performs vector triple product
 !
@@ -709,7 +709,7 @@ END INTERFACE
 !                                                       Vector_Product@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 Feb 2021
 ! summary: This generic function computes the vector product
 
@@ -719,7 +719,7 @@ END INTERFACE Vector_Product
 
 PUBLIC :: Vector_Product
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	A generic procedure to perform vector product
 
@@ -733,7 +733,7 @@ PUBLIC :: OPERATOR(.X.)
 !                                                                 NORM2@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 Feb 2021
 ! summary: This function creates Norm2 of a vector
 !
@@ -778,7 +778,7 @@ PUBLIC :: Norm2
 !                                                            UnitVector@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	Returnt the unit vector from a given vector
 !
@@ -817,7 +817,7 @@ PUBLIC :: OPERATOR( .HAT. )
 !                                                                 Angle@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  25 Feb 2021
 ! summary: 	This function returns the angle beteen two vectors
 !
@@ -867,7 +867,7 @@ PUBLIC :: Angle
 !                                                     ProjectionVector@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	Returns the vector of projection from u onto v
 !
@@ -929,7 +929,7 @@ PUBLIC :: OPERATOR( .Parallel. )
 !                                                                Normal@Misc
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: Returns the component of u normal to v.
 !
@@ -972,7 +972,7 @@ PUBLIC :: Normal
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	25 Feb 2021
 ! summary: 	Returns the projection from u onto v
 !
