@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE HexahedronInterpolationUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: InterpolationPoint_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -48,3 +53,8 @@ INTERFACE
   END FUNCTION EquidistanceLIP_Hexahedron
 END INTERFACE
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE HexahedronInterpolationUtility
