@@ -21,7 +21,7 @@ PUBLIC :: getNormal
 !                                                                 GetNormal
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 Jan 2022
 ! update: 28 Jan 2022
 ! summary: This routine returns the normal vector stored in [[ElemShapeData_]]
@@ -43,7 +43,7 @@ END INTERFACE getNormal
 !                                                                 GetNormal
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 Jan 2022
 ! update: 28 Jan 2022
 ! summary: This routine returns the normal vector stored in [[ElemShapeData_]]
@@ -66,7 +66,7 @@ END INTERFACE getNormal
 !                                                                 GetNormal
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 28 Jan 2022
 ! update: 28 Jan 2022
 ! summary: This routine returns the normal vector stored in [[ElemShapeData_]]

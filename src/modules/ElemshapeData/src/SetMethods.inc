@@ -28,7 +28,7 @@ PUBLIC :: setNormal
 !                                                     setThickness@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         4 March
 ! summary: This subroutine set the thickness field
 !
@@ -57,7 +57,7 @@ END INTERFACE
 !                                                     setThickness@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         4 March 2021
 ! summary: This subroutine set the thickness field
 !
@@ -88,7 +88,7 @@ END INTERFACE
 !                                              setBarycentricCoord@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         4 March 2021
 ! summary: This subroutine set the Barycentric coordinates
 !
@@ -117,7 +117,7 @@ END INTERFACE setBarycentricCoord
 !                                              setBarycentricCoord@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         4 March 2021
 ! summary: This subroutine set the Barycentric coordinates
 !
@@ -146,7 +146,7 @@ END INTERFACE setBarycentricCoord
 !                                                            setJs@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set the determinent of jacobian
 
@@ -164,7 +164,7 @@ END INTERFACE setJs
 !                                                          setdNdXt@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set $\frac{d N}{d X_t}$ internally
 !
@@ -188,7 +188,7 @@ END INTERFACE setdNdXt
 !                                                      setJacobian@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set the jacobian
 !
@@ -215,7 +215,7 @@ END INTERFACE setJacobian
 !                                                      setJacobian@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set the jacobian using space-time nodal coords
 !
@@ -247,7 +247,7 @@ END INTERFACE setJacobian
 !                                                         setdNTdt@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set `dNTdt` by using the space-time nodal values
 !
@@ -279,7 +279,7 @@ END INTERFACE setdNTdt
 !                                                        setdNTdXt@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set `dNTdXt` by using internal data
 !
@@ -308,7 +308,7 @@ END INTERFACE setdNTdXt
 !                                                             Set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set parameters defined on physical element
 !
@@ -350,7 +350,7 @@ END INTERFACE set
 !                                                             Set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set parameters defined on physical element
 !
@@ -379,7 +379,7 @@ END INTERFACE set
 !                                                             Set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set parameters defined on physical element
 !
@@ -431,7 +431,7 @@ END INTERFACE set
 !                                                             set@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine set parameters defined on physical element
 !
@@ -474,7 +474,7 @@ END INTERFACE set
 !                                                       setNormal@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine sets the normal vector
 !

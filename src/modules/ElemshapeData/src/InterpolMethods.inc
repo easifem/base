@@ -25,7 +25,7 @@ PUBLIC :: STInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolations of scalar
 !
@@ -56,7 +56,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 Nov 2021
 ! summary: This subroutine performs interpolations of scalar nodal values
 !
@@ -88,7 +88,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 Nov 2021
 ! summary: This subroutine performs interpolations of scalar nodal values
 !
@@ -120,7 +120,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: returns the interpolation of scalar FEVariable
 !
@@ -156,7 +156,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 Nov 2021
 ! summary: This subroutine performs interpolations of scalar FEVariable
 !
@@ -193,7 +193,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolation of a vector
 !
@@ -222,7 +222,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 Nov 2021
 ! summary: This subroutine performs interpolation of a vector
 !
@@ -251,7 +251,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 Nov 2021
 ! summary: This subroutine performs interpolation of a vector
 !
@@ -280,7 +280,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: returns the interpolation of vector FEVariable
 !
@@ -314,7 +314,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: returns the interpolation of vector FEVariable
 !
@@ -348,7 +348,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolation of matrix
 
@@ -370,7 +370,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 Nov 2021
 ! summary: This subroutine performs interpolation of matrix
 !
@@ -396,7 +396,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 1 Nov 2021
 ! summary: This subroutine performs interpolation of matrix
 !
@@ -423,7 +423,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This subroutine performs interpolation of matrix FEVariable
 !
@@ -463,7 +463,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: returns the interpolation of a FEVariable
 !
@@ -495,7 +495,7 @@ END INTERFACE getInterpolation
 !                                           getInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: returns the interpolation of a FEVariable
 !
@@ -527,7 +527,7 @@ END INTERFACE getInterpolation
 !                                              Interpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This function returns the interpolation of a scalar
 
@@ -547,7 +547,7 @@ END INTERFACE Interpolation
 !                                              Interpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This function returns the interpolation of vector
 
@@ -567,7 +567,7 @@ END INTERFACE Interpolation
 !                                              Interpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: This function returns the interpolation of matrix
 
@@ -587,7 +587,7 @@ END INTERFACE Interpolation
 !                                               Interpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-13
 ! update: 2021-12-13
 ! summary: Interpolation of FEVariable
@@ -608,7 +608,7 @@ END INTERFACE Interpolation
 !                                            STInterpolation@InterpolMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-23
 ! update: 2021-11-23
 ! summary: This function performs interpolations of scalar
@@ -641,7 +641,7 @@ END INTERFACE STInterpolation
 INTERFACE
 !! This function performs interpolations of vector
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This function performs interpolation of a vector from its space-time nodal
 ! values.
@@ -667,7 +667,7 @@ END INTERFACE STInterpolation
 INTERFACE
 !! This function performs interpolations of matrix
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! This function performs interpolation of a matrix from its space-time nodal
 ! values.

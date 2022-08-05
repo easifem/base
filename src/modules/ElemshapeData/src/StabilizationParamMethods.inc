@@ -26,7 +26,7 @@ PUBLIC :: getSUGN3Param_Takizawa2018
 !                                                    getUnitNormal@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine can be used in SUPG formulation
@@ -57,7 +57,7 @@ END INTERFACE getUnitNormal
 !                                                    getUnitNormal@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine can be used in SUPG formulation
@@ -89,7 +89,7 @@ END INTERFACE getUnitNormal
 !                                                    getUnitNormal@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine can be used in SUPG formulation
@@ -126,7 +126,7 @@ END INTERFACE getUnitNormal
 !                                                   GetHRGNParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRGN param
@@ -152,7 +152,7 @@ END INTERFACE GetHRGNParam
 !                                                   GetHRGNParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRGN param
@@ -178,7 +178,7 @@ END INTERFACE GetHRGNParam
 !                                                   GetHRGNParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRGN param
@@ -204,7 +204,7 @@ END INTERFACE GetHRGNParam
 !                                                   GetHRGNParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRGN param
@@ -230,7 +230,7 @@ END INTERFACE GetHRGNParam
 !                                                   GetHRQIParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRQI param
@@ -260,7 +260,7 @@ END INTERFACE GetHRQIParam
 !                                                   GetHRQIParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRQI param
@@ -289,7 +289,7 @@ END INTERFACE GetHRQIParam
 !                                                   GetHRQIParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRQI param
@@ -320,7 +320,7 @@ END INTERFACE GetHRQIParam
 !                                                   GetHRQIParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRQI param
@@ -348,7 +348,7 @@ END INTERFACE GetHRQIParam
 !                                                   getSUGN3Param@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUGN3 param
@@ -379,7 +379,7 @@ END INTERFACE getSUGN3Param
 !                                                   getSUGN3Param@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 May 2022
 ! update: 3 May 2022
 ! summary: Returns the SUGN3 param
@@ -410,7 +410,7 @@ END INTERFACE getSUGN3Param
 !                                                   getSUGN3Param@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUGN3 param
@@ -441,7 +441,7 @@ END INTERFACE getSUGN3Param
 !                                                   getSUGN3Param@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 May 2022
 ! update: 3 May 2022
 ! summary: Returns the SUGN3 param
@@ -472,7 +472,7 @@ END INTERFACE getSUGN3Param
 !                              getSUGN3Param_Takizawa2018@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUGN3 param
@@ -508,7 +508,7 @@ END INTERFACE getSUGN3Param_Takizawa2018
 !                                      getSUGN3Param_Takizawa2018@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 May 2022
 ! update: 3 May 2022
 ! summary: Returns the SUGN3 param
@@ -544,7 +544,7 @@ END INTERFACE getSUGN3Param_Takizawa2018
 !                                      getSUGN3Param_Takizawa2018@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUGN3 param
@@ -580,7 +580,7 @@ END INTERFACE getSUGN3Param_Takizawa2018
 !                                      getSUGN3Param_Takizawa2018@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 May 2022
 ! update: 3 May 2022
 ! summary: Returns the SUGN3 param
@@ -616,7 +616,7 @@ END INTERFACE getSUGN3Param_Takizawa2018
 !                                                   GetSUPGParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUPG param
@@ -656,7 +656,7 @@ END INTERFACE GetSUPGParam
 !                                                   GetSUPGParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUPG param
@@ -699,7 +699,7 @@ END INTERFACE GetSUPGParam
 !                                                   GetSUPGParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUPG param
@@ -739,7 +739,7 @@ END INTERFACE GetSUPGParam
 !                                                   GetSUPGParam@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUPG param

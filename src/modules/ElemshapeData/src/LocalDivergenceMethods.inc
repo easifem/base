@@ -22,7 +22,7 @@ PUBLIC :: LocalDivergence
 !                                       getLocalDivergence@DivergenceMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local Divergence of a vector
@@ -47,7 +47,7 @@ END INTERFACE getLocalDivergence
 !                                          getLocalDivergence@DivergenceMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local Divergence of a vector
@@ -78,7 +78,7 @@ END INTERFACE getLocalDivergence
 !                                      getLocalDivergence@DivergenceMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local Divergence of a vector
@@ -106,7 +106,7 @@ END INTERFACE getLocalDivergence
 !                                      getLocalDivergence@DivergenceMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local Divergence of a matrix
@@ -129,7 +129,7 @@ END INTERFACE getLocalDivergence
 !                                       getLocalDivergence@DivergenceMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local Divergence of a vector
@@ -152,7 +152,7 @@ END INTERFACE getLocalDivergence
 !                                       getLocalDivergence@DivergenceMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local Divergence of a vector
@@ -175,7 +175,7 @@ END INTERFACE getLocalDivergence
 !                                      getLocalDivergence@DivergenceMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the local Divergence
@@ -203,7 +203,7 @@ END INTERFACE getLocalDivergence
 !                                      getLocalDivergence@DivergenceMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
 ! update: 2021-11-26
 ! summary: This subroutine returns the Local Divergence

@@ -22,7 +22,7 @@ PUBLIC :: getProjectionOfdNTdXt
 !                                     getProjectionOfdNdXt@ProjectionMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-21
 ! update: 2021-11-21
 ! summary: Computes $\frac{dN}{dx_k}c_k$
@@ -52,7 +52,7 @@ END INTERFACE getProjectionOfdNdXt
 !                                            getProjectionOfdNdXt@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-21
 ! update: 2021-11-21
 ! summary: computes the projection of dNdXt on a vector
@@ -83,7 +83,7 @@ END INTERFACE getProjectionOfdNdXt
 !                                            getProjectionOfdNdXt@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-21
 ! update: 2021-11-21
 ! summary: computes the projection of dNdXt on a vector
@@ -114,7 +114,7 @@ END INTERFACE getProjectionOfdNdXt
 !                                            getProjectionOfdNTdXt@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-23
 ! update: 2021-11-23
 ! summary: Computes the projection of dNTdXt on a vector
@@ -142,7 +142,7 @@ END INTERFACE getProjectionOfdNTdXt
 !                                            getProjectionOfdNTdXt@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-07
 ! update: 2021-12-07
 ! summary:  returns the projection of dNTdXt on a vector
@@ -176,7 +176,7 @@ END INTERFACE getProjectionOfdNTdXt
 !                                            getProjectionOfdNTdXt@getMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-07
 ! update: 2021-12-07
 ! summary:  returns the projection of dNTdXt on a vector
