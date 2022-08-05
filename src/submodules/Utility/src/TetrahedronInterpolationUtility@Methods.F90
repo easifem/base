@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) TetrahedronInterpolationPoints
+SUBMODULE(TetrahedronInterpolationUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -312,4 +312,4 @@ END PROCEDURE EquidistanceLIP_Tetrahedron
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE TetrahedronInterpolationPoints
+END SUBMODULE Methods
