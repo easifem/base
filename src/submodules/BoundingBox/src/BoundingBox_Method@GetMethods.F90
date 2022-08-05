@@ -14,7 +14,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: 	This submodule contains implementation of get method for [[BoundingBox_]] data type which are defined in [[BoundingBox_Method]] module.
 

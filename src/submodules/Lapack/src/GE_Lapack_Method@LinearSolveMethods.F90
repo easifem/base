@@ -26,33 +26,41 @@ CONTAINS
 
 MODULE PROCEDURE ge_solve_1
   REAL( DFP ), DIMENSION( SIZE( A, 1 ), SIZE( A, 2 ) ) :: At
-  REAL( DFP ), DIMENSION( SIZE( b ) ) :: Bt
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
   !!
   At = A
-  Bt = B
+  X = B
   !!
   IF( SIZE( A, 1 ) .EQ. SIZE( A, 2 ) ) THEN
-    CALL GESV( A = At, B = Bt, IPIV=IPIV )
+    CALL GESV( A = At, B = X, IPIV=IPIV, info=info )
   ELSE
     IF( PRESENT( SolverName ) ) THEN
       SELECT CASE( TRIM( SolverName ) )
         !!
       CASE( "GELS" )
-        CALL GELS( A=At, B=Bt, TRANS=TRANS )
+        CALL GELS( A=At, B=X, TRANS=TRANS, info=info )
         !!
       CASE( "GELSD" )
-        CALL GELSD( A=At, B=Bt, RANK=RANK, RCOND=RCOND, S=S )
+        CALL GELSD( A=At, B=X, RANK=RANK, RCOND=RCOND, S=S, info=info )
         !!
       CASE( "GELSS" )
-        CALL GELSS( A=At, B=Bt, RANK=RANK, RCOND=RCOND, S=S )
+        CALL GELSS( A=At, B=X, RANK=RANK, RCOND=RCOND, S=S, info=info)
         !!
       END SELECT
     ELSE
-        CALL GELS( A=At, B=Bt, TRANS=TRANS )
+        CALL GELS( A=At, B=X, TRANS=TRANS, info=info )
     END IF
   END IF
-  !!
-  X = Bt
   !!
 END PROCEDURE ge_solve_1
 
@@ -62,35 +70,207 @@ END PROCEDURE ge_solve_1
 
 MODULE PROCEDURE ge_solve_2
   REAL( DFP ), DIMENSION( SIZE( A, 1 ), SIZE( A, 2 ) ) :: At
-  REAL( DFP ), DIMENSION( SIZE( B, 1 ), SIZE( B, 2 ) ) :: Bt
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
   !!
   At = A
-  Bt = B
+  X = B
   !!
   IF( SIZE( A, 1 ) .EQ. SIZE( A, 2 ) ) THEN
-    CALL GESV( A = At, B = Bt )
+    CALL GESV( A = At, B = X, IPIV=IPIV, info=info )
   ELSE
     IF( PRESENT( SolverName ) ) THEN
       SELECT CASE( TRIM( SolverName ) )
         !!
       CASE( "GELS" )
-        CALL GELS( A=At, B=Bt, TRANS=TRANS )
+        CALL GELS( A=At, B=X, TRANS=TRANS, info=info )
         !!
       CASE( "GELSD" )
-        CALL GELSD( A=At, B=Bt, RANK=RANK, RCOND=RCOND, S=S )
+        CALL GELSD( A=At, B=X, RANK=RANK, RCOND=RCOND, S=S, info=info )
         !!
       CASE( "GELSS" )
-        CALL GELSS( A=At, B=Bt, RANK=RANK, RCOND=RCOND, S=S )
+        CALL GELSS( A=At, B=X, RANK=RANK, RCOND=RCOND, S=S, info=info )
         !!
       END SELECT
     ELSE
-        CALL GELS( A=At, B=Bt, TRANS=TRANS )
+        CALL GELS( A=At, B=X, TRANS=TRANS, info=info )
     END IF
   END IF
   !!
-  X = Bt
-  !!
 END PROCEDURE ge_solve_2
+
+!----------------------------------------------------------------------------
+!                                                                   LinSolve
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_linsolve_1
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
+  !!
+  X = B
+  !!
+  IF( SIZE( A, 1 ) .EQ. SIZE( A, 2 ) ) THEN
+    CALL GESV( A = A, B = X, IPIV=IPIV, info=info )
+  ELSE
+    IF( PRESENT( SolverName ) ) THEN
+      SELECT CASE( TRIM( SolverName ) )
+        !!
+      CASE( "GELS" )
+        CALL GELS( A=A, B=X, TRANS=TRANS, info=info )
+        !!
+      CASE( "GELSD" )
+        CALL GELSD( A=A, B=X, RANK=RANK, RCOND=RCOND, S=S, info=info )
+        !!
+      CASE( "GELSS" )
+        CALL GELSS( A=A, B=X, RANK=RANK, RCOND=RCOND, S=S, info=info )
+        !!
+      END SELECT
+    ELSE
+        CALL GELS( A=A, B=X, TRANS=TRANS, info=info )
+    END IF
+  END IF
+  !!
+END PROCEDURE ge_linsolve_1
+
+!----------------------------------------------------------------------------
+!                                                                      Solve
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_linsolve_2
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
+  !!
+  X = B
+  !!
+  IF( SIZE( A, 1 ) .EQ. SIZE( A, 2 ) ) THEN
+    CALL GESV( A = A, B = X, IPIV=IPIV, info=info )
+  ELSE
+    IF( PRESENT( SolverName ) ) THEN
+      SELECT CASE( TRIM( SolverName ) )
+        !!
+      CASE( "GELS" )
+        CALL GELS( A=A, B=X, TRANS=TRANS, info=info )
+        !!
+      CASE( "GELSD" )
+        CALL GELSD( A=A, B=X, RANK=RANK, RCOND=RCOND, S=S, info=info )
+        !!
+      CASE( "GELSS" )
+        CALL GELSS( A=A, B=X, RANK=RANK, RCOND=RCOND, S=S, info=info )
+        !!
+      END SELECT
+    ELSE
+        CALL GELS( A=A, B=X, TRANS=TRANS, info=info )
+    END IF
+  END IF
+  !!
+END PROCEDURE ge_linsolve_2
+
+!----------------------------------------------------------------------------
+!                                                                   LinSolve
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_linsolve_3
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
+  !!
+  IF( SIZE( A, 1 ) .EQ. SIZE( A, 2 ) ) THEN
+    CALL GESV( A = A, B = B, IPIV=IPIV, info=info )
+  ELSE
+    IF( PRESENT( SolverName ) ) THEN
+      SELECT CASE( TRIM( SolverName ) )
+        !!
+      CASE( "GELS" )
+        CALL GELS( A=A, B=B, TRANS=TRANS, info=info )
+        !!
+      CASE( "GELSD" )
+        CALL GELSD( A=A, B=B, RANK=RANK, RCOND=RCOND, S=S, info=info )
+        !!
+      CASE( "GELSS" )
+        CALL GELSS( A=A, B=B, RANK=RANK, RCOND=RCOND, S=S, info=info )
+        !!
+      END SELECT
+    ELSE
+        CALL GELS( A=A, B=B, TRANS=TRANS, info=info )
+    END IF
+  END IF
+  !!
+END PROCEDURE ge_linsolve_3
+
+!----------------------------------------------------------------------------
+!                                                                      Solve
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_linsolve_4
+  CHARACTER( LEN = 1 ) :: TRANS
+  !!
+  IF( PRESENT( isTranspose ) ) THEN
+    IF( isTranspose ) THEN
+      TRANS="T"
+    ELSE
+      TRANS="N"
+    END IF
+  ELSE
+    TRANS = "N"
+  END IF
+  !!
+  IF( SIZE( A, 1 ) .EQ. SIZE( A, 2 ) ) THEN
+    CALL GESV( A = A, B = B, IPIV=IPIV, info=info )
+  ELSE
+    IF( PRESENT( SolverName ) ) THEN
+      SELECT CASE( TRIM( SolverName ) )
+        !!
+      CASE( "GELS" )
+        CALL GELS( A=A, B=B, TRANS=TRANS, info=info )
+        !!
+      CASE( "GELSD" )
+        CALL GELSD( A=A, B=B, RANK=RANK, RCOND=RCOND, S=S, info=info )
+        !!
+      CASE( "GELSS" )
+        CALL GELSS( A=A, B=B, RANK=RANK, RCOND=RCOND, S=S, info=info )
+        !!
+      END SELECT
+    ELSE
+        CALL GELS( A=A, B=B, TRANS=TRANS, info=info )
+    END IF
+  END IF
+  !!
+END PROCEDURE ge_linsolve_4
 
 !----------------------------------------------------------------------------
 !

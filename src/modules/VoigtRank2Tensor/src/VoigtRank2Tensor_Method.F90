@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	10 March 2021
 ! summary: 	This module contains methods for [[VoigtRank2Tensor_]]
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: Initiate [[VoigtRank2Tensor_]] using Vector
 !
@@ -63,7 +63,7 @@ END INTERFACE
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: Initiate [[VoigtRank2Tensor_]] from a rank2 matrix
 !
@@ -99,7 +99,7 @@ PUBLIC :: Initiate
 !                                               VoigtRank2Tensor@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: This function returns an instance of [[VoigtRank2Tensor_]].
 !
@@ -127,7 +127,7 @@ END INTERFACE
 !                                               VoigtRank2Tensor@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: This function returns an instance of [[VoigtRank2Tensor_]].
 !
@@ -162,7 +162,7 @@ PUBLIC :: VoigtRank2Tensor
 !                                       VoigtRank2Tensor_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: This function returns an instance of [[VoigtRank2Tensor_]].
 !
@@ -191,7 +191,7 @@ END INTERFACE
 !                                       VoigtRank2Tensor_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: This function returns a pointer to an instance of [[VoigtRank2Tensor_]]
 !
@@ -226,7 +226,7 @@ PUBLIC :: VoigtRank2Tensor_Pointer
 !                                                      Assignment@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: This subroutine converts [[VoigtRank2Tensor_]] into Mat(3,3)
 !
@@ -276,7 +276,7 @@ PUBLIC :: ASSIGNMENT( = )
 !                                                                Display@IO
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: This routine displays the content of [[VoigtRank2Tensor_]]
 
