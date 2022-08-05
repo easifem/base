@@ -19,7 +19,7 @@
 !                                      Multiplication@MultiplicationMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-1
 ! summary: FEVariable = FEVariable * FEVariable
@@ -42,7 +42,7 @@ PUBLIC :: OPERATOR(*)
 !                                      Multiplication@MultiplicationMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = FEVariable * Real
@@ -63,7 +63,7 @@ END INTERFACE OPERATOR(*)
 !                                      Multiplication@MultiplicationMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = Real * FEVariable

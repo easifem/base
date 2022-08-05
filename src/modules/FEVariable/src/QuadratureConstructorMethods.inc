@@ -21,7 +21,7 @@ PUBLIC :: QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, Constant
@@ -44,7 +44,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, Space
@@ -67,7 +67,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, Time
@@ -90,7 +90,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Scalar, SpaceTime
@@ -113,7 +113,7 @@ END INTERFACE QuadratureVariable
 !                                           NodalVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Constant
@@ -136,7 +136,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Space
@@ -159,7 +159,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, Time
@@ -183,7 +183,7 @@ END INTERFACE QuadratureVariable
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Vector, SpaceTime
@@ -206,7 +206,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Constant
@@ -229,7 +229,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Space
@@ -252,7 +252,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, Time
@@ -275,7 +275,7 @@ END INTERFACE QuadratureVariable
 !                                      QuadratureVariable@ConstructorMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Create quadrature variable, which is Matrix, SpaceTime

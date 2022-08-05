@@ -21,7 +21,7 @@ PUBLIC :: OPERATOR(+)
 !                                                   Addition@AdditioMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = FEVariable + FEVariable
@@ -42,7 +42,7 @@ END INTERFACE OPERATOR(+)
 !                                                   Addition@AdditioMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = FEVariable + Real
@@ -63,7 +63,7 @@ END INTERFACE OPERATOR(+)
 !                                                   Addition@AdditioMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-12
 ! update: 2021-12-12
 ! summary: FEVariable = Real + FEVariable
