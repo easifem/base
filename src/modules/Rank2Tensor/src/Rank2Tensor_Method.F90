@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	10 March 2021
 ! summary: 	This module contains method for [[Rank2Tensor_]]
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                      initiate@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: Initiates [[Rank2Tensor_]] from another [[Rank2Tensor_]]
 !
@@ -51,7 +51,7 @@ END INTERFACE
 !                                                      initiate@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: Initiates [[Rank2Tensor_]] from a matrix
 !
@@ -80,7 +80,7 @@ END INTERFACE
 !                                                      initiate@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: Initiates [[Rank2Tensor_]] from a [[VoigtRank2Tensor_]].
 !
@@ -110,7 +110,7 @@ END INTERFACE
 !                                                      Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: Initiates [[VoigtRank2Tensor_]] from a [[Rank2Tensor_]]
 
@@ -139,7 +139,7 @@ PUBLIC :: ASSIGNMENT(=)
 !                                                    Rank2Tensor@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: This function returns an instance of [[Rank2Tensor_]]
 !
@@ -168,7 +168,7 @@ END INTERFACE
 !                                                    Rank2Tensor@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: This function returns an instance of [[Rank2Tensor_]]
 !
@@ -200,7 +200,7 @@ PUBLIC :: Rank2Tensor
 !                                            Rank2Tensor_Pointer@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: returns the pointer to an newly created instance of [[Rank2Tensor_]].
 !
@@ -229,7 +229,7 @@ END INTERFACE
 !                                                    Rank2Tensor@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: returns a pointer to a newly created instance of [[Rank2Tensor_]]
 !
@@ -261,7 +261,7 @@ PUBLIC :: Rank2Tensor_Pointer
 !                                                     Assignment@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: [[Rank2Tensor_]] = Matrix(3,3)
 !
@@ -290,7 +290,7 @@ END INTERFACE
 !                                                     Assignment@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 March 2021
 ! summary: Matrix(3,3) = [[Rank2Tensor_]]
 !
@@ -318,7 +318,7 @@ END INTERFACE
 !                                                     Assignment@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: This routine returns a [[VoigtRank2Tensor_]] from [[Rank2Tensor_2]]
 !
@@ -355,7 +355,7 @@ END INTERFACE
 !                                                 IdentityTensor@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the rank2 identity tensor
 !
@@ -388,7 +388,7 @@ PUBLIC :: IdentityTensor
 !                                                 getOnesTensor@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns a second order tensor with all entry one
 
@@ -408,7 +408,7 @@ PUBLIC :: getOnes
 !                                                   ZerosTensor@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns a zero second order tensor
 !
@@ -442,7 +442,7 @@ PUBLIC :: getZeros
 !                                                IsotropicTensor@constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: returns a second order isotropic tensor
 !
@@ -477,7 +477,7 @@ PUBLIC :: IsotropicTensor
 !                                                          isSym@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Returns true if symmetric
 
@@ -498,7 +498,7 @@ PUBLIC :: isSym
 !                                                   isDeviatoric@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Returns true of deviatoric tensor
 
@@ -519,7 +519,7 @@ PUBLIC :: isDeviatoric
 !                                           DeformationGradient@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Returns pointer to a newly created instance of [[DeformationGradient_]]
 
@@ -540,7 +540,7 @@ PUBLIC :: DeformationGradient
 !                                           DeformationGradient@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Returns pointer to a newly created instance of [[DeformationGradient_]]
 
@@ -561,7 +561,7 @@ PUBLIC :: DeformationGradient_Pointer
 !                                                           LeftCauchyGreen
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Returns pointer to a newly created instance of [[LeftCauchyGreen_]]
 
@@ -583,7 +583,7 @@ PUBLIC :: LeftCauchyGreen
 !                                                           LeftCauchyGreen
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Returns pointer to a newly created instance of [[LeftCauchyGreen_]]
 
@@ -605,7 +605,7 @@ PUBLIC :: LeftCauchyGreen_Pointer
 !                                                           RightCauchyGreen
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Returns pointer to a newly created instance of [[RightCauchyGreen_]]
 
@@ -627,7 +627,7 @@ PUBLIC :: RightCauchyGreen
 !                                                           RightCauchyGreen
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	22 March 2021
 ! summary: 	Returns pointer to a newly created instance of [[RightCauchyGreen_]]
 
@@ -666,7 +666,7 @@ PUBLIC :: INV
 !                                                        Transpose@Operation
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Transpose of a tensor
 
@@ -687,7 +687,7 @@ PUBLIC :: TRANSPOSE
 !                                                           Sym@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the symmetric part of a rank2 tensor
 !
@@ -722,7 +722,7 @@ PUBLIC :: Sym
 !                                                       SkewSym@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the skew symmetric part of the tensor
 !
@@ -756,7 +756,7 @@ PUBLIC :: SkewSym
 !                                                               Display@IO
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Display the content of [[Rank2Tensor_]]
 
@@ -778,7 +778,7 @@ PUBLIC :: Display
 !                                                         Trace@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns trace of a tensor
 !
@@ -818,7 +818,7 @@ PUBLIC :: Trace
 !                                                            J2@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns J2 invariant of tensor
 !
@@ -858,7 +858,7 @@ PUBLIC :: J2
 !                                                           J3@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns J3 invarinat of a tensor
 !
@@ -899,7 +899,7 @@ PUBLIC :: J3
 !                                                           Det@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the Determinant of a tensor
 !
@@ -933,7 +933,7 @@ PUBLIC :: Det
 !                                                     LodeAngle@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns lode angle
 !
@@ -962,7 +962,7 @@ END INTERFACE
 !                                                     LodeAngle@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the Lode angle
 !
@@ -1003,7 +1003,7 @@ PUBLIC :: LodeAngle
 !                                                IsotropicPart@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the isotropic part of the tensor
 !
@@ -1044,7 +1044,7 @@ PUBLIC :: Iso
 !                                                DeviatoricPart@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the Deviatoric part of the tensor
 !
@@ -1076,7 +1076,7 @@ PUBLIC :: Dev
 !                                                    Invariants@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns invariant of [[Rank2Tensor_]]
 !
@@ -1118,7 +1118,7 @@ PUBLIC :: Invariants
 !                                                        Eigen@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the eigen vector and eigen value of the tensor.
 !
@@ -1165,7 +1165,7 @@ PUBLIC :: Eigen
 !                                                   PolarDecomp@InvarMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	This subroutine provides polar decomposition of a tensor.
 !
@@ -1203,7 +1203,7 @@ PUBLIC :: PolarDecomp
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the contraction of tensor
 
@@ -1218,7 +1218,7 @@ END INTERFACE
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns the contraction of a rank2 tensor and voigt rank2 tensor
 
@@ -1234,7 +1234,7 @@ END INTERFACE
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns contraction of aa voigt rank2 tensor and rank2 tensor
 
@@ -1250,7 +1250,7 @@ END INTERFACE
 !                                                    Contraction@Contraction
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 March 2021
 ! summary: Returns contraction of two voigt rank tensor
 
@@ -1280,7 +1280,7 @@ PUBLIC :: Contraction
 !                                                                +@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Addition of two tensor
 !
@@ -1310,7 +1310,7 @@ END INTERFACE
 !                                                                +@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Addition of tensor and scalar
 !
@@ -1340,7 +1340,7 @@ END INTERFACE
 !                                                                +@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Addition of tensor and scalar
 !
@@ -1376,7 +1376,7 @@ PUBLIC :: OPERATOR( + )
 !                                                                -@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Subtraction of tensor and tensor
 !
@@ -1406,7 +1406,7 @@ END INTERFACE
 !                                                                -@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Subtraction of tensor and scalar
 !
@@ -1436,7 +1436,7 @@ END INTERFACE
 !                                                                -@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	Subtraction of tensor and scalar
 !
@@ -1473,7 +1473,7 @@ PUBLIC :: OPERATOR( - )
 !                                                                 *@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	rank2 tensor times rank 2 tensor
 !
@@ -1503,7 +1503,7 @@ END INTERFACE
 !                                                                 *@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	rank2 tensor times scalar
 !
@@ -1533,7 +1533,7 @@ END INTERFACE
 !                                                                 *@Operator
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	17 March 2021
 ! summary: 	rank2 tensor times scalar
 !
