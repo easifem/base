@@ -15,8 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) MiscMethods
+SUBMODULE(MiscUtility) Methods
+USE BaseMethod
 IMPLICIT NONE
+INTEGER(I4B), PARAMETER :: NPAR_ARTH = 16, NPAR2_ARTH = 8
+INTEGER(I4B), PARAMETER :: NPAR_GEOP = 4, NPAR2_GEOP = 2
+INTEGER(I4B), PARAMETER :: NPAR_CUMSUM = 16
+INTEGER(I4B), PARAMETER :: NPAR_CUMPROD = 8
+INTEGER(I4B), PARAMETER :: NPAR_POLY = 8
+INTEGER(I4B), PARAMETER :: NPAR_POLYTERM = 8
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -330,4 +337,4 @@ MODULE PROCEDURE IMG_2
   ans = REAL(x*i, KIND=Real64)
 END PROCEDURE IMG_2
 
-END SUBMODULE MiscMethods
+END SUBMODULE Methods
