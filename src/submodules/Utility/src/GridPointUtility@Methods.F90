@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(Utility) GridMethods
+SUBMODULE(GridPointUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -291,4 +291,4 @@ MODULE PROCEDURE arange_real32
   ENDDO
 END PROCEDURE arange_real32
 
-END SUBMODULE GridMethods
+END SUBMODULE Methods
