@@ -15,11 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	3 April 2021
 ! summary: 	This method contains the input method
 
-SUBMODULE(Utility ) InputMethods
+SUBMODULE(InputUtility) Methods
 IMPLICIT NONE
 CONTAINS
 
@@ -159,4 +159,4 @@ END PROCEDURE input_logical
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE InputMethods
+END SUBMODULE Methods
