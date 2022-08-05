@@ -15,12 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE HashingUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
 
 !----------------------------------------------------------------------------
 !                                                StringToUID@HashingMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 Aug 2021
 ! summary: This function returns a unique number for a given string
 !
@@ -42,3 +46,9 @@ INTERFACE StringToUID
 END INTERFACE StringToUID
 
 PUBLIC :: StringToUID
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE HashingUtility
