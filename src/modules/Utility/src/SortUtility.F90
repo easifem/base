@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE SortUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: SORT
 PUBLIC :: HeapSort
 PUBLIC :: QUICKSORT
@@ -23,7 +28,7 @@ PUBLIC :: QUICKSORT
 !                                                              HeapSort@Sort
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Heap sort
 
@@ -484,7 +489,7 @@ END INTERFACE QUICKSORT
 !                                                                 SORT@SORT
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
 ! summary:         Recursive quicksort using binary tree pivot.
 
@@ -499,7 +504,7 @@ END INTERFACE
 !                                                                 SORT@SORT
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Recursive quicksort using binary tree pivot.
 
@@ -513,3 +518,9 @@ END INTERFACE
 INTERFACE SORT
   MODULE PROCEDURE SORT_INT, SORT_REAL
 END INTERFACE SORT
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE SortUtility
