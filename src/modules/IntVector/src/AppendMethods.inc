@@ -67,7 +67,7 @@ END INTERFACE Append
 !                                                        H_CONCAT@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 18 June 2021
 ! summary: Horizontally concat two integer vectors
 
@@ -87,7 +87,7 @@ END INTERFACE H_CONCAT
 !                                                        H_CONCAT@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         18 June 2021
 ! summary: Horizontally concat two [[IntVector_]]
 
@@ -107,7 +107,7 @@ END INTERFACE H_CONCAT
 !                                                        H_CONCAT@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         18 June 2021
 ! summary: Horizontally concat a integer vector to a IntVec datatype.
 
@@ -127,7 +127,7 @@ END INTERFACE H_CONCAT
 !                                                        H_CONCAT@setMethod
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         18 June 2021
 ! summary: Horizontally concat a integer vector to a IntVec datatype.
 

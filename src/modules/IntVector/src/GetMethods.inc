@@ -23,7 +23,7 @@ PUBLIC :: getIndex
 !                                                             get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns IntVector instance
@@ -44,7 +44,7 @@ END INTERFACE get
 !                                                             get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns an instance of [[intvector_]], obj(indx)
@@ -67,7 +67,7 @@ END INTERFACE get
 !                                                             get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns the value using triplets.
@@ -96,7 +96,7 @@ END INTERFACE get
 !                                                             get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: converts a vector of [[intvector_]] into a scalar instance.
@@ -127,7 +127,7 @@ END INTERFACE get
 !                                                             get@GetMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Serialized the vector of [[IntVector_]], select values by indx

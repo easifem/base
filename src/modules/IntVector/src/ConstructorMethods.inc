@@ -31,7 +31,7 @@ PUBLIC :: Convert
 !                                                         Shape@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 Feb 2021
 ! summary: Returns shape of the vector
 
@@ -50,7 +50,7 @@ END INTERFACE Shape
 !                                                           SIZE@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         25 Feb 2021
 ! summary:         Returns size of the vector
 
@@ -70,7 +70,7 @@ END INTERFACE SIZE
 !                                                TotalDimension@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
 ! summary:         Returns the total dimension of an array
 !
@@ -93,7 +93,7 @@ END INTERFACE getTotalDimension
 !                                                   Allocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  25 Feb 2021
 ! summary:         Allocate memory for the vector
 
@@ -119,7 +119,7 @@ END INTERFACE ALLOCATE
 !                                                   Reallocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  25 Feb 2021
 ! summary: Allocate memory for the vector
 
@@ -138,7 +138,7 @@ END INTERFACE Reallocate
 !                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 Feb 2021
 ! summary: Deallocate memory occupied by IntVector
 
@@ -158,7 +158,7 @@ END INTERFACE Deallocate
 !                                                        Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 Feb 2021
 ! summary: This routine initiates the [[IntVector_]]
 !
@@ -182,7 +182,7 @@ END INTERFACE Initiate
 !                                                        Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 Feb 2021
 ! summary: This routine initiates the vector of [[IntVector_]]
 
@@ -201,7 +201,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Initiates an instance on [[IntVector_]] with lower & upper bounds
@@ -221,7 +221,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Initiates an instance by using a vector of integers
@@ -268,7 +268,7 @@ END INTERFACE ASSIGNMENT(=)
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Initiates an instance by using a vector of real numbers
@@ -303,7 +303,7 @@ END INTERFACE ASSIGNMENT(=)
 !                                                      IntVector@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: IntVector returns an instance of [[IntVector_]] of given size
@@ -323,7 +323,7 @@ END INTERFACE IntVector
 !                                                      IntVector@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Convert a integer vector into [[IntVector_]]
@@ -343,7 +343,7 @@ END INTERFACE IntVector
 !                                                      IntVector@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Converts a real vector into [[IntVector_]]
@@ -366,7 +366,7 @@ END INTERFACE IntVector
 !                                                 Vector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns the pointer to an instance of [[IntVector_]] of tsize
@@ -386,7 +386,7 @@ END INTERFACE IntVector_Pointer
 !                                                 Vector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Converts integer vector into [[intvector_]] and returns the pointer
@@ -406,7 +406,7 @@ END INTERFACE IntVector_Pointer
 !                                                 Vector_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Converts real vector into [[intvector_]] and returns the pointer

@@ -21,7 +21,7 @@ PUBLIC :: Display
 !                                                                 Display@IO
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         25 Feb 2021
 ! summary: Display the content of [[IntVector_]]
 
@@ -42,7 +42,7 @@ END INTERFACE Display
 !                                                                 Display@IO
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         25 Feb 2021
 ! summary: Display the content of [[IntVector_]]
 

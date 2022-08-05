@@ -24,7 +24,7 @@ PUBLIC :: isInitiated
 !                                                 isAllocated@EnquireMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns true if the instance is allocated
@@ -48,7 +48,7 @@ END INTERFACE isInitiated
 !                                              Operator(.in.)@EnquireMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns true if a integer set is inside another
@@ -69,7 +69,7 @@ END INTERFACE OPERATOR(.in.)
 !                                             Operator(.in.)@EnquireMethods
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-11
 ! update: 2021-11-11
 ! summary: Returns true if a integer set is inside another
