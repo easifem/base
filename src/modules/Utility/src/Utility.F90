@@ -15,48 +15,29 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE Utility
-USE GlobalData
-USE Display_Method
-USE ErrorHandling
-USE ISO_C_BINDING
-IMPLICIT NONE
-
-PRIVATE
-INTEGER(I4B), PARAMETER :: NPAR_ARTH = 16, NPAR2_ARTH = 8
-INTEGER(I4B), PARAMETER :: NPAR_GEOP = 4, NPAR2_GEOP = 2
-INTEGER(I4B), PARAMETER :: NPAR_CUMSUM = 16
-INTEGER(I4B), PARAMETER :: NPAR_CUMPROD = 8
-INTEGER(I4B), PARAMETER :: NPAR_POLY = 8
-INTEGER(I4B), PARAMETER :: NPAR_POLYTERM = 8
-
-#include "AppendMethods.inc"
-#include "ApproxMethods.inc"
-#include "AssertMethods.inc"
-#include "FunctionalFortran.inc"
-#include "GridMethods.inc"
-#include "OnesMethods.inc"
-#include "EyeMethods.inc"
-#include "DiagMethods.inc"
-#include "HashingMethods.inc"
-#include "InputMethods.inc"
-#include "InvMethods.inc"
-#include "MatmulMethods.inc"
-#include "ContrationMethods.inc"
-#include "MiscMethods.inc"
-#include "ProductMethods.inc"
-#include "ReallocateMethods.inc"
-#include "SortMethods.inc"
-#include "StringMethods.inc"
-#include "SwapMethods.inc"
-#include "ConvertMethods.inc"
-#include "LineInterpolationPoints.inc"
-#include "TriangleInterpolationPoints.inc"
-#include "QuadrangleInterpolationPoints.inc"
-#include "TetrahedronInterpolationPoints.inc"
-#include "HexahedronInterpolationPoints.inc"
-#include "PrismInterpolationPoints.inc"
-#include "PyramidInterpolationPoints.inc"
-#include "IntegerMethods.inc"
+USE BinomUtility
+USE AppendUtility
+USE ApproxUtility
+USE AssertUtility
+USE FunctionalFortranUtility
+USE GridPointUtility
+USE OnesUtility
+USE EyeUtility
+USE DiagUtility
+USE HashingUtility
+USE InputUtility
+USE InvUtility
+USE MatmulUtility
+USE ContractionUtility
+USE MiscUtility
+USE ProductUtility
+USE ReallocateUtility
+USE SortUtility
+USE StringUtility
+USE SwapUtility
+USE ConvertUtility
+USE IntegerUtility
+USE PolynomialUtility
 
 !----------------------------------------------------------------------------
 !
