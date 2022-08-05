@@ -19,7 +19,7 @@
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary:  Convert real to string.
 !
@@ -46,7 +46,7 @@ end function strf_R16P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -72,7 +72,7 @@ end function strf_R8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -97,7 +97,7 @@ end function strf_R4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -122,7 +122,7 @@ end function strf_I8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -147,7 +147,7 @@ end function strf_I4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -172,7 +172,7 @@ end function strf_I2P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -198,7 +198,7 @@ end function strf_I1P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -252,7 +252,7 @@ end function str_R16P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -304,7 +304,7 @@ end function str_R8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real to string.
 !
@@ -356,7 +356,7 @@ end function str_R4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -398,7 +398,7 @@ end function str_I8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Converting integer to string.
 !
@@ -442,7 +442,7 @@ end function str_I4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -485,7 +485,7 @@ end function str_I2P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer to string.
 !
@@ -529,7 +529,7 @@ end function str_I1P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert logical to string.
 !
@@ -555,7 +555,7 @@ end function str_bol
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Converting real array to string.
 !
@@ -631,7 +631,7 @@ end function str_a_R16P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real array to string.
 !
@@ -704,7 +704,7 @@ end function str_a_R8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert real array to string.
 !
@@ -777,7 +777,7 @@ end function str_a_R4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer array to string.
 !
@@ -847,7 +847,7 @@ end function str_a_I8P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer array to string.
 !
@@ -917,7 +917,7 @@ end function str_a_I4P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer array to string.
 !
@@ -987,7 +987,7 @@ end function str_a_I2P
 !
 !----------------------------------------------------------------------------
 
-!> authors: Stefano Zaghi, https://github.com/szaghi
+!> author: Stefano Zaghi, https://github.com/szaghi
 ! date:
 ! summary: Convert integer array to string.
 !
