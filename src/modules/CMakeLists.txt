@@ -66,9 +66,6 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ErrorHandling/CMakeLists.txt)
 #Utility
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 
-#PolynomialUtility
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/PolynomialUtility/CMakeLists.txt)
-
 #BaseType
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseType/CMakeLists.txt)
 
