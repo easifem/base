@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>
 !
 
-!> authors: Dr. Vikas Sharma
+!> author: Dr. Vikas Sharma
 !
 ! [[BaseType]] module contains several userful user defined data types.
 
@@ -29,7 +29,7 @@ PRIVATE
 !                                                                 Math_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2022
 ! summary: Math class
 
@@ -55,7 +55,7 @@ TYPE( Math_ ), PARAMETER, PUBLIC :: Math = Math_()
 !----------------------------------------------------------------------------
 
 ! date: 23 Feb 2021
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! summary: A data type to represent a bounding box;
 !
 !{!pages/BoundingBox_.md!}
@@ -82,7 +82,7 @@ TYPE(BoundingBox_), PUBLIC, PARAMETER :: TypeBoundingBox = &
   & BoundingBox_(NSD=0, Box=0)
 !! A Type Instance of Boundingbox
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Feb 2021
 ! summary: Contains the pointer to the [[BoundingBox_]] data type.
 
@@ -96,7 +96,7 @@ PUBLIC :: BoundingBoxPointer_
 !                                                                    Matrix_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 Feb 2021
 ! summary: A data type for an Array of rank 2 of real numbers
 !
@@ -124,7 +124,7 @@ PUBLIC :: RealMatrixPointer_
 !                                                             IntVector_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:         24 Feb 2021
 ! summary:         A data type to contain fortran vector of integer numbers
 !
@@ -149,7 +149,7 @@ PUBLIC :: IntVectorPointer_
 !                                                             RealVector_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 24 Feb 2021
 ! summary: A data type to contain fortran vector of real numbers
 !
@@ -175,7 +175,7 @@ PUBLIC :: RealVectorPointer_
 !                                                                 Vector3D_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! summary: Data type for 3D vectors
 ! date: 24 Feb 2021
 !
@@ -205,7 +205,7 @@ PUBLIC :: Vector3DPointer_
 !                                                              IndexValue_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
 ! summary: 	Index value keymap; useful for defining nodal boundary conditions
 
@@ -229,7 +229,7 @@ PUBLIC :: IndexValuePointer_
 !                                                                     DOF_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 23 Feb 2021
 ! summary: Degree of freedom object type
 !
@@ -258,7 +258,7 @@ PUBLIC :: DOFPointer_
 !                                                            SparseOrdering
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
 ! summary: SparseMatrix reordering scheme
 
@@ -279,7 +279,7 @@ TYPE(SparseMatrixReOrdering_), PUBLIC, PARAMETER :: &
 !                                                               CSRSparsity_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 13 June 2021
 ! summary: User data type for handling the sparsity pattern
 !
@@ -315,7 +315,7 @@ PUBLIC :: CSRSparsityPointer_
 !                                                             CSRMatrix_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: User data type for handling CSR matrices
 !
@@ -344,7 +344,7 @@ PUBLIC :: CSRMatrixPointer_
 !                                                            IterationData_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
 ! summary: Iteration data
 
@@ -399,7 +399,7 @@ PUBLIC :: IterationDataPointer_
 !                                                       VoigtRank2Tensor_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
 ! summary: Voigt representation of rank2 tensor
 
@@ -468,7 +468,7 @@ PUBLIC :: DeformationGradientPointer_
 !                                                           LeftCauchyGreen_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Left Cauchy Green Deformation tensor
 !
@@ -498,7 +498,7 @@ PUBLIC :: LeftCauchyGreenPointer_
 !                                                           RightCauchyGreen_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: Right Cauchy Green Deformation tensor
 !
@@ -600,7 +600,7 @@ PUBLIC :: SmallStrainPointer_
 !                                                       ReferenceTopology_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date:  1 March 2021
 ! summary: This data type is defined to handle reference topology
 !
@@ -624,7 +624,7 @@ PUBLIC :: ReferenceTopologyPointer_
 !                                                          ReferenceElement_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2 March 2021
 ! summary: An abstract data type for Reference Element
 !
@@ -674,7 +674,7 @@ END INTERFACE
 !                                                          ReferencePoint_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
 ! summary: This data type defines a reference point element
 !
@@ -694,7 +694,7 @@ TYPE(ReferencePoint_), PARAMETER, PUBLIC :: &
 !                                                          ReferenceLine_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
 ! summary: This data type defines a reference line
 !
@@ -714,7 +714,7 @@ TYPE(ReferenceLine_), PARAMETER, PUBLIC :: &
 !                                                      ReferenceTriangle_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
 ! summary: This data type defines a reference triangle
 !
@@ -733,7 +733,7 @@ TYPE(ReferenceTriangle_), PARAMETER, PUBLIC :: &
 !                                                       ReferenceQuadrangle_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
 ! summary: This data type defines a reference quadrangle
 !
@@ -754,7 +754,7 @@ TYPE(ReferenceQuadrangle_), PARAMETER, PUBLIC :: &
 !                                                    ReferenceTetrahedron_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
 ! summary: This data type defines a reference tetrahedron
 !
@@ -775,7 +775,7 @@ TYPE(ReferenceTetrahedron_), PARAMETER, PUBLIC :: &
 !                                                     ReferenceHexahedron_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
 ! summary: This data type defines a reference hexahedron
 !
@@ -801,7 +801,7 @@ TYPE(ReferenceHexahedron_), PARAMETER, PUBLIC :: &
 !                                                            ReferencePrism_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
 ! summary: This data type defines a reference prism
 !
@@ -826,7 +826,7 @@ TYPE(ReferencePrism_), PARAMETER, PUBLIC :: TypeReferencePrism &
 !                                                          ReferencePyramid_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 3 March 2021
 ! summary: This data type defines a reference pyramid
 !
@@ -851,7 +851,7 @@ TYPE(ReferencePyramid_), PARAMETER, PUBLIC :: TypeReferencePyramid &
 !                                                                 KeyValue_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
 ! summary: [[keyvalue_]] is a poor implementation of dict
 
@@ -870,7 +870,7 @@ TYPE(KeyValue_), PARAMETER, PUBLIC :: TypeKeyValue = &
 !                                                                FEVariable_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
 ! summary: Finite element variable
 !
@@ -905,7 +905,7 @@ TYPE(FEVariable_), PARAMETER, PUBLIC ::TypeFEVariable=FEVariable_(val=NULL())
 !                                                         FEVariableConstant_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: FEVariable Constant
@@ -927,7 +927,7 @@ TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeVariableConstant = &
 !                                                           FEVariableSpace_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: FEVariable Space
@@ -947,7 +947,7 @@ TYPE(FEVariableSpace_), PARAMETER, PUBLIC :: TypeVariableSpace = &
 !                                                       FEVariableSpaceTime_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: FEVariable Space time
@@ -967,7 +967,7 @@ TYPE(FEVariableSpaceTime_), PARAMETER, PUBLIC :: &
 !                                                            FEVariableTime_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: FEVariable time
@@ -988,7 +988,7 @@ TYPE(FEVariableTime_), PARAMETER, PUBLIC :: TypeVariableTime = &
 !                                                          FEVariableScalar_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: FEVariable scalar
@@ -1009,7 +1009,7 @@ TYPE(FEVariableScalar_), PARAMETER, PUBLIC :: &
 !                                                          FEVariableVector_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: FEVariable vector
@@ -1030,7 +1030,7 @@ TYPE(FEVariableVector_), PARAMETER, PUBLIC :: &
 !                                                          FEVariableMatrix_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: FEVariable matrix
@@ -1050,7 +1050,7 @@ TYPE(FEVariableMatrix_), PARAMETER, PUBLIC :: &
 !                                                           QuadraturePoint_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-10
 ! update: 2021-12-10
 ! summary: Quadrature points for numerical integration
@@ -1194,7 +1194,7 @@ TYPE(DG_), PARAMETER, PUBLIC :: &
 !                                                                 Derivative
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-06
 ! update: 2021-11-06
 ! summary: Derivative class contains symbols for derivatives
@@ -1238,7 +1238,7 @@ PUBLIC :: ElementDataPointer_
 !                                                              ShapeData_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
 ! summary: shape function data (deprecated)
 
@@ -1276,7 +1276,7 @@ PUBLIC :: ShapeDataPointer_
 !                                                               STShapeData_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
 ! summary: Datatype for space-time shape data
 
@@ -1308,7 +1308,7 @@ PUBLIC :: STShapeDataPointer_
 !                                                           ElemShapeData_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: Datatype for data defined at all gauss points of an elements
 !
@@ -1363,7 +1363,7 @@ PUBLIC :: ElemShapeDataPointer_
 !                                                           STElemShapeData_
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 2021-12-08
 ! update: 2021-12-08
 ! summary: Space-time shape function data
@@ -1443,7 +1443,7 @@ TYPE(Random_), PARAMETER, PUBLIC :: &
 !
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 9 March 2021
 ! summary: OpenMP and EASIFEM
 TYPE :: OpenMP_
