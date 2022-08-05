@@ -27,7 +27,7 @@ PUBLIC :: STForceVector
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -46,7 +46,7 @@ END INTERFACE STForceVector
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -68,7 +68,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -90,7 +90,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -112,7 +112,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -137,7 +137,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -162,7 +162,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -186,7 +186,7 @@ END INTERFACE STForceVector
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -206,7 +206,7 @@ END INTERFACE STForceVector
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -229,7 +229,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -252,7 +252,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -275,7 +275,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -301,7 +301,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -327,7 +327,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -353,7 +353,7 @@ END INTERFACE STForceVector
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -375,7 +375,7 @@ END INTERFACE STForceVector
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -400,7 +400,7 @@ END INTERFACE STForceVector
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -425,7 +425,7 @@ END INTERFACE STForceVector
 !                                                             STForceVector
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -451,7 +451,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -479,7 +479,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
@@ -507,7 +507,7 @@ END INTERFACE STForceVector
 !----------------------------------------------------------------------------
 
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
 ! summary: Force vector
 
