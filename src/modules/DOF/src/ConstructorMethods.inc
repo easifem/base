@@ -25,7 +25,7 @@ PUBLIC :: DOF
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: This subroutine initiate [[DOF_]] object
 !
@@ -71,7 +71,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 	23 Feb 2021
 ! summary: Initiate a fortran vector using [[DOF_]] object
 !
@@ -99,7 +99,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
 ! summary: Initiate two fortran vectors using [[dof_]] object
 !
@@ -123,7 +123,7 @@ END INTERFACE Initiate
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 25 July 2021
 ! summary: Initiate an instance of [[DOF_]] by copying other object
 !
@@ -150,7 +150,7 @@ END INTERFACE Initiate
 !                                                            DOF@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 oct 2021
 ! summary: 	 Constructor for [[dof_]] object
 !
@@ -179,7 +179,7 @@ END INTERFACE DOF
 !                                                     DOF_Pointer@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: 10 Oct, 2021
 ! summary: Returns pointer to newly created [[dof_]] object
 !
@@ -214,7 +214,7 @@ END INTERFACE DOF_Pointer
 !                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
-!> authors: Vikas Sharma, Ph. D.
+!> author: Vikas Sharma, Ph. D.
 ! date: Oct 10, 2021
 ! summary: Deallocate data in [[dof_]]
 !
