@@ -20,8 +20,6 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: InterpolationPoint_Triangle
-
 !----------------------------------------------------------------------------
 !                                                InterpolationPoint_Triangle
 !----------------------------------------------------------------------------
@@ -38,6 +36,14 @@ INTERFACE
   END FUNCTION InterpolationPoint_Triangle
 END INTERFACE
 
+PUBLIC :: InterpolationPoint_Triangle
+
+INTERFACE TriangleInterpolationPoint
+  MODULE PROCEDURE InterpolationPoint_Triangle
+END INTERFACE TriangleInterpolationPoint
+
+PUBLIC :: TriangleInterpolationPoint
+
 !----------------------------------------------------------------------------
 !                                                   EquidistanceLIP_Triangle
 !----------------------------------------------------------------------------
@@ -45,13 +51,17 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION EquidistanceLIP_Triangle( order, xij ) &
     & RESULT( nodecoord )
-    !!
     INTEGER( I4B ), INTENT( IN ) :: order
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 3 )
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-    !!
   END FUNCTION EquidistanceLIP_Triangle
 END INTERFACE
+
+INTERFACE TriangleLagrangeEquidistance
+  MODULE PROCEDURE EquidistanceLIP_Triangle
+END INTERFACE TriangleLagrangeEquidistance
+
+PUBLIC :: TriangleLagrangeEquidistance
 
 !----------------------------------------------------------------------------
 !

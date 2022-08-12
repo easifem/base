@@ -19,38 +19,47 @@ MODULE PrismInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
-PUBLIC :: InterpolationPoint_Prism
 
 !----------------------------------------------------------------------------
-!                                            InterpolationPoint_Prism
+!                                                  InterpolationPoint_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
   MODULE PURE FUNCTION InterpolationPoint_Prism( order, ipType, xij ) &
     & RESULT( nodecoord )
-    !!
     INTEGER( I4B ), INTENT( IN ) :: order
     INTEGER( I4B ), INTENT( IN ) :: ipType
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-    !!
   END FUNCTION InterpolationPoint_Prism
 END INTERFACE
 
+PUBLIC :: InterpolationPoint_Prism
+
+INTERFACE PrismInterpolationPoint
+  MODULE PROCEDURE InterpolationPoint_Prism
+END INTERFACE PrismInterpolationPoint
+
+PUBLIC :: PrismInterpolationPoint
+
 !----------------------------------------------------------------------------
-!                                               EquidistanceLIP_Prism
+!                                                     EquidistanceLIP_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
   MODULE PURE FUNCTION EquidistanceLIP_Prism( order, xij ) &
     & RESULT( nodecoord )
-    !!
     INTEGER( I4B ), INTENT( IN ) :: order
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-    !!
   END FUNCTION EquidistanceLIP_Prism
 END INTERFACE
+
+INTERFACE PrismLagrangeEquidistance
+  MODULE PROCEDURE EquidistanceLIP_Prism
+END INTERFACE PrismLagrangeEquidistance
+
+PUBLIC :: PrismLagrangeEquidistance
 
 !----------------------------------------------------------------------------
 !

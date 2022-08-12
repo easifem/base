@@ -45,8 +45,6 @@ END PROCEDURE InterpolationPoint_Tetrahedron
 
 MODULE PROCEDURE EquidistanceLIP_Tetrahedron
   !!
-  !!
-  !!
   SELECT CASE ( order )
     CASE( 1 )
       !!

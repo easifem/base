@@ -44,6 +44,15 @@ END PROCEDURE InterpolationPoint_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceLIP_Pyramid
+  SELECT CASE( order )
+  CASE( 1_I4B )
+    ALLOCATE( nodecoord( 3, 5 ) )
+    nodecoord( :, 1 ) = [-1,-1,0]
+    nodecoord( :, 2 ) = [1,-1,0]
+    nodecoord( :, 3 ) = [1,1,0]
+    nodecoord( :, 4 ) = [-1,1,0]
+    nodecoord( :, 5 ) = [0,0,1]
+  END SELECT
 END PROCEDURE EquidistanceLIP_Pyramid
 
 !----------------------------------------------------------------------------

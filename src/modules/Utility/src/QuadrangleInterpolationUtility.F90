@@ -15,16 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-
 MODULE QuadrangleInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: InterpolationPoint_Quadrangle
-
 !----------------------------------------------------------------------------
-!                                                InterpolationPoint_Quadrangle
+!                                             InterpolationPoint_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -39,8 +36,16 @@ INTERFACE
   END FUNCTION InterpolationPoint_Quadrangle
 END INTERFACE
 
+PUBLIC :: InterpolationPoint_Quadrangle
+
+INTERFACE QuadrangleInterpolationPoint
+  MODULE PROCEDURE InterpolationPoint_Quadrangle
+END INTERFACE QuadrangleInterpolationPoint
+
+PUBLIC :: QuadrangleInterpolationPoint
+
 !----------------------------------------------------------------------------
-!                                                   EquidistanceLIP_Quadrangle
+!                                                 EquidistanceLIP_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -53,6 +58,12 @@ INTERFACE
     !!
   END FUNCTION EquidistanceLIP_Quadrangle
 END INTERFACE
+
+INTERFACE QuadrangleLagrangeEquidistance
+  MODULE PROCEDURE EquidistanceLIP_Quadrangle
+END INTERFACE QuadrangleLagrangeEquidistance
+
+PUBLIC :: QuadrangleLagrangeEquidistance
 
 !----------------------------------------------------------------------------
 !

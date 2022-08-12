@@ -21,8 +21,6 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: InterpolationPoint_Line
-
 !----------------------------------------------------------------------------
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
@@ -39,19 +37,31 @@ INTERFACE
   END FUNCTION InterpolationPoint_Line
 END INTERFACE
 
+PUBLIC :: InterpolationPoint_Line
+
+INTERFACE LineInterpolationPoint
+  MODULE PROCEDURE InterpolationPoint_Line
+END INTERFACE LineInterpolationPoint
+
+PUBLIC :: LineInterpolationPoint
+
 !----------------------------------------------------------------------------
 !                                                      EquidistanceLIP_Line
 !----------------------------------------------------------------------------
 
 INTERFACE
   MODULE PURE FUNCTION EquidistanceLIP_Line( order, xij ) RESULT( nodecoord )
-    !!
     INTEGER( I4B ), INTENT( IN ) :: order
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 2 )
     REAL( DFP ) :: nodecoord( 3, order+1 )
-    !!
   END FUNCTION EquidistanceLIP_Line
 END INTERFACE
+
+INTERFACE LineLagrangeEquidistance
+  MODULE PROCEDURE EquidistanceLIP_Line
+END INTERFACE LineLagrangeEquidistance
+
+PUBLIC :: LineLagrangeEquidistance
 
 !----------------------------------------------------------------------------
 !

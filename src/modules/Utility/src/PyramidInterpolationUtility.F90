@@ -21,8 +21,6 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: InterpolationPoint_Pyramid
-
 !----------------------------------------------------------------------------
 !                                            InterpolationPoint_Pyramid
 !----------------------------------------------------------------------------
@@ -39,6 +37,14 @@ INTERFACE
   END FUNCTION InterpolationPoint_Pyramid
 END INTERFACE
 
+PUBLIC :: InterpolationPoint_Pyramid
+
+INTERFACE PyramidInterpolationPoint
+  MODULE PROCEDURE InterpolationPoint_Pyramid
+END INTERFACE PyramidInterpolationPoint
+
+PUBLIC :: PyramidInterpolationPoint
+
 !----------------------------------------------------------------------------
 !                                               EquidistanceLIP_Pyramid
 !----------------------------------------------------------------------------
@@ -46,13 +52,17 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION EquidistanceLIP_Pyramid( order, xij ) &
     & RESULT( nodecoord )
-    !!
     INTEGER( I4B ), INTENT( IN ) :: order
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-    !!
   END FUNCTION EquidistanceLIP_Pyramid
 END INTERFACE
+
+INTERFACE PyramidLagrangeEquidistance
+  MODULE PROCEDURE EquidistanceLIP_Pyramid
+END INTERFACE PyramidLagrangeEquidistance
+
+PUBLIC :: PyramidLagrangeEquidistance
 
 !----------------------------------------------------------------------------
 !

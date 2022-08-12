@@ -20,8 +20,6 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: InterpolationPoint_Hexahedron
-
 !----------------------------------------------------------------------------
 !                                            InterpolationPoint_Hexahedron
 !----------------------------------------------------------------------------
@@ -38,6 +36,14 @@ INTERFACE
   END FUNCTION InterpolationPoint_Hexahedron
 END INTERFACE
 
+PUBLIC :: InterpolationPoint_Hexahedron
+
+INTERFACE HexahedronInterpolationPoint
+  MODULE PROCEDURE InterpolationPoint_Hexahedron
+END INTERFACE HexahedronInterpolationPoint
+
+PUBLIC :: HexahedronInterpolationPoint
+
 !----------------------------------------------------------------------------
 !                                               EquidistanceLIP_Hexahedron
 !----------------------------------------------------------------------------
@@ -45,13 +51,17 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION EquidistanceLIP_Hexahedron( order, xij ) &
     & RESULT( nodecoord )
-    !!
     INTEGER( I4B ), INTENT( IN ) :: order
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-    !!
   END FUNCTION EquidistanceLIP_Hexahedron
 END INTERFACE
+
+INTERFACE HexahedronLagrangeEquidistance
+  MODULE PROCEDURE EquidistanceLIP_Hexahedron
+END INTERFACE HexahedronLagrangeEquidistance
+
+PUBLIC :: HexahedronLagrangeEquidistance
 
 !----------------------------------------------------------------------------
 !

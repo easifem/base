@@ -44,6 +44,23 @@ END PROCEDURE InterpolationPoint_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceLIP_Hexahedron
+  !!
+  SELECT CASE( order )
+    !!
+  CASE( 1_I4B )
+    !!
+    ALLOCATE( nodecoord( 3, 8 ) )
+    nodecoord(:,1) = [-1,-1,-1]
+    nodecoord(:,2) = [1,-1,-1]
+    nodecoord(:,3) = [1,1,-1]
+    nodecoord(:,4) = [-1,1,-1]
+    nodecoord(:,5) = [-1,-1,1]
+    nodecoord(:,6) = [1,-1,1]
+    nodecoord(:,7) = [1,1,1]
+    nodecoord(:,8) = [-1,1,1]
+    !!
+  END SELECT
+  !!
 END PROCEDURE EquidistanceLIP_Hexahedron
 
 !----------------------------------------------------------------------------

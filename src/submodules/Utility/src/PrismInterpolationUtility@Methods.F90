@@ -44,6 +44,16 @@ END PROCEDURE InterpolationPoint_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceLIP_Prism
+  SELECT CASE( order )
+  CASE( 1_I4B )
+    ALLOCATE( nodecoord( 3, 6 ) )
+    nodecoord( :, 1 ) = [0,0,-1]
+    nodecoord( :, 2 ) = [1,0,-1]
+    nodecoord( :, 3 ) = [0,1,-1]
+    nodecoord( :, 4 ) = [0,0,1]
+    nodecoord( :, 5 ) = [1,0,1]
+    nodecoord( :, 6 ) = [0,1,1]
+  END SELECT
 END PROCEDURE EquidistanceLIP_Prism
 
 !----------------------------------------------------------------------------
