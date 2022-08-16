@@ -20,23 +20,63 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                LagrangeDegree_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDegree_Tetrahedron
+
+! TODO #162 Implement LagrangeDegree_Tetrahedron
+
+END PROCEDURE LagrangeDegree_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeDOF_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDOF_Tetrahedron
+  ans = (order+1)*(order+2)*(order+3)/6_I4B
+END PROCEDURE LagrangeDOF_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeInDOF_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeInDOF_Tetrahedron
+  ans = (order-1)*(order-2)*(order-3)/6_I4B
+END PROCEDURE LagrangeInDOF_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Tetrahedron
+
+! TODO #158 Implement EquidistancePoint_Tetrahedron routine
+
+END PROCEDURE EquidistancePoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                            EquidistanceInPoint_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistanceInPoint_Tetrahedron
+
+! TODO #158 Implement EquidistanceInPoint_Tetrahedron routine
+
+END PROCEDURE EquidistanceInPoint_Tetrahedron
+
+!----------------------------------------------------------------------------
 !                                            InterpolationPoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Tetrahedron
-  !!
   SELECT CASE( ipType )
-  !!
   CASE( Equidistance )
-    !!
     nodecoord = EquidistanceLIP_Tetrahedron( xij=xij, order=order )
-    !!
   CASE( GaussLegendre )
   CASE( GaussLobatto )
   CASE( Chebyshev )
-  !!
   END SELECT
-  !!
 END PROCEDURE InterpolationPoint_Tetrahedron
 
 !----------------------------------------------------------------------------
