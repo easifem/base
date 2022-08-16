@@ -151,21 +151,21 @@ MODULE PROCEDURE Element_Type
   SELECT CASE (TRIM(ElemName))
   CASE ("Line0")
     Ans = 0
-  CASE ("Line1")
+  CASE ("Line1", "Point")
     Ans = Point
-  CASE ("Line2")
+  CASE ("Line2", "Line")
     Ans = Line2
-  CASE ("Triangle3")
+  CASE ("Triangle3", "Triangle")
     Ans = Triangle3
-  CASE ("Quadrangle4")
+  CASE ("Quadrangle4", "Quadrangle")
     Ans = Quadrangle4
-  CASE ("Tetrahedron4")
+  CASE ("Tetrahedron4", "Tetrahedron")
     Ans = Tetrahedron4
-  CASE ("Hexahedron8")
+  CASE ("Hexahedron8", "Hexahedron")
     Ans = Hexahedron8
-  CASE ("Prism6")
+  CASE ("Prism6", "Prism")
     Ans = Prism6
-  CASE ("Pyramid5")
+  CASE ("Pyramid5", "Pyramid")
     Ans = Pyramid5
   CASE ("Line3")
     Ans = Line3
