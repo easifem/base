@@ -236,19 +236,13 @@ END PROCEDURE EquidistanceInPoint_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Triangle
-  !!
   SELECT CASE( ipType )
-  !!
   CASE( Equidistance )
-    !!
     nodecoord = EquidistancePoint_Triangle( xij=xij, order=order )
-    !!
   CASE( GaussLegendre )
   CASE( GaussLobatto )
   CASE( Chebyshev )
-  !!
   END SELECT
-  !!
 END PROCEDURE InterpolationPoint_Triangle
 
 !----------------------------------------------------------------------------
