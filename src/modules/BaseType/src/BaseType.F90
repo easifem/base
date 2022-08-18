@@ -495,7 +495,7 @@ END TYPE LeftCauchyGreenPointer_
 PUBLIC :: LeftCauchyGreenPointer_
 
 !----------------------------------------------------------------------------
-!                                                           RightCauchyGreen_
+!                                                          RightCauchyGreen_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
