@@ -120,7 +120,7 @@ MODULE PROCEDURE EquidistancePoint_Quadrangle
     !!
     IF( order .EQ. 2_I4B ) THEN
       i1 = i2+1
-      ans(1:nsd, i1) = SUM(x, dim=2_I4B)/4.0_DFP
+      ans(1:nsd, i1) = SUM(x(1:nsd,:), dim=2_I4B)/4.0_DFP
     ELSE
       !!
       e1 = x(:,2)-x(:,1)
