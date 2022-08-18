@@ -16,27 +16,68 @@
 !
 
 SUBMODULE(PrismInterpolationUtility) Methods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                     LagrangeDegree_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDegree_Prism
+
+! TODO #164 Implement LagrangeDegree_Prism
+
+END PROCEDURE LagrangeDegree_Prism
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeDOF_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDOF_Prism
+  ans = (order+1)**2 * (order+2) / 2_I4B
+END PROCEDURE LagrangeDOF_Prism
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeInDOF_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeInDOF_Prism
+  ans = (order-1)**2 * (order-2) / 2_I4B
+END PROCEDURE LagrangeInDOF_Prism
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Prism
+
+! TODO #160 Implement EquidistancePoint_Prism routine
+
+END PROCEDURE EquidistancePoint_Prism
+
+!----------------------------------------------------------------------------
+!                                            EquidistanceInPoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistanceInPoint_Prism
+
+! TODO Implement EquidistanceInPoint_Prism routine
+
+END PROCEDURE EquidistanceInPoint_Prism
 
 !----------------------------------------------------------------------------
 !                                                  InterpolationPoint_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Prism
-  !!
   SELECT CASE( ipType )
-  !!
   CASE( Equidistance )
-    !!
     nodecoord = EquidistanceLIP_Prism( xij=xij, order=order )
-    !!
   CASE( GaussLegendre )
   CASE( GaussLobatto )
   CASE( Chebyshev )
-  !!
   END SELECT
-  !!
 END PROCEDURE InterpolationPoint_Prism
 
 !----------------------------------------------------------------------------

@@ -48,6 +48,7 @@ TARGET_SOURCES(
   ${src_path}/PrismInterpolationUtility@Methods.F90
   ${src_path}/PyramidInterpolationUtility@Methods.F90
   ${src_path}/InterpolationUtility@Methods.F90
+  ${src_path}/LagrangeUtility@Methods.F90
   ${src_path}/JacobiPolynomialUtility@Methods.F90
   ${src_path}/Chebyshev1PolynomialUtility@Methods.F90
   ${src_path}/OrthogonalPolynomialUtility@Methods.F90

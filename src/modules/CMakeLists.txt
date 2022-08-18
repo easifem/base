@@ -60,6 +60,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
 #Display
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)
 
+#MdEncode
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
+
 #ErrorHandling
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ErrorHandling/CMakeLists.txt)
 

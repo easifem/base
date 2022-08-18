@@ -16,5 +16,126 @@
 !
 
 MODULE LagrangeUtility
+USE GlobalData
 IMPLICIT NONE
+PRIVATE
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeDOF@BasisMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: Returns the number of dof for lagrange polynomial
+!
+!# Introduction
+!
+! this routine returns the number of dof for lagrange polynomial
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDOF( order, elemType) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+    !! order
+  INTEGER( I4B ), INTENT( IN ) :: elemType
+  INTEGER( I4B ) :: ans
+    !! number of degree of freedom
+END FUNCTION LagrangeDOF
+END INTERFACE
+
+PUBLIC :: LagrangeDOF
+
+!----------------------------------------------------------------------------
+!                                                 LagrangeInDOF@BasisMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: Returns the number of dof for lagrange polynomial
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeInDOF( order, elemType) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+    !! order
+  INTEGER( I4B ), INTENT( IN ) :: elemType
+  INTEGER( I4B ) :: ans
+    !! number of degree of freedom
+END FUNCTION LagrangeInDOF
+END INTERFACE
+
+PUBLIC :: LagrangeInDOF
+
+!----------------------------------------------------------------------------
+!                                                           LagrangeDegree
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: Returns the degrees of monomials for lagrange polynomial
+!
+!# Introduction
+!
+! this routine returns the degrees of monomials for lagrange polynomial on
+! triangles and quadrilaterals.
+
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDegree( order, elemType ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ), INTENT( IN ) :: elemType
+  INTEGER( I4B ), ALLOCATABLE :: ans( :, : )
+END FUNCTION LagrangeDegree
+END INTERFACE
+
+PUBLIC :: LagrangeDegree
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeVandermonde
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: Returns the degrees of monomials for lagrange polynomial
+!
+!# Introduction
+!
+! this routine returns the degrees of monomials for lagrange polynomial on
+! triangles and quadrilaterals.
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeVandermonde( x, order, elemType ) &
+  & RESULT( ans )
+  REAL( DFP ), INTENT( IN ) :: x( :, : )
+  !!  points in $x_{iJ}$ format
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  INTEGER( I4B ), INTENT( IN ) :: elemType
+  !! element type
+  REAL( DFP ), ALLOCATABLE :: ans( :, : )
+  !! vandermonde matrix nrows = number of points
+  !! ncols = number of dof
+END FUNCTION LagrangeVandermonde
+END INTERFACE
+
+PUBLIC :: LagrangeVandermonde
+
+!----------------------------------------------------------------------------
+!                                                          EquidistancePoint
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION EquidistancePoint( order, xij, elemType ) &
+  & RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+  INTEGER( I4B ), INTENT( IN ) :: elemType
+  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+END FUNCTION EquidistancePoint
+END INTERFACE
+
+PUBLIC :: EquidistancePoint
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END MODULE LagrangeUtility

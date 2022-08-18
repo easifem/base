@@ -16,27 +16,68 @@
 !
 
 SUBMODULE(PyramidInterpolationUtility) Methods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                LagrangeDegree_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDegree_Pyramid
+
+! TODO #165 Implement LagrangeDegree_Pyramid
+
+END PROCEDURE LagrangeDegree_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeDOF_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDOF_Pyramid
+  ans = (order+1)*(order+2)*(2*order+3)/6
+END PROCEDURE LagrangeDOF_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeInDOF_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeInDOF_Pyramid
+  ans = (order-1)*(order-2)*(2*order-3)/6
+END PROCEDURE LagrangeInDOF_Pyramid
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Pyramid
+
+! TODO #161 Implement EquidistancePoint_Pyramid routine
+
+END PROCEDURE EquidistancePoint_Pyramid
+
+!----------------------------------------------------------------------------
+!                                            EquidistanceInPoint_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistanceInPoint_Pyramid
+
+! TODO #161 Implement EquidistanceInPoint_Pyramid routine
+
+END PROCEDURE EquidistanceInPoint_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                InterpolationPoint_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Pyramid
-  !!
   SELECT CASE( ipType )
-  !!
   CASE( Equidistance )
-    !!
     nodecoord = EquidistanceLIP_Pyramid( xij=xij, order=order )
-    !!
   CASE( GaussLegendre )
   CASE( GaussLobatto )
   CASE( Chebyshev )
-  !!
   END SELECT
-  !!
 END PROCEDURE InterpolationPoint_Pyramid
 
 !----------------------------------------------------------------------------
