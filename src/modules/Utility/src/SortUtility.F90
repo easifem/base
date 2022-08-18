@@ -29,8 +29,8 @@ PUBLIC :: QUICKSORT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Heap sort
+! date: 22 March 2021
+! summary: Heap sort
 
 INTERFACE
   MODULE PURE SUBROUTINE HEAPSORT_Int8(array)
@@ -490,8 +490,8 @@ END INTERFACE QUICKSORT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Recursive quicksort using binary tree pivot.
+! date: 22 March 2021
+! summary: Recursive quicksort using binary tree pivot.
 
 INTERFACE
   MODULE PURE RECURSIVE FUNCTION SORT_INT(x) RESULT(Ans)
