@@ -24,11 +24,15 @@ PRIVATE
 !                                                  LagrangeDegree_Quadrangle
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary:         Returns the degree of monomials for Lagrange polynomials
+
 INTERFACE
-MODULE PURE FUNCTION LagrangeDegree_Quadrangle( order ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  INTEGER( I4B ), ALLOCATABLE :: ans(:,:)
-END FUNCTION LagrangeDegree_Quadrangle
+  MODULE PURE FUNCTION LagrangeDegree_Quadrangle(order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+  END FUNCTION LagrangeDegree_Quadrangle
 END INTERFACE
 
 PUBLIC :: LagrangeDegree_Quadrangle
@@ -39,14 +43,14 @@ PUBLIC :: LagrangeDegree_Quadrangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary: 	Returns the total number of degree of freedom for a
+! summary:         Returns the total number of degree of freedom for a
 ! lagrange polynomial on Quadrangle
 
 INTERFACE
-MODULE PURE FUNCTION LagrangeDOF_Quadrangle( order ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  INTEGER( I4B ) :: ans
-END FUNCTION LagrangeDOF_Quadrangle
+  MODULE PURE FUNCTION LagrangeDOF_Quadrangle(order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B) :: ans
+  END FUNCTION LagrangeDOF_Quadrangle
 END INTERFACE
 
 PUBLIC :: LagrangeDOF_Quadrangle
@@ -57,7 +61,7 @@ PUBLIC :: LagrangeDOF_Quadrangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary: 	Returns the total number of degree of freedom for a
+! summary:         Returns the total number of degree of freedom for a
 ! lagrange polynomial in cell/face of Quadrangle
 !
 !# Introduction
@@ -67,10 +71,10 @@ PUBLIC :: LagrangeDOF_Quadrangle
 !- These dof are strictly inside the Quadrangle
 
 INTERFACE
-MODULE PURE FUNCTION LagrangeInDOF_Quadrangle( order ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  INTEGER( I4B ) :: ans
-END FUNCTION LagrangeInDOF_Quadrangle
+  MODULE PURE FUNCTION LagrangeInDOF_Quadrangle(order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B) :: ans
+  END FUNCTION LagrangeInDOF_Quadrangle
 END INTERFACE
 
 PUBLIC :: LagrangeInDOF_Quadrangle
@@ -81,7 +85,7 @@ PUBLIC :: LagrangeInDOF_Quadrangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary: 	Returns equidistance points in Quadrangle
+! summary:         Returns equidistance points in Quadrangle
 !
 !# Introduction
 !
@@ -89,17 +93,17 @@ PUBLIC :: LagrangeInDOF_Quadrangle
 !- All points are inside the Quadrangle
 
 INTERFACE
-MODULE PURE FUNCTION EquidistanceInPoint_Quadrangle( order, xij ) &
-  & RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
+  MODULE PURE FUNCTION EquidistanceInPoint_Quadrangle(order, xij) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
   !! order
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
   !! coordinates of point 1 and point 2 in $x_{iJ}$ format
   !! number of rows = nsd
   !! number of cols = 4
-  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   !! returned coordinates in $x_{iJ}$ format
-END FUNCTION EquidistanceInPoint_Quadrangle
+  END FUNCTION EquidistanceInPoint_Quadrangle
 END INTERFACE
 
 PUBLIC :: EquidistanceInPoint_Quadrangle
@@ -110,7 +114,7 @@ PUBLIC :: EquidistanceInPoint_Quadrangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 12 Aug 2022
-! summary: 	Returns the nodal coordinates of higher order Quadrangle element
+! summary: Returns the nodal coordinates of higher order Quadrangle element
 !
 !# Introduction
 !
@@ -122,16 +126,16 @@ PUBLIC :: EquidistanceInPoint_Quadrangle
 !- The node numbering is according to Gmsh convention.
 
 INTERFACE
-MODULE PURE FUNCTION EquidistancePoint_Quadrangle( order, xij ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
+  MODULE PURE FUNCTION EquidistancePoint_Quadrangle(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
   !! order
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
   !! coordinates of point 1 and point 2 in $x_{iJ}$ format
   !! number of rows = nsd
   !! number of cols = 3
-  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   !! returned coordinates in $x_{iJ}$ format
-END FUNCTION EquidistancePoint_Quadrangle
+  END FUNCTION EquidistancePoint_Quadrangle
 END INTERFACE
 
 PUBLIC :: EquidistancePoint_Quadrangle
@@ -140,15 +144,21 @@ PUBLIC :: EquidistancePoint_Quadrangle
 !                                                InterpolationPoint_Quadrangle
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary:         Interpolation point
+
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Quadrangle( order, ipType, xij ) &
-    & RESULT( nodecoord )
-    !!
-    INTEGER( I4B ), INTENT( IN ) :: order
-    INTEGER( I4B ), INTENT( IN ) :: ipType
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 4 )
-    REAL( DFP ) :: nodecoord( 3, ( order + 1 ) ** 2 )
-    !!
+  MODULE PURE FUNCTION InterpolationPoint_Quadrangle(order, ipType, xij) &
+    & RESULT(nodecoord)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of element
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point type
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 4)
+    !! xij format
+    REAL(DFP) :: nodecoord(3, (order + 1)**2)
+    !! interpolation points in xij format
   END FUNCTION InterpolationPoint_Quadrangle
 END INTERFACE
 

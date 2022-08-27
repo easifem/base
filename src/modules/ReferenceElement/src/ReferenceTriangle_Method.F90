@@ -610,4 +610,56 @@ END INTERFACE
 
 PUBLIC :: triangle_quality
 
+!----------------------------------------------------------------------------
+!                                                            TriangleArea3D
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 10 Aug 2022
+! summary: Area of triangle in 3D
+!
+!# Introduction
+!
+!- TRIANGLEAREA3D computes the area of a triangle in 3D.
+!- This routine uses the fact that the norm of the cross product
+! of two vectors is the area of the parallelogram they form.
+! Therefore, the area of the triangle is half of that value.
+
+INTERFACE
+MODULE PURE SUBROUTINE TriangleArea3D( t, area )
+  REAL( DFP ), INTENT( IN ) :: t(3,3)
+  REAL( DFP ), INTENT( OUT ) :: area
+END SUBROUTINE TriangleArea3D
+END INTERFACE
+
+PUBLIC :: TriangleArea3D
+
+!-----------------------------------------------------------------------------
+!
+!-----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 10 Aug 2022
+! summary: 	Return are of triangle in 2D
+!
+!# Introduction
+!
+!- TRIANGLEAREA2D computes the area of a triangle in 2D.
+!- If the triangle's vertices are given in counter clockwise order,
+! the area will be positive.  If the triangle's vertices are given
+! in clockwise order, the area will be negative!
+
+INTERFACE
+MODULE PURE SUBROUTINE TriangleArea2D( t, area )
+  REAL ( DFP ), INTENT( IN ) ::  t(2,3)
+  REAL ( DFP ), INTENT( OUT ) :: area
+END SUBROUTINE TriangleArea2D
+END INTERFACE
+
+PUBLIC :: TriangleArea2D
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END MODULE ReferenceTriangle_Method

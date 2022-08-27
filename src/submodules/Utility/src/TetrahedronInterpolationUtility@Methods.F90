@@ -25,25 +25,25 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDegree_Tetrahedron
-  INTEGER( I4B ) ::  n, ii, jj, kk, ll
+INTEGER(I4B) :: n, ii, jj, kk, ll
   !!
-  n = LagrangeDOF_Tetrahedron( order=order )
-  ALLOCATE( ans( n, 3 ) )
+n = LagrangeDOF_Tetrahedron(order=order)
+ALLOCATE (ans(n, 3))
   !!
-  ll = 0
+ll = 0
   !!
-  DO kk = 0, order
-    DO jj = 0, order
-      DO ii = 0, order
-        IF( ii+jj+kk .LE. order ) THEN
-          ll = ll + 1
-          ans(ll, 1) = ii
-          ans(ll, 2) = jj
-          ans(ll, 3) = kk
-        END IF
-      END DO
+DO kk = 0, order
+  DO jj = 0, order
+    DO ii = 0, order
+      IF (ii + jj + kk .LE. order) THEN
+        ll = ll + 1
+        ans(ll, 1) = ii
+        ans(ll, 2) = jj
+        ans(ll, 3) = kk
+      END IF
     END DO
   END DO
+END DO
   !!
 END PROCEDURE LagrangeDegree_Tetrahedron
 
@@ -52,7 +52,7 @@ END PROCEDURE LagrangeDegree_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDOF_Tetrahedron
-  ans = (order+1)*(order+2)*(order+3)/6_I4B
+ans = (order + 1) * (order + 2) * (order + 3) / 6_I4B
 END PROCEDURE LagrangeDOF_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ END PROCEDURE LagrangeDOF_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeInDOF_Tetrahedron
-  ans = (order-1)*(order-2)*(order-3)/6_I4B
+ans = (order - 1) * (order - 2) * (order - 3) / 6_I4B
 END PROCEDURE LagrangeInDOF_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -68,122 +68,122 @@ END PROCEDURE LagrangeInDOF_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Tetrahedron
-  INTEGER( I4B ), PARAMETER :: nv = 4_I4B
-  INTEGER( I4B ) :: nsd, n, ne, nf, nc, i1, i2, ii
-  REAL( DFP ) :: x( 3, nv ), xin( 3, nv ), e1(3), e2(3), e3(3), lam, &
-    & avar, mu, delta
-  INTEGER( I4B ), PARAMETER :: edges(6,2) = RESHAPE( &
-    & [1,1,1,2,2,3,2,3,4,3,4,4], [6,2])
-  INTEGER( I4B ), PARAMETER :: faces(4,3) = RESHAPE( &
-    & [1,1,1,2,3,2,4,3,2,4,3,4], [4,3] )
+INTEGER(I4B), PARAMETER :: nv = 4_I4B
+INTEGER(I4B) :: nsd, n, ne, nf, nc, i1, i2, ii
+REAL(DFP) :: x(3, nv), xin(3, nv), e1(3), e2(3), e3(3), lam, &
+  & avar, mu, delta
+INTEGER(I4B), PARAMETER :: edges(6, 2) = RESHAPE( &
+  & [1, 1, 1, 2, 2, 3, 2, 3, 4, 3, 4, 4], [6, 2])
+INTEGER(I4B), PARAMETER :: faces(4, 3) = RESHAPE( &
+  & [1, 1, 1, 2, 3, 2, 4, 3, 2, 4, 3, 4], [4, 3])
   !!
-  x = 0.0_DFP; xin=0.0_DFP; e1=0.0_DFP; e2=0.0_DFP
+x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
   !!
-  IF( PRESENT( xij ) ) THEN
-    nsd = SIZE( xij, 1 )
-    x(1:nsd, 1:nv) = xij(1:nsd, 1:nv)
-  ELSE
-    nsd = 3_I4B
-    x(1:nsd,1) = [0.0,0.0,0.0]
-    x(1:nsd,2) = [1.0,0.0,0.0]
-    x(1:nsd,3) = [0.0,1.0,0.0]
-    x(1:nsd,4) = [0.0,0.0,1.0]
-  END IF
+IF (PRESENT(xij)) THEN
+  nsd = SIZE(xij, 1)
+  x(1:nsd, 1:nv) = xij(1:nsd, 1:nv)
+ELSE
+  nsd = 3_I4B
+  x(1:nsd, 1) = [0.0, 0.0, 0.0]
+  x(1:nsd, 2) = [1.0, 0.0, 0.0]
+  x(1:nsd, 3) = [0.0, 1.0, 0.0]
+  x(1:nsd, 4) = [0.0, 0.0, 1.0]
+END IF
   !!
-  n = LagrangeDOF_Tetrahedron(order=order)
-  ALLOCATE( ans( nsd, n ) )
-  ans = 0.0_DFP
+n = LagrangeDOF_Tetrahedron(order=order)
+ALLOCATE (ans(nsd, n))
+ans = 0.0_DFP
   !!
   !! points on vertex
   !!
-  ans(1:nsd,1:nv) = x(1:nsd, 1:nv)
+ans(1:nsd, 1:nv) = x(1:nsd, 1:nv)
   !!
   !! points on edge
   !!
-  ne = LagrangeInDOF_Line( order=order )
-  nf = LagrangeInDOF_Triangle( order=order )
-  nc = LagrangeInDOF_Tetrahedron( order=order )
+ne = LagrangeInDOF_Line(order=order)
+nf = LagrangeInDOF_Triangle(order=order)
+nc = LagrangeInDOF_Tetrahedron(order=order)
   !!
-  i2=nv
+i2 = nv
   !!
-  IF( order .GT. 1_I4B ) THEN
-    DO ii = 1, SIZE(edges,1)
-      i1 = i2+1; i2=i2+ne
-      ans(1:nsd, i1:i2 ) = EquidistanceInPoint_Line( &
-        & order=order, &
-        & xij=x(1:nsd, edges(ii, 1:2) ) )
-    END DO
-  END IF
+IF (order .GT. 1_I4B) THEN
+  DO ii = 1, SIZE(edges, 1)
+    i1 = i2 + 1; i2 = i2 + ne
+    ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
+      & order=order, &
+      & xij=x(1:nsd, edges(ii, 1:2)))
+  END DO
+END IF
   !!
   !! points on face
   !!
-  IF( order .GT. 2_I4B ) THEN
-    DO ii = 1, SIZE(faces,1)
-      i1 = i2+1; i2 = i2+nf
-      ans(1:nsd, i1:i2) = EquidistanceInPoint_Triangle( &
-        & order=order, &
-        & xij=x(1:nsd, faces(ii, 1:3) ))
-    END DO
-  END IF
+IF (order .GT. 2_I4B) THEN
+  DO ii = 1, SIZE(faces, 1)
+    i1 = i2 + 1; i2 = i2 + nf
+    ans(1:nsd, i1:i2) = EquidistanceInPoint_Triangle( &
+      & order=order, &
+      & xij=x(1:nsd, faces(ii, 1:3)))
+  END DO
+END IF
   !!
   !! points on cell
   !!
-  IF( order .GT. 3_I4B ) THEN
-    IF( order .EQ. 4_I4B ) THEN
-      ans(1:nsd, i2+1) = SUM(x(1:nsd,:), dim=2_I4B)/nv
-    ELSE
+IF (order .GT. 3_I4B) THEN
+  IF (order .EQ. 4_I4B) THEN
+    ans(1:nsd, i2 + 1) = SUM(x(1:nsd, :), dim=2_I4B) / nv
+  ELSE
       !!
-      e1 = x(:,2)-x(:,1); avar = NORM2(e1); e1 = e1 / avar
-      lam = avar / order
-      e2 = x(:,3)-x(:,1); avar = NORM2(e2); e2 = e2 / avar
-      mu = avar / order
-      e3 = x(:,4)-x(:,1); avar = NORM2(e3); e3 = e3 / avar
-      delta = avar / order
-      xin(1:nsd, 1) = x(1:nsd, 1) &
-        & + lam*e1(1:nsd) &
-        & + mu*e2(1:nsd) &
-        & + delta*e3(1:nsd)
+    e1 = x(:, 2) - x(:, 1); avar = NORM2(e1); e1 = e1 / avar
+    lam = avar / order
+    e2 = x(:, 3) - x(:, 1); avar = NORM2(e2); e2 = e2 / avar
+    mu = avar / order
+    e3 = x(:, 4) - x(:, 1); avar = NORM2(e3); e3 = e3 / avar
+    delta = avar / order
+    xin(1:nsd, 1) = x(1:nsd, 1) &
+      & + lam * e1(1:nsd) &
+      & + mu * e2(1:nsd) &
+      & + delta * e3(1:nsd)
       !!
-      e1 = x(:,1)-x(:,2); avar = NORM2(e1); e1 = e1 / avar
-      lam = avar / order
-      e2 = x(:,3)-x(:,2); avar = NORM2(e2); e2 = e2 / avar
-      mu = avar / order
-      e3 = x(:,4)-x(:,2); avar = NORM2(e3); e3 = e3 / avar
-      delta = avar / order
-      xin(1:nsd, 2) = x(1:nsd, 2) &
-        & + lam*e1(1:nsd) &
-        & + mu*e2(1:nsd) &
-        & + delta*e3(1:nsd)
+    e1 = x(:, 1) - x(:, 2); avar = NORM2(e1); e1 = e1 / avar
+    lam = avar / order
+    e2 = x(:, 3) - x(:, 2); avar = NORM2(e2); e2 = e2 / avar
+    mu = avar / order
+    e3 = x(:, 4) - x(:, 2); avar = NORM2(e3); e3 = e3 / avar
+    delta = avar / order
+    xin(1:nsd, 2) = x(1:nsd, 2) &
+      & + lam * e1(1:nsd) &
+      & + mu * e2(1:nsd) &
+      & + delta * e3(1:nsd)
       !!
-      e1 = x(:,1)-x(:,3); avar = NORM2(e1); e1 = e1 / avar
-      lam = avar / order
-      e2 = x(:,2)-x(:,3); avar = NORM2(e2); e2 = e2 / avar
-      mu = avar / order
-      e3 = x(:,4)-x(:,3); avar = NORM2(e3); e3 = e3 / avar
-      delta = avar / order
-      xin(1:nsd, 3) = x(1:nsd, 3) &
-        & + lam*e1(1:nsd) &
-        & + mu*e2(1:nsd) &
-        & + delta*e3(1:nsd)
+    e1 = x(:, 1) - x(:, 3); avar = NORM2(e1); e1 = e1 / avar
+    lam = avar / order
+    e2 = x(:, 2) - x(:, 3); avar = NORM2(e2); e2 = e2 / avar
+    mu = avar / order
+    e3 = x(:, 4) - x(:, 3); avar = NORM2(e3); e3 = e3 / avar
+    delta = avar / order
+    xin(1:nsd, 3) = x(1:nsd, 3) &
+      & + lam * e1(1:nsd) &
+      & + mu * e2(1:nsd) &
+      & + delta * e3(1:nsd)
       !!
-      e1 = x(:,1)-x(:,4); avar = NORM2(e1); e1 = e1 / avar
-      lam = avar / order
-      e2 = x(:,2)-x(:,4); avar = NORM2(e2); e2 = e2 / avar
-      mu = avar / order
-      e3 = x(:,3)-x(:,4); avar = NORM2(e3); e3 = e3 / avar
-      delta = avar / order
-      xin(1:nsd, 4) = x(1:nsd, 4) &
-        & + lam*e1(1:nsd) &
-        & + mu*e2(1:nsd) &
-        & + delta*e3(1:nsd)
+    e1 = x(:, 1) - x(:, 4); avar = NORM2(e1); e1 = e1 / avar
+    lam = avar / order
+    e2 = x(:, 2) - x(:, 4); avar = NORM2(e2); e2 = e2 / avar
+    mu = avar / order
+    e3 = x(:, 3) - x(:, 4); avar = NORM2(e3); e3 = e3 / avar
+    delta = avar / order
+    xin(1:nsd, 4) = x(1:nsd, 4) &
+      & + lam * e1(1:nsd) &
+      & + mu * e2(1:nsd) &
+      & + delta * e3(1:nsd)
       !!
-      i1 = i2+1
-      ans(1:nsd, i1: ) = EquidistancePoint_Tetrahedron( &
-        & order=order-4, &
-        & xij=xin(1:nsd, 1:4) )
+    i1 = i2 + 1
+    ans(1:nsd, i1:) = EquidistancePoint_Tetrahedron( &
+      & order=order - 4, &
+      & xij=xin(1:nsd, 1:4))
       !!
-    END IF
   END IF
+END IF
 END PROCEDURE EquidistancePoint_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -191,92 +191,92 @@ END PROCEDURE EquidistancePoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Tetrahedron
-  INTEGER( I4B ), PARAMETER :: nv = 4_I4B
-  INTEGER( I4B ) :: nsd, n, ne, nf, nc, i1, i2, ii
-  REAL( DFP ) :: x( 3, nv ), xin( 3, nv ), e1(3), e2(3), e3(3), lam, &
-    & avar, mu, delta
-  INTEGER( I4B ), PARAMETER :: edges(6,2) = RESHAPE( &
-    & [1,1,1,2,2,3,2,3,4,3,4,4], [6,2])
-  INTEGER( I4B ), PARAMETER :: faces(4,3) = RESHAPE( &
-    & [1,1,1,2,3,2,4,3,2,4,3,4], [4,3] )
+INTEGER(I4B), PARAMETER :: nv = 4_I4B
+INTEGER(I4B) :: nsd, n, ne, nf, nc, i1, i2, ii
+REAL(DFP) :: x(3, nv), xin(3, nv), e1(3), e2(3), e3(3), lam, &
+  & avar, mu, delta
+INTEGER(I4B), PARAMETER :: edges(6, 2) = RESHAPE( &
+  & [1, 1, 1, 2, 2, 3, 2, 3, 4, 3, 4, 4], [6, 2])
+INTEGER(I4B), PARAMETER :: faces(4, 3) = RESHAPE( &
+  & [1, 1, 1, 2, 3, 2, 4, 3, 2, 4, 3, 4], [4, 3])
   !!
-  x = 0.0_DFP; xin=0.0_DFP; e1=0.0_DFP; e2=0.0_DFP
+x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
   !!
-  IF( PRESENT( xij ) ) THEN
-    nsd = SIZE( xij, 1 )
-    x(1:nsd, 1:nv) = xij(1:nsd, 1:nv)
-  ELSE
-    nsd = 3_I4B
-    x(1:nsd,1) = [0.0,0.0,0.0]
-    x(1:nsd,2) = [1.0,0.0,0.0]
-    x(1:nsd,3) = [0.0,1.0,0.0]
-    x(1:nsd,4) = [0.0,0.0,1.0]
-  END IF
+IF (PRESENT(xij)) THEN
+  nsd = SIZE(xij, 1)
+  x(1:nsd, 1:nv) = xij(1:nsd, 1:nv)
+ELSE
+  nsd = 3_I4B
+  x(1:nsd, 1) = [0.0, 0.0, 0.0]
+  x(1:nsd, 2) = [1.0, 0.0, 0.0]
+  x(1:nsd, 3) = [0.0, 1.0, 0.0]
+  x(1:nsd, 4) = [0.0, 0.0, 1.0]
+END IF
   !!
-  n = LagrangeInDOF_Tetrahedron(order=order)
+n = LagrangeInDOF_Tetrahedron(order=order)
   !!
   !! points on cell
   !!
-  IF( order .GT. 3_I4B ) THEN
-    ALLOCATE( ans( nsd, n ) )
-    ans = 0.0_DFP
-    IF( order .EQ. 4_I4B ) THEN
-      ans(1:nsd, i2+1) = SUM(x(1:nsd,:), dim=2_I4B)/nv
-    ELSE
-      !!
-      e1 = x(:,2)-x(:,1); avar = NORM2(e1); e1 = e1 / avar
-      lam = avar / order
-      e2 = x(:,3)-x(:,1); avar = NORM2(e2); e2 = e2 / avar
-      mu = avar / order
-      e3 = x(:,4)-x(:,1); avar = NORM2(e3); e3 = e3 / avar
-      delta = avar / order
-      xin(1:nsd, 1) = x(1:nsd, 1) &
-        & + lam*e1(1:nsd) &
-        & + mu*e2(1:nsd) &
-        & + delta*e3(1:nsd)
-      !!
-      e1 = x(:,1)-x(:,2); avar = NORM2(e1); e1 = e1 / avar
-      lam = avar / order
-      e2 = x(:,3)-x(:,2); avar = NORM2(e2); e2 = e2 / avar
-      mu = avar / order
-      e3 = x(:,4)-x(:,2); avar = NORM2(e3); e3 = e3 / avar
-      delta = avar / order
-      xin(1:nsd, 2) = x(1:nsd, 2) &
-        & + lam*e1(1:nsd) &
-        & + mu*e2(1:nsd) &
-        & + delta*e3(1:nsd)
-      !!
-      e1 = x(:,1)-x(:,3); avar = NORM2(e1); e1 = e1 / avar
-      lam = avar / order
-      e2 = x(:,2)-x(:,3); avar = NORM2(e2); e2 = e2 / avar
-      mu = avar / order
-      e3 = x(:,4)-x(:,3); avar = NORM2(e3); e3 = e3 / avar
-      delta = avar / order
-      xin(1:nsd, 3) = x(1:nsd, 3) &
-        & + lam*e1(1:nsd) &
-        & + mu*e2(1:nsd) &
-        & + delta*e3(1:nsd)
-      !!
-      e1 = x(:,1)-x(:,4); avar = NORM2(e1); e1 = e1 / avar
-      lam = avar / order
-      e2 = x(:,2)-x(:,4); avar = NORM2(e2); e2 = e2 / avar
-      mu = avar / order
-      e3 = x(:,3)-x(:,4); avar = NORM2(e3); e3 = e3 / avar
-      delta = avar / order
-      xin(1:nsd, 4) = x(1:nsd, 4) &
-        & + lam*e1(1:nsd) &
-        & + mu*e2(1:nsd) &
-        & + delta*e3(1:nsd)
-      !!
-      i1 = i2+1
-      ans(1:nsd, i1: ) = EquidistancePoint_Tetrahedron( &
-        & order=order-4, &
-        & xij=xin(1:nsd, 1:4) )
-      !!
-    END IF
+IF (order .GT. 3_I4B) THEN
+  ALLOCATE (ans(nsd, n))
+  ans = 0.0_DFP
+  IF (order .EQ. 4_I4B) THEN
+    ans(1:nsd, i2 + 1) = SUM(x(1:nsd, :), dim=2_I4B) / nv
   ELSE
-    ALLOCATE( ans( 0, 0 ) )
+      !!
+    e1 = x(:, 2) - x(:, 1); avar = NORM2(e1); e1 = e1 / avar
+    lam = avar / order
+    e2 = x(:, 3) - x(:, 1); avar = NORM2(e2); e2 = e2 / avar
+    mu = avar / order
+    e3 = x(:, 4) - x(:, 1); avar = NORM2(e3); e3 = e3 / avar
+    delta = avar / order
+    xin(1:nsd, 1) = x(1:nsd, 1) &
+      & + lam * e1(1:nsd) &
+      & + mu * e2(1:nsd) &
+      & + delta * e3(1:nsd)
+      !!
+    e1 = x(:, 1) - x(:, 2); avar = NORM2(e1); e1 = e1 / avar
+    lam = avar / order
+    e2 = x(:, 3) - x(:, 2); avar = NORM2(e2); e2 = e2 / avar
+    mu = avar / order
+    e3 = x(:, 4) - x(:, 2); avar = NORM2(e3); e3 = e3 / avar
+    delta = avar / order
+    xin(1:nsd, 2) = x(1:nsd, 2) &
+      & + lam * e1(1:nsd) &
+      & + mu * e2(1:nsd) &
+      & + delta * e3(1:nsd)
+      !!
+    e1 = x(:, 1) - x(:, 3); avar = NORM2(e1); e1 = e1 / avar
+    lam = avar / order
+    e2 = x(:, 2) - x(:, 3); avar = NORM2(e2); e2 = e2 / avar
+    mu = avar / order
+    e3 = x(:, 4) - x(:, 3); avar = NORM2(e3); e3 = e3 / avar
+    delta = avar / order
+    xin(1:nsd, 3) = x(1:nsd, 3) &
+      & + lam * e1(1:nsd) &
+      & + mu * e2(1:nsd) &
+      & + delta * e3(1:nsd)
+      !!
+    e1 = x(:, 1) - x(:, 4); avar = NORM2(e1); e1 = e1 / avar
+    lam = avar / order
+    e2 = x(:, 2) - x(:, 4); avar = NORM2(e2); e2 = e2 / avar
+    mu = avar / order
+    e3 = x(:, 3) - x(:, 4); avar = NORM2(e3); e3 = e3 / avar
+    delta = avar / order
+    xin(1:nsd, 4) = x(1:nsd, 4) &
+      & + lam * e1(1:nsd) &
+      & + mu * e2(1:nsd) &
+      & + delta * e3(1:nsd)
+      !!
+    i1 = i2 + 1
+    ans(1:nsd, i1:) = EquidistancePoint_Tetrahedron( &
+      & order=order - 4, &
+      & xij=xin(1:nsd, 1:4))
+      !!
   END IF
+ELSE
+  ALLOCATE (ans(0, 0))
+END IF
 END PROCEDURE EquidistanceInPoint_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -284,283 +284,14 @@ END PROCEDURE EquidistanceInPoint_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Tetrahedron
-  SELECT CASE( ipType )
-  CASE( Equidistance )
-    nodecoord = EquidistanceLIP_Tetrahedron( xij=xij, order=order )
-  CASE( GaussLegendre )
-  CASE( GaussLobatto )
-  CASE( Chebyshev )
-  END SELECT
+SELECT CASE (ipType)
+CASE (Equidistance)
+  nodecoord = EquidistancePoint_Tetrahedron(xij=xij, order=order)
+CASE (GaussLegendre)
+CASE (GaussLobatto)
+CASE (Chebyshev)
+END SELECT
 END PROCEDURE InterpolationPoint_Tetrahedron
-
-!----------------------------------------------------------------------------
-!                                                EquidistanceLIP_Tetrahedron
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE EquidistanceLIP_Tetrahedron
-  !!
-  !!
-  !!
-  SELECT CASE ( order )
-    CASE( 1 )
-      !!
-      !! tetra4
-      !!
-    nodecoord = reshape( [ &
-      & 0.0, 0.0, 0.0, &
-      & 1.0, 0.0, 0.0, &
-      & 0.0, 1.0, 0.0, &
-      & 0.0, 0.0, 1.0 ], [3, 4])
-      !!
-    CASE( 2 )
-      !!
-      !! tetra10
-      !!
-    nodecoord = reshape( [ &
-      & 0.0, 0.0, 0.0, &
-      & 1.0, 0.0, 0.0, &
-      & 0.0, 1.0, 0.0, &
-      & 0.0, 0.0, 1.0, &
-      & 0.5, 0.0, 0.0, &
-      & 0.5, 0.5, 0.0, &
-      & 0.0, 0.5, 0.0, &
-      & 0.0, 0.0, 0.5, &
-      & 0.0, 0.5, 0.5, &
-      & 0.5, 0.0, 0.5 ], [3, 10])
-      !!
-    CASE( 3 )
-      !!
-      !! tetra20
-      !!
-    nodecoord = reshape( [ &
-      & 0.0, 0.0, 0.0, &
-      & 1.0, 0.0, 0.0, &
-      & 0.0, 1.0, 0.0, &
-      & 0.0, 0.0, 1.0, &
-      & 0.33333333333333333333, 0.0, 0.0, &
-      & 0.66666666666666666667, 0.0, 0.0, &
-      & 0.66666666666666666667, 0.33333333333333333333, 0.0, &
-      & 0.33333333333333333333, 0.66666666666666666667, 0.0, &
-      & 0.0, 0.66666666666666666667, 0.0, &
-      & 0.0, 0.33333333333333333333, 0.0, &
-      & 0.0, 0.0, 0.66666666666666666667, &
-      & 0.0, 0.0, 0.33333333333333333333, &
-      & 0.0, 0.33333333333333333333, 0.66666666666666666667, &
-      & 0.0, 0.66666666666666666667, 0.33333333333333333333, &
-      & 0.33333333333333333333, 0.0, 0.66666666666666666667, &
-      & 0.66666666666666666667, 0.0, 0.33333333333333333333, &
-      & 0.33333333333333333333, 0.33333333333333333333, 0.0, &
-      & 0.33333333333333333333, 0.0, 0.33333333333333333333, &
-      & 0.0, 0.33333333333333333333, 0.33333333333333333333, &
-      & 0.33333333333333333333, 0.33333333333333333333, &
-      & 0.33333333333333333333], [3,20])
-      !!
-    CASE( 4 )
-      !!
-      !! tetra35
-      !!
-    nodecoord = reshape( [ &
-      & 0.0, 0.0, 0.0, &
-      & 1.0, 0.0, 0.0, &
-      & 0.0, 1.0, 0.0, &
-      & 0.0, 0.0, 1.0, &
-      & 0.25, 0.0, 0.0, &
-      & 0.5, 0.0, 0.0, &
-      & 0.75, 0.0, 0.0, &
-      & 0.75, 0.25, 0.0, &
-      & 0.5, 0.5, 0.0, &
-      & 0.25, 0.75, 0.0, &
-      & 0.0, 0.75, 0.0, &
-      & 0.0, 0.5, 0.0, &
-      & 0.0, 0.25, 0.0, &
-      & 0.0, 0.0, 0.75, &
-      & 0.0, 0.0, 0.5, &
-      & 0.0, 0.0, 0.25, &
-      & 0.0, 0.25, 0.75, &
-      & 0.0, 0.5, 0.5, &
-      & 0.0, 0.75, 0.25, &
-      & 0.25, 0.0, 0.75, &
-      & 0.5, 0.0, 0.5, &
-      & 0.75, 0.0, 0.25, &
-      & 0.25, 0.25, 0.0, &
-      & 0.25, 0.5, 0.0, &
-      & 0.5, 0.25, 0.0, &
-      & 0.25, 0.0, 0.25, &
-      & 0.5, 0.0, 0.25, &
-      & 0.25, 0.0, 0.5, &
-      & 0.0, 0.25, 0.25, &
-      & 0.0, 0.25, 0.5, &
-      & 0.0, 0.5, 0.25, &
-      & 0.25, 0.25, 0.5, &
-      & 0.5, 0.25, 0.25, &
-      & 0.25, 0.5, 0.25, &
-      & 0.25, 0.25, 0.25 ], [3, 35])
-      !!
-    CASE( 5 )
-      !!
-      !! tetra56
-      !!
-    nodecoord = reshape( [ &
-      & 0.0, 0.0, 0.0, &
-      & 1.0, 0.0, 0.0, &
-      & 0.0, 1.0, 0.0, &
-      & 0.0, 0.0, 1.0, &
-      & 0.2, 0.0, 0.0, &
-      & 0.4, 0.0, 0.0, &
-      & 0.6, 0.0, 0.0, &
-      & 0.8, 0.0, 0.0, &
-      & 0.8, 0.2, 0.0, &
-      & 0.6, 0.4, 0.0, &
-      & 0.4, 0.6, 0.0, &
-      & 0.2, 0.8, 0.0, &
-      & 0.0, 0.8, 0.0, &
-      & 0.0, 0.6, 0.0, &
-      & 0.0, 0.4, 0.0, &
-      & 0.0, 0.2, 0.0, &
-      & 0.0, 0.0, 0.8, &
-      & 0.0, 0.0, 0.6, &
-      & 0.0, 0.0, 0.4, &
-      & 0.0, 0.0, 0.2, &
-      & 0.0, 0.2, 0.8, &
-      & 0.0, 0.4, 0.6, &
-      & 0.0, 0.6, 0.4, &
-      & 0.0, 0.8, 0.2, &
-      & 0.2, 0.0, 0.8, &
-      & 0.4, 0.0, 0.6, &
-      & 0.6, 0.0, 0.4, &
-      & 0.8, 0.0, 0.2, &
-      & 0.2, 0.2, 0.0, &
-      & 0.2, 0.6, 0.0, &
-      & 0.6, 0.2, 0.0, &
-      & 0.2, 0.4, 0.0, &
-      & 0.4, 0.4, 0.0, &
-      & 0.4, 0.2, 0.0, &
-      & 0.2, 0.0, 0.2, &
-      & 0.6, 0.0, 0.2, &
-      & 0.2, 0.0, 0.6, &
-      & 0.4, 0.0, 0.2, &
-      & 0.4, 0.0, 0.4, &
-      & 0.2, 0.0, 0.4, &
-      & 0.0, 0.2, 0.2, &
-      & 0.0, 0.2, 0.6, &
-      & 0.0, 0.6, 0.2, &
-      & 0.0, 0.2, 0.4, &
-      & 0.0, 0.4, 0.4, &
-      & 0.0, 0.4, 0.2, &
-      & 0.2, 0.2, 0.6, &
-      & 0.6, 0.2, 0.2, &
-      & 0.2, 0.6, 0.2, &
-      & 0.4, 0.2, 0.4, &
-      & 0.4, 0.4, 0.2, &
-      & 0.2, 0.4, 0.4, &
-      & 0.2, 0.2, 0.2, &
-      & 0.4, 0.2, 0.2, &
-      & 0.2, 0.4, 0.2, &
-      & 0.2, 0.2, 0.4 ], [3, 56])
-      !!
-    CASE( 6 )
-      !!
-      !!
-      !!
-    nodecoord = reshape( [ &
-      & 0.0, 0.0, 0.0, &
-      & 1.0, 0.0, 0.0, &
-      & 0.0, 1.0, 0.0, &
-      & 0.0, 0.0, 1.0, &
-      & 0.16666666666666666667, 0.0, 0.0, &
-      & 0.33333333333333333333, 0.0, 0.0, &
-      & 0.5, 0.0, 0.0, &
-      & 0.66666666666666666667, 0.0, 0.0, &
-      & 0.83333333333333333333, 0.0, 0.0, &
-      & 0.83333333333333333333, 0.16666666666666666667, 0.0, &
-      & 0.66666666666666666667, 0.33333333333333333333, 0.0, &
-      & 0.5, 0.5, 0.0, &
-      & 0.33333333333333333333, 0.66666666666666666667, 0.0, &
-      & 0.16666666666666666667, 0.83333333333333333333, 0.0, &
-      & 0.0, 0.83333333333333333333, 0.0, &
-      & 0.0, 0.66666666666666666667, 0.0, &
-      & 0.0, 0.5, 0.0, &
-      & 0.0, 0.33333333333333333333, 0.0, &
-      & 0.0, 0.16666666666666666667, 0.0, &
-      & 0.0, 0.0, 0.83333333333333333333, &
-      & 0.0, 0.0, 0.66666666666666666667, &
-      & 0.0, 0.0, 0.5, &
-      & 0.0, 0.0, 0.33333333333333333333, &
-      & 0.0, 0.0, 0.16666666666666666667, &
-      & 0.0, 0.16666666666666666667, 0.83333333333333333333, &
-      & 0.0, 0.33333333333333333333, 0.66666666666666666667, &
-      & 0.0, 0.5, 0.5, &
-      & 0.0, 0.66666666666666666667, 0.33333333333333333333, &
-      & 0.0, 0.83333333333333333333, 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.0, 0.83333333333333333333, &
-      & 0.33333333333333333333, 0.0, 0.66666666666666666667, &
-      & 0.5, 0.0, 0.5, &
-      & 0.66666666666666666667, 0.0, 0.33333333333333333333, &
-      & 0.83333333333333333333, 0.0, 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.16666666666666666667, 0.0, &
-      & 0.16666666666666666667, 0.66666666666666666667, 0.0, &
-      & 0.66666666666666666667, 0.16666666666666666667, 0.0, &
-      & 0.16666666666666666667, 0.33333333333333333333, 0.0, &
-      & 0.16666666666666666667, 0.5, 0.0, &
-      & 0.33333333333333333333, 0.5, 0.0, &
-      & 0.5, 0.33333333333333333333, 0.0, &
-      & 0.5, 0.16666666666666666667, 0.0, &
-      & 0.33333333333333333333, 0.16666666666666666667, 0.0, &
-      & 0.33333333333333333333, 0.33333333333333333333, 0.0, &
-      & 0.16666666666666666667, 0.0, 0.16666666666666666667, &
-      & 0.66666666666666666667, 0.0, 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.0, 0.66666666666666666667, &
-      & 0.33333333333333333333, 0.0, 0.16666666666666666667, &
-      & 0.5, 0.0, 0.16666666666666666667, &
-      & 0.5, 0.0, 0.33333333333333333333, &
-      & 0.33333333333333333333, 0.0, 0.5, &
-      & 0.16666666666666666667, 0.0, 0.5, &
-      & 0.16666666666666666667, 0.0, 0.33333333333333333333, &
-      & 0.33333333333333333333, 0.0, 0.33333333333333333333, &
-      & 0.0, 0.16666666666666666667, 0.16666666666666666667, &
-      & 0.0, 0.16666666666666666667, 0.66666666666666666667, &
-      & 0.0, 0.66666666666666666667, 0.16666666666666666667, &
-      & 0.0, 0.16666666666666666667, 0.33333333333333333333, &
-      & 0.0, 0.16666666666666666667, 0.5, &
-      & 0.0, 0.33333333333333333333, 0.5, &
-      & 0.0, 0.5, 0.33333333333333333333, &
-      & 0.0, 0.5, 0.16666666666666666667, &
-      & 0.0, 0.33333333333333333333, 0.16666666666666666667, &
-      & 0.0, 0.33333333333333333333, 0.33333333333333333333, &
-      & 0.16666666666666666667, 0.16666666666666666667, &
-      & 0.66666666666666666667, &
-      & 0.66666666666666666667, 0.16666666666666666667, &
-      & 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.66666666666666666667, &
-      & 0.16666666666666666667, &
-      & 0.33333333333333333333, 0.16666666666666666667, 0.5, &
-      & 0.5, 0.16666666666666666667, 0.33333333333333333333, &
-      & 0.5, 0.33333333333333333333, 0.16666666666666666667, &
-      & 0.33333333333333333333, 0.5, 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.5, 0.33333333333333333333, &
-      & 0.16666666666666666667, 0.33333333333333333333, 0.5, &
-      & 0.33333333333333333333, 0.33333333333333333333, &
-      & 0.33333333333333333333, &
-      & 0.16666666666666666667, 0.16666666666666666667, &
-      & 0.16666666666666666667, &
-      & 0.5, 0.16666666666666666667, 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.5, 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.16666666666666666667, 0.5, &
-      & 0.33333333333333333333, 0.16666666666666666667,  &
-      & 0.16666666666666666667, &
-      & 0.33333333333333333333, 0.33333333333333333333, &
-      & 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.33333333333333333333, &
-      & 0.16666666666666666667, &
-      & 0.16666666666666666667, 0.16666666666666666667, &
-      & 0.33333333333333333333, &
-      & 0.16666666666666666667, 0.33333333333333333333, &
-      & 0.33333333333333333333, &
-      & 0.33333333333333333333, 0.16666666666666666667, &
-      & 0.33333333333333333333], [3, 84])
-  END SELECT
-  !!
-END PROCEDURE EquidistanceLIP_Tetrahedron
 
 !----------------------------------------------------------------------------
 !

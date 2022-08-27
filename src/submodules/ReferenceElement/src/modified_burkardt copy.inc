@@ -45,6 +45,100 @@ END FUNCTION R8MATDET4D
 !
 !-----------------------------------------------------------------------------
 
+PURE SUBROUTINE QUADAREA3D ( q, area )
+
+  !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  !! QUADAREA3D computes the area of a quadrilateral in 3D.
+  !
+  !  Discussion:
+  !    A quadrilateral is a polygon defined by 4 vertices.
+  !    It is assumed that the four vertices of the quadrilateral
+  !    are coplanar.
+  !    This algorithm computes the area of the related
+  !    Varignon parallelogram first.
+  !  Licensing:
+  !    This code is distributed under the GNU LGPL license.
+  !  Modified:
+  !    09 May 2010
+  !  Author:
+  !    John Burkardt
+  !  Parameters:
+  !    Input, REAL ( kind = 8 ) Q(3,4), the vertices, specified in
+  !    counter clockwise order.
+  !    Output, REAL ( kind = 8 ) AREA, the area of the quadrilateral.
+  !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  REAL( DFP ), INTENT( IN ) :: q(3,4)
+  REAL( DFP ), INTENT( OUT ) :: area
+  REAL( DFP ) :: p(3,4)
+
+  ! Define a parallelogram by averaging consecutive vertices.
+  p(1:3,1:3) = ( q(1:3,1:3) + q(1:3,2:4) ) / 2.0_DFP
+  p(1:3,  4) = ( q(1:3,  4) + q(1:3,1  ) ) / 2.0_DFP
+
+  !  Compute the area.
+  call PARALLELOGRAMAREA3D ( p, area )
+  ! The quadrilateral's area is twice that of the parallelogram.
+  area = 2.0_DFP * area
+
+END SUBROUTINE QUADAREA3D
+
+!-----------------------------------------------------------------------------
+!
+!-----------------------------------------------------------------------------
+
+PURE SUBROUTINE QUADAREA2D ( q, area )
+
+  !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+  ! QUADAREA2D computes the area of a quadrilateral in 2D.
+  !  Discussion:
+  !    A quadrilateral is a polygon defined by 4 vertices.
+  !    This algorithm should be able to handle nonconvex quadrilaterals.
+  !    The vertices of the quadrilateral should be listed in counter clockwise
+  !    order, so that the area is positive.
+  !
+  !  Licensing:
+  !    This code is distributed under the GNU LGPL license.
+  !  Modified:
+  !    28 December 2004
+  !  Author:
+  !    John Burkardt
+  !  Parameters:
+  !    Input, REAL ( kind = 8 ) Q(2,4), the vertices, specified in
+  !    counter clockwise order.
+  !    Output, REAL ( kind = 8 ) AREA, the area of the quadrilateral.
+  !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+  REAL( DFP ), INTENT( IN ) :: q(2,4)
+  REAL( DFP ), INTENT( OUT ) :: area
+
+  INTEGER( I4B ), PARAMETER :: dim_num = 2
+
+  REAL( DFP ) :: area_triangle
+  REAL( DFP ) :: t(dim_num,3)
+
+  area = 0.0_DFP
+
+  t(1:dim_num,1:3) = reshape ( (/ &
+    q(1:2,1), q(1:2,2), q(1:2,3) /), (/ dim_num, 3 /) )
+
+  CALL TRIANGLEAREA2D ( t, area_triangle )
+
+  area = area + area_triangle
+
+  t(1:dim_num,1:3) = RESHAPE ( (/ &
+    q(1:2,3), q(1:2,4), q(1:2,1) /), (/ dim_num, 3 /) )
+
+  CALL TRIANGLEAREA2D ( t, area_triangle )
+
+  area = area + area_triangle
+
+END SUBROUTINE QUADAREA2D
+
+!-----------------------------------------------------------------------------
+!
+!-----------------------------------------------------------------------------
+
 PURE SUBROUTINE PARALLELOGRAMAREA3D ( p, area )
 
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
