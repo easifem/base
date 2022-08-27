@@ -34,7 +34,7 @@ END PROCEDURE LagrangeDegree_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDOF_Hexahedron
-  ans = (order+1)**3
+ans = (order + 1)**3
 END PROCEDURE LagrangeDOF_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ END PROCEDURE LagrangeDOF_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeInDOF_Hexahedron
-  ans = (order-1)**3
+ans = (order - 1)**3
 END PROCEDURE LagrangeInDOF_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -50,9 +50,16 @@ END PROCEDURE LagrangeInDOF_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Hexahedron
-
+! ALLOCATE (nodecoord(3, 8))
+! nodecoord(:, 1) = [-1, -1, -1]
+! nodecoord(:, 2) = [1, -1, -1]
+! nodecoord(:, 3) = [1, 1, -1]
+! nodecoord(:, 4) = [-1, 1, -1]
+! nodecoord(:, 5) = [-1, -1, 1]
+! nodecoord(:, 6) = [1, -1, 1]
+! nodecoord(:, 7) = [1, 1, 1]
+! nodecoord(:, 8) = [-1, 1, 1]
 ! TODO #159 Implement EquidistancePoint_Hexahedron routine
-
 END PROCEDURE EquidistancePoint_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -70,38 +77,14 @@ END PROCEDURE EquidistanceInPoint_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Hexahedron
-  SELECT CASE( ipType )
-  CASE( Equidistance )
-    nodecoord = EquidistanceLIP_Hexahedron( xij=xij, order=order )
-  CASE( GaussLegendre )
-  CASE( GaussLobatto )
-  CASE( Chebyshev )
-  END SELECT
+SELECT CASE (ipType)
+CASE (Equidistance)
+  nodecoord = EquidistancePoint_Hexahedron(xij=xij, order=order)
+CASE (GaussLegendre)
+CASE (GaussLobatto)
+CASE (Chebyshev)
+END SELECT
 END PROCEDURE InterpolationPoint_Hexahedron
-
-!----------------------------------------------------------------------------
-!                                                EquidistanceLIP_Hexahedron
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE EquidistanceLIP_Hexahedron
-  !!
-  SELECT CASE( order )
-    !!
-  CASE( 1_I4B )
-    !!
-    ALLOCATE( nodecoord( 3, 8 ) )
-    nodecoord(:,1) = [-1,-1,-1]
-    nodecoord(:,2) = [1,-1,-1]
-    nodecoord(:,3) = [1,1,-1]
-    nodecoord(:,4) = [-1,1,-1]
-    nodecoord(:,5) = [-1,-1,1]
-    nodecoord(:,6) = [1,-1,1]
-    nodecoord(:,7) = [1,1,1]
-    nodecoord(:,8) = [-1,1,1]
-    !!
-  END SELECT
-  !!
-END PROCEDURE EquidistanceLIP_Hexahedron
 
 !----------------------------------------------------------------------------
 !

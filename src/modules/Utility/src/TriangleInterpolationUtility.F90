@@ -24,11 +24,15 @@ PRIVATE
 !                                                   LagrangeDegree_Triangle
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary:         Returns the degree of monomials for Lagrange polynomials
+
 INTERFACE
-MODULE PURE FUNCTION LagrangeDegree_Triangle( order ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  INTEGER( I4B ), ALLOCATABLE :: ans(:,:)
-END FUNCTION LagrangeDegree_Triangle
+  MODULE PURE FUNCTION LagrangeDegree_Triangle(order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+  END FUNCTION LagrangeDegree_Triangle
 END INTERFACE
 
 PUBLIC :: LagrangeDegree_Triangle
@@ -39,14 +43,14 @@ PUBLIC :: LagrangeDegree_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary: 	Returns the total number of degree of freedom for a
+! summary: Returns the total number of degree of freedom for a
 ! lagrange polynomial on triangle
 
 INTERFACE
-MODULE PURE FUNCTION LagrangeDOF_Triangle( order ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  INTEGER( I4B ) :: ans
-END FUNCTION LagrangeDOF_Triangle
+  MODULE PURE FUNCTION LagrangeDOF_Triangle(order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B) :: ans
+  END FUNCTION LagrangeDOF_Triangle
 END INTERFACE
 
 PUBLIC :: LagrangeDOF_Triangle
@@ -57,7 +61,7 @@ PUBLIC :: LagrangeDOF_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary: 	Returns the total number of degree of freedom for a
+! summary:         Returns the total number of degree of freedom for a
 ! lagrange polynomial in cell/face of triangle
 !
 !# Introduction
@@ -67,10 +71,10 @@ PUBLIC :: LagrangeDOF_Triangle
 !- These dof are strictly inside the triangle
 
 INTERFACE
-MODULE PURE FUNCTION LagrangeInDOF_Triangle( order ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  INTEGER( I4B ) :: ans
-END FUNCTION LagrangeInDOF_Triangle
+  MODULE PURE FUNCTION LagrangeInDOF_Triangle(order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B) :: ans
+  END FUNCTION LagrangeInDOF_Triangle
 END INTERFACE
 
 PUBLIC :: LagrangeInDOF_Triangle
@@ -81,7 +85,7 @@ PUBLIC :: LagrangeInDOF_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary: 	Returns equidistance points in triangle
+! summary: Returns equidistance points in triangle
 !
 !# Introduction
 !
@@ -89,16 +93,16 @@ PUBLIC :: LagrangeInDOF_Triangle
 !- All points are inside the triangle
 
 INTERFACE
-MODULE PURE FUNCTION EquidistanceInPoint_Triangle( order, xij ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
+  MODULE PURE FUNCTION EquidistanceInPoint_Triangle(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
   !! order
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
   !! coordinates of point 1 and point 2 in $x_{iJ}$ format
   !! number of rows = nsd
   !! number of cols = 3
-  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   !! returned coordinates in $x_{iJ}$ format
-END FUNCTION EquidistanceInPoint_Triangle
+  END FUNCTION EquidistanceInPoint_Triangle
 END INTERFACE
 
 PUBLIC :: EquidistanceInPoint_Triangle
@@ -109,7 +113,7 @@ PUBLIC :: EquidistanceInPoint_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 12 Aug 2022
-! summary: 	Returns the nodal coordinates of higher order triangle element
+! summary: Returns the nodal coordinates of higher order triangle element
 !
 !# Introduction
 !
@@ -121,16 +125,16 @@ PUBLIC :: EquidistanceInPoint_Triangle
 !- The node numbering is according to Gmsh convention.
 
 INTERFACE
-MODULE PURE FUNCTION EquidistancePoint_Triangle( order, xij ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
+  MODULE PURE FUNCTION EquidistancePoint_Triangle(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
   !! order
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
   !! coordinates of point 1 and point 2 in $x_{iJ}$ format
   !! number of rows = nsd
   !! number of cols = 3
-  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   !! returned coordinates in $x_{iJ}$ format
-END FUNCTION EquidistancePoint_Triangle
+  END FUNCTION EquidistancePoint_Triangle
 END INTERFACE
 
 PUBLIC :: EquidistancePoint_Triangle
@@ -139,23 +143,23 @@ PUBLIC :: EquidistancePoint_Triangle
 !                                                InterpolationPoint_Triangle
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 18 Aug 2022
+! summary:         Interpolation point on triangle
+
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Triangle( order, ipType, xij ) &
-    & RESULT( nodecoord )
-    INTEGER( I4B ), INTENT( IN ) :: order
-    INTEGER( I4B ), INTENT( IN ) :: ipType
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 3 )
-    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
+  MODULE PURE FUNCTION InterpolationPoint_Triangle(order, ipType, xij) &
+    & RESULT(nodecoord)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation type
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 3)
+    !! xij coordinates
+    REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
+    !! xij coordinates
   END FUNCTION InterpolationPoint_Triangle
 END INTERFACE
-=======
->>>>>>> dev
-
-INTERFACE TriangleLagrangeEquidistance
-  MODULE PROCEDURE EquidistanceLIP_Triangle
-END INTERFACE TriangleLagrangeEquidistance
-
-PUBLIC :: TriangleLagrangeEquidistance
 
 PUBLIC :: InterpolationPoint_Triangle
 

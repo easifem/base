@@ -35,7 +35,7 @@ END PROCEDURE LagrangeDegree_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDOF_Pyramid
-  ans = (order+1)*(order+2)*(2*order+3)/6
+ans = (order + 1) * (order + 2) * (2 * order + 3) / 6
 END PROCEDURE LagrangeDOF_Pyramid
 
 !----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ END PROCEDURE LagrangeDOF_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeInDOF_Pyramid
-  ans = (order-1)*(order-2)*(2*order-3)/6
+ans = (order - 1) * (order - 2) * (2 * order - 3) / 6
 END PROCEDURE LagrangeInDOF_Pyramid
 
 !----------------------------------------------------------------------------
@@ -52,6 +52,11 @@ END PROCEDURE LagrangeInDOF_Pyramid
 
 MODULE PROCEDURE EquidistancePoint_Pyramid
 
+! nodecoord(:, 1) = [-1, -1, 0]
+! nodecoord(:, 2) = [1, -1, 0]
+! nodecoord(:, 3) = [1, 1, 0]
+! nodecoord(:, 4) = [-1, 1, 0]
+! nodecoord(:, 5) = [0, 0, 1]
 ! TODO #161 Implement EquidistancePoint_Pyramid routine
 
 END PROCEDURE EquidistancePoint_Pyramid
@@ -71,30 +76,14 @@ END PROCEDURE EquidistanceInPoint_Pyramid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Pyramid
-  SELECT CASE( ipType )
-  CASE( Equidistance )
-    nodecoord = EquidistanceLIP_Pyramid( xij=xij, order=order )
-  CASE( GaussLegendre )
-  CASE( GaussLobatto )
-  CASE( Chebyshev )
-  END SELECT
+SELECT CASE (ipType)
+CASE (Equidistance)
+  nodecoord = EquidistancePoint_Pyramid(xij=xij, order=order)
+CASE (GaussLegendre)
+CASE (GaussLobatto)
+CASE (Chebyshev)
+END SELECT
 END PROCEDURE InterpolationPoint_Pyramid
-
-!----------------------------------------------------------------------------
-!                                                   EquidistanceLIP_Pyramid
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE EquidistanceLIP_Pyramid
-  SELECT CASE( order )
-  CASE( 1_I4B )
-    ALLOCATE( nodecoord( 3, 5 ) )
-    nodecoord( :, 1 ) = [-1,-1,0]
-    nodecoord( :, 2 ) = [1,-1,0]
-    nodecoord( :, 3 ) = [1,1,0]
-    nodecoord( :, 4 ) = [-1,1,0]
-    nodecoord( :, 5 ) = [0,0,1]
-  END SELECT
-END PROCEDURE EquidistanceLIP_Pyramid
 
 !----------------------------------------------------------------------------
 !

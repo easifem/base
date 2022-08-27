@@ -284,9 +284,9 @@ PUBLIC :: ReferenceElement_Pointer
 ! summary: Returns a pointer to an instance of ReferenceElement
 
 INTERFACE
-  MODULE FUNCTION refelem_Constructor_2( refelem ) RESULT( ans )
-    CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-    CLASS( ReferenceElement_ ), POINTER :: ans
+  MODULE FUNCTION refelem_Constructor_2(refelem) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), POINTER :: ans
   END FUNCTION refelem_Constructor_2
 END INTERFACE
 
@@ -465,7 +465,6 @@ PUBLIC :: XiDimension
 !> author: Vikas Sharma, Ph. D.
 ! date: 21 May 2022
 ! summary: Returns true if element is a volume element
-
 
 INTERFACE
   MODULE PURE FUNCTION isVolume(ElemType) RESULT(Ans)
