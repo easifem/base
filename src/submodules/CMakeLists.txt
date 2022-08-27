@@ -18,6 +18,9 @@
 #Hashing
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
 
+#MdEncode
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
+
 #Utility
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 

@@ -21,61 +21,152 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                            InterpolationPoint_Tetrahedron
+!                                                 LagrangeDegree_Tetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDegree_Tetrahedron( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ), ALLOCATABLE :: ans(:,:)
+END FUNCTION LagrangeDegree_Tetrahedron
+END INTERFACE
+
+PUBLIC :: LagrangeDegree_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeDOF_Tetrahedron
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 10 Aug 2022
-! summary: 	Get interpolation points on Tetrahedron
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial on Tetrahedron
 
 INTERFACE
-MODULE PURE FUNCTION InterpolationPoint_Tetrahedron( order, ipType, xij ) &
-  & RESULT( nodecoord )
+MODULE PURE FUNCTION LagrangeDOF_Tetrahedron( order ) RESULT( ans )
   INTEGER( I4B ), INTENT( IN ) :: order
-  !! order of element
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-  !! interpolation point type
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 4 )
-  !! nodal coordinates of simplex
-  REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-  !! interpolation points
-END FUNCTION InterpolationPoint_Tetrahedron
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeDOF_Tetrahedron
+END INTERFACE
+
+PUBLIC :: LagrangeDOF_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                 LagrangeInDOF_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial in cell of Tetrahedron
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial in cell of Tetrahedron
+!- These dof are strictly inside the Tetrahedron
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeInDOF_Tetrahedron( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeInDOF_Tetrahedron
+END INTERFACE
+
+PUBLIC :: LagrangeInDOF_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                           EquidistanceInPoint_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns equidistance points in Tetrahedron
+!
+!# Introduction
+!
+!- This function returns the equidistance points in Tetrahedron
+!- All points are inside the Tetrahedron
+
+INTERFACE
+MODULE PURE FUNCTION EquidistanceInPoint_Tetrahedron( order, xij ) &
+  & RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+  !! number of rows = nsd
+  !! number of cols = 4
+  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+  !! returned coordinates in $x_{iJ}$ format
+END FUNCTION EquidistanceInPoint_Tetrahedron
+END INTERFACE
+
+PUBLIC :: EquidistanceInPoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: 	Returns the nodal coordinates of higher order Tetrahedron element
+!
+!# Introduction
+!
+!- This function returns the nodal coordinates of higher order
+! Tetrahedron element
+!- The coordinates are distributed uniformly
+!- These coordinates can be used to construct lagrange polynomials
+!- The returned coordinates are in $x_{iJ}$ format.
+!- The node numbering is according to Gmsh convention.
+
+INTERFACE
+MODULE PURE FUNCTION EquidistancePoint_Tetrahedron( order, xij ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+  !! number of rows = nsd
+  !! number of cols = 3
+  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+  !! returned coordinates in $x_{iJ}$ format
+END FUNCTION EquidistancePoint_Tetrahedron
+END INTERFACE
+
+PUBLIC :: EquidistancePoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                            InterpolationPoint_Tetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION InterpolationPoint_Tetrahedron( order, ipType, xij ) &
+    & RESULT( nodecoord )
+    !!
+    INTEGER( I4B ), INTENT( IN ) :: order
+    INTEGER( I4B ), INTENT( IN ) :: ipType
+    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 4 )
+    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
+    !!
+  END FUNCTION InterpolationPoint_Tetrahedron
 END INTERFACE
 
 PUBLIC :: InterpolationPoint_Tetrahedron
-
-INTERFACE TetrahedronInterpolationPoint
-  MODULE PROCEDURE InterpolationPoint_Tetrahedron
-END INTERFACE TetrahedronInterpolationPoint
-
-PUBLIC :: TetrahedronInterpolationPoint
 
 !----------------------------------------------------------------------------
 !                                               EquidistanceLIP_Tetrahedron
 !----------------------------------------------------------------------------
 
-!> author: Vikas Sharma, Ph. D.
-! date: 10 Aug 2022
-! summary: 	Uniformly distributed points on tetrahedron
-!
-!# Introduction
-!
-! This routine returns the interpolation points on tetrahedron. These
-! are uniformly distributed points. The scheme is same what Gmsh uses.
-
 INTERFACE
   MODULE PURE FUNCTION EquidistanceLIP_Tetrahedron( order, xij ) &
     & RESULT( nodecoord )
+    !!
     INTEGER( I4B ), INTENT( IN ) :: order
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 4 )
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
+    !!
   END FUNCTION EquidistanceLIP_Tetrahedron
 END INTERFACE
-
-INTERFACE TetrahedronLagrangeEquidistance
-  MODULE PROCEDURE EquidistanceLIP_Tetrahedron
-END INTERFACE TetrahedronLagrangeEquidistance
-
-PUBLIC :: TetrahedronLagrangeEquidistance
 
 END MODULE TetrahedronInterpolationUtility

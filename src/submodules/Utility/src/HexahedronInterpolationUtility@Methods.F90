@@ -20,23 +20,63 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                LagrangeDegree_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDegree_Hexahedron
+
+! TODO #163 Implement LagrangeDegree_Hexahedron
+
+END PROCEDURE LagrangeDegree_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDOF_Hexahedron
+  ans = (order+1)**3
+END PROCEDURE LagrangeDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeInDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeInDOF_Hexahedron
+  ans = (order-1)**3
+END PROCEDURE LagrangeInDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Hexahedron
+
+! TODO #159 Implement EquidistancePoint_Hexahedron routine
+
+END PROCEDURE EquidistancePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                            EquidistanceInPoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistanceInPoint_Hexahedron
+
+! TODO #159 Implement EquidistanceInPoint_Hexahedron routine
+
+END PROCEDURE EquidistanceInPoint_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                            InterpolationPoint_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Hexahedron
-  !!
   SELECT CASE( ipType )
-  !!
   CASE( Equidistance )
-    !!
     nodecoord = EquidistanceLIP_Hexahedron( xij=xij, order=order )
-    !!
   CASE( GaussLegendre )
   CASE( GaussLobatto )
   CASE( Chebyshev )
-  !!
   END SELECT
-  !!
 END PROCEDURE InterpolationPoint_Hexahedron
 
 !----------------------------------------------------------------------------

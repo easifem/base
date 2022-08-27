@@ -21,7 +21,123 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                  InterpolationPoint_Prism
+!                                                     LagrangeDegree_Prism
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDegree_Prism( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ), ALLOCATABLE :: ans(:,:)
+END FUNCTION LagrangeDegree_Prism
+END INTERFACE
+
+PUBLIC :: LagrangeDegree_Prism
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeDOF_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial on Prism
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDOF_Prism( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeDOF_Prism
+END INTERFACE
+
+PUBLIC :: LagrangeDOF_Prism
+
+!----------------------------------------------------------------------------
+!                                                     LagrangeInDOF_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial in cell of Prism
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial in cell of Prism
+!- These dof are strictly inside the Prism
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeInDOF_Prism( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeInDOF_Prism
+END INTERFACE
+
+PUBLIC :: LagrangeInDOF_Prism
+
+!----------------------------------------------------------------------------
+!                                           EquidistanceInPoint_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns equidistance points in Prism
+!
+!# Introduction
+!
+!- This function returns the equidistance points in Prism
+!- All points are inside the Prism
+
+INTERFACE
+MODULE PURE FUNCTION EquidistanceInPoint_Prism( order, xij ) &
+  & RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+  !! number of rows = nsd
+  !! number of cols = 4
+  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+  !! returned coordinates in $x_{iJ}$ format
+END FUNCTION EquidistanceInPoint_Prism
+END INTERFACE
+
+PUBLIC :: EquidistanceInPoint_Prism
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: 	Returns the nodal coordinates of higher order Prism element
+!
+!# Introduction
+!
+!- This function returns the nodal coordinates of higher order
+! Prism element
+!- The coordinates are distributed uniformly
+!- These coordinates can be used to construct lagrange polynomials
+!- The returned coordinates are in $x_{iJ}$ format.
+!- The node numbering is according to Gmsh convention.
+
+INTERFACE
+MODULE PURE FUNCTION EquidistancePoint_Prism( order, xij ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+  !! number of rows = nsd
+  !! number of cols = 3
+  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+  !! returned coordinates in $x_{iJ}$ format
+END FUNCTION EquidistancePoint_Prism
+END INTERFACE
+
+PUBLIC :: EquidistancePoint_Prism
+
+!----------------------------------------------------------------------------
+!                                            InterpolationPoint_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -36,14 +152,8 @@ END INTERFACE
 
 PUBLIC :: InterpolationPoint_Prism
 
-INTERFACE PrismInterpolationPoint
-  MODULE PROCEDURE InterpolationPoint_Prism
-END INTERFACE PrismInterpolationPoint
-
-PUBLIC :: PrismInterpolationPoint
-
 !----------------------------------------------------------------------------
-!                                                     EquidistanceLIP_Prism
+!                                               EquidistanceLIP_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -54,12 +164,6 @@ INTERFACE
     REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
   END FUNCTION EquidistanceLIP_Prism
 END INTERFACE
-
-INTERFACE PrismLagrangeEquidistance
-  MODULE PROCEDURE EquidistanceLIP_Prism
-END INTERFACE PrismLagrangeEquidistance
-
-PUBLIC :: PrismLagrangeEquidistance
 
 !----------------------------------------------------------------------------
 !

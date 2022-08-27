@@ -22,46 +22,215 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
+!                                                       LagrangeDegree_Line
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDegree_Line( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ), ALLOCATABLE :: ans(:,:)
+END FUNCTION LagrangeDegree_Line
+END INTERFACE
+
+PUBLIC :: LagrangeDegree_Line
+
+!----------------------------------------------------------------------------
+!                                                          LagrangeDOF_Point
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial on a point of Line
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDOF_Point( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeDOF_Point
+END INTERFACE
+
+PUBLIC :: LagrangeDOF_Point
+
+!----------------------------------------------------------------------------
+!                                                              GetDOF_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial on Line
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDOF_Line( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeDOF_Line
+END INTERFACE
+
+PUBLIC :: LagrangeDOF_Line
+
+!----------------------------------------------------------------------------
+!                                                        LagrangeInDOF_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Line
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial on an edge of a Line
+!- These dof are strictly inside the line
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeInDOF_Line( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeInDOF_Line
+END INTERFACE
+
+PUBLIC :: LagrangeInDOF_Line
+
+!----------------------------------------------------------------------------
+!                                                   EquidistanceInPoint_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns equidistance points on edge
+!
+!# Introduction
+!
+!- This function returns the equidistance points on edge
+!- All points are inside the interval
+
+INTERFACE
+MODULE PURE FUNCTION EquidistanceInPoint_Line1( order, xij ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  REAL( DFP ), INTENT( IN ) :: xij(2)
+  !! coordinates of point 1 and point 2
+  REAL( DFP ), ALLOCATABLE :: ans( : )
+END FUNCTION EquidistanceInPoint_Line1
+END INTERFACE
+
+INTERFACE EquidistanceInPoint_Line
+  MODULE PROCEDURE EquidistanceInPoint_Line1
+END INTERFACE EquidistanceInPoint_Line
+
+PUBLIC :: EquidistanceInPoint_Line
+
+!----------------------------------------------------------------------------
+!                                                   EquidistanceInPoint_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns equidistance points on edge
+!
+!# Introduction
+!
+!- This function returns the equidistance points on edge
+!- All points are inside the interval
+
+INTERFACE
+MODULE PURE FUNCTION EquidistanceInPoint_Line2( order, xij ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+  !! number of rows = nsd
+  !! number of cols = 2
+  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+  !! returned coordinates in $x_{iJ}$ format
+END FUNCTION EquidistanceInPoint_Line2
+END INTERFACE
+
+INTERFACE EquidistanceInPoint_Line
+  MODULE PROCEDURE EquidistanceInPoint_Line2
+END INTERFACE EquidistanceInPoint_Line
+
+!----------------------------------------------------------------------------
+!                                                    EquidistancePoint_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: Returns equidistance points on edge
+!
+!# Introduction
+!
+!- This function returns the equidistance points on edge
+!- All points are inside the interval
+
+INTERFACE
+  MODULE PURE FUNCTION EquidistancePoint_Line1( order, xij ) &
+    & RESULT( ans )
+    INTEGER( I4B ), INTENT( IN ) :: order
+    !! order
+    REAL( DFP ), INTENT( IN ) :: xij(2)
+    !! coorindates of point 1 and point 2
+    REAL( DFP ), ALLOCATABLE :: ans(:)
+    !! equidistance points
+  END FUNCTION EquidistancePoint_Line1
+END INTERFACE
+
+INTERFACE EquidistancePoint_Line
+  MODULE PROCEDURE EquidistancePoint_Line1
+END INTERFACE EquidistancePoint_Line
+
+PUBLIC :: EquidistancePoint_Line
+
+!----------------------------------------------------------------------------
+!                                                    EquidistancePoint_Line
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION EquidistancePoint_Line2( order, xij ) &
+    & RESULT( ans )
+    INTEGER( I4B ), INTENT( IN ) :: order
+    !! order
+    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 2
+    REAL( DFP ), ALLOCATABLE :: ans(:,:)
+    !! equidistance points in $x_{iJ}$ format
+  END FUNCTION EquidistancePoint_Line2
+END INTERFACE
+
+INTERFACE EquidistancePoint_Line
+  MODULE PROCEDURE EquidistancePoint_Line2
+END INTERFACE EquidistancePoint_Line
+
+!----------------------------------------------------------------------------
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
 INTERFACE
   MODULE PURE FUNCTION InterpolationPoint_Line( order, ipType, xij ) &
-    & RESULT( nodecoord )
+    & RESULT( ans )
     !!
     INTEGER( I4B ), INTENT( IN ) :: order
     INTEGER( I4B ), INTENT( IN ) :: ipType
     REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 2 )
-    REAL( DFP ) :: nodecoord( 3, order+1 )
+    REAL( DFP ), ALLOCATABLE :: ans( :, : )
     !!
   END FUNCTION InterpolationPoint_Line
 END INTERFACE
-
-PUBLIC :: InterpolationPoint_Line
-
-INTERFACE LineInterpolationPoint
-  MODULE PROCEDURE InterpolationPoint_Line
-END INTERFACE LineInterpolationPoint
-
-PUBLIC :: LineInterpolationPoint
-
-!----------------------------------------------------------------------------
-!                                                      EquidistanceLIP_Line
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION EquidistanceLIP_Line( order, xij ) RESULT( nodecoord )
-    INTEGER( I4B ), INTENT( IN ) :: order
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( 3, 2 )
-    REAL( DFP ) :: nodecoord( 3, order+1 )
-  END FUNCTION EquidistanceLIP_Line
-END INTERFACE
+=======
+>>>>>>> dev
 
 INTERFACE LineLagrangeEquidistance
   MODULE PROCEDURE EquidistanceLIP_Line
 END INTERFACE LineLagrangeEquidistance
 
 PUBLIC :: LineLagrangeEquidistance
+
+PUBLIC :: InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
 !

@@ -21,47 +21,149 @@ IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
+!                                                  LagrangeDegree_Hexahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDegree_Hexahedron( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ), ALLOCATABLE :: ans(:,:)
+END FUNCTION LagrangeDegree_Hexahedron
+END INTERFACE
+
+PUBLIC :: LagrangeDegree_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     LagrangeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial on Hexahedron
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeDOF_Hexahedron( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeDOF_Hexahedron
+END INTERFACE
+
+PUBLIC :: LagrangeDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeInDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns the total number of degree of freedom for a
+! lagrange polynomial in cell of Hexahedron
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial in cell of Hexahedron
+!- These dof are strictly inside the Hexahedron
+
+INTERFACE
+MODULE PURE FUNCTION LagrangeInDOF_Hexahedron( order ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ) :: ans
+END FUNCTION LagrangeInDOF_Hexahedron
+END INTERFACE
+
+PUBLIC :: LagrangeInDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                           EquidistanceInPoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary: 	Returns equidistance points in Hexahedron
+!
+!# Introduction
+!
+!- This function returns the equidistance points in Hexahedron
+!- All points are inside the Hexahedron
+
+INTERFACE
+MODULE PURE FUNCTION EquidistanceInPoint_Hexahedron( order, xij ) &
+  & RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+  !! number of rows = nsd
+  !! number of cols = 4
+  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+  !! returned coordinates in $x_{iJ}$ format
+END FUNCTION EquidistanceInPoint_Hexahedron
+END INTERFACE
+
+PUBLIC :: EquidistanceInPoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: 	Returns the nodal coordinates of higher order Hexahedron element
+!
+!# Introduction
+!
+!- This function returns the nodal coordinates of higher order
+! Hexahedron element
+!- The coordinates are distributed uniformly
+!- These coordinates can be used to construct lagrange polynomials
+!- The returned coordinates are in $x_{iJ}$ format.
+!- The node numbering is according to Gmsh convention.
+
+INTERFACE
+MODULE PURE FUNCTION EquidistancePoint_Hexahedron( order, xij ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  !! order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
+  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+  !! number of rows = nsd
+  !! number of cols = 3
+  REAL( DFP ), ALLOCATABLE :: ans(:,:)
+  !! returned coordinates in $x_{iJ}$ format
+END FUNCTION EquidistancePoint_Hexahedron
+END INTERFACE
+
+PUBLIC :: EquidistancePoint_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                            InterpolationPoint_Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Hexahedron( order, ipType, xij ) &
-    & RESULT( nodecoord )
-    !!
-    INTEGER( I4B ), INTENT( IN ) :: order
-    INTEGER( I4B ), INTENT( IN ) :: ipType
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
-    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-    !!
-  END FUNCTION InterpolationPoint_Hexahedron
+MODULE PURE FUNCTION InterpolationPoint_Hexahedron( order, ipType, xij ) &
+  & RESULT( nodecoord )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  INTEGER( I4B ), INTENT( IN ) :: ipType
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
+  REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
+END FUNCTION InterpolationPoint_Hexahedron
 END INTERFACE
 
 PUBLIC :: InterpolationPoint_Hexahedron
-
-INTERFACE HexahedronInterpolationPoint
-  MODULE PROCEDURE InterpolationPoint_Hexahedron
-END INTERFACE HexahedronInterpolationPoint
-
-PUBLIC :: HexahedronInterpolationPoint
 
 !----------------------------------------------------------------------------
 !                                               EquidistanceLIP_Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistanceLIP_Hexahedron( order, xij ) &
-    & RESULT( nodecoord )
-    INTEGER( I4B ), INTENT( IN ) :: order
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
-    REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
-  END FUNCTION EquidistanceLIP_Hexahedron
+MODULE PURE FUNCTION EquidistanceLIP_Hexahedron( order, xij ) &
+  & RESULT( nodecoord )
+  INTEGER( I4B ), INTENT( IN ) :: order
+  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij( :, : )
+  REAL( DFP ), ALLOCATABLE :: nodecoord( :, : )
+END FUNCTION EquidistanceLIP_Hexahedron
 END INTERFACE
-
-INTERFACE HexahedronLagrangeEquidistance
-  MODULE PROCEDURE EquidistanceLIP_Hexahedron
-END INTERFACE HexahedronLagrangeEquidistance
-
-PUBLIC :: HexahedronLagrangeEquidistance
 
 !----------------------------------------------------------------------------
 !
