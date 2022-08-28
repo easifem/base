@@ -40,18 +40,5 @@ TARGET_SOURCES(
   ${src_path}/SwapUtility.F90
   ${src_path}/ConvertUtility.F90
   ${src_path}/IntegerUtility.F90
-  ${src_path}/InterpolationUtility.F90
-  ${src_path}/LagrangeUtility.F90
-  ${src_path}/OrthogonalPolynomialUtility.F90
-  ${src_path}/JacobiPolynomialUtility.F90
-  ${src_path}/Chebyshev1PolynomialUtility.F90
-  ${src_path}/LineInterpolationUtility.F90
-  ${src_path}/TriangleInterpolationUtility.F90
-  ${src_path}/QuadrangleInterpolationUtility.F90
-  ${src_path}/TetrahedronInterpolationUtility.F90
-  ${src_path}/HexahedronInterpolationUtility.F90
-  ${src_path}/PrismInterpolationUtility.F90
-  ${src_path}/PyramidInterpolationUtility.F90
-  ${src_path}/PolynomialUtility.F90
   ${src_path}/Utility.F90
 )
