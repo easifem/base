@@ -30,7 +30,7 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
+! date:         1 March 2021
 ! summary: This subroutine constructs an instance of line reference element
 !
 !# Introduction
@@ -41,7 +41,7 @@ PRIVATE
 ! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
 !
 !@note
-! 	Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
+! Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
 ! that this routine creats a linear element.
 !@endnote
 !
@@ -56,14 +56,14 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Line( obj, nsd, xij )
-  CLASS( ReferenceLine_ ), INTENT( INOUT ) :: obj
+  MODULE PURE SUBROUTINE initiate_ref_Line(obj, nsd, xij)
+    CLASS(ReferenceLine_), INTENT(INOUT) :: obj
     !! The instance
-  INTEGER( I4B ), INTENT( IN ) :: nsd
+    INTEGER(I4B), INTENT(IN) :: nsd
     !! Spatial dimension of the problem
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij( :, : )
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     !! Coords of element
-END SUBROUTINE initiate_ref_Line
+  END SUBROUTINE initiate_ref_Line
 END INTERFACE
 
 INTERFACE Initiate
@@ -77,7 +77,7 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: This routine constructs an instance of line reference element
 !
 !# Introduction
@@ -101,11 +101,11 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_line(nsd, xij) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: nsd
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
-  TYPE( ReferenceLine_ ) :: obj
-END FUNCTION reference_line
+  MODULE PURE FUNCTION reference_line(nsd, xij) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    TYPE(ReferenceLine_) :: obj
+  END FUNCTION reference_line
 END INTERFACE
 
 INTERFACE ReferenceLine
@@ -119,7 +119,7 @@ PUBLIC :: ReferenceLine
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: This routine constructs an instance of line reference element
 !
 !# Introduction
@@ -130,7 +130,7 @@ PUBLIC :: ReferenceLine
 ! [-1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP, 0.0_DFP, 0.0_DFP], [3, 2] ) is used.
 !
 !@note
-! 	Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
+! Note that SIZE(xij,1) should be equal to 3, i.e., x,y,z coord. Also note
 ! that this routine creats a linear element.
 !@endnote
 !
@@ -143,11 +143,11 @@ PUBLIC :: ReferenceLine
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_line_pointer_1(nsd, xij) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: nsd
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
-  CLASS( ReferenceLine_ ), POINTER :: obj
-END FUNCTION reference_line_pointer_1
+  MODULE PURE FUNCTION reference_line_pointer_1(nsd, xij) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CLASS(ReferenceLine_), POINTER :: obj
+  END FUNCTION reference_line_pointer_1
 END INTERFACE
 
 INTERFACE ReferenceLine_Pointer
@@ -181,16 +181,16 @@ PUBLIC :: ReferenceLine_Pointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE highorderElement_Line( refelem, order, obj, &
-  & ipType )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
+  MODULE PURE SUBROUTINE highorderElement_Line(refelem, order, obj, &
+    & ipType)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! Linear line element
-  INTEGER( I4B ), INTENT( IN ) :: order
+    INTEGER(I4B), INTENT(IN) :: order
     !! order or generated element
-  CLASS( ReferenceElement_ ),  INTENT( INOUT ) ::  obj
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     !! High order lagrange line element
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-END SUBROUTINE highorderElement_Line
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highorderElement_Line
 END INTERFACE
 
 PUBLIC :: highorderElement_Line
@@ -200,8 +200,8 @@ PUBLIC :: highorderElement_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
-! summary: 	This function returns the measure of linear line element
+! date: 3 March 2021
+! summary: This function returns the measure of linear line element
 !
 !# Introduction
 !
@@ -220,11 +220,11 @@ PUBLIC :: highorderElement_Line
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Line( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceLine_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Line
+  MODULE PURE FUNCTION Measure_Simplex_Line(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceLine_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex_Line
 END INTERFACE
 
 PUBLIC :: Measure_Simplex_Line
@@ -234,12 +234,12 @@ PUBLIC :: Measure_Simplex_Line
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Line_Quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferenceLine_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION Line_Quality
+  MODULE FUNCTION Line_Quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferenceLine_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION Line_Quality
 END INTERFACE
 
 PUBLIC :: Line_Quality

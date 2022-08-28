@@ -83,15 +83,7 @@ USE Vector3D_Method
 USE BLAS1V_Method
 USE RealVector_Method
 USE DOF_Method
-USE ReferenceElement_Method
-USE ReferencePoint_Method
-USE ReferenceLine_Method
-USE ReferenceTriangle_Method
-USE ReferenceQuadrangle_Method
-USE ReferenceTetrahedron_Method
-USE ReferenceHexahedron_Method
-USE ReferencePrism_Method
-USE ReferencePyramid_Method
+USE Geometry_Method
 USE QuadraturePoint_Method
 USE FEVariable_Method
 USE Elemshapedata_Method

@@ -60,8 +60,8 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 #DOF
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
 
-#ReferenceElement
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
+#Geometry
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Geometry/CMakeLists.txt)
 
 #QuadraturePoint
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)
