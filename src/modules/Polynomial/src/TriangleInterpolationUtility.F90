@@ -145,7 +145,7 @@ PUBLIC :: EquidistancePoint_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Aug 2022
-! summary:         Interpolation point on triangle
+! summary: Interpolation point on triangle
 
 INTERFACE
   MODULE PURE FUNCTION InterpolationPoint_Triangle(order, ipType, xij) &
@@ -154,7 +154,7 @@ INTERFACE
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation type
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 3)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! xij coordinates
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! xij coordinates

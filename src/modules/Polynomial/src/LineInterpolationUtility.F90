@@ -222,13 +222,17 @@ END INTERFACE EquidistancePoint_Line
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Aug 2022
+! summary: Returns the interpolation point
+
 INTERFACE
   MODULE PURE FUNCTION InterpolationPoint_Line(order, ipType, xij) &
     & RESULT(ans)
     !!
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), INTENT(IN) :: ipType
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 2)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !!
   END FUNCTION InterpolationPoint_Line

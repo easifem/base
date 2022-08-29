@@ -134,6 +134,27 @@ END INTERFACE
 PUBLIC :: EquidistancePoint
 
 !----------------------------------------------------------------------------
+!                                                         InterpolationPoint
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Aug 2022
+! summary: Get the interpolation point
+
+INTERFACE
+  MODULE PURE FUNCTION InterpolationPoint(order, elemType, ipType, xij) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: ipType
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION InterpolationPoint
+END INTERFACE
+
+PUBLIC :: InterpolationPoint
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

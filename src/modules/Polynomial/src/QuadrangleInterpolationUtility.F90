@@ -155,9 +155,9 @@ INTERFACE
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation point type
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 4)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! xij format
-    REAL(DFP) :: nodecoord(3, (order + 1)**2)
+    REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint_Quadrangle
 END INTERFACE
