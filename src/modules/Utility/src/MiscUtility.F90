@@ -322,10 +322,10 @@ END INTERFACE IMINLOC
 ! summary: Return imaginary part of complex value
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION IMG_1(x) RESULT(ans)
-  COMPLEX( Real32 ), INTENT( IN ) :: x
-  REAL( Real32 ) :: ans
-END FUNCTION IMG_1
+  MODULE ELEMENTAL FUNCTION IMG_1(x) RESULT(ans)
+    COMPLEX(Real32), INTENT(IN) :: x
+    REAL(Real32) :: ans
+  END FUNCTION IMG_1
 END INTERFACE
 
 INTERFACE IMG
@@ -341,15 +341,41 @@ END INTERFACE IMG
 ! summary: Return imaginary part of complex value
 
 INTERFACE
-MODULE ELEMENTAL FUNCTION IMG_2(x) RESULT(ans)
-  COMPLEX( Real64 ), INTENT( IN ) :: x
-  REAL( Real64 ) :: ans
-END FUNCTION IMG_2
+  MODULE ELEMENTAL FUNCTION IMG_2(x) RESULT(ans)
+    COMPLEX(Real64), INTENT(IN) :: x
+    REAL(Real64) :: ans
+  END FUNCTION IMG_2
 END INTERFACE
 
 INTERFACE IMG
   MODULE PROCEDURE IMG_2
 END INTERFACE IMG
+
+!----------------------------------------------------------------------------
+!                                                                 safe_ACOS
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE ELEMENTAL FUNCTION safe_ACOS(c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: c
+    REAL(DFP) :: ans
+  END FUNCTION safe_ACOS
+END INTERFACE
+
+PUBLIC :: safe_ACOS
+
+!----------------------------------------------------------------------------
+!                                                                 safe_ASIN
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE ELEMENTAL FUNCTION safe_ASIN(s) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: s
+    REAL(DFP) :: ans
+  END FUNCTION safe_ASIN
+END INTERFACE
+
+PUBLIC :: safe_ASIN
 
 !----------------------------------------------------------------------------
 !                                                            Factorial@MISC

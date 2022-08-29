@@ -31,7 +31,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE radian_dfp
-  Ans = deg / 180.0_DFP * 3.1415926535_DFP
+Ans = deg / 180.0_DFP * 3.1415926535_DFP
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -39,7 +39,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE radian_int
-  Ans = REAL( deg, KIND=DFP ) / 180.0_DFP * 3.1415926535_DFP
+Ans = REAL(deg, KIND=DFP) / 180.0_DFP * 3.1415926535_DFP
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -47,7 +47,7 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE degrees_dfp
-  Ans = rad / 3.1415926535_DFP * 180.0_DFP
+Ans = rad / 3.1415926535_DFP * 180.0_DFP
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -55,36 +55,36 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Loc_Nearest_Point
-  ! Define internal variables
-  REAL( DFP ) :: xr( 3 )
-  INTEGER( I4B ) :: i, n,m,norm,tr_norm
+! Define internal variables
+REAL(DFP) :: xr(3)
+INTEGER(I4B) :: i, n, m, norm, tr_norm
 
-  n = SIZE( Array, 1 )
-  m = SIZE( Array, 2 )
-  IF( n .NE. SIZE(x) ) THEN
-    CALL ErrorMSG(&
-      & Msg="SearchNearestCoord >> size(Array,1) should be =size(x)", &
-      & File= __FILE__, &
-      & Line = __LINE__, &
-      & Routine = "Loc_Nearest_Point(Array, x)" )
-    STOP
-  ENDIF
-  !
-  DO i = 1, m
-    xr( 1:n ) = Array( 1:n, i )
-    tr_norm = NORM2( xr(1:n) - x(1:n) )
-    IF( i .EQ. 1 ) THEN
+n = SIZE(Array, 1)
+m = SIZE(Array, 2)
+IF (n .NE. SIZE(x)) THEN
+  CALL ErrorMSG(&
+    & Msg="SearchNearestCoord >> size(Array,1) should be =size(x)", &
+    & File=__FILE__, &
+    & Line=__LINE__, &
+    & Routine="Loc_Nearest_Point(Array, x)")
+  STOP
+END IF
+!
+DO i = 1, m
+  xr(1:n) = Array(1:n, i)
+  tr_norm = NORM2(xr(1:n) - x(1:n))
+  IF (i .EQ. 1) THEN
+    norm = tr_norm
+    id = i
+  ELSE
+    IF (norm .GT. tr_norm) THEN
       norm = tr_norm
-      id  = i
+      id = i
     ELSE
-      IF( norm .GT. tr_norm ) THEN
-        norm = tr_norm
-        id  = i
-      ELSE
-        CYCLE
-      END IF
+      CYCLE
     END IF
-  END DO
+  END IF
+END DO
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -92,30 +92,30 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE exe_cmd
-  ! Define internal variables
-  INTEGER( I4B ) :: CMDSTAT, EXITSTAT
-  LOGICAL( LGT ) :: WAIT = .TRUE.
-  CHARACTER( LEN = 300 ) :: CMDMSG = ""
+! Define internal variables
+INTEGER(I4B) :: CMDSTAT, EXITSTAT
+LOGICAL(LGT) :: WAIT = .TRUE.
+CHARACTER(LEN=300) :: CMDMSG = ""
 
-  CALL EXECUTE_COMMAND_LINE( TRIM(CMD), CMDSTAT = CMDSTAT, &
-    & EXITSTAT = EXITSTAT, WAIT = WAIT, CMDMSG = CMDMSG )
+CALL EXECUTE_COMMAND_LINE(TRIM(CMD), CMDSTAT=CMDSTAT, &
+  & EXITSTAT=EXITSTAT, WAIT=WAIT, CMDMSG=CMDMSG)
 
-  IF( CMDSTAT .NE. 0 ) THEN
-    IF( CMDSTAT .EQ. -1 ) THEN
-      CALL ErrorMsg( &
-        & File = __FILE__, &
-        & Routine = "exe_cmd()", &
-        & Line = __LINE__, &
-        & MSG = "following command failed " // TRIM( CMDMSG ) )
-    END IF
-
+IF (CMDSTAT .NE. 0) THEN
+  IF (CMDSTAT .EQ. -1) THEN
     CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "exe_cmd()", &
-      & Line = __LINE__, &
-      & MSG = "following command failed " // TRIM( CMDMSG ) )
-    STOP
+      & File=__FILE__, &
+      & Routine="exe_cmd()", &
+      & Line=__LINE__, &
+      & MSG="following command failed "//TRIM(CMDMSG))
   END IF
+
+  CALL ErrorMsg( &
+    & File=__FILE__, &
+    & Routine="exe_cmd()", &
+    & Line=__LINE__, &
+    & MSG="following command failed "//TRIM(CMDMSG))
+  STOP
+END IF
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -123,26 +123,26 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getUnitNo_1
-  ! Define internal variables
-  LOGICAL( LGT ) :: isOpen, isExist
-  INTEGER( I4B ) :: Imin, Imax, I
+! Define internal variables
+LOGICAL(LGT) :: isOpen, isExist
+INTEGER(I4B) :: Imin, Imax, I
 
-  Imin = 10
-  Imax = 1000
+Imin = 10
+Imax = 1000
 
-  DO I = Imin, Imax, 1
-    INQUIRE( UNIT = I, OPENED = isOpen, EXIST = isExist )
-    IF( isExist .AND. .NOT. isOpen ) EXIT
-  END DO
-  IF( isOpen .OR. .NOT. isExist ) THEN
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "getUnitNo_1()", &
-      & Line = __LINE__, &
-      & MSG = " cannot find a valid unit number; Program Stopped" )
-    STOP
-  END IF
-  ans = I
+DO I = Imin, Imax, 1
+  INQUIRE (UNIT=I, OPENED=isOpen, EXIST=isExist)
+  IF (isExist .AND. .NOT. isOpen) EXIT
+END DO
+IF (isOpen .OR. .NOT. isExist) THEN
+  CALL ErrorMsg( &
+    & File=__FILE__, &
+    & Routine="getUnitNo_1()", &
+    & Line=__LINE__, &
+    & MSG=" cannot find a valid unit number; Program Stopped")
+  STOP
+END IF
+ans = I
 END PROCEDURE getUnitNo_1
 
 !----------------------------------------------------------------------------
@@ -150,11 +150,11 @@ END PROCEDURE getUnitNo_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Factorial
-  IF ( N .EQ. 0 ) THEN
-    Ans = 1
-  ELSE
-    Ans = N * Factorial( N - 1 )
-  END IF
+IF (N .EQ. 0) THEN
+  Ans = 1
+ELSE
+  Ans = N * Factorial(N - 1)
+END IF
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -162,9 +162,9 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Int2Str
-  CHARACTER( LEN = 15 ) :: Str
-  WRITE( Str, "(I15)" ) I
-  Int2Str = TRIM( ADJUSTL( Str ) )
+CHARACTER(LEN=15) :: Str
+WRITE (Str, "(I15)") I
+Int2Str = TRIM(ADJUSTL(Str))
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -172,9 +172,9 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SP2Str
-  CHARACTER( LEN = 20 ) :: Str
-  WRITE( Str, "(G17.7)" ) I
-  SP2Str = TRIM( ADJUSTL( Str ) )
+CHARACTER(LEN=20) :: Str
+WRITE (Str, "(G17.7)") I
+SP2Str = TRIM(ADJUSTL(Str))
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -182,9 +182,9 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE DP2Str
-  CHARACTER( LEN = 20 ) :: Str
-  WRITE( Str, "(G17.7)" ) I
-  DP2Str = TRIM( ADJUSTL( Str ) )
+CHARACTER(LEN=20) :: Str
+WRITE (Str, "(G17.7)") I
+DP2Str = TRIM(ADJUSTL(Str))
 END PROCEDURE
 
 !----------------------------------------------------------------------------
@@ -192,27 +192,27 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE arth_r
-  INTEGER(I4B) :: k,k2
-  REAL(SP) :: temp
-  IF (n > 0) arth_r(1)=first
-  IF (n <= NPAR_ARTH) THEN
-    DO k=2,n
-      arth_r(k)=arth_r(k-1)+increment
-    END DO
-  ELSE
-    DO k=2,NPAR2_ARTH
-      arth_r(k)=arth_r(k-1)+increment
-    END DO
-    temp=increment*NPAR2_ARTH
-    k=NPAR2_ARTH
-    DO
-      IF (k >= n) exit
-      k2=k+k
-      arth_r(k+1:min(k2,n))=temp+arth_r(1:min(k,n-k))
-      temp=temp+temp
-      k=k2
-    END DO
-  END IF
+INTEGER(I4B) :: k, k2
+REAL(SP) :: temp
+IF (n > 0) arth_r(1) = first
+IF (n <= NPAR_ARTH) THEN
+  DO k = 2, n
+    arth_r(k) = arth_r(k - 1) + increment
+  END DO
+ELSE
+  DO k = 2, NPAR2_ARTH
+    arth_r(k) = arth_r(k - 1) + increment
+  END DO
+  temp = increment * NPAR2_ARTH
+  k = NPAR2_ARTH
+  DO
+    IF (k >= n) exit
+    k2 = k + k
+    arth_r(k + 1:min(k2, n)) = temp + arth_r(1:min(k, n - k))
+    temp = temp + temp
+    k = k2
+  END DO
+END IF
 END PROCEDURE arth_r
 
 !----------------------------------------------------------------------------
@@ -220,27 +220,27 @@ END PROCEDURE arth_r
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE arth_d
-  INTEGER(I4B) :: k,k2
-  REAL(DP) :: temp
-  IF (n > 0) arth_d(1)=first
-  IF (n <= NPAR_ARTH) THEN
-    DO k=2,n
-      arth_d(k)=arth_d(k-1)+increment
-    END DO
-  ELSE
-    DO k=2,NPAR2_ARTH
-      arth_d(k)=arth_d(k-1)+increment
-    END DO
-    temp=increment*NPAR2_ARTH
-    k=NPAR2_ARTH
-    DO
-      IF (k >= n) exit
-      k2=k+k
-      arth_d(k+1:min(k2,n))=temp+arth_d(1:min(k,n-k))
-      temp=temp+temp
-      k=k2
-    END DO
-  END IF
+INTEGER(I4B) :: k, k2
+REAL(DP) :: temp
+IF (n > 0) arth_d(1) = first
+IF (n <= NPAR_ARTH) THEN
+  DO k = 2, n
+    arth_d(k) = arth_d(k - 1) + increment
+  END DO
+ELSE
+  DO k = 2, NPAR2_ARTH
+    arth_d(k) = arth_d(k - 1) + increment
+  END DO
+  temp = increment * NPAR2_ARTH
+  k = NPAR2_ARTH
+  DO
+    IF (k >= n) exit
+    k2 = k + k
+    arth_d(k + 1:min(k2, n)) = temp + arth_d(1:min(k, n - k))
+    temp = temp + temp
+    k = k2
+  END DO
+END IF
 END PROCEDURE arth_d
 
 !----------------------------------------------------------------------------
@@ -248,26 +248,26 @@ END PROCEDURE arth_d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE arth_i
-  INTEGER(I4B) :: k,k2,temp
-  IF (n > 0) arth_i(1)=first
-  IF (n <= NPAR_ARTH) THEN
-    DO k=2,n
-      arth_i(k)=arth_i(k-1)+increment
-    END DO
-  ELSE
-    DO k=2,NPAR2_ARTH
-      arth_i(k)=arth_i(k-1)+increment
-    END DO
-    temp=increment*NPAR2_ARTH
-    k=NPAR2_ARTH
-    DO
-      IF (k >= n) exit
-      k2=k+k
-      arth_i(k+1:min(k2,n))=temp+arth_i(1:min(k,n-k))
-      temp=temp+temp
-      k=k2
-    END DO
-  END IF
+INTEGER(I4B) :: k, k2, temp
+IF (n > 0) arth_i(1) = first
+IF (n <= NPAR_ARTH) THEN
+  DO k = 2, n
+    arth_i(k) = arth_i(k - 1) + increment
+  END DO
+ELSE
+  DO k = 2, NPAR2_ARTH
+    arth_i(k) = arth_i(k - 1) + increment
+  END DO
+  temp = increment * NPAR2_ARTH
+  k = NPAR2_ARTH
+  DO
+    IF (k >= n) exit
+    k2 = k + k
+    arth_i(k + 1:min(k2, n)) = temp + arth_i(1:min(k, n - k))
+    temp = temp + temp
+    k = k2
+  END DO
+END IF
 END PROCEDURE arth_i
 
 !----------------------------------------------------------------------------
@@ -275,18 +275,18 @@ END PROCEDURE arth_i
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE outerdIFf_r
-  outerdIFf_r = SPREAD(a,dim=2,ncopies=size(b)) - &
-    SPREAD(b,dim=1,ncopies=size(a))
+outerdIFf_r = SPREAD(a, dim=2, ncopies=size(b)) - &
+              SPREAD(b, dim=1, ncopies=size(a))
 END PROCEDURE outerdIFf_r
 
 MODULE PROCEDURE outerdIFf_d
-  outerdIFf_d = SPREAD(a,dim=2,ncopies=size(b)) - &
-    SPREAD(b,dim=1,ncopies=size(a))
+outerdIFf_d = SPREAD(a, dim=2, ncopies=size(b)) - &
+              SPREAD(b, dim=1, ncopies=size(a))
 END PROCEDURE outerdIFf_d
 
 MODULE PROCEDURE outerdIFf_i
-  outerdIFf_i = SPREAD(a,dim=2,ncopies=size(b)) - &
-    SPREAD(b,dim=1,ncopies=size(a))
+outerdIFf_i = SPREAD(a, dim=2, ncopies=size(b)) - &
+              SPREAD(b, dim=1, ncopies=size(a))
 END PROCEDURE outerdIFf_i
 
 !----------------------------------------------------------------------------
@@ -294,9 +294,9 @@ END PROCEDURE outerdIFf_i
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE imaxloc_r
-  INTEGER( I4B ), DIMENSION(1) :: imax
-  imax = MAXLOC( arr(:) )
-  imaxloc_r = imax(1)
+INTEGER(I4B), DIMENSION(1) :: imax
+imax = MAXLOC(arr(:))
+imaxloc_r = imax(1)
 END PROCEDURE imaxloc_r
 
 !----------------------------------------------------------------------------
@@ -304,9 +304,9 @@ END PROCEDURE imaxloc_r
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE imaxloc_i
-  INTEGER( I4B ), DIMENSION(1) :: imax
-  imax = MAXLOC( iarr( : ) )
-  imaxloc_i = imax(1)
+INTEGER(I4B), DIMENSION(1) :: imax
+imax = MAXLOC(iarr(:))
+imaxloc_i = imax(1)
 END PROCEDURE imaxloc_i
 
 !----------------------------------------------------------------------------
@@ -314,9 +314,9 @@ END PROCEDURE imaxloc_i
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE iminloc_r
-  INTEGER(I4B), DIMENSION(1) :: imin
-  imin=MINLOC(arr(:))
-  iminloc_r=imin(1)
+INTEGER(I4B), DIMENSION(1) :: imin
+imin = MINLOC(arr(:))
+iminloc_r = imin(1)
 END PROCEDURE iminloc_r
 
 !----------------------------------------------------------------------------
@@ -324,8 +324,8 @@ END PROCEDURE iminloc_r
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IMG_1
-  COMPLEX( Real32 ), PARAMETER :: i=(0.0_Real32, 1.0_Real32)
-  ans = REAL(x*i, KIND=Real32)
+COMPLEX(Real32), PARAMETER :: i = (0.0_Real32, 1.0_Real32)
+ans = REAL(x * i, KIND=Real32)
 END PROCEDURE IMG_1
 
 !----------------------------------------------------------------------------
@@ -333,8 +333,34 @@ END PROCEDURE IMG_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IMG_2
-  COMPLEX( Real64 ), PARAMETER :: i=(0.0_Real64, 1.0_Real64)
-  ans = REAL(x*i, KIND=Real64)
+COMPLEX(Real64), PARAMETER :: i = (0.0_Real64, 1.0_Real64)
+ans = REAL(x * i, KIND=Real64)
 END PROCEDURE IMG_2
+
+!----------------------------------------------------------------------------
+!                                                                 Safe_ACOS
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE safe_ACOS
+REAL(DFP) :: c2
+!!
+c2 = c
+c2 = MAX(c2, -1.0_DFP)
+c2 = MIN(c2, +1.0_DFP)
+!!
+ans = acos(c2)
+END PROCEDURE safe_ACOS
+
+!----------------------------------------------------------------------------
+!                                                                 Safe_ASIN
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE safe_ASIN
+REAL(DFP) :: s2
+s2 = s
+s2 = MAX(s2, -1.0D+00)
+s2 = MIN(s2, +1.0D+00)
+ans = asin(s2)
+END PROCEDURE safe_ASIN
 
 END SUBMODULE Methods

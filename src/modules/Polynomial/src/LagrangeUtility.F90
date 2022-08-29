@@ -33,13 +33,13 @@ PRIVATE
 ! this routine returns the number of dof for lagrange polynomial
 
 INTERFACE
-MODULE PURE FUNCTION LagrangeDOF( order, elemType) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
+  MODULE PURE FUNCTION LagrangeDOF(order, elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
     !! order
-  INTEGER( I4B ), INTENT( IN ) :: elemType
-  INTEGER( I4B ) :: ans
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
     !! number of degree of freedom
-END FUNCTION LagrangeDOF
+  END FUNCTION LagrangeDOF
 END INTERFACE
 
 PUBLIC :: LagrangeDOF
@@ -53,13 +53,13 @@ PUBLIC :: LagrangeDOF
 ! summary: Returns the number of dof for lagrange polynomial
 
 INTERFACE
-MODULE PURE FUNCTION LagrangeInDOF( order, elemType) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
+  MODULE PURE FUNCTION LagrangeInDOF(order, elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
     !! order
-  INTEGER( I4B ), INTENT( IN ) :: elemType
-  INTEGER( I4B ) :: ans
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
     !! number of degree of freedom
-END FUNCTION LagrangeInDOF
+  END FUNCTION LagrangeInDOF
 END INTERFACE
 
 PUBLIC :: LagrangeInDOF
@@ -77,13 +77,12 @@ PUBLIC :: LagrangeInDOF
 ! this routine returns the degrees of monomials for lagrange polynomial on
 ! triangles and quadrilaterals.
 
-
 INTERFACE
-MODULE PURE FUNCTION LagrangeDegree( order, elemType ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  INTEGER( I4B ), INTENT( IN ) :: elemType
-  INTEGER( I4B ), ALLOCATABLE :: ans( :, : )
-END FUNCTION LagrangeDegree
+  MODULE PURE FUNCTION LagrangeDegree(order, elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+  END FUNCTION LagrangeDegree
 END INTERFACE
 
 PUBLIC :: LagrangeDegree
@@ -102,18 +101,18 @@ PUBLIC :: LagrangeDegree
 ! triangles and quadrilaterals.
 
 INTERFACE
-MODULE PURE FUNCTION LagrangeVandermonde( x, order, elemType ) &
-  & RESULT( ans )
-  REAL( DFP ), INTENT( IN ) :: x( :, : )
+  MODULE PURE FUNCTION LagrangeVandermonde(x, order, elemType) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: x(:, :)
   !!  points in $x_{iJ}$ format
-  INTEGER( I4B ), INTENT( IN ) :: order
+    INTEGER(I4B), INTENT(IN) :: order
   !! order
-  INTEGER( I4B ), INTENT( IN ) :: elemType
+    INTEGER(I4B), INTENT(IN) :: elemType
   !! element type
-  REAL( DFP ), ALLOCATABLE :: ans( :, : )
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   !! vandermonde matrix nrows = number of points
   !! ncols = number of dof
-END FUNCTION LagrangeVandermonde
+  END FUNCTION LagrangeVandermonde
 END INTERFACE
 
 PUBLIC :: LagrangeVandermonde
@@ -123,16 +122,37 @@ PUBLIC :: LagrangeVandermonde
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION EquidistancePoint( order, xij, elemType ) &
-  & RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: elemType
-  REAL( DFP ), ALLOCATABLE :: ans(:,:)
-END FUNCTION EquidistancePoint
+  MODULE PURE FUNCTION EquidistancePoint(order, xij, elemType) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION EquidistancePoint
 END INTERFACE
 
 PUBLIC :: EquidistancePoint
+
+!----------------------------------------------------------------------------
+!                                                         InterpolationPoint
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Aug 2022
+! summary: Get the interpolation point
+
+INTERFACE
+  MODULE PURE FUNCTION InterpolationPoint(order, elemType, ipType, xij) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B), INTENT(IN) :: ipType
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION InterpolationPoint
+END INTERFACE
+
+PUBLIC :: InterpolationPoint
 
 !----------------------------------------------------------------------------
 !

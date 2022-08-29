@@ -31,6 +31,12 @@ INTERFACE
   END FUNCTION det_2D
 END INTERFACE
 
+INTERFACE Det
+  MODULE PROCEDURE det_2D
+END INTERFACE Det
+
+PUBLIC :: DET
+
 !----------------------------------------------------------------------------
 !                                                        Det@InverseMethods
 !----------------------------------------------------------------------------
@@ -43,10 +49,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE Det
-  MODULE PROCEDURE det_2D, det_3D
+  MODULE PROCEDURE det_3D
 END INTERFACE Det
-
-PUBLIC :: DET
 
 !----------------------------------------------------------------------------
 !                                                        INV@InverseMethods
@@ -58,6 +62,12 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: A(:, :)
   END SUBROUTINE
 END INTERFACE
+
+INTERFACE Inv
+  MODULE PROCEDURE Inv_2D
+END INTERFACE Inv
+
+PUBLIC :: INV
 
 !----------------------------------------------------------------------------
 !                                                         INV@InverseMethods
@@ -71,9 +81,7 @@ INTERFACE
 END INTERFACE
 
 INTERFACE Inv
-  MODULE PROCEDURE Inv_2D, Inv_3D
+  MODULE PROCEDURE Inv_3D
 END INTERFACE Inv
-
-PUBLIC :: INV
 
 END MODULE InvUtility

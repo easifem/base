@@ -29,17 +29,17 @@ PRIVATE
 ! summary: Returns vandermonde matrix
 
 INTERFACE
-MODULE PURE FUNCTION VandermondeMatrix_Real32( order, x ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  REAL( Real32 ), INTENT( IN ) :: x( : )
-  REAL( Real32 ) :: ans( SIZE(x), order+1 )
-END FUNCTION VandermondeMatrix_Real32
+  MODULE PURE FUNCTION VandermondeMatrix_Real32(order, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    REAL(Real32), INTENT(IN) :: x(:)
+    REAL(Real32) :: ans(SIZE(x), order + 1)
+  END FUNCTION VandermondeMatrix_Real32
 
-MODULE PURE FUNCTION VandermondeMatrix_Real64( order, x ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: order
-  REAL( Real64 ), INTENT( IN ) :: x( : )
-  REAL( Real64 ) :: ans( SIZE(x), order+1 )
-END FUNCTION VandermondeMatrix_Real64
+  MODULE PURE FUNCTION VandermondeMatrix_Real64(order, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    REAL(Real64), INTENT(IN) :: x(:)
+    REAL(Real64) :: ans(SIZE(x), order + 1)
+  END FUNCTION VandermondeMatrix_Real64
 END INTERFACE
 
 INTERFACE VandermondeMatrix
@@ -47,6 +47,5 @@ INTERFACE VandermondeMatrix
 END INTERFACE VandermondeMatrix
 
 PUBLIC :: VandermondeMatrix
-
 
 END MODULE InterpolationUtility

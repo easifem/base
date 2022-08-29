@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	23 Feb 2021
+! date:         23 Feb 2021
 ! summary: Modules related to [[BaseType]] module.
 !
 !# Introduction
@@ -30,76 +30,69 @@
 MODULE BaseMethod
 
 #ifdef USE_PLPLOT
-  USE PLPLOT
+USE PLPLOT
 #endif
 
 #ifdef USE_OpenMP
-  USE OMP_LIB
+USE OMP_LIB
 #endif
 
 #ifdef USE_BLAS95
-  USE EASIFEM_BLAS
+USE EASIFEM_BLAS
 #endif
 
 #ifdef USE_LAPACK95
-  USE F95_LAPACK
-  USE F77_LAPACK
-  USE Lapack_Method
+USE F95_LAPACK
+USE F77_LAPACK
+USE Lapack_Method
 #endif
 
 #ifdef USE_FFTW
-  USE FFTW3
+USE FFTW3
 #endif
 
-  USE String_Class
-  USE String_Method
-  USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
-    & str_ucs4, str, strz, cton, bstr, bcton, check_endian, digit, &
-    & penf_Init, penf_print
-  USE BeFoR64
-  USE FACE
-  USE FPL
-  USE System_Method
-  USE CInterface
-  USE MetisInterface
-  USE OpenMP_Method
-  USE GlobalData
-  USE Hashing32
-  USE OGPF
-  USE Test_Method
-  USE MdEncode_Method
-  USE DISPMODULE
-  USE Display_Method
-  USE ErrorHandling
-  USE Utility
-  USE BaseType
-  USE Random_Method
-  USE BoundingBox_Method
-  USE IntVector_Method
-  USE IndexValue_Method
-  USE KeyValue_Method
-  USE IterationData_Method
-  USE Vector3D_Method
-  USE BLAS1V_Method
-  USE RealVector_Method
-  USE DOF_Method
-  USE ReferenceElement_Method
-  USE ReferencePoint_Method
-  USE ReferenceLine_Method
-  USE ReferenceTriangle_Method
-  USE ReferenceQuadrangle_Method
-  USE ReferenceTetrahedron_Method
-  USE ReferenceHexahedron_Method
-  USE ReferencePrism_Method
-  USE ReferencePyramid_Method
-  USE QuadraturePoint_Method
-  USE FEVariable_Method
-  USE Elemshapedata_Method
-  USE RealMatrix_Method
-  USE FEMatrix_Method
-  USE FEVector_Method
-  USE Rank2Tensor_Method
-  USE VoigtRank2Tensor_Method
-  USE CSRSparsity_Method
-  USE CSRMatrix_Method
+USE String_Class
+USE String_Method
+USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
+  & str_ucs4, str, strz, cton, bstr, bcton, check_endian, digit, &
+  & penf_Init, penf_print
+USE BeFoR64
+USE FACE
+USE FPL
+USE System_Method
+USE CInterface
+USE MetisInterface
+USE OpenMP_Method
+USE GlobalData
+USE Hashing32
+USE OGPF
+USE Test_Method
+USE MdEncode_Method
+USE DISPMODULE
+USE Display_Method
+USE ErrorHandling
+USE Utility
+USE PolynomialUtility
+USE BaseType
+USE Random_Method
+USE BoundingBox_Method
+USE IntVector_Method
+USE IndexValue_Method
+USE KeyValue_Method
+USE IterationData_Method
+USE Vector3D_Method
+USE BLAS1V_Method
+USE RealVector_Method
+USE DOF_Method
+USE Geometry_Method
+USE QuadraturePoint_Method
+USE FEVariable_Method
+USE Elemshapedata_Method
+USE RealMatrix_Method
+USE FEMatrix_Method
+USE FEVector_Method
+USE Rank2Tensor_Method
+USE VoigtRank2Tensor_Method
+USE CSRSparsity_Method
+USE CSRMatrix_Method
 END MODULE BaseMethod

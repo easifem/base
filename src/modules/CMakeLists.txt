@@ -69,6 +69,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ErrorHandling/CMakeLists.txt)
 #Utility
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 
+#Polynomial
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
+
 #BaseType
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseType/CMakeLists.txt)
 
@@ -110,9 +113,6 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
 
 #Geometry
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Geometry/CMakeLists.txt)
-
-#ReferenceElement
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
 
 #QuadraturePoint
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)

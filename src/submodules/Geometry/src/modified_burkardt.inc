@@ -3,7 +3,7 @@
 !
 !-----------------------------------------------------------------------------
 
-PURE FUNCTION R8MATDET4D ( a )
+PURE FUNCTION R8MATDET4D(a)
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   !! R8MATDET4D computes the determinant of a 4 by 4 matrix.
   !
@@ -18,26 +18,26 @@ PURE FUNCTION R8MATDET4D ( a )
   !    Output, real ( kind = 8 ) R8MATDET4D, the determinant of the matrix.
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-  REAL( DFP ), INTENT( IN ) :: a(4,4)
-  REAL( DFP ) :: R8MATDET4D
+  REAL(DFP), INTENT(IN) :: a(4, 4)
+  REAL(DFP) :: R8MATDET4D
 
   R8MATDET4D = &
-      a(1,1) * ( &
-        a(2,2) * ( a(3,3) * a(4,4) - a(3,4) * a(4,3) ) &
-      - a(2,3) * ( a(3,2) * a(4,4) - a(3,4) * a(4,2) ) &
-      + a(2,4) * ( a(3,2) * a(4,3) - a(3,3) * a(4,2) ) ) &
-    - a(1,2) * ( &
-        a(2,1) * ( a(3,3) * a(4,4) - a(3,4) * a(4,3) ) &
-      - a(2,3) * ( a(3,1) * a(4,4) - a(3,4) * a(4,1) ) &
-      + a(2,4) * ( a(3,1) * a(4,3) - a(3,3) * a(4,1) ) ) &
-    + a(1,3) * ( &
-        a(2,1) * ( a(3,2) * a(4,4) - a(3,4) * a(4,2) ) &
-      - a(2,2) * ( a(3,1) * a(4,4) - a(3,4) * a(4,1) ) &
-      + a(2,4) * ( a(3,1) * a(4,2) - a(3,2) * a(4,1) ) ) &
-    - a(1,4) * ( &
-        a(2,1) * ( a(3,2) * a(4,3) - a(3,3) * a(4,2) ) &
-      - a(2,2) * ( a(3,1) * a(4,3) - a(3,3) * a(4,1) ) &
-      + a(2,3) * ( a(3,1) * a(4,2) - a(3,2) * a(4,1) ) )
+    a(1, 1) * ( &
+    a(2, 2) * (a(3, 3) * a(4, 4) - a(3, 4) * a(4, 3)) &
+    - a(2, 3) * (a(3, 2) * a(4, 4) - a(3, 4) * a(4, 2)) &
+    + a(2, 4) * (a(3, 2) * a(4, 3) - a(3, 3) * a(4, 2))) &
+    - a(1, 2) * ( &
+    a(2, 1) * (a(3, 3) * a(4, 4) - a(3, 4) * a(4, 3)) &
+    - a(2, 3) * (a(3, 1) * a(4, 4) - a(3, 4) * a(4, 1)) &
+    + a(2, 4) * (a(3, 1) * a(4, 3) - a(3, 3) * a(4, 1))) &
+    + a(1, 3) * ( &
+    a(2, 1) * (a(3, 2) * a(4, 4) - a(3, 4) * a(4, 2)) &
+    - a(2, 2) * (a(3, 1) * a(4, 4) - a(3, 4) * a(4, 1)) &
+    + a(2, 4) * (a(3, 1) * a(4, 2) - a(3, 2) * a(4, 1))) &
+    - a(1, 4) * ( &
+    a(2, 1) * (a(3, 2) * a(4, 3) - a(3, 3) * a(4, 2)) &
+    - a(2, 2) * (a(3, 1) * a(4, 3) - a(3, 3) * a(4, 1)) &
+    + a(2, 3) * (a(3, 1) * a(4, 2) - a(3, 2) * a(4, 1)))
 
 END FUNCTION R8MATDET4D
 
@@ -45,101 +45,7 @@ END FUNCTION R8MATDET4D
 !
 !-----------------------------------------------------------------------------
 
-PURE SUBROUTINE QUADAREA3D ( q, area )
-
-  !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-  !! QUADAREA3D computes the area of a quadrilateral in 3D.
-  !
-  !  Discussion:
-  !    A quadrilateral is a polygon defined by 4 vertices.
-  !    It is assumed that the four vertices of the quadrilateral
-  !    are coplanar.
-  !    This algorithm computes the area of the related
-  !    Varignon parallelogram first.
-  !  Licensing:
-  !    This code is distributed under the GNU LGPL license.
-  !  Modified:
-  !    09 May 2010
-  !  Author:
-  !    John Burkardt
-  !  Parameters:
-  !    Input, REAL ( kind = 8 ) Q(3,4), the vertices, specified in
-  !    counter clockwise order.
-  !    Output, REAL ( kind = 8 ) AREA, the area of the quadrilateral.
-  !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-
-  REAL( DFP ), INTENT( IN ) :: q(3,4)
-  REAL( DFP ), INTENT( OUT ) :: area
-  REAL( DFP ) :: p(3,4)
-
-  ! Define a parallelogram by averaging consecutive vertices.
-  p(1:3,1:3) = ( q(1:3,1:3) + q(1:3,2:4) ) / 2.0_DFP
-  p(1:3,  4) = ( q(1:3,  4) + q(1:3,1  ) ) / 2.0_DFP
-
-  !  Compute the area.
-  call PARALLELOGRAMAREA3D ( p, area )
-  ! The quadrilateral's area is twice that of the parallelogram.
-  area = 2.0_DFP * area
-
-END SUBROUTINE QUADAREA3D
-
-!-----------------------------------------------------------------------------
-!
-!-----------------------------------------------------------------------------
-
-PURE SUBROUTINE QUADAREA2D ( q, area )
-
-  !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-  ! QUADAREA2D computes the area of a quadrilateral in 2D.
-  !  Discussion:
-  !    A quadrilateral is a polygon defined by 4 vertices.
-  !    This algorithm should be able to handle nonconvex quadrilaterals.
-  !    The vertices of the quadrilateral should be listed in counter clockwise
-  !    order, so that the area is positive.
-  !
-  !  Licensing:
-  !    This code is distributed under the GNU LGPL license.
-  !  Modified:
-  !    28 December 2004
-  !  Author:
-  !    John Burkardt
-  !  Parameters:
-  !    Input, REAL ( kind = 8 ) Q(2,4), the vertices, specified in
-  !    counter clockwise order.
-  !    Output, REAL ( kind = 8 ) AREA, the area of the quadrilateral.
-  !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-
-  REAL( DFP ), INTENT( IN ) :: q(2,4)
-  REAL( DFP ), INTENT( OUT ) :: area
-
-  INTEGER( I4B ), PARAMETER :: dim_num = 2
-
-  REAL( DFP ) :: area_triangle
-  REAL( DFP ) :: t(dim_num,3)
-
-  area = 0.0_DFP
-
-  t(1:dim_num,1:3) = reshape ( (/ &
-    q(1:2,1), q(1:2,2), q(1:2,3) /), (/ dim_num, 3 /) )
-
-  CALL TRIANGLEAREA2D ( t, area_triangle )
-
-  area = area + area_triangle
-
-  t(1:dim_num,1:3) = RESHAPE ( (/ &
-    q(1:2,3), q(1:2,4), q(1:2,1) /), (/ dim_num, 3 /) )
-
-  CALL TRIANGLEAREA2D ( t, area_triangle )
-
-  area = area + area_triangle
-
-END SUBROUTINE QUADAREA2D
-
-!-----------------------------------------------------------------------------
-!
-!-----------------------------------------------------------------------------
-
-PURE SUBROUTINE PARALLELOGRAMAREA3D ( p, area )
+PURE SUBROUTINE PARALLELOGRAMAREA3D(p, area)
 
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   !! PARALLELOGRAMAREA3D computes the area of a parallelogram in 3D.
@@ -174,22 +80,22 @@ PURE SUBROUTINE PARALLELOGRAMAREA3D ( p, area )
   !    Output, real ( kind = 8 ) AREA, the area
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-  REAL( DFP ), INTENT( IN ) :: p(3,4)
-  REAL( DFP ), INTENT( OUT ) :: area
-  REAL( DFP ) :: cross(3)
+  REAL(DFP), INTENT(IN) :: p(3, 4)
+  REAL(DFP), INTENT(OUT) :: area
+  REAL(DFP) :: cross(3)
 
   ! Compute the cross product vector.
 
-  cross(1) = ( p(2,2) - p(2,1) ) * ( p(3,3) - p(3,1) ) &
-           - ( p(3,2) - p(3,1) ) * ( p(2,3) - p(2,1) )
+  cross(1) = (p(2, 2) - p(2, 1)) * (p(3, 3) - p(3, 1)) &
+             - (p(3, 2) - p(3, 1)) * (p(2, 3) - p(2, 1))
 
-  cross(2) = ( p(3,2) - p(3,1) ) * ( p(1,3) - p(1,1) ) &
-           - ( p(1,2) - p(1,1) ) * ( p(3,3) - p(3,1) )
+  cross(2) = (p(3, 2) - p(3, 1)) * (p(1, 3) - p(1, 1)) &
+             - (p(1, 2) - p(1, 1)) * (p(3, 3) - p(3, 1))
 
-  cross(3) = ( p(1,2) - p(1,1) ) * ( p(2,3) - p(2,1) ) &
-           - ( p(2,2) - p(2,1) ) * ( p(1,3) - p(1,1) )
+  cross(3) = (p(1, 2) - p(1, 1)) * (p(2, 3) - p(2, 1)) &
+             - (p(2, 2) - p(2, 1)) * (p(1, 3) - p(1, 1))
 
-  area = SQRT ( SUM ( cross(1:3) ** 2 ) )
+  area = SQRT(SUM(cross(1:3)**2))
 
 END SUBROUTINE PARALLELOGRAMAREA3D
 
@@ -197,7 +103,7 @@ END SUBROUTINE PARALLELOGRAMAREA3D
 !
 !-----------------------------------------------------------------------------
 
-PURE SUBROUTINE PARALLELOGRAMAREA2D ( p, area )
+PURE SUBROUTINE PARALLELOGRAMAREA2D(p, area)
 
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   !
@@ -233,14 +139,14 @@ PURE SUBROUTINE PARALLELOGRAMAREA2D ( p, area )
   !    Output, real ( kind = 8 ) AREA, the (signed) area.
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-  REAL ( DFP ), INTENT( IN ) :: p(2,4)
-  REAL ( DFP ), INTENT( OUT ) :: area
+  REAL(DFP), INTENT(IN) :: p(2, 4)
+  REAL(DFP), INTENT(OUT) :: area
 
   !  Compute the cross product vector, which only has a single
   !  nonzero component.
 
-  area = ( p(1,2) - p(1,1) ) * ( p(2,3) - p(2,1) ) &
-       - ( p(2,2) - p(2,1) ) * ( p(1,3) - p(1,1) )
+  area = (p(1, 2) - p(1, 1)) * (p(2, 3) - p(2, 1)) &
+         - (p(2, 2) - p(2, 1)) * (p(1, 3) - p(1, 1))
 
 END SUBROUTINE PARALLELOGRAMAREA2D
 
@@ -248,7 +154,7 @@ END SUBROUTINE PARALLELOGRAMAREA2D
 !
 !-----------------------------------------------------------------------------
 
-PURE SUBROUTINE TETRAHEDRONVOLUME3D ( tetra, volume )
+PURE SUBROUTINE TETRAHEDRONVOLUME3D(tetra, volume)
 
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   !
@@ -265,16 +171,16 @@ PURE SUBROUTINE TETRAHEDRONVOLUME3D ( tetra, volume )
   !    Output, real ( kind = 8 ) VOLUME, the volume of the tetrahedron.
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-  REAL( DFP ), INTENT( IN ) :: tetra(3,4)
-  REAL( DFP ), INTENT( OUT ) :: volume
+  REAL(DFP), INTENT(IN) :: tetra(3, 4)
+  REAL(DFP), INTENT(OUT) :: volume
 
-  INTEGER ( I4B ), PARAMETER :: dim_num = 3
-  REAL( DFP ) :: a(4,4)
+  INTEGER(I4B), PARAMETER :: dim_num = 3
+  REAL(DFP) :: a(4, 4)
 
-  a(1:dim_num,1:4) = tetra(1:dim_num,1:4)
-  a(4,1:4) = 1.0_DFP
+  a(1:dim_num, 1:4) = tetra(1:dim_num, 1:4)
+  a(4, 1:4) = 1.0_DFP
 
-  volume = abs ( R8MATDET4D ( a ) ) / 6.0_DFP
+  volume = abs(R8MATDET4D(a)) / 6.0_DFP
 
 END SUBROUTINE TETRAHEDRONVOLUME3D
 
@@ -282,8 +188,8 @@ END SUBROUTINE TETRAHEDRONVOLUME3D
 !
 !-----------------------------------------------------------------------------
 
-PURE SUBROUTINE POLYHEDRONVOLUME3D ( coord, order_max, face_num, node, &
-  & node_num, order, volume )
+PURE SUBROUTINE POLYHEDRONVOLUME3D(coord, order_max, face_num, node, &
+  & node_num, order, volume)
 
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
   !
@@ -321,37 +227,37 @@ PURE SUBROUTINE POLYHEDRONVOLUME3D ( coord, order_max, face_num, node, &
   !    Output, real ( kind = 8 ) VOLUME, the volume of the polyhedron.
   !.   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-  INTEGER( I4B ), INTENT( IN ) :: order_max
-  INTEGER( I4B ), INTENT( IN ) :: face_num
-  INTEGER( I4B ), INTENT( IN ) :: node(face_num,order_max)
-  INTEGER( I4B ), INTENT( IN ) :: node_num
-  REAL( DFP ), INTENT( IN ) :: coord(3,node_num)
-  INTEGER( I4B ), INTENT( IN ) :: order(face_num)
-  REAL( DFP ), INTENT( OUT ) :: volume
+  INTEGER(I4B), INTENT(IN) :: order_max
+  INTEGER(I4B), INTENT(IN) :: face_num
+  INTEGER(I4B), INTENT(IN) :: node(face_num, order_max)
+  INTEGER(I4B), INTENT(IN) :: node_num
+  REAL(DFP), INTENT(IN) :: coord(3, node_num)
+  INTEGER(I4B), INTENT(IN) :: order(face_num)
+  REAL(DFP), INTENT(OUT) :: volume
 
-  INTEGER( I4B ), parameter :: dim_num = 3
-  INTEGER( I4B ) :: face
-  INTEGER( I4B ) :: n1
-  INTEGER( I4B ) :: n2
-  INTEGER( I4B ) :: n3
-  INTEGER( I4B ) :: v
+  INTEGER(I4B), parameter :: dim_num = 3
+  INTEGER(I4B) :: face
+  INTEGER(I4B) :: n1
+  INTEGER(I4B) :: n2
+  INTEGER(I4B) :: n3
+  INTEGER(I4B) :: v
   volume = 0.0_DFP
 
   ! Triangulate each face.
   DO face = 1, face_num
 
-    n3 = node(face,order(face))
+    n3 = node(face, order(face))
 
     DO v = 1, order(face) - 2
-      n1 = node(face,v)
-      n2 = node(face,v+1)
+      n1 = node(face, v)
+      n2 = node(face, v + 1)
       volume = volume &
-        + coord(1,n1) &
-        * ( coord(2,n2) * coord(3,n3) - coord(2,n3) * coord(3,n2) ) &
-        + coord(1,n2) &
-        * ( coord(2,n3) * coord(3,n1) - coord(2,n1) * coord(3,n3) ) &
-        + coord(1,n3) &
-        * ( coord(2,n1) * coord(3,n2) - coord(2,n2) * coord(3,n1) )
+               + coord(1, n1) &
+               * (coord(2, n2) * coord(3, n3) - coord(2, n3) * coord(3, n2)) &
+               + coord(1, n2) &
+               * (coord(2, n3) * coord(3, n1) - coord(2, n1) * coord(3, n3)) &
+               + coord(1, n3) &
+               * (coord(2, n1) * coord(3, n2) - coord(2, n2) * coord(3, n1))
     END DO
   END DO
 

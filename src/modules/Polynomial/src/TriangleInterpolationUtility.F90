@@ -15,13 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE QuadrangleInterpolationUtility
+MODULE TriangleInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
 !----------------------------------------------------------------------------
-!                                                  LagrangeDegree_Quadrangle
+!                                                   LagrangeDegree_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -29,104 +29,71 @@ PRIVATE
 ! summary:         Returns the degree of monomials for Lagrange polynomials
 
 INTERFACE
-  MODULE PURE FUNCTION LagrangeDegree_Quadrangle(order) RESULT(ans)
+  MODULE PURE FUNCTION LagrangeDegree_Triangle(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
-  END FUNCTION LagrangeDegree_Quadrangle
+  END FUNCTION LagrangeDegree_Triangle
 END INTERFACE
 
-PUBLIC :: LagrangeDegree_Quadrangle
+PUBLIC :: LagrangeDegree_Triangle
 
 !----------------------------------------------------------------------------
-!                                                    LagrangeDOF_Quadrangle
+!                                                       LagrangeDOF_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary:         Returns the total number of degree of freedom for a
-! lagrange polynomial on Quadrangle
+! summary: Returns the total number of degree of freedom for a
+! lagrange polynomial on triangle
 
 INTERFACE
-  MODULE PURE FUNCTION LagrangeDOF_Quadrangle(order) RESULT(ans)
+  MODULE PURE FUNCTION LagrangeDOF_Triangle(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B) :: ans
-  END FUNCTION LagrangeDOF_Quadrangle
+  END FUNCTION LagrangeDOF_Triangle
 END INTERFACE
 
-PUBLIC :: LagrangeDOF_Quadrangle
+PUBLIC :: LagrangeDOF_Triangle
 
 !----------------------------------------------------------------------------
-!                                                  LagrangeInDOF_Quadrangle
+!                                                     LagrangeInDOF_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
 ! summary:         Returns the total number of degree of freedom for a
-! lagrange polynomial in cell/face of Quadrangle
+! lagrange polynomial in cell/face of triangle
 !
 !# Introduction
 !
 !- Returns the total number of degree of freedom for a
-! lagrange polynomial in cell/face of Quadrangle
-!- These dof are strictly inside the Quadrangle
+! lagrange polynomial in cell/face of triangle
+!- These dof are strictly inside the triangle
 
 INTERFACE
-  MODULE PURE FUNCTION LagrangeInDOF_Quadrangle(order) RESULT(ans)
+  MODULE PURE FUNCTION LagrangeInDOF_Triangle(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B) :: ans
-  END FUNCTION LagrangeInDOF_Quadrangle
+  END FUNCTION LagrangeInDOF_Triangle
 END INTERFACE
 
-PUBLIC :: LagrangeInDOF_Quadrangle
+PUBLIC :: LagrangeInDOF_Triangle
 
 !----------------------------------------------------------------------------
-!                                             EquidistanceInPoint_Quadrangle
+!                                              EquidistanceInPoint_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary:         Returns equidistance points in Quadrangle
+! summary: Returns equidistance points in triangle
 !
 !# Introduction
 !
-!- This function returns the equidistance points in Quadrangle
-!- All points are inside the Quadrangle
+!- This function returns the equidistance points in triangle
+!- All points are inside the triangle
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistanceInPoint_Quadrangle(order, xij) &
-    & RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-  !! order
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-  !! number of rows = nsd
-  !! number of cols = 4
-    REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! returned coordinates in $x_{iJ}$ format
-  END FUNCTION EquidistanceInPoint_Quadrangle
-END INTERFACE
-
-PUBLIC :: EquidistanceInPoint_Quadrangle
-
-!----------------------------------------------------------------------------
-!                                              EquidistancePoint_Quadrangle
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 12 Aug 2022
-! summary: Returns the nodal coordinates of higher order Quadrangle element
-!
-!# Introduction
-!
-!- This function returns the nodal coordinates of higher order
-! Quadrangle element
-!- The coordinates are distributed uniformly
-!- These coordinates can be used to construct lagrange polynomials
-!- The returned coordinates are in $x_{iJ}$ format.
-!- The node numbering is according to Gmsh convention.
-
-INTERFACE
-  MODULE PURE FUNCTION EquidistancePoint_Quadrangle(order, xij) RESULT(ans)
+  MODULE PURE FUNCTION EquidistanceInPoint_Triangle(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
   !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
@@ -135,37 +102,69 @@ INTERFACE
   !! number of cols = 3
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   !! returned coordinates in $x_{iJ}$ format
-  END FUNCTION EquidistancePoint_Quadrangle
+  END FUNCTION EquidistanceInPoint_Triangle
 END INTERFACE
 
-PUBLIC :: EquidistancePoint_Quadrangle
+PUBLIC :: EquidistanceInPoint_Triangle
 
 !----------------------------------------------------------------------------
-!                                                InterpolationPoint_Quadrangle
+!                                              EquidistancePoint_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: Returns the nodal coordinates of higher order triangle element
+!
+!# Introduction
+!
+!- This function returns the nodal coordinates of higher order
+! triangle element
+!- The coordinates are distributed uniformly
+!- These coordinates can be used to construct lagrange polynomials
+!- The returned coordinates are in $x_{iJ}$ format.
+!- The node numbering is according to Gmsh convention.
+
+INTERFACE
+  MODULE PURE FUNCTION EquidistancePoint_Triangle(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+  !! order
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+  !! number of rows = nsd
+  !! number of cols = 3
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  !! returned coordinates in $x_{iJ}$ format
+  END FUNCTION EquidistancePoint_Triangle
+END INTERFACE
+
+PUBLIC :: EquidistancePoint_Triangle
+
+!----------------------------------------------------------------------------
+!                                                InterpolationPoint_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Aug 2022
-! summary:         Interpolation point
+! summary: Interpolation point on triangle
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Quadrangle(order, ipType, xij) &
+  MODULE PURE FUNCTION InterpolationPoint_Triangle(order, ipType, xij) &
     & RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of element
+    !! order
     INTEGER(I4B), INTENT(IN) :: ipType
-    !! interpolation point type
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 4)
-    !! xij format
-    REAL(DFP) :: nodecoord(3, (order + 1)**2)
-    !! interpolation points in xij format
-  END FUNCTION InterpolationPoint_Quadrangle
+    !! interpolation type
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! xij coordinates
+    REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
+    !! xij coordinates
+  END FUNCTION InterpolationPoint_Triangle
 END INTERFACE
 
-PUBLIC :: InterpolationPoint_Quadrangle
+PUBLIC :: InterpolationPoint_Triangle
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END MODULE QuadrangleInterpolationUtility
+END MODULE TriangleInterpolationUtility

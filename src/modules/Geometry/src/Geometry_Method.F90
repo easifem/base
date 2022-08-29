@@ -15,17 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE PolynomialUtility
-USE LagrangeUtility
-USE OrthogonalPolynomialUtility
-USE Chebyshev1PolynomialUtility
-USE JacobiPolynomialUtility
-USE InterpolationUtility
-USE LineInterpolationUtility
-USE TriangleInterpolationUtility
-USE QuadrangleInterpolationUtility
-USE TetrahedronInterpolationUtility
-USE HexahedronInterpolationUtility
-USE PrismInterpolationUtility
-USE PyramidInterpolationUtility
-END MODULE PolynomialUtility
+MODULE Geometry_Method
+USE ReferenceElement_Method
+USE ReferencePoint_Method
+USE ReferenceLine_Method
+USE ReferenceTriangle_Method
+USE ReferenceQuadrangle_Method
+USE ReferenceTetrahedron_Method
+USE ReferenceHexahedron_Method
+USE ReferencePrism_Method
+USE ReferencePyramid_Method
+END MODULE Geometry_Method

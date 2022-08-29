@@ -24,6 +24,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
 #Utility
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 
+#Polynomial
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
+
 #OpenMP
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/OpenMP/CMakeLists.txt)
 
@@ -60,8 +63,8 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 #DOF
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/DOF/CMakeLists.txt)
 
-#ReferenceElement
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ReferenceElement/CMakeLists.txt)
+#Geometry
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Geometry/CMakeLists.txt)
 
 #QuadraturePoint
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/QuadraturePoint/CMakeLists.txt)

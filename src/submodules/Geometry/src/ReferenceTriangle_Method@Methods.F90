@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	2 March 2021
+! date:         2 March 2021
 ! summary: This submodule contains methods for [[ReferenceTriangle_]]
 
 SUBMODULE(ReferenceTriangle_Method) Methods
@@ -30,29 +30,29 @@ CONTAINS
 
 MODULE PROCEDURE initiate_ref_Triangle
   !!
-  CALL Reallocate( obj%xij, 3, 3 )
+CALL Reallocate(obj%xij, 3, 3)
   !!
-  obj%xij = InterpolationPoint_Triangle(  &
-    & xij=xij, &
-    & order=1, &
-    & ipType=Equidistance )
+obj%xij = InterpolationPoint_Triangle(  &
+  & xij=xij, &
+  & order=1, &
+  & ipType=Equidistance)
   !!
-  obj%EntityCounts = [3, 3, 1, 0]
-  obj%XiDimension = 2
-  obj%Name = Triangle3
-  obj%order = 1
-  obj%nsd = nsd
+obj%EntityCounts = [3, 3, 1, 0]
+obj%XiDimension = 2
+obj%Name = Triangle3
+obj%order = 1
+obj%nsd = nsd
   !!
-  ALLOCATE( obj%Topology( 7 ) )
-  obj%Topology( 1 ) = ReferenceTopology( [1], Point )
-  obj%Topology( 2 ) = ReferenceTopology( [2], Point )
-  obj%Topology( 3 ) = ReferenceTopology( [3], Point )
-  obj%Topology( 4 ) = ReferenceTopology( [1, 2], Line2 )
-  obj%Topology( 5 ) = ReferenceTopology( [2, 3], Line2 )
-  obj%Topology( 6 ) = ReferenceTopology( [3, 1], Line2 )
-  obj%Topology( 7 ) = ReferenceTopology( [1, 2, 3], Triangle3 )
+ALLOCATE (obj%Topology(7))
+obj%Topology(1) = ReferenceTopology([1], Point)
+obj%Topology(2) = ReferenceTopology([2], Point)
+obj%Topology(3) = ReferenceTopology([3], Point)
+obj%Topology(4) = ReferenceTopology([1, 2], Line2)
+obj%Topology(5) = ReferenceTopology([2, 3], Line2)
+obj%Topology(6) = ReferenceTopology([3, 1], Line2)
+obj%Topology(7) = ReferenceTopology([1, 2, 3], Triangle3)
   !!
-  obj%highorderElement => highorderElement_Triangle
+obj%highorderElement => highorderElement_Triangle
   !!
 END PROCEDURE initiate_ref_Triangle
 
@@ -62,11 +62,11 @@ END PROCEDURE initiate_ref_Triangle
 
 MODULE PROCEDURE reference_Triangle
   !!
-  IF( PRESENT( xij ) ) THEN
-    CALL Initiate( obj, nsd, xij )
-  ELSE
-    CALL Initiate( obj, nsd )
-  END IF
+IF (PRESENT(xij)) THEN
+  CALL Initiate(obj, nsd, xij)
+ELSE
+  CALL Initiate(obj, nsd)
+END IF
   !!
 END PROCEDURE reference_Triangle
 
@@ -76,13 +76,13 @@ END PROCEDURE reference_Triangle
 
 MODULE PROCEDURE reference_Triangle_Pointer
   !!
-  ALLOCATE( obj )
+ALLOCATE (obj)
   !!
-  IF( PRESENT( xij ) ) THEN
-    CALL Initiate( obj, nsd, xij )
-  ELSE
-    CALL Initiate( obj, nsd )
-  END IF
+IF (PRESENT(xij)) THEN
+  CALL Initiate(obj, nsd, xij)
+ELSE
+  CALL Initiate(obj, nsd)
+END IF
   !!
 END PROCEDURE reference_Triangle_Pointer
 
@@ -91,74 +91,74 @@ END PROCEDURE reference_Triangle_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE highorderElement_Triangle
-  INTEGER( I4B ) :: I, NNS, nsd
+INTEGER(I4B) :: I, NNS, nsd
   !!
-  CALL Deallocate( obj )
+CALL Deallocate (obj)
   !!
-  obj%xij = InterpolationPoint_Triangle( &
-    & xij=refelem%xij(1:3, 1:3), &
-    & order=order, &
-    & ipType=ipType )
+obj%xij = InterpolationPoint_Triangle( &
+  & xij=refelem%xij(1:3, 1:3), &
+  & order=order, &
+  & ipType=ipType)
   !!
-  nsd = refelem%nsd
-  obj%highOrderElement => refelem%highOrderElement
+nsd = refelem%nsd
+obj%highOrderElement => refelem%highOrderElement
   !!
-  SELECT CASE( order )
+SELECT CASE (order)
     !!
-  CASE( 1 )
+CASE (1)
     !!
-    NNS = 3
-    obj%EntityCounts = [NNS, 3, 1, 0]
-    obj%XiDimension = 2
-    obj%Name = Triangle3
-    obj%order = order
-    obj%nsd = nsd
-    ALLOCATE( obj%Topology( SUM( obj%EntityCounts) ) )
-    DO I = 1, NNS
-      obj%Topology( I ) = ReferenceTopology( [I], Point )
-    END DO
-    obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2], Line2 )
-    obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3], Line2 )
-    obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 1], Line2 )
-    obj%Topology( NNS + 4 ) = ReferenceTopology( [1, 2, 3], obj%Name )
+  NNS = 3
+  obj%EntityCounts = [NNS, 3, 1, 0]
+  obj%XiDimension = 2
+  obj%Name = Triangle3
+  obj%order = order
+  obj%nsd = nsd
+  ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+  DO I = 1, NNS
+    obj%Topology(I) = ReferenceTopology([I], Point)
+  END DO
+  obj%Topology(NNS + 1) = ReferenceTopology([1, 2], Line2)
+  obj%Topology(NNS + 2) = ReferenceTopology([2, 3], Line2)
+  obj%Topology(NNS + 3) = ReferenceTopology([3, 1], Line2)
+  obj%Topology(NNS + 4) = ReferenceTopology([1, 2, 3], obj%Name)
     !!
-  CASE( 2 )
+CASE (2)
     !!
-    NNS = 6
-    obj%EntityCounts = [NNS, 3, 1, 0]
-    obj%XiDimension = 2
-    obj%Name = Triangle6
-    obj%order = order
-    obj%nsd = nsd
-    ALLOCATE( obj%Topology( SUM( obj%EntityCounts) ) )
-    DO I = 1, NNS
-      obj%Topology( I ) = ReferenceTopology( [I], Point )
-    END DO
-    obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 4], Line3 )
-    obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 5], Line3 )
-    obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 1, 6], Line3 )
-    obj%Topology( NNS + 4 ) = ReferenceTopology( [1, 2, 3, 4, 5, 6], &
-      & obj%Name )
+  NNS = 6
+  obj%EntityCounts = [NNS, 3, 1, 0]
+  obj%XiDimension = 2
+  obj%Name = Triangle6
+  obj%order = order
+  obj%nsd = nsd
+  ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+  DO I = 1, NNS
+    obj%Topology(I) = ReferenceTopology([I], Point)
+  END DO
+  obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 4], Line3)
+  obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 5], Line3)
+  obj%Topology(NNS + 3) = ReferenceTopology([3, 1, 6], Line3)
+  obj%Topology(NNS + 4) = ReferenceTopology([1, 2, 3, 4, 5, 6], &
+    & obj%Name)
     !!
-  CASE( 3 )
+CASE (3)
     !!
-    NNS = 10
-    obj%EntityCounts = [NNS, 3, 1, 0]
-    obj%XiDimension = 2
-    obj%Name = Triangle10
-    obj%order = order
-    obj%nsd = nsd
-    ALLOCATE( obj%Topology( SUM( obj%EntityCounts) ) )
-    DO I = 1, NNS
-      obj%Topology( I ) = ReferenceTopology( [I], Point )
-    END DO
-    obj%Topology( NNS + 1 ) = ReferenceTopology( [1, 2, 4, 5], Line4 )
-    obj%Topology( NNS + 2 ) = ReferenceTopology( [2, 3, 6, 7], Line4 )
-    obj%Topology( NNS + 3 ) = ReferenceTopology( [3, 1, 8, 9], Line4 )
-    obj%Topology( NNS + 4 ) = ReferenceTopology( &
-      & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obj%Name )
+  NNS = 10
+  obj%EntityCounts = [NNS, 3, 1, 0]
+  obj%XiDimension = 2
+  obj%Name = Triangle10
+  obj%order = order
+  obj%nsd = nsd
+  ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+  DO I = 1, NNS
+    obj%Topology(I) = ReferenceTopology([I], Point)
+  END DO
+  obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 4, 5], Line4)
+  obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 6, 7], Line4)
+  obj%Topology(NNS + 3) = ReferenceTopology([3, 1, 8, 9], Line4)
+  obj%Topology(NNS + 4) = ReferenceTopology( &
+    & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obj%Name)
     !!
-  END SELECT
+END SELECT
   !!
 END PROCEDURE highorderElement_Triangle
 
@@ -167,11 +167,7 @@ END PROCEDURE highorderElement_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Triangle
-  IF( refelem%nsd .EQ. 2 ) THEN
-    CALL TRIANGLEAREA2D( xij( 1:2, 1:3 ), Ans )
-  ELSE
-    CALL TRIANGLEAREA3D( xij( 1:3, 1:3), Ans )
-  END IF
+ans = triangle_area(refelem, xij)
 END PROCEDURE Measure_Simplex_Triangle
 
 !----------------------------------------------------------------------------
@@ -179,12 +175,12 @@ END PROCEDURE Measure_Simplex_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_angles
-  SELECT CASE( refelem%nsd )
-  CASE( 2 )
-    CALL triangle_angles_2d( xij(1:2, 1:3), ans )
-  CASE( 3 )
-    CALL triangle_angles_3d( xij(1:3, 1:3), ans )
-  END SELECT
+SELECT CASE (refelem%nsd)
+CASE (2)
+  ans = triangle_angles_2d(xij(1:2, 1:3))
+CASE (3)
+  ans = triangle_angles_3d(xij(1:3, 1:3))
+END SELECT
 END PROCEDURE triangle_angles
 
 !----------------------------------------------------------------------------
@@ -192,12 +188,12 @@ END PROCEDURE triangle_angles
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_area
-  SELECT CASE(refelem%nsd)
-  CASE(2)
-    CALL triangle_area_2d( xij(1:2, 1:3), ans )
-  CASE(3)
-    CALL TRIANGLE_AREA_3D_3( xij(1:3, 1:3), ans )
-  END SELECT
+SELECT CASE (refelem%nsd)
+CASE (2)
+  ans = triangle_area_2d(xij(1:2, 1:3))
+CASE (3)
+  ans = TRIANGLE_AREA_3D(xij(1:3, 1:3))
+END SELECT
 END PROCEDURE triangle_area
 
 !----------------------------------------------------------------------------
@@ -205,13 +201,13 @@ END PROCEDURE triangle_area
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_ArealVector
-  SELECT CASE(refelem%nsd)
-  CASE(2)
-    ans(1:2) = 0.0_DFP
-    CALL triangle_area_2d( xij(1:2, 1:3), ans(3))
-  CASE(3)
-    CALL triangle_area_vector_3d(xij(1:3, 1:3), ans)
-  END SELECT
+SELECT CASE (refelem%nsd)
+CASE (2)
+  ans(1:2) = 0.0_DFP
+  ans(3) = triangle_area_2d(xij(1:2, 1:3))
+CASE (3)
+  ans = triangle_area_vector_3d(xij(1:3, 1:3))
+END SELECT
 END PROCEDURE triangle_ArealVector
 
 !----------------------------------------------------------------------------
@@ -219,7 +215,7 @@ END PROCEDURE triangle_ArealVector
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_barycentric
-  CALL triangle_barycentric_2d ( xij(1:2, 1:3), x(1:2), ans )
+ans = triangle_barycentric_2d(xij(1:2, 1:3), x(1:2))
 END PROCEDURE triangle_barycentric
 
 !----------------------------------------------------------------------------
@@ -227,12 +223,12 @@ END PROCEDURE triangle_barycentric
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_centroid
-  IF( refelem%nsd .EQ. 2 ) THEN
-    Ans(3)=0.0_DFP
-    CALL triangle_centroid_2d( xij(1:2, 1:3), ans(1:2) )
-  ELSE
-    CALL triangle_centroid_3d( xij(1:3, 1:3), ans(1:3) )
-  END IF
+IF (refelem%nsd .EQ. 2) THEN
+  Ans(3) = 0.0_DFP
+  ans(1:2) = triangle_centroid_2d(xij)
+ELSE
+  ans = triangle_centroid_3d(xij)
+END IF
 END PROCEDURE triangle_centroid
 
 !----------------------------------------------------------------------------
@@ -240,12 +236,12 @@ END PROCEDURE triangle_centroid
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_circumcentre
-  IF( refelem%nsd .EQ. 2 ) THEN
-    Ans(3)=0.0_DFP
-    CALL triangle_circumcenter_2d( xij(1:2, 1:3), Ans(1:2))
-  ELSE
-    CALL triangle_circumcenter( 3, xij(1:3, 1:3), Ans(1:3))
-  END IF
+IF (refelem%nsd .EQ. 2) THEN
+  Ans(3) = 0.0_DFP
+  ans(1:2) = triangle_circumcenter_2d(xij)
+ELSE
+  ans = triangle_circumcenter(3_I4B, xij)
+END IF
 END PROCEDURE triangle_circumcentre
 
 !----------------------------------------------------------------------------
@@ -253,8 +249,8 @@ END PROCEDURE triangle_circumcentre
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_circumcircle
-  Ans(4)=0.0_DFP
-  CALL triangle_circumcircle_2d( xij(1:2, 1:3), Ans(1), Ans(2:3))
+Ans(4) = 0.0_DFP
+CALL triangle_circumcircle_2d(xij, ans(1), ans(2:3))
 END PROCEDURE triangle_circumcircle
 
 !----------------------------------------------------------------------------
@@ -262,7 +258,7 @@ END PROCEDURE triangle_circumcircle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_circumradius
-  CALL triangle_circumradius_2d( xij(1:2, 1:3), Ans )
+ans = triangle_circumradius_2d(xij)
 END PROCEDURE triangle_circumradius
 
 !----------------------------------------------------------------------------
@@ -270,13 +266,13 @@ END PROCEDURE triangle_circumradius
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_contains_line
-  IF( parametricLine ) THEN
-    CALL triangle_contains_line_par_3d( xij(1:3, 1:3), x1, x2, &
-      & inside, xint)
-  ELSE
-    CALL triangle_contains_line_exp_3d( xij(1:3, 1:3), x1, x2, &
-      & inside, xint)
-  END IF
+IF (parametricLine) THEN
+  CALL triangle_contains_line_par_3d(xij, x1, x2, &
+    & inside, xint)
+ELSE
+  CALL triangle_contains_line_exp_3d(xij, x1, x2, &
+    & inside, xint)
+END IF
 END PROCEDURE triangle_contains_line
 
 !----------------------------------------------------------------------------
@@ -284,7 +280,7 @@ END PROCEDURE triangle_contains_line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_contains_point
-  CALL triangle_contains_point_2d_1(xij(1:2,1:3), x(1:2), ans)
+ans = triangle_contains_point_2d_1(xij(1:2, 1:3), x(1:2))
 END PROCEDURE triangle_contains_point
 
 !----------------------------------------------------------------------------
@@ -292,7 +288,7 @@ END PROCEDURE triangle_contains_point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_diameter
-  CALL triangle_diameter_2d(xij(1:2, 1:3), Ans)
+ans = triangle_diameter_2d(xij(1:2, 1:3))
 END PROCEDURE triangle_diameter
 
 !----------------------------------------------------------------------------
@@ -300,7 +296,7 @@ END PROCEDURE triangle_diameter
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_edge_length
-  CALL triangle_edge_length_2d(xij(1:2, 1:3), Ans)
+ans = triangle_edge_length_2d(xij(1:2, 1:3))
 END PROCEDURE triangle_edge_length
 
 !----------------------------------------------------------------------------
@@ -308,8 +304,8 @@ END PROCEDURE triangle_edge_length
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_incenter
-  Ans(3)=0.0_DFP
-  CALL triangle_incenter_2d(xij(1:2,1:3), Ans(1:2))
+Ans(3) = 0.0_DFP
+ans(1:2) = triangle_incenter_2d(xij(1:2, 1:3))
 END PROCEDURE triangle_incenter
 
 !----------------------------------------------------------------------------
@@ -317,8 +313,8 @@ END PROCEDURE triangle_incenter
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_incircle
-  Ans(4) = 0.0_DFP
-  CALL triangle_incircle_2d(xij(1:2,1:3), Ans(1), Ans(2:3))
+Ans(4) = 0.0_DFP
+CALL triangle_incircle_2d(xij(1:2, 1:3), Ans(1), Ans(2:3))
 END PROCEDURE triangle_incircle
 
 !----------------------------------------------------------------------------
@@ -326,7 +322,7 @@ END PROCEDURE triangle_incircle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_inradius
-  CALL triangle_inradius_2d(xij(1:2,1:3), Ans)
+ans = triangle_inradius_2d(xij(1:2, 1:3))
 END PROCEDURE triangle_inradius
 
 !----------------------------------------------------------------------------
@@ -334,8 +330,8 @@ END PROCEDURE triangle_inradius
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_orthocenter
-  Ans(3)=0.0_DFP
-  CALL triangle_orthocenter_2d(xij(1:2,1:3), Ans(1:2))
+Ans(3) = 0.0_DFP
+ans(1:2) = triangle_orthocenter_2d(xij(1:2, 1:3))
 END PROCEDURE triangle_orthocenter
 
 !----------------------------------------------------------------------------
@@ -343,12 +339,12 @@ END PROCEDURE triangle_orthocenter
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_point_dist
-  SELECT CASE( refelem%nsd)
-  CASE(2)
-    CALL triangle_point_dist_2d(xij(1:2,1:3), x(1:2), Ans)
-  CASE(3)
-      CALL triangle_point_dist_3d(xij(1:3,1:3), x(1:3), Ans)
-  END SELECT
+SELECT CASE (refelem%nsd)
+CASE (2)
+  ans = triangle_point_dist_2d(xij(1:2, 1:3), x(1:2))
+CASE (3)
+  ans = triangle_point_dist_3d(xij(1:3, 1:3), x(1:3))
+END SELECT
 END PROCEDURE triangle_point_dist
 
 !----------------------------------------------------------------------------
@@ -356,7 +352,7 @@ END PROCEDURE triangle_point_dist
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_get_nearest_point
-  CALL triangle_point_near_2d(xij(1:2,1:3), x(1:2), xn(1:2), dist)
+CALL triangle_point_near_2d(xij(1:2, 1:3), x(1:2), xn(1:2), dist)
 END PROCEDURE triangle_get_nearest_point
 
 !----------------------------------------------------------------------------
@@ -364,8 +360,8 @@ END PROCEDURE triangle_get_nearest_point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_random_point
-  Ans=0.0_DFP
-  CALL triangle_sample(xij(1:2,1:3), n, seed, Ans(1:2, 1:n))
+Ans = 0.0_DFP
+ans(1:2, 1:n) = triangle_sample(xij(1:2, 1:3), n, seed)
 END PROCEDURE triangle_random_point
 
 !----------------------------------------------------------------------------
@@ -374,36 +370,36 @@ END PROCEDURE triangle_random_point
 
 MODULE PROCEDURE triangle_quality
   !!
-  REAL( DFP ) :: rvar(3)
+REAL(DFP) :: rvar(3)
   !!
-  SELECT CASE(measure)
+SELECT CASE (measure)
     !!
-  CASE( QualityMeasure%area )
-    Ans=Area(refelem=refelem, xij=xij)
+CASE (QualityMeasure%area)
+  Ans = Area(refelem=refelem, xij=xij)
     !!
-  CASE( QualityMeasure%maxangle )
-    Ans=MAXVAL(Angles(refelem=refelem, xij=xij))
+CASE (QualityMeasure%maxangle)
+  Ans = MAXVAL(Angles(refelem=refelem, xij=xij))
     !!
-  CASE( QualityMeasure%minangle )
-    Ans=MINVAL(Angles(refelem=refelem, xij=xij))
+CASE (QualityMeasure%minangle)
+  Ans = MINVAL(Angles(refelem=refelem, xij=xij))
     !!
-  CASE( QualityMeasure%angleratio )
-    Ans=3.0_DFP * MINVAL(Angles(refelem=refelem, xij=xij)) / Pi
+CASE (QualityMeasure%angleratio)
+  Ans = 3.0_DFP * MINVAL(Angles(refelem=refelem, xij=xij)) / Pi
     !!
-  CASE( QualityMeasure%radiusRatio )
-    Ans=2.0_DFP * InRadius(refelem=refelem, xij=xij) &
-      & / CircumRadius(refelem=refelem, xij=xij)
+CASE (QualityMeasure%radiusRatio)
+  Ans = 2.0_DFP * InRadius(refelem=refelem, xij=xij) &
+    & / CircumRadius(refelem=refelem, xij=xij)
     !!
-  CASE( QualityMeasure%edgeRatio )
-    rvar = EdgeLength(refelem=refelem, xij=xij)
-    Ans = MINVAL(rvar)/MAXVAL(rvar)
+CASE (QualityMeasure%edgeRatio)
+  rvar = EdgeLength(refelem=refelem, xij=xij)
+  Ans = MINVAL(rvar) / MAXVAL(rvar)
     !!
-  CASE( QualityMeasure%aspectRatio )
-    rvar = EdgeLength(refelem=refelem, xij=xij)
-    Ans = MAXVAL(rvar) * SUM(rvar) &
-      & / (4.0_DFP*SQRT(3.0_DFP)*Area(refelem=refelem, xij=xij))
+CASE (QualityMeasure%aspectRatio)
+  rvar = EdgeLength(refelem=refelem, xij=xij)
+  Ans = MAXVAL(rvar) * SUM(rvar) &
+    & / (4.0_DFP * SQRT(3.0_DFP) * Area(refelem=refelem, xij=xij))
     !!
-  END SELECT
+END SELECT
   !!
 END PROCEDURE triangle_quality
 
@@ -413,21 +409,21 @@ END PROCEDURE triangle_quality
 
 MODULE PROCEDURE TriangleArea3D
   !!
-  INTEGER ( I4B ), PARAMETER :: dim_num = 3
-  REAL( DFP ) :: cross(dim_num)
+INTEGER(I4B), PARAMETER :: dim_num = 3
+REAL(DFP) :: cross(dim_num)
   !!
   !! Compute the cross product vector.
   !!
-  cross(1) = ( t(2,2) - t(2,1) ) * ( t(3,3) - t(3,1) ) &
-           - ( t(3,2) - t(3,1) ) * ( t(2,3) - t(2,1) )
+cross(1) = (t(2, 2) - t(2, 1)) * (t(3, 3) - t(3, 1)) &
+           - (t(3, 2) - t(3, 1)) * (t(2, 3) - t(2, 1))
   !!
-  cross(2) = ( t(3,2) - t(3,1) ) * ( t(1,3) - t(1,1) ) &
-           - ( t(1,2) - t(1,1) ) * ( t(3,3) - t(3,1) )
+cross(2) = (t(3, 2) - t(3, 1)) * (t(1, 3) - t(1, 1)) &
+           - (t(1, 2) - t(1, 1)) * (t(3, 3) - t(3, 1))
   !!
-  cross(3) = ( t(1,2) - t(1,1) ) * ( t(2,3) - t(2,1) ) &
-           - ( t(2,2) - t(2,1) ) * ( t(1,3) - t(1,1) )
+cross(3) = (t(1, 2) - t(1, 1)) * (t(2, 3) - t(2, 1)) &
+           - (t(2, 2) - t(2, 1)) * (t(1, 3) - t(1, 1))
   !!
-  area = 0.5_DFP * SQRT ( SUM ( cross(1:3)**2 ) )
+area = 0.5_DFP * SQRT(SUM(cross(1:3)**2))
   !!
 END PROCEDURE TriangleArea3D
 
@@ -437,12 +433,12 @@ END PROCEDURE TriangleArea3D
 
 MODULE PROCEDURE TriangleArea2D
   !!
-  INTEGER ( I4B ), PARAMETER :: dim_num = 2
+INTEGER(I4B), PARAMETER :: dim_num = 2
   !!
-  area = 0.5_DFP * ( &
-      t(1,1) * ( t(2,2) - t(2,3) ) &
-    + t(1,2) * ( t(2,3) - t(2,1) ) &
-    + t(1,3) * ( t(2,1) - t(2,2) ) )
+area = 0.5_DFP * ( &
+       t(1, 1) * (t(2, 2) - t(2, 3)) &
+       + t(1, 2) * (t(2, 3) - t(2, 1)) &
+       + t(1, 3) * (t(2, 1) - t(2, 2)))
   !!
 END PROCEDURE TriangleArea2D
 
@@ -450,6 +446,6 @@ END PROCEDURE TriangleArea2D
 !
 !----------------------------------------------------------------------------
 
-#include "./modified_burkardt.inc"
+! #include "./modified_burkardt.inc"
 
 END SUBMODULE Methods
