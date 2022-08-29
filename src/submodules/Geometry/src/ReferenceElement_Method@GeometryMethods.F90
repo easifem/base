@@ -32,114 +32,114 @@ MODULE PROCEDURE Element_Name
   !!
   !! Define internal variables
   !!
-  CHARACTER(LEN=50) :: Str1
+CHARACTER(LEN=50) :: Str1
     !!
-  SELECT CASE (ElemType)
+SELECT CASE (ElemType)
     !!
-  CASE (Point1)
-    Str1 = "Point1"
+CASE (Point1)
+  Str1 = "Point1"
     !!
-  CASE (Line2)
-    Str1 = "Line2"
+CASE (Line2)
+  Str1 = "Line2"
     !!
-  CASE (Triangle3)
-    Str1 = "Triangle3"
+CASE (Triangle3)
+  Str1 = "Triangle3"
     !!
-  CASE (Quadrangle4)
-    Str1 = "Quadrangle4"
+CASE (Quadrangle4)
+  Str1 = "Quadrangle4"
     !!
-  CASE (Tetrahedron4)
-    Str1 = "Tetrahedron4"
+CASE (Tetrahedron4)
+  Str1 = "Tetrahedron4"
     !!
-  CASE (Hexahedron8)
-    Str1 = "Hexahedron8"
+CASE (Hexahedron8)
+  Str1 = "Hexahedron8"
     !!
-  CASE (Prism6)
-    Str1 = "Prism6"
+CASE (Prism6)
+  Str1 = "Prism6"
     !!
-  CASE (Pyramid5)
-    Str1 = "Pyramid5"
+CASE (Pyramid5)
+  Str1 = "Pyramid5"
     !!
     !! Order=2 elements
     !!
-  CASE (Line3)
-    Str1 = "Line3"
+CASE (Line3)
+  Str1 = "Line3"
     !!
-  CASE (Triangle6)
-    Str1 = "Triangle6"
+CASE (Triangle6)
+  Str1 = "Triangle6"
     !!
-  CASE (Quadrangle9)
-    Str1 = "Quadrangle9"
+CASE (Quadrangle9)
+  Str1 = "Quadrangle9"
     !!
-  CASE (Quadrangle8)
-    Str1 = "Quadrangle8"
+CASE (Quadrangle8)
+  Str1 = "Quadrangle8"
     !!
-  CASE (Tetrahedron10)
-    Str1 = "Tetrahedron10"
+CASE (Tetrahedron10)
+  Str1 = "Tetrahedron10"
     !!
-  CASE (Hexahedron20)
-    Str1 = "Hexahedron20"
+CASE (Hexahedron20)
+  Str1 = "Hexahedron20"
     !!
-  CASE (Hexahedron27)
-    Str1 = "Hexahedron27"
+CASE (Hexahedron27)
+  Str1 = "Hexahedron27"
     !!
-  CASE (Prism15)
-    Str1 = "Prism15"
+CASE (Prism15)
+  Str1 = "Prism15"
     !!
-  CASE (Prism18)
-    Str1 = "Prism18"
+CASE (Prism18)
+  Str1 = "Prism18"
     !!
-  CASE (Pyramid13)
-    Str1 = "Pyramid13"
+CASE (Pyramid13)
+  Str1 = "Pyramid13"
     !!
-  CASE (Pyramid14)
-    Str1 = "Pyramid14"
+CASE (Pyramid14)
+  Str1 = "Pyramid14"
     !!
-  CASE (Triangle9)
-    Str1 = "Triangle9"
+CASE (Triangle9)
+  Str1 = "Triangle9"
     !!
-  CASE (Triangle10)
-    Str1 = "Triangle10"
+CASE (Triangle10)
+  Str1 = "Triangle10"
     !!
-  CASE (Triangle12)
-    Str1 = "Triangle12"
+CASE (Triangle12)
+  Str1 = "Triangle12"
     !!
-  CASE (Triangle15a)
-    Str1 = "Triangle15a"
+CASE (Triangle15a)
+  Str1 = "Triangle15a"
     !!
-  CASE (Triangle15b)
-    Str1 = "Triangle15b"
+CASE (Triangle15b)
+  Str1 = "Triangle15b"
     !!
-  CASE (Triangle21)
-    Str1 = "Triangle21"
+CASE (Triangle21)
+  Str1 = "Triangle21"
     !!
-  CASE (Line4)
-    Str1 = "Line4"
+CASE (Line4)
+  Str1 = "Line4"
     !!
-  CASE (Line5)
-    Str1 = "Line5"
+CASE (Line5)
+  Str1 = "Line5"
     !!
-  CASE (Line6)
-    Str1 = "Line6"
+CASE (Line6)
+  Str1 = "Line6"
     !!
-  CASE (Tetrahedron20)
-    Str1 = "Tetrahedron20"
+CASE (Tetrahedron20)
+  Str1 = "Tetrahedron20"
     !!
-  CASE (Tetrahedron35)
-    Str1 = "Tetrahedron35"
+CASE (Tetrahedron35)
+  Str1 = "Tetrahedron35"
     !!
-  CASE (Tetrahedron56)
-    Str1 = "Tetrahedron56"
+CASE (Tetrahedron56)
+  Str1 = "Tetrahedron56"
     !!
-  CASE (Hexahedron64)
-    Str1 = "Hexahedron64"
+CASE (Hexahedron64)
+  Str1 = "Hexahedron64"
     !!
-  CASE (Hexahedron125)
-    Str1 = "Hexahedron125"
+CASE (Hexahedron125)
+  Str1 = "Hexahedron125"
     !!
-  END SELECT
+END SELECT
   !!
-  Ans = TRIM(Str1)
+Ans = TRIM(Str1)
   !!
 END PROCEDURE Element_Name
 
@@ -148,78 +148,78 @@ END PROCEDURE Element_Name
 !----------------------------------------------------------------------------
 MODULE PROCEDURE Element_Type
   !!
-  SELECT CASE (TRIM(ElemName))
-  CASE ("Line0")
-    Ans = 0
-  CASE ("Line1", "Point")
-    Ans = Point
-  CASE ("Line2", "Line")
-    Ans = Line2
-  CASE ("Triangle3", "Triangle")
-    Ans = Triangle3
-  CASE ("Quadrangle4", "Quadrangle")
-    Ans = Quadrangle4
-  CASE ("Tetrahedron4", "Tetrahedron")
-    Ans = Tetrahedron4
-  CASE ("Hexahedron8", "Hexahedron")
-    Ans = Hexahedron8
-  CASE ("Prism6", "Prism")
-    Ans = Prism6
-  CASE ("Pyramid5", "Pyramid")
-    Ans = Pyramid5
-  CASE ("Line3")
-    Ans = Line3
-  CASE ("Triangle6")
-    Ans = Triangle6
-  CASE ("Quadrangle9")
-    Ans = Quadrangle9
-  CASE ("Tetrahedron10")
-    Ans = Tetrahedron10
-  CASE ("Hexahedron27")
-    Ans = Hexahedron27
-  CASE ("Prism18")
-    Ans = Prism18
-  CASE ("Pyramid14")
-    Ans = Pyramid14
-  CASE ("Point1")
-    Ans = Point1
-  CASE ("Quadrangle8")
-    Ans = Quadrangle8
-  CASE ("Hexahedron20")
-    Ans = Hexahedron20
-  CASE ("Prism15")
-    Ans = Prism15
-  CASE ("Pyramid13")
-    Ans = Pyramid13
-  CASE ("Triangle9")
-    Ans = Triangle9
-  CASE ("Triangle10")
-    Ans = Triangle10
-  CASE ("Triangle12")
-    Ans = Triangle12
-  CASE ("Triangle15a")
-    Ans = Triangle15a
-  CASE ("Triangle15b")
-    Ans = Triangle15b
-  CASE ("Triangle21")
-    Ans = Triangle21
-  CASE ("Line4")
-    Ans = Line4
-  CASE ("Line5")
-    Ans = Line5
-  CASE ("Line6")
-    Ans = Line6
-  CASE ("Tetrahedron20")
-    Ans = Tetrahedron20
-  CASE ("Tetrahedron35")
-    Ans = Tetrahedron35
-  CASE ("Tetrahedron56")
-    Ans = Tetrahedron56
-  CASE ("Hexahedron64")
-    Ans = Hexahedron64
-  CASE ("Hexahedron125")
-    Ans = Hexahedron125
-  END SELECT
+SELECT CASE (TRIM(ElemName))
+CASE ("Line0")
+  Ans = 0
+CASE ("Line1", "Point")
+  Ans = Point
+CASE ("Line2", "Line")
+  Ans = Line2
+CASE ("Triangle3", "Triangle")
+  Ans = Triangle3
+CASE ("Quadrangle4", "Quadrangle")
+  Ans = Quadrangle4
+CASE ("Tetrahedron4", "Tetrahedron")
+  Ans = Tetrahedron4
+CASE ("Hexahedron8", "Hexahedron")
+  Ans = Hexahedron8
+CASE ("Prism6", "Prism")
+  Ans = Prism6
+CASE ("Pyramid5", "Pyramid")
+  Ans = Pyramid5
+CASE ("Line3")
+  Ans = Line3
+CASE ("Triangle6")
+  Ans = Triangle6
+CASE ("Quadrangle9")
+  Ans = Quadrangle9
+CASE ("Tetrahedron10")
+  Ans = Tetrahedron10
+CASE ("Hexahedron27")
+  Ans = Hexahedron27
+CASE ("Prism18")
+  Ans = Prism18
+CASE ("Pyramid14")
+  Ans = Pyramid14
+CASE ("Point1")
+  Ans = Point1
+CASE ("Quadrangle8")
+  Ans = Quadrangle8
+CASE ("Hexahedron20")
+  Ans = Hexahedron20
+CASE ("Prism15")
+  Ans = Prism15
+CASE ("Pyramid13")
+  Ans = Pyramid13
+CASE ("Triangle9")
+  Ans = Triangle9
+CASE ("Triangle10")
+  Ans = Triangle10
+CASE ("Triangle12")
+  Ans = Triangle12
+CASE ("Triangle15a")
+  Ans = Triangle15a
+CASE ("Triangle15b")
+  Ans = Triangle15b
+CASE ("Triangle21")
+  Ans = Triangle21
+CASE ("Line4")
+  Ans = Line4
+CASE ("Line5")
+  Ans = Line5
+CASE ("Line6")
+  Ans = Line6
+CASE ("Tetrahedron20")
+  Ans = Tetrahedron20
+CASE ("Tetrahedron35")
+  Ans = Tetrahedron35
+CASE ("Tetrahedron56")
+  Ans = Tetrahedron56
+CASE ("Hexahedron64")
+  Ans = Hexahedron64
+CASE ("Hexahedron125")
+  Ans = Hexahedron125
+END SELECT
   !!
 END PROCEDURE Element_Type
 
@@ -229,74 +229,74 @@ END PROCEDURE Element_Type
 
 MODULE PROCEDURE Total_Nodes_In_Element
   !!
-  SELECT CASE (ElemType)
-  CASE (Line2)
-    Ans = 2
-  CASE (Triangle3)
-    Ans = 3
-  CASE (Quadrangle4)
-    Ans = 4
-  CASE (Tetrahedron4)
-    Ans = 4
-  CASE (Hexahedron8)
-    Ans = 8
-  CASE (Prism6)
-    Ans = 6
-  CASE (Pyramid5)
-    Ans = 5
-  CASE (Line3)
-    Ans = 3
-  CASE (Triangle6)
-    Ans = 6
-  CASE (Quadrangle9)
-    Ans = 9
-  CASE (Tetrahedron10)
-    Ans = 10
-  CASE (Hexahedron27)
-    Ans = 27
-  CASE (Prism18)
-    Ans = 18
-  CASE (Pyramid14)
-    Ans = 14
-  CASE (Point1)
-    Ans = 1
-  CASE (Quadrangle8)
-    Ans = 8
-  CASE (Hexahedron20)
-    Ans = 20
-  CASE (Prism15)
-    Ans = 15
-  CASE (Pyramid13)
-    Ans = 13
-  CASE (Triangle9)
-    Ans = 9
-  CASE (Triangle10)
-    Ans = 10
-  CASE (Triangle12)
-    Ans = 12
-  CASE (Triangle15a)
-    Ans = 15
-  CASE (Triangle15b)
-    Ans = 15
-  CASE (Triangle21)
-    Ans = 21
-  CASE (Line4)
-    Ans = 4
-  CASE (Line5)
-    Ans = 5
-  CASE (Line6)
-    Ans = 6
-  CASE (Tetrahedron20)
-    Ans = 20
-  CASE (Tetrahedron35)
-    Ans = 35
-  CASE (Tetrahedron56)
-    Ans = 56
-  CASE (Hexahedron64)
-    Ans = 64
-  CASE (Hexahedron125)
-    Ans = 125
-  END SELECT
+SELECT CASE (ElemType)
+CASE (Line2)
+  Ans = 2
+CASE (Triangle3)
+  Ans = 3
+CASE (Quadrangle4)
+  Ans = 4
+CASE (Tetrahedron4)
+  Ans = 4
+CASE (Hexahedron8)
+  Ans = 8
+CASE (Prism6)
+  Ans = 6
+CASE (Pyramid5)
+  Ans = 5
+CASE (Line3)
+  Ans = 3
+CASE (Triangle6)
+  Ans = 6
+CASE (Quadrangle9)
+  Ans = 9
+CASE (Tetrahedron10)
+  Ans = 10
+CASE (Hexahedron27)
+  Ans = 27
+CASE (Prism18)
+  Ans = 18
+CASE (Pyramid14)
+  Ans = 14
+CASE (Point1)
+  Ans = 1
+CASE (Quadrangle8)
+  Ans = 8
+CASE (Hexahedron20)
+  Ans = 20
+CASE (Prism15)
+  Ans = 15
+CASE (Pyramid13)
+  Ans = 13
+CASE (Triangle9)
+  Ans = 9
+CASE (Triangle10)
+  Ans = 10
+CASE (Triangle12)
+  Ans = 12
+CASE (Triangle15a)
+  Ans = 15
+CASE (Triangle15b)
+  Ans = 15
+CASE (Triangle21)
+  Ans = 21
+CASE (Line4)
+  Ans = 4
+CASE (Line5)
+  Ans = 5
+CASE (Line6)
+  Ans = 6
+CASE (Tetrahedron20)
+  Ans = 20
+CASE (Tetrahedron35)
+  Ans = 35
+CASE (Tetrahedron56)
+  Ans = 56
+CASE (Hexahedron64)
+  Ans = 64
+CASE (Hexahedron125)
+  Ans = 125
+END SELECT
   !!
 END PROCEDURE Total_Nodes_In_Element
 
@@ -306,74 +306,74 @@ END PROCEDURE Total_Nodes_In_Element
 
 MODULE PROCEDURE Element_Order
   !!
-  SELECT CASE (ElemType)
-  CASE (Line2)
-    Ans = 1
-  CASE (Triangle3)
-    Ans = 1
-  CASE (Quadrangle4)
-    Ans = 1
-  CASE (Tetrahedron4)
-    Ans = 1
-  CASE (Hexahedron8)
-    Ans = 1
-  CASE (Prism6)
-    Ans = 1
-  CASE (Pyramid5)
-    Ans = 1
-  CASE (Line3)
-    Ans = 2
-  CASE (Triangle6)
-    Ans = 2
-  CASE (Quadrangle9)
-    Ans = 2
-  CASE (Tetrahedron10)
-    Ans = 2
-  CASE (Hexahedron27)
-    Ans = 2
-  CASE (Prism18)
-    Ans = 2
-  CASE (Pyramid14)
-    Ans = 2
-  CASE (Point1)
-    Ans = 0
-  CASE (Quadrangle8)
-    Ans = 2
-  CASE (Hexahedron20)
-    Ans = 2
-  CASE (Prism15)
-    Ans = 2
-  CASE (Pyramid13)
-    Ans = 2
-  CASE (Triangle9)
-    Ans = 3
-  CASE (Triangle10)
-    Ans = 3
-  CASE (Triangle12)
-    Ans = 4
-  CASE (Triangle15a)
-    Ans = 4
-  CASE (Triangle15b)
-    Ans = 5
-  CASE (Triangle21)
-    Ans = 5
-  CASE (Line4)
-    Ans = 3
-  CASE (Line5)
-    Ans = 4
-  CASE (Line6)
-    Ans = 5
-  CASE (Tetrahedron20)
-    Ans = 3
-  CASE (Tetrahedron35)
-    Ans = 4
-  CASE (Tetrahedron56)
-    Ans = 5
-  CASE (Hexahedron64)
-    Ans = 3
-  CASE (Hexahedron125)
-    Ans = 4
-  END SELECT
+SELECT CASE (ElemType)
+CASE (Line2)
+  Ans = 1
+CASE (Triangle3)
+  Ans = 1
+CASE (Quadrangle4)
+  Ans = 1
+CASE (Tetrahedron4)
+  Ans = 1
+CASE (Hexahedron8)
+  Ans = 1
+CASE (Prism6)
+  Ans = 1
+CASE (Pyramid5)
+  Ans = 1
+CASE (Line3)
+  Ans = 2
+CASE (Triangle6)
+  Ans = 2
+CASE (Quadrangle9)
+  Ans = 2
+CASE (Tetrahedron10)
+  Ans = 2
+CASE (Hexahedron27)
+  Ans = 2
+CASE (Prism18)
+  Ans = 2
+CASE (Pyramid14)
+  Ans = 2
+CASE (Point1)
+  Ans = 0
+CASE (Quadrangle8)
+  Ans = 2
+CASE (Hexahedron20)
+  Ans = 2
+CASE (Prism15)
+  Ans = 2
+CASE (Pyramid13)
+  Ans = 2
+CASE (Triangle9)
+  Ans = 3
+CASE (Triangle10)
+  Ans = 3
+CASE (Triangle12)
+  Ans = 4
+CASE (Triangle15a)
+  Ans = 4
+CASE (Triangle15b)
+  Ans = 5
+CASE (Triangle21)
+  Ans = 5
+CASE (Line4)
+  Ans = 3
+CASE (Line5)
+  Ans = 4
+CASE (Line6)
+  Ans = 5
+CASE (Tetrahedron20)
+  Ans = 3
+CASE (Tetrahedron35)
+  Ans = 4
+CASE (Tetrahedron56)
+  Ans = 5
+CASE (Hexahedron64)
+  Ans = 3
+CASE (Hexahedron125)
+  Ans = 4
+END SELECT
   !!
 END PROCEDURE Element_Order
 
@@ -390,45 +390,45 @@ END PROCEDURE Element_Order_refelem
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Elem_XiDimension1
-  SELECT CASE (ElemType)
-  CASE (Tetrahedron4, &
-        Hexahedron8, &
-        Prism6, &
-        Pyramid5, &
-        Tetrahedron10, &
-        Hexahedron27, &
-        Prism18, &
-        Pyramid14, &
-        Hexahedron20, &
-        Prism15, &
-        Pyramid13, &
-        Tetrahedron20, &
-        Tetrahedron35, &
-        Tetrahedron56, &
-        Hexahedron64, &
-        Hexahedron125)
-    Ans = 3
-  CASE (Triangle3, &
-        Triangle6, &
-        Triangle9, &
-        Triangle10, &
-        Triangle12, &
-        Triangle15a, &
-        Triangle15b, &
-        Triangle21, &
-        Quadrangle4, &
-        Quadrangle8, &
-        Quadrangle9)
-    Ans = 2
-  CASE (Line2, &
-        Line3, &
-        Line4, &
-        Line5, &
-        Line6)
-    Ans = 1
-  CASE DEFAULT
-    Ans = 0
-  END SELECT
+SELECT CASE (ElemType)
+CASE (Tetrahedron4, &
+      Hexahedron8, &
+      Prism6, &
+      Pyramid5, &
+      Tetrahedron10, &
+      Hexahedron27, &
+      Prism18, &
+      Pyramid14, &
+      Hexahedron20, &
+      Prism15, &
+      Pyramid13, &
+      Tetrahedron20, &
+      Tetrahedron35, &
+      Tetrahedron56, &
+      Hexahedron64, &
+      Hexahedron125)
+  Ans = 3
+CASE (Triangle3, &
+      Triangle6, &
+      Triangle9, &
+      Triangle10, &
+      Triangle12, &
+      Triangle15a, &
+      Triangle15b, &
+      Triangle21, &
+      Quadrangle4, &
+      Quadrangle8, &
+      Quadrangle9)
+  Ans = 2
+CASE (Line2, &
+      Line3, &
+      Line4, &
+      Line5, &
+      Line6)
+  Ans = 1
+CASE DEFAULT
+  Ans = 0
+END SELECT
 END PROCEDURE Elem_XiDimension1
 
 !----------------------------------------------------------------------------
@@ -436,7 +436,7 @@ END PROCEDURE Elem_XiDimension1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Elem_Xidimension2
-  ans = obj%xidimension
+ans = obj%xidimension
 END PROCEDURE Elem_Xidimension2
 
 !----------------------------------------------------------------------------
@@ -445,32 +445,32 @@ END PROCEDURE Elem_Xidimension2
 
 MODULE PROCEDURE isVolume
   !!
-  SELECT CASE (ElemType)
+SELECT CASE (ElemType)
     !!
-  CASE (Tetrahedron4, &
-        Hexahedron8, &
-        Prism6, &
-        Pyramid5, &
-        Tetrahedron10, &
-        Hexahedron27, &
-        Prism18, &
-        Pyramid14, &
-        Hexahedron20, &
-        Prism15, &
-        Pyramid13, &
-        Tetrahedron20, &
-        Tetrahedron35, &
-        Tetrahedron56, &
-        Hexahedron64, &
-        Hexahedron125)
+CASE (Tetrahedron4, &
+      Hexahedron8, &
+      Prism6, &
+      Pyramid5, &
+      Tetrahedron10, &
+      Hexahedron27, &
+      Prism18, &
+      Pyramid14, &
+      Hexahedron20, &
+      Prism15, &
+      Pyramid13, &
+      Tetrahedron20, &
+      Tetrahedron35, &
+      Tetrahedron56, &
+      Hexahedron64, &
+      Hexahedron125)
     !!
-    Ans = .TRUE.
+  Ans = .TRUE.
     !!
-  CASE DEFAULT
+CASE DEFAULT
     !!
-    Ans = .FALSE.
+  Ans = .FALSE.
     !!
-  END SELECT
+END SELECT
   !!
 END PROCEDURE isVolume
 
@@ -629,31 +629,31 @@ END PROCEDURE isSerendipityElement
 
 MODULE PROCEDURE refelem_ElementTopology1
   !!
-  SELECT CASE (ElemType)
-  CASE (Line2, &
-    & Line3, &
-    & Line4, &
-    & Line5, &
-    & Line6)
-    Ans = Line
-  CASE (Triangle3, Triangle6, &
-    & Triangle9, Triangle10, Triangle12, Triangle15a, &
-    & Triangle15b, Triangle21)
-    Ans = Triangle
-  CASE (Quadrangle4, Quadrangle8, &
-    & Quadrangle9)
-    Ans = Quadrangle
-  CASE (Tetrahedron4, Tetrahedron10, &
-    & Tetrahedron20, Tetrahedron35, Tetrahedron56)
-    Ans = Tetrahedron
-  CASE (Hexahedron8, Hexahedron27, &
-    & Hexahedron20, Hexahedron64, Hexahedron125)
-    Ans = Hexahedron
-  CASE (Prism6, Prism18, Prism15)
-    Ans = Prism
-  CASE (Pyramid5, Pyramid13, Pyramid14)
-    Ans = Pyramid
-  END SELECT
+SELECT CASE (ElemType)
+CASE (Line2, &
+  & Line3, &
+  & Line4, &
+  & Line5, &
+  & Line6)
+  Ans = Line
+CASE (Triangle3, Triangle6, &
+  & Triangle9, Triangle10, Triangle12, Triangle15a, &
+  & Triangle15b, Triangle21)
+  Ans = Triangle
+CASE (Quadrangle4, Quadrangle8, &
+  & Quadrangle9)
+  Ans = Quadrangle
+CASE (Tetrahedron4, Tetrahedron10, &
+  & Tetrahedron20, Tetrahedron35, Tetrahedron56)
+  Ans = Tetrahedron
+CASE (Hexahedron8, Hexahedron27, &
+  & Hexahedron20, Hexahedron64, Hexahedron125)
+  Ans = Hexahedron
+CASE (Prism6, Prism18, Prism15)
+  Ans = Prism
+CASE (Pyramid5, Pyramid13, Pyramid14)
+  Ans = Pyramid
+END SELECT
   !!
 END PROCEDURE refelem_ElementTopology1
 
@@ -662,7 +662,7 @@ END PROCEDURE refelem_ElementTopology1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_ElementTopology2
-  ans = refelem_ElementTopology1(obj%name)
+ans = refelem_ElementTopology1(obj%name)
 END PROCEDURE refelem_ElementTopology2
 
 !----------------------------------------------------------------------------
@@ -671,50 +671,50 @@ END PROCEDURE refelem_ElementTopology2
 
 MODULE PROCEDURE Facet_Matrix_refelem
   !!
-  INTEGER(I4B) :: XiCell, T(4), i, istart, iend, max_nns, nns, tFacet
+INTEGER(I4B) :: XiCell, T(4), i, istart, iend, max_nns, nns, tFacet
   !!
   !! main
   !!
-  T(1) = 0
-  DO i = 2, 4
-    T(i) = SUM(refelem%EntityCounts(1:i - 1))
+T(1) = 0
+DO i = 2, 4
+  T(i) = SUM(refelem%EntityCounts(1:i - 1))
+END DO
+!>
+XiCell = refelem%XiDimension
+SELECT CASE (XiCell)
+CASE (1)
+  tFacet = 2
+  istart = 1
+  iend = 2
+  max_nns = 2
+  ALLOCATE (FM(tFacet, max_nns + 3))
+  FM = 0
+  DO i = 0, tFacet - 1
+    FM(i + 1, 1) = refelem%Topology(iStart + i)%Name
+    FM(i + 1, 2) = refelem%Topology(iStart + i)%XiDimension
+    nns = SIZE(refelem%Topology(iStart + i)%Nptrs)
+    FM(i + 1, 3) = nns
+    FM(i + 1, 4:(3 + nns)) = refelem%Topology(iStart + i)%Nptrs
   END DO
-  !>
-  XiCell = refelem%XiDimension
-  SELECT CASE (XiCell)
-  CASE (1)
-    tFacet = 2
-    istart = 1
-    iend = 2
-    max_nns = 2
-    ALLOCATE (FM(tFacet, max_nns + 3))
-    FM = 0
-    DO i = 0, tFacet - 1
-      FM(i + 1, 1) = refelem%Topology(iStart + i)%Name
-      FM(i + 1, 2) = refelem%Topology(iStart + i)%XiDimension
-      nns = SIZE(refelem%Topology(iStart + i)%Nptrs)
-      FM(i + 1, 3) = nns
-      FM(i + 1, 4:(3 + nns)) = refelem%Topology(iStart + i)%Nptrs
-    END DO
-  CASE (2, 3)
-    tFacet = refelem%EntityCounts(XiCell)
-    istart = T(XiCell) + 1
-    iend = T(XiCell) + tFacet
-    max_nns = 0
-    DO i = istart, iend
-      nns = SIZE(refelem%Topology(i)%Nptrs)
-      IF (max_nns .LT. nns) max_nns = nns
-    END DO
-    ALLOCATE (FM(tFacet, max_nns + 3))
-    FM = 0
-    DO i = 0, tFacet - 1
-      FM(i + 1, 1) = refelem%Topology(iStart + i)%Name
-      FM(i + 1, 2) = refelem%Topology(iStart + i)%XiDimension
-      nns = SIZE(refelem%Topology(iStart + i)%Nptrs)
-      FM(i + 1, 3) = nns
-      FM(i + 1, 4:(3 + nns)) = refelem%Topology(iStart + i)%Nptrs
-    END DO
-  END SELECT
+CASE (2, 3)
+  tFacet = refelem%EntityCounts(XiCell)
+  istart = T(XiCell) + 1
+  iend = T(XiCell) + tFacet
+  max_nns = 0
+  DO i = istart, iend
+    nns = SIZE(refelem%Topology(i)%Nptrs)
+    IF (max_nns .LT. nns) max_nns = nns
+  END DO
+  ALLOCATE (FM(tFacet, max_nns + 3))
+  FM = 0
+  DO i = 0, tFacet - 1
+    FM(i + 1, 1) = refelem%Topology(iStart + i)%Name
+    FM(i + 1, 2) = refelem%Topology(iStart + i)%XiDimension
+    nns = SIZE(refelem%Topology(iStart + i)%Nptrs)
+    FM(i + 1, 3) = nns
+    FM(i + 1, 4:(3 + nns)) = refelem%Topology(iStart + i)%Nptrs
+  END DO
+END SELECT
   !!
 END PROCEDURE Facet_Matrix_refelem
 
@@ -723,139 +723,139 @@ END PROCEDURE Facet_Matrix_refelem
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_FacetElements
-  INTEGER(I4B) :: tFacet, ii, xiCell, T(4), istart, iend, tsize, jj
-  INTEGER(I4B), ALLOCATABLE :: nptrs(:)
-  TYPE(ReferenceTopology_) :: topo
-  !> main
-  xiCell = refelem%xidimension
-  SELECT CASE (xiCell)
+INTEGER(I4B) :: tFacet, ii, xiCell, T(4), istart, iend, tsize, jj
+INTEGER(I4B), ALLOCATABLE :: nptrs(:)
+TYPE(ReferenceTopology_) :: topo
+!> main
+xiCell = refelem%xidimension
+SELECT CASE (xiCell)
     !!
     !! Reference cell is a curve
     !!
-  CASE (1)
+CASE (1)
     !!
-    tFacet = 2; ALLOCATE (ans(tFacet))
+  tFacet = 2; ALLOCATE (ans(tFacet))
     !!
-    DO ii = 1, tFacet
-      nptrs = refelem%Topology(ii)%nptrs
-      ans(ii)%xij = refelem%xij(:, nptrs)
-      ans(ii)%EntityCounts = [1, 0, 0, 0]
-      ans(ii)%xidimension = 0
-      ans(ii)%Name = Point
-      ans(ii)%interpolationPointType = refelem%interpolationPointType
-      ans(ii)%Order = 0
-      ans(ii)%NSD = refelem%nsd
-      ALLOCATE (ans(ii)%Topology(1))
-      ans(ii)%Topology(1) = ReferenceTopology(nptrs=nptrs, name=Point)
-      ans(ii)%highOrderElement => NULL()
-    END DO
+  DO ii = 1, tFacet
+    nptrs = refelem%Topology(ii)%nptrs
+    ans(ii)%xij = refelem%xij(:, nptrs)
+    ans(ii)%EntityCounts = [1, 0, 0, 0]
+    ans(ii)%xidimension = 0
+    ans(ii)%Name = Point
+    ans(ii)%interpolationPointType = refelem%interpolationPointType
+    ans(ii)%Order = 0
+    ans(ii)%NSD = refelem%nsd
+    ALLOCATE (ans(ii)%Topology(1))
+    ans(ii)%Topology(1) = ReferenceTopology(nptrs=nptrs, name=Point)
+    ans(ii)%highOrderElement => NULL()
+  END DO
     !!
     !! Reference cell is a surface
     !!
-  CASE (2)
+CASE (2)
     !!
-    tFacet = refelem%EntityCounts(xicell)
-    ALLOCATE (ans(tFacet))
-    T(1) = 0
+  tFacet = refelem%EntityCounts(xicell)
+  ALLOCATE (ans(tFacet))
+  T(1) = 0
     !!
-    DO ii = 2, 4
-      T(ii) = SUM(refelem%EntityCounts(1:ii - 1))
+  DO ii = 2, 4
+    T(ii) = SUM(refelem%EntityCounts(1:ii - 1))
+  END DO
+    !!
+  istart = T(XiCell) + 1
+  iend = T(XiCell) + tFacet
+    !!
+  DO ii = 1, tFacet
+      !!
+    topo = refelem%Topology(iStart + ii - 1)
+    nptrs = topo%nptrs
+    ans(ii)%xidimension = topo%Xidimension
+    ans(ii)%Name = topo%Name
+    ans(ii)%interpolationPointType = refelem%interpolationPointType
+    ! ans(ii)%xij = refelem%xij(:, nptrs)
+      !!
+    ans(ii)%xij = InterpolationPoint_Line(  &
+      & order=refelem%order, &
+      & ipType=refelem%interpolationPointType)
+      !!
+    ans(ii)%Order = ElementOrder(ElemType=topo%Name)
+    ans(ii)%NSD = refelem%nsd
+    ans(ii)%EntityCounts = [SIZE(nptrs), 1, 0, 0]
+    tsize = SIZE(nptrs) + 1
+      !!
+    ALLOCATE (ans(ii)%Topology(tsize))
+      !!
+    DO jj = 1, SIZE(nptrs)
+      ans(ii)%Topology(jj) = ReferenceTopology(nptrs=nptrs(jj:jj), &
+        & name=Point)
     END DO
-    !!
-    istart = T(XiCell) + 1
-    iend = T(XiCell) + tFacet
-    !!
-    DO ii = 1, tFacet
       !!
-      topo = refelem%Topology(iStart + ii - 1)
-      nptrs = topo%nptrs
-      ans(ii)%xidimension = topo%Xidimension
-      ans(ii)%Name = topo%Name
-      ans(ii)%interpolationPointType = refelem%interpolationPointType
-      ! ans(ii)%xij = refelem%xij(:, nptrs)
+    ans(ii)%Topology(tsize) = &
+      & ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
       !!
-      ans( ii )%xij = InterpolationPoint_Line(  &
-        & order = refelem%order, &
-        & ipType = refelem%interpolationPointType )
-      !!
-      ans(ii)%Order = ElementOrder(ElemType=topo%Name)
-      ans(ii)%NSD = refelem%nsd
-      ans(ii)%EntityCounts = [SIZE(nptrs), 1, 0, 0]
-      tsize = SIZE(nptrs) + 1
-      !!
-      ALLOCATE (ans(ii)%Topology(tsize))
-      !!
-      DO jj = 1, SIZE(nptrs)
-        ans(ii)%Topology(jj) = ReferenceTopology(nptrs=nptrs(jj:jj), &
-          & name=Point)
-      END DO
-      !!
-      ans(ii)%Topology(tsize) = &
-        & ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
-      !!
-    END DO
+  END DO
     !!
     !! Reference cell is a volume
     !!
-  CASE (3)
+CASE (3)
     !!
-    tFacet = refelem%EntityCounts(xicell)
-    ALLOCATE (ans(tFacet))
-    T(1) = 0
+  tFacet = refelem%EntityCounts(xicell)
+  ALLOCATE (ans(tFacet))
+  T(1) = 0
     !!
-    DO ii = 2, 4
-      T(ii) = SUM(refelem%EntityCounts(1:ii - 1))
+  DO ii = 2, 4
+    T(ii) = SUM(refelem%EntityCounts(1:ii - 1))
+  END DO
+    !!
+  istart = T(XiCell) + 1
+  iend = T(XiCell) + tFacet
+    !!
+  DO ii = 1, tFacet
+    topo = refelem%Topology(iStart + ii - 1)
+    nptrs = topo%nptrs
+    ans(ii)%xidimension = topo%Xidimension
+    ans(ii)%Name = topo%Name
+    ans(ii)%interpolationPointType = refelem%interpolationPointType
+    ! ans(ii)%xij = refelem%xij(:, nptrs)
+    ans(ii)%Order = ElementOrder(ElemType=topo%Name)
+    ans(ii)%NSD = refelem%nsd
+    ans(ii)%EntityCounts = TotalEntities(topo%Name)
+    tsize = SUM(ans(ii)%EntityCounts)
+    ALLOCATE (ans(ii)%Topology(tsize))
+    ! points
+    DO jj = 1, ans(ii)%EntityCounts(1)
+      ans(ii)%Topology(jj) = ReferenceTopology(nptrs=nptrs(jj:jj), &
+        & name=Point)
     END DO
-    !!
-    istart = T(XiCell) + 1
-    iend = T(XiCell) + tFacet
-    !!
-    DO ii = 1, tFacet
-      topo = refelem%Topology(iStart + ii - 1)
-      nptrs = topo%nptrs
-      ans(ii)%xidimension = topo%Xidimension
-      ans(ii)%Name = topo%Name
-      ans(ii)%interpolationPointType = refelem%interpolationPointType
-      ! ans(ii)%xij = refelem%xij(:, nptrs)
-      ans(ii)%Order = ElementOrder(ElemType=topo%Name)
-      ans(ii)%NSD = refelem%nsd
-      ans(ii)%EntityCounts = TotalEntities(topo%Name)
-      tsize = SUM(ans(ii)%EntityCounts)
-      ALLOCATE (ans(ii)%Topology(tsize))
-      ! points
-      DO jj = 1, ans(ii)%EntityCounts(1)
-        ans(ii)%Topology(jj) = ReferenceTopology(nptrs=nptrs(jj:jj), &
-          & name=Point)
-      END DO
-      ! lines
-      jj = ans(ii)%EntityCounts(1)
-      tsize = jj + ans(ii)%EntityCounts(2)
-        ans( ii )%Topology( jj+1 : tsize ) = &
-          & FacetTopology( ElemType=ans(ii)%name, Nptrs=nptrs )
-      ! surface
-      ans(ii)%Topology(tsize) = &
-        & ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
+    ! lines
+    jj = ans(ii)%EntityCounts(1)
+    tsize = jj + ans(ii)%EntityCounts(2)
+    ans(ii)%Topology(jj + 1:tsize) = &
+      & FacetTopology(ElemType=ans(ii)%name, Nptrs=nptrs)
+    ! surface
+    ans(ii)%Topology(tsize) = &
+      & ReferenceTopology(nptrs=nptrs, name=ans(ii)%Name)
       !!
       !!
       !!
-      IF( isTriangle( topo%Name ) ) THEN
+    IF (isTriangle(topo%Name)) THEN
         !!
-        ans( ii )%xij = InterpolationPoint_Triangle( &
-          & order = refelem%order, &
-          & ipType = refelem%interpolationPointType )
+      ans(ii)%xij = InterpolationPoint_Triangle( &
+        & order=refelem%order, &
+        & ipType=refelem%interpolationPointType)
         !!
-      ELSE IF( isQuadrangle( topo%Name ) ) THEN
+    ELSE IF (isQuadrangle(topo%Name)) THEN
         !!
-        ans( ii )%xij = InterpolationPoint_Quadrangle( &
-          & order = refelem%order, &
-          & ipType = refelem%interpolationPointType )
+      ans(ii)%xij = InterpolationPoint_Quadrangle( &
+        & order=refelem%order, &
+        & ipType=refelem%interpolationPointType)
         !!
-      END IF
-    END DO
+    END IF
+  END DO
     !!
-  END SELECT
+END SELECT
   !!
-  IF (ALLOCATED(nptrs)) DEALLOCATE (nptrs)
+IF (ALLOCATED(nptrs)) DEALLOCATE (nptrs)
   !!
 END PROCEDURE refelem_FacetElements
 
@@ -1234,7 +1234,7 @@ END PROCEDURE Local_nodecoord
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Local_nodecoord_refelem
-  IF (ALLOCATED(refelem%xij)) nodecoord = refelem%xij
+IF (ALLOCATED(refelem%xij)) nodecoord = refelem%xij
 END PROCEDURE Local_nodecoord_refelem
 
 !----------------------------------------------------------------------------
@@ -1242,25 +1242,25 @@ END PROCEDURE Local_nodecoord_refelem
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex
-  Ans = 0.0_DFP
-  SELECT TYPE (refelem)
-  TYPE IS (ReferencePoint_)
-    Ans = Measure_Simplex_Point(refelem, xij)
-  TYPE IS (ReferenceLine_)
-    Ans = Measure_Simplex_Line(refelem, xij)
-  TYPE IS (ReferenceTriangle_)
-    Ans = Measure_Simplex_Triangle(refelem, xij)
-  TYPE IS (ReferenceQuadrangle_)
-    Ans = Measure_Simplex_Quadrangle(refelem, xij)
-  TYPE IS (ReferenceTetrahedron_)
-    Ans = Measure_Simplex_Tetrahedron(refelem, xij)
-  TYPE IS (ReferenceHexahedron_)
-    Ans = Measure_Simplex_Hexahedron(refelem, xij)
-  TYPE IS (ReferencePrism_)
-    Ans = Measure_Simplex_Prism(refelem, xij)
-  TYPE IS (ReferencePyramid_)
-    Ans = Measure_Simplex_Pyramid(refelem, xij)
-  END SELECT
+Ans = 0.0_DFP
+SELECT TYPE (refelem)
+TYPE IS (ReferencePoint_)
+  Ans = Measure_Simplex_Point(refelem, xij)
+TYPE IS (ReferenceLine_)
+  Ans = Measure_Simplex_Line(refelem, xij)
+TYPE IS (ReferenceTriangle_)
+  Ans = Measure_Simplex_Triangle(refelem, xij)
+TYPE IS (ReferenceQuadrangle_)
+  Ans = Measure_Simplex_Quadrangle(refelem, xij)
+TYPE IS (ReferenceTetrahedron_)
+  Ans = Measure_Simplex_Tetrahedron(refelem, xij)
+TYPE IS (ReferenceHexahedron_)
+  Ans = Measure_Simplex_Hexahedron(refelem, xij)
+TYPE IS (ReferencePrism_)
+  Ans = Measure_Simplex_Prism(refelem, xij)
+TYPE IS (ReferencePyramid_)
+  Ans = Measure_Simplex_Pyramid(refelem, xij)
+END SELECT
 END PROCEDURE Measure_Simplex
 
 !----------------------------------------------------------------------------
@@ -1268,24 +1268,24 @@ END PROCEDURE Measure_Simplex
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Quality
-  SELECT TYPE (refelem)
-  CLASS IS (ReferencePoint_)
-    Ans = Point_quality(refelem, xij, measure)
-  CLASS IS (ReferenceLine_)
-    Ans = Line_quality(refelem, xij, measure)
-  CLASS IS (ReferenceTriangle_)
-    Ans = Triangle_quality(refelem, xij, measure)
-  CLASS IS (ReferenceQuadrangle_)
-    Ans = Quadrangle_quality(refelem, xij, measure)
-  CLASS IS (ReferenceTetrahedron_)
-    Ans = Tetrahedron_quality(refelem, xij, measure)
-  CLASS IS (ReferencePrism_)
-    Ans = Prism_quality(refelem, xij, measure)
-  CLASS IS (ReferenceHexahedron_)
-    Ans = Hexahedron_quality(refelem, xij, measure)
-  CLASS IS (ReferencePyramid_)
-    Ans = Pyramid_quality(refelem, xij, measure)
-  END SELECT
+SELECT TYPE (refelem)
+CLASS IS (ReferencePoint_)
+  Ans = Point_quality(refelem, xij, measure)
+CLASS IS (ReferenceLine_)
+  Ans = Line_quality(refelem, xij, measure)
+CLASS IS (ReferenceTriangle_)
+  Ans = Triangle_quality(refelem, xij, measure)
+CLASS IS (ReferenceQuadrangle_)
+  Ans = Quadrangle_quality(refelem, xij, measure)
+CLASS IS (ReferenceTetrahedron_)
+  Ans = Tetrahedron_quality(refelem, xij, measure)
+CLASS IS (ReferencePrism_)
+  Ans = Prism_quality(refelem, xij, measure)
+CLASS IS (ReferenceHexahedron_)
+  Ans = Hexahedron_quality(refelem, xij, measure)
+CLASS IS (ReferencePyramid_)
+  Ans = Pyramid_quality(refelem, xij, measure)
+END SELECT
 END PROCEDURE Element_Quality
 
 !----------------------------------------------------------------------------
@@ -1293,22 +1293,22 @@ END PROCEDURE Element_Quality
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE contains_point
-  SELECT TYPE (refelem)
-  CLASS IS (ReferenceLine_)
-    CALL Display("ERROR:: ReferenceElement_Method@Geometry.F90")
-    CALL Display("          Contains_point()")
-    CALL Display("            No case found for ReferenceLine_")
-    CALL Display("            Program stopped!!!")
-    STOP
-  CLASS IS (ReferenceTriangle_)
-    Ans = triangle_contains_point(refelem, xij, x)
-  CLASS IS (ReferenceQuadrangle_)
-    CALL Display("ERROR:: ReferenceElement_Method@Geometry.F90")
-    CALL Display("          Contains_point()")
-    CALL Display("            No case found for Quadrangle_")
-    CALL Display("            Program stopped!!!")
-    STOP
-  END SELECT
+SELECT TYPE (refelem)
+CLASS IS (ReferenceLine_)
+  CALL Display("ERROR:: ReferenceElement_Method@Geometry.F90")
+  CALL Display("          Contains_point()")
+  CALL Display("            No case found for ReferenceLine_")
+  CALL Display("            Program stopped!!!")
+  STOP
+CLASS IS (ReferenceTriangle_)
+  Ans = triangle_contains_point(refelem, xij, x)
+CLASS IS (ReferenceQuadrangle_)
+  CALL Display("ERROR:: ReferenceElement_Method@Geometry.F90")
+  CALL Display("          Contains_point()")
+  CALL Display("            No case found for Quadrangle_")
+  CALL Display("            Program stopped!!!")
+  STOP
+END SELECT
 END PROCEDURE contains_point
 
 !----------------------------------------------------------------------------
@@ -1316,76 +1316,76 @@ END PROCEDURE contains_point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_TotalEntities
-  SELECT CASE (ElemType)
-  CASE (Point1)
-    ans = 0
-    ans(1) = 1
-  CASE (Line2)
-    ans = [2, 1, 0, 0]
-  CASE (Triangle3)
-    ans = [3, 3, 1, 0]
-  CASE (Quadrangle4)
-    ans = [4, 4, 1, 0]
-  CASE (Tetrahedron4)
-    ans = [4, 6, 4, 1]
-  CASE (Hexahedron8)
-    ans = [8, 12, 6, 1]
-  CASE (Prism6)
-    ans = [6, 9, 5, 1]
-  CASE (Pyramid5)
-    ans = [5, 8, 5, 1]
+SELECT CASE (ElemType)
+CASE (Point1)
+  ans = 0
+  ans(1) = 1
+CASE (Line2)
+  ans = [2, 1, 0, 0]
+CASE (Triangle3)
+  ans = [3, 3, 1, 0]
+CASE (Quadrangle4)
+  ans = [4, 4, 1, 0]
+CASE (Tetrahedron4)
+  ans = [4, 6, 4, 1]
+CASE (Hexahedron8)
+  ans = [8, 12, 6, 1]
+CASE (Prism6)
+  ans = [6, 9, 5, 1]
+CASE (Pyramid5)
+  ans = [5, 8, 5, 1]
     !! Order=2 elements
-  CASE (Line3)
-    ans = [3, 1, 0, 0]
-  CASE (Triangle6)
-    ans = [6, 3, 1, 0]
-  CASE (Quadrangle9)
-    ans = [9, 4, 1, 0]
-  CASE (Quadrangle8)
-    ans = [8, 4, 1, 0]
-  CASE (Tetrahedron10)
-    ans = [10, 6, 4, 1]
-  CASE (Hexahedron20)
-    ans = [20, 12, 6, 1]
-  CASE (Hexahedron27)
-    ans = [27, 12, 6, 1]
-  CASE (Prism15)
-    ans = [15, 9, 5, 1]
-  CASE (Prism18)
-    ans = [18, 9, 5, 1]
-  CASE (Pyramid13)
-    ans = [13, 8, 5, 1]
-  CASE (Pyramid14)
-    ans = [14, 8, 5, 1]
-  CASE (Triangle9)
-    ans = [9, 3, 1, 0]
-  CASE (Triangle10)
-    ans = [10, 3, 1, 0]
-  CASE (Triangle12)
-    ans = [12, 3, 1, 0]
-  CASE (Triangle15a)
-    ans = [15, 3, 1, 0]
-  CASE (Triangle15b)
-    ans = [15, 3, 1, 0]
-  CASE (Triangle21)
-    ans = [21, 3, 1, 0]
-  CASE (Line4)
-    ans = [4, 1, 0, 0]
-  CASE (Line5)
-    ans = [5, 1, 0, 0]
-  CASE (Line6)
-    ans = [6, 1, 0, 0]
-  CASE (Tetrahedron20)
-    ans = [20, 6, 4, 1]
-  CASE (Tetrahedron35)
-    ans = [35, 6, 4, 1]
-  CASE (Tetrahedron56)
-    ans = [56, 6, 4, 1]
-  CASE (Hexahedron64)
-    ans = [64, 6, 4, 1]
-  CASE (Hexahedron125)
-    ans = [125, 6, 4, 1]
-  END SELECT
+CASE (Line3)
+  ans = [3, 1, 0, 0]
+CASE (Triangle6)
+  ans = [6, 3, 1, 0]
+CASE (Quadrangle9)
+  ans = [9, 4, 1, 0]
+CASE (Quadrangle8)
+  ans = [8, 4, 1, 0]
+CASE (Tetrahedron10)
+  ans = [10, 6, 4, 1]
+CASE (Hexahedron20)
+  ans = [20, 12, 6, 1]
+CASE (Hexahedron27)
+  ans = [27, 12, 6, 1]
+CASE (Prism15)
+  ans = [15, 9, 5, 1]
+CASE (Prism18)
+  ans = [18, 9, 5, 1]
+CASE (Pyramid13)
+  ans = [13, 8, 5, 1]
+CASE (Pyramid14)
+  ans = [14, 8, 5, 1]
+CASE (Triangle9)
+  ans = [9, 3, 1, 0]
+CASE (Triangle10)
+  ans = [10, 3, 1, 0]
+CASE (Triangle12)
+  ans = [12, 3, 1, 0]
+CASE (Triangle15a)
+  ans = [15, 3, 1, 0]
+CASE (Triangle15b)
+  ans = [15, 3, 1, 0]
+CASE (Triangle21)
+  ans = [21, 3, 1, 0]
+CASE (Line4)
+  ans = [4, 1, 0, 0]
+CASE (Line5)
+  ans = [5, 1, 0, 0]
+CASE (Line6)
+  ans = [6, 1, 0, 0]
+CASE (Tetrahedron20)
+  ans = [20, 6, 4, 1]
+CASE (Tetrahedron35)
+  ans = [35, 6, 4, 1]
+CASE (Tetrahedron56)
+  ans = [56, 6, 4, 1]
+CASE (Hexahedron64)
+  ans = [64, 6, 4, 1]
+CASE (Hexahedron125)
+  ans = [125, 6, 4, 1]
+END SELECT
 END PROCEDURE refelem_TotalEntities
 
 !----------------------------------------------------------------------------
