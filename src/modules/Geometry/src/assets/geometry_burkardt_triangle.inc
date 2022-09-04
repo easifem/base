@@ -3,7 +3,7 @@
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_angles_2d ( t, angle )
+subroutine triangle_angles_2d(t, angle)
 
 !***************************************************************************80
 !
@@ -38,45 +38,46 @@ subroutine triangle_angles_2d ( t, angle )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) angle(3)
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) angle(3)
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) t(dim_num,3)
+  integer(kind=4), parameter :: dim_num = 2
+
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r8_acos
 !
 !  Compute the length of each side.
 !
-  a = sqrt ( sum ( ( t(1:dim_num,1) - t(1:dim_num,2) )**2 ) )
-  b = sqrt ( sum ( ( t(1:dim_num,2) - t(1:dim_num,3) )**2 ) )
-  c = sqrt ( sum ( ( t(1:dim_num,3) - t(1:dim_num,1) )**2 ) )
+  a = sqrt(sum((t(1:dim_num, 1) - t(1:dim_num, 2))**2))
+  b = sqrt(sum((t(1:dim_num, 2) - t(1:dim_num, 3))**2))
+  c = sqrt(sum((t(1:dim_num, 3) - t(1:dim_num, 1))**2))
 !
 !  Take care of ridiculous special cases.
 !
-  if ( a == 0.0D+00 .and. b == 0.0D+00 .and. c == 0.0D+00 ) then
+  if (a == 0.0D+00 .and. b == 0.0D+00 .and. c == 0.0D+00) then
     angle(1:3) = 2.0D+00 * r8_pi / 3.0D+00
     return
   end if
 
-  if ( c == 0.0D+00 .or. a == 0.0D+00 ) then
+  if (c == 0.0D+00 .or. a == 0.0D+00) then
     angle(1) = r8_pi
   else
-    angle(1) = r8_acos ( ( c * c + a * a - b * b ) / ( 2.0D+00 * c * a ) )
+    angle(1) = r8_acos((c * c + a * a - b * b) / (2.0D+00 * c * a))
   end if
 
-  if ( a == 0.0D+00 .or. b == 0.0D+00 ) then
+  if (a == 0.0D+00 .or. b == 0.0D+00) then
     angle(2) = r8_pi
   else
-    angle(2) = r8_acos ( ( a * a + b * b - c * c ) / ( 2.0D+00 * a * b ) )
+    angle(2) = r8_acos((a * a + b * b - c * c) / (2.0D+00 * a * b))
   end if
 
-  if ( b == 0.0D+00 .or. c == 0.0D+00 ) then
+  if (b == 0.0D+00 .or. c == 0.0D+00) then
     angle(3) = r8_pi
   else
-    angle(3) = r8_acos ( ( b * b + c * c - a * a ) / ( 2.0D+00 * b * c ) )
+    angle(3) = r8_acos((b * b + c * c - a * a) / (2.0D+00 * b * c))
   end if
 
   return
@@ -86,7 +87,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_angles_3d ( t, angle )
+subroutine triangle_angles_3d(t, angle)
 
 !***************************************************************************80
 !
@@ -121,45 +122,45 @@ subroutine triangle_angles_3d ( t, angle )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) angle(3)
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) angle(3)
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) r8_acos
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the length of each side.
 !
-  a = sqrt ( sum ( ( t(1:dim_num,1) - t(1:dim_num,2) )**2 ) )
-  b = sqrt ( sum ( ( t(1:dim_num,2) - t(1:dim_num,3) )**2 ) )
-  c = sqrt ( sum ( ( t(1:dim_num,3) - t(1:dim_num,1) )**2 ) )
+  a = sqrt(sum((t(1:dim_num, 1) - t(1:dim_num, 2))**2))
+  b = sqrt(sum((t(1:dim_num, 2) - t(1:dim_num, 3))**2))
+  c = sqrt(sum((t(1:dim_num, 3) - t(1:dim_num, 1))**2))
 !
 !  Take care of a ridiculous special case.
 !
-  if ( a == 0.0D+00 .and. b == 0.0D+00 .and. c == 0.0D+00 ) then
+  if (a == 0.0D+00 .and. b == 0.0D+00 .and. c == 0.0D+00) then
     angle(1:3) = 2.0D+00 * r8_pi / 3.0D+00
     return
   end if
 
-  if ( c == 0.0D+00 .or. a == 0.0D+00 ) then
+  if (c == 0.0D+00 .or. a == 0.0D+00) then
     angle(1) = r8_pi
   else
-    angle(1) = r8_acos ( ( c * c + a * a - b * b ) / ( 2.0D+00 * c * a ) )
+    angle(1) = r8_acos((c * c + a * a - b * b) / (2.0D+00 * c * a))
   end if
 
-  if ( a == 0.0D+00 .or. b == 0.0D+00 ) then
+  if (a == 0.0D+00 .or. b == 0.0D+00) then
     angle(2) = r8_pi
   else
-    angle(2) = r8_acos ( ( a * a + b * b - c * c ) / ( 2.0D+00 * a * b ) )
+    angle(2) = r8_acos((a * a + b * b - c * c) / (2.0D+00 * a * b))
   end if
 
-  if ( b == 0.0D+00 .or. c == 0.0D+00 ) then
+  if (b == 0.0D+00 .or. c == 0.0D+00) then
     angle(3) = r8_pi
   else
-    angle(3) = r8_acos ( ( b * b + c * c - a * a ) / ( 2.0D+00 * b * c ) )
+    angle(3) = r8_acos((b * b + c * c - a * a) / (2.0D+00 * b * c))
   end if
 
   return
@@ -169,7 +170,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_area_2d ( t, area )
+subroutine triangle_area_2d(t, area)
 
 !***************************************************************************80
 !
@@ -208,15 +209,15 @@ subroutine triangle_area_2d ( t, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) area
+  real(kind=8) t(dim_num, 3)
 
   area = 0.5D+00 * ( &
-      t(1,1) * ( t(2,2) - t(2,3) ) &
-    + t(1,2) * ( t(2,3) - t(2,1) ) &
-    + t(1,3) * ( t(2,1) - t(2,2) ) )
+         t(1, 1) * (t(2, 2) - t(2, 3)) &
+         + t(1, 2) * (t(2, 3) - t(2, 1)) &
+         + t(1, 3) * (t(2, 1) - t(2, 2)))
 
   return
 end
@@ -225,7 +226,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_area_3d ( t, area )
+subroutine triangle_area_3d(t, area)
 
 !*****************************************************************************80
 !
@@ -265,28 +266,28 @@ subroutine triangle_area_3d ( t, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) cross(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) area
+  real(kind=8) cross(dim_num)
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the cross product vector.
 !
-  cross(1) = ( t(2,2) - t(2,1) ) * ( t(3,3) - t(3,1) ) &
-           - ( t(3,2) - t(3,1) ) * ( t(2,3) - t(2,1) )
+  cross(1) = (t(2, 2) - t(2, 1)) * (t(3, 3) - t(3, 1)) &
+             - (t(3, 2) - t(3, 1)) * (t(2, 3) - t(2, 1))
 
-  cross(2) = ( t(3,2) - t(3,1) ) * ( t(1,3) - t(1,1) ) &
-           - ( t(1,2) - t(1,1) ) * ( t(3,3) - t(3,1) )
+  cross(2) = (t(3, 2) - t(3, 1)) * (t(1, 3) - t(1, 1)) &
+             - (t(1, 2) - t(1, 1)) * (t(3, 3) - t(3, 1))
 
-  cross(3) = ( t(1,2) - t(1,1) ) * ( t(2,3) - t(2,1) ) &
-           - ( t(2,2) - t(2,1) ) * ( t(1,3) - t(1,1) )
+  cross(3) = (t(1, 2) - t(1, 1)) * (t(2, 3) - t(2, 1)) &
+             - (t(2, 2) - t(2, 1)) * (t(1, 3) - t(1, 1))
 
-  area = 0.5D+00 * sqrt ( sum ( cross(1:3)**2 ) )
+  area = 0.5D+00 * sqrt(sum(cross(1:3)**2))
 
   return
 end
-subroutine triangle_area_3d_2 ( t, area )
+subroutine triangle_area_3d_2(t, area)
 
 !*****************************************************************************80
 !
@@ -316,42 +317,42 @@ subroutine triangle_area_3d_2 ( t, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) alpha
-  real ( kind = 8 ) area
-  real ( kind = 8 ) base
-  real ( kind = 8 ) dot
-  real ( kind = 8 ) height
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) alpha
+  real(kind=8) area
+  real(kind=8) base
+  real(kind=8) dot
+  real(kind=8) height
+  real(kind=8) t(dim_num, 3)
 !
 !  Find the projection of (P3-P1) onto (P2-P1).
 !
-  dot = ( t(1,2) - t(1,1) ) * ( t(1,3) - t(1,1) ) &
-      + ( t(2,2) - t(2,1) ) * ( t(2,3) - t(2,1) ) &
-      + ( t(3,2) - t(3,1) ) * ( t(3,3) - t(3,1) )
+  dot = (t(1, 2) - t(1, 1)) * (t(1, 3) - t(1, 1)) &
+        + (t(2, 2) - t(2, 1)) * (t(2, 3) - t(2, 1)) &
+        + (t(3, 2) - t(3, 1)) * (t(3, 3) - t(3, 1))
 !
 !  Find the length of (P2-P1).
 !
-  base = sqrt ( ( t(1,2) - t(1,1) )**2 &
-              + ( t(2,2) - t(2,1) )**2 &
-              + ( t(3,2) - t(3,1) )**2 )
+  base = sqrt((t(1, 2) - t(1, 1))**2 &
+              + (t(2, 2) - t(2, 1))**2 &
+              + (t(3, 2) - t(3, 1))**2)
 !
 !  The height of the triangle is the length of (P3-P1) after its
 !  projection onto (P2-P1) has been subtracted.
 !
-  if ( base == 0.0D+00 ) then
+  if (base == 0.0D+00) then
 
     height = 0.0D+00
 
   else
 
-    alpha = dot / ( base * base )
+    alpha = dot / (base * base)
 
-    height = sqrt ( &
-        ( t(1,1) + alpha * ( t(1,2) - t(1,1) ) - t(1,3) )**2 &
-      + ( t(2,1) + alpha * ( t(2,2) - t(2,1) ) - t(2,3) )**2 &
-      + ( t(3,1) + alpha * ( t(3,2) - t(3,1) ) - t(3,3) )**2 )
+    height = sqrt( &
+             (t(1, 1) + alpha * (t(1, 2) - t(1, 1)) - t(1, 3))**2 &
+             + (t(2, 1) + alpha * (t(2, 2) - t(2, 1)) - t(2, 3))**2 &
+             + (t(3, 1) + alpha * (t(3, 2) - t(3, 1)) - t(3, 3))**2)
 
   end if
 
@@ -359,7 +360,7 @@ subroutine triangle_area_3d_2 ( t, area )
 
   return
 end
-subroutine triangle_area_3d_3 ( t, area )
+subroutine triangle_area_3d_3(t, area)
 
 !*****************************************************************************80
 !
@@ -396,39 +397,39 @@ subroutine triangle_area_3d_3 ( t, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) s(3)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) area
+  integer(kind=4) i
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) s(3)
+  real(kind=8) t(dim_num, 3)
 
   do j = 1, 3
-    jp1 = mod ( j, 3 ) + 1
+    jp1 = mod(j, 3) + 1
     s(j) = 0.0D+00
     do i = 1, dim_num
-      s(j) = s(j) + ( t(i,j) - t(i,jp1) )**2
+      s(j) = s(j) + (t(i, j) - t(i, jp1))**2
     end do
-    s(j) = sqrt ( s(j) )
+    s(j) = sqrt(s(j))
   end do
 
-  area = (   s(1) + s(2) + s(3) ) &
-       * ( - s(1) + s(2) + s(3) ) &
-       * (   s(1) - s(2) + s(3) ) &
-       * (   s(1) + s(2) - s(3) )
+  area = (s(1) + s(2) + s(3)) &
+         * (-s(1) + s(2) + s(3)) &
+         * (s(1) - s(2) + s(3)) &
+         * (s(1) + s(2) - s(3))
 
-  if ( area < 0.0D+00 ) then
+  if (area < 0.0D+00) then
     area = -1.0D+00
     return
   end if
 
-  area = 0.25D+00 * sqrt ( area )
+  area = 0.25D+00 * sqrt(area)
 
   return
 end
-subroutine triangle_area_heron ( s, area )
+subroutine triangle_area_heron(s, area)
 
 !*****************************************************************************80
 !
@@ -460,20 +461,20 @@ subroutine triangle_area_heron ( s, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) s(3)
+  real(kind=8) area
+  real(kind=8) s(3)
 
-  area = (   s(1) + s(2) + s(3) ) &
-       * ( - s(1) + s(2) + s(3) ) &
-       * (   s(1) - s(2) + s(3) ) &
-       * (   s(1) + s(2) - s(3) )
+  area = (s(1) + s(2) + s(3)) &
+         * (-s(1) + s(2) + s(3)) &
+         * (s(1) - s(2) + s(3)) &
+         * (s(1) + s(2) - s(3))
 
-  if ( area < 0.0D+00 ) then
+  if (area < 0.0D+00) then
     area = -1.0D+00
     return
   end if
 
-  area = 0.25D+00 * sqrt ( area )
+  area = 0.25D+00 * sqrt(area)
 
   return
 end
@@ -482,7 +483,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_area_vector_3d ( t, area_vector )
+subroutine triangle_area_vector_3d(t, area_vector)
 !
 !! TRIANGLE_AREA_VECTOR_3D computes the area vector of a triangle in 3D.
 !
@@ -534,19 +535,19 @@ subroutine triangle_area_vector_3d ( t, area_vector )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) area_vector(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) area_vector(dim_num)
+  real(kind=8) t(dim_num, 3)
 
-  area_vector(1) = ( t(2,2) - t(2,1) ) * ( t(3,3) - t(3,1) ) &
-                 - ( t(3,2) - t(3,1) ) * ( t(2,3) - t(2,1) )
+  area_vector(1) = (t(2, 2) - t(2, 1)) * (t(3, 3) - t(3, 1)) &
+                   - (t(3, 2) - t(3, 1)) * (t(2, 3) - t(2, 1))
 
-  area_vector(2) = ( t(3,2) - t(3,1) ) * ( t(1,3) - t(1,1) ) &
-                 - ( t(1,2) - t(1,1) ) * ( t(3,3) - t(3,1) )
+  area_vector(2) = (t(3, 2) - t(3, 1)) * (t(1, 3) - t(1, 1)) &
+                   - (t(1, 2) - t(1, 1)) * (t(3, 3) - t(3, 1))
 
-  area_vector(3) = ( t(1,2) - t(1,1) ) * ( t(2,3) - t(2,1) ) &
-                 - ( t(2,2) - t(2,1) ) * ( t(1,3) - t(1,1) )
+  area_vector(3) = (t(1, 2) - t(1, 1)) * (t(2, 3) - t(2, 1)) &
+                   - (t(2, 2) - t(2, 1)) * (t(1, 3) - t(1, 1))
 
   return
 end
@@ -555,7 +556,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_barycentric_2d ( t, p, xsi )
+subroutine triangle_barycentric_2d(t, p, xsi)
 
 !
 !! TRIANGLE_BARYCENTRIC_2D finds the barycentric coordinates of a point in 2D.
@@ -594,14 +595,14 @@ subroutine triangle_barycentric_2d ( t, p, xsi )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ), parameter :: rhs_num = 1
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4), parameter :: rhs_num = 1
 
-  real ( kind = 8 ) a(dim_num,dim_num+rhs_num)
-  integer ( kind = 4 ) info
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) xsi(dim_num+1)
+  real(kind=8) a(dim_num, dim_num + rhs_num)
+  integer(kind=4) info
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) xsi(dim_num + 1)
 !
 !  Set up the linear system
 !
@@ -610,28 +611,28 @@ subroutine triangle_barycentric_2d ( t, p, xsi )
 !
 !  which is satisfied by the barycentric coordinates of P.
 !
-  a(1,1) = t(1,2) - t(1,1)
-  a(1,2) = t(1,3) - t(1,1)
-  a(1,3) = p(1)   - t(1,1)
+  a(1, 1) = t(1, 2) - t(1, 1)
+  a(1, 2) = t(1, 3) - t(1, 1)
+  a(1, 3) = p(1) - t(1, 1)
 
-  a(2,1) = t(2,2) - t(2,1)
-  a(2,2) = t(2,3) - t(2,1)
-  a(2,3) = p(2)   - t(2,1)
+  a(2, 1) = t(2, 2) - t(2, 1)
+  a(2, 2) = t(2, 3) - t(2, 1)
+  a(2, 3) = p(2) - t(2, 1)
 !
 !  Solve the linear system.
 !
-  call r8mat_solve ( dim_num, rhs_num, a, info )
+  call r8mat_solve(dim_num, rhs_num, a, info)
 
-  if ( info /= 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TRIANGLE_BARYCENTRIC_2D - Fatal error!'
-    write ( *, '(a)' ) '  The linear system is singular.'
-    write ( *, '(a)' ) '  The input data does not form a proper triangle.'
+  if (info /= 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TRIANGLE_BARYCENTRIC_2D - Fatal error!'
+    write (*, '(a)') '  The linear system is singular.'
+    write (*, '(a)') '  The input data does not form a proper triangle.'
     stop 1
   end if
 
-  xsi(1) = a(1,3)
-  xsi(2) = a(2,3)
+  xsi(1) = a(1, 3)
+  xsi(2) = a(2, 3)
   xsi(3) = 1.0D+00 - xsi(1) - xsi(2)
 
   return
@@ -641,7 +642,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_centroid_2d ( t, centroid )
+subroutine triangle_centroid_2d(t, centroid)
 
 !
 !! TRIANGLE_CENTROID_2D computes the centroid of a triangle in 2D.
@@ -690,14 +691,14 @@ subroutine triangle_centroid_2d ( t, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) centroid(dim_num)
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) centroid(dim_num)
+  integer(kind=4) i
+  real(kind=8) t(dim_num, 3)
 
   do i = 1, dim_num
-    centroid(i) = sum ( t(i,1:3) ) / 3.0D+00
+    centroid(i) = sum(t(i, 1:3)) / 3.0D+00
   end do
 
   return
@@ -707,7 +708,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_centroid_3d ( t, centroid )
+subroutine triangle_centroid_3d(t, centroid)
 
 !
 !! TRIANGLE_CENTROID_3D computes the centroid of a triangle in 3D.
@@ -742,14 +743,14 @@ subroutine triangle_centroid_3d ( t, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) centroid(dim_num)
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) centroid(dim_num)
+  integer(kind=4) i
+  real(kind=8) t(dim_num, 3)
 
   do i = 1, dim_num
-    centroid(i) = sum ( t(i,1:3) ) / 3.0D+00
+    centroid(i) = sum(t(i, 1:3)) / 3.0D+00
   end do
 
   return
@@ -759,7 +760,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_circumcenter_2d ( t, pc )
+subroutine triangle_circumcenter_2d(t, pc)
 !
 !! TRIANGLE_CIRCUMCENTER_2D computes the circumcenter of a triangle in 2D.
 !
@@ -800,24 +801,24 @@ subroutine triangle_circumcenter_2d ( t, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) det
-  real ( kind = 8 ) f(2)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) top(dim_num)
+  real(kind=8) det
+  real(kind=8) f(2)
+  real(kind=8) pc(dim_num)
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) top(dim_num)
 
-  f(1) = ( t(1,2) - t(1,1) )**2 + ( t(2,2) - t(2,1) )**2
-  f(2) = ( t(1,3) - t(1,1) )**2 + ( t(2,3) - t(2,1) )**2
+  f(1) = (t(1, 2) - t(1, 1))**2 + (t(2, 2) - t(2, 1))**2
+  f(2) = (t(1, 3) - t(1, 1))**2 + (t(2, 3) - t(2, 1))**2
 
-  top(1) =    ( t(2,3) - t(2,1) ) * f(1) - ( t(2,2) - t(2,1) ) * f(2)
-  top(2) =  - ( t(1,3) - t(1,1) ) * f(1) + ( t(1,2) - t(1,1) ) * f(2)
+  top(1) = (t(2, 3) - t(2, 1)) * f(1) - (t(2, 2) - t(2, 1)) * f(2)
+  top(2) = -(t(1, 3) - t(1, 1)) * f(1) + (t(1, 2) - t(1, 1)) * f(2)
 
-  det  =    ( t(2,3) - t(2,1) ) * ( t(1,2) - t(1,1) ) &
-          - ( t(2,2) - t(2,1) ) * ( t(1,3) - t(1,1) )
+  det = (t(2, 3) - t(2, 1)) * (t(1, 2) - t(1, 1)) &
+        - (t(2, 2) - t(2, 1)) * (t(1, 3) - t(1, 1))
 
-  pc(1:2) = t(1:2,1) + 0.5D+00 * top(1:2) / det
+  pc(1:2) = t(1:2, 1) + 0.5D+00 * top(1:2) / det
 
   return
 end
@@ -826,7 +827,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_circumcenter_2d_2 ( t, pc )
+subroutine triangle_circumcenter_2d_2(t, pc)
 
 !*****************************************************************************80
 !
@@ -886,34 +887,34 @@ subroutine triangle_circumcenter_2d_2 ( t, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ), parameter :: rhs_num = 1
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4), parameter :: rhs_num = 1
 
-  real ( kind = 8 ) a(dim_num,dim_num+rhs_num)
-  integer ( kind = 4 ) info
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a(dim_num, dim_num + rhs_num)
+  integer(kind=4) info
+  real(kind=8) pc(dim_num)
+  real(kind=8) t(dim_num, 3)
 !
 !  Set up the linear system.
 !
-  a(1,1) = t(1,2) - t(1,1)
-  a(1,2) = t(2,2) - t(2,1)
-  a(1,3) = ( t(1,2) - t(1,1) )**2 + ( t(2,2) - t(2,1) )**2
+  a(1, 1) = t(1, 2) - t(1, 1)
+  a(1, 2) = t(2, 2) - t(2, 1)
+  a(1, 3) = (t(1, 2) - t(1, 1))**2 + (t(2, 2) - t(2, 1))**2
 
-  a(2,1) = t(1,3) - t(1,1)
-  a(2,2) = t(2,3) - t(2,1)
-  a(2,3) = ( t(1,3) - t(1,1) )**2 + ( t(2,3) - t(2,1) )**2
+  a(2, 1) = t(1, 3) - t(1, 1)
+  a(2, 2) = t(2, 3) - t(2, 1)
+  a(2, 3) = (t(1, 3) - t(1, 1))**2 + (t(2, 3) - t(2, 1))**2
 !
 !  Solve the linear system.
 !
-  call r8mat_solve ( dim_num, rhs_num, a, info )
+  call r8mat_solve(dim_num, rhs_num, a, info)
 !
 !  Compute the center
 !
-  if ( info /= 0 ) then
+  if (info /= 0) then
     pc(1:dim_num) = 0.0D+00
   else
-    pc(1:dim_num) = t(1:dim_num,1) + 0.5D+00 * a(1:dim_num,dim_num+1)
+    pc(1:dim_num) = t(1:dim_num, 1) + 0.5D+00 * a(1:dim_num, dim_num + 1)
   end if
 
   return
@@ -923,7 +924,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_circumcenter ( n, t, p )
+subroutine triangle_circumcenter(n, t, p)
 
 !*****************************************************************************80
 !
@@ -963,28 +964,28 @@ subroutine triangle_circumcenter ( n, t, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) abp
-  real ( kind = 8 ) apc
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) p(n)
-  real ( kind = 8 ) pbc
-  real ( kind = 8 ) r8vec_normsq_affine
-  real ( kind = 8 ) t(n,3)
+  real(kind=8) a
+  real(kind=8) abp
+  real(kind=8) apc
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) p(n)
+  real(kind=8) pbc
+  real(kind=8) r8vec_normsq_affine
+  real(kind=8) t(n, 3)
 
-  a = r8vec_normsq_affine ( n, t(1:n,2), t(1:n,3) )
-  b = r8vec_normsq_affine ( n, t(1:n,3), t(1:n,1) )
-  c = r8vec_normsq_affine ( n, t(1:n,1), t(1:n,2) )
+  a = r8vec_normsq_affine(n, t(1:n, 2), t(1:n, 3))
+  b = r8vec_normsq_affine(n, t(1:n, 3), t(1:n, 1))
+  c = r8vec_normsq_affine(n, t(1:n, 1), t(1:n, 2))
 
-  pbc = a * ( - a + b + c )
-  apc = b * (   a - b + c )
-  abp = c * (   a + b - c )
+  pbc = a * (-a + b + c)
+  apc = b * (a - b + c)
+  abp = c * (a + b - c)
 
-  p(1:n) = ( pbc * t(1:n,1) + apc * t(1:n,2) + abp * t(1:n,3) ) &
-         / ( pbc            + apc            + abp )
+  p(1:n) = (pbc * t(1:n, 1) + apc * t(1:n, 2) + abp * t(1:n, 3)) &
+           / (pbc + apc + abp)
 
   return
 end
@@ -993,7 +994,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_circumcircle_2d ( t, r, pc )
+subroutine triangle_circumcircle_2d(t, r, pc)
 
 !*****************************************************************************80
 !
@@ -1037,47 +1038,47 @@ subroutine triangle_circumcircle_2d ( t, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) c
-  real ( kind = 8 ) det
-  real ( kind = 8 ) f(2)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) top(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) bot
+  real(kind=8) c
+  real(kind=8) det
+  real(kind=8) f(2)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) top(dim_num)
+  real(kind=8) t(dim_num, 3)
 !
 !  Circumradius.
 !
-  a = sqrt ( ( t(1,2) - t(1,1) )**2 + ( t(2,2) - t(2,1) )**2 )
-  b = sqrt ( ( t(1,3) - t(1,2) )**2 + ( t(2,3) - t(2,2) )**2 )
-  c = sqrt ( ( t(1,1) - t(1,3) )**2 + ( t(2,1) - t(2,3) )**2 )
+  a = sqrt((t(1, 2) - t(1, 1))**2 + (t(2, 2) - t(2, 1))**2)
+  b = sqrt((t(1, 3) - t(1, 2))**2 + (t(2, 3) - t(2, 2))**2)
+  c = sqrt((t(1, 1) - t(1, 3))**2 + (t(2, 1) - t(2, 3))**2)
 
-  bot = ( a + b + c ) * ( - a + b + c ) * (   a - b + c ) * (   a + b - c )
+  bot = (a + b + c) * (-a + b + c) * (a - b + c) * (a + b - c)
 
-  if ( bot <= 0.0D+00 ) then
+  if (bot <= 0.0D+00) then
     r = -1.0D+00
     pc(1:2) = 0.0D+00
     return
   end if
 
-  r = a * b * c / sqrt ( bot )
+  r = a * b * c / sqrt(bot)
 !
 !  Circumcenter.
 !
-  f(1) = ( t(1,2) - t(1,1) )**2 + ( t(2,2) - t(2,1) )**2
-  f(2) = ( t(1,3) - t(1,1) )**2 + ( t(2,3) - t(2,1) )**2
+  f(1) = (t(1, 2) - t(1, 1))**2 + (t(2, 2) - t(2, 1))**2
+  f(2) = (t(1, 3) - t(1, 1))**2 + (t(2, 3) - t(2, 1))**2
 
-  top(1) =    ( t(2,3) - t(2,1) ) * f(1) - ( t(2,2) - t(2,1) ) * f(2)
-  top(2) =  - ( t(1,3) - t(1,1) ) * f(1) + ( t(1,2) - t(1,1) ) * f(2)
+  top(1) = (t(2, 3) - t(2, 1)) * f(1) - (t(2, 2) - t(2, 1)) * f(2)
+  top(2) = -(t(1, 3) - t(1, 1)) * f(1) + (t(1, 2) - t(1, 1)) * f(2)
 
-  det  =    ( t(2,3) - t(2,1) ) * ( t(1,2) - t(1,1) ) &
-          - ( t(2,2) - t(2,1) ) * ( t(1,3) - t(1,1) )
+  det = (t(2, 3) - t(2, 1)) * (t(1, 2) - t(1, 1)) &
+        - (t(2, 2) - t(2, 1)) * (t(1, 3) - t(1, 1))
 
-  pc(1:2) = t(1:2,1) + 0.5D+00 * top(1:2) / det
+  pc(1:2) = t(1:2, 1) + 0.5D+00 * top(1:2) / det
 
   return
 end
@@ -1086,7 +1087,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_circumcircle_2d_2 ( t, r, pc )
+subroutine triangle_circumcircle_2d_2(t, r, pc)
 !
 !! TRIANGLE_CIRCUMCIRCLE_2D_2 computes the circumcircle of a triangle in 2D.
 !
@@ -1135,37 +1136,37 @@ subroutine triangle_circumcircle_2d_2 ( t, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ), parameter :: rhs_num = 1
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4), parameter :: rhs_num = 1
 
-  real ( kind = 8 ) a(dim_num,dim_num+rhs_num)
-  integer ( kind = 4 ) info
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a(dim_num, dim_num + rhs_num)
+  integer(kind=4) info
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) t(dim_num, 3)
 !
 !  Set up the linear system.
 !
-  a(1,1) = t(1,2) - t(1,1)
-  a(1,2) = t(2,2) - t(2,1)
-  a(1,3) = ( t(1,2) - t(1,1) )**2 + ( t(2,2) - t(2,1) )**2
+  a(1, 1) = t(1, 2) - t(1, 1)
+  a(1, 2) = t(2, 2) - t(2, 1)
+  a(1, 3) = (t(1, 2) - t(1, 1))**2 + (t(2, 2) - t(2, 1))**2
 
-  a(2,1) = t(1,3) - t(1,1)
-  a(2,2) = t(2,3) - t(2,1)
-  a(2,3) = ( t(1,3) - t(1,1) )**2 + ( t(2,3) - t(2,1) )**2
+  a(2, 1) = t(1, 3) - t(1, 1)
+  a(2, 2) = t(2, 3) - t(2, 1)
+  a(2, 3) = (t(1, 3) - t(1, 1))**2 + (t(2, 3) - t(2, 1))**2
 !
 !  Solve the linear system.
 !
-  call r8mat_solve ( dim_num, rhs_num, a, info )
+  call r8mat_solve(dim_num, rhs_num, a, info)
 
-  if ( info /= 0 ) then
+  if (info /= 0) then
     r = -1.0D+00
     pc(1:dim_num) = 0.0D+00
   end if
 
-  r = 0.5D+00 * sqrt ( a(1,dim_num+1) * a(1,dim_num+1) &
-                     + a(2,dim_num+1) * a(2,dim_num+1) )
-  pc(1:dim_num) = t(1:dim_num,1) + 0.5D+00 * a(1:dim_num,dim_num+1)
+  r = 0.5D+00 * sqrt(a(1, dim_num + 1) * a(1, dim_num + 1) &
+                     + a(2, dim_num + 1) * a(2, dim_num + 1))
+  pc(1:dim_num) = t(1:dim_num, 1) + 0.5D+00 * a(1:dim_num, dim_num + 1)
 
   return
 end
@@ -1174,7 +1175,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_circumradius_2d ( t, r )
+subroutine triangle_circumradius_2d(t, r)
 
 !
 !! TRIANGLE_CIRCUMRADIUS_2D computes the circumradius of a triangle in 2D.
@@ -1208,29 +1209,29 @@ subroutine triangle_circumradius_2d ( t, r )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) c
-  real ( kind = 8 ) r
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) bot
+  real(kind=8) c
+  real(kind=8) r
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the length of each side.
 !
-  a = sqrt ( sum ( ( t(1:dim_num,1) - t(1:dim_num,2) )**2 ) )
-  b = sqrt ( sum ( ( t(1:dim_num,2) - t(1:dim_num,3) )**2 ) )
-  c = sqrt ( sum ( ( t(1:dim_num,3) - t(1:dim_num,1) )**2 ) )
+  a = sqrt(sum((t(1:dim_num, 1) - t(1:dim_num, 2))**2))
+  b = sqrt(sum((t(1:dim_num, 2) - t(1:dim_num, 3))**2))
+  c = sqrt(sum((t(1:dim_num, 3) - t(1:dim_num, 1))**2))
 
-  bot = ( a + b + c ) * ( - a + b + c ) * (   a - b + c ) * (   a + b - c )
+  bot = (a + b + c) * (-a + b + c) * (a - b + c) * (a + b - c)
 
-  if ( bot <= 0.0D+00 ) then
+  if (bot <= 0.0D+00) then
     r = -1.0D+00
     return
   end if
 
-  r = a * b * c / sqrt ( bot )
+  r = a * b * c / sqrt(bot)
 
   return
 end
@@ -1239,7 +1240,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_contains_line_exp_3d ( t, p1, p2, inside, pint )
+subroutine triangle_contains_line_exp_3d(t, p1, p2, inside, pint)
 
 !
 !! TRIANGLE_CONTAINS_LINE_EXP_3D finds if a line is inside a triangle in 3D.
@@ -1296,63 +1297,63 @@ subroutine triangle_contains_line_exp_3d ( t, p1, p2, inside, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  logical ( kind = 4 ) inside
-  integer ( kind = 4 ) ival
-  logical ( kind = 4 ) line_exp_is_degenerate_nd
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) normal2(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pint(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) temp
-  logical ( kind = 4 ) triangle_is_degenerate_nd
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
+  logical(kind=4) inside
+  integer(kind=4) ival
+  logical(kind=4) line_exp_is_degenerate_nd
+  real(kind=8) normal(dim_num)
+  real(kind=8) normal2(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pint(dim_num)
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) temp
+  logical(kind=4) triangle_is_degenerate_nd
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
 !
 !  Make sure the line is not degenerate.
 !
-  if ( line_exp_is_degenerate_nd ( dim_num, p1, p2 ) ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TRIANGLE_CONTAINS_LINE_EXP_3D - Fatal error!'
-    write ( *, '(a)' ) '  The explicit line is degenerate.'
+  if (line_exp_is_degenerate_nd(dim_num, p1, p2)) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TRIANGLE_CONTAINS_LINE_EXP_3D - Fatal error!'
+    write (*, '(a)') '  The explicit line is degenerate.'
     stop 1
   end if
 !
 !  Make sure the triangle is not degenerate.
 !
-  if ( triangle_is_degenerate_nd ( dim_num, t ) ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TRIANGLE_CONTAINS_LINE_EXP_3D - Fatal error!'
-    write ( *, '(a)' ) '  The triangle is degenerate.'
+  if (triangle_is_degenerate_nd(dim_num, t)) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TRIANGLE_CONTAINS_LINE_EXP_3D - Fatal error!'
+    write (*, '(a)') '  The triangle is degenerate.'
     stop 1
   end if
 !
 !  Determine a unit normal vector associated with the plane of
 !  the triangle.
 !
-  v1(1:dim_num) = t(1:dim_num,2) - t(1:dim_num,1)
-  v2(1:dim_num) = t(1:dim_num,3) - t(1:dim_num,1)
+  v1(1:dim_num) = t(1:dim_num, 2) - t(1:dim_num, 1)
+  v2(1:dim_num) = t(1:dim_num, 3) - t(1:dim_num, 1)
 
   normal(1) = v1(2) * v2(3) - v1(3) * v2(2)
   normal(2) = v1(3) * v2(1) - v1(1) * v2(3)
   normal(3) = v1(1) * v2(2) - v1(2) * v2(1)
 
-  temp = sqrt ( sum ( normal(1:dim_num)**2 ) )
+  temp = sqrt(sum(normal(1:dim_num)**2))
   normal(1:dim_num) = normal(1:dim_num) / temp
 !
 !  Find the intersection of the plane and the line.
 !
-  call plane_normal_line_exp_int_3d ( t(1:dim_num,1), normal, p1, p2, &
-    ival, pint )
+  call plane_normal_line_exp_int_3d(t(1:dim_num, 1), normal, p1, p2, &
+                                    ival, pint)
 
-  if ( ival == 0 ) then
+  if (ival == 0) then
     inside = .false.
-    pint(1:dim_num) = huge ( temp )
+    pint(1:dim_num) = huge(temp)
     return
-  else if ( ival == 2 ) then
+  else if (ival == 2) then
     inside = .false.
     pint(1:dim_num) = p1(1:dim_num)
     return
@@ -1362,38 +1363,38 @@ subroutine triangle_contains_line_exp_3d ( t, p1, p2, inside, pint )
 !  the intersection point have the same "clock sense" as the
 !  triangle's normal vector.
 !
-  v1(1:dim_num) = t(1:dim_num,2)  - t(1:dim_num,1)
-  v2(1:dim_num) = pint(1:dim_num) - t(1:dim_num,1)
+  v1(1:dim_num) = t(1:dim_num, 2) - t(1:dim_num, 1)
+  v2(1:dim_num) = pint(1:dim_num) - t(1:dim_num, 1)
 
   normal2(1) = v1(2) * v2(3) - v1(3) * v2(2)
   normal2(2) = v1(3) * v2(1) - v1(1) * v2(3)
   normal2(3) = v1(1) * v2(2) - v1(2) * v2(1)
 
-  if ( dot_product ( normal(1:dim_num), normal2(1:dim_num) ) < 0.0D+00 ) then
+  if (dot_product(normal(1:dim_num), normal2(1:dim_num)) < 0.0D+00) then
     inside = .false.
     return
   end if
 
-  v1(1:dim_num) = t(1:dim_num,3)  - t(1:dim_num,2)
-  v2(1:dim_num) = pint(1:dim_num) - t(1:dim_num,2)
+  v1(1:dim_num) = t(1:dim_num, 3) - t(1:dim_num, 2)
+  v2(1:dim_num) = pint(1:dim_num) - t(1:dim_num, 2)
 
   normal2(1) = v1(2) * v2(3) - v1(3) * v2(2)
   normal2(2) = v1(3) * v2(1) - v1(1) * v2(3)
   normal2(3) = v1(1) * v2(2) - v1(2) * v2(1)
 
-  if ( dot_product ( normal(1:dim_num), normal2(1:dim_num) ) < 0.0D+00 ) then
+  if (dot_product(normal(1:dim_num), normal2(1:dim_num)) < 0.0D+00) then
     inside = .false.
     return
   end if
 
-  v1(1:dim_num) = t(1:dim_num,1)  - t(1:dim_num,3)
-  v2(1:dim_num) = pint(1:dim_num) - t(1:dim_num,3)
+  v1(1:dim_num) = t(1:dim_num, 1) - t(1:dim_num, 3)
+  v2(1:dim_num) = pint(1:dim_num) - t(1:dim_num, 3)
 
   normal2(1) = v1(2) * v2(3) - v1(3) * v2(2)
   normal2(2) = v1(3) * v2(1) - v1(1) * v2(3)
   normal2(3) = v1(1) * v2(2) - v1(2) * v2(1)
 
-  if ( dot_product ( normal(1:dim_num), normal2(1:dim_num) ) < 0.0D+00 ) then
+  if (dot_product(normal(1:dim_num), normal2(1:dim_num)) < 0.0D+00) then
     inside = .false.
     return
   end if
@@ -1407,7 +1408,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_contains_line_par_3d ( t, p0, pd, inside, p )
+subroutine triangle_contains_line_par_3d(t, p0, pd, inside, p)
 
 !
 !! TRIANGLE_CONTAINS_LINE_PAR_3D: finds if a line is inside a triangle in 3D.
@@ -1472,53 +1473,53 @@ subroutine triangle_contains_line_par_3d ( t, p0, pd, inside, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) angle_sum
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) denom
-  logical ( kind = 4 ) inside
-  logical ( kind = 4 ) intersect
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) norm1
-  real ( kind = 8 ) norm2
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p0(dim_num)
-  real ( kind = 8 ) pd(dim_num)
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) t_int
-  real ( kind = 8 ), parameter :: tol = 0.00001D+00
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
-  real ( kind = 8 ) v3(dim_num)
+  real(kind=8) a
+  real(kind=8) angle_sum
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) denom
+  logical(kind=4) inside
+  logical(kind=4) intersect
+  real(kind=8) norm
+  real(kind=8) norm1
+  real(kind=8) norm2
+  real(kind=8) p(dim_num)
+  real(kind=8) p0(dim_num)
+  real(kind=8) pd(dim_num)
+  real(kind=8) r8_acos
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) t_int
+  real(kind=8), parameter :: tol = 0.00001D+00
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
+  real(kind=8) v3(dim_num)
 !
 !  Determine the implicit form (A,B,C,D) of the plane containing the
 !  triangle.
 !
-  a = ( t(2,2) - t(2,1) ) * ( t(3,3) - t(3,1) ) &
-    - ( t(3,2) - t(3,1) ) * ( t(2,3) - t(2,1) )
+  a = (t(2, 2) - t(2, 1)) * (t(3, 3) - t(3, 1)) &
+      - (t(3, 2) - t(3, 1)) * (t(2, 3) - t(2, 1))
 
-  b = ( t(3,2) - t(3,1) ) * ( t(1,3) - t(1,1) ) &
-    - ( t(1,2) - t(1,1) ) * ( t(3,3) - t(3,1) )
+  b = (t(3, 2) - t(3, 1)) * (t(1, 3) - t(1, 1)) &
+      - (t(1, 2) - t(1, 1)) * (t(3, 3) - t(3, 1))
 
-  c = ( t(1,2) - t(1,1) ) * ( t(2,3) - t(2,1) ) &
-    - ( t(2,2) - t(2,1) ) * ( t(1,3) - t(1,1) )
+  c = (t(1, 2) - t(1, 1)) * (t(2, 3) - t(2, 1)) &
+      - (t(2, 2) - t(2, 1)) * (t(1, 3) - t(1, 1))
 
-  d = - t(1,2) * a - t(2,2) * b - t(3,2) * c
+  d = -t(1, 2) * a - t(2, 2) * b - t(3, 2) * c
 !
 !  Make sure the plane is well-defined.
 !
-  norm1 = sqrt ( a * a + b * b + c * c )
+  norm1 = sqrt(a * a + b * b + c * c)
 
-  if ( norm1 == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TRIANGLE_LINE_PAR_INT_3D - Fatal error!'
-    write ( *, '(a)' ) '  The plane normal vector is null.'
+  if (norm1 == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TRIANGLE_LINE_PAR_INT_3D - Fatal error!'
+    write (*, '(a)') '  The plane normal vector is null.'
     inside = .false.
     p(1:dim_num) = 0.0D+00
     stop 1
@@ -1526,12 +1527,12 @@ subroutine triangle_contains_line_par_3d ( t, p0, pd, inside, p )
 !
 !  Make sure the implicit line is well defined.
 !
-  norm2 = sqrt ( sum ( pd(1:dim_num)**2 ) )
+  norm2 = sqrt(sum(pd(1:dim_num)**2))
 
-  if ( norm2 == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TRIANGLE_LINE_PAR_INT_3D - Fatal error!'
-    write ( *, '(a)' ) '  The line direction vector is null.'
+  if (norm2 == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TRIANGLE_LINE_PAR_INT_3D - Fatal error!'
+    write (*, '(a)') '  The line direction vector is null.'
     inside = .false.
     p(1:dim_num) = 0.0D+00
     stop 1
@@ -1546,12 +1547,12 @@ subroutine triangle_contains_line_par_3d ( t, p0, pd, inside, p )
 !  If DENOM is zero, or very small, the line and the plane may be
 !  parallel or almost so.
 !
-  if ( abs ( denom ) < tol * norm1 * norm2 ) then
+  if (abs(denom) < tol * norm1 * norm2) then
 !
 !  The line may actually lie in the plane.  We're not going
 !  to try to address this possibility.
 !
-    if ( a * p0(1) + b * p0(2) + c * p0(3) + d == 0.0D+00 ) then
+    if (a * p0(1) + b * p0(2) + c * p0(3) + d == 0.0D+00) then
 
       intersect = .true.
       inside = .false.
@@ -1572,7 +1573,7 @@ subroutine triangle_contains_line_par_3d ( t, p0, pd, inside, p )
   else
 
     intersect = .true.
-    t_int = - ( a * p0(1) + b * p0(2) + c * p0(3) + d ) / denom
+    t_int = -(a * p0(1) + b * p0(2) + c * p0(3) + d) / denom
     p(1:dim_num) = p0(1:dim_num) + t_int * pd(1:dim_num)
 !
 !  To see if P is included in the triangle, sum the angles
@@ -1580,42 +1581,42 @@ subroutine triangle_contains_line_par_3d ( t, p0, pd, inside, p )
 !  triangle, we get a total 360 degree view.  Otherwise, we
 !  get less than 180 degrees.
 !
-    v1(1:dim_num) = t(1:dim_num,1) - p(1:dim_num)
-    v2(1:dim_num) = t(1:dim_num,2) - p(1:dim_num)
-    v3(1:dim_num) = t(1:dim_num,3) - p(1:dim_num)
+    v1(1:dim_num) = t(1:dim_num, 1) - p(1:dim_num)
+    v2(1:dim_num) = t(1:dim_num, 2) - p(1:dim_num)
+    v3(1:dim_num) = t(1:dim_num, 3) - p(1:dim_num)
 
-    norm = sqrt ( sum ( v1(1:dim_num)**2 ) )
+    norm = sqrt(sum(v1(1:dim_num)**2))
 
-    if ( norm == 0.0D+00 ) then
+    if (norm == 0.0D+00) then
       inside = .true.
       return
     end if
 
     v1(1:dim_num) = v1(1:dim_num) / norm
 
-    norm = sqrt ( sum ( v2(1:dim_num)**2 ) )
+    norm = sqrt(sum(v2(1:dim_num)**2))
 
-    if ( norm == 0.0D+00 ) then
+    if (norm == 0.0D+00) then
       inside = .true.
       return
     end if
 
     v2(1:dim_num) = v2(1:dim_num) / norm
 
-    norm = sqrt ( sum ( v3(1:dim_num)**2 ) )
+    norm = sqrt(sum(v3(1:dim_num)**2))
 
-    if ( norm == 0.0D+00 ) then
+    if (norm == 0.0D+00) then
       inside = .true.
       return
     end if
 
     v3(1:dim_num) = v3(1:dim_num) / norm
 
-    angle_sum = r8_acos ( dot_product ( v1(1:3), v2(1:3) ) ) &
-              + r8_acos ( dot_product ( v2(1:3), v3(1:3) ) ) &
-              + r8_acos ( dot_product ( v3(1:3), v1(1:3) ) )
+    angle_sum = r8_acos(dot_product(v1(1:3), v2(1:3))) &
+                + r8_acos(dot_product(v2(1:3), v3(1:3))) &
+                + r8_acos(dot_product(v3(1:3), v1(1:3)))
 
-    if ( nint ( angle_sum / r8_pi ) == 2 ) then
+    if (nint(angle_sum / r8_pi) == 2) then
       inside = .true.
     else
       inside = .false.
@@ -1630,7 +1631,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_contains_point_2d_1 ( t, p, inside )
+subroutine triangle_contains_point_2d_1(t, p, inside)
 
 !
 !! TRIANGLE_CONTAINS_POINT_2D_1 finds if a point is inside a triangle in 2D.
@@ -1664,16 +1665,16 @@ subroutine triangle_contains_point_2d_1 ( t, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) xsi(dim_num+1)
+  logical(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) xsi(dim_num + 1)
 
-  call triangle_barycentric_2d ( t, p, xsi )
+  call triangle_barycentric_2d(t, p, xsi)
 
-  if ( any ( xsi(1:3) < 0.0D+00 ) ) then
+  if (any(xsi(1:3) < 0.0D+00)) then
     inside = .false.
   else
     inside = .true.
@@ -1686,7 +1687,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_contains_point_2d_2 ( t, p, inside )
+subroutine triangle_contains_point_2d_2(t, p, inside)
 
 !
 !! TRIANGLE_CONTAINS_POINT_2D_2 finds if a point is inside a triangle in 2D.
@@ -1726,20 +1727,20 @@ subroutine triangle_contains_point_2d_2 ( t, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  logical ( kind = 4 ) inside
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  logical(kind=4) inside
+  integer(kind=4) j
+  integer(kind=4) k
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
 
   do j = 1, 3
 
-    k = mod ( j, 3 ) + 1
+    k = mod(j, 3) + 1
 
-    if ( 0.0D+00 < ( p(1) - t(1,j) ) * ( t(2,k) - t(2,j) ) &
-                 - ( p(2) - t(2,j) ) * ( t(1,k) - t(1,j) ) ) then
+    if (0.0D+00 < (p(1) - t(1, j)) * (t(2, k) - t(2, j)) &
+        - (p(2) - t(2, j)) * (t(1, k) - t(1, j))) then
       inside = .false.
       return
     end if
@@ -1755,7 +1756,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_contains_point_2d_3 ( t, p, inside )
+subroutine triangle_contains_point_2d_3(t, p, inside)
 
 !
 !! TRIANGLE_CONTAINS_POINT_2D_3 finds if a point is inside a triangle in 2D.
@@ -1799,31 +1800,31 @@ subroutine triangle_contains_point_2d_3 ( t, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dir_new
-  real ( kind = 8 ) dir_old
-  logical ( kind = 4 ) inside
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) dir_new
+  real(kind=8) dir_old
+  logical(kind=4) inside
+  integer(kind=4) j
+  integer(kind=4) k
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
 
   dir_old = 0.0D+00
 
   do j = 1, 3
 
-    k = mod ( j, 3 ) + 1
+    k = mod(j, 3) + 1
 
-    dir_new = ( p(1) - t(1,j) ) * ( t(2,k) - t(2,j) ) &
-            - ( p(2) - t(2,j) ) * ( t(1,k) - t(1,j) )
+    dir_new = (p(1) - t(1, j)) * (t(2, k) - t(2, j)) &
+              - (p(2) - t(2, j)) * (t(1, k) - t(1, j))
 
-    if ( dir_new * dir_old < 0.0D+00 ) then
+    if (dir_new * dir_old < 0.0D+00) then
       inside = .false.
       return
     end if
 
-    if ( dir_new /= 0.0D+00 ) then
+    if (dir_new /= 0.0D+00) then
       dir_old = dir_new
     end if
 
@@ -1838,7 +1839,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_diameter_2d ( t, diameter )
+subroutine triangle_diameter_2d(t, diameter)
 
 !
 !! TRIANGLE_DIAMETER_2D computes the diameter of a triangle in 2D.
@@ -1870,60 +1871,60 @@ subroutine triangle_diameter_2d ( t, diameter )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) asq
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bsq
-  real ( kind = 8 ) c
-  real ( kind = 8 ) csq
-  real ( kind = 8 ) diameter
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) asq
+  real(kind=8) b
+  real(kind=8) bsq
+  real(kind=8) c
+  real(kind=8) csq
+  real(kind=8) diameter
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the squared length of each side.
 !
-  asq = sum ( t(1:dim_num,1) - t(1:dim_num,2) )**2
-  bsq = sum ( t(1:dim_num,2) - t(1:dim_num,3) )**2
-  csq = sum ( t(1:dim_num,3) - t(1:dim_num,1) )**2
+  asq = sum(t(1:dim_num, 1) - t(1:dim_num, 2))**2
+  bsq = sum(t(1:dim_num, 2) - t(1:dim_num, 3))**2
+  csq = sum(t(1:dim_num, 3) - t(1:dim_num, 1))**2
 !
 !  Take care of a zero side.
 !
-  if ( asq == 0.0D+00 ) then
-    diameter = sqrt ( bsq )
+  if (asq == 0.0D+00) then
+    diameter = sqrt(bsq)
     return
-  else if ( bsq == 0.0D+00 ) then
-    diameter = sqrt ( csq )
+  else if (bsq == 0.0D+00) then
+    diameter = sqrt(csq)
     return
-  else if ( csq == 0.0D+00 ) then
-    diameter = sqrt ( asq )
+  else if (csq == 0.0D+00) then
+    diameter = sqrt(asq)
     return
   end if
 !
 !  Make ASQ the largest.
 !
-  if ( asq < bsq ) then
-    call r8_swap ( asq, bsq )
+  if (asq < bsq) then
+    call r8_swap(asq, bsq)
   end if
 
-  if ( asq < csq ) then
-    call r8_swap ( asq, csq )
+  if (asq < csq) then
+    call r8_swap(asq, csq)
   end if
 !
 !  If ASQ is very large...
 !
-  if ( bsq + csq < asq ) then
+  if (bsq + csq < asq) then
 
-    diameter = sqrt ( asq )
+    diameter = sqrt(asq)
 
   else
 
-    a = sqrt ( asq )
-    b = sqrt ( bsq )
-    c = sqrt ( csq )
+    a = sqrt(asq)
+    b = sqrt(bsq)
+    c = sqrt(csq)
 
-    diameter = 2.0D+00 * a * b * c / sqrt ( ( a + b + c ) * ( - a + b + c ) &
-      * ( a - b + c ) * ( a + b - c ) )
+    diameter = 2.0D+00 * a * b * c / sqrt((a + b + c) * (-a + b + c) &
+                                          * (a - b + c) * (a + b - c))
 
   end if
 
@@ -1934,7 +1935,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_edge_length_2d ( t, edge_length )
+subroutine triangle_edge_length_2d(t, edge_length)
 
 !
 !! TRIANGLE_EDGE_LENGTH_2D returns edge lengths of a triangle in 2D.
@@ -1959,19 +1960,19 @@ subroutine triangle_edge_length_2d ( t, edge_length )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) edge_length(3)
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j1
-  integer ( kind = 4 ) j2
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) edge_length(3)
+  integer(kind=4) i4_wrap
+  integer(kind=4) j1
+  integer(kind=4) j2
+  real(kind=8) r8vec_norm
+  real(kind=8) t(dim_num, 3)
 
   do j1 = 1, 3
-    j2 = i4_wrap ( j1 + 1, 1, 3 )
+    j2 = i4_wrap(j1 + 1, 1, 3)
     edge_length(j1) = &
-      r8vec_norm ( dim_num, t(1:dim_num,j2) - t(1:dim_num,j1) )
+      r8vec_norm(dim_num, t(1:dim_num, j2) - t(1:dim_num, j1))
   end do
 
   return
@@ -1981,7 +1982,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_gridpoints_2d ( t, sub_num, grid_max, grid_num, g )
+subroutine triangle_gridpoints_2d(t, sub_num, grid_max, grid_num, g)
 
 !
 !! TRIANGLE_GRIDPOINTS_2D computes gridpoints within a triangle in 2D.
@@ -2034,25 +2035,25 @@ subroutine triangle_gridpoints_2d ( t, sub_num, grid_max, grid_num, g )
 !
   implicit none
 
-  integer ( kind = 4 ) grid_max
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) grid_max
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) g(dim_num,grid_max)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) grid_num
-  integer ( kind = 4 ) sub_num
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) g(dim_num, grid_max)
+  integer(kind=4) i
+  integer(kind=4) j
+  integer(kind=4) grid_num
+  integer(kind=4) sub_num
+  real(kind=8) t(dim_num, 3)
 
   grid_num = 0
 !
 !  Special case, SUB_NUM = 0.
 !
-  if ( sub_num == 0 ) then
-    if ( 1 <= grid_max ) then
+  if (sub_num == 0) then
+    if (1 <= grid_max) then
       grid_num = 1
-      g(1,1) = ( t(1,1) + t(1,2) + t(1,3) ) / 3.0D+00
-      g(2,1) = ( t(2,1) + t(2,2) + t(2,3) ) / 3.0D+00
+      g(1, 1) = (t(1, 1) + t(1, 2) + t(1, 3)) / 3.0D+00
+      g(2, 1) = (t(2, 1) + t(2, 2) + t(2, 3)) / 3.0D+00
     end if
     return
   end if
@@ -2061,19 +2062,19 @@ subroutine triangle_gridpoints_2d ( t, sub_num, grid_max, grid_num, g )
 
     do j = 0, sub_num - i
 
-      if ( grid_num < grid_max ) then
+      if (grid_num < grid_max) then
 
         grid_num = grid_num + 1
 
-        g(1,grid_num) = ( real (           i,     kind = 8 ) * t(1,1) &
-                        + real (               j, kind = 8 ) * t(1,2) &
-                        + real ( sub_num - i - j, kind = 8 ) * t(1,3) ) &
-                        / real ( sub_num,         kind = 8 )
+        g(1, grid_num) = (real(i, kind=8) * t(1, 1) &
+                          + real(j, kind=8) * t(1, 2) &
+                          + real(sub_num - i - j, kind=8) * t(1, 3)) &
+                         / real(sub_num, kind=8)
 
-        g(2,grid_num) = ( real (           i,     kind = 8 ) * t(2,1) &
-                        + real (               j, kind = 8 ) * t(2,2) &
-                        + real ( sub_num - i - j, kind = 8 ) * t(2,3) ) &
-                        / real ( sub_num,         kind = 8 )
+        g(2, grid_num) = (real(i, kind=8) * t(2, 1) &
+                          + real(j, kind=8) * t(2, 2) &
+                          + real(sub_num - i - j, kind=8) * t(2, 3)) &
+                         / real(sub_num, kind=8)
       end if
 
     end do
@@ -2086,7 +2087,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_incenter_2d ( t, pc )
+subroutine triangle_incenter_2d(t, pc)
 
 !
 !! TRIANGLE_INCENTER_2D computes the incenter of a triangle in 2D.
@@ -2132,29 +2133,29 @@ subroutine triangle_incenter_2d ( t, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) perimeter
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) pc(dim_num)
+  real(kind=8) perimeter
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the length of each side.
 !
-  a = sqrt ( sum ( ( t(1:dim_num,1) - t(1:dim_num,2) )**2 ) )
-  b = sqrt ( sum ( ( t(1:dim_num,2) - t(1:dim_num,3) )**2 ) )
-  c = sqrt ( sum ( ( t(1:dim_num,3) - t(1:dim_num,1) )**2 ) )
+  a = sqrt(sum((t(1:dim_num, 1) - t(1:dim_num, 2))**2))
+  b = sqrt(sum((t(1:dim_num, 2) - t(1:dim_num, 3))**2))
+  c = sqrt(sum((t(1:dim_num, 3) - t(1:dim_num, 1))**2))
 
   perimeter = a + b + c
 
-  if ( perimeter == 0.0D+00 ) then
-    pc(1:dim_num) = t(1:dim_num,1)
+  if (perimeter == 0.0D+00) then
+    pc(1:dim_num) = t(1:dim_num, 1)
   else
-    pc(1:dim_num) = ( b * t(1:dim_num,1) &
-                    + c * t(1:dim_num,2) &
-                    + a * t(1:dim_num,3) ) / perimeter
+    pc(1:dim_num) = (b * t(1:dim_num, 1) &
+                     + c * t(1:dim_num, 2) &
+                     + a * t(1:dim_num, 3)) / perimeter
   end if
 
   return
@@ -2164,7 +2165,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_incircle_2d ( t, r, pc )
+subroutine triangle_incircle_2d(t, r, pc)
 
 !
 !! TRIANGLE_INCIRCLE_2D computes the inscribed circle of a triangle in 2D.
@@ -2204,39 +2205,39 @@ subroutine triangle_incircle_2d ( t, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) perimeter
-  real ( kind = 8 ) r
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) pc(dim_num)
+  real(kind=8) perimeter
+  real(kind=8) r
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the length of each side.
 !
-  a = sqrt ( sum ( ( t(1:dim_num,1) - t(1:dim_num,2) )**2 ) )
-  b = sqrt ( sum ( ( t(1:dim_num,2) - t(1:dim_num,3) )**2 ) )
-  c = sqrt ( sum ( ( t(1:dim_num,3) - t(1:dim_num,1) )**2 ) )
+  a = sqrt(sum((t(1:dim_num, 1) - t(1:dim_num, 2))**2))
+  b = sqrt(sum((t(1:dim_num, 2) - t(1:dim_num, 3))**2))
+  c = sqrt(sum((t(1:dim_num, 3) - t(1:dim_num, 1))**2))
 
   perimeter = a + b + c
 
-  if ( perimeter == 0.0D+00 ) then
-    pc(1:dim_num) = t(1:dim_num,1)
+  if (perimeter == 0.0D+00) then
+    pc(1:dim_num) = t(1:dim_num, 1)
     r = 0.0D+00
     return
   end if
 
-  pc(1:dim_num) = (  &
-      b * t(1:dim_num,1) &
-    + c * t(1:dim_num,2) &
-    + a * t(1:dim_num,3) ) / perimeter
+  pc(1:dim_num) = ( &
+                  b * t(1:dim_num, 1) &
+                  + c * t(1:dim_num, 2) &
+                  + a * t(1:dim_num, 3)) / perimeter
 
-  r = 0.5D+00 * sqrt ( &
-      ( - a + b + c )  &
-    * ( + a - b + c )  &
-    * ( + a + b - c ) / perimeter )
+  r = 0.5D+00 * sqrt( &
+      (-a + b + c) &
+      * (+a - b + c) &
+      * (+a + b - c) / perimeter)
 
   return
 end
@@ -2245,7 +2246,7 @@ end
 !
 
 !----------------------------------------------------------------------------
-subroutine triangle_inradius_2d ( t, r )
+subroutine triangle_inradius_2d(t, r)
 
 !
 !! TRIANGLE_INRADIUS_2D: radius of the inscribed circle of a triangle in 2D.
@@ -2284,32 +2285,32 @@ subroutine triangle_inradius_2d ( t, r )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) perimeter
-  real ( kind = 8 ) r
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) perimeter
+  real(kind=8) r
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the length of each side.
 !
-  a = sqrt ( sum ( ( t(1:dim_num,1) - t(1:dim_num,2) )**2 ) )
-  b = sqrt ( sum ( ( t(1:dim_num,2) - t(1:dim_num,3) )**2 ) )
-  c = sqrt ( sum ( ( t(1:dim_num,3) - t(1:dim_num,1) )**2 ) )
+  a = sqrt(sum((t(1:dim_num, 1) - t(1:dim_num, 2))**2))
+  b = sqrt(sum((t(1:dim_num, 2) - t(1:dim_num, 3))**2))
+  c = sqrt(sum((t(1:dim_num, 3) - t(1:dim_num, 1))**2))
 
   perimeter = a + b + c
 
-  if ( perimeter == 0.0D+00 ) then
+  if (perimeter == 0.0D+00) then
     r = 0.0D+00
     return
   end if
 
-  r = 0.5D+00 * sqrt ( &
-      ( - a + b + c )  &
-    * ( + a - b + c )  &
-    * ( + a + b - c ) / perimeter )
+  r = 0.5D+00 * sqrt( &
+      (-a + b + c) &
+      * (+a - b + c) &
+      * (+a + b - c) / perimeter)
 
   return
 end
@@ -2318,7 +2319,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-function triangle_is_degenerate_nd ( dim_num, t )
+function triangle_is_degenerate_nd(dim_num, t)
 
 !
 !! TRIANGLE_IS_DEGENERATE_ND finds if a triangle is degenerate in ND.
@@ -2352,15 +2353,15 @@ function triangle_is_degenerate_nd ( dim_num, t )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) t(dim_num,3)
-  logical ( kind = 4 ) triangle_is_degenerate_nd
+  real(kind=8) t(dim_num, 3)
+  logical(kind=4) triangle_is_degenerate_nd
 
   triangle_is_degenerate_nd = &
-     ( all ( t(1:dim_num,1) == t(1:dim_num,2) ) .or. &
-       all ( t(1:dim_num,2) == t(1:dim_num,3) ) .or. &
-       all ( t(1:dim_num,3) == t(1:dim_num,1) ) )
+    (all(t(1:dim_num, 1) == t(1:dim_num, 2)) .or. &
+     all(t(1:dim_num, 2) == t(1:dim_num, 3)) .or. &
+     all(t(1:dim_num, 3) == t(1:dim_num, 1)))
 
   return
 end
@@ -2369,7 +2370,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_lattice_layer_point_next ( c, v, more )
+subroutine triangle_lattice_layer_point_next(c, v, more)
 
 !*****************************************************************************80
 !
@@ -2427,19 +2428,19 @@ subroutine triangle_lattice_layer_point_next ( c, v, more )
 !
   implicit none
 
-  integer ( kind = 4 ) c(3)
-  integer ( kind = 4 ) c1n
-  integer ( kind = 4 ) i4vec_lcm
-  logical ( kind = 4 ) more
-  integer ( kind = 4 ), parameter :: n = 2
-  integer ( kind = 4 ) rhs1
-  integer ( kind = 4 ) rhs2
-  integer ( kind = 4 ) v(2)
+  integer(kind=4) c(3)
+  integer(kind=4) c1n
+  integer(kind=4) i4vec_lcm
+  logical(kind=4) more
+  integer(kind=4), parameter :: n = 2
+  integer(kind=4) rhs1
+  integer(kind=4) rhs2
+  integer(kind=4) v(2)
 !
 !  Treat layer C(N+1) = 0 specially.
 !
-  if ( c(n+1) == 0 ) then
-    if ( .not. more ) then
+  if (c(n + 1) == 0) then
+    if (.not. more) then
       v(1:n) = 0
       more = .true.
     else
@@ -2450,29 +2451,29 @@ subroutine triangle_lattice_layer_point_next ( c, v, more )
 !
 !  Compute first point.
 !
-  if ( .not. more ) then
+  if (.not. more) then
 
-    v(1) = ( c(n+1) - 1 ) * c(1) + 1
+    v(1) = (c(n + 1) - 1) * c(1) + 1
     v(2) = 0
     more = .true.
 
   else
 
-    c1n = i4vec_lcm ( n, c )
+    c1n = i4vec_lcm(n, c)
 
-    rhs1 = c1n * ( c(n+1) - 1 )
-    rhs2 = c1n *   c(n+1)
+    rhs1 = c1n * (c(n + 1) - 1)
+    rhs2 = c1n * c(n + 1)
 
-    if ( c(2) * ( v(1) + 1 ) + c(1) * v(2) <= rhs2 ) then
+    if (c(2) * (v(1) + 1) + c(1) * v(2) <= rhs2) then
       v(1) = v(1) + 1
     else
-      v(1) = ( rhs1 - c(1) * ( v(2) + 1 ) ) / c(2)
-      v(1) = max ( v(1), 0 )
+      v(1) = (rhs1 - c(1) * (v(2) + 1)) / c(2)
+      v(1) = max(v(1), 0)
       v(2) = v(2) + 1
-      if ( c(2) * v(1) + c(1) * v(2) <= rhs1 ) then
+      if (c(2) * v(1) + c(1) * v(2) <= rhs1) then
         v(1) = v(1) + 1
       end if
-      if ( c(2) * v(1) + c(1) * v(2) <= rhs2 ) then
+      if (c(2) * v(1) + c(1) * v(2) <= rhs2) then
 
       else
         v(1:n) = 0
@@ -2488,10 +2489,8 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_lattice_point_next ( c, v, more )
+subroutine triangle_lattice_point_next(c, v, more)
 
-!*****************************************************************************80
-!
 !! TRIANGLE_LATTICE_POINT_NEXT returns the next triangle lattice point.
 !
 !  Discussion:
@@ -2541,30 +2540,30 @@ subroutine triangle_lattice_point_next ( c, v, more )
 !
   implicit none
 
-  integer ( kind = 4 ) c(3)
-  integer ( kind = 4 ) c1n
-  integer ( kind = 4 ) i4vec_lcm
-  logical ( kind = 4 ) more
-  integer ( kind = 4 ), parameter :: n = 2
-  integer ( kind = 4 ) rhs
-  integer ( kind = 4 ) v(2)
+  integer(kind=4) c(3)
+  integer(kind=4) c1n
+  integer(kind=4) i4vec_lcm
+  logical(kind=4) more
+  integer(kind=4), parameter :: n = 2
+  integer(kind=4) rhs
+  integer(kind=4) v(2)
 
-  if ( .not. more ) then
+  if (.not. more) then
 
     v(1:n) = 0
     more = .true.
 
   else
 
-    c1n = i4vec_lcm ( n, c )
+    c1n = i4vec_lcm(n, c)
 
-    rhs = c1n * c(n+1)
+    rhs = c1n * c(n + 1)
 
-    if ( c(2) * ( v(1) + 1 ) + c(1) * v(2) <= rhs ) then
+    if (c(2) * (v(1) + 1) + c(1) * v(2) <= rhs) then
       v(1) = v(1) + 1
     else
       v(1) = 0
-      if ( c(2) * v(1) + c(1) * ( v(2) + 1 ) <= rhs ) then
+      if (c(2) * v(1) + c(1) * (v(2) + 1) <= rhs) then
         v(2) = v(2) + 1
       else
         v(2) = 0
@@ -2580,7 +2579,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_line_imp_int_2d ( t, a, b, c, int_num, pint )
+subroutine triangle_line_imp_int_2d(t, a, b, c, int_num, pint)
 
 !*****************************************************************************80
 !
@@ -2620,51 +2619,51 @@ subroutine triangle_line_imp_int_2d ( t, a, b, c, int_num, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) a1
-  real ( kind = 8 ) b
-  real ( kind = 8 ) b1
-  real ( kind = 8 ) c
-  real ( kind = 8 ) c1
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) int_num
-  integer ( kind = 4 ) ival
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pint(dim_num,3)
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) test1
-  real ( kind = 8 ) test2
+  real(kind=8) a
+  real(kind=8) a1
+  real(kind=8) b
+  real(kind=8) b1
+  real(kind=8) c
+  real(kind=8) c1
+  integer(kind=4) i
+  integer(kind=4) i4_wrap
+  integer(kind=4) int_num
+  integer(kind=4) ival
+  integer(kind=4) j
+  real(kind=8) p(dim_num)
+  real(kind=8) pint(dim_num, 3)
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) test1
+  real(kind=8) test2
 
   int_num = 0
 
   do i = 1, 3
 
-    j = i4_wrap ( i+1, 1, 3 )
+    j = i4_wrap(i + 1, 1, 3)
 !
 !  Get the implicit form of the line through vertices I and I+1.
 !
-    call line_exp2imp_2d ( t(1:2,i), t(1:2,j), a1, b1, c1 )
+    call line_exp2imp_2d(t(1:2, i), t(1:2, j), a1, b1, c1)
 !
 !  Seek an intersection with the original line.
 !
-    call lines_imp_int_2d ( a, b, c, a1, b1, c1, ival, p )
+    call lines_imp_int_2d(a, b, c, a1, b1, c1, ival, p)
 !
 !  If there is an intersection, determine if it lies between the two vertices.
 !
-    if ( ival == 1 ) then
+    if (ival == 1) then
 
-      test1 = sum ( ( p(1:dim_num)   - t(1:dim_num,i) ) &
-                  * ( t(1:dim_num,j) - t(1:dim_num,i) ) )
-      test2 = sum ( ( t(1:dim_num,j) - t(1:dim_num,i) ) &
-                  * ( t(1:dim_num,j) - t(1:dim_num,i) ) )
+      test1 = sum((p(1:dim_num) - t(1:dim_num, i)) &
+                  * (t(1:dim_num, j) - t(1:dim_num, i)))
+      test2 = sum((t(1:dim_num, j) - t(1:dim_num, i)) &
+                  * (t(1:dim_num, j) - t(1:dim_num, i)))
 
-      if ( 0 <= test1 .and. test1 <= test2 ) then
+      if (0 <= test1 .and. test1 <= test2) then
         int_num = int_num + 1
-        pint(1:dim_num,int_num) = p(1:dim_num)
+        pint(1:dim_num, int_num) = p(1:dim_num)
       end if
 
     end if
@@ -2678,7 +2677,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-function triangle_orientation_2d ( t )
+function triangle_orientation_2d(t)
 
 !
 !! TRIANGLE_ORIENTATION_2D determines the orientation of a triangle in 2D.
@@ -2718,27 +2717,27 @@ function triangle_orientation_2d ( t )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) det
-  integer ( kind = 4 ) triangle_orientation_2d
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) det
+  integer(kind=4) triangle_orientation_2d
+  real(kind=8) t(dim_num, 3)
 
-  if ( all ( t(1:dim_num,1) == t(1:dim_num,2) ) .or. &
-       all ( t(1:dim_num,2) == t(1:dim_num,3) ) .or. &
-       all ( t(1:dim_num,3) == t(1:dim_num,1) ) ) then
+  if (all(t(1:dim_num, 1) == t(1:dim_num, 2)) .or. &
+      all(t(1:dim_num, 2) == t(1:dim_num, 3)) .or. &
+      all(t(1:dim_num, 3) == t(1:dim_num, 1))) then
     triangle_orientation_2d = 3
     return
   end if
 
-  det = ( t(1,1) - t(1,3) ) * ( t(2,2) - t(2,3) ) &
-      - ( t(1,2) - t(1,3) ) * ( t(2,1) - t(2,3) )
+  det = (t(1, 1) - t(1, 3)) * (t(2, 2) - t(2, 3)) &
+        - (t(1, 2) - t(1, 3)) * (t(2, 1) - t(2, 3))
 
-  if ( det == 0.0D+00 ) then
+  if (det == 0.0D+00) then
     triangle_orientation_2d = 2
-  else if ( det < 0.0D+00 ) then
+  else if (det < 0.0D+00) then
     triangle_orientation_2d = 1
-  else if ( 0.0D+00 < det ) then
+  else if (0.0D+00 < det) then
     triangle_orientation_2d = 0
   end if
 
@@ -2749,7 +2748,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_orthocenter_2d ( t, pc )
+subroutine triangle_orthocenter_2d(t, pc)
 
 !
 !! TRIANGLE_ORTHOCENTER_2D computes the orthocenter of a triangle in 2D.
@@ -2794,42 +2793,42 @@ subroutine triangle_orthocenter_2d ( t, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  logical ( kind = 4 ) flag
-  integer ( kind = 4 ) ival
-  real ( kind = 8 ) p23(dim_num)
-  real ( kind = 8 ) p31(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r8_huge
-  real ( kind = 8 ) t(dim_num,3)
+  logical(kind=4) flag
+  integer(kind=4) ival
+  real(kind=8) p23(dim_num)
+  real(kind=8) p31(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r8_huge
+  real(kind=8) t(dim_num, 3)
 !
 !  Determine a point P23 common to the line (P2,P3) and
 !  its perpendicular through P1.
 !
-  call line_exp_perp_2d ( t(1:2,2), t(1:2,3), t(1:2,1), p23, flag )
+  call line_exp_perp_2d(t(1:2, 2), t(1:2, 3), t(1:2, 1), p23, flag)
 
-  if ( flag ) then
-    pc(1:2) = r8_huge ( )
+  if (flag) then
+    pc(1:2) = r8_huge()
     return
   end if
 !
 !  Determine a point P31 common to the line (P3,P1) and
 !  its perpendicular through P2.
 !
-  call line_exp_perp_2d ( t(1:2,3), t(1:2,1), t(1:2,2), p31, flag )
+  call line_exp_perp_2d(t(1:2, 3), t(1:2, 1), t(1:2, 2), p31, flag)
 
-  if ( flag ) then
-    pc(1:2) = r8_huge ( )
+  if (flag) then
+    pc(1:2) = r8_huge()
     return
   end if
 !
 !  Determine PC, the intersection of the lines (P1,P23) and (P2,P31).
 !
-  call lines_exp_int_2d ( t(1:2,1), p23(1:2), t(1:2,2), p31(1:2), ival, pc )
+  call lines_exp_int_2d(t(1:2, 1), p23(1:2), t(1:2, 2), p31(1:2), ival, pc)
 
-  if ( ival /= 1 ) then
-    pc(1:2) = r8_huge ( )
+  if (ival /= 1) then
+    pc(1:2) = r8_huge()
     flag = .true.
     return
   end if
@@ -2841,7 +2840,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_point_dist_2d ( t, p, dist )
+subroutine triangle_point_dist_2d(t, p, dist)
 
 !
 !! TRIANGLE_POINT_DIST_2D: distance ( triangle, point ) in 2D.
@@ -2869,28 +2868,28 @@ subroutine triangle_point_dist_2d ( t, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ), parameter :: side_num = 3
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4), parameter :: side_num = 3
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,side_num)
+  real(kind=8) dist
+  real(kind=8) dist2
+  integer(kind=4) i4_wrap
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, side_num)
 !
 !  Find the distance to each of the line segments.
 !
-  dist = huge ( dist )
+  dist = huge(dist)
 
   do j = 1, side_num
 
-    jp1 = i4_wrap ( j+1, 1, side_num )
+    jp1 = i4_wrap(j + 1, 1, side_num)
 
-    call segment_point_dist_2d ( t(1:dim_num,j), t(1:dim_num,jp1), p, dist2 )
+    call segment_point_dist_2d(t(1:dim_num, j), t(1:dim_num, jp1), p, dist2)
 
-    if ( dist2 < dist ) then
+    if (dist2 < dist) then
       dist = dist2
     end if
 
@@ -2903,7 +2902,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_point_dist_3d ( t, p, dist )
+subroutine triangle_point_dist_3d(t, p, dist)
 
 !
 !! TRIANGLE_POINT_DIST_3D: distance ( triangle, point ) in 3D.
@@ -2931,26 +2930,26 @@ subroutine triangle_point_dist_3d ( t, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) dist
+  real(kind=8) dist2
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the distances from the point to each of the sides.
 !
-  call segment_point_dist_3d ( t(1:dim_num,1), t(1:dim_num,2), p, dist2 )
+  call segment_point_dist_3d(t(1:dim_num, 1), t(1:dim_num, 2), p, dist2)
 
   dist = dist2
 
-  call segment_point_dist_3d ( t(1:dim_num,2), t(1:dim_num,3), p, dist2 )
+  call segment_point_dist_3d(t(1:dim_num, 2), t(1:dim_num, 3), p, dist2)
 
-  dist = min ( dist, dist2 )
+  dist = min(dist, dist2)
 
-  call segment_point_dist_3d ( t(1:dim_num,3), t(1:dim_num,1), p, dist2 )
+  call segment_point_dist_3d(t(1:dim_num, 3), t(1:dim_num, 1), p, dist2)
 
-  dist = min ( dist, dist2 )
+  dist = min(dist, dist2)
 
   return
 end
@@ -2959,7 +2958,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_point_dist_signed_2d ( t, p, dist_signed )
+subroutine triangle_point_dist_signed_2d(t, p, dist_signed)
 
 !
 !! TRIANGLE_POINT_DIST_SIGNED_2D: signed distance ( triangle, point ) in 2D.
@@ -2995,40 +2994,40 @@ subroutine triangle_point_dist_signed_2d ( t, p, dist_signed )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dis12
-  real ( kind = 8 ) dis23
-  real ( kind = 8 ) dis31
-  real ( kind = 8 ) dist_signed
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) dis12
+  real(kind=8) dis23
+  real(kind=8) dis31
+  real(kind=8) dist_signed
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the signed line distances to the point.
 !
-  call line_exp_point_dist_signed_2d ( t(1:2,1), t(1:2,2), p, dis12 )
+  call line_exp_point_dist_signed_2d(t(1:2, 1), t(1:2, 2), p, dis12)
 
-  call line_exp_point_dist_signed_2d ( t(1:2,2), t(1:2,3), p, dis23 )
+  call line_exp_point_dist_signed_2d(t(1:2, 2), t(1:2, 3), p, dis23)
 
-  call line_exp_point_dist_signed_2d ( t(1:2,3), t(1:2,1), p, dis31 )
+  call line_exp_point_dist_signed_2d(t(1:2, 3), t(1:2, 1), p, dis31)
 !
 !  If the point is inside the triangle, all the line distances are negative.
 !  The largest (negative) line distance has the smallest magnitude,
 !  and is the signed triangle distance.
 !
-  if ( dis12 <= 0.0D+00 .and. dis23 <= 0.0D+00 .and. dis31 <= 0.0D+00 ) then
-    dist_signed = max ( dis12, dis23, dis31 )
+  if (dis12 <= 0.0D+00 .and. dis23 <= 0.0D+00 .and. dis31 <= 0.0D+00) then
+    dist_signed = max(dis12, dis23, dis31)
 !
 !  If the point is outside the triangle, then we have to compute
 !  the (positive) line segment distances and take the minimum.
 !
   else
 
-    call segment_point_dist_2d ( t(1:2,1), t(1:2,2), p, dis12 )
-    call segment_point_dist_2d ( t(1:2,2), t(1:2,3), p, dis23 )
-    call segment_point_dist_2d ( t(1:2,3), t(1:2,1), p, dis31 )
+    call segment_point_dist_2d(t(1:2, 1), t(1:2, 2), p, dis12)
+    call segment_point_dist_2d(t(1:2, 2), t(1:2, 3), p, dis23)
+    call segment_point_dist_2d(t(1:2, 3), t(1:2, 1), p, dis31)
 
-    dist_signed = min ( dis12, dis23, dis31 )
+    dist_signed = min(dis12, dis23, dis31)
 
   end if
 
@@ -3039,7 +3038,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_point_near_2d ( t, p, pn, dist )
+subroutine triangle_point_near_2d(t, p, pn, dist)
 
 !
 !! TRIANGLE_POINT_NEAR_2D computes the nearest point on a triangle in 2D.
@@ -3070,34 +3069,34 @@ subroutine triangle_point_near_2d ( t, p, pn, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ), parameter :: side_num = 3
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4), parameter :: side_num = 3
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) pn2(dim_num)
-  real ( kind = 8 ) t(dim_num,side_num)
-  real ( kind = 8 ) tval
+  real(kind=8) dist
+  real(kind=8) dist2
+  integer(kind=4) i4_wrap
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) p(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) pn2(dim_num)
+  real(kind=8) t(dim_num, side_num)
+  real(kind=8) tval
 !
 !  Find the distance to each of the line segments that make up the edges
 !  of the triangle.
 !
-  dist = huge ( dist )
+  dist = huge(dist)
   pn(1:dim_num) = 0.0D+00
 
   do j = 1, side_num
 
-    jp1 = i4_wrap ( j+1, 1, side_num )
+    jp1 = i4_wrap(j + 1, 1, side_num)
 
-    call segment_point_near_2d ( t(1:dim_num,j), t(1:dim_num,jp1), p, &
-      pn2, dist2, tval )
+    call segment_point_near_2d(t(1:dim_num, j), t(1:dim_num, jp1), p, &
+                               pn2, dist2, tval)
 
-    if ( dist2 < dist ) then
+    if (dist2 < dist) then
       dist = dist2
       pn(1:dim_num) = pn2(1:dim_num)
     end if
@@ -3111,7 +3110,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_quality_2d ( t, quality )
+subroutine triangle_quality_2d(t, quality)
 
 !
 !! TRIANGLE_QUALITY_2D: "quality" of a triangle in 2D.
@@ -3149,25 +3148,25 @@ subroutine triangle_quality_2d ( t, quality )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) quality
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) quality
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the length of each side.
 !
-  a = sqrt ( sum ( ( t(1:dim_num,1) - t(1:dim_num,2) )**2 ) )
-  b = sqrt ( sum ( ( t(1:dim_num,2) - t(1:dim_num,3) )**2 ) )
-  c = sqrt ( sum ( ( t(1:dim_num,3) - t(1:dim_num,1) )**2 ) )
+  a = sqrt(sum((t(1:dim_num, 1) - t(1:dim_num, 2))**2))
+  b = sqrt(sum((t(1:dim_num, 2) - t(1:dim_num, 3))**2))
+  c = sqrt(sum((t(1:dim_num, 3) - t(1:dim_num, 1))**2))
 
-  if ( a * b * c == 0.0D+00 ) then
+  if (a * b * c == 0.0D+00) then
     quality = 0.0D+00
   else
-    quality = ( - a + b + c ) * ( a - b + c ) * ( a + b - c ) &
-      / ( a * b * c )
+    quality = (-a + b + c) * (a - b + c) * (a + b - c) &
+              / (a * b * c)
   end if
 
   return
@@ -3177,7 +3176,7 @@ end
 !
 !----------------------------------------------------------------------------
 
-subroutine triangle_right_lattice_point_num_2d ( a, b, n )
+subroutine triangle_right_lattice_point_num_2d(a, b, n)
 
 !
 !! TRIANGLE_RIGHT_LATTICE_POINT_NUM_2D: count lattice points.
@@ -3213,18 +3212,18 @@ subroutine triangle_right_lattice_point_num_2d ( a, b, n )
 !
 !    Output, integer ( kind = 4 ) N, the number of lattice points.
 !
-  implicit  none
+  implicit none
 
-  integer ( kind = 4 ) a
-  integer ( kind = 4 ) b
-  integer ( kind = 4 ) i4_gcd
-  integer ( kind = 4 ) n
+  integer(kind=4) a
+  integer(kind=4) b
+  integer(kind=4) i4_gcd
+  integer(kind=4) n
 
-  n = ( ( a + 1 ) * ( b + 1 ) + i4_gcd ( a, b ) + 1 ) / 2
+  n = ((a + 1) * (b + 1) + i4_gcd(a, b) + 1) / 2
 
   return
 end
-subroutine triangle_sample ( t, n, seed, p )
+subroutine triangle_sample(t, n, seed, p)
 
 !*****************************************************************************80
 !
@@ -3255,27 +3254,27 @@ subroutine triangle_sample ( t, n, seed, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4) n
 
-  real ( kind = 8 ) alpha(n)
-  integer ( kind = 4 ) dim
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) p12(dim_num,n)
-  real ( kind = 8 ) p13(dim_num,n)
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) alpha(n)
+  integer(kind=4) dim
+  real(kind=8) p(dim_num, n)
+  real(kind=8) p12(dim_num, n)
+  real(kind=8) p13(dim_num, n)
+  integer(kind=4) seed
+  real(kind=8) t(dim_num, 3)
 !
 !  For comparison between F90, C++ and MATLAB codes, call R8VEC_UNIFORM_01.
 !  For faster execution, call RANDOM_NUMBER.
 !
-  if ( .true. ) then
+  if (.true.) then
 
-    call r8vec_uniform_01 ( n, seed, alpha )
+    call r8vec_uniform_01(n, seed, alpha)
 
   else
 
-    call random_number ( harvest = alpha(1:n) )
+    call random_number(harvest=alpha(1:n))
 
   end if
 !
@@ -3287,18 +3286,18 @@ subroutine triangle_sample ( t, n, seed, p )
 !  The line L will intersect sides 2 and 3 at a fraction
 !  ALPHA = SQRT ( R ) of the distance from vertex 1 to vertices 2 and 3.
 !
-  alpha(1:n) = sqrt ( alpha(1:n) )
+  alpha(1:n) = sqrt(alpha(1:n))
 !
 !  Determine the coordinates of the points on sides 2 and 3 intersected
 !  by line L.
 !
   do dim = 1, dim_num
 
-    p12(dim,1:n) = ( 1.0D+00 - alpha(1:n) ) * t(dim,1) &
-                             + alpha(1:n)   * t(dim,2)
+    p12(dim, 1:n) = (1.0D+00 - alpha(1:n)) * t(dim, 1) &
+                    + alpha(1:n) * t(dim, 2)
 
-    p13(dim,1:n) = ( 1.0D+00 - alpha(1:n) ) * t(dim,1) &
-                             + alpha(1:n)   * t(dim,3)
+    p13(dim, 1:n) = (1.0D+00 - alpha(1:n)) * t(dim, 1) &
+                    + alpha(1:n) * t(dim, 3)
 
   end do
 !
@@ -3307,26 +3306,26 @@ subroutine triangle_sample ( t, n, seed, p )
 !  For comparison between F90, C++ and MATLAB codes, call R8VEC_UNIFORM_01.
 !  For faster execution, call RANDOM_NUMBER.
 !
-  if ( .true. ) then
+  if (.true.) then
 
-    call r8vec_uniform_01 ( n, seed, alpha )
+    call r8vec_uniform_01(n, seed, alpha)
 
   else
 
-    call random_number ( harvest = alpha(1:n) )
+    call random_number(harvest=alpha(1:n))
 
   end if
 
   do dim = 1, dim_num
 
-    p(dim,1:n) = ( 1.0D+00 - alpha(1:n) ) * p12(dim,1:n) &
-                           + alpha(1:n)   * p13(dim,1:n)
+    p(dim, 1:n) = (1.0D+00 - alpha(1:n)) * p12(dim, 1:n) &
+                  + alpha(1:n) * p13(dim, 1:n)
 
   end do
 
   return
 end
-subroutine triangle01_lattice_point_num_2d ( s, n )
+subroutine triangle01_lattice_point_num_2d(s, n)
 
 !*****************************************************************************80
 !
@@ -3371,16 +3370,16 @@ subroutine triangle01_lattice_point_num_2d ( s, n )
 !
 !    Output, integer ( kind = 4 ) N, the number of lattice points.
 !
-  implicit  none
+  implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) s
+  integer(kind=4) n
+  integer(kind=4) s
 
-  n = ( ( s + 2 ) * ( s + 1 ) ) / 2
+  n = ((s + 2) * (s + 1)) / 2
 
   return
 end
-subroutine triangle_xsi_to_xy_2d ( t, xsi, p )
+subroutine triangle_xsi_to_xy_2d(t, xsi, p)
 
 !*****************************************************************************80
 !
@@ -3409,17 +3408,17 @@ subroutine triangle_xsi_to_xy_2d ( t, xsi, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) xsi(dim_num+1)
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) xsi(dim_num + 1)
 
-  p(1:dim_num) = matmul ( t(1:dim_num,1:3), xsi(1:dim_num+1) )
+  p(1:dim_num) = matmul(t(1:dim_num, 1:3), xsi(1:dim_num + 1))
 
   return
 end
-subroutine triangle_xy_to_xsi_2d ( t, p, xsi )
+subroutine triangle_xy_to_xsi_2d(t, p, xsi)
 
 !*****************************************************************************80
 !
@@ -3448,21 +3447,21 @@ subroutine triangle_xy_to_xsi_2d ( t, p, xsi )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) det
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) xsi(3)
+  real(kind=8) det
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) xsi(3)
 
-  det = ( t(1,1) - t(1,3) ) * ( t(2,2) - t(2,3) ) &
-      - ( t(1,2) - t(1,3) ) * ( t(2,1) - t(2,3) )
+  det = (t(1, 1) - t(1, 3)) * (t(2, 2) - t(2, 3)) &
+        - (t(1, 2) - t(1, 3)) * (t(2, 1) - t(2, 3))
 
-  xsi(1) = (   ( t(2,2) - t(2,3) ) * ( p(1) - t(1,3) ) &
-             - ( t(1,2) - t(1,3) ) * ( p(2) - t(2,3) ) ) / det
+  xsi(1) = ((t(2, 2) - t(2, 3)) * (p(1) - t(1, 3)) &
+            - (t(1, 2) - t(1, 3)) * (p(2) - t(2, 3))) / det
 
-  xsi(2) = ( - ( t(2,1) - t(2,3) ) * ( p(1) - t(1,3) ) &
-             + ( t(1,1) - t(1,3) ) * ( p(2) - t(2,3) ) ) / det
+  xsi(2) = (-(t(2, 1) - t(2, 3)) * (p(1) - t(1, 3)) &
+            + (t(1, 1) - t(1, 3)) * (p(2) - t(2, 3))) / det
 
   xsi(3) = 1.0D+00 - xsi(1) - xsi(2)
 

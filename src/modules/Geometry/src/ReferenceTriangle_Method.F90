@@ -17,7 +17,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 5 March 2021
-! summary: 	This module contains method for [[ReferenceTriangle_]] data type.
+! summary: This module contains method for [[ReferenceTriangle_]] data type.
 
 MODULE ReferenceTriangle_Method
 USE GlobalData
@@ -30,7 +30,7 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: This routine constructs an instance of [[ReferenceTriangle_]]
 !
 !# Introduction
@@ -39,7 +39,7 @@ PRIVATE
 ! - User can specify the coordinates of the trinagle
 !
 !@note
-! 	This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
+!         This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
 !@endnote
 !
 !### Usage
@@ -57,11 +57,11 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Triangle( obj, nsd, xij )
-  CLASS( ReferenceTriangle_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: nsd
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij( :, : )
-END SUBROUTINE initiate_ref_Triangle
+  MODULE PURE SUBROUTINE initiate_ref_Triangle(obj, nsd, xij)
+    CLASS(ReferenceTriangle_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+  END SUBROUTINE initiate_ref_Triangle
 END INTERFACE
 
 INTERFACE Initiate
@@ -75,14 +75,14 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: This function returns an instance of [[ReferenceTriangle_]]
 !
 !# Introduction
 ! * This routine contructs an instance of [[ReferenceTriangle_]]
 ! * User can specify the coordinates of the trinagle
 !@note
-! 	This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
+! This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
 !@endnote
 !
 !### Usage
@@ -96,11 +96,11 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Triangle(nsd, xij) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: nsd
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
-  TYPE( ReferenceTriangle_ ) :: obj
-END FUNCTION reference_Triangle
+  MODULE PURE FUNCTION reference_Triangle(nsd, xij) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    TYPE(ReferenceTriangle_) :: obj
+  END FUNCTION reference_Triangle
 END INTERFACE
 
 INTERFACE ReferenceTriangle
@@ -114,14 +114,14 @@ PUBLIC :: ReferenceTriangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: This function returns an instance of [[ReferenceTriangle_]]
 !
 !# Introduction
 ! * This routine contructs an instance of [[ReferenceTriangle_]]
 ! * User can specify the coordinates of the trinagle
 !@note
-! 	This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
+!This routine will contruct a three node triangle. Also, SHAPE(xij) = [3,3]
 !@endnote
 !
 !### Usage
@@ -135,11 +135,11 @@ PUBLIC :: ReferenceTriangle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Triangle_pointer(nsd, xij) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: nsd
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
-  CLASS( ReferenceTriangle_ ), POINTER :: obj
-END FUNCTION reference_Triangle_pointer
+  MODULE PURE FUNCTION reference_Triangle_pointer(nsd, xij) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CLASS(ReferenceTriangle_), POINTER :: obj
+  END FUNCTION reference_Triangle_pointer
 END INTERFACE
 
 INTERFACE ReferenceTriangle_Pointer
@@ -157,7 +157,7 @@ PUBLIC :: ReferenceTriangle_Pointer
 ! summary: Returns lagrange Triangle element of higher order
 !
 !# Introduction
-! 	This routine retuns the lagrance element of higher order
+!         This routine retuns the lagrance element of higher order
 ! This routine will be called by [[ReferenceTriangle_:LagrangeElement]]
 ! Currently upto 3rd order triangle elements are supported.
 !
@@ -177,13 +177,13 @@ PUBLIC :: ReferenceTriangle_Pointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE highorderElement_Triangle( refelem, order, obj,  &
-  & ipType )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  CLASS( ReferenceElement_ ), INTENT( INOUT ) ::  obj
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-END SUBROUTINE highorderElement_Triangle
+  MODULE PURE SUBROUTINE highorderElement_Triangle(refelem, order, obj,  &
+    & ipType)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    INTEGER(I4B), INTENT(IN) :: order
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highorderElement_Triangle
 END INTERFACE
 
 PUBLIC :: highorderElement_Triangle
@@ -201,10 +201,6 @@ PUBLIC :: highorderElement_Triangle
 ! This function returns the measure of linear triangle. This function belongs
 ! to the generic function [[ReferenceElement_Method:MeasureSimplex]].
 !
-!@note
-! 	This function is private
-!@endnote
-!
 !### Usage
 !
 !```fortran
@@ -212,11 +208,11 @@ PUBLIC :: highorderElement_Triangle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Triangle( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Triangle
+  MODULE PURE FUNCTION Measure_Simplex_Triangle(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex_Triangle
 END INTERFACE
 
 PUBLIC :: Measure_Simplex_Triangle
@@ -226,15 +222,15 @@ PUBLIC :: Measure_Simplex_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: Returns three angles of a triangle
 
 INTERFACE
-MODULE FUNCTION triangle_angles( refelem, xij ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_angles
+  MODULE PURE FUNCTION triangle_angles(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(3)
+  END FUNCTION triangle_angles
 END INTERFACE
 
 INTERFACE Angles
@@ -248,15 +244,15 @@ PUBLIC :: Angles
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
-! summary: 	Returns the area of triangle
+! date:         5 March 2021
+! summary:         Returns the area of triangle
 
 INTERFACE
-MODULE FUNCTION triangle_area( refelem, xij ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_area
+  MODULE PURE FUNCTION triangle_area(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION triangle_area
 END INTERFACE
 
 INTERFACE Area
@@ -274,11 +270,11 @@ PUBLIC :: Area
 ! summary: Returns the area vector
 
 INTERFACE
-MODULE FUNCTION triangle_arealVector( refelem, xij ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans( 3 )
-END FUNCTION triangle_arealVector
+  MODULE PURE FUNCTION triangle_arealVector(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(3)
+  END FUNCTION triangle_arealVector
 END INTERFACE
 
 INTERFACE ArealVector
@@ -292,16 +288,16 @@ PUBLIC :: ArealVector
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: Returns the barycentric coordinates of triangle
 
 INTERFACE
-MODULE FUNCTION triangle_barycentric( refelem, xij, x ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ), INTENT( IN ) :: x( : )
-  REAL( DFP ) :: Ans( 3 )
-END FUNCTION triangle_barycentric
+  MODULE PURE FUNCTION triangle_barycentric(refelem, xij, x) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: Ans(3)
+  END FUNCTION triangle_barycentric
 END INTERFACE
 
 INTERFACE Barycentric
@@ -315,15 +311,15 @@ PUBLIC :: Barycentric
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: Returns the centroid of a triangle
 
 INTERFACE
-MODULE FUNCTION triangle_centroid( refelem, xij ) RESULT( Ans )
-  CLASS(ReferenceTriangle_), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_centroid
+  MODULE PURE FUNCTION triangle_centroid(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(3)
+  END FUNCTION triangle_centroid
 END INTERFACE
 
 INTERFACE Centroid
@@ -337,15 +333,15 @@ PUBLIC :: Centroid
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
-! summary: 	Returns the circum center of the triangle
+! date:         5 March 2021
+! summary:         Returns the circum center of the triangle
 
 INTERFACE
-MODULE FUNCTION triangle_circumcentre(  refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_circumcentre
+  MODULE PURE FUNCTION triangle_circumcentre(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(3)
+  END FUNCTION triangle_circumcentre
 END INTERFACE
 
 INTERFACE CircumCenter
@@ -359,16 +355,16 @@ PUBLIC :: CircumCenter
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: Returns circum circle of triangle
 
 INTERFACE
-MODULE FUNCTION triangle_circumcircle( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(4)
+  MODULE PURE FUNCTION triangle_circumcircle(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(4)
     !! Ans(1) = radius and Ans(2:4) center
-END FUNCTION triangle_circumcircle
+  END FUNCTION triangle_circumcircle
 END INTERFACE
 
 INTERFACE CircumCircle
@@ -382,11 +378,11 @@ PUBLIC :: CircumCircle
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_circumradius( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_circumradius
+  MODULE PURE FUNCTION triangle_circumradius(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION triangle_circumradius
 END INTERFACE
 
 INTERFACE CircumRadius
@@ -400,14 +396,14 @@ PUBLIC :: CircumRadius
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE triangle_contains_line( refelem, xij, x1, x2, &
-  & parametricLine, inside, xint )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:), x1(3), x2(3)
-  LOGICAL(LGT), INTENT( IN ) :: parametricLine
-  LOGICAL(LGT), INTENT (OUT) :: inside
-  REAL( DFP ), INTENT( OUT ) :: xint(3)
-END SUBROUTINE triangle_contains_line
+  MODULE PURE SUBROUTINE triangle_contains_line(refelem, xij, x1, x2, &
+    & parametricLine, inside, xint)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :), x1(3), x2(3)
+    LOGICAL(LGT), INTENT(IN) :: parametricLine
+    LOGICAL(LGT), INTENT(OUT) :: inside
+    REAL(DFP), INTENT(OUT) :: xint(3)
+  END SUBROUTINE triangle_contains_line
 END INTERFACE
 
 INTERFACE ContainsLine
@@ -421,11 +417,11 @@ PUBLIC :: ContainsLine
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_contains_point( refelem, xij, x ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:), x(:)
-  LOGICAL(LGT) :: Ans
-END FUNCTION triangle_contains_point
+  MODULE PURE FUNCTION triangle_contains_point(refelem, xij, x) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
+    LOGICAL(LGT) :: Ans
+  END FUNCTION triangle_contains_point
 END INTERFACE
 
 PUBLIC :: triangle_contains_point
@@ -435,11 +431,11 @@ PUBLIC :: triangle_contains_point
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_diameter( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_diameter
+  MODULE PURE FUNCTION triangle_diameter(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION triangle_diameter
 END INTERFACE
 
 INTERFACE diameter
@@ -453,11 +449,11 @@ PUBLIC :: diameter
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_edge_length( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_edge_length
+  MODULE PURE FUNCTION triangle_edge_length(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(3)
+  END FUNCTION triangle_edge_length
 END INTERFACE
 
 INTERFACE EdgeLength
@@ -471,11 +467,11 @@ PUBLIC :: EdgeLength
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_incenter( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(3)
-END FUNCTION triangle_incenter
+  MODULE PURE FUNCTION triangle_incenter(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(3)
+  END FUNCTION triangle_incenter
 END INTERFACE
 
 INTERFACE Incenter
@@ -489,11 +485,11 @@ PUBLIC :: Incenter
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_incircle( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans(4)
-END FUNCTION triangle_incircle
+  MODULE PURE FUNCTION triangle_incircle(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(4)
+  END FUNCTION triangle_incircle
 END INTERFACE
 
 INTERFACE Incircle
@@ -507,11 +503,11 @@ PUBLIC :: Incircle
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_inradius( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_inradius
+  MODULE PURE FUNCTION triangle_inradius(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION triangle_inradius
 END INTERFACE
 
 INTERFACE Inradius
@@ -525,11 +521,11 @@ PUBLIC :: Inradius
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_orthocenter( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  REAL( DFP ) :: Ans( 3 )
-END FUNCTION triangle_orthocenter
+  MODULE PURE FUNCTION triangle_orthocenter(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans(3)
+  END FUNCTION triangle_orthocenter
 END INTERFACE
 
 INTERFACE Orthocenter
@@ -543,12 +539,12 @@ PUBLIC :: Orthocenter
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_point_dist( refelem, xij, x ) &
-  & RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:), x(:)
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_point_dist
+  MODULE PURE FUNCTION triangle_point_dist(refelem, xij, x) &
+    & RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
+    REAL(DFP) :: Ans
+  END FUNCTION triangle_point_dist
 END INTERFACE
 
 INTERFACE DistanceFromPoint
@@ -562,12 +558,12 @@ PUBLIC :: DistanceFromPoint
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE triangle_get_nearest_point( refelem, xij, x, xn, dist )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:), x(:)
-  REAL( DFP ) , INTENT (INOUT ) :: xn(:)
-  REAL( DFP ), INTENT (OUT) :: dist
-END SUBROUTINE triangle_get_nearest_point
+  MODULE PURE SUBROUTINE triangle_get_nearest_point(refelem, xij, x, xn, dist)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
+    REAL(DFP), INTENT(INOUT) :: xn(:)
+    REAL(DFP), INTENT(OUT) :: dist
+  END SUBROUTINE triangle_get_nearest_point
 END INTERFACE
 
 INTERFACE NearestPoint
@@ -581,12 +577,14 @@ PUBLIC :: NearestPoint
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_random_point( refelem, xij, n, seed ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ) :: n, seed
-  REAL( DFP ) :: Ans(3, n)
-END FUNCTION triangle_random_point
+  MODULE PURE FUNCTION triangle_random_point(refelem, xij, n, seed) &
+    & RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: n
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
+    REAL(DFP) :: Ans(3, n)
+  END FUNCTION triangle_random_point
 END INTERFACE
 
 INTERFACE RandomPoint
@@ -600,12 +598,12 @@ PUBLIC :: RandomPoint
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION triangle_quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferenceTriangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION triangle_quality
+  MODULE PURE FUNCTION triangle_quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION triangle_quality
 END INTERFACE
 
 PUBLIC :: triangle_quality
@@ -626,10 +624,10 @@ PUBLIC :: triangle_quality
 ! Therefore, the area of the triangle is half of that value.
 
 INTERFACE
-MODULE PURE SUBROUTINE TriangleArea3D( t, area )
-  REAL( DFP ), INTENT( IN ) :: t(3,3)
-  REAL( DFP ), INTENT( OUT ) :: area
-END SUBROUTINE TriangleArea3D
+  MODULE PURE SUBROUTINE TriangleArea3D(t, area)
+    REAL(DFP), INTENT(IN) :: t(3, 3)
+    REAL(DFP), INTENT(OUT) :: area
+  END SUBROUTINE TriangleArea3D
 END INTERFACE
 
 PUBLIC :: TriangleArea3D
@@ -640,7 +638,7 @@ PUBLIC :: TriangleArea3D
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Aug 2022
-! summary: 	Return are of triangle in 2D
+! summary:         Return are of triangle in 2D
 !
 !# Introduction
 !
@@ -650,10 +648,10 @@ PUBLIC :: TriangleArea3D
 ! in clockwise order, the area will be negative!
 
 INTERFACE
-MODULE PURE SUBROUTINE TriangleArea2D( t, area )
-  REAL ( DFP ), INTENT( IN ) ::  t(2,3)
-  REAL ( DFP ), INTENT( OUT ) :: area
-END SUBROUTINE TriangleArea2D
+  MODULE PURE SUBROUTINE TriangleArea2D(t, area)
+    REAL(DFP), INTENT(IN) :: t(2, 3)
+    REAL(DFP), INTENT(OUT) :: area
+  END SUBROUTINE TriangleArea2D
 END INTERFACE
 
 PUBLIC :: TriangleArea2D

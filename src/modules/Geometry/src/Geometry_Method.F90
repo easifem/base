@@ -25,4 +25,7 @@ USE ReferenceTetrahedron_Method
 USE ReferenceHexahedron_Method
 USE ReferencePrism_Method
 USE ReferencePyramid_Method
+USE Line_Method
+USE Triangle_Method
+USE Plane_Method
 END MODULE Geometry_Method

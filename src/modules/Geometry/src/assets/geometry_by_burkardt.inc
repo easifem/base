@@ -1,4 +1,4 @@
-subroutine angle_box_2d ( dist, p1, p2, p3, p4, p5 )
+subroutine angle_box_2d(dist, p1, p2, p3, p4, p5)
 
 !*****************************************************************************80
 !
@@ -71,22 +71,22 @@ subroutine angle_box_2d ( dist, p1, p2, p3, p4, p5 )
 !
   implicit none
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p1(2)
-  real ( kind = 8 ) p2(2)
-  real ( kind = 8 ) p3(2)
-  real ( kind = 8 ) p4(2)
-  real ( kind = 8 ) p5(2)
-  real ( kind = 8 ) stheta
-  real ( kind = 8 ) temp1
-  real ( kind = 8 ) temp2
-  real ( kind = 8 ) u(2)
-  real ( kind = 8 ) u1(2)
-  real ( kind = 8 ) u2(2)
+  real(kind=8) dist
+  real(kind=8) p1(2)
+  real(kind=8) p2(2)
+  real(kind=8) p3(2)
+  real(kind=8) p4(2)
+  real(kind=8) p5(2)
+  real(kind=8) stheta
+  real(kind=8) temp1
+  real(kind=8) temp2
+  real(kind=8) u(2)
+  real(kind=8) u1(2)
+  real(kind=8) u2(2)
 !
 !  If DIST = 0, assume the user knows best.
 !
-  if ( dist == 0.0D+00 ) then
+  if (dist == 0.0D+00) then
     p4(1:2) = p2(1:2)
     p5(1:2) = p2(1:2)
     return
@@ -94,21 +94,21 @@ subroutine angle_box_2d ( dist, p1, p2, p3, p4, p5 )
 !
 !  Fail if all three points are equal.
 !
-  if ( all ( p1(1:2) == p2(1:2) ) .and. &
-       all ( p2(1:2) == p3(1:2) ) ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'ANGLE_BOX_2D - Fatal error!'
-    write ( *, '(a)' ) '  Input points P1 = P2 = P3.'
-    write ( *, '(a,2g14.6)' ) '  P1 = ', p1(1:2)
+  if (all(p1(1:2) == p2(1:2)) .and. &
+      all(p2(1:2) == p3(1:2))) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'ANGLE_BOX_2D - Fatal error!'
+    write (*, '(a)') '  Input points P1 = P2 = P3.'
+    write (*, '(a,2g14.6)') '  P1 = ', p1(1:2)
     stop 1
   end if
 !
 !  If P1 = P2, extend the line through the doubled point.
 !
-  if ( all ( p1(1:2) == p2(1:2) ) ) then
+  if (all(p1(1:2) == p2(1:2))) then
     u2(1) = p3(2) - p2(2)
     u2(2) = p2(1) - p3(1)
-    temp1 = sqrt ( sum ( u2(1:2)**2 ) )
+    temp1 = sqrt(sum(u2(1:2)**2))
     u2(1:2) = u2(1:2) / temp1
     p4(1:2) = p2(1:2) + dist * u2(1:2)
     p5(1:2) = p2(1:2) - dist * u2(1:2)
@@ -117,10 +117,10 @@ subroutine angle_box_2d ( dist, p1, p2, p3, p4, p5 )
 !
 !  If P2 = P3, extend the line through the doubled point.
 !
-  if ( all ( p2(1:2) == p3(1:2) ) ) then
+  if (all(p2(1:2) == p3(1:2))) then
     u1(1) = p1(2) - p2(2)
     u1(2) = p2(1) - p1(1)
-    temp1 = sqrt ( sum ( u1(1:2)**2 ) )
+    temp1 = sqrt(sum(u1(1:2)**2))
     u1(1:2) = u1(1:2) / temp1
     p4(1:2) = p2(1:2) + dist * u1(1:2)
     p5(1:2) = p2(1:2) - dist * u1(1:2)
@@ -133,22 +133,22 @@ subroutine angle_box_2d ( dist, p1, p2, p3, p4, p5 )
 !
   u1(1) = p1(2) - p2(2)
   u1(2) = p2(1) - p1(1)
-  temp1 = sqrt ( sum ( u1(1:2)**2 ) )
+  temp1 = sqrt(sum(u1(1:2)**2))
   u1(1:2) = u1(1:2) / temp1
 
-  temp1 = dot_product ( u1(1:2), p3(1:2) - p2(1:2) )
+  temp1 = dot_product(u1(1:2), p3(1:2) - p2(1:2))
 
-  if ( temp1 < 0.0D+00 ) then
+  if (temp1 < 0.0D+00) then
     u1(1:2) = -u1(1:2)
   end if
 
   u2(1) = p3(2) - p2(2)
   u2(2) = p2(1) - p3(1)
-  temp1 = sqrt ( sum ( u2(1:2)**2 ) )
+  temp1 = sqrt(sum(u2(1:2)**2))
   u2(1:2) = u2(1:2) / temp1
 
-  temp1 = dot_product ( u2(1:2), p1(1:2) - p2(1:2) )
-  if ( temp1 < 0.0D+00 ) then
+  temp1 = dot_product(u2(1:2), p1(1:2) - p2(1:2))
+  if (temp1 < 0.0D+00) then
     u2(1:2) = -u2(1:2)
   end if
 !
@@ -156,12 +156,12 @@ subroutine angle_box_2d ( dist, p1, p2, p3, p4, p5 )
 !  sign of U1, because both U1 and -U1 are perpendicular
 !  to (P3-P2)...and similarly for U2 and (P1-P2).
 !
-  temp1 = dot_product ( u1(1:2), p3(1:2) - p2(1:2) )
-  temp2 = dot_product ( u2(1:2), p1(1:2) - p2(1:2) )
+  temp1 = dot_product(u1(1:2), p3(1:2) - p2(1:2))
+  temp2 = dot_product(u2(1:2), p1(1:2) - p2(1:2))
 
-  if ( temp1 == 0.0D+00 .or. temp2 == 0.0D+00 ) then
+  if (temp1 == 0.0D+00 .or. temp2 == 0.0D+00) then
 
-    if ( dot_product ( u1(1:2), u2(1:2) ) < 0.0D+00 ) then
+    if (dot_product(u1(1:2), u2(1:2)) < 0.0D+00) then
       u1(1:2) = -u1(1:2)
     end if
 
@@ -171,18 +171,18 @@ subroutine angle_box_2d ( dist, p1, p2, p3, p4, p5 )
 !    Cos(theta) = (P3-P2) dot (P2-P1) / ( norm(P3-P2) * norm(P2-P1) )
 !  being -1, or very close to -1.
 !
-  temp1 = dot_product ( p3(1:2) - p2(1:2), p2(1:2) - p1(1:2) )
+  temp1 = dot_product(p3(1:2) - p2(1:2), p2(1:2) - p1(1:2))
 
   temp1 = temp1 / &
-        ( sqrt ( sum ( ( p3(1:2) - p2(1:2) )**2 ) ) &
-        * sqrt ( sum ( ( p2(1:2) - p1(1:2) )**2 ) ) )
+          (sqrt(sum((p3(1:2) - p2(1:2))**2)) &
+           * sqrt(sum((p2(1:2) - p1(1:2))**2)))
 
-  if ( temp1 < -0.99D+00 ) then
-    temp1 = sqrt ( sum ( ( p2(1:2) - p1(1:2) )**2 ) )
-    p4(1:2) = p2(1:2) + dist * ( p2(1:2) - p1(1:2) ) &
-      / temp1 + dist * u1(1:2)
-    p5(1:2) = p2(1:2) + dist * ( p2(1:2) - p1(1:2) ) &
-      / temp1 - dist * u1(1:2)
+  if (temp1 < -0.99D+00) then
+    temp1 = sqrt(sum((p2(1:2) - p1(1:2))**2))
+    p4(1:2) = p2(1:2) + dist * (p2(1:2) - p1(1:2)) &
+              / temp1 + dist * u1(1:2)
+    p5(1:2) = p2(1:2) + dist * (p2(1:2) - p1(1:2)) &
+              / temp1 - dist * u1(1:2)
     return
   end if
 !
@@ -196,25 +196,25 @@ subroutine angle_box_2d ( dist, p1, p2, p3, p4, p5 )
 !  P1 = P2, which I now treat specially just to guarantee I
 !  avoid this problem!
 !
-  if ( dot_product ( u1(1:2), u2(1:2) ) < 0.0D+00 ) then
+  if (dot_product(u1(1:2), u2(1:2)) < 0.0D+00) then
     u2(1:2) = -u2(1:2)
   end if
 
-  u(1:2) = 0.5D+00 * ( u1(1:2) + u2(1:2) )
-  temp1 = sqrt ( sum ( u(1:2)**2 ) )
+  u(1:2) = 0.5D+00 * (u1(1:2) + u2(1:2))
+  temp1 = sqrt(sum(u(1:2)**2))
   u(1:2) = u(1:2) / temp1
 !
 !  You must go DIST/STHETA units along this unit normal to
 !  result in a distance DIST from line1 (and line2).
 !
-  stheta = dot_product ( u(1:2), u1(1:2) )
+  stheta = dot_product(u(1:2), u1(1:2))
 
   p4(1:2) = p2(1:2) + dist * u(1:2) / stheta
   p5(1:2) = p2(1:2) - dist * u(1:2) / stheta
 
   return
 end
-subroutine angle_contains_point_2d ( p1, p2, p3, p, inside )
+subroutine angle_contains_point_2d(p1, p2, p3, p, inside)
 
 !*****************************************************************************80
 !
@@ -259,14 +259,14 @@ subroutine angle_contains_point_2d ( p1, p2, p3, p, inside )
 !
   implicit none
 
-  real ( kind = 8 ) angle_rad_2d
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(2)
-  real ( kind = 8 ) p1(2)
-  real ( kind = 8 ) p2(2)
-  real ( kind = 8 ) p3(2)
+  real(kind=8) angle_rad_2d
+  logical(kind=4) inside
+  real(kind=8) p(2)
+  real(kind=8) p1(2)
+  real(kind=8) p2(2)
+  real(kind=8) p3(2)
 
-  if ( angle_rad_2d ( p1, p2, p ) <= angle_rad_2d ( p1, p2, p3 ) ) then
+  if (angle_rad_2d(p1, p2, p) <= angle_rad_2d(p1, p2, p3)) then
     inside = .true.
   else
     inside = .false.
@@ -274,7 +274,7 @@ subroutine angle_contains_point_2d ( p1, p2, p3, p, inside )
 
   return
 end
-function angle_deg_2d ( p1, p2, p3 )
+function angle_deg_2d(p1, p2, p3)
 
 !*****************************************************************************80
 !
@@ -316,39 +316,39 @@ function angle_deg_2d ( p1, p2, p3 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle_deg_2d
-  real ( kind = 8 ) angle_rad_2d
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radians_to_degrees
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
+  real(kind=8) angle_deg_2d
+  real(kind=8) angle_rad_2d
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radians_to_degrees
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
 
-  p(1) = ( p3(1) - p2(1) ) * ( p1(1) - p2(1) ) &
-       + ( p3(2) - p2(2) ) * ( p1(2) - p2(2) )
+  p(1) = (p3(1) - p2(1)) * (p1(1) - p2(1)) &
+         + (p3(2) - p2(2)) * (p1(2) - p2(2))
 
-  p(2) = ( p3(1) - p2(1) ) * ( p1(2) - p2(2) ) &
-       - ( p3(2) - p2(2) ) * ( p1(1) - p2(1) )
+  p(2) = (p3(1) - p2(1)) * (p1(2) - p2(2)) &
+         - (p3(2) - p2(2)) * (p1(1) - p2(1))
 
-  if ( p(1) == 0.0D+00 .and. p(2) == 0.0D+00 ) then
+  if (p(1) == 0.0D+00 .and. p(2) == 0.0D+00) then
     angle_deg_2d = 0.0D+00
     return
   end if
 
-  angle_rad_2d = atan2 ( p(2), p(1) )
+  angle_rad_2d = atan2(p(2), p(1))
 
-  if ( angle_rad_2d < 0.0D+00 ) then
+  if (angle_rad_2d < 0.0D+00) then
     angle_rad_2d = angle_rad_2d + 2.0D+00 * r8_pi
   end if
 
-  angle_deg_2d = radians_to_degrees ( angle_rad_2d )
+  angle_deg_2d = radians_to_degrees(angle_rad_2d)
 
   return
 end
-subroutine angle_half_2d ( p1, p2, p3, p4 )
+subroutine angle_half_2d(p1, p2, p3, p4)
 
 !*****************************************************************************80
 !
@@ -390,20 +390,20 @@ subroutine angle_half_2d ( p1, p2, p3, p4 )
 !
   implicit none
 
-  real ( kind = 8 ) p1(2)
-  real ( kind = 8 ) p2(2)
-  real ( kind = 8 ) p3(2)
-  real ( kind = 8 ) p4(2)
+  real(kind=8) p1(2)
+  real(kind=8) p2(2)
+  real(kind=8) p3(2)
+  real(kind=8) p4(2)
 
   p4(1:2) = 0.5D+00 * ( &
-      ( p1(1:2) - p2(1:2) ) / sqrt ( sum ( ( p1(1:2) - p2(1:2) )**2 ) ) &
-    + ( p3(1:2) - p2(1:2) ) / sqrt ( sum ( ( p3(1:2) - p2(1:2) )**2 ) ) )
+            (p1(1:2) - p2(1:2)) / sqrt(sum((p1(1:2) - p2(1:2))**2)) &
+            + (p3(1:2) - p2(1:2)) / sqrt(sum((p3(1:2) - p2(1:2))**2)))
 
-   p4(1:2) = p2(1:2) + p4(1:2) / sqrt ( sum ( p4(1:2)**2 ) )
+  p4(1:2) = p2(1:2) + p4(1:2) / sqrt(sum(p4(1:2)**2))
 
   return
 end
-function angle_rad_2d ( p1, p2, p3 )
+function angle_rad_2d(p1, p2, p3)
 
 !*****************************************************************************80
 !
@@ -445,33 +445,33 @@ function angle_rad_2d ( p1, p2, p3 )
 !
   implicit none
 
-  real ( kind = 8 ) angle_rad_2d
-  real ( kind = 8 ) p(2)
-  real ( kind = 8 ) p1(2)
-  real ( kind = 8 ) p2(2)
-  real ( kind = 8 ) p3(2)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) angle_rad_2d
+  real(kind=8) p(2)
+  real(kind=8) p1(2)
+  real(kind=8) p2(2)
+  real(kind=8) p3(2)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
-  p(1) = ( p3(1) - p2(1) ) * ( p1(1) - p2(1) ) &
-       + ( p3(2) - p2(2) ) * ( p1(2) - p2(2) )
+  p(1) = (p3(1) - p2(1)) * (p1(1) - p2(1)) &
+         + (p3(2) - p2(2)) * (p1(2) - p2(2))
 
-  p(2) = ( p3(1) - p2(1) ) * ( p1(2) - p2(2) ) &
-       - ( p3(2) - p2(2) ) * ( p1(1) - p2(1) )
+  p(2) = (p3(1) - p2(1)) * (p1(2) - p2(2)) &
+         - (p3(2) - p2(2)) * (p1(1) - p2(1))
 
-  if ( all ( p(1:2) == 0.0D+00)  ) then
+  if (all(p(1:2) == 0.0D+00)) then
     angle_rad_2d = 0.0D+00
     return
   end if
 
-  angle_rad_2d = atan2 ( p(2), p(1) )
+  angle_rad_2d = atan2(p(2), p(1))
 
-  if ( angle_rad_2d < 0.0D+00 ) then
+  if (angle_rad_2d < 0.0D+00) then
     angle_rad_2d = angle_rad_2d + 2.0D+00 * r8_pi
   end if
 
   return
 end
-function angle_rad_3d ( p1, p2, p3 )
+function angle_rad_3d(p1, p2, p3)
 
 !*****************************************************************************80
 !
@@ -508,39 +508,39 @@ function angle_rad_3d ( p1, p2, p3 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) angle_rad_3d
-  real ( kind = 8 ) dot
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) v1norm
-  real ( kind = 8 ) v2norm
+  real(kind=8) angle_rad_3d
+  real(kind=8) dot
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) r8_acos
+  real(kind=8) v1norm
+  real(kind=8) v2norm
 
-  v1norm = sqrt ( sum ( ( p1(1:dim_num) - p2(1:dim_num) )**2 ) )
+  v1norm = sqrt(sum((p1(1:dim_num) - p2(1:dim_num))**2))
 
-  if ( v1norm == 0.0D+00 ) then
+  if (v1norm == 0.0D+00) then
     angle_rad_3d = 0.0D+00
     return
   end if
 
-  v2norm = sqrt ( sum ( ( p3(1:dim_num) - p2(1:dim_num) )**2 ) )
+  v2norm = sqrt(sum((p3(1:dim_num) - p2(1:dim_num))**2))
 
-  if ( v2norm == 0.0D+00 ) then
+  if (v2norm == 0.0D+00) then
     angle_rad_3d = 0.0D+00
     return
   end if
 
-  dot = sum ( ( p1(1:dim_num) - p2(1:dim_num) ) &
-            * ( p3(1:dim_num) - p2(1:dim_num) ) )
+  dot = sum((p1(1:dim_num) - p2(1:dim_num)) &
+            * (p3(1:dim_num) - p2(1:dim_num)))
 
-  angle_rad_3d = r8_acos ( dot / ( v1norm * v2norm ) )
+  angle_rad_3d = r8_acos(dot / (v1norm * v2norm))
 
   return
 end
-function angle_rad_nd ( dim_num, v1, v2 )
+function angle_rad_nd(dim_num, v1, v2)
 
 !*****************************************************************************80
 !
@@ -577,37 +577,37 @@ function angle_rad_nd ( dim_num, v1, v2 )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) angle_rad_nd
-  real ( kind = 8 ) dot
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v1norm
-  real ( kind = 8 ) v2(dim_num)
-  real ( kind = 8 ) v2norm
+  real(kind=8) angle_rad_nd
+  real(kind=8) dot
+  real(kind=8) r8_acos
+  real(kind=8) v1(dim_num)
+  real(kind=8) v1norm
+  real(kind=8) v2(dim_num)
+  real(kind=8) v2norm
 
-  dot = dot_product ( v1(1:dim_num), v2(1:dim_num) )
+  dot = dot_product(v1(1:dim_num), v2(1:dim_num))
 
-  v1norm = sqrt ( sum ( v1(1:dim_num)**2 ) )
+  v1norm = sqrt(sum(v1(1:dim_num)**2))
 
-  if ( v1norm == 0.0D+00 ) then
+  if (v1norm == 0.0D+00) then
     angle_rad_nd = 0.0D+00
     return
   end if
 
-  v2norm = sqrt ( sum ( v2(1:dim_num)**2 ) )
+  v2norm = sqrt(sum(v2(1:dim_num)**2))
 
-  if ( v2norm == 0.0D+00 ) then
+  if (v2norm == 0.0D+00) then
     angle_rad_nd = 0.0D+00
     return
   end if
 
-  angle_rad_nd = r8_acos ( dot / ( v1norm * v2norm ) )
+  angle_rad_nd = r8_acos(dot / (v1norm * v2norm))
 
   return
 end
-subroutine angle_turn_2d ( p1, p2, p3, turn )
+subroutine angle_turn_2d(p1, p2, p3, turn)
 
 !*****************************************************************************80
 !
@@ -662,31 +662,31 @@ subroutine angle_turn_2d ( p1, p2, p3, turn )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) turn
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) r8_atan
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) turn
 
-  p(1) = ( p3(1) - p2(1) ) * ( p1(1) - p2(1) ) &
-       + ( p3(2) - p2(2) ) * ( p1(2) - p2(2) )
+  p(1) = (p3(1) - p2(1)) * (p1(1) - p2(1)) &
+         + (p3(2) - p2(2)) * (p1(2) - p2(2))
 
-  p(2) = ( p3(1) - p2(1) ) * ( p1(2) - p2(2) ) &
-       - ( p3(2) - p2(2) ) * ( p1(1) - p2(1) )
+  p(2) = (p3(1) - p2(1)) * (p1(2) - p2(2)) &
+         - (p3(2) - p2(2)) * (p1(1) - p2(1))
 
-  if ( p(1) == 0.0D+00 .and. p(2) == 0.0D+00 ) then
+  if (p(1) == 0.0D+00 .and. p(2) == 0.0D+00) then
     turn = 0.0D+00
   else
-    turn = r8_pi - r8_atan ( p(2), p(1) )
+    turn = r8_pi - r8_atan(p(2), p(1))
   end if
 
   return
 end
-subroutine annulus_area_2d ( r1, r2, area )
+subroutine annulus_area_2d(r1, r2, area)
 
 !*****************************************************************************80
 !
@@ -719,16 +719,16 @@ subroutine annulus_area_2d ( r1, r2, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) area
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
-  area = r8_pi * ( r2 + r1 ) * ( r2 - r1 )
+  area = r8_pi * (r2 + r1) * (r2 - r1)
 
   return
 end
-subroutine annulus_sector_area_2d ( r1, r2, theta1, theta2, area )
+subroutine annulus_sector_area_2d(r1, r2, theta1, theta2, area)
 
 !*****************************************************************************80
 !
@@ -764,17 +764,17 @@ subroutine annulus_sector_area_2d ( r1, r2, theta1, theta2, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) area
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8) theta1
+  real(kind=8) theta2
 
-  area = 0.5D+00 * ( theta2 - theta1 ) * ( r2 + r1 ) * ( r2 - r1 )
+  area = 0.5D+00 * (theta2 - theta1) * (r2 + r1) * (r2 - r1)
 
   return
 end
-subroutine annulus_sector_centroid_2d ( pc, r1, r2, theta1, theta2, centroid )
+subroutine annulus_sector_centroid_2d(pc, r1, r2, theta1, theta2, centroid)
 
 !*****************************************************************************80
 !
@@ -825,26 +825,26 @@ subroutine annulus_sector_centroid_2d ( pc, r1, r2, theta1, theta2, centroid )
 !
   implicit none
 
-  real ( kind = 8 ) centroid(2)
-  real ( kind = 8 ) pc(2)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) centroid(2)
+  real(kind=8) pc(2)
+  real(kind=8) r
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
 
   theta = theta2 - theta1
 
-  r = 4.0D+00 * sin ( theta / 2.0D+00 ) / ( 3.0D+00 * theta ) &
-    * ( r1 * r1 + r1 * r2 + r2 * r2 ) / ( r1 + r2 )
+  r = 4.0D+00 * sin(theta / 2.0D+00) / (3.0D+00 * theta) &
+      * (r1 * r1 + r1 * r2 + r2 * r2) / (r1 + r2)
 
-  centroid(1) = pc(1) + r * cos ( theta1 + theta / 2.0D+00 )
-  centroid(2) = pc(2) + r * sin ( theta1 + theta / 2.0D+00 )
+  centroid(1) = pc(1) + r * cos(theta1 + theta / 2.0D+00)
+  centroid(2) = pc(2) + r * sin(theta1 + theta / 2.0D+00)
 
   return
 end
-subroutine ball01_sample_2d ( seed, p )
+subroutine ball01_sample_2d(seed, p)
 
 !*****************************************************************************80
 !
@@ -877,26 +877,26 @@ subroutine ball01_sample_2d ( seed, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) u(dim_num)
+  real(kind=8) p(dim_num)
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  integer(kind=4) seed
+  real(kind=8) theta
+  real(kind=8) u(dim_num)
 
-  call r8vec_uniform_01 ( dim_num, seed, u )
+  call r8vec_uniform_01(dim_num, seed, u)
 
-  r = sqrt ( u(1) )
+  r = sqrt(u(1))
   theta = 2.0D+00 * r8_pi * u(2)
 
-  p(1) = r * cos ( theta )
-  p(2) = r * sin ( theta )
+  p(1) = r * cos(theta)
+  p(2) = r * sin(theta)
 
   return
 end
-subroutine ball01_sample_3d ( seed, p )
+subroutine ball01_sample_3d(seed, p)
 
 !*****************************************************************************80
 !
@@ -923,19 +923,19 @@ subroutine ball01_sample_3d ( seed, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) u(dim_num)
-  real ( kind = 8 ) vdot
+  real(kind=8) p(dim_num)
+  real(kind=8) phi
+  real(kind=8) r
+  real(kind=8) r8_acos
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  integer(kind=4) seed
+  real(kind=8) theta
+  real(kind=8) u(dim_num)
+  real(kind=8) vdot
 
-  call r8vec_uniform_01 ( dim_num, seed, u )
+  call r8vec_uniform_01(dim_num, seed, u)
 !
 !  Pick a uniformly random VDOT, which must be between -1 and 1.
 !  This represents the dot product of the random vector with the Z unit vector.
@@ -946,7 +946,7 @@ subroutine ball01_sample_3d ( seed, p )
 !
   vdot = 2.0D+00 * u(1) - 1.0D+00
 
-  phi = r8_acos ( vdot )
+  phi = r8_acos(vdot)
 !
 !  Pick a uniformly random rotation between 0 and 2 Pi around the
 !  axis of the Z vector.
@@ -955,15 +955,15 @@ subroutine ball01_sample_3d ( seed, p )
 !
 !  Pick a random radius R.
 !
-  r = u(3) ** ( 1.0D+00 / 3.0D+00 )
+  r = u(3)**(1.0D+00 / 3.0D+00)
 
-  p(1) = r * cos ( theta ) * sin ( phi )
-  p(2) = r * sin ( theta ) * sin ( phi )
-  p(3) = r * cos ( phi )
+  p(1) = r * cos(theta) * sin(phi)
+  p(2) = r * sin(theta) * sin(phi)
+  p(3) = r * cos(phi)
 
   return
 end
-subroutine ball01_sample_nd ( dim_num, seed, p )
+subroutine ball01_sample_nd(dim_num, seed, p)
 
 !*****************************************************************************80
 !
@@ -1005,45 +1005,45 @@ subroutine ball01_sample_nd ( dim_num, seed, p )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pi
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_uniform_01
-  real ( kind = 8 ) random_cosine
-  real ( kind = 8 ) random_sign
-  real ( kind = 8 ) random_sine
-  integer ( kind = 4 ) seed
+  integer(kind=4) i
+  real(kind=8) p(dim_num)
+  real(kind=8) pi
+  real(kind=8) r
+  real(kind=8) r8_uniform_01
+  real(kind=8) random_cosine
+  real(kind=8) random_sign
+  real(kind=8) random_sine
+  integer(kind=4) seed
 
   p(1) = 1.0D+00
   p(2:dim_num) = 0.0D+00
 
-  do i = 1, dim_num-1
+  do i = 1, dim_num - 1
 
-    r = r8_uniform_01 ( seed )
+    r = r8_uniform_01(seed)
     random_cosine = 2.0D+00 * r - 1.0D+00
-    r = r8_uniform_01 ( seed )
-    random_sign = real ( 2 * int ( 2.0D+00 * r ) - 1, kind = 8 )
-    r = r8_uniform_01 ( seed )
-    random_sine = random_sign * sqrt ( 1.0D+00 - random_cosine * random_cosine )
+    r = r8_uniform_01(seed)
+    random_sign = real(2 * int(2.0D+00 * r) - 1, kind=8)
+    r = r8_uniform_01(seed)
+    random_sine = random_sign * sqrt(1.0D+00 - random_cosine * random_cosine)
 
     pi = p(i)
-    p(i  ) = random_cosine * pi
-    p(i+1) = random_sine   * pi
+    p(i) = random_cosine * pi
+    p(i + 1) = random_sine * pi
 
   end do
 
-  r = r8_uniform_01 ( seed )
+  r = r8_uniform_01(seed)
 
-  r = r ** ( 1.0D+00 / real ( dim_num, kind = 8 ) )
+  r = r**(1.0D+00 / real(dim_num, kind=8))
 
   p(1:dim_num) = r * p(1:dim_num)
 
   return
 end
-function ball01_volume ( )
+function ball01_volume()
 
 !*****************************************************************************80
 !
@@ -1067,16 +1067,16 @@ function ball01_volume ( )
 !
   implicit none
 
-  real ( kind = 8 ) ball01_volume
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) ball01_volume
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
   r = 1.0D+00
-  ball01_volume = 4.0D+00 * r8_pi * r ** 3 / 3.0D+00
+  ball01_volume = 4.0D+00 * r8_pi * r**3 / 3.0D+00
 
   return
 end
-subroutine basis_map_3d ( u, v, a, ierror )
+subroutine basis_map_3d(u, v, a, ierror)
 
 !*****************************************************************************80
 !
@@ -1121,34 +1121,34 @@ subroutine basis_map_3d ( u, v, a, ierror )
 !
   implicit none
 
-  real ( kind = 8 ) a(3,3)
-  real ( kind = 8 ) b(3,3)
-  real ( kind = 8 ) c(3,3)
-  real ( kind = 8 ) det
-  integer ( kind = 4 ) ierror
-  real ( kind = 8 ) u(3,3)
-  real ( kind = 8 ) v(3,3)
+  real(kind=8) a(3, 3)
+  real(kind=8) b(3, 3)
+  real(kind=8) c(3, 3)
+  real(kind=8) det
+  integer(kind=4) ierror
+  real(kind=8) u(3, 3)
+  real(kind=8) v(3, 3)
 
   ierror = 0
 !
 !  Compute C = the inverse of [ U1 | U2 | U3 ].
 !
-  b(1:3,1:3) = u(1:3,1:3)
+  b(1:3, 1:3) = u(1:3, 1:3)
 
-  call r8mat_inverse_3d ( b, c, det )
+  call r8mat_inverse_3d(b, c, det)
 
-  if ( det == 0.0D+00 ) then
+  if (det == 0.0D+00) then
     ierror = 1
     return
   end if
 !
 !  A = [ V1 | V2 | V3 ] * inverse [ U1 | U2 | U3 ].
 !
-  a(1:3,1:3) = matmul ( v(1:3,1:3), c(1:3,1:3) )
+  a(1:3, 1:3) = matmul(v(1:3, 1:3), c(1:3, 1:3))
 
   return
 end
-function box_contains_point_2d ( p1, p2, p )
+function box_contains_point_2d(p1, p2, p)
 
 !*****************************************************************************80
 !
@@ -1186,15 +1186,15 @@ function box_contains_point_2d ( p1, p2, p )
 !
   implicit none
 
-  logical ( kind = 4 ) box_contains_point_2d
-  real ( kind = 8 ) p(2)
-  real ( kind = 8 ) p1(2)
-  real ( kind = 8 ) p2(2)
+  logical(kind=4) box_contains_point_2d
+  real(kind=8) p(2)
+  real(kind=8) p1(2)
+  real(kind=8) p2(2)
 
-  if ( p(1)  < p1(1) .or. &
-       p2(1) < p(1)  .or. &
-       p(2)  < p1(2) .or. &
-       p2(2) < p(2) ) then
+  if (p(1) < p1(1) .or. &
+      p2(1) < p(1) .or. &
+      p(2) < p1(2) .or. &
+      p2(2) < p(2)) then
     box_contains_point_2d = .false.
   else
     box_contains_point_2d = .true.
@@ -1202,7 +1202,7 @@ function box_contains_point_2d ( p1, p2, p )
 
   return
 end
-function box_contains_point_nd ( dim_num, p1, p2, p )
+function box_contains_point_nd(dim_num, p1, p2, p)
 
 !*****************************************************************************80
 !
@@ -1242,18 +1242,18 @@ function box_contains_point_nd ( dim_num, p1, p2, p )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  logical ( kind = 4 ) box_contains_point_nd
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
+  logical(kind=4) box_contains_point_nd
+  integer(kind=4) i
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
 
   box_contains_point_nd = .false.
 
   do i = 1, dim_num
-    if ( p(i) < p1(i) .or. p2(i) < p(i) ) then
+    if (p(i) < p1(i) .or. p2(i) < p(i)) then
       return
     end if
   end do
@@ -1262,7 +1262,7 @@ function box_contains_point_nd ( dim_num, p1, p2, p )
 
   return
 end
-function box_contains_segment_nd ( dim_num, p1, p2, pa, pb  )
+function box_contains_segment_nd(dim_num, p1, p2, pa, pb)
 
 !*****************************************************************************80
 !
@@ -1306,22 +1306,22 @@ function box_contains_segment_nd ( dim_num, p1, p2, pa, pb  )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  logical ( kind = 4 ) box_contains_segment_nd
-  logical ( kind = 4 ) box_contains_point_nd
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pa(dim_num)
-  real ( kind = 8 ) pb(dim_num)
+  logical(kind=4) box_contains_segment_nd
+  logical(kind=4) box_contains_point_nd
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pa(dim_num)
+  real(kind=8) pb(dim_num)
 
   box_contains_segment_nd = .false.
 
-  if ( .not. box_contains_point_nd ( dim_num, p1, p2, pa ) ) then
+  if (.not. box_contains_point_nd(dim_num, p1, p2, pa)) then
     return
   end if
 
-  if ( .not. box_contains_point_nd ( dim_num, p1, p2, pb ) ) then
+  if (.not. box_contains_point_nd(dim_num, p1, p2, pb)) then
     return
   end if
 
@@ -1329,7 +1329,7 @@ function box_contains_segment_nd ( dim_num, p1, p2, pa, pb  )
 
   return
 end
-subroutine box_ray_int_2d ( p1, p2, pa, pb, pint )
+subroutine box_ray_int_2d(p1, p2, pa, pb, pint)
 
 !*****************************************************************************80
 !
@@ -1372,55 +1372,55 @@ subroutine box_ray_int_2d ( p1, p2, pa, pb, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  logical ( kind = 4 ) inside
-  integer ( kind = 4 ) ival
-  real ( kind = 8 ) p1(2)
-  real ( kind = 8 ) p2(2)
-  real ( kind = 8 ) pa(2)
-  real ( kind = 8 ) pb(2)
-  real ( kind = 8 ) pc(2)
-  real ( kind = 8 ) pd(2)
-  real ( kind = 8 ) pint(2)
-  integer ( kind = 4 ) side
+  logical(kind=4) inside
+  integer(kind=4) ival
+  real(kind=8) p1(2)
+  real(kind=8) p2(2)
+  real(kind=8) pa(2)
+  real(kind=8) pb(2)
+  real(kind=8) pc(2)
+  real(kind=8) pd(2)
+  real(kind=8) pint(2)
+  integer(kind=4) side
 
   do side = 1, 4
 
-    if ( side == 1 ) then
-      pd(1:2) = (/ p1(1), p1(2) /)
-      pc(1:2) = (/ p2(1), p1(2) /)
-    else if ( side == 2 ) then
-      pd(1:2) = (/ p2(1), p1(2) /)
-      pc(1:2) = (/ p2(1), p2(2) /)
-    else if ( side == 3 ) then
-      pd(1:2) = (/ p2(1), p2(2) /)
-      pc(1:2) = (/ p1(1), p2(2) /)
-    else if ( side == 4 ) then
-      pd(1:2) = (/ p1(1), p2(2) /)
-      pc(1:2) = (/ p1(1), p1(2) /)
+    if (side == 1) then
+      pd(1:2) = (/p1(1), p1(2)/)
+      pc(1:2) = (/p2(1), p1(2)/)
+    else if (side == 2) then
+      pd(1:2) = (/p2(1), p1(2)/)
+      pc(1:2) = (/p2(1), p2(2)/)
+    else if (side == 3) then
+      pd(1:2) = (/p2(1), p2(2)/)
+      pc(1:2) = (/p1(1), p2(2)/)
+    else if (side == 4) then
+      pd(1:2) = (/p1(1), p2(2)/)
+      pc(1:2) = (/p1(1), p1(2)/)
     end if
 
-    call angle_contains_point_2d ( pc, pa, pd, pb, inside )
+    call angle_contains_point_2d(pc, pa, pd, pb, inside)
 
-    if ( inside ) then
+    if (inside) then
       exit
     end if
 
-    if ( side == 4 ) then
-      write ( *, '(a)' ) ' '
-      write ( *, '(a)' ) 'BOX_RAY_INT_2D - Fatal error!'
-      write ( *, '(a)' ) '  No intersection could be found.'
+    if (side == 4) then
+      write (*, '(a)') ' '
+      write (*, '(a)') 'BOX_RAY_INT_2D - Fatal error!'
+      write (*, '(a)') '  No intersection could be found.'
       stop 1
     end if
 
   end do
 
-  call lines_exp_int_2d ( pa, pb, pc, pd, ival, pint )
+  call lines_exp_int_2d(pa, pb, pc, pd, ival, pint)
 
   return
 end
-subroutine box_segment_clip_2d ( p1, p2, pa, pb, ival )
+subroutine box_segment_clip_2d(p1, p2, pa, pb, ival)
 
 !*****************************************************************************80
 !
@@ -1468,109 +1468,109 @@ subroutine box_segment_clip_2d ( p1, p2, pa, pb, ival )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  logical ( kind = 4 ) clip_a
-  logical ( kind = 4 ) clip_b
-  integer ( kind = 4 ) ival
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pa(dim_num)
-  real ( kind = 8 ) pb(dim_num)
-  real ( kind = 8 ) q(dim_num)
+  logical(kind=4) clip_a
+  logical(kind=4) clip_b
+  integer(kind=4) ival
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pa(dim_num)
+  real(kind=8) pb(dim_num)
+  real(kind=8) q(dim_num)
 
   clip_a = .false.
   clip_b = .false.
 !
 !  Require that XMIN <= X.
 !
-  if ( pa(1) < p1(1) .and. pb(1) < p1(1) ) then
+  if (pa(1) < p1(1) .and. pb(1) < p1(1)) then
     ival = -1
     return
   end if
 
-  if ( pa(1) < p1(1) .and. p1(1) <= pb(1) ) then
+  if (pa(1) < p1(1) .and. p1(1) <= pb(1)) then
     q(1) = p1(1)
-    q(2) = pa(2) + ( pb(2) - pa(2) ) * ( q(1) - pa(1) ) / ( pb(1) - pa(1) )
+    q(2) = pa(2) + (pb(2) - pa(2)) * (q(1) - pa(1)) / (pb(1) - pa(1))
     pa(1:2) = q(1:2)
     clip_a = .true.
-  else if ( p1(1) <= pa(1) .and. pb(1) < p1(1) ) then
+  else if (p1(1) <= pa(1) .and. pb(1) < p1(1)) then
     q(1) = p1(1)
-    q(2) = pa(2) + ( pb(2) - pa(2) ) * ( q(1) - pa(1) ) / ( pb(1) - pa(1) )
+    q(2) = pa(2) + (pb(2) - pa(2)) * (q(1) - pa(1)) / (pb(1) - pa(1))
     pb(1:2) = q(1:2)
     clip_b = .true.
   end if
 !
 !  Require that X <= XMAX.
 !
-  if ( p2(1) < pa(1) .and. p2(1) < pb(1) ) then
+  if (p2(1) < pa(1) .and. p2(1) < pb(1)) then
     ival = -1
     return
   end if
 
-  if ( p2(1) < pa(1) .and. pb(1) <= p2(1) ) then
+  if (p2(1) < pa(1) .and. pb(1) <= p2(1)) then
     q(1) = p2(1)
-    q(2) = pa(2) + ( pb(2) - pa(2) ) * ( q(1) - pa(1) ) / ( pb(1) - pa(1) )
+    q(2) = pa(2) + (pb(2) - pa(2)) * (q(1) - pa(1)) / (pb(1) - pa(1))
     pa(1:2) = q(1:2)
     clip_a = .true.
-  else if ( pa(1) <= p2(1) .and. p2(1) < pb(1) ) then
+  else if (pa(1) <= p2(1) .and. p2(1) < pb(1)) then
     q(1) = p2(1)
-    q(2) = pa(2) + ( pb(2) - pa(2) ) * ( q(1) - pa(1) ) / ( pb(1) - pa(1) )
+    q(2) = pa(2) + (pb(2) - pa(2)) * (q(1) - pa(1)) / (pb(1) - pa(1))
     pb(1:2) = q(1:2)
     clip_b = .true.
   end if
 !
 !  Require that YMIN <= Y.
 !
-  if ( pa(2) < p1(2) .and. pb(2) < p1(2) ) then
+  if (pa(2) < p1(2) .and. pb(2) < p1(2)) then
     ival = -1
     return
   end if
 
-  if ( pa(2) < p1(2) .and. p1(2) <= pb(2) ) then
+  if (pa(2) < p1(2) .and. p1(2) <= pb(2)) then
     q(2) = p1(2)
-    q(1) = pa(1) + ( pb(1) - pa(1) ) * ( q(2) - pa(2) ) / ( pb(2) - pa(2) )
+    q(1) = pa(1) + (pb(1) - pa(1)) * (q(2) - pa(2)) / (pb(2) - pa(2))
     pa(1:2) = q(1:2)
     clip_a = .true.
-  else if ( p1(2) <= pa(2) .and. pb(2) < p1(2) ) then
+  else if (p1(2) <= pa(2) .and. pb(2) < p1(2)) then
     q(2) = p1(2)
-    q(1) = pa(1) + ( pb(1) - pa(1) ) * ( q(2) - pa(2) ) / ( pb(2) - pa(2) )
+    q(1) = pa(1) + (pb(1) - pa(1)) * (q(2) - pa(2)) / (pb(2) - pa(2))
     pb(1:2) = q(1:2)
     clip_b = .true.
   end if
 !
 !  Require that Y <= YMAX.
 !
-  if ( p2(2) < pa(2) .and. p2(2) < pb(2) ) then
+  if (p2(2) < pa(2) .and. p2(2) < pb(2)) then
     ival = -1
     return
   end if
 
-  if ( p2(2) < pa(2) .and. pb(2) <= p2(2) ) then
+  if (p2(2) < pa(2) .and. pb(2) <= p2(2)) then
     q(2) = p2(2)
-    q(1) = pa(1) + ( pb(1) - pa(1) ) * ( q(2) - pa(2) ) / ( pb(2) - pa(2) )
+    q(1) = pa(1) + (pb(1) - pa(1)) * (q(2) - pa(2)) / (pb(2) - pa(2))
     pa(1:2) = q(1:2)
     clip_a = .true.
-  else if ( pa(2) <= p2(2) .and. p2(2) < pb(2) ) then
+  else if (pa(2) <= p2(2) .and. p2(2) < pb(2)) then
     q(2) = p2(2)
-    q(1) = pa(1) + ( pb(1) - pa(1) ) * ( p2(2) - pa(2) ) / ( pb(2) - pa(2) )
+    q(1) = pa(1) + (pb(1) - pa(1)) * (p2(2) - pa(2)) / (pb(2) - pa(2))
     pb(1:2) = q(1:2)
     clip_b = .true.
   end if
 
   ival = 0
 
-  if ( clip_a ) then
+  if (clip_a) then
     ival = ival + 1
   end if
 
-  if ( clip_b ) then
+  if (clip_b) then
     ival = ival + 2
   end if
 
   return
 end
-function box01_contains_point_2d ( p )
+function box01_contains_point_2d(p)
 
 !*****************************************************************************80
 !
@@ -1606,15 +1606,15 @@ function box01_contains_point_2d ( p )
 !
   implicit none
 
-  logical ( kind = 4 ) box01_contains_point_2d
-  real ( kind = 8 ) p(2)
+  logical(kind=4) box01_contains_point_2d
+  real(kind=8) p(2)
 
   box01_contains_point_2d = &
-    all ( 0.0D+00 <= p(1:2) ) .and. all ( p(1:2) <= 1.0D+00 )
+    all(0.0D+00 <= p(1:2)) .and. all(p(1:2) <= 1.0D+00)
 
   return
 end
-function box01_contains_point_nd ( dim_num, p )
+function box01_contains_point_nd(dim_num, p)
 
 !*****************************************************************************80
 !
@@ -1650,18 +1650,18 @@ function box01_contains_point_nd ( dim_num, p )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  logical ( kind = 4 ) box01_contains_point_nd
-  real ( kind = 8 ) p(dim_num)
+  logical(kind=4) box01_contains_point_nd
+  real(kind=8) p(dim_num)
 
   box01_contains_point_nd = &
-    all ( 0.0D+00 <= p(1:dim_num) ) .and. all ( p(1:dim_num) <= 1.0D+00 )
+    all(0.0D+00 <= p(1:dim_num)) .and. all(p(1:dim_num) <= 1.0D+00)
 
   return
 end
-subroutine circle_arc_point_near_2d ( r, pc, theta1, theta2, p, pn, &
-  dist )
+subroutine circle_arc_point_near_2d(r, pc, theta1, theta2, p, pn, &
+                                    dist)
 
 !*****************************************************************************80
 !
@@ -1711,65 +1711,65 @@ subroutine circle_arc_point_near_2d ( r, pc, theta1, theta2, p, pn, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r2
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ) r8_modp
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) r
+  real(kind=8) r2
+  real(kind=8) r8_atan
+  real(kind=8) r8_modp
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
 !
 !  Special case, the zero circle.
 !
-  if ( r == 0.0D+00 ) then
+  if (r == 0.0D+00) then
     pn(1:dim_num) = pc(1:dim_num)
-    dist = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+    dist = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
     return
   end if
 !
 !  Determine the angle made by the point.
 !
-  theta = r8_atan ( p(2) - pc(2), p(1) - pc(1) )
+  theta = r8_atan(p(2) - pc(2), p(1) - pc(1))
 !
 !  If the angle is between THETA1 and THETA2, then you can
 !  simply project the point onto the arc.
 !
-  if ( r8_modp ( theta  - theta1,  2.0D+00 * r8_pi ) <= &
-       r8_modp ( theta2 - theta1,  2.0D+00 * r8_pi ) ) then
+  if (r8_modp(theta - theta1, 2.0D+00 * r8_pi) <= &
+      r8_modp(theta2 - theta1, 2.0D+00 * r8_pi)) then
 
-    r2 = sqrt ( sum ( ( p(1:dim_num) - pc(1:dim_num) )**2 ) )
+    r2 = sqrt(sum((p(1:dim_num) - pc(1:dim_num))**2))
 
-    pn(1:dim_num) = pc(1:dim_num) + ( p(1:dim_num) - pc(1:dim_num) ) * r / r2
+    pn(1:dim_num) = pc(1:dim_num) + (p(1:dim_num) - pc(1:dim_num)) * r / r2
 !
 !  Otherwise, if the angle is less than the negative of the
 !  average of THETA1 and THETA2, it's on the side of the arc
 !  where the endpoint associated with THETA2 is closest.
 !
-  else if ( r8_modp ( theta - 0.5D+00 * ( theta1 + theta2 ), 2.0D+00 * r8_pi ) &
-    <= r8_pi ) then
+  else if (r8_modp(theta - 0.5D+00 * (theta1 + theta2), 2.0D+00 * r8_pi) &
+           <= r8_pi) then
 
-    pn(1:dim_num) = pc(1:dim_num) + r * (/ cos ( theta2 ), sin ( theta2 ) /)
+    pn(1:dim_num) = pc(1:dim_num) + r * (/cos(theta2), sin(theta2)/)
 !
 !  Otherwise, the endpoint associated with THETA1 is closest.
 !
   else
 
-    pn(1:dim_num) = pc(1:dim_num) + r * (/ cos ( theta1 ), sin ( theta1 ) /)
+    pn(1:dim_num) = pc(1:dim_num) + r * (/cos(theta1), sin(theta1)/)
 
   end if
 
-  dist = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
 
   return
 end
-subroutine circle_area_2d ( r, area )
+subroutine circle_area_2d(r, area)
 
 !*****************************************************************************80
 !
@@ -1795,15 +1795,15 @@ subroutine circle_area_2d ( r, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) area
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
   area = r8_pi * r * r
 
   return
 end
-subroutine circle_dia2imp_2d ( p1, p2, r, pc )
+subroutine circle_dia2imp_2d(p1, p2, r, pc)
 
 !*****************************************************************************80
 !
@@ -1842,20 +1842,20 @@ subroutine circle_dia2imp_2d ( p1, p2, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
 
-  r = 0.5D+00 * sqrt ( sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 ) )
+  r = 0.5D+00 * sqrt(sum((p2(1:dim_num) - p1(1:dim_num))**2))
 
-  pc(1:dim_num) = 0.5D+00 * ( p1(1:dim_num) + p2(1:dim_num) )
+  pc(1:dim_num) = 0.5D+00 * (p1(1:dim_num) + p2(1:dim_num))
 
   return
 end
-subroutine circle_exp_contains_point_2d ( p1, p2, p3, p, inside )
+subroutine circle_exp_contains_point_2d(p1, p2, p3, p, inside)
 
 !*****************************************************************************80
 !
@@ -1903,24 +1903,24 @@ subroutine circle_exp_contains_point_2d ( p1, p2, p3, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) det
-  real ( kind = 8 ) r8mat_det_4d
-  integer ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
+  real(kind=8) a(4, 4)
+  real(kind=8) det
+  real(kind=8) r8mat_det_4d
+  integer(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
 !
 !  P1 = P2?
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
-    if ( all ( p1(1:dim_num) == p3(1:dim_num) ) ) then
+    if (all(p1(1:dim_num) == p3(1:dim_num))) then
 
-      if ( all ( p1(1:dim_num) == p(1:dim_num) ) ) then
+      if (all(p1(1:dim_num) == p(1:dim_num))) then
         inside = 6
       else
         inside = 7
@@ -1928,10 +1928,10 @@ subroutine circle_exp_contains_point_2d ( p1, p2, p3, p, inside )
 
     else
 
-      det = ( p1(1) - p3(1) ) * ( p(2)  - p3(2) ) &
-          - ( p(1)  - p3(1) ) * ( p1(2) - p3(2) )
+      det = (p1(1) - p3(1)) * (p(2) - p3(2)) &
+            - (p(1) - p3(1)) * (p1(2) - p3(2))
 
-      if ( det == 0.0D+00 ) then
+      if (det == 0.0D+00) then
         inside = 4
       else
         inside = 5
@@ -1944,12 +1944,12 @@ subroutine circle_exp_contains_point_2d ( p1, p2, p3, p, inside )
 !
 !  P1 does not equal P2.  Does P1 = P3?
 !
-  if ( all ( p1(1:dim_num) == p3(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p3(1:dim_num))) then
 
-    det = ( p1(1) - p2(1) ) * ( p(2)  - p2(2) ) &
-        - ( p(1)  - p2(1) ) * ( p1(2) - p2(2) )
+    det = (p1(1) - p2(1)) * (p(2) - p2(2)) &
+          - (p(1) - p2(1)) * (p1(2) - p2(2))
 
-    if ( det == 0.0D+00 ) then
+    if (det == 0.0D+00) then
       inside = 4
     else
       inside = 5
@@ -1961,15 +1961,15 @@ subroutine circle_exp_contains_point_2d ( p1, p2, p3, p, inside )
 !
 !  The points are distinct.  Are they colinear?
 !
-  det = ( p1(1) - p2(1) ) * ( p3(2) - p2(2) ) &
-      - ( p3(1) - p2(1) ) * ( p1(2) - p2(2) )
+  det = (p1(1) - p2(1)) * (p3(2) - p2(2)) &
+        - (p3(1) - p2(1)) * (p1(2) - p2(2))
 
-  if ( det == 0.0D+00 ) then
+  if (det == 0.0D+00) then
 
-    det = ( p1(1) - p2(1) ) * ( p(2)  - p2(2) ) &
-        - ( p(1)  - p2(1) ) * ( p1(2) - p2(2) )
+    det = (p1(1) - p2(1)) * (p(2) - p2(2)) &
+          - (p(1) - p2(1)) * (p1(2) - p2(2))
 
-    if ( det == 0.0D+00 ) then
+    if (det == 0.0D+00) then
       inside = 2
     else
       inside = 3
@@ -1983,31 +1983,31 @@ subroutine circle_exp_contains_point_2d ( p1, p2, p3, p, inside )
 !
 !  Compute the determinant
 !
-  a(1,1) = p1(1)
-  a(1,2) = p1(2)
-  a(1,3) = p1(1) * p1(1) + p1(2) * p1(2)
-  a(1,4) = 1.0D+00
+  a(1, 1) = p1(1)
+  a(1, 2) = p1(2)
+  a(1, 3) = p1(1) * p1(1) + p1(2) * p1(2)
+  a(1, 4) = 1.0D+00
 
-  a(2,1) = p2(1)
-  a(2,2) = p2(2)
-  a(2,3) = p2(1) * p2(1) + p2(2) * p2(2)
-  a(2,4) = 1.0D+00
+  a(2, 1) = p2(1)
+  a(2, 2) = p2(2)
+  a(2, 3) = p2(1) * p2(1) + p2(2) * p2(2)
+  a(2, 4) = 1.0D+00
 
-  a(3,1) = p3(1)
-  a(3,2) = p3(2)
-  a(3,3) = p3(1) * p3(1) + p3(2) * p3(2)
-  a(3,4) = 1.0D+00
+  a(3, 1) = p3(1)
+  a(3, 2) = p3(2)
+  a(3, 3) = p3(1) * p3(1) + p3(2) * p3(2)
+  a(3, 4) = 1.0D+00
 
-  a(4,1) = p(1)
-  a(4,2) = p(2)
-  a(4,3) = p(1) * p(1) + p(2) * p(2)
-  a(4,4) = 1.0D+00
+  a(4, 1) = p(1)
+  a(4, 2) = p(2)
+  a(4, 3) = p(1) * p(1) + p(2) * p(2)
+  a(4, 4) = 1.0D+00
 
-  det = r8mat_det_4d ( a )
+  det = r8mat_det_4d(a)
 
-  if ( det < 0.0D+00 ) then
+  if (det < 0.0D+00) then
     inside = 1
-  else if ( det == 0.0D+00 ) then
+  else if (det == 0.0D+00) then
     inside = 0
   else
     inside = -1
@@ -2015,7 +2015,7 @@ subroutine circle_exp_contains_point_2d ( p1, p2, p3, p, inside )
 
   return
 end
-subroutine circle_exp2imp_2d ( p1, p2, p3, r, pc )
+subroutine circle_exp2imp_2d(p1, p2, p3, r, pc)
 
 !*****************************************************************************80
 !
@@ -2085,22 +2085,22 @@ subroutine circle_exp2imp_2d ( p1, p2, p3, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) e
-  real ( kind = 8 ) f
-  real ( kind = 8 ) g
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) e
+  real(kind=8) f
+  real(kind=8) g
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
 !
 !  If all three points are equal, then the
 !  circle of radius 0 and center P1 passes through the points.
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) .and. &
-       all ( p1(1:dim_num) == p3(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num)) .and. &
+      all(p1(1:dim_num) == p3(1:dim_num))) then
     r = 0.0D+00
     pc(1:dim_num) = p1(1:dim_num)
     return
@@ -2109,22 +2109,22 @@ subroutine circle_exp2imp_2d ( p1, p2, p3, r, pc )
 !  If exactly two points are equal, then the circle is defined as
 !  having the obvious radius and center.
 !
-       if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
-    r = 0.5D+00 * sqrt ( sum ( ( p1(1:dim_num) - p3(1:dim_num) )**2 ) )
-    pc(1:dim_num) = 0.5D+00 * ( p1(1:dim_num) + p3(1:dim_num)  )
+    r = 0.5D+00 * sqrt(sum((p1(1:dim_num) - p3(1:dim_num))**2))
+    pc(1:dim_num) = 0.5D+00 * (p1(1:dim_num) + p3(1:dim_num))
     return
 
-  else if ( all ( p1(1:dim_num) == p3(1:dim_num) ) ) then
+  else if (all(p1(1:dim_num) == p3(1:dim_num))) then
 
-    r = 0.5D+00 * sqrt ( sum ( ( p1(1:dim_num) - p2(1:dim_num) )**2 ) )
-    pc(1:dim_num) = 0.5D+00 * ( p1(1:dim_num) + p2(1:dim_num)  )
+    r = 0.5D+00 * sqrt(sum((p1(1:dim_num) - p2(1:dim_num))**2))
+    pc(1:dim_num) = 0.5D+00 * (p1(1:dim_num) + p2(1:dim_num))
     return
 
-  else if ( all ( p2(1:dim_num) == p3(1:dim_num) ) ) then
+  else if (all(p2(1:dim_num) == p3(1:dim_num))) then
 
-    r = 0.5D+00 * sqrt ( sum ( ( p1(1:dim_num) - p2(1:dim_num) )**2 ) )
-    pc(1:dim_num) = 0.5D+00 * ( p1(1:dim_num) + p2(1:dim_num)  )
+    r = 0.5D+00 * sqrt(sum((p1(1:dim_num) - p2(1:dim_num))**2))
+    pc(1:dim_num) = 0.5D+00 * (p1(1:dim_num) + p2(1:dim_num))
     return
 
   end if
@@ -2132,33 +2132,33 @@ subroutine circle_exp2imp_2d ( p1, p2, p3, r, pc )
 !  We check for collinearity.  A more useful check would compare the
 !  absolute value of G to a small quantity.
 !
-  e = ( p2(1) - p1(1) ) * ( p1(1) + p2(1) ) &
-    + ( p2(2) - p1(2) ) * ( p1(2) + p2(2) )
+  e = (p2(1) - p1(1)) * (p1(1) + p2(1)) &
+      + (p2(2) - p1(2)) * (p1(2) + p2(2))
 
-  f = ( p3(1) - p1(1) ) * ( p1(1) + p3(1) ) &
-    + ( p3(2) - p1(2) ) * ( p1(2) + p3(2) )
+  f = (p3(1) - p1(1)) * (p1(1) + p3(1)) &
+      + (p3(2) - p1(2)) * (p1(2) + p3(2))
 
-  g = ( p2(1) - p1(1) ) * ( p3(2) - p2(2) ) &
-    - ( p2(2) - p1(2) ) * ( p3(1) - p2(1) )
+  g = (p2(1) - p1(1)) * (p3(2) - p2(2)) &
+      - (p2(2) - p1(2)) * (p3(1) - p2(1))
 
-  if ( g == 0.0D+00 ) then
-    pc(1:2) = (/ 0.0D+00, 0.0D+00 /)
+  if (g == 0.0D+00) then
+    pc(1:2) = (/0.0D+00, 0.0D+00/)
     r = -1.0D+00
     return
   end if
 !
 !  The center is halfway along the diameter vector from P1.
 !
-  pc(1) = 0.5D+00 * ( ( p3(2) - p1(2) ) * e - ( p2(2) - p1(2) ) * f ) / g
-  pc(2) = 0.5D+00 * ( ( p2(1) - p1(1) ) * f - ( p3(1) - p1(1) ) * e ) / g
+  pc(1) = 0.5D+00 * ((p3(2) - p1(2)) * e - (p2(2) - p1(2)) * f) / g
+  pc(2) = 0.5D+00 * ((p2(1) - p1(1)) * f - (p3(1) - p1(1)) * e) / g
 !
 !  Knowing the center, the radius is now easy to compute.
 !
-  r = sqrt ( sum ( ( p1(1:dim_num) - pc(1:dim_num) )**2 ) )
+  r = sqrt(sum((p1(1:dim_num) - pc(1:dim_num))**2))
 
   return
 end
-subroutine circle_imp_contains_point_2d ( r, pc, p, inside )
+subroutine circle_imp_contains_point_2d(r, pc, p, inside)
 
 !*****************************************************************************80
 !
@@ -2195,15 +2195,15 @@ subroutine circle_imp_contains_point_2d ( r, pc, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
+  logical(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
 
-  if ( ( p(1) - pc(1) ) * ( p(1) - pc(1) ) &
-     + ( p(2) - pc(2) ) * ( p(2) - pc(2) ) <= r * r ) then
+  if ((p(1) - pc(1)) * (p(1) - pc(1)) &
+      + (p(2) - pc(2)) * (p(2) - pc(2)) <= r * r) then
     inside = .true.
   else
     inside = .false.
@@ -2211,7 +2211,7 @@ subroutine circle_imp_contains_point_2d ( r, pc, p, inside )
 
   return
 end
-subroutine circle_imp_line_exp_dist_2d ( r, pc, p1, p2, dist )
+subroutine circle_imp_line_exp_dist_2d(r, pc, p1, p2, dist)
 
 !*****************************************************************************80
 !
@@ -2256,25 +2256,25 @@ subroutine circle_imp_line_exp_dist_2d ( r, pc, p1, p2, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) dist
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
 
-  call line_exp_point_dist_2d ( p1, p2, pc, dist )
+  call line_exp_point_dist_2d(p1, p2, pc, dist)
 
   dist = dist - r
 
-  if ( dist < 0.0D+00 ) then
+  if (dist < 0.0D+00) then
     dist = 0.0D+00
   end if
 
   return
 end
-subroutine circle_imp_line_par_int_2d ( r, pc, x0, y0, f, g, int_num, p )
+subroutine circle_imp_line_par_int_2d(r, pc, x0, y0, f, g, int_num, p)
 
 !*****************************************************************************80
 !
@@ -2321,55 +2321,55 @@ subroutine circle_imp_line_par_int_2d ( r, pc, x0, y0, f, g, int_num, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) f
-  real ( kind = 8 ) g
-  integer ( kind = 4 ) int_num
-  real ( kind = 8 ) p(dim_num,2)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) root
-  real ( kind = 8 ) t
-  real ( kind = 8 ) x0
-  real ( kind = 8 ) y0
+  real(kind=8) f
+  real(kind=8) g
+  integer(kind=4) int_num
+  real(kind=8) p(dim_num, 2)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) root
+  real(kind=8) t
+  real(kind=8) x0
+  real(kind=8) y0
 
-  root = r * r * ( f * f + g * g ) - ( f * ( pc(2) - y0 ) &
-    - g * ( pc(1) - x0 ) )**2
+  root = r * r * (f * f + g * g) - (f * (pc(2) - y0) &
+                                    - g * (pc(1) - x0))**2
 
-  if ( root < 0.0D+00 ) then
+  if (root < 0.0D+00) then
 
     int_num = 0
 
-  else if ( root == 0.0D+00 ) then
+  else if (root == 0.0D+00) then
 
     int_num = 1
 
-    t = ( f * ( pc(1) - x0 ) + g * ( pc(2) - y0 ) ) / ( f * f + g * g )
-    p(1,1) = x0 + f * t
-    p(2,1) = y0 + g * t
+    t = (f * (pc(1) - x0) + g * (pc(2) - y0)) / (f * f + g * g)
+    p(1, 1) = x0 + f * t
+    p(2, 1) = y0 + g * t
 
-  else if ( 0.0D+00 < root ) then
+  else if (0.0D+00 < root) then
 
     int_num = 2
 
-    t = ( ( f * ( pc(1) - x0 ) + g * ( pc(2) - y0 ) ) &
-      - sqrt ( root ) ) / ( f * f + g * g )
+    t = ((f * (pc(1) - x0) + g * (pc(2) - y0)) &
+         - sqrt(root)) / (f * f + g * g)
 
-    p(1,1) = x0 + f * t
-    p(2,1) = y0 + g * t
+    p(1, 1) = x0 + f * t
+    p(2, 1) = y0 + g * t
 
-    t = ( ( f * ( pc(1) - x0 ) + g * ( pc(2) - y0 ) ) &
-      + sqrt ( root ) ) / ( f * f + g * g )
+    t = ((f * (pc(1) - x0) + g * (pc(2) - y0)) &
+         + sqrt(root)) / (f * f + g * g)
 
-    p(1,2) = x0 + f * t
-    p(2,2) = y0 + g * t
+    p(1, 2) = x0 + f * t
+    p(2, 2) = y0 + g * t
 
   end if
 
   return
 end
-subroutine circle_imp_point_dist_2d ( r, pc, p, dist )
+subroutine circle_imp_point_dist_2d(r, pc, p, dist)
 
 !*****************************************************************************80
 !
@@ -2407,21 +2407,21 @@ subroutine circle_imp_point_dist_2d ( r, pc, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r2
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) r2
 
-  r2 = sqrt ( sum ( ( p(1:2) - pc(1:2) )**2 ) )
+  r2 = sqrt(sum((p(1:2) - pc(1:2))**2))
 
-  dist = abs ( r2 - r )
+  dist = abs(r2 - r)
 
   return
 end
-subroutine circle_imp_point_dist_signed_2d ( r, pc, p, dist )
+subroutine circle_imp_point_dist_signed_2d(r, pc, p, dist)
 
 !*****************************************************************************80
 !
@@ -2462,21 +2462,21 @@ subroutine circle_imp_point_dist_signed_2d ( r, pc, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r2
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) r2
 
-  r2 = sqrt ( sum ( ( p(1:dim_num) - pc(1:dim_num) )**2 ) )
+  r2 = sqrt(sum((p(1:dim_num) - pc(1:dim_num))**2))
 
   dist = r2 - r
 
   return
 end
-subroutine circle_imp_point_near_2d ( r, pc, p, pn, dist )
+subroutine circle_imp_point_near_2d(r, pc, p, pn, dist)
 
 !*****************************************************************************80
 !
@@ -2521,30 +2521,30 @@ subroutine circle_imp_point_near_2d ( r, pc, p, pn, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r2
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) r
+  real(kind=8) r2
 
-  if ( all ( p(1:dim_num) == pc(1:dim_num) ) ) then
+  if (all(p(1:dim_num) == pc(1:dim_num))) then
     dist = r
-    pn(1:dim_num) = pc(1:dim_num) + r / sqrt ( real ( dim_num, kind = 8 ) )
+    pn(1:dim_num) = pc(1:dim_num) + r / sqrt(real(dim_num, kind=8))
     return
   end if
 
-  r2 = sqrt ( sum ( ( p(1:dim_num) - pc(1:dim_num) )**2 ) )
+  r2 = sqrt(sum((p(1:dim_num) - pc(1:dim_num))**2))
 
-  dist = abs (  r2 - r )
+  dist = abs(r2 - r)
 
-  pn(1:dim_num) = pc(1:dim_num) + r * ( p(1:dim_num) - pc(1:dim_num) ) / r2
+  pn(1:dim_num) = pc(1:dim_num) + r * (p(1:dim_num) - pc(1:dim_num)) / r2
 
   return
 end
-subroutine circle_imp_points_2d ( r, pc, n, p )
+subroutine circle_imp_points_2d(r, pc, n, p)
 
 !*****************************************************************************80
 !
@@ -2585,24 +2585,24 @@ subroutine circle_imp_points_2d ( r, pc, n, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) p(2,n)
-  real ( kind = 8 ) pc(2)
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
+  integer(kind=4) j
+  real(kind=8) p(2, n)
+  real(kind=8) pc(2)
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
 
   do j = 1, n
-    theta = 2.0D+00 * r8_pi * real ( j - 1, kind = 8 ) / real ( n, kind = 8 )
-    p(1:dim_num,j) = pc(1:dim_num) + r * (/ cos ( theta ), sin ( theta ) /)
+    theta = 2.0D+00 * r8_pi * real(j - 1, kind=8) / real(n, kind=8)
+    p(1:dim_num, j) = pc(1:dim_num) + r * (/cos(theta), sin(theta)/)
   end do
 
   return
 end
-subroutine circle_imp_points_3d ( r, pc, nc, n, p )
+subroutine circle_imp_points_3d(r, pc, nc, n, p)
 
 !*****************************************************************************80
 !
@@ -2652,40 +2652,40 @@ subroutine circle_imp_points_3d ( r, pc, nc, n, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 3
 
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) n1(dim_num)
-  real ( kind = 8 ) n2(dim_num)
-  real ( kind = 8 ) nc(dim_num)
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
+  integer(kind=4) j
+  real(kind=8) n1(dim_num)
+  real(kind=8) n2(dim_num)
+  real(kind=8) nc(dim_num)
+  real(kind=8) p(dim_num, n)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
 !
 !  Get two unit vectors N1 and N2 which are orthogonal to each other,
 !  and to NC.
 !
-  call plane_normal_basis_3d ( pc, nc, n1, n2 )
+  call plane_normal_basis_3d(pc, nc, n1, n2)
 !
 !  Rotate R units away from PC in the plane of N1 and N2.
 !
   do j = 1, n
 
-    theta = ( 2.0D+00 * r8_pi * real ( j - 1, kind = 8 ) ) &
-      / real ( n, kind = 8 )
+    theta = (2.0D+00 * r8_pi * real(j - 1, kind=8)) &
+            / real(n, kind=8)
 
-    p(1:dim_num,j) = pc(1:dim_num) &
-      + r * ( cos ( theta ) * n1(1:dim_num) &
-            + sin ( theta ) * n2(1:dim_num) )
+    p(1:dim_num, j) = pc(1:dim_num) &
+                      + r * (cos(theta) * n1(1:dim_num) &
+                             + sin(theta) * n2(1:dim_num))
 
   end do
 
   return
 end
-subroutine circle_imp_points_arc_2d ( r, pc, theta1, theta2, n, p )
+subroutine circle_imp_points_arc_2d(r, pc, theta1, theta2, n, p)
 
 !*****************************************************************************80
 !
@@ -2732,42 +2732,42 @@ subroutine circle_imp_points_arc_2d ( r, pc, theta1, theta2, n, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_modp
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
-  real ( kind = 8 ) theta3
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) pc(dim_num)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r
+  real(kind=8) r8_modp
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
+  real(kind=8) theta3
 !
 !  THETA3 is the smallest angle, no less than THETA1, which
 !  coincides with THETA2.
 !
-  theta3 = theta1 + r8_modp ( theta2 - theta1, 2.0D+00 * r8_pi )
+  theta3 = theta1 + r8_modp(theta2 - theta1, 2.0D+00 * r8_pi)
 
   do i = 1, n
 
-    if ( 1 < n ) then
-      theta = ( real ( n - i,     kind = 8 ) * theta1   &
-              + real (     i - 1, kind = 8 ) * theta3 ) &
-              / real ( n     - 1, kind = 8 )
+    if (1 < n) then
+      theta = (real(n - i, kind=8) * theta1 &
+               + real(i - 1, kind=8) * theta3) &
+              / real(n - 1, kind=8)
     else
-      theta = 0.5D+00 * ( theta1 + theta3 )
+      theta = 0.5D+00 * (theta1 + theta3)
     end if
 
-    p(1:dim_num,i) = pc(1:dim_num) + r * (/ cos ( theta ), sin ( theta ) /)
+    p(1:dim_num, i) = pc(1:dim_num) + r * (/cos(theta), sin(theta)/)
 
   end do
 
   return
 end
-subroutine circle_imp_print_2d ( r, pc, title )
+subroutine circle_imp_print_2d(r, pc, title)
 
 !*****************************************************************************80
 !
@@ -2801,21 +2801,21 @@ subroutine circle_imp_print_2d ( r, pc, title )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  character ( len = * ) title
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
-  write ( *, '(a)'        ) ' '
-  write ( *, '(a,g14.6)'  ) '  Radius = ', r
-  write ( *, '(a,2g14.6)' ) '  Center = ', pc(1:dim_num)
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
+  write (*, '(a)') ' '
+  write (*, '(a,g14.6)') '  Radius = ', r
+  write (*, '(a,2g14.6)') '  Center = ', pc(1:dim_num)
 
   return
 end
-subroutine circle_imp_print_3d ( r, pc, nc, title )
+subroutine circle_imp_print_3d(r, pc, nc, title)
 
 !*****************************************************************************80
 !
@@ -2859,23 +2859,23 @@ subroutine circle_imp_print_3d ( r, pc, nc, title )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) nc(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  character ( len = * )  title
+  real(kind=8) nc(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
-  write ( *, '(a)'        ) ' '
-  write ( *, '(a,g14.6)'  ) '  Radius = ', r
-  write ( *, '(a,3g14.6)' ) '  Center = ', pc(1:dim_num)
-  write ( *, '(a,3g14.6)' ) '  Normal = ', nc(1:dim_num)
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
+  write (*, '(a)') ' '
+  write (*, '(a,g14.6)') '  Radius = ', r
+  write (*, '(a,3g14.6)') '  Center = ', pc(1:dim_num)
+  write (*, '(a,3g14.6)') '  Normal = ', nc(1:dim_num)
 
   return
 end
-subroutine circle_imp2exp_2d ( r, pc, p1, p2, p3 )
+subroutine circle_imp2exp_2d(r, pc, p1, p2, p3)
 
 !*****************************************************************************80
 !
@@ -2920,31 +2920,31 @@ subroutine circle_imp2exp_2d ( r, pc, p1, p2, p3 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r
+  real(kind=8) theta
 
   theta = 0.0D+00
-  p1(1) = pc(1) + r * cos ( theta )
-  p1(2) = pc(2) + r * sin ( theta )
+  p1(1) = pc(1) + r * cos(theta)
+  p1(2) = pc(2) + r * sin(theta)
 
   theta = 2.0D+00 * r8_pi / 3.0D+00
-  p2(1) = pc(1) + r * cos ( theta )
-  p2(2) = pc(2) + r * sin ( theta )
+  p2(1) = pc(1) + r * cos(theta)
+  p2(2) = pc(2) + r * sin(theta)
 
   theta = 4.0D+00 * r8_pi / 3.0D+00
-  p3(1) = pc(1) + r * cos ( theta )
-  p3(2) = pc(2) + r * sin ( theta )
+  p3(1) = pc(1) + r * cos(theta)
+  p3(2) = pc(2) + r * sin(theta)
 
   return
 end
-subroutine circle_llr2imp_2d ( p1, p2, q1, q2, r, pc )
+subroutine circle_llr2imp_2d(p1, p2, q1, q2, r, pc)
 
 !*****************************************************************************80
 !
@@ -3006,62 +3006,62 @@ subroutine circle_llr2imp_2d ( p1, p2, q1, q2, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a(2,2)
-  real ( kind = 8 ) b(2)
-  real ( kind = 8 ) det
-  real ( kind = 8 ) n1(dim_num)
-  real ( kind = 8 ) n2(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pc(dim_num,4)
-  real ( kind = 8 ) q1(dim_num)
-  real ( kind = 8 ) q2(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) x(dim_num)
+  real(kind=8) a(2, 2)
+  real(kind=8) b(2)
+  real(kind=8) det
+  real(kind=8) n1(dim_num)
+  real(kind=8) n2(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pc(dim_num, 4)
+  real(kind=8) q1(dim_num)
+  real(kind=8) q2(dim_num)
+  real(kind=8) r
+  real(kind=8) x(dim_num)
 !
 !  Compute the normals N1 and N2.
 !
-  call line_exp_normal_2d ( p1, p2, n1 )
+  call line_exp_normal_2d(p1, p2, n1)
 
-  call line_exp_normal_2d ( q1, q2, n2 )
+  call line_exp_normal_2d(q1, q2, n2)
 !
 !  Set the linear system.
 !
-  a(1:2,1) =   p2(1:2) - p1(1:2)
-  a(1:2,2) = - q2(1:2) + q1(1:2)
+  a(1:2, 1) = p2(1:2) - p1(1:2)
+  a(1:2, 2) = -q2(1:2) + q1(1:2)
 !
 !  Solve the 4 linear systems, using every combination of
 !  signs on the normal vectors.
 !
-  b(1:2) = - p1(1:2) + q1(1:2) + r * n1(1:2) + r * n2(1:2)
+  b(1:2) = -p1(1:2) + q1(1:2) + r * n1(1:2) + r * n2(1:2)
 
-  call r8mat_solve_2d ( a, b, det, x )
+  call r8mat_solve_2d(a, b, det, x)
 
-  pc(1:2,1) = p1(1:2) + ( p2(1:2) - p1(1:2) ) * x(1) - r * n1(1:2)
+  pc(1:2, 1) = p1(1:2) + (p2(1:2) - p1(1:2)) * x(1) - r * n1(1:2)
 
-  b(1:2) = - p1(1:2) + q1(1:2) + r * n1(1:2) - r * n2(1:2)
+  b(1:2) = -p1(1:2) + q1(1:2) + r * n1(1:2) - r * n2(1:2)
 
-  call r8mat_solve_2d ( a, b, det, x )
+  call r8mat_solve_2d(a, b, det, x)
 
-  pc(1:2,2) = p1(1:2) + ( p2(1:2) - p1(1:2) ) * x(1) - r * n1(1:2)
+  pc(1:2, 2) = p1(1:2) + (p2(1:2) - p1(1:2)) * x(1) - r * n1(1:2)
 
-  b(1:2) = - p1(1:2) + q1(1:2) - r * n1(1:2) + r * n2(1:2)
+  b(1:2) = -p1(1:2) + q1(1:2) - r * n1(1:2) + r * n2(1:2)
 
-  call r8mat_solve_2d ( a, b, det, x )
+  call r8mat_solve_2d(a, b, det, x)
 
-  pc(1:2,3) = p1(1:2) + ( p2(1:2) - p1(1:2) ) * x(1) + r * n1(1:2)
+  pc(1:2, 3) = p1(1:2) + (p2(1:2) - p1(1:2)) * x(1) + r * n1(1:2)
 
-  b(1:2) = - p1(1:2) + q1(1:2) - r * n1(1:2) - r * n2(1:2)
+  b(1:2) = -p1(1:2) + q1(1:2) - r * n1(1:2) - r * n2(1:2)
 
-  call r8mat_solve_2d ( a, b, det, x )
+  call r8mat_solve_2d(a, b, det, x)
 
-  pc(1:2,4) = p1(1:2) + ( p2(1:2) - p1(1:2) ) * x(1) + r * n1(1:2)
+  pc(1:2, 4) = p1(1:2) + (p2(1:2) - p1(1:2)) * x(1) + r * n1(1:2)
 
   return
 end
-subroutine circle_lune_angle_by_height_2d ( r, h, angle )
+subroutine circle_lune_angle_by_height_2d(r, h, angle)
 
 !*****************************************************************************80
 !
@@ -3102,19 +3102,19 @@ subroutine circle_lune_angle_by_height_2d ( r, h, angle )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) h
-  real ( kind = 8 ) r
+  real(kind=8) angle
+  real(kind=8) h
+  real(kind=8) r
 
-  if ( -r <= h .and. h <= r ) then
-    angle = 2.0D+00 * acos ( h / r );
+  if (-r <= h .and. h <= r) then
+    angle = 2.0D+00 * acos(h / r);
   else
     angle = 0.0D+00
   end if
 
   return
 end
-subroutine circle_lune_area_by_angle_2d ( r, pc, theta1, theta2, area )
+subroutine circle_lune_area_by_angle_2d(r, pc, theta1, theta2, area)
 
 !*****************************************************************************80
 !
@@ -3149,24 +3149,24 @@ subroutine circle_lune_area_by_angle_2d ( r, pc, theta1, theta2, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) area_sector
-  real ( kind = 8 ) area_triangle
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) area
+  real(kind=8) area_sector
+  real(kind=8) area_triangle
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) theta1
+  real(kind=8) theta2
 
-  call circle_sector_area_2d ( r, pc, theta1, theta2, area_sector )
-  call circle_triangle_area_2d ( r, pc, theta1, theta2, area_triangle )
+  call circle_sector_area_2d(r, pc, theta1, theta2, area_sector)
+  call circle_triangle_area_2d(r, pc, theta1, theta2, area_triangle)
 
   area = area_sector - area_triangle
 
   return
 end
-subroutine circle_lune_area_by_height_2d ( r, h )
+subroutine circle_lune_area_by_height_2d(r, h)
 
 !*****************************************************************************80
 !
@@ -3207,21 +3207,21 @@ subroutine circle_lune_area_by_height_2d ( r, h )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) h
-  real ( kind = 8 ) r
+  real(kind=8) area
+  real(kind=8) h
+  real(kind=8) r
 
-  if ( -r <= h .and. h <= r ) then
-    area = r ** 2 * acos ( h / r ) - h * sqrt ( r ** 2 - h ** 2 )
+  if (-r <= h .and. h <= r) then
+    area = r**2 * acos(h / r) - h * sqrt(r**2 - h**2)
   else
     area = 0.0D+00
   end if
 
   return
 end
-subroutine circle_lune_centroid_2d ( r, pc, theta1, theta2, centroid )
+subroutine circle_lune_centroid_2d(r, pc, theta1, theta2, centroid)
 
 !*****************************************************************************80
 !
@@ -3264,31 +3264,31 @@ subroutine circle_lune_centroid_2d ( r, pc, theta1, theta2, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) centroid(dim_num)
-  real ( kind = 8 ) d
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) centroid(dim_num)
+  real(kind=8) d
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
 
   theta = theta2 - theta1
 
-  if ( theta == 0.0D+00 ) then
+  if (theta == 0.0D+00) then
     d = r
   else
-    d = 4.0D+00 * r * ( sin ( 0.5D+00 * theta ) )**3 / &
-      ( 3.0D+00 * ( theta - sin ( theta ) ) )
+    d = 4.0D+00 * r * (sin(0.5D+00 * theta))**3 / &
+        (3.0D+00 * (theta - sin(theta)))
   end if
 
-  centroid(1:2) = (/ pc(1) + d * cos ( theta ), &
-                     pc(2) + d * sin ( theta ) /)
+  centroid(1:2) = (/pc(1) + d * cos(theta), &
+                    pc(2) + d * sin(theta)/)
 
   return
 end
-subroutine circle_lune_height_by_angle_2d ( r, angle, height )
+subroutine circle_lune_height_by_angle_2d(r, angle, height)
 
 !*****************************************************************************80
 !
@@ -3325,15 +3325,15 @@ subroutine circle_lune_height_by_angle_2d ( r, angle, height )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  real  ( kind = 8 ) height
-  real  ( kind = 8 ) r
+  real(kind=8) angle
+  real(kind=8) height
+  real(kind=8) r
 
-  height = r * cos ( angle / 2.0D+00 )
+  height = r * cos(angle / 2.0D+00)
 
   return
 end
-subroutine circle_pppr2imp_3d ( p1, p2, p3, r, pc, normal )
+subroutine circle_pppr2imp_3d(p1, p2, p3, r, pc, normal)
 
 !*****************************************************************************80
 !
@@ -3393,37 +3393,37 @@ subroutine circle_pppr2imp_3d ( p1, p2, p3, r, pc, normal )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dot
-  real ( kind = 8 ) h
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) length
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pc(dim_num,2)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) v(dim_num)
+  real(kind=8) dist
+  real(kind=8) dot
+  real(kind=8) h
+  integer(kind=4) j
+  real(kind=8) length
+  real(kind=8) normal(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pc(dim_num, 2)
+  real(kind=8) r
+  real(kind=8) v(dim_num)
 !
 !  Compute the distance from P1 to P2.
 !
-  dist = sqrt ( sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p2(1:dim_num) - p1(1:dim_num))**2))
 !
 !  If R is smaller than DIST, we don't have a circle.
 !
-  if ( 2.0D+00 * r < dist ) then
+  if (2.0D+00 * r < dist) then
     do j = 1, 2
-      pc(1:dim_num,j) = 0.5D+00 * ( p1(1:dim_num) + p2(1:dim_num) )
+      pc(1:dim_num, j) = 0.5D+00 * (p1(1:dim_num) + p2(1:dim_num))
     end do
     return
   end if
 !
 !  H is the distance from the midpoint of (P1,P2) to the center.
 !
-  h = sqrt ( ( r + 0.5D+00 * dist ) * ( r - 0.5D+00 * dist ) )
+  h = sqrt((r + 0.5D+00 * dist) * (r - 0.5D+00 * dist))
 !
 !  Define a unit direction V that is normal to P2-P1, and lying
 !  in the plane (P1,P2,P3).
@@ -3431,28 +3431,28 @@ subroutine circle_pppr2imp_3d ( p1, p2, p3, r, pc, normal )
 !  To do this, subtract from P3-P1 the component in the direction P2-P1.
 !
   v(1:dim_num) = p3(1:dim_num) - p1(1:dim_num)
-  dot = dot_product ( v(1:dim_num), p2(1:dim_num) - p1(1:dim_num) )
+  dot = dot_product(v(1:dim_num), p2(1:dim_num) - p1(1:dim_num))
   dot = dot / dist
 
-  v(1:dim_num) = v(1:dim_num) - dot * ( p2(1:dim_num) - p1(1:dim_num) ) / dist
+  v(1:dim_num) = v(1:dim_num) - dot * (p2(1:dim_num) - p1(1:dim_num)) / dist
 
-  length = sqrt ( sum ( v(1:dim_num)**2 ) )
+  length = sqrt(sum(v(1:dim_num)**2))
 
   v(1:dim_num) = v(1:dim_num) / length
 !
 !  We can go with or against the given normal direction.
 !
-  pc(1:dim_num,1) = 0.5D+00 * ( p2(1:dim_num) + p1(1:dim_num) ) &
-    + h * v(1:dim_num)
+  pc(1:dim_num, 1) = 0.5D+00 * (p2(1:dim_num) + p1(1:dim_num)) &
+                     + h * v(1:dim_num)
 
-  pc(1:dim_num,2) = 0.5D+00 * ( p2(1:dim_num) + p1(1:dim_num) ) &
-    - h * v(1:dim_num)
+  pc(1:dim_num, 2) = 0.5D+00 * (p2(1:dim_num) + p1(1:dim_num)) &
+                     - h * v(1:dim_num)
 
-  call plane_exp_normal_3d ( p1, p2, p3, normal )
+  call plane_exp_normal_3d(p1, p2, p3, normal)
 
   return
 end
-subroutine circle_ppr2imp_2d ( p1, p2, r, pc )
+subroutine circle_ppr2imp_2d(p1, p2, r, pc)
 
 !*****************************************************************************80
 !
@@ -3504,50 +3504,50 @@ subroutine circle_ppr2imp_2d ( p1, p2, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) h
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pc(dim_num,2)
-  real ( kind = 8 ) r
+  real(kind=8) dist
+  real(kind=8) h
+  integer(kind=4) j
+  real(kind=8) normal(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pc(dim_num, 2)
+  real(kind=8) r
 !
 !  Compute the distance from P1 to P2.
 !
-  dist = sqrt ( sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p2(1:dim_num) - p1(1:dim_num))**2))
 !
 !  If R is smaller than DIST, we don't have a circle.
 !
-  if ( 2.0D+00 * r < dist ) then
+  if (2.0D+00 * r < dist) then
     do j = 1, 2
-      pc(1:dim_num,j) = 0.5D+00 * ( p1(1:dim_num) + p2(1:dim_num) )
+      pc(1:dim_num, j) = 0.5D+00 * (p1(1:dim_num) + p2(1:dim_num))
     end do
     return
   end if
 !
 !  H is the distance from the midpoint of (P1,P2) to the center.
 !
-  h = sqrt ( ( r + 0.5D+00 * dist ) * ( r - 0.5D+00 * dist ) )
+  h = sqrt((r + 0.5D+00 * dist) * (r - 0.5D+00 * dist))
 !
 !  Determine the unit normal direction.
 !
-  normal(1) =   ( p2(2) - p1(2) ) / dist
-  normal(2) = - ( p2(1) - p1(1) ) / dist
+  normal(1) = (p2(2) - p1(2)) / dist
+  normal(2) = -(p2(1) - p1(1)) / dist
 !
 !  We can go with or against the given normal direction.
 !
-  pc(1:dim_num,1) = 0.5D+00 * ( p2(1:dim_num) + p1(1:dim_num) ) &
-    + h * normal(1:dim_num)
+  pc(1:dim_num, 1) = 0.5D+00 * (p2(1:dim_num) + p1(1:dim_num)) &
+                     + h * normal(1:dim_num)
 
-  pc(1:dim_num,2) = 0.5D+00 * ( p2(1:dim_num) + p1(1:dim_num) ) &
-    - h * normal(1:dim_num)
+  pc(1:dim_num, 2) = 0.5D+00 * (p2(1:dim_num) + p1(1:dim_num)) &
+                     - h * normal(1:dim_num)
 
   return
 end
-subroutine circle_sector_area_2d ( r, pc, theta1, theta2, area )
+subroutine circle_sector_area_2d(r, pc, theta1, theta2, area)
 
 !*****************************************************************************80
 !
@@ -3591,19 +3591,19 @@ subroutine circle_sector_area_2d ( r, pc, theta1, theta2, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) area
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) theta1
+  real(kind=8) theta2
 
-  area = 0.5D+00 * r * r * ( theta2 - theta1 )
+  area = 0.5D+00 * r * r * (theta2 - theta1)
 
   return
 end
-subroutine circle_sector_centroid_2d ( r, pc, theta1, theta2, centroid )
+subroutine circle_sector_centroid_2d(r, pc, theta1, theta2, centroid)
 
 !*****************************************************************************80
 !
@@ -3655,32 +3655,32 @@ subroutine circle_sector_centroid_2d ( r, pc, theta1, theta2, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) centroid(dim_num)
-  real ( kind = 8 ) d
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) centroid(dim_num)
+  real(kind=8) d
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
 
   theta = theta2 - theta1
 
-  if ( theta == 0.0D+00 ) then
+  if (theta == 0.0D+00) then
     d = 2.0D+00 * r / 3.0D+00
   else
-    d = 4.0D+00 * r * sin ( 0.5D+00 * theta ) / &
-      ( 3.0D+00 * theta )
+    d = 4.0D+00 * r * sin(0.5D+00 * theta) / &
+        (3.0D+00 * theta)
   end if
 
-  centroid(1:2) = (/ pc(1) + d * cos ( theta ), &
-                     pc(2) + d * sin ( theta ) /)
+  centroid(1:2) = (/pc(1) + d * cos(theta), &
+                    pc(2) + d * sin(theta)/)
 
   return
 end
-subroutine circle_sector_contains_point_2d ( r, pc, theta1, theta2, &
-  p, inside )
+subroutine circle_sector_contains_point_2d(r, pc, theta1, theta2, &
+                                           p, inside)
 
 !*****************************************************************************80
 !
@@ -3727,33 +3727,33 @@ subroutine circle_sector_contains_point_2d ( r, pc, theta1, theta2, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ) r8_modp
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  logical(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) r8_atan
+  real(kind=8) r8_modp
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
 
   inside = .false.
 !
 !  Is the point inside the (full) circle?
 !
-  if ( ( p(1) - pc(1) ) * ( p(1) - pc(1) ) &
-     + ( p(2) - pc(2) ) * ( p(2) - pc(2) ) <= r * r ) then
+  if ((p(1) - pc(1)) * (p(1) - pc(1)) &
+      + (p(2) - pc(2)) * (p(2) - pc(2)) <= r * r) then
 !
 !  Is the point's angle within the arc's range?
 !  Try to force the angles to lie between 0 and 2 * PI.
 !
-    theta = r8_atan ( p(2) - pc(2), p(1) - pc(1) )
+    theta = r8_atan(p(2) - pc(2), p(1) - pc(1))
 
-    if ( r8_modp ( theta  - theta1,  2.0D+00 * r8_pi ) <= &
-         r8_modp ( theta2 - theta1,  2.0D+00 * r8_pi ) ) then
+    if (r8_modp(theta - theta1, 2.0D+00 * r8_pi) <= &
+        r8_modp(theta2 - theta1, 2.0D+00 * r8_pi)) then
 
       inside = .true.
 
@@ -3763,7 +3763,7 @@ subroutine circle_sector_contains_point_2d ( r, pc, theta1, theta2, &
 
   return
 end
-subroutine circle_sector_print_2d ( r, pc, theta1, theta2 )
+subroutine circle_sector_print_2d(r, pc, theta1, theta2)
 
 !*****************************************************************************80
 !
@@ -3805,23 +3805,23 @@ subroutine circle_sector_print_2d ( r, pc, theta1, theta2 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) theta1
+  real(kind=8) theta2
 
-  write ( *, '(a)'        ) ' '
-  write ( *, '(a)'        ) '  Circular sector definition:'
-  write ( *, '(a)'        ) ' '
-  write ( *, '(a,g14.6)'  ) '    Radius = ', r
-  write ( *, '(a,2g14.6)' ) '    Center = ', pc(1:2)
-  write ( *, '(a,2g14.6)' ) '    Theta  = ', theta1, theta2
+  write (*, '(a)') ' '
+  write (*, '(a)') '  Circular sector definition:'
+  write (*, '(a)') ' '
+  write (*, '(a,g14.6)') '    Radius = ', r
+  write (*, '(a,2g14.6)') '    Center = ', pc(1:2)
+  write (*, '(a,2g14.6)') '    Theta  = ', theta1, theta2
 
   return
 end
-subroutine circle_triangle_area_2d ( r, pc, theta1, theta2, area )
+subroutine circle_triangle_area_2d(r, pc, theta1, theta2, area)
 
 !*****************************************************************************80
 !
@@ -3861,19 +3861,19 @@ subroutine circle_triangle_area_2d ( r, pc, theta1, theta2, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) area
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) theta1
+  real(kind=8) theta2
 
-  area = 0.5D+00 * r * r * sin ( theta2 - theta1 )
+  area = 0.5D+00 * r * r * sin(theta2 - theta1)
 
   return
 end
-subroutine circle_triple_angles_2d ( r1, r2, r3, angle1, angle2, angle3 )
+subroutine circle_triple_angles_2d(r1, r2, r3, angle1, angle2, angle3)
 
 !*****************************************************************************80
 !
@@ -3913,29 +3913,29 @@ subroutine circle_triple_angles_2d ( r1, r2, r3, angle1, angle2, angle3 )
 !
   implicit none
 
-  real ( kind = 8 ) angle1
-  real ( kind = 8 ) angle2
-  real ( kind = 8 ) angle3
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ) r3
-  real ( kind = 8 ) r8_acos
+  real(kind=8) angle1
+  real(kind=8) angle2
+  real(kind=8) angle3
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8) r3
+  real(kind=8) r8_acos
 
-  angle1 = r8_acos ( &
-    ( r1 + r2 )**2 + ( r1 + r3 )**2 - ( r2 + r3 )**2 ) / &
-    ( 2.0D+00 * ( r1 + r2 ) * ( r1 + r3 ) )
+  angle1 = r8_acos( &
+           (r1 + r2)**2 + (r1 + r3)**2 - (r2 + r3)**2) / &
+           (2.0D+00 * (r1 + r2) * (r1 + r3))
 
-  angle2 = r8_acos ( &
-    ( r2 + r3 )**2 + ( r2 + r1 )**2 - ( r3 + r1 )**2 ) / &
-    ( 2.0D+00 * ( r2 + r3 ) * ( r2 + r1 ) )
+  angle2 = r8_acos( &
+           (r2 + r3)**2 + (r2 + r1)**2 - (r3 + r1)**2) / &
+           (2.0D+00 * (r2 + r3) * (r2 + r1))
 
-  angle3 = r8_acos ( &
-    ( r3 + r1 )**2 + ( r3 + r2 )**2 - ( r1 + r2 )**2 ) / &
-    ( 2.0D+00 * ( r3 + r1 ) * ( r3 + r2 ) )
+  angle3 = r8_acos( &
+           (r3 + r1)**2 + (r3 + r2)**2 - (r1 + r2)**2) / &
+           (2.0D+00 * (r3 + r1) * (r3 + r2))
 
   return
 end
-subroutine circles_intersect_points_2d ( r1, pc1, r2, pc2, int_num, p )
+subroutine circles_intersect_points_2d(r1, pc1, r2, pc2, int_num, p)
 
 !*****************************************************************************80
 !
@@ -3984,40 +3984,40 @@ subroutine circles_intersect_points_2d ( r1, pc1, r2, pc2, int_num, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) distsq
-  integer ( kind = 4 ) int_num
-  real ( kind = 8 ) p(dim_num,2)
-  real ( kind = 8 ) pc1(dim_num)
-  real ( kind = 8 ) pc2(dim_num)
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ) root
-  real ( kind = 8 ) sc1
-  real ( kind = 8 ) sc2
-  real ( kind = 8 ) t1
-  real ( kind = 8 ) t2
-  real ( kind = 8 ) tol
+  real(kind=8) distsq
+  integer(kind=4) int_num
+  real(kind=8) p(dim_num, 2)
+  real(kind=8) pc1(dim_num)
+  real(kind=8) pc2(dim_num)
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8) root
+  real(kind=8) sc1
+  real(kind=8) sc2
+  real(kind=8) t1
+  real(kind=8) t2
+  real(kind=8) tol
 
-  tol = epsilon ( tol )
+  tol = epsilon(tol)
 
-  p(1:dim_num,1:2) = 0.0D+00
+  p(1:dim_num, 1:2) = 0.0D+00
 !
 !  Take care of the case in which the circles have the same center.
 !
-  t1 = ( abs ( pc1(1) - pc2(1) ) &
-       + abs ( pc1(2) - pc2(2) ) ) / 2.0D+00
+  t1 = (abs(pc1(1) - pc2(1)) &
+        + abs(pc1(2) - pc2(2))) / 2.0D+00
 
-  t2 = ( abs ( pc1(1) ) + abs ( pc2(1) ) &
-       + abs ( pc1(2) ) + abs ( pc2(2) ) + 1.0D+00 ) / 5.0D+00
+  t2 = (abs(pc1(1)) + abs(pc2(1)) &
+        + abs(pc1(2)) + abs(pc2(2)) + 1.0D+00) / 5.0D+00
 
-  if ( t1 <= tol * t2 ) then
+  if (t1 <= tol * t2) then
 
-    t1 = abs ( r1 - r2 )
-    t2 = ( abs ( r1 ) + abs ( r2 ) + 1.0D+00 ) / 3.0D+00
+    t1 = abs(r1 - r2)
+    t2 = (abs(r1) + abs(r2) + 1.0D+00) / 3.0D+00
 
-    if ( t1 <= tol * t2 ) then
+    if (t1 <= tol * t2) then
       int_num = 3
     else
       int_num = 0
@@ -4027,42 +4027,42 @@ subroutine circles_intersect_points_2d ( r1, pc1, r2, pc2, int_num, p )
 
   end if
 
-  distsq = ( pc1(1) - pc2(1) )**2 + ( pc1(2) - pc2(2) )**2
+  distsq = (pc1(1) - pc2(1))**2 + (pc1(2) - pc2(2))**2
 
-  root = 2.0D+00 * ( r1**2 + r2**2 ) * distsq - distsq**2 &
-    - ( r1 - r2 )**2 * ( r1 + r2 )**2
+  root = 2.0D+00 * (r1**2 + r2**2) * distsq - distsq**2 &
+         - (r1 - r2)**2 * (r1 + r2)**2
 
-  if ( root < -tol ) then
+  if (root < -tol) then
     int_num = 0
     return
   end if
 
-  sc1 = ( distsq - ( r2**2 - r1**2 ) ) / distsq
+  sc1 = (distsq - (r2**2 - r1**2)) / distsq
 
-  if ( root < tol ) then
+  if (root < tol) then
     int_num = 1
-    p(1:dim_num,1) = pc1(1:dim_num) &
-      + 0.5D+00 * sc1 * ( pc2(1:dim_num) - pc1(1:dim_num) )
+    p(1:dim_num, 1) = pc1(1:dim_num) &
+                      + 0.5D+00 * sc1 * (pc2(1:dim_num) - pc1(1:dim_num))
     return
   end if
 
-  sc2 = sqrt ( root ) / distsq
+  sc2 = sqrt(root) / distsq
 
   int_num = 2
 
-  p(1,1) = pc1(1) + 0.5D+00 * sc1 * ( pc2(1) - pc1(1) ) &
-                  - 0.5D+00 * sc2 * ( pc2(2) - pc1(2) )
-  p(2,1) = pc1(2) + 0.5D+00 * sc1 * ( pc2(2) - pc1(2) ) &
-                  + 0.5D+00 * sc2 * ( pc2(1) - pc1(1) )
+  p(1, 1) = pc1(1) + 0.5D+00 * sc1 * (pc2(1) - pc1(1)) &
+            - 0.5D+00 * sc2 * (pc2(2) - pc1(2))
+  p(2, 1) = pc1(2) + 0.5D+00 * sc1 * (pc2(2) - pc1(2)) &
+            + 0.5D+00 * sc2 * (pc2(1) - pc1(1))
 
-  p(1,2) = pc1(1) + 0.5D+00 * sc1 * ( pc2(1) - pc1(1) ) &
-                  + 0.5D+00 * sc2 * ( pc2(2) - pc1(2) )
-  p(2,2) = pc1(2) + 0.5D+00 * sc1 * ( pc2(2) - pc1(2) ) &
-                  - 0.5D+00 * sc2 * ( pc2(1) - pc1(1) )
+  p(1, 2) = pc1(1) + 0.5D+00 * sc1 * (pc2(1) - pc1(1)) &
+            + 0.5D+00 * sc2 * (pc2(2) - pc1(2))
+  p(2, 2) = pc1(2) + 0.5D+00 * sc1 * (pc2(2) - pc1(2)) &
+            - 0.5D+00 * sc2 * (pc2(1) - pc1(1))
 
   return
 end
-subroutine combin2 ( n, k, icnk )
+subroutine combin2(n, k, icnk)
 
 !*****************************************************************************80
 !
@@ -4106,37 +4106,37 @@ subroutine combin2 ( n, k, icnk )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) icnk
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) mn
-  integer ( kind = 4 ) mx
-  integer ( kind = 4 ) n
+  integer(kind=4) i
+  integer(kind=4) icnk
+  integer(kind=4) k
+  integer(kind=4) mn
+  integer(kind=4) mx
+  integer(kind=4) n
 
-  mn = min ( k, n - k )
+  mn = min(k, n - k)
 
-  if ( mn < 0 ) then
+  if (mn < 0) then
 
     icnk = 0
 
-  else if ( mn == 0 ) then
+  else if (mn == 0) then
 
     icnk = 1
 
   else
 
-    mx = max ( k, n - k )
+    mx = max(k, n - k)
     icnk = mx + 1
 
     do i = 2, mn
-      icnk = ( icnk * ( mx + i ) ) / i
+      icnk = (icnk * (mx + i)) / i
     end do
 
   end if
 
   return
 end
-subroutine cone_area_3d ( h, r, area )
+subroutine cone_area_3d(h, r, area)
 
 !*****************************************************************************80
 !
@@ -4163,16 +4163,16 @@ subroutine cone_area_3d ( h, r, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) h
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) area
+  real(kind=8) h
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
-  area = r8_pi * r * sqrt ( h * h + r * r )
+  area = r8_pi * r * sqrt(h * h + r * r)
 
   return
 end
-subroutine cone_centroid_3d ( r, pc, pt, centroid )
+subroutine cone_centroid_3d(r, pc, pt, centroid)
 
 !*****************************************************************************80
 !
@@ -4211,18 +4211,18 @@ subroutine cone_centroid_3d ( r, pc, pt, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) centroid(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) pt(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) centroid(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) pt(dim_num)
+  real(kind=8) r
 
   centroid(1:dim_num) = 0.75D+00 * pc(1:dim_num) + 0.25D+00 * pt(1:dim_num)
 
   return
 end
-subroutine cone_volume_3d ( h, r, volume )
+subroutine cone_volume_3d(h, r, volume)
 
 !*****************************************************************************80
 !
@@ -4249,16 +4249,16 @@ subroutine cone_volume_3d ( h, r, volume )
 !
   implicit none
 
-  real ( kind = 8 ) h
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) volume
+  real(kind=8) h
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) volume
 
   volume = r8_pi * r * r * h / 3.0D+00
 
   return
 end
-subroutine conv3d ( axis, theta, n, cor3, cor2 )
+subroutine conv3d(axis, theta, n, cor3, cor2)
 
 !*****************************************************************************80
 !
@@ -4301,44 +4301,44 @@ subroutine conv3d ( axis, theta, n, cor3, cor2 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
   character axis
-  real ( kind = 8 ) cor2(2,n)
-  real ( kind = 8 ) cor3(3,n)
-  real ( kind = 8 ) degrees_to_radians
-  real ( kind = 8 ) stheta
-  real ( kind = 8 ) theta
+  real(kind=8) cor2(2, n)
+  real(kind=8) cor3(3, n)
+  real(kind=8) degrees_to_radians
+  real(kind=8) stheta
+  real(kind=8) theta
 
-  stheta = sin ( degrees_to_radians ( theta ) )
+  stheta = sin(degrees_to_radians(theta))
 
-  if ( axis == 'X' .or. axis == 'x' ) then
+  if (axis == 'X' .or. axis == 'x') then
 
-    cor2(1,1:n) = cor3(2,1:n) - stheta * cor3(1,1:n)
-    cor2(2,1:n) = cor3(3,1:n) - stheta * cor3(1,1:n)
+    cor2(1, 1:n) = cor3(2, 1:n) - stheta * cor3(1, 1:n)
+    cor2(2, 1:n) = cor3(3, 1:n) - stheta * cor3(1, 1:n)
 
-  else if ( axis == 'Y' .or. axis == 'y' ) then
+  else if (axis == 'Y' .or. axis == 'y') then
 
-    cor2(1,1:n) = cor3(1,1:n) - stheta * cor3(2,1:n)
-    cor2(2,1:n) = cor3(3,1:n) - stheta * cor3(2,1:n)
+    cor2(1, 1:n) = cor3(1, 1:n) - stheta * cor3(2, 1:n)
+    cor2(2, 1:n) = cor3(3, 1:n) - stheta * cor3(2, 1:n)
 
-  else if ( axis == 'Z' .or. axis == 'z' ) then
+  else if (axis == 'Z' .or. axis == 'z') then
 
-    cor2(1,1:n) = cor3(1,1:n) - stheta * cor3(3,1:n)
-    cor2(2,1:n) = cor3(2,1:n) - stheta * cor3(3,1:n)
+    cor2(1, 1:n) = cor3(1, 1:n) - stheta * cor3(3, 1:n)
+    cor2(2, 1:n) = cor3(2, 1:n) - stheta * cor3(3, 1:n)
 
   else
 
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'CONV3D - Fatal error!'
-    write ( *, '(a)' ) '  Illegal coordinate index = "' // axis // '".'
+    write (*, '(a)') ' '
+    write (*, '(a)') 'CONV3D - Fatal error!'
+    write (*, '(a)') '  Illegal coordinate index = "'//axis//'".'
     stop 1
 
   end if
 
   return
 end
-function cot_rad ( angle_rad )
+function cot_rad(angle_rad)
 
 !*****************************************************************************80
 !
@@ -4364,15 +4364,15 @@ function cot_rad ( angle_rad )
 !
   implicit none
 
-  real ( kind = 8 ) angle_rad
-  real ( kind = 8 ) cot_rad
+  real(kind=8) angle_rad
+  real(kind=8) cot_rad
 
-  cot_rad  = cos ( angle_rad ) / sin ( angle_rad )
+  cot_rad = cos(angle_rad) / sin(angle_rad)
 
   return
 end
-subroutine cube_shape_3d ( point_num, face_num, face_order_max, &
-  point_coord, face_order, face_point )
+subroutine cube_shape_3d(point_num, face_num, face_order_max, &
+                         point_coord, face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -4418,48 +4418,48 @@ subroutine cube_shape_3d ( point_num, face_num, face_order_max, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) point_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) point_num
 
-  real ( kind = 8 ) a
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  real ( kind = 8 ) point_coord(dim_num,point_num)
+  real(kind=8) a
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  real(kind=8) point_coord(dim_num, point_num)
 !
 !  Set point coordinates.
 !
-  a = sqrt ( 1.0D+00 / 3.0D+00 )
+  a = sqrt(1.0D+00 / 3.0D+00)
 
-  point_coord(1:dim_num,1:point_num) = reshape ( (/ &
-     -a, -a, -a, &
-      a, -a, -a, &
-      a,  a, -a, &
-     -a,  a, -a, &
-     -a, -a,  a, &
-      a, -a,  a, &
-      a,  a,  a, &
-     -a,  a,  a /), (/ dim_num, point_num /) )
+  point_coord(1:dim_num, 1:point_num) = reshape((/ &
+                                                -a, -a, -a, &
+                                                a, -a, -a, &
+                                                a, a, -a, &
+                                                -a, a, -a, &
+                                                -a, -a, a, &
+                                                a, -a, a, &
+                                                a, a, a, &
+                                           -a, a, a/), (/dim_num, point_num/))
 !
 !  Set the face orders.
 !
   face_order(1:face_num) = (/ &
-    4, 4, 4, 4, 4, 4 /)
+                           4, 4, 4, 4, 4, 4/)
 !
 !  Set the faces.
 !
-  face_point(1:face_order_max,1:face_num) = reshape ( (/ &
-     1, 4, 3, 2, &
-     1, 2, 6, 5, &
-     2, 3, 7, 6, &
-     3, 4, 8, 7, &
-     1, 5, 8, 4, &
-     5, 6, 7, 8 /), (/ face_order_max, face_num /) )
+  face_point(1:face_order_max, 1:face_num) = reshape((/ &
+                                                     1, 4, 3, 2, &
+                                                     1, 2, 6, 5, &
+                                                     2, 3, 7, 6, &
+                                                     3, 4, 8, 7, &
+                                                     1, 5, 8, 4, &
+                                   5, 6, 7, 8/), (/face_order_max, face_num/))
 
   return
 end
-subroutine cube_size_3d ( point_num, edge_num, face_num, face_order_max )
+subroutine cube_size_3d(point_num, edge_num, face_num, face_order_max)
 
 !*****************************************************************************80
 !
@@ -4489,10 +4489,10 @@ subroutine cube_size_3d ( point_num, edge_num, face_num, face_order_max )
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
   point_num = 8
   edge_num = 12
@@ -4501,7 +4501,7 @@ subroutine cube_size_3d ( point_num, edge_num, face_num, face_order_max )
 
   return
 end
-function cube01_volume ( )
+function cube01_volume()
 
 !*****************************************************************************80
 !
@@ -4525,13 +4525,13 @@ function cube01_volume ( )
 !
   implicit none
 
-  real ( kind = 8 ) cube01_volume
+  real(kind=8) cube01_volume
 
   cube01_volume = 1.0D+00
 
   return
 end
-subroutine cylinder_point_dist_3d ( p1, p2, r, p, distance )
+subroutine cylinder_point_dist_3d(p1, p2, r, p, distance)
 
 !*****************************************************************************80
 !
@@ -4577,63 +4577,63 @@ subroutine cylinder_point_dist_3d ( p1, p2, r, p, distance )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) axis(dim_num)
-  real ( kind = 8 ) axis_length
-  real ( kind = 8 ) distance
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) off_axis_component
-  real ( kind = 8 ) p(3)
-  real ( kind = 8 ) p_dot_axis
-  real ( kind = 8 ) p_length
-  real ( kind = 8 ) p1(3)
-  real ( kind = 8 ) p2(3)
-  real ( kind = 8 ) r
+  real(kind=8) axis(dim_num)
+  real(kind=8) axis_length
+  real(kind=8) distance
+  real(kind=8) r8vec_norm
+  real(kind=8) off_axis_component
+  real(kind=8) p(3)
+  real(kind=8) p_dot_axis
+  real(kind=8) p_length
+  real(kind=8) p1(3)
+  real(kind=8) p2(3)
+  real(kind=8) r
 
   axis(1:dim_num) = p2(1:dim_num) - p1(1:dim_num)
-  axis_length = r8vec_norm ( dim_num, axis )
+  axis_length = r8vec_norm(dim_num, axis)
 
-  if ( axis_length == 0.0D+00 ) then
-    distance = -huge ( distance )
+  if (axis_length == 0.0D+00) then
+    distance = -huge(distance)
     return
   end if
 
   axis(1:dim_num) = axis(1:dim_num) / axis_length
 
-  p_dot_axis = dot_product ( p(1:dim_num) - p1(1:dim_num), axis )
+  p_dot_axis = dot_product(p(1:dim_num) - p1(1:dim_num), axis)
 !
 !  Case 1: Below bottom cap.
 !
-  if ( p_dot_axis <= 0.0D+00 ) then
+  if (p_dot_axis <= 0.0D+00) then
 
-    call disk_point_dist_3d ( p1, r, axis, p, distance )
+    call disk_point_dist_3d(p1, r, axis, p, distance)
 !
 !  Case 2: between cylinder planes.
 !
-  else if ( p_dot_axis <= axis_length ) then
+  else if (p_dot_axis <= axis_length) then
 
-    p_length = r8vec_norm ( dim_num, p(1:dim_num) - p1(1:dim_num) )
-    off_axis_component = sqrt ( p_length**2 - p_dot_axis**2 )
+    p_length = r8vec_norm(dim_num, p(1:dim_num) - p1(1:dim_num))
+    off_axis_component = sqrt(p_length**2 - p_dot_axis**2)
 
-    distance = abs ( off_axis_component - r )
+    distance = abs(off_axis_component - r)
 
-    if ( off_axis_component < r ) then
-      distance = min ( distance, axis_length - p_dot_axis )
-      distance = min ( distance, p_dot_axis )
+    if (off_axis_component < r) then
+      distance = min(distance, axis_length - p_dot_axis)
+      distance = min(distance, p_dot_axis)
     end if
 !
 !  Case 3: Above the top cap.
 !
-  else if ( axis_length < p_dot_axis ) then
+  else if (axis_length < p_dot_axis) then
 
-    call disk_point_dist_3d ( p2, r, axis, p, distance )
+    call disk_point_dist_3d(p2, r, axis, p, distance)
 
   end if
 
   return
 end
-subroutine cylinder_point_dist_signed_3d ( p1, p2, r, p, distance )
+subroutine cylinder_point_dist_signed_3d(p1, p2, r, p, distance)
 
 !*****************************************************************************80
 !
@@ -4683,63 +4683,63 @@ subroutine cylinder_point_dist_signed_3d ( p1, p2, r, p, distance )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) axis(dim_num)
-  real ( kind = 8 ) axis_length
-  real ( kind = 8 ) distance
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) off_axis_component
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p_dot_axis
-  real ( kind = 8 ) p_length
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) axis(dim_num)
+  real(kind=8) axis_length
+  real(kind=8) distance
+  real(kind=8) r8vec_norm
+  real(kind=8) off_axis_component
+  real(kind=8) p(dim_num)
+  real(kind=8) p_dot_axis
+  real(kind=8) p_length
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) r
 
   axis(1:dim_num) = p2(1:dim_num) - p1(1:dim_num)
-  axis_length = r8vec_norm ( dim_num, axis )
+  axis_length = r8vec_norm(dim_num, axis)
 
-  if ( axis_length == 0.0D+00 ) then
-    distance = -huge ( distance )
+  if (axis_length == 0.0D+00) then
+    distance = -huge(distance)
     return
   end if
 
   axis(1:dim_num) = axis(1:dim_num) / axis_length
 
-  p_dot_axis = dot_product ( p(1:dim_num) - p1(1:dim_num), axis )
+  p_dot_axis = dot_product(p(1:dim_num) - p1(1:dim_num), axis)
 !
 !  Case 1: Below bottom cap.
 !
-  if ( p_dot_axis <= 0.0D+00 ) then
+  if (p_dot_axis <= 0.0D+00) then
 
-    call disk_point_dist_3d ( p1, r, axis, p, distance )
+    call disk_point_dist_3d(p1, r, axis, p, distance)
 !
 !  Case 2: between cylinder planes.
 !
-  else if ( p_dot_axis <= axis_length ) then
+  else if (p_dot_axis <= axis_length) then
 
-    p_length = r8vec_norm ( dim_num, p(1:dim_num) - p1(1:dim_num) )
-    off_axis_component = sqrt ( p_length**2 - p_dot_axis**2 )
+    p_length = r8vec_norm(dim_num, p(1:dim_num) - p1(1:dim_num))
+    off_axis_component = sqrt(p_length**2 - p_dot_axis**2)
 
     distance = off_axis_component - r
 
-    if ( distance < 0.0D+00 ) then
-      distance = max ( distance, p_dot_axis - axis_length )
-      distance = max ( distance, -p_dot_axis )
+    if (distance < 0.0D+00) then
+      distance = max(distance, p_dot_axis - axis_length)
+      distance = max(distance, -p_dot_axis)
     end if
 !
 !  Case 3: Above the top cap.
 !
-  else if ( axis_length < p_dot_axis ) then
+  else if (axis_length < p_dot_axis) then
 
-    call disk_point_dist_3d ( p2, r, axis, p, distance )
+    call disk_point_dist_3d(p2, r, axis, p, distance)
 
   end if
 
   return
 end
-subroutine cylinder_point_inside_3d ( p1, p2, r, p, inside )
+subroutine cylinder_point_inside_3d(p1, p2, r, p, inside)
 
 !*****************************************************************************80
 !
@@ -4780,35 +4780,35 @@ subroutine cylinder_point_inside_3d ( p1, p2, r, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) axis(dim_num)
-  real ( kind = 8 ) axis_length
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) off_axis_component
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p_dot_axis
-  real ( kind = 8 ) p_length
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8vec_norm
+  real(kind=8) axis(dim_num)
+  real(kind=8) axis_length
+  logical(kind=4) inside
+  real(kind=8) off_axis_component
+  real(kind=8) p(dim_num)
+  real(kind=8) p_dot_axis
+  real(kind=8) p_length
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) r
+  real(kind=8) r8vec_norm
 
   axis(1:dim_num) = p2(1:dim_num) - p1(1:dim_num)
-  axis_length = r8vec_norm ( dim_num, axis )
+  axis_length = r8vec_norm(dim_num, axis)
 
-  if ( axis_length == 0.0D+00 ) then
+  if (axis_length == 0.0D+00) then
     inside = .false.
     return
   end if
 
   axis(1:dim_num) = axis(1:dim_num) / axis_length
 
-  p_dot_axis = dot_product ( p(1:dim_num) - p1(1:dim_num), axis )
+  p_dot_axis = dot_product(p(1:dim_num) - p1(1:dim_num), axis)
 !
 !  If the point lies below or above the "caps" of the cylinder, we're done.
 !
-  if ( p_dot_axis < 0.0D+00 .or. axis_length < p_dot_axis ) then
+  if (p_dot_axis < 0.0D+00 .or. axis_length < p_dot_axis) then
 
     inside = .false.
 !
@@ -4816,11 +4816,11 @@ subroutine cylinder_point_inside_3d ( p1, p2, r, p, inside )
 !
   else
 
-    p_length = r8vec_norm ( dim_num, p(1:dim_num) - p1(1:dim_num) )
+    p_length = r8vec_norm(dim_num, p(1:dim_num) - p1(1:dim_num))
 
-    off_axis_component = sqrt ( p_length**2 - p_dot_axis**2 )
+    off_axis_component = sqrt(p_length**2 - p_dot_axis**2)
 
-    if ( off_axis_component <= r ) then
+    if (off_axis_component <= r) then
       inside = .true.
     else
       inside = .false.
@@ -4830,7 +4830,7 @@ subroutine cylinder_point_inside_3d ( p1, p2, r, p, inside )
 
   return
 end
-subroutine cylinder_point_near_3d ( p1, p2, r, p, pn )
+subroutine cylinder_point_near_3d(p1, p2, r, p, pn)
 
 !*****************************************************************************80
 !
@@ -4875,68 +4875,68 @@ subroutine cylinder_point_near_3d ( p1, p2, r, p, pn )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) axial_component
-  real ( kind = 8 ) axis(dim_num)
-  real ( kind = 8 ) axis_length
-  real ( kind = 8 ) distance
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) off_axis(dim_num)
-  real ( kind = 8 ) off_axis_component
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) axial_component
+  real(kind=8) axis(dim_num)
+  real(kind=8) axis_length
+  real(kind=8) distance
+  real(kind=8) r8vec_norm
+  real(kind=8) off_axis(dim_num)
+  real(kind=8) off_axis_component
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) r
 
   axis(1:dim_num) = p2(1:dim_num) - p1(1:dim_num)
-  axis_length = r8vec_norm ( dim_num, axis )
+  axis_length = r8vec_norm(dim_num, axis)
   axis(1:dim_num) = axis(1:dim_num) / axis_length
 
-  axial_component = dot_product ( p(1:dim_num) - p1(1:dim_num), axis )
+  axial_component = dot_product(p(1:dim_num) - p1(1:dim_num), axis)
 
   off_axis(1:dim_num) = p(1:dim_num) - p1(1:dim_num) &
-    - axial_component * axis(1:dim_num)
+                        - axial_component * axis(1:dim_num)
 
-  off_axis_component = r8vec_norm ( dim_num, off_axis )
+  off_axis_component = r8vec_norm(dim_num, off_axis)
 !
 !  Case 1: Below bottom cap.
 !
-  if ( axial_component <= 0.0D+00 ) then
+  if (axial_component <= 0.0D+00) then
 
-    if ( off_axis_component <= r ) then
+    if (off_axis_component <= r) then
       pn(1:dim_num) = p1(1:dim_num) + off_axis(1:dim_num)
     else
       pn(1:dim_num) = p1(1:dim_num) &
-        + ( r / off_axis_component ) * off_axis(1:dim_num)
+                      + (r / off_axis_component) * off_axis(1:dim_num)
     end if
 !
 !  Case 2: between cylinder planes.
 !
-  else if ( axial_component <= axis_length ) then
+  else if (axial_component <= axis_length) then
 
-    if ( off_axis_component == 0.0D+00 ) then
+    if (off_axis_component == 0.0D+00) then
 
-      call r8vec_any_normal ( dim_num, axis, off_axis )
+      call r8vec_any_normal(dim_num, axis, off_axis)
 
       pn(1:dim_num) = p(1:dim_num) + r * off_axis(1:dim_num)
 
     else
 
-      distance = abs ( off_axis_component - r )
+      distance = abs(off_axis_component - r)
 
       pn(1:dim_num) = p1(1:dim_num) + axial_component * axis(1:dim_num) &
-        + ( r / off_axis_component ) * off_axis(1:dim_num)
+                      + (r / off_axis_component) * off_axis(1:dim_num)
 
-      if ( off_axis_component < r ) then
+      if (off_axis_component < r) then
 
-        if ( axis_length - axial_component < distance ) then
+        if (axis_length - axial_component < distance) then
           distance = axis_length - axial_component
           pn(1:dim_num) = p2(1:dim_num) + off_axis(1:dim_num)
         end if
 
-        if ( axial_component < distance ) then
+        if (axial_component < distance) then
           distance = axial_component
           pn(1:dim_num) = p1(1:dim_num) + off_axis(1:dim_num)
         end if
@@ -4947,20 +4947,20 @@ subroutine cylinder_point_near_3d ( p1, p2, r, p, pn )
 !
 !  Case 3: Above the top cap.
 !
-  else if ( axis_length < axial_component ) then
+  else if (axis_length < axial_component) then
 
-    if ( off_axis_component <= r ) then
+    if (off_axis_component <= r) then
       pn(1:dim_num) = p2(1:dim_num) + off_axis(1:dim_num)
     else
       pn(1:dim_num) = p2(1:dim_num) &
-        + ( r / off_axis_component ) * off_axis(1:dim_num)
+                      + (r / off_axis_component) * off_axis(1:dim_num)
     end if
 
   end if
 
   return
 end
-subroutine cylinder_sample_3d ( p1, p2, r, n, seed, p )
+subroutine cylinder_sample_3d(p1, p2, r, n, seed, p)
 
 !*****************************************************************************80
 !
@@ -5004,59 +5004,58 @@ subroutine cylinder_sample_3d ( p1, p2, r, n, seed, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) n
 
-  real ( kind = 8 ) axis(dim_num)
-  real ( kind = 8 ) axis_length
-  real ( kind = 8 ) r8vec_norm
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radius(n)
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) theta(n)
-  real ( kind = 8 ) v2(dim_num)
-  real ( kind = 8 ) v3(dim_num)
-  real ( kind = 8 ) z(n)
+  real(kind=8) axis(dim_num)
+  real(kind=8) axis_length
+  real(kind=8) r8vec_norm
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radius(n)
+  integer(kind=4) seed
+  real(kind=8) theta(n)
+  real(kind=8) v2(dim_num)
+  real(kind=8) v3(dim_num)
+  real(kind=8) z(n)
 !
 !  Compute the axis vector.
 !
   axis(1:dim_num) = p2(1:dim_num) - p1(1:dim_num)
-  axis_length = r8vec_norm ( dim_num, axis )
+  axis_length = r8vec_norm(dim_num, axis)
   axis(1:dim_num) = axis(1:dim_num) / axis_length
 !
 !  Compute vectors V2 and V3 that form an orthogonal triple with AXIS.
 !
-  call plane_normal_basis_3d ( p1, axis, v2, v3 )
+  call plane_normal_basis_3d(p1, axis, v2, v3)
 !
 !  Assemble the randomized information.
 !
-  call random_number ( harvest = radius(1:n) )
-  radius(1:n) = r * sqrt ( radius(1:n) )
+  call random_number(harvest=radius(1:n))
+  radius(1:n) = r * sqrt(radius(1:n))
 
-  call random_number ( harvest = theta(1:n) )
+  call random_number(harvest=theta(1:n))
   theta(1:n) = 2.0D+00 * r8_pi * theta(1:n)
 
-  call random_number ( harvest = z(1:n) )
+  call random_number(harvest=z(1:n))
   z(1:n) = axis_length * z(1:n)
 
   do i = 1, dim_num
 
-    p(i,1:n) =                                       p1(i)   &
-              + z(1:n)                             * axis(i) &
-              + radius(1:n) * cos ( theta(1:n) )   * v2(i)   &
-              + radius(1:n) * sin ( theta(1:n) )   * v3(i)
+    p(i, 1:n) = p1(i) &
+                + z(1:n) * axis(i) &
+                + radius(1:n) * cos(theta(1:n)) * v2(i) &
+                + radius(1:n) * sin(theta(1:n)) * v3(i)
 
   end do
 
-
   return
 end
-subroutine cylinder_volume_3d ( p1, p2, r, volume )
+subroutine cylinder_volume_3d(p1, p2, r, volume)
 
 !*****************************************************************************80
 !
@@ -5094,22 +5093,22 @@ subroutine cylinder_volume_3d ( p1, p2, r, volume )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) h
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) volume
+  real(kind=8) h
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) volume
 
-  h = sqrt ( sum ( ( p1(1:dim_num) - p2(1:dim_num) )**2 ) )
+  h = sqrt(sum((p1(1:dim_num) - p2(1:dim_num))**2))
 
   volume = r8_pi * r * r * h
 
   return
 end
-function degrees_to_radians ( angle_deg )
+function degrees_to_radians(angle_deg)
 
 !*****************************************************************************80
 !
@@ -5136,15 +5135,15 @@ function degrees_to_radians ( angle_deg )
 !
   implicit none
 
-  real ( kind = 8 ) angle_deg
-  real ( kind = 8 ) degrees_to_radians
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) angle_deg
+  real(kind=8) degrees_to_radians
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
-  degrees_to_radians = ( angle_deg / 180.0D+00 ) * r8_pi
+  degrees_to_radians = (angle_deg / 180.0D+00) * r8_pi
 
   return
 end
-subroutine direction_pert_3d ( sigma, vbase, seed, vran )
+subroutine direction_pert_3d(sigma, vbase, seed, vran)
 
 !*****************************************************************************80
 !
@@ -5182,48 +5181,48 @@ subroutine direction_pert_3d ( sigma, vbase, seed, vran )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) r8_uniform_01
-  real ( kind = 8 ) dphi
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) psi
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) sigma
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) v(dim_num)
-  real ( kind = 8 ) vbase(dim_num)
-  real ( kind = 8 ) vdot
-  real ( kind = 8 ) vran(dim_num)
-  real ( kind = 8 ) x
+  real(kind=8) r8_uniform_01
+  real(kind=8) dphi
+  real(kind=8) phi
+  real(kind=8) psi
+  real(kind=8) r
+  real(kind=8) r8_acos
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  integer(kind=4) seed
+  real(kind=8) sigma
+  real(kind=8) theta
+  real(kind=8) v(dim_num)
+  real(kind=8) vbase(dim_num)
+  real(kind=8) vdot
+  real(kind=8) vran(dim_num)
+  real(kind=8) x
 !
 !  1 <= SIGMA, just use the base vector.
 !
-  if ( 1.0D+00 <= sigma ) then
+  if (1.0D+00 <= sigma) then
 
     vran(1:dim_num) = vbase(1:dim_num)
 
-  else if ( sigma <= 0.0D+00 ) then
+  else if (sigma <= 0.0D+00) then
 
-    vdot = r8_uniform_01 ( seed )
+    vdot = r8_uniform_01(seed)
     vdot = 2.0D+00 * vdot - 1.0D+00
 
-    phi = r8_acos ( vdot )
+    phi = r8_acos(vdot)
 
-    theta = r8_uniform_01 ( seed )
+    theta = r8_uniform_01(seed)
     theta = 2.0D+00 * r8_pi * theta
 
-    vran(1) = cos ( theta ) * sin ( phi )
-    vran(2) = sin ( theta ) * sin ( phi )
-    vran(3) = cos ( phi )
+    vran(1) = cos(theta) * sin(phi)
+    vran(2) = sin(theta) * sin(phi)
+    vran(3) = cos(phi)
 
   else
 
-    phi = r8_acos ( vbase(3) )
-    theta = atan2 ( vbase(2), vbase(1) )
+    phi = r8_acos(vbase(3))
+    theta = atan2(vbase(2), vbase(1))
 !
 !  Pick VDOT, which must be between -1 and 1.  This represents
 !  the dot product of the perturbed vector with the base vector.
@@ -5235,32 +5234,32 @@ subroutine direction_pert_3d ( sigma, vbase, seed, vran )
 !  VDOT, in turn, is a value between -1 and 1, which, for large
 !  SIGMA, we want biased towards 1.
 !
-    r = r8_uniform_01 ( seed )
-    x = exp ( ( 1.0D+00 - sigma ) * log ( r ) )
-    dphi = r8_acos ( 2.0D+00 * x - 1.0D+00 )
+    r = r8_uniform_01(seed)
+    x = exp((1.0D+00 - sigma) * log(r))
+    dphi = r8_acos(2.0D+00 * x - 1.0D+00)
 !
 !  Now we know enough to write down a vector that is rotated DPHI
 !  from the base vector.
 !
-    v(1) = cos ( theta ) * sin ( phi + dphi )
-    v(2) = sin ( theta ) * sin ( phi + dphi )
-    v(3) = cos ( phi + dphi )
+    v(1) = cos(theta) * sin(phi + dphi)
+    v(2) = sin(theta) * sin(phi + dphi)
+    v(3) = cos(phi + dphi)
 !
 !  Pick a uniformly random rotation between 0 and 2 Pi around the
 !  axis of the base vector.
 !
-    psi = r8_uniform_01 ( seed )
+    psi = r8_uniform_01(seed)
     psi = 2.0D+00 * r8_pi * psi
 !
 !  Carry out the rotation.
 !
-    call rotation_axis_vector_3d ( vbase, psi, v, vran )
+    call rotation_axis_vector_3d(vbase, psi, v, vran)
 
   end if
 
   return
 end
-subroutine direction_uniform_2d ( seed, vran )
+subroutine direction_uniform_2d(seed, vran)
 
 !*****************************************************************************80
 !
@@ -5288,23 +5287,23 @@ subroutine direction_uniform_2d ( seed, vran )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r8_uniform_01
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) vran(dim_num)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r8_uniform_01
+  integer(kind=4) seed
+  real(kind=8) theta
+  real(kind=8) vran(dim_num)
 
-  theta = r8_uniform_01 ( seed )
+  theta = r8_uniform_01(seed)
   theta = 2.0D+00 * r8_pi * theta
 
-  vran(1) = cos ( theta )
-  vran(2) = sin ( theta )
+  vran(1) = cos(theta)
+  vran(2) = sin(theta)
 
   return
 end
-subroutine direction_uniform_3d ( seed, vran )
+subroutine direction_uniform_3d(seed, vran)
 
 !*****************************************************************************80
 !
@@ -5332,16 +5331,16 @@ subroutine direction_uniform_3d ( seed, vran )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) r8_uniform_01
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) vdot
-  real ( kind = 8 ) vran(dim_num)
+  real(kind=8) r8_uniform_01
+  real(kind=8) phi
+  real(kind=8) r8_acos
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  integer(kind=4) seed
+  real(kind=8) theta
+  real(kind=8) vdot
+  real(kind=8) vran(dim_num)
 !
 !  Pick a uniformly random VDOT, which must be between -1 and 1.
 !  This represents the dot product of the random vector with the Z unit vector.
@@ -5350,24 +5349,24 @@ subroutine direction_uniform_3d ( seed, vran )
 !  Z and Z + dZ is independent of Z.  So choosing Z uniformly chooses
 !  a patch of area uniformly.
 !
-  vdot = r8_uniform_01 ( seed )
+  vdot = r8_uniform_01(seed)
   vdot = 2.0D+00 * vdot - 1.0D+00
 
-  phi = r8_acos ( vdot )
+  phi = r8_acos(vdot)
 !
 !  Pick a uniformly random rotation between 0 and 2 Pi around the
 !  axis of the Z vector.
 !
-  theta = r8_uniform_01 ( seed )
+  theta = r8_uniform_01(seed)
   theta = 2.0D+00 * r8_pi * theta
 
-  vran(1) = cos ( theta ) * sin ( phi )
-  vran(2) = sin ( theta ) * sin ( phi )
-  vran(3) = cos ( phi )
+  vran(1) = cos(theta) * sin(phi)
+  vran(2) = sin(theta) * sin(phi)
+  vran(3) = cos(phi)
 
   return
 end
-subroutine direction_uniform_nd ( dim_num, seed, w )
+subroutine direction_uniform_nd(dim_num, seed, w)
 
 !*****************************************************************************80
 !
@@ -5397,19 +5396,19 @@ subroutine direction_uniform_nd ( dim_num, seed, w )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) norm
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) w(dim_num)
+  real(kind=8) norm
+  integer(kind=4) seed
+  real(kind=8) w(dim_num)
 !
 !  Get N values from a standard normal distribution.
 !
-  call r8vec_normal_01 ( dim_num, seed, w )
+  call r8vec_normal_01(dim_num, seed, w)
 !
 !  Compute the length of the vector.
 !
-  norm = sqrt ( sum ( w(1:dim_num)**2 ) )
+  norm = sqrt(sum(w(1:dim_num)**2))
 !
 !  Normalize the vector.
 !
@@ -5417,7 +5416,7 @@ subroutine direction_uniform_nd ( dim_num, seed, w )
 
   return
 end
-subroutine disk_point_dist_3d ( pc, r, axis, p, dist )
+subroutine disk_point_dist_3d(pc, r, axis, p, dist)
 
 !*****************************************************************************80
 !
@@ -5459,40 +5458,40 @@ subroutine disk_point_dist_3d ( pc, r, axis, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) axial_component
-  real ( kind = 8 ) axis(dim_num)
-  real ( kind = 8 ) axis_length
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) off_axis_component
-  real ( kind = 8 ) off_axis(dim_num)
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) axial_component
+  real(kind=8) axis(dim_num)
+  real(kind=8) axis_length
+  real(kind=8) dist
+  real(kind=8) r8vec_norm
+  real(kind=8) off_axis_component
+  real(kind=8) off_axis(dim_num)
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
 !
 !  Special case: the point is the center.
 !
-  if ( all ( p(1:dim_num) == pc(1:dim_num) ) ) then
+  if (all(p(1:dim_num) == pc(1:dim_num))) then
     dist = 0.0D+00
     return
   end if
 
-  axis_length = r8vec_norm ( dim_num, axis(1:dim_num) )
+  axis_length = r8vec_norm(dim_num, axis(1:dim_num))
 
-  if ( axis_length == 0.0D+00 ) then
-    dist = -huge ( dist )
+  if (axis_length == 0.0D+00) then
+    dist = -huge(dist)
     return
   end if
 
-  axial_component = dot_product ( p(1:dim_num) - pc(1:dim_num), &
-    axis(1:dim_num) ) / axis_length
+  axial_component = dot_product(p(1:dim_num) - pc(1:dim_num), &
+                                axis(1:dim_num)) / axis_length
 !
 !  Special case: the point satisfies the disk equation exactly.
 !
-  if ( sum ( p(1:dim_num) - pc(1:dim_num) )**2 <= r * r .and. &
-        axial_component == 0.0D+00 ) then
+  if (sum(p(1:dim_num) - pc(1:dim_num))**2 <= r * r .and. &
+      axial_component == 0.0D+00) then
     dist = 0.0D+00
     return
   end if
@@ -5500,26 +5499,26 @@ subroutine disk_point_dist_3d ( pc, r, axis, p, dist )
 !  Decompose P-PC into axis component and off-axis component.
 !
   off_axis(1:dim_num) = p(1:dim_num) - pc(1:dim_num) &
-    - axial_component * axis(1:dim_num) / axis_length
+                        - axial_component * axis(1:dim_num) / axis_length
 
-  off_axis_component = r8vec_norm ( dim_num, off_axis )
+  off_axis_component = r8vec_norm(dim_num, off_axis)
 !
 !  If the off-axis component has norm less than R, the nearest point is
 !  the projection to the disk along the axial direction, and the distance
 !  is just the dot product of P-PC with unit AXIS.
 !
-  if ( off_axis_component <= r ) then
-    dist = abs ( axial_component )
+  if (off_axis_component <= r) then
+    dist = abs(axial_component)
     return
   end if
 !
 !  Otherwise, the nearest point is along the perimeter of the disk.
 !
-  dist = sqrt ( axial_component**2 + ( off_axis_component - r )**2 )
+  dist = sqrt(axial_component**2 + (off_axis_component - r)**2)
 
   return
 end
-subroutine dms_to_radians ( degrees, minutes, seconds, radians )
+subroutine dms_to_radians(degrees, minutes, seconds, radians)
 
 !*****************************************************************************80
 !
@@ -5546,23 +5545,23 @@ subroutine dms_to_radians ( degrees, minutes, seconds, radians )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  integer ( kind = 4 ) degrees
-  integer ( kind = 4 ) minutes
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radians
-  integer ( kind = 4 ) seconds
+  real(kind=8) angle
+  integer(kind=4) degrees
+  integer(kind=4) minutes
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radians
+  integer(kind=4) seconds
 
-  angle =   real ( degrees, kind = 8 ) &
-        + ( real ( minutes, kind = 8 ) &
-        + ( real ( seconds, kind = 8 ) / 60.0D+00 ) ) / 60.0D+00
+  angle = real(degrees, kind=8) &
+          + (real(minutes, kind=8) &
+             + (real(seconds, kind=8) / 60.0D+00)) / 60.0D+00
 
-  radians = ( angle / 180.0D+00 ) * r8_pi
+  radians = (angle / 180.0D+00) * r8_pi
 
   return
 end
-subroutine dodec_shape_3d ( point_num, face_num, face_order_max, &
-  point_coord, face_order, face_point )
+subroutine dodec_shape_3d(point_num, face_num, face_order_max, &
+                          point_coord, face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -5607,75 +5606,75 @@ subroutine dodec_shape_3d ( point_num, face_num, face_order_max, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) point_coord(dim_num,point_num)
-  real ( kind = 8 ) z
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  real(kind=8) phi
+  real(kind=8) point_coord(dim_num, point_num)
+  real(kind=8) z
 !
 !  Set point coordinates.
 !
-  phi = 0.5D+00 * ( sqrt ( 5.0D+00 ) + 1.0D+00 )
+  phi = 0.5D+00 * (sqrt(5.0D+00) + 1.0D+00)
 
-  a = 1.0D+00 / sqrt ( 3.0D+00 )
-  b = phi / sqrt ( 3.0D+00 )
-  c = ( phi - 1.0D+00 ) / sqrt ( 3.0D+00 )
+  a = 1.0D+00 / sqrt(3.0D+00)
+  b = phi / sqrt(3.0D+00)
+  c = (phi - 1.0D+00) / sqrt(3.0D+00)
   z = 0.0D+00
 
-  point_coord(1:dim_num,1:point_num) = reshape ( (/ &
-      a,  a,  a, &
-      a,  a, -a, &
-      a, -a,  a, &
-      a, -a, -a, &
-     -a,  a,  a, &
-     -a,  a, -a, &
-     -a, -a,  a, &
-     -a, -a, -a, &
-      c,  b,  z, &
-     -c,  b,  z, &
-      c, -b,  z, &
-     -c, -b,  z, &
-      b,  z,  c, &
-      b,  z, -c, &
-     -b,  z,  c, &
-     -b,  z, -c, &
-      z,  c,  b, &
-      z, -c,  b, &
-      z,  c, -b, &
-      z, -c, -b /), (/ dim_num, point_num /) )
+  point_coord(1:dim_num, 1:point_num) = reshape((/ &
+                                                a, a, a, &
+                                                a, a, -a, &
+                                                a, -a, a, &
+                                                a, -a, -a, &
+                                                -a, a, a, &
+                                                -a, a, -a, &
+                                                -a, -a, a, &
+                                                -a, -a, -a, &
+                                                c, b, z, &
+                                                -c, b, z, &
+                                                c, -b, z, &
+                                                -c, -b, z, &
+                                                b, z, c, &
+                                                b, z, -c, &
+                                                -b, z, c, &
+                                                -b, z, -c, &
+                                                z, c, b, &
+                                                z, -c, b, &
+                                                z, c, -b, &
+                                          z, -c, -b/), (/dim_num, point_num/))
 !
 !  Set the face orders.
 !
   face_order(1:face_num) = (/ &
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 /)
+                           5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5/)
 !
 !  Set the faces.
 !
-  face_point(1:face_order_max,1:face_num) = reshape ( (/ &
-      2,  9,  1, 13, 14, &
-      5, 10,  6, 16, 15, &
-      3, 11,  4, 14, 13, &
-      8, 12,  7, 15, 16, &
-      3, 13,  1, 17, 18, &
-      2, 14,  4, 20, 19, &
-      5, 15,  7, 18, 17, &
-      8, 16,  6, 19, 20, &
-      5, 17,  1,  9, 10, &
-      3, 18,  7, 12, 11, &
-      2, 19,  6, 10,  9, &
-      8, 20,  4, 11, 12 /), (/ face_order_max, face_num /) )
+  face_point(1:face_order_max, 1:face_num) = reshape((/ &
+                                                     2, 9, 1, 13, 14, &
+                                                     5, 10, 6, 16, 15, &
+                                                     3, 11, 4, 14, 13, &
+                                                     8, 12, 7, 15, 16, &
+                                                     3, 13, 1, 17, 18, &
+                                                     2, 14, 4, 20, 19, &
+                                                     5, 15, 7, 18, 17, &
+                                                     8, 16, 6, 19, 20, &
+                                                     5, 17, 1, 9, 10, &
+                                                     3, 18, 7, 12, 11, &
+                                                     2, 19, 6, 10, 9, &
+                             8, 20, 4, 11, 12/), (/face_order_max, face_num/))
 
   return
 end
-subroutine dodec_size_3d ( point_num, edge_num, face_num, face_order_max )
+subroutine dodec_size_3d(point_num, edge_num, face_num, face_order_max)
 
 !*****************************************************************************80
 !
@@ -5705,10 +5704,10 @@ subroutine dodec_size_3d ( point_num, edge_num, face_num, face_order_max )
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
   point_num = 20
   edge_num = 30
@@ -5717,9 +5716,9 @@ subroutine dodec_size_3d ( point_num, edge_num, face_num, face_order_max )
 
   return
 end
-subroutine dual_shape_3d ( point_num, face_num, face_order_max, &
-  point_coord, face_order, face_point, point_num2, face_num2, &
-  face_order_max2, point_coord2, face_order2, face_point2 )
+subroutine dual_shape_3d(point_num, face_num, face_order_max, &
+                 point_coord, face_order, face_point, point_num2, face_num2, &
+                      face_order_max2, point_coord2, face_order2, face_point2)
 
 !*****************************************************************************80
 !
@@ -5774,31 +5773,31 @@ subroutine dual_shape_3d ( point_num, face_num, face_order_max, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_num2
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) face_order_max2
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) point_num
-  integer ( kind = 4 ) point_num2
+  integer(kind=4) face_num
+  integer(kind=4) face_num2
+  integer(kind=4) face_order_max
+  integer(kind=4) face_order_max2
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) point_num
+  integer(kind=4) point_num2
 
-  integer ( kind = 4 ) col
-  integer ( kind = 4 ) face
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_order2(face_num2)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  integer ( kind = 4 ) face_point2(face_order_max2,face_num2)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) inext
-  integer ( kind = 4 ) iprev
-  integer ( kind = 4 ) istop
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) point_coord(dim_num,point_num)
-  real ( kind = 8 ) point_coord2(dim_num,point_num2)
-  integer ( kind = 4 ) row
+  integer(kind=4) col
+  integer(kind=4) face
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_order2(face_num2)
+  integer(kind=4) face_point(face_order_max, face_num)
+  integer(kind=4) face_point2(face_order_max2, face_num2)
+  integer(kind=4) i
+  integer(kind=4) inext
+  integer(kind=4) iprev
+  integer(kind=4) istop
+  integer(kind=4) j
+  integer(kind=4) k
+  real(kind=8) norm
+  real(kind=8) p(dim_num)
+  real(kind=8) point_coord(dim_num, point_num)
+  real(kind=8) point_coord2(dim_num, point_num2)
+  integer(kind=4) row
 !
 !  This computation should really compute the center of gravity
 !  of the face, in the general case.
@@ -5812,13 +5811,13 @@ subroutine dual_shape_3d ( point_num, face_num, face_order_max, &
     p(1:dim_num) = 0.0D+00
 
     do j = 1, face_order(face)
-      k = face_point(j,face)
-      p(1:dim_num) = p(1:dim_num) + point_coord(1:dim_num,k)
+      k = face_point(j, face)
+      p(1:dim_num) = p(1:dim_num) + point_coord(1:dim_num, k)
     end do
 
-    norm = sqrt ( sum ( p(1:dim_num)**2 ) )
+    norm = sqrt(sum(p(1:dim_num)**2))
 
-    point_coord2(1:dim_num,face) = p(1:dim_num) / norm
+    point_coord2(1:dim_num, face) = p(1:dim_num) / norm
 
   end do
 !
@@ -5832,13 +5831,13 @@ subroutine dual_shape_3d ( point_num, face_num, face_order_max, &
 !
 !  Find the first occurrence of FACE in an edge of polyhedron.
 !
-    call i4col_find_item ( face_order_max, face_num, face_point, &
-      face, row, col )
+    call i4col_find_item(face_order_max, face_num, face_point, &
+                         face, row, col)
 
-    if ( row <= 0 ) then
-      write ( *, '(a)' ) ' '
-      write ( *, '(a)' ) 'DUAL_SHAPE_3D - Fatal error!'
-      write ( *, '(a,i8)' ) '  Could not find an edge using node ', face
+    if (row <= 0) then
+      write (*, '(a)') ' '
+      write (*, '(a)') 'DUAL_SHAPE_3D - Fatal error!'
+      write (*, '(a,i8)') '  Could not find an edge using node ', face
       stop 1
     end if
 !
@@ -5846,30 +5845,30 @@ subroutine dual_shape_3d ( point_num, face_num, face_order_max, &
 !  When we encounter ISTOP again, this will mark the end of our search.
 !
     i = row + 1
-    if ( face_order(col) < i ) then
+    if (face_order(col) < i) then
       i = 1
     end if
 
-    istop = face_point(i,col)
+    istop = face_point(i, col)
 !
 !  Save the previous node as INEXT.
 !
     do
 
       i = row - 1
-      if ( i < 1 ) then
+      if (i < 1) then
         i = i + face_order(col)
       end if
 
-      inext = face_point(i,col)
+      inext = face_point(i, col)
 
       face_order2(face) = face_order2(face) + 1
 
-      face_point2(face_order2(face),face) = col
+      face_point2(face_order2(face), face) = col
 !
 !  If INEXT =/= ISTOP, continue.
 !
-      if ( inext == istop ) then
+      if (inext == istop) then
         exit
       end if
 !
@@ -5879,14 +5878,14 @@ subroutine dual_shape_3d ( point_num, face_num, face_order_max, &
 !
 !  Search for the occurrence of the edge FACE-IPREV.
 !
-      call i4col_find_pair_wrap ( face_order_max, face_num, face_point, &
-        face, iprev, row, col )
+      call i4col_find_pair_wrap(face_order_max, face_num, face_point, &
+                                face, iprev, row, col)
 
-      if ( row <= 0 ) then
-        write ( *, '(a)' ) ' '
-        write ( *, '(a)' ) 'DUAL_SHAPE_3D - Fatal error!'
-        write ( *, '(a,i8)' ) '  No edge from node ', iprev
-        write ( *, '(a,i8)' ) '  to node ', face
+      if (row <= 0) then
+        write (*, '(a)') ' '
+        write (*, '(a)') 'DUAL_SHAPE_3D - Fatal error!'
+        write (*, '(a,i8)') '  No edge from node ', iprev
+        write (*, '(a,i8)') '  to node ', face
         stop 1
       end if
 
@@ -5896,9 +5895,9 @@ subroutine dual_shape_3d ( point_num, face_num, face_order_max, &
 
   return
 end
-subroutine dual_size_3d ( point_num, edge_num, face_num, face_order_max, &
-  point_coord, face_order, face_point, point_num2, edge_num2, face_num2, &
-  face_order_max2 )
+subroutine dual_size_3d(point_num, edge_num, face_num, face_order_max, &
+      point_coord, face_order, face_point, point_num2, edge_num2, face_num2, &
+                        face_order_max2)
 
 !*****************************************************************************80
 !
@@ -5954,23 +5953,23 @@ subroutine dual_size_3d ( point_num, edge_num, face_num, face_order_max, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) edge_num2
-  integer ( kind = 4 ) face
-  integer ( kind = 4 ) face_num2
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_order2(point_num)
-  integer ( kind = 4 ) face_order_max2
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  integer ( kind = 4 ) face2
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) point_num2
-  real ( kind = 8 ) point_coord(dim_num,point_num)
+  integer(kind=4) edge_num
+  integer(kind=4) edge_num2
+  integer(kind=4) face
+  integer(kind=4) face_num2
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_order2(point_num)
+  integer(kind=4) face_order_max2
+  integer(kind=4) face_point(face_order_max, face_num)
+  integer(kind=4) face2
+  integer(kind=4) i
+  integer(kind=4) point_num2
+  real(kind=8) point_coord(dim_num, point_num)
 !
 !  These values are easy to compute:
 !
@@ -5989,16 +5988,16 @@ subroutine dual_size_3d ( point_num, edge_num, face_num, face_order_max, &
 
   do face = 1, face_num
     do i = 1, face_order(face)
-      face2 = face_point(i,face)
+      face2 = face_point(i, face)
       face_order2(face2) = face_order2(face2) + 1
     end do
   end do
 
-  face_order_max2 = maxval ( face_order2(1:face_num2) )
+  face_order_max2 = maxval(face_order2(1:face_num2))
 
   return
 end
-function ellipse_area1 ( a, r )
+function ellipse_area1(a, r)
 
 !*****************************************************************************80
 !
@@ -6033,16 +6032,16 @@ function ellipse_area1 ( a, r )
 !
   implicit none
 
-  real ( kind = 8 ) a(2,2)
-  real ( kind = 8 ) ellipse_area1
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) a(2, 2)
+  real(kind=8) ellipse_area1
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
-  ellipse_area1 = r ** 2 * r8_pi / sqrt ( a(1,1) * a(2,2) - a(2,1) * a(1,2) )
+  ellipse_area1 = r**2 * r8_pi / sqrt(a(1, 1) * a(2, 2) - a(2, 1) * a(1, 2))
 
   return
 end
-function ellipse_area2 ( a, b, c, d )
+function ellipse_area2(a, b, c, d)
 
 !*****************************************************************************80
 !
@@ -6075,18 +6074,18 @@ function ellipse_area2 ( a, b, c, d )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) ellipse_area2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) ellipse_area2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
-  ellipse_area2 = 2.0D+00 * d * d * r8_pi / sqrt ( 4.0D+00 * a * c - b * b )
+  ellipse_area2 = 2.0D+00 * d * d * r8_pi / sqrt(4.0D+00 * a * c - b * b)
 
   return
 end
-function ellipse_area3 ( r1, r2 )
+function ellipse_area3(r1, r2)
 
 !*****************************************************************************80
 !
@@ -6121,16 +6120,16 @@ function ellipse_area3 ( r1, r2 )
 !
   implicit none
 
-  real ( kind = 8 ) ellipse_area3
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) ellipse_area3
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
   ellipse_area3 = r8_pi * r1 * r2
 
   return
 end
-subroutine ellipse_point_dist_2d ( r1, r2, p, dist )
+subroutine ellipse_point_dist_2d(r1, r2, p, dist)
 
 !*****************************************************************************80
 !
@@ -6176,21 +6175,21 @@ subroutine ellipse_point_dist_2d ( r1, r2, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) r1
+  real(kind=8) r2
 
-  call ellipse_point_near_2d ( r1, r1, p, pn )
+  call ellipse_point_near_2d(r1, r1, p, pn)
 
-  dist = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
 
   return
 end
-subroutine ellipse_point_near_2d ( r1, r2, p, pn )
+subroutine ellipse_point_near_2d(r1, r2, p, pn)
 
 !*****************************************************************************80
 !
@@ -6247,76 +6246,76 @@ subroutine ellipse_point_near_2d ( r1, r2, p, pn )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) ct
-  real ( kind = 8 ) f
-  real ( kind = 8 ) fp
-  integer ( kind = 4 ) iteration
-  integer ( kind = 4 ), parameter :: iteration_max = 100
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) st
-  real ( kind = 8 ) t
-  real ( kind = 8 ) x
-  real ( kind = 8 ) y
+  real(kind=8) ct
+  real(kind=8) f
+  real(kind=8) fp
+  integer(kind=4) iteration
+  integer(kind=4), parameter :: iteration_max = 100
+  real(kind=8) p(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) st
+  real(kind=8) t
+  real(kind=8) x
+  real(kind=8) y
 
-  x = abs ( p(1) )
-  y = abs ( p(2) )
+  x = abs(p(1))
+  y = abs(p(2))
 
-  if ( y == 0.0D+00 .and. r1 * r1 - r2 * r2 <= r1 * x ) then
+  if (y == 0.0D+00 .and. r1 * r1 - r2 * r2 <= r1 * x) then
 
     t = 0.0D+00
 
-  else if ( x == 0.0D+00 .and. r2 * r2 - r1 * r1 <= r2 * y ) then
+  else if (x == 0.0D+00 .and. r2 * r2 - r1 * r1 <= r2 * y) then
 
     t = r8_pi / 2.0D+00
 
   else
 
-    if ( y == 0.0D+00 ) then
-      y = sqrt ( epsilon ( y ) ) * abs ( r2 )
+    if (y == 0.0D+00) then
+      y = sqrt(epsilon(y)) * abs(r2)
     end if
 
-    if ( x == 0.0D+00 ) then
-      x = sqrt ( epsilon ( x ) ) * abs ( r1 )
+    if (x == 0.0D+00) then
+      x = sqrt(epsilon(x)) * abs(r1)
     end if
 !
 !  Initial parameter T:
 !
-    t = atan2 ( y, x )
+    t = atan2(y, x)
 
     iteration = 0
 
     do
 
-      ct = cos ( t )
-      st = sin ( t )
+      ct = cos(t)
+      st = sin(t)
 
-      f = ( x - abs ( r1 ) * ct ) * abs ( r1 ) * st &
-        - ( y - abs ( r2 ) * st ) * abs ( r2 ) * ct
+      f = (x - abs(r1) * ct) * abs(r1) * st &
+          - (y - abs(r2) * st) * abs(r2) * ct
 
-      if ( abs ( f ) <= 100.0D+00 * epsilon ( f ) ) then
+      if (abs(f) <= 100.0D+00 * epsilon(f)) then
         exit
       end if
 
-      if ( iteration_max <= iteration ) then
-        write ( *, '(a)' ) ' '
-        write ( *, '(a)' ) 'ELLIPSE_POINT_NEAR_2D - Warning!'
-        write ( *, '(a)' ) '  Reached iteration limit.'
-        write ( *, '(a,f8.6)' ) '  T = ', t
-        write ( *, '(a,g14.6)' ) '  F = ', f
+      if (iteration_max <= iteration) then
+        write (*, '(a)') ' '
+        write (*, '(a)') 'ELLIPSE_POINT_NEAR_2D - Warning!'
+        write (*, '(a)') '  Reached iteration limit.'
+        write (*, '(a,f8.6)') '  T = ', t
+        write (*, '(a,g14.6)') '  F = ', f
         exit
       end if
 
       iteration = iteration + 1
 
       fp = r1 * r1 * st * st + r2 * r2 * ct * ct &
-         + ( x - abs ( r1 ) * ct ) * abs ( r1 ) * ct &
-         + ( y - abs ( r2 ) * st ) * abs ( r2 ) * st
+           + (x - abs(r1) * ct) * abs(r1) * ct &
+           + (y - abs(r2) * st) * abs(r2) * st
 
       t = t - f / fp
 
@@ -6326,17 +6325,17 @@ subroutine ellipse_point_near_2d ( r1, r2, p, pn )
 !
 !  From the T value, we get the nearest point.
 !
-  pn(1) = abs ( r1 ) * cos ( t )
-  pn(2) = abs ( r2 ) * sin ( t )
+  pn(1) = abs(r1) * cos(t)
+  pn(2) = abs(r2) * sin(t)
 !
 !  Take care of case where the point was in another quadrant.
 !
-  pn(1) = sign ( 1.0D+00, p(1) ) * pn(1)
-  pn(2) = sign ( 1.0D+00, p(2) ) * pn(2)
+  pn(1) = sign(1.0D+00, p(1)) * pn(1)
+  pn(2) = sign(1.0D+00, p(2)) * pn(2)
 
   return
 end
-subroutine ellipse_points_2d ( pc, r1, r2, psi, n, p )
+subroutine ellipse_points_2d(pc, r1, r2, psi, n, p)
 
 !*****************************************************************************80
 !
@@ -6383,35 +6382,35 @@ subroutine ellipse_points_2d ( pc, r1, r2, psi, n, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) psi
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) pc(dim_num)
+  real(kind=8) psi
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
 
   do i = 1, n
 
-    theta = ( 2.0D+00 * r8_pi * real ( i - 1, kind = 8 ) ) &
-      / real ( n, kind = 8 )
+    theta = (2.0D+00 * r8_pi * real(i - 1, kind=8)) &
+            / real(n, kind=8)
 
-    p(1,i) = pc(1) + r1 * cos ( psi ) * cos ( theta ) &
-                   - r2 * sin ( psi ) * sin ( theta )
+    p(1, i) = pc(1) + r1 * cos(psi) * cos(theta) &
+              - r2 * sin(psi) * sin(theta)
 
-    p(2,i) = pc(2) + r1 * sin ( psi ) * cos ( theta ) &
-                   + r2 * cos ( psi ) * sin ( theta )
+    p(2, i) = pc(2) + r1 * sin(psi) * cos(theta) &
+              + r2 * cos(psi) * sin(theta)
 
   end do
 
   return
 end
-subroutine ellipse_points_arc_2d ( pc, r1, r2, psi, theta1, theta2, n, p )
+subroutine ellipse_points_arc_2d(pc, r1, r2, psi, theta1, theta2, n, p)
 
 !*****************************************************************************80
 !
@@ -6463,48 +6462,48 @@ subroutine ellipse_points_arc_2d ( pc, r1, r2, psi, theta1, theta2, n, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) r8_modp
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) psi
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
-  real ( kind = 8 ) theta3
+  real(kind=8) r8_modp
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) pc(dim_num)
+  real(kind=8) psi
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
+  real(kind=8) theta3
 !
 !  THETA3 is the smallest angle, no less than THETA1, which
 !  coincides with THETA2.
 !
-  theta3 = theta1 + r8_modp ( theta2 - theta1, 2.0D+00 * r8_pi )
+  theta3 = theta1 + r8_modp(theta2 - theta1, 2.0D+00 * r8_pi)
 
   do i = 1, n
 
-    if ( 1 < n ) then
-      theta = ( real ( n - i,     kind = 8 ) * theta1 &
-              + real (     i - 1, kind = 8 ) * theta3 ) &
-              / real ( n     - 1, kind = 8 )
+    if (1 < n) then
+      theta = (real(n - i, kind=8) * theta1 &
+               + real(i - 1, kind=8) * theta3) &
+              / real(n - 1, kind=8)
     else
-      theta = 0.5D+00 * ( theta1 + theta3 )
+      theta = 0.5D+00 * (theta1 + theta3)
     end if
 
-    p(1,i) = pc(1) + r1 * cos ( psi ) * cos ( theta ) &
-                   - r2 * sin ( psi ) * sin ( theta )
+    p(1, i) = pc(1) + r1 * cos(psi) * cos(theta) &
+              - r2 * sin(psi) * sin(theta)
 
-    p(2,i) = pc(2) + r1 * sin ( psi ) * cos ( theta ) &
-                   + r2 * cos ( psi ) * sin ( theta )
+    p(2, i) = pc(2) + r1 * sin(psi) * cos(theta) &
+              + r2 * cos(psi) * sin(theta)
 
   end do
 
   return
 end
-subroutine get_seed ( seed )
+subroutine get_seed(seed)
 
 !*****************************************************************************80
 !
@@ -6535,50 +6534,50 @@ subroutine get_seed ( seed )
 !
   implicit none
 
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) temp
-  character ( len = 10 ) time
-  character ( len = 8 ) today
-  integer ( kind = 4 ) values(8)
-  character ( len = 5 ) zone
+  integer(kind=4) seed
+  real(kind=8) temp
+  character(len=10) time
+  character(len=8) today
+  integer(kind=4) values(8)
+  character(len=5) zone
 
-  call date_and_time ( today, time, zone, values )
+  call date_and_time(today, time, zone, values)
 
   temp = 0.0D+00
 
-  temp = temp + real ( values(2) - 1, kind = 8 ) / 11.0D+00
-  temp = temp + real ( values(3) - 1, kind = 8 ) / 30.0D+00
-  temp = temp + real ( values(5),     kind = 8 ) / 23.0D+00
-  temp = temp + real ( values(6),     kind = 8 ) / 59.0D+00
-  temp = temp + real ( values(7),     kind = 8 ) / 59.0D+00
-  temp = temp + real ( values(8),     kind = 8 ) / 999.0D+00
+  temp = temp + real(values(2) - 1, kind=8) / 11.0D+00
+  temp = temp + real(values(3) - 1, kind=8) / 30.0D+00
+  temp = temp + real(values(5), kind=8) / 23.0D+00
+  temp = temp + real(values(6), kind=8) / 59.0D+00
+  temp = temp + real(values(7), kind=8) / 59.0D+00
+  temp = temp + real(values(8), kind=8) / 999.0D+00
   temp = temp / 6.0D+00
 !
 !  Force 0 < TEMP <= 1.
 !
-  do while ( temp <= 0.0D+00 )
+  do while (temp <= 0.0D+00)
     temp = temp + 1.0D+00
   end do
 
-  do while ( 1.0D+00 < temp )
+  do while (1.0D+00 < temp)
     temp = temp - 1.0D+00
   end do
 
-  seed = int ( real ( huge ( 1 ), kind = 8 ) * temp )
+  seed = int(real(huge(1), kind=8) * temp)
 !
 !  Never use a seed of 0 or maximum integer.
 !
-  if ( seed == 0 ) then
+  if (seed == 0) then
     seed = 1
   end if
 
-  if ( seed == huge ( 1 ) ) then
+  if (seed == huge(1)) then
     seed = seed - 1
   end if
 
   return
 end
-subroutine get_unit ( iunit )
+subroutine get_unit(iunit)
 
 !*****************************************************************************80
 !
@@ -6615,21 +6614,21 @@ subroutine get_unit ( iunit )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ios
-  integer ( kind = 4 ) iunit
-  logical ( kind = 4 ) lopen
+  integer(kind=4) i
+  integer(kind=4) ios
+  integer(kind=4) iunit
+  logical(kind=4) lopen
 
   iunit = 0
 
   do i = 1, 99
 
-    if ( i /= 5 .and. i /= 6 ) then
+    if (i /= 5 .and. i /= 6) then
 
-      inquire ( unit = i, opened = lopen, iostat = ios )
+      inquire (unit=i, opened=lopen, iostat=ios)
 
-      if ( ios == 0 ) then
-        if ( .not. lopen ) then
+      if (ios == 0) then
+        if (.not. lopen) then
           iunit = i
           return
         end if
@@ -6641,8 +6640,8 @@ subroutine get_unit ( iunit )
 
   return
 end
-subroutine glob2loc_3d ( cospitch, cosroll, cosyaw, sinpitch, sinroll, sinyaw, &
-  globas, glopts, locpts )
+subroutine glob2loc_3d(cospitch, cosroll, cosyaw, sinpitch, sinroll, sinyaw, &
+                       globas, glopts, locpts)
 
 !*****************************************************************************80
 !
@@ -6707,37 +6706,37 @@ subroutine glob2loc_3d ( cospitch, cosroll, cosyaw, sinpitch, sinroll, sinyaw, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) cospitch
-  real ( kind = 8 ) cosroll
-  real ( kind = 8 ) cosyaw
-  real ( kind = 8 ) globas(dim_num)
-  real ( kind = 8 ) glopts(dim_num)
-  real ( kind = 8 ) locpts(dim_num)
-  real ( kind = 8 ) sinpitch
-  real ( kind = 8 ) sinroll
-  real ( kind = 8 ) sinyaw
+  real(kind=8) cospitch
+  real(kind=8) cosroll
+  real(kind=8) cosyaw
+  real(kind=8) globas(dim_num)
+  real(kind=8) glopts(dim_num)
+  real(kind=8) locpts(dim_num)
+  real(kind=8) sinpitch
+  real(kind=8) sinroll
+  real(kind=8) sinyaw
 
-  locpts(1) = ( cosyaw * cospitch ) * ( glopts(1) - globas(1) ) &
-            + ( sinyaw * cospitch ) * ( glopts(2) - globas(2) ) &
-            -   sinpitch * ( glopts(3) - globas(3) )
+  locpts(1) = (cosyaw * cospitch) * (glopts(1) - globas(1)) &
+              + (sinyaw * cospitch) * (glopts(2) - globas(2)) &
+              - sinpitch * (glopts(3) - globas(3))
 
-  locpts(2) = ( cosyaw * sinpitch * sinroll - sinyaw * cosroll ) &
-    * ( glopts(1) - globas(1) ) &
-    + ( sinyaw * sinpitch * sinroll + cosyaw * cosroll ) &
-    * ( glopts(2) - globas(2) ) &
-    +   cospitch * sinroll * ( glopts(3) - globas(3) )
+  locpts(2) = (cosyaw * sinpitch * sinroll - sinyaw * cosroll) &
+              * (glopts(1) - globas(1)) &
+              + (sinyaw * sinpitch * sinroll + cosyaw * cosroll) &
+              * (glopts(2) - globas(2)) &
+              + cospitch * sinroll * (glopts(3) - globas(3))
 
-  locpts(3) = ( cosyaw * sinpitch * cosroll + sinyaw * sinroll ) &
-    * ( glopts(1) - globas(1) ) &
-    + ( sinyaw * sinpitch * cosroll - cosyaw * sinroll  ) &
-    * ( glopts(2) - globas(2) ) &
-    + ( cospitch * cosroll ) * ( glopts(3) - globas(3) )
+  locpts(3) = (cosyaw * sinpitch * cosroll + sinyaw * sinroll) &
+              * (glopts(1) - globas(1)) &
+              + (sinyaw * sinpitch * cosroll - cosyaw * sinroll) &
+              * (glopts(2) - globas(2)) &
+              + (cospitch * cosroll) * (glopts(3) - globas(3))
 
   return
 end
-function halfplane_contains_point_2d ( p1, p2, p )
+function halfplane_contains_point_2d(p1, p2, p)
 
 !*****************************************************************************80
 !
@@ -6779,24 +6778,24 @@ function halfplane_contains_point_2d ( p1, p2, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area_signed
-  logical ( kind = 4 ) halfplane_contains_point_2d
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
+  real(kind=8) area_signed
+  logical(kind=4) halfplane_contains_point_2d
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
 
-  area_signed = 0.5D+00 *       &
-    ( p1(1) * ( p2(2) - p(2)  ) &
-    + p2(1) * ( p(2)  - p1(2) ) &
-    + p(1)  * ( p1(2) - p2(2) ) )
+  area_signed = 0.5D+00 * &
+                (p1(1) * (p2(2) - p(2)) &
+                 + p2(1) * (p(2) - p1(2)) &
+                 + p(1) * (p1(2) - p2(2)))
 
-  halfplane_contains_point_2d = ( 0.0D+00 <= area_signed )
+  halfplane_contains_point_2d = (0.0D+00 <= area_signed)
 
   return
 end
-subroutine halfspace_imp_triangle_int_3d ( a, b, c, d, t, int_num, pint )
+subroutine halfspace_imp_triangle_int_3d(a, b, c, d, t, int_num, pint)
 
 !*****************************************************************************80
 !
@@ -6852,32 +6851,32 @@ subroutine halfspace_imp_triangle_int_3d ( a, b, c, d, t, int_num, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist1
-  real ( kind = 8 ) dist2
-  real ( kind = 8 ) dist3
-  integer ( kind = 4 ) int_num
-  real ( kind = 8 ) pint(dim_num,4)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) dist1
+  real(kind=8) dist2
+  real(kind=8) dist3
+  integer(kind=4) int_num
+  real(kind=8) pint(dim_num, 4)
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the signed distances between the vertices and the plane.
 !
-  dist1 = a * t(1,1) + b * t(2,1) + c * t(3,1) + d
-  dist2 = a * t(1,2) + b * t(2,2) + c * t(3,2) + d
-  dist3 = a * t(1,3) + b * t(2,2) + c * t(3,3) + d
+  dist1 = a * t(1, 1) + b * t(2, 1) + c * t(3, 1) + d
+  dist2 = a * t(1, 2) + b * t(2, 2) + c * t(3, 2) + d
+  dist3 = a * t(1, 3) + b * t(2, 2) + c * t(3, 3) + d
 !
 !  Now we can find the intersections.
 !
-  call halfspace_triangle_int_3d ( dist1, dist2, dist3, t, int_num, pint )
+  call halfspace_triangle_int_3d(dist1, dist2, dist3, t, int_num, pint)
 
   return
 end
-subroutine halfspace_normal_triangle_int_3d ( pp, normal, t, int_num, pint )
+subroutine halfspace_normal_triangle_int_3d(pp, normal, t, int_num, pint)
 
 !*****************************************************************************80
 !
@@ -6939,35 +6938,35 @@ subroutine halfspace_normal_triangle_int_3d ( pp, normal, t, int_num, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist1
-  real ( kind = 8 ) dist2
-  real ( kind = 8 ) dist3
-  real ( kind = 8 ) normal(dim_num)
-  integer ( kind = 4 ) int_num
-  real ( kind = 8 ) pp(dim_num)
-  real ( kind = 8 ) pint(dim_num,4)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) d
+  real(kind=8) dist1
+  real(kind=8) dist2
+  real(kind=8) dist3
+  real(kind=8) normal(dim_num)
+  integer(kind=4) int_num
+  real(kind=8) pp(dim_num)
+  real(kind=8) pint(dim_num, 4)
+  real(kind=8) t(dim_num, 3)
 !
 !  Compute the signed distances between the vertices and the plane.
 !
-  d = - dot_product ( normal(1:dim_num), pp(1:dim_num) )
+  d = -dot_product(normal(1:dim_num), pp(1:dim_num))
 !
 !  Compute the signed distances between the vertices and the plane.
 !
-  dist1 = d + dot_product ( normal(1:dim_num), t(1:dim_num,1) )
-  dist2 = d + dot_product ( normal(1:dim_num), t(1:dim_num,2) )
-  dist3 = d + dot_product ( normal(1:dim_num), t(1:dim_num,3) )
+  dist1 = d + dot_product(normal(1:dim_num), t(1:dim_num, 1))
+  dist2 = d + dot_product(normal(1:dim_num), t(1:dim_num, 2))
+  dist3 = d + dot_product(normal(1:dim_num), t(1:dim_num, 3))
 !
 !  Now we can find the intersections.
 !
-  call halfspace_triangle_int_3d ( dist1, dist2, dist3, t, int_num, pint )
+  call halfspace_triangle_int_3d(dist1, dist2, dist3, t, int_num, pint)
 
   return
 end
-subroutine halfspace_triangle_int_3d ( dist1, dist2, dist3, t, int_num, pint )
+subroutine halfspace_triangle_int_3d(dist1, dist2, dist3, t, int_num, pint)
 
 !*****************************************************************************80
 !
@@ -7024,72 +7023,72 @@ subroutine halfspace_triangle_int_3d ( dist1, dist2, dist3, t, int_num, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dist1
-  real ( kind = 8 ) dist2
-  real ( kind = 8 ) dist3
-  integer ( kind = 4 ) int_num
-  real ( kind = 8 ) pint(dim_num,4)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) dist1
+  real(kind=8) dist2
+  real(kind=8) dist3
+  integer(kind=4) int_num
+  real(kind=8) pint(dim_num, 4)
+  real(kind=8) t(dim_num, 3)
 !
 !  Walk around the triangle, looking for vertices that are included,
 !  and points of separation.
 !
   int_num = 0
 
-  if ( dist1 <= 0.0D+00 ) then
+  if (dist1 <= 0.0D+00) then
 
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,1)
+    pint(1:dim_num, int_num) = t(1:dim_num, 1)
 
   end if
 
-  if ( dist1 * dist2 < 0.0D+00 ) then
+  if (dist1 * dist2 < 0.0D+00) then
 
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = &
-      ( dist1 * t(1:dim_num,2) - dist2 * t(1:dim_num,1) ) &
-      / ( dist1 - dist2 )
+    pint(1:dim_num, int_num) = &
+      (dist1 * t(1:dim_num, 2) - dist2 * t(1:dim_num, 1)) &
+      / (dist1 - dist2)
 
   end if
 
-  if ( dist2 <= 0.0D+00 ) then
+  if (dist2 <= 0.0D+00) then
 
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,2)
+    pint(1:dim_num, int_num) = t(1:dim_num, 2)
 
   end if
 
-  if ( dist2 * dist3 < 0.0D+00 ) then
+  if (dist2 * dist3 < 0.0D+00) then
 
     int_num = int_num + 1
 
-    pint(1:dim_num,int_num) = &
-      ( dist2 * t(1:dim_num,3) - dist3 * t(1:dim_num,2) ) &
-      / ( dist2 - dist3 )
+    pint(1:dim_num, int_num) = &
+      (dist2 * t(1:dim_num, 3) - dist3 * t(1:dim_num, 2)) &
+      / (dist2 - dist3)
 
   end if
 
-  if ( dist3 <= 0.0D+00 ) then
+  if (dist3 <= 0.0D+00) then
 
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,3)
+    pint(1:dim_num, int_num) = t(1:dim_num, 3)
 
   end if
 
-  if ( dist3 * dist1 < 0.0D+00 ) then
+  if (dist3 * dist1 < 0.0D+00) then
 
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = &
-      ( dist3 * t(1:dim_num,1) - dist1 * t(1:dim_num,3) ) &
-      / ( dist3 - dist1 )
+    pint(1:dim_num, int_num) = &
+      (dist3 * t(1:dim_num, 1) - dist1 * t(1:dim_num, 3)) &
+      / (dist3 - dist1)
 
   end if
 
   return
 end
-function haversine ( a )
+function haversine(a)
 
 !*****************************************************************************80
 !
@@ -7121,14 +7120,14 @@ function haversine ( a )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) haversine
+  real(kind=8) a
+  real(kind=8) haversine
 
-  haversine = ( 1.0D+00 - cos ( a ) ) / 2.0D+00
+  haversine = (1.0D+00 - cos(a)) / 2.0D+00
 
   return
 end
-subroutine helix_shape_3d ( a, n, r, theta1, theta2, p )
+subroutine helix_shape_3d(a, n, r, theta1, theta2, p)
 
 !*****************************************************************************80
 !
@@ -7173,36 +7172,36 @@ subroutine helix_shape_3d ( a, n, r, theta1, theta2, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
+  real(kind=8) a
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) r
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
 
   do i = 1, n
 
-    if ( n == 1 ) then
-      theta = 0.5D+00 * ( theta1 + theta2 )
+    if (n == 1) then
+      theta = 0.5D+00 * (theta1 + theta2)
     else
-      theta = ( real ( n - i,     kind = 8 ) * theta1 &
-              + real (     i - 1, kind = 8 ) * theta2 ) &
-              / real ( n     - 1, kind = 8 )
+      theta = (real(n - i, kind=8) * theta1 &
+               + real(i - 1, kind=8) * theta2) &
+              / real(n - 1, kind=8)
     end if
 
-    p(1,i) = r * cos ( theta )
-    p(2,i) = r * sin ( theta )
-    p(3,i) = a * theta
+    p(1, i) = r * cos(theta)
+    p(2, i) = r * sin(theta)
+    p(3, i) = a * theta
 
   end do
 
   return
 end
-function hexagon_area_2d ( r )
+function hexagon_area_2d(r)
 
 !*****************************************************************************80
 !
@@ -7234,15 +7233,15 @@ function hexagon_area_2d ( r )
 !
   implicit none
 
-  real ( kind = 8 ) hexagon_area_2d
-  real ( kind = 8 ) hexagon01_area_2d
-  real ( kind = 8 ) r
+  real(kind=8) hexagon_area_2d
+  real(kind=8) hexagon01_area_2d
+  real(kind=8) r
 
-  hexagon_area_2d = r * r * hexagon01_area_2d ( )
+  hexagon_area_2d = r * r * hexagon01_area_2d()
 
   return
 end
-function hexagon_contains_point_2d ( v, p )
+function hexagon_contains_point_2d(v, p)
 
 !*****************************************************************************80
 !
@@ -7275,14 +7274,14 @@ function hexagon_contains_point_2d ( v, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: n = 6
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: n = 6
+  integer(kind=4), parameter :: dim_num = 2
 
-  logical ( kind = 4 ) hexagon_contains_point_2d
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) v(dim_num,n)
+  logical(kind=4) hexagon_contains_point_2d
+  integer(kind=4) i
+  integer(kind=4) j
+  real(kind=8) p(dim_num)
+  real(kind=8) v(dim_num, n)
 !
 !  A point is inside a convex hexagon if and only if it is "inside"
 !  each of the 6 halfplanes defined by lines through consecutive
@@ -7290,11 +7289,11 @@ function hexagon_contains_point_2d ( v, p )
 !
   do i = 1, n
 
-    j = mod ( i, n ) + 1
+    j = mod(i, n) + 1
 
-    if (  v(1,i) * ( v(2,j) - p(2  ) ) &
-        + v(1,j) * ( p(2  ) - v(2,i) ) &
-        + p(1  ) * ( v(2,i) - v(2,j) ) < 0.0D+00 ) then
+    if (v(1, i) * (v(2, j) - p(2)) &
+        + v(1, j) * (p(2) - v(2, i)) &
+        + p(1) * (v(2, i) - v(2, j)) < 0.0D+00) then
 
       hexagon_contains_point_2d = .false.
       return
@@ -7307,7 +7306,7 @@ function hexagon_contains_point_2d ( v, p )
 
   return
 end
-subroutine hexagon_shape_2d ( angle_deg, p )
+subroutine hexagon_shape_2d(angle_deg, p)
 
 !*****************************************************************************80
 !
@@ -7355,66 +7354,66 @@ subroutine hexagon_shape_2d ( angle_deg, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle_deg
-  real ( kind = 8 ) angle2
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) r8_cotd
-  real ( kind = 8 ) r8_modp
-  real ( kind = 8 ) r8_tand
+  real(kind=8) angle_deg
+  real(kind=8) angle2
+  real(kind=8) p(dim_num)
+  real(kind=8) r8_cotd
+  real(kind=8) r8_modp
+  real(kind=8) r8_tand
 !
 !  Ensure that 0 <= ANGLE < 360.
 !
-  angle2 = r8_modp ( angle_deg, 360.0D+00 )
+  angle2 = r8_modp(angle_deg, 360.0D+00)
 !
 !  y = - sqrt(3) * x + sqrt(3)
 !
-  if ( 0.0D+00 <= angle2 .and. angle2 <= 60.0D+00 ) then
+  if (0.0D+00 <= angle2 .and. angle2 <= 60.0D+00) then
 
-    p(1) = sqrt ( 3.0D+00 ) / ( r8_tand ( angle2 ) + sqrt ( 3.0D+00 ) )
-    p(2) = r8_tand ( angle2 ) * p(1)
+    p(1) = sqrt(3.0D+00) / (r8_tand(angle2) + sqrt(3.0D+00))
+    p(2) = r8_tand(angle2) * p(1)
 !
 !  y = sqrt(3) / 2
 !
-  else if ( angle2 <= 120.0D+00 ) then
+  else if (angle2 <= 120.0D+00) then
 
-    p(2) = sqrt ( 3.0D+00 ) / 2.0D+00
-    p(1) = r8_cotd ( angle2 ) * p(2)
+    p(2) = sqrt(3.0D+00) / 2.0D+00
+    p(1) = r8_cotd(angle2) * p(2)
 !
 !  y = sqrt(3) * x + sqrt(3)
 !
-  else if ( angle2 <= 180.0D+00 ) then
+  else if (angle2 <= 180.0D+00) then
 
-    p(1) = sqrt ( 3.0D+00 ) / ( r8_tand ( angle2 ) - sqrt ( 3.0D+00 ) )
-    p(2) = r8_tand ( angle2 ) * p(1)
+    p(1) = sqrt(3.0D+00) / (r8_tand(angle2) - sqrt(3.0D+00))
+    p(2) = r8_tand(angle2) * p(1)
 !
 !  y = - sqrt(3) * x - sqrt(3)
 !
-  else if ( angle2 <= 240.0D+00 ) then
+  else if (angle2 <= 240.0D+00) then
 
-    p(1) = - sqrt ( 3.0D+00 ) / ( r8_tand ( angle2 ) + sqrt ( 3.0D+00 ) )
-    p(2) = r8_tand ( angle2 ) * p(1)
+    p(1) = -sqrt(3.0D+00) / (r8_tand(angle2) + sqrt(3.0D+00))
+    p(2) = r8_tand(angle2) * p(1)
 !
 !  y = - sqrt(3) / 2
 !
-  else if ( angle2 <= 300.0D+00 ) then
+  else if (angle2 <= 300.0D+00) then
 
-    p(2) = - sqrt ( 3.0D+00 ) / 2.0D+00
-    p(1) = r8_cotd ( angle2 ) * p(2)
+    p(2) = -sqrt(3.0D+00) / 2.0D+00
+    p(1) = r8_cotd(angle2) * p(2)
 !
 !  y = sqrt(3) * x - sqrt(3)
 !
-  else if ( angle2 <= 360.0D+00 ) then
+  else if (angle2 <= 360.0D+00) then
 
-    p(1) = - sqrt ( 3.0D+00 ) / ( r8_tand ( angle2 ) - sqrt ( 3.0D+00 ) )
-    p(2) = r8_tand ( angle2 ) * p(1)
+    p(1) = -sqrt(3.0D+00) / (r8_tand(angle2) - sqrt(3.0D+00))
+    p(2) = r8_tand(angle2) * p(1)
 
   end if
 
   return
 end
-subroutine hexagon_vertices_2d ( p )
+subroutine hexagon_vertices_2d(p)
 
 !*****************************************************************************80
 !
@@ -7458,22 +7457,22 @@ subroutine hexagon_vertices_2d ( p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ), parameter :: a = 0.8660254037844386D+00
-  real ( kind = 8 ) p(dim_num,6)
+  real(kind=8), parameter :: a = 0.8660254037844386D+00
+  real(kind=8) p(dim_num, 6)
 
-  p(1:2,1:6) = reshape ( (/ &
-     1.0D+00,  0.0D+00, &
-     0.5D+00,  a, &
-    -0.5D+00,  a, &
-    -1.0D+00,  0.0D+00, &
-    -0.5D+00, -a, &
-     0.5D+00, -a /), (/ dim_num, 6 /) )
+  p(1:2, 1:6) = reshape((/ &
+                        1.0D+00, 0.0D+00, &
+                        0.5D+00, a, &
+                        -0.5D+00, a, &
+                        -1.0D+00, 0.0D+00, &
+                        -0.5D+00, -a, &
+                        0.5D+00, -a/), (/dim_num, 6/))
 
   return
 end
-function hexagon01_area_2d ( )
+function hexagon01_area_2d()
 
 !*****************************************************************************80
 !
@@ -7502,13 +7501,13 @@ function hexagon01_area_2d ( )
 !
   implicit none
 
-  real ( kind = 8 ) hexagon01_area_2d
+  real(kind=8) hexagon01_area_2d
 
-  hexagon01_area_2d = 3.0D+00 * sqrt ( 3.0D+00 ) / 2.0D+00
+  hexagon01_area_2d = 3.0D+00 * sqrt(3.0D+00) / 2.0D+00
 
   return
 end
-function hyperball01_volume ( m )
+function hyperball01_volume(m)
 
 !*****************************************************************************80
 !
@@ -7549,24 +7548,24 @@ function hyperball01_volume ( m )
 !
   implicit none
 
-  real ( kind = 8 ) hyperball01_volume
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) m_half
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) volume
+  real(kind=8) hyperball01_volume
+  integer(kind=4) i
+  integer(kind=4) m
+  integer(kind=4) m_half
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) volume
 
-  if ( mod ( m, 2 ) == 0 ) then
-    m_half = ( m / 2 )
-    volume = r8_pi ** m_half
+  if (mod(m, 2) == 0) then
+    m_half = (m / 2)
+    volume = r8_pi**m_half
     do i = 1, m_half
-      volume = volume / real ( i, kind = 8 )
+      volume = volume / real(i, kind=8)
     end do
   else
-    m_half = ( ( m - 1 ) / 2 )
-    volume = r8_pi ** m_half * 2.0D+00 ** m
+    m_half = ((m - 1) / 2)
+    volume = r8_pi**m_half * 2.0D+00**m
     do i = m_half + 1, 2 * m_half + 1
-      volume = volume / real ( i, kind = 8 )
+      volume = volume / real(i, kind=8)
     end do
   end if
 
@@ -7574,7 +7573,7 @@ function hyperball01_volume ( m )
 
   return
 end
-function i4_dedekind_factor ( p, q )
+function i4_dedekind_factor(p, q)
 
 !*****************************************************************************80
 !
@@ -7607,20 +7606,20 @@ function i4_dedekind_factor ( p, q )
 !
   implicit none
 
-  real ( kind = 8 ) i4_dedekind_factor
-  integer ( kind = 4 ) p
-  integer ( kind = 4 ) q
+  real(kind=8) i4_dedekind_factor
+  integer(kind=4) p
+  integer(kind=4) q
 
-  if ( mod ( p, q ) == 0 ) then
+  if (mod(p, q) == 0) then
     i4_dedekind_factor = 0.0D+00
   else
-    i4_dedekind_factor = real ( p, kind = 8 ) / real ( q, kind = 8 ) &
-      - real ( ( p / q ), kind = 8 ) - 0.5D+00
+    i4_dedekind_factor = real(p, kind=8) / real(q, kind=8) &
+                         - real((p / q), kind=8) - 0.5D+00
   end if
 
   return
 end
-subroutine i4_dedekind_sum ( p, q, s )
+subroutine i4_dedekind_sum(p, q, s)
 
 !*****************************************************************************80
 !
@@ -7653,21 +7652,21 @@ subroutine i4_dedekind_sum ( p, q, s )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) i4_dedekind_factor
-  integer ( kind = 4 ) p
-  integer ( kind = 4 ) q
-  real ( kind = 8 ) s
+  integer(kind=4) i
+  real(kind=8) i4_dedekind_factor
+  integer(kind=4) p
+  integer(kind=4) q
+  real(kind=8) s
 
   s = 0.0D+00
 
   do i = 1, q
-    s = s + i4_dedekind_factor ( i, q ) * i4_dedekind_factor ( p * i, q )
+    s = s + i4_dedekind_factor(i, q) * i4_dedekind_factor(p * i, q)
   end do
 
   return
 end
-function i4_factorial2 ( n )
+function i4_factorial2(n)
 
 !*****************************************************************************80
 !
@@ -7699,11 +7698,11 @@ function i4_factorial2 ( n )
 !
   implicit none
 
-  integer ( kind = 4 ) i4_factorial2
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) n_copy
+  integer(kind=4) i4_factorial2
+  integer(kind=4) n
+  integer(kind=4) n_copy
 
-  if ( n < 1 ) then
+  if (n < 1) then
     i4_factorial2 = 1
     return
   end if
@@ -7711,14 +7710,14 @@ function i4_factorial2 ( n )
   n_copy = n
   i4_factorial2 = 1
 
-  do while ( 1 < n_copy )
+  do while (1 < n_copy)
     i4_factorial2 = i4_factorial2 * n_copy
     n_copy = n_copy - 2
   end do
 
   return
 end
-function i4_gcd ( i, j )
+function i4_gcd(i, j)
 
 !*****************************************************************************80
 !
@@ -7759,38 +7758,38 @@ function i4_gcd ( i, j )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_gcd
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) p
-  integer ( kind = 4 ) q
-  integer ( kind = 4 ) r
+  integer(kind=4) i
+  integer(kind=4) i4_gcd
+  integer(kind=4) j
+  integer(kind=4) p
+  integer(kind=4) q
+  integer(kind=4) r
 
   i4_gcd = 1
 !
 !  Return immediately if either I or J is zero.
 !
-  if ( i == 0 ) then
-    i4_gcd = max ( 1, abs ( j ) )
+  if (i == 0) then
+    i4_gcd = max(1, abs(j))
     return
-  else if ( j == 0 ) then
-    i4_gcd = max ( 1, abs ( i ) )
+  else if (j == 0) then
+    i4_gcd = max(1, abs(i))
     return
   end if
 !
 !  Set P to the larger of I and J, Q to the smaller.
 !  This way, we can alter P and Q as we go.
 !
-  p = max ( abs ( i ), abs ( j ) )
-  q = min ( abs ( i ), abs ( j ) )
+  p = max(abs(i), abs(j))
+  q = min(abs(i), abs(j))
 !
 !  Carry out the Euclidean algorithm.
 !
   do
 
-    r = mod ( p, q )
+    r = mod(p, q)
 
-    if ( r == 0 ) then
+    if (r == 0) then
       exit
     end if
 
@@ -7803,7 +7802,7 @@ function i4_gcd ( i, j )
 
   return
 end
-function i4_huge ( )
+function i4_huge()
 
 !*****************************************************************************80
 !
@@ -7852,13 +7851,13 @@ function i4_huge ( )
 !
   implicit none
 
-  integer ( kind = 4 ) i4_huge
+  integer(kind=4) i4_huge
 
   i4_huge = 2147483647
 
   return
 end
-function i4_lcm ( i, j )
+function i4_lcm(i, j)
 
 !*****************************************************************************80
 !
@@ -7895,16 +7894,16 @@ function i4_lcm ( i, j )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_gcd
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) i4_lcm
+  integer(kind=4) i
+  integer(kind=4) i4_gcd
+  integer(kind=4) j
+  integer(kind=4) i4_lcm
 
-  i4_lcm = abs ( i * ( j / i4_gcd ( i, j ) ) )
+  i4_lcm = abs(i * (j / i4_gcd(i, j)))
 
   return
 end
-function i4_modp ( i, j )
+function i4_modp(i, j)
 
 !*****************************************************************************80
 !
@@ -7959,26 +7958,26 @@ function i4_modp ( i, j )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_modp
-  integer ( kind = 4 ) j
+  integer(kind=4) i
+  integer(kind=4) i4_modp
+  integer(kind=4) j
 
-  if ( j == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4_MODP - Fatal error!'
-    write ( *, '(a,i8)' ) '  I4_MODP ( I, J ) called with J = ', j
+  if (j == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4_MODP - Fatal error!'
+    write (*, '(a,i8)') '  I4_MODP ( I, J ) called with J = ', j
     stop 1
   end if
 
-  i4_modp = mod ( i, j )
+  i4_modp = mod(i, j)
 
-  if ( i4_modp < 0 ) then
-    i4_modp = i4_modp + abs ( j )
+  if (i4_modp < 0) then
+    i4_modp = i4_modp + abs(j)
   end if
 
   return
 end
-subroutine i4_swap ( i, j )
+subroutine i4_swap(i, j)
 
 !*****************************************************************************80
 !
@@ -8003,9 +8002,9 @@ subroutine i4_swap ( i, j )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
+  integer(kind=4) i
+  integer(kind=4) j
+  integer(kind=4) k
 
   k = i
   i = j
@@ -8013,7 +8012,7 @@ subroutine i4_swap ( i, j )
 
   return
 end
-function i4_uniform ( a, b, seed )
+function i4_uniform(a, b, seed)
 
 !*****************************************************************************80
 !
@@ -8074,48 +8073,48 @@ function i4_uniform ( a, b, seed )
 !
   implicit none
 
-  integer ( kind = 4 ) a
-  integer ( kind = 4 ) b
-  integer ( kind = 4 ) i4_uniform
-  integer ( kind = 4 ) k
-  real ( kind = 4 ) r
-  integer ( kind = 4 ) seed
-  integer ( kind = 4 ) value
+  integer(kind=4) a
+  integer(kind=4) b
+  integer(kind=4) i4_uniform
+  integer(kind=4) k
+  real(kind=4) r
+  integer(kind=4) seed
+  integer(kind=4) value
 
-  if ( seed == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4_UNIFORM - Fatal error!'
-    write ( *, '(a)' ) '  Input value of SEED = 0.'
+  if (seed == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4_UNIFORM - Fatal error!'
+    write (*, '(a)') '  Input value of SEED = 0.'
     stop 1
   end if
 
   k = seed / 127773
 
-  seed = 16807 * ( seed - k * 127773 ) - k * 2836
+  seed = 16807 * (seed - k * 127773) - k * 2836
 
-  if ( seed < 0 ) then
+  if (seed < 0) then
     seed = seed + 2147483647
   end if
 
-  r = real ( seed, kind = 4 ) * 4.656612875E-10
+  r = real(seed, kind=4) * 4.656612875E-10
 !
 !  Scale R to lie between A-0.5 and B+0.5.
 !
-  r = ( 1.0E+00 - r ) * ( real ( min ( a, b ), kind = 4 ) - 0.5E+00 ) &
-    +             r   * ( real ( max ( a, b ), kind = 4 ) + 0.5E+00 )
+  r = (1.0E+00 - r) * (real(min(a, b), kind=4) - 0.5E+00) &
+      + r * (real(max(a, b), kind=4) + 0.5E+00)
 !
 !  Use rounding to convert R to an integer between A and B.
 !
-  value = nint ( r, kind = 4 )
+  value = nint(r, kind=4)
 
-  value = max ( value, min ( a, b ) )
-  value = min ( value, max ( a, b ) )
+  value = max(value, min(a, b))
+  value = min(value, max(a, b))
 
   i4_uniform = value
 
   return
 end
-function i4_wrap ( ival, ilo, ihi )
+function i4_wrap(ival, ilo, ihi)
 
 !*****************************************************************************80
 !
@@ -8168,29 +8167,29 @@ function i4_wrap ( ival, ilo, ihi )
 !
   implicit none
 
-  integer ( kind = 4 ) i4_modp
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) ihi
-  integer ( kind = 4 ) ilo
-  integer ( kind = 4 ) ival
-  integer ( kind = 4 ) jhi
-  integer ( kind = 4 ) jlo
-  integer ( kind = 4 ) wide
+  integer(kind=4) i4_modp
+  integer(kind=4) i4_wrap
+  integer(kind=4) ihi
+  integer(kind=4) ilo
+  integer(kind=4) ival
+  integer(kind=4) jhi
+  integer(kind=4) jlo
+  integer(kind=4) wide
 
-  jlo = min ( ilo, ihi )
-  jhi = max ( ilo, ihi )
+  jlo = min(ilo, ihi)
+  jhi = max(ilo, ihi)
 
   wide = jhi - jlo + 1
 
-  if ( wide == 1 ) then
+  if (wide == 1) then
     i4_wrap = jlo
   else
-    i4_wrap = jlo + i4_modp ( ival - jlo, wide )
+    i4_wrap = jlo + i4_modp(ival - jlo, wide)
   end if
 
   return
 end
-subroutine i4col_compare ( m, n, a, i, j, isgn )
+subroutine i4col_compare(m, n, a, i, j, isgn)
 
 !*****************************************************************************80
 !
@@ -8240,45 +8239,45 @@ subroutine i4col_compare ( m, n, a, i, j, isgn )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) isgn
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
+  integer(kind=4) a(m, n)
+  integer(kind=4) i
+  integer(kind=4) isgn
+  integer(kind=4) j
+  integer(kind=4) k
 !
 !  Check.
 !
-  if ( i < 1 .or. n < i ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4COL_COMPARE - Fatal error!'
-    write ( *, '(a)' ) '  Column index I is out of bounds.'
+  if (i < 1 .or. n < i) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4COL_COMPARE - Fatal error!'
+    write (*, '(a)') '  Column index I is out of bounds.'
     stop 1
   end if
 
-  if ( j < 1 .or. n < j ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4COL_COMPARE - Fatal error!'
-    write ( *, '(a)' ) '  Column index J is out of bounds.'
+  if (j < 1 .or. n < j) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4COL_COMPARE - Fatal error!'
+    write (*, '(a)') '  Column index J is out of bounds.'
     stop 1
   end if
 
   isgn = 0
 
-  if ( i == j ) then
+  if (i == j) then
     return
   end if
 
   k = 1
 
-  do while ( k <= m )
+  do while (k <= m)
 
-    if ( a(k,i) < a(k,j) ) then
+    if (a(k, i) < a(k, j)) then
       isgn = -1
       return
-    else if ( a(k,j) < a(k,i) ) then
+    else if (a(k, j) < a(k, i)) then
       isgn = +1
       return
     end if
@@ -8289,7 +8288,7 @@ subroutine i4col_compare ( m, n, a, i, j, isgn )
 
   return
 end
-subroutine i4col_find_item ( m, n, a, item, row, col )
+subroutine i4col_find_item(m, n, a, item, row, col)
 
 !*****************************************************************************80
 !
@@ -8324,19 +8323,19 @@ subroutine i4col_find_item ( m, n, a, item, row, col )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) col
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) item
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) row
+  integer(kind=4) a(m, n)
+  integer(kind=4) col
+  integer(kind=4) i
+  integer(kind=4) item
+  integer(kind=4) j
+  integer(kind=4) row
 
   do j = 1, n
     do i = 1, m
-      if ( a(i,j) == item ) then
+      if (a(i, j) == item) then
         row = i
         col = j
         return
@@ -8349,7 +8348,7 @@ subroutine i4col_find_item ( m, n, a, item, row, col )
 
   return
 end
-subroutine i4col_find_pair_wrap ( m, n, a, item1, item2, row, col )
+subroutine i4col_find_pair_wrap(m, n, a, item1, item2, row, col)
 
 !*****************************************************************************80
 !
@@ -8391,30 +8390,30 @@ subroutine i4col_find_pair_wrap ( m, n, a, item1, item2, row, col )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) col
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i2
-  integer ( kind = 4 ) item1
-  integer ( kind = 4 ) item2
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) row
+  integer(kind=4) a(m, n)
+  integer(kind=4) col
+  integer(kind=4) i
+  integer(kind=4) i2
+  integer(kind=4) item1
+  integer(kind=4) item2
+  integer(kind=4) j
+  integer(kind=4) row
 
   do j = 1, n
     do i = 1, m
 
-      if ( a(i,j) == item1 ) then
+      if (a(i, j) == item1) then
 
         i2 = i + 1
 
-        if ( m < i2 ) then
+        if (m < i2) then
           i2 = 1
         end if
 
-        if ( a(i2,j) == item2 ) then
+        if (a(i2, j) == item2) then
           row = i
           col = j
           return
@@ -8430,7 +8429,7 @@ subroutine i4col_find_pair_wrap ( m, n, a, item1, item2, row, col )
 
   return
 end
-subroutine i4col_sort_a ( m, n, a )
+subroutine i4col_sort_a(m, n, a)
 
 !*****************************************************************************80
 !
@@ -8474,20 +8473,20 @@ subroutine i4col_sort_a ( m, n, a )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) indx
-  integer ( kind = 4 ) isgn
-  integer ( kind = 4 ) j
+  integer(kind=4) a(m, n)
+  integer(kind=4) i
+  integer(kind=4) indx
+  integer(kind=4) isgn
+  integer(kind=4) j
 
-  if ( m <= 0 ) then
+  if (m <= 0) then
     return
   end if
 
-  if ( n <= 1 ) then
+  if (n <= 1) then
     return
   end if
 !
@@ -8502,21 +8501,21 @@ subroutine i4col_sort_a ( m, n, a )
 !
   do
 
-    call sort_heap_external ( n, indx, i, j, isgn )
+    call sort_heap_external(n, indx, i, j, isgn)
 !
 !  Interchange the I and J objects.
 !
-    if ( 0 < indx ) then
+    if (0 < indx) then
 
-      call i4col_swap ( m, n, a, i, j )
+      call i4col_swap(m, n, a, i, j)
 !
 !  Compare the I and J objects.
 !
-    else if ( indx < 0 ) then
+    else if (indx < 0) then
 
-      call i4col_compare ( m, n, a, i, j, isgn )
+      call i4col_compare(m, n, a, i, j, isgn)
 
-    else if ( indx == 0 ) then
+    else if (indx == 0) then
 
       exit
 
@@ -8526,7 +8525,7 @@ subroutine i4col_sort_a ( m, n, a )
 
   return
 end
-subroutine i4col_sorted_unique_count ( m, n, a, unique_num )
+subroutine i4col_sorted_unique_count(m, n, a, unique_num)
 
 !*****************************************************************************80
 !
@@ -8559,15 +8558,15 @@ subroutine i4col_sorted_unique_count ( m, n, a, unique_num )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) j1
-  integer ( kind = 4 ) j2
-  integer ( kind = 4 ) unique_num
+  integer(kind=4) a(m, n)
+  integer(kind=4) j1
+  integer(kind=4) j2
+  integer(kind=4) unique_num
 
-  if ( n <= 0 ) then
+  if (n <= 0) then
     unique_num = 0
     return
   end if
@@ -8577,7 +8576,7 @@ subroutine i4col_sorted_unique_count ( m, n, a, unique_num )
 
   do j2 = 2, n
 
-    if ( any ( a(1:m,j1) /= a(1:m,j2) ) ) then
+    if (any(a(1:m, j1) /= a(1:m, j2))) then
       unique_num = unique_num + 1
       j1 = j2
     end if
@@ -8586,7 +8585,7 @@ subroutine i4col_sorted_unique_count ( m, n, a, unique_num )
 
   return
 end
-subroutine i4col_swap ( m, n, a, i, j )
+subroutine i4col_swap(m, n, a, i, j)
 
 !*****************************************************************************80
 !
@@ -8634,37 +8633,37 @@ subroutine i4col_swap ( m, n, a, i, j )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) col(m)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
+  integer(kind=4) a(m, n)
+  integer(kind=4) col(m)
+  integer(kind=4) i
+  integer(kind=4) j
 
-  if ( i < 1 .or. n < i .or. j < 1 .or. n < j ) then
+  if (i < 1 .or. n < i .or. j < 1 .or. n < j) then
 
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4COL_SWAP - Fatal error!'
-    write ( *, '(a)' ) '  I or J is out of bounds.'
-    write ( *, '(a,i8)' ) '  I =    ', i
-    write ( *, '(a,i8)' ) '  J =    ', j
-    write ( *, '(a,i8)' ) '  N =    ', n
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4COL_SWAP - Fatal error!'
+    write (*, '(a)') '  I or J is out of bounds.'
+    write (*, '(a,i8)') '  I =    ', i
+    write (*, '(a,i8)') '  J =    ', j
+    write (*, '(a,i8)') '  N =    ', n
     stop 1
 
   end if
 
-  if ( i == j ) then
+  if (i == j) then
     return
   end if
 
-  col(1:m) = a(1:m,i)
-  a(1:m,i) = a(1:m,j)
-  a(1:m,j) = col(1:m)
+  col(1:m) = a(1:m, i)
+  a(1:m, i) = a(1:m, j)
+  a(1:m, j) = col(1:m)
 
   return
 end
-subroutine i4mat_print ( m, n, a, title )
+subroutine i4mat_print(m, n, a, title)
 
 !*****************************************************************************80
 !
@@ -8694,26 +8693,26 @@ subroutine i4mat_print ( m, n, a, title )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) ihi
-  integer ( kind = 4 ) ilo
-  integer ( kind = 4 ) jhi
-  integer ( kind = 4 ) jlo
-  character ( len = * )  title
+  integer(kind=4) a(m, n)
+  integer(kind=4) ihi
+  integer(kind=4) ilo
+  integer(kind=4) jhi
+  integer(kind=4) jlo
+  character(len=*) title
 
   ilo = 1
   ihi = m
   jlo = 1
   jhi = n
 
-  call i4mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
+  call i4mat_print_some(m, n, a, ilo, jlo, ihi, jhi, title)
 
   return
 end
-subroutine i4mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
+subroutine i4mat_print_some(m, n, a, ilo, jlo, ihi, jhi, title)
 
 !*****************************************************************************80
 !
@@ -8749,50 +8748,50 @@ subroutine i4mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: incx = 10
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: incx = 10
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  character ( len = 8 )  ctemp(incx)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i2hi
-  integer ( kind = 4 ) i2lo
-  integer ( kind = 4 ) ihi
-  integer ( kind = 4 ) ilo
-  integer ( kind = 4 ) inc
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) j2
-  integer ( kind = 4 ) j2hi
-  integer ( kind = 4 ) j2lo
-  integer ( kind = 4 ) jhi
-  integer ( kind = 4 ) jlo
-  character ( len = * )  title
+  integer(kind=4) a(m, n)
+  character(len=8) ctemp(incx)
+  integer(kind=4) i
+  integer(kind=4) i2hi
+  integer(kind=4) i2lo
+  integer(kind=4) ihi
+  integer(kind=4) ilo
+  integer(kind=4) inc
+  integer(kind=4) j
+  integer(kind=4) j2
+  integer(kind=4) j2hi
+  integer(kind=4) j2lo
+  integer(kind=4) jhi
+  integer(kind=4) jlo
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
 
-  do j2lo = max ( jlo, 1 ), min ( jhi, n ), incx
+  do j2lo = max(jlo, 1), min(jhi, n), incx
 
     j2hi = j2lo + incx - 1
-    j2hi = min ( j2hi, n )
-    j2hi = min ( j2hi, jhi )
+    j2hi = min(j2hi, n)
+    j2hi = min(j2hi, jhi)
 
     inc = j2hi + 1 - j2lo
 
-    write ( *, '(a)' ) ' '
+    write (*, '(a)') ' '
 
     do j = j2lo, j2hi
       j2 = j + 1 - j2lo
-      write ( ctemp(j2), '(i8)' ) j
+      write (ctemp(j2), '(i8)') j
     end do
 
-    write ( *, '(''  Col '',10a8)' ) ctemp(1:inc)
-    write ( *, '(a)' ) '  Row'
-    write ( *, '(a)' ) ' '
+    write (*, '(''  Col '',10a8)') ctemp(1:inc)
+    write (*, '(a)') '  Row'
+    write (*, '(a)') ' '
 
-    i2lo = max ( ilo, 1 )
-    i2hi = min ( ihi, m )
+    i2lo = max(ilo, 1)
+    i2hi = min(ihi, m)
 
     do i = i2lo, i2hi
 
@@ -8800,11 +8799,11 @@ subroutine i4mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 
         j = j2lo - 1 + j2
 
-        write ( ctemp(j2), '(i8)' ) a(i,j)
+        write (ctemp(j2), '(i8)') a(i, j)
 
       end do
 
-      write ( *, '(i5,a,10a8)' ) i, ':', ( ctemp(j), j = 1, inc )
+      write (*, '(i5,a,10a8)') i, ':', (ctemp(j), j=1, inc)
 
     end do
 
@@ -8812,7 +8811,7 @@ subroutine i4mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 
   return
 end
-subroutine i4mat_transpose_print ( m, n, a, title )
+subroutine i4mat_transpose_print(m, n, a, title)
 
 !*****************************************************************************80
 !
@@ -8840,17 +8839,17 @@ subroutine i4mat_transpose_print ( m, n, a, title )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  character ( len = * ) title
+  integer(kind=4) a(m, n)
+  character(len=*) title
 
-  call i4mat_transpose_print_some ( m, n, a, 1, 1, m, n, title )
+  call i4mat_transpose_print_some(m, n, a, 1, 1, m, n, title)
 
   return
 end
-subroutine i4mat_transpose_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
+subroutine i4mat_transpose_print_some(m, n, a, ilo, jlo, ihi, jhi, title)
 
 !*****************************************************************************80
 !
@@ -8886,50 +8885,50 @@ subroutine i4mat_transpose_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: incx = 10
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: incx = 10
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  character ( len = 8 )  ctemp(incx)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i2
-  integer ( kind = 4 ) i2hi
-  integer ( kind = 4 ) i2lo
-  integer ( kind = 4 ) ihi
-  integer ( kind = 4 ) ilo
-  integer ( kind = 4 ) inc
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) j2hi
-  integer ( kind = 4 ) j2lo
-  integer ( kind = 4 ) jhi
-  integer ( kind = 4 ) jlo
-  character ( len = * )  title
+  integer(kind=4) a(m, n)
+  character(len=8) ctemp(incx)
+  integer(kind=4) i
+  integer(kind=4) i2
+  integer(kind=4) i2hi
+  integer(kind=4) i2lo
+  integer(kind=4) ihi
+  integer(kind=4) ilo
+  integer(kind=4) inc
+  integer(kind=4) j
+  integer(kind=4) j2hi
+  integer(kind=4) j2lo
+  integer(kind=4) jhi
+  integer(kind=4) jlo
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
 
-  do i2lo = max ( ilo, 1 ), min ( ihi, m ), incx
+  do i2lo = max(ilo, 1), min(ihi, m), incx
 
     i2hi = i2lo + incx - 1
-    i2hi = min ( i2hi, m )
-    i2hi = min ( i2hi, ihi )
+    i2hi = min(i2hi, m)
+    i2hi = min(i2hi, ihi)
 
     inc = i2hi + 1 - i2lo
 
-    write ( *, '(a)' ) ' '
+    write (*, '(a)') ' '
 
     do i = i2lo, i2hi
       i2 = i + 1 - i2lo
-      write ( ctemp(i2), '(i8)' ) i
+      write (ctemp(i2), '(i8)') i
     end do
 
-    write ( *, '(''  Row '',10a8)' ) ctemp(1:inc)
-    write ( *, '(a)' ) '  Col'
-    write ( *, '(a)' ) ' '
+    write (*, '(''  Row '',10a8)') ctemp(1:inc)
+    write (*, '(a)') '  Col'
+    write (*, '(a)') ' '
 
-    j2lo = max ( jlo, 1 )
-    j2hi = min ( jhi, n )
+    j2lo = max(jlo, 1)
+    j2hi = min(jhi, n)
 
     do j = j2lo, j2hi
 
@@ -8937,11 +8936,11 @@ subroutine i4mat_transpose_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 
         i = i2lo - 1 + i2
 
-        write ( ctemp(i2), '(i8)' ) a(i,j)
+        write (ctemp(i2), '(i8)') a(i, j)
 
       end do
 
-      write ( *, '(i5,a,10a8)' ) j, ':', ( ctemp(i), i = 1, inc )
+      write (*, '(i5,a,10a8)') j, ':', (ctemp(i), i=1, inc)
 
     end do
 
@@ -8949,7 +8948,7 @@ subroutine i4mat_transpose_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 
   return
 end
-subroutine i4row_compare ( m, n, a, i, j, isgn )
+subroutine i4row_compare(m, n, a, i, j, isgn)
 
 !*****************************************************************************80
 !
@@ -8999,61 +8998,61 @@ subroutine i4row_compare ( m, n, a, i, j, isgn )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) isgn
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
+  integer(kind=4) a(m, n)
+  integer(kind=4) i
+  integer(kind=4) isgn
+  integer(kind=4) j
+  integer(kind=4) k
 !
 !  Check that I and J are legal.
 !
-  if ( i < 1 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4ROW_COMPARE - Fatal error!'
-    write ( *, '(a)' ) '  Row index I is less than 1.'
-    write ( *, '(a,i8)' ) '  I = ', i
+  if (i < 1) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4ROW_COMPARE - Fatal error!'
+    write (*, '(a)') '  Row index I is less than 1.'
+    write (*, '(a,i8)') '  I = ', i
     stop 1
-  else if ( m < i ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4ROW_COMPARE - Fatal error!'
-    write ( *, '(a)' ) '  Row index I is out of bounds.'
-    write ( *, '(a,i8)' ) '  I = ', i
-    write ( *, '(a,i8)' ) '  Maximum legal value is M = ', m
+  else if (m < i) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4ROW_COMPARE - Fatal error!'
+    write (*, '(a)') '  Row index I is out of bounds.'
+    write (*, '(a,i8)') '  I = ', i
+    write (*, '(a,i8)') '  Maximum legal value is M = ', m
     stop 1
   end if
 
-  if ( j < 1 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4ROW_COMPARE - Fatal error!'
-    write ( *, '(a)' ) '  Row index J is less than 1.'
-    write ( *, '(a,i8)' ) '  J = ', j
+  if (j < 1) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4ROW_COMPARE - Fatal error!'
+    write (*, '(a)') '  Row index J is less than 1.'
+    write (*, '(a,i8)') '  J = ', j
     stop 1
-  else if ( m < j ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4ROW_COMPARE - Fatal error!'
-    write ( *, '(a)' ) '  Row index J is out of bounds.'
-    write ( *, '(a,i8)' ) '  J = ', j
-    write ( *, '(a,i8)' ) '  Maximum legal value is M = ', m
+  else if (m < j) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4ROW_COMPARE - Fatal error!'
+    write (*, '(a)') '  Row index J is out of bounds.'
+    write (*, '(a,i8)') '  J = ', j
+    write (*, '(a,i8)') '  Maximum legal value is M = ', m
     stop 1
   end if
 
   isgn = 0
 
-  if ( i == j ) then
+  if (i == j) then
     return
   end if
 
   k = 1
 
-  do while ( k <= n )
+  do while (k <= n)
 
-    if ( a(i,k) < a(j,k) ) then
+    if (a(i, k) < a(j, k)) then
       isgn = -1
       return
-    else if ( a(j,k) < a(i,k) ) then
+    else if (a(j, k) < a(i, k)) then
       isgn = +1
       return
     end if
@@ -9064,7 +9063,7 @@ subroutine i4row_compare ( m, n, a, i, j, isgn )
 
   return
 end
-subroutine i4row_sort_a ( m, n, a )
+subroutine i4row_sort_a(m, n, a)
 
 !*****************************************************************************80
 !
@@ -9130,14 +9129,14 @@ subroutine i4row_sort_a ( m, n, a )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) indx
-  integer ( kind = 4 ) isgn
-  integer ( kind = 4 ) j
+  integer(kind=4) a(m, n)
+  integer(kind=4) i
+  integer(kind=4) indx
+  integer(kind=4) isgn
+  integer(kind=4) j
 !
 !  Initialize.
 !
@@ -9150,21 +9149,21 @@ subroutine i4row_sort_a ( m, n, a )
 !
   do
 
-    call sort_heap_external ( m, indx, i, j, isgn )
+    call sort_heap_external(m, indx, i, j, isgn)
 !
 !  Interchange the I and J objects.
 !
-    if ( 0 < indx ) then
+    if (0 < indx) then
 
-      call i4row_swap ( m, n, a, i, j )
+      call i4row_swap(m, n, a, i, j)
 !
 !  Compare the I and J objects.
 !
-    else if ( indx < 0 ) then
+    else if (indx < 0) then
 
-      call i4row_compare ( m, n, a, i, j, isgn )
+      call i4row_compare(m, n, a, i, j, isgn)
 
-    else if ( indx == 0 ) then
+    else if (indx == 0) then
 
       exit
 
@@ -9174,7 +9173,7 @@ subroutine i4row_sort_a ( m, n, a )
 
   return
 end
-subroutine i4row_sorted_unique_count ( m, n, a, unique_num )
+subroutine i4row_sorted_unique_count(m, n, a, unique_num)
 
 !*****************************************************************************80
 !
@@ -9207,15 +9206,15 @@ subroutine i4row_sorted_unique_count ( m, n, a, unique_num )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) i1
-  integer ( kind = 4 ) i2
-  integer ( kind = 4 ) unique_num
+  integer(kind=4) a(m, n)
+  integer(kind=4) i1
+  integer(kind=4) i2
+  integer(kind=4) unique_num
 
-  if ( n <= 0 ) then
+  if (n <= 0) then
     unique_num = 0
     return
   end if
@@ -9225,7 +9224,7 @@ subroutine i4row_sorted_unique_count ( m, n, a, unique_num )
 
   do i2 = 2, m
 
-    if ( any ( a(i1,1:n) /= a(i2,1:n) ) ) then
+    if (any(a(i1, 1:n) /= a(i2, 1:n))) then
       unique_num = unique_num + 1
       i1 = i2
     end if
@@ -9234,7 +9233,7 @@ subroutine i4row_sorted_unique_count ( m, n, a, unique_num )
 
   return
 end
-subroutine i4row_swap ( m, n, a, irow1, irow2 )
+subroutine i4row_swap(m, n, a, irow1, irow2)
 
 !*****************************************************************************80
 !
@@ -9262,41 +9261,41 @@ subroutine i4row_swap ( m, n, a, irow1, irow2 )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(m,n)
-  integer ( kind = 4 ) irow1
-  integer ( kind = 4 ) irow2
-  integer ( kind = 4 ) row(n)
+  integer(kind=4) a(m, n)
+  integer(kind=4) irow1
+  integer(kind=4) irow2
+  integer(kind=4) row(n)
 !
 !  Check.
 !
-  if ( irow1 < 1 .or. m < irow1 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4ROW_SWAP - Fatal error!'
-    write ( *, '(a)' ) '  IROW1 is out of range.'
+  if (irow1 < 1 .or. m < irow1) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4ROW_SWAP - Fatal error!'
+    write (*, '(a)') '  IROW1 is out of range.'
     stop 1
   end if
 
-  if ( irow2 < 1 .or. m < irow2 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4ROW_SWAP - Fatal error!'
-    write ( *, '(a)' ) '  IROW2 is out of range.'
+  if (irow2 < 1 .or. m < irow2) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4ROW_SWAP - Fatal error!'
+    write (*, '(a)') '  IROW2 is out of range.'
     stop 1
   end if
 
-  if ( irow1 == irow2 ) then
+  if (irow1 == irow2) then
     return
   end if
 
-  row(1:n) = a(irow1,1:n)
-  a(irow1,1:n) = a(irow2,1:n)
-  a(irow2,1:n) = row(1:n)
+  row(1:n) = a(irow1, 1:n)
+  a(irow1, 1:n) = a(irow2, 1:n)
+  a(irow2, 1:n) = row(1:n)
 
   return
 end
-subroutine i4vec_heap_d ( n, a )
+subroutine i4vec_heap_d(n, a)
 
 !*****************************************************************************80
 !
@@ -9347,17 +9346,17 @@ subroutine i4vec_heap_d ( n, a )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ifree
-  integer ( kind = 4 ) key
-  integer ( kind = 4 ) m
+  integer(kind=4) a(n)
+  integer(kind=4) i
+  integer(kind=4) ifree
+  integer(kind=4) key
+  integer(kind=4) m
 !
 !  Only nodes N/2 down to 1 can be "parent" nodes.
 !
-  do i = n/2, 1, -1
+  do i = n / 2, 1, -1
 !
 !  Copy the value out of the parent node.
 !  Position IFREE is now "open".
@@ -9374,18 +9373,18 @@ subroutine i4vec_heap_d ( n, a )
 !
 !  Does the first position exist?
 !
-      if ( n < m ) then
+      if (n < m) then
         exit
       end if
 !
 !  Does the second position exist?
 !
-      if ( m + 1 <= n ) then
+      if (m + 1 <= n) then
 !
 !  If both positions exist, take the larger of the two values,
 !  and update M if necessary.
 !
-        if ( a(m) < a(m+1) ) then
+        if (a(m) < a(m + 1)) then
           m = m + 1
         end if
 
@@ -9395,7 +9394,7 @@ subroutine i4vec_heap_d ( n, a )
 !  and update IFREE, the location of the free position, and
 !  consider the descendants of THIS position.
 !
-      if ( a(m) <= key ) then
+      if (a(m) <= key) then
         exit
       end if
 
@@ -9412,7 +9411,7 @@ subroutine i4vec_heap_d ( n, a )
 
   return
 end
-subroutine i4vec_indicator ( n, a )
+subroutine i4vec_indicator(n, a)
 
 !*****************************************************************************80
 !
@@ -9438,10 +9437,10 @@ subroutine i4vec_indicator ( n, a )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(n)
-  integer ( kind = 4 ) i
+  integer(kind=4) a(n)
+  integer(kind=4) i
 
   do i = 1, n
     a(i) = i
@@ -9449,7 +9448,7 @@ subroutine i4vec_indicator ( n, a )
 
   return
 end
-function i4vec_lcm ( n, v )
+function i4vec_lcm(n, v)
 
 !*****************************************************************************80
 !
@@ -9488,25 +9487,25 @@ function i4vec_lcm ( n, v )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_lcm
-  integer ( kind = 4 ) i4vec_lcm
-  integer ( kind = 4 ) lcm
-  integer ( kind = 4 ) v(n)
+  integer(kind=4) i
+  integer(kind=4) i4_lcm
+  integer(kind=4) i4vec_lcm
+  integer(kind=4) lcm
+  integer(kind=4) v(n)
 
   lcm = 1
 
   do i = 1, n
 
-    if ( v(i) == 0 ) then
+    if (v(i) == 0) then
       lcm = 0
       i4vec_lcm = lcm
       return
     end if
 
-    lcm = i4_lcm ( lcm, v(i) )
+    lcm = i4_lcm(lcm, v(i))
 
   end do
 
@@ -9514,7 +9513,7 @@ function i4vec_lcm ( n, v )
 
   return
 end
-subroutine i4vec_print ( n, a, title )
+subroutine i4vec_print(n, a, title)
 
 !*****************************************************************************80
 !
@@ -9546,22 +9545,22 @@ subroutine i4vec_print ( n, a, title )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(n)
-  integer ( kind = 4 ) i
-  character ( len = * ) title
+  integer(kind=4) a(n)
+  integer(kind=4) i
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
-  write ( *, '(a)' ) ' '
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
+  write (*, '(a)') ' '
   do i = 1, n
-    write ( *, '(2x,i8,a,2x,i12)' ) i, ':', a(i)
+    write (*, '(2x,i8,a,2x,i12)') i, ':', a(i)
   end do
 
   return
 end
-subroutine i4vec_sort_heap_a ( n, a )
+subroutine i4vec_sort_heap_a(n, a)
 
 !*****************************************************************************80
 !
@@ -9596,25 +9595,25 @@ subroutine i4vec_sort_heap_a ( n, a )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(n)
-  integer ( kind = 4 ) n1
+  integer(kind=4) a(n)
+  integer(kind=4) n1
 
-  if ( n <= 1 ) then
+  if (n <= 1) then
     return
   end if
 !
 !  1: Put A into descending heap form.
 !
-  call i4vec_heap_d ( n, a )
+  call i4vec_heap_d(n, a)
 !
 !  2: Sort A.
 !
 !  The largest object in the heap is in A(1).
 !  Move it to position A(N).
 !
-  call i4_swap ( a(1), a(n) )
+  call i4_swap(a(1), a(n))
 !
 !  Consider the diminished heap of size N1.
 !
@@ -9622,17 +9621,17 @@ subroutine i4vec_sort_heap_a ( n, a )
 !
 !  Restore the heap structure of A(1) through A(N1).
 !
-    call i4vec_heap_d ( n1, a )
+    call i4vec_heap_d(n1, a)
 !
 !  Take the largest object from A(1) and move it to A(N1).
 !
-    call i4_swap ( a(1), a(n1) )
+    call i4_swap(a(1), a(n1))
 
   end do
 
   return
 end
-subroutine i4vec_sorted_unique ( n, a, unique_num )
+subroutine i4vec_sorted_unique(n, a, unique_num)
 
 !*****************************************************************************80
 !
@@ -9662,15 +9661,15 @@ subroutine i4vec_sorted_unique ( n, a, unique_num )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a(n)
-  integer ( kind = 4 ) itest
-  integer ( kind = 4 ) unique_num
+  integer(kind=4) a(n)
+  integer(kind=4) itest
+  integer(kind=4) unique_num
 
   unique_num = 0
 
-  if ( n <= 0 ) then
+  if (n <= 0) then
     return
   end if
 
@@ -9678,7 +9677,7 @@ subroutine i4vec_sorted_unique ( n, a, unique_num )
 
   do itest = 2, n
 
-    if ( a(itest) /= a(unique_num) ) then
+    if (a(itest) /= a(unique_num)) then
       unique_num = unique_num + 1
       a(unique_num) = a(itest)
     end if
@@ -9687,7 +9686,7 @@ subroutine i4vec_sorted_unique ( n, a, unique_num )
 
   return
 end
-subroutine i4vec_uniform ( n, a, b, seed, x )
+subroutine i4vec_uniform(n, a, b, seed, x)
 
 !*****************************************************************************80
 !
@@ -9725,21 +9724,21 @@ subroutine i4vec_uniform ( n, a, b, seed, x )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a
-  integer ( kind = 4 ) b
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) k
-  real ( kind = 4 ) r
-  integer ( kind = 4 ) seed
-  integer ( kind = 4 ) value
-  integer ( kind = 4 ) x(n)
+  integer(kind=4) a
+  integer(kind=4) b
+  integer(kind=4) i
+  integer(kind=4) k
+  real(kind=4) r
+  integer(kind=4) seed
+  integer(kind=4) value
+  integer(kind=4) x(n)
 
-  if ( seed == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'I4VEC_UNIFORM - Fatal error!'
-    write ( *, '(a)' ) '  Input value of SEED = 0.'
+  if (seed == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'I4VEC_UNIFORM - Fatal error!'
+    write (*, '(a)') '  Input value of SEED = 0.'
     stop 1
   end if
 
@@ -9747,25 +9746,25 @@ subroutine i4vec_uniform ( n, a, b, seed, x )
 
     k = seed / 127773
 
-    seed = 16807 * ( seed - k * 127773 ) - k * 2836
+    seed = 16807 * (seed - k * 127773) - k * 2836
 
-    if ( seed < 0 ) then
+    if (seed < 0) then
       seed = seed + 2147483647
     end if
 
-    r = real ( seed, kind = 4 ) * 4.656612875E-10
+    r = real(seed, kind=4) * 4.656612875E-10
 !
 !  Scale R to lie between A-0.5 and B+0.5.
 !
-    r = ( 1.0E+00 - r ) * ( real ( min ( a, b ), kind = 4 ) - 0.5E+00 ) &
-      +             r   * ( real ( max ( a, b ), kind = 4 ) + 0.5E+00 )
+    r = (1.0E+00 - r) * (real(min(a, b), kind=4) - 0.5E+00) &
+        + r * (real(max(a, b), kind=4) + 0.5E+00)
 !
 !  Use rounding to convert R to an integer between A and B.
 !
-    value = nint ( r, kind = 4 )
+    value = nint(r, kind=4)
 
-    value = max ( value, min ( a, b ) )
-    value = min ( value, max ( a, b ) )
+    value = max(value, min(a, b))
+    value = min(value, max(a, b))
 
     x(i) = value
 
@@ -9773,7 +9772,7 @@ subroutine i4vec_uniform ( n, a, b, seed, x )
 
   return
 end
-subroutine i4vec2_compare ( n, a1, a2, i, j, isgn )
+subroutine i4vec2_compare(n, a1, a2, i, j, isgn)
 
 !*****************************************************************************80
 !
@@ -9807,31 +9806,31 @@ subroutine i4vec2_compare ( n, a1, a2, i, j, isgn )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a1(n)
-  integer ( kind = 4 ) a2(n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) isgn
-  integer ( kind = 4 ) j
+  integer(kind=4) a1(n)
+  integer(kind=4) a2(n)
+  integer(kind=4) i
+  integer(kind=4) isgn
+  integer(kind=4) j
 
   isgn = 0
 
-       if ( a1(i) < a1(j) ) then
+  if (a1(i) < a1(j)) then
 
     isgn = -1
 
-  else if ( a1(i) == a1(j) ) then
+  else if (a1(i) == a1(j)) then
 
-         if ( a2(i) < a2(j) ) then
+    if (a2(i) < a2(j)) then
       isgn = -1
-    else if ( a2(i) < a2(j) ) then
+    else if (a2(i) < a2(j)) then
       isgn = 0
-    else if ( a2(j) < a2(i) ) then
+    else if (a2(j) < a2(i)) then
       isgn = +1
     end if
 
-  else if ( a1(j) < a1(i) ) then
+  else if (a1(j) < a1(i)) then
 
     isgn = +1
 
@@ -9839,7 +9838,7 @@ subroutine i4vec2_compare ( n, a1, a2, i, j, isgn )
 
   return
 end
-subroutine i4vec2_sort_a ( n, a1, a2 )
+subroutine i4vec2_sort_a(n, a1, a2)
 
 !*****************************************************************************80
 !
@@ -9870,14 +9869,14 @@ subroutine i4vec2_sort_a ( n, a1, a2 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a1(n)
-  integer ( kind = 4 ) a2(n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) indx
-  integer ( kind = 4 ) isgn
-  integer ( kind = 4 ) j
+  integer(kind=4) a1(n)
+  integer(kind=4) a2(n)
+  integer(kind=4) i
+  integer(kind=4) indx
+  integer(kind=4) isgn
+  integer(kind=4) j
 !
 !  Initialize.
 !
@@ -9890,22 +9889,22 @@ subroutine i4vec2_sort_a ( n, a1, a2 )
 !
   do
 
-    call sort_heap_external ( n, indx, i, j, isgn )
+    call sort_heap_external(n, indx, i, j, isgn)
 !
 !  Interchange the I and J objects.
 !
-    if ( 0 < indx ) then
+    if (0 < indx) then
 
-      call i4_swap ( a1(i), a1(j) )
-      call i4_swap ( a2(i), a2(j) )
+      call i4_swap(a1(i), a1(j))
+      call i4_swap(a2(i), a2(j))
 !
 !  Compare the I and J objects.
 !
-    else if ( indx < 0 ) then
+    else if (indx < 0) then
 
-      call i4vec2_compare ( n, a1, a2, i, j, isgn )
+      call i4vec2_compare(n, a1, a2, i, j, isgn)
 
-    else if ( indx == 0 ) then
+    else if (indx == 0) then
 
       exit
 
@@ -9915,7 +9914,7 @@ subroutine i4vec2_sort_a ( n, a1, a2 )
 
   return
 end
-subroutine i4vec2_sorted_unique ( n, a1, a2, unique_num )
+subroutine i4vec2_sorted_unique(n, a1, a2, unique_num)
 
 !*****************************************************************************80
 !
@@ -9955,16 +9954,16 @@ subroutine i4vec2_sorted_unique ( n, a1, a2, unique_num )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) a1(n)
-  integer ( kind = 4 ) a2(n)
-  integer ( kind = 4 ) itest
-  integer ( kind = 4 ) unique_num
+  integer(kind=4) a1(n)
+  integer(kind=4) a2(n)
+  integer(kind=4) itest
+  integer(kind=4) unique_num
 
   unique_num = 0
 
-  if ( n <= 0 ) then
+  if (n <= 0) then
     return
   end if
 
@@ -9972,7 +9971,7 @@ subroutine i4vec2_sorted_unique ( n, a1, a2, unique_num )
 
   do itest = 2, n
 
-    if ( a1(itest) /= a1(unique_num) .or. a2(itest) /= a2(unique_num) ) then
+    if (a1(itest) /= a1(unique_num) .or. a2(itest) /= a2(unique_num)) then
 
       unique_num = unique_num + 1
 
@@ -9985,8 +9984,8 @@ subroutine i4vec2_sorted_unique ( n, a1, a2, unique_num )
 
   return
 end
-subroutine icos_shape ( point_num, edge_num, face_num, face_order_max, &
-  point_coord, edge_point, face_order, face_point )
+subroutine icos_shape(point_num, edge_num, face_num, face_order_max, &
+                      point_coord, edge_point, face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -10045,113 +10044,113 @@ subroutine icos_shape ( point_num, edge_num, face_num, face_order_max, &
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ), parameter :: edge_order = 2
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4), parameter :: edge_order = 2
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) point_num
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  integer ( kind = 4 ) edge_point(edge_order,edge_num)
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) point_coord(dim_num,point_num)
-  real ( kind = 8 ) z
+  real(kind=8) a
+  real(kind=8) b
+  integer(kind=4) edge_point(edge_order, edge_num)
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  real(kind=8) phi
+  real(kind=8) point_coord(dim_num, point_num)
+  real(kind=8) z
 !
 !  Set the point coordinates.
 !
-  phi = 0.5D+00 * ( sqrt ( 5.0D+00 ) + 1.0D+00 )
+  phi = 0.5D+00 * (sqrt(5.0D+00) + 1.0D+00)
 
-  a = phi / sqrt ( 1.0D+00 + phi * phi )
-  b = 1.0D+00 / sqrt ( 1.0D+00 + phi * phi )
+  a = phi / sqrt(1.0D+00 + phi * phi)
+  b = 1.0D+00 / sqrt(1.0D+00 + phi * phi)
   z = 0.0D+00
 !
 !  A*A + B*B + Z*Z = 1.
 !
-  point_coord(1:dim_num,1:point_num) = reshape ( (/ &
-      a,  b,  z, &
-      a, -b,  z, &
-      b,  z,  a, &
-      b,  z, -a, &
-      z,  a,  b, &
-      z,  a, -b, &
-      z, -a,  b, &
-      z, -a, -b, &
-     -b,  z,  a, &
-     -b,  z, -a, &
-     -a,  b,  z, &
-     -a, -b,  z /), (/ dim_num, point_num /) )
+  point_coord(1:dim_num, 1:point_num) = reshape((/ &
+                                                a, b, z, &
+                                                a, -b, z, &
+                                                b, z, a, &
+                                                b, z, -a, &
+                                                z, a, b, &
+                                                z, a, -b, &
+                                                z, -a, b, &
+                                                z, -a, -b, &
+                                                -b, z, a, &
+                                                -b, z, -a, &
+                                                -a, b, z, &
+                                          -a, -b, z/), (/dim_num, point_num/))
 !
 !  Set the edges.
 !
-  edge_point(1:edge_order,1:edge_num) = reshape ( (/ &
-     1,  2, &
-     1,  3, &
-     1,  4, &
-     1,  5, &
-     1,  6, &
-     2,  3, &
-     2,  4, &
-     2,  7, &
-     2,  8, &
-     3,  5, &
-     3,  7, &
-     3,  9, &
-     4,  6, &
-     4,  8, &
-     4, 10, &
-     5,  6, &
-     5,  9, &
-     5, 11, &
-     6, 10, &
-     6, 11, &
-     7,  8, &
-     7,  9, &
-     7, 12, &
-     8, 10, &
-     8, 12, &
-     9, 11, &
-     9, 12, &
-    10, 11, &
-    10, 12, &
-    11, 12 /), (/ edge_order, edge_num /) )
+  edge_point(1:edge_order, 1:edge_num) = reshape((/ &
+                                                 1, 2, &
+                                                 1, 3, &
+                                                 1, 4, &
+                                                 1, 5, &
+                                                 1, 6, &
+                                                 2, 3, &
+                                                 2, 4, &
+                                                 2, 7, &
+                                                 2, 8, &
+                                                 3, 5, &
+                                                 3, 7, &
+                                                 3, 9, &
+                                                 4, 6, &
+                                                 4, 8, &
+                                                 4, 10, &
+                                                 5, 6, &
+                                                 5, 9, &
+                                                 5, 11, &
+                                                 6, 10, &
+                                                 6, 11, &
+                                                 7, 8, &
+                                                 7, 9, &
+                                                 7, 12, &
+                                                 8, 10, &
+                                                 8, 12, &
+                                                 9, 11, &
+                                                 9, 12, &
+                                                 10, 11, &
+                                                 10, 12, &
+                                           11, 12/), (/edge_order, edge_num/))
 !
 !  Set the face orders.
 !
   face_order(1:face_num) = (/ &
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, &
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3 /)
+                           3, 3, 3, 3, 3, 3, 3, 3, 3, 3, &
+                           3, 3, 3, 3, 3, 3, 3, 3, 3, 3/)
 !
 !  Set the faces.
 !
-  face_point(1:face_order_max,1:face_num) = reshape ( (/ &
-     1,  2,  4, &
-     1,  3,  2, &
-     1,  4,  6, &
-     1,  5,  3, &
-     1,  6,  5, &
-     2,  3,  7, &
-     2,  7,  8, &
-     2,  8,  4, &
-     3,  5,  9, &
-     3,  9,  7, &
-     4,  8, 10, &
-     4, 10,  6, &
-     5,  6, 11, &
-     5, 11,  9, &
-     6, 10, 11, &
-     7,  9, 12, &
-     7, 12,  8, &
-     8, 12, 10, &
-     9, 11, 12, &
-    10, 12, 11 /), (/ face_order_max, face_num /) )
+  face_point(1:face_order_max, 1:face_num) = reshape((/ &
+                                                     1, 2, 4, &
+                                                     1, 3, 2, &
+                                                     1, 4, 6, &
+                                                     1, 5, 3, &
+                                                     1, 6, 5, &
+                                                     2, 3, 7, &
+                                                     2, 7, 8, &
+                                                     2, 8, 4, &
+                                                     3, 5, 9, &
+                                                     3, 9, 7, &
+                                                     4, 8, 10, &
+                                                     4, 10, 6, &
+                                                     5, 6, 11, &
+                                                     5, 11, 9, &
+                                                     6, 10, 11, &
+                                                     7, 9, 12, &
+                                                     7, 12, 8, &
+                                                     8, 12, 10, &
+                                                     9, 11, 12, &
+                                   10, 12, 11/), (/face_order_max, face_num/))
 
   return
 end
-subroutine icos_size ( point_num, edge_num, face_num, face_order_max )
+subroutine icos_size(point_num, edge_num, face_num, face_order_max)
 
 !*****************************************************************************80
 !
@@ -10181,10 +10180,10 @@ subroutine icos_size ( point_num, edge_num, face_num, face_order_max )
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
   point_num = 12
   edge_num = 30
@@ -10194,8 +10193,8 @@ subroutine icos_size ( point_num, edge_num, face_num, face_order_max )
   return
 end
 
-subroutine loc2glob_3d ( cospitch, cosroll, cosyaw, sinpitch, sinroll, sinyaw, &
-  globas, locpts, glopts )
+subroutine loc2glob_3d(cospitch, cosroll, cosyaw, sinpitch, sinroll, sinyaw, &
+                       globas, locpts, glopts)
 
 !*****************************************************************************80
 !
@@ -10259,33 +10258,33 @@ subroutine loc2glob_3d ( cospitch, cosroll, cosyaw, sinpitch, sinroll, sinyaw, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) cospitch
-  real ( kind = 8 ) cosroll
-  real ( kind = 8 ) cosyaw
-  real ( kind = 8 ) globas(dim_num)
-  real ( kind = 8 ) glopts(dim_num)
-  real ( kind = 8 ) locpts(dim_num)
-  real ( kind = 8 ) sinpitch
-  real ( kind = 8 ) sinroll
-  real ( kind = 8 ) sinyaw
+  real(kind=8) cospitch
+  real(kind=8) cosroll
+  real(kind=8) cosyaw
+  real(kind=8) globas(dim_num)
+  real(kind=8) glopts(dim_num)
+  real(kind=8) locpts(dim_num)
+  real(kind=8) sinpitch
+  real(kind=8) sinroll
+  real(kind=8) sinyaw
 
-  glopts(1) = globas(1) + (  cosyaw * cospitch ) * locpts(1) &
-    + (  cosyaw * sinpitch * sinroll - sinyaw * cosroll ) * locpts(2) &
-    + (  cosyaw * sinpitch * cosroll + sinyaw * sinroll ) * locpts(3)
+  glopts(1) = globas(1) + (cosyaw * cospitch) * locpts(1) &
+              + (cosyaw * sinpitch * sinroll - sinyaw * cosroll) * locpts(2) &
+              + (cosyaw * sinpitch * cosroll + sinyaw * sinroll) * locpts(3)
 
-  glopts(2) = globas(2) + (  sinyaw * cospitch ) * locpts(1) &
-    + (  sinyaw * sinpitch * sinroll + cosyaw * cosroll ) * locpts(2) &
-    + (  sinyaw * sinpitch * cosroll - cosyaw * sinroll ) * locpts(3)
+  glopts(2) = globas(2) + (sinyaw * cospitch) * locpts(1) &
+              + (sinyaw * sinpitch * sinroll + cosyaw * cosroll) * locpts(2) &
+              + (sinyaw * sinpitch * cosroll - cosyaw * sinroll) * locpts(3)
 
-  glopts(3) = globas(3) + ( -sinpitch ) * locpts(1) &
-    + (  cospitch * sinroll ) * locpts(2) &
-    + (  cospitch * cosroll ) * locpts(3)
+  glopts(3) = globas(3) + (-sinpitch) * locpts(1) &
+              + (cospitch * sinroll) * locpts(2) &
+              + (cospitch * cosroll) * locpts(3)
 
   return
 end
-subroutine l4vec_print ( n, a, title )
+subroutine l4vec_print(n, a, title)
 
 !*****************************************************************************80
 !
@@ -10313,23 +10312,23 @@ subroutine l4vec_print ( n, a, title )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  logical ( kind = 4 ) a(n)
-  integer ( kind = 4 ) i
-  character ( len = * )  title
+  logical(kind=4) a(n)
+  integer(kind=4) i
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
-  write ( *, '(a)' ) ' '
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
+  write (*, '(a)') ' '
 
   do i = 1, n
-    write ( *, '(2x,i8,a,1x,l1)' ) i, ':', a(i)
+    write (*, '(2x,i8,a,1x,l1)') i, ':', a(i)
   end do
 
   return
 end
-subroutine minabs ( x1, y1, x2, y2, x3, y3, xmin, ymin )
+subroutine minabs(x1, y1, x2, y2, x3, y3, xmin, ymin)
 
 !*****************************************************************************80
 !
@@ -10360,56 +10359,56 @@ subroutine minabs ( x1, y1, x2, y2, x3, y3, xmin, ymin )
 !
   implicit none
 
-  real ( kind = 8 ) slope
-  real ( kind = 8 ) slope12
-  real ( kind = 8 ) slope13
-  real ( kind = 8 ) slope23
-  real ( kind = 8 ) x1
-  real ( kind = 8 ) x2
-  real ( kind = 8 ) x3
-  real ( kind = 8 ) xmin
-  real ( kind = 8 ) y1
-  real ( kind = 8 ) y2
-  real ( kind = 8 ) y3
-  real ( kind = 8 ) ymin
+  real(kind=8) slope
+  real(kind=8) slope12
+  real(kind=8) slope13
+  real(kind=8) slope23
+  real(kind=8) x1
+  real(kind=8) x2
+  real(kind=8) x3
+  real(kind=8) xmin
+  real(kind=8) y1
+  real(kind=8) y2
+  real(kind=8) y3
+  real(kind=8) ymin
 !
 !  Refuse to deal with coincident data.
 !
-  if ( x1 == x2 .or. x2 == x3 .or. x3 == x1 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'MINABS - Fatal error!'
-    write ( *, '(a)' ) '  X values are equal.'
+  if (x1 == x2 .or. x2 == x3 .or. x3 == x1) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'MINABS - Fatal error!'
+    write (*, '(a)') '  X values are equal.'
     stop 1
   end if
 !
 !  Sort the data.
 !
-  if ( x2 < x1 ) then
-    call r8_swap ( x1, x2 )
-    call r8_swap ( y1, y2 )
+  if (x2 < x1) then
+    call r8_swap(x1, x2)
+    call r8_swap(y1, y2)
   end if
 
-  if ( x3 < x1 ) then
-    call r8_swap ( x1, x3 )
-    call r8_swap ( y1, y3 )
+  if (x3 < x1) then
+    call r8_swap(x1, x3)
+    call r8_swap(y1, y3)
   end if
 
-  if ( x3 < x2 ) then
-    call r8_swap ( x2, x3 )
-    call r8_swap ( y2, y3 )
+  if (x3 < x2) then
+    call r8_swap(x2, x3)
+    call r8_swap(y2, y3)
   end if
 !
 !  Now determine the slopes.
 !
-  slope12 = ( y2 - y1 ) / ( x2 - x1 )
-  slope23 = ( y3 - y2 ) / ( x3 - x2 )
-  slope13 = ( y3 - y1 ) / ( x3 - x1 )
+  slope12 = (y2 - y1) / (x2 - x1)
+  slope23 = (y3 - y2) / (x3 - x2)
+  slope13 = (y3 - y1) / (x3 - x1)
 !
 !  Case 1: Minimum must be at an endpoint.
 !
-  if ( slope13 <= slope12 .or. 0.0D+00 <= slope12 ) then
+  if (slope13 <= slope12 .or. 0.0D+00 <= slope12) then
 
-    if ( y1 < y3 ) then
+    if (y1 < y3) then
       xmin = x1
       ymin = y1
     else
@@ -10427,16 +10426,16 @@ subroutine minabs ( x1, y1, x2, y2, x3, y3, xmin, ymin )
 !
   else
 
-    slope = max ( abs ( slope12 ), slope23 )
+    slope = max(abs(slope12), slope23)
 
-    xmin = 0.5D+00 * ( x1 + x3 + ( y1 - y3 ) / slope )
-    ymin = y1 - slope * ( xmin - x1 )
+    xmin = 0.5D+00 * (x1 + x3 + (y1 - y3) / slope)
+    ymin = y1 - slope * (xmin - x1)
 
   end if
 
   return
 end
-subroutine minquad ( x1, y1, x2, y2, x3, y3, xmin, ymin )
+subroutine minquad(x1, y1, x2, y2, x3, y3, xmin, ymin)
 
 !*****************************************************************************80
 !
@@ -10474,40 +10473,40 @@ subroutine minquad ( x1, y1, x2, y2, x3, y3, xmin, ymin )
 !
   implicit none
 
-  integer ( kind = 4 ) ierror
-  real ( kind = 8 ) x
-  real ( kind = 8 ) x1
-  real ( kind = 8 ) x2
-  real ( kind = 8 ) x3
-  real ( kind = 8 ) xleft
-  real ( kind = 8 ) xmin
-  real ( kind = 8 ) xrite
-  real ( kind = 8 ) y
-  real ( kind = 8 ) y1
-  real ( kind = 8 ) y2
-  real ( kind = 8 ) y3
-  real ( kind = 8 ) ymin
+  integer(kind=4) ierror
+  real(kind=8) x
+  real(kind=8) x1
+  real(kind=8) x2
+  real(kind=8) x3
+  real(kind=8) xleft
+  real(kind=8) xmin
+  real(kind=8) xrite
+  real(kind=8) y
+  real(kind=8) y1
+  real(kind=8) y2
+  real(kind=8) y3
+  real(kind=8) ymin
 !
 !  Refuse to deal with coincident data.
 !
-  if ( x1 == x2 .or. x2 == x3 .or. x3 == x1 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'MINQUAD - Fatal error!'
-    write ( *, '(a)' ) '  X values are equal.'
+  if (x1 == x2 .or. x2 == x3 .or. x3 == x1) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'MINQUAD - Fatal error!'
+    write (*, '(a)') '  X values are equal.'
     stop 1
   end if
 !
 !  Find the interval endpoints.
 !
-  xleft = min ( x1, x2, x3 )
-  xrite = max ( x1, x2, x3 )
+  xleft = min(x1, x2, x3)
+  xrite = max(x1, x2, x3)
 !
 !  Find the minimizer and its function value, over the three input points.
 !
-  if ( y1 <= y2 .and. y1 <= y3 ) then
+  if (y1 <= y2 .and. y1 <= y3) then
     xmin = x1
     ymin = y1
-  else if ( y2 <= y1 .and. y2 <= y3 ) then
+  else if (y2 <= y1 .and. y2 <= y3) then
     xmin = x2
     ymin = y2
   else
@@ -10517,23 +10516,23 @@ subroutine minquad ( x1, y1, x2, y2, x3, y3, xmin, ymin )
 !
 !  Find the minimizer and its function value over the real line.
 !
-  call parabola_ex ( x1, y1, x2, y2, x3, y3, x, y, ierror )
+  call parabola_ex(x1, y1, x2, y2, x3, y3, x, y, ierror)
 !
 !  If F is linear, then take the already computed min.
 !
-  if ( ierror == 2 ) then
+  if (ierror == 2) then
 !
 !  If F has a maximum, then take the already computed min.
 !
-  else if ( ymin < y ) then
+  else if (ymin < y) then
 !
 !  If the minimizer is to the left, take the already computed min.
 !
-  else if ( x < xleft ) then
+  else if (x < xleft) then
 !
 !  If the minimizer is to the right, take the already computed min.
 !
-  else if ( xrite < x ) then
+  else if (xrite < x) then
 
   else
 
@@ -10544,8 +10543,8 @@ subroutine minquad ( x1, y1, x2, y2, x3, y3, xmin, ymin )
 
   return
 end
-subroutine octahedron_shape_3d ( point_num, face_num, face_order_max, &
-  point_coord, face_order, face_point )
+subroutine octahedron_shape_3d(point_num, face_num, face_order_max, &
+                               point_coord, face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -10590,45 +10589,45 @@ subroutine octahedron_shape_3d ( point_num, face_num, face_order_max, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) point_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) point_num
 
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  real ( kind = 8 ) point_coord(dim_num,point_num)
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  real(kind=8) point_coord(dim_num, point_num)
 !
 !  Set point coordinates.
 !
-  point_coord(1:dim_num,1:point_num) = reshape ( (/ &
-     0.0D+00,  0.0D+00, -1.0D+00, &
-     0.0D+00, -1.0D+00,  0.0D+00, &
-     1.0D+00,  0.0D+00,  0.0D+00, &
-     0.0D+00,  1.0D+00,  0.0D+00, &
-    -1.0D+00,  0.0D+00,  0.0D+00, &
-     0.0D+00,  0.0D+00,  1.0D+00 /), (/ dim_num, point_num /) )
+  point_coord(1:dim_num, 1:point_num) = reshape((/ &
+                                                0.0D+00, 0.0D+00, -1.0D+00, &
+                                                0.0D+00, -1.0D+00, 0.0D+00, &
+                                                1.0D+00, 0.0D+00, 0.0D+00, &
+                                                0.0D+00, 1.0D+00, 0.0D+00, &
+                                                -1.0D+00, 0.0D+00, 0.0D+00, &
+                          0.0D+00, 0.0D+00, 1.0D+00/), (/dim_num, point_num/))
 !
 !  Set the face orders.
 !
   face_order(1:face_num) = (/ &
-    3, 3, 3, 3, 3, 3, 3, 3 /)
+                           3, 3, 3, 3, 3, 3, 3, 3/)
 !
 !  Set the faces.
 !
-  face_point(1:face_order_max,1:face_num) = reshape ( (/ &
-     1, 3, 2, &
-     1, 4, 3, &
-     1, 5, 4, &
-     1, 2, 5, &
-     2, 3, 6, &
-     3, 4, 6, &
-     4, 5, 6, &
-     5, 2, 6 /), (/ face_order_max, face_num /) )
+  face_point(1:face_order_max, 1:face_num) = reshape((/ &
+                                                     1, 3, 2, &
+                                                     1, 4, 3, &
+                                                     1, 5, 4, &
+                                                     1, 2, 5, &
+                                                     2, 3, 6, &
+                                                     3, 4, 6, &
+                                                     4, 5, 6, &
+                                      5, 2, 6/), (/face_order_max, face_num/))
 
   return
 end
-subroutine octahedron_size_3d ( point_num, edge_num, face_num, face_order_max )
+subroutine octahedron_size_3d(point_num, edge_num, face_num, face_order_max)
 
 !*****************************************************************************80
 !
@@ -10664,10 +10663,10 @@ subroutine octahedron_size_3d ( point_num, edge_num, face_num, face_order_max )
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
   point_num = 6
   edge_num = 12
@@ -10676,7 +10675,7 @@ subroutine octahedron_size_3d ( point_num, edge_num, face_num, face_order_max )
 
   return
 end
-subroutine parallelogram_area_2d ( p, area )
+subroutine parallelogram_area_2d(p, area)
 
 !*****************************************************************************80
 !
@@ -10723,18 +10722,18 @@ subroutine parallelogram_area_2d ( p, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) p(2,4)
+  real(kind=8) area
+  real(kind=8) p(2, 4)
 !
 !  Compute the cross product vector, which only has a single
 !  nonzero component.
 !
-  area = ( p(1,2) - p(1,1) ) * ( p(2,3) - p(2,1) ) &
-       - ( p(2,2) - p(2,1) ) * ( p(1,3) - p(1,1) )
+  area = (p(1, 2) - p(1, 1)) * (p(2, 3) - p(2, 1)) &
+         - (p(2, 2) - p(2, 1)) * (p(1, 3) - p(1, 1))
 
   return
 end
-subroutine parallelogram_area_3d ( p, area )
+subroutine parallelogram_area_3d(p, area)
 
 !*****************************************************************************80
 !
@@ -10785,26 +10784,26 @@ subroutine parallelogram_area_3d ( p, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) cross(3)
-  real ( kind = 8 ) p(3,4)
+  real(kind=8) area
+  real(kind=8) cross(3)
+  real(kind=8) p(3, 4)
 !
 !  Compute the cross product vector.
 !
-  cross(1) = ( p(2,2) - p(2,1) ) * ( p(3,3) - p(3,1) ) &
-           - ( p(3,2) - p(3,1) ) * ( p(2,3) - p(2,1) )
+  cross(1) = (p(2, 2) - p(2, 1)) * (p(3, 3) - p(3, 1)) &
+             - (p(3, 2) - p(3, 1)) * (p(2, 3) - p(2, 1))
 
-  cross(2) = ( p(3,2) - p(3,1) ) * ( p(1,3) - p(1,1) ) &
-           - ( p(1,2) - p(1,1) ) * ( p(3,3) - p(3,1) )
+  cross(2) = (p(3, 2) - p(3, 1)) * (p(1, 3) - p(1, 1)) &
+             - (p(1, 2) - p(1, 1)) * (p(3, 3) - p(3, 1))
 
-  cross(3) = ( p(1,2) - p(1,1) ) * ( p(2,3) - p(2,1) ) &
-           - ( p(2,2) - p(2,1) ) * ( p(1,3) - p(1,1) )
+  cross(3) = (p(1, 2) - p(1, 1)) * (p(2, 3) - p(2, 1)) &
+             - (p(2, 2) - p(2, 1)) * (p(1, 3) - p(1, 1))
 
-  area = sqrt ( sum ( cross(1:3) ** 2 ) )
+  area = sqrt(sum(cross(1:3)**2))
 
   return
 end
-function parallelogram_contains_point_2d ( p1, p2, p3, p )
+function parallelogram_contains_point_2d(p1, p2, p3, p)
 
 !*****************************************************************************80
 !
@@ -10850,15 +10849,15 @@ function parallelogram_contains_point_2d ( p1, p2, p3, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a(dim_num,dim_num+1)
-  integer ( kind = 4 ) info
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  logical ( kind = 4 ) parallelogram_contains_point_2d
+  real(kind=8) a(dim_num, dim_num + 1)
+  integer(kind=4) info
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  logical(kind=4) parallelogram_contains_point_2d
 !
 !  Set up the linear system
 !
@@ -10867,29 +10866,29 @@ function parallelogram_contains_point_2d ( p1, p2, p3, p )
 !
 !  which is satisfied by the barycentric coordinates of P.
 !
-  a(1,1) = p2(1) - p1(1)
-  a(1,2) = p3(1) - p1(1)
-  a(1,3) = p(1)  - p1(1)
+  a(1, 1) = p2(1) - p1(1)
+  a(1, 2) = p3(1) - p1(1)
+  a(1, 3) = p(1) - p1(1)
 
-  a(2,1) = p2(2) - p1(2)
-  a(2,2) = p3(2) - p1(2)
-  a(2,3) = p(2)  - p1(2)
+  a(2, 1) = p2(2) - p1(2)
+  a(2, 2) = p3(2) - p1(2)
+  a(2, 3) = p(2) - p1(2)
 !
 !  Solve the linear system.
 !
-  call r8mat_solve ( dim_num, 1, a, info )
+  call r8mat_solve(dim_num, 1, a, info)
 
-  if ( info /= 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PARALLELOGRAM_CONTAINS_CONTAIN_2D - Fatal error!'
-    write ( *, '(a)' ) '  The linear system is singular.'
-    write ( *, '(a)' ) '  The input data does not form a proper triangle.'
+  if (info /= 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PARALLELOGRAM_CONTAINS_CONTAIN_2D - Fatal error!'
+    write (*, '(a)') '  The linear system is singular.'
+    write (*, '(a)') '  The input data does not form a proper triangle.'
     stop 1
   end if
 
-  if ( a(1,3) < 0.0D+00 .or. 1.0D+00 < a(1,3) ) then
+  if (a(1, 3) < 0.0D+00 .or. 1.0D+00 < a(1, 3)) then
     parallelogram_contains_point_2d = .false.
-  else if ( a(2,3) < 0.0D+00 .or. 1.0D+00 < a(2,3) ) then
+  else if (a(2, 3) < 0.0D+00 .or. 1.0D+00 < a(2, 3)) then
     parallelogram_contains_point_2d = .false.
   else
     parallelogram_contains_point_2d = .true.
@@ -10897,7 +10896,7 @@ function parallelogram_contains_point_2d ( p1, p2, p3, p )
 
   return
 end
-function parallelogram_contains_point_3d ( p1, p2, p3, p )
+function parallelogram_contains_point_3d(p1, p2, p3, p)
 
 !*****************************************************************************80
 !
@@ -10948,26 +10947,26 @@ function parallelogram_contains_point_3d ( p1, p2, p3, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a(dim_num,dim_num+1)
-  real ( kind = 8 ) r8vec_norm
-  integer ( kind = 4 ) info
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) p4(dim_num)
-  logical ( kind = 4 ) parallelogram_contains_point_3d
-  real ( kind = 8 ), parameter :: tol = 0.0001D+00
+  real(kind=8) a(dim_num, dim_num + 1)
+  real(kind=8) r8vec_norm
+  integer(kind=4) info
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) p4(dim_num)
+  logical(kind=4) parallelogram_contains_point_3d
+  real(kind=8), parameter :: tol = 0.0001D+00
 !
 !  Turn the triangle into a tetrahedron by computing the normal to
 !  P2-P1 and P3-P1.
 !
-  call r8vec_cross_product_3d ( p2(1:dim_num) - p1(1:dim_num), &
-                  p3(1:dim_num) - p1(1:dim_num), p4 )
+  call r8vec_cross_product_3d(p2(1:dim_num) - p1(1:dim_num), &
+                              p3(1:dim_num) - p1(1:dim_num), p4)
 
-  p4(1:dim_num) = p4(1:dim_num) / r8vec_norm ( dim_num, p4 )
+  p4(1:dim_num) = p4(1:dim_num) / r8vec_norm(dim_num, p4)
 !
 !  Set up the linear system
 !
@@ -10977,38 +10976,38 @@ function parallelogram_contains_point_3d ( p1, p2, p3, p )
 !
 !  which is satisfied by the barycentric coordinates of P.
 !
-  a(1,1) = p2(1) - p1(1)
-  a(1,2) = p3(1) - p1(1)
-  a(1,3) = p4(1) - p1(1)
-  a(1,4) = p(1)  - p1(1)
+  a(1, 1) = p2(1) - p1(1)
+  a(1, 2) = p3(1) - p1(1)
+  a(1, 3) = p4(1) - p1(1)
+  a(1, 4) = p(1) - p1(1)
 
-  a(2,1) = p2(2) - p1(2)
-  a(2,2) = p3(2) - p1(2)
-  a(2,3) = p4(2) - p1(2)
-  a(2,4) = p(2)  - p1(2)
+  a(2, 1) = p2(2) - p1(2)
+  a(2, 2) = p3(2) - p1(2)
+  a(2, 3) = p4(2) - p1(2)
+  a(2, 4) = p(2) - p1(2)
 
-  a(3,1) = p2(3) - p1(3)
-  a(3,2) = p3(3) - p1(3)
-  a(3,3) = p4(3) - p1(3)
-  a(3,4) = p(3)  - p1(3)
+  a(3, 1) = p2(3) - p1(3)
+  a(3, 2) = p3(3) - p1(3)
+  a(3, 3) = p4(3) - p1(3)
+  a(3, 4) = p(3) - p1(3)
 !
 !  Solve the linear system.
 !
-  call r8mat_solve ( dim_num, 1, a, info )
+  call r8mat_solve(dim_num, 1, a, info)
 
-  if ( info /= 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PARALLELOGRAM_CONTAINS_CONTAIN_3D - Fatal error!'
-    write ( *, '(a)' ) '  The linear system is singular.'
-    write ( *, '(a)' ) '  The input data does not form a proper triangle.'
+  if (info /= 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PARALLELOGRAM_CONTAINS_CONTAIN_3D - Fatal error!'
+    write (*, '(a)') '  The linear system is singular.'
+    write (*, '(a)') '  The input data does not form a proper triangle.'
     stop 1
   end if
 
-  if ( a(1,4) < 0.0D+00 .or. 1.0D+00 < a(1,4) ) then
+  if (a(1, 4) < 0.0D+00 .or. 1.0D+00 < a(1, 4)) then
     parallelogram_contains_point_3d = .false.
-  else if ( a(2,4) < 0.0D+00 .or. 1.0D+00 < a(2,4) ) then
+  else if (a(2, 4) < 0.0D+00 .or. 1.0D+00 < a(2, 4)) then
     parallelogram_contains_point_3d = .false.
-  else if ( tol < abs ( a(3,4) ) ) then
+  else if (tol < abs(a(3, 4))) then
     parallelogram_contains_point_3d = .false.
   else
     parallelogram_contains_point_3d = .true.
@@ -11016,7 +11015,7 @@ function parallelogram_contains_point_3d ( p1, p2, p3, p )
 
   return
 end
-subroutine parallelogram_point_dist_3d ( p1, p2, p3, p, dist )
+subroutine parallelogram_point_dist_3d(p1, p2, p3, p, dist)
 
 !*****************************************************************************80
 !
@@ -11058,40 +11057,40 @@ subroutine parallelogram_point_dist_3d ( p1, p2, p3, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dis13
-  real ( kind = 8 ) dis21
-  real ( kind = 8 ) dis34
-  real ( kind = 8 ) dis42
-  real ( kind = 8 ) dist
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) p4(dim_num)
-  logical ( kind = 4 ) parallelogram_contains_point_3d
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) pp(dim_num)
-  real ( kind = 8 ) t
-  real ( kind = 8 ) temp
+  real(kind=8) dis13
+  real(kind=8) dis21
+  real(kind=8) dis34
+  real(kind=8) dis42
+  real(kind=8) dist
+  logical(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) p4(dim_num)
+  logical(kind=4) parallelogram_contains_point_3d
+  real(kind=8) pn(dim_num)
+  real(kind=8) pp(dim_num)
+  real(kind=8) t
+  real(kind=8) temp
 !
 !  Compute PP, the unit normal to X2-X1 and X3-X1:
 !
-  pp(1) = ( p2(2) - p1(2) ) * ( p3(3) - p1(3) ) &
-        - ( p2(3) - p1(3) ) * ( p3(2) - p1(2) )
-  pp(2) = ( p2(3) - p1(3) ) * ( p3(1) - p1(1) ) &
-        - ( p2(1) - p1(1) ) * ( p3(3) - p1(3) )
-  pp(3) = ( p2(1) - p1(1) ) * ( p3(2) - p1(2) ) &
-        - ( p2(2) - p1(2) ) * ( p3(1) - p1(1) )
+  pp(1) = (p2(2) - p1(2)) * (p3(3) - p1(3)) &
+          - (p2(3) - p1(3)) * (p3(2) - p1(2))
+  pp(2) = (p2(3) - p1(3)) * (p3(1) - p1(1)) &
+          - (p2(1) - p1(1)) * (p3(3) - p1(3))
+  pp(3) = (p2(1) - p1(1)) * (p3(2) - p1(2)) &
+          - (p2(2) - p1(2)) * (p3(1) - p1(1))
 
-  temp = sqrt ( sum ( pp(1:dim_num) ** 2 ) )
+  temp = sqrt(sum(pp(1:dim_num)**2))
 
-  if ( temp == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PARALLELOGRAM_POINT_DIST_3D - Fatal error!'
-    write ( *, '(a)' ) '  The normal vector is zero.'
+  if (temp == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PARALLELOGRAM_POINT_DIST_3D - Fatal error!'
+    write (*, '(a)') '  The normal vector is zero.'
     stop 1
   end if
 
@@ -11099,16 +11098,16 @@ subroutine parallelogram_point_dist_3d ( p1, p2, p3, p, dist )
 !
 !  Find PN, the nearest point to P in the plane.
 !
-  t = dot_product ( pp(1:dim_num), p(1:dim_num) - p1(1:dim_num) )
+  t = dot_product(pp(1:dim_num), p(1:dim_num) - p1(1:dim_num))
 
   pn(1:dim_num) = p(1:dim_num) - pp(1:dim_num) * t
 !
 !  If P lies WITHIN the parallelogram, we're done.
 !
-  inside = parallelogram_contains_point_3d ( p1, p2, p3, p )
+  inside = parallelogram_contains_point_3d(p1, p2, p3, p)
 
-  if ( inside ) then
-    dist = sqrt ( sum ( ( pn(1:dim_num) - p(1:dim_num) ) ** 2 ) )
+  if (inside) then
+    dist = sqrt(sum((pn(1:dim_num) - p(1:dim_num))**2))
     return
   end if
 !
@@ -11117,16 +11116,16 @@ subroutine parallelogram_point_dist_3d ( p1, p2, p3, p, dist )
 !
   p4(1:dim_num) = p2(1:dim_num) + p3(1:dim_num) - p1(1:dim_num)
 
-  call segment_point_dist_3d ( p1, p3, p, dis13 )
-  call segment_point_dist_3d ( p3, p4, p, dis34 )
-  call segment_point_dist_3d ( p4, p2, p, dis42 )
-  call segment_point_dist_3d ( p2, p1, p, dis21 )
+  call segment_point_dist_3d(p1, p3, p, dis13)
+  call segment_point_dist_3d(p3, p4, p, dis34)
+  call segment_point_dist_3d(p4, p2, p, dis42)
+  call segment_point_dist_3d(p2, p1, p, dis21)
 
-  dist = min ( dis13, dis34, dis42, dis21 )
+  dist = min(dis13, dis34, dis42, dis21)
 
   return
 end
-subroutine parabola_ex ( x1, y1, x2, y2, x3, y3, x, y, ierror )
+subroutine parabola_ex(x1, y1, x2, y2, x3, y3, x, y, ierror)
 
 !*****************************************************************************80
 !
@@ -11159,49 +11158,49 @@ subroutine parabola_ex ( x1, y1, x2, y2, x3, y3, x, y, ierror )
 !
   implicit none
 
-  real ( kind = 8 ) bot
-  integer ( kind = 4 ) ierror
-  real ( kind = 8 ) x
-  real ( kind = 8 ) x1
-  real ( kind = 8 ) x2
-  real ( kind = 8 ) x3
-  real ( kind = 8 ) y
-  real ( kind = 8 ) y1
-  real ( kind = 8 ) y2
-  real ( kind = 8 ) y3
+  real(kind=8) bot
+  integer(kind=4) ierror
+  real(kind=8) x
+  real(kind=8) x1
+  real(kind=8) x2
+  real(kind=8) x3
+  real(kind=8) y
+  real(kind=8) y1
+  real(kind=8) y2
+  real(kind=8) y3
 
   ierror = 0
 
-  if ( x1 == x2 .or. x2 == x3 .or. x3 == x1 ) then
+  if (x1 == x2 .or. x2 == x3 .or. x3 == x1) then
     ierror = 1
     return
   end if
 
-  if ( y1 == y2 .and. y2 == y3 .and. y3 == y1 ) then
+  if (y1 == y2 .and. y2 == y3 .and. y3 == y1) then
     x = x1
     y = y1
     return
   end if
 
-  bot = ( x2 - x3 ) * y1 - ( x1 - x3 ) * y2 + ( x1 - x2 ) * y3
+  bot = (x2 - x3) * y1 - (x1 - x3) * y2 + (x1 - x2) * y3
 
-  if ( bot == 0.0D+00 ) then
+  if (bot == 0.0D+00) then
     ierror = 2
     return
   end if
 
-  x = 0.5D+00 * ( x1 * x1 * ( y3 - y2 ) &
-                + x2 * x2 * ( y1 - y3 ) &
-                + x3 * x3 * ( y2 - y1 ) ) / bot
+  x = 0.5D+00 * (x1 * x1 * (y3 - y2) &
+                 + x2 * x2 * (y1 - y3) &
+                 + x3 * x3 * (y2 - y1)) / bot
 
-  y = (    ( x  - x2 ) * ( x  - x3 ) * ( x2 - x3 ) * y1 &
-         - ( x  - x1 ) * ( x  - x3 ) * ( x1 - x3 ) * y2 &
-         + ( x  - x1 ) * ( x  - x2 ) * ( x1 - x2 ) * y3 ) / &
-         ( ( x1 - x2 ) * ( x2 - x3 ) * ( x1 - x3 ) )
+  y = ((x - x2) * (x - x3) * (x2 - x3) * y1 &
+       - (x - x1) * (x - x3) * (x1 - x3) * y2 &
+       + (x - x1) * (x - x2) * (x1 - x2) * y3) / &
+      ((x1 - x2) * (x2 - x3) * (x1 - x3))
 
   return
 end
-subroutine parabola_ex2 ( x1, y1, x2, y2, x3, y3, x, y, a, b, c, ierror )
+subroutine parabola_ex2(x1, y1, x2, y2, x3, y3, x, y, a, b, c, ierror)
 
 !*****************************************************************************80
 !
@@ -11238,30 +11237,30 @@ subroutine parabola_ex2 ( x1, y1, x2, y2, x3, y3, x, y, a, b, c, ierror )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) det
-  integer ( kind = 4 ) ierror
-  real ( kind = 8 ) v(3,3)
-  real ( kind = 8 ) w(3,3)
-  real ( kind = 8 ) x
-  real ( kind = 8 ) x1
-  real ( kind = 8 ) x2
-  real ( kind = 8 ) x3
-  real ( kind = 8 ) y
-  real ( kind = 8 ) y1
-  real ( kind = 8 ) y2
-  real ( kind = 8 ) y3
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) det
+  integer(kind=4) ierror
+  real(kind=8) v(3, 3)
+  real(kind=8) w(3, 3)
+  real(kind=8) x
+  real(kind=8) x1
+  real(kind=8) x2
+  real(kind=8) x3
+  real(kind=8) y
+  real(kind=8) y1
+  real(kind=8) y2
+  real(kind=8) y3
 
   ierror = 0
 
-  if ( x1 == x2 .or. x2 == x3 .or. x3 == x1 ) then
+  if (x1 == x2 .or. x2 == x3 .or. x3 == x1) then
     ierror = 1
     return
   end if
 
-  if ( y1 == y2 .and. y2 == y3 .and. y3 == y1 ) then
+  if (y1 == y2 .and. y2 == y3 .and. y3 == y1) then
     x = x1
     y = y1
     return
@@ -11269,41 +11268,41 @@ subroutine parabola_ex2 ( x1, y1, x2, y2, x3, y3, x, y, a, b, c, ierror )
 !
 !  Set up the Vandermonde matrix.
 !
-  v(1,1) = 1.0D+00
-  v(1,2) = x1
-  v(1,3) = x1 * x1
+  v(1, 1) = 1.0D+00
+  v(1, 2) = x1
+  v(1, 3) = x1 * x1
 
-  v(2,1) = 1.0D+00
-  v(2,2) = x2
-  v(2,3) = x2 * x2
+  v(2, 1) = 1.0D+00
+  v(2, 2) = x2
+  v(2, 3) = x2 * x2
 
-  v(3,1) = 1.0D+00
-  v(3,2) = x3
-  v(3,3) = x3 * x3
+  v(3, 1) = 1.0D+00
+  v(3, 2) = x3
+  v(3, 3) = x3 * x3
 !
 !  Get the inverse.
 !
-  call r8mat_inverse_3d ( v, w, det )
+  call r8mat_inverse_3d(v, w, det)
 !
 !  Compute the parabolic coefficients.
 !
-  c = w(1,1) * y1 + w(1,2) * y2 + w(1,3) * y3
-  b = w(2,1) * y1 + w(2,2) * y2 + w(2,3) * y3
-  a = w(3,1) * y1 + w(3,2) * y2 + w(3,3) * y3
+  c = w(1, 1) * y1 + w(1, 2) * y2 + w(1, 3) * y3
+  b = w(2, 1) * y1 + w(2, 2) * y2 + w(2, 3) * y3
+  a = w(3, 1) * y1 + w(3, 2) * y2 + w(3, 3) * y3
 !
 !  Determine the extremal point.
 !
-  if ( a == 0.0D+00 ) then
+  if (a == 0.0D+00) then
     ierror = 2
     return
   end if
 
-  x = - b / ( 2.0D+00 * a )
+  x = -b / (2.0D+00 * a)
   y = a * x * x + b * x + c
 
   return
 end
-function parallelepiped_contains_point_3d ( p1, p2, p3, p4, p )
+function parallelepiped_contains_point_3d(p1, p2, p3, p4, p)
 
 !*****************************************************************************80
 !
@@ -11353,48 +11352,48 @@ function parallelepiped_contains_point_3d ( p1, p2, p3, p4, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dot
-  logical ( kind = 4 ) parallelepiped_contains_point_3d
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) p4(dim_num)
+  real(kind=8) dot
+  logical(kind=4) parallelepiped_contains_point_3d
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) p4(dim_num)
 
   parallelepiped_contains_point_3d = .false.
 
-  dot = dot_product ( p(1:dim_num)  - p1(1:dim_num), &
-                      p2(1:dim_num) - p1(1:dim_num) )
+  dot = dot_product(p(1:dim_num) - p1(1:dim_num), &
+                    p2(1:dim_num) - p1(1:dim_num))
 
-  if ( dot < 0.0D+00 ) then
+  if (dot < 0.0D+00) then
     return
   end if
 
-  if ( sum ( ( p2(1:dim_num) - p1(1:dim_num) ) ** 2 ) < dot ) then
+  if (sum((p2(1:dim_num) - p1(1:dim_num))**2) < dot) then
     return
   end if
 
-  dot = dot_product ( p(1:dim_num)  - p1(1:dim_num), &
-                      p3(1:dim_num) - p1(1:dim_num) )
+  dot = dot_product(p(1:dim_num) - p1(1:dim_num), &
+                    p3(1:dim_num) - p1(1:dim_num))
 
-  if ( dot < 0.0D+00 ) then
+  if (dot < 0.0D+00) then
     return
   end if
 
-  if ( sum ( ( p3(1:dim_num) - p1(1:dim_num) ) ** 2 ) < dot ) then
+  if (sum((p3(1:dim_num) - p1(1:dim_num))**2) < dot) then
     return
   end if
 
-  dot = dot_product ( p(1:dim_num)  - p1(1:dim_num), &
-                      p4(1:dim_num) - p1(1:dim_num) )
+  dot = dot_product(p(1:dim_num) - p1(1:dim_num), &
+                    p4(1:dim_num) - p1(1:dim_num))
 
-  if ( dot < 0.0D+00 ) then
+  if (dot < 0.0D+00) then
     return
   end if
 
-  if ( sum ( ( p4(1:dim_num) - p1(1:dim_num) ) ** 2 ) < dot ) then
+  if (sum((p4(1:dim_num) - p1(1:dim_num))**2) < dot) then
     return
   end if
 
@@ -11402,7 +11401,7 @@ function parallelepiped_contains_point_3d ( p1, p2, p3, p4, p )
 
   return
 end
-subroutine parallelepiped_point_dist_3d ( p1, p2, p3, p4, p, dist )
+subroutine parallelepiped_point_dist_3d(p1, p2, p3, p4, p, dist)
 
 !*****************************************************************************80
 !
@@ -11455,19 +11454,19 @@ subroutine parallelepiped_point_dist_3d ( p1, p2, p3, p4, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dis
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) p4(dim_num)
-  real ( kind = 8 ) p5(dim_num)
-  real ( kind = 8 ) p6(dim_num)
-  real ( kind = 8 ) p7(dim_num)
-  real ( kind = 8 ) p8(dim_num)
+  real(kind=8) dis
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) p4(dim_num)
+  real(kind=8) p5(dim_num)
+  real(kind=8) p6(dim_num)
+  real(kind=8) p7(dim_num)
+  real(kind=8) p8(dim_num)
 !
 !  Fill in the other corners
 !
@@ -11475,38 +11474,38 @@ subroutine parallelepiped_point_dist_3d ( p1, p2, p3, p4, p, dist )
   p6(1:dim_num) = p2(1:dim_num) + p4(1:dim_num) - p1(1:dim_num)
   p7(1:dim_num) = p3(1:dim_num) + p4(1:dim_num) - p1(1:dim_num)
   p8(1:dim_num) = p2(1:dim_num) + p3(1:dim_num) + p4(1:dim_num) &
-    - 2.0D+00 * p1(1:dim_num)
+                  - 2.0D+00 * p1(1:dim_num)
 !
 !  Compute the distance from the point P to each of the six
 !  parallelogram faces.
 !
-  call parallelogram_point_dist_3d ( p1, p2, p3, p, dis )
+  call parallelogram_point_dist_3d(p1, p2, p3, p, dis)
 
   dist = dis
 
-  call parallelogram_point_dist_3d ( p1, p2, p4, p, dis )
+  call parallelogram_point_dist_3d(p1, p2, p4, p, dis)
 
-  dist = min ( dist, dis )
+  dist = min(dist, dis)
 
-  call parallelogram_point_dist_3d ( p1, p3, p4, p, dis )
+  call parallelogram_point_dist_3d(p1, p3, p4, p, dis)
 
-  dist = min ( dist, dis )
+  dist = min(dist, dis)
 
-  call parallelogram_point_dist_3d ( p8, p5, p6, p, dis )
+  call parallelogram_point_dist_3d(p8, p5, p6, p, dis)
 
-  dist = min ( dist, dis )
+  dist = min(dist, dis)
 
-  call parallelogram_point_dist_3d ( p8, p5, p7, p, dis )
+  call parallelogram_point_dist_3d(p8, p5, p7, p, dis)
 
-  dist = min ( dist, dis )
+  dist = min(dist, dis)
 
-  call parallelogram_point_dist_3d ( p8, p6, p7, p, dis )
+  call parallelogram_point_dist_3d(p8, p6, p7, p, dis)
 
-  dist = min ( dist, dis )
+  dist = min(dist, dis)
 
   return
 end
-subroutine perm_inverse ( n, p )
+subroutine perm_inverse(n, p)
 
 !*****************************************************************************80
 !
@@ -11533,19 +11532,19 @@ subroutine perm_inverse ( n, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i0
-  integer ( kind = 4 ) i1
-  integer ( kind = 4 ) i2
-  integer ( kind = 4 ) is
-  integer ( kind = 4 ) p(n)
+  integer(kind=4) i
+  integer(kind=4) i0
+  integer(kind=4) i1
+  integer(kind=4) i2
+  integer(kind=4) is
+  integer(kind=4) p(n)
 
-  if ( n <= 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PERM_INVERSE - Fatal error!'
-    write ( *, '(a,i8)' ) '  Input value of N = ', n
+  if (n <= 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PERM_INVERSE - Fatal error!'
+    write (*, '(a,i8)') '  Input value of N = ', n
     stop 1
   end if
 
@@ -11555,14 +11554,14 @@ subroutine perm_inverse ( n, p )
 
     i1 = p(i)
 
-    do while ( i < i1 )
+    do while (i < i1)
       i2 = p(i1)
       p(i1) = -i2
       i1 = i2
     end do
 
-    is = -sign ( 1, p(i) )
-    p(i) = sign ( p(i), is )
+    is = -sign(1, p(i))
+    p(i) = sign(p(i), is)
 
   end do
 
@@ -11570,7 +11569,7 @@ subroutine perm_inverse ( n, p )
 
     i1 = -p(i)
 
-    if ( 0 <= i1 ) then
+    if (0 <= i1) then
 
       i0 = i
 
@@ -11579,7 +11578,7 @@ subroutine perm_inverse ( n, p )
         i2 = p(i1)
         p(i1) = i0
 
-        if ( i2 < 0 ) then
+        if (i2 < 0) then
           exit
         end if
 
@@ -11594,8 +11593,8 @@ subroutine perm_inverse ( n, p )
 
   return
 end
-subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
-  maxcor3, line_max, ierror )
+subroutine plane_exp_grid_3d(p1, p2, p3, ncor3, line_num, cor3, lines, &
+                             maxcor3, line_max, ierror)
 
 !*****************************************************************************80
 !
@@ -11660,40 +11659,40 @@ subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) maxcor3
-  integer ( kind = 4 ) line_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) maxcor3
+  integer(kind=4) line_max
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) amax
-  real ( kind = 8 ) amin
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bmax
-  real ( kind = 8 ) bmin
-  real ( kind = 8 ) cor3(dim_num,maxcor3)
-  real ( kind = 8 ) dot
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ierror
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) line_num
-  integer ( kind = 4 ) lines(line_max)
-  integer ( kind = 4 ) nbase
-  integer ( kind = 4 ) ncor3
-  integer ( kind = 4 ), parameter :: nx = 5
-  integer ( kind = 4 ), parameter :: ny = 5
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
+  real(kind=8) a
+  real(kind=8) amax
+  real(kind=8) amin
+  real(kind=8) b
+  real(kind=8) bmax
+  real(kind=8) bmin
+  real(kind=8) cor3(dim_num, maxcor3)
+  real(kind=8) dot
+  integer(kind=4) i
+  integer(kind=4) ierror
+  integer(kind=4) j
+  integer(kind=4) line_num
+  integer(kind=4) lines(line_max)
+  integer(kind=4) nbase
+  integer(kind=4) ncor3
+  integer(kind=4), parameter :: nx = 5
+  integer(kind=4), parameter :: ny = 5
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
 
   ierror = 0
 
-  if ( ncor3 <= 0 ) then
+  if (ncor3 <= 0) then
     ncor3 = 0
   end if
 
-  if ( line_num <= 0 ) then
+  if (line_num <= 0) then
     line_num = 0
   end if
 
@@ -11703,11 +11702,11 @@ subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
 !
   v1(1:dim_num) = p2(1:dim_num) - p1(1:dim_num)
 
-  call vector_unit_nd ( dim_num, v1 )
+  call vector_unit_nd(dim_num, v1)
 
   v2(1:dim_num) = p3(1:dim_num) - p1(1:dim_num)
 
-  dot = dot_product ( v1(1:dim_num), v2(1:dim_num) )
+  dot = dot_product(v1(1:dim_num), v2(1:dim_num))
 !
 !  Remove the component of V1 from V2, and give the
 !  resulting vector unit norm.  V1 and V2 are now orthogonal
@@ -11716,11 +11715,11 @@ subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
 !
   v2(1:dim_num) = v2(1:dim_num) - dot * v1(1:dim_num)
 
-  call vector_unit_nd ( dim_num, v2 )
+  call vector_unit_nd(dim_num, v2)
 !
 !  Compute the (V1,V2) coordinate range of the input data, if any.
 !
-  if ( ncor3 == 0 ) then
+  if (ncor3 == 0) then
 
     amin = 0.0D+00
     amax = 1.0D+00
@@ -11731,19 +11730,19 @@ subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
 
     do i = 1, ncor3
 
-      a = dot_product ( v1(1:dim_num), cor3(1:dim_num,i) )
-      b = dot_product ( v2(1:dim_num), cor3(1:dim_num,i) )
+      a = dot_product(v1(1:dim_num), cor3(1:dim_num, i))
+      b = dot_product(v2(1:dim_num), cor3(1:dim_num, i))
 
-      if ( i == 1 ) then
+      if (i == 1) then
         amin = a
         amax = a
         bmin = b
         bmax = b
       else
-        amin = min ( amin, a )
-        amax = max ( amax, a )
-        bmin = min ( bmin, b )
-        bmax = max ( bmax, b )
+        amin = min(amin, a)
+        amax = max(amax, a)
+        bmin = min(bmin, b)
+        bmax = max(bmax, b)
       end if
 
     end do
@@ -11752,25 +11751,25 @@ subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
 !
 !  Generate the points we will use.
 !
-  if ( maxcor3 < ncor3 + nx * ny ) then
+  if (maxcor3 < ncor3 + nx * ny) then
     ierror = 1
     return
   end if
 
   do j = 1, ny
 
-    b = ( real ( ny - j,     kind = 8 ) * bmin &
-        + real (      j - 1, kind = 8 ) * bmax ) &
-        / real ( ny     - 1, kind = 8 )
+    b = (real(ny - j, kind=8) * bmin &
+         + real(j - 1, kind=8) * bmax) &
+        / real(ny - 1, kind=8)
 
     do i = 1, nx
 
-      a = ( real ( nx - i,     kind = 8 ) * amin &
-          + real (      i - 1, kind = 8 ) * amax ) &
-          / real ( nx     - 1, kind = 8 )
+      a = (real(nx - i, kind=8) * amin &
+           + real(i - 1, kind=8) * amax) &
+          / real(nx - 1, kind=8)
 
       ncor3 = ncor3 + 1
-      cor3(1:dim_num,ncor3) = a * v1(1:dim_num) + b * v2(1:dim_num)
+      cor3(1:dim_num, ncor3) = a * v1(1:dim_num) + b * v2(1:dim_num)
 
     end do
 
@@ -11782,17 +11781,17 @@ subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
 
     do j = 1, ny
 
-      if ( line_max <= line_num ) then
+      if (line_max <= line_num) then
         ierror = 2
         return
       end if
 
       line_num = line_num + 1
-      lines(line_num) = nbase + ( j - 1 ) * nx + i
+      lines(line_num) = nbase + (j - 1) * nx + i
 
     end do
 
-    if ( line_max <= line_num ) then
+    if (line_max <= line_num) then
       ierror = 2
       return
     end if
@@ -11808,17 +11807,17 @@ subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
 
     do i = 1, nx
 
-      if ( line_max <= line_num ) then
+      if (line_max <= line_num) then
         ierror = 2
         return
       end if
 
       line_num = line_num + 1
-      lines(line_num) = nbase + ( j - 1 ) * nx + i
+      lines(line_num) = nbase + (j - 1) * nx + i
 
     end do
 
-    if ( line_max <= line_num ) then
+    if (line_max <= line_num) then
       ierror = 2
       return
     end if
@@ -11830,7 +11829,7 @@ subroutine plane_exp_grid_3d ( p1, p2, p3, ncor3, line_num, cor3, lines, &
 
   return
 end
-subroutine plane_exp_normal_3d ( p1, p2, p3, normal )
+subroutine plane_exp_normal_3d(p1, p2, p3, normal)
 
 !*****************************************************************************80
 !
@@ -11863,31 +11862,31 @@ subroutine plane_exp_normal_3d ( p1, p2, p3, normal )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) normal_norm
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
+  real(kind=8) normal(dim_num)
+  real(kind=8) normal_norm
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
 !
 !  The cross product (P2-P1) x (P3-P1) is normal to (P2-P1) and (P3-P1).
 !
-  normal(1) = ( p2(2) - p1(2) ) * ( p3(3) - p1(3) ) &
-            - ( p2(3) - p1(3) ) * ( p3(2) - p1(2) )
+  normal(1) = (p2(2) - p1(2)) * (p3(3) - p1(3)) &
+              - (p2(3) - p1(3)) * (p3(2) - p1(2))
 
-  normal(2) = ( p2(3) - p1(3) ) * ( p3(1) - p1(1) ) &
-            - ( p2(1) - p1(1) ) * ( p3(3) - p1(3) )
+  normal(2) = (p2(3) - p1(3)) * (p3(1) - p1(1)) &
+              - (p2(1) - p1(1)) * (p3(3) - p1(3))
 
-  normal(3) = ( p2(1) - p1(1) ) * ( p3(2) - p1(2) ) &
-            - ( p2(2) - p1(2) ) * ( p3(1) - p1(1) )
+  normal(3) = (p2(1) - p1(1)) * (p3(2) - p1(2)) &
+              - (p2(2) - p1(2)) * (p3(1) - p1(1))
 
-  normal_norm = sqrt ( sum ( normal(1:dim_num) ** 2 ) )
+  normal_norm = sqrt(sum(normal(1:dim_num)**2))
 
-  if ( normal_norm == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_EXP_NORMAL_3D - Fatal error!'
-    write ( *, '(a)' ) '  The plane is poorly defined.'
+  if (normal_norm == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_EXP_NORMAL_3D - Fatal error!'
+    write (*, '(a)') '  The plane is poorly defined.'
     stop 1
   end if
 
@@ -11895,7 +11894,7 @@ subroutine plane_exp_normal_3d ( p1, p2, p3, normal )
 
   return
 end
-subroutine plane_exp_point_dist_3d ( p1, p2, p3, p, dist )
+subroutine plane_exp_point_dist_3d(p1, p2, p3, p, dist)
 
 !*****************************************************************************80
 !
@@ -11929,25 +11928,25 @@ subroutine plane_exp_point_dist_3d ( p1, p2, p3, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
 
-  call plane_exp2imp_3d ( p1, p2, p3, a, b, c, d )
+  call plane_exp2imp_3d(p1, p2, p3, a, b, c, d)
 
-  call plane_imp_point_dist_3d ( a, b, c, d, p, dist )
+  call plane_imp_point_dist_3d(a, b, c, d, p, dist)
 
   return
 end
-subroutine plane_exp_pro2 ( p1, p2, p3, n, p, pp )
+subroutine plane_exp_pro2(p1, p2, p3, n, p, pp)
 
 !*****************************************************************************80
 !
@@ -11996,43 +11995,43 @@ subroutine plane_exp_pro2 ( p1, p2, p3, n, p, pp )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dot
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pp(2,dim_num)
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
+  real(kind=8) dot
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pp(2, dim_num)
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
 !
 !  Compute the two basis vectors for the affine plane.
 !
   v1(1:dim_num) = p2(1:dim_num) - p1(1:dim_num)
 
-  call vector_unit_nd ( dim_num, v1 )
+  call vector_unit_nd(dim_num, v1)
 
   v2(1:dim_num) = p3(1:dim_num) - p1(1:dim_num)
 
-  dot = dot_product ( v1(1:dim_num), v2(1:dim_num) )
+  dot = dot_product(v1(1:dim_num), v2(1:dim_num))
 
   v2(1:dim_num) = v2(1:dim_num) - dot * v1(1:dim_num)
 
-  call vector_unit_nd ( dim_num, v2 )
+  call vector_unit_nd(dim_num, v2)
 !
 !  Now decompose each point.
 !
   do i = 1, n
-    pp(1,i) = dot_product ( p(1:dim_num,i) - p1(1:dim_num), v1(1:dim_num) )
-    pp(2,i) = dot_product ( p(1:dim_num,i) - p2(1:dim_num), v2(1:dim_num) )
+    pp(1, i) = dot_product(p(1:dim_num, i) - p1(1:dim_num), v1(1:dim_num))
+    pp(2, i) = dot_product(p(1:dim_num, i) - p2(1:dim_num), v2(1:dim_num))
   end do
 
   return
 end
-subroutine plane_exp_pro3 ( p1, p2, p3, n, p, pp )
+subroutine plane_exp_pro3(p1, p2, p3, n, p, pp)
 
 !*****************************************************************************80
 !
@@ -12072,36 +12071,36 @@ subroutine plane_exp_pro3 ( p1, p2, p3, n, p, pp )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pp(dim_num,n)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pp(dim_num, n)
 !
 !  Put the plane into ABCD form.
 !
-  call plane_exp2imp_3d ( p1, p2, p3, a, b, c, d )
+  call plane_exp2imp_3d(p1, p2, p3, a, b, c, d)
 !
 !  For each point, its image in the plane is the nearest point
 !  in the plane.
 !
   do i = 1, n
 
-    call plane_imp_point_near_3d ( a, b, c, d, p(1:dim_num,i), pp(1:dim_num,i) )
+   call plane_imp_point_near_3d(a, b, c, d, p(1:dim_num, i), pp(1:dim_num, i))
 
   end do
 
   return
 end
-subroutine plane_exp_project_3d ( p1, p2, p3, pf, n, po, pp, ivis )
+subroutine plane_exp_project_3d(p1, p2, p3, pf, n, po, pp, ivis)
 
 !*****************************************************************************80
 !
@@ -12151,48 +12150,48 @@ subroutine plane_exp_project_3d ( p1, p2, p3, pf, n, po, pp, ivis )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) alpha
-  real ( kind = 8 ) angle_rad_3d
-  real ( kind = 8 ) b
-  real ( kind = 8 ) beta
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) disfo
-  real ( kind = 8 ) disfn
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ivis(n)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pf(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) po(dim_num,n)
-  real ( kind = 8 ) pp(dim_num,n)
+  real(kind=8) a
+  real(kind=8) alpha
+  real(kind=8) angle_rad_3d
+  real(kind=8) b
+  real(kind=8) beta
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) disfo
+  real(kind=8) disfn
+  integer(kind=4) i
+  integer(kind=4) ivis(n)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pf(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) po(dim_num, n)
+  real(kind=8) pp(dim_num, n)
 !
 !  Put the plane into ABCD form.
 !
-  call plane_exp2imp_3d ( p1, p2, p3, a, b, c, d )
+  call plane_exp2imp_3d(p1, p2, p3, a, b, c, d)
 !
 !  Get the nearest point on the plane to the focus.
 !
-  call plane_imp_point_near_3d ( a, b, c, d, pf, pn )
+  call plane_imp_point_near_3d(a, b, c, d, pf, pn)
 !
 !  Get the distance from the focus to the plane.
 !
-  disfn = sqrt ( sum ( ( pf(1:dim_num) - pn(1:dim_num) ) ** 2 ) )
+  disfn = sqrt(sum((pf(1:dim_num) - pn(1:dim_num))**2))
 !
 !  If the focus lies in the plane, this is bad.  We could still
 !  project points that actually lie in the plane, but we'll
 !  just bail out.
 !
-  if ( disfn == 0.0D+00 ) then
+  if (disfn == 0.0D+00) then
     ivis(1:n) = 0
     do i = 1, dim_num
-      pp(i,1:n) = pf(i)
+      pp(i, 1:n) = pf(i)
     end do
     return
   end if
@@ -12203,35 +12202,35 @@ subroutine plane_exp_project_3d ( p1, p2, p3, pf, n, po, pp, ivis )
 !
 !  Get the distance from the focus to the object.
 !
-    disfo = sqrt ( sum ( ( po(1:dim_num,i) - pf(1:dim_num) ) ** 2 ) )
+    disfo = sqrt(sum((po(1:dim_num, i) - pf(1:dim_num))**2))
 
-    if ( disfo == 0.0D+00 ) then
+    if (disfo == 0.0D+00) then
 
       ivis(i) = 0
-      pp(1:dim_num,i) = pn(1:dim_num)
+      pp(1:dim_num, i) = pn(1:dim_num)
 
     else
 !
 !  Compute ALPHA, the angle between (objECT-FOCUS) and (NEAREST-FOCUS).
 !
-      alpha = angle_rad_3d ( po(1:3,i), pf(1:3), pn(1:3) )
+      alpha = angle_rad_3d(po(1:3, i), pf(1:3), pn(1:3))
 
-      if ( cos ( alpha ) == 0.0D+00 ) then
+      if (cos(alpha) == 0.0D+00) then
 
         ivis(i) = 0
-        pp(1:dim_num,i) = pn(1:dim_num)
+        pp(1:dim_num, i) = pn(1:dim_num)
 
       else
 !
 !  BETA is Dist(NEAREST-FOCUS) / ( Cos(ALPHA)*Dist(objECT-FOCUS) )
 !
-        beta = disfn / ( cos ( alpha ) * disfo )
+        beta = disfn / (cos(alpha) * disfo)
 
-        if ( 1.0D+00 < beta ) then
+        if (1.0D+00 < beta) then
           ivis(i) = 1
-        else if ( beta == 1.0D+00 ) then
+        else if (beta == 1.0D+00) then
           ivis(i) = 2
-        else if ( 0.0D+00 < beta ) then
+        else if (0.0D+00 < beta) then
           ivis(i) = 3
         else
           ivis(i) = -1
@@ -12239,8 +12238,8 @@ subroutine plane_exp_project_3d ( p1, p2, p3, pf, n, po, pp, ivis )
 !
 !  Set the projected point.
 !
-        pp(1:dim_num,i) = pf(1:dim_num) &
-          + beta * ( po(1:dim_num,i) - pf(1:dim_num) )
+        pp(1:dim_num, i) = pf(1:dim_num) &
+                           + beta * (po(1:dim_num, i) - pf(1:dim_num))
 
       end if
 
@@ -12250,7 +12249,7 @@ subroutine plane_exp_project_3d ( p1, p2, p3, pf, n, po, pp, ivis )
 
   return
 end
-subroutine plane_exp2imp_3d ( p1, p2, p3, a, b, c, d )
+subroutine plane_exp2imp_3d(p1, p2, p3, a, b, c, d)
 
 !*****************************************************************************80
 !
@@ -12294,30 +12293,30 @@ subroutine plane_exp2imp_3d ( p1, p2, p3, a, b, c, d )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
 
-  a = ( p2(2) - p1(2) ) * ( p3(3) - p1(3) ) &
-    - ( p2(3) - p1(3) ) * ( p3(2) - p1(2) )
+  a = (p2(2) - p1(2)) * (p3(3) - p1(3)) &
+      - (p2(3) - p1(3)) * (p3(2) - p1(2))
 
-  b = ( p2(3) - p1(3) ) * ( p3(1) - p1(1) ) &
-    - ( p2(1) - p1(1) ) * ( p3(3) - p1(3) )
+  b = (p2(3) - p1(3)) * (p3(1) - p1(1)) &
+      - (p2(1) - p1(1)) * (p3(3) - p1(3))
 
-  c = ( p2(1) - p1(1) ) * ( p3(2) - p1(2) ) &
-    - ( p2(2) - p1(2) ) * ( p3(1) - p1(1) )
+  c = (p2(1) - p1(1)) * (p3(2) - p1(2)) &
+      - (p2(2) - p1(2)) * (p3(1) - p1(1))
 
-  d = - p2(1) * a - p2(2) * b - p2(3) * c
+  d = -p2(1) * a - p2(2) * b - p2(3) * c
 
   return
 end
-subroutine plane_exp2normal_3d ( p1, p2, p3, pp, normal )
+subroutine plane_exp2normal_3d(p1, p2, p3, pp, normal)
 
 !*****************************************************************************80
 !
@@ -12356,33 +12355,33 @@ subroutine plane_exp2normal_3d ( p1, p2, p3, pp, normal )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pp(dim_num)
+  real(kind=8) norm
+  real(kind=8) normal(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pp(dim_num)
 
   pp(1:dim_num) = p1(1:dim_num)
 
-  normal(1) = ( p2(2) - p1(2) ) * ( p3(3) - p1(3) ) &
-            - ( p2(3) - p1(3) ) * ( p3(2) - p1(2) )
+  normal(1) = (p2(2) - p1(2)) * (p3(3) - p1(3)) &
+              - (p2(3) - p1(3)) * (p3(2) - p1(2))
 
-  normal(2) = ( p2(3) - p1(3) ) * ( p3(1) - p1(1) ) &
-            - ( p2(1) - p1(1) ) * ( p3(3) - p1(3) )
+  normal(2) = (p2(3) - p1(3)) * (p3(1) - p1(1)) &
+              - (p2(1) - p1(1)) * (p3(3) - p1(3))
 
-  normal(3) = ( p2(1) - p1(1) ) * ( p3(2) - p1(2) ) &
-            - ( p2(2) - p1(2) ) * ( p3(1) - p1(1) )
+  normal(3) = (p2(1) - p1(1)) * (p3(2) - p1(2)) &
+              - (p2(2) - p1(2)) * (p3(1) - p1(1))
 
-  norm = sqrt ( sum ( normal(1:dim_num) ** 2 ) )
+  norm = sqrt(sum(normal(1:dim_num)**2))
 
-  if ( norm == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_EXP2NORMAL_3D - Fatal error!'
-    write ( *, '(a)' ) '  The normal vector is null.'
-    write ( *, '(a)' ) '  Two points coincide, or nearly so.'
+  if (norm == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_EXP2NORMAL_3D - Fatal error!'
+    write (*, '(a)') '  The normal vector is null.'
+    write (*, '(a)') '  Two points coincide, or nearly so.'
     stop 1
   end if
 
@@ -12390,7 +12389,7 @@ subroutine plane_exp2normal_3d ( p1, p2, p3, pp, normal )
 
   return
 end
-function plane_imp_is_degenerate_3d ( a, b, c )
+function plane_imp_is_degenerate_3d(a, b, c)
 
 !*****************************************************************************80
 !
@@ -12425,12 +12424,12 @@ function plane_imp_is_degenerate_3d ( a, b, c )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  logical ( kind = 4 ) plane_imp_is_degenerate_3d
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  logical(kind=4) plane_imp_is_degenerate_3d
 
-  if ( a == 0.0D+00 .and. b == 0.0D+00 .and. c == 0.0D+00 ) then
+  if (a == 0.0D+00 .and. b == 0.0D+00 .and. c == 0.0D+00) then
     plane_imp_is_degenerate_3d = .true.
   else
     plane_imp_is_degenerate_3d = .false.
@@ -12438,8 +12437,8 @@ function plane_imp_is_degenerate_3d ( a, b, c )
 
   return
 end
-subroutine plane_imp_line_par_int_3d ( a, b, c, d, x0, y0, z0, f, g, h, &
-  intersect, p )
+subroutine plane_imp_line_par_int_3d(a, b, c, d, x0, y0, z0, f, g, h, &
+                                     intersect, p)
 
 !*****************************************************************************80
 !
@@ -12495,43 +12494,43 @@ subroutine plane_imp_line_par_int_3d ( a, b, c, d, x0, y0, z0, f, g, h, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) denom
-  real ( kind = 8 ) f
-  real ( kind = 8 ) g
-  real ( kind = 8 ) h
-  logical ( kind = 4 ) intersect
-  real ( kind = 8 ) norm1
-  real ( kind = 8 ) norm2
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t
-  real ( kind = 8 ), parameter :: tol = 0.00001D+00
-  real ( kind = 8 ) x0
-  real ( kind = 8 ) y0
-  real ( kind = 8 ) z0
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) denom
+  real(kind=8) f
+  real(kind=8) g
+  real(kind=8) h
+  logical(kind=4) intersect
+  real(kind=8) norm1
+  real(kind=8) norm2
+  real(kind=8) p(dim_num)
+  real(kind=8) t
+  real(kind=8), parameter :: tol = 0.00001D+00
+  real(kind=8) x0
+  real(kind=8) y0
+  real(kind=8) z0
 !
 !  Check.
 !
-  norm1 = sqrt ( a * a + b * b + c * c )
+  norm1 = sqrt(a * a + b * b + c * c)
 
-  if ( norm1 == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_IMP_LINE_PAR_INT_3D - Fatal error!'
-    write ( *, '(a)' ) '  The plane normal vector is null.'
+  if (norm1 == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_IMP_LINE_PAR_INT_3D - Fatal error!'
+    write (*, '(a)') '  The plane normal vector is null.'
     stop 1
   end if
 
-  norm2 = sqrt ( f * f + g * g + h * h )
+  norm2 = sqrt(f * f + g * g + h * h)
 
-  if ( norm2 == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_IMP_LINE_PAR_INT_3D - Fatal error!'
-    write ( *, '(a)' ) '  The line direction vector is null.'
+  if (norm2 == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_IMP_LINE_PAR_INT_3D - Fatal error!'
+    write (*, '(a)') '  The line direction vector is null.'
     stop 1
   end if
 
@@ -12539,9 +12538,9 @@ subroutine plane_imp_line_par_int_3d ( a, b, c, d, x0, y0, z0, f, g, h, &
 !
 !  The line and the plane may be parallel.
 !
-  if ( abs ( denom ) < tol * norm1 * norm2 ) then
+  if (abs(denom) < tol * norm1 * norm2) then
 
-    if ( a * x0 + b * y0 + c * z0 + d == 0.0D+00 ) then
+    if (a * x0 + b * y0 + c * z0 + d == 0.0D+00) then
       intersect = .true.
       p(1) = x0
       p(2) = y0
@@ -12556,7 +12555,7 @@ subroutine plane_imp_line_par_int_3d ( a, b, c, d, x0, y0, z0, f, g, h, &
   else
 
     intersect = .true.
-    t = - ( a * x0 + b * y0 + c * z0 + d ) / denom
+    t = -(a * x0 + b * y0 + c * z0 + d) / denom
     p(1) = x0 + t * f
     p(2) = y0 + t * g
     p(3) = z0 + t * h
@@ -12565,7 +12564,7 @@ subroutine plane_imp_line_par_int_3d ( a, b, c, d, x0, y0, z0, f, g, h, &
 
   return
 end
-subroutine plane_imp_point_dist_3d ( a, b, c, d, p, dist )
+subroutine plane_imp_point_dist_3d(a, b, c, d, p, dist)
 
 !*****************************************************************************80
 !
@@ -12606,30 +12605,30 @@ subroutine plane_imp_point_dist_3d ( a, b, c, d, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) p(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) dist
+  real(kind=8) norm
+  real(kind=8) p(dim_num)
 
-  norm = sqrt ( a * a + b * b + c * c )
+  norm = sqrt(a * a + b * b + c * c)
 
-  if ( norm == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_IMP_POINT_DIST_3D - Fatal error!'
-    write ( *, '(a)' ) '  The plane normal vector is null.'
+  if (norm == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_IMP_POINT_DIST_3D - Fatal error!'
+    write (*, '(a)') '  The plane normal vector is null.'
     stop 1
   end if
 
-  dist = abs ( a * p(1) + b * p(2) + c * p(3) + d ) / norm
+  dist = abs(a * p(1) + b * p(2) + c * p(3) + d) / norm
 
   return
 end
-subroutine plane_imp_point_dist_signed_3d ( a, b, c, d, p, dist_signed )
+subroutine plane_imp_point_dist_signed_3d(a, b, c, d, p, dist_signed)
 
 !*****************************************************************************80
 !
@@ -12672,31 +12671,31 @@ subroutine plane_imp_point_dist_signed_3d ( a, b, c, d, p, dist_signed )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist_signed
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) p(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) dist_signed
+  real(kind=8) norm
+  real(kind=8) p(dim_num)
 
-  norm = sqrt ( a * a + b * b + c * c )
+  norm = sqrt(a * a + b * b + c * c)
 
-  if ( norm == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_IMP_POINT_DIST_SIGNED_3D - Fatal error!'
-    write ( *, '(a)' ) '  The plane normal vector is null.'
+  if (norm == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_IMP_POINT_DIST_SIGNED_3D - Fatal error!'
+    write (*, '(a)') '  The plane normal vector is null.'
     stop 1
   end if
 
-  dist_signed = - sign ( 1.0D+00, d ) &
-    * ( a * p(1) + b * p(2) + c * p(3) + d ) / norm
+  dist_signed = -sign(1.0D+00, d) &
+                * (a * p(1) + b * p(2) + c * p(3) + d) / norm
 
   return
 end
-subroutine plane_imp_point_near_3d ( a, b, c, d, p, pn )
+subroutine plane_imp_point_near_3d(a, b, c, d, p, pn)
 
 !*****************************************************************************80
 !
@@ -12749,25 +12748,25 @@ subroutine plane_imp_point_near_3d ( a, b, c, d, p, pn )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) p(dim_num)
-  logical ( kind = 4 ) plane_imp_is_degenerate_3d
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) t
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) p(dim_num)
+  logical(kind=4) plane_imp_is_degenerate_3d
+  real(kind=8) pn(dim_num)
+  real(kind=8) t
 
-  if ( plane_imp_is_degenerate_3d ( a, b, c ) ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_IMP_POINT_NEAR_3D - Fatal error!'
-    write ( *, '(a)' ) '  A = B = C = 0.'
+  if (plane_imp_is_degenerate_3d(a, b, c)) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_IMP_POINT_NEAR_3D - Fatal error!'
+    write (*, '(a)') '  A = B = C = 0.'
     stop 1
   end if
 
-  t = - ( a * p(1) + b * p(2) + c * p(3) + d ) / ( a * a + b * b + c * c )
+  t = -(a * p(1) + b * p(2) + c * p(3) + d) / (a * a + b * b + c * c)
 
   pn(1) = p(1) + a * t
   pn(2) = p(2) + b * t
@@ -12775,7 +12774,7 @@ subroutine plane_imp_point_near_3d ( a, b, c, d, p, pn )
 
   return
 end
-subroutine plane_imp_segment_near_3d ( p1, p2, a, b, c, d, dist, p, pn )
+subroutine plane_imp_segment_near_3d(p1, p2, a, b, c, d, dist, p, pn)
 
 !*****************************************************************************80
 !
@@ -12820,35 +12819,35 @@ subroutine plane_imp_segment_near_3d ( p1, p2, a, b, c, d, dist, p, pn )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) alpha
-  real ( kind = 8 ) an
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bn
-  real ( kind = 8 ) c
-  real ( kind = 8 ) cn
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dn
-  real ( kind = 8 ) dot1
-  real ( kind = 8 ) dot2
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
+  real(kind=8) a
+  real(kind=8) alpha
+  real(kind=8) an
+  real(kind=8) b
+  real(kind=8) bn
+  real(kind=8) c
+  real(kind=8) cn
+  real(kind=8) d
+  real(kind=8) dist
+  real(kind=8) dn
+  real(kind=8) dot1
+  real(kind=8) dot2
+  real(kind=8) norm
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
 
   pn(1:dim_num) = 0.0D+00
   p(1:dim_num) = 0.0D+00
 
-  norm = sqrt ( a * a + b * b + c * c )
+  norm = sqrt(a * a + b * b + c * c)
 
-  if ( norm == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_IMP_SEGMENT_NEAR_3D - Fatal error!'
-    write ( *, '(a)' ) '  Plane normal vector is null.'
+  if (norm == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_IMP_SEGMENT_NEAR_3D - Fatal error!'
+    write (*, '(a)') '  Plane normal vector is null.'
     stop 1
   end if
 !
@@ -12861,10 +12860,10 @@ subroutine plane_imp_segment_near_3d ( p1, p2, a, b, c, d, dist, p, pn )
 !
 !  If the line segment is actually a point, then the answer is easy.
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
     dot1 = an * p1(1) + bn * p1(2) + cn * p1(3) + dn
-    dist = abs ( dot1 )
+    dist = abs(dot1)
     pn(1:dim_num) = p1(1:dim_num)
     p(1) = pn(1) - an * dot1
     p(2) = pn(2) - bn * dot1
@@ -12881,13 +12880,13 @@ subroutine plane_imp_segment_near_3d ( p1, p2, a, b, c, d, dist, p, pn )
 !  If these have the same sign, then the line segment does not
 !  cross the plane, and one endpoint is the nearest point.
 !
-  if ( ( 0.0D+00 < dot1 .and. 0.0D+00 < dot2 ) .or. &
-       ( dot1 < 0.0D+00 .and. dot2 < 0.0D+00 ) ) then
+  if ((0.0D+00 < dot1 .and. 0.0D+00 < dot2) .or. &
+      (dot1 < 0.0D+00 .and. dot2 < 0.0D+00)) then
 
-    dot1 = abs ( dot1 )
-    dot2 = abs ( dot2 )
+    dot1 = abs(dot1)
+    dot2 = abs(dot2)
 
-    if ( dot1 < dot2 ) then
+    if (dot1 < dot2) then
       pn(1:dim_num) = p1(1:dim_num)
       p(1) = pn(1) - an * dot1
       p(2) = pn(2) - bn * dot1
@@ -12905,16 +12904,16 @@ subroutine plane_imp_segment_near_3d ( p1, p2, a, b, c, d, dist, p, pn )
 !
   else
 
-    if ( dot1 == 0.0D+00 ) then
+    if (dot1 == 0.0D+00) then
       alpha = 0.0D+00
-    else if ( dot2 == 0.0D+00 ) then
+    else if (dot2 == 0.0D+00) then
       alpha = 1.0D+00
     else
-      alpha = dot2 / ( dot2 - dot1 )
+      alpha = dot2 / (dot2 - dot1)
     end if
 
-    pn(1:dim_num) =             alpha   * p1(1:dim_num) &
-                  + ( 1.0D+00 - alpha ) * p2(1:dim_num)
+    pn(1:dim_num) = alpha * p1(1:dim_num) &
+                    + (1.0D+00 - alpha) * p2(1:dim_num)
 
     p(1:dim_num) = pn(1:dim_num)
 
@@ -12924,7 +12923,7 @@ subroutine plane_imp_segment_near_3d ( p1, p2, a, b, c, d, dist, p, pn )
 
   return
 end
-subroutine plane_imp_triangle_int_3d ( a, b, c, d, t, int_num, pint )
+subroutine plane_imp_triangle_int_3d(a, b, c, d, t, int_num, pint)
 
 !*****************************************************************************80
 !
@@ -12969,69 +12968,69 @@ subroutine plane_imp_triangle_int_3d ( a, b, c, d, t, int_num, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist1
-  real ( kind = 8 ) dist2
-  real ( kind = 8 ) dist3
-  integer ( kind = 4 ) int_num
-  real ( kind = 8 ) pint(dim_num,3)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) dist1
+  real(kind=8) dist2
+  real(kind=8) dist3
+  integer(kind=4) int_num
+  real(kind=8) pint(dim_num, 3)
+  real(kind=8) t(dim_num, 3)
 
   int_num = 0
 !
 !  Compute the signed distances between the vertices and the plane.
 !
-  dist1 = a * t(1,1) + b * t(2,1) + c * t(3,1) + d
-  dist2 = a * t(1,2) + b * t(2,2) + c * t(3,2) + d
-  dist3 = a * t(1,3) + b * t(2,3) + c * t(3,3) + d
+  dist1 = a * t(1, 1) + b * t(2, 1) + c * t(3, 1) + d
+  dist2 = a * t(1, 2) + b * t(2, 2) + c * t(3, 2) + d
+  dist3 = a * t(1, 3) + b * t(2, 3) + c * t(3, 3) + d
 !
 !  Consider any zero distances.
 !
-  if ( dist1 == 0.0D+00 ) then
+  if (dist1 == 0.0D+00) then
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,1)
+    pint(1:dim_num, int_num) = t(1:dim_num, 1)
   end if
 
-  if ( dist2 == 0.0D+00 ) then
+  if (dist2 == 0.0D+00) then
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,2)
+    pint(1:dim_num, int_num) = t(1:dim_num, 2)
   end if
 
-  if ( dist3 == 0.0D+00 ) then
+  if (dist3 == 0.0D+00) then
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,3)
+    pint(1:dim_num, int_num) = t(1:dim_num, 3)
   end if
 !
 !  If 2 or 3 of the nodes intersect, we're already done.
 !
-  if ( 2 <= int_num ) then
+  if (2 <= int_num) then
     return
   end if
 !
 !  If one node intersects, then we're done unless the other two
 !  are of opposite signs.
 !
-  if ( int_num == 1 ) then
+  if (int_num == 1) then
 
-    if ( dist1 == 0.0D+00 ) then
+    if (dist1 == 0.0D+00) then
 
-      call plane_imp_triangle_int_add_3d ( t(1:dim_num,2), t(1:dim_num,3), &
-        dist2, dist3, int_num, pint )
+      call plane_imp_triangle_int_add_3d(t(1:dim_num, 2), t(1:dim_num, 3), &
+                                         dist2, dist3, int_num, pint)
 
-    else if ( dist2 == 0.0D+00 ) then
+    else if (dist2 == 0.0D+00) then
 
-      call plane_imp_triangle_int_add_3d ( t(1:dim_num,1), t(1:dim_num,3), &
-        dist1, dist3, int_num, pint )
+      call plane_imp_triangle_int_add_3d(t(1:dim_num, 1), t(1:dim_num, 3), &
+                                         dist1, dist3, int_num, pint)
 
-    else if ( dist3 == 0.0D+00 ) then
+    else if (dist3 == 0.0D+00) then
 
-      call plane_imp_triangle_int_add_3d ( t(1:dim_num,1), t(1:dim_num,2), &
-        dist1, dist2, int_num, pint )
+      call plane_imp_triangle_int_add_3d(t(1:dim_num, 1), t(1:dim_num, 2), &
+                                         dist1, dist2, int_num, pint)
 
     end if
 
@@ -13042,35 +13041,35 @@ subroutine plane_imp_triangle_int_3d ( a, b, c, d, t, int_num, pint )
 !  All nodal distances are nonzero, and there is at least one
 !  positive and one negative.
 !
-  if ( dist1 * dist2 < 0.0D+00 .and. dist1 * dist3 < 0.0D+00 ) then
+  if (dist1 * dist2 < 0.0D+00 .and. dist1 * dist3 < 0.0D+00) then
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,1), t(1:dim_num,2), &
-      dist1, dist2, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 1), t(1:dim_num, 2), &
+                                       dist1, dist2, int_num, pint)
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,1), t(1:dim_num,3), &
-      dist1, dist3, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 1), t(1:dim_num, 3), &
+                                       dist1, dist3, int_num, pint)
 
-  else if ( dist2 * dist1 < 0.0D+00 .and. dist2 * dist3 < 0.0D+00 ) then
+  else if (dist2 * dist1 < 0.0D+00 .and. dist2 * dist3 < 0.0D+00) then
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,2), t(1:dim_num,1), &
-      dist2, dist1, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 2), t(1:dim_num, 1), &
+                                       dist2, dist1, int_num, pint)
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,2), t(1:dim_num,3), &
-      dist2, dist3, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 2), t(1:dim_num, 3), &
+                                       dist2, dist3, int_num, pint)
 
-  else if ( dist3 * dist1 < 0.0D+00 .and. dist3 * dist2 < 0.0D+00 ) then
+  else if (dist3 * dist1 < 0.0D+00 .and. dist3 * dist2 < 0.0D+00) then
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,3), t(1:dim_num,1), &
-      dist3, dist1, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 3), t(1:dim_num, 1), &
+                                       dist3, dist1, int_num, pint)
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,3), t(1:dim_num,2), &
-      dist3, dist2, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 3), t(1:dim_num, 2), &
+                                       dist3, dist2, int_num, pint)
 
   end if
 
   return
 end
-subroutine plane_imp_triangle_int_add_3d ( p1, p2, dist1, dist2, int_num, pint )
+subroutine plane_imp_triangle_int_add_3d(p1, p2, dist1, dist2, int_num, pint)
 
 !*****************************************************************************80
 !
@@ -13110,32 +13109,32 @@ subroutine plane_imp_triangle_int_add_3d ( p1, p2, dist1, dist2, int_num, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) alpha
-  real ( kind = 8 ) dist1
-  real ( kind = 8 ) dist2
-  integer ( kind = 4 ) int_num
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pint(dim_num,3)
+  real(kind=8) alpha
+  real(kind=8) dist1
+  real(kind=8) dist2
+  integer(kind=4) int_num
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pint(dim_num, 3)
 
-  if ( dist1 == 0.0D+00 ) then
+  if (dist1 == 0.0D+00) then
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = p1(1:dim_num)
-  else if ( dist2 == 0.0D+00 ) then
+    pint(1:dim_num, int_num) = p1(1:dim_num)
+  else if (dist2 == 0.0D+00) then
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = p2(1:dim_num)
-  else if ( dist1 * dist2 < 0.0D+00 ) then
-    alpha = dist2 / ( dist2 - dist1 )
+    pint(1:dim_num, int_num) = p2(1:dim_num)
+  else if (dist1 * dist2 < 0.0D+00) then
+    alpha = dist2 / (dist2 - dist1)
     int_num = int_num + 1
-    pint(1:dim_num,int_num) =             alpha   * p1(1:dim_num) &
-                            + ( 1.0D+00 - alpha ) * p2(1:dim_num)
+    pint(1:dim_num, int_num) = alpha * p1(1:dim_num) &
+                               + (1.0D+00 - alpha) * p2(1:dim_num)
   end if
 
   return
 end
-subroutine plane_imp_triangle_near_3d ( t, a, b, c, d, dist, near_num, pn )
+subroutine plane_imp_triangle_near_3d(t, a, b, c, d, dist, near_num, pn)
 
 !*****************************************************************************80
 !
@@ -13185,102 +13184,102 @@ subroutine plane_imp_triangle_near_3d ( t, a, b, c, d, dist, near_num, pn )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist12
-  real ( kind = 8 ) dist23
-  real ( kind = 8 ) dist31
-  integer ( kind = 4 ) near_num
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pn(dim_num,6)
-  real ( kind = 8 ) pt(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) dist
+  real(kind=8) dist12
+  real(kind=8) dist23
+  real(kind=8) dist31
+  integer(kind=4) near_num
+  real(kind=8) p(dim_num)
+  real(kind=8) pn(dim_num, 6)
+  real(kind=8) pt(dim_num)
+  real(kind=8) t(dim_num, 3)
 
   near_num = 0
 !
 !  Consider the line segment P1 - P2.
 !
-  call plane_imp_segment_near_3d ( t(1:dim_num,1), t(1:dim_num,2), &
-    a, b, c, d, dist12, p, pt )
+  call plane_imp_segment_near_3d(t(1:dim_num, 1), t(1:dim_num, 2), &
+                                 a, b, c, d, dist12, p, pt)
 
   dist = dist12
 
   near_num = near_num + 1
-  pn(1:dim_num,near_num) = pt(1:dim_num)
+  pn(1:dim_num, near_num) = pt(1:dim_num)
 
-  if ( 0.0D+00 < dist12 ) then
+  if (0.0D+00 < dist12) then
     near_num = near_num + 1
-    pn(1:dim_num,near_num) = p(1:dim_num)
+    pn(1:dim_num, near_num) = p(1:dim_num)
   end if
 !
 !  Consider the line segment P2 - P3.
 !
-  call plane_imp_segment_near_3d ( t(1:dim_num,2), t(1:dim_num,3), &
-    a, b, c, d, dist23, p, pt )
+  call plane_imp_segment_near_3d(t(1:dim_num, 2), t(1:dim_num, 3), &
+                                 a, b, c, d, dist23, p, pt)
 
-  if ( dist23 < dist ) then
+  if (dist23 < dist) then
 
     near_num = 0
     dist = dist23
 
     near_num = near_num + 1
-    pn(1:dim_num,near_num) = pt(1:dim_num)
+    pn(1:dim_num, near_num) = pt(1:dim_num)
 
-    if ( 0.0D+00 < dist23 ) then
+    if (0.0D+00 < dist23) then
       near_num = near_num + 1
-      pn(1:dim_num,near_num) = p(1:dim_num)
+      pn(1:dim_num, near_num) = p(1:dim_num)
     end if
 
-  else if ( dist23 == dist ) then
+  else if (dist23 == dist) then
 
     near_num = near_num + 1
-    pn(1:dim_num,near_num) = pt(1:dim_num)
+    pn(1:dim_num, near_num) = pt(1:dim_num)
 
-    if ( 0.0D+00 < dist23 ) then
+    if (0.0D+00 < dist23) then
       near_num = near_num + 1
-      pn(1:dim_num,near_num) = p(1:dim_num)
+      pn(1:dim_num, near_num) = p(1:dim_num)
     end if
 
   end if
 !
 !  Consider the line segment P3 - P1.
 !
-  call plane_imp_segment_near_3d ( t(1:dim_num,3), t(1:dim_num,1), &
-    a, b, c, d, dist31, p, pt )
+  call plane_imp_segment_near_3d(t(1:dim_num, 3), t(1:dim_num, 1), &
+                                 a, b, c, d, dist31, p, pt)
 
-  if ( dist31 < dist ) then
+  if (dist31 < dist) then
 
     near_num = 0
     dist = dist31
 
     near_num = near_num + 1
-    pn(1:dim_num,near_num) = pt(1:dim_num)
+    pn(1:dim_num, near_num) = pt(1:dim_num)
 
-    if ( 0.0D+00 < dist31 ) then
+    if (0.0D+00 < dist31) then
       near_num = near_num + 1
-      pn(1:dim_num,near_num) = p(1:dim_num)
+      pn(1:dim_num, near_num) = p(1:dim_num)
     end if
 
-  else if ( dist31 == dist ) then
+  else if (dist31 == dist) then
 
     near_num = near_num + 1
-    pn(1:dim_num,near_num) = pt(1:dim_num)
+    pn(1:dim_num, near_num) = pt(1:dim_num)
 
-    if ( 0.0D+00 < dist31 ) then
+    if (0.0D+00 < dist31) then
       near_num = near_num + 1
-      pn(1:dim_num,near_num) = p(1:dim_num)
+      pn(1:dim_num, near_num) = p(1:dim_num)
     end if
 
   end if
 
   return
 end
-subroutine plane_imp2exp_3d ( a, b, c, d, p1, p2, p3 )
+subroutine plane_imp2exp_3d(a, b, c, d, p1, p2, p3)
 
 !*****************************************************************************80
 !
@@ -13316,25 +13315,25 @@ subroutine plane_imp2exp_3d ( a, b, c, d, p1, p2, p3 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pp(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) normal(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pp(dim_num)
 
-  call plane_imp2normal_3d ( a, b, c, d, pp, normal )
+  call plane_imp2normal_3d(a, b, c, d, pp, normal)
 
-  call plane_normal2exp_3d ( pp, normal, p1, p2, p3 )
+  call plane_normal2exp_3d(pp, normal, p1, p2, p3)
 
   return
 end
-subroutine plane_imp2normal_3d ( a, b, c, d, pp, normal )
+subroutine plane_imp2normal_3d(a, b, c, d, pp, normal)
 
 !*****************************************************************************80
 !
@@ -13373,22 +13372,22 @@ subroutine plane_imp2normal_3d ( a, b, c, d, pp, normal )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) pp(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) norm
+  real(kind=8) normal(dim_num)
+  real(kind=8) pp(dim_num)
 
-  norm = sqrt ( a * a + b * b + c * c )
+  norm = sqrt(a * a + b * b + c * c)
 
-  if ( norm == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_IMP2NORMAL_3D - Fatal error!'
-    write ( *, '(a)' ) '  The plane (A,B,C) has zero norm.'
+  if (norm == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_IMP2NORMAL_3D - Fatal error!'
+    write (*, '(a)') '  The plane (A,B,C) has zero norm.'
     stop 1
   end if
 
@@ -13396,28 +13395,28 @@ subroutine plane_imp2normal_3d ( a, b, c, d, pp, normal )
   normal(2) = b / norm
   normal(3) = c / norm
 
-  if ( a /= 0.0D+00 ) then
-    pp(1) = - d / a
+  if (a /= 0.0D+00) then
+    pp(1) = -d / a
     pp(2) = 0.0D+00
     pp(3) = 0.0D+00
-  else if ( b /= 0.0D+00 ) then
+  else if (b /= 0.0D+00) then
     pp(1) = 0.0D+00
-    pp(2) = - d / b
+    pp(2) = -d / b
     pp(3) = 0.0D+00
-  else if ( c /= 0.0D+00 ) then
+  else if (c /= 0.0D+00) then
     pp(1) = 0.0D+00
     pp(2) = 0.0D+00
-    pp(3) = - d / c
+    pp(3) = -d / c
   else
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_IMP2NORMAL_3D - Fatal error!'
-    write ( *, '(a)' ) '  The (A,B,C) vector is null.'
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_IMP2NORMAL_3D - Fatal error!'
+    write (*, '(a)') '  The (A,B,C) vector is null.'
     stop 1
   end if
 
   return
 end
-subroutine plane_normal_basis_3d ( pp, normal, pq, pr )
+subroutine plane_normal_basis_3d(pp, normal, pq, pr)
 
 !*****************************************************************************80
 !
@@ -13469,42 +13468,43 @@ subroutine plane_normal_basis_3d ( pp, normal, pq, pr )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) normal_norm
-  real ( kind = 8 ) pp(dim_num)
-  real ( kind = 8 ) pq(dim_num)
-  real ( kind = 8 ) pr(dim_num)
-  real ( kind = 8 ) pr_norm
+  real(kind=8) r8vec_norm
+  real(kind=8) normal(dim_num)
+  real(kind=8) normal_norm
+  real(kind=8) pp(dim_num)
+  real(kind=8) pq(dim_num)
+  real(kind=8) pr(dim_num)
+  real(kind=8) pr_norm
 !
 !  Compute the length of NORMAL.
 !
-  normal_norm = r8vec_norm ( dim_num, normal )
+  normal_norm = r8vec_norm(dim_num, normal)
 
-  if ( normal_norm == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_NORMAL_BASIS_3D - Fatal error!'
-    write ( *, '(a)' ) '  The normal vector is 0.'
+  if (normal_norm == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_NORMAL_BASIS_3D - Fatal error!'
+    write (*, '(a)') '  The normal vector is 0.'
     stop 1
   end if
 !
 !  Find a vector PQ that is normal to NORMAL and has unit length.
 !
-  call r8vec_any_normal ( dim_num, normal, pq )
+  call r8vec_any_normal(dim_num, normal, pq)
 !
 !  Now just take the cross product NORMAL x PQ to get the PR vector.
 !
-  call r8vec_cross_product_3d ( normal, pq, pr )
+  call r8vec_cross_product_3d(normal, pq, pr)
 
-  pr_norm = r8vec_norm ( dim_num, pr )
+  pr_norm = r8vec_norm(dim_num, pr)
 
   pr(1:dim_num) = pr(1:dim_num) / pr_norm
 
   return
 end
-subroutine plane_normal_line_exp_int_3d ( pp, normal, p1, p2, ival, pint )
+
+subroutine plane_normal_line_exp_int_3d(pp, normal, p1, p2, ival, pint)
 
 !*****************************************************************************80
 !
@@ -13551,35 +13551,35 @@ subroutine plane_normal_line_exp_int_3d ( pp, normal, p1, p2, ival, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) direction(dim_num)
-  integer ( kind = 4 ) ival
-  logical ( kind = 4 ) line_exp_is_degenerate_nd
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pint(dim_num)
-  real ( kind = 8 ) pp(dim_num)
-  real ( kind = 8 ) temp
+  real(kind=8) direction(dim_num)
+  integer(kind=4) ival
+  logical(kind=4) line_exp_is_degenerate_nd
+  real(kind=8) normal(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pint(dim_num)
+  real(kind=8) pp(dim_num)
+  real(kind=8) temp
 !
 !  Make sure the line is not degenerate.
 !
-  if ( line_exp_is_degenerate_nd ( dim_num, p1, p2 ) ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_NORMAL_LINE_EXP_INT_3D - Fatal error!'
-    write ( *, '(a)' ) '  The line is degenerate.'
+  if (line_exp_is_degenerate_nd(dim_num, p1, p2)) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_NORMAL_LINE_EXP_INT_3D - Fatal error!'
+    write (*, '(a)') '  The line is degenerate.'
     stop 1
   end if
 !
 !  Make sure the plane normal vector is a unit vector.
 !
-  temp = sqrt ( sum ( normal(1:dim_num) ** 2 ) )
+  temp = sqrt(sum(normal(1:dim_num)**2))
 
-  if ( temp == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'PLANE_NORMAL_LINE_EXP_INT_3D - Fatal error!'
-    write ( *, '(a)' ) '  The normal vector of the plane is degenerate.'
+  if (temp == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'PLANE_NORMAL_LINE_EXP_INT_3D - Fatal error!'
+    write (*, '(a)') '  The normal vector of the plane is degenerate.'
     stop 1
   end if
 
@@ -13588,22 +13588,22 @@ subroutine plane_normal_line_exp_int_3d ( pp, normal, p1, p2, ival, pint )
 !  Determine the unit direction vector of the line.
 !
   direction(1:dim_num) = p2(1:dim_num) - p1(1:dim_num)
-  temp = sqrt ( sum ( direction(1:dim_num) ** 2 ) )
+  temp = sqrt(sum(direction(1:dim_num)**2))
   direction(1:dim_num) = direction(1:dim_num) / temp
 !
 !  If the normal and direction vectors are orthogonal, then
 !  we have a special case to deal with.
 !
-  if ( dot_product ( normal(1:dim_num), direction(1:dim_num) ) == 0.0D+00 ) then
+  if (dot_product(normal(1:dim_num), direction(1:dim_num)) == 0.0D+00) then
 
-    temp = dot_product ( normal(1:dim_num), p1(1:dim_num) - pp(1:dim_num) )
+    temp = dot_product(normal(1:dim_num), p1(1:dim_num) - pp(1:dim_num))
 
-    if ( temp == 0.0D+00 ) then
+    if (temp == 0.0D+00) then
       ival = 2
       pint(1:dim_num) = p1(1:dim_num)
     else
       ival = 0
-      pint(1:dim_num) = huge ( temp )
+      pint(1:dim_num) = huge(temp)
     end if
 
     return
@@ -13611,15 +13611,15 @@ subroutine plane_normal_line_exp_int_3d ( pp, normal, p1, p2, ival, pint )
 !
 !  Determine the distance along the direction vector to the intersection point.
 !
-  temp = dot_product ( pp(1:dim_num) - p1(1:dim_num), normal(1:dim_num) ) &
-    / dot_product ( direction(1:dim_num), normal(1:dim_num) )
+  temp = dot_product(pp(1:dim_num) - p1(1:dim_num), normal(1:dim_num)) &
+         / dot_product(direction(1:dim_num), normal(1:dim_num))
 
   ival = 1
   pint(1:dim_num) = p1(1:dim_num) + temp * direction(1:dim_num)
 
   return
 end
-subroutine plane_normal_qr_to_xyz ( pp, normal, pq, pr, n, qr, xyz )
+subroutine plane_normal_qr_to_xyz(pp, normal, pq, pr, n, qr, xyz)
 
 !*****************************************************************************80
 !
@@ -13675,28 +13675,28 @@ subroutine plane_normal_qr_to_xyz ( pp, normal, pq, pr, n, qr, xyz )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) normal(3)
-  real ( kind = 8 ) pp(3)
-  real ( kind = 8 ) pq(3)
-  real ( kind = 8 ) pqpr(3,2)
-  real ( kind = 8 ) pr(3)
-  real ( kind = 8 ) qr(2,n)
-  real ( kind = 8 ) xyz(3,n)
+  real(kind=8) normal(3)
+  real(kind=8) pp(3)
+  real(kind=8) pq(3)
+  real(kind=8) pqpr(3, 2)
+  real(kind=8) pr(3)
+  real(kind=8) qr(2, n)
+  real(kind=8) xyz(3, n)
 
-  xyz(1,1:n) = pp(1)
-  xyz(2,1:n) = pp(2)
-  xyz(3,1:n) = pp(3)
+  xyz(1, 1:n) = pp(1)
+  xyz(2, 1:n) = pp(2)
+  xyz(3, 1:n) = pp(3)
 
-  pqpr(1:3,1) = pq(1:3)
-  pqpr(1:3,2) = pr(1:3)
+  pqpr(1:3, 1) = pq(1:3)
+  pqpr(1:3, 2) = pr(1:3)
 
-  xyz(1:3,1:n) = xyz(1:3,1:n) + matmul ( pqpr(1:3,1:2), qr(1:2,1:n) )
+  xyz(1:3, 1:n) = xyz(1:3, 1:n) + matmul(pqpr(1:3, 1:2), qr(1:2, 1:n))
 
   return
 end
-subroutine plane_normal_tetrahedron_intersect ( pp, normal, t, int_num, pint )
+subroutine plane_normal_tetrahedron_intersect(pp, normal, t, int_num, pint)
 
 !*****************************************************************************80
 !
@@ -13753,41 +13753,41 @@ subroutine plane_normal_tetrahedron_intersect ( pp, normal, t, int_num, pint )
 !
   implicit none
 
-  real ( kind = 8 ) area1
-  real ( kind = 8 ) area2
-  real ( kind = 8 ) d(4)
-  real ( kind = 8 ) dn
-  real ( kind = 8 ) dpp
-  integer ( kind = 4 ) int_num
-  integer ( kind = 4 ) j1
-  integer ( kind = 4 ) j2
-  real ( kind = 8 ) normal(3)
-  real ( kind = 8 ) pint(3,4)
-  real ( kind = 8 ) pp(3)
-  logical ( kind = 4 ) r8_sign_opposite_strict
-  real ( kind = 8 ) t(3,4)
-  real ( kind = 8 ) temp(3)
+  real(kind=8) area1
+  real(kind=8) area2
+  real(kind=8) d(4)
+  real(kind=8) dn
+  real(kind=8) dpp
+  integer(kind=4) int_num
+  integer(kind=4) j1
+  integer(kind=4) j2
+  real(kind=8) normal(3)
+  real(kind=8) pint(3, 4)
+  real(kind=8) pp(3)
+  logical(kind=4) r8_sign_opposite_strict
+  real(kind=8) t(3, 4)
+  real(kind=8) temp(3)
 
   int_num = 0
-  pint(1:3,1:4) = 0.0D+00
+  pint(1:3, 1:4) = 0.0D+00
 !
 !  DN is the length of the normal vector.
 !
-  dn = dot_product ( normal(1:3), normal(1:3) )
+  dn = dot_product(normal(1:3), normal(1:3))
 !
 !  DPP is the distance between the origin and the projection of the
 !  point PP onto the normal vector.
 !
-  dpp = dn - dot_product ( normal(1:3), pp(1:3) )
+  dpp = dn - dot_product(normal(1:3), pp(1:3))
 !
 !  D(I) is positive, zero, or negative if vertex I is above,
 !  on, or below the plane.
 !
-  d(1:4) = dn - matmul ( normal(1:3), t(1:3,1:4) ) - dpp
+  d(1:4) = dn - matmul(normal(1:3), t(1:3, 1:4)) - dpp
 !
 !  If all D are positive or negative, no intersection.
 !
-  if ( all ( d(1:4) < 0.0D+00 ) .or. all ( 0.0D+00 < d(1:4) ) ) then
+  if (all(d(1:4) < 0.0D+00) .or. all(0.0D+00 < d(1:4))) then
     int_num = 0
     return
   end if
@@ -13800,16 +13800,16 @@ subroutine plane_normal_tetrahedron_intersect ( pp, normal, t, int_num, pint )
 !
   do j1 = 1, 4
 
-    if ( d(j1) == 0.0D+00 ) then
+    if (d(j1) == 0.0D+00) then
       int_num = int_num + 1
-      pint(1:3,int_num) = t(1:3,j1)
+      pint(1:3, int_num) = t(1:3, j1)
     else
       do j2 = j1 + 1, 4
-        if ( r8_sign_opposite_strict ( d(j1), d(j2) ) ) then
+        if (r8_sign_opposite_strict(d(j1), d(j2))) then
           int_num = int_num + 1
-          pint(1:3,int_num) = ( d(j1)         * t(1:3,j2)   &
-                                      - d(j2) * t(1:3,j1) ) &
-                            / ( d(j1) - d(j2) )
+          pint(1:3, int_num) = (d(j1) * t(1:3, j2) &
+                                - d(j2) * t(1:3, j1)) &
+                               / (d(j1) - d(j2))
         end if
       end do
     end if
@@ -13817,22 +13817,22 @@ subroutine plane_normal_tetrahedron_intersect ( pp, normal, t, int_num, pint )
 !
 !  If four points were found, try to order them properly.
 !
-  if ( int_num == 4 ) then
-    call quad_area_3d ( pint, area1 )
-    temp(1:3) = pint(1:3,3)
-    pint(1:3,3) = pint(1:3,4)
-    pint(1:3,4) = temp(1:3)
-    call quad_area_3d ( pint, area2 )
-    if ( area2 < area1 ) then
-      temp(1:3) = pint(1:3,3)
-      pint(1:3,3) = pint(1:3,4)
-      pint(1:3,4) = temp(1:3)
+  if (int_num == 4) then
+    call quad_area_3d(pint, area1)
+    temp(1:3) = pint(1:3, 3)
+    pint(1:3, 3) = pint(1:3, 4)
+    pint(1:3, 4) = temp(1:3)
+    call quad_area_3d(pint, area2)
+    if (area2 < area1) then
+      temp(1:3) = pint(1:3, 3)
+      pint(1:3, 3) = pint(1:3, 4)
+      pint(1:3, 4) = temp(1:3)
     end if
   end if
 
   return
 end
-subroutine plane_normal_triangle_int_3d ( pp, normal, t, int_num, pint )
+subroutine plane_normal_triangle_int_3d(pp, normal, t, int_num, pint)
 
 !*****************************************************************************80
 !
@@ -13881,76 +13881,76 @@ subroutine plane_normal_triangle_int_3d ( pp, normal, t, int_num, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist1
-  real ( kind = 8 ) dist2
-  real ( kind = 8 ) dist3
-  real ( kind = 8 ) normal(dim_num)
-  integer ( kind = 4 ) int_num
-  real ( kind = 8 ) pint(dim_num,3)
-  real ( kind = 8 ) pp(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) d
+  real(kind=8) dist1
+  real(kind=8) dist2
+  real(kind=8) dist3
+  real(kind=8) normal(dim_num)
+  integer(kind=4) int_num
+  real(kind=8) pint(dim_num, 3)
+  real(kind=8) pp(dim_num)
+  real(kind=8) t(dim_num, 3)
 
   int_num = 0
 !
 !  Compute the signed distances between the vertices and the plane.
 !
-  d = - dot_product ( normal(1:dim_num), pp(1:dim_num) )
+  d = -dot_product(normal(1:dim_num), pp(1:dim_num))
 
-  dist1 = dot_product ( normal(1:dim_num), t(1:dim_num,1) ) + d
-  dist2 = dot_product ( normal(1:dim_num), t(1:dim_num,2) ) + d
-  dist3 = dot_product ( normal(1:dim_num), t(1:dim_num,3) ) + d
+  dist1 = dot_product(normal(1:dim_num), t(1:dim_num, 1)) + d
+  dist2 = dot_product(normal(1:dim_num), t(1:dim_num, 2)) + d
+  dist3 = dot_product(normal(1:dim_num), t(1:dim_num, 3)) + d
 !
 !  Consider any zero distances.
 !
-  if ( dist1 == 0.0D+00 ) then
+  if (dist1 == 0.0D+00) then
 
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,1)
+    pint(1:dim_num, int_num) = t(1:dim_num, 1)
 
   end if
 
-  if ( dist2 == 0.0D+00 ) then
+  if (dist2 == 0.0D+00) then
 
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,2)
+    pint(1:dim_num, int_num) = t(1:dim_num, 2)
 
   end if
 
-  if ( dist3 == 0.0D+00 ) then
+  if (dist3 == 0.0D+00) then
 
     int_num = int_num + 1
-    pint(1:dim_num,int_num) = t(1:dim_num,3)
+    pint(1:dim_num, int_num) = t(1:dim_num, 3)
 
   end if
 !
 !  If 2 or 3 of the nodes intersect, we're already done.
 !
-  if ( 2 <= int_num ) then
+  if (2 <= int_num) then
     return
   end if
 !
 !  If one node intersects, then we're done unless the other two
 !  are of opposite signs.
 !
-  if ( int_num == 1 ) then
+  if (int_num == 1) then
 
-    if ( dist1 == 0.0D+00 ) then
+    if (dist1 == 0.0D+00) then
 
-      call plane_imp_triangle_int_add_3d ( t(1:dim_num,2), t(1:dim_num,3), &
-        dist2, dist3, int_num, pint )
+      call plane_imp_triangle_int_add_3d(t(1:dim_num, 2), t(1:dim_num, 3), &
+                                         dist2, dist3, int_num, pint)
 
-    else if ( dist2 == 0.0D+00 ) then
+    else if (dist2 == 0.0D+00) then
 
-      call plane_imp_triangle_int_add_3d ( t(1:dim_num,1), t(1:dim_num,3), &
-        dist1, dist3, int_num, pint )
+      call plane_imp_triangle_int_add_3d(t(1:dim_num, 1), t(1:dim_num, 3), &
+                                         dist1, dist3, int_num, pint)
 
-    else if ( dist3 == 0.0D+00 ) then
+    else if (dist3 == 0.0D+00) then
 
-      call plane_imp_triangle_int_add_3d ( t(1:dim_num,1), t(1:dim_num,2), &
-        dist1, dist2, int_num, pint )
+      call plane_imp_triangle_int_add_3d(t(1:dim_num, 1), t(1:dim_num, 2), &
+                                         dist1, dist2, int_num, pint)
 
     end if
 
@@ -13961,35 +13961,35 @@ subroutine plane_normal_triangle_int_3d ( pp, normal, t, int_num, pint )
 !  All nodal distances are nonzero, and there is at least one
 !  positive and one negative.
 !
-  if ( dist1 * dist2 < 0.0D+00 .and. dist1 * dist3 < 0.0D+00 ) then
+  if (dist1 * dist2 < 0.0D+00 .and. dist1 * dist3 < 0.0D+00) then
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,1), t(1:dim_num,2), &
-      dist1, dist2, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 1), t(1:dim_num, 2), &
+                                       dist1, dist2, int_num, pint)
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,1), t(1:dim_num,3), &
-      dist1, dist3, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 1), t(1:dim_num, 3), &
+                                       dist1, dist3, int_num, pint)
 
-  else if ( dist2 * dist1 < 0.0D+00 .and. dist2 * dist3 < 0.0D+00 ) then
+  else if (dist2 * dist1 < 0.0D+00 .and. dist2 * dist3 < 0.0D+00) then
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,2), t(1:dim_num,1), &
-      dist2, dist1, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 2), t(1:dim_num, 1), &
+                                       dist2, dist1, int_num, pint)
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,2), t(1:dim_num,3), &
-      dist2, dist3, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 2), t(1:dim_num, 3), &
+                                       dist2, dist3, int_num, pint)
 
-  else if ( dist3 * dist1 < 0.0D+00 .and. dist3 * dist2 < 0.0D+00 ) then
+  else if (dist3 * dist1 < 0.0D+00 .and. dist3 * dist2 < 0.0D+00) then
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,3), t(1:dim_num,1), &
-      dist3, dist1, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 3), t(1:dim_num, 1), &
+                                       dist3, dist1, int_num, pint)
 
-    call plane_imp_triangle_int_add_3d ( t(1:dim_num,3), t(1:dim_num,2), &
-      dist3, dist2, int_num, pint )
+    call plane_imp_triangle_int_add_3d(t(1:dim_num, 3), t(1:dim_num, 2), &
+                                       dist3, dist2, int_num, pint)
 
   end if
 
   return
 end
-subroutine plane_normal_uniform_3d ( seed, pp, normal )
+subroutine plane_normal_uniform_3d(seed, pp, normal)
 
 !*****************************************************************************80
 !
@@ -14027,24 +14027,24 @@ subroutine plane_normal_uniform_3d ( seed, pp, normal )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) pp(dim_num)
-  integer ( kind = 4 ) seed
+  real(kind=8) norm
+  real(kind=8) normal(dim_num)
+  real(kind=8) pp(dim_num)
+  integer(kind=4) seed
 !
 !  Pick PP as a random point inside the unit sphere in ND.
 !
-  call ball01_sample_3d ( seed, pp )
+  call ball01_sample_3d(seed, pp)
 !
 !  Get values from a standard normal distribution.
 !
-  call r8vec_normal_01 ( dim_num, seed, normal )
+  call r8vec_normal_01(dim_num, seed, normal)
 !
 !  Compute the length of the vector.
 !
-  norm = sqrt ( sum ( normal(1:dim_num) ** 2 ) )
+  norm = sqrt(sum(normal(1:dim_num)**2))
 !
 !  Normalize the vector.
 !
@@ -14052,7 +14052,7 @@ subroutine plane_normal_uniform_3d ( seed, pp, normal )
 
   return
 end
-subroutine plane_normal_uniform_nd ( dim_num, seed, pp, normal )
+subroutine plane_normal_uniform_nd(dim_num, seed, pp, normal)
 
 !*****************************************************************************80
 !
@@ -14092,24 +14092,24 @@ subroutine plane_normal_uniform_nd ( dim_num, seed, pp, normal )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) pp(dim_num)
-  integer ( kind = 4 ) seed
+  real(kind=8) norm
+  real(kind=8) normal(dim_num)
+  real(kind=8) pp(dim_num)
+  integer(kind=4) seed
 !
 !  Pick PP as a random point inside the unit sphere in ND.
 !
-  call ball01_sample_nd ( dim_num, seed, pp )
+  call ball01_sample_nd(dim_num, seed, pp)
 !
 !  Get values from a standard normal distribution.
 !
-  call r8vec_normal_01 ( dim_num, seed, normal )
+  call r8vec_normal_01(dim_num, seed, normal)
 !
 !  Compute the length of the vector.
 !
-  norm = sqrt ( sum ( normal(1:dim_num) ** 2 ) )
+  norm = sqrt(sum(normal(1:dim_num)**2))
 !
 !  Normalize the vector.
 !
@@ -14117,7 +14117,7 @@ subroutine plane_normal_uniform_nd ( dim_num, seed, pp, normal )
 
   return
 end
-subroutine plane_normal_xyz_to_qr ( pp, normal, pq, pr, n, xyz, qr )
+subroutine plane_normal_xyz_to_qr(pp, normal, pq, pr, n, xyz, qr)
 
 !*****************************************************************************80
 !
@@ -14173,27 +14173,27 @@ subroutine plane_normal_xyz_to_qr ( pp, normal, pq, pr, n, xyz, qr )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) normal(3)
-  real ( kind = 8 ) pp(3)
-  real ( kind = 8 ) pq(3)
-  real ( kind = 8 ) pr(3)
-  real ( kind = 8 ) qr(2,n)
-  real ( kind = 8 ) rpqp(2,3)
-  real ( kind = 8 ) xyz(3,n)
+  real(kind=8) normal(3)
+  real(kind=8) pp(3)
+  real(kind=8) pq(3)
+  real(kind=8) pr(3)
+  real(kind=8) qr(2, n)
+  real(kind=8) rpqp(2, 3)
+  real(kind=8) xyz(3, n)
 
-  rpqp(1,1:3) = pq(1:3)
-  rpqp(2,1:3) = pr(1:3)
+  rpqp(1, 1:3) = pq(1:3)
+  rpqp(2, 1:3) = pr(1:3)
 
-  qr(1:2,1:n) = matmul ( rpqp(1:2,1:3), xyz(1:3,1:n) )
+  qr(1:2, 1:n) = matmul(rpqp(1:2, 1:3), xyz(1:3, 1:n))
 
-  qr(1,1:n) = qr(1,1:n) - dot_product ( pq(1:3), pp(1:3) )
-  qr(2,1:n) = qr(2,1:n) - dot_product ( pr(1:3), pp(1:3) )
+  qr(1, 1:n) = qr(1, 1:n) - dot_product(pq(1:3), pp(1:3))
+  qr(2, 1:n) = qr(2, 1:n) - dot_product(pr(1:3), pp(1:3))
 
   return
 end
-subroutine plane_normal2exp_3d ( pp, normal, p1, p2, p3 )
+subroutine plane_normal2exp_3d(pp, normal, p1, p2, p3)
 
 !*****************************************************************************80
 !
@@ -14234,17 +14234,17 @@ subroutine plane_normal2exp_3d ( pp, normal, p1, p2, p3 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pp(dim_num)
-  real ( kind = 8 ) pq(dim_num)
-  real ( kind = 8 ) pr(dim_num)
+  real(kind=8) normal(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pp(dim_num)
+  real(kind=8) pq(dim_num)
+  real(kind=8) pr(dim_num)
 
-  call plane_normal_basis_3d ( pp, normal, pq, pr )
+  call plane_normal_basis_3d(pp, normal, pq, pr)
 
   p1(1:dim_num) = pp(1:dim_num)
   p2(1:dim_num) = pp(1:dim_num) + pq(1:dim_num)
@@ -14252,7 +14252,7 @@ subroutine plane_normal2exp_3d ( pp, normal, p1, p2, p3 )
 
   return
 end
-subroutine plane_normal2imp_3d ( pp, normal, a, b, c, d )
+subroutine plane_normal2imp_3d(pp, normal, a, b, c, d)
 
 !*****************************************************************************80
 !
@@ -14291,23 +14291,23 @@ subroutine plane_normal2imp_3d ( pp, normal, a, b, c, d )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) pp(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) normal(dim_num)
+  real(kind=8) pp(dim_num)
 
   a = normal(1)
   b = normal(2)
   c = normal(3)
-  d = - a * pp(1) - b * pp(2) - c * pp(3)
+  d = -a * pp(1) - b * pp(2) - c * pp(3)
 
   return
 end
-subroutine planes_imp_angle_3d ( a1, b1, c1, d1, a2, b2, c2, d2, angle )
+subroutine planes_imp_angle_3d(a1, b1, c1, d1, a2, b2, c2, d2, angle)
 
 !*****************************************************************************80
 !
@@ -14363,43 +14363,43 @@ subroutine planes_imp_angle_3d ( a1, b1, c1, d1, a2, b2, c2, d2, angle )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a1
-  real ( kind = 8 ) a2
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) b1
-  real ( kind = 8 ) b2
-  real ( kind = 8 ) c1
-  real ( kind = 8 ) c2
-  real ( kind = 8 ) cosine
-  real ( kind = 8 ) d1
-  real ( kind = 8 ) d2
-  real ( kind = 8 ) norm1
-  real ( kind = 8 ) norm2
-  real ( kind = 8 ) r8_acos
+  real(kind=8) a1
+  real(kind=8) a2
+  real(kind=8) angle
+  real(kind=8) b1
+  real(kind=8) b2
+  real(kind=8) c1
+  real(kind=8) c2
+  real(kind=8) cosine
+  real(kind=8) d1
+  real(kind=8) d2
+  real(kind=8) norm1
+  real(kind=8) norm2
+  real(kind=8) r8_acos
 
-  norm1 = sqrt ( a1 * a1 + b1 * b1 + c1 * c1 )
+  norm1 = sqrt(a1 * a1 + b1 * b1 + c1 * c1)
 
-  if ( norm1 == 0.0D+00 ) then
-    angle = huge ( angle )
+  if (norm1 == 0.0D+00) then
+    angle = huge(angle)
     return
   end if
 
-  norm2 = sqrt ( a2 * a2 + b2 * b2 + c2 * c2 )
+  norm2 = sqrt(a2 * a2 + b2 * b2 + c2 * c2)
 
-  if ( norm2 == 0.0D+00 ) then
-    angle = huge ( angle )
+  if (norm2 == 0.0D+00) then
+    angle = huge(angle)
     return
   end if
 
-  cosine = ( a1 * a2 + b1 * b2 + c1 * c2 ) / ( norm1 * norm2 )
+  cosine = (a1 * a2 + b1 * b2 + c1 * c2) / (norm1 * norm2)
 
-  angle = r8_acos ( cosine )
+  angle = r8_acos(cosine)
 
   return
 end
-function points_avoid_point_naive_2d ( n, p_set, p )
+function points_avoid_point_naive_2d(n, p_set, p)
 
 !*****************************************************************************80
 !
@@ -14441,22 +14441,22 @@ function points_avoid_point_naive_2d ( n, p_set, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p_set(dim_num,n)
-  logical ( kind = 4 ) points_avoid_point_naive_2d
-  real ( kind = 8 ) tol
+  integer(kind=4) j
+  real(kind=8) p(dim_num)
+  real(kind=8) p_set(dim_num, n)
+  logical(kind=4) points_avoid_point_naive_2d
+  real(kind=8) tol
 
-  tol = 100.0D+00 * epsilon ( tol )
+  tol = 100.0D+00 * epsilon(tol)
 
   points_avoid_point_naive_2d = .true.
 
   do j = 1, n
 
-    if ( sqrt ( sum ( ( p_set(1:dim_num,j) - p(1:dim_num) )**2 ) ) < tol ) then
+    if (sqrt(sum((p_set(1:dim_num, j) - p(1:dim_num))**2)) < tol) then
       points_avoid_point_naive_2d = .false.
       return
     end if
@@ -14465,7 +14465,7 @@ function points_avoid_point_naive_2d ( n, p_set, p )
 
   return
 end
-subroutine points_bisect_line_imp_2d ( p1, p2, a, b, c )
+subroutine points_bisect_line_imp_2d(p1, p2, a, b, c)
 
 !*****************************************************************************80
 !
@@ -14508,22 +14508,22 @@ subroutine points_bisect_line_imp_2d ( p1, p2, a, b, c )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
 
   a = p1(1) - p2(1)
   b = p1(2) - p2(2)
-  c = - 0.5D+00 * ( ( p1(1) * p1(1) + p1(2) * p1(2) ) &
-                  - ( p2(1) * p2(1) + p2(2) * p2(2) ) )
+  c = -0.5D+00 * ((p1(1) * p1(1) + p1(2) * p1(2)) &
+                  - (p2(1) * p2(1) + p2(2) * p2(2)))
 
   return
 end
-subroutine points_bisect_line_par_2d ( p1, p2, f, g, x, y )
+subroutine points_bisect_line_par_2d(p1, p2, f, g, x, y)
 
 !*****************************************************************************80
 !
@@ -14569,37 +14569,37 @@ subroutine points_bisect_line_par_2d ( p1, p2, f, g, x, y )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) f
-  real ( kind = 8 ) g
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) x
-  real ( kind = 8 ) y
+  real(kind=8) f
+  real(kind=8) g
+  real(kind=8) norm
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) x
+  real(kind=8) y
 
-  f = 0.5D+00 * ( p1(1) + p2(1) )
-  g = 0.5D+00 * ( p1(2) + p2(2) )
+  f = 0.5D+00 * (p1(1) + p2(1))
+  g = 0.5D+00 * (p1(2) + p2(2))
 
   norm = f * f + g * g
 
-  if ( norm /= 0.0D+00 ) then
+  if (norm /= 0.0D+00) then
     f = f / norm
     g = g / norm
   end if
 
-  if ( f < 0.0D+00 ) then
+  if (f < 0.0D+00) then
     f = -f
     g = -g
   end if
 
-  x = - ( p2(2) - p1(2) )
-  y = + ( p2(1) - p1(1) )
+  x = -(p2(2) - p1(2))
+  y = +(p2(1) - p1(1))
 
   return
 end
-subroutine points_centroid_2d ( n, p, centroid_index )
+subroutine points_centroid_2d(n, p, centroid_index)
 
 !*****************************************************************************80
 !
@@ -14640,15 +14640,15 @@ subroutine points_centroid_2d ( n, p, centroid_index )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) centroid_index
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist_min
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) p(dim_num,n)
+  integer(kind=4) centroid_index
+  real(kind=8) dist
+  real(kind=8) dist_min
+  integer(kind=4) i
+  integer(kind=4) j
+  real(kind=8) p(dim_num, n)
 
   dist_min = 0.0D+00
   centroid_index = -1
@@ -14657,13 +14657,13 @@ subroutine points_centroid_2d ( n, p, centroid_index )
 
     dist = 0.0D+00
     do j = 1, n
-      dist = dist + sum ( ( p(1:dim_num,i) - p(1:dim_num,j) )**2 )
+      dist = dist + sum((p(1:dim_num, i) - p(1:dim_num, j))**2)
     end do
 
-    if ( i == 1 ) then
+    if (i == 1) then
       dist_min = dist
       centroid_index = i
-    else if ( dist < dist_min ) then
+    else if (dist < dist_min) then
       dist_min = dist
       centroid_index = i
     end if
@@ -14672,7 +14672,7 @@ subroutine points_centroid_2d ( n, p, centroid_index )
 
   return
 end
-subroutine points_colin_2d ( p1, p2, p3, colin )
+subroutine points_colin_2d(p1, p2, p3, colin)
 
 !*****************************************************************************80
 !
@@ -14708,44 +14708,44 @@ subroutine points_colin_2d ( p1, p2, p3, colin )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area_triangle
-  real ( kind = 8 ) area2
-  real ( kind = 8 ) colin
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) perim
-  real ( kind = 8 ) side
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) area_triangle
+  real(kind=8) area2
+  real(kind=8) colin
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) perim
+  real(kind=8) side
+  real(kind=8) t(dim_num, 3)
 
-  t(1:dim_num,1:3) = reshape ( (/ &
-    p1(1:dim_num), p2(1:dim_num), p3(1:dim_num) /), (/ dim_num, 3 /) )
+  t(1:dim_num, 1:3) = reshape((/ &
+                p1(1:dim_num), p2(1:dim_num), p3(1:dim_num)/), (/dim_num, 3/))
 
-  call triangle_area_2d ( t, area_triangle )
+  call triangle_area_2d(t, area_triangle)
 
-  if ( area_triangle == 0.0D+00 ) then
+  if (area_triangle == 0.0D+00) then
 
     colin = 0.0D+00
 
   else
 
-    perim = sqrt ( sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 ) ) &
-          + sqrt ( sum ( ( p3(1:dim_num) - p2(1:dim_num) )**2 ) ) &
-          + sqrt ( sum ( ( p1(1:dim_num) - p3(1:dim_num) )**2 ) )
+    perim = sqrt(sum((p2(1:dim_num) - p1(1:dim_num))**2)) &
+            + sqrt(sum((p3(1:dim_num) - p2(1:dim_num))**2)) &
+            + sqrt(sum((p1(1:dim_num) - p3(1:dim_num))**2))
 
     side = perim / 3.0D+00
 
-    area2 = 0.25D+00 * sqrt ( 3.0D+00 ) * side * side
+    area2 = 0.25D+00 * sqrt(3.0D+00) * side * side
 
-    colin = abs ( area_triangle ) / area2
+    colin = abs(area_triangle) / area2
 
   end if
 
   return
 end
-subroutine points_colin_3d ( p1, p2, p3, colin )
+subroutine points_colin_3d(p1, p2, p3, colin)
 
 !*****************************************************************************80
 !
@@ -14781,44 +14781,44 @@ subroutine points_colin_3d ( p1, p2, p3, colin )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) area_triangle
-  real ( kind = 8 ) area2
-  real ( kind = 8 ) colin
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) perim
-  real ( kind = 8 ) side
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) area_triangle
+  real(kind=8) area2
+  real(kind=8) colin
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) perim
+  real(kind=8) side
+  real(kind=8) t(dim_num, 3)
 
-  t(1:dim_num,1:3) = reshape ( (/ &
-    p1(1:dim_num), p2(1:dim_num), p3(1:dim_num) /), (/ dim_num, 3 /) )
+  t(1:dim_num, 1:3) = reshape((/ &
+                p1(1:dim_num), p2(1:dim_num), p3(1:dim_num)/), (/dim_num, 3/))
 
-  call triangle_area_3d ( t, area_triangle )
+  call triangle_area_3d(t, area_triangle)
 
-  if ( area_triangle == 0.0D+00 ) then
+  if (area_triangle == 0.0D+00) then
 
     colin = 0.0D+00
 
   else
 
-    perim = sqrt ( sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 ) ) &
-          + sqrt ( sum ( ( p3(1:dim_num) - p2(1:dim_num) )**2 ) ) &
-          + sqrt ( sum ( ( p1(1:dim_num) - p3(1:dim_num) )**2 ) )
+    perim = sqrt(sum((p2(1:dim_num) - p1(1:dim_num))**2)) &
+            + sqrt(sum((p3(1:dim_num) - p2(1:dim_num))**2)) &
+            + sqrt(sum((p1(1:dim_num) - p3(1:dim_num))**2))
 
     side = perim / 3.0D+00
 
-    area2 = 0.25D+00 * sqrt ( 3.0D+00 ) * side * side
+    area2 = 0.25D+00 * sqrt(3.0D+00) * side * side
 
-    colin = abs ( area_triangle ) / area2
+    colin = abs(area_triangle) / area2
 
   end if
 
   return
 end
-subroutine points_dist_nd ( dim_num, p1, p2, dist )
+subroutine points_dist_nd(dim_num, p1, p2, dist)
 
 !*****************************************************************************80
 !
@@ -14847,17 +14847,17 @@ subroutine points_dist_nd ( dim_num, p1, p2, dist )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
+  real(kind=8) dist
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
 
-  dist = sqrt ( sum ( ( p1(1:dim_num) - p2(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p1(1:dim_num) - p2(1:dim_num))**2))
 
   return
 end
-subroutine points_hull_2d ( node_num, node_xy, hull_num, hull )
+subroutine points_hull_2d(node_num, node_xy, hull_num, hull)
 
 !*****************************************************************************80
 !
@@ -14894,32 +14894,32 @@ subroutine points_hull_2d ( node_num, node_xy, hull_num, hull )
 !
   implicit none
 
-  integer ( kind = 4 ) node_num
+  integer(kind=4) node_num
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) angle_max
-  real ( kind = 8 ) angle_rad_2d
-  real ( kind = 8 ) di
-  real ( kind = 8 ) dr
-  integer ( kind = 4 ) first
-  integer ( kind = 4 ) hull(node_num)
-  integer ( kind = 4 ) hull_num
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) node_xy(2,node_num)
-  real ( kind = 8 ) p_xy(2)
-  integer ( kind = 4 ) q
-  real ( kind = 8 ) q_xy(2)
-  integer ( kind = 4 ) r
-  real ( kind = 8 ) r_xy(2)
+  real(kind=8) angle
+  real(kind=8) angle_max
+  real(kind=8) angle_rad_2d
+  real(kind=8) di
+  real(kind=8) dr
+  integer(kind=4) first
+  integer(kind=4) hull(node_num)
+  integer(kind=4) hull_num
+  integer(kind=4) i
+  real(kind=8) node_xy(2, node_num)
+  real(kind=8) p_xy(2)
+  integer(kind=4) q
+  real(kind=8) q_xy(2)
+  integer(kind=4) r
+  real(kind=8) r_xy(2)
 
-  if ( node_num < 1 ) then
+  if (node_num < 1) then
     hull_num = 0
     return
   end if
 !
 !  If NODE_NUM = 1, the hull is the point.
 !
-  if ( node_num == 1 ) then
+  if (node_num == 1) then
     hull_num = 1
     hull(1) = 1
     return
@@ -14928,9 +14928,9 @@ subroutine points_hull_2d ( node_num, node_xy, hull_num, hull )
 !  If NODE_NUM = 2, then the convex hull is either the two distinct points,
 !  or possibly a single (repeated) point.
 !
-  if ( node_num == 2 ) then
+  if (node_num == 2) then
 
-    if ( node_xy(1,1) /= node_xy(1,2) .or. node_xy(2,1) /= node_xy(2,2) ) then
+  if (node_xy(1, 1) /= node_xy(1, 2) .or. node_xy(2, 1) /= node_xy(2, 2)) then
       hull_num = 2
       hull(1) = 1
       hull(2) = 2
@@ -14948,13 +14948,13 @@ subroutine points_hull_2d ( node_num, node_xy, hull_num, hull )
 !
   q = 1
   do i = 2, node_num
-    if ( node_xy(1,i) < node_xy(1,q) .or. &
-       ( node_xy(1,i) == node_xy(1,q) .and. node_xy(2,i) < node_xy(2,q) ) ) then
+    if (node_xy(1, i) < node_xy(1, q) .or. &
+    (node_xy(1, i) == node_xy(1, q) .and. node_xy(2, i) < node_xy(2, q))) then
       q = i
     end if
   end do
 
-  q_xy(1:2) = node_xy(1:2,q)
+  q_xy(1:2) = node_xy(1:2, q)
 !
 !  Remember the starting point, so we know when to stop!
 !
@@ -14980,27 +14980,27 @@ subroutine points_hull_2d ( node_num, node_xy, hull_num, hull )
 
     do i = 1, node_num
 
-      if ( i /= q .and. &
-           ( node_xy(1,i) /= q_xy(1) .or. node_xy(2,i) /= q_xy(2) ) ) then
+      if (i /= q .and. &
+          (node_xy(1, i) /= q_xy(1) .or. node_xy(2, i) /= q_xy(2))) then
 
-        angle = angle_rad_2d ( p_xy, q_xy, node_xy(1:2,i) )
+        angle = angle_rad_2d(p_xy, q_xy, node_xy(1:2, i))
 
-        if ( r == 0 .or. angle_max < angle ) then
+        if (r == 0 .or. angle_max < angle) then
 
           r = i
-          r_xy(1:2) = node_xy(1:2,r)
+          r_xy(1:2) = node_xy(1:2, r)
           angle_max = angle
 !
 !  In case of ties, choose the nearer point.
 !
-        else if ( r /= 0 .and. angle == angle_max ) then
+        else if (r /= 0 .and. angle == angle_max) then
 
-          di = ( node_xy(1,i) - q_xy(1) )**2 + ( node_xy(2,i) - q_xy(2) )**2
-          dr = ( r_xy(1)      - q_xy(1) )**2 + ( r_xy(2)      - q_xy(2) )**2
+          di = (node_xy(1, i) - q_xy(1))**2 + (node_xy(2, i) - q_xy(2))**2
+          dr = (r_xy(1) - q_xy(1))**2 + (r_xy(2) - q_xy(2))**2
 
-          if ( di < dr ) then
+          if (di < dr) then
             r = i
-            r_xy(1:2) = node_xy(1:2,r)
+            r_xy(1:2) = node_xy(1:2, r)
             angle_max = angle
           end if
 
@@ -15012,16 +15012,16 @@ subroutine points_hull_2d ( node_num, node_xy, hull_num, hull )
 !
 !  We are done when we have returned to the first point on the convex hull.
 !
-    if ( r == first ) then
+    if (r == first) then
       exit
     end if
 
     hull_num = hull_num + 1
 
-    if ( node_num < hull_num ) then
-      write ( *, '(a)' ) ' '
-      write ( *, '(a)' ) 'POINTS_HULL_2D - Fatal error!'
-      write ( *, '(a)' ) '  The algorithm has failed.'
+    if (node_num < hull_num) then
+      write (*, '(a)') ' '
+      write (*, '(a)') 'POINTS_HULL_2D - Fatal error!'
+      write (*, '(a)') '  The algorithm has failed.'
       stop 1
     end if
 !
@@ -15040,7 +15040,7 @@ subroutine points_hull_2d ( node_num, node_xy, hull_num, hull )
 
   return
 end
-subroutine points_plot ( file_name, node_num, node_xy, node_label )
+subroutine points_plot(file_name, node_num, node_xy, node_label)
 
 !*****************************************************************************80
 !
@@ -15077,58 +15077,58 @@ subroutine points_plot ( file_name, node_num, node_xy, node_label )
 !
   implicit none
 
-  integer ( kind = 4 ) node_num
+  integer(kind=4) node_num
 
-  integer ( kind = 4 ), parameter :: circle_size = 5
-  integer ( kind = 4 ) delta
-  character ( len = * ) file_name
-  integer ( kind = 4 ) file_unit
-  integer ( kind = 4 ) ios
-  integer ( kind = 4 ) node
-  logical ( kind = 4 ) node_label
-  real ( kind = 8 ) node_xy(2,node_num)
-  character ( len = 40 ) string
-  real ( kind = 8 ) x_max
-  real ( kind = 8 ) x_min
-  integer ( kind = 4 ) x_ps
-  integer ( kind = 4 ) :: x_ps_max = 576
-  integer ( kind = 4 ) :: x_ps_max_clip = 594
-  integer ( kind = 4 ) :: x_ps_min = 36
-  integer ( kind = 4 ) :: x_ps_min_clip = 18
-  real ( kind = 8 ) x_scale
-  real ( kind = 8 ) y_max
-  real ( kind = 8 ) y_min
-  integer ( kind = 4 ) y_ps
-  integer ( kind = 4 ) :: y_ps_max = 666
-  integer ( kind = 4 ) :: y_ps_max_clip = 684
-  integer ( kind = 4 ) :: y_ps_min = 126
-  integer ( kind = 4 ) :: y_ps_min_clip = 108
-  real ( kind = 8 ) y_scale
+  integer(kind=4), parameter :: circle_size = 5
+  integer(kind=4) delta
+  character(len=*) file_name
+  integer(kind=4) file_unit
+  integer(kind=4) ios
+  integer(kind=4) node
+  logical(kind=4) node_label
+  real(kind=8) node_xy(2, node_num)
+  character(len=40) string
+  real(kind=8) x_max
+  real(kind=8) x_min
+  integer(kind=4) x_ps
+  integer(kind=4) :: x_ps_max = 576
+  integer(kind=4) :: x_ps_max_clip = 594
+  integer(kind=4) :: x_ps_min = 36
+  integer(kind=4) :: x_ps_min_clip = 18
+  real(kind=8) x_scale
+  real(kind=8) y_max
+  real(kind=8) y_min
+  integer(kind=4) y_ps
+  integer(kind=4) :: y_ps_max = 666
+  integer(kind=4) :: y_ps_max_clip = 684
+  integer(kind=4) :: y_ps_min = 126
+  integer(kind=4) :: y_ps_min_clip = 108
+  real(kind=8) y_scale
 !
 !  We need to do some figuring here, so that we can determine
 !  the range of the data, and hence the height and width
 !  of the piece of paper.
 !
-  x_max = maxval ( node_xy(1,1:node_num) )
-  x_min = minval ( node_xy(1,1:node_num) )
+  x_max = maxval(node_xy(1, 1:node_num))
+  x_min = minval(node_xy(1, 1:node_num))
   x_scale = x_max - x_min
 
   x_max = x_max + 0.05D+00 * x_scale
   x_min = x_min - 0.05D+00 * x_scale
   x_scale = x_max - x_min
 
-  y_max = maxval ( node_xy(2,1:node_num) )
-  y_min = minval ( node_xy(2,1:node_num) )
+  y_max = maxval(node_xy(2, 1:node_num))
+  y_min = minval(node_xy(2, 1:node_num))
   y_scale = y_max - y_min
 
   y_max = y_max + 0.05D+00 * y_scale
   y_min = y_min - 0.05D+00 * y_scale
   y_scale = y_max - y_min
 
-  if ( x_scale < y_scale ) then
+  if (x_scale < y_scale) then
 
-    delta = nint ( real ( x_ps_max - x_ps_min, kind = 8 ) &
-      * ( y_scale - x_scale ) / ( 2.0D+00 * y_scale ) )
+    delta = nint(real(x_ps_max - x_ps_min, kind=8) &
+                 * (y_scale - x_scale) / (2.0D+00 * y_scale))
 
     x_ps_max = x_ps_max - delta
     x_ps_min = x_ps_min + delta
@@ -15138,10 +15138,10 @@ subroutine points_plot ( file_name, node_num, node_xy, node_label )
 
     x_scale = y_scale
 
-  else if ( y_scale < x_scale ) then
+  else if (y_scale < x_scale) then
 
-    delta = nint ( real ( y_ps_max - y_ps_min, kind = 8 ) &
-      * ( x_scale - y_scale ) / ( 2.0D+00 * x_scale ) )
+    delta = nint(real(y_ps_max - y_ps_min, kind=8) &
+                 * (x_scale - y_scale) / (2.0D+00 * x_scale))
 
     y_ps_max = y_ps_max - delta
     y_ps_min = y_ps_min + delta
@@ -15153,153 +15153,153 @@ subroutine points_plot ( file_name, node_num, node_xy, node_label )
 
   end if
 
-  call get_unit ( file_unit )
+  call get_unit(file_unit)
 
-  open ( unit = file_unit, file = file_name, status = 'replace', &
-    iostat = ios )
+  open (unit=file_unit, file=file_name, status='replace', &
+        iostat=ios)
 
-  if ( ios /= 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POINTS_PLOT - Fatal error!'
-    write ( *, '(a)' ) '  Can not open output file.'
+  if (ios /= 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POINTS_PLOT - Fatal error!'
+    write (*, '(a)') '  Can not open output file.'
     stop 1
   end if
 
-  write ( file_unit, '(a)' ) '%!PS-Adobe-3.0 EPSF-3.0'
-  write ( file_unit, '(a)' ) '%%Creator: points_plot.F90'
-  write ( file_unit, '(a)' ) '%%Title: ' // trim ( file_name )
-  write ( file_unit, '(a)' ) '%%Pages: 1'
-  write ( file_unit, '(a,i3,2x,i3,2x,i3,2x,i3)' ) '%%BoundingBox: ', &
+  write (file_unit, '(a)') '%!PS-Adobe-3.0 EPSF-3.0'
+  write (file_unit, '(a)') '%%Creator: points_plot.F90'
+  write (file_unit, '(a)') '%%Title: '//trim(file_name)
+  write (file_unit, '(a)') '%%Pages: 1'
+  write (file_unit, '(a,i3,2x,i3,2x,i3,2x,i3)') '%%BoundingBox: ', &
     x_ps_min, y_ps_min, x_ps_max, y_ps_max
-  write ( file_unit, '(a)' ) '%%Document-Fonts: Times-Roman'
-  write ( file_unit, '(a)' ) '%%LanguageLevel: 1'
-  write ( file_unit, '(a)' ) '%%EndComments'
-  write ( file_unit, '(a)' ) '%%BeginProlog'
-  write ( file_unit, '(a)' ) '/inch {72 mul} def'
-  write ( file_unit, '(a)' ) '%%EndProlog'
-  write ( file_unit, '(a)' ) '%%Page: 1 1'
-  write ( file_unit, '(a)' ) 'save'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  Set the RGB line color to very light gray.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '0.900  0.900  0.900 setrgbcolor'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  Draw a gray border around the page.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) 'newpath'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', x_ps_min, y_ps_min, ' moveto'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', x_ps_max, y_ps_min, ' lineto'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', x_ps_max, y_ps_max, ' lineto'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', x_ps_min, y_ps_max, ' lineto'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', x_ps_min, y_ps_min, ' lineto'
-  write ( file_unit, '(a)' ) 'stroke'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  Set the RGB line color to black.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '0.000  0.000  0.000 setrgbcolor'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  Set the font and its size.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '/Times-Roman findfont'
-  write ( file_unit, '(a)' ) '0.50 inch scalefont'
-  write ( file_unit, '(a)' ) 'setfont'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  Print a title.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  210  702  moveto'
-  write ( file_unit, '(a)' ) '%  (Pointset)  show'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  Define a clipping polygon.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) 'newpath'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', &
+  write (file_unit, '(a)') '%%Document-Fonts: Times-Roman'
+  write (file_unit, '(a)') '%%LanguageLevel: 1'
+  write (file_unit, '(a)') '%%EndComments'
+  write (file_unit, '(a)') '%%BeginProlog'
+  write (file_unit, '(a)') '/inch {72 mul} def'
+  write (file_unit, '(a)') '%%EndProlog'
+  write (file_unit, '(a)') '%%Page: 1 1'
+  write (file_unit, '(a)') 'save'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  Set the RGB line color to very light gray.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '0.900  0.900  0.900 setrgbcolor'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  Draw a gray border around the page.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') 'newpath'
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', x_ps_min, y_ps_min, ' moveto'
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', x_ps_max, y_ps_min, ' lineto'
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', x_ps_max, y_ps_max, ' lineto'
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', x_ps_min, y_ps_max, ' lineto'
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', x_ps_min, y_ps_min, ' lineto'
+  write (file_unit, '(a)') 'stroke'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  Set the RGB line color to black.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '0.000  0.000  0.000 setrgbcolor'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  Set the font and its size.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '/Times-Roman findfont'
+  write (file_unit, '(a)') '0.50 inch scalefont'
+  write (file_unit, '(a)') 'setfont'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  Print a title.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  210  702  moveto'
+  write (file_unit, '(a)') '%  (Pointset)  show'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  Define a clipping polygon.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') 'newpath'
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', &
     x_ps_min_clip, y_ps_min_clip, ' moveto'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', &
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', &
     x_ps_max_clip, y_ps_min_clip, ' lineto'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', &
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', &
     x_ps_max_clip, y_ps_max_clip, ' lineto'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', &
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', &
     x_ps_min_clip, y_ps_max_clip, ' lineto'
-  write ( file_unit, '(a,i3,2x,i3,2x,a)' ) '  ', &
+  write (file_unit, '(a,i3,2x,i3,2x,a)') '  ', &
     x_ps_min_clip, y_ps_min_clip, ' lineto'
-  write ( file_unit, '(a)' ) 'clip newpath'
+  write (file_unit, '(a)') 'clip newpath'
 !
 !  Draw the nodes.
 !
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  Draw filled dots at each node.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  Set the RGB color to blue.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '0.000  0.150  0.750 setrgbcolor'
-  write ( file_unit, '(a)' ) '%'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  Draw filled dots at each node.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  Set the RGB color to blue.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '0.000  0.150  0.750 setrgbcolor'
+  write (file_unit, '(a)') '%'
 
   do node = 1, node_num
 
-    x_ps = int ( &
-      ( ( x_max - node_xy(1,node)         ) * real ( x_ps_min, kind = 8 )   &
-      + (         node_xy(1,node) - x_min ) * real ( x_ps_max, kind = 8 ) ) &
-      / ( x_max                   - x_min ) )
+    x_ps = int( &
+           ((x_max - node_xy(1, node)) * real(x_ps_min, kind=8) &
+            + (node_xy(1, node) - x_min) * real(x_ps_max, kind=8)) &
+           / (x_max - x_min))
 
-    y_ps = int ( &
-      ( ( y_max - node_xy(2,node)         ) * real ( y_ps_min, kind = 8 )   &
-      + (         node_xy(2,node) - y_min ) * real ( y_ps_max, kind = 8 ) ) &
-      / ( y_max                   - y_min ) )
+    y_ps = int( &
+           ((y_max - node_xy(2, node)) * real(y_ps_min, kind=8) &
+            + (node_xy(2, node) - y_min) * real(y_ps_max, kind=8)) &
+           / (y_max - y_min))
 
-    write ( file_unit, '(a,i4,2x,i4,2x,i4,2x,a)' ) 'newpath ', x_ps, y_ps, &
+    write (file_unit, '(a,i4,2x,i4,2x,i4,2x,a)') 'newpath ', x_ps, y_ps, &
       circle_size, '0 360 arc closepath fill'
 
   end do
 !
 !  Label the nodes.
 !
-  if ( node_label ) then
+  if (node_label) then
 
-    write ( file_unit, '(a)' ) '%'
-    write ( file_unit, '(a)' ) '%  Label the nodes:'
-    write ( file_unit, '(a)' ) '%'
-    write ( file_unit, '(a)' ) '%  Set the RGB color to darker blue.'
-    write ( file_unit, '(a)' ) '%'
-    write ( file_unit, '(a)' ) '0.000  0.250  0.850 setrgbcolor'
-    write ( file_unit, '(a)' ) '/Times-Roman findfont'
-    write ( file_unit, '(a)' ) '0.20 inch scalefont'
-    write ( file_unit, '(a)' ) 'setfont'
+    write (file_unit, '(a)') '%'
+    write (file_unit, '(a)') '%  Label the nodes:'
+    write (file_unit, '(a)') '%'
+    write (file_unit, '(a)') '%  Set the RGB color to darker blue.'
+    write (file_unit, '(a)') '%'
+    write (file_unit, '(a)') '0.000  0.250  0.850 setrgbcolor'
+    write (file_unit, '(a)') '/Times-Roman findfont'
+    write (file_unit, '(a)') '0.20 inch scalefont'
+    write (file_unit, '(a)') 'setfont'
 
     do node = 1, node_num
 
-      x_ps = int ( &
-        ( ( x_max - node_xy(1,node)         ) * real ( x_ps_min, kind = 8 )   &
-        + (       + node_xy(1,node) - x_min ) * real ( x_ps_max, kind = 8 ) ) &
-        / ( x_max                   - x_min ) )
+      x_ps = int( &
+             ((x_max - node_xy(1, node)) * real(x_ps_min, kind=8) &
+              + (+node_xy(1, node) - x_min) * real(x_ps_max, kind=8)) &
+             / (x_max - x_min))
 
-      y_ps = int ( &
-        ( ( y_max - node_xy(2,node)         ) * real ( y_ps_min, kind = 8 )   &
-        + (         node_xy(2,node) - y_min ) * real ( y_ps_max, kind = 8 ) ) &
-        / ( y_max                   - y_min ) )
+      y_ps = int( &
+             ((y_max - node_xy(2, node)) * real(y_ps_min, kind=8) &
+              + (node_xy(2, node) - y_min) * real(y_ps_max, kind=8)) &
+             / (y_max - y_min))
 
-      write ( string, '(i4)' ) node
-      string = adjustl ( string )
+      write (string, '(i4)') node
+      string = adjustl(string)
 
-      write ( file_unit, '(i4,2x,i4,a)' ) x_ps, y_ps+5, &
-        ' moveto (' // trim ( string ) // ') show'
+      write (file_unit, '(i4,2x,i4,a)') x_ps, y_ps + 5, &
+        ' moveto ('//trim(string)//') show'
 
     end do
 
   end if
 
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) 'restore  showpage'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%  End of page.'
-  write ( file_unit, '(a)' ) '%'
-  write ( file_unit, '(a)' ) '%%Trailer'
-  write ( file_unit, '(a)' ) '%%EOF'
-  close ( unit = file_unit )
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') 'restore  showpage'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%  End of page.'
+  write (file_unit, '(a)') '%'
+  write (file_unit, '(a)') '%%Trailer'
+  write (file_unit, '(a)') '%%EOF'
+  close (unit=file_unit)
 
   return
 end
-subroutine points_point_near_naive_nd ( dim_num, set_num, pset, p, i_min, &
-  dist_min )
+subroutine points_point_near_naive_nd(dim_num, set_num, pset, p, i_min, &
+                                      dist_min)
 
 !*****************************************************************************80
 !
@@ -15341,32 +15341,32 @@ subroutine points_point_near_naive_nd ( dim_num, set_num, pset, p, i_min, &
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) set_num
+  integer(kind=4) dim_num
+  integer(kind=4) set_num
 
-  real ( kind = 8 ) d
-  real ( kind = 8 ) dist_min
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i_min
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pset(dim_num,set_num)
+  real(kind=8) d
+  real(kind=8) dist_min
+  integer(kind=4) i
+  integer(kind=4) i_min
+  real(kind=8) p(dim_num)
+  real(kind=8) pset(dim_num, set_num)
 
-  dist_min = huge ( dist_min )
+  dist_min = huge(dist_min)
   i_min = -1
 
   do i = 1, set_num
-    d = sum ( ( p(1:dim_num) - pset(1:dim_num,i) )**2 )
-    if ( d < dist_min ) then
+    d = sum((p(1:dim_num) - pset(1:dim_num, i))**2)
+    if (d < dist_min) then
       dist_min = d
       i_min = i
     end if
   end do
 
-  dist_min = sqrt ( dist_min )
+  dist_min = sqrt(dist_min)
 
   return
 end
-subroutine polar_to_xy ( r, t, xy )
+subroutine polar_to_xy(r, t, xy)
 
 !*****************************************************************************80
 !
@@ -15392,16 +15392,16 @@ subroutine polar_to_xy ( r, t, xy )
 !
   implicit none
 
-  real ( kind = 8 ) r
-  real ( kind = 8 ) t
-  real ( kind = 8 ) xy(2)
+  real(kind=8) r
+  real(kind=8) t
+  real(kind=8) xy(2)
 
-  xy(1) = r * cos ( t )
-  xy(2) = r * sin ( t )
+  xy(1) = r * cos(t)
+  xy(2) = r * sin(t)
 
   return
 end
-subroutine polygon_1_2d ( n, v, result )
+subroutine polygon_1_2d(n, v, result)
 
 !*****************************************************************************80
 !
@@ -15449,39 +15449,39 @@ subroutine polygon_1_2d ( n, v, result )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) im1
-  real ( kind = 8 ) result
-  real ( kind = 8 ) v(2,n)
+  integer(kind=4) i
+  integer(kind=4) im1
+  real(kind=8) result
+  real(kind=8) v(2, n)
 
   result = 0.0D+00
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_1_2D - Fatal error!'
-    write ( *, '(a)' ) '  The number of vertices must be at least 3.'
-    write ( *, '(a,i8)' ) '  The input value of N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_1_2D - Fatal error!'
+    write (*, '(a)') '  The number of vertices must be at least 3.'
+    write (*, '(a,i8)') '  The input value of N = ', n
     stop 1
   end if
 
   do i = 1, n
 
-    if ( i == 1 ) then
+    if (i == 1) then
       im1 = n
     else
       im1 = i - 1
     end if
 
-    result = result + 0.5D+00 * ( v(1,i) + v(1,im1) ) * ( v(2,i) - v(2,im1) )
+    result = result + 0.5D+00 * (v(1, i) + v(1, im1)) * (v(2, i) - v(2, im1))
 
   end do
 
   return
 end
-subroutine polygon_angles_2d ( n, v, angle )
+subroutine polygon_angles_2d(n, v, angle)
 
 !*****************************************************************************80
 !
@@ -15514,35 +15514,35 @@ subroutine polygon_angles_2d ( n, v, angle )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle(n)
-  real ( kind = 8 ) angle_rad_2d
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) im1
-  integer ( kind = 4 ) ip1
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) angle(n)
+  real(kind=8) angle_rad_2d
+  integer(kind=4) i
+  integer(kind=4) i4_wrap
+  integer(kind=4) im1
+  integer(kind=4) ip1
+  real(kind=8) v(dim_num, n)
 
-  if ( n <= 2 ) then
+  if (n <= 2) then
     angle(1:n) = 0.0D+00
     return
   end if
 
   do i = 1, n
 
-    im1 = i4_wrap ( i - 1, 1, n )
-    ip1 = i4_wrap ( i + 1, 1, n )
+    im1 = i4_wrap(i - 1, 1, n)
+    ip1 = i4_wrap(i + 1, 1, n)
 
-    angle(i) = angle_rad_2d ( v(1:dim_num,im1), v(1:dim_num,i), &
-      v(1:dim_num,ip1) )
+    angle(i) = angle_rad_2d(v(1:dim_num, im1), v(1:dim_num, i), &
+                            v(1:dim_num, ip1))
 
   end do
 
   return
 end
-subroutine polygon_area_2d ( n, v, area )
+subroutine polygon_area_2d(n, v, area)
 
 !*****************************************************************************80
 !
@@ -15579,24 +15579,24 @@ subroutine polygon_area_2d ( n, v, area )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) im1
-  integer ( kind = 4 ) ip1
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) area
+  integer(kind=4) i
+  integer(kind=4) i4_wrap
+  integer(kind=4) im1
+  integer(kind=4) ip1
+  real(kind=8) v(dim_num, n)
 
   area = 0.0D+00
 
   do i = 1, n
 
-    im1 = i4_wrap ( i-1, 1, n )
-    ip1 = i4_wrap ( i+1, 1, n )
+    im1 = i4_wrap(i - 1, 1, n)
+    ip1 = i4_wrap(i + 1, 1, n)
 
-    area = area + v(1,i) * ( v(2,ip1) - v(2,im1) )
+    area = area + v(1, i) * (v(2, ip1) - v(2, im1))
 
   end do
 
@@ -15604,7 +15604,7 @@ subroutine polygon_area_2d ( n, v, area )
 
   return
 end
-subroutine polygon_area_2d_2 ( n, v, area )
+subroutine polygon_area_2d_2(n, v, area)
 
 !*****************************************************************************80
 !
@@ -15652,24 +15652,24 @@ subroutine polygon_area_2d_2 ( n, v, area )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) area_triangle
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) area
+  real(kind=8) area_triangle
+  integer(kind=4) i
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) v(dim_num, n)
 
   area = 0.0D+00
 
   do i = 1, n - 2
 
-    t(1:dim_num,1:3) = reshape ( (/ &
-      v(1:dim_num,i), v(1:dim_num,i+1), v(1:dim_num,n) /), &
-      (/ dim_num, 3 /) )
+    t(1:dim_num, 1:3) = reshape((/ &
+                    v(1:dim_num, i), v(1:dim_num, i + 1), v(1:dim_num, n)/), &
+                                (/dim_num, 3/))
 
-    call triangle_area_2d ( t, area_triangle )
+    call triangle_area_2d(t, area_triangle)
 
     area = area + area_triangle
 
@@ -15677,7 +15677,7 @@ subroutine polygon_area_2d_2 ( n, v, area )
 
   return
 end
-subroutine polygon_area_3d ( n, v, area, normal )
+subroutine polygon_area_3d(n, v, area, normal)
 
 !*****************************************************************************80
 !
@@ -15724,22 +15724,22 @@ subroutine polygon_area_3d ( n, v, area, normal )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) cross(dim_num)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ip1
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) area
+  real(kind=8) cross(dim_num)
+  integer(kind=4) i
+  integer(kind=4) ip1
+  real(kind=8) normal(dim_num)
+  real(kind=8) v(dim_num, n)
 
   normal(1:dim_num) = 0.0D+00
 
   do i = 1, n
 
-    if ( i < n ) then
+    if (i < n) then
       ip1 = i + 1
     else
       ip1 = 1
@@ -15747,27 +15747,27 @@ subroutine polygon_area_3d ( n, v, area, normal )
 !
 !  Compute the cross product vector.
 !
-    cross(1) = v(2,i) * v(3,ip1) - v(3,i) * v(2,ip1)
-    cross(2) = v(3,i) * v(1,ip1) - v(1,i) * v(3,ip1)
-    cross(3) = v(1,i) * v(2,ip1) - v(2,i) * v(1,ip1)
+    cross(1) = v(2, i) * v(3, ip1) - v(3, i) * v(2, ip1)
+    cross(2) = v(3, i) * v(1, ip1) - v(1, i) * v(3, ip1)
+    cross(3) = v(1, i) * v(2, ip1) - v(2, i) * v(1, ip1)
 
     normal(1:dim_num) = normal(1:dim_num) + cross(1:dim_num)
 
   end do
 
-  area = sqrt ( sum ( normal(1:dim_num)**2 ) )
+  area = sqrt(sum(normal(1:dim_num)**2))
 
-  if ( area /= 0.0D+00 ) then
+  if (area /= 0.0D+00) then
     normal(1:dim_num) = normal(1:dim_num) / area
   else
-    normal(1:dim_num) = 1.0D+00 / sqrt ( real ( dim_num, kind = 8 ) )
+    normal(1:dim_num) = 1.0D+00 / sqrt(real(dim_num, kind=8))
   end if
 
   area = 0.5D+00 * area
 
   return
 end
-subroutine polygon_area_3d_2 ( n, v, area )
+subroutine polygon_area_3d_2(n, v, area)
 
 !*****************************************************************************80
 !
@@ -15814,36 +15814,36 @@ subroutine polygon_area_3d_2 ( n, v, area )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) area_vector(dim_num)
-  real ( kind = 8 ) area_vector_triangle(dim_num)
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) area
+  real(kind=8) area_vector(dim_num)
+  real(kind=8) area_vector_triangle(dim_num)
+  integer(kind=4) j
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) v(dim_num, n)
 
   area_vector(1:dim_num) = 0.0D+00
 
   do j = 1, n - 2
 
-    t(1:dim_num,1:3) = reshape ( (/ &
-      v(1:dim_num,j), v(1:dim_num,j+1), v(1:dim_num,n) /), &
-      (/ dim_num, 3 /) )
+    t(1:dim_num, 1:3) = reshape((/ &
+                    v(1:dim_num, j), v(1:dim_num, j + 1), v(1:dim_num, n)/), &
+                                (/dim_num, 3/))
 
-    call triangle_area_vector_3d ( t, area_vector_triangle )
+    call triangle_area_vector_3d(t, area_vector_triangle)
 
     area_vector(1:dim_num) = area_vector(1:dim_num) &
-      + area_vector_triangle(1:dim_num)
+                             + area_vector_triangle(1:dim_num)
 
   end do
 
-  area = 0.5D+00 * sqrt ( sum ( area_vector(1:dim_num)**2 ) )
+  area = 0.5D+00 * sqrt(sum(area_vector(1:dim_num)**2))
 
   return
 end
-subroutine polygon_centroid_2d ( n, v, centroid )
+subroutine polygon_centroid_2d(n, v, centroid)
 
 !*****************************************************************************80
 !
@@ -15908,47 +15908,47 @@ subroutine polygon_centroid_2d ( n, v, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) centroid(dim_num)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ip1
-  real ( kind = 8 ) temp
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) area
+  real(kind=8) centroid(dim_num)
+  integer(kind=4) i
+  integer(kind=4) ip1
+  real(kind=8) temp
+  real(kind=8) v(dim_num, n)
 
   area = 0.0D+00
   centroid(1:dim_num) = 0.0D+00
 
   do i = 1, n
 
-    if ( i < n ) then
+    if (i < n) then
       ip1 = i + 1
     else
       ip1 = 1
     end if
 
-    temp = ( v(1,i) * v(2,ip1) - v(1,ip1) * v(2,i) )
+    temp = (v(1, i) * v(2, ip1) - v(1, ip1) * v(2, i))
 
     area = area + temp
 
     centroid(1:dim_num) = centroid(1:dim_num) &
-      + ( v(1:dim_num,ip1) + v(1:dim_num,i) ) * temp
+                          + (v(1:dim_num, ip1) + v(1:dim_num, i)) * temp
 
   end do
 
   area = area / 2.0D+00
 
-  if ( area == 0.0D+00 ) then
-    centroid(1:dim_num) = v(1:dim_num,1)
+  if (area == 0.0D+00) then
+    centroid(1:dim_num) = v(1:dim_num, 1)
   else
-    centroid(1:dim_num) = centroid(1:dim_num) / ( 6.0D+00 * area )
+    centroid(1:dim_num) = centroid(1:dim_num) / (6.0D+00 * area)
   end if
 
   return
 end
-subroutine polygon_centroid_2d_2 ( n, v, centroid )
+subroutine polygon_centroid_2d_2(n, v, centroid)
 
 !*****************************************************************************80
 !
@@ -15988,43 +15988,43 @@ subroutine polygon_centroid_2d_2 ( n, v, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area_polygon
-  real ( kind = 8 ) area_triangle
-  real ( kind = 8 ) centroid(dim_num)
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) area_polygon
+  real(kind=8) area_triangle
+  real(kind=8) centroid(dim_num)
+  integer(kind=4) i
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) v(dim_num, n)
 
   area_polygon = 0.0D+00
   centroid(1:dim_num) = 0.0D+00
 
   do i = 1, n - 2
 
-    t(1:dim_num,1:3) = reshape ( (/ &
-      v(1:dim_num,i), v(1:dim_num,i+1), v(1:dim_num,n) /), &
-      (/ dim_num, 3 /) )
+    t(1:dim_num, 1:3) = reshape((/ &
+                    v(1:dim_num, i), v(1:dim_num, i + 1), v(1:dim_num, n)/), &
+                                (/dim_num, 3/))
 
-    call triangle_area_2d ( t, area_triangle )
+    call triangle_area_2d(t, area_triangle)
 
     area_polygon = area_polygon + area_triangle
 
     centroid(1:dim_num) = centroid(1:dim_num) + area_triangle &
-      * ( v(1:dim_num,i) + v(1:dim_num,i+1) + v(1:dim_num,n) ) / 3.0D+00
+         * (v(1:dim_num, i) + v(1:dim_num, i + 1) + v(1:dim_num, n)) / 3.0D+00
 
   end do
 
-  if ( area_polygon == 0.0D+00 ) then
-    centroid(1:dim_num) = v(1:dim_num,1)
+  if (area_polygon == 0.0D+00) then
+    centroid(1:dim_num) = v(1:dim_num, 1)
   else
     centroid(1:dim_num) = centroid(1:dim_num) / area_polygon
   end if
 
   return
 end
-subroutine polygon_centroid_3d ( n, v, centroid )
+subroutine polygon_centroid_3d(n, v, centroid)
 
 !*****************************************************************************80
 !
@@ -16069,43 +16069,43 @@ subroutine polygon_centroid_3d ( n, v, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) area_polygon
-  real ( kind = 8 ) area_triangle
-  real ( kind = 8 ) centroid(dim_num)
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) area_polygon
+  real(kind=8) area_triangle
+  real(kind=8) centroid(dim_num)
+  integer(kind=4) i
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) v(dim_num, n)
 
   area_polygon = 0.0D+00
   centroid(1:dim_num) = 0.0D+00
 
   do i = 1, n - 2
 
-    t(1:dim_num,1:3) = reshape ( (/ &
-      v(1:dim_num,i), v(1:dim_num,i+1), v(1:dim_num,n) /), &
-      (/ dim_num, 3 /) )
+    t(1:dim_num, 1:3) = reshape((/ &
+                    v(1:dim_num, i), v(1:dim_num, i + 1), v(1:dim_num, n)/), &
+                                (/dim_num, 3/))
 
-    call triangle_area_3d ( t, area_triangle )
+    call triangle_area_3d(t, area_triangle)
 
     area_polygon = area_polygon + area_triangle
 
     centroid(1:dim_num) = centroid(1:dim_num) + area_triangle &
-      * ( v(1:dim_num,i) + v(1:dim_num,i+1) + v(1:dim_num,n) ) / 3.0D+00
+         * (v(1:dim_num, i) + v(1:dim_num, i + 1) + v(1:dim_num, n)) / 3.0D+00
 
   end do
 
-  if ( area_polygon == 0.0D+00 ) then
-    centroid(1:dim_num) = v(1:dim_num,1)
+  if (area_polygon == 0.0D+00) then
+    centroid(1:dim_num) = v(1:dim_num, 1)
   else
     centroid(1:dim_num) = centroid(1:dim_num) / area_polygon
   end if
 
   return
 end
-subroutine polygon_contains_point_2d ( n, v, p, inside )
+subroutine polygon_contains_point_2d(n, v, p, inside)
 
 !*****************************************************************************80
 !
@@ -16137,37 +16137,37 @@ subroutine polygon_contains_point_2d ( n, v, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) i
-  logical ( kind = 4 ) inside
-  integer ( kind = 4 ) ip1
-  real ( kind = 8 ) p(2)
-  real ( kind = 8 ) px1
-  real ( kind = 8 ) px2
-  real ( kind = 8 ) py1
-  real ( kind = 8 ) py2
-  real ( kind = 8 ) v(2,n)
-  real ( kind = 8 ) xints
+  integer(kind=4) i
+  logical(kind=4) inside
+  integer(kind=4) ip1
+  real(kind=8) p(2)
+  real(kind=8) px1
+  real(kind=8) px2
+  real(kind=8) py1
+  real(kind=8) py2
+  real(kind=8) v(2, n)
+  real(kind=8) xints
 
   inside = .false.
 
-  px1 = v(1,1)
-  py1 = v(2,1)
+  px1 = v(1, 1)
+  py1 = v(2, 1)
   xints = p(1) - 1.0D+00
 
   do i = 1, n
 
-    px2 = v(1,mod(i,n)+1)
-    py2 = v(2,mod(i,n)+1)
+    px2 = v(1, mod(i, n) + 1)
+    py2 = v(2, mod(i, n) + 1)
 
-    if ( min ( py1, py2 ) < p(2) ) then
-      if ( p(2) <= max ( py1, py2 ) ) then
-        if ( p(1) <= max ( px1, px2 ) ) then
-          if ( py1 /= py2 ) then
-            xints = ( p(2) - py1 ) * ( px2 - px1 ) / ( py2 - py1 ) + px1
+    if (min(py1, py2) < p(2)) then
+      if (p(2) <= max(py1, py2)) then
+        if (p(1) <= max(px1, px2)) then
+          if (py1 /= py2) then
+            xints = (p(2) - py1) * (px2 - px1) / (py2 - py1) + px1
           end if
-          if ( px1 == px2 .or. p(1) <= xints ) then
+          if (px1 == px2 .or. p(1) <= xints) then
             inside = .not. inside
           end if
         end if
@@ -16181,7 +16181,7 @@ subroutine polygon_contains_point_2d ( n, v, p, inside )
 
   return
 end
-subroutine polygon_contains_point_2d_2 ( n, v, p, inside )
+subroutine polygon_contains_point_2d_2(n, v, p, inside)
 
 !*****************************************************************************80
 !
@@ -16213,14 +16213,14 @@ subroutine polygon_contains_point_2d_2 ( n, v, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) t(dim_num,3)
-  real ( kind = 8 ) v(dim_num,n)
+  integer(kind=4) i
+  logical(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) t(dim_num, 3)
+  real(kind=8) v(dim_num, n)
 
   inside = .false.
 !
@@ -16228,16 +16228,16 @@ subroutine polygon_contains_point_2d_2 ( n, v, p, inside )
 !  one of the triangles formed by X(1),Y(1) and any two consecutive
 !  points on the polygon's circumference.
 !
-  t(1:dim_num,1) = v(1:dim_num,1)
+  t(1:dim_num, 1) = v(1:dim_num, 1)
 
   do i = 2, n - 1
 
-    t(1:dim_num,2) = v(1:dim_num,i)
-    t(1:dim_num,3) = v(1:dim_num,i+1)
+    t(1:dim_num, 2) = v(1:dim_num, i)
+    t(1:dim_num, 3) = v(1:dim_num, i + 1)
 
-    call triangle_contains_point_2d_1 ( t, p, inside )
+    call triangle_contains_point_2d_1(t, p, inside)
 
-    if ( inside ) then
+    if (inside) then
       return
     end if
 
@@ -16245,7 +16245,7 @@ subroutine polygon_contains_point_2d_2 ( n, v, p, inside )
 
   return
 end
-subroutine polygon_contains_point_2d_3 ( n, v, p, inside )
+subroutine polygon_contains_point_2d_3(n, v, p, inside)
 
 !*****************************************************************************80
 !
@@ -16290,29 +16290,29 @@ subroutine polygon_contains_point_2d_3 ( n, v, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  logical ( kind = 4 ) inside
-  integer ( kind = 4 ) ip1
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) v(dim_num,n)
+  integer(kind=4) i
+  logical(kind=4) inside
+  integer(kind=4) ip1
+  real(kind=8) p(dim_num)
+  real(kind=8) v(dim_num, n)
 
   inside = .false.
 
   do i = 1, n
 
-    if ( i < n ) then
+    if (i < n) then
       ip1 = i + 1
     else
       ip1 = 1
     end if
 
-    if ( ( v(2,i)   <  p(2) .and. p(2) <= v(2,ip1)   ) .or. &
-         ( p(2) <= v(2,i)   .and. v(2,ip1)   < p(2) ) ) then
-      if ( ( p(1) - v(1,i) ) - ( p(2) - v(2,i) ) &
-         * ( v(1,ip1) - v(1,i) ) / ( v(2,ip1) - v(2,i) ) < 0.0D+00 ) then
+    if ((v(2, i) < p(2) .and. p(2) <= v(2, ip1)) .or. &
+        (p(2) <= v(2, i) .and. v(2, ip1) < p(2))) then
+      if ((p(1) - v(1, i)) - (p(2) - v(2, i)) &
+          * (v(1, ip1) - v(1, i)) / (v(2, ip1) - v(2, i)) < 0.0D+00) then
         inside = .not. inside
       end if
     end if
@@ -16321,7 +16321,7 @@ subroutine polygon_contains_point_2d_3 ( n, v, p, inside )
 
   return
 end
-subroutine polygon_diameter_2d ( n, v, diameter )
+subroutine polygon_diameter_2d(n, v, diameter)
 
 !*****************************************************************************80
 !
@@ -16358,28 +16358,28 @@ subroutine polygon_diameter_2d ( n, v, diameter )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) diameter
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) diameter
+  integer(kind=4) i
+  integer(kind=4) j
+  real(kind=8) v(dim_num, n)
 
   diameter = 0.0D+00
 
   do i = 1, n
 
-    do j = i+1, n
-      diameter = max ( diameter, &
-        sqrt ( ( v(1,i) - v(1,j) )**2 + ( v(2,i) - v(2,j) )**2 ) )
+    do j = i + 1, n
+      diameter = max(diameter, &
+                     sqrt((v(1, i) - v(1, j))**2 + (v(2, i) - v(2, j))**2))
     end do
 
   end do
 
   return
 end
-subroutine polygon_expand_2d ( n, v, h, w )
+subroutine polygon_expand_2d(n, v, h, w)
 
 !*****************************************************************************80
 !
@@ -16419,27 +16419,27 @@ subroutine polygon_expand_2d ( n, v, h, w )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) angle_rad_2d
-  real ( kind = 8 ) h
-  real ( kind = 8 ) h2
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) im1
-  integer ( kind = 4 ) ip1
-  real ( kind = 8 ) p4(dim_num)
-  real ( kind = 8 ) v(dim_num,n)
-  real ( kind = 8 ) w(dim_num,n)
+  real(kind=8) angle
+  real(kind=8) angle_rad_2d
+  real(kind=8) h
+  real(kind=8) h2
+  integer(kind=4) i
+  integer(kind=4) i4_wrap
+  integer(kind=4) im1
+  integer(kind=4) ip1
+  real(kind=8) p4(dim_num)
+  real(kind=8) v(dim_num, n)
+  real(kind=8) w(dim_num, n)
 !
 !  Consider each angle, formed by the nodes P(I-1), P(I), P(I+1).
 !
   do i = 1, n
 
-    im1 = i4_wrap ( i-1, 1, n )
-    ip1 = i4_wrap ( i+1, 1, n )
+    im1 = i4_wrap(i - 1, 1, n)
+    ip1 = i4_wrap(i + 1, 1, n)
 !
 !        P1
 !        /
@@ -16448,25 +16448,25 @@ subroutine polygon_expand_2d ( n, v, h, w )
 !     / .
 !    P2--------->P3
 !
-    call angle_half_2d ( v(1:dim_num,im1), v(1:dim_num,i), v(1:dim_num,ip1), &
-      p4 )
+   call angle_half_2d(v(1:dim_num, im1), v(1:dim_num, i), v(1:dim_num, ip1), &
+                       p4)
 !
 !  Compute the value of the half angle.
 !
-    angle = angle_rad_2d ( v(1:dim_num,im1), v(1:dim_num,i), p4(1:dim_num) )
+    angle = angle_rad_2d(v(1:dim_num, im1), v(1:dim_num, i), p4(1:dim_num))
 !
 !  The stepsize along the ray must be adjusted so that the sides
 !  move out by H.
 !
-    h2 = h / sin ( angle )
+    h2 = h / sin(angle)
 
-    w(1:dim_num,i) = v(1:dim_num,i) - h2 * ( p4(1:dim_num) - v(1:dim_num,i) )
+    w(1:dim_num, i) = v(1:dim_num, i) - h2 * (p4(1:dim_num) - v(1:dim_num, i))
 
   end do
 
   return
 end
-subroutine polygon_inrad_data_2d ( n, radin, area, radout, side )
+subroutine polygon_inrad_data_2d(n, radin, area, radout, side)
 
 !*****************************************************************************80
 !
@@ -16503,30 +16503,30 @@ subroutine polygon_inrad_data_2d ( n, radin, area, radout, side )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) n
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radin
-  real ( kind = 8 ) radout
-  real ( kind = 8 ) side
+  real(kind=8) angle
+  real(kind=8) area
+  integer(kind=4) n
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radin
+  real(kind=8) radout
+  real(kind=8) side
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_INRAD_DATA_2D - Fatal error!'
-    write ( *, '(a)' ) '  Input value of N must be at least 3'
-    write ( *, '(a,i8)' ) '  but your input value was N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_INRAD_DATA_2D - Fatal error!'
+    write (*, '(a)') '  Input value of N must be at least 3'
+    write (*, '(a,i8)') '  but your input value was N = ', n
     stop 1
   end if
 
-  angle = r8_pi / real ( n, kind = 8 )
-  area = real ( n, kind = 8 ) * radin * radin * tan ( angle )
-  side = 2.0D+00 * radin * tan ( angle )
-  radout = 0.5D+00 * side / sin ( angle )
+  angle = r8_pi / real(n, kind=8)
+  area = real(n, kind=8) * radin * radin * tan(angle)
+  side = 2.0D+00 * radin * tan(angle)
+  radout = 0.5D+00 * side / sin(angle)
 
   return
 end
-function polygon_is_convex_2d ( n, v )
+function polygon_is_convex_2d(n, v)
 
 !*****************************************************************************80
 !
@@ -16578,33 +16578,33 @@ function polygon_is_convex_2d ( n, v )
 !
   implicit none
 
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ), parameter :: RAD_TO_DEG = 180.0D+00 / r8_pi
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8), parameter :: RAD_TO_DEG = 180.0D+00 / r8_pi
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle
-  integer ( kind = 4 ), parameter :: CONVEX_CCW = 1
-  integer ( kind = 4 ), parameter :: CONVEX_CW = 2
-  real ( kind = 8 ) cross
-  integer ( kind = 4 ), parameter :: DEGENERATE_CONVEX = 0
-  real ( kind = 8 ) dot
-  real ( kind = 8 ) exterior_total
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ip1
-  integer ( kind = 4 ) ip2
-  integer ( kind = 4 ), parameter :: NOT_CONVEX = -1
-  integer ( kind = 4 ) polygon_is_convex_2d
-  real ( kind = 8 ) sense
-  real ( kind = 8 ), parameter :: tol = 1.0D+00
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) angle
+  integer(kind=4), parameter :: CONVEX_CCW = 1
+  integer(kind=4), parameter :: CONVEX_CW = 2
+  real(kind=8) cross
+  integer(kind=4), parameter :: DEGENERATE_CONVEX = 0
+  real(kind=8) dot
+  real(kind=8) exterior_total
+  integer(kind=4) i
+  integer(kind=4) ip1
+  integer(kind=4) ip2
+  integer(kind=4), parameter :: NOT_CONVEX = -1
+  integer(kind=4) polygon_is_convex_2d
+  real(kind=8) sense
+  real(kind=8), parameter :: tol = 1.0D+00
+  real(kind=8) v(dim_num, n)
 
   exterior_total = 0.0D+00
 !
 !  If there are not at least 3 distinct vertices, we are done.
 !
-  if ( n < 3 ) then
+  if (n < 3) then
     polygon_is_convex_2d = DEGENERATE_CONVEX
     return
   end if
@@ -16616,45 +16616,45 @@ function polygon_is_convex_2d ( n, v )
   do i = 1, n
 
     ip1 = i + 1
-    if ( n < ip1 ) then
+    if (n < ip1) then
       ip1 = ip1 - n
     end if
 
     ip2 = i + 2
-    if ( n < ip2 ) then
+    if (n < ip2) then
       ip2 = ip2 - n
     end if
 
-    dot =   ( v(1,ip2) - v(1,ip1) ) * ( v(1,i) - v(1,ip1) ) &
-          + ( v(2,ip2) - v(2,ip1) ) * ( v(2,i) - v(2,ip1) )
+    dot = (v(1, ip2) - v(1, ip1)) * (v(1, i) - v(1, ip1)) &
+          + (v(2, ip2) - v(2, ip1)) * (v(2, i) - v(2, ip1))
 
-    cross =   ( v(1,ip2) - v(1,ip1) ) * ( v(2,i) - v(2,ip1) ) &
-            - ( v(1,i)   - v(1,ip1) ) * ( v(2,ip2) - v(2,ip1) )
+    cross = (v(1, ip2) - v(1, ip1)) * (v(2, i) - v(2, ip1)) &
+            - (v(1, i) - v(1, ip1)) * (v(2, ip2) - v(2, ip1))
 
-    angle = atan2 ( cross, dot )
+    angle = atan2(cross, dot)
 !
 !  See if the turn defined by this vertex is our first indication of
 !  the "sense" of the polygon, or if it disagrees with the previously
 !  defined sense.
 !
-    if ( sense == 0.0D+00 ) then
+    if (sense == 0.0D+00) then
 
-      if ( angle < 0.0D+00 ) then
+      if (angle < 0.0D+00) then
         sense = -1.0D+00
-      else if ( 0.0D+00 < angle ) then
+      else if (0.0D+00 < angle) then
         sense = +1.0D+00
       end if
 
-    else if ( sense == 1.0D+00 ) then
+    else if (sense == 1.0D+00) then
 
-      if ( angle < 0.0D+00 ) then
+      if (angle < 0.0D+00) then
         polygon_is_convex_2d = NOT_CONVEX
         return
       end if
 
-    else if ( sense == -1.0D+00 ) then
+    else if (sense == -1.0D+00) then
 
-      if ( 0.0D+00 < angle ) then
+      if (0.0D+00 < angle) then
         polygon_is_convex_2d = NOT_CONVEX
         return
       end if
@@ -16664,26 +16664,26 @@ function polygon_is_convex_2d ( n, v )
 !  If the exterior total is greater than 360, then the polygon is
 !  going around again.
 !
-    angle = atan2 ( -cross, -dot )
+    angle = atan2(-cross, -dot)
 
     exterior_total = exterior_total + angle
 
-    if ( 360.0D+00 + tol < abs ( exterior_total ) * RAD_TO_DEG ) then
+    if (360.0D+00 + tol < abs(exterior_total) * RAD_TO_DEG) then
       polygon_is_convex_2d = NOT_CONVEX
       return
     end if
 
   end do
 
-  if ( sense == +1.0D+00 ) then
+  if (sense == +1.0D+00) then
     polygon_is_convex_2d = CONVEX_CCW
-  else if ( sense == -1.0D+00 ) then
+  else if (sense == -1.0D+00) then
     polygon_is_convex_2d = CONVEX_CW
   end if
 
   return
 end
-subroutine polygon_lattice_area_2d ( i, b, area )
+subroutine polygon_lattice_area_2d(i, b, area)
 
 !*****************************************************************************80
 !
@@ -16736,15 +16736,15 @@ subroutine polygon_lattice_area_2d ( i, b, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) b
-  integer ( kind = 4 ) i
+  real(kind=8) area
+  integer(kind=4) b
+  integer(kind=4) i
 
-  area = real ( i, kind = 8 ) + real ( b, kind = 8 ) / 2.0D+00 - 1.0D+00
+  area = real(i, kind=8) + real(b, kind=8) / 2.0D+00 - 1.0D+00
 
   return
 end
-subroutine polygon_normal_3d ( n, v, normal )
+subroutine polygon_normal_3d(n, v, normal)
 
 !*****************************************************************************80
 !
@@ -16795,27 +16795,27 @@ subroutine polygon_normal_3d ( n, v, normal )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) n
 
-  real ( kind = 8 ) r8vec_norm
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) normal_norm
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) v(dim_num,n)
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
+  real(kind=8) r8vec_norm
+  integer(kind=4) j
+  real(kind=8) normal(dim_num)
+  real(kind=8) normal_norm
+  real(kind=8) p(dim_num)
+  real(kind=8) v(dim_num, n)
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
 
   normal(1:dim_num) = 0.0D+00
 
-  v1(1:dim_num) = v(1:dim_num,2) - v(1:dim_num,1)
+  v1(1:dim_num) = v(1:dim_num, 2) - v(1:dim_num, 1)
 
   do j = 3, n
 
-    v2(1:dim_num) = v(1:dim_num,j) - v(1:dim_num,1)
+    v2(1:dim_num) = v(1:dim_num, j) - v(1:dim_num, 1)
 
-    call r8vec_cross_product_3d ( v1, v2, p )
+    call r8vec_cross_product_3d(v1, v2, p)
 
     normal(1:dim_num) = normal(1:dim_num) + p(1:dim_num)
 
@@ -16825,9 +16825,9 @@ subroutine polygon_normal_3d ( n, v, normal )
 !
 !  Normalize.
 !
-  normal_norm = r8vec_norm ( dim_num, normal )
+  normal_norm = r8vec_norm(dim_num, normal)
 
-  if ( normal_norm == 0.0D+00 ) then
+  if (normal_norm == 0.0D+00) then
     return
   end if
 
@@ -16835,7 +16835,7 @@ subroutine polygon_normal_3d ( n, v, normal )
 
   return
 end
-subroutine polygon_outrad_data_2d ( n, radout, area, radin, side )
+subroutine polygon_outrad_data_2d(n, radout, area, radin, side)
 
 !*****************************************************************************80
 !
@@ -16872,31 +16872,31 @@ subroutine polygon_outrad_data_2d ( n, radout, area, radin, side )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) n
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radin
-  real ( kind = 8 ) radout
-  real ( kind = 8 ) side
+  real(kind=8) angle
+  real(kind=8) area
+  integer(kind=4) n
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radin
+  real(kind=8) radout
+  real(kind=8) side
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_OUTRAD_DATA_2D - Fatal error!'
-    write ( *, '(a)' ) '  Input value of N must be at least 3'
-    write ( *, '(a,i8)' ) '  but your input value was N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_OUTRAD_DATA_2D - Fatal error!'
+    write (*, '(a)') '  Input value of N must be at least 3'
+    write (*, '(a,i8)') '  but your input value was N = ', n
     stop 1
   end if
 
-  angle = r8_pi / real ( n, kind = 8 )
-  area = 0.5D+00 * real ( n, kind = 8 ) * radout * radout &
-    * sin ( 2.0D+00 * angle )
-  side = 2.0D+00 * radout * sin ( angle )
-  radin = 0.5D+00 * side / tan ( angle )
+  angle = r8_pi / real(n, kind=8)
+  area = 0.5D+00 * real(n, kind=8) * radout * radout &
+         * sin(2.0D+00 * angle)
+  side = 2.0D+00 * radout * sin(angle)
+  radin = 0.5D+00 * side / tan(angle)
 
   return
 end
-subroutine polygon_point_dist_2d ( n, v, p, dist )
+subroutine polygon_point_dist_2d(n, v, p, dist)
 
 !*****************************************************************************80
 !
@@ -16927,28 +16927,28 @@ subroutine polygon_point_dist_2d ( n, v, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) dist
+  real(kind=8) dist2
+  integer(kind=4) i4_wrap
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) p(dim_num)
+  real(kind=8) v(dim_num, n)
 !
 !  Find the distance to each of the line segments.
 !
-  dist = huge ( dist )
+  dist = huge(dist)
 
   do j = 1, n
 
-    jp1 = i4_wrap ( j+1, 1, n )
+    jp1 = i4_wrap(j + 1, 1, n)
 
-    call segment_point_dist_2d ( v(1:dim_num,j), v(1:dim_num,jp1), p, dist2 )
+    call segment_point_dist_2d(v(1:dim_num, j), v(1:dim_num, jp1), p, dist2)
 
-    if ( dist2 < dist ) then
+    if (dist2 < dist) then
       dist = dist2
     end if
 
@@ -16956,7 +16956,7 @@ subroutine polygon_point_dist_2d ( n, v, p, dist )
 
   return
 end
-subroutine polygon_point_near_2d ( n, v, p, pn, dist )
+subroutine polygon_point_near_2d(n, v, p, pn, dist)
 
 !*****************************************************************************80
 !
@@ -16988,34 +16988,34 @@ subroutine polygon_point_near_2d ( n, v, p, pn, dist )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) pn2(dim_num)
-  real ( kind = 8 ) tval
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) dist
+  real(kind=8) dist2
+  integer(kind=4) i4_wrap
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) p(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) pn2(dim_num)
+  real(kind=8) tval
+  real(kind=8) v(dim_num, n)
 !
 !  Find the distance to each of the line segments that make up the edges
 !  of the polygon.
 !
-  dist = huge ( dist )
+  dist = huge(dist)
   pn(1:dim_num) = 0.0D+00
 
   do j = 1, n
 
-    jp1 = i4_wrap ( j+1, 1, n )
+    jp1 = i4_wrap(j + 1, 1, n)
 
-    call segment_point_near_2d ( v(1:dim_num,j), v(1:dim_num,jp1), p, &
-      pn2, dist2, tval )
+    call segment_point_near_2d(v(1:dim_num, j), v(1:dim_num, jp1), p, &
+                               pn2, dist2, tval)
 
-    if ( dist2 < dist ) then
+    if (dist2 < dist) then
       dist = dist2
       pn(1:dim_num) = pn2(1:dim_num)
     end if
@@ -17024,7 +17024,7 @@ subroutine polygon_point_near_2d ( n, v, p, pn, dist )
 
   return
 end
-subroutine polygon_side_data_2d ( n, side, area, radin, radout )
+subroutine polygon_side_data_2d(n, side, area, radin, radout)
 
 !*****************************************************************************80
 !
@@ -17061,30 +17061,30 @@ subroutine polygon_side_data_2d ( n, side, area, radin, radout )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) n
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radin
-  real ( kind = 8 ) radout
-  real ( kind = 8 ) side
+  real(kind=8) angle
+  real(kind=8) area
+  integer(kind=4) n
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radin
+  real(kind=8) radout
+  real(kind=8) side
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_SIDE_DATA_2D - Fatal error!'
-    write ( *, '(a)' ) '  Input value of N must be at least 3'
-    write ( *, '(a,i8)' ) '  but your input value was N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_SIDE_DATA_2D - Fatal error!'
+    write (*, '(a)') '  Input value of N must be at least 3'
+    write (*, '(a,i8)') '  but your input value was N = ', n
     stop 1
   end if
 
-  angle = r8_pi / real ( n, kind = 8 )
-  area = 0.25D+00 * real ( n, kind = 8 ) * side * side / tan ( angle )
-  radin = 0.5D+00 * side / tan ( angle )
-  radout = 0.5D+00 * side / sin ( angle )
+  angle = r8_pi / real(n, kind=8)
+  area = 0.25D+00 * real(n, kind=8) * side * side / tan(angle)
+  radin = 0.5D+00 * side / tan(angle)
+  radout = 0.5D+00 * side / sin(angle)
 
   return
 end
-subroutine polygon_solid_angle_3d ( n, v, p, solid_angle )
+subroutine polygon_solid_angle_3d(n, v, p, solid_angle)
 
 !*****************************************************************************80
 !
@@ -17147,66 +17147,66 @@ subroutine polygon_solid_angle_3d ( n, v, p, solid_angle )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(dim_num)
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) area
-  real ( kind = 8 ) b(dim_num)
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) r8vec_scalar_triple_product
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) normal1(dim_num)
-  real ( kind = 8 ) normal1_norm
-  real ( kind = 8 ) normal2(dim_num)
-  real ( kind = 8 ) normal2_norm
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) plane(dim_num)
-  real ( kind = 8 ) r1(dim_num)
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) s
-  real ( kind = 8 ) solid_angle
-  real ( kind = 8 ) v(dim_num,n)
+  real(kind=8) a(dim_num)
+  real(kind=8) angle
+  real(kind=8) area
+  real(kind=8) b(dim_num)
+  real(kind=8) r8vec_norm
+  real(kind=8) r8vec_scalar_triple_product
+  integer(kind=4) i4_wrap
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) normal1(dim_num)
+  real(kind=8) normal1_norm
+  real(kind=8) normal2(dim_num)
+  real(kind=8) normal2_norm
+  real(kind=8) p(dim_num)
+  real(kind=8) plane(dim_num)
+  real(kind=8) r1(dim_num)
+  real(kind=8) r8_acos
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) s
+  real(kind=8) solid_angle
+  real(kind=8) v(dim_num, n)
 
-  if ( n < 3 ) then
+  if (n < 3) then
     solid_angle = 0.0D+00
     return
   end if
 
-  call polygon_normal_3d ( n, v, plane )
+  call polygon_normal_3d(n, v, plane)
 
-  a(1:dim_num) = v(1:dim_num,n) - v(1:dim_num,1)
+  a(1:dim_num) = v(1:dim_num, n) - v(1:dim_num, 1)
 
   area = 0.0D+00
 
   do j = 1, n
 
-    r1(1:dim_num) = v(1:dim_num,j) - p(1:dim_num)
+    r1(1:dim_num) = v(1:dim_num, j) - p(1:dim_num)
 
-    jp1 = i4_wrap ( j + 1, 1, n )
+    jp1 = i4_wrap(j + 1, 1, n)
 
-    b(1:dim_num) = v(1:dim_num,jp1) - v(1:dim_num,j)
+    b(1:dim_num) = v(1:dim_num, jp1) - v(1:dim_num, j)
 
-    call r8vec_cross_product_3d ( a, r1, normal1 )
+    call r8vec_cross_product_3d(a, r1, normal1)
 
-    normal1_norm = r8vec_norm ( dim_num, normal1 )
+    normal1_norm = r8vec_norm(dim_num, normal1)
 
-    call r8vec_cross_product_3d ( r1, b, normal2 )
+    call r8vec_cross_product_3d(r1, b, normal2)
 
-    normal2_norm = r8vec_norm ( dim_num, normal2 )
+    normal2_norm = r8vec_norm(dim_num, normal2)
 
-    s = dot_product ( normal1(1:dim_num), normal2(1:dim_num) ) &
-      / ( normal1_norm * normal2_norm )
+    s = dot_product(normal1(1:dim_num), normal2(1:dim_num)) &
+        / (normal1_norm * normal2_norm)
 
-    angle = r8_acos ( s )
+    angle = r8_acos(s)
 
-    s = r8vec_scalar_triple_product ( b, a, plane )
+    s = r8vec_scalar_triple_product(b, a, plane)
 
-    if ( 0.0D+00 < s ) then
+    if (0.0D+00 < s) then
       area = area + r8_pi - angle
     else
       area = area + r8_pi + angle
@@ -17216,9 +17216,9 @@ subroutine polygon_solid_angle_3d ( n, v, p, solid_angle )
 
   end do
 
-  area = area - r8_pi * real ( n - 2, kind = 8 )
+  area = area - r8_pi * real(n - 2, kind=8)
 
-  if ( 0.0D+00 < dot_product ( plane(1:dim_num), r1(1:dim_num) ) ) then
+  if (0.0D+00 < dot_product(plane(1:dim_num), r1(1:dim_num))) then
     solid_angle = -area
   else
     solid_angle = area
@@ -17226,7 +17226,7 @@ subroutine polygon_solid_angle_3d ( n, v, p, solid_angle )
 
   return
 end
-subroutine polygon_x_2d ( n, v, result )
+subroutine polygon_x_2d(n, v, result)
 
 !*****************************************************************************80
 !
@@ -17272,34 +17272,34 @@ subroutine polygon_x_2d ( n, v, result )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) im1
-  real ( kind = 8 ) result
-  real ( kind = 8 ) v(2,n)
+  integer(kind=4) i
+  integer(kind=4) im1
+  real(kind=8) result
+  real(kind=8) v(2, n)
 
   result = 0.0D+00
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_X_2D - Fatal error!'
-    write ( *, '(a)' ) '  The number of vertices must be at least 3.'
-    write ( *, '(a,i8)' ) '  The input value of N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_X_2D - Fatal error!'
+    write (*, '(a)') '  The number of vertices must be at least 3.'
+    write (*, '(a,i8)') '  The input value of N = ', n
     stop 1
   end if
 
   do i = 1, n
 
-    if ( i == 1 ) then
+    if (i == 1) then
       im1 = n
     else
       im1 = i - 1
     end if
 
-    result = result + ( v(1,i)**2 + v(1,i) * v(1,im1) + v(1,im1)**2 ) &
-      * ( v(2,i) - v(2,im1) )
+    result = result + (v(1, i)**2 + v(1, i) * v(1, im1) + v(1, im1)**2) &
+             * (v(2, i) - v(2, im1))
 
   end do
 
@@ -17307,7 +17307,7 @@ subroutine polygon_x_2d ( n, v, result )
 
   return
 end
-subroutine polygon_xx_2d ( n, v, result )
+subroutine polygon_xx_2d(n, v, result)
 
 !*****************************************************************************80
 !
@@ -17355,34 +17355,34 @@ subroutine polygon_xx_2d ( n, v, result )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) im1
-  real ( kind = 8 ) result
-  real ( kind = 8 ) v(2,n)
+  integer(kind=4) i
+  integer(kind=4) im1
+  real(kind=8) result
+  real(kind=8) v(2, n)
 
   result = 0.0D+00
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_XX_2D - Fatal error!'
-    write ( *, '(a)' ) '  The number of vertices must be at least 3.'
-    write ( *, '(a,i8)' ) '  The input value of N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_XX_2D - Fatal error!'
+    write (*, '(a)') '  The number of vertices must be at least 3.'
+    write (*, '(a,i8)') '  The input value of N = ', n
     stop 1
   end if
 
   do i = 1, n
 
-    if ( i == 1 ) then
+    if (i == 1) then
       im1 = n
     else
       im1 = i - 1
     end if
 
-    result = result + ( v(1,i)**3 + v(1,i)**2 * v(1,im1) &
-      + v(1,i) * v(1,im1)**2 + v(1,im1)**3 ) * ( v(2,i) - v(2,im1) )
+    result = result + (v(1, i)**3 + v(1, i)**2 * v(1, im1) &
+              + v(1, i) * v(1, im1)**2 + v(1, im1)**3) * (v(2, i) - v(2, im1))
 
   end do
 
@@ -17390,7 +17390,7 @@ subroutine polygon_xx_2d ( n, v, result )
 
   return
 end
-subroutine polygon_xy_2d ( n, v, result )
+subroutine polygon_xy_2d(n, v, result)
 
 !*****************************************************************************80
 !
@@ -17439,36 +17439,36 @@ subroutine polygon_xy_2d ( n, v, result )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) im1
-  real ( kind = 8 ) result
-  real ( kind = 8 ) v(dim_num,n)
+  integer(kind=4) i
+  integer(kind=4) im1
+  real(kind=8) result
+  real(kind=8) v(dim_num, n)
 
   result = 0.0D+00
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_XY_2D - Fatal error!'
-    write ( *, '(a)' ) '  The number of vertices must be at least 3.'
-    write ( *, '(a,i8)' ) '  The input value of N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_XY_2D - Fatal error!'
+    write (*, '(a)') '  The number of vertices must be at least 3.'
+    write (*, '(a,i8)') '  The input value of N = ', n
     stop 1
   end if
 
   do i = 1, n
 
-    if ( i == 1 ) then
+    if (i == 1) then
       im1 = n
     else
       im1 = i - 1
     end if
 
     result = result + ( &
-      v(2,i) * ( 3.0D+00 * v(1,i)**2 + 2.0D+00 * v(1,i) * v(1,im1) &
-      + v(1,im1)**2 ) + v(2,im1) * ( v(1,i)**2 + 2.0D+00 * v(1,i) * v(1,im1) &
-      + 3.0D+00 * v(1,im1)**2 ) ) * ( v(2,i) - v(2,im1) )
+             v(2, i) * (3.0D+00 * v(1, i)**2 + 2.0D+00 * v(1, i) * v(1, im1) &
+   + v(1, im1)**2) + v(2, im1) * (v(1, i)**2 + 2.0D+00 * v(1, i) * v(1, im1) &
+                            + 3.0D+00 * v(1, im1)**2)) * (v(2, i) - v(2, im1))
 
   end do
 
@@ -17476,7 +17476,7 @@ subroutine polygon_xy_2d ( n, v, result )
 
   return
 end
-subroutine polygon_y_2d ( n, v, result )
+subroutine polygon_y_2d(n, v, result)
 
 !*****************************************************************************80
 !
@@ -17523,34 +17523,34 @@ subroutine polygon_y_2d ( n, v, result )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) im1
-  real ( kind = 8 ) result
-  real ( kind = 8 ) v(dim_num,n)
+  integer(kind=4) i
+  integer(kind=4) im1
+  real(kind=8) result
+  real(kind=8) v(dim_num, n)
 
   result = 0.0D+00
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_Y_2D - Fatal error!'
-    write ( *, '(a)' ) '  The number of vertices must be at least 3.'
-    write ( *, '(a,i8)' ) '  The input value of N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_Y_2D - Fatal error!'
+    write (*, '(a)') '  The number of vertices must be at least 3.'
+    write (*, '(a,i8)') '  The input value of N = ', n
     stop 1
   end if
 
   do i = 1, n
 
-    if ( i == 1 ) then
+    if (i == 1) then
       im1 = n
     else
       im1 = i - 1
     end if
 
-    result = result - ( v(2,i)**2 + v(2,i) * v(2,im1) + v(2,im1)**2 ) &
-      * ( v(1,i) - v(1,im1) )
+    result = result - (v(2, i)**2 + v(2, i) * v(2, im1) + v(2, im1)**2) &
+             * (v(1, i) - v(1, im1))
 
   end do
 
@@ -17558,7 +17558,7 @@ subroutine polygon_y_2d ( n, v, result )
 
   return
 end
-subroutine polygon_yy_2d ( n, v, result )
+subroutine polygon_yy_2d(n, v, result)
 
 !*****************************************************************************80
 !
@@ -17606,34 +17606,34 @@ subroutine polygon_yy_2d ( n, v, result )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) im1
-  real ( kind = 8 ) result
-  real ( kind = 8 ) v(dim_num,n)
+  integer(kind=4) i
+  integer(kind=4) im1
+  real(kind=8) result
+  real(kind=8) v(dim_num, n)
 
   result = 0.0D+00
 
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYGON_YY_2D - Fatal error!'
-    write ( *, '(a)' ) '  The number of polygonal vertices must be '
-    write ( *, '(a,i8)' ) '  at least 3, but the input polygon has N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYGON_YY_2D - Fatal error!'
+    write (*, '(a)') '  The number of polygonal vertices must be '
+    write (*, '(a,i8)') '  at least 3, but the input polygon has N = ', n
     stop 1
   end if
 
   do i = 1, n
 
-    if ( i == 1 ) then
+    if (i == 1) then
       im1 = n
     else
       im1 = i - 1
     end if
 
-    result = result - ( v(2,i)**3 + v(2,i)**2 * v(2,im1) &
-      + v(2,i) * v(2,im1)**2 + v(2,im1)**3 ) * ( v(1,i) - v(1,im1) )
+    result = result - (v(2, i)**3 + v(2, i)**2 * v(2, im1) &
+              + v(2, i) * v(2, im1)**2 + v(2, im1)**3) * (v(1, i) - v(1, im1))
 
   end do
 
@@ -17641,8 +17641,8 @@ subroutine polygon_yy_2d ( n, v, result )
 
   return
 end
-subroutine polyhedron_area_3d ( coord, order_max, face_num, node, &
-  node_num, order, area )
+subroutine polyhedron_area_3d(coord, order_max, face_num, node, &
+                              node_num, order, area)
 
 !*****************************************************************************80
 !
@@ -17697,21 +17697,21 @@ subroutine polyhedron_area_3d ( coord, order_max, face_num, node, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) node_num
+  integer(kind=4) face_num
+  integer(kind=4) order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) node_num
 
-  real ( kind = 8 ) ainc
-  real ( kind = 8 ) area
-  real ( kind = 8 ) coord(dim_num,node_num)
-  integer ( kind = 4 ) face
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k1
-  integer ( kind = 4 ) k2
-  integer ( kind = 4 ) node(face_num,order_max)
-  integer ( kind = 4 ) order(face_num)
-  real ( kind = 8 ) v(dim_num)
+  real(kind=8) ainc
+  real(kind=8) area
+  real(kind=8) coord(dim_num, node_num)
+  integer(kind=4) face
+  integer(kind=4) j
+  integer(kind=4) k1
+  integer(kind=4) k2
+  integer(kind=4) node(face_num, order_max)
+  integer(kind=4) order(face_num)
+  real(kind=8) v(dim_num)
 
   area = 0.0D+00
 !
@@ -17725,25 +17725,25 @@ subroutine polyhedron_area_3d ( coord, order_max, face_num, node, &
 !
     do j = 1, order(face)
 
-      k1 = node(face,j)
+      k1 = node(face, j)
 
-      if ( j < order(face) ) then
-        k2 = node(face,j+1)
+      if (j < order(face)) then
+        k2 = node(face, j + 1)
       else
-        k2 = node(face,1)
+        k2 = node(face, 1)
       end if
 !
 !  Compute the cross product.
 !
-      v(1) = v(1) + coord(2,k1) * coord(3,k2) - coord(3,k1) * coord(2,k2)
-      v(2) = v(2) + coord(3,k1) * coord(1,k2) - coord(1,k1) * coord(3,k2)
-      v(3) = v(3) + coord(1,k1) * coord(2,k2) - coord(2,k1) * coord(1,k2)
+      v(1) = v(1) + coord(2, k1) * coord(3, k2) - coord(3, k1) * coord(2, k2)
+      v(2) = v(2) + coord(3, k1) * coord(1, k2) - coord(1, k1) * coord(3, k2)
+      v(3) = v(3) + coord(1, k1) * coord(2, k2) - coord(2, k1) * coord(1, k2)
 
     end do
 !
 !  Add the magnitude of the normal vector to the sum.
 !
-    ainc = sqrt ( sum ( v(1:dim_num)**2 ) )
+    ainc = sqrt(sum(v(1:dim_num)**2))
     area = area + ainc
 
   end do
@@ -17752,8 +17752,8 @@ subroutine polyhedron_area_3d ( coord, order_max, face_num, node, &
 
   return
 end
-subroutine polyhedron_centroid_3d ( coord, order_max, face_num, node, &
-  node_num, order, centroid )
+subroutine polyhedron_centroid_3d(coord, order_max, face_num, node, &
+                                  node_num, order, centroid)
 
 !*****************************************************************************80
 !
@@ -17802,31 +17802,31 @@ subroutine polyhedron_centroid_3d ( coord, order_max, face_num, node, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) node_num
+  integer(kind=4) face_num
+  integer(kind=4) order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) node_num
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) centroid(dim_num)
-  real ( kind = 8 ) coord(dim_num,node_num)
-  integer ( kind = 4 ) face
-  integer ( kind = 4 ) n1
-  integer ( kind = 4 ) n2
-  integer ( kind = 4 ) n3
-  integer ( kind = 4 ) node(face_num,order_max)
-  real ( kind = 8 ) normal(dim_num)
-  integer ( kind = 4 ) order(face_num)
-  real ( kind = 8 ) point(dim_num)
-  real ( kind = 8 ) polygon_area
-  real ( kind = 8 ) polygon_centroid(dim_num)
-  real ( kind = 8 ) tetra(dim_num,4)
-  real ( kind = 8 ) tetra_centroid(dim_num)
-  real ( kind = 8 ) tetra_volume
-  integer ( kind = 4 ) vert
-  integer ( kind = 4 ) vert_num
-  real ( kind = 8 ) volume
-  real ( kind = 8 ) v(dim_num,order_max)
+  real(kind=8) area
+  real(kind=8) centroid(dim_num)
+  real(kind=8) coord(dim_num, node_num)
+  integer(kind=4) face
+  integer(kind=4) n1
+  integer(kind=4) n2
+  integer(kind=4) n3
+  integer(kind=4) node(face_num, order_max)
+  real(kind=8) normal(dim_num)
+  integer(kind=4) order(face_num)
+  real(kind=8) point(dim_num)
+  real(kind=8) polygon_area
+  real(kind=8) polygon_centroid(dim_num)
+  real(kind=8) tetra(dim_num, 4)
+  real(kind=8) tetra_centroid(dim_num)
+  real(kind=8) tetra_volume
+  integer(kind=4) vert
+  integer(kind=4) vert_num
+  real(kind=8) volume
+  real(kind=8) v(dim_num, order_max)
 !
 !  Compute a point in the interior.
 !  We take the area-weighted centroid of each face.
@@ -17838,14 +17838,14 @@ subroutine polyhedron_centroid_3d ( coord, order_max, face_num, node, &
 
     vert_num = order(face)
 
-    v(1:dim_num,1:vert_num) = coord(1:dim_num,node(face,1:vert_num))
+    v(1:dim_num, 1:vert_num) = coord(1:dim_num, node(face, 1:vert_num))
 
-    call polygon_area_3d ( vert_num, v, polygon_area, normal )
+    call polygon_area_3d(vert_num, v, polygon_area, normal)
 
-    call polygon_centroid_3d ( vert_num, v, polygon_centroid )
+    call polygon_centroid_3d(vert_num, v, polygon_centroid)
 
     point(1:dim_num) = point(1:dim_num) &
-      + polygon_area * polygon_centroid(1:dim_num)
+                       + polygon_area * polygon_centroid(1:dim_num)
 
     area = area + polygon_area
 
@@ -17861,23 +17861,23 @@ subroutine polyhedron_centroid_3d ( coord, order_max, face_num, node, &
 
   do face = 1, face_num
 
-    n3 = node(face,order(face))
+    n3 = node(face, order(face))
 
     do vert = 1, order(face) - 2
 
-      n1 = node(face,vert)
-      n2 = node(face,vert+1)
+      n1 = node(face, vert)
+      n2 = node(face, vert + 1)
 
-      tetra(1:dim_num,1:4) = reshape ( (/ &
-        coord(1:dim_num,n1), coord(1:dim_num,n2), coord(1:dim_num,n3), &
-        point(1:dim_num) /), (/ dim_num, 4 /) )
+      tetra(1:dim_num, 1:4) = reshape((/ &
+           coord(1:dim_num, n1), coord(1:dim_num, n2), coord(1:dim_num, n3), &
+                                      point(1:dim_num)/), (/dim_num, 4/))
 
-      call tetrahedron_volume_3d ( tetra, tetra_volume )
+      call tetrahedron_volume_3d(tetra, tetra_volume)
 
-      call tetrahedron_centroid_3d ( tetra, tetra_centroid )
+      call tetrahedron_centroid_3d(tetra, tetra_centroid)
 
       centroid(1:dim_num) = centroid(1:dim_num) &
-        + tetra_volume * tetra_centroid(1:dim_num)
+                            + tetra_volume * tetra_centroid(1:dim_num)
 
       volume = volume + tetra_volume
 
@@ -17888,8 +17888,8 @@ subroutine polyhedron_centroid_3d ( coord, order_max, face_num, node, &
 
   return
 end
-subroutine polyhedron_contains_point_3d ( node_num, face_num, &
-  face_order_max, v, face_order, face_point, p, inside )
+subroutine polyhedron_contains_point_3d(node_num, face_num, &
+                         face_order_max, v, face_order, face_point, p, inside)
 
 !*****************************************************************************80
 !
@@ -17947,24 +17947,24 @@ subroutine polyhedron_contains_point_3d ( node_num, face_num, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) node_num
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) node_num
 
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) face
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  logical ( kind = 4 ) inside
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) node
-  integer ( kind = 4 ) node_num_face
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) solid_angle
-  real ( kind = 8 ) v(dim_num,node_num)
-  real ( kind = 8 ) v_face(dim_num,face_order_max)
+  real(kind=8) area
+  integer(kind=4) face
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  logical(kind=4) inside
+  integer(kind=4) k
+  integer(kind=4) node
+  integer(kind=4) node_num_face
+  real(kind=8) p(dim_num)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) solid_angle
+  real(kind=8) v(dim_num, node_num)
+  real(kind=8) v_face(dim_num, face_order_max)
 
   area = 0.0D+00
 
@@ -17974,13 +17974,13 @@ subroutine polyhedron_contains_point_3d ( node_num, face_num, &
 
     do k = 1, node_num_face
 
-      node = face_point(k,face)
+      node = face_point(k, face)
 
-      v_face(1:dim_num,k) = v(1:dim_num,node)
+      v_face(1:dim_num, k) = v(1:dim_num, node)
 
     end do
 
-    call polygon_solid_angle_3d ( node_num_face, v_face, p, solid_angle )
+    call polygon_solid_angle_3d(node_num_face, v_face, p, solid_angle)
 
     area = area + solid_angle
 
@@ -17989,7 +17989,7 @@ subroutine polyhedron_contains_point_3d ( node_num, face_num, &
 !  AREA should be -4*PI, 0, or 4*PI.
 !  So this test should be quite safe!
 !
-  if ( area < -2.0D+00 * r8_pi .or. 2.0D+00 * r8_pi < area ) then
+  if (area < -2.0D+00 * r8_pi .or. 2.0D+00 * r8_pi < area) then
     inside = .true.
   else
     inside = .false.
@@ -17997,8 +17997,8 @@ subroutine polyhedron_contains_point_3d ( node_num, face_num, &
 
   return
 end
-subroutine polyhedron_volume_3d ( coord, order_max, face_num, node, &
-  node_num, order, volume )
+subroutine polyhedron_volume_3d(coord, order_max, face_num, node, &
+                                node_num, order, volume)
 
 !*****************************************************************************80
 !
@@ -18040,20 +18040,20 @@ subroutine polyhedron_volume_3d ( coord, order_max, face_num, node, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) node_num
+  integer(kind=4) face_num
+  integer(kind=4) order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) node_num
 
-  real ( kind = 8 ) coord(dim_num,node_num)
-  integer ( kind = 4 ) face
-  integer ( kind = 4 ) n1
-  integer ( kind = 4 ) n2
-  integer ( kind = 4 ) n3
-  integer ( kind = 4 ) node(face_num,order_max)
-  integer ( kind = 4 ) order(face_num)
-  integer ( kind = 4 ) v
-  real ( kind = 8 ) volume
+  real(kind=8) coord(dim_num, node_num)
+  integer(kind=4) face
+  integer(kind=4) n1
+  integer(kind=4) n2
+  integer(kind=4) n3
+  integer(kind=4) node(face_num, order_max)
+  integer(kind=4) order(face_num)
+  integer(kind=4) v
+  real(kind=8) volume
 
   volume = 0.0D+00
 !
@@ -18061,20 +18061,20 @@ subroutine polyhedron_volume_3d ( coord, order_max, face_num, node, &
 !
   do face = 1, face_num
 
-    n3 = node(face,order(face))
+    n3 = node(face, order(face))
 
     do v = 1, order(face) - 2
 
-      n1 = node(face,v)
-      n2 = node(face,v+1)
+      n1 = node(face, v)
+      n2 = node(face, v + 1)
 
       volume = volume &
-        + coord(1,n1) &
-        * ( coord(2,n2) * coord(3,n3) - coord(2,n3) * coord(3,n2) ) &
-        + coord(1,n2) &
-        * ( coord(2,n3) * coord(3,n1) - coord(2,n1) * coord(3,n3) ) &
-        + coord(1,n3) &
-        * ( coord(2,n1) * coord(3,n2) - coord(2,n2) * coord(3,n1) )
+               + coord(1, n1) &
+               * (coord(2, n2) * coord(3, n3) - coord(2, n3) * coord(3, n2)) &
+               + coord(1, n2) &
+               * (coord(2, n3) * coord(3, n1) - coord(2, n1) * coord(3, n3)) &
+               + coord(1, n3) &
+               * (coord(2, n1) * coord(3, n2) - coord(2, n2) * coord(3, n1))
 
     end do
 
@@ -18084,8 +18084,8 @@ subroutine polyhedron_volume_3d ( coord, order_max, face_num, node, &
 
   return
 end
-subroutine polyhedron_volume_3d_2 ( coord, order_max, face_num, node, &
-  node_num, order, volume )
+subroutine polyhedron_volume_3d_2(coord, order_max, face_num, node, &
+                                  node_num, order, volume)
 
 !*****************************************************************************80
 !
@@ -18140,22 +18140,22 @@ subroutine polyhedron_volume_3d_2 ( coord, order_max, face_num, node, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) node_num
+  integer(kind=4) face_num
+  integer(kind=4) order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) node_num
 
-  real ( kind = 8 ) coord(dim_num,node_num)
-  integer ( kind = 4 ) face
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) k1
-  integer ( kind = 4 ) k2
-  integer ( kind = 4 ) node(face_num,order_max)
-  real ( kind = 8 ) normal(dim_num)
-  integer ( kind = 4 ) order(face_num)
-  real ( kind = 8 ) v(dim_num)
-  real ( kind = 8 ) volume
+  real(kind=8) coord(dim_num, node_num)
+  integer(kind=4) face
+  integer(kind=4) j
+  integer(kind=4) k
+  integer(kind=4) k1
+  integer(kind=4) k2
+  integer(kind=4) node(face_num, order_max)
+  real(kind=8) normal(dim_num)
+  integer(kind=4) order(face_num)
+  real(kind=8) v(dim_num)
+  real(kind=8) volume
 
   volume = 0.0D+00
 
@@ -18167,19 +18167,19 @@ subroutine polyhedron_volume_3d_2 ( coord, order_max, face_num, node, &
 !
     do j = 1, order(face)
 
-      k1 = node(face,j)
+      k1 = node(face, j)
 
-      if ( j < order(face) ) then
-        k2 = node(face,j+1)
+      if (j < order(face)) then
+        k2 = node(face, j + 1)
       else
-        k2 = node(face,1)
+        k2 = node(face, 1)
       end if
 !
 !  Compute the cross product.
 !
-      normal(1) = coord(2,k1) * coord(3,k2) - coord(3,k1) * coord(2,k2)
-      normal(2) = coord(3,k1) * coord(1,k2) - coord(1,k1) * coord(3,k2)
-      normal(3) = coord(1,k1) * coord(2,k2) - coord(2,k1) * coord(1,k2)
+      normal(1) = coord(2, k1) * coord(3, k2) - coord(3, k1) * coord(2, k2)
+      normal(2) = coord(3, k1) * coord(1, k2) - coord(1, k1) * coord(3, k2)
+      normal(3) = coord(1, k1) * coord(2, k2) - coord(2, k1) * coord(1, k2)
 
       v(1:dim_num) = v(1:dim_num) + normal(1:dim_num)
 
@@ -18187,8 +18187,8 @@ subroutine polyhedron_volume_3d_2 ( coord, order_max, face_num, node, &
 !
 !  Area vector dot any vertex.
 !
-    k = node(face,1)
-    volume = volume + dot_product ( v(1:dim_num), coord(1:dim_num,k) )
+    k = node(face, 1)
+    volume = volume + dot_product(v(1:dim_num), coord(1:dim_num, k))
 
   end do
 
@@ -18196,7 +18196,7 @@ subroutine polyhedron_volume_3d_2 ( coord, order_max, face_num, node, &
 
   return
 end
-subroutine polyline_arclength_nd ( dim_num, n, p, s )
+subroutine polyline_arclength_nd(dim_num, n, p, s)
 
 !*****************************************************************************80
 !
@@ -18238,24 +18238,24 @@ subroutine polyline_arclength_nd ( dim_num, n, p, s )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) n
+  integer(kind=4) dim_num
+  integer(kind=4) n
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) s(n)
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) s(n)
 
   s(1) = 0.0D+00
 
   do i = 2, n
 
-    s(i) = s(i-1) + sqrt ( sum ( ( p(1:dim_num,i) - p(1:dim_num,i-1) )**2 ) )
+    s(i) = s(i - 1) + sqrt(sum((p(1:dim_num, i) - p(1:dim_num, i - 1))**2))
 
   end do
 
   return
 end
-subroutine polyline_index_point_nd ( dim_num, n, p, t, pt )
+subroutine polyline_index_point_nd(dim_num, n, p, t, pt)
 
 !*****************************************************************************80
 !
@@ -18305,27 +18305,27 @@ subroutine polyline_index_point_nd ( dim_num, n, p, t, pt )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) n
+  integer(kind=4) dim_num
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) pt(dim_num)
-  real ( kind = 8 ) t
-  real ( kind = 8 ) t1
-  real ( kind = 8 ) t2
+  integer(kind=4) i
+  real(kind=8) p(dim_num, n)
+  real(kind=8) pt(dim_num)
+  real(kind=8) t
+  real(kind=8) t1
+  real(kind=8) t2
 
-  if ( n <= 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'POLYLINE_INDEX_POINT_ND - Fatal error!'
-    write ( *, '(a)' ) '  The input quantity N is nonpositive.'
-    write ( *, '(a,i8)' ) '  N = ', n
+  if (n <= 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'POLYLINE_INDEX_POINT_ND - Fatal error!'
+    write (*, '(a)') '  The input quantity N is nonpositive.'
+    write (*, '(a,i8)') '  N = ', n
     stop 1
   end if
 
-  if ( n == 1 ) then
+  if (n == 1) then
 
-    pt(1:dim_num) = p(1:dim_num,1)
+    pt(1:dim_num) = p(1:dim_num, 1)
 
   else
 
@@ -18336,15 +18336,15 @@ subroutine polyline_index_point_nd ( dim_num, n, p, t, pt )
 !  Find the distance between points I and I+1.
 !
       t1 = t2
-      t2 = t1 + sqrt ( sum ( ( p(1:dim_num,i+1) - p(1:dim_num,i) )**2 ) )
+      t2 = t1 + sqrt(sum((p(1:dim_num, i + 1) - p(1:dim_num, i))**2))
 !
 !  Interpolate or extrapolate in an interval.
 !
-      if ( t <= t2 .or. i == n - 1 ) then
+      if (t <= t2 .or. i == n - 1) then
 
-        pt(1:dim_num) = ( ( t2 - t      ) * p(1:dim_num,i)     &
-                        + (      t - t1 ) * p(1:dim_num,i+1) ) &
-                        / ( t2     - t1 )
+        pt(1:dim_num) = ((t2 - t) * p(1:dim_num, i) &
+                         + (t - t1) * p(1:dim_num, i + 1)) &
+                        / (t2 - t1)
 
         return
       end if
@@ -18353,7 +18353,7 @@ subroutine polyline_index_point_nd ( dim_num, n, p, t, pt )
 
   return
 end
-subroutine polyline_length_nd ( dim_num, nk, pk, length )
+subroutine polyline_length_nd(dim_num, nk, pk, length)
 
 !*****************************************************************************80
 !
@@ -18393,25 +18393,25 @@ subroutine polyline_length_nd ( dim_num, nk, pk, length )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) nk
+  integer(kind=4) dim_num
+  integer(kind=4) nk
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) length
-  real ( kind = 8 ) pk(dim_num,nk)
+  integer(kind=4) i
+  real(kind=8) length
+  real(kind=8) pk(dim_num, nk)
 
   length = 0.0D+00
 
   do i = 2, nk
 
     length = length &
-      + sqrt ( sum ( ( pk(1:dim_num,i) - pk(1:dim_num,i-1) )**2 ) )
+             + sqrt(sum((pk(1:dim_num, i) - pk(1:dim_num, i - 1))**2))
 
   end do
 
   return
 end
-subroutine polyline_points_nd ( dim_num, n, p, nt, pt )
+subroutine polyline_points_nd(dim_num, n, p, nt, pt)
 
 !*****************************************************************************80
 !
@@ -18454,34 +18454,34 @@ subroutine polyline_points_nd ( dim_num, n, p, nt, pt )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) nt
+  integer(kind=4) dim_num
+  integer(kind=4) n
+  integer(kind=4) nt
 
-  integer ( kind = 4 ) it
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) pt(dim_num,nt)
-  real ( kind = 8 ) s(n)
-  real ( kind = 8 ) st
+  integer(kind=4) it
+  integer(kind=4) j
+  real(kind=8) p(dim_num, n)
+  real(kind=8) pt(dim_num, nt)
+  real(kind=8) s(n)
+  real(kind=8) st
 
-  call polyline_arclength_nd ( dim_num, n, p, s )
+  call polyline_arclength_nd(dim_num, n, p, s)
 
   j = 1
 
-  do it = 1,  nt
+  do it = 1, nt
 
-    st = ( real ( nt - it,     kind = 8 ) * 0.0D+00 + &
-           real (      it - 1, kind = 8 ) * s(n) ) &
-         / real ( nt      - 1, kind = 8 )
+    st = (real(nt - it, kind=8) * 0.0D+00 + &
+          real(it - 1, kind=8) * s(n)) &
+         / real(nt - 1, kind=8)
 
     do
 
-      if ( s(j) <= st .and. st <= s(j+1) ) then
+      if (s(j) <= st .and. st <= s(j + 1)) then
         exit
       end if
 
-      if ( n - 1 <= j ) then
+      if (n - 1 <= j) then
         exit
       end if
 
@@ -18489,15 +18489,15 @@ subroutine polyline_points_nd ( dim_num, n, p, nt, pt )
 
     end do
 
-    pt(1:dim_num,it) = ( ( s(j+1) - st        ) * p(1:dim_num,j) &
-                       + (          st - s(j) ) * p(1:dim_num,j+1) ) &
-                       / ( s(j+1)      - s(j) )
+    pt(1:dim_num, it) = ((s(j + 1) - st) * p(1:dim_num, j) &
+                         + (st - s(j)) * p(1:dim_num, j + 1)) &
+                        / (s(j + 1) - s(j))
 
   end do
 
   return
 end
-subroutine polyloop_arclength_nd ( dim_num, nk, pk, sk )
+subroutine polyloop_arclength_nd(dim_num, nk, pk, sk)
 
 !*****************************************************************************80
 !
@@ -18537,32 +18537,32 @@ subroutine polyloop_arclength_nd ( dim_num, nk, pk, sk )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) nk
+  integer(kind=4) dim_num
+  integer(kind=4) nk
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) pk(dim_num,nk)
-  real ( kind = 8 ) sk(nk+1)
+  integer(kind=4) i
+  integer(kind=4) j
+  real(kind=8) pk(dim_num, nk)
+  real(kind=8) sk(nk + 1)
 
   sk(1) = 0.0D+00
 
   do i = 2, nk + 1
 
-    if ( i <= nk ) then
+    if (i <= nk) then
       j = i
     else
       j = 1
     end if
 
-    sk(i) = sk(i-1) &
-      + sqrt ( sum ( ( pk(1:dim_num,j) - pk(1:dim_num,i-1) )**2 ) )
+    sk(i) = sk(i - 1) &
+            + sqrt(sum((pk(1:dim_num, j) - pk(1:dim_num, i - 1))**2))
 
   end do
 
   return
 end
-subroutine polyloop_length_nd ( dim_num, nk, pk, length )
+subroutine polyloop_length_nd(dim_num, nk, pk, length)
 
 !*****************************************************************************80
 !
@@ -18600,32 +18600,32 @@ subroutine polyloop_length_nd ( dim_num, nk, pk, length )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) nk
+  integer(kind=4) dim_num
+  integer(kind=4) nk
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) length
-  real ( kind = 8 ) pk(dim_num,nk)
+  integer(kind=4) i
+  integer(kind=4) j
+  real(kind=8) length
+  real(kind=8) pk(dim_num, nk)
 
   length = 0.0D+00
 
   do i = 2, nk + 1
 
-    if ( i <= nk ) then
+    if (i <= nk) then
       j = i
     else
       j = 1
     end if
 
     length = length &
-      + sqrt ( sum ( ( pk(1:dim_num,j) - pk(1:dim_num,i-1) )**2 ) )
+             + sqrt(sum((pk(1:dim_num, j) - pk(1:dim_num, i - 1))**2))
 
   end do
 
   return
 end
-subroutine polyloop_points_nd ( dim_num, nk, pk, nt, pt )
+subroutine polyloop_points_nd(dim_num, nk, pk, nt, pt)
 
 !*****************************************************************************80
 !
@@ -18664,36 +18664,36 @@ subroutine polyloop_points_nd ( dim_num, nk, pk, nt, pt )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) nk
-  integer ( kind = 4 ) nt
+  integer(kind=4) dim_num
+  integer(kind=4) nk
+  integer(kind=4) nt
 
-  integer ( kind = 4 ) it
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) pk(dim_num,nk)
-  real ( kind = 8 ) pt(dim_num,nt)
-  real ( kind = 8 ) sk(nk+1)
-  real ( kind = 8 ) st
+  integer(kind=4) it
+  integer(kind=4) i4_wrap
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) pk(dim_num, nk)
+  real(kind=8) pt(dim_num, nt)
+  real(kind=8) sk(nk + 1)
+  real(kind=8) st
 
-  call polyloop_arclength_nd ( dim_num, nk, pk, sk )
+  call polyloop_arclength_nd(dim_num, nk, pk, sk)
 
   j = 1
 
-  do it = 1,  nt
+  do it = 1, nt
 
-    st = ( real ( nt - it,     kind = 8 ) * 0.0D+00 + &
-           real (      it - 1, kind = 8 ) * sk(nk+1) ) &
-         / real ( nt      - 1, kind = 8 )
+    st = (real(nt - it, kind=8) * 0.0D+00 + &
+          real(it - 1, kind=8) * sk(nk + 1)) &
+         / real(nt - 1, kind=8)
 
     do
 
-      if ( sk(j) <= st .and. st <= sk(j+1) ) then
+      if (sk(j) <= st .and. st <= sk(j + 1)) then
         exit
       end if
 
-      if ( nk <= j ) then
+      if (nk <= j) then
         exit
       end if
 
@@ -18701,17 +18701,17 @@ subroutine polyloop_points_nd ( dim_num, nk, pk, nt, pt )
 
     end do
 
-    jp1 = i4_wrap ( j + 1, 1, nk )
+    jp1 = i4_wrap(j + 1, 1, nk)
 
-    pt(1:dim_num,it) = ( ( sk(j+1) - st         ) * pk(1:dim_num,j) &
-                       + (           st - sk(j) ) * pk(1:dim_num,jp1) ) &
-                       / ( sk(j+1)      - sk(j) )
+    pt(1:dim_num, it) = ((sk(j + 1) - st) * pk(1:dim_num, j) &
+                         + (st - sk(j)) * pk(1:dim_num, jp1)) &
+                        / (sk(j + 1) - sk(j))
 
   end do
 
   return
 end
-subroutine provec ( m, n, base, vecm, vecn, vecnm )
+subroutine provec(m, n, base, vecm, vecn, vecnm)
 
 !*****************************************************************************80
 !
@@ -18751,16 +18751,16 @@ subroutine provec ( m, n, base, vecm, vecn, vecnm )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  real ( kind = 8 ) base(m,n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) temp
-  real ( kind = 8 ) vecm(m)
-  real ( kind = 8 ) vecn(n)
-  real ( kind = 8 ) vecnm(m)
+  real(kind=8) base(m, n)
+  integer(kind=4) i
+  integer(kind=4) j
+  real(kind=8) temp
+  real(kind=8) vecm(m)
+  real(kind=8) vecn(n)
+  real(kind=8) vecnm(m)
 !
 !  For each vector, remove all projections onto previous vectors,
 !  and then normalize.  This should result in a matrix BASE
@@ -18768,18 +18768,18 @@ subroutine provec ( m, n, base, vecm, vecn, vecnm )
 !
   do j = 1, n
 
-    do i = 1, j-1
+    do i = 1, j - 1
 
-      temp = dot_product ( base(1:m,i), base(1:m,j) )
+      temp = dot_product(base(1:m, i), base(1:m, j))
 
-      base(1:m,j) = base(1:m,j) - temp * base(1:m,i)
+      base(1:m, j) = base(1:m, j) - temp * base(1:m, i)
 
     end do
 
-    temp = sqrt ( sum ( base(1:m,j)**2 ) )
+    temp = sqrt(sum(base(1:m, j)**2))
 
-    if ( 0.0D+00 < temp ) then
-      base(1:m,j) = base(1:m,j) / temp
+    if (0.0D+00 < temp) then
+      base(1:m, j) = base(1:m, j) / temp
     end if
 
   end do
@@ -18788,19 +18788,19 @@ subroutine provec ( m, n, base, vecm, vecn, vecnm )
 !  simply by taking dot products.
 !
   do j = 1, n
-    vecn(j) = dot_product ( vecm(1:m), base(1:m,j) )
+    vecn(j) = dot_product(vecm(1:m), base(1:m, j))
   end do
 !
 !  Compute the coordinates of the projection in terms of
 !  the original space.
 !
   do i = 1, m
-    vecnm(i) = dot_product ( base(i,1:n), vecn(1:n) )
+    vecnm(i) = dot_product(base(i, 1:n), vecn(1:n))
   end do
 
   return
 end
-subroutine pyramid_volume_3d ( h, s, volume )
+subroutine pyramid_volume_3d(h, s, volume)
 
 !*****************************************************************************80
 !
@@ -18827,15 +18827,15 @@ subroutine pyramid_volume_3d ( h, s, volume )
 !
   implicit none
 
-  real ( kind = 8 ) h
-  real ( kind = 8 ) s
-  real ( kind = 8 ) volume
+  real(kind=8) h
+  real(kind=8) s
+  real(kind=8) volume
 
   volume = s * s * h / 3.0D+00
 
   return
 end
-function pyramid01_volume ( )
+function pyramid01_volume()
 
 !*****************************************************************************80
 !
@@ -18870,8 +18870,8 @@ function pyramid01_volume ( )
 !
   implicit none
 
-  real ( kind = 8 ) pyramid01_volume
-  real ( kind = 8 ) volume
+  real(kind=8) pyramid01_volume
+  real(kind=8) volume
 
   volume = 4.0D+00 / 3.0D+00
 
@@ -18879,7 +18879,7 @@ function pyramid01_volume ( )
 
   return
 end
-subroutine quad_area_2d ( q, area )
+subroutine quad_area_2d(q, area)
 
 !*****************************************************************************80
 !
@@ -18915,32 +18915,32 @@ subroutine quad_area_2d ( q, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) area_triangle
-  real ( kind = 8 ) q(dim_num,4)
-  real ( kind = 8 ) t(dim_num,3)
+  real(kind=8) area
+  real(kind=8) area_triangle
+  real(kind=8) q(dim_num, 4)
+  real(kind=8) t(dim_num, 3)
 
   area = 0.0D+00
 
-  t(1:dim_num,1:3) = reshape ( (/ &
-    q(1:2,1), q(1:2,2), q(1:2,3) /), (/ dim_num, 3 /) )
+  t(1:dim_num, 1:3) = reshape((/ &
+                            q(1:2, 1), q(1:2, 2), q(1:2, 3)/), (/dim_num, 3/))
 
-  call triangle_area_2d ( t, area_triangle )
+  call triangle_area_2d(t, area_triangle)
 
   area = area + area_triangle
 
-  t(1:dim_num,1:3) = reshape ( (/ &
-    q(1:2,3), q(1:2,4), q(1:2,1) /), (/ dim_num, 3 /) )
+  t(1:dim_num, 1:3) = reshape((/ &
+                            q(1:2, 3), q(1:2, 4), q(1:2, 1)/), (/dim_num, 3/))
 
-  call triangle_area_2d ( t, area_triangle )
+  call triangle_area_2d(t, area_triangle)
 
   area = area + area_triangle
 
   return
 end
-subroutine quad_area2_2d ( q, area )
+subroutine quad_area2_2d(q, area)
 
 !*****************************************************************************80
 !
@@ -18974,18 +18974,18 @@ subroutine quad_area2_2d ( q, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) p(2,4)
-  real ( kind = 8 ) q(2,4)
+  real(kind=8) area
+  real(kind=8) p(2, 4)
+  real(kind=8) q(2, 4)
 !
 !  Define a parallelogram by averaging consecutive vertices.
 !
-  p(1:2,1:3) = ( q(1:2,1:3) + q(1:2,2:4) ) / 2.0D+00
-  p(1:2,  4) = ( q(1:2,  4) + q(1:2,1  ) ) / 2.0D+00
+  p(1:2, 1:3) = (q(1:2, 1:3) + q(1:2, 2:4)) / 2.0D+00
+  p(1:2, 4) = (q(1:2, 4) + q(1:2, 1)) / 2.0D+00
 !
 !  Compute the area.
 !
-  call parallelogram_area_2d ( p, area )
+  call parallelogram_area_2d(p, area)
 !
 !  The quadrilateral's area is twice that of the parallelogram.
 !
@@ -18993,7 +18993,7 @@ subroutine quad_area2_2d ( q, area )
 
   return
 end
-subroutine quad_area_3d ( q, area )
+subroutine quad_area_3d(q, area)
 
 !*****************************************************************************80
 !
@@ -19030,18 +19030,18 @@ subroutine quad_area_3d ( q, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) p(3,4)
-  real ( kind = 8 ) q(3,4)
+  real(kind=8) area
+  real(kind=8) p(3, 4)
+  real(kind=8) q(3, 4)
 !
 !  Define a parallelogram by averaging consecutive vertices.
 !
-  p(1:3,1:3) = ( q(1:3,1:3) + q(1:3,2:4) ) / 2.0D+00
-  p(1:3,  4) = ( q(1:3,  4) + q(1:3,1  ) ) / 2.0D+00
+  p(1:3, 1:3) = (q(1:3, 1:3) + q(1:3, 2:4)) / 2.0D+00
+  p(1:3, 4) = (q(1:3, 4) + q(1:3, 1)) / 2.0D+00
 !
 !  Compute the area.
 !
-  call parallelogram_area_3d ( p, area )
+  call parallelogram_area_3d(p, area)
 !
 !  The quadrilateral's area is twice that of the parallelogram.
 !
@@ -19049,7 +19049,7 @@ subroutine quad_area_3d ( q, area )
 
   return
 end
-subroutine quad_contains_point_2d ( q, p, inside )
+subroutine quad_contains_point_2d(q, p, inside)
 
 !*****************************************************************************80
 !
@@ -19082,44 +19082,44 @@ subroutine quad_contains_point_2d ( q, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle_1
-  real ( kind = 8 ) angle_2
-  real ( kind = 8 ) angle_rad_2d
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) q(dim_num,4)
+  real(kind=8) angle_1
+  real(kind=8) angle_2
+  real(kind=8) angle_rad_2d
+  logical(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) q(dim_num, 4)
 !
 !  This will only handle convex quadrilaterals.
 !
   inside = .false.
 
-  angle_1 = angle_rad_2d ( q(1:2,1), q(1:2,2), q(1:2,3) )
-  angle_2 = angle_rad_2d ( q(1:2,1), q(1:2,2), p(1:2) )
+  angle_1 = angle_rad_2d(q(1:2, 1), q(1:2, 2), q(1:2, 3))
+  angle_2 = angle_rad_2d(q(1:2, 1), q(1:2, 2), p(1:2))
 
-  if ( angle_1 < angle_2 ) then
+  if (angle_1 < angle_2) then
     return
   end if
 
-  angle_1 = angle_rad_2d ( q(1:2,2), q(1:2,3), q(1:2,4) )
-  angle_2 = angle_rad_2d ( q(1:2,2), q(1:2,3), p(1:2) )
+  angle_1 = angle_rad_2d(q(1:2, 2), q(1:2, 3), q(1:2, 4))
+  angle_2 = angle_rad_2d(q(1:2, 2), q(1:2, 3), p(1:2))
 
-  if ( angle_1 < angle_2 ) then
+  if (angle_1 < angle_2) then
     return
   end if
 
-  angle_1 = angle_rad_2d ( q(1:2,3), q(1:2,4), q(1:2,1) )
-  angle_2 = angle_rad_2d ( q(1:2,3), q(1:2,4), p(1:2) )
+  angle_1 = angle_rad_2d(q(1:2, 3), q(1:2, 4), q(1:2, 1))
+  angle_2 = angle_rad_2d(q(1:2, 3), q(1:2, 4), p(1:2))
 
-  if ( angle_1 < angle_2 ) then
+  if (angle_1 < angle_2) then
     return
   end if
 
-  angle_1 = angle_rad_2d ( q(1:2,4), q(1:2,1), q(1:2,2) )
-  angle_2 = angle_rad_2d ( q(1:2,4), q(1:2,1), p(1:2) )
+  angle_1 = angle_rad_2d(q(1:2, 4), q(1:2, 1), q(1:2, 2))
+  angle_2 = angle_rad_2d(q(1:2, 4), q(1:2, 1), p(1:2))
 
-  if ( angle_1 < angle_2 ) then
+  if (angle_1 < angle_2) then
     return
   end if
 
@@ -19127,7 +19127,7 @@ subroutine quad_contains_point_2d ( q, p, inside )
 
   return
 end
-subroutine quad_convex_random ( seed, xy )
+subroutine quad_convex_random(seed, xy)
 
 !*****************************************************************************80
 !
@@ -19162,29 +19162,29 @@ subroutine quad_convex_random ( seed, xy )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: node_num = 4
+  integer(kind=4), parameter :: node_num = 4
 
-  integer ( kind = 4 ) hull(node_num)
-  integer ( kind = 4 ) hull_num
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) xy(2,node_num)
-  real ( kind = 8 ) xy_random(2,node_num)
+  integer(kind=4) hull(node_num)
+  integer(kind=4) hull_num
+  integer(kind=4) j
+  integer(kind=4) seed
+  real(kind=8) xy(2, node_num)
+  real(kind=8) xy_random(2, node_num)
 
   do
 !
 !  Generate 4 random points.
 !
-    call r8mat_uniform_01 ( 2, node_num, seed, xy_random )
+    call r8mat_uniform_01(2, node_num, seed, xy_random)
 !
 !  Determine the convex hull.
 !
-    call points_hull_2d ( node_num, xy_random, hull_num, hull )
+    call points_hull_2d(node_num, xy_random, hull_num, hull)
 !
 !  If HULL_NUM < NODE_NUM, then our convex hull is a triangle.
 !  Try again.
 !
-    if ( hull_num == node_num ) then
+    if (hull_num == node_num) then
       exit
     end if
 
@@ -19193,12 +19193,12 @@ subroutine quad_convex_random ( seed, xy )
 !  Make an ordered copy of the random points.
 !
   do j = 1, node_num
-    xy(1:2,j) = xy_random(1:2,hull(j))
+    xy(1:2, j) = xy_random(1:2, hull(j))
   end do
 
   return
 end
-subroutine quad_point_dist_2d ( q, p, dist )
+subroutine quad_point_dist_2d(q, p, dist)
 
 !*****************************************************************************80
 !
@@ -19231,28 +19231,28 @@ subroutine quad_point_dist_2d ( q, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ), parameter :: side_num = 4
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4), parameter :: side_num = 4
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) q(dim_num,side_num)
+  real(kind=8) dist
+  real(kind=8) dist2
+  integer(kind=4) i4_wrap
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) p(dim_num)
+  real(kind=8) q(dim_num, side_num)
 !
 !  Find the distance to each of the line segments.
 !
-  dist = huge ( dist )
+  dist = huge(dist)
 
   do j = 1, side_num
 
-    jp1 = i4_wrap ( j+1, 1, side_num )
+    jp1 = i4_wrap(j + 1, 1, side_num)
 
-    call segment_point_dist_2d ( q(1:dim_num,j), q(1:dim_num,jp1), p, dist2 )
+    call segment_point_dist_2d(q(1:dim_num, j), q(1:dim_num, jp1), p, dist2)
 
-    if ( dist2 < dist ) then
+    if (dist2 < dist) then
       dist = dist2
     end if
 
@@ -19260,7 +19260,7 @@ subroutine quad_point_dist_2d ( q, p, dist )
 
   return
 end
-subroutine quad_point_dist_signed_2d ( q, p, dist_signed )
+subroutine quad_point_dist_signed_2d(q, p, dist_signed)
 
 !*****************************************************************************80
 !
@@ -19304,17 +19304,17 @@ subroutine quad_point_dist_signed_2d ( q, p, dist_signed )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dis
-  real ( kind = 8 ) dis12
-  real ( kind = 8 ) dis23
-  real ( kind = 8 ) dis34
-  real ( kind = 8 ) dis41
-  real ( kind = 8 ) dist_signed
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pm(dim_num)
-  real ( kind = 8 ) q(dim_num,4)
+  real(kind=8) dis
+  real(kind=8) dis12
+  real(kind=8) dis23
+  real(kind=8) dis34
+  real(kind=8) dis41
+  real(kind=8) dist_signed
+  real(kind=8) p(dim_num)
+  real(kind=8) pm(dim_num)
+  real(kind=8) q(dim_num, 4)
 !
 !  Compare the signed distance from each line segment to the point,
 !  with the signed distance to the midpoint of the opposite line.
@@ -19323,61 +19323,61 @@ subroutine quad_point_dist_signed_2d ( q, p, dist_signed )
 !
 !  Side 12
 !
-  call line_exp_point_dist_signed_2d ( q(1:2,1), q(1:2,2), p, dis12 )
+  call line_exp_point_dist_signed_2d(q(1:2, 1), q(1:2, 2), p, dis12)
 
-  pm(1:dim_num) = 0.5D+00 * ( q(1:dim_num,3) + q(1:dim_num,4) )
+  pm(1:dim_num) = 0.5D+00 * (q(1:dim_num, 3) + q(1:dim_num, 4))
 
-  call line_exp_point_dist_signed_2d ( q(1:2,1), q(1:2,2), pm, dis )
+  call line_exp_point_dist_signed_2d(q(1:2, 1), q(1:2, 2), pm, dis)
 
-  if ( 0.0D+00 < dis ) then
+  if (0.0D+00 < dis) then
     dis = -dis
     dis12 = -dis12
   end if
 !
 !  Side 23
 !
-  call line_exp_point_dist_signed_2d ( q(1:2,2), q(1:2,3), p, dis23 )
+  call line_exp_point_dist_signed_2d(q(1:2, 2), q(1:2, 3), p, dis23)
 
-  pm(1:dim_num) = 0.5D+00 * ( q(1:dim_num,4) + q(1:dim_num,1) )
+  pm(1:dim_num) = 0.5D+00 * (q(1:dim_num, 4) + q(1:dim_num, 1))
 
-  call line_exp_point_dist_signed_2d ( q(1:2,2), q(1:2,3), pm, dis )
+  call line_exp_point_dist_signed_2d(q(1:2, 2), q(1:2, 3), pm, dis)
 
-  if ( 0.0D+00 < dis ) then
+  if (0.0D+00 < dis) then
     dis = -dis
     dis23 = -dis23
   end if
 !
 !  Side 34
 !
-  call line_exp_point_dist_signed_2d ( q(1:2,3), q(1:2,4), p, dis34 )
+  call line_exp_point_dist_signed_2d(q(1:2, 3), q(1:2, 4), p, dis34)
 
-  pm(1:dim_num) = 0.5D+00 * ( q(1:dim_num,1) + q(1:dim_num,2) )
+  pm(1:dim_num) = 0.5D+00 * (q(1:dim_num, 1) + q(1:dim_num, 2))
 
-  call line_exp_point_dist_signed_2d ( q(1:2,3), q(1:2,4), pm, dis )
+  call line_exp_point_dist_signed_2d(q(1:2, 3), q(1:2, 4), pm, dis)
 
-  if ( 0.0D+00 < dis ) then
+  if (0.0D+00 < dis) then
     dis = -dis
     dis34 = -dis34
   end if
 !
 !  Side 41
 !
-  call line_exp_point_dist_signed_2d ( q(1:2,4), q(1:2,1), p, dis41 )
+  call line_exp_point_dist_signed_2d(q(1:2, 4), q(1:2, 1), p, dis41)
 
-  pm(1:dim_num) = 0.5D+00 * ( q(1:dim_num,2) + q(1:dim_num,3) )
+  pm(1:dim_num) = 0.5D+00 * (q(1:dim_num, 2) + q(1:dim_num, 3))
 
-  call line_exp_point_dist_signed_2d ( q(1:2,4), q(1:2,1), pm, dis )
+  call line_exp_point_dist_signed_2d(q(1:2, 4), q(1:2, 1), pm, dis)
 
-  if ( 0.0D+00 < dis ) then
+  if (0.0D+00 < dis) then
     dis = -dis
     dis41 = -dis41
   end if
 
-  dist_signed = max ( dis12, dis23, dis34, dis41 )
+  dist_signed = max(dis12, dis23, dis34, dis41)
 
   return
 end
-subroutine quad_point_near_2d ( q, p, pn, dist )
+subroutine quad_point_near_2d(q, p, pn, dist)
 
 !*****************************************************************************80
 !
@@ -19413,34 +19413,34 @@ subroutine quad_point_near_2d ( q, p, pn, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ), parameter :: side_num = 4
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4), parameter :: side_num = 4
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jp1
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) pn2(dim_num)
-  real ( kind = 8 ) q(dim_num,side_num)
-  real ( kind = 8 ) tval
+  real(kind=8) dist
+  real(kind=8) dist2
+  integer(kind=4) i4_wrap
+  integer(kind=4) j
+  integer(kind=4) jp1
+  real(kind=8) p(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) pn2(dim_num)
+  real(kind=8) q(dim_num, side_num)
+  real(kind=8) tval
 !
 !  Find the distance to each of the line segments that make up the edges
 !  of the quadrilateral.
 !
-  dist = huge ( dist )
+  dist = huge(dist)
   pn(1:dim_num) = 0.0D+00
 
   do j = 1, side_num
 
-    jp1 = i4_wrap ( j+1, 1, side_num )
+    jp1 = i4_wrap(j + 1, 1, side_num)
 
-    call segment_point_near_2d ( q(1:dim_num,j), q(1:dim_num,jp1), p, &
-      pn2, dist2, tval )
+    call segment_point_near_2d(q(1:dim_num, j), q(1:dim_num, jp1), p, &
+                               pn2, dist2, tval)
 
-    if ( dist2 < dist ) then
+    if (dist2 < dist) then
       dist = dist2
       pn(1:dim_num) = pn2(1:dim_num)
     end if
@@ -19449,7 +19449,7 @@ subroutine quad_point_near_2d ( q, p, pn, dist )
 
   return
 end
-function r8_acos ( c )
+function r8_acos(c)
 
 !*****************************************************************************80
 !
@@ -19483,19 +19483,19 @@ function r8_acos ( c )
 !
   implicit none
 
-  real ( kind = 8 ) c
-  real ( kind = 8 ) c2
-  real ( kind = 8 ) r8_acos
+  real(kind=8) c
+  real(kind=8) c2
+  real(kind=8) r8_acos
 
   c2 = c
-  c2 = max ( c2, -1.0D+00 )
-  c2 = min ( c2, +1.0D+00 )
+  c2 = max(c2, -1.0D+00)
+  c2 = min(c2, +1.0D+00)
 
-  r8_acos = acos ( c2 )
+  r8_acos = acos(c2)
 
   return
 end
-function r8_asin ( s )
+function r8_asin(s)
 
 !*****************************************************************************80
 !
@@ -19529,19 +19529,19 @@ function r8_asin ( s )
 !
   implicit none
 
-  real ( kind = 8 ) r8_asin
-  real ( kind = 8 ) s
-  real ( kind = 8 ) s2
+  real(kind=8) r8_asin
+  real(kind=8) s
+  real(kind=8) s2
 
   s2 = s
-  s2 = max ( s2, -1.0D+00 )
-  s2 = min ( s2, +1.0D+00 )
+  s2 = max(s2, -1.0D+00)
+  s2 = min(s2, +1.0D+00)
 
-  r8_asin = asin ( s2 )
+  r8_asin = asin(s2)
 
   return
 end
-function r8_atan ( y, x )
+function r8_atan(y, x)
 
 !*****************************************************************************80
 !
@@ -19585,32 +19585,32 @@ function r8_atan ( y, x )
 !
   implicit none
 
-  real ( kind = 8 ) abs_x
-  real ( kind = 8 ) abs_y
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta_0
-  real ( kind = 8 ) x
-  real ( kind = 8 ) y
+  real(kind=8) abs_x
+  real(kind=8) abs_y
+  real(kind=8) r8_atan
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
+  real(kind=8) theta_0
+  real(kind=8) x
+  real(kind=8) y
 !
 !  Special cases:
 !
-  if ( x == 0.0D+00 ) then
+  if (x == 0.0D+00) then
 
-    if ( 0.0D+00 < y ) then
+    if (0.0D+00 < y) then
       theta = r8_pi / 2.0D+00
-    else if ( y < 0.0D+00 ) then
+    else if (y < 0.0D+00) then
       theta = 3.0D+00 * r8_pi / 2.0D+00
-    else if ( y == 0.0D+00 ) then
+    else if (y == 0.0D+00) then
       theta = 0.0D+00
     end if
 
-  else if ( y == 0.0D+00 ) then
+  else if (y == 0.0D+00) then
 
-    if ( 0.0D+00 < x ) then
+    if (0.0D+00 < x) then
       theta = 0.0D+00
-    else if ( x < 0.0D+00 ) then
+    else if (x < 0.0D+00) then
       theta = r8_pi
     end if
 !
@@ -19618,18 +19618,18 @@ function r8_atan ( y, x )
 !
   else
 
-    abs_y = abs ( y )
-    abs_x = abs ( x )
+    abs_y = abs(y)
+    abs_x = abs(x)
 
-    theta_0 = atan2 ( abs_y, abs_x )
+    theta_0 = atan2(abs_y, abs_x)
 
-    if ( 0.0D+00 < x .and. 0.0D+00 < y ) then
+    if (0.0D+00 < x .and. 0.0D+00 < y) then
       theta = theta_0
-    else if ( x < 0.0D+00 .and. 0.0D+00 < y ) then
+    else if (x < 0.0D+00 .and. 0.0D+00 < y) then
       theta = r8_pi - theta_0
-    else if ( x < 0.0D+00 .and. y < 0.0D+00 ) then
+    else if (x < 0.0D+00 .and. y < 0.0D+00) then
       theta = r8_pi + theta_0
-    else if ( 0.0D+00 < x .and. y < 0.0D+00 ) then
+    else if (0.0D+00 < x .and. y < 0.0D+00) then
       theta = 2.0D+00 * r8_pi - theta_0
     end if
 
@@ -19639,7 +19639,7 @@ function r8_atan ( y, x )
 
   return
 end
-function r8_cosd ( degrees )
+function r8_cosd(degrees)
 
 !*****************************************************************************80
 !
@@ -19665,17 +19665,17 @@ function r8_cosd ( degrees )
 !
   implicit none
 
-  real ( kind = 8 ) degrees
-  real ( kind = 8 ) r8_cosd
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radians
+  real(kind=8) degrees
+  real(kind=8) r8_cosd
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radians
 
-  radians = r8_pi * ( degrees / 180.0D+00 )
-  r8_cosd = cos ( radians )
+  radians = r8_pi * (degrees / 180.0D+00)
+  r8_cosd = cos(radians)
 
   return
 end
-function r8_cotd ( degrees )
+function r8_cotd(degrees)
 
 !*****************************************************************************80
 !
@@ -19701,17 +19701,17 @@ function r8_cotd ( degrees )
 !
   implicit none
 
-  real ( kind = 8 ) degrees
-  real ( kind = 8 ) r8_cotd
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radians
+  real(kind=8) degrees
+  real(kind=8) r8_cotd
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radians
 
-  radians = r8_pi * ( degrees / 180.0D+00 )
-  r8_cotd = cos ( radians ) / sin ( radians )
+  radians = r8_pi * (degrees / 180.0D+00)
+  r8_cotd = cos(radians) / sin(radians)
 
   return
 end
-function r8_cscd ( degrees )
+function r8_cscd(degrees)
 
 !*****************************************************************************80
 !
@@ -19737,17 +19737,17 @@ function r8_cscd ( degrees )
 !
   implicit none
 
-  real ( kind = 8 ) degrees
-  real ( kind = 8 ) r8_cscd
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radians
+  real(kind=8) degrees
+  real(kind=8) r8_cscd
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radians
 
-  radians = r8_pi * ( degrees / 180.0D+00 )
-  r8_cscd  = 1.0D+00 / sin ( radians )
+  radians = r8_pi * (degrees / 180.0D+00)
+  r8_cscd = 1.0D+00 / sin(radians)
 
   return
 end
-function r8_huge ( )
+function r8_huge()
 
 !*****************************************************************************80
 !
@@ -19782,13 +19782,13 @@ function r8_huge ( )
 !
   implicit none
 
-  real ( kind = 8 ) r8_huge
+  real(kind=8) r8_huge
 
   r8_huge = 1.0D+30
 
   return
 end
-function r8_is_int ( r )
+function r8_is_int(r)
 
 !*****************************************************************************80
 !
@@ -19814,15 +19814,15 @@ function r8_is_int ( r )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) r
-  logical ( kind = 4 ) r8_is_int
+  integer(kind=4) i
+  real(kind=8) r
+  logical(kind=4) r8_is_int
 
-  if ( real ( huge ( i ), kind = 8 ) < r ) then
+  if (real(huge(i), kind=8) < r) then
     r8_is_int = .false.
-  else if ( r < - real ( huge ( i ), kind = 8 ) ) then
+  else if (r < -real(huge(i), kind=8)) then
     r8_is_int = .false.
-  else if ( r == real ( int ( r ), kind = 8 ) ) then
+  else if (r == real(int(r), kind=8)) then
     r8_is_int = .true.
   else
     r8_is_int = .false.
@@ -19830,7 +19830,7 @@ function r8_is_int ( r )
 
   return
 end
-function r8_modp ( x, y )
+function r8_modp(x, y)
 
 !*****************************************************************************80
 !
@@ -19885,26 +19885,26 @@ function r8_modp ( x, y )
 !
   implicit none
 
-  real ( kind = 8 ) r8_modp
-  real ( kind = 8 ) x
-  real ( kind = 8 ) y
+  real(kind=8) r8_modp
+  real(kind=8) x
+  real(kind=8) y
 
-  if ( y == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8_MODP - Fatal error!'
-    write ( *, '(a,g14.6)' ) '  R8_MODP ( X, Y ) called with Y = ', y
+  if (y == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8_MODP - Fatal error!'
+    write (*, '(a,g14.6)') '  R8_MODP ( X, Y ) called with Y = ', y
     stop 1
   end if
 
-  r8_modp = mod ( x, y )
+  r8_modp = mod(x, y)
 
-  if ( r8_modp < 0.0D+00 ) then
-    r8_modp = r8_modp + abs ( y )
+  if (r8_modp < 0.0D+00) then
+    r8_modp = r8_modp + abs(y)
   end if
 
   return
 end
-function r8_normal_01 ( seed )
+function r8_normal_01(seed)
 
 !*****************************************************************************80
 !
@@ -19951,36 +19951,36 @@ function r8_normal_01 ( seed )
 !
   implicit none
 
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ) r8_normal_01
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r8_uniform_01
-  integer ( kind = 4 ) seed
-  integer ( kind = 4 ), save :: seed2 = 0
-  integer ( kind = 4 ), save :: used = 0
-  real ( kind = 8 ) x
-  real ( kind = 8 ), save :: y = 0.0D+00
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8) r8_normal_01
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r8_uniform_01
+  integer(kind=4) seed
+  integer(kind=4), save :: seed2 = 0
+  integer(kind=4), save :: used = 0
+  real(kind=8) x
+  real(kind=8), save :: y = 0.0D+00
 !
 !  On odd numbered calls, generate two uniforms, create two normals,
 !  return the first normal and its corresponding seed.
 !
-  if ( mod ( used, 2 ) == 0 ) then
+  if (mod(used, 2) == 0) then
 
-    r1 = r8_uniform_01 ( seed )
+    r1 = r8_uniform_01(seed)
 
-    if ( r1 == 0.0D+00 ) then
-      write ( *, '(a)' ) ' '
-      write ( *, '(a)' ) 'R8_NORMAL_01 - Fatal error!'
-      write ( *, '(a)' ) '  R8_UNIFORM_01 returned a value of 0.'
+    if (r1 == 0.0D+00) then
+      write (*, '(a)') ' '
+      write (*, '(a)') 'R8_NORMAL_01 - Fatal error!'
+      write (*, '(a)') '  R8_UNIFORM_01 returned a value of 0.'
       stop 1
     end if
 
     seed2 = seed
-    r2 = r8_uniform_01 ( seed2 )
+    r2 = r8_uniform_01(seed2)
 
-    x = sqrt ( -2.0D+00 * log ( r1 ) ) * cos ( 2.0D+00 * r8_pi * r2 )
-    y = sqrt ( -2.0D+00 * log ( r1 ) ) * sin ( 2.0D+00 * r8_pi * r2 )
+    x = sqrt(-2.0D+00 * log(r1)) * cos(2.0D+00 * r8_pi * r2)
+    y = sqrt(-2.0D+00 * log(r1)) * sin(2.0D+00 * r8_pi * r2)
 !
 !  On odd calls, return the second normal and its corresponding seed.
 !
@@ -19997,7 +19997,7 @@ function r8_normal_01 ( seed )
 
   return
 end
-function r8_pi ( )
+function r8_pi()
 
 !*****************************************************************************80
 !
@@ -20021,13 +20021,13 @@ function r8_pi ( )
 !
   implicit none
 
-  real ( kind = 8 ) r8_pi
+  real(kind=8) r8_pi
 
   r8_pi = 3.141592653589793D+00
 
   return
 end
-function r8_sign_opposite_strict ( r1, r2 )
+function r8_sign_opposite_strict(r1, r2)
 
 !*****************************************************************************80
 !
@@ -20060,16 +20060,16 @@ function r8_sign_opposite_strict ( r1, r2 )
 !
   implicit none
 
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  logical ( kind = 4 ) r8_sign_opposite_strict
+  real(kind=8) r1
+  real(kind=8) r2
+  logical(kind=4) r8_sign_opposite_strict
 
-  r8_sign_opposite_strict = ( r1 < 0.0D+00 .and. 0.0D+00 < r2 ) .or. &
-                            ( r2 < 0.0D+00 .and. 0.0D+00 < r1 )
+  r8_sign_opposite_strict = (r1 < 0.0D+00 .and. 0.0D+00 < r2) .or. &
+                            (r2 < 0.0D+00 .and. 0.0D+00 < r1)
 
   return
 end
-function r8_sind ( degrees )
+function r8_sind(degrees)
 
 !*****************************************************************************80
 !
@@ -20095,17 +20095,17 @@ function r8_sind ( degrees )
 !
   implicit none
 
-  real ( kind = 8 ) degrees
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r8_sind
-  real ( kind = 8 ) radians
+  real(kind=8) degrees
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r8_sind
+  real(kind=8) radians
 
-  radians = r8_pi * ( degrees / 180.0D+00 )
-  r8_sind  = sin ( radians )
+  radians = r8_pi * (degrees / 180.0D+00)
+  r8_sind = sin(radians)
 
   return
 end
-function r8_secd ( degrees )
+function r8_secd(degrees)
 
 !*****************************************************************************80
 !
@@ -20131,17 +20131,17 @@ function r8_secd ( degrees )
 !
   implicit none
 
-  real ( kind = 8 ) degrees
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r8_secd
-  real ( kind = 8 ) radians
+  real(kind=8) degrees
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r8_secd
+  real(kind=8) radians
 
-  radians = r8_pi * ( degrees / 180.0D+00 )
-  r8_secd = 1.0D+00 / cos ( radians )
+  radians = r8_pi * (degrees / 180.0D+00)
+  r8_secd = 1.0D+00 / cos(radians)
 
   return
 end
-subroutine r8_swap ( x, y )
+subroutine r8_swap(x, y)
 
 !*****************************************************************************80
 !
@@ -20166,9 +20166,9 @@ subroutine r8_swap ( x, y )
 !
   implicit none
 
-  real ( kind = 8 ) x
-  real ( kind = 8 ) y
-  real ( kind = 8 ) z
+  real(kind=8) x
+  real(kind=8) y
+  real(kind=8) z
 
   z = x
   x = y
@@ -20176,7 +20176,7 @@ subroutine r8_swap ( x, y )
 
   return
 end
-function r8_tand ( degrees )
+function r8_tand(degrees)
 
 !*****************************************************************************80
 !
@@ -20202,17 +20202,17 @@ function r8_tand ( degrees )
 !
   implicit none
 
-  real ( kind = 8 ) degrees
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r8_tand
-  real ( kind = 8 ) radians
+  real(kind=8) degrees
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r8_tand
+  real(kind=8) radians
 
-  radians = r8_pi * ( degrees / 180.0D+00 )
-  r8_tand  = tan ( radians )
+  radians = r8_pi * (degrees / 180.0D+00)
+  r8_tand = tan(radians)
 
   return
 end
-function r8_uniform ( a, b, seed )
+function r8_uniform(a, b, seed)
 
 !*****************************************************************************80
 !
@@ -20250,32 +20250,32 @@ function r8_uniform ( a, b, seed )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) r8_uniform
-  integer ( kind = 4 )seed
+  real(kind=8) a
+  real(kind=8) b
+  integer(kind=4) k
+  real(kind=8) r8_uniform
+  integer(kind=4) seed
 
-  if ( seed == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8_UNIFORM - Fatal error!'
-    write ( *, '(a)' ) '  Input value of SEED = 0.'
+  if (seed == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8_UNIFORM - Fatal error!'
+    write (*, '(a)') '  Input value of SEED = 0.'
     stop 1
   end if
 
   k = seed / 127773
 
-  seed = 16807 * ( seed - k * 127773 ) - k * 2836
+  seed = 16807 * (seed - k * 127773) - k * 2836
 
-  if ( seed < 0 ) then
+  if (seed < 0) then
     seed = seed + 2147483647
   end if
 
-  r8_uniform = a + ( b - a ) * real ( seed, kind = 8 ) * 4.656612875D-10
+  r8_uniform = a + (b - a) * real(seed, kind=8) * 4.656612875D-10
 
   return
 end
-function r8_uniform_01 ( seed )
+function r8_uniform_01(seed)
 
 !*****************************************************************************80
 !
@@ -20350,33 +20350,33 @@ function r8_uniform_01 ( seed )
 !
   implicit none
 
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) r8_uniform_01
-  integer ( kind = 4 ) seed
+  integer(kind=4) k
+  real(kind=8) r8_uniform_01
+  integer(kind=4) seed
 
-  if ( seed == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8_UNIFORM_01 - Fatal error!'
-    write ( *, '(a)' ) '  Input value of SEED = 0.'
+  if (seed == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8_UNIFORM_01 - Fatal error!'
+    write (*, '(a)') '  Input value of SEED = 0.'
     stop 1
   end if
 
   k = seed / 127773
 
-  seed = 16807 * ( seed - k * 127773 ) - k * 2836
+  seed = 16807 * (seed - k * 127773) - k * 2836
 
-  if ( seed < 0 ) then
+  if (seed < 0) then
     seed = seed + 2147483647
   end if
 !
 !  Although SEED can be represented exactly as a 32 bit integer,
 !  it generally cannot be represented exactly as a 32 bit real number!
 !
-  r8_uniform_01 = real ( seed, kind = 8 ) * 4.656612875D-10
+  r8_uniform_01 = real(seed, kind=8) * 4.656612875D-10
 
   return
 end
-subroutine r82vec_permute ( n, p, a )
+subroutine r82vec_permute(n, p, a)
 
 !*****************************************************************************80
 !
@@ -20431,31 +20431,31 @@ subroutine r82vec_permute ( n, p, a )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(2,n)
-  real ( kind = 8 ) a_temp(2)
-  integer ( kind = 4 ) iget
-  integer ( kind = 4 ) iput
-  integer ( kind = 4 ) istart
-  integer ( kind = 4 ) p(n)
+  real(kind=8) a(2, n)
+  real(kind=8) a_temp(2)
+  integer(kind=4) iget
+  integer(kind=4) iput
+  integer(kind=4) istart
+  integer(kind=4) p(n)
 !
 !  Search for the next element of the permutation that has not been used.
 !
   do istart = 1, n
 
-    if ( p(istart) < 0 ) then
+    if (p(istart) < 0) then
 
       cycle
 
-    else if ( p(istart) == istart ) then
+    else if (p(istart) == istart) then
 
-      p(istart) = - p(istart)
+      p(istart) = -p(istart)
       cycle
 
     else
 
-      a_temp(1:2) = a(1:2,istart)
+      a_temp(1:2) = a(1:2, istart)
       iget = istart
 !
 !  Copy the new value into the vacated entry.
@@ -20465,20 +20465,20 @@ subroutine r82vec_permute ( n, p, a )
         iput = iget
         iget = p(iget)
 
-        p(iput) = - p(iput)
+        p(iput) = -p(iput)
 
-        if ( iget < 1 .or. n < iget ) then
-          write ( *, '(a)' ) ' '
-          write ( *, '(a)' ) 'R82VEC_PERMUTE - Fatal error!'
+        if (iget < 1 .or. n < iget) then
+          write (*, '(a)') ' '
+          write (*, '(a)') 'R82VEC_PERMUTE - Fatal error!'
           stop 1
         end if
 
-        if ( iget == istart ) then
-          a(1:2,iput) = a_temp(1:2)
+        if (iget == istart) then
+          a(1:2, iput) = a_temp(1:2)
           exit
         end if
 
-        a(1:2,iput) = a(1:2,iget)
+        a(1:2, iput) = a(1:2, iget)
 
       end do
 
@@ -20492,7 +20492,7 @@ subroutine r82vec_permute ( n, p, a )
 
   return
 end
-subroutine r82vec_sort_heap_index_a ( n, a, indx )
+subroutine r82vec_sort_heap_index_a(n, a, indx)
 
 !*****************************************************************************80
 !
@@ -20539,47 +20539,47 @@ subroutine r82vec_sort_heap_index_a ( n, a, indx )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(2,n)
-  real ( kind = 8 ) aval(2)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) indx(n)
-  integer ( kind = 4 ) indxt
-  integer ( kind = 4 ) ir
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) l
+  real(kind=8) a(2, n)
+  real(kind=8) aval(2)
+  integer(kind=4) i
+  integer(kind=4) indx(n)
+  integer(kind=4) indxt
+  integer(kind=4) ir
+  integer(kind=4) j
+  integer(kind=4) l
 
-  if ( n < 1 ) then
+  if (n < 1) then
     return
   end if
 
-  if ( n == 1 ) then
+  if (n == 1) then
     indx(1) = 1
     return
   end if
 
-  call i4vec_indicator ( n, indx )
+  call i4vec_indicator(n, indx)
 
   l = n / 2 + 1
   ir = n
 
   do
 
-    if ( 1 < l ) then
+    if (1 < l) then
 
       l = l - 1
       indxt = indx(l)
-      aval(1:2) = a(1:2,indxt)
+      aval(1:2) = a(1:2, indxt)
 
     else
 
       indxt = indx(ir)
-      aval(1:2) = a(1:2,indxt)
+      aval(1:2) = a(1:2, indxt)
       indx(ir) = indx(1)
       ir = ir - 1
 
-      if ( ir == 1 ) then
+      if (ir == 1) then
         indx(1) = indxt
         exit
       end if
@@ -20589,19 +20589,19 @@ subroutine r82vec_sort_heap_index_a ( n, a, indx )
     i = l
     j = l + l
 
-    do while ( j <= ir )
+    do while (j <= ir)
 
-      if ( j < ir ) then
-        if (   a(1,indx(j)) <  a(1,indx(j+1)) .or. &
-             ( a(1,indx(j)) == a(1,indx(j+1)) .and. &
-               a(2,indx(j)) <  a(2,indx(j+1)) ) ) then
+      if (j < ir) then
+        if (a(1, indx(j)) < a(1, indx(j + 1)) .or. &
+            (a(1, indx(j)) == a(1, indx(j + 1)) .and. &
+             a(2, indx(j)) < a(2, indx(j + 1)))) then
           j = j + 1
         end if
       end if
 
-      if (   aval(1) <  a(1,indx(j)) .or. &
-           ( aval(1) == a(1,indx(j)) .and. &
-             aval(2) <  a(2,indx(j)) ) ) then
+      if (aval(1) < a(1, indx(j)) .or. &
+          (aval(1) == a(1, indx(j)) .and. &
+           aval(2) < a(2, indx(j)))) then
         indx(i) = indx(j)
         i = j
         j = j + j
@@ -20617,7 +20617,7 @@ subroutine r82vec_sort_heap_index_a ( n, a, indx )
 
   return
 end
-subroutine r8ge_det ( n, a, pivot, det )
+subroutine r8ge_det(n, a, pivot, det)
 
 !*****************************************************************************80
 !
@@ -20654,25 +20654,25 @@ subroutine r8ge_det ( n, a, pivot, det )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(n,n)
-  real ( kind = 8 ) det
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) pivot(n)
+  real(kind=8) a(n, n)
+  real(kind=8) det
+  integer(kind=4) i
+  integer(kind=4) pivot(n)
 
   det = 1.0D+00
 
   do i = 1, n
-    det = det * a(i,i)
-    if ( pivot(i) /= i ) then
-      det = - det
+    det = det * a(i, i)
+    if (pivot(i) /= i) then
+      det = -det
     end if
   end do
 
   return
 end
-subroutine r8ge_fa ( n, a, pivot, info )
+subroutine r8ge_fa(n, a, pivot, info)
 
 !*****************************************************************************80
 !
@@ -20719,16 +20719,16 @@ subroutine r8ge_fa ( n, a, pivot, info )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(n,n)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) info
-  integer ( kind = 4 ) pivot(n)
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) l
-  real ( kind = 8 ) t
+  real(kind=8) a(n, n)
+  integer(kind=4) i
+  integer(kind=4) info
+  integer(kind=4) pivot(n)
+  integer(kind=4) j
+  integer(kind=4) k
+  integer(kind=4) l
+  real(kind=8) t
 
   info = 0
 
@@ -20737,8 +20737,8 @@ subroutine r8ge_fa ( n, a, pivot, info )
 !  Find L, the index of the pivot row.
 !
     l = k
-    do i = k+1, n
-      if ( abs ( a(l,k) ) < abs ( a(i,k) ) ) then
+    do i = k + 1, n
+      if (abs(a(l, k)) < abs(a(i, k))) then
         l = i
       end if
     end do
@@ -20747,37 +20747,37 @@ subroutine r8ge_fa ( n, a, pivot, info )
 !
 !  If the pivot index is zero, the algorithm has failed.
 !
-    if ( a(l,k) == 0.0D+00 ) then
+    if (a(l, k) == 0.0D+00) then
       info = k
-      write ( *, '(a)' ) ' '
-      write ( *, '(a)' ) 'R8GE_FA - Warning!'
-      write ( *, '(a,i8)' ) '  Zero pivot on step ', info
+      write (*, '(a)') ' '
+      write (*, '(a)') 'R8GE_FA - Warning!'
+      write (*, '(a,i8)') '  Zero pivot on step ', info
       return
     end if
 !
 !  Interchange rows L and K if necessary.
 !
-    if ( l /= k ) then
-      t      = a(l,k)
-      a(l,k) = a(k,k)
-      a(k,k)= t
+    if (l /= k) then
+      t = a(l, k)
+      a(l, k) = a(k, k)
+      a(k, k) = t
     end if
 !
 !  Normalize the values that lie below the pivot entry A(K,K).
 !
-    a(k+1:n,k) = - a(k+1:n,k) / a(k,k)
+    a(k + 1:n, k) = -a(k + 1:n, k) / a(k, k)
 !
 !  Row elimination with column indexing.
 !
-    do j = k+1, n
+    do j = k + 1, n
 
-      if ( l /= k ) then
-        t      = a(l,j)
-        a(l,j) = a(k,j)
-        a(k,j) = t
+      if (l /= k) then
+        t = a(l, j)
+        a(l, j) = a(k, j)
+        a(k, j) = t
       end if
 
-      a(k+1:n,j) = a(k+1:n,j) + a(k+1:n,k) * a(k,j)
+      a(k + 1:n, j) = a(k + 1:n, j) + a(k + 1:n, k) * a(k, j)
 
     end do
 
@@ -20785,16 +20785,16 @@ subroutine r8ge_fa ( n, a, pivot, info )
 
   pivot(n) = n
 
-  if ( a(n,n) == 0.0D+00 ) then
+  if (a(n, n) == 0.0D+00) then
     info = n
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8GE_FA - Warning!'
-    write ( *, '(a,i8)' ) '  Zero pivot on step ', info
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8GE_FA - Warning!'
+    write (*, '(a,i8)') '  Zero pivot on step ', info
   end if
 
   return
 end
-subroutine r8ge_sl ( n, a, pivot, b, job )
+subroutine r8ge_sl(n, a, pivot, b, job)
 
 !*****************************************************************************80
 !
@@ -20835,18 +20835,18 @@ subroutine r8ge_sl ( n, a, pivot, b, job )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(n,n)
-  real ( kind = 8 ) b(n)
-  integer ( kind = 4 ) pivot(n)
-  integer ( kind = 4 ) job
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) l
+  real(kind=8) a(n, n)
+  real(kind=8) b(n)
+  integer(kind=4) pivot(n)
+  integer(kind=4) job
+  integer(kind=4) k
+  integer(kind=4) l
 !
 !  Solve A * x = b.
 !
-  if ( job == 0 ) then
+  if (job == 0) then
 !
 !  Solve PL * Y = B.
 !
@@ -20854,19 +20854,19 @@ subroutine r8ge_sl ( n, a, pivot, b, job )
 
       l = pivot(k)
 
-      if ( l /= k ) then
-        call r8_swap ( b(l), b(k) )
+      if (l /= k) then
+        call r8_swap(b(l), b(k))
       end if
 
-      b(k+1:n) = b(k+1:n) + a(k+1:n,k) * b(k)
+      b(k + 1:n) = b(k + 1:n) + a(k + 1:n, k) * b(k)
 
     end do
 !
 !  Solve U * X = Y.
 !
     do k = n, 1, -1
-      b(k) = b(k) / a(k,k)
-      b(1:k-1) = b(1:k-1) - a(1:k-1,k) * b(k)
+      b(k) = b(k) / a(k, k)
+      b(1:k - 1) = b(1:k - 1) - a(1:k - 1, k) * b(k)
     end do
 !
 !  Solve A' * X = B.
@@ -20876,19 +20876,19 @@ subroutine r8ge_sl ( n, a, pivot, b, job )
 !  Solve U' * Y = B.
 !
     do k = 1, n
-      b(k) = ( b(k) - sum ( b(1:k-1) * a(1:k-1,k) ) ) / a(k,k)
+      b(k) = (b(k) - sum(b(1:k - 1) * a(1:k - 1, k))) / a(k, k)
     end do
 !
 !  Solve ( PL )' * X = Y.
 !
     do k = n - 1, 1, -1
 
-      b(k) = b(k) + sum ( b(k+1:n) * a(k+1:n,k) )
+      b(k) = b(k) + sum(b(k + 1:n) * a(k + 1:n, k))
 
       l = pivot(k)
 
-      if ( l /= k ) then
-        call r8_swap ( b(l), b(k) )
+      if (l /= k) then
+        call r8_swap(b(l), b(k))
       end if
 
     end do
@@ -20897,7 +20897,7 @@ subroutine r8ge_sl ( n, a, pivot, b, job )
 
   return
 end
-function r8mat_det_2d ( a )
+function r8mat_det_2d(a)
 
 !*****************************************************************************80
 !
@@ -20930,14 +20930,14 @@ function r8mat_det_2d ( a )
 !
   implicit none
 
-  real ( kind = 8 ) a(2,2)
-  real ( kind = 8 ) r8mat_det_2d
+  real(kind=8) a(2, 2)
+  real(kind=8) r8mat_det_2d
 
-  r8mat_det_2d = a(1,1) * a(2,2) - a(1,2) * a(2,1)
+  r8mat_det_2d = a(1, 1) * a(2, 2) - a(1, 2) * a(2, 1)
 
   return
 end
-function r8mat_det_3d ( a )
+function r8mat_det_3d(a)
 
 !*****************************************************************************80
 !
@@ -20972,16 +20972,16 @@ function r8mat_det_3d ( a )
 !
   implicit none
 
-  real ( kind = 8 ) a(3,3)
-  real ( kind = 8 ) r8mat_det_3d
+  real(kind=8) a(3, 3)
+  real(kind=8) r8mat_det_3d
 
-  r8mat_det_3d =   a(1,1) * ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) &
-              + a(1,2) * ( a(2,3) * a(3,1) - a(2,1) * a(3,3) ) &
-              + a(1,3) * ( a(2,1) * a(3,2) - a(2,2) * a(3,1) )
+  r8mat_det_3d = a(1, 1) * (a(2, 2) * a(3, 3) - a(2, 3) * a(3, 2)) &
+                 + a(1, 2) * (a(2, 3) * a(3, 1) - a(2, 1) * a(3, 3)) &
+                 + a(1, 3) * (a(2, 1) * a(3, 2) - a(2, 2) * a(3, 1))
 
   return
 end
-function r8mat_det_4d ( a )
+function r8mat_det_4d(a)
 
 !*****************************************************************************80
 !
@@ -21007,30 +21007,30 @@ function r8mat_det_4d ( a )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) r8mat_det_4d
+  real(kind=8) a(4, 4)
+  real(kind=8) r8mat_det_4d
 
   r8mat_det_4d = &
-      a(1,1) * ( &
-        a(2,2) * ( a(3,3) * a(4,4) - a(3,4) * a(4,3) ) &
-      - a(2,3) * ( a(3,2) * a(4,4) - a(3,4) * a(4,2) ) &
-      + a(2,4) * ( a(3,2) * a(4,3) - a(3,3) * a(4,2) ) ) &
-    - a(1,2) * ( &
-        a(2,1) * ( a(3,3) * a(4,4) - a(3,4) * a(4,3) ) &
-      - a(2,3) * ( a(3,1) * a(4,4) - a(3,4) * a(4,1) ) &
-      + a(2,4) * ( a(3,1) * a(4,3) - a(3,3) * a(4,1) ) ) &
-    + a(1,3) * ( &
-        a(2,1) * ( a(3,2) * a(4,4) - a(3,4) * a(4,2) ) &
-      - a(2,2) * ( a(3,1) * a(4,4) - a(3,4) * a(4,1) ) &
-      + a(2,4) * ( a(3,1) * a(4,2) - a(3,2) * a(4,1) ) ) &
-    - a(1,4) * ( &
-        a(2,1) * ( a(3,2) * a(4,3) - a(3,3) * a(4,2) ) &
-      - a(2,2) * ( a(3,1) * a(4,3) - a(3,3) * a(4,1) ) &
-      + a(2,3) * ( a(3,1) * a(4,2) - a(3,2) * a(4,1) ) )
+    a(1, 1) * ( &
+    a(2, 2) * (a(3, 3) * a(4, 4) - a(3, 4) * a(4, 3)) &
+    - a(2, 3) * (a(3, 2) * a(4, 4) - a(3, 4) * a(4, 2)) &
+    + a(2, 4) * (a(3, 2) * a(4, 3) - a(3, 3) * a(4, 2))) &
+    - a(1, 2) * ( &
+    a(2, 1) * (a(3, 3) * a(4, 4) - a(3, 4) * a(4, 3)) &
+    - a(2, 3) * (a(3, 1) * a(4, 4) - a(3, 4) * a(4, 1)) &
+    + a(2, 4) * (a(3, 1) * a(4, 3) - a(3, 3) * a(4, 1))) &
+    + a(1, 3) * ( &
+    a(2, 1) * (a(3, 2) * a(4, 4) - a(3, 4) * a(4, 2)) &
+    - a(2, 2) * (a(3, 1) * a(4, 4) - a(3, 4) * a(4, 1)) &
+    + a(2, 4) * (a(3, 1) * a(4, 2) - a(3, 2) * a(4, 1))) &
+    - a(1, 4) * ( &
+    a(2, 1) * (a(3, 2) * a(4, 3) - a(3, 3) * a(4, 2)) &
+    - a(2, 2) * (a(3, 1) * a(4, 3) - a(3, 3) * a(4, 1)) &
+    + a(2, 3) * (a(3, 1) * a(4, 2) - a(3, 2) * a(4, 1)))
 
   return
 end
-function r8mat_det_5d ( a )
+function r8mat_det_5d(a)
 
 !*****************************************************************************80
 !
@@ -21056,14 +21056,14 @@ function r8mat_det_5d ( a )
 !
   implicit none
 
-  real ( kind = 8 ) a(5,5)
-  real ( kind = 8 ) b(4,4)
-  real ( kind = 8 ) r8mat_det_4d
-  real ( kind = 8 ) r8mat_det_5d
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) inc
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
+  real(kind=8) a(5, 5)
+  real(kind=8) b(4, 4)
+  real(kind=8) r8mat_det_4d
+  real(kind=8) r8mat_det_5d
+  integer(kind=4) i
+  integer(kind=4) inc
+  integer(kind=4) j
+  integer(kind=4) k
 !
 !  Expand the determinant into the sum of the determinants of the
 !  five 4 by 4 matrices created by dropping row 1, and column k.
@@ -21075,24 +21075,24 @@ function r8mat_det_5d ( a )
     do i = 1, 4
       do j = 1, 4
 
-        if ( j < k ) then
+        if (j < k) then
           inc = 0
         else
           inc = 1
         end if
 
-        b(i,j) = a(i+1,j+inc)
+        b(i, j) = a(i + 1, j + inc)
 
       end do
     end do
 
-    r8mat_det_5d = r8mat_det_5d + (-1)**( k + 1 ) * a(1,k) * r8mat_det_4d ( b )
+    r8mat_det_5d = r8mat_det_5d + (-1)**(k + 1) * a(1, k) * r8mat_det_4d(b)
 
   end do
 
   return
 end
-subroutine r8mat_inverse_2d ( a, b, det )
+subroutine r8mat_inverse_2d(a, b, det)
 
 !*****************************************************************************80
 !
@@ -21129,33 +21129,33 @@ subroutine r8mat_inverse_2d ( a, b, det )
 !
   implicit none
 
-  real ( kind = 8 ) a(2,2)
-  real ( kind = 8 ) b(2,2)
-  real ( kind = 8 ) det
+  real(kind=8) a(2, 2)
+  real(kind=8) b(2, 2)
+  real(kind=8) det
 !
 !  Compute the determinant.
 !
-  det = a(1,1) * a(2,2) - a(1,2) * a(2,1)
+  det = a(1, 1) * a(2, 2) - a(1, 2) * a(2, 1)
 !
 !  If the determinant is zero, bail out.
 !
-  if ( det == 0.0D+00 ) then
+  if (det == 0.0D+00) then
 
-    b(1:2,1:2) = 0.0D+00
+    b(1:2, 1:2) = 0.0D+00
 
     return
   end if
 !
 !  Compute the entries of the inverse matrix using an explicit formula.
 !
-  b(1,1) = + a(2,2) / det
-  b(1,2) = - a(1,2) / det
-  b(2,1) = - a(2,1) / det
-  b(2,2) = + a(1,1) / det
+  b(1, 1) = +a(2, 2) / det
+  b(1, 2) = -a(1, 2) / det
+  b(2, 1) = -a(2, 1) / det
+  b(2, 2) = +a(1, 1) / det
 
   return
 end
-subroutine r8mat_inverse_3d ( a, b, det )
+subroutine r8mat_inverse_3d(a, b, det)
 
 !*****************************************************************************80
 !
@@ -21192,21 +21192,21 @@ subroutine r8mat_inverse_3d ( a, b, det )
 !
   implicit none
 
-  real ( kind = 8 ) a(3,3)
-  real ( kind = 8 ) b(3,3)
-  real ( kind = 8 ) det
+  real(kind=8) a(3, 3)
+  real(kind=8) b(3, 3)
+  real(kind=8) det
 !
 !  Compute the determinant of A
 !
-  det =   a(1,1) * ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) &
-        + a(1,2) * ( a(2,3) * a(3,1) - a(2,1) * a(3,3) ) &
-        + a(1,3) * ( a(2,1) * a(3,2) - a(2,2) * a(3,1) )
+  det = a(1, 1) * (a(2, 2) * a(3, 3) - a(2, 3) * a(3, 2)) &
+        + a(1, 2) * (a(2, 3) * a(3, 1) - a(2, 1) * a(3, 3)) &
+        + a(1, 3) * (a(2, 1) * a(3, 2) - a(2, 2) * a(3, 1))
 !
 !  If the determinant is zero, bail out.
 !
-  if ( det == 0.0D+00 ) then
+  if (det == 0.0D+00) then
 
-    b(1:3,1:3) = 0.0D+00
+    b(1:3, 1:3) = 0.0D+00
 
     return
   end if
@@ -21214,21 +21214,21 @@ subroutine r8mat_inverse_3d ( a, b, det )
 !  Compute the entries of the inverse matrix using an explicit
 !  formula.
 !
-  b(1,1) = + ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) / det
-  b(1,2) = - ( a(1,2) * a(3,3) - a(1,3) * a(3,2) ) / det
-  b(1,3) = + ( a(1,2) * a(2,3) - a(1,3) * a(2,2) ) / det
+  b(1, 1) = +(a(2, 2) * a(3, 3) - a(2, 3) * a(3, 2)) / det
+  b(1, 2) = -(a(1, 2) * a(3, 3) - a(1, 3) * a(3, 2)) / det
+  b(1, 3) = +(a(1, 2) * a(2, 3) - a(1, 3) * a(2, 2)) / det
 
-  b(2,1) = - ( a(2,1) * a(3,3) - a(2,3) * a(3,1) ) / det
-  b(2,2) = + ( a(1,1) * a(3,3) - a(1,3) * a(3,1) ) / det
-  b(2,3) = - ( a(1,1) * a(2,3) - a(1,3) * a(2,1) ) / det
+  b(2, 1) = -(a(2, 1) * a(3, 3) - a(2, 3) * a(3, 1)) / det
+  b(2, 2) = +(a(1, 1) * a(3, 3) - a(1, 3) * a(3, 1)) / det
+  b(2, 3) = -(a(1, 1) * a(2, 3) - a(1, 3) * a(2, 1)) / det
 
-  b(3,1) = + ( a(2,1) * a(3,2) - a(2,2) * a(3,1) ) / det
-  b(3,2) = - ( a(1,1) * a(3,2) - a(1,2) * a(3,1) ) / det
-  b(3,3) = + ( a(1,1) * a(2,2) - a(1,2) * a(2,1) ) / det
+  b(3, 1) = +(a(2, 1) * a(3, 2) - a(2, 2) * a(3, 1)) / det
+  b(3, 2) = -(a(1, 1) * a(3, 2) - a(1, 2) * a(3, 1)) / det
+  b(3, 3) = +(a(1, 1) * a(2, 2) - a(1, 2) * a(2, 1)) / det
 
   return
 end
-subroutine r8mat_print ( m, n, a, title )
+subroutine r8mat_print(m, n, a, title)
 
 !*****************************************************************************80
 !
@@ -21258,17 +21258,17 @@ subroutine r8mat_print ( m, n, a, title )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(m,n)
-  character ( len = * ) title
+  real(kind=8) a(m, n)
+  character(len=*) title
 
-  call r8mat_print_some ( m, n, a, 1, 1, m, n, title )
+  call r8mat_print_some(m, n, a, 1, 1, m, n, title)
 
   return
 end
-subroutine r8mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
+subroutine r8mat_print_some(m, n, a, ilo, jlo, ihi, jhi, title)
 
 !*****************************************************************************80
 !
@@ -21304,50 +21304,50 @@ subroutine r8mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: incx = 5
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: incx = 5
+  integer(kind=4) m
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(m,n)
-  character ( len = 14 ) ctemp(incx)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i2hi
-  integer ( kind = 4 ) i2lo
-  integer ( kind = 4 ) ihi
-  integer ( kind = 4 ) ilo
-  integer ( kind = 4 ) inc
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) j2
-  integer ( kind = 4 ) j2hi
-  integer ( kind = 4 ) j2lo
-  integer ( kind = 4 ) jhi
-  integer ( kind = 4 ) jlo
-  character ( len = * )  title
+  real(kind=8) a(m, n)
+  character(len=14) ctemp(incx)
+  integer(kind=4) i
+  integer(kind=4) i2hi
+  integer(kind=4) i2lo
+  integer(kind=4) ihi
+  integer(kind=4) ilo
+  integer(kind=4) inc
+  integer(kind=4) j
+  integer(kind=4) j2
+  integer(kind=4) j2hi
+  integer(kind=4) j2lo
+  integer(kind=4) jhi
+  integer(kind=4) jlo
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
 
-  do j2lo = max ( jlo, 1 ), min ( jhi, n ), incx
+  do j2lo = max(jlo, 1), min(jhi, n), incx
 
     j2hi = j2lo + incx - 1
-    j2hi = min ( j2hi, n )
-    j2hi = min ( j2hi, jhi )
+    j2hi = min(j2hi, n)
+    j2hi = min(j2hi, jhi)
 
     inc = j2hi + 1 - j2lo
 
-    write ( *, '(a)' ) ' '
+    write (*, '(a)') ' '
 
     do j = j2lo, j2hi
       j2 = j + 1 - j2lo
-      write ( ctemp(j2), '(i8,6x)' ) j
+      write (ctemp(j2), '(i8,6x)') j
     end do
 
-    write ( *, '(''  Col   '',5a14)' ) ctemp(1:inc)
-    write ( *, '(a)' ) '  Row'
-    write ( *, '(a)' ) ' '
+    write (*, '(''  Col   '',5a14)') ctemp(1:inc)
+    write (*, '(a)') '  Row'
+    write (*, '(a)') ' '
 
-    i2lo = max ( ilo, 1 )
-    i2hi = min ( ihi, m )
+    i2lo = max(ilo, 1)
+    i2hi = min(ihi, m)
 
     do i = i2lo, i2hi
 
@@ -21355,15 +21355,15 @@ subroutine r8mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 
         j = j2lo - 1 + j2
 
-        if ( a(i,j) == real ( int ( a(i,j) ), kind = 8 ) ) then
-          write ( ctemp(j2), '(f8.0,6x)' ) a(i,j)
+        if (a(i, j) == real(int(a(i, j)), kind=8)) then
+          write (ctemp(j2), '(f8.0,6x)') a(i, j)
         else
-          write ( ctemp(j2), '(g14.6)' ) a(i,j)
+          write (ctemp(j2), '(g14.6)') a(i, j)
         end if
 
       end do
 
-      write ( *, '(i5,a,5a14)' ) i, ':', ( ctemp(j), j = 1, inc )
+      write (*, '(i5,a,5a14)') i, ':', (ctemp(j), j=1, inc)
 
     end do
 
@@ -21371,7 +21371,7 @@ subroutine r8mat_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 
   return
 end
-subroutine r8mat_solve ( n, rhs_num, a, info )
+subroutine r8mat_solve(n, rhs_num, a, info)
 
 !*****************************************************************************80
 !
@@ -21409,16 +21409,16 @@ subroutine r8mat_solve ( n, rhs_num, a, info )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) rhs_num
+  integer(kind=4) n
+  integer(kind=4) rhs_num
 
-  real ( kind = 8 ) a(n,n+rhs_num)
-  real ( kind = 8 ) apivot
-  real ( kind = 8 ) factor
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) info
-  integer ( kind = 4 ) ipivot
-  integer ( kind = 4 ) j
+  real(kind=8) a(n, n + rhs_num)
+  real(kind=8) apivot
+  real(kind=8) factor
+  integer(kind=4) i
+  integer(kind=4) info
+  integer(kind=4) ipivot
+  integer(kind=4) j
 
   info = 0
 
@@ -21427,16 +21427,16 @@ subroutine r8mat_solve ( n, rhs_num, a, info )
 !  Choose a pivot row.
 !
     ipivot = j
-    apivot = a(j,j)
+    apivot = a(j, j)
 
-    do i = j+1, n
-      if ( abs ( apivot ) < abs ( a(i,j) ) ) then
-        apivot = a(i,j)
+    do i = j + 1, n
+      if (abs(apivot) < abs(a(i, j))) then
+        apivot = a(i, j)
         ipivot = i
       end if
     end do
 
-    if ( apivot == 0.0D+00 ) then
+    if (apivot == 0.0D+00) then
       info = j
       return
     end if
@@ -21444,22 +21444,22 @@ subroutine r8mat_solve ( n, rhs_num, a, info )
 !  Interchange.
 !
     do i = 1, n + rhs_num
-      call r8_swap ( a(ipivot,i), a(j,i) )
+      call r8_swap(a(ipivot, i), a(j, i))
     end do
 !
 !  A(J,J) becomes 1.
 !
-    a(j,j) = 1.0D+00
-    a(j,j+1:n+rhs_num) = a(j,j+1:n+rhs_num) / apivot
+    a(j, j) = 1.0D+00
+    a(j, j + 1:n + rhs_num) = a(j, j + 1:n + rhs_num) / apivot
 !
 !  A(I,J) becomes 0.
 !
     do i = 1, n
 
-      if ( i /= j ) then
+      if (i /= j) then
 
-        factor = a(i,j)
-        a(i,j) = 0.0D+00
+        factor = a(i, j)
+        a(i, j) = 0.0D+00
         a(i,j+1:n+rhs_num) = a(i,j+1:n+rhs_num) - factor * a(j,j+1:n+rhs_num)
 
       end if
@@ -21470,7 +21470,7 @@ subroutine r8mat_solve ( n, rhs_num, a, info )
 
   return
 end
-subroutine r8mat_solve_2d ( a, b, det, x )
+subroutine r8mat_solve_2d(a, b, det, x)
 
 !*****************************************************************************80
 !
@@ -21510,30 +21510,30 @@ subroutine r8mat_solve_2d ( a, b, det, x )
 !
   implicit none
 
-  real ( kind = 8 ) a(2,2)
-  real ( kind = 8 ) b(2)
-  real ( kind = 8 ) det
-  real ( kind = 8 ) x(2)
+  real(kind=8) a(2, 2)
+  real(kind=8) b(2)
+  real(kind=8) det
+  real(kind=8) x(2)
 !
 !  Compute the determinant.
 !
-  det = a(1,1) * a(2,2) - a(1,2) * a(2,1)
+  det = a(1, 1) * a(2, 2) - a(1, 2) * a(2, 1)
 !
 !  If the determinant is zero, bail out.
 !
-  if ( det == 0.0D+00 ) then
+  if (det == 0.0D+00) then
     x(1:2) = 0.0D+00
     return
   end if
 !
 !  Compute the solution.
 !
-  x(1) = (  a(2,2) * b(1) - a(1,2) * b(2) ) / det
-  x(2) = ( -a(2,1) * b(1) + a(1,1) * b(2) ) / det
+  x(1) = (a(2, 2) * b(1) - a(1, 2) * b(2)) / det
+  x(2) = (-a(2, 1) * b(1) + a(1, 1) * b(2)) / det
 
   return
 end
-subroutine r8mat_transpose_print ( m, n, a, title )
+subroutine r8mat_transpose_print(m, n, a, title)
 
 !*****************************************************************************80
 !
@@ -21561,17 +21561,17 @@ subroutine r8mat_transpose_print ( m, n, a, title )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(m,n)
-  character ( len = * ) title
+  real(kind=8) a(m, n)
+  character(len=*) title
 
-  call r8mat_transpose_print_some ( m, n, a, 1, 1, m, n, title )
+  call r8mat_transpose_print_some(m, n, a, 1, 1, m, n, title)
 
   return
 end
-subroutine r8mat_transpose_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
+subroutine r8mat_transpose_print_some(m, n, a, ilo, jlo, ihi, jhi, title)
 
 !*****************************************************************************80
 !
@@ -21607,59 +21607,59 @@ subroutine r8mat_transpose_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: incx = 5
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: incx = 5
+  integer(kind=4) m
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(m,n)
-  character ( len = 14 ) ctemp(incx)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i2
-  integer ( kind = 4 ) i2hi
-  integer ( kind = 4 ) i2lo
-  integer ( kind = 4 ) ihi
-  integer ( kind = 4 ) ilo
-  integer ( kind = 4 ) inc
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) j2hi
-  integer ( kind = 4 ) j2lo
-  integer ( kind = 4 ) jhi
-  integer ( kind = 4 ) jlo
-  character ( len = * )  title
+  real(kind=8) a(m, n)
+  character(len=14) ctemp(incx)
+  integer(kind=4) i
+  integer(kind=4) i2
+  integer(kind=4) i2hi
+  integer(kind=4) i2lo
+  integer(kind=4) ihi
+  integer(kind=4) ilo
+  integer(kind=4) inc
+  integer(kind=4) j
+  integer(kind=4) j2hi
+  integer(kind=4) j2lo
+  integer(kind=4) jhi
+  integer(kind=4) jlo
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
 
-  do i2lo = max ( ilo, 1 ), min ( ihi, m ), incx
+  do i2lo = max(ilo, 1), min(ihi, m), incx
 
     i2hi = i2lo + incx - 1
-    i2hi = min ( i2hi, m )
-    i2hi = min ( i2hi, ihi )
+    i2hi = min(i2hi, m)
+    i2hi = min(i2hi, ihi)
 
     inc = i2hi + 1 - i2lo
 
-    write ( *, '(a)' ) ' '
+    write (*, '(a)') ' '
 
     do i = i2lo, i2hi
       i2 = i + 1 - i2lo
-      write ( ctemp(i2), '(i8,6x)' ) i
+      write (ctemp(i2), '(i8,6x)') i
     end do
 
-    write ( *, '(''  Row   '',5a14)' ) ctemp(1:inc)
-    write ( *, '(a)' ) '  Col'
-    write ( *, '(a)' ) ' '
+    write (*, '(''  Row   '',5a14)') ctemp(1:inc)
+    write (*, '(a)') '  Col'
+    write (*, '(a)') ' '
 
-    j2lo = max ( jlo, 1 )
-    j2hi = min ( jhi, n )
+    j2lo = max(jlo, 1)
+    j2hi = min(jhi, n)
 
     do j = j2lo, j2hi
 
       do i2 = 1, inc
         i = i2lo - 1 + i2
-        write ( ctemp(i2), '(g14.6)' ) a(i,j)
+        write (ctemp(i2), '(g14.6)') a(i, j)
       end do
 
-      write ( *, '(i5,a,5a14)' ) j, ':', ( ctemp(i), i = 1, inc )
+      write (*, '(i5,a,5a14)') j, ':', (ctemp(i), i=1, inc)
 
     end do
 
@@ -21667,7 +21667,7 @@ subroutine r8mat_transpose_print_some ( m, n, a, ilo, jlo, ihi, jhi, title )
 
   return
 end
-subroutine r8mat_uniform ( m, n, a, b, seed, r )
+subroutine r8mat_uniform(m, n, a, b, seed, r)
 
 !*****************************************************************************80
 !
@@ -21723,21 +21723,21 @@ subroutine r8mat_uniform ( m, n, a, b, seed, r )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) r(m,n)
+  real(kind=8) a
+  real(kind=8) b
+  integer(kind=4) i
+  integer(kind=4) j
+  integer(kind=4) k
+  integer(kind=4) seed
+  real(kind=8) r(m, n)
 
-  if ( seed == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8MAT_UNIFORM - Fatal error!'
-    write ( *, '(a)' ) '  Input value of SEED = 0.'
+  if (seed == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8MAT_UNIFORM - Fatal error!'
+    write (*, '(a)') '  Input value of SEED = 0.'
     stop 1
   end if
 
@@ -21747,20 +21747,20 @@ subroutine r8mat_uniform ( m, n, a, b, seed, r )
 
       k = seed / 127773
 
-      seed = 16807 * ( seed - k * 127773 ) - k * 2836
+      seed = 16807 * (seed - k * 127773) - k * 2836
 
-      if ( seed < 0 ) then
+      if (seed < 0) then
         seed = seed + 2147483647
       end if
 
-      r(i,j) = a + ( b - a ) * real ( seed, kind = 8 ) * 4.656612875D-10
+      r(i, j) = a + (b - a) * real(seed, kind=8) * 4.656612875D-10
 
     end do
   end do
 
   return
 end
-subroutine r8mat_uniform_01 ( m, n, seed, r )
+subroutine r8mat_uniform_01(m, n, seed, r)
 
 !*****************************************************************************80
 !
@@ -21814,19 +21814,19 @@ subroutine r8mat_uniform_01 ( m, n, seed, r )
 !
   implicit none
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) n
+  integer(kind=4) m
+  integer(kind=4) n
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) r(m,n)
+  integer(kind=4) i
+  integer(kind=4) j
+  integer(kind=4) k
+  integer(kind=4) seed
+  real(kind=8) r(m, n)
 
-  if ( seed == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8MAT_UNIFORM_01 - Fatal error!'
-    write ( *, '(a)' ) '  Input value of SEED = 0.'
+  if (seed == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8MAT_UNIFORM_01 - Fatal error!'
+    write (*, '(a)') '  Input value of SEED = 0.'
     stop 1
   end if
 
@@ -21836,20 +21836,20 @@ subroutine r8mat_uniform_01 ( m, n, seed, r )
 
       k = seed / 127773
 
-      seed = 16807 * ( seed - k * 127773 ) - k * 2836
+      seed = 16807 * (seed - k * 127773) - k * 2836
 
-      if ( seed < 0 ) then
+      if (seed < 0) then
         seed = seed + 2147483647
       end if
 
-      r(i,j) = real ( seed, kind = 8 ) * 4.656612875D-10
+      r(i, j) = real(seed, kind=8) * 4.656612875D-10
 
     end do
   end do
 
   return
 end
-subroutine r8vec_angle_3d ( u, v, angle )
+subroutine r8vec_angle_3d(u, v, angle)
 
 !*****************************************************************************80
 !
@@ -21871,28 +21871,28 @@ subroutine r8vec_angle_3d ( u, v, angle )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) angle_cos
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) u(3)
-  real ( kind = 8 ) u_norm
-  real ( kind = 8 ) uv_dot
-  real ( kind = 8 ) v(3)
-  real ( kind = 8 ) v_norm
+  real(kind=8) angle
+  real(kind=8) angle_cos
+  real(kind=8) r8_acos
+  real(kind=8) u(3)
+  real(kind=8) u_norm
+  real(kind=8) uv_dot
+  real(kind=8) v(3)
+  real(kind=8) v_norm
 
-  uv_dot = dot_product ( u(1:3), v(1:3) )
+  uv_dot = dot_product(u(1:3), v(1:3))
 
-  u_norm = sqrt ( dot_product ( u(1:3), u(1:3) ) )
+  u_norm = sqrt(dot_product(u(1:3), u(1:3)))
 
-  v_norm = sqrt ( dot_product ( v(1:3), v(1:3) ) )
+  v_norm = sqrt(dot_product(v(1:3), v(1:3)))
 
   angle_cos = uv_dot / u_norm / v_norm
 
-  angle = r8_acos ( angle_cos )
+  angle = r8_acos(angle_cos)
 
   return
 end
-subroutine r8vec_any_normal ( dim_num, v1, v2 )
+subroutine r8vec_any_normal(dim_num, v1, v2)
 
 !*****************************************************************************80
 !
@@ -21930,25 +21930,25 @@ subroutine r8vec_any_normal ( dim_num, v1, v2 )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) r8vec_norm
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
-  real ( kind = 8 ) vj
-  real ( kind = 8 ) vk
+  real(kind=8) r8vec_norm
+  integer(kind=4) i
+  integer(kind=4) j
+  integer(kind=4) k
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
+  real(kind=8) vj
+  real(kind=8) vk
 
-  if ( dim_num < 2 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8VEC_ANY_NORMAL - Fatal error!'
-    write ( *, '(a)' ) '  Called with DIM_NUM < 2.'
+  if (dim_num < 2) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8VEC_ANY_NORMAL - Fatal error!'
+    write (*, '(a)') '  Called with DIM_NUM < 2.'
     stop 1
   end if
 
-  if ( r8vec_norm ( dim_num, v1 ) == 0.0D+00 ) then
+  if (r8vec_norm(dim_num, v1) == 0.0D+00) then
     v2(1) = 1.0D+00
     v2(2:dim_num) = 0.0D+00
     return
@@ -21968,9 +21968,9 @@ subroutine r8vec_any_normal ( dim_num, v1, v2 )
 
   do i = 1, dim_num
 
-    if ( abs ( vk ) < abs ( v1(i) ) .or. k < 1 ) then
+    if (abs(vk) < abs(v1(i)) .or. k < 1) then
 
-      if ( abs ( vj ) < abs ( v1(i) ) .or. j < 1 ) then
+      if (abs(vj) < abs(v1(i)) .or. j < 1) then
         k = j
         vk = vj
         j = i
@@ -21989,12 +21989,12 @@ subroutine r8vec_any_normal ( dim_num, v1, v2 )
 !
   v2(1:dim_num) = 0.0D+00
 
-  v2(j) = -vk / sqrt ( vk * vk + vj * vj )
-  v2(k) =  vj / sqrt ( vk * vk + vj * vj )
+  v2(j) = -vk / sqrt(vk * vk + vj * vj)
+  v2(k) = vj / sqrt(vk * vk + vj * vj)
 
   return
 end
-subroutine r8vec_bracket ( n, x, xval, left, right )
+subroutine r8vec_bracket(n, x, xval, left, right)
 
 !*****************************************************************************80
 !
@@ -22036,30 +22036,30 @@ subroutine r8vec_bracket ( n, x, xval, left, right )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) left
-  integer ( kind = 4 ) right
-  real ( kind = 8 ) x(n)
-  real ( kind = 8 ) xval
+  integer(kind=4) i
+  integer(kind=4) left
+  integer(kind=4) right
+  real(kind=8) x(n)
+  real(kind=8) xval
 
   do i = 2, n - 1
 
-    if ( xval < x(i) ) then
+    if (xval < x(i)) then
       left = i - 1
       right = i
       return
     end if
 
-   end do
+  end do
 
   left = n - 1
   right = n
 
   return
 end
-function r8vec_cross_product_2d ( v1, v2 )
+function r8vec_cross_product_2d(v1, v2)
 
 !*****************************************************************************80
 !
@@ -22092,15 +22092,15 @@ function r8vec_cross_product_2d ( v1, v2 )
 !
   implicit none
 
-  real ( kind = 8 ) r8vec_cross_product_2d
-  real ( kind = 8 ) v1(2)
-  real ( kind = 8 ) v2(2)
+  real(kind=8) r8vec_cross_product_2d
+  real(kind=8) v1(2)
+  real(kind=8) v2(2)
 
   r8vec_cross_product_2d = v1(1) * v2(2) - v1(2) * v2(1)
 
   return
 end
-function r8vec_cross_product_affine_2d ( v0, v1, v2 )
+function r8vec_cross_product_affine_2d(v0, v1, v2)
 
 !*****************************************************************************80
 !
@@ -22136,18 +22136,18 @@ function r8vec_cross_product_affine_2d ( v0, v1, v2 )
 !
   implicit none
 
-  real ( kind = 8 ) r8vec_cross_product_affine_2d
-  real ( kind = 8 ) v0(2)
-  real ( kind = 8 ) v1(2)
-  real ( kind = 8 ) v2(2)
+  real(kind=8) r8vec_cross_product_affine_2d
+  real(kind=8) v0(2)
+  real(kind=8) v1(2)
+  real(kind=8) v2(2)
 
   r8vec_cross_product_affine_2d = &
-      ( v1(1) - v0(1) ) * ( v2(2) - v0(2) ) &
-    - ( v2(1) - v0(1) ) * ( v1(2) - v0(2) )
+    (v1(1) - v0(1)) * (v2(2) - v0(2)) &
+    - (v2(1) - v0(1)) * (v1(2) - v0(2))
 
   return
 end
-subroutine r8vec_cross_product_3d ( v1, v2, v3 )
+subroutine r8vec_cross_product_3d(v1, v2, v3)
 
 !*****************************************************************************80
 !
@@ -22186,9 +22186,9 @@ subroutine r8vec_cross_product_3d ( v1, v2, v3 )
 !
   implicit none
 
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 
   v3(1) = v1(2) * v2(3) - v1(3) * v2(2)
   v3(2) = v1(3) * v2(1) - v1(1) * v2(3)
@@ -22196,7 +22196,7 @@ subroutine r8vec_cross_product_3d ( v1, v2, v3 )
 
   return
 end
-subroutine r8vec_cross_product_affine_3d ( v0, v1, v2, v3 )
+subroutine r8vec_cross_product_affine_3d(v0, v1, v2, v3)
 
 !*****************************************************************************80
 !
@@ -22241,23 +22241,23 @@ subroutine r8vec_cross_product_affine_3d ( v0, v1, v2, v3 )
 !
   implicit none
 
-  real ( kind = 8 ) v0(3)
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) v0(3)
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 
-  v3(1) = ( v1(2) - v0(2) ) * ( v2(3) - v0(3) ) &
-        - ( v2(2) - v0(2) ) * ( v1(3) - v0(3) )
+  v3(1) = (v1(2) - v0(2)) * (v2(3) - v0(3)) &
+          - (v2(2) - v0(2)) * (v1(3) - v0(3))
 
-  v3(2) = ( v1(3) - v0(3) ) * ( v2(1) - v0(1) ) &
-        - ( v2(3) - v0(3) ) * ( v1(1) - v0(1) )
+  v3(2) = (v1(3) - v0(3)) * (v2(1) - v0(1)) &
+          - (v2(3) - v0(3)) * (v1(1) - v0(1))
 
-  v3(3) = ( v1(1) - v0(1) ) * ( v2(2) - v0(2) ) &
-        - ( v2(1) - v0(1) ) * ( v1(2) - v0(2) )
+  v3(3) = (v1(1) - v0(1)) * (v2(2) - v0(2)) &
+          - (v2(1) - v0(1)) * (v1(2) - v0(2))
 
   return
 end
-function r8vec_distance ( dim_num, v1, v2 )
+function r8vec_distance(dim_num, v1, v2)
 
 !*****************************************************************************80
 !
@@ -22286,17 +22286,17 @@ function r8vec_distance ( dim_num, v1, v2 )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) r8vec_distance
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
+  real(kind=8) r8vec_distance
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
 
-  r8vec_distance = sqrt ( sum ( ( v1(1:dim_num) - v2(1:dim_num) )**2 ) )
+  r8vec_distance = sqrt(sum((v1(1:dim_num) - v2(1:dim_num))**2))
 
   return
 end
-function r8vec_dot_product ( dim_num, v1, v2 )
+function r8vec_dot_product(dim_num, v1, v2)
 
 !*****************************************************************************80
 !
@@ -22329,17 +22329,17 @@ function r8vec_dot_product ( dim_num, v1, v2 )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) r8vec_dot_product
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
+  real(kind=8) r8vec_dot_product
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
 
-  r8vec_dot_product = dot_product ( v1(1:dim_num), v2(1:dim_num) )
+  r8vec_dot_product = dot_product(v1(1:dim_num), v2(1:dim_num))
 
   return
 end
-function r8vec_dot_product_affine ( n, v0, v1, v2 )
+function r8vec_dot_product_affine(n, v0, v1, v2)
 
 !*****************************************************************************80
 !
@@ -22369,20 +22369,20 @@ function r8vec_dot_product_affine ( n, v0, v1, v2 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) r8vec_dot_product_affine
-  real ( kind = 8 ) v0(n)
-  real ( kind = 8 ) v1(n)
-  real ( kind = 8 ) v2(n)
+  real(kind=8) r8vec_dot_product_affine
+  real(kind=8) v0(n)
+  real(kind=8) v1(n)
+  real(kind=8) v2(n)
 
-  r8vec_dot_product_affine = dot_product ( &
-    v1(1:n) - v0(1:n),  &
-    v2(1:n) - v0(1:n) )
+  r8vec_dot_product_affine = dot_product( &
+                             v1(1:n) - v0(1:n), &
+                             v2(1:n) - v0(1:n))
 
   return
 end
-function r8vec_eq ( n, a1, a2 )
+function r8vec_eq(n, a1, a2)
 
 !*****************************************************************************80
 !
@@ -22411,17 +22411,17 @@ function r8vec_eq ( n, a1, a2 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a1(n)
-  real ( kind = 8 ) a2(n)
-  logical ( kind = 4 ) r8vec_eq
+  real(kind=8) a1(n)
+  real(kind=8) a2(n)
+  logical(kind=4) r8vec_eq
 
-  r8vec_eq = ( all ( a1(1:n) == a2(1:n) ) )
+  r8vec_eq = (all(a1(1:n) == a2(1:n)))
 
   return
 end
-function r8vec_gt ( n, a1, a2 )
+function r8vec_gt(n, a1, a2)
 
 !*****************************************************************************80
 !
@@ -22458,21 +22458,21 @@ function r8vec_gt ( n, a1, a2 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a1(n)
-  real ( kind = 8 ) a2(n)
-  integer ( kind = 4 ) i
-  logical ( kind = 4 ) r8vec_gt
+  real(kind=8) a1(n)
+  real(kind=8) a2(n)
+  integer(kind=4) i
+  logical(kind=4) r8vec_gt
 
   r8vec_gt = .false.
 
   do i = 1, n
 
-    if ( a2(i) < a1(i) ) then
+    if (a2(i) < a1(i)) then
       r8vec_gt = .true.
       exit
-    else if ( a1(i) < a2(i) ) then
+    else if (a1(i) < a2(i)) then
       r8vec_gt = .false.
       exit
     end if
@@ -22481,7 +22481,7 @@ function r8vec_gt ( n, a1, a2 )
 
   return
 end
-function r8vec_lt ( n, a1, a2 )
+function r8vec_lt(n, a1, a2)
 
 !*****************************************************************************80
 !
@@ -22518,21 +22518,21 @@ function r8vec_lt ( n, a1, a2 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a1(n)
-  real ( kind = 8 ) a2(n)
-  integer ( kind = 4 ) i
-  logical ( kind = 4 ) r8vec_lt
+  real(kind=8) a1(n)
+  real(kind=8) a2(n)
+  integer(kind=4) i
+  logical(kind=4) r8vec_lt
 
   r8vec_lt = .false.
 
   do i = 1, n
 
-    if ( a1(i) < a2(i) ) then
+    if (a1(i) < a2(i)) then
       r8vec_lt = .true.
       exit
-    else if ( a2(i) < a1(i) ) then
+    else if (a2(i) < a1(i)) then
       r8vec_lt = .false.
       exit
     end if
@@ -22541,7 +22541,7 @@ function r8vec_lt ( n, a1, a2 )
 
   return
 end
-function r8vec_norm ( n, a )
+function r8vec_norm(n, a)
 
 !*****************************************************************************80
 !
@@ -22577,16 +22577,16 @@ function r8vec_norm ( n, a )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(n)
-  real ( kind = 8 ) r8vec_norm
+  real(kind=8) a(n)
+  real(kind=8) r8vec_norm
 
-  r8vec_norm = sqrt ( sum ( a(1:n)**2 ) )
+  r8vec_norm = sqrt(sum(a(1:n)**2))
 
   return
 end
-function r8vec_norm_affine ( n, v0, v1 )
+function r8vec_norm_affine(n, v0, v1)
 
 !*****************************************************************************80
 !
@@ -22625,17 +22625,17 @@ function r8vec_norm_affine ( n, v0, v1 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) r8vec_norm_affine
-  real ( kind = 8 ) v0(n)
-  real ( kind = 8 ) v1(n)
+  real(kind=8) r8vec_norm_affine
+  real(kind=8) v0(n)
+  real(kind=8) v1(n)
 
-  r8vec_norm_affine = sqrt ( sum ( ( v0(1:n) - v1(1:n) )**2 ) )
+  r8vec_norm_affine = sqrt(sum((v0(1:n) - v1(1:n))**2))
 
   return
 end
-subroutine r8vec_normal_01 ( n, seed, x )
+subroutine r8vec_normal_01(n, seed, x)
 
 !*****************************************************************************80
 !
@@ -22705,19 +22705,19 @@ subroutine r8vec_normal_01 ( n, seed, x )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ), save :: made = 0
-  real ( kind = 8 ) r(n+1)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) r8_uniform_01
-  integer ( kind = 4 ), save :: saved = 0
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) x(n)
-  integer ( kind = 4 ) x_hi_index
-  integer ( kind = 4 ) x_lo_index
-  real ( kind = 8 ), save :: y = 0.0D+00
+  integer(kind=4) m
+  integer(kind=4), save :: made = 0
+  real(kind=8) r(n + 1)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) r8_uniform_01
+  integer(kind=4), save :: saved = 0
+  integer(kind=4) seed
+  real(kind=8) x(n)
+  integer(kind=4) x_hi_index
+  integer(kind=4) x_lo_index
+  real(kind=8), save :: y = 0.0D+00
 !
 !  I'd like to allow the user to reset the internal data.
 !  But this won't work properly if we have a saved value Y.
@@ -22725,13 +22725,13 @@ subroutine r8vec_normal_01 ( n, seed, x )
 !  explicitly that any internal memory should be flushed,
 !  by passing in a negative value for N.
 !
-  if ( n < 0 ) then
+  if (n < 0) then
     n = made
     made = 0
     saved = 0
     y = 0.0D+00
     return
-  else if ( n == 0 ) then
+  else if (n == 0) then
     return
   end if
 !
@@ -22742,7 +22742,7 @@ subroutine r8vec_normal_01 ( n, seed, x )
 !
 !  Use up the old value, if we have it.
 !
-  if ( saved == 1 ) then
+  if (saved == 1) then
     x(1) = y
     saved = 0
     x_lo_index = 2
@@ -22750,26 +22750,26 @@ subroutine r8vec_normal_01 ( n, seed, x )
 !
 !  Maybe we don't need any more values.
 !
-  if ( x_hi_index - x_lo_index + 1 == 0 ) then
+  if (x_hi_index - x_lo_index + 1 == 0) then
 !
 !  If we need just one new value, do that here to avoid null arrays.
 !
-  else if ( x_hi_index - x_lo_index + 1 == 1 ) then
+  else if (x_hi_index - x_lo_index + 1 == 1) then
 
-    r(1) = r8_uniform_01 ( seed )
+    r(1) = r8_uniform_01(seed)
 
-    if ( r(1) == 0.0D+00 ) then
-      write ( *, '(a)' ) ' '
-      write ( *, '(a)' ) 'R8VEC_NORMAL_01 - Fatal error!'
-      write ( *, '(a)' ) '  R8_UNIFORM_01 returned a value of 0.'
+    if (r(1) == 0.0D+00) then
+      write (*, '(a)') ' '
+      write (*, '(a)') 'R8VEC_NORMAL_01 - Fatal error!'
+      write (*, '(a)') '  R8_UNIFORM_01 returned a value of 0.'
       stop 1
     end if
 
-    r(2) = r8_uniform_01 ( seed )
+    r(2) = r8_uniform_01(seed)
 
     x(x_hi_index) = &
-             sqrt ( -2.0D+00 * log ( r(1) ) ) * cos ( 2.0D+00 * r8_pi * r(2) )
-    y =      sqrt ( -2.0D+00 * log ( r(1) ) ) * sin ( 2.0D+00 * r8_pi * r(2) )
+      sqrt(-2.0D+00 * log(r(1))) * cos(2.0D+00 * r8_pi * r(2))
+    y = sqrt(-2.0D+00 * log(r(1))) * sin(2.0D+00 * r8_pi * r(2))
 
     saved = 1
 
@@ -22777,19 +22777,19 @@ subroutine r8vec_normal_01 ( n, seed, x )
 !
 !  If we require an even number of values, that's easy.
 !
-  else if ( mod ( x_hi_index - x_lo_index + 1, 2 ) == 0 ) then
+  else if (mod(x_hi_index - x_lo_index + 1, 2) == 0) then
 
-    m = ( x_hi_index - x_lo_index + 1 ) / 2
+    m = (x_hi_index - x_lo_index + 1) / 2
 
-    call r8vec_uniform_01 ( 2*m, seed, r )
+    call r8vec_uniform_01(2 * m, seed, r)
 
-    x(x_lo_index:x_hi_index-1:2) = &
-      sqrt ( -2.0D+00 * log ( r(1:2*m-1:2) ) ) &
-      * cos ( 2.0D+00 * r8_pi * r(2:2*m:2) )
+    x(x_lo_index:x_hi_index - 1:2) = &
+      sqrt(-2.0D+00 * log(r(1:2 * m - 1:2))) &
+      * cos(2.0D+00 * r8_pi * r(2:2 * m:2))
 
-    x(x_lo_index+1:x_hi_index:2) = &
-      sqrt ( -2.0D+00 * log ( r(1:2*m-1:2) ) ) &
-      * sin ( 2.0D+00 * r8_pi * r(2:2*m:2) )
+    x(x_lo_index + 1:x_hi_index:2) = &
+      sqrt(-2.0D+00 * log(r(1:2 * m - 1:2))) &
+      * sin(2.0D+00 * r8_pi * r(2:2 * m:2))
 
     made = made + x_hi_index - x_lo_index + 1
 !
@@ -22801,23 +22801,23 @@ subroutine r8vec_normal_01 ( n, seed, x )
 
     x_hi_index = x_hi_index - 1
 
-    m = ( x_hi_index - x_lo_index + 1 ) / 2 + 1
+    m = (x_hi_index - x_lo_index + 1) / 2 + 1
 
-    call r8vec_uniform_01 ( 2*m, seed, r )
+    call r8vec_uniform_01(2 * m, seed, r)
 
-    x(x_lo_index:x_hi_index-1:2) = &
-      sqrt ( -2.0D+00 * log ( r(1:2*m-3:2) ) ) &
-      * cos ( 2.0D+00 * r8_pi * r(2:2*m-2:2) )
+    x(x_lo_index:x_hi_index - 1:2) = &
+      sqrt(-2.0D+00 * log(r(1:2 * m - 3:2))) &
+      * cos(2.0D+00 * r8_pi * r(2:2 * m - 2:2))
 
-    x(x_lo_index+1:x_hi_index:2) = &
-      sqrt ( -2.0D+00 * log ( r(1:2*m-3:2) ) ) &
-      * sin ( 2.0D+00 * r8_pi * r(2:2*m-2:2) )
+    x(x_lo_index + 1:x_hi_index:2) = &
+      sqrt(-2.0D+00 * log(r(1:2 * m - 3:2))) &
+      * sin(2.0D+00 * r8_pi * r(2:2 * m - 2:2))
 
-    x(n) = sqrt ( -2.0E+00 * log ( r(2*m-1) ) ) &
-      * cos ( 2.0D+00 * r8_pi * r(2*m) )
+    x(n) = sqrt(-2.0E+00 * log(r(2 * m - 1))) &
+           * cos(2.0D+00 * r8_pi * r(2 * m))
 
-    y = sqrt ( -2.0D+00 * log ( r(2*m-1) ) ) &
-      * sin ( 2.0D+00 * r8_pi * r(2*m) )
+    y = sqrt(-2.0D+00 * log(r(2 * m - 1))) &
+        * sin(2.0D+00 * r8_pi * r(2 * m))
 
     saved = 1
 
@@ -22827,7 +22827,7 @@ subroutine r8vec_normal_01 ( n, seed, x )
 
   return
 end
-function r8vec_normsq ( n, v )
+function r8vec_normsq(n, v)
 
 !*****************************************************************************80
 !
@@ -22863,16 +22863,17 @@ function r8vec_normsq ( n, v )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) r8vec_normsq
-  real ( kind = 8 ) v(n)
+  real(kind=8) r8vec_normsq
+  real(kind=8) v(n)
 
-  r8vec_normsq = sum ( v(1:n)**2 )
+  r8vec_normsq = sum(v(1:n)**2)
 
   return
 end
-function r8vec_normsq_affine ( n, v0, v1 )
+
+function r8vec_normsq_affine(n, v0, v1)
 
 !*****************************************************************************80
 !
@@ -22911,17 +22912,17 @@ function r8vec_normsq_affine ( n, v0, v1 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) r8vec_normsq_affine
-  real ( kind = 8 ) v0(n)
-  real ( kind = 8 ) v1(n)
+  real(kind=8) r8vec_normsq_affine
+  real(kind=8) v0(n)
+  real(kind=8) v1(n)
 
-  r8vec_normsq_affine = sum ( ( v0(1:n) - v1(1:n) )**2 )
+  r8vec_normsq_affine = sum((v0(1:n) - v1(1:n))**2)
 
   return
 end
-subroutine r8vec_polarize ( n, a, p, a_normal, a_parallel )
+subroutine r8vec_polarize(n, a, p, a_normal, a_parallel)
 
 !*****************************************************************************80
 !
@@ -22965,24 +22966,24 @@ subroutine r8vec_polarize ( n, a, p, a_normal, a_parallel )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(n)
-  real ( kind = 8 ) a_dot_p
-  real ( kind = 8 ) a_normal(n)
-  real ( kind = 8 ) a_parallel(n)
-  real ( kind = 8 ) p(n)
-  real ( kind = 8 ) p_norm
+  real(kind=8) a(n)
+  real(kind=8) a_dot_p
+  real(kind=8) a_normal(n)
+  real(kind=8) a_parallel(n)
+  real(kind=8) p(n)
+  real(kind=8) p_norm
 
-  p_norm = sqrt ( sum ( p(1:n)**2 ) )
+  p_norm = sqrt(sum(p(1:n)**2))
 
-  if ( p_norm == 0.0D+00 ) then
+  if (p_norm == 0.0D+00) then
     a_normal(1:n) = a(1:n)
     a_parallel(1:n) = 0.0D+00
     return
   end if
 
-  a_dot_p = dot_product ( a(1:n), p(1:n) ) / p_norm
+  a_dot_p = dot_product(a(1:n), p(1:n)) / p_norm
 
   a_parallel(1:n) = a_dot_p * p(1:n) / p_norm
 
@@ -22990,7 +22991,7 @@ subroutine r8vec_polarize ( n, a, p, a_normal, a_parallel )
 
   return
 end
-subroutine r8vec_print ( n, a, title )
+subroutine r8vec_print(n, a, title)
 
 !*****************************************************************************80
 !
@@ -23022,23 +23023,23 @@ subroutine r8vec_print ( n, a, title )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(n)
-  integer ( kind = 4 ) i
-  character ( len = * )  title
+  real(kind=8) a(n)
+  integer(kind=4) i
+  character(len=*) title
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) trim ( title )
-  write ( *, '(a)' ) ' '
+  write (*, '(a)') ' '
+  write (*, '(a)') trim(title)
+  write (*, '(a)') ' '
 
   do i = 1, n
-    write ( *, '(2x,i8,a,1x,g16.8)' ) i, ':', a(i)
+    write (*, '(2x,i8,a,1x,g16.8)') i, ':', a(i)
   end do
 
   return
 end
-function r8vec_scalar_triple_product ( v1, v2, v3 )
+function r8vec_scalar_triple_product(v1, v2, v3)
 
 !*****************************************************************************80
 !
@@ -23084,19 +23085,19 @@ function r8vec_scalar_triple_product ( v1, v2, v3 )
 !
   implicit none
 
-  real ( kind = 8 ) r8vec_scalar_triple_product
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
-  real ( kind = 8 ) v4(3)
+  real(kind=8) r8vec_scalar_triple_product
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
+  real(kind=8) v4(3)
 
-  call r8vec_cross_product_3d ( v2, v3, v4 )
+  call r8vec_cross_product_3d(v2, v3, v4)
 
-  r8vec_scalar_triple_product = dot_product ( v1(1:3), v4(1:3) )
+  r8vec_scalar_triple_product = dot_product(v1(1:3), v4(1:3))
 
   return
 end
-subroutine r8vec_swap ( n, a1, a2 )
+subroutine r8vec_swap(n, a1, a2)
 
 !*****************************************************************************80
 !
@@ -23122,11 +23123,11 @@ subroutine r8vec_swap ( n, a1, a2 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a1(n)
-  real ( kind = 8 ) a2(n)
-  real ( kind = 8 ) a3(n)
+  real(kind=8) a1(n)
+  real(kind=8) a2(n)
+  real(kind=8) a3(n)
 
   a3(1:n) = a1(1:n)
   a1(1:n) = a2(1:n)
@@ -23134,7 +23135,7 @@ subroutine r8vec_swap ( n, a1, a2 )
 
   return
 end
-subroutine r8vec_uniform_01 ( n, seed, r )
+subroutine r8vec_uniform_01(n, seed, r)
 
 !*****************************************************************************80
 !
@@ -23187,17 +23188,17 @@ subroutine r8vec_uniform_01 ( n, seed, r )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) r(n)
+  integer(kind=4) i
+  integer(kind=4) k
+  integer(kind=4) seed
+  real(kind=8) r(n)
 
-  if ( seed == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8VEC_UNIFORM_01 - Fatal error!'
-    write ( *, '(a)' ) '  Input value of SEED = 0.'
+  if (seed == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8VEC_UNIFORM_01 - Fatal error!'
+    write (*, '(a)') '  Input value of SEED = 0.'
     stop 1
   end if
 
@@ -23205,19 +23206,19 @@ subroutine r8vec_uniform_01 ( n, seed, r )
 
     k = seed / 127773
 
-    seed = 16807 * ( seed - k * 127773 ) - k * 2836
+    seed = 16807 * (seed - k * 127773) - k * 2836
 
-    if ( seed < 0 ) then
+    if (seed < 0) then
       seed = seed + 2147483647
     end if
 
-    r(i) = real ( seed, kind = 8 ) * 4.656612875D-10
+    r(i) = real(seed, kind=8) * 4.656612875D-10
 
   end do
 
   return
 end
-subroutine r8vec_uniform_ab ( n, a, b, seed, r )
+subroutine r8vec_uniform_ab(n, a, b, seed, r)
 
 !*****************************************************************************80
 !
@@ -23270,19 +23271,19 @@ subroutine r8vec_uniform_ab ( n, a, b, seed, r )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) r(n)
+  real(kind=8) a
+  real(kind=8) b
+  integer(kind=4) i
+  integer(kind=4) k
+  integer(kind=4) seed
+  real(kind=8) r(n)
 
-  if ( seed == 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'R8VEC_UNIFORM_AB - Fatal error!'
-    write ( *, '(a)' ) '  Input value of SEED = 0.'
+  if (seed == 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'R8VEC_UNIFORM_AB - Fatal error!'
+    write (*, '(a)') '  Input value of SEED = 0.'
     stop 1
   end if
 
@@ -23290,19 +23291,19 @@ subroutine r8vec_uniform_ab ( n, a, b, seed, r )
 
     k = seed / 127773
 
-    seed = 16807 * ( seed - k * 127773 ) - k * 2836
+    seed = 16807 * (seed - k * 127773) - k * 2836
 
-    if ( seed < 0 ) then
+    if (seed < 0) then
       seed = seed + 2147483647
     end if
 
-    r(i) = a + ( b - a ) * real ( seed, kind = 8 ) * 4.656612875D-10
+    r(i) = a + (b - a) * real(seed, kind=8) * 4.656612875D-10
 
   end do
 
   return
 end
-subroutine r8vec_uniform_unit ( m, seed, w )
+subroutine r8vec_uniform_unit(m, seed, w)
 
 !*****************************************************************************80
 !
@@ -23332,19 +23333,19 @@ subroutine r8vec_uniform_unit ( m, seed, w )
 !
   implicit none
 
-  integer ( kind = 4 ) m
+  integer(kind=4) m
 
-  real ( kind = 8 ) norm
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) w(m)
+  real(kind=8) norm
+  integer(kind=4) seed
+  real(kind=8) w(m)
 !
 !  Get M values from a standard normal distribution.
 !
-  call r8vec_normal_01 ( m, seed, w )
+  call r8vec_normal_01(m, seed, w)
 !
 !  Compute the length of the vector.
 !
-  norm = sqrt ( sum ( w(1:m)**2 ) )
+  norm = sqrt(sum(w(1:m)**2))
 !
 !  Normalize the vector.
 !
@@ -23352,7 +23353,7 @@ subroutine r8vec_uniform_unit ( m, seed, w )
 
   return
 end
-subroutine radec_distance_3d ( ra1, dec1, ra2, dec2, theta )
+subroutine radec_distance_3d(ra1, dec1, ra2, dec2, theta)
 
 !*****************************************************************************80
 !
@@ -23393,51 +23394,51 @@ subroutine radec_distance_3d ( ra1, dec1, ra2, dec2, theta )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) cos_theta
-  real ( kind = 8 ) dec1
-  real ( kind = 8 ) dec2
-  real ( kind = 8 ) degrees_to_radians
-  real ( kind = 8 ) norm_v1
-  real ( kind = 8 ) norm_v2
-  real ( kind = 8 ) phi1
-  real ( kind = 8 ) phi2
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) ra1
-  real ( kind = 8 ) ra2
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) theta1
-  real ( kind = 8 ) theta2
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
+  real(kind=8) cos_theta
+  real(kind=8) dec1
+  real(kind=8) dec2
+  real(kind=8) degrees_to_radians
+  real(kind=8) norm_v1
+  real(kind=8) norm_v2
+  real(kind=8) phi1
+  real(kind=8) phi2
+  real(kind=8) r8_acos
+  real(kind=8) ra1
+  real(kind=8) ra2
+  real(kind=8) theta
+  real(kind=8) theta1
+  real(kind=8) theta2
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
 
-  theta1 = degrees_to_radians ( 15.0D+00 * ra1 )
-  phi1 = degrees_to_radians ( dec1 )
+  theta1 = degrees_to_radians(15.0D+00 * ra1)
+  phi1 = degrees_to_radians(dec1)
 
-  v1(1:dim_num) = (/ cos ( theta1 ) * cos ( phi1 ), &
-                     sin ( theta1 ) * cos ( phi1 ), &
-                                      sin ( phi1 ) /)
+  v1(1:dim_num) = (/cos(theta1) * cos(phi1), &
+                    sin(theta1) * cos(phi1), &
+                    sin(phi1)/)
 
-  norm_v1 = sqrt ( sum ( v1(1:dim_num)**2 ) )
+  norm_v1 = sqrt(sum(v1(1:dim_num)**2))
 
-  theta2 = degrees_to_radians ( 15.0D+00 * ra2 )
-  phi2 = degrees_to_radians ( dec2 )
+  theta2 = degrees_to_radians(15.0D+00 * ra2)
+  phi2 = degrees_to_radians(dec2)
 
-  v2(1:dim_num) = (/ cos ( theta2 ) * cos ( phi2 ), &
-                     sin ( theta2 ) * cos ( phi2 ), &
-                                      sin ( phi2 ) /)
+  v2(1:dim_num) = (/cos(theta2) * cos(phi2), &
+                    sin(theta2) * cos(phi2), &
+                    sin(phi2)/)
 
-  norm_v2 = sqrt ( sum ( v2(1:dim_num)**2 ) )
+  norm_v2 = sqrt(sum(v2(1:dim_num)**2))
 
-  cos_theta = dot_product ( v1(1:dim_num), v2(1:dim_num) ) &
-    / ( norm_v1 * norm_v2 )
+  cos_theta = dot_product(v1(1:dim_num), v2(1:dim_num)) &
+              / (norm_v1 * norm_v2)
 
-  theta = r8_acos ( cos_theta )
+  theta = r8_acos(cos_theta)
 
   return
 end
-subroutine radec_to_xyz ( ra, dec, p )
+subroutine radec_to_xyz(ra, dec, p)
 
 !*****************************************************************************80
 !
@@ -23473,25 +23474,25 @@ subroutine radec_to_xyz ( ra, dec, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dec
-  real ( kind = 8 ) degrees_to_radians
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) ra
-  real ( kind = 8 ) theta
+  real(kind=8) dec
+  real(kind=8) degrees_to_radians
+  real(kind=8) p(dim_num)
+  real(kind=8) phi
+  real(kind=8) ra
+  real(kind=8) theta
 
-  theta = degrees_to_radians ( 15.0D+00 * ra )
-  phi = degrees_to_radians ( dec )
+  theta = degrees_to_radians(15.0D+00 * ra)
+  phi = degrees_to_radians(dec)
 
-  p(1) = cos ( theta ) * cos ( phi )
-  p(2) = sin ( theta ) * cos ( phi )
-  p(3) = sin ( phi )
+  p(1) = cos(theta) * cos(phi)
+  p(2) = sin(theta) * cos(phi)
+  p(3) = sin(phi)
 
   return
 end
-function radians_to_degrees ( angle_rad )
+function radians_to_degrees(angle_rad)
 
 !*****************************************************************************80
 !
@@ -23518,15 +23519,15 @@ function radians_to_degrees ( angle_rad )
 !
   implicit none
 
-  real ( kind = 8 ) angle_rad
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radians_to_degrees
+  real(kind=8) angle_rad
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radians_to_degrees
 
-  radians_to_degrees = ( angle_rad / r8_pi ) * 180.0D+00
+  radians_to_degrees = (angle_rad / r8_pi) * 180.0D+00
 
   return
 end
-subroutine radians_to_dms ( angle_rad, degrees, minutes, seconds )
+subroutine radians_to_dms(angle_rad, degrees, minutes, seconds)
 
 !*****************************************************************************80
 !
@@ -23553,30 +23554,30 @@ subroutine radians_to_dms ( angle_rad, degrees, minutes, seconds )
 !
   implicit none
 
-  real ( kind = 8 ) angle_deg
-  real ( kind = 8 ) angle_rad
-  integer ( kind = 4 ) degrees
-  integer ( kind = 4 ) minutes
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  integer ( kind = 4 ) seconds
+  real(kind=8) angle_deg
+  real(kind=8) angle_rad
+  integer(kind=4) degrees
+  integer(kind=4) minutes
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  integer(kind=4) seconds
 
-  angle_deg = 180.0D+00 * abs ( angle_rad ) / r8_pi
+  angle_deg = 180.0D+00 * abs(angle_rad) / r8_pi
 
-  degrees = int ( angle_deg )
-  angle_deg = ( angle_deg - real ( degrees, kind = 8 ) ) * 60.0D+00
-  minutes = int ( angle_deg )
-  angle_deg = ( angle_deg - real ( minutes, kind = 8 ) ) * 60.0D+00
-  seconds = nint ( angle_deg )
+  degrees = int(angle_deg)
+  angle_deg = (angle_deg - real(degrees, kind=8)) * 60.0D+00
+  minutes = int(angle_deg)
+  angle_deg = (angle_deg - real(minutes, kind=8)) * 60.0D+00
+  seconds = nint(angle_deg)
 
-  if ( angle_rad < 0.0D+00 ) then
-    degrees = - degrees
-    minutes = - minutes
-    seconds = - seconds
+  if (angle_rad < 0.0D+00) then
+    degrees = -degrees
+    minutes = -minutes
+    seconds = -seconds
   end if
 
   return
 end
-subroutine random_initialize ( seed )
+subroutine random_initialize(seed)
 
 !*****************************************************************************80
 !
@@ -23618,42 +23619,42 @@ subroutine random_initialize ( seed )
 !
   implicit none
 
-  integer ( kind = 4 ) count
-  integer ( kind = 4 ) count_max
-  integer ( kind = 4 ) count_rate
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) seed
-  integer ( kind = 4 ), allocatable :: seed_vector(:)
-  integer ( kind = 4 ) seed_size
-  real ( kind = 8 ) t
+  integer(kind=4) count
+  integer(kind=4) count_max
+  integer(kind=4) count_rate
+  integer(kind=4) i
+  integer(kind=4) seed
+  integer(kind=4), allocatable :: seed_vector(:)
+  integer(kind=4) seed_size
+  real(kind=8) t
 !
 !  Initialize the random number seed.
 !
-  call random_seed ( )
+  call random_seed()
 !
 !  Determine the size of the random number seed.
 !
-  call random_seed ( size = seed_size )
+  call random_seed(size=seed_size)
 !
 !  Allocate a seed of the right size.
 !
-  allocate ( seed_vector(seed_size) )
+  allocate (seed_vector(seed_size))
 
-  if ( seed /= 0 ) then
+  if (seed /= 0) then
 
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'RANDOM_INITIALIZE'
-    write ( *, '(a,i12)' ) '  Initialize RANDOM_NUMBER with user SEED = ', seed
+    write (*, '(a)') ' '
+    write (*, '(a)') 'RANDOM_INITIALIZE'
+    write (*, '(a,i12)') '  Initialize RANDOM_NUMBER with user SEED = ', seed
 
   else
 
-    call system_clock ( count, count_rate, count_max )
+    call system_clock(count, count_rate, count_max)
 
     seed = count
 
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'RANDOM_INITIALIZE'
-    write ( *, '(a,i12)' ) &
+    write (*, '(a)') ' '
+    write (*, '(a)') 'RANDOM_INITIALIZE'
+    write (*, '(a,i12)') &
       '  Initialize RANDOM_NUMBER with arbitrary SEED = ', seed
 
   end if
@@ -23662,21 +23663,21 @@ subroutine random_initialize ( seed )
 !
   seed_vector(1:seed_size) = seed
 
-  call random_seed ( put = seed_vector(1:seed_size) )
+  call random_seed(put=seed_vector(1:seed_size))
 !
 !  Free up the seed space.
 !
-  deallocate ( seed_vector )
+  deallocate (seed_vector)
 !
 !  Call the random number routine a bunch of times.
 !
   do i = 1, 100
-    call random_number ( harvest = t )
+    call random_number(harvest=t)
   end do
 
   return
 end
-subroutine rotation_axis_vector_3d ( axis, angle, v, w )
+subroutine rotation_axis_vector_3d(axis, angle, v, w)
 
 !*****************************************************************************80
 !
@@ -23711,29 +23712,29 @@ subroutine rotation_axis_vector_3d ( axis, angle, v, w )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) axis(dim_num)
-  real ( kind = 8 ) axis_norm
-  real ( kind = 8 ) dot
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) normal(dim_num)
-  real ( kind = 8 ) normal_component
-  real ( kind = 8 ) normal2(dim_num)
-  real ( kind = 8 ) parallel(dim_num)
-  real ( kind = 8 ) rot(dim_num)
-  real ( kind = 8 ) u(dim_num)
-  real ( kind = 8 ) v(dim_num)
-  real ( kind = 8 ) w(dim_num)
+  real(kind=8) angle
+  real(kind=8) axis(dim_num)
+  real(kind=8) axis_norm
+  real(kind=8) dot
+  real(kind=8) norm
+  real(kind=8) normal(dim_num)
+  real(kind=8) normal_component
+  real(kind=8) normal2(dim_num)
+  real(kind=8) parallel(dim_num)
+  real(kind=8) rot(dim_num)
+  real(kind=8) u(dim_num)
+  real(kind=8) v(dim_num)
+  real(kind=8) w(dim_num)
 !
 !  Compute the length of the rotation axis.
 !
   u(1:dim_num) = axis(1:dim_num)
 
-  axis_norm = sqrt ( sum ( u(1:dim_num)**2 ) )
+  axis_norm = sqrt(sum(u(1:dim_num)**2))
 
-  if ( axis_norm == 0.0D+00 ) then
+  if (axis_norm == 0.0D+00) then
     w(1:dim_num) = 0.0D+00
     return
   end if
@@ -23742,7 +23743,7 @@ subroutine rotation_axis_vector_3d ( axis, angle, v, w )
 !
 !  Compute the dot product of the vector and the unit rotation axis.
 !
-  dot = dot_product ( u(1:dim_num), v(1:dim_num) )
+  dot = dot_product(u(1:dim_num), v(1:dim_num))
 !
 !  Compute the parallel component of the vector.
 !
@@ -23752,9 +23753,9 @@ subroutine rotation_axis_vector_3d ( axis, angle, v, w )
 !
   normal(1:dim_num) = v(1:dim_num) - parallel(1:dim_num)
 
-  normal_component = sqrt ( sum ( normal(1:dim_num)**2 ) )
+  normal_component = sqrt(sum(normal(1:dim_num)**2))
 
-  if ( normal_component == 0.0D+00 ) then
+  if (normal_component == 0.0D+00) then
     w(1:dim_num) = parallel(1:dim_num)
     return
   end if
@@ -23769,15 +23770,15 @@ subroutine rotation_axis_vector_3d ( axis, angle, v, w )
   normal2(2) = u(3) * normal(1) - u(1) * normal(3)
   normal2(3) = u(1) * normal(2) - u(2) * normal(1)
 
-  norm = sqrt ( sum ( normal2(1:dim_num)**2 ) )
+  norm = sqrt(sum(normal2(1:dim_num)**2))
 
   normal2(1:dim_num) = normal2(1:dim_num) / norm
 !
 !  Rotate the normal component by the angle.
 !
   rot(1:dim_num) = normal_component * ( &
-      cos ( angle ) * normal(1:dim_num) &
-    + sin ( angle ) * normal2(1:dim_num) )
+                   cos(angle) * normal(1:dim_num) &
+                   + sin(angle) * normal2(1:dim_num))
 !
 !  The rotated vector is the parallel component plus the rotated component.
 !
@@ -23785,7 +23786,7 @@ subroutine rotation_axis_vector_3d ( axis, angle, v, w )
 
   return
 end
-subroutine rtp_to_xyz ( r, theta, phi, xyz )
+subroutine rtp_to_xyz(r, theta, phi, xyz)
 
 !*****************************************************************************80
 !
@@ -23820,18 +23821,18 @@ subroutine rtp_to_xyz ( r, theta, phi, xyz )
 !
   implicit none
 
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) xyz(3)
+  real(kind=8) phi
+  real(kind=8) r
+  real(kind=8) theta
+  real(kind=8) xyz(3)
 
-  xyz(1) = r * cos ( theta ) * sin ( phi )
-  xyz(2) = r * sin ( theta ) * sin ( phi )
-  xyz(3) = r *                 cos ( phi )
+  xyz(1) = r * cos(theta) * sin(phi)
+  xyz(2) = r * sin(theta) * sin(phi)
+  xyz(3) = r * cos(phi)
 
   return
 end
-subroutine segment_contains_point_1d ( p1, p2, p, t )
+subroutine segment_contains_point_1d(p1, p2, p, t)
 
 !*****************************************************************************80
 !
@@ -23866,33 +23867,33 @@ subroutine segment_contains_point_1d ( p1, p2, p, t )
 !
   implicit none
 
-  real ( kind = 8 ) p
-  real ( kind = 8 ) p1
-  real ( kind = 8 ) p2
-  real ( kind = 8 ) t
-  real ( kind = 8 ) unit
+  real(kind=8) p
+  real(kind=8) p1
+  real(kind=8) p2
+  real(kind=8) t
+  real(kind=8) unit
 
   unit = p2 - p1
 
-  if ( unit == 0.0D+00 ) then
+  if (unit == 0.0D+00) then
 
-    if ( p == p1 ) then
+    if (p == p1) then
       t = 0.5D+00
-    else if ( p < p1 ) then
-      t = - huge ( t )
-    else if ( p1 < p ) then
-      t = huge ( t )
+    else if (p < p1) then
+      t = -huge(t)
+    else if (p1 < p) then
+      t = huge(t)
     end if
 
   else
 
-    t = ( p - p1 ) / unit
+    t = (p - p1) / unit
 
   end if
 
   return
 end
-subroutine segment_contains_point_2d ( p1, p2, p, u )
+subroutine segment_contains_point_2d(p1, p2, p, u)
 
 !*****************************************************************************80
 !
@@ -23931,40 +23932,40 @@ subroutine segment_contains_point_2d ( p1, p2, p, u )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) normsq
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) u(dim_num)
+  real(kind=8) normsq
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) u(dim_num)
 
-  normsq = sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 )
+  normsq = sum((p2(1:dim_num) - p1(1:dim_num))**2)
 
-  if ( normsq == 0.0D+00 ) then
+  if (normsq == 0.0D+00) then
 
-    if ( all ( p(1:dim_num) == p1(1:dim_num) ) ) then
+    if (all(p(1:dim_num) == p1(1:dim_num))) then
       u(1) = 0.5D+00
       u(2) = 0.0D+00
     else
       u(1) = 0.5D+00
-      u(2) = huge ( u(2) )
+      u(2) = huge(u(2))
     end if
 
   else
 
-    u(1) = sum ( ( p(1:dim_num)  - p1(1:dim_num) ) &
-               * ( p2(1:dim_num) - p1(1:dim_num) ) ) / normsq
+    u(1) = sum((p(1:dim_num) - p1(1:dim_num)) &
+               * (p2(1:dim_num) - p1(1:dim_num))) / normsq
 
-    u(2) = sqrt ( ( ( u(1) - 1.0D+00 ) * p1(1) - u(1) * p2(1) + p(1) )**2 &
-                + ( ( u(1) - 1.0D+00 ) * p1(2) - u(1) * p2(2) + p(2) )**2 ) &
-                / sqrt ( normsq )
+    u(2) = sqrt(((u(1) - 1.0D+00) * p1(1) - u(1) * p2(1) + p(1))**2 &
+                + ((u(1) - 1.0D+00) * p1(2) - u(1) * p2(2) + p(2))**2) &
+           / sqrt(normsq)
 
   end if
 
   return
 end
-subroutine segment_point_coords_2d ( p1, p2, p, s, t )
+subroutine segment_point_coords_2d(p1, p2, p, s, t)
 
 !*****************************************************************************80
 !
@@ -24019,38 +24020,38 @@ subroutine segment_point_coords_2d ( p1, p2, p, s, t )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) s
-  real ( kind = 8 ) t
+  real(kind=8) bot
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) s
+  real(kind=8) t
 !
 !  If the line segment is actually a point, then the answer is easy.
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
     t = 0.0D+00
 
   else
 
-    bot = sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 )
+    bot = sum((p2(1:dim_num) - p1(1:dim_num))**2)
 
-    t = sum ( ( p(1:dim_num)  - p1(1:dim_num) ) &
-            * ( p2(1:dim_num) - p1(1:dim_num) ) ) / bot
+    t = sum((p(1:dim_num) - p1(1:dim_num)) &
+            * (p2(1:dim_num) - p1(1:dim_num))) / bot
 
   end if
 
-  pn(1:dim_num) = p1(1:dim_num) + t * ( p2(1:dim_num) - p1(1:dim_num) )
+  pn(1:dim_num) = p1(1:dim_num) + t * (p2(1:dim_num) - p1(1:dim_num))
 
-  s = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+  s = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
 
   return
 end
-subroutine segment_point_coords_3d ( p1, p2, p, s, t )
+subroutine segment_point_coords_3d(p1, p2, p, s, t)
 
 !*****************************************************************************80
 !
@@ -24105,38 +24106,38 @@ subroutine segment_point_coords_3d ( p1, p2, p, s, t )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) s
-  real ( kind = 8 ) t
+  real(kind=8) bot
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) s
+  real(kind=8) t
 !
 !  If the line segment is actually a point, then the answer is easy.
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
     t = 0.0D+00
 
   else
 
-    bot = sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 )
+    bot = sum((p2(1:dim_num) - p1(1:dim_num))**2)
 
-    t = sum ( ( p(1:dim_num)  - p1(1:dim_num) ) &
-            * ( p2(1:dim_num) - p1(1:dim_num) ) ) / bot
+    t = sum((p(1:dim_num) - p1(1:dim_num)) &
+            * (p2(1:dim_num) - p1(1:dim_num))) / bot
 
   end if
 
-  pn(1:dim_num) = p1(1:dim_num) + t * ( p2(1:dim_num) - p1(1:dim_num) )
+  pn(1:dim_num) = p1(1:dim_num) + t * (p2(1:dim_num) - p1(1:dim_num))
 
-  s = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+  s = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
 
   return
 end
-subroutine segment_point_dist_2d ( p1, p2, p, dist )
+subroutine segment_point_dist_2d(p1, p2, p, dist)
 
 !*****************************************************************************80
 !
@@ -24177,41 +24178,41 @@ subroutine segment_point_dist_2d ( p1, p2, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) t
+  real(kind=8) bot
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) t
 !
 !  If the line segment is actually a point, then the answer is easy.
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
     t = 0.0D+00
 
   else
 
-    bot = sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 )
+    bot = sum((p2(1:dim_num) - p1(1:dim_num))**2)
 
-    t = sum ( ( p(1:dim_num)  - p1(1:dim_num) ) &
-            * ( p2(1:dim_num) - p1(1:dim_num) ) ) / bot
+    t = sum((p(1:dim_num) - p1(1:dim_num)) &
+            * (p2(1:dim_num) - p1(1:dim_num))) / bot
 
-    t = max ( t, 0.0D+00 )
-    t = min ( t, 1.0D+00 )
+    t = max(t, 0.0D+00)
+    t = min(t, 1.0D+00)
 
   end if
 
-  pn(1:dim_num) = p1(1:dim_num) + t * ( p2(1:dim_num) - p1(1:dim_num) )
+  pn(1:dim_num) = p1(1:dim_num) + t * (p2(1:dim_num) - p1(1:dim_num))
 
-  dist = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
 
   return
 end
-subroutine segment_point_dist_3d ( p1, p2, p, dist )
+subroutine segment_point_dist_3d(p1, p2, p, dist)
 
 !*****************************************************************************80
 !
@@ -24252,41 +24253,41 @@ subroutine segment_point_dist_3d ( p1, p2, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) t
+  real(kind=8) bot
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) t
 !
 !  If the line segment is actually a point, then the answer is easy.
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
     t = 0.0D+00
 
   else
 
-    bot = sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 )
+    bot = sum((p2(1:dim_num) - p1(1:dim_num))**2)
 
-    t = sum ( ( p(1:dim_num)  - p1(1:dim_num) ) &
-            * ( p2(1:dim_num) - p1(1:dim_num) ) ) / bot
+    t = sum((p(1:dim_num) - p1(1:dim_num)) &
+            * (p2(1:dim_num) - p1(1:dim_num))) / bot
 
-    t = max ( t, 0.0D+00 )
-    t = min ( t, 1.0D+00 )
+    t = max(t, 0.0D+00)
+    t = min(t, 1.0D+00)
 
   end if
 
-  pn(1:dim_num) = p1(1:dim_num) + t * ( p2(1:dim_num) - p1(1:dim_num) )
+  pn(1:dim_num) = p1(1:dim_num) + t * (p2(1:dim_num) - p1(1:dim_num))
 
-  dist = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
 
   return
 end
-subroutine segment_point_near_2d ( p1, p2, p, pn, dist, t )
+subroutine segment_point_near_2d(p1, p2, p, pn, dist, t)
 
 !*****************************************************************************80
 !
@@ -24333,41 +24334,41 @@ subroutine segment_point_near_2d ( p1, p2, p, pn, dist, t )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) t
+  real(kind=8) bot
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) t
 !
 !  If the line segment is actually a point, then the answer is easy.
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
     t = 0.0D+00
 
   else
 
-    bot = sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 )
+    bot = sum((p2(1:dim_num) - p1(1:dim_num))**2)
 
-    t = sum ( ( p(1:dim_num)  - p1(1:dim_num) ) &
-            * ( p2(1:dim_num) - p1(1:dim_num) ) ) / bot
+    t = sum((p(1:dim_num) - p1(1:dim_num)) &
+            * (p2(1:dim_num) - p1(1:dim_num))) / bot
 
-    t = max ( t, 0.0D+00 )
-    t = min ( t, 1.0D+00 )
+    t = max(t, 0.0D+00)
+    t = min(t, 1.0D+00)
 
   end if
 
-  pn(1:dim_num) = p1(1:dim_num) + t * ( p2(1:dim_num) - p1(1:dim_num) )
+  pn(1:dim_num) = p1(1:dim_num) + t * (p2(1:dim_num) - p1(1:dim_num))
 
-  dist = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
 
   return
 end
-subroutine segment_point_near_3d ( p1, p2, p, pn, dist, t )
+subroutine segment_point_near_3d(p1, p2, p, pn, dist, t)
 
 !*****************************************************************************80
 !
@@ -24414,41 +24415,41 @@ subroutine segment_point_near_3d ( p1, p2, p, pn, dist, t )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) t
+  real(kind=8) bot
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) t
 !
 !  If the line segment is actually a point, then the answer is easy.
 !
-  if ( all ( p1(1:dim_num) == p2(1:dim_num) ) ) then
+  if (all(p1(1:dim_num) == p2(1:dim_num))) then
 
     t = 0.0D+00
 
   else
 
-    bot = sum ( ( p2(1:dim_num) - p1(1:dim_num) )**2 )
+    bot = sum((p2(1:dim_num) - p1(1:dim_num))**2)
 
-    t = sum ( ( p(1:dim_num)  - p1(1:dim_num) ) &
-            * ( p2(1:dim_num) - p1(1:dim_num) ) ) / bot
+    t = sum((p(1:dim_num) - p1(1:dim_num)) &
+            * (p2(1:dim_num) - p1(1:dim_num))) / bot
 
-    t = max ( t, 0.0D+00 )
-    t = min ( t, 1.0D+00 )
+    t = max(t, 0.0D+00)
+    t = min(t, 1.0D+00)
 
   end if
 
-  pn(1:dim_num) = p1(1:dim_num) + t * ( p2(1:dim_num) - p1(1:dim_num) )
+  pn(1:dim_num) = p1(1:dim_num) + t * (p2(1:dim_num) - p1(1:dim_num))
 
-  dist = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+  dist = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
 
   return
 end
-subroutine segments_curvature_2d ( p1, p2, p3, curvature )
+subroutine segments_curvature_2d(p1, p2, p3, curvature)
 
 !*****************************************************************************80
 !
@@ -24489,18 +24490,18 @@ subroutine segments_curvature_2d ( p1, p2, p3, curvature )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) curvature
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) curvature
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
 
-  call circle_exp2imp_2d ( p1, p2, p3, r, pc )
+  call circle_exp2imp_2d(p1, p2, p3, r, pc)
 
-  if ( 0.0D+00 < r ) then
+  if (0.0D+00 < r) then
     curvature = 1.0D+00 / r
   else
     curvature = 0.0D+00
@@ -24508,7 +24509,7 @@ subroutine segments_curvature_2d ( p1, p2, p3, curvature )
 
   return
 end
-subroutine segments_dist_2d ( p1, p2, q1, q2, dist )
+subroutine segments_dist_2d(p1, p2, q1, q2, dist)
 
 !*****************************************************************************80
 !
@@ -24565,35 +24566,35 @@ subroutine segments_dist_2d ( p1, p2, q1, q2, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  integer ( kind = 4 ) ival
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) q1(dim_num)
-  real ( kind = 8 ) q2(dim_num)
-  real ( kind = 8 ) r(dim_num)
-  real ( kind = 8 ) rps
-  real ( kind = 8 ) rpt
-  real ( kind = 8 ) rqs
-  real ( kind = 8 ) rqt
+  real(kind=8) dist
+  real(kind=8) dist2
+  integer(kind=4) ival
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) q1(dim_num)
+  real(kind=8) q2(dim_num)
+  real(kind=8) r(dim_num)
+  real(kind=8) rps
+  real(kind=8) rpt
+  real(kind=8) rqs
+  real(kind=8) rqt
 !
 !  Determine whether and where the underlying lines intersect.
 !
-  call lines_exp_int_2d ( p1, p2, q1, q2, ival, r )
+  call lines_exp_int_2d(p1, p2, q1, q2, ival, r)
 !
 !  If there is exactly one intersection point part of both lines,
 !  check that it is part of both line segments.
 !
-  if ( ival == 1 ) then
+  if (ival == 1) then
 
-    call segment_point_coords_2d ( p1, p2, r, rps, rpt )
-    call segment_point_coords_2d ( q1, q2, r, rqs, rqt )
+    call segment_point_coords_2d(p1, p2, r, rps, rpt)
+    call segment_point_coords_2d(q1, q2, r, rqs, rqt)
 
-    if ( 0.0D+00 <= rpt .and. rpt <= 1.0D+00 .and. &
-         0.0D+00 <= rqt .and. rqt <= 1.0D+00 ) then
+    if (0.0D+00 <= rpt .and. rpt <= 1.0D+00 .and. &
+        0.0D+00 <= rqt .and. rqt <= 1.0D+00) then
       dist = 0.0D+00
       return
     end if
@@ -24604,18 +24605,18 @@ subroutine segments_dist_2d ( p1, p2, q1, q2, dist )
 !  not part of both line segments, then an endpoint of one
 !  line segment achieves the minimum distance.
 !
-  call segment_point_dist_2d ( q1, q2, p1, dist2 )
+  call segment_point_dist_2d(q1, q2, p1, dist2)
   dist = dist2
-  call segment_point_dist_2d ( q1, q2, p2, dist2 )
-  dist = min ( dist, dist2 )
-  call segment_point_dist_2d ( p1, p2, q1, dist2 )
-  dist = min ( dist, dist2 )
-  call segment_point_dist_2d ( p1, p2, q2, dist2 )
-  dist = min ( dist, dist2 )
+  call segment_point_dist_2d(q1, q2, p2, dist2)
+  dist = min(dist, dist2)
+  call segment_point_dist_2d(p1, p2, q1, dist2)
+  dist = min(dist, dist2)
+  call segment_point_dist_2d(p1, p2, q2, dist2)
+  dist = min(dist, dist2)
 
   return
 end
-subroutine segments_dist_3d ( p1, p2, q1, q2, dist )
+subroutine segments_dist_3d(p1, p2, q1, q2, dist)
 
 !*****************************************************************************80
 !
@@ -24689,27 +24690,27 @@ subroutine segments_dist_3d ( p1, p2, q1, q2, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  real ( kind = 8 ) det
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dist2
-  real ( kind = 8 ) e
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) q1(dim_num)
-  real ( kind = 8 ) q2(dim_num)
-  real ( kind = 8 ) qn(dim_num)
-  real ( kind = 8 ) sn
-  real ( kind = 8 ) tn
-  real ( kind = 8 ) u(dim_num)
-  real ( kind = 8 ) v(dim_num)
-  real ( kind = 8 ) w0(dim_num)
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  real(kind=8) det
+  real(kind=8) dist
+  real(kind=8) dist2
+  real(kind=8) e
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) q1(dim_num)
+  real(kind=8) q2(dim_num)
+  real(kind=8) qn(dim_num)
+  real(kind=8) sn
+  real(kind=8) tn
+  real(kind=8) u(dim_num)
+  real(kind=8) v(dim_num)
+  real(kind=8) w0(dim_num)
 !
 !  The lines are identical.
 !  THIS CASE NOT SET UP YET
@@ -24764,55 +24765,55 @@ subroutine segments_dist_3d ( p1, p2, q1, q2, dist )
 !   ( a  -b ) * ( sn ) = ( -d )
 !   ( b  -c )   ( tc )   ( -e )
 !
-  a = dot_product ( u, u )
-  b = dot_product ( u, v )
-  c = dot_product ( v, v )
-  d = dot_product ( u, w0 )
-  e = dot_product ( v, w0 )
+  a = dot_product(u, u)
+  b = dot_product(u, v)
+  c = dot_product(v, v)
+  d = dot_product(u, w0)
+  e = dot_product(v, w0)
 !
 !  Check the determinant.
 !
-  det = - a * c + b * b
+  det = -a * c + b * b
 
-  if ( det == 0.0D+00 ) then
+  if (det == 0.0D+00) then
     sn = 0.0D+00
-    if ( abs ( b ) < abs ( c ) ) then
+    if (abs(b) < abs(c)) then
       tn = e / c
     else
       tn = d / b
     end if
   else
-    sn = ( c * d - b * e ) / det
-    tn = ( b * d - a * e ) / det
+    sn = (c * d - b * e) / det
+    tn = (b * d - a * e) / det
   end if
 !
 !  Now if both nearest points on the lines
 !  also happen to lie inside their line segments,
 !  then we have found the nearest points on the line segments.
 !
-  if ( 0.0D+00 <= sn .and. sn <= 1.0D+00 .and. &
-       0.0D+00 <= tn .and. tn <= 1.0D+00 ) then
-    pn(1:dim_num) = p1(1:dim_num) + sn * ( p2(1:dim_num) - p1(1:dim_num) )
-    qn(1:dim_num) = q1(1:dim_num) + tn * ( q2(1:dim_num) - q1(1:dim_num) )
-    dist = sqrt ( sum ( ( pn(1:dim_num) - qn(1:dim_num) )**2 ) )
+  if (0.0D+00 <= sn .and. sn <= 1.0D+00 .and. &
+      0.0D+00 <= tn .and. tn <= 1.0D+00) then
+    pn(1:dim_num) = p1(1:dim_num) + sn * (p2(1:dim_num) - p1(1:dim_num))
+    qn(1:dim_num) = q1(1:dim_num) + tn * (q2(1:dim_num) - q1(1:dim_num))
+    dist = sqrt(sum((pn(1:dim_num) - qn(1:dim_num))**2))
     return
   end if
 !
 !  The nearest point did not occur in the interior.
 !  Therefore it must be achieved at an endpoint.
 !
-  call segment_point_dist_3d ( q1, q2, p1, dist2 )
+  call segment_point_dist_3d(q1, q2, p1, dist2)
   dist = dist2
-  call segment_point_dist_3d ( q1, q2, p2, dist2 )
-  dist = min ( dist, dist2 )
-  call segment_point_dist_3d ( p1, p2, q1, dist2 )
-  dist = min ( dist, dist2 )
-  call segment_point_dist_3d ( p1, p2, q2, dist2 )
-  dist = min ( dist, dist2 )
+  call segment_point_dist_3d(q1, q2, p2, dist2)
+  dist = min(dist, dist2)
+  call segment_point_dist_3d(p1, p2, q1, dist2)
+  dist = min(dist, dist2)
+  call segment_point_dist_3d(p1, p2, q2, dist2)
+  dist = min(dist, dist2)
 
   return
 end
-subroutine segments_dist_3d_old ( p1, p2, q1, q2, dist )
+subroutine segments_dist_3d_old(p1, p2, q1, q2, dist)
 
 !*****************************************************************************80
 !
@@ -24847,47 +24848,47 @@ subroutine segments_dist_3d_old ( p1, p2, q1, q2, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) d1
-  real ( kind = 8 ) d2
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) dl
-  real ( kind = 8 ) dm
-  real ( kind = 8 ) dr
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pm(dim_num)
-  real ( kind = 8 ) pn1(dim_num)
-  real ( kind = 8 ) pn2(dim_num)
-  real ( kind = 8 ) q1(dim_num)
-  real ( kind = 8 ) q2(dim_num)
-  real ( kind = 8 ) t1
-  real ( kind = 8 ) t2
-  real ( kind = 8 ) tl
-  real ( kind = 8 ) tm
-  real ( kind = 8 ) tmin
-  real ( kind = 8 ) tr
+  real(kind=8) d1
+  real(kind=8) d2
+  real(kind=8) dist
+  real(kind=8) dl
+  real(kind=8) dm
+  real(kind=8) dr
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pm(dim_num)
+  real(kind=8) pn1(dim_num)
+  real(kind=8) pn2(dim_num)
+  real(kind=8) q1(dim_num)
+  real(kind=8) q2(dim_num)
+  real(kind=8) t1
+  real(kind=8) t2
+  real(kind=8) tl
+  real(kind=8) tm
+  real(kind=8) tmin
+  real(kind=8) tr
 !
 !  Find the nearest points on line 2 to the endpoints of line 1.
 !
-  call segment_point_near_3d ( q1, q2, p1, pn1, d1, t1 )
-  call segment_point_near_3d ( q1, q2, p2, pn2, d2, t2 )
+  call segment_point_near_3d(q1, q2, p1, pn1, d1, t1)
+  call segment_point_near_3d(q1, q2, p2, pn2, d2, t2)
 
-  if ( t1 == t2 ) then
-    call segment_point_dist_3d ( p1, p2, pn1, dist )
+  if (t1 == t2) then
+    call segment_point_dist_3d(p1, p2, pn1, dist)
     return
   end if
 
-  pm(1:dim_num) = 0.5D+00 * ( pn1(1:dim_num) + pn2(1:dim_num) )
+  pm(1:dim_num) = 0.5D+00 * (pn1(1:dim_num) + pn2(1:dim_num))
 !
 !  On line 2, over the interval between the points nearest to line 1,
 !  the square of the distance of any point to line 1 is a quadratic function.
 !  Evaluate it at three points, and seek its local minimum.
 !
-  call segment_point_dist_3d ( p1, p2, pn1, dl )
-  call segment_point_dist_3d ( p1, p2, pm, dm )
-  call segment_point_dist_3d ( p1, p2, pn2, dr )
+  call segment_point_dist_3d(p1, p2, pn1, dl)
+  call segment_point_dist_3d(p1, p2, pm, dm)
+  call segment_point_dist_3d(p1, p2, pn2, dr)
 
   tl = 0.0D+00
   tm = 0.5D+00
@@ -24897,13 +24898,13 @@ subroutine segments_dist_3d_old ( p1, p2, q1, q2, dist )
   dm = dm * dm
   dr = dr * dr
 
-  call minquad ( tl, dl, tm, dm, tr, dr, tmin, dist )
+  call minquad(tl, dl, tm, dm, tr, dr, tmin, dist)
 
-  dist = sqrt ( dist )
+  dist = sqrt(dist)
 
   return
 end
-subroutine segments_int_1d ( p1, p2, q1, q2, dist, r1, r2 )
+subroutine segments_int_1d(p1, p2, q1, q2, dist, r1, r2)
 
 !*****************************************************************************80
 !
@@ -24954,25 +24955,25 @@ subroutine segments_int_1d ( p1, p2, q1, q2, dist, r1, r2 )
 !
   implicit none
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p1
-  real ( kind = 8 ) p2
-  real ( kind = 8 ) q1
-  real ( kind = 8 ) q2
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
+  real(kind=8) dist
+  real(kind=8) p1
+  real(kind=8) p2
+  real(kind=8) q1
+  real(kind=8) q2
+  real(kind=8) r1
+  real(kind=8) r2
 
-  r1 = max ( min ( p1, p2 ), &
-             min ( q1, q2 ) )
+  r1 = max(min(p1, p2), &
+           min(q1, q2))
 
-  r2 = min ( max ( p1, p2 ), &
-             max ( q1, q2 ) )
+  r2 = min(max(p1, p2), &
+           max(q1, q2))
 
   dist = r1 - r2
 
   return
 end
-subroutine segments_int_2d ( p1, p2, q1, q2, flag, r )
+subroutine segments_int_2d(p1, p2, q1, q2, flag, r)
 
 !*****************************************************************************80
 !
@@ -25014,43 +25015,43 @@ subroutine segments_int_2d ( p1, p2, q1, q2, flag, r )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  integer ( kind = 4 ) flag
-  integer ( kind = 4 ) ival
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) q1(dim_num)
-  real ( kind = 8 ) q2(dim_num)
-  real ( kind = 8 ) r(dim_num)
-  real ( kind = 8 ), parameter :: tol = 0.001D+00
-  real ( kind = 8 ) u(dim_num)
+  integer(kind=4) flag
+  integer(kind=4) ival
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) q1(dim_num)
+  real(kind=8) q2(dim_num)
+  real(kind=8) r(dim_num)
+  real(kind=8), parameter :: tol = 0.001D+00
+  real(kind=8) u(dim_num)
 !
 !  Find the intersection of the two lines.
 !
-  r(1:dim_num) = (/ 0.0D+00, 0.0D+00 /)
+  r(1:dim_num) = (/0.0D+00, 0.0D+00/)
 
-  call lines_exp_int_2d ( p1, p2, q1, q2, ival, r )
+  call lines_exp_int_2d(p1, p2, q1, q2, ival, r)
 
-  if ( ival == 0 ) then
+  if (ival == 0) then
     flag = 0
     return
   end if
 !
 !  Is the intersection point part of the first line segment?
 !
-  call segment_contains_point_2d ( p1, p2, r, u )
+  call segment_contains_point_2d(p1, p2, r, u)
 
-  if ( u(1) < 0.0D+00 .or. 1.0D+00 < u(1) .or. tol < u(2) ) then
+  if (u(1) < 0.0D+00 .or. 1.0D+00 < u(1) .or. tol < u(2)) then
     flag = 0
     return
   end if
 !
 !  Is the intersection point part of the second line segment?
 !
-  call segment_contains_point_2d ( q1, q2, r, u )
+  call segment_contains_point_2d(q1, q2, r, u)
 
-  if ( u(1) < 0.0D+00 .or. 1.0D+00 < u(1) .or. tol < u(2) ) then
+  if (u(1) < 0.0D+00 .or. 1.0D+00 < u(1) .or. tol < u(2)) then
     flag = 0
     return
   end if
@@ -25059,7 +25060,7 @@ subroutine segments_int_2d ( p1, p2, q1, q2, flag, r )
 
   return
 end
-subroutine shape_point_dist_2d ( pc, p1, side_num, p, dist )
+subroutine shape_point_dist_2d(pc, p1, side_num, p, dist)
 
 !*****************************************************************************80
 !
@@ -25096,36 +25097,36 @@ subroutine shape_point_dist_2d ( pc, p1, side_num, p, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) angle_deg_2d
-  real ( kind = 8 ) angle2
-  real ( kind = 8 ) degrees_to_radians
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) pa(dim_num)
-  real ( kind = 8 ) pb(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radius
-  real ( kind = 8 ) sector_angle
-  integer ( kind = 4 ) sector_index
-  integer ( kind = 4 ) side_num
+  real(kind=8) angle
+  real(kind=8) angle_deg_2d
+  real(kind=8) angle2
+  real(kind=8) degrees_to_radians
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) pa(dim_num)
+  real(kind=8) pb(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radius
+  real(kind=8) sector_angle
+  integer(kind=4) sector_index
+  integer(kind=4) side_num
 !
 !  Determine the angle subtended by a single side.
 !
-  sector_angle = 360.0D+00 / real ( side_num, kind = 8 )
+  sector_angle = 360.0D+00 / real(side_num, kind=8)
 !
 !  How long is the half-diagonal?
 !
-  radius = sqrt ( sum ( ( p1(1:dim_num) - pc(1:dim_num) )**2 ) )
+  radius = sqrt(sum((p1(1:dim_num) - pc(1:dim_num))**2))
 !
 !  If the radius is zero, then the shape is a point and the computation is easy.
 !
-  if ( radius == 0.0D+00 ) then
-    dist = sqrt ( sum ( ( p(1:dim_num) - pc(1:dim_num) )**2 ) )
+  if (radius == 0.0D+00) then
+    dist = sqrt(sum((p(1:dim_num) - pc(1:dim_num))**2))
     return
   end if
 !
@@ -25133,40 +25134,40 @@ subroutine shape_point_dist_2d ( pc, p1, side_num, p, dist )
 !  The angle subtended by any side is ( 2 * PI / SIDE_NUM ) and the
 !  nearest distance is the midpoint of any such side.
 !
-  if ( all ( p(1:dim_num) == pc(1:dim_num) ) ) then
-    dist = radius * cos ( r8_pi / real ( side_num, kind = 8 ) )
+  if (all(p(1:dim_num) == pc(1:dim_num))) then
+    dist = radius * cos(r8_pi / real(side_num, kind=8))
     return
   end if
 !
 !  Determine the angle between the ray to the first corner,
 !  and the ray to the test point.
 !
-  angle = angle_deg_2d ( p1(1:2), pc(1:2), p(1:2) )
+  angle = angle_deg_2d(p1(1:2), pc(1:2), p(1:2))
 !
 !  Determine the sector of the point.
 !
-  sector_index = int ( angle / sector_angle ) + 1
+  sector_index = int(angle / sector_angle) + 1
 !
 !  Generate the two corner points that terminate the SECTOR-th side.
 !
-  angle2 = real ( sector_index - 1, kind = 8 ) * sector_angle
-  angle2 = degrees_to_radians ( angle2 )
+  angle2 = real(sector_index - 1, kind=8) * sector_angle
+  angle2 = degrees_to_radians(angle2)
 
-  call vector_rotate_base_2d ( p1, pc, angle2, pa )
+  call vector_rotate_base_2d(p1, pc, angle2, pa)
 
-  angle2 = real ( sector_index, kind = 8 ) * sector_angle
-  angle2 = degrees_to_radians ( angle2 )
+  angle2 = real(sector_index, kind=8) * sector_angle
+  angle2 = degrees_to_radians(angle2)
 
-  call vector_rotate_base_2d ( p1, pc, angle2, pb )
+  call vector_rotate_base_2d(p1, pc, angle2, pb)
 !
 !  Determine the distance from the test point to the line segment that
 !  is the SECTOR-th side.
 !
-  call segment_point_dist_2d ( pa, pb, p, dist )
+  call segment_point_dist_2d(pa, pb, p, dist)
 
   return
 end
-subroutine shape_point_near_2d ( pc, p1, side_num, p, pn, dist )
+subroutine shape_point_near_2d(pc, p1, side_num, p, pn, dist)
 
 !*****************************************************************************80
 !
@@ -25206,40 +25207,40 @@ subroutine shape_point_near_2d ( pc, p1, side_num, p, pn, dist )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) angle_deg_2d
-  real ( kind = 8 ) angle2
-  real ( kind = 8 ) degrees_to_radians
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) pa(dim_num)
-  real ( kind = 8 ) pb(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) pd(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) radius
-  real ( kind = 8 ) sector_angle
-  integer ( kind = 4 ) sector_index
-  integer ( kind = 4 ) side_num
-  real ( kind = 8 ) t
+  real(kind=8) angle
+  real(kind=8) angle_deg_2d
+  real(kind=8) angle2
+  real(kind=8) degrees_to_radians
+  real(kind=8) dist
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) pa(dim_num)
+  real(kind=8) pb(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) pd(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) radius
+  real(kind=8) sector_angle
+  integer(kind=4) sector_index
+  integer(kind=4) side_num
+  real(kind=8) t
 !
 !  Determine the angle subtended by a single side.
 !
-  sector_angle = 360.0D+00 / real ( side_num, kind = 8 )
+  sector_angle = 360.0D+00 / real(side_num, kind=8)
 !
 !  How long is the half-diagonal?
 !
-  radius = sqrt ( sum ( ( p1(1:dim_num) - pc(1:dim_num) )**2 ) )
+  radius = sqrt(sum((p1(1:dim_num) - pc(1:dim_num))**2))
 !
 !  If the radius is zero, then the shape is a point and the computation is easy.
 !
-  if ( radius == 0.0D+00 ) then
+  if (radius == 0.0D+00) then
     pn(1:dim_num) = pc(1:dim_num)
-    dist = sqrt ( sum ( ( p(1:dim_num) - pn(1:dim_num) )**2 ) )
+    dist = sqrt(sum((p(1:dim_num) - pn(1:dim_num))**2))
     return
   end if
 !
@@ -25247,48 +25248,48 @@ subroutine shape_point_near_2d ( pc, p1, side_num, p, pn, dist )
 !  The angle subtended by any side is ( 2 * PI / SIDE_NUM ) and the
 !  nearest distance is the midpoint of any such side.
 !
-  if ( all ( p(1:dim_num) == pc(1:dim_num) ) ) then
-    angle = r8_pi / real ( side_num, kind = 8 )
-    pd(1) =   ( p(1) - pc(1) ) * cos ( angle ) &
-            + ( p(2) - pc(2) ) * sin ( angle )
-    pd(2) = - ( p(1) - pc(1) ) * sin ( angle ) &
-            + ( p(2) - pc(2) ) * cos ( angle )
-    pn(1) = pc(1) + pd(1) * cos ( angle )
-    pn(2) = pc(2) + pd(2) * sin ( angle )
-    dist = radius * cos ( angle )
+  if (all(p(1:dim_num) == pc(1:dim_num))) then
+    angle = r8_pi / real(side_num, kind=8)
+    pd(1) = (p(1) - pc(1)) * cos(angle) &
+            + (p(2) - pc(2)) * sin(angle)
+    pd(2) = -(p(1) - pc(1)) * sin(angle) &
+            + (p(2) - pc(2)) * cos(angle)
+    pn(1) = pc(1) + pd(1) * cos(angle)
+    pn(2) = pc(2) + pd(2) * sin(angle)
+    dist = radius * cos(angle)
     return
   end if
 !
 !  Determine the angle between the ray to the first corner,
 !  and the ray to the test point.
 !
-  angle = angle_deg_2d ( p1(1:2), pc(1:2), p(1:2) )
+  angle = angle_deg_2d(p1(1:2), pc(1:2), p(1:2))
 !
 !  Determine the sector of the point.
 !
-  sector_index = int ( angle / sector_angle ) + 1
+  sector_index = int(angle / sector_angle) + 1
 !
 !  Generate the two corner points that terminate the SECTOR-th side.
 !
-  angle2 = real ( sector_index - 1, kind = 8 ) * sector_angle
-  angle2 = degrees_to_radians ( angle2 )
+  angle2 = real(sector_index - 1, kind=8) * sector_angle
+  angle2 = degrees_to_radians(angle2)
 
-  call vector_rotate_base_2d ( p1, pc, angle2, pa )
+  call vector_rotate_base_2d(p1, pc, angle2, pa)
 
-  angle2 = real ( sector_index, kind = 8 ) * sector_angle
-  angle2 = degrees_to_radians ( angle2 )
+  angle2 = real(sector_index, kind=8) * sector_angle
+  angle2 = degrees_to_radians(angle2)
 
-  call vector_rotate_base_2d ( p1, pc, angle2, pb )
+  call vector_rotate_base_2d(p1, pc, angle2, pb)
 !
 !  Determine the point on the SECTOR-th side of the shape which is
 !  nearest.
 !
-  call segment_point_near_2d ( pa, pb, p, pn, dist, t )
+  call segment_point_near_2d(pa, pb, p, pn, dist, t)
 
   return
 end
-subroutine shape_print_3d ( point_num, face_num, face_order_max, &
-  point_coord, face_order, face_point )
+subroutine shape_print_3d(point_num, face_num, face_order_max, &
+                          point_coord, face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -25327,47 +25328,47 @@ subroutine shape_print_3d ( point_num, face_num, face_order_max, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) point_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) point_num
 
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) point_coord(dim_num,point_num)
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  integer(kind=4) i
+  real(kind=8) point_coord(dim_num, point_num)
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) 'SHAPE_PRINT_3D'
-  write ( *, '(a)' ) '  Information about a polytope.'
-  write ( *, '(a)' ) ' '
-  write ( *, '(a,i8)' ) '  The number of vertices is ', point_num
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) '  Vertices:'
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) '     Index          X               Y               Z'
-  write ( *, '(a)' ) ' '
+  write (*, '(a)') ' '
+  write (*, '(a)') 'SHAPE_PRINT_3D'
+  write (*, '(a)') '  Information about a polytope.'
+  write (*, '(a)') ' '
+  write (*, '(a,i8)') '  The number of vertices is ', point_num
+  write (*, '(a)') ' '
+  write (*, '(a)') '  Vertices:'
+  write (*, '(a)') ' '
+  write (*, '(a)') '     Index          X               Y               Z'
+  write (*, '(a)') ' '
 
   do i = 1, point_num
-    write ( *, '(2x,i8,2x,3f16.8)' ) i, point_coord(1:dim_num,i)
+    write (*, '(2x,i8,2x,3f16.8)') i, point_coord(1:dim_num, i)
   end do
 
-  write ( *, '(a)' ) ' '
-  write ( *, '(a,i8)' ) '  The number of faces is ', face_num
-  write ( *, '(a,i8)' ) '  The maximum order of any face is ', face_order_max
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) '     Index     Order         Indices of Nodes in Face'
-  write ( *, '(22x,10i8)' ) ( i, i = 1, face_order_max )
-  write ( *, '(a)' ) ' '
+  write (*, '(a)') ' '
+  write (*, '(a,i8)') '  The number of faces is ', face_num
+  write (*, '(a,i8)') '  The maximum order of any face is ', face_order_max
+  write (*, '(a)') ' '
+  write (*, '(a)') '     Index     Order         Indices of Nodes in Face'
+  write (*, '(22x,10i8)') (i, i=1, face_order_max)
+  write (*, '(a)') ' '
 
   do i = 1, face_num
-    write ( *, '(2x,i8,2x,i8,2x,10i8)' ) i, face_order(i), &
-     face_point(1:face_order(i),i)
+    write (*, '(2x,i8,2x,i8,2x,10i8)') i, face_order(i), &
+      face_point(1:face_order(i), i)
   end do
 
   return
 end
-subroutine shape_ray_int_2d ( pc, p1, side_num, pa, pb, pint )
+subroutine shape_ray_int_2d(pc, p1, side_num, pa, pb, pint)
 
 !*****************************************************************************80
 !
@@ -25410,23 +25411,23 @@ subroutine shape_ray_int_2d ( pc, p1, side_num, pa, pb, pint )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle2
-  real ( kind = 8 ) degrees_to_radians
-  logical ( kind = 4 ) inside
-  integer ( kind = 4 ) ival
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) pa(dim_num)
-  real ( kind = 8 ) pb(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) pint(dim_num)
-  real ( kind = 8 ) radius
-  real ( kind = 8 ) sector_angle
-  integer ( kind = 4 ) sector_index
-  integer ( kind = 4 ) side_num
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v2(dim_num)
+  real(kind=8) angle2
+  real(kind=8) degrees_to_radians
+  logical(kind=4) inside
+  integer(kind=4) ival
+  real(kind=8) p1(dim_num)
+  real(kind=8) pa(dim_num)
+  real(kind=8) pb(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) pint(dim_num)
+  real(kind=8) radius
+  real(kind=8) sector_angle
+  integer(kind=4) sector_index
+  integer(kind=4) side_num
+  real(kind=8) v1(dim_num)
+  real(kind=8) v2(dim_num)
 !
 !  Warning!
 !  No check is made to ensure that the ray origin is inside the shape.
@@ -25434,35 +25435,35 @@ subroutine shape_ray_int_2d ( pc, p1, side_num, pa, pb, pint )
 !
 !  Determine the angle subtended by a single side.
 !
-  sector_angle = 360.0D+00 / real ( side_num, kind = 8 )
+  sector_angle = 360.0D+00 / real(side_num, kind=8)
 !
 !  How long is the half-diagonal?
 !
-  radius = sqrt ( sum ( ( p1(1:dim_num) - pc(1:dim_num) )**2 ) )
+  radius = sqrt(sum((p1(1:dim_num) - pc(1:dim_num))**2))
 !
 !  If the radius is zero, refuse to continue.
 !
-  if ( radius == 0.0D+00 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'SHAPE_RAY_INT_2D - Fatal error!'
-    write ( *, '(a)' ) '  The shape has radius zero.'
+  if (radius == 0.0D+00) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'SHAPE_RAY_INT_2D - Fatal error!'
+    write (*, '(a)') '  The shape has radius zero.'
     stop 1
   end if
 !
 !  Determine which sector side intersects the ray.
 !
-  v2(1:dim_num) = (/ 0.0D+00, 0.0D+00 /)
+  v2(1:dim_num) = (/0.0D+00, 0.0D+00/)
 
   do sector_index = 1, side_num
 !
 !  Determine the two vertices that define this sector.
 !
-    if ( sector_index == 1 ) then
+    if (sector_index == 1) then
 
-      angle2 = real ( sector_index - 1, kind = 8 ) * sector_angle
-      angle2 = degrees_to_radians ( angle2 )
+      angle2 = real(sector_index - 1, kind=8) * sector_angle
+      angle2 = degrees_to_radians(angle2)
 
-      call vector_rotate_base_2d ( p1, pc, angle2, v1 )
+      call vector_rotate_base_2d(p1, pc, angle2, v1)
 
     else
 
@@ -25470,25 +25471,25 @@ subroutine shape_ray_int_2d ( pc, p1, side_num, pa, pb, pint )
 
     end if
 
-    angle2 = real ( sector_index, kind = 8 ) * sector_angle
-    angle2 = degrees_to_radians ( angle2 )
+    angle2 = real(sector_index, kind=8) * sector_angle
+    angle2 = degrees_to_radians(angle2)
 
-    call vector_rotate_base_2d ( p1, pc, angle2, v2 )
+    call vector_rotate_base_2d(p1, pc, angle2, v2)
 !
 !  Draw the angle from one vertex to the ray origin to the next vertex,
 !  and see if that angle contains the ray.  If so, then the ray
 !  must intersect the shape side of that sector.
 !
-    call angle_contains_point_2d ( v1, pa, v2, pb, inside )
+    call angle_contains_point_2d(v1, pa, v2, pb, inside)
 !
 !  Determine the intersection of the lines defined by the ray and the
 !  sector side.  (We're already convinced that the ray and sector line
 !  segment intersect, so we can use the simpler code that treats them
 !  as full lines).
 !
-    if ( inside ) then
+    if (inside) then
 
-      call lines_exp_int_2d ( pa, pb, v1, v2, ival, pint )
+      call lines_exp_int_2d(pa, pb, v1, v2, ival, pint)
 
       return
 
@@ -25498,12 +25499,12 @@ subroutine shape_ray_int_2d ( pc, p1, side_num, pa, pb, pint )
 !
 !  If the calculation fell through the loop, then something's wrong.
 !
-  write ( *, '(a)' ) ' '
-  write ( *, '(a)' ) 'SHAPE_RAY_INT_2D - Fatal error!'
-  write ( *, '(a)' ) '  Cannot find intersection of ray and shape.'
+  write (*, '(a)') ' '
+  write (*, '(a)') 'SHAPE_RAY_INT_2D - Fatal error!'
+  write (*, '(a)') '  Cannot find intersection of ray and shape.'
   stop 1
 end
-subroutine simplex_lattice_layer_point_next ( n, c, v, more )
+subroutine simplex_lattice_layer_point_next(n, c, v, more)
 
 !*****************************************************************************80
 !
@@ -25555,23 +25556,23 @@ subroutine simplex_lattice_layer_point_next ( n, c, v, more )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) c(n+1)
-  integer ( kind = 4 ) c1n
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4vec_lcm
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) lhs
-  logical ( kind = 4 ) more
-  integer ( kind = 4 ) rhs1
-  integer ( kind = 4 ) rhs2
-  integer ( kind = 4 ) v(n)
+  integer(kind=4) c(n + 1)
+  integer(kind=4) c1n
+  integer(kind=4) i
+  integer(kind=4) i4vec_lcm
+  integer(kind=4) j
+  integer(kind=4) lhs
+  logical(kind=4) more
+  integer(kind=4) rhs1
+  integer(kind=4) rhs2
+  integer(kind=4) v(n)
 !
 !  Treat layer C(N+1) = 0 specially.
 !
-  if ( c(n+1) == 0 ) then
-    if ( .not. more ) then
+  if (c(n + 1) == 0) then
+    if (.not. more) then
       v(1:n) = 0
       more = .true.
     else
@@ -25582,18 +25583,18 @@ subroutine simplex_lattice_layer_point_next ( n, c, v, more )
 !
 !  Compute the first point.
 !
-  if ( .not. more ) then
+  if (.not. more) then
 
-    v(1) = ( c(n+1) - 1 ) * c(1) + 1
+    v(1) = (c(n + 1) - 1) * c(1) + 1
     v(2:n) = 0
     more = .true.
 
   else
 
-    c1n = i4vec_lcm ( n, c )
+    c1n = i4vec_lcm(n, c)
 
-    rhs1 = c1n * ( c(n+1) - 1 )
-    rhs2 = c1n *   c(n+1)
+    rhs1 = c1n * (c(n + 1) - 1)
+    rhs2 = c1n * c(n + 1)
 !
 !  Try to increment component I.
 !
@@ -25601,28 +25602,28 @@ subroutine simplex_lattice_layer_point_next ( n, c, v, more )
 
       v(i) = v(i) + 1
 
-      v(1:i-1) = 0
+      v(1:i - 1) = 0
 
-      if ( 1 < i ) then
+      if (1 < i) then
         v(1) = rhs1
         do j = 2, n
-          v(1) = v(1) - ( c1n / c(j) ) * v(j)
+          v(1) = v(1) - (c1n / c(j)) * v(j)
         end do
-        v(1) = ( c(1) * v(1) ) / c1n
-        v(1) = max ( v(1), 0 )
+        v(1) = (c(1) * v(1)) / c1n
+        v(1) = max(v(1), 0)
       end if
 
       lhs = 0
       do j = 1, n
-        lhs = lhs + ( c1n / c(j) ) * v(j)
+        lhs = lhs + (c1n / c(j)) * v(j)
       end do
 
-      if ( lhs <= rhs1 ) then
+      if (lhs <= rhs1) then
         v(1) = v(1) + 1
         lhs = lhs + c1n / c(1)
       end if
 
-      if ( lhs <= rhs2 ) then
+      if (lhs <= rhs2) then
         return
       end if
 
@@ -25635,7 +25636,7 @@ subroutine simplex_lattice_layer_point_next ( n, c, v, more )
 
   return
 end
-subroutine simplex_lattice_point_next ( n, c, v, more )
+subroutine simplex_lattice_point_next(n, c, v, more)
 
 !*****************************************************************************80
 !
@@ -25691,34 +25692,34 @@ subroutine simplex_lattice_point_next ( n, c, v, more )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  integer ( kind = 4 ) c(n+1)
-  integer ( kind = 4 ) c1n
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4vec_lcm
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) lhs
-  logical ( kind = 4 ) more
-  integer ( kind = 4 ) rhs
-  integer ( kind = 4 ) term
-  integer ( kind = 4 ) v(n)
+  integer(kind=4) c(n + 1)
+  integer(kind=4) c1n
+  integer(kind=4) i
+  integer(kind=4) i4vec_lcm
+  integer(kind=4) j
+  integer(kind=4) lhs
+  logical(kind=4) more
+  integer(kind=4) rhs
+  integer(kind=4) term
+  integer(kind=4) v(n)
 
-  if ( .not. more ) then
+  if (.not. more) then
 
     v(1:n) = 0
     more = .true.
 
   else
 
-    c1n = i4vec_lcm ( n, c )
-    rhs = c1n * c(n+1)
+    c1n = i4vec_lcm(n, c)
+    rhs = c1n * c(n + 1)
 
     lhs = 0
     do i = 1, n
       term = 1
       do j = 1, n
-        if ( i == j ) then
+        if (i == j) then
           term = term * v(j)
         else
           term = term * c(j)
@@ -25728,7 +25729,7 @@ subroutine simplex_lattice_point_next ( n, c, v, more )
     end do
 
     do i = 1, n
-      if ( lhs + c1n / c(i) <= rhs ) then
+      if (lhs + c1n / c(i) <= rhs) then
         v(i) = v(i) + 1
         more = .true.
         return
@@ -25743,7 +25744,7 @@ subroutine simplex_lattice_point_next ( n, c, v, more )
 
   return
 end
-subroutine simplex01_lattice_point_num_nd ( d, s, n )
+subroutine simplex01_lattice_point_num_nd(d, s, n)
 
 !*****************************************************************************80
 !
@@ -25790,21 +25791,21 @@ subroutine simplex01_lattice_point_num_nd ( d, s, n )
 !
 !    Output, integer ( kind = 4 ) N, the number of lattice points.
 !
-  implicit  none
+  implicit none
 
-  integer ( kind = 4 ) d
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) s
+  integer(kind=4) d
+  integer(kind=4) i
+  integer(kind=4) n
+  integer(kind=4) s
 
   n = 1
   do i = 1, d
-    n = ( n * ( s + i ) ) / i
+    n = (n * (s + i)) / i
   end do
 
   return
 end
-subroutine simplex01_volume_nd ( dim_num, volume )
+subroutine simplex01_volume_nd(dim_num, volume)
 
 !*****************************************************************************80
 !
@@ -25834,18 +25835,18 @@ subroutine simplex01_volume_nd ( dim_num, volume )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) dim_num
-  real ( kind = 8 ) volume
+  integer(kind=4) i
+  integer(kind=4) dim_num
+  real(kind=8) volume
 
   volume = 1.0D+00
   do i = 1, dim_num
-    volume = volume / real ( i, kind = 8 )
+    volume = volume / real(i, kind=8)
   end do
 
   return
 end
-subroutine simplex_volume_nd ( dim_num, a, volume )
+subroutine simplex_volume_nd(dim_num, a, volume)
 
 !*****************************************************************************80
 !
@@ -25882,42 +25883,42 @@ subroutine simplex_volume_nd ( dim_num, a, volume )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) a(dim_num,dim_num+1)
-  real ( kind = 8 ) b(dim_num,dim_num)
-  real ( kind = 8 ) det
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) info
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) pivot(dim_num)
-  real ( kind = 8 ) volume
+  real(kind=8) a(dim_num, dim_num + 1)
+  real(kind=8) b(dim_num, dim_num)
+  real(kind=8) det
+  integer(kind=4) i
+  integer(kind=4) info
+  integer(kind=4) j
+  integer(kind=4) pivot(dim_num)
+  real(kind=8) volume
 
-  b(1:dim_num,1:dim_num) = a(1:dim_num,1:dim_num)
+  b(1:dim_num, 1:dim_num) = a(1:dim_num, 1:dim_num)
   do j = 1, dim_num
-    b(1:dim_num,j) = b(1:dim_num,j) - a(1:dim_num,dim_num+1)
+    b(1:dim_num, j) = b(1:dim_num, j) - a(1:dim_num, dim_num + 1)
   end do
 
-  call r8ge_fa ( dim_num, b, pivot, info )
+  call r8ge_fa(dim_num, b, pivot, info)
 
-  if ( info /= 0 ) then
+  if (info /= 0) then
 
     volume = -1.0D+00
 
   else
 
-    call r8ge_det ( dim_num, b, pivot, det )
+    call r8ge_det(dim_num, b, pivot, det)
 
-    volume = abs ( det )
+    volume = abs(det)
     do i = 1, dim_num
-      volume = volume / real ( i, kind = 8 )
+      volume = volume / real(i, kind=8)
     end do
 
   end if
 
   return
 end
-function sin_power_int ( a, b, n )
+function sin_power_int(a, b, n)
 
 !*****************************************************************************80
 !
@@ -25956,32 +25957,32 @@ function sin_power_int ( a, b, n )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) ca
-  real ( kind = 8 ) cb
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) mlo
-  integer ( kind = 4 ) n
-  real ( kind = 8 ) sa
-  real ( kind = 8 ) sb
-  real ( kind = 8 ) sin_power_int
-  real ( kind = 8 ) value
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) ca
+  real(kind=8) cb
+  integer(kind=4) m
+  integer(kind=4) mlo
+  integer(kind=4) n
+  real(kind=8) sa
+  real(kind=8) sb
+  real(kind=8) sin_power_int
+  real(kind=8) value
 
-  if ( n < 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'SIN_POWER_INT - Fatal error!'
-    write ( *, '(a)' ) '  Power N < 0.'
+  if (n < 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'SIN_POWER_INT - Fatal error!'
+    write (*, '(a)') '  Power N < 0.'
     value = 0.0D+00
     stop 1
   end if
 
-  sa = sin ( a )
-  sb = sin ( b )
-  ca = cos ( a )
-  cb = cos ( b )
+  sa = sin(a)
+  sb = sin(b)
+  ca = cos(a)
+  cb = cos(b)
 
-  if ( mod ( n, 2 ) == 0 ) then
+  if (mod(n, 2) == 0) then
 
     value = b - a
     mlo = 2
@@ -25991,17 +25992,17 @@ function sin_power_int ( a, b, n )
   end if
 
   do m = mlo, n, 2
-    value = ( real ( m - 1, kind = 8 ) * value &
-              + sa**( m - 1 ) * ca - sb**( m - 1 ) * cb ) &
-      / real ( m, kind = 8 )
+    value = (real(m - 1, kind=8) * value &
+             + sa**(m - 1) * ca - sb**(m - 1) * cb) &
+            / real(m, kind=8)
   end do
 
   sin_power_int = value
 
   return
 end
-subroutine soccer_shape_3d ( point_num, face_num, face_order_max, point_coord, &
-  face_order, face_point )
+subroutine soccer_shape_3d(point_num, face_num, face_order_max, point_coord, &
+                           face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -26057,127 +26058,127 @@ subroutine soccer_shape_3d ( point_num, face_num, face_order_max, point_coord, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) point_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) point_num
 
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  real ( kind = 8 ) point_coord(dim_num,point_num)
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  real(kind=8) point_coord(dim_num, point_num)
 !
 !  Set the point coordinates.
 !
-  point_coord(1:dim_num,1:point_num) = reshape ( (/ &
-       -0.100714D+01,   0.153552D+00,   0.067258D+00, &
-       -0.960284D+00,   0.0848813D+00, -0.336290D+00, &
-       -0.951720D+00,  -0.153552D+00,   0.336290D+00, &
-       -0.860021D+00,   0.529326D+00,   0.150394D+00, &
-       -0.858000D+00,  -0.290893D+00,  -0.470806D+00, &
-       -0.849436D+00,  -0.529326D+00,   0.201774D+00, &
-       -0.802576D+00,  -0.597996D+00,  -0.201774D+00, &
-       -0.784200D+00,   0.418215D+00,  -0.502561D+00, &
-       -0.749174D+00,  -0.0848813D+00,  0.688458D+00, &
-       -0.722234D+00,   0.692896D+00,  -0.201774D+00, &
-       -0.657475D+00,   0.597996D+00,   0.502561D+00, &
-       -0.602051D+00,   0.290893D+00,   0.771593D+00, &
-       -0.583675D+00,  -0.692896D+00,   0.470806D+00, &
-       -0.579632D+00,  -0.333333D+00,  -0.771593D+00, &
-       -0.521710D+00,  -0.418215D+00,   0.771593D+00, &
-       -0.505832D+00,   0.375774D+00,  -0.803348D+00, &
-       -0.489955D+00,  -0.830237D+00,  -0.336290D+00, &
-       -0.403548D+00,   0.000000D+00,  -0.937864D+00, &
-       -0.381901D+00,   0.925138D+00,  -0.201774D+00, &
-       -0.352168D+00,  -0.666667D+00,  -0.688458D+00, &
-       -0.317142D+00,   0.830237D+00,   0.502561D+00, &
-       -0.271054D+00,  -0.925138D+00,   0.336290D+00, &
-       -0.227464D+00,   0.333333D+00,   0.937864D+00, &
-       -0.224193D+00,  -0.993808D+00,  -0.067258D+00, &
-       -0.179355D+00,   0.993808D+00,   0.150394D+00, &
-       -0.165499D+00,   0.608015D+00,  -0.803348D+00, &
-       -0.147123D+00,  -0.375774D+00,   0.937864D+00, &
-       -0.103533D+00,   0.882697D+00,  -0.502561D+00, &
-       -0.513806D-01,   0.666667D+00,   0.771593D+00, &
-        0.000000D+00,   0.000000D+00,   1.021000D+00, &
-        0.000000D+00,   0.000000D+00,  -1.021000D+00, &
-        0.513806D-01,  -0.666667D+00,  -0.771593D+00, &
-        0.103533D+00,  -0.882697D+00,   0.502561D+00, &
-        0.147123D+00,   0.375774D+00,  -0.937864D+00, &
-        0.165499D+00,  -0.608015D+00,   0.803348D+00, &
-        0.179355D+00,  -0.993808D+00,  -0.150394D+00, &
-        0.224193D+00,   0.993808D+00,   0.067258D+00, &
-        0.227464D+00,  -0.333333D+00,  -0.937864D+00, &
-        0.271054D+00,   0.925138D+00,  -0.336290D+00, &
-        0.317142D+00,  -0.830237D+00,  -0.502561D+00, &
-        0.352168D+00,   0.666667D+00,   0.688458D+00, &
-        0.381901D+00,  -0.925138D+00,   0.201774D+00, &
-        0.403548D+00,   0.000000D+00,   0.937864D+00, &
-        0.489955D+00,   0.830237D+00,   0.336290D+00, &
-        0.505832D+00,  -0.375774D+00,   0.803348D+00, &
-        0.521710D+00,   0.418215D+00,  -0.771593D+00, &
-        0.579632D+00,   0.333333D+00,   0.771593D+00, &
-        0.583675D+00,   0.692896D+00,  -0.470806D+00, &
-        0.602051D+00,  -0.290893D+00,  -0.771593D+00, &
-        0.657475D+00,  -0.597996D+00,  -0.502561D+00, &
-        0.722234D+00,  -0.692896D+00,   0.201774D+00, &
-        0.749174D+00,   0.0848813D+00, -0.688458D+00, &
-        0.784200D+00,  -0.418215D+00,   0.502561D+00, &
-        0.802576D+00,   0.597996D+00,   0.201774D+00, &
-        0.849436D+00,   0.529326D+00,  -0.201774D+00, &
-        0.858000D+00,   0.290893D+00,   0.470806D+00, &
-        0.860021D+00,  -0.529326D+00,  -0.150394D+00, &
-        0.951720D+00,   0.153552D+00,  -0.336290D+00, &
-        0.960284D+00,  -0.0848813D+00,  0.336290D+00, &
-        1.007140D+00,  -0.153552D+00,  -0.067258D+00 /), &
-    (/ dim_num, point_num /) )
+  point_coord(1:dim_num, 1:point_num) = reshape((/ &
+                                  -0.100714D+01, 0.153552D+00, 0.067258D+00, &
+                                -0.960284D+00, 0.0848813D+00, -0.336290D+00, &
+                                 -0.951720D+00, -0.153552D+00, 0.336290D+00, &
+                                  -0.860021D+00, 0.529326D+00, 0.150394D+00, &
+                                -0.858000D+00, -0.290893D+00, -0.470806D+00, &
+                                 -0.849436D+00, -0.529326D+00, 0.201774D+00, &
+                                -0.802576D+00, -0.597996D+00, -0.201774D+00, &
+                                 -0.784200D+00, 0.418215D+00, -0.502561D+00, &
+                                -0.749174D+00, -0.0848813D+00, 0.688458D+00, &
+                                 -0.722234D+00, 0.692896D+00, -0.201774D+00, &
+                                  -0.657475D+00, 0.597996D+00, 0.502561D+00, &
+                                  -0.602051D+00, 0.290893D+00, 0.771593D+00, &
+                                 -0.583675D+00, -0.692896D+00, 0.470806D+00, &
+                                -0.579632D+00, -0.333333D+00, -0.771593D+00, &
+                                 -0.521710D+00, -0.418215D+00, 0.771593D+00, &
+                                 -0.505832D+00, 0.375774D+00, -0.803348D+00, &
+                                -0.489955D+00, -0.830237D+00, -0.336290D+00, &
+                                 -0.403548D+00, 0.000000D+00, -0.937864D+00, &
+                                 -0.381901D+00, 0.925138D+00, -0.201774D+00, &
+                                -0.352168D+00, -0.666667D+00, -0.688458D+00, &
+                                  -0.317142D+00, 0.830237D+00, 0.502561D+00, &
+                                 -0.271054D+00, -0.925138D+00, 0.336290D+00, &
+                                  -0.227464D+00, 0.333333D+00, 0.937864D+00, &
+                                -0.224193D+00, -0.993808D+00, -0.067258D+00, &
+                                  -0.179355D+00, 0.993808D+00, 0.150394D+00, &
+                                 -0.165499D+00, 0.608015D+00, -0.803348D+00, &
+                                 -0.147123D+00, -0.375774D+00, 0.937864D+00, &
+                                 -0.103533D+00, 0.882697D+00, -0.502561D+00, &
+                                  -0.513806D-01, 0.666667D+00, 0.771593D+00, &
+                                   0.000000D+00, 0.000000D+00, 1.021000D+00, &
+                                  0.000000D+00, 0.000000D+00, -1.021000D+00, &
+                                 0.513806D-01, -0.666667D+00, -0.771593D+00, &
+                                  0.103533D+00, -0.882697D+00, 0.502561D+00, &
+                                  0.147123D+00, 0.375774D+00, -0.937864D+00, &
+                                  0.165499D+00, -0.608015D+00, 0.803348D+00, &
+                                 0.179355D+00, -0.993808D+00, -0.150394D+00, &
+                                   0.224193D+00, 0.993808D+00, 0.067258D+00, &
+                                 0.227464D+00, -0.333333D+00, -0.937864D+00, &
+                                  0.271054D+00, 0.925138D+00, -0.336290D+00, &
+                                 0.317142D+00, -0.830237D+00, -0.502561D+00, &
+                                   0.352168D+00, 0.666667D+00, 0.688458D+00, &
+                                  0.381901D+00, -0.925138D+00, 0.201774D+00, &
+                                   0.403548D+00, 0.000000D+00, 0.937864D+00, &
+                                   0.489955D+00, 0.830237D+00, 0.336290D+00, &
+                                  0.505832D+00, -0.375774D+00, 0.803348D+00, &
+                                  0.521710D+00, 0.418215D+00, -0.771593D+00, &
+                                   0.579632D+00, 0.333333D+00, 0.771593D+00, &
+                                  0.583675D+00, 0.692896D+00, -0.470806D+00, &
+                                 0.602051D+00, -0.290893D+00, -0.771593D+00, &
+                                 0.657475D+00, -0.597996D+00, -0.502561D+00, &
+                                  0.722234D+00, -0.692896D+00, 0.201774D+00, &
+                                 0.749174D+00, 0.0848813D+00, -0.688458D+00, &
+                                  0.784200D+00, -0.418215D+00, 0.502561D+00, &
+                                   0.802576D+00, 0.597996D+00, 0.201774D+00, &
+                                  0.849436D+00, 0.529326D+00, -0.201774D+00, &
+                                   0.858000D+00, 0.290893D+00, 0.470806D+00, &
+                                 0.860021D+00, -0.529326D+00, -0.150394D+00, &
+                                  0.951720D+00, 0.153552D+00, -0.336290D+00, &
+                                 0.960284D+00, -0.0848813D+00, 0.336290D+00, &
+                               1.007140D+00, -0.153552D+00, -0.067258D+00/), &
+                                                (/dim_num, point_num/))
 !
 !  Set the face orders.
 !
   face_order(1:face_num) = (/ &
-    6, 6, 5, 6, 5, 6, 5, 6, 6, 6, &
-    5, 6, 5, 6, 5, 6, 6, 6, 5, 6, &
-    5, 5, 6, 6, 6, 5, 6, 5, 6, 6, &
-    5, 6 /)
+                           6, 6, 5, 6, 5, 6, 5, 6, 6, 6, &
+                           5, 6, 5, 6, 5, 6, 6, 6, 5, 6, &
+                           5, 5, 6, 6, 6, 5, 6, 5, 6, 6, &
+                           5, 6/)
 !
 !  Set faces.
 !
-  face_point(1:face_order_max,1:face_num) = reshape ( (/ &
-       30, 43, 47, 41, 29, 23, &
-       30, 23, 12,  9, 15, 27, &
-       30, 27, 35, 45, 43, -1, &
-       43, 45, 53, 59, 56, 47, &
-       23, 29, 21, 11, 12, -1, &
-       27, 15, 13, 22, 33, 35, &
-       47, 56, 54, 44, 41, -1, &
-       45, 35, 33, 42, 51, 53, &
-       12, 11,  4,  1,  3,  9, &
-       29, 41, 44, 37, 25, 21, &
-       15,  9,  3,  6, 13, -1, &
-       56, 59, 60, 58, 55, 54, &
-       53, 51, 57, 60, 59, -1, &
-       11, 21, 25, 19, 10,  4, &
-       33, 22, 24, 36, 42, -1, &
-       13,  6,  7, 17, 24, 22, &
-       54, 55, 48, 39, 37, 44, &
-       51, 42, 36, 40, 50, 57, &
-        4, 10,  8,  2,  1, -1, &
-        3,  1,  2,  5,  7,  6, &
-       25, 37, 39, 28, 19, -1, &
-       55, 58, 52, 46, 48, -1, &
-       60, 57, 50, 49, 52, 58, &
-       10, 19, 28, 26, 16,  8, &
-       36, 24, 17, 20, 32, 40, &
-        7,  5, 14, 20, 17, -1, &
-       48, 46, 34, 26, 28, 39, &
-       50, 40, 32, 38, 49, -1, &
-        8, 16, 18, 14,  5,  2, &
-       46, 52, 49, 38, 31, 34, &
-       16, 26, 34, 31, 18, -1, &
-       32, 20, 14, 18, 31, 38 /), (/ face_order_max, face_num /) )
+  face_point(1:face_order_max, 1:face_num) = reshape((/ &
+                                                     30, 43, 47, 41, 29, 23, &
+                                                     30, 23, 12, 9, 15, 27, &
+                                                     30, 27, 35, 45, 43, -1, &
+                                                     43, 45, 53, 59, 56, 47, &
+                                                     23, 29, 21, 11, 12, -1, &
+                                                     27, 15, 13, 22, 33, 35, &
+                                                     47, 56, 54, 44, 41, -1, &
+                                                     45, 35, 33, 42, 51, 53, &
+                                                     12, 11, 4, 1, 3, 9, &
+                                                     29, 41, 44, 37, 25, 21, &
+                                                     15, 9, 3, 6, 13, -1, &
+                                                     56, 59, 60, 58, 55, 54, &
+                                                     53, 51, 57, 60, 59, -1, &
+                                                     11, 21, 25, 19, 10, 4, &
+                                                     33, 22, 24, 36, 42, -1, &
+                                                     13, 6, 7, 17, 24, 22, &
+                                                     54, 55, 48, 39, 37, 44, &
+                                                     51, 42, 36, 40, 50, 57, &
+                                                     4, 10, 8, 2, 1, -1, &
+                                                     3, 1, 2, 5, 7, 6, &
+                                                     25, 37, 39, 28, 19, -1, &
+                                                     55, 58, 52, 46, 48, -1, &
+                                                     60, 57, 50, 49, 52, 58, &
+                                                     10, 19, 28, 26, 16, 8, &
+                                                     36, 24, 17, 20, 32, 40, &
+                                                     7, 5, 14, 20, 17, -1, &
+                                                     48, 46, 34, 26, 28, 39, &
+                                                     50, 40, 32, 38, 49, -1, &
+                                                     8, 16, 18, 14, 5, 2, &
+                                                     46, 52, 49, 38, 31, 34, &
+                                                     16, 26, 34, 31, 18, -1, &
+                       32, 20, 14, 18, 31, 38/), (/face_order_max, face_num/))
 
   return
 end
-subroutine soccer_size_3d ( point_num, edge_num, face_num, face_order_max )
+subroutine soccer_size_3d(point_num, edge_num, face_num, face_order_max)
 
 !*****************************************************************************80
 !
@@ -26216,10 +26217,10 @@ subroutine soccer_size_3d ( point_num, edge_num, face_num, face_order_max )
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
   point_num = 60
   edge_num = 90
@@ -26228,7 +26229,7 @@ subroutine soccer_size_3d ( point_num, edge_num, face_num, face_order_max )
 
   return
 end
-subroutine sort_heap_external ( n, indx, i, j, isgn )
+subroutine sort_heap_external(n, indx, i, j, isgn)
 
 !*****************************************************************************80
 !
@@ -26297,20 +26298,20 @@ subroutine sort_heap_external ( n, indx, i, j, isgn )
 !
   implicit none
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ), save :: i_save = 0
-  integer ( kind = 4 ) indx
-  integer ( kind = 4 ) isgn
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ), save :: j_save = 0
-  integer ( kind = 4 ), save :: k = 0
-  integer ( kind = 4 ), save :: k1 = 0
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), save :: n1 = 0
+  integer(kind=4) i
+  integer(kind=4), save :: i_save = 0
+  integer(kind=4) indx
+  integer(kind=4) isgn
+  integer(kind=4) j
+  integer(kind=4), save :: j_save = 0
+  integer(kind=4), save :: k = 0
+  integer(kind=4), save :: k1 = 0
+  integer(kind=4) n
+  integer(kind=4), save :: n1 = 0
 !
 !  INDX = 0: This is the first call.
 !
-  if ( indx == 0 ) then
+  if (indx == 0) then
 
     i_save = 0
     j_save = 0
@@ -26320,11 +26321,11 @@ subroutine sort_heap_external ( n, indx, i, j, isgn )
 !
 !  INDX < 0: The user is returning the results of a comparison.
 !
-  else if ( indx < 0 ) then
+  else if (indx < 0) then
 
-    if ( indx == -2 ) then
+    if (indx == -2) then
 
-      if ( isgn < 0 ) then
+      if (isgn < 0) then
         i_save = i_save + 1
       end if
 
@@ -26337,16 +26338,16 @@ subroutine sort_heap_external ( n, indx, i, j, isgn )
 
     end if
 
-    if ( 0 < isgn ) then
+    if (0 < isgn) then
       indx = 2
       i = i_save
       j = j_save
       return
     end if
 
-    if ( k <= 1 ) then
+    if (k <= 1) then
 
-      if ( n1 == 1 ) then
+      if (n1 == 1) then
         i_save = 0
         j_save = 0
         indx = 0
@@ -26368,7 +26369,7 @@ subroutine sort_heap_external ( n, indx, i, j, isgn )
 !
 !  0 < INDX, the user was asked to make an interchange.
 !
-  else if ( indx == 1 ) then
+  else if (indx == 1) then
 
     k1 = k
 
@@ -26378,14 +26379,14 @@ subroutine sort_heap_external ( n, indx, i, j, isgn )
 
     i_save = 2 * k1
 
-    if ( i_save == n1 ) then
+    if (i_save == n1) then
       j_save = k1
       k1 = i_save
       indx = -1
       i = i_save
       j = j_save
       return
-    else if ( i_save <= n1 ) then
+    else if (i_save <= n1) then
       j_save = i_save + 1
       indx = -2
       i = i_save
@@ -26393,7 +26394,7 @@ subroutine sort_heap_external ( n, indx, i, j, isgn )
       return
     end if
 
-    if ( k <= 1 ) then
+    if (k <= 1) then
       exit
     end if
 
@@ -26402,7 +26403,7 @@ subroutine sort_heap_external ( n, indx, i, j, isgn )
 
   end do
 
-  if ( n1 == 1 ) then
+  if (n1 == 1) then
     i_save = 0
     j_save = 0
     indx = 0
@@ -26419,7 +26420,7 @@ subroutine sort_heap_external ( n, indx, i, j, isgn )
 
   return
 end
-subroutine sphere_cap_area_2d ( r, h, area )
+subroutine sphere_cap_area_2d(r, h, area)
 
 !*****************************************************************************80
 !
@@ -26458,23 +26459,23 @@ subroutine sphere_cap_area_2d ( r, h, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) h
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_asin
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
+  real(kind=8) area
+  real(kind=8) h
+  real(kind=8) r
+  real(kind=8) r8_asin
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
 
-  if ( h <= 0.0D+00 ) then
+  if (h <= 0.0D+00) then
     area = 0.0D+00
-  else if ( 2.0D+00 * r <= h ) then
+  else if (2.0D+00 * r <= h) then
     area = 2.0D+00 * r8_pi * r
   else
 
-    theta = 2.0D+00 * r8_asin ( sqrt ( r * r - ( r - h )**2 ) / r )
+    theta = 2.0D+00 * r8_asin(sqrt(r * r - (r - h)**2) / r)
     area = r * theta
 
-    if ( r <= h ) then
+    if (r <= h) then
       area = 2.0D+00 * r8_pi * r - area
     end if
 
@@ -26482,7 +26483,7 @@ subroutine sphere_cap_area_2d ( r, h, area )
 
   return
 end
-subroutine sphere_cap_area_3d ( r, h, area )
+subroutine sphere_cap_area_3d(r, h, area)
 
 !*****************************************************************************80
 !
@@ -26521,14 +26522,14 @@ subroutine sphere_cap_area_3d ( r, h, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) h
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) area
+  real(kind=8) h
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
-  if ( h <= 0.0D+00 ) then
+  if (h <= 0.0D+00) then
     area = 0.0D+00
-  else if ( 2.0D+00 * r <= h ) then
+  else if (2.0D+00 * r <= h) then
     area = 4.0D+00 * r8_pi * r * r
   else
     area = 2.0D+00 * r8_pi * r * h
@@ -26536,7 +26537,7 @@ subroutine sphere_cap_area_3d ( r, h, area )
 
   return
 end
-subroutine sphere_cap_area_nd ( dim_num, r, h, area )
+subroutine sphere_cap_area_nd(dim_num, r, h, area)
 
 !*****************************************************************************80
 !
@@ -26582,46 +26583,46 @@ subroutine sphere_cap_area_nd ( dim_num, r, h, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) area2
-  real ( kind = 8 ) h
-  real ( kind = 8 ) haver_sine
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) dim_num
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_asin
-  real ( kind = 8 ) sphere_k
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) ti
-  real ( kind = 8 ) tj
-  real ( kind = 8 ) tk
+  real(kind=8) area
+  real(kind=8) area2
+  real(kind=8) h
+  real(kind=8) haver_sine
+  integer(kind=4) i
+  integer(kind=4) dim_num
+  real(kind=8) r
+  real(kind=8) r8_asin
+  real(kind=8) sphere_k
+  real(kind=8) theta
+  real(kind=8) ti
+  real(kind=8) tj
+  real(kind=8) tk
 
-  if ( h <= 0.0D+00 ) then
+  if (h <= 0.0D+00) then
     area = 0.0D+00
     return
   end if
 
-  if ( 2.0D+00 * r <= h ) then
-    call sphere_imp_area_nd ( dim_num, r, area )
+  if (2.0D+00 * r <= h) then
+    call sphere_imp_area_nd(dim_num, r, area)
     return
   end if
 !
 !  For cases where R < H < 2 * R, work with the complementary region.
 !
-  haver_sine = sqrt ( ( 2.0D+00 * r - h ) * h )
+  haver_sine = sqrt((2.0D+00 * r - h) * h)
 
-  theta = r8_asin ( haver_sine / r )
+  theta = r8_asin(haver_sine / r)
 
-  if ( dim_num < 1 ) then
+  if (dim_num < 1) then
 
     area = -1.0D+00
     return
 
-  else if ( dim_num == 1 ) then
+  else if (dim_num == 1) then
 
     area = 0.0D+00
 
-  else if ( dim_num == 2 ) then
+  else if (dim_num == 2) then
 
     area = 2.0D+00 * theta * r
 
@@ -26630,30 +26631,30 @@ subroutine sphere_cap_area_nd ( dim_num, r, h, area )
     ti = theta
 
     tj = ti
-    ti = 1.0D+00 - cos ( theta )
+    ti = 1.0D+00 - cos(theta)
 
-    do i = 2, dim_num-2
+    do i = 2, dim_num - 2
       tk = tj
       tj = ti
-      ti = ( real ( i - 1, kind = 8 ) * tk &
-        - cos ( theta ) * sin ( theta ) ** ( i - 1 ) ) &
-        / real ( i, kind = 8 )
+      ti = (real(i - 1, kind=8) * tk &
+            - cos(theta) * sin(theta)**(i - 1)) &
+           / real(i, kind=8)
     end do
 
-    area = sphere_k ( dim_num-1 ) * ti * r ** ( dim_num - 1 )
+    area = sphere_k(dim_num - 1) * ti * r**(dim_num - 1)
 
   end if
 !
 !  Adjust for cases where R < H < 2R.
 !
-  if ( r < h ) then
-    call sphere_imp_area_nd ( dim_num, r, area2 )
+  if (r < h) then
+    call sphere_imp_area_nd(dim_num, r, area2)
     area = area2 - area
   end if
 
   return
 end
-subroutine sphere_cap_volume_2d ( r, h, volume )
+subroutine sphere_cap_volume_2d(r, h, volume)
 
 !*****************************************************************************80
 !
@@ -26691,27 +26692,27 @@ subroutine sphere_cap_volume_2d ( r, h, volume )
 !
   implicit none
 
-  real ( kind = 8 ) h
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_asin
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) volume
+  real(kind=8) h
+  real(kind=8) r
+  real(kind=8) r8_asin
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
+  real(kind=8) volume
 
-  if ( h <= 0.0D+00 ) then
+  if (h <= 0.0D+00) then
 
     volume = 0.0D+00
 
-  else if ( 2.0D+00 * r <= h ) then
+  else if (2.0D+00 * r <= h) then
 
     volume = r8_pi * r * r
 
   else
 
-    theta = 2.0D+00 * r8_asin ( sqrt ( r * r - ( r - h )**2 ) / r )
-    volume = r * r * ( theta - sin ( theta ) ) / 2.0D+00
+    theta = 2.0D+00 * r8_asin(sqrt(r * r - (r - h)**2) / r)
+    volume = r * r * (theta - sin(theta)) / 2.0D+00
 
-    if ( r < h ) then
+    if (r < h) then
       volume = r8_pi * r * r - volume
     end if
 
@@ -26719,7 +26720,7 @@ subroutine sphere_cap_volume_2d ( r, h, volume )
 
   return
 end
-subroutine sphere_cap_volume_3d ( r, h, volume )
+subroutine sphere_cap_volume_3d(r, h, volume)
 
 !*****************************************************************************80
 !
@@ -26758,22 +26759,22 @@ subroutine sphere_cap_volume_3d ( r, h, volume )
 !
   implicit none
 
-  real ( kind = 8 ) h
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) volume
+  real(kind=8) h
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) volume
 
-  if ( h <= 0.0D+00 ) then
+  if (h <= 0.0D+00) then
     volume = 0.0D+00
-  else if ( 2.0D+00 * r <= h ) then
-    volume = ( 4.0D+00 / 3.0D+00 ) * r8_pi * r * r * r
+  else if (2.0D+00 * r <= h) then
+    volume = (4.0D+00 / 3.0D+00) * r8_pi * r * r * r
   else
-    volume = ( 1.0D+00 / 3.0D+00 ) * r8_pi * h * h * ( 3.0D+00 * r - h )
+    volume = (1.0D+00 / 3.0D+00) * r8_pi * h * h * (3.0D+00 * r - h)
   end if
 
   return
 end
-subroutine sphere_cap_volume_nd ( dim_num, r, h, volume )
+subroutine sphere_cap_volume_nd(dim_num, r, h, volume)
 
 !*****************************************************************************80
 !
@@ -26835,48 +26836,48 @@ subroutine sphere_cap_volume_nd ( dim_num, r, h, volume )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) factor1
-  real ( kind = 8 ) factor2
-  real ( kind = 8 ) h
-  integer ( kind = 4 ) dim_num
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_asin
-  real ( kind = 8 ) sin_power_int
-  real ( kind = 8 ) sphere01_volume_nd
-  real ( kind = 8 ) volume
-  real ( kind = 8 ) volume2
+  real(kind=8) angle
+  real(kind=8) factor1
+  real(kind=8) factor2
+  real(kind=8) h
+  integer(kind=4) dim_num
+  real(kind=8) r
+  real(kind=8) r8_asin
+  real(kind=8) sin_power_int
+  real(kind=8) sphere01_volume_nd
+  real(kind=8) volume
+  real(kind=8) volume2
 
-  if ( h <= 0.0D+00 ) then
+  if (h <= 0.0D+00) then
     volume = 0.0D+00
     return
   end if
 
-  if ( 2.0D+00 * r <= h ) then
-    call sphere_imp_volume_nd ( dim_num, r, volume )
+  if (2.0D+00 * r <= h) then
+    call sphere_imp_volume_nd(dim_num, r, volume)
     return
   end if
 
-  if ( dim_num < 1 ) then
+  if (dim_num < 1) then
 
     volume = -1.0D+00
 
-  else if ( dim_num == 1 ) then
+  else if (dim_num == 1) then
 
     volume = h
 
   else
 
-    factor1 = sphere01_volume_nd ( dim_num - 1 )
+    factor1 = sphere01_volume_nd(dim_num - 1)
 
-    angle = r8_asin ( sqrt ( ( 2.0D+00 * r - h ) * h / r ) )
+    angle = r8_asin(sqrt((2.0D+00 * r - h) * h / r))
 
-    factor2 = sin_power_int ( 0.0D+00, angle, dim_num )
+    factor2 = sin_power_int(0.0D+00, angle, dim_num)
 
     volume = factor1 * factor2 * r**dim_num
 
-    if ( r < h ) then
-      call sphere_imp_volume_nd ( dim_num, r, volume2 )
+    if (r < h) then
+      call sphere_imp_volume_nd(dim_num, r, volume2)
       volume = volume2 - volume
     end if
 
@@ -26884,7 +26885,7 @@ subroutine sphere_cap_volume_nd ( dim_num, r, h, volume )
 
   return
 end
-subroutine sphere_dia2imp_3d ( p1, p2, r, pc )
+subroutine sphere_dia2imp_3d(p1, p2, r, pc)
 
 !*****************************************************************************80
 !
@@ -26919,19 +26920,19 @@ subroutine sphere_dia2imp_3d ( p1, p2, r, pc )
 !
   implicit none
 
-  real ( kind = 8 ) p1(3)
-  real ( kind = 8 ) p2(3)
-  real ( kind = 8 ) pc(3)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8vec_norm_affine
+  real(kind=8) p1(3)
+  real(kind=8) p2(3)
+  real(kind=8) pc(3)
+  real(kind=8) r
+  real(kind=8) r8vec_norm_affine
 
-  r = 0.5D+00 * r8vec_norm_affine ( 3, p1, p2 )
+  r = 0.5D+00 * r8vec_norm_affine(3, p1, p2)
 
-  pc(1:3) = 0.5D+00 * ( p1(1:3) + p2(1:3) )
+  pc(1:3) = 0.5D+00 * (p1(1:3) + p2(1:3))
 
   return
 end
-subroutine sphere_distance_xyz ( xyz1, xyz2, dist )
+subroutine sphere_distance_xyz(xyz1, xyz2, dist)
 
 !*****************************************************************************80
 !
@@ -26975,42 +26976,42 @@ subroutine sphere_distance_xyz ( xyz1, xyz2, dist )
 !
   implicit none
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) lat1
-  real ( kind = 8 ) lat2
-  real ( kind = 8 ) lon1
-  real ( kind = 8 ) lon2
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_asin
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) top
-  real ( kind = 8 ) xyz1(3)
-  real ( kind = 8 ) xyz2(3)
+  real(kind=8) bot
+  real(kind=8) dist
+  real(kind=8) lat1
+  real(kind=8) lat2
+  real(kind=8) lon1
+  real(kind=8) lon2
+  real(kind=8) r
+  real(kind=8) r8_asin
+  real(kind=8) r8_atan
+  real(kind=8) r8vec_norm
+  real(kind=8) top
+  real(kind=8) xyz1(3)
+  real(kind=8) xyz2(3)
 
-  r = r8vec_norm ( 3, xyz1 )
+  r = r8vec_norm(3, xyz1)
 
-  lat1 = r8_asin ( xyz1(3) )
-  lon1 = r8_atan ( xyz1(2), xyz1(1) )
+  lat1 = r8_asin(xyz1(3))
+  lon1 = r8_atan(xyz1(2), xyz1(1))
 
-  lat2 = r8_asin ( xyz2(3) )
-  lon2 = r8_atan ( xyz2(2), xyz2(1) )
+  lat2 = r8_asin(xyz2(3))
+  lon2 = r8_atan(xyz2(2), xyz2(1))
 
-  top = ( cos ( lat2 ) * sin ( lon1 - lon2 ) )**2 &
-      + ( cos ( lat1 ) * sin ( lat2 ) &
-      -   sin ( lat1 ) * cos ( lat2 ) * cos ( lon1 - lon2 ) )**2
+  top = (cos(lat2) * sin(lon1 - lon2))**2 &
+        + (cos(lat1) * sin(lat2) &
+           - sin(lat1) * cos(lat2) * cos(lon1 - lon2))**2
 
-  top = sqrt ( top )
+  top = sqrt(top)
 
-  bot = sin ( lat1 ) * sin ( lat2 ) &
-      + cos ( lat1 ) * cos ( lat2 ) * cos ( lon1 - lon2 )
+  bot = sin(lat1) * sin(lat2) &
+        + cos(lat1) * cos(lat2) * cos(lon1 - lon2)
 
-  dist = r * atan2 ( top, bot )
+  dist = r * atan2(top, bot)
 
   return
 end
-subroutine sphere_distance1 ( lat1, lon1, lat2, lon2, r, dist )
+subroutine sphere_distance1(lat1, lon1, lat2, lon2, r, dist)
 
 !*****************************************************************************80
 !
@@ -27059,22 +27060,22 @@ subroutine sphere_distance1 ( lat1, lon1, lat2, lon2, r, dist )
 !
   implicit none
 
-  real ( kind = 8 ) c
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) lat1
-  real ( kind = 8 ) lat2
-  real ( kind = 8 ) lon1
-  real ( kind = 8 ) lon2
-  real ( kind = 8 ) r
+  real(kind=8) c
+  real(kind=8) dist
+  real(kind=8) lat1
+  real(kind=8) lat2
+  real(kind=8) lon1
+  real(kind=8) lon2
+  real(kind=8) r
 
-  c = cos ( lat1 ) * cos ( lat2 ) * cos ( lon1 - lon2 ) &
-    + sin ( lat1 ) * sin ( lat2 )
+  c = cos(lat1) * cos(lat2) * cos(lon1 - lon2) &
+      + sin(lat1) * sin(lat2)
 
-  dist = r * acos ( c )
+  dist = r * acos(c)
 
   return
 end
-subroutine sphere_distance2 ( lat1, lon1, lat2, lon2, r, dist )
+subroutine sphere_distance2(lat1, lon1, lat2, lon2, r, dist)
 
 !*****************************************************************************80
 !
@@ -27123,23 +27124,23 @@ subroutine sphere_distance2 ( lat1, lon1, lat2, lon2, r, dist )
 !
   implicit none
 
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) lat1
-  real ( kind = 8 ) lat2
-  real ( kind = 8 ) lon1
-  real ( kind = 8 ) lon2
-  real ( kind = 8 ) r
-  real ( kind = 8 ) s
+  real(kind=8) dist
+  real(kind=8) lat1
+  real(kind=8) lat2
+  real(kind=8) lon1
+  real(kind=8) lon2
+  real(kind=8) r
+  real(kind=8) s
 
-  s = ( sin ( ( lat1 - lat2 ) / 2.0D+00 ) )**2 &
-    + cos ( lat1 ) * cos ( lat2 ) * ( sin ( ( lon1 - lon2 ) / 2.0D+00 ) )**2
-  s = sqrt ( s )
+  s = (sin((lat1 - lat2) / 2.0D+00))**2 &
+      + cos(lat1) * cos(lat2) * (sin((lon1 - lon2) / 2.0D+00))**2
+  s = sqrt(s)
 
-  dist = 2.0D+00 * r * asin ( s )
+  dist = 2.0D+00 * r * asin(s)
 
   return
 end
-subroutine sphere_distance3 ( lat1, lon1, lat2, lon2, r, dist )
+subroutine sphere_distance3(lat1, lon1, lat2, lon2, r, dist)
 
 !*****************************************************************************80
 !
@@ -27188,29 +27189,29 @@ subroutine sphere_distance3 ( lat1, lon1, lat2, lon2, r, dist )
 !
   implicit none
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) lat1
-  real ( kind = 8 ) lat2
-  real ( kind = 8 ) lon1
-  real ( kind = 8 ) lon2
-  real ( kind = 8 ) r
-  real ( kind = 8 ) top
+  real(kind=8) bot
+  real(kind=8) dist
+  real(kind=8) lat1
+  real(kind=8) lat2
+  real(kind=8) lon1
+  real(kind=8) lon2
+  real(kind=8) r
+  real(kind=8) top
 
-  top = ( cos ( lat2 ) * sin ( lon1 - lon2 ) )**2 &
-      + ( cos ( lat1 ) * sin ( lat2 ) &
-      -   sin ( lat1 ) * cos ( lat2 ) * cos ( lon1 - lon2 ) )**2
+  top = (cos(lat2) * sin(lon1 - lon2))**2 &
+        + (cos(lat1) * sin(lat2) &
+           - sin(lat1) * cos(lat2) * cos(lon1 - lon2))**2
 
-  top = sqrt ( top )
+  top = sqrt(top)
 
-  bot = sin ( lat1 ) * sin ( lat2 ) &
-      + cos ( lat1 ) * cos ( lat2 ) * cos ( lon1 - lon2 )
+  bot = sin(lat1) * sin(lat2) &
+        + cos(lat1) * cos(lat2) * cos(lon1 - lon2)
 
-  dist = r * atan2 ( top, bot )
+  dist = r * atan2(top, bot)
 
   return
 end
-subroutine sphere_exp_contains_point_3d ( p1, p2, p3, p4, p, inside )
+subroutine sphere_exp_contains_point_3d(p1, p2, p3, p4, p, inside)
 
 !*****************************************************************************80
 !
@@ -27253,51 +27254,51 @@ subroutine sphere_exp_contains_point_3d ( p1, p2, p3, p4, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a(5,5)
-  real ( kind = 8 ) det
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) p4(dim_num)
-  real ( kind = 8 ) r8mat_det_5d
+  real(kind=8) a(5, 5)
+  real(kind=8) det
+  logical(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) p4(dim_num)
+  real(kind=8) r8mat_det_5d
 !
 !  Compute the determinant.
 !
-  a(1,1:dim_num) = p1(1:dim_num)
-  a(1,4) = sum ( p1(1:dim_num)**2 )
-  a(1,5) = 1.0D+00
+  a(1, 1:dim_num) = p1(1:dim_num)
+  a(1, 4) = sum(p1(1:dim_num)**2)
+  a(1, 5) = 1.0D+00
 
-  a(2,1:dim_num) = p2(1:dim_num)
-  a(2,4) = sum ( p2(1:dim_num)**2 )
-  a(2,5) = 1.0D+00
+  a(2, 1:dim_num) = p2(1:dim_num)
+  a(2, 4) = sum(p2(1:dim_num)**2)
+  a(2, 5) = 1.0D+00
 
-  a(3,1:dim_num) = p3(1:dim_num)
-  a(3,4) = sum ( p3(1:dim_num)**2 )
-  a(3,5) = 1.0D+00
+  a(3, 1:dim_num) = p3(1:dim_num)
+  a(3, 4) = sum(p3(1:dim_num)**2)
+  a(3, 5) = 1.0D+00
 
-  a(4,1:dim_num) = p4(1:dim_num)
-  a(4,4) = sum ( p4(1:dim_num)**2 )
-  a(4,5) = 1.0D+00
+  a(4, 1:dim_num) = p4(1:dim_num)
+  a(4, 4) = sum(p4(1:dim_num)**2)
+  a(4, 5) = 1.0D+00
 
-  a(5,1:dim_num) = p(1:dim_num)
-  a(5,4) = sum ( p(1:dim_num)**2 )
-  a(5,5) = 1.0D+00
+  a(5, 1:dim_num) = p(1:dim_num)
+  a(5, 4) = sum(p(1:dim_num)**2)
+  a(5, 5) = 1.0D+00
 
-  det = r8mat_det_5d ( a )
+  det = r8mat_det_5d(a)
 
-  if ( det < 0.0D+00 ) then
+  if (det < 0.0D+00) then
     inside = .false.
-  else if ( 0.0D+00 <= det ) then
+  else if (0.0D+00 <= det) then
     inside = .true.
   end if
 
   return
 end
-subroutine sphere_exp_point_near_3d ( p1, p2, p3, p4, p, pn )
+subroutine sphere_exp_point_near_3d(p1, p2, p3, p4, p, pn)
 
 !*****************************************************************************80
 !
@@ -27336,38 +27337,38 @@ subroutine sphere_exp_point_near_3d ( p1, p2, p3, p4, p, pn )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) p4(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) pn(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) norm
+  real(kind=8) p(dim_num)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) p4(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) pn(dim_num)
+  real(kind=8) r
 !
 !  Find the center.
 !
-  call sphere_exp2imp_3d ( p1, p2, p3, p4, r, pc )
+  call sphere_exp2imp_3d(p1, p2, p3, p4, r, pc)
 !
 !  If P = PC, bail out now.
 !
-  norm = sqrt ( sum ( ( p(1:dim_num) - pc(1:dim_num) )**2 ) )
+  norm = sqrt(sum((p(1:dim_num) - pc(1:dim_num))**2))
 
-  if ( norm == 0.0D+00 ) then
-    pn(1:dim_num) = pc(1:dim_num) + r / sqrt ( real ( dim_num, kind = 8 ) )
+  if (norm == 0.0D+00) then
+    pn(1:dim_num) = pc(1:dim_num) + r / sqrt(real(dim_num, kind=8))
     return
   end if
 !
 !  Compute the nearest point.
 !
-  pn(1:dim_num) = pc(1:dim_num) + r * ( p(1:dim_num) - pc(1:dim_num) ) / norm
+  pn(1:dim_num) = pc(1:dim_num) + r * (p(1:dim_num) - pc(1:dim_num)) / norm
 
   return
 end
-subroutine sphere_exp2imp_3d ( p1, p2, p3, p4, r, pc )
+subroutine sphere_exp2imp_3d(p1, p2, p3, p4, r, pc)
 
 !*****************************************************************************80
 !
@@ -27412,25 +27413,25 @@ subroutine sphere_exp2imp_3d ( p1, p2, p3, p4, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) p4(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) tetra(dim_num,4)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) p4(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) tetra(dim_num, 4)
 
-  tetra(1:dim_num,1:4) = reshape ( (/ &
-    p1(1:dim_num), p2(1:dim_num), p3(1:dim_num), p4(1:dim_num) /), &
-    (/ dim_num, 4 /) )
+  tetra(1:dim_num, 1:4) = reshape((/ &
+               p1(1:dim_num), p2(1:dim_num), p3(1:dim_num), p4(1:dim_num)/), &
+                                  (/dim_num, 4/))
 
-  call tetrahedron_circumsphere_3d ( tetra, r, pc )
+  call tetrahedron_circumsphere_3d(tetra, r, pc)
 
   return
 end
-subroutine sphere_exp2imp_nd ( n, p, r, pc )
+subroutine sphere_exp2imp_nd(n, p, r, pc)
 
 !*****************************************************************************80
 !
@@ -27459,35 +27460,35 @@ subroutine sphere_exp2imp_nd ( n, p, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(n,n+1)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) info
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) pc(n)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) p(n,n+1)
+  real(kind=8) a(n, n + 1)
+  integer(kind=4) i
+  integer(kind=4) info
+  integer(kind=4) j
+  real(kind=8) pc(n)
+  real(kind=8) r
+  real(kind=8) p(n, n + 1)
 !
 !  Set up the linear system.
 !
-  a(1:n,1:n) = transpose ( p(1:n,2:n+1) )
+  a(1:n, 1:n) = transpose(p(1:n, 2:n + 1))
 
   do j = 1, n
-    a(1:n,j) = a(1:n,j) - p(j,1)
+    a(1:n, j) = a(1:n, j) - p(j, 1)
   end do
 
   do i = 1, n
-    a(i,n+1) = sum ( a(i,1:n)**2 )
+    a(i, n + 1) = sum(a(i, 1:n)**2)
   end do
 !
 !  Solve the linear system.
 !
-  call r8mat_solve ( n, 1, a, info )
+  call r8mat_solve(n, 1, a, info)
 !
 !  If the system was singular, return a consolation prize.
 !
-  if ( info /= 0 ) then
+  if (info /= 0) then
     r = -1.0D+00
     pc(1:n) = 0.0D+00
     return
@@ -27495,13 +27496,13 @@ subroutine sphere_exp2imp_nd ( n, p, r, pc )
 !
 !  Compute the radius and center.
 !
-  r = 0.5D+00 * sqrt ( sum ( a(1:n,n+1)**2 ) )
+  r = 0.5D+00 * sqrt(sum(a(1:n, n + 1)**2))
 
-  pc(1:n) = p(1:n,1) + 0.5D+00 * a(1:n,n+1)
+  pc(1:n) = p(1:n, 1) + 0.5D+00 * a(1:n, n + 1)
 
   return
 end
-subroutine sphere_imp_area_3d ( r, area )
+subroutine sphere_imp_area_3d(r, area)
 
 !*****************************************************************************80
 !
@@ -27533,15 +27534,15 @@ subroutine sphere_imp_area_3d ( r, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) area
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
   area = 4.0D+00 * r8_pi * r * r
 
   return
 end
-subroutine sphere_imp_area_nd ( dim_num, r, area )
+subroutine sphere_imp_area_nd(dim_num, r, area)
 
 !*****************************************************************************80
 !
@@ -27587,16 +27588,16 @@ subroutine sphere_imp_area_nd ( dim_num, r, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) dim_num
-  real ( kind = 8 ) r
-  real ( kind = 8 ) sphere01_area_nd
+  real(kind=8) area
+  integer(kind=4) dim_num
+  real(kind=8) r
+  real(kind=8) sphere01_area_nd
 
-  area = r**( dim_num - 1  ) * sphere01_area_nd ( dim_num )
+  area = r**(dim_num - 1) * sphere01_area_nd(dim_num)
 
   return
 end
-subroutine sphere_imp_contains_point_3d ( r, pc, p, inside )
+subroutine sphere_imp_contains_point_3d(r, pc, p, inside)
 
 !*****************************************************************************80
 !
@@ -27633,12 +27634,12 @@ subroutine sphere_imp_contains_point_3d ( r, pc, p, inside )
 !
   implicit none
 
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(3)
-  real ( kind = 8 ) pc(3)
-  real ( kind = 8 ) r
+  logical(kind=4) inside
+  real(kind=8) p(3)
+  real(kind=8) pc(3)
+  real(kind=8) r
 
-  if ( sum ( ( p(1:3) - pc(1:3) ) ** 2 ) <= r * r ) then
+  if (sum((p(1:3) - pc(1:3))**2) <= r * r) then
     inside = .true.
   else
     inside = .false.
@@ -27646,8 +27647,8 @@ subroutine sphere_imp_contains_point_3d ( r, pc, p, inside )
 
   return
 end
-subroutine sphere_imp_line_project_3d ( r, pc, n, p, maxpnt2, n2, pp, &
-  theta_min, theta_max )
+subroutine sphere_imp_line_project_3d(r, pc, n, p, maxpnt2, n2, pp, &
+                                      theta_min, theta_max)
 
 !*****************************************************************************80
 !
@@ -27720,32 +27721,32 @@ subroutine sphere_imp_line_project_3d ( r, pc, n, p, maxpnt2, n2, pp, &
 !
   implicit none
 
-  integer ( kind = 4 ) maxpnt2
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) n
+  integer(kind=4) maxpnt2
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) n
 
-  real ( kind = 8 ) alpha
-  real ( kind = 8 ) ang3d
-  real ( kind = 8 ) dot
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) nfill
-  integer ( kind = 4 ) n2
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) pd(dim_num)
-  real ( kind = 8 ) pp(dim_num,maxpnt2)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) theta_max
-  real ( kind = 8 ) theta_min
-  real ( kind = 8 ) tnorm
+  real(kind=8) alpha
+  real(kind=8) ang3d
+  real(kind=8) dot
+  integer(kind=4) i
+  integer(kind=4) j
+  integer(kind=4) nfill
+  integer(kind=4) n2
+  real(kind=8) p(dim_num, n)
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) pd(dim_num)
+  real(kind=8) pp(dim_num, maxpnt2)
+  real(kind=8) r
+  real(kind=8) r8_acos
+  real(kind=8) theta_max
+  real(kind=8) theta_min
+  real(kind=8) tnorm
 !
 !  Check the input.
 !
-  if ( r == 0.0D+00 ) then
+  if (r == 0.0D+00) then
     n2 = 0
     return
   end if
@@ -27757,58 +27758,58 @@ subroutine sphere_imp_line_project_3d ( r, pc, n, p, maxpnt2, n2, pp, &
 
   do i = 1, n
 
-    if ( all ( p(1:dim_num,i) == pc(1:dim_num) ) ) then
+    if (all(p(1:dim_num, i) == pc(1:dim_num))) then
 
     else
 
       p1(1:dim_num) = p2(1:dim_num)
 
-      alpha = sqrt ( sum ( ( p(1:dim_num,i) - pc(1:dim_num) )**2 ) )
+      alpha = sqrt(sum((p(1:dim_num, i) - pc(1:dim_num))**2))
 
       p2(1:dim_num) = pc(1:dim_num) &
-        + r * ( p(1:dim_num,i) - pc(1:dim_num) ) / alpha
+                      + r * (p(1:dim_num, i) - pc(1:dim_num)) / alpha
 !
 !  If we haven't gotten any points yet, take this point as our start.
 !
-      if ( n2 == 0 ) then
+      if (n2 == 0) then
 
         n2 = n2 + 1
-        pp(1:dim_num,n2) = p2(1:dim_num)
+        pp(1:dim_num, n2) = p2(1:dim_num)
 !
 !  Compute the angular projection of P1 to P2.
 !
-      else if ( 1 <= n2 ) then
+      else if (1 <= n2) then
 
-        dot = sum ( ( p1(1:dim_num) - pc(1:dim_num) ) &
-                  * ( p2(1:dim_num) - pc(1:dim_num) ) )
+        dot = sum((p1(1:dim_num) - pc(1:dim_num)) &
+                  * (p2(1:dim_num) - pc(1:dim_num)))
 
-        ang3d = r8_acos (  dot / ( r * r ) )
+        ang3d = r8_acos(dot / (r * r))
 !
 !  If the angle is at least THETA_MIN, (or it's the last point),
 !  then we will draw a line segment.
 !
-        if ( theta_min < abs ( ang3d ) .or. i == n ) then
+        if (theta_min < abs(ang3d) .or. i == n) then
 !
 !  Now we check to see if the line segment is too long.
 !
-          if ( theta_max < abs ( ang3d ) ) then
+          if (theta_max < abs(ang3d)) then
 
-            nfill = int ( abs ( ang3d ) / theta_max )
+            nfill = int(abs(ang3d) / theta_max)
 
-            do j = 1, nfill-1
+            do j = 1, nfill - 1
 
               pd(1:dim_num) = &
-                ( real ( nfill - j, kind = 8 ) &
-                * ( p1(1:dim_num) - pc(1:dim_num) ) &
-                + real (         j, kind = 8 ) &
-                * ( p2(1:dim_num) - pc(1:dim_num) ) )
+                (real(nfill - j, kind=8) &
+                 * (p1(1:dim_num) - pc(1:dim_num)) &
+                 + real(j, kind=8) &
+                 * (p2(1:dim_num) - pc(1:dim_num)))
 
-              tnorm = sqrt ( sum ( pd(1:dim_num)**2 ) )
+              tnorm = sqrt(sum(pd(1:dim_num)**2))
 
-              if ( tnorm /= 0.0D+00 ) then
+              if (tnorm /= 0.0D+00) then
                 pd(1:dim_num) = pc(1:dim_num) + r * pd(1:dim_num) / tnorm
                 n2 = n2 + 1
-                pp(1:dim_num,n2) = pd(1:dim_num)
+                pp(1:dim_num, n2) = pd(1:dim_num)
               end if
 
             end do
@@ -27818,7 +27819,7 @@ subroutine sphere_imp_line_project_3d ( r, pc, n, p, maxpnt2, n2, pp, &
 !  Now tack on the projection of point 2.
 !
           n2 = n2 + 1
-          pp(1:dim_num,n2) = p2(1:dim_num)
+          pp(1:dim_num, n2) = p2(1:dim_num)
 
         end if
 
@@ -27830,7 +27831,7 @@ subroutine sphere_imp_line_project_3d ( r, pc, n, p, maxpnt2, n2, pp, &
 
   return
 end
-subroutine sphere_imp_local2xyz_3d ( r, pc, theta, phi, p )
+subroutine sphere_imp_local2xyz_3d(r, pc, theta, phi, p)
 
 !*****************************************************************************80
 !
@@ -27873,21 +27874,21 @@ subroutine sphere_imp_local2xyz_3d ( r, pc, theta, phi, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) r
-  real ( kind = 8 ) theta
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) phi
+  real(kind=8) r
+  real(kind=8) theta
 
-  p(1) = pc(1) + r * sin ( phi ) * cos ( theta )
-  p(2) = pc(2) + r * sin ( phi ) * sin ( theta )
-  p(3) = pc(3) + r * cos ( phi )
+  p(1) = pc(1) + r * sin(phi) * cos(theta)
+  p(2) = pc(2) + r * sin(phi) * sin(theta)
+  p(3) = pc(3) + r * cos(phi)
 
   return
 end
-subroutine sphere_imp_point_near_3d ( r, pc, p, pn )
+subroutine sphere_imp_point_near_3d(r, pc, p, pn)
 
 !*****************************************************************************80
 !
@@ -27928,30 +27929,30 @@ subroutine sphere_imp_point_near_3d ( r, pc, p, pn )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) p(3)
-  real ( kind = 8 ) pc(3)
-  real ( kind = 8 ) pn(3)
-  real ( kind = 8 ) r
+  real(kind=8) norm
+  real(kind=8) p(3)
+  real(kind=8) pc(3)
+  real(kind=8) pn(3)
+  real(kind=8) r
 !
 !  If P = PC, bail out now.
 !
-  norm = sqrt ( sum ( ( p(1:dim_num) - pc(1:dim_num) )**2 ) )
+  norm = sqrt(sum((p(1:dim_num) - pc(1:dim_num))**2))
 
-  if ( norm == 0.0D+00 ) then
-    pn(1:dim_num) = pc(1:dim_num) + r / sqrt ( real ( dim_num, kind = 8 ) )
+  if (norm == 0.0D+00) then
+    pn(1:dim_num) = pc(1:dim_num) + r / sqrt(real(dim_num, kind=8))
     return
   end if
 !
 !  Compute the nearest point.
 !
-  pn(1:dim_num) = pc(1:dim_num) + r * ( p(1:dim_num) - pc(1:dim_num) ) / norm
+  pn(1:dim_num) = pc(1:dim_num) + r * (p(1:dim_num) - pc(1:dim_num)) / norm
 
   return
 end
-subroutine sphere_imp_point_project_3d ( r, pc, p, pp )
+subroutine sphere_imp_point_project_3d(r, pc, p, pp)
 
 !*****************************************************************************80
 !
@@ -27987,33 +27988,33 @@ subroutine sphere_imp_point_project_3d ( r, pc, p, pp )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) pp(dim_num)
-  real ( kind = 8 ) r
+  real(kind=8) norm
+  real(kind=8) p(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) pp(dim_num)
+  real(kind=8) r
 
-  if ( r == 0.0D+00 ) then
+  if (r == 0.0D+00) then
 
     pp(1:dim_num) = pc(1:dim_num)
 
-  else if ( all ( p(1:dim_num) == pc(1:dim_num) ) ) then
+  else if (all(p(1:dim_num) == pc(1:dim_num))) then
 
-    pp(1:dim_num) = pc(1:dim_num) + r / sqrt ( real ( dim_num, kind = 8 ) )
+    pp(1:dim_num) = pc(1:dim_num) + r / sqrt(real(dim_num, kind=8))
 
   else
 
-    norm = sqrt ( sum ( ( p(1:dim_num) - pc(1:dim_num) )**2 ) )
+    norm = sqrt(sum((p(1:dim_num) - pc(1:dim_num))**2))
 
-    pp(1:dim_num) = pc(1:dim_num) + r * ( p(1:dim_num) - pc(1:dim_num) ) / norm
+    pp(1:dim_num) = pc(1:dim_num) + r * (p(1:dim_num) - pc(1:dim_num)) / norm
 
   end if
 
   return
 end
-subroutine sphere_imp_volume_3d ( r, volume )
+subroutine sphere_imp_volume_3d(r, volume)
 
 !*****************************************************************************80
 !
@@ -28045,15 +28046,15 @@ subroutine sphere_imp_volume_3d ( r, volume )
 !
   implicit none
 
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) volume
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) volume
 
-  volume = ( 4.0D+00 / 3.0D+00 ) * r8_pi * r * r * r
+  volume = (4.0D+00 / 3.0D+00) * r8_pi * r * r * r
 
   return
 end
-subroutine sphere_imp_volume_nd ( dim_num, r, volume )
+subroutine sphere_imp_volume_nd(dim_num, r, volume)
 
 !*****************************************************************************80
 !
@@ -28100,16 +28101,16 @@ subroutine sphere_imp_volume_nd ( dim_num, r, volume )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  real ( kind = 8 ) r
-  real ( kind = 8 ) sphere01_volume_nd
-  real ( kind = 8 ) volume
+  integer(kind=4) dim_num
+  real(kind=8) r
+  real(kind=8) sphere01_volume_nd
+  real(kind=8) volume
 
-  volume = r**dim_num * sphere01_volume_nd ( dim_num )
+  volume = r**dim_num * sphere01_volume_nd(dim_num)
 
   return
 end
-subroutine sphere_imp_zone_area_3d ( r, h1, h2, area  )
+subroutine sphere_imp_zone_area_3d(r, h1, h2, area)
 
 !*****************************************************************************80
 !
@@ -28151,18 +28152,18 @@ subroutine sphere_imp_zone_area_3d ( r, h1, h2, area  )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) h
-  real ( kind = 8 ) h1
-  real ( kind = 8 ) h2
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) area
+  real(kind=8) h
+  real(kind=8) h1
+  real(kind=8) h2
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 
-  h = abs ( h1 - h2 )
+  h = abs(h1 - h2)
 
-  if ( h <= 0.0D+00 ) then
+  if (h <= 0.0D+00) then
     area = 0.0D+00
-  else if ( 2.0D+00 * r <= h ) then
+  else if (2.0D+00 * r <= h) then
     area = 4.0D+00 * r8_pi * r * r
   else
     area = 2.0D+00 * r8_pi * r * h
@@ -28170,7 +28171,7 @@ subroutine sphere_imp_zone_area_3d ( r, h1, h2, area  )
 
   return
 end
-subroutine sphere_imp_zone_volume_3d ( r, h1, h2, volume )
+subroutine sphere_imp_zone_volume_3d(r, h1, h2, volume)
 
 !*****************************************************************************80
 !
@@ -28212,37 +28213,37 @@ subroutine sphere_imp_zone_volume_3d ( r, h1, h2, volume )
 !
   implicit none
 
-  real ( kind = 8 ) h1
-  real ( kind = 8 ) h11
-  real ( kind = 8 ) h2
-  real ( kind = 8 ) h22
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) volume
+  real(kind=8) h1
+  real(kind=8) h11
+  real(kind=8) h2
+  real(kind=8) h22
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) volume
 
-  h11 = min ( h1, h2 )
-  h11 = max ( h11, 0.0D+00 )
+  h11 = min(h1, h2)
+  h11 = max(h11, 0.0D+00)
 
-  if ( 2.0D+00 * r <= h11 ) then
+  if (2.0D+00 * r <= h11) then
     volume = 0.0D+00
     return
   end if
 
-  h22 = max ( h1, h2 )
-  h22 = min ( h22, 2.0D+00 * r )
+  h22 = max(h1, h2)
+  h22 = min(h22, 2.0D+00 * r)
 
-  if ( h22 <= 0.0D+00 ) then
+  if (h22 <= 0.0D+00) then
     volume = 0.0D+00
     return
   end if
 
-  volume = ( 1.0D+00 / 3.0D+00 ) * r8_pi * ( &
-      h22 * h22 * ( 3.0D+00 * r - h22 ) &
-    - h11 * h11 * ( 3.0D+00 * r - h11 ) )
+  volume = (1.0D+00 / 3.0D+00) * r8_pi * ( &
+           h22 * h22 * (3.0D+00 * r - h22) &
+           - h11 * h11 * (3.0D+00 * r - h11))
 
   return
 end
-subroutine sphere_imp2exp_3d ( r, pc, p1, p2, p3, p4 )
+subroutine sphere_imp2exp_3d(r, pc, p1, p2, p3, p4)
 
 !*****************************************************************************80
 !
@@ -28285,49 +28286,49 @@ subroutine sphere_imp2exp_3d ( r, pc, p1, p2, p3, p4 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) p1(dim_num)
-  real ( kind = 8 ) p2(dim_num)
-  real ( kind = 8 ) p3(dim_num)
-  real ( kind = 8 ) p4(dim_num)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) theta
+  real(kind=8) p1(dim_num)
+  real(kind=8) p2(dim_num)
+  real(kind=8) p3(dim_num)
+  real(kind=8) p4(dim_num)
+  real(kind=8) pc(dim_num)
+  real(kind=8) phi
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) theta
 
   theta = 0.0D+00
   phi = 0.0D+00
 
-  p1(1) = pc(1) + r * cos ( theta ) * sin ( phi )
-  p1(2) = pc(2) + r * sin ( theta ) * sin ( phi )
-  p1(3) = pc(3) + r                 * cos ( phi )
+  p1(1) = pc(1) + r * cos(theta) * sin(phi)
+  p1(2) = pc(2) + r * sin(theta) * sin(phi)
+  p1(3) = pc(3) + r * cos(phi)
 
   theta = 0.0D+00
   phi = 2.0D+00 * r8_pi / 3.0D+00
 
-  p2(1) = pc(1) + r * cos ( theta ) * sin ( phi )
-  p2(2) = pc(2) + r * sin ( theta ) * sin ( phi )
-  p2(3) = pc(3) + r                 * cos ( phi )
+  p2(1) = pc(1) + r * cos(theta) * sin(phi)
+  p2(2) = pc(2) + r * sin(theta) * sin(phi)
+  p2(3) = pc(3) + r * cos(phi)
 
   theta = 2.0D+00 * r8_pi / 3.0D+00
   phi = 2.0D+00 * r8_pi / 3.0D+00
 
-  p3(1) = pc(1) + r * cos ( theta ) * sin ( phi )
-  p3(2) = pc(2) + r * sin ( theta ) * sin ( phi )
-  p3(3) = pc(3) + r                 * cos ( phi )
+  p3(1) = pc(1) + r * cos(theta) * sin(phi)
+  p3(2) = pc(2) + r * sin(theta) * sin(phi)
+  p3(3) = pc(3) + r * cos(phi)
 
   theta = 4.0D+00 * r8_pi / 3.0D+00
   phi = 2.0D+00 * r8_pi / 3.0D+00
 
-  p4(1) = pc(1) + r * cos ( theta ) * sin ( phi )
-  p4(2) = pc(2) + r * sin ( theta ) * sin ( phi )
-  p4(3) = pc(3) + r                 * cos ( phi )
+  p4(1) = pc(1) + r * cos(theta) * sin(phi)
+  p4(2) = pc(2) + r * sin(theta) * sin(phi)
+  p4(3) = pc(3) + r * cos(phi)
 
   return
 end
-function sphere_k ( dim_num )
+function sphere_k(dim_num)
 
 !*****************************************************************************80
 !
@@ -28360,22 +28361,22 @@ function sphere_k ( dim_num )
 !
   implicit none
 
-  integer ( kind = 4 ) i4_factorial2
-  integer ( kind = 4 ) dim_num
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) sphere_k
+  integer(kind=4) i4_factorial2
+  integer(kind=4) dim_num
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) sphere_k
 
-  if ( mod ( dim_num, 2 ) == 0 ) then
-    sphere_k = ( 2.0D+00 * r8_pi ) ** ( dim_num / 2 )
+  if (mod(dim_num, 2) == 0) then
+    sphere_k = (2.0D+00 * r8_pi)**(dim_num / 2)
   else
-    sphere_k = 2.0D+00 * ( 2.0D+00 * r8_pi ) ** ( ( dim_num - 1 ) / 2 )
+    sphere_k = 2.0D+00 * (2.0D+00 * r8_pi)**((dim_num - 1) / 2)
   end if
 
-  sphere_k = sphere_k / real ( i4_factorial2 ( dim_num - 2 ), kind = 8 )
+  sphere_k = sphere_k / real(i4_factorial2(dim_num - 2), kind=8)
 
   return
 end
-subroutine sphere_triangle_angles_to_area ( r, a, b, c, area )
+subroutine sphere_triangle_angles_to_area(r, a, b, c, area)
 
 !*****************************************************************************80
 !
@@ -28420,20 +28421,20 @@ subroutine sphere_triangle_angles_to_area ( r, a, b, c, area )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) area
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) r
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) a
+  real(kind=8) area
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) r
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 !
 !  Apply Girard's formula.
 !
-  area = r * r * ( a + b + c - r8_pi )
+  area = r * r * (a + b + c - r8_pi)
 
   return
 end
-subroutine sphere_triangle_sides_to_angles ( r, as, bs, cs, a, b, c )
+subroutine sphere_triangle_sides_to_angles(r, as, bs, cs, a, b, c)
 
 !*****************************************************************************80
 !
@@ -28463,44 +28464,44 @@ subroutine sphere_triangle_sides_to_angles ( r, as, bs, cs, a, b, c )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) as
-  real ( kind = 8 ) asu
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bs
-  real ( kind = 8 ) bsu
-  real ( kind = 8 ) c
-  real ( kind = 8 ) cs
-  real ( kind = 8 ) csu
-  real ( kind = 8 ) r
-  real ( kind = 8 ) ssu
-  real ( kind = 8 ) tan_a2
-  real ( kind = 8 ) tan_b2
-  real ( kind = 8 ) tan_c2
+  real(kind=8) a
+  real(kind=8) as
+  real(kind=8) asu
+  real(kind=8) b
+  real(kind=8) bs
+  real(kind=8) bsu
+  real(kind=8) c
+  real(kind=8) cs
+  real(kind=8) csu
+  real(kind=8) r
+  real(kind=8) ssu
+  real(kind=8) tan_a2
+  real(kind=8) tan_b2
+  real(kind=8) tan_c2
 
   asu = as / r
   bsu = bs / r
   csu = cs / r
-  ssu = ( asu + bsu + csu ) / 2.0D+00
+  ssu = (asu + bsu + csu) / 2.0D+00
 
-  tan_a2 = sqrt ( ( sin ( ssu - bsu ) * sin ( ssu - csu ) ) / &
-                  ( sin ( ssu ) * sin ( ssu - asu )     ) )
+  tan_a2 = sqrt((sin(ssu - bsu) * sin(ssu - csu)) / &
+                (sin(ssu) * sin(ssu - asu)))
 
-  a = 2.0D+00 * atan ( tan_a2 )
+  a = 2.0D+00 * atan(tan_a2)
 
-  tan_b2 = sqrt ( ( sin ( ssu - asu ) * sin ( ssu - csu ) ) / &
-                  ( sin ( ssu ) * sin ( ssu - bsu )     ) )
+  tan_b2 = sqrt((sin(ssu - asu) * sin(ssu - csu)) / &
+                (sin(ssu) * sin(ssu - bsu)))
 
-  b = 2.0D+00 * atan ( tan_b2 )
+  b = 2.0D+00 * atan(tan_b2)
 
-  tan_c2 = sqrt ( ( sin ( ssu - asu ) * sin ( ssu - bsu ) ) / &
-                  ( sin ( ssu ) * sin ( ssu - csu )     ) )
+  tan_c2 = sqrt((sin(ssu - asu) * sin(ssu - bsu)) / &
+                (sin(ssu) * sin(ssu - csu)))
 
-  c = 2.0D+00 * atan ( tan_c2 )
+  c = 2.0D+00 * atan(tan_c2)
 
   return
 end
-subroutine sphere_triangle_vertices_to_angles ( r, v1, v2, v3, a, b, c )
+subroutine sphere_triangle_vertices_to_angles(r, v1, v2, v3, a, b, c)
 
 !*****************************************************************************80
 !
@@ -28537,28 +28538,28 @@ subroutine sphere_triangle_vertices_to_angles ( r, v1, v2, v3, a, b, c )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) as
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bs
-  real ( kind = 8 ) c
-  real ( kind = 8 ) cs
-  real ( kind = 8 ) r
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) a
+  real(kind=8) as
+  real(kind=8) b
+  real(kind=8) bs
+  real(kind=8) c
+  real(kind=8) cs
+  real(kind=8) r
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 !
 !  Compute the lengths of the sides of the spherical triangle.
 !
-  call sphere_triangle_vertices_to_sides ( r, v1, v2, v3, as, bs, cs )
+  call sphere_triangle_vertices_to_sides(r, v1, v2, v3, as, bs, cs)
 !
 !  Get the spherical angles.
 !
-  call sphere_triangle_sides_to_angles ( r, as, bs, cs, a, b, c )
+  call sphere_triangle_sides_to_angles(r, as, bs, cs, a, b, c)
 
   return
 end
-subroutine sphere_triangle_vertices_to_area ( r, v1, v2, v3, area )
+subroutine sphere_triangle_vertices_to_area(r, v1, v2, v3, area)
 
 !*****************************************************************************80
 !
@@ -28603,33 +28604,33 @@ subroutine sphere_triangle_vertices_to_area ( r, v1, v2, v3, area )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) area
-  real ( kind = 8 ) as
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bs
-  real ( kind = 8 ) c
-  real ( kind = 8 ) cs
-  real ( kind = 8 ) r
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) a
+  real(kind=8) area
+  real(kind=8) as
+  real(kind=8) b
+  real(kind=8) bs
+  real(kind=8) c
+  real(kind=8) cs
+  real(kind=8) r
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 !
 !  Compute the lengths of the sides of the spherical triangle.
 !
-  call sphere_triangle_vertices_to_sides ( r, v1, v2, v3, as, bs, cs )
+  call sphere_triangle_vertices_to_sides(r, v1, v2, v3, as, bs, cs)
 !
 !  Get the spherical angles.
 !
-  call sphere_triangle_sides_to_angles ( r, as, bs, cs, a, b, c )
+  call sphere_triangle_sides_to_angles(r, as, bs, cs, a, b, c)
 !
 !  Get the area.
 !
-  call sphere_triangle_angles_to_area ( r, a, b, c, area )
+  call sphere_triangle_angles_to_area(r, a, b, c, area)
 
   return
 end
-subroutine sphere_triangle_vertices_to_centroid ( r, v1, v2, v3, vs )
+subroutine sphere_triangle_vertices_to_centroid(r, v1, v2, v3, vs)
 
 !*****************************************************************************80
 !
@@ -28686,23 +28687,23 @@ subroutine sphere_triangle_vertices_to_centroid ( r, v1, v2, v3, vs )
 !
   implicit none
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
-  real ( kind = 8 ) vs(3)
+  real(kind=8) norm
+  real(kind=8) r
+  real(kind=8) r8vec_norm
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
+  real(kind=8) vs(3)
 
-  vs(1:3) = ( v1(1:3) + v2(1:3) + v3(1:3) ) / 3.0D+00
+  vs(1:3) = (v1(1:3) + v2(1:3) + v3(1:3)) / 3.0D+00
 
-  norm = r8vec_norm ( 3, vs )
+  norm = r8vec_norm(3, vs)
 
   vs(1:3) = r * vs(1:3) / norm
 
   return
 end
-subroutine sphere_triangle_vertices_to_orientation ( a, b, c, o )
+subroutine sphere_triangle_vertices_to_orientation(a, b, c, o)
 
 !*****************************************************************************80
 !
@@ -28745,18 +28746,18 @@ subroutine sphere_triangle_vertices_to_orientation ( a, b, c, o )
 !
   implicit none
 
-  real ( kind = 8 ) a(3)
-  real ( kind = 8 ) b(3)
-  real ( kind = 8 ) c(3)
-  real ( kind = 8 ) cd(3)
-  real ( kind = 8 ) cp(3)
-  integer ( kind = 4 ) o
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
+  real(kind=8) a(3)
+  real(kind=8) b(3)
+  real(kind=8) c(3)
+  real(kind=8) cd(3)
+  real(kind=8) cp(3)
+  integer(kind=4) o
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
 !
 !  Centroid.
 !
-  cd(1:3) = ( a(1:3) + b(1:3) + c(1:3) ) / 3.0D+00
+  cd(1:3) = (a(1:3) + b(1:3) + c(1:3)) / 3.0D+00
 !
 !  Cross product ( C - B ) x ( A - B );
 !
@@ -28769,15 +28770,15 @@ subroutine sphere_triangle_vertices_to_orientation ( a, b, c, o )
 !
 !  Compare the directions.
 !
-  if ( dot_product ( cp, cd ) < 0.0D+00 ) then
-    o = - 1
+  if (dot_product(cp, cd) < 0.0D+00) then
+    o = -1
   else
-    o = + 1
+    o = +1
   end if
 
   return
 end
-subroutine sphere_triangle_vertices_to_sides ( r, v1, v2, v3, as, bs, cs )
+subroutine sphere_triangle_vertices_to_sides(r, v1, v2, v3, as, bs, cs)
 
 !*****************************************************************************80
 !
@@ -28813,22 +28814,22 @@ subroutine sphere_triangle_vertices_to_sides ( r, v1, v2, v3, as, bs, cs )
 !
   implicit none
 
-  real ( kind = 8 ) as
-  real ( kind = 8 ) bs
-  real ( kind = 8 ) cs
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) as
+  real(kind=8) bs
+  real(kind=8) cs
+  real(kind=8) r
+  real(kind=8) r8_acos
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 
-  as = r * r8_acos ( dot_product ( v2(1:3), v3(1:3) ) / r**2 )
-  bs = r * r8_acos ( dot_product ( v3(1:3), v1(1:3) ) / r**2 )
-  cs = r * r8_acos ( dot_product ( v1(1:3), v2(1:3) ) / r**2 )
+  as = r * r8_acos(dot_product(v2(1:3), v3(1:3)) / r**2)
+  bs = r * r8_acos(dot_product(v3(1:3), v1(1:3)) / r**2)
+  cs = r * r8_acos(dot_product(v1(1:3), v2(1:3)) / r**2)
 
   return
 end
-function sphere01_area_nd ( dim_num )
+function sphere01_area_nd(dim_num)
 
 !*****************************************************************************80
 !
@@ -28878,24 +28879,24 @@ function sphere01_area_nd ( dim_num )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) m
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) sphere01_area_nd
+  real(kind=8) area
+  integer(kind=4) dim_num
+  integer(kind=4) i
+  integer(kind=4) m
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) sphere01_area_nd
 
-  if ( mod ( dim_num, 2 ) == 0 ) then
+  if (mod(dim_num, 2) == 0) then
     m = dim_num / 2
-    area = 2.0D+00 * ( r8_pi ) ** m
+    area = 2.0D+00 * (r8_pi)**m
     do i = 1, m - 1
-      area = area / real ( i, kind = 8 )
+      area = area / real(i, kind=8)
     end do
   else
-    m = ( dim_num - 1 ) / 2
-    area = ( r8_pi ) ** m * 2.0D+00 ** dim_num
+    m = (dim_num - 1) / 2
+    area = (r8_pi)**m * 2.0D+00**dim_num
     do i = m + 1, 2 * m
-      area = area / real ( i,  kind = 8 )
+      area = area / real(i, kind=8)
     end do
   end if
 
@@ -28903,7 +28904,7 @@ function sphere01_area_nd ( dim_num )
 
   return
 end
-subroutine sphere01_area_values ( n_data, n, area )
+subroutine sphere01_area_values(n_data, n, area)
 
 !*****************************************************************************80
 !
@@ -28970,61 +28971,61 @@ subroutine sphere01_area_values ( n_data, n, area )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: n_max = 20
+  integer(kind=4), parameter :: n_max = 20
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ), save, dimension ( n_max ) :: area_vec = (/ &
-    0.2000000000000000D+01, &
-    0.6283185307179586D+01, &
-    0.1256637061435917D+02, &
-    0.1973920880217872D+02, &
-    0.2631894506957162D+02, &
-    0.3100627668029982D+02, &
-    0.3307336179231981D+02, &
-    0.3246969701133415D+02, &
-    0.2968658012464836D+02, &
-    0.2550164039877345D+02, &
-    0.2072514267328890D+02, &
-    0.1602315322625507D+02, &
-    0.1183817381218268D+02, &
-    0.8389703410491089D+01, &
-    0.5721649212349567D+01, &
-    0.3765290085742291D+01, &
-    0.2396678817591364D+01, &
-    0.1478625959000308D+01, &
-    0.8858104195716824D+00, &
-    0.5161378278002812D+00 /)
-  integer ( kind = 4 ) n_data
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), save, dimension ( n_max ) :: n_vec = (/ &
-     1, &
-     2, &
-     3, &
-     4, &
-     5, &
-     6, &
-     7, &
-     8, &
-     9, &
-    10, &
-    11, &
-    12, &
-    13, &
-    14, &
-    15, &
-    16, &
-    17, &
-    18, &
-    19, &
-    20 /)
+  real(kind=8) area
+  real(kind=8), save, dimension(n_max) :: area_vec = (/ &
+                                          0.2000000000000000D+01, &
+                                          0.6283185307179586D+01, &
+                                          0.1256637061435917D+02, &
+                                          0.1973920880217872D+02, &
+                                          0.2631894506957162D+02, &
+                                          0.3100627668029982D+02, &
+                                          0.3307336179231981D+02, &
+                                          0.3246969701133415D+02, &
+                                          0.2968658012464836D+02, &
+                                          0.2550164039877345D+02, &
+                                          0.2072514267328890D+02, &
+                                          0.1602315322625507D+02, &
+                                          0.1183817381218268D+02, &
+                                          0.8389703410491089D+01, &
+                                          0.5721649212349567D+01, &
+                                          0.3765290085742291D+01, &
+                                          0.2396678817591364D+01, &
+                                          0.1478625959000308D+01, &
+                                          0.8858104195716824D+00, &
+                                          0.5161378278002812D+00/)
+  integer(kind=4) n_data
+  integer(kind=4) n
+  integer(kind=4), save, dimension(n_max) :: n_vec = (/ &
+                                             1, &
+                                             2, &
+                                             3, &
+                                             4, &
+                                             5, &
+                                             6, &
+                                             7, &
+                                             8, &
+                                             9, &
+                                             10, &
+                                             11, &
+                                             12, &
+                                             13, &
+                                             14, &
+                                             15, &
+                                             16, &
+                                             17, &
+                                             18, &
+                                             19, &
+                                             20/)
 
-  if ( n_data < 0 ) then
+  if (n_data < 0) then
     n_data = 0
   end if
 
   n_data = n_data + 1
 
-  if ( n_max < n_data ) then
+  if (n_max < n_data) then
     n_data = 0
     n = 0
     area = 0.0D+00
@@ -29035,7 +29036,7 @@ subroutine sphere01_area_values ( n_data, n, area )
 
   return
 end
-subroutine sphere01_sample_2d ( seed, x )
+subroutine sphere01_sample_2d(seed, x)
 
 !*****************************************************************************80
 !
@@ -29068,22 +29069,22 @@ subroutine sphere01_sample_2d ( seed, x )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) r8_uniform_01
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) u
-  real ( kind = 8 ) x(dim_num)
+  real(kind=8) r8_uniform_01
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  integer(kind=4) seed
+  real(kind=8) u
+  real(kind=8) x(dim_num)
 
-  u = r8_uniform_01 ( seed )
+  u = r8_uniform_01(seed)
 
-  x(1) = cos ( 2.0D+00 * r8_pi * u )
-  x(2) = sin ( 2.0D+00 * r8_pi * u )
+  x(1) = cos(2.0D+00 * r8_pi * u)
+  x(2) = sin(2.0D+00 * r8_pi * u)
 
   return
 end
-subroutine sphere01_sample_3d ( seed, x )
+subroutine sphere01_sample_3d(seed, x)
 
 !*****************************************************************************80
 !
@@ -29116,16 +29117,16 @@ subroutine sphere01_sample_3d ( seed, x )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) r8_uniform_01
-  real ( kind = 8 ) phi
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) vdot
-  real ( kind = 8 ) x(dim_num)
+  real(kind=8) r8_acos
+  real(kind=8) r8_uniform_01
+  real(kind=8) phi
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  integer(kind=4) seed
+  real(kind=8) theta
+  real(kind=8) vdot
+  real(kind=8) x(dim_num)
 !
 !  Pick a uniformly random VDOT, which must be between -1 and 1.
 !  This represents the dot product of the random vector with the Z unit vector.
@@ -29134,24 +29135,24 @@ subroutine sphere01_sample_3d ( seed, x )
 !  Z and Z + dZ is independent of Z.  So choosing Z uniformly chooses
 !  a patch of area uniformly.
 !
-  vdot = r8_uniform_01 ( seed )
+  vdot = r8_uniform_01(seed)
   vdot = 2.0D+00 * vdot - 1.0D+00
 
-  phi = r8_acos ( vdot )
+  phi = r8_acos(vdot)
 !
 !  Pick a uniformly random rotation between 0 and 2 Pi around the
 !  axis of the Z vector.
 !
-  theta = r8_uniform_01 ( seed )
+  theta = r8_uniform_01(seed)
   theta = 2.0D+00 * r8_pi * theta
 
-  x(1) = cos ( theta ) * sin ( phi )
-  x(2) = sin ( theta ) * sin ( phi )
-  x(3) = cos ( phi )
+  x(1) = cos(theta) * sin(phi)
+  x(2) = sin(theta) * sin(phi)
+  x(3) = cos(phi)
 
   return
 end
-subroutine sphere01_sample_3d_2 ( seed, x )
+subroutine sphere01_sample_3d_2(seed, x)
 
 !*****************************************************************************80
 !
@@ -29197,28 +29198,28 @@ subroutine sphere01_sample_3d_2 ( seed, x )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) r8_uniform_01
-  real ( kind = 8 ) phi
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) x(dim_num)
+  real(kind=8) r8_uniform_01
+  real(kind=8) phi
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  integer(kind=4) seed
+  real(kind=8) theta
+  real(kind=8) x(dim_num)
 
-  phi = r8_uniform_01 ( seed )
+  phi = r8_uniform_01(seed)
   phi = r8_pi * phi
 
-  theta = r8_uniform_01 ( seed )
+  theta = r8_uniform_01(seed)
   theta = 2.0D+00 * r8_pi * theta
 
-  x(1) = cos ( theta ) * sin ( phi )
-  x(2) = sin ( theta ) * sin ( phi )
-  x(3) = cos ( phi )
+  x(1) = cos(theta) * sin(phi)
+  x(2) = sin(theta) * sin(phi)
+  x(3) = cos(phi)
 
   return
 end
-subroutine sphere01_sample_nd ( dim_num, seed, x )
+subroutine sphere01_sample_nd(dim_num, seed, x)
 
 !*****************************************************************************80
 !
@@ -29262,34 +29263,34 @@ subroutine sphere01_sample_nd ( dim_num, seed, x )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) r8_uniform_01
-  real ( kind = 8 ) random_cosine
-  real ( kind = 8 ) random_sign
-  real ( kind = 8 ) random_sine
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) x(dim_num)
-  real ( kind = 8 ) xi
+  integer(kind=4) i
+  real(kind=8) r8_uniform_01
+  real(kind=8) random_cosine
+  real(kind=8) random_sign
+  real(kind=8) random_sine
+  integer(kind=4) seed
+  real(kind=8) x(dim_num)
+  real(kind=8) xi
 
   x(1) = 1.0D+00
   x(2:dim_num) = 0.0D+00
 
-  do i = 1, dim_num-1
-    random_cosine = r8_uniform_01 ( seed )
+  do i = 1, dim_num - 1
+    random_cosine = r8_uniform_01(seed)
     random_cosine = 2.0D+00 * random_cosine - 1.0D+00
-    random_sign = r8_uniform_01 ( seed )
-    random_sign = real ( 2 * int ( 2.0D+00 * random_sign ) - 1,  kind = 8 )
-    random_sine = random_sign * sqrt ( 1.0D+00 - random_cosine**2 )
+    random_sign = r8_uniform_01(seed)
+    random_sign = real(2 * int(2.0D+00 * random_sign) - 1, kind=8)
+    random_sine = random_sign * sqrt(1.0D+00 - random_cosine**2)
     xi = x(i)
-    x(i  ) = random_cosine * xi
-    x(i+1) = random_sine   * xi
+    x(i) = random_cosine * xi
+    x(i + 1) = random_sine * xi
   end do
 
   return
 end
-subroutine sphere01_sample_nd_2 ( dim_num, seed, x )
+subroutine sphere01_sample_nd_2(dim_num, seed, x)
 
 !*****************************************************************************80
 !
@@ -29327,21 +29328,21 @@ subroutine sphere01_sample_nd_2 ( dim_num, seed, x )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) norm
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) x(dim_num)
+  real(kind=8) norm
+  integer(kind=4) seed
+  real(kind=8) x(dim_num)
 
-  call r8vec_normal_01 ( dim_num, seed, x )
+  call r8vec_normal_01(dim_num, seed, x)
 
-  norm = sqrt ( sum ( x(1:dim_num)**2 ) )
+  norm = sqrt(sum(x(1:dim_num)**2))
 
   x(1:dim_num) = x(1:dim_num) / norm
 
   return
 end
-subroutine sphere01_sample_nd_3 ( dim_num, seed, x )
+subroutine sphere01_sample_nd_3(dim_num, seed, x)
 
 !*****************************************************************************80
 !
@@ -29385,21 +29386,21 @@ subroutine sphere01_sample_nd_3 ( dim_num, seed, x )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) norm
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) x(dim_num)
+  real(kind=8) norm
+  integer(kind=4) seed
+  real(kind=8) x(dim_num)
 
   do
 
-    call r8vec_uniform_01 ( dim_num, seed, x )
+    call r8vec_uniform_01(dim_num, seed, x)
 
     x(1:dim_num) = 2.0D+00 * x(1:dim_num) - 1.0D+00
 
-    norm = sqrt ( sum ( x(1:dim_num)**2 ) )
+    norm = sqrt(sum(x(1:dim_num)**2))
 
-    if ( norm <= 1.0E00 ) then
+    if (norm <= 1.0E00) then
       x(1:dim_num) = x(1:dim_num) / norm
       exit
     end if
@@ -29408,7 +29409,7 @@ subroutine sphere01_sample_nd_3 ( dim_num, seed, x )
 
   return
 end
-function sphere01_volume_nd ( dim_num )
+function sphere01_volume_nd(dim_num)
 
 !*****************************************************************************80
 !
@@ -29457,24 +29458,24 @@ function sphere01_volume_nd ( dim_num )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) m
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) sphere01_volume_nd
-  real ( kind = 8 ) volume
+  integer(kind=4) dim_num
+  integer(kind=4) i
+  integer(kind=4) m
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) sphere01_volume_nd
+  real(kind=8) volume
 
-  if ( mod ( dim_num, 2 ) == 0 ) then
+  if (mod(dim_num, 2) == 0) then
     m = dim_num / 2
-    volume = r8_pi ** m
+    volume = r8_pi**m
     do i = 1, m
-      volume = volume / real ( i, kind = 8 )
+      volume = volume / real(i, kind=8)
     end do
   else
-    m = ( dim_num - 1 ) / 2
-    volume = r8_pi ** m * 2.0D+00**dim_num
+    m = (dim_num - 1) / 2
+    volume = r8_pi**m * 2.0D+00**dim_num
     do i = m + 1, 2 * m + 1
-      volume = volume / real ( i, kind = 8 )
+      volume = volume / real(i, kind=8)
     end do
   end if
 
@@ -29482,7 +29483,7 @@ function sphere01_volume_nd ( dim_num )
 
   return
 end
-subroutine sphere01_volume_values ( n_data, n, volume )
+subroutine sphere01_volume_values(n_data, n, volume)
 
 !*****************************************************************************80
 !
@@ -29553,51 +29554,51 @@ subroutine sphere01_volume_values ( n_data, n, volume )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: n_max = 20
+  integer(kind=4), parameter :: n_max = 20
 
-  integer ( kind = 4 ) n_data
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), save, dimension ( n_max ) :: n_vec = (/ &
-     1,  2, &
-     3,  4, &
-     5,  6, &
-     7,  8, &
-     9, 10, &
-    11, 12, &
-    13, 14, &
-    15, 16, &
-    17, 18, &
-    19, 20 /)
-  real ( kind = 8 ) volume
-  real ( kind = 8 ), save, dimension ( n_max ) :: volume_vec = (/ &
-    0.2000000000000000D+01, &
-    0.3141592653589793D+01, &
-    0.4188790204786391D+01, &
-    0.4934802200544679D+01, &
-    0.5263789013914325D+01, &
-    0.5167712780049970D+01, &
-    0.4724765970331401D+01, &
-    0.4058712126416768D+01, &
-    0.3298508902738707D+01, &
-    0.2550164039877345D+01, &
-    0.1884103879389900D+01, &
-    0.1335262768854589D+01, &
-    0.9106287547832831D+00, &
-    0.5992645293207921D+00, &
-    0.3814432808233045D+00, &
-    0.2353306303588932D+00, &
-    0.1409811069171390D+00, &
-    0.8214588661112823D-01, &
-    0.4662160103008855D-01, &
-    0.2580689139001406D-01 /)
+  integer(kind=4) n_data
+  integer(kind=4) n
+  integer(kind=4), save, dimension(n_max) :: n_vec = (/ &
+                                             1, 2, &
+                                             3, 4, &
+                                             5, 6, &
+                                             7, 8, &
+                                             9, 10, &
+                                             11, 12, &
+                                             13, 14, &
+                                             15, 16, &
+                                             17, 18, &
+                                             19, 20/)
+  real(kind=8) volume
+  real(kind=8), save, dimension(n_max) :: volume_vec = (/ &
+                                          0.2000000000000000D+01, &
+                                          0.3141592653589793D+01, &
+                                          0.4188790204786391D+01, &
+                                          0.4934802200544679D+01, &
+                                          0.5263789013914325D+01, &
+                                          0.5167712780049970D+01, &
+                                          0.4724765970331401D+01, &
+                                          0.4058712126416768D+01, &
+                                          0.3298508902738707D+01, &
+                                          0.2550164039877345D+01, &
+                                          0.1884103879389900D+01, &
+                                          0.1335262768854589D+01, &
+                                          0.9106287547832831D+00, &
+                                          0.5992645293207921D+00, &
+                                          0.3814432808233045D+00, &
+                                          0.2353306303588932D+00, &
+                                          0.1409811069171390D+00, &
+                                          0.8214588661112823D-01, &
+                                          0.4662160103008855D-01, &
+                                          0.2580689139001406D-01/)
 
-  if ( n_data < 0 ) then
+  if (n_data < 0) then
     n_data = 0
   end if
 
   n_data = n_data + 1
 
-  if ( n_max < n_data ) then
+  if (n_max < n_data) then
     n_data = 0
     n = 0
     volume = 0.0D+00
@@ -29608,7 +29609,7 @@ subroutine sphere01_volume_values ( n_data, n, volume )
 
   return
 end
-subroutine sphere01_distance_xyz ( xyz1, xyz2, dist )
+subroutine sphere01_distance_xyz(xyz1, xyz2, dist)
 
 !*****************************************************************************80
 !
@@ -29652,38 +29653,38 @@ subroutine sphere01_distance_xyz ( xyz1, xyz2, dist )
 !
   implicit none
 
-  real ( kind = 8 ) bot
-  real ( kind = 8 ) dist
-  real ( kind = 8 ) lat1
-  real ( kind = 8 ) lat2
-  real ( kind = 8 ) lon1
-  real ( kind = 8 ) lon2
-  real ( kind = 8 ) r8_asin
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ) top
-  real ( kind = 8 ) xyz1(3)
-  real ( kind = 8 ) xyz2(3)
+  real(kind=8) bot
+  real(kind=8) dist
+  real(kind=8) lat1
+  real(kind=8) lat2
+  real(kind=8) lon1
+  real(kind=8) lon2
+  real(kind=8) r8_asin
+  real(kind=8) r8_atan
+  real(kind=8) top
+  real(kind=8) xyz1(3)
+  real(kind=8) xyz2(3)
 
-  lat1 = r8_asin ( xyz1(3) )
-  lon1 = r8_atan ( xyz1(2), xyz1(1) )
+  lat1 = r8_asin(xyz1(3))
+  lon1 = r8_atan(xyz1(2), xyz1(1))
 
-  lat2 = r8_asin ( xyz2(3) )
-  lon2 = r8_atan ( xyz2(2), xyz2(1) )
+  lat2 = r8_asin(xyz2(3))
+  lon2 = r8_atan(xyz2(2), xyz2(1))
 
-  top = ( cos ( lat2 ) * sin ( lon1 - lon2 ) )**2 &
-      + ( cos ( lat1 ) * sin ( lat2 ) &
-      -   sin ( lat1 ) * cos ( lat2 ) * cos ( lon1 - lon2 ) )**2
+  top = (cos(lat2) * sin(lon1 - lon2))**2 &
+        + (cos(lat1) * sin(lat2) &
+           - sin(lat1) * cos(lat2) * cos(lon1 - lon2))**2
 
-  top = sqrt ( top )
+  top = sqrt(top)
 
-  bot = sin ( lat1 ) * sin ( lat2 ) &
-      + cos ( lat1 ) * cos ( lat2 ) * cos ( lon1 - lon2 )
+  bot = sin(lat1) * sin(lat2) &
+        + cos(lat1) * cos(lat2) * cos(lon1 - lon2)
 
-  dist = atan2 ( top, bot )
+  dist = atan2(top, bot)
 
   return
 end
-function sphere01_polygon_area ( n, lat, lon )
+function sphere01_polygon_area(n, lat, lon)
 
 !*****************************************************************************80
 !
@@ -29748,77 +29749,77 @@ function sphere01_polygon_area ( n, lat, lon )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) area
-  real ( kind = 8 ) b
-  real ( kind = 8 ) beta1
-  real ( kind = 8 ) beta2
-  real ( kind = 8 ) c
-  real ( kind = 8 ) cos_b1
-  real ( kind = 8 ) cos_b2
-  real ( kind = 8 ) excess
-  real ( kind = 8 ) hav_a
-  real ( kind = 8 ) haversine
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) lam
-  real ( kind = 8 ) lam1
-  real ( kind = 8 ) lam2
-  real ( kind = 8 ) lat(n)
-  real ( kind = 8 ) lon(n)
-  real ( kind = 8 ), parameter :: r8_pi_half = 1.5707963267948966192313D+00
-  real ( kind = 8 ) s
-  real ( kind = 8 ) sphere01_polygon_area
-  real ( kind = 8 ) t
+  real(kind=8) a
+  real(kind=8) area
+  real(kind=8) b
+  real(kind=8) beta1
+  real(kind=8) beta2
+  real(kind=8) c
+  real(kind=8) cos_b1
+  real(kind=8) cos_b2
+  real(kind=8) excess
+  real(kind=8) hav_a
+  real(kind=8) haversine
+  integer(kind=4) j
+  integer(kind=4) k
+  real(kind=8) lam
+  real(kind=8) lam1
+  real(kind=8) lam2
+  real(kind=8) lat(n)
+  real(kind=8) lon(n)
+  real(kind=8), parameter :: r8_pi_half = 1.5707963267948966192313D+00
+  real(kind=8) s
+  real(kind=8) sphere01_polygon_area
+  real(kind=8) t
 
   area = 0.0D+00
 
   do j = 1, n + 1
 
-    if ( j == 1 ) then
+    if (j == 1) then
       lam1 = lon(j)
       beta1 = lat(j)
-      lam2 = lon(j+1)
-      beta2 = lat(j+1)
-      cos_b1 = cos ( beta1 )
-      cos_b2 = cos ( beta2 )
+      lam2 = lon(j + 1)
+      beta2 = lat(j + 1)
+      cos_b1 = cos(beta1)
+      cos_b2 = cos(beta2)
     else
-      k = mod ( j + 1, n + 1 )
+      k = mod(j + 1, n + 1)
       lam1 = lam2
       beta1 = beta2
       lam2 = lon(k)
       beta2 = lat(k)
       cos_b1 = cos_b2
-      cos_b2 = cos ( beta2 )
+      cos_b2 = cos(beta2)
     end if
 
-    if ( lam1 /= lam2 ) then
+    if (lam1 /= lam2) then
 
-      hav_a = haversine ( beta2 - beta1 ) &
-        + cos_b1 * cos_b2 * haversine ( lam2 - lam1 )
-      a = 2.0D+00 * asin ( sqrt ( hav_a ) )
+      hav_a = haversine(beta2 - beta1) &
+              + cos_b1 * cos_b2 * haversine(lam2 - lam1)
+      a = 2.0D+00 * asin(sqrt(hav_a))
 
       b = r8_pi_half - beta2
       c = r8_pi_half - beta1
-      s = 0.5D+00 * ( a + b + c )
+      s = 0.5D+00 * (a + b + c)
 !
 !  Given the three sides of a spherical triangle, we can use a formula
 !  to find the spherical excess.
 !
-      t = tan ( s / 2.0D+00 ) * tan ( ( s - a ) / 2.0D+00 ) &
-        * tan ( ( s - b ) / 2.0D+00 ) * tan ( ( s - c ) / 2.0D+00 )
+      t = tan(s / 2.0D+00) * tan((s - a) / 2.0D+00) &
+          * tan((s - b) / 2.0D+00) * tan((s - c) / 2.0D+00)
 
-      excess = abs ( 4.0D+00 * atan ( sqrt ( abs ( t ) ) ) )
+      excess = abs(4.0D+00 * atan(sqrt(abs(t))))
 
-      if ( lam1 < lam2 ) then
+      if (lam1 < lam2) then
         lam = lam2 - lam1
       else
         lam = lam2 - lam1 + 4.0D+00 * r8_pi_half
       end if
 
-      if ( 2.0D+00 * r8_pi_half < lam ) then
+      if (2.0D+00 * r8_pi_half < lam) then
         excess = -excess
       end if
 
@@ -29828,11 +29829,11 @@ function sphere01_polygon_area ( n, lat, lon )
 
   end do
 
-  sphere01_polygon_area = abs ( area )
+  sphere01_polygon_area = abs(area)
 
   return
 end
-subroutine sphere01_triangle_angles_to_area ( a, b, c, area )
+subroutine sphere01_triangle_angles_to_area(a, b, c, area)
 
 !*****************************************************************************80
 !
@@ -29875,11 +29876,11 @@ subroutine sphere01_triangle_angles_to_area ( a, b, c, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) area
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
 !
 !  Apply Girard's formula.
 !
@@ -29887,7 +29888,7 @@ subroutine sphere01_triangle_angles_to_area ( a, b, c, area )
 
   return
 end
-subroutine sphere01_triangle_sides_to_angles ( as, bs, cs, a, b, c )
+subroutine sphere01_triangle_sides_to_angles(as, bs, cs, a, b, c)
 
 !*****************************************************************************80
 !
@@ -29915,43 +29916,43 @@ subroutine sphere01_triangle_sides_to_angles ( as, bs, cs, a, b, c )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) as
-  real ( kind = 8 ) asu
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bs
-  real ( kind = 8 ) bsu
-  real ( kind = 8 ) c
-  real ( kind = 8 ) cs
-  real ( kind = 8 ) csu
-  real ( kind = 8 ) ssu
-  real ( kind = 8 ) tan_a2
-  real ( kind = 8 ) tan_b2
-  real ( kind = 8 ) tan_c2
+  real(kind=8) a
+  real(kind=8) as
+  real(kind=8) asu
+  real(kind=8) b
+  real(kind=8) bs
+  real(kind=8) bsu
+  real(kind=8) c
+  real(kind=8) cs
+  real(kind=8) csu
+  real(kind=8) ssu
+  real(kind=8) tan_a2
+  real(kind=8) tan_b2
+  real(kind=8) tan_c2
 
   asu = as
   bsu = bs
   csu = cs
-  ssu = ( asu + bsu + csu ) / 2.0D+00
+  ssu = (asu + bsu + csu) / 2.0D+00
 
-  tan_a2 = sqrt ( ( sin ( ssu - bsu ) * sin ( ssu - csu ) ) / &
-                  ( sin ( ssu ) * sin ( ssu - asu )     ) )
+  tan_a2 = sqrt((sin(ssu - bsu) * sin(ssu - csu)) / &
+                (sin(ssu) * sin(ssu - asu)))
 
-  a = 2.0D+00 * atan ( tan_a2 )
+  a = 2.0D+00 * atan(tan_a2)
 
-  tan_b2 = sqrt ( ( sin ( ssu - asu ) * sin ( ssu - csu ) ) / &
-                  ( sin ( ssu ) * sin ( ssu - bsu )     ) )
+  tan_b2 = sqrt((sin(ssu - asu) * sin(ssu - csu)) / &
+                (sin(ssu) * sin(ssu - bsu)))
 
-  b = 2.0D+00 * atan ( tan_b2 )
+  b = 2.0D+00 * atan(tan_b2)
 
-  tan_c2 = sqrt ( ( sin ( ssu - asu ) * sin ( ssu - bsu ) ) / &
-                  ( sin ( ssu ) * sin ( ssu - csu )     ) )
+  tan_c2 = sqrt((sin(ssu - asu) * sin(ssu - bsu)) / &
+                (sin(ssu) * sin(ssu - csu)))
 
-  c = 2.0D+00 * atan ( tan_c2 )
+  c = 2.0D+00 * atan(tan_c2)
 
   return
 end
-subroutine sphere01_triangle_vertices_to_angles ( v1, v2, v3, a, b, c )
+subroutine sphere01_triangle_vertices_to_angles(v1, v2, v3, a, b, c)
 
 !*****************************************************************************80
 !
@@ -29986,27 +29987,27 @@ subroutine sphere01_triangle_vertices_to_angles ( v1, v2, v3, a, b, c )
 !
   implicit none
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) as
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bs
-  real ( kind = 8 ) c
-  real ( kind = 8 ) cs
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) a
+  real(kind=8) as
+  real(kind=8) b
+  real(kind=8) bs
+  real(kind=8) c
+  real(kind=8) cs
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 !
 !  Compute the lengths of the sides of the spherical triangle.
 !
-  call sphere01_triangle_vertices_to_sides ( v1, v2, v3, as, bs, cs )
+  call sphere01_triangle_vertices_to_sides(v1, v2, v3, as, bs, cs)
 !
 !  Get the spherical angles.
 !
-  call sphere01_triangle_sides_to_angles ( as, bs, cs, a, b, c )
+  call sphere01_triangle_sides_to_angles(as, bs, cs, a, b, c)
 
   return
 end
-subroutine sphere01_triangle_vertices_to_area ( v1, v2, v3, area )
+subroutine sphere01_triangle_vertices_to_area(v1, v2, v3, area)
 
 !*****************************************************************************80
 !
@@ -30049,32 +30050,32 @@ subroutine sphere01_triangle_vertices_to_area ( v1, v2, v3, area )
 !
   implicit none
 
-  real ( kind = 8 ) area
-  real ( kind = 8 ) a
-  real ( kind = 8 ) as
-  real ( kind = 8 ) b
-  real ( kind = 8 ) bs
-  real ( kind = 8 ) c
-  real ( kind = 8 ) cs
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) area
+  real(kind=8) a
+  real(kind=8) as
+  real(kind=8) b
+  real(kind=8) bs
+  real(kind=8) c
+  real(kind=8) cs
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 !
 !  Compute the lengths of the sides of the spherical triangle.
 !
-  call sphere01_triangle_vertices_to_sides ( v1, v2, v3, as, bs, cs )
+  call sphere01_triangle_vertices_to_sides(v1, v2, v3, as, bs, cs)
 !
 !  Get the spherical angles.
 !
-  call sphere01_triangle_sides_to_angles ( as, bs, cs, a, b, c )
+  call sphere01_triangle_sides_to_angles(as, bs, cs, a, b, c)
 !
 !  Get the area.
 !
-  call sphere01_triangle_angles_to_area ( a, b, c, area )
+  call sphere01_triangle_angles_to_area(a, b, c, area)
 
   return
 end
-subroutine sphere01_triangle_vertices_to_centroid ( v1, v2, v3, vs )
+subroutine sphere01_triangle_vertices_to_centroid(v1, v2, v3, vs)
 
 !*****************************************************************************80
 !
@@ -30129,21 +30130,21 @@ subroutine sphere01_triangle_vertices_to_centroid ( v1, v2, v3, vs )
 !
   implicit none
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
-  real ( kind = 8 ) vs(3)
+  real(kind=8) norm
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
+  real(kind=8) vs(3)
 
-  vs(1:3) = ( v1(1:3) + v2(1:3) + v3(1:3) ) / 3.0D+00
+  vs(1:3) = (v1(1:3) + v2(1:3) + v3(1:3)) / 3.0D+00
 
-  norm = sqrt ( sum ( vs(1:3)**2 ) )
+  norm = sqrt(sum(vs(1:3)**2))
 
   vs(1:3) = vs(1:3) / norm
 
   return
 end
-subroutine sphere01_triangle_vertices_to_midpoints ( v1, v2, v3, m1, m2, m3 )
+subroutine sphere01_triangle_vertices_to_midpoints(v1, v2, v3, m1, m2, m3)
 
 !*****************************************************************************80
 !
@@ -30174,29 +30175,29 @@ subroutine sphere01_triangle_vertices_to_midpoints ( v1, v2, v3, m1, m2, m3 )
 !
   implicit none
 
-  real ( kind = 8 ) m1(3)
-  real ( kind = 8 ) m2(3)
-  real ( kind = 8 ) m3(3)
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) m1(3)
+  real(kind=8) m2(3)
+  real(kind=8) m3(3)
+  real(kind=8) norm
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 
-  m1(1:3) = ( v1(1:3) + v2(1:3) ) / 2.0D+00
-  norm = sqrt ( sum ( m1(1:3)**2 ) )
+  m1(1:3) = (v1(1:3) + v2(1:3)) / 2.0D+00
+  norm = sqrt(sum(m1(1:3)**2))
   m1(1:3) = m1(1:3) / norm
 
-  m2(1:3) = ( v2(1:3) + v3(1:3) ) / 2.0D+00
-  norm = sqrt ( sum ( m2(1:3)**2 ) )
+  m2(1:3) = (v2(1:3) + v3(1:3)) / 2.0D+00
+  norm = sqrt(sum(m2(1:3)**2))
   m2(1:3) = m2(1:3) / norm
 
-  m3(1:3) = ( v3(1:3) + v1(1:3) ) / 2.0D+00
-  norm = sqrt ( sum ( m3(1:3)**2 ) )
+  m3(1:3) = (v3(1:3) + v1(1:3)) / 2.0D+00
+  norm = sqrt(sum(m3(1:3)**2))
   m3(1:3) = m3(1:3) / norm
 
   return
 end
-subroutine sphere01_triangle_vertices_to_sides ( v1, v2, v3, as, bs, cs )
+subroutine sphere01_triangle_vertices_to_sides(v1, v2, v3, as, bs, cs)
 
 !*****************************************************************************80
 !
@@ -30224,20 +30225,20 @@ subroutine sphere01_triangle_vertices_to_sides ( v1, v2, v3, as, bs, cs )
 !
   implicit none
 
-  real ( kind = 8 ) as
-  real ( kind = 8 ) bs
-  real ( kind = 8 ) cs
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) v3(3)
+  real(kind=8) as
+  real(kind=8) bs
+  real(kind=8) cs
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) v3(3)
 
-  as = acos ( dot_product ( v2(1:3), v3(1:3) ) )
-  bs = acos ( dot_product ( v3(1:3), v1(1:3) ) )
-  cs = acos ( dot_product ( v1(1:3), v2(1:3) ) )
+  as = acos(dot_product(v2(1:3), v3(1:3)))
+  bs = acos(dot_product(v3(1:3), v1(1:3)))
+  cs = acos(dot_product(v1(1:3), v2(1:3)))
 
   return
 end
-subroutine string_2d ( nvec, p1, p2, string_num, order, string )
+subroutine string_2d(nvec, p1, p2, string_num, order, string)
 
 !*****************************************************************************80
 !
@@ -30304,26 +30305,26 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
-  integer ( kind = 4 ) nvec
+  integer(kind=4), parameter :: dim_num = 2
+  integer(kind=4) nvec
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) indx
-  integer ( kind = 4 ) isgn
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) jval
-  integer ( kind = 4 ) kval
-  integer ( kind = 4 ) match
-  integer ( kind = 4 ) order(nvec)
-  real ( kind = 8 ) p1(dim_num,nvec)
-  real ( kind = 8 ) p2(dim_num,nvec)
-  integer ( kind = 4 ) seed
-  integer ( kind = 4 ) string(nvec)
-  integer ( kind = 4 ) string_num
-  real ( kind = 8 ) x1val
-  real ( kind = 8 ) x2val
-  real ( kind = 8 ) y1val
-  real ( kind = 8 ) y2val
+  integer(kind=4) i
+  integer(kind=4) indx
+  integer(kind=4) isgn
+  integer(kind=4) j
+  integer(kind=4) jval
+  integer(kind=4) kval
+  integer(kind=4) match
+  integer(kind=4) order(nvec)
+  real(kind=8) p1(dim_num, nvec)
+  real(kind=8) p2(dim_num, nvec)
+  integer(kind=4) seed
+  integer(kind=4) string(nvec)
+  integer(kind=4) string_num
+  real(kind=8) x1val
+  real(kind=8) x2val
+  real(kind=8) y1val
+  real(kind=8) y2val
 !
 !  Mark STRING so that each segment is alone.
 !
@@ -30339,11 +30340,11 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
 
   do
 
-    x1val = p1(1,seed)
-    y1val = p1(2,seed)
+    x1val = p1(1, seed)
+    y1val = p1(2, seed)
 
-    x2val = p2(1,seed)
-    y2val = p2(2,seed)
+    x2val = p2(1, seed)
+    y2val = p2(2, seed)
 
     jval = order(seed)
     kval = order(seed)
@@ -30354,49 +30355,49 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
 
       do j = 1, nvec
 
-        if ( string_num < string(j) ) then
+        if (string_num < string(j)) then
 
-          if ( x1val == p1(1,j) .and. y1val == p1(2,j) ) then
-
-            jval = jval - 1
-            order(j) = jval
-            string(j) = string_num
-            x1val = p2(1,j)
-            y1val = p2(2,j)
-            match = match + 1
-
-            call r8_swap ( p1(1,j), p2(1,j) )
-            call r8_swap ( p1(2,j), p2(2,j) )
-
-          else if ( x1val == p2(1,j) .and. y1val == p2(2,j) ) then
+          if (x1val == p1(1, j) .and. y1val == p1(2, j)) then
 
             jval = jval - 1
             order(j) = jval
             string(j) = string_num
-            x1val = p1(1,j)
-            y1val = p1(2,j)
+            x1val = p2(1, j)
+            y1val = p2(2, j)
             match = match + 1
 
-          else if ( x2val == p1(1,j) .and. y2val == p1(2,j) ) then
+            call r8_swap(p1(1, j), p2(1, j))
+            call r8_swap(p1(2, j), p2(2, j))
+
+          else if (x1val == p2(1, j) .and. y1val == p2(2, j)) then
+
+            jval = jval - 1
+            order(j) = jval
+            string(j) = string_num
+            x1val = p1(1, j)
+            y1val = p1(2, j)
+            match = match + 1
+
+          else if (x2val == p1(1, j) .and. y2val == p1(2, j)) then
 
             kval = kval + 1
             order(j) = kval
             string(j) = string_num
-            x2val = p2(1,j)
-            y2val = p2(2,j)
+            x2val = p2(1, j)
+            y2val = p2(2, j)
             match = match + 1
 
-          else if ( x2val == p2(1,j) .and. y2val == p2(2,j) ) then
+          else if (x2val == p2(1, j) .and. y2val == p2(2, j)) then
 
             kval = kval + 1
             order(j) = kval
             string(j) = string_num
-            x2val = p1(1,j)
-            y2val = p1(2,j)
+            x2val = p1(1, j)
+            y2val = p1(2, j)
             match = match + 1
 
-            call r8_swap ( p1(1,j), p2(1,j) )
-            call r8_swap ( p1(2,j), p2(2,j) )
+            call r8_swap(p1(1, j), p2(1, j))
+            call r8_swap(p1(2, j), p2(2, j))
 
           end if
 
@@ -30407,13 +30408,13 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
 !  If the string has closed on itself, then we don't want to
 !  look for any more matches for this string.
 !
-      if ( x1val == x2val .and. y1val == y2val ) then
+      if (x1val == x2val .and. y1val == y2val) then
         exit
       end if
 !
 !  If we made no matches this pass, we're done.
 !
-      if ( match <= 0 ) then
+      if (match <= 0) then
         exit
       end if
 
@@ -30425,7 +30426,7 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
     seed = 0
 
     do i = 1, nvec
-      if ( string_num < string(i) ) then
+      if (string_num < string(i)) then
         seed = i
         string_num = string_num + 1
         string(i) = string_num
@@ -30433,7 +30434,7 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
       end if
     end do
 
-    if ( seed == 0 ) then
+    if (seed == 0) then
       exit
     end if
 
@@ -30445,7 +30446,7 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
 !  Question: Can this ever happen?
 !
   do i = 1, nvec
-    if ( nvec < string(i) ) then
+    if (nvec < string(i)) then
       string_num = string_num + 1
       string(i) = string_num
     end if
@@ -30461,31 +30462,31 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
 
   do
 
-    call sort_heap_external ( nvec, indx, i, j, isgn )
+    call sort_heap_external(nvec, indx, i, j, isgn)
 
-    if ( 0 < indx ) then
+    if (0 < indx) then
 
-      call i4_swap ( order(i), order(j) )
-      call i4_swap ( string(i), string(j) )
-      call r8_swap ( p1(1,i), p1(1,j) )
-      call r8_swap ( p1(2,i), p1(2,j) )
-      call r8_swap ( p2(1,i), p2(1,j) )
-      call r8_swap ( p2(2,i), p2(2,j) )
+      call i4_swap(order(i), order(j))
+      call i4_swap(string(i), string(j))
+      call r8_swap(p1(1, i), p1(1, j))
+      call r8_swap(p1(2, i), p1(2, j))
+      call r8_swap(p2(1, i), p2(1, j))
+      call r8_swap(p2(2, i), p2(2, j))
 
-    else if ( indx < 0 ) then
+    else if (indx < 0) then
 
-      if ( ( string(i) < string(j) ) .or. &
-           ( string(i) == string(j) .and. order(i) < order(j) ) ) then
+      if ((string(i) < string(j)) .or. &
+          (string(i) == string(j) .and. order(i) < order(j))) then
 
         isgn = -1
 
       else
 
-        isgn = + 1
+        isgn = +1
 
       end if
 
-    else if ( indx == 0 ) then
+    else if (indx == 0) then
 
       exit
 
@@ -30495,7 +30496,7 @@ subroutine string_2d ( nvec, p1, p2, string_num, order, string )
 
   return
 end
-subroutine super_ellipse_points_2d ( pc, r1, r2, expo, psi, n, p )
+subroutine super_ellipse_points_2d(pc, r1, r2, expo, psi, n, p)
 
 !*****************************************************************************80
 !
@@ -30560,44 +30561,44 @@ subroutine super_ellipse_points_2d ( pc, r1, r2, expo, psi, n, p )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) act
-  real ( kind = 8 ) ast
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) expo
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) psi
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) sct
-  real ( kind = 8 ) sst
-  real ( kind = 8 ) theta
+  real(kind=8) act
+  real(kind=8) ast
+  integer(kind=4) i
+  real(kind=8) expo
+  real(kind=8) p(dim_num, n)
+  real(kind=8) pc(dim_num)
+  real(kind=8) psi
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) sct
+  real(kind=8) sst
+  real(kind=8) theta
 
   do i = 1, n
 
-    theta = ( 2.0D+00 * r8_pi * real ( i - 1, kind = 8 ) ) &
-      / real ( n, kind = 8 )
+    theta = (2.0D+00 * r8_pi * real(i - 1, kind=8)) &
+            / real(n, kind=8)
 
-    act = abs ( cos ( theta ) )
-    sct = sign ( 1.0D+00, cos ( theta ) )
-    ast = abs ( sin ( theta ) )
-    sst = sign ( 1.0D+00, sin ( theta ) )
+    act = abs(cos(theta))
+    sct = sign(1.0D+00, cos(theta))
+    ast = abs(sin(theta))
+    sst = sign(1.0D+00, sin(theta))
 
-    p(1,i) = pc(1) + r1 * cos ( psi ) * sct * ( act ) ** expo &
-                   - r2 * sin ( psi ) * sst * ( ast ) ** expo
+    p(1, i) = pc(1) + r1 * cos(psi) * sct * (act)**expo &
+              - r2 * sin(psi) * sst * (ast)**expo
 
-    p(2,i) = pc(2) + r1 * sin ( psi ) * sct * ( act ) ** expo &
-                   + r2 * cos ( psi ) * sst * ( ast ) ** expo
+    p(2, i) = pc(2) + r1 * sin(psi) * sct * (act)**expo &
+              + r2 * cos(psi) * sst * (ast)**expo
 
   end do
 
   return
 end
-subroutine tetrahedron_barycentric_3d ( tetra, p, c )
+subroutine tetrahedron_barycentric_3d(tetra, p, c)
 
 !*****************************************************************************80
 !
@@ -30639,15 +30640,15 @@ subroutine tetrahedron_barycentric_3d ( tetra, p, c )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ), parameter :: rhs_num = 1
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4), parameter :: rhs_num = 1
 
-  real ( kind = 8 ) a(dim_num,dim_num+rhs_num)
-  real ( kind = 8 ) c(dim_num+1)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) info
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) tetra(dim_num,4)
+  real(kind=8) a(dim_num, dim_num + rhs_num)
+  real(kind=8) c(dim_num + 1)
+  integer(kind=4) i
+  integer(kind=4) info
+  real(kind=8) p(dim_num)
+  real(kind=8) tetra(dim_num, 4)
 !
 !  Set up the linear system
 !
@@ -30657,32 +30658,32 @@ subroutine tetrahedron_barycentric_3d ( tetra, p, c )
 !
 !  which is satisfied by the barycentric coordinates of P.
 !
-  a(1:dim_num,1:3) = tetra(1:dim_num,2:4)
-  a(1:dim_num,4) = p(1:dim_num)
+  a(1:dim_num, 1:3) = tetra(1:dim_num, 2:4)
+  a(1:dim_num, 4) = p(1:dim_num)
 
   do i = 1, dim_num
-    a(i,1:4) = a(i,1:4) - tetra(i,1)
+    a(i, 1:4) = a(i, 1:4) - tetra(i, 1)
   end do
 !
 !  Solve the linear system.
 !
-  call r8mat_solve ( dim_num, rhs_num, a, info )
+  call r8mat_solve(dim_num, rhs_num, a, info)
 
-  if ( info /= 0 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TETRAHEDRON_BARYCENTRIC_3D - Fatal error!'
-    write ( *, '(a)' ) '  The linear system is singular.'
-    write ( *, '(a)' ) '  The input data does not form a proper tetrahedron.'
+  if (info /= 0) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TETRAHEDRON_BARYCENTRIC_3D - Fatal error!'
+    write (*, '(a)') '  The linear system is singular.'
+    write (*, '(a)') '  The input data does not form a proper tetrahedron.'
     stop 1
   end if
 
-  c(2:4) = a(1:dim_num,4)
+  c(2:4) = a(1:dim_num, 4)
 
-  c(1) = 1.0D+00 - sum ( c(2:4) )
+  c(1) = 1.0D+00 - sum(c(2:4))
 
   return
 end
-subroutine tetrahedron_centroid_3d ( tetra, centroid )
+subroutine tetrahedron_centroid_3d(tetra, centroid)
 
 !*****************************************************************************80
 !
@@ -30708,19 +30709,19 @@ subroutine tetrahedron_centroid_3d ( tetra, centroid )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) centroid(dim_num)
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) tetra(dim_num,4)
+  real(kind=8) centroid(dim_num)
+  integer(kind=4) i
+  real(kind=8) tetra(dim_num, 4)
 
   do i = 1, dim_num
-    centroid(i) = sum ( tetra(i,1:4) ) / 4.0D+00
+    centroid(i) = sum(tetra(i, 1:4)) / 4.0D+00
   end do
 
   return
 end
-subroutine tetrahedron_circumsphere_3d ( tetra, r, pc )
+subroutine tetrahedron_circumsphere_3d(tetra, r, pc)
 
 !*****************************************************************************80
 !
@@ -30770,36 +30771,36 @@ subroutine tetrahedron_circumsphere_3d ( tetra, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ), parameter :: rhs_num = 1
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4), parameter :: rhs_num = 1
 
-  real ( kind = 8 ) a(dim_num,dim_num+rhs_num)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) info
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) pc(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) tetra(dim_num,4)
+  real(kind=8) a(dim_num, dim_num + rhs_num)
+  integer(kind=4) i
+  integer(kind=4) info
+  integer(kind=4) j
+  real(kind=8) pc(dim_num)
+  real(kind=8) r
+  real(kind=8) tetra(dim_num, 4)
 !
 !  Set up the linear system.
 !
-  a(1:dim_num,1:3) = transpose ( tetra(1:dim_num,2:4) )
+  a(1:dim_num, 1:3) = transpose(tetra(1:dim_num, 2:4))
 
   do j = 1, dim_num
-    a(1:dim_num,j) = a(1:dim_num,j) - tetra(j,1)
+    a(1:dim_num, j) = a(1:dim_num, j) - tetra(j, 1)
   end do
 
   do i = 1, 3
-    a(i,4) = sum ( a(i,1:3)**2 )
+    a(i, 4) = sum(a(i, 1:3)**2)
   end do
 !
 !  Solve the linear system.
 !
-  call r8mat_solve ( dim_num, rhs_num, a, info )
+  call r8mat_solve(dim_num, rhs_num, a, info)
 !
 !  If the system was singular, return a consolation prize.
 !
-  if ( info /= 0 ) then
+  if (info /= 0) then
     r = -1.0D+00
     pc(1:dim_num) = 0.0D+00
     return
@@ -30807,13 +30808,13 @@ subroutine tetrahedron_circumsphere_3d ( tetra, r, pc )
 !
 !  Compute the radius and center.
 !
-  r = 0.5D+00 * sqrt ( sum ( a(1:dim_num,4)**2 ) )
+  r = 0.5D+00 * sqrt(sum(a(1:dim_num, 4)**2))
 
-  pc(1:dim_num) = tetra(1:dim_num,1) + 0.5D+00 * a(1:dim_num,4)
+  pc(1:dim_num) = tetra(1:dim_num, 1) + 0.5D+00 * a(1:dim_num, 4)
 
   return
 end
-subroutine tetrahedron_contains_point_3d ( tetra, p, inside )
+subroutine tetrahedron_contains_point_3d(tetra, p, inside)
 
 !*****************************************************************************80
 !
@@ -30848,19 +30849,19 @@ subroutine tetrahedron_contains_point_3d ( tetra, p, inside )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) c(dim_num+1)
-  logical ( kind = 4 ) inside
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) tetra(dim_num,4)
+  real(kind=8) c(dim_num + 1)
+  logical(kind=4) inside
+  real(kind=8) p(dim_num)
+  real(kind=8) tetra(dim_num, 4)
 
-  call tetrahedron_barycentric_3d ( tetra, p, c )
+  call tetrahedron_barycentric_3d(tetra, p, c)
 !
 !  If the point is in the tetrahedron, its barycentric coordinates
 !  must be nonnegative.
 !
-  if ( any ( c(1:dim_num+1) < 0.0D+00 ) ) then
+  if (any(c(1:dim_num + 1) < 0.0D+00)) then
     inside = .false.
   else
     inside = .true.
@@ -30868,7 +30869,7 @@ subroutine tetrahedron_contains_point_3d ( tetra, p, inside )
 
   return
 end
-subroutine tetrahedron_dihedral_angles_3d ( tetra, angle )
+subroutine tetrahedron_dihedral_angles_3d(tetra, angle)
 
 !*****************************************************************************80
 !
@@ -30896,42 +30897,42 @@ subroutine tetrahedron_dihedral_angles_3d ( tetra, angle )
 !
   implicit none
 
-  real ( kind = 8 ) ab(3)
-  real ( kind = 8 ) abc_normal(3)
-  real ( kind = 8 ) abd_normal(3)
-  real ( kind = 8 ) ac(3)
-  real ( kind = 8 ) acd_normal(3)
-  real ( kind = 8 ) ad(3)
-  real ( kind = 8 ) angle(6)
-  real ( kind = 8 ) bc(3)
-  real ( kind = 8 ) bcd_normal(3)
-  real ( kind = 8 ) bd(3)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) tetra(3,4)
+  real(kind=8) ab(3)
+  real(kind=8) abc_normal(3)
+  real(kind=8) abd_normal(3)
+  real(kind=8) ac(3)
+  real(kind=8) acd_normal(3)
+  real(kind=8) ad(3)
+  real(kind=8) angle(6)
+  real(kind=8) bc(3)
+  real(kind=8) bcd_normal(3)
+  real(kind=8) bd(3)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) tetra(3, 4)
 
-  ab(1:3) = tetra(1:3,2) - tetra(1:3,1)
-  ac(1:3) = tetra(1:3,3) - tetra(1:3,1)
-  ad(1:3) = tetra(1:3,4) - tetra(1:3,1)
-  bc(1:3) = tetra(1:3,3) - tetra(1:3,2)
-  bd(1:3) = tetra(1:3,4) - tetra(1:3,2)
+  ab(1:3) = tetra(1:3, 2) - tetra(1:3, 1)
+  ac(1:3) = tetra(1:3, 3) - tetra(1:3, 1)
+  ad(1:3) = tetra(1:3, 4) - tetra(1:3, 1)
+  bc(1:3) = tetra(1:3, 3) - tetra(1:3, 2)
+  bd(1:3) = tetra(1:3, 4) - tetra(1:3, 2)
 
-  call r8vec_cross_product_3d ( ac, ab, abc_normal )
-  call r8vec_cross_product_3d ( ab, ad, abd_normal )
-  call r8vec_cross_product_3d ( ad, ac, acd_normal )
-  call r8vec_cross_product_3d ( bc, bd, bcd_normal )
+  call r8vec_cross_product_3d(ac, ab, abc_normal)
+  call r8vec_cross_product_3d(ab, ad, abd_normal)
+  call r8vec_cross_product_3d(ad, ac, acd_normal)
+  call r8vec_cross_product_3d(bc, bd, bcd_normal)
 
-  call r8vec_angle_3d ( abc_normal, abd_normal, angle(1) )
-  call r8vec_angle_3d ( abc_normal, acd_normal, angle(2) )
-  call r8vec_angle_3d ( abd_normal, acd_normal, angle(3) )
-  call r8vec_angle_3d ( abc_normal, bcd_normal, angle(4) )
-  call r8vec_angle_3d ( abd_normal, bcd_normal, angle(5) )
-  call r8vec_angle_3d ( acd_normal, bcd_normal, angle(6) )
+  call r8vec_angle_3d(abc_normal, abd_normal, angle(1))
+  call r8vec_angle_3d(abc_normal, acd_normal, angle(2))
+  call r8vec_angle_3d(abd_normal, acd_normal, angle(3))
+  call r8vec_angle_3d(abc_normal, bcd_normal, angle(4))
+  call r8vec_angle_3d(abd_normal, bcd_normal, angle(5))
+  call r8vec_angle_3d(acd_normal, bcd_normal, angle(6))
 
   angle(1:6) = r8_pi - angle(1:6)
 
   return
 end
-subroutine tetrahedron_edge_length_3d ( tetra, edge_length )
+subroutine tetrahedron_edge_length_3d(tetra, edge_length)
 
 !*****************************************************************************80
 !
@@ -30957,27 +30958,27 @@ subroutine tetrahedron_edge_length_3d ( tetra, edge_length )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) edge_length(6)
-  integer ( kind = 4 ) j1
-  integer ( kind = 4 ) j2
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) tetra(dim_num,4)
+  real(kind=8) r8vec_norm
+  real(kind=8) edge_length(6)
+  integer(kind=4) j1
+  integer(kind=4) j2
+  integer(kind=4) k
+  real(kind=8) tetra(dim_num, 4)
 
   k = 0
   do j1 = 1, 3
-    do j2 = j1+1, 4
+    do j2 = j1 + 1, 4
       k = k + 1
-      edge_length(k) = r8vec_norm ( dim_num, &
-        tetra(1:dim_num,j2) - tetra(1:dim_num,j1) )
+      edge_length(k) = r8vec_norm(dim_num, &
+                                  tetra(1:dim_num, j2) - tetra(1:dim_num, j1))
     end do
   end do
 
   return
 end
-subroutine tetrahedron_face_angles_3d ( tetra, angles )
+subroutine tetrahedron_face_angles_3d(tetra, angles)
 
 !*****************************************************************************80
 !
@@ -31008,35 +31009,35 @@ subroutine tetrahedron_face_angles_3d ( tetra, angles )
 !
   implicit none
 
-  real ( kind = 8 ) angles(3,4)
-  real ( kind = 8 ) tri(3,3)
-  real ( kind = 8 ) tetra(3,4)
+  real(kind=8) angles(3, 4)
+  real(kind=8) tri(3, 3)
+  real(kind=8) tetra(3, 4)
 !
 !  Face 123
 !
-  tri(1:3,1:3) = tetra(1:3,1:3)
-  call triangle_angles_3d ( tri, angles(1:3,1) )
+  tri(1:3, 1:3) = tetra(1:3, 1:3)
+  call triangle_angles_3d(tri, angles(1:3, 1))
 !
 !  Face 124
 !
-  tri(1:3,1:2) = tetra(1:3,1:2)
-  tri(1:3,3) = tetra(1:3,4)
-  call triangle_angles_3d ( tri, angles(1:3,2) )
+  tri(1:3, 1:2) = tetra(1:3, 1:2)
+  tri(1:3, 3) = tetra(1:3, 4)
+  call triangle_angles_3d(tri, angles(1:3, 2))
 !
 !  Face 134
 !
-  tri(1:3,1) = tetra(1:3,1)
-  tri(1:3,2:3) = tetra(1:3,3:4)
-  call triangle_angles_3d ( tri, angles(1:3,3) )
+  tri(1:3, 1) = tetra(1:3, 1)
+  tri(1:3, 2:3) = tetra(1:3, 3:4)
+  call triangle_angles_3d(tri, angles(1:3, 3))
 !
 !  Face 234
 !
-  tri(1:3,1:3) = tetra(1:3,2:4)
-  call triangle_angles_3d ( tri, angles(1:3,4) )
+  tri(1:3, 1:3) = tetra(1:3, 2:4)
+  call triangle_angles_3d(tri, angles(1:3, 4))
 
   return
 end
-subroutine tetrahedron_face_areas_3d ( tetra, areas )
+subroutine tetrahedron_face_areas_3d(tetra, areas)
 
 !*****************************************************************************80
 !
@@ -31067,35 +31068,35 @@ subroutine tetrahedron_face_areas_3d ( tetra, areas )
 !
   implicit none
 
-  real ( kind = 8 ) areas(4)
-  real ( kind = 8 ) tri(3,3)
-  real ( kind = 8 ) tetra(3,4)
+  real(kind=8) areas(4)
+  real(kind=8) tri(3, 3)
+  real(kind=8) tetra(3, 4)
 !
 !  Face 123
 !
-  tri(1:3,1:3) = tetra(1:3,1:3)
-  call triangle_area_3d ( tri, areas(1) )
+  tri(1:3, 1:3) = tetra(1:3, 1:3)
+  call triangle_area_3d(tri, areas(1))
 !
 !  Face 124
 !
-  tri(1:3,1:2) = tetra(1:3,1:2)
-  tri(1:3,3) = tetra(1:3,4)
-  call triangle_area_3d ( tri, areas(2) )
+  tri(1:3, 1:2) = tetra(1:3, 1:2)
+  tri(1:3, 3) = tetra(1:3, 4)
+  call triangle_area_3d(tri, areas(2))
 !
 !  Face 134
 !
-  tri(1:3,1) = tetra(1:3,1)
-  tri(1:3,2:3) = tetra(1:3,3:4)
-  call triangle_area_3d ( tri, areas(3) )
+  tri(1:3, 1) = tetra(1:3, 1)
+  tri(1:3, 2:3) = tetra(1:3, 3:4)
+  call triangle_area_3d(tri, areas(3))
 !
 !  Face 234
 !
-  tri(1:3,1:3) = tetra(1:3,2:4)
-  call triangle_area_3d ( tri, areas(4) )
+  tri(1:3, 1:3) = tetra(1:3, 2:4)
+  call triangle_area_3d(tri, areas(4))
 
   return
 end
-subroutine tetrahedron_insphere_3d ( tetra, r, pc )
+subroutine tetrahedron_insphere_3d(tetra, r, pc)
 
 !*****************************************************************************80
 !
@@ -31142,57 +31143,57 @@ subroutine tetrahedron_insphere_3d ( tetra, r, pc )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) b(4,4)
-  real ( kind = 8 ) r8mat_det_4d
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) gamma
-  real ( kind = 8 ) l123
-  real ( kind = 8 ) l124
-  real ( kind = 8 ) l134
-  real ( kind = 8 ) l234
-  real ( kind = 8 ) n123(1:dim_num)
-  real ( kind = 8 ) n124(1:dim_num)
-  real ( kind = 8 ) n134(1:dim_num)
-  real ( kind = 8 ) n234(1:dim_num)
-  real ( kind = 8 ) pc(1:dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) tetra(1:dim_num,4)
-  real ( kind = 8 ) v21(1:dim_num)
-  real ( kind = 8 ) v31(1:dim_num)
-  real ( kind = 8 ) v41(1:dim_num)
-  real ( kind = 8 ) v32(1:dim_num)
-  real ( kind = 8 ) v42(1:dim_num)
-  real ( kind = 8 ) v43(1:dim_num)
+  real(kind=8) b(4, 4)
+  real(kind=8) r8mat_det_4d
+  real(kind=8) r8vec_norm
+  real(kind=8) gamma
+  real(kind=8) l123
+  real(kind=8) l124
+  real(kind=8) l134
+  real(kind=8) l234
+  real(kind=8) n123(1:dim_num)
+  real(kind=8) n124(1:dim_num)
+  real(kind=8) n134(1:dim_num)
+  real(kind=8) n234(1:dim_num)
+  real(kind=8) pc(1:dim_num)
+  real(kind=8) r
+  real(kind=8) tetra(1:dim_num, 4)
+  real(kind=8) v21(1:dim_num)
+  real(kind=8) v31(1:dim_num)
+  real(kind=8) v41(1:dim_num)
+  real(kind=8) v32(1:dim_num)
+  real(kind=8) v42(1:dim_num)
+  real(kind=8) v43(1:dim_num)
 
-  v21(1:dim_num) = tetra(1:dim_num,2) - tetra(1:dim_num,1)
-  v31(1:dim_num) = tetra(1:dim_num,3) - tetra(1:dim_num,1)
-  v41(1:dim_num) = tetra(1:dim_num,4) - tetra(1:dim_num,1)
-  v32(1:dim_num) = tetra(1:dim_num,3) - tetra(1:dim_num,2)
-  v42(1:dim_num) = tetra(1:dim_num,4) - tetra(1:dim_num,2)
-  v43(1:dim_num) = tetra(1:dim_num,4) - tetra(1:dim_num,3)
+  v21(1:dim_num) = tetra(1:dim_num, 2) - tetra(1:dim_num, 1)
+  v31(1:dim_num) = tetra(1:dim_num, 3) - tetra(1:dim_num, 1)
+  v41(1:dim_num) = tetra(1:dim_num, 4) - tetra(1:dim_num, 1)
+  v32(1:dim_num) = tetra(1:dim_num, 3) - tetra(1:dim_num, 2)
+  v42(1:dim_num) = tetra(1:dim_num, 4) - tetra(1:dim_num, 2)
+  v43(1:dim_num) = tetra(1:dim_num, 4) - tetra(1:dim_num, 3)
 
-  call r8vec_cross_product_3d ( v21, v31, n123 )
-  call r8vec_cross_product_3d ( v41, v21, n124 )
-  call r8vec_cross_product_3d ( v31, v41, n134 )
-  call r8vec_cross_product_3d ( v42, v32, n234 )
+  call r8vec_cross_product_3d(v21, v31, n123)
+  call r8vec_cross_product_3d(v41, v21, n124)
+  call r8vec_cross_product_3d(v31, v41, n134)
+  call r8vec_cross_product_3d(v42, v32, n234)
 
-  l123 = r8vec_norm ( dim_num, n123 )
-  l124 = r8vec_norm ( dim_num, n124 )
-  l134 = r8vec_norm ( dim_num, n134 )
-  l234 = r8vec_norm ( dim_num, n234 )
+  l123 = r8vec_norm(dim_num, n123)
+  l124 = r8vec_norm(dim_num, n124)
+  l134 = r8vec_norm(dim_num, n134)
+  l234 = r8vec_norm(dim_num, n234)
 
-  pc(1:dim_num) = ( l234 * tetra(1:dim_num,1)   &
-                  + l134 * tetra(1:dim_num,2)   &
-                  + l124 * tetra(1:dim_num,3)   &
-                  + l123 * tetra(1:dim_num,4) ) &
-                / ( l234 + l134 + l124 + l123 )
+  pc(1:dim_num) = (l234 * tetra(1:dim_num, 1) &
+                   + l134 * tetra(1:dim_num, 2) &
+                   + l124 * tetra(1:dim_num, 3) &
+                   + l123 * tetra(1:dim_num, 4)) &
+                  / (l234 + l134 + l124 + l123)
 
-  b(1:dim_num,1:4) = tetra(1:dim_num,1:4)
-  b(4,1:4) = 1.0D+00
+  b(1:dim_num, 1:4) = tetra(1:dim_num, 1:4)
+  b(4, 1:4) = 1.0D+00
 
-  gamma = abs ( r8mat_det_4d ( b ) )
+  gamma = abs(r8mat_det_4d(b))
 
 ! gamma = abs ( &
 !     ( tetra(1,2) * tetra(2,3) * tetra(3,4) &
@@ -31208,11 +31209,11 @@ subroutine tetrahedron_insphere_3d ( tetra, r, pc )
 !     - tetra(1,2) * tetra(2,3) * tetra(3,1) &
 !     + tetra(1,3) * tetra(2,1) * tetra(3,2) ) )
 
-  r = gamma / ( l234 + l134 + l124 + l123 )
+  r = gamma / (l234 + l134 + l124 + l123)
 
   return
 end
-subroutine tetrahedron_lattice_layer_point_next ( c, v, more )
+subroutine tetrahedron_lattice_layer_point_next(c, v, more)
 
 !*****************************************************************************80
 !
@@ -31264,20 +31265,20 @@ subroutine tetrahedron_lattice_layer_point_next ( c, v, more )
 !
   implicit none
 
-  integer ( kind = 4 ) c(4)
-  integer ( kind = 4 ) c1n
-  integer ( kind = 4 ) i4vec_lcm
-  integer ( kind = 4 ) lhs
-  logical ( kind = 4 ) more
-  integer ( kind = 4 ), parameter :: n = 3
-  integer ( kind = 4 ) rhs1
-  integer ( kind = 4 ) rhs2
-  integer ( kind = 4 ) v(3)
+  integer(kind=4) c(4)
+  integer(kind=4) c1n
+  integer(kind=4) i4vec_lcm
+  integer(kind=4) lhs
+  logical(kind=4) more
+  integer(kind=4), parameter :: n = 3
+  integer(kind=4) rhs1
+  integer(kind=4) rhs2
+  integer(kind=4) v(3)
 !
 !  Treat layer C(N+1) = 0 specially.
 !
-  if ( c(n+1) == 0 ) then
-    if ( .not. more ) then
+  if (c(n + 1) == 0) then
+    if (.not. more) then
       v(1:n) = 0
       more = .true.
     else
@@ -31288,28 +31289,28 @@ subroutine tetrahedron_lattice_layer_point_next ( c, v, more )
 !
 !  Compute the first point.
 !
-  if ( .not. more ) then
+  if (.not. more) then
 
-    v(1) = ( c(n+1) - 1 ) * c(1) + 1
+    v(1) = (c(n + 1) - 1) * c(1) + 1
     v(2:n) = 0
     more = .true.
 
   else
 
-    c1n = i4vec_lcm ( n, c )
+    c1n = i4vec_lcm(n, c)
 
-    rhs1 = c1n * ( c(n+1) - 1 )
-    rhs2 = c1n *   c(n+1)
+    rhs1 = c1n * (c(n + 1) - 1)
+    rhs2 = c1n * c(n + 1)
 !
 !  Can we simply increase X?
 !
     v(1) = v(1) + 1
 
-    lhs = ( c1n / c(1) ) * v(1) &
-        + ( c1n / c(2) ) * v(2) &
-        + ( c1n / c(3) ) * v(3)
+    lhs = (c1n / c(1)) * v(1) &
+          + (c1n / c(2)) * v(2) &
+          + (c1n / c(3)) * v(3)
 
-    if ( lhs <= rhs2 ) then
+    if (lhs <= rhs2) then
 !
 !  No.  Increase Y, and set X so we just exceed RHS1...if possible.
 !
@@ -31317,22 +31318,22 @@ subroutine tetrahedron_lattice_layer_point_next ( c, v, more )
 
       v(2) = v(2) + 1
 
-      v(1) = ( c(1) * ( rhs1 - ( c1n / c(2) ) * v(2) &
-                             - ( c1n / c(3) ) * v(3) ) ) / c1n
-      v(1) = max ( v(1), 0 )
+      v(1) = (c(1) * (rhs1 - (c1n / c(2)) * v(2) &
+                      - (c1n / c(3)) * v(3))) / c1n
+      v(1) = max(v(1), 0)
 
-      lhs = ( c1n / c(1) ) * v(1) &
-          + ( c1n / c(2) ) * v(2) &
-          + ( c1n / c(3) ) * v(3)
+      lhs = (c1n / c(1)) * v(1) &
+            + (c1n / c(2)) * v(2) &
+            + (c1n / c(3)) * v(3)
 
-      if ( lhs <= rhs1 ) then
+      if (lhs <= rhs1) then
         v(1) = v(1) + 1
         lhs = lhs + c1n / c(1)
       end if
 !
 !  We have increased Y by 1.  Have we stayed below the upper bound?
 !
-      if ( lhs <= rhs2 ) then
+      if (lhs <= rhs2) then
 
       else
 !
@@ -31340,20 +31341,20 @@ subroutine tetrahedron_lattice_layer_point_next ( c, v, more )
 !
         v(3) = v(3) + 1
         v(2) = 0
-        v(1) = ( c(1) * ( rhs1 - ( c1n / c(2) ) * v(2) &
-                               - ( c1n / c(3) ) * v(3) ) ) / c1n
-        v(1) = max ( v(1), 0 )
+        v(1) = (c(1) * (rhs1 - (c1n / c(2)) * v(2) &
+                        - (c1n / c(3)) * v(3))) / c1n
+        v(1) = max(v(1), 0)
 
-        lhs = ( c1n / c(1) ) * v(1) &
-            + ( c1n / c(2) ) * v(2) &
-            + ( c1n / c(3) ) * v(3)
+        lhs = (c1n / c(1)) * v(1) &
+              + (c1n / c(2)) * v(2) &
+              + (c1n / c(3)) * v(3)
 
-        if ( lhs <= rhs1 ) then
+        if (lhs <= rhs1) then
           v(1) = v(1) + 1
           lhs = lhs + c1n / c(1)
         end if
 
-        if ( lhs <= rhs2 ) then
+        if (lhs <= rhs2) then
 
         else
           more = .false.
@@ -31366,7 +31367,7 @@ subroutine tetrahedron_lattice_layer_point_next ( c, v, more )
 
   return
 end
-subroutine tetrahedron_lattice_point_next ( c, v, more )
+subroutine tetrahedron_lattice_point_next(c, v, more)
 
 !*****************************************************************************80
 !
@@ -31421,31 +31422,31 @@ subroutine tetrahedron_lattice_point_next ( c, v, more )
 !
   implicit none
 
-  integer ( kind = 4 ) c(4)
-  integer ( kind = 4 ) c1n
-  integer ( kind = 4 ) i4vec_lcm
-  integer ( kind = 4 ) lhs
-  logical ( kind = 4 ) more
-  integer ( kind = 4 ), parameter :: n = 3
-  integer ( kind = 4 ) rhs
-  integer ( kind = 4 ) v(3)
+  integer(kind=4) c(4)
+  integer(kind=4) c1n
+  integer(kind=4) i4vec_lcm
+  integer(kind=4) lhs
+  logical(kind=4) more
+  integer(kind=4), parameter :: n = 3
+  integer(kind=4) rhs
+  integer(kind=4) v(3)
 
-  if ( .not. more ) then
+  if (.not. more) then
 
     v(1:n) = 0
     more = .true.
 
   else
 
-    c1n = i4vec_lcm ( n, c )
+    c1n = i4vec_lcm(n, c)
 
-    rhs = c1n * c(n+1)
+    rhs = c1n * c(n + 1)
 
-    lhs =        c(2) * c(3) * v(1) &
-        + c(1) *        c(3) * v(2) &
-        + c(1) * c(2)        * v(3)
+    lhs = c(2) * c(3) * v(1) &
+          + c(1) * c(3) * v(2) &
+          + c(1) * c(2) * v(3)
 
-    if ( lhs +  c1n / c(1) <= rhs ) then
+    if (lhs + c1n / c(1) <= rhs) then
 
       v(1) = v(1) + 1
 
@@ -31454,7 +31455,7 @@ subroutine tetrahedron_lattice_point_next ( c, v, more )
       lhs = lhs - c1n * v(1) / c(1)
       v(1) = 0
 
-      if ( lhs + c1n / c(2) <= rhs ) then
+      if (lhs + c1n / c(2) <= rhs) then
 
         v(2) = v(2) + 1
 
@@ -31463,7 +31464,7 @@ subroutine tetrahedron_lattice_point_next ( c, v, more )
         lhs = lhs - c1n * v(2) / c(2)
         v(2) = 0
 
-        if ( lhs + c1n / c(3) <= rhs ) then
+        if (lhs + c1n / c(3) <= rhs) then
 
           v(3) = v(3) + 1
 
@@ -31482,7 +31483,7 @@ subroutine tetrahedron_lattice_point_next ( c, v, more )
 
   return
 end
-subroutine tetrahedron_quality1_3d ( tetra, quality )
+subroutine tetrahedron_quality1_3d(tetra, quality)
 
 !*****************************************************************************80
 !
@@ -31515,21 +31516,21 @@ subroutine tetrahedron_quality1_3d ( tetra, quality )
 !
   implicit none
 
-  real ( kind = 8 ) pc(3)
-  real ( kind = 8 ) quality
-  real ( kind = 8 ) r_in
-  real ( kind = 8 ) r_out
-  real ( kind = 8 ) tetra(3,4)
+  real(kind=8) pc(3)
+  real(kind=8) quality
+  real(kind=8) r_in
+  real(kind=8) r_out
+  real(kind=8) tetra(3, 4)
 
-  call tetrahedron_circumsphere_3d ( tetra, r_out, pc )
+  call tetrahedron_circumsphere_3d(tetra, r_out, pc)
 
-  call tetrahedron_insphere_3d ( tetra, r_in, pc )
+  call tetrahedron_insphere_3d(tetra, r_in, pc)
 
   quality = 3.0D+00 * r_in / r_out
 
   return
 end
-subroutine tetrahedron_quality2_3d ( tetra, quality2 )
+subroutine tetrahedron_quality2_3d(tetra, quality2)
 
 !*****************************************************************************80
 !
@@ -31576,24 +31577,24 @@ subroutine tetrahedron_quality2_3d ( tetra, quality2 )
 !
   implicit none
 
-  real ( kind = 8 ) edge_length(6)
-  real ( kind = 8 ) l_max
-  real ( kind = 8 ) pc(3)
-  real ( kind = 8 ) quality2
-  real ( kind = 8 ) r_in
-  real ( kind = 8 ) tetra(3,4)
+  real(kind=8) edge_length(6)
+  real(kind=8) l_max
+  real(kind=8) pc(3)
+  real(kind=8) quality2
+  real(kind=8) r_in
+  real(kind=8) tetra(3, 4)
 
-  call tetrahedron_edge_length_3d ( tetra, edge_length )
+  call tetrahedron_edge_length_3d(tetra, edge_length)
 
-  l_max = maxval ( edge_length(1:6) )
+  l_max = maxval(edge_length(1:6))
 
-  call tetrahedron_insphere_3d ( tetra, r_in, pc )
+  call tetrahedron_insphere_3d(tetra, r_in, pc)
 
-  quality2 = 2.0D+00 * sqrt ( 6.0D+00 ) * r_in / l_max
+  quality2 = 2.0D+00 * sqrt(6.0D+00) * r_in / l_max
 
   return
 end
-subroutine tetrahedron_quality3_3d ( tetra, quality3 )
+subroutine tetrahedron_quality3_3d(tetra, quality3)
 
 !*****************************************************************************80
 !
@@ -31641,61 +31642,61 @@ subroutine tetrahedron_quality3_3d ( tetra, quality3 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) ab(dim_num)
-  real ( kind = 8 ) ac(dim_num)
-  real ( kind = 8 ) ad(dim_num)
-  real ( kind = 8 ) bc(dim_num)
-  real ( kind = 8 ) bd(dim_num)
-  real ( kind = 8 ) cd(dim_num)
-  real ( kind = 8 ) denom
-  real ( kind = 8 ) lab
-  real ( kind = 8 ) lac
-  real ( kind = 8 ) lad
-  real ( kind = 8 ) lbc
-  real ( kind = 8 ) lbd
-  real ( kind = 8 ) lcd
-  real ( kind = 8 ) quality3
-  real ( kind = 8 ) tetra(dim_num,4)
-  real ( kind = 8 ) volume
+  real(kind=8) ab(dim_num)
+  real(kind=8) ac(dim_num)
+  real(kind=8) ad(dim_num)
+  real(kind=8) bc(dim_num)
+  real(kind=8) bd(dim_num)
+  real(kind=8) cd(dim_num)
+  real(kind=8) denom
+  real(kind=8) lab
+  real(kind=8) lac
+  real(kind=8) lad
+  real(kind=8) lbc
+  real(kind=8) lbd
+  real(kind=8) lcd
+  real(kind=8) quality3
+  real(kind=8) tetra(dim_num, 4)
+  real(kind=8) volume
 !
 !  Compute the vectors representing the sides of the tetrahedron.
 !
-  ab(1:3) = tetra(1:dim_num,2) - tetra(1:dim_num,1)
-  ac(1:3) = tetra(1:dim_num,3) - tetra(1:dim_num,1)
-  ad(1:3) = tetra(1:dim_num,4) - tetra(1:dim_num,1)
-  bc(1:3) = tetra(1:dim_num,3) - tetra(1:dim_num,2)
-  bd(1:3) = tetra(1:dim_num,4) - tetra(1:dim_num,2)
-  cd(1:3) = tetra(1:dim_num,4) - tetra(1:dim_num,3)
+  ab(1:3) = tetra(1:dim_num, 2) - tetra(1:dim_num, 1)
+  ac(1:3) = tetra(1:dim_num, 3) - tetra(1:dim_num, 1)
+  ad(1:3) = tetra(1:dim_num, 4) - tetra(1:dim_num, 1)
+  bc(1:3) = tetra(1:dim_num, 3) - tetra(1:dim_num, 2)
+  bd(1:3) = tetra(1:dim_num, 4) - tetra(1:dim_num, 2)
+  cd(1:3) = tetra(1:dim_num, 4) - tetra(1:dim_num, 3)
 !
 !  Compute the squares of the lengths of the sides.
 !
-  lab = sum ( ab(1:dim_num)**2 )
-  lac = sum ( ac(1:dim_num)**2 )
-  lad = sum ( ad(1:dim_num)**2 )
-  lbc = sum ( bc(1:dim_num)**2 )
-  lbd = sum ( bd(1:dim_num)**2 )
-  lcd = sum ( cd(1:dim_num)**2 )
+  lab = sum(ab(1:dim_num)**2)
+  lac = sum(ac(1:dim_num)**2)
+  lad = sum(ad(1:dim_num)**2)
+  lbc = sum(bc(1:dim_num)**2)
+  lbd = sum(bd(1:dim_num)**2)
+  lcd = sum(cd(1:dim_num)**2)
 !
 !  Compute the volume.
 !
-  volume = abs ( &
-      ab(1) * ( ac(2) * ad(3) - ac(3) * ad(2) ) &
-    + ab(2) * ( ac(3) * ad(1) - ac(1) * ad(3) ) &
-    + ab(3) * ( ac(1) * ad(2) - ac(2) * ad(1) ) ) / 6.0D+00
+  volume = abs( &
+           ab(1) * (ac(2) * ad(3) - ac(3) * ad(2)) &
+           + ab(2) * (ac(3) * ad(1) - ac(1) * ad(3)) &
+           + ab(3) * (ac(1) * ad(2) - ac(2) * ad(1))) / 6.0D+00
 
   denom = lab + lac + lad + lbc + lbd + lcd
 
-  if ( denom == 0.0D+00 ) then
+  if (denom == 0.0D+00) then
     quality3 = 0.0D+00
   else
-    quality3 = 12.0D+00 * ( 3.0D+00 * volume )**( 2.0D+00 / 3.0D+00 ) / denom
+    quality3 = 12.0D+00 * (3.0D+00 * volume)**(2.0D+00 / 3.0D+00) / denom
   end if
 
   return
 end
-subroutine tetrahedron_quality4_3d ( tetra, quality4 )
+subroutine tetrahedron_quality4_3d(tetra, quality4)
 
 !*****************************************************************************80
 !
@@ -31738,52 +31739,52 @@ subroutine tetrahedron_quality4_3d ( tetra, quality4 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) ab(dim_num)
-  real ( kind = 8 ) ac(dim_num)
-  real ( kind = 8 ) ad(dim_num)
-  real ( kind = 8 ) bc(dim_num)
-  real ( kind = 8 ) bd(dim_num)
-  real ( kind = 8 ) cd(dim_num)
-  real ( kind = 8 ) denom
-  real ( kind = 8 ) l1
-  real ( kind = 8 ) l2
-  real ( kind = 8 ) l3
-  real ( kind = 8 ) lab
-  real ( kind = 8 ) lac
-  real ( kind = 8 ) lad
-  real ( kind = 8 ) lbc
-  real ( kind = 8 ) lbd
-  real ( kind = 8 ) lcd
-  real ( kind = 8 ) quality4
-  real ( kind = 8 ) tetra(dim_num,4)
-  real ( kind = 8 ) volume
+  real(kind=8) ab(dim_num)
+  real(kind=8) ac(dim_num)
+  real(kind=8) ad(dim_num)
+  real(kind=8) bc(dim_num)
+  real(kind=8) bd(dim_num)
+  real(kind=8) cd(dim_num)
+  real(kind=8) denom
+  real(kind=8) l1
+  real(kind=8) l2
+  real(kind=8) l3
+  real(kind=8) lab
+  real(kind=8) lac
+  real(kind=8) lad
+  real(kind=8) lbc
+  real(kind=8) lbd
+  real(kind=8) lcd
+  real(kind=8) quality4
+  real(kind=8) tetra(dim_num, 4)
+  real(kind=8) volume
 !
 !  Compute the vectors that represent the sides.
 !
-  ab(1:dim_num) = tetra(1:dim_num,2) - tetra(1:dim_num,1)
-  ac(1:dim_num) = tetra(1:dim_num,3) - tetra(1:dim_num,1)
-  ad(1:dim_num) = tetra(1:dim_num,4) - tetra(1:dim_num,1)
-  bc(1:dim_num) = tetra(1:dim_num,3) - tetra(1:dim_num,2)
-  bd(1:dim_num) = tetra(1:dim_num,4) - tetra(1:dim_num,2)
-  cd(1:dim_num) = tetra(1:dim_num,4) - tetra(1:dim_num,3)
+  ab(1:dim_num) = tetra(1:dim_num, 2) - tetra(1:dim_num, 1)
+  ac(1:dim_num) = tetra(1:dim_num, 3) - tetra(1:dim_num, 1)
+  ad(1:dim_num) = tetra(1:dim_num, 4) - tetra(1:dim_num, 1)
+  bc(1:dim_num) = tetra(1:dim_num, 3) - tetra(1:dim_num, 2)
+  bd(1:dim_num) = tetra(1:dim_num, 4) - tetra(1:dim_num, 2)
+  cd(1:dim_num) = tetra(1:dim_num, 4) - tetra(1:dim_num, 3)
 !
 !  Compute the lengths of the sides.
 !
-  lab = sqrt ( sum ( ab(1:dim_num)**2 ) )
-  lac = sqrt ( sum ( ac(1:dim_num)**2 ) )
-  lad = sqrt ( sum ( ad(1:dim_num)**2 ) )
-  lbc = sqrt ( sum ( bc(1:dim_num)**2 ) )
-  lbd = sqrt ( sum ( bd(1:dim_num)**2 ) )
-  lcd = sqrt ( sum ( cd(1:dim_num)**2 ) )
+  lab = sqrt(sum(ab(1:dim_num)**2))
+  lac = sqrt(sum(ac(1:dim_num)**2))
+  lad = sqrt(sum(ad(1:dim_num)**2))
+  lbc = sqrt(sum(bc(1:dim_num)**2))
+  lbd = sqrt(sum(bd(1:dim_num)**2))
+  lcd = sqrt(sum(cd(1:dim_num)**2))
 !
 !  Compute the volume
 !
-  volume = abs ( &
-      ab(1) * ( ac(2) * ad(3) - ac(3) * ad(2) ) &
-    + ab(2) * ( ac(3) * ad(1) - ac(1) * ad(3) ) &
-    + ab(3) * ( ac(1) * ad(2) - ac(2) * ad(1) ) ) / 6.0D+00
+  volume = abs( &
+           ab(1) * (ac(2) * ad(3) - ac(3) * ad(2)) &
+           + ab(2) * (ac(3) * ad(1) - ac(1) * ad(3)) &
+           + ab(3) * (ac(1) * ad(2) - ac(2) * ad(1))) / 6.0D+00
 
   quality4 = 1.0D+00
 
@@ -31791,64 +31792,64 @@ subroutine tetrahedron_quality4_3d ( tetra, quality4 )
   l2 = lab + lad
   l3 = lac + lad
 
-  denom = ( l1 + lbc ) * ( l1 - lbc ) &
-        * ( l2 + lbd ) * ( l2 - lbd ) &
-        * ( l3 + lcd ) * ( l3 - lcd )
+  denom = (l1 + lbc) * (l1 - lbc) &
+          * (l2 + lbd) * (l2 - lbd) &
+          * (l3 + lcd) * (l3 - lcd)
 
-  if ( denom <= 0.0D+00 ) then
+  if (denom <= 0.0D+00) then
     quality4 = 0.0D+00
   else
-    quality4 = min ( quality4, 12.0D+00 * volume / sqrt ( denom ) )
+    quality4 = min(quality4, 12.0D+00 * volume / sqrt(denom))
   end if
 
   l1 = lab + lbc
   l2 = lab + lbd
   l3 = lbc + lbd
 
-  denom = ( l1 + lac ) * ( l1 - lac ) &
-        * ( l2 + lad ) * ( l2 - lad ) &
-        * ( l3 + lcd ) * ( l3 - lcd )
+  denom = (l1 + lac) * (l1 - lac) &
+          * (l2 + lad) * (l2 - lad) &
+          * (l3 + lcd) * (l3 - lcd)
 
-  if ( denom <= 0.0D+00 ) then
+  if (denom <= 0.0D+00) then
     quality4 = 0.0D+00
   else
-    quality4 = min ( quality4, 12.0D+00 * volume / sqrt ( denom ) )
+    quality4 = min(quality4, 12.0D+00 * volume / sqrt(denom))
   end if
 
   l1 = lac + lbc
   l2 = lac + lcd
   l3 = lbc + lcd
 
-  denom = ( l1 + lab ) * ( l1 - lab ) &
-        * ( l2 + lad ) * ( l2 - lad ) &
-        * ( l3 + lbd ) * ( l3 - lbd )
+  denom = (l1 + lab) * (l1 - lab) &
+          * (l2 + lad) * (l2 - lad) &
+          * (l3 + lbd) * (l3 - lbd)
 
-  if ( denom <= 0.0D+00 ) then
+  if (denom <= 0.0D+00) then
     quality4 = 0.0D+00
   else
-    quality4 = min ( quality4, 12.0D+00 * volume / sqrt ( denom ) )
+    quality4 = min(quality4, 12.0D+00 * volume / sqrt(denom))
   end if
 
   l1 = lad + lbd
   l2 = lad + lcd
   l3 = lbd + lcd
 
-  denom = ( l1 + lab ) * ( l1 - lab ) &
-        * ( l2 + lac ) * ( l2 - lac ) &
-        * ( l3 + lbc ) * ( l3 - lbc )
+  denom = (l1 + lab) * (l1 - lab) &
+          * (l2 + lac) * (l2 - lac) &
+          * (l3 + lbc) * (l3 - lbc)
 
-  if ( denom <= 0.0D+00 ) then
+  if (denom <= 0.0D+00) then
     quality4 = 0.0D+00
   else
-    quality4 = min ( quality4, 12.0D+00 * volume / sqrt ( denom ) )
+    quality4 = min(quality4, 12.0D+00 * volume / sqrt(denom))
   end if
 
-  quality4 = quality4 * 1.5D+00 * sqrt ( 6.0D+00 )
+  quality4 = quality4 * 1.5D+00 * sqrt(6.0D+00)
 
   return
 end
-subroutine tetrahedron_rhombic_shape_3d ( point_num, face_num, &
-  face_order_max, point_coord, face_order, face_point )
+subroutine tetrahedron_rhombic_shape_3d(point_num, face_num, &
+                          face_order_max, point_coord, face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -31903,56 +31904,56 @@ subroutine tetrahedron_rhombic_shape_3d ( point_num, face_num, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) d
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  real ( kind = 8 ) point_coord(dim_num,point_num)
-  real ( kind = 8 ), parameter :: z = 0.0D+00
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) d
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  real(kind=8) point_coord(dim_num, point_num)
+  real(kind=8), parameter :: z = 0.0D+00
 
-  a =        1.0D+00   / sqrt ( 3.0D+00 )
-  b = sqrt ( 2.0D+00 ) / sqrt ( 3.0D+00 )
-  c = sqrt ( 3.0D+00 ) /        6.0D+00
-  d =        1.0D+00   / sqrt ( 6.0D+00 )
+  a = 1.0D+00 / sqrt(3.0D+00)
+  b = sqrt(2.0D+00) / sqrt(3.0D+00)
+  c = sqrt(3.0D+00) / 6.0D+00
+  d = 1.0D+00 / sqrt(6.0D+00)
 !
 !  Set the point coordinates.
 !
-  point_coord(1:dim_num,1)  = (/ -b,  z,  z /)
-  point_coord(1:dim_num,2)  = (/  z, -a,  z /)
-  point_coord(1:dim_num,3)  = (/  z,  a,  z /)
-  point_coord(1:dim_num,4)  = (/  z,  z,  b /)
-  point_coord(1:dim_num,5)  = (/ -d, -c,  z /)
-  point_coord(1:dim_num,6)  = (/ -d,  c,  z /)
-  point_coord(1:dim_num,7)  = (/ -d,  z,  d /)
-  point_coord(1:dim_num,8)  = (/  z,  z,  z /)
-  point_coord(1:dim_num,9)  = (/  z, -c,  d /)
-  point_coord(1:dim_num,10) = (/  z,  c,  d /)
+  point_coord(1:dim_num, 1) = (/-b, z, z/)
+  point_coord(1:dim_num, 2) = (/z, -a, z/)
+  point_coord(1:dim_num, 3) = (/z, a, z/)
+  point_coord(1:dim_num, 4) = (/z, z, b/)
+  point_coord(1:dim_num, 5) = (/-d, -c, z/)
+  point_coord(1:dim_num, 6) = (/-d, c, z/)
+  point_coord(1:dim_num, 7) = (/-d, z, d/)
+  point_coord(1:dim_num, 8) = (/z, z, z/)
+  point_coord(1:dim_num, 9) = (/z, -c, d/)
+  point_coord(1:dim_num, 10) = (/z, c, d/)
 !
 !  Set the face orders.
 !
   face_order(1:face_num) = (/ &
-    6, 6, 6, 6 /)
+                           6, 6, 6, 6/)
 !
 !  Set faces.
 !
-  face_point(1:face_order_max,1:face_num) = reshape ( (/ &
-     1,  5,  2,  9,  4,  7, &
-     2,  8,  3, 10,  4,  9, &
-     3,  6,  1,  7,  4, 10, &
-     1,  6,  3,  8,  2,  5 /), (/ face_order_max, face_num /) )
+  face_point(1:face_order_max, 1:face_num) = reshape((/ &
+                                                     1, 5, 2, 9, 4, 7, &
+                                                     2, 8, 3, 10, 4, 9, &
+                                                     3, 6, 1, 7, 4, 10, &
+                             1, 6, 3, 8, 2, 5/), (/face_order_max, face_num/))
 
   return
 end
-subroutine tetrahedron_rhombic_size_3d ( point_num, edge_num, face_num, &
-  face_order_max )
+subroutine tetrahedron_rhombic_size_3d(point_num, edge_num, face_num, &
+                                       face_order_max)
 
 !*****************************************************************************80
 !
@@ -31987,10 +31988,10 @@ subroutine tetrahedron_rhombic_size_3d ( point_num, edge_num, face_num, &
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
   point_num = 10
   edge_num = 6
@@ -31999,7 +32000,7 @@ subroutine tetrahedron_rhombic_size_3d ( point_num, edge_num, face_num, &
 
   return
 end
-subroutine tetrahedron_sample_3d ( t, n, seed, p )
+subroutine tetrahedron_sample_3d(t, n, seed, p)
 
 !*****************************************************************************80
 !
@@ -32030,25 +32031,25 @@ subroutine tetrahedron_sample_3d ( t, n, seed, p )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) n
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) n
 
-  real ( kind = 8 ) alpha
-  real ( kind = 8 ) beta
-  real ( kind = 8 ) gamma
-  integer ( kind = 4 ) j
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) p12(dim_num)
-  real ( kind = 8 ) p13(dim_num)
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_uniform_01
-  integer ( kind = 4 ) seed
-  real ( kind = 8 ) t(dim_num,dim_num+1)
-  real ( kind = 8 ) tr(dim_num,3)
+  real(kind=8) alpha
+  real(kind=8) beta
+  real(kind=8) gamma
+  integer(kind=4) j
+  real(kind=8) p(dim_num, n)
+  real(kind=8) p12(dim_num)
+  real(kind=8) p13(dim_num)
+  real(kind=8) r
+  real(kind=8) r8_uniform_01
+  integer(kind=4) seed
+  real(kind=8) t(dim_num, dim_num + 1)
+  real(kind=8) tr(dim_num, 3)
 
   do j = 1, n
 
-    r = r8_uniform_01 ( seed )
+    r = r8_uniform_01(seed)
 !
 !  Interpret R as a percentage of the tetrahedron's volume.
 !
@@ -32058,21 +32059,21 @@ subroutine tetrahedron_sample_3d ( t, n, seed, p )
 !  The plane will intersect sides 12, 13, and 14 at a fraction
 !  ALPHA = R^1/3 of the distance from vertex 1 to vertices 2, 3, and 4.
 !
-    alpha = r**( 1.0D+00 / 3.0D+00 )
+    alpha = r**(1.0D+00 / 3.0D+00)
 !
 !  Determine the coordinates of the points on sides 12, 13 and 14 intersected
 !  by the plane, which form a triangle TR.
 !
-    tr(1:dim_num,1) = ( 1.0D+00 - alpha ) * t(1:dim_num,1) &
-                                + alpha   * t(1:dim_num,2)
-    tr(1:dim_num,2) = ( 1.0D+00 - alpha ) * t(1:dim_num,1) &
-                                + alpha   * t(1:dim_num,3)
-    tr(1:dim_num,3) = ( 1.0D+00 - alpha ) * t(1:dim_num,1) &
-                                + alpha   * t(1:dim_num,4)
+    tr(1:dim_num, 1) = (1.0D+00 - alpha) * t(1:dim_num, 1) &
+                       + alpha * t(1:dim_num, 2)
+    tr(1:dim_num, 2) = (1.0D+00 - alpha) * t(1:dim_num, 1) &
+                       + alpha * t(1:dim_num, 3)
+    tr(1:dim_num, 3) = (1.0D+00 - alpha) * t(1:dim_num, 1) &
+                       + alpha * t(1:dim_num, 4)
 !
 !  Now choose, uniformly at random, a point in this triangle.
 !
-    r = r8_uniform_01 ( seed )
+    r = r8_uniform_01(seed)
 !
 !  Interpret R as a percentage of the triangle's area.
 !
@@ -32082,29 +32083,29 @@ subroutine tetrahedron_sample_3d ( t, n, seed, p )
 !  The line L will intersect sides 2 and 3 at a fraction
 !  ALPHA = SQRT ( R ) of the distance from vertex 1 to vertices 2 and 3.
 !
-    beta = sqrt ( r )
+    beta = sqrt(r)
 !
 !  Determine the coordinates of the points on sides 2 and 3 intersected
 !  by line L.
 !
-    p12(1:dim_num) = ( 1.0D+00 - beta ) * tr(1:dim_num,1) &
-                               + beta   * tr(1:dim_num,2)
-    p13(1:dim_num) = ( 1.0D+00 - beta ) * tr(1:dim_num,1) &
-                               + beta   * tr(1:dim_num,3)
+    p12(1:dim_num) = (1.0D+00 - beta) * tr(1:dim_num, 1) &
+                     + beta * tr(1:dim_num, 2)
+    p13(1:dim_num) = (1.0D+00 - beta) * tr(1:dim_num, 1) &
+                     + beta * tr(1:dim_num, 3)
 !
 !  Now choose, uniformly at random, a point on the line L.
 !
-    gamma = r8_uniform_01 ( seed )
+    gamma = r8_uniform_01(seed)
 
-    p(1:dim_num,j) = ( 1.0D+00 - gamma ) * p12(1:dim_num) &
-                   +             gamma   * p13(1:dim_num)
+    p(1:dim_num, j) = (1.0D+00 - gamma) * p12(1:dim_num) &
+                      + gamma * p13(1:dim_num)
 
   end do
 
   return
 end
-subroutine tetrahedron_shape_3d ( point_num, face_num, face_order_max, &
-  point_coord, face_order, face_point )
+subroutine tetrahedron_shape_3d(point_num, face_num, face_order_max, &
+                                point_coord, face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -32151,42 +32152,42 @@ subroutine tetrahedron_shape_3d ( point_num, face_num, face_order_max, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  real ( kind = 8 ) point_coord(dim_num,point_num)
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  real(kind=8) point_coord(dim_num, point_num)
 !
 !  Set the point coordinates.
 !
-  point_coord(1:dim_num,1:point_num) = reshape ( (/ &
-        0.942809D+00,    0.000000D+00,   -0.333333D+00, &
-       -0.471405D+00,    0.816497D+00,   -0.333333D+00, &
-       -0.471405D+00,   -0.816497D+00,   -0.333333D+00, &
-        0.000000D+00,    0.000000D+00,    1.000000D+00 /), &
-    (/ dim_num, point_num /) )
+  point_coord(1:dim_num, 1:point_num) = reshape((/ &
+                                  0.942809D+00, 0.000000D+00, -0.333333D+00, &
+                                 -0.471405D+00, 0.816497D+00, -0.333333D+00, &
+                                -0.471405D+00, -0.816497D+00, -0.333333D+00, &
+                                 0.000000D+00, 0.000000D+00, 1.000000D+00/), &
+                                                (/dim_num, point_num/))
 !
 !  Set the face orders.
 !
   face_order(1:face_num) = (/ &
-    3, 3, 3, 3 /)
+                           3, 3, 3, 3/)
 !
 !  Set faces.
 !
-  face_point(1:face_order_max,1:face_num) = reshape ( (/ &
-       1, 3, 2, &
-       1, 2, 4, &
-       1, 4, 3, &
-       2, 3, 4 /), (/ face_order_max, face_num /) )
+  face_point(1:face_order_max, 1:face_num) = reshape((/ &
+                                                     1, 3, 2, &
+                                                     1, 2, 4, &
+                                                     1, 4, 3, &
+                                      2, 3, 4/), (/face_order_max, face_num/))
 
   return
 end
-subroutine tetrahedron_size_3d ( point_num, edge_num, face_num, &
-  face_order_max )
+subroutine tetrahedron_size_3d(point_num, edge_num, face_num, &
+                               face_order_max)
 
 !*****************************************************************************80
 !
@@ -32221,10 +32222,10 @@ subroutine tetrahedron_size_3d ( point_num, edge_num, face_num, &
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
   point_num = 4
   edge_num = 6
@@ -32233,7 +32234,7 @@ subroutine tetrahedron_size_3d ( point_num, edge_num, face_num, &
 
   return
 end
-subroutine tetrahedron_solid_angles_3d ( tetra, angle )
+subroutine tetrahedron_solid_angles_3d(tetra, angle)
 
 !*****************************************************************************80
 !
@@ -32259,12 +32260,12 @@ subroutine tetrahedron_solid_angles_3d ( tetra, angle )
 !
   implicit none
 
-  real ( kind = 8 ) angle(6)
-  real ( kind = 8 ) dihedral_angle(6)
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) tetra(3,4)
+  real(kind=8) angle(6)
+  real(kind=8) dihedral_angle(6)
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) tetra(3, 4)
 
-  call tetrahedron_dihedral_angles_3d ( tetra, dihedral_angle )
+  call tetrahedron_dihedral_angles_3d(tetra, dihedral_angle)
 
   angle(1) = dihedral_angle(1) + dihedral_angle(2) + dihedral_angle(3) - r8_pi
   angle(2) = dihedral_angle(1) + dihedral_angle(4) + dihedral_angle(5) - r8_pi
@@ -32273,7 +32274,7 @@ subroutine tetrahedron_solid_angles_3d ( tetra, angle )
 
   return
 end
-subroutine tetrahedron_volume_3d ( tetra, volume )
+subroutine tetrahedron_volume_3d(tetra, volume)
 
 !*****************************************************************************80
 !
@@ -32299,21 +32300,21 @@ subroutine tetrahedron_volume_3d ( tetra, volume )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) r8mat_det_4d
-  real ( kind = 8 ) tetra(dim_num,4)
-  real ( kind = 8 ) volume
+  real(kind=8) a(4, 4)
+  real(kind=8) r8mat_det_4d
+  real(kind=8) tetra(dim_num, 4)
+  real(kind=8) volume
 
-  a(1:dim_num,1:4) = tetra(1:dim_num,1:4)
-  a(4,1:4) = 1.0D+00
+  a(1:dim_num, 1:4) = tetra(1:dim_num, 1:4)
+  a(4, 1:4) = 1.0D+00
 
-  volume = abs ( r8mat_det_4d ( a ) ) / 6.0D+00
+  volume = abs(r8mat_det_4d(a)) / 6.0D+00
 
   return
 end
-subroutine tetrahedron01_lattice_point_num_3d ( s, n )
+subroutine tetrahedron01_lattice_point_num_3d(s, n)
 
 !*****************************************************************************80
 !
@@ -32358,16 +32359,16 @@ subroutine tetrahedron01_lattice_point_num_3d ( s, n )
 !
 !    Output, integer ( kind = 4 ) N, the number of lattice points.
 !
-  implicit  none
+  implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) s
+  integer(kind=4) n
+  integer(kind=4) s
 
-  n = ( ( s + 3 ) * ( s + 2 ) * ( s + 1 ) ) / 6
+  n = ((s + 3) * (s + 2) * (s + 1)) / 6
 
   return
 end
-function tetrahedron01_volume ( )
+function tetrahedron01_volume()
 
 !*****************************************************************************80
 !
@@ -32391,13 +32392,13 @@ function tetrahedron01_volume ( )
 !
   implicit none
 
-  real ( kind = 8 ) tetrahedron01_volume
+  real(kind=8) tetrahedron01_volume
 
   tetrahedron01_volume = 1.0D+00 / 6.0D+00
 
   return
 end
-subroutine timestamp ( )
+subroutine timestamp()
 
 !*****************************************************************************80
 !
@@ -32425,21 +32426,21 @@ subroutine timestamp ( )
 !
   implicit none
 
-  character ( len = 8 ) ampm
-  integer ( kind = 4 ) d
-  integer ( kind = 4 ) h
-  integer ( kind = 4 ) m
-  integer ( kind = 4 ) mm
-  character ( len = 9 ), parameter, dimension(12) :: month = (/ &
-    'January  ', 'February ', 'March    ', 'April    ', &
-    'May      ', 'June     ', 'July     ', 'August   ', &
-    'September', 'October  ', 'November ', 'December ' /)
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) s
-  integer ( kind = 4 ) values(8)
-  integer ( kind = 4 ) y
+  character(len=8) ampm
+  integer(kind=4) d
+  integer(kind=4) h
+  integer(kind=4) m
+  integer(kind=4) mm
+  character(len=9), parameter, dimension(12) :: month = (/ &
+                         'January  ', 'February ', 'March    ', 'April    ', &
+                         'May      ', 'June     ', 'July     ', 'August   ', &
+                          'September', 'October  ', 'November ', 'December '/)
+  integer(kind=4) n
+  integer(kind=4) s
+  integer(kind=4) values(8)
+  integer(kind=4) y
 
-  call date_and_time ( values = values )
+  call date_and_time(values=values)
 
   y = values(1)
   m = values(2)
@@ -32449,20 +32450,20 @@ subroutine timestamp ( )
   s = values(7)
   mm = values(8)
 
-  if ( h < 12 ) then
+  if (h < 12) then
     ampm = 'AM'
-  else if ( h == 12 ) then
-    if ( n == 0 .and. s == 0 ) then
+  else if (h == 12) then
+    if (n == 0 .and. s == 0) then
       ampm = 'Noon'
     else
       ampm = 'PM'
     end if
   else
     h = h - 12
-    if ( h < 12 ) then
+    if (h < 12) then
       ampm = 'PM'
-    else if ( h == 12 ) then
-      if ( n == 0 .and. s == 0 ) then
+    else if (h == 12) then
+      if (n == 0 .and. s == 0) then
         ampm = 'Midnight'
       else
         ampm = 'AM'
@@ -32470,12 +32471,12 @@ subroutine timestamp ( )
     end if
   end if
 
-  write ( *, '(i2,1x,a,1x,i4,2x,i2,a1,i2.2,a1,i2.2,a1,i3.3,1x,a)' ) &
-    d, trim ( month(m) ), y, h, ':', n, ':', s, '.', mm, trim ( ampm )
+  write (*, '(i2,1x,a,1x,i4,2x,i2,a1,i2.2,a1,i2.2,a1,i3.3,1x,a)') &
+    d, trim(month(m)), y, h, ':', n, ':', s, '.', mm, trim(ampm)
 
   return
 end
-subroutine tmat_init ( a )
+subroutine tmat_init(a)
 
 !*****************************************************************************80
 !
@@ -32531,23 +32532,23 @@ subroutine tmat_init ( a )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) j
+  real(kind=8) a(4, 4)
+  integer(kind=4) i
+  integer(kind=4) j
 
   do i = 1, 4
     do j = 1, 4
-      if ( i == j ) then
-        a(i,j) = 1.0D+00
+      if (i == j) then
+        a(i, j) = 1.0D+00
       else
-        a(i,j) = 0.0D+00
+        a(i, j) = 0.0D+00
       end if
     end do
   end do
 
   return
 end
-subroutine tmat_mxm ( a, b, c )
+subroutine tmat_mxm(a, b, c)
 
 !*****************************************************************************80
 !
@@ -32589,15 +32590,15 @@ subroutine tmat_mxm ( a, b, c )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) b(4,4)
-  real ( kind = 8 ) c(4,4)
+  real(kind=8) a(4, 4)
+  real(kind=8) b(4, 4)
+  real(kind=8) c(4, 4)
 
-  c(1:4,1:4) = matmul ( a(1:4,1:4), b(1:4,1:4) )
+  c(1:4, 1:4) = matmul(a(1:4, 1:4), b(1:4, 1:4))
 
   return
 end
-subroutine tmat_mxp ( a, x, y )
+subroutine tmat_mxp(a, x, y)
 
 !*****************************************************************************80
 !
@@ -32647,15 +32648,15 @@ subroutine tmat_mxp ( a, x, y )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) x(3)
-  real ( kind = 8 ) y(3)
+  real(kind=8) a(4, 4)
+  real(kind=8) x(3)
+  real(kind=8) y(3)
 
-  y(1:3) = a(1:3,4) + matmul ( a(1:3,1:3), x(1:3) )
+  y(1:3) = a(1:3, 4) + matmul(a(1:3, 1:3), x(1:3))
 
   return
 end
-subroutine tmat_mxp2 ( a, n, x, y )
+subroutine tmat_mxp2(a, n, x, y)
 
 !*****************************************************************************80
 !
@@ -32694,22 +32695,22 @@ subroutine tmat_mxp2 ( a, n, x, y )
 !
   implicit none
 
-  integer ( kind = 4 ) n
+  integer(kind=4) n
 
-  real ( kind = 8 ) a(4,4)
-  integer ( kind = 4 ) i
-  real ( kind = 8 ) x(3,n)
-  real ( kind = 8 ) y(3,n)
+  real(kind=8) a(4, 4)
+  integer(kind=4) i
+  real(kind=8) x(3, n)
+  real(kind=8) y(3, n)
 
   do i = 1, 3
-    y(i,1:n) = a(i,4)
+    y(i, 1:n) = a(i, 4)
   end do
 
-  y(1:3,1:n) = y(1:3,1:n) + matmul ( a(1:3,1:3), x(1:3,1:n) )
+  y(1:3, 1:n) = y(1:3, 1:n) + matmul(a(1:3, 1:3), x(1:3, 1:n))
 
   return
 end
-subroutine tmat_mxv ( a, x, y )
+subroutine tmat_mxv(a, x, y)
 
 !*****************************************************************************80
 !
@@ -32747,15 +32748,15 @@ subroutine tmat_mxv ( a, x, y )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) x(3)
-  real ( kind = 8 ) y(3)
+  real(kind=8) a(4, 4)
+  real(kind=8) x(3)
+  real(kind=8) y(3)
 
-  y(1:3) = a(1:3,4) + matmul ( a(1:3,1:3), x(1:3) )
+  y(1:3) = a(1:3, 4) + matmul(a(1:3, 1:3), x(1:3))
 
   return
 end
-subroutine tmat_rot_axis ( a, angle, axis, b )
+subroutine tmat_rot_axis(a, angle, axis, b)
 
 !*****************************************************************************80
 !
@@ -32796,46 +32797,46 @@ subroutine tmat_rot_axis ( a, angle, axis, b )
 !
   implicit none
 
-  real      ( kind = 8 ) a(4,4)
-  real      ( kind = 8 ) angle
-  real      ( kind = 8 ) angle_rad
-  character              axis
-  real      ( kind = 8 ) b(4,4)
-  real      ( kind = 8 ) c(4,4)
-  real      ( kind = 8 ) degrees_to_radians
+  real(kind=8) a(4, 4)
+  real(kind=8) angle
+  real(kind=8) angle_rad
+  character axis
+  real(kind=8) b(4, 4)
+  real(kind=8) c(4, 4)
+  real(kind=8) degrees_to_radians
 
-  angle_rad = degrees_to_radians ( angle )
+  angle_rad = degrees_to_radians(angle)
 
-  call tmat_init ( c )
+  call tmat_init(c)
 
-  if ( axis == 'X' .or. axis == 'x' ) then
-    c(2,2) =   cos ( angle_rad )
-    c(2,3) = - sin ( angle_rad )
-    c(3,2) =   sin ( angle_rad )
-    c(3,3) =   cos ( angle_rad )
-  else if ( axis == 'Y' .or. axis == 'y' ) then
-    c(1,1) =   cos ( angle_rad )
-    c(1,3) =   sin ( angle_rad )
-    c(3,1) = - sin ( angle_rad )
-    c(3,3) =   cos ( angle_rad )
-  else if ( axis == 'Z' .or. axis == 'z' ) then
-    c(1,1) =   cos ( angle_rad )
-    c(1,2) = - sin ( angle_rad )
-    c(2,1) =   sin ( angle_rad )
-    c(2,2) =   cos ( angle_rad )
+  if (axis == 'X' .or. axis == 'x') then
+    c(2, 2) = cos(angle_rad)
+    c(2, 3) = -sin(angle_rad)
+    c(3, 2) = sin(angle_rad)
+    c(3, 3) = cos(angle_rad)
+  else if (axis == 'Y' .or. axis == 'y') then
+    c(1, 1) = cos(angle_rad)
+    c(1, 3) = sin(angle_rad)
+    c(3, 1) = -sin(angle_rad)
+    c(3, 3) = cos(angle_rad)
+  else if (axis == 'Z' .or. axis == 'z') then
+    c(1, 1) = cos(angle_rad)
+    c(1, 2) = -sin(angle_rad)
+    c(2, 1) = sin(angle_rad)
+    c(2, 2) = cos(angle_rad)
   else
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TMAT_ROT_AXIS - Fatal error!'
-    write ( *, '(a)' ) '  Illegal rotation axis: ' // axis
-    write ( *, '(a)' ) '  Legal choices are ''X'', ''Y'', or ''Z''.'
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TMAT_ROT_AXIS - Fatal error!'
+    write (*, '(a)') '  Illegal rotation axis: '//axis
+    write (*, '(a)') '  Legal choices are ''X'', ''Y'', or ''Z''.'
     stop 1
   end if
 
-  b(1:4,1:4) = matmul ( c(1:4,1:4), a(1:4,1:4) )
+  b(1:4, 1:4) = matmul(c(1:4, 1:4), a(1:4, 1:4))
 
   return
 end
-subroutine tmat_rot_vector ( a, angle, axis, b )
+subroutine tmat_rot_vector(a, angle, axis, b)
 
 !*****************************************************************************80
 !
@@ -32876,27 +32877,27 @@ subroutine tmat_rot_vector ( a, angle, axis, b )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) angle_rad
-  real ( kind = 8 ) axis(3)
-  real ( kind = 8 ) b(4,4)
-  real ( kind = 8 ) c(4,4)
-  real ( kind = 8 ) ca
-  real ( kind = 8 ) degrees_to_radians
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) sa
-  real ( kind = 8 ) v1
-  real ( kind = 8 ) v2
-  real ( kind = 8 ) v3
+  real(kind=8) a(4, 4)
+  real(kind=8) angle
+  real(kind=8) angle_rad
+  real(kind=8) axis(3)
+  real(kind=8) b(4, 4)
+  real(kind=8) c(4, 4)
+  real(kind=8) ca
+  real(kind=8) degrees_to_radians
+  real(kind=8) norm
+  real(kind=8) sa
+  real(kind=8) v1
+  real(kind=8) v2
+  real(kind=8) v3
 
   v1 = axis(1)
   v2 = axis(2)
   v3 = axis(3)
 
-  norm = sqrt ( v1 * v1 + v2 * v2 + v3 * v3 )
+  norm = sqrt(v1 * v1 + v2 * v2 + v3 * v3)
 
-  if ( norm == 0.0D+00 ) then
+  if (norm == 0.0D+00) then
     return
   end if
 
@@ -32904,29 +32905,29 @@ subroutine tmat_rot_vector ( a, angle, axis, b )
   v2 = v2 / norm
   v3 = v3 / norm
 
-  angle_rad = degrees_to_radians ( angle )
-  ca = cos ( angle_rad )
-  sa = sin ( angle_rad )
+  angle_rad = degrees_to_radians(angle)
+  ca = cos(angle_rad)
+  sa = sin(angle_rad)
 
-  call tmat_init ( c )
+  call tmat_init(c)
 
-  c(1,1) =                    v1 * v1 + ca * ( 1.0D+00 - v1 * v1 )
-  c(1,2) = ( 1.0D+00 - ca ) * v1 * v2 - sa * v3
-  c(1,3) = ( 1.0D+00 - ca ) * v1 * v3 + sa * v2
+  c(1, 1) = v1 * v1 + ca * (1.0D+00 - v1 * v1)
+  c(1, 2) = (1.0D+00 - ca) * v1 * v2 - sa * v3
+  c(1, 3) = (1.0D+00 - ca) * v1 * v3 + sa * v2
 
-  c(2,1) = ( 1.0D+00 - ca ) * v2 * v1 + sa * v3
-  c(2,2) =                    v2 * v2 + ca * ( 1.0D+00 - v2 * v2 )
-  c(2,3) = ( 1.0D+00 - ca ) * v2 * v3 - sa * v1
+  c(2, 1) = (1.0D+00 - ca) * v2 * v1 + sa * v3
+  c(2, 2) = v2 * v2 + ca * (1.0D+00 - v2 * v2)
+  c(2, 3) = (1.0D+00 - ca) * v2 * v3 - sa * v1
 
-  c(3,1) = ( 1.0D+00 - ca ) * v3 * v1 - sa * v2
-  c(3,2) = ( 1.0D+00 - ca ) * v3 * v2 + sa * v1
-  c(3,3) =                    v3 * v3 + ca * ( 1.0D+00 - v3 * v3 )
+  c(3, 1) = (1.0D+00 - ca) * v3 * v1 - sa * v2
+  c(3, 2) = (1.0D+00 - ca) * v3 * v2 + sa * v1
+  c(3, 3) = v3 * v3 + ca * (1.0D+00 - v3 * v3)
 
-  b(1:4,1:4) = matmul ( c(1:4,1:4), a(1:4,1:4) )
+  b(1:4, 1:4) = matmul(c(1:4, 1:4), a(1:4, 1:4))
 
   return
 end
-subroutine tmat_scale ( a, s, b )
+subroutine tmat_scale(a, s, b)
 
 !*****************************************************************************80
 !
@@ -32964,22 +32965,22 @@ subroutine tmat_scale ( a, s, b )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) b(4,4)
-  real ( kind = 8 ) c(4,4)
-  real ( kind = 8 ) s(3)
+  real(kind=8) a(4, 4)
+  real(kind=8) b(4, 4)
+  real(kind=8) c(4, 4)
+  real(kind=8) s(3)
 
-  call tmat_init ( c )
+  call tmat_init(c)
 
-  c(1,1) = s(1)
-  c(2,2) = s(2)
-  c(3,3) = s(3)
+  c(1, 1) = s(1)
+  c(2, 2) = s(2)
+  c(3, 3) = s(3)
 
-  b(1:4,1:4) = matmul ( c(1:4,1:4), a(1:4,1:4) )
+  b(1:4, 1:4) = matmul(c(1:4, 1:4), a(1:4, 1:4))
 
   return
 end
-subroutine tmat_shear ( a, axis, s, b )
+subroutine tmat_shear(a, axis, s, b)
 
 !*****************************************************************************80
 !
@@ -33026,39 +33027,39 @@ subroutine tmat_shear ( a, axis, s, b )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  character ( len = 2 ) axis
-  real ( kind = 8 ) b(4,4)
-  real ( kind = 8 ) c(4,4)
-  real ( kind = 8 ) s
+  real(kind=8) a(4, 4)
+  character(len=2) axis
+  real(kind=8) b(4, 4)
+  real(kind=8) c(4, 4)
+  real(kind=8) s
 
-  call tmat_init ( c )
+  call tmat_init(c)
 
-  if ( axis == 'XY' .or. axis == 'xy' ) then
-    c(1,2) = s
-  else if ( axis == 'XZ' .or. axis == 'xz' ) then
-    c(1,3) = s
-  else if ( axis == 'YX' .or. axis == 'yx' ) then
-    c(2,1) = s
-  else if ( axis == 'YZ' .or. axis == 'yz' ) then
-    c(2,3) = s
-  else if ( axis == 'ZX' .or. axis == 'zx' ) then
-    c(3,1) = s
-  else if ( axis == 'ZY' .or. axis == 'zy' ) then
-    c(3,2) = s
+  if (axis == 'XY' .or. axis == 'xy') then
+    c(1, 2) = s
+  else if (axis == 'XZ' .or. axis == 'xz') then
+    c(1, 3) = s
+  else if (axis == 'YX' .or. axis == 'yx') then
+    c(2, 1) = s
+  else if (axis == 'YZ' .or. axis == 'yz') then
+    c(2, 3) = s
+  else if (axis == 'ZX' .or. axis == 'zx') then
+    c(3, 1) = s
+  else if (axis == 'ZY' .or. axis == 'zy') then
+    c(3, 2) = s
   else
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TMAT_SHEAR - Fatal error!'
-    write ( *, '(a)' ) '  Illegal shear axis: "' // axis // '".'
-    write ( *, '(a)' ) '  Legal choices are XY, XZ, YX, YZ, ZX, or ZY.'
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TMAT_SHEAR - Fatal error!'
+    write (*, '(a)') '  Illegal shear axis: "'//axis//'".'
+    write (*, '(a)') '  Legal choices are XY, XZ, YX, YZ, ZX, or ZY.'
     stop 1
   end if
 
-  b(1:4,1:4) = matmul ( c(1:4,1:4), a(1:4,1:4) )
+  b(1:4, 1:4) = matmul(c(1:4, 1:4), a(1:4, 1:4))
 
   return
 end
-subroutine tmat_trans ( a, t, b )
+subroutine tmat_trans(a, t, b)
 
 !*****************************************************************************80
 !
@@ -33096,17 +33097,17 @@ subroutine tmat_trans ( a, t, b )
 !
   implicit none
 
-  real ( kind = 8 ) a(4,4)
-  real ( kind = 8 ) b(4,4)
-  real ( kind = 8 ) t(3)
+  real(kind=8) a(4, 4)
+  real(kind=8) b(4, 4)
+  real(kind=8) t(3)
 
-  b(1:4,1:4) = a(1:4,1:4)
+  b(1:4, 1:4) = a(1:4, 1:4)
 
-  b(1:3,4) = b(1:3,4) + t(1:3)
+  b(1:3, 4) = b(1:3, 4) + t(1:3)
 
   return
 end
-function torus_area_3d ( r1, r2 )
+function torus_area_3d(r1, r2)
 
 !*****************************************************************************80
 !
@@ -33138,16 +33139,16 @@ function torus_area_3d ( r1, r2 )
 !
   implicit none
 
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) torus_area_3d
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) torus_area_3d
 
   torus_area_3d = 4.0D+00 * r8_pi * r8_pi * r1 * r2
 
   return
 end
-subroutine torus_volume_3d ( r1, r2, volume )
+subroutine torus_volume_3d(r1, r2, volume)
 
 !*****************************************************************************80
 !
@@ -33180,16 +33181,16 @@ subroutine torus_volume_3d ( r1, r2, volume )
 !
   implicit none
 
-  real ( kind = 8 ) r1
-  real ( kind = 8 ) r2
-  real ( kind = 8 ), parameter :: r8_pi = 3.141592653589793D+00
-  real ( kind = 8 ) volume
+  real(kind=8) r1
+  real(kind=8) r2
+  real(kind=8), parameter :: r8_pi = 3.141592653589793D+00
+  real(kind=8) volume
 
   volume = 2.0D+00 * r8_pi * r8_pi * r1 * r2 * r2
 
   return
 end
-subroutine tp_to_xyz ( theta, phi, v )
+subroutine tp_to_xyz(theta, phi, v)
 
 !*****************************************************************************80
 !
@@ -33220,19 +33221,19 @@ subroutine tp_to_xyz ( theta, phi, v )
 !
   implicit none
 
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) v(3)
+  real(kind=8) phi
+  real(kind=8) theta
+  real(kind=8) v(3)
 
-  v(1) = cos ( theta ) * sin ( phi )
-  v(2) = sin ( theta ) * sin ( phi )
-  v(3) =                 cos ( phi )
+  v(1) = cos(theta) * sin(phi)
+  v(2) = sin(theta) * sin(phi)
+  v(3) = cos(phi)
 
   return
 end
 
-subroutine truncated_octahedron_shape_3d ( point_num, face_num, &
-  face_order_max, point_coord, face_order, face_point )
+subroutine truncated_octahedron_shape_3d(point_num, face_num, &
+                          face_order_max, point_coord, face_order, face_point)
 
 !*****************************************************************************80
 !
@@ -33287,71 +33288,71 @@ subroutine truncated_octahedron_shape_3d ( point_num, face_num, &
 !
   implicit none
 
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ), parameter :: dim_num = 3
-  integer ( kind = 4 ) point_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4), parameter :: dim_num = 3
+  integer(kind=4) point_num
 
-  integer ( kind = 4 ) face_order(face_num)
-  integer ( kind = 4 ) face_point(face_order_max,face_num)
-  real ( kind = 8 ) point_coord(dim_num,point_num)
+  integer(kind=4) face_order(face_num)
+  integer(kind=4) face_point(face_order_max, face_num)
+  real(kind=8) point_coord(dim_num, point_num)
 !
 !  Set the point coordinates.
 !
-  point_coord(1:dim_num,1:point_num) = reshape ( (/ &
-    -1.5D+00, -0.5D+00,  0.0D+00,        &
-    -1.5D+00,  0.5D+00,  0.0D+00,        &
-    -1.0D+00, -1.0D+00, -0.70710677D+00, &
-    -1.0D+00, -1.0D+00,  0.70710677D+00, &
-    -1.0D+00,  1.0D+00, -0.70710677D+00, &
-    -1.0D+00,  1.0D+00,  0.70710677D+00, &
-    -0.5D+00, -1.5D+00,  0.0D+00,        &
-    -0.5D+00, -0.5D+00, -1.4142135D+00,  &
-    -0.5D+00, -0.5D+00,  1.4142135D+00,  &
-    -0.5D+00,  0.5D+00, -1.4142135D+00,  &
-    -0.5D+00,  0.5D+00,  1.4142135D+00,  &
-    -0.5D+00,  1.5D+00,  0.0D+00,        &
-     0.5D+00, -1.5D+00,  0.0D+00,        &
-     0.5D+00, -0.5D+00, -1.4142135D+00,  &
-     0.5D+00, -0.5D+00,  1.4142135D+00,  &
-     0.5D+00,  0.5D+00, -1.4142135D+00,  &
-     0.5D+00,  0.5D+00,  1.4142135D+00,  &
-     0.5D+00,  1.5D+00,  0.0D+00,        &
-     1.0D+00, -1.0D+00, -0.70710677D+00, &
-     1.0D+00, -1.0D+00,  0.70710677D+00, &
-     1.0D+00,  1.0D+00, -0.70710677D+00, &
-     1.0D+00,  1.0D+00,  0.70710677D+00, &
-     1.5D+00, -0.5D+00,  0.0D+00,        &
-     1.5D+00,  0.5D+00,  0.0D+00 /), (/ dim_num, point_num /) )
+  point_coord(1:dim_num, 1:point_num) = reshape((/ &
+                                                -1.5D+00, -0.5D+00, 0.0D+00, &
+                                                -1.5D+00, 0.5D+00, 0.0D+00, &
+                                        -1.0D+00, -1.0D+00, -0.70710677D+00, &
+                                         -1.0D+00, -1.0D+00, 0.70710677D+00, &
+                                         -1.0D+00, 1.0D+00, -0.70710677D+00, &
+                                          -1.0D+00, 1.0D+00, 0.70710677D+00, &
+                                                -0.5D+00, -1.5D+00, 0.0D+00, &
+                                         -0.5D+00, -0.5D+00, -1.4142135D+00, &
+                                          -0.5D+00, -0.5D+00, 1.4142135D+00, &
+                                          -0.5D+00, 0.5D+00, -1.4142135D+00, &
+                                           -0.5D+00, 0.5D+00, 1.4142135D+00, &
+                                                -0.5D+00, 1.5D+00, 0.0D+00, &
+                                                0.5D+00, -1.5D+00, 0.0D+00, &
+                                          0.5D+00, -0.5D+00, -1.4142135D+00, &
+                                           0.5D+00, -0.5D+00, 1.4142135D+00, &
+                                           0.5D+00, 0.5D+00, -1.4142135D+00, &
+                                            0.5D+00, 0.5D+00, 1.4142135D+00, &
+                                                0.5D+00, 1.5D+00, 0.0D+00, &
+                                         1.0D+00, -1.0D+00, -0.70710677D+00, &
+                                          1.0D+00, -1.0D+00, 0.70710677D+00, &
+                                          1.0D+00, 1.0D+00, -0.70710677D+00, &
+                                           1.0D+00, 1.0D+00, 0.70710677D+00, &
+                                                1.5D+00, -0.5D+00, 0.0D+00, &
+                          1.5D+00, 0.5D+00, 0.0D+00/), (/dim_num, point_num/))
 !
 !  Set the face orders.
 !
   face_order(1:face_num) = (/ &
-    4, 4, 4, 4, 4, 4, 6, 6, 6, 6, &
-    6, 6, 6, 6 /)
+                           4, 4, 4, 4, 4, 4, 6, 6, 6, 6, &
+                           6, 6, 6, 6/)
 !
 !  Set faces.
 !
-  face_point(1:face_order_max,1:face_num) = reshape ( (/ &
-    17, 11,  9, 15, -1, -1, &
-    14,  8, 10, 16, -1, -1, &
-    22, 24, 21, 18, -1, -1, &
-    12,  5,  2,  6, -1, -1, &
-    13, 19, 23, 20, -1, -1, &
-     4,  1,  3,  7, -1, -1, &
-    19, 13,  7,  3,  8, 14, &
-    15,  9,  4,  7, 13, 20, &
-    16, 10,  5, 12, 18, 21, &
-    22, 18, 12,  6, 11, 17, &
-    20, 23, 24, 22, 17, 15, &
-    14, 16, 21, 24, 23, 19, &
-     9, 11,  6,  2,  1,  4, &
-     3,  1,  2,  5, 10,  8 /), (/ face_order_max, face_num /) )
+  face_point(1:face_order_max, 1:face_num) = reshape((/ &
+                                                     17, 11, 9, 15, -1, -1, &
+                                                     14, 8, 10, 16, -1, -1, &
+                                                     22, 24, 21, 18, -1, -1, &
+                                                     12, 5, 2, 6, -1, -1, &
+                                                     13, 19, 23, 20, -1, -1, &
+                                                     4, 1, 3, 7, -1, -1, &
+                                                     19, 13, 7, 3, 8, 14, &
+                                                     15, 9, 4, 7, 13, 20, &
+                                                     16, 10, 5, 12, 18, 21, &
+                                                     22, 18, 12, 6, 11, 17, &
+                                                     20, 23, 24, 22, 17, 15, &
+                                                     14, 16, 21, 24, 23, 19, &
+                                                     9, 11, 6, 2, 1, 4, &
+                            3, 1, 2, 5, 10, 8/), (/face_order_max, face_num/))
 
   return
 end
-subroutine truncated_octahedron_size_3d ( point_num, edge_num, face_num, &
-  face_order_max )
+subroutine truncated_octahedron_size_3d(point_num, edge_num, face_num, &
+                                        face_order_max)
 
 !*****************************************************************************80
 !
@@ -33385,10 +33386,10 @@ subroutine truncated_octahedron_size_3d ( point_num, edge_num, face_num, &
 !
   implicit none
 
-  integer ( kind = 4 ) edge_num
-  integer ( kind = 4 ) face_num
-  integer ( kind = 4 ) face_order_max
-  integer ( kind = 4 ) point_num
+  integer(kind=4) edge_num
+  integer(kind=4) face_num
+  integer(kind=4) face_order_max
+  integer(kind=4) point_num
 
   point_num = 24
   edge_num = 36
@@ -33397,7 +33398,7 @@ subroutine truncated_octahedron_size_3d ( point_num, edge_num, face_num, &
 
   return
 end
-subroutine tube_2d ( dist, n, p, p1, p2 )
+subroutine tube_2d(dist, n, p, p1, p2)
 
 !*****************************************************************************80
 !
@@ -33441,68 +33442,68 @@ subroutine tube_2d ( dist, n, p, p1, p2 )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) a
-  real ( kind = 8 ) b
-  real ( kind = 8 ) c
-  real ( kind = 8 ) dis1
-  real ( kind = 8 ) dis2
-  real ( kind = 8 ) dist
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i4_wrap
-  integer ( kind = 4 ) im1
-  integer ( kind = 4 ) ip1
-  real ( kind = 8 ) p(dim_num,n)
-  real ( kind = 8 ) p1(dim_num,n)
-  real ( kind = 8 ) p2(dim_num,n)
-  real ( kind = 8 ) temp
+  real(kind=8) a
+  real(kind=8) b
+  real(kind=8) c
+  real(kind=8) dis1
+  real(kind=8) dis2
+  real(kind=8) dist
+  integer(kind=4) i
+  integer(kind=4) i4_wrap
+  integer(kind=4) im1
+  integer(kind=4) ip1
+  real(kind=8) p(dim_num, n)
+  real(kind=8) p1(dim_num, n)
+  real(kind=8) p2(dim_num, n)
+  real(kind=8) temp
 !
 !  Check that N is at least 3.
 !
-  if ( n < 3 ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'TUBE_2D - Fatal error!'
-    write ( *, '(a)' ) '  N must be at least 3'
-    write ( *, '(a,i8)' ) '  but your input value was N = ', n
+  if (n < 3) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'TUBE_2D - Fatal error!'
+    write (*, '(a)') '  N must be at least 3'
+    write (*, '(a,i8)') '  but your input value was N = ', n
     stop 1
   end if
 !
 !  Check that consecutive points are distinct.
 !
   do i = 1, n - 1
-    if ( all ( p(1:2,i) == p(1:2,i+1) ) ) then
-      write ( *, '(a)' ) ' '
-      write ( *, '(a)' ) 'TUBE_2D - Fatal error!'
-      write ( *, '(a,i8)' ) '  P(1:2,I) = P(1:2,I+1) for I = ', i
-      write ( *, '(a,2g14.6)' ) '  P(1:2,I) = ', p(1:2,i)
+    if (all(p(1:2, i) == p(1:2, i + 1))) then
+      write (*, '(a)') ' '
+      write (*, '(a)') 'TUBE_2D - Fatal error!'
+      write (*, '(a,i8)') '  P(1:2,I) = P(1:2,I+1) for I = ', i
+      write (*, '(a,2g14.6)') '  P(1:2,I) = ', p(1:2, i)
       stop 1
     end if
   end do
 
   do i = 1, n
 
-    im1 = i4_wrap ( i-1, 1, n )
-    ip1 = i4_wrap ( i+1, 1, n )
+    im1 = i4_wrap(i - 1, 1, n)
+    ip1 = i4_wrap(i + 1, 1, n)
 
-    call angle_box_2d ( dist, p(1:2,im1), p(1:2,i), &
-      p(1:2,ip1), p1(1:2,i), p2(1:2,i) )
+    call angle_box_2d(dist, p(1:2, im1), p(1:2, i), &
+                      p(1:2, ip1), p1(1:2, i), p2(1:2, i))
 !
 !  On the first and last steps, translate the corner points DIST units
 !  along the line, to make an extra buffer.
 !
-    if ( i == 1 ) then
+    if (i == 1) then
 
-      temp = sqrt ( ( p(1,2) - p(1,1) )**2 + ( p(2,2) - p(2,1) )**2 )
-      p1(1:2,1) = p1(1:2,1) - dist * ( p(1:2,2) - p(1:2,1) ) / temp
-      p2(1:2,1) = p2(1:2,1) - dist * ( p(1:2,2) - p(1:2,1) ) / temp
+      temp = sqrt((p(1, 2) - p(1, 1))**2 + (p(2, 2) - p(2, 1))**2)
+      p1(1:2, 1) = p1(1:2, 1) - dist * (p(1:2, 2) - p(1:2, 1)) / temp
+      p2(1:2, 1) = p2(1:2, 1) - dist * (p(1:2, 2) - p(1:2, 1)) / temp
 
-    else if ( i == n ) then
+    else if (i == n) then
 
-      temp = sqrt ( ( p(1,n) - p(1,n-1) )**2 + ( p(2,n) - p(2,n-1) )**2 )
-      p1(1:2,n) = p1(1:2,n) + dist * ( p(1:2,n) - p(1:2,n-1) ) / temp
-      p2(1:2,n) = p2(1:2,n) + dist * ( p(1:2,n) - p(1:2,n-1) ) / temp
+      temp = sqrt((p(1, n) - p(1, n - 1))**2 + (p(2, n) - p(2, n - 1))**2)
+      p1(1:2, n) = p1(1:2, n) + dist * (p(1:2, n) - p(1:2, n - 1)) / temp
+      p2(1:2, n) = p2(1:2, n) + dist * (p(1:2, n) - p(1:2, n - 1)) / temp
 
     end if
 !
@@ -33510,20 +33511,20 @@ subroutine tube_2d ( dist, n, p, p1, p2 )
 !
 !  Compute the signed distance from the points to the line.
 !
-    if ( 1 < i ) then
+    if (1 < i) then
 
-      a = p(2,i-1) - p(2,i)
-      b = p(1,i) - p(1,i-1)
-      c = p(1,i-1) * p(2,i) - p(1,i) * p(2,i-1)
+      a = p(2, i - 1) - p(2, i)
+      b = p(1, i) - p(1, i - 1)
+      c = p(1, i - 1) * p(2, i) - p(1, i) * p(2, i - 1)
 
-      dis1 = ( a * p1(1,i-1) + b * p1(2,i-1) + c ) / sqrt ( a * a + b * b )
+      dis1 = (a * p1(1, i - 1) + b * p1(2, i - 1) + c) / sqrt(a * a + b * b)
 
-      dis2 = ( a * p1(1,i) + b * p1(2,i) + c ) / sqrt ( a * a + b * b )
+      dis2 = (a * p1(1, i) + b * p1(2, i) + c) / sqrt(a * a + b * b)
 
-      if ( sign ( 1.0D+00, dis1 ) /= sign ( 1.0D+00, dis2 ) ) then
+      if (sign(1.0D+00, dis1) /= sign(1.0D+00, dis2)) then
 
-        call r8_swap ( p1(1,i), p2(1,i) )
-        call r8_swap ( p1(2,i), p2(2,i) )
+        call r8_swap(p1(1, i), p2(1, i))
+        call r8_swap(p1(2, i), p2(2, i))
 
       end if
 
@@ -33533,7 +33534,7 @@ subroutine tube_2d ( dist, n, p, p1, p2 )
 
   return
 end
-subroutine vector_directions_nd ( dim_num, v, angle )
+subroutine vector_directions_nd(dim_num, v, angle)
 
 !*****************************************************************************80
 !
@@ -33574,26 +33575,26 @@ subroutine vector_directions_nd ( dim_num, v, angle )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) angle(dim_num)
-  real ( kind = 8 ) v(dim_num)
-  real ( kind = 8 ) vnorm
+  real(kind=8) angle(dim_num)
+  real(kind=8) v(dim_num)
+  real(kind=8) vnorm
 !
 !  Get the norm of the vector.
 !
-  vnorm = sqrt ( sum ( v(1:dim_num)**2 ) )
+  vnorm = sqrt(sum(v(1:dim_num)**2))
 
-  if ( vnorm == 0.0D+00 ) then
+  if (vnorm == 0.0D+00) then
     angle(1:dim_num) = 0.0D+00
     return
   end if
 
-  angle(1:dim_num) = acos ( v(1:dim_num) / vnorm )
+  angle(1:dim_num) = acos(v(1:dim_num) / vnorm)
 
   return
 end
-subroutine vector_rotate_2d ( v, angle, w )
+subroutine vector_rotate_2d(v, angle, w)
 
 !*****************************************************************************80
 !
@@ -33635,18 +33636,18 @@ subroutine vector_rotate_2d ( v, angle, w )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) v(dim_num)
-  real ( kind = 8 ) w(dim_num)
+  real(kind=8) angle
+  real(kind=8) v(dim_num)
+  real(kind=8) w(dim_num)
 
-  w(1) = cos ( angle ) * v(1) - sin ( angle ) * v(2)
-  w(2) = sin ( angle ) * v(1) + cos ( angle ) * v(2)
+  w(1) = cos(angle) * v(1) - sin(angle) * v(2)
+  w(2) = sin(angle) * v(1) + cos(angle) * v(2)
 
   return
 end
-subroutine vector_rotate_3d ( v1, axis, angle, v2 )
+subroutine vector_rotate_3d(v1, axis, angle, v2)
 
 !*****************************************************************************80
 !
@@ -33683,31 +33684,31 @@ subroutine vector_rotate_3d ( v1, axis, angle, v2 )
 !
   implicit none
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) axis(3)
-  real ( kind = 8 ) dot
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) norm_vn
-  real ( kind = 8 ) normal2(3)
-  real ( kind = 8 ) r8vec_norm
-  real ( kind = 8 ) v1(3)
-  real ( kind = 8 ) v2(3)
-  real ( kind = 8 ) vn(3)
-  real ( kind = 8 ) vp(3)
-  real ( kind = 8 ) vr(3)
+  real(kind=8) angle
+  real(kind=8) axis(3)
+  real(kind=8) dot
+  real(kind=8) norm
+  real(kind=8) norm_vn
+  real(kind=8) normal2(3)
+  real(kind=8) r8vec_norm
+  real(kind=8) v1(3)
+  real(kind=8) v2(3)
+  real(kind=8) vn(3)
+  real(kind=8) vp(3)
+  real(kind=8) vr(3)
 !
 !  Compute the length of the rotation axis.
 !
-  norm = r8vec_norm ( 3, axis )
+  norm = r8vec_norm(3, axis)
 
-  if ( norm == 0.0D+00 ) then
+  if (norm == 0.0D+00) then
     v2(1:3) = v1(1:3)
     return
   end if
 !
 !  Compute the dot product of the vector and the (unit) rotation axis.
 !
-  dot = dot_product ( v1(1:3), axis(1:3) ) / norm
+  dot = dot_product(v1(1:3), axis(1:3)) / norm
 !
 !  Compute the parallel component of the vector.
 !
@@ -33717,9 +33718,9 @@ subroutine vector_rotate_3d ( v1, axis, angle, v2 )
 !
   vn(1:3) = v1(1:3) - vp(1:3)
 
-  norm_vn = r8vec_norm ( 3, vn )
+  norm_vn = r8vec_norm(3, vn)
 
-  if ( norm_vn == 0.0D+00 ) then
+  if (norm_vn == 0.0D+00) then
     v2(1:3) = vp(1:3)
     return
   end if
@@ -33733,14 +33734,14 @@ subroutine vector_rotate_3d ( v1, axis, angle, v2 )
   normal2(2) = axis(3) * vn(1) - axis(1) * vn(3)
   normal2(3) = axis(1) * vn(2) - axis(2) * vn(1)
 
-  norm = r8vec_norm ( 3, normal2 )
-  if ( norm /= 0.0D+00 ) then
+  norm = r8vec_norm(3, normal2)
+  if (norm /= 0.0D+00) then
     normal2(1:3) = normal2(1:3) / norm
   end if
 !
 !  Rotate the normal component by the angle.
 !
-  vr(1:3) = norm_vn * ( cos ( angle ) * vn(1:3) + sin ( angle ) * normal2(1:3) )
+  vr(1:3) = norm_vn * (cos(angle) * vn(1:3) + sin(angle) * normal2(1:3))
 !
 !  The rotated vector is the parallel component plus the rotated component.
 !
@@ -33748,7 +33749,7 @@ subroutine vector_rotate_3d ( v1, axis, angle, v2 )
 
   return
 end
-subroutine vector_rotate_base_2d ( p1, pb, angle, p2 )
+subroutine vector_rotate_base_2d(p1, pb, angle, p2)
 
 !*****************************************************************************80
 !
@@ -33785,22 +33786,22 @@ subroutine vector_rotate_base_2d ( p1, pb, angle, p2 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 2
+  integer(kind=4), parameter :: dim_num = 2
 
-  real ( kind = 8 ) angle
-  real ( kind = 8 ) p1(2)
-  real ( kind = 8 ) p2(2)
-  real ( kind = 8 ) pb(2)
+  real(kind=8) angle
+  real(kind=8) p1(2)
+  real(kind=8) p2(2)
+  real(kind=8) pb(2)
 
-  p2(1) = pb(1) + cos ( angle ) * ( p1(1) - pb(1) ) &
-                - sin ( angle ) * ( p1(2) - pb(2) )
+  p2(1) = pb(1) + cos(angle) * (p1(1) - pb(1)) &
+          - sin(angle) * (p1(2) - pb(2))
 
-  p2(2) = pb(2) + sin ( angle ) * ( p1(1) - pb(1) ) &
-                + cos ( angle ) * ( p1(2) - pb(2) )
+  p2(2) = pb(2) + sin(angle) * (p1(1) - pb(1)) &
+          + cos(angle) * (p1(2) - pb(2))
 
   return
 end
-subroutine vector_separation_nd ( dim_num, v1, v2, theta )
+subroutine vector_separation_nd(dim_num, v1, v2, theta)
 
 !*****************************************************************************80
 !
@@ -33832,28 +33833,28 @@ subroutine vector_separation_nd ( dim_num, v1, v2, theta )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) cos_theta
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) v1(dim_num)
-  real ( kind = 8 ) v1_norm
-  real ( kind = 8 ) v2(dim_num)
-  real ( kind = 8 ) v2_norm
+  real(kind=8) cos_theta
+  real(kind=8) r8_acos
+  real(kind=8) theta
+  real(kind=8) v1(dim_num)
+  real(kind=8) v1_norm
+  real(kind=8) v2(dim_num)
+  real(kind=8) v2_norm
 
-  v1_norm = sqrt ( sum ( v1(1:dim_num)**2 ) )
+  v1_norm = sqrt(sum(v1(1:dim_num)**2))
 
-  v2_norm = sqrt ( sum ( v2(1:dim_num)**2 ) )
+  v2_norm = sqrt(sum(v2(1:dim_num)**2))
 
-  cos_theta = dot_product ( v1(1:dim_num), v2(1:dim_num) ) &
-    / ( v1_norm * v2_norm )
+  cos_theta = dot_product(v1(1:dim_num), v2(1:dim_num)) &
+              / (v1_norm * v2_norm)
 
-  theta = r8_acos ( cos_theta )
+  theta = r8_acos(cos_theta)
 
   return
 end
-subroutine vector_unit_nd ( dim_num, v )
+subroutine vector_unit_nd(dim_num, v)
 
 !*****************************************************************************80
 !
@@ -33881,20 +33882,20 @@ subroutine vector_unit_nd ( dim_num, v )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  real ( kind = 8 ) norm
-  real ( kind = 8 ) v(dim_num)
+  real(kind=8) norm
+  real(kind=8) v(dim_num)
 
-  norm = sqrt ( sum ( v(1:dim_num)**2 ) )
+  norm = sqrt(sum(v(1:dim_num)**2))
 
-  if ( norm /= 0.0D+00 ) then
+  if (norm /= 0.0D+00) then
     v(1:dim_num) = v(1:dim_num) / norm
   end if
 
   return
 end
-function voxels_dist_l1_nd ( dim_num, v1, v2 )
+function voxels_dist_l1_nd(dim_num, v1, v2)
 
 !*****************************************************************************80
 !
@@ -33939,17 +33940,17 @@ function voxels_dist_l1_nd ( dim_num, v1, v2 )
 !
   implicit none
 
-  integer ( kind = 4 ) dim_num
+  integer(kind=4) dim_num
 
-  integer ( kind = 4 ) v1(dim_num)
-  integer ( kind = 4 ) v2(dim_num)
-  integer ( kind = 4 ) voxels_dist_l1_nd
+  integer(kind=4) v1(dim_num)
+  integer(kind=4) v2(dim_num)
+  integer(kind=4) voxels_dist_l1_nd
 
-  voxels_dist_l1_nd = sum ( abs ( v1(1:dim_num) - v2(1:dim_num) ) )
+  voxels_dist_l1_nd = sum(abs(v1(1:dim_num) - v2(1:dim_num)))
 
   return
 end
-subroutine voxels_line_3d ( v1, v2, n, v )
+subroutine voxels_line_3d(v1, v2, n, v)
 
 !*****************************************************************************80
 !
@@ -33999,27 +34000,27 @@ subroutine voxels_line_3d ( v1, v2, n, v )
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4) n
+  integer(kind=4), parameter :: dim_num = 3
 
-  integer ( kind = 4 ) a(3)
-  integer ( kind = 4 ) exy
-  integer ( kind = 4 ) exz
-  integer ( kind = 4 ) ezy
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) s(3)
-  integer ( kind = 4 ) v(3,n)
-  integer ( kind = 4 ) v1(3)
-  integer ( kind = 4 ) v2(3)
+  integer(kind=4) a(3)
+  integer(kind=4) exy
+  integer(kind=4) exz
+  integer(kind=4) ezy
+  integer(kind=4) i
+  integer(kind=4) s(3)
+  integer(kind=4) v(3, n)
+  integer(kind=4) v1(3)
+  integer(kind=4) v2(3)
 
-  if ( n <= 0 ) then
+  if (n <= 0) then
     return
   end if
 !
 !  Determine the number of voxels on the line.
 !
-  s(1:dim_num) = sign ( 1, v2(1:dim_num) - v1(1:dim_num) )
-  a(1:dim_num) = abs ( v2(1:dim_num) - v1(1:dim_num) )
+  s(1:dim_num) = sign(1, v2(1:dim_num) - v1(1:dim_num))
+  a(1:dim_num) = abs(v2(1:dim_num) - v1(1:dim_num))
 
   exy = a(2) - a(1)
   exz = a(3) - a(1)
@@ -34027,33 +34028,33 @@ subroutine voxels_line_3d ( v1, v2, n, v )
 !
 !  We start at the starting point.
 !
-  v(1:dim_num,1) = v1(1:dim_num)
+  v(1:dim_num, 1) = v1(1:dim_num)
 
   do i = 2, n
 
-    v(1:dim_num,i) = v(1:dim_num,i-1)
+    v(1:dim_num, i) = v(1:dim_num, i - 1)
 
-    if ( exy < 0 ) then
+    if (exy < 0) then
 
-      if ( exz < 0 ) then
-        v(1,i) = v(1,i) + s(1)
+      if (exz < 0) then
+        v(1, i) = v(1, i) + s(1)
         exy = exy + 2 * a(2)
         exz = exz + 2 * a(3)
       else
-        v(3,i) = v(3,i) + s(3)
+        v(3, i) = v(3, i) + s(3)
         exz = exz - 2 * a(1)
         ezy = ezy + 2 * a(2)
       end if
 
-    else if ( ezy < 0 ) then
+    else if (ezy < 0) then
 
-      v(3,i) = v(3,i) + s(3)
+      v(3, i) = v(3, i) + s(3)
       exz = exz - 2 * a(1)
       ezy = ezy + 2 * a(2)
 
     else
 
-      v(2,i) = v(2,i) + s(2)
+      v(2, i) = v(2, i) + s(2)
       exy = exy - 2 * a(1)
       ezy = ezy - 2 * a(3)
 
@@ -34063,8 +34064,8 @@ subroutine voxels_line_3d ( v1, v2, n, v )
 
   return
 end
-subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
-  region_num )
+subroutine voxels_region_3d(list_max, nx, ny, nz, ishow, list_num, list, &
+                            region_num)
 
 !*****************************************************************************80
 !
@@ -34148,37 +34149,37 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: maxstack = 100
+  integer(kind=4), parameter :: maxstack = 100
 
-  integer ( kind = 4 ) list_max
-  integer ( kind = 4 ) nx
-  integer ( kind = 4 ) ny
-  integer ( kind = 4 ) nz
+  integer(kind=4) list_max
+  integer(kind=4) nx
+  integer(kind=4) ny
+  integer(kind=4) nz
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) i2
-  integer ( kind = 4 ) ibase
-  integer ( kind = 4 ) ihi
-  integer ( kind = 4 ) ilo
-  integer ( kind = 4 ) ishow(nx,ny,nz)
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) j2
-  integer ( kind = 4 ) jbase
-  integer ( kind = 4 ) jhi
-  integer ( kind = 4 ) jlo
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) k2
-  integer ( kind = 4 ) kbase
-  integer ( kind = 4 ) khi
-  integer ( kind = 4 ) klo
-  integer ( kind = 4 ) list(list_max)
-  integer ( kind = 4 ) list_num
-  integer ( kind = 4 ) nabes
-  integer ( kind = 4 ) ncan
-  integer ( kind = 4 ) nelements
-  integer ( kind = 4 ) nstack
-  integer ( kind = 4 ) region_num
-  integer ( kind = 4 ) stack(maxstack)
+  integer(kind=4) i
+  integer(kind=4) i2
+  integer(kind=4) ibase
+  integer(kind=4) ihi
+  integer(kind=4) ilo
+  integer(kind=4) ishow(nx, ny, nz)
+  integer(kind=4) j
+  integer(kind=4) j2
+  integer(kind=4) jbase
+  integer(kind=4) jhi
+  integer(kind=4) jlo
+  integer(kind=4) k
+  integer(kind=4) k2
+  integer(kind=4) kbase
+  integer(kind=4) khi
+  integer(kind=4) klo
+  integer(kind=4) list(list_max)
+  integer(kind=4) list_num
+  integer(kind=4) nabes
+  integer(kind=4) ncan
+  integer(kind=4) nelements
+  integer(kind=4) nstack
+  integer(kind=4) region_num
+  integer(kind=4) stack(maxstack)
 !
 !  Reset all nonzero entries of ISHOW to -1.
 !
@@ -34186,8 +34187,8 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
     do j = 1, ny
       do i = 1, nx
 
-        if ( ishow(i,j,k) /= 0 ) then
-          ishow(i,j,k) = -1
+        if (ishow(i, j, k) /= 0) then
+          ishow(i, j, k) = -1
         end if
 
       end do
@@ -34214,7 +34215,7 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
 !  We found a voxel that is "ON", and does not belong to any region.
 !
-        if ( ishow(i,j,k) == -1 ) then
+        if (ishow(i, j, k) == -1) then
 !
 !  Increase the number of regions.
 !
@@ -34222,22 +34223,22 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
 !  Add this voxel to the region.
 !
-          ishow(i,j,k) = region_num
+          ishow(i, j, k) = region_num
 !
 !  Add this voxel to the stack.
 !
-          if ( maxstack < nstack + 4 ) then
-            write ( *, '(a)' ) ' '
-            write ( *, '(a)' ) 'VOXELS_REGION - Fatal error!'
-            write ( *, '(a)' ) '  The internal stack overflowed.'
-            write ( *, '(a)' ) '  The algorithm has failed.'
+          if (maxstack < nstack + 4) then
+            write (*, '(a)') ' '
+            write (*, '(a)') 'VOXELS_REGION - Fatal error!'
+            write (*, '(a)') '  The internal stack overflowed.'
+            write (*, '(a)') '  The algorithm has failed.'
             stop 1
           end if
 
-          stack(nstack+1) = i
-          stack(nstack+2) = j
-          stack(nstack+3) = k
-          stack(nstack+4) = 1
+          stack(nstack + 1) = i
+          stack(nstack + 2) = j
+          stack(nstack + 3) = k
+          stack(nstack + 4) = 1
 
           nstack = nstack + 4
 !
@@ -34245,10 +34246,10 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
           nelements = 1
 
-          if ( list_num + 3 <= list_max ) then
-            list(list_num+1) = i
-            list(list_num+2) = j
-            list(list_num+3) = k
+          if (list_num + 3 <= list_max) then
+            list(list_num + 1) = i
+            list(list_num + 2) = j
+            list(list_num + 3) = k
           end if
 
           list_num = list_num + 3
@@ -34258,16 +34259,16 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !  Find all neighbors of BASE that are "ON" but unused.
 !  Mark them as belonging to this region, and stack their indices.
 !
-            ibase = stack(nstack-3)
-            jbase = stack(nstack-2)
-            kbase = stack(nstack-1)
+            ibase = stack(nstack - 3)
+            jbase = stack(nstack - 2)
+            kbase = stack(nstack - 1)
 
-            ilo = max ( ibase-1, 1 )
-            ihi = min ( ibase+1, nx )
-            jlo = max ( jbase-1, 1 )
-            jhi = min ( jbase+1, ny )
-            klo = max ( kbase-1, 1 )
-            khi = min ( kbase+1, nz )
+            ilo = max(ibase - 1, 1)
+            ihi = min(ibase + 1, nx)
+            jlo = max(jbase - 1, 1)
+            jhi = min(jbase + 1, ny)
+            klo = max(kbase - 1, 1)
+            khi = min(kbase + 1, nz)
 
             nabes = 0
 
@@ -34277,7 +34278,7 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
 !  We found a neighbor to our current search point, which is "ON" and unused.
 !
-                  if ( ishow(i2,j2,k2) == -1 ) then
+                  if (ishow(i2, j2, k2) == -1) then
 !
 !  Increase the number of neighbors.
 !
@@ -34285,21 +34286,21 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
 !  Mark the neighbor as belonging to the region.
 !
-                    ishow(i2,j2,k2) = region_num
+                    ishow(i2, j2, k2) = region_num
 !
 !  Add the neighbor to the stack.
 !
-                    if ( maxstack < nstack + 3 ) then
-                      write ( *, '(a)' ) ' '
-                      write ( *, '(a)' ) 'VOXELS_REGION - Fatal error!'
-                      write ( *, '(a)' ) '  The internal stack overflowed.'
-                      write ( *, '(a)' ) '  The algorithm has failed.'
+                    if (maxstack < nstack + 3) then
+                      write (*, '(a)') ' '
+                      write (*, '(a)') 'VOXELS_REGION - Fatal error!'
+                      write (*, '(a)') '  The internal stack overflowed.'
+                      write (*, '(a)') '  The algorithm has failed.'
                       stop 1
                     end if
 
-                    stack(nstack+1) = i2
-                    stack(nstack+2) = j2
-                    stack(nstack+3) = k2
+                    stack(nstack + 1) = i2
+                    stack(nstack + 2) = j2
+                    stack(nstack + 3) = k2
 
                     nstack = nstack + 3
 !
@@ -34307,10 +34308,10 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
                     nelements = nelements + 1
 
-                    if ( list_num + 3 <= list_max ) then
-                      list(list_num+1) = i2
-                      list(list_num+2) = j2
-                      list(list_num+3) = k2
+                    if (list_num + 3 <= list_max) then
+                      list(list_num + 1) = i2
+                      list(list_num + 2) = j2
+                      list(list_num + 3) = k2
                     end if
 
                     list_num = list_num + 3
@@ -34324,17 +34325,17 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !  If any new neighbors were found, take the last one as the basis
 !  for a deeper search.
 !
-            if ( 0 < nabes ) then
+            if (0 < nabes) then
 
-              if ( maxstack < nstack + 1 ) then
-                write ( *, '(a)' ) ' '
-                write ( *, '(a)' ) 'VOXELS_REGION - Fatal error!'
-                write ( *, '(a)' ) '  The internal stack overflowed.'
-                write ( *, '(a)' ) '  The algorithm has failed.'
+              if (maxstack < nstack + 1) then
+                write (*, '(a)') ' '
+                write (*, '(a)') 'VOXELS_REGION - Fatal error!'
+                write (*, '(a)') '  The internal stack overflowed.'
+                write (*, '(a)') '  The algorithm has failed.'
                 stop 1
               end if
 
-              stack(nstack+1) = nabes
+              stack(nstack + 1) = nabes
               nstack = nstack + 1
               cycle
 
@@ -34349,7 +34350,7 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !  If there are still any unused candidates at this level, take the
 !  last one as the basis for a deeper search.
 !
-            if ( 0 < stack(nstack) ) then
+            if (0 < stack(nstack)) then
               cycle
             end if
 !
@@ -34359,7 +34360,7 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
             nstack = nstack - 1
 
-            if ( nstack <= 0 ) then
+            if (nstack <= 0) then
               exit
             end if
 
@@ -34369,7 +34370,7 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !  Tag the number of elements to the end of the region description list.
 !
           list_num = list_num + 1
-          if ( list_num <= list_max ) then
+          if (list_num <= list_max) then
             list(list_num) = nelements
           end if
 
@@ -34381,17 +34382,17 @@ subroutine voxels_region_3d ( list_max, nx, ny, nz, ishow, list_num, list, &
 !
 !  Print some warnings.
 !
-  if ( list_max < list_num ) then
-    write ( *, '(a)' ) ' '
-    write ( *, '(a)' ) 'VOXELS_REGION - Warning!'
-    write ( *, '(a)' ) '  LIST_MAX was too small to list the regions.'
-    write ( *, '(a)' ) '  Do not try to use the LIST array!'
-    write ( *, '(a)' ) '  The ISHOW data is OK, however.'
+  if (list_max < list_num) then
+    write (*, '(a)') ' '
+    write (*, '(a)') 'VOXELS_REGION - Warning!'
+    write (*, '(a)') '  LIST_MAX was too small to list the regions.'
+    write (*, '(a)') '  Do not try to use the LIST array!'
+    write (*, '(a)') '  The ISHOW data is OK, however.'
   end if
 
   return
 end
-subroutine voxels_step_3d ( v1, v2, inc, jnc, knc, v3 )
+subroutine voxels_step_3d(v1, v2, inc, jnc, knc, v3)
 
 !*****************************************************************************80
 !
@@ -34428,18 +34429,18 @@ subroutine voxels_step_3d ( v1, v2, inc, jnc, knc, v3 )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) alpha
-  real ( kind = 8 ) alphai
-  real ( kind = 8 ) alphaj
-  real ( kind = 8 ) alphak
-  integer ( kind = 4 ) inc
-  integer ( kind = 4 ) jnc
-  integer ( kind = 4 ) knc
-  integer ( kind = 4 ) v1(3)
-  integer ( kind = 4 ) v2(3)
-  integer ( kind = 4 ) v3(3)
+  real(kind=8) alpha
+  real(kind=8) alphai
+  real(kind=8) alphaj
+  real(kind=8) alphak
+  integer(kind=4) inc
+  integer(kind=4) jnc
+  integer(kind=4) knc
+  integer(kind=4) v1(3)
+  integer(kind=4) v2(3)
+  integer(kind=4) v3(3)
 
   v3(1:dim_num) = v2(1:dim_num)
 !
@@ -34450,7 +34451,7 @@ subroutine voxels_step_3d ( v1, v2, inc, jnc, knc, v3 )
 !    J = V1(2) + alpha * jnc
 !    K = V1(3) + alpha * knc
 !
-  if ( inc == 0 .and. jnc == 0 .and. knc == 0 ) then
+  if (inc == 0 .and. jnc == 0 .and. knc == 0) then
     return
   end if
 
@@ -34458,72 +34459,72 @@ subroutine voxels_step_3d ( v1, v2, inc, jnc, knc, v3 )
 !
 !  Compute the smallest ALPHA that will change one of V2(1:3) by +-0.5.
 !
-  if ( 0 < inc ) then
-    alphai = ( real ( v2(1) - v1(1), kind = 8 ) + 0.5D+00 ) &
-             / real ( inc, kind = 8 )
-  else if ( inc < 0 ) then
-    alphai = ( real ( v2(1) - v1(1), kind = 8 ) - 0.5D+00 ) &
-             / real ( inc, kind = 8 )
+  if (0 < inc) then
+    alphai = (real(v2(1) - v1(1), kind=8) + 0.5D+00) &
+             / real(inc, kind=8)
+  else if (inc < 0) then
+    alphai = (real(v2(1) - v1(1), kind=8) - 0.5D+00) &
+             / real(inc, kind=8)
   else
-    alphai = huge ( alphai )
+    alphai = huge(alphai)
   end if
 
-  if ( 0 < jnc ) then
-    alphaj = ( real ( v2(2) - v1(2), kind = 8 ) + 0.5D+00 ) &
-             / real ( jnc, kind = 8 )
-  else if ( jnc < 0 ) then
-    alphaj = ( real ( v2(2) - v1(2), kind = 8 ) - 0.5D+00 ) &
-             / real ( jnc, kind = 8 )
+  if (0 < jnc) then
+    alphaj = (real(v2(2) - v1(2), kind=8) + 0.5D+00) &
+             / real(jnc, kind=8)
+  else if (jnc < 0) then
+    alphaj = (real(v2(2) - v1(2), kind=8) - 0.5D+00) &
+             / real(jnc, kind=8)
   else
-    alphaj = huge ( alphaj )
+    alphaj = huge(alphaj)
   end if
 
-  if ( 0 < knc ) then
-    alphak = ( real ( v2(3) - v1(3), kind = 8 ) + 0.5D+00 ) &
-             / real ( knc, kind = 8 )
-  else if ( knc < 0 ) then
-    alphak = ( real ( v2(3) - v1(3), kind = 8 ) - 0.5D+00 ) &
-             / real ( knc, kind = 8 )
+  if (0 < knc) then
+    alphak = (real(v2(3) - v1(3), kind=8) + 0.5D+00) &
+             / real(knc, kind=8)
+  else if (knc < 0) then
+    alphak = (real(v2(3) - v1(3), kind=8) - 0.5D+00) &
+             / real(knc, kind=8)
   else
-    alphaj = huge ( alphaj )
+    alphaj = huge(alphaj)
   end if
 !
 !  The ALPHA of smallest positive magnitude represents the closest next voxel.
 !
-  alpha = huge ( alpha )
+  alpha = huge(alpha)
 
-  if ( 0.0D+00 < alphai ) then
-    alpha = min ( alpha, alphai )
+  if (0.0D+00 < alphai) then
+    alpha = min(alpha, alphai)
   end if
 
-  if ( 0.0D+00 < alphaj ) then
-    alpha = min ( alpha, alphaj )
+  if (0.0D+00 < alphaj) then
+    alpha = min(alpha, alphaj)
   end if
 
-  if ( 0.0D+00 < alphak ) then
-    alpha = min ( alpha, alphak )
+  if (0.0D+00 < alphak) then
+    alpha = min(alpha, alphak)
   end if
 !
 !  Move to the new voxel.  Whichever index just made the half
 !  step must be forced to take a whole step.
 !
-  if ( alpha == alphai ) then
-    v3(1) = v2(1) + sign ( 1, inc )
-    v3(2) = v1(2) + nint ( alpha * real ( jnc, kind = 8 ) )
-    v3(3) = v1(3) + nint ( alpha * real ( knc, kind = 8 ) )
-  else if ( alpha == alphaj ) then
-    v3(1) = v1(1) + nint ( alpha * real ( inc, kind = 8 ) )
-    v3(2) = v2(2) + sign ( 1, jnc )
-    v3(3) = v1(3) + nint ( alpha * real ( knc, kind = 8 ) )
-  else if ( alpha == alphak ) then
-    v3(1) = v1(1) + nint ( alpha * real ( inc, kind = 8 ) )
-    v3(2) = v1(2) + nint ( alpha * real ( jnc, kind = 8 ) )
-    v3(3) = v2(3) + sign ( 1, knc )
+  if (alpha == alphai) then
+    v3(1) = v2(1) + sign(1, inc)
+    v3(2) = v1(2) + nint(alpha * real(jnc, kind=8))
+    v3(3) = v1(3) + nint(alpha * real(knc, kind=8))
+  else if (alpha == alphaj) then
+    v3(1) = v1(1) + nint(alpha * real(inc, kind=8))
+    v3(2) = v2(2) + sign(1, jnc)
+    v3(3) = v1(3) + nint(alpha * real(knc, kind=8))
+  else if (alpha == alphak) then
+    v3(1) = v1(1) + nint(alpha * real(inc, kind=8))
+    v3(2) = v1(2) + nint(alpha * real(jnc, kind=8))
+    v3(3) = v2(3) + sign(1, knc)
   end if
 
   return
 end
-function wedge01_volume ( )
+function wedge01_volume()
 
 !*****************************************************************************80
 !
@@ -34556,13 +34557,13 @@ function wedge01_volume ( )
 !
   implicit none
 
-  real ( kind = 8 ) wedge01_volume
+  real(kind=8) wedge01_volume
 
   wedge01_volume = 1.0D+00
 
   return
 end
-subroutine xy_to_polar ( xy, r, t )
+subroutine xy_to_polar(xy, r, t)
 
 !*****************************************************************************80
 !
@@ -34588,22 +34589,22 @@ subroutine xy_to_polar ( xy, r, t )
 !
   implicit none
 
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ) t
-  real ( kind = 8 ) xy(2)
+  real(kind=8) r
+  real(kind=8) r8_atan
+  real(kind=8) t
+  real(kind=8) xy(2)
 
-  r = sqrt ( xy(1) * xy(1) + xy(2) * xy(2) )
+  r = sqrt(xy(1) * xy(1) + xy(2) * xy(2))
 
-  if ( r == 0.0D+00 ) then
+  if (r == 0.0D+00) then
     t = 0.0D+00
   else
-    t = r8_atan ( xy(2), xy(1) )
+    t = r8_atan(xy(2), xy(1))
   end if
 
   return
 end
-subroutine xyz_to_radec ( p, ra, dec )
+subroutine xyz_to_radec(p, ra, dec)
 
 !*****************************************************************************80
 !
@@ -34643,40 +34644,40 @@ subroutine xyz_to_radec ( p, ra, dec )
 !
   implicit none
 
-  integer ( kind = 4 ), parameter :: dim_num = 3
+  integer(kind=4), parameter :: dim_num = 3
 
-  real ( kind = 8 ) dec
-  real ( kind = 8 ) p(dim_num)
-  real ( kind = 8 ) p_norm
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) r8_asin
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ) ra
-  real ( kind = 8 ) radians_to_degrees
-  real ( kind = 8 ) theta
+  real(kind=8) dec
+  real(kind=8) p(dim_num)
+  real(kind=8) p_norm
+  real(kind=8) phi
+  real(kind=8) r8_asin
+  real(kind=8) r8_atan
+  real(kind=8) ra
+  real(kind=8) radians_to_degrees
+  real(kind=8) theta
 
-  p_norm = sqrt ( sum ( p(1:dim_num)**2 )  )
+  p_norm = sqrt(sum(p(1:dim_num)**2))
 
-  if ( p_norm == 0.0D+00 ) then
+  if (p_norm == 0.0D+00) then
     dec = 0.0D+00
     ra = 0.0D+00
     return
   end if
 
-  phi = r8_asin ( p(3) / p_norm )
+  phi = r8_asin(p(3) / p_norm)
 
-  if ( cos ( phi ) == 0.0D+00 ) then
+  if (cos(phi) == 0.0D+00) then
     theta = 0.0D+00
   else
-    theta = r8_atan ( p(2), p(1) )
+    theta = r8_atan(p(2), p(1))
   end if
 
-  dec = radians_to_degrees ( phi )
-  ra = radians_to_degrees ( theta ) / 15.0D+00
+  dec = radians_to_degrees(phi)
+  ra = radians_to_degrees(theta) / 15.0D+00
 
   return
 end
-subroutine xyz_to_rtp ( xyz, r, theta, phi )
+subroutine xyz_to_rtp(xyz, r, theta, phi)
 
 !*****************************************************************************80
 !
@@ -34713,28 +34714,28 @@ subroutine xyz_to_rtp ( xyz, r, theta, phi )
 !
   implicit none
 
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) xyz(3)
+  real(kind=8) r
+  real(kind=8) r8_acos
+  real(kind=8) r8_atan
+  real(kind=8) phi
+  real(kind=8) theta
+  real(kind=8) xyz(3)
 
-  r = sqrt ( sum ( xyz(1:3)**2 )  )
+  r = sqrt(sum(xyz(1:3)**2))
 
-  if ( r == 0.0D+00 ) then
+  if (r == 0.0D+00) then
     theta = 0.0D+00
     phi = 0.0D+00
     return
   end if
 
-  phi = r8_acos ( xyz(3) / r )
+  phi = r8_acos(xyz(3) / r)
 
-  theta = r8_atan ( xyz(2), xyz(1) )
+  theta = r8_atan(xyz(2), xyz(1))
 
   return
 end
-subroutine xyz_to_tp ( xyz, theta, phi )
+subroutine xyz_to_tp(xyz, theta, phi)
 
 !*****************************************************************************80
 !
@@ -34774,24 +34775,24 @@ subroutine xyz_to_tp ( xyz, theta, phi )
 !
   implicit none
 
-  real ( kind = 8 ) r
-  real ( kind = 8 ) r8_acos
-  real ( kind = 8 ) r8_atan
-  real ( kind = 8 ) phi
-  real ( kind = 8 ) theta
-  real ( kind = 8 ) xyz(3)
+  real(kind=8) r
+  real(kind=8) r8_acos
+  real(kind=8) r8_atan
+  real(kind=8) phi
+  real(kind=8) theta
+  real(kind=8) xyz(3)
 
-  r = sqrt ( sum ( xyz(1:3)**2 )  )
+  r = sqrt(sum(xyz(1:3)**2))
 
-  if ( r == 0.0D+00 ) then
+  if (r == 0.0D+00) then
     theta = 0.0D+00
     phi = 0.0D+00
     return
   end if
 
-  phi = r8_acos ( xyz(3) / r )
+  phi = r8_acos(xyz(3) / r)
 
-  theta = r8_atan ( xyz(2), xyz(1) )
+  theta = r8_atan(xyz(2), xyz(1))
 
   return
 end
