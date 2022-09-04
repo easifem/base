@@ -34,21 +34,21 @@ PRIVATE
 ! summary: Math class
 
 TYPE :: Math_
-  REAL( DFP ) :: PI = 3.14159265359_DFP
-  REAL( DFP ) :: e  = 2.718281828459045_DFP
+  REAL(DFP) :: PI = 3.14159265359_DFP
+  REAL(DFP) :: e = 2.718281828459045_DFP
   COMPLEX(DFPC) :: i = (0.0_DFP, 1.0_DFP)
   COMPLEX(DFPC) :: j = (0.0_DFP, 1.0_DFP)
-  REAL(DFP), DIMENSION(3, 3) :: Eye3 = RESHAPE( [ &
+  REAL(DFP), DIMENSION(3, 3) :: Eye3 = RESHAPE([ &
                                 & 1.0_DFP, 0.0_DFP, 0.0_DFP, &
                                 & 0.0_DFP, 1.0_DFP, 0.0_DFP, &
                                 & 0.0_DFP, 0.0_DFP, 1.0_DFP], &
-                                & [3, 3] )
-  REAL(DFP), DIMENSION(2, 2) :: Eye2 = RESHAPE( [ &
+                                & [3, 3])
+  REAL(DFP), DIMENSION(2, 2) :: Eye2 = RESHAPE([ &
                               & 1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP], &
-                              & [2, 2] )
+                              & [2, 2])
 END TYPE Math_
 
-TYPE( Math_ ), PARAMETER, PUBLIC :: Math = Math_()
+TYPE(Math_), PARAMETER, PUBLIC :: Math = Math_()
 
 !----------------------------------------------------------------------------
 !                                                               BoundingBox_
@@ -207,7 +207,7 @@ PUBLIC :: Vector3DPointer_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
-! summary: 	Index value keymap; useful for defining nodal boundary conditions
+! summary:         Index value keymap; useful for defining nodal boundary conditions
 
 TYPE :: IndexValue_
   INTEGER(I4B) :: Indx
@@ -377,17 +377,17 @@ TYPE :: IterationData_
     !! Starting time
   REAL(DFP) :: timeAtEnd = 0.0
     !! Present time
-  REAL(DFP), ALLOCATABLE :: convergenceData(:,:)
+  REAL(DFP), ALLOCATABLE :: convergenceData(:, :)
     !! history of convergence data
     !! each column corresponding to a iteration
-  TYPE(String), ALLOCATABLE :: header( : )
+  TYPE(String), ALLOCATABLE :: header(:)
     !! header for convergenceData
 END TYPE IterationData_
 
 PUBLIC :: IterationData_
 
 TYPE(IterationData_), PUBLIC, PARAMETER :: TypeIterationData = &
-  & IterationData_( header=NULL() )
+  & IterationData_(header=NULL())
 
 TYPE :: IterationDataPointer_
   CLASS(IterationData_), POINTER :: ptr => NULL()
@@ -643,12 +643,12 @@ TYPE :: ReferenceElement_
     !! Order of element
   INTEGER(I4B) :: nsd = 0
     !! Number of spatial dimensions
-  INTEGER( I4B ) :: interpolationPointType = Equidistance
+  INTEGER(I4B) :: interpolationPointType = Equidistance
     !! Interpolation point
     !! Equidistance, GaussLegendre, GaussLobatto, Chebyshev
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities
-  PROCEDURE(highorder_refelem), POINTER, PASS(obj) :: highOrderElement=>NULL()
+PROCEDURE(highorder_refelem), POINTER, PASS(obj) :: highOrderElement => NULL()
     !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 
@@ -661,7 +661,7 @@ END TYPE ReferenceElementPointer_
 PUBLIC :: ReferenceElementPointer_
 
 INTERFACE
-  PURE SUBROUTINE highorder_refelem(obj,order, highOrderobj, ipType)
+  PURE SUBROUTINE highorder_refelem(obj, order, highOrderobj, ipType)
     IMPORT :: ReferenceElement_, I4B
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: order
@@ -921,7 +921,6 @@ TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeFEVariableConstant = &
 
 TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeVariableConstant = &
   & FEVariableConstant_()
-
 
 !----------------------------------------------------------------------------
 !                                                           FEVariableSpace_
@@ -1502,5 +1501,22 @@ ABSTRACT INTERFACE
 END INTERFACE
 
 PUBLIC :: iface_TimeFunction
+
+!----------------------------------------------------------------------------
+!                                                              MultiIndices_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 Sept 2022
+! summary:         Multi-indices object is defined
+
+TYPE :: MultiIndices_
+  INTEGER(I4B) :: d
+  !! dimension of simplex
+  INTEGER(I4B) :: n
+  !! order
+END TYPE MultiIndices_
+
+PUBLIC :: MultiIndices_
 
 END MODULE BaseType
