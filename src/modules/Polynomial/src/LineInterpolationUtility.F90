@@ -227,7 +227,7 @@ END INTERFACE EquidistancePoint_Line
 ! summary: Returns the interpolation point
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Line(order, ipType, xij) &
+  MODULE PURE FUNCTION InterpolationPoint_Line1(order, ipType, xij) &
     & RESULT(ans)
     !!
     INTEGER(I4B), INTENT(IN) :: order
@@ -235,10 +235,49 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !!
-  END FUNCTION InterpolationPoint_Line
+  END FUNCTION InterpolationPoint_Line1
 END INTERFACE
 
+INTERFACE InterpolationPoint_Line
+  MODULE PROCEDURE InterpolationPoint_Line1
+END INTERFACE InterpolationPoint_Line
+
 PUBLIC :: InterpolationPoint_Line
+
+!----------------------------------------------------------------------------
+!                                                   InterpolationPoint_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Aug 2022
+! summary: Returns the interpolation point
+
+INTERFACE
+  MODULE PURE FUNCTION InterpolationPoint_Line2(order, ipType, xij) &
+    & RESULT(ans)
+    !!
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation nodes type:
+    !! Equidistance
+    !! LobattoGaussLegendre
+    !! LobattoGaussChebyshev
+    !! LobattoGaussJacobi
+    !! LobattoGaussGegenbauer
+    !! GaussLegendre
+    !! GaussChebyshev
+    !! GaussJacobi
+    !! GaussGegenbauer
+    REAL(DFP), INTENT(IN) :: xij(2)
+    !! end points
+    REAL(DFP), ALLOCATABLE :: ans(:)
+    !!
+  END FUNCTION InterpolationPoint_Line2
+END INTERFACE
+
+INTERFACE InterpolationPoint_Line
+  MODULE PROCEDURE InterpolationPoint_Line2
+END INTERFACE InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
 !
