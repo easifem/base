@@ -39,15 +39,15 @@ PRIVATE
 ! These recurrence coefficients are for monic jacobi polynomials.
 
 INTERFACE
-MODULE PURE SUBROUTINE GetJacobiRecurrenceCoeff( n, alpha, beta, alphaCoeff, &
-  & betaCoeff )
-  INTEGER( I4B ), INTENT( IN ) :: n
+ MODULE PURE SUBROUTINE GetJacobiRecurrenceCoeff(n, alpha, beta, alphaCoeff, &
+                                                                 & betaCoeff)
+    INTEGER(I4B), INTENT(IN) :: n
   !! order of jacobi polynomial, it should be greater than 1
-  REAL( DFP ), INTENT( IN ) :: alpha
-  REAL( DFP ), INTENT( IN ) :: beta
-  REAL( DFP ), INTENT( OUT ) :: alphaCoeff(0:n-1)
-  REAL( DFP ), INTENT( OUT ) :: betaCoeff(0:n-1)
-END SUBROUTINE GetJacobiRecurrenceCoeff
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(OUT) :: alphaCoeff(0:n - 1)
+    REAL(DFP), INTENT(OUT) :: betaCoeff(0:n - 1)
+  END SUBROUTINE GetJacobiRecurrenceCoeff
 END INTERFACE
 
 PUBLIC :: GetJacobiRecurrenceCoeff
@@ -61,16 +61,16 @@ PUBLIC :: GetJacobiRecurrenceCoeff
 ! summary: Leading coefficient of Jacobi polynomial
 
 INTERFACE
-MODULE PURE FUNCTION JacobiLeadingCoeff( n, alpha, beta ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: n
+  MODULE PURE FUNCTION JacobiLeadingCoeff(n, alpha, beta) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
     !! order of Jacobi polynomial
-  REAL( DFP ), INTENT( IN ) :: alpha
+    REAL(DFP), INTENT(IN) :: alpha
     !! alpha in Jacobi poly
-  REAL( DFP ), INTENT( IN ) :: beta
+    REAL(DFP), INTENT(IN) :: beta
     !! beta in Jacobi poly
-  REAL( DFP ) :: ans
+    REAL(DFP) :: ans
     !! answer
-END FUNCTION JacobiLeadingCoeff
+  END FUNCTION JacobiLeadingCoeff
 END INTERFACE
 
 PUBLIC :: JacobiLeadingCoeff
@@ -93,12 +93,12 @@ PUBLIC :: JacobiLeadingCoeff
 !$$
 
 INTERFACE
-MODULE PURE FUNCTION JacobiNormSQR( n, alpha, beta ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( IN ) :: alpha
-  REAL( DFP ), INTENT( IN ) :: beta
-  REAL( DFP ) :: ans
-END FUNCTION JacobiNormSQR
+  MODULE PURE FUNCTION JacobiNormSQR(n, alpha, beta) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP) :: ans
+  END FUNCTION JacobiNormSQR
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -106,21 +106,21 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE JacobiJacobiMatrix( n, alpha, beta, D, E, &
-    & alphaCoeff, betaCoeff )
-  INTEGER( I4B ), INTENT( IN ) :: n
+  MODULE PURE SUBROUTINE JacobiJacobiMatrix(n, alpha, beta, D, E, &
+      & alphaCoeff, betaCoeff)
+    INTEGER(I4B), INTENT(IN) :: n
     !! n should be greater than or equal to 1
-  REAL( DFP ), INTENT( IN ) :: alpha
+    REAL(DFP), INTENT(IN) :: alpha
     !! alpha of jacobu poly
-  REAL( DFP ), INTENT( IN ) :: beta
+    REAL(DFP), INTENT(IN) :: beta
     !! beta of jacobi poly
-  REAL( DFP ), INTENT( OUT ) :: D( : )
+    REAL(DFP), INTENT(OUT) :: D(:)
     !! the size should be 1:n
-  REAL( DFP ), INTENT( OUT ) :: E( : )
+    REAL(DFP), INTENT(OUT) :: E(:)
     !! the size should be 1:n-1
-  REAL( DFP ), OPTIONAL, INTENT( OUT ) :: alphaCoeff( 0: )
-  REAL( DFP ), OPTIONAL, INTENT( OUT ) :: betaCoeff( 0: )
-END SUBROUTINE JacobiJacobiMatrix
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: alphaCoeff(0:)
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
+  END SUBROUTINE JacobiJacobiMatrix
 END INTERFACE
 
 PUBLIC :: JacobiJacobiMatrix
@@ -131,7 +131,7 @@ PUBLIC :: JacobiJacobiMatrix
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 Aug 2022
-! summary: 	Returns the Gauss quadrature points for Jacobi Polynomial
+! summary:         Returns the Gauss quadrature points for Jacobi Polynomial
 !
 !# Introduction
 !
@@ -142,15 +142,16 @@ PUBLIC :: JacobiJacobiMatrix
 ! All Gauss-Quadrature points are inside $(-1, 1)$
 
 INTERFACE
-MODULE SUBROUTINE JacobiGaussQuadrature( n, alpha, beta, pt, wt )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( IN ) :: alpha
-  REAL( DFP ), INTENT( IN ) :: beta
-  REAL( DFP ), INTENT( OUT ) :: pt(:)
+  MODULE SUBROUTINE JacobiGaussQuadrature(n, alpha, beta, pt, wt)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! It represents the order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(OUT) :: pt(:)
     !! the size is 1 to n
-  REAL( DFP ), INTENT( OUT ) :: wt(:)
+    REAL(DFP), INTENT(OUT) :: wt(:)
     !! the size is 1 to n
-END SUBROUTINE JacobiGaussQuadrature
+  END SUBROUTINE JacobiGaussQuadrature
 END INTERFACE
 
 PUBLIC :: JacobiGaussQuadrature
@@ -160,23 +161,23 @@ PUBLIC :: JacobiGaussQuadrature
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE JacobiJacobiRadauMatrix( a, n, alpha, beta, D, &
-  & E, alphaCoeff, betaCoeff )
-  REAL( DFP ), INTENT( IN ) :: a
+  MODULE PURE SUBROUTINE JacobiJacobiRadauMatrix(a, n, alpha, beta, D, &
+    & E, alphaCoeff, betaCoeff)
+    REAL(DFP), INTENT(IN) :: a
     !! one of the end of the domain
-  INTEGER( I4B ), INTENT( IN ) :: n
+    INTEGER(I4B), INTENT(IN) :: n
     !! n should be greater than or equal to 1
-  REAL( DFP ), INTENT( IN ) :: alpha
+    REAL(DFP), INTENT(IN) :: alpha
     !! alpha of jacobu poly
-  REAL( DFP ), INTENT( IN ) :: beta
+    REAL(DFP), INTENT(IN) :: beta
     !! beta of jacobi poly
-  REAL( DFP ), INTENT( OUT ) :: D( : )
+    REAL(DFP), INTENT(OUT) :: D(:)
     !! the size should be 1:n+1
-  REAL( DFP ), INTENT( OUT ) :: E( : )
+    REAL(DFP), INTENT(OUT) :: E(:)
     !! the size should be 1:n
-  REAL( DFP ), OPTIONAL, INTENT( OUT ) :: alphaCoeff( 0: )
-  REAL( DFP ), OPTIONAL, INTENT( OUT ) :: betaCoeff( 0: )
-END SUBROUTINE JacobiJacobiRadauMatrix
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: alphaCoeff(0:)
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
+  END SUBROUTINE JacobiJacobiRadauMatrix
 END INTERFACE
 
 PUBLIC :: JacobiJacobiRadauMatrix
@@ -187,7 +188,7 @@ PUBLIC :: JacobiJacobiRadauMatrix
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 Aug 2022
-! summary: 	Returns the Gauss-Radau quadrature points for Jacobi Polynomial
+! summary: Returns the Gauss-Radau quadrature points for Jacobi Polynomial
 !
 !# Introduction
 !
@@ -207,21 +208,21 @@ PUBLIC :: JacobiJacobiRadauMatrix
 ! If $a=-1$ then 1st quadrature point will be -1
 
 INTERFACE
-MODULE SUBROUTINE JacobiGaussRadauQuadrature( a, n, alpha, beta, pt, wt )
-  REAL( DFP ), INTENT( IN ) :: a
-  !! the value of one of the end points
-  !! it should be either -1 or +1
-  INTEGER( I4B ), INTENT( IN ) :: n
-  !! order of jacobi polynomial
-  REAL( DFP ), INTENT( IN ) :: alpha
-  !! alpha of Jacobi polynomial
-  REAL( DFP ), INTENT( IN ) :: beta
-  !! beta of Jacobi polynomial
-  REAL( DFP ), INTENT( OUT ) :: pt(:)
+  MODULE SUBROUTINE JacobiGaussRadauQuadrature(a, n, alpha, beta, pt, wt)
+    REAL(DFP), INTENT(IN) :: a
+    !! the value of one of the end points
+    !! it should be either -1 or +1
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta of Jacobi polynomial
+    REAL(DFP), INTENT(OUT) :: pt(:)
     !! n+1 quadrature points from 1 to n+1
-  REAL( DFP ), INTENT( OUT ) :: wt(:)
+    REAL(DFP), INTENT(OUT) :: wt(:)
     !! n+1 weights from 1 to n+1
-END SUBROUTINE JacobiGaussRadauQuadrature
+  END SUBROUTINE JacobiGaussRadauQuadrature
 END INTERFACE
 
 PUBLIC :: JacobiGaussRadauQuadrature
@@ -231,21 +232,21 @@ PUBLIC :: JacobiGaussRadauQuadrature
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE JacobiJacobiLobattoMatrix( n, alpha, beta, D, &
-  & E, alphaCoeff, betaCoeff )
-  INTEGER( I4B ), INTENT( IN ) :: n
+  MODULE PURE SUBROUTINE JacobiJacobiLobattoMatrix(n, alpha, beta, D, &
+    & E, alphaCoeff, betaCoeff)
+    INTEGER(I4B), INTENT(IN) :: n
     !! n should be greater than or equal to 1
-  REAL( DFP ), INTENT( IN ) :: alpha
+    REAL(DFP), INTENT(IN) :: alpha
     !! alpha of jacobu poly
-  REAL( DFP ), INTENT( IN ) :: beta
+    REAL(DFP), INTENT(IN) :: beta
     !! beta of jacobi poly
-  REAL( DFP ), INTENT( OUT ) :: D( : )
+    REAL(DFP), INTENT(OUT) :: D(:)
     !! the size should be 1:n+2
-  REAL( DFP ), INTENT( OUT ) :: E( : )
+    REAL(DFP), INTENT(OUT) :: E(:)
     !! the size should be 1:n+1
-  REAL( DFP ), OPTIONAL, INTENT( OUT ) :: alphaCoeff( 0: )
-  REAL( DFP ), OPTIONAL, INTENT( OUT ) :: betaCoeff( 0: )
-END SUBROUTINE JacobiJacobiLobattoMatrix
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: alphaCoeff(0:)
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
+  END SUBROUTINE JacobiJacobiLobattoMatrix
 END INTERFACE
 
 PUBLIC :: JacobiJacobiLobattoMatrix
@@ -256,7 +257,7 @@ PUBLIC :: JacobiJacobiLobattoMatrix
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 Aug 2022
-! summary: 	Returns the Gauss-Lobatto quadrature points for Jacobi Polynomial
+! summary: Returns the Gauss-Lobatto quadrature points for Jacobi Polynomial
 !
 !# Introduction
 !
@@ -277,15 +278,16 @@ PUBLIC :: JacobiJacobiLobattoMatrix
 ! Here n is the order of Jacobi polynomial.
 
 INTERFACE
-MODULE SUBROUTINE JacobiGaussLobattoQuadrature( n, alpha, beta, pt, wt )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( IN ) :: alpha
-  REAL( DFP ), INTENT( IN ) :: beta
-  REAL( DFP ), INTENT( OUT ) :: pt(:)
+  MODULE SUBROUTINE JacobiGaussLobattoQuadrature(n, alpha, beta, pt, wt)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomials
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(OUT) :: pt(:)
     !! n+2 quad points indexed from 1 to n+2
-  REAL( DFP ), INTENT( OUT ) :: wt(:)
+    REAL(DFP), INTENT(OUT) :: wt(:)
     !! n+2 weights, index from 1 to n+2
-END SUBROUTINE JacobiGaussLobattoQuadrature
+  END SUBROUTINE JacobiGaussLobattoQuadrature
 END INTERFACE
 
 PUBLIC :: JacobiGaussLobattoQuadrature
@@ -294,15 +296,210 @@ PUBLIC :: JacobiGaussLobattoQuadrature
 !                                                              JacobiZeros
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary:         Returns zeros of Jacobi polynomials
+
 INTERFACE
-MODULE FUNCTION JacobiZeros( n, alpha, beta ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( IN ) :: alpha
-  REAL( DFP ), INTENT( IN ) :: beta
-  REAL( DFP ) :: ans( n )
-END FUNCTION JacobiZeros
+  MODULE FUNCTION JacobiZeros(n, alpha, beta) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP) :: ans(n)
+  END FUNCTION JacobiZeros
 END INTERFACE
 
 PUBLIC :: JacobiZeros
+
+!----------------------------------------------------------------------------
+!                                                          JacobiQuadrature
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: This routine can return Jacobi-Gauss, Jacobi-Radau, Jacobi-Lobatto
+!
+!# Introduction
+!
+! This routine returns the Quadrature point of Jacobi polynomial
+!
+!@note
+! Here n is the number of quadrature points. Please note it is not
+! the order of jacobi polynomial. The order is decided internally
+! depending upon the quadType
+!@endnote
+!
+!@note
+! pt and wt should be allocated outside, and length should be n.
+!@endnote
+!
+
+INTERFACE
+  MODULE SUBROUTINE JacobiQuadrature(n, alpha, beta, pt, wt, quadType)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! number of quadrature points, the order will be computed as follows
+    !! for quadType = Gauss, n is same as order of Jacobi polynomial
+    !! for quadType = GaussRadauLeft or GaussRadauRight n is order+1
+    !! for quadType = GaussLobatto, n = order+2
+    REAL(DFP), INTENT(IN) :: alpha
+    !! alpha of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: beta
+    !! beta of Jacobi polynomial
+    REAL(DFP), INTENT(OUT) :: pt(n)
+    !! n+1 quadrature points from 1 to n+1
+    REAL(DFP), INTENT(OUT) :: wt(n)
+    !! n+1 weights from 1 to n+1
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Gauss
+    !! GaussRadauLeft
+    !! GaussRadauRight
+    !! GaussLobatto
+  END SUBROUTINE JacobiQuadrature
+END INTERFACE
+
+PUBLIC :: JacobiQuadrature
+
+!----------------------------------------------------------------------------
+!                                                             JacobiEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate Jacobi polynomials from order = 0 to n at several points
+!
+!# Introduction
+!
+! Evaluate Jacobi polynomials from order = 0 to n at several points
+!
+!- N, the highest order polynomial to compute. Note that polynomials 0
+! through N will be computed.
+!- alpha, beta are parameters
+!- x: the point at which the polynomials are to be evaluated.
+!- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
+! X.
+
+INTERFACE
+  MODULE PURE FUNCTION JacobiEvalAll1(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans(n + 1)
+    !! Evaluate Jacobi polynomial of order = 0 to n (total n+1)
+    !! at point x
+  END FUNCTION JacobiEvalAll1
+END INTERFACE
+
+INTERFACE JacobiEvalAll
+  MODULE PROCEDURE JacobiEvalAll1
+END INTERFACE JacobiEvalAll
+
+PUBLIC :: JacobiEvalAll
+
+!----------------------------------------------------------------------------
+!                                                             JacobiEvalUpto
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate Jacobi polynomials from order = 0 to n at several points
+!
+!# Introduction
+!
+! Evaluate Jacobi polynomials from order = 0 to n at several points
+!
+!- N, the highest order polynomial to compute. Note that polynomials 0
+! through N will be computed.
+!- alpha, beta are parameters
+!- x: the point at which the polynomials are to be evaluated.
+!- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
+! X.
+
+INTERFACE
+  MODULE PURE FUNCTION JacobiEvalAll2(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(SIZE(x), n + 1)
+    !! Evaluate Jacobi polynomial of order = 0 to n (total n+1)
+    !! at point x
+  END FUNCTION JacobiEvalAll2
+END INTERFACE
+
+INTERFACE JacobiEvalAll
+  MODULE PROCEDURE JacobiEvalAll2
+END INTERFACE JacobiEvalAll
+
+!----------------------------------------------------------------------------
+!                                                             JacobiEval
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate Jacobi polynomials from order = 0 to n at several points
+!
+!# Introduction
+!
+! Evaluate Jacobi polynomials from order = 0 to n at several points
+!
+!- N, the highest order polynomial to compute. Note that polynomials 0
+! through N will be computed.
+!- alpha, beta are parameters
+!- x: the point at which the polynomials are to be evaluated.
+!- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
+! X.
+
+INTERFACE
+  MODULE PURE FUNCTION JacobiEval1(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+    !! Evaluate Jacobi polynomial of order n at point x
+  END FUNCTION JacobiEval1
+END INTERFACE
+
+INTERFACE JacobiEval
+  MODULE PROCEDURE JacobiEval1
+END INTERFACE JacobiEval
+
+PUBLIC :: JacobiEval
+
+!----------------------------------------------------------------------------
+!                                                             JacobiEvalUpto
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate Jacobi polynomials from order = 0 to n at several points
+!
+!# Introduction
+!
+! Evaluate Jacobi polynomials from order = 0 to n at several points
+!
+!- N, the highest order polynomial to compute. Note that polynomials 0
+! through N will be computed.
+!- alpha, beta are parameters
+!- x: the point at which the polynomials are to be evaluated.
+!- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
+! X.
+
+INTERFACE
+  MODULE PURE FUNCTION JacobiEval2(n, alpha, beta, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(SIZE(x))
+    !! Evaluate Jacobi polynomial of order n at point x
+  END FUNCTION JacobiEval2
+END INTERFACE
+
+INTERFACE JacobiEval
+  MODULE PROCEDURE JacobiEval2
+END INTERFACE JacobiEval
 
 END MODULE JacobiPolynomialUtility
