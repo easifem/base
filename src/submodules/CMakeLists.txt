@@ -27,6 +27,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
 #Polynomial
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
 
+#MultiIndices
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MultiIndices/CMakeLists.txt)
+
 #OpenMP
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/OpenMP/CMakeLists.txt)
 
