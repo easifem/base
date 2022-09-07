@@ -122,8 +122,14 @@ END PROCEDURE EquidistanceInPoint_Line2
 
 MODULE PROCEDURE EquidistancePoint_Line1
 CALL Reallocate(ans, order + 1)
+IF (order .EQ. 0_I4B) THEN
+  ans(1) = 0.5_DFP * (xij(1) + xij(2))
+  RETURN
+END IF
+!!
 ans(1) = xij(1)
 ans(2) = xij(2)
+!!
 IF (order .GE. 2) THEN
   ans(3:) = EquidistanceInPoint_Line(order=order, xij=xij)
 END IF
@@ -137,15 +143,32 @@ MODULE PROCEDURE EquidistancePoint_Line2
 INTEGER(I4B) :: nsd
   !!
 IF (PRESENT(xij)) THEN
+  !!
   nsd = SIZE(xij, 1)
+  !!
   CALL Reallocate(ans, nsd, order + 1)
+  !!
+  IF (order .EQ. 0_I4B) THEN
+    ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
+    RETURN
+  END IF
+  !!
   ans(1:nsd, 1) = xij(1:nsd, 1)
   ans(1:nsd, 2) = xij(1:nsd, 2)
+  !!
 ELSE
   nsd = 3_I4B
+  !!
   CALL Reallocate(ans, nsd, order + 1)
+  !!
+  IF (order .EQ. 0_I4B) THEN
+    ans(1:nsd, 1) = 0.0_DFP
+    RETURN
+  END IF
+  !!
   ans(1:nsd, 1) = [-1.0, 0.0, 0.0]
   ans(1:nsd, 2) = [1.0, 0.0, 0.0]
+  !!
 END IF
   !!
 IF (order .GE. 2) THEN
@@ -155,10 +178,10 @@ END IF
 END PROCEDURE EquidistancePoint_Line2
 
 !----------------------------------------------------------------------------
-!                                                    InterpolationPoint_Line
+!                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE InterpolationPoint_Line
+MODULE PROCEDURE InterpolationPoint_Line1
 SELECT CASE (ipType)
 CASE (Equidistance)
   ans = EquidistancePoint_Line(xij=xij, order=order)
@@ -166,7 +189,21 @@ CASE (GaussLegendre)
 CASE (GaussLobatto)
 CASE (Chebyshev)
 END SELECT
-END PROCEDURE InterpolationPoint_Line
+END PROCEDURE InterpolationPoint_Line1
+
+!----------------------------------------------------------------------------
+!                                                   InterpolationPoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Line2
+SELECT CASE (ipType)
+CASE (Equidistance)
+  ans = EquidistancePoint_Line(xij=xij, order=order)
+CASE (GaussLegendre)
+CASE (GaussLobatto)
+CASE (Chebyshev)
+END SELECT
+END PROCEDURE InterpolationPoint_Line2
 
 !----------------------------------------------------------------------------
 !
