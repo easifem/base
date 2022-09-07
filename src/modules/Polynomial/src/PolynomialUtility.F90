@@ -28,4 +28,5 @@ USE TetrahedronInterpolationUtility
 USE HexahedronInterpolationUtility
 USE PrismInterpolationUtility
 USE PyramidInterpolationUtility
+USE RecursiveNodesUtility
 END MODULE PolynomialUtility
