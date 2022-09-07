@@ -75,6 +75,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
 #BaseType
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseType/CMakeLists.txt)
 
+#MultiIndices
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MultiIndices/CMakeLists.txt)
+
 #OpenMP
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/OpenMP/CMakeLists.txt)
 
