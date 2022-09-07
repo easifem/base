@@ -74,6 +74,7 @@ USE ErrorHandling
 USE Utility
 USE PolynomialUtility
 USE BaseType
+USE MultiIndices_Method
 USE Random_Method
 USE BoundingBox_Method
 USE IntVector_Method
