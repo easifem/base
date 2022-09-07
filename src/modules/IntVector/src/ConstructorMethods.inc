@@ -418,7 +418,6 @@ INTERFACE
   END FUNCTION intVec_Constructor_3
 END INTERFACE
 
-
 INTERFACE IntVector_Pointer
   MODULE PROCEDURE intVec_Constructor_3
 END INTERFACE IntVector_Pointer
