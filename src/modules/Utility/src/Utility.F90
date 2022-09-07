@@ -37,6 +37,7 @@ USE StringUtility
 USE SwapUtility
 USE ConvertUtility
 USE IntegerUtility
+USE PushPopUtility
 USE PolynomialUtility
 
 !----------------------------------------------------------------------------
