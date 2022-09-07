@@ -250,11 +250,11 @@ INTEGER(DIP), PARAMETER :: BYInt = BIT_SIZE(MaxInt) / 8_DIP !default in bytes
 INTEGER(DIP), PARAMETER :: BYI4B = BIT_SIZE(MaxInt) / 8_DIP ! default in bytes
 REAL(DFP), PARAMETER :: Pi = 3.14159265359_DFP
 REAL(DFP), PARAMETER, DIMENSION(3, 3) :: Eye3 = RESHAPE( &
-                              (/1.0_DFP, 0.0_DFP, 0.0_DFP, &
-                                0.0_DFP, 1.0_DFP, 0.0_DFP, &
-                                0.0_DFP, 0.0_DFP, 1.0_DFP/), (/3, 3/))
+                                         (/1.0_DFP, 0.0_DFP, 0.0_DFP, &
+                                           0.0_DFP, 1.0_DFP, 0.0_DFP, &
+                                        0.0_DFP, 0.0_DFP, 1.0_DFP/), (/3, 3/))
 REAL(DFP), PARAMETER, DIMENSION(2, 2) :: Eye2 = RESHAPE( &
-                            (/1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP/), (/2, 2/))
+                             (/1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP/), (/2, 2/))
 ! Parameters for iteration data
 INTEGER(I4B), PARAMETER :: RelativeConvergence = 1
 INTEGER(I4B), PARAMETER :: AbsoluteConvergence = 2
@@ -273,6 +273,10 @@ INTEGER(I4B), PARAMETER :: Equidistance = 1
 INTEGER(I4B), PARAMETER :: GaussLegendre = 2
 INTEGER(I4B), PARAMETER :: GaussLobatto = 3
 INTEGER(I4B), PARAMETER :: Chebyshev = 4
+INTEGER(I4B), PARAMETER :: Gauss = 5
+INTEGER(I4B), PARAMETER :: GaussRadau = 6
+INTEGER(I4B), PARAMETER :: GaussRadauLeft = 7
+INTEGER(I4B), PARAMETER :: GaussRadauRight = 8
 ! Type of Lagrange Interpolation Poitns
 INTEGER(I4B), PARAMETER :: EquidistanceLIP = Equidistance
 INTEGER(I4B), PARAMETER :: GaussLobattoLIP = GaussLobatto
@@ -282,6 +286,10 @@ INTEGER(I4B), PARAMETER :: ChebyshevLIP = Chebyshev
 INTEGER(I4B), PARAMETER :: GaussLegendreQP = GaussLegendre
 INTEGER(I4B), PARAMETER :: GaussLobattoQP = GaussLobatto
 INTEGER(I4B), PARAMETER :: ChebyshevQP = Chebyshev
+INTEGER(I4B), PARAMETER :: GaussQP = Gauss
+INTEGER(I4B), PARAMETER :: GaussRadauQP = GaussRadau
+INTEGER(I4B), PARAMETER :: GaussRadauLeftQP = GaussRadauLeft
+INTEGER(I4B), PARAMETER :: GaussRadauRightQP = GaussRadauRight
 ! Types of Elements
 INTEGER(I4B), PARAMETER :: Line = 1
 INTEGER(I4B), PARAMETER :: Line2 = 1
@@ -493,7 +501,7 @@ INTEGER(I4B), PARAMETER, PUBLIC :: Matrix = 3
 INTEGER(I4B), PARAMETER, PUBLIC :: Nodal = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: Quadrature = 2
 
-INTEGER( I4B ), PARAMETER, PUBLIC :: MAX_CHUNK_SIZE=1024
+INTEGER(I4B), PARAMETER, PUBLIC :: MAX_CHUNK_SIZE = 1024
 
 !----------------------------------------------------------------------------
 !
