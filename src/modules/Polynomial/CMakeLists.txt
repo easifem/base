@@ -30,5 +30,6 @@ TARGET_SOURCES(
   ${src_path}/HexahedronInterpolationUtility.F90
   ${src_path}/PrismInterpolationUtility.F90
   ${src_path}/PyramidInterpolationUtility.F90
+  ${src_path}/RecursiveNodesUtility.F90
   ${src_path}/PolynomialUtility.F90
 )
