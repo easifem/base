@@ -15,21 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE PolynomialUtility
-USE InterpolationUtility
-USE LagrangeUtility
-USE OrthogonalPolynomialUtility
-USE JacobiPolynomialUtility
-USE LegendrePolynomialUtility
-USE LobattoPolynomialUtility
-USE UnscaledLobattoPolynomialUtility
-USE Chebyshev1PolynomialUtility
-USE LineInterpolationUtility
-USE TriangleInterpolationUtility
-USE QuadrangleInterpolationUtility
-USE TetrahedronInterpolationUtility
-USE HexahedronInterpolationUtility
-USE PrismInterpolationUtility
-USE PyramidInterpolationUtility
-USE RecursiveNodesUtility
-END MODULE PolynomialUtility
+SUBMODULE(GE_Lapack_Method) CompRoutineMethods
+USE BaseMethod
+IMPLICIT NONE
+CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                      ConditionNo
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_ConditionNo_1
+REAL(DFP), DIMENSION(SIZE(A, 1), SIZE(A, 2)) :: tempA
+tempA = A
+CALL getLU(A=tempA, RCOND=ans, NORM=NORM)
+ans = 1.0_DFP / ans
+END PROCEDURE ge_ConditionNo_1
+
+END SUBMODULE CompRoutineMethods

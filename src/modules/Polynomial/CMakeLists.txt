@@ -22,6 +22,9 @@ TARGET_SOURCES(
   ${src_path}/LagrangeUtility.F90
   ${src_path}/OrthogonalPolynomialUtility.F90
   ${src_path}/JacobiPolynomialUtility.F90
+  ${src_path}/LegendrePolynomialUtility.F90
+  ${src_path}/LobattoPolynomialUtility.F90
+  ${src_path}/UnscaledLobattoPolynomialUtility.F90
   ${src_path}/Chebyshev1PolynomialUtility.F90
   ${src_path}/LineInterpolationUtility.F90
   ${src_path}/TriangleInterpolationUtility.F90

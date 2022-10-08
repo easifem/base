@@ -39,10 +39,10 @@ PRIVATE
 ! These recurrence coefficients are for monic jacobi polynomials.
 
 INTERFACE
- MODULE PURE SUBROUTINE GetJacobiRecurrenceCoeff(n, alpha, beta, alphaCoeff, &
-                                                                 & betaCoeff)
+  MODULE PURE SUBROUTINE GetJacobiRecurrenceCoeff(n, alpha, beta, &
+    & alphaCoeff, betaCoeff)
     INTEGER(I4B), INTENT(IN) :: n
-  !! order of jacobi polynomial, it should be greater than 1
+    !! order of jacobi polynomial, it should be greater than 1
     REAL(DFP), INTENT(IN) :: alpha
     REAL(DFP), INTENT(IN) :: beta
     REAL(DFP), INTENT(OUT) :: alphaCoeff(0:n - 1)

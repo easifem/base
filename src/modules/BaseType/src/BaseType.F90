@@ -232,8 +232,6 @@ PUBLIC :: IndexValuePointer_
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 Feb 2021
 ! summary: Degree of freedom object type
-!
-!{!pages/DOF.md!}
 
 TYPE :: DOF_
   INTEGER(I4B), ALLOCATABLE :: map(:, :)

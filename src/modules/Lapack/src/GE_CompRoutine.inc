@@ -15,21 +15,23 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE PolynomialUtility
-USE InterpolationUtility
-USE LagrangeUtility
-USE OrthogonalPolynomialUtility
-USE JacobiPolynomialUtility
-USE LegendrePolynomialUtility
-USE LobattoPolynomialUtility
-USE UnscaledLobattoPolynomialUtility
-USE Chebyshev1PolynomialUtility
-USE LineInterpolationUtility
-USE TriangleInterpolationUtility
-USE QuadrangleInterpolationUtility
-USE TetrahedronInterpolationUtility
-USE HexahedronInterpolationUtility
-USE PrismInterpolationUtility
-USE PyramidInterpolationUtility
-USE RecursiveNodesUtility
-END MODULE PolynomialUtility
+!----------------------------------------------------------------------------
+!                                                                ConditionNo
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION ge_ConditionNo_1(A, NORM) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: A(:, :)
+    !! General matrix
+    CHARACTER(LEN=1), INTENT(IN) :: NORM
+    !! "1", "0"
+    REAL(DFP) :: ans
+    !!
+  END FUNCTION ge_ConditionNo_1
+END INTERFACE
+
+INTERFACE ConditionNo
+  MODULE PROCEDURE ge_ConditionNo_1
+END INTERFACE ConditionNo
+
+PUBLIC :: ConditionNo

@@ -40,5 +40,6 @@ PRIVATE
 #include "./GE_LinsolveMethods.inc"
 !#include "./GE_EigenvalueMethods.inc"
 #include "./GE_LUMethods.inc"
+#include "./GE_CompRoutine.inc"
 
 END MODULE GE_Lapack_Method

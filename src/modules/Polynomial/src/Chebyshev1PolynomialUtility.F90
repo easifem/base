@@ -34,12 +34,12 @@ IMPLICIT NONE
 ! These recurrence coefficients are for monic jacobi polynomials.
 
 INTERFACE
-MODULE PURE SUBROUTINE GetChebyshev1RecurrenceCoeff( n, alphaCoeff, &
-  & betaCoeff )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( OUT ) :: alphaCoeff(0:n-1)
-  REAL( DFP ), INTENT( OUT ) :: betaCoeff(0:n-1)
-END SUBROUTINE GetChebyshev1RecurrenceCoeff
+  MODULE PURE SUBROUTINE GetChebyshev1RecurrenceCoeff(n, alphaCoeff, &
+    & betaCoeff)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(OUT) :: alphaCoeff(0:n - 1)
+    REAL(DFP), INTENT(OUT) :: betaCoeff(0:n - 1)
+  END SUBROUTINE GetChebyshev1RecurrenceCoeff
 END INTERFACE
 
 PUBLIC :: GetChebyshev1RecurrenceCoeff
@@ -53,12 +53,12 @@ PUBLIC :: GetChebyshev1RecurrenceCoeff
 ! summary: Leading coefficient of Chebyshev1 polynomial
 
 INTERFACE
-MODULE PURE FUNCTION Chebyshev1LeadingCoeff( n ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: n
+  MODULE PURE FUNCTION Chebyshev1LeadingCoeff(n) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
     !! order of Chebyshev1 polynomial
-  REAL( DFP ) :: ans
+    REAL(DFP) :: ans
     !! answer
-END FUNCTION Chebyshev1LeadingCoeff
+  END FUNCTION Chebyshev1LeadingCoeff
 END INTERFACE
 
 PUBLIC :: Chebyshev1LeadingCoeff
@@ -72,12 +72,12 @@ PUBLIC :: Chebyshev1LeadingCoeff
 ! summary: Square norm of Chebyshev1 polynomial
 
 INTERFACE
-MODULE PURE FUNCTION Chebyshev1NormSQR( n, alpha, beta ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( IN ) :: alpha
-  REAL( DFP ), INTENT( IN ) :: beta
-  REAL( DFP ) :: ans
-END FUNCTION Chebyshev1NormSQR
+  MODULE PURE FUNCTION Chebyshev1NormSQR(n, alpha, beta) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), INTENT(IN) :: beta
+    REAL(DFP) :: ans
+  END FUNCTION Chebyshev1NormSQR
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -86,16 +86,16 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 Aug 2022
-! summary: 	Returns the Gauss quadrature points for Chebyshev1 Polynomial
+! summary: Returns the Gauss quadrature points for Chebyshev1 Polynomial
 
 INTERFACE
-MODULE SUBROUTINE Chebyshev1GaussQuadrature( n, pt, wt )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( OUT ) :: pt(:)
+  MODULE SUBROUTINE Chebyshev1GaussQuadrature(n, pt, wt)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(OUT) :: pt(:)
     !! the size is 1 to n
-  REAL( DFP ), INTENT( OUT ) :: wt(:)
+    REAL(DFP), INTENT(OUT) :: wt(:)
     !! the size is 1 to n
-END SUBROUTINE Chebyshev1GaussQuadrature
+  END SUBROUTINE Chebyshev1GaussQuadrature
 END INTERFACE
 
 PUBLIC :: Chebyshev1GaussQuadrature
@@ -106,18 +106,18 @@ PUBLIC :: Chebyshev1GaussQuadrature
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 Aug 2022
-! summary: 	Returns the GaussRadau quadrature points for Chebyshev1 Polynomial
+! summary: Returns the GaussRadau quadrature points for Chebyshev1 Polynomial
 
 INTERFACE
-MODULE SUBROUTINE Chebyshev1GaussRadauQuadrature( n, a, pt, wt )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( IN ) :: a
+  MODULE SUBROUTINE Chebyshev1GaussRadauQuadrature(n, a, pt, wt)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(IN) :: a
     !! +1.0 or -1.0
-  REAL( DFP ), INTENT( OUT ) :: pt(:)
+    REAL(DFP), INTENT(OUT) :: pt(:)
     !! the size is 1 to n+1
-  REAL( DFP ), INTENT( OUT ) :: wt(:)
+    REAL(DFP), INTENT(OUT) :: wt(:)
     !! the size is 1 to n+1
-END SUBROUTINE Chebyshev1GaussRadauQuadrature
+  END SUBROUTINE Chebyshev1GaussRadauQuadrature
 END INTERFACE
 
 PUBLIC :: Chebyshev1GaussRadauQuadrature
@@ -128,17 +128,17 @@ PUBLIC :: Chebyshev1GaussRadauQuadrature
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 Aug 2022
-! summary: 	Returns the GaussLobatto quadrature points for Chebyshev1
+! summary:         Returns the GaussLobatto quadrature points for Chebyshev1
 ! Polynomial
 
 INTERFACE
-MODULE SUBROUTINE Chebyshev1GaussLobattoQuadrature( n, pt, wt )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( OUT ) :: pt(:)
+  MODULE SUBROUTINE Chebyshev1GaussLobattoQuadrature(n, pt, wt)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP), INTENT(OUT) :: pt(:)
     !! the size is 1 to n+2
-  REAL( DFP ), INTENT( OUT ) :: wt(:)
+    REAL(DFP), INTENT(OUT) :: wt(:)
     !! the size is 1 to n+2
-END SUBROUTINE Chebyshev1GaussLobattoQuadrature
+  END SUBROUTINE Chebyshev1GaussLobattoQuadrature
 END INTERFACE
 
 PUBLIC :: Chebyshev1GaussLobattoQuadrature
@@ -148,10 +148,10 @@ PUBLIC :: Chebyshev1GaussLobattoQuadrature
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Chebyshev1Zeros( n ) RESULT( ans )
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ) :: ans( n )
-END FUNCTION Chebyshev1Zeros
+  MODULE FUNCTION Chebyshev1Zeros(n) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP) :: ans(n)
+  END FUNCTION Chebyshev1Zeros
 END INTERFACE
 
 PUBLIC :: Chebyshev1Zeros
