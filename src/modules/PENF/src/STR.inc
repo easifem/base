@@ -235,9 +235,7 @@ elemental function str_R16P(n, no_sign, compact) result(str)
   write (str, FR16P) n               ! Casting of n to string.
   !!
   if (present(no_sign)) then
-    if( no_sign ) then
-      str = str(2:) ! Leaving out the sign.
-    else
+    if (.not. no_sign) then
       if (n > 0._R16P) str(1:1) = '+'       ! Prefixing plus if n>0.
     end if
   end if
@@ -288,9 +286,7 @@ elemental function str_R8P(n, no_sign, compact) result(str)
   write (str, FR8P) n                ! Casting of n to string.
   !!
   if (present(no_sign)) then
-    if( no_sign ) then
-      str = str(2:) ! Leaving out the sign.
-    else
+    if (.not. no_sign) then
       if (n > 0._R8P) str(1:1) = '+'        ! Prefixing plus if n>0.
     end if
   end if
@@ -340,9 +336,7 @@ elemental function str_R4P(n, no_sign, compact) result(str)
   write (str, FR4P) n                ! Casting of n to string.
   !!
   if (present(no_sign)) then
-    if( no_sign ) then
-      str = str(2:) ! Leaving out the sign.
-    else
+    if (.not. no_sign) then
       if (n > 0._R4P) str(1:1) = '+'        ! Prefixing plus if n>0.
     end if
   end if
@@ -385,9 +379,7 @@ elemental function str_I8P(n, no_sign) result(str)
   str = adjustl(trim(str))          ! Removing white spaces.
   !!
   if (present(no_sign)) then
-    if( no_sign ) then
-      str = str(2:) ! Leaving out the sign.
-    else
+    if (.not. no_sign) then
       if (n >= 0_I8P) str = '+'//trim(str)  ! Prefixing plus if n>0.
     end if
   end if
@@ -429,9 +421,7 @@ elemental function str_I4P(n, no_sign) result(str)
   str = adjustl(trim(str))          ! Removing white spaces.
   !!
   if (present(no_sign)) then
-    if( no_sign ) then
-      str = str(2:) ! Leaving out the sign.
-    else
+    if (.not. no_sign) then
       if (n >= 0_I4P) str = '+'//trim(str)  ! Prefixing plus if n>0.
     end if
   end if
@@ -472,9 +462,7 @@ elemental function str_I2P(n, no_sign) result(str)
   str = adjustl(trim(str))          ! Removing white spaces.
   !!
   if (present(no_sign)) then
-    if( no_sign ) then
-      str = str(2:) ! Leaving out the sign.
-    else
+    if (.not. no_sign) then
       if (n >= 0_I2P) str = '+'//trim(str)  ! Prefixing plus if n>0.
     end if
   end if
@@ -516,9 +504,7 @@ elemental function str_I1P(n, no_sign) result(str)
   str = adjustl(trim(str))          ! Removing white spaces.
   !!
   if (present(no_sign)) then
-    if( no_sign ) then
-      str = str(2:) ! Leaving out the sign.
-    else
+    if (.not. no_sign) then
       if (n >= 0_I1P) str = '+'//trim(str)  ! Prefixing plus if n>0.
     end if
   end if
@@ -667,7 +653,6 @@ end function str_a_R16P
 ! print "(A)", str(n=[1._R8P, -2._R8P], compact=.true.)
 !```
 !=> +0.1E+1,-0.2E+1 <<<
-
 
 pure function str_a_R8P(n, no_sign, separator, delimiters, compact) &
   & result(str)

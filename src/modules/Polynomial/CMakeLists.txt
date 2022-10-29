@@ -19,9 +19,10 @@ SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/InterpolationUtility.F90
-  ${src_path}/LagrangeUtility.F90
+  ${src_path}/LagrangePolynomialUtility.F90
   ${src_path}/OrthogonalPolynomialUtility.F90
   ${src_path}/JacobiPolynomialUtility.F90
+  ${src_path}/UltrasphericalPolynomialUtility.F90
   ${src_path}/LegendrePolynomialUtility.F90
   ${src_path}/LobattoPolynomialUtility.F90
   ${src_path}/UnscaledLobattoPolynomialUtility.F90
