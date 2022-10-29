@@ -31,4 +31,44 @@ CALL getLU(A=tempA, RCOND=ans, NORM=NORM)
 ans = 1.0_DFP / ans
 END PROCEDURE ge_ConditionNo_1
 
+!----------------------------------------------------------------------------
+!                                                                 GetInvMat
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_GetInvMat1
+INTEGER(I4B) :: info, ipiv(SIZE(A, 1))
+invA = A
+CALL getLU(A=invA, IPIV=ipiv, info=info)
+CALL GETRI(A=invA, IPIV=ipiv, info=info)
+END PROCEDURE ge_GetInvMat1
+
+!----------------------------------------------------------------------------
+!                                                                 GetInvMat
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_GetInvMat2
+INTEGER(I4B) :: info
+invA = A
+CALL GETRI(A=invA, IPIV=ipiv, info=info)
+END PROCEDURE ge_GetInvMat2
+
+!----------------------------------------------------------------------------
+!                                                                 GetInvMat
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_GetInvMat3
+INTEGER(I4B) :: info
+CALL GETRI(A=A, IPIV=ipiv, info=info)
+END PROCEDURE ge_GetInvMat3
+
+!----------------------------------------------------------------------------
+!                                                                 GetInvMat
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ge_GetInvMat4
+INTEGER(I4B) :: info, ipiv(SIZE(A, 1))
+CALL getLU(A=A, IPIV=ipiv, info=info)
+CALL GETRI(A=A, IPIV=ipiv, info=info)
+END PROCEDURE ge_GetInvMat4
+
 END SUBMODULE CompRoutineMethods
