@@ -25,19 +25,18 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Clenshaw_1( x, alpha, beta, y0, ym1, c ) RESULT( ans )
-  REAL( DFP ), INTENT( IN ) :: x
-  REAL( DFP ), INTENT( IN ) :: alpha(0:)
-  REAL( DFP ), INTENT( IN ) :: beta(0:)
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: y0
+  MODULE PURE FUNCTION Clenshaw_1(x, alpha, beta, y0, ym1, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(IN) :: alpha(0:)
+    REAL(DFP), INTENT(IN) :: beta(0:)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: y0
     !! if y0 is absent then y0 = 1.0
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: ym1
+    REAL(DFP), OPTIONAL, INTENT(IN) :: ym1
     !! if ym1 is absent then ym1 = 0.0
-  REAL( DFP ), INTENT( IN ) :: c(0:)
-  REAL( DFP ) :: ans
-END FUNCTION Clenshaw_1
+    REAL(DFP), INTENT(IN) :: c(0:)
+    REAL(DFP) :: ans
+  END FUNCTION Clenshaw_1
 END INTERFACE
-
 
 INTERFACE Clenshaw
   MODULE PROCEDURE Clenshaw_1
@@ -50,19 +49,18 @@ PUBLIC :: Clenshaw
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Clenshaw_2( x, alpha, beta, y0, ym1, c ) RESULT( ans )
-  REAL( DFP ), INTENT( IN ) :: x( : )
-  REAL( DFP ), INTENT( IN ) :: alpha(0:)
-  REAL( DFP ), INTENT( IN ) :: beta(0:)
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: y0
+  MODULE PURE FUNCTION Clenshaw_2(x, alpha, beta, y0, ym1, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(IN) :: alpha(0:)
+    REAL(DFP), INTENT(IN) :: beta(0:)
+    REAL(DFP), OPTIONAL, INTENT(IN) :: y0
     !! if y0 is absent then y0 = 1.0
-  REAL( DFP ), OPTIONAL, INTENT( IN ) :: ym1
+    REAL(DFP), OPTIONAL, INTENT(IN) :: ym1
     !! if ym1 is absent then ym1 = 0.0
-  REAL( DFP ), INTENT( IN ) :: c(0:)
-  REAL( DFP ) :: ans( SIZE( x ) )
-END FUNCTION Clenshaw_2
+    REAL(DFP), INTENT(IN) :: c(0:)
+    REAL(DFP) :: ans(SIZE(x))
+  END FUNCTION Clenshaw_2
 END INTERFACE
-
 
 INTERFACE Clenshaw
   MODULE PROCEDURE Clenshaw_2
@@ -85,11 +83,11 @@ END INTERFACE Clenshaw
 !$$
 
 INTERFACE
-MODULE PURE FUNCTION ChebClenshaw_1( x, c ) RESULT( ans )
-  REAL( DFP ), INTENT( IN ) :: x
-  REAL( DFP ), INTENT( IN ) :: c(0:)
-  REAL( DFP ) :: ans
-END FUNCTION ChebClenshaw_1
+  MODULE PURE FUNCTION ChebClenshaw_1(x, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP), INTENT(IN) :: c(0:)
+    REAL(DFP) :: ans
+  END FUNCTION ChebClenshaw_1
 END INTERFACE
 
 INTERFACE Clenshaw
@@ -119,11 +117,11 @@ PUBLIC :: ChebClenshaw
 !$$
 
 INTERFACE
-MODULE PURE FUNCTION ChebClenshaw_2( x, c ) RESULT( ans )
-  REAL( DFP ), INTENT( IN ) :: x( : )
-  REAL( DFP ), INTENT( IN ) :: c(0:)
-  REAL( DFP ) :: ans( SIZE( x ) )
-END FUNCTION ChebClenshaw_2
+  MODULE PURE FUNCTION ChebClenshaw_2(x, c) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP), INTENT(IN) :: c(0:)
+    REAL(DFP) :: ans(SIZE(x))
+  END FUNCTION ChebClenshaw_2
 END INTERFACE
 
 INTERFACE Clenshaw
@@ -139,16 +137,16 @@ END INTERFACE ChebClenshaw
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE JacobiMatrix_1( alphaCoeff, betaCoeff, D, E )
-  REAL( DFP ), INTENT( IN ) :: alphaCoeff( 0: )
+  MODULE PURE SUBROUTINE JacobiMatrix_1(alphaCoeff, betaCoeff, D, E)
+    REAL(DFP), INTENT(IN) :: alphaCoeff(0:)
   !! size n, from 0 to n-1
-  REAL( DFP ), INTENT( IN ) :: betaCoeff( 0: )
+    REAL(DFP), INTENT(IN) :: betaCoeff(0:)
   !! size n, from 0 to n-1
-  REAL( DFP ), INTENT( OUT ) :: D(:)
+    REAL(DFP), INTENT(OUT) :: D(:)
   !! entry from 1 to n are filled
-  REAL( DFP ), INTENT( OUT ) :: E(:)
+    REAL(DFP), INTENT(OUT) :: E(:)
   !! entry from 1 to n-1 are filled
-END SUBROUTINE JacobiMatrix_1
+  END SUBROUTINE JacobiMatrix_1
 END INTERFACE
 
 INTERFACE JacobiMatrix
@@ -157,5 +155,29 @@ END INTERFACE JacobiMatrix
 
 PUBLIC :: JacobiMatrix
 
+!----------------------------------------------------------------------------
+!                                                           EvalAllOrthopol
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION EvalAllOrthopol(n, x, orthopol, alpha, beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! points of evaluation
+    INTEGER(I4B), INTENT(IN) :: orthopol
+    !! orthogonal polynomial family
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! alpha1 needed when orthopol1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! beta1 is needed when orthopol1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! lambda1 is needed when orthopol1 is "Ultraspherical"
+    REAL(DFP) :: ans(SIZE(x), n + 1)
+  END FUNCTION EvalAllOrthopol
+END INTERFACE
+
+PUBLIC :: EvalAllOrthopol
 
 END MODULE OrthogonalPolynomialUtility

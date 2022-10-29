@@ -141,7 +141,7 @@ END INTERFACE
 PUBLIC :: EquidistancePoint_Quadrangle
 
 !----------------------------------------------------------------------------
-!                                                InterpolationPoint_Quadrangle
+!                                             InterpolationPoint_Quadrangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -149,14 +149,16 @@ PUBLIC :: EquidistancePoint_Quadrangle
 ! summary:         Interpolation point
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Quadrangle(order, ipType, xij) &
-    & RESULT(nodecoord)
+  MODULE PURE FUNCTION InterpolationPoint_Quadrangle(order, ipType, xij, &
+    & layout) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation point type
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! xij format
+    CHARACTER(LEN=*), INTENT(IN) :: layout
+    !!
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint_Quadrangle
@@ -165,7 +167,501 @@ END INTERFACE
 PUBLIC :: InterpolationPoint_Quadrangle
 
 !----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Quadrangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Quadrangle1(order, i, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP) :: ans(SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Quadrangle1
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Quadrangle
+  MODULE PROCEDURE LagrangeCoeff_Quadrangle1
+END INTERFACE LagrangeCoeff_Quadrangle
+
+PUBLIC :: LagrangeCoeff_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeCoeff_Quadrangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Quadrangle2(order, i, v, isVandermonde) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP) :: ans(SIZE(v, 1))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Quadrangle2
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Quadrangle
+  MODULE PROCEDURE LagrangeCoeff_Quadrangle2
+END INTERFACE LagrangeCoeff_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Quadrangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Quadrangle3(order, i, v, ipiv) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP) :: ans(SIZE(v, 1))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Quadrangle3
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Quadrangle
+  MODULE PROCEDURE LagrangeCoeff_Quadrangle3
+END INTERFACE LagrangeCoeff_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Quadrangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Quadrangle4(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Quadrangle4
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Quadrangle
+  MODULE PROCEDURE LagrangeCoeff_Quadrangle4
+END INTERFACE LagrangeCoeff_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                       DubinerPolynomial
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on biunit domain
+!
+!# Introduction
+!
+! Forms Dubiner basis on biunit quadrangle domain.
+! This routine is called while forming dubiner basis on triangle domain
+!
+! The shape of `ans` is (M,N), where M=SIZE(xij,2) (number of points)
+! N = 0.5*(order+1)*(order+2).
+!
+! In this way, ans(j,:) denotes the values of all polynomial at jth point
+!
+! Polynomials are returned in following way:
+!
+!$$
+! P_{0,0}, P_{0,1}, \cdots , P_{0,order} \\
+! P_{1,0}, P_{1,1}, \cdots , P_{1,order-1} \\
+! P_{2,0}, P_{2,1}, \cdots , P_{2,order-2} \\
+! \cdots
+! P_{order,0}
+!$$
+!
+! For example for order=3, the polynomials are arranged as:
+!
+!$$
+! P_{0,0}, P_{0,1}, P_{0,2}, P_{0,3} \\
+! P_{1,0}, P_{1,1}, P_{1,2} \\
+! P_{2,0}, P_{2,1} \\
+! P_{3,0}
+!$$
+
+INTERFACE
+  MODULE PURE FUNCTION Dubiner_Quadrangle1(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in biunit quadrangle, shape functions will be evaluated
+    !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
+    REAL(DFP) :: ans(SIZE(xij, 2), (order + 1) * (order + 2) / 2)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+  END FUNCTION Dubiner_Quadrangle1
+END INTERFACE
+
+INTERFACE Dubiner_Quadrangle
+  MODULE PROCEDURE Dubiner_Quadrangle1
+END INTERFACE Dubiner_Quadrangle
+
+PUBLIC :: Dubiner_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                       DubinerPolynomial
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on biunit domain
+!
+!# Introduction
+!
+! Forms Dubiner basis on biunit quadrangle domain.
+! This routine is same as Dubiner_Quadrangle1
+! The only difference is that xij are given by outerproduct of x and y.
+! This function calls `Dubiner_Quadrangle1`.
+
+INTERFACE
+  MODULE PURE FUNCTION Dubiner_Quadrangle2(order, x, y) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! x coordinate on line
+    REAL(DFP), INTENT(IN) :: y(:)
+    !! y coordinate on line
+    REAL(DFP) :: ans(SIZE(x) * SIZE(y), (order + 1) * (order + 2) / 2)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+  END FUNCTION Dubiner_Quadrangle2
+END INTERFACE
+
+INTERFACE Dubiner_Quadrangle
+  MODULE PROCEDURE Dubiner_Quadrangle2
+END INTERFACE Dubiner_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                            TensorProdOrthopol_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all tensor product orthogoanl polynomial on quadrangle
+!
+!# Introduction
+!
+! This function returns the tensor product expansion of orthogonal
+! polynomial on biunit quadrangle.
+
+INTERFACE
+  MODULE PURE FUNCTION TensorProdOrthopol_Quadrangle1(p, q, xij, &
+    & orthopol1, orthopol2, alpha1, beta1, alpha2, beta2, lambda1, lambda2) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: orthopol1
+    !! orthogonal polynomial family in x1 direction
+    INTEGER(I4B), INTENT(IN) :: orthopol2
+    !! orthogonal poly family in x2 direction
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when orthopol1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when orthopol1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when orthopol2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when orthopol2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when orthopol1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when orthopol2 is "Ultraspherical"
+    REAL(DFP) :: ans(SIZE(xij, 2), (p + 1) * (q + 1))
+    !!
+  END FUNCTION TensorProdOrthopol_Quadrangle1
+END INTERFACE
+
+INTERFACE TensorProdOrthopol_Quadrangle
+  MODULE PROCEDURE TensorProdOrthopol_Quadrangle1
+END INTERFACE TensorProdOrthopol_Quadrangle
+
+PUBLIC :: TensorProdOrthopol_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                            TensorProdOrthopol_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all tensor product orthogoanl polynomial on quadrangle
+!
+!# Introduction
+!
+! This function returns the tensor product expansion of orthogonal
+! polynomial on biunit quadrangle. Here xij is obtained by
+! outer product of x and y
+
+INTERFACE
+  MODULE PURE FUNCTION TensorProdOrthopol_Quadrangle2(p, q, x, y, &
+    & orthopol1, orthopol2, alpha1, beta1, alpha2, beta2, lambda1, lambda2) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: orthopol1
+    !! orthogonal polynomial family in x1 direction
+    INTEGER(I4B), INTENT(IN) :: orthopol2
+    !! orthogonal poly family in x2 direction
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when orthopol1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when orthopol1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when orthopol2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when orthopol2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when orthopol1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when orthopol2 is "Ultraspherical"
+    REAL(DFP) :: ans(SIZE(x) * SIZE(y), (p + 1) * (q + 1))
+    !!
+  END FUNCTION TensorProdOrthopol_Quadrangle2
+END INTERFACE
+
+INTERFACE TensorProdOrthopol_Quadrangle
+  MODULE PROCEDURE TensorProdOrthopol_Quadrangle2
+END INTERFACE TensorProdOrthopol_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                    VertexBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit quadrangle
+
+INTERFACE
+  MODULE PURE FUNCTION VertexBasis_Quadrangle(x, y) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(x), 4)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasis_Quadrangle
+END INTERFACE
+
+PUBLIC :: VertexBasis_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                    VertexBasis_Quadrangle2
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit quadrangle
+
+INTERFACE
+  MODULE PURE FUNCTION VertexBasis_Quadrangle2(L1, L2) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(L1, 1), 4)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasis_Quadrangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               VerticalEdgeBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on left, right edge of biunit quadrangle
+!
+!# Introduction
+!
+! Evaluate basis functions on left and right edge of biunit quadrangle
+!
+! qe1 and qe2 should be greater than or equal to 2
+
+INTERFACE
+  MODULE PURE FUNCTION VerticalEdgeBasis_Quadrangle(qe1, qe2, x, y) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order on left vertical edge (e1)
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order on right vertical edge(e2)
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(x), qe1 + qe2 - 2)
+  END FUNCTION VerticalEdgeBasis_Quadrangle
+END INTERFACE
+
+PUBLIC :: VerticalEdgeBasis_Quadrangle
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION VerticalEdgeBasis_Quadrangle2(qe1, qe2, L1, L2) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order on left vertical edge (e1)
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order on right vertical edge(e2)
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(L1, 1), qe1 + qe2 - 2)
+  END FUNCTION VerticalEdgeBasis_Quadrangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                             HorizontalEdgeBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on bottom and top edge of biunit quadrangle
+!
+!# Introduction
+!
+! Evaluate basis functions on bottom and top edge of biunit quadrangle
+!
+! pe3 and pe4 should be greater than or equal to 2
+
+INTERFACE
+  MODULE PURE FUNCTION HorizontalEdgeBasis_Quadrangle(pe3, pe4, x, y) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on bottom vertical edge (e3)
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on top vertical edge(e4)
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(x), pe3 + pe4 - 2)
+  END FUNCTION HorizontalEdgeBasis_Quadrangle
+END INTERFACE
+
+PUBLIC :: HorizontalEdgeBasis_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION HorizontalEdgeBasis_Quadrangle2(pe3, pe4, L1, L2) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on bottom vertical edge (e3)
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on top vertical edge(e4)
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(L1, 1), pe3 + pe4 - 2)
+  END FUNCTION HorizontalEdgeBasis_Quadrangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      CellBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis in the cell of biunit quadrangle
+!
+!# Introduction
+!
+! Evaluate basis functions in the cell of biunit quadrangle
+
+INTERFACE
+  MODULE PURE FUNCTION CellBasis_Quadrangle(pb, qb, x, y) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order on bottom vertical edge (e3)
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order on top vertical edge(e4)
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(x), (pb - 1) * (qb - 1))
+  END FUNCTION CellBasis_Quadrangle
+END INTERFACE
+
+PUBLIC :: CellBasis_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION CellBasis_Quadrangle2(pb, qb, L1, L2) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order on bottom vertical edge (e3)
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order on top vertical edge(e4)
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(L1, 1), (pb - 1) * (qb - 1))
+  END FUNCTION CellBasis_Quadrangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on quadrangle
+!
+!# Introduction
+!
+! This function returns the modal basis on orthogonal polynomial
+! The modal function in 1D is given by scaled Lobatto polynomial.
+! These modal functions are orthogonal with respect to H1 seminorm.
+! However, these modal function are not orthogonal withrespect to L2 norm.
+!
+! Bubble function in 1D is proportional to Jacobi polynomial with
+! alpha=beta=1. Equivalently, these bubble functions are proportional to
+! Ultraspherical polynomials with lambda = 3/2.
+!
+
+INTERFACE
+  MODULE PURE FUNCTION HeirarchicalBasis_Quadrangle1(pb, qb, pe3, pe4, &
+    & qe1, qe2, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qb
+    !! order of interpolation inside the quadrangle in x2 direction
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge e3 (bottom) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge e4 (top) in x1 direction
+    INTEGER(I4B), INTENT(IN) :: qe1
+    !! order of interpolation on edge e1 (left) in y1 direction
+    INTEGER(I4B), INTENT(IN) :: qe2
+    !! order of interpolation on edge e2 (right) in y1 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP) :: ans(SIZE(xij, 2), &
+      & pb * qb - pb - qb + pe3 + pe4 + qe1 + qe2 + 1)
+    !!
+  END FUNCTION HeirarchicalBasis_Quadrangle1
+END INTERFACE
+
+INTERFACE HeirarchicalBasis_Quadrangle
+  MODULE PROCEDURE HeirarchicalBasis_Quadrangle1
+END INTERFACE HeirarchicalBasis_Quadrangle
+
+PUBLIC :: HeirarchicalBasis_Quadrangle
 
 END MODULE QuadrangleInterpolationUtility

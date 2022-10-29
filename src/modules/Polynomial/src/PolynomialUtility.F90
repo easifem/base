@@ -17,9 +17,10 @@
 
 MODULE PolynomialUtility
 USE InterpolationUtility
-USE LagrangeUtility
+USE LagrangePolynomialUtility
 USE OrthogonalPolynomialUtility
 USE JacobiPolynomialUtility
+USE UltrasphericalPolynomialUtility
 USE LegendrePolynomialUtility
 USE LobattoPolynomialUtility
 USE UnscaledLobattoPolynomialUtility

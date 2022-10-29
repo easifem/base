@@ -26,10 +26,11 @@ PRIVATE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Convert nodal coordinates to barycentric coordinates
+! summary: Convert nodal coordinates to barycentric coordinates
 
 INTERFACE
-  MODULE PURE FUNCTION RecursiveNode1D(order, ipType, domain) RESULT(ans)
+  MODULE FUNCTION RecursiveNode1D(order, ipType, &
+    & domain) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -60,10 +61,10 @@ PUBLIC :: RecursiveNode1D
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Convert nodal coordinates to barycentric coordinates
+! summary: Convert nodal coordinates to barycentric coordinates
 
 INTERFACE
-  MODULE PURE FUNCTION RecursiveNode2D(order, ipType, domain) &
+  MODULE FUNCTION RecursiveNode2D(order, ipType, domain) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0
@@ -98,7 +99,7 @@ PUBLIC :: RecursiveNode2D
 ! summary:         Convert nodal coordinates to barycentric coordinates
 
 INTERFACE
-  MODULE PURE FUNCTION RecursiveNode3D(order, ipType, &
+  MODULE FUNCTION RecursiveNode3D(order, ipType, &
     & domain) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0

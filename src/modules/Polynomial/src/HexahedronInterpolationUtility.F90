@@ -149,10 +149,12 @@ PUBLIC :: EquidistancePoint_Hexahedron
 ! summary:         Interpolation point
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Hexahedron(order, ipType, xij) &
+  MODULE PURE FUNCTION InterpolationPoint_Hexahedron(order, ipType, &
+    & layout, xij) &
     & RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), INTENT(IN) :: ipType
+    CHARACTER(LEN=*), INTENT(IN) :: layout
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
   END FUNCTION InterpolationPoint_Hexahedron
@@ -161,7 +163,92 @@ END INTERFACE
 PUBLIC :: InterpolationPoint_Hexahedron
 
 !----------------------------------------------------------------------------
-!
+!                                                  LagrangeCoeff_Hexahedron
 !----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Hexahedron1(order, i, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP) :: ans(SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Hexahedron1
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Hexahedron
+  MODULE PROCEDURE LagrangeCoeff_Hexahedron1
+END INTERFACE LagrangeCoeff_Hexahedron
+
+PUBLIC :: LagrangeCoeff_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeCoeff_Hexahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Hexahedron2(order, i, v, isVandermonde) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP) :: ans(SIZE(v, 1))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Hexahedron2
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Hexahedron
+  MODULE PROCEDURE LagrangeCoeff_Hexahedron2
+END INTERFACE LagrangeCoeff_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Hexahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Hexahedron3(order, i, v, ipiv) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP) :: ans(SIZE(v, 1))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Hexahedron3
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Hexahedron
+  MODULE PROCEDURE LagrangeCoeff_Hexahedron3
+END INTERFACE LagrangeCoeff_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Hexahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Hexahedron4(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Hexahedron4
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Hexahedron
+  MODULE PROCEDURE LagrangeCoeff_Hexahedron4
+END INTERFACE LagrangeCoeff_Hexahedron
 
 END MODULE HexahedronInterpolationUtility

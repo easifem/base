@@ -103,12 +103,13 @@ PUBLIC :: LagrangeInDOF_Line
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary:         Returns equidistance points on edge
+! summary: Returns equidistance internal points on edge
 !
 !# Introduction
 !
 !- This function returns the equidistance points on edge
 !- All points are inside the interval
+!- Points are in increasing order
 
 INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Line1(order, xij) RESULT(ans)
@@ -167,7 +168,7 @@ END INTERFACE EquidistanceInPoint_Line
 !# Introduction
 !
 !- This function returns the equidistance points on edge
-!- All points are inside the interval
+!- Points are in "VEFC" format, which means `xij(1,1:2)` are end points
 
 INTERFACE
   MODULE PURE FUNCTION EquidistancePoint_Line1(order, xij) &
@@ -225,16 +226,52 @@ END INTERFACE EquidistancePoint_Line
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Aug 2022
 ! summary: Returns the interpolation point
+!
+!# Introduction
+!
+!- This routine returns the interplation points on line
+!- `xij` contains nodal coordinates of line in xij format.
+!- SIZE(xij,1) = nsd, and SIZE(xij,2)=2
+!- If xij is absent then [-1,1] is used
+!- `ipType` is interpolation point type, it can take following values
+!-  `Equidistance`, uniformly/evenly distributed points
+!-  `GaussLegendre`, Zeros of Legendre polynomials, all nodes are strictly
+! inside the domain.
+!- `GaussLegendreLobatto` or `GaussLobatto` are zeros of Lobatto polynomials
+! they always contains boundary points
+!- `GaussChebyshev` Zeros of Chebyshev polynomials of first kind, all
+! nodes are internal
+!- `GaussChebyshevLobatto` they contains boundary points
+!- `GaussJacobi` and `GaussJacobiLobatto`
+!
+!- `layout` specifies the arrangement of points. Following options are
+! possible:
+!
+!- `layout=VEFC` vertex, edge, face, cell, in this case first two points are
+! boundary points, remaining (from 3 to n) are internal points in
+! increasing order.
+!
+!- `layout=INCREASING` points are arranged in increasing order
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Line1(order, ipType, xij) &
-    & RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Line1(order, ipType, &
+    & layout, xij) RESULT(ans)
     !!
     INTEGER(I4B), INTENT(IN) :: order
+    !! Order of interpolation
     INTEGER(I4B), INTENT(IN) :: ipType
+    !! Interpolation point type
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! domain of interpolation
+    CHARACTER(LEN=*), INTENT(IN) :: layout
+    !! "VEFC"
+    !! "INCREASING"
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !!
+    !! interpolation points in xij format
+    !! size(ans,1) = 1
+    !! size(ans,2) = order+1
   END FUNCTION InterpolationPoint_Line1
 END INTERFACE
 
@@ -253,25 +290,23 @@ PUBLIC :: InterpolationPoint_Line
 ! summary: Returns the interpolation point
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Line2(order, ipType, xij) &
-    & RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Line2(order, ipType, xij, &
+    & layout) RESULT(ans)
     !!
     INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: ipType
-    !! interpolation nodes type:
-    !! Equidistance
-    !! LobattoGaussLegendre
-    !! LobattoGaussChebyshev
-    !! LobattoGaussJacobi
-    !! LobattoGaussGegenbauer
-    !! GaussLegendre
-    !! GaussChebyshev
-    !! GaussJacobi
-    !! GaussGegenbauer
+    !! Interpolation point type
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
     REAL(DFP), INTENT(IN) :: xij(2)
     !! end points
+    CHARACTER(LEN=*), INTENT(IN) :: layout
+    !! "VEFC"
+    !! "INCREASING"
+    !! "DECREASING"
     REAL(DFP), ALLOCATABLE :: ans(:)
-    !!
+    !! one dimensional interpolation point
   END FUNCTION InterpolationPoint_Line2
 END INTERFACE
 
@@ -280,7 +315,91 @@ INTERFACE InterpolationPoint_Line
 END INTERFACE InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
-!
+!                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Line1(order, i, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(xij,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2) = order+1
+    REAL(DFP) :: ans(order + 1)
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Line1
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Line
+  MODULE PROCEDURE LagrangeCoeff_Line1
+END INTERFACE LagrangeCoeff_Line
+
+PUBLIC :: LagrangeCoeff_Line
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Line2(order, i, v, isVandermonde) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP) :: ans(order + 1)
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Line2
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Line
+  MODULE PROCEDURE LagrangeCoeff_Line2
+END INTERFACE LagrangeCoeff_Line
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Line3(order, i, v, ipiv) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP) :: ans(order + 1)
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Line3
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Line
+  MODULE PROCEDURE LagrangeCoeff_Line3
+END INTERFACE LagrangeCoeff_Line
+
+!----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Line4(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(xij,2)-1
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2) = order+1
+    REAL(DFP) :: ans(order + 1, order + 1)
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Line4
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Line
+  MODULE PROCEDURE LagrangeCoeff_Line4
+END INTERFACE LagrangeCoeff_Line
 
 END MODULE LineInterpolationUtility

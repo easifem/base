@@ -23,8 +23,47 @@
 
 MODULE LegendrePolynomialUtility
 USE GlobalData
+USE BaseType, ONLY: iface_1DFunction
 IMPLICIT NONE
 PRIVATE
+
+!----------------------------------------------------------------------------
+!                                                             LegendreAlpha
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Recurrence coefficient, alpha, of Legendre polynomial
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreAlpha(n) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Legendre polynomial
+    REAL(DFP) :: ans
+    !! answer
+  END FUNCTION LegendreAlpha
+END INTERFACE
+
+PUBLIC :: LegendreAlpha
+
+!----------------------------------------------------------------------------
+!                                                              LegendreBeta
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Recurrence coefficient, beta, of Legendre polynomial
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreBeta(n) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Legendre polynomial
+    REAL(DFP) :: ans
+    !! answer
+  END FUNCTION LegendreBeta
+END INTERFACE
+
+PUBLIC :: LegendreBeta
 
 !----------------------------------------------------------------------------
 !                                                  GetLegendreRecurrenceCoeff
@@ -32,7 +71,7 @@ PRIVATE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 8 Sept 2022
-! summary: Return the recurrence coefficient for nth order polynomial
+! summary: Return the recurrence coefficient for monic Legendre polynomial
 !
 !# Introduction
 !
@@ -66,6 +105,29 @@ END INTERFACE
 PUBLIC :: GetLegendreRecurrenceCoeff
 
 !----------------------------------------------------------------------------
+!                                              GetLegendreRecurrenceCoeff2
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Return the recurrence coefficient for Legendre polynomial
+
+INTERFACE
+  MODULE PURE SUBROUTINE GetLegendreRecurrenceCoeff2(n, A, B, C)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Legendre polynomial, it should be greater than 1
+    REAL(DFP), INTENT(OUT) :: A(0:n - 1)
+    !! size is n
+    REAL(DFP), INTENT(OUT) :: B(0:n - 1)
+    !! this coefficient is zero
+    REAL(DFP), INTENT(OUT) :: C(0:n - 1)
+    !! size is n
+  END SUBROUTINE GetLegendreRecurrenceCoeff2
+END INTERFACE
+
+PUBLIC :: GetLegendreRecurrenceCoeff2
+
+!----------------------------------------------------------------------------
 !                                                         LegendreLeadingCoeff
 !----------------------------------------------------------------------------
 
@@ -94,7 +156,26 @@ END INTERFACE
 PUBLIC :: LegendreLeadingCoeff
 
 !----------------------------------------------------------------------------
-!
+!                                                 LegendreLeadingCoeffRatio
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Ration of Leading coefficient of Legendre polynomial n+1/n
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreLeadingCoeffRatio(n) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Legendre polynomial
+    REAL(DFP) :: ans
+    !! answer
+  END FUNCTION LegendreLeadingCoeffRatio
+END INTERFACE
+
+PUBLIC :: LegendreLeadingCoeffRatio
+
+!----------------------------------------------------------------------------
+!                                                            LegendreNormSQR
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -116,8 +197,52 @@ INTERFACE
   END FUNCTION LegendreNormSQR
 END INTERFACE
 
+PUBLIC :: LegendreNormSQR
+
 !----------------------------------------------------------------------------
-!                                                     LegendreJacobiMatrix
+!                                                            LegendreNormSQR2
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Square norm of Legendre polynomial
+!
+!# Introduction
+!
+! This function returns the square norm of legendre polynomial
+!
+!$$
+! \Vert P_{n}\Vert^{2}=:h_{n}=\frac{2}{2n+1}
+!$$
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreNormSQR2(n) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP) :: ans(0:n)
+  END FUNCTION LegendreNormSQR2
+END INTERFACE
+
+PUBLIC :: LegendreNormSQR2
+
+!----------------------------------------------------------------------------
+!                                                      LegendreNormSQRRatio
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 8 Sept 2022
+! summary: Ratio of Square norm of Legendre polynomial n+1/n
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreNormSQRRatio(n) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP) :: ans
+  END FUNCTION LegendreNormSQRRatio
+END INTERFACE
+
+PUBLIC :: LegendreNormSqrRatio
+
+!----------------------------------------------------------------------------
+!                                                      LegendreJacobiMatrix
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -163,7 +288,7 @@ INTERFACE
     !! It represents the order of Legendre polynomial
     REAL(DFP), INTENT(OUT) :: pt(:)
     !! the size is 1 to n
-    REAL(DFP), INTENT(OUT) :: wt(:)
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: wt(:)
     !! the size is 1 to n
   END SUBROUTINE LegendreGaussQuadrature
 END INTERFACE
@@ -226,7 +351,7 @@ INTERFACE
     !! order of Legendre polynomial
     REAL(DFP), INTENT(OUT) :: pt(:)
     !! n+1 quadrature points from 1 to n+1
-    REAL(DFP), INTENT(OUT) :: wt(:)
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: wt(:)
     !! n+1 weights from 1 to n+1
   END SUBROUTINE LegendreGaussRadauQuadrature
 END INTERFACE
@@ -285,7 +410,7 @@ INTERFACE
     !! order of Legendre polynomials
     REAL(DFP), INTENT(OUT) :: pt(:)
     !! n+2 quad points indexed from 1 to n+2
-    REAL(DFP), INTENT(OUT) :: wt(:)
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: wt(:)
     !! n+2 weights, index from 1 to n+2
   END SUBROUTINE LegendreGaussLobattoQuadrature
 END INTERFACE
@@ -343,7 +468,7 @@ INTERFACE
     !! for quadType = GaussLobatto, n = order+2
     REAL(DFP), INTENT(OUT) :: pt(n)
     !! n+1 quadrature points from 1 to n+1
-    REAL(DFP), INTENT(OUT) :: wt(n)
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: wt(n)
     !! n+1 weights from 1 to n+1
     INTEGER(I4B), INTENT(IN) :: quadType
     !! Gauss
@@ -429,18 +554,15 @@ END INTERFACE LegendreEval
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Legendre polynomials from order = 0 to n at several points
+! summary: Evaluate Legendre polynomials from order = 0 to n at single point
 !
 !# Introduction
 !
-! Evaluate Legendre polynomials from order = 0 to n at several points
+! Evaluate Legendre polynomials from order = 0 to n at single points
 !
 !- N, the highest order polynomial to compute. Note that polynomials 0
 ! through N will be computed.
-!- alpha, beta are parameters
 !- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Legendre polynomials at the point
-! X.
 
 INTERFACE
   MODULE PURE FUNCTION LegendreEvalAll1(n, x) RESULT(ans)
@@ -476,14 +598,19 @@ PUBLIC :: LegendreEvalAll
 !- x: the point at which the polynomials are to be evaluated.
 !- ans(M,1:N+1), the values of the first N+1 Legendre polynomials at the point
 ! X.
+!
+!- the ith row of ans denotes the values of all polynomials at
+! ith point. In this case shape of ans is (M,1:N+1), where M is number of
+! points, N+1 number of polynomials. So ans(j, :) denotes value of all
+! polynomials at jth point, and ans(:, n) denotes value of Pn at all nodes
 
 INTERFACE
   MODULE PURE FUNCTION LegendreEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
+    !! number of points, SIZE(x)=M
     REAL(DFP) :: ans(SIZE(x), n + 1)
-    !! Evaluate Legendre polynomial of order = 0 to n (total n+1)
-    !! at point x
+    !! shape (M,N+1)
   END FUNCTION LegendreEvalAll2
 END INTERFACE
 
@@ -654,6 +781,422 @@ END INTERFACE
 INTERFACE LegendreGradientEval
   MODULE PROCEDURE LegendreGradientEval2
 END INTERFACE LegendreGradientEval
+
+!----------------------------------------------------------------------------
+!                                                     LegendreEvalSum
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate finite sum of Legendre polynomials at point x
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreEvalSum1(n, x, coeff) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! Coefficient of finite sum, size = n+1
+    REAL(DFP) :: ans
+    !! Evaluate Legendre polynomial of order n at point x
+  END FUNCTION LegendreEvalSum1
+END INTERFACE
+
+INTERFACE LegendreEvalSum
+  MODULE PROCEDURE LegendreEvalSum1
+END INTERFACE LegendreEvalSum
+
+PUBLIC :: LegendreEvalSum
+
+!----------------------------------------------------------------------------
+!                                                          LegendreEvalSum
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate finite sum of Legendre polynomials at several x
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreEvalSum2(n, x, coeff) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! Coefficient of finite sum, size = n+1
+    REAL(DFP) :: ans(SIZE(x))
+    !! Evaluate Legendre polynomial of order n at point x
+  END FUNCTION LegendreEvalSum2
+END INTERFACE
+
+INTERFACE LegendreEvalSum
+  MODULE PROCEDURE LegendreEvalSum2
+END INTERFACE LegendreEvalSum
+
+!----------------------------------------------------------------------------
+!                                             LegendreGradientEvalSum
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate the gradient of finite sum of Legendre polynomials
+! at point x
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreGradientEvalSum1(n, x, coeff) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! Coefficient of finite sum, size = n+1
+    REAL(DFP) :: ans
+    !! Evaluate Legendre polynomial of order n at point x
+  END FUNCTION LegendreGradientEvalSum1
+END INTERFACE
+
+INTERFACE LegendreGradientEvalSum
+  MODULE PROCEDURE LegendreGradientEvalSum1
+END INTERFACE LegendreGradientEvalSum
+
+PUBLIC :: LegendreGradientEvalSum
+
+!----------------------------------------------------------------------------
+!                                              LegendreGradientEvalSum
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate the gradient of finite sum of Legendre polynomials
+! at several x
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreGradientEvalSum2(n, x, coeff) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! Coefficient of finite sum, size = n+1
+    REAL(DFP) :: ans(SIZE(x))
+    !! Evaluate Legendre polynomial of order n at point x
+  END FUNCTION LegendreGradientEvalSum2
+END INTERFACE
+
+INTERFACE LegendreGradientEvalSum
+  MODULE PROCEDURE LegendreGradientEvalSum2
+END INTERFACE LegendreGradientEvalSum
+
+!----------------------------------------------------------------------------
+!                                              LegendreGradientEvalSum
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate the kth derivative of finite sum of Legendre
+! polynomials at point x
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreGradientEvalSum3(n, x, coeff, k) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x
+    !! point
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! Coefficient of finite sum, size = n+1
+    INTEGER(I4B), INTENT(IN) :: k
+    !! order of derivative
+    REAL(DFP) :: ans
+    !! Evaluate Legendre polynomial of order n at point x
+  END FUNCTION LegendreGradientEvalSum3
+END INTERFACE
+
+INTERFACE LegendreGradientEvalSum
+  MODULE PROCEDURE LegendreGradientEvalSum3
+END INTERFACE LegendreGradientEvalSum
+
+!----------------------------------------------------------------------------
+!                                             LegendreGradientEvalSum
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Evaluate the kth gradient of finite sum of Legendre
+!  polynomials at several x
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreGradientEvalSum4(n, x, coeff, k) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! Coefficient of finite sum, size = n+1
+    INTEGER(I4B), INTENT(IN) :: k
+    !! kth order derivative
+    REAL(DFP) :: ans(SIZE(x))
+    !! Evaluate Legendre polynomial of order n at point x
+  END FUNCTION LegendreGradientEvalSum4
+END INTERFACE
+
+INTERFACE LegendreGradientEvalSum
+  MODULE PROCEDURE LegendreGradientEvalSum4
+END INTERFACE LegendreGradientEvalSum
+
+!----------------------------------------------------------------------------
+!                                                         LegendreTransform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 13 Oct 2022
+! summary: Discrete Legendre Transform
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreTransform1(n, coeff, x, w, &
+    &  quadType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! nodal value (at quad points)
+    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! weights
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP) :: ans(0:n)
+    !! modal values  or coefficients
+  END FUNCTION LegendreTransform1
+END INTERFACE
+
+INTERFACE LegendreTransform
+  MODULE PROCEDURE LegendreTransform1
+END INTERFACE LegendreTransform
+
+PUBLIC :: LegendreTransform
+
+!----------------------------------------------------------------------------
+!                                                   LegendreTransform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 13 Oct 2022
+! summary: Columnwise Discrete Legendre Transform
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreTransform2(n, coeff, x, w, &
+    & quadType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:, 1:)
+    !! nodal value (at quad points)
+    REAL(DFP), INTENT(IN) :: x(0:n)
+    !! quadrature points
+    REAL(DFP), INTENT(IN) :: w(0:n)
+    !! weights
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP) :: ans(0:n, 1:SIZE(coeff, 2))
+    !! modal values  or coefficients for each column of val
+  END FUNCTION LegendreTransform2
+END INTERFACE
+
+INTERFACE LegendreTransform
+  MODULE PROCEDURE LegendreTransform2
+END INTERFACE LegendreTransform
+
+!----------------------------------------------------------------------------
+!                                                   LegendreTransform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 13 Oct 2022
+! summary: Legendre Transform of a function on [-1,1]
+!
+!# Introduction
+!
+! This function performs the Legendre transformation of f defined
+! on -1 to 1. The interface of the function is give below:
+!
+!```fortran
+! ABSTRACT INTERFACE
+!   ELEMENTAL FUNCTION iface_1DFunction(x) RESULT(ans)
+!     IMPORT :: DFP
+!     REAL(DFP), INTENT(IN) :: x
+!     REAL(DFP) :: ans
+!   END FUNCTION iface_1DFunction
+! END INTERFACE
+!```
+!
+!@note
+! This routine is not pure, because this subroutine calls
+!  `LegendreQuadrature` which is not pure due to Lapack call.
+!@endnote
+
+INTERFACE
+  MODULE FUNCTION LegendreTransform3(n, f, quadType) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of jacobi polynomial
+    PROCEDURE(iface_1DFunction), POINTER, INTENT(IN) :: f
+    !! 1D space function
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature type, Gauss, GaussLobatto, GaussRadau, GaussRadauLeft
+    !! GaussRadauRight
+    REAL(DFP) :: ans(0:n)
+    !! modal values  or coefficients
+  END FUNCTION LegendreTransform3
+END INTERFACE
+
+INTERFACE LegendreTransform
+  MODULE PROCEDURE LegendreTransform3
+END INTERFACE LegendreTransform
+
+!----------------------------------------------------------------------------
+!                                                 LegendreInvTransform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 13 Oct 2022
+! summary: Inverse Legendre Transform
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreInvTransform1(n, coeff, x) &
+        & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! n+1  coefficient (modal values)
+    REAL(DFP), INTENT(IN) :: x
+    !! x point in physical space
+    REAL(DFP) :: ans
+    !! value in physical space
+  END FUNCTION LegendreInvTransform1
+END INTERFACE
+
+INTERFACE LegendreInvTransform
+  MODULE PROCEDURE LegendreInvTransform1
+END INTERFACE LegendreInvTransform
+
+PUBLIC :: LegendreInvTransform
+
+!----------------------------------------------------------------------------
+!                                                 LegendreInvTransform
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 13 Oct 2022
+! summary: Inverse Legendre Transform
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreInvTransform2(n, coeff, x) &
+        & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+    !! n+1  coefficient (modal values)
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! x point in physical space
+    REAL(DFP) :: ans(SIZE(x))
+    !! value in physical space
+  END FUNCTION LegendreInvTransform2
+END INTERFACE
+
+INTERFACE LegendreInvTransform
+  MODULE PROCEDURE LegendreInvTransform2
+END INTERFACE LegendreInvTransform
+
+!----------------------------------------------------------------------------
+!                                               LegendreGradientCoeff
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 13 Oct 2022
+! summary: Returns coefficients for gradient of Legendre expansion
+!
+!# Introduction
+!
+!- This routine returns the coefficients of gradient of Jacobi expansion.
+!- Input is coefficient of Legendre expansion (modal values)
+!- Output is coefficient of derivative of legendre expansion (modal values)
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreGradientCoeff1(n, coeff) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+      !! order of Jacobi polynomial
+    REAL(DFP), INTENT(IN) :: coeff(0:n)
+      !! coefficients $\tilde{u}_{n}$ obtained from LegendreTransform
+    REAL(DFP) :: ans(0:n)
+      !! coefficient of gradient
+  END FUNCTION LegendreGradientCoeff1
+END INTERFACE
+
+INTERFACE LegendreGradientCoeff
+  MODULE PROCEDURE LegendreGradientCoeff1
+END INTERFACE LegendreGradientCoeff
+
+PUBLIC :: LegendreGradientCoeff
+
+!----------------------------------------------------------------------------
+!                                                           LegendreDMatrix
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 15 Oct 2022
+! summary: Returns differentiation matrix for Legendre expansion
+
+INTERFACE
+  MODULE PURE FUNCTION LegendreDMatrix1(n, x, quadType) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+      !! order of Legendre polynomial
+    REAL(DFP), INTENT(IN) :: x(0:n)
+      !! quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadType
+      !! Gauss and GaussLobatto
+    REAL(DFP) :: ans(0:n, 0:n)
+      !! D matrix
+  END FUNCTION LegendreDMatrix1
+END INTERFACE
+
+INTERFACE LegendreDMatrix
+  MODULE PROCEDURE LegendreDMatrix1
+END INTERFACE LegendreDMatrix
+
+PUBLIC :: LegendreDMatrix
+
+!----------------------------------------------------------------------------
+!                                                 LegendreDMatEvenOdd
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 15 Oct 2022
+! summary: Performs even and odd decomposition of Differential matrix
+
+INTERFACE
+  MODULE PURE SUBROUTINE LegendreDMatEvenOdd1(n, D, e, o)
+    INTEGER(I4B), INTENT(IN) :: n
+      !! order of Legendre polynomial
+    REAL(DFP), INTENT(IN) :: D(0:n, 0:n)
+      !! n+1 by n+1
+    REAL(DFP), INTENT(OUT) :: e(0:, 0:)
+      !! even Decomposition, 0:n/2, 0:n/2
+    REAL(DFP), INTENT(OUT) :: o(0:, 0:)
+      !! odd decomposition, 0:n/2, 0:n/2
+  END SUBROUTINE LegendreDMatEvenOdd1
+END INTERFACE
+
+INTERFACE LegendreDMatEvenOdd
+  MODULE PROCEDURE LegendreDMatEvenOdd1
+END INTERFACE LegendreDMatEvenOdd
+
+PUBLIC :: LegendreDMatEvenOdd
 
 !----------------------------------------------------------------------------
 !

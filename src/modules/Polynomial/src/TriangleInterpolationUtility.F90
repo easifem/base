@@ -118,11 +118,11 @@ PUBLIC :: EquidistanceInPoint_Triangle
 !# Introduction
 !
 !- This function returns the nodal coordinates of higher order
-! triangle element
+! triangle element, the layout is always "VEFC"
 !- The coordinates are distributed uniformly
 !- These coordinates can be used to construct lagrange polynomials
 !- The returned coordinates are in $x_{iJ}$ format.
-!- The node numbering is according to Gmsh convention.
+!- The node numbering is according to Gmsh convention, VEFC.
 
 INTERFACE
   MODULE PURE FUNCTION EquidistancePoint_Triangle(order, xij) RESULT(ans)
@@ -140,23 +140,102 @@ END INTERFACE
 PUBLIC :: EquidistancePoint_Triangle
 
 !----------------------------------------------------------------------------
+!                                                BlythPozrikidis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary:         Blyth Pozrikidis nodes on triangle
+
+INTERFACE
+  MODULE FUNCTION BlythPozrikidis_Triangle(order, ipType, layout, xij) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! xij coordinates
+    CHARACTER(LEN=*), INTENT(IN) :: layout
+    !! local node numbering layout
+    !! only layout = "VEFC" is allowed
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! xij coordinates
+  END FUNCTION BlythPozrikidis_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            Isaac_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary:         Isaac points on triangle
+
+INTERFACE
+  MODULE FUNCTION Isaac_Triangle(order, ipType, layout, xij) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order
+    INTEGER(I4B), INTENT(IN) :: ipType
+    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! xij coordinates
+    CHARACTER(LEN=*), INTENT(IN) :: layout
+    !! local node numbering layout
+    !! only layout = "VEFC" is allowed
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! xij coordinates
+  END FUNCTION Isaac_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                InterpolationPoint_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Aug 2022
-! summary: Interpolation point on triangle
+! summary: Interpolation points on triangle
+!
+!# Introduction
+!
+!- This routine returns the interplation points on line
+!- `xij` contains nodal coordinates of line in xij format.
+!- SIZE(xij,1) = nsd, and SIZE(xij,2)=2
+!- If xij is absent then [-1,1] is used
+!- `ipType` is interpolation point type, it can take following values
+!-  `Equidistance`, uniformly/evenly distributed points
+!- `GaussLegendreLobatto ---> IsaacLegendre
+!- `GaussChebyshevLobatto ---> IsaacChebyshev
+!- `GaussJacobi` and `GaussJacobiLobatto`
+!- `ChenBabuska`
+!- `Hesthaven`
+!- `Feket`
+!- `BlythPozChebyshev`
+!- `BlythPozLegendre`
+!- `IsaacChebyshev`
+!- `IsaacLegendre`
+!
+!- `layout` specifies the arrangement of points. The nodes are always
+! returned in VEFC format (vertex, edge, face, cell). 1:3 are are
+! vertex points, then edge, and then internal nodes. The internal nodes
+! also follow the same convention. Please read Gmsh manual  on this topic.
+! In case of BlythPoz and Recursive
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Triangle(order, ipType, xij) &
-    & RESULT(nodecoord)
+  MODULE FUNCTION InterpolationPoint_Triangle(order, ipType, &
+    & layout, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
-    !! interpolation type
+    !! interpolation point type
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! xij coordinates
-    REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
+    !! Coord of domain in xij format
+    CHARACTER(LEN=*), INTENT(IN) :: layout
+    !! local node numbering layout, always VEFC
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
   END FUNCTION InterpolationPoint_Triangle
 END INTERFACE
@@ -164,7 +243,250 @@ END INTERFACE
 PUBLIC :: InterpolationPoint_Triangle
 
 !----------------------------------------------------------------------------
+!                                                    LagrangeCoeff_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Returns the coefficients for ith lagrange polynomial for monomial
+! basis
 !
+!# Introduction
+!
+! ith Lagrange polynomial for interpolation points xij is given by
+!
+!$$
+! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
+!$$
+!
+! This function returns the coefficients $a_{n}$.
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Triangle1(order, i, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP) :: ans(SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Triangle1
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Triangle
+  MODULE PROCEDURE LagrangeCoeff_Triangle1
+END INTERFACE LagrangeCoeff_Triangle
+
+PUBLIC :: LagrangeCoeff_Triangle
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeCoeff_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Returns the coefficients for ith lagrange polynomial for monomial
+! basis
+!
+!# Introduction
+!
+! ith Lagrange polynomial for interpolation points xij is given by
+!
+!$$
+! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
+!$$
+!
+! This function returns the coefficients $a_{n}$
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Triangle2(order, i, v, isVandermonde) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP) :: ans(SIZE(v, 1))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Triangle2
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Triangle
+  MODULE PROCEDURE LagrangeCoeff_Triangle2
+END INTERFACE LagrangeCoeff_Triangle
+
+!----------------------------------------------------------------------------
+!                                                     LagrangeCoeff_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Returns the coefficients for ith lagrange polynomial for monomial
+! basis
+!
+!# Introduction
+!
+! ith Lagrange polynomial for interpolation points xij is given by
+!
+!$$
+! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
+!$$
+!
+! This function returns the coefficients $a_{n}$
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Triangle3(order, i, v, ipiv) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP) :: ans(SIZE(v, 1))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Triangle3
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Triangle
+  MODULE PROCEDURE LagrangeCoeff_Triangle3
+END INTERFACE LagrangeCoeff_Triangle
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeCoeff_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Returns the coefficients for ith lagrange polynomial for monomial
+! basis
+!
+!# Introduction
+!
+! ith Lagrange polynomial for interpolation points xij is given by
+!
+!$$
+! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
+!$$
+!
+! This function returns the coefficients $a_{n}$ for ALL i.
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Triangle4(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Triangle4
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Triangle
+  MODULE PROCEDURE LagrangeCoeff_Triangle4
+END INTERFACE LagrangeCoeff_Triangle
+
+!----------------------------------------------------------------------------
+!                                                       DubinerPolynomial
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on triangle
+!
+!# Introduction
+!
+! Forms Dubiner basis on reference triangle domain. Reference triangle
+! can be biunit or unit.
+!
+! The shape of `ans` is (M,N), where M=SIZE(xij,2) (number of points)
+! N = 0.5*(order+1)*(order+2).
+!
+! In this way, ans(j,:) denotes the values of all polynomial at jth point
+!
+! Polynomials are returned in following way:
+!
+!$$
+! P_{0,0}, P_{0,1}, \cdots , P_{0,order} \\
+! P_{1,0}, P_{1,1}, \cdots , P_{1,order-1} \\
+! P_{2,0}, P_{2,1}, \cdots , P_{2,order-2} \\
+! \cdots
+! P_{order,0}
+!$$
+!
+! For example for order=3, the polynomials are arranged as:
+!
+!$$
+! P_{0,0}, P_{0,1}, P_{0,2}, P_{0,3} \\
+! P_{1,0}, P_{1,1}, P_{1,2} \\
+! P_{2,0}, P_{2,1} \\
+! P_{3,0}
+!$$
+
+INTERFACE
+  MODULE PURE FUNCTION Dubiner_Triangle1(order, xij, refTriangle) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in reference triangle, shape functions will be evaluated
+    !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
+    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    !! "unit"
+    !! "biunit"
+    REAL(DFP) :: ans(SIZE(xij, 2), (order + 1) * (order + 2) / 2)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+  END FUNCTION Dubiner_Triangle1
+END INTERFACE
+
+INTERFACE Dubiner_Triangle
+  MODULE PROCEDURE Dubiner_Triangle1
+END INTERFACE Dubiner_Triangle
+
+PUBLIC :: Dubiner_Triangle
+
+!----------------------------------------------------------------------------
+!                                                       DubinerPolynomial
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on triangle
+!
+!# Introduction
+!
+! Forms Dubiner basis on reference triangle domain. Reference triangle
+! can be biunit or unit. Here x and y are coordinate on line.
+! xij is given by outerproduct of x and y.
+
+INTERFACE
+  MODULE PURE FUNCTION Dubiner_Triangle2(order, x, y, refTriangle) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: x(:), y(:)
+    !! x and y coordinates, total points = SIZE(x)*SIZE(y)
+    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    !! "unit"
+    !! "biunit"
+    REAL(DFP) :: ans(SIZE(x) * SIZE(y), (order + 1) * (order + 2) / 2)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+  END FUNCTION Dubiner_Triangle2
+END INTERFACE
+
+INTERFACE Dubiner_Triangle
+  MODULE PROCEDURE Dubiner_Triangle2
+END INTERFACE Dubiner_Triangle
+
+!----------------------------------------------------------------------------
+!                                                                 Triangle
 !----------------------------------------------------------------------------
 
 END MODULE TriangleInterpolationUtility
