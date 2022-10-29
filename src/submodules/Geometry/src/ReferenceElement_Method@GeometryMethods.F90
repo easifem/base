@@ -776,7 +776,8 @@ CASE (2)
       !!
     ans(ii)%xij = InterpolationPoint_Line(  &
       & order=refelem%order, &
-      & ipType=refelem%interpolationPointType)
+      & ipType=refelem%interpolationPointType, &
+      & layout="VEFC")
       !!
     ans(ii)%Order = ElementOrder(ElemType=topo%Name)
     ans(ii)%NSD = refelem%nsd
@@ -842,13 +843,15 @@ CASE (3)
         !!
       ans(ii)%xij = InterpolationPoint_Triangle( &
         & order=refelem%order, &
-        & ipType=refelem%interpolationPointType)
+        & ipType=refelem%interpolationPointType, &
+        & layout="VEFC")
         !!
     ELSE IF (isQuadrangle(topo%Name)) THEN
         !!
       ans(ii)%xij = InterpolationPoint_Quadrangle( &
         & order=refelem%order, &
-        & ipType=refelem%interpolationPointType)
+        & ipType=refelem%interpolationPointType, &
+        & layout="VEFC")
         !!
     END IF
   END DO

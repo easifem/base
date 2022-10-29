@@ -35,7 +35,8 @@ CALL Reallocate(obj%xij, 3, 3)
 obj%xij = InterpolationPoint_Triangle(  &
   & xij=xij, &
   & order=1, &
-  & ipType=Equidistance)
+  & ipType=Equidistance, &
+  & layout="VEFC")
   !!
 obj%EntityCounts = [3, 3, 1, 0]
 obj%XiDimension = 2
@@ -98,7 +99,8 @@ CALL Deallocate (obj)
 obj%xij = InterpolationPoint_Triangle( &
   & xij=refelem%xij(1:3, 1:3), &
   & order=order, &
-  & ipType=ipType)
+  & ipType=ipType, &
+  & layout="VEFC")
   !!
 nsd = refelem%nsd
 obj%highOrderElement => refelem%highOrderElement
