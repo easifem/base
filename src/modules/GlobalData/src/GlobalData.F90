@@ -249,12 +249,12 @@ INTEGER(Int8), PARAMETER :: BYInt8 = BIT_SIZE(MaxInt8) / 8_Int8
 INTEGER(DIP), PARAMETER :: BYInt = BIT_SIZE(MaxInt) / 8_DIP !default in bytes
 INTEGER(DIP), PARAMETER :: BYI4B = BIT_SIZE(MaxInt) / 8_DIP ! default in bytes
 REAL(DFP), PARAMETER :: Pi = 3.14159265359_DFP
-REAL(DFP), PARAMETER, DIMENSION(3, 3) :: Eye3 = RESHAPE( &
-                                         (/1.0_DFP, 0.0_DFP, 0.0_DFP, &
-                                           0.0_DFP, 1.0_DFP, 0.0_DFP, &
-                                        0.0_DFP, 0.0_DFP, 1.0_DFP/), (/3, 3/))
-REAL(DFP), PARAMETER, DIMENSION(2, 2) :: Eye2 = RESHAPE( &
-                             (/1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP/), (/2, 2/))
+REAL(DFP), PARAMETER :: Eye3(3, 3) = RESHAPE( &
+  & [1.0_DFP, 0.0_DFP, 0.0_DFP, &
+  & 0.0_DFP, 1.0_DFP, 0.0_DFP, &
+  & 0.0_DFP, 0.0_DFP, 1.0_DFP], [3, 3])
+REAL(DFP), PARAMETER :: Eye2(2, 2) = RESHAPE( &
+  & [1.0_DFP, 0.0_DFP, 0.0_DFP, 1.0_DFP], [2, 2])
 ! Parameters for iteration data
 INTEGER(I4B), PARAMETER :: RelativeConvergence = 1
 INTEGER(I4B), PARAMETER :: AbsoluteConvergence = 2
@@ -265,32 +265,74 @@ INTEGER(I4B), PARAMETER :: ConvergenceInSolRes = 3
 INTEGER(I4B), PARAMETER :: NormL1 = 1
 INTEGER(I4B), PARAMETER :: NormL2 = 2
 INTEGER(I4B), PARAMETER :: NormInfinity = 3
-! Type of shape functions
+!!
+!! Type of polynomial for scale interpolation
+!!
 INTEGER(I4B), PARAMETER :: LagrangePolynomial = 1
 INTEGER(I4B), PARAMETER :: SerendipityPolynomial = 2
 INTEGER(I4B), PARAMETER :: HeirarchicalPolynomial = 3
+INTEGER(I4B), PARAMETER :: Jacobi = 4
+INTEGER(I4B), PARAMETER :: Ultraspherical = 5
+INTEGER(I4B), PARAMETER :: Legendre = 6
+INTEGER(I4B), PARAMETER :: Chebyshev = 7
+INTEGER(I4B), PARAMETER :: Lobatto = 8
+!!
+!! Quadrature types
+!!
 INTEGER(I4B), PARAMETER :: Equidistance = 1
-INTEGER(I4B), PARAMETER :: GaussLegendre = 2
-INTEGER(I4B), PARAMETER :: GaussLobatto = 3
-INTEGER(I4B), PARAMETER :: Chebyshev = 4
-INTEGER(I4B), PARAMETER :: Gauss = 5
-INTEGER(I4B), PARAMETER :: GaussRadau = 6
-INTEGER(I4B), PARAMETER :: GaussRadauLeft = 7
-INTEGER(I4B), PARAMETER :: GaussRadauRight = 8
-! Type of Lagrange Interpolation Poitns
+INTEGER(I4B), PARAMETER :: Gauss = 2
+INTEGER(I4B), PARAMETER :: GaussRadau = 3
+INTEGER(I4B), PARAMETER :: GaussRadauLeft = 4
+INTEGER(I4B), PARAMETER :: GaussRadauRight = 5
+INTEGER(I4B), PARAMETER :: GaussLobatto = 6
+!!
+INTEGER(I4B), PARAMETER :: GaussLegendre = 7
+INTEGER(I4B), PARAMETER :: GaussLegendreLobatto = 8
+INTEGER(I4B), PARAMETER :: GaussLegendreRadau = 9
+INTEGER(I4B), PARAMETER :: GaussLegendreRadauLeft = 10
+INTEGER(I4B), PARAMETER :: GaussLegendreRadauRight = 11
+!!
+INTEGER(I4B), PARAMETER :: GaussChebyshev = 12
+INTEGER(I4B), PARAMETER :: GaussChebyshevRadau = 13
+INTEGER(I4B), PARAMETER :: GaussChebyshevRadauLeft = 14
+INTEGER(I4B), PARAMETER :: GaussChebyshevRadauRight = 15
+INTEGER(I4B), PARAMETER :: GaussChebyshevLobatto = 16
+!!
+INTEGER(I4B), PARAMETER :: GaussJacobi = 17
+INTEGER(I4B), PARAMETER :: GaussJacobiRadau = 18
+INTEGER(I4B), PARAMETER :: GaussJacobiRadauLeft = 19
+INTEGER(I4B), PARAMETER :: GaussJacobiRadauRight = 20
+INTEGER(I4B), PARAMETER :: GaussJacobiLobatto = 21
+!!
+!! Type of quadrature points
+!!
+INTEGER(I4B), PARAMETER :: GaussQP = Gauss
+INTEGER(I4B), PARAMETER :: GaussLegendreQP = GaussLegendre
+INTEGER(I4B), PARAMETER :: GaussRadauQP = GaussRadau
+INTEGER(I4B), PARAMETER :: GaussRadauLeftQP = GaussRadauLeft
+INTEGER(I4B), PARAMETER :: GaussRadauRightQP = GaussRadauRight
+INTEGER(I4B), PARAMETER :: GaussLobattoQP = GaussLobatto
+INTEGER(I4B), PARAMETER :: GaussChebyshevQP = GaussChebyshev
+!!
+INTEGER(I4B), PARAMETER :: ChenBabuska = 22 !! for triangle nodes
+INTEGER(I4B), PARAMETER :: Hesthaven = 23 !! for triangle nodes
+INTEGER(I4B), PARAMETER :: Feket = 24 !! for triangle nodes
+!!
+INTEGER(I4B), PARAMETER :: BlythPozLegendre = 25 !! for triangle
+INTEGER(I4B), PARAMETER :: BlythPozChebyshev = 26 !! for triangle
+!!
+INTEGER(I4B), PARAMETER :: IsaacLegendre = 27 !! for triangle
+INTEGER(I4B), PARAMETER :: IsaacChebyshev = 28 !! for triangle
+!!
+!! Type of Lagrange Interpolation Poitns
+!!
 INTEGER(I4B), PARAMETER :: EquidistanceLIP = Equidistance
 INTEGER(I4B), PARAMETER :: GaussLobattoLIP = GaussLobatto
 INTEGER(I4B), PARAMETER :: GaussLegendreLIP = GaussLegendre
 INTEGER(I4B), PARAMETER :: ChebyshevLIP = Chebyshev
-! Type of quadrature points
-INTEGER(I4B), PARAMETER :: GaussLegendreQP = GaussLegendre
-INTEGER(I4B), PARAMETER :: GaussLobattoQP = GaussLobatto
-INTEGER(I4B), PARAMETER :: ChebyshevQP = Chebyshev
-INTEGER(I4B), PARAMETER :: GaussQP = Gauss
-INTEGER(I4B), PARAMETER :: GaussRadauQP = GaussRadau
-INTEGER(I4B), PARAMETER :: GaussRadauLeftQP = GaussRadauLeft
-INTEGER(I4B), PARAMETER :: GaussRadauRightQP = GaussRadauRight
-! Types of Elements
+!!
+!! Types of Element domain
+!!
 INTEGER(I4B), PARAMETER :: Line = 1
 INTEGER(I4B), PARAMETER :: Line2 = 1
 INTEGER(I4B), PARAMETER :: Line3 = 8
@@ -507,3 +549,56 @@ INTEGER(I4B), PARAMETER, PUBLIC :: MAX_CHUNK_SIZE = 1024
 !
 !----------------------------------------------------------------------------
 END MODULE GlobalData
+
+! INTEGER(I4B), PARAMETER :: LagrangePolynomial = 1
+! INTEGER(I4B), PARAMETER :: SerendipityPolynomial = 2
+! INTEGER(I4B), PARAMETER :: HeirarchicalPolynomial = 3
+! INTEGER(I4B), PARAMETER :: Jacobi = 10
+! INTEGER(I4B), PARAMETER :: Ultraspherical = 15
+! INTEGER(I4B), PARAMETER :: Legendre = 2
+! INTEGER(I4B), PARAMETER :: Chebyshev = 4
+! INTEGER(I4B), PARAMETER :: Lobatto = 5
+! !!
+! !! Quadrature types
+! !!
+! INTEGER(I4B), PARAMETER :: Equidistance = 1
+! INTEGER(I4B), PARAMETER :: Gauss = 5
+! INTEGER(I4B), PARAMETER :: GaussRadau = 6
+! INTEGER(I4B), PARAMETER :: GaussRadauLeft = 7
+! INTEGER(I4B), PARAMETER :: GaussRadauRight = 8
+! INTEGER(I4B), PARAMETER :: GaussLobatto = 3
+! INTEGER(I4B), PARAMETER :: GaussLegendre = Legendre
+! INTEGER(I4B), PARAMETER :: GaussLegendreLobatto = GaussLobatto
+! !!
+! INTEGER(I4B), PARAMETER :: GaussChebyshev = Chebyshev
+! INTEGER(I4B), PARAMETER :: GaussChebyshevLobatto = 9
+! !!
+! INTEGER(I4B), PARAMETER :: GaussJacobi = Jacobi
+! INTEGER(I4B), PARAMETER :: GaussJacobiLobatto = 11
+! !!
+! INTEGER(I4B), PARAMETER :: ChenBabuska = 21 !! for triangle nodes
+! INTEGER(I4B), PARAMETER :: Hesthaven = 22 !! for triangle nodes
+! INTEGER(I4B), PARAMETER :: Feket = 23 !! for triangle nodes
+! !!
+! INTEGER(I4B), PARAMETER :: BlythPozLegendre = 24 !! for triangle
+! INTEGER(I4B), PARAMETER :: BlythPozChebyshev = 25 !! for triangle
+! !!
+! INTEGER(I4B), PARAMETER :: IsaacLegendre = 26 !! for triangle
+! INTEGER(I4B), PARAMETER :: IsaacChebyshev = 27 !! for triangle
+! !!
+! !! Type of Lagrange Interpolation Poitns
+! !!
+! INTEGER(I4B), PARAMETER :: EquidistanceLIP = Equidistance
+! INTEGER(I4B), PARAMETER :: GaussLobattoLIP = GaussLobatto
+! INTEGER(I4B), PARAMETER :: GaussLegendreLIP = GaussLegendre
+! INTEGER(I4B), PARAMETER :: ChebyshevLIP = Chebyshev
+! !!
+! !! Type of quadrature points
+! !!
+! INTEGER(I4B), PARAMETER :: GaussQP = Gauss
+! INTEGER(I4B), PARAMETER :: GaussLegendreQP = GaussLegendre
+! INTEGER(I4B), PARAMETER :: GaussRadauQP = GaussRadau
+! INTEGER(I4B), PARAMETER :: GaussRadauLeftQP = GaussRadauLeft
+! INTEGER(I4B), PARAMETER :: GaussRadauRightQP = GaussRadauRight
+! INTEGER(I4B), PARAMETER :: GaussLobattoQP = GaussLobatto
+! INTEGER(I4B), PARAMETER :: ChebyshevQP = Chebyshev
