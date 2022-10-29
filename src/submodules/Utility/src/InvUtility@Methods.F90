@@ -17,7 +17,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         3 April 2021
-! summary:         Methods for determining determinent and inverse of small matrix
+! summary: Methods for determining determinent and inverse of small matrix
 
 SUBMODULE(InvUtility) Methods
 USE BaseMethod
