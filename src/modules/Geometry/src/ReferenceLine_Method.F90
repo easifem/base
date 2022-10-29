@@ -56,7 +56,7 @@ PRIVATE
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE initiate_ref_Line(obj, nsd, xij)
+  MODULE SUBROUTINE initiate_ref_Line(obj, nsd, xij)
     CLASS(ReferenceLine_), INTENT(INOUT) :: obj
     !! The instance
     INTEGER(I4B), INTENT(IN) :: nsd
@@ -101,7 +101,7 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-  MODULE PURE FUNCTION reference_line(nsd, xij) RESULT(obj)
+  MODULE FUNCTION reference_line(nsd, xij) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     TYPE(ReferenceLine_) :: obj
@@ -143,7 +143,7 @@ PUBLIC :: ReferenceLine
 !```
 
 INTERFACE
-  MODULE PURE FUNCTION reference_line_pointer_1(nsd, xij) RESULT(obj)
+  MODULE FUNCTION reference_line_pointer_1(nsd, xij) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CLASS(ReferenceLine_), POINTER :: obj
@@ -181,7 +181,7 @@ PUBLIC :: ReferenceLine_Pointer
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE highorderElement_Line(refelem, order, obj, &
+  MODULE SUBROUTINE highorderElement_Line(refelem, order, obj, &
     & ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! Linear line element
