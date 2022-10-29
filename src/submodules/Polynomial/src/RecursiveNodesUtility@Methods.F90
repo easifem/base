@@ -33,13 +33,11 @@ INTEGER(I4B), ALLOCATABLE :: indices(:, :)
 REAL(DFP), ALLOCATABLE :: x(:)
 !!
 n = order
-x = InterpolationPoint_Line(order=order, ipType=ipType, xij=xij)
-!!
-IF (order .GT. 1) THEN
-  avar = x(2)
-  x(2:order) = x(3:)
-  x(order + 1) = avar
-END IF
+x = InterpolationPoint_Line( &
+  & order=order, &
+  & ipType=ipType, &
+  & xij=xij, &
+  & layout="INCREASING")
 !!
 indices = GetMultiIndices(n=n, d=d)
 CALL Reallocate(ans, SIZE(indices, 1), SIZE(indices, 2))
@@ -73,8 +71,9 @@ REAL(DFP) :: BX(2, order + 1, order + 1)
 INTEGER(I4B), ALLOCATABLE :: indices(:, :)
 !!
 n = order
-CALL BarycentericNodeFamily1D(order=order, ipType=ipType, ans=BX, Xn=Xn)
-!
+CALL BarycentericNodeFamily1D(order=order, ipType=ipType, ans=BX, &
+  & Xn=Xn)
+!!
 indices = GetMultiIndices(n=n, d=d)
 CALL Reallocate(ans, SIZE(indices, 1), SIZE(indices, 2))
 !!
@@ -108,7 +107,7 @@ IF (ALLOCATED(indices)) DEALLOCATE (indices)
 END PROCEDURE RecursiveNode2D
 
 !----------------------------------------------------------------------------
-!                                               RecursiveNode3D
+!                                                          RecursiveNode3D
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RecursiveNode3D
@@ -158,7 +157,7 @@ END PROCEDURE RecursiveNode3D
 !
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE BarycentericNodeFamily1D(order, ipType, ans, Xn)
+SUBROUTINE BarycentericNodeFamily1D(order, ipType, ans, Xn)
   INTEGER(I4B), INTENT(IN) :: order
   INTEGER(I4B), INTENT(IN) :: ipType
   REAL(DFP), INTENT(OUT) :: ans(2, order + 1, order + 1)
@@ -191,7 +190,7 @@ END SUBROUTINE BarycentericNodeFamily1D
 !
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn)
+SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn)
   INTEGER(I4B), INTENT(IN) :: order
   INTEGER(I4B), INTENT(IN) :: ipType
   REAL(DFP), INTENT(OUT) :: ans(3, order + 1, order + 1, order + 1)
@@ -218,13 +217,14 @@ PURE SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn)
     !!
   END DO
   !!
-  Xn = InterpolationPoint_Line(order=order, ipType=ipType, xij=xij)
+  Xn = InterpolationPoint_Line(order=order, ipType=ipType, xij=xij, &
+    & layout="INCREASING")
   !!
-  IF (order .GT. 1) THEN
-    avar = Xn(2)
-    Xn(2:order) = Xn(3:)
-    Xn(order + 1) = avar
-  END IF
+  ! IF (order .GT. 1) THEN
+  !   avar = Xn(2)
+  !   Xn(2:order) = Xn(3:)
+  !   Xn(order + 1) = avar
+  ! END IF
   !!
   IF (ALLOCATED(BXn)) DEALLOCATE (BXn)
   IF (ALLOCATED(indices)) DEALLOCATE (indices)

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(LagrangeUtility) Methods
+SUBMODULE(LagrangePolynomialUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -106,27 +106,27 @@ INTEGER(I4B) :: m, n, jj, nsd
   !!
 degree = TRANSPOSE(LagrangeDegree(order=order, elemType=elemType))
   !!
-m = SIZE(x, 2)
+m = SIZE(xij, 2)
 nsd = SIZE(degree, 1)
 n = SIZE(degree, 2)
 ALLOCATE (ans(m, n))
   !!
 SELECT CASE (nsd)
 CASE (1)
-  x0 = x(1, :)
+  x0 = xij(1, :)
   DO jj = 1, n
     ans(:, jj) = x0**degree(1, jj)
   END DO
 CASE (2)
-  x0 = x(1, :)
-  y0 = x(2, :)
+  x0 = xij(1, :)
+  y0 = xij(2, :)
   DO jj = 1, n
     ans(:, jj) = x0**degree(1, jj) * y0**degree(2, jj)
   END DO
 CASE (3)
-  x0 = x(1, :)
-  y0 = x(2, :)
-  z0 = x(3, :)
+  x0 = xij(1, :)
+  y0 = xij(2, :)
+  z0 = xij(3, :)
   DO jj = 1, n
     ans(:, jj) = x0**degree(1, jj) * y0**degree(2, jj) * z0**degree(3, jj)
   END DO
@@ -181,21 +181,131 @@ CASE (Point)
     ALLOCATE (ans(0, 0))
   END IF
 CASE (Line)
-  ans = InterpolationPoint_Line(order=order, ipType=ipType, xij=xij)
+  ans = InterpolationPoint_Line(order=order, ipType=ipType, xij=xij, &
+    & layout=layout)
 CASE (Triangle)
-  ans = InterpolationPoint_Triangle(order=order, ipType=ipType, xij=xij)
+  ans = InterpolationPoint_Triangle(order=order, ipType=ipType, xij=xij, &
+    & layout=layout)
 CASE (Quadrangle)
-  ans = InterpolationPoint_Quadrangle(order=order, ipType=ipType, xij=xij)
+  ans = InterpolationPoint_Quadrangle(order=order, ipType=ipType, xij=xij, &
+    & layout=layout)
 CASE (Tetrahedron)
-  ans = InterpolationPoint_Tetrahedron(order=order, ipType=ipType, xij=xij)
+  ans = InterpolationPoint_Tetrahedron(order=order, ipType=ipType, xij=xij, &
+    & layout=layout)
 CASE (Hexahedron)
-  ans = InterpolationPoint_Hexahedron(order=order, ipType=ipType, xij=xij)
+  ans = InterpolationPoint_Hexahedron(order=order, ipType=ipType, xij=xij, &
+    &layout=layout)
 CASE (Prism)
-  ans = InterpolationPoint_Prism(order=order, ipType=ipType, xij=xij)
+  ans = InterpolationPoint_Prism(order=order, ipType=ipType, xij=xij, &
+    & layout=layout)
 CASE (Pyramid)
-  ans = InterpolationPoint_Pyramid(order=order, ipType=ipType, xij=xij)
+  ans = InterpolationPoint_Pyramid(order=order, ipType=ipType, xij=xij, &
+  & layout=layout)
 END SELECT
 END PROCEDURE InterpolationPoint
+
+!----------------------------------------------------------------------------
+!                                                             LagrangeCoeff
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff1
+SELECT CASE (elemType)
+CASE (Point)
+  !!
+CASE (Line)
+  ans = LagrangeCoeff_Line(order=order, xij=xij, i=i)
+CASE (Triangle)
+  ans = LagrangeCoeff_Triangle(order=order, xij=xij, i=i)
+CASE (Quadrangle)
+  ans = LagrangeCoeff_Quadrangle(order=order, xij=xij, i=i)
+CASE (Tetrahedron)
+  ans = LagrangeCoeff_Tetrahedron(order=order, xij=xij, i=i)
+CASE (Hexahedron)
+  ans = LagrangeCoeff_Hexahedron(order=order, xij=xij, i=i)
+CASE (Prism)
+  ans = LagrangeCoeff_Prism(order=order, xij=xij, i=i)
+CASE (Pyramid)
+  ans = LagrangeCoeff_Pyramid(order=order, xij=xij, i=i)
+END SELECT
+END PROCEDURE LagrangeCoeff1
+
+!----------------------------------------------------------------------------
+!                                                             LagrangeCoeff
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff2
+SELECT CASE (elemType)
+CASE (Point)
+  !!
+CASE (Line)
+  ans = LagrangeCoeff_Line(order=order, xij=xij)
+CASE (Triangle)
+  ans = LagrangeCoeff_Triangle(order=order, xij=xij)
+CASE (Quadrangle)
+  ans = LagrangeCoeff_Quadrangle(order=order, xij=xij)
+CASE (Tetrahedron)
+  ans = LagrangeCoeff_Tetrahedron(order=order, xij=xij)
+CASE (Hexahedron)
+  ans = LagrangeCoeff_Hexahedron(order=order, xij=xij)
+CASE (Prism)
+  ans = LagrangeCoeff_Prism(order=order, xij=xij)
+CASE (Pyramid)
+  ans = LagrangeCoeff_Pyramid(order=order, xij=xij)
+END SELECT
+  !!
+END PROCEDURE LagrangeCoeff2
+
+!----------------------------------------------------------------------------
+!                                                             LagrangeCoeff
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff3
+SELECT CASE (elemType)
+CASE (Point)
+  !!
+CASE (Line)
+  ans = LagrangeCoeff_Line(order=order, i=i, v=v, isVandermonde=.TRUE.)
+CASE (Triangle)
+  ans = LagrangeCoeff_Triangle(order=order, i=i, v=v, isVandermonde=.TRUE.)
+CASE (Quadrangle)
+  ans = LagrangeCoeff_Quadrangle(order=order, i=i, v=v, isVandermonde=.TRUE.)
+CASE (Tetrahedron)
+  ans = LagrangeCoeff_Tetrahedron(order=order, i=i, v=v, isVandermonde=.TRUE.)
+CASE (Hexahedron)
+  ans = LagrangeCoeff_Hexahedron(order=order, i=i, v=v, isVandermonde=.TRUE.)
+CASE (Prism)
+  ans = LagrangeCoeff_Prism(order=order, i=i, v=v, isVandermonde=.TRUE.)
+CASE (Pyramid)
+  ans = LagrangeCoeff_Pyramid(order=order, i=i, v=v, isVandermonde=.TRUE.)
+END SELECT
+  !!
+END PROCEDURE LagrangeCoeff3
+
+!----------------------------------------------------------------------------
+!                                                             LagrangeCoeff
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff4
+SELECT CASE (elemType)
+CASE (Point)
+  !!
+CASE (Line)
+  ans = LagrangeCoeff_Line(order=order, i=i, v=v, ipiv=ipiv)
+CASE (Triangle)
+  ans = LagrangeCoeff_Triangle(order=order, i=i, v=v, ipiv=ipiv)
+CASE (Quadrangle)
+  ans = LagrangeCoeff_Quadrangle(order=order, i=i, v=v, ipiv=ipiv)
+CASE (Tetrahedron)
+  ans = LagrangeCoeff_Tetrahedron(order=order, i=i, v=v, ipiv=ipiv)
+CASE (Hexahedron)
+  ans = LagrangeCoeff_Hexahedron(order=order, i=i, v=v, ipiv=ipiv)
+CASE (Prism)
+  ans = LagrangeCoeff_Prism(order=order, i=i, v=v, ipiv=ipiv)
+CASE (Pyramid)
+  ans = LagrangeCoeff_Pyramid(order=order, i=i, v=v, ipiv=ipiv)
+END SELECT
+  !!
+END PROCEDURE LagrangeCoeff4
 
 !----------------------------------------------------------------------------
 !

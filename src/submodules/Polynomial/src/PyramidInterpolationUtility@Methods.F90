@@ -80,10 +80,61 @@ SELECT CASE (ipType)
 CASE (Equidistance)
   nodecoord = EquidistancePoint_Pyramid(xij=xij, order=order)
 CASE (GaussLegendre)
-CASE (GaussLobatto)
-CASE (Chebyshev)
+CASE (GaussLegendreLobatto)
+CASE (GaussChebyshev)
+CASE (GaussChebyshevLobatto)
 END SELECT
 END PROCEDURE InterpolationPoint_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid1
+REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
+INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
+INTEGER(I4B) :: info
+!!
+ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
+V = LagrangeVandermonde(order=order, xij=xij, elemType=Pyramid)
+CALL GetLU(A=V, IPIV=ipiv, info=info)
+CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
+!!
+END PROCEDURE LagrangeCoeff_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid2
+!!
+REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
+INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
+INTEGER(I4B) :: info
+!!
+vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
+CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
+CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Pyramid2
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid3
+INTEGER(I4B) :: info
+ans = 0.0_DFP; ans(i) = 1.0_DFP
+CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
+END PROCEDURE LagrangeCoeff_Pyramid3
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeCoeff_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Pyramid4
+ans = LagrangeVandermonde(order=order, xij=xij, elemType=Pyramid)
+CALL GetInvMat(ans)
+END PROCEDURE LagrangeCoeff_Pyramid4
 
 !----------------------------------------------------------------------------
 !
