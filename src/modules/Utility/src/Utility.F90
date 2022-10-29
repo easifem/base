@@ -15,6 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE Utility
+USE MappingUtility
 USE BinomUtility
 USE AppendUtility
 USE ApproxUtility
@@ -22,6 +23,7 @@ USE AssertUtility
 USE FunctionalFortranUtility
 USE GridPointUtility
 USE OnesUtility
+USE ZerosUtility
 USE EyeUtility
 USE DiagUtility
 USE HashingUtility
