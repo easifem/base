@@ -15,9 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-
 !----------------------------------------------------------------------------
-!                                                           DGEES@EigenValue
+!                                                          DGEES@EigenValue
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -76,12 +75,12 @@ INTERFACE
 !
 ! SDIM:
 
-MODULE SUBROUTINE dgees_1( A, WR, WI, SchurForm )
-  REAL( DFP ), INTENT( IN ) :: A( :, : )
-  REAL( DFP ), INTENT( INOUT ) :: WR( : )
+  MODULE SUBROUTINE dgees_1(A, WR, WI, SchurForm)
+    REAL(DFP), INTENT(IN) :: A(:, :)
+    REAL(DFP), INTENT(INOUT) :: WR(:)
     !! Real part of the eigenvalue
-  REAL( DFP ), INTENT( INOUT ) :: WI( : )
+    REAL(DFP), INTENT(INOUT) :: WI(:)
     !! Imaginary part of the eigenvalue
-  REAL( DFP ), INTENT( INOUT ) :: SchurForm( :, : )
-END SUBROUTINE dgees_1
+    REAL(DFP), INTENT(INOUT) :: SchurForm(:, :)
+  END SUBROUTINE dgees_1
 END INTERFACE

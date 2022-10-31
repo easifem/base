@@ -26,8 +26,13 @@ TARGET_SOURCES(
   ${src_path}/PrismInterpolationUtility@Methods.F90
   ${src_path}/PyramidInterpolationUtility@Methods.F90
   ${src_path}/InterpolationUtility@Methods.F90
-  ${src_path}/LagrangeUtility@Methods.F90
+  ${src_path}/LagrangePolynomialUtility@Methods.F90
   ${src_path}/JacobiPolynomialUtility@Methods.F90
+  ${src_path}/UltrasphericalPolynomialUtility@Methods.F90
+  ${src_path}/LegendrePolynomialUtility@Methods.F90
+  ${src_path}/LobattoPolynomialUtility@Methods.F90
+  ${src_path}/UnscaledLobattoPolynomialUtility@Methods.F90
   ${src_path}/Chebyshev1PolynomialUtility@Methods.F90
   ${src_path}/OrthogonalPolynomialUtility@Methods.F90
+  ${src_path}/RecursiveNodesUtility@Methods.F90
 )

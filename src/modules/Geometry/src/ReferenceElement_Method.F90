@@ -733,7 +733,7 @@ PUBLIC :: FacetMatrix
 ! summary: This routine returns the facet elements
 
 INTERFACE
-  MODULE PURE FUNCTION RefElem_FacetElements(RefElem) RESULT(ans)
+  MODULE FUNCTION RefElem_FacetElements(RefElem) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
     TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
   END FUNCTION RefElem_FacetElements

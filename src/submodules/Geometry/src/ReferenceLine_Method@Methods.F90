@@ -17,7 +17,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2 March 2021
-! summary: 	This submodule contains methods for [[ReferenceLine_]]
+! summary:         This submodule contains methods for [[ReferenceLine_]]
 
 SUBMODULE(ReferenceLine_Method) Methods
 USE BaseMethod
@@ -30,22 +30,23 @@ CONTAINS
 
 MODULE PROCEDURE initiate_ref_Line
   !!
-  CALL Reallocate( obj%xij, 3, 2 )
-  obj%xij = InterpolationPoint_Line( xij=xij, order=1, ipType=Equidistance )
+CALL Reallocate(obj%xij, 3, 2)
+obj%xij = InterpolationPoint_Line(xij=xij, order=1, ipType=Equidistance, &
+& layout="VEFC")
   !!
-  obj%EntityCounts = [2, 1, 0, 0]
-  obj%XiDimension = 1
-  obj%order = 1
-  obj%nsd = nsd
-  obj%Name = Line2
+obj%EntityCounts = [2, 1, 0, 0]
+obj%XiDimension = 1
+obj%order = 1
+obj%nsd = nsd
+obj%Name = Line2
   !!
-  IF( ALLOCATED( obj%Topology ) ) DEALLOCATE( obj%Topology )
-  ALLOCATE( obj%Topology( 3 ) )
-  obj%Topology( 1 ) = ReferenceTopology( [1], Point )
-  obj%Topology( 2 ) = ReferenceTopology( [2], Point )
-  obj%Topology( 3 ) = ReferenceTopology( [1, 2], Line2 )
+IF (ALLOCATED(obj%Topology)) DEALLOCATE (obj%Topology)
+ALLOCATE (obj%Topology(3))
+obj%Topology(1) = ReferenceTopology([1], Point)
+obj%Topology(2) = ReferenceTopology([2], Point)
+obj%Topology(3) = ReferenceTopology([1, 2], Line2)
   !!
-  obj%highorderElement => highorderElement_Line
+obj%highorderElement => highorderElement_Line
   !!
 END PROCEDURE initiate_ref_Line
 
@@ -55,11 +56,11 @@ END PROCEDURE initiate_ref_Line
 
 MODULE PROCEDURE reference_Line
   !!
-  IF( PRESENT( xij ) ) THEN
-    CALL Initiate( obj, nsd, xij )
-  ELSE
-    CALL Initiate( obj, nsd )
-  END IF
+IF (PRESENT(xij)) THEN
+  CALL Initiate(obj, nsd, xij)
+ELSE
+  CALL Initiate(obj, nsd)
+END IF
   !!
 END PROCEDURE reference_Line
 
@@ -69,13 +70,13 @@ END PROCEDURE reference_Line
 
 MODULE PROCEDURE reference_Line_Pointer_1
   !!
-  ALLOCATE( obj )
+ALLOCATE (obj)
   !!
-  IF( PRESENT( xij ) ) THEN
-    CALL Initiate( obj, nsd, xij )
-  ELSE
-    CALL Initiate( obj, nsd )
-  END IF
+IF (PRESENT(xij)) THEN
+  CALL Initiate(obj, nsd, xij)
+ELSE
+  CALL Initiate(obj, nsd)
+END IF
   !!
 END PROCEDURE reference_Line_Pointer_1
 
@@ -87,23 +88,23 @@ MODULE PROCEDURE highorderElement_Line
   !!
   !! Define internal variables
   !!
-  INTEGER( I4B ) :: nns, i
+INTEGER(I4B) :: nns, i
   !!
-  obj%xij = InterpolationPoint_Line( xij = refelem%xij, order = order, &
-    & ipType=ipType )
-  obj%nsd = refelem%nsd
-  nns = SIZE( obj%xij, 2 )
-  obj%EntityCounts = [nns, 1, 0, 0]
-  obj%XiDimension = 1
-  obj%order = order
-  obj%Name = ElementType( "Line" // TRIM( INT2STR( nns ) ) )
+obj%xij = InterpolationPoint_Line(xij=refelem%xij, order=order, &
+  & ipType=ipType, layout="VEFC")
+obj%nsd = refelem%nsd
+nns = SIZE(obj%xij, 2)
+obj%EntityCounts = [nns, 1, 0, 0]
+obj%XiDimension = 1
+obj%order = order
+obj%Name = ElementType("Line"//TRIM(INT2STR(nns)))
   !!
-  ALLOCATE( obj%Topology( nns + 1 ) )
-  DO CONCURRENT (i=1:nns)
-    obj%Topology( i ) = ReferenceTopology( [i], Point )
-  END DO
+ALLOCATE (obj%Topology(nns + 1))
+DO CONCURRENT(i=1:nns)
+  obj%Topology(i) = ReferenceTopology([i], Point)
+END DO
   !!
-  obj%Topology( nns + 1 ) = ReferenceTopology( [(i, i=1,nns)], obj%Name )
+obj%Topology(nns + 1) = ReferenceTopology([(i, i=1, nns)], obj%Name)
   !!
 END PROCEDURE highorderElement_Line
 
@@ -112,9 +113,9 @@ END PROCEDURE highorderElement_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Line
-  Ans = SQRT( ( xij( 1, 1 ) -  xij( 1, 2 ) ) ** 2 &
-    & + ( xij( 2, 1 ) -  xij( 2, 2 ) ) ** 2 &
-    & + ( xij( 3, 1 ) -  xij( 3, 2 ) ) ** 2 )
+Ans = SQRT((xij(1, 1) - xij(1, 2))**2 &
+  & + (xij(2, 1) - xij(2, 2))**2 &
+  & + (xij(3, 1) - xij(3, 2))**2)
 END PROCEDURE Measure_Simplex_Line
 
 !----------------------------------------------------------------------------
@@ -122,7 +123,7 @@ END PROCEDURE Measure_Simplex_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Line_quality
-  ans = 0.0_DFP
+ans = 0.0_DFP
 END PROCEDURE Line_quality
 
 END SUBMODULE Methods

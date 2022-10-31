@@ -58,23 +58,23 @@ PUBLIC :: Inv
 !
 
 INTERFACE
-MODULE SUBROUTINE getLU_1(A, LU, IPIV, RCOND, NORM, info)
-  REAL( DFP ), INTENT( IN ) :: A( :, : )
+  MODULE SUBROUTINE getLU_1(A, LU, IPIV, RCOND, NORM, info)
+    REAL(DFP), INTENT(IN) :: A(:, :)
     !! Matrix to be factored
-  REAL( DFP ), INTENT( OUT ) :: LU( :, : )
+    REAL(DFP), INTENT(OUT) :: LU(:, :)
     !! LU factorization, the unit diagonal elements of L are not stored.
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: IPIV( : )
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
     !! IPIV is INTEGER array,row i of the matrix was interchanged with row
     !! IPIV(i).
     !! IPIV is INTEGER array, dimension (min(M,N))
     !! The pivot indices; for 1 <= i <= min(M,N), row i of the
     !! matrix was interchanged with row IPIV(i).
-  REAL( DFP ), OPTIONAL, INTENT( OUT ) :: RCOND
-    !! Condition number
-  CHARACTER( LEN = 1 ), OPTIONAL, INTENT( IN ) :: NORM
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: RCOND
+    !! Inverse of Condition number
+    CHARACTER(LEN=1), OPTIONAL, INTENT(IN) :: NORM
     !! NORM "1", "0"
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
-END SUBROUTINE getLU_1
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
+  END SUBROUTINE getLU_1
 END INTERFACE
 
 INTERFACE getLU
@@ -91,26 +91,26 @@ END INTERFACE getLU
 !
 !# Introduction
 !
-! This routine is same as `getLU_1`	however in this routine LU
+! This routine is same as `getLU_1`        however in this routine LU
 ! factorization is computed in A matrix on return.
 
 INTERFACE
-MODULE SUBROUTINE getLU_2(A, IPIV, RCOND, NORM, info)
-  REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+  MODULE SUBROUTINE getLU_2(A, IPIV, RCOND, NORM, info)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
     !! Matrix to be factored, on return it contains LU factorization,
     !! the unit diagonal elements of L are not stored.
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: IPIV( : )
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
     !! IPIV is INTEGER array,row i of the matrix was interchanged with row
     !! IPIV(i).
     !! IPIV is INTEGER array, dimension (min(M,N))
     !! The pivot indices; for 1 <= i <= min(M,N), row i of the
     !! matrix was interchanged with row IPIV(i).
-  REAL( DFP ), OPTIONAL, INTENT( OUT ) :: RCOND
-    !! If present then condition number is returned
-  CHARACTER( LEN = 1 ), OPTIONAL, INTENT( IN ) :: NORM
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: RCOND
+    !! If present then inverse of condition number is returned
+    CHARACTER(LEN=1), OPTIONAL, INTENT(IN) :: NORM
     !! "1", "0"
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
-END SUBROUTINE getLU_2
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
+  END SUBROUTINE getLU_2
 END INTERFACE
 
 INTERFACE getLU
@@ -126,18 +126,18 @@ END INTERFACE getLU
 ! summary: Solve LUx=y
 
 INTERFACE
-MODULE SUBROUTINE LUSolve_1( A, B, IPIV, isTranspose, info )
-  REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+  MODULE SUBROUTINE LUSolve_1(A, B, IPIV, isTranspose, info)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
     !! LU decomposition of matrix A, see getLU
-  REAL( DFP ), INTENT( INOUT ) :: B(:)
+    REAL(DFP), INTENT(INOUT) :: B(:)
     !! RHS, on return solution will be in B
-  INTEGER( I4B ), INTENT( IN ) :: IPIV(:)
+    INTEGER(I4B), INTENT(IN) :: IPIV(:)
     !! IPIV returned from getLU
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
     !! if isTranspose true then we solve A^Tx=y
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! info
-END SUBROUTINE LUSolve_1
+  END SUBROUTINE LUSolve_1
 END INTERFACE
 
 INTERFACE LUSolve
@@ -153,17 +153,17 @@ END INTERFACE LUSolve
 ! summary: Solve LUx=y
 
 INTERFACE
-MODULE SUBROUTINE LUSolve_2( A, B, IPIV, isTranspose, info )
-  REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+  MODULE SUBROUTINE LUSolve_2(A, B, IPIV, isTranspose, info)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
     !! LU Decomposition of A returned from getLU
-  REAL( DFP ), INTENT( INOUT ) :: B(:,:)
+    REAL(DFP), INTENT(INOUT) :: B(:, :)
     !! Several rhs, on return solution will be in B
-  INTEGER( I4B ), INTENT( IN ) :: IPIV(:)
+    INTEGER(I4B), INTENT(IN) :: IPIV(:)
     !! pivoting returned from getLU
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
     !! if true we solve A^Tx = y
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
-END SUBROUTINE LUSolve_2
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
+  END SUBROUTINE LUSolve_2
 END INTERFACE
 
 INTERFACE LUSolve
@@ -179,20 +179,20 @@ END INTERFACE LUSolve
 ! summary: Solve LUx=y
 
 INTERFACE
-MODULE SUBROUTINE LUSolve_3( X, A, B, IPIV, isTranspose, info )
-  REAL( DFP ), INTENT( OUT ) :: X(:)
+  MODULE SUBROUTINE LUSolve_3(X, A, B, IPIV, isTranspose, info)
+    REAL(DFP), INTENT(OUT) :: X(:)
     !! RHS, on return solution will be in B
-  REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
     !! LU decomposition of matrix A, see getLU
-  REAL( DFP ), INTENT( IN ) :: B(:)
+    REAL(DFP), INTENT(IN) :: B(:)
     !! RHS
-  INTEGER( I4B ), INTENT( IN ) :: IPIV(:)
+    INTEGER(I4B), INTENT(IN) :: IPIV(:)
     !! IPIV returned from getLU
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
     !! if isTranspose true then we solve A^Tx=y
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! info
-END SUBROUTINE LUSolve_3
+  END SUBROUTINE LUSolve_3
 END INTERFACE
 
 INTERFACE LUSolve
@@ -208,19 +208,19 @@ END INTERFACE LUSolve
 ! summary: Solve LUx=y
 
 INTERFACE
-MODULE SUBROUTINE LUSolve_4( X, A, B, IPIV, isTranspose, info )
-  REAL( DFP ), INTENT( OUT ) :: X(:,:)
+  MODULE SUBROUTINE LUSolve_4(X, A, B, IPIV, isTranspose, info)
+    REAL(DFP), INTENT(OUT) :: X(:, :)
     !! solution
-  REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
     !! LU Decomposition of A returned from getLU
-  REAL( DFP ), INTENT( IN ) :: B(:,:)
+    REAL(DFP), INTENT(IN) :: B(:, :)
     !! several RHS
-  INTEGER( I4B ), INTENT( IN ) :: IPIV(:)
+    INTEGER(I4B), INTENT(IN) :: IPIV(:)
     !! pivoting returned from getLU
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
     !! if true we solve A^Tx = y
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
-END SUBROUTINE LUSolve_4
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
+  END SUBROUTINE LUSolve_4
 END INTERFACE
 
 INTERFACE LUSolve
@@ -236,15 +236,15 @@ END INTERFACE LUSolve
 ! summary: get inverse of square matrix from LU decomposition
 
 INTERFACE
-MODULE SUBROUTINE Inv_1( A, invA, IPIV, info )
-  REAL( DFP ), INTENT( IN ) :: A( :, : )
+  MODULE SUBROUTINE Inv_1(A, invA, IPIV, info)
+    REAL(DFP), INTENT(IN) :: A(:, :)
     !! LU Decomposition
-  REAL( DFP ), INTENT( INOUT ) :: invA(:, :)
+    REAL(DFP), INTENT(INOUT) :: invA(:, :)
     !! inverse of A
-  INTEGER( I4B ), INTENT( IN ) :: IPIV(:)
+    INTEGER(I4B), INTENT(IN) :: IPIV(:)
     !! returned from getLU
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
-END SUBROUTINE Inv_1
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
+  END SUBROUTINE Inv_1
 END INTERFACE
 
 INTERFACE Inv
@@ -260,13 +260,13 @@ END INTERFACE Inv
 ! summary: get inverse of square matrix from LU decomposition
 
 INTERFACE
-MODULE SUBROUTINE Inv_2( A, IPIV, info )
-  REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+  MODULE SUBROUTINE Inv_2(A, IPIV, info)
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
     !! LU Decomposition, inverse will be returned in A
-  INTEGER( I4B ), INTENT( IN ) :: IPIV(:)
+    INTEGER(I4B), INTENT(IN) :: IPIV(:)
     !! returned from getLU
-  INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
-END SUBROUTINE Inv_2
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
+  END SUBROUTINE Inv_2
 END INTERFACE
 
 INTERFACE Inv

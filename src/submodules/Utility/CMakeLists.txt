@@ -18,6 +18,7 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
+  ${src_path}/MappingUtility@Methods.F90
   ${src_path}/BinomUtility@Methods.F90
   ${src_path}/SortUtility@Methods.F90
   ${src_path}/SwapUtility@Methods.F90
@@ -27,6 +28,7 @@ TARGET_SOURCES(
   ${src_path}/GridPointUtility@Methods.F90
   ${src_path}/FunctionalFortranUtility@Methods.F90
   ${src_path}/OnesUtility@Methods.F90
+  ${src_path}/ZerosUtility@Methods.F90
   ${src_path}/EyeUtility@Methods.F90
   ${src_path}/DiagUtility@Methods.F90
   ${src_path}/AppendUtility@Methods.F90
@@ -40,4 +42,5 @@ TARGET_SOURCES(
   ${src_path}/MiscUtility@Methods.F90
   ${src_path}/StringUtility@Methods.F90
   ${src_path}/IntegerUtility@Methods.F90
+  ${src_path}/PushPopUtility@Methods.F90
 )

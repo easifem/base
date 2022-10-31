@@ -16,11 +16,13 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	23 Feb 2021
-! summary: 	This module contains methods of [[DOF_]] object
+! date:         23 Feb 2021
+! summary:         This module contains methods of [[DOF_]] object
 !
 !# Introduction
 !This module contains methods for derived type called [[DOF_]]
+!
+!{!pages/DOF.md!}
 
 MODULE DOF_Method
 USE GlobalData

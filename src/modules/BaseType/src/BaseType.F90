@@ -232,8 +232,6 @@ PUBLIC :: IndexValuePointer_
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 Feb 2021
 ! summary: Degree of freedom object type
-!
-!{!pages/DOF.md!}
 
 TYPE :: DOF_
   INTEGER(I4B), ALLOCATABLE :: map(:, :)
@@ -661,7 +659,7 @@ END TYPE ReferenceElementPointer_
 PUBLIC :: ReferenceElementPointer_
 
 INTERFACE
-  PURE SUBROUTINE highorder_refelem(obj, order, highOrderobj, ipType)
+  SUBROUTINE highorder_refelem(obj, order, highOrderobj, ipType)
     IMPORT :: ReferenceElement_, I4B
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: order
@@ -1501,6 +1499,48 @@ ABSTRACT INTERFACE
 END INTERFACE
 
 PUBLIC :: iface_TimeFunction
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_1DFunction(x) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), INTENT(IN) :: x
+    REAL(DFP) :: ans
+  END FUNCTION iface_1DFunction
+END INTERFACE
+
+PUBLIC :: iface_1DFunction
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_2DFunction(x, y) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), INTENT(IN) :: x, y
+    REAL(DFP) :: ans
+  END FUNCTION iface_2DFunction
+END INTERFACE
+
+PUBLIC :: iface_2DFunction
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+ABSTRACT INTERFACE
+  PURE FUNCTION iface_3DFunction(x, y, z) RESULT(ans)
+    IMPORT :: DFP
+    REAL(DFP), INTENT(IN) :: x, y, z
+    REAL(DFP) :: ans
+  END FUNCTION iface_3DFunction
+END INTERFACE
+
+PUBLIC :: iface_3DFunction
 
 !----------------------------------------------------------------------------
 !                                                              MultiIndices_

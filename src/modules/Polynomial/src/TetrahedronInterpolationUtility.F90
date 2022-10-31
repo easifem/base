@@ -149,12 +149,13 @@ PUBLIC :: EquidistancePoint_Tetrahedron
 ! summary:         Interpolation point
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Tetrahedron(order, ipType, xij) &
-    & RESULT(nodecoord)
+  MODULE PURE FUNCTION InterpolationPoint_Tetrahedron(order, ipType, &
+    & layout, xij) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation type
+    CHARACTER(LEN=*), INTENT(IN) :: layout
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 4)
     !! coordinates of vertices in $x_{iJ}$ format
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
@@ -163,5 +164,94 @@ INTERFACE
 END INTERFACE
 
 PUBLIC :: InterpolationPoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Tetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Tetrahedron1(order, i, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP) :: ans(SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Tetrahedron1
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Tetrahedron
+  MODULE PROCEDURE LagrangeCoeff_Tetrahedron1
+END INTERFACE LagrangeCoeff_Tetrahedron
+
+PUBLIC :: LagrangeCoeff_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeCoeff_Tetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Tetrahedron2(order, i, v, isVandermonde) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(v,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! coefficient for ith lagrange polynomial
+    REAL(DFP), INTENT(IN) :: v(:, :)
+    !! vandermonde matrix size should be (order+1,order+1)
+    LOGICAL(LGT), INTENT(IN) :: isVandermonde
+    !! This is just to resolve interface issue
+    REAL(DFP) :: ans(SIZE(v, 1))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Tetrahedron2
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Tetrahedron
+  MODULE PROCEDURE LagrangeCoeff_Tetrahedron2
+END INTERFACE LagrangeCoeff_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Tetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Tetrahedron3(order, i, v, ipiv) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(x,2)-1
+    INTEGER(I4B), INTENT(IN) :: i
+    !! ith coefficients for lagrange polynomial
+    REAL(DFP), INTENT(INOUT) :: v(:, :)
+    !! LU decomposition of vandermonde matrix
+    INTEGER(I4B), INTENT(IN) :: ipiv(:)
+    !! inverse pivoting mapping, compes from LU decomposition
+    REAL(DFP) :: ans(SIZE(v, 1))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Tetrahedron3
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Tetrahedron
+  MODULE PROCEDURE LagrangeCoeff_Tetrahedron3
+END INTERFACE LagrangeCoeff_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                  LagrangeCoeff_Tetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION LagrangeCoeff_Tetrahedron4(order, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2)
+    REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficients
+  END FUNCTION LagrangeCoeff_Tetrahedron4
+END INTERFACE
+
+INTERFACE LagrangeCoeff_Tetrahedron
+  MODULE PROCEDURE LagrangeCoeff_Tetrahedron4
+END INTERFACE LagrangeCoeff_Tetrahedron
 
 END MODULE TetrahedronInterpolationUtility

@@ -57,7 +57,7 @@ PRIVATE
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE initiate_ref_Triangle(obj, nsd, xij)
+  MODULE SUBROUTINE initiate_ref_Triangle(obj, nsd, xij)
     CLASS(ReferenceTriangle_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
@@ -96,7 +96,7 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-  MODULE PURE FUNCTION reference_Triangle(nsd, xij) RESULT(obj)
+  MODULE FUNCTION reference_Triangle(nsd, xij) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     TYPE(ReferenceTriangle_) :: obj
@@ -135,7 +135,7 @@ PUBLIC :: ReferenceTriangle
 !```
 
 INTERFACE
-  MODULE PURE FUNCTION reference_Triangle_pointer(nsd, xij) RESULT(obj)
+  MODULE FUNCTION reference_Triangle_pointer(nsd, xij) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CLASS(ReferenceTriangle_), POINTER :: obj
@@ -177,7 +177,7 @@ PUBLIC :: ReferenceTriangle_Pointer
 !```
 
 INTERFACE
-  MODULE PURE SUBROUTINE highorderElement_Triangle(refelem, order, obj,  &
+  MODULE SUBROUTINE highorderElement_Triangle(refelem, order, obj,  &
     & ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order

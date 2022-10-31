@@ -24,6 +24,86 @@ PUBLIC :: OPERATOR(.in.)
 PUBLIC :: OPERATOR(.isin.)
 PUBLIC :: RemoveDuplicates
 PUBLIC :: Repeat
+PUBLIC :: SIZE
+PUBLIC :: GetMultiIndices
+
+!----------------------------------------------------------------------------
+!                                                           Size@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 Sept 2022
+! summary:         Get the number of touples
+
+INTERFACE
+  MODULE PURE FUNCTION obj_Size1(n, d) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n, d
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_Size1
+END INTERFACE
+
+INTERFACE Size
+  MODULE PROCEDURE obj_Size1
+END INTERFACE Size
+
+!----------------------------------------------------------------------------
+!                                                           Size@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 Sept 2022
+! summary:         Get the number of touples
+
+INTERFACE
+  MODULE PURE FUNCTION obj_Size2(n, d, upto) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n, d
+    LOGICAL(LGT), INTENT(IN) :: upto
+    INTEGER(I4B) :: ans
+  END FUNCTION obj_Size2
+END INTERFACE
+
+INTERFACE Size
+  MODULE PROCEDURE obj_Size2
+END INTERFACE Size
+
+!----------------------------------------------------------------------------
+!                                                         GetIndices@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 Sept 2022
+! summary:         Get Indices
+
+INTERFACE
+  MODULE PURE FUNCTION obj_GetMultiIndices1(n, d) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n, d
+    INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+  END FUNCTION obj_GetMultiIndices1
+END INTERFACE
+
+INTERFACE GetMultiIndices
+  MODULE PROCEDURE obj_GetMultiIndices1
+END INTERFACE GetMultiIndices
+
+!----------------------------------------------------------------------------
+!                                                         GetIndices@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 Sept 2022
+! summary:         Get Indices upto order n
+
+INTERFACE
+  MODULE PURE FUNCTION obj_GetMultiIndices2(n, d, upto) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n, d
+    LOGICAL(LGT), INTENT(IN) :: upto
+    INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+  END FUNCTION obj_GetMultiIndices2
+END INTERFACE
+
+INTERFACE GetMultiIndices
+  MODULE PROCEDURE obj_GetMultiIndices2
+END INTERFACE GetMultiIndices
 
 !----------------------------------------------------------------------------
 !                                             Operator(.in.)@IntegerMethods
@@ -85,25 +165,25 @@ INTERFACE
   MODULE PURE FUNCTION isin_1a(a, b) RESULT(Ans)
     INTEGER(Int8), INTENT(IN) :: a(:)
     INTEGER(Int8), INTENT(IN) :: b(:)
-    LOGICAL(LGT) :: ans( SIZE( a ) )
+    LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1a
 
   MODULE PURE FUNCTION isin_1b(a, b) RESULT(Ans)
     INTEGER(Int16), INTENT(IN) :: a(:)
     INTEGER(Int16), INTENT(IN) :: b(:)
-    LOGICAL(LGT) :: ans( SIZE( a ) )
+    LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1b
 
   MODULE PURE FUNCTION isin_1c(a, b) RESULT(Ans)
     INTEGER(Int32), INTENT(IN) :: a(:)
     INTEGER(Int32), INTENT(IN) :: b(:)
-    LOGICAL(LGT) :: ans( SIZE( a ) )
+    LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1c
 
   MODULE PURE FUNCTION isin_1d(a, b) RESULT(Ans)
     INTEGER(Int64), INTENT(IN) :: a(:)
     INTEGER(Int64), INTENT(IN) :: b(:)
-    LOGICAL(LGT) :: ans( SIZE( a ) )
+    LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1d
 
 END INTERFACE

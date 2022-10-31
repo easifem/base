@@ -158,35 +158,35 @@ PUBLIC :: LinSolve
 INTERFACE
   MODULE SUBROUTINE ge_solve_1(X, A, B, IPIV, SolverName, isTranspose, RANK, &
     & RCOND, S, info)
-    REAL( DFP ), INTENT( INOUT ) :: X( : )
+    REAL(DFP), INTENT(INOUT) :: X(:)
       !! Unknown vector
-    REAL( DFP ), INTENT( IN ) :: A( :, : )
+    REAL(DFP), INTENT(IN) :: A(:, :)
       !! General square matrix
-    REAL( DFP ), INTENT( IN ) :: B( : )
+    REAL(DFP), INTENT(IN) :: B(:)
       !! RHS of Ax=B
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: IPIV( : )
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
       !! Used for GESV
-      ! IPIV is INTEGER array, dimension (N)
-      ! The pivot indices that define the permutation matrix P;
-      ! row i of the matrix was interchanged with row IPIV(i).
-    CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: SolverName
+    ! IPIV is INTEGER array, dimension (N)
+    ! The pivot indices that define the permutation matrix P;
+    ! row i of the matrix was interchanged with row IPIV(i).
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: SolverName
       !! Name of the solver, when A is not square, default is GELS
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
       !! If true then we solve $A^{T} x = y$
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: RANK
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: RANK
       !! Used in case of GELSD and GELSS
       !! The effective rank of A, i.e., the number of singular values
       !! which are greater than RCOND*S(1).
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: RCOND
+    REAL(DFP), OPTIONAL, INTENT(IN) :: RCOND
       !! RCOND is used to determine the effective rank of A.
       !! Singular values S(i) <= RCOND*S(1) are treated as zero.
       !! If RCOND < 0, machine precision is used instead.
-    REAL( DFP ), OPTIONAL, INTENT( OUT ) :: S( : )
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
     !! Used in case of GELSD and GELSS
     !! S is DOUBLE PRECISION array, dimension (min(M,N))
     !! The singular values of A in decreasing order.
     !! The condition number of A in the 2-norm = S(1)/S(min(m,n)).
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_solve_1
 END INTERFACE
 
@@ -213,22 +213,22 @@ END INTERFACE Solve
 INTERFACE
   MODULE SUBROUTINE ge_solve_2(X, A, B, IPIV, SolverName, isTranspose, RANK, &
     & RCOND, S, info)
-    REAL( DFP ), INTENT( INOUT ) :: X( :, : )
+    REAL(DFP), INTENT(INOUT) :: X(:, :)
       !! Unknown vector
-    REAL( DFP ), INTENT( IN ) :: A( :, : )
+    REAL(DFP), INTENT(IN) :: A(:, :)
       !! General square matrix
-    REAL( DFP ), INTENT( IN ) :: B( :, : )
+    REAL(DFP), INTENT(IN) :: B(:, :)
       !! RHS of Ax=B
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: IPIV( : )
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
       !! inverse of permuation
-    CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: SolverName
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: SolverName
       !! Name of the solver, when A is not square, default is GELS
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
       !! If true then we solve A^T x = y.
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: RANK
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: RCOND
-    REAL( DFP ), OPTIONAL, INTENT( OUT ) :: S( : )
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: RANK
+    REAL(DFP), OPTIONAL, INTENT(IN) :: RCOND
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_solve_2
 END INTERFACE
 
@@ -322,39 +322,38 @@ END INTERFACE Solve
 ! On exit, the first min(m,n) rows of A are overwritten with
 ! its right singular vectors, stored rowwise.
 
-
 INTERFACE
   MODULE SUBROUTINE ge_linsolve_1(X, A, B, IPIV, SolverName, &
     & isTranspose, RANK, RCOND, S, info)
-    REAL( DFP ), INTENT( INOUT ) :: X( : )
+    REAL(DFP), INTENT(INOUT) :: X(:)
       !! Unknown vector solution
-    REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
       !! General square/rectangle matrix, it will be modified on return
-    REAL( DFP ), INTENT( IN ) :: B( : )
+    REAL(DFP), INTENT(IN) :: B(:)
       !! RHS of Ax=B
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: IPIV( : )
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
       !! Used for GESV
-      ! IPIV is INTEGER array, dimension (N)
-      ! The pivot indices that define the permutation matrix P;
-      ! row i of the matrix was interchanged with row IPIV(i).
-    CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: SolverName
+    ! IPIV is INTEGER array, dimension (N)
+    ! The pivot indices that define the permutation matrix P;
+    ! row i of the matrix was interchanged with row IPIV(i).
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: SolverName
       !! Name of the solver, when A is not square, default is GELS
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
       !! If true then we solve $A^{T} x = y$
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: RANK
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: RANK
       !! Used in case of GELSD and GELSS
       !! The effective rank of A, i.e., the number of singular values
       !! which are greater than RCOND*S(1).
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: RCOND
+    REAL(DFP), OPTIONAL, INTENT(IN) :: RCOND
       !! RCOND is used to determine the effective rank of A.
       !! Singular values S(i) <= RCOND*S(1) are treated as zero.
       !! If RCOND < 0, machine precision is used instead.
-    REAL( DFP ), OPTIONAL, INTENT( OUT ) :: S( : )
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
     !! Used in case of GELSD and GELSS
     !! S is DOUBLE PRECISION array, dimension (min(M,N))
     !! The singular values of A in decreasing order.
     !! The condition number of A in the 2-norm = S(1)/S(min(m,n)).
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_linsolve_1
 END INTERFACE
 
@@ -381,22 +380,22 @@ END INTERFACE LinSolve
 INTERFACE
   MODULE SUBROUTINE ge_linsolve_2(X, A, B, IPIV, SolverName, isTranspose, &
     & RANK, RCOND, S, info)
-    REAL( DFP ), INTENT( INOUT ) :: X( :, : )
+    REAL(DFP), INTENT(INOUT) :: X(:, :)
       !! Unknown vector or solution
-    REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
       !! General square/ rectangle matrix, its content will be destroyed
-    REAL( DFP ), INTENT( IN ) :: B( :, : )
+    REAL(DFP), INTENT(IN) :: B(:, :)
       !! RHS of Ax=B
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: IPIV( : )
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
       !! inverse of permuation
-    CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: SolverName
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: SolverName
       !! Name of the solver, when A is not square, default is GELS
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
       !! If true then we solve A^T x = y.
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: RANK
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: RCOND
-    REAL( DFP ), OPTIONAL, INTENT( OUT ) :: S( : )
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: RANK
+    REAL(DFP), OPTIONAL, INTENT(IN) :: RCOND
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_linsolve_2
 END INTERFACE
 
@@ -419,38 +418,37 @@ END INTERFACE LinSolve
 ! We do not make any copy of B. The solution is returned in B. This
 ! means B will be destroyed on return.
 
-
 INTERFACE
   MODULE SUBROUTINE ge_linsolve_3(A, B, IPIV, SolverName, &
     & isTranspose, RANK, RCOND, S, info)
-    REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
       !! General square/ rectangle matrix, its content will be modified on
       !! return
-    REAL( DFP ), INTENT( INOUT ) :: B( : )
+    REAL(DFP), INTENT(INOUT) :: B(:)
       !! RHS of Ax=B, it will contain the solution on return
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: IPIV( : )
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
       !! Used for GESV
-      ! IPIV is INTEGER array, dimension (N)
-      ! The pivot indices that define the permutation matrix P;
-      ! row i of the matrix was interchanged with row IPIV(i).
-    CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: SolverName
+    ! IPIV is INTEGER array, dimension (N)
+    ! The pivot indices that define the permutation matrix P;
+    ! row i of the matrix was interchanged with row IPIV(i).
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: SolverName
       !! Name of the solver, when A is not square, default is GELS
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
       !! If true then we solve $A^{T} x = y$
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: RANK
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: RANK
       !! Used in case of GELSD and GELSS
       !! The effective rank of A, i.e., the number of singular values
       !! which are greater than RCOND*S(1).
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: RCOND
+    REAL(DFP), OPTIONAL, INTENT(IN) :: RCOND
       !! RCOND is used to determine the effective rank of A.
       !! Singular values S(i) <= RCOND*S(1) are treated as zero.
       !! If RCOND < 0, machine precision is used instead.
-    REAL( DFP ), OPTIONAL, INTENT( OUT ) :: S( : )
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
     !! Used in case of GELSD and GELSS
     !! S is DOUBLE PRECISION array, dimension (min(M,N))
     !! The singular values of A in decreasing order.
     !! The condition number of A in the 2-norm = S(1)/S(min(m,n)).
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_linsolve_3
 END INTERFACE
 
@@ -480,22 +478,22 @@ END INTERFACE Solve
 INTERFACE
   MODULE SUBROUTINE ge_linsolve_4(A, B, IPIV, SolverName, isTranspose, &
     & RANK, RCOND, S, info)
-    REAL( DFP ), INTENT( INOUT ) :: A( :, : )
+    REAL(DFP), INTENT(INOUT) :: A(:, :)
       !! General square/rectangle matrix, its content will be modifie
       !! on return
-    REAL( DFP ), INTENT( INOUT ) :: B( :, : )
+    REAL(DFP), INTENT(INOUT) :: B(:, :)
       !! RHS of Ax=B, it will be modified such that it contains solution on
       !! return
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: IPIV( : )
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: IPIV(:)
       !! inverse of permuation
-    CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: SolverName
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: SolverName
       !! Name of the solver, when A is not square, default is GELS
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
       !! If true then we solve A^T x = y.
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: RANK
-    REAL( DFP ), OPTIONAL, INTENT( IN ) :: RCOND
-    REAL( DFP ), OPTIONAL, INTENT( OUT ) :: S( : )
-    INTEGER( I4B ), OPTIONAL, INTENT( OUT ) :: info
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: RANK
+    REAL(DFP), OPTIONAL, INTENT(IN) :: RCOND
+    REAL(DFP), OPTIONAL, INTENT(OUT) :: S(:)
+    INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
   END SUBROUTINE ge_linsolve_4
 END INTERFACE
 
