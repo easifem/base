@@ -643,4 +643,13 @@ IF (pb .GE. 2_I4B .OR. qb .GE. 2_I4B) THEN
 END IF
 END PROCEDURE HeirarchicalBasis_Quadrangle1
 
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Quadrangle2
+ans = HeirarchicalBasis_Quadrangle1(pb=p, pe3=p, pe4=p, &
+  & qb=q, qe1=q, qe2=q, xij=xij)
+END PROCEDURE HeirarchicalBasis_Quadrangle2
+
 END SUBMODULE Methods

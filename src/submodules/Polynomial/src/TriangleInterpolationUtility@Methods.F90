@@ -598,4 +598,353 @@ ans = Dubiner_Quadrangle(order=order, x=x0, y=y0)
 !!
 END PROCEDURE Dubiner_Triangle2
 
+!----------------------------------------------------------------------------
+!                                            BarycentricVertexBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricVertexBasis_Triangle
+ans = TRANSPOSE(lambda)
+END PROCEDURE BarycentricVertexBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                             BarycentricEdgeBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricEdgeBasis_Triangle
+REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
+REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
+INTEGER(I4B) :: maxP, tPoints
+!!
+tPoints = SIZE(lambda, 2)
+maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
+!!
+d_lambda(1:tPoints) = lambda(2, :) - lambda(1, :)
+d_lambda(1 + tPoints:2 * tPoints) = lambda(3, :) - lambda(1, :)
+d_lambda(1 + 2 * tPoints:3 * tPoints) = lambda(3, :) - lambda(2, :)
+phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+!!
+ans = BarycentricEdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
+  & lambda=lambda, phi=phi)
+!!
+END PROCEDURE BarycentricEdgeBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                            BarycentricEdgeBasis_Triangle2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricEdgeBasis_Triangle2
+INTEGER(I4B) :: tPoints, a, ii
+REAL(DFP) :: temp(SIZE(lambda, 2))
+!!
+ans = 0.0_DFP
+tPoints = SIZE(lambda, 2)
+!!
+a = 0
+!!
+!! edge(1) = (v1, v2)
+!!
+temp = lambda(1, :) * lambda(2, :)
+!!
+DO ii = 1, pe1 - 1
+  ans(:, a + ii) = temp * phi(1:tPoints, ii - 1)
+END DO
+!!
+!! edge(2) = (v1, v3)
+!!
+a = pe1 - 1
+temp = lambda(1, :) * lambda(3, :)
+!!
+DO ii = 1, pe2 - 1
+  ans(:, a + ii) = temp &
+                  & * phi(1 + tPoints:2 * tPoints, ii - 1)
+END DO
+!!
+!! edge(3) = (v2, v3)
+!!
+a = pe1 - 1 + pe2 - 1
+temp = lambda(2, :) * lambda(3, :)
+!!
+DO ii = 1, pe3 - 1
+  ans(:, a + ii) = temp &
+                  & * phi(1 + 2 * tPoints:3 * tPoints, ii - 1)
+END DO
+!!
+END PROCEDURE BarycentricEdgeBasis_Triangle2
+
+!----------------------------------------------------------------------------
+!                                              BarycentricCellBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCellBasis_Triangle
+INTEGER(I4B) :: k1, k2, cnt
+!!
+cnt = 0
+!!
+DO k1 = 1, order - 2
+  DO k2 = 1, order - 1 - k1
+    cnt = cnt + 1
+    ans(:, cnt) = (lambda(1, :)**k1) * (lambda(2, :)**k2) * lambda(3, :)
+  END DO
+END DO
+!!
+END PROCEDURE BarycentricCellBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                     BarycentricHeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle1
+CHARACTER(LEN=20) :: layout
+REAL(DFP) :: lambda(3, SIZE(xij, 2))
+INTEGER(I4B) :: a, b
+!!
+layout = TRIM(UpperCase(refTriangle))
+!!
+IF (layout .EQ. "BIUNIT") THEN
+  lambda = BarycentricCoordBiUnitTriangle(xin=xij)
+ELSE
+  lambda = BarycentricCoordUnitTriangle(xin=xij)
+END IF
+!!
+!! Vertex basis function
+!!
+ans = 0.0_DFP
+ans(:, 1:3) = BarycentricVertexBasis_Triangle(lambda=lambda)
+!!
+!! Edge basis function
+!!
+b = 3
+!!
+IF (pe1 .GE. 2_I4B .OR. pe2 .GE. 2_I4B .OR. pe3 .GE. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + pe1 + pe2 + pe3 - 3 !!4+qe1 + qe2 - 2
+  ans(:, a:b) = BarycentricEdgeBasis_Triangle( &
+    & pe1=pe1, pe2=pe2, pe3=pe3, lambda=lambda)
+END IF
+!!
+!! Cell basis function
+!!
+IF (order .GT. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + INT((order - 1) * (order - 2) / 2)
+  ans(:, a:b) = BarycentricCellBasis_Triangle(order=order, lambda=lambda)
+END IF
+!!
+END PROCEDURE BarycentricHeirarchicalBasis_Triangle1
+
+!----------------------------------------------------------------------------
+!                                     BarycentricHeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle2
+ans = BarycentricHeirarchicalBasis_Triangle1(order=order, pe1=order, &
+  & pe2=order, pe3=order, xij=xij, refTriangle=refTriangle)
+END PROCEDURE BarycentricHeirarchicalBasis_Triangle2
+
+!----------------------------------------------------------------------------
+!                                                      VertexBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasis_Triangle
+CHARACTER(LEN=20) :: layout
+REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
+REAL(DFP), PARAMETER :: one = 1.0_DFP, pt5 = 0.5_DFP
+!!
+layout = TRIM(UpperCase(refTriangle))
+!!
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
+CASE ("UNIT")
+  x = FromUnitTriangle2BiUnitSqr(xin=xij)
+END SELECT
+!!
+ans(:, 1) = pt5 * pt5 * (one - x(1, :)) * (one - x(2, :))
+ans(:, 2) = pt5 * pt5 * (one + x(1, :)) * (one - x(2, :))
+ans(:, 3) = pt5 * (one + x(2, :))
+!!
+END PROCEDURE VertexBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                                       VertexBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasis_Triangle2
+ans(:, 1) = L1(:, 0) * L2(:, 0)
+ans(:, 2) = L1(:, 1) * L2(:, 0)
+ans(:, 3) = L2(:, 1)
+END PROCEDURE VertexBasis_Triangle2
+
+!----------------------------------------------------------------------------
+!                                                         EdgeBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeBasis_Triangle
+CHARACTER(LEN=20) :: layout
+REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
+REAL(DFP) :: L1(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3))
+REAL(DFP) :: L2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3))
+INTEGER(I4B) :: maxP
+!!
+layout = TRIM(UpperCase(refTriangle))
+!!
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
+CASE ("UNIT")
+  x = FromUnitTriangle2BiUnitSqr(xin=xij)
+END SELECT
+!!
+maxP = MAX(pe1, pe2, pe3)
+L1 = LobattoEvalAll(n=maxP, x=x(1, :))
+L2 = LobattoEvalAll(n=maxP, x=x(2, :))
+!!
+ans = EdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, L1=L1, L2=L2)
+!!
+END PROCEDURE EdgeBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                                         EdgeBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeBasis_Triangle2
+CHARACTER(LEN=20) :: layout
+INTEGER(I4B) :: maxP, k1, k2, a
+!!
+maxP = MAX(pe1, pe2, pe3)
+!!
+!! edge(1)
+!!
+a = 0
+!!
+DO k1 = 2, pe1
+  ans(:, k1 - 1) = L1(:, k1) * (L2(:, 0)**k1)
+END DO
+!!
+!! edge(2)
+!!
+a = pe1 - 1
+DO k2 = 2, pe2
+  ans(:, a + k2 - 1) = L1(:, 0) * L2(:, k2)
+END DO
+!!
+!! edge(3)
+!!
+a = pe1 - 1 + pe2 - 1
+DO k2 = 2, pe2
+  ans(:, a + k2 - 1) = L1(:, 1) * L2(:, k2)
+END DO
+!!
+END PROCEDURE EdgeBasis_Triangle2
+
+!----------------------------------------------------------------------------
+!                                              CellBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CellBasis_Triangle
+CHARACTER(LEN=20) :: layout
+REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
+REAL(DFP) :: L1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: L2(SIZE(xij, 2), 0:1)
+!!
+layout = TRIM(UpperCase(refTriangle))
+!!
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
+CASE ("UNIT")
+  x = FromUnitTriangle2BiUnitSqr(xin=xij)
+END SELECT
+!!
+L1 = LobattoEvalAll(n=order, x=x(1, :))
+L2 = LobattoEvalAll(n=1_I4B, x=x(2, :))
+!!
+ans = CellBasis_Triangle2(order=order, L1=L1, L2=L2, eta_ij=x)
+!!
+END PROCEDURE CellBasis_Triangle
+
+!----------------------------------------------------------------------------
+!                                                        CellBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CellBasis_Triangle2
+REAL(DFP) :: P2(SIZE(eta_ij, 2), 0:order)
+REAL(DFP) :: avec(SIZE(eta_ij, 2)), alpha, beta
+INTEGER(I4B) :: k1, k2, max_k2, cnt
+!!
+alpha = 0.0_DFP
+beta = 1.0_DFP
+cnt = 0
+!!
+DO k1 = 2, order
+  !!
+  avec = (L2(:, 0)**k1) * L2(:, 1)
+  alpha = 2.0_DFP * k1 - 1.0_DFP
+  !
+  max_k2 = MAX(order - k1 - 1, 0)
+  !!
+  P2(:, 0:max_k2) = JacobiEvalAll(n=max_k2, x=eta_ij(2, :), &
+    & alpha=alpha, beta=beta)
+  !!
+  DO k2 = 2, order + 1 - k1
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * avec * P2(:, k2 - 2)
+  END DO
+  !!
+END DO
+
+END PROCEDURE CellBasis_Triangle2
+
+!----------------------------------------------------------------------------
+!                                                 HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Triangle1
+CHARACTER(LEN=20) :: layout
+REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
+REAL(DFP) :: L1(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
+REAL(DFP) :: L2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
+INTEGER(I4B) :: maxP, a, b
+!!
+layout = TRIM(UpperCase(refTriangle))
+!!
+IF (layout .EQ. "BIUNIT") THEN
+  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
+ELSE
+  x = FromUnitTriangle2BiUnitSqr(xin=xij)
+END IF
+!!
+maxP = MAX(pe1, pe2, pe3, order)
+L1 = LobattoEvalAll(n=maxP, x=x(1, :))
+L2 = LobattoEvalAll(n=maxP, x=x(2, :))
+!!
+!! Vertex basis function
+!!
+ans = 0.0_DFP
+ans(:, 1:3) = VertexBasis_Triangle2(L1=L1, L2=L2)
+!!
+!! Edge basis function
+!!
+b = 3
+!!
+IF (pe1 .GE. 2_I4B .OR. pe2 .GE. 2_I4B .OR. pe3 .GE. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + pe1 + pe2 + pe3 - 3 !!4+qe1 + qe2 - 2
+  ans(:, a:b) = EdgeBasis_Triangle2( &
+    & pe1=pe1, pe2=pe2, pe3=pe3, L1=L1, L2=L2)
+END IF
+!!
+!! Cell basis function
+!!
+IF (order .GT. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + INT((order - 1) * (order - 2) / 2)
+  ans(:, a:b) = CellBasis_Triangle2(order=order, L1=L1, L2=L2, eta_ij=x)
+END IF
+!!
+END PROCEDURE HeirarchicalBasis_Triangle1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 END SUBMODULE Methods

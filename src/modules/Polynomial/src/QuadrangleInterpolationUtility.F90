@@ -664,4 +664,35 @@ END INTERFACE HeirarchicalBasis_Quadrangle
 
 PUBLIC :: HeirarchicalBasis_Quadrangle
 
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on quadrangle
+!
+!# Introduction
+!
+! This function is identical to `HeirarchicalBasis_Quadrangle1`
+! with qe1=qe2=qb=q, and pe3=pe4=pb=p.
+!
+
+INTERFACE
+  MODULE PURE FUNCTION HeirarchicalBasis_Quadrangle2(p, q, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of interpolation inside the quadrangle in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of interpolation inside the quadrangle in x2 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP) :: ans(SIZE(xij, 2), (p + 1) * (q + 1))
+    !!
+  END FUNCTION HeirarchicalBasis_Quadrangle2
+END INTERFACE
+
+INTERFACE HeirarchicalBasis_Quadrangle
+  MODULE PROCEDURE HeirarchicalBasis_Quadrangle2
+END INTERFACE HeirarchicalBasis_Quadrangle
+
 END MODULE QuadrangleInterpolationUtility

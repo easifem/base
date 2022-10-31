@@ -167,6 +167,24 @@ END SELECT
 END PROCEDURE LobattoEvalAll2
 
 !----------------------------------------------------------------------------
+!                                                       LobattoKernelEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LobattoKernelEvalAll1
+REAL(DFP) :: m, avar
+INTEGER(I4B) :: ii
+!!
+ans = UltrasphericalEvalAll(n=n, x=x, lambda=1.5_DFP)
+!!
+DO ii = 0, n
+  m = REAL(ii, KIND=DFP)
+  avar = -SQRT(8.0_DFP*(2.0_DFP*m+3.0_DFP))/(m+1.0_DFP)/(m+2.0_DFP)
+  ans(:, ii) = avar * ans(:, ii)
+END DO
+!!
+END PROCEDURE LobattoKernelEvalAll1
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

@@ -102,4 +102,24 @@ ans(1, :) = 0.25_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :))
 ans(2, :) = 0.5_DFP * (xin(2, :) + 1.0_DFP)
 END PROCEDURE FromBiUnitSqr2UnitTriangle
 
+!----------------------------------------------------------------------------
+!                                               BarycentricCoordUnitTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordUnitTriangle
+ans(1, :) = 1.0_DFP - xin(1, :) - xin(2, :)
+ans(2, :) = xin(1, :)
+ans(3, :) = xin(2, :)
+END PROCEDURE BarycentricCoordUnitTriangle
+
+!----------------------------------------------------------------------------
+!                                             BarycentricCoordBiUnitTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordBiUnitTriangle
+ans(1, :) = -0.5_DFP * (xin(1, :) + xin(2, :))
+ans(2, :) = 0.5_DFP * (1.0_DFP + xin(1, :))
+ans(3, :) = 0.5_DFP * (1.0_DFP + xin(2, :))
+END PROCEDURE BarycentricCoordBiUnitTriangle
+
 END SUBMODULE Methods
