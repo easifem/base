@@ -574,17 +574,20 @@ END INTERFACE
 ! summary: Eval basis in the cell of reference triangle
 
 INTERFACE
-  MODULE PURE FUNCTION BarycentricCellBasis_Triangle(order, lambda) &
+  MODULE PURE FUNCTION BarycentricCellBasis_Triangle2(order, lambda, phi) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! lobatto kernel values
+    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
     REAL(DFP) :: ans(SIZE(lambda, 2), INT((order - 1) * (order - 2) / 2))
-  END FUNCTION BarycentricCellBasis_Triangle
+  END FUNCTION BarycentricCellBasis_Triangle2
 END INTERFACE
-
-PUBLIC :: BarycentricCellBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                      BarycentricHeirarchicalBasis_Triangle
@@ -679,10 +682,11 @@ PUBLIC :: VertexBasis_Triangle
 ! summary: Returns the vertex basis functions on Triangle
 
 INTERFACE
-  MODULE PURE FUNCTION VertexBasis_Triangle2(L1, L2) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
-    !! point of evaluation
-    REAL(DFP) :: ans(SIZE(L1, 1), 3)
+  MODULE PURE FUNCTION VertexBasis_Triangle2(Lo1, Lo2) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
+    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
+    !! coordinates on biunit square
+    REAL(DFP) :: ans(SIZE(Lo1, 1), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasis_Triangle2
 END INTERFACE
@@ -735,8 +739,8 @@ PUBLIC :: EdgeBasis_Triangle
 ! qe1 and qe2 should be greater than or equal to 2
 
 INTERFACE
-  MODULE PURE FUNCTION EdgeBasis_Triangle2(pe1, pe2, pe3, L1, L2) &
-    & RESULT(ans)
+  MODULE PURE FUNCTION EdgeBasis_Triangle2(pe1, pe2, pe3, L1, L2, Lo1, &
+    & Lo2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on left vertical edge (e1), should be greater than 1
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -744,7 +748,11 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: pe3
     !! order on right vertical edge(e3), should be greater than 1
     REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
-    !! point of evaluation
+    !! L1 and L2 are jacobian polynomials
+    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
+    !! coordinates on biunit square domain
+    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
+    !! coordinates on biunit square domain
     REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 - 3)
   END FUNCTION EdgeBasis_Triangle2
 END INTERFACE
@@ -788,15 +796,18 @@ PUBLIC :: CellBasis_Triangle
 ! Evaluate basis functions in the cell of biunit Triangle
 
 INTERFACE
-  MODULE PURE FUNCTION CellBasis_Triangle2(order, L1, L2, eta_ij) RESULT(ans)
+  MODULE PURE FUNCTION CellBasis_Triangle2(order, L1, eta_ij, &
+    & Lo1, Lo2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of approximation inside the cell, order>2
     REAL(DFP), INTENT(IN) :: L1(1:, 0:)
     !! lobatto polynomials
-    REAL(DFP), INTENT(IN) :: L2(1:, 0:)
-    !! lobatto polynomials
     REAL(DFP), INTENT(IN) :: eta_ij(:, :)
     !! coordinates on biunit square
+    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
+    !! coordinates on biunit square domain
+    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
+    !! coordinates on biunit square domain
     REAL(DFP) :: ans(SIZE(L1, 1), INT((order - 1) * (order - 2) / 2))
   END FUNCTION CellBasis_Triangle2
 END INTERFACE
