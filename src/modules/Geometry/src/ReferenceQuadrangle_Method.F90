@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: This module contains methods for [[ReferenceQuadrangle_]]
 
 MODULE ReferenceQuadrangle_Method
@@ -51,11 +51,11 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Quadrangle( obj, NSD, xij )
-  CLASS( ReferenceQuadrangle_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij( :, : )
-END SUBROUTINE initiate_ref_Quadrangle
+  MODULE SUBROUTINE initiate_ref_Quadrangle(obj, NSD, xij)
+    CLASS(ReferenceQuadrangle_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+  END SUBROUTINE initiate_ref_Quadrangle
 END INTERFACE
 
 INTERFACE Initiate
@@ -73,7 +73,7 @@ PUBLIC :: Initiate
 ! summary: Returns lagrange Quadrangle element of higher order
 !
 !# Introduction
-! 	This routine retuns the lagrance element of higher order
+!         This routine retuns the lagrance element of higher order
 ! This routine will be called by [[ReferenceQuadrangle_:LagrangeElement]]
 ! Currently upto 3rd order Quadrangle elements are supported.
 !
@@ -88,11 +88,11 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Quadrangle( NSD, xij ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
-  TYPE( ReferenceQuadrangle_ ) :: obj
-END FUNCTION reference_Quadrangle
+  MODULE FUNCTION reference_Quadrangle(NSD, xij) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    TYPE(ReferenceQuadrangle_) :: obj
+  END FUNCTION reference_Quadrangle
 END INTERFACE
 
 INTERFACE ReferenceQuadrangle
@@ -110,7 +110,7 @@ PUBLIC :: ReferenceQuadrangle
 ! summary: Returns lagrange Quadrangle element of higher order
 !
 !# Introduction
-! 	This routine retuns the lagrance element of higher order
+!         This routine retuns the lagrance element of higher order
 ! This routine will be called by [[ReferenceQuadrangle_:LagrangeElement]]
 ! Currently upto 3rd order Quadrangle elements are supported.
 !
@@ -125,11 +125,11 @@ PUBLIC :: ReferenceQuadrangle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION reference_Quadrangle_Pointer( NSD, xij ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
-  CLASS( ReferenceQuadrangle_ ), POINTER :: obj
-END FUNCTION reference_Quadrangle_Pointer
+  MODULE FUNCTION reference_Quadrangle_Pointer(NSD, xij) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CLASS(ReferenceQuadrangle_), POINTER :: obj
+  END FUNCTION reference_Quadrangle_Pointer
 END INTERFACE
 
 INTERFACE ReferenceQuadrangle_Pointer
@@ -143,8 +143,8 @@ PUBLIC :: ReferenceQuadrangle_Pointer
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
-! summary: 	Higher order lagrange elements
+! date:         3 March 2021
+! summary:         Higher order lagrange elements
 !
 !### Usage
 !
@@ -161,13 +161,13 @@ PUBLIC :: ReferenceQuadrangle_Pointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE highorderElement_Quadrangle( refelem, order, obj, &
-  & ipType )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  CLASS( ReferenceElement_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-END SUBROUTINE highorderElement_Quadrangle
+  MODULE SUBROUTINE highorderElement_Quadrangle(refelem, order, obj, &
+    & ipType)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    INTEGER(I4B), INTENT(IN) :: order
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highorderElement_Quadrangle
 END INTERFACE
 
 PUBLIC :: highorderElement_Quadrangle
@@ -177,11 +177,11 @@ PUBLIC :: highorderElement_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Quadrangle( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Quadrangle
+  MODULE PURE FUNCTION Measure_Simplex_Quadrangle(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceQuadrangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex_Quadrangle
 END INTERFACE
 
 PUBLIC :: Measure_Simplex_Quadrangle
@@ -191,12 +191,12 @@ PUBLIC :: Measure_Simplex_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Quadrangle_Quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferenceQuadrangle_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION Quadrangle_Quality
+  MODULE FUNCTION Quadrangle_Quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferenceQuadrangle_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION Quadrangle_Quality
 END INTERFACE
 
 PUBLIC :: Quadrangle_Quality
@@ -207,7 +207,7 @@ PUBLIC :: Quadrangle_Quality
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Aug 2022
-! summary: 	Area of quadrangle in 3D
+! summary:         Area of quadrangle in 3D
 !
 !# Introduction
 !
@@ -219,10 +219,10 @@ PUBLIC :: Quadrangle_Quality
 ! first.
 
 INTERFACE
-MODULE PURE SUBROUTINE QuadArea3D( q, area )
-  REAL( DFP ), INTENT( IN ) :: q(3,4)
-  REAL( DFP ), INTENT( OUT ) :: area
-END SUBROUTINE QuadArea3D
+  MODULE PURE SUBROUTINE QuadArea3D(q, area)
+    REAL(DFP), INTENT(IN) :: q(3, 4)
+    REAL(DFP), INTENT(OUT) :: area
+  END SUBROUTINE QuadArea3D
 END INTERFACE
 
 PUBLIC :: QuadArea3D
@@ -233,7 +233,7 @@ PUBLIC :: QuadArea3D
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 10 Aug 2022
-! summary: 	QuadArea2D
+! summary:         QuadArea2D
 !
 !# Introduction
 !
@@ -244,10 +244,10 @@ PUBLIC :: QuadArea3D
 ! order, so that the area is positive.
 
 INTERFACE
-MODULE PURE SUBROUTINE QuadArea2D( q, area )
-  REAL( DFP ), INTENT( IN ) :: q(2,4)
-  REAL( DFP ), INTENT( OUT ) :: area
-END SUBROUTINE QuadArea2D
+  MODULE PURE SUBROUTINE QuadArea2D(q, area)
+    REAL(DFP), INTENT(IN) :: q(2, 4)
+    REAL(DFP), INTENT(OUT) :: area
+  END SUBROUTINE QuadArea2D
 END INTERFACE
 
 PUBLIC :: QuadArea2D

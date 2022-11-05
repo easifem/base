@@ -21,37 +21,36 @@ USE BaseType
 IMPLICIT NONE
 PRIVATE
 !!
-INTEGER( I4B ), PARAMETER, PUBLIC :: SPARSE_FMT_CSR = 0
-INTEGER( I4B ), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1
+INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_CSR = 0
+INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1
 !!
-#include "./ConstructorMethods.inc"
-#include "./IOMethods.inc"
-#include "./SparsityMethods.inc"
-#include "./SetMethods.inc"
-#include "./AddMethods.inc"
-#include "./SetRowMethods.inc"
-#include "./SetColMethods.inc"
-#include "./SetBlockRowMethods.inc"
-#include "./SetBlockColMethods.inc"
-#include "./GetMethods.inc"
+#include "./include/ConstructorMethods.inc"
+#include "./include/IOMethods.inc"
+#include "./include/SparsityMethods.inc"
+#include "./include/SetMethods.inc"
+#include "./include/AddMethods.inc"
+#include "./include/SetRowMethods.inc"
+#include "./include/SetColMethods.inc"
+#include "./include/SetBlockRowMethods.inc"
+#include "./include/SetBlockColMethods.inc"
+#include "./include/GetMethods.inc"
 
-#include "./GetRowMethods.inc"
-#include "./GetColMethods.inc"
-#include "./GetBlockRowMethods.inc"
-#include "./GetBlockColMethods.inc"
+#include "./include/GetRowMethods.inc"
+#include "./include/GetColMethods.inc"
+#include "./include/GetBlockRowMethods.inc"
+#include "./include/GetBlockColMethods.inc"
 
-#include "./UnaryMethods.inc"
-#include "./ILUTMethods.inc"
-#include "./LUSolveMethods.inc"
-#include "./MatVecMethods.inc"
-#include "./MatmulMethods.inc"
-#include "./ReorderingMethods.inc"
+#include "./include/UnaryMethods.inc"
+#include "./include/ILUTMethods.inc"
+#include "./include/LUSolveMethods.inc"
+#include "./include/MatVecMethods.inc"
+#include "./include/MatmulMethods.inc"
+#include "./include/ReorderingMethods.inc"
 
-#include "./DiagonalScalingMethods.inc"
+#include "./include/DiagonalScalingMethods.inc"
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-
 
 END MODULE CSRMatrix_Method

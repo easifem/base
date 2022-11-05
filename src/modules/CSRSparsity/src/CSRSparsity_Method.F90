@@ -16,8 +16,8 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This module contains methods for [[CSRSparsity_]]
+! date:         22 March 2021
+! summary:         This module contains methods for [[CSRSparsity_]]
 
 MODULE CSRSparsity_Method
 USE GlobalData
@@ -30,7 +30,7 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
+! date:         22 March 2021
 ! summary: This subroutine constructs the CSR sparsity object
 !
 !# Introduction
@@ -43,7 +43,7 @@ PRIVATE
 ! to initiate [[DOF_:dof]].
 !
 !@note
-! 	If dof object is not present, then this routine initiates
+! If dof object is not present, then this routine initiates
 ! [[CSRSparsity_:dof]] internally with following options.
 !
 ! - tNodes = [nrow]
@@ -53,78 +53,12 @@ PRIVATE
 ! - storageFMT = FMT_NODES
 !@endnote
 !
-!## Usage
-!
-!```fortran
-! PROGRAM main
-! USE easifemBase
-! IMPLICIT NONE
-! !
-! ! [[CSRSparsity_]], [[DOF_]]
-! !
-! TYPE( CSRSparsity_ ) :: obj
-! TYPE( DOF_ ) :: dofobj
-! INTEGER( I4B ) :: i
-! !
-! ! #DOF_/Initiate
-! !
-! CALL Initiate( obj=dofobj, tNodes=[12], names=['K'], &
-!   & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT )
-! !
-! ! #CSRSparsity_/Initiate
-! !
-! CALL Initiate( obj, ncol=12, nrow=12, dof=dofobj )
-! !
-! ! #CSRSparsity_/Display
-! !
-! CALL Display( obj, "CSRSparsity : " )
-! !
-! ! #CSRSparsity_/Deallocate
-! !
-! CALL Deallocate( obj )
-! END PROGRAM main
-!```
-!
-! another example for multi-physics applications
-!
-!## Usage
-!
-!```fortran
-! PROGRAM main
-! USE easifemBase
-! IMPLICIT NONE
-! !
-! ! [[CSRSparsity_]], [[DOF_]]
-! !
-! TYPE( CSRSparsity_ ) :: obj
-! TYPE( DOF_ ) :: dofobj
-! INTEGER( I4B ) :: i
-! !
-! ! #DOF_/Initiate
-! !
-! CALL Initiate( obj=dofobj, tNodes=[20, 10], names=['V', 'P'], &
-!   & spacecompo=[3, 1], timecompo=[1, 1], storageFMT=FMT_DOF )
-! !
-! ! #CSRSparsity_/Initiate
-! !
-! CALL Initiate( obj, ncol=(.tnodes. dofobj), nrow=(.tNodes. dofobj),  &
-!   & dof=dofobj )
-! !
-! ! #CSRSparsity_/Display
-! !
-! CALL Display( obj, "CSRSparsity : " )
-! !
-! ! #CSRSparsity_/Deallocate
-! !
-! CALL Deallocate( obj )
-! END PROGRAM main
-!```
 
 INTERFACE
-  MODULE SUBROUTINE csr_initiate1( obj, ncol, nrow, dof )
-    TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-    INTEGER( I4B ), INTENT( IN ) :: ncol, nrow
-    TYPE( DOF_ ), OPTIONAL, INTENT( IN ) ::  dof
+  MODULE SUBROUTINE csr_initiate1(obj, ncol, nrow, dof)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ncol, nrow
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: dof
   END SUBROUTINE csr_initiate1
 END INTERFACE
 
@@ -133,7 +67,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
+! date:         22 March 2021
 ! summary: This subroutine construct `CSRSparsity_` object from copying
 !
 !# Introduction
@@ -142,9 +76,9 @@ END INTERFACE
 ! This routine is used to define the assignment operator.
 
 INTERFACE
-  MODULE SUBROUTINE csr_initiate2( obj, obj2 )
-    TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-    TYPE( CSRSparsity_ ), INTENT( IN ) :: obj2
+  MODULE SUBROUTINE csr_initiate2(obj, obj2)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    TYPE(CSRSparsity_), INTENT(IN) :: obj2
   END SUBROUTINE csr_initiate2
 END INTERFACE
 
@@ -153,7 +87,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
+! date:         22 March 2021
 ! summary: This subroutine constructs `CSRSparsity_` object from IA, JA
 !
 !# Introduction
@@ -165,18 +99,11 @@ END INTERFACE
 ! without `dof` argument. So this type of initiation does not contain
 ! useful information about the degree of freedoms.
 !
-!
-!## Usage
-!
-!```fortran
-!
-!```
-
 
 INTERFACE
-  MODULE SUBROUTINE csr_initiate3( obj, IA, JA )
-    TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-    INTEGER( I4B ), INTENT( IN ) :: IA( : ), JA( : )
+  MODULE SUBROUTINE csr_initiate3(obj, IA, JA)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: IA(:), JA(:)
   END SUBROUTINE csr_initiate3
 END INTERFACE
 
@@ -186,11 +113,11 @@ END INTERFACE Initiate
 
 PUBLIC :: Initiate
 
-INTERFACE ASSIGNMENT( = )
+INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE csr_initiate2
-END INTERFACE ASSIGNMENT( = )
+END INTERFACE ASSIGNMENT(=)
 
-PUBLIC :: ASSIGNMENT( = )
+PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                            CSRSparsity@ConstructorMethods
@@ -205,11 +132,11 @@ PUBLIC :: ASSIGNMENT( = )
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE
-  MODULE FUNCTION csr_constructor1( nrow, ncol, dof ) RESULT( Ans )
-    INTEGER( I4B ), INTENT( IN ) :: nrow
-    INTEGER( I4B ), INTENT( IN ) :: ncol
-    TYPE( DOF_ ), OPTIONAL, INTENT( IN ) :: dof
-    TYPE( CSRSparsity_ ) :: ans
+  MODULE FUNCTION csr_constructor1(nrow, ncol, dof) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: nrow
+    INTEGER(I4B), INTENT(IN) :: ncol
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: dof
+    TYPE(CSRSparsity_) :: ans
   END FUNCTION csr_constructor1
 END INTERFACE
 
@@ -226,10 +153,10 @@ END INTERFACE
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE
-  MODULE FUNCTION csr_constructor2( IA, JA ) RESULT( Ans )
-    INTEGER( I4B ), INTENT( IN ) :: IA(:)
-    INTEGER( I4B ), INTENT( IN ) :: JA(:)
-    TYPE( CSRSparsity_ ) :: ans
+  MODULE FUNCTION csr_constructor2(IA, JA) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: IA(:)
+    INTEGER(I4B), INTENT(IN) :: JA(:)
+    TYPE(CSRSparsity_) :: ans
   END FUNCTION csr_constructor2
 END INTERFACE
 
@@ -252,12 +179,12 @@ PUBLIC :: CSRSpasity
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE
-MODULE FUNCTION csr_constructor_1( nrow, ncol, dof ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: nrow
-  INTEGER( I4B ), INTENT( IN ) :: ncol
-  TYPE( DOF_ ), OPTIONAL, INTENT( IN ) :: dof
-  TYPE( CSRSparsity_ ), POINTER :: ans
-END FUNCTION csr_constructor_1
+  MODULE FUNCTION csr_constructor_1(nrow, ncol, dof) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: nrow
+    INTEGER(I4B), INTENT(IN) :: ncol
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: dof
+    TYPE(CSRSparsity_), POINTER :: ans
+  END FUNCTION csr_constructor_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -273,11 +200,11 @@ END INTERFACE
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE
-MODULE FUNCTION csr_constructor_2( IA, JA ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: IA(:)
-  INTEGER( I4B ), INTENT( IN ) :: JA(:)
-  TYPE( CSRSparsity_ ), POINTER :: ans
-END FUNCTION csr_constructor_2
+  MODULE FUNCTION csr_constructor_2(IA, JA) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: IA(:)
+    INTEGER(I4B), INTENT(IN) :: JA(:)
+    TYPE(CSRSparsity_), POINTER :: ans
+  END FUNCTION csr_constructor_2
 END INTERFACE
 
 INTERFACE CSRSpasityPointer
@@ -291,13 +218,13 @@ PUBLIC :: CSRSpasityPointer
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine deallocates the data
+! date:         22 March 2021
+! summary:          This subroutine deallocates the data
 
 INTERFACE
-MODULE PURE SUBROUTINE csr_Deallocate( obj )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE csr_Deallocate
+  MODULE PURE SUBROUTINE csr_Deallocate(obj)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+  END SUBROUTINE csr_Deallocate
 END INTERFACE
 
 INTERFACE Deallocate
@@ -311,15 +238,15 @@ PUBLIC :: Deallocate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine display the content of sparsity
+! date: 22 March 2021
+! summary: This subroutine display the content of sparsity
 
 INTERFACE
-MODULE SUBROUTINE csr_Display( obj, Msg, UnitNo )
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: Msg
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-END SUBROUTINE csr_Display
+  MODULE SUBROUTINE csr_Display(obj, Msg, UnitNo)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    CHARACTER(LEN=*), INTENT(IN) :: Msg
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
+  END SUBROUTINE csr_Display
 END INTERFACE
 
 INTERFACE Display
@@ -333,18 +260,18 @@ PUBLIC :: Display
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This function returns the shape of the sparse matrix
+! date:         22 March 2021
+! summary:         This function returns the shape of the sparse matrix
 !
 !# Introduction
 !
 ! This function returns the shape of sparse matrix
 
 INTERFACE
-MODULE PURE FUNCTION csr_shape( obj ) RESULT( Ans )
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans( 2 )
-END FUNCTION csr_shape
+  MODULE PURE FUNCTION csr_shape(obj) RESULT(Ans)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    INTEGER(I4B) :: Ans(2)
+  END FUNCTION csr_shape
 END INTERFACE
 
 INTERFACE Shape
@@ -358,7 +285,7 @@ PUBLIC :: Shape
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
+! date:         22 March 2021
 ! summary: This function returns the size of sparse matrix
 !
 !# Introduction
@@ -369,11 +296,11 @@ PUBLIC :: Shape
 ! If Dims is absent then nrow*ncol are returned
 
 INTERFACE
-MODULE PURE FUNCTION csr_size( obj, Dims ) RESULT( Ans )
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: Dims
-  INTEGER( I4B ) :: Ans
-END FUNCTION csr_size
+  MODULE PURE FUNCTION csr_size(obj, Dims) RESULT(Ans)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: Dims
+    INTEGER(I4B) :: Ans
+  END FUNCTION csr_size
 END INTERFACE
 
 INTERFACE Size
@@ -387,14 +314,14 @@ PUBLIC :: Size
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	Return the total number of non zero entry
+! date:         22 March 2021
+! summary:         Return the total number of non zero entry
 
 INTERFACE
-MODULE PURE FUNCTION csr_getNNZ( obj ) RESULT( Ans )
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans
-END FUNCTION csr_getNNZ
+  MODULE PURE FUNCTION csr_getNNZ(obj) RESULT(Ans)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    INTEGER(I4B) :: Ans
+  END FUNCTION csr_getNNZ
 END INTERFACE
 
 INTERFACE getNNZ
@@ -428,16 +355,16 @@ PUBLIC :: getNNZ
 ! diagonal found in row=i.
 
 INTERFACE
-MODULE SUBROUTINE csr_getDiagonal1( obj, A, diag, idiag, offset )
-  TYPE( CSRSparsity_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: A( : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: diag( : )
+  MODULE SUBROUTINE csr_getDiagonal1(obj, A, diag, idiag, offset)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: A(:)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: diag(:)
     !! Diagonal entries
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: idiag( : )
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: idiag(:)
     !! Position of diagonal entries in `A(:)`
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: offset
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: offset
     !! offset of the wanted diagonal
-END SUBROUTINE csr_getDiagonal1
+  END SUBROUTINE csr_getDiagonal1
 END INTERFACE
 
 INTERFACE getDiagonal
@@ -462,15 +389,15 @@ PUBLIC :: getDiagonal
 ! However, this routine does not return the position of diagonal in `A`
 
 INTERFACE
-MODULE SUBROUTINE csr_getDiagonal2( obj, A, diag, offset )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: A( : )
+  MODULE SUBROUTINE csr_getDiagonal2(obj, A, diag, offset)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: A(:)
     !! Sparse matrix values
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: diag( : )
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: diag(:)
     !! Diagonal entries
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: offset
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: offset
     !! offset of diagonal
-END SUBROUTINE csr_getDiagonal2
+  END SUBROUTINE csr_getDiagonal2
 END INTERFACE
 
 INTERFACE getDiagonal
@@ -482,8 +409,8 @@ END INTERFACE getDiagonal
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine set the sparsity pattern of a given row
+! date:         22 March 2021
+! summary:          This subroutine set the sparsity pattern of a given row
 !
 !# Introduction
 !
@@ -494,13 +421,13 @@ END INTERFACE getDiagonal
 ! `Col` connectivity information is generated.
 
 INTERFACE
-MODULE SUBROUTINE csr_setSparsity1( obj, Row, Col )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Row
+  MODULE SUBROUTINE csr_setSparsity1(obj, Row, Col)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: Row
   !! row number
-  INTEGER( I4B ), INTENT( IN ) :: Col( : )
+    INTEGER(I4B), INTENT(IN) :: Col(:)
   !! column number
-END SUBROUTINE csr_setSparsity1
+  END SUBROUTINE csr_setSparsity1
 END INTERFACE
 
 INTERFACE setSparsity
@@ -514,21 +441,21 @@ PUBLIC :: setSparsity
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine sets the sparsity pattern of several rows
+! date:         22 March 2021
+! summary:          This subroutine sets the sparsity pattern of several rows
 !
 !# Introduction
 ! This routine is similar to [[CSRSparsity_Method:csr_setSparsity1]].
 ! However, in this routine several rows can be given.
 
 INTERFACE
-MODULE SUBROUTINE csr_setSparsity2( obj, Row, Col )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Row( : )
+  MODULE SUBROUTINE csr_setSparsity2(obj, Row, Col)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: Row(:)
     !! row number
-  TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
+    TYPE(IntVector_), INTENT(IN) :: Col(:)
     !! column number
-END SUBROUTINE csr_setSparsity2
+  END SUBROUTINE csr_setSparsity2
 END INTERFACE
 
 INTERFACE setSparsity
@@ -544,17 +471,17 @@ END INTERFACE setSparsity
 ! summary: This subroutine sets sparsity pattern for block `CSRSparsity_`
 
 INTERFACE
-MODULE SUBROUTINE csr_setSparsity3( obj, row, col, ivar, jvar )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: row
+  MODULE SUBROUTINE csr_setSparsity3(obj, row, col, ivar, jvar)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: row
     !! row number
-  INTEGER( I4B ), INTENT( IN ) :: col( : )
+    INTEGER(I4B), INTENT(IN) :: col(:)
     !! sparsity of row, column numbers
-  INTEGER( I4B ), INTENT( IN ) :: ivar
+    INTEGER(I4B), INTENT(IN) :: ivar
     !! block address (row index)
-  INTEGER( I4B ), INTENT( IN ) :: jvar
+    INTEGER(I4B), INTENT(IN) :: jvar
     !! block address (col index)
-END SUBROUTINE csr_setSparsity3
+  END SUBROUTINE csr_setSparsity3
 END INTERFACE
 
 INTERFACE setSparsity
@@ -575,17 +502,17 @@ END INTERFACE setSparsity
 ! column indices.
 
 INTERFACE
-MODULE SUBROUTINE csr_setSparsity4( obj, Row, Col, iVar, jVar )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Row( : )
+  MODULE SUBROUTINE csr_setSparsity4(obj, Row, Col, iVar, jVar)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: Row(:)
     !! several row numbers
-  TYPE( IntVector_ ), INTENT( IN ) :: Col( : )
+    TYPE(IntVector_), INTENT(IN) :: Col(:)
     !! column index for each row number
-  INTEGER( I4B ), INTENT( IN ) :: iVar
+    INTEGER(I4B), INTENT(IN) :: iVar
     !! block address (row index)
-  INTEGER( I4B ), INTENT( IN ) :: jVar
+    INTEGER(I4B), INTENT(IN) :: jVar
     !! block address (col index)
-END SUBROUTINE csr_setSparsity4
+  END SUBROUTINE csr_setSparsity4
 END INTERFACE
 
 INTERFACE setSparsity
@@ -597,8 +524,8 @@ END INTERFACE setSparsity
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine set the sparsity pattern of a given row
+! date:         22 March 2021
+! summary:          This subroutine set the sparsity pattern of a given row
 !
 !# Introduction
 !
@@ -607,13 +534,13 @@ END INTERFACE setSparsity
 ! between row-i and row-j
 
 INTERFACE
-MODULE SUBROUTINE csr_setSparsity5( obj, graph )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: graph( :, : )
+  MODULE SUBROUTINE csr_setSparsity5(obj, graph)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: graph(:, :)
   !! graph of sparsity
   !! If graph( i, j ) .EQ. 0, then i and j are not connected
   !! else they are connected.
-END SUBROUTINE csr_setSparsity5
+  END SUBROUTINE csr_setSparsity5
 END INTERFACE
 
 INTERFACE setSparsity
@@ -625,8 +552,8 @@ END INTERFACE setSparsity
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine set the sparsity pattern of a given row
+! date:         22 March 2021
+! summary:          This subroutine set the sparsity pattern of a given row
 !
 !# Introduction
 !
@@ -635,13 +562,13 @@ END INTERFACE setSparsity
 ! between row-i and row-j
 
 INTERFACE
-MODULE SUBROUTINE csr_setSparsity6( obj, graph )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-  LOGICAL( LGT ), INTENT( IN ) :: graph( :, : )
+  MODULE SUBROUTINE csr_setSparsity6(obj, graph)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    LOGICAL(LGT), INTENT(IN) :: graph(:, :)
   !! graph of sparsity
   !! If graph( i, j ) .EQ. FALSE, then i and j are not connected
   !! else they are connected.
-END SUBROUTINE csr_setSparsity6
+  END SUBROUTINE csr_setSparsity6
 END INTERFACE
 
 INTERFACE setSparsity
@@ -653,8 +580,8 @@ END INTERFACE setSparsity
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	 This subroutine set sparsity pattern of `CSRSparsity_`
+! date:         22 March 2021
+! summary:          This subroutine set sparsity pattern of `CSRSparsity_`
 !
 !# Introduction
 ! This subroutine set sparsity pattern of `CSRSparsity_`
@@ -665,14 +592,13 @@ END INTERFACE setSparsity
 ! `obj%RowSize(:) `, and `obj%DiagIndx(:)`
 
 INTERFACE
-MODULE SUBROUTINE csr_setSparsity_final( obj )
-  TYPE( CSRSparsity_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE csr_setSparsity_final
+  MODULE SUBROUTINE csr_setSparsity_final(obj)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+  END SUBROUTINE csr_setSparsity_final
 END INTERFACE
 
 INTERFACE setSparsity
   MODULE PROCEDURE csr_setSparsity_final
 END INTERFACE setSparsity
-
 
 END MODULE CSRSparsity_Method

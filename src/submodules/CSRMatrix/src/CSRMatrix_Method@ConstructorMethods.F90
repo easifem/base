@@ -16,8 +16,8 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
-! summary: 	This submodule contains method for constructing [[CSRMatrix_]]
+! date:         22 March 2021
+! summary:         This submodule contains method for constructing [[CSRMatrix_]]
 
 SUBMODULE(CSRMatrix_Method) ConstructorMethods
 USE BaseMethod
@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Shape
-  Ans = [ obj%csr%nrow, obj%csr%ncol ]
+Ans = [obj%csr%nrow, obj%csr%ncol]
 END PROCEDURE csrMat_Shape
 
 !----------------------------------------------------------------------------
@@ -37,15 +37,15 @@ END PROCEDURE csrMat_Shape
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Size
-  IF( PRESENT( Dims ) ) THEN
-    IF( Dims .EQ. 1 ) THEN
-      Ans = obj%csr%nrow
-    ELSE
-      Ans = obj%csr%ncol
-    END IF
+IF (PRESENT(Dims)) THEN
+  IF (Dims .EQ. 1) THEN
+    Ans = obj%csr%nrow
   ELSE
-    Ans = obj%csr%nrow * obj%csr%ncol
+    Ans = obj%csr%ncol
   END IF
+ELSE
+  Ans = obj%csr%nrow * obj%csr%ncol
+END IF
 END PROCEDURE csrMat_Size
 
 !----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ END PROCEDURE csrMat_Size
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_TotalDimension
-  ans = obj%tDimension
+ans = obj%tDimension
 END PROCEDURE csrMat_TotalDimension
 
 !----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ END PROCEDURE csrMat_TotalDimension
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setTotalDimension
-  obj%tDimension = tDimension
+obj%tDimension = tDimension
 END PROCEDURE csrMat_setTotalDimension
 
 !----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ END PROCEDURE csrMat_setTotalDimension
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getNNZ
-  Ans = obj%csr%nnz
+Ans = obj%csr%nnz
 END PROCEDURE csrMat_getNNZ
 
 !----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ END PROCEDURE csrMat_getNNZ
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Allocate
-  CALL Initiate(obj=obj, ncol=dims(2), nrow=dims(1), matrixProp=matrixProp)
+CALL Initiate(obj=obj, ncol=dims(2), nrow=dims(1), matrixProp=matrixProp)
 END PROCEDURE csrMat_Allocate
 
 !----------------------------------------------------------------------------
@@ -85,11 +85,11 @@ END PROCEDURE csrMat_Allocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Deallocate
-  NULLIFY( obj%csr )
-  obj%csrOwnership = .FALSE.
-  obj%tDimension = 2
-  obj%MatrixProp = 'UNSYM'
-  IF( ALLOCATED( obj%A ) ) DEALLOCATE( obj%A )
+CALL Deallocate (obj%csr)
+obj%csrOwnership = .FALSE.
+obj%tDimension = 2
+obj%MatrixProp = 'UNSYM'
+IF (ALLOCATED(obj%A)) DEALLOCATE (obj%A)
 END PROCEDURE csrMat_Deallocate
 
 !----------------------------------------------------------------------------
@@ -97,13 +97,12 @@ END PROCEDURE csrMat_Deallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_initiate1
-  CALL Deallocate( obj )
-  obj%csrOwnership = .TRUE.
-  IF( PRESENT( matrixProp ) ) obj%matrixProp = TRIM( matrixProp )
-  ALLOCATE( obj%csr )
-  CALL Initiate( obj=obj%csr, ncol=ncol, nrow=nrow, dof=dof )
-  CALL Reallocate( obj%A, obj%csr%nnz )
-  CALL setTotalDimension( obj, 2_I4B )
+CALL Deallocate (obj)
+obj%csrOwnership = .TRUE.
+IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
+CALL Initiate(obj=obj%csr, ncol=ncol, nrow=nrow, dof=dof)
+CALL Reallocate(obj%A, obj%csr%nnz)
+CALL setTotalDimension(obj, 2_I4B)
 END PROCEDURE csrMat_initiate1
 
 !----------------------------------------------------------------------------
@@ -113,22 +112,22 @@ END PROCEDURE csrMat_initiate1
 MODULE PROCEDURE csrMat_initiate2
   !!
 #ifdef DEBUG_VER
-  IF( .NOT. csr%isInitiated ) THEN
-    CALL ErrorMSG( &
-      & "Instance of CSRSparsity is not initiated!", &
-      & "CSRMatrix_Method@ConstructorMethods.F90", &
-      & "csrMat_initiate2()", &
-      & __LINE__, stderr )
-    STOP
-  END IF
+IF (.NOT. csr%isInitiated) THEN
+  CALL ErrorMSG( &
+    & "Instance of CSRSparsity is not initiated!", &
+    & "CSRMatrix_Method@ConstructorMethods.F90", &
+    & "csrMat_initiate2()", &
+    & __LINE__, stderr)
+  STOP
+END IF
 #endif
   !!
-  CALL Deallocate( obj )
-  obj%csrOwnership = .FALSE.
-  IF( PRESENT( matrixProp ) ) obj%matrixProp = TRIM( matrixProp )
-  obj%csr => csr
-  CALL Reallocate( obj%A, obj%csr%nnz )
-  CALL setTotalDimension( obj, 2_I4B )
+CALL Deallocate (obj)
+obj%csrOwnership = .FALSE.
+IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
+obj%csr = csr
+CALL Reallocate(obj%A, obj%csr%nnz)
+CALL setTotalDimension(obj, 2_I4B)
   !!
 END PROCEDURE csrMat_initiate2
 
@@ -138,13 +137,12 @@ END PROCEDURE csrMat_initiate2
 
 MODULE PROCEDURE csrMat_initiate3
   !!
-  obj%csrOwnership = .TRUE.
-  IF( PRESENT( matrixProp ) ) obj%matrixProp = TRIM( matrixProp )
-  ALLOCATE( obj%csr )
-  CALL Initiate( obj=obj%csr, IA=IA, JA=JA )
-  obj%A = A
-  CALL setTotalDimension( obj, 2_I4B )
-  CALL setSparsity( obj )
+obj%csrOwnership = .TRUE.
+IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
+CALL Initiate(obj=obj%csr, IA=IA, JA=JA)
+obj%A = A
+CALL setTotalDimension(obj, 2_I4B)
+CALL setSparsity(obj)
   !!
 END PROCEDURE csrMat_initiate3
 
@@ -153,11 +151,11 @@ END PROCEDURE csrMat_initiate3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Initiate4
-  obj%csr => obj2%csr
-  obj%tDimension = obj2%tDimension
-  obj%csrOwnership = .FALSE.
-  obj%matrixProp = obj2%matrixProp
-  IF( ALLOCATED( obj2%A ) ) obj%A = obj2%A
+obj%csr = obj2%csr
+obj%tDimension = obj2%tDimension
+obj%csrOwnership = .FALSE.
+obj%matrixProp = obj2%matrixProp
+IF (ALLOCATED(obj2%A)) obj%A = obj2%A
 END PROCEDURE csrMat_Initiate4
 
 !----------------------------------------------------------------------------
@@ -165,24 +163,24 @@ END PROCEDURE csrMat_Initiate4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Initiate5
-  INTEGER( I4B ) :: nrow, ncol, nnz, job
-  INTEGER( I4B ), ALLOCATABLE :: IA( : ), JA( : )
-  REAL( DFP ), ALLOCATABLE :: A( : )
+INTEGER(I4B) :: nrow, ncol, nnz, job
+INTEGER(I4B), ALLOCATABLE :: IA(:), JA(:)
+REAL(DFP), ALLOCATABLE :: A(:)
   !!
-  job = 1
-  nrow = i2-i1+1
-  ncol = j2-j1+1
-  nnz = obj2%csr%nnz
-  ALLOCATE( A( nnz ), IA( nrow+1 ), JA( nnz ) )
-  A = 0.0; IA = 0; JA = 0
+job = 1
+nrow = i2 - i1 + 1
+ncol = j2 - j1 + 1
+nnz = obj2%csr%nnz
+ALLOCATE (A(nnz), IA(nrow + 1), JA(nnz))
+A = 0.0; IA = 0; JA = 0
   !! calling from Sparsekit
-  CALL SUBMAT(job,i1,i2,j1,j2,obj2%A,obj2%csr%JA,obj2%csr%IA,&
-    & nrow,ncol,A,JA,IA)
+CALL SUBMAT(job, i1, i2, j1, j2, obj2%A, obj2%csr%JA, obj2%csr%IA,&
+  & nrow, ncol, A, JA, IA)
   !!
-  nnz = IA( nrow+1 ) - 1
-  CALL initiate( obj=obj, A=A(1:nnz), IA=IA, JA=JA(1:nnz) )
-  obj%csr%ncol = ncol
-  DEALLOCATE( IA, JA, A )
+nnz = IA(nrow + 1) - 1
+CALL initiate(obj=obj, A=A(1:nnz), IA=IA, JA=JA(1:nnz))
+obj%csr%ncol = ncol
+DEALLOCATE (IA, JA, A)
   !!
 END PROCEDURE csrMat_Initiate5
 
@@ -193,23 +191,22 @@ END PROCEDURE csrMat_Initiate5
 MODULE PROCEDURE csrMat_Initiate6
   !!
 #ifdef DEBUG_VER
-  IF( ASSOCIATED( obj%csr ) ) THEN
-    CALL ErrorMSG( &
-      & MSG = "obj%csr is associated.", &
-      & FILE="CSRMatrix_Method@ConstructorMethods.F90", &
-      & ROUTINE="csrMat_Initiate6()", &
-      & LINE = __LINE__, &
-      & unitNo = stdout )
-    STOP
-  END IF
+IF (ASSOCIATED(obj%csr)) THEN
+  CALL ErrorMSG( &
+    & MSG="obj%csr is associated.", &
+    & FILE="CSRMatrix_Method@ConstructorMethods.F90", &
+    & ROUTINE="csrMat_Initiate6()", &
+    & LINE=__LINE__, &
+    & unitNo=stdout)
+  STOP
+END IF
 #endif
   !!
-  ALLOCATE( obj%csr )
-  obj%csr = obj2%csr
-  obj%tDimension = obj2%tDimension
-  obj%csrOwnership = .TRUE.
-  obj%matrixProp = obj2%matrixProp
-  IF( ALLOCATED( obj2%A ) ) obj%A = obj2%A
+obj%csr = obj2%csr
+obj%tDimension = obj2%tDimension
+obj%csrOwnership = .TRUE.
+obj%matrixProp = obj2%matrixProp
+IF (ALLOCATED(obj2%A)) obj%A = obj2%A
 END PROCEDURE csrMat_Initiate6
 
 END SUBMODULE ConstructorMethods

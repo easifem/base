@@ -112,6 +112,40 @@ END INTERFACE FromUnitTriangle2Triangle
 PUBLIC :: FromUnitTriangle2Triangle
 
 !----------------------------------------------------------------------------
+!                                            FromBiUnitQuadrangle2Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from unit line to physical space
+
+INTERFACE
+  MODULE PURE FUNCTION FromBiUnitQuadrangle2Quadrangle1(xin, x1, x2, x3, x4) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Quadrangle in xij format
+    !! SIZE(xin,1) = 2
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! vertex x1 of physical domain, size(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! vertex x2 of physical domain, size(x2) = nsd
+    REAL(DFP), INTENT(IN) :: x3(:)
+    !! vertex x3 of physical domain, size(x3) = nsd
+    REAL(DFP), INTENT(IN) :: x4(:)
+    !! vertex x4 of physical domain, size(x4) = nsd
+    REAL(DFP) :: ans(SIZE(x1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+  END FUNCTION FromBiUnitQuadrangle2Quadrangle1
+END INTERFACE
+
+INTERFACE FromBiUnitQuadrangle2Quadrangle
+  MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+END INTERFACE FromBiUnitQuadrangle2Quadrangle
+
+PUBLIC :: FromBiUnitQuadrangle2Quadrangle
+
+!----------------------------------------------------------------------------
 !                                                     FromBiUnitLine2UnitLine
 !----------------------------------------------------------------------------
 

@@ -323,9 +323,9 @@ TYPE :: CSRMatrix_
   LOGICAL(LGT) :: csrOwnership = .FALSE.
     !! This variable, if true, denotes that csr is allocated inside the obj
   INTEGER(I4B) :: tDimension = 2_I4B
-  CHARACTER(LEN=5) :: matrixProp = 'UNSYM'
+  CHARACTER(LEN=20) :: matrixProp = 'UNSYM'
   REAL(DFP), ALLOCATABLE :: A(:)
-  TYPE(CSRSparsity_), POINTER :: csr => NULL()
+  TYPE(CSRSparsity_) :: csr
 END TYPE CSRMatrix_
 
 PUBLIC :: CSRMatrix_

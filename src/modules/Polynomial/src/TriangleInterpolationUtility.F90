@@ -201,15 +201,14 @@ END INTERFACE
 !
 !# Introduction
 !
-!- This routine returns the interplation points on line
-!- `xij` contains nodal coordinates of line in xij format.
-!- SIZE(xij,1) = nsd, and SIZE(xij,2)=2
-!- If xij is absent then [-1,1] is used
+!- This routine returns the interplation points on triangle.
+!- `xij` contains nodal coordinates of triangle in xij format.
+!- SIZE(xij,1) = nsd, and SIZE(xij,2)=3
+!- If xij is absent then unit triangle is assumed
 !- `ipType` is interpolation point type, it can take following values
 !-  `Equidistance`, uniformly/evenly distributed points
 !- `GaussLegendreLobatto ---> IsaacLegendre
 !- `GaussChebyshevLobatto ---> IsaacChebyshev
-!- `GaussJacobi` and `GaussJacobiLobatto`
 !- `ChenBabuska`
 !- `Hesthaven`
 !- `Feket`
@@ -222,7 +221,6 @@ END INTERFACE
 ! returned in VEFC format (vertex, edge, face, cell). 1:3 are are
 ! vertex points, then edge, and then internal nodes. The internal nodes
 ! also follow the same convention. Please read Gmsh manual  on this topic.
-! In case of BlythPoz and Recursive
 
 INTERFACE
   MODULE FUNCTION InterpolationPoint_Triangle(order, ipType, &

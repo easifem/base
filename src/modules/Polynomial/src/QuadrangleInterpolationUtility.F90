@@ -146,23 +146,48 @@ PUBLIC :: EquidistancePoint_Quadrangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Aug 2022
-! summary:         Interpolation point
+! summary:  Interpolation point
+!
+!# Introduction
+!
+! In this case order is same in both x1 and x2 direction. Therefore,
+! (N+1)**2 grid points are returned.
+!
+! Also in both x1 and x2 same type of grid family will be used.
+!
+!- This routine returns the interplation points on quad
+!- `xij` contains nodal coordinates of quad in xij format.
+!- SIZE(xij,1) = nsd, and SIZE(xij,2)=4
+!- If xij is absent then biunit quad is used
+!- `ipType` is interpolation point type, it can take following values
+!- `Equidistance`, uniformly/evenly distributed points
+!- `GaussLegendreLobatto
+!- `GaussChebyshevLobatto
+!
+!- `layout` specifies the arrangement of points. The nodes are always
+! returned in VEFC format (vertex, edge, face, cell). 1:3 are are
+! vertex points, then edge, and then internal nodes. The internal nodes
+! also follow the same convention. Please read Gmsh manual  on this topic.
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Quadrangle(order, ipType, xij, &
+  MODULE FUNCTION InterpolationPoint_Quadrangle1(order, ipType, xij, &
     & layout) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation point type
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! xij format
+    !! four vertices of quadrangle in xij format
     CHARACTER(LEN=*), INTENT(IN) :: layout
-    !!
+    !! VEFC
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in xij format
-  END FUNCTION InterpolationPoint_Quadrangle
+  END FUNCTION InterpolationPoint_Quadrangle1
 END INTERFACE
+
+INTERFACE InterpolationPoint_Quadrangle
+  MODULE PROCEDURE InterpolationPoint_Quadrangle1
+END INTERFACE InterpolationPoint_Quadrangle
 
 PUBLIC :: InterpolationPoint_Quadrangle
 

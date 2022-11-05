@@ -66,6 +66,27 @@ END DO
 END PROCEDURE FromUnitTriangle2Triangle1
 
 !----------------------------------------------------------------------------
+!                                           FromBiUnitQuadrangle2Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+INTEGER(I4B) :: ii
+REAL(DFP) :: xi, eta, p1, p2, p3, p4
+!!
+DO ii = 1, size(ans, 2)
+  xi = xin(1, ii)
+  eta = xin(2, ii)
+  p1 = 0.25 * (1.0 - xi) * (1.0 - eta)
+  p2 = 0.25 * (1.0 + xi) * (1.0 - eta)
+  p3 = 0.25 * (1.0 + xi) * (1.0 + eta)
+  p4 = 0.25 * (1.0 - xi) * (1.0 + eta)
+  !!
+  ans(:, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4
+  !!
+END DO
+END PROCEDURE FromBiUnitQuadrangle2Quadrangle1
+
+!----------------------------------------------------------------------------
 !                                             FromBiUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
