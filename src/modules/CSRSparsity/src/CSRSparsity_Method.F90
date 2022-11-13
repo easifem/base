@@ -55,10 +55,13 @@ PRIVATE
 !
 
 INTERFACE
-  MODULE SUBROUTINE csr_initiate1(obj, ncol, nrow, dof)
+  MODULE SUBROUTINE csr_initiate1(obj, ncol, nrow, idof, jdof)
     TYPE(CSRSparsity_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ncol, nrow
-    TYPE(DOF_), OPTIONAL, INTENT(IN) :: dof
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
+    !! DOF for row
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: jdof
+    !! DOF for column
   END SUBROUTINE csr_initiate1
 END INTERFACE
 
@@ -132,10 +135,13 @@ PUBLIC :: ASSIGNMENT(=)
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE
-  MODULE FUNCTION csr_constructor1(nrow, ncol, dof) RESULT(Ans)
+  MODULE FUNCTION csr_constructor1(nrow, ncol, idof, jdof) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: nrow
     INTEGER(I4B), INTENT(IN) :: ncol
-    TYPE(DOF_), OPTIONAL, INTENT(IN) :: dof
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
+    !! dof for row
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: jdof
+    !! dof for column
     TYPE(CSRSparsity_) :: ans
   END FUNCTION csr_constructor1
 END INTERFACE
@@ -179,10 +185,13 @@ PUBLIC :: CSRSpasity
 ! This function returns an instance of [[CSRSparsity_]]
 
 INTERFACE
-  MODULE FUNCTION csr_constructor_1(nrow, ncol, dof) RESULT(Ans)
+  MODULE FUNCTION csr_constructor_1(nrow, ncol, idof, jdof) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: nrow
     INTEGER(I4B), INTENT(IN) :: ncol
-    TYPE(DOF_), OPTIONAL, INTENT(IN) :: dof
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
+    !! dof for row
+    TYPE(DOF_), OPTIONAL, INTENT(IN) :: jdof
+    !! dof for column
     TYPE(CSRSparsity_), POINTER :: ans
   END FUNCTION csr_constructor_1
 END INTERFACE
@@ -331,7 +340,7 @@ END INTERFACE getNNZ
 PUBLIC :: getNNZ
 
 !----------------------------------------------------------------------------
-!                                                         getDiagonal@Unary
+!                                                      getDiagonal@GeMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -374,7 +383,7 @@ END INTERFACE getDiagonal
 PUBLIC :: getDiagonal
 
 !----------------------------------------------------------------------------
-!                                                         getDiagonal@Unary
+!                                                    getDiagonal@GetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -405,7 +414,7 @@ INTERFACE getDiagonal
 END INTERFACE getDiagonal
 
 !----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
+!                                                     setSparsity@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -437,7 +446,7 @@ END INTERFACE setSparsity
 PUBLIC :: setSparsity
 
 !----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
+!                                                     setSparsity@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -463,7 +472,7 @@ INTERFACE setSparsity
 END INTERFACE setSparsity
 
 !----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
+!                                                     setSparsity@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -489,7 +498,7 @@ INTERFACE setSparsity
 END INTERFACE setSparsity
 
 !----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
+!                                                     setSparsity@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -520,7 +529,7 @@ INTERFACE setSparsity
 END INTERFACE setSparsity
 
 !----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
+!                                                     setSparsity@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -548,7 +557,7 @@ INTERFACE setSparsity
 END INTERFACE setSparsity
 
 !----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
+!                                                     setSparsity@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -576,7 +585,7 @@ INTERFACE setSparsity
 END INTERFACE setSparsity
 
 !----------------------------------------------------------------------------
-!                                                     setSparsity@setMethods
+!                                                     setSparsity@SetMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
