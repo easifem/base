@@ -48,15 +48,15 @@ PUBLIC :: Convert
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE convert_1( From, To, Conversion, nns, tdof )
-  REAL( DFP ), INTENT( IN ) :: From( :, : )
+  MODULE PURE SUBROUTINE convert_1(From, To, Conversion, nns, tdof)
+    REAL(DFP), INTENT(IN) :: From(:, :)
     !! Matrix in one format
-  REAL( DFP ), INTENT( INOUT ), ALLOCATABLE :: To( :, : )
+    REAL(DFP), INTENT(INOUT), ALLOCATABLE :: To(:, :)
     !! Matrix is desired format
-  INTEGER( I4B ), INTENT( IN ) :: Conversion
+    INTEGER(I4B), INTENT(IN) :: Conversion
     !! `Conversion` can be `NodesToDOF` or `DOFToNodes`
-  INTEGER( I4B ), INTENT( IN ) :: nns, tdof
-END SUBROUTINE convert_1
+    INTEGER(I4B), INTENT(IN) :: nns, tdof
+  END SUBROUTINE convert_1
 END INTERFACE
 
 INTERFACE Convert
@@ -73,10 +73,10 @@ END INTERFACE Convert
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE convert_2( From, To )
-  REAL( DFP ), INTENT( IN ) :: From( :, :, :, : )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: To( :, : )
-END SUBROUTINE convert_2
+  MODULE PURE SUBROUTINE convert_2(From, To)
+    REAL(DFP), INTENT(IN) :: From(:, :, :, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :)
+  END SUBROUTINE convert_2
 END INTERFACE
 
 INTERFACE Convert
@@ -93,12 +93,12 @@ END INTERFACE Convert
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE convert_3( From, To )
-  REAL( DFP ), INTENT( IN ) :: From( :, :, :, :, :, : )
+  MODULE PURE SUBROUTINE convert_3(From, To)
+    REAL(DFP), INTENT(IN) :: From(:, :, :, :, :, :)
   !! I, J, ii, jj, a, b
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: To( :, :, :, : )
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: To(:, :, :, :)
   !! I, J, a, b
-END SUBROUTINE convert_3
+  END SUBROUTINE convert_3
 END INTERFACE
 
 INTERFACE Convert
