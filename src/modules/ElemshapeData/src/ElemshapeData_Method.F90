@@ -17,6 +17,8 @@
 !> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
 ! summary: Methods related to [[elemShapeData_]] datatype
+!
+!{!pages/ElemshapeData_.md!}
 
 MODULE ElemshapeData_Method
 USE BaseType
@@ -50,7 +52,14 @@ PRIVATE
 #include "./DivergenceMethods.inc"
 #include "./ProjectionMethods.inc"
 #include "./GetMethods.inc"
-#include "./StabilizationParamMethods.inc"
+#include "./UnitNormalMethods.inc"
+#include "./HRGNParamMethods.inc"
+#include "./HRQIParamMethods.inc"
+#include "./SUGN3ParamMethods.inc"
+#include "./SUGN3Param_Takizawa2018Methods.inc"
+#include "./SUPGParamMethods.inc"
+#include "./DBEStabParamMethods.inc"
+! #include "./StabilizationParamMethods.inc"
 
 !----------------------------------------------------------------------------
 !                                                                   Contains
