@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
+! date:         22 March 2021
 ! summary: It contains method for setting values in [[CSRMatrix_]]
 
 SUBMODULE(CSRMatrix_Method) SparsityMethods
@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setSparsity1
-  CALL setSparsity( obj=obj%csr, row=row, col=col )
+CALL setSparsity(obj=obj%csr, row=row, col=col)
 END PROCEDURE csrMat_setSparsity1
 
 !----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ END PROCEDURE csrMat_setSparsity1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setSparsity2
-  CALL setSparsity( obj=obj%csr, row=row, col=col )
+CALL setSparsity(obj=obj%csr, row=row, col=col)
 END PROCEDURE csrMat_setSparsity2
 
 !----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ END PROCEDURE csrMat_setSparsity2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setSparsity3
-  CALL setSparsity( obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar )
+CALL setSparsity(obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar)
 END PROCEDURE csrMat_setSparsity3
 
 !----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ END PROCEDURE csrMat_setSparsity3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setSparsity4
-  CALL setSparsity( obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar )
+CALL setSparsity(obj=obj%csr, row=row, col=col, ivar=ivar, jvar=jvar)
 END PROCEDURE csrMat_setSparsity4
 
 !----------------------------------------------------------------------------
@@ -61,32 +61,32 @@ END PROCEDURE csrMat_setSparsity4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setSparsity_final
-  REAL( DFP ), ALLOCATABLE :: tempA( : )
-  INTEGER( I4B ) :: m
-  !
-  IF( .NOT. obj%csr%isSparsityLock ) CALL setSparsity( obj%csr )
-  IF( ALLOCATED( obj%A ) ) THEN
-    m = SIZE(obj%A)
-    IF( m .EQ. 0 ) THEN
-      CALL Reallocate( obj%A, obj%csr%nnz )
-    ELSE IF ( m .NE. obj%csr%nnz ) THEN
-      tempA = obj%A
-      CALL Reallocate( obj%A, obj%csr%nnz )
-      IF( SIZE(obj%A) .LT. SIZE( tempA ) ) THEN
-        obj%A( 1:SIZE( tempA ) ) = tempA( : )
-      ELSE
-        obj%A( 1:obj%csr%nnz ) =  tempA( 1:obj%csr%nnz )
-      END IF
-      DEALLOCATE( tempA )
+REAL(DFP), ALLOCATABLE :: tempA(:)
+INTEGER(I4B) :: m
+!
+IF (.NOT. obj%csr%isSparsityLock) CALL setSparsity(obj%csr)
+IF (ALLOCATED(obj%A)) THEN
+  m = SIZE(obj%A)
+  IF (m .EQ. 0) THEN
+    CALL Reallocate(obj%A, obj%csr%nnz)
+  ELSE IF (m .NE. obj%csr%nnz) THEN
+    tempA = obj%A
+    CALL Reallocate(obj%A, obj%csr%nnz)
+    IF (SIZE(obj%A) .LT. SIZE(tempA)) THEN
+      obj%A(1:SIZE(tempA)) = tempA(:)
+    ELSE
+      obj%A(1:obj%csr%nnz) = tempA(1:obj%csr%nnz)
     END IF
-  ELSE
-    CALL Reallocate( obj%A, obj%csr%nnz )
+    DEALLOCATE (tempA)
   END IF
-  !> Sort entries according to their column index
-  CALL CSORT( obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, .TRUE. )
-  obj%csr%isSorted = .TRUE.
-  obj%csr%isSparsityLock = .FALSE.
-  CALL setSparsity( obj%csr )
+ELSE
+  CALL Reallocate(obj%A, obj%csr%nnz)
+END IF
+!> Sort entries according to their column index
+CALL CSORT(obj%csr%nrow, obj%A, obj%csr%JA, obj%csr%IA, .TRUE.)
+obj%csr%isSorted = .TRUE.
+obj%csr%isSparsityLock = .FALSE.
+CALL setSparsity(obj%csr)
 END PROCEDURE csrMat_setSparsity_final
 
 !----------------------------------------------------------------------------

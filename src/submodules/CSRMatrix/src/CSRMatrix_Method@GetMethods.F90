@@ -29,7 +29,11 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getStorageFMT
-ans = obj%csr%dof%storageFMT
+IF (i .EQ. 1) THEN
+  ans = obj%csr%idof%storageFMT
+ELSE
+  ans = obj%csr%jdof%storageFMT
+END IF
 END PROCEDURE csrMat_getStorageFMT
 
 !----------------------------------------------------------------------------
@@ -45,7 +49,11 @@ END PROCEDURE csrMat_getMatrixProp
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getDOFPointer
-ans => obj%csr%dof
+IF (i .EQ. 1) THEN
+  ans => obj%csr%idof
+ELSE
+  ans => obj%csr%jdof
+END IF
 END PROCEDURE csrMat_getDOFPointer
 
 !----------------------------------------------------------------------------
