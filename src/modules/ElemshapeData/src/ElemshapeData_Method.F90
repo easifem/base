@@ -53,13 +53,12 @@ PRIVATE
 #include "./ProjectionMethods.inc"
 #include "./GetMethods.inc"
 #include "./UnitNormalMethods.inc"
+#include "./HminHmaxMethods.inc"
 #include "./HRGNParamMethods.inc"
 #include "./HRQIParamMethods.inc"
 #include "./SUGN3ParamMethods.inc"
 #include "./SUGN3Param_Takizawa2018Methods.inc"
 #include "./SUPGParamMethods.inc"
-#include "./DBEStabParamMethods.inc"
-! #include "./StabilizationParamMethods.inc"
 
 !----------------------------------------------------------------------------
 !                                                                   Contains
