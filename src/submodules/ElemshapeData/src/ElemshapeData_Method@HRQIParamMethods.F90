@@ -95,11 +95,7 @@ FFT = 0.0_DFP; r0 = 0.0_DFP
 !!
 IF (ismin .OR. ismax) THEN
   DO ii = 1, nips
-    CALL JacobiMethod( &
-      & mat=G(:, :, ii), &
-      & eigenValues=r0(:, ii), &
-      & eigenVectors=FFT, &
-      & maxIter=100)
+    r0(:, ii) = SymEigenValuesUpto3(G(:, :, ii))
   END DO
 END IF
 !!

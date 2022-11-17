@@ -34,7 +34,7 @@ PURE SUBROUTINE elemsd_getHRGNParam_a(obj, h, val, opt)
   !!
   INTEGER(I4B) :: ii
   REAL(DFP) :: areal
-  REAL(DFP), ALLOCATABLE :: q(:, :)
+  REAL(DFP), ALLOCATABLE :: q(:, :), hmin(:), hmax(:)
   !! rdNdXt; (I,ips) => projection of dNdXt on unit normal
   TYPE(FEVariable_) :: rvar
   !! vector variable for keeping r
@@ -55,16 +55,22 @@ PURE SUBROUTINE elemsd_getHRGNParam_a(obj, h, val, opt)
   !!
   CALL GetProjectionOfdNdXt(obj=obj, cdNdXt=q, val=rvar)
   !!
+  !! Calculate hmin and hmax
+  !!
+  CALL GetHminHmax(obj=obj, hmax=hmax, hmin=hmin)
+  !!
   DO ii = 1, SIZE(h)
     areal = SUM(ABS(q(:, ii)))
     IF (areal.APPROXEQ.zero) THEN
-      h(ii) = 0.0_DFP
+      h(ii) = hmin(ii)
     ELSE
       h(ii) = 2.0_DFP / areal
     END IF
   END DO
   !!
   IF (ALLOCATED(q)) DEALLOCATE (q)
+  IF (ALLOCATED(hmin)) DEALLOCATE (hmin)
+  IF (ALLOCATED(hmax)) DEALLOCATE (hmax)
   CALL DEALLOCATE (rvar)
   !!
 END SUBROUTINE elemsd_getHRGNParam_a
@@ -83,7 +89,7 @@ PURE SUBROUTINE elemsd_getHRGNParam_b(obj, h, val, opt)
   !!
   INTEGER(I4B) :: ii
   REAL(DFP) :: areal
-  REAL(DFP), ALLOCATABLE :: r(:, :)
+  REAL(DFP), ALLOCATABLE :: r(:, :), hmin(:), hmax(:)
   REAL(DFP), ALLOCATABLE :: q(:, :, :)
   !! rdNTdXt; (I,a,ips)m => projection of dNTdXt on unit normal
   TYPE(FEVariable_) :: rvar
@@ -104,10 +110,14 @@ PURE SUBROUTINE elemsd_getHRGNParam_b(obj, h, val, opt)
   !!
   CALL GetProjectionOfdNTdXt(obj=obj, cdNTdXt=q, val=rvar)
   !!
+  !! Calculate hmin and hmax
+  !!
+  CALL GetHminHmax(obj=obj, hmax=hmax, hmin=hmin)
+  !!
   DO ii = 1, SIZE(h, 1)
     areal = SUM(ABS(q(:, :, ii)))
     IF (areal.APPROXEQ.zero) THEN
-      h(ii) = 0.0_DFP
+      h(ii) = hmin(ii)
     ELSE
       h(ii) = 2.0_DFP / areal
     END IF

@@ -370,7 +370,7 @@ FFT = 0.0_DFP; r0 = 0.0_DFP
 !!
 IF (ismin .OR. ismax) THEN
   DO ii = 1, nips
-    CALL JacobiMethod( &
+    CALL GetSymEigenJacobi( &
       & mat=G(:, :, ii), &
       & eigenValues=r0(:, ii), &
       & eigenVectors=FFT, &
