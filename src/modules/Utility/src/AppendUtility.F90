@@ -21,10 +21,11 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: ColConcat
-PUBLIC :: OPERATOR( .ColConcat. )
+PUBLIC :: OPERATOR(.ColConcat.)
 PUBLIC :: RowConcat
-PUBLIC :: OPERATOR( .RowConcat. )
+PUBLIC :: OPERATOR(.RowConcat.)
 PUBLIC :: Append
+PUBLIC :: OPERATOR(.Append.)
 PUBLIC :: Expand
 
 !----------------------------------------------------------------------------
@@ -43,62 +44,62 @@ PUBLIC :: Expand
 ! csv_utilities.f90
 
 INTERFACE
-MODULE PURE SUBROUTINE expand_int8(vec,n,chunk_size,val,finished)
-  INTEGER( Int8 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
-  INTEGER( I4B ), INTENT(INOUT) :: n
+  MODULE PURE SUBROUTINE expand_int8(vec, n, chunk_size, val, finished)
+    INTEGER(Int8), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
-  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+    INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-  INTEGER( Int8 ), OPTIONAL, INTENT(IN) :: val
+    INTEGER(Int8), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
-  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
-END SUBROUTINE expand_int8
-MODULE PURE SUBROUTINE expand_int16(vec,n,chunk_size,val,finished)
-  INTEGER( Int16 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
-  INTEGER( I4B ), INTENT(INOUT) :: n
+  END SUBROUTINE expand_int8
+  MODULE PURE SUBROUTINE expand_int16(vec, n, chunk_size, val, finished)
+    INTEGER(Int16), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
-  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+    INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-  INTEGER( Int16 ), OPTIONAL, INTENT(IN) :: val
+    INTEGER(Int16), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
-  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
-END SUBROUTINE expand_int16
-MODULE PURE SUBROUTINE expand_int32(vec,n,chunk_size,val,finished)
-  INTEGER( Int32 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
-  INTEGER( I4B ), INTENT(INOUT) :: n
+  END SUBROUTINE expand_int16
+  MODULE PURE SUBROUTINE expand_int32(vec, n, chunk_size, val, finished)
+    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
-  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+    INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-  INTEGER( Int32 ), OPTIONAL, INTENT(IN) :: val
+    INTEGER(Int32), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
-  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
-END SUBROUTINE expand_int32
-MODULE PURE SUBROUTINE expand_int64(vec,n,chunk_size,val,finished)
-  INTEGER( Int64 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
-  INTEGER( I4B ), INTENT(INOUT) :: n
+  END SUBROUTINE expand_int32
+  MODULE PURE SUBROUTINE expand_int64(vec, n, chunk_size, val, finished)
+    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
-  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+    INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-  INTEGER( Int64 ), OPTIONAL, INTENT(IN) :: val
+    INTEGER(Int64), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
-  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
-END SUBROUTINE expand_int64
+  END SUBROUTINE expand_int64
 END INTERFACE
 
 INTERFACE EXPAND
@@ -114,34 +115,34 @@ END INTERFACE EXPAND
 ! summary: Expand the real vector
 
 INTERFACE
-MODULE PURE SUBROUTINE expand_real32(vec,n,chunk_size,val,finished)
-  REAL( Real32 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
-  INTEGER( I4B ), INTENT(INOUT) :: n
+  MODULE PURE SUBROUTINE expand_real32(vec, n, chunk_size, val, finished)
+    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
-  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+    INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-  REAL( Real32 ), OPTIONAL, INTENT(IN) :: val
+    REAL(Real32), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
-  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
-END SUBROUTINE expand_real32
-MODULE PURE SUBROUTINE expand_real64(vec,n,chunk_size,val,finished)
-  REAL( Real64 ), ALLOCATABLE,INTENT(INOUT) :: vec(:)
-  INTEGER( I4B ), INTENT(INOUT) :: n
+  END SUBROUTINE expand_real32
+  MODULE PURE SUBROUTINE expand_real64(vec, n, chunk_size, val, finished)
+    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
-  INTEGER( I4B ) ,INTENT(IN) :: chunk_size
+    INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-  REAL( Real64 ), OPTIONAL, INTENT(IN) :: val
+    REAL(Real64), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
-  LOGICAL( LGT ), OPTIONAL, INTENT(IN) :: finished
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
-END SUBROUTINE expand_real64
+  END SUBROUTINE expand_real64
 END INTERFACE
 
 INTERFACE Expand
@@ -169,14 +170,14 @@ INTERFACE
 
   MODULE PURE SUBROUTINE Append_1c(C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
-    INTEGER( I4B ), INTENT( IN ) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B
   END SUBROUTINE Append_1c
 
   MODULE PURE SUBROUTINE Append_1d(C, A, B)
-    REAL( DFP ), ALLOCATABLE, INTENT(INOUT) :: C(:)
-    REAL( DFP ), INTENT( IN ) :: A(:)
-    REAL( DFP ), INTENT(IN) :: B
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    REAL(DFP), INTENT(IN) :: A(:)
+    REAL(DFP), INTENT(IN) :: B
   END SUBROUTINE Append_1d
 END INTERFACE
 
@@ -232,27 +233,27 @@ INTERFACE
   MODULE PURE SUBROUTINE Append_3a(A, ENTRY, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY
-    LOGICAL( LGT ), INTENT( IN ) :: mask
+    LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3a
 
   MODULE PURE SUBROUTINE Append_3b(A, ENTRY, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
-    LOGICAL( LGT ), INTENT( IN ) :: mask
+    LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3b
 
   MODULE PURE SUBROUTINE Append_3c(C, A, B, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
-    INTEGER( I4B ), INTENT( IN ) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B
-    LOGICAL( LGT ), INTENT( IN ) :: mask
+    LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3c
 
   MODULE PURE SUBROUTINE Append_3d(C, A, B, mask)
-    REAL( DFP ), ALLOCATABLE, INTENT(INOUT) :: C(:)
-    REAL( DFP ), INTENT( IN ) :: A(:)
-    REAL( DFP ), INTENT(IN) :: B
-    LOGICAL( LGT ), INTENT( IN ) :: mask
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
+    REAL(DFP), INTENT(IN) :: A(:)
+    REAL(DFP), INTENT(IN) :: B
+    LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE Append_3d
 END INTERFACE
 
@@ -272,32 +273,85 @@ INTERFACE
   MODULE PURE SUBROUTINE Append_4a(A, ENTRY, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY(:)
-    LOGICAL( LGT ), INTENT( IN ) :: mask(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4a
 
   MODULE PURE SUBROUTINE Append_4b(A, ENTRY, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY(:)
-    LOGICAL( LGT ), INTENT( IN ) :: mask(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4b
 
   MODULE PURE SUBROUTINE Append_4c(C, A, B, mask)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B(:)
-    LOGICAL( LGT ), INTENT( IN ) :: mask(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4c
 
   MODULE PURE SUBROUTINE Append_4d(C, A, B, mask)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
     REAL(DFP), INTENT(IN) :: B(:)
-    LOGICAL( LGT ), INTENT( IN ) :: mask(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE Append_4d
 END INTERFACE
 
 INTERFACE Append
   MODULE PROCEDURE Append_4a, Append_4b, Append_4c, Append_4d
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      Append@AppendMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  22 March 2021
+! summary: Append a scalar INTEGER  to  INTEGER  vec tor
+
+INTERFACE
+  MODULE PURE FUNCTION func_Append_1a(A, ENTRY) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: ENTRY
+    INTEGER(I4B), ALLOCATABLE :: ans(:)
+  END FUNCTION func_Append_1a
+
+  MODULE PURE FUNCTION func_Append_1b(A, ENTRY) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: A(:)
+    REAL(DFP), INTENT(IN) :: ENTRY
+    REAL(DFP), ALLOCATABLE :: ans(:)
+  END FUNCTION func_Append_1b
+END INTERFACE
+
+INTERFACE OPERATOR(.APPEND.)
+  MODULE PROCEDURE func_Append_1a, func_Append_1b
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                      Append@AppendMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  22 March 2021
+! summary: Append two vectors of INTEGER
+
+INTERFACE
+  MODULE PURE FUNCTION func_Append_2a(A, ENTRY) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: A(:)
+    INTEGER(I4B), INTENT(IN) :: ENTRY(:)
+    INTEGER(I4B), ALLOCATABLE :: ans(:)
+  END FUNCTION func_Append_2a
+
+  MODULE PURE FUNCTION func_Append_2b(A, ENTRY) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: A(:)
+    REAL(DFP), INTENT(IN) :: ENTRY(:)
+    REAL(DFP), ALLOCATABLE :: ans(:)
+  END FUNCTION func_Append_2b
+
+END INTERFACE
+
+INTERFACE OPERATOR(.APPEND.)
+  MODULE PROCEDURE func_Append_2a, func_Append_2b
 END INTERFACE
 
 !----------------------------------------------------------------------------
