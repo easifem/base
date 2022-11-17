@@ -30,7 +30,7 @@ CONTAINS
 
 MODULE PROCEDURE csr_initiate1
 #ifdef DEBUG_VER
-INTEGER(I4B) :: tNodes
+INTEGER(I4B) :: tNodes1, tNodes2
 IF (obj%isInitiated) THEN
   CALL ErrorMSG( &
     & "Instance of CSRSparsity is already initiated!", &
@@ -45,11 +45,12 @@ obj%nnz = 0
 obj%ncol = ncol
 obj%nrow = nrow
 !!
-IF (PRESENT(dof)) THEN
+IF (PRESENT(idof)) THEN
   !!
 #ifdef DEBUG_VER
-  tnodes = .tNodes.dof
-  IF (tnodes .NE. MAX(nrow, ncol)) THEN
+  tnodes1 = .tNodes.idof
+  tnodes2 = .tNodes.jdof
+  IF (tnodes1 .NE. nrow .OR. tnodes2 .NE. ncol) THEN
     CALL ErrorMSG( &
     & "Size of the matrix does not conform with the dof data!", &
     & "CSRSparsity_Method@Constructor.F90", &
@@ -59,10 +60,13 @@ IF (PRESENT(dof)) THEN
   END IF
 #endif
   !!
-  obj%dof = dof
+  obj%idof = idof
+  obj%jdof = jdof
   !!
 ELSE
-  CALL initiate(obj=obj%dof, tNodes=[nrow], names=['K'], &
+  CALL initiate(obj=obj%idof, tNodes=[nrow], names=['K'], &
+    & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT)
+  CALL initiate(obj=obj%jdof, tNodes=[ncol], names=['K'], &
     & spacecompo=[1], timecompo=[1], storageFMT=NODES_FMT)
 END IF
 !!
@@ -99,7 +103,8 @@ IF (ALLOCATED(obj%row)) THEN
     obj%row(ii) = obj2%row(ii)
   END DO
 END IF
-obj%dof = obj2%dof
+obj%idof = obj2%idof
+obj%jdof = obj2%jdof
 END PROCEDURE csr_initiate2
 
 !----------------------------------------------------------------------------
@@ -122,7 +127,7 @@ END PROCEDURE csr_Initiate3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csr_constructor1
-CALL Initiate(obj=ans, ncol=ncol, nrow=nrow, dof=dof)
+CALL Initiate(obj=ans, ncol=ncol, nrow=nrow, idof=idof, jdof=jdof)
 END PROCEDURE csr_constructor1
 
 !----------------------------------------------------------------------------
@@ -139,7 +144,7 @@ END PROCEDURE csr_constructor2
 
 MODULE PROCEDURE csr_constructor_1
 ALLOCATE (CSRSparsity_ :: ans)
-CALL Initiate(obj=ans, ncol=ncol, nrow=nrow, dof=dof)
+CALL Initiate(obj=ans, ncol=ncol, nrow=nrow, idof=idof, jdof=jdof)
 END PROCEDURE csr_constructor_1
 
 !----------------------------------------------------------------------------
@@ -160,7 +165,8 @@ IF (ALLOCATED(obj%IA)) DEALLOCATE (obj%IA)
 IF (ALLOCATED(obj%JA)) DEALLOCATE (obj%JA)
 IF (ALLOCATED(obj%idiag)) DEALLOCATE (obj%idiag)
 IF (ALLOCATED(obj%Row)) DEALLOCATE (obj%Row)
-CALL Deallocate (obj%dof)
+CALL Deallocate (obj%idof)
+CALL Deallocate (obj%jdof)
 obj%nnz = 0
 obj%nrow = 0
 obj%ncol = 0

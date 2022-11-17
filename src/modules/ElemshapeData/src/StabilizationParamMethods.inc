@@ -43,7 +43,7 @@ INTERFACE
   MODULE PURE SUBROUTINE getUnitNormal_1(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    !! unit vector defined over quadrature points
+    !! unit vector defined over quadrature points, in xiJ format
     REAL(DFP), INTENT(IN) :: val(:)
     !! spatial nodal values of scalar
   END SUBROUTINE getUnitNormal_1
@@ -75,9 +75,9 @@ INTERFACE
   MODULE PURE SUBROUTINE getUnitNormal_2(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    !! unit vector defined over quadrature points
+    !! unit vector defined over quadrature points, in xiJ format
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! spatial nodal values of velocity
+    !! spatial nodal values of velocity (vector field)
   END SUBROUTINE getUnitNormal_2
 END INTERFACE
 
@@ -107,12 +107,15 @@ END INTERFACE getUnitNormal
 ! {\bf r}=\frac{\nabla\Vert{\bf v}\Vert}{\left|\nabla\Vert{\bf v}\Vert\right|}
 ! $$
 !
-
+! TODO: Make implementation simple:
+!  extract scalar or vector values from fevariable val,
+! and call above routines
 
 INTERFACE
   MODULE PURE SUBROUTINE getUnitNormal_3(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
+    !! unit vector defined over quadrature points, in xiJ format
     TYPE(FEVariable_), INTENT(IN) :: val
     !! it can be scalar or vector fe variable
   END SUBROUTINE getUnitNormal_3
@@ -130,13 +133,17 @@ END INTERFACE getUnitNormal
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRGN param
+!
+!# Introduction
+!
+! In this method `h` is oneD real-vector defined at quadrature points
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetHRGNParam1(obj, h, val, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
       !! obj can be an instance of [[STElemshapeData_]]
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h( : )
-      !! h is a scalar, and defined on quadrature points
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h(:)
+      !! h is a scalar field and defined on quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
       !! val can be a vector or a scalar
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
@@ -156,6 +163,13 @@ END INTERFACE GetHRGNParam
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the HRGN param
+!
+!# Introduction
+!
+!- This routine is same as `elemsd_GetHRGNParam1`
+!- Here, `h` is an [[FEVariable_]]  (scalar and quadVariable)
+!- This routine calls `elemsd_GetHRGNParam1` and then convert
+!- the result in to [[FEVariable_]].
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetHRGNParam2(obj, h, val, opt)
@@ -188,7 +202,7 @@ INTERFACE
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
       !! Spacetime shape function data, obj(ipt) denotes data at
       !! ipt quadrature point in time domain
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h( :, : )
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h(:, :)
       !! scalar variable, defined on space-time quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
       !! it can be a scalar, defined on space or space-time quadrature points
@@ -239,16 +253,19 @@ INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetHRQIParam1(obj, h, val, hmax, hmin, &
     & r, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-      !! obj can be an instance of [[STElemshapeData_]]
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h( : )
-      !! h is a scalar, and defined on quadrature points
+    !! obj can be an instance of [[STElemshapeData_]]
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h(:)
+    !! h is a scalar, and defined on quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! val can be a vector or a scalar
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmax( : )
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmin( : )
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r( :, : )
+    !! val can be a vector or a scalar
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmax(:)
+    !! maximum directional length, size(hmax) = nips
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmin(:)
+    !! minimum directional length, size(hmin) = nips
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r(:, :)
+    !! unit normal, shape(r) = (nsd, nips)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! currently, opt is not used, but it may be used in future
+    !! currently, opt is not used, but it may be used in future
   END SUBROUTINE elemsd_GetHRQIParam1
 END INTERFACE
 
@@ -300,13 +317,13 @@ INTERFACE
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
       !! Spacetime shape function data, obj(ipt) denotes data at
       !! ipt quadrature point in time domain
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h( :, : )
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h(:, :)
       !! scalar variable, defined on space-time quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
       !! it can be a scalar, defined on space or space-time quadrature points
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmax( :, : )
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmin( :, : )
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r( :, :, : )
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmax(:, :)
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmin(:, :)
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r(:, :, :)
       !! scalar variable, defined on space-time quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
   END SUBROUTINE elemsd_GetHRQIParam3
@@ -386,7 +403,7 @@ END INTERFACE getSUGN3Param
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_2(obj, tau, val, nu, h, opt)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj( : )
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
       !! obj can be an instance of [[STElemshapeData_]]
     TYPE(FEVariable_), INTENT(INOUT) :: tau
       !! tau-sugn3 is a scalar and defined on quadrature points
@@ -423,7 +440,7 @@ INTERFACE
       !! tau-sugn3 is a scalar and defined on quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
       !! val can be a vector or a scalar
-    REAL( DFP ), INTENT(IN) :: nu
+    REAL(DFP), INTENT(IN) :: nu
       !! kinematic viscosity or diffusivity
       !! scalar and defined on quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
@@ -448,13 +465,13 @@ END INTERFACE getSUGN3Param
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_4(obj, tau, val, nu, h, opt)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj( : )
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
       !! obj can be an instance of [[STElemshapeData_]]
     TYPE(FEVariable_), INTENT(INOUT) :: tau
       !! tau-sugn3 is a scalar and defined on quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
       !! val can be a vector or a scalar
-    REAL( DFP ), INTENT(IN) :: nu
+    REAL(DFP), INTENT(IN) :: nu
       !! kinematic viscosity or diffusivity
       !! scalar and defined on quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
@@ -516,7 +533,7 @@ END INTERFACE getSUGN3Param_Takizawa2018
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_2(obj, tau, val, &
     & nu, h, hmax, hmin, opt)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj( : )
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
       !! obj can be an instance of [[STElemshapeData_]]
     TYPE(FEVariable_), INTENT(INOUT) :: tau
       !! tau-sugn3 is a scalar and defined on quadrature points
@@ -558,7 +575,7 @@ INTERFACE
       !! tau-sugn3 is a scalar and defined on quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
       !! val can be a vector or a scalar
-    REAL( DFP ), INTENT(IN) :: nu
+    REAL(DFP), INTENT(IN) :: nu
       !! kinematic viscosity or diffusivity
       !! scalar and defined on quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
@@ -588,13 +605,13 @@ END INTERFACE getSUGN3Param_Takizawa2018
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_4(obj, tau, val, &
     & nu, h, hmax, hmin, opt)
-    CLASS(STElemshapeData_), INTENT(IN) :: obj( : )
+    CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
       !! obj can be an instance of [[STElemshapeData_]]
     TYPE(FEVariable_), INTENT(INOUT) :: tau
       !! tau-sugn3 is a scalar and defined on quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
       !! val can be a vector or a scalar
-    REAL( DFP ), INTENT(IN) :: nu
+    REAL(DFP), INTENT(IN) :: nu
       !! kinematic viscosity or diffusivity
       !! scalar and defined on quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
@@ -620,6 +637,20 @@ END INTERFACE getSUGN3Param_Takizawa2018
 ! date: 2021-11-27
 ! update: 2021-11-27
 ! summary: Returns the SUPG param
+!
+!# Introduction
+!
+!- `tau` stabilization parameter, instance of [[FEVariable_]],
+!- defined on quadrature, changes in space
+!- `c` convective velocity, instance of [[FEVariable_]], vector, defined on
+!- nodes or quadrature points
+!- `val` instance of [[FEVariable_]], can be vector or scalar, defined on
+!- nodes or quadrature points
+!- `nu` instance of [[FEVariable_]], scalar, defined on nodes or quadrature
+!- `k` instance of [[FEVariable_]], scalar, optional, defined on nodes/
+!- quadrature points
+!- `phi`, porosity, [[FEVariable_]], scalar, optional, defined on nodes/quads
+!-
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUPGParam1(obj, tau, c, val, nu, k, &
@@ -627,24 +658,24 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! It can be an instance of ElemshapeData_ or STElemshapeData_
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-    !! Stabilization parameter
-    !! Quadrature FEVariable
-    !! varType=Space
+    !! Stabilization parameter, [[FEVariable_]], Defined on Quadrature points
     TYPE(FEVariable_), INTENT(IN) :: c
     !! Convective velocity => Vector variable
     TYPE(FEVariable_), INTENT(IN) :: val
     !! solution, it can be scalar or vector variable
     TYPE(FEVariable_), INTENT(IN) :: nu
     !! diffusivity
+    !! In case of NSE it should be mu/rho
     TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: k
     !! permeability
     TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: phi
     !! porosity
-    !! In case of NSE it should be mu/rho
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! futuristic options
+    !! default=1
+    !! opt=1, then `ans(ii) = SQRT(1.0_DFP / (t12**2 + t3**2 + t4**2))`
+    !! opt=2, then `ans(ii) = 1.0_DFP / (t12 + t3 + t4)`
   END SUBROUTINE elemsd_GetSUPGParam1
 END INTERFACE
 
@@ -687,7 +718,9 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! futuristic options
+    !! default=1
+    !! opt=1, then `ans(ii) = SQRT(1.0_DFP / (t12**2 + t3**2 + t4**2))`
+    !! opt=2, then `ans(ii) = 1.0_DFP / (t12 + t3 + t4)`
   END SUBROUTINE elemsd_GetSUPGParam2
 END INTERFACE
 
@@ -717,17 +750,19 @@ INTERFACE
     !! Convective velocity => Vector variable
     TYPE(FEVariable_), INTENT(IN) :: val
     !! solution, it can be scalar or vector variable
-    REAL( DFP ), INTENT(IN) :: nu
+    REAL(DFP), INTENT(IN) :: nu
     !! In case of NSE it should be mu/rho
     !! diffusivity
-    REAL( DFP ), OPTIONAL, INTENT(IN) :: k
+    REAL(DFP), OPTIONAL, INTENT(IN) :: k
     !! permeability
-    REAL( DFP ), OPTIONAL, INTENT(IN) :: phi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: phi
     !! porosity
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! futuristic options
+    !! default=1
+    !! opt=1, then `ans(ii) = SQRT(1.0_DFP / (t12**2 + t3**2 + t4**2))`
+    !! opt=2, then `ans(ii) = 1.0_DFP / (t12 + t3 + t4)`
   END SUBROUTINE elemsd_GetSUPGParam3
 END INTERFACE
 
@@ -759,18 +794,20 @@ INTERFACE
     TYPE(FEVariable_), INTENT(IN) :: val
     !! solution
     !! scalar or vector FEVariable
-    REAL( DFP ), INTENT(IN) :: nu
+    REAL(DFP), INTENT(IN) :: nu
     !! kinematic diffusivity
-    REAL( DFP ), OPTIONAL, INTENT(IN) :: k
+    REAL(DFP), OPTIONAL, INTENT(IN) :: k
     !! permeability
     !! Scalar FEVariable
-    REAL( DFP ), OPTIONAL, INTENT(IN) :: phi
+    REAL(DFP), OPTIONAL, INTENT(IN) :: phi
     !! porosity
     !! Scalar FEVariable
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! futuristic options
+    !! default=1
+    !! opt=1, then `ans(ii) = SQRT(1.0_DFP / (t12**2 + t3**2 + t4**2))`
+    !! opt=2, then `ans(ii) = 1.0_DFP / (t12 + t3 + t4)`
   END SUBROUTINE elemsd_GetSUPGParam4
 END INTERFACE
 

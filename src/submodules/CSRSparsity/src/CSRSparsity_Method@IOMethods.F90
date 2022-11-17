@@ -33,7 +33,8 @@ CALL Display(Msg, unitNo=unitNo)
 CALL Display(obj%nnz, "# NNZ : ", unitNo=unitNo)
 CALL Display(obj%ncol, "# NCOL : ", unitNo=unitNo)
 CALL Display(obj%nrow, "# NROW : ", unitNo=unitNo)
-CALL Display(obj%dof, "# DOF : ", unitNo=unitNo)
+CALL Display(obj%idof, "# iDOF : ", unitNo=unitNo)
+CALL Display(obj%jdof, "# jDOF : ", unitNo=unitNo)
 !!
 IF (ALLOCATED(obj%IA)) THEN
   CALL Display(obj%IA, "# IA : ", unitNo=unitNo, advance="NO")

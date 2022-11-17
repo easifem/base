@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	22 March 2021
+! date:         22 March 2021
 ! summary: It contains method for setting values in [[CSRMatrix_]]
 
 SUBMODULE(CSRMatrix_Method) SetRowMethods
@@ -32,18 +32,18 @@ MODULE PROCEDURE csrMat_setRow1
   !!
 #ifdef DEBUG_VER
   !!
-  IF( SIZE( value ) .LT. obj%csr%ncol .OR. irow .GT. SIZE(obj, 1) ) THEN
-    CALL ErrorMSG( &
-      & Msg="SIZE of value vector should be same as number of col &
-      & in sparse matrix or irow is out of bound", &
-      & File = "CSRMatrix_Method@setMethod.F90", &
-      & Routine = "csrMat_setRow1", Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF (SIZE(value) .LT. obj%csr%ncol .OR. irow .GT. SIZE(obj, 1)) THEN
+  CALL ErrorMSG( &
+    & Msg="SIZE of value vector should be same as number of col &
+    & in sparse matrix or irow is out of bound", &
+    & File="CSRMatrix_Method@setMethod.F90", &
+    & Routine="csrMat_setRow1", Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
 #endif
   !!
-  obj%A( obj%csr%IA( irow ):obj%csr%IA( irow+1 ) - 1 ) = value( &
-    & obj%csr%JA( obj%csr%IA( irow ):obj%csr%IA( irow+1 ) - 1 ))
+obj%A(obj%csr%IA(irow):obj%csr%IA(irow + 1) - 1) = value( &
+  & obj%csr%JA(obj%csr%IA(irow):obj%csr%IA(irow + 1) - 1))
   !!
 END PROCEDURE csrMat_setRow1
 
@@ -52,15 +52,15 @@ END PROCEDURE csrMat_setRow1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setRow1b
-  INTEGER( I4B ) :: ii
+INTEGER(I4B) :: ii
   !!
-  DO ii = 1, size(irow)
+DO ii = 1, size(irow)
     !!
-    obj%A( obj%csr%IA( irow(ii) ) : obj%csr%IA( irow(ii)+1 ) - 1 )  &
-      & = value(obj%csr%JA( obj%csr%IA( irow(ii) ) &
-      & : obj%csr%IA( irow(ii)+1 ) - 1 ))
+  obj%A(obj%csr%IA(irow(ii)):obj%csr%IA(irow(ii) + 1) - 1)  &
+    & = value(obj%csr%JA(obj%csr%IA(irow(ii)) &
+    & :obj%csr%IA(irow(ii) + 1) - 1))
     !!
-  END DO
+END DO
   !!
 END PROCEDURE csrMat_setRow1b
 
@@ -69,9 +69,13 @@ END PROCEDURE csrMat_setRow1b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setRow2
-  CALL csrMat_setRow1( obj=obj, &
-    & irow=getNodeLoc(obj=obj%csr%dof, nodenum=nodenum, idof=idof), &
-    & value=value )
+CALL csrMat_setRow1( &
+  & obj=obj, &
+  & irow=getNodeLoc( &
+          & obj=obj%csr%idof, &
+          & nodenum=nodenum, &
+          & idof=idof), &
+  & value=value)
 END PROCEDURE csrMat_setRow2
 
 !----------------------------------------------------------------------------
@@ -79,7 +83,7 @@ END PROCEDURE csrMat_setRow2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setRow3
-  obj%A( obj%csr%IA( irow ) : obj%csr%IA( irow+1 ) - 1 ) = value
+obj%A(obj%csr%IA(irow):obj%csr%IA(irow + 1) - 1) = value
 END PROCEDURE csrMat_setRow3
 
 !----------------------------------------------------------------------------
@@ -87,11 +91,11 @@ END PROCEDURE csrMat_setRow3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setRow3b
-  INTEGER( I4B ) :: ii
+INTEGER(I4B) :: ii
   !!
-  DO ii = 1, size(irow)
-    obj%A( obj%csr%IA( irow(ii) ) : obj%csr%IA( irow(ii)+1 ) - 1 ) = value
-  END DO
+DO ii = 1, size(irow)
+  obj%A(obj%csr%IA(irow(ii)):obj%csr%IA(irow(ii) + 1) - 1) = value
+END DO
   !!
 END PROCEDURE csrMat_setRow3b
 
@@ -101,9 +105,9 @@ END PROCEDURE csrMat_setRow3b
 
 MODULE PROCEDURE csrMat_setRow4
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc(obj=obj%csr%dof, nodenum=nodenum, idof=idof),&
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc(obj=obj%csr%idof, nodenum=nodenum, idof=idof),&
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow4
 
@@ -113,10 +117,10 @@ END PROCEDURE csrMat_setRow4
 
 MODULE PROCEDURE csrMat_setRow5
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc(obj=obj%csr%dof, nodenum=nodenum, ivar=ivar, &
-      & idof=idof), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc(obj=obj%csr%idof, nodenum=nodenum, ivar=ivar, &
+    & idof=idof), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow5
 
@@ -126,10 +130,10 @@ END PROCEDURE csrMat_setRow5
 
 MODULE PROCEDURE csrMat_setRow6
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc(obj=obj%csr%dof, nodenum=nodenum, ivar=ivar, &
-      & idof=idof), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc(obj=obj%csr%idof, nodenum=nodenum, ivar=ivar, &
+    & idof=idof), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow6
 
@@ -139,14 +143,14 @@ END PROCEDURE csrMat_setRow6
 
 MODULE PROCEDURE csrMat_setRow7
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo ), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow7
 
@@ -156,14 +160,14 @@ END PROCEDURE csrMat_setRow7
 
 MODULE PROCEDURE csrMat_setRow8
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow8
 
@@ -173,14 +177,14 @@ END PROCEDURE csrMat_setRow8
 
 MODULE PROCEDURE csrMat_setRow9
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow9
 
@@ -190,14 +194,14 @@ END PROCEDURE csrMat_setRow9
 
 MODULE PROCEDURE csrMat_setRow10
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow10
 
@@ -207,14 +211,14 @@ END PROCEDURE csrMat_setRow10
 
 MODULE PROCEDURE csrMat_setRow11
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow11
 
@@ -224,14 +228,14 @@ END PROCEDURE csrMat_setRow11
 
 MODULE PROCEDURE csrMat_setRow12
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow12
 
@@ -241,14 +245,14 @@ END PROCEDURE csrMat_setRow12
 
 MODULE PROCEDURE csrMat_setRow13
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow13
 
@@ -258,14 +262,14 @@ END PROCEDURE csrMat_setRow13
 
 MODULE PROCEDURE csrMat_setRow14
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow14
 
@@ -275,14 +279,14 @@ END PROCEDURE csrMat_setRow14
 
 MODULE PROCEDURE csrMat_setRow15
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow15
 
@@ -292,14 +296,14 @@ END PROCEDURE csrMat_setRow15
 
 MODULE PROCEDURE csrMat_setRow16
   !!
-  CALL SetRow( obj=obj, &
-    & irow=getNodeLoc( &
-    & obj=obj%csr%dof, &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo), &
-    & value=value )
+CALL SetRow(obj=obj, &
+  & irow=getNodeLoc( &
+  & obj=obj%csr%idof, &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value)
   !!
 END PROCEDURE csrMat_setRow16
 

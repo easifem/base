@@ -34,20 +34,18 @@ INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1
 #include "./include/SetBlockRowMethods.inc"
 #include "./include/SetBlockColMethods.inc"
 #include "./include/GetMethods.inc"
-
 #include "./include/GetRowMethods.inc"
 #include "./include/GetColMethods.inc"
 #include "./include/GetBlockRowMethods.inc"
 #include "./include/GetBlockColMethods.inc"
-
 #include "./include/UnaryMethods.inc"
 #include "./include/ILUTMethods.inc"
 #include "./include/LUSolveMethods.inc"
 #include "./include/MatVecMethods.inc"
 #include "./include/MatmulMethods.inc"
 #include "./include/ReorderingMethods.inc"
-
 #include "./include/DiagonalScalingMethods.inc"
+! 🏁 here
 
 !----------------------------------------------------------------------------
 !

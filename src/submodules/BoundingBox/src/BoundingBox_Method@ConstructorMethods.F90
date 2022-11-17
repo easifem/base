@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	23 Feb 2021
+! date:         23 Feb 2021
 ! summary: This submodule of [[BoundingBox_Method]] implements methods defined in parent module
 !
 !# Introduction
@@ -33,14 +33,14 @@ CONTAINS
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_1
-  obj%Box = 0.0_DFP
-  obj%NSD = NSD
-  obj%Box( 1, 1 ) = lim( 1 ) !xmin
-  obj%Box( 1, 2 ) = lim( 3 ) !ymin
-  obj%Box( 1, 3 ) = lim( 5 ) !zmin
-  obj%Box( 2, 1 ) = lim( 2 ) !xmax
-  obj%Box( 2, 2 ) = lim( 4 ) !ymax
-  obj%Box( 2, 3 ) = lim( 6 ) !zmax
+obj%Box = 0.0_DFP
+obj%NSD = NSD
+obj%Box(1, 1) = lim(1) !xmin
+obj%Box(1, 2) = lim(3) !ymin
+obj%Box(1, 3) = lim(5) !zmin
+obj%Box(2, 1) = lim(2) !xmax
+obj%Box(2, 2) = lim(4) !ymax
+obj%Box(2, 3) = lim(6) !zmax
 END PROCEDURE initiate_1
 
 !-----------------------------------------------------------------------------
@@ -48,8 +48,8 @@ END PROCEDURE initiate_1
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_2
-  obj%Box = Anotherobj%Box
-  obj%NSD = Anotherobj%NSD
+obj%Box = Anotherobj%Box
+obj%NSD = Anotherobj%NSD
 END PROCEDURE initiate_2
 
 !-----------------------------------------------------------------------------
@@ -57,14 +57,14 @@ END PROCEDURE initiate_2
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Constructor1
-  CALL Initiate( Ans, nsd, lim )
+CALL Initiate(Ans, nsd, lim)
 END PROCEDURE Constructor1
 
 !----------------------------------------------------------------------------
 !                                                               Bounding box
 !----------------------------------------------------------------------------
 MODULE PROCEDURE Constructor2
-  CALL Initiate( Ans, Anotherobj )
+CALL Initiate(Ans, Anotherobj)
 END PROCEDURE Constructor2
 
 !----------------------------------------------------------------------------
@@ -72,31 +72,31 @@ END PROCEDURE Constructor2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Constructor3
-  REAL( DFP ) :: lim( 6 )
-  INTEGER( I4B ) :: nsd
+REAL(DFP) :: lim(6)
+INTEGER(I4B) :: nsd
 
-  lim = 0.0_DFP
-  nsd = SIZE( xij, 1 )
+lim = 0.0_DFP
+nsd = SIZE(xij, 1)
 
-  SELECT CASE( nsd )
-  CASE( 1 )
-    lim( 1 ) = MINVAL( xij( 1, : ) )
-    lim( 2 ) = MAXVAL( xij( 1, : ) )
-  CASE( 2 )
-    lim( 1 ) = MINVAL( xij( 1, : ) )
-    lim( 2 ) = MAXVAL( xij( 1, : ) )
-    lim( 3 ) = MINVAL( xij( 2, : ) )
-    lim( 4 ) = MAXVAL( xij( 2, : ) )
-  CASE( 3 )
-    lim( 1 ) = MINVAL( xij( 1, : ) )
-    lim( 2 ) = MAXVAL( xij( 1, : ) )
-    lim( 3 ) = MINVAL( xij( 2, : ) )
-    lim( 4 ) = MAXVAL( xij( 2, : ) )
-    lim( 5 ) = MINVAL( xij( 3, : ) )
-    lim( 6 ) = MAXVAL( xij( 3, : ) )
-  END SELECT
+SELECT CASE (nsd)
+CASE (1)
+  lim(1) = MINVAL(xij(1, :))
+  lim(2) = MAXVAL(xij(1, :))
+CASE (2)
+  lim(1) = MINVAL(xij(1, :))
+  lim(2) = MAXVAL(xij(1, :))
+  lim(3) = MINVAL(xij(2, :))
+  lim(4) = MAXVAL(xij(2, :))
+CASE (3)
+  lim(1) = MINVAL(xij(1, :))
+  lim(2) = MAXVAL(xij(1, :))
+  lim(3) = MINVAL(xij(2, :))
+  lim(4) = MAXVAL(xij(2, :))
+  lim(5) = MINVAL(xij(3, :))
+  lim(6) = MAXVAL(xij(3, :))
+END SELECT
 
-  CALL Initiate( obj = Ans, nsd = nsd, lim = lim )
+CALL Initiate(obj=Ans, nsd=nsd, lim=lim)
 END PROCEDURE Constructor3
 
 !-----------------------------------------------------------------------------
@@ -104,13 +104,13 @@ END PROCEDURE Constructor3
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Constructor_1
-  ALLOCATE( Ans )
-  CALL Initiate( Ans, nsd, lim )
+ALLOCATE (Ans)
+CALL Initiate(Ans, nsd, lim)
 END PROCEDURE Constructor_1
 
 MODULE PROCEDURE Constructor_2
-  ALLOCATE( Ans )
-  CALL Initiate( Ans, Anotherobj )
+ALLOCATE (Ans)
+CALL Initiate(Ans, Anotherobj)
 END PROCEDURE Constructor_2
 
 !----------------------------------------------------------------------------
@@ -118,26 +118,8 @@ END PROCEDURE Constructor_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BB_Deallocate
-  obj%NSD=0
-  obj%Box=0.0_DFP
+obj%NSD = 0
+obj%Box = 0.0_DFP
 END PROCEDURE BB_Deallocate
-
-!----------------------------------------------------------------------------
-!                                                               GetDiameter
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE bbox_GetDiameter
-  REAL( DFP ) :: x1, x2, y1, y2, z1, z2
-  !!
-  x1 = .xmin. obj
-  x2 = .xmax. obj
-  y1 = .ymin. obj
-  y2 = .ymax. obj
-  z1 = .zmin. obj
-  z2 = .zmax. obj
-  !!
-  ans = MAXVAL( ABS([x1-x2, y1-y2, z1-z2]) )
-  !!
-END PROCEDURE bbox_GetDiameter
 
 END SUBMODULE ConstructorMethods

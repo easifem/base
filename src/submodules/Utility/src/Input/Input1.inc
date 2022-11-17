@@ -15,25 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-! Define internal variables
-REAL(DFP), ALLOCATABLE :: dp(:, :), p(:), pnorm(:)
-INTEGER(I4B) :: ii
-!! main
-CALL getInterpolation(obj=obj, Val=val, Interpol=p)
-CALL getSpatialGradient(obj=obj, lg=dp, Val=Val)
-CALL Reallocate(R, obj%refelem%NSD, SIZE(obj%N, 2))
-pnorm = NORM2(dp, DIM=1)
-!!
-DO ii = 1, SIZE(p)
-  IF (pnorm(ii) .GT. zero) THEN
-    IF (p(ii) .GE. 0.0_DFP) THEN
-      R(:, ii) = dp(:, ii) / pnorm(ii)
-    ELSE
-      R(:, ii) = -dp(:, ii) / pnorm(ii)
-    END IF
-  END IF
-END DO
-!!
-IF (ALLOCATED(dp)) DEALLOCATE (dp)
-IF (ALLOCATED(p)) DEALLOCATE (p)
-IF (ALLOCATED(pnorm)) DEALLOCATE (pnorm)
+IF(PRESENT(option) )THEN
+  ans=option
+ELSE
+  ans=default
+ENDIF

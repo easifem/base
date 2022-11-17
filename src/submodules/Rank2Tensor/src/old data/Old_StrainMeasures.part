@@ -199,7 +199,7 @@ END SUBROUTINE AlmansiStrainTensor
 !
 !------------------------------------------------------------------------------
 !
-USE LinearAlgebra, ONLY: JacobiMethod
+USE LinearAlgebra, ONLY: GetSymEigenJacobi
 USE Utility, ONLY: Put_Diag
 ! Define Intent of dummy variables
     REAL( DFP ), DIMENSION( :, : ), INTENT( INOUT ), OPTIONAL  :: F, B, C
@@ -224,7 +224,7 @@ USE Utility, ONLY: Put_Diag
             ALLOCATE( EigenVecs( SIZE( C, 1 ), SIZE( C, 2 ) ) )
             DummyMat = 0.0_DFP
 ! Flag-1
-            CALL JacobiMethod( Mat = C, EigenVals = EigenVals, &
+            CALL GetSymEigenJacobi( Mat = C, EigenVals = EigenVals, &
             EigenVecs = EigenVecs, MaxIter = 20 )
             CALL Check_Error( "Tensor.F90>>StrainMeasures.part", &
             "StretchTensor(), Flag-1" )
@@ -258,7 +258,7 @@ USE Utility, ONLY: Put_Diag
             ALLOCATE( EigenVecs( SIZE( B, 1 ), SIZE( B, 2 ) ) )
             DummyMat = 0.0_DFP
 ! Flag-2
-            CALL JacobiMethod( Mat = B, EigenVals = EigenVals, &
+            CALL GetSymEigenJacobi( Mat = B, EigenVals = EigenVals, &
             EigenVecs = EigenVecs, MaxIter = 20 )
             CALL Check_Error( " Tensor.F90>>StrainMeasures.part", &
             "StretchTensor(), Flag-2" )

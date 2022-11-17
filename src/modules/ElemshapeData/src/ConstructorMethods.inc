@@ -32,9 +32,8 @@ PUBLIC :: ASSIGNMENT(=)
 !
 !# Introduction
 !
-! This subroutine allocates the memory for various matrices in the object.
-! This subroutine belongs to the generic interface called `Allocate()`.
-!
+!- This subroutine allocates the memory for various matrices in the object.
+!- This subroutine belongs to the generic interface called `Allocate()`.
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_Allocate(obj, nsd, xidim, nns, nips)
@@ -67,10 +66,15 @@ INTERFACE
   MODULE SUBROUTINE elemsd_initiate1(obj, quad, refelem, continuityType, &
     & interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! ElemshapeData to be formed
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! Quadrature points
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! reference element
     CHARACTER(LEN=*), INTENT(IN) :: continuityType
+    !! continuity/ conformity of shape function
     CHARACTER(LEN=*), INTENT(IN) :: interpolType
+    !! interpolation/polynomial family type
   END SUBROUTINE elemsd_initiate1
 END INTERFACE
 
@@ -87,9 +91,9 @@ END INTERFACE Initiate
 ! summary: Copy data from an instance of elemshapedata to another instance
 
 INTERFACE
-  MODULE SUBROUTINE elemsd_initiate2( obj1, obj2 )
-    TYPE(ElemshapeData_), INTENT( INOUT ) :: obj1
-    TYPE(ElemshapeData_), INTENT( IN ) :: obj2
+  MODULE SUBROUTINE elemsd_initiate2(obj1, obj2)
+    TYPE(ElemshapeData_), INTENT(INOUT) :: obj1
+    TYPE(ElemshapeData_), INTENT(IN) :: obj2
   END SUBROUTINE elemsd_initiate2
 END INTERFACE
 
@@ -97,7 +101,7 @@ INTERFACE Initiate
   MODULE PROCEDURE elemsd_initiate2
 END INTERFACE Initiate
 
-INTERFACE ASSIGNMENT( = )
+INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE elemsd_initiate2
 END INTERFACE
 
@@ -115,9 +119,9 @@ END INTERFACE
 ! from an instance of STElemshapeData.
 
 INTERFACE
-  MODULE SUBROUTINE elemsd_initiate3( obj1, obj2 )
-    TYPE(ElemshapeData_), INTENT( INOUT ) :: obj1
-    TYPE(STElemshapeData_), INTENT( IN ) :: obj2
+  MODULE SUBROUTINE elemsd_initiate3(obj1, obj2)
+    TYPE(ElemshapeData_), INTENT(INOUT) :: obj1
+    TYPE(STElemshapeData_), INTENT(IN) :: obj2
   END SUBROUTINE elemsd_initiate3
 END INTERFACE
 
@@ -125,7 +129,7 @@ INTERFACE Initiate
   MODULE PROCEDURE elemsd_initiate3
 END INTERFACE Initiate
 
-INTERFACE ASSIGNMENT( = )
+INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE elemsd_initiate3
 END INTERFACE
 
@@ -143,9 +147,9 @@ END INTERFACE
 ! from the instance of ElemshapeData
 
 INTERFACE
-  MODULE SUBROUTINE elemsd_initiate4( obj1, obj2 )
-    TYPE(STElemshapeData_), INTENT( INOUT ) :: obj1
-    TYPE(ElemshapeData_), INTENT( IN ) :: obj2
+  MODULE SUBROUTINE elemsd_initiate4(obj1, obj2)
+    TYPE(STElemshapeData_), INTENT(INOUT) :: obj1
+    TYPE(ElemshapeData_), INTENT(IN) :: obj2
   END SUBROUTINE elemsd_initiate4
 END INTERFACE
 
@@ -153,7 +157,7 @@ INTERFACE Initiate
   MODULE PROCEDURE elemsd_initiate4
 END INTERFACE Initiate
 
-INTERFACE ASSIGNMENT( = )
+INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE elemsd_initiate4
 END INTERFACE
 
@@ -170,9 +174,9 @@ END INTERFACE
 ! from the instance of STElemshapeData.
 
 INTERFACE
-  MODULE SUBROUTINE elemsd_initiate5( obj1, obj2 )
-    TYPE(STElemshapeData_), INTENT( INOUT ) :: obj1
-    TYPE(STElemshapeData_), INTENT( IN ) :: obj2
+  MODULE SUBROUTINE elemsd_initiate5(obj1, obj2)
+    TYPE(STElemshapeData_), INTENT(INOUT) :: obj1
+    TYPE(STElemshapeData_), INTENT(IN) :: obj2
   END SUBROUTINE elemsd_initiate5
 END INTERFACE
 
@@ -180,7 +184,7 @@ INTERFACE Initiate
   MODULE PROCEDURE elemsd_initiate5
 END INTERFACE Initiate
 
-INTERFACE ASSIGNMENT( = )
+INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE elemsd_initiate5
 END INTERFACE
 
@@ -193,7 +197,7 @@ END INTERFACE
 ! summary: Initiate time shape function data in [[stelemshapedata_]]
 !
 !# Introduction
-
+!
 ! - This subroutine initiates the shape-function data related to time
 ! domain in the instance of [[stelemshapedata_]].
 ! - User should provide an instance of [[Elemshapedata_]] elemsd,

@@ -1,10 +1,19 @@
-# This file is a part of easifem-base
-# (c) 2021, Vikas Sharma, Ph.D.
-# All right reserved
+# This program is a part of EASIFEM library
+# Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 #
-# log
-# 1/03/2021 this file was created
-#-----------------------------------------------------------------------
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https: //www.gnu.org/licenses/>
+#
 
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
@@ -13,7 +22,13 @@ TARGET_SOURCES(
   ${src_path}/ElemshapeData_Method@IOMethods.F90
   ${src_path}/ElemshapeData_Method@GetMethods.F90
   ${src_path}/ElemshapeData_Method@SetMethods.F90
-  ${src_path}/ElemshapeData_Method@StabilizationParamMethods.F90
+  ${src_path}/ElemshapeData_Method@UnitNormalMethods.F90
+  ${src_path}/ElemshapeData_Method@HminHmaxMethods.F90
+  ${src_path}/ElemshapeData_Method@HRGNParamMethods.F90
+  ${src_path}/ElemshapeData_Method@HRQIParamMethods.F90
+  ${src_path}/ElemshapeData_Method@SUGN3ParamMethods.F90
+  ${src_path}/ElemshapeData_Method@SUGN3Param_Takizawa2018Methods.F90
+  ${src_path}/ElemshapeData_Method@SUPGParamMethods.F90
   ${src_path}/ElemshapeData_Method@ProjectionMethods.F90
   ${src_path}/ElemshapeData_Method@InterpolMethods.F90
   ${src_path}/ElemshapeData_Method@LocalGradientMethods.F90
