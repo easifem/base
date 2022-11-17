@@ -2231,7 +2231,7 @@ Type-1
 !			polar decomposition
 !.  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
 
-    USE LinearAlgebra, ONLY: JacobiMethod
+    USE LinearAlgebra, ONLY: GetSymEigenJacobiacobi
     USE Utility, ONLY: IMAXLOC, INV
 
 	! Define intent of dummy variables
@@ -2267,7 +2267,7 @@ Type-1
 
 ```fortran
  FUNCTION f_getRotationPart( Mat )
-    USE LinearAlgebra, ONLY: JacobiMethod
+    USE LinearAlgebra, ONLY: GetSymEigenJacobi
     USE Utility, ONLY: IMAXLOC, INV
     REAL( DFP ), DIMENSION( :, : ), INTENT( IN ) :: Mat
     REAL( DFP ), DIMENSION( SIZE( Mat, 1 ), SIZE( Mat, 2 ) ) :: f_getRotationPart
