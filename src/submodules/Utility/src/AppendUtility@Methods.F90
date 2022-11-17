@@ -25,22 +25,22 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE expand_int8
-  INTEGER( Int8 ), ALLOCATABLE :: tmp( : )
+INTEGER(Int8), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_int8
 
 MODULE PROCEDURE expand_int16
-  INTEGER( Int16 ), ALLOCATABLE :: tmp( : )
+INTEGER(Int16), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_int16
 
 MODULE PROCEDURE expand_int32
-  INTEGER( Int32 ), ALLOCATABLE :: tmp( : )
+INTEGER(Int32), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_int32
 
 MODULE PROCEDURE expand_int64
-  INTEGER( Int64 ), ALLOCATABLE :: tmp( : )
+INTEGER(Int64), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_int64
 
@@ -49,7 +49,7 @@ END PROCEDURE expand_int64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE expand_real32
-  REAL( Real32 ), ALLOCATABLE :: tmp( : )
+REAL(Real32), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_real32
 
@@ -58,7 +58,7 @@ END PROCEDURE expand_real32
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE expand_real64
-  REAL( Real64 ), ALLOCATABLE :: tmp( : )
+REAL(Real64), ALLOCATABLE :: tmp(:)
 #include "./Expand/Expand.inc"
 END PROCEDURE expand_real64
 
@@ -205,6 +205,38 @@ END PROCEDURE Append_4c
 MODULE PROCEDURE Append_4d
 #include "./Append/Append_4cd.inc"
 END PROCEDURE Append_4d
+
+!----------------------------------------------------------------------------
+!                                                                 Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE func_Append_1a
+CALL Append(ans, A, ENTRY)
+END PROCEDURE func_Append_1a
+
+!----------------------------------------------------------------------------
+!                                                                 Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE func_Append_1b
+CALL Append(ans, A, ENTRY)
+END PROCEDURE func_Append_1b
+
+!----------------------------------------------------------------------------
+!                                                                 Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE func_Append_2a
+CALL Append(ans, A, ENTRY)
+END PROCEDURE func_Append_2a
+
+!----------------------------------------------------------------------------
+!                                                                 Append
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE func_Append_2b
+CALL Append(ans, A, ENTRY)
+END PROCEDURE func_Append_2b
 
 !----------------------------------------------------------------------------
 !                                                                 colConcat

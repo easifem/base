@@ -43,4 +43,5 @@ TARGET_SOURCES(
   ${src_path}/StringUtility@Methods.F90
   ${src_path}/IntegerUtility@Methods.F90
   ${src_path}/PushPopUtility@Methods.F90
+  ${src_path}/EigenUtility@Methods.F90
 )
