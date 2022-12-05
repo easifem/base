@@ -22,7 +22,6 @@
 #define ParameterListIterator_t ParameterListIterator_
 
 module FPL
-
 USE ParameterList
 USE WrapperFactoryListSingleton
 
@@ -30,19 +29,16 @@ public :: ParameterList_t, ParameterListIterator_t
 
 contains
 
-    subroutine FPL_Init()
-    !-----------------------------------------------------------------
-    !< Initialize FPL
-    !-----------------------------------------------------------------
-        call TheWrapperFactoryList_Init()
-    end subroutine FPL_Init
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-02
+! summary:         Initialize FPL
 
+subroutine FPL_Init()
+  call TheWrapperFactoryList_Init()
+end subroutine FPL_Init
 
-    subroutine FPL_Finalize()
-    !-----------------------------------------------------------------
-    !< Finalize FPL
-    !-----------------------------------------------------------------
-        call TheWrapperFactoryList%Free()
-    end subroutine FPL_Finalize
+subroutine FPL_Finalize()
+  call TheWrapperFactoryList%Free()
+end subroutine FPL_Finalize
 
 end module FPL
