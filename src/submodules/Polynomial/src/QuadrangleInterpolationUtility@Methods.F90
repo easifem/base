@@ -180,7 +180,7 @@ END PROCEDURE EquidistancePoint_Quadrangle
 MODULE PROCEDURE EquidistanceInPoint_Quadrangle
 INTEGER(I4B) :: nsd, n, ne, i1, i2
 REAL(DFP) :: x(3, 4), xin(3, 4), e1(3), e2(3), lam, avar, mu
-  !!
+!!
 IF (order .LT. 2_I4B) THEN
   ALLOCATE (ans(0, 0))
   RETURN
@@ -254,23 +254,204 @@ ELSE
     & xij=xin(1:nsd, 1:4))
     !!
 END IF
-  !!
+!!
 END PROCEDURE EquidistanceInPoint_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                         GLL_IP_Quadrangle
+!----------------------------------------------------------------------------
+
+FUNCTION IP_Quadrangle(p, q, ipType1, ipType2, xij) RESULT(ans)
+  INTEGER(I4B), INTENT(IN) :: p
+  INTEGER(I4B), INTENT(IN) :: q
+  INTEGER(I4B), INTENT(IN) :: ipType1
+  INTEGER(I4B), INTENT(IN) :: ipType2
+  REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+  REAL(DFP), ALLOCATABLE :: ans(:, :)
+  !!
+  !! internal variables
+  !!
+  REAL(DFP) :: x(p + 1), y(q + 1), &
+    & xi(p + 1, q + 1), eta(p + 1, q + 1)
+  REAL(DFP), ALLOCATABLE :: temp(:, :)
+  INTEGER(I4B) :: ii, jj, kk, nsd
+  CHARACTER(LEN=*), PARAMETER :: myName = "IP_Quadrangle"
+  !!
+  x = InterpolationPoint_Line(order=p, ipType=ipType1, &
+    & xij=[-1.0_DFP, 1.0_DFP], &
+    & layout="INCREASING")
+  !!
+  y = InterpolationPoint_Line(order=q, ipType=ipType2, &
+    & xij=[-1.0_DFP, 1.0_DFP], &
+    & layout="INCREASING")
+  !!
+  IF (PRESENT(xij)) THEN
+    nsd = SIZE(xij, 1)
+  ELSE
+    nsd = 2
+  END IF
+  !!
+  CALL Reallocate(ans, nsd, (p + 1) * (q + 1))
+  CALL Reallocate(temp, 2, (p + 1) * (q + 1))
+  !!
+  xi = 0.0_DFP
+  eta = 0.0_DFP
+  !!
+  DO ii = 1, p + 1
+    DO jj = 1, q + 1
+      xi(ii, jj) = x(ii)
+      eta(ii, jj) = y(jj)
+    END DO
+  END DO
+  !!
+  CALL IJ2VEFC(xi=xi, eta=eta, temp=temp, p=p, q=q, myname=myname)
+  !!
+  IF (PRESENT(xij)) THEN
+    ans = FromBiUnitQuadrangle2Quadrangle(xin=temp, x1=xij(:, 1), &
+      & x2=xij(:, 2), x3=xij(:, 3), x4=xij(:, 4))
+  ELSE
+    ans = temp
+  END IF
+END FUNCTION IP_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE IJ2VEFC(xi, eta, temp, p, q, myname)
+  REAL(DFP), INTENT(IN) :: xi(:, :)
+  REAL(DFP), INTENT(IN) :: eta(:, :)
+  REAL(DFP), INTENT(OUT) :: temp(:, :)
+  INTEGER(I4B), INTENT(IN) :: p
+  INTEGER(I4B), INTENT(IN) :: q
+  CHARACTER(LEN=*), INTENT(IN) :: myname
+  !!
+  INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, llt, llr, N
+  !!
+  !! vertices
+  !!
+  N = (p + 1) * (q + 1)
+  cnt = 0
+  ll = -1
+  !!
+  DO
+    ll = ll + 1
+    !!
+    !! v1
+    !!
+    cnt = cnt + 1
+    ii = 1 + ll; jj = 1 + ll
+    temp(1, cnt) = xi(ii, jj)
+    temp(2, cnt) = eta(ii, jj)
+    !!
+    !! v2
+    !!
+    ii = p + 1 - ll
+    jj = 1 + ll
+    IF (cnt .LT. N) THEN
+      cnt = cnt + 1
+      temp(1, cnt) = xi(ii, jj)
+      temp(2, cnt) = eta(ii, jj)
+    END IF
+    !!
+    !! v3
+    !!
+    ii = p + 1 - ll
+    jj = q + 1 - ll
+    IF (cnt .LT. N) THEN
+      cnt = cnt + 1
+      temp(1, cnt) = xi(ii, jj)
+      temp(2, cnt) = eta(ii, jj)
+    END IF
+    !!
+    !! v4
+    !!
+    ii = 1 + ll
+    jj = q + 1 - ll
+    IF (cnt .LT. N) THEN
+      cnt = cnt + 1
+      temp(1, cnt) = xi(ii, jj)
+      temp(2, cnt) = eta(ii, jj)
+    END IF
+    !!
+    !! nodes on edge 12
+    !!
+    jj = ll + 1
+    IF (cnt .LT. N) THEN
+      DO ii = 2 + ll, p - ll
+        cnt = cnt + 1
+        temp(1, cnt) = xi(ii, jj)
+        temp(2, cnt) = eta(ii, jj)
+      END DO
+    END IF
+    !!
+    !! nodes on edge 23
+    !!
+    ii = p + 1 - ll
+    IF (cnt .LT. N) THEN
+      DO jj = 2 + ll, q - ll
+        cnt = cnt + 1
+        temp(1, cnt) = xi(ii, jj)
+        temp(2, cnt) = eta(ii, jj)
+      END DO
+    END IF
+    !!
+    !! nodes on edge 34
+    !!
+    jj = q + 1 - ll
+    IF (cnt .LT. N) THEN
+      DO ii = p - ll, 2 + ll, -1
+        cnt = cnt + 1
+        temp(1, cnt) = xi(ii, jj)
+        temp(2, cnt) = eta(ii, jj)
+      END DO
+    END IF
+    !!
+    !! nodes on edge 41
+    !!
+    ii = ll + 1
+    IF (cnt .LT. N) THEN
+      DO jj = q - ll, 2 + ll, -1
+        cnt = cnt + 1
+        temp(1, cnt) = xi(ii, jj)
+        temp(2, cnt) = eta(ii, jj)
+      END DO
+    END IF
+    !!
+    !! internal nodes
+    !!
+    IF (cnt .EQ. N) EXIT
+  END DO
+  !!
+END SUBROUTINE IJ2VEFC
 
 !----------------------------------------------------------------------------
 !                                              InterpolationPoint_Quadrangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE InterpolationPoint_Quadrangle
+MODULE PROCEDURE InterpolationPoint_Quadrangle1
+CHARACTER(LEN=*), PARAMETER :: myName = "InterpolationPoint_Quadrangle1"
+!!
 SELECT CASE (ipType)
 CASE (Equidistance)
   nodecoord = EquidistancePoint_Quadrangle(xij=xij, order=order)
-CASE (GaussLegendre)
 CASE (GaussLegendreLobatto)
-CASE (GaussChebyshev)
+  nodecoord = IP_Quadrangle(p=order, q=order, &
+    & ipType1=GaussLegendreLobatto, ipType2=GaussLegendreLobatto, &
+    & xij=xij)
 CASE (GaussChebyshevLobatto)
+  nodecoord = IP_Quadrangle(p=order, q=order, &
+    & ipType1=GaussChebyshevLobatto, ipType2=GaussChebyshevLobatto, &
+    & xij=xij)
+CASE DEFAULT
+  CALL ErrorMsg(msg="Unknown interpolation point type (ipType)", &
+    & file=__FILE__, &
+    & routine=myname, &
+    & line=__LINE__, &
+    & unitno=stderr)
 END SELECT
-END PROCEDURE InterpolationPoint_Quadrangle
+!!
+END PROCEDURE InterpolationPoint_Quadrangle1
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Quadrangle

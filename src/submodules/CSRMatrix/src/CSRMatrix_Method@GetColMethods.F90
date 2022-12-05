@@ -29,54 +29,54 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getColumn1
-  INTEGER( I4B ) :: i, j
-  REAL( DFP ) :: alpha
+INTEGER(I4B) :: i, j
+REAL(DFP) :: alpha
   !!
 #ifdef DEBUG_VER
   !!
-  IF( SIZE( value ) .LT. obj%csr%nrow .OR. iColumn .GT. SIZE(obj, 2) ) THEN
-    CALL ErrorMSG( &
-    & Msg="SIZE of column vector should be same as number of &
-    & rows in sparse matrix", &
-    & File = "CSRMatrix_Method@getMethod.F90", &
-    & Routine = "csrMat_getColumn1", Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF (SIZE(value) .LT. obj%csr%nrow .OR. iColumn .GT. SIZE(obj, 2)) THEN
+  CALL ErrorMSG( &
+  & Msg="SIZE of column vector should be same as number of &
+  & rows in sparse matrix", &
+  & File="CSRMatrix_Method@getMethod.F90", &
+  & Routine="csrMat_getColumn1", Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
 #endif
   !!
-  IF( PRESENT( addContribution ) ) THEN
+IF (PRESENT(addContribution)) THEN
     !!
-    alpha = INPUT( default=1.0_DFP, option=scale )
+  alpha = INPUT(default=1.0_DFP, option=scale)
     !!
-    DO i = 1, obj%csr%nrow
+  DO i = 1, obj%csr%nrow
       !!
-      DO j = obj%csr%IA( i ), obj%csr%IA( i+1 ) - 1
+    DO j = obj%csr%IA(i), obj%csr%IA(i + 1) - 1
         !!
-        IF( obj%csr%JA(j) .EQ. iColumn ) THEN
-          value( i ) = value( i )+alpha*obj%A( j )
-          EXIT
-        END IF
+      IF (obj%csr%JA(j) .EQ. iColumn) THEN
+        value(i) = value(i) + alpha * obj%A(j)
+        EXIT
+      END IF
         !!
-      END DO
-      !!
     END DO
+      !!
+  END DO
     !!
-  ELSE
+ELSE
     !!
-    DO i = 1, obj%csr%nrow
+  DO i = 1, obj%csr%nrow
       !!
-      value( i ) = 0.0_DFP
+    value(i) = 0.0_DFP
       !!
-      DO j = obj%csr%IA( i ), obj%csr%IA( i+1 ) - 1
-        IF( obj%csr%JA(j) .EQ. iColumn ) THEN
-          value( i ) = obj%A( j )
-          EXIT
-        END IF
-      END DO
-      !!
+    DO j = obj%csr%IA(i), obj%csr%IA(i + 1) - 1
+      IF (obj%csr%JA(j) .EQ. iColumn) THEN
+        value(i) = obj%A(j)
+        EXIT
+      END IF
     END DO
+      !!
+  END DO
     !!
-  END IF
+END IF
   !!
 END PROCEDURE csrMat_getColumn1
 
@@ -85,41 +85,41 @@ END PROCEDURE csrMat_getColumn1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getColumn1b
-  INTEGER( I4B ) :: i, j, k
-  REAL( DFP ) :: alpha
+INTEGER(I4B) :: i, j, k
+REAL(DFP) :: alpha
   !!
   !!
   !!
-  IF( PRESENT( addContribution ) ) THEN
+IF (PRESENT(addContribution)) THEN
     !!
-    alpha = INPUT( default=1.0_DFP, option=scale )
+  alpha = INPUT(default=1.0_DFP, option=scale)
     !!
-    DO i = 1, obj%csr%nrow
-      DO k = 1, size(iColumn)
-        DO j = obj%csr%IA( i ), obj%csr%IA( i+1 ) - 1
-          IF( obj%csr%JA(j) .EQ. iColumn(k) ) THEN
-            value( i ) = value( i )+alpha*obj%A( j )
-            EXIT
-          END IF
-        END DO
+  DO i = 1, obj%csr%nrow
+    DO k = 1, size(iColumn)
+      DO j = obj%csr%IA(i), obj%csr%IA(i + 1) - 1
+        IF (obj%csr%JA(j) .EQ. iColumn(k)) THEN
+          value(i) = value(i) + alpha * obj%A(j)
+          EXIT
+        END IF
       END DO
     END DO
+  END DO
     !!
-  ELSE
+ELSE
     !!
-    DO i = 1, obj%csr%nrow
-      value( i ) = 0.0_DFP
-      DO k = 1, size(iColumn)
-        DO j = obj%csr%IA( i ), obj%csr%IA( i+1 ) - 1
-          IF( obj%csr%JA(j) .EQ. iColumn(k) ) THEN
-            value( i ) = obj%A( j )
-            EXIT
-          END IF
-        END DO
+  DO i = 1, obj%csr%nrow
+    value(i) = 0.0_DFP
+    DO k = 1, size(iColumn)
+      DO j = obj%csr%IA(i), obj%csr%IA(i + 1) - 1
+        IF (obj%csr%JA(j) .EQ. iColumn(k)) THEN
+          value(i) = obj%A(j)
+          EXIT
+        END IF
       END DO
     END DO
+  END DO
     !!
-  END IF
+END IF
   !!
 END PROCEDURE csrMat_getColumn1b
 
@@ -128,10 +128,10 @@ END PROCEDURE csrMat_getColumn1b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getColumn2
-  CALL GetColumn( obj=obj, &
-    & iColumn=getNodeLoc( obj=obj%csr%dof, idof=idof, nodenum=nodenum), &
-    & value=value, scale=scale, &
-    & addContribution=addContribution )
+CALL GetColumn(obj=obj, &
+  & iColumn=getNodeLoc(obj=obj%csr%jdof, idof=idof, nodenum=nodenum), &
+  & value=value, scale=scale, &
+  & addContribution=addContribution)
 END PROCEDURE csrMat_getColumn2
 
 !----------------------------------------------------------------------------
@@ -139,11 +139,11 @@ END PROCEDURE csrMat_getColumn2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getColumn3
-  CALL GetColumn( obj=obj, &
-    & iColumn=getNodeLoc( obj=obj%csr%dof,  &
-      & ivar=ivar, idof=idof, nodenum=nodenum), &
-    & value=value, scale=scale, &
-    & addContribution=addContribution )
+CALL GetColumn(obj=obj, &
+  & iColumn=getNodeLoc(obj=obj%csr%jdof,  &
+    & ivar=ivar, idof=idof, nodenum=nodenum), &
+  & value=value, scale=scale, &
+  & addContribution=addContribution)
 END PROCEDURE csrMat_getColumn3
 
 !----------------------------------------------------------------------------
@@ -151,12 +151,12 @@ END PROCEDURE csrMat_getColumn3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getColumn4
-  CALL GetColumn( obj=obj, &
-    & iColumn=getNodeLoc( obj=obj%csr%dof,  &
-    & ivar=ivar, spacecompo=spacecompo, &
-    & timecompo=timecompo, nodenum=nodenum), &
-    & value=value, scale=scale, &
-    & addContribution=addContribution )
+CALL GetColumn(obj=obj, &
+  & iColumn=getNodeLoc(obj=obj%csr%jdof,  &
+  & ivar=ivar, spacecompo=spacecompo, &
+  & timecompo=timecompo, nodenum=nodenum), &
+  & value=value, scale=scale, &
+  & addContribution=addContribution)
 END PROCEDURE csrMat_getColumn4
 
 !----------------------------------------------------------------------------
@@ -165,16 +165,16 @@ END PROCEDURE csrMat_getColumn4
 
 MODULE PROCEDURE csrMat_getColumn5
   !!
-  CALL GetColumn( obj=obj, &
-    & iColumn=getNodeLoc( &
-    & obj=obj%csr%dof,  &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo ), &
-    & value=value, &
-    & scale=scale, &
-    & addContribution=addContribution )
+CALL GetColumn(obj=obj, &
+  & iColumn=getNodeLoc( &
+  & obj=obj%csr%jdof,  &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value, &
+  & scale=scale, &
+  & addContribution=addContribution)
   !!
 END PROCEDURE csrMat_getColumn5
 
@@ -184,16 +184,16 @@ END PROCEDURE csrMat_getColumn5
 
 MODULE PROCEDURE csrMat_getColumn6
   !!
-  CALL GetColumn( obj=obj, &
-    & iColumn=getNodeLoc( &
-    & obj=obj%csr%dof,  &
-    & nodenum=nodenum, &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo ), &
-    & value=value, &
-    & scale=scale, &
-    & addContribution=addContribution )
+CALL GetColumn(obj=obj, &
+  & iColumn=getNodeLoc( &
+  & obj=obj%csr%jdof,  &
+  & nodenum=nodenum, &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo), &
+  & value=value, &
+  & scale=scale, &
+  & addContribution=addContribution)
   !!
 END PROCEDURE csrMat_getColumn6
 
@@ -203,16 +203,16 @@ END PROCEDURE csrMat_getColumn6
 
 MODULE PROCEDURE csrMat_getColumn7
   !!
-  CALL GetColumn( obj=obj, &
-    & iColumn=getNodeLoc( &
-    & obj=obj%csr%dof,  &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo, &
-    & nodenum=nodenum), &
-    & value=value, &
-    & scale=scale, &
-    & addContribution=addContribution )
+CALL GetColumn(obj=obj, &
+  & iColumn=getNodeLoc( &
+  & obj=obj%csr%jdof,  &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo, &
+  & nodenum=nodenum), &
+  & value=value, &
+  & scale=scale, &
+  & addContribution=addContribution)
   !!
 END PROCEDURE csrMat_getColumn7
 
@@ -222,16 +222,16 @@ END PROCEDURE csrMat_getColumn7
 
 MODULE PROCEDURE csrMat_getColumn8
   !!
-  CALL GetColumn( obj=obj, &
-    & iColumn=getNodeLoc( &
-    & obj=obj%csr%dof,  &
-    & ivar=ivar, &
-    & spacecompo=spacecompo, &
-    & timecompo=timecompo, &
-    & nodenum=nodenum), &
-    & value=value, &
-    & scale=scale, &
-    & addContribution=addContribution )
+CALL GetColumn(obj=obj, &
+  & iColumn=getNodeLoc( &
+  & obj=obj%csr%jdof,  &
+  & ivar=ivar, &
+  & spacecompo=spacecompo, &
+  & timecompo=timecompo, &
+  & nodenum=nodenum), &
+  & value=value, &
+  & scale=scale, &
+  & addContribution=addContribution)
   !!
 END PROCEDURE csrMat_getColumn8
 

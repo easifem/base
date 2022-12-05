@@ -207,7 +207,7 @@ PUBLIC :: Vector3DPointer_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 June 2022
-! summary:         Index value keymap; useful for defining nodal boundary conditions
+! summary: Index value keymap; useful for defining nodal boundary conditions
 
 TYPE :: IndexValue_
   INTEGER(I4B) :: Indx
@@ -295,7 +295,10 @@ TYPE :: CSRSparsity_
   INTEGER(I4B), ALLOCATABLE :: JA(:)
   INTEGER(I4B), ALLOCATABLE :: idiag(:)
   TYPE(IntVector_), ALLOCATABLE :: row(:)
-  TYPE(DOF_) :: dof
+  TYPE(DOF_) :: idof
+  !! DOF for row
+  TYPE(DOF_) :: jdof
+  !! DOF for columns
 END TYPE CSRSparsity_
 
 PUBLIC :: CSRSparsity_
@@ -323,9 +326,9 @@ TYPE :: CSRMatrix_
   LOGICAL(LGT) :: csrOwnership = .FALSE.
     !! This variable, if true, denotes that csr is allocated inside the obj
   INTEGER(I4B) :: tDimension = 2_I4B
-  CHARACTER(LEN=5) :: matrixProp = 'UNSYM'
+  CHARACTER(LEN=20) :: matrixProp = 'UNSYM'
   REAL(DFP), ALLOCATABLE :: A(:)
-  TYPE(CSRSparsity_), POINTER :: csr => NULL()
+  TYPE(CSRSparsity_) :: csr
 END TYPE CSRMatrix_
 
 PUBLIC :: CSRMatrix_

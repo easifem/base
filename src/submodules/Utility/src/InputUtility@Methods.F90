@@ -27,133 +27,121 @@ CONTAINS
 !                                                                     Input
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE input_Int
-  IF(PRESENT(option) )THEN
-    Ans=option
-  ELSE
-    Ans=default
-  ENDIF
-END PROCEDURE input_Int
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE input_Real64
-  IF(PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
-END PROCEDURE input_Real64
+MODULE PROCEDURE input_Int8
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int8
+MODULE PROCEDURE input_Int16
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int16
+MODULE PROCEDURE input_Int32
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int32
+MODULE PROCEDURE input_Int64
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int64
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE input_Real32
-  IF(PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
+#include "./Input/Input1.inc"
 END PROCEDURE input_Real32
+MODULE PROCEDURE input_Real64
+#include "./Input/Input1.inc"
+END PROCEDURE input_Real64
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE input_IntVec
-  IF( PRESENT( option ) ) THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
-END PROCEDURE input_IntVec
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE input_Real64vec
-  IF( PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
-END PROCEDURE input_Real64vec
+MODULE PROCEDURE input_Int8Vec
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int8Vec
+MODULE PROCEDURE input_Int16Vec
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int16Vec
+MODULE PROCEDURE input_Int32Vec
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int32Vec
+MODULE PROCEDURE input_Int64Vec
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int64Vec
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE input_Real32vec
-  IF( PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
+#include "./Input/Input1.inc"
 END PROCEDURE input_Real32vec
+MODULE PROCEDURE input_Real64vec
+#include "./Input/Input1.inc"
+END PROCEDURE input_Real64vec
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE input_IntArray
-  IF(PRESENT(option) )THEN
-    val = option
-  ELSE
-    val = default
-  ENDIF
-END PROCEDURE input_IntArray
-
-!----------------------------------------------------------------------------
-!                                                                      Input
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE input_Real64Array
-  IF(PRESENT(option) )THEN
-    val = option
-  ELSE
-    val = default
-  ENDIF
-END PROCEDURE input_Real64Array
+MODULE PROCEDURE input_Int8Array
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int8Array
+MODULE PROCEDURE input_Int16Array
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int16Array
+MODULE PROCEDURE input_Int32Array
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int32Array
+MODULE PROCEDURE input_Int64Array
+#include "./Input/Input1.inc"
+END PROCEDURE input_Int64Array
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE input_Real32Array
-  IF(PRESENT(option) )THEN
-    val = option
-  ELSE
-    val = default
-  ENDIF
+#include "./Input/Input1.inc"
 END PROCEDURE input_Real32Array
+MODULE PROCEDURE input_Real64Array
+#include "./Input/Input1.inc"
+END PROCEDURE input_Real64Array
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE input_String
-  IF(PRESENT(option) )THEN
-    val=TRIM(option)
-  ELSE
-    val=TRIM(default)
-  ENDIF
+#include "./Input/Input1.inc"
 END PROCEDURE input_String
+
+! MODULE PROCEDURE input_StringVec
+! #include "./Input/Input1.inc"
+! END PROCEDURE input_StringVec
 
 !----------------------------------------------------------------------------
 !                                                                      Input
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE input_logical
-  IF(PRESENT(option) )THEN
-    val=option
-  ELSE
-    val=default
-  ENDIF
+#include "./Input/Input1.inc"
 END PROCEDURE input_logical
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE input_logicalvec
+#include "./Input/Input1.inc"
+END PROCEDURE input_logicalvec
+
+!----------------------------------------------------------------------------
+!                                                                      Input
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE input_logicalArray
+#include "./Input/Input1.inc"
+END PROCEDURE input_logicalArray
 
 !----------------------------------------------------------------------------
 !

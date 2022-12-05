@@ -324,7 +324,7 @@ INTEGER(I4B), PARAMETER :: BlythPozChebyshev = 26 !! for triangle
 INTEGER(I4B), PARAMETER :: IsaacLegendre = 27 !! for triangle
 INTEGER(I4B), PARAMETER :: IsaacChebyshev = 28 !! for triangle
 !!
-!! Type of Lagrange Interpolation Poitns
+!! Type of Lagrange Interpolation Points
 !!
 INTEGER(I4B), PARAMETER :: EquidistanceLIP = Equidistance
 INTEGER(I4B), PARAMETER :: GaussLobattoLIP = GaussLobatto
@@ -545,9 +545,6 @@ INTEGER(I4B), PARAMETER, PUBLIC :: Quadrature = 2
 
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_CHUNK_SIZE = 1024
 
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 END MODULE GlobalData
 
 ! INTEGER(I4B), PARAMETER :: LagrangePolynomial = 1

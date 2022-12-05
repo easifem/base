@@ -18,22 +18,25 @@
 ! Define internal variables
 INTEGER(I4B) :: ii, n, tsize
 !!
-IF ( .NOT. ALLOCATED(obj)) RETURN
+IF (.NOT. ALLOCATED(obj)) THEN
+  ! ALLOCATE (obj(0))
+  RETURN
+END IF
 !!
-tsize = SIZE(obj); ALLOCATE (temp(tsize)); temp=obj; DEALLOCATE( obj )
-CALL QUICKSORT( temp, 1_I4B, SIZE( temp, KIND=I4B ) )
+tsize = SIZE(obj); ALLOCATE (temp(tsize)); temp = obj; DEALLOCATE (obj)
+CALL QUICKSORT(temp, 1_I4B, SIZE(temp, KIND=I4B))
 !!
 n = 1; obj = [temp(1)]
 !!
-IF( tsize .GT. 1 ) THEN
+IF (tsize .GT. 1) THEN
   DO ii = 2, tsize
-    IF( temp( ii ) .NE. temp( ii-1 ) ) THEN
-      CALL Expand( vec=obj, n=n, chunk_size=MAX_CHUNK_SIZE, &
-        & val=temp( ii )  )
+    IF (temp(ii) .NE. temp(ii - 1)) THEN
+      CALL Expand(vec=obj, n=n, chunk_size=tsize, &
+        & val=temp(ii))
     END IF
   END DO
   !!
-  CALL Expand( vec=obj, n=n, chunk_size=MAX_CHUNK_SIZE, finished=.TRUE. )
+  CALL Expand(vec=obj, n=n, chunk_size=tsize, finished=.TRUE.)
 END IF
 !!
-IF( ALLOCATED( temp ) ) DEALLOCATE( temp )
+IF (ALLOCATED(temp)) DEALLOCATE (temp)

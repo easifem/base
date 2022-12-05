@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary:  Constructor methods for [[Quadraturepoints_]]
 
 SUBMODULE(QuadraturePoint_Method) GetMethods
@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_Size
-  ans = SIZE( obj%points, dims )
+ans = SIZE(obj%points, dims)
 END PROCEDURE quad_Size
 
 !----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ END PROCEDURE quad_Size
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_getTotalQuadraturepoints
-  ans = SIZE( obj, 2 )
+ans = SIZE(obj, 2)
 END PROCEDURE quad_getTotalQuadraturepoints
 
 !----------------------------------------------------------------------------
@@ -45,9 +45,9 @@ END PROCEDURE quad_getTotalQuadraturepoints
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_GetQuadraturePoints1
-  point = 0.0_DFP
-  point( 1 : obj%tXi ) = obj%points( 1 : obj%tXi, Num )
-  weight = obj%points( obj%tXi + 1, Num )
+point = 0.0_DFP
+point(1:obj%tXi) = obj%points(1:obj%tXi, Num)
+weight = obj%points(obj%tXi + 1, Num)
 END PROCEDURE quad_GetQuadraturePoints1
 
 !----------------------------------------------------------------------------
@@ -55,11 +55,45 @@ END PROCEDURE quad_GetQuadraturePoints1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_GetQuadraturePoints2
-  INTEGER( I4B ) :: n
-  n = SIZE( obj%points, 2 ) !#column
-  CALL Reallocate( point, 3, n )
-  point( 1 : obj%tXi, 1:n ) = obj%points( 1 : obj%tXi, 1:n )
-  weight = obj%points( obj%tXi + 1, 1:n )
+INTEGER(I4B) :: n
+n = SIZE(obj%points, 2) !#column
+CALL Reallocate(point, 3, n)
+point(1:obj%tXi, 1:n) = obj%points(1:obj%tXi, 1:n)
+weight = obj%points(obj%tXi + 1, 1:n)
 END PROCEDURE quad_GetQuadraturePoints2
+
+!----------------------------------------------------------------------------
+!                                                                Outerprod
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_Outerprod
+REAL(DFP), ALLOCATABLE :: points(:, :)
+INTEGER(I4B) :: n1, n2, n
+INTEGER(I4B) :: ii, a, b
+!!
+n1 = SIZE(obj1, 2)
+n2 = SIZE(obj2, 2)
+n = n1 * n2
+!!
+CALL Reallocate(points, 3, n)
+!!
+DO ii = 1, n1
+  !!
+  a = (ii - 1) * n2 + 1
+  b = ii * n2
+  !!
+  points(1, a:b) = obj1%points(1, ii)
+  !!
+  points(2, a:b) = obj2%points(1, :)
+  !!
+  points(3, a:b) = obj1%points(2, ii) * obj2%points(2, :)
+  !!
+END DO
+!!
+CALL Initiate(obj=ans, points=points)
+!!
+IF (ALLOCATED(points)) DEALLOCATE (points)
+!!
+END PROCEDURE quad_Outerprod
 
 END SUBMODULE GetMethods

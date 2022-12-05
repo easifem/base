@@ -296,6 +296,8 @@ IF (layout .EQ. "VEFC") THEN
   IF (PRESENT(xij)) THEN
     ans = FromUnitTriangle2Triangle(xin=temp, &
       & x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3))
+  ELSE
+    ans = temp
   END IF
   !!
 ELSE
@@ -356,6 +358,8 @@ IF (layout .EQ. "VEFC") THEN
   IF (PRESENT(xij)) THEN
     ans = FromUnitTriangle2Triangle(xin=temp, &
       & x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3))
+  ELSE
+    ans = temp
   END IF
   !!
 ELSE
@@ -501,6 +505,12 @@ CASE (GaussLegendreLobatto, IsaacLegendre)
 CASE (GaussChebyshevLobatto, IsaacChebyshev)
   ans = Isaac_Triangle(order=order, ipType=GaussChebyshevLobatto, &
     & layout="VEFC", xij=xij)
+CASE DEFAULT
+  CALL ErrorMsg(msg="Unknown interpolation point type (ipType)", &
+    & file=__FILE__, &
+    & routine=myname, &
+    & line=__LINE__, &
+    & unitno=stderr)
 END SELECT
 END PROCEDURE InterpolationPoint_Triangle
 

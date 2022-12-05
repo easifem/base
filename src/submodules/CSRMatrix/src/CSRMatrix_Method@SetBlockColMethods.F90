@@ -29,67 +29,67 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setBlockColumn1
-  INTEGER( I4B ) :: ii, jj, c(3), row_start, row_end
-  CLASS( DOF_ ), POINTER :: dofobj
+INTEGER(I4B) :: ii, jj, c(3), row_start, row_end
+CLASS(DOF_), POINTER :: idofobj
   !!
 #ifdef DEBUG_VER
   !!
   !! check
   !!
-  IF( icolumn .GT. SIZE(obj, 2) ) THEN
-    CALL ErrorMSG(  &
-      & Msg="icolumn is out of Bound", &
-      & File = "CSRMatrix_Method@SetBlockColMethods.F90", &
-      & Routine = "csrMat_setBlockColumn1", &
-      & Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF (icolumn .GT. SIZE(obj, 2)) THEN
+  CALL ErrorMSG(  &
+    & Msg="icolumn is out of Bound", &
+    & File="CSRMatrix_Method@SetBlockColMethods.F90", &
+    & Routine="csrMat_setBlockColumn1", &
+    & Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
   !!
 #endif
   !!
-  dofobj => GetDOFPointer( obj )
+idofobj => GetDOFPointer(obj, 1)
   !!
 #ifdef DEBUG_VER
   !!
   !! check
   !!
-  IF( ivar .GT. (.tNames. dofobj) ) THEN
-    CALL ErrorMSG(  &
-      & Msg="ivar is out of Bound", &
-      & File = "CSRMatrix_Method@SetBlockColMethods.F90", &
-      & Routine = "csrMat_setBlockColumn1", &
-      & Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF (ivar .GT. (.tNames.dofobj)) THEN
+  CALL ErrorMSG(  &
+    & Msg="ivar is out of Bound", &
+    & File="CSRMatrix_Method@SetBlockColMethods.F90", &
+    & Routine="csrMat_setBlockColumn1", &
+    & Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
   !!
   !! check
   !!
-  IF( (.StorageFMT. obj ) .NE. FMT_DOF ) THEN
-    CALL ErrorMSG(  &
-      & Msg="For this rotuine storage format should FMT_DOF", &
-      & File = "CSRMatrix_Method@SetBlockColMethods.F90", &
-      & Routine = "csrMat_setBlockColumn1", &
-      & Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF ((obj.StorageFMT.1) .NE. FMT_DOF) THEN
+  CALL ErrorMSG(  &
+    & Msg="For this rotuine storage format should FMT_DOF", &
+    & File="CSRMatrix_Method@SetBlockColMethods.F90", &
+    & Routine="csrMat_setBlockColumn1", &
+    & Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
   !!
 #endif
   !!
   !! start, end, stride of idof
   !!
-  c = getNodeLoc( obj=dofobj, idof=(dofobj .DOFStartIndex. ivar) )
-  row_start = c( 1 ) ! start
-  c = getNodeLoc( dofobj, (dofobj .DOFEndIndex. ivar) )
-  row_end = c( 2 ) ! end
+c = getNodeLoc(obj=idofobj, idof=(idofobj.DOFStartIndex.ivar))
+row_start = c(1) ! start
+c = getNodeLoc(idofobj, (idofobj.DOFEndIndex.ivar))
+row_end = c(2) ! end
   !!
-  DO ii = row_start, row_end
-    DO jj = obj%csr%IA( ii ), obj%csr%IA( ii+1 ) - 1
-      IF( obj%csr%JA(jj) .EQ. icolumn ) &
-        & obj%A( jj ) = value
-    END DO
+DO ii = row_start, row_end
+  DO jj = obj%csr%IA(ii), obj%csr%IA(ii + 1) - 1
+    IF (obj%csr%JA(jj) .EQ. icolumn) &
+      & obj%A(jj) = value
   END DO
+END DO
   !!
-  dofobj => NULL()
+idofobj => NULL()
   !!
 END PROCEDURE csrMat_setBlockColumn1
 
@@ -98,79 +98,79 @@ END PROCEDURE csrMat_setBlockColumn1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setBlockColumn2
-  INTEGER( I4B ) :: ii, c(3), row_start, row_end, jj
-  CLASS( DOF_ ), POINTER :: dofobj
+INTEGER(I4B) :: ii, c(3), row_start, row_end, jj
+CLASS(DOF_), POINTER :: idofobj
   !!
 #ifdef DEBUG_VER
   !!
   !! check
   !!
-  IF( SIZE( value ) .LT. obj%csr%ncol ) THEN
-    CALL ErrorMSG(  &
-      & Msg="SIZE of row vector should be less than the number of col &
-      & in sparse matrix", &
-      & File = "CSRMatrix_Method@SetBlockColMethods.F90", &
-      & Routine = "csrMat_setBlockColumn2",  &
-      & Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF (SIZE(value) .LT. obj%csr%ncol) THEN
+  CALL ErrorMSG(  &
+    & Msg="SIZE of row vector should be less than the number of col &
+    & in sparse matrix", &
+    & File="CSRMatrix_Method@SetBlockColMethods.F90", &
+    & Routine="csrMat_setBlockColumn2",  &
+    & Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
   !!
   !! check
   !!
-  IF( icolumn .GT. SIZE(obj, 2) ) THEN
-    CALL ErrorMSG(  &
-      & Msg="icolumn is out of Bound", &
-      & File = "CSRMatrix_Method@SetBlockColMethods.F90", &
-      & Routine = "csrMat_setBlockColumn2", &
-      & Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF (icolumn .GT. SIZE(obj, 2)) THEN
+  CALL ErrorMSG(  &
+    & Msg="icolumn is out of Bound", &
+    & File="CSRMatrix_Method@SetBlockColMethods.F90", &
+    & Routine="csrMat_setBlockColumn2", &
+    & Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
   !!
 #endif
   !!
-  dofobj => GetDOFPointer( obj )
+idofobj => GetDOFPointer(obj, 1)
   !!
 #ifdef DEBUG_VER
   !!
   !! check
   !!
-  IF( ivar .GT. (.tNames. dofobj) ) THEN
-    CALL ErrorMSG(  &
-      & Msg="jVar is out of Bound", &
-      & File = "CSRMatrix_Method@SetBlockColMethods.F90", &
-      & Routine = "csrMat_setBlockColumn2", &
-      & Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF (ivar .GT. (.tNames.idofobj)) THEN
+  CALL ErrorMSG(  &
+    & Msg="jVar is out of Bound", &
+    & File="CSRMatrix_Method@SetBlockColMethods.F90", &
+    & Routine="csrMat_setBlockColumn2", &
+    & Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
   !!
   !! check
   !!
-  IF( (.StorageFMT. obj ) .NE. FMT_DOF ) THEN
-    CALL ErrorMSG(  &
-      & Msg="For this rotuine storage format should FMT_DOF", &
-      & File = "CSRMatrix_Method@SetBlockColMethods.F90", &
-      & Routine = "csrMat_setBlockColumn2", &
-      & Line= __LINE__ , UnitNo=stdout )
-    RETURN
-  END IF
+IF ((obj.StorageFMT.1) .NE. FMT_DOF) THEN
+  CALL ErrorMSG(  &
+    & Msg="For this rotuine storage format should FMT_DOF", &
+    & File="CSRMatrix_Method@SetBlockColMethods.F90", &
+    & Routine="csrMat_setBlockColumn2", &
+    & Line=__LINE__, UnitNo=stdout)
+  RETURN
+END IF
   !!
 #endif
   !!
   !! start, end, stride
   !!
-  c = getNodeLoc( obj=dofobj, idof=(dofobj .DOFStartIndex. ivar) )
-  row_start = c( 1 ) ! start
-  c = getNodeLoc( obj=dofobj, idof=(dofobj .DOFEndIndex. ivar) )
-  row_end = c( 2 ) ! end
+c = getNodeLoc(obj=idofobj, idof=(idofobj.DOFStartIndex.ivar))
+row_start = c(1) ! start
+c = getNodeLoc(obj=idofobj, idof=(idofobj.DOFEndIndex.ivar))
+row_end = c(2) ! end
   !!
-  DO ii = row_start, row_end
-    DO jj = obj%csr%IA( ii ), obj%csr%IA( ii+1 ) - 1
-      IF( obj%csr%JA(jj) .EQ. icolumn ) &
-        & obj%A( jj ) = value( ii )
-    END DO
+DO ii = row_start, row_end
+  DO jj = obj%csr%IA(ii), obj%csr%IA(ii + 1) - 1
+    IF (obj%csr%JA(jj) .EQ. icolumn) &
+      & obj%A(jj) = value(ii)
   END DO
+END DO
   !!
-  dofobj => NULL()
+idofobj => NULL()
   !!
 END PROCEDURE csrMat_setBlockColumn2
 
@@ -179,12 +179,12 @@ END PROCEDURE csrMat_setBlockColumn2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setBlockColumn3
-  CALL SetBlockColumn( &
-    & obj=obj, &
-    & ivar=ivar, &
-    & icolumn=getNodeLoc(obj=obj%csr%dof, nodeNum=nodenum, &
-    & ivar=jvar, idof=idof), &
-    & value=value )
+CALL SetBlockColumn( &
+  & obj=obj, &
+  & ivar=ivar, &
+  & icolumn=getNodeLoc(obj=obj%csr%jdof, nodeNum=nodenum, &
+  & ivar=jvar, idof=idof), &
+  & value=value)
 END PROCEDURE csrMat_setBlockColumn3
 
 !----------------------------------------------------------------------------
@@ -192,12 +192,12 @@ END PROCEDURE csrMat_setBlockColumn3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setBlockColumn4
-  CALL SetBlockColumn( &
-    & obj=obj, &
-    & ivar=ivar, &
-    & icolumn=getNodeLoc(obj=obj%csr%dof, nodeNum=nodenum, &
-    & ivar=jvar, idof=idof), &
-    & value=value )
+CALL SetBlockColumn( &
+  & obj=obj, &
+  & ivar=ivar, &
+  & icolumn=getNodeLoc(obj=obj%csr%jdof, nodeNum=nodenum, &
+  & ivar=jvar, idof=idof), &
+  & value=value)
 END PROCEDURE csrMat_setBlockColumn4
 
 !----------------------------------------------------------------------------
@@ -205,16 +205,16 @@ END PROCEDURE csrMat_setBlockColumn4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setBlockColumn5
-  CALL SetBlockColumn( &
-    & obj=obj, &
-    & ivar=ivar, &
-    & icolumn=getIndex( &
-      & obj=obj%csr%dof, &
-      & nodeNum=nodenum, &
-      & ivar=jvar, &
-      & spacecompo=spacecompo, &
-      & timecompo=timecompo), &
-    & value=value )
+CALL SetBlockColumn( &
+  & obj=obj, &
+  & ivar=ivar, &
+  & icolumn=getIndex( &
+    & obj=obj%csr%jdof, &
+    & nodeNum=nodenum, &
+    & ivar=jvar, &
+    & spacecompo=spacecompo, &
+    & timecompo=timecompo), &
+  & value=value)
 END PROCEDURE csrMat_setBlockColumn5
 
 !----------------------------------------------------------------------------
@@ -222,16 +222,16 @@ END PROCEDURE csrMat_setBlockColumn5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_setBlockColumn6
-  CALL SetBlockColumn( &
-    & obj=obj, &
-    & ivar=ivar, &
-    & icolumn=getIndex( &
-      & obj=obj%csr%dof, &
-      & nodeNum=nodenum, &
-      & ivar=jvar, &
-      & spacecompo=spacecompo, &
-      & timecompo=timecompo), &
-    & value=value )
+CALL SetBlockColumn( &
+  & obj=obj, &
+  & ivar=ivar, &
+  & icolumn=getIndex( &
+    & obj=obj%csr%jdof, &
+    & nodeNum=nodenum, &
+    & ivar=jvar, &
+    & spacecompo=spacecompo, &
+    & timecompo=timecompo), &
+  & value=value)
 END PROCEDURE csrMat_setBlockColumn6
 
 !----------------------------------------------------------------------------

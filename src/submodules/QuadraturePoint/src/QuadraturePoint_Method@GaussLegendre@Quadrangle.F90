@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(QuadraturePoint_Method:GaussLegendre ) Quadrangle
+SUBMODULE(QuadraturePoint_Method:GaussLegendre) Quadrangle
 IMPLICIT NONE
 CONTAINS
 
@@ -23,55 +23,11 @@ CONTAINS
 !                                                                 Quadrangle
 !----------------------------------------------------------------------------
 
-PURE FUNCTION TensorProd( PW, n ) RESULT( Ans )
-  ! Define intent of dummy variables
-  INTEGER( I4B ), INTENT( IN ) :: n
-  REAL( DFP ), INTENT( IN ) :: PW( :, : )
-  REAL( DFP ) :: Ans( 3, n*n )
-  ! define internal variable
-  INTEGER( I4B ) :: i, a, b
-  DO i = 1, n
-    a = ( i - 1 ) * n + 1
-    b = i * n
-    Ans( 1, a:b ) = PW( 1, : )
-    Ans( 2, a:b ) = PW( 1, i )
-    Ans( 3, a:b ) = PW( 2, i ) * PW( 2, : )
-  END DO
-END FUNCTION TensorProd
-
-!----------------------------------------------------------------------------
-!                                                                  Quadrangle
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE getGaussLegendreQPQuadrangle1
-  SELECT CASE(Order)
-  CASE(0, 1)
-    ! 1 x 1
-    CALL Initiate( obj, TensorProd( PW1, 1 ) )
-  CASE(2, 3)
-    ! 2 x 2
-    CALL Initiate( obj, TensorProd( PW2, 2 ) )
-  CASE(4, 5)
-    CALL Initiate( obj, TensorProd( PW3, 3 ) )
-  CASE( 6, 7 )
-    CALL Initiate( obj, TensorProd( PW4, 4 ) )
-  CASE( 8, 9 )
-    CALL Initiate( obj, TensorProd( PW5, 5 ) )
-  CASE( 10, 11 )
-    CALL Initiate( obj, TensorProd( PW6, 6 ) )
-  CASE( 12, 13 )
-    CALL Initiate( obj, TensorProd( PW7, 7 ) )
-  CASE( 14, 15 )
-    CALL Initiate( obj, TensorProd( PW8, 8 ) )
-  CASE( 16, 17 )
-    CALL Initiate( obj, TensorProd( PW9, 9 ) )
-  CASE( 18, 19 )
-    CALL Initiate( obj, TensorProd( PW10, 10 ) )
-  CASE( 20, 21 )
-    CALL Initiate( obj, TensorProd( PW11, 11 ) )
-  CASE( 22, 23 )
-    CALL Initiate( obj, TensorProd( PW12, 12 ) )
-  END SELECT
+TYPE(QuadraturePoint_) :: obj1
+obj1 = getGaussLegendreQPLine1(order=order)
+obj = Outerprod(obj1=obj1, obj2=obj1)
+CALL Deallocate (obj1)
 END PROCEDURE getGaussLegendreQPQuadrangle1
 
 !----------------------------------------------------------------------------
@@ -79,34 +35,38 @@ END PROCEDURE getGaussLegendreQPQuadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPQuadrangle2
-  SELECT CASE( NIPS( 1 ) )
-  CASE( 1 )
-    ! 1 x 1
-    CALL Initiate( obj, TensorProd( PW1, 1 ) )
-  CASE( 4 )
-    ! 2 x 2
-    CALL Initiate( obj, TensorProd( PW2, 2 ) )
-  CASE( 9 )
-    CALL Initiate( obj, TensorProd( PW3, 3 ) )
-  CASE( 16 )
-    CALL Initiate( obj, TensorProd( PW4, 4 ) )
-  CASE( 25 )
-    CALL Initiate( obj, TensorProd( PW5, 5 ) )
-  CASE( 36 )
-    CALL Initiate( obj, TensorProd( PW6, 6 ) )
-  CASE( 49 )
-    CALL Initiate( obj, TensorProd( PW7, 7 ) )
-  CASE( 64 )
-    CALL Initiate( obj, TensorProd( PW8, 8 ) )
-  CASE( 81 )
-    CALL Initiate( obj, TensorProd( PW9, 9 ) )
-  CASE( 100 )
-    CALL Initiate( obj, TensorProd( PW10, 10 ) )
-  CASE( 121 )
-    CALL Initiate( obj, TensorProd( PW11, 11 ) )
-  CASE( 144 )
-    CALL Initiate( obj, TensorProd( PW12, 12 ) )
-  END SELECT
+TYPE(QuadraturePoint_) :: obj1, obj2
+INTEGER(I4B) :: np(2)
+!!
+IF (SIZE(nips) .EQ. 1) THEN
+  np = INT(SQRT(REAL(nips(1))), KIND=I4B)
+  obj1 = getGaussLegendreQPLine2(nips=np(1:1))
+  obj = Outerprod(obj1=obj1, obj2=obj1)
+ELSE
+  np = nips
+  obj1 = getGaussLegendreQPLine2(nips=np(1:1))
+  obj2 = getGaussLegendreQPLine2(nips=np(2:2))
+  obj = Outerprod(obj1=obj1, obj2=obj2)
+END IF
+CALL Deallocate (obj1)
+CALL Deallocate (obj2)
 END PROCEDURE getGaussLegendreQPQuadrangle2
+
+!----------------------------------------------------------------------------
+!                                                                 Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getGaussLegendreQPQuadrangle3
+TYPE(QuadraturePoint_) :: obj1, obj2
+obj1 = getGaussLegendreQPLine1(order=p)
+obj2 = getGaussLegendreQPLine1(order=q)
+obj = Outerprod(obj1=obj1, obj2=obj2)
+CALL Deallocate (obj1)
+CALL Deallocate (obj2)
+END PROCEDURE getGaussLegendreQPQuadrangle3
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE

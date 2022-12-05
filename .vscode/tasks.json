@@ -5,10 +5,7 @@
       "label": "clean",
       "type": "shell",
       "command": "rm",
-      "args": [
-        "-rf",
-        "~/temp/tests/easifem-base"
-      ],
+      "args": ["-rf", "~/temp/easifem-base"],
       "problemMatcher": []
     },
     {
@@ -30,6 +27,6 @@
         "kind": "test",
         "isDefault": true
       }
-    },
+    }
   ]
 }

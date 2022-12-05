@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary:  Constructor methods for [[QuadraturePoint_]]
 
 SUBMODULE(QuadraturePoint_Method) ConstructorMethods
@@ -30,8 +30,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_initiate1
-  obj%points = points
-  obj%tXi = SIZE( points, 1 ) - 1
+obj%points = points
+obj%tXi = SIZE(points, 1) - 1
     !! No of row minus one
 END PROCEDURE quad_initiate1
 
@@ -40,8 +40,8 @@ END PROCEDURE quad_initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_initiate2
-  obj%tXi = tXi
-  CALL Reallocate( obj%points, tXi + 1, tpoints )
+obj%tXi = tXi
+CALL Reallocate(obj%points, tXi + 1, tpoints)
 END PROCEDURE quad_initiate2
 
 !----------------------------------------------------------------------------
@@ -49,10 +49,21 @@ END PROCEDURE quad_initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_initiate3
-  SELECT CASE( TRIM( quadratureType ) )
-  CASE( "GaussLegendre" )
-    obj = GaussLegendreQuadrature( refElem=refElem, order=order)
-  END SELECT
+CHARACTER(LEN=30) :: qtype
+!!
+qtype = UpperCase(quadratureType)
+!!
+SELECT CASE (TRIM(qtype))
+CASE ("GAUSSLEGENDRE")
+  obj = GaussLegendreQuadrature(refElem=refElem, order=order)
+CASE ("GAUSSLEGENDRELOBATTO")
+CASE ("GAUSSLEGENDRERADAU", "GAUSSLEGENDRERADAULEFT")
+CASE ("GAUSSLEGENDRERADAURIGHT")
+CASE ("GAUSSCHEBYSHEV")
+CASE ("GAUSSCHEBYSHEVLOBATTO")
+CASE ("GAUSSCHEBYSHEVRADAU", "GAUSSCHEBYSHEVRADAULEFT")
+CASE ("GAUSSCHEBYSHEVRADAURIGHT")
+END SELECT
 END PROCEDURE quad_initiate3
 
 !----------------------------------------------------------------------------
@@ -60,12 +71,17 @@ END PROCEDURE quad_initiate3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_initiate4
-  SELECT CASE( TRIM( quadratureType ) )
-  CASE( "GaussLegendre" )
-    obj = GaussLegendreQuadrature( refElem=refElem, nips=nips)
-  CASE( "GaussLobatto" )
-  CASE( "Chebyshev" )
-  END SELECT
+SELECT CASE (TRIM(quadratureType))
+CASE ("GaussLegendre")
+  obj = GaussLegendreQuadrature(refElem=refElem, nips=nips)
+CASE ("GAUSSLEGENDRELOBATTO")
+CASE ("GAUSSLEGENDRERADAU", "GAUSSLEGENDRERADAULEFT")
+CASE ("GAUSSLEGENDRERADAURIGHT")
+CASE ("GAUSSCHEBYSHEV")
+CASE ("GAUSSCHEBYSHEVLOBATTO")
+CASE ("GAUSSCHEBYSHEVRADAU", "GAUSSCHEBYSHEVRADAULEFT")
+CASE ("GAUSSCHEBYSHEVRADAURIGHT")
+END SELECT
 END PROCEDURE quad_initiate4
 
 !----------------------------------------------------------------------------
@@ -73,8 +89,8 @@ END PROCEDURE quad_initiate4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_Constructor1
-  obj%points = points
-  obj%tXi = SIZE( points, 1 ) - 1
+obj%points = points
+obj%tXi = SIZE(points, 1) - 1
 END PROCEDURE quad_Constructor1
 
 !----------------------------------------------------------------------------
@@ -82,9 +98,9 @@ END PROCEDURE quad_Constructor1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_Constructor_1
-  ALLOCATE( obj )
-  obj%points = points
-  obj%tXi = SIZE( points, 1 ) - 1
+ALLOCATE (obj)
+obj%points = points
+obj%tXi = SIZE(points, 1) - 1
 END PROCEDURE quad_Constructor_1
 
 !----------------------------------------------------------------------------
@@ -92,8 +108,8 @@ END PROCEDURE quad_Constructor_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_Deallocate
-  IF( ALLOCATED( obj%points ) ) DEALLOCATE( obj%points )
-  obj%tXi = -1
+IF (ALLOCATED(obj%points)) DEALLOCATE (obj%points)
+obj%tXi = -1
 END PROCEDURE quad_Deallocate
 
 END SUBMODULE ConstructorMethods

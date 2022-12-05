@@ -48,9 +48,9 @@ public :: msg
 contains
 
 subroutine MessageHandler_Print(this, txt, unit, iostat, iomsg)
-  !-----------------------------------------------------------------
+
   !< Print a txt message preceding for prefix
-  !-----------------------------------------------------------------
+
   class(MessageHandler_t), intent(IN) :: this                 !< Message handler
   character(len=*), intent(IN) :: txt                  !< Text to print
   integer(I4P), optional, intent(IN) :: unit                 !< Unit where to print
@@ -59,7 +59,7 @@ subroutine MessageHandler_Print(this, txt, unit, iostat, iomsg)
   integer(I4P) :: iostatd              !< Real IO error.
   integer(I4P) :: u                    !< Real unit
   character(500) :: iomsgd               !< Real IO error message.
-  !-----------------------------------------------------------------
+
   u = OUTPUT_UNIT; if (present(unit)) u = unit; iostatd = 0; iomsgd = ''
  write (unit=u, fmt='(A)', iostat=iostatd, iomsg=iomsgd) this%Prefix//' '//txt
   if (present(iostat)) iostat = iostatd
@@ -67,9 +67,9 @@ subroutine MessageHandler_Print(this, txt, unit, iostat, iomsg)
 end subroutine
 
 subroutine MessageHandler_Warn(this, txt, unit, file, line, iostat, iomsg)
-  !-----------------------------------------------------------------
+
   !< Warn a with txt message preceding for WARNING!
-  !-----------------------------------------------------------------
+
   class(MessageHandler_t), intent(IN) :: this                 !< Message handler
   character(len=*), intent(IN) :: txt                  !< Text to print
   integer(I4P), optional, intent(IN) :: unit                 !< Unit where to print
@@ -81,7 +81,7 @@ subroutine MessageHandler_Warn(this, txt, unit, file, line, iostat, iomsg)
   integer(I4P) :: iostatd              !< Real IO error.
   integer(I4P) :: u                    !< Real unit
   character(500) :: iomsgd               !< Real IO error message.
-  !-----------------------------------------------------------------
+
   u = ERROR_UNIT; if (present(unit)) u = unit; iostatd = 0; iomsgd = ''; loc = ''
   if (present(file) .and. present(line)) &
     loc = '('//file//':'//trim(str(no_sign=.true., n=line))//') '
@@ -91,9 +91,9 @@ subroutine MessageHandler_Warn(this, txt, unit, file, line, iostat, iomsg)
 end subroutine
 
 subroutine MessageHandler_Error(this, txt, unit, file, line, iostat, iomsg)
-  !-----------------------------------------------------------------
+
   !< Print a txt message preceding for ERROR!
-  !-----------------------------------------------------------------
+
   class(MessageHandler_t), intent(IN) :: this                 !< Message handler
   character(len=*), intent(IN) :: txt                  !< Text to print
   integer(I4P), optional, intent(IN) :: unit                 !< Unit where to print
@@ -105,7 +105,7 @@ subroutine MessageHandler_Error(this, txt, unit, file, line, iostat, iomsg)
   integer(I4P) :: iostatd              !< Real IO error.
   integer(I4P) :: u                    !< Real unit
   character(500) :: iomsgd               !< Real IO error message.
-  !-----------------------------------------------------------------
+
   u = ERROR_UNIT; if (present(unit)) u = unit; iostatd = 0; iomsgd = ''
   loc = ''
   if (present(file) .and. present(line)) &

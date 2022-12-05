@@ -19,20 +19,16 @@ SUBMODULE(QuadraturePoint_Method) GaussLegendre
 USE BaseMethod
 IMPLICIT NONE
 
-#include "./GaussLegendre/QuadDataLine.inc"
-#include "./GaussLegendre/QuadDataTriangle.inc"
-
 !----------------------------------------------------------------------------
 !                                                GaussLegendre@GaussLegendre
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPLine1( refelem, order )  &
-  & RESULT( obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPLine1
+  MODULE FUNCTION getGaussLegendreQPLine1(order)  &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: order
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPLine1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -40,12 +36,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPLine2( refelem, nips )  &
-  & RESULT( obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: nips( 1 )
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPLine2
+  MODULE FUNCTION getGaussLegendreQPLine2(nips)  &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPLine2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -53,12 +48,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTriangle1( refelem, order ) &
-  & RESULT(obj)
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPTriangle1
+  MODULE FUNCTION getGaussLegendreQPQuadrangle1(order) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: order
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPQuadrangle1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -66,19 +60,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPQuadrangle1( refelem, order) &
-  & RESULT(obj)
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPQuadrangle1
-
-MODULE PURE FUNCTION getGaussLegendreQPQuadrangle2( refelem, nips) &
-  & RESULT(obj)
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: nips( 1 )
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPQuadrangle2
+  MODULE FUNCTION getGaussLegendreQPQuadrangle2(nips) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nips(:)
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPQuadrangle2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -86,12 +72,12 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTriangle2( refelem, nips ) &
-  &  RESULT(obj)
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: nips( 1 )
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPTriangle2
+  MODULE FUNCTION getGaussLegendreQPQuadrangle3(p, q) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: p
+    INTEGER(I4B), INTENT(IN) :: q
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPQuadrangle3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -99,12 +85,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTetrahedron1( refelem, order) &
-  & RESULT(obj)
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPTetrahedron1
+  MODULE FUNCTION getGaussLegendreQPTriangle1(order) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: order
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPTriangle1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -112,12 +97,10 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPTetrahedron2( refelem, nips) &
-  & RESULT(obj)
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: nips( 1 )
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPTetrahedron2
+  MODULE FUNCTION getGaussLegendreQPTriangle2(nips) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nips(:)
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPTriangle2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -125,12 +108,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPyramid1( refelem, order) &
-  & RESULT(obj)
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPPyramid1
+  MODULE FUNCTION getGaussLegendreQPTetrahedron1(order) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: order
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPTetrahedron1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -138,12 +120,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPyramid2( refelem, nips) &
-  & RESULT(obj)
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: nips( 1 )
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPPyramid2
+  MODULE FUNCTION getGaussLegendreQPTetrahedron2(nips) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPTetrahedron2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -151,12 +132,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPrism1( refelem, order ) &
-  & RESULT( obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPPrism1
+  MODULE FUNCTION getGaussLegendreQPPyramid1(order) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: order
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPPyramid1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -164,12 +144,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPPrism2( refelem, nips ) &
-  & RESULT( obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: nips( 1 )
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPPrism2
+  MODULE FUNCTION getGaussLegendreQPPyramid2(nips) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPPyramid2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -177,12 +156,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPHexahedron1( refelem, order ) &
-    & RESULT( obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPHexahedron1
+  MODULE FUNCTION getGaussLegendreQPPrism1(order) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: order
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPPrism1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -190,12 +168,35 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION getGaussLegendreQPHexahedron2( refelem, nips ) &
-    & RESULT( obj )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: nips( 1 )
-  TYPE( QuadraturePoint_ ) :: obj
-END FUNCTION getGaussLegendreQPHexahedron2
+  MODULE FUNCTION getGaussLegendreQPPrism2(nips) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPPrism2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                GaussLegendre@GaussLegendre
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION getGaussLegendreQPHexahedron1(order) &
+      & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: order
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPHexahedron1
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                GaussLegendre@GaussLegendre
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION getGaussLegendreQPHexahedron2(nips) &
+      & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    TYPE(QuadraturePoint_) :: obj
+  END FUNCTION getGaussLegendreQPHexahedron2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -210,67 +211,67 @@ CONTAINS
 
 MODULE PROCEDURE getGaussLegendreQP1
   !!
-  SELECT TYPE( refelem )
+SELECT TYPE (refelem)
   !!
-  TYPE IS ( ReferenceLine_ )
-    obj = getGaussLegendreQPLine1( refelem = refelem, order = order )
+TYPE IS (ReferenceLine_)
+  obj = getGaussLegendreQPLine1(order=order)
   !!
-  TYPE IS ( ReferenceTriangle_ )
-    obj = getGaussLegendreQPTriangle1( refelem = refelem, order = order )
+TYPE IS (ReferenceTriangle_)
+  obj = getGaussLegendreQPTriangle1(order=order)
   !!
-  TYPE IS ( ReferenceQuadrangle_ )
-    obj = getGaussLegendreQPQuadrangle1( refelem = refelem, order = order )
+TYPE IS (ReferenceQuadrangle_)
+  obj = getGaussLegendreQPQuadrangle1(order=order)
   !!
-  TYPE IS ( ReferenceTetrahedron_ )
-    obj = getGaussLegendreQPTetrahedron1( refelem = refelem, order = order )
+TYPE IS (ReferenceTetrahedron_)
+  obj = getGaussLegendreQPTetrahedron1(order=order)
   !!
-  TYPE IS ( ReferenceHexahedron_ )
-    obj = getGaussLegendreQPHexahedron1( refelem = refelem, order = order )
+TYPE IS (ReferenceHexahedron_)
+  obj = getGaussLegendreQPHexahedron1(order=order)
   !!
-  TYPE IS ( ReferencePrism_ )
-    obj = getGaussLegendreQPPrism1( refelem = refelem, order = order )
+TYPE IS (ReferencePrism_)
+  obj = getGaussLegendreQPPrism1(order=order)
   !!
-  TYPE IS ( ReferencePyramid_ )
-    obj = getGaussLegendreQPPyramid1( refelem = refelem, order = order )
+TYPE IS (ReferencePyramid_)
+  obj = getGaussLegendreQPPyramid1(order=order)
   !!
-  TYPE IS ( ReferenceElement_ )
+TYPE IS (ReferenceElement_)
     !!
-    IF( isLine( refelem%name ) ) THEN
-      obj = getGaussLegendreQPLine1( refelem=refelem, order=order )
-      RETURN
-    END IF
+  IF (isLine(refelem%name)) THEN
+    obj = getGaussLegendreQPLine1(order=order)
+    RETURN
+  END IF
     !!
-    IF( isTriangle( refelem%name ) ) THEN
-      obj = getGaussLegendreQPTriangle1( refelem=refelem, order=order )
-      RETURN
-    END IF
+  IF (isTriangle(refelem%name)) THEN
+    obj = getGaussLegendreQPTriangle1(order=order)
+    RETURN
+  END IF
     !!
-    IF( isQuadrangle( refelem%name ) ) THEN
-      obj = getGaussLegendreQPQuadrangle1( refelem=refelem, order=order )
-      RETURN
-    END IF
+  IF (isQuadrangle(refelem%name)) THEN
+    obj = getGaussLegendreQPQuadrangle1(order=order)
+    RETURN
+  END IF
     !!
-    IF( isTetrahedron( refelem%name ) ) THEN
-      obj = getGaussLegendreQPTetrahedron1( refelem=refelem, order=order )
-      RETURN
-    END IF
+  IF (isTetrahedron(refelem%name)) THEN
+    obj = getGaussLegendreQPTetrahedron1(order=order)
+    RETURN
+  END IF
     !!
-    IF( isHexahedron( refelem%name ) ) THEN
-      obj = getGaussLegendreQPHexahedron1( refelem=refelem, order=order )
-      RETURN
-    END IF
+  IF (isHexahedron(refelem%name)) THEN
+    obj = getGaussLegendreQPHexahedron1(order=order)
+    RETURN
+  END IF
     !!
-    IF( isPrism( refelem%name ) ) THEN
-      obj = getGaussLegendreQPPrism1( refelem=refelem, order=order )
-      RETURN
-    END IF
+  IF (isPrism(refelem%name)) THEN
+    obj = getGaussLegendreQPPrism1(order=order)
+    RETURN
+  END IF
     !!
-    IF( isPyramid( refelem%name ) ) THEN
-      obj = getGaussLegendreQPPyramid1( refelem=refelem, order=order )
-      RETURN
-    END IF
+  IF (isPyramid(refelem%name)) THEN
+    obj = getGaussLegendreQPPyramid1(order=order)
+    RETURN
+  END IF
   !!
-  END SELECT
+END SELECT
   !!
 END PROCEDURE getGaussLegendreQP1
 
@@ -280,68 +281,138 @@ END PROCEDURE getGaussLegendreQP1
 
 MODULE PROCEDURE getGaussLegendreQP2
   !!
-  SELECT TYPE( refelem )
+SELECT TYPE (refelem)
   !!
-  TYPE IS ( ReferenceLine_ )
-    obj = getGaussLegendreQPLine2( refelem = refelem, nips = nips )
+TYPE IS (ReferenceLine_)
+  obj = getGaussLegendreQPLine2(nips=nips)
   !!
-  TYPE IS ( ReferenceTriangle_ )
-    obj = getGaussLegendreQPTriangle2( refelem = refelem, nips = nips )
+TYPE IS (ReferenceTriangle_)
+  obj = getGaussLegendreQPTriangle2(nips=nips)
   !!
-  TYPE IS ( ReferenceQuadrangle_ )
-    obj = getGaussLegendreQPQuadrangle2( refelem = refelem, nips = nips )
+TYPE IS (ReferenceQuadrangle_)
+  obj = getGaussLegendreQPQuadrangle2(nips=nips)
   !!
-  TYPE IS ( ReferenceTetrahedron_ )
-    obj = getGaussLegendreQPTetrahedron2( refelem = refelem, nips = nips )
+TYPE IS (ReferenceTetrahedron_)
+  obj = getGaussLegendreQPTetrahedron2(nips=nips)
   !!
-  TYPE IS ( ReferenceHexahedron_ )
-    obj = getGaussLegendreQPHexahedron2( refelem = refelem, nips = nips )
+TYPE IS (ReferenceHexahedron_)
+  obj = getGaussLegendreQPHexahedron2(nips=nips)
   !!
-  TYPE IS ( ReferencePrism_ )
-    obj = getGaussLegendreQPPrism2( refelem = refelem, nips = nips )
+TYPE IS (ReferencePrism_)
+  obj = getGaussLegendreQPPrism2(nips=nips)
   !!
-  TYPE IS ( ReferencePyramid_ )
-    obj = getGaussLegendreQPPyramid2( refelem = refelem, nips = nips )
+TYPE IS (ReferencePyramid_)
+  obj = getGaussLegendreQPPyramid2(nips=nips)
   !!
-  TYPE IS ( ReferenceElement_ )
+TYPE IS (ReferenceElement_)
     !!
-    IF( isLine( refelem%name ) ) THEN
-      obj = getGaussLegendreQPLine2( refelem=refelem, nips=nips )
-      RETURN
-    END IF
+  IF (isLine(refelem%name)) THEN
+    obj = getGaussLegendreQPLine2(nips=nips)
+    RETURN
+  END IF
     !!
-    IF( isTriangle( refelem%name ) ) THEN
-      obj = getGaussLegendreQPTriangle2( refelem=refelem, nips=nips )
-      RETURN
-    END IF
+  IF (isTriangle(refelem%name)) THEN
+    obj = getGaussLegendreQPTriangle2(nips=nips)
+    RETURN
+  END IF
     !!
-    IF( isQuadrangle( refelem%name ) ) THEN
-      obj = getGaussLegendreQPQuadrangle2( refelem=refelem, nips=nips )
-      RETURN
-    END IF
+  IF (isQuadrangle(refelem%name)) THEN
+    obj = getGaussLegendreQPQuadrangle2(nips=nips)
+    RETURN
+  END IF
     !!
-    IF( isTetrahedron( refelem%name ) ) THEN
-      obj = getGaussLegendreQPTetrahedron2( refelem=refelem, nips=nips )
-      RETURN
-    END IF
+  IF (isTetrahedron(refelem%name)) THEN
+    obj = getGaussLegendreQPTetrahedron2(nips=nips)
+    RETURN
+  END IF
     !!
-    IF( isHexahedron( refelem%name ) ) THEN
-      obj = getGaussLegendreQPHexahedron2( refelem=refelem, nips=nips )
-      RETURN
-    END IF
+  IF (isHexahedron(refelem%name)) THEN
+    obj = getGaussLegendreQPHexahedron2(nips=nips)
+    RETURN
+  END IF
     !!
-    IF( isPrism( refelem%name ) ) THEN
-      obj = getGaussLegendreQPPrism2( refelem=refelem, nips=nips )
-      RETURN
-    END IF
+  IF (isPrism(refelem%name)) THEN
+    obj = getGaussLegendreQPPrism2(nips=nips)
+    RETURN
+  END IF
     !!
-    IF( isPyramid( refelem%name ) ) THEN
-      obj = getGaussLegendreQPPyramid2( refelem=refelem, nips=nips )
-      RETURN
-    END IF
+  IF (isPyramid(refelem%name)) THEN
+    obj = getGaussLegendreQPPyramid2(nips=nips)
+    RETURN
+  END IF
   !!
-  END SELECT
+END SELECT
   !!
 END PROCEDURE getGaussLegendreQP2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE getGaussLegendreQP3
+  !!
+SELECT TYPE (refelem)
+  !!
+TYPE IS (ReferenceLine_)
+  obj = getGaussLegendreQPLine1(order=p)
+  !!
+TYPE IS (ReferenceTriangle_)
+  obj = getGaussLegendreQPTriangle1(order=p)
+  !!
+TYPE IS (ReferenceQuadrangle_)
+  obj = getGaussLegendreQPQuadrangle3(p=p, q=q)
+  !!
+TYPE IS (ReferenceTetrahedron_)
+  obj = getGaussLegendreQPTetrahedron1(order=p)
+  !!
+TYPE IS (ReferenceHexahedron_)
+  obj = getGaussLegendreQPHexahedron1(order=p)
+  !!
+TYPE IS (ReferencePrism_)
+  obj = getGaussLegendreQPPrism1(order=p)
+  !!
+TYPE IS (ReferencePyramid_)
+  obj = getGaussLegendreQPPyramid1(order=p)
+  !!
+TYPE IS (ReferenceElement_)
+    !!
+  IF (isLine(refelem%name)) THEN
+    obj = getGaussLegendreQPLine1(order=p)
+    RETURN
+  END IF
+    !!
+  IF (isTriangle(refelem%name)) THEN
+    obj = getGaussLegendreQPTriangle1(order=p)
+    RETURN
+  END IF
+    !!
+  IF (isQuadrangle(refelem%name)) THEN
+    obj = getGaussLegendreQPQuadrangle3(p=p, q=q)
+    RETURN
+  END IF
+    !!
+  IF (isTetrahedron(refelem%name)) THEN
+    obj = getGaussLegendreQPTetrahedron1(order=p)
+    RETURN
+  END IF
+    !!
+  IF (isHexahedron(refelem%name)) THEN
+    obj = getGaussLegendreQPHexahedron1(order=p)
+    RETURN
+  END IF
+    !!
+  IF (isPrism(refelem%name)) THEN
+    obj = getGaussLegendreQPPrism1(order=p)
+    RETURN
+  END IF
+    !!
+  IF (isPyramid(refelem%name)) THEN
+    obj = getGaussLegendreQPPyramid1(order=p)
+    RETURN
+  END IF
+  !!
+END SELECT
+  !!
+END PROCEDURE getGaussLegendreQP3
 
 END SUBMODULE GaussLegendre

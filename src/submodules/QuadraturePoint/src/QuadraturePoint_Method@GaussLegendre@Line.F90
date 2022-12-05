@@ -24,32 +24,16 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPLine1
-  SELECT CASE( order )
-  CASE( 0, 1 )
-    CALL Initiate( obj, Pw1 )
-  CASE( 2, 3 )
-    CALL Initiate( obj, Pw2 )
-  CASE( 4, 5 )
-    CALL Initiate( obj, Pw3 )
-  CASE( 6, 7 )
-    CALL Initiate( obj, Pw4 )
-  CASE( 8, 9 )
-    CALL Initiate( obj, Pw5 )
-  CASE( 10, 11 )
-    CALL Initiate( obj, Pw6 )
-  CASE( 12, 13 )
-    CALL Initiate( obj, Pw7 )
-  CASE( 14, 15 )
-    CALL Initiate( obj, Pw8 )
-  CASE( 16, 17 )
-    CALL Initiate( obj, Pw9 )
-  CASE( 18, 19 )
-    CALL Initiate( obj, Pw10 )
-  CASE( 20, 21 )
-    CALL Initiate( obj, Pw11 )
-  CASE( 22, 23 )
-    CALL Initiate( obj, Pw12 )
-  END SELECT
+INTEGER(I4B) :: np
+REAL(DFP) :: pt(1 + INT(order / 2, KIND=I4B))
+REAL(DFP) :: wt(1 + INT(order / 2, KIND=I4B))
+REAL(DFP) :: points(2, 1 + INT(order / 2, KIND=I4B))
+!!
+np = SIZE(pt)
+CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
+points = pt.ROWCONCAT.wt
+CALL Initiate(obj=obj, points=points)
+!!
 END PROCEDURE getGaussLegendreQPLine1
 
 !----------------------------------------------------------------------------
@@ -57,32 +41,14 @@ END PROCEDURE getGaussLegendreQPLine1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQPLine2
-  SELECT CASE( nips( 1 ) )
-  CASE( 1 )
-    CALL Initiate( obj, Pw1 )
-  CASE( 2 )
-    CALL Initiate( obj, Pw2 )
-  CASE( 3 )
-    CALL Initiate( obj, Pw3 )
-  CASE( 4 )
-    CALL Initiate( obj, Pw4 )
-  CASE( 5 )
-    CALL Initiate( obj, Pw5 )
-  CASE( 6 )
-    CALL Initiate( obj, Pw6 )
-  CASE( 7 )
-    CALL Initiate( obj, Pw7 )
-  CASE( 8 )
-    CALL Initiate( obj, Pw8 )
-  CASE( 9 )
-    CALL Initiate( obj, Pw9 )
-  CASE( 10 )
-    CALL Initiate( obj, Pw10 )
-  CASE( 11 )
-    CALL Initiate( obj, Pw11 )
-  CASE( 12 )
-    CALL Initiate( obj, Pw12 )
-  END SELECT
+REAL(DFP) :: pt(nips(1))
+REAL(DFP) :: wt(nips(1))
+REAL(DFP) :: points(2, nips(1))
+!!
+CALL LegendreQuadrature(n=nips(1), pt=pt, wt=wt, quadType=Gauss)
+points = pt.ROWCONCAT.wt
+CALL Initiate(obj=obj, points=points)
+!!
 END PROCEDURE getGaussLegendreQPLine2
 
 END SUBMODULE Line

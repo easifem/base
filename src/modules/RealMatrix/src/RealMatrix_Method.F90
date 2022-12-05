@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	6 March 2021
+! date:         6 March 2021
 ! summary: This module contains methods for [[RealMatrix_]] data type
 
 MODULE RealMatrix_Method
@@ -30,7 +30,6 @@ PRIVATE
 #include "./GetValuesMethods.inc"
 #include "./SetValuesMethods.inc"
 #include "./MatmulMethods.inc"
-#include "./LapackMethods.inc"
 #include "./IterativeSolverMethods.inc"
 
 END MODULE RealMatrix_Method

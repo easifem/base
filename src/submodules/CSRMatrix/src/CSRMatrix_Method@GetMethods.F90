@@ -29,7 +29,11 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getStorageFMT
-  ans = obj%csr%dof%storageFMT
+IF (i .EQ. 1) THEN
+  ans = obj%csr%idof%storageFMT
+ELSE
+  ans = obj%csr%jdof%storageFMT
+END IF
 END PROCEDURE csrMat_getStorageFMT
 
 !----------------------------------------------------------------------------
@@ -37,7 +41,7 @@ END PROCEDURE csrMat_getStorageFMT
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getMatrixProp
-  ans = TRIM( obj%matrixProp )
+ans = TRIM(obj%matrixProp)
 END PROCEDURE csrMat_getMatrixProp
 
 !----------------------------------------------------------------------------
@@ -45,7 +49,11 @@ END PROCEDURE csrMat_getMatrixProp
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_getDOFPointer
-  ans => obj%csr%dof
+IF (i .EQ. 1) THEN
+  ans => obj%csr%idof
+ELSE
+  ans => obj%csr%jdof
+END IF
 END PROCEDURE csrMat_getDOFPointer
 
 !----------------------------------------------------------------------------
@@ -53,11 +61,11 @@ END PROCEDURE csrMat_getDOFPointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_isSquare
-  IF( obj%csr%nrow .EQ. obj%csr%ncol ) THEN
-    ans = .TRUE.
-  ELSE
-    ans = .FALSE.
-  END IF
+IF (obj%csr%nrow .EQ. obj%csr%ncol) THEN
+  ans = .TRUE.
+ELSE
+  ans = .FALSE.
+END IF
 END PROCEDURE csrMat_isSquare
 
 !----------------------------------------------------------------------------
@@ -65,11 +73,11 @@ END PROCEDURE csrMat_isSquare
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_isRectangle
-  IF( obj%csr%nrow .EQ. obj%csr%ncol ) THEN
-    ans = .FALSE.
-  ELSE
-    ans = .TRUE.
-  END IF
+IF (obj%csr%nrow .EQ. obj%csr%ncol) THEN
+  ans = .FALSE.
+ELSE
+  ans = .TRUE.
+END IF
 END PROCEDURE csrMat_isRectangle
 
 END SUBMODULE GetMethods
