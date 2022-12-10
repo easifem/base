@@ -16,113 +16,77 @@
 !
 
 MODULE DiagUtility
-USE GlobalData
+USE GlobalData, ONLY: I4B, Int8, Int16, Int32, Int64, &
+#ifdef USE_Int128
+& Int128, &
+#endif
+& Real32, Real64, DFP
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Diag
+PUBLIC :: SetDiag
+PUBLIC :: DiagSize
+PUBLIC :: SetTriDiag
 
 !----------------------------------------------------------------------------
-!                                                           Diag@DiagMethods
+!                                                                       Diag
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-11
+! summary: Make a Diagonal matrix from int8 vector
 
 INTERFACE
 MODULE PURE FUNCTION Diag_1( a ) RESULT( Ans )
   INTEGER( Int8 ), INTENT( IN ) :: a(:)
   REAL( DFP ) :: ans( size(a), size(a) )
 END FUNCTION Diag_1
-END INTERFACE
 
-INTERFACE Diag
-  MODULE PROCEDURE Diag_1
-END INTERFACE Diag
-
-!----------------------------------------------------------------------------
-!                                                           Diag@DiagMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
 MODULE PURE FUNCTION Diag_2( a ) RESULT( Ans )
   INTEGER( Int16 ), INTENT( IN ) :: a(:)
   REAL( DFP ) :: ans( size(a), size(a) )
 END FUNCTION Diag_2
-END INTERFACE
 
-INTERFACE Diag
-  MODULE PROCEDURE Diag_2
-END INTERFACE Diag
-
-!----------------------------------------------------------------------------
-!                                                           Diag@DiagMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
 MODULE PURE FUNCTION Diag_3( a ) RESULT( Ans )
   INTEGER( Int32 ), INTENT( IN ) :: a(:)
   REAL( DFP ) :: ans( size(a), size(a) )
 END FUNCTION Diag_3
-END INTERFACE
 
-INTERFACE Diag
-  MODULE PROCEDURE Diag_3
-END INTERFACE Diag
-
-!----------------------------------------------------------------------------
-!                                                           Diag@DiagMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
 MODULE PURE FUNCTION Diag_4( a ) RESULT( Ans )
   INTEGER( Int64 ), INTENT( IN ) :: a(:)
   REAL( DFP ) :: ans( size(a), size(a) )
 END FUNCTION Diag_4
-END INTERFACE
 
-INTERFACE Diag
-  MODULE PROCEDURE Diag_4
-END INTERFACE Diag
-
-!----------------------------------------------------------------------------
-!                                                           Diag@DiagMethods
-!----------------------------------------------------------------------------
-
-#ifdef USE_Int128
-
-INTERFACE
 MODULE PURE FUNCTION Diag_5( a ) RESULT( Ans )
-  INTEGER( Int64 ), INTENT( IN ) :: a(:)
+  REAL( Real32 ), INTENT( IN ) :: a(:)
   REAL( DFP ) :: ans( size(a), size(a) )
 END FUNCTION Diag_5
-END INTERFACE
 
-INTERFACE Diag
-  MODULE PROCEDURE Diag_5
-END INTERFACE Diag
-
-#endif
-
-!----------------------------------------------------------------------------
-!                                                           Diag@DiagMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
 MODULE PURE FUNCTION Diag_6( a ) RESULT( Ans )
-  REAL( Real32 ), INTENT( IN ) :: a(:)
+  REAL( Real64 ), INTENT( IN ) :: a(:)
   REAL( DFP ) :: ans( size(a), size(a) )
 END FUNCTION Diag_6
 END INTERFACE
 
 INTERFACE Diag
-  MODULE PROCEDURE Diag_6
+  MODULE PROCEDURE Diag_1, Diag_2, Diag_3, Diag_4, Diag_5, &
+    & Diag_6
 END INTERFACE Diag
 
 !----------------------------------------------------------------------------
-!                                                           Diag@DiagMethods
+!                                                                      Diag
 !----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-11
+! summary: Make diagonal matrix from Int128 vector.
 
 INTERFACE
 MODULE PURE FUNCTION Diag_7( a ) RESULT( Ans )
-  REAL( Real64 ), INTENT( IN ) :: a(:)
+  INTEGER( Int128 ), INTENT( IN ) :: a(:)
   REAL( DFP ) :: ans( size(a), size(a) )
 END FUNCTION Diag_7
 END INTERFACE
@@ -131,8 +95,210 @@ INTERFACE Diag
   MODULE PROCEDURE Diag_7
 END INTERFACE Diag
 
+#endif
+
 !----------------------------------------------------------------------------
+!                                                                       Diag
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-11
+! summary: Get the diagNo of matrix
 !
+!# Introduction
+!
+!- This routine returns the diagonal of matrix.
+!- `diagNo=0` denotes main diagonal
+!- `diagNo>0` denotes the super-diagonal
+!- `diagNo<0` denotes the sub-diagonal
+!- `d` is a one dimesional vector of default Reals (DFP)
+
+INTERFACE
+MODULE PURE FUNCTION Diag_8( mat, diagNo ) RESULT(ans)
+  REAL( DFP ), INTENT( IN ) :: mat(:,:)
+    !! matrix
+  INTEGER( I4B ), INTENT( IN ) :: diagNo
+    !! diagonal  number
+  REAL( DFP ), ALLOCATABLE :: ans(:)
+    !! diagonal
+END FUNCTION Diag_8
+
+END INTERFACE
+
+INTERFACE Diag
+  MODULE PROCEDURE Diag_8
+END INTERFACE Diag
+
 !----------------------------------------------------------------------------
+!                                                                   SetDiag
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-11
+! summary: Set the diagNo of matrix
+!
+!# Introduction
+!
+!- This routine sets the diagonal of matrix.
+!
+!- `diagNo=0` denotes main diagonal
+!- `diagNo>0` denotes the super-diagonal
+!- `diagNo<0` denotes the sub-diagonal
+!
+!- `d` is a one dimesional vector of (Int or float)
+!- if `size(d)=1`, then all entries of the diagonal will be set to this
+! value.
+!- if `size(d) .ne. 1`, then the size of `d` should be atleast the size of
+! diagonal number `diag`.
+
+INTERFACE
+MODULE PURE SUBROUTINE SetDiag1( mat, d, diagNo )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  INTEGER( Int8 ), INTENT( IN ) :: d(:)
+  INTEGER( I4B ), INTENT( IN ) :: diagNo
+END SUBROUTINE SetDiag1
+MODULE PURE SUBROUTINE SetDiag2( mat, d, diagNo )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  INTEGER( Int16 ), INTENT( IN ) :: d(:)
+  INTEGER( I4B ), INTENT( IN ) :: diagNo
+END SUBROUTINE SetDiag2
+MODULE PURE SUBROUTINE SetDiag3( mat, d, diagNo )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  INTEGER( Int32 ), INTENT( IN ) :: d(:)
+  INTEGER( I4B ), INTENT( IN ) :: diagNo
+END SUBROUTINE SetDiag3
+MODULE PURE SUBROUTINE SetDiag4( mat, d, diagNo )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  INTEGER( Int64 ), INTENT( IN ) :: d(:)
+  INTEGER( I4B ), INTENT( IN ) :: diagNo
+END SUBROUTINE SetDiag4
+MODULE PURE SUBROUTINE SetDiag5( mat, d, diagNo )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  REAL( Real32 ), INTENT( IN ) :: d(:)
+  INTEGER( I4B ), INTENT( IN ) :: diagNo
+END SUBROUTINE SetDiag5
+MODULE PURE SUBROUTINE SetDiag6( mat, d, diagNo )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  REAL( Real64 ), INTENT( IN ) :: d(:)
+  INTEGER( I4B ), INTENT( IN ) :: diagNo
+END SUBROUTINE SetDiag6
+END INTERFACE
+
+INTERFACE SetDiag
+  MODULE PROCEDURE SetDiag1, SetDiag2, SetDiag3, SetDiag4, &
+    & SetDiag5, SetDiag6
+END INTERFACE SetDiag
+
+!----------------------------------------------------------------------------
+!                                                               DiagSize
+!----------------------------------------------------------------------------
+
+INTERFACE
+MODULE PURE FUNCTION DiagSize( n, diagNo ) RESULT( ans )
+  INTEGER( I4B ), INTENT( IN ) :: n
+  !! size of matrix
+  INTEGER( I4B ), INTENT( IN ) :: diagNo
+  !! diagonal number
+  INTEGER( I4B ) :: ans
+  !! size of diagonal
+END FUNCTION DiagSize
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                               SetTriDiag
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2022-12-11
+! summary: Set the diagNo of tri diagonal matrix
+!
+!# Introduction
+!
+!- This routine sets the diagonals of a tridiagonal matrix.
+!
+!- `d` denotes main diagonal
+!- `da` denotes the super-diagonal
+!- `db` denotes the sub-diagonal
+!
+!- `d, da, db` are one dimesional vectors of (Int or float)
+!- if `size(d/da/db)=1`, then all entries of the diagonal will be set to this
+! value.
+!- if `size(d/da/db) .ne. 1`, then the size of `d/da/db` should be atleast
+! the size of respective diagonals.
+
+INTERFACE
+MODULE PURE SUBROUTINE SetTriDiag1( mat, d, da, db )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  !! tri diagonal matrix dense form
+  INTEGER( Int8 ), INTENT( IN ) :: d(:)
+  !! main diagonal
+  INTEGER( Int8 ), INTENT( IN ) :: da(:)
+  !! super-diagonal, (a, for above)
+  INTEGER( Int8 ), INTENT( IN ) :: db(:)
+  !! sub-diagonal (b for below)
+END SUBROUTINE SetTriDiag1
+
+MODULE PURE SUBROUTINE SetTriDiag2( mat, d, da, db )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  !! tri diagonal matrix dense form
+  INTEGER( Int16 ), INTENT( IN ) :: d(:)
+  !! main diagonal
+  INTEGER( Int16 ), INTENT( IN ) :: da(:)
+  !! super-diagonal, (a, for above)
+  INTEGER( Int16 ), INTENT( IN ) :: db(:)
+  !! sub-diagonal (b for below)
+END SUBROUTINE SetTriDiag2
+
+MODULE PURE SUBROUTINE SetTriDiag3( mat, d, da, db )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  !! tri diagonal matrix dense form
+  INTEGER( Int32 ), INTENT( IN ) :: d(:)
+  !! main diagonal
+  INTEGER( Int32 ), INTENT( IN ) :: da(:)
+  !! super-diagonal, (a, for above)
+  INTEGER( Int32 ), INTENT( IN ) :: db(:)
+  !! sub-diagonal (b for below)
+END SUBROUTINE SetTriDiag3
+
+MODULE PURE SUBROUTINE SetTriDiag4( mat, d, da, db )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  !! tri diagonal matrix dense form
+  INTEGER( Int64 ), INTENT( IN ) :: d(:)
+  !! main diagonal
+  INTEGER( Int64 ), INTENT( IN ) :: da(:)
+  !! super-diagonal, (a, for above)
+  INTEGER( Int64 ), INTENT( IN ) :: db(:)
+  !! sub-diagonal (b for below)
+END SUBROUTINE SetTriDiag4
+
+MODULE PURE SUBROUTINE SetTriDiag5( mat, d, da, db )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  !! tri diagonal matrix dense form
+  REAL( Real32 ), INTENT( IN ) :: d(:)
+  !! main diagonal
+  REAL( Real32 ), INTENT( IN ) :: da(:)
+  !! super-diagonal, (a, for above)
+  REAL( Real32 ), INTENT( IN ) :: db(:)
+  !! sub-diagonal (b for below)
+END SUBROUTINE SetTriDiag5
+
+MODULE PURE SUBROUTINE SetTriDiag6( mat, d, da, db )
+  REAL( DFP ), INTENT( INOUT ) :: mat(:,:)
+  !! tri diagonal matrix dense form
+  REAL( Real64 ), INTENT( IN ) :: d(:)
+  !! main diagonal
+  REAL( Real64 ), INTENT( IN ) :: da(:)
+  !! super-diagonal, (a, for above)
+  REAL( Real64 ), INTENT( IN ) :: db(:)
+  !! sub-diagonal (b for below)
+END SUBROUTINE SetTriDiag6
+
+END INTERFACE
+
+INTERFACE SetTriDiag
+  MODULE PROCEDURE SetTriDiag1, SetTriDiag2, SetTriDiag3, SetTriDiag4, &
+    & SetTriDiag5, SetTriDiag6
+END INTERFACE SetTriDiag
+
 
 END MODULE DiagUtility
