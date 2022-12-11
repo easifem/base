@@ -81,7 +81,7 @@ END DO
 END PROCEDURE Diag_5
 
 !----------------------------------------------------------------------------
-!                                                                  Diag
+!                                                                      Diag
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Diag_6
@@ -93,7 +93,7 @@ END DO
 END PROCEDURE Diag_6
 
 !----------------------------------------------------------------------------
-!                                                                  Diag
+!                                                                      Diag
 !----------------------------------------------------------------------------
 
 #ifdef USE_Int128
@@ -123,15 +123,17 @@ IF (diagNo .EQ. 0) THEN
 ELSEIF (diagNo .GT. 0) THEN
   !!
   m = n - diagNo
+  CALL Reallocate(ans, m)
   DO CONCURRENT(ii=1:m)
-    ans(ii) = mat(ii, ii + 1)
+    ans(ii) = mat(ii, ii + diagNo)
   END DO
   !!
 ELSE
   !!
-  m = n - ABS(diagNo)
+  m = n + diagNo
+  CALL Reallocate(ans, m)
   DO CONCURRENT(ii=1:m)
-    ans(ii) = mat(ii + 1, ii)
+    ans(ii) = mat(ii - diagNo, ii)
   END DO
   !!
 END IF
