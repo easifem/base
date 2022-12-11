@@ -37,11 +37,11 @@ ELSEIF (diagNo .GT. 0) THEN
   !!
   IF (SIZE(d) .EQ. 1) THEN
     DO CONCURRENT(ii=1:m)
-      mat(ii, ii + 1) = REAL(d(1), kind=DFP)
+      mat(ii, ii + diagNo) = REAL(d(1), kind=DFP)
     END DO
   ELSE
     DO CONCURRENT(ii=1:m)
-      mat(ii, ii + 1) = REAL(d(ii), kind=DFP)
+      mat(ii, ii + diagNo) = REAL(d(ii), kind=DFP)
     END DO
   END IF
   !!
@@ -51,11 +51,11 @@ ELSE
   !!
   IF (SIZE(d) .EQ. 1) THEN
     DO CONCURRENT(ii=1:m)
-      mat(ii + 1, ii) = REAL(d(1), kind=DFP)
+      mat(ii - diagNo, ii) = REAL(d(1), kind=DFP)
     END DO
   ELSE
     DO CONCURRENT(ii=1:m)
-      mat(ii + 1, ii) = REAL(d(ii), kind=DFP)
+      mat(ii - diagNo, ii) = REAL(d(ii), kind=DFP)
     END DO
   END IF
   !!
