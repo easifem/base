@@ -13,40 +13,16 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-
-MODULE Utility
-USE MappingUtility
-USE BinomUtility
-USE AppendUtility
-USE ApproxUtility
-USE AssertUtility
-USE FunctionalFortranUtility
-USE GridPointUtility
-USE OnesUtility
-USE ZerosUtility
-USE EyeUtility
-USE DiagUtility
-USE HashingUtility
-USE InputUtility
-USE InvUtility
-USE MatmulUtility
-USE ContractionUtility
-USE MiscUtility
-USE ProductUtility
-USE ReallocateUtility
-USE SortUtility
-USE StringUtility
-USE SwapUtility
-USE ConvertUtility
-USE IntegerUtility
-USE PushPopUtility
-USE PolynomialUtility
-USE EigenUtility
-USE ArangeUtility
-USE SymUtility
-
-!----------------------------------------------------------------------------
 !
-!----------------------------------------------------------------------------
 
-END MODULE Utility
+INTEGER(I4B) :: ii, jj
+SELECT CASE (from)
+CASE ("L", "l")
+  DO CONCURRENT(ii=1:SIZE(mat, 1), jj=1:SIZE(mat, 2))
+    IF (ii .GE. jj) mat(jj, ii) = mat(ii, jj)
+  END DO
+CASE ("u", "U")
+  DO CONCURRENT(ii=1:SIZE(mat, 1), jj=1:SIZE(mat, 2))
+    IF (ii .GE. jj) mat(ii, jj) = mat(jj, ii)
+  END DO
+END SELECT

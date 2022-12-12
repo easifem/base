@@ -45,5 +45,6 @@ TARGET_SOURCES(
   ${src_path}/IntegerUtility.F90
   ${src_path}/PushPopUtility.F90
   ${src_path}/EigenUtility.F90
+  ${src_path}/SymUtility.F90
   ${src_path}/Utility.F90
 )
