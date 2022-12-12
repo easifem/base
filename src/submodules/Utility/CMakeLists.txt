@@ -25,6 +25,7 @@ TARGET_SOURCES(
   ${src_path}/ConvertUtility@Methods.F90
   ${src_path}/ReallocateUtility@Methods.F90
   ${src_path}/ProductUtility@Methods.F90
+  ${src_path}/ArangeUtility@Methods.F90
   ${src_path}/GridPointUtility@Methods.F90
   ${src_path}/FunctionalFortranUtility@Methods.F90
   ${src_path}/OnesUtility@Methods.F90

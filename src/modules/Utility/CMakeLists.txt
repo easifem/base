@@ -24,6 +24,7 @@ TARGET_SOURCES(
   ${src_path}/ApproxUtility.F90
   ${src_path}/AssertUtility.F90
   ${src_path}/FunctionalFortranUtility.F90
+  ${src_path}/ArangeUtility.F90
   ${src_path}/GridPointUtility.F90
   ${src_path}/OnesUtility.F90
   ${src_path}/ZerosUtility.F90

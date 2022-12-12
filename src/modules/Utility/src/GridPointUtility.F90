@@ -24,8 +24,6 @@ PUBLIC :: ExpMesh
 PUBLIC :: Linspace
 PUBLIC :: Logspace
 PUBLIC :: MeshGrid
-PUBLIC :: arange
-
 
 !----------------------------------------------------------------------------
 !                                                  ExpMesh@FunctionalFortran
@@ -153,9 +151,9 @@ INTERFACE
     !! right end of 1D domain
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
     !! Number of points including a and b
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: endPoint
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: endPoint
     !! default is true, if true then include endpoint
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: base
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: base
     !! default is 10
     REAL(Real64), ALLOCATABLE :: ans(:)
     !! Number of nodes in mesh
@@ -182,9 +180,9 @@ INTERFACE
     !! right end of 1D domain
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
     !! Number of points including a and b
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: endPoint
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: endPoint
     !! default is true, if true then include endpoint
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: base
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: base
     !! default is 10
     REAL(Real32), ALLOCATABLE :: ans(:)
     !! Number of nodes in mesh
@@ -296,88 +294,5 @@ END INTERFACE
 INTERFACE MeshGrid
   MODULE PROCEDURE MeshGrid3D_Real32
 END INTERFACE MeshGrid
-
-!----------------------------------------------------------------------------
-!                                                   arange@FunctionalFortran
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
-! values.
-
-INTERFACE
-  MODULE PURE FUNCTION arange_Real64(istart, iend, increment) RESULT(Ans)
-    REAL(Real64), INTENT(IN) :: istart
-    !! Start value of the array
-    REAL(Real64), INTENT(IN) :: iend
-    !! End value of the array
-    REAL(Real64), INTENT(IN), OPTIONAL :: increment
-    !! Array increment
-    REAL(Real64), DIMENSION(:), ALLOCATABLE :: Ans
-  END FUNCTION arange_Real64
-END INTERFACE
-
-INTERFACE arange
-  MODULE PROCEDURE arange_Real64
-END INTERFACE arange
-
-!----------------------------------------------------------------------------
-!                                                   arange@FunctionalFortran
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary: Returns a vector of reals given `start`,  `end`,  and `increment`
-! values.
-
-INTERFACE
-  MODULE PURE FUNCTION arange_Real32(istart, iend, increment) RESULT(Ans)
-    REAL(Real32), INTENT(IN) :: istart
-    !! Start value of the array
-    REAL(Real32), INTENT(IN) :: iend
-    !! End value of the array
-    REAL(Real32), INTENT(IN), OPTIONAL :: increment
-    !! Array increment
-    REAL(Real32), DIMENSION(:), ALLOCATABLE :: Ans
-  END FUNCTION arange_Real32
-END INTERFACE
-
-INTERFACE arange
-  MODULE PROCEDURE arange_Real32
-END INTERFACE arange
-
-!----------------------------------------------------------------------------
-!                                                    arangeFunctionalFortran
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:         3 March 2021
-! summary: Returns a vector of integer
-!
-!# Introduction
-! Returns an array of integers given `istart`,  `iend`,  and
-! `increment` values. Default value of increment is 1
-! This function belongs to the generic function [[Utility:arange]]
-!
-!### Usage
-!
-!```fortran
-!        arange(1,10,1)
-! arange(1,10,2)
-!```
-
-INTERFACE
-  MODULE PURE FUNCTION arange_int(istart, iend, increment) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: istart
-    INTEGER(I4B), INTENT(IN) :: iend
-    INTEGER(I4B), INTENT(IN), OPTIONAL :: increment
-    INTEGER(I4B), DIMENSION(:), ALLOCATABLE :: Ans
-  END FUNCTION
-END INTERFACE
-
-INTERFACE arange
-  MODULE PROCEDURE arange_int
-END INTERFACE arange
 
 END MODULE GridPointUtility
