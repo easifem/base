@@ -42,6 +42,7 @@ USE IntegerUtility
 USE PushPopUtility
 USE PolynomialUtility
 USE EigenUtility
+USE ArangeUtility
 
 !----------------------------------------------------------------------------
 !
