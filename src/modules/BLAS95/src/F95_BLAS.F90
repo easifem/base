@@ -16,15 +16,14 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	26 Feb 2021
+! date:         26 Feb 2021
 ! summary:
 
-MODULE EASIFEM_BLAS
-USE EASIFEM_F77_BLAS
+MODULE F95_BLAS
+USE F77_BLAS
 IMPLICIT NONE
 PRIVATE
 #include "./iface.inc"
-
 CONTAINS
 #include "./blas95_src/caxpby.F90"
 #include "./blas95_src/caxpy.F90"
@@ -236,4 +235,4 @@ CONTAINS
 #include "./blas95_src/scgemv.F90"
 #endif
 
-END MODULE EASIFEM_BLAS
+END MODULE F95_BLAS
