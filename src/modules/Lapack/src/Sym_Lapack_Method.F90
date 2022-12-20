@@ -37,7 +37,7 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-! #include "./Sym/LinsolveMethods.inc"
+#include "./Sym/LinearSolveMethods.inc"
 !#include "./Sym/EigenvalueMethods.inc"
 #include "./Sym/LUMethods.inc"
 ! #include "./Sym/GE_CompRoutine.inc"
