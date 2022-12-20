@@ -17,4 +17,5 @@
 
 MODULE Lapack_Method
 USE GE_Lapack_Method
+USE Sym_Lapack_Method
 END MODULE Lapack_Method

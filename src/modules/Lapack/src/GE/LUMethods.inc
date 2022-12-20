@@ -24,7 +24,7 @@ PUBLIC :: Inv
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 7 July 2022
+! date: 2022-07-07
 ! summary: DGETF2 computes an LU factorization of a general m-by-n matrix A
 !
 !# Introduction
@@ -91,7 +91,7 @@ END INTERFACE getLU
 !
 !# Introduction
 !
-! This routine is same as `getLU_1`        however in this routine LU
+! This routine is same as `getLU_1` however in this routine LU
 ! factorization is computed in A matrix on return.
 
 INTERFACE
@@ -130,11 +130,13 @@ INTERFACE
     REAL(DFP), INTENT(INOUT) :: A(:, :)
     !! LU decomposition of matrix A, see getLU
     REAL(DFP), INTENT(INOUT) :: B(:)
-    !! RHS, on return solution will be in B
+    !! at entry RHS
+    !! on return solution will be in B
     INTEGER(I4B), INTENT(IN) :: IPIV(:)
     !! IPIV returned from getLU
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
-    !! if isTranspose true then we solve A^Tx=y
+    !! IF isTranspose true then we solve A^Tx=y
+    !! Default is `.false.`
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: info
     !! info
   END SUBROUTINE LUSolve_1

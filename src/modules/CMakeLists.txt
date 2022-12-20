@@ -45,6 +45,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Test/CMakeLists.txt)
 #GlobalData
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/GlobalData/CMakeLists.txt)
 
+#ARPACK
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ARPACK/CMakeLists.txt)
+
 #Hashing
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
 

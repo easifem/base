@@ -22,23 +22,24 @@
 !# Introduction
 !
 ! This module contains linear algebra packages for fortran matrix (2D array)
-! The matrix is GE
+! The matrix is symmetric and dense
+!
 ! This module contains following submoduls
-! - @LinearSolveMethods PARTIAL/STABLE
+! - @LinearSolveMethods TODO
 ! - @EigenValueMethods TODO
 ! - @SingularValueMethods TODO
-! - @CompRoutineMethods PARTIAL/STABLE
+! - @CompRoutineMethods TODO
 ! - @AuxRoutinesMethods TODO
+!
 
-MODULE GE_Lapack_Method
+MODULE Sym_Lapack_Method
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-#include "./GE/LinearSolveMethods.inc"
-#include "./GE/EigenValueMethods.inc"
-#include "./GE/CompRoutineMethods.inc"
-#include "./GE/LUMethods.inc"
-#include "./GE/SingularValueMethods.inc"
+! #include "./Sym/LinsolveMethods.inc"
+!#include "./Sym/EigenvalueMethods.inc"
+#include "./Sym/LUMethods.inc"
+! #include "./Sym/GE_CompRoutine.inc"
 
-END MODULE GE_Lapack_Method
+END MODULE Sym_Lapack_Method
