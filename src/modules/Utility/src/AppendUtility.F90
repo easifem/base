@@ -29,7 +29,7 @@ PUBLIC :: OPERATOR(.Append.)
 PUBLIC :: Expand
 
 !----------------------------------------------------------------------------
-!                                                     Expand@IntegerMethods
+!                                                            Expand@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -45,56 +45,56 @@ PUBLIC :: Expand
 
 INTERFACE
   MODULE PURE SUBROUTINE expand_int8(vec, n, chunk_size, val, finished)
-    INTEGER(Int8), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(INT8), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-    INTEGER(Int8), OPTIONAL, INTENT(IN) :: val
+    INTEGER(INT8), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
   END SUBROUTINE expand_int8
   MODULE PURE SUBROUTINE expand_int16(vec, n, chunk_size, val, finished)
-    INTEGER(Int16), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-    INTEGER(Int16), OPTIONAL, INTENT(IN) :: val
+    INTEGER(INT16), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
   END SUBROUTINE expand_int16
   MODULE PURE SUBROUTINE expand_int32(vec, n, chunk_size, val, finished)
-    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-    INTEGER(Int32), OPTIONAL, INTENT(IN) :: val
+    INTEGER(INT32), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
   END SUBROUTINE expand_int32
   MODULE PURE SUBROUTINE expand_int64(vec, n, chunk_size, val, finished)
-    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-    INTEGER(Int64), OPTIONAL, INTENT(IN) :: val
+    INTEGER(INT64), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
@@ -107,7 +107,7 @@ INTERFACE EXPAND
 END INTERFACE EXPAND
 
 !----------------------------------------------------------------------------
-!                                                      Expand@AppendMethods
+!                                                      Expand@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -116,28 +116,28 @@ END INTERFACE EXPAND
 
 INTERFACE
   MODULE PURE SUBROUTINE expand_real32(vec, n, chunk_size, val, finished)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-    REAL(Real32), OPTIONAL, INTENT(IN) :: val
+    REAL(REAL32), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
   !! as its correct size (`n`)
   END SUBROUTINE expand_real32
   MODULE PURE SUBROUTINE expand_real64(vec, n, chunk_size, val, finished)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
   !! counter for last element added to `vec`.
   !! must be initialized to `size(vec)`
   !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
   !! allocate `vec` in blocks of this size (>0)
-    REAL(Real64), OPTIONAL, INTENT(IN) :: val
+    REAL(REAL64), OPTIONAL, INTENT(IN) :: val
   !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
   !! set to true to return `vec`
@@ -150,30 +150,49 @@ INTERFACE Expand
 END INTERFACE Expand
 
 !----------------------------------------------------------------------------
-!                                                      Append@AppendMethods
+!                                                      Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  22 March 2021
-! summary: Append a scalar INTEGER  to  INTEGER  vec tor
+! summary: Append a scalar or vector to vector
+!
+!# Introduction
+!
+!- Append a scalar integer to an integer vector
+!- Append a integer vector and scalar to an integer vector
+!- Append a scalar real to an real vector
+!- Append a real vector to a real vector
 
 INTERFACE
+  !>
+  ! Append a scalar int to a vector of int
+  !
   MODULE PURE SUBROUTINE Append_1a(A, ENTRY)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: A(:)
     INTEGER(I4B), INTENT(IN) :: ENTRY
   END SUBROUTINE Append_1a
 
+  !>
+  ! Append a scalar real to a vector of real
+  !
   MODULE PURE SUBROUTINE Append_1b(A, ENTRY)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
     REAL(DFP), INTENT(IN) :: ENTRY
   END SUBROUTINE Append_1b
 
+  !>
+  ! Append a scalar and vector int to a vector of int
+  !
   MODULE PURE SUBROUTINE Append_1c(C, A, B)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: C(:)
     INTEGER(I4B), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: B
   END SUBROUTINE Append_1c
 
+  !>
+  ! Append a scalar and vector real to a vector of real
+  !
   MODULE PURE SUBROUTINE Append_1d(C, A, B)
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: C(:)
     REAL(DFP), INTENT(IN) :: A(:)
@@ -186,12 +205,19 @@ INTERFACE Append
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      Append@AppendMethods
+!                                                            Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  22 March 2021
-! summary: Append two vectors of INTEGER
+! summary: Append two vectors of real or int
+!
+!# Introduction
+!
+!- Append a vector of int to another vector of int
+!- Append a vector of real to another vector of real
+!- Append two vectors of int to another vector of int
+!- Append two vector of real to another vector of real
 
 INTERFACE
   MODULE PURE SUBROUTINE Append_2a(A, ENTRY)
@@ -222,12 +248,19 @@ INTERFACE Append
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      Append@AppendMethods
+!                                                      Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  22 March 2021
-! summary: Append a scalar INTEGER  to  INTEGER  vec tor
+! summary: Masked append
+!
+!# Introduction
+!
+!- Append a scalar integer to a vector of int
+!- Append a scalar real to a vector of reals
+!- Append a scalar and vector of int to another vector of int
+!- Append a scalar and vector real to another vector of real
 
 INTERFACE
   MODULE PURE SUBROUTINE Append_3a(A, ENTRY, mask)
@@ -262,12 +295,17 @@ INTERFACE Append
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      Append@AppendMethods
+!                                                      Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  22 March 2021
-! summary: Append two vectors of INTEGER
+! summary: Masked append two vectors to another vector of int/real
+!
+!# Introduction
+!
+!- Append a vector of int to another vector of int
+!- Append a vector of real to another vector of real
 
 INTERFACE
   MODULE PURE SUBROUTINE Append_4a(A, ENTRY, mask)
@@ -302,7 +340,7 @@ INTERFACE Append
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      Append@AppendMethods
+!                                                      Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -328,7 +366,7 @@ INTERFACE OPERATOR(.APPEND.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                      Append@AppendMethods
+!                                                      Append@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -355,7 +393,7 @@ INTERFACE OPERATOR(.APPEND.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    ColConcat@AppendMethods
+!                                                    ColConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -365,39 +403,39 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION colConcat_1a(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a(:)
-    REAL(Real32), INTENT(IN) :: b(:)
-    REAL(Real32), ALLOCATABLE :: ans(:, :)
+    REAL(REAL32), INTENT(IN) :: a(:)
+    REAL(REAL32), INTENT(IN) :: b(:)
+    REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1a
 
   MODULE PURE FUNCTION colConcat_1b(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a(:)
-    REAL(Real64), INTENT(IN) :: b(:)
-    REAL(Real64), ALLOCATABLE :: ans(:, :)
+    REAL(REAL64), INTENT(IN) :: a(:)
+    REAL(REAL64), INTENT(IN) :: b(:)
+    REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1b
 
   MODULE PURE FUNCTION colConcat_1c(a, b) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: a(:)
-    INTEGER(Int64), INTENT(IN) :: b(:)
-    INTEGER(Int64), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT64), INTENT(IN) :: a(:)
+    INTEGER(INT64), INTENT(IN) :: b(:)
+    INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1c
 
   MODULE PURE FUNCTION colConcat_1d(a, b) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: a(:)
-    INTEGER(Int32), INTENT(IN) :: b(:)
-    INTEGER(Int32), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT32), INTENT(IN) :: a(:)
+    INTEGER(INT32), INTENT(IN) :: b(:)
+    INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1d
 
   MODULE PURE FUNCTION colConcat_1e(a, b) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: a(:)
-    INTEGER(Int16), INTENT(IN) :: b(:)
-    INTEGER(Int16), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT16), INTENT(IN) :: a(:)
+    INTEGER(INT16), INTENT(IN) :: b(:)
+    INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1e
 
   MODULE PURE FUNCTION colConcat_1f(a, b) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: a(:)
-    INTEGER(Int8), INTENT(IN) :: b(:)
-    INTEGER(Int8), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT8), INTENT(IN) :: a(:)
+    INTEGER(INT8), INTENT(IN) :: b(:)
+    INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_1f
 END INTERFACE
 
@@ -412,7 +450,7 @@ INTERFACE OPERATOR(.ColConcat.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    ColConcat@AppendMethods
+!                                                    ColConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -422,39 +460,39 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION colConcat_2a(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a(:, :)
-    REAL(Real32), INTENT(IN) :: b(:)
-    REAL(Real32), ALLOCATABLE :: ans(:, :)
+    REAL(REAL32), INTENT(IN) :: a(:, :)
+    REAL(REAL32), INTENT(IN) :: b(:)
+    REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_2a
 
   MODULE PURE FUNCTION colConcat_2b(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a(:, :)
-    REAL(Real64), INTENT(IN) :: b(:)
-    REAL(Real64), ALLOCATABLE :: ans(:, :)
+    REAL(REAL64), INTENT(IN) :: a(:, :)
+    REAL(REAL64), INTENT(IN) :: b(:)
+    REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_2b
 
   MODULE PURE FUNCTION colConcat_2c(a, b) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: a(:, :)
-    INTEGER(Int64), INTENT(IN) :: b(:)
-    INTEGER(Int64), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT64), INTENT(IN) :: a(:, :)
+    INTEGER(INT64), INTENT(IN) :: b(:)
+    INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_2c
 
   MODULE PURE FUNCTION colConcat_2d(a, b) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: a(:, :)
-    INTEGER(Int32), INTENT(IN) :: b(:)
-    INTEGER(Int32), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT32), INTENT(IN) :: a(:, :)
+    INTEGER(INT32), INTENT(IN) :: b(:)
+    INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_2d
 
   MODULE PURE FUNCTION colConcat_2e(a, b) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: a(:, :)
-    INTEGER(Int16), INTENT(IN) :: b(:)
-    INTEGER(Int16), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT16), INTENT(IN) :: a(:, :)
+    INTEGER(INT16), INTENT(IN) :: b(:)
+    INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_2e
 
   MODULE PURE FUNCTION colConcat_2f(a, b) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: a(:, :)
-    INTEGER(Int8), INTENT(IN) :: b(:)
-    INTEGER(Int8), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT8), INTENT(IN) :: a(:, :)
+    INTEGER(INT8), INTENT(IN) :: b(:)
+    INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_2f
 END INTERFACE
 
@@ -469,7 +507,7 @@ INTERFACE OPERATOR(.ColConcat.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    ColConcat@AppendMethods
+!                                                    ColConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -479,39 +517,39 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION colConcat_3a(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a(:)
-    REAL(Real32), INTENT(IN) :: b(:, :)
-    REAL(Real32), ALLOCATABLE :: ans(:, :)
+    REAL(REAL32), INTENT(IN) :: a(:)
+    REAL(REAL32), INTENT(IN) :: b(:, :)
+    REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_3a
 
   MODULE PURE FUNCTION colConcat_3b(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a(:)
-    REAL(Real64), INTENT(IN) :: b(:, :)
-    REAL(Real64), ALLOCATABLE :: ans(:, :)
+    REAL(REAL64), INTENT(IN) :: a(:)
+    REAL(REAL64), INTENT(IN) :: b(:, :)
+    REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_3b
 
   MODULE PURE FUNCTION colConcat_3c(a, b) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: a(:)
-    INTEGER(Int64), INTENT(IN) :: b(:, :)
-    INTEGER(Int64), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT64), INTENT(IN) :: a(:)
+    INTEGER(INT64), INTENT(IN) :: b(:, :)
+    INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_3c
 
   MODULE PURE FUNCTION colConcat_3d(a, b) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: a(:)
-    INTEGER(Int32), INTENT(IN) :: b(:, :)
-    INTEGER(Int32), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT32), INTENT(IN) :: a(:)
+    INTEGER(INT32), INTENT(IN) :: b(:, :)
+    INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_3d
 
   MODULE PURE FUNCTION colConcat_3e(a, b) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: a(:)
-    INTEGER(Int16), INTENT(IN) :: b(:, :)
-    INTEGER(Int16), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT16), INTENT(IN) :: a(:)
+    INTEGER(INT16), INTENT(IN) :: b(:, :)
+    INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_3e
 
   MODULE PURE FUNCTION colConcat_3f(a, b) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: a(:)
-    INTEGER(Int8), INTENT(IN) :: b(:, :)
-    INTEGER(Int8), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT8), INTENT(IN) :: a(:)
+    INTEGER(INT8), INTENT(IN) :: b(:, :)
+    INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_3f
 END INTERFACE
 
@@ -526,7 +564,7 @@ INTERFACE OPERATOR(.ColConcat.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    ColConcat@AppendMethods
+!                                                    ColConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -536,39 +574,39 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION colConcat_4a(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a(:, :)
-    REAL(Real32), INTENT(IN) :: b(:, :)
-    REAL(Real32), ALLOCATABLE :: ans(:, :)
+    REAL(REAL32), INTENT(IN) :: a(:, :)
+    REAL(REAL32), INTENT(IN) :: b(:, :)
+    REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_4a
 
   MODULE PURE FUNCTION colConcat_4b(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a(:, :)
-    REAL(Real64), INTENT(IN) :: b(:, :)
-    REAL(Real64), ALLOCATABLE :: ans(:, :)
+    REAL(REAL64), INTENT(IN) :: a(:, :)
+    REAL(REAL64), INTENT(IN) :: b(:, :)
+    REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_4b
 
   MODULE PURE FUNCTION colConcat_4c(a, b) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: a(:, :)
-    INTEGER(Int64), INTENT(IN) :: b(:, :)
-    INTEGER(Int64), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT64), INTENT(IN) :: a(:, :)
+    INTEGER(INT64), INTENT(IN) :: b(:, :)
+    INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_4c
 
   MODULE PURE FUNCTION colConcat_4d(a, b) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: a(:, :)
-    INTEGER(Int32), INTENT(IN) :: b(:, :)
-    INTEGER(Int32), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT32), INTENT(IN) :: a(:, :)
+    INTEGER(INT32), INTENT(IN) :: b(:, :)
+    INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_4d
 
   MODULE PURE FUNCTION colConcat_4e(a, b) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: a(:, :)
-    INTEGER(Int16), INTENT(IN) :: b(:, :)
-    INTEGER(Int16), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT16), INTENT(IN) :: a(:, :)
+    INTEGER(INT16), INTENT(IN) :: b(:, :)
+    INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_4e
 
   MODULE PURE FUNCTION colConcat_4f(a, b) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: a(:, :)
-    INTEGER(Int8), INTENT(IN) :: b(:, :)
-    INTEGER(Int8), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT8), INTENT(IN) :: a(:, :)
+    INTEGER(INT8), INTENT(IN) :: b(:, :)
+    INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION colConcat_4f
 END INTERFACE
 
@@ -583,7 +621,7 @@ INTERFACE OPERATOR(.ColConcat.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    ColConcat@AppendMethods
+!                                                    ColConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -593,39 +631,39 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION rowConcat_1a(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a(:)
-    REAL(Real32), INTENT(IN) :: b(:)
-    REAL(Real32), ALLOCATABLE :: ans(:, :)
+    REAL(REAL32), INTENT(IN) :: a(:)
+    REAL(REAL32), INTENT(IN) :: b(:)
+    REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_1a
 
   MODULE PURE FUNCTION rowConcat_1b(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a(:)
-    REAL(Real64), INTENT(IN) :: b(:)
-    REAL(Real64), ALLOCATABLE :: ans(:, :)
+    REAL(REAL64), INTENT(IN) :: a(:)
+    REAL(REAL64), INTENT(IN) :: b(:)
+    REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_1b
 
   MODULE PURE FUNCTION rowConcat_1c(a, b) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: a(:)
-    INTEGER(Int64), INTENT(IN) :: b(:)
-    INTEGER(Int64), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT64), INTENT(IN) :: a(:)
+    INTEGER(INT64), INTENT(IN) :: b(:)
+    INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_1c
 
   MODULE PURE FUNCTION rowConcat_1d(a, b) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: a(:)
-    INTEGER(Int32), INTENT(IN) :: b(:)
-    INTEGER(Int32), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT32), INTENT(IN) :: a(:)
+    INTEGER(INT32), INTENT(IN) :: b(:)
+    INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_1d
 
   MODULE PURE FUNCTION rowConcat_1e(a, b) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: a(:)
-    INTEGER(Int16), INTENT(IN) :: b(:)
-    INTEGER(Int16), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT16), INTENT(IN) :: a(:)
+    INTEGER(INT16), INTENT(IN) :: b(:)
+    INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_1e
 
   MODULE PURE FUNCTION rowConcat_1f(a, b) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: a(:)
-    INTEGER(Int8), INTENT(IN) :: b(:)
-    INTEGER(Int8), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT8), INTENT(IN) :: a(:)
+    INTEGER(INT8), INTENT(IN) :: b(:)
+    INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_1f
 END INTERFACE
 
@@ -640,7 +678,7 @@ INTERFACE OPERATOR(.rowConcat.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    rowConcat@AppendMethods
+!                                                    rowConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -650,39 +688,39 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION rowConcat_2a(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a(:, :)
-    REAL(Real32), INTENT(IN) :: b(:)
-    REAL(Real32), ALLOCATABLE :: ans(:, :)
+    REAL(REAL32), INTENT(IN) :: a(:, :)
+    REAL(REAL32), INTENT(IN) :: b(:)
+    REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_2a
 
   MODULE PURE FUNCTION rowConcat_2b(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a(:, :)
-    REAL(Real64), INTENT(IN) :: b(:)
-    REAL(Real64), ALLOCATABLE :: ans(:, :)
+    REAL(REAL64), INTENT(IN) :: a(:, :)
+    REAL(REAL64), INTENT(IN) :: b(:)
+    REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_2b
 
   MODULE PURE FUNCTION rowConcat_2c(a, b) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: a(:, :)
-    INTEGER(Int64), INTENT(IN) :: b(:)
-    INTEGER(Int64), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT64), INTENT(IN) :: a(:, :)
+    INTEGER(INT64), INTENT(IN) :: b(:)
+    INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_2c
 
   MODULE PURE FUNCTION rowConcat_2d(a, b) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: a(:, :)
-    INTEGER(Int32), INTENT(IN) :: b(:)
-    INTEGER(Int32), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT32), INTENT(IN) :: a(:, :)
+    INTEGER(INT32), INTENT(IN) :: b(:)
+    INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_2d
 
   MODULE PURE FUNCTION rowConcat_2e(a, b) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: a(:, :)
-    INTEGER(Int16), INTENT(IN) :: b(:)
-    INTEGER(Int16), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT16), INTENT(IN) :: a(:, :)
+    INTEGER(INT16), INTENT(IN) :: b(:)
+    INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_2e
 
   MODULE PURE FUNCTION rowConcat_2f(a, b) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: a(:, :)
-    INTEGER(Int8), INTENT(IN) :: b(:)
-    INTEGER(Int8), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT8), INTENT(IN) :: a(:, :)
+    INTEGER(INT8), INTENT(IN) :: b(:)
+    INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_2f
 END INTERFACE
 
@@ -697,7 +735,7 @@ INTERFACE OPERATOR(.rowConcat.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    rowConcat@AppendMethods
+!                                                    rowConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -707,39 +745,39 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION rowConcat_3a(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a(:)
-    REAL(Real32), INTENT(IN) :: b(:, :)
-    REAL(Real32), ALLOCATABLE :: ans(:, :)
+    REAL(REAL32), INTENT(IN) :: a(:)
+    REAL(REAL32), INTENT(IN) :: b(:, :)
+    REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_3a
 
   MODULE PURE FUNCTION rowConcat_3b(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a(:)
-    REAL(Real64), INTENT(IN) :: b(:, :)
-    REAL(Real64), ALLOCATABLE :: ans(:, :)
+    REAL(REAL64), INTENT(IN) :: a(:)
+    REAL(REAL64), INTENT(IN) :: b(:, :)
+    REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_3b
 
   MODULE PURE FUNCTION rowConcat_3c(a, b) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: a(:)
-    INTEGER(Int64), INTENT(IN) :: b(:, :)
-    INTEGER(Int64), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT64), INTENT(IN) :: a(:)
+    INTEGER(INT64), INTENT(IN) :: b(:, :)
+    INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_3c
 
   MODULE PURE FUNCTION rowConcat_3d(a, b) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: a(:)
-    INTEGER(Int32), INTENT(IN) :: b(:, :)
-    INTEGER(Int32), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT32), INTENT(IN) :: a(:)
+    INTEGER(INT32), INTENT(IN) :: b(:, :)
+    INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_3d
 
   MODULE PURE FUNCTION rowConcat_3e(a, b) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: a(:)
-    INTEGER(Int16), INTENT(IN) :: b(:, :)
-    INTEGER(Int16), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT16), INTENT(IN) :: a(:)
+    INTEGER(INT16), INTENT(IN) :: b(:, :)
+    INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_3e
 
   MODULE PURE FUNCTION rowConcat_3f(a, b) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: a(:)
-    INTEGER(Int8), INTENT(IN) :: b(:, :)
-    INTEGER(Int8), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT8), INTENT(IN) :: a(:)
+    INTEGER(INT8), INTENT(IN) :: b(:, :)
+    INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_3f
 END INTERFACE
 
@@ -754,7 +792,7 @@ INTERFACE OPERATOR(.rowConcat.)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                    rowConcat@AppendMethods
+!                                                    rowConcat@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -764,39 +802,39 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION rowConcat_4a(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a(:, :)
-    REAL(Real32), INTENT(IN) :: b(:, :)
-    REAL(Real32), ALLOCATABLE :: ans(:, :)
+    REAL(REAL32), INTENT(IN) :: a(:, :)
+    REAL(REAL32), INTENT(IN) :: b(:, :)
+    REAL(REAL32), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_4a
 
   MODULE PURE FUNCTION rowConcat_4b(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a(:, :)
-    REAL(Real64), INTENT(IN) :: b(:, :)
-    REAL(Real64), ALLOCATABLE :: ans(:, :)
+    REAL(REAL64), INTENT(IN) :: a(:, :)
+    REAL(REAL64), INTENT(IN) :: b(:, :)
+    REAL(REAL64), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_4b
 
   MODULE PURE FUNCTION rowConcat_4c(a, b) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: a(:, :)
-    INTEGER(Int64), INTENT(IN) :: b(:, :)
-    INTEGER(Int64), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT64), INTENT(IN) :: a(:, :)
+    INTEGER(INT64), INTENT(IN) :: b(:, :)
+    INTEGER(INT64), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_4c
 
   MODULE PURE FUNCTION rowConcat_4d(a, b) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: a(:, :)
-    INTEGER(Int32), INTENT(IN) :: b(:, :)
-    INTEGER(Int32), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT32), INTENT(IN) :: a(:, :)
+    INTEGER(INT32), INTENT(IN) :: b(:, :)
+    INTEGER(INT32), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_4d
 
   MODULE PURE FUNCTION rowConcat_4e(a, b) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: a(:, :)
-    INTEGER(Int16), INTENT(IN) :: b(:, :)
-    INTEGER(Int16), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT16), INTENT(IN) :: a(:, :)
+    INTEGER(INT16), INTENT(IN) :: b(:, :)
+    INTEGER(INT16), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_4e
 
   MODULE PURE FUNCTION rowConcat_4f(a, b) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: a(:, :)
-    INTEGER(Int8), INTENT(IN) :: b(:, :)
-    INTEGER(Int8), ALLOCATABLE :: ans(:, :)
+    INTEGER(INT8), INTENT(IN) :: a(:, :)
+    INTEGER(INT8), INTENT(IN) :: b(:, :)
+    INTEGER(INT8), ALLOCATABLE :: ans(:, :)
   END FUNCTION rowConcat_4f
 END INTERFACE
 

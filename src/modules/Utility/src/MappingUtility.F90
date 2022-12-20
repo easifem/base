@@ -26,6 +26,18 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: FromBiunitLine2Segment
+PUBLIC :: FromUnitTriangle2Triangle
+PUBLIC :: FromBiUnitQuadrangle2Quadrangle
+PUBLIC :: FromBiUnitLine2UnitLine
+PUBLIC :: FromUnitLine2BiUnitLine
+PUBLIC :: FromBiUnitTriangle2BiUnitSqr
+PUBLIC :: FromBiUnitSqr2BiUnitTriangle
+PUBLIC :: FromUnitTriangle2BiUnitSqr
+PUBLIC :: FromBiUnitSqr2UnitTriangle
+PUBLIC :: BarycentricCoordUnitTriangle
+PUBLIC :: BarycentricCoordBiUnitTriangle
+
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
 !----------------------------------------------------------------------------
@@ -50,8 +62,6 @@ END INTERFACE
 INTERFACE FromBiunitLine2Segment
   MODULE PROCEDURE FromBiunitLine2Segment1
 END INTERFACE FromBiunitLine2Segment
-
-PUBLIC :: FromBiunitLine2Segment
 
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
@@ -109,8 +119,6 @@ INTERFACE FromUnitTriangle2Triangle
   MODULE PROCEDURE FromUnitTriangle2Triangle1
 END INTERFACE FromUnitTriangle2Triangle
 
-PUBLIC :: FromUnitTriangle2Triangle
-
 !----------------------------------------------------------------------------
 !                                            FromBiUnitQuadrangle2Quadrangle
 !----------------------------------------------------------------------------
@@ -143,8 +151,6 @@ INTERFACE FromBiUnitQuadrangle2Quadrangle
   MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1
 END INTERFACE FromBiUnitQuadrangle2Quadrangle
 
-PUBLIC :: FromBiUnitQuadrangle2Quadrangle
-
 !----------------------------------------------------------------------------
 !                                                     FromBiUnitLine2UnitLine
 !----------------------------------------------------------------------------
@@ -167,8 +173,6 @@ INTERFACE
   END FUNCTION FromBiUnitLine2UnitLine
 END INTERFACE
 
-PUBLIC :: FromBiUnitLine2UnitLine
-
 !----------------------------------------------------------------------------
 !                                                    FromUnitLine2BiUnitLine
 !----------------------------------------------------------------------------
@@ -190,8 +194,6 @@ INTERFACE
     !! mapped coordinates of xin in biunit line
   END FUNCTION FromUnitLine2BiUnitLine
 END INTERFACE
-
-PUBLIC :: FromUnitLine2BiUnitLine
 
 !----------------------------------------------------------------------------
 !                                             FromBiUnitTriangle2BiUnitSqr
@@ -217,8 +219,6 @@ INTERFACE
   END FUNCTION FromBiUnitTriangle2BiUnitSqr
 END INTERFACE
 
-PUBLIC :: FromBiUnitTriangle2BiUnitSqr
-
 !----------------------------------------------------------------------------
 !                                             FromBiUnitSqr2BiUnitTriangle
 !----------------------------------------------------------------------------
@@ -240,8 +240,6 @@ INTERFACE
     !! coordinates in biunit triangle
   END FUNCTION FromBiUnitSqr2BiUnitTriangle
 END INTERFACE
-
-PUBLIC :: FromBiUnitSqr2BiUnitTriangle
 
 !----------------------------------------------------------------------------
 !                                             FromUnitTriangle2BiUnitSqr
@@ -267,8 +265,6 @@ INTERFACE
   END FUNCTION FromUnitTriangle2BiUnitSqr
 END INTERFACE
 
-PUBLIC :: FromUnitTriangle2BiUnitSqr
-
 !----------------------------------------------------------------------------
 !                                             FromBiUnitSqr2UnitTriangle
 !----------------------------------------------------------------------------
@@ -291,8 +287,6 @@ INTERFACE
   END FUNCTION FromBiUnitSqr2UnitTriangle
 END INTERFACE
 
-PUBLIC :: FromBiUnitSqr2UnitTriangle
-
 !----------------------------------------------------------------------------
 !                                              BarycentricCoordUnitTriangle
 !----------------------------------------------------------------------------
@@ -308,8 +302,6 @@ INTERFACE
   END FUNCTION BarycentricCoordUnitTriangle
 END INTERFACE
 
-PUBLIC :: BarycentricCoordUnitTriangle
-
 !----------------------------------------------------------------------------
 !                                            BarycentricCoordBiUnitTriangle
 !----------------------------------------------------------------------------
@@ -324,7 +316,5 @@ INTERFACE
     REAL(DFP) :: ans(3, SIZE(xin, 2))
   END FUNCTION BarycentricCoordBiUnitTriangle
 END INTERFACE
-
-PUBLIC :: BarycentricCoordBiUnitTriangle
 
 END MODULE MappingUtility
