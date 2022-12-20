@@ -23,6 +23,7 @@ IF( USE_LAPACK95 )
     ${src_path}/GE_Lapack_Method@LUMethods.F90
     # ${src_path}/GE_Lapack_Method@EigenvalueMethods.F90
     ${src_path}/GE_Lapack_Method@CompRoutineMethods.F90
-    )
+    ${src_path}/Sym_Lapack_Method@LUMethods.F90
+  )
 ENDIF(  )
 
