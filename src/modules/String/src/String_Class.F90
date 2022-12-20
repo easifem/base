@@ -278,7 +278,7 @@ CONTAINS
     !! Generic function for reading file
   PROCEDURE, PASS(self) :: read_line
     !! Read line (record) from a connected unit.
-  GENERIC, PUBLIC :: readFile => read_line
+  GENERIC, PUBLIC :: readLine => read_line
     !! Generic method for reading a record from file
   PROCEDURE, PASS(self) :: read_lines
     !! Read (all) lines (records) from a connected unit as a single ascii
@@ -2276,7 +2276,7 @@ SUBROUTINE read_file(self, file, is_fast, form, iostat, iomsg)
   INQUIRE (file=file, iomsg=iomsg_, iostat=iostat_, exist=does_exist)
   !
   IF (does_exist) THEN
-    is_fast_ = .FALSE.; 
+    is_fast_ = .FALSE.;
     IF (PRESENT(is_fast)) is_fast_ = is_fast
     IF (is_fast_) THEN
       OPEN (newunit=unit, file=file, &
@@ -2382,34 +2382,36 @@ END SUBROUTINE read_file
 
 SUBROUTINE read_line(self, unit, form, iostat, iomsg)
   CLASS(string), INTENT(inout) :: self
-  !< The string.
+  !! The string.
   INTEGER, INTENT(IN) :: unit
-  !< Logical unit.
+  !! Logical unit.
   CHARACTER(len=*), INTENT(IN), OPTIONAL :: form
-  !< Format of unit.
+  !! Format of unit.
   INTEGER, INTENT(out), OPTIONAL :: iostat
-  !< IO status code.
+  !! IO status code.
   CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg
-  !< IO status message.
+  !! IO status message.
   TYPE(string) :: form_
-  !< Format of unit, local variable.
+  !! Format of unit, local variable.
   INTEGER :: iostat_
-  !< IO status code, local variable.
+  !! IO status code, local variable.
   CHARACTER(len=:), ALLOCATABLE :: iomsg_
-  !< IO status message, local variable.
+  !! IO status message, local variable.
   CHARACTER(kind=CK, len=:), ALLOCATABLE :: line
-  !< Line storage.
+  !! Line storage.
   CHARACTER(kind=CK, len=1) :: ch
-  !< Character storage.
+  !! Character storage.
 
   form_ = 'FORMATTED'
-  IF (PRESENT(form)) form_ = form; form_ = form_%upper()
+  IF (PRESENT(form)) form_ = form
+  form_ = form_%upper()
   iomsg_ = REPEAT(' ', 99)
   IF (PRESENT(iomsg)) iomsg_ = iomsg
   line = ''
   SELECT CASE (form_%chars())
   CASE ('FORMATTED')
     DO
+      !!
       READ (unit, "(A)", advance='no', iostat=iostat_, &
         & iomsg=iomsg_, err=10, END=10, eor=10) &
         & ch
@@ -2433,17 +2435,23 @@ END SUBROUTINE read_line
 
 ! Read (all) lines (records) from a connected unit as a single ascii stream.
 !
-! @note All the lines are stored into the string self as a single ascii stream. Each line (record) is separated by a `new_line`
-! character. The line is read as an ascii stream read until the eor is reached.
+!@note
+! All the lines are stored into the string self as a single ascii stream.
+! Each line (record) is separated by a `new_line`
+! character. The line is read as an ascii stream read until the eor
+! is reached.
+!@endnote
 !
 !@note
 ! The connected unit is rewinded.
 ! At a successful exit current record is at eof,
 ! at the beginning otherwise.
+!@endnote
 !
 !@note
 ! For unformatted read only `access='stream'` is
 ! supported with new_line as line terminator.
+!@endnote
 !
 !```fortran
 ! type(string)              :: astring
@@ -2473,7 +2481,8 @@ END SUBROUTINE read_line
 ! write(scratch) line(1)%chars()//new_line('a')
 ! write(scratch) line(2)%chars()//new_line('a')
 ! write(scratch) line(3)%chars()//new_line('a')
-! call astring%read_lines(unit=scratch, form='unformatted', iostat=iostat, iomsg=iomsg)
+! call astring%read_lines(unit=scratch, &
+! form='unformatted', iostat=iostat, iomsg=iomsg)
 ! call astring%split(tokens=strings, sep=new_line('a'))
 ! test_passed(5) = (size(strings, dim=1)==size(line, dim=1))
 ! do l=1, size(strings, dim=1)
@@ -2520,6 +2529,10 @@ SUBROUTINE read_lines(self, unit, form, iostat, iomsg)
   IF (PRESENT(iostat)) iostat = iostat_
   IF (PRESENT(iomsg)) iomsg = iomsg_
 END SUBROUTINE read_lines
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION replace(self, old, NEW, count) RESULT(replaced)
   !< Return a string with all occurrences of substring old replaced by new.
@@ -3739,7 +3752,7 @@ ELEMENTAL FUNCTION end_with(self, suffix, start, END, ignore_null_eof)
   IF (ALLOCATED(self%raw)) THEN
     start_ = 1; IF (PRESENT(start)) start_ = start
     end_ = LEN(self%raw); IF (PRESENT(END)) end_ = END
-    ignore_null_eof_ = .FALSE.; 
+    ignore_null_eof_ = .FALSE.;
     IF (PRESENT(ignore_null_eof)) ignore_null_eof_ = ignore_null_eof
   IF (ignore_null_eof_ .AND. (self%raw(end_:end_) == CHAR(0))) end_ = end_ - 1
     IF (LEN(suffix) <= LEN(self%raw(start_:end_))) THEN
