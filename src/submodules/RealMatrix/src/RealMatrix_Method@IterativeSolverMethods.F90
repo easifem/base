@@ -20,7 +20,7 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                 CG
+!                                                                        CG
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realmat_CG_1
@@ -82,14 +82,15 @@ MODULE PROCEDURE realmat_CG_1
     END IF
   END IF
   !!
-  tol = INPUT( default=default_rtol, option=rtol) * tol + INPUT( default=default_atol, option=atol)
+  tol = INPUT( default=default_rtol, option=rtol) * tol &
+      & + INPUT( default=default_atol, option=atol)
   !!
   !! Check convergence
   !!
   IF( convIn .EQ. convergenceInRes ) THEN
-     IF( error0 .LE. tol  ) THEN
-        RETURN
-     END IF
+    IF( error0 .LE. tol  ) THEN
+      RETURN
+    END IF
   END IF
   !!
   !! maxiter0

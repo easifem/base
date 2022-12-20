@@ -107,10 +107,16 @@ SUBROUTINE csrMat_SPY_PLPLOT(obj, filename, ext, driver)
   CALL PLINIT
   CALL PLSCOL0(0, 0, 0, 0)
   CALL PLCOL0(0)
-  CALL PLENV(xmin, xmax, ymin, ymax, 2, 0)
-  CALL PLBOX('bcgnst', 0.0_DFP, 2, 'bcgnstv', 0.0_DFP, 2)
+  CALL PLENV(xmin, xmax, ymin, ymax, 1, -1)
+  ! CALL PLBOX('bcgnst', 0.0_DFP, 2, 'bcgnstv', 0.0_DFP, 2)
+  ! I am removing grids, if you want them then please activate
+  ! above line of code, and comment the following line.
+  ! I am deactivating the numerical labels
+  ! I am deactivating the subticks
+
+  CALL PLBOX('bcx', 0.0_DFP, 2, 'bcx', 0.0_DFP, 2)
   CALL PLLAB("COLUMN", "ROW", "STRUCTURE OF SPARSE MATRIX")
-  CALL PLSSYM(0.0_DFP, 0.8_DFP)
+  CALL PLSSYM(0.0_DFP, 0.2_DFP)
   CALL PLCOL0(9)
   CALL PLPOIN(X, Y, 3)
   CALL PLEND
