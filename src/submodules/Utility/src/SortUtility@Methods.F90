@@ -72,36 +72,26 @@ END PROCEDURE HeapSort_Real64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuickSort1vectReal32
-INTEGER(I4B) i, iPivot
 #include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE QuickSort1vectReal32
 
 MODULE PROCEDURE QuickSort1vectReal64
-INTEGER(I4B) i, iPivot
 #include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE QuickSort1vectReal64
 
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE QuickSort1vectInt8
-INTEGER(I4B) i, iPivot
 #include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE QuickSort1vectInt8
 
 MODULE PROCEDURE QuickSort1vectInt16
-INTEGER(I4B) i, iPivot
 #include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE QuickSort1vectInt16
 
 MODULE PROCEDURE QuickSort1vectInt32
-INTEGER(I4B) i, iPivot
 #include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE QuickSort1vectInt32
 
 MODULE PROCEDURE QuickSort1vectInt64
-INTEGER(I4B) i, iPivot
 #include "./QuickSort/QuickSort1Vec.inc"
 END PROCEDURE QuickSort1vectInt64
 
@@ -110,99 +100,19 @@ END PROCEDURE QuickSort1vectInt64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuickSort2vectIR
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, iPivot + 1, high)
-END IF
-END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
+#include "./QuickSort/QuickSort2Vec.inc"
+END PROCEDURE QuickSort2vectIR
 
 MODULE PROCEDURE QuickSort2vectII
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, iPivot + 1, high)
-END IF
-END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
+#include "./QuickSort/QuickSort2Vec.inc"
+END PROCEDURE QuickSort2vectII
 
 MODULE PROCEDURE QuickSort2vectRI
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, iPivot + 1, high)
-END IF
-END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
+#include "./QuickSort/QuickSort2Vec.inc"
+END PROCEDURE QuickSort2vectRI
 
 MODULE PROCEDURE QuickSort2vectRR
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, iPivot + 1, high)
-END IF
+#include "./QuickSort/QuickSort2Vec.inc"
 END PROCEDURE
 
 !----------------------------------------------------------------------------

@@ -22,13 +22,15 @@ i = low
 DO WHILE (iPivot > i)
   IF (vect1(i) > vect1(iPivot)) THEN
     CALL Swap(vect1(i), vect1(iPivot - 1))
+    CALL Swap(vect2(i), vect2(iPivot - 1))
     CALL Swap(vect1(iPivot - 1), vect1(iPivot))
+    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
     iPivot = iPivot - 1
   ELSE
     i = i + 1
   END IF
 END DO
 IF (low < high) THEN
-  CALL QuickSort(vect1, low, iPivot - 1)
-  CALL QuickSort(vect1, iPivot + 1, high)
+  CALL QuickSort(vect1, vect2, low, iPivot - 1)
+  CALL QuickSort(vect1, vect2, iPivot + 1, high)
 END IF
