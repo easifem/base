@@ -20,10 +20,10 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: SWAP
+PUBLIC :: Swap
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -31,26 +31,26 @@ PUBLIC :: SWAP
 ! summary: Swap two integer
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_int8(a, b)
+  MODULE PURE SUBROUTINE Swap_Int8(a, b)
     INTEGER(Int8), INTENT(INOUT) :: a, b
-  END SUBROUTINE swap_int8
-  MODULE PURE SUBROUTINE swap_Int16(a, b)
+  END SUBROUTINE Swap_Int8
+  MODULE PURE SUBROUTINE Swap_Int16(a, b)
     INTEGER(Int16), INTENT(INOUT) :: a, b
-  END SUBROUTINE swap_Int16
-  MODULE PURE SUBROUTINE swap_Int32(a, b)
+  END SUBROUTINE Swap_Int16
+  MODULE PURE SUBROUTINE Swap_Int32(a, b)
     INTEGER(Int32), INTENT(INOUT) :: a, b
-  END SUBROUTINE swap_Int32
-  MODULE PURE SUBROUTINE swap_Int64(a, b)
+  END SUBROUTINE Swap_Int32
+  MODULE PURE SUBROUTINE Swap_Int64(a, b)
     INTEGER(Int64), INTENT(INOUT) :: a, b
-  END SUBROUTINE swap_Int64
+  END SUBROUTINE Swap_Int64
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_int8, swap_Int16, swap_Int32, swap_Int64
+INTERFACE Swap
+  MODULE PROCEDURE Swap_Int8, Swap_Int16, Swap_Int32, Swap_Int64
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                            SWAP@SWAPMethods
+!                                                            Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -58,17 +58,17 @@ END INTERFACE
 ! summary: Swap two real
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_r32(a, b)
+  MODULE PURE SUBROUTINE Swap_r32(a, b)
     REAL(Real32), INTENT(INOUT) :: a, b
-  END SUBROUTINE swap_r32
+  END SUBROUTINE Swap_r32
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_r32
+INTERFACE Swap
+  MODULE PROCEDURE Swap_r32
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                            SWAP@SWAPMethods
+!                                                            Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -76,17 +76,17 @@ END INTERFACE
 ! summary: Swap two real
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_r64(a, b)
+  MODULE PURE SUBROUTINE Swap_r64(a, b)
     REAL(Real64), INTENT(INOUT) :: a, b
-  END SUBROUTINE swap_r64
+  END SUBROUTINE Swap_r64
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_r64
+INTERFACE Swap
+  MODULE PROCEDURE Swap_r64
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                            SWAP@SWAPMethods
+!                                                            Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -95,18 +95,18 @@ END INTERFACE
 
 #ifndef USE_BLAS95
 INTERFACE
-  MODULE PURE SUBROUTINE swap_r32v(a, b)
+  MODULE PURE SUBROUTINE Swap_r32v(a, b)
     REAL(Real32), INTENT(INOUT) :: a(:), b(:)
-  END SUBROUTINE swap_r32v
+  END SUBROUTINE Swap_r32v
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_r32v
-END INTERFACE SWAP
+INTERFACE Swap
+  MODULE PROCEDURE Swap_r32v
+END INTERFACE Swap
 #endif
 
 !----------------------------------------------------------------------------
-!                                                            SWAP@SWAPMethods
+!                                                            Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -115,18 +115,18 @@ END INTERFACE SWAP
 
 #ifndef USE_BLAS95
 INTERFACE
-  MODULE PURE SUBROUTINE swap_r64v(a, b)
+  MODULE PURE SUBROUTINE Swap_r64v(a, b)
     REAL(Real64), INTENT(INOUT) :: a(:), b(:)
-  END SUBROUTINE swap_r64v
+  END SUBROUTINE Swap_r64v
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_r64v
-END INTERFACE SWAP
+INTERFACE Swap
+  MODULE PROCEDURE Swap_r64v
+END INTERFACE Swap
 #endif
 
 !----------------------------------------------------------------------------
-!                                                            SWAP@SWAPMethods
+!                                                            Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -134,165 +134,165 @@ END INTERFACE SWAP
 ! summary:         Subroutine for interchanging two complex numbers
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_c(a, b)
+  MODULE PURE SUBROUTINE Swap_c(a, b)
     COMPLEX(DFPC), INTENT(INOUT) :: a, b
-  END SUBROUTINE swap_c
+  END SUBROUTINE Swap_c
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_c
+INTERFACE Swap
+  MODULE PROCEDURE Swap_c
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 #ifndef USE_BLAS95
 INTERFACE
-  MODULE PURE SUBROUTINE swap_cv(a, b)
+  MODULE PURE SUBROUTINE Swap_cv(a, b)
     COMPLEX(DFPC), INTENT(INOUT) :: a(:), b(:)
-  END SUBROUTINE swap_cv
+  END SUBROUTINE Swap_cv
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_cv
-END INTERFACE SWAP
+INTERFACE Swap
+  MODULE PROCEDURE Swap_cv
+END INTERFACE Swap
 #endif
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_cm(a, b)
+  MODULE PURE SUBROUTINE Swap_cm(a, b)
     COMPLEX(DFPC), INTENT(INOUT) :: a(:, :), b(:, :)
-  END SUBROUTINE swap_cm
+  END SUBROUTINE Swap_cm
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_cm
+INTERFACE Swap
+  MODULE PROCEDURE Swap_cm
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_r32m(a, b)
+  MODULE PURE SUBROUTINE Swap_r32m(a, b)
     REAL(Real32), INTENT(INOUT) :: a(:, :), b(:, :)
-  END SUBROUTINE swap_r32m
+  END SUBROUTINE Swap_r32m
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_r32m
+INTERFACE Swap
+  MODULE PROCEDURE Swap_r32m
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_r64m(a, b)
+  MODULE PURE SUBROUTINE Swap_r64m(a, b)
     REAL(Real64), INTENT(INOUT) :: a(:, :), b(:, :)
-  END SUBROUTINE swap_r64m
+  END SUBROUTINE Swap_r64m
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_r64m
+INTERFACE Swap
+  MODULE PROCEDURE Swap_r64m
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE masked_swap_r32s(a, b, mask)
+  MODULE PURE SUBROUTINE masked_Swap_r32s(a, b, mask)
     REAL(Real32), INTENT(INOUT) :: a, b
     LOGICAL(LGT), INTENT(IN) :: mask
-  END SUBROUTINE masked_swap_r32s
+  END SUBROUTINE masked_Swap_r32s
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE masked_swap_r32s
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_r32s
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE masked_swap_r64s(a, b, mask)
+  MODULE PURE SUBROUTINE masked_Swap_r64s(a, b, mask)
     REAL(Real64), INTENT(INOUT) :: a, b
     LOGICAL(LGT), INTENT(IN) :: mask
-  END SUBROUTINE masked_swap_r64s
+  END SUBROUTINE masked_Swap_r64s
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE masked_swap_r64s
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_r64s
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE masked_swap_r32v(a, b, mask)
+  MODULE PURE SUBROUTINE masked_Swap_r32v(a, b, mask)
     REAL(Real32), INTENT(INOUT) :: a(:), b(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
-  END SUBROUTINE masked_swap_r32v
+  END SUBROUTINE masked_Swap_r32v
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE masked_swap_r32v
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_r32v
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE masked_swap_r64v(a, b, mask)
+  MODULE PURE SUBROUTINE masked_Swap_r64v(a, b, mask)
     REAL(Real64), INTENT(INOUT) :: a(:), b(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
-  END SUBROUTINE masked_swap_r64v
+  END SUBROUTINE masked_Swap_r64v
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE masked_swap_r64v
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_r64v
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE masked_swap_r32m(a, b, mask)
+  MODULE PURE SUBROUTINE masked_Swap_r32m(a, b, mask)
     REAL(Real32), INTENT(INOUT) :: a(:, :), b(:, :)
     LOGICAL(LGT), INTENT(IN) :: mask(:, :)
-  END SUBROUTINE masked_swap_r32m
+  END SUBROUTINE masked_Swap_r32m
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE masked_swap_r32m
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_r32m
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE masked_swap_r64m(a, b, mask)
+  MODULE PURE SUBROUTINE masked_Swap_r64m(a, b, mask)
     REAL(Real64), INTENT(INOUT) :: a(:, :), b(:, :)
     LOGICAL(LGT), INTENT(IN) :: mask(:, :)
-  END SUBROUTINE masked_swap_r64m
+  END SUBROUTINE masked_Swap_r64m
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE masked_swap_r64m
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_r64m
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -309,26 +309,26 @@ END INTERFACE
 !
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_index1(a, b, i1, i2)
+  MODULE PURE SUBROUTINE Swap_index1(a, b, i1, i2)
     REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
       !! the returned array
     REAL(Real32), INTENT(IN) :: b(:, :)
       !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
-      !! index 1 is swapped with index `i1`
+      !! index 1 is Swapped with index `i1`
       !! make sure i1 is lesser than or equal to 2
     INTEGER(I4B), INTENT(IN) :: i2
-      !! index 2 is swapped with index `i2`
+      !! index 2 is Swapped with index `i2`
       !! make sure i2 is less than or equal to 2
-  END SUBROUTINE swap_index1
+  END SUBROUTINE Swap_index1
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_index1
+INTERFACE Swap
+  MODULE PROCEDURE Swap_index1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -345,26 +345,26 @@ END INTERFACE
 !
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_index2(a, b, i1, i2)
+  MODULE PURE SUBROUTINE Swap_index2(a, b, i1, i2)
     REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
-     !! the returned array
+    !! the returned array
     REAL(Real64), INTENT(IN) :: b(:, :)
-     !! input array, it will be untouched
+    !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
-     !! index 1 is swapped with index `i1`
-     !! make sure i1 is lesser than or equal to 2
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 2
     INTEGER(I4B), INTENT(IN) :: i2
-     !! index 2 is swapped with index `i2`
-     !! make sure i2 is less than or equal to 2
-  END SUBROUTINE swap_index2
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 2
+  END SUBROUTINE Swap_index2
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_index2
+INTERFACE Swap
+  MODULE PROCEDURE Swap_index2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -381,29 +381,29 @@ END INTERFACE
 !
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_index3(a, b, i1, i2, i3)
+  MODULE PURE SUBROUTINE Swap_index3(a, b, i1, i2, i3)
     REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :)
-     !! the returned array
+    !! the returned array
     REAL(Real32), INTENT(IN) :: b(:, :, :)
-     !! input array, it will be untouched
+    !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
-     !! index 1 is swapped with index `i1`
-     !! make sure i1 is lesser than or equal to 3
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 3
     INTEGER(I4B), INTENT(IN) :: i2
-     !! index 2 is swapped with index `i2`
-     !! make sure i2 is less than or equal to 3
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 3
     INTEGER(I4B), INTENT(IN) :: i3
-     !! index 3 is swapped with index `i3`
-     !! make sure i3 is less than or equal to 3
-  END SUBROUTINE swap_index3
+    !! index 3 is Swapped with index `i3`
+    !! make sure i3 is less than or equal to 3
+  END SUBROUTINE Swap_index3
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_index3
+INTERFACE Swap
+  MODULE PROCEDURE Swap_index3
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -420,29 +420,29 @@ END INTERFACE
 !
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_index4(a, b, i1, i2, i3)
+  MODULE PURE SUBROUTINE Swap_index4(a, b, i1, i2, i3)
     REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :)
-     !! the returned array
+    !! the returned array
     REAL(Real64), INTENT(IN) :: b(:, :, :)
-     !! input array, it will be untouched
+    !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
-     !! index 1 is swapped with index `i1`
-     !! make sure i1 is lesser than or equal to 3
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 3
     INTEGER(I4B), INTENT(IN) :: i2
-     !! index 2 is swapped with index `i2`
-     !! make sure i2 is less than or equal to 3
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 3
     INTEGER(I4B), INTENT(IN) :: i3
-     !! index 3 is swapped with index `i3`
-     !! make sure i3 is less than or equal to 3
-  END SUBROUTINE swap_index4
+    !! index 3 is Swapped with index `i3`
+    !! make sure i3 is less than or equal to 3
+  END SUBROUTINE Swap_index4
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_index4
+INTERFACE Swap
+  MODULE PROCEDURE Swap_index4
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -458,32 +458,32 @@ END INTERFACE
 ! `a` and `b` are appropriate,.
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_index5(a, b, i1, i2, i3, i4)
+  MODULE PURE SUBROUTINE Swap_index5(a, b, i1, i2, i3, i4)
     REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
-     !! the returned array
+    !! the returned array
     REAL(Real64), INTENT(IN) :: b(:, :, :, :)
-     !! input array, it will be untouched
+    !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
-     !! index 1 is swapped with index `i1`
-     !! make sure i1 is lesser than or equal to 4
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 4
     INTEGER(I4B), INTENT(IN) :: i2
-     !! index 2 is swapped with index `i2`
-     !! make sure i2 is less than or equal to 4
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 4
     INTEGER(I4B), INTENT(IN) :: i3
-     !! index 3 is swapped with index `i3`
-     !! make sure i3 is less than or equal to 4
+    !! index 3 is Swapped with index `i3`
+    !! make sure i3 is less than or equal to 4
     INTEGER(I4B), INTENT(IN) :: i4
-     !! index 4 is swapped with index `i4`
-     !! make sure i4 is less than or equal to 4
-  END SUBROUTINE swap_index5
+    !! index 4 is Swapped with index `i4`
+    !! make sure i4 is less than or equal to 4
+  END SUBROUTINE Swap_index5
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_index5
+INTERFACE Swap
+  MODULE PROCEDURE Swap_index5
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                           SWAP@SWAPMethods
+!                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -499,28 +499,28 @@ END INTERFACE
 ! `a` and `b` are appropriate,.
 
 INTERFACE
-  MODULE PURE SUBROUTINE swap_index6(a, b, i1, i2, i3, i4)
+  MODULE PURE SUBROUTINE Swap_index6(a, b, i1, i2, i3, i4)
     REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
-     !! the returned array
+    !! the returned array
     REAL(Real32), INTENT(IN) :: b(:, :, :, :)
-     !! input array, it will be untouched
+    !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
-     !! index 1 is swapped with index `i1`
-     !! make sure i1 is lesser than or equal to 4
+    !! index 1 is Swapped with index `i1`
+    !! make sure i1 is lesser than or equal to 4
     INTEGER(I4B), INTENT(IN) :: i2
-     !! index 2 is swapped with index `i2`
-     !! make sure i2 is less than or equal to 4
+    !! index 2 is Swapped with index `i2`
+    !! make sure i2 is less than or equal to 4
     INTEGER(I4B), INTENT(IN) :: i3
-     !! index 3 is swapped with index `i3`
-     !! make sure i3 is less than or equal to 4
+    !! index 3 is Swapped with index `i3`
+    !! make sure i3 is less than or equal to 4
     INTEGER(I4B), INTENT(IN) :: i4
-     !! index 4 is swapped with index `i4`
-     !! make sure i4 is less than or equal to 4
-  END SUBROUTINE swap_index6
+    !! index 4 is Swapped with index `i4`
+    !! make sure i4 is less than or equal to 4
+  END SUBROUTINE Swap_index6
 END INTERFACE
 
-INTERFACE SWAP
-  MODULE PROCEDURE swap_index6
+INTERFACE Swap
+  MODULE PROCEDURE Swap_index6
 END INTERFACE
 
 !----------------------------------------------------------------------------
