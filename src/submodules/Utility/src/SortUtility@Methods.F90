@@ -20,7 +20,7 @@
 ! summary:         This submodule contains the sorting routine
 
 SUBMODULE(SortUtility) Methods
-USE BaseMethod
+USE BaseMethod, ONLY: Swap, Split, Head, Tail, arange
 IMPLICIT NONE
 CONTAINS
 
@@ -29,43 +29,62 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeapSort_Int8
-INTEGER(I4B) :: n, i, k, j, l
 INTEGER(Int8) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Int8
 
 MODULE PROCEDURE HeapSort_Int16
-INTEGER(I4B) :: n, i, k, j, l
 INTEGER(Int16) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Int16
 
 MODULE PROCEDURE HeapSort_Int32
-INTEGER(I4B) :: n, i, k, j, l
 INTEGER(Int32) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Int32
 
 MODULE PROCEDURE HeapSort_Int64
-INTEGER(I4B) :: n, i, k, j, l
 INTEGER(Int64) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Int64
 
-!----------------------------------------------------------------------------
-!                                                                   HeapSort
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE HeapSort_Real32
-INTEGER(I4B) :: n, i, k, j, l
 REAL(Real32) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Real32
+
 MODULE PROCEDURE HeapSort_Real64
-INTEGER(I4B) :: n, i, k, j, l
 REAL(Real64) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Real64
+
+!----------------------------------------------------------------------------
+!                                                              ArgHeapSort
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ArgHeapSort_Int8
+#include "./HeapSort/ArgHeapSort.inc"
+END PROCEDURE ArgHeapSort_Int8
+
+MODULE PROCEDURE ArgHeapSort_Int16
+#include "./HeapSort/ArgHeapSort.inc"
+END PROCEDURE ArgHeapSort_Int16
+
+MODULE PROCEDURE ArgHeapSort_Int32
+#include "./HeapSort/ArgHeapSort.inc"
+END PROCEDURE ArgHeapSort_Int32
+
+MODULE PROCEDURE ArgHeapSort_Int64
+#include "./HeapSort/ArgHeapSort.inc"
+END PROCEDURE ArgHeapSort_Int64
+
+MODULE PROCEDURE ArgHeapSort_Real32
+#include "./HeapSort/ArgHeapSort.inc"
+END PROCEDURE ArgHeapSort_Real32
+
+MODULE PROCEDURE ArgHeapSort_Real64
+#include "./HeapSort/ArgHeapSort.inc"
+END PROCEDURE ArgHeapSort_Real64
 
 !----------------------------------------------------------------------------
 !

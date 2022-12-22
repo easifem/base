@@ -23,6 +23,7 @@ PRIVATE
 PUBLIC :: Sort
 PUBLIC :: HeapSort
 PUBLIC :: QuickSort
+PUBLIC :: ArgHeapSort
 
 !----------------------------------------------------------------------------
 !                                                              HeapSort@Sort
@@ -45,18 +46,6 @@ INTERFACE
   MODULE PURE SUBROUTINE HeapSort_Int64(array)
     INTEGER(Int64), INTENT(INOUT) :: array(:)
   END SUBROUTINE HeapSort_Int64
-END INTERFACE
-
-INTERFACE HeapSort
-  MODULE PROCEDURE HeapSort_Int8, HeapSort_Int16, HeapSort_Int32, &
-    & HeapSort_Int64
-END INTERFACE HeapSort
-
-!----------------------------------------------------------------------------
-!                                                             HeapSort@Sort
-!----------------------------------------------------------------------------
-
-INTERFACE
   MODULE PURE SUBROUTINE HeapSort_Real32(array)
     REAL(Real32), INTENT(INOUT) :: array(:)
   END SUBROUTINE HeapSort_Real32
@@ -66,27 +55,54 @@ INTERFACE
 END INTERFACE
 
 INTERFACE HeapSort
-  MODULE PROCEDURE HeapSort_Real32, HeapSort_Real64
+  MODULE PROCEDURE HeapSort_Int8, HeapSort_Int16, HeapSort_Int32, &
+    & HeapSort_Int64, HeapSort_Real32, HeapSort_Real64
 END INTERFACE HeapSort
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                           ArgHeapSort@Sort
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 22 March 2021
+! summary: Heap Sort
+
 INTERFACE
-  MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectReal32(vect1, low, high)
-    REAL(Real32), INTENT(INOUT) :: vect1(:)
-    INTEGER(I4B), INTENT(IN) :: low, high
-  END SUBROUTINE QuickSort1vectReal32
-  MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectReal64(vect1, low, high)
-    REAL(Real64), INTENT(INOUT) :: vect1(:)
-    INTEGER(I4B), INTENT(IN) :: low, high
-  END SUBROUTINE QuickSort1vectReal64
+  MODULE PURE SUBROUTINE ArgHeapSort_Int8(array, arg)
+    INTEGER(Int8), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(OUT) :: arg(0:)
+  END SUBROUTINE ArgHeapSort_Int8
+
+  MODULE PURE SUBROUTINE ArgHeapSort_Int16(array, arg)
+    INTEGER(Int16), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(OUT) :: arg(0:)
+  END SUBROUTINE ArgHeapSort_Int16
+
+  MODULE PURE SUBROUTINE ArgHeapSort_Int32(array, arg)
+    INTEGER(Int32), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(OUT) :: arg(0:)
+  END SUBROUTINE ArgHeapSort_Int32
+
+  MODULE PURE SUBROUTINE ArgHeapSort_Int64(array, arg)
+    INTEGER(Int64), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(OUT) :: arg(0:)
+  END SUBROUTINE ArgHeapSort_Int64
+
+  MODULE PURE SUBROUTINE ArgHeapSort_Real32(array, arg)
+    REAL(Real32), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(OUT) :: arg(0:)
+  END SUBROUTINE ArgHeapSort_Real32
+
+  MODULE PURE SUBROUTINE ArgHeapSort_Real64(array, arg)
+    REAL(Real64), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(OUT) :: arg(0:)
+  END SUBROUTINE ArgHeapSort_Real64
 END INTERFACE
 
-INTERFACE QuickSort
-  MODULE PROCEDURE QuickSort1vectReal32, QuickSort1vectReal64
-END INTERFACE QuickSort
+INTERFACE ArgHeapSort
+  MODULE PROCEDURE ArgHeapSort_Int8, ArgHeapSort_Int16, ArgHeapSort_Int32, &
+    & ArgHeapSort_Int64, ArgHeapSort_Real32, ArgHeapSort_Real64
+END INTERFACE ArgHeapSort
 
 !----------------------------------------------------------------------------
 !                                                             QuickSort@Sort
@@ -109,11 +125,20 @@ INTERFACE
     INTEGER(Int64), INTENT(INOUT) :: vect1(:)
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE QuickSort1vectInt64
+  MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectReal32(vect1, low, high)
+    REAL(Real32), INTENT(INOUT) :: vect1(:)
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE QuickSort1vectReal32
+  MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectReal64(vect1, low, high)
+    REAL(Real64), INTENT(INOUT) :: vect1(:)
+    INTEGER(I4B), INTENT(IN) :: low, high
+  END SUBROUTINE QuickSort1vectReal64
 END INTERFACE
 
 INTERFACE QuickSort
   MODULE PROCEDURE QuickSort1vectInt8, QuickSort1vectInt16, &
     & QuickSort1vectInt32, QuickSort1vectInt64
+  MODULE PROCEDURE QuickSort1vectReal32, QuickSort1vectReal64
 END INTERFACE QuickSort
 
 !----------------------------------------------------------------------------
