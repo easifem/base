@@ -120,215 +120,35 @@ END PROCEDURE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuickSort3vectIII
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
-END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
+#include "./QuickSort/QuickSort3Vec.inc"
+END PROCEDURE QuickSort3vectIII
 
 MODULE PROCEDURE QuickSort3vectIIR
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
+#include "./QuickSort/QuickSort3Vec.inc"
 END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuickSort3vectIRR
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
+#include "./QuickSort/QuickSort3Vec.inc"
 END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuickSort3vectIRI
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
+#include "./QuickSort/QuickSort3Vec.inc"
 END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuickSort3vectRRR
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
+#include "./QuickSort/QuickSort3Vec.inc"
 END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuickSort3vectRRI
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
+#include "./QuickSort/QuickSort3Vec.inc"
 END PROCEDURE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuickSort3vectRIR
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
+#include "./QuickSort/QuickSort3Vec.inc"
 END PROCEDURE
 
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 MODULE PROCEDURE QuickSort3vectRII
-INTEGER(I4B) i, iPivot
-iPivot = high
-i = low
-DO WHILE (iPivot > i)
-  IF (vect1(i) > vect1(iPivot)) THEN
-    CALL Swap(vect1(i), vect1(iPivot - 1))
-    CALL Swap(vect2(i), vect2(iPivot - 1))
-    CALL Swap(vect3(i), vect3(iPivot - 1))
-    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
-    CALL Swap(vect2(iPivot - 1), vect2(iPivot))
-    CALL Swap(vect3(iPivot - 1), vect3(iPivot))
-    iPivot = iPivot - 1
-  ELSE
-    i = i + 1
-  END IF
-END DO
-IF (low < high) THEN
-  CALL QuickSort(vect1, vect2, vect3, low, iPivot - 1)
-  CALL QuickSort(vect1, vect2, vect3, iPivot + 1, high)
-END IF
+#include "./QuickSort/QuickSort3Vec.inc"
 END PROCEDURE
 
 !----------------------------------------------------------------------------
