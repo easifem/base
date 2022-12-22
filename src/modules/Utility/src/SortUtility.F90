@@ -21,9 +21,10 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Sort
+PUBLIC :: ArgSort
 PUBLIC :: HeapSort
-PUBLIC :: QuickSort
 PUBLIC :: ArgHeapSort
+PUBLIC :: QuickSort
 
 !----------------------------------------------------------------------------
 !                                                              HeapSort@Sort
@@ -511,38 +512,88 @@ INTERFACE QuickSort
 END INTERFACE QuickSort
 
 !----------------------------------------------------------------------------
-!                                                                 Sort@Sort
+!                                                                 Sort
 !----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 22 March 2021
-! summary: Recursive QuickSort using binary tree pivot.
 
 INTERFACE
-  MODULE PURE RECURSIVE FUNCTION Sort_INT(x) RESULT(Ans)
-    INTEGER(I4B), DIMENSION(:), INTENT(IN) :: x
-    INTEGER(I4B), DIMENSION(SIZE(x)) :: Ans
-  END FUNCTION Sort_INT
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                                 Sort@Sort
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 22 March 2021
-! summary: Recursive QuickSort using binary tree pivot.
-
-INTERFACE
-  MODULE PURE RECURSIVE FUNCTION Sort_REAL(x) RESULT(Ans)
-    REAL(DFP), DIMENSION(:), INTENT(IN) :: x
-    REAL(DFP), DIMENSION(SIZE(x)) :: Ans
-  END FUNCTION Sort_REAL
+  MODULE PURE FUNCTION Sort_Int8(x, name) RESULT(ans)
+    INTEGER(Int8), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(Int8) :: ans(SIZE(x))
+  END FUNCTION Sort_Int8
+  MODULE PURE FUNCTION Sort_Int16(x, name) RESULT(ans)
+    INTEGER(Int16), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(Int16) :: ans(SIZE(x))
+  END FUNCTION Sort_Int16
+  MODULE PURE FUNCTION Sort_Int32(x, name) RESULT(ans)
+    INTEGER(Int32), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(Int32) :: ans(SIZE(x))
+  END FUNCTION Sort_Int32
+  MODULE PURE FUNCTION Sort_Int64(x, name) RESULT(ans)
+    INTEGER(Int64), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(Int64) :: ans(SIZE(x))
+  END FUNCTION Sort_Int64
+  MODULE PURE FUNCTION Sort_Real32(x, name) RESULT(ans)
+    Real(Real32), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    Real(Real32) :: ans(SIZE(x))
+  END FUNCTION Sort_Real32
+  MODULE PURE FUNCTION Sort_Real64(x, name) RESULT(ans)
+    Real(Real64), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    Real(Real64) :: ans(SIZE(x))
+  END FUNCTION Sort_Real64
 END INTERFACE
 
 INTERFACE Sort
-  MODULE PROCEDURE Sort_INT, Sort_REAL
+  MODULE PROCEDURE Sort_Int8, Sort_Int16, Sort_Int32, Sort_Int64
+  MODULE PROCEDURE Sort_Real32, Sort_Real64
 END INTERFACE Sort
+
+!----------------------------------------------------------------------------
+!                                                                    ArgSort
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION ArgSort_Int8(x, name) RESULT(ans)
+    INTEGER(Int8), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(I4B) :: ans(SIZE(x))
+  END FUNCTION ArgSort_Int8
+  MODULE PURE FUNCTION ArgSort_Int16(x, name) RESULT(ans)
+    INTEGER(Int16), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(I4B) :: ans(SIZE(x))
+  END FUNCTION ArgSort_Int16
+  MODULE PURE FUNCTION ArgSort_Int32(x, name) RESULT(ans)
+    INTEGER(Int32), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(I4B) :: ans(SIZE(x))
+  END FUNCTION ArgSort_Int32
+  MODULE PURE FUNCTION ArgSort_Int64(x, name) RESULT(ans)
+    INTEGER(Int64), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(I4B) :: ans(SIZE(x))
+  END FUNCTION ArgSort_Int64
+  MODULE PURE FUNCTION ArgSort_Real32(x, name) RESULT(ans)
+    Real(Real32), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(I4B) :: ans(SIZE(x))
+  END FUNCTION ArgSort_Real32
+  MODULE PURE FUNCTION ArgSort_Real64(x, name) RESULT(ans)
+    Real(Real64), INTENT(IN) :: x(:)
+    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: name
+    INTEGER(I4B) :: ans(SIZE(x))
+  END FUNCTION ArgSort_Real64
+END INTERFACE
+
+INTERFACE ArgSort
+  MODULE PROCEDURE ArgSort_Int8, ArgSort_Int16, ArgSort_Int32, ArgSort_Int64
+  MODULE PROCEDURE ArgSort_Real32, ArgSort_Real64
+END INTERFACE ArgSort
 
 !----------------------------------------------------------------------------
 !

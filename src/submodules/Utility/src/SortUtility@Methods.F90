@@ -20,7 +20,7 @@
 ! summary:         This submodule contains the sorting routine
 
 SUBMODULE(SortUtility) Methods
-USE BaseMethod, ONLY: Swap, Split, Head, Tail, arange
+USE BaseMethod, ONLY: Swap, UpperCase, arange
 IMPLICIT NONE
 CONTAINS
 
@@ -242,37 +242,47 @@ END PROCEDURE
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Sort_Int
-INTEGER(I4B), DIMENSION(SIZE(x) - 1) :: rest
-INTEGER(I4B) :: pivot
-
-IF (SIZE(x) > 1) THEN
-  pivot = HEAD(SPLIT(x, 2))
-  rest = [SPLIT(x, 1), TAIL(split(x, 2))]
-  ANS = [Sort_Int(PACK(rest, rest < pivot)), pivot, &
-          & Sort_Int(PACK(rest, rest >= pivot))]
-ELSE
-  ANS = x
-END IF
-END PROCEDURE Sort_Int
+MODULE PROCEDURE Sort_Int8
+#include "./Sort/Sort.inc"
+END PROCEDURE Sort_Int8
+MODULE PROCEDURE Sort_Int16
+#include "./Sort/Sort.inc"
+END PROCEDURE Sort_Int16
+MODULE PROCEDURE Sort_Int32
+#include "./Sort/Sort.inc"
+END PROCEDURE Sort_Int32
+MODULE PROCEDURE Sort_Int64
+#include "./Sort/Sort.inc"
+END PROCEDURE Sort_Int64
+MODULE PROCEDURE Sort_Real32
+#include "./Sort/Sort.inc"
+END PROCEDURE Sort_Real32
+MODULE PROCEDURE Sort_Real64
+#include "./Sort/Sort.inc"
+END PROCEDURE Sort_Real64
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE Sort_Real
-REAL(DFP), DIMENSION(SIZE(x) - 1) :: rest
-REAL(DFP) :: pivot
-!
-IF (SIZE(x) > 1) THEN
-  pivot = HEAD(SPLIT(x, 2))
-  rest = [SPLIT(x, 1), TAIL(split(x, 2))]
-  ANS = [Sort_Real(pack(rest, rest < pivot)), pivot, &
-          & Sort_Real(pack(rest, rest >= pivot))]
-ELSE
-  ANS = x
-END IF
-END PROCEDURE Sort_Real
+MODULE PROCEDURE ArgSort_Int8
+#include "./Sort/ArgSort.inc"
+END PROCEDURE ArgSort_Int8
+MODULE PROCEDURE ArgSort_Int16
+#include "./Sort/ArgSort.inc"
+END PROCEDURE ArgSort_Int16
+MODULE PROCEDURE ArgSort_Int32
+#include "./Sort/ArgSort.inc"
+END PROCEDURE ArgSort_Int32
+MODULE PROCEDURE ArgSort_Int64
+#include "./Sort/ArgSort.inc"
+END PROCEDURE ArgSort_Int64
+MODULE PROCEDURE ArgSort_Real32
+#include "./Sort/ArgSort.inc"
+END PROCEDURE ArgSort_Real32
+MODULE PROCEDURE ArgSort_Real64
+#include "./Sort/ArgSort.inc"
+END PROCEDURE ArgSort_Real64
 
 !----------------------------------------------------------------------------
 !
