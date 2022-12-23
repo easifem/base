@@ -19,7 +19,7 @@
 ! summary:  String datatype
 
 MODULE String_Class
-USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: iostat_eor, stdout => output_unit
+USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: IOSTAT_EOR, stdout => OUTPUT_UNIT
 USE BeFor64, ONLY: b64_decode, b64_encode
 USE FACE, ONLY: colorize
 USE PENF, ONLY: I1P, I2P, I4P, I8P, R4P, R8P, R16P, str
@@ -274,11 +274,17 @@ CONTAINS
     !! separator and after).
   PROCEDURE, PASS(self) :: read_file
     !! Read a file a single string stream.
+  GENERIC, PUBLIC :: readFile => read_file
+    !! Generic function for reading file
   PROCEDURE, PASS(self) :: read_line
     !! Read line (record) from a connected unit.
+  GENERIC, PUBLIC :: readLine => read_line
+    !! Generic method for reading a record from file
   PROCEDURE, PASS(self) :: read_lines
     !! Read (all) lines (records) from a connected unit as a single ascii
     !! stream.
+  GENERIC, PUBLIC :: readLines => read_lines
+    !! Generic method for reading all lines from a file
   PROCEDURE, PASS(self) :: replace
     !! Return a string with all occurrences of substring old replaced by new.
   PROCEDURE, PASS(self) :: reverse
@@ -965,7 +971,7 @@ ELEMENTAL FUNCTION slen_trim(self) RESULT(l)
   INTEGER :: l    !< String length.
 
   IF (ALLOCATED(self%raw)) THEN
-    l = len_TRIM(string=self%raw)
+    l = LEN_TRIM(string=self%raw)
   ELSE
     l = 0
   END IF
@@ -1541,7 +1547,7 @@ SUBROUTINE glob_string(self, pattern, list)
   tempname = self%tempname()
   CALL execute_command_LINE('ls -1 '//TRIM(ADJUSTL(pattern))//' > '//tempname)
   CALL tempfile%read_file(file=tempname)
-  CALL tempfile%split(sep=new_LINE('a'), tokens=list)
+  CALL tempfile%split(sep=NEW_LINE('a'), tokens=list)
   OPEN (newunit=tempunit, file=tempname)
   CLOSE (unit=tempunit, status='delete')
 END SUBROUTINE glob_string
@@ -2163,90 +2169,135 @@ PURE FUNCTION partition(self, sep) RESULT(partitions)
   END IF
 END FUNCTION partition
 
-SUBROUTINE read_file(self, file, is_fast, form, iostat, iomsg)
-  !< Read a file as a single string stream.
-  !<
-  !< @note All the lines are stored into the string self as a single ascii stream. Each line (record) is separated by a `new_line`
-  !< character.
-  !<
-  !< @note For unformatted read only `access='stream'` is supported with new_line as line terminator.
-  !<
-  !< @note *Fast* file reading allows a very efficient reading of streamed file, but it dumps file as single streamed string.
-  !<
-  !<```fortran
-  !< type(string)              :: astring
-  !< type(string), allocatable :: strings(:)
-  !< type(string)              :: line(3)
-  !< integer                   :: iostat
-  !< character(len=99)         :: iomsg
-  !< integer                   :: scratch
-  !< integer                   :: l
-  !< logical                   :: test_passed(9)
-  !< line(1) = ' Hello World!   '
-  !< line(2) = 'How are you?  '
-  !< line(3) = '   All say: "Fine thanks"'
-  !< open(newunit=scratch, file='read_file_test.tmp')
-  !< write(scratch, "(A)") line(1)%chars()
-  !< write(scratch, "(A)") line(2)%chars()
-  !< write(scratch, "(A)") line(3)%chars()
-  !< close(scratch)
-  !< call astring%read_file(file='read_file_test.tmp', iostat=iostat, iomsg=iomsg)
-  !< call astring%split(tokens=strings, sep=new_line('a'))
-  !< test_passed(1) = (size(strings, dim=1)==size(line, dim=1))
-  !< do l=1, size(strings, dim=1)
-  !<   test_passed(l+1) = (strings(l)==line(l))
-  !< enddo
-  !< open(newunit=scratch, file='read_file_test.tmp', form='UNFORMATTED', access='STREAM')
-  !< write(scratch) line(1)%chars()//new_line('a')
-  !< write(scratch) line(2)%chars()//new_line('a')
-  !< write(scratch) line(3)%chars()//new_line('a')
-  !< close(scratch)
-  !< call astring%read_file(file='read_file_test.tmp', form='unformatted', iostat=iostat, iomsg=iomsg)
-  !< call astring%split(tokens=strings, sep=new_line('a'))
-  !< test_passed(5) = (size(strings, dim=1)==size(line, dim=1))
-  !< do l=1, size(strings, dim=1)
-  !<   test_passed(l+5) = (strings(l)==line(l))
-  !< enddo
-  !< open(newunit=scratch, file='read_file_test.tmp', form='UNFORMATTED', access='STREAM')
-  !< close(scratch, status='DELETE')
-  !< call astring%read_file(file='read_file_test.tmp', iostat=iostat)
-  !< test_passed(9) = (iostat/=0)
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(inout) :: self       !< The string.
-  CHARACTER(len=*), INTENT(IN) :: file       !< File name.
-  LOGICAL, INTENT(IN), OPTIONAL :: is_fast    !< Flag to enable (super) fast file reading.
-  CHARACTER(len=*), INTENT(IN), OPTIONAL :: form       !< Format of unit.
-  INTEGER, INTENT(out), OPTIONAL :: iostat     !< IO status code.
-  CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg      !< IO status message.
-  LOGICAL :: is_fast_   !< Flag to enable (super) fast file reading, local variable.
-  TYPE(string) :: form_      !< Format of unit, local variable.
-  INTEGER :: iostat_    !< IO status code, local variable.
-  CHARACTER(len=:), ALLOCATABLE :: iomsg_     !< IO status message, local variable.
-  INTEGER :: unit       !< Logical unit.
-  LOGICAL :: does_exist !< Check if file exist.
-  INTEGER(I4P) :: filesize   !< Size of the file for fast reading.
+!---------------------------------------------------------------------------
+!                                                                  ReadFile
+!----------------------------------------------------------------------------
 
-  iomsg_ = REPEAT(' ', 99); IF (PRESENT(iomsg)) iomsg_ = iomsg
+!> author: Stefano Zaghi, https://github.com/szaghi
+! date: 2022-12-16
+! summary:         Read a file
+!
+!# Introduction
+!
+! Read a file as a single string stream.
+!
+! @note All the lines are stored into the string self as a single
+! ascii stream. Each line (record) is separated by a `new_line`
+! character.
+!
+!@note
+! For unformatted read only `access='stream'` is supported
+! with new_line as line terminator.
+!
+!@note
+! *Fast* file reading allows a very efficient reading of
+! streamed file, but it dumps file as single streamed string.
+!
+!```fortran
+! type(string)              :: astring
+! type(string), allocatable :: strings(:)
+! type(string)              :: line(3)
+! integer                   :: iostat
+! character(len=99)         :: iomsg
+! integer                   :: scratch
+! integer                   :: l
+! logical                   :: test_passed(9)
+! line(1) = ' Hello World!   '
+! line(2) = 'How are you?  '
+! line(3) = '   All say: "Fine thanks"'
+! open(newunit=scratch, file='read_file_test.tmp')
+! write(scratch, "(A)") line(1)%chars()
+! write(scratch, "(A)") line(2)%chars()
+! write(scratch, "(A)") line(3)%chars()
+! close(scratch)
+! call astring%read_file(file='read_file_test.tmp', &
+! & iostat=iostat, iomsg=iomsg)
+! call astring%split(tokens=strings, sep=new_line('a'))
+! test_passed(1) = (size(strings, dim=1)==size(line, dim=1))
+! do l=1, size(strings, dim=1)
+!   test_passed(l+1) = (strings(l)==line(l))
+! enddo
+! open(newunit=scratch, file='read_file_test.tmp', &
+! & form='UNFORMATTED', access='STREAM')
+! write(scratch) line(1)%chars()//new_line('a')
+! write(scratch) line(2)%chars()//new_line('a')
+! write(scratch) line(3)%chars()//new_line('a')
+! close(scratch)
+! call astring%read_file(file='read_file_test.tmp', form='unformatted', &
+! & iostat=iostat, iomsg=iomsg)
+! call astring%split(tokens=strings, sep=new_line('a'))
+! test_passed(5) = (size(strings, dim=1)==size(line, dim=1))
+! do l=1, size(strings, dim=1)
+!   test_passed(l+5) = (strings(l)==line(l))
+! enddo
+! open(newunit=scratch, file='read_file_test.tmp', form='UNFORMATTED', &
+! & access='STREAM')
+! close(scratch, status='DELETE')
+! call astring%read_file(file='read_file_test.tmp', iostat=iostat)
+! test_passed(9) = (iostat/=0)
+! print '(L1)', all(test_passed)
+!```
+
+SUBROUTINE read_file(self, file, is_fast, form, iostat, iomsg)
+  CLASS(string), INTENT(inout) :: self
+  !! The string.
+  CHARACTER(len=*), INTENT(IN) :: file
+  !! File name.
+  LOGICAL, INTENT(IN), OPTIONAL :: is_fast
+  !! Flag to enable (super) fast file reading.
+  CHARACTER(len=*), INTENT(IN), OPTIONAL :: form
+  !! Format of unit.
+  INTEGER, INTENT(out), OPTIONAL :: iostat
+  !! IO status code.
+  CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg
+  !! IO status message.
+  !
+  ! internal variables
+  !
+  LOGICAL :: is_fast_
+  !! Flag to enable (super) fast file reading, local variable.
+  TYPE(string) :: form_
+  !! Format of unit, local variable.
+  INTEGER :: iostat_
+  !! IO status code, local variable.
+  CHARACTER(len=:), ALLOCATABLE :: iomsg_
+  !! IO status message, local variable.
+  INTEGER :: unit
+  !! Logical unit.
+  LOGICAL :: does_exist
+  !! Check if file exist.
+  INTEGER(I4P) :: filesize
+  !! Size of the file for fast reading.
+  !
+  ! main program
+  !
+  iomsg_ = REPEAT(' ', 99)
+  IF (PRESENT(iomsg)) iomsg_ = iomsg
   INQUIRE (file=file, iomsg=iomsg_, iostat=iostat_, exist=does_exist)
+  !
   IF (does_exist) THEN
-    is_fast_ = .FALSE.; IF (PRESENT(is_fast)) is_fast_ = is_fast
+    is_fast_ = .FALSE.;
+    IF (PRESENT(is_fast)) is_fast_ = is_fast
     IF (is_fast_) THEN
-            OPEN (newunit=unit, file=file, access='STREAM', form='UNFORMATTED', iomsg=iomsg_, iostat=iostat_)
+      OPEN (newunit=unit, file=file, &
+        & access='STREAM', form='UNFORMATTED', iomsg=iomsg_, iostat=iostat_)
       INQUIRE (file=file, size=filesize)
       IF (ALLOCATED(self%raw)) DEALLOCATE (self%raw)
       ALLOCATE (CHARACTER(len=filesize) :: self%raw)
       READ (unit=unit, iostat=iostat_, iomsg=iomsg_) self%raw
       CLOSE (unit)
     ELSE
-      form_ = 'FORMATTED'; IF (PRESENT(form)) form_ = form; form_ = form_%upper()
+      form_ = 'FORMATTED'
+      IF (PRESENT(form)) form_ = form
+      form_ = form_%upper()
       SELECT CASE (form_%chars())
       CASE ('FORMATTED')
-               OPEN (newunit=unit, file=file, status='OLD', action='READ', iomsg=iomsg_, iostat=iostat_, err=10)
+        OPEN (newunit=unit, file=file, status='OLD', &
+        & action='READ', iomsg=iomsg_, iostat=iostat_, err=10)
       CASE ('UNFORMATTED')
-               OPEN (newunit=unit, file=file, status='OLD', action='READ', form='UNFORMATTED', access='STREAM', &
-              iomsg=iomsg_, iostat=iostat_, err=10)
+        OPEN (newunit=unit, file=file, status='OLD',  &
+          & action='READ', form='UNFORMATTED', access='STREAM', &
+          & iomsg=iomsg_, iostat=iostat_, err=10)
       END SELECT
       CALL self%read_lines(unit=unit, form=form, iomsg=iomsg_, iostat=iostat_)
 10    CLOSE (unit)
@@ -2263,86 +2314,115 @@ END SUBROUTINE read_file
 !                                                                  readLine
 !----------------------------------------------------------------------------
 
-SUBROUTINE read_line(self, unit, form, iostat, iomsg)
-  !< Read line (record) from a connected unit.
-  !<
-  !< The line is read as an ascii stream read until the eor is reached.
-  !<
-  !< @note For unformatted read only `access='stream'` is supported with new_line as line terminator.
-  !<
-  !<```fortran
-  !< type(string)      :: astring
-  !< type(string)      :: line(3)
-  !< integer           :: iostat
-  !< character(len=99) :: iomsg
-  !< integer           :: scratch
-  !< integer           :: l
-  !< logical           :: test_passed(6)
-  !< line(1) = ' Hello World!   '
-  !< line(2) = 'How are you?  '
-  !< line(3) = '   All say: "Fine thanks"'
-  !< open(newunit=scratch, status='SCRATCH')
-  !< write(scratch, "(A)") line(1)%chars()
-  !< write(scratch, "(A)") line(2)%chars()
-  !< write(scratch, "(A)") line(3)%chars()
-  !< rewind(scratch)
-  !< l = 0
-  !< iostat = 0
-  !< do
-  !<   l = l + 1
-  !<   call astring%read_line(unit=scratch, iostat=iostat, iomsg=iomsg)
-  !<   if (iostat/=0.and..not.is_iostat_eor(iostat)) then
-  !<     exit
-  !<   else
-  !<     test_passed(l) = (astring==line(l))
-  !<   endif
-  !< enddo
-  !< close(scratch)
-  !< open(newunit=scratch, status='SCRATCH', form='UNFORMATTED', access='STREAM')
-  !< write(scratch) line(1)%chars()//new_line('a')
-  !< write(scratch) line(2)%chars()//new_line('a')
-  !< write(scratch) line(3)%chars()//new_line('a')
-  !< rewind(scratch)
-  !< l = 0
-  !< iostat = 0
-  !< do
-  !<   l = l + 1
-  !<   call astring%read_line(unit=scratch, iostat=iostat, iomsg=iomsg, form='UnfORMatteD')
-  !<   if (iostat/=0.and..not.is_iostat_eor(iostat)) then
-  !<     exit
-  !<   else
-  !<     test_passed(l+3) = (astring==line(l))
-  !<   endif
-  !< enddo
-  !< close(scratch)
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(inout) :: self    !< The string.
-  INTEGER, INTENT(IN) :: unit    !< Logical unit.
-  CHARACTER(len=*), INTENT(IN), OPTIONAL :: form    !< Format of unit.
-  INTEGER, INTENT(out), OPTIONAL :: iostat  !< IO status code.
-  CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg   !< IO status message.
-  TYPE(string) :: form_   !< Format of unit, local variable.
-  INTEGER :: iostat_ !< IO status code, local variable.
-  CHARACTER(len=:), ALLOCATABLE :: iomsg_  !< IO status message, local variable.
-  CHARACTER(kind=CK, len=:), ALLOCATABLE :: line    !< Line storage.
-  CHARACTER(kind=CK, len=1) :: ch      !< Character storage.
+!> author: Stefano Zaghi, https://github.com/szaghi
+! date: 2022-12-16
+! summary:         2022-12-16
+!
+!# Introduction
+!
+! Read line (record) from a connected unit.
+!
+! The line is read as an ascii stream read until the eor
+! is reached.
+!
+!@note
+! For unformatted read only `access='stream'` is
+! supported with new_line as line terminator.
+!@endnote
+!
+!```fortran
+! type(string)      :: astring
+! type(string)      :: line(3)
+! integer           :: iostat
+! character(len=99) :: iomsg
+! integer           :: scratch
+! integer           :: l
+! logical           :: test_passed(6)
+! line(1) = ' Hello World!   '
+! line(2) = 'How are you?  '
+! line(3) = '   All say: "Fine thanks"'
+! open(newunit=scratch, status='SCRATCH')
+! write(scratch, "(A)") line(1)%chars()
+! write(scratch, "(A)") line(2)%chars()
+! write(scratch, "(A)") line(3)%chars()
+! rewind(scratch)
+! l = 0
+! iostat = 0
+! do
+!   l = l + 1
+!   call astring%read_line(unit=scratch, &
+! & iostat=iostat, iomsg=iomsg)
+!   if (iostat/=0.and..not.is_iostat_eor(iostat)) then
+!     exit
+!   else
+!     test_passed(l) = (astring==line(l))
+!   endif
+! enddo
+! close(scratch)
+! open(newunit=scratch, status='SCRATCH', form='UNFORMATTED', access='STREAM')
+! write(scratch) line(1)%chars()//new_line('a')
+! write(scratch) line(2)%chars()//new_line('a')
+! write(scratch) line(3)%chars()//new_line('a')
+! rewind(scratch)
+! l = 0
+! iostat = 0
+! do
+!   l = l + 1
+!   call astring%read_line(unit=scratch, &
+! & iostat=iostat, iomsg=iomsg, form='UnfORMatteD')
+!   if (iostat/=0.and..not.is_iostat_eor(iostat)) then
+!     exit
+!   else
+!     test_passed(l+3) = (astring==line(l))
+!   endif
+! enddo
+! close(scratch)
+! print '(L1)', all(test_passed)
+!```
 
-  form_ = 'FORMATTED'; IF (PRESENT(form)) form_ = form; form_ = form_%upper()
-  iomsg_ = REPEAT(' ', 99); IF (PRESENT(iomsg)) iomsg_ = iomsg
+SUBROUTINE read_line(self, unit, form, iostat, iomsg)
+  CLASS(string), INTENT(inout) :: self
+  !! The string.
+  INTEGER, INTENT(IN) :: unit
+  !! Logical unit.
+  CHARACTER(len=*), INTENT(IN), OPTIONAL :: form
+  !! Format of unit.
+  INTEGER, INTENT(out), OPTIONAL :: iostat
+  !! IO status code.
+  CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg
+  !! IO status message.
+  TYPE(string) :: form_
+  !! Format of unit, local variable.
+  INTEGER :: iostat_
+  !! IO status code, local variable.
+  CHARACTER(len=:), ALLOCATABLE :: iomsg_
+  !! IO status message, local variable.
+  CHARACTER(kind=CK, len=:), ALLOCATABLE :: line
+  !! Line storage.
+  CHARACTER(kind=CK, len=1) :: ch
+  !! Character storage.
+
+  form_ = 'FORMATTED'
+  IF (PRESENT(form)) form_ = form
+  form_ = form_%upper()
+  iomsg_ = REPEAT(' ', 99)
+  IF (PRESENT(iomsg)) iomsg_ = iomsg
   line = ''
   SELECT CASE (form_%chars())
   CASE ('FORMATTED')
     DO
-            READ (unit, "(A)", advance='no', iostat=iostat_, iomsg=iomsg_, err=10, END=10, eor=10) ch
+      !!
+      READ (unit, "(A)", advance='no', iostat=iostat_, &
+        & iomsg=iomsg_, err=10, END=10, eor=10) &
+        & ch
       line = line//ch
     END DO
   CASE ('UNFORMATTED')
     DO
-      READ (unit, iostat=iostat_, iomsg=iomsg_, err=10, END=10) ch
-      IF (ch == new_LINE('a')) THEN
-        iostat_ = iostat_eor
+      READ (unit, iostat=iostat_, iomsg=iomsg_, &
+        & err=10, END=10) ch
+      IF (ch == NEW_LINE('a')) THEN
+        iostat_ = IOSTAT_EOR
         EXIT
       END IF
       line = line//ch
@@ -2353,63 +2433,84 @@ SUBROUTINE read_line(self, unit, form, iostat, iomsg)
   IF (PRESENT(iomsg)) iomsg = iomsg_
 END SUBROUTINE read_line
 
+! Read (all) lines (records) from a connected unit as a single ascii stream.
+!
+!@note
+! All the lines are stored into the string self as a single ascii stream.
+! Each line (record) is separated by a `new_line`
+! character. The line is read as an ascii stream read until the eor
+! is reached.
+!@endnote
+!
+!@note
+! The connected unit is rewinded.
+! At a successful exit current record is at eof,
+! at the beginning otherwise.
+!@endnote
+!
+!@note
+! For unformatted read only `access='stream'` is
+! supported with new_line as line terminator.
+!@endnote
+!
+!```fortran
+! type(string)              :: astring
+! type(string), allocatable :: strings(:)
+! type(string)              :: line(3)
+! integer                   :: iostat
+! character(len=99)         :: iomsg
+! integer                   :: scratch
+! integer                   :: l
+! logical                   :: test_passed(8)
+!
+! line(1) = ' Hello World!   '
+! line(2) = 'How are you?  '
+! line(3) = '   All say: "Fine thanks"'
+! open(newunit=scratch, status='SCRATCH')
+! write(scratch, "(A)") line(1)%chars()
+! write(scratch, "(A)") line(2)%chars()
+! write(scratch, "(A)") line(3)%chars()
+! call astring%read_lines(unit=scratch, iostat=iostat, iomsg=iomsg)
+! call astring%split(tokens=strings, sep=new_line('a'))
+! test_passed(1) = (size(strings, dim=1)==size(line, dim=1))
+! do l=1, size(strings, dim=1)
+!   test_passed(l+1) = (strings(l)==line(l))
+! enddo
+! close(scratch)
+! open(newunit=scratch, status='SCRATCH', form='UNFORMATTED', access='STREAM')
+! write(scratch) line(1)%chars()//new_line('a')
+! write(scratch) line(2)%chars()//new_line('a')
+! write(scratch) line(3)%chars()//new_line('a')
+! call astring%read_lines(unit=scratch, &
+! form='unformatted', iostat=iostat, iomsg=iomsg)
+! call astring%split(tokens=strings, sep=new_line('a'))
+! test_passed(5) = (size(strings, dim=1)==size(line, dim=1))
+! do l=1, size(strings, dim=1)
+!   test_passed(l+5) = (strings(l)==line(l))
+! enddo
+! close(scratch)
+! print '(L1)', all(test_passed)
+!```
+
 SUBROUTINE read_lines(self, unit, form, iostat, iomsg)
-  !< Read (all) lines (records) from a connected unit as a single ascii stream.
-  !<
-  !< @note All the lines are stored into the string self as a single ascii stream. Each line (record) is separated by a `new_line`
-  !< character. The line is read as an ascii stream read until the eor is reached.
-  !<
-  !< @note The connected unit is rewinded. At a successful exit current record is at eof, at the beginning otherwise.
-  !<
-  !< @note For unformatted read only `access='stream'` is supported with new_line as line terminator.
-  !<
-  !<```fortran
-  !< type(string)              :: astring
-  !< type(string), allocatable :: strings(:)
-  !< type(string)              :: line(3)
-  !< integer                   :: iostat
-  !< character(len=99)         :: iomsg
-  !< integer                   :: scratch
-  !< integer                   :: l
-  !< logical                   :: test_passed(8)
-  !<
-  !< line(1) = ' Hello World!   '
-  !< line(2) = 'How are you?  '
-  !< line(3) = '   All say: "Fine thanks"'
-  !< open(newunit=scratch, status='SCRATCH')
-  !< write(scratch, "(A)") line(1)%chars()
-  !< write(scratch, "(A)") line(2)%chars()
-  !< write(scratch, "(A)") line(3)%chars()
-  !< call astring%read_lines(unit=scratch, iostat=iostat, iomsg=iomsg)
-  !< call astring%split(tokens=strings, sep=new_line('a'))
-  !< test_passed(1) = (size(strings, dim=1)==size(line, dim=1))
-  !< do l=1, size(strings, dim=1)
-  !<   test_passed(l+1) = (strings(l)==line(l))
-  !< enddo
-  !< close(scratch)
-  !< open(newunit=scratch, status='SCRATCH', form='UNFORMATTED', access='STREAM')
-  !< write(scratch) line(1)%chars()//new_line('a')
-  !< write(scratch) line(2)%chars()//new_line('a')
-  !< write(scratch) line(3)%chars()//new_line('a')
-  !< call astring%read_lines(unit=scratch, form='unformatted', iostat=iostat, iomsg=iomsg)
-  !< call astring%split(tokens=strings, sep=new_line('a'))
-  !< test_passed(5) = (size(strings, dim=1)==size(line, dim=1))
-  !< do l=1, size(strings, dim=1)
-  !<   test_passed(l+5) = (strings(l)==line(l))
-  !< enddo
-  !< close(scratch)
-  !< print '(L1)', all(test_passed)
-  !<```
-  !=> T <<<
-  CLASS(string), INTENT(inout) :: self    !< The string.
-  INTEGER, INTENT(IN) :: unit    !< Logical unit.
-  CHARACTER(len=*), INTENT(IN), OPTIONAL :: form    !< Format of unit.
-  INTEGER, INTENT(out), OPTIONAL :: iostat  !< IO status code.
-  CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg   !< IO status message.
-  INTEGER :: iostat_ !< IO status code, local variable.
-  CHARACTER(len=:), ALLOCATABLE :: iomsg_  !< IO status message, local variable.
-  TYPE(string) :: lines   !< Lines storage.
-  TYPE(string) :: line    !< Line storage.
+  CLASS(string), INTENT(inout) :: self
+  !! The string.
+  INTEGER, INTENT(IN) :: unit
+  !! Logical unit.
+  CHARACTER(len=*), INTENT(IN), OPTIONAL :: form
+  !! Format of unit.
+  INTEGER, INTENT(out), OPTIONAL :: iostat
+  !! IO status code.
+  CHARACTER(len=*), INTENT(inout), OPTIONAL :: iomsg
+  !! IO status message.
+  INTEGER :: iostat_
+  !! IO status code, local variable.
+  CHARACTER(len=:), ALLOCATABLE :: iomsg_
+  !! IO status message, local variable.
+  TYPE(string) :: lines
+  !! Lines storage.
+  TYPE(string) :: line
+  !! Line storage.
 
   iomsg_ = REPEAT(' ', 99); IF (PRESENT(iomsg)) iomsg_ = iomsg
   REWIND (unit)
@@ -2421,13 +2522,17 @@ SUBROUTINE read_lines(self, unit, form, iostat, iomsg)
     IF (iostat_ /= 0 .AND. .NOT. is_iostat_eor(iostat_)) THEN
       EXIT
     ELSEIF (line /= '') THEN
-      lines%raw = lines%raw//line%raw//new_LINE('a')
+      lines%raw = lines%raw//line%raw//NEW_LINE('a')
     END IF
   END DO
   IF (lines%raw /= '') self%raw = lines%raw
   IF (PRESENT(iostat)) iostat = iostat_
   IF (PRESENT(iomsg)) iomsg = iomsg_
 END SUBROUTINE read_lines
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 ELEMENTAL FUNCTION replace(self, old, NEW, count) RESULT(replaced)
   !< Return a string with all occurrences of substring old replaced by new.
@@ -2878,7 +2983,7 @@ CONTAINS
         ALLOCATE (tokens_swap(1:t - 1 + Nt_))
         tokens_swap(1:t - 1) = tokens(1:t - 1)
         tokens_swap(t:) = tokens_(:)
-        CALL move_ALLOC(from=tokens_swap, to=tokens)
+        CALL MOVE_ALLOC(from=tokens_swap, to=tokens)
       END IF
       IF (Nt_ == 1) THEN
         isok = .FALSE.
@@ -3045,7 +3150,7 @@ FUNCTION tempname(self, is_file, prefix, path)
   END IF
   tempname = REPEAT(' ', LEN(path_) + LEN(prefix_) + 10) ! [path_] + [prefix_] + 6 random chars + [.tmp]
   DO
-    CALL random_NUMBER(random_real)
+    CALL RANDOM_NUMBER(random_real)
     random_integer = TRANSFER(random_real, random_integer)
     random_integer = IAND(random_integer, 16777215_I4P)
     IF (is_file_) THEN
@@ -3545,10 +3650,10 @@ SUBROUTINE write_line(self, unit, form, iostat, iomsg)
     CASE ('FORMATTED')
       WRITE (unit, "(A)", iostat=iostat_, iomsg=iomsg_) self%raw
     CASE ('UNFORMATTED')
-      IF (self%end_with(new_LINE('a'))) THEN
+      IF (self%end_with(NEW_LINE('a'))) THEN
         WRITE (unit, iostat=iostat_, iomsg=iomsg_) self%raw
       ELSE
-        WRITE (unit, iostat=iostat_, iomsg=iomsg_) self%raw//new_LINE('a')
+        WRITE (unit, iostat=iostat_, iomsg=iomsg_) self%raw//NEW_LINE('a')
       END IF
     END SELECT
   END IF
@@ -3593,7 +3698,7 @@ SUBROUTINE write_lines(self, unit, form, iostat, iomsg)
   !! Counter.
   !!
   IF (ALLOCATED(self%raw)) THEN
-    CALL self%split(tokens=lines, sep=new_LINE('a'))
+    CALL self%split(tokens=lines, sep=NEW_LINE('a'))
     DO l = 1, SIZE(lines, dim=1)
     CALL lines(l)%write_line(unit=unit, form=form, iostat=iostat, iomsg=iomsg)
     END DO
@@ -5148,7 +5253,7 @@ END FUNCTION replace_one_occurrence
 
 ! non type-bound-procedures
 SUBROUTINE get_delimiter_mode(unit, delim, iostat, iomsg)
-  USE, INTRINSIC :: iso_fortran_env, ONLY: iostat_inquire_internal_unit
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: IOSTAT_INQUIRE_INTERNAL_UNIT
   INTEGER, INTENT(IN) :: unit
   !! The unit for the connection.
   CHARACTER(len=1, kind=CK), INTENT(out) :: delim
@@ -5166,7 +5271,7 @@ SUBROUTINE get_delimiter_mode(unit, delim, iostat, iomsg)
   !!
   INQUIRE (unit, delim=delim_buffer, iostat=iostat, iomsg=local_iomsg)
   !!
-  IF (iostat == iostat_inquire_internal_unit) THEN
+  IF (iostat == IOSTAT_INQUIRE_INTERNAL_UNIT) THEN
     ! no way of determining the DELIM mode for an internal file
     iostat = 0
     delim = ''
@@ -5270,7 +5375,7 @@ END SUBROUTINE get_next_non_blank_character_any_record
 ! to this procedure.
 
 SUBROUTINE get_decimal_mode(unit, decimal_point, iostat, iomsg)
-  USE, INTRINSIC :: iso_fortran_env, ONLY: iostat_inquire_internal_unit
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: IOSTAT_INQUIRE_INTERNAL_UNIT
   INTEGER, INTENT(IN) :: unit
   !! Logical unit.
   LOGICAL, INTENT(out) :: decimal_point
@@ -5287,7 +5392,7 @@ SUBROUTINE get_decimal_mode(unit, decimal_point, iostat, iomsg)
   !!
   INQUIRE (unit, decimal=decimal_buffer, iostat=iostat, iomsg=local_iomsg)
   !!
-  IF (iostat .EQ. iostat_inquire_internal_unit) THEN
+  IF (iostat .EQ. IOSTAT_INQUIRE_INTERNAL_UNIT) THEN
     ! no way of determining the decimal mode for an internal file
     iostat = 0
     decimal_point = .TRUE.

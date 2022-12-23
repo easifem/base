@@ -15,18 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+INTEGER(I4B) i, iPivot
+
 iPivot = high
 i = low
-DO WHILE(iPivot > i)
+DO WHILE (iPivot > i)
   IF (vect1(i) > vect1(iPivot)) THEN
-    CALL SWAP(vect1(i), vect1(iPivot-1))
-    CALL SWAP(vect1(iPivot-1), vect1(iPivot))
+    CALL Swap(vect1(i), vect1(iPivot - 1))
+    CALL Swap(vect1(iPivot - 1), vect1(iPivot))
     iPivot = iPivot - 1
   ELSE
-    i=i+1
+    i = i + 1
   END IF
 END DO
 IF (low < high) THEN
-  CALL QUICKSORT(vect1, low, iPivot-1)
-  CALL QUICKSORT(vect1, iPivot+1, high)
+  CALL QuickSort(vect1, low, iPivot - 1)
+  CALL QuickSort(vect1, iPivot + 1, high)
 END IF

@@ -161,7 +161,7 @@ SUBROUTINE Display_Str(msg, unitno, advance)
   ! Internal variables
   INTEGER(I4B) :: i
   CALL setDefaultSettings
-  if (PRESENT(unitno)) then
+  IF (PRESENT(unitno)) THEN
     i = unitno
   ELSE
     i = stdout
@@ -246,7 +246,7 @@ END SUBROUTINE Display_Str2
 
 SUBROUTINE Display_Real64(val, msg, unitNo, advance)
   ! Define intent of dummy variables
-  REAL(Real64), INTENT(IN) :: val
+  REAL(REAL64), INTENT(IN) :: val
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Real64
 
@@ -270,7 +270,7 @@ END SUBROUTINE Display_Real64
 
 SUBROUTINE Display_Real32(val, msg, unitNo, advance)
   ! Define intent of dummy variables
-  REAL(Real32), INTENT(IN) :: val
+  REAL(REAL32), INTENT(IN) :: val
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Real32
 
@@ -294,7 +294,7 @@ END SUBROUTINE Display_Real32
 
 SUBROUTINE Display_Int64(val, msg, unitNo, advance)
   ! Define intent of dummy variables
-  INTEGER(Int64), INTENT(IN) :: val
+  INTEGER(INT64), INTENT(IN) :: val
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Int64
 
@@ -318,7 +318,7 @@ END SUBROUTINE Display_Int64
 
 SUBROUTINE Display_Int32(val, msg, unitNo, advance)
   ! Define intent of dummy variables
-  INTEGER(Int32), INTENT(IN) :: val
+  INTEGER(INT32), INTENT(IN) :: val
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Int32
 
@@ -342,7 +342,7 @@ END SUBROUTINE Display_Int32
 
 SUBROUTINE Display_Int16(val, msg, unitNo, advance)
   ! Define intent of dummy variables
-  INTEGER(Int16), INTENT(IN) :: val
+  INTEGER(INT16), INTENT(IN) :: val
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Int16
 
@@ -366,7 +366,7 @@ END SUBROUTINE Display_Int16
 
 SUBROUTINE Display_Int8(val, msg, unitNo, advance)
   ! Define intent of dummy variables
-  INTEGER(Int8), INTENT(IN) :: val
+  INTEGER(INT8), INTENT(IN) :: val
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Int8
 
@@ -441,7 +441,7 @@ END SUBROUTINE Display_Vector_Logical
 
 SUBROUTINE Display_Vector_Real64(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
-  REAL(Real64), INTENT(IN) :: val(:)
+  REAL(REAL64), INTENT(IN) :: val(:)
     !! vector of real numbers
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Real64
@@ -469,7 +469,7 @@ END SUBROUTINE Display_Vector_Real64
 
 SUBROUTINE Display_Vector_Real32(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
-  REAL(Real32), INTENT(IN) :: val(:)
+  REAL(REAL32), INTENT(IN) :: val(:)
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Real32
 
@@ -496,7 +496,7 @@ END SUBROUTINE Display_Vector_Real32
 
 SUBROUTINE Display_Vector_Int32(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
-  INTEGER(Int32), INTENT(IN) :: val(:)
+  INTEGER(INT32), INTENT(IN) :: val(:)
   !! vector of real numbers
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Int32
@@ -524,7 +524,7 @@ END SUBROUTINE Display_Vector_Int32
 
 SUBROUTINE Display_Vector_Int64(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
-  INTEGER(Int64), INTENT(IN) :: val(:)
+  INTEGER(INT64), INTENT(IN) :: val(:)
   !! vector of real numbers
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Int64
@@ -552,7 +552,7 @@ END SUBROUTINE Display_Vector_Int64
 
 SUBROUTINE Display_Vector_Int16(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
-  INTEGER(Int16), INTENT(IN) :: val(:)
+  INTEGER(INT16), INTENT(IN) :: val(:)
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Int16
 
@@ -579,7 +579,7 @@ END SUBROUTINE Display_Vector_Int16
 
 SUBROUTINE Display_Vector_Int8(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
-  INTEGER(Int8), INTENT(IN) :: val(:)
+  INTEGER(INT8), INTENT(IN) :: val(:)
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Int8
 
@@ -602,7 +602,7 @@ END SUBROUTINE Display_Vector_Int8
 
 SUBROUTINE Display_Mat2_Real64(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  REAL(Real64), DIMENSION(:, :), INTENT(IN) :: Val
+  REAL(REAL64), DIMENSION(:, :), INTENT(IN) :: Val
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Real64
 
@@ -625,7 +625,7 @@ END SUBROUTINE Display_Mat2_Real64
 
 SUBROUTINE Display_Mat2_Real32(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  REAL(Real32), DIMENSION(:, :), INTENT(IN) :: Val
+  REAL(REAL32), DIMENSION(:, :), INTENT(IN) :: Val
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Real32
 
@@ -646,7 +646,7 @@ END SUBROUTINE Display_Mat2_Real32
 
 SUBROUTINE Display_Mat2_Int64(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  INTEGER(Int64), DIMENSION(:, :), INTENT(IN) :: Val
+  INTEGER(INT64), DIMENSION(:, :), INTENT(IN) :: Val
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int64
 
@@ -667,7 +667,7 @@ END SUBROUTINE Display_Mat2_Int64
 
 SUBROUTINE Display_Mat2_Int32(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  INTEGER(Int32), DIMENSION(:, :), INTENT(IN) :: Val
+  INTEGER(INT32), DIMENSION(:, :), INTENT(IN) :: Val
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int32
 
@@ -688,7 +688,7 @@ END SUBROUTINE Display_Mat2_Int32
 
 SUBROUTINE Display_Mat2_Int16(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  INTEGER(Int16), DIMENSION(:, :), INTENT(IN) :: Val
+  INTEGER(INT16), DIMENSION(:, :), INTENT(IN) :: Val
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int16
 
@@ -709,7 +709,7 @@ END SUBROUTINE Display_Mat2_Int16
 
 SUBROUTINE Display_Mat2_Int8(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  INTEGER(Int8), DIMENSION(:, :), INTENT(IN) :: Val
+  INTEGER(INT8), DIMENSION(:, :), INTENT(IN) :: Val
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int8
 
@@ -734,7 +734,7 @@ END SUBROUTINE Display_Mat2_Int8
 
 SUBROUTINE Display_Mat3_Real64(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  REAL(Real64), INTENT(IN) :: Val(:, :, :)
+  REAL(REAL64), INTENT(IN) :: Val(:, :, :)
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Real64
 
@@ -759,7 +759,7 @@ END SUBROUTINE Display_Mat3_Real64
 
 SUBROUTINE Display_Mat3_Real32(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  REAL(Real32), INTENT(IN) :: Val(:, :, :)
+  REAL(REAL32), INTENT(IN) :: Val(:, :, :)
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Real32
 
@@ -784,7 +784,7 @@ END SUBROUTINE Display_Mat3_Real32
 
 SUBROUTINE Display_Mat3_Int64(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  INTEGER(Int64), INTENT(IN) :: Val(:, :, :)
+  INTEGER(INT64), INTENT(IN) :: Val(:, :, :)
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Int64
 
@@ -809,7 +809,7 @@ END SUBROUTINE Display_Mat3_Int64
 
 SUBROUTINE Display_Mat3_Int32(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  INTEGER(Int32), INTENT(IN) :: Val(:, :, :)
+  INTEGER(INT32), INTENT(IN) :: Val(:, :, :)
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Int32
 
@@ -835,7 +835,7 @@ END SUBROUTINE Display_Mat3_Int32
 
 SUBROUTINE Display_Mat3_Int16(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  INTEGER(Int16), INTENT(IN) :: Val(:, :, :)
+  INTEGER(INT16), INTENT(IN) :: Val(:, :, :)
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Int16
 
@@ -861,7 +861,7 @@ END SUBROUTINE Display_Mat3_Int16
 
 SUBROUTINE Display_Mat3_Int8(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
-  INTEGER(Int8), INTENT(IN) :: Val(:, :, :)
+  INTEGER(INT8), INTENT(IN) :: Val(:, :, :)
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Int8
 
@@ -887,7 +887,7 @@ END SUBROUTINE Display_Mat3_Int8
 
 SUBROUTINE Display_Mat4_Real64(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
-  REAL(Real64), INTENT(IN) :: Val(:, :, :, :)
+  REAL(REAL64), INTENT(IN) :: Val(:, :, :, :)
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Real64
 
@@ -913,7 +913,7 @@ END SUBROUTINE Display_Mat4_Real64
 
 SUBROUTINE Display_Mat4_Real32(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
-  REAL(Real32), INTENT(IN) :: Val(:, :, :, :)
+  REAL(REAL32), INTENT(IN) :: Val(:, :, :, :)
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Real32
 
@@ -939,7 +939,7 @@ END SUBROUTINE Display_Mat4_Real32
 
 SUBROUTINE Display_Mat4_Int64(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
-  INTEGER(Int64), INTENT(IN) :: Val(:, :, :, :)
+  INTEGER(INT64), INTENT(IN) :: Val(:, :, :, :)
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Int64
 
@@ -965,7 +965,7 @@ END SUBROUTINE Display_Mat4_Int64
 
 SUBROUTINE Display_Mat4_Int32(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
-  INTEGER(Int32), INTENT(IN) :: Val(:, :, :, :)
+  INTEGER(INT32), INTENT(IN) :: Val(:, :, :, :)
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Int32
 
@@ -991,7 +991,7 @@ END SUBROUTINE Display_Mat4_Int32
 
 SUBROUTINE Display_Mat4_Int16(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
-  INTEGER(Int16), INTENT(IN) :: Val(:, :, :, :)
+  INTEGER(INT16), INTENT(IN) :: Val(:, :, :, :)
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Int16
 
@@ -1017,7 +1017,7 @@ END SUBROUTINE Display_Mat4_Int16
 
 SUBROUTINE Display_Mat4_Int8(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
-  INTEGER(Int8), INTENT(IN) :: Val(:, :, :, :)
+  INTEGER(INT8), INTENT(IN) :: Val(:, :, :, :)
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Int8
 
@@ -1149,7 +1149,7 @@ SUBROUTINE TIMESTAMP()
   INTEGER(I4B) :: values(8)
   INTEGER(I4B) :: y
 
-  CALL date_and_time(values=values)
+  CALL DATE_AND_TIME(values=values)
 
   y = values(1)
   m = values(2)
@@ -1162,7 +1162,7 @@ SUBROUTINE TIMESTAMP()
   IF (h < 12) THEN
     ampm = 'AM'
   ELSE IF (h == 12) THEN
-    IF (n == 0 .and. s == 0) THEN
+    IF (n == 0 .AND. s == 0) THEN
       ampm = 'Noon'
     ELSE
       ampm = 'PM'
@@ -1172,7 +1172,7 @@ SUBROUTINE TIMESTAMP()
     IF (h < 12) THEN
       ampm = 'PM'
     ELSE IF (h == 12) THEN
-      IF (n == 0 .and. s == 0) THEN
+      IF (n == 0 .AND. s == 0) THEN
         ampm = 'Midnight'
       ELSE
         ampm = 'AM'

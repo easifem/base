@@ -22,24 +22,23 @@
 !# Introduction
 !
 ! This module contains linear algebra packages for fortran matrix (2D array)
-! as well as RealMatrix Defined in EASIFEM
 ! The matrix is GE
-! This module contains 4 submoduls
-! - @LinearSolve
-! - @EigenValue
-! - @SingularValue
-! - @ComputationalRoutines
-! - @AuxiliaryRoutines
-!
+! This module contains following submoduls
+! - @LinearSolveMethods PARTIAL/STABLE
+! - @EigenValueMethods TODO
+! - @SingularValueMethods TODO
+! - @CompRoutineMethods PARTIAL/STABLE
+! - @AuxRoutinesMethods TODO
 
 MODULE GE_Lapack_Method
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-#include "./GE_LinsolveMethods.inc"
-!#include "./GE_EigenvalueMethods.inc"
-#include "./GE_LUMethods.inc"
-#include "./GE_CompRoutine.inc"
+#include "./GE/LinearSolveMethods.inc"
+#include "./GE/EigenValueMethods.inc"
+#include "./GE/CompRoutineMethods.inc"
+#include "./GE/LUMethods.inc"
+#include "./GE/SingularValueMethods.inc"
 
 END MODULE GE_Lapack_Method

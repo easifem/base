@@ -25,8 +25,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getLU_1
-  LU = A
-  CALL GETRF( A=LU, IPIV=IPIV, RCOND=RCOND, NORM=NORM, info=info )
+LU = A
+CALL GETRF(A=LU, IPIV=IPIV, RCOND=RCOND, NORM=NORM, info=info)
 END PROCEDURE getLU_1
 
 !----------------------------------------------------------------------------
@@ -34,7 +34,7 @@ END PROCEDURE getLU_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getLU_2
-  CALL GETRF( A=A, IPIV=IPIV, RCOND=RCOND, NORM=NORM, info=info )
+CALL GETRF(A=A, IPIV=IPIV, RCOND=RCOND, NORM=NORM, info=info)
 END PROCEDURE getLU_2
 
 !----------------------------------------------------------------------------
@@ -42,19 +42,19 @@ END PROCEDURE getLU_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LUSolve_1
-  CHARACTER( LEN = 1 ) :: TRANS
+CHARACTER(LEN=1) :: TRANS
   !!
-  IF( PRESENT( isTranspose ) ) THEN
-    IF( isTranspose ) THEN
-      TRANS="T"
-    ELSE
-      TRANS="N"
-    END IF
+IF (PRESENT(isTranspose)) THEN
+  IF (isTranspose) THEN
+    TRANS = "T"
   ELSE
     TRANS = "N"
   END IF
+ELSE
+  TRANS = "N"
+END IF
   !!
-  CALL GETRS( A=A, IPIV=IPIV, B=B, TRANS=TRANS, info=info )
+CALL GETRS(A=A, IPIV=IPIV, B=B, TRANS=TRANS, info=info)
   !!
 END PROCEDURE LUSolve_1
 
@@ -63,19 +63,19 @@ END PROCEDURE LUSolve_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LUSolve_2
-  CHARACTER( LEN = 1 ) :: TRANS
+CHARACTER(LEN=1) :: TRANS
   !!
-  IF( PRESENT( isTranspose ) ) THEN
-    IF( isTranspose ) THEN
-      TRANS="T"
-    ELSE
-      TRANS="N"
-    END IF
+IF (PRESENT(isTranspose)) THEN
+  IF (isTranspose) THEN
+    TRANS = "T"
   ELSE
     TRANS = "N"
   END IF
+ELSE
+  TRANS = "N"
+END IF
   !!
-  CALL GETRS( A=A, IPIV=IPIV, B=B, TRANS=TRANS, info=info )
+CALL GETRS(A=A, IPIV=IPIV, B=B, TRANS=TRANS, info=info)
   !!
 END PROCEDURE LUSolve_2
 
@@ -84,21 +84,21 @@ END PROCEDURE LUSolve_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LUSolve_3
-  CHARACTER( LEN = 1 ) :: TRANS
+CHARACTER(LEN=1) :: TRANS
   !!
-  IF( PRESENT( isTranspose ) ) THEN
-    IF( isTranspose ) THEN
-      TRANS="T"
-    ELSE
-      TRANS="N"
-    END IF
+IF (PRESENT(isTranspose)) THEN
+  IF (isTranspose) THEN
+    TRANS = "T"
   ELSE
     TRANS = "N"
   END IF
+ELSE
+  TRANS = "N"
+END IF
   !!
-  X = B
+X = B
   !!
-  CALL GETRS( A=A, IPIV=IPIV, B=X, TRANS=TRANS, info=info )
+CALL GETRS(A=A, IPIV=IPIV, B=X, TRANS=TRANS, info=info)
   !!
 END PROCEDURE LUSolve_3
 
@@ -107,20 +107,20 @@ END PROCEDURE LUSolve_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LUSolve_4
-  CHARACTER( LEN = 1 ) :: TRANS
+CHARACTER(LEN=1) :: TRANS
   !!
-  IF( PRESENT( isTranspose ) ) THEN
-    IF( isTranspose ) THEN
-      TRANS="T"
-    ELSE
-      TRANS="N"
-    END IF
+IF (PRESENT(isTranspose)) THEN
+  IF (isTranspose) THEN
+    TRANS = "T"
   ELSE
     TRANS = "N"
   END IF
+ELSE
+  TRANS = "N"
+END IF
   !!
-  X = B
-  CALL GETRS( A=A, IPIV=IPIV, B=X, TRANS=TRANS, info=info )
+X = B
+CALL GETRS(A=A, IPIV=IPIV, B=X, TRANS=TRANS, info=info)
   !!
 END PROCEDURE LUSolve_4
 
@@ -129,8 +129,8 @@ END PROCEDURE LUSolve_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Inv_1
-  invA=A
-  CALL GETRI( A=invA, IPIV=IPIV, info=info )
+invA = A
+CALL GETRI(A=invA, IPIV=IPIV, info=info)
 END PROCEDURE Inv_1
 
 !----------------------------------------------------------------------------
@@ -138,7 +138,7 @@ END PROCEDURE Inv_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Inv_2
-  CALL GETRI( A=A, IPIV=IPIV, info=info )
+CALL GETRI(A=A, IPIV=IPIV, info=info)
 END PROCEDURE Inv_2
 
 END SUBMODULE LUMethods

@@ -21,6 +21,7 @@ IF( USE_LAPACK95 )
     TARGET_SOURCES(
       ${PROJECT_NAME} PRIVATE
       ${src_path}/GE_Lapack_Method.F90
+      ${src_path}/Sym_Lapack_Method.F90
       ${src_path}/Lapack_Method.F90
       )
 ENDIF(  )

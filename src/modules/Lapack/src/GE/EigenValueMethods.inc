@@ -19,8 +19,6 @@
 !                                                          DGEES@EigenValue
 !----------------------------------------------------------------------------
 
-INTERFACE
-
 !> author: Dr. Vikas Sharma
 !
 ! DGEES computes for an N-by-N real nonsymmetric matrix A, the
@@ -75,12 +73,13 @@ INTERFACE
 !
 ! SDIM:
 
-  MODULE SUBROUTINE dgees_1(A, WR, WI, SchurForm)
-    REAL(DFP), INTENT(IN) :: A(:, :)
-    REAL(DFP), INTENT(INOUT) :: WR(:)
-    !! Real part of the eigenvalue
-    REAL(DFP), INTENT(INOUT) :: WI(:)
-    !! Imaginary part of the eigenvalue
-    REAL(DFP), INTENT(INOUT) :: SchurForm(:, :)
-  END SUBROUTINE dgees_1
-END INTERFACE
+! INTERFACE
+!   MODULE SUBROUTINE dgees_1(A, WR, WI, SchurForm)
+!     REAL(DFP), INTENT(IN) :: A(:, :)
+!     REAL(DFP), INTENT(INOUT) :: WR(:)
+!     !! Real part of the eigenvalue
+!     REAL(DFP), INTENT(INOUT) :: WI(:)
+!     !! Imaginary part of the eigenvalue
+!     REAL(DFP), INTENT(INOUT) :: SchurForm(:, :)
+!   END SUBROUTINE dgees_1
+! END INTERFACE

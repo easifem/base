@@ -23,6 +23,15 @@ IF( USE_LAPACK95 )
     ${src_path}/GE_Lapack_Method@LUMethods.F90
     # ${src_path}/GE_Lapack_Method@EigenvalueMethods.F90
     ${src_path}/GE_Lapack_Method@CompRoutineMethods.F90
-    )
+  )
+ENDIF(  )
+
+IF( USE_LAPACK95 )
+  SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+  TARGET_SOURCES(
+    ${PROJECT_NAME} PRIVATE
+    ${src_path}/Sym_Lapack_Method@LinearSolveMethods.F90
+    ${src_path}/Sym_Lapack_Method@LUMethods.F90
+  )
 ENDIF(  )
 

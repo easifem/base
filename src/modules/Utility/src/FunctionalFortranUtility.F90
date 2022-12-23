@@ -29,8 +29,8 @@ PUBLIC :: SPLIT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Returns the first element of array `x`.
+! date: 22 March 2021
+! summary: Returns the first element of array `x`.
 
 INTERFACE
   MODULE PURE FUNCTION head_int(x) RESULT(Ans)

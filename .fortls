@@ -1,6 +1,6 @@
 {
   "source_dirs": [
-    "src"
+    "src/**"
   ],
   "excl_suffixes": [
     "_skip.F90",

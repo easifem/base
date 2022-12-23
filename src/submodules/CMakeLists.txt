@@ -60,6 +60,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BLAS/CMakeLists.txt)
 #Lapack
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)
 
+#ARPACK
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ARPACK/CMakeLists.txt)
+
 #RealVector
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/RealVector/CMakeLists.txt)
 
