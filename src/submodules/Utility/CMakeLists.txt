@@ -46,4 +46,5 @@ TARGET_SOURCES(
   ${src_path}/PushPopUtility@Methods.F90
   ${src_path}/EigenUtility@Methods.F90
   ${src_path}/SymUtility@Methods.F90
+  ${src_path}/TriagUtility@Methods.F90
 )

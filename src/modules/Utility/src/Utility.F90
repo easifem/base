@@ -44,6 +44,7 @@ USE PolynomialUtility
 USE EigenUtility
 USE ArangeUtility
 USE SymUtility
+USE TriagUtility
 
 !----------------------------------------------------------------------------
 !

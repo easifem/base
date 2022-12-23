@@ -16,7 +16,7 @@
 !
 
 SUBMODULE(DiagUtility) Methods
-USE BaseMethod, ONLY: Reallocate
+USE BaseMethod, ONLY: Reallocate, Input
 IMPLICIT NONE
 CONTAINS
 
@@ -200,14 +200,74 @@ END PROCEDURE SetTriDiag6
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE DiagSize
-IF (diagNo .EQ. 0) THEN
-  ans = n
-ELSEIF (diagNo .GT. 0) THEN
-  ans = n - diagNo
+MODULE PROCEDURE DiagSize1
+ans = DiagSize(m=n, n=n, diagNo=diagNo)
+END PROCEDURE DiagSize1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiagSize2
+IF (diagNo .GE. 0 .AND. diagNo .LE. n) THEN
+  ans = MIN(m, n - diagNo)
+ELSE IF (diagNo .LT. 0 .AND. -diagNo .LE. m) THEN
+  ans = MIN(n, m + diagNo)
 ELSE
-  ans = n + diagNo
+  ans = 0
 END IF
-END PROCEDURE DiagSize
+END PROCEDURE DiagSize2
+
+!----------------------------------------------------------------------------
+!                                                                 DiagIndx
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DiagIndx
+INTEGER(I4B) :: tsize, ii
+!
+tsize = DiagSize(m, n, diagNo)
+!
+ALLOCATE (ans(tsize, 2))
+!
+IF (diagNo .GE. 0 .AND. diagNo .LE. n) THEN
+  DO CONCURRENT(ii=1:tsize)
+    ans(ii, 1) = ii
+    ans(ii, 2) = ii + diagNo
+  END DO
+ELSE IF (diagNo .LT. 0 .AND. -diagNo .LE. m) THEN
+  DO CONCURRENT(ii=1:tsize)
+    ans(ii, 2) = ii
+    ans(ii, 1) = ii - diagNo
+  END DO
+END IF
+END PROCEDURE DiagIndx
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Tridiag_1
+#include "./Diag/Tridiag.inc"
+END PROCEDURE Tridiag_1
+
+MODULE PROCEDURE Tridiag_2
+#include "./Diag/Tridiag.inc"
+END PROCEDURE Tridiag_2
+
+MODULE PROCEDURE Tridiag_3
+#include "./Diag/Tridiag.inc"
+END PROCEDURE Tridiag_3
+
+MODULE PROCEDURE Tridiag_4
+#include "./Diag/Tridiag.inc"
+END PROCEDURE Tridiag_4
+
+MODULE PROCEDURE Tridiag_5
+#include "./Diag/Tridiag.inc"
+END PROCEDURE Tridiag_5
+
+MODULE PROCEDURE Tridiag_6
+#include "./Diag/Tridiag.inc"
+END PROCEDURE Tridiag_6
 
 END SUBMODULE Methods

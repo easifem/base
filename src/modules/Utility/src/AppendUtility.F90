@@ -47,58 +47,58 @@ INTERFACE
   MODULE PURE SUBROUTINE expand_int8(vec, n, chunk_size, val, finished)
     INTEGER(INT8), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
-  !! counter for last element added to `vec`.
-  !! must be initialized to `size(vec)`
-  !! (or 0 if not allocated) before first call
+    !! counter for last element added to `vec`.
+    !! must be initialized to `size(vec)`
+    !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
-  !! allocate `vec` in blocks of this size (>0)
+    !! allocate `vec` in blocks of this size (>0)
     INTEGER(INT8), OPTIONAL, INTENT(IN) :: val
-  !! the value to add to `vec`
+    !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
-  !! set to true to return `vec`
-  !! as its correct size (`n`)
+    !! set to true to return `vec`
+    !! as its correct size (`n`)
   END SUBROUTINE expand_int8
   MODULE PURE SUBROUTINE expand_int16(vec, n, chunk_size, val, finished)
     INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
-  !! counter for last element added to `vec`.
-  !! must be initialized to `size(vec)`
-  !! (or 0 if not allocated) before first call
+    !! counter for last element added to `vec`.
+    !! must be initialized to `size(vec)`
+    !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
-  !! allocate `vec` in blocks of this size (>0)
+    !! allocate `vec` in blocks of this size (>0)
     INTEGER(INT16), OPTIONAL, INTENT(IN) :: val
-  !! the value to add to `vec`
+    !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
-  !! set to true to return `vec`
-  !! as its correct size (`n`)
+    !! set to true to return `vec`
+    !! as its correct size (`n`)
   END SUBROUTINE expand_int16
   MODULE PURE SUBROUTINE expand_int32(vec, n, chunk_size, val, finished)
     INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
-  !! counter for last element added to `vec`.
-  !! must be initialized to `size(vec)`
-  !! (or 0 if not allocated) before first call
+    !! counter for last element added to `vec`.
+    !! must be initialized to `size(vec)`
+    !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
-  !! allocate `vec` in blocks of this size (>0)
+    !! allocate `vec` in blocks of this size (>0)
     INTEGER(INT32), OPTIONAL, INTENT(IN) :: val
-  !! the value to add to `vec`
+    !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
-  !! set to true to return `vec`
-  !! as its correct size (`n`)
+    !! set to true to return `vec`
+    !! as its correct size (`n`)
   END SUBROUTINE expand_int32
   MODULE PURE SUBROUTINE expand_int64(vec, n, chunk_size, val, finished)
     INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
-  !! counter for last element added to `vec`.
-  !! must be initialized to `size(vec)`
-  !! (or 0 if not allocated) before first call
+    !! counter for last element added to `vec`.
+    !! must be initialized to `size(vec)`
+    !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
-  !! allocate `vec` in blocks of this size (>0)
+    !! allocate `vec` in blocks of this size (>0)
     INTEGER(INT64), OPTIONAL, INTENT(IN) :: val
-  !! the value to add to `vec`
+    !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
-  !! set to true to return `vec`
-  !! as its correct size (`n`)
+    !! set to true to return `vec`
+    !! as its correct size (`n`)
   END SUBROUTINE expand_int64
 END INTERFACE
 
@@ -118,30 +118,30 @@ INTERFACE
   MODULE PURE SUBROUTINE expand_real32(vec, n, chunk_size, val, finished)
     REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
-  !! counter for last element added to `vec`.
-  !! must be initialized to `size(vec)`
-  !! (or 0 if not allocated) before first call
+    !! counter for last element added to `vec`.
+    !! must be initialized to `size(vec)`
+    !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
-  !! allocate `vec` in blocks of this size (>0)
+    !! allocate `vec` in blocks of this size (>0)
     REAL(REAL32), OPTIONAL, INTENT(IN) :: val
-  !! the value to add to `vec`
+    !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
-  !! set to true to return `vec`
-  !! as its correct size (`n`)
+    !! set to true to return `vec`
+    !! as its correct size (`n`)
   END SUBROUTINE expand_real32
   MODULE PURE SUBROUTINE expand_real64(vec, n, chunk_size, val, finished)
     REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: vec(:)
     INTEGER(I4B), INTENT(INOUT) :: n
-  !! counter for last element added to `vec`.
-  !! must be initialized to `size(vec)`
-  !! (or 0 if not allocated) before first call
+    !! counter for last element added to `vec`.
+    !! must be initialized to `size(vec)`
+    !! (or 0 if not allocated) before first call
     INTEGER(I4B), INTENT(IN) :: chunk_size
-  !! allocate `vec` in blocks of this size (>0)
+    !! allocate `vec` in blocks of this size (>0)
     REAL(REAL64), OPTIONAL, INTENT(IN) :: val
-  !! the value to add to `vec`
+    !! the value to add to `vec`
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: finished
-  !! set to true to return `vec`
-  !! as its correct size (`n`)
+    !! set to true to return `vec`
+    !! as its correct size (`n`)
   END SUBROUTINE expand_real64
 END INTERFACE
 
