@@ -13,11 +13,13 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+
 MODULE GlobalData
 USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: INPUT_UNIT, &
   & OUTPUT_UNIT, ERROR_UNIT
 IMPLICIT NONE
 PUBLIC
+
 SAVE
 INTEGER, PARAMETER :: stdin = INPUT_UNIT
 INTEGER, PARAMETER :: stdout = OUTPUT_UNIT
@@ -33,9 +35,9 @@ INTEGER, PARAMETER :: REAL128 = SELECTED_REAL_KIND(15, 307)
 INTEGER, PARAMETER :: REAL64 = SELECTED_REAL_KIND(15, 307)
 INTEGER, PARAMETER :: REAL32 = SELECTED_REAL_KIND(6, 37)
 #ifdef USE_Real64
-INTEGER, PARAMETER :: Float = REAL64  ! Default
+INTEGER, PARAMETER :: Float = REAL64 ! Default
 #else
-INTEGER, PARAMETER :: Float = REAL32  ! Default
+INTEGER, PARAMETER :: Float = REAL32 ! Default
 #endif
 #ifdef USE_Real64
 INTEGER, PARAMETER :: DFP = REAL64
@@ -62,8 +64,10 @@ INTEGER, PARAMETER :: DFPC = KIND((1.0_REAL64, 1.0_REAL64))
 #else
 INTEGER, PARAMETER :: DFPC = KIND((1.0_REAL32, 1.0_REAL32))
 #endif
-INTEGER, PARAMETER :: LGT = KIND(.TRUE.)       !Logical
-! Format parameters
+INTEGER, PARAMETER :: LGT = KIND(.TRUE.)
+! Logical
+!
+!Format parameters
 #ifdef USE_Real128
 CHARACTER(*), PARAMETER :: FReal128 = '(E42.33E4)'
 #else
@@ -500,35 +504,35 @@ INTEGER(I4B), PARAMETER :: PenaltyBC = 4
 INTEGER(I4B), PARAMETER :: AugmentedBC = 5
 ! Symmetric and Skewsymmertic Nitsche Formulation
 INTEGER(I4B), PARAMETER :: SkewSymNitsch = 1, SymNitsche = 2
-CHARACTER(LEN=*), PARAMETER :: CHAR_BLANK = " "
+CHARACTER(*), PARAMETER :: CHAR_BLANK = " "
     !! Character representing a space symbol
-CHARACTER(LEN=*), PARAMETER :: CHAR_BANG = "!"
+CHARACTER(*), PARAMETER :: CHAR_BANG = "!"
     !! Character representing a comment symbol
-CHARACTER(LEN=*), PARAMETER :: CHAR_DOT = "."
+CHARACTER(*), PARAMETER :: CHAR_DOT = "."
     !! Character representing a period
-CHARACTER(LEN=*), PARAMETER :: CHAR_FSLASH = "/"
+CHARACTER(*), PARAMETER :: CHAR_FSLASH = "/"
     !! Character representing a forward slash
-CHARACTER(LEN=*), PARAMETER :: CHAR_BSLASH = ACHAR(92)
+CHARACTER(*), PARAMETER :: CHAR_BSLASH = ACHAR(92)
     !! Character representing a backward slash
-CHARACTER(LEN=*), PARAMETER :: CHAR_COLON = ":"
+CHARACTER(*), PARAMETER :: CHAR_COLON = ":"
     !! Character representing a colon
 #ifdef WIN32
-CHARACTER(LEN=*), PARAMETER :: CHAR_SLASH = CHAR_BSLASH
+CHARACTER(*), PARAMETER :: CHAR_SLASH = CHAR_BSLASH
     !! This is needed for doxygen to parse correctly
     !! The slash symbol used by the file system
     !! (BLASH for Windows, FSLASH for everything else)
 #else
-CHARACTER(LEN=*), PARAMETER :: CHAR_SLASH = CHAR_FSLASH
+CHARACTER(*), PARAMETER :: CHAR_SLASH = CHAR_FSLASH
     !! The slash symbol used by the file system
     !! (BLASH for Windows, FSLASH for everything else)
 #endif
-CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_SPACE = ' '
+CHARACTER(1), PUBLIC, PARAMETER :: CHAR_SPACE = ' '
     !! Character constant for a single space
-CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_CR = CHAR(13)
+CHARACTER(1), PUBLIC, PARAMETER :: CHAR_CR = CHAR(13)
     !! Character constant for a carraige return
-CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_LF = CHAR(10)
+CHARACTER(1), PUBLIC, PARAMETER :: CHAR_LF = CHAR(10)
     !! Character constant for a line feed
-CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_TAB = CHAR(9)
+CHARACTER(1), PUBLIC, PARAMETER :: CHAR_TAB = CHAR(9)
 
 INTEGER(I4B), PARAMETER, PUBLIC :: Constant = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: Space = 2
