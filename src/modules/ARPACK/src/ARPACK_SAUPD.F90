@@ -65,7 +65,7 @@ INTERFACE
     & RESULT(ans)
     REAL(DFP), INTENT(IN) :: mat(:, :)
     !! dense matrix
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: which
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: which
     !! `which = "LM"` ⇨ absolute largest eigenvalue
     !! `which = "LA"` ⇨ algebraic largest eigenvalue
     !! default is "LA"
@@ -94,11 +94,11 @@ PUBLIC :: SymLargestEigenVal
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-10
-! summary: Calculate the largest eigenvalue of a real sym dense matrix
+! summary: Calculate the `nev` smallest eigenvalue of a real sym dense matrix
 !
 !# Introduction
 !
-!- This routine calculates the largest eigenvalue of a real sym dense matrix.
+!- This routine calculates the smallest eigenvalue of a real sym dense matrix.
 !- It calls ARPACK SSAUPD or DSAUPD routine
 
 INTERFACE
@@ -108,7 +108,7 @@ INTERFACE
     !! dense matrix
     INTEGER(I4B), INTENT(IN) :: nev
     !! number of eigenvalues requested
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: which
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: which
     !! `which = "LM"` ⇨ absolute largest eigenvalue
     !! `which = "LA"` ⇨ algebraic largest eigenvalue
     !! default is "LA"
@@ -163,7 +163,7 @@ INTERFACE
     !! dense matrix
     REAL(DFP), OPTIONAL, INTENT(IN) :: sigma
     !! Default value is 0.0
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: which
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: which
     !! `which = "SM"` ⇨ absolute smallest eigenvalue
     !! `which = "SA"` ⇨ algebraic smallest eigenvalue
     !! default is "SA"
@@ -203,27 +203,33 @@ PUBLIC :: SymSmallestEigenVal
 ! However, if `isLU=false`, then we will change mat, and on return
 ! it will contain the LU factorization of `mat`
 !
-!- [ ] TODO Please use Cholsky factorization instead of LU as mat is
+!- [ ] TODO use Cholsky factorization instead of LU as mat is
 ! symmetric.
 !
 
 INTERFACE
-  MODULE FUNCTION SymSmallestEigenVal2(mat, isFactor, sigma, which, &
+  MODULE FUNCTION SymSmallestEigenVal2(mat, isFactor, ipiv, sigma, which, &
     & NCV, maxIter, tol) &
     & RESULT(ans)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
     !!
     !! Dense matrix
     !! If isFactor is false, then this matrix will change on return
-    !!    in this case, it will contain LU decomposition
+    !! in this case, it will contain LU decomposition of `A-sigma*I`
     !! If isFactor is true, then this matrix will not change
     !!
     LOGICAL(LGT), INTENT(INOUT) :: isFactor
     !! if mat is already factorized, the set isFactor to true
     !! if mat is not factorized, then set isFactor to false
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipiv(:)
+    !! When `isFactor` is true, then `mat` represents the
+    !! `LU` factorization of `A-sigma*I` obtained by `SymGetLU` routine.
+    !! In this case `ipiv` is returned by `SymGetLU`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: sigma
     !! Default value is 0.0
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: which
+    !! Sigma is ignored when isFactor=true. Because in this case
+    !! mat represents LU factorization of `A-sigma*I`
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: which
     !! `which = "SM"` ⇨ absolute smallest eigenvalue
     !! `which = "SA"` ⇨ algebraic smallest eigenvalue
     !! default is "SA"
@@ -236,7 +242,7 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(IN) :: tol
     !! tolerance, default = 0.0
     REAL(DFP) :: ans
-    !! maximum eigenvalue
+    !! smallest eigenvalue
   END FUNCTION SymSmallestEigenVal2
 END INTERFACE
 
