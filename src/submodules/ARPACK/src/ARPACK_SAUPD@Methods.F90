@@ -17,7 +17,7 @@
 
 SUBMODULE(ARPACK_SAUPD) Methods
 USE BaseMethod, ONLY: ErrorMsg, Input, F77_SAUPD, F77_SEUPD, Display, &
-  & GetLU, LUSolve
+  & SymGetLU, SymLUSolve, Tostring
 USE GlobalData, ONLY: stdout, zero
 
 !----------------------------------------------------------------------------
@@ -137,15 +137,15 @@ END PROCEDURE SEUPD_ErrorMsg
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SymLargestEigenVal1
-CHARACTER(LEN=*), PARAMETER :: myName = "SymLargestEigenVal1"
+CHARACTER(*), PARAMETER :: myName = "SymLargestEigenVal1"
 !!
 !! Internal variables
 !!
 INTEGER(I4B), PARAMETER :: nev = 1
 INTEGER(I4B) :: ido, lworkl, ldv, info, iparam(11), ipntr(11), maxIter0, n, &
   & ncv0
-CHARACTER(LEN=1), PARAMETER :: bmat = "I"
-CHARACTER(LEN=2) :: which0
+CHARACTER(1), PARAMETER :: bmat = "I"
+CHARACTER(2) :: which0
 REAL(DFP) :: tol0, d(nev), sigma
 REAL(DFP), ALLOCATABLE :: resid(:), v(:, :), workd(:), workl(:)
 TYPE(String) :: err_msg
@@ -231,13 +231,13 @@ END PROCEDURE SymLargestEigenVal1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SymLargestEigenVal2
-CHARACTER(LEN=*), PARAMETER :: myName = "SymLargestEigenVal2"
+CHARACTER(*), PARAMETER :: myName = "SymLargestEigenVal2"
 !!
 !! Internal variables
 INTEGER(I4B) :: ido, lworkl, ldv, info, iparam(11), ipntr(11), maxIter0, n, &
   & ncv0
-CHARACTER(LEN=1), PARAMETER :: bmat = "I"
-CHARACTER(LEN=2) :: which0
+CHARACTER(1), PARAMETER :: bmat = "I"
+CHARACTER(2) :: which0
 REAL(DFP) :: tol0, sigma
 REAL(DFP), ALLOCATABLE :: resid(:), v(:, :), workd(:), workl(:)
 TYPE(String) :: err_msg
@@ -321,21 +321,21 @@ END PROCEDURE SymLargestEigenVal2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE SymSmallestEigenVal1
-CHARACTER(LEN=*), PARAMETER :: myName = "SymSmallestEigenVal1"
+CHARACTER(*), PARAMETER :: myName = "SymSmallestEigenVal1"
 !!
 !! Internal variables
 !!
 INTEGER(I4B), PARAMETER :: nev = 1
 INTEGER(I4B) :: ido, lworkl, ldv, info, iparam(11), ipntr(11), maxIter0, n, &
   & ncv0, ii
-CHARACTER(LEN=1), PARAMETER :: bmat = "I"
-CHARACTER(LEN=2) :: which0
+CHARACTER(1), PARAMETER :: bmat = "I", uplo = "U"
+CHARACTER(2) :: which0
 REAL(DFP) :: tol0, d(nev), sigma0
 REAL(DFP), ALLOCATABLE :: resid(:), v(:, :), workd(:), workl(:)
 TYPE(String) :: err_msg
 LOGICAL(LGT), ALLOCATABLE :: SELECT(:)
 REAL(DFP) :: mat0(SIZE(mat, 1), SIZE(mat, 2))
-INTEGER(I4B) :: ipiv(SIZE(mat, 1))
+INTEGER(I4B) :: ipiv(SIZE(mat, 1)), info1
 !!
 !! int scalar
 !!
@@ -382,7 +382,16 @@ DO CONCURRENT(ii=1:n)
   mat0(ii, ii) = mat0(ii, ii) - sigma0
 END DO
 !!
-CALL GetLU(A=mat0, IPIV=ipiv, INFO=info)
+CALL SymGetLU(A=mat0, IPIV=ipiv, UPLO=uplo, INFO=info1)
+!!
+IF (info1 .NE. 0) THEN
+  CALL ErrorMsg( &
+    & msg="Error occured in SymGetLU() errorCode="//tostring(info1), &
+    & file=__FILE__, &
+    & line=__LINE__, &
+    & routine="SymSmallestEigenVal1()")
+  STOP
+END IF
 !!
 DO
   CALL F77_SAUPD( &
@@ -408,9 +417,17 @@ DO
     WORKD(ipntr(2):ipntr(2) + N - 1) = &
       & WORKD(ipntr(1):ipntr(1) + N - 1)
     !!
-    CALL LUSolve(A=mat0, B=WORKD(ipntr(2):ipntr(2) + N - 1), IPIV=ipiv)
+    CALL SymLUSolve(A=mat0, B=WORKD(ipntr(2):ipntr(2) + N - 1),  &
+      & IPIV=ipiv, UPLO=uplo, INFO=info1)
     !!
-    !! TODO check error
+    IF (info1 .NE. 0) THEN
+      CALL ErrorMsg( &
+        & msg="Error occured in SymGetLU() errorCode="//tostring(info1), &
+        & file=__FILE__, &
+        & line=__LINE__, &
+        & routine="SymSmallestEigenVal1()")
+      STOP
+    END IF
     !!
   ELSE
     EXIT
@@ -420,22 +437,181 @@ END DO
 !! we are not getting rvec, therefore ldz=1,
 !! othereise ldz = N
 !!
-CALL F77_SEUPD( &
-  & rvec=.FALSE., howmny='All', SELECT=SELECT, &
-  & d=d, z=v, ldz=1, sigma=sigma0, &
-  & bmat=bmat, n=n, which=which0, nev=nev, tol=tol0, &
-  & resid=resid, ncv=ncv0, v=v, ldv=ldv, &
-  & iparam=iparam, ipntr=ipntr, workd=workd, &
-  & workl=workl, lworkl=lworkl, info=info)
-!!
-IF (info .NE. 0) THEN
-  err_msg = SEUPD_ErrorMsg(INFO)
-  CALL Display(err_msg, msg="", unitno=stdout)
-  ans = 0.0_DFP
-ELSE
-  ans = d(1)
+IF (info .EQ. 0) THEN
+  CALL F77_SEUPD( &
+    & rvec=.FALSE., howmny='All', SELECT=SELECT, &
+    & d=d, z=v, ldz=1, sigma=sigma0, &
+    & bmat=bmat, n=n, which=which0, nev=nev, tol=tol0, &
+    & resid=resid, ncv=ncv0, v=v, ldv=ldv, &
+    & iparam=iparam, ipntr=ipntr, workd=workd, &
+    & workl=workl, lworkl=lworkl, info=info)
+    !!
+  IF (info .NE. 0) THEN
+    err_msg = SEUPD_ErrorMsg(info)
+    CALL Display(err_msg, msg="", unitno=stdout)
+    STOP
+  ELSE
+    ans = d(1)
+  END IF
 END IF
 !!
 END PROCEDURE SymSmallestEigenVal1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE SymSmallestEigenVal2
+CHARACTER(*), PARAMETER :: myName = "SymSmallestEigenVal2"
+!!
+!! Internal variables
+!!
+INTEGER(I4B), PARAMETER :: nev = 1
+INTEGER(I4B) :: ido, lworkl, ldv, info, iparam(11), ipntr(11), maxIter0, n, &
+  & ncv0, ii
+CHARACTER(1), PARAMETER :: bmat = "I", uplo = "U"
+CHARACTER(2) :: which0
+REAL(DFP) :: tol0, d(nev), sigma0
+REAL(DFP), ALLOCATABLE :: resid(:), v(:, :), workd(:), workl(:)
+TYPE(String) :: err_msg
+LOGICAL(LGT), ALLOCATABLE :: SELECT(:)
+REAL(DFP) :: mat0(SIZE(mat, 1), SIZE(mat, 2))
+INTEGER(I4B) :: ipiv0(SIZE(mat, 1)), info1
+!!
+!! int scalar
+!!
+sigma0 = INPUT(default=0.0_DFP, option=sigma)
+!!
+!! note to get smallest value, we transform the problem to
+!! find largest value.
+!!
+IF (PRESENT(which)) THEN
+  which0 = "L"//which(2:2)
+ELSE
+  which0 = "LA"
+END IF
+!!
+n = SIZE(mat, 1)
+ncv0 = input(default=MIN(20_I4B, n), option=ncv)
+lworkl = ncv0 * (ncv0 + 8)
+ALLOCATE (resid(n), v(n, ncv0), workd(3 * n), workl(lworkl), SELECT(ncv0))
+ldv = SIZE(v, 1)
+ido = 0
+info = 0
+maxIter0 = INPUT(option=maxIter, default=10 * n)
+tol0 = INPUT(option=tol, default=zero)
+!!
+!! iparam
+!!
+iparam(1) = 1 !! ishift
+iparam(3) = maxIter0 !! maxiter
+iparam(4) = 1 !! nb
+iparam(7) = 3 !! mode
+iparam(2) = 0 !! deprecated
+iparam(5) = 0 !! out
+iparam(6) = 0 !! iupd, deprecated
+iparam(8) = 0 !! np, na
+iparam(9:11) = 0 !! OUT
+ipntr = 0
+!!
+!! make a copy of mat  in mat0
+!! we will then form mat - sigma*I
+!! then we will compute LU decomposition
+!!
+IF (.NOT. isFactor) THEN
+  !!
+  DO CONCURRENT(ii=1:n)
+    mat(ii, ii) = mat(ii, ii) - sigma0
+  END DO
+  !!
+  CALL SymGetLU(A=mat, IPIV=ipiv0, UPLO=uplo, INFO=info1)
+  !!
+  IF (info1 .NE. 0) THEN
+    CALL ErrorMsg( &
+      & msg="Error occured in SymGetLU() errorCode="//tostring(info1), &
+      & file=__FILE__, &
+      & line=__LINE__, &
+      & routine="SymSmallestEigenVal2()")
+    STOP
+  END IF
+  !!
+ELSE
+  !!
+  IF (.NOT. PRESENT(ipiv)) THEN
+    CALL ErrorMsg( &
+      & msg="When isFactor is True, then ipiv should be provided", &
+      & file=__FILE__, &
+      & line=__LINE__, &
+      & routine="SymSmallestEigenVal2()")
+    STOP
+  !!
+  ELSE
+    ipiv0(1:n) = ipiv(1:n)
+  END IF
+  !!
+END IF
+!!
+DO
+  CALL F77_SAUPD( &
+    & ido=ido, bmat=bmat, n=n, which=which0, nev=nev, &
+    & tol=tol0, resid=resid, ncv=ncv0, v=v, ldv=ldv, &
+    & iparam=iparam, ipntr=ipntr, workd=workd, workl=workl,  &
+    & lworkl=lworkl, info=info)
+    !!
+  IF (info .NE. 0) THEN
+    err_msg = SAUPD_ErrorMsg(info)
+    CALL Display(err_msg, msg="", unitno=stdout)
+    ans = 0.0_DFP
+    STOP
+  END IF
+    !!
+  IF (ido .EQ. -1 .OR. ido .EQ. 1) THEN
+    !!
+    !! LU Solve
+    !! mat0 * y = x
+    !! x => WORKD(ipntr(1):ipntr(1)+N-1)
+    !! y => WORKD(ipntr(2):ipntr(2)+N-1)
+    !!
+    WORKD(ipntr(2):ipntr(2) + N - 1) = &
+      & WORKD(ipntr(1):ipntr(1) + N - 1)
+    !!
+    CALL SymLUSolve(A=mat, B=WORKD(ipntr(2):ipntr(2) + N - 1),  &
+      & IPIV=ipiv0, UPLO=uplo, INFO=info1)
+    !!
+    IF (info1 .NE. 0) THEN
+      CALL ErrorMsg( &
+        & msg="Error occured in SymGetLU() errorCode="//tostring(info1), &
+        & file=__FILE__, &
+        & line=__LINE__, &
+        & routine="SymSmallestEigenVal2()")
+      STOP
+    END IF
+    !!
+  ELSE
+    EXIT
+  END IF
+END DO
+!!
+!! we are not getting rvec, therefore ldz=1,
+!! othereise ldz = N
+!!
+IF (info .EQ. 0) THEN
+  CALL F77_SEUPD( &
+    & rvec=.FALSE., howmny='All', SELECT=SELECT, &
+    & d=d, z=v, ldz=1, sigma=sigma0, &
+    & bmat=bmat, n=n, which=which0, nev=nev, tol=tol0, &
+    & resid=resid, ncv=ncv0, v=v, ldv=ldv, &
+    & iparam=iparam, ipntr=ipntr, workd=workd, &
+    & workl=workl, lworkl=lworkl, info=info)
+    !!
+  IF (info .NE. 0) THEN
+    err_msg = SEUPD_ErrorMsg(info)
+    CALL Display(err_msg, msg="", unitno=stdout)
+  ELSE
+    ans = d(1)
+  END IF
+END IF
+!!
+END PROCEDURE SymSmallestEigenVal2
 
 END SUBMODULE Methods
