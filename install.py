@@ -4,7 +4,6 @@
 #
 
 import os
-import sys
 import platform
 
 
@@ -114,7 +113,7 @@ else:
     cmake_def += " -D USE_Int32=ON -D USE_Real64=ON"
 
     print("CMAKE DEF : ", cmake_def)
-    build_dir = "~/temp/easifem-base/build"
+    build_dir = os.environ["HOME"] + "/temp/easifem-base/build"
     os.makedirs(build_dir, exist_ok=True)
     os.system(f"cmake -S ./ -B {build_dir} {cmake_def}")
     os.system(f"cmake --build {build_dir} --target install")
