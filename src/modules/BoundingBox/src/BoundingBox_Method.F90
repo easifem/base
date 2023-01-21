@@ -51,6 +51,7 @@ PRIVATE
 !- `lim(6)` => zmax
 !
 !### Usage
+!
 !```fortran
 ! subroutine test
 !   type(BoundingBox_) :: obj
@@ -308,11 +309,11 @@ INTERFACE
   END SUBROUTINE BB_Deallocate
 END INTERFACE
 
-INTERFACE Deallocate
+INTERFACE DEALLOCATE
   MODULE PROCEDURE BB_Deallocate
-END INTERFACE Deallocate
+END INTERFACE DEALLOCATE
 
-PUBLIC :: Deallocate
+PUBLIC :: DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                        Display@Constructor
@@ -325,7 +326,7 @@ PUBLIC :: Deallocate
 INTERFACE
   MODULE SUBROUTINE display_obj(obj, msg, unitno)
     CLASS(BoundingBox_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitNo
   END SUBROUTINE display_obj
 END INTERFACE
@@ -447,11 +448,11 @@ INTERFACE
   END FUNCTION getXmin
 END INTERFACE
 
-INTERFACE Operator(.Xmin.)
+INTERFACE OPERATOR(.Xmin.)
   MODULE PROCEDURE getXmin
-END INTERFACE Operator(.Xmin.)
+END INTERFACE OPERATOR(.Xmin.)
 
-PUBLIC :: Operator(.Xmin.)
+PUBLIC :: OPERATOR(.Xmin.)
 
 !----------------------------------------------------------------------------
 !                                                         getXmax@getMethods
@@ -474,11 +475,11 @@ INTERFACE
   END FUNCTION getXmax
 END INTERFACE
 
-INTERFACE Operator(.Xmax.)
+INTERFACE OPERATOR(.Xmax.)
   MODULE PROCEDURE getXmax
-END INTERFACE Operator(.Xmax.)
+END INTERFACE OPERATOR(.Xmax.)
 
-PUBLIC :: Operator(.Xmax.)
+PUBLIC :: OPERATOR(.Xmax.)
 
 !----------------------------------------------------------------------------
 !                                                         getYmin@getMethods
@@ -501,11 +502,11 @@ INTERFACE
   END FUNCTION getYmin
 END INTERFACE
 
-INTERFACE Operator(.Ymin.)
+INTERFACE OPERATOR(.Ymin.)
   MODULE PROCEDURE getYmin
-END INTERFACE Operator(.Ymin.)
+END INTERFACE OPERATOR(.Ymin.)
 
-PUBLIC :: Operator(.Ymin.)
+PUBLIC :: OPERATOR(.Ymin.)
 
 !----------------------------------------------------------------------------
 !                                                         getYmax@getMethods
@@ -528,11 +529,11 @@ INTERFACE
   END FUNCTION getYmax
 END INTERFACE
 
-INTERFACE Operator(.Ymax.)
+INTERFACE OPERATOR(.Ymax.)
   MODULE PROCEDURE getYmax
-END INTERFACE Operator(.Ymax.)
+END INTERFACE OPERATOR(.Ymax.)
 
-PUBLIC :: Operator(.Ymax.)
+PUBLIC :: OPERATOR(.Ymax.)
 
 !----------------------------------------------------------------------------
 !                                                         getZmin@getMethods
@@ -555,11 +556,11 @@ INTERFACE
   END FUNCTION getZmin
 END INTERFACE
 
-INTERFACE Operator(.Zmin.)
+INTERFACE OPERATOR(.Zmin.)
   MODULE PROCEDURE getZmin
-END INTERFACE Operator(.Zmin.)
+END INTERFACE OPERATOR(.Zmin.)
 
-PUBLIC :: Operator(.Zmin.)
+PUBLIC :: OPERATOR(.Zmin.)
 
 !----------------------------------------------------------------------------
 !                                                         getZmax@getMethods
@@ -582,11 +583,11 @@ INTERFACE
   END FUNCTION getZmax
 END INTERFACE
 
-INTERFACE Operator(.Zmax.)
+INTERFACE OPERATOR(.Zmax.)
   MODULE PROCEDURE getZmax
-END INTERFACE Operator(.Zmax.)
+END INTERFACE OPERATOR(.Zmax.)
 
-PUBLIC :: Operator(.Zmax.)
+PUBLIC :: OPERATOR(.Zmax.)
 
 !----------------------------------------------------------------------------
 !                                                  isIntersectInX@getMethods
@@ -682,11 +683,11 @@ INTERFACE
   END FUNCTION is_intersect
 END INTERFACE
 
-INTERFACE Operator(.isIntersect.)
+INTERFACE OPERATOR(.isIntersect.)
   MODULE PROCEDURE is_intersect
-END INTERFACE Operator(.isIntersect.)
+END INTERFACE OPERATOR(.isIntersect.)
 
-PUBLIC :: Operator(.isIntersect.)
+PUBLIC :: OPERATOR(.isIntersect.)
 
 INTERFACE isIntersect
   MODULE PROCEDURE is_intersect
