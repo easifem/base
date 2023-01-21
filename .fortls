@@ -18,5 +18,11 @@
   "ext_source_dirs": [],
   "lowercase_intrinsics": false,
   "debug_log": false,
-  "disable_diagnostics": false
+  "disable_diagnostics": false,
+  "sort_keywords": false,
+  "use_signature_help": true,
+  "hover_signature": true,
+  "hover_language": "fortran",
+  "enable_code_actions": false,
+  "symbol_skip_mem": false
 }
