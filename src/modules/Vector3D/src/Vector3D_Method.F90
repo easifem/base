@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
+! date:         24 Feb 2021
 ! summary: This module contains method for [[Vector3D_]] data type
 !
 !# Introduction
@@ -25,7 +25,6 @@
 ! * `Vector3D_Method@Constructor.F90`
 ! * `Vector3D_Method@Misc.F90`
 !
-
 
 MODULE Vector3D_Method
 USE GlobalData, ONLY: DFP, I4B, LGT, stdout
@@ -39,8 +38,8 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This function returns the shape of [[Vector3D_]]
+! date:         24 Feb 2021
+! summary:         This function returns the shape of [[Vector3D_]]
 !
 !# Introduction
 ! This routine returns the shape of [[Vector3D_]]
@@ -52,10 +51,10 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION get_shape( obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: Ans( 1 )
-END FUNCTION get_shape
+  MODULE PURE FUNCTION get_shape(obj) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj
+    INTEGER(I4B) :: Ans(1)
+  END FUNCTION get_shape
 END INTERFACE
 
 INTERFACE Shape
@@ -69,15 +68,15 @@ PUBLIC :: Shape
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This routine returns the size of [[Vector3D_]]
+! date:         24 Feb 2021
+! summary:         This routine returns the size of [[Vector3D_]]
 
 INTERFACE
-MODULE PURE FUNCTION get_size( obj, Dims ) RESULT( Ans )
-  TYPE( Vector3D_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: Dims
-  INTEGER( I4B ) :: Ans
-END FUNCTION get_size
+  MODULE PURE FUNCTION get_size(obj, Dims) RESULT(Ans)
+    TYPE(Vector3D_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: Dims
+    INTEGER(I4B) :: Ans
+  END FUNCTION get_size
 END INTERFACE
 
 INTERFACE SIZE
@@ -91,18 +90,18 @@ PUBLIC :: SIZE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	23 Feb 2021
-! summary: 	Returns the total dimension of an array
+! date:         23 Feb 2021
+! summary:         Returns the total dimension of an array
 !
 !# Introduction
 !
 ! This function returns the total dimension (or rank) of an array,
 
 INTERFACE
-MODULE PURE FUNCTION Vec3D_getTotalDimension( obj ) RESULT( Ans )
-  TYPE( Vector3D_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ) :: ans
-END FUNCTION Vec3D_getTotalDimension
+  MODULE PURE FUNCTION Vec3D_getTotalDimension(obj) RESULT(Ans)
+    TYPE(Vector3D_), INTENT(IN) :: obj
+    INTEGER(I4B) :: ans
+  END FUNCTION Vec3D_getTotalDimension
 END INTERFACE
 
 INTERFACE getTotalDimension
@@ -116,18 +115,18 @@ PUBLIC :: getTotalDimension
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	23 Feb 2021
-! summary: 	This subroutine set the total dimension (rank) of an array
+! date:         23 Feb 2021
+! summary:         This subroutine set the total dimension (rank) of an array
 !
 !# Introduction
 !
 ! This subroutine sets the rank(total dimension) of an array
 
 INTERFACE
-MODULE PURE SUBROUTINE Vec3D_setTotalDimension( obj, tDimension )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: tDimension
-END SUBROUTINE Vec3D_setTotalDimension
+  MODULE PURE SUBROUTINE Vec3D_setTotalDimension(obj, tDimension)
+    CLASS(Vector3D_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: tDimension
+  END SUBROUTINE Vec3D_setTotalDimension
 END INTERFACE
 
 INTERFACE setTotalDimension
@@ -141,53 +140,53 @@ PUBLIC :: setTotalDimension
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This routine allocate the data for [[Vector3D_]]
+! date:         24 Feb 2021
+! summary:         This routine allocate the data for [[Vector3D_]]
 !
 !# Introduction
 ! This subroutine reset the instance of [[Vector3D_]] to zero
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE Allocate_Data( obj, Dims )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: Dims
-END SUBROUTINE Allocate_Data
+  MODULE PURE SUBROUTINE Allocate_Data(obj, Dims)
+    CLASS(Vector3D_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: Dims
+  END SUBROUTINE Allocate_Data
 END INTERFACE
 
-INTERFACE Allocate
+INTERFACE ALLOCATE
   MODULE PROCEDURE Allocate_Data
-END INTERFACE Allocate
+END INTERFACE ALLOCATE
 
-PUBLIC :: Allocate
+PUBLIC :: ALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                 Deallocate@Constructor
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This subroutine reset the instance of [[Vector3D_]]
+! date:         24 Feb 2021
+! summary:         This subroutine reset the instance of [[Vector3D_]]
 
 INTERFACE
-MODULE PURE SUBROUTINE Deallocate_Data( obj )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
-END SUBROUTINE Deallocate_Data
+  MODULE PURE SUBROUTINE Deallocate_Data(obj)
+    CLASS(Vector3D_), INTENT(INOUT) :: obj
+  END SUBROUTINE Deallocate_Data
 END INTERFACE
 
-INTERFACE Deallocate
+INTERFACE DEALLOCATE
   MODULE PROCEDURE Deallocate_Data
-END INTERFACE Deallocate
+END INTERFACE DEALLOCATE
 
-PUBLIC :: Deallocate
+PUBLIC :: DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This routine initiate the instance of [[Vector3D_]]
+! date:         24 Feb 2021
+! summary:         This routine initiate the instance of [[Vector3D_]]
 !
 !# Introduction
 !
@@ -204,10 +203,10 @@ PUBLIC :: Deallocate
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_from_val( obj, Val )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-END SUBROUTINE initiate_obj_from_val
+  MODULE PURE SUBROUTINE initiate_obj_from_val(obj, Val)
+    CLASS(Vector3D_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+  END SUBROUTINE initiate_obj_from_val
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -215,8 +214,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This routine initiate the instance of [[Vector3D_]] from another object, basically it is a copy operation
+! date:         24 Feb 2021
+! summary:         This routine initiate the instance of [[Vector3D_]] from another object, basically it is a copy operation
 !
 !# Introduction
 ! This routine initiate the instance of [[Vector3D_]] from another object, basically it is a copy operation.
@@ -232,10 +231,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_obj_from_obj( obj, Anotherobj )
-  CLASS( Vector3D_ ), INTENT( INOUT ) :: obj
-  CLASS( Vector3D_ ), INTENT( IN ) :: Anotherobj
-END SUBROUTINE initiate_obj_from_obj
+  MODULE PURE SUBROUTINE initiate_obj_from_obj(obj, Anotherobj)
+    CLASS(Vector3D_), INTENT(INOUT) :: obj
+    CLASS(Vector3D_), INTENT(IN) :: Anotherobj
+  END SUBROUTINE initiate_obj_from_obj
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -243,7 +242,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
+! date:         24 Feb 2021
 ! summary: Generic procedure to initiate the instance of [[Vector3D_]] object
 
 INTERFACE Initiate
@@ -257,8 +256,8 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	Generic procedure to copy one instance of [[Vector3D_]] into another instance
+! date:         24 Feb 2021
+! summary:         Generic procedure to copy one instance of [[Vector3D_]] into another instance
 
 INTERFACE COPY
   MODULE PROCEDURE initiate_obj_from_obj
@@ -298,10 +297,10 @@ PUBLIC :: ASSIGNMENT(=)
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Constructor1( Val ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-  TYPE( Vector3D_ ) :: Ans
-END FUNCTION Constructor1
+  MODULE PURE FUNCTION Constructor1(Val) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: Val(:)
+    TYPE(Vector3D_) :: Ans
+  END FUNCTION Constructor1
 END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
@@ -319,8 +318,8 @@ PUBLIC :: Vector3D
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This function returns the pointer to an instance of [[Vector3D_]]
+! date:         24 Feb 2021
+! summary:         This function returns the pointer to an instance of [[Vector3D_]]
 !
 !# Introduction
 !
@@ -336,15 +335,15 @@ PUBLIC :: Vector3D
 !```
 
 INTERFACE
-MODULE FUNCTION Constructor_1( Val ) RESULT( Ans )
-  REAL( DFP ), INTENT( IN ) :: Val(:)
-  CLASS( Vector3D_ ), POINTER :: Ans
-END FUNCTION Constructor_1
+  MODULE FUNCTION Constructor_1(Val) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: Val(:)
+    CLASS(Vector3D_), POINTER :: Ans
+  END FUNCTION Constructor_1
 END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This function returns the pointer to an instance of [[Vector3D_]]
+! date:         24 Feb 2021
+! summary:         This function returns the pointer to an instance of [[Vector3D_]]
 !
 !### Usage
 !
@@ -355,15 +354,15 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE FUNCTION Constructor_2( obj ) RESULT( Ans )
-  TYPE( Vector3D_ ), INTENT( IN ) :: obj
-  CLASS( Vector3D_ ), POINTER :: Ans
-END FUNCTION Constructor_2
+  MODULE FUNCTION Constructor_2(obj) RESULT(Ans)
+    TYPE(Vector3D_), INTENT(IN) :: obj
+    CLASS(Vector3D_), POINTER :: Ans
+  END FUNCTION Constructor_2
 END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This generic function returns pointer to an instance of [[Vector3D_]]
+! date:         24 Feb 2021
+! summary:         This generic function returns pointer to an instance of [[Vector3D_]]
 
 INTERFACE Vector3D_Pointer
   MODULE PROCEDURE Constructor_1, Constructor_2
@@ -376,7 +375,7 @@ PUBLIC :: Vector3D_Pointer
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
+! date:         24 Feb 2021
 ! summary: This subroutine display [[Vector3D_]]
 !
 !### Usage
@@ -388,16 +387,16 @@ PUBLIC :: Vector3D_Pointer
 !```
 
 INTERFACE
-MODULE SUBROUTINE Display_obj( obj, Msg, UnitNo )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: Msg
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-END SUBROUTINE Display_obj
+  MODULE SUBROUTINE Display_obj(obj, Msg, UnitNo)
+    CLASS(Vector3D_), INTENT(IN) :: obj
+    CHARACTER(LEN=*), INTENT(IN) :: Msg
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
+  END SUBROUTINE Display_obj
 END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	Generic routine to display an object
+! date:         24 Feb 2021
+! summary:         Generic routine to display an object
 
 INTERFACE Display
   MODULE PROCEDURE Display_obj
@@ -410,8 +409,8 @@ PUBLIC :: Display
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This funtion computes dot product of two [[Vector3D_]] object
+! date:         24 Feb 2021
+! summary:         This funtion computes dot product of two [[Vector3D_]] object
 !
 !### Usage
 !
@@ -429,11 +428,11 @@ PUBLIC :: Display
 !```
 
 INTERFACE
-MODULE PURE FUNCTION dot_product_1( obj1, obj2 ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj1
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj2
-  REAL( DFP ) :: Ans
-END FUNCTION dot_product_1
+  MODULE PURE FUNCTION dot_product_1(obj1, obj2) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj1
+    CLASS(Vector3D_), INTENT(IN) :: obj2
+    REAL(DFP) :: Ans
+  END FUNCTION dot_product_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -441,8 +440,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This funtion computes dot product of a [[Vector3D_]] object and fortran vector
+! date:         24 Feb 2021
+! summary:         This funtion computes dot product of a [[Vector3D_]] object and fortran vector
 !
 !### Usage
 !
@@ -461,11 +460,11 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION dot_product_2( obj, Val ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-  REAL( DFP ) :: Ans
-END FUNCTION dot_product_2
+  MODULE PURE FUNCTION dot_product_2(obj, Val) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP) :: Ans
+  END FUNCTION dot_product_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -473,8 +472,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This funtion computes dot product of a [[Vector3D_]] object and fortran vector
+! date:         24 Feb 2021
+! summary:         This funtion computes dot product of a [[Vector3D_]] object and fortran vector
 !
 !### Usage
 !
@@ -493,11 +492,11 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION dot_product_3( Val, obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-  REAL( DFP ) :: Ans
-END FUNCTION dot_product_3
+  MODULE PURE FUNCTION dot_product_3(Val, obj) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+    REAL(DFP) :: Ans
+  END FUNCTION dot_product_3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -505,8 +504,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This function returns the box product (triple scalar product) of three vector.
+! date:         25 Feb 2021
+! summary:         This function returns the box product (triple scalar product) of three vector.
 !
 !# Introduction
 !
@@ -530,22 +529,21 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION dot_product_4( u, v, w ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: u
-  CLASS( Vector3D_ ), INTENT( IN ) :: v
-  CLASS( Vector3D_ ), INTENT( IN ) :: w
-  REAL( DFP ) :: Ans
-END FUNCTION dot_product_4
+  MODULE PURE FUNCTION dot_product_4(u, v, w) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: u
+    CLASS(Vector3D_), INTENT(IN) :: v
+    CLASS(Vector3D_), INTENT(IN) :: w
+    REAL(DFP) :: Ans
+  END FUNCTION dot_product_4
 END INTERFACE
-
 
 !----------------------------------------------------------------------------
 !                                                          DOT_PRODUCT@Misc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This Generic function computes dot product of [[Vector3D_]] object.
+! date:         24 Feb 2021
+! summary:         This Generic function computes dot product of [[Vector3D_]] object.
 
 INTERFACE DOT_PRODUCT
   MODULE PROCEDURE dot_product_1, dot_product_2, dot_product_4
@@ -553,19 +551,19 @@ END INTERFACE DOT_PRODUCT
 
 PUBLIC :: DOT_PRODUCT
 
-INTERFACE OPERATOR( .DOT. )
+INTERFACE OPERATOR(.DOT.)
   MODULE PROCEDURE dot_product_1, dot_product_2, dot_product_3
 END INTERFACE
 
-PUBLIC :: OPERATOR(.DOT. )
+PUBLIC :: OPERATOR(.DOT.)
 
 !----------------------------------------------------------------------------
 !                                                       Vector_Product@Misc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This function computes the vector product
+! date:         24 Feb 2021
+! summary:         This function computes the vector product
 !
 !# Introduction
 !
@@ -587,11 +585,11 @@ PUBLIC :: OPERATOR(.DOT. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION vector_product_1( obj1, obj2 ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj1
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj2
-  TYPE( Vector3D_ ) :: Ans
-END FUNCTION vector_product_1
+  MODULE PURE FUNCTION vector_product_1(obj1, obj2) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj1
+    CLASS(Vector3D_), INTENT(IN) :: obj2
+    TYPE(Vector3D_) :: Ans
+  END FUNCTION vector_product_1
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -599,8 +597,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This function computes the vector product
+! date:         24 Feb 2021
+! summary:         This function computes the vector product
 !
 !# Introduction
 !
@@ -623,11 +621,11 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION vector_product_2( obj, Val ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-  TYPE( Vector3D_ ) :: Ans
-END FUNCTION vector_product_2
+  MODULE PURE FUNCTION vector_product_2(obj, Val) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+    TYPE(Vector3D_) :: Ans
+  END FUNCTION vector_product_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -635,8 +633,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This function computes the vector product
+! date:         24 Feb 2021
+! summary:         This function computes the vector product
 !
 !# Introduction
 !
@@ -659,11 +657,11 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION vector_product_3( Val, obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj
-  REAL( DFP ), INTENT( IN ) :: Val( : )
-  TYPE( Vector3D_ ) :: Ans
-END FUNCTION vector_product_3
+  MODULE PURE FUNCTION vector_product_3(Val, obj) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj
+    REAL(DFP), INTENT(IN) :: Val(:)
+    TYPE(Vector3D_) :: Ans
+  END FUNCTION vector_product_3
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -671,8 +669,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This function performs vector triple product
+! date:         25 Feb 2021
+! summary:         This function performs vector triple product
 !
 !# Introduction
 !
@@ -697,12 +695,12 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION vector_product_4( u, v, w ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: u
-  CLASS( Vector3D_ ), INTENT( IN ) :: v
-  CLASS( Vector3D_ ), INTENT( IN ) :: w
-  TYPE( Vector3D_ ) :: Ans
-END FUNCTION vector_product_4
+  MODULE PURE FUNCTION vector_product_4(u, v, w) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: u
+    CLASS(Vector3D_), INTENT(IN) :: v
+    CLASS(Vector3D_), INTENT(IN) :: w
+    TYPE(Vector3D_) :: Ans
+  END FUNCTION vector_product_4
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -720,11 +718,11 @@ END INTERFACE Vector_Product
 PUBLIC :: Vector_Product
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	A generic procedure to perform vector product
+! date:         25 Feb 2021
+! summary:         A generic procedure to perform vector product
 
 INTERFACE OPERATOR(.X.)
-  MODULE PROCEDURE  vector_product_1, vector_product_2, vector_product_3
+  MODULE PROCEDURE vector_product_1, vector_product_2, vector_product_3
 END INTERFACE OPERATOR(.X.)
 
 PUBLIC :: OPERATOR(.X.)
@@ -756,17 +754,17 @@ PUBLIC :: OPERATOR(.X.)
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Norm2_obj( obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj
-  REAL( DFP ) :: Ans
-END FUNCTION Norm2_obj
+  MODULE PURE FUNCTION Norm2_obj(obj) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj
+    REAL(DFP) :: Ans
+  END FUNCTION Norm2_obj
 END INTERFACE
 
-INTERFACE OPERATOR( .NORM.)
+INTERFACE OPERATOR(.NORM.)
   MODULE PROCEDURE Norm2_obj
-END INTERFACE OPERATOR( .NORM.)
+END INTERFACE OPERATOR(.NORM.)
 
-PUBLIC :: OPERATOR( .NORM.)
+PUBLIC :: OPERATOR(.NORM.)
 
 INTERFACE Norm2
   MODULE PROCEDURE Norm2_obj
@@ -779,8 +777,8 @@ PUBLIC :: Norm2
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	Returnt the unit vector from a given vector
+! date:         25 Feb 2021
+! summary:         Returnt the unit vector from a given vector
 !
 !### Usage
 !
@@ -789,10 +787,10 @@ PUBLIC :: Norm2
 !```
 
 INTERFACE
-MODULE PURE FUNCTION get_unitVector( obj ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: obj
-  TYPE( Vector3D_ ) :: Ans
-END FUNCTION get_unitVector
+  MODULE PURE FUNCTION get_unitVector(obj) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: obj
+    TYPE(Vector3D_) :: Ans
+  END FUNCTION get_unitVector
 END INTERFACE
 
 INTERFACE UnitVector
@@ -807,11 +805,11 @@ END INTERFACE Hat
 
 PUBLIC :: Hat
 
-INTERFACE OPERATOR( .HAT. )
+INTERFACE OPERATOR(.HAT.)
   MODULE PROCEDURE get_unitVector
-END INTERFACE OPERATOR( .HAT. )
+END INTERFACE OPERATOR(.HAT.)
 
-PUBLIC :: OPERATOR( .HAT. )
+PUBLIC :: OPERATOR(.HAT.)
 
 !----------------------------------------------------------------------------
 !                                                                 Angle@Misc
@@ -819,7 +817,7 @@ PUBLIC :: OPERATOR( .HAT. )
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  25 Feb 2021
-! summary: 	This function returns the angle beteen two vectors
+! summary:         This function returns the angle beteen two vectors
 !
 !# Introduction
 ! Angle between two vectors $\mathbf{u}$ and $\mathbf{v}$ is given by:
@@ -844,18 +842,18 @@ PUBLIC :: OPERATOR( .HAT. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION get_angle( u, v ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: u
-  CLASS( Vector3D_ ), INTENT( IN ) :: v
-  REAL( DFP ):: Ans
-END FUNCTION get_angle
+  MODULE PURE FUNCTION get_angle(u, v) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: u
+    CLASS(Vector3D_), INTENT(IN) :: v
+    REAL(DFP) :: Ans
+  END FUNCTION get_angle
 END INTERFACE
 
-INTERFACE OPERATOR( .Angle. )
+INTERFACE OPERATOR(.Angle.)
   MODULE PROCEDURE get_angle
-END INTERFACE OPERATOR( .Angle. )
+END INTERFACE OPERATOR(.Angle.)
 
-PUBLIC :: OPERATOR( .Angle. )
+PUBLIC :: OPERATOR(.Angle.)
 
 INTERFACE Angle
   MODULE PROCEDURE get_angle
@@ -868,8 +866,8 @@ PUBLIC :: Angle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	Returns the vector of projection from u onto v
+! date:         25 Feb 2021
+! summary:         Returns the vector of projection from u onto v
 !
 !# Introduction
 ! Projetion of a vector $\mathbf{u}$ on \mathbf{v} is given by
@@ -900,11 +898,11 @@ PUBLIC :: Angle
 !```
 
 INTERFACE
-MODULE PURE FUNCTION get_projection_vector_obj( u, v ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: u
-  CLASS( Vector3D_ ), INTENT( IN ) :: v
-  TYPE( Vector3D_ ) ::  Ans
-END FUNCTION get_projection_vector_obj
+  MODULE PURE FUNCTION get_projection_vector_obj(u, v) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: u
+    CLASS(Vector3D_), INTENT(IN) :: v
+    TYPE(Vector3D_) :: Ans
+  END FUNCTION get_projection_vector_obj
 END INTERFACE
 
 INTERFACE ProjectionVector
@@ -913,24 +911,24 @@ END INTERFACE ProjectionVector
 
 PUBLIC :: ProjectionVector
 
-INTERFACE OPERATOR( .ProjectionVector. )
+INTERFACE OPERATOR(.ProjectionVector.)
   MODULE PROCEDURE get_projection_vector_obj
-END INTERFACE OPERATOR( .ProjectionVector. )
+END INTERFACE OPERATOR(.ProjectionVector.)
 
-PUBLIC :: OPERATOR( .ProjectionVector. )
+PUBLIC :: OPERATOR(.ProjectionVector.)
 
-INTERFACE OPERATOR( .Parallel. )
+INTERFACE OPERATOR(.Parallel.)
   MODULE PROCEDURE get_projection_vector_obj
-END INTERFACE OPERATOR( .Parallel. )
+END INTERFACE OPERATOR(.Parallel.)
 
-PUBLIC :: OPERATOR( .Parallel. )
+PUBLIC :: OPERATOR(.Parallel.)
 
 !----------------------------------------------------------------------------
 !                                                                Normal@Misc
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
+! date:         25 Feb 2021
 ! summary: Returns the component of u normal to v.
 !
 !# Introduction
@@ -948,18 +946,18 @@ PUBLIC :: OPERATOR( .Parallel. )
 !```
 
 INTERFACE
-MODULE PURE FUNCTION getNormal_Vector( u, v ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: u
-  CLASS( Vector3D_ ), INTENT( IN ) :: v
-  TYPE( Vector3D_ ) :: Ans
-END FUNCTION getNormal_Vector
+  MODULE PURE FUNCTION getNormal_Vector(u, v) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: u
+    CLASS(Vector3D_), INTENT(IN) :: v
+    TYPE(Vector3D_) :: Ans
+  END FUNCTION getNormal_Vector
 END INTERFACE
 
-INTERFACE OPERATOR( .Normal. )
+INTERFACE OPERATOR(.Normal.)
   MODULE PROCEDURE getNormal_Vector
-END INTERFACE OPERATOR( .Normal. )
+END INTERFACE OPERATOR(.Normal.)
 
-PUBLIC :: OPERATOR( .Normal. )
+PUBLIC :: OPERATOR(.Normal.)
 
 INTERFACE Normal
   MODULE PROCEDURE getNormal_Vector
@@ -971,10 +969,9 @@ PUBLIC :: Normal
 !                                                           Projection@Misc
 !----------------------------------------------------------------------------
 
-
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	Returns the projection from u onto v
+! date:         25 Feb 2021
+! summary:         Returns the projection from u onto v
 !
 !# Introduction
 ! Projetion of a vector $\mathbf{u}$ on \mathbf{v} is given by
@@ -1000,11 +997,11 @@ PUBLIC :: Normal
 !```
 
 INTERFACE
-MODULE PURE FUNCTION get_projection_obj( u, v ) RESULT( Ans )
-  CLASS( Vector3D_ ), INTENT( IN ) :: u
-  CLASS( Vector3D_ ), INTENT( IN ) :: v
-  REAL( DFP ) :: Ans
-END FUNCTION get_projection_obj
+  MODULE PURE FUNCTION get_projection_obj(u, v) RESULT(Ans)
+    CLASS(Vector3D_), INTENT(IN) :: u
+    CLASS(Vector3D_), INTENT(IN) :: v
+    REAL(DFP) :: Ans
+  END FUNCTION get_projection_obj
 END INTERFACE
 
 INTERFACE Projection
@@ -1013,10 +1010,10 @@ END INTERFACE Projection
 
 PUBLIC :: Projection
 
-INTERFACE OPERATOR( .Projection. )
+INTERFACE OPERATOR(.Projection.)
   MODULE PROCEDURE get_projection_obj
-END INTERFACE OPERATOR( .Projection. )
+END INTERFACE OPERATOR(.Projection.)
 
-PUBLIC :: OPERATOR( .Projection. )
+PUBLIC :: OPERATOR(.Projection.)
 
 END MODULE Vector3D_Method
