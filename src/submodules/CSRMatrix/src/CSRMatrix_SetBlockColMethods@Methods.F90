@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE(CSRMatrix_Method) SetBlockColMethods
+SUBMODULE(CSRMatrix_SetBlockColMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -238,4 +238,4 @@ END PROCEDURE csrMat_setBlockColumn6
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE SetBlockColMethods
+END SUBMODULE Methods

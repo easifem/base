@@ -19,7 +19,7 @@
 ! date:         22 March 2021
 ! summary: It contains method for setting values in [[CSRMatrix_]]
 
-SUBMODULE(CSRMatrix_Method) SetRowMethods
+SUBMODULE(CSRMatrix_SetRowMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -311,4 +311,4 @@ END PROCEDURE csrMat_setRow16
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE SetRowMethods
+END SUBMODULE Methods

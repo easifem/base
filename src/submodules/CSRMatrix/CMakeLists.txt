@@ -1,33 +1,42 @@
-# This file is a part of easifem-base
-# (c) 2021, Vikas Sharma, Ph.D.
-# All right reserved
+# This program is a part of EASIFEM library
+# Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 #
-# log
-# 16/02/2021 this file was created
-#-----------------------------------------------------------------------
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https: //www.gnu.org/licenses/>
+#
 
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/CSRMatrix_Method@ConstructorMethods.F90
-  ${src_path}/CSRMatrix_Method@IOMethods.F90
-  ${src_path}/CSRMatrix_Method@SparsityMethods.F90
-  ${src_path}/CSRMatrix_Method@SetMethods.F90
-  ${src_path}/CSRMatrix_Method@AddMethods.F90
-  ${src_path}/CSRMatrix_Method@SetRowMethods.F90
-  ${src_path}/CSRMatrix_Method@SetColMethods.F90
-  ${src_path}/CSRMatrix_Method@SetBlockRowMethods.F90
-  ${src_path}/CSRMatrix_Method@SetBlockColMethods.F90
-  ${src_path}/CSRMatrix_Method@GetMethods.F90
-  ${src_path}/CSRMatrix_Method@GetRowMethods.F90
-  ${src_path}/CSRMatrix_Method@GetColMethods.F90
-  ${src_path}/CSRMatrix_Method@GetBlockRowMethods.F90
-  ${src_path}/CSRMatrix_Method@GetBlockColMethods.F90
-  ${src_path}/CSRMatrix_Method@UnaryMethods.F90
-  ${src_path}/CSRMatrix_Method@ILUTMethods.F90
-  ${src_path}/CSRMatrix_Method@LUSolveMethods.F90
-  ${src_path}/CSRMatrix_Method@MatVecMethods.F90
-  # ${src_path}/CSRMatrix_Method@MatmulMethods.F90
-  ${src_path}/CSRMatrix_Method@ReorderingMethod.F90
-  ${src_path}/CSRMatrix_Method@DiagonalScalingMethods.F90
+  ${src_path}/CSRMatrix_AddMethods@Methods.F90
+  ${src_path}/CSRMatrix_ConstructorMethods@Methods.F90
+  ${src_path}/CSRMatrix_DiagonalScalingMethods@Methods.F90
+  ${src_path}/CSRMatrix_GetBlockColMethods@Methods.F90
+  ${src_path}/CSRMatrix_GetColMethods@Methods.F90
+  ${src_path}/CSRMatrix_GetMethods@Methods.F90
+  ${src_path}/CSRMatrix_GetRowMethods@Methods.F90
+  ${src_path}/CSRMatrix_ILUMethods@Methods.F90
+  ${src_path}/CSRMatrix_IOMethods@Methods.F90
+  ${src_path}/CSRMatrix_LUSolveMethods@Methods.F90
+  ${src_path}/CSRMatrix_MatVecMethods@Methods.F90
+  ${src_path}/CSRMatrix_ReorderingMethods@Methods.F90
+  ${src_path}/CSRMatrix_SetBlockColMethods@Methods.F90
+  ${src_path}/CSRMatrix_SetBlockRowMethods@Methods.F90
+  ${src_path}/CSRMatrix_SetColMethods@Methods.F90
+  ${src_path}/CSRMatrix_SetRowMethods@Methods.F90
+  ${src_path}/CSRMatrix_SetMethods@Methods.F90
+  ${src_path}/CSRMatrix_SparsityMethods@Methods.F90
+  ${src_path}/CSRMatrix_UnaryMethods@Methods.F90
+  ${src_path}/CSRMatrix_SpectralMethods@Methods.F90
+  ${src_path}/CSRMatrix_MatrixMarketIO@Methods.F90
 )

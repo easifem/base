@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(CSRMatrix_Method) DiagonalScalingMethods
+SUBMODULE(CSRMatrix_DiagonalScalingMethods) Methods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -24,10 +25,10 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrmat_DiagonalScaling_1
-  REAL( DFP ), ALLOCATABLE :: diag( : )
-  CALL getDiagonal( obj=obj, diag=diag )
-  CALL DiagonalScaling( obj=obj, diag=diag, operator=operator, side=side)
-  IF( ALLOCATED( diag ) ) DEALLOCATE( diag )
+REAL(DFP), ALLOCATABLE :: diag_(:)
+CALL getDiagonal(obj=obj, diag=diag_)
+CALL DiagonalScaling(obj=obj, diag=diag_, OPERATOR=OPERATOR, side=side)
+IF (ALLOCATED(diag_)) DEALLOCATE (diag_)
 END PROCEDURE csrmat_DiagonalScaling_1
 
 !----------------------------------------------------------------------------
@@ -35,127 +36,127 @@ END PROCEDURE csrmat_DiagonalScaling_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrmat_DiagonalScaling_2
-  INTEGER( I4B ) :: ii, jj
-  CHARACTER( LEN = : ), ALLOCATABLE :: op
+INTEGER(I4B) :: ii, jj
+CHARACTER(:), ALLOCATABLE :: op
   !!
   !!
   !!
-  IF( PRESENT( operator ) ) THEN
-    op = operator
-  ELSE
-    op = 'SQRT'
-  END IF
+IF (PRESENT(OPERATOR)) THEN
+  op = OPERATOR
+ELSE
+  op = 'SQRT'
+END IF
   !!
-  SELECT CASE( TRIM( side ) )
+SELECT CASE (TRIM(side))
   !!
   !! LEFT
   !!
-  CASE( 'LEFT', 'Left', 'left' )
+CASE ('LEFT', 'Left', 'left')
     !!
-    SELECT CASE( TRIM(op) )
+  SELECT CASE (TRIM(op))
     !!
     !!
     !!
-    CASE( 'SQRT' )
+  CASE ('SQRT')
       !!
-      DO ii = 1, obj%csr%nrow
+    DO ii = 1, obj % csr % nrow
         !!
-        DO jj = obj%csr%IA( ii ), obj%csr%IA(ii+1)-1
+      DO jj = obj % csr % IA(ii), obj % csr % IA(ii + 1) - 1
           !!
-          obj%A(jj) = obj%A(jj) / SQRT( ABS( diag(ii) ))
+        obj % A(jj) = obj % A(jj) / SQRT(ABS(diag(ii)))
           !!
-        END DO
       END DO
+    END DO
     !!
     !!
     !!
-    CASE( 'NONE' )
+  CASE ('NONE')
       !!
-      DO ii = 1, obj%csr%nrow
+    DO ii = 1, obj % csr % nrow
         !!
-        DO jj = obj%csr%IA( ii ), obj%csr%IA(ii+1)-1
+      DO jj = obj % csr % IA(ii), obj % csr % IA(ii + 1) - 1
           !!
-          obj%A(jj) = obj%A(jj) / diag(ii)
+        obj % A(jj) = obj % A(jj) / diag(ii)
           !!
-        END DO
       END DO
+    END DO
     !!
-    END SELECT
-  !!
-  !!
-  !!
-  CASE( 'RIGHT', 'Right', 'right' )
-    !!
-    !!
-    SELECT CASE( TRIM(op) )
-    !!
-    !!
-    !!
-    CASE( 'SQRT' )
-      !!
-      DO ii = 1, obj%csr%nrow
-        !!
-        DO jj = obj%csr%IA( ii ), obj%csr%IA(ii+1)-1
-          !!
-          obj%A(jj) = obj%A(jj) / SQRT( ABS( diag(obj%csr%JA(jj)) ))
-          !!
-        END DO
-      END DO
-    !!
-    !!
-    !!
-    CASE( 'NONE' )
-      !!
-      DO ii = 1, obj%csr%nrow
-        !!
-        DO jj = obj%csr%IA( ii ), obj%csr%IA(ii+1)-1
-          !!
-          obj%A(jj) = obj%A(jj) / diag(obj%csr%JA(jj))
-          !!
-        END DO
-      END DO
-      !!
-    END SELECT
-  !!
-  !!
-  !!
-  CASE( 'BOTH', 'Both', 'both' )
-    !!
-    !!
-    SELECT CASE( TRIM(op) )
-    !!
-    !!
-    !!
-    CASE( 'SQRT' )
-      !!
-      DO ii = 1, obj%csr%nrow
-        !!
-        DO jj = obj%csr%IA( ii ), obj%csr%IA(ii+1)-1
-          !!
-          obj%A(jj) = obj%A(jj) / &
-            & SQRT( ABS( diag(ii) * diag(obj%csr%JA(jj)) ))
-          !!
-        END DO
-      END DO
-    !!
-    !!
-    !!
-    CASE( 'NONE' )
-      !!
-      DO ii = 1, obj%csr%nrow
-        !!
-        DO jj = obj%csr%IA( ii ), obj%csr%IA(ii+1)-1
-          !!
-          obj%A(jj) = obj%A(jj) / diag(ii) / diag(obj%csr%JA(jj))
-          !!
-        END DO
-      END DO
-    !!
-    END SELECT
-  !!
-  !!
-  !!
   END SELECT
+  !!
+  !!
+  !!
+CASE ('RIGHT', 'Right', 'right')
+    !!
+    !!
+  SELECT CASE (TRIM(op))
+    !!
+    !!
+    !!
+  CASE ('SQRT')
+      !!
+    DO ii = 1, obj % csr % nrow
+        !!
+      DO jj = obj % csr % IA(ii), obj % csr % IA(ii + 1) - 1
+          !!
+        obj % A(jj) = obj % A(jj) / SQRT(ABS(diag(obj % csr % JA(jj))))
+          !!
+      END DO
+    END DO
+    !!
+    !!
+    !!
+  CASE ('NONE')
+      !!
+    DO ii = 1, obj % csr % nrow
+        !!
+      DO jj = obj % csr % IA(ii), obj % csr % IA(ii + 1) - 1
+          !!
+        obj % A(jj) = obj % A(jj) / diag(obj % csr % JA(jj))
+          !!
+      END DO
+    END DO
+      !!
+  END SELECT
+  !!
+  !!
+  !!
+CASE ('BOTH', 'Both', 'both')
+    !!
+    !!
+  SELECT CASE (TRIM(op))
+    !!
+    !!
+    !!
+  CASE ('SQRT')
+      !!
+    DO ii = 1, obj % csr % nrow
+        !!
+      DO jj = obj % csr % IA(ii), obj % csr % IA(ii + 1) - 1
+          !!
+        obj % A(jj) = obj % A(jj) / &
+          & SQRT(ABS(diag(ii) * diag(obj % csr % JA(jj))))
+          !!
+      END DO
+    END DO
+    !!
+    !!
+    !!
+  CASE ('NONE')
+      !!
+    DO ii = 1, obj % csr % nrow
+        !!
+      DO jj = obj % csr % IA(ii), obj % csr % IA(ii + 1) - 1
+          !!
+        obj % A(jj) = obj % A(jj) / diag(ii) / diag(obj % csr % JA(jj))
+          !!
+      END DO
+    END DO
+    !!
+  END SELECT
+  !!
+  !!
+  !!
+END SELECT
   !!
   !!
   !!
@@ -165,4 +166,4 @@ END PROCEDURE csrmat_DiagonalScaling_2
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE DiagonalScalingMethods
+END SUBMODULE Methods

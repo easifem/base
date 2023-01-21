@@ -62,7 +62,7 @@
 ! | `CSRKVSTC`|  Finds block column partitioning of matrix in CSR format   |
 ! | `KVSTMERGE`| Merges block partitionings, for conformal row/col pattern |
 
-SUBMODULE(CSRMatrix_Method) UnaryMethods
+SUBMODULE(CSRMatrix_UnaryMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -179,8 +179,8 @@ INTERFACE
     DOUBLE PRECISION :: GETELM, A(*)
   END FUNCTION GETELM
 END INTERFACE
-INTEGER(I4B) :: iadd
-Ans = GETELM(I, J, obj%A, obj%csr%JA, obj%csr%IA, iadd, obj%csr%isSorted)
+INTEGER(I4B) :: iadd0
+Ans = GETELM(I, J, obj%A, obj%csr%JA, obj%csr%IA, iadd0, obj%csr%isSorted)
 END PROCEDURE csrMat_Get1
 
 !----------------------------------------------------------------------------
@@ -362,4 +362,4 @@ END PROCEDURE csrMat_Permute
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-END SUBMODULE UnaryMethods
+END SUBMODULE Methods

@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE(CSRMatrix_Method) MatVecMethods
+SUBMODULE(CSRMatrix_MatVecMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AMatvec1
-  CALL AMUX( SIZE( y ), x, y, obj%A, obj%csr%JA, obj%csr%IA )
+CALL AMUX(SIZE(y), x, y, obj % A, obj % csr % JA, obj % csr % IA)
 END PROCEDURE csrMat_AMatvec1
 
 !----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ END PROCEDURE csrMat_AMatvec1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AMatvec2
-  CALL AMUXMS( SIZE( y ), x, y, A, JA )
+CALL AMUXMS(SIZE(y), x, y, A, JA)
 END PROCEDURE csrMat_AMatvec2
 
 !----------------------------------------------------------------------------
@@ -45,11 +45,11 @@ END PROCEDURE csrMat_AMatvec2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AtMatvec
-  IF( isSquare( obj ) ) THEN
-    CALL ATMUX( SIZE( y ), x, y, obj%A, obj%csr%JA, obj%csr%IA )
-  ELSE
-    CALL ATMUXR( SIZE( x ), SIZE( y ), x, y, obj%A, obj%csr%JA, obj%csr%IA )
-  END IF
+IF (isSquare(obj)) THEN
+  CALL ATMUX(SIZE(y), x, y, obj % A, obj % csr % JA, obj % csr % IA)
+ELSE
+  CALL ATMUXR(SIZE(x), SIZE(y), x, y, obj % A, obj % csr % JA, obj % csr % IA)
+END IF
 END PROCEDURE csrMat_AtMatvec
 
 !----------------------------------------------------------------------------
@@ -57,13 +57,13 @@ END PROCEDURE csrMat_AtMatvec
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_MatVec1
-  LOGICAL( LGT ) :: trans
-  trans = INPUT( option=transp, default=.FALSE. )
-  IF( trans ) THEN
-    CALL AtMatvec( obj=obj, x=x, y=y )
-  ELSE
-    CALL AMatvec( obj=obj, x=x, y=y )
-  END IF
+LOGICAL(LGT) :: trans
+trans = INPUT(option=transp, default=.FALSE.)
+IF (trans) THEN
+  CALL AtMatvec(obj=obj, x=x, y=y)
+ELSE
+  CALL AMatvec(obj=obj, x=x, y=y)
+END IF
 END PROCEDURE csrMat_MatVec1
 
 !----------------------------------------------------------------------------
@@ -71,6 +71,7 @@ END PROCEDURE csrMat_MatVec1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_MatVec2
-  CALL AMatvec( A=A, JA=JA, x=x, y=y )
+CALL AMatvec(A=A, JA=JA, x=x, y=y)
 END PROCEDURE csrMat_MatVec2
-END SUBMODULE MatVecMethods
+
+END SUBMODULE Methods

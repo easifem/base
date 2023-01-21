@@ -17,9 +17,9 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date:         22 March 2021
-! summary:         This submodule contains method for constructing [[CSRMatrix_]]
+! summary: This submodule contains method for constructing [[CSRMatrix_]]
 
-SUBMODULE(CSRMatrix_Method) ConstructorMethods
+SUBMODULE(CSRMatrix_ConstructorMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -110,8 +110,7 @@ END PROCEDURE csrMat_initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_initiate2
-  !!
-#ifdef DEBUG_VER
+!!
 IF (.NOT. csr%isInitiated) THEN
   CALL ErrorMSG( &
     & "Instance of CSRSparsity is not initiated!", &
@@ -120,15 +119,14 @@ IF (.NOT. csr%isInitiated) THEN
     & __LINE__, stderr)
   STOP
 END IF
-#endif
-  !!
+!!
 CALL Deallocate (obj)
-obj%csrOwnership = .FALSE.
+obj%csrOwnership = .TRUE.
 IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
 obj%csr = csr
 CALL Reallocate(obj%A, obj%csr%nnz)
 CALL setTotalDimension(obj, 2_I4B)
-  !!
+!!
 END PROCEDURE csrMat_initiate2
 
 !----------------------------------------------------------------------------
@@ -136,14 +134,12 @@ END PROCEDURE csrMat_initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_initiate3
-  !!
 obj%csrOwnership = .TRUE.
 IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
 CALL Initiate(obj=obj%csr, IA=IA, JA=JA)
 obj%A = A
 CALL setTotalDimension(obj, 2_I4B)
 CALL setSparsity(obj)
-  !!
 END PROCEDURE csrMat_initiate3
 
 !----------------------------------------------------------------------------
@@ -153,7 +149,7 @@ END PROCEDURE csrMat_initiate3
 MODULE PROCEDURE csrMat_Initiate4
 obj%csr = obj2%csr
 obj%tDimension = obj2%tDimension
-obj%csrOwnership = .FALSE.
+obj%csrOwnership = obj2%csrOwnership
 obj%matrixProp = obj2%matrixProp
 IF (ALLOCATED(obj2%A)) obj%A = obj2%A
 END PROCEDURE csrMat_Initiate4
@@ -166,22 +162,20 @@ MODULE PROCEDURE csrMat_Initiate5
 INTEGER(I4B) :: nrow, ncol, nnz, job
 INTEGER(I4B), ALLOCATABLE :: IA(:), JA(:)
 REAL(DFP), ALLOCATABLE :: A(:)
-  !!
 job = 1
 nrow = i2 - i1 + 1
 ncol = j2 - j1 + 1
 nnz = obj2%csr%nnz
 ALLOCATE (A(nnz), IA(nrow + 1), JA(nnz))
 A = 0.0; IA = 0; JA = 0
-  !! calling from Sparsekit
+!! calling from Sparsekit
 CALL SUBMAT(job, i1, i2, j1, j2, obj2%A, obj2%csr%JA, obj2%csr%IA,&
   & nrow, ncol, A, JA, IA)
-  !!
+!!
 nnz = IA(nrow + 1) - 1
 CALL initiate(obj=obj, A=A(1:nnz), IA=IA, JA=JA(1:nnz))
 obj%csr%ncol = ncol
 DEALLOCATE (IA, JA, A)
-  !!
 END PROCEDURE csrMat_Initiate5
 
 !----------------------------------------------------------------------------
@@ -189,24 +183,7 @@ END PROCEDURE csrMat_Initiate5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Initiate6
-  !!
-#ifdef DEBUG_VER
-IF (ASSOCIATED(obj%csr)) THEN
-  CALL ErrorMSG( &
-    & MSG="obj%csr is associated.", &
-    & FILE="CSRMatrix_Method@ConstructorMethods.F90", &
-    & ROUTINE="csrMat_Initiate6()", &
-    & LINE=__LINE__, &
-    & unitNo=stdout)
-  STOP
-END IF
-#endif
-  !!
-obj%csr = obj2%csr
-obj%tDimension = obj2%tDimension
-obj%csrOwnership = .TRUE.
-obj%matrixProp = obj2%matrixProp
-IF (ALLOCATED(obj2%A)) obj%A = obj2%A
+CALL csrMat_Initiate4(obj=obj, obj2=obj2)
 END PROCEDURE csrMat_Initiate6
 
-END SUBMODULE ConstructorMethods
+END SUBMODULE Methods

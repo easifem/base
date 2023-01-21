@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE(CSRMatrix_Method) GetRowMethods
+SUBMODULE(CSRMatrix_GetRowMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -223,4 +223,4 @@ END PROCEDURE csrMat_getRow8
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE GetRowMethods
+END SUBMODULE Methods

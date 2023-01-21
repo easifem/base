@@ -19,7 +19,7 @@
 ! date:         22 March 2021
 ! summary: It contains method for setting values in [[CSRMatrix_]]
 
-SUBMODULE(CSRMatrix_Method) SetMethods
+SUBMODULE(CSRMatrix_SetMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -45,7 +45,7 @@ DO ii = 1, SIZE(row)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       !!
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = value(ii, kk)
+        obj%A(jj) = VALUE(ii, kk)
         EXIT
       END IF
       !!
@@ -77,9 +77,9 @@ SELECT CASE (storageFMT)
 CASE (FMT_NODES)
   !!
   IF ((obj.StorageFMT.1) .EQ. FMT_NODES) THEN
-    m2 = value
+    m2 = VALUE
   ELSE
-    CALL Convert(From=value, To=m2, Conversion=NodesToDOF, &
+    CALL Convert(From=VALUE, To=m2, Conversion=NodesToDOF, &
       & nns=SIZE(nodenum), tDOF=tdof)
   END IF
 !!
@@ -89,15 +89,15 @@ CASE (FMT_NODES)
 CASE (FMT_DOF)
   !!
   IF ((obj.StorageFMT.1) .EQ. FMT_DOF) THEN
-    m2 = value
+    m2 = VALUE
   ELSE
-    CALL Convert(From=value, To=m2, Conversion=DofToNodes, &
+    CALL Convert(From=VALUE, To=m2, Conversion=DofToNodes, &
       & nns=SIZE(nodenum), tDOF=tdof)
   END IF
   !!
 END SELECT
 !!
-CALL Set(obj=obj, nodenum=nodenum, value=m2)
+CALL Set(obj=obj, nodenum=nodenum, VALUE=m2)
 !!
 IF (ALLOCATED(m2)) DEALLOCATE (m2)
 !!
@@ -108,7 +108,7 @@ END PROCEDURE csrMat_set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_set2
-obj%A = value
+obj%A = VALUE
 END PROCEDURE csrMat_set2
 
 !----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ MODULE PROCEDURE csrMat_set3
 INTEGER(I4B) :: i, j
   !!
 DO j = obj%csr%IA(irow), obj%csr%IA(irow + 1) - 1
-  IF (obj%csr%JA(j) .EQ. icolumn) obj%A(j) = value
+  IF (obj%csr%JA(j) .EQ. icolumn) obj%A(j) = VALUE
 END DO
   !!
 END PROCEDURE csrMat_set3
@@ -136,7 +136,7 @@ CALL set(obj=obj,  &
   & icolumn=getNodeLoc( &
               & obj=obj%csr%jdof, &
               & nodenum=jNodeNum, idof=jDOF), &
-  & value=value)
+  & VALUE=VALUE)
 END PROCEDURE csrMat_set4
 
 !----------------------------------------------------------------------------
@@ -150,9 +150,9 @@ INTEGER(I4B) :: tdof1, tdof2
 tdof1 = .tdof. (obj%csr%idof)
 tdof2 = .tdof. (obj%csr%jdof)
 !!
-CALL Reallocate(m2, tdof1 * size(nodenum), tdof2 * size(nodenum))
-m2 = value
-CALL Set(obj=obj, nodenum=nodenum, value=m2)
+CALL Reallocate(m2, tdof1 * SIZE(nodenum), tdof2 * SIZE(nodenum))
+m2 = VALUE
+CALL Set(obj=obj, nodenum=nodenum, VALUE=m2)
 !!
 DEALLOCATE (m2)
 END PROCEDURE csrMat_set5
@@ -173,7 +173,7 @@ DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = value(ii, kk)
+        obj%A(jj) = VALUE(ii, kk)
         EXIT
       END IF
     END DO
@@ -201,7 +201,7 @@ CALL set(obj=obj, &
   & nodenum=jNodeNum, &
   & ivar=jvar, &
   & idof=jDOF), &
-  & value=value)
+  & VALUE=VALUE)
 END PROCEDURE csrMat_set7
 
 !----------------------------------------------------------------------------
@@ -220,7 +220,7 @@ DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = value(ii, kk)
+        obj%A(jj) = VALUE(ii, kk)
         EXIT
       END IF
     END DO
@@ -249,7 +249,7 @@ CALL set(obj=obj, &
   & ivar=jvar, &
   & spacecompo=jspacecompo, &
   & timecompo=jtimecompo), &
-  & value=value)
+  & VALUE=VALUE)
 END PROCEDURE csrMat_set9
 
 !----------------------------------------------------------------------------
@@ -268,7 +268,7 @@ DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = value
+        obj%A(jj) = VALUE
         EXIT
       END IF
     END DO
@@ -295,7 +295,7 @@ DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = value
+        obj%A(jj) = VALUE
         EXIT
       END IF
     END DO
@@ -324,7 +324,7 @@ DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = value
+        obj%A(jj) = VALUE
         EXIT
       END IF
     END DO
@@ -353,7 +353,7 @@ DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = value
+        obj%A(jj) = VALUE
         EXIT
       END IF
     END DO
@@ -382,7 +382,7 @@ DO ii = 1, SIZE(row)
   DO kk = 1, SIZE(col)
     DO jj = obj%csr%IA(row(ii)), obj%csr%IA(row(ii) + 1) - 1
       IF (obj%csr%JA(jj) .EQ. col(kk)) THEN
-        obj%A(jj) = value
+        obj%A(jj) = VALUE
         EXIT
       END IF
     END DO
@@ -393,4 +393,4 @@ DEALLOCATE (row, col)
   !!
 END PROCEDURE csrMat_set14
 
-END SUBMODULE SetMethods
+END SUBMODULE Methods

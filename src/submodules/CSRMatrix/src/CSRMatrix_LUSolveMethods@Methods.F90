@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains methods fors solving LU x = y
 
-SUBMODULE(CSRMatrix_Method) LUSolveMethods
+SUBMODULE(CSRMatrix_LUSolveMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,7 +29,15 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_LUSOLVE
+IF (PRESENT(isTranspose)) THEN
+  IF (isTranspose) THEN
+    CALL LUTSOL(SIZE(rhs), rhs, sol, alu, jlu, ju)
+  ELSE
+    CALL LUSOL(SIZE(rhs), rhs, sol, alu, jlu, ju)
+  END IF
+ELSE
   CALL LUSOL(SIZE(rhs), rhs, sol, alu, jlu, ju)
+END IF
 END PROCEDURE csrMat_LUSOLVE
 
 !----------------------------------------------------------------------------
@@ -37,7 +45,7 @@ END PROCEDURE csrMat_LUSOLVE
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_LUTSOLVE
-  CALL LUTSOL(SIZE(rhs), rhs, sol, alu, jlu, ju)
+CALL LUTSOL(SIZE(rhs), rhs, sol, alu, jlu, ju)
 END PROCEDURE csrMat_LUTSOLVE
 
-END SUBMODULE LUSolveMethods
+END SUBMODULE Methods

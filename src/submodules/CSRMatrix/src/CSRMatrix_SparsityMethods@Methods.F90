@@ -19,7 +19,7 @@
 ! date:         22 March 2021
 ! summary: It contains method for setting values in [[CSRMatrix_]]
 
-SUBMODULE(CSRMatrix_Method) SparsityMethods
+SUBMODULE(CSRMatrix_SparsityMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -93,4 +93,4 @@ END PROCEDURE csrMat_setSparsity_final
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE SparsityMethods
+END SUBMODULE Methods

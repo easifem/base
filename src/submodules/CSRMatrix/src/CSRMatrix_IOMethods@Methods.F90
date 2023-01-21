@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE(CSRMatrix_Method) IOMethods
+SUBMODULE(CSRMatrix_IOMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -37,9 +37,9 @@ CALL Display(obj%tDimension, "TOTAL DIMENSION : ")
 CALL Display(obj%MatrixProp, "MATRIX PROPERTY : ")
 CALL Display(obj=obj%csr, msg="CSR SPARSITY : ", unitNo=I)
 IF (ALLOCATED(obj%A)) THEN
-  CALL DUMP(1, obj%csr%nrow, .true., obj%A, obj%csr%JA, obj%csr%IA, I)
+  CALL DUMP(1, obj%csr%nrow, .TRUE., obj%A, obj%csr%JA, obj%csr%IA, I)
 ELSE
-  CALL DUMP(1, obj%csr%nrow, .false., obj%A, obj%csr%JA, obj%csr%IA, I)
+  CALL DUMP(1, obj%csr%nrow, .FALSE., obj%A, obj%csr%JA, obj%csr%IA, I)
 END IF
 END PROCEDURE csrMat_Display
 
@@ -71,9 +71,9 @@ END PROCEDURE csrMat_SPY
 
 SUBROUTINE csrMat_SPY_PLPLOT(obj, filename, ext, driver)
   TYPE(CSRMatrix_), INTENT(IN) :: obj
-  CHARACTER(LEN=*), INTENT(IN) :: filename
-  CHARACTER(LEN=*), INTENT(IN) :: ext
-  CHARACTER(LEN=*), INTENT(IN) :: driver
+  CHARACTER(*), INTENT(IN) :: filename
+  CHARACTER(*), INTENT(IN) :: ext
+  CHARACTER(*), INTENT(IN) :: driver
 #ifdef USE_PLPLOT
   !> Internal
   REAL(DFP), ALLOCATABLE :: X(:), Y(:) !, A( : )!
@@ -132,10 +132,10 @@ END SUBROUTINE csrMat_SPY_PLPLOT
 
 SUBROUTINE csrMat_SPY_gnuplot(obj, filename)
   TYPE(CSRMatrix_), INTENT(IN) :: obj
-  CHARACTER(LEN=*), INTENT(IN) :: filename
+  CHARACTER(*), INTENT(IN) :: filename
   ! internal variable
   INTEGER(I4B) :: i, nrow, j, m, ncol, nnz, unitno, a, b, IOSTAT
-  CHARACTER(LEN=256) :: scripFile
+  CHARACTER(256) :: scripFile
   LOGICAL(LGT) :: isOpen
   !> main
   OPEN (FILE=TRIM(filename)//".txt", NEWUNIT=unitno, STATUS="REPLACE", &
@@ -162,7 +162,7 @@ SUBROUTINE csrMat_SPY_gnuplot(obj, filename)
   END DO
   CLOSE (unitno)
   !> open gnuplot script file
-  OPEN (FILE=trim(filename)//".gp", NEWUNIT=unitno, STATUS="REPLACE", &
+  OPEN (FILE=TRIM(filename)//".gp", NEWUNIT=unitno, STATUS="REPLACE", &
     & ACTION="WRITE", IOSTAT=IOSTAT)
   !> check
   IF (IOSTAT .NE. 0) THEN
@@ -226,22 +226,131 @@ END SUBROUTINE csrMat_SPY_gnuplot
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_IMPORT
-INTEGER(I4B) :: unitNo, nrow, ncol, nnz, ii
+INTEGER(I4B) :: iostat, unitno, rows, cols, nnz, ii
+INTEGER(I4B), ALLOCATABLE :: indx(:), jndx(:), IA(:), JA(:)
+REAL(DFP), ALLOCATABLE :: A(:), rval(:)
+TYPE(String) :: aline
+CHARACTER(1024) :: iomsg
+CHARACTER(50) :: rep, field, symm
+!
+! Open file
+!
+OPEN (FILE=filename, NEWUNIT=unitno, STATUS="OLD", ACTION="READ", &
+  & IOSTAT=iostat, iomsg=iomsg)
+!
+IF (iostat .NE. 0) THEN
+  CALL ErrorMSG(&
+    & msg="Error in opening file, following msg = "//TRIM(iomsg), &
+    & file=__FILE__, &
+    & routine="csrMat_IMPORT()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+!
+CALL MMRead(unitno=unitno, rep=rep, field=field, symm=symm, rows=rows, &
+  & cols=cols, nnz=nnz, indx=indx, jndx=jndx, rval=rval)
+!
+CALL toUpperCase(symm)
+IF (symm .EQ. "SYMMETRIC") THEN
+  symm = "SYM"
+ELSEIF (symm .EQ. "SKEW-SYMMETRIC") THEN
+  symm = "SKEWSYM"
+ELSE
+  symm = "UNSYM"
+END IF
+!
+ALLOCATE (IA(rows + 1), JA(nnz), A(nnz))
+!
+! Call COOCSR from sparsekit
+!
+CALL COOCSR(rows, nnz, rval, indx, jndx, A, JA, IA)
+!
+CALL Initiate(obj=obj, A=A, IA=IA, JA=JA, MatrixProp=symm)
+!
+CLOSE (unitNo)
+DEALLOCATE (indx, jndx, rval, IA, JA, A)
+END PROCEDURE csrMat_IMPORT
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE deprecated_csrMat_IMPORT
+INTEGER(I4B) :: iostat, unitNo, nrow, ncol, nnz, ii
 INTEGER(I4B), ALLOCATABLE :: ROW(:), COL(:), IA(:), JA(:)
 REAL(DFP), ALLOCATABLE :: A(:), X(:)
 TYPE(String) :: aline
+CHARACTER(1024) :: iomsg
 !
-OPEN (FILE=filename, NEWUNIT=unitNo, STATUS="OLD", ACTION="READ")
-CALL aline%read_line(unit=unitNo)
-READ (unitNo, *) nrow, ncol, nnz
+OPEN (FILE=filename, NEWUNIT=unitNo, STATUS="OLD", ACTION="READ", &
+  & IOSTAT=iostat, iomsg=iomsg)
+!
+IF (iostat .NE. 0) THEN
+  CALL ErrorMSG(&
+    & msg="Error in opening file, following msg = "//TRIM(iomsg), &
+    & file=__FILE__, &
+    & routine="csrMat_IMPORT()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END IF
+!
+CALL aline%read_line(unit=unitNo, iostat=iostat, iomsg=iomsg)
+!
+IF (iostat .NE. 0) THEN
+  CALL ErrorMSG(&
+    & msg="Error while calling read_line method from String Class, &
+    & following msg is returned "//TRIM(iomsg), &
+    & file=__FILE__, &
+    & routine="csrMat_IMPORT()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END IF
+!
+iostat = 0
+READ (unitNo, *, iostat=iostat, iomsg=iomsg) nrow, ncol, nnz
+!
+IF (iostat .NE. 0) THEN
+  CALL ErrorMSG(&
+    & msg="Error while reading nrow, ncol, nnz from the given file, &
+    & following msg is returned "//TRIM(iomsg), &
+    & file=__FILE__, &
+    & routine="csrMat_IMPORT()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END IF
+!
 ALLOCATE (ROW(nnz), COL(nnz), X(nnz))
+!
+iostat = 0
 DO ii = 1, nnz
-  READ (unitNo, *) ROW(ii), COL(ii), X(ii)
+  READ (unitNo, *, iostat=iostat, iomsg=iomsg) ROW(ii), COL(ii), X(ii)
+  IF (iostat .NE. 0) EXIT
 END DO
+!
+IF (iostat .NE. 0) THEN
+  CALL ErrorMSG(&
+    & msg="Error while reading row(ii), col(ii), x(ii) from the given file, &
+    & following msg is returned "//TRIM(iomsg), &
+    & file=__FILE__, &
+    & routine="csrMat_IMPORT()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END IF
+!
 ALLOCATE (IA(nrow + 1), JA(nnz), A(nnz))
+!
+! Call COOCSR from sparsekit
+!
 CALL COOCSR(nrow, nnz, X, ROW, COL, A, JA, IA)
+!
 CALL Initiate(obj=obj, A=A, IA=IA, JA=JA)
+!
 DEALLOCATE (ROW, COL, X, IA, JA, A)
 CLOSE (unitNo)
-END PROCEDURE csrMat_IMPORT
-END SUBMODULE IOMethods
+END PROCEDURE deprecated_csrMat_IMPORT
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+END SUBMODULE Methods

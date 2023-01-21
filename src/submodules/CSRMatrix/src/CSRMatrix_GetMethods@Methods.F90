@@ -19,7 +19,7 @@
 ! date: 14 July 2021
 ! summary: This submodule contains the methods for sparse matrix
 
-SUBMODULE(CSRMatrix_Method) GetMethods
+SUBMODULE(CSRMatrix_GetMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -80,4 +80,4 @@ ELSE
 END IF
 END PROCEDURE csrMat_isRectangle
 
-END SUBMODULE GetMethods
+END SUBMODULE Methods

@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(CSRMatrix_Method) ReorderingMethod
+SUBMODULE(CSRMatrix_ReorderingMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -25,34 +25,34 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_NestedDissect
-  INTEGER( I4B ) :: nrow, ncol, nnz, ii, jj, kk, nbr, ll
-  INTEGER( I4B ), ALLOCATABLE :: XADJ( : ), ADJNCY( : )
-  !
-  nrow = SIZE( csrMat, 1 )
-  ncol = SIZE( csrMat, 2 )
-  nnz = getNNZ( csrMat )
-  CALL REALLOCATE( XADJ, nrow + 1, ADJNCY, nnz )
-  CALL REALLOCATE( reorder%PERM, nrow, reorder%IPERM, nrow )
-  reorder%name = 'NodeND'
-  XADJ( 1 ) = 1
-  kk=0
-  DO ii = 1, nrow
-    nbr = 0
-    DO jj = csrMat%csr%IA( ii ), csrMat%csr%IA( ii+1 ) - 1
-      ll = csrMat%csr%JA( jj )
-      IF( ll .NE. ii ) THEN
-        nbr = nbr + 1
-        kk = kk + 1
-        ADJNCY( kk ) = ll
-      END IF
-    END DO
-    XADJ( ii+1 ) = XADJ( ii ) + nbr
+INTEGER(I4B) :: nrow, ncol, nnz, ii, jj, kk, nbr, ll
+INTEGER(I4B), ALLOCATABLE :: XADJ(:), ADJNCY(:)
+!
+nrow = SIZE(csrMat, 1)
+ncol = SIZE(csrMat, 2)
+nnz = getNNZ(csrMat)
+CALL REALLOCATE(XADJ, nrow + 1, ADJNCY, nnz)
+CALL REALLOCATE(reorder%PERM, nrow, reorder%IPERM, nrow)
+reorder%name = 'NodeND'
+XADJ(1) = 1
+kk = 0
+DO ii = 1, nrow
+  nbr = 0
+  DO jj = csrMat%csr%IA(ii), csrMat%csr%IA(ii + 1) - 1
+    ll = csrMat%csr%JA(jj)
+    IF (ll .NE. ii) THEN
+      nbr = nbr + 1
+      kk = kk + 1
+      ADJNCY(kk) = ll
+    END IF
   END DO
-  ll = XADJ( size( xadj ) ) - 1
-  CALL MetisNodeND( XADJ=XADJ, ADJNCY=ADJNCY(1:ll), PERM=reorder%PERM, &
-    & IPERM=reorder%IPERM )
-  IF( ALLOCATED( XADJ ) ) DEALLOCATE( XADJ )
-  IF( ALLOCATED( ADJNCY ) ) DEALLOCATE( ADJNCY )
+  XADJ(ii + 1) = XADJ(ii) + nbr
+END DO
+ll = XADJ(size(xadj)) - 1
+CALL MetisNodeND(XADJ=XADJ, ADJNCY=ADJNCY(1:ll), PERM=reorder%PERM, &
+  & IPERM=reorder%IPERM)
+IF (ALLOCATED(XADJ)) DEALLOCATE (XADJ)
+IF (ALLOCATED(ADJNCY)) DEALLOCATE (ADJNCY)
 END PROCEDURE csrMat_NestedDissect
 
 !----------------------------------------------------------------------------
@@ -60,13 +60,13 @@ END PROCEDURE csrMat_NestedDissect
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_reorderDisplay
-  INTEGER( I4B ) :: I
-  I = INPUT( Default=stdout, Option=unitNo )
-  CALL Display( obj%name, "# NAME : ")
-  CALL DISP( x=obj%PERM, title="PERM=",advance="NO",unit=I, &
-    & style='left')
-  CALL DISP( x=obj%IPERM, title="IPERM=", advance="DOUBLE", &
-    & unit=I, style='left' )
+INTEGER(I4B) :: I
+I = INPUT(Default=stdout, Option=unitNo)
+CALL Display(obj%name, "# NAME : ")
+CALL DISP(x=obj%PERM, title="PERM=", advance="NO", unit=I, &
+  & style='left')
+CALL DISP(x=obj%IPERM, title="IPERM=", advance="DOUBLE", &
+  & unit=I, style='left')
 END PROCEDURE csrMat_reorderDisplay
 
 !----------------------------------------------------------------------------
@@ -74,12 +74,12 @@ END PROCEDURE csrMat_reorderDisplay
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Permute2
-  ans = Permute( obj=obj, rowPERM=rowPERM%IPERM, colPERM=colPERM%IPERM, &
-    & isValues=.TRUE. )
+ans = Permute(obj=obj, rowPERM=rowPERM%IPERM, colPERM=colPERM%IPERM, &
+  & isValues=.TRUE.)
 END PROCEDURE csrMat_Permute2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE ReorderingMethod
+END SUBMODULE Methods
