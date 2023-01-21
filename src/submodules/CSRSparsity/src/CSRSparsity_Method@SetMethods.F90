@@ -206,14 +206,14 @@ INTEGER(I4B), ALLOCATABLE :: row(:)
 LOGICAL(LGT), ALLOCATABLE :: graphT(:, :)
 TYPE(IntVector_), ALLOCATABLE :: col(:)
 INTEGER(I4B) :: ii, jj, kk, nn, nrow, ncol
-  !!
+!!
 nrow = SIZE(graph, 1)
 ncol = SIZE(graph, 2)
 graphT = TRANSPOSE(graph)
-  !!
+!!
 CALL Reallocate(row, nrow)
 ALLOCATE (col(nrow))
-  !!
+!!
 DO ii = 1, nrow
   row(ii) = ii
   nn = COUNT(graphT(:, ii))
@@ -226,13 +226,13 @@ DO ii = 1, nrow
     END IF
   END DO
 END DO
-  !!
+!!
 CALL setSparsity(obj=obj, row=row, col=col)
-  !!
+!!
 IF (ALLOCATED(row)) DEALLOCATE (row)
 IF (ALLOCATED(col)) DEALLOCATE (col)
 IF (ALLOCATED(graphT)) DEALLOCATE (graphT)
-  !!
+!!
 END PROCEDURE csr_setSparsity6
 
 !----------------------------------------------------------------------------
