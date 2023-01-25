@@ -41,7 +41,6 @@ if _os == "Windows":
 else:
 
     cmake_def = ""
-    cmake_def += " -DUSE_METIS=ON"
     user_query = False
     if user_query:
         ###################################
@@ -88,6 +87,16 @@ else:
             opt = "ON"
         cmake_def += " -DUSE_FFTW=" + opt
         ###################################
+        opt = getOption("USE_METIS", ["ON", "OFF"])
+        if opt == " ":
+            opt = "ON"
+        cmake_def += " -DUSE_METIS=" + opt
+        ###################################
+        opt = getOption("USE_SUPERLU", ["ON", "OFF"])
+        if opt == " ":
+            opt = "ON"
+        cmake_def += " -DUSE_SUPERLU=" + opt
+        ###################################
         opt = getOption("USE_GTK4", ["ON", "OFF"])
         if opt == " ":
             opt = "ON"
@@ -108,7 +117,7 @@ else:
             opt = "${EASIFEM_BASE}"
         cmake_def += " -DCMAKE_INSTALL_PREFIX=" + opt
     else:
-        cmake_def += ' -G "Ninja" -D USE_OpenMP:BOOL=ON -D CMAKE_BUILD_TYPE:STRING=Release -D BUILD_SHARED_LIBS:BOOL=ON -D USE_PLPLOT:BOOL=ON -D CMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE} -D USE_BLAS95:BOOL=ON -D USE_LAPACK95:BOOL=ON -D USE_FFTW:BOOL=ON -D USE_GTK:BOOL=ON -D USE_ARPACK:BOOL=ON -D USE_PARPACK:BOOL=OFF'
+        cmake_def += ' -G "Ninja" -D USE_OpenMP:BOOL=ON -D CMAKE_BUILD_TYPE:STRING=Release -D BUILD_SHARED_LIBS:BOOL=ON -D USE_PLPLOT:BOOL=ON -D CMAKE_INSTALL_PREFIX:PATH=${EASIFEM_BASE} -D USE_BLAS95:BOOL=ON -D USE_LAPACK95:BOOL=ON -D USE_FFTW:BOOL=ON -D USE_GTK:BOOL=ON -D USE_ARPACK:BOOL=ON -D USE_PARPACK:BOOL=OFF -D USE_METIS:BOOL=ON -D USE_SUPERLU:BOOL=ON'
 
     cmake_def += " -D USE_Int32=ON -D USE_Real64=ON"
 

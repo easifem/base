@@ -54,11 +54,14 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
 #Gnuplot
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 
-#MetisInterface
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
-
 #CInterface
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
+
+#SuperLUInterface
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/SuperLUInterface/CMakeLists.txt)
+
+#MetisInterface
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
 
 #Display
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)

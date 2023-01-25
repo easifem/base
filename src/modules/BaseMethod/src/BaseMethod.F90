@@ -29,6 +29,10 @@
 
 MODULE BaseMethod
 
+#ifdef USE_SuperLU
+USE SuperLUInterface
+#endif
+
 #ifdef USE_PLPLOT
 USE PLPLOT
 #endif

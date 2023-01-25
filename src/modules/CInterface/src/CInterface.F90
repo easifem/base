@@ -24,6 +24,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: C_CHAR_PTR, C_VOID_PTR, C_CONST_CHAR_PTR, C_CONST_VOID_PTR
+PUBLIC :: CString
 
 INTEGER(I4B), PUBLIC, PARAMETER :: C_ENUM = C_INT
   !! a C enum may not always be a standard C int
@@ -534,11 +535,14 @@ END INTERFACE C_F_STRING
 
 PUBLIC :: C_F_STRING
 
-INTERFACE C2Fortran
-  MODULE PROCEDURE F_string_assign_C_string, C_F_STRING_CHARS
-END INTERFACE C2Fortran
+!
+! Deprecated
+!
+! INTERFACE C2Fortran
+!   MODULE PROCEDURE F_string_assign_C_string, C_F_STRING_CHARS
+! END INTERFACE C2Fortran
 
-PUBLIC :: C2Fortran
+! PUBLIC :: C2Fortran
 
 !----------------------------------------------------------------------------
 !
@@ -550,11 +554,14 @@ END INTERFACE F_C_STRING
 
 PUBLIC F_C_STRING
 
-INTERFACE FortranToC
-  MODULE PROCEDURE F_C_STRING_CHARS, F_C_STRING_PTR
-END INTERFACE FortranToC
+!
+! Deprecated
+!
+! INTERFACE FortranToC
+!   MODULE PROCEDURE F_C_STRING_CHARS, F_C_STRING_PTR
+! END INTERFACE FortranToC
 
-PUBLIC :: FortranToC
+! PUBLIC :: FortranToC
 
 !----------------------------------------------------------------------------
 !
@@ -760,21 +767,43 @@ END SUBROUTINE F_C_STRING_PTR
 
 SUBROUTINE F_C_STRING_CHARS(F_string, C_string, C_string_len)
   CHARACTER(*), INTENT(IN) :: F_string
-  CHARACTER(1, KIND=C_CHAR), DIMENSION(*), INTENT(OUT) :: C_string
+  ! fortran string
+  CHARACTER(1, KIND=C_CHAR), INTENT(OUT) :: C_string(*)
+  ! c string
   INTEGER(I4B), INTENT(IN), OPTIONAL :: C_string_len
-    !! Max string length,
-    !! INCLUDING THE TERMINAL NUL
+  ! max string length, optional
+  !
+  ! main
+  !
   INTEGER(I4B) :: i, strlen
+  !
   strlen = LEN(F_string)
   IF (PRESENT(C_string_len)) THEN
     IF (C_string_len .LE. 0) RETURN
     strlen = MIN(strlen, C_string_len - 1)
   END IF
+  !
   FORALL (i=1:strlen)
     C_string(i) = F_string(i:i)
   END FORALL
+  !
   C_string(strlen + 1) = NUL
+  !
 END SUBROUTINE F_C_STRING_CHARS
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  23-01-21
+! summary: Convert a fortran string to cString
+
+FUNCTION CString(o) RESULT(v)
+  CHARACTER(*), INTENT(in) :: o
+  CHARACTER(:, kind=C_CHAR), ALLOCATABLE :: v
+  v = TRIM(o)//C_NULL_CHAR
+END FUNCTION CString
 
 !----------------------------------------------------------------------------
 !
