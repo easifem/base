@@ -30,16 +30,11 @@
 ! - @SingularValueMethods TODO
 ! - @CompRoutineMethods TODO
 ! - @AuxRoutinesMethods TODO
-!
 
 MODULE Sym_Lapack_Method
-USE GlobalData
-IMPLICIT NONE
-PRIVATE
-
-#include "./Sym/LinearSolveMethods.inc"
-!#include "./Sym/EigenvalueMethods.inc"
-#include "./Sym/LUMethods.inc"
-! #include "./Sym/GE_CompRoutine.inc"
-
+USE Sym_CompRoutineMethods
+USE Sym_EigenValueMethods
+USE Sym_LUMethods
+USE Sym_LinearSolveMethods
+USE Sym_SingularValueMethods
 END MODULE Sym_Lapack_Method

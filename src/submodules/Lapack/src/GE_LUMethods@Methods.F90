@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(GE_Lapack_Method) LUMethods
+SUBMODULE(GE_LUMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -141,4 +141,4 @@ MODULE PROCEDURE Inv_2
 CALL GETRI(A=A, IPIV=IPIV, info=info)
 END PROCEDURE Inv_2
 
-END SUBMODULE LUMethods
+END SUBMODULE Methods

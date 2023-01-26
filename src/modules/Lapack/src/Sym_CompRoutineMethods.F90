@@ -15,25 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!> author: Vikas Sharma, Ph. D.
-! date: 7 July 2022
-! summary: Lapack methods
-!
-!# Introduction
-!
-! This module contains linear algebra packages for fortran matrix (2D array)
-! The matrix is GE
-! This module contains following submoduls
-! - @LinearSolveMethods PARTIAL/STABLE
-! - @EigenValueMethods TODO
-! - @SingularValueMethods TODO
-! - @CompRoutineMethods PARTIAL/STABLE
-! - @AuxRoutinesMethods TODO
+MODULE Sym_CompRoutineMethods
 
-MODULE GE_Lapack_Method
-USE GE_CompRoutineMethods
-USE GE_EigenValueMethods
-USE GE_LUMethods
-USE GE_LinearSolveMethods
-USE GE_SingularValueMethods
-END MODULE GE_Lapack_Method
+END MODULE Sym_CompRoutineMethods
