@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealVector_Method) Norm2Methods
+SUBMODULE(RealVector_Norm2Methods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -25,24 +25,24 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realvec_norm2_1
-  INTEGER( I4B ) :: s(3), ii
+INTEGER(I4B) :: s(3), ii
   !!
   !!
   !!
-  s=GetNodeLoc( &
-    & obj=dof, &
-    & idof=getIDOF( &
-    & obj=dof, &
-    & ivar=ivar, &
-    & idof=idof ))
+s = GetNodeLoc( &
+  & obj=dof, &
+  & idof=getIDOF( &
+  & obj=dof, &
+  & ivar=ivar, &
+  & idof=idof))
   !!
-  ans=0.0_DFP
+ans = 0.0_DFP
   !!
-  DO ii = s(1), s(2), s(3)
-    ans = ans + obj%val(ii)**2
-  END DO
+DO ii = s(1), s(2), s(3)
+  ans = ans + obj%val(ii)**2
+END DO
   !!
-  ans = SQRT( ans )
+ans = SQRT(ans)
   !!
 END PROCEDURE realvec_norm2_1
 
@@ -51,28 +51,28 @@ END PROCEDURE realvec_norm2_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realvec_norm2_2
-  INTEGER( I4B ) :: s(3), ii, kk
+INTEGER(I4B) :: s(3), ii, kk
   !!
   !!
   !!
-  ans=0.0_DFP
+ans = 0.0_DFP
   !!
-  DO kk = 1, SIZE(idof)
+DO kk = 1, SIZE(idof)
     !!
-    s=GetNodeLoc( &
-      & obj=dof, &
-      & idof=getIDOF( &
-      & obj=dof, &
-      & ivar=ivar, &
-      & idof=idof(kk) ))
+  s = GetNodeLoc( &
+    & obj=dof, &
+    & idof=getIDOF( &
+    & obj=dof, &
+    & ivar=ivar, &
+    & idof=idof(kk)))
     !!
-    DO ii = s(1), s(2), s(3)
-      ans = ans + obj%val(ii)**2
-    END DO
-    !!
+  DO ii = s(1), s(2), s(3)
+    ans = ans + obj%val(ii)**2
   END DO
+    !!
+END DO
   !!
-  ans = SQRT( ans )
+ans = SQRT(ans)
   !!
 END PROCEDURE realvec_norm2_2
 
@@ -81,19 +81,19 @@ END PROCEDURE realvec_norm2_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realvec_norm2_3
-  INTEGER( I4B ) :: s(3), ii
+INTEGER(I4B) :: s(3), ii
   !!
   !!
   !!
-  s=GetNodeLoc( obj=dof, idof=idof )
+s = GetNodeLoc(obj=dof, idof=idof)
   !!
-  ans=0.0_DFP
+ans = 0.0_DFP
   !!
-  DO ii = s(1), s(2), s(3)
-    ans = ans + obj%val(ii)**2
-  END DO
+DO ii = s(1), s(2), s(3)
+  ans = ans + obj%val(ii)**2
+END DO
   !!
-  ans = SQRT( ans )
+ans = SQRT(ans)
   !!
 END PROCEDURE realvec_norm2_3
 
@@ -102,23 +102,23 @@ END PROCEDURE realvec_norm2_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realvec_norm2_4
-  INTEGER( I4B ) :: s(3), ii, kk
+INTEGER(I4B) :: s(3), ii, kk
   !!
   !!
   !!
-  ans=0.0_DFP
+ans = 0.0_DFP
   !!
-  DO kk = 1, SIZE(idof)
+DO kk = 1, SIZE(idof)
     !!
-    s=GetNodeLoc( obj=dof, idof=idof(kk) )
+  s = GetNodeLoc(obj=dof, idof=idof(kk))
     !!
-    DO ii = s(1), s(2), s(3)
-      ans = ans + obj%val(ii)**2
-    END DO
-    !!
+  DO ii = s(1), s(2), s(3)
+    ans = ans + obj%val(ii)**2
   END DO
+    !!
+END DO
   !!
-  ans = SQRT( ans )
+ans = SQRT(ans)
   !!
 END PROCEDURE realvec_norm2_4
 
@@ -127,25 +127,25 @@ END PROCEDURE realvec_norm2_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realvec_norm2_5
-  INTEGER( I4B ) :: s(3), ii
+INTEGER(I4B) :: s(3), ii
   !!
   !!
   !!
-  s=GetNodeLoc( &
-    & obj=dof, &
-    & idof=getIDOF( &
-    & obj=dof, &
-    & ivar=ivar, &
-    & spaceCompo=spaceCompo, &
-    & timeCompo=timeCompo ))
+s = GetNodeLoc( &
+  & obj=dof, &
+  & idof=getIDOF( &
+  & obj=dof, &
+  & ivar=ivar, &
+  & spaceCompo=spaceCompo, &
+  & timeCompo=timeCompo))
   !!
-  ans=0.0_DFP
+ans = 0.0_DFP
   !!
-  DO ii = s(1), s(2), s(3)
-    ans = ans + obj%val(ii)**2
-  END DO
+DO ii = s(1), s(2), s(3)
+  ans = ans + obj%val(ii)**2
+END DO
   !!
-  ans = SQRT( ans )
+ans = SQRT(ans)
   !!
 END PROCEDURE realvec_norm2_5
 
@@ -154,29 +154,29 @@ END PROCEDURE realvec_norm2_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realvec_norm2_6
-  INTEGER( I4B ) :: s(3), ii, kk
+INTEGER(I4B) :: s(3), ii, kk
   !!
   !!
   !!
-  ans=0.0_DFP
+ans = 0.0_DFP
   !!
-  DO kk = 1, SIZE(timeCompo)
+DO kk = 1, SIZE(timeCompo)
     !!
-    s=GetNodeLoc( &
-      & obj=dof, &
-      & idof=getIDOF( &
-      & obj=dof, &
-      & ivar=ivar, &
-      & spaceCompo=spaceCompo, &
-      & timeCompo=timeCompo(kk) ))
+  s = GetNodeLoc( &
+    & obj=dof, &
+    & idof=getIDOF( &
+    & obj=dof, &
+    & ivar=ivar, &
+    & spaceCompo=spaceCompo, &
+    & timeCompo=timeCompo(kk)))
     !!
-    DO ii = s(1), s(2), s(3)
-      ans = ans + obj%val(ii)**2
-    END DO
-    !!
+  DO ii = s(1), s(2), s(3)
+    ans = ans + obj%val(ii)**2
   END DO
+    !!
+END DO
   !!
-  ans = SQRT( ans )
+ans = SQRT(ans)
   !!
 END PROCEDURE realvec_norm2_6
 
@@ -185,30 +185,30 @@ END PROCEDURE realvec_norm2_6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realvec_norm2_7
-  INTEGER( I4B ) :: s(3), ii, kk
+INTEGER(I4B) :: s(3), ii, kk
   !!
   !!
   !!
-  ans=0.0_DFP
+ans = 0.0_DFP
   !!
-  DO kk = 1, SIZE(spaceCompo)
+DO kk = 1, SIZE(spaceCompo)
     !!
-    s=GetNodeLoc( &
-      & obj=dof, &
-      & idof=getIDOF( &
-      & obj=dof, &
-      & ivar=ivar, &
-      & spaceCompo=spaceCompo(kk), &
-      & timeCompo=timeCompo ))
+  s = GetNodeLoc( &
+    & obj=dof, &
+    & idof=getIDOF( &
+    & obj=dof, &
+    & ivar=ivar, &
+    & spaceCompo=spaceCompo(kk), &
+    & timeCompo=timeCompo))
     !!
-    DO ii = s(1), s(2), s(3)
-      ans = ans + obj%val(ii)**2
-    END DO
-    !!
+  DO ii = s(1), s(2), s(3)
+    ans = ans + obj%val(ii)**2
   END DO
+    !!
+END DO
   !!
-  ans = SQRT( ans )
+ans = SQRT(ans)
   !!
 END PROCEDURE realvec_norm2_7
 
-END SUBMODULE Norm2Methods
+END SUBMODULE Methods

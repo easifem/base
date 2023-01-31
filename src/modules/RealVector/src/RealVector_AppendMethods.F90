@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE RealVector_AppendMethods
+USE GlobalData
+USE BaseType
+IMPLICIT NONE
+PRIVATE
 PUBLIC :: Append
 
 !----------------------------------------------------------------------------
@@ -22,57 +27,56 @@ PUBLIC :: Append
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This subroutine appends value to [[RealVector_]]
+! date:         28 Feb 2021
+! summary:         This subroutine appends value to [[RealVector_]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realVec_Append1( obj, value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: value
-END SUBROUTINE realVec_Append1
+  MODULE PURE SUBROUTINE realVec_Append1(obj, VALUE)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: VALUE
+  END SUBROUTINE realVec_Append1
 END INTERFACE
 
 INTERFACE Append
   MODULE PROCEDURE realVec_Append1
 END INTERFACE Append
 
-
 !----------------------------------------------------------------------------
 !                                                          Append@setMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This subroutine appends value to [[RealVector_]]
+! date:         28 Feb 2021
+! summary:         This subroutine appends value to [[RealVector_]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realVec_Append2( obj, value )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: value( : )
-END SUBROUTINE realVec_Append2
+  MODULE PURE SUBROUTINE realVec_Append2(obj, VALUE)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+  END SUBROUTINE realVec_Append2
 END INTERFACE
 
 INTERFACE Append
   MODULE PROCEDURE realVec_Append2
 END INTERFACE Append
 
-
 !----------------------------------------------------------------------------
 !                                                          Append@setMethod
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	28 Feb 2021
-! summary: 	This subroutine appends value to [[RealVector_]]
+! date:         28 Feb 2021
+! summary:         This subroutine appends value to [[RealVector_]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realVec_Append3( obj, anotherobj )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  CLASS( RealVector_ ), INTENT( IN ) :: anotherobj
-END SUBROUTINE realVec_Append3
+  MODULE PURE SUBROUTINE realVec_Append3(obj, anotherobj)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    CLASS(RealVector_), INTENT(IN) :: anotherobj
+  END SUBROUTINE realVec_Append3
 END INTERFACE
 
 INTERFACE Append
   MODULE PROCEDURE realVec_Append3
 END INTERFACE Append
 
+END MODULE RealVector_AppendMethods

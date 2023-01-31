@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE RealVector_IOMethods
+USE GlobalData
+USE BaseType
+IMPLICIT NONE
+PRIVATE
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
@@ -22,11 +27,11 @@ PUBLIC :: Display
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE realVec_display1( obj, msg, UnitNo )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: UnitNo
-END SUBROUTINE realVec_display1
+  MODULE SUBROUTINE realVec_display1(obj, msg, UnitNo)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    CHARACTER(LEN=*), INTENT(IN) :: msg
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
+  END SUBROUTINE realVec_display1
 END INTERFACE
 
 INTERFACE Display
@@ -38,13 +43,15 @@ END INTERFACE Display
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE realVec_display2 ( obj, msg, UnitNo )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-END SUBROUTINE realVec_display2
+  MODULE SUBROUTINE realVec_display2(obj, msg, UnitNo)
+    CLASS(RealVector_), INTENT(IN) :: obj(:)
+    CHARACTER(LEN=*), INTENT(IN) :: msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
+  END SUBROUTINE realVec_display2
 END INTERFACE
 
 INTERFACE Display
   MODULE PROCEDURE realVec_display2
 END INTERFACE Display
+
+END MODULE RealVector_IOMethods

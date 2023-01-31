@@ -15,37 +15,27 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealVector_Method) OperatorMethods
-USE BaseMethod
+MODULE RealVector_ComparisonMethods
+USE GlobalData
+USE BaseType
 IMPLICIT NONE
-
-CONTAINS
+PRIVATE
+PUBLIC :: OPERATOR(.EQ.)
 
 !----------------------------------------------------------------------------
-!                                                                 isEqual
+!                                                                        EQ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE realvec_isequal
-  IF( .NOT. ALLOCATED( obj%val ) ) THEN
-    ans = .FALSE.
-    return
-  END IF
-  !!
-  IF( .NOT. ALLOCATED( obj2%val ) ) THEN
-    ans = .FALSE.
-    return
-  END IF
-  !!
-  IF( SIZE( obj%val ) .NE. SIZE( obj2%val ) ) THEN
-    ans = .FALSE.
-    return
-  END IF
-  !!
-  IF( ALL( obj%val .APPROXEQ. obj2%val ) ) THEN
-    ans = .TRUE.
-  ELSE
-    ans = .FALSE.
-  END IF
-END PROCEDURE realvec_isequal
+INTERFACE
+  MODULE PURE FUNCTION realvec_isEqual(obj, obj2) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    CLASS(RealVector_), INTENT(IN) :: obj2
+    LOGICAL(LGT) :: ans
+  END FUNCTION realvec_isEqual
+END INTERFACE
 
-END SUBMODULE OperatorMethods
+INTERFACE OPERATOR(.EQ.)
+  MODULE PROCEDURE realvec_isEqual
+END INTERFACE OPERATOR(.EQ.)
+
+END MODULE RealVector_ComparisonMethods

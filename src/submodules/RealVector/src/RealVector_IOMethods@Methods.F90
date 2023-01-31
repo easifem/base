@@ -16,10 +16,10 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This submodule implements IO methods of [[RealVector_]]
+! date:         25 Feb 2021
+! summary:         This submodule implements IO methods of [[RealVector_]]
 
-SUBMODULE(RealVector_Method) IOMethods
+SUBMODULE(RealVector_IOMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,11 +29,11 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_display1
-  INTEGER( I4B ) :: I
-  I = Input( option=UnitNo, default=stdout)
-  CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
+INTEGER(I4B) :: I
+I = Input(option=UnitNo, default=stdout)
+CALL Display(msg="# "//TRIM(msg), UnitNo=I)
   CALL Display( msg = "size : " // TRIM(ADJUSTL(STR( fm=FI4B, n=SIZE(obj) ))), unitNo = I )
-  CALL Display( Val = obj%Val, msg='', UnitNo=I, orient='col', full=.true. )
+CALL Display(Val=obj%Val, msg='', UnitNo=I, orient='col', full=.TRUE.)
 END PROCEDURE realVec_display1
 
 !----------------------------------------------------------------------------
@@ -41,17 +41,17 @@ END PROCEDURE realVec_display1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_display2
-  INTEGER( I4B ) :: j, I
-  I = Input( option=UnitNo, default=stdout)
-  CALL Display( msg = "# " // TRIM(msg), UnitNo = I )
-  CALL Display( msg = "size : ", val = SIZE( obj ), unitNo = I )
-  DO j = 1, SIZE( obj )
+INTEGER(I4B) :: j, I
+I = Input(option=UnitNo, default=stdout)
+CALL Display(msg="# "//TRIM(msg), UnitNo=I)
+CALL Display(msg="size : ", val=SIZE(obj), unitNo=I)
+DO j = 1, SIZE(obj)
     CALL Display( obj( j ), msg = "( " // TRIM(ADJUSTL(STR(fm=FI4B, n=j))) // " ) ",unitNo = I )
-  END DO
+END DO
 END PROCEDURE realVec_display2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE IOMethods
+END SUBMODULE Methods

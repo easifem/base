@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE RealVector_Norm2Methods
+USE GlobalData
+USE BaseType
+IMPLICIT NONE
+PRIVATE
 PUBLIC :: Norm2
 
 !----------------------------------------------------------------------------
@@ -22,14 +27,14 @@ PUBLIC :: Norm2
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION realvec_norm2_1( obj, dof, ivar, idof ) &
-  & RESULT( ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  TYPE( DOF_ ), INTENT( IN ) :: dof
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: idof
-  REAL( DFP ) :: ans
-END FUNCTION realvec_norm2_1
+  MODULE PURE FUNCTION realvec_norm2_1(obj, dof, ivar, idof) &
+    & RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: dof
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: idof
+    REAL(DFP) :: ans
+  END FUNCTION realvec_norm2_1
 END INTERFACE
 
 INTERFACE norm2
@@ -41,14 +46,14 @@ END INTERFACE norm2
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION realvec_norm2_2( obj, dof, ivar, idof ) &
-  & RESULT( ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  TYPE( DOF_ ), INTENT( IN ) :: dof
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: idof(:)
-  REAL( DFP ) :: ans
-END FUNCTION realvec_norm2_2
+  MODULE PURE FUNCTION realvec_norm2_2(obj, dof, ivar, idof) &
+    & RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: dof
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    REAL(DFP) :: ans
+  END FUNCTION realvec_norm2_2
 END INTERFACE
 
 INTERFACE norm2
@@ -60,12 +65,12 @@ END INTERFACE norm2
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION realvec_norm2_3( obj, dof, idof ) RESULT( ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  TYPE( DOF_ ), INTENT( IN ) :: dof
-  INTEGER( I4B ), INTENT( IN ) :: idof
-  REAL( DFP ) :: ans
-END FUNCTION realvec_norm2_3
+  MODULE PURE FUNCTION realvec_norm2_3(obj, dof, idof) RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: dof
+    INTEGER(I4B), INTENT(IN) :: idof
+    REAL(DFP) :: ans
+  END FUNCTION realvec_norm2_3
 END INTERFACE
 
 INTERFACE norm2
@@ -77,12 +82,12 @@ END INTERFACE norm2
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION realvec_norm2_4( obj, dof, idof) RESULT( ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  TYPE( DOF_ ), INTENT( IN ) :: dof
-  INTEGER( I4B ), INTENT( IN ) :: idof(:)
-  REAL( DFP ) :: ans
-END FUNCTION realvec_norm2_4
+  MODULE PURE FUNCTION realvec_norm2_4(obj, dof, idof) RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: dof
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    REAL(DFP) :: ans
+  END FUNCTION realvec_norm2_4
 END INTERFACE
 
 INTERFACE norm2
@@ -94,15 +99,15 @@ END INTERFACE norm2
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION realvec_norm2_5( obj, dof, ivar, &
-  & spaceCompo, timeCompo ) RESULT( ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  TYPE( DOF_ ), INTENT( IN ) :: dof
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spaceCompo
-  INTEGER( I4B ), INTENT( IN ) :: timeCompo
-  REAL( DFP ) :: ans
-END FUNCTION realvec_norm2_5
+  MODULE PURE FUNCTION realvec_norm2_5(obj, dof, ivar, &
+    & spaceCompo, timeCompo) RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: dof
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spaceCompo
+    INTEGER(I4B), INTENT(IN) :: timeCompo
+    REAL(DFP) :: ans
+  END FUNCTION realvec_norm2_5
 END INTERFACE
 
 INTERFACE norm2
@@ -114,15 +119,15 @@ END INTERFACE norm2
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION realvec_norm2_6( obj, dof, ivar, &
-  & spaceCompo, timeCompo ) RESULT( ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  TYPE( DOF_ ), INTENT( IN ) :: dof
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spaceCompo
-  INTEGER( I4B ), INTENT( IN ) :: timeCompo(:)
-  REAL( DFP ) :: ans
-END FUNCTION realvec_norm2_6
+  MODULE PURE FUNCTION realvec_norm2_6(obj, dof, ivar, &
+    & spaceCompo, timeCompo) RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: dof
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spaceCompo
+    INTEGER(I4B), INTENT(IN) :: timeCompo(:)
+    REAL(DFP) :: ans
+  END FUNCTION realvec_norm2_6
 END INTERFACE
 
 INTERFACE norm2
@@ -134,17 +139,19 @@ END INTERFACE norm2
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION realvec_norm2_7( obj, dof, ivar, &
-  & spaceCompo, timeCompo ) RESULT( ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  TYPE( DOF_ ), INTENT( IN ) :: dof
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spaceCompo(:)
-  INTEGER( I4B ), INTENT( IN ) :: timeCompo
-  REAL( DFP ) :: ans
-END FUNCTION realvec_norm2_7
+  MODULE PURE FUNCTION realvec_norm2_7(obj, dof, ivar, &
+    & spaceCompo, timeCompo) RESULT(ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    TYPE(DOF_), INTENT(IN) :: dof
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spaceCompo(:)
+    INTEGER(I4B), INTENT(IN) :: timeCompo
+    REAL(DFP) :: ans
+  END FUNCTION realvec_norm2_7
 END INTERFACE
 
 INTERFACE norm2
   MODULE PROCEDURE realvec_norm2_7
 END INTERFACE norm2
+
+END MODULE RealVector_Norm2Methods

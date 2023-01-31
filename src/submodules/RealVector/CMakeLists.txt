@@ -18,16 +18,16 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/RealVector_Method@ConstructorMethods.F90
-  ${src_path}/RealVector_Method@AssignMethods.F90
-  ${src_path}/RealVector_Method@ShallowCopyMethods.F90
-  ${src_path}/RealVector_Method@GetMethods.F90
-  ${src_path}/RealVector_Method@GetValueMethods.F90
-  ${src_path}/RealVector_Method@AppendMethods.F90
-  ${src_path}/RealVector_Method@SetMethods.F90
-  ${src_path}/RealVector_Method@AddMethods.F90
-  ${src_path}/RealVector_Method@IOMethods.F90
-  ${src_path}/RealVector_Method@ComparisonMethods.F90
-  ${src_path}/RealVector_Method@Norm2ErrorMethods.F90
-  ${src_path}/RealVector_Method@Norm2Methods.F90
+  ${src_path}/RealVector_ConstructorMethods@Methods.F90
+  ${src_path}/RealVector_AssignMethods@Methods.F90
+  ${src_path}/RealVector_ShallowCopyMethods@Methods.F90
+  ${src_path}/RealVector_GetMethods@Methods.F90
+  ${src_path}/RealVector_GetValueMethods@Methods.F90
+  ${src_path}/RealVector_AppendMethods@Methods.F90
+  ${src_path}/RealVector_SetMethods@Methods.F90
+  ${src_path}/RealVector_AddMethods@Methods.F90
+  ${src_path}/RealVector_IOMethods@Methods.F90
+  ${src_path}/RealVector_ComparisonMethods@Methods.F90
+  ${src_path}/RealVector_Norm2ErrorMethods@Methods.F90
+  ${src_path}/RealVector_Norm2Methods@Methods.F90
 )

@@ -15,6 +15,11 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE RealVector_AddMethods
+USE GlobalData
+USE BaseType
+IMPLICIT NONE
+PRIVATE
 PUBLIC :: Add
 
 !----------------------------------------------------------------------------
@@ -26,11 +31,11 @@ PUBLIC :: Add
 ! summary: Add all values to given scalar
 
 INTERFACE
-MODULE SUBROUTINE realVec_add1( obj,  value, scale )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realVec_add1
+  MODULE SUBROUTINE realVec_add1(obj, VALUE, scale)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realVec_add1
 END INTERFACE
 
 INTERFACE Add
@@ -46,11 +51,11 @@ END INTERFACE Add
 ! summary: Add all values by given vector
 
 INTERFACE
-MODULE SUBROUTINE realVec_add2( obj,  value, scale )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realVec_add2
+  MODULE SUBROUTINE realVec_add2(obj, VALUE, scale)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realVec_add2
 END INTERFACE
 
 INTERFACE Add
@@ -66,12 +71,12 @@ END INTERFACE Add
 ! summary: set selected values
 
 INTERFACE
-MODULE SUBROUTINE realVec_add3( obj, nodenum, value, scale )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realVec_add3
+  MODULE SUBROUTINE realVec_add3(obj, nodenum, VALUE, scale)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realVec_add3
 END INTERFACE
 
 INTERFACE Add
@@ -87,12 +92,12 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add4( obj, nodenum, value, scale )
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realvec_add4
+  MODULE PURE SUBROUTINE realvec_add4(obj, nodenum, VALUE, scale)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realvec_add4
 END INTERFACE
 
 INTERFACE Add
@@ -108,12 +113,12 @@ END INTERFACE Add
 ! summary: set selected values
 
 INTERFACE
-MODULE SUBROUTINE realVec_add5( obj, nodenum, value, scale )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ) , INTENT( IN ) :: scale
-END SUBROUTINE realVec_add5
+  MODULE SUBROUTINE realVec_add5(obj, nodenum, VALUE, scale)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realVec_add5
 END INTERFACE
 
 INTERFACE Add
@@ -129,12 +134,12 @@ END INTERFACE Add
 ! summary: Add range of values to a scalar
 
 INTERFACE
-MODULE SUBROUTINE realVec_add6( obj, istart, iend, stride, value, scale )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: istart, iend, stride
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realVec_add6
+  MODULE SUBROUTINE realVec_add6(obj, istart, iend, stride, VALUE, scale)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realVec_add6
 END INTERFACE
 
 INTERFACE Add
@@ -150,12 +155,12 @@ END INTERFACE Add
 ! summary: Add range of values to a vector
 
 INTERFACE
-MODULE SUBROUTINE realVec_add7( obj, istart, iend, stride, value, scale )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: istart, iend, stride
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realVec_add7
+  MODULE SUBROUTINE realVec_add7(obj, istart, iend, stride, VALUE, scale)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: istart, iend, stride
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realVec_add7
 END INTERFACE
 
 INTERFACE Add
@@ -171,15 +176,15 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set1]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add8(obj, dofobj, nodenum, value, &
-  & scale, conversion)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: conversion( 1 )
-END SUBROUTINE realvec_add8
+  MODULE PURE SUBROUTINE realvec_add8(obj, dofobj, nodenum, VALUE, &
+    & scale, conversion)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: conversion(1)
+  END SUBROUTINE realvec_add8
 END INTERFACE
 
 INTERFACE Add
@@ -195,14 +200,14 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set1]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add9(obj, dofobj, nodenum, value, &
-  & scale)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realvec_add9
+  MODULE PURE SUBROUTINE realvec_add9(obj, dofobj, nodenum, VALUE, &
+    & scale)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realvec_add9
 END INTERFACE
 
 INTERFACE Add
@@ -218,15 +223,15 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add10( obj, dofobj, nodenum, value, &
-  & scale, idof )
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE realvec_add10
+  MODULE PURE SUBROUTINE realvec_add10(obj, dofobj, nodenum, VALUE, &
+    & scale, idof)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE realvec_add10
 END INTERFACE
 
 INTERFACE Add
@@ -242,15 +247,15 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add11( obj, dofobj, nodenum, value, &
-  & scale, idof )
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE realvec_add11
+  MODULE PURE SUBROUTINE realvec_add11(obj, dofobj, nodenum, VALUE, &
+    & scale, idof)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE realvec_add11
 END INTERFACE
 
 INTERFACE Add
@@ -266,16 +271,16 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add12( obj, dofobj, nodenum, value, &
-  & scale, ivar, idof)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE realvec_add12
+  MODULE PURE SUBROUTINE realvec_add12(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, idof)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE realvec_add12
 END INTERFACE
 
 INTERFACE Add
@@ -291,16 +296,16 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add13( obj, dofobj, nodenum, value, &
-  & scale, ivar, idof)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE realvec_add13
+  MODULE PURE SUBROUTINE realvec_add13(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, idof)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE realvec_add13
 END INTERFACE
 
 INTERFACE Add
@@ -316,17 +321,17 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add14( obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE realvec_add14
+  MODULE PURE SUBROUTINE realvec_add14(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE realvec_add14
 END INTERFACE
 
 INTERFACE add
@@ -342,17 +347,17 @@ END INTERFACE add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add15( obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE realvec_add15
+  MODULE PURE SUBROUTINE realvec_add15(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE realvec_add15
 END INTERFACE
 
 INTERFACE add
@@ -368,17 +373,17 @@ END INTERFACE add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add16( obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo(:)
-END SUBROUTINE realvec_add16
+  MODULE PURE SUBROUTINE realvec_add16(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo(:)
+  END SUBROUTINE realvec_add16
 END INTERFACE
 
 INTERFACE add
@@ -394,17 +399,17 @@ END INTERFACE add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add17( obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo(:)
-END SUBROUTINE realvec_add17
+  MODULE PURE SUBROUTINE realvec_add17(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo(:)
+  END SUBROUTINE realvec_add17
 END INTERFACE
 
 INTERFACE add
@@ -420,17 +425,17 @@ END INTERFACE add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add18( obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value( : )
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo(:)
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE realvec_add18
+  MODULE PURE SUBROUTINE realvec_add18(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE(:)
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE realvec_add18
 END INTERFACE
 
 INTERFACE add
@@ -446,17 +451,17 @@ END INTERFACE add
 ! summary: See [[DOF_Method::dof_set2]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add19( obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo(:)
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE realvec_add19
+  MODULE PURE SUBROUTINE realvec_add19(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE realvec_add19
 END INTERFACE
 
 INTERFACE add
@@ -472,14 +477,14 @@ END INTERFACE add
 ! summary: See [[DOF_Method::dof_set1]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add20(obj, dofobj, nodenum, value, &
-  & scale)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realvec_add20
+  MODULE PURE SUBROUTINE realvec_add20(obj, dofobj, nodenum, VALUE, &
+    & scale)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realvec_add20
 END INTERFACE
 
 INTERFACE Add
@@ -495,15 +500,15 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set1]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add21(obj, dofobj, nodenum, value, &
-  & scale, idof)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE realvec_add21
+  MODULE PURE SUBROUTINE realvec_add21(obj, dofobj, nodenum, VALUE, &
+    & scale, idof)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE realvec_add21
 END INTERFACE
 
 INTERFACE Add
@@ -519,16 +524,16 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set1]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add22(obj, dofobj, nodenum, value, &
-  & scale, ivar, idof)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE realvec_add22
+  MODULE PURE SUBROUTINE realvec_add22(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, idof)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE realvec_add22
 END INTERFACE
 
 INTERFACE Add
@@ -544,17 +549,17 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set1]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add23(obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE realvec_add23
+  MODULE PURE SUBROUTINE realvec_add23(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE realvec_add23
 END INTERFACE
 
 INTERFACE Add
@@ -570,17 +575,17 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set1]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add24(obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo(:)
-END SUBROUTINE realvec_add24
+  MODULE PURE SUBROUTINE realvec_add24(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo(:)
+  END SUBROUTINE realvec_add24
 END INTERFACE
 
 INTERFACE Add
@@ -596,17 +601,17 @@ END INTERFACE Add
 ! summary: See [[DOF_Method::dof_set1]]
 
 INTERFACE
-MODULE PURE SUBROUTINE realvec_add25(obj, dofobj, nodenum, value, &
-  & scale, ivar, spacecompo, timecompo)
-  TYPE( Realvector_ ), INTENT( INOUT ) :: obj
-  CLASS( DOF_ ), INTENT( IN ) :: dofobj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo(:)
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE realvec_add25
+  MODULE PURE SUBROUTINE realvec_add25(obj, dofobj, nodenum, VALUE, &
+    & scale, ivar, spacecompo, timecompo)
+    TYPE(Realvector_), INTENT(INOUT) :: obj
+    CLASS(DOF_), INTENT(IN) :: dofobj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    REAL(DFP), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE realvec_add25
 END INTERFACE
 
 INTERFACE Add
@@ -622,13 +627,14 @@ END INTERFACE Add
 ! summary: obj1=obj2
 
 INTERFACE
-MODULE PURE SUBROUTINE realVec_add26( obj, value, scale )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: obj
-  CLASS( RealVector_ ), INTENT( IN ) :: value
-  REAL( DFP ), INTENT( IN ) :: scale
-END SUBROUTINE realVec_add26
+  MODULE PURE SUBROUTINE realVec_add26(obj, VALUE, scale)
+    CLASS(RealVector_), INTENT(INOUT) :: obj
+    CLASS(RealVector_), INTENT(IN) :: VALUE
+    REAL(DFP), INTENT(IN) :: scale
+  END SUBROUTINE realVec_add26
 END INTERFACE
 
 INTERFACE Add
   MODULE PROCEDURE realVec_add26
 END INTERFACE Add
+END MODULE RealVector_AddMethods

@@ -16,10 +16,10 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This submodule contains set methods of [[RealVector_]]
+! date:         25 Feb 2021
+! summary:         This submodule contains set methods of [[RealVector_]]
 
-SUBMODULE(RealVector_Method) AppendMethods
+SUBMODULE(RealVector_AppendMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Append1
-  CALL Append( obj%val, value )
+CALL Append(obj%val, VALUE)
 END PROCEDURE realVec_Append1
 
 !----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ END PROCEDURE realVec_Append1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Append2
-  CALL Append( obj%val, value )
+CALL Append(obj%val, VALUE)
 END PROCEDURE realVec_Append2
 
 !----------------------------------------------------------------------------
@@ -45,11 +45,11 @@ END PROCEDURE realVec_Append2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_Append3
-  CALL Append( obj%val, Anotherobj%val )
+CALL Append(obj%val, Anotherobj%val)
 END PROCEDURE realVec_Append3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE AppendMethods
+END SUBMODULE Methods

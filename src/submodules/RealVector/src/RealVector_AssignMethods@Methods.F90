@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(RealVector_Method) AssignMethods
+SUBMODULE(RealVector_AssignMethods) Methods
 USE BaseMethod
 IMPLICIT NONE
 
@@ -26,9 +26,9 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_assign1
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL setTotalDimension( lhs, 1_I4B )
-  CALL COPY( Y=lhs%val, X=rhs%val )
+CALL SHALLOWCOPY(Y=lhs, X=rhs)
+CALL setTotalDimension(lhs, 1_I4B)
+CALL COPY(Y=lhs%val, X=rhs%val)
 END PROCEDURE realVec_assign1
 
 !----------------------------------------------------------------------------
@@ -36,15 +36,15 @@ END PROCEDURE realVec_assign1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_assign2
-  INTEGER( I4B ) :: m, ii, aa
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL setTotalDimension( lhs, 1_I4B )
-  m = 0
-  DO ii = 1, SIZE( rhs )
-    aa = m + 1
-    m = m + SIZE( rhs( ii ) )
-    CALL COPY( Y=lhs%val( aa:m ), X=rhs(ii)%val )
-  END DO
+INTEGER(I4B) :: m, ii, aa
+CALL SHALLOWCOPY(Y=lhs, X=rhs)
+CALL setTotalDimension(lhs, 1_I4B)
+m = 0
+DO ii = 1, SIZE(rhs)
+  aa = m + 1
+  m = m + SIZE(rhs(ii))
+  CALL COPY(Y=lhs%val(aa:m), X=rhs(ii)%val)
+END DO
 END PROCEDURE realVec_assign2
 
 !----------------------------------------------------------------------------
@@ -52,15 +52,15 @@ END PROCEDURE realVec_assign2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_assign3a
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL setTotalDimension( lhs, 1_I4B )
-  lhs%val=rhs
+CALL SHALLOWCOPY(Y=lhs, X=rhs)
+CALL setTotalDimension(lhs, 1_I4B)
+lhs%val = rhs
 END PROCEDURE realVec_assign3a
 
 MODULE PROCEDURE realVec_assign3b
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL setTotalDimension( lhs, 1_I4B )
-  lhs%val=rhs
+CALL SHALLOWCOPY(Y=lhs, X=rhs)
+CALL setTotalDimension(lhs, 1_I4B)
+lhs%val = rhs
 END PROCEDURE realVec_assign3b
 
 !----------------------------------------------------------------------------
@@ -69,18 +69,18 @@ END PROCEDURE realVec_assign3b
 
 MODULE PROCEDURE realVec_assign4a
 #ifdef USE_Real64
-  lhs=rhs%val
+lhs = rhs%val
 #else
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  CALL COPY( Y=lhs, X=rhs%val )
+CALL SHALLOWCOPY(Y=lhs, X=rhs)
+CALL COPY(Y=lhs, X=rhs%val)
 #endif
 END PROCEDURE realVec_assign4a
 MODULE PROCEDURE realVec_assign4b
-CALL SHALLOWCOPY( Y=lhs, X=rhs )
+CALL SHALLOWCOPY(Y=lhs, X=rhs)
 #ifdef USE_Real64
-  CALL COPY( Y=lhs, X=rhs%val )
+CALL COPY(Y=lhs, X=rhs%val)
 #else
-  lhs=rhs%val
+lhs = rhs%val
 #endif
 END PROCEDURE realVec_assign4b
 
@@ -89,19 +89,19 @@ END PROCEDURE realVec_assign4b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_assign5a
-  INTEGER( I4B ) :: m, ii, aa
+INTEGER(I4B) :: m, ii, aa
   !!
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  m = 0
-  DO ii = 1, SIZE( rhs )
-    aa = m + 1
-    m = m + SIZE( rhs( ii ) )
+CALL SHALLOWCOPY(Y=lhs, X=rhs)
+m = 0
+DO ii = 1, SIZE(rhs)
+  aa = m + 1
+  m = m + SIZE(rhs(ii))
 #ifndef USE_Real64
-    CALL COPY( Y=lhs( aa:m ), X=rhs(ii)%val )
+  CALL COPY(Y=lhs(aa:m), X=rhs(ii)%val)
 #else
-    lhs(aa:m)=rhs(ii)%val(:)
+  lhs(aa:m) = rhs(ii)%val(:)
 #endif
-  END DO
+END DO
 END PROCEDURE realVec_assign5a
 
 !----------------------------------------------------------------------------
@@ -109,19 +109,19 @@ END PROCEDURE realVec_assign5a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_assign5b
-  INTEGER( I4B ) :: m, ii, aa
+INTEGER(I4B) :: m, ii, aa
   !!
-  CALL SHALLOWCOPY( Y=lhs, X=rhs )
-  m = 0
-  DO ii = 1, SIZE( rhs )
-    aa = m + 1
-    m = m + SIZE( rhs( ii ) )
+CALL SHALLOWCOPY(Y=lhs, X=rhs)
+m = 0
+DO ii = 1, SIZE(rhs)
+  aa = m + 1
+  m = m + SIZE(rhs(ii))
 #ifdef USE_Real64
-    CALL COPY( Y=lhs( aa:m ), X=rhs(ii)%val )
+  CALL COPY(Y=lhs(aa:m), X=rhs(ii)%val)
 #else
-    lhs(aa:m)=rhs(ii)%val(:)
+  lhs(aa:m) = rhs(ii)%val(:)
 #endif
-  END DO
+END DO
 END PROCEDURE realVec_assign5b
 
 !----------------------------------------------------------------------------
@@ -129,7 +129,7 @@ END PROCEDURE realVec_assign5b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_assign6
-  lhs = REAL( rhs, DFP )
+lhs = REAL(rhs, DFP)
 END PROCEDURE realVec_assign6
 
 !----------------------------------------------------------------------------
@@ -137,10 +137,10 @@ END PROCEDURE realVec_assign6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_assign7
-  REAL( DFP ), ALLOCATABLE :: dummy( : )
-  dummy = rhs
-  lhs = INT( dummy, I4B )
-  IF( ALLOCATED( dummy ) ) DEALLOCATE( dummy )
+REAL(DFP), ALLOCATABLE :: dummy(:)
+dummy = rhs
+lhs = INT(dummy, I4B)
+IF (ALLOCATED(dummy)) DEALLOCATE (dummy)
 END PROCEDURE realVec_assign7
 
 !----------------------------------------------------------------------------
@@ -148,10 +148,10 @@ END PROCEDURE realVec_assign7
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE realVec_assign8
-  REAL( DFP ), ALLOCATABLE :: dummy( : )
-  dummy = rhs
-  lhs = INT( dummy, I4B )
-  IF( ALLOCATED( dummy ) ) DEALLOCATE( dummy )
+REAL(DFP), ALLOCATABLE :: dummy(:)
+dummy = rhs
+lhs = INT(dummy, I4B)
+IF (ALLOCATED(dummy)) DEALLOCATE (dummy)
 END PROCEDURE realVec_assign8
 
-END SUBMODULE AssignMethods
+END SUBMODULE Methods
