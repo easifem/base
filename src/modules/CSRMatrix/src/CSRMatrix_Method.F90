@@ -38,6 +38,9 @@ USE CSRMatrix_MatmulMethods
 USE CSRMatrix_ReorderingMethods
 USE CSRMatrix_DiagonalScalingMethods
 USE CSRMatrix_MatrixMarketIO
+USE CSRMatrix_Superlu
+USE CSRMatrix_SpectralMethods
+USE CSRMatrix_SchurMethods
 IMPLICIT NONE
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_CSR = 0
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1

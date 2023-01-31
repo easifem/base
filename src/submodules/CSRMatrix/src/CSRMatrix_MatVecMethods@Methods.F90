@@ -29,7 +29,21 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AMatvec1
-CALL AMUX(SIZE(y), x, y, obj % A, obj % csr % JA, obj % csr % IA)
+REAL(dfp), ALLOCATABLE :: y0(:)
+LOGICAL(LGT) :: add0
+REAL(DFP) :: scale0
+!
+add0 = input(default=.FALSE., option=addContribution)
+scale0 = input(default=1.0_DFP, option=scale)
+!
+IF (add0) THEN
+  ALLOCATE (y0(SIZE(y)))
+  CALL AMUX(SIZE(y0), x, y0, obj%A, obj%csr%JA, obj%csr%IA)
+  CALL AXPY(X=y0, Y=y, A=scale0)
+  DEALLOCATE (y0)
+ELSE
+  CALL AMUX(SIZE(y), x, y, obj%A, obj%csr%JA, obj%csr%IA)
+END IF
 END PROCEDURE csrMat_AMatvec1
 
 !----------------------------------------------------------------------------
@@ -37,7 +51,21 @@ END PROCEDURE csrMat_AMatvec1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AMatvec2
-CALL AMUXMS(SIZE(y), x, y, A, JA)
+REAL(dfp), ALLOCATABLE :: y0(:)
+LOGICAL(LGT) :: add0
+REAL(DFP) :: scale0
+!
+add0 = input(default=.FALSE., option=addContribution)
+scale0 = input(default=1.0_DFP, option=scale)
+!
+IF (add0) THEN
+  ALLOCATE (y0(SIZE(y)))
+  CALL AMUXMS(SIZE(y0), x, y0, A, JA)
+  CALL AXPY(X=y0, Y=y, A=scale0)
+  DEALLOCATE (y0)
+ELSE
+  CALL AMUXMS(SIZE(y), x, y, A, JA)
+END IF
 END PROCEDURE csrMat_AMatvec2
 
 !----------------------------------------------------------------------------
@@ -45,33 +73,54 @@ END PROCEDURE csrMat_AMatvec2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_AtMatvec
-IF (isSquare(obj)) THEN
-  CALL ATMUX(SIZE(y), x, y, obj % A, obj % csr % JA, obj % csr % IA)
+REAL(DFP), ALLOCATABLE :: y0(:)
+LOGICAL(LGT) :: add0
+REAL(DFP) :: scale0
+!
+add0 = INPUT(default=.FALSE., option=addContribution)
+scale0 = input(default=1.0_DFP, option=scale)
+!
+IF (add0) THEN
+  ALLOCATE (y0(SIZE(y)))
+  IF (isSquare(obj)) THEN
+    CALL ATMUX(SIZE(y0), x, y0, obj%A, obj%csr%JA, obj%csr%IA)
+  ELSE
+    CALL ATMUXR(SIZE(x), SIZE(y0), x, y0, obj%A, obj%csr%JA, obj%csr%IA)
+  END IF
+  CALL AXPY(X=y0, Y=y, A=scale0)
+  DEALLOCATE (y0)
 ELSE
-  CALL ATMUXR(SIZE(x), SIZE(y), x, y, obj % A, obj % csr % JA, obj % csr % IA)
+  IF (isSquare(obj)) THEN
+    CALL ATMUX(SIZE(y), x, y, obj%A, obj%csr%JA, obj%csr%IA)
+  ELSE
+    CALL ATMUXR(SIZE(x), SIZE(y), x, y, obj%A, obj%csr%JA, obj%csr%IA)
+  END IF
 END IF
 END PROCEDURE csrMat_AtMatvec
 
 !----------------------------------------------------------------------------
-!                                                                 MatVec
+!                                                                    MatVec
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_MatVec1
 LOGICAL(LGT) :: trans
-trans = INPUT(option=transp, default=.FALSE.)
+trans = INPUT(option=isTranspose, default=.FALSE.)
 IF (trans) THEN
-  CALL AtMatvec(obj=obj, x=x, y=y)
+  CALL AtMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
+  & scale=scale)
 ELSE
-  CALL AMatvec(obj=obj, x=x, y=y)
+  CALL AMatvec(obj=obj, x=x, y=y, addContribution=addContribution, &
+  & scale=scale)
 END IF
 END PROCEDURE csrMat_MatVec1
 
 !----------------------------------------------------------------------------
-!                                                                 MatVec
+!                                                                    MatVec
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_MatVec2
-CALL AMatvec(A=A, JA=JA, x=x, y=y)
+CALL AMatvec(A=A, JA=JA, x=x, y=y, addContribution=addContribution, &
+  & scale=scale)
 END PROCEDURE csrMat_MatVec2
 
 END SUBMODULE Methods

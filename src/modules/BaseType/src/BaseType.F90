@@ -22,6 +22,10 @@
 MODULE BaseType
 USE GlobalData
 USE String_Class, ONLY: String
+#ifdef USE_SuperLU
+USE SuperLUInterface
+USE ISO_C_BINDING, ONLY: C_CHAR, C_PTR
+#endif
 IMPLICIT NONE
 PRIVATE
 
@@ -104,7 +108,7 @@ PUBLIC :: BoundingBoxPointer_
 
 TYPE :: RealMatrix_
   INTEGER(I4B) :: tDimension = 0_I4B
-  CHARACTER(LEN=5) :: MatrixProp = 'UNSYM'
+  CHARACTER(5) :: MatrixProp = 'UNSYM'
   REAL(DFP), ALLOCATABLE :: Val(:, :)
 END TYPE RealMatrix_
 
@@ -259,7 +263,7 @@ PUBLIC :: DOFPointer_
 ! summary: SparseMatrix reordering scheme
 
 TYPE :: SparseMatrixReOrdering_
-  CHARACTER(LEN=10) :: name
+  CHARACTER(10) :: name
   INTEGER(I4B), ALLOCATABLE :: PERM(:)
   INTEGER(I4B), ALLOCATABLE :: IPERM(:)
 END TYPE SparseMatrixReOrdering_
@@ -311,6 +315,66 @@ END TYPE CSRSparsityPointer_
 PUBLIC :: CSRSparsityPointer_
 
 !----------------------------------------------------------------------------
+!                                                                 SuperLU_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  23-01-25
+! summary: SuperLU data structure
+
+#ifdef USE_SuperLU
+TYPE :: SuperLU_
+  TYPE(SuperMatrix) :: A
+  TYPE(SuperMatrix) :: B
+  TYPE(SuperMatrix) :: X
+  TYPE(SuperMatrix) :: L
+  TYPE(SuperMatrix) :: U
+  TYPE(GlobalLU_t) :: Glu
+  TYPE(superlu_options_t) :: options
+  TYPE(SuperLUStat_t) :: stat
+  TYPE(mem_usage_t) :: mem_usage
+  TYPE(C_PTR) :: Work
+  !! work-space for superlu, the size is decided by superlu
+  INTEGER(I4B), ALLOCATABLE :: ia(:)
+  !! starting index of row, size(m+1)
+  INTEGER(I4B), ALLOCATABLE :: ja(:)
+  !! column indices, size(nnz)
+  INTEGER(I4B), ALLOCATABLE :: perm_c(:)
+  !! col permutation, size(n)
+  INTEGER(I4B), ALLOCATABLE :: perm_r(:)
+  !! row permutation, size(m)
+  INTEGER(I4B), ALLOCATABLE :: etree(:)
+  !! elimination tree, size(n)
+  REAL(DFP), ALLOCATABLE :: nzval(:)
+  !! nonzero values, size(nnz)
+  REAL(DFP), ALLOCATABLE :: sol(:, :)
+  !! solution, size(n, nrhs)
+  REAL(DFP), ALLOCATABLE :: rhs(:, :)
+  !! right hand side, size(m, nrhs)
+  REAL(DFP), ALLOCATABLE :: R(:)
+  !! row digonal scaling, size(m)
+  REAL(DFP), ALLOCATABLE :: C(:)
+  !! column diagonal scaling, size(n)
+  REAL(DFP), ALLOCATABLE :: ferr(:)
+  !! size(nrhs)
+  REAL(DFP), ALLOCATABLE :: berr(:)
+  !! size(nrhs)
+  CHARACTER(1, kind=C_CHAR) :: equed(2)
+  INTEGER(I4B) :: lwork = 0
+  INTEGER(I4B) :: info = 0
+  REAL(DFP) :: recip_pivot_growth = 0.0_DFP
+  REAL(DFP) :: rcond = 0.0_DFP
+  LOGICAL(LGT) :: isAInitiated = .FALSE.
+  LOGICAL(LGT) :: isBInitiated = .FALSE.
+  LOGICAL(LGT) :: isXInitiated = .FALSE.
+  LOGICAL(LGT) :: isLInitiated = .FALSE.
+  LOGICAL(LGT) :: isUInitiated = .FALSE.
+  LOGICAL(LGT) :: isGluInitiated = .FALSE.
+  LOGICAL(LGT) :: isStatInitiated = .FALSE.
+END TYPE SuperLU_
+#endif
+
+!----------------------------------------------------------------------------
 !                                                             CSRMatrix_
 !----------------------------------------------------------------------------
 
@@ -320,11 +384,14 @@ PUBLIC :: CSRSparsityPointer_
 
 TYPE :: CSRMatrix_
   LOGICAL(LGT) :: csrOwnership = .TRUE.
-    !! This variable, if true, denotes that csr is allocated inside the obj
+  !! This variable, if true, denotes that csr is allocated inside the obj
   INTEGER(I4B) :: tDimension = 2_I4B
   CHARACTER(20) :: matrixProp = 'UNSYM'
   REAL(DFP), ALLOCATABLE :: A(:)
   TYPE(CSRSparsity_) :: csr
+#ifdef USE_SuperLU
+  TYPE(SuperLU_) :: slu
+#endif
 END TYPE CSRMatrix_
 
 PUBLIC :: CSRMatrix_

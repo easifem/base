@@ -208,17 +208,23 @@ END PROCEDURE csrMat_DropEntry
 MODULE PROCEDURE csrMat_Transpose
 INTEGER(I4B), ALLOCATABLE :: iwk(:)
 INTEGER(I4B) :: ierr
+TYPE(DOF_) :: dofobj
 CALL Reallocate(iwk, obj%csr%nnz)
 CALL TRANSP(obj%csr%nrow,obj%csr%ncol,obj%A,obj%csr%JA,obj%csr%IA,iwk,ierr)
 IF (ierr .NE. 0) THEN
   CALL ErrorMSG( &
-    & "Error occured during transposing!", &
-    & "CSRMatrix_Method@UnaryMethods.F90", &
-    & "csrMat_Transpose()", &
-    & __LINE__, stderr)
+    & msg="Error occured during transposing!", &
+    & file="CSRMatrix_Method@UnaryMethods.F90", &
+    & routine="csrMat_Transpose()", &
+    & line=__LINE__, &
+    & unitno=stderr)
   STOP
 END IF
 CALL ColumnSORT(obj)
+dofobj = obj%csr%idof
+obj%csr%jdof = obj%csr%idof
+obj%csr%idof = dofobj
+CALL DEALLOCATE (dofobj)
 DEALLOCATE (iwk)
 END PROCEDURE csrMat_Transpose
 
@@ -358,6 +364,529 @@ IF (PRESENT(colPERM)) THEN
   END IF
 END IF
 END PROCEDURE csrMat_Permute
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE csrMat_GetSymU1(obj, symobj, A, symA)
+  TYPE(CSRSparsity_), INTENT(IN) :: obj
+  TYPE(CSRSparsity_), INTENT(INOUT) :: symobj
+  REAL(DFP), INTENT(IN) :: A(:)
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: symA(:)
+  !
+  INTEGER(I4B) :: nnz_parts(3), ii, jj, rindx, indx, nrow, nnzU, ncol, &
+    & nnzD, al, ar, ad
+  INTEGER(I4B), ALLOCATABLE :: IA_csr(:), IA_csc(:), JA_csr(:), &
+    & JA_csc(:), idiag(:)
+  REAL(DFP), ALLOCATABLE :: A_csr(:), A_csc(:)
+  !
+  nnz_parts = GetNNZ(obj, [""])
+  nrow = obj%nrow
+  ncol = obj%ncol
+  nnzU = nnz_parts(1)
+  nnzD = nnz_parts(3)
+  !
+  CALL Reallocate(JA_csr, nnzU, IA_csr, nrow + 1)
+  CALL Reallocate(idiag, nrow)
+  CALL Reallocate(A_csc, nnzU)
+  CALL Reallocate(A_csr, nnzU)
+  !
+  indx = 0
+  !
+  DO ii = 1, nrow
+    !
+    IA_csr(ii) = indx + 1
+    IA_csr(ii + 1) = IA_csr(ii)
+    !
+    DO rindx = obj%IA(ii), obj%IA(ii + 1) - 1
+      jj = obj%JA(rindx)
+      IF (ii .LT. jj) THEN
+        indx = indx + 1
+        IA_csr(ii + 1) = IA_csr(ii + 1) + 1
+        JA_csr(indx) = jj
+        A_csr(indx) = A(rindx)
+      ELSE IF (ii .EQ. jj) THEN
+        idiag(ii) = rindx
+      END IF
+    END DO
+    !
+  END DO
+  !
+  CALL Reallocate(IA_csc, ncol + 1, JA_csc, nnzU)
+  CALL Reallocate(A_csc, nnzU)
+  !
+  CALL csrcsc( &
+    & nrow, &
+    & 1, &
+    & 1, &
+    & A_csr, &
+    & JA_csr, &
+    & IA_csr, &
+    & A_csc, &
+    & JA_csc, &
+    & IA_csc)
+  !
+  symobj%nnz = nnzU * 2 + nnzD
+  symobj%ncol = ncol
+  symobj%nrow = nrow
+  symobj%isSorted = obj%isSorted
+  symobj%isInitiated = obj%isInitiated
+  symobj%isSparsityLock = obj%isSparsityLock
+  symobj%isDiagStored = .TRUE.
+  symobj%idof = obj%idof
+  symobj%jdof = obj%jdof
+  !
+  CALL Reallocate(symobj%IA, nrow + 1, symobj%idiag, nrow)
+  CALL Reallocate(symobj%JA, symobj%nnz)
+  CALL Reallocate(symA, symobj%nnz)
+  !
+  indx = 0
+  !
+  DO ii = 1, symobj%nrow
+    ar = IA_csr(ii + 1) - IA_csr(ii)
+    al = IA_csc(ii + 1) - IA_csr(ii)
+    IF (idiag(ii) .NE. 0) THEN
+      ad = 1
+    ELSE
+      ad = 0
+    END IF
+    !
+    symobj%IA(ii) = indx + 1
+    symobj%IA(ii + 1) = symobj%IA(ii) + ar + al + ad
+    !
+    DO rindx = IA_csc(ii), IA_csc(ii + 1) - 1
+      indx = indx + 1
+      symobj%JA(indx) = JA_csc(rindx)
+      symA(indx) = A_csc(rindx)
+    END DO
+    !
+    IF (idiag(ii) .NE. 0) THEN
+      indx = indx + 1
+      symobj%JA(indx) = ii !!obj%JA(idiag(ii))
+      symobj%idiag(ii) = indx
+      symA(indx) = A(idiag(ii))
+    END IF
+    !
+    DO rindx = IA_csr(ii), IA_csr(ii + 1) - 1
+      indx = indx + 1
+      symobj%JA(indx) = JA_csr(rindx)
+      symA(indx) = A_csr(rindx)
+    END DO
+    !
+  END DO
+  !
+  ! Clean up
+  !
+  DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag, A_csr, A_csc)
+  !
+END SUBROUTINE csrMat_GetSymU1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE csrMat_GetSymU2(obj, A)
+  TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
+  !
+  INTEGER(I4B) :: nnz_parts(3), ii, jj, rindx, indx, nrow, nnzU, ncol, &
+    & nnzD, al, ar, ad
+  INTEGER(I4B), ALLOCATABLE :: IA_csr(:), IA_csc(:), JA_csr(:), &
+    & JA_csc(:), idiag(:)
+  REAL(DFP), ALLOCATABLE :: A_csr(:), A_csc(:), A_diag(:)
+  !
+  nnz_parts = GetNNZ(obj, [""])
+  nrow = obj%nrow
+  ncol = obj%ncol
+  nnzU = nnz_parts(1)
+  nnzD = nnz_parts(3)
+  !
+  CALL Reallocate(JA_csr, nnzU, IA_csr, nrow + 1)
+  CALL Reallocate(idiag, nrow)
+  CALL Reallocate(A_csc, nnzU)
+  CALL Reallocate(A_csr, nnzU)
+  CALL Reallocate(A_diag, nrow)
+  !
+  indx = 0
+  !
+  DO ii = 1, nrow
+    !
+    IA_csr(ii) = indx + 1
+    IA_csr(ii + 1) = IA_csr(ii)
+    !
+    DO rindx = obj%IA(ii), obj%IA(ii + 1) - 1
+      jj = obj%JA(rindx)
+      IF (ii .LT. jj) THEN
+        indx = indx + 1
+        IA_csr(ii + 1) = IA_csr(ii + 1) + 1
+        JA_csr(indx) = jj
+        A_csr(indx) = A(rindx)
+      ELSE IF (ii .EQ. jj) THEN
+        idiag(ii) = rindx
+        A_diag(ii) = A(rindx)
+      END IF
+    END DO
+    !
+  END DO
+  !
+  CALL Reallocate(IA_csc, ncol + 1, JA_csc, nnzU)
+  CALL Reallocate(A_csc, nnzU)
+  !
+  CALL csrcsc( &
+    & nrow, &
+    & 1, &
+    & 1, &
+    & A_csr, &
+    & JA_csr, &
+    & IA_csr, &
+    & A_csc, &
+    & JA_csc, &
+    & IA_csc)
+  !
+  obj%nnz = nnz_parts(1) * 2 + nnz_parts(3)
+  obj%isDiagStored = .TRUE.
+  !
+  CALL Reallocate(obj%IA, nrow + 1, obj%idiag, nrow)
+  CALL Reallocate(obj%JA, obj%nnz)
+  CALL Reallocate(A, obj%nnz)
+  !
+  indx = 0
+  !
+  DO ii = 1, obj%nrow
+    ar = IA_csr(ii + 1) - IA_csr(ii)
+    al = IA_csc(ii + 1) - IA_csr(ii)
+    IF (idiag(ii) .NE. 0) THEN
+      ad = 1
+    ELSE
+      ad = 0
+    END IF
+    !
+    obj%IA(ii) = indx + 1
+    obj%IA(ii + 1) = obj%IA(ii) + ar + al + ad
+    !
+    DO rindx = IA_csc(ii), IA_csc(ii + 1) - 1
+      indx = indx + 1
+      obj%JA(indx) = JA_csc(rindx)
+      A(indx) = A_csc(rindx)
+    END DO
+    !
+    IF (idiag(ii) .NE. 0) THEN
+      indx = indx + 1
+      obj%JA(indx) = ii !!obj%JA(idiag(ii))
+      obj%idiag(ii) = indx
+      A(indx) = A_diag(ii)
+    END IF
+    !
+    DO rindx = IA_csr(ii), IA_csr(ii + 1) - 1
+      indx = indx + 1
+      obj%JA(indx) = JA_csr(rindx)
+      A(indx) = A_csr(rindx)
+    END DO
+    !
+  END DO
+  !
+  ! Clean up
+  !
+  DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag, A_csr, &
+    & A_csc, A_diag)
+  !
+END SUBROUTINE csrMat_GetSymU2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE csrMat_GetSymL1(obj, symobj, A, symA)
+  TYPE(CSRSparsity_), INTENT(IN) :: obj
+  TYPE(CSRSparsity_), INTENT(INOUT) :: symobj
+  REAL(DFP), INTENT(IN) :: A(:)
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: symA(:)
+  !
+  INTEGER(I4B) :: nnz_parts(3), ii, jj, rindx, indx, nrow, nnzL, ncol, &
+    & nnzD, al, ar, ad
+  INTEGER(I4B), ALLOCATABLE :: IA_csr(:), IA_csc(:), JA_csr(:), &
+    & JA_csc(:), idiag(:)
+  REAL(DFP), ALLOCATABLE :: A_csr(:), A_csc(:), A_diag(:)
+  !
+  nnz_parts = GetNNZ(obj, [""])
+  nrow = obj%nrow
+  ncol = obj%ncol
+  nnzL = nnz_parts(2)
+  nnzD = nnz_parts(3)
+  !
+  CALL Reallocate(JA_csr, nnzL, IA_csr, nrow + 1)
+  CALL Reallocate(idiag, nrow)
+  CALL Reallocate(A_csr, nnzL)
+  CALL Reallocate(A_diag, nrow)
+  !
+  indx = 0
+  !
+  DO ii = 1, nrow
+    IA_csr(ii) = indx + 1
+    IA_csr(ii + 1) = IA_csr(ii)
+    DO rindx = obj%IA(ii), obj%IA(ii + 1) - 1
+      jj = obj%JA(rindx)
+      IF (ii .GT. jj) THEN
+        indx = indx + 1
+        IA_csr(ii + 1) = IA_csr(ii + 1) + 1
+        JA_csr(indx) = jj
+        A_csr(indx) = A(rindx)
+      ELSE IF (ii .EQ. jj) THEN
+        idiag(ii) = rindx
+        A_diag(ii) = A(rindx)
+      END IF
+    END DO
+  END DO
+  !
+  CALL Reallocate(IA_csc, ncol + 1, JA_csc, nnzL)
+  CALL Reallocate(A_csc, nnzL)
+  !
+  CALL csrcsc( &
+    & nrow, &
+    & 1, &
+    & 1, &
+    & A_csr, &
+    & JA_csr, &
+    & IA_csr, &
+    & A_csc, &
+    & JA_csc, &
+    & IA_csc)
+  !
+  symobj%nnz = nnzL * 2 + nnzD
+  symobj%ncol = ncol
+  symobj%nrow = nrow
+  symobj%isSorted = obj%isSorted
+  symobj%isInitiated = obj%isInitiated
+  symobj%isSparsityLock = obj%isSparsityLock
+  symobj%isDiagStored = .TRUE.
+  symobj%idof = obj%idof
+  symobj%jdof = obj%jdof
+  !
+  CALL Reallocate(symobj%IA, nrow + 1, symobj%idiag, nrow)
+  CALL Reallocate(symobj%JA, symobj%nnz)
+  CALL Reallocate(symA, symobj%nnz)
+  !
+  indx = 0
+  !
+  DO ii = 1, symobj%nrow
+    al = IA_csr(ii + 1) - IA_csr(ii)
+    ar = IA_csc(ii + 1) - IA_csc(ii)
+    IF (idiag(ii) .NE. 0) THEN
+      ad = 1
+    ELSE
+      ad = 0
+    END IF
+    !
+    symobj%IA(ii) = indx + 1
+    symobj%IA(ii + 1) = symobj%IA(ii) + ar + al + ad
+    !
+    DO rindx = IA_csr(ii), IA_csr(ii + 1) - 1
+      indx = indx + 1
+      symobj%JA(indx) = JA_csr(rindx)
+      symA(indx) = A_csr(rindx)
+    END DO
+    !
+    IF (idiag(ii) .NE. 0) THEN
+      indx = indx + 1
+      symobj%JA(indx) = ii !!obj%JA(idiag(ii))
+      symobj%idiag(ii) = indx
+      symA(indx) = A_diag(ii)
+    END IF
+    !
+    DO rindx = IA_csc(ii), IA_csc(ii + 1) - 1
+      indx = indx + 1
+      symobj%JA(indx) = JA_csc(rindx)
+      symA(indx) = A_csc(rindx)
+    END DO
+    !
+  END DO
+  !
+  ! Clean up
+  !
+  DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag, A_csr, A_csc, A_diag)
+  !
+END SUBROUTINE csrMat_GetSymL1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE csrMat_GetSymL2(obj, A)
+  TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: A(:)
+  !
+  INTEGER(I4B) :: nnz_parts(3), ii, jj, rindx, indx, nrow, nnzL, ncol, &
+    & nnzD, al, ar, ad
+  INTEGER(I4B), ALLOCATABLE :: IA_csr(:), IA_csc(:), JA_csr(:), &
+    & JA_csc(:), idiag(:)
+  REAL(DFP), ALLOCATABLE :: A_csr(:), A_csc(:), A_diag(:)
+  !
+  nnz_parts = GetNNZ(obj, [""])
+  nrow = obj%nrow
+  ncol = obj%ncol
+  nnzL = nnz_parts(2)
+  nnzD = nnz_parts(3)
+  !
+  CALL Reallocate(JA_csr, nnzL, IA_csr, nrow + 1)
+  CALL Reallocate(idiag, nrow)
+  CALL Reallocate(A_csr, nnzL)
+  CALL Reallocate(A_Diag, nrow)
+  !
+  indx = 0
+  !
+  DO ii = 1, nrow
+    IA_csr(ii) = indx + 1
+    IA_csr(ii + 1) = IA_csr(ii)
+    DO rindx = obj%IA(ii), obj%IA(ii + 1) - 1
+      jj = obj%JA(rindx)
+      IF (ii .GT. jj) THEN
+        indx = indx + 1
+        IA_csr(ii + 1) = IA_csr(ii + 1) + 1
+        JA_csr(indx) = jj
+        A_csr(indx) = A(rindx)
+      ELSE IF (ii .EQ. jj) THEN
+        idiag(ii) = rindx
+        A_diag(ii) = A(rindx)
+      END IF
+    END DO
+  END DO
+  !
+  CALL Reallocate(IA_csc, ncol + 1, JA_csc, nnzL)
+  CALL Reallocate(A_csc, nnzL)
+  !
+  CALL csrcsc( &
+    & nrow, &
+    & 1, &
+    & 1, &
+    & A_csr, &
+    & JA_csr, &
+    & IA_csr, &
+    & A_csc, &
+    & JA_csc, &
+    & IA_csc)
+  !
+  obj%nnz = nnzL * 2 + nnzD
+  obj%ncol = ncol
+  obj%nrow = nrow
+  obj%isSorted = obj%isSorted
+  obj%isInitiated = obj%isInitiated
+  obj%isSparsityLock = obj%isSparsityLock
+  obj%isDiagStored = .TRUE.
+  obj%idof = obj%idof
+  obj%jdof = obj%jdof
+  !
+  CALL Reallocate(obj%IA, nrow + 1, obj%idiag, nrow)
+  CALL Reallocate(obj%JA, obj%nnz)
+  CALL Reallocate(A, obj%nnz)
+  !
+  indx = 0
+  !
+  DO ii = 1, obj%nrow
+    al = IA_csr(ii + 1) - IA_csr(ii)
+    ar = IA_csc(ii + 1) - IA_csc(ii)
+    !
+    IF (idiag(ii) .NE. 0) THEN
+      ad = 1
+    ELSE
+      ad = 0
+    END IF
+    !
+    obj%IA(ii) = indx + 1
+    obj%IA(ii + 1) = obj%IA(ii) + ar + al + ad
+    !
+    DO rindx = IA_csr(ii), IA_csr(ii + 1) - 1
+      indx = indx + 1
+      obj%JA(indx) = JA_csr(rindx)
+      A(indx) = A_csr(rindx)
+    END DO
+    !
+    IF (idiag(ii) .NE. 0) THEN
+      indx = indx + 1
+      obj%JA(indx) = ii
+      obj%idiag(ii) = indx
+      A(indx) = A_diag(ii)
+    END IF
+    !
+    DO rindx = IA_csc(ii), IA_csc(ii + 1) - 1
+      indx = indx + 1
+      obj%JA(indx) = JA_csc(rindx)
+      A(indx) = A_csc(rindx)
+    END DO
+    !
+  END DO
+  !
+  ! Clean up
+  !
+  DEALLOCATE (IA_csr, IA_csc, JA_csr, JA_csc, idiag, A_csr, A_csc, A_diag)
+  !
+END SUBROUTINE csrMat_GetSymL2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_GetSym1
+INTEGER(I4B) :: ii, jj, nrow, rindx
+REAL(DFP) :: VALUE
+!
+! Matrix should be square
+!
+symObj%csrOwnership = obj%csrOwnership
+symObj%tDimension = obj%tDimension
+symObj%matrixProp = "SYM"
+
+IF (ALLOCATED(obj%A)) THEN
+  SELECT CASE (from)
+  CASE ("U", "u")
+    CALL csrMat_GetSymU1(obj=obj%csr, symobj=symobj%csr, A=obj%A, &
+      & symA=symobj%A)
+  CASE ("L", "l")
+    CALL csrMat_GetSymL1(obj=obj%csr, symobj=symobj%csr, A=obj%A, &
+      & symA=symobj%A)
+  CASE DEFAULT
+    CALL Errormsg(&
+     & msg="No match found for given from = "//from, &
+     & file=__FILE__, &
+     & routine="csrMat_GetSym1()", &
+     & line=__LINE__, &
+     & unitno=stderr)
+    STOP
+  END SELECT
+END IF
+
+END PROCEDURE csrMat_GetSym1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csrMat_GetSym2
+INTEGER(I4B) :: ii, jj, nrow, rindx
+REAL(DFP) :: VALUE
+!
+! Matrix should be square
+!
+obj%matrixProp = "SYM"
+
+IF (ALLOCATED(obj%A)) THEN
+  SELECT CASE (from)
+  CASE ("U", "u")
+    CALL csrMat_GetSymU2(obj=obj%csr, A=obj%A)
+  CASE ("L", "l")
+    CALL csrMat_GetSymL2(obj=obj%csr, A=obj%A)
+  CASE DEFAULT
+    CALL Errormsg(&
+     & msg="No match found for given from = "//from, &
+     & file=__FILE__, &
+     & routine="csrMat_GetSym2()", &
+     & line=__LINE__, &
+     & unitno=stderr)
+    STOP
+  END SELECT
+END IF
+
+END PROCEDURE csrMat_GetSym2
 
 !----------------------------------------------------------------------------
 !

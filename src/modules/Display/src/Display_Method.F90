@@ -35,12 +35,12 @@ PUBLIC :: DotLine, EqualLine
 PUBLIC :: TIMESTAMP
 PUBLIC :: setDisplayProfile
 
-CHARACTER(LEN=*), PARAMETER :: equal = "=============================="
-CHARACTER(LEN=*), PARAMETER :: dot = ".............................."
-CHARACTER(LEN=*), PARAMETER :: dash = "------------------------------"
-CHARACTER(LEN=*), PARAMETER :: COLOR_FG = "CYAN"
-CHARACTER(LEN=*), PARAMETER :: COLOR_BG = "BLACK"
-CHARACTER(LEN=*), PARAMETER :: COLOR_STYLE = "BOLD_ON"
+CHARACTER(*), PARAMETER :: equal = "=============================="
+CHARACTER(*), PARAMETER :: dot = ".............................."
+CHARACTER(*), PARAMETER :: dash = "------------------------------"
+CHARACTER(*), PARAMETER :: COLOR_FG = "CYAN"
+CHARACTER(*), PARAMETER :: COLOR_BG = "BLACK"
+CHARACTER(*), PARAMETER :: COLOR_STYLE = "BOLD_ON"
 
 TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: &
   & DisplayProfileTerminal = DISP_SETTINGS(&

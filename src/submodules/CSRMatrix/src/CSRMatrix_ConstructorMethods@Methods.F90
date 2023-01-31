@@ -85,11 +85,14 @@ END PROCEDURE csrMat_Allocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_Deallocate
-CALL Deallocate (obj%csr)
+CALL DEALLOCATE (obj%csr)
 obj%csrOwnership = .FALSE.
 obj%tDimension = 2
 obj%MatrixProp = 'UNSYM'
 IF (ALLOCATED(obj%A)) DEALLOCATE (obj%A)
+#ifdef USE_SuperLU
+CALL SuperluDeallocate(obj)
+#endif
 END PROCEDURE csrMat_Deallocate
 
 !----------------------------------------------------------------------------
@@ -97,7 +100,7 @@ END PROCEDURE csrMat_Deallocate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_initiate1
-CALL Deallocate (obj)
+CALL DEALLOCATE (obj)
 obj%csrOwnership = .TRUE.
 IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
 CALL Initiate(obj=obj%csr, ncol=ncol, nrow=nrow, idof=idof, jdof=jdof)
@@ -120,7 +123,7 @@ IF (.NOT. csr%isInitiated) THEN
   STOP
 END IF
 !!
-CALL Deallocate (obj)
+CALL DEALLOCATE (obj)
 obj%csrOwnership = .TRUE.
 IF (PRESENT(matrixProp)) obj%matrixProp = TRIM(matrixProp)
 obj%csr = csr

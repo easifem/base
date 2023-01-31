@@ -18,6 +18,7 @@
 MODULE CSRMatrix_SpectralMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
+PRIVATE
 
 PUBLIC :: SymLargestEigenval
 PUBLIC :: SymSmallestEigenval
@@ -38,7 +39,7 @@ PUBLIC :: SymSmallestEigenval
 INTERFACE
   MODULE FUNCTION SymLargestEigenVal1(mat, which, NCV, maxIter, tol) &
     & RESULT(ans)
-    TYPE(CSRMatrix_), INTENT(IN) :: mat
+    TYPE(CSRMatrix_), INTENT(INOUT) :: mat
     !! dense matrix
     CHARACTER(*), OPTIONAL, INTENT(IN) :: which
     !! `which = "LM"` ⇨ absolute largest eigenvalue
@@ -77,7 +78,7 @@ END INTERFACE SymLargestEigenVal
 INTERFACE
   MODULE FUNCTION SymLargestEigenVal2(mat, nev, which, NCV, maxIter, tol) &
     & RESULT(ans)
-    TYPE(CSRMatrix_), INTENT(IN) :: mat
+    TYPE(CSRMatrix_), INTENT(INOUT) :: mat
     !! dense matrix
     INTEGER(I4B), INTENT(IN) :: nev
     !! number of eigenvalues requested
@@ -130,12 +131,10 @@ END INTERFACE SymLargestEigenVal
 !@endnote
 
 INTERFACE
-  MODULE FUNCTION SymSmallestEigenVal1(mat, sigma, which, NCV, maxIter, tol) &
+  MODULE FUNCTION SymSmallestEigenVal1(mat, which, NCV, maxIter, tol) &
     & RESULT(ans)
-    TYPE(CSRMatrix_), INTENT(IN) :: mat
+    TYPE(CSRMatrix_), INTENT(INOUT) :: mat
     !! dense matrix
-    REAL(DFP), OPTIONAL, INTENT(IN) :: sigma
-    !! Default value is 0.0
     CHARACTER(*), OPTIONAL, INTENT(IN) :: which
     !! `which = "SM"` ⇨ absolute smallest eigenvalue
     !! `which = "SA"` ⇨ algebraic smallest eigenvalue
@@ -179,26 +178,12 @@ END INTERFACE SymSmallestEigenVal
 !
 
 INTERFACE
-  MODULE FUNCTION SymSmallestEigenVal2(mat, isFactor, ipiv, sigma, which, &
+  MODULE FUNCTION SymSmallestEigenVal2(mat, nev, which, &
     & NCV, maxIter, tol) RESULT(ans)
     TYPE(CSRMatrix_), INTENT(INOUT) :: mat
-    !!
-    !! Dense matrix
-    !! If isFactor is false, then this matrix will change on return
-    !! in this case, it will contain LU decomposition of `A-sigma*I`
-    !! If isFactor is true, then this matrix will not change
-    !!
-    LOGICAL(LGT), INTENT(INOUT) :: isFactor
-    !! if mat is already factorized, the set isFactor to true
-    !! if mat is not factorized, then set isFactor to false
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipiv(:)
-    !! When `isFactor` is true, then `mat` represents the
-    !! `LU` factorization of `A-sigma*I` obtained by `SymGetLU` routine.
-    !! In this case `ipiv` is returned by `SymGetLU`.
-    REAL(DFP), OPTIONAL, INTENT(IN) :: sigma
-    !! Default value is 0.0
-    !! Sigma is ignored when isFactor=true. Because in this case
-    !! mat represents LU factorization of `A-sigma*I`
+    !! CSRMatrix
+    INTEGER(I4B), INTENT(IN) :: nev
+    !! number of eigenvalues
     CHARACTER(*), OPTIONAL, INTENT(IN) :: which
     !! `which = "SM"` ⇨ absolute smallest eigenvalue
     !! `which = "SA"` ⇨ algebraic smallest eigenvalue
@@ -211,7 +196,7 @@ INTERFACE
     !! Maximum number of iteration default = `N*10`
     REAL(DFP), OPTIONAL, INTENT(IN) :: tol
     !! tolerance, default = 0.0
-    REAL(DFP) :: ans
+    REAL(DFP) :: ans(nev)
     !! smallest eigenvalue
   END FUNCTION SymSmallestEigenVal2
 END INTERFACE

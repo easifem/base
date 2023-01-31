@@ -43,3 +43,11 @@ TARGET_SOURCES(
   ${src_path}/CSRMatrix_SpectralMethods.F90
   ${src_path}/CSRMatrix_MatrixMarketIO.F90
 )
+
+
+SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+TARGET_SOURCES(
+  ${PROJECT_NAME} PRIVATE
+  ${src_path}/CSRMatrix_SuperLU.F90
+  ${src_path}/CSRMatrix_SchurMethods.F90
+)

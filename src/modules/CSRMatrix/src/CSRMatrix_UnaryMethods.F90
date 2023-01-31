@@ -26,13 +26,14 @@ PUBLIC :: Clean
 PUBLIC :: Copy
 PUBLIC :: Get
 PUBLIC :: DropEntry
-PUBLIC :: getTRANSPOSE
-PUBLIC :: getDiagonal
-PUBLIC :: getLowerTriangle
-PUBLIC :: getUpperTriangle
+PUBLIC :: GetTRANSPOSE
+PUBLIC :: GetDiagonal
+PUBLIC :: GetLowerTriangle
+PUBLIC :: GetUpperTriangle
 PUBLIC :: PermuteRow
 PUBLIC :: PermuteColumn
 PUBLIC :: Permute
+PUBLIC :: GetSym
 
 !----------------------------------------------------------------------------
 !                                                              Convert@Unary
@@ -294,9 +295,9 @@ INTERFACE
   END SUBROUTINE csrMat_Transpose
 END INTERFACE
 
-INTERFACE getTRANSPOSE
+INTERFACE GetTRANSPOSE
   MODULE PROCEDURE csrMat_Transpose
-END INTERFACE getTRANSPOSE
+END INTERFACE GetTRANSPOSE
 
 !----------------------------------------------------------------------------
 !                                                         getDiagonal@Unary
@@ -329,9 +330,9 @@ INTERFACE
   END SUBROUTINE csrMat_getDiagonal1
 END INTERFACE
 
-INTERFACE getDiagonal
+INTERFACE GetDiagonal
   MODULE PROCEDURE csrMat_getDiagonal1
-END INTERFACE getDiagonal
+END INTERFACE GetDiagonal
 
 !----------------------------------------------------------------------------
 !                                                         getDiagonal@Unary
@@ -359,9 +360,9 @@ INTERFACE
   END SUBROUTINE csrMat_getDiagonal2
 END INTERFACE
 
-INTERFACE getDiagonal
+INTERFACE GetDiagonal
   MODULE PROCEDURE csrMat_getDiagonal2
-END INTERFACE getDiagonal
+END INTERFACE GetDiagonal
 
 !----------------------------------------------------------------------------
 !                                                    getLowerTriangle@Unary
@@ -382,9 +383,9 @@ INTERFACE
   END SUBROUTINE csrMat_getLowerTriangle
 END INTERFACE
 
-INTERFACE getLowerTriangle
+INTERFACE GetLowerTriangle
   MODULE PROCEDURE csrMat_getLowerTriangle
-END INTERFACE getLowerTriangle
+END INTERFACE GetLowerTriangle
 
 !----------------------------------------------------------------------------
 !                                                    getUpperTriangle@Unary
@@ -476,4 +477,44 @@ END INTERFACE
 INTERFACE Permute
   MODULE PROCEDURE csrMat_permute
 END INTERFACE Permute
+
+!----------------------------------------------------------------------------
+!                                                                    GetSym
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-01-28
+! summary: Returns symmetric part of csrmatrix in symObj
+
+INTERFACE
+  MODULE SUBROUTINE csrMat_GetSym1(obj, symObj, from)
+    TYPE(CSRMatrix_), INTENT(IN) :: obj
+    TYPE(CSRMatrix_), INTENT(INOUT) :: symObj
+    CHARACTER(1), INTENT(IN) :: from
+  END SUBROUTINE csrMat_GetSym1
+END INTERFACE
+
+INTERFACE GetSym
+  MODULE PROCEDURE csrMat_GetSym1
+END INTERFACE GetSym
+
+!----------------------------------------------------------------------------
+!                                                                    GetSym
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-01-28
+! summary: Returns symmetric part of csrmatrix in symObj
+
+INTERFACE
+  MODULE SUBROUTINE csrMat_GetSym2(obj, from)
+    TYPE(CSRMatrix_), INTENT(INOUT) :: obj
+    CHARACTER(1), INTENT(IN) :: from
+  END SUBROUTINE csrMat_GetSym2
+END INTERFACE
+
+INTERFACE GetSym
+  MODULE PROCEDURE csrMat_GetSym2
+END INTERFACE GetSym
+
 END MODULE CSRMatrix_UnaryMethods

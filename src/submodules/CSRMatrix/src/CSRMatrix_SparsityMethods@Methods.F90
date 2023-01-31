@@ -72,7 +72,7 @@ IF (ALLOCATED(obj%A)) THEN
   ELSE IF (m .NE. obj%csr%nnz) THEN
     tempA = obj%A
     CALL Reallocate(obj%A, obj%csr%nnz)
-    IF (SIZE(obj%A) .LT. SIZE(tempA)) THEN
+    IF (SIZE(obj%A) .GE. SIZE(tempA)) THEN
       obj%A(1:SIZE(tempA)) = tempA(:)
     ELSE
       obj%A(1:obj%csr%nnz) = tempA(1:obj%csr%nnz)

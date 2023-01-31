@@ -535,6 +535,16 @@ END INTERFACE C_F_STRING
 
 PUBLIC :: C_F_STRING
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE FString
+  MODULE PROCEDURE Fstring1
+END INTERFACE FString
+
+PUBLIC :: Fstring
+
 !
 ! Deprecated
 !
@@ -702,7 +712,11 @@ END SUBROUTINE F_string_assign_C_string
 SUBROUTINE C_F_string_chars(C_string, F_string)
   CHARACTER(1, KIND=C_CHAR), INTENT(IN) :: C_string(*)
   CHARACTER(*), INTENT(OUT) :: F_string
-  !> internal variable
+  !! F_String is fortran string, it should be allocated
+  !! before calling the routine
+  !
+  ! internal variable
+  !
   INTEGER(I4B) :: i
   i = 1
   DO WHILE (C_string(i) .NE. NUL .AND. i .LE. LEN(F_string))
@@ -711,6 +725,75 @@ SUBROUTINE C_F_string_chars(C_string, F_string)
   END DO
   IF (i .LT. LEN(F_string)) F_string(i:) = ' '
 END SUBROUTINE C_F_string_chars
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+FUNCTION Fstring1(C_string) RESULT(F_string)
+  CHARACTER(1, KIND=C_CHAR), INTENT(IN) :: C_string(:)
+  CHARACTER(:), ALLOCATABLE :: F_string
+  !!
+  INTEGER(I4B) :: i, n, m
+  n = SIZE(C_string)
+  m = 0
+  DO i = 1, n - 1
+    IF (C_string(i) .EQ. NUL) THEN
+      EXIT
+    ELSE
+      m = m + 1
+    END IF
+  END DO
+  ALLOCATE (CHARACTER(m) :: F_string)
+  DO i = 1, m
+    F_string(i:i) = C_string(i)
+  END DO
+END FUNCTION Fstring1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! FUNCTION Fstring2(C_string) RESULT(F_string)
+!   TYPE(C_CHAR_PTR), INTENT(IN) :: C_string
+!   !! C pointer
+!   CHARACTER(:), ALLOCATABLE :: F_string
+!   !! Fortran string
+!
+!   ! ! internal variables
+!   ! CHARACTER(1, KIND=C_CHAR), POINTER :: p_chars(:)
+!   ! INTEGER(I4B) :: i, n, m
+!   !
+!   ! !> main
+!   ! IF (.NOT. C_ASSOCIATED(C_string)) THEN
+!   !   F_string = ''
+!   !   RETURN
+!   ! ELSE
+!   !   CALL C_F_POINTER(C_string, p_chars, [HUGE(0)])
+!   !   i = 1
+!   !   DO WHILE (p_chars(i) .NE. NUL .AND. I .LE. LEN(F_string))
+!   !     F_string(i:i) = p_chars(i); i = i + 1
+!   !   END DO
+!   !   IF (i .LT. LEN(F_string)) F_string(i:) = ' '
+!   ! END IF
+!   !
+!   ! n = SIZE(C_string)
+!   ! m = 0
+!   !
+!   ! DO i = 1, n - 1
+!   !   IF (C_string(i) .EQ. NUL) THEN
+!   !     EXIT
+!   !   ELSE
+!   !     m = m + 1
+!   !   END IF
+!   ! END DO
+!   !
+!   ! ALLOCATE (CHARACTER(m) :: F_string)
+!   !
+!   ! DO i = 1, m
+!   !   F_string(i:i) = C_string(i)
+!   ! END DO
+! END FUNCTION Fstring2
 
 !----------------------------------------------------------------------------
 !

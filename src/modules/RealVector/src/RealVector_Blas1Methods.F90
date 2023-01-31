@@ -24,6 +24,14 @@ USE GlobalData
 USE BaseType
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: ASUM
+PUBLIC :: AXPY
+PUBLIC :: COPY
+PUBLIC :: Compact
+PUBLIC :: DOT_PRODUCT
+PUBLIC :: NORM2
+PUBLIC :: SWAP
+PUBLIC :: SCAL
 
 !----------------------------------------------------------------------------
 !                                                                 ASUM@BLAS1
@@ -129,8 +137,6 @@ INTERFACE ASUM
   MODULE PROCEDURE ASUMScalar, ASUMvector
 END INTERFACE ASUM
 
-PUBLIC :: ASUM
-
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
 !----------------------------------------------------------------------------
@@ -140,7 +146,8 @@ PUBLIC :: ASUM
 ! summary: This subroutine computes AXPY
 !
 !# Introduction
-!         This subroutine performs following task
+!
+! This subroutine performs following task
 !
 ! $$Y=Y+A*X$$
 !
@@ -177,6 +184,10 @@ INTERFACE
   END SUBROUTINE scalarAXPYscalar
 END INTERFACE
 
+INTERFACE AXPY
+  MODULE PROCEDURE scalarAXPYscalar
+END INTERFACE AXPY
+
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
 !----------------------------------------------------------------------------
@@ -207,6 +218,10 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: A
   END SUBROUTINE scalarAXPYintrinsic
 END INTERFACE
+
+INTERFACE AXPY
+  MODULE PROCEDURE scalarAXPYintrinsic
+END INTERFACE AXPY
 
 !----------------------------------------------------------------------------
 !                                                                  AXPY@BLAS1
@@ -261,11 +276,8 @@ INTERFACE
 END INTERFACE
 
 INTERFACE AXPY
-  MODULE PROCEDURE scalarAXPYscalar, vectorAXPYvector, &
-    & scalarAXPYintrinsic
+  MODULE PROCEDURE vectorAXPYvector
 END INTERFACE AXPY
-
-PUBLIC :: AXPY
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -311,8 +323,6 @@ END INTERFACE
 INTERFACE COPY
   MODULE PROCEDURE scalarCOPYscalar
 END INTERFACE COPY
-
-PUBLIC :: COPY
 
 !----------------------------------------------------------------------------
 !                                                                 COPY@BLAS1
@@ -517,8 +527,6 @@ INTERFACE Compact
   MODULE PROCEDURE Compact_real_1, Compact_int_1
 END INTERFACE Compact
 
-PUBLIC :: Compact
-
 !----------------------------------------------------------------------------
 !                                                                 DOT@BLAS1
 !----------------------------------------------------------------------------
@@ -653,8 +661,6 @@ INTERFACE DOT_PRODUCT
     & scalarDOTvector, scalarDOTintrinsic
 END INTERFACE DOT_PRODUCT
 
-PUBLIC :: DOT_PRODUCT
-
 !----------------------------------------------------------------------------
 !                                                                Norm2@BLAS1
 !----------------------------------------------------------------------------
@@ -737,8 +743,6 @@ INTERFACE NORM2
   MODULE PROCEDURE NRM2scalar, NRM2vector
 END INTERFACE NORM2
 
-PUBLIC :: NORM2
-
 !----------------------------------------------------------------------------
 !                                                                 SWAP@BLAS1
 !----------------------------------------------------------------------------
@@ -765,8 +769,6 @@ INTERFACE SWAP
     & vectorSWAPvector, scalarSWAPintrinsic
 END INTERFACE SWAP
 
-PUBLIC :: SWAP
-
 !----------------------------------------------------------------------------
 !                                                                SCALE@BLAS1
 !----------------------------------------------------------------------------
@@ -786,7 +788,5 @@ END INTERFACE
 INTERFACE SCAL
   MODULE PROCEDURE SCALscalar, SCALvector
 END INTERFACE SCAL
-
-PUBLIC :: SCAL
 
 END MODULE RealVector_Blas1Methods

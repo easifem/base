@@ -18,6 +18,7 @@
 MODULE CSRMatrix_MatVecMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
+PRIVATE
 
 PUBLIC :: MatVec
 PUBLIC :: AMatVec
@@ -32,10 +33,12 @@ PUBLIC :: AtMatvec
 ! summary: This routine computes y = A*x
 
 INTERFACE
-  MODULE SUBROUTINE csrMat_AMatVec1(obj, x, y)
+  MODULE SUBROUTINE csrMat_AMatVec1(obj, x, y, addContribution, scale)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(INOUT) :: y(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_AMatVec1
 END INTERFACE
 
@@ -52,11 +55,13 @@ END INTERFACE AMatVec
 ! summary: This routine computes y = A*x, A is in MSR format
 
 INTERFACE
-  MODULE SUBROUTINE csrMat_AMatVec2(A, JA, x, y)
+  MODULE SUBROUTINE csrMat_AMatVec2(A, JA, x, y, addContribution, scale)
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(INOUT) :: y(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_AMatVec2
 END INTERFACE
 
@@ -73,10 +78,12 @@ END INTERFACE AMatVec
 ! summary: This routine computes y = A*x
 
 INTERFACE
-  MODULE SUBROUTINE csrMat_AtMatvec(obj, x, y)
+  MODULE SUBROUTINE csrMat_AtMatvec(obj, x, y, addContribution, scale)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(INOUT) :: y(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_AtMatvec
 END INTERFACE
 
@@ -96,11 +103,14 @@ END INTERFACE AtMatvec
 ! y = A*x
 
 INTERFACE
-  MODULE SUBROUTINE csrMat_MatVec1(obj, x, y, transp)
+  MODULE SUBROUTINE csrMat_MatVec1(obj, x, y, isTranspose, addContribution, &
+    & scale)
     TYPE(CSRMatrix_), INTENT(IN) :: obj
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(INOUT) :: y(:)
-    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: transp
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: isTranspose
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_MatVec1
 END INTERFACE
 
@@ -117,14 +127,18 @@ END INTERFACE MatVec
 ! summary: This routine performs matrix-vector multiplication
 !
 !# Introduction
+!
 ! y = A*x
 
 INTERFACE
-  MODULE SUBROUTINE csrMat_MatVec2(A, JA, x, y)
+  MODULE SUBROUTINE csrMat_MatVec2(A, JA, x, y, addContribution, &
+    & scale)
     REAL(DFP), INTENT(IN) :: A(:)
     INTEGER(I4B), INTENT(IN) :: JA(:)
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(INOUT) :: y(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: addContribution
+    REAL(DFP), OPTIONAL, INTENT(IN) :: scale
   END SUBROUTINE csrMat_MatVec2
 END INTERFACE
 
