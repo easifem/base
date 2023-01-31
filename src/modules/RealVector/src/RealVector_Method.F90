@@ -41,4 +41,5 @@ USE RealVector_Norm2Methods
 USE RealVector_Norm2ErrorMethods
 USE RealVector_SetMethods
 USE RealVector_ShallowCopyMethods
+USE RealVector_Blas1Methods
 END MODULE RealVector_Method

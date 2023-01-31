@@ -29,7 +29,7 @@ PUBLIC :: Display
 INTERFACE
   MODULE SUBROUTINE realVec_display1(obj, msg, UnitNo)
     CLASS(RealVector_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
   END SUBROUTINE realVec_display1
 END INTERFACE
@@ -45,7 +45,7 @@ END INTERFACE Display
 INTERFACE
   MODULE SUBROUTINE realVec_display2(obj, msg, UnitNo)
     CLASS(RealVector_), INTENT(IN) :: obj(:)
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
   END SUBROUTINE realVec_display2
 END INTERFACE

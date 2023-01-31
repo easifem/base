@@ -22,6 +22,7 @@ TARGET_SOURCES(
   ${src_path}/RealVector_AddMethods.F90
   ${src_path}/RealVector_AppendMethods.F90
   ${src_path}/RealVector_AssignMethods.F90
+  ${src_path}/RealVector_Blas1Methods.F90
   ${src_path}/RealVector_ComparisonMethods.F90
   ${src_path}/RealVector_ConstructorMethods.F90
   ${src_path}/RealVector_GetMethods.F90

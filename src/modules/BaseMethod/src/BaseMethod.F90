@@ -91,7 +91,6 @@ USE IndexValue_Method
 USE KeyValue_Method
 USE IterationData_Method
 USE Vector3D_Method
-USE BLAS1V_Method
 USE RealVector_Method
 USE DOF_Method
 USE Geometry_Method

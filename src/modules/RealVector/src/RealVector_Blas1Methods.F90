@@ -17,12 +17,9 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 7 March 2021
-! summary: This module contains BLAS1 methods for [[RealVector_]] and
-! [[RealMatrix_]] data type.
-!
-!{!pages/BLAS.md}
+! summary: This module contains BLAS1 methods
 
-MODULE BLAS1V_Method
+MODULE RealVector_Blas1Methods
 USE GlobalData
 USE BaseType
 IMPLICIT NONE
@@ -33,8 +30,9 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This function computes the absolute sum of a vector
+! date:         25 Feb 2021
+! summary:         This function computes the absolute sum of a vector
+!
 !# Introduction
 !
 ! This function computes the absolute sum of a vector.
@@ -43,7 +41,7 @@ PRIVATE
 ! \left| V_{i}\right|  \right)$$
 !
 !@note
-! 	This function calls BLAS function ASUM.
+!         This function calls BLAS function ASUM.
 !@endnote
 !
 !@todo
@@ -57,10 +55,10 @@ PRIVATE
 !@endtodo
 
 INTERFACE
-MODULE  FUNCTION ASUMScalar( obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  REAL( DFP ) :: Ans
-END FUNCTION ASUMScalar
+  MODULE FUNCTION ASUMScalar(obj) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    REAL(DFP) :: Ans
+  END FUNCTION ASUMScalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -68,8 +66,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This function computes the absolute sum of a vector
+! date:         25 Feb 2021
+! summary:         This function computes the absolute sum of a vector
 !# Introduction
 !
 ! This function computes the absolute sum of a vector.
@@ -78,7 +76,7 @@ END INTERFACE
 ! \left| V_{i}\right|  \right)$$
 !
 !@note
-! 	This function calls [[ASUMScalar]] method
+!         This function calls [[ASUMScalar]] method
 !@endnote
 !
 !### Usage
@@ -121,10 +119,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE  FUNCTION ASUMvector( obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
-  REAL( DFP ) :: Ans
-END FUNCTION ASUMvector
+  MODULE FUNCTION ASUMvector(obj) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj(:)
+    REAL(DFP) :: Ans
+  END FUNCTION ASUMvector
 END INTERFACE
 
 INTERFACE ASUM
@@ -138,11 +136,11 @@ PUBLIC :: ASUM
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	8 March 2021
+! date:         8 March 2021
 ! summary: This subroutine computes AXPY
 !
 !# Introduction
-! 	This subroutine performs following task
+!         This subroutine performs following task
 !
 ! $$Y=Y+A*X$$
 !
@@ -158,25 +156,25 @@ PUBLIC :: ASUM
 !### Usage
 !
 !```fortran
-  ! integer( i4b ), parameter :: n = 100
-  ! integer( i4b ) :: i
-  ! real( dfp ) :: a = 1.0_DFP
-  ! type( RealVector_ ) :: x, y, z
-  ! call random_number( x, n )
-  ! call random_number( y, n )
-  ! z%val = y%val + a * x%val
-  ! call axpy( x = x, y = y, A = a  )
-  ! call display( asum(y%val - z%val), "test4: 0 if correct : " )
+! integer( i4b ), parameter :: n = 100
+! integer( i4b ) :: i
+! real( dfp ) :: a = 1.0_DFP
+! type( RealVector_ ) :: x, y, z
+! call random_number( x, n )
+! call random_number( y, n )
+! z%val = y%val + a * x%val
+! call axpy( x = x, y = y, A = a  )
+! call display( asum(y%val - z%val), "test4: 0 if correct : " )
 !```
 
 INTERFACE
 
 ! Y = Y + A*X
-MODULE  SUBROUTINE scalarAXPYscalar( X, Y, A )
-  CLASS( RealVector_ ), INTENT( IN ) :: X
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
-  REAL( DFP ), INTENT( IN ) :: A
-END SUBROUTINE scalarAXPYscalar
+  MODULE SUBROUTINE scalarAXPYscalar(X, Y, A)
+    CLASS(RealVector_), INTENT(IN) :: X
+    CLASS(RealVector_), INTENT(INOUT) :: Y
+    REAL(DFP), INTENT(IN) :: A
+  END SUBROUTINE scalarAXPYscalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -184,11 +182,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	8 March 2021
+! date:         8 March 2021
 ! summary: This subroutine computes AXPY
 !
 !# Introduction
-! 	This subroutine performs following task
+!         This subroutine performs following task
 !
 ! $$Y=Y+A*X$$
 !
@@ -203,11 +201,11 @@ END INTERFACE
 !
 
 INTERFACE
-MODULE SUBROUTINE scalarAXPYintrinsic( X, Y, A )
-  REAL( DFP ), INTENT( IN ) :: X( : )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
-  REAL( DFP ), INTENT( IN ) :: A
-END SUBROUTINE scalarAXPYintrinsic
+  MODULE SUBROUTINE scalarAXPYintrinsic(X, Y, A)
+    REAL(DFP), INTENT(IN) :: X(:)
+    CLASS(RealVector_), INTENT(INOUT) :: Y
+    REAL(DFP), INTENT(IN) :: A
+  END SUBROUTINE scalarAXPYintrinsic
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -215,7 +213,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	8 March 2021
+! date:         8 March 2021
 ! summary: This subroutine computes AXPY
 !
 !# Introduction
@@ -255,11 +253,11 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE SUBROUTINE vectorAXPYvector( X, Y, A )
-  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Y( : )
-  REAL( DFP ), INTENT( IN ) :: A( : )
-END SUBROUTINE vectorAXPYvector
+  MODULE SUBROUTINE vectorAXPYvector(X, Y, A)
+    CLASS(RealVector_), INTENT(IN) :: X(:)
+    CLASS(RealVector_), INTENT(INOUT) :: Y(:)
+    REAL(DFP), INTENT(IN) :: A(:)
+  END SUBROUTINE vectorAXPYvector
 END INTERFACE
 
 INTERFACE AXPY
@@ -274,8 +272,8 @@ PUBLIC :: AXPY
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
+! date:         25 Feb 2021
+! summary:         This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copies one [[RealVector_]] object into another object, i.e.
@@ -285,7 +283,7 @@ PUBLIC :: AXPY
 ! style="max-width:500px;"/>
 !
 !@note
-! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
+!         This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
 !@endnote
 !
 !### Usage
@@ -304,10 +302,10 @@ PUBLIC :: AXPY
 !```
 
 INTERFACE
-MODULE SUBROUTINE scalarCOPYscalar( Y, X )
-  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
-  CLASS( RealVector_ ), INTENT( IN ) :: X
-END SUBROUTINE scalarCOPYscalar
+  MODULE SUBROUTINE scalarCOPYscalar(Y, X)
+    TYPE(RealVector_), INTENT(INOUT) :: Y
+    CLASS(RealVector_), INTENT(IN) :: X
+  END SUBROUTINE scalarCOPYscalar
 END INTERFACE
 
 INTERFACE COPY
@@ -321,14 +319,14 @@ PUBLIC :: COPY
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
+! date:         25 Feb 2021
+! summary:         This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copy a fortran vector into [[RealVector_]] obj, i.e. `Y=X`
 !
 !@note
-! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
+!         This subroutine internally uses [[intrinsicCOPYintrinsic]] routine.
 !@endnote
 !
 !### Usage
@@ -347,14 +345,14 @@ PUBLIC :: COPY
 !```
 
 INTERFACE
-MODULE SUBROUTINE scalarCOPYintrinsic_1a( Y, X )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
-  REAL( Real32 ), INTENT( IN ) :: X( : )
-END SUBROUTINE scalarCOPYintrinsic_1a
-MODULE SUBROUTINE scalarCOPYintrinsic_1b( Y, X )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
-  REAL( Real64 ), INTENT( IN ) :: X( : )
-END SUBROUTINE scalarCOPYintrinsic_1b
+  MODULE SUBROUTINE scalarCOPYintrinsic_1a(Y, X)
+    CLASS(RealVector_), INTENT(INOUT) :: Y
+    REAL(REAL32), INTENT(IN) :: X(:)
+  END SUBROUTINE scalarCOPYintrinsic_1a
+  MODULE SUBROUTINE scalarCOPYintrinsic_1b(Y, X)
+    CLASS(RealVector_), INTENT(INOUT) :: Y
+    REAL(REAL64), INTENT(IN) :: X(:)
+  END SUBROUTINE scalarCOPYintrinsic_1b
 END INTERFACE
 
 INTERFACE COPY
@@ -366,15 +364,15 @@ END INTERFACE COPY
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
+! date:         25 Feb 2021
+! summary:         This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copy an instance of [[RealVector_]] in another fortran
 ! vector, i.e. `Val=obj`
 !
 !@note
-! 	This subroutine internally calls [[intrinsicCOPYintrinsic]]. Also `Val`
+!         This subroutine internally calls [[intrinsicCOPYintrinsic]]. Also `Val`
 ! is allocatable.
 !@endnote
 !
@@ -395,14 +393,14 @@ END INTERFACE COPY
 !```
 
 INTERFACE
-MODULE SUBROUTINE intrinsicCOPYscalar_1a( Y, X )
-  REAL( Real32 ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: X
-END SUBROUTINE intrinsicCOPYscalar_1a
-MODULE SUBROUTINE intrinsicCOPYscalar_1b( Y, X )
-  REAL( Real64 ), ALLOCATABLE, INTENT( INOUT ) :: Y( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: X
-END SUBROUTINE intrinsicCOPYscalar_1b
+  MODULE SUBROUTINE intrinsicCOPYscalar_1a(Y, X)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: Y(:)
+    CLASS(RealVector_), INTENT(IN) :: X
+  END SUBROUTINE intrinsicCOPYscalar_1a
+  MODULE SUBROUTINE intrinsicCOPYscalar_1b(Y, X)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: Y(:)
+    CLASS(RealVector_), INTENT(IN) :: X
+  END SUBROUTINE intrinsicCOPYscalar_1b
 END INTERFACE
 
 INTERFACE COPY
@@ -414,8 +412,8 @@ END INTERFACE COPY
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
+! date:         25 Feb 2021
+! summary:         This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copy a vector of [[RealVector_]] into another vector, i.e.
@@ -425,7 +423,7 @@ END INTERFACE COPY
 ! style="max-width:500px;"/>
 !
 !@note
-! 	This subroutine internally uses [[intrinsicCOPYintrinsic]] routine. Also
+!         This subroutine internally uses [[intrinsicCOPYintrinsic]] routine. Also
 ! note that `obj1` and `obj2` are vectors of [[RealVector_]] data type.
 !@endnote
 !
@@ -449,10 +447,10 @@ END INTERFACE COPY
 !```
 
 INTERFACE
-MODULE SUBROUTINE vectorCOPYvector( Y, X )
-  TYPE( RealVector_ ), INTENT( INOUT ), ALLOCATABLE :: Y( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
-END SUBROUTINE vectorCOPYvector
+  MODULE SUBROUTINE vectorCOPYvector(Y, X)
+    TYPE(RealVector_), INTENT(INOUT), ALLOCATABLE :: Y(:)
+    CLASS(RealVector_), INTENT(IN) :: X(:)
+  END SUBROUTINE vectorCOPYvector
 END INTERFACE
 
 INTERFACE COPY
@@ -464,8 +462,8 @@ END INTERFACE COPY
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine copies one vector into another
+! date:         25 Feb 2021
+! summary:         This routine copies one vector into another
 !
 !# Introduction
 ! This subroutine copies a vector of [[RealVector_]] into a scalar instance
@@ -483,10 +481,10 @@ END INTERFACE COPY
 !@endtodo
 
 INTERFACE
-MODULE SUBROUTINE scalarCOPYvector( Y, X )
-  TYPE( RealVector_ ), INTENT( INOUT ) :: Y
-  CLASS( RealVector_ ), INTENT( IN ) :: X( : )
-END SUBROUTINE scalarCOPYvector
+  MODULE SUBROUTINE scalarCOPYvector(Y, X)
+    TYPE(RealVector_), INTENT(INOUT) :: Y
+    CLASS(RealVector_), INTENT(IN) :: X(:)
+  END SUBROUTINE scalarCOPYvector
 END INTERFACE
 
 INTERFACE COPY
@@ -498,10 +496,10 @@ END INTERFACE COPY
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE Compact_real_1( Val, row )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
-  INTEGER( I4B ), INTENT( IN ) :: row
-END SUBROUTINE
+  MODULE SUBROUTINE Compact_real_1(Val, row)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: row
+  END SUBROUTINE
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -509,12 +507,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE SUBROUTINE Compact_int_1( Val, row )
-  INTEGER( I4B ), ALLOCATABLE, INTENT( INOUT ) :: Val( : )
-  INTEGER( I4B ), INTENT( IN ) :: row
-END SUBROUTINE
+  MODULE SUBROUTINE Compact_int_1(Val, row)
+    INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: row
+  END SUBROUTINE
 END INTERFACE
-
 
 INTERFACE Compact
   MODULE PROCEDURE Compact_real_1, Compact_int_1
@@ -527,8 +524,8 @@ PUBLIC :: Compact
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine returns dot product of two [[RealVector_]]
+! date:         25 Feb 2021
+! summary:         This routine returns dot product of two [[RealVector_]]
 !
 !@todo
 ! type(_obj_) :: obj1, obj2
@@ -538,10 +535,10 @@ PUBLIC :: Compact
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTscalar( obj1, obj2 ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj1, obj2
-  REAL( DFP ) :: Ans
-END FUNCTION scalarDOTscalar
+  MODULE PURE FUNCTION scalarDOTscalar(obj1, obj2) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj1, obj2
+    REAL(DFP) :: Ans
+  END FUNCTION scalarDOTscalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -549,8 +546,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine computes dot product of a fortran array and scalar
+! date:         25 Feb 2021
+! summary:         This routine computes dot product of a fortran array and scalar
 ! instance of [[RealVector_]]
 !
 !@todo
@@ -562,11 +559,11 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTintrinsic( obj, Val ) RESULT( Ans )
-  REAL ( DFP ), INTENT( IN ) :: Val( : )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  REAL( DFP ) :: Ans
-END FUNCTION scalarDOTintrinsic
+  MODULE PURE FUNCTION scalarDOTintrinsic(obj, Val) RESULT(Ans)
+    REAL(DFP), INTENT(IN) :: Val(:)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    REAL(DFP) :: Ans
+  END FUNCTION scalarDOTintrinsic
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -574,8 +571,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routines returns the dot product of vector of
+! date:         25 Feb 2021
+! summary:         This routines returns the dot product of vector of
 ! [[RealVector_]] data type.
 !
 !@todo
@@ -587,10 +584,10 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION vectorDOTvector( obj1, obj2 ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj1( : ), obj2( : )
-  REAL( DFP ) :: Ans
-END FUNCTION vectorDOTvector
+  MODULE PURE FUNCTION vectorDOTvector(obj1, obj2) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj1(:), obj2(:)
+    REAL(DFP) :: Ans
+  END FUNCTION vectorDOTvector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -598,8 +595,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine computes dot product of a vector of [[RealVector_]]
+! date:         25 Feb 2021
+! summary:         This routine computes dot product of a vector of [[RealVector_]]
 ! and scalar of [[RealVector_]]
 !
 !@todo
@@ -611,10 +608,10 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION vectorDOTscalar( obj1, obj2 ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj1( : ), obj2
-  REAL( DFP ) :: Ans
-END FUNCTION vectorDOTscalar
+  MODULE PURE FUNCTION vectorDOTscalar(obj1, obj2) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj1(:), obj2
+    REAL(DFP) :: Ans
+  END FUNCTION vectorDOTscalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -622,8 +619,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine computes dot product of a scalar of [[RealVector_]]
+! date:         25 Feb 2021
+! summary:         This routine computes dot product of a scalar of [[RealVector_]]
 ! and vector of [[RealVector_]]
 !
 !### Usage
@@ -637,10 +634,10 @@ END INTERFACE
 !```
 
 INTERFACE
-MODULE PURE FUNCTION scalarDOTvector( obj1, obj2 ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj1, obj2( : )
-  REAL( DFP ) :: Ans
-END FUNCTION scalarDOTvector
+  MODULE PURE FUNCTION scalarDOTvector(obj1, obj2) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj1, obj2(:)
+    REAL(DFP) :: Ans
+  END FUNCTION scalarDOTvector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -648,8 +645,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This generic routine computes dot product
+! date:         25 Feb 2021
+! summary:         This generic routine computes dot product
 
 INTERFACE DOT_PRODUCT
   MODULE PROCEDURE scalarDOTscalar, vectorDOTvector, vectorDOTscalar, &
@@ -663,8 +660,8 @@ PUBLIC :: DOT_PRODUCT
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This function computes Euclidean norm of [[RealVector_]]
+! date:         25 Feb 2021
+! summary:         This function computes Euclidean norm of [[RealVector_]]
 !
 !# Introduction
 !
@@ -673,20 +670,20 @@ PUBLIC :: DOT_PRODUCT
 ! $$\left| \left| \bf{V} \right|  \right|  =\sqrt{\bf{V} \cdot \bf{V} }$$
 !
 !@note
-! 	This subroutine uses DOT function.
+!         This subroutine uses DOT function.
 !@endnote
 !
 !### Usage
 !
 !```fortran
-!	s = NORM2(obj)
+!        s = NORM2(obj)
 !```
 
 INTERFACE
-MODULE PURE FUNCTION NRM2scalar( obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj
-  REAL( DFP ) :: Ans
-END FUNCTION NRM2scalar
+  MODULE PURE FUNCTION NRM2scalar(obj) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj
+    REAL(DFP) :: Ans
+  END FUNCTION NRM2scalar
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -694,15 +691,15 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine computes the L2 norm of [[RealVector_]]
+! date:         25 Feb 2021
+! summary:         This routine computes the L2 norm of [[RealVector_]]
 !
 !# Introduction
 !
 ! This routine computes L2 norm of a vector of [[RealVector_]].
 !
 !@note
-! 	This function employs DOT function.
+!         This function employs DOT function.
 !@endnote
 !
 !@todo
@@ -714,10 +711,10 @@ END INTERFACE
 !@endtodo
 
 INTERFACE
-MODULE PURE FUNCTION NRM2vector( obj ) RESULT( Ans )
-  CLASS( RealVector_ ), INTENT( IN ) :: obj( : )
-  REAL( DFP ) :: Ans
-END FUNCTION NRM2vector
+  MODULE PURE FUNCTION NRM2vector(obj) RESULT(Ans)
+    CLASS(RealVector_), INTENT(IN) :: obj(:)
+    REAL(DFP) :: Ans
+  END FUNCTION NRM2vector
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -725,8 +722,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	25 Feb 2021
-! summary: 	This routine computes norm2
+! date:         25 Feb 2021
+! summary:         This routine computes norm2
 !
 !@note
 ! type(_obj_) :: obj1
@@ -747,20 +744,20 @@ PUBLIC :: NORM2
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE scalarSWAPscalar( X, Y )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: X
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Y
-END SUBROUTINE scalarSWAPscalar
+  MODULE PURE SUBROUTINE scalarSWAPscalar(X, Y)
+    CLASS(RealVector_), INTENT(INOUT) :: X
+    CLASS(RealVector_), INTENT(INOUT) :: Y
+  END SUBROUTINE scalarSWAPscalar
 
-MODULE PURE SUBROUTINE vectorSWAPvector( X, Y )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: X( : )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: Y( : )
-END SUBROUTINE vectorSWAPvector
+  MODULE PURE SUBROUTINE vectorSWAPvector(X, Y)
+    CLASS(RealVector_), INTENT(INOUT) :: X(:)
+    CLASS(RealVector_), INTENT(INOUT) :: Y(:)
+  END SUBROUTINE vectorSWAPvector
 
-MODULE PURE SUBROUTINE scalarSWAPintrinsic( X, Y )
-  CLASS( RealVector_ ), INTENT( INOUT ) :: X
-  REAL( DFP ), INTENT( INOUT ) :: Y( : )
-END SUBROUTINE scalarSWAPintrinsic
+  MODULE PURE SUBROUTINE scalarSWAPintrinsic(X, Y)
+    CLASS(RealVector_), INTENT(INOUT) :: X
+    REAL(DFP), INTENT(INOUT) :: Y(:)
+  END SUBROUTINE scalarSWAPintrinsic
 END INTERFACE
 
 INTERFACE SWAP
@@ -775,15 +772,15 @@ PUBLIC :: SWAP
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE SCALscalar( X, A )
-  CLASS ( RealVector_ ), INTENT( INOUT ) :: X
-  REAL( DFP ), INTENT( IN ) :: A
-END SUBROUTINE SCALscalar
+  MODULE PURE SUBROUTINE SCALscalar(X, A)
+    CLASS(RealVector_), INTENT(INOUT) :: X
+    REAL(DFP), INTENT(IN) :: A
+  END SUBROUTINE SCALscalar
 
-MODULE PURE SUBROUTINE SCALvector( X, A )
-  CLASS ( RealVector_ ), INTENT( INOUT ) :: X( : )
-  REAL( DFP ), INTENT( IN ) :: A
-END SUBROUTINE SCALvector
+  MODULE PURE SUBROUTINE SCALvector(X, A)
+    CLASS(RealVector_), INTENT(INOUT) :: X(:)
+    REAL(DFP), INTENT(IN) :: A
+  END SUBROUTINE SCALvector
 END INTERFACE
 
 INTERFACE SCAL
@@ -792,4 +789,4 @@ END INTERFACE SCAL
 
 PUBLIC :: SCAL
 
-END MODULE BLAS1V_Method
+END MODULE RealVector_Blas1Methods
