@@ -96,6 +96,24 @@ INTERFACE StiffnessMatrix
 END INTERFACE StiffnessMatrix
 
 !----------------------------------------------------------------------------
+!                                     StiffnessMatrix@StiffnessMatrixMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION femat_StiffnessMatrix5(test, trial, lambda, mu) &
+    & RESULT(Ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    REAL(DFP), INTENT(IN) :: lambda(:)
+    REAL(DFP), INTENT(IN) :: mu(:)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION femat_StiffnessMatrix5
+END INTERFACE
+
+INTERFACE StiffnessMatrix
+  MODULE PROCEDURE femat_StiffnessMatrix5
+END INTERFACE StiffnessMatrix
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

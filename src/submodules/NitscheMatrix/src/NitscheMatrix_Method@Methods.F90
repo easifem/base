@@ -26,113 +26,113 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE space_nitsche_mat_1
-LOGICAL(LGT) :: isLamNod, isMuNod, isEvecNod
-REAL(DFP), ALLOCATABLE :: LamBar(:), MuBar(:), RealVal(:), &
-  & EvecBar(:, :)
+LOGICAL(LGT) :: isLamNod, ismuNod, isevecNod
+REAL(DFP), ALLOCATABLE :: LamBar(:), muBar(:), realval(:), &
+  & evecBar(:, :)
 INTEGER(I4B) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j
 REAL(DFP), ALLOCATABLE :: SBar(:, :), DummyMat(:, :)
 
-nns1 = SIZE(Test%N, 1); nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2); nsd = Trial%RefElem%NSD
-isLamNod = .FALSE.; isMuNod = .FALSE.; isEvecNod = .FALSE.
-IF (Lambda%DefineOn .EQ. Nodal) isLamNod = .TRUE.
-IF (Mu%DefineOn .EQ. Nodal) isMuNod = .TRUE.
-IF (EVec%DefineOn .EQ. Nodal) isEvecNod = .TRUE.
+nns1 = SIZE(test%N, 1); nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2); nsd = trial%refElem%nsd
+isLamNod = .FALSE.; ismuNod = .FALSE.; isevecNod = .FALSE.
+IF (lambda%DefineOn .EQ. Nodal) isLamNod = .TRUE.
+IF (mu%DefineOn .EQ. Nodal) ismuNod = .TRUE.
+IF (evec%DefineOn .EQ. Nodal) isevecNod = .TRUE.
 
-!<--- LamBar and MuBar contains space varying values of Lam and Mu
-SELECT CASE (Lambda%VarType)
+!<--- LamBar and muBar contains space varying values of Lam and mu
+SELECT CASE (lambda%VarType)
 CASE (Constant)
 
   ALLOCATE (LamBar(nips))
-  LamBar = Get(Lambda, TypeFEVariableScalar, &
+  LamBar = Get(lambda, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = Get(Lambda, TypeFEVariableScalar, &
+  realval = Get(lambda, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
   IF (isLamNod) THEN
-    LamBar = Interpolation(Trial, RealVal)
+    LamBar = Interpolation(trial, realval)
   ELSE
-    LamBar = RealVal
+    LamBar = realval
   END IF
 END SELECT
 
-SELECT CASE (Mu%VarType)
+SELECT CASE (mu%VarType)
 CASE (Constant)
 
-  ALLOCATE (MuBar(nips))
-  MuBar = Get(Mu, TypeFEVariableScalar, &
+  ALLOCATE (muBar(nips))
+  muBar = Get(mu, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = Get(Mu, TypeFEVariableScalar, &
+  realval = Get(mu, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
-  IF (isMuNod) THEN
-    MuBar = Interpolation(Trial, RealVal)
+  IF (ismuNod) THEN
+    muBar = Interpolation(trial, realval)
   ELSE
-    MuBar = RealVal
+    muBar = realval
   END IF
 END SELECT
 
-SELECT CASE (Evec%VarType)
+SELECT CASE (evec%VarType)
 CASE (Constant)
 
-  ALLOCATE (EvecBar(nsd, nips))
-  EvecBar(:, 1) = Get(Evec, TypeFEVariableVector, &
+  ALLOCATE (evecBar(nsd, nips))
+  evecBar(:, 1) = Get(evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
-    EvecBar(:, i) = EvecBar(:, 1)
+    evecBar(:, i) = evecBar(:, 1)
   END DO
 
 CASE (Space)
 
-  Ans = Get(Evec, TypeFEVariableVector, &
+  ans = Get(evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
 
-  IF (isEvecNod) THEN
-    EvecBar = Interpolation(Trial, Ans)
+  IF (isevecNod) THEN
+    evecBar = Interpolation(trial, ans)
   ELSE
-    EvecBar = Ans
+    evecBar = ans
   END IF
 
-  DEALLOCATE (Ans)
+  DEALLOCATE (ans)
 END SELECT
 
 !<--- make integration parameters
-RealVal = Trial%Ws * Trial%Js * Trial%Thickness
+realval = trial%Ws * trial%Js * trial%Thickness
 
-!<--- allocate Ans
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
+!<--- allocate ans
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
 
 !<---
 DO ips = 1, nips
   DummyMat = &
-  &   LamBar(ips) * RealVal(ips) &
-  & * DOT_PRODUCT(Trial%normal(1:nsd, ips), EvecBar(1:nsd, ips)) &
+  &   LamBar(ips) * realval(ips) &
+  & * DOT_PRODUCT(trial%normal(1:nsd, ips), evecBar(1:nsd, ips)) &
   & * Eye3(1:nsd, 1:nsd) &
-  & + 2.0 * MuBar(ips) * RealVal(ips) &
-  & * OUTERPROD(a=Trial%normal(1:nsd, ips), &
-              & b=EvecBar(1:nsd, ips), &
+  & + 2.0 * muBar(ips) * realval(ips) &
+  & * OUTERPROD(a=trial%normal(1:nsd, ips), &
+              & b=evecBar(1:nsd, ips), &
               & Sym=.TRUE.)
 
-  SBar = MATMUL(Trial%dNdXt(:, :, ips), DummyMat)
+  SBar = MATMUL(trial%dNdXt(:, :, ips), DummyMat)
 
   DummyMat = RESHAPE(SBar, [nsd * nns2, 1])
 
-  SBar = OUTERPROD(Test%N(:, ips), DummyMat(:, 1))
+  SBar = OUTERPROD(test%N(:, ips), DummyMat(:, 1))
 
   r1 = 0; r2 = 0
   DO i = 1, nsd
     r1 = r2 + 1; r2 = i * nns1
-    Ans(r1:r2, :) = Ans(r1:r2, :) + EvecBar(i, ips) * SBar(:, :)
+    ans(r1:r2, :) = ans(r1:r2, :) + evecBar(i, ips) * SBar(:, :)
   END DO
 END DO
 
-DEALLOCATE (LamBar, MuBar, RealVal, EvecBar, SBar, DummyMat)
+DEALLOCATE (LamBar, muBar, realval, evecBar, SBar, DummyMat)
 END PROCEDURE space_nitsche_mat_1
 
 !----------------------------------------------------------------------------
@@ -140,70 +140,70 @@ END PROCEDURE space_nitsche_mat_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE space_nitsche_mat_3
-LOGICAL(LGT) :: isEvecNod
-REAL(DFP), ALLOCATABLE :: RealVal(:), EvecBar(:, :), &
+LOGICAL(LGT) :: isevecNod
+REAL(DFP), ALLOCATABLE :: realval(:), evecBar(:, :), &
   & SBar(:, :), DummyMat(:, :)
 INTEGER(I4B) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j
 
-nns1 = SIZE(Test%N, 1); nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2); nsd = Trial%RefElem%NSD
-isEvecNod = .FALSE.
+nns1 = SIZE(test%N, 1); nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2); nsd = trial%refElem%nsd
+isevecNod = .FALSE.
 
-IF (EVec%DefineOn .EQ. Nodal) isEvecNod = .TRUE.
+IF (evec%DefineOn .EQ. Nodal) isevecNod = .TRUE.
 
-SELECT CASE (Evec%VarType)
+SELECT CASE (evec%VarType)
 CASE (Constant)
 
-  ALLOCATE (EvecBar(nsd, nips))
-  EvecBar(1, :) = Get(Evec, TypeFEVariableVector, &
+  ALLOCATE (evecBar(nsd, nips))
+  evecBar(1, :) = Get(evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
-    EvecBar(i, :) = EvecBar(1, :)
+    evecBar(i, :) = evecBar(1, :)
   END DO
 
 CASE (Space)
 
-  Ans = Get(Evec, TypeFEVariableVector, &
+  ans = Get(evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
 
-  IF (isEvecNod) THEN
-    EvecBar = Interpolation(Trial, Ans)
+  IF (isevecNod) THEN
+    evecBar = Interpolation(trial, ans)
   ELSE
-    EvecBar = Ans
+    evecBar = ans
   END IF
 
-  DEALLOCATE (Ans)
+  DEALLOCATE (ans)
 END SELECT
 
 !<--- make integration parameters
-RealVal = Trial%Ws * Trial%Thickness * Trial%Js
+realval = trial%Ws * trial%Thickness * trial%Js
 
-!<--- allocate Ans
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
+!<--- allocate ans
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
 
 !<---
 DO ips = 1, nips
   DummyMat = &
-  &   Lambda * RealVal(ips) &
-  & * DOT_PRODUCT(Trial%normal(1:nsd, ips), EvecBar(1:nsd, ips)) &
+  &   lambda * realval(ips) &
+  & * DOT_PRODUCT(trial%normal(1:nsd, ips), evecBar(1:nsd, ips)) &
   & * Eye3(1:nsd, 1:nsd) &
-  & + 2.0 * Mu * RealVal(ips) &
-  & * OUTERPROD(a=Trial%normal(1:nsd, ips), &
-              & b=EvecBar(1:nsd, ips), &
+  & + 2.0 * mu * realval(ips) &
+  & * OUTERPROD(a=trial%normal(1:nsd, ips), &
+              & b=evecBar(1:nsd, ips), &
               & Sym=.TRUE.)
 
-  SBar = MATMUL(Trial%dNdXt(:, :, ips), DummyMat)
+  SBar = MATMUL(trial%dNdXt(:, :, ips), DummyMat)
   DummyMat = RESHAPE(SBar, [nsd * nns2, 1])
-  SBar = OUTERPROD(a=Test%N(:, ips), b=DummyMat(:, 1))
+  SBar = OUTERPROD(a=test%N(:, ips), b=DummyMat(:, 1))
 
   r1 = 0; r2 = 0
   DO i = 1, nsd
     r1 = r2 + 1; r2 = i * nns1
-    Ans(r1:r2, :) = Ans(r1:r2, :) + EvecBar(i, ips) * SBar(:, :)
+    ans(r1:r2, :) = ans(r1:r2, :) + evecBar(i, ips) * SBar(:, :)
   END DO
 END DO
 
-DEALLOCATE (RealVal, EvecBar, SBar, DummyMat)
+DEALLOCATE (realval, evecBar, SBar, DummyMat)
 END PROCEDURE space_nitsche_mat_3
 
 !----------------------------------------------------------------------------
@@ -211,18 +211,18 @@ END PROCEDURE space_nitsche_mat_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE space_nitsche_mat_5
-REAL(DFP), ALLOCATABLE :: RealVal(:), SBar(:), cdNdXt(:, :)
+REAL(DFP), ALLOCATABLE :: realval(:), SBar(:), cdNdXt(:, :)
 INTEGER(I4B) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j, c1, c2
 
-nns1 = SIZE(Test%N, 1); nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2); nsd = Trial%RefElem%NSD
+nns1 = SIZE(test%N, 1); nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2); nsd = trial%refElem%nsd
 !<--- make integration parameters
-RealVal = Trial%Ws * Trial%Thickness * Trial%Js
-!<--- allocate Ans
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
-ALLOCATE (cdNdXt(SIZE(Trial%N, 1), SIZE(Trial%N, 2)))
-DO i = 1, SIZE(Trial%N, 2)
-  cdNdXt(:, i) = MATMUL(Trial%dNdXt(:, :, i), Trial%Normal(1:nsd, i))
+realval = trial%Ws * trial%Thickness * trial%Js
+!<--- allocate ans
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
+ALLOCATE (cdNdXt(SIZE(trial%N, 1), SIZE(trial%N, 2)))
+DO i = 1, SIZE(trial%N, 2)
+  cdNdXt(:, i) = MATMUL(trial%dNdXt(:, :, i), trial%Normal(1:nsd, i))
 END DO
 
 DO ips = 1, nips
@@ -233,20 +233,20 @@ DO ips = 1, nips
     DO i = 1, nsd
       r1 = r2 + 1; r2 = i * nns1
       IF (i .EQ. j) THEN
-        SBar = Lambda * trial%normal(i, ips) * trial%dNdXt(:, j, ips) &
-          & + Mu * cdNdXt(:, ips) &
-          & + Mu * trial%normal(j, ips) * trial%dNdXt(:, i, ips)
+        SBar = lambda * trial%normal(i, ips) * trial%dNdXt(:, j, ips) &
+          & + mu * cdNdXt(:, ips) &
+          & + mu * trial%normal(j, ips) * trial%dNdXt(:, i, ips)
       ELSE
-        SBar = Lambda * trial%normal(i, ips) * trial%dNdXt(:, j, ips) &
-          & + Mu * trial%normal(j, ips) * trial%dNdXt(:, i, ips)
+        SBar = lambda * trial%normal(i, ips) * trial%dNdXt(:, j, ips) &
+          & + mu * trial%normal(j, ips) * trial%dNdXt(:, i, ips)
       END IF
-      Ans(r1:r2, c1:c2) = Ans(r1:r2, c1:c2) &
-        & + RealVal(ips) * OUTERPROD(Test%N(:, ips), SBar)
+      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) &
+        & + realval(ips) * OUTERPROD(test%N(:, ips), SBar)
     END DO
   END DO
 END DO
 
-DEALLOCATE (RealVal, SBar, cdNdXt)
+DEALLOCATE (realval, SBar, cdNdXt)
 END PROCEDURE space_nitsche_mat_5
 
 !----------------------------------------------------------------------------
@@ -254,58 +254,58 @@ END PROCEDURE space_nitsche_mat_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE space_nitsche_mat_7
-REAL(DFP), ALLOCATABLE :: RealVal(:), SBar(:), cdNdXt(:, :), &
-  & LamBar(:), MuBar(:)
+REAL(DFP), ALLOCATABLE :: realval(:), SBar(:), cdNdXt(:, :), &
+  & LamBar(:), muBar(:)
 INTEGER(I4B) :: nns1, nns2, nips, nsd, ips, r1, r2, i, j, c1, c2
 
-nns1 = SIZE(Test%N, 1); nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2); nsd = Trial%RefElem%NSD
+nns1 = SIZE(test%N, 1); nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2); nsd = trial%refElem%nsd
 
-SELECT CASE (Lambda%VarType)
+SELECT CASE (lambda%VarType)
 CASE (Constant)
 
   ALLOCATE (LamBar(nips))
-  LamBar = Get(Lambda, TypeFEVariableScalar, &
+  LamBar = Get(lambda, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = Get(Lambda, TypeFEVariableScalar, &
+  realval = Get(lambda, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
-  IF (Lambda%DefineOn .EQ. Nodal) THEN
-    LamBar = Interpolation(Trial, RealVal)
+  IF (lambda%DefineOn .EQ. Nodal) THEN
+    LamBar = Interpolation(trial, realval)
   ELSE
-    LamBar = RealVal
+    LamBar = realval
   END IF
 END SELECT
 
-SELECT CASE (Mu%VarType)
+SELECT CASE (mu%VarType)
 CASE (Constant)
 
-  ALLOCATE (MuBar(nips))
-  MuBar = Get(Mu, TypeFEVariableScalar, &
+  ALLOCATE (muBar(nips))
+  muBar = Get(mu, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 
 CASE (Space)
 
-  RealVal = Get(Mu, TypeFEVariableScalar, &
+  realval = Get(mu, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
-  IF (Mu%DefineOn .EQ. Nodal) THEN
-    MuBar = Interpolation(Trial, RealVal)
+  IF (mu%DefineOn .EQ. Nodal) THEN
+    muBar = Interpolation(trial, realval)
   ELSE
-    MuBar = RealVal
+    muBar = realval
   END IF
 END SELECT
 
 !<--- make integration parameters
-RealVal = Trial%Ws * Trial%Thickness * Trial%Js
-!<--- allocate Ans
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
-ALLOCATE (cdNdXt(SIZE(Trial%N, 1), SIZE(Trial%N, 2)))
-DO i = 1, SIZE(Trial%N, 2)
-  cdNdXt(:, i) = MATMUL(Trial%dNdXt(:, :, i), Trial%Normal(1:nsd, i))
+realval = trial%Ws * trial%Thickness * trial%Js
+!<--- allocate ans
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
+ALLOCATE (cdNdXt(SIZE(trial%N, 1), SIZE(trial%N, 2)))
+DO i = 1, SIZE(trial%N, 2)
+  cdNdXt(:, i) = MATMUL(trial%dNdXt(:, :, i), trial%Normal(1:nsd, i))
 END DO
 
 DO ips = 1, nips
@@ -317,19 +317,19 @@ DO ips = 1, nips
       r1 = r2 + 1; r2 = i * nns1
       IF (i .EQ. j) THEN
         SBar = LamBar(ips) * trial%normal(i, ips) * trial%dNdXt(:, j, ips) &
-          & + MuBar(ips) * cdNdXt(:, ips) &
-          & + MuBar(ips) * trial%normal(j, ips) * trial%dNdXt(:, i, ips)
+          & + muBar(ips) * cdNdXt(:, ips) &
+          & + muBar(ips) * trial%normal(j, ips) * trial%dNdXt(:, i, ips)
       ELSE
         SBar = LamBar(ips) * trial%normal(i, ips) * trial%dNdXt(:, j, ips) &
-          & + MuBar(ips) * trial%normal(j, ips) * trial%dNdXt(:, i, ips)
+          & + muBar(ips) * trial%normal(j, ips) * trial%dNdXt(:, i, ips)
       END IF
-      Ans(r1:r2, c1:c2) = Ans(r1:r2, c1:c2) &
-        & + RealVal(ips) * OUTERPROD(Test%N(:, ips), SBar)
+      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) &
+        & + realval(ips) * OUTERPROD(test%N(:, ips), SBar)
     END DO
   END DO
 END DO
 
-DEALLOCATE (RealVal, SBar, cdNdXt, LamBar, MuBar)
+DEALLOCATE (realval, SBar, cdNdXt, LamBar, muBar)
 END PROCEDURE space_nitsche_mat_7
 
 !----------------------------------------------------------------------------
@@ -338,17 +338,17 @@ END PROCEDURE space_nitsche_mat_7
 
 MODULE PROCEDURE space_nitsche_mat_2
 
-LOGICAL(LGT) :: isAlphaNod, isEvecNod
+LOGICAL(LGT) :: isAlphaNod, isevecNod
 INTEGER(I4B) :: nns1, nns2, nsd, nips, ips, i, j, r1, r2, c1, c2
-REAL(DFP), ALLOCATABLE :: AlphaBar(:), EvecBar(:, :), RealVal(:)
+REAL(DFP), ALLOCATABLE :: AlphaBar(:), evecBar(:, :), realval(:)
 REAL(DFP), ALLOCATABLE :: DummyMat(:, :)
 
-nns1 = SIZE(Test%N, 1); nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2); nsd = Trial%RefElem%NSD
+nns1 = SIZE(test%N, 1); nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2); nsd = trial%refElem%nsd
 
-isAlphaNod = .FALSE.; isEvecNod = .FALSE.
+isAlphaNod = .FALSE.; isevecNod = .FALSE.
 IF (Alpha%DefineOn .EQ. Nodal) isAlphaNod = .TRUE.
-IF (Evec%DefineOn .EQ. Nodal) isEvecNod = .TRUE.
+IF (evec%DefineOn .EQ. Nodal) isevecNod = .TRUE.
 
 SELECT CASE (Alpha%VarType)
 CASE (Constant)
@@ -359,58 +359,58 @@ CASE (Constant)
 
 CASE (Space)
 
-  RealVal = Get(Alpha, TypeFEVariableScalar, &
+  realval = Get(Alpha, TypeFEVariableScalar, &
     & TypeFEVariableSpace)
 
   IF (isAlphaNod) THEN
-    AlphaBar = Interpolation(Trial, RealVal)
+    AlphaBar = Interpolation(trial, realval)
   ELSE
-    AlphaBar = RealVal
+    AlphaBar = realval
   END IF
 END SELECT
 
-SELECT CASE (Evec%VarType)
+SELECT CASE (evec%VarType)
 CASE (Constant)
 
-  ALLOCATE (EvecBar(nsd, nips))
-  EvecBar(1, :) = Get(Evec, TypeFEVariableVector, &
+  ALLOCATE (evecBar(nsd, nips))
+  evecBar(1, :) = Get(evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
-    EvecBar(i, :) = EvecBar(1, :)
+    evecBar(i, :) = evecBar(1, :)
   END DO
 
 CASE (Space)
 
-  Ans = Get(Evec, TypeFEVariableVector, &
+  ans = Get(evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
 
-  IF (isEvecNod) THEN
-    EvecBar = Interpolation(Trial, Ans)
+  IF (isevecNod) THEN
+    evecBar = Interpolation(trial, ans)
   ELSE
-    EvecBar = Ans
+    evecBar = ans
   END IF
 
-  DEALLOCATE (Ans)
+  DEALLOCATE (ans)
 END SELECT
 
-RealVal = Trial%Ws * Trial%Js * Trial%Thickness * AlphaBar
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
+realval = trial%Ws * trial%Js * trial%Thickness * AlphaBar
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
 
 DO ips = 1, nips
-  DummyMat = RealVal(ips) * &
-    & OUTERPROD(a=Test%N(:, ips), b=Trial%N(:, ips))
+  DummyMat = realval(ips) * &
+    & OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
   c1 = 0; c2 = 0
   DO j = 1, nsd
     c1 = c2 + 1; c2 = j * nns2; r1 = 0; r2 = r1
     DO i = 1, nsd
       r1 = r2 + 1; r2 = i * nns1
-      Ans(r1:r2, c1:c2) = Ans(r1:r2, c1:c2) + &
-        & EvecBar(i, ips) * EvecBar(j, ips) * DummyMat
+      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + &
+        & evecBar(i, ips) * evecBar(j, ips) * DummyMat
     END DO
   END DO
 END DO
 
-DEALLOCATE (AlphaBar, EvecBar, RealVal, DummyMat)
+DEALLOCATE (AlphaBar, evecBar, realval, DummyMat)
 END PROCEDURE space_nitsche_mat_2
 
 !----------------------------------------------------------------------------
@@ -418,52 +418,52 @@ END PROCEDURE space_nitsche_mat_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE space_nitsche_mat_4
-LOGICAL(LGT) :: isEvecNod
+LOGICAL(LGT) :: isevecNod
 INTEGER(I4B) :: nns1, nns2, nsd, nips, ips, i, j, r1, r2, c1, c2
-REAL(DFP), ALLOCATABLE :: EvecBar(:, :), RealVal(:)
+REAL(DFP), ALLOCATABLE :: evecBar(:, :), realval(:)
 REAL(DFP), ALLOCATABLE :: DummyMat(:, :)
 !!
-nns1 = SIZE(Test%N, 1); nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2); nsd = Trial%RefElem%NSD
-IF (Evec%DefineOn .EQ. Nodal) THEN
-  isEvecNod = .TRUE.
+nns1 = SIZE(test%N, 1); nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2); nsd = trial%refElem%nsd
+IF (evec%DefineOn .EQ. Nodal) THEN
+  isevecNod = .TRUE.
 ELSE
-  isEvecNod = .FALSE.
+  isevecNod = .FALSE.
 END IF
-SELECT CASE (Evec%VarType)
+SELECT CASE (evec%VarType)
 CASE (Constant)
-  ALLOCATE (EvecBar(nsd, nips))
-  EvecBar(1, :) = Get(Evec, TypeFEVariableVector, &
+  ALLOCATE (evecBar(nsd, nips))
+  evecBar(1, :) = Get(evec, TypeFEVariableVector, &
     & TypeFEVariableConstant)
   DO i = 2, nsd
-    EvecBar(i, :) = EvecBar(1, :)
+    evecBar(i, :) = evecBar(1, :)
   END DO
 CASE (Space)
-  Ans = Get(Evec, TypeFEVariableVector, &
+  ans = Get(evec, TypeFEVariableVector, &
     & TypeFEVariableSpace)
-  IF (isEvecNod) THEN
-    EvecBar = Interpolation(Trial, Ans)
+  IF (isevecNod) THEN
+    evecBar = Interpolation(trial, ans)
   ELSE
-    EvecBar = Ans
+    evecBar = ans
   END IF
-  DEALLOCATE (Ans)
+  DEALLOCATE (ans)
 END SELECT
-RealVal = Trial%Ws * Trial%Js * Trial%Thickness * Alpha
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
+realval = trial%Ws * trial%Js * trial%Thickness * Alpha
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
 DO ips = 1, nips
-  DummyMat = RealVal(ips) * &
-    & OUTERPROD(a=Test%N(:, ips), b=Trial%N(:, ips))
+  DummyMat = realval(ips) * &
+    & OUTERPROD(a=test%N(:, ips), b=trial%N(:, ips))
   c1 = 0; c2 = 0
   DO j = 1, nsd
     c1 = c2 + 1; c2 = j * nns2; r1 = 0; r2 = r1
     DO i = 1, nsd
       r1 = r2 + 1; r2 = i * nns1
-      Ans(r1:r2, c1:c2) = Ans(r1:r2, c1:c2) + &
-        & EvecBar(i, ips) * EvecBar(j, ips) * DummyMat
+      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + &
+        & evecBar(i, ips) * evecBar(j, ips) * DummyMat
     END DO
   END DO
 END DO
-DEALLOCATE (EvecBar, RealVal, DummyMat)
+DEALLOCATE (evecBar, realval, DummyMat)
 END PROCEDURE space_nitsche_mat_4
 
 !----------------------------------------------------------------------------

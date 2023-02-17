@@ -1,13 +1,53 @@
-# This file is a part of easifem-base
-# (c) 2021, Vikas Sharma, Ph.D.
-# All right reserved
+# This program is a part of EASIFEM library
+# Copyright (C) 2020-2021  Vikas Sharma, Ph.D
 #
-# log
-# 16/02/2021 this file was created
-#-----------------------------------------------------------------------
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https: //www.gnu.org/licenses/>
+#
 
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/ElemshapeData_Method.F90
+  ${src_path}/ElemshapeData_ConstructorMethods.F90
+  ${src_path}/ElemshapeData_DGLagrangeMethods.F90
+  ${src_path}/ElemshapeData_DGHermitMethods.F90
+  ${src_path}/ElemshapeData_DGSerendipityMethods.F90
+  ${src_path}/ElemshapeData_DGHierarchyMethods.F90
+  ${src_path}/ElemshapeData_DivergenceMethods.F90
+  ${src_path}/ElemshapeData_GradientMethods.F90
+  ${src_path}/ElemshapeData_GetMethods.F90
+  ${src_path}/ElemshapeData_H1CurlLagrangeMethods.F90
+  ${src_path}/ElemshapeData_H1CurlHermitMethods.F90
+  ${src_path}/ElemshapeData_H1CurlSerendipityMethods.F90
+  ${src_path}/ElemshapeData_H1CurlHierarchyMethods.F90
+  ${src_path}/ElemshapeData_H1DivLagrangeMethods.F90
+  ${src_path}/ElemshapeData_H1DivHermitMethods.F90
+  ${src_path}/ElemshapeData_H1DivHierarchyMethods.F90
+  ${src_path}/ElemshapeData_H1DivSerendipityMethods.F90
+  ${src_path}/ElemshapeData_H1HermitMethods.F90
+  ${src_path}/ElemshapeData_H1HierarchyMethods.F90
+  ${src_path}/ElemshapeData_H1LagrangeMethods.F90
+  ${src_path}/ElemshapeData_H1SerendipityMethods.F90
+  ${src_path}/ElemshapeData_HminHmaxMethods.F90
+  ${src_path}/ElemshapeData_HRGNParamMethods.F90
+  ${src_path}/ElemshapeData_HRQIParamMethods.F90
+  ${src_path}/ElemshapeData_InterpolMethods.F90
+  ${src_path}/ElemshapeData_IOMethods.F90
+  ${src_path}/ElemshapeData_LocalDivergenceMethods.F90
+  ${src_path}/ElemshapeData_LocalGradientMethods.F90
+  ${src_path}/ElemshapeData_ProjectionMethods.F90
+  ${src_path}/ElemshapeData_SetMethods.F90
+  ${src_path}/ElemshapeData_StabilizationParamMethods.F90
+  ${src_path}/ElemshapeData_UnitNormalMethods.F90
 )

@@ -390,13 +390,14 @@ TYPE :: CSRMatrix_
   REAL(DFP), ALLOCATABLE :: A(:)
   TYPE(CSRSparsity_) :: csr
 #ifdef USE_SuperLU
-  TYPE(SuperLU_) :: slu
+  TYPE(SuperLU_), POINTER :: slu => NULL()
 #endif
 END TYPE CSRMatrix_
 
 PUBLIC :: CSRMatrix_
 
-TYPE(CSRMatrix_), PUBLIC, PARAMETER :: TypeCSRMatrix = CSRMatrix_(A=NULL())
+TYPE(CSRMatrix_), PUBLIC, PARAMETER :: TypeCSRMatrix = CSRMatrix_(&
+  & A=NULL(), slu=NULL())
 
 TYPE :: CSRMatrixPointer_
   CLASS(CSRMatrix_), POINTER :: ptr => NULL()

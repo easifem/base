@@ -979,53 +979,55 @@ END PROCEDURE SuperluDisplayStat
 MODULE PROCEDURE SuperluDeallocate
 #ifdef USE_SuperLU
 CHARACTER(LEN=*), PARAMETER :: myName = "SuperluDeallocate()"
-IF (ALLOCATED(obj%slu%rhs)) DEALLOCATE (obj%slu%rhs)
-IF (ALLOCATED(obj%slu%sol)) DEALLOCATE (obj%slu%sol)
-IF (ALLOCATED(obj%slu%etree)) DEALLOCATE (obj%slu%etree)
-IF (ALLOCATED(obj%slu%perm_r)) DEALLOCATE (obj%slu%perm_r)
-IF (ALLOCATED(obj%slu%perm_c)) DEALLOCATE (obj%slu%perm_c)
-IF (ALLOCATED(obj%slu%R)) DEALLOCATE (obj%slu%R)
-IF (ALLOCATED(obj%slu%C)) DEALLOCATE (obj%slu%C)
-IF (ALLOCATED(obj%slu%ferr)) DEALLOCATE (obj%slu%ferr)
-IF (ALLOCATED(obj%slu%berr)) DEALLOCATE (obj%slu%berr)
-IF (ALLOCATED(obj%slu%ia)) DEALLOCATE (obj%slu%ia)
-IF (ALLOCATED(obj%slu%ja)) DEALLOCATE (obj%slu%ja)
-IF (ALLOCATED(obj%slu%nzval)) DEALLOCATE (obj%slu%nzval)
-IF (obj%slu%isAInitiated) THEN
-  CALL Destroy_SuperMatrix_Store(obj%slu%A)
+IF (ASSOCIATED(obj%slu)) THEN
+  IF (ALLOCATED(obj%slu%rhs)) DEALLOCATE (obj%slu%rhs)
+  IF (ALLOCATED(obj%slu%sol)) DEALLOCATE (obj%slu%sol)
+  IF (ALLOCATED(obj%slu%etree)) DEALLOCATE (obj%slu%etree)
+  IF (ALLOCATED(obj%slu%perm_r)) DEALLOCATE (obj%slu%perm_r)
+  IF (ALLOCATED(obj%slu%perm_c)) DEALLOCATE (obj%slu%perm_c)
+  IF (ALLOCATED(obj%slu%R)) DEALLOCATE (obj%slu%R)
+  IF (ALLOCATED(obj%slu%C)) DEALLOCATE (obj%slu%C)
+  IF (ALLOCATED(obj%slu%ferr)) DEALLOCATE (obj%slu%ferr)
+  IF (ALLOCATED(obj%slu%berr)) DEALLOCATE (obj%slu%berr)
+  IF (ALLOCATED(obj%slu%ia)) DEALLOCATE (obj%slu%ia)
+  IF (ALLOCATED(obj%slu%ja)) DEALLOCATE (obj%slu%ja)
+  IF (ALLOCATED(obj%slu%nzval)) DEALLOCATE (obj%slu%nzval)
+  IF (obj%slu%isAInitiated) THEN
+    CALL Destroy_SuperMatrix_Store(obj%slu%A)
+  END IF
+  IF (obj%slu%isBInitiated) THEN
+    CALL Destroy_SuperMatrix_Store(obj%slu%B)
+  END IF
+  IF (obj%slu%isXInitiated) THEN
+    CALL Destroy_SuperMatrix_Store(obj%slu%X)
+  END IF
+  IF (obj%slu%isLInitiated) THEN
+    CALL Destroy_SuperNode_Matrix(obj%slu%L)
+  END IF
+  IF (obj%slu%isUInitiated) THEN
+    CALL Destroy_CompCol_Matrix(obj%slu%U)
+  END IF
+  IF (obj%slu%lwork .NE. 0) THEN
+    CALL Superlu_Free(obj%slu%work)
+  END IF
+  IF (obj%slu%isStatInitiated) THEN
+    CALL StatFree(obj%slu%stat)
+  END IF
+  obj%slu%lwork = 0
+  obj%slu%info = 0
+  obj%slu%recip_pivot_growth = 0.0_DFP
+  obj%slu%rcond = 0.0_DFP
+  obj%slu%isAInitiated = .FALSE.
+  obj%slu%isBInitiated = .FALSE.
+  obj%slu%isXInitiated = .FALSE.
+  obj%slu%isLInitiated = .FALSE.
+  obj%slu%isUInitiated = .FALSE.
+  obj%slu%isGluInitiated = .FALSE.
+  obj%slu%isStatInitiated = .FALSE.
+  DEALLOCATE (obj%slu)
+  obj%slu => NULL()
 END IF
-IF (obj%slu%isBInitiated) THEN
-  CALL Destroy_SuperMatrix_Store(obj%slu%B)
-END IF
-IF (obj%slu%isXInitiated) THEN
-  CALL Destroy_SuperMatrix_Store(obj%slu%X)
-END IF
-IF (obj%slu%isLInitiated) THEN
-  CALL Destroy_SuperNode_Matrix(obj%slu%L)
-END IF
-IF (obj%slu%isUInitiated) THEN
-  CALL Destroy_CompCol_Matrix(obj%slu%U)
-END IF
-IF (obj%slu%lwork .NE. 0) THEN
-  CALL Superlu_Free(obj%slu%work)
-END IF
-IF (obj%slu%isStatInitiated) THEN
-  CALL StatFree(obj%slu%stat)
-END IF
-obj%slu%lwork = 0
-obj%slu%info = 0
-obj%slu%recip_pivot_growth = 0.0_DFP
-obj%slu%rcond = 0.0_DFP
-obj%slu%isAInitiated = .FALSE.
-obj%slu%isBInitiated = .FALSE.
-obj%slu%isXInitiated = .FALSE.
-obj%slu%isLInitiated = .FALSE.
-obj%slu%isUInitiated = .FALSE.
-obj%slu%isGluInitiated = .FALSE.
-obj%slu%isStatInitiated = .FALSE.
-
 #else
-
 CALL ErrorMsg(&
   & msg="This routine requires Superlu library, and &
   & it seems this library is not linked with the easifemBase", &
@@ -1035,7 +1037,6 @@ CALL ErrorMsg(&
   & unitno=stderr &
   & )
 STOP
-
 #endif
 END PROCEDURE SuperluDeallocate
 
@@ -1081,6 +1082,10 @@ PrintStat0 = input(option=PrintStat, default=yes_no_t%NO)
 ! First call
 ! if obj%slu%A is not initiated
 
+IF (.NOT. ASSOCIATED(A%slu)) THEN
+  ALLOCATE (A%slu)
+END IF
+
 IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluA(obj=A)
   CALL InitiateSuperluRHS(obj=A, rhs=B)
@@ -1108,8 +1113,21 @@ ELSE
     ! WE dont perform factorization
     !
     CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, &
-      & Trans=Trans0)
+    ! CALL SetSuperluOptions(obj=A, Fact=Fact_t%FACTORED, &
+    !   & Trans=Trans0)
+    CALL SetSuperluOptions( &
+      & obj=A, &
+      & Equil=Equil0, &
+      & Trans=Trans0, &
+      & ColPerm=ColPerm0, &
+      & Fact=Fact_t%FACTORED, &
+      & IterRefine=IterRefine0, &
+      & PivotGrowth=PivotGrowth0, &
+      & DiagPivotThresh=DiagPivotThresh0, &
+      & SymmetricMode=SymmetricMode0, &
+      & PrintStat=PrintStat0, &
+      & ConditionNumber=ConditionNumber0 &
+      & )
   ELSE
     !
     ! perform factorization
@@ -1119,11 +1137,24 @@ ELSE
     !
     CALL SetSuperluA(obj=A)
     CALL SetSuperluRHS(obj=A, rhs=B)
-    CALL SetSuperluOptions(&
-      & obj=A, &
-      & Fact=Fact_t%SamePattern, &
-      & Trans=Trans0)
+    ! CALL SetSuperluOptions(&
+    !   & obj=A, &
+    !   & Fact=Fact_t%SamePattern, &
+    !   & Trans=Trans0)
     !
+    CALL SetSuperluOptions( &
+      & obj=A, &
+      & Equil=Equil0, &
+      & Trans=Trans0, &
+      & ColPerm=ColPerm0, &
+      & Fact=Fact_t%SamePattern, &
+      & IterRefine=IterRefine0, &
+      & PivotGrowth=PivotGrowth0, &
+      & DiagPivotThresh=DiagPivotThresh0, &
+      & SymmetricMode=SymmetricMode0, &
+      & PrintStat=PrintStat0, &
+      & ConditionNumber=ConditionNumber0 &
+      & )
   END IF
 
 END IF
@@ -1190,6 +1221,10 @@ PrintStat0 = input(option=PrintStat, default=yes_no_t%NO)
 
 ! First call
 ! if obj%slu%A is not initiated
+
+IF (.NOT. ASSOCIATED(A%slu)) THEN
+  ALLOCATE (A%slu)
+END IF
 
 IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluA(obj=A)
@@ -1303,6 +1338,10 @@ PrintStat0 = input(option=PrintStat, default=yes_no_t%NO)
 ! First call
 ! if obj%slu%A is not initiated
 
+IF (.NOT. ASSOCIATED(A%slu)) THEN
+  ALLOCATE (A%slu)
+END IF
+
 IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluA(obj=A)
   CALL InitiateSuperluRHS(obj=A, rhs=B)
@@ -1412,6 +1451,10 @@ PrintStat0 = input(option=PrintStat, default=yes_no_t%NO)
 
 ! First call
 ! if obj%slu%A is not initiated
+
+IF (.NOT. ASSOCIATED(A%slu)) THEN
+  ALLOCATE (A%slu)
+END IF
 
 IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluA(obj=A)

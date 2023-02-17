@@ -32,11 +32,14 @@ PUBLIC :: NitscheMatrix
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_1(Test, Trial, Lambda, Mu, Evec) &
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    CLASS(FEVariable_), INTENT(IN) :: Lambda, Mu, Evec
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
+  MODULE PURE FUNCTION space_nitsche_mat_1(test, trial, lambda, mu, evec) &
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    CLASS(ElemshapeData_), INTENT(IN) :: trial
+    CLASS(FEVariable_), INTENT(IN) :: lambda
+    CLASS(FEVariable_), INTENT(IN) :: mu
+    CLASS(FEVariable_), INTENT(IN) :: evec
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION space_nitsche_mat_1
 END INTERFACE
 
@@ -49,29 +52,12 @@ END INTERFACE NitscheMatrix
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_2(Test, Trial, Alpha, Evec) &
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    CLASS(FEVariable_), INTENT(IN) :: Alpha, Evec
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
-  END FUNCTION space_nitsche_mat_2
-END INTERFACE
-
-INTERFACE NitscheMatrix
-  MODULE PROCEDURE space_nitsche_mat_2
-END INTERFACE NitscheMatrix
-
-!----------------------------------------------------------------------------
-!                                         NitscheMatrix@NitscheMatrixMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_3(Test, Trial, Lambda, Mu, Evec) &
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    CLASS(FEVariable_), INTENT(IN) :: Evec
-    REAL(DFP), INTENT(IN) :: Lambda, Mu
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
+  MODULE PURE FUNCTION space_nitsche_mat_3(test, trial, lambda, mu, evec) &
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    CLASS(FEVariable_), INTENT(IN) :: evec
+    REAL(DFP), INTENT(IN) :: lambda, mu
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION space_nitsche_mat_3
 END INTERFACE
 
@@ -84,30 +70,14 @@ END INTERFACE NitscheMatrix
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_4(Test, Trial, Alpha, Evec) &
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    CLASS(FEVariable_), INTENT(IN) :: Evec
-    REAL(DFP), INTENT(IN) :: Alpha
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
-  END FUNCTION space_nitsche_mat_4
-END INTERFACE
-
-INTERFACE NitscheMatrix
-  MODULE PROCEDURE space_nitsche_mat_4
-END INTERFACE NitscheMatrix
-
-!----------------------------------------------------------------------------
-!                                         NitscheMatrix@NitscheMatrixMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_5(Test, Trial, Lambda, Mu, isNoSlip)&
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    REAL(DFP), INTENT(IN) :: Lambda, Mu
+  MODULE PURE FUNCTION space_nitsche_mat_5(test, trial, lambda, mu, isNoSlip)&
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    REAL(DFP), INTENT(IN) :: lambda, mu
     LOGICAL(LGT), INTENT(IN) :: isNoSlip
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
+    !! this is a dummy variable, It is used only to create distinct interface
+    !! It is not used in the routine
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION space_nitsche_mat_5
 END INTERFACE
 
@@ -120,17 +90,52 @@ END INTERFACE NitscheMatrix
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION space_nitsche_mat_7(Test, Trial, Lambda, Mu, isNoSlip)&
-    & RESULT(Ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: Test, Trial
-    CLASS(FEVariable_), INTENT(IN) :: Lambda, Mu
+  MODULE PURE FUNCTION space_nitsche_mat_7(test, trial, lambda, mu, isNoSlip)&
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    CLASS(FEVariable_), INTENT(IN) :: lambda, mu
     LOGICAL(LGT), INTENT(IN) :: isNoSlip
-    REAL(DFP), ALLOCATABLE :: Ans(:, :)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION space_nitsche_mat_7
 END INTERFACE
 
 INTERFACE NitscheMatrix
   MODULE PROCEDURE space_nitsche_mat_7
+END INTERFACE NitscheMatrix
+
+!----------------------------------------------------------------------------
+!                                         NitscheMatrix@NitscheMatrixMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION space_nitsche_mat_2(test, trial, alpha, evec) &
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    CLASS(FEVariable_), INTENT(IN) :: alpha, evec
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION space_nitsche_mat_2
+END INTERFACE
+
+INTERFACE NitscheMatrix
+  MODULE PROCEDURE space_nitsche_mat_2
+END INTERFACE NitscheMatrix
+
+!----------------------------------------------------------------------------
+!                                         NitscheMatrix@NitscheMatrixMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION space_nitsche_mat_4(test, trial, alpha, evec) &
+    & RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test, trial
+    CLASS(FEVariable_), INTENT(IN) :: evec
+    REAL(DFP), INTENT(IN) :: alpha
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION space_nitsche_mat_4
+END INTERFACE
+
+INTERFACE NitscheMatrix
+  MODULE PROCEDURE space_nitsche_mat_4
 END INTERFACE NitscheMatrix
 
 !----------------------------------------------------------------------------

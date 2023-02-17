@@ -39,14 +39,14 @@ PRIVATE
 
 INTERFACE
   MODULE ELEMENTAL FUNCTION approxeq_1(a, b) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: a, b
+    REAL(REAL64), INTENT(IN) :: a, b
     LOGICAL(LGT) :: ans
   END FUNCTION approxeq_1
 END INTERFACE
 
 INTERFACE
   MODULE ELEMENTAL FUNCTION approxeq_2(a, b) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: a, b
+    REAL(REAL32), INTENT(IN) :: a, b
     LOGICAL(LGT) :: ans
   END FUNCTION approxeq_2
 END INTERFACE
@@ -109,7 +109,6 @@ PUBLIC :: OPERATOR(.APPROXEQR.)
 !
 ! - TODO change the name to approxeqf_1
 ! - TODO add support for the real32 and real64
-
 
 INTERFACE
   MODULE ELEMENTAL FUNCTION approxeq_ulp_real(a, b) RESULT(Ans)
@@ -355,7 +354,7 @@ PUBLIC :: OPERATOR(/=)
 INTERFACE
   MODULE ELEMENTAL SUBROUTINE assign_char_to_int(i, c)
     INTEGER(I4B), INTENT(OUT) :: i
-    CHARACTER(LEN=*), INTENT(IN) :: c
+    CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE
 END INTERFACE
 
@@ -366,7 +365,7 @@ END INTERFACE
 INTERFACE
   MODULE ELEMENTAL SUBROUTINE assign_char_to_bool(b, c)
     LOGICAL(LGT), INTENT(OUT) :: b
-    CHARACTER(LEN=*), INTENT(IN) :: c
+    CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE
 END INTERFACE
 
@@ -377,7 +376,7 @@ END INTERFACE
 INTERFACE
   MODULE ELEMENTAL SUBROUTINE assign_char_to_real(s, c)
     REAL(DFP), INTENT(OUT) :: s
-    CHARACTER(LEN=*), INTENT(IN) :: c
+    CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE
 END INTERFACE
 
@@ -395,7 +394,7 @@ PUBLIC :: ASSIGNMENT(=)
 
 INTERFACE
   MODULE FUNCTION isNumeric(char_str) RESULT(bool)
-    CHARACTER(LEN=*), INTENT(IN) :: char_str
+    CHARACTER(*), INTENT(IN) :: char_str
     LOGICAL(LGT) :: bool
   END FUNCTION
 END INTERFACE

@@ -76,6 +76,7 @@ MODULE PROCEDURE csrMat_AtMatvec
 REAL(DFP), ALLOCATABLE :: y0(:)
 LOGICAL(LGT) :: add0
 REAL(DFP) :: scale0
+INTEGER(I4B) :: m, n
 !
 add0 = INPUT(default=.FALSE., option=addContribution)
 scale0 = input(default=1.0_DFP, option=scale)
@@ -85,7 +86,20 @@ IF (add0) THEN
   IF (isSquare(obj)) THEN
     CALL ATMUX(SIZE(y0), x, y0, obj%A, obj%csr%JA, obj%csr%IA)
   ELSE
-    CALL ATMUXR(SIZE(x), SIZE(y0), x, y0, obj%A, obj%csr%JA, obj%csr%IA)
+    m = SIZE(obj, 2)
+    n = SIZE(obj, 1)
+    IF (SIZE(x) .NE. n .OR. SIZE(y) .NE. m) THEN
+      CALL Errormsg( &
+        & msg="Mismatch in shapes... nrow = "//tostring(n)// &
+        & " ncol = "//tostring(m)//" size(x) = "//tostring(SIZE(x))// &
+        & " size(y) = "//tostring(SIZE(y)), &
+        & file=__FILE__, &
+        & routine="csrMat_AtMatvec()", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      STOP
+    END IF
+    CALL ATMUXR(m, n, x, y0, obj%A, obj%csr%JA, obj%csr%IA)
   END IF
   CALL AXPY(X=y0, Y=y, A=scale0)
   DEALLOCATE (y0)

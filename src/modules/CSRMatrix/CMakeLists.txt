@@ -42,6 +42,7 @@ TARGET_SOURCES(
   ${src_path}/CSRMatrix_Method.F90
   ${src_path}/CSRMatrix_SpectralMethods.F90
   ${src_path}/CSRMatrix_MatrixMarketIO.F90
+  ${src_path}/CSRMatrix_DBCMethods.F90
 )
 
 

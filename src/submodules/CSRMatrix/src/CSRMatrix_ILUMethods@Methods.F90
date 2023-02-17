@@ -37,20 +37,21 @@ s = SHAPE(obj)
 nnz = getNNZ(obj)
 ALLOCATE (JW(2 * s(1)), W(s(1) + 1))
 CALL Reallocate(JU, s(1))
-IWK = nnz + INT(nnz / 10, kind=I4B)
+IWK = 2 * (lfil + 1) * s(1)
 !
-DO
-  CALL Reallocate(ALU, IWK, JLU, IWK)
-  CALL ILUT(s(1), obj%A, obj%csr%JA, obj%csr%IA, lfil, droptol, &
-    & ALU, JLU, JU, IWK, W, JW, ierr)
-  IF (ierr .EQ. -2 .OR. ierr .EQ. -3) THEN
-    IWK = IWK + INT(2 * IWK / 10, kind=I4B)
-  ELSE
-    EXIT
-  END IF
-END DO
+CALL Reallocate(ALU, IWK, JLU, IWK)
+!
+CALL ILUT(s(1), obj%A, obj%csr%JA, obj%csr%IA, lfil, droptol, &
+  & ALU, JLU, JU, IWK, W, JW, ierr)
 !
 SELECT CASE (ierr)
+CASE (1:)
+  CALL ErrorMSG( &
+    & "zero pivot encountered at step number = "//tostring(ierr), &
+    & "CSRMatrix_Method@ILUMethods.F90", &
+    & "csrMat_getILUT1()", &
+    & __LINE__, stderr)
+  STOP
 CASE (-1)
   CALL ErrorMSG( &
     & "Input matrix may be wrong. (The elimination process has generated a &
@@ -61,7 +62,7 @@ CASE (-1)
   STOP
 CASE (-2)
   CALL ErrorMSG( &
-    & "The matrix L overflows the array AL", &
+    & "The matrix L overflows the array ALU", &
     & "CSRMatrix_Method@ILUMethods.F90", &
     & "csrMat_getILUT1()", &
     & __LINE__, stderr)
@@ -224,9 +225,10 @@ END PROCEDURE csrMat_getILUTP2
 !> subroutine ilud(n,a,ja,ia,alph,tol,alu,jlu,ju,iwk,w,jw,ierr)
 
 MODULE PROCEDURE csrMat_getILUD1
-INTEGER(I4B) :: nnz, s(2), ierr, IWK, k
+INTEGER(I4B) :: nnz, s(2), ierr, IWK, k, iter
 INTEGER(I4B), ALLOCATABLE :: JW(:)
 REAL(DFP), ALLOCATABLE :: W(:)
+INTEGER(I4B), PARAMETER :: maxIter = 5
 !
 s = SHAPE(obj)
 nnz = getNNZ(obj)
@@ -234,18 +236,25 @@ ALLOCATE (JW(2 * s(1)), W(2 * s(1)))
 CALL Reallocate(JU, s(1))
 IWK = nnz + INT(nnz / 10, kind=I4B)
 !
-DO
+DO iter = 1, maxIter
   CALL Reallocate(ALU, IWK, JLU, IWK)
   CALL ILUD(s(1), obj%A, obj%csr%JA, obj%csr%IA, alpha, droptol, &
     & ALU, JLU, JU, IWK, W, JW, ierr)
-  IF (ierr .EQ. -2 .OR. ierr .EQ. -3) THEN
-    IWK = IWK + INT(2 * IWK / 10, kind=I4B)
+  IF (ierr .EQ. -2) THEN
+    IWK = IWK + INT(IWK / 10, kind=I4B)
   ELSE
     EXIT
   END IF
 END DO
 !
 SELECT CASE (ierr)
+CASE (1:)
+  CALL ErrorMSG( &
+    & "zero pivot encountered at step number = "//tostring(ierr), &
+    & "CSRMatrix_Method@ILUMethods.F90", &
+    & "csrMat_getILUD1()", &
+    & __LINE__, stderr)
+  STOP
 CASE (-1)
   CALL ErrorMSG( &
     & "Input matrix may be wrong. (The elimination process has generated a &
