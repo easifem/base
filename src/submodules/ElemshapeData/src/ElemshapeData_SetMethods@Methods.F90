@@ -61,11 +61,11 @@ MODULE PROCEDURE elemsd_setJs
 ! Define internal variable
 INTEGER(I4B) :: xidim, nsd, nips, ips
 REAL(DFP) :: aa, bb, ab
-  !!
+!
 xidim = obj%RefElem%XiDimension
 nsd = obj%RefElem%nsd
 nips = SIZE(obj%N, 2)
-  !!
+!
 DO ips = 1, nips
   IF (nsd .EQ. xidim) THEN
     obj%Js(ips) = det(obj%Jacobian(:, :, ips))
@@ -132,7 +132,7 @@ MODULE PROCEDURE stsd_setdNTdt
 REAL(DFP), ALLOCATABLE :: v(:, :)
 INTEGER(I4B) :: ip
 
-  !! get mesh velocity at space integration points
+! get mesh velocity at space integration points
 v = MATMUL(MATMUL(val, obj%dTdTheta / obj%Jt), obj%N)
 CALL Reallocate(obj%dNTdt, SIZE(obj%N, 1), SIZE(obj%T), &
   & SIZE(obj%N, 2))
@@ -147,19 +147,19 @@ END PROCEDURE stsd_setdNTdt
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE stsd_setdNTdXt
-  !!
+!
 INTEGER(I4B) :: ip, j
 REAL(DFP), ALLOCATABLE :: Q(:, :), Temp(:, :)
-  !!
+!
 CALL Reallocate(obj%dNTdXt, SIZE(obj%N, 1), SIZE(obj%T), &
   & SIZE(obj%Jacobian, 1), SIZE(obj%N, 2))
-  !!
+!
 IF (obj%RefElem%XiDimension .NE. obj%RefElem%NSD) THEN
   RETURN
 END IF
-  !!
+!
 Q = obj%Jacobian(:, :, 1)
-  !!
+!
 DO ip = 1, SIZE(obj%N, 2)
   CALL INV(A=obj%Jacobian(:, :, ip), INVA=Q)
   Temp = MATMUL(obj%dNdXi(:, :, ip), Q)
@@ -167,9 +167,9 @@ DO ip = 1, SIZE(obj%N, 2)
     obj%dNTdXt(:, :, j, ip) = OUTERPROD(Temp(:, j), obj%T)
   END DO
 END DO
-  !!
+!
 DEALLOCATE (Q, Temp)
-  !!
+!
 END PROCEDURE stsd_setdNTdXt
 
 !----------------------------------------------------------------------------
@@ -188,33 +188,38 @@ END PROCEDURE elemsd_set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_set2
-  !!
 INTEGER(I4B), ALLOCATABLE :: facetNptrs(:)
-  !!
+
 CALL setJacobian(obj=cellobj, val=cellVal, dNdXi=celldNdXi)
 CALL setJs(obj=cellobj)
 CALL setdNdXt(obj=cellobj)
 CALL setBarycentricCoord(obj=cellobj, val=cellval, N=cellN)
-  !!
+
 facetNptrs = getConnectivity(facetobj%refelem)
-  !!
+
 CALL setJacobian(obj=facetobj, val=cellVal(:, facetNptrs), &
   & dNdXi=facetdNdXi)
 CALL setJs(obj=facetobj)
 CALL setBarycentricCoord(obj=facetobj, val=cellval(:, facetNptrs), &
   & N=facetN)
-  !!
+
 CALL setNormal(obj=facetobj)
-  !!
-  !!
-  !! gradient depends upon all nodes of the element
-  !! therefore the SIZE( dNdXt, 1 ) = NNS of cell
-  !!
+
+! gradient depends upon all nodes of the element
+! therefore the SIZE( dNdXt, 1 ) = NNS of cell
+
 ! CALL Reallocate( facetobj%dNdXt, SHAPE( cellobj%dNdXt) )
 facetobj%dNdXt = cellobj%dNdXt(:, :, :)
-  !!
+
+!
+! I am copying normal Js from facet to cell
+! In this way, we can use cellobj to construct the element matrix
+!
+cellobj%normal = facetobj%normal
+cellobj%Js = facetobj%Js
+cellobj%Ws = facetobj%Ws
+
 IF (ALLOCATED(facetNptrs)) DEALLOCATE (facetNptrs)
-  !!
 END PROCEDURE elemsd_set2
 
 !----------------------------------------------------------------------------
@@ -222,7 +227,7 @@ END PROCEDURE elemsd_set2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_set3
-  !!
+!
 CALL Set( &
   & facetobj=masterFacetObj, &
   & cellobj=masterCellObj, &
@@ -231,7 +236,7 @@ CALL Set( &
   & celldNdXi=masterCelldNdXi, &
   & facetN=masterFacetN, &
   & facetdNdXi=masterFacetdNdXi)
-  !!
+!
 CALL Set( &
   & facetobj=slaveFacetObj, &
   & cellobj=slaveCellObj, &
@@ -240,7 +245,7 @@ CALL Set( &
   & celldNdXi=slaveCelldNdXi, &
   & facetN=slaveFacetN, &
   & facetdNdXi=slaveFacetdNdXi)
-  !!
+!
 END PROCEDURE elemsd_set3
 
 !----------------------------------------------------------------------------
@@ -263,21 +268,21 @@ END PROCEDURE stelemsd_set1
 MODULE PROCEDURE elemsd_setNormal
 REAL(DFP) :: vec(3, 3)
 INTEGER(I4B) :: i, xidim, nsd
-  !!
-  !!
-  !!
+!
+!
+!
 vec = 0.0_DFP
 vec(3, 2) = 1.0_DFP
-  !!
+!
 xidim = obj%RefElem%XiDimension
 nsd = obj%refElem%nsd
-  !!
+!
 DO i = 1, SIZE(obj%N, 2)
   Vec(1:nsd, 1:xidim) = obj%Jacobian(1:nsd, 1:xidim, i)
   obj%Normal(:, i) = &
     & VectorProduct(Vec(:, 1), Vec(:, 2)) / obj%Js(i)
 END DO
-  !!
+!
 END PROCEDURE elemsd_setNormal
 
 !----------------------------------------------------------------------------

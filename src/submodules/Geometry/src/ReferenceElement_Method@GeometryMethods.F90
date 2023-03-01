@@ -1245,6 +1245,7 @@ END PROCEDURE Local_nodecoord_refelem
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex
+INTEGER(I4B)  :: elemType
 Ans = 0.0_DFP
 SELECT TYPE (refelem)
 TYPE IS (ReferencePoint_)
@@ -1263,6 +1264,25 @@ TYPE IS (ReferencePrism_)
   Ans = Measure_Simplex_Prism(refelem, xij)
 TYPE IS (ReferencePyramid_)
   Ans = Measure_Simplex_Pyramid(refelem, xij)
+CLASS DEFAULT
+elemType = refelem%name
+IF( isPoint(elemType)  ) then
+  Ans = Measure_Simplex_Point(refelem, xij)
+elseif(isLine(elemType) ) then
+  Ans = Measure_Simplex_Line(refelem, xij)
+elseif(isTriangle(elemType) ) then
+  Ans = Measure_Simplex_Triangle(refelem, xij)
+elseif(isQuadrangle(elemType) ) then
+  Ans = Measure_Simplex_Quadrangle(refelem, xij)
+elseif(isTetrahedron(elemType) ) then
+  Ans = Measure_Simplex_Tetrahedron(refelem, xij)
+elseif(isHexahedron(elemType) ) then
+  Ans = Measure_Simplex_Hexahedron(refelem, xij)
+elseif(isPrism(elemType) ) then
+  Ans = Measure_Simplex_Prism(refelem, xij)
+elseif(isPyramid(elemType) ) then
+  Ans = Measure_Simplex_Pyramid(refelem, xij)
+endif
 END SELECT
 END PROCEDURE Measure_Simplex
 
@@ -1309,6 +1329,12 @@ CLASS IS (ReferenceQuadrangle_)
   CALL Display("ERROR:: ReferenceElement_Method@Geometry.F90")
   CALL Display("          Contains_point()")
   CALL Display("            No case found for Quadrangle_")
+  CALL Display("            Program stopped!!")
+  STOP
+CLASS DEFAULT
+  CALL Display("ERROR:: ReferenceElement_Method@Geometry.F90")
+  CALL Display("          Contains_point()")
+  CALL Display("            No case found")
   CALL Display("            Program stopped!!")
   STOP
 END SELECT

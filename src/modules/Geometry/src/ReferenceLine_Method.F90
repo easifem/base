@@ -221,7 +221,7 @@ PUBLIC :: highorderElement_Line
 
 INTERFACE
   MODULE PURE FUNCTION Measure_Simplex_Line(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceLine_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex_Line
@@ -235,7 +235,7 @@ PUBLIC :: Measure_Simplex_Line
 
 INTERFACE
   MODULE FUNCTION Line_Quality(refelem, xij, measure) RESULT(Ans)
-    CLASS(ReferenceLine_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans

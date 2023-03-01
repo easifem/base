@@ -154,8 +154,8 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/STConvectiveMatrix/CMakeLists.txt)
 #StiffnessMatrix
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/StiffnessMatrix/CMakeLists.txt)
 
-#NitscheMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/NitscheMatrix/CMakeLists.txt)
+#ElasticNitscheMatrix
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ElasticNitscheMatrix/CMakeLists.txt)
 
 #FacetMatrix
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FacetMatrix/CMakeLists.txt)

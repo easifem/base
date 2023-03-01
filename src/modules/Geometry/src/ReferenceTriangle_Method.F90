@@ -209,7 +209,7 @@ PUBLIC :: highorderElement_Triangle
 
 INTERFACE
   MODULE PURE FUNCTION Measure_Simplex_Triangle(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex_Triangle
@@ -227,7 +227,7 @@ PUBLIC :: Measure_Simplex_Triangle
 
 INTERFACE
   MODULE PURE FUNCTION triangle_angles(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
   END FUNCTION triangle_angles
@@ -249,7 +249,7 @@ PUBLIC :: Angles
 
 INTERFACE
   MODULE PURE FUNCTION triangle_area(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
   END FUNCTION triangle_area
@@ -271,7 +271,7 @@ PUBLIC :: Area
 
 INTERFACE
   MODULE PURE FUNCTION triangle_arealVector(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
   END FUNCTION triangle_arealVector
@@ -293,7 +293,7 @@ PUBLIC :: ArealVector
 
 INTERFACE
   MODULE PURE FUNCTION triangle_barycentric(refelem, xij, x) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: Ans(3)
@@ -316,7 +316,7 @@ PUBLIC :: Barycentric
 
 INTERFACE
   MODULE PURE FUNCTION triangle_centroid(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
   END FUNCTION triangle_centroid
@@ -338,7 +338,7 @@ PUBLIC :: Centroid
 
 INTERFACE
   MODULE PURE FUNCTION triangle_circumcentre(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
   END FUNCTION triangle_circumcentre
@@ -360,7 +360,7 @@ PUBLIC :: CircumCenter
 
 INTERFACE
   MODULE PURE FUNCTION triangle_circumcircle(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(4)
     !! Ans(1) = radius and Ans(2:4) center
@@ -379,7 +379,7 @@ PUBLIC :: CircumCircle
 
 INTERFACE
   MODULE PURE FUNCTION triangle_circumradius(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
   END FUNCTION triangle_circumradius
@@ -398,7 +398,7 @@ PUBLIC :: CircumRadius
 INTERFACE
   MODULE PURE SUBROUTINE triangle_contains_line(refelem, xij, x1, x2, &
     & parametricLine, inside, xint)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :), x1(3), x2(3)
     LOGICAL(LGT), INTENT(IN) :: parametricLine
     LOGICAL(LGT), INTENT(OUT) :: inside
@@ -418,7 +418,7 @@ PUBLIC :: ContainsLine
 
 INTERFACE
   MODULE PURE FUNCTION triangle_contains_point(refelem, xij, x) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
     LOGICAL(LGT) :: Ans
   END FUNCTION triangle_contains_point
@@ -432,7 +432,7 @@ PUBLIC :: triangle_contains_point
 
 INTERFACE
   MODULE PURE FUNCTION triangle_diameter(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
   END FUNCTION triangle_diameter
@@ -450,7 +450,7 @@ PUBLIC :: diameter
 
 INTERFACE
   MODULE PURE FUNCTION triangle_edge_length(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
   END FUNCTION triangle_edge_length
@@ -468,7 +468,7 @@ PUBLIC :: EdgeLength
 
 INTERFACE
   MODULE PURE FUNCTION triangle_incenter(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
   END FUNCTION triangle_incenter
@@ -486,7 +486,7 @@ PUBLIC :: Incenter
 
 INTERFACE
   MODULE PURE FUNCTION triangle_incircle(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(4)
   END FUNCTION triangle_incircle
@@ -504,7 +504,7 @@ PUBLIC :: Incircle
 
 INTERFACE
   MODULE PURE FUNCTION triangle_inradius(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
   END FUNCTION triangle_inradius
@@ -522,7 +522,7 @@ PUBLIC :: Inradius
 
 INTERFACE
   MODULE PURE FUNCTION triangle_orthocenter(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans(3)
   END FUNCTION triangle_orthocenter
@@ -541,7 +541,7 @@ PUBLIC :: Orthocenter
 INTERFACE
   MODULE PURE FUNCTION triangle_point_dist(refelem, xij, x) &
     & RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
     REAL(DFP) :: Ans
   END FUNCTION triangle_point_dist
@@ -559,7 +559,7 @@ PUBLIC :: DistanceFromPoint
 
 INTERFACE
   MODULE PURE SUBROUTINE triangle_get_nearest_point(refelem, xij, x, xn, dist)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :), x(:)
     REAL(DFP), INTENT(INOUT) :: xn(:)
     REAL(DFP), INTENT(OUT) :: dist
@@ -579,7 +579,7 @@ PUBLIC :: NearestPoint
 INTERFACE
   MODULE PURE FUNCTION triangle_random_point(refelem, xij, n, seed) &
     & RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: n
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: seed
@@ -599,7 +599,7 @@ PUBLIC :: RandomPoint
 
 INTERFACE
   MODULE PURE FUNCTION triangle_quality(refelem, xij, measure) RESULT(Ans)
-    CLASS(ReferenceTriangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans

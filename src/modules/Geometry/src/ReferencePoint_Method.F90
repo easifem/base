@@ -30,7 +30,7 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
+! date:         1 March 2021
 ! summary: This subroutine constructs an instance of point reference element
 !
 !# Introduction
@@ -40,7 +40,7 @@ PRIVATE
 ! used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
+!         Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
 ! Also note that this routine creats a linear element.
 !@endnote
 !
@@ -55,14 +55,14 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE refPoint_Initiate( obj, NSD, XiJ )
-  CLASS( ReferencePoint_ ), INTENT( INOUT ) :: obj
+  MODULE PURE SUBROUTINE refPoint_Initiate(obj, NSD, XiJ)
+    CLASS(ReferencePoint_), INTENT(INOUT) :: obj
     !! The instance
-  INTEGER( I4B ), INTENT( IN ) :: NSD
+    INTEGER(I4B), INTENT(IN) :: NSD
     !! Spatial dimension of the problem
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     !! Coords of element
-END SUBROUTINE refPoint_Initiate
+  END SUBROUTINE refPoint_Initiate
 END INTERFACE
 
 INTERFACE Initiate
@@ -76,7 +76,7 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: This routine constructs an instance of Point reference element
 !
 !# Introduction
@@ -86,7 +86,7 @@ PUBLIC :: Initiate
 ! RESHAPE( [0.0, 0.0, 0.0], [3, 1] ) is used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
+!         Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
 !@endnote
 !
 !### Usage
@@ -98,11 +98,11 @@ PUBLIC :: Initiate
 !```
 
 INTERFACE
-MODULE PURE FUNCTION refPoint_Constructor1(NSD, XiJ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferencePoint_ ) :: obj
-END FUNCTION refPoint_Constructor1
+  MODULE PURE FUNCTION refPoint_Constructor1(NSD, XiJ) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    TYPE(ReferencePoint_) :: obj
+  END FUNCTION refPoint_Constructor1
 END INTERFACE
 
 INTERFACE ReferencePoint
@@ -116,7 +116,7 @@ PUBLIC :: ReferencePoint
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
+! date:         3 March 2021
 ! summary: Constructs a pointer to an instance of point reference element
 !
 !# Introduction
@@ -127,7 +127,7 @@ PUBLIC :: ReferencePoint
 ! 0.0_DFP, 0.0_DFP, 0.0_DFP], [3, 1] ) is used.
 !
 !@note
-! 	Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
+!         Note that SIZE(XiJ,1) should be equal to 3, i.e., x,y,z coord.
 !@endnote
 !
 !### Usage
@@ -139,11 +139,11 @@ PUBLIC :: ReferencePoint
 !```
 
 INTERFACE
-MODULE PURE FUNCTION refPoint_Constructor_1(NSD, XiJ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferencePoint_ ), POINTER :: obj
-END FUNCTION refPoint_Constructor_1
+  MODULE PURE FUNCTION refPoint_Constructor_1(NSD, XiJ) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    CLASS(ReferencePoint_), POINTER :: obj
+  END FUNCTION refPoint_Constructor_1
 END INTERFACE
 
 INTERFACE ReferencePoint_Pointer
@@ -176,15 +176,15 @@ PUBLIC :: ReferencePoint_Pointer
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE highOrderElement_Point( RefElem, Order, obj, ipType )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
+  MODULE PURE SUBROUTINE highOrderElement_Point(RefElem, Order, obj, ipType)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
     !! Linear line element
-  INTEGER( I4B ), INTENT( IN ) :: Order
+    INTEGER(I4B), INTENT(IN) :: Order
     !! Order or generated element
-  CLASS( ReferenceElement_ ),  INTENT( INOUT ) ::  obj
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     !! High order lagrange line element
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-END SUBROUTINE highOrderElement_Point
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highOrderElement_Point
 END INTERFACE
 
 PUBLIC :: highOrderElement_Point
@@ -194,8 +194,8 @@ PUBLIC :: highOrderElement_Point
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 March 2021
-! summary: 	This function returns the measure of linear point element
+! date:         3 March 2021
+! summary:         This function returns the measure of linear point element
 !
 !# Introduction
 !
@@ -213,11 +213,11 @@ PUBLIC :: highOrderElement_Point
 !```
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Point( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferencePoint_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Point
+  MODULE PURE FUNCTION Measure_Simplex_Point(RefElem, XiJ) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    REAL(DFP), INTENT(IN) :: XiJ(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex_Point
 END INTERFACE
 
 PUBLIC :: Measure_Simplex_Point
@@ -227,12 +227,12 @@ PUBLIC :: Measure_Simplex_Point
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Point_Quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferencePoint_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION Point_Quality
+  MODULE FUNCTION Point_Quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferencePoint_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION Point_Quality
 END INTERFACE
 
 PUBLIC :: Point_Quality

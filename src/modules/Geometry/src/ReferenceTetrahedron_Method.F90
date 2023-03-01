@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: This module contains methods for [[ReferenceTetrahedron_]]
 
 MODULE ReferenceTetrahedron_Method
@@ -25,13 +25,12 @@ USE BaseType
 IMPLICIT NONE
 PRIVATE
 
-
 !----------------------------------------------------------------------------
 !                                                       Initiate@Tetrahedron
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
+! date:         1 March 2021
 ! summary: This subroutine for constructing the object
 !
 !### Usage
@@ -41,11 +40,11 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Tetrahedron( obj, NSD, XiJ )
-  CLASS( ReferenceTetrahedron_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
-END SUBROUTINE initiate_ref_Tetrahedron
+  MODULE PURE SUBROUTINE initiate_ref_Tetrahedron(obj, NSD, XiJ)
+    CLASS(ReferenceTetrahedron_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  END SUBROUTINE initiate_ref_Tetrahedron
 END INTERFACE
 
 INTERFACE Initiate
@@ -59,11 +58,11 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Tetrahedron( NSD, XiJ ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferenceTetrahedron_ ) :: obj
-END FUNCTION reference_Tetrahedron
+  MODULE PURE FUNCTION reference_Tetrahedron(NSD, XiJ) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    TYPE(ReferenceTetrahedron_) :: obj
+  END FUNCTION reference_Tetrahedron
 END INTERFACE
 
 INTERFACE ReferenceTetrahedron
@@ -77,11 +76,11 @@ PUBLIC :: ReferenceTetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Tetrahedron_Pointer( NSD, XiJ ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferenceTetrahedron_ ), POINTER :: obj
-END FUNCTION reference_Tetrahedron_Pointer
+  MODULE PURE FUNCTION reference_Tetrahedron_Pointer(NSD, XiJ) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    CLASS(ReferenceTetrahedron_), POINTER :: obj
+  END FUNCTION reference_Tetrahedron_Pointer
 END INTERFACE
 
 INTERFACE ReferenceTetrahedron_Pointer
@@ -95,13 +94,13 @@ PUBLIC :: ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE highOrderElement_Tetrahedron( RefElem, Order, obj, &
-  & ipType )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-END SUBROUTINE highOrderElement_Tetrahedron
+  MODULE PURE SUBROUTINE highOrderElement_Tetrahedron(RefElem, Order, obj, &
+    & ipType)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    INTEGER(I4B), INTENT(IN) :: Order
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highOrderElement_Tetrahedron
 END INTERFACE
 
 PUBLIC :: highOrderElement_Tetrahedron
@@ -111,11 +110,11 @@ PUBLIC :: highOrderElement_Tetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Tetrahedron( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferenceTetrahedron_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Tetrahedron
+  MODULE PURE FUNCTION Measure_Simplex_Tetrahedron(RefElem, XiJ) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    REAL(DFP), INTENT(IN) :: XiJ(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex_Tetrahedron
 END INTERFACE
 
 PUBLIC :: Measure_Simplex_Tetrahedron
@@ -125,12 +124,12 @@ PUBLIC :: Measure_Simplex_Tetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Tetrahedron_Quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( Referencetetrahedron_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION Tetrahedron_Quality
+  MODULE FUNCTION Tetrahedron_Quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION Tetrahedron_Quality
 END INTERFACE
 
 PUBLIC :: Tetrahedron_Quality

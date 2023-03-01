@@ -18,5 +18,9 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/NitscheMatrix_Method.F90
-)
+  ${src_path}/ElasticNitscheMatrix_Method@Matrix1.F90
+  ${src_path}/ElasticNitscheMatrix_Method@Matrix2.F90
+  ${src_path}/ElasticNitscheMatrix_Method@Matrix3.F90
+  ${src_path}/ElasticNitscheMatrix_Method@MatrixNormal.F90
+  ${src_path}/ElasticNitscheMatrix_Method@MatrixTangent.F90
+  )

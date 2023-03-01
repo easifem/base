@@ -178,7 +178,7 @@ PUBLIC :: highorderElement_Quadrangle
 
 INTERFACE
   MODULE PURE FUNCTION Measure_Simplex_Quadrangle(refelem, xij) RESULT(Ans)
-    CLASS(ReferenceQuadrangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex_Quadrangle
@@ -192,7 +192,7 @@ PUBLIC :: Measure_Simplex_Quadrangle
 
 INTERFACE
   MODULE FUNCTION Quadrangle_Quality(refelem, xij, measure) RESULT(Ans)
-    CLASS(ReferenceQuadrangle_), INTENT(IN) :: refelem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans

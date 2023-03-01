@@ -853,7 +853,6 @@ CALL dgssvx(&
   & L=obj%slu%L, &
   & U=obj%slu%U, &
   & Work=obj%slu%Work, &
-  & lwork=obj%slu%lwork, &
   & B=obj%slu%B, &
   & X=obj%slu%X, &
   & recip_pivot_growth=obj%slu%recip_pivot_growth, &
@@ -863,6 +862,7 @@ CALL dgssvx(&
   & Glu=obj%slu%Glu, &
   & mem_usage=obj%slu%mem_usage, &
   & stat=obj%slu%stat, &
+  & lwork=obj%slu%lwork, &
   & info=obj%slu%info)
 
 obj%slu%isLInitiated = .TRUE.
@@ -955,6 +955,8 @@ IF (obj%slu%options%PrintStat .EQ. yes_no_t%YES) THEN
     END DO
   END IF
   CALL StatPrint(obj%slu%stat)
+ CALL Display(obj%slu%mem_usage%total_needed / 1.0E+6, "total size needed = ")
+  ! WRITE (*, *) "total needed = ", A%slu%mem_usage%total_needed
 END IF
 
 #else
@@ -1106,6 +1108,16 @@ IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluDGSSVXParam(obj=A)
   CALL StatInit(A%slu%stat)
   A%slu%isStatInitiated = .TRUE.
+
+  ! new thing here
+  ! A%slu%lwork = -1
+  ! CALL SuperluDGSSVX(obj=A)
+  ! WRITE (*, *) "total needed = ", A%slu%mem_usage%total_needed
+  ! WRITE (*, *) "info = ", A%slu%info
+  ! WRITE (*, *) "info = ", A%slu%A%ncol
+  ! STOP
+  ! new thing stop here
+
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
   IF (isFactored0) THEN
@@ -1426,6 +1438,22 @@ INTEGER(I4B) :: Equil0
 INTEGER(I4B) :: SymmetricMode0
 INTEGER(I4B) :: PrintStat0
 INTEGER(I4B) :: ii, nrhs
+!
+! void *superlu_malloc(size_t size)
+! {
+!     void *buf;
+!     buf = (void *) malloc(size);
+!     return (buf);
+! }
+
+INTERFACE
+  FUNCTION superlu_malloc(size) RESULT(ans) &
+    & BIND(C, name="superlu_malloc")
+    IMPORT :: C_PTR, C_SIZE_T
+    TYPE(C_PTR) :: ans
+    INTEGER(C_SIZE_T) :: size
+  END FUNCTION superlu_malloc
+END INTERFACE
 
 CALL CheckErrorCSRMatrix( &
   & obj=A, &
@@ -1476,6 +1504,17 @@ IF (.NOT. A%slu%isAInitiated) THEN
   CALL InitiateSuperluDGSSVXParam(obj=A)
   CALL StatInit(A%slu%stat)
   A%slu%isStatInitiated = .TRUE.
+
+  ! new thing here
+  A%slu%lwork = -1
+  CALL SuperluDGSSVX(obj=A)
+  WRITE (*, *) "total needed = ", A%slu%mem_usage%total_needed
+  WRITE (*, *) "info = ", A%slu%info
+  WRITE (*, *) "info = ", A%slu%A%ncol
+  A%slu%lwork = INT(A%slu%mem_usage%total_needed, kind=C_SIZE_T)
+ A%slu%work = superlu_malloc(INT(A%slu%mem_usage%total_needed, kind=C_SIZE_T))
+  STOP
+  ! new thing stop here
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
   IF (isFactored0) THEN

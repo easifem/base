@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_ConstructorMethods
+MODULE ElemshapeData_ConstructorMethods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
@@ -77,9 +77,9 @@ INTERFACE
     !! Quadrature points
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! reference element
-    CHARACTER(LEN=*), INTENT(IN) :: continuityType
+    CHARACTER(*), INTENT(IN) :: continuityType
     !! continuity/ conformity of shape function
-    CHARACTER(LEN=*), INTENT(IN) :: interpolType
+    CHARACTER(*), INTENT(IN) :: interpolType
     !! interpolation/polynomial family type
   END SUBROUTINE elemsd_initiate1
 END INTERFACE
@@ -265,7 +265,7 @@ END INTERFACE DEALLOCATE
 
 INTERFACE
   MODULE FUNCTION elemsd_BaseInterpolation(childName) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: childName
+    CHARACTER(*), INTENT(IN) :: childName
     CLASS(BaseInterpolation_), POINTER :: ans
   END FUNCTION elemsd_BaseInterpolation
 END INTERFACE
@@ -284,7 +284,7 @@ END INTERFACE BaseInterpolation
 
 INTERFACE
   MODULE FUNCTION elemsd_BaseContinuity(childName) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: childName
+    CHARACTER(*), INTENT(IN) :: childName
     CLASS(BaseContinuity_), POINTER :: ans
   END FUNCTION elemsd_BaseContinuity
 END INTERFACE
@@ -293,4 +293,4 @@ INTERFACE BaseContinuity
   MODULE PROCEDURE elemsd_BaseContinuity
 END INTERFACE BaseContinuity
 
-end module ElemshapeData_ConstructorMethods
+END MODULE ElemshapeData_ConstructorMethods

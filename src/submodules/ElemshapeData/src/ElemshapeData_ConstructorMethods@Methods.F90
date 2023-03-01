@@ -368,8 +368,8 @@ IF (ALLOCATED(obj%Js)) DEALLOCATE (obj%Js)
 IF (ALLOCATED(obj%Ws)) DEALLOCATE (obj%Ws)
 IF (ALLOCATED(obj%Thickness)) DEALLOCATE (obj%Thickness)
 IF (ALLOCATED(obj%Coord)) DEALLOCATE (obj%Coord)
-CALL Deallocate (obj%Quad)
-CALL Deallocate (obj%refelem)
+CALL DEALLOCATE (obj%Quad)
+CALL DEALLOCATE (obj%refelem)
   !!
 SELECT TYPE (obj)
 TYPE IS (STElemShapeData_)
@@ -433,4 +433,3 @@ END PROCEDURE elemsd_BaseContinuity
 !----------------------------------------------------------------------------
 
 END SUBMODULE Methods
-

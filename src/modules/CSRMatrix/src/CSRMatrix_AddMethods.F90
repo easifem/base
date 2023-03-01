@@ -14,7 +14,6 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-
 MODULE CSRMatrix_AddMethods
 USE GlobalData, ONLY: I4B, DFP, LGT
 USE BaseType, ONLY: CSRMatrix_
@@ -30,11 +29,11 @@ PUBLIC :: Add
 ! summary: This subroutine add contribution
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_add0(obj, nodenum, value, scale)
+  MODULE PURE SUBROUTINE csrMat_add0(obj, nodenum, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     !! Node numbers
-    REAL(DFP), INTENT(IN) :: value(:, :)
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
     !! Element finite element matrix
     REAL(DFP), INTENT(IN) :: scale
     !! Scale is used to scale the Val before adding it to the obj
@@ -54,11 +53,11 @@ END INTERFACE Add
 ! summary: This subroutine add contribution
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_add1(obj, nodenum, value, scale, storageFMT)
+  MODULE PURE SUBROUTINE csrMat_add1(obj, nodenum, VALUE, scale, storageFMT)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
     !! Node numbers
-    REAL(DFP), INTENT(IN) :: value(:, :)
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
     !! Element finite element matrix
     REAL(DFP), INTENT(IN) :: scale
     !! Scale is used to scale the Val before adding it to the obj
@@ -84,9 +83,9 @@ END INTERFACE Add
 ! This routine signifies `obj=obj+scale*value`.
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_add2(obj, value, scale)
+  MODULE PURE SUBROUTINE csrMat_add2(obj, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add2
 END INTERFACE
@@ -112,11 +111,11 @@ END INTERFACE Add
 ! should be avoided by general user.
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_add3(obj, irow, icolumn, value, scale)
+  MODULE PURE SUBROUTINE csrMat_add3(obj, irow, icolumn, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     INTEGER(I4B), INTENT(IN) :: icolumn
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add3
 END INTERFACE
@@ -143,13 +142,13 @@ END INTERFACE Add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add4(obj, iNodeNum, jNodeNum, idof, &
-    & jdof, value, scale)
+    & jdof, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     INTEGER(I4B), INTENT(IN) :: jNodeNum
     INTEGER(I4B), INTENT(IN) :: idof
     INTEGER(I4B), INTENT(IN) :: jdof
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add4
 END INTERFACE
@@ -167,10 +166,10 @@ END INTERFACE Add
 ! summary: This subroutine add the selected value in sparse matrix
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_add5(obj, nodenum, value, scale)
+  MODULE PURE SUBROUTINE csrMat_add5(obj, nodenum, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add5
 END INTERFACE
@@ -200,13 +199,13 @@ END INTERFACE Add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add6(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, value, scale)
+    & ivar, jvar, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: jvar
-    REAL(DFP), INTENT(IN) :: value(:, :)
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add6
 END INTERFACE
@@ -245,7 +244,7 @@ END INTERFACE add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add7(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, value, scale)
+    & jvar, iDOF, jDOF, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -259,7 +258,7 @@ INTERFACE
     !! row degree of freedom
     INTEGER(I4B), INTENT(IN) :: jDOF
     !! col degree of freedom
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add7
@@ -279,7 +278,7 @@ END INTERFACE add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add8(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, value, scale)
+    & jvar, iDOF, jDOF, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -293,7 +292,7 @@ INTERFACE
     !! row degree of freedom
     INTEGER(I4B), INTENT(IN) :: jDOF
     !! col degree of freedom
-    REAL(DFP), INTENT(IN) :: value(:, :)
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
     !! scalar value to be add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add8
@@ -333,7 +332,7 @@ END INTERFACE add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add9(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, value, scale)
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -347,7 +346,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: itimecompo
     INTEGER(I4B), INTENT(IN) :: jspacecompo
     INTEGER(I4B), INTENT(IN) :: jtimecompo
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add9
@@ -378,13 +377,13 @@ END INTERFACE add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add10(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, value, scale)
+    & ivar, jvar, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: jvar
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add10
 END INTERFACE
@@ -403,7 +402,7 @@ END INTERFACE add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add11(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, value, scale)
+    & jvar, iDOF, jDOF, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -417,7 +416,7 @@ INTERFACE
     !! row degree of freedom
     INTEGER(I4B), INTENT(IN) :: jDOF
     !! col degree of freedom
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add11
@@ -437,7 +436,7 @@ END INTERFACE add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add12(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, value, scale)
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -451,7 +450,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: itimecompo
     INTEGER(I4B), INTENT(IN) :: jspacecompo
     INTEGER(I4B), INTENT(IN) :: jtimecompo
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add12
@@ -471,7 +470,7 @@ END INTERFACE add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add13(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, value, scale)
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -485,7 +484,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: itimecompo(:)
     INTEGER(I4B), INTENT(IN) :: jspacecompo
     INTEGER(I4B), INTENT(IN) :: jtimecompo(:)
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add13
@@ -505,7 +504,7 @@ END INTERFACE add
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_add14(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, value, scale)
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE, scale)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -519,7 +518,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: itimecompo
     INTEGER(I4B), INTENT(IN) :: jspacecompo(:)
     INTEGER(I4B), INTENT(IN) :: jtimecompo
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be add
     REAL(DFP), INTENT(IN) :: scale
   END SUBROUTINE csrMat_add14
