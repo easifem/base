@@ -16,7 +16,8 @@
 !
 
 MODULE SuperLU_Util_Methods
-USE ISO_C_BINDING, ONLY: C_PTR, C_INT, C_DOUBLE, C_CHAR, C_FLOAT
+USE ISO_C_BINDING, ONLY: C_PTR, C_INT, C_DOUBLE, C_CHAR, C_FLOAT, &
+  & C_SIZE_T
 USE SuperLU_Types
 IMPLICIT NONE
 
@@ -536,5 +537,20 @@ INTERFACE
 END INTERFACE
 
 PUBLIC :: superlu_free
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  FUNCTION superlu_malloc(size) RESULT(ans) &
+    & BIND(C, name="superlu_malloc")
+    IMPORT :: C_PTR, C_SIZE_T
+    TYPE(C_PTR) :: ans
+    INTEGER(C_SIZE_T) :: size
+  END FUNCTION superlu_malloc
+END INTERFACE
+
+PUBLIC :: superlu_malloc
 
 END MODULE SuperLU_Util_Methods

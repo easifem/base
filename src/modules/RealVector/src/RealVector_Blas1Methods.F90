@@ -49,7 +49,7 @@ PUBLIC :: SCAL
 ! \left| V_{i}\right|  \right)$$
 !
 !@note
-!         This function calls BLAS function ASUM.
+! This function calls BLAS function ASUM.
 !@endnote
 !
 !@todo
@@ -151,6 +151,8 @@ END INTERFACE ASUM
 !
 ! $$Y=Y+A*X$$
 !
+! Y = Y + A*X
+!
 ! Here A is an scalar
 !
 !@note
@@ -176,7 +178,6 @@ END INTERFACE ASUM
 
 INTERFACE
 
-! Y = Y + A*X
   MODULE SUBROUTINE scalarAXPYscalar(X, Y, A)
     CLASS(RealVector_), INTENT(IN) :: X
     CLASS(RealVector_), INTENT(INOUT) :: Y
@@ -676,13 +677,13 @@ END INTERFACE DOT_PRODUCT
 ! $$\left| \left| \bf{V} \right|  \right|  =\sqrt{\bf{V} \cdot \bf{V} }$$
 !
 !@note
-!         This subroutine uses DOT function.
+! This subroutine uses DOT function.
 !@endnote
 !
 !### Usage
 !
 !```fortran
-!        s = NORM2(obj)
+!s = NORM2(obj)
 !```
 
 INTERFACE
@@ -705,7 +706,7 @@ END INTERFACE
 ! This routine computes L2 norm of a vector of [[RealVector_]].
 !
 !@note
-!         This function employs DOT function.
+! This function employs DOT function.
 !@endnote
 !
 !@todo

@@ -24,7 +24,7 @@ USE GlobalData
 USE String_Class, ONLY: String
 #ifdef USE_SuperLU
 USE SuperLUInterface
-USE ISO_C_BINDING, ONLY: C_CHAR, C_PTR
+USE ISO_C_BINDING, ONLY: C_CHAR, C_PTR, C_SIZE_T
 #endif
 IMPLICIT NONE
 PRIVATE
@@ -334,6 +334,7 @@ TYPE :: SuperLU_
   TYPE(SuperLUStat_t) :: stat
   TYPE(mem_usage_t) :: mem_usage
   TYPE(C_PTR) :: Work
+  ! TYPE(C_PTR), POINTER :: Work
   !! work-space for superlu, the size is decided by superlu
   INTEGER(I4B), ALLOCATABLE :: ia(:)
   !! starting index of row, size(m+1)
@@ -360,8 +361,8 @@ TYPE :: SuperLU_
   REAL(DFP), ALLOCATABLE :: berr(:)
   !! size(nrhs)
   CHARACTER(1, kind=C_CHAR) :: equed(2)
-  INTEGER(I4B) :: lwork = 0
-  INTEGER(I4B) :: info = 0
+  INTEGER(C_SIZE_T) :: lwork = 0
+  INTEGER(C_SIZE_T) :: info = 0
   REAL(DFP) :: recip_pivot_growth = 0.0_DFP
   REAL(DFP) :: rcond = 0.0_DFP
   LOGICAL(LGT) :: isAInitiated = .FALSE.

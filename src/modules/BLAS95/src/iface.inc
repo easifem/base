@@ -9,7 +9,7 @@ PUBLIC :: ASUM
 !----------------------------------------------------------------------------
 
 INTERFACE AXPY
-  MODULE PROCEDURE SAXPY_F95,  DAXPY_F95, CAXPY_F95, ZAXPY_F95
+  MODULE PROCEDURE SAXPY_F95, DAXPY_F95, CAXPY_F95, ZAXPY_F95
 END INTERFACE AXPY
 
 PUBLIC :: AXPY
@@ -167,3 +167,19 @@ INTERFACE CABS1
 END INTERFACE CABS1
 
 PUBLIC :: CABS1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE GEMV
+  MODULE PROCEDURE SGEMV_F95, DGEMV_F95, CGEMV_F95, ZGEMV_F95
+END INTERFACE GEMV
+
+#ifdef USE_INTEL_MKL
+INTERFACE GEMV
+  MODULE PROCEDURE SCGEMV_F95, DZGEMV_F95
+END INTERFACE GEMV
+#endif
+
+PUBLIC :: GEMV

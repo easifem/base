@@ -17,7 +17,7 @@
 
 MODULE SuperLU_dgssvx_Methods
 USE SuperLU_Types
-USE ISO_C_BINDING, ONLY: C_CHAR, C_INT, C_FLOAT, C_DOUBLE, C_PTR
+USE ISO_C_BINDING, ONLY: C_CHAR, C_INT, C_FLOAT, C_DOUBLE, C_PTR, C_SIZE_T
 IMPLICIT NONE
 PRIVATE
 
@@ -141,7 +141,8 @@ INTERFACE
     & Glu, mem_usage, stat, info) &
     & BIND(C, name="dgssvx")
     IMPORT :: superlu_options_t, SuperLUStat_t, C_INT, C_PTR, &
-      & SuperMatrix, GlobalLU_t, mem_usage_t, C_CHAR, C_DOUBLE
+      & SuperMatrix, GlobalLU_t, mem_usage_t, C_CHAR, C_DOUBLE, &
+    & C_SIZE_T
     !
     TYPE(superlu_options_t), INTENT(IN) :: options
     ! options (input) superlu_options_t*
@@ -257,7 +258,7 @@ INTERFACE
     !         to hold data structures for factors L and U.
     !         On exit, if fact is not 'F', L and U point to this array.
     !
-    INTEGER(C_INT), VALUE, INTENT(IN) :: lwork
+    INTEGER(C_SIZE_T), VALUE, INTENT(IN) :: lwork
     ! lwork   (input) int
     !         Specifies the size of work array in bytes.
     !         = 0:  allocate space internally by system malloc;
@@ -349,7 +350,7 @@ INTERFACE
     ! stat   (output) SuperLUStat_t*
     !        Record the statistics on runtime and floating-point operation count.
     !        See slu_util.h for the definition of 'SuperLUStat_t'.
-    INTEGER(C_INT), INTENT(INOUT) :: info
+    INTEGER(C_SIZE_T), INTENT(INOUT) :: info
     ! info    (output) int*
     !         = 0: successful exit
     !         < 0: if info = -i, the i-th argument had an illegal value

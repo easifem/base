@@ -14,18 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
-# FIND OPENMP
-OPTION(USE_OpenMP OFF)
-IF(USE_OpenMP)
-  FIND_PACKAGE(OpenMP REQUIRED)
-  IF(OpenMP_FOUND)
-    MESSAGE(STATUS "FOUND OpenMP")
-    MESSAGE(STATUS "OpenMP_Fortran_LIBRARIES: ${OpenMP_Fortran_LIBRARIES}")
-    LIST( APPEND TARGET_COMPILE_DEF "-DUSE_OpenMP" )
-    LIST( APPEND TARGET_COMPILE_OPT ${OpenMP_Fortran_FLAGS} )
-    # TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${OpenMP_Fortran_LIBRARIES})
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_Fortran)
+# LIS
+IF( ${PROJECT_NAME} MATCHES "easifemBase" )
+  OPTION( USE_LIS OFF )
+  IF( USE_LIS )
+    LIST( APPEND TARGET_COMPILE_DEF "-DUSE_LIS" )
+    IF( UNIX )
+      IF(APPLE)
+        SET( LIS_LIBRARIES "$ENV{EASIFEM_EXTPKGS}/lib/liblis.dylib"  )
+      ELSE()
+        SET( LIS_LIBRARIES "$ENV{EASIFEM_EXTPKGS}/lib/liblis.so"  )
+      ENDIF()
+    ENDIF()
+    TARGET_LINK_LIBRARIES( ${PROJECT_NAME} PUBLIC ${LIS_LIBRARIES} )
+    MESSAGE( STATUS "LIS_LIBRARIES : ${LIS_LIBRARIES}" )
   ELSE()
-    MESSAGE(ERROR "NOT FOUND OpenMP")
+    MESSAGE( STATUS "NOT USING LIS LIBRARIES" )
   ENDIF()
 ENDIF()

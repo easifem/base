@@ -1109,15 +1109,6 @@ IF (.NOT. A%slu%isAInitiated) THEN
   CALL StatInit(A%slu%stat)
   A%slu%isStatInitiated = .TRUE.
 
-  ! new thing here
-  ! A%slu%lwork = -1
-  ! CALL SuperluDGSSVX(obj=A)
-  ! WRITE (*, *) "total needed = ", A%slu%mem_usage%total_needed
-  ! WRITE (*, *) "info = ", A%slu%info
-  ! WRITE (*, *) "info = ", A%slu%A%ncol
-  ! STOP
-  ! new thing stop here
-
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
   IF (isFactored0) THEN
@@ -1175,6 +1166,17 @@ CALL SuperluDGSSVX(obj=A)
 CALL Copy(x=A%slu%sol(:, 1), y=x)
 IF (PRESENT(info)) info = A%slu%info
 CALL SuperluDisplayStat(obj=A)
+
+IF (A%slu%lwork .EQ. 0) THEN
+  IF (A%slu%isLInitiated) THEN
+    CALL Destroy_SuperNode_Matrix(A%slu%L)
+    A%slu%isLInitiated = .FALSE.
+  END IF
+  IF (A%slu%isUInitiated) THEN
+    CALL Destroy_CompCol_Matrix(A%slu%U)
+    A%slu%isUInitiated = .FALSE.
+  END IF
+END IF
 
 #else
 
@@ -1293,6 +1295,17 @@ END DO
 IF (PRESENT(info)) info = A%slu%info
 CALL SuperluDisplayStat(obj=A)
 
+IF (A%slu%lwork .EQ. 0) THEN
+  IF (A%slu%isLInitiated) THEN
+    CALL Destroy_SuperNode_Matrix(A%slu%L)
+    A%slu%isLInitiated = .FALSE.
+  END IF
+  IF (A%slu%isUInitiated) THEN
+    CALL Destroy_CompCol_Matrix(A%slu%U)
+    A%slu%isUInitiated = .FALSE.
+  END IF
+END IF
+
 #else
 
 CALL ErrorMsg(&
@@ -1405,7 +1418,16 @@ CALL SuperluDGSSVX(obj=A)
 CALL Copy(x=A%slu%sol(:, 1), y=B)
 IF (PRESENT(info)) info = A%slu%info
 CALL SuperluDisplayStat(obj=A)
-
+IF (A%slu%lwork .EQ. 0) THEN
+  IF (A%slu%isLInitiated) THEN
+    CALL Destroy_SuperNode_Matrix(A%slu%L)
+    A%slu%isLInitiated = .FALSE.
+  END IF
+  IF (A%slu%isUInitiated) THEN
+    CALL Destroy_CompCol_Matrix(A%slu%U)
+    A%slu%isUInitiated = .FALSE.
+  END IF
+END IF
 #else
 
 CALL ErrorMsg(&
@@ -1438,22 +1460,6 @@ INTEGER(I4B) :: Equil0
 INTEGER(I4B) :: SymmetricMode0
 INTEGER(I4B) :: PrintStat0
 INTEGER(I4B) :: ii, nrhs
-!
-! void *superlu_malloc(size_t size)
-! {
-!     void *buf;
-!     buf = (void *) malloc(size);
-!     return (buf);
-! }
-
-INTERFACE
-  FUNCTION superlu_malloc(size) RESULT(ans) &
-    & BIND(C, name="superlu_malloc")
-    IMPORT :: C_PTR, C_SIZE_T
-    TYPE(C_PTR) :: ans
-    INTEGER(C_SIZE_T) :: size
-  END FUNCTION superlu_malloc
-END INTERFACE
 
 CALL CheckErrorCSRMatrix( &
   & obj=A, &
@@ -1506,14 +1512,11 @@ IF (.NOT. A%slu%isAInitiated) THEN
   A%slu%isStatInitiated = .TRUE.
 
   ! new thing here
-  A%slu%lwork = -1
-  CALL SuperluDGSSVX(obj=A)
-  WRITE (*, *) "total needed = ", A%slu%mem_usage%total_needed
-  WRITE (*, *) "info = ", A%slu%info
-  WRITE (*, *) "info = ", A%slu%A%ncol
-  A%slu%lwork = INT(A%slu%mem_usage%total_needed, kind=C_SIZE_T)
- A%slu%work = superlu_malloc(INT(A%slu%mem_usage%total_needed, kind=C_SIZE_T))
-  STOP
+  ! A%slu%lwork = -1
+  ! CALL SuperluDGSSVX(obj=A)
+  ! A%slu%lwork = INT(A%slu%mem_usage%total_needed, kind=C_SIZE_T)
+  ! A%slu%work = superlu_malloc(A%slu%lwork)
+  ! STOP
   ! new thing stop here
 ELSE
   isFactored0 = input(option=isFactored, default=.FALSE.)
@@ -1549,7 +1552,16 @@ DO ii = 1, nrhs
 END DO
 IF (PRESENT(info)) info = A%slu%info
 CALL SuperluDisplayStat(obj=A)
-
+IF (A%slu%lwork .EQ. 0) THEN
+  IF (A%slu%isLInitiated) THEN
+    CALL Destroy_SuperNode_Matrix(A%slu%L)
+    A%slu%isLInitiated = .FALSE.
+  END IF
+  IF (A%slu%isUInitiated) THEN
+    CALL Destroy_CompCol_Matrix(A%slu%U)
+    A%slu%isUInitiated = .FALSE.
+  END IF
+END IF
 #else
 
 CALL ErrorMsg(&

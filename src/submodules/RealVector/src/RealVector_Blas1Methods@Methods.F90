@@ -34,7 +34,7 @@ IF ((SIZE(obj%Val) .LE. SMALL_VECTOR_LEN) &
   Ans = ASUM(obj%Val)
   !! big data
 ELSE
-  !> create threads and share the work
+  !! create threads and share the work
   Ans = 0.0_DFP
   !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(Indx) REDUCTION( +: Ans )
   CALL OMP_INITIATE
@@ -435,7 +435,7 @@ PURE FUNCTION inner_nrm2(X) RESULT(Ans)
   IF (SIZE(X) .LE. SMALL_VECTOR_LEN) THEN
     Ans = NORM2(x)
   ELSE
-    Ans = NRM2(X)
+    Ans = NRM2(X) !! blas
   END IF
 END FUNCTION inner_nrm2
 
