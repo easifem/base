@@ -14,54 +14,36 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
-!> author: Vikas Sharma, Ph. D.
-! date: 1 March 2021
-! summary: Methods related to [[elemShapeData_]] datatype
-!
-!{!pages/ElemshapeData_.md!}
-
 MODULE ElemshapeData_Method
-USE BaseType
-USE GlobalData
-IMPLICIT NONE
-PRIVATE
-
-#include "./ConstructorMethods.inc"
-#include "./IOMethods.inc"
-#include "./H1LagrangeMethods.inc"
-#include "./H1HermitMethods.inc"
-#include "./H1SerendipityMethods.inc"
-#include "./H1HierarchyMethods.inc"
-#include "./H1DivLagrangeMethods.inc"
-#include "./H1DivHermitMethods.inc"
-#include "./H1DivSerendipityMethods.inc"
-#include "./H1DivHierarchyMethods.inc"
-#include "./H1CurlLagrangeMethods.inc"
-#include "./H1CurlHermitMethods.inc"
-#include "./H1CurlSerendipityMethods.inc"
-#include "./H1CurlHierarchyMethods.inc"
-#include "./DGLagrangeMethods.inc"
-#include "./DGHermitMethods.inc"
-#include "./DGSerendipityMethods.inc"
-#include "./DGHierarchyMethods.inc"
-#include "./SetMethods.inc"
-#include "./InterpolMethods.inc"
-#include "./LocalGradientMethods.inc"
-#include "./GradientMethods.inc"
-#include "./LocalDivergenceMethods.inc"
-#include "./DivergenceMethods.inc"
-#include "./ProjectionMethods.inc"
-#include "./GetMethods.inc"
-#include "./UnitNormalMethods.inc"
-#include "./HminHmaxMethods.inc"
-#include "./HRGNParamMethods.inc"
-#include "./HRQIParamMethods.inc"
-#include "./SUGN3ParamMethods.inc"
-#include "./SUGN3Param_Takizawa2018Methods.inc"
-#include "./SUPGParamMethods.inc"
-
-!----------------------------------------------------------------------------
-!                                                                   Contains
-!----------------------------------------------------------------------------
-
+USE ElemshapeData_ConstructorMethods
+USE ElemshapeData_DGLagrangeMethods
+USE ElemshapeData_DGHermitMethods
+USE ElemshapeData_DGSerendipityMethods
+USE ElemshapeData_DGHierarchyMethods
+USE ElemshapeData_DivergenceMethods
+USE ElemshapeData_GradientMethods
+USE ElemshapeData_GetMethods
+USE ElemshapeData_H1CurlLagrangeMethods
+USE ElemshapeData_H1CurlHermitMethods
+USE ElemshapeData_H1CurlSerendipityMethods
+USE ElemshapeData_H1CurlHierarchyMethods
+USE ElemshapeData_H1DivLagrangeMethods
+USE ElemshapeData_H1DivHermitMethods
+USE ElemshapeData_H1DivHierarchyMethods
+USE ElemshapeData_H1DivSerendipityMethods
+USE ElemshapeData_H1HermitMethods
+USE ElemshapeData_H1HierarchyMethods
+USE ElemshapeData_H1LagrangeMethods
+USE ElemshapeData_H1SerendipityMethods
+USE ElemshapeData_HminHmaxMethods
+USE ElemshapeData_HRGNParamMethods
+USE ElemshapeData_HRQIParamMethods
+USE ElemshapeData_InterpolMethods
+USE ElemshapeData_IOMethods
+USE ElemshapeData_LocalDivergenceMethods
+USE ElemshapeData_LocalGradientMethods
+USE ElemshapeData_ProjectionMethods
+USE ElemshapeData_SetMethods
+USE ElemshapeData_StabilizationParamMethods
+USE ElemshapeData_UnitNormalMethods
 END MODULE ElemshapeData_Method

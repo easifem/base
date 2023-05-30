@@ -17,17 +17,18 @@
 MODULE CInterface
 USE GlobalData
 USE String_Class, ONLY: String
-USE, INTRINSIC :: ISO_C_Binding, C_PTR => C_PTR, &
+USE, INTRINSIC :: ISO_C_BINDING, C_PTR => C_PTR, &
   & C_CHAR_PTR => C_PTR, C_CONST_CHAR_PTR => C_PTR, &
   & C_void_ptr => C_PTR, C_CONST_VOID_PTR => C_PTR
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: C_CHAR_PTR, C_VOID_PTR, C_CONST_CHAR_PTR, C_CONST_VOID_PTR
+PUBLIC :: CString
 
 INTEGER(I4B), PUBLIC, PARAMETER :: C_ENUM = C_INT
   !! a C enum may not always be a standard C int
-CHARACTER(LEN=1, KIND=C_CHAR), PUBLIC, PARAMETER :: NUL = C_NULL_CHAR
+CHARACTER(1, KIND=C_CHAR), PUBLIC, PARAMETER :: NUL = C_NULL_CHAR
   !! C string terminator alais using the 3-letter ASCII name.
   !! The C_ prefix is not used because it is just an ASCII character.
   !! In C, "char" is distinct from "signed char", unlike integers.
@@ -83,9 +84,9 @@ INTEGER(I4B), PUBLIC, PARAMETER :: C_UNSIGNED_LONG_LONG_INT = C_LONG_LONG
 !```
 
 INTERFACE
-  FUNCTION C_MEMCPY(dest, src, n) RESULT(result) BIND(C, name="memcpy")
+  FUNCTION C_MEMCPY(dest, src, n) RESULT(RESULT) BIND(C, name="memcpy")
     IMPORT C_void_ptr, C_SIZE_T
-    TYPE(C_VOID_PTR) :: result
+    TYPE(C_VOID_PTR) :: RESULT
     TYPE(C_VOID_PTR), VALUE, INTENT(IN) :: dest
     !! target=intent(out)
     TYPE(C_VOID_PTR), VALUE, INTENT(IN) :: src
@@ -117,9 +118,9 @@ PUBLIC :: C_MEMCPY
 !```
 
 INTERFACE
-  FUNCTION C_memmove(dest, src, n) result(result) bind(C, name="memmove")
+  FUNCTION C_memmove(dest, src, n) RESULT(RESULT) BIND(C, name="memmove")
     IMPORT C_void_ptr, C_SIZE_T
-    TYPE(C_void_ptr) :: result
+    TYPE(C_void_ptr) :: RESULT
     TYPE(C_void_ptr), VALUE, INTENT(IN) :: dest ! target=intent(out)
     TYPE(C_void_ptr), VALUE, INTENT(IN) :: src
     INTEGER(C_SIZE_T), VALUE, INTENT(IN) :: n
@@ -146,12 +147,12 @@ PUBLIC :: C_memmove
 !```
 
 INTERFACE
-  FUNCTION C_memset(s, c, n) RESULT(result) BIND(C, name="memset")
-    IMPORT :: C_void_ptr, C_int, C_SIZE_T
-    TYPE(C_void_ptr) :: result
-    TYPE(C_void_ptr), VALUE, intent(in) :: s ! target=intent(out)
-    INTEGER(C_int), VALUE, intent(in) :: c
-    INTEGER(C_SIZE_T), VALUE, intent(in) :: n
+  FUNCTION C_memset(s, c, n) RESULT(RESULT) BIND(C, name="memset")
+    IMPORT :: C_void_ptr, C_INT, C_SIZE_T
+    TYPE(C_void_ptr) :: RESULT
+    TYPE(C_void_ptr), VALUE, INTENT(in) :: s ! target=intent(out)
+    INTEGER(C_INT), VALUE, INTENT(in) :: c
+    INTEGER(C_SIZE_T), VALUE, INTENT(in) :: n
   END FUNCTION C_memset
 END INTERFACE
 
@@ -175,9 +176,9 @@ PUBLIC :: C_memset
 !```
 
 INTERFACE
-  PURE FUNCTION C_memcmp(s1, s2, n) RESULT(result) BIND(C, name="memcmp")
-    IMPORT :: C_int, C_void_ptr, C_SIZE_T
-    INTEGER(C_int) :: result
+  PURE FUNCTION C_memcmp(s1, s2, n) RESULT(RESULT) BIND(C, name="memcmp")
+    IMPORT :: C_INT, C_void_ptr, C_SIZE_T
+    INTEGER(C_INT) :: RESULT
     TYPE(C_void_ptr), VALUE, INTENT(IN) :: s1
     TYPE(C_void_ptr), VALUE, INTENT(IN) :: s2
     INTEGER(C_SIZE_T), VALUE, INTENT(IN) :: n
@@ -204,11 +205,11 @@ PUBLIC :: C_memcmp
 !```
 
 INTERFACE
-  PURE FUNCTION C_memchr(s, c, n) RESULT(result) BIND(C, name="memchr")
-    IMPORT :: C_void_ptr, C_int, C_SIZE_T
-    TYPE(C_void_ptr) :: result
+  PURE FUNCTION C_memchr(s, c, n) RESULT(RESULT) BIND(C, name="memchr")
+    IMPORT :: C_void_ptr, C_INT, C_SIZE_T
+    TYPE(C_void_ptr) :: RESULT
     TYPE(C_void_ptr), VALUE, INTENT(IN) :: s
-    INTEGER(C_int), VALUE, INTENT(IN) :: c
+    INTEGER(C_INT), VALUE, INTENT(IN) :: c
     INTEGER(C_SIZE_T), VALUE, INTENT(IN) :: n
   END FUNCTION C_memchr
 END INTERFACE
@@ -233,9 +234,9 @@ PUBLIC :: C_memchr
 !```
 
 INTERFACE
-  FUNCTION C_strcpy(dest, src) RESULT(result) BIND(C, name="strcpy")
+  FUNCTION C_strcpy(dest, src) RESULT(RESULT) BIND(C, name="strcpy")
     IMPORT :: C_CHAR_PTR, C_SIZE_T
-    TYPE(C_CHAR_PTR) :: result
+    TYPE(C_CHAR_PTR) :: RESULT
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: dest ! target=intent(out)
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: src
   END FUNCTION C_strcpy
@@ -262,13 +263,13 @@ PUBLIC :: C_strcpy
 !```
 
 INTERFACE
-  function C_strncpy(dest, src, n) result(result) bind(C, name="strncpy")
-    import C_CHAR_PTR, C_SIZE_T
-    type(C_CHAR_PTR) :: result
-    type(C_CHAR_PTR), value, intent(in) :: dest ! target=intent(out)
-    type(C_CHAR_PTR), value, intent(in) :: src
-    integer(C_SIZE_T), value, intent(in) :: n
-  end function C_strncpy
+  FUNCTION C_strncpy(dest, src, n) RESULT(RESULT) BIND(C, name="strncpy")
+    IMPORT C_CHAR_PTR, C_SIZE_T
+    TYPE(C_CHAR_PTR) :: RESULT
+    TYPE(C_CHAR_PTR), VALUE, INTENT(in) :: dest ! target=intent(out)
+    TYPE(C_CHAR_PTR), VALUE, INTENT(in) :: src
+    INTEGER(C_SIZE_T), VALUE, INTENT(in) :: n
+  END FUNCTION C_strncpy
 END INTERFACE
 
 PUBLIC :: C_strncpy
@@ -292,9 +293,9 @@ PUBLIC :: C_strncpy
 !```
 
 INTERFACE
-  FUNCTION C_strcat(dest, src) result(result) bind(C, name="strcat")
+  FUNCTION C_strcat(dest, src) RESULT(RESULT) BIND(C, name="strcat")
     IMPORT :: C_CHAR_PTR, C_SIZE_T
-    TYPE(C_CHAR_PTR) :: result
+    TYPE(C_CHAR_PTR) :: RESULT
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: dest
     !! target=intent(out)
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: src
@@ -321,9 +322,9 @@ PUBLIC :: C_strcat
 !```
 
 INTERFACE
-  FUNCTION C_strncat(dest, src, n) RESULT(result) BIND(C, name="strncat")
+  FUNCTION C_strncat(dest, src, n) RESULT(RESULT) BIND(C, name="strncat")
     IMPORT :: C_CHAR_PTR, C_SIZE_T
-    TYPE(C_CHAR_PTR) :: result
+    TYPE(C_CHAR_PTR) :: RESULT
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: dest
     !! target=intent(out)
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: src
@@ -351,9 +352,9 @@ PUBLIC :: C_strncat
 !```
 
 INTERFACE
-  PURE FUNCTION C_strcmp(s1, s2) RESULT(result) BIND(C, name="strcmp")
-    IMPORT :: C_int, C_CHAR_PTR, C_SIZE_T
-    INTEGER(C_int) :: result
+  PURE FUNCTION C_strcmp(s1, s2) RESULT(RESULT) BIND(C, name="strcmp")
+    IMPORT :: C_INT, C_CHAR_PTR, C_SIZE_T
+    INTEGER(C_INT) :: RESULT
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s1
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s2
   END FUNCTION C_strcmp
@@ -379,9 +380,9 @@ PUBLIC :: C_strcmp
 !```
 
 INTERFACE
-  PURE FUNCTION C_strncmp(s1, s2, n) result(result) bind(C, name="strncmp")
-    IMPORT :: C_int, C_CHAR_PTR, C_SIZE_T
-    INTEGER(C_int) :: result
+  PURE FUNCTION C_strncmp(s1, s2, n) RESULT(RESULT) BIND(C, name="strncmp")
+    IMPORT :: C_INT, C_CHAR_PTR, C_SIZE_T
+    INTEGER(C_INT) :: RESULT
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s1
     TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s2
     INTEGER(C_SIZE_T), VALUE, INTENT(IN) :: n
@@ -408,10 +409,10 @@ PUBLIC :: C_strncmp
 !```
 
 INTERFACE
-  PURE FUNCTION C_strlen(s) RESULT(result) BIND(C, name="strlen")
+  PURE FUNCTION C_strlen(s) RESULT(RESULT) BIND(C, name="strlen")
     IMPORT :: C_CHAR_PTR, C_SIZE_T
-    INTEGER(C_SIZE_T) :: result
-    TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s  !character(len=*), intent(in)
+    INTEGER(C_SIZE_T) :: RESULT
+    TYPE(C_CHAR_PTR), VALUE, INTENT(IN) :: s !character(len=*), intent(in)
   END FUNCTION C_strlen
 END INTERFACE
 
@@ -534,11 +535,24 @@ END INTERFACE C_F_STRING
 
 PUBLIC :: C_F_STRING
 
-INTERFACE C2Fortran
-  MODULE PROCEDURE F_string_assign_C_string, C_F_STRING_CHARS
-END INTERFACE C2Fortran
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-PUBLIC :: C2Fortran
+INTERFACE FString
+  MODULE PROCEDURE Fstring1
+END INTERFACE FString
+
+PUBLIC :: Fstring
+
+!
+! Deprecated
+!
+! INTERFACE C2Fortran
+!   MODULE PROCEDURE F_string_assign_C_string, C_F_STRING_CHARS
+! END INTERFACE C2Fortran
+
+! PUBLIC :: C2Fortran
 
 !----------------------------------------------------------------------------
 !
@@ -550,11 +564,14 @@ END INTERFACE F_C_STRING
 
 PUBLIC F_C_STRING
 
-INTERFACE FortranToC
-  MODULE PROCEDURE F_C_STRING_CHARS, F_C_STRING_PTR
-END INTERFACE FortranToC
+!
+! Deprecated
+!
+! INTERFACE FortranToC
+!   MODULE PROCEDURE F_C_STRING_CHARS, F_C_STRING_PTR
+! END INTERFACE FortranToC
 
-PUBLIC :: FortranToC
+! PUBLIC :: FortranToC
 
 !----------------------------------------------------------------------------
 !
@@ -636,7 +653,7 @@ CONTAINS
 ! summary:
 
 PURE LOGICAL FUNCTION C_ASSOCIATED_PURE(ptr) RESULT(associated)
-  TYPE(C_ptr), INTENT(IN) :: ptr
+  TYPE(C_PTR), INTENT(IN) :: ptr
   INTEGER(C_INTPTR_T) :: iptr
   iptr = TRANSFER(ptr, iptr)
   ASSOCIATED = (iptr /= 0)
@@ -658,16 +675,16 @@ END FUNCTION C_ASSOCIATED_PURE
 ! blank-padded at the end.
 
 SUBROUTINE F_string_assign_C_string(F_string, C_string)
-  CHARACTER(LEN=*), INTENT(OUT) :: F_string
+  CHARACTER(*), INTENT(OUT) :: F_string
   TYPE(C_CHAR_PTR), INTENT(IN) :: C_string
   !> internal variables
-  CHARACTER(LEN=1, KIND=C_CHAR), POINTER :: p_chars(:)
+  CHARACTER(1, KIND=C_CHAR), POINTER :: p_chars(:)
   INTEGER(I4B) :: i
   !> main
   IF (.NOT. C_ASSOCIATED(C_string)) THEN
     F_string = ''
   ELSE
-    CALL C_F_POINTER(C_string, p_chars, [huge(0)])
+    CALL C_F_POINTER(C_string, p_chars, [HUGE(0)])
     i = 1
     DO WHILE (p_chars(i) .NE. NUL .AND. I .LE. LEN(F_string))
       F_string(i:i) = p_chars(i); i = i + 1
@@ -693,9 +710,13 @@ END SUBROUTINE F_string_assign_C_string
 ! blank-padded at the end.
 
 SUBROUTINE C_F_string_chars(C_string, F_string)
-  CHARACTER(LEN=1, KIND=C_CHAR), INTENT(IN) :: C_string(*)
-  CHARACTER(LEN=*), INTENT(OUT) :: F_string
-  !> internal variable
+  CHARACTER(1, KIND=C_CHAR), INTENT(IN) :: C_string(*)
+  CHARACTER(*), INTENT(OUT) :: F_string
+  !! F_String is fortran string, it should be allocated
+  !! before calling the routine
+  !
+  ! internal variable
+  !
   INTEGER(I4B) :: i
   i = 1
   DO WHILE (C_string(i) .NE. NUL .AND. i .LE. LEN(F_string))
@@ -704,6 +725,75 @@ SUBROUTINE C_F_string_chars(C_string, F_string)
   END DO
   IF (i .LT. LEN(F_string)) F_string(i:) = ' '
 END SUBROUTINE C_F_string_chars
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+FUNCTION Fstring1(C_string) RESULT(F_string)
+  CHARACTER(1, KIND=C_CHAR), INTENT(IN) :: C_string(:)
+  CHARACTER(:), ALLOCATABLE :: F_string
+  !!
+  INTEGER(I4B) :: i, n, m
+  n = SIZE(C_string)
+  m = 0
+  DO i = 1, n - 1
+    IF (C_string(i) .EQ. NUL) THEN
+      EXIT
+    ELSE
+      m = m + 1
+    END IF
+  END DO
+  ALLOCATE (CHARACTER(m) :: F_string)
+  DO i = 1, m
+    F_string(i:i) = C_string(i)
+  END DO
+END FUNCTION Fstring1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+! FUNCTION Fstring2(C_string) RESULT(F_string)
+!   TYPE(C_CHAR_PTR), INTENT(IN) :: C_string
+!   !! C pointer
+!   CHARACTER(:), ALLOCATABLE :: F_string
+!   !! Fortran string
+!
+!   ! ! internal variables
+!   ! CHARACTER(1, KIND=C_CHAR), POINTER :: p_chars(:)
+!   ! INTEGER(I4B) :: i, n, m
+!   !
+!   ! !> main
+!   ! IF (.NOT. C_ASSOCIATED(C_string)) THEN
+!   !   F_string = ''
+!   !   RETURN
+!   ! ELSE
+!   !   CALL C_F_POINTER(C_string, p_chars, [HUGE(0)])
+!   !   i = 1
+!   !   DO WHILE (p_chars(i) .NE. NUL .AND. I .LE. LEN(F_string))
+!   !     F_string(i:i) = p_chars(i); i = i + 1
+!   !   END DO
+!   !   IF (i .LT. LEN(F_string)) F_string(i:) = ' '
+!   ! END IF
+!   !
+!   ! n = SIZE(C_string)
+!   ! m = 0
+!   !
+!   ! DO i = 1, n - 1
+!   !   IF (C_string(i) .EQ. NUL) THEN
+!   !     EXIT
+!   !   ELSE
+!   !     m = m + 1
+!   !   END IF
+!   ! END DO
+!   !
+!   ! ALLOCATE (CHARACTER(m) :: F_string)
+!   !
+!   ! DO i = 1, m
+!   !   F_string(i:i) = C_string(i)
+!   ! END DO
+! END FUNCTION Fstring2
 
 !----------------------------------------------------------------------------
 !
@@ -721,14 +811,14 @@ END SUBROUTINE C_F_string_chars
 ! If the length is passed and F_string is too long, it is truncated.
 
 SUBROUTINE F_C_STRING_PTR(F_string, C_string, C_string_len)
-  CHARACTER(LEN=*), INTENT(IN) :: F_string
+  CHARACTER(*), INTENT(IN) :: F_string
   TYPE(C_CHAR_PTR), INTENT(IN) :: C_string
     !! target = intent(out)
   INTEGER(I4B), INTENT(IN), OPTIONAL :: C_string_len
     !! Max string length,
     !! INCLUDING THE TERMINAL NUL
   !> internal variables
-  CHARACTER(LEN=1, KIND=C_CHAR), DIMENSION(:), POINTER :: p_chars
+  CHARACTER(1, KIND=C_CHAR), DIMENSION(:), POINTER :: p_chars
   INTEGER(I4B) :: i, strlen
   !> main
   strlen = LEN(F_string)
@@ -759,22 +849,44 @@ END SUBROUTINE F_C_STRING_PTR
 ! If the length is passed and F_string is too long, it is truncated.
 
 SUBROUTINE F_C_STRING_CHARS(F_string, C_string, C_string_len)
-  CHARACTER(LEN=*), INTENT(IN) :: F_string
-  CHARACTER(LEN=1, KIND=C_CHAR), DIMENSION(*), INTENT(OUT) :: C_string
+  CHARACTER(*), INTENT(IN) :: F_string
+  ! fortran string
+  CHARACTER(1, KIND=C_CHAR), INTENT(OUT) :: C_string(*)
+  ! c string
   INTEGER(I4B), INTENT(IN), OPTIONAL :: C_string_len
-    !! Max string length,
-    !! INCLUDING THE TERMINAL NUL
+  ! max string length, optional
+  !
+  ! main
+  !
   INTEGER(I4B) :: i, strlen
+  !
   strlen = LEN(F_string)
   IF (PRESENT(C_string_len)) THEN
     IF (C_string_len .LE. 0) RETURN
     strlen = MIN(strlen, C_string_len - 1)
   END IF
+  !
   FORALL (i=1:strlen)
     C_string(i) = F_string(i:i)
   END FORALL
+  !
   C_string(strlen + 1) = NUL
+  !
 END SUBROUTINE F_C_STRING_CHARS
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  23-01-21
+! summary: Convert a fortran string to cString
+
+FUNCTION CString(o) RESULT(v)
+  CHARACTER(*), INTENT(in) :: o
+  CHARACTER(:, kind=C_CHAR), ALLOCATABLE :: v
+  v = TRIM(o)//C_NULL_CHAR
+END FUNCTION CString
 
 !----------------------------------------------------------------------------
 !
@@ -785,11 +897,11 @@ END SUBROUTINE F_C_STRING_CHARS
 ! summary: Convert Fortran string to C string
 
 FUNCTION F_C_STRING_DUP(F_string, length) RESULT(C_string)
-  CHARACTER(LEN=*), INTENT(IN) :: F_string
+  CHARACTER(*), INTENT(IN) :: F_string
   INTEGER, INTENT(IN), OPTIONAL :: length
   TYPE(C_PTR) :: C_string
   !> internal variables
-  CHARACTER(LEN=1, KIND=C_CHAR), POINTER :: C_string_ptr(:)
+  CHARACTER(1, KIND=C_CHAR), POINTER :: C_string_ptr(:)
   INTEGER(I4B) :: i
   INTEGER(C_SIZE_T) :: strlen
   !> main
@@ -839,11 +951,11 @@ END FUNCTION C_STRLEN_SAFE
 ! date: 23 Sept 2021
 ! summary: Returns the value of target of C string
 
-FUNCTION C_STRING_VALUE(C_string) result(F_string)
+FUNCTION C_STRING_VALUE(C_string) RESULT(F_string)
   TYPE(C_CHAR_PTR), INTENT(IN) :: C_string
   CHARACTER(LEN=C_STRLEN_SAFE(C_string)) :: F_string
   !> internal variables
-  CHARACTER(LEN=1, kind=C_char), DIMENSION(:), POINTER :: p_chars
+  CHARACTER(1, kind=C_CHAR), DIMENSION(:), POINTER :: p_chars
   INTEGER(I4B) :: i, length
   !> main
   length = LEN(F_string)
@@ -863,11 +975,11 @@ END FUNCTION C_STRING_VALUE
 ! date: 23 Sept 2021
 ! summary: Allocate memory space and return C string
 
-FUNCTION C_STRING_ALLOC(length) result(C_string)
+FUNCTION C_STRING_ALLOC(length) RESULT(C_string)
   INTEGER(C_SIZE_T), INTENT(IN) :: length
   TYPE(C_PTR) :: C_String
   !> internal variables
-  CHARACTER(LEN=1, KIND=C_CHAR), POINTER :: C_CHARPTR
+  CHARACTER(1, KIND=C_CHAR), POINTER :: C_CHARPTR
   !> main
   C_string = C_MALLOC(length + 1)
   IF (C_ASSOCIATED(C_string)) THEN
@@ -897,11 +1009,11 @@ END SUBROUTINE C_STRING_FREE
 ! summary: Converts C pointer to integer vector
 
 SUBROUTINE C_PTR_TO_Int8_VEC(vec, cptr)
-  INTEGER(Int8), INTENT(OUT) :: vec(:)
+  INTEGER(INT8), INTENT(OUT) :: vec(:)
   TYPE(C_PTR), INTENT(IN) :: cptr
   !> Internal variables
   INTEGER(I4B) :: n, ii
-  INTEGER(Int8), POINTER :: p(:)
+  INTEGER(INT8), POINTER :: p(:)
   !> main
   n = SIZE(vec); vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
@@ -922,11 +1034,11 @@ END SUBROUTINE C_PTR_TO_Int8_VEC
 ! summary: Converts C pointer to integer vector
 
 SUBROUTINE C_PTR_TO_Int16_VEC(vec, cptr)
-  INTEGER(Int16), INTENT(OUT) :: vec(:)
+  INTEGER(INT16), INTENT(OUT) :: vec(:)
   TYPE(C_PTR), INTENT(IN) :: cptr
   !> Internal variables
   INTEGER(I4B) :: n, ii
-  INTEGER(Int16), POINTER :: p(:)
+  INTEGER(INT16), POINTER :: p(:)
   !> main
   n = SIZE(vec); vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
@@ -947,11 +1059,11 @@ END SUBROUTINE C_PTR_TO_Int16_VEC
 ! summary: Converts C pointer to integer vector
 
 SUBROUTINE C_PTR_TO_Int32_VEC(vec, cptr)
-  INTEGER(Int32), INTENT(OUT) :: vec(:)
+  INTEGER(INT32), INTENT(OUT) :: vec(:)
   TYPE(C_PTR), INTENT(IN) :: cptr
   !> Internal variables
   INTEGER(I4B) :: n, ii
-  INTEGER(Int32), POINTER :: p(:)
+  INTEGER(INT32), POINTER :: p(:)
   !> main
   n = SIZE(vec); vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
@@ -972,11 +1084,11 @@ END SUBROUTINE C_PTR_TO_Int32_VEC
 ! summary: Converts C pointer to integer vector
 
 SUBROUTINE C_PTR_TO_Int64_VEC(vec, cptr)
-  INTEGER(Int64), INTENT(OUT) :: vec(:)
+  INTEGER(INT64), INTENT(OUT) :: vec(:)
   TYPE(C_PTR), INTENT(IN) :: cptr
   !> Internal variables
   INTEGER(I4B) :: n, ii
-  INTEGER(Int64), POINTER :: p(:)
+  INTEGER(INT64), POINTER :: p(:)
   !> main
   n = SIZE(vec); vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
@@ -997,11 +1109,11 @@ END SUBROUTINE C_PTR_TO_Int64_VEC
 ! summary: Converts C pointer to real vector
 
 SUBROUTINE C_PTR_TO_Real32_VEC(vec, cptr)
-  REAL(Real32), INTENT(OUT) :: vec(:)
+  REAL(REAL32), INTENT(OUT) :: vec(:)
   TYPE(C_PTR), INTENT(IN) :: cptr
   ! Internal variables
   INTEGER :: n, ii
-  REAL(Real32), POINTER :: p(:)
+  REAL(REAL32), POINTER :: p(:)
   !> main
   n = SIZE(vec); vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
@@ -1022,11 +1134,11 @@ END SUBROUTINE C_PTR_TO_Real32_VEC
 ! summary: Converts C pointer to real vector
 
 SUBROUTINE C_PTR_TO_Real64_VEC(vec, cptr)
-  REAL(Real64), INTENT(OUT) :: vec(:)
+  REAL(REAL64), INTENT(OUT) :: vec(:)
   TYPE(C_PTR), INTENT(IN) :: cptr
   ! Internal variables
   INTEGER :: n, ii
-  REAL(Real64), POINTER :: p(:)
+  REAL(REAL64), POINTER :: p(:)
   !> main
   n = SIZE(vec); vec = 0
   IF (C_ASSOCIATED(cptr)) THEN
@@ -1050,7 +1162,7 @@ END SUBROUTINE C_PTR_TO_Real64_VEC
 !
 ! Reference: https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/api/gmsh.f90
 
-PURE FUNCTION optval_c_int_1(default, option) result(res)
+PURE FUNCTION optval_c_int_1(default, option) RESULT(res)
   INTEGER(C_INT), INTENT(IN) :: default
   INTEGER(C_INT), OPTIONAL, INTENT(IN) :: option
   INTEGER(C_INT) :: res
@@ -1074,7 +1186,7 @@ END FUNCTION optval_c_int_1
 !
 ! Reference: https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/api/gmsh.f90
 
-PURE FUNCTION optval_c_size_t_1(default, option) result(res)
+PURE FUNCTION optval_c_size_t_1(default, option) RESULT(res)
   INTEGER(I4B), INTENT(IN) :: default
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: option
   INTEGER(C_SIZE_T) :: res
@@ -1122,14 +1234,14 @@ END FUNCTION optval_c_size_t_2
 !
 ! Reference: https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/api/gmsh.f90
 
-pure function optval_c_double_1(default, option) result(res)
-  real(c_double), intent(in) :: default
-  real(c_double), optional, intent(in) :: option
-  real(c_double) :: res
+PURE FUNCTION optval_c_double_1(default, option) RESULT(res)
+  REAL(C_DOUBLE), INTENT(in) :: default
+  REAL(C_DOUBLE), OPTIONAL, INTENT(in) :: option
+  REAL(C_DOUBLE) :: res
   !!
-  res = real(default, kind=c_double)
-  if (present(option)) res = real(option, kind=c_double)
-end function optval_c_double_1
+  res = REAL(default, kind=C_DOUBLE)
+  IF (PRESENT(option)) res = REAL(option, kind=C_DOUBLE)
+END FUNCTION optval_c_double_1
 
 !----------------------------------------------------------------------------
 !
@@ -1143,14 +1255,14 @@ end function optval_c_double_1
 !
 ! Reference: https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/api/gmsh.f90
 
-pure function optval_c_double_2(default, option) result(res)
-  real, intent(in) :: default
-  real(c_double), optional, intent(in) :: option
-  real(c_double) :: res
+PURE FUNCTION optval_c_double_2(default, option) RESULT(res)
+  REAL, INTENT(in) :: default
+  REAL(C_DOUBLE), OPTIONAL, INTENT(in) :: option
+  REAL(C_DOUBLE) :: res
   !!
-  res = real(default, kind=c_double)
-  if (present(option)) res = real(option, kind=c_double)
-end function optval_c_double_2
+  res = REAL(default, kind=C_DOUBLE)
+  IF (PRESENT(option)) res = REAL(option, kind=C_DOUBLE)
+END FUNCTION optval_c_double_2
 
 !----------------------------------------------------------------------------
 !
@@ -1164,13 +1276,13 @@ end function optval_c_double_2
 !
 ! Reference: https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/api/gmsh.f90
 
-pure function optval_c_bool(default, option) result(res)
-  logical, intent(in) :: default
-  logical, optional, intent(in) :: option
-  integer(c_int) :: res
+PURE FUNCTION optval_c_bool(default, option) RESULT(res)
+  LOGICAL, INTENT(in) :: default
+  LOGICAL, OPTIONAL, INTENT(in) :: option
+  INTEGER(C_INT) :: res
   !!
-  res = merge(1_c_int, 0_c_int, default)
-  if (present(option)) res = merge(1_c_int, 0_c_int, option)
-end function optval_c_bool
+  res = MERGE(1_C_INT, 0_C_INT, default)
+  IF (PRESENT(option)) res = MERGE(1_C_INT, 0_C_INT, option)
+END FUNCTION optval_c_bool
 
 END MODULE CInterface

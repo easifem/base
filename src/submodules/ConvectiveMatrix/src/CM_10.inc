@@ -22,55 +22,55 @@
 PURE SUBROUTINE CM_10(ans, test, trial, term1, term2, opt)
   REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
   CLASS(ElemshapeData_), INTENT(IN) :: test
-  !! test functions
+  ! test functions
   CLASS(ElemshapeData_), INTENT(IN) :: trial
-  !! trial functions
+  ! trial functions
   INTEGER(I4B), INTENT(IN) :: term1
-  !! del_x_all
+  ! del_x_all
   INTEGER(I4B), INTENT(IN) :: term2
-  !! del_none
-  INTEGER( I4B ), INTENT( IN ) :: opt
-  !!
-  !! Define internal variables
-  !!
+  ! del_none
+  INTEGER(I4B), INTENT(IN) :: opt
+  !
+  ! Define internal variables
+  !
   INTEGER(I4B) :: ips, ii
   REAL(DFP), ALLOCATABLE :: realval(:)
   REAL(DFP), ALLOCATABLE :: m4(:, :, :, :)
-  !!
-  !! main
-  !!
+  !
+  ! main
+  !
   realval = trial%js * trial%ws * trial%thickness
-  !!
-  if( opt .eq. 1 ) then
+  !
+  IF (opt .EQ. 1) THEN
     CALL Reallocate(m4, &
       & SIZE(test%N, 1), &
       & SIZE(trial%N, 1), &
       & trial%refelem%nsd, 1)
-    !!
+    !
     DO ips = 1, SIZE(realval)
-      do ii = 1, size(m4, 3)
-        m4(:,:,ii, 1) = m4(:,:,ii, 1) + outerprod( &
+      DO ii = 1, SIZE(m4, 3)
+        m4(:, :, ii, 1) = m4(:, :, ii, 1) + outerprod( &
           & a=test%dNdXt(:, ii, ips), &
           & b=trial%N(:, ips)) * realval(ips)
-      end do
+      END DO
     END DO
-  else
+  ELSE
     CALL Reallocate(m4, &
       & SIZE(test%N, 1), &
       & SIZE(trial%N, 1), &
       & 1, trial%refelem%nsd)
-    !!
+    !
     DO ips = 1, SIZE(realval)
-      do ii = 1, SIZE(m4, 4)
-        m4(:,:,1,ii) = m4(:,:,1,ii) + outerprod( &
+      DO ii = 1, SIZE(m4, 4)
+        m4(:, :, 1, ii) = m4(:, :, 1, ii) + outerprod( &
           & a=test%dNdXt(:, ii, ips), &
           & b=trial%N(:, ips)) * realval(ips)
-      end do
+      END DO
     END DO
-  end if
-  !!
+  END IF
+  !
   CALL Convert(from=m4, to=ans)
-  !!
+  !
   DEALLOCATE (realval, m4)
-  !!
+  !
 END SUBROUTINE CM_10

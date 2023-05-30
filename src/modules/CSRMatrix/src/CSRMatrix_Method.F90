@@ -16,39 +16,34 @@
 !
 
 MODULE CSRMatrix_Method
-USE GlobalData
-USE BaseType
+USE CSRMatrix_ConstructorMethods
+USE CSRMatrix_IOMethods
+USE CSRMatrix_SparsityMethods
+USE CSRMatrix_SetMethods
+USE CSRMatrix_AddMethods
+USE CSRMatrix_SetRowMethods
+USE CSRMatrix_SetColMethods
+USE CSRMatrix_SetBlockRowMethods
+USE CSRMatrix_SetBlockColMethods
+USE CSRMatrix_GetMethods
+USE CSRMatrix_GetRowMethods
+USE CSRMatrix_GetColMethods
+USE CSRMatrix_GetBlockRowMethods
+USE CSRMatrix_GetBlockColMethods
+USE CSRMatrix_UnaryMethods
+USE CSRMatrix_ILUMethods
+USE CSRMatrix_LUSolveMethods
+USE CSRMatrix_MatVecMethods
+USE CSRMatrix_MatmulMethods
+USE CSRMatrix_ReorderingMethods
+USE CSRMatrix_DiagonalScalingMethods
+USE CSRMatrix_MatrixMarketIO
+USE CSRMatrix_Superlu
+USE CSRMatrix_SpectralMethods
+USE CSRMatrix_SchurMethods
+USE CSRMatrix_DBCMethods
+USE CSRMatrix_LinSolveMethods
 IMPLICIT NONE
-PRIVATE
-!!
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_CSR = 0
 INTEGER(I4B), PARAMETER, PUBLIC :: SPARSE_FMT_COO = 1
-!!
-#include "./include/ConstructorMethods.inc"
-#include "./include/IOMethods.inc"
-#include "./include/SparsityMethods.inc"
-#include "./include/SetMethods.inc"
-#include "./include/AddMethods.inc"
-#include "./include/SetRowMethods.inc"
-#include "./include/SetColMethods.inc"
-#include "./include/SetBlockRowMethods.inc"
-#include "./include/SetBlockColMethods.inc"
-#include "./include/GetMethods.inc"
-#include "./include/GetRowMethods.inc"
-#include "./include/GetColMethods.inc"
-#include "./include/GetBlockRowMethods.inc"
-#include "./include/GetBlockColMethods.inc"
-#include "./include/UnaryMethods.inc"
-#include "./include/ILUTMethods.inc"
-#include "./include/LUSolveMethods.inc"
-#include "./include/MatVecMethods.inc"
-#include "./include/MatmulMethods.inc"
-#include "./include/ReorderingMethods.inc"
-#include "./include/DiagonalScalingMethods.inc"
-! 🏁 here
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
 END MODULE CSRMatrix_Method

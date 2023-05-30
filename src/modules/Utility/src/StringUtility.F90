@@ -30,8 +30,8 @@ PRIVATE
 
 INTERFACE
   MODULE PURE FUNCTION UpperCase_char(chars) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=LEN(chars)) :: ans
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(LEN(chars)) :: ans
   END FUNCTION UpperCase_char
 END INTERFACE
 
@@ -51,7 +51,7 @@ PUBLIC :: UpperCase
 
 INTERFACE
   MODULE PURE SUBROUTINE ToUpperCase_Char(chars)
-    CHARACTER(LEN=*), INTENT(INOUT) :: chars
+    CHARACTER(*), INTENT(INOUT) :: chars
   END SUBROUTINE ToUpperCase_Char
 END INTERFACE
 
@@ -71,8 +71,8 @@ PUBLIC :: toUpperCase
 
 INTERFACE
   MODULE PURE FUNCTION LowerCase_char(chars) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=LEN(chars)) :: ans
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(LEN(chars)) :: ans
   END FUNCTION LowerCase_char
 END INTERFACE
 
@@ -92,7 +92,7 @@ PUBLIC :: LowerCase
 
 INTERFACE
   MODULE PURE SUBROUTINE ToLowerCase_Char(chars)
-    CHARACTER(LEN=*), INTENT(INOUT) :: chars
+    CHARACTER(*), INTENT(INOUT) :: chars
   END SUBROUTINE ToLowerCase_Char
 END INTERFACE
 
@@ -112,7 +112,7 @@ PUBLIC :: toLowerCase
 
 INTERFACE
   MODULE PURE FUNCTION isWhiteChar_char(char) RESULT(Ans)
-    CHARACTER(LEN=1), INTENT(IN) :: char
+    CHARACTER(1), INTENT(IN) :: char
     LOGICAL(LGT) :: ans
   END FUNCTION isWhiteChar_char
 END INTERFACE
@@ -133,7 +133,7 @@ PUBLIC :: isWhiteChar
 
 INTERFACE
   MODULE PURE FUNCTION isBlank_chars(chars) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(IN) :: chars
     LOGICAL(LGT) :: ans
   END FUNCTION isBlank_chars
 END INTERFACE
@@ -163,7 +163,7 @@ PUBLIC :: isBlank
 
 INTERFACE
   MODULE PURE FUNCTION numStrings_chars(chars) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(IN) :: chars
     INTEGER(I4B) :: ans
   END FUNCTION numStrings_chars
 END INTERFACE
@@ -185,8 +185,8 @@ PUBLIC :: numStrings
 
 INTERFACE
   MODULE PURE FUNCTION numMatchStr_chars(chars, pattern) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=*), INTENT(IN) :: pattern
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(IN) :: pattern
     INTEGER(I4B) :: ans
   END FUNCTION numMatchStr_chars
 END INTERFACE
@@ -215,8 +215,8 @@ PUBLIC :: numMatchStr
 
 INTERFACE
   MODULE PURE FUNCTION isPresent_chars(chars, pattern) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=*), INTENT(IN) :: pattern
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(IN) :: pattern
     LOGICAL(LGT) :: ans
   END FUNCTION isPresent_chars
 END INTERFACE
@@ -237,8 +237,8 @@ PUBLIC :: isPresent
 
 INTERFACE
   MODULE PURE SUBROUTINE strFind_chars(chars, pattern, indices)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=*), INTENT(IN) :: pattern
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(IN) :: pattern
     INTEGER(I4B), ALLOCATABLE, INTENT(OUT) :: indices(:)
   END SUBROUTINE strFind_chars
 END INTERFACE
@@ -271,9 +271,9 @@ PUBLIC :: strFind
 
 INTERFACE
   MODULE PURE SUBROUTINE FindReplace_chars(chars, findp, repp)
-    CHARACTER(LEN=*), INTENT(INOUT) :: chars
-    CHARACTER(LEN=*), INTENT(IN) :: findp
-    CHARACTER(LEN=*), INTENT(IN) :: repp
+    CHARACTER(*), INTENT(INOUT) :: chars
+    CHARACTER(*), INTENT(IN) :: findp
+    CHARACTER(*), INTENT(IN) :: repp
   END SUBROUTINE FindReplace_chars
 END INTERFACE
 
@@ -306,8 +306,8 @@ PUBLIC :: FindReplace
 INTERFACE
   MODULE PURE SUBROUTINE getField_chars(i, chars, field, ierr)
     INTEGER(I4B), INTENT(IN) :: i
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=:), ALLOCATABLE, INTENT(OUT) :: field
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(:), ALLOCATABLE, INTENT(OUT) :: field
     INTEGER(I4B), INTENT(OUT), OPTIONAL :: ierr
   END SUBROUTINE getField_chars
 END INTERFACE
@@ -332,7 +332,7 @@ PUBLIC :: getField
 
 INTERFACE
   MODULE PURE SUBROUTINE SlashRep_chars(chars)
-    CHARACTER(LEN=*), INTENT(INOUT) :: chars
+    CHARACTER(*), INTENT(INOUT) :: chars
   END SUBROUTINE SlashRep_chars
 END INTERFACE
 
@@ -355,10 +355,10 @@ PUBLIC :: SlashRep
 
 INTERFACE
   MODULE PURE SUBROUTINE getFileParts_chars(chars, path, fname, ext)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=*), INTENT(OUT) :: path
-    CHARACTER(LEN=*), INTENT(OUT) :: fname
-    CHARACTER(LEN=*), INTENT(OUT) :: ext
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(OUT) :: path
+    CHARACTER(*), INTENT(OUT) :: fname
+    CHARACTER(*), INTENT(OUT) :: ext
   END SUBROUTINE getFileParts_chars
 END INTERFACE
 
@@ -374,8 +374,8 @@ PUBLIC :: getFileParts
 
 INTERFACE
   MODULE PURE SUBROUTINE getPath_chars(chars, path)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=*), INTENT(OUT) :: path
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(OUT) :: path
   END SUBROUTINE getPath_chars
 END INTERFACE
 
@@ -391,8 +391,8 @@ PUBLIC :: getPath
 
 INTERFACE
   MODULE PURE SUBROUTINE getFileName_chars(chars, fname)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=*), INTENT(OUT) :: fname
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(OUT) :: fname
   END SUBROUTINE getFileName_chars
 END INTERFACE
 
@@ -408,8 +408,8 @@ PUBLIC :: getFileName
 
 INTERFACE
   MODULE PURE SUBROUTINE getFileNameExt_chars(chars, ext)
-    CHARACTER(LEN=*), INTENT(IN) :: chars
-    CHARACTER(LEN=*), INTENT(OUT) :: ext
+    CHARACTER(*), INTENT(IN) :: chars
+    CHARACTER(*), INTENT(OUT) :: ext
   END SUBROUTINE getFileNameExt_chars
 END INTERFACE
 
@@ -435,7 +435,7 @@ PUBLIC :: getFileNameExt
 
 INTERFACE
   MODULE FUNCTION getExtension_chars(char) RESULT(ext)
-    CHARACTER(LEN=*), INTENT(IN) :: char
+    CHARACTER(*), INTENT(IN) :: char
     CHARACTER(7) :: ext
   END FUNCTION
 END INTERFACE

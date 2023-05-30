@@ -31,14 +31,9 @@
 ! - @AuxRoutinesMethods TODO
 
 MODULE GE_Lapack_Method
-USE GlobalData
-IMPLICIT NONE
-PRIVATE
-
-#include "./GE/LinearSolveMethods.inc"
-#include "./GE/EigenValueMethods.inc"
-#include "./GE/CompRoutineMethods.inc"
-#include "./GE/LUMethods.inc"
-#include "./GE/SingularValueMethods.inc"
-
+USE GE_CompRoutineMethods
+USE GE_EigenValueMethods
+USE GE_LUMethods
+USE GE_LinearSolveMethods
+USE GE_SingularValueMethods
 END MODULE GE_Lapack_Method

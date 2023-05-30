@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: This module contains methods for [[ReferencePrism_]]
 
 MODULE ReferencePrism_Method
@@ -25,13 +25,12 @@ USE BaseType
 IMPLICIT NONE
 PRIVATE
 
-
 !----------------------------------------------------------------------------
 !                                                       Initiate@Prism
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
+! date:         1 March 2021
 ! summary: This subroutine for constructing the object
 !
 !### Usage
@@ -41,11 +40,11 @@ PRIVATE
 !```
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Prism( obj, NSD, XiJ )
-  CLASS( ReferencePrism_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
-END SUBROUTINE initiate_ref_Prism
+  MODULE PURE SUBROUTINE initiate_ref_Prism(obj, NSD, XiJ)
+    CLASS(ReferencePrism_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  END SUBROUTINE initiate_ref_Prism
 END INTERFACE
 
 INTERFACE Initiate
@@ -59,11 +58,11 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Prism( NSD, XiJ ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferencePrism_ ) :: obj
-END FUNCTION reference_Prism
+  MODULE PURE FUNCTION reference_Prism(NSD, XiJ) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    TYPE(ReferencePrism_) :: obj
+  END FUNCTION reference_Prism
 END INTERFACE
 
 INTERFACE ReferencePrism
@@ -77,11 +76,11 @@ PUBLIC :: ReferencePrism
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Prism_Pointer( NSD, XiJ ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferencePrism_ ), POINTER :: obj
-END FUNCTION reference_Prism_Pointer
+  MODULE PURE FUNCTION reference_Prism_Pointer(NSD, XiJ) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    CLASS(ReferencePrism_), POINTER :: obj
+  END FUNCTION reference_Prism_Pointer
 END INTERFACE
 
 INTERFACE ReferencePrism_Pointer
@@ -95,12 +94,12 @@ PUBLIC :: ReferencePrism_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE highOrderElement_Prism( RefElem, Order, obj, ipType )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-END SUBROUTINE highOrderElement_Prism
+  MODULE PURE SUBROUTINE highOrderElement_Prism(RefElem, Order, obj, ipType)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    INTEGER(I4B), INTENT(IN) :: Order
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highOrderElement_Prism
 END INTERFACE
 
 PUBLIC :: highOrderElement_Prism
@@ -110,11 +109,11 @@ PUBLIC :: highOrderElement_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Prism( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferencePrism_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Prism
+  MODULE PURE FUNCTION Measure_Simplex_Prism(RefElem, XiJ) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    REAL(DFP), INTENT(IN) :: XiJ(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex_Prism
 END INTERFACE
 
 PUBLIC :: Measure_Simplex_Prism
@@ -124,12 +123,12 @@ PUBLIC :: Measure_Simplex_Prism
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Prism_Quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferencePrism_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION Prism_Quality
+  MODULE FUNCTION Prism_Quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION Prism_Quality
 END INTERFACE
 
 PUBLIC :: Prism_Quality

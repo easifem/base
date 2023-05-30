@@ -36,7 +36,7 @@ PRIVATE
 INTERFACE
   MODULE SUBROUTINE refelem_Display(obj, msg, unitno)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
   END SUBROUTINE refelem_Display
 END INTERFACE
@@ -58,7 +58,7 @@ PUBLIC :: Display
 INTERFACE
   MODULE SUBROUTINE reftopo_Display(obj, msg, unitno)
     CLASS(ReferenceTopology_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
   END SUBROUTINE reftopo_Display
 END INTERFACE
@@ -138,11 +138,11 @@ INTERFACE
   END SUBROUTINE refelem_Deallocate1
 END INTERFACE
 
-INTERFACE Deallocate
+INTERFACE DEALLOCATE
   MODULE PROCEDURE refelem_Deallocate1
 END INTERFACE
 
-PUBLIC :: Deallocate
+PUBLIC :: DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                            Deallocate@ConstructorMethods
@@ -158,7 +158,7 @@ INTERFACE
   END SUBROUTINE refelem_Deallocate2
 END INTERFACE
 
-INTERFACE Deallocate
+INTERFACE DEALLOCATE
   MODULE PROCEDURE refelem_Deallocate2
 END INTERFACE
 
@@ -325,7 +325,7 @@ PUBLIC :: getConnectivity
 
 INTERFACE
   MODULE PURE FUNCTION Element_Type(ElemName) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: ElemName
+    CHARACTER(*), INTENT(IN) :: ElemName
     INTEGER(I4B) :: Ans
   END FUNCTION Element_Type
 END INTERFACE
@@ -347,7 +347,7 @@ PUBLIC :: ElementType
 INTERFACE
   MODULE PURE FUNCTION Element_Name(ElemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
-    CHARACTER(LEN=50) :: Ans
+    CHARACTER(50) :: Ans
   END FUNCTION Element_Name
 END INTERFACE
 
@@ -905,7 +905,7 @@ PUBLIC :: FacetTopology
 INTERFACE
   MODULE PURE SUBROUTINE get_vtk_elemType(ElemType, vtk_type, nptrs)
     INTEGER(I4B), INTENT(IN) :: ElemType
-    INTEGER(Int8), INTENT(OUT) :: vtk_type
+    INTEGER(INT8), INTENT(OUT) :: vtk_type
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: nptrs(:)
   END SUBROUTINE get_vtk_elemType
 END INTERFACE

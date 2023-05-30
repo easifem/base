@@ -25,6 +25,19 @@ USE BaseType
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: GetSym
+PUBLIC :: Initiate
+PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: SetSparsity
+PUBLIC :: CSRSpasity
+PUBLIC :: CSRSpasityPointer
+PUBLIC :: DEALLOCATE
+PUBLIC :: GetDiagonal
+PUBLIC :: Display
+PUBLIC :: Shape
+PUBLIC :: Size
+PUBLIC :: GetNNZ
+
 !----------------------------------------------------------------------------
 !                                                       Initiate@Constructor
 !----------------------------------------------------------------------------
@@ -114,13 +127,9 @@ INTERFACE Initiate
   MODULE PROCEDURE csr_initiate1, csr_initiate2, csr_initiate3
 END INTERFACE Initiate
 
-PUBLIC :: Initiate
-
 INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE csr_initiate2
 END INTERFACE ASSIGNMENT(=)
-
-PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                            CSRSparsity@ConstructorMethods
@@ -170,8 +179,6 @@ INTERFACE CSRSpasity
   MODULE PROCEDURE csr_constructor1, csr_constructor2
 END INTERFACE CSRSpasity
 
-PUBLIC :: CSRSpasity
-
 !----------------------------------------------------------------------------
 !                                       CSRSparsityPointer@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -220,8 +227,6 @@ INTERFACE CSRSpasityPointer
   MODULE PROCEDURE csr_constructor_1, csr_constructor_2
 END INTERFACE CSRSpasityPointer
 
-PUBLIC :: CSRSpasityPointer
-
 !----------------------------------------------------------------------------
 !                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -236,11 +241,9 @@ INTERFACE
   END SUBROUTINE csr_Deallocate
 END INTERFACE
 
-INTERFACE Deallocate
+INTERFACE DEALLOCATE
   MODULE PROCEDURE csr_Deallocate
-END INTERFACE Deallocate
-
-PUBLIC :: Deallocate
+END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                         Display@IOMethods
@@ -253,7 +256,7 @@ PUBLIC :: Deallocate
 INTERFACE
   MODULE SUBROUTINE csr_Display(obj, Msg, UnitNo)
     TYPE(CSRSparsity_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: Msg
+    CHARACTER(*), INTENT(IN) :: Msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
   END SUBROUTINE csr_Display
 END INTERFACE
@@ -261,8 +264,6 @@ END INTERFACE
 INTERFACE Display
   MODULE PROCEDURE csr_Display
 END INTERFACE Display
-
-PUBLIC :: Display
 
 !----------------------------------------------------------------------------
 !                                                          Shape@GetMethods
@@ -286,8 +287,6 @@ END INTERFACE
 INTERFACE Shape
   MODULE PROCEDURE csr_shape
 END INTERFACE Shape
-
-PUBLIC :: Shape
 
 !----------------------------------------------------------------------------
 !                                                           Size@GetMethods
@@ -316,8 +315,6 @@ INTERFACE Size
   MODULE PROCEDURE csr_size
 END INTERFACE Size
 
-PUBLIC :: Size
-
 !----------------------------------------------------------------------------
 !                                                          getNNZ@GetMethods
 !----------------------------------------------------------------------------
@@ -337,7 +334,52 @@ INTERFACE getNNZ
   MODULE PROCEDURE csr_getNNZ
 END INTERFACE getNNZ
 
-PUBLIC :: getNNZ
+!----------------------------------------------------------------------------
+!                                                          getNNZ@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-28
+! summary:         Return the total number of non zero entry
+
+INTERFACE
+  MODULE PURE FUNCTION csr_getNNZ1(obj, from) RESULT(Ans)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    CHARACTER(1), INTENT(IN) :: from
+    !! "U" nnz in upper triangular part, j > i
+    !! "L" nnz in lower triangular part, i > j
+    !! "D" nnz in diagonal part, i=j
+    !! "A" nnz in whole matrix, L+U+D
+    INTEGER(I4B) :: Ans
+  END FUNCTION csr_getNNZ1
+END INTERFACE
+
+INTERFACE getNNZ
+  MODULE PROCEDURE csr_getNNZ1
+END INTERFACE getNNZ
+
+!----------------------------------------------------------------------------
+!                                                          getNNZ@GetMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-01-28
+! summary: Return the total number of non zero in U, L and D
+
+INTERFACE
+  MODULE PURE FUNCTION csr_getNNZ2(obj, from) RESULT(Ans)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    CHARACTER(1), INTENT(IN) :: from(1)
+    !! this argument is not referred, it is here
+    !! to create a unique interface only
+    INTEGER(I4B) :: Ans(3)
+    !! [nnzU, nnzL, nnzD]
+  END FUNCTION csr_getNNZ2
+END INTERFACE
+
+INTERFACE getNNZ
+  MODULE PROCEDURE csr_getNNZ2
+END INTERFACE getNNZ
 
 !----------------------------------------------------------------------------
 !                                                      getDiagonal@GeMethods
@@ -379,8 +421,6 @@ END INTERFACE
 INTERFACE getDiagonal
   MODULE PROCEDURE csr_getDiagonal1
 END INTERFACE getDiagonal
-
-PUBLIC :: getDiagonal
 
 !----------------------------------------------------------------------------
 !                                                    getDiagonal@GetMethods
@@ -442,8 +482,6 @@ END INTERFACE
 INTERFACE setSparsity
   MODULE PROCEDURE csr_setSparsity1
 END INTERFACE setSparsity
-
-PUBLIC :: setSparsity
 
 !----------------------------------------------------------------------------
 !                                                     setSparsity@SetMethods
@@ -609,5 +647,44 @@ END INTERFACE
 INTERFACE setSparsity
   MODULE PROCEDURE csr_setSparsity_final
 END INTERFACE setSparsity
+
+!----------------------------------------------------------------------------
+!                                                         GetSym@SymMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-01-28
+! summary: Get symmetric part
+
+INTERFACE
+  MODULE SUBROUTINE csr_GetSym1(obj, symObj, from)
+    TYPE(CSRSparsity_), INTENT(IN) :: obj
+    TYPE(CSRSparsity_), INTENT(INOUT) :: symObj
+    CHARACTER(1), INTENT(IN) :: from
+  END SUBROUTINE csr_GetSym1
+END INTERFACE
+
+INTERFACE GetSym
+  MODULE PROCEDURE csr_GetSym1
+END INTERFACE GetSym
+
+!----------------------------------------------------------------------------
+!                                                         GetSym@SymMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-01-28
+! summary: Get symmetric part
+
+INTERFACE
+  MODULE SUBROUTINE csr_GetSym2(obj, from)
+    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
+    CHARACTER(1), INTENT(IN) :: from
+  END SUBROUTINE csr_GetSym2
+END INTERFACE
+
+INTERFACE GetSym
+  MODULE PROCEDURE csr_GetSym2
+END INTERFACE GetSym
 
 END MODULE CSRSparsity_Method

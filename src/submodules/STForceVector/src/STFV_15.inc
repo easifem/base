@@ -19,12 +19,12 @@
 !                                                               STForceVector
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE STFV_15( ans, test, term1 )
+PURE SUBROUTINE STFV_15(ans, test, term1)
   !! intent of dummy variable
-  CLASS(STElemshapeData_), INTENT(IN) :: test( : )
-  INTEGER( I4B ), INTENT( IN ) :: term1
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  INTEGER(I4B), INTENT(IN) :: term1
   !! DEL_x, DEL_y, DEL_z
-  REAL(DFP), ALLOCATABLE, INTENT( INOUT ) :: ans(:, :)
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
   !!
   !! Define internal variable
   !!
@@ -38,9 +38,9 @@ PURE SUBROUTINE STFV_15( ans, test, term1 )
     & SIZE(test(1)%N, 1), &
     & SIZE(test(1)%T))
   !!
-  DO ipt = 1, SIZE( test )
+  DO ipt = 1, SIZE(test)
     !!
-    realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness
+    realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness * test(ipt)%jt
     !!
     DO ips = 1, SIZE(realval)
       ans = ans + realval(ips) * test(ipt)%dNTdXt(:, :, term1, ips)

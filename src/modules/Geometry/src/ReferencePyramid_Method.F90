@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: This module contains methods for [[ReferencePyramid_]]
 
 MODULE ReferencePyramid_Method
@@ -30,15 +30,15 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
+! date:         1 March 2021
 ! summary: This subroutine for constructing the object
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Pyramid( obj, NSD, XiJ )
-  CLASS( ReferencePyramid_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ( :, : )
-END SUBROUTINE initiate_ref_Pyramid
+  MODULE PURE SUBROUTINE initiate_ref_Pyramid(obj, NSD, XiJ)
+    CLASS(ReferencePyramid_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  END SUBROUTINE initiate_ref_Pyramid
 END INTERFACE
 
 INTERFACE Initiate
@@ -52,11 +52,11 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Pyramid( NSD, XiJ ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  TYPE( ReferencePyramid_ ) :: obj
-END FUNCTION reference_Pyramid
+  MODULE PURE FUNCTION reference_Pyramid(NSD, XiJ) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    TYPE(ReferencePyramid_) :: obj
+  END FUNCTION reference_Pyramid
 END INTERFACE
 
 INTERFACE ReferencePyramid
@@ -70,11 +70,11 @@ PUBLIC :: ReferencePyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Pyramid_Pointer( NSD, XiJ ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: XiJ(:,:)
-  CLASS( ReferencePyramid_ ), POINTER :: obj
-END FUNCTION reference_Pyramid_Pointer
+  MODULE PURE FUNCTION reference_Pyramid_Pointer(NSD, XiJ) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    CLASS(ReferencePyramid_), POINTER :: obj
+  END FUNCTION reference_Pyramid_Pointer
 END INTERFACE
 
 INTERFACE ReferencePyramid_Pointer
@@ -88,12 +88,12 @@ PUBLIC :: ReferencePyramid_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE highOrderElement_Pyramid( RefElem, Order, obj, ipType )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: RefElem
-  INTEGER( I4B ), INTENT( IN ) :: Order
-  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-END SUBROUTINE highOrderElement_Pyramid
+  MODULE PURE SUBROUTINE highOrderElement_Pyramid(RefElem, Order, obj, ipType)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    INTEGER(I4B), INTENT(IN) :: Order
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highOrderElement_Pyramid
 END INTERFACE
 
 PUBLIC :: highOrderElement_Pyramid
@@ -103,11 +103,11 @@ PUBLIC :: highOrderElement_Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Pyramid( RefElem, XiJ ) RESULT( Ans )
-  CLASS( ReferencePyramid_ ), INTENT( IN ) :: RefElem
-  REAL( DFP ), INTENT( IN ) :: XiJ( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Pyramid
+  MODULE PURE FUNCTION Measure_Simplex_Pyramid(RefElem, XiJ) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    REAL(DFP), INTENT(IN) :: XiJ(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex_Pyramid
 END INTERFACE
 
 PUBLIC :: Measure_Simplex_Pyramid
@@ -117,12 +117,12 @@ PUBLIC :: Measure_Simplex_Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Pyramid_Quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferencePyramid_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION Pyramid_Quality
+  MODULE FUNCTION Pyramid_Quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION Pyramid_Quality
 END INTERFACE
 
 PUBLIC :: Pyramid_Quality

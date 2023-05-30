@@ -27,7 +27,6 @@ PUBLIC :: ForceVector
 !                                                               ForceVector
 !----------------------------------------------------------------------------
 
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 May 2022
 ! summary: Force vector
@@ -55,6 +54,32 @@ END INTERFACE ForceVector
 !                                                               ForceVector
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 20 Jan 2022
+! summary: Force vector
+!
+!# Introduction
+!
+! $$
+! F_{I}=\int_{\Omega}\rho N^{I}d\Omega
+! $$
+
+INTERFACE
+  MODULE PURE FUNCTION ForceVector_2b(test, c) RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: test
+    REAL(DFP), INTENT(IN) :: c(:)
+    !! defined on quadrature point
+    REAL(DFP), ALLOCATABLE :: ans(:)
+  END FUNCTION ForceVector_2b
+END INTERFACE
+
+INTERFACE ForceVector
+  MODULE PROCEDURE ForceVector_2b
+END INTERFACE ForceVector
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
@@ -69,8 +94,8 @@ END INTERFACE ForceVector
 INTERFACE
   MODULE PURE FUNCTION ForceVector_2(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT( IN ) :: c
-    TYPE(FEVariableScalar_), INTENT( IN ) :: crank
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableScalar_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION ForceVector_2
 END INTERFACE
@@ -82,7 +107,6 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 !                                                               ForceVector
 !----------------------------------------------------------------------------
-
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
@@ -99,8 +123,8 @@ END INTERFACE ForceVector
 INTERFACE
   MODULE PURE FUNCTION ForceVector_3(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT( IN ) :: c
-    TYPE(FEVariableVector_), INTENT( IN ) :: crank
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableVector_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION ForceVector_3
 END INTERFACE
@@ -128,8 +152,8 @@ END INTERFACE ForceVector
 INTERFACE
   MODULE PURE FUNCTION ForceVector_4(test, c, crank) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT( IN ) :: c
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: crank
+    TYPE(FEVariable_), INTENT(IN) :: c
+    TYPE(FEVariableMatrix_), INTENT(IN) :: crank
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
   END FUNCTION ForceVector_4
 END INTERFACE
@@ -141,7 +165,6 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 !                                                               ForceVector
 !----------------------------------------------------------------------------
-
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
@@ -159,10 +182,10 @@ INTERFACE
   MODULE PURE FUNCTION ForceVector_5(test, c1, c1rank, c2, c2rank) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT( IN ) :: c1
-    TYPE(FEVariable_), INTENT( IN ) :: c2
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c1rank
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c2rank
+    TYPE(FEVariable_), INTENT(IN) :: c1
+    TYPE(FEVariable_), INTENT(IN) :: c2
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+    TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION ForceVector_5
 END INTERFACE
@@ -174,7 +197,6 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 !                                                               ForceVector
 !----------------------------------------------------------------------------
-
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
@@ -192,10 +214,10 @@ INTERFACE
   MODULE PURE FUNCTION ForceVector_6(test, c1, c1rank, c2, c2rank) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT( IN ) :: c1
-    TYPE(FEVariable_), INTENT( IN ) :: c2
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c1rank
-    TYPE(FEVariableVector_), INTENT( IN ) :: c2rank
+    TYPE(FEVariable_), INTENT(IN) :: c1
+    TYPE(FEVariable_), INTENT(IN) :: c2
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+    TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION ForceVector_6
 END INTERFACE
@@ -207,7 +229,6 @@ END INTERFACE ForceVector
 !----------------------------------------------------------------------------
 !                                                               ForceVector
 !----------------------------------------------------------------------------
-
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 20 Jan 2022
@@ -225,10 +246,10 @@ INTERFACE
   MODULE PURE FUNCTION ForceVector_7(test, c1, c1rank, c2, c2rank) &
     & RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
-    TYPE(FEVariable_), INTENT( IN ) :: c1
-    TYPE(FEVariable_), INTENT( IN ) :: c2
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c1rank
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: c2rank
+    TYPE(FEVariable_), INTENT(IN) :: c1
+    TYPE(FEVariable_), INTENT(IN) :: c2
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     REAL(DFP), ALLOCATABLE :: ans(:, :, :)
   END FUNCTION ForceVector_7
 END INTERFACE

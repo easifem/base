@@ -35,12 +35,12 @@ PUBLIC :: DotLine, EqualLine
 PUBLIC :: TIMESTAMP
 PUBLIC :: setDisplayProfile
 
-CHARACTER(LEN=*), PARAMETER :: equal = "=============================="
-CHARACTER(LEN=*), PARAMETER :: dot = ".............................."
-CHARACTER(LEN=*), PARAMETER :: dash = "------------------------------"
-CHARACTER(LEN=*), PARAMETER :: COLOR_FG = "CYAN"
-CHARACTER(LEN=*), PARAMETER :: COLOR_BG = "BLACK"
-CHARACTER(LEN=*), PARAMETER :: COLOR_STYLE = "BOLD_ON"
+CHARACTER(*), PARAMETER :: equal = "=============================="
+CHARACTER(*), PARAMETER :: dot = ".............................."
+CHARACTER(*), PARAMETER :: dash = "------------------------------"
+CHARACTER(*), PARAMETER :: COLOR_FG = "CYAN"
+CHARACTER(*), PARAMETER :: COLOR_BG = "BLACK"
+CHARACTER(*), PARAMETER :: COLOR_STYLE = "BOLD_ON"
 
 TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: &
   & DisplayProfileTerminal = DISP_SETTINGS(&
@@ -121,14 +121,14 @@ END SUBROUTINE setDefaultSettings
 SUBROUTINE setDisplayProfile(DispProfile, advance, digmax, &
   & matsep, orient, sep, style, unit, zeroas)
   TYPE(DISP_SETTINGS), INTENT(IN) :: DispProfile
-  CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: advance
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: digmax
-  CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: matsep
-  CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: orient
-  CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: sep
-  CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: style
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: matsep
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: sep
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: style
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: unit
-  CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: zeroas
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: zeroas
   !> internal variables
   CALL DISP_SET(DispProfile)
   CALL DISP_SET(advance=advance, digmax=digmax, matsep=matsep, &
@@ -153,7 +153,7 @@ END SUBROUTINE setDisplayProfile
 
 SUBROUTINE Display_Str(msg, unitno, advance)
   ! Dummt arguments
-  CHARACTER(LEN=*), INTENT(IN) :: msg
+  CHARACTER(*), INTENT(IN) :: msg
   !! input message
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
   !! unit no
@@ -218,8 +218,8 @@ END SUBROUTINE Display_Str
 !```
 
 SUBROUTINE Display_Str2(val, msg, unitno, advance)
-  CHARACTER(LEN=*), INTENT(IN) :: val
-  CHARACTER(LEN=*), INTENT(IN) :: msg
+  CHARACTER(*), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
   LOGICAL(LGT), OPTIONAL, INTENT(IN) :: advance
   ! internal variables
@@ -1032,9 +1032,9 @@ END SUBROUTINE Display_Mat4_Int8
 FUNCTION Int2Str(I)
   ! Define intent of dummy arguments
   INTEGER(I4B), INTENT(IN) :: I
-  CHARACTER(LEN=15) :: Int2Str
+  CHARACTER(15) :: Int2Str
   ! Define internal variables
-  CHARACTER(LEN=15) :: Str
+  CHARACTER(15) :: Str
   WRITE (Str, "(I15)") I
   Int2Str = TRIM(ADJUSTL(Str))
 END FUNCTION Int2Str
@@ -1135,12 +1135,12 @@ END SUBROUTINE EqualLine
 
 SUBROUTINE TIMESTAMP()
   ! Define Intent of dummy Variable
-  CHARACTER(LEN=8) :: ampm
+  CHARACTER(8) :: ampm
   INTEGER(I4B) :: d
   INTEGER(I4B) :: h
   INTEGER(I4B) :: m
   INTEGER(I4B) :: mm
-  CHARACTER(LEN=9), PARAMETER, DIMENSION(12) :: month = (/ &
+  CHARACTER(9), PARAMETER, DIMENSION(12) :: month = (/ &
                          'January  ', 'February ', 'March    ', 'April    ', &
                          'May      ', 'June     ', 'July     ', 'August   ', &
                           'September', 'October  ', 'November ', 'December '/)

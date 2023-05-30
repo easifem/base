@@ -19,19 +19,19 @@
 !                                                              STForceVector
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE STFV_4( ans, test, term1, c, crank )
+PURE SUBROUTINE STFV_4(ans, test, term1, c, crank)
   !! intent of dummy variable
-  REAL(DFP), ALLOCATABLE, INTENT( INOUT ) :: ans(:, :, :, :)
-  CLASS(STElemshapeData_), INTENT(IN) :: test( : )
-  INTEGER( I4B ), INTENT( IN ) :: term1
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :, :)
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  INTEGER(I4B), INTENT(IN) :: term1
   !! DEL_NONE
-  TYPE(FEVariable_), INTENT( IN ) :: c
-  TYPE(FEVariableMatrix_), INTENT( IN ) :: crank
+  TYPE(FEVariable_), INTENT(IN) :: c
+  TYPE(FEVariableMatrix_), INTENT(IN) :: crank
   !!
   !! Define internal variable
   !!
   REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: cbar(:,:,:,:)
+  REAL(DFP), ALLOCATABLE :: cbar(:, :, :, :)
   INTEGER(I4B) :: ips, ipt
   !!
   !! main
@@ -43,18 +43,18 @@ PURE SUBROUTINE STFV_4( ans, test, term1, c, crank )
     & SIZE(cbar, 1), &
     & SIZE(cbar, 2), &
     & SIZE(test(1)%N, 1), &
-    & SIZE(test(1)%T) )
+    & SIZE(test(1)%T))
   !!
-  DO ipt = 1, SIZE( test )
+  DO ipt = 1, SIZE(test)
     !!
-    realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness
+    realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness * test(ipt)%jt
     !!
     DO ips = 1, SIZE(realval)
       ans = ans + realval(ips) &
         & * OUTERPROD( &
         & cbar(:, :, ips, ipt), &
         & test(ipt)%N(:, ips), &
-        & test(ipt)%T )
+        & test(ipt)%T)
     END DO
     !!
   END DO

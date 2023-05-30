@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	5 March 2021
+! date:         5 March 2021
 ! summary: This module contains methods for [[ReferenceHexahedron_]]
 
 MODULE ReferenceHexahedron_Method
@@ -30,15 +30,15 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	1 March 2021
+! date:         1 March 2021
 ! summary: This subroutine for constructing the object
 
 INTERFACE
-MODULE PURE SUBROUTINE initiate_ref_Hexahedron( obj, NSD, xij )
-  CLASS( ReferenceHexahedron_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij( :, : )
-END SUBROUTINE initiate_ref_Hexahedron
+  MODULE PURE SUBROUTINE initiate_ref_Hexahedron(obj, NSD, xij)
+    CLASS(ReferenceHexahedron_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+  END SUBROUTINE initiate_ref_Hexahedron
 END INTERFACE
 
 INTERFACE Initiate
@@ -52,11 +52,11 @@ PUBLIC :: Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Hexahedron( NSD, xij ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
-  TYPE( ReferenceHexahedron_ ) :: obj
-END FUNCTION reference_Hexahedron
+  MODULE PURE FUNCTION reference_Hexahedron(NSD, xij) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    TYPE(ReferenceHexahedron_) :: obj
+  END FUNCTION reference_Hexahedron
 END INTERFACE
 
 INTERFACE ReferenceHexahedron
@@ -70,11 +70,11 @@ PUBLIC :: ReferenceHexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION reference_Hexahedron_Pointer( NSD, xij ) RESULT( obj )
-  INTEGER( I4B ), INTENT( IN ) :: NSD
-  REAL( DFP ), INTENT( IN ), OPTIONAL :: xij(:,:)
-  CLASS( ReferenceHexahedron_ ), POINTER :: obj
-END FUNCTION reference_Hexahedron_Pointer
+  MODULE PURE FUNCTION reference_Hexahedron_Pointer(NSD, xij) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: NSD
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CLASS(ReferenceHexahedron_), POINTER :: obj
+  END FUNCTION reference_Hexahedron_Pointer
 END INTERFACE
 
 INTERFACE ReferenceHexahedron_Pointer
@@ -88,13 +88,13 @@ PUBLIC :: ReferenceHexahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE SUBROUTINE highorderElement_Hexahedron( refelem, order, obj, &
-  & ipType )
-  CLASS( ReferenceElement_ ), INTENT( IN ) :: refelem
-  INTEGER( I4B ), INTENT( IN ) :: order
-  CLASS ( ReferenceElement_ ), INTENT( INOUT ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: ipType
-END SUBROUTINE highorderElement_Hexahedron
+  MODULE PURE SUBROUTINE highorderElement_Hexahedron(refelem, order, obj, &
+    & ipType)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    INTEGER(I4B), INTENT(IN) :: order
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    INTEGER(I4B), INTENT(IN) :: ipType
+  END SUBROUTINE highorderElement_Hexahedron
 END INTERFACE
 
 PUBLIC :: highorderElement_Hexahedron
@@ -104,11 +104,11 @@ PUBLIC :: highorderElement_Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE PURE FUNCTION Measure_Simplex_Hexahedron( refelem, xij ) RESULT( Ans )
-  CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: refelem
-  REAL( DFP ), INTENT( IN ) :: xij( :, : )
-  REAL( DFP ) :: Ans
-END FUNCTION Measure_Simplex_Hexahedron
+  MODULE PURE FUNCTION Measure_Simplex_Hexahedron(refelem, xij) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP) :: Ans
+  END FUNCTION Measure_Simplex_Hexahedron
 END INTERFACE
 
 PUBLIC :: Measure_Simplex_Hexahedron
@@ -118,12 +118,12 @@ PUBLIC :: Measure_Simplex_Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION Hexahedron_quality( refelem, xij, measure ) RESULT( Ans )
-  CLASS( ReferenceHexahedron_ ), INTENT( IN ) :: refelem
-  REAL( DFP ) , INTENT( IN ) :: xij(:,:)
-  INTEGER( I4B ), INTENT( IN ) :: measure
-  REAL( DFP ) :: Ans
-END FUNCTION Hexahedron_quality
+  MODULE FUNCTION Hexahedron_quality(refelem, xij, measure) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    INTEGER(I4B), INTENT(IN) :: measure
+    REAL(DFP) :: Ans
+  END FUNCTION Hexahedron_quality
 END INTERFACE
 
 PUBLIC :: Hexahedron_Quality

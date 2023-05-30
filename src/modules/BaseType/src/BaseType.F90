@@ -12,7 +12,7 @@
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <https://www.gnu.org/licenses/>
+! along with this program.  If not, see < https://www.gnu.org/licenses/>
 !
 
 !> author: Dr. Vikas Sharma
@@ -22,6 +22,10 @@
 MODULE BaseType
 USE GlobalData
 USE String_Class, ONLY: String
+#ifdef USE_SuperLU
+USE SuperLUInterface
+USE ISO_C_BINDING, ONLY: C_CHAR, C_PTR, C_SIZE_T
+#endif
 IMPLICIT NONE
 PRIVATE
 
@@ -63,17 +67,17 @@ TYPE(Math_), PARAMETER, PUBLIC :: Math = Math_()
 TYPE :: BoundingBox_
   INTEGER(I4B) :: NSD
     !! Number of spatial dimension
-    !! NSD=1,2,3 for 1D, 2D, 3D box
+    !! NSD = 1, 2, 3 for 1D, 2D, 3D box
   REAL(DFP) :: Box(2, 3)
     !! Box contains the xmin, ymin, ...
     !! `Box(1:2, 1:3)`  an array containing box coordinates.
     !!- `Box(1:2, 1:3)`  an array containing box coordinates.
-    !!- `Box(1,1)` is x_min
-    !!- `Box(2,1)` is x_max
-    !!- `Box(1,2)` is y_min
-    !!- `Box(2,2)` is y_max
-    !!- `Box(1,3)` is z_min
-    !!- `Box(2,3)` is z_max
+    !!- `Box(1, 1)` is x_min
+    !!- `Box(2, 1)` is x_max
+    !!- `Box(1, 2)` is y_min
+    !!- `Box(2, 2)` is y_max
+    !!- `Box(1, 3)` is z_min
+    !!- `Box(2, 3)` is z_max
 END TYPE BoundingBox_
 
 PUBLIC :: BoundingBox_
@@ -104,7 +108,7 @@ PUBLIC :: BoundingBoxPointer_
 
 TYPE :: RealMatrix_
   INTEGER(I4B) :: tDimension = 0_I4B
-  CHARACTER(LEN=5) :: MatrixProp = 'UNSYM'
+  CHARACTER(5) :: MatrixProp = 'UNSYM'
   REAL(DFP), ALLOCATABLE :: Val(:, :)
 END TYPE RealMatrix_
 
@@ -178,8 +182,6 @@ PUBLIC :: RealVectorPointer_
 !> author: Vikas Sharma, Ph. D.
 ! summary: Data type for 3D vectors
 ! date: 24 Feb 2021
-!
-!{!pages/Vector3D.md!}
 
 TYPE :: Vector3D_
   INTEGER(I4B) :: tDimension = 1_I4B
@@ -261,7 +263,7 @@ PUBLIC :: DOFPointer_
 ! summary: SparseMatrix reordering scheme
 
 TYPE :: SparseMatrixReOrdering_
-  CHARACTER(LEN=10) :: name
+  CHARACTER(10) :: name
   INTEGER(I4B), ALLOCATABLE :: PERM(:)
   INTEGER(I4B), ALLOCATABLE :: IPERM(:)
 END TYPE SparseMatrixReOrdering_
@@ -313,27 +315,90 @@ END TYPE CSRSparsityPointer_
 PUBLIC :: CSRSparsityPointer_
 
 !----------------------------------------------------------------------------
+!                                                                 SuperLU_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  23-01-25
+! summary: SuperLU data structure
+
+#ifdef USE_SuperLU
+TYPE :: SuperLU_
+  TYPE(SuperMatrix) :: A
+  TYPE(SuperMatrix) :: B
+  TYPE(SuperMatrix) :: X
+  TYPE(SuperMatrix) :: L
+  TYPE(SuperMatrix) :: U
+  TYPE(GlobalLU_t) :: Glu
+  TYPE(superlu_options_t) :: options
+  TYPE(SuperLUStat_t) :: stat
+  TYPE(mem_usage_t) :: mem_usage
+  TYPE(C_PTR) :: Work
+  ! TYPE(C_PTR), POINTER :: Work
+  !! work-space for superlu, the size is decided by superlu
+  INTEGER(I4B), ALLOCATABLE :: ia(:)
+  !! starting index of row, size(m+1)
+  INTEGER(I4B), ALLOCATABLE :: ja(:)
+  !! column indices, size(nnz)
+  INTEGER(I4B), ALLOCATABLE :: perm_c(:)
+  !! col permutation, size(n)
+  INTEGER(I4B), ALLOCATABLE :: perm_r(:)
+  !! row permutation, size(m)
+  INTEGER(I4B), ALLOCATABLE :: etree(:)
+  !! elimination tree, size(n)
+  REAL(DFP), ALLOCATABLE :: nzval(:)
+  !! nonzero values, size(nnz)
+  REAL(DFP), ALLOCATABLE :: sol(:, :)
+  !! solution, size(n, nrhs)
+  REAL(DFP), ALLOCATABLE :: rhs(:, :)
+  !! right hand side, size(m, nrhs)
+  REAL(DFP), ALLOCATABLE :: R(:)
+  !! row digonal scaling, size(m)
+  REAL(DFP), ALLOCATABLE :: C(:)
+  !! column diagonal scaling, size(n)
+  REAL(DFP), ALLOCATABLE :: ferr(:)
+  !! size(nrhs)
+  REAL(DFP), ALLOCATABLE :: berr(:)
+  !! size(nrhs)
+  CHARACTER(1, kind=C_CHAR) :: equed(2)
+  INTEGER(C_SIZE_T) :: lwork = 0
+  INTEGER(C_SIZE_T) :: info = 0
+  REAL(DFP) :: recip_pivot_growth = 0.0_DFP
+  REAL(DFP) :: rcond = 0.0_DFP
+  LOGICAL(LGT) :: isAInitiated = .FALSE.
+  LOGICAL(LGT) :: isBInitiated = .FALSE.
+  LOGICAL(LGT) :: isXInitiated = .FALSE.
+  LOGICAL(LGT) :: isLInitiated = .FALSE.
+  LOGICAL(LGT) :: isUInitiated = .FALSE.
+  LOGICAL(LGT) :: isGluInitiated = .FALSE.
+  LOGICAL(LGT) :: isStatInitiated = .FALSE.
+END TYPE SuperLU_
+#endif
+
+!----------------------------------------------------------------------------
 !                                                             CSRMatrix_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
 ! summary: User data type for handling CSR matrices
-!
-!{!pages/CSRMatrix_.md}
 
 TYPE :: CSRMatrix_
-  LOGICAL(LGT) :: csrOwnership = .FALSE.
-    !! This variable, if true, denotes that csr is allocated inside the obj
+  LOGICAL(LGT) :: csrOwnership = .TRUE.
+  !! This variable, if true, denotes that csr is allocated inside the obj
   INTEGER(I4B) :: tDimension = 2_I4B
-  CHARACTER(LEN=20) :: matrixProp = 'UNSYM'
+  CHARACTER(20) :: matrixProp = 'UNSYM'
   REAL(DFP), ALLOCATABLE :: A(:)
   TYPE(CSRSparsity_) :: csr
+#ifdef USE_SuperLU
+  TYPE(SuperLU_), POINTER :: slu => NULL()
+#endif
 END TYPE CSRMatrix_
 
 PUBLIC :: CSRMatrix_
 
-TYPE(CSRMatrix_), PUBLIC, PARAMETER :: TypeCSRMatrix = CSRMatrix_(A=NULL())
+TYPE(CSRMatrix_), PUBLIC, PARAMETER :: TypeCSRMatrix = CSRMatrix_(&
+  & A=NULL(), slu=NULL())
 
 TYPE :: CSRMatrixPointer_
   CLASS(CSRMatrix_), POINTER :: ptr => NULL()
@@ -369,7 +434,7 @@ TYPE :: IterationData_
   INTEGER(I4B) :: convergenceType = RelativeConvergence
     !! Type of convergence
   INTEGER(I4B) :: convergenceIn = ConvergenceInRes
-    !! Check Convergence in solution and/ or residual
+    !! Check Convergence in solution and/or residual
   INTEGER(I4B) :: normType = NormL2
     !! Error norm type
   LOGICAL(LGT) :: converged = .FALSE.
@@ -477,7 +542,7 @@ PUBLIC :: DeformationGradientPointer_
 ! This data tyoe defines Left Cauchy Green Deformation tensor, which
 ! is an Eulerian tensor. It is symmetric and given by
 !
-! $$b=F F^{T}=V^2$$
+! $$b = F F^{T}=V^2$$
 !
 !{!pages/LeftCauchyGreen.md}
 
@@ -507,7 +572,7 @@ PUBLIC :: LeftCauchyGreenPointer_
 ! This data tyoe defines Right Cauchy Green Deformation tensor, which is an
 ! Eulerian tensor. It is symmetric and given by
 !
-! $$b=F F^{T}=V^2$$
+! $$b = F F^{T}=V^2$$
 !
 !{!pages/RightCauchyGreen.md}
 
@@ -900,7 +965,7 @@ END TYPE FEVariable_
 
 PUBLIC :: FEVariable_
 
-TYPE(FEVariable_), PARAMETER, PUBLIC ::TypeFEVariable=FEVariable_(val=NULL())
+TYPE(FEVariable_), PARAMETER, PUBLIC:: TypeFEVariable = FEVariable_(val = NULL())
 
 !----------------------------------------------------------------------------
 !                                                         FEVariableConstant_
@@ -912,7 +977,7 @@ TYPE(FEVariable_), PARAMETER, PUBLIC ::TypeFEVariable=FEVariable_(val=NULL())
 ! summary: FEVariable Constant
 
 TYPE :: FEVariableConstant_
-!! INTEGER(I4B) :: Val = 1
+!! INTEGER(I4B):: Val = 1
 END TYPE FEVariableConstant_
 
 PUBLIC :: FEVariableConstant_
@@ -933,7 +998,7 @@ TYPE(FEVariableConstant_), PARAMETER, PUBLIC :: TypeVariableConstant = &
 ! summary: FEVariable Space
 !
 TYPE :: FEVariableSpace_
-!! INTEGER(I4B) :: Val = 2
+!! INTEGER(I4B):: Val = 2
 END TYPE FEVariableSpace_
 
 PUBLIC :: FEVariableSpace_
@@ -953,7 +1018,7 @@ TYPE(FEVariableSpace_), PARAMETER, PUBLIC :: TypeVariableSpace = &
 ! summary: FEVariable Space time
 
 TYPE :: FEVariableSpaceTime_
-!! INTEGER(I4B) :: Val = 3
+!! INTEGER(I4B):: Val = 3
 END TYPE FEVariableSpaceTime_
 
 PUBLIC :: FEVariableSpaceTime_
@@ -973,7 +1038,7 @@ TYPE(FEVariableSpaceTime_), PARAMETER, PUBLIC :: &
 ! summary: FEVariable time
 
 TYPE :: FEVariableTime_
-!! INTEGER(I4B) :: Val = 4
+!! INTEGER(I4B):: Val = 4
 END TYPE FEVariableTime_
 
 PUBLIC :: FEVariableTime_
@@ -994,7 +1059,7 @@ TYPE(FEVariableTime_), PARAMETER, PUBLIC :: TypeVariableTime = &
 ! summary: FEVariable scalar
 
 TYPE :: FEVariableScalar_
-!!  INTEGER(I4B) :: Val = 0
+!!  INTEGER(I4B):: Val = 0
 END TYPE FEVariableScalar_
 
 PUBLIC :: FEVariableScalar_
@@ -1015,7 +1080,7 @@ TYPE(FEVariableScalar_), PARAMETER, PUBLIC :: &
 ! summary: FEVariable vector
 
 TYPE :: FEVariableVector_
-!!  INTEGER(I4B) :: Val = 1
+!!  INTEGER(I4B):: Val = 1
 END TYPE FEVariableVector_
 
 PUBLIC :: FEVariableVector_
@@ -1036,7 +1101,7 @@ TYPE(FEVariableVector_), PARAMETER, PUBLIC :: &
 ! summary: FEVariable matrix
 
 TYPE :: FEVariableMatrix_
-!!  INTEGER(I4B) :: Val = 2
+!!  INTEGER(I4B):: Val = 2
 END TYPE FEVariableMatrix_
 
 PUBLIC :: FEVariableMatrix_
@@ -1316,7 +1381,7 @@ PUBLIC :: STShapeDataPointer_
 !
 TYPE :: ElemShapeData_
   REAL(DFP), ALLOCATABLE :: N(:, :)
-    !! Shape function value `N(I,ips)`
+    !! Shape function value `N(I, ips)`
   REAL(DFP), ALLOCATABLE :: dNdXi(:, :, :)
     !! Local derivative of a shape function
   REAL(DFP), ALLOCATABLE :: jacobian(:, :, :)
@@ -1381,7 +1446,7 @@ TYPE, EXTENDS(ElemShapeData_) :: STElemShapeData_
     !! Local shape function derivative in time domain
   REAL(DFP), ALLOCATABLE :: dNTdt(:, :, :)
   REAL(DFP), ALLOCATABLE :: dNTdXt(:, :, :, :)
-    !! (I,a,i,ips)
+    !! (I, a, i, ips)
 END TYPE STElemShapeData_
 
 PUBLIC :: STElemShapeData_
@@ -1466,7 +1531,7 @@ TYPE(OpenMP_), PUBLIC :: OMP
 ABSTRACT INTERFACE
   PURE FUNCTION iface_SpaceTimeFunction(x, t) RESULT(ans)
     IMPORT :: DFP
-    ! CLASS( DirichletBC_ ), INTENT( IN ) :: obj
+    ! CLASS( DirichletBC_ ), INTENT( IN ):: obj
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP), INTENT(IN) :: t
     REAL(DFP) :: ans

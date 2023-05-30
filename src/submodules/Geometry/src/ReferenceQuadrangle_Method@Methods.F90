@@ -91,7 +91,7 @@ END PROCEDURE reference_Quadrangle_Pointer
 MODULE PROCEDURE highorderElement_Quadrangle
 INTEGER(I4B) :: NNS, I
   !!
-CALL Deallocate (obj)
+CALL DEALLOCATE (obj)
   !!
 SELECT CASE (order)
     !!
@@ -203,7 +203,7 @@ REAL(DFP) :: t(dim_num, 3)
   !!
 area = 0.0_DFP
   !!
-t(1:dim_num, 1:3) = reshape((/ &
+t(1:dim_num, 1:3) = RESHAPE((/ &
                             q(1:2, 1), q(1:2, 2), q(1:2, 3)/), (/dim_num, 3/))
   !!
 CALL TRIANGLEAREA2D(t, area_triangle)

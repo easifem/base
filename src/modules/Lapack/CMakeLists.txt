@@ -20,7 +20,17 @@ IF( USE_LAPACK95 )
     SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
     TARGET_SOURCES(
       ${PROJECT_NAME} PRIVATE
+      ${src_path}/GE_CompRoutineMethods.F90
+      ${src_path}/GE_EigenValueMethods.F90
+      ${src_path}/GE_LUMethods.F90
+      ${src_path}/GE_LinearSolveMethods.F90
+      ${src_path}/GE_SingularValueMethods.F90
       ${src_path}/GE_Lapack_Method.F90
+      ${src_path}/Sym_CompRoutineMethods.F90
+      ${src_path}/Sym_EigenValueMethods.F90
+      ${src_path}/Sym_LUMethods.F90
+      ${src_path}/Sym_LinearSolveMethods.F90
+      ${src_path}/Sym_SingularValueMethods.F90
       ${src_path}/Sym_Lapack_Method.F90
       ${src_path}/Lapack_Method.F90
       )

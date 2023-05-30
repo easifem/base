@@ -13,11 +13,13 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+
 MODULE GlobalData
 USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: INPUT_UNIT, &
   & OUTPUT_UNIT, ERROR_UNIT
 IMPLICIT NONE
 PUBLIC
+
 SAVE
 INTEGER, PARAMETER :: stdin = INPUT_UNIT
 INTEGER, PARAMETER :: stdout = OUTPUT_UNIT
@@ -33,9 +35,9 @@ INTEGER, PARAMETER :: REAL128 = SELECTED_REAL_KIND(15, 307)
 INTEGER, PARAMETER :: REAL64 = SELECTED_REAL_KIND(15, 307)
 INTEGER, PARAMETER :: REAL32 = SELECTED_REAL_KIND(6, 37)
 #ifdef USE_Real64
-INTEGER, PARAMETER :: Float = REAL64  ! Default
+INTEGER, PARAMETER :: Float = REAL64 ! Default
 #else
-INTEGER, PARAMETER :: Float = REAL32  ! Default
+INTEGER, PARAMETER :: Float = REAL32 ! Default
 #endif
 #ifdef USE_Real64
 INTEGER, PARAMETER :: DFP = REAL64
@@ -62,8 +64,10 @@ INTEGER, PARAMETER :: DFPC = KIND((1.0_REAL64, 1.0_REAL64))
 #else
 INTEGER, PARAMETER :: DFPC = KIND((1.0_REAL32, 1.0_REAL32))
 #endif
-INTEGER, PARAMETER :: LGT = KIND(.TRUE.)       !Logical
-! Format parameters
+INTEGER, PARAMETER :: LGT = KIND(.TRUE.)
+! Logical
+!
+!Format parameters
 #ifdef USE_Real128
 CHARACTER(*), PARAMETER :: FReal128 = '(E42.33E4)'
 #else
@@ -462,6 +466,7 @@ INTEGER(I4B), PARAMETER, PUBLIC :: LIS_CGN = 26
 INTEGER(I4B), PARAMETER, PUBLIC :: LIS_DBCG = 27
 INTEGER(I4B), PARAMETER, PUBLIC :: LIS_DBICG = 27
 INTEGER(I4B), PARAMETER, PUBLIC :: LIS_DQGMRES = 28
+INTEGER(I4B), PARAMETER, PUBLIC :: LIS_SUPERLU = 29
 ! Precondition sides
 INTEGER(I4B), PARAMETER :: NoPrecond = 0
 INTEGER(I4B), PARAMETER :: PrecondLeft = 1
@@ -472,18 +477,20 @@ INTEGER(I4B), PARAMETER, PUBLIC :: RIGHT_PRECONDITION = 2
 INTEGER(I4B), PARAMETER, PUBLIC :: LEFT_RIGHT_PRECONDITION = 3
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_NONE = 0
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_JACOBI = 1
-INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILUK = 2
+INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILU = 2
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_SSOR = 3
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_HYBRID = 4
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_IS = 5
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_SAINV = 6
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_SAAMG = 7
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILUC = 8
-INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILUT = 9
+INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ADDS = 9
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILUTP = 10
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILUD = 11
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILUDP = 12
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILU0 = 13
+INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILUK = 14
+INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILUT = 15
 ! Linear solver/ linear algebra engines
 INTEGER(I4B), PARAMETER, PUBLIC :: NATIVE_SERIAL = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: NATIVE_OMP = 2
@@ -500,35 +507,35 @@ INTEGER(I4B), PARAMETER :: PenaltyBC = 4
 INTEGER(I4B), PARAMETER :: AugmentedBC = 5
 ! Symmetric and Skewsymmertic Nitsche Formulation
 INTEGER(I4B), PARAMETER :: SkewSymNitsch = 1, SymNitsche = 2
-CHARACTER(LEN=*), PARAMETER :: CHAR_BLANK = " "
+CHARACTER(*), PARAMETER :: CHAR_BLANK = " "
     !! Character representing a space symbol
-CHARACTER(LEN=*), PARAMETER :: CHAR_BANG = "!"
+CHARACTER(*), PARAMETER :: CHAR_BANG = "!"
     !! Character representing a comment symbol
-CHARACTER(LEN=*), PARAMETER :: CHAR_DOT = "."
+CHARACTER(*), PARAMETER :: CHAR_DOT = "."
     !! Character representing a period
-CHARACTER(LEN=*), PARAMETER :: CHAR_FSLASH = "/"
+CHARACTER(*), PARAMETER :: CHAR_FSLASH = "/"
     !! Character representing a forward slash
-CHARACTER(LEN=*), PARAMETER :: CHAR_BSLASH = ACHAR(92)
+CHARACTER(*), PARAMETER :: CHAR_BSLASH = ACHAR(92)
     !! Character representing a backward slash
-CHARACTER(LEN=*), PARAMETER :: CHAR_COLON = ":"
+CHARACTER(*), PARAMETER :: CHAR_COLON = ":"
     !! Character representing a colon
 #ifdef WIN32
-CHARACTER(LEN=*), PARAMETER :: CHAR_SLASH = CHAR_BSLASH
+CHARACTER(*), PARAMETER :: CHAR_SLASH = CHAR_BSLASH
     !! This is needed for doxygen to parse correctly
     !! The slash symbol used by the file system
     !! (BLASH for Windows, FSLASH for everything else)
 #else
-CHARACTER(LEN=*), PARAMETER :: CHAR_SLASH = CHAR_FSLASH
+CHARACTER(*), PARAMETER :: CHAR_SLASH = CHAR_FSLASH
     !! The slash symbol used by the file system
     !! (BLASH for Windows, FSLASH for everything else)
 #endif
-CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_SPACE = ' '
+CHARACTER(1), PUBLIC, PARAMETER :: CHAR_SPACE = ' '
     !! Character constant for a single space
-CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_CR = CHAR(13)
+CHARACTER(1), PUBLIC, PARAMETER :: CHAR_CR = CHAR(13)
     !! Character constant for a carraige return
-CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_LF = CHAR(10)
+CHARACTER(1), PUBLIC, PARAMETER :: CHAR_LF = CHAR(10)
     !! Character constant for a line feed
-CHARACTER(LEN=1), PUBLIC, PARAMETER :: CHAR_TAB = CHAR(9)
+CHARACTER(1), PUBLIC, PARAMETER :: CHAR_TAB = CHAR(9)
 
 INTEGER(I4B), PARAMETER, PUBLIC :: Constant = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: Space = 2
@@ -546,56 +553,3 @@ INTEGER(I4B), PARAMETER, PUBLIC :: Quadrature = 2
 INTEGER(I4B), PARAMETER, PUBLIC :: MAX_CHUNK_SIZE = 1024
 
 END MODULE GlobalData
-
-! INTEGER(I4B), PARAMETER :: LagrangePolynomial = 1
-! INTEGER(I4B), PARAMETER :: SerendipityPolynomial = 2
-! INTEGER(I4B), PARAMETER :: HeirarchicalPolynomial = 3
-! INTEGER(I4B), PARAMETER :: Jacobi = 10
-! INTEGER(I4B), PARAMETER :: Ultraspherical = 15
-! INTEGER(I4B), PARAMETER :: Legendre = 2
-! INTEGER(I4B), PARAMETER :: Chebyshev = 4
-! INTEGER(I4B), PARAMETER :: Lobatto = 5
-! !!
-! !! Quadrature types
-! !!
-! INTEGER(I4B), PARAMETER :: Equidistance = 1
-! INTEGER(I4B), PARAMETER :: Gauss = 5
-! INTEGER(I4B), PARAMETER :: GaussRadau = 6
-! INTEGER(I4B), PARAMETER :: GaussRadauLeft = 7
-! INTEGER(I4B), PARAMETER :: GaussRadauRight = 8
-! INTEGER(I4B), PARAMETER :: GaussLobatto = 3
-! INTEGER(I4B), PARAMETER :: GaussLegendre = Legendre
-! INTEGER(I4B), PARAMETER :: GaussLegendreLobatto = GaussLobatto
-! !!
-! INTEGER(I4B), PARAMETER :: GaussChebyshev = Chebyshev
-! INTEGER(I4B), PARAMETER :: GaussChebyshevLobatto = 9
-! !!
-! INTEGER(I4B), PARAMETER :: GaussJacobi = Jacobi
-! INTEGER(I4B), PARAMETER :: GaussJacobiLobatto = 11
-! !!
-! INTEGER(I4B), PARAMETER :: ChenBabuska = 21 !! for triangle nodes
-! INTEGER(I4B), PARAMETER :: Hesthaven = 22 !! for triangle nodes
-! INTEGER(I4B), PARAMETER :: Feket = 23 !! for triangle nodes
-! !!
-! INTEGER(I4B), PARAMETER :: BlythPozLegendre = 24 !! for triangle
-! INTEGER(I4B), PARAMETER :: BlythPozChebyshev = 25 !! for triangle
-! !!
-! INTEGER(I4B), PARAMETER :: IsaacLegendre = 26 !! for triangle
-! INTEGER(I4B), PARAMETER :: IsaacChebyshev = 27 !! for triangle
-! !!
-! !! Type of Lagrange Interpolation Poitns
-! !!
-! INTEGER(I4B), PARAMETER :: EquidistanceLIP = Equidistance
-! INTEGER(I4B), PARAMETER :: GaussLobattoLIP = GaussLobatto
-! INTEGER(I4B), PARAMETER :: GaussLegendreLIP = GaussLegendre
-! INTEGER(I4B), PARAMETER :: ChebyshevLIP = Chebyshev
-! !!
-! !! Type of quadrature points
-! !!
-! INTEGER(I4B), PARAMETER :: GaussQP = Gauss
-! INTEGER(I4B), PARAMETER :: GaussLegendreQP = GaussLegendre
-! INTEGER(I4B), PARAMETER :: GaussRadauQP = GaussRadau
-! INTEGER(I4B), PARAMETER :: GaussRadauLeftQP = GaussRadauLeft
-! INTEGER(I4B), PARAMETER :: GaussRadauRightQP = GaussRadauRight
-! INTEGER(I4B), PARAMETER :: GaussLobattoQP = GaussLobatto
-! INTEGER(I4B), PARAMETER :: ChebyshevQP = Chebyshev

@@ -16,8 +16,8 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	24 Feb 2021
-! summary: 	This module contains methods of [[RealVector_]] data type.
+! date:         24 Feb 2021
+! summary:         This module contains methods of [[RealVector_]] data type.
 !
 !###Introduction
 !
@@ -29,22 +29,17 @@
 !@todo Documentation, testing, usage
 
 MODULE RealVector_Method
-USE GlobalData
-USE BaseType
-IMPLICIT NONE
-PRIVATE
-!!
-#include "./ConstructorMethods.inc"
-#include "./ShallowCopyMethods.inc"
-#include "./AssignMethods.inc"
-#include "./GetMethods.inc"
-#include "./GetValueMethods.inc"
-#include "./AppendMethods.inc"
-#include "./SetMethods.inc"
-#include "./AddMethods.inc"
-#include "./IOMethods.inc"
-#include "./ComparisonMethods.inc"
-#include "./Norm2ErrorMethods.inc"
-#include "./Norm2Methods.inc"
-!!
+USE RealVector_AddMethods
+USE RealVector_AppendMethods
+USE RealVector_AssignMethods
+USE RealVector_ComparisonMethods
+USE RealVector_ConstructorMethods
+USE RealVector_GetMethods
+USE RealVector_GetValueMethods
+USE RealVector_IOMethods
+USE RealVector_Norm2Methods
+USE RealVector_Norm2ErrorMethods
+USE RealVector_SetMethods
+USE RealVector_ShallowCopyMethods
+USE RealVector_Blas1Methods
 END MODULE RealVector_Method

@@ -29,6 +29,14 @@
 
 MODULE BaseMethod
 
+#ifdef USE_SuperLU
+USE SuperLUInterface
+#endif
+
+#ifdef USE_LIS
+! USE LISInterface
+#endif
+
 #ifdef USE_PLPLOT
 USE PLPLOT
 #endif
@@ -87,7 +95,6 @@ USE IndexValue_Method
 USE KeyValue_Method
 USE IterationData_Method
 USE Vector3D_Method
-USE BLAS1V_Method
 USE RealVector_Method
 USE DOF_Method
 USE Geometry_Method

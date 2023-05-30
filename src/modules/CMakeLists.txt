@@ -54,11 +54,17 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Hashing/CMakeLists.txt)
 #Gnuplot
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Gnuplot/CMakeLists.txt)
 
-#MetisInterface
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
-
 #CInterface
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
+
+#SuperLUInterface
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/SuperLUInterface/CMakeLists.txt)
+
+#LISInterface
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/LISInterface/CMakeLists.txt)
+
+#MetisInterface
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
 
 #Display
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Display/CMakeLists.txt)
@@ -105,8 +111,6 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
 #Vector3D_
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
 
-#BLAS
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BLAS/CMakeLists.txt)
 
 #Lapack
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)
@@ -153,8 +157,8 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/STConvectiveMatrix/CMakeLists.txt)
 #StiffnessMatrix
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/StiffnessMatrix/CMakeLists.txt)
 
-#NitscheMatrix
-INCLUDE(${CMAKE_CURRENT_LIST_DIR}/NitscheMatrix/CMakeLists.txt)
+#ElasticNitscheMatrix
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ElasticNitscheMatrix/CMakeLists.txt)
 
 #FacetMatrix
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/FacetMatrix/CMakeLists.txt)

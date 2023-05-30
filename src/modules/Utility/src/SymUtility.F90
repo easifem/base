@@ -16,7 +16,7 @@
 !
 
 MODULE SymUtility
-USE GlobalData, ONLY: DFP, I4B, Real32, Real64, Int32, Int64, Int8, Int16
+USE GlobalData, ONLY: DFP, I4B, REAL32, REAL64, INT32, INT64, INT8, INT16
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Sym
@@ -41,51 +41,51 @@ PUBLIC :: GetSym
 INTERFACE
   !!
   MODULE PURE FUNCTION Sym_Int8(mat, from) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    INTEGER(INT8), INTENT(IN) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
-    INTEGER(Int8) :: ans(SIZE(mat, 1), SIZE(mat, 2))
+    INTEGER(INT8) :: ans(SIZE(mat, 1), SIZE(mat, 2))
   END FUNCTION Sym_Int8
   !!
   MODULE PURE FUNCTION Sym_Int16(mat, from) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    INTEGER(INT16), INTENT(IN) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
-    INTEGER(Int16) :: ans(SIZE(mat, 1), SIZE(mat, 2))
+    INTEGER(INT16) :: ans(SIZE(mat, 1), SIZE(mat, 2))
   END FUNCTION Sym_Int16
   !!
   MODULE PURE FUNCTION Sym_Int32(mat, from) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    INTEGER(INT32), INTENT(IN) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
-    INTEGER(Int32) :: ans(SIZE(mat, 1), SIZE(mat, 2))
+    INTEGER(INT32) :: ans(SIZE(mat, 1), SIZE(mat, 2))
   END FUNCTION Sym_Int32
   !!
   MODULE PURE FUNCTION Sym_Int64(mat, from) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    INTEGER(INT64), INTENT(IN) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
-    INTEGER(Int64) :: ans(SIZE(mat, 1), SIZE(mat, 2))
+    INTEGER(INT64) :: ans(SIZE(mat, 1), SIZE(mat, 2))
   END FUNCTION Sym_Int64
   !!
   MODULE PURE FUNCTION Sym_Real32(mat, from) RESULT(ans)
-    REAL(Real32), INTENT(IN) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    REAL(REAL32), INTENT(IN) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
-    REAL(Real32) :: ans(SIZE(mat, 1), SIZE(mat, 2))
+    REAL(REAL32) :: ans(SIZE(mat, 1), SIZE(mat, 2))
   END FUNCTION Sym_Real32
   !!
   MODULE PURE FUNCTION Sym_Real64(mat, from) RESULT(ans)
-    REAL(Real64), INTENT(IN) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    REAL(REAL64), INTENT(IN) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
-    REAL(Real64) :: ans(SIZE(mat, 1), SIZE(mat, 2))
+    REAL(REAL64) :: ans(SIZE(mat, 1), SIZE(mat, 2))
   END FUNCTION Sym_Real64
   !!
 END INTERFACE
@@ -113,43 +113,43 @@ END INTERFACE Sym
 
 INTERFACE
   MODULE PURE SUBROUTINE GetSym_Int8(mat, from)
-    INTEGER(Int8), INTENT(INOUT) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    INTEGER(INT8), INTENT(INOUT) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
   END SUBROUTINE GetSym_Int8
   !!
   MODULE PURE SUBROUTINE GetSym_Int16(mat, from)
-    INTEGER(Int16), INTENT(INOUT) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    INTEGER(INT16), INTENT(INOUT) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
   END SUBROUTINE GetSym_Int16
   !!
   MODULE PURE SUBROUTINE GetSym_Int32(mat, from)
-    INTEGER(Int32), INTENT(INOUT) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    INTEGER(INT32), INTENT(INOUT) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
   END SUBROUTINE GetSym_Int32
   !!
   MODULE PURE SUBROUTINE GetSym_Int64(mat, from)
-    INTEGER(Int64), INTENT(INOUT) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    INTEGER(INT64), INTENT(INOUT) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
   END SUBROUTINE GetSym_Int64
   !!
   MODULE PURE SUBROUTINE GetSym_Real32(mat, from)
-    REAL(Real32), INTENT(INOUT) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    REAL(REAL32), INTENT(INOUT) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
   END SUBROUTINE GetSym_Real32
   !!
   MODULE PURE SUBROUTINE GetSym_Real64(mat, from)
-    REAL(Real64), INTENT(INOUT) :: mat(:, :)
-    CHARACTER(LEN=1), INTENT(IN) :: from
+    REAL(REAL64), INTENT(INOUT) :: mat(:, :)
+    CHARACTER(1), INTENT(IN) :: from
     !! from = "U", then upper triangular part must be provided
     !! from = "L", then lower triangular part must be provided
   END SUBROUTINE GetSym_Real64

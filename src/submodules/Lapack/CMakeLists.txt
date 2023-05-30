@@ -19,10 +19,11 @@ IF( USE_LAPACK95 )
   SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
   TARGET_SOURCES(
     ${PROJECT_NAME} PRIVATE
-    ${src_path}/GE_Lapack_Method@LinearSolveMethods.F90
-    ${src_path}/GE_Lapack_Method@LUMethods.F90
-    # ${src_path}/GE_Lapack_Method@EigenvalueMethods.F90
-    ${src_path}/GE_Lapack_Method@CompRoutineMethods.F90
+    ${src_path}/GE_CompRoutineMethods@Methods.F90
+    ${src_path}/GE_EigenValueMethods@Methods.F90
+    ${src_path}/GE_LUMethods@Methods.F90
+    ${src_path}/GE_LinearSolveMethods@Methods.F90
+    ${src_path}/GE_SingularValueMethods@Methods.F90
   )
 ENDIF(  )
 
@@ -30,8 +31,11 @@ IF( USE_LAPACK95 )
   SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
   TARGET_SOURCES(
     ${PROJECT_NAME} PRIVATE
-    ${src_path}/Sym_Lapack_Method@LinearSolveMethods.F90
-    ${src_path}/Sym_Lapack_Method@LUMethods.F90
+    ${src_path}/Sym_CompRoutineMethods@Methods.F90
+    ${src_path}/Sym_EigenValueMethods@Methods.F90
+    ${src_path}/Sym_LUMethods@Methods.F90
+    ${src_path}/Sym_LinearSolveMethods@Methods.F90
+    ${src_path}/Sym_SingularValueMethods@Methods.F90
   )
 ENDIF(  )
 

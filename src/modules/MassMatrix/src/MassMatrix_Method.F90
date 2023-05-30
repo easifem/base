@@ -49,7 +49,7 @@ INTERFACE
     !! Shapedata for test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
     !! Shapedata for trial function
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_1
@@ -75,7 +75,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(IN) :: trial
     !! Shapedata for trial function
     CLASS(FEVariable_), INTENT(IN) :: rho
-    TYPE(FEVariableScalar_), INTENT( IN ) :: rhorank
+    TYPE(FEVariableScalar_), INTENT(IN) :: rhorank
     !! Scalar
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
@@ -103,7 +103,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(IN) :: trial
     !! Shapedata for trial function
     CLASS(FEVariable_), INTENT(IN) :: rho
-    TYPE(FEVariableVector_), INTENT( IN ) :: rhorank
+    TYPE(FEVariableVector_), INTENT(IN) :: rhorank
     !! Vector
     INTEGER(I4B), INTENT(IN) :: opt
     !! ncopy
@@ -131,7 +131,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(IN) :: trial
     !! Shapedata for trial function
     CLASS(FEVariable_), INTENT(IN) :: rho
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: rhorank
+    TYPE(FEVariableMatrix_), INTENT(IN) :: rhorank
     !! Matrix
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION MassMatrix_4

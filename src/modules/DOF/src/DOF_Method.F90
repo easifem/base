@@ -19,22 +19,13 @@
 ! date:         23 Feb 2021
 ! summary:         This module contains methods of [[DOF_]] object
 !
-!# Introduction
-!This module contains methods for derived type called [[DOF_]]
-!
-!{!pages/DOF.md!}
+!{!pages/DOF_.md!}
 
 MODULE DOF_Method
-USE GlobalData
-USE BaseType
-IMPLICIT NONE
-PRIVATE
-
-#include "./ConstructorMethods.inc"
-#include "./IOMethods.inc"
-#include "./SetMethods.inc"
-#include "./AddMethods.inc"
-#include "./GetMethods.inc"
-#include "./GetValueMethods.inc"
-
+USE DOF_ConstructorMethods
+USE DOF_IOMethods
+USE DOF_GetMethods
+USE DOF_GetValueMethods
+USE DOF_SetMethods
+USE DOF_AddMethods
 END MODULE DOF_Method

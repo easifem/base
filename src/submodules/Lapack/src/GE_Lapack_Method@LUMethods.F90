@@ -42,8 +42,8 @@ END PROCEDURE getLU_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LUSolve_1
-CHARACTER(LEN=1) :: TRANS
-  !!
+CHARACTER(1) :: TRANS
+!!
 IF (PRESENT(isTranspose)) THEN
   IF (isTranspose) THEN
     TRANS = "T"
@@ -53,9 +53,9 @@ IF (PRESENT(isTranspose)) THEN
 ELSE
   TRANS = "N"
 END IF
-  !!
+!!
 CALL GETRS(A=A, IPIV=IPIV, B=B, TRANS=TRANS, info=info)
-  !!
+!!
 END PROCEDURE LUSolve_1
 
 !----------------------------------------------------------------------------
@@ -63,8 +63,8 @@ END PROCEDURE LUSolve_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LUSolve_2
-CHARACTER(LEN=1) :: TRANS
-  !!
+CHARACTER(1) :: TRANS
+!!
 IF (PRESENT(isTranspose)) THEN
   IF (isTranspose) THEN
     TRANS = "T"
@@ -74,9 +74,9 @@ IF (PRESENT(isTranspose)) THEN
 ELSE
   TRANS = "N"
 END IF
-  !!
+!!
 CALL GETRS(A=A, IPIV=IPIV, B=B, TRANS=TRANS, info=info)
-  !!
+!!
 END PROCEDURE LUSolve_2
 
 !----------------------------------------------------------------------------
@@ -84,8 +84,8 @@ END PROCEDURE LUSolve_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LUSolve_3
-CHARACTER(LEN=1) :: TRANS
-  !!
+CHARACTER(1) :: TRANS
+!!
 IF (PRESENT(isTranspose)) THEN
   IF (isTranspose) THEN
     TRANS = "T"
@@ -95,11 +95,11 @@ IF (PRESENT(isTranspose)) THEN
 ELSE
   TRANS = "N"
 END IF
-  !!
+!!
 X = B
-  !!
+!!
 CALL GETRS(A=A, IPIV=IPIV, B=X, TRANS=TRANS, info=info)
-  !!
+!!
 END PROCEDURE LUSolve_3
 
 !----------------------------------------------------------------------------
@@ -107,8 +107,8 @@ END PROCEDURE LUSolve_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LUSolve_4
-CHARACTER(LEN=1) :: TRANS
-  !!
+CHARACTER(1) :: TRANS
+!!
 IF (PRESENT(isTranspose)) THEN
   IF (isTranspose) THEN
     TRANS = "T"
@@ -118,10 +118,10 @@ IF (PRESENT(isTranspose)) THEN
 ELSE
   TRANS = "N"
 END IF
-  !!
+!!
 X = B
 CALL GETRS(A=A, IPIV=IPIV, B=X, TRANS=TRANS, info=info)
-  !!
+!!
 END PROCEDURE LUSolve_4
 
 !----------------------------------------------------------------------------

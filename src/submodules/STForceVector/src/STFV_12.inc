@@ -19,16 +19,16 @@
 !                                                              STForceVector
 !----------------------------------------------------------------------------
 
-PURE SUBROUTINE STFV_12( ans, test, term1, c1, c1rank, c2, c2rank )
+PURE SUBROUTINE STFV_12(ans, test, term1, c1, c1rank, c2, c2rank)
   !! intent of dummy variable
-  REAL(DFP), ALLOCATABLE, INTENT( INOUT ) :: ans(:, :)
-  CLASS(STElemshapeData_), INTENT(IN) :: test( : )
-  INTEGER( I4B ), INTENT( IN ) :: term1
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
+  CLASS(STElemshapeData_), INTENT(IN) :: test(:)
+  INTEGER(I4B), INTENT(IN) :: term1
   !! DEL_t
-  TYPE(FEVariable_), INTENT( IN ) :: c1
-  TYPE(FEVariable_), INTENT( IN ) :: c2
-  TYPE(FEVariableScalar_), INTENT( IN ) :: c1rank
-  TYPE(FEVariableScalar_), INTENT( IN ) :: c2rank
+  TYPE(FEVariable_), INTENT(IN) :: c1
+  TYPE(FEVariable_), INTENT(IN) :: c2
+  TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
+  TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
   !!
   !! Define internal variable
   !!
@@ -45,12 +45,12 @@ PURE SUBROUTINE STFV_12( ans, test, term1, c1, c1rank, c2, c2rank )
   CALL reallocate( &
     & ans, &
     & SIZE(test(1)%N, 1), &
-    & SIZE(test(1)%T) )
+    & SIZE(test(1)%T))
   !!
-  DO ipt = 1, SIZE( test )
+  DO ipt = 1, SIZE(test)
     !!
-    realval = test(ipt)%js*test(ipt)%ws*test(ipt)%thickness &
-      & * c1bar(:,ipt) * c2bar(:, ipt)
+    realval = test(ipt)%js * test(ipt)%ws * test(ipt)%thickness &
+     & * c1bar(:, ipt) * c2bar(:, ipt) * test(ipt)%jt
     !!
     DO ips = 1, SIZE(realval)
       ans = ans + realval(ips) * test(ipt)%dNTdt(:, :, ips)

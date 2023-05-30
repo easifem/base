@@ -74,6 +74,71 @@ Ans = obj%nnz
 END PROCEDURE csr_getNNZ
 
 !----------------------------------------------------------------------------
+!                                                                 GetNNZ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_getNNZ1
+INTEGER(I4B) :: ii, rindx, jj
+IF (obj%isInitiated) THEN
+  ans = 0
+  SELECT CASE (from)
+  CASE ("L", "l")
+    DO ii = 1, obj%nrow
+      DO rindx = obj%IA(ii), obj%IA(ii + 1) - 1
+        IF (ii .GT. obj%JA(rindx)) ans = ans + 1
+      END DO
+    END DO
+
+  CASE ("U", "u")
+    DO ii = 1, obj%nrow
+      DO rindx = obj%IA(ii), obj%IA(ii + 1) - 1
+        IF (ii .LT. obj%JA(rindx)) ans = ans + 1
+      END DO
+    END DO
+
+  CASE ("D", "d")
+    DO ii = 1, obj%nrow
+      DO rindx = obj%IA(ii), obj%IA(ii + 1) - 1
+        IF (ii .EQ. obj%JA(rindx)) ans = ans + 1
+      END DO
+    END DO
+  CASE default
+    ans = obj%nnz
+  END SELECT
+ELSE
+  ans = 0
+END IF
+END PROCEDURE csr_getNNZ1
+
+!----------------------------------------------------------------------------
+!                                                                 GetNNZ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE csr_getNNZ2
+INTEGER(I4B) :: ii, rindx, jj
+IF (obj%isInitiated) THEN
+  ans = 0
+
+  DO ii = 1, obj%nrow
+    DO rindx = obj%IA(ii), obj%IA(ii + 1) - 1
+      IF (ii .LT. obj%JA(rindx)) THEN
+        ! U
+        ans(1) = ans(1) + 1
+      ELSEIF (ii .GT. obj%JA(rindx)) THEN
+        ! L
+        ans(2) = ans(2) + 1
+      ELSEIF (ii .EQ. obj%JA(rindx)) THEN
+        ! D
+        ans(3) = ans(3) + 1
+      END IF
+    END DO
+  END DO
+ELSE
+  ans = 0
+END IF
+END PROCEDURE csr_getNNZ2
+
+!----------------------------------------------------------------------------
 !                                                                 getDiagonal
 !----------------------------------------------------------------------------
 

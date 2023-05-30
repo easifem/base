@@ -25,20 +25,20 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE femat_StiffnessMatrix1
-REAL(DFP), ALLOCATABLE :: RealVal(:), CBar(:, :, :), &
+REAL(DFP), ALLOCATABLE :: realval(:), CBar(:, :, :), &
   & Dummy(:, :, :), Ce(:, :), BMat1(:, :), BMat2(:, :)
 INTEGER(I4B) :: nips, nns1, nns2, i, j, ips, nsd
 INTEGER(I4B), ALLOCATABLE :: S(:), Indx(:, :)
 LOGICAL(LGT) :: isNodal
 
-nns1 = SIZE(Test%N, 1)
-nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2)
-nsd = Trial%RefElem%NSD
+nns1 = SIZE(test%N, 1)
+nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2)
+nsd = trial%refElem%NSD
 
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
 
-IF (Cijkl%DefineOn .EQ. Nodal) THEN
+IF (Cijkl%defineOn .EQ. Nodal) THEN
   isNodal = .TRUE.
 ELSE
   isNodal = .FALSE.
@@ -46,7 +46,7 @@ END IF
 
 S = SHAPE(Cijkl)
 
-SELECT CASE (Cijkl%VarType)
+SELECT CASE (Cijkl%varType)
 CASE (Constant)
   ALLOCATE (CBar(S(1), S(2), nips))
   CBar(:, :, 1) = Get(Cijkl, TypeFEVariableMatrix, &
@@ -57,7 +57,7 @@ CASE (Constant)
 CASE (Space)
   Dummy = Get(Cijkl, TypeFEVariableMatrix, TypeFEVariableSpace)
   IF (isNodal) THEN
-    CBar = Interpolation(Trial, Dummy)
+    CBar = Interpolation(trial, Dummy)
   ELSE
     CBar = Dummy
   END IF
@@ -69,19 +69,22 @@ CASE (1)
   ALLOCATE (Indx(1, 1))
   Indx = 1
 CASE (2)
-  Indx = RESHAPE((/1, 3, 3, 2/), (/2, 2/))
+  Indx = RESHAPE([1, 3, 3, 2], [2, 2])
 CASE (3)
-  Indx = RESHAPE((/1, 4, 6, 4, 2, 5, 6, 5, 3/), (/3, 3/))
+  Indx = RESHAPE([1, 4, 6, 4, 2, 5, 6, 5, 3], [3, 3])
 END SELECT
 
-ALLOCATE (Ce(nsd * nsd, nsd * nsd), BMat1(nsd * nns1, nsd * nsd), &
-          BMat2(nsd * nns2, nsd * nsd))
+ALLOCATE ( &
+  & Ce(nsd * nsd, nsd * nsd), &
+  & BMat1(nsd * nns1, nsd * nsd), &
+  & BMat2(nsd * nns2, nsd * nsd))
 
-BMat1 = 0.0_DFP; BMat2 = 0.0_DFP
+BMat1 = 0.0_DFP
+BMat2 = 0.0_DFP
+realval = trial%Ws * trial%js * trial%Thickness
 
-RealVal = Trial%Ws * Trial%js * Trial%Thickness
+DO ips = 1, nips
 
-Do ips = 1, nips
   DO j = 1, nsd
     DO i = 1, nsd
       Ce((i - 1) * nsd + 1:i * nsd, (j - 1) * nsd + 1:j * nsd) &
@@ -91,17 +94,18 @@ Do ips = 1, nips
 
   DO i = 1, nsd
     BMat1((i - 1) * nns1 + 1:i * nns1, (i - 1) * nsd + 1:i * nsd) = &
-      & Test%dNdXt(:, :, ips)
+      & test%dNdXt(:, :, ips)
     BMat2((i - 1) * nns2 + 1:i * nns2, (i - 1) * nsd + 1:i * nsd) = &
-      & Trial%dNdXt(:, :, ips)
+      & trial%dNdXt(:, :, ips)
   END DO
 
-  Ans = Ans + RealVal(ips) * MATMUL( &
+  ans = ans + realval(ips) * MATMUL( &
     & MATMUL(BMat1, Ce), TRANSPOSE(BMat2))
 
 END DO
 
-DEALLOCATE (BMat1, BMat2, Indx, Ce, CBar, RealVal, S)
+DEALLOCATE (BMat1, BMat2, Indx, Ce, CBar, realval, S)
+
 END PROCEDURE femat_StiffnessMatrix1
 
 !----------------------------------------------------------------------------
@@ -111,78 +115,99 @@ END PROCEDURE femat_StiffnessMatrix1
 MODULE PROCEDURE femat_StiffnessMatrix2
 ! Define internal variable
 REAL(DFP), ALLOCATABLE :: LambdaBar(:), MuBar(:), Dummy(:), &
-  & RealVal(:), Ke11(:, :)
-REAL(DFP) :: Real1, Real2, Real3
+  & realval(:), Ke11(:, :)
+REAL(DFP) :: real1, real2, real3
 INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
 LOGICAL(LGT) :: isLambdaNodal, isMunodal
-!>
-nns1 = SIZE(Test%N, 1)
-nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2)
-nsd = Trial%RefElem%NSD
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
+
+nns1 = SIZE(test%N, 1)
+nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2)
+nsd = trial%RefElem%NSD
+
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
+ans = 0.0_DFP
+
 IF (Lambda%DefineOn .EQ. Nodal) THEN
   isLambdaNodal = .TRUE.
 ELSE
   isLambdaNodal = .FALSE.
 END IF
+
 IF (Mu%DefineOn .EQ. Nodal) THEN
   isMuNodal = .TRUE.
 ELSE
   isMuNodal = .FALSE.
 END IF
+
 SELECT CASE (Lambda%VarType)
 CASE (Constant)
   ALLOCATE (LambdaBar(nips))
-  LambdaBar = Get(Lambda, TypeFEVariableScalar, &
+  LambdaBar = Get( &
+    & Lambda, TypeFEVariableScalar, &
     & TypeFEVariableConstant)
 CASE (Space)
-  RealVal = Get(Lambda, TypeFEVariableScalar, TypeFEVariableSpace)
+  realval = Get(Lambda, TypeFEVariableScalar, TypeFEVariableSpace)
   IF (isLambdaNodal) THEN
-    LambdaBar = Interpolation(Trial, RealVal)
+    LambdaBar = Interpolation(trial, realval)
   ELSE
-    LambdaBar = RealVal
+    LambdaBar = realval
   END IF
 END SELECT
+
 SELECT CASE (Mu%VarType)
 CASE (Constant)
   ALLOCATE (MuBar(nips))
   MuBar = Get(Mu, TypeFEVariableScalar, TypeFEVariableConstant)
 CASE (Space)
-  RealVal = Get(Mu, TypeFEVariableScalar, TypeFEVariableSpace)
+  realval = Get(Mu, TypeFEVariableScalar, TypeFEVariableSpace)
   IF (isMuNodal) THEN
-    MuBar = Interpolation(Trial, RealVal)
+    MuBar = Interpolation(trial, realval)
   ELSE
-    MuBar = RealVal
+    MuBar = realval
   END IF
-  DEALLOCATE (RealVal)
+  DEALLOCATE (realval)
 END SELECT
-RealVal = Trial%Ws * Trial%Js * Trial%Thickness
+
+realval = trial%Ws * trial%Js * trial%Thickness
+
 DO ips = 1, nips
-  Real1 = MuBar(ips) * RealVal(ips)
-  Real2 = (LambdaBar(ips) + MuBar(ips)) * RealVal(ips)
-  Real3 = LambdaBar(ips) * RealVal(ips)
-  c1 = 0; c2 = 0;
+  real1 = MuBar(ips) * realval(ips)
+  real2 = (LambdaBar(ips) + MuBar(ips)) * realval(ips)
+  real3 = LambdaBar(ips) * realval(ips)
+  c1 = 0
+  c2 = 0
   DO j = 1, nsd
-    c1 = c2 + 1; c2 = j * nns2; r1 = 0; r2 = 0
+    c1 = c2 + 1
+    c2 = j * nns2
+    r1 = 0
+    r2 = 0
     DO i = 1, nsd
-      r1 = r2 + 1; r2 = i * nns1
+      r1 = r2 + 1
+      r2 = i * nns1
       IF (i .EQ. j) THEN
-        Ke11 = Real1 * MATMUL(Test%dNdXt(:, :, ips), &
-          & TRANSPOSE(Trial%dNdXt(:, :, ips))) &
-          & + Real2 * OUTERPROD(Test%dNdXt(:, i, ips), &
-          & Trial%dNdXt(:, i, ips))
+        Ke11 = real1 * MATMUL( &
+          & test%dNdXt(:, :, ips), &
+          & TRANSPOSE(trial%dNdXt(:, :, ips))) &
+          & + real2 * OUTERPROD( &
+          & test%dNdXt(:, i, ips), &
+          & trial%dNdXt(:, i, ips))
       ELSE
-        Ke11 = Real3 * OUTERPROD(Test%dNdXt(:, i, ips), &
-          & Trial%dNdXt(:, j, ips)) &
-          + Real1 * &
-          & OUTERPROD(Test%dNdXt(:, j, ips), Trial%dNdXt(:, i, ips))
+        Ke11 = real3 * OUTERPROD( &
+          & test%dNdXt(:, i, ips), &
+          & trial%dNdXt(:, j, ips)) &
+          + real1 * &
+          & OUTERPROD( &
+          & test%dNdXt(:, j, ips), &
+          & trial%dNdXt(:, i, ips))
       END IF
-      Ans(r1:r2, c1:c2) = Ans(r1:r2, c1:c2) + Ke11
+      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11
     END DO
   END DO
 END DO
-DEALLOCATE (RealVal, Ke11, LambdaBar, MuBar)
+
+DEALLOCATE (realval, Ke11, LambdaBar, MuBar)
+
 END PROCEDURE femat_StiffnessMatrix2
 
 !----------------------------------------------------------------------------
@@ -191,40 +216,40 @@ END PROCEDURE femat_StiffnessMatrix2
 
 MODULE PROCEDURE femat_StiffnessMatrix3
 INTEGER(I4B) :: nns1, nns2, nips, ips, nsd, c1, c2, r1, r2, i, j
-REAL(DFP), ALLOCATABLE :: RealVal(:), Ke11(:, :)
-REAL(DFP) :: Real1, Real2, Real3
-nns1 = SIZE(Test%N, 1)
-nns2 = SIZE(Trial%N, 1)
-nips = SIZE(Trial%N, 2)
-nsd = Trial%RefElem%NSD
-ALLOCATE (Ans(nns1 * nsd, nns2 * nsd)); Ans = 0.0_DFP
-RealVal = Trial%Ws * Trial%Thickness * Trial%Js
+REAL(DFP), ALLOCATABLE :: realval(:), Ke11(:, :)
+REAL(DFP) :: real1, real2, real3
+nns1 = SIZE(test%N, 1)
+nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2)
+nsd = trial%RefElem%NSD
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd)); ans = 0.0_DFP
+realval = trial%Ws * trial%Thickness * trial%Js
 DO ips = 1, nips
-  Real1 = Mu * RealVal(ips)
-  Real2 = (Lambda + Mu) * RealVal(ips)
-  Real3 = Lambda * RealVal(ips)
-  c1 = 0; c2 = 0;
+  real1 = Mu * realval(ips)
+  real2 = (Lambda + Mu) * realval(ips)
+  real3 = Lambda * realval(ips)
+  c1 = 0; c2 = 0; 
   DO j = 1, nsd
     c1 = c2 + 1; c2 = j * nns2; r1 = 0; r2 = 0
     DO i = 1, nsd
       r1 = r2 + 1; r2 = i * nns1
       IF (i .EQ. j) THEN
-        Ke11 = Real1 * MATMUL(Test%dNdXt(:, :, ips), &
-          & TRANSPOSE(Trial%dNdXt(:, :, ips))) &
-          & + Real2 * OUTERPROD(Test%dNdXt(:, i, ips), &
-          & Trial%dNdXt(:, i, ips))
+        Ke11 = real1 * MATMUL(test%dNdXt(:, :, ips), &
+          & TRANSPOSE(trial%dNdXt(:, :, ips))) &
+          & + real2 * OUTERPROD(test%dNdXt(:, i, ips), &
+          & trial%dNdXt(:, i, ips))
       ELSE
-        Ke11 = Real3 * OUTERPROD(Test%dNdXt(:, i, ips), &
-          & Trial%dNdXt(:, j, ips)) &
-          + Real1 * &
-          & OUTERPROD(Test%dNdXt(:, j, ips), &
-            & Trial%dNdXt(:, i, ips))
+        Ke11 = real3 * OUTERPROD(test%dNdXt(:, i, ips), &
+          & trial%dNdXt(:, j, ips)) &
+          + real1 * &
+          & OUTERPROD(test%dNdXt(:, j, ips), &
+            & trial%dNdXt(:, i, ips))
       END IF
-      Ans(r1:r2, c1:c2) = Ans(r1:r2, c1:c2) + Ke11
+      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11
     END DO
   END DO
 END DO
-DEALLOCATE (RealVal, Ke11)
+DEALLOCATE (realval, Ke11)
 END PROCEDURE femat_StiffnessMatrix3
 
 !----------------------------------------------------------------------------
@@ -233,5 +258,68 @@ END PROCEDURE femat_StiffnessMatrix3
 
 MODULE PROCEDURE femat_StiffnessMatrix4
 END PROCEDURE femat_StiffnessMatrix4
+
+!----------------------------------------------------------------------------
+!                                                           StiffnessMatrix
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE femat_StiffnessMatrix5
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:), Ke11(:, :)
+REAL(DFP) :: real1, real2, real3
+INTEGER(I4B) :: nns1, nns2, nips, nsd, c1, c2, i, j, r1, r2, ips
+
+nns1 = SIZE(test%N, 1)
+nns2 = SIZE(trial%N, 1)
+nips = SIZE(trial%N, 2)
+nsd = trial%refelem%NSD
+
+ALLOCATE (ans(nns1 * nsd, nns2 * nsd))
+ans = 0.0_DFP
+
+realval = trial%ws * trial%js * trial%thickness
+
+DO ips = 1, nips
+  real1 = mu(ips) * realval(ips)
+  real2 = (lambda(ips) + mu(ips)) * realval(ips)
+  real3 = lambda(ips) * realval(ips)
+  c1 = 0
+  c2 = 0
+  DO j = 1, nsd
+    c1 = c2 + 1
+    c2 = j * nns2
+    r1 = 0
+    r2 = 0
+    DO i = 1, nsd
+      r1 = r2 + 1
+      r2 = i * nns1
+      IF (i .EQ. j) THEN
+        Ke11 = real1 * MATMUL( &
+          & test%dNdXt(:, :, ips), &
+          & TRANSPOSE(trial%dNdXt(:, :, ips))) &
+          & + real2 * OUTERPROD( &
+          & test%dNdXt(:, i, ips), &
+          & trial%dNdXt(:, i, ips))
+      ELSE
+        Ke11 = real3 * OUTERPROD( &
+          & test%dNdXt(:, i, ips), &
+          & trial%dNdXt(:, j, ips)) &
+          + real1 * &
+          & OUTERPROD( &
+          & test%dNdXt(:, j, ips), &
+          & trial%dNdXt(:, i, ips))
+      END IF
+      ans(r1:r2, c1:c2) = ans(r1:r2, c1:c2) + Ke11
+    END DO
+  END DO
+END DO
+
+DEALLOCATE (realval, Ke11)
+
+END PROCEDURE femat_StiffnessMatrix5
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END SUBMODULE Methods

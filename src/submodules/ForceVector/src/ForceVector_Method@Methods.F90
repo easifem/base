@@ -25,21 +25,21 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_1
-  !! Define internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  INTEGER(I4B) :: ips
-  !!
-  !! main
-  !!
-  realval = test%js * test%ws * test%thickness
-  CALL reallocate(ans, SIZE(test%N, 1))
-  !!
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * test%N(:, ips)
-  END DO
-  !!
-  DEALLOCATE (realval)
-  !!
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:)
+INTEGER(I4B) :: ips
+!
+! main
+!
+realval = test%js * test%ws * test%thickness
+CALL reallocate(ans, SIZE(test%N, 1))
+!
+DO ips = 1, SIZE(realval)
+  ans = ans + realval(ips) * test%N(:, ips)
+END DO
+!
+DEALLOCATE (realval)
+!
 END PROCEDURE ForceVector_1
 
 !----------------------------------------------------------------------------
@@ -47,46 +47,66 @@ END PROCEDURE ForceVector_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_2
-  !! Define internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  INTEGER(I4B) :: ips
-  !!
-  !! main
-  !!
-  CALL getInterpolation(obj=test, interpol=realval, val=c)
-  realval = test%js * test%ws * test%thickness * realval
-  CALL reallocate(ans, SIZE(test%N, 1))
-  !!
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * test%N(:, ips)
-  END DO
-  !!
-  DEALLOCATE (realval)
-  !!
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:)
+INTEGER(I4B) :: ips
+!
+! main
+!
+CALL getInterpolation(obj=test, interpol=realval, val=c)
+realval = test%js * test%ws * test%thickness * realval
+CALL reallocate(ans, SIZE(test%N, 1))
+!
+DO ips = 1, SIZE(realval)
+  ans = ans + realval(ips) * test%N(:, ips)
+END DO
+!
+DEALLOCATE (realval)
+!
 END PROCEDURE ForceVector_2
 
 !----------------------------------------------------------------------------
 !                                                               ForceVector
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE ForceVector_2b
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:)
+INTEGER(I4B) :: ips
+
+realval = test%js * test%ws * test%thickness * c
+CALL reallocate(ans, SIZE(test%N, 1))
+
+DO ips = 1, SIZE(realval)
+  ans = ans + realval(ips) * test%N(:, ips)
+END DO
+
+DEALLOCATE (realval)
+
+END PROCEDURE ForceVector_2b
+
+!----------------------------------------------------------------------------
+!                                                               ForceVector
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE ForceVector_3
-  !! Define internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: cbar(:,:)
-  INTEGER(I4B) :: ips
-  !!
-  !! main
-  !!
-  CALL getInterpolation(obj=test, interpol=cbar, val=c)
-  realval = test%js * test%ws * test%thickness
-  CALL reallocate(ans, SIZE(cbar, 1), SIZE(test%N, 1))
-  !!
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * OUTERPROD( cbar(:, ips), test%N(:, ips) )
-  END DO
-  !!
-  DEALLOCATE (realval, cbar)
-  !!
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: cbar(:, :)
+INTEGER(I4B) :: ips
+!
+! main
+!
+CALL getInterpolation(obj=test, interpol=cbar, val=c)
+realval = test%js * test%ws * test%thickness
+CALL reallocate(ans, SIZE(cbar, 1), SIZE(test%N, 1))
+!
+DO ips = 1, SIZE(realval)
+  ans = ans + realval(ips) * OUTERPROD(cbar(:, ips), test%N(:, ips))
+END DO
+!
+DEALLOCATE (realval, cbar)
+!
 END PROCEDURE ForceVector_3
 
 !----------------------------------------------------------------------------
@@ -94,23 +114,23 @@ END PROCEDURE ForceVector_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_4
-  !! Define internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: cbar(:,:,:)
-  INTEGER(I4B) :: ips
-  !!
-  !! main
-  !!
-  CALL getInterpolation(obj=test, interpol=cbar, val=c)
-  realval = test%js * test%ws * test%thickness
-  CALL reallocate(ans, SIZE(cbar,1), SIZE(cbar,2), SIZE(test%N, 1))
-  !!
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * OUTERPROD( cbar(:, :, ips), test%N(:, ips) )
-  END DO
-  !!
-  DEALLOCATE (realval, cbar)
-  !!
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: cbar(:, :, :)
+INTEGER(I4B) :: ips
+!
+! main
+!
+CALL getInterpolation(obj=test, interpol=cbar, val=c)
+realval = test%js * test%ws * test%thickness
+CALL reallocate(ans, SIZE(cbar, 1), SIZE(cbar, 2), SIZE(test%N, 1))
+!
+DO ips = 1, SIZE(realval)
+  ans = ans + realval(ips) * OUTERPROD(cbar(:, :, ips), test%N(:, ips))
+END DO
+!
+DEALLOCATE (realval, cbar)
+!
 END PROCEDURE ForceVector_4
 
 !----------------------------------------------------------------------------
@@ -118,25 +138,25 @@ END PROCEDURE ForceVector_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_5
-  !! Define internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: c1bar(:)
-  REAL(DFP), ALLOCATABLE :: c2bar(:)
-  INTEGER(I4B) :: ips
-  !!
-  !! main
-  !!
-  CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
-  realval = test%js * test%ws * test%thickness * c1bar * c2bar
-  CALL reallocate(ans, SIZE(test%N, 1))
-  !!
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * test%N(:, ips)
-  END DO
-  !!
-  DEALLOCATE (realval, c1bar, c2bar)
-  !!
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: c1bar(:)
+REAL(DFP), ALLOCATABLE :: c2bar(:)
+INTEGER(I4B) :: ips
+!
+! main
+!
+CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
+CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+realval = test%js * test%ws * test%thickness * c1bar * c2bar
+CALL reallocate(ans, SIZE(test%N, 1))
+!
+DO ips = 1, SIZE(realval)
+  ans = ans + realval(ips) * test%N(:, ips)
+END DO
+!
+DEALLOCATE (realval, c1bar, c2bar)
+!
 END PROCEDURE ForceVector_5
 
 !----------------------------------------------------------------------------
@@ -144,25 +164,25 @@ END PROCEDURE ForceVector_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_6
-  !! Define internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: c1bar(:)
-  REAL(DFP), ALLOCATABLE :: c2bar(:, :)
-  INTEGER(I4B) :: ips
-  !!
-  !! main
-  !!
-  CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
-  realval = test%js * test%ws * test%thickness * c1bar
-  CALL reallocate(ans, SIZE(c2bar,1), SIZE(test%N, 1))
-  !!
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * OUTERPROD( c2bar(:, ips), test%N(:, ips) )
-  END DO
-  !!
-  DEALLOCATE (realval, c1bar, c2bar)
-  !!
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: c1bar(:)
+REAL(DFP), ALLOCATABLE :: c2bar(:, :)
+INTEGER(I4B) :: ips
+!
+! main
+!
+CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
+CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+realval = test%js * test%ws * test%thickness * c1bar
+CALL reallocate(ans, SIZE(c2bar, 1), SIZE(test%N, 1))
+!
+DO ips = 1, SIZE(realval)
+  ans = ans + realval(ips) * OUTERPROD(c2bar(:, ips), test%N(:, ips))
+END DO
+!
+DEALLOCATE (realval, c1bar, c2bar)
+!
 END PROCEDURE ForceVector_6
 
 !----------------------------------------------------------------------------
@@ -170,25 +190,25 @@ END PROCEDURE ForceVector_6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE ForceVector_7
-  !! Define internal variable
-  REAL(DFP), ALLOCATABLE :: realval(:)
-  REAL(DFP), ALLOCATABLE :: c1bar(:)
-  REAL(DFP), ALLOCATABLE :: c2bar(:, :, :)
-  INTEGER(I4B) :: ips
-  !!
-  !! main
-  !!
-  CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
-  CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
-  realval = test%js * test%ws * test%thickness * c1bar
-  CALL reallocate(ans, SIZE(c2bar,1), SIZE(c2bar,2), SIZE(test%N, 1))
-  !!
-  DO ips = 1, SIZE(realval)
-    ans = ans + realval(ips) * OUTERPROD( c2bar(:, :, ips), test%N(:, ips) )
-  END DO
-  !!
-  DEALLOCATE (realval, c1bar, c2bar)
-  !!
+! Define internal variable
+REAL(DFP), ALLOCATABLE :: realval(:)
+REAL(DFP), ALLOCATABLE :: c1bar(:)
+REAL(DFP), ALLOCATABLE :: c2bar(:, :, :)
+INTEGER(I4B) :: ips
+!
+! main
+!
+CALL getInterpolation(obj=test, interpol=c1bar, val=c1)
+CALL getInterpolation(obj=test, interpol=c2bar, val=c2)
+realval = test%js * test%ws * test%thickness * c1bar
+CALL reallocate(ans, SIZE(c2bar, 1), SIZE(c2bar, 2), SIZE(test%N, 1))
+!
+DO ips = 1, SIZE(realval)
+  ans = ans + realval(ips) * OUTERPROD(c2bar(:, :, ips), test%N(:, ips))
+END DO
+!
+DEALLOCATE (realval, c1bar, c2bar)
+!
 END PROCEDURE ForceVector_7
 
 !----------------------------------------------------------------------------
