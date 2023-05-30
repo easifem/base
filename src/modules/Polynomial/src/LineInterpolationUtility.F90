@@ -265,7 +265,7 @@ INTERFACE
     !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! domain of interpolation
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! "VEFC"
     !! "INCREASING"
     REAL(DFP), ALLOCATABLE :: ans(:, :)
@@ -301,7 +301,7 @@ INTERFACE
     !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
     REAL(DFP), INTENT(IN) :: xij(2)
     !! end points
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! "VEFC"
     !! "INCREASING"
     !! "DECREASING"

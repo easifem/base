@@ -36,10 +36,10 @@ PUBLIC :: Set
 ! - Symbolic we are performing following task `obj(nodenum, nodenum)=value`
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_set0(obj, nodenum, value)
+  MODULE PURE SUBROUTINE csrMat_set0(obj, nodenum, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-    REAL(DFP), INTENT(IN) :: value(:, :)
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
   END SUBROUTINE csrMat_set0
 END INTERFACE
 
@@ -73,10 +73,10 @@ END INTERFACE set
 ! - Usually, element matrix is stored with `DOF_FMT`
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_set1(obj, nodenum, value, storageFMT)
+  MODULE PURE SUBROUTINE csrMat_set1(obj, nodenum, VALUE, storageFMT)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-    REAL(DFP), INTENT(IN) :: value(:, :)
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
     INTEGER(I4B), INTENT(IN) :: storageFMT
   END SUBROUTINE csrMat_set1
 END INTERFACE
@@ -99,9 +99,9 @@ END INTERFACE set
 ! call this routine by `obj=value`.
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_set2(obj, value)
+  MODULE PURE SUBROUTINE csrMat_set2(obj, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_set2
 END INTERFACE
 
@@ -134,13 +134,13 @@ END INTERFACE ASSIGNMENT(=)
 !@endwarning
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_set3(obj, irow, icolumn, value)
+  MODULE PURE SUBROUTINE csrMat_set3(obj, irow, icolumn, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: irow
     !! row index
     INTEGER(I4B), INTENT(IN) :: icolumn
     !! column index
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! value
   END SUBROUTINE csrMat_set3
 END INTERFACE
@@ -179,7 +179,7 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set4(obj, iNodeNum, jNodeNum, iDOF, &
-    & jDOF, value)
+    & jDOF, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -189,7 +189,7 @@ INTERFACE
     !! row degree of freedom
     INTEGER(I4B), INTENT(IN) :: jDOF
     !! col degree of freedom
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be set
   END SUBROUTINE csrMat_set4
 END INTERFACE
@@ -214,10 +214,10 @@ END INTERFACE set
 ! This routine corresponds to `obj(nodenum) = value`
 
 INTERFACE
-  MODULE PURE SUBROUTINE csrMat_set5(obj, nodenum, value)
+  MODULE PURE SUBROUTINE csrMat_set5(obj, nodenum, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nodenum(:)
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_set5
 END INTERFACE
 
@@ -246,13 +246,13 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set6(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, value)
+    & ivar, jvar, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: jvar
-    REAL(DFP), INTENT(IN) :: value(:, :)
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
   END SUBROUTINE csrMat_set6
 END INTERFACE
 
@@ -290,7 +290,7 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set7(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, value)
+    & jvar, iDOF, jDOF, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -304,7 +304,7 @@ INTERFACE
     !! row degree of freedom
     INTEGER(I4B), INTENT(IN) :: jDOF
     !! col degree of freedom
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be set
   END SUBROUTINE csrMat_set7
 END INTERFACE
@@ -323,7 +323,7 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set8(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, value)
+    & jvar, iDOF, jDOF, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -337,7 +337,7 @@ INTERFACE
     !! row degree of freedom
     INTEGER(I4B), INTENT(IN) :: jDOF
     !! col degree of freedom
-    REAL(DFP), INTENT(IN) :: value(:, :)
+    REAL(DFP), INTENT(IN) :: VALUE(:, :)
     !! scalar value to be set
   END SUBROUTINE csrMat_set8
 END INTERFACE
@@ -376,7 +376,7 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set9(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, value)
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum
     !! row node number
@@ -391,7 +391,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: jspacecompo
     INTEGER(I4B), INTENT(IN) :: jtimecompo
     !! col degree of freedom
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be set
   END SUBROUTINE csrMat_set9
 END INTERFACE
@@ -421,13 +421,13 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set10(obj, iNodeNum, jNodeNum, &
-    & ivar, jvar, value)
+    & ivar, jvar, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: jNodeNum(:)
     INTEGER(I4B), INTENT(IN) :: ivar
     INTEGER(I4B), INTENT(IN) :: jvar
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
   END SUBROUTINE csrMat_set10
 END INTERFACE
 
@@ -445,7 +445,7 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set11(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, iDOF, jDOF, value)
+    & jvar, iDOF, jDOF, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -459,7 +459,7 @@ INTERFACE
     !! row degree of freedom
     INTEGER(I4B), INTENT(IN) :: jDOF
     !! col degree of freedom
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be set
   END SUBROUTINE csrMat_set11
 END INTERFACE
@@ -478,7 +478,7 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set12(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, value)
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -492,7 +492,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: itimecompo
     INTEGER(I4B), INTENT(IN) :: jspacecompo
     INTEGER(I4B), INTENT(IN) :: jtimecompo
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be set
   END SUBROUTINE csrMat_set12
 END INTERFACE
@@ -511,7 +511,7 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set13(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, value)
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -525,7 +525,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: itimecompo(:)
     INTEGER(I4B), INTENT(IN) :: jspacecompo
     INTEGER(I4B), INTENT(IN) :: jtimecompo(:)
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be set
   END SUBROUTINE csrMat_set13
 END INTERFACE
@@ -544,7 +544,7 @@ END INTERFACE set
 
 INTERFACE
   MODULE PURE SUBROUTINE csrMat_set14(obj, iNodeNum, jNodeNum, ivar,  &
-    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, value)
+    & jvar, ispacecompo, itimecompo, jspacecompo, jtimecompo, VALUE)
     TYPE(CSRMatrix_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: iNodeNum(:)
     !! row node number
@@ -558,7 +558,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: itimecompo
     INTEGER(I4B), INTENT(IN) :: jspacecompo(:)
     INTEGER(I4B), INTENT(IN) :: jtimecompo
-    REAL(DFP), INTENT(IN) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
     !! scalar value to be set
   END SUBROUTINE csrMat_set14
 END INTERFACE

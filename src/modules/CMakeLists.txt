@@ -60,6 +60,9 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/CInterface/CMakeLists.txt)
 #SuperLUInterface
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/SuperLUInterface/CMakeLists.txt)
 
+#LISInterface
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/LISInterface/CMakeLists.txt)
+
 #MetisInterface
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MetisInterface/CMakeLists.txt)
 

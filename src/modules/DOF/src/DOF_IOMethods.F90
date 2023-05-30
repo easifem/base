@@ -15,6 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE DOF_IOMethods
+USE GlobalData
+USE BaseType
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
@@ -23,14 +29,14 @@ PUBLIC :: Display
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 29 June 2021
-! summary: 	Display content of [[dof_]]
+! summary:         Display content of [[dof_]]
 
 INTERFACE
-MODULE SUBROUTINE dof_Display1( obj, msg, UnitNo )
-  CLASS(DOF_), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), INTENT( IN ), OPTIONAL :: UnitNo
-END SUBROUTINE dof_Display1
+  MODULE SUBROUTINE dof_Display1(obj, msg, UnitNo)
+    CLASS(DOF_), INTENT(IN) :: obj
+    CHARACTER(*), INTENT(IN) :: msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: UnitNo
+  END SUBROUTINE dof_Display1
 END INTERFACE
 
 INTERFACE Display
@@ -69,12 +75,12 @@ END INTERFACE Display
 !```
 
 INTERFACE
-MODULE SUBROUTINE dof_Display2( Vec, obj, msg, unitno )
-  REAL( DFP ), INTENT( IN ) :: Vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitno
-END SUBROUTINE dof_Display2
+  MODULE SUBROUTINE dof_Display2(Vec, obj, msg, unitno)
+    REAL(DFP), INTENT(IN) :: Vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+    CHARACTER(*), INTENT(IN) :: msg
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
+  END SUBROUTINE dof_Display2
 END INTERFACE
 
 INTERFACE Display
@@ -90,14 +96,16 @@ END INTERFACE Display
 ! summary: Display content of fortran vec with [[DOF_]] object info
 
 INTERFACE
-MODULE SUBROUTINE dof_Display3( Vec, obj, msg, unitno )
-  CLASS( RealVector_ ), INTENT( IN ) :: Vec
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  CHARACTER( LEN = * ), INTENT( IN ) :: msg
-  INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: unitno
-END SUBROUTINE dof_Display3
+  MODULE SUBROUTINE dof_Display3(Vec, obj, msg, unitno)
+    CLASS(RealVector_), INTENT(IN) :: Vec
+    CLASS(DOF_), INTENT(IN) :: obj
+    CHARACTER(*), INTENT(IN) :: msg
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
+  END SUBROUTINE dof_Display3
 END INTERFACE
 
 INTERFACE Display
   MODULE PROCEDURE dof_Display3
 END INTERFACE Display
+
+END MODULE DOF_IOMethods

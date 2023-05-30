@@ -15,6 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE DOF_SetMethods
+USE GlobalData
+USE BaseType
+IMPLICIT NONE
+PRIVATE
+
 PUBLIC :: set
 
 !----------------------------------------------------------------------------
@@ -35,21 +41,21 @@ PUBLIC :: set
 ! value from value
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set1( vec, obj, nodenum, value, conversion )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set1(vec, obj, nodenum, VALUE, conversion)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  INTEGER( I4B ), INTENT( IN ) :: conversion( 1 )
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    INTEGER(I4B), INTENT(IN) :: conversion(1)
   !! DOFToNodes
   !! NodesTODOF
   !! None
-  REAL( DFP ), INTENT( IN ) :: value( : )
+    REAL(DFP), INTENT(IN) :: VALUE(:)
   !! `value` denotes the nodal values of all dof defined inside `obj`.
   !! The storage pattern in `value` can be `FMT_DOF` or `FMT_Nodes`.
-END SUBROUTINE dof_set1
+  END SUBROUTINE dof_set1
 END INTERFACE
 
 INTERFACE set
@@ -65,12 +71,12 @@ END INTERFACE set
 ! summary: Set values in a vector of real numbers
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set2( vec, obj, nodenum, value )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-  REAL( DFP ), INTENT( IN ) :: value
-END SUBROUTINE dof_set2
+  MODULE PURE SUBROUTINE dof_set2(vec, obj, nodenum, VALUE)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    REAL(DFP), INTENT(IN) :: VALUE
+  END SUBROUTINE dof_set2
 END INTERFACE
 
 INTERFACE set
@@ -101,18 +107,18 @@ END INTERFACE set
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set3( vec, obj, nodenum, value, idof )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set3(vec, obj, nodenum, VALUE, idof)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! Object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value( : )
+    REAL(DFP), INTENT(IN) :: VALUE(:)
   !! `value` denotes the nodal values of dof `idof`.
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE dof_set3
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE dof_set3
 END INTERFACE
 
 INTERFACE set
@@ -128,20 +134,20 @@ END INTERFACE set
 ! summary: Set values in a vector of real numbers
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set4( vec, obj, nodenum, value, ivar, idof )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set4(vec, obj, nodenum, VALUE, ivar, idof)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! Object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value( : )
+    REAL(DFP), INTENT(IN) :: VALUE(:)
   !! `value` denotes the nodal values of dof `idof`.
-  INTEGER( I4B ), INTENT( IN ) :: ivar
+    INTEGER(I4B), INTENT(IN) :: ivar
   !! physical variable
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE dof_set4
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE dof_set4
 END INTERFACE
 
 INTERFACE set
@@ -157,22 +163,22 @@ END INTERFACE set
 ! summary: Set values in a vector of real numbers
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set5( vec, obj, nodenum, value, ivar, &
-    & spacecompo, timecompo )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set5(vec, obj, nodenum, VALUE, ivar, &
+      & spacecompo, timecompo)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! Object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value( : )
+    REAL(DFP), INTENT(IN) :: VALUE(:)
   !! `value` denotes the nodal values of dof `idof`.
-  INTEGER( I4B ), INTENT( IN ) :: ivar
+    INTEGER(I4B), INTENT(IN) :: ivar
   !! physical variable
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE dof_set5
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE dof_set5
 END INTERFACE
 
 INTERFACE set
@@ -188,22 +194,22 @@ END INTERFACE set
 ! summary: Set values in a vector of real numbers
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set6( vec, obj, nodenum, value, ivar, &
-    & spacecompo, timecompo )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set6(vec, obj, nodenum, VALUE, ivar, &
+      & spacecompo, timecompo)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! Object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value( : )
+    REAL(DFP), INTENT(IN) :: VALUE(:)
   !! `value` denotes the nodal values of dof `idof`.
-  INTEGER( I4B ), INTENT( IN ) :: ivar
+    INTEGER(I4B), INTENT(IN) :: ivar
   !! physical variable
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo(:)
-END SUBROUTINE dof_set6
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo(:)
+  END SUBROUTINE dof_set6
 END INTERFACE
 
 INTERFACE set
@@ -219,22 +225,22 @@ END INTERFACE set
 ! summary: Set values in a vector of real numbers
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set7( vec, obj, nodenum, value, ivar, &
-    & spacecompo, timecompo )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set7(vec, obj, nodenum, VALUE, ivar, &
+      & spacecompo, timecompo)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! Object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value( : )
+    REAL(DFP), INTENT(IN) :: VALUE(:)
   !! `value` denotes the nodal values of dof `idof`.
-  INTEGER( I4B ), INTENT( IN ) :: ivar
+    INTEGER(I4B), INTENT(IN) :: ivar
   !! physical variable
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo(:)
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE dof_set7
+    INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE dof_set7
 END INTERFACE
 
 INTERFACE set
@@ -250,12 +256,12 @@ END INTERFACE set
 ! summary: Set values in a vector of real numbers
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set8( vec, obj, nodenum, value )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
-  REAL( DFP ), INTENT( IN ) :: value
-END SUBROUTINE dof_set8
+  MODULE PURE SUBROUTINE dof_set8(vec, obj, nodenum, VALUE)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: nodenum
+    REAL(DFP), INTENT(IN) :: VALUE
+  END SUBROUTINE dof_set8
 END INTERFACE
 
 INTERFACE set
@@ -286,18 +292,18 @@ END INTERFACE set
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set9( vec, obj, nodenum, value, idof )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set9(vec, obj, nodenum, VALUE, idof)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! Object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: nodenum
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
   !! `value` denotes the nodal values of dof `idof`.
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE dof_set9
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE dof_set9
 END INTERFACE
 
 INTERFACE set
@@ -328,19 +334,19 @@ END INTERFACE set
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set10( vec, obj, nodenum, value, ivar, idof )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set10(vec, obj, nodenum, VALUE, ivar, idof)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: nodenum
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
   !! `value` denotes the nodal values of dof `idof`.
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: idof
-END SUBROUTINE dof_set10
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: idof
+  END SUBROUTINE dof_set10
 END INTERFACE
 
 INTERFACE set
@@ -371,22 +377,22 @@ END INTERFACE set
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set11( vec, obj, nodenum, value, ivar, &
-  & spacecompo, timecompo )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set11(vec, obj, nodenum, VALUE, ivar, &
+    & spacecompo, timecompo)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: nodenum
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
   !! `value` denotes the nodal values of dof `idof`.
 
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE dof_set11
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE dof_set11
 END INTERFACE
 
 INTERFACE set
@@ -417,22 +423,22 @@ END INTERFACE set
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set12( vec, obj, nodenum, value, ivar, &
-  & spacecompo, timecompo )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set12(vec, obj, nodenum, VALUE, ivar, &
+    & spacecompo, timecompo)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: nodenum
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
   !! `value` denotes the nodal values of dof `idof`.
 
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo
-  INTEGER( I4B ), INTENT( IN ) :: timecompo(:)
-END SUBROUTINE dof_set12
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo
+    INTEGER(I4B), INTENT(IN) :: timecompo(:)
+  END SUBROUTINE dof_set12
 END INTERFACE
 
 INTERFACE set
@@ -463,24 +469,26 @@ END INTERFACE set
 !@endnote
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_set13( vec, obj, nodenum, value, ivar, &
-  & spacecompo, timecompo )
-  REAL( DFP ), INTENT( INOUT ) :: vec( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
+  MODULE PURE SUBROUTINE dof_set13(vec, obj, nodenum, VALUE, ivar, &
+    & spacecompo, timecompo)
+    REAL(DFP), INTENT(INOUT) :: vec(:)
+    CLASS(DOF_), INTENT(IN) :: obj
   !! object `obj` contains the storage pattern of degrees of freedom
   !! inside `vec`.
   !! This storage pattern can be `FMT_Nodes` or `FMT_DOF`
-  INTEGER( I4B ), INTENT( IN ) :: nodenum
+    INTEGER(I4B), INTENT(IN) :: nodenum
   !! node number
-  REAL( DFP ), INTENT( IN ) :: value
+    REAL(DFP), INTENT(IN) :: VALUE
   !! `value` denotes the nodal values of dof `idof`.
 
-  INTEGER( I4B ), INTENT( IN ) :: ivar
-  INTEGER( I4B ), INTENT( IN ) :: spacecompo(:)
-  INTEGER( I4B ), INTENT( IN ) :: timecompo
-END SUBROUTINE dof_set13
+    INTEGER(I4B), INTENT(IN) :: ivar
+    INTEGER(I4B), INTENT(IN) :: spacecompo(:)
+    INTEGER(I4B), INTENT(IN) :: timecompo
+  END SUBROUTINE dof_set13
 END INTERFACE
 
 INTERFACE set
   MODULE PROCEDURE dof_set13
 END INTERFACE set
+
+END MODULE DOF_SetMethods

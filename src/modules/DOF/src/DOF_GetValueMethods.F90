@@ -15,6 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE DOF_GetValueMethods
+USE GlobalData
+USE BaseType
+IMPLICIT NONE
+
+PRIVATE
+
 PUBLIC :: Getvalue
 PUBLIC :: Get
 
@@ -34,15 +41,15 @@ PUBLIC :: Get
 ! format of returned vector.
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_getvalue1( v, val, obj, idof, storageFMT, &
-  & nodenum )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: v( : )
-  REAL( DFP ), INTENT( IN ) :: val( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT(IN ) :: idof( : )
-  INTEGER( I4B ), INTENT( IN ) :: storageFMT
-  INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-END SUBROUTINE dof_getvalue1
+  MODULE PURE SUBROUTINE dof_getvalue1(v, val, obj, idof, storageFMT, &
+    & nodenum)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: v(:)
+    REAL(DFP), INTENT(IN) :: val(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+  END SUBROUTINE dof_getvalue1
 END INTERFACE
 
 INTERFACE getvalue
@@ -67,13 +74,13 @@ END INTERFACE getvalue
 !
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_getvalue2( v, val, obj, idof, force3D )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: v( :, : )
-  REAL( DFP ), INTENT( IN ) :: val( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT(IN ) :: idof( : )
-  LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: force3D
-END SUBROUTINE dof_getvalue2
+  MODULE PURE SUBROUTINE dof_getvalue2(v, val, obj, idof, force3D)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: v(:, :)
+    REAL(DFP), INTENT(IN) :: val(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
+  END SUBROUTINE dof_getvalue2
 END INTERFACE
 
 INTERFACE getvalue
@@ -96,13 +103,13 @@ END INTERFACE getvalue
 ! format of returned vector.
 
 INTERFACE
-MODULE PURE SUBROUTINE dof_getvalue3( v, val, obj, idof, storageFMT )
-  REAL( DFP ), ALLOCATABLE, INTENT( INOUT ) :: v( : )
-  REAL( DFP ), INTENT( IN ) :: val( : )
-  CLASS( DOF_ ), INTENT( IN ) :: obj
-  INTEGER( I4B ), INTENT(IN ) :: idof( : )
-  INTEGER( I4B ), INTENT( IN ) :: storageFMT
-END SUBROUTINE dof_getvalue3
+  MODULE PURE SUBROUTINE dof_getvalue3(v, val, obj, idof, storageFMT)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: v(:)
+    REAL(DFP), INTENT(IN) :: val(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    INTEGER(I4B), INTENT(IN) :: storageFMT
+  END SUBROUTINE dof_getvalue3
 END INTERFACE
 
 INTERFACE getvalue
@@ -114,15 +121,15 @@ END INTERFACE getvalue
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION dof_get1( val, obj, idof, StorageFMT, nodenum, &
-    & Force3D )  RESULT( ans )
-    REAL( DFP ), INTENT( IN ) :: val( : )
-    CLASS( DOF_ ), INTENT( IN ) :: obj
-    INTEGER( I4B ), INTENT( IN ) :: idof( : )
-    INTEGER( I4B ), INTENT( IN ) :: StorageFMT
-    INTEGER( I4B ), INTENT( IN ) :: nodenum( : )
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: force3D
-    REAL( DFP ), ALLOCATABLE :: ans( : )
+  MODULE PURE FUNCTION dof_get1(val, obj, idof, StorageFMT, nodenum, &
+    & Force3D) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: val(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    INTEGER(I4B), INTENT(IN) :: StorageFMT
+    INTEGER(I4B), INTENT(IN) :: nodenum(:)
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
+    REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION dof_get1
 END INTERFACE
 
@@ -135,17 +142,19 @@ END INTERFACE get
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION dof_get2( val, obj, idof, StorageFMT, &
-    & Force3D )  RESULT( ans )
-    REAL( DFP ), INTENT( IN ) :: val( : )
-    CLASS( DOF_ ), INTENT( IN ) :: obj
-    INTEGER( I4B ), INTENT( IN ) :: idof( : )
-    INTEGER( I4B ), INTENT( IN ) :: StorageFMT
-    LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: force3D
-    REAL( DFP ), ALLOCATABLE :: ans( : )
+  MODULE PURE FUNCTION dof_get2(val, obj, idof, StorageFMT, &
+    & Force3D) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: val(:)
+    CLASS(DOF_), INTENT(IN) :: obj
+    INTEGER(I4B), INTENT(IN) :: idof(:)
+    INTEGER(I4B), INTENT(IN) :: StorageFMT
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: force3D
+    REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION dof_get2
 END INTERFACE
 
 INTERFACE get
   MODULE PROCEDURE dof_get2
 END INTERFACE get
+
+END MODULE DOF_GetValueMethods

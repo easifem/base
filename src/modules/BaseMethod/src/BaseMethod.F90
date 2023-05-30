@@ -33,6 +33,10 @@ MODULE BaseMethod
 USE SuperLUInterface
 #endif
 
+#ifdef USE_LIS
+! USE LISInterface
+#endif
+
 #ifdef USE_PLPLOT
 USE PLPLOT
 #endif

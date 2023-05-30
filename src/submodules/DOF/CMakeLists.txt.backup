@@ -9,10 +9,10 @@
 SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
 TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
-  ${src_path}/DOF_ConstructorMethods@Methods.F90
-  ${src_path}/DOF_IOMethods@Methods.F90
-  ${src_path}/DOF_SetMethods@Methods.F90
-  ${src_path}/DOF_AddMethods@Methods.F90
-  ${src_path}/DOF_GetMethods@Methods.F90
-  ${src_path}/DOF_GetValueMethods@Methods.F90
+  ${src_path}/DOF_Method@ConstructorMethods.F90
+  ${src_path}/DOF_Method@IOMethods.F90
+  ${src_path}/DOF_Method@SetMethods.F90
+  ${src_path}/DOF_Method@AddMethods.F90
+  ${src_path}/DOF_Method@GetMethods.F90
+  ${src_path}/DOF_Method@GetValueMethods.F90
 )

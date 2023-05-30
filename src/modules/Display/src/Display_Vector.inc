@@ -15,32 +15,32 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-!! vector of real numbers
-CHARACTER( LEN = * ), INTENT( IN ) :: msg
-!! message
-INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-!! Unit number
-CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: orient
-!! orient=row => rowwise printing
-!! orient=col =>  columnwise printing
-LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
-!! logical variable to print the whole vector
-CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: advance
+! vector of real numbers
+CHARACTER(*), INTENT(IN) :: msg
+! message
+INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+! Unit number
+CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+! orient=row => rowwise printing
+! orient=col =>  columnwise printing
+LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+! logical variable to print the whole vector
+CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 ! Define internal variables
-INTEGER( I4B ) :: I
-CHARACTER( LEN = 3 ) :: orient_
+INTEGER(I4B) :: I
+CHARACTER(3) :: orient_
 CALL setDefaultSettings
 !> main
-IF( PRESENT( unitNo ) ) THEN
+IF (PRESENT(unitNo)) THEN
   I = unitNo
 ELSE
   I = stdout
 END IF
-IF( PRESENT( full ) ) THEN
+IF (PRESENT(full)) THEN
   ! do nothing for now
 END IF
-IF( PRESENT( orient ) ) THEN
-  IF( orient(1:1) .EQ. "r" .OR. orient(1:1) .EQ. "R" ) THEN
+IF (PRESENT(orient)) THEN
+  IF (orient(1:1) .EQ. "r" .OR. orient(1:1) .EQ. "R") THEN
     orient_ = "row"
   ELSE
     orient_ = "col"
@@ -50,9 +50,9 @@ ELSE
 END IF
 #ifdef COLOR_DISP
 CALL DISP( &
-  & title=TRIM(colorize( msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
+  & title=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
   & style=COLOR_STYLE)), &
-  & x=val, unit = I, orient = orient_, advance=advance )
+  & x=val, unit=I, orient=orient_, advance=advance)
 #else
-CALL DISP( title=msg, x=val, unit = I, orient = orient_, advance=advance )
+CALL DISP(title=msg, x=val, unit=I, orient=orient_, advance=advance)
 #endif

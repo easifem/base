@@ -14,14 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
-SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
-TARGET_SOURCES(
-  ${PROJECT_NAME} PRIVATE
-  ${src_path}/DOF_Method.F90
-  ${src_path}/DOF_ConstructorMethods.F90
-  ${src_path}/DOF_IOMethods.F90
-  ${src_path}/DOF_GetMethods.F90
-  ${src_path}/DOF_GetValueMethods.F90
-  ${src_path}/DOF_SetMethods.F90
-  ${src_path}/DOF_AddMethods.F90
-)
+
+# IF( USE_LIS )
+#     SET(src_path "${CMAKE_CURRENT_LIST_DIR}/src/")
+#     TARGET_SOURCES(
+#       ${PROJECT_NAME} PRIVATE
+#       ${src_path}/LISParam.F90
+#       ${src_path}/LISBasic.F90
+#       ${src_path}/LISVector.F90
+#       ${src_path}/LISInterface.F90
+#       )
+# ENDIF(  )

@@ -234,7 +234,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: n
     !! n
     REAL(DFP), INTENT(IN) :: x(:)
-    REAL(DFP) :: ans(1:SIZE(x), 0:n )
+    REAL(DFP) :: ans(1:SIZE(x), 0:n)
     !! Evaluate Lobatto polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION LobattoKernelEvalAll1

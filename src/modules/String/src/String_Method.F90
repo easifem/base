@@ -19,20 +19,20 @@
 ! date: 21 Oct 2021
 ! summary: Additional String Methods
 
-module String_Method
-use String_Class, only: repeat, CK, string
-implicit none
-private
+MODULE String_Method
+USE String_Class, ONLY: repeat, string
+IMPLICIT NONE
+PRIVATE
 ! expose StingiFor new procedures
-public :: read_file, read_lines, write_file, write_lines
+PUBLIC :: read_file, read_lines, write_file, write_lines
 
-contains
+CONTAINS
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine read_file(file, lines, form, iostat, iomsg)
+SUBROUTINE read_file(file, lines, form, iostat, iomsg)
   !< Read a file as a single string stream.
   !<
   !< The lines are returned as an array of strings that are read until the eof is reached.
@@ -45,7 +45,7 @@ subroutine read_file(file, lines, form, iostat, iomsg)
   !< type(string), allocatable :: strings(:)
   !< type(string)              :: line(3)
   !< integer                   :: iostat
-  !< character(len=99)         :: iomsg
+  !< character(99)         :: iomsg
   !< integer                   :: scratch
   !< integer                   :: l
   !< logical                   :: test_passed(8)
@@ -77,41 +77,41 @@ subroutine read_file(file, lines, form, iostat, iomsg)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  character(len=*), intent(in) :: file       !< File name.
-  type(string), intent(out), allocatable :: lines(:)   !< The lines.
-  character(len=*), intent(in), optional :: form       !< Format of unit.
-  integer, intent(out), optional :: iostat     !< IO status code.
-  character(len=*), intent(inout), optional :: iomsg      !< IO status message.
-  type(string) :: form_      !< Format of unit, local variable.
-  integer :: iostat_    !< IO status code, local variable.
-  character(len=:), allocatable :: iomsg_     !< IO status message, local variable.
-  integer :: unit       !< Logical unit.
-  logical :: does_exist !< Check if file exist.
+  CHARACTER(*), INTENT(in) :: file !< File name.
+  TYPE(string), INTENT(out), ALLOCATABLE :: lines(:) !< The lines.
+  CHARACTER(*), INTENT(in), OPTIONAL :: form !< Format of unit.
+  INTEGER, INTENT(out), OPTIONAL :: iostat !< IO status code.
+  CHARACTER(*), INTENT(inout), OPTIONAL :: iomsg !< IO status message.
+  TYPE(string) :: form_ !< Format of unit, local variable.
+  INTEGER :: iostat_ !< IO status code, local variable.
+  CHARACTER(:), ALLOCATABLE :: iomsg_ !< IO status message, local variable.
+  INTEGER :: unit !< Logical unit.
+  LOGICAL :: does_exist !< Check if file exist.
 
-  iomsg_ = repeat(' ', 99); if (present(iomsg)) iomsg_ = iomsg
-  inquire (file=file, iomsg=iomsg_, iostat=iostat_, exist=does_exist)
-  if (does_exist) then
-    form_ = 'FORMATTED'; if (present(form)) form_ = form; form_ = form_ % upper()
-    select case (form_ % chars())
-    case ('FORMATTED')
+  iomsg_ = REPEAT(' ', 99); IF (PRESENT(iomsg)) iomsg_ = iomsg
+  INQUIRE (file=file, iomsg=iomsg_, iostat=iostat_, exist=does_exist)
+  IF (does_exist) THEN
+    form_ = 'FORMATTED'; IF (PRESENT(form)) form_ = form; form_ = form_%upper()
+    SELECT CASE (form_%chars())
+    CASE ('FORMATTED')
             open (newunit=unit, file=file, status='OLD', action='READ', iomsg=iomsg_, iostat=iostat_, err=10)
-    case ('UNFORMATTED')
+    CASE ('UNFORMATTED')
             open (newunit=unit, file=file, status='OLD', action='READ', form='UNFORMATTED', access='STREAM', &
             iomsg=iomsg_, iostat=iostat_, err=10)
-    end select
-      call read_lines(unit=unit, lines=lines, form=form, iomsg=iomsg_, &
-        & iostat=iostat_)
-10  close (unit)
-  end if
-  if (present(iostat)) iostat = iostat_
-  if (present(iomsg)) iomsg = iomsg_
-end subroutine read_file
+    END SELECT
+    CALL read_lines(unit=unit, lines=lines, form=form, iomsg=iomsg_, &
+      & iostat=iostat_)
+10  CLOSE (unit)
+  END IF
+  IF (PRESENT(iostat)) iostat = iostat_
+  IF (PRESENT(iomsg)) iomsg = iomsg_
+END SUBROUTINE read_file
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine read_lines(unit, lines, form, iostat, iomsg)
+SUBROUTINE read_lines(unit, lines, form, iostat, iomsg)
   !< Read lines (records) from a connected-formatted unit.
   !<
   !< @note The connected unit is rewinded. At a successful exit current record is at eof, at the beginning otherwise.
@@ -122,56 +122,56 @@ subroutine read_lines(unit, lines, form, iostat, iomsg)
   !< @note For unformatted read only `access='stream'` is supported with new_line as line terminator.
   !<
   !< @note There is no doctests, this being tested by means of [[read_file]] doctests.
-  integer, intent(in) :: unit     !< Logical unit.
-  type(string), intent(out), allocatable :: lines(:) !< The lines.
-  character(len=*), intent(in), optional :: form     !< Format of unit.
-  integer, intent(out), optional :: iostat   !< IO status code.
-  character(len=*), intent(inout), optional :: iomsg    !< IO status message.
-  type(string) :: form_    !< Format of unit, local variable.
-  integer :: iostat_  !< IO status code, local variable.
-  character(len=:), allocatable :: iomsg_   !< IO status message, local variable.
-  character(kind=CK, len=1) :: ch       !< Character storage.
-  integer :: l        !< Counter.
+  INTEGER, INTENT(in) :: unit !< Logical unit.
+  TYPE(string), INTENT(out), ALLOCATABLE :: lines(:) !< The lines.
+  CHARACTER(*), INTENT(in), OPTIONAL :: form !< Format of unit.
+  INTEGER, INTENT(out), OPTIONAL :: iostat !< IO status code.
+  CHARACTER(*), INTENT(inout), OPTIONAL :: iomsg !< IO status message.
+  TYPE(string) :: form_ !< Format of unit, local variable.
+  INTEGER :: iostat_ !< IO status code, local variable.
+  CHARACTER(:), ALLOCATABLE :: iomsg_ !< IO status message, local variable.
+  CHARACTER(1) :: ch !< Character storage.
+  INTEGER :: l !< Counter.
 
-  form_ = 'FORMATTED'; if (present(form)) form_ = form; form_ = form_ % upper()
-  iomsg_ = repeat(' ', 99); if (present(iomsg)) iomsg_ = iomsg
-  rewind (unit)
-  select case (form_ % chars())
-  case ('FORMATTED')
+  form_ = 'FORMATTED'; IF (PRESENT(form)) form_ = form; form_ = form_%upper()
+  iomsg_ = REPEAT(' ', 99); IF (PRESENT(iomsg)) iomsg_ = iomsg
+  REWIND (unit)
+  SELECT CASE (form_%chars())
+  CASE ('FORMATTED')
     l = 0
-    do
-      read (unit, *, err=10, end=10)
+    DO
+      READ (unit, *, err=10, END=10)
       l = l + 1
-    end do
-  case ('UNFORMATTED')
+    END DO
+  CASE ('UNFORMATTED')
     l = 0
-    do
-      read (unit, err=10, end=10) ch
-      if (ch == new_line('a')) l = l + 1
-    end do
-  end select
-10 rewind (unit)
-  if (l > 0) then
-    allocate (lines(1:l))
+    DO
+      READ (unit, err=10, END=10) ch
+      IF (ch == NEW_LINE('a')) l = l + 1
+    END DO
+  END SELECT
+10 REWIND (unit)
+  IF (l > 0) THEN
+    ALLOCATE (lines(1:l))
     l = 1
     iostat_ = 0
-    do
- call lines(l) % read_line(unit=unit, form=form, iostat=iostat_, iomsg=iomsg_)
+    DO
+   CALL lines(l)%read_line(unit=unit, form=form, iostat=iostat_, iomsg=iomsg_)
             if ((iostat_ /= 0 .and. .not. is_iostat_eor(iostat_)) .or. (l >= size(lines, dim=1))) then
-        exit
-      end if
+        EXIT
+      END IF
       l = l + 1
-    end do
-  end if
-  if (present(iostat)) iostat = iostat_
-  if (present(iomsg)) iomsg = iomsg_
-end subroutine read_lines
+    END DO
+  END IF
+  IF (PRESENT(iostat)) iostat = iostat_
+  IF (PRESENT(iomsg)) iomsg = iomsg_
+END SUBROUTINE read_lines
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine write_file(file, lines, form, iostat, iomsg)
+SUBROUTINE write_file(file, lines, form, iostat, iomsg)
   !< Write a single string stream into file.
   !<
   !< @note For unformatted read only `access='stream'` is supported with new_line as line terminator.
@@ -182,7 +182,7 @@ subroutine write_file(file, lines, form, iostat, iomsg)
   !< type(string), allocatable :: strings(:)
   !< type(string)              :: line(3)
   !< integer                   :: iostat
-  !< character(len=99)         :: iomsg
+  !< character(99)         :: iomsg
   !< integer                   :: scratch
   !< integer                   :: l
   !< logical                   :: test_passed(8)
@@ -209,47 +209,47 @@ subroutine write_file(file, lines, form, iostat, iomsg)
   !< print '(L1)', all(test_passed)
   !<```
   !=> T <<<
-  character(len=*), intent(in) :: file      !< File name.
-  type(string), intent(in) :: lines(1:) !< The lines.
-  character(len=*), intent(in), optional :: form      !< Format of unit.
-  integer, intent(out), optional :: iostat    !< IO status code.
-  character(len=*), intent(inout), optional :: iomsg     !< IO status message.
-  type(string) :: form_     !< Format of unit, local variable.
-  integer :: iostat_   !< IO status code, local variable.
-  character(len=:), allocatable :: iomsg_    !< IO status message, local variable.
-  integer :: unit      !< Logical unit.
+  CHARACTER(*), INTENT(in) :: file !< File name.
+  TYPE(string), INTENT(in) :: lines(1:) !< The lines.
+  CHARACTER(*), INTENT(in), OPTIONAL :: form !< Format of unit.
+  INTEGER, INTENT(out), OPTIONAL :: iostat !< IO status code.
+  CHARACTER(*), INTENT(inout), OPTIONAL :: iomsg !< IO status message.
+  TYPE(string) :: form_ !< Format of unit, local variable.
+  INTEGER :: iostat_ !< IO status code, local variable.
+  CHARACTER(:), ALLOCATABLE :: iomsg_ !< IO status message, local variable.
+  INTEGER :: unit !< Logical unit.
 
-  iomsg_ = repeat(' ', 99); if (present(iomsg)) iomsg_ = iomsg
-  form_ = 'FORMATTED'; if (present(form)) form_ = form; form_ = form_ % upper()
-  select case (form_ % chars())
-  case ('FORMATTED')
+  iomsg_ = REPEAT(' ', 99); IF (PRESENT(iomsg)) iomsg_ = iomsg
+  form_ = 'FORMATTED'; IF (PRESENT(form)) form_ = form; form_ = form_%upper()
+  SELECT CASE (form_%chars())
+  CASE ('FORMATTED')
          open (newunit=unit, file=file, action='WRITE', iomsg=iomsg_, iostat=iostat_, err=10)
-  case ('UNFORMATTED')
+  CASE ('UNFORMATTED')
          open (newunit=unit, file=file, action='WRITE', form='UNFORMATTED', access='STREAM', iomsg=iomsg_, iostat=iostat_, err=10)
-  end select
+  END SELECT
       call write_lines(unit=unit, lines=lines, form=form, iomsg=iomsg_, iostat=iostat_)
-10 close (unit)
-  if (present(iostat)) iostat = iostat_
-  if (present(iomsg)) iomsg = iomsg_
-end subroutine write_file
+10 CLOSE (unit)
+  IF (PRESENT(iostat)) iostat = iostat_
+  IF (PRESENT(iomsg)) iomsg = iomsg_
+END SUBROUTINE write_file
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine write_lines(unit, lines, form, iostat, iomsg)
+SUBROUTINE write_lines(unit, lines, form, iostat, iomsg)
   !< Write lines (records) to a connected-formatted unit.
   !<
   !< @note There is no doctests, this being tested by means of [[write_file]] doctests.
-  integer, intent(in) :: unit      !< Logical unit.
-  type(string), intent(in) :: lines(1:) !< The lines.
-  character(len=*), intent(in), optional :: form      !< Format of unit.
-  integer, intent(out), optional :: iostat    !< IO status code.
-  character(len=*), intent(inout), optional :: iomsg     !< IO status message.
-  integer :: l         !< Counter.
+  INTEGER, INTENT(in) :: unit !< Logical unit.
+  TYPE(string), INTENT(in) :: lines(1:) !< The lines.
+  CHARACTER(*), INTENT(in), OPTIONAL :: form !< Format of unit.
+  INTEGER, INTENT(out), OPTIONAL :: iostat !< IO status code.
+  CHARACTER(*), INTENT(inout), OPTIONAL :: iomsg !< IO status message.
+  INTEGER :: l !< Counter.
 
-  do l = 1, size(lines, dim=1)
-  call lines(l) % write_line(unit=unit, form=form, iostat=iostat, iomsg=iomsg)
-  end do
-end subroutine write_lines
-end module String_Method
+  DO l = 1, SIZE(lines, dim=1)
+    CALL lines(l)%write_line(unit=unit, form=form, iostat=iostat, iomsg=iomsg)
+  END DO
+END SUBROUTINE write_lines
+END MODULE String_Method
