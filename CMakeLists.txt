@@ -65,3 +65,5 @@ INCLUDE(${PROJECT_SOURCE_DIR}/cmake/targetCompileOpts.cmake)
 INCLUDE(${PROJECT_SOURCE_DIR}/cmake/targetCompileDefs.cmake)
 INCLUDE(${PROJECT_SOURCE_DIR}/cmake/targetProperties.cmake)
 INCLUDE(${PROJECT_SOURCE_DIR}/cmake/install.cmake)
+INCLUDE(${PROJECT_SOURCE_DIR}/cmake/packaging.cmake)
+
