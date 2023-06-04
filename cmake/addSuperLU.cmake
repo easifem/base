@@ -17,6 +17,11 @@
 # SuperLU LIBRARY
 # -DUSE_SuperLU
 #
+
+#....................................................................
+#
+#....................................................................
+
 IF( ${PROJECT_NAME} MATCHES "easifemBase" )
   OPTION(USE_SUPERLU ON)
   IF(USE_SUPERLU)

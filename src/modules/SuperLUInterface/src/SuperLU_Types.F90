@@ -26,10 +26,10 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 TYPE :: yes_no_
-  INTEGER(C_INT) :: no, yes
-END TYPE
+  INTEGER(C_INT) :: NO, YES
+END TYPE yes_no_
 
-TYPE(yes_no_), PUBLIC, PARAMETER :: yes_no_t = yes_no_(no=no, yes=yes)
+TYPE(yes_no_), PUBLIC, PARAMETER :: yes_no_t = yes_no_(NO, YES)
 
 !----------------------------------------------------------------------------
 !
@@ -39,50 +39,32 @@ TYPE :: fact_
   INTEGER(C_INT) :: DOFACT, SamePattern, SamePattern_SameRowPerm, FACTORED
 END TYPE fact_
 
-TYPE(fact_), PARAMETER, PUBLIC :: fact_t = fact_(&
-  & DOFACT=DOFACT, &
-  & SamePattern=SamePattern, &
-  & SamePattern_SameRowPerm=SamePattern_SameRowPerm, &
-  & FACTORED=FACTORED &
-  &)
+TYPE(fact_), PUBLIC, PARAMETER :: fact_t = fact_(&
+  & DOFACT, SamePattern, SamePattern_SameRowPerm, FACTORED)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 TYPE :: rowperm_
-  INTEGER(C_INT) :: NOROWPERM
-  INTEGER(C_INT) :: LargeDiag_MC64
-  INTEGER(C_INT) :: LargeDiag_HWPM
-  INTEGER(C_INT) :: MY_PERMR
+  INTEGER(C_INT) :: NOROWPERM, LargeDiag_MC64, LargeDiag_HWPM, MY_PERMR
 END TYPE rowperm_
 
-TYPE(rowperm_), PUBLIC, PARAMETER :: rowperm_t = rowperm_(&
-  & NOROWPERM=NOROWPERM, &
-  & LargeDiag_MC64=LargeDiag_MC64, &
-  & LargeDiag_HWPM=LargeDiag_HWPM, &
-  & MY_PERMR=MY_PERMR &
-  & )
+TYPE(rowperm_), PUBLIC, PARAMETER :: rowperm_t = rowperm_( &
+  & NOROWPERM, LargeDiag_MC64, LargeDiag_HWPM, MY_PERMR)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 TYPE :: colperm_
-  INTEGER(C_INT) :: NATURAL, MMD_ATA, MMD_AT_PLUS_A, &
-    & COLAMD, METIS_AT_PLUS_A, PARMETIS, ZOLTAN, MY_PERMC
-END TYPE colperm_
+  INTEGER(C_INT) :: NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD, &
+   & METIS_AT_PLUS_A, PARMETIS, ZOLTAN, MY_PERMC
+END TYPE
 
 TYPE(colperm_), PUBLIC, PARAMETER :: colperm_t = colperm_(&
-  & NATURAL=NATURAL, &
-  & MMD_ATA=MMD_ATA, &
-  & MMD_AT_PLUS_A=MMD_AT_PLUS_A, &
-  & COLAMD=COLAMD, &
-  & METIS_AT_PLUS_A=METIS_AT_PLUS_A, &
-  & PARMETIS=PARMETIS, &
-  & ZOLTAN=ZOLTAN, &
-  & MY_PERMC=MY_PERMC &
-  &)
+  & NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD, &
+  & METIS_AT_PLUS_A, PARMETIS, ZOLTAN, MY_PERMC)
 
 !----------------------------------------------------------------------------
 !
@@ -90,10 +72,10 @@ TYPE(colperm_), PUBLIC, PARAMETER :: colperm_t = colperm_(&
 
 TYPE :: trans_
   INTEGER(C_INT) :: NOTRANS, TRANS, CONJ
-END TYPE trans_
+END TYPE
 
 TYPE(trans_), PARAMETER, PUBLIC :: trans_t = trans_(&
-  & NOTRANS=NOTRANS, trans=trans, conj=conj)
+  & NOTRANS, TRANS, CONJ)
 
 !----------------------------------------------------------------------------
 !
@@ -101,23 +83,21 @@ TYPE(trans_), PARAMETER, PUBLIC :: trans_t = trans_(&
 
 TYPE :: DiagScale_
   INTEGER(C_INT) :: NOEQUIL, ROW, COL, BOTH
-END TYPE DiagScale_
+END TYPE
 
-TYPE(DiagScale_), PARAMETER, PUBLIC :: DiagScale_t = DiagScale_(&
-  & NOEQUIL=NOEQUIL, ROW=ROW, COL=COL, BOTH=BOTH)
+TYPE(DiagScale_), PUBLIC, PARAMETER :: DiagScale_t = DiagScale_(&
+& NOEQUIL, ROW, COL, BOTH)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-! typedef enum {NOREFINE, SLU_SINGLE=1, SLU_DOUBLE, SLU_EXTRA}    IterRefine_t;
-
 TYPE :: IterRefine_
   INTEGER(C_INT) :: NOREFINE, SLU_SINGLE = 1, SLU_DOUBLE, SLU_EXTRA
 END TYPE
 
-TYPE(IterRefine_), PARAMETER, PUBLIC :: IterRefine_t = IterRefine_(&
-& NOREFINE, SLU_SINGLE, SLU_DOUBLE, SLU_EXTRA)
+TYPE(IterRefine_), PUBLIC, PARAMETER :: IterRefine_t = IterRefine_(&
+  & NOREFINE, SLU_SINGLE, SLU_DOUBLE, SLU_EXTRA)
 
 !----------------------------------------------------------------------------
 !
@@ -125,80 +105,54 @@ TYPE(IterRefine_), PARAMETER, PUBLIC :: IterRefine_t = IterRefine_(&
 
 TYPE :: MemType_
   INTEGER(C_INT) :: USUB, LSUB, UCOL, LUSUP, LLVL, ULVL, NO_MEMTYPE
-END TYPE
+END TYPE MemType_
 
-TYPE(MemType_), PUBLIC, PARAMETER :: MemType_t = MemType_( &
-& USUB, LSUB, UCOL, LUSUP, LLVL, ULVL, NO_MEMTYPE)
+TYPE(MemType_), PUBLIC, PARAMETER :: MemType_t = MemType_(&
+  & USUB, LSUB, UCOL, LUSUP, LLVL, ULVL, NO_MEMTYPE)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-
-! typedef enum {HEAD, TAIL}                                       stack_end_t;
 
 TYPE :: stack_end_
   INTEGER(C_INT) :: HEAD, TAIL
 END TYPE
 
 TYPE(stack_end_), PUBLIC, PARAMETER :: stack_end_t = stack_end_(&
-& HEAD, TAIL)
+ & HEAD, TAIL)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 TYPE :: LU_space_
-  INTEGER(C_INT) :: SYSTEM
-  INTEGER(C_INT) :: USER
-END TYPE LU_space_
+  INTEGER(C_INT) :: SYSTEM, USER
+END TYPE
 
 TYPE(LU_space_), PARAMETER, PUBLIC :: LU_space_t = LU_space_(&
-  & SYSTEM=SYSTEM, &
-  & USER=USER &
-  & )
+& SYSTEM, USER)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-TYPE :: Stype_
-  INTEGER(C_INT) :: SLU_NC
-  INTEGER(C_INT) :: SLU_NCP
-  INTEGER(C_INT) :: SLU_NR
-  INTEGER(C_INT) :: SLU_SC
-  INTEGER(C_INT) :: SLU_SCP
-  INTEGER(C_INT) :: SLU_SR
-  INTEGER(C_INT) :: SLU_DN
-  INTEGER(C_INT) :: SLU_NR_LOC
-END TYPE Stype_
+TYPE :: norm_
+  INTEGER(C_INT) :: ONE_NORM, TWO_NORM, INF_NORM
+END TYPE
 
-TYPE(Stype_), PARAMETER, PUBLIC :: Stype_t = Stype_(&
-  & SLU_NC=SLU_NC, &
-  & SLU_NCP=SLU_NCP, &
-  & SLU_NR=SLU_NR, &
-  & SLU_SC=SLU_SC, &
-  & SLU_SCP=SLU_SCP, &
-  & SLU_SR=SLU_SR, &
-  & SLU_DN=SLU_DN, &
-  & SLU_NR_LOC=SLU_NR_LOC &
-  & )
+TYPE(norm_), PUBLIC, PARAMETER :: norm_t = norm_(&
+ & ONE_NORM, TWO_NORM, INF_NORM)
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-TYPE :: Dtype_
-  INTEGER(C_INT) :: SLU_S
-  INTEGER(C_INT) :: SLU_D
-  INTEGER(C_INT) :: SLU_C
-  INTEGER(C_INT) :: SLU_Z
-END TYPE Dtype_
+TYPE :: milu_
+  INTEGER(C_INT) :: SILU, SMILU_1, SMILU_2, SMILU_3
+END TYPE milu_
 
-TYPE(Dtype_), PARAMETER, PUBLIC :: Dtype_t = Dtype_(&
-  & SLU_S=SLU_S, &
-  & SLU_D=SLU_D, &
-  & SLU_C=SLU_C, &
-  & SLU_Z=SLU_Z)
+TYPE(milu_), PARAMETER, PUBLIC :: milu_t = milu_(&
+  &  SILU, SMILU_1, SMILU_2, SMILU_3)
 
 !----------------------------------------------------------------------------
 !
@@ -228,6 +182,49 @@ TYPE(Mtype_), PUBLIC, PARAMETER :: Mtype_t = Mtype_(&
   & SLU_HEU=SLU_HEU)
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+TYPE :: Dtype_
+  INTEGER(C_INT) :: SLU_S
+  INTEGER(C_INT) :: SLU_D
+  INTEGER(C_INT) :: SLU_C
+  INTEGER(C_INT) :: SLU_Z
+END TYPE Dtype_
+
+TYPE(Dtype_), PARAMETER, PUBLIC :: Dtype_t = Dtype_(&
+  & SLU_S=SLU_S, &
+  & SLU_D=SLU_D, &
+  & SLU_C=SLU_C, &
+  & SLU_Z=SLU_Z)
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+TYPE :: Stype_
+  INTEGER(C_INT) :: SLU_NC
+  INTEGER(C_INT) :: SLU_NCP
+  INTEGER(C_INT) :: SLU_NR
+  INTEGER(C_INT) :: SLU_SC
+  INTEGER(C_INT) :: SLU_SCP
+  INTEGER(C_INT) :: SLU_SR
+  INTEGER(C_INT) :: SLU_DN
+  INTEGER(C_INT) :: SLU_NR_LOC
+END TYPE Stype_
+
+TYPE(Stype_), PARAMETER, PUBLIC :: Stype_t = Stype_(&
+  & SLU_NC=SLU_NC, &
+  & SLU_NCP=SLU_NCP, &
+  & SLU_NR=SLU_NR, &
+  & SLU_SC=SLU_SC, &
+  & SLU_SCP=SLU_SCP, &
+  & SLU_SR=SLU_SR, &
+  & SLU_DN=SLU_DN, &
+  & SLU_NR_LOC=SLU_NR_LOC &
+  & )
+
+!----------------------------------------------------------------------------
 !                                                          superlu_options_t
 !----------------------------------------------------------------------------
 
@@ -237,7 +234,6 @@ TYPE(Mtype_), PUBLIC, PARAMETER :: Mtype_t = Mtype_(&
 !
 !# Introduction
 !
-
 ! typedef struct {
 !     fact_t        Fact;
 !     yes_no_t      Equil;
@@ -427,7 +423,7 @@ PUBLIC :: GlobalLU_t
 !   void *Store;   /* pointer to the actual storage of the matrix */
 ! } SuperMatrix;
 
-TYPE, BIND(C) :: SuperMatrix
+TYPE, BIND(c) :: SuperMatrix
   INTEGER(C_INT) :: Stype; 
   INTEGER(C_INT) :: Dtype; 
   INTEGER(C_INT) :: Mtype; 

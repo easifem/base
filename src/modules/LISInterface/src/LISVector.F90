@@ -346,7 +346,7 @@ END INTERFACE
 
 PUBLIC :: lis_vector_scatter
 
-!       extern LIS_INT lis_vector_gather(LIS_VECTOR v, LIS_SCALAR value[]);
+! extern LIS_INT lis_vector_gather(LIS_VECTOR v, LIS_SCALAR value[]);
 ! extern LIS_INT lis_vector_is_null(LIS_VECTOR v);
 ! extern LIS_INT lis_vector_swap(LIS_VECTOR vsrc, LIS_VECTOR vdst);
 ! extern LIS_INT lis_vector_copy(LIS_VECTOR vsrc, LIS_VECTOR vdst);

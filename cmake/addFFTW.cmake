@@ -14,7 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
-#FFTW
+
+#....................................................................
+#
+#....................................................................
+
 IF( ${PROJECT_NAME} MATCHES "easifemBase" )
   OPTION( USE_FFTW OFF )
   IF( USE_FFTW )

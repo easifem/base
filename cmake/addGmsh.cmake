@@ -14,7 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
-#GMSH SDK
+
+#....................................................................
+#
+#....................................................................
+
 IF( ${PROJECT_NAME} MATCHES "easifemClasses" )
   OPTION( USE_GMSH_SDK OFF )
   IF( USE_GMSH_SDK )

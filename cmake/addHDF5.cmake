@@ -14,7 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
-# Find HDF5
+
+#....................................................................
+#
+#....................................................................
+
 IF( ${PROJECT_NAME} MATCHES "easifemClasses" )
   # SET(HDF5_NO_FIND_PACKAGE_CONFIG_FILE true CACHE BOOL "Set true to skip trying to find hdf5-config.cmake" FORCE)
   FIND_PACKAGE(
