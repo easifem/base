@@ -18,16 +18,14 @@
 MODULE SuperLU_Enums
 USE ISO_C_BINDING, ONLY: C_INT, C_DOUBLE, C_CHAR, C_FLOAT, C_PTR
 IMPLICIT NONE
-
 PRIVATE
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
+ENUM, BIND(C)
 ! typedef enum {NO, YES}                                          yes_no_t;
-
-ENUM, BIND(c)
   ENUMERATOR :: NO, YES
 END ENUM
 
@@ -37,10 +35,9 @@ PUBLIC :: NO, YES
 !
 !----------------------------------------------------------------------------
 
-! typedef enum {DOFACT, SamePattern, SamePattern_SameRowPerm, FACTORED} fact_t;
-
 ENUM, BIND(c)
   ENUMERATOR :: DOFACT, SamePattern, SamePattern_SameRowPerm, FACTORED
+! typedef enum {DOFACT, SamePattern, SamePattern_SameRowPerm, FACTORED} fact_t;
 END ENUM
 
 PUBLIC :: DOFACT, SamePattern, SamePattern_SameRowPerm, FACTORED
@@ -62,7 +59,6 @@ PUBLIC :: NOROWPERM, LargeDiag_MC64, LargeDiag_HWPM, MY_PERMR
 
 ! typedef enum {NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD,
 !               METIS_AT_PLUS_A, PARMETIS, ZOLTAN, MY_PERMC}      colperm_t;
-
 ENUM, BIND(c)
   ENUMERATOR :: NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD, &
  & METIS_AT_PLUS_A, PARMETIS, ZOLTAN, MY_PERMC
@@ -75,10 +71,9 @@ PUBLIC :: NATURAL, MMD_ATA, MMD_AT_PLUS_A, COLAMD, &
 !
 !----------------------------------------------------------------------------
 
-! typedef enum {NOTRANS, TRANS, CONJ}                             trans_t;
-
-ENUM, BIND(C)
+ENUM, BIND(c)
   ENUMERATOR :: NOTRANS, TRANS, CONJ
+! typedef enum {NOTRANS, TRANS, CONJ}                             trans_t;
 END ENUM
 
 PUBLIC :: NOTRANS, TRANS, CONJ
@@ -87,9 +82,9 @@ PUBLIC :: NOTRANS, TRANS, CONJ
 !
 !----------------------------------------------------------------------------
 
-! typedef enum {NOEQUIL, ROW, COL, BOTH}                          DiagScale_t;
 ENUM, BIND(C)
   ENUMERATOR :: NOEQUIL, ROW, COL, BOTH
+! typedef enum {NOEQUIL, ROW, COL, BOTH}                          DiagScale_t;
 END ENUM
 
 PUBLIC :: NOEQUIL, ROW, COL, BOTH
@@ -100,8 +95,9 @@ PUBLIC :: NOEQUIL, ROW, COL, BOTH
 
 ! typedef enum {NOREFINE, SLU_SINGLE=1, SLU_DOUBLE, SLU_EXTRA}    IterRefine_t;
 
-ENUM, BIND(C)
+ENUM, BIND(c)
   ENUMERATOR :: NOREFINE, SLU_SINGLE = 1, SLU_DOUBLE, SLU_EXTRA
+! typedef enum {NOREFINE, SLU_SINGLE=1, SLU_DOUBLE, SLU_EXTRA}    IterRefine_t;
 END ENUM
 
 PUBLIC :: NOREFINE, SLU_SINGLE, SLU_DOUBLE, SLU_EXTRA
@@ -110,10 +106,9 @@ PUBLIC :: NOREFINE, SLU_SINGLE, SLU_DOUBLE, SLU_EXTRA
 !
 !----------------------------------------------------------------------------
 
-! typedef enum {USUB, LSUB, UCOL, LUSUP, LLVL, ULVL, NO_MEMTYPE}  MemType;
-
-ENUM, BIND(C)
+ENUM, BIND(c)
   ENUMERATOR :: USUB, LSUB, UCOL, LUSUP, LLVL, ULVL, NO_MEMTYPE
+! typedef enum {USUB, LSUB, UCOL, LUSUP, LLVL, ULVL, NO_MEMTYPE}  MemType;
 END ENUM
 
 PUBLIC :: USUB, LSUB, UCOL, LUSUP, LLVL, ULVL, NO_MEMTYPE
@@ -122,10 +117,9 @@ PUBLIC :: USUB, LSUB, UCOL, LUSUP, LLVL, ULVL, NO_MEMTYPE
 !
 !----------------------------------------------------------------------------
 
-! typedef enum {HEAD, TAIL}                                       stack_end_t;
-
 ENUM, BIND(C)
   ENUMERATOR :: HEAD, TAIL
+! typedef enum {HEAD, TAIL}                                       stack_end_t;
 END ENUM
 
 PUBLIC :: HEAD, TAIL
@@ -146,10 +140,9 @@ PUBLIC :: SYSTEM, USER
 !
 !----------------------------------------------------------------------------
 
-! typedef enum {ONE_NORM, TWO_NORM, INF_NORM}                        norm_t;
-
-ENUM, BIND(C)
+ENUM, BIND(c)
   ENUMERATOR :: ONE_NORM, TWO_NORM, INF_NORM
+! typedef enum {ONE_NORM, TWO_NORM, INF_NORM}                        norm_t;
 END ENUM
 
 PUBLIC :: ONE_NORM, TWO_NORM, INF_NORM
@@ -158,60 +151,12 @@ PUBLIC :: ONE_NORM, TWO_NORM, INF_NORM
 !
 !----------------------------------------------------------------------------
 
-! typedef enum {SILU, SMILU_1, SMILU_2, SMILU_3}                        milu_t;
 ENUM, BIND(C)
   ENUMERATOR :: SILU, SMILU_1, SMILU_2, SMILU_3
+! typedef enum {SILU, SMILU_1, SMILU_2, SMILU_3}                        milu_t;
 END ENUM
 
 PUBLIC :: SILU, SMILU_1, SMILU_2, SMILU_3
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-! /*
-!  * The following enumerate type is used by the statistics variable
-!  * to keep track of flop count and time spent at various stages.
-!  *
-!  * Note that not all of the fields are disjoint.
-!  */
-! typedef enum {
-!     COLPERM, /* find a column ordering that minimizes fills */
-!     ROWPERM, /* find a row ordering maximizes diagonal. */
-!     RELAX,   /* find artificial supernodes */
-!     ETREE,   /* compute column etree */
-!     EQUIL,   /* equilibrate the original matrix */
-!     SYMBFAC, /* symbolic factorization. */
-!     DIST,    /* distribute matrix. */
-!     FACT,    /* perform LU factorization */
-!     COMM,    /* communication for factorization */
-!     COMM_DIAG, /* Bcast diagonal block to process column */
-!     COMM_RIGHT, /* communicate L panel */
-!     COMM_DOWN, /* communicate U panel */
-!     SOL_COMM,/* communication for solve */
-!     SOL_GEMM,/* gemm for solve */
-!     SOL_TRSM,/* trsm for solve */
-!     SOL_TOT,        /* LU-solve time*/
-!     RCOND,   /* estimate reciprocal condition number */
-!     SOLVE,   /* forward and back solves */
-!     REFINE,  /* perform iterative refinement */
-!     TRSV,    /* fraction of FACT spent in xTRSV */
-!     GEMV,    /* fraction of FACT spent in xGEMV */
-!     FERR,    /* estimate error bounds after iterative refinement */
-!     NPHASES  /* total number of phases */
-! } PhaseType;
-
-ENUM, BIND(C)
-  ENUMERATOR :: COLPERM, ROWPERM, RELAX, ETREE, EQUIL, SYMBFAC, &
-    & DIST, FACT, COMM, COMM_DIAG, COMM_RIGHT, COMM_DOWN,&
-    & SOL_COMM, SOL_GEMM, SOL_TRSM, SOL_TOT, RCOND, SOLVE, REFINE, &
-    & TRSV, GEMV, FERR, NPHASES
-END ENUM
-
-PUBLIC :: COLPERM, ROWPERM, RELAX, ETREE, EQUIL, SYMBFAC, &
-    & DIST, FACT, COMM, COMM_DIAG, COMM_RIGHT, COMM_DOWN,&
-    & SOL_COMM, SOL_GEMM, SOL_TRSM, SOL_TOT, RCOND, SOLVE, REFINE, &
-    & TRSV, GEMV, FERR, NPHASES
 
 !----------------------------------------------------------------------------
 !
@@ -314,7 +259,7 @@ ENUM, BIND(c)
   ENUMERATOR :: SLU_HEU
 END ENUM
 
-PUBLIC :: SLU_GE, SLU_TRLU, SLU_TRUU, SLU_TRL, SLU_TRU, SLU_SYL, &
-  & SLU_SYU, SLU_HEL, SLU_HEU
+PUBLIC :: SLU_GE, SLU_TRLU, SLU_TRUU, SLU_TRL, SLU_TRU, &
+  & SLU_SYL, SLU_SYU, SLU_HEL, SLU_HEU
 
 END MODULE SuperLU_Enums

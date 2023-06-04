@@ -13,8 +13,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
+
+#....................................................................
 #
-# LIS
+#....................................................................
+
 IF( ${PROJECT_NAME} MATCHES "easifemBase" )
   OPTION( USE_LIS OFF )
   IF( USE_LIS )
@@ -32,3 +35,4 @@ IF( ${PROJECT_NAME} MATCHES "easifemBase" )
     MESSAGE( STATUS "NOT USING LIS LIBRARIES" )
   ENDIF()
 ENDIF()
+#

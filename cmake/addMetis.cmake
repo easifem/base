@@ -14,7 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
-# METIS LIBRARY
+
+#....................................................................
+#
+#....................................................................
+
 IF( ${PROJECT_NAME} MATCHES "easifemBase" )
   OPTION(USE_METIS ON)
   IF(USE_METIS)
