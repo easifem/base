@@ -31,15 +31,24 @@ SET(CPACK_VERBATIM_VARIABLES YES)
 # backwards compatibility.
 
 SET(CPACK_PACKAGE_DESCRIPTION
-    "Expandable And Scalable Infrastructure for Finite Element Methods, EASIFEM, is a computational framework for FEM written in Modern-Fortran. easifemBase is a critical part of EASIFEM framework. It contains many
-    useful components which are necessary for building higher level classes
-    of finite element code.")
+"
+Expandable And Scalable Infrastructure for Finite Element Methods, 
+EASIFEM, is a computational framework for FEM written in Modern-Fortran. 
+easifemBase is a critical part of EASIFEM framework. It contains many
+useful components which are necessary for building higher level classes
+of finite element code.
+")
 
 # CPACK_PACKAGE_DESCRIPTION_FILE
 # A text file used to describe the project when CPACK_PACKAGE_DESCRIPTION is not explicitly set. The default value for CPACK_PACKAGE_DESCRIPTION_FILE points to a built-in template file Templates/CPack.GenericDescription.txt.
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY
-    "Expandable And Scalable Infrastructure for Finite Element Methods, EASIFEM, is a computational framework for FEM written in Modern-Fortran. easifemBase is a critical part of EASIFEM framework.")
+"
+Expandable And Scalable Infrastructure for Finite Element Methods, 
+EASIFEM, is a computational framework for FEM written in Modern-Fortran. 
+easifemBase is a critical part of EASIFEM framework.
+=======================================================================
+")
 
 # A description of the project, used in places such as the introduction
 # screen of CPack-generated Windows installers. If not set, the value of this
@@ -114,9 +123,9 @@ SET(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME} )
 LIST(
   APPEND
   CpackGen
-  TGZ
   DEB
 )
+# TGZ
 SET(CPACK_GENERATOR "${CpackGen}")
 # SET(CPACK_SOURCE_GENERATOR "TGZ DEB")
 
@@ -157,7 +166,7 @@ SET(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
 SET(CPACK_DEB_COMPONENT_INSTALL YES)
 SET(CPACK_DEBIAN_PACKAGE_NAME, "${CPACK_PACKAGE_NAME}")
 # SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE,  "i386")
-SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS YES)
+SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS OFF) #ON
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Vikas Sharma <${CPACK_PACKAGE_CONTACT}>")
 SET(CPACK_DEBIAN_PACKAGE_SECTION, "devl")
 SET(CPACK_DEBIAN_PACKAGE_PRIORITY, "optional")

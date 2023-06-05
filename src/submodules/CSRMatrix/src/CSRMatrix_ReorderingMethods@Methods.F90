@@ -25,6 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE csrMat_NestedDissect
+#ifdef USE_METIS
 INTEGER(I4B) :: nrow, ncol, nnz, ii, jj, kk, nbr, ll
 INTEGER(I4B), ALLOCATABLE :: XADJ(:), ADJNCY(:)
 !
@@ -48,11 +49,20 @@ DO ii = 1, nrow
   END DO
   XADJ(ii + 1) = XADJ(ii) + nbr
 END DO
-ll = XADJ(size(xadj)) - 1
+ll = XADJ(SIZE(xadj)) - 1
 CALL MetisNodeND(XADJ=XADJ, ADJNCY=ADJNCY(1:ll), PERM=reorder%PERM, &
   & IPERM=reorder%IPERM)
 IF (ALLOCATED(XADJ)) DEALLOCATE (XADJ)
 IF (ALLOCATED(ADJNCY)) DEALLOCATE (ADJNCY)
+#else
+CALL ErrorMSG( &
+  & Msg="Metis library not installed!", &
+  & File="CSRMatrix_ReorderingMethods@Methods.F90", &
+  & Routine="csrMat_NestedDissect()", &
+  & Line=__LINE__, &
+  & UnitNo=stdout)
+STOP
+#endif
 END PROCEDURE csrMat_NestedDissect
 
 !----------------------------------------------------------------------------

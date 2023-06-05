@@ -62,7 +62,7 @@ PUBLIC :: dCreate_CompCol_Matrix
 
 INTERFACE
   SUBROUTINE dCreate_CompRow_Matrix(A, m, n, nnz, nzval, colind, rowptr, &
-    & stype, dtype, mtype) BIND(C, name="dCreate_CompRow_Matrix")
+    & stype, dtype, mtype) BIND(C, name="dCreate_CompCol_Matrix")
     IMPORT :: C_PTR, C_INT, C_DOUBLE, SuperMatrix
     TYPE(SuperMatrix), INTENT(INOUT) :: A
     INTEGER(C_INT), VALUE, INTENT(IN) :: m
