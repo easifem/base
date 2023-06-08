@@ -125,7 +125,7 @@ PUBLIC :: EquidistanceInPoint_Triangle
 !- The node numbering is according to Gmsh convention, VEFC.
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistancePoint_Triangle(order, xij) RESULT(ans)
+  MODULE RECURSIVE PURE FUNCTION EquidistancePoint_Triangle(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
   !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)

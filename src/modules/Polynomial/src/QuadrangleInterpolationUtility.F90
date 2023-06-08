@@ -126,7 +126,7 @@ PUBLIC :: EquidistanceInPoint_Quadrangle
 !- The node numbering is according to Gmsh convention.
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistancePoint_Quadrangle(order, xij) RESULT(ans)
+  MODULE RECURSIVE PURE FUNCTION EquidistancePoint_Quadrangle(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
   !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)

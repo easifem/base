@@ -64,6 +64,10 @@ USE EASIFEM_ARPACK
 USE FFTW3
 #endif
 
+#ifdef USE_METIS
+USE MetisInterface
+#endif
+
 USE String_Class
 USE String_Method
 USE PENF, ONLY: endianL, endianB, endian, byte_size, str_ascii, &
@@ -74,11 +78,6 @@ USE FACE
 USE FPL
 USE System_Method
 USE CInterface
-
-#ifdef USE_METIS
-USE MetisInterface
-#endif
-
 USE OpenMP_Method
 USE GlobalData
 USE Hashing32

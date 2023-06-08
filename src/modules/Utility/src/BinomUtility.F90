@@ -43,12 +43,12 @@ PUBLIC :: Binom
 !```
 
 INTERFACE
-  MODULE PURE FUNCTION Real32_Binom_Int8(n, k, kind) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: n
+  MODULE RECURSIVE PURE FUNCTION Real32_Binom_Int8(n, k, kind) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: n
     !! n is integer, should be a positive number and greater or equal to k
-    INTEGER(Int8), INTENT(IN) :: k
-    REAL(Real32), INTENT(IN) :: kind
-    REAL(Real32) :: ans
+    INTEGER(INT8), INTENT(IN) :: k
+    REAL(REAL32), INTENT(IN) :: kind
+    REAL(REAL32) :: ans
   END FUNCTION Real32_Binom_Int8
 END INTERFACE
 
@@ -57,11 +57,11 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Real32_Binom_Int16(n, k, kind) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: n
-    INTEGER(Int16), INTENT(IN) :: k
-    REAL(Real32), INTENT(IN) :: kind
-    REAL(Real32) :: ans
+  MODULE RECURSIVE PURE FUNCTION Real32_Binom_Int16(n, k, kind) RESULT(ans)
+    INTEGER(INT16), INTENT(IN) :: n
+    INTEGER(INT16), INTENT(IN) :: k
+    REAL(REAL32), INTENT(IN) :: kind
+    REAL(REAL32) :: ans
   END FUNCTION Real32_Binom_Int16
 END INTERFACE
 
@@ -70,18 +70,18 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Real32_Binom_Int32(n, k, kind) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: n
-    INTEGER(Int32), INTENT(IN) :: k
-    REAL(Real32), INTENT(IN) :: kind
-    REAL(Real32) :: ans
+  MODULE RECURSIVE PURE FUNCTION Real32_Binom_Int32(n, k, kind) RESULT(ans)
+    INTEGER(INT32), INTENT(IN) :: n
+    INTEGER(INT32), INTENT(IN) :: k
+    REAL(REAL32), INTENT(IN) :: kind
+    REAL(REAL32) :: ans
   END FUNCTION Real32_Binom_Int32
   !!
-  MODULE PURE FUNCTION Real32_Binom_Int64(n, k, kind) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: n
-    INTEGER(Int64), INTENT(IN) :: k
-    REAL(Real32), INTENT(IN) :: kind
-    REAL(Real32) :: ans
+  MODULE RECURSIVE PURE FUNCTION Real32_Binom_Int64(n, k, kind) RESULT(ans)
+    INTEGER(INT64), INTENT(IN) :: n
+    INTEGER(INT64), INTENT(IN) :: k
+    REAL(REAL32), INTENT(IN) :: kind
+    REAL(REAL32) :: ans
   END FUNCTION Real32_Binom_Int64
 END INTERFACE
 
@@ -95,32 +95,32 @@ END INTERFACE Binom
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION Real64_Binom_Int8(n, k, kind) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: n
-    INTEGER(Int8), INTENT(IN) :: k
-    REAL(Real64), INTENT(IN) :: kind
-    REAL(Real64) :: ans
+  MODULE RECURSIVE PURE FUNCTION Real64_Binom_Int8(n, k, kind) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: n
+    INTEGER(INT8), INTENT(IN) :: k
+    REAL(REAL64), INTENT(IN) :: kind
+    REAL(REAL64) :: ans
   END FUNCTION Real64_Binom_Int8
   !!
-  MODULE PURE FUNCTION Real64_Binom_Int16(n, k, kind) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: n
-    INTEGER(Int16), INTENT(IN) :: k
-    REAL(Real64), INTENT(IN) :: kind
-    REAL(Real64) :: ans
+  MODULE RECURSIVE PURE FUNCTION Real64_Binom_Int16(n, k, kind) RESULT(ans)
+    INTEGER(INT16), INTENT(IN) :: n
+    INTEGER(INT16), INTENT(IN) :: k
+    REAL(REAL64), INTENT(IN) :: kind
+    REAL(REAL64) :: ans
   END FUNCTION Real64_Binom_Int16
   !!
-  MODULE PURE FUNCTION Real64_Binom_Int32(n, k, kind) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: n
-    INTEGER(Int32), INTENT(IN) :: k
-    REAL(Real64), INTENT(IN) :: kind
-    REAL(Real64) :: ans
+  MODULE RECURSIVE PURE FUNCTION Real64_Binom_Int32(n, k, kind) RESULT(ans)
+    INTEGER(INT32), INTENT(IN) :: n
+    INTEGER(INT32), INTENT(IN) :: k
+    REAL(REAL64), INTENT(IN) :: kind
+    REAL(REAL64) :: ans
   END FUNCTION Real64_Binom_Int32
   !!
-  MODULE PURE FUNCTION Real64_Binom_Int64(n, k, kind) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: n
-    INTEGER(Int64), INTENT(IN) :: k
-    REAL(Real64), INTENT(IN) :: kind
-    REAL(Real64) :: ans
+  MODULE RECURSIVE PURE FUNCTION Real64_Binom_Int64(n, k, kind) RESULT(ans)
+    INTEGER(INT64), INTENT(IN) :: n
+    INTEGER(INT64), INTENT(IN) :: k
+    REAL(REAL64), INTENT(IN) :: kind
+    REAL(REAL64) :: ans
   END FUNCTION Real64_Binom_Int64
 END INTERFACE
 

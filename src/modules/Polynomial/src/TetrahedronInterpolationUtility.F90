@@ -126,7 +126,7 @@ PUBLIC :: EquidistanceInPoint_Tetrahedron
 !- The node numbering is according to Gmsh convention.
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistancePoint_Tetrahedron(order, xij) RESULT(ans)
+  MODULE RECURSIVE PURE FUNCTION EquidistancePoint_Tetrahedron(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
   !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
@@ -155,7 +155,7 @@ INTERFACE
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation type
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(3, 4)
     !! coordinates of vertices in $x_{iJ}$ format
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
