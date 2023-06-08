@@ -46,7 +46,7 @@ INTERFACE
       !! barycentric coordinates, in xiJ format
       !! size(ans,1) = 2 corresponding to b0 and b1
       !! size(ans,2) total number of points
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: domain
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
       !! unit (0,1)
       !! biunit (-1, 1)
       !! equilateral
@@ -81,7 +81,7 @@ INTERFACE
       !! barycentric coordinates, in xiJ format
       !! size(ans,1) = 3 corresponding to b0, b1, b2
       !! size(ans,2) total number of points
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: domain
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
       !! unit
       !! Biunit
       !! Equilateral
@@ -116,7 +116,7 @@ INTERFACE
       !! barycentric coordinates, in xiJ format
       !! size(ans,1) = 4 corresponding to b0, b1, b2, b3
       !! size(ans,2) total number of points
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: domain
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domain
       !! unit
       !! Biunit
       !! Equilateral
@@ -132,7 +132,7 @@ PUBLIC :: RecursiveNode3D
 INTERFACE
   MODULE PURE FUNCTION ToUnit(x, domain) RESULT(ans)
     REAL(DFP), INTENT(IN) :: x(:, :)
-    CHARACTER(LEN=*), INTENT(IN) :: domain
+    CHARACTER(*), INTENT(IN) :: domain
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION ToUnit
 END INTERFACE
@@ -144,7 +144,7 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION FromUnit(x, domain) RESULT(ans)
     REAL(DFP), INTENT(IN) :: x(:, :)
-    CHARACTER(LEN=*), INTENT(IN) :: domain
+    CHARACTER(*), INTENT(IN) :: domain
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION FromUnit
 END INTERFACE
@@ -154,7 +154,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE Unit2Equilateral(d, x)
+  MODULE RECURSIVE PURE SUBROUTINE Unit2Equilateral(d, x)
     INTEGER(I4B), INTENT(IN) :: d
     REAL(DFP), INTENT(INOUT) :: x(:, :)
   END SUBROUTINE Unit2Equilateral
@@ -165,7 +165,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE Equilateral2Unit(d, x)
+  MODULE RECURSIVE PURE SUBROUTINE Equilateral2Unit(d, x)
     INTEGER(I4B), INTENT(IN) :: d
     REAL(DFP), INTENT(INOUT) :: x(:, :)
   END SUBROUTINE Equilateral2Unit
@@ -178,8 +178,8 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION Coord_Map(x, from, to) RESULT(ans)
     REAL(DFP), INTENT(IN) :: x(:, :)
-    CHARACTER(LEN=*), INTENT(IN) :: from
-    CHARACTER(LEN=*), INTENT(IN) :: to
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION Coord_Map
 END INTERFACE

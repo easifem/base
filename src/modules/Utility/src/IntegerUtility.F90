@@ -75,7 +75,7 @@ END INTERFACE Size
 ! summary:         Get Indices
 
 INTERFACE
-  MODULE PURE FUNCTION obj_GetMultiIndices1(n, d) RESULT(ans)
+  MODULE RECURSIVE PURE FUNCTION obj_GetMultiIndices1(n, d) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n, d
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
   END FUNCTION obj_GetMultiIndices1
@@ -94,7 +94,7 @@ END INTERFACE GetMultiIndices
 ! summary:         Get Indices upto order n
 
 INTERFACE
-  MODULE PURE FUNCTION obj_GetMultiIndices2(n, d, upto) RESULT(ans)
+  MODULE RECURSIVE PURE FUNCTION obj_GetMultiIndices2(n, d, upto) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n, d
     LOGICAL(LGT), INTENT(IN) :: upto
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
@@ -117,26 +117,26 @@ END INTERFACE GetMultiIndices
 INTERFACE
 
   MODULE PURE FUNCTION in_1a(a, b) RESULT(Ans)
-    INTEGER(Int8), INTENT(IN) :: a(:)
-    INTEGER(Int8), INTENT(IN) :: b(:)
+    INTEGER(INT8), INTENT(IN) :: a(:)
+    INTEGER(INT8), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_1a
 
   MODULE PURE FUNCTION in_1b(a, b) RESULT(Ans)
-    INTEGER(Int16), INTENT(IN) :: a(:)
-    INTEGER(Int16), INTENT(IN) :: b(:)
+    INTEGER(INT16), INTENT(IN) :: a(:)
+    INTEGER(INT16), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_1b
 
   MODULE PURE FUNCTION in_1c(a, b) RESULT(Ans)
-    INTEGER(Int32), INTENT(IN) :: a(:)
-    INTEGER(Int32), INTENT(IN) :: b(:)
+    INTEGER(INT32), INTENT(IN) :: a(:)
+    INTEGER(INT32), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_1c
 
   MODULE PURE FUNCTION in_1d(a, b) RESULT(Ans)
-    INTEGER(Int64), INTENT(IN) :: a(:)
-    INTEGER(Int64), INTENT(IN) :: b(:)
+    INTEGER(INT64), INTENT(IN) :: a(:)
+    INTEGER(INT64), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_1d
 
@@ -163,26 +163,26 @@ END INTERFACE OPERATOR(.in.)
 INTERFACE
 
   MODULE PURE FUNCTION isin_1a(a, b) RESULT(Ans)
-    INTEGER(Int8), INTENT(IN) :: a(:)
-    INTEGER(Int8), INTENT(IN) :: b(:)
+    INTEGER(INT8), INTENT(IN) :: a(:)
+    INTEGER(INT8), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1a
 
   MODULE PURE FUNCTION isin_1b(a, b) RESULT(Ans)
-    INTEGER(Int16), INTENT(IN) :: a(:)
-    INTEGER(Int16), INTENT(IN) :: b(:)
+    INTEGER(INT16), INTENT(IN) :: a(:)
+    INTEGER(INT16), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1b
 
   MODULE PURE FUNCTION isin_1c(a, b) RESULT(Ans)
-    INTEGER(Int32), INTENT(IN) :: a(:)
-    INTEGER(Int32), INTENT(IN) :: b(:)
+    INTEGER(INT32), INTENT(IN) :: a(:)
+    INTEGER(INT32), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1c
 
   MODULE PURE FUNCTION isin_1d(a, b) RESULT(Ans)
-    INTEGER(Int64), INTENT(IN) :: a(:)
-    INTEGER(Int64), INTENT(IN) :: b(:)
+    INTEGER(INT64), INTENT(IN) :: a(:)
+    INTEGER(INT64), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1d
 
@@ -204,26 +204,26 @@ END INTERFACE OPERATOR(.isin.)
 INTERFACE
 
   MODULE PURE FUNCTION in_2a(a, b) RESULT(Ans)
-    INTEGER(Int8), INTENT(IN) :: a
-    INTEGER(Int8), INTENT(IN) :: b(:)
+    INTEGER(INT8), INTENT(IN) :: a
+    INTEGER(INT8), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_2a
 
   MODULE PURE FUNCTION in_2b(a, b) RESULT(Ans)
-    INTEGER(Int16), INTENT(IN) :: a
-    INTEGER(Int16), INTENT(IN) :: b(:)
+    INTEGER(INT16), INTENT(IN) :: a
+    INTEGER(INT16), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_2b
 
   MODULE PURE FUNCTION in_2c(a, b) RESULT(Ans)
-    INTEGER(Int32), INTENT(IN) :: a
-    INTEGER(Int32), INTENT(IN) :: b(:)
+    INTEGER(INT32), INTENT(IN) :: a
+    INTEGER(INT32), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_2c
 
   MODULE PURE FUNCTION in_2d(a, b) RESULT(Ans)
-    INTEGER(Int64), INTENT(IN) :: a
-    INTEGER(Int64), INTENT(IN) :: b(:)
+    INTEGER(INT64), INTENT(IN) :: a
+    INTEGER(INT64), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans
   END FUNCTION in_2d
 
@@ -243,16 +243,16 @@ END INTERFACE OPERATOR(.isin.)
 
 INTERFACE
   MODULE PURE SUBROUTINE RemoveDuplicates_1a(obj)
-    INTEGER(Int8), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    INTEGER(INT8), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1a
   MODULE PURE SUBROUTINE RemoveDuplicates_1b(obj)
-    INTEGER(Int16), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    INTEGER(INT16), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1b
   MODULE PURE SUBROUTINE RemoveDuplicates_1c(obj)
-    INTEGER(Int32), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    INTEGER(INT32), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1c
   MODULE PURE SUBROUTINE RemoveDuplicates_1d(obj)
-    INTEGER(Int64), ALLOCATABLE, INTENT(INOUT) :: obj(:)
+    INTEGER(INT64), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   END SUBROUTINE RemoveDuplicates_1d
 END INTERFACE
 
@@ -267,24 +267,24 @@ END INTERFACE RemoveDuplicates
 
 INTERFACE
   MODULE PURE FUNCTION Repeat_1a(Val, rtimes) RESULT(Ans)
-    INTEGER(Int8), INTENT(IN) :: Val(:)
+    INTEGER(INT8), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
-    INTEGER(Int8) :: Ans(SIZE(Val) * rtimes)
+    INTEGER(INT8) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1a
   MODULE PURE FUNCTION Repeat_1b(Val, rtimes) RESULT(Ans)
-    INTEGER(Int16), INTENT(IN) :: Val(:)
+    INTEGER(INT16), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
-    INTEGER(Int16) :: Ans(SIZE(Val) * rtimes)
+    INTEGER(INT16) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1b
   MODULE PURE FUNCTION Repeat_1c(Val, rtimes) RESULT(Ans)
-    INTEGER(Int32), INTENT(IN) :: Val(:)
+    INTEGER(INT32), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
-    INTEGER(Int32) :: Ans(SIZE(Val) * rtimes)
+    INTEGER(INT32) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1c
   MODULE PURE FUNCTION Repeat_1d(Val, rtimes) RESULT(Ans)
-    INTEGER(Int64), INTENT(IN) :: Val(:)
+    INTEGER(INT64), INTENT(IN) :: Val(:)
     INTEGER(I4B), INTENT(IN) :: rtimes
-    INTEGER(Int64) :: Ans(SIZE(Val) * rtimes)
+    INTEGER(INT64) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1d
 END INTERFACE
 
