@@ -60,12 +60,13 @@ else:
     cmake_def += " -D USE_METIS:BOOL=OFF"
     cmake_def += " -D USE_Int32:BOOL=ON"
     cmake_def += " -D USE_Real64:BOOL=ON"
+    cmake_def += " -D COLOR_DISP:BOOL=OFF"
 
     print("CMAKE DEF : ", cmake_def)
 
     _build0 = os.path.join(os.environ["HOME"], "temp")
     build_dir = os.path.join(
-        os.environ.get("EASIFEM_BUILD_DIR", _build0), "base", "build"
+        os.environ.get("EASIFEM_BUILD_DIR", _build0), "easifem", "base", "build"
     )
     # build_dir = os.environ["HOME"] + "/temp/easifem-base/build"
     os.makedirs(build_dir, exist_ok=True)

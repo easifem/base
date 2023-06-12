@@ -46,10 +46,12 @@ TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: &
   & DisplayProfileTerminal = DISP_SETTINGS(&
   & advance="YES", matsep=",", orient="COL", style="UNDERLINE", &
   & trim="FALSE", ZEROAS=".")
+
 TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: &
   & DisplayProfilePrint = DISP_SETTINGS(&
   & advance="YES", matsep=",", orient="COL", style="UNDERLINE", &
   & trim="FALSE", ZEROAS="")
+
 TYPE(DISP_SETTINGS), PARAMETER :: DisplayProfileOriginal = DISP_SETTINGS()
 LOGICAL(LGT), SAVE :: defaultSettingSet = .FALSE.
 
@@ -121,14 +123,32 @@ END SUBROUTINE setDefaultSettings
 SUBROUTINE setDisplayProfile(DispProfile, advance, digmax, &
   & matsep, orient, sep, style, unit, zeroas)
   TYPE(DISP_SETTINGS), INTENT(IN) :: DispProfile
+  !! An instance of Display settings
+  !! It can be DisplayProfileTerminal, DisplayProfilePrint
+  !!
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+  !! "NO", stay on the same line
+  !! "YES", advance to the next line, default
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: digmax
+  !! Number of significant digits to show for X-element of largest
+  !! absolute magnitude
   CHARACTER(*), OPTIONAL, INTENT(IN) :: matsep
+  !!
   CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  !! "ROW" display vector as row
+  !! "COL" display vector as column, default
   CHARACTER(*), OPTIONAL, INTENT(IN) :: sep
+  !! String used to separate matrix column
   CHARACTER(*), OPTIONAL, INTENT(IN) :: style
+  !! "LEFT", default
+  !! "ABOVE"
+  !! "PAD"
+  !! "UNDERLINE"
+  !! "NUMBER"
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: unit
+  !! External file unit to send output to (stdout is default)
   CHARACTER(*), OPTIONAL, INTENT(IN) :: zeroas
+  !! String to display instead of zeros
   !> internal variables
   CALL DISP_SET(DispProfile)
   CALL DISP_SET(advance=advance, digmax=digmax, matsep=matsep, &
@@ -247,6 +267,9 @@ END SUBROUTINE Display_Str2
 SUBROUTINE Display_Real64(val, msg, unitNo, advance)
   ! Define intent of dummy variables
   REAL(REAL64), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Real64
 
@@ -271,6 +294,9 @@ END SUBROUTINE Display_Real64
 SUBROUTINE Display_Real32(val, msg, unitNo, advance)
   ! Define intent of dummy variables
   REAL(REAL32), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Real32
 
@@ -295,6 +321,9 @@ END SUBROUTINE Display_Real32
 SUBROUTINE Display_Int64(val, msg, unitNo, advance)
   ! Define intent of dummy variables
   INTEGER(INT64), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Int64
 
@@ -319,6 +348,9 @@ END SUBROUTINE Display_Int64
 SUBROUTINE Display_Int32(val, msg, unitNo, advance)
   ! Define intent of dummy variables
   INTEGER(INT32), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Int32
 
@@ -343,6 +375,9 @@ END SUBROUTINE Display_Int32
 SUBROUTINE Display_Int16(val, msg, unitNo, advance)
   ! Define intent of dummy variables
   INTEGER(INT16), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Int16
 
@@ -367,6 +402,9 @@ END SUBROUTINE Display_Int16
 SUBROUTINE Display_Int8(val, msg, unitNo, advance)
   ! Define intent of dummy variables
   INTEGER(INT8), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Int8
 
@@ -391,6 +429,9 @@ END SUBROUTINE Display_Int8
 SUBROUTINE Display_Logical(val, msg, unitNo, advance)
   ! Define intent of dummy variables
   LOGICAL(LGT), INTENT(IN) :: val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Scalar.inc"
 END SUBROUTINE Display_Logical
 
@@ -415,6 +456,16 @@ END SUBROUTINE Display_Logical
 SUBROUTINE Display_Vector_Logical(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
   LOGICAL(LGT), INTENT(IN) :: val(:)
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Logical
 
@@ -442,6 +493,16 @@ END SUBROUTINE Display_Vector_Logical
 SUBROUTINE Display_Vector_Real64(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
   REAL(REAL64), INTENT(IN) :: val(:)
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
     !! vector of real numbers
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Real64
@@ -470,6 +531,16 @@ END SUBROUTINE Display_Vector_Real64
 SUBROUTINE Display_Vector_Real32(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
   REAL(REAL32), INTENT(IN) :: val(:)
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Real32
 
@@ -498,6 +569,16 @@ SUBROUTINE Display_Vector_Int32(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
   INTEGER(INT32), INTENT(IN) :: val(:)
   !! vector of real numbers
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Int32
 
@@ -526,6 +607,16 @@ SUBROUTINE Display_Vector_Int64(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
   INTEGER(INT64), INTENT(IN) :: val(:)
   !! vector of real numbers
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Int64
 
@@ -553,6 +644,16 @@ END SUBROUTINE Display_Vector_Int64
 SUBROUTINE Display_Vector_Int16(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
   INTEGER(INT16), INTENT(IN) :: val(:)
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Int16
 
@@ -580,6 +681,16 @@ END SUBROUTINE Display_Vector_Int16
 SUBROUTINE Display_Vector_Int8(val, msg, unitNo, orient, full, advance)
   ! Define intent of dummy variables
   INTEGER(INT8), INTENT(IN) :: val(:)
+  CHARACTER(*), INTENT(IN) :: msg
+  ! message
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  ! Unit number
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
+  ! orient=row => rowwise printing
+  ! orient=col =>  columnwise printing
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  ! logical variable to print the whole vector
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Vector.inc"
 END SUBROUTINE Display_Vector_Int8
 
@@ -603,6 +714,10 @@ END SUBROUTINE Display_Vector_Int8
 SUBROUTINE Display_Mat2_Real64(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   REAL(REAL64), DIMENSION(:, :), INTENT(IN) :: Val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Real64
 
@@ -626,6 +741,10 @@ END SUBROUTINE Display_Mat2_Real64
 SUBROUTINE Display_Mat2_Real32(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   REAL(REAL32), DIMENSION(:, :), INTENT(IN) :: Val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Real32
 
@@ -647,6 +766,10 @@ END SUBROUTINE Display_Mat2_Real32
 SUBROUTINE Display_Mat2_Int64(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   INTEGER(INT64), DIMENSION(:, :), INTENT(IN) :: Val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int64
 
@@ -668,6 +791,10 @@ END SUBROUTINE Display_Mat2_Int64
 SUBROUTINE Display_Mat2_Int32(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   INTEGER(INT32), DIMENSION(:, :), INTENT(IN) :: Val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int32
 
@@ -689,6 +816,10 @@ END SUBROUTINE Display_Mat2_Int32
 SUBROUTINE Display_Mat2_Int16(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   INTEGER(INT16), DIMENSION(:, :), INTENT(IN) :: Val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int16
 
@@ -710,6 +841,10 @@ END SUBROUTINE Display_Mat2_Int16
 SUBROUTINE Display_Mat2_Int8(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   INTEGER(INT8), DIMENSION(:, :), INTENT(IN) :: Val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int8
 
@@ -735,6 +870,10 @@ END SUBROUTINE Display_Mat2_Int8
 SUBROUTINE Display_Mat3_Real64(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   REAL(REAL64), INTENT(IN) :: Val(:, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Real64
 
@@ -760,6 +899,10 @@ END SUBROUTINE Display_Mat3_Real64
 SUBROUTINE Display_Mat3_Real32(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   REAL(REAL32), INTENT(IN) :: Val(:, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Real32
 
@@ -785,6 +928,10 @@ END SUBROUTINE Display_Mat3_Real32
 SUBROUTINE Display_Mat3_Int64(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   INTEGER(INT64), INTENT(IN) :: Val(:, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Int64
 
@@ -810,6 +957,10 @@ END SUBROUTINE Display_Mat3_Int64
 SUBROUTINE Display_Mat3_Int32(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   INTEGER(INT32), INTENT(IN) :: Val(:, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Int32
 
@@ -836,6 +987,10 @@ END SUBROUTINE Display_Mat3_Int32
 SUBROUTINE Display_Mat3_Int16(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   INTEGER(INT16), INTENT(IN) :: Val(:, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Int16
 
@@ -862,6 +1017,10 @@ END SUBROUTINE Display_Mat3_Int16
 SUBROUTINE Display_Mat3_Int8(Val, msg, unitNo, full, advance)
   !   Define intent of dummy variables
   INTEGER(INT8), INTENT(IN) :: Val(:, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat3.inc"
 END SUBROUTINE Display_Mat3_Int8
 
@@ -888,6 +1047,10 @@ END SUBROUTINE Display_Mat3_Int8
 SUBROUTINE Display_Mat4_Real64(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
   REAL(REAL64), INTENT(IN) :: Val(:, :, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Real64
 
@@ -914,6 +1077,10 @@ END SUBROUTINE Display_Mat4_Real64
 SUBROUTINE Display_Mat4_Real32(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
   REAL(REAL32), INTENT(IN) :: Val(:, :, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Real32
 
@@ -940,6 +1107,10 @@ END SUBROUTINE Display_Mat4_Real32
 SUBROUTINE Display_Mat4_Int64(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
   INTEGER(INT64), INTENT(IN) :: Val(:, :, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Int64
 
@@ -966,6 +1137,10 @@ END SUBROUTINE Display_Mat4_Int64
 SUBROUTINE Display_Mat4_Int32(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
   INTEGER(INT32), INTENT(IN) :: Val(:, :, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Int32
 
@@ -992,6 +1167,10 @@ END SUBROUTINE Display_Mat4_Int32
 SUBROUTINE Display_Mat4_Int16(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
   INTEGER(INT16), INTENT(IN) :: Val(:, :, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Int16
 
@@ -1018,6 +1197,10 @@ END SUBROUTINE Display_Mat4_Int16
 SUBROUTINE Display_Mat4_Int8(Val, msg, unitNo, full, advance)
   ! Define intent of dummy variables
   INTEGER(INT8), INTENT(IN) :: Val(:, :, :, :)
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), OPTIONAL, INTENT(IN) :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat4.inc"
 END SUBROUTINE Display_Mat4_Int8
 

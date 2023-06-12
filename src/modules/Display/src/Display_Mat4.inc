@@ -15,21 +15,17 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-CHARACTER( LEN = * ), INTENT( IN ) :: msg
-INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-LOGICAL( LGT ), OPTIONAL, INTENT( IN ) :: full
-CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: advance
 ! Define internal variables
-INTEGER( I4B ) :: J, K
-DO K = 1, SIZE( Val, 4 )
-  DO J = 1, SIZE( Val, 3 )
-  CALL Display( Val=Val( :, :, J, K ), &
-    & msg = TRIM( msg ) &
-    & // "( :, :, " &
-    & // TRIM( Int2Str( J ) ) &
-    & // ", " &
-    & // TRIM( Int2Str( K ) ) &
-    & // " ) = " &
-    & , unitNo=unitNo, full=full, advance=advance )
+INTEGER(I4B) :: J, K
+DO K = 1, SIZE(Val, 4)
+  DO J = 1, SIZE(Val, 3)
+    CALL Display(Val=Val(:, :, J, K), &
+      & msg=TRIM(msg) &
+      & //"( :, :, " &
+      & //TRIM(Int2Str(J)) &
+      & //", " &
+      & //TRIM(Int2Str(K)) &
+      & //" ) = " &
+      & , unitNo=unitNo, full=full, advance=advance)
   END DO
 END DO

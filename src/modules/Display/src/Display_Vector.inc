@@ -15,30 +15,29 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-! vector of real numbers
-CHARACTER(*), INTENT(IN) :: msg
-! message
-INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
-! Unit number
-CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
-! orient=row => rowwise printing
-! orient=col =>  columnwise printing
-LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
-! logical variable to print the whole vector
-CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
-! Define internal variables
 INTEGER(I4B) :: I
 CHARACTER(3) :: orient_
+LOGICAL(LGT) :: full_
+INTEGER(I4B) :: ii, ff, ss
+
 CALL setDefaultSettings
 !> main
+
 IF (PRESENT(unitNo)) THEN
   I = unitNo
 ELSE
   I = stdout
 END IF
 IF (PRESENT(full)) THEN
+  full_ = full
+ELSE
+  full_ = .FALSE.
   ! do nothing for now
 END IF
+IF (I .NE. stdout .OR. (I .NE. stderr)) THEN
+  full_ = .TRUE.
+END IF
+
 IF (PRESENT(orient)) THEN
   IF (orient(1:1) .EQ. "r" .OR. orient(1:1) .EQ. "R") THEN
     orient_ = "row"
@@ -48,11 +47,27 @@ IF (PRESENT(orient)) THEN
 ELSE
   orient_ = "col"
 END IF
+
+ss = SIZE(val)
+IF (full_ .OR. ss .LE. (minRow + minRow)) THEN
 #ifdef COLOR_DISP
-CALL DISP( &
-  & title=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
-  & style=COLOR_STYLE)), &
-  & x=val, unit=I, orient=orient_, advance=advance)
+  CALL DISP( &
+    & title=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
+    & style=COLOR_STYLE)), &
+    & x=val, unit=I, orient=orient_, advance=advance)
 #else
-CALL DISP(title=msg, x=val, unit=I, orient=orient_, advance=advance)
+  CALL DISP(title=msg, x=val, unit=I, orient=orient_, advance=advance)
 #endif
+ELSE
+  IF (orient_ .EQ. "row") THEN
+    CALL Disp(title=msg, unit=I, advance="YES")
+    CALL DISP(title="", x=val(1:minRow), unit=I, orient=orient_, advance="NO")
+    CALL Display("...", unitNo=I, advance=.FALSE.)
+    CALL DISP(title="", x=val(ss-minRow+1:ss), unit=I, orient=orient_, advance=advance)
+  ELSE
+    CALL Disp(title=msg, unit=I, advance="YES")
+   CALL DISP(title="", x=val(1:minRow), unit=I, orient=orient_, advance="YES")
+    CALL Display("."//CHAR_LF//"."//CHAR_LF//".", unitNo=I, advance=.TRUE.)
+    CALL DISP(title="", x=val(ss-minRow+1:ss), unit=I, orient=orient_, advance=advance)
+  END IF
+END IF
