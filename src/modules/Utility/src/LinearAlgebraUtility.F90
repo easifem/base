@@ -13,42 +13,37 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-
-MODULE Utility
-USE MappingUtility
-USE BinomUtility
-USE AppendUtility
-USE ApproxUtility
-USE AssertUtility
-USE FunctionalFortranUtility
-USE GridPointUtility
-USE OnesUtility
-USE ZerosUtility
-USE EyeUtility
-USE DiagUtility
-USE HashingUtility
-USE InputUtility
-USE InvUtility
-USE MatmulUtility
-USE ContractionUtility
-USE MiscUtility
-USE ProductUtility
-USE ReallocateUtility
-USE SortUtility
-USE StringUtility
-USE SwapUtility
-USE ConvertUtility
-USE IntegerUtility
-USE PushPopUtility
-USE PolynomialUtility
-USE EigenUtility
-USE ArangeUtility
-USE SymUtility
-USE TriagUtility
-USE LinearAlgebraUtility
-
-!----------------------------------------------------------------------------
 !
+
+MODULE LinearAlgebraUtility
+USE GlobalData
+IMPLICIT NONE
+PRIVATE
+
+!----------------------------------------------------------------------------
+!                                                   InvHilbertMatrix@Methods
 !----------------------------------------------------------------------------
 
-END MODULE Utility
+INTERFACE
+  MODULE PURE FUNCTION InvHilbertMatrix(n) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP) :: Ans(n, n)
+  END FUNCTION InvHilbertMatrix
+END INTERFACE
+
+PUBLIC :: InvHilbertMatrix
+
+!----------------------------------------------------------------------------
+!                                                      HilbertMatrix@Methods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION HilbertMatrix(n) RESULT(Ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    REAL(DFP) :: Ans(n, n)
+  END FUNCTION HilbertMatrix
+END INTERFACE
+
+PUBLIC :: HilbertMatrix
+
+END MODULE LinearAlgebraUtility
