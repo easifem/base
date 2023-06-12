@@ -15,19 +15,54 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-CHARACTER( LEN = * ), INTENT( IN ) :: msg
-INTEGER( I4B ), INTENT( IN ), OPTIONAL :: unitNo
-LOGICAL( LGT ), INTENT( IN ), OPTIONAL :: full
-CHARACTER( LEN = * ), OPTIONAL, INTENT( IN ) :: advance
-!   Define internal variables
-INTEGER( I4B ) :: I
+INTEGER(I4B) :: I
+
+LOGICAL(LGT) :: full_
+INTEGER(I4B) :: ii, ff, mm, nn
+CHARACTER(3) :: orient_
+
 CALL setDefaultSettings
-IF( PRESENT( unitNo ) ) THEN; I = unitNo; ELSE; I = stdout; END IF
+IF (PRESENT(unitNo)) THEN; I = unitNo; ELSE; I = stdout; END IF
+
+IF (PRESENT(full)) THEN
+  full_ = full
+ELSE
+  full_ = .FALSE.
+  ! do nothing for now
+END IF
+IF (I .NE. stdout .OR. (I .NE. stderr)) THEN
+  full_ = .TRUE.
+END IF
+
+! IF (PRESENT(orient)) THEN
+!   IF (orient(1:1) .EQ. "r" .OR. orient(1:1) .EQ. "R") THEN
+!     orient_ = "row"
+!   ELSE
+!     orient_ = "col"
+!   END IF
+! ELSE
+!   orient_ = "col"
+! END IF
+orient_ = "row"
+
+mm = SIZE(val, 1)
+nn = SIZE(val, 2)
+IF (full_ .OR. mm .LE. (minRow + minRow) .OR. (nn .LE. (minCol + minCol))) THEN
 #ifdef COLOR_DISP
-CALL DISP( &
-  & title = TRIM(colorize( msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
-  & style=COLOR_STYLE)), &
-  & x= val, unit = I, advance=advance )
+  CALL DISP( &
+    & title=TRIM(colorize(msg, color_fg=COLOR_FG, color_bg=COLOR_BG, &
+    & style=COLOR_STYLE)), &
+    & x=val, unit=I, advance=advance)
 #else
-CALL DISP( title = msg, x= val, unit = I, advance=advance )
+  CALL DISP(title=msg, x=val, unit=I, advance=advance)
 #endif
+ELSE
+  CALL Disp(title=msg, unit=I, advance="YES")
+  CALL DISP(title="", x=val(1:minRow, 1:minCol), unit=I, advance="NO")
+  CALL Display("...", unitNo=I, advance=.FALSE.)
+  CALL DISP(title="", x=val(1:minRow, nn-minCol+1:nn), unit=I, advance="YES")
+  CALL Display("."//CHAR_LF//"."//CHAR_LF//".", unitNo=I, advance=.TRUE.)
+CALL DISP(title="", x=val(mm - minRow + 1:mm, 1:minCol), unit=I, advance="NO")
+  CALL Display("...", unitNo=I, advance=.FALSE.)
+  CALL DISP(title="", x=val(mm-minRow+1:mm, nn-minCol+1:nn), unit=I, advance=advance)
+END IF

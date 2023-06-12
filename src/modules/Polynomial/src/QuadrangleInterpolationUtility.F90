@@ -178,7 +178,7 @@ INTERFACE
     !! interpolation point type
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! VEFC
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in xij format

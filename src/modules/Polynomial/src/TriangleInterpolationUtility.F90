@@ -157,7 +157,7 @@ INTERFACE
     !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! xij coordinates
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! local node numbering layout
     !! only layout = "VEFC" is allowed
     REAL(DFP), ALLOCATABLE :: ans(:, :)
@@ -183,7 +183,7 @@ INTERFACE
     !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! xij coordinates
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! local node numbering layout
     !! only layout = "VEFC" is allowed
     REAL(DFP), ALLOCATABLE :: ans(:, :)
@@ -231,7 +231,7 @@ INTERFACE
     !! interpolation point type
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! Coord of domain in xij format
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! local node numbering layout, always VEFC
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
@@ -433,7 +433,7 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in reference triangle, shape functions will be evaluated
     !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
-    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
     !! "unit"
     !! "biunit"
     REAL(DFP) :: ans(SIZE(xij, 2), (order + 1) * (order + 2) / 2)
@@ -469,7 +469,7 @@ INTERFACE
     !! order of polynomial space
     REAL(DFP), INTENT(IN) :: x(:), y(:)
     !! x and y coordinates, total points = SIZE(x)*SIZE(y)
-    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
     !! "unit"
     !! "biunit"
     REAL(DFP) :: ans(SIZE(x) * SIZE(y), (order + 1) * (order + 2) / 2)
@@ -608,7 +608,7 @@ INTERFACE
     !! order of interpolation on edge e3
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points of evaluation in xij format
-    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
     !! reference triangle, "BIUNIT", "UNIT"
     REAL(DFP) :: ans( &
       & SIZE(xij, 2), &
@@ -638,7 +638,7 @@ INTERFACE
     !! order of approximation on triangle
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points of evaluation in xij format
-    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
     !! reference triangle, "BIUNIT", "UNIT"
     REAL(DFP) :: ans( &
       & SIZE(xij, 2), &
@@ -663,7 +663,7 @@ INTERFACE
   MODULE PURE FUNCTION VertexBasis_Triangle(xij, refTriangle) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! point of evaluation
-    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
     REAL(DFP) :: ans(SIZE(xij, 2), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasis_Triangle
@@ -714,7 +714,7 @@ INTERFACE
     !! order on right vertical edge(e3), should be greater than 1
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! point of evaluation
-    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
     !! Reference triangle
     REAL(DFP) :: ans(SIZE(xij, 2), pe1 + pe2 + pe3 - 3)
   END FUNCTION EdgeBasis_Triangle
@@ -773,7 +773,7 @@ INTERFACE
     !! order of approximation inside the cell, order>2
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! point of evaluation
-    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
     !! Reference triangle
     REAL(DFP) :: ans(SIZE(xij, 2), INT((order - 1) * (order - 2) / 2))
   END FUNCTION CellBasis_Triangle
@@ -831,7 +831,7 @@ INTERFACE
     !! order of interpolation on edge e3
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points of evaluation in xij format
-    CHARACTER(LEN=*), INTENT(IN) :: refTriangle
+    CHARACTER(*), INTENT(IN) :: refTriangle
     !! reference triangle
     REAL(DFP) :: ans( &
       & SIZE(xij, 2), &
