@@ -19,6 +19,7 @@
 ! summary:         This submodule contains implementation of get method for [[BoundingBox_]] data type which are defined in [[BoundingBox_Method]] module.
 
 SUBMODULE(BoundingBox_Method) GetMethods
+USE GlobalData, ONLY: zero
 IMPLICIT NONE
 CONTAINS
 
@@ -145,6 +146,25 @@ Ans = isIntersectInX(obj, obj2) &
   & .AND. isIntersectInY(obj, obj2) &
   & .AND. isIntersectInZ(obj, obj2)
 END PROCEDURE is_intersect
+
+!----------------------------------------------------------------------------
+!                                                                 isEmpty
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE bbox_isEmpty
+REAL(DFP) :: min1, max1
+
+min1 = .Xmin.obj
+max1 = .Xmax.obj
+ans = .TRUE.
+IF (ABS(max1 - min1) .GE. zero) ans = .FALSE.
+min1 = .Ymin.obj
+max1 = .Ymax.obj
+IF (ABS(max1 - min1) .GE. zero) ans = .FALSE.
+min1 = .Zmin.obj
+max1 = .Zmax.obj
+IF (ABS(max1 - min1) .GE. zero) ans = .FALSE.
+END PROCEDURE bbox_isEmpty
 
 !----------------------------------------------------------------------------
 !                                                           get_intersection

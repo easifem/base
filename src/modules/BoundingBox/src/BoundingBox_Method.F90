@@ -176,7 +176,6 @@ END INTERFACE
 !                                                                BoundingBox
 !----------------------------------------------------------------------------
 
-INTERFACE
 !> author: Vikas Sharma, Ph. D.
 ! date:         23 Feb 2021
 ! summary:         This function creates an instance of [[BoundingBox_]]
@@ -195,6 +194,7 @@ INTERFACE
 ! end subroutine test5
 !```
 
+INTERFACE
   MODULE PURE FUNCTION Constructor3(xij) RESULT(Ans)
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! Nodal coordinates xij( 1:nsd, 1:tnodes )
@@ -669,12 +669,8 @@ PUBLIC :: isIntersectInZ
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         23 Feb 2021
-! summary:         This function checks if two bounding boxes interesect each other
-!
-!@todo
-!### Usage
-!@endtodo
+! date: 2023-06-12
+! summary: This function checks if two bounding boxes interesect each other
 
 INTERFACE
   MODULE PURE FUNCTION is_intersect(obj, obj2) RESULT(Ans)
@@ -694,6 +690,23 @@ INTERFACE isIntersect
 END INTERFACE isIntersect
 
 PUBLIC :: isIntersect
+
+!----------------------------------------------------------------------------
+!                                                         isEmpty@getMethods
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION bbox_isEmpty(obj) RESULT(ans)
+    CLASS(BoundingBox_), INTENT(IN) :: obj
+    LOGICAL(LGT) :: ans
+  END FUNCTION bbox_isEmpty
+END INTERFACE
+
+INTERFACE isEmpty
+  MODULE PROCEDURE bbox_isEmpty
+END INTERFACE isEmpty
+
+PUBLIC :: isEmpty
 
 !----------------------------------------------------------------------------
 !                                                  getIntersection@getMethod
