@@ -20,6 +20,9 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: DET
+PUBLIC :: INV
+
 !----------------------------------------------------------------------------
 !                                                         Det@InverseMethods
 !----------------------------------------------------------------------------
@@ -34,8 +37,6 @@ END INTERFACE
 INTERFACE Det
   MODULE PROCEDURE det_2D
 END INTERFACE Det
-
-PUBLIC :: DET
 
 !----------------------------------------------------------------------------
 !                                                        Det@InverseMethods
@@ -70,8 +71,6 @@ END INTERFACE
 INTERFACE Inv
   MODULE PROCEDURE Inv_2D
 END INTERFACE Inv
-
-PUBLIC :: INV
 
 !----------------------------------------------------------------------------
 !                                                         INV@InverseMethods

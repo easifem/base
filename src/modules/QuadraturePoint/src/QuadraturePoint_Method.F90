@@ -90,7 +90,7 @@ INTERFACE
     !! Reference element
     INTEGER(I4B), INTENT(IN) :: order
     !! order of integrand
-    CHARACTER(LEN=*), INTENT(IN) :: quadratureType
+    CHARACTER(*), INTENT(IN) :: quadratureType
     !! Total number quadrature points
   END SUBROUTINE quad_initiate3
 END INTERFACE
@@ -115,7 +115,7 @@ INTERFACE
     !! Reference element
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! order of integrand
-    CHARACTER(LEN=*), INTENT(IN) :: quadratureType
+    CHARACTER(*), INTENT(IN) :: quadratureType
     !! Total number quadrature points
   END SUBROUTINE quad_initiate4
 END INTERFACE
@@ -180,11 +180,11 @@ INTERFACE
   END SUBROUTINE quad_Deallocate
 END INTERFACE
 
-INTERFACE Deallocate
+INTERFACE DEALLOCATE
   MODULE PROCEDURE quad_Deallocate
-END INTERFACE Deallocate
+END INTERFACE DEALLOCATE
 
-PUBLIC :: Deallocate
+PUBLIC :: DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre
@@ -386,7 +386,7 @@ PUBLIC :: Outerprod
 INTERFACE
   MODULE SUBROUTINE quad_Display(obj, msg, unitno)
     CLASS(QuadraturePoint_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
   END SUBROUTINE quad_Display
 END INTERFACE
