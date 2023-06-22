@@ -154,7 +154,7 @@ INTERFACE
     !! line = [-1,1]
     !! triangle = (0,0), (0,1), (1,0)
     !! quadrangle = [-1,1]x[-1,1]
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! "VEFC" Vertex, Edge, Face, Cell
     !! "INCREASING" incresing order
     !! "DECREASING" decreasing order
