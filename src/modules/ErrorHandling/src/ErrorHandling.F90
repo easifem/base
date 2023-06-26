@@ -46,11 +46,11 @@ CONTAINS
 ! ```
 
 SUBROUTINE Errormsg(msg, file, routine, line, unitno)
-  CHARACTER(LEN=*), INTENT(IN) :: msg
+  CHARACTER(*), INTENT(IN) :: msg
   !! Message
-  CHARACTER(LEN=*), INTENT(IN) :: file
+  CHARACTER(*), INTENT(IN) :: file
   !! Name of the file
-  CHARACTER(LEN=*), INTENT(IN) :: routine
+  CHARACTER(*), INTENT(IN) :: routine
   !! Name of the routine where error has occured
   INTEGER(I4B), INTENT(IN) :: line
   !! line number where error has occured
@@ -76,11 +76,11 @@ END SUBROUTINE Errormsg
 
 SUBROUTINE Warningmsg(msg, file, routine, line, unitno)
   !! This subroutine prints the warning message
-  CHARACTER(LEN=*), INTENT(IN) :: msg
+  CHARACTER(*), INTENT(IN) :: msg
   !! Message
-  CHARACTER(LEN=*), INTENT(IN) :: file
+  CHARACTER(*), INTENT(IN) :: file
   !! Name of the file
-  CHARACTER(LEN=*), INTENT(IN) :: routine
+  CHARACTER(*), INTENT(IN) :: routine
   !! Name of the routine where error has occured
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
   !! file id to write the message to
@@ -108,19 +108,19 @@ SUBROUTINE fileError(istat, filename, flg, unitno, file, routine, line)
   ! Dummy argumnet
   INTEGER(I4B), INTENT(IN) :: istat
     !! Result of iostat=istat for open,read,write,close
-  CHARACTER(len=*), INTENT(IN) :: filename
+  CHARACTER(*), INTENT(IN) :: filename
     !! Name of the file (IO related)
   INTEGER(I4B), INTENT(IN) :: flg
     !! IO_OPEN=Open, IO_READ=Read, IO_WRITE=Write, IO_CLOSE=Close
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
     !! file id to write the error to
-  CHARACTER(LEN=*), INTENT(IN) :: file, routine
+  CHARACTER(*), INTENT(IN) :: file, routine
     !! Name of the source code file and routine name
   INTEGER(I4B), INTENT(IN) :: line
     !! line number
   !!
   ! Define internal variables
-  CHARACTER(len=:), allocatable :: Amsg
+  CHARACTER(:), ALLOCATABLE :: Amsg
   !!
   ! Return if no error
   IF (istat == 0) THEN
@@ -163,18 +163,18 @@ END SUBROUTINE fileError
 SUBROUTINE AllocationErr(istat, amsg, alloc, unitno, file, routine, line)
   INTEGER(I4B), INTENT(IN) :: istat
   !! results of stat=istat in (de)allocate
-  CHARACTER(LEN=*), INTENT(IN) :: amsg
+  CHARACTER(*), INTENT(IN) :: amsg
   !! Message associated with the (de)allocate
   INTEGER(I4B), INTENT(IN) :: alloc
   !! For OPT_ALLOC = allocate, for OPT_DEALLOC = deallocate
   INTEGER(I4B), OPTIONAL, INTENT(IN) :: unitno
   !! Optional file id to write the message to
-  CHARACTER(LEN=*), INTENT(IN) :: file, routine
+  CHARACTER(*), INTENT(IN) :: file, routine
   !! filename and routine name
   INTEGER(I4B), INTENT(IN) :: line
   !!
   ! Define internal variables
-  CHARACTER(LEN=:), ALLOCATABLE :: tmp
+  CHARACTER(:), ALLOCATABLE :: tmp
   !!
   IF (istat == 0) RETURN
   !!
