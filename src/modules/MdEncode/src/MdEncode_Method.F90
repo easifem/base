@@ -26,10 +26,10 @@ PRIVATE
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION MdEncode_1( val ) RESULT( ans )
-  CLASS( * ), INTENT( IN ) :: val
-  TYPE(String) :: ans
-END FUNCTION MdEncode_1
+  MODULE FUNCTION MdEncode_1(val) RESULT(ans)
+    CLASS(*), INTENT(IN) :: val
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_1
 END INTERFACE
 
 INTERFACE MdEncode
@@ -43,10 +43,10 @@ PUBLIC :: MdEncode
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION MdEncode_2( val ) RESULT( ans )
-  CLASS( * ), INTENT( IN ) :: val( : )
-  TYPE(String) :: ans
-END FUNCTION MdEncode_2
+  MODULE FUNCTION MdEncode_2(val) RESULT(ans)
+    CLASS(*), INTENT(IN) :: val(:)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_2
 END INTERFACE
 
 INTERFACE MdEncode
@@ -58,15 +58,44 @@ END INTERFACE MdEncode
 !----------------------------------------------------------------------------
 
 INTERFACE
-MODULE FUNCTION MdEncode_3( val ) RESULT( ans )
-  CLASS( * ), INTENT( IN ) :: val(:, :)
-  TYPE(String) :: ans
-END FUNCTION MdEncode_3
+  MODULE FUNCTION MdEncode_3(val) RESULT(ans)
+    CLASS(*), INTENT(IN) :: val(:, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_3
 END INTERFACE
 
 INTERFACE MdEncode
   MODULE PROCEDURE MdEncode_3
 END INTERFACE MdEncode
 
+!----------------------------------------------------------------------------
+!                                                                   MdEncode
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION MdEncode_4(val) RESULT(ans)
+    CLASS(*), INTENT(IN) :: val(:, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_4
+END INTERFACE
+
+INTERFACE MdEncode
+  MODULE PROCEDURE MdEncode_4
+END INTERFACE MdEncode
+
+!----------------------------------------------------------------------------
+!                                                                   MdEncode
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE FUNCTION MdEncode_5(val) RESULT(ans)
+    CLASS(*), INTENT(IN) :: val(:, :, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_5
+END INTERFACE
+
+INTERFACE MdEncode
+  MODULE PROCEDURE MdEncode_5
+END INTERFACE MdEncode
 
 END MODULE MdEncode_Method
