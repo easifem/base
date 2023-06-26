@@ -29,31 +29,43 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_Int8
-  INTEGER(Int8) :: dum
-  dum = a
-  a = b
-  b = dum
+INTEGER(INT8) :: dum
+dum = a
+a = b
+b = dum
 END PROCEDURE swap_Int8
 
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE swap_Int16
-  INTEGER(Int16) :: dum
-  dum = a
-  a = b
-  b = dum
+INTEGER(INT16) :: dum
+dum = a
+a = b
+b = dum
 END PROCEDURE swap_Int16
 
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE swap_Int32
-  INTEGER(Int32) :: dum
-  dum = a
-  a = b
-  b = dum
+INTEGER(INT32) :: dum
+dum = a
+a = b
+b = dum
 END PROCEDURE swap_Int32
 
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE swap_Int64
-  INTEGER(Int64) :: dum
-  dum = a
-  a = b
-  b = dum
+INTEGER(INT64) :: dum
+dum = a
+a = b
+b = dum
 END PROCEDURE swap_Int64
 
 !----------------------------------------------------------------------------
@@ -61,7 +73,7 @@ END PROCEDURE swap_Int64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_r32
-REAL(Real32) :: dum
+REAL(REAL32) :: dum
 dum = a
 a = b
 b = dum
@@ -72,7 +84,7 @@ END PROCEDURE swap_r32
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_r64
-REAL(Real64) :: dum
+REAL(REAL64) :: dum
 dum = a
 a = b
 b = dum
@@ -84,24 +96,79 @@ END PROCEDURE swap_r64
 
 #ifndef USE_BLAS95
 MODULE PROCEDURE swap_r32v
-REAL(Real32), DIMENSION(SIZE(a)) :: dum
+REAL(REAL32), DIMENSION(SIZE(a)) :: dum
 dum = a
 a = b
 b = dum
 END PROCEDURE swap_r32v
-#endif
 
 !----------------------------------------------------------------------------
-!                                                                       SWAP
+!                                                                      SWAP
 !----------------------------------------------------------------------------
 
-#ifndef USE_BLAS95
 MODULE PROCEDURE swap_r64v
-REAL(Real64), DIMENSION(SIZE(a)) :: dum
+REAL(REAL64), DIMENSION(SIZE(a)) :: dum
 dum = a
 a = b
 b = dum
 END PROCEDURE swap_r64v
+#endif
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_Int8v
+INTEGER(INT8), DIMENSION(SIZE(a)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int8v
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_Int16v
+INTEGER(INT16), DIMENSION(SIZE(a)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int16v
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_Int32v
+INTEGER(INT32), DIMENSION(SIZE(a)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int32v
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_Int64v
+INTEGER(INT64), DIMENSION(SIZE(a)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int64v
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+MODULE PROCEDURE swap_Int128v
+INTEGER(Int128), DIMENSION(SIZE(a)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int128v
 #endif
 
 !----------------------------------------------------------------------------
@@ -144,7 +211,7 @@ END PROCEDURE swap_cm
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_r32m
-REAL( Real32 ), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
+REAL(REAL32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
 dum = a
 a = b
 b = dum
@@ -155,7 +222,7 @@ END PROCEDURE swap_r32m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE swap_r64m
-REAL( Real32 ), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
+REAL(REAL32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
 dum = a
 a = b
 b = dum
@@ -166,7 +233,7 @@ END PROCEDURE swap_r64m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE masked_swap_r32s
-REAL(Real32) :: swp
+REAL(REAL32) :: swp
 IF (mask) THEN
   swp = a
   a = b
@@ -179,7 +246,7 @@ END PROCEDURE masked_swap_r32s
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE masked_swap_r64s
-REAL(Real64) :: swp
+REAL(REAL64) :: swp
 IF (mask) THEN
   swp = a
   a = b
@@ -192,7 +259,7 @@ END PROCEDURE masked_swap_r64s
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE masked_swap_r32v
-REAL(Real32), DIMENSION(SIZE(a)) :: swp
+REAL(REAL32), DIMENSION(SIZE(a)) :: swp
 WHERE (mask)
   swp = a
   a = b
@@ -205,7 +272,7 @@ END PROCEDURE masked_swap_r32v
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE masked_swap_r64v
-REAL(Real64), DIMENSION(SIZE(a)) :: swp
+REAL(REAL64), DIMENSION(SIZE(a)) :: swp
 WHERE (mask)
   swp = a
   a = b
@@ -218,7 +285,7 @@ END PROCEDURE masked_swap_r64v
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE masked_swap_r32m
-REAL(Real32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
+REAL(REAL32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
 WHERE (mask)
   swp = a
   a = b
@@ -231,7 +298,7 @@ END PROCEDURE masked_swap_r32m
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE masked_swap_r64m
-REAL(Real64), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
+REAL(REAL64), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
 WHERE (mask)
   swp = a
   a = b
