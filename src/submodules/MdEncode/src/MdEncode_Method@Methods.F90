@@ -26,24 +26,24 @@ CONTAINS
 
 MODULE PROCEDURE MdEncode_1
   !!
-  SELECT TYPE( val )
-  TYPE IS( REAL(Real32) )
-    ans = TOSTRING( val )
-  TYPE IS( REAL(Real64) )
-    ans = TOSTRING( val )
-  TYPE IS( INTEGER( Int8 ) )
-    ans = TOSTRING( val )
-  TYPE IS( INTEGER( Int16 ) )
-    ans = TOSTRING( val )
-  TYPE IS( INTEGER( Int32 ) )
-    ans = TOSTRING( val )
-  TYPE IS( INTEGER( Int64 ) )
-    ans = TOSTRING( val )
-  TYPE IS( CHARACTER( LEN = * ) )
-    ans = TRIM( val )
-  TYPE IS( String )
-    ans = TRIM( val )
-  END SELECT
+SELECT TYPE (val)
+TYPE IS (REAL(REAL32))
+  ans = TOSTRING(val)
+TYPE IS (REAL(REAL64))
+  ans = TOSTRING(val)
+TYPE IS (INTEGER(INT8))
+  ans = TOSTRING(val)
+TYPE IS (INTEGER(INT16))
+  ans = TOSTRING(val)
+TYPE IS (INTEGER(INT32))
+  ans = TOSTRING(val)
+TYPE IS (INTEGER(INT64))
+  ans = TOSTRING(val)
+TYPE IS (CHARACTER(LEN=*))
+  ans = TRIM(val)
+TYPE IS (String)
+  ans = TRIM(val)
+END SELECT
   !!
 END PROCEDURE MdEncode_1
 !----------------------------------------------------------------------------
@@ -51,47 +51,47 @@ END PROCEDURE MdEncode_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MdEncode_2
-  INTEGER( I4B ) :: ii, n
+INTEGER(I4B) :: ii, n
   !!
-  n = SIZE( val )
-  ans = " | "
+n = SIZE(val)
+ans = " | "
+DO ii = 1, n
+  ans = ans//" | "
+END DO
+ans = ans//CHAR_LF
+  !!
+ans = ans//" | "
+DO ii = 1, n
+  ans = ans//" --- | "
+END DO
+ans = ans//CHAR_LF
+  !!
+SELECT TYPE (val)
+TYPE IS (REAL(REAL32))
+#include "./inc/MdEncode_2.inc"
+TYPE IS (REAL(REAL64))
+#include "./inc/MdEncode_2.inc"
+TYPE IS (INTEGER(INT8))
+#include "./inc/MdEncode_2.inc"
+TYPE IS (INTEGER(INT16))
+#include "./inc/MdEncode_2.inc"
+TYPE IS (INTEGER(INT32))
+#include "./inc/MdEncode_2.inc"
+TYPE IS (INTEGER(INT64))
+#include "./inc/MdEncode_2.inc"
+TYPE IS (CHARACTER(LEN=*))
+  ans = ans//" | "
   DO ii = 1, n
-    ans = ans // " | "
+    ans = ans//TRIM(val(ii))//" | "
   END DO
-  ans = ans // CHAR_LF
-  !!
-  ans = ans // " | "
+  ans = ans//CHAR_LF
+TYPE IS (String)
+  ans = ans//" | "
   DO ii = 1, n
-    ans = ans // " --- | "
+    ans = ans//TRIM(val(ii))//" | "
   END DO
-  ans = ans // CHAR_LF
-  !!
-  SELECT TYPE( val )
-  TYPE IS( REAL(Real32) )
-#include "./inc/MdEncode_2.inc"
-  TYPE IS( REAL(Real64) )
-#include "./inc/MdEncode_2.inc"
-  TYPE IS( INTEGER( Int8 ) )
-#include "./inc/MdEncode_2.inc"
-  TYPE IS( INTEGER( Int16 ) )
-#include "./inc/MdEncode_2.inc"
-  TYPE IS( INTEGER( Int32 ) )
-#include "./inc/MdEncode_2.inc"
-  TYPE IS( INTEGER( Int64 ) )
-#include "./inc/MdEncode_2.inc"
-  TYPE IS( CHARACTER( LEN = * ) )
-    ans = ans // " | "
-    DO ii = 1, n
-      ans = ans // TRIM( val( ii ) ) // " | "
-    END DO
-    ans = ans // CHAR_LF
-  TYPE IS( String )
-    ans = ans // " | "
-    DO ii = 1, n
-      ans = ans // TRIM( val( ii ) ) // " | "
-    END DO
-    ans = ans // CHAR_LF
-  END SELECT
+  ans = ans//CHAR_LF
+END SELECT
   !!
 END PROCEDURE MdEncode_2
 
@@ -100,42 +100,68 @@ END PROCEDURE MdEncode_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MdEncode_3
-  INTEGER( I4B ) :: ii, jj,  m, n
+INTEGER(I4B) :: ii, jj, m, n
   !!
-  m = SIZE( val, 1 )
-  n = SIZE( val, 2 )
-  ans = " | "
-  DO ii = 1, n
-    ans = ans // " | "
-  END DO
-  ans = ans // CHAR_LF
+m = SIZE(val, 1)
+n = SIZE(val, 2)
+ans = " | "
+DO ii = 1, n
+  ans = ans//" | "
+END DO
+ans = ans//CHAR_LF
   !!
-  ans = ans // " | "
-  DO ii = 1, n
-    ans = ans // " --- | "
-  END DO
-  ans = ans // CHAR_LF
+ans = ans//" | "
+DO ii = 1, n
+  ans = ans//" --- | "
+END DO
+ans = ans//CHAR_LF
   !!
-  SELECT TYPE( val )
-  TYPE IS( REAL(Real32) )
+SELECT TYPE (val)
+TYPE IS (REAL(REAL32))
 #include "./inc/MdEncode_3.inc"
-  TYPE IS( REAL(Real64) )
+TYPE IS (REAL(REAL64))
 #include "./inc/MdEncode_3.inc"
-  TYPE IS( INTEGER( Int8 ) )
+TYPE IS (INTEGER(INT8))
 #include "./inc/MdEncode_3.inc"
-  TYPE IS( INTEGER( Int16 ) )
+TYPE IS (INTEGER(INT16))
 #include "./inc/MdEncode_3.inc"
-  TYPE IS( INTEGER( Int32 ) )
+TYPE IS (INTEGER(INT32))
 #include "./inc/MdEncode_3.inc"
-  TYPE IS( INTEGER( Int64 ) )
+TYPE IS (INTEGER(INT64))
 #include "./inc/MdEncode_3.inc"
-  TYPE IS( CHARACTER( LEN = * ) )
+TYPE IS (CHARACTER(LEN=*))
 #include "./inc/MdEncode_3b.inc"
-  TYPE IS( String )
+TYPE IS (String)
 #include "./inc/MdEncode_3b.inc"
-  END SELECT
+END SELECT
   !!
 END PROCEDURE MdEncode_3
 
+!----------------------------------------------------------------------------
+!                                                                   MdEncode
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MdEncode_4
+INTEGER(I4B) :: ii
+DO ii = 1, SIZE(val, 3)
+  ans = "( :, :,  "//tostring(ii)//" ) = "//CHAR_LF//CHAR_LF
+  ans = ans//MdEncode(val(:, :, ii))
+END DO
+END PROCEDURE MdEncode_4
+
+!----------------------------------------------------------------------------
+!                                                                   MdEncode
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE MdEncode_5
+INTEGER(I4B) :: ii, jj
+DO jj = 1, SIZE(val, 4)
+  DO ii = 1, SIZE(val, 3)
+    ans = "( :, :,  "//tostring(ii)//", "//tostring(jj)//" ) = " &
+    & //CHAR_LF//CHAR_LF
+    ans = ans//MdEncode(val(:, :, ii, jj))
+  END DO
+END DO
+END PROCEDURE MdEncode_5
 
 END SUBMODULE Methods
