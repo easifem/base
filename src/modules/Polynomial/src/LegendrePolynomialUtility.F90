@@ -488,23 +488,18 @@ PUBLIC :: LegendreQuadrature
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Legendre polynomials from order = 0 to n at several points
+! summary: Evaluate Legendre polynomial of order n at single points
 !
 !# Introduction
 !
-! Evaluate Legendre polynomials from order = 0 to n at several points
-!
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
-!- alpha, beta are parameters
-!- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Legendre polynomials at the point
-! X.
+! Evaluate Legendre polynomial of order n at single points
 
 INTERFACE
   MODULE PURE FUNCTION LegendreEval1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
     REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation, it should be between -1 and 1
     REAL(DFP) :: ans
     !! Evaluate Legendre polynomial of order n at point x
   END FUNCTION LegendreEval1
@@ -522,25 +517,20 @@ PUBLIC :: LegendreEval
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Legendre polynomials from order = 0 to n at several points
+! summary: Evaluate Legendre polynomials of order n at several points
 !
 !# Introduction
 !
-! Evaluate Legendre polynomials from order = 0 to n at several points
-!
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
-!- alpha, beta are parameters
-!- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Legendre polynomials at the point
-! X.
+! Evaluate Legendre polynomials of order n at several points
 
 INTERFACE
   MODULE PURE FUNCTION LegendreEval2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
+    !! order of polynomial
     REAL(DFP), INTENT(IN) :: x(:)
+    !! several points of evaluation
     REAL(DFP) :: ans(SIZE(x))
-    !! Evaluate Legendre polynomial of order n at point x
+    !! Evaluate Legendre polynomial of order n at points x
   END FUNCTION LegendreEval2
 END INTERFACE
 
@@ -549,7 +539,7 @@ INTERFACE LegendreEval
 END INTERFACE LegendreEval
 
 !----------------------------------------------------------------------------
-!                                                             LegendreEvalAll
+!                                                            LegendreEvalAll
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -560,14 +550,15 @@ END INTERFACE LegendreEval
 !
 ! Evaluate Legendre polynomials from order = 0 to n at single points
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
 !- x: the point at which the polynomials are to be evaluated.
 
 INTERFACE
   MODULE PURE FUNCTION LegendreEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
+    !! Highest order of polynomial.
+    !! Polynomials from 0 to n will be computed.
     REAL(DFP), INTENT(IN) :: x
+    !! Point of evaluation, $x \in [-1, 1]$
     REAL(DFP) :: ans(n + 1)
     !! Evaluate Legendre polynomial of order = 0 to n (total n+1)
     !! at point x
@@ -607,6 +598,8 @@ PUBLIC :: LegendreEvalAll
 INTERFACE
   MODULE PURE FUNCTION LegendreEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
+    !! Highest order of polynomial.
+    !! Polynomials from 0 to n will be computed.
     REAL(DFP), INTENT(IN) :: x(:)
     !! number of points, SIZE(x)=M
     REAL(DFP) :: ans(SIZE(x), n + 1)
