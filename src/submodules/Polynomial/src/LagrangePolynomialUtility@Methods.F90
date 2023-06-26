@@ -103,14 +103,13 @@ MODULE PROCEDURE LagrangeVandermonde
 INTEGER(I4B), ALLOCATABLE :: degree(:, :)
 REAL(DFP), ALLOCATABLE :: x0(:), y0(:), z0(:)
 INTEGER(I4B) :: m, n, jj, nsd
-  !!
+!
 degree = TRANSPOSE(LagrangeDegree(order=order, elemType=elemType))
-  !!
 m = SIZE(xij, 2)
 nsd = SIZE(degree, 1)
 n = SIZE(degree, 2)
 ALLOCATE (ans(m, n))
-  !!
+
 SELECT CASE (nsd)
 CASE (1)
   x0 = xij(1, :)
@@ -131,12 +130,11 @@ CASE (3)
     ans(:, jj) = x0**degree(1, jj) * y0**degree(2, jj) * z0**degree(3, jj)
   END DO
 END SELECT
-  !!
+
 IF (ALLOCATED(degree)) DEALLOCATE (degree)
 IF (ALLOCATED(x0)) DEALLOCATE (x0)
 IF (ALLOCATED(y0)) DEALLOCATE (y0)
 IF (ALLOCATED(z0)) DEALLOCATE (z0)
-  !!
 END PROCEDURE LagrangeVandermonde
 
 !----------------------------------------------------------------------------
@@ -181,10 +179,16 @@ CASE (Point)
     ALLOCATE (ans(0, 0))
   END IF
 CASE (Line)
-  ans = InterpolationPoint_Line(order=order, ipType=ipType, xij=xij, &
+  ans = InterpolationPoint_Line(&
+    & order=order, &
+    & ipType=ipType, &
+    & xij=xij, &
     & layout=layout)
 CASE (Triangle)
-  ans = InterpolationPoint_Triangle(order=order, ipType=ipType, xij=xij, &
+  ans = InterpolationPoint_Triangle( &
+    & order=order, &
+    & ipType=ipType, &
+    & xij=xij, &
     & layout=layout)
 CASE (Quadrangle)
   ans = InterpolationPoint_Quadrangle(order=order, ipType=ipType, xij=xij, &
