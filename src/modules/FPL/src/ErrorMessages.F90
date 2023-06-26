@@ -22,97 +22,102 @@ MODULE ErrorMessages
 USE ISO_FORTRAN_ENV, ONLY: OUTPUT_UNIT, ERROR_UNIT
 USE PENF, ONLY: I4P, str
 
-IMPLICIT none
+IMPLICIT NONE
 PRIVATE
 
-integer(I4P), public, parameter :: FPLSuccess = 0
-integer(I4P), public, parameter :: FPLWrapperFactoryError = -1
-integer(I4P), public, parameter :: FPLWrapperError = -2
-integer(I4P), public, parameter :: FPLSublistError = -3
-integer(I4P), public, parameter :: FPLParameterListIteratorError = -4
+INTEGER(I4P), PUBLIC, PARAMETER :: FPLSuccess = 0
+INTEGER(I4P), PUBLIC, PARAMETER :: FPLWrapperFactoryError = -1
+INTEGER(I4P), PUBLIC, PARAMETER :: FPLWrapperError = -2
+INTEGER(I4P), PUBLIC, PARAMETER :: FPLSublistError = -3
+INTEGER(I4P), PUBLIC, PARAMETER :: FPLParameterListIteratorError = -4
 
-type :: MessageHandler_t
-  private
-  character(len=5) :: prefix = '[FPL]'
-contains
-  procedure, non_overridable :: Print => MessageHandler_Print
-  procedure, non_overridable :: Warn => MessageHandler_Warn
-  procedure, non_overridable :: Error => MessageHandler_Error
-end type
+TYPE :: MessageHandler_t
+  PRIVATE
+  CHARACTER(5) :: prefix = '[FPL]'
+CONTAINS
+  PROCEDURE, NON_OVERRIDABLE :: PRINT => MessageHandler_Print
+  PROCEDURE, NON_OVERRIDABLE :: Warn => MessageHandler_Warn
+  PROCEDURE, NON_OVERRIDABLE :: Error => MessageHandler_Error
+END TYPE
 
-type(MessageHandler_t), save :: msg
+TYPE(MessageHandler_t), SAVE :: msg
 !$OMP THREADPRIVATE(msg)
 
-public :: msg
+PUBLIC :: msg
 
-contains
+CONTAINS
 
-subroutine MessageHandler_Print(this, txt, unit, iostat, iomsg)
+SUBROUTINE MessageHandler_Print(this, txt, unit, iostat, iomsg)
   !-----------------------------------------------------------------
   !< Print a txt message preceding for prefix
   !-----------------------------------------------------------------
-  class(MessageHandler_t), intent(IN) :: this                 !< Message handler
-  character(len=*), intent(IN) :: txt                  !< Text to print
-  integer(I4P), optional, intent(IN) :: unit                 !< Unit where to print
-  integer(I4P), optional, intent(OUT) :: iostat               !< IO error.
-  character(*), optional, intent(OUT) :: iomsg                !< IO error message.
-  integer(I4P) :: iostatd              !< Real IO error.
-  integer(I4P) :: u                    !< Real unit
-  character(500) :: iomsgd               !< Real IO error message.
+  CLASS(MessageHandler_t), INTENT(IN) :: this !< Message handler
+  CHARACTER(*), INTENT(IN) :: txt !< Text to print
+  INTEGER(I4P), OPTIONAL, INTENT(IN) :: unit !< Unit where to print
+  INTEGER(I4P), OPTIONAL, INTENT(OUT) :: iostat !< IO error.
+  CHARACTER(*), OPTIONAL, INTENT(OUT) :: iomsg !< IO error message.
+  INTEGER(I4P) :: iostatd !< Real IO error.
+  INTEGER(I4P) :: u !< Real unit
+  CHARACTER(500) :: iomsgd !< Real IO error message.
   !-----------------------------------------------------------------
-  u = OUTPUT_UNIT; if (present(unit)) u = unit; iostatd = 0; iomsgd = ''
- write (unit=u, fmt='(A)', iostat=iostatd, iomsg=iomsgd) this%Prefix//' '//txt
-  if (present(iostat)) iostat = iostatd
-  if (present(iomsg)) iomsg = iomsgd
-end subroutine
+  u = OUTPUT_UNIT; IF (PRESENT(unit)) u = unit; iostatd = 0;
+  iomsgd = ''
+  WRITE (unit=u, fmt='(A)', iostat=iostatd, iomsg=iomsgd) &
+   & this%Prefix//' '//txt
+  IF (PRESENT(iostat)) iostat = iostatd
+  IF (PRESENT(iomsg)) iomsg = iomsgd
+END SUBROUTINE
 
-subroutine MessageHandler_Warn(this, txt, unit, file, line, iostat, iomsg)
+SUBROUTINE MessageHandler_Warn(this, txt, unit, file, line, iostat, iomsg)
   !-----------------------------------------------------------------
   !< Warn a with txt message preceding for WARNING!
   !-----------------------------------------------------------------
-  class(MessageHandler_t), intent(IN) :: this                 !< Message handler
-  character(len=*), intent(IN) :: txt                  !< Text to print
-  integer(I4P), optional, intent(IN) :: unit                 !< Unit where to print
-  character(*), optional, intent(IN) :: file                 !< Source file
-  integer(I4P), optional, intent(IN) :: line                 !< Number of line in source file
-  integer(I4P), optional, intent(OUT) :: iostat               !< IO error.
-  character(*), optional, intent(OUT) :: iomsg                !< IO error message.
-  character(len=:), allocatable :: loc                  !< Warning location string
-  integer(I4P) :: iostatd              !< Real IO error.
-  integer(I4P) :: u                    !< Real unit
-  character(500) :: iomsgd               !< Real IO error message.
+  CLASS(MessageHandler_t), INTENT(IN) :: this !< Message handler
+  CHARACTER(*), INTENT(IN) :: txt !< Text to print
+  INTEGER(I4P), OPTIONAL, INTENT(IN) :: unit !< Unit where to print
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: file !< Source file
+  INTEGER(I4P), OPTIONAL, INTENT(IN) :: line !< Number of line in source file
+  INTEGER(I4P), OPTIONAL, INTENT(OUT) :: iostat !< IO error.
+  CHARACTER(*), OPTIONAL, INTENT(OUT) :: iomsg !< IO error message.
+  CHARACTER(:), ALLOCATABLE :: loc !< Warning location string
+  INTEGER(I4P) :: iostatd !< Real IO error.
+  INTEGER(I4P) :: u !< Real unit
+  CHARACTER(500) :: iomsgd !< Real IO error message.
   !-----------------------------------------------------------------
-  u = ERROR_UNIT; if (present(unit)) u = unit; iostatd = 0; iomsgd = ''; loc = ''
-  if (present(file) .and. present(line)) &
-    loc = '('//file//':'//trim(str(no_sign=.true., n=line))//') '
-        call this%Print('WARNING! '//trim(adjustl(loc//txt)), unit=u, iostat=iostatd, iomsg=iomsgd)
-  if (present(iostat)) iostat = iostatd
-  if (present(iomsg)) iomsg = iomsgd
-end subroutine
+  u = ERROR_UNIT; IF (PRESENT(unit)) u = unit; iostatd = 0;
+  iomsgd = ''; loc = ''
+  IF (PRESENT(file) .AND. PRESENT(line)) &
+    & loc = '('//file//':'//TRIM(str(no_sign=.TRUE., n=line))//') '
+  call this%Print('WARNING! '//trim(adjustl(loc//txt)), &
+    & unit=u, iostat=iostatd, iomsg=iomsgd)
+  IF (PRESENT(iostat)) iostat = iostatd
+  IF (PRESENT(iomsg)) iomsg = iomsgd
+END SUBROUTINE
 
-subroutine MessageHandler_Error(this, txt, unit, file, line, iostat, iomsg)
+SUBROUTINE MessageHandler_Error(this, txt, unit, file, line, iostat, iomsg)
   !-----------------------------------------------------------------
   !< Print a txt message preceding for ERROR!
   !-----------------------------------------------------------------
-  class(MessageHandler_t), intent(IN) :: this                 !< Message handler
-  character(len=*), intent(IN) :: txt                  !< Text to print
-  integer(I4P), optional, intent(IN) :: unit                 !< Unit where to print
-  character(*), optional, intent(IN) :: file                 !< Source file
-  integer(I4P), optional, intent(IN) :: line                 !< Number of line in source file
-  integer(I4P), optional, intent(OUT) :: iostat               !< IO error.
-  character(*), optional, intent(OUT) :: iomsg                !< IO error message.
-  character(len=:), allocatable :: loc                  !< Error location string
-  integer(I4P) :: iostatd              !< Real IO error.
-  integer(I4P) :: u                    !< Real unit
-  character(500) :: iomsgd               !< Real IO error message.
+  CLASS(MessageHandler_t), INTENT(IN) :: this !< Message handler
+  CHARACTER(*), INTENT(IN) :: txt !< Text to print
+  INTEGER(I4P), OPTIONAL, INTENT(IN) :: unit !< Unit where to print
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: file !< Source file
+  INTEGER(I4P), OPTIONAL, INTENT(IN) :: line !< Number of line in source file
+  INTEGER(I4P), OPTIONAL, INTENT(OUT) :: iostat !< IO error.
+  CHARACTER(*), OPTIONAL, INTENT(OUT) :: iomsg !< IO error message.
+  CHARACTER(:), ALLOCATABLE :: loc !< Error location string
+  INTEGER(I4P) :: iostatd !< Real IO error.
+  INTEGER(I4P) :: u !< Real unit
+  CHARACTER(500) :: iomsgd !< Real IO error message.
   !-----------------------------------------------------------------
-  u = ERROR_UNIT; if (present(unit)) u = unit; iostatd = 0; iomsgd = ''
+  u = ERROR_UNIT; IF (PRESENT(unit)) u = unit; iostatd = 0; iomsgd = ''
   loc = ''
-  if (present(file) .and. present(line)) &
-    loc = '('//file//':'//trim(str(no_sign=.true., n=line))//') '
-        call this%Print('ERROR! '//trim(adjustl(loc//txt)), unit=u, iostat=iostatd, iomsg=iomsgd)
-  if (present(iostat)) iostat = iostatd
-  if (present(iomsg)) iomsg = iomsgd
-end subroutine
+  IF (PRESENT(file) .AND. PRESENT(line)) &
+    & loc = '('//file//':'//TRIM(str(no_sign=.TRUE., n=line))//') '
+  call this%Print('ERROR! '//trim(adjustl(loc//txt)), &
+    & unit=u, iostat=iostatd, iomsg=iomsgd)
+  IF (PRESENT(iostat)) iostat = iostatd
+  IF (PRESENT(iomsg)) iomsg = iomsgd
+END SUBROUTINE
 
-end module
+END MODULE
