@@ -144,8 +144,8 @@ END PROCEDURE MdEncode_3
 MODULE PROCEDURE MdEncode_4
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(val, 3)
-  ans = "( :, :,  "//tostring(ii)//" ) = "//CHAR_LF//CHAR_LF
-  ans = ans//MdEncode(val(:, :, ii))
+  ans = ans//"( :, :,  "//tostring(ii)//" ) = "//CHAR_LF//CHAR_LF &
+      & //MdEncode(val(:, :, ii))
 END DO
 END PROCEDURE MdEncode_4
 
@@ -157,9 +157,8 @@ MODULE PROCEDURE MdEncode_5
 INTEGER(I4B) :: ii, jj
 DO jj = 1, SIZE(val, 4)
   DO ii = 1, SIZE(val, 3)
-    ans = "( :, :,  "//tostring(ii)//", "//tostring(jj)//" ) = " &
-    & //CHAR_LF//CHAR_LF
-    ans = ans//MdEncode(val(:, :, ii, jj))
+    ans = ans//"( :, :,  "//tostring(ii)//", "//tostring(jj)//" ) = " &
+        & //CHAR_LF//CHAR_LF//MdEncode(val(:, :, ii, jj))
   END DO
 END DO
 END PROCEDURE MdEncode_5

@@ -20,9 +20,277 @@
 ! summary:         This submodule contains the sorting routine
 
 SUBMODULE(SortUtility) Methods
-USE BaseMethod, ONLY: Swap, UpperCase, arange
+USE BaseMethod, ONLY: Swap, UpperCase, arange, Median, Partition, &
+& ArgPartition, ArgMedian
 IMPLICIT NONE
+
+INTEGER(I4B), PARAMETER :: minimumLengthForInsertion = 16
+
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Int8
+!----------------------------------------------------------------------------
+
+#define _Recursive_IntroSort_ Recursive_IntroSort_Int8
+MODULE PROCEDURE IntroSort_Int8
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_IntroSort_(array, low, high, maxDepth)
+END PROCEDURE IntroSort_Int8
+RECURSIVE PURE SUBROUTINE _Recursive_IntroSort_(this, left, right, maxDepth)
+  INTEGER(INT8), INTENT(INOUT) :: this(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_IntroSort.inc"
+END SUBROUTINE _Recursive_IntroSort_
+#undef _Recursive_IntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Int16
+!----------------------------------------------------------------------------
+
+#define _Recursive_IntroSort_ Recursive_IntroSort_Int16
+MODULE PROCEDURE IntroSort_Int16
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_IntroSort_(array, low, high, maxDepth)
+END PROCEDURE IntroSort_Int16
+RECURSIVE PURE SUBROUTINE _Recursive_IntroSort_(this, left, right, maxDepth)
+  INTEGER(INT16), INTENT(INOUT) :: this(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_IntroSort.inc"
+END SUBROUTINE _Recursive_IntroSort_
+#undef _Recursive_IntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Int32
+!----------------------------------------------------------------------------
+
+#define _Recursive_IntroSort_ Recursive_IntroSort_Int32
+MODULE PROCEDURE IntroSort_Int32
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_IntroSort_(array, low, high, maxDepth)
+END PROCEDURE IntroSort_Int32
+RECURSIVE PURE SUBROUTINE _Recursive_IntroSort_(this, left, right, maxDepth)
+  INTEGER(INT32), INTENT(INOUT) :: this(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_IntroSort.inc"
+END SUBROUTINE _Recursive_IntroSort_
+#undef _Recursive_IntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Int8
+!----------------------------------------------------------------------------
+
+#define _Recursive_IntroSort_ Recursive_IntroSort_Int64
+MODULE PROCEDURE IntroSort_Int64
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_IntroSort_(array, low, high, maxDepth)
+END PROCEDURE IntroSort_Int64
+RECURSIVE PURE SUBROUTINE _Recursive_IntroSort_(this, left, right, maxDepth)
+  INTEGER(INT64), INTENT(INOUT) :: this(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_IntroSort.inc"
+END SUBROUTINE _Recursive_IntroSort_
+#undef _Recursive_IntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Real32
+!----------------------------------------------------------------------------
+
+#define _Recursive_IntroSort_ Recursive_IntroSort_Real32
+MODULE PROCEDURE IntroSort_Real32
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_IntroSort_(array, low, high, maxDepth)
+END PROCEDURE IntroSort_Real32
+RECURSIVE PURE SUBROUTINE _Recursive_IntroSort_(this, left, right, maxDepth)
+  REAL(REAL32), INTENT(INOUT) :: this(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_IntroSort.inc"
+END SUBROUTINE _Recursive_IntroSort_
+#undef _Recursive_IntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Real64
+!----------------------------------------------------------------------------
+
+#define _Recursive_IntroSort_ Recursive_IntroSort_Real64
+MODULE PROCEDURE IntroSort_Real64
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_IntroSort_(array, low, high, maxDepth)
+END PROCEDURE IntroSort_Real64
+RECURSIVE PURE SUBROUTINE _Recursive_IntroSort_(this, left, right, maxDepth)
+  REAL(REAL64), INTENT(INOUT) :: this(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_IntroSort.inc"
+END SUBROUTINE _Recursive_IntroSort_
+#undef _Recursive_IntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Int8
+!----------------------------------------------------------------------------
+
+#define _Recursive_ArgIntroSort_ Recursive_ArgIntroSort_Int8
+MODULE PROCEDURE ArgIntroSort_Int8
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
+END PROCEDURE ArgIntroSort_Int8
+RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
+  & left, right, maxDepth)
+  INTEGER(INT8), INTENT(IN) :: this(:)
+  INTEGER(I4B), INTENT(INOUT) :: idx(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_ArgIntroSort.inc"
+END SUBROUTINE _Recursive_ArgIntroSort_
+#undef _Recursive_ArgIntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Int16
+!----------------------------------------------------------------------------
+
+#define _Recursive_ArgIntroSort_ Recursive_ArgIntroSort_Int16
+MODULE PROCEDURE ArgIntroSort_Int16
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
+END PROCEDURE ArgIntroSort_Int16
+RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
+  & left, right, maxDepth)
+  INTEGER(INT16), INTENT(IN) :: this(:)
+  INTEGER(I4B), INTENT(INOUT) :: idx(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_ArgIntroSort.inc"
+END SUBROUTINE _Recursive_ArgIntroSort_
+#undef _Recursive_ArgIntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Int32
+!----------------------------------------------------------------------------
+
+#define _Recursive_ArgIntroSort_ Recursive_ArgIntroSort_Int32
+MODULE PROCEDURE ArgIntroSort_Int32
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
+END PROCEDURE ArgIntroSort_Int32
+RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
+  & left, right, maxDepth)
+  INTEGER(INT32), INTENT(IN) :: this(:)
+  INTEGER(I4B), INTENT(INOUT) :: idx(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_ArgIntroSort.inc"
+END SUBROUTINE _Recursive_ArgIntroSort_
+#undef _Recursive_ArgIntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Int64
+!----------------------------------------------------------------------------
+
+#define _Recursive_ArgIntroSort_ Recursive_ArgIntroSort_Int64
+MODULE PROCEDURE ArgIntroSort_Int64
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
+END PROCEDURE ArgIntroSort_Int64
+RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
+  & left, right, maxDepth)
+  INTEGER(INT64), INTENT(IN) :: this(:)
+  INTEGER(I4B), INTENT(INOUT) :: idx(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_ArgIntroSort.inc"
+END SUBROUTINE _Recursive_ArgIntroSort_
+#undef _Recursive_ArgIntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Real32
+!----------------------------------------------------------------------------
+
+#define _Recursive_ArgIntroSort_ Recursive_ArgIntroSort_Real32
+MODULE PROCEDURE ArgIntroSort_Real32
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
+END PROCEDURE ArgIntroSort_Real32
+RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
+  & left, right, maxDepth)
+  REAL(REAL32), INTENT(IN) :: this(:)
+  INTEGER(I4B), INTENT(INOUT) :: idx(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_ArgIntroSort.inc"
+END SUBROUTINE _Recursive_ArgIntroSort_
+#undef _Recursive_ArgIntroSort_
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort_Real32
+!----------------------------------------------------------------------------
+
+#define _Recursive_ArgIntroSort_ Recursive_ArgIntroSort_Real64
+MODULE PROCEDURE ArgIntroSort_Real64
+INTEGER(I4B) :: low, high
+INTEGER(I4B) :: maxDepth
+low = 1
+high = SIZE(array)
+maxDepth = 2 * idnint(LOG(DBLE(high)))
+CALL _Recursive_ArgIntroSort_(array, arg, low, high, maxDepth)
+END PROCEDURE ArgIntroSort_Real64
+RECURSIVE PURE SUBROUTINE _Recursive_ArgIntroSort_(this, idx, &
+  & left, right, maxDepth)
+  REAL(REAL64), INTENT(IN) :: this(:)
+  INTEGER(I4B), INTENT(INOUT) :: idx(:)
+  INTEGER(I4B), INTENT(IN) :: left, right, maxDepth
+  INTEGER(I4B) :: imid, iPivot, N
+#include "./IntroSort/Recursive_ArgIntroSort.inc"
+END SUBROUTINE _Recursive_ArgIntroSort_
+#undef _Recursive_ArgIntroSort_
 
 !----------------------------------------------------------------------------
 !                                                             InsertionSort

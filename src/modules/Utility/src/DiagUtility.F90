@@ -16,8 +16,8 @@
 !
 
 MODULE DiagUtility
-USE GlobalData, ONLY: I4B, Int8, Int16, Int32, Int64, &
-& Real32, Real64, DFP
+USE GlobalData, ONLY: I4B, INT8, INT16, INT32, INT64, &
+& REAL32, REAL64, DFP
 #ifdef USE_Int128
 USE GlobaData, ONLY: Int128
 #endif
@@ -41,33 +41,33 @@ PUBLIC :: SetTriDiag
 
 INTERFACE
   MODULE PURE FUNCTION Diag_1(a) RESULT(Ans)
-    INTEGER(Int8), INTENT(IN) :: a(:)
-    REAL(DFP) :: ans(size(a), size(a))
+    INTEGER(INT8), INTENT(IN) :: a(:)
+    REAL(DFP) :: ans(SIZE(a), SIZE(a))
   END FUNCTION Diag_1
 
   MODULE PURE FUNCTION Diag_2(a) RESULT(Ans)
-    INTEGER(Int16), INTENT(IN) :: a(:)
-    REAL(DFP) :: ans(size(a), size(a))
+    INTEGER(INT16), INTENT(IN) :: a(:)
+    REAL(DFP) :: ans(SIZE(a), SIZE(a))
   END FUNCTION Diag_2
 
   MODULE PURE FUNCTION Diag_3(a) RESULT(Ans)
-    INTEGER(Int32), INTENT(IN) :: a(:)
-    REAL(DFP) :: ans(size(a), size(a))
+    INTEGER(INT32), INTENT(IN) :: a(:)
+    REAL(DFP) :: ans(SIZE(a), SIZE(a))
   END FUNCTION Diag_3
 
   MODULE PURE FUNCTION Diag_4(a) RESULT(Ans)
-    INTEGER(Int64), INTENT(IN) :: a(:)
-    REAL(DFP) :: ans(size(a), size(a))
+    INTEGER(INT64), INTENT(IN) :: a(:)
+    REAL(DFP) :: ans(SIZE(a), SIZE(a))
   END FUNCTION Diag_4
 
   MODULE PURE FUNCTION Diag_5(a) RESULT(Ans)
-    REAL(Real32), INTENT(IN) :: a(:)
-    REAL(DFP) :: ans(size(a), size(a))
+    REAL(REAL32), INTENT(IN) :: a(:)
+    REAL(DFP) :: ans(SIZE(a), SIZE(a))
   END FUNCTION Diag_5
 
   MODULE PURE FUNCTION Diag_6(a) RESULT(Ans)
-    REAL(Real64), INTENT(IN) :: a(:)
-    REAL(DFP) :: ans(size(a), size(a))
+    REAL(REAL64), INTENT(IN) :: a(:)
+    REAL(DFP) :: ans(SIZE(a), SIZE(a))
   END FUNCTION Diag_6
 END INTERFACE
 
@@ -89,7 +89,7 @@ END INTERFACE Diag
 INTERFACE
   MODULE PURE FUNCTION Diag_7(a) RESULT(Ans)
     INTEGER(Int128), INTENT(IN) :: a(:)
-    REAL(DFP) :: ans(size(a), size(a))
+    REAL(DFP) :: ans(SIZE(a), SIZE(a))
   END FUNCTION Diag_7
 END INTERFACE
 
@@ -156,32 +156,32 @@ END INTERFACE Diag
 INTERFACE
   MODULE PURE SUBROUTINE SetDiag1(mat, d, diagNo)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
-    INTEGER(Int8), INTENT(IN) :: d(:)
+    INTEGER(INT8), INTENT(IN) :: d(:)
     INTEGER(I4B), INTENT(IN) :: diagNo
   END SUBROUTINE SetDiag1
   MODULE PURE SUBROUTINE SetDiag2(mat, d, diagNo)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
-    INTEGER(Int16), INTENT(IN) :: d(:)
+    INTEGER(INT16), INTENT(IN) :: d(:)
     INTEGER(I4B), INTENT(IN) :: diagNo
   END SUBROUTINE SetDiag2
   MODULE PURE SUBROUTINE SetDiag3(mat, d, diagNo)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
-    INTEGER(Int32), INTENT(IN) :: d(:)
+    INTEGER(INT32), INTENT(IN) :: d(:)
     INTEGER(I4B), INTENT(IN) :: diagNo
   END SUBROUTINE SetDiag3
   MODULE PURE SUBROUTINE SetDiag4(mat, d, diagNo)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
-    INTEGER(Int64), INTENT(IN) :: d(:)
+    INTEGER(INT64), INTENT(IN) :: d(:)
     INTEGER(I4B), INTENT(IN) :: diagNo
   END SUBROUTINE SetDiag4
   MODULE PURE SUBROUTINE SetDiag5(mat, d, diagNo)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
-    REAL(Real32), INTENT(IN) :: d(:)
+    REAL(REAL32), INTENT(IN) :: d(:)
     INTEGER(I4B), INTENT(IN) :: diagNo
   END SUBROUTINE SetDiag5
   MODULE PURE SUBROUTINE SetDiag6(mat, d, diagNo)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
-    REAL(Real64), INTENT(IN) :: d(:)
+    REAL(REAL64), INTENT(IN) :: d(:)
     INTEGER(I4B), INTENT(IN) :: diagNo
   END SUBROUTINE SetDiag6
 END INTERFACE
@@ -274,66 +274,66 @@ INTERFACE
   MODULE PURE SUBROUTINE SetTriDiag1(mat, d, da, db)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
     !! tri diagonal matrix dense form
-    INTEGER(Int8), INTENT(IN) :: d(:)
+    INTEGER(INT8), INTENT(IN) :: d(:)
     !! main diagonal
-    INTEGER(Int8), INTENT(IN) :: da(:)
+    INTEGER(INT8), INTENT(IN) :: da(:)
     !! super-diagonal, (a, for above)
-    INTEGER(Int8), INTENT(IN) :: db(:)
+    INTEGER(INT8), INTENT(IN) :: db(:)
     !! sub-diagonal (b for below)
   END SUBROUTINE SetTriDiag1
 
   MODULE PURE SUBROUTINE SetTriDiag2(mat, d, da, db)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
     !! tri diagonal matrix dense form
-    INTEGER(Int16), INTENT(IN) :: d(:)
+    INTEGER(INT16), INTENT(IN) :: d(:)
     !! main diagonal
-    INTEGER(Int16), INTENT(IN) :: da(:)
+    INTEGER(INT16), INTENT(IN) :: da(:)
     !! super-diagonal, (a, for above)
-    INTEGER(Int16), INTENT(IN) :: db(:)
+    INTEGER(INT16), INTENT(IN) :: db(:)
     !! sub-diagonal (b for below)
   END SUBROUTINE SetTriDiag2
 
   MODULE PURE SUBROUTINE SetTriDiag3(mat, d, da, db)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
     !! tri diagonal matrix dense form
-    INTEGER(Int32), INTENT(IN) :: d(:)
+    INTEGER(INT32), INTENT(IN) :: d(:)
     !! main diagonal
-    INTEGER(Int32), INTENT(IN) :: da(:)
+    INTEGER(INT32), INTENT(IN) :: da(:)
     !! super-diagonal, (a, for above)
-    INTEGER(Int32), INTENT(IN) :: db(:)
+    INTEGER(INT32), INTENT(IN) :: db(:)
     !! sub-diagonal (b for below)
   END SUBROUTINE SetTriDiag3
 
   MODULE PURE SUBROUTINE SetTriDiag4(mat, d, da, db)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
     !! tri diagonal matrix dense form
-    INTEGER(Int64), INTENT(IN) :: d(:)
+    INTEGER(INT64), INTENT(IN) :: d(:)
     !! main diagonal
-    INTEGER(Int64), INTENT(IN) :: da(:)
+    INTEGER(INT64), INTENT(IN) :: da(:)
     !! super-diagonal, (a, for above)
-    INTEGER(Int64), INTENT(IN) :: db(:)
+    INTEGER(INT64), INTENT(IN) :: db(:)
     !! sub-diagonal (b for below)
   END SUBROUTINE SetTriDiag4
 
   MODULE PURE SUBROUTINE SetTriDiag5(mat, d, da, db)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
     !! tri diagonal matrix dense form
-    REAL(Real32), INTENT(IN) :: d(:)
+    REAL(REAL32), INTENT(IN) :: d(:)
     !! main diagonal
-    REAL(Real32), INTENT(IN) :: da(:)
+    REAL(REAL32), INTENT(IN) :: da(:)
     !! super-diagonal, (a, for above)
-    REAL(Real32), INTENT(IN) :: db(:)
+    REAL(REAL32), INTENT(IN) :: db(:)
     !! sub-diagonal (b for below)
   END SUBROUTINE SetTriDiag5
 
   MODULE PURE SUBROUTINE SetTriDiag6(mat, d, da, db)
     REAL(DFP), INTENT(INOUT) :: mat(:, :)
     !! tri diagonal matrix dense form
-    REAL(Real64), INTENT(IN) :: d(:)
+    REAL(REAL64), INTENT(IN) :: d(:)
     !! main diagonal
-    REAL(Real64), INTENT(IN) :: da(:)
+    REAL(REAL64), INTENT(IN) :: da(:)
     !! super-diagonal, (a, for above)
-    REAL(Real64), INTENT(IN) :: db(:)
+    REAL(REAL64), INTENT(IN) :: db(:)
     !! sub-diagonal (b for below)
   END SUBROUTINE SetTriDiag6
 
@@ -354,81 +354,81 @@ END INTERFACE SetTriDiag
 
 INTERFACE
   MODULE PURE FUNCTION Tridiag_1(d, da, db, diagNo) RESULT(Ans)
-    INTEGER(Int8), INTENT(IN) :: d(:)
+    INTEGER(INT8), INTENT(IN) :: d(:)
     !! main diagonal
-    INTEGER(Int8), INTENT(IN) :: da(:)
+    INTEGER(INT8), INTENT(IN) :: da(:)
     !! super diagonal
-    INTEGER(Int8), INTENT(IN) :: db(:)
+    INTEGER(INT8), INTENT(IN) :: db(:)
     !! subdiagonal
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! sub and super diagonal number, default is 1
     !! diagNo should be positive
-    REAL(DFP) :: ans(size(d), size(d))
+    REAL(DFP) :: ans(SIZE(d), SIZE(d))
   END FUNCTION Tridiag_1
 
   MODULE PURE FUNCTION Tridiag_2(d, da, db, diagNo) RESULT(Ans)
-    INTEGER(Int16), INTENT(IN) :: d(:)
+    INTEGER(INT16), INTENT(IN) :: d(:)
     !! main diagonal
-    INTEGER(Int16), INTENT(IN) :: da(:)
+    INTEGER(INT16), INTENT(IN) :: da(:)
     !! super diagonal
-    INTEGER(Int16), INTENT(IN) :: db(:)
+    INTEGER(INT16), INTENT(IN) :: db(:)
     !! subdiagonal
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! sub and super diagonal number, default is 1
     !! diagNo should be positive
-    REAL(DFP) :: ans(size(d), size(d))
+    REAL(DFP) :: ans(SIZE(d), SIZE(d))
   END FUNCTION Tridiag_2
 
   MODULE PURE FUNCTION Tridiag_3(d, da, db, diagNo) RESULT(Ans)
-    INTEGER(Int32), INTENT(IN) :: d(:)
+    INTEGER(INT32), INTENT(IN) :: d(:)
     !! main diagonal
-    INTEGER(Int32), INTENT(IN) :: da(:)
+    INTEGER(INT32), INTENT(IN) :: da(:)
     !! super diagonal
-    INTEGER(Int32), INTENT(IN) :: db(:)
+    INTEGER(INT32), INTENT(IN) :: db(:)
     !! subdiagonal
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! sub and super diagonal number, default is 1
     !! diagNo should be positive
-    REAL(DFP) :: ans(size(d), size(d))
+    REAL(DFP) :: ans(SIZE(d), SIZE(d))
   END FUNCTION Tridiag_3
 
   MODULE PURE FUNCTION Tridiag_4(d, da, db, diagNo) RESULT(Ans)
-    INTEGER(Int64), INTENT(IN) :: d(:)
+    INTEGER(INT64), INTENT(IN) :: d(:)
     !! main diagonal
-    INTEGER(Int64), INTENT(IN) :: da(:)
+    INTEGER(INT64), INTENT(IN) :: da(:)
     !! super diagonal
-    INTEGER(Int64), INTENT(IN) :: db(:)
+    INTEGER(INT64), INTENT(IN) :: db(:)
     !! subdiagonal
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! sub and super diagonal number, default is 1
     !! diagNo should be positive
-    REAL(DFP) :: ans(size(d), size(d))
+    REAL(DFP) :: ans(SIZE(d), SIZE(d))
   END FUNCTION Tridiag_4
 
   MODULE PURE FUNCTION Tridiag_5(d, da, db, diagNo) RESULT(Ans)
-    REAL(Real32), INTENT(IN) :: d(:)
+    REAL(REAL32), INTENT(IN) :: d(:)
     !! main diagonal
-    REAL(Real32), INTENT(IN) :: da(:)
+    REAL(REAL32), INTENT(IN) :: da(:)
     !! super diagonal
-    REAL(Real32), INTENT(IN) :: db(:)
+    REAL(REAL32), INTENT(IN) :: db(:)
     !! subdiagonal
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! sub and super diagonal number, default is 1
     !! diagNo should be positive
-    REAL(DFP) :: ans(size(d), size(d))
+    REAL(DFP) :: ans(SIZE(d), SIZE(d))
   END FUNCTION Tridiag_5
 
   MODULE PURE FUNCTION Tridiag_6(d, da, db, diagNo) RESULT(Ans)
-    REAL(Real64), INTENT(IN) :: d(:)
+    REAL(REAL64), INTENT(IN) :: d(:)
     !! main diagonal
-    REAL(Real64), INTENT(IN) :: da(:)
+    REAL(REAL64), INTENT(IN) :: da(:)
     !! super diagonal
-    REAL(Real64), INTENT(IN) :: db(:)
+    REAL(REAL64), INTENT(IN) :: db(:)
     !! subdiagonal
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! sub and super diagonal number, default is 1
     !! diagNo should be positive
-    REAL(DFP) :: ans(size(d), size(d))
+    REAL(DFP) :: ans(SIZE(d), SIZE(d))
   END FUNCTION Tridiag_6
 
 END INTERFACE

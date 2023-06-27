@@ -38,7 +38,7 @@ INTERFACE
   MODULE PURE FUNCTION Contraction_r4_r1(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
     REAL(DFP), INTENT(IN) :: a2(:)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2), size(a1, 3))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2), SIZE(a1, 3))
   END FUNCTION
 END INTERFACE
 
@@ -61,8 +61,8 @@ END INTERFACE Contraction
 INTERFACE
   MODULE PURE FUNCTION Contraction_r4_r2(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
-    REAL(DFP), INTENT(IN) :: a2(:,:)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2))
+    REAL(DFP), INTENT(IN) :: a2(:, :)
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2))
   END FUNCTION
 END INTERFACE
 
@@ -86,7 +86,7 @@ INTERFACE
   MODULE PURE FUNCTION Contraction_r4_r3(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :)
-    REAL(DFP) :: ans(size(a1, 1))
+    REAL(DFP) :: ans(SIZE(a1, 1))
   END FUNCTION
 END INTERFACE
 
@@ -135,7 +135,7 @@ INTERFACE
   MODULE PURE FUNCTION Contraction_r3_r1(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :)
     REAL(DFP), INTENT(IN) :: a2(:)
-    REAL(DFP) :: ans(size(a1, 1), size(a1, 2))
+    REAL(DFP) :: ans(SIZE(a1, 1), SIZE(a1, 2))
   END FUNCTION
 END INTERFACE
 
@@ -159,7 +159,7 @@ INTERFACE
   MODULE PURE FUNCTION Contraction_r3_r2(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :, :)
     REAL(DFP), INTENT(IN) :: a2(:, :)
-    REAL(DFP) :: ans(size(a1, 1))
+    REAL(DFP) :: ans(SIZE(a1, 1))
   END FUNCTION
 END INTERFACE
 
@@ -181,7 +181,7 @@ END INTERFACE Contraction
 
 INTERFACE
   MODULE PURE FUNCTION Contraction_r3_r3(a1, a2) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a1(:,:,:)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :)
     REAL(DFP) :: ans
   END FUNCTION
@@ -205,9 +205,9 @@ END INTERFACE Contraction
 
 INTERFACE
   MODULE PURE FUNCTION Contraction_r3_r4(a1, a2) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a1(:,:,:)
+    REAL(DFP), INTENT(IN) :: a1(:, :, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
-    REAL(DFP) :: ans(size(a2,4))
+    REAL(DFP) :: ans(SIZE(a2, 4))
   END FUNCTION
 END INTERFACE
 
@@ -232,7 +232,7 @@ INTERFACE
   MODULE PURE FUNCTION Contraction_r2_r1(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:, :)
     REAL(DFP), INTENT(IN) :: a2(:)
-    REAL(DFP) :: ans(size(a1, 1))
+    REAL(DFP) :: ans(SIZE(a1, 1))
   END FUNCTION
 END INTERFACE
 
@@ -278,9 +278,9 @@ END INTERFACE Contraction
 
 INTERFACE
   MODULE PURE FUNCTION Contraction_r2_r3(a1, a2) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a1(:,:)
+    REAL(DFP), INTENT(IN) :: a1(:, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :)
-    REAL(DFP) :: ans(size(a2,3))
+    REAL(DFP) :: ans(SIZE(a2, 3))
   END FUNCTION
 END INTERFACE
 
@@ -302,9 +302,9 @@ END INTERFACE Contraction
 
 INTERFACE
   MODULE PURE FUNCTION Contraction_r2_r4(a1, a2) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a1(:,:)
+    REAL(DFP), INTENT(IN) :: a1(:, :)
     REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
-    REAL(DFP) :: ans(size(a2,3), size(a2,4))
+    REAL(DFP) :: ans(SIZE(a2, 3), SIZE(a2, 4))
   END FUNCTION
 END INTERFACE
 
@@ -353,7 +353,7 @@ INTERFACE
   MODULE PURE FUNCTION Contraction_r1_r2(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:)
     REAL(DFP), INTENT(IN) :: a2(:, :)
-    REAL(DFP) :: ans(size(a2,2))
+    REAL(DFP) :: ans(SIZE(a2, 2))
   END FUNCTION
 END INTERFACE
 
@@ -377,7 +377,7 @@ INTERFACE
   MODULE PURE FUNCTION Contraction_r1_r3(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:)
     REAL(DFP), INTENT(IN) :: a2(:, :, :)
-    REAL(DFP) :: ans(size(a2,2), size(a2,3))
+    REAL(DFP) :: ans(SIZE(a2, 2), SIZE(a2, 3))
   END FUNCTION
 END INTERFACE
 
@@ -401,7 +401,7 @@ INTERFACE
   MODULE PURE FUNCTION Contraction_r1_r4(a1, a2) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a1(:)
     REAL(DFP), INTENT(IN) :: a2(:, :, :, :)
-    REAL(DFP) :: ans(size(a2,2), size(a2,3), size(a2,4))
+    REAL(DFP) :: ans(SIZE(a2, 2), SIZE(a2, 3), SIZE(a2, 4))
   END FUNCTION
 END INTERFACE
 

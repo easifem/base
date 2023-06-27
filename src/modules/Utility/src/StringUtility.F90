@@ -20,6 +20,25 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: FindReplace
+PUBLIC :: GetFileParts
+PUBLIC :: GetPath
+PUBLIC :: GetFileName
+PUBLIC :: GetFileNameExt
+PUBLIC :: GetExtension
+PUBLIC :: GetField
+PUBLIC :: LowerCase
+PUBLIC :: ToLowerCase
+PUBLIC :: IsWhiteChar
+PUBLIC :: IsBlank
+PUBLIC :: NumStrings
+PUBLIC :: NumMatchStr
+PUBLIC :: IsPresent
+PUBLIC :: StrFind
+PUBLIC :: SlashRep
+PUBLIC :: ToUpperCase
+PUBLIC :: UpperCase
+
 !----------------------------------------------------------------------------
 !                                                    UpperCase@StringMethods
 !----------------------------------------------------------------------------
@@ -39,8 +58,6 @@ INTERFACE UpperCase
   MODULE PROCEDURE UpperCase_char
 END INTERFACE UpperCase
 
-PUBLIC :: UpperCase
-
 !----------------------------------------------------------------------------
 !                                                  toUpperCase@StringMethods
 !----------------------------------------------------------------------------
@@ -58,8 +75,6 @@ END INTERFACE
 INTERFACE toUpperCase
   MODULE PROCEDURE ToUpperCase_Char
 END INTERFACE toUpperCase
-
-PUBLIC :: toUpperCase
 
 !----------------------------------------------------------------------------
 !                                                    LowerCase@StringMethods
@@ -80,8 +95,6 @@ INTERFACE LowerCase
   MODULE PROCEDURE LowerCase_char
 END INTERFACE LowerCase
 
-PUBLIC :: LowerCase
-
 !----------------------------------------------------------------------------
 !                                                  toLowerCase@StringMethods
 !----------------------------------------------------------------------------
@@ -99,8 +112,6 @@ END INTERFACE
 INTERFACE toLowerCase
   MODULE PROCEDURE ToLowerCase_Char
 END INTERFACE toLowerCase
-
-PUBLIC :: toLowerCase
 
 !----------------------------------------------------------------------------
 !                                                  isWhiteChar@StringMethods
@@ -121,8 +132,6 @@ INTERFACE isWhiteChar
   MODULE PROCEDURE isWhiteChar_char
 END INTERFACE isWhiteChar
 
-PUBLIC :: isWhiteChar
-
 !----------------------------------------------------------------------------
 !                                                  isBlank@StringMethods
 !----------------------------------------------------------------------------
@@ -141,8 +150,6 @@ END INTERFACE
 INTERFACE isBlank
   MODULE PROCEDURE isBlank_chars
 END INTERFACE isBlank
-
-PUBLIC :: isBlank
 
 !----------------------------------------------------------------------------
 !                                                    numString@StringMethods
@@ -172,8 +179,6 @@ INTERFACE numStrings
   MODULE PROCEDURE numStrings_chars
 END INTERFACE numStrings
 
-PUBLIC :: numStrings
-
 !----------------------------------------------------------------------------
 !                                                   nmatchstr@StringMethods
 !----------------------------------------------------------------------------
@@ -194,8 +199,6 @@ END INTERFACE
 INTERFACE numMatchStr
   MODULE PROCEDURE numMatchStr_chars
 END INTERFACE numMatchStr
-
-PUBLIC :: numMatchStr
 
 !----------------------------------------------------------------------------
 !                                                  isPresent@StringMethods
@@ -225,8 +228,6 @@ INTERFACE isPresent
   MODULE PROCEDURE isPresent_chars
 END INTERFACE isPresent
 
-PUBLIC :: isPresent
-
 !----------------------------------------------------------------------------
 !                                                       strFind@StringMethods
 !----------------------------------------------------------------------------
@@ -247,8 +248,6 @@ INTERFACE strFind
   MODULE PROCEDURE strFind_chars
 END INTERFACE strFind
 
-PUBLIC :: strFind
-
 !----------------------------------------------------------------------------
 !                                                 FindReplace@StringMethods
 !----------------------------------------------------------------------------
@@ -264,7 +263,7 @@ PUBLIC :: strFind
 ! - repp the new substring that will be replace parts of string
 !
 !@note
-! repp can be larger than @c findp and as long as the size of string can
+! repp can be larger than findp and as long as the size of string can
 ! accomodate the increased length of all replacements. Trailing and preceding
 ! spaces are counted in all strings.
 !@endnote
@@ -281,8 +280,6 @@ INTERFACE FindReplace
   MODULE PROCEDURE FindReplace_chars
 END INTERFACE FindReplace
 
-PUBLIC :: FindReplace
-
 !----------------------------------------------------------------------------
 !                                                    getField@StringMethods
 !----------------------------------------------------------------------------
@@ -290,18 +287,6 @@ PUBLIC :: FindReplace
 !> author: Vikas Sharma, Ph. D.
 ! date: 8 sept 2021
 ! summary: Replaces a substring pattern with a different substring in a string
-!
-!# Introduction
-! Replaces a substring pattern with a different substring in a string.
-! - chars the string which will have substrings replaced.
-! - findp the substring pattern to find and replace
-! - repp the new substring that will be replace parts of string
-!
-!@note
-! repp can be larger than @c findp and as long as the size of string can
-! accomodate the increased length of all replacements. Trailing and preceding
-! spaces are counted in all strings.
-!@endnote
 
 INTERFACE
   MODULE PURE SUBROUTINE getField_chars(i, chars, field, ierr)
@@ -315,8 +300,6 @@ END INTERFACE
 INTERFACE getField
   MODULE PROCEDURE getField_chars
 END INTERFACE getField
-
-PUBLIC :: getField
 
 !----------------------------------------------------------------------------
 !                                                    SlashRep@StringMethods
@@ -339,8 +322,6 @@ END INTERFACE
 INTERFACE SlashRep
   MODULE PROCEDURE SlashRep_chars
 END INTERFACE SlashRep
-
-PUBLIC :: SlashRep
 
 !----------------------------------------------------------------------------
 !                                                getFileParts@StringMethods
@@ -366,8 +347,6 @@ INTERFACE getFileParts
   MODULE PROCEDURE getFileParts_chars
 END INTERFACE getFileParts
 
-PUBLIC :: getFileParts
-
 !----------------------------------------------------------------------------
 !                                                getPath@StringMethods
 !----------------------------------------------------------------------------
@@ -382,8 +361,6 @@ END INTERFACE
 INTERFACE getPath
   MODULE PROCEDURE getPath_chars
 END INTERFACE getPath
-
-PUBLIC :: getPath
 
 !----------------------------------------------------------------------------
 !                                                getFileName@StringMethods
@@ -400,8 +377,6 @@ INTERFACE getFileName
   MODULE PROCEDURE getFileName_chars
 END INTERFACE getFileName
 
-PUBLIC :: getFileName
-
 !----------------------------------------------------------------------------
 !                                           getFileNameExt@StringMethods
 !----------------------------------------------------------------------------
@@ -416,8 +391,6 @@ END INTERFACE
 INTERFACE getFileNameExt
   MODULE PROCEDURE getFileNameExt_chars
 END INTERFACE getFileNameExt
-
-PUBLIC :: getFileNameExt
 
 !----------------------------------------------------------------------------
 !                                                getExtension@StringMethods
@@ -443,8 +416,6 @@ END INTERFACE
 INTERFACE getExtension
   MODULE PROCEDURE getExtension_chars
 END INTERFACE getExtension
-
-PUBLIC :: getExtension
 
 !----------------------------------------------------------------------------
 !

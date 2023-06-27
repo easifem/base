@@ -15,9 +15,21 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-INTEGER(I4B) :: n, i
-n = SIZE(Val)
-Ans(1:n) = Val
-DO i = 1, rtimes - 1
-  Ans(i * n + 1:(i + 1) * n) = Val
+
+pivot = this(left)
+lo = left; hi = right
+DO WHILE (lo <= hi)
+  DO WHILE (this(hi) > pivot)
+    hi = hi - 1
+  END DO
+
+  DO WHILE (lo <= hi .AND. this(lo) <= pivot)
+    lo = lo + 1
+  END DO
+  IF (lo <= hi) THEN
+    CALL swap(this(lo), this(hi))
+    lo = lo + 1; hi = hi - 1
+  END IF
 END DO
+CALL swap(this(left), this(hi))
+iPivot = hi

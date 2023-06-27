@@ -161,7 +161,6 @@ END INTERFACE OPERATOR(.in.)
 ! if a(i) is inside the b, then ans(i) is true, otherwise false.
 
 INTERFACE
-
   MODULE PURE FUNCTION isin_1a(a, b) RESULT(Ans)
     INTEGER(INT8), INTENT(IN) :: a(:)
     INTEGER(INT8), INTENT(IN) :: b(:)
@@ -185,7 +184,6 @@ INTERFACE
     INTEGER(INT64), INTENT(IN) :: b(:)
     LOGICAL(LGT) :: ans(SIZE(a))
   END FUNCTION isin_1d
-
 END INTERFACE
 
 INTERFACE OPERATOR(.isin.)
@@ -286,10 +284,21 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: rtimes
     INTEGER(INT64) :: Ans(SIZE(Val) * rtimes)
   END FUNCTION Repeat_1d
+  MODULE PURE FUNCTION Repeat_1e(Val, rtimes) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: rtimes
+    REAL(REAL32) :: Ans(SIZE(Val) * rtimes)
+  END FUNCTION Repeat_1e
+  MODULE PURE FUNCTION Repeat_1f(Val, rtimes) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: Val(:)
+    INTEGER(I4B), INTENT(IN) :: rtimes
+    REAL(REAL64) :: Ans(SIZE(Val) * rtimes)
+  END FUNCTION Repeat_1f
 END INTERFACE
 
 INTERFACE Repeat
-  MODULE PROCEDURE Repeat_1a, Repeat_1b, Repeat_1c, Repeat_1d
+  MODULE PROCEDURE Repeat_1a, Repeat_1b, Repeat_1c, Repeat_1d, &
+    & Repeat_1e, Repeat_1f
 END INTERFACE Repeat
 
 !----------------------------------------------------------------------------

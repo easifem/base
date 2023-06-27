@@ -15,9 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-INTEGER(I4B) :: n, i
-n = SIZE(Val)
-Ans(1:n) = Val
-DO i = 1, rtimes - 1
-  Ans(i * n + 1:(i + 1) * n) = Val
-END DO
+IF (this(indx(right)) < this(indx(left))) CALL swap(indx(left), indx(right))
+IF (this(indx(mid)) < this(indx(left))) CALL swap(indx(mid), indx(left))
+IF (this(indx(right)) < this(indx(mid))) CALL swap(indx(right), indx(mid))

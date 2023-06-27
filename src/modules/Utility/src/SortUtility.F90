@@ -27,6 +27,97 @@ PUBLIC :: Sort
 PUBLIC :: ArgSort
 PUBLIC :: InsertionSort
 PUBLIC :: ArgInsertionSort
+PUBLIC :: IntroSort
+PUBLIC :: ArgIntroSort
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Sorting by insertion algorithm
+
+INTERFACE
+  MODULE PURE SUBROUTINE IntroSort_Int8(array)
+    INTEGER(INT8), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Int8
+  MODULE PURE SUBROUTINE IntroSort_Int16(array)
+    INTEGER(INT16), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Int16
+  MODULE PURE SUBROUTINE IntroSort_Int32(array)
+    INTEGER(INT32), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Int32
+  MODULE PURE SUBROUTINE IntroSort_Int64(array)
+    INTEGER(INT64), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Int64
+  MODULE PURE SUBROUTINE IntroSort_Real32(array)
+    REAL(REAL32), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Real32
+  MODULE PURE SUBROUTINE IntroSort_Real64(array)
+    REAL(REAL64), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Real64
+END INTERFACE
+
+INTERFACE IntroSort
+  MODULE PROCEDURE &
+    & IntroSort_Int8, &
+    & IntroSort_Int16, &
+    & IntroSort_Int32, &
+    & IntroSort_Int64, &
+    & IntroSort_Real32, &
+    & IntroSort_Real64
+END INTERFACE IntroSort
+
+!----------------------------------------------------------------------------
+!                                                           ArgIntroSort
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Indirect sorting by insertion sort
+
+INTERFACE
+  MODULE PURE SUBROUTINE ArgIntroSort_Int8(array, arg)
+    INTEGER(INT8), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Int8
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Int16(array, arg)
+    INTEGER(INT16), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Int16
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Int32(array, arg)
+    INTEGER(INT32), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Int32
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Int64(array, arg)
+    INTEGER(INT64), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Int64
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Real32(array, arg)
+    REAL(REAL32), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Real32
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Real64(array, arg)
+    REAL(REAL64), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Real64
+END INTERFACE
+
+INTERFACE ArgIntroSort
+  MODULE PROCEDURE &
+    & ArgIntroSort_Int8, &
+    & ArgIntroSort_Int16, &
+    & ArgIntroSort_Int32, &
+    & ArgIntroSort_Int64, &
+    & ArgIntroSort_Real32, &
+    & ArgIntroSort_Real64
+END INTERFACE ArgIntroSort
 
 !----------------------------------------------------------------------------
 !                                                           IntroSort
@@ -70,8 +161,12 @@ INTERFACE
 END INTERFACE
 
 INTERFACE InsertionSort
-  MODULE PROCEDURE InsertionSort_Int8, InsertionSort_Int16, &
-    & InsertionSort_Int32, InsertionSort_Int64, InsertionSort_Real32, &
+  MODULE PROCEDURE &
+    & InsertionSort_Int8, &
+    & InsertionSort_Int16, &
+    & InsertionSort_Int32, &
+    & InsertionSort_Int64, &
+    & InsertionSort_Real32, &
     & InsertionSort_Real64
 END INTERFACE InsertionSort
 

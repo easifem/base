@@ -34,8 +34,10 @@ USE InvUtility
 USE LinearAlgebraUtility
 USE MappingUtility
 USE MatmulUtility
+USE MedianUtility
 USE MiscUtility
 USE OnesUtility
+USE PartitionUtility
 USE ProductUtility
 USE PushPopUtility
 USE ReallocateUtility

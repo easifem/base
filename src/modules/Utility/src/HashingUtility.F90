@@ -36,7 +36,7 @@ PRIVATE
 
 INTERFACE
   MODULE PURE FUNCTION StringToUID_PolyRoll(charVar) RESULT(Ans)
-    CHARACTER(LEN=*), INTENT(IN) :: charVar
+    CHARACTER(*), INTENT(IN) :: charVar
     INTEGER(I4B) :: ans
   END FUNCTION StringToUID_PolyRoll
 END INTERFACE
