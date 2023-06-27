@@ -25,36 +25,92 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                             InsertionSort
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InsertionSort_Int8
+#include "./InsertionSort/InsertionSort.inc"
+END PROCEDURE InsertionSort_Int8
+
+MODULE PROCEDURE InsertionSort_Int16
+#include "./InsertionSort/InsertionSort.inc"
+END PROCEDURE InsertionSort_Int16
+
+MODULE PROCEDURE InsertionSort_Int32
+#include "./InsertionSort/InsertionSort.inc"
+END PROCEDURE InsertionSort_Int32
+
+MODULE PROCEDURE InsertionSort_Int64
+#include "./InsertionSort/InsertionSort.inc"
+END PROCEDURE InsertionSort_Int64
+
+MODULE PROCEDURE InsertionSort_Real32
+#include "./InsertionSort/InsertionSort.inc"
+END PROCEDURE InsertionSort_Real32
+
+MODULE PROCEDURE InsertionSort_Real64
+#include "./InsertionSort/InsertionSort.inc"
+END PROCEDURE InsertionSort_Real64
+
+!----------------------------------------------------------------------------
+!                                                            ArgInsertionSort
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ArgInsertionSort_Int8
+#include "./InsertionSort/ArgInsertionSort.inc"
+END PROCEDURE ArgInsertionSort_Int8
+
+MODULE PROCEDURE ArgInsertionSort_Int16
+#include "./InsertionSort/ArgInsertionSort.inc"
+END PROCEDURE ArgInsertionSort_Int16
+
+MODULE PROCEDURE ArgInsertionSort_Int32
+#include "./InsertionSort/ArgInsertionSort.inc"
+END PROCEDURE ArgInsertionSort_Int32
+
+MODULE PROCEDURE ArgInsertionSort_Int64
+#include "./InsertionSort/ArgInsertionSort.inc"
+END PROCEDURE ArgInsertionSort_Int64
+
+MODULE PROCEDURE ArgInsertionSort_Real32
+#include "./InsertionSort/ArgInsertionSort.inc"
+END PROCEDURE ArgInsertionSort_Real32
+
+MODULE PROCEDURE ArgInsertionSort_Real64
+#include "./InsertionSort/ArgInsertionSort.inc"
+END PROCEDURE ArgInsertionSort_Real64
+
+!----------------------------------------------------------------------------
 !                                                                 HeapSort
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeapSort_Int8
-INTEGER(Int8) :: t
+INTEGER(INT8) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Int8
 
 MODULE PROCEDURE HeapSort_Int16
-INTEGER(Int16) :: t
+INTEGER(INT16) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Int16
 
 MODULE PROCEDURE HeapSort_Int32
-INTEGER(Int32) :: t
+INTEGER(INT32) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Int32
 
 MODULE PROCEDURE HeapSort_Int64
-INTEGER(Int64) :: t
+INTEGER(INT64) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Int64
 
 MODULE PROCEDURE HeapSort_Real32
-REAL(Real32) :: t
+REAL(REAL32) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Real32
 
 MODULE PROCEDURE HeapSort_Real64
-REAL(Real64) :: t
+REAL(REAL64) :: t
 #include "./HeapSort/HeapSort.inc"
 END PROCEDURE HeapSort_Real64
 
