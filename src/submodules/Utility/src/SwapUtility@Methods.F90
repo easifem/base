@@ -229,6 +229,63 @@ b = dum
 END PROCEDURE swap_r64m
 
 !----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_Int8m
+INTEGER(INT8), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int8m
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_Int16m
+INTEGER(INT16), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int16m
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_Int32m
+INTEGER(INT32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int32m
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE swap_Int64m
+INTEGER(INT64), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int64m
+
+!----------------------------------------------------------------------------
+!                                                                     SWAP
+!----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+MODULE PROCEDURE swap_Int128m
+INTEGER(Int128), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: dum
+dum = a
+a = b
+b = dum
+END PROCEDURE swap_Int128m
+#endif
+
+!----------------------------------------------------------------------------
 !                                                                      SWAP
 !----------------------------------------------------------------------------
 
@@ -258,6 +315,73 @@ END PROCEDURE masked_swap_r64s
 !                                                                       SWAP
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE masked_swap_Int8s
+INTEGER(INT8) :: swp
+IF (mask) THEN
+  swp = a
+  a = b
+  b = swp
+END IF
+END PROCEDURE masked_swap_Int8s
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int16s
+INTEGER(INT16) :: swp
+IF (mask) THEN
+  swp = a
+  a = b
+  b = swp
+END IF
+END PROCEDURE masked_swap_Int16s
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int32s
+INTEGER(INT32) :: swp
+IF (mask) THEN
+  swp = a
+  a = b
+  b = swp
+END IF
+END PROCEDURE masked_swap_Int32s
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int64s
+INTEGER(INT64) :: swp
+IF (mask) THEN
+  swp = a
+  a = b
+  b = swp
+END IF
+END PROCEDURE masked_swap_Int64s
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+MODULE PROCEDURE masked_swap_Int128s
+INTEGER(Int128) :: swp
+IF (mask) THEN
+  swp = a
+  a = b
+  b = swp
+END IF
+END PROCEDURE masked_swap_Int128s
+#endif
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE masked_swap_r32v
 REAL(REAL32), DIMENSION(SIZE(a)) :: swp
 WHERE (mask)
@@ -279,6 +403,73 @@ WHERE (mask)
   b = swp
 END WHERE
 END PROCEDURE masked_swap_r64v
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int8v
+INTEGER(INT8), DIMENSION(SIZE(a)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int8v
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int16v
+INTEGER(INT16), DIMENSION(SIZE(a)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int16v
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int32v
+INTEGER(INT32), DIMENSION(SIZE(a)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int32v
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int64v
+INTEGER(INT64), DIMENSION(SIZE(a)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int64v
+
+!----------------------------------------------------------------------------
+!                                                                       SWAP
+!----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+MODULE PROCEDURE masked_swap_Int128v
+INTEGER(Int128), DIMENSION(SIZE(a)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int128v
+#endif
 
 !----------------------------------------------------------------------------
 !                                                                      SWAP
@@ -305,6 +496,73 @@ WHERE (mask)
   b = swp
 END WHERE
 END PROCEDURE masked_swap_r64m
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int8m
+INTEGER(INT8), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int8m
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int16m
+INTEGER(INT16), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int16m
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int32m
+INTEGER(INT32), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int32m
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE masked_swap_Int64m
+INTEGER(INT64), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int64m
+
+!----------------------------------------------------------------------------
+!                                                                      SWAP
+!----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+MODULE PROCEDURE masked_swap_Int128m
+INTEGER(Int128), DIMENSION(SIZE(a, 1), SIZE(a, 2)) :: swp
+WHERE (mask)
+  swp = a
+  a = b
+  b = swp
+END WHERE
+END PROCEDURE masked_swap_Int128m
+#endif
 
 !----------------------------------------------------------------------------
 !                                                                  SWAP
