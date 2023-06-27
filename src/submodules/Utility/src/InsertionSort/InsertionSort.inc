@@ -15,20 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: NORM2
+INTEGER(I4B) :: ii, jj
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-12-12
-! update: 2021-12-12
-! summary: FEVariable = NORM2(FEVariable)
-
-INTERFACE
-  MODULE PURE FUNCTION fevar_norm2(obj) RESULT(Ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj
-    TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_norm2
-END INTERFACE
-
-INTERFACE NORM2
-  MODULE PROCEDURE fevar_norm2
-END INTERFACE NORM2
+DO ii = low, high
+  DO jj = ii, low + 1, -1
+    IF (array(jj) < array(jj - 1)) THEN
+      CALL SWAP(array(jj), array(jj - 1))
+    ELSE
+      EXIT
+    END IF
+  END DO
+END DO

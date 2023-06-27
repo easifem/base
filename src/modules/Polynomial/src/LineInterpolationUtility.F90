@@ -20,13 +20,23 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: LagrangeDegree_Line
+PUBLIC :: LagrangeDOF_Point
+PUBLIC :: LagrangeDOF_Line
+PUBLIC :: LagrangeInDOF_Line
+PUBLIC :: EquidistanceInPoint_Line
+PUBLIC :: EquidistancePoint_Line
+PUBLIC :: InterpolationPoint_Line
+PUBLIC :: LagrangeCoeff_Line
+PUBLIC :: LagrangeEvalAll_Line
+
 !----------------------------------------------------------------------------
 !                                                       LagrangeDegree_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Aug 2022
-! summary:         Returns the degree of monomials for Lagrange polynomials
+! summary: Returns the degree of monomials for Lagrange polynomials
 
 INTERFACE
   MODULE PURE FUNCTION LagrangeDegree_Line(order) RESULT(ans)
@@ -35,15 +45,13 @@ INTERFACE
   END FUNCTION LagrangeDegree_Line
 END INTERFACE
 
-PUBLIC :: LagrangeDegree_Line
-
 !----------------------------------------------------------------------------
 !                                                          LagrangeDOF_Point
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary:         Returns the total number of degree of freedom for a
+! summary: Returns the total number of degree of freedom for a
 ! lagrange polynomial on a point of Line
 
 INTERFACE
@@ -53,15 +61,13 @@ INTERFACE
   END FUNCTION LagrangeDOF_Point
 END INTERFACE
 
-PUBLIC :: LagrangeDOF_Point
-
 !----------------------------------------------------------------------------
 !                                                              GetDOF_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary:         Returns the total number of degree of freedom for a
+! summary: Returns the total number of degree of freedom for a
 ! lagrange polynomial on Line
 
 INTERFACE
@@ -70,8 +76,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeDOF_Line
 END INTERFACE
-
-PUBLIC :: LagrangeDOF_Line
 
 !----------------------------------------------------------------------------
 !                                                        LagrangeInDOF_Line
@@ -94,8 +98,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeInDOF_Line
 END INTERFACE
-
-PUBLIC :: LagrangeInDOF_Line
 
 !----------------------------------------------------------------------------
 !                                                   EquidistanceInPoint_Line
@@ -124,8 +126,6 @@ END INTERFACE
 INTERFACE EquidistanceInPoint_Line
   MODULE PROCEDURE EquidistanceInPoint_Line1
 END INTERFACE EquidistanceInPoint_Line
-
-PUBLIC :: EquidistanceInPoint_Line
 
 !----------------------------------------------------------------------------
 !                                                   EquidistanceInPoint_Line
@@ -185,8 +185,6 @@ END INTERFACE
 INTERFACE EquidistancePoint_Line
   MODULE PROCEDURE EquidistancePoint_Line1
 END INTERFACE EquidistancePoint_Line
-
-PUBLIC :: EquidistancePoint_Line
 
 !----------------------------------------------------------------------------
 !                                                    EquidistancePoint_Line
@@ -279,8 +277,6 @@ INTERFACE InterpolationPoint_Line
   MODULE PROCEDURE InterpolationPoint_Line1
 END INTERFACE InterpolationPoint_Line
 
-PUBLIC :: InterpolationPoint_Line
-
 !----------------------------------------------------------------------------
 !                                                   InterpolationPoint_Line
 !----------------------------------------------------------------------------
@@ -334,8 +330,6 @@ END INTERFACE
 INTERFACE LagrangeCoeff_Line
   MODULE PROCEDURE LagrangeCoeff_Line1
 END INTERFACE LagrangeCoeff_Line
-
-PUBLIC :: LagrangeCoeff_Line
 
 !----------------------------------------------------------------------------
 !                                                         LagrangeCoeff_Line
@@ -395,11 +389,98 @@ INTERFACE
     !! points in xij format, size(xij,2) = order+1
     REAL(DFP) :: ans(order + 1, order + 1)
     !! coefficients
+    !! jth column of ans corresponds to the coeff of lagrange polynomial
+    !! at the jth point
   END FUNCTION LagrangeCoeff_Line4
 END INTERFACE
 
 INTERFACE LagrangeCoeff_Line
   MODULE PROCEDURE LagrangeCoeff_Line4
 END INTERFACE LagrangeCoeff_Line
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate Lagrange polynomials from 0 to n at single points
+!
+!# Introduction
+!
+! Evaluate Lagrangepolynomials at single point
+!
+!- Two indicate the first call to subroutine set `firstCall` to True.
+!
+!- If `firstCall` is True, then
+!   - If `V` is present and `ipiv` is absent, then on return V contains
+!     vandermonde matrix
+!   - If `V` is present and `ipiv` is present, then on return V contains
+!     LU decomposition of vandermonde matrix and `ipiv` contains
+!     inverse map of pivoting.
+!
+!- If `firstCall` is FALSE, then
+!   - If `V` is present and `ipiv` is absent, then V denotes vandermonde
+!     matrix, which will be used in the computations.
+!   - If `V` is present and `ipiv` is present, then V denotes the
+!     LU decomposition of vandermonde matrix and `ipiv` denotes the
+!     inverse map of pivoting. These information will be used.
+
+INTERFACE
+  MODULE FUNCTION LagrangeEvalAll_Line1(order, x, xij, coeff, firstCall) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    !! interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP) :: ans(order + 1)
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Line1
+END INTERFACE
+
+INTERFACE LagrangeEvalAll_Line
+  MODULE PROCEDURE LagrangeEvalAll_Line1
+END INTERFACE LagrangeEvalAll_Line
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate Lagrange polynomials from 0 to n at several points
+
+INTERFACE
+  MODULE FUNCTION LagrangeEvalAll_Line2(order, x, xij, coeff, firstCall) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point of evaluation
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    !! interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP) :: ans(SIZE(x), order + 1)
+    !! Value of n+1 Lagrange polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+  END FUNCTION LagrangeEvalAll_Line2
+END INTERFACE
+
+INTERFACE LagrangeEvalAll_Line
+  MODULE PROCEDURE LagrangeEvalAll_Line2
+END INTERFACE LagrangeEvalAll_Line
 
 END MODULE LineInterpolationUtility

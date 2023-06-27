@@ -27,32 +27,67 @@ PUBLIC :: Eye
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	6 March 2021
+! date: 2023-06-26
 ! summary: Return an identity matrix of an integers
 
 INTERFACE
-MODULE PURE FUNCTION int_eye_1( m, DataType ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: m, DataType
-  INTEGER( I4B ) :: Ans( m, m )
-END FUNCTION int_eye_1
+  MODULE PURE FUNCTION int_eye_1(m, DataType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: m
+    INTEGER(INT8), INTENT(IN) :: DataType
+    INTEGER(INT8) :: ans(m, m)
+  END FUNCTION int_eye_1
+
+  MODULE PURE FUNCTION int_eye_2(m, DataType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: m
+    INTEGER(INT16), INTENT(IN) :: DataType
+    INTEGER(INT16) :: ans(m, m)
+  END FUNCTION int_eye_2
+
+  MODULE PURE FUNCTION int_eye_3(m, DataType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: m
+    INTEGER(INT32), INTENT(IN) :: DataType
+    INTEGER(INT32) :: ans(m, m)
+  END FUNCTION int_eye_3
+
+  MODULE PURE FUNCTION int_eye_4(m, DataType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: m
+    INTEGER(INT64), INTENT(IN) :: DataType
+    INTEGER(INT64) :: ans(m, m)
+  END FUNCTION int_eye_4
 END INTERFACE
 
 INTERFACE Eye
-  MODULE PROCEDURE int_eye_1
+  MODULE PROCEDURE int_eye_1, int_eye_2, int_eye_3, int_eye_4
 END INTERFACE Eye
+
+#ifdef USE_Int128
+INTERFACE
+  MODULE PURE FUNCTION int_eye_5(m, DataType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: m
+    INTEGER(Int128), INTENT(IN) :: DataType
+    INTEGER(Int128) :: ans(m, m)
+  END FUNCTION int_eye_5
+END INTERFACE
+
+INTERFACE Eye
+  MODULE PROCEDURE int_eye_5
+END INTERFACE Eye
+#endif
 
 !----------------------------------------------------------------------------
 !                                                            Eye@Constructor
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-26
+! summary:  Return identity matrix of real numbers
 INTERFACE
-!! Return identity matrix of real numbers
 
-MODULE PURE FUNCTION real_eye_1( m, DataType ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: m
-  REAL( Real64 ) :: Ans( m, m )
-  REAL( Real64 ), INTENT( IN ) :: DataType
-END FUNCTION real_eye_1
+  MODULE PURE FUNCTION real_eye_1(m, DataType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: m
+    REAL(REAL64) :: ans(m, m)
+    REAL(REAL64), INTENT(IN) :: DataType
+  END FUNCTION real_eye_1
 END INTERFACE
 
 INTERFACE Eye
@@ -63,13 +98,15 @@ END INTERFACE Eye
 !                                                            Eye@Constructor
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-26
+! summary:  Return identity matrix of real number
 INTERFACE
-!! Return identity matrix of real number
 
-MODULE PURE FUNCTION real_eye_2( m ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: m
-  REAL( DFP ) :: Ans( m, m )
-END FUNCTION real_eye_2
+  MODULE PURE FUNCTION real_eye_2(m) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: m
+    REAL(DFP) :: ans(m, m)
+  END FUNCTION real_eye_2
 END INTERFACE
 
 INTERFACE Eye
@@ -80,14 +117,16 @@ END INTERFACE Eye
 !                                                            Eye@Constructor
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-26
+! summary:  Return identity matrix of real numbers
 INTERFACE
-!! Return identity matrix of real numbers
 
-MODULE PURE FUNCTION real_eye_3( m, DataType ) RESULT( Ans )
-  INTEGER( I4B ), INTENT( IN ) :: m
-  REAL( Real32 ) :: Ans( m, m )
-  REAL( Real32 ), INTENT( IN ) :: DataType
-END FUNCTION real_eye_3
+  MODULE PURE FUNCTION real_eye_3(m, DataType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: m
+    REAL(REAL32) :: ans(m, m)
+    REAL(REAL32), INTENT(IN) :: DataType
+  END FUNCTION real_eye_3
 END INTERFACE
 
 INTERFACE Eye

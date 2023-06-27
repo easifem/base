@@ -182,7 +182,7 @@ END PROCEDURE EquidistancePoint_Line2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Line1
-CHARACTER(LEN=20) :: astr
+CHARACTER(20) :: astr
 INTEGER(I4B) :: nsd, ii
 REAL(DFP) :: temp(order + 1), t1
 !!
@@ -273,7 +273,7 @@ END PROCEDURE InterpolationPoint_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Line2
-CHARACTER(LEN=20) :: astr
+CHARACTER(20) :: astr
 REAL(DFP) :: t1
 !!
 IF (order .EQ. 0_I4B) THEN
@@ -349,15 +349,10 @@ MODULE PROCEDURE LagrangeCoeff_Line1
 REAL(DFP) :: v(SIZE(xij, 2), SIZE(xij, 2))
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-!!
 v = LagrangeVandermonde(order=order, xij=xij, elemType=Line2)
 CALL getLU(A=v, IPIV=ipiv, info=info)
-!!
-!! deploy to subroutine
-!!
 ans = 0.0_DFP; ans(i) = 1.0_DFP
 CALL LUSolve(A=v, B=ans, IPIV=ipiv, info=info)
-!!
 END PROCEDURE LagrangeCoeff_Line1
 
 !----------------------------------------------------------------------------
@@ -368,13 +363,10 @@ MODULE PROCEDURE LagrangeCoeff_Line2
 REAL(DFP) :: vtemp(SIZE(v, 1), SIZE(v, 2))
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-!!
 vtemp = v; ipiv = 0
 CALL getLU(A=vtemp, IPIV=ipiv, info=info)
-!!
 ans = 0.0_DFP; ans(i) = 1.0_DFP
 CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
-!!
 END PROCEDURE LagrangeCoeff_Line2
 
 !----------------------------------------------------------------------------
@@ -395,6 +387,97 @@ MODULE PROCEDURE LagrangeCoeff_Line4
 ans = LagrangeVandermonde(order=order, xij=xij, elemType=Line2)
 CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Line4
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Line1
+LOGICAL(LGT) :: firstCall0
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(order + 1)
+INTEGER(I4B) :: ii
+
+firstCall0 = input(default=.FALSE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    IF (.NOT. PRESENT(xij)) THEN
+      CALL Errormsg(&
+        & msg="xij should be present!", &
+        & file=__FILE__, &
+        & routine="LagrangeEvalAll_Line1", &
+        & line=__LINE__, &
+        & unitno=stderr)
+    END IF
+    coeff = LagrangeCoeff_Line(order=order, xij=xij)
+    coeff0 = TRANSPOSE(coeff)
+  ELSE
+    coeff0 = TRANSPOSE(coeff)
+  END IF
+ELSE
+  IF (.NOT. PRESENT(xij)) THEN
+    CALL Errormsg(&
+      & msg="xij should be present!", &
+      & file=__FILE__, &
+      & routine="LagrangeEvalAll_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+  coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
+END IF
+
+xx(1) = 1.0_DFP
+DO ii = 1, order
+  xx(ii + 1) = xx(ii) * x
+END DO
+ans = MATMUL(coeff0, xx)
+
+END PROCEDURE LagrangeEvalAll_Line1
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Line2
+LOGICAL(LGT) :: firstCall0
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x), order + 1)
+INTEGER(I4B) :: ii
+
+firstCall0 = input(default=.FALSE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    IF (.NOT. PRESENT(xij)) THEN
+      CALL Errormsg(&
+        & msg="xij should be present!", &
+        & file=__FILE__, &
+        & routine="LagrangeEvalAll_Line1", &
+        & line=__LINE__, &
+        & unitno=stderr)
+    END IF
+    coeff = LagrangeCoeff_Line(order=order, xij=xij)
+    coeff0 = TRANSPOSE(coeff)
+  ELSE
+    coeff0 = TRANSPOSE(coeff)
+  END IF
+ELSE
+  IF (.NOT. PRESENT(xij)) THEN
+    CALL Errormsg(&
+      & msg="xij should be present!", &
+      & file=__FILE__, &
+      & routine="LagrangeEvalAll_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+  coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
+END IF
+
+xx(:, 1) = 1.0_DFP
+DO ii = 1, order
+  xx(:, ii + 1) = xx(:, ii) * x
+END DO
+ans = MATMUL(xx, coeff0)
+END PROCEDURE LagrangeEvalAll_Line2
 
 !----------------------------------------------------------------------------
 !

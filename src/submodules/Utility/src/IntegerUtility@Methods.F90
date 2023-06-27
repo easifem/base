@@ -36,7 +36,7 @@ MODULE PROCEDURE obj_Size2
 INTEGER(I4B) :: ii
 ans = 0_I4B
 DO ii = 0, n
-  ans = ans + Size(n=ii, d=d)
+  ans = ans + SIZE(n=ii, d=d)
 END DO
 END PROCEDURE obj_Size2
 
@@ -86,7 +86,7 @@ END PROCEDURE obj_GetMultiIndices1
 MODULE PROCEDURE obj_GetMultiIndices2
 INTEGER(I4B) :: ii, m, r1, r2
 !!
-m = SIZE(n, d, .true.)
+m = SIZE(n, d, .TRUE.)
 ALLOCATE (ans(d + 1, m))
 !!
 r1 = 0; r2 = 0
@@ -164,22 +164,22 @@ END PROCEDURE in_2d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE RemoveDuplicates_1a
-INTEGER(Int8), ALLOCATABLE :: temp(:)
+INTEGER(INT8), ALLOCATABLE :: temp(:)
 #include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1a
 
 MODULE PROCEDURE RemoveDuplicates_1b
-INTEGER(Int16), ALLOCATABLE :: temp(:)
+INTEGER(INT16), ALLOCATABLE :: temp(:)
 #include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1b
 
 MODULE PROCEDURE RemoveDuplicates_1c
-INTEGER(Int32), ALLOCATABLE :: temp(:)
+INTEGER(INT32), ALLOCATABLE :: temp(:)
 #include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1c
 
 MODULE PROCEDURE RemoveDuplicates_1d
-INTEGER(Int64), ALLOCATABLE :: temp(:)
+INTEGER(INT64), ALLOCATABLE :: temp(:)
 #include "./RemoveDuplicates/RemoveDuplicates_1.inc"
 END PROCEDURE RemoveDuplicates_1d
 
@@ -202,5 +202,13 @@ END PROCEDURE Repeat_1c
 MODULE PROCEDURE Repeat_1d
 #include "./Repeat/Repeat_1.inc"
 END PROCEDURE Repeat_1d
+
+MODULE PROCEDURE Repeat_1e
+#include "./Repeat/Repeat_1.inc"
+END PROCEDURE Repeat_1e
+
+MODULE PROCEDURE Repeat_1f
+#include "./Repeat/Repeat_1.inc"
+END PROCEDURE Repeat_1f
 
 END SUBMODULE Methods

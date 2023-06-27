@@ -26,6 +26,14 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: LagrangeDOF
+PUBLIC :: LagrangeInDOF
+PUBLIC :: LagrangeDegree
+PUBLIC :: LagrangeVandermonde
+PUBLIC :: EquidistancePoint
+PUBLIC :: InterpolationPoint
+PUBLIC :: LagrangeCoeff
+
 !----------------------------------------------------------------------------
 !                                                   LagrangeDOF@BasisMethods
 !----------------------------------------------------------------------------
@@ -43,8 +51,6 @@ INTERFACE
     !! number of degree of freedom
   END FUNCTION LagrangeDOF
 END INTERFACE
-
-PUBLIC :: LagrangeDOF
 
 !----------------------------------------------------------------------------
 !                                                 LagrangeInDOF@BasisMethods
@@ -64,8 +70,6 @@ INTERFACE
   END FUNCTION LagrangeInDOF
 END INTERFACE
 
-PUBLIC :: LagrangeInDOF
-
 !----------------------------------------------------------------------------
 !                                                           LagrangeDegree
 !----------------------------------------------------------------------------
@@ -83,8 +87,6 @@ INTERFACE
   END FUNCTION LagrangeDegree
 END INTERFACE
 
-PUBLIC :: LagrangeDegree
-
 !----------------------------------------------------------------------------
 !                                                       LagrangeVandermonde
 !----------------------------------------------------------------------------
@@ -97,18 +99,17 @@ INTERFACE
   MODULE PURE FUNCTION LagrangeVandermonde(xij, order, elemType) &
     & RESULT(ans)
     REAL(DFP), INTENT(IN) :: xij(:, :)
-  !!  points in $x_{iJ}$ format
+    !!  points in $x_{iJ}$ format
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     INTEGER(I4B), INTENT(IN) :: elemType
-  !! element type
+    !! element type
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! vandermonde matrix nrows = number of points
-  !! ncols = number of dof
+    !! vandermonde matrix
+    !! nrows := number of points
+    !! ncols := number of dof
   END FUNCTION LagrangeVandermonde
 END INTERFACE
-
-PUBLIC :: LagrangeVandermonde
 
 !----------------------------------------------------------------------------
 !                                                          EquidistancePoint
@@ -127,8 +128,6 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION EquidistancePoint
 END INTERFACE
-
-PUBLIC :: EquidistancePoint
 
 !----------------------------------------------------------------------------
 !                                                         InterpolationPoint
@@ -154,7 +153,7 @@ INTERFACE
     !! line = [-1,1]
     !! triangle = (0,0), (0,1), (1,0)
     !! quadrangle = [-1,1]x[-1,1]
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! "VEFC" Vertex, Edge, Face, Cell
     !! "INCREASING" incresing order
     !! "DECREASING" decreasing order
@@ -165,15 +164,13 @@ INTERFACE
   END FUNCTION InterpolationPoint
 END INTERFACE
 
-PUBLIC :: InterpolationPoint
-
 !----------------------------------------------------------------------------
 !                                                           LagrangeCoeff
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Oct 2022
-! summary:         Returns the coefficient of ith lagrange poly
+! summary:  Returns the coefficient of ith lagrange poly
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff1(order, elemType, i, xij) RESULT(ans)
@@ -193,8 +190,6 @@ END INTERFACE
 INTERFACE LagrangeCoeff
   MODULE PROCEDURE LagrangeCoeff1
 END INTERFACE LagrangeCoeff
-
-PUBLIC :: LagrangeCoeff
 
 !----------------------------------------------------------------------------
 !                                                           LagrangeCoeff

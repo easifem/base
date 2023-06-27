@@ -35,7 +35,7 @@ END PROCEDURE UpperCase_Char
 
 MODULE PROCEDURE ToUpperCase_Char
 INTEGER(I4B) :: i, diff
-CHARACTER(LEN=1) :: c
+CHARACTER(1) :: c
 
 diff = ICHAR('A') - ICHAR('a')
 DO i = 1, LEN(chars)
@@ -61,7 +61,7 @@ END PROCEDURE LowerCase_Char
 
 MODULE PROCEDURE ToLowerCase_Char
 INTEGER(I4B) :: i, diff
-CHARACTER(LEN=1) :: c
+CHARACTER(1) :: c
 !>
 diff = ICHAR('A') - ICHAR('a')
 DO i = 1, LEN(chars)
@@ -229,7 +229,7 @@ END PROCEDURE strFind_chars
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FindReplace_chars
-CHARACTER(LEN=LEN(chars)) :: string2
+CHARACTER(LEN(chars)) :: string2
 INTEGER(I4B), ALLOCATABLE :: indices(:)
 INTEGER(I4B) :: i, n, stt, stp, dlen, slen, rlen, flen, tlen
 !>
@@ -259,7 +259,7 @@ END PROCEDURE FindReplace_chars
 
 MODULE PROCEDURE getField_chars
 INTEGER(I4B) :: j, ioerr, nf
-CHARACTER(LEN=LEN(chars)) :: temp, temp2
+CHARACTER(LEN(chars)) :: temp, temp2
 
 temp = chars
 temp2 = ''
@@ -323,7 +323,7 @@ END PROCEDURE getFileParts_chars
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getPath_chars
-CHARACTER(LEN=LEN(chars)) :: chars2
+CHARACTER(LEN(chars)) :: chars2
 INTEGER(I4B) :: i
 !>
 chars2 = chars
@@ -356,7 +356,7 @@ END PROCEDURE getExtension_chars
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getFileName_chars
-CHARACTER(LEN=LEN(chars)) :: chars2
+CHARACTER(LEN(chars)) :: chars2
 INTEGER(I4B) :: i
 chars2 = chars
 CALL SlashRep(chars2)
@@ -374,7 +374,7 @@ END PROCEDURE getFileName_chars
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getFileNameExt_chars
-CHARACTER(LEN=LEN(chars)) :: chars2
+CHARACTER(LEN(chars)) :: chars2
 INTEGER(I4B) :: i, SLASHloc
 
 chars2 = chars

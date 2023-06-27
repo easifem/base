@@ -14,25 +14,3 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-
-PUBLIC :: SQRT
-
-!----------------------------------------------------------------------------
-!                                                   Power@PowerMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-12-12
-! update: 2021-12-12
-! summary: FEVariable = FEVariable + FEVariable
-
-INTERFACE
-  MODULE PURE FUNCTION fevar_sqrt(obj) RESULT(Ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj
-    TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_sqrt
-END INTERFACE
-
-INTERFACE SQRT
-  MODULE PROCEDURE fevar_sqrt
-END INTERFACE SQRT

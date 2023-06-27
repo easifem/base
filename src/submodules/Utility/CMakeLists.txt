@@ -20,6 +20,8 @@ TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/MappingUtility@Methods.F90
   ${src_path}/BinomUtility@Methods.F90
+  ${src_path}/MedianUtility@Methods.F90
+  ${src_path}/PartitionUtility@Methods.F90
   ${src_path}/SortUtility@Methods.F90
   ${src_path}/SwapUtility@Methods.F90
   ${src_path}/ConvertUtility@Methods.F90

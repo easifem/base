@@ -15,9 +15,18 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-INTEGER(I4B) :: n, i
-n = SIZE(Val)
-Ans(1:n) = Val
-DO i = 1, rtimes - 1
-  Ans(i * n + 1:(i + 1) * n) = Val
-END DO
+N = right - left + 1
+IF (N < minimumLengthForInsertion) THEN
+  CALL InsertionSort(this, left, right)
+  RETURN
+END IF
+IF (maxDepth .EQ. 0) THEN
+  CALL Heapsort(this(left:right))
+  RETURN
+END IF
+imid = left + N / 2
+CALL Median(this, left, imid, right)
+CALL swap(this(left), this(imid))
+CALL partition(this, left, right, iPivot)
+CALL _Recursive_IntroSort_(this, left, iPivot - 1, maxDepth - 1)
+CALL _Recursive_IntroSort_(this, iPivot + 1, right, maxDepth - 1)

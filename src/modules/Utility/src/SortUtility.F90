@@ -20,14 +20,220 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: HeapSort
 PUBLIC :: ArgHeapSort
+PUBLIC :: HeapSort
 PUBLIC :: QuickSort
 PUBLIC :: Sort
 PUBLIC :: ArgSort
+PUBLIC :: InsertionSort
+PUBLIC :: ArgInsertionSort
+PUBLIC :: IntroSort
+PUBLIC :: ArgIntroSort
 
 !----------------------------------------------------------------------------
-!                                                              HeapSort@Sort
+!                                                           IntroSort
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Sorting by insertion algorithm
+
+INTERFACE
+  MODULE PURE SUBROUTINE IntroSort_Int8(array)
+    INTEGER(INT8), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Int8
+  MODULE PURE SUBROUTINE IntroSort_Int16(array)
+    INTEGER(INT16), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Int16
+  MODULE PURE SUBROUTINE IntroSort_Int32(array)
+    INTEGER(INT32), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Int32
+  MODULE PURE SUBROUTINE IntroSort_Int64(array)
+    INTEGER(INT64), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Int64
+  MODULE PURE SUBROUTINE IntroSort_Real32(array)
+    REAL(REAL32), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Real32
+  MODULE PURE SUBROUTINE IntroSort_Real64(array)
+    REAL(REAL64), INTENT(INOUT) :: array(:)
+  END SUBROUTINE IntroSort_Real64
+END INTERFACE
+
+INTERFACE IntroSort
+  MODULE PROCEDURE &
+    & IntroSort_Int8, &
+    & IntroSort_Int16, &
+    & IntroSort_Int32, &
+    & IntroSort_Int64, &
+    & IntroSort_Real32, &
+    & IntroSort_Real64
+END INTERFACE IntroSort
+
+!----------------------------------------------------------------------------
+!                                                           ArgIntroSort
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Indirect sorting by insertion sort
+
+INTERFACE
+  MODULE PURE SUBROUTINE ArgIntroSort_Int8(array, arg)
+    INTEGER(INT8), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Int8
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Int16(array, arg)
+    INTEGER(INT16), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Int16
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Int32(array, arg)
+    INTEGER(INT32), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Int32
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Int64(array, arg)
+    INTEGER(INT64), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Int64
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Real32(array, arg)
+    REAL(REAL32), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Real32
+
+  MODULE PURE SUBROUTINE ArgIntroSort_Real64(array, arg)
+    REAL(REAL64), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+  END SUBROUTINE ArgIntroSort_Real64
+END INTERFACE
+
+INTERFACE ArgIntroSort
+  MODULE PROCEDURE &
+    & ArgIntroSort_Int8, &
+    & ArgIntroSort_Int16, &
+    & ArgIntroSort_Int32, &
+    & ArgIntroSort_Int64, &
+    & ArgIntroSort_Real32, &
+    & ArgIntroSort_Real64
+END INTERFACE ArgIntroSort
+
+!----------------------------------------------------------------------------
+!                                                           IntroSort
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Sorting by insertion algorithm
+
+INTERFACE
+  MODULE PURE SUBROUTINE InsertionSort_Int8(array, low, high)
+    INTEGER(INT8), INTENT(INOUT) :: array(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE InsertionSort_Int8
+  MODULE PURE SUBROUTINE InsertionSort_Int16(array, low, high)
+    INTEGER(INT16), INTENT(INOUT) :: array(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE InsertionSort_Int16
+  MODULE PURE SUBROUTINE InsertionSort_Int32(array, low, high)
+    INTEGER(INT32), INTENT(INOUT) :: array(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE InsertionSort_Int32
+  MODULE PURE SUBROUTINE InsertionSort_Int64(array, low, high)
+    INTEGER(INT64), INTENT(INOUT) :: array(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE InsertionSort_Int64
+  MODULE PURE SUBROUTINE InsertionSort_Real32(array, low, high)
+    REAL(REAL32), INTENT(INOUT) :: array(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE InsertionSort_Real32
+  MODULE PURE SUBROUTINE InsertionSort_Real64(array, low, high)
+    REAL(REAL64), INTENT(INOUT) :: array(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE InsertionSort_Real64
+END INTERFACE
+
+INTERFACE InsertionSort
+  MODULE PROCEDURE &
+    & InsertionSort_Int8, &
+    & InsertionSort_Int16, &
+    & InsertionSort_Int32, &
+    & InsertionSort_Int64, &
+    & InsertionSort_Real32, &
+    & InsertionSort_Real64
+END INTERFACE InsertionSort
+
+!----------------------------------------------------------------------------
+!                                                           ArgInsertionSort
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Indirect sorting by insertion sort
+
+INTERFACE
+  MODULE PURE SUBROUTINE ArgInsertionSort_Int8(array, arg, low, high)
+    INTEGER(INT8), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE ArgInsertionSort_Int8
+
+  MODULE PURE SUBROUTINE ArgInsertionSort_Int16(array, arg, low, high)
+    INTEGER(INT16), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE ArgInsertionSort_Int16
+
+  MODULE PURE SUBROUTINE ArgInsertionSort_Int32(array, arg, low, high)
+    INTEGER(INT32), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE ArgInsertionSort_Int32
+
+  MODULE PURE SUBROUTINE ArgInsertionSort_Int64(array, arg, low, high)
+    INTEGER(INT64), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE ArgInsertionSort_Int64
+
+  MODULE PURE SUBROUTINE ArgInsertionSort_Real32(array, arg, low, high)
+    REAL(REAL32), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE ArgInsertionSort_Real32
+
+  MODULE PURE SUBROUTINE ArgInsertionSort_Real64(array, arg, low, high)
+    REAL(REAL64), INTENT(IN) :: array(:)
+    INTEGER(I4B), INTENT(INOUT) :: arg(:)
+    INTEGER(I4B), INTENT(IN) :: low
+    INTEGER(I4B), INTENT(IN) :: high
+  END SUBROUTINE ArgInsertionSort_Real64
+END INTERFACE
+
+INTERFACE ArgInsertionSort
+  MODULE PROCEDURE &
+    & ArgInsertionSort_Int8, &
+    & ArgInsertionSort_Int16, &
+    & ArgInsertionSort_Int32, &
+    & ArgInsertionSort_Int64, &
+    & ArgInsertionSort_Real32, &
+    & ArgInsertionSort_Real64
+END INTERFACE ArgInsertionSort
+
+!----------------------------------------------------------------------------
+!                                                              HeapSort
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -36,22 +242,22 @@ PUBLIC :: ArgSort
 
 INTERFACE
   MODULE PURE SUBROUTINE HeapSort_Int8(array)
-    INTEGER(Int8), INTENT(INOUT) :: array(:)
+    INTEGER(INT8), INTENT(INOUT) :: array(:)
   END SUBROUTINE HeapSort_Int8
   MODULE PURE SUBROUTINE HeapSort_Int16(array)
-    INTEGER(Int16), INTENT(INOUT) :: array(:)
+    INTEGER(INT16), INTENT(INOUT) :: array(:)
   END SUBROUTINE HeapSort_Int16
   MODULE PURE SUBROUTINE HeapSort_Int32(array)
-    INTEGER(Int32), INTENT(INOUT) :: array(:)
+    INTEGER(INT32), INTENT(INOUT) :: array(:)
   END SUBROUTINE HeapSort_Int32
   MODULE PURE SUBROUTINE HeapSort_Int64(array)
-    INTEGER(Int64), INTENT(INOUT) :: array(:)
+    INTEGER(INT64), INTENT(INOUT) :: array(:)
   END SUBROUTINE HeapSort_Int64
   MODULE PURE SUBROUTINE HeapSort_Real32(array)
-    REAL(Real32), INTENT(INOUT) :: array(:)
+    REAL(REAL32), INTENT(INOUT) :: array(:)
   END SUBROUTINE HeapSort_Real32
   MODULE PURE SUBROUTINE HeapSort_Real64(array)
-    REAL(Real64), INTENT(INOUT) :: array(:)
+    REAL(REAL64), INTENT(INOUT) :: array(:)
   END SUBROUTINE HeapSort_Real64
 END INTERFACE
 
@@ -61,7 +267,7 @@ INTERFACE HeapSort
 END INTERFACE HeapSort
 
 !----------------------------------------------------------------------------
-!                                                           ArgHeapSort@Sort
+!                                                           ArgHeapSort
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -70,32 +276,32 @@ END INTERFACE HeapSort
 
 INTERFACE
   MODULE PURE SUBROUTINE ArgHeapSort_Int8(array, arg)
-    INTEGER(Int8), INTENT(IN) :: array(:)
+    INTEGER(INT8), INTENT(IN) :: array(:)
     INTEGER(I4B), INTENT(OUT) :: arg(0:)
   END SUBROUTINE ArgHeapSort_Int8
 
   MODULE PURE SUBROUTINE ArgHeapSort_Int16(array, arg)
-    INTEGER(Int16), INTENT(IN) :: array(:)
+    INTEGER(INT16), INTENT(IN) :: array(:)
     INTEGER(I4B), INTENT(OUT) :: arg(0:)
   END SUBROUTINE ArgHeapSort_Int16
 
   MODULE PURE SUBROUTINE ArgHeapSort_Int32(array, arg)
-    INTEGER(Int32), INTENT(IN) :: array(:)
+    INTEGER(INT32), INTENT(IN) :: array(:)
     INTEGER(I4B), INTENT(OUT) :: arg(0:)
   END SUBROUTINE ArgHeapSort_Int32
 
   MODULE PURE SUBROUTINE ArgHeapSort_Int64(array, arg)
-    INTEGER(Int64), INTENT(IN) :: array(:)
+    INTEGER(INT64), INTENT(IN) :: array(:)
     INTEGER(I4B), INTENT(OUT) :: arg(0:)
   END SUBROUTINE ArgHeapSort_Int64
 
   MODULE PURE SUBROUTINE ArgHeapSort_Real32(array, arg)
-    REAL(Real32), INTENT(IN) :: array(:)
+    REAL(REAL32), INTENT(IN) :: array(:)
     INTEGER(I4B), INTENT(OUT) :: arg(0:)
   END SUBROUTINE ArgHeapSort_Real32
 
   MODULE PURE SUBROUTINE ArgHeapSort_Real64(array, arg)
-    REAL(Real64), INTENT(IN) :: array(:)
+    REAL(REAL64), INTENT(IN) :: array(:)
     INTEGER(I4B), INTENT(OUT) :: arg(0:)
   END SUBROUTINE ArgHeapSort_Real64
 END INTERFACE
@@ -106,32 +312,32 @@ INTERFACE ArgHeapSort
 END INTERFACE ArgHeapSort
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
   MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectInt8(vect1, low, high)
-    INTEGER(Int8), INTENT(INOUT) :: vect1(:)
+    INTEGER(INT8), INTENT(INOUT) :: vect1(:)
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE QuickSort1vectInt8
   MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectInt16(vect1, low, high)
-    INTEGER(Int16), INTENT(INOUT) :: vect1(:)
+    INTEGER(INT16), INTENT(INOUT) :: vect1(:)
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE QuickSort1vectInt16
   MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectInt32(vect1, low, high)
-    INTEGER(Int32), INTENT(INOUT) :: vect1(:)
+    INTEGER(INT32), INTENT(INOUT) :: vect1(:)
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE QuickSort1vectInt32
   MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectInt64(vect1, low, high)
-    INTEGER(Int64), INTENT(INOUT) :: vect1(:)
+    INTEGER(INT64), INTENT(INOUT) :: vect1(:)
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE QuickSort1vectInt64
   MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectReal32(vect1, low, high)
-    REAL(Real32), INTENT(INOUT) :: vect1(:)
+    REAL(REAL32), INTENT(INOUT) :: vect1(:)
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE QuickSort1vectReal32
   MODULE RECURSIVE PURE SUBROUTINE QuickSort1vectReal64(vect1, low, high)
-    REAL(Real64), INTENT(INOUT) :: vect1(:)
+    REAL(REAL64), INTENT(INOUT) :: vect1(:)
     INTEGER(I4B), INTENT(IN) :: low, high
   END SUBROUTINE QuickSort1vectReal64
 END INTERFACE
@@ -143,7 +349,7 @@ INTERFACE QuickSort
 END INTERFACE QuickSort
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -155,7 +361,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -167,7 +373,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -179,7 +385,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -191,7 +397,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -203,7 +409,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -216,7 +422,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -229,7 +435,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -242,7 +448,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -254,7 +460,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -267,7 +473,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -280,7 +486,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -293,7 +499,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -305,7 +511,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -318,7 +524,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -331,7 +537,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -344,7 +550,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -357,7 +563,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -370,7 +576,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -383,7 +589,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -396,7 +602,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -408,7 +614,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -421,7 +627,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -434,7 +640,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -447,7 +653,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -460,7 +666,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -473,7 +679,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -486,7 +692,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                             QuickSort@Sort
+!                                                             QuickSort
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -517,34 +723,34 @@ END INTERFACE QuickSort
 
 INTERFACE
   MODULE PURE FUNCTION Sort_Int8(x, name) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: x(:)
+    INTEGER(INT8), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
-    INTEGER(Int8) :: ans(SIZE(x))
+    INTEGER(INT8) :: ans(SIZE(x))
   END FUNCTION Sort_Int8
   MODULE PURE FUNCTION Sort_Int16(x, name) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: x(:)
+    INTEGER(INT16), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
-    INTEGER(Int16) :: ans(SIZE(x))
+    INTEGER(INT16) :: ans(SIZE(x))
   END FUNCTION Sort_Int16
   MODULE PURE FUNCTION Sort_Int32(x, name) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: x(:)
+    INTEGER(INT32), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
-    INTEGER(Int32) :: ans(SIZE(x))
+    INTEGER(INT32) :: ans(SIZE(x))
   END FUNCTION Sort_Int32
   MODULE PURE FUNCTION Sort_Int64(x, name) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: x(:)
+    INTEGER(INT64), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
-    INTEGER(Int64) :: ans(SIZE(x))
+    INTEGER(INT64) :: ans(SIZE(x))
   END FUNCTION Sort_Int64
   MODULE PURE FUNCTION Sort_Real32(x, name) RESULT(ans)
-    Real(Real32), INTENT(IN) :: x(:)
+    REAL(REAL32), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
-    Real(Real32) :: ans(SIZE(x))
+    REAL(REAL32) :: ans(SIZE(x))
   END FUNCTION Sort_Real32
   MODULE PURE FUNCTION Sort_Real64(x, name) RESULT(ans)
-    Real(Real64), INTENT(IN) :: x(:)
+    REAL(REAL64), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
-    Real(Real64) :: ans(SIZE(x))
+    REAL(REAL64) :: ans(SIZE(x))
   END FUNCTION Sort_Real64
 END INTERFACE
 
@@ -559,32 +765,32 @@ END INTERFACE Sort
 
 INTERFACE
   MODULE PURE FUNCTION ArgSort_Int8(x, name) RESULT(ans)
-    INTEGER(Int8), INTENT(IN) :: x(:)
+    INTEGER(INT8), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
     INTEGER(I4B) :: ans(SIZE(x))
   END FUNCTION ArgSort_Int8
   MODULE PURE FUNCTION ArgSort_Int16(x, name) RESULT(ans)
-    INTEGER(Int16), INTENT(IN) :: x(:)
+    INTEGER(INT16), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
     INTEGER(I4B) :: ans(SIZE(x))
   END FUNCTION ArgSort_Int16
   MODULE PURE FUNCTION ArgSort_Int32(x, name) RESULT(ans)
-    INTEGER(Int32), INTENT(IN) :: x(:)
+    INTEGER(INT32), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
     INTEGER(I4B) :: ans(SIZE(x))
   END FUNCTION ArgSort_Int32
   MODULE PURE FUNCTION ArgSort_Int64(x, name) RESULT(ans)
-    INTEGER(Int64), INTENT(IN) :: x(:)
+    INTEGER(INT64), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
     INTEGER(I4B) :: ans(SIZE(x))
   END FUNCTION ArgSort_Int64
   MODULE PURE FUNCTION ArgSort_Real32(x, name) RESULT(ans)
-    Real(Real32), INTENT(IN) :: x(:)
+    REAL(REAL32), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
     INTEGER(I4B) :: ans(SIZE(x))
   END FUNCTION ArgSort_Real32
   MODULE PURE FUNCTION ArgSort_Real64(x, name) RESULT(ans)
-    Real(Real64), INTENT(IN) :: x(:)
+    REAL(REAL64), INTENT(IN) :: x(:)
     CHARACTER(*), OPTIONAL, INTENT(IN) :: name
     INTEGER(I4B) :: ans(SIZE(x))
   END FUNCTION ArgSort_Real64

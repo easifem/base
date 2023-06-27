@@ -20,6 +20,9 @@ USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: InvHilbertMatrix
+PUBLIC :: HilbertMatrix
+
 !----------------------------------------------------------------------------
 !                                                   InvHilbertMatrix@Methods
 !----------------------------------------------------------------------------
@@ -31,8 +34,6 @@ INTERFACE
   END FUNCTION InvHilbertMatrix
 END INTERFACE
 
-PUBLIC :: InvHilbertMatrix
-
 !----------------------------------------------------------------------------
 !                                                      HilbertMatrix@Methods
 !----------------------------------------------------------------------------
@@ -43,7 +44,5 @@ INTERFACE
     REAL(DFP) :: Ans(n, n)
   END FUNCTION HilbertMatrix
 END INTERFACE
-
-PUBLIC :: HilbertMatrix
 
 END MODULE LinearAlgebraUtility

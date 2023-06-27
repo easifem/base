@@ -14,22 +14,3 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-
-PUBLIC :: DOT_PRODUCT
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-12-12
-! update: 2021-12-12
-! summary: FEVariable = FEVariable + FEVariable
-
-INTERFACE
-  MODULE PURE FUNCTION fevar_dot_product(obj1, obj2) RESULT(Ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj1
-    CLASS(FEVariable_), INTENT(IN) :: obj2
-    TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_dot_product
-END INTERFACE
-
-INTERFACE DOT_PRODUCT
-  MODULE PROCEDURE fevar_dot_product
-END INTERFACE DOT_PRODUCT

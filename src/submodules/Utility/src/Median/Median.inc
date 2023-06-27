@@ -15,25 +15,6 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: Display
-
-!----------------------------------------------------------------------------
-!                                                          Display@IOMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-12-10
-! update: 2021-12-10
-! summary: Displays the content of [[FEVariable_]]
-
-INTERFACE
-  MODULE SUBROUTINE fevar_Display(obj, Msg, UnitNo)
-    TYPE(FEVariable_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: Msg
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
-  END SUBROUTINE fevar_Display
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE fevar_Display
-END INTERFACE Display
+if (this(right) < this(left)) call swap(this(left), this(right))
+if (this(mid) < this(left)) call swap(this(mid), this(left))
+if (this(right) < this(mid)) call swap(this(right), this(mid))

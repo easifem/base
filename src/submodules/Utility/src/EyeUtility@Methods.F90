@@ -16,31 +16,81 @@
 !
 
 SUBMODULE(EyeUtility) Methods
-implicit none
-contains
+IMPLICIT NONE
+CONTAINS
 
 !----------------------------------------------------------------------------
 !                                                                        Eye
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE int_eye_1
-  INTEGER( I4B ) :: i
-  Ans = 0_I4B
-  DO i = 1, m
-    Ans( i, i ) = 1
-  END DO
+INTEGER(I4B) :: i
+Ans = 0_INT8
+DO i = 1, m
+  Ans(i, i) = 1
+END DO
 END PROCEDURE int_eye_1
 
 !----------------------------------------------------------------------------
 !                                                                        Eye
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE int_eye_2
+INTEGER(I4B) :: i
+Ans = 0_INT16
+DO i = 1, m
+  Ans(i, i) = 1
+END DO
+END PROCEDURE int_eye_2
+
+!----------------------------------------------------------------------------
+!                                                                        Eye
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE int_eye_3
+INTEGER(I4B) :: i
+Ans = 0_INT32
+DO i = 1, m
+  Ans(i, i) = 1
+END DO
+END PROCEDURE int_eye_3
+
+!----------------------------------------------------------------------------
+!                                                                        Eye
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE int_eye_4
+INTEGER(I4B) :: i
+Ans = 0_INT64
+DO i = 1, m
+  Ans(i, i) = 1
+END DO
+END PROCEDURE int_eye_4
+
+!----------------------------------------------------------------------------
+!                                                                       Eye
+!----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+MODULE PROCEDURE int_eye_5
+INTEGER(I4B) :: i
+Ans = 0_INT128
+DO i = 1, m
+  Ans(i, i) = 1
+END DO
+END PROCEDURE int_eye_5
+#endif
+
+!----------------------------------------------------------------------------
+!                                                                        Eye
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE real_eye_1
-  INTEGER( I4B ) :: i
-  Ans = 0.0
-  DO i = 1, m
-    Ans( i, i ) = 1.0
-  END DO
+INTEGER(I4B) :: i
+Ans = 0.0
+DO i = 1, m
+  Ans(i, i) = 1.0
+END DO
 END PROCEDURE real_eye_1
 
 !----------------------------------------------------------------------------
@@ -48,11 +98,11 @@ END PROCEDURE real_eye_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE real_eye_2
-  INTEGER( I4B ) :: i
-  Ans = 0.0
-  DO i = 1, m
-    Ans( i, i ) = 1.0
-  END DO
+INTEGER(I4B) :: i
+Ans = 0.0
+DO i = 1, m
+  Ans(i, i) = 1.0
+END DO
 END PROCEDURE real_eye_2
 
 !----------------------------------------------------------------------------
@@ -60,11 +110,11 @@ END PROCEDURE real_eye_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE real_eye_3
-  INTEGER( I4B ) :: i
-  Ans = 0.0
-  DO i = 1, m
-    Ans( i, i ) = 1.0
-  END DO
+INTEGER(I4B) :: i
+Ans = 0.0
+DO i = 1, m
+  Ans(i, i) = 1.0
+END DO
 END PROCEDURE real_eye_3
 
 END SUBMODULE Methods

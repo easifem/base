@@ -19,9 +19,21 @@ MODULE EigenUtility
 USE GlobalData
 IMPLICIT NONE
 
+PUBLIC :: SymEigenValues2by2
+PUBLIC :: SymEigenValues3by3
+PUBLIC :: SymEigenValuesUpto3
+PUBLIC :: SymEigenValues
+PUBLIC :: GetSymEigenValues
+PUBLIC :: GetSymEigenValues_
+PUBLIC :: GetSymEigenJacobi
+
 !----------------------------------------------------------------------------
 !                                                                 SymEigen
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-26
+! summary: Eigenvalue of 2 by 2 symmetric matrix
 
 INTERFACE
   MODULE PURE FUNCTION SymEigenValues2by2(mat) RESULT(ans)
@@ -30,11 +42,13 @@ INTERFACE
   END FUNCTION SymEigenValues2by2
 END INTERFACE
 
-PUBLIC :: SymEigenValues2by2
-
 !----------------------------------------------------------------------------
 !                                                                 SymEigen
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-26
+! summary: Eigenvalue of 3 by 3 symmetric matrix
 
 INTERFACE
   MODULE PURE FUNCTION SymEigenValues3by3(mat) RESULT(ans)
@@ -43,11 +57,13 @@ INTERFACE
   END FUNCTION SymEigenValues3by3
 END INTERFACE
 
-PUBLIC :: SymEigenValues3by3
-
 !----------------------------------------------------------------------------
 !                                                                 SymEigen
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-26
+! summary: Eigenvalue of 3 by 3 or 2 by 2 symmetric matrix
 
 INTERFACE
   MODULE PURE FUNCTION SymEigenValuesUpto3(mat) RESULT(ans)
@@ -56,8 +72,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(mat, 1))
   END FUNCTION SymEigenValuesUpto3
 END INTERFACE
-
-PUBLIC :: SymEigenValuesUpto3
 
 !----------------------------------------------------------------------------
 !                                                                 SymEigen
@@ -85,8 +99,6 @@ INTERFACE
   END FUNCTION SymEigenValues
 END INTERFACE
 
-PUBLIC :: SymEigenValues
-
 !----------------------------------------------------------------------------
 !                                                                GetSymEigen
 !----------------------------------------------------------------------------
@@ -109,8 +121,6 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: eigenValues(:)
   END SUBROUTINE GetSymEigenValues
 END INTERFACE
-
-PUBLIC :: GetSymEigenValues
 
 !----------------------------------------------------------------------------
 !                                                                GetSymEigen
@@ -136,8 +146,6 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: eigenValues(:)
   END SUBROUTINE GetSymEigenValues_
 END INTERFACE
-
-PUBLIC :: GetSymEigenValues_
 
 !----------------------------------------------------------------------------
 !                                                  GetSymEigenJacobi@LAPACK
@@ -171,8 +179,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: maxIter
   END SUBROUTINE GetSymEigenJacobi
 END INTERFACE
-
-PUBLIC :: GetSymEigenJacobi
 
 !----------------------------------------------------------------------------
 !

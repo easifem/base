@@ -15,25 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: OPERATOR(**)
 
-!----------------------------------------------------------------------------
-!                                                   Power@PowerMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-12-12
-! update: 2021-12-12
-! summary: FEVariable = FEVariable + FEVariable
-
-INTERFACE
-  MODULE PURE FUNCTION fevar_power(obj, n) RESULT(Ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj
-    INTEGER(I4B), INTENT( IN ) :: n
-    TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_power
-END INTERFACE
-
-INTERFACE OPERATOR(**)
-  MODULE PROCEDURE fevar_power
-END INTERFACE OPERATOR(**)
+pivot = this(idx(left))
+lo = left + 1; hi = right
+DO WHILE (lo <= hi)
+  DO WHILE (this(idx(hi)) > pivot)
+    hi = hi - 1
+  END DO
+  DO WHILE (lo <= hi .AND. this(idx(lo)) <= pivot)
+    lo = lo + 1
+  END DO
+  IF (lo <= hi) THEN
+    CALL swap(idx(lo), idx(hi))
+    lo = lo + 1; hi = hi - 1
+  END IF
+END DO
+CALL swap(idx(left), idx(hi))
+i = hi

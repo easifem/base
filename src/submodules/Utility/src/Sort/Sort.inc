@@ -20,16 +20,18 @@ CHARACTER(LEN=120) :: name0
 IF (PRESENT(name)) THEN
   name0 = UpperCase(name)
 ELSE
-  name0 = "QUICKSORT"
+  name0 = "INTROSORT"
 END IF
 
 ans = x
 
 SELECT CASE (TRIM(name0))
 CASE ("QUICKSORT")
-  CALL QuickSort(vect1=ans, low=1_I4B, high=SIZE(ans))
+  CALL QuickSort(vect1=ans, low=1_I4B, high=SIZE(ans, kind=I4B))
 CASE ("HEAPSORT")
   CALL HeapSort(array=ans)
 CASE ("INTROSORT")
-  !! TODO
+  CALL IntroSort(array=ans)
+CASE ("INSERTIONSORT")
+  CALL InsertionSort(array=ans, low=1_I4B, high=SIZE(ans, kind=I4B))
 END SELECT

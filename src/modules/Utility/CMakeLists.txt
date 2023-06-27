@@ -38,6 +38,8 @@ TARGET_SOURCES(
   ${src_path}/MiscUtility.F90
   ${src_path}/ProductUtility.F90
   ${src_path}/ReallocateUtility.F90
+  ${src_path}/PartitionUtility.F90
+  ${src_path}/MedianUtility.F90
   ${src_path}/SortUtility.F90
   ${src_path}/StringUtility.F90
   ${src_path}/SwapUtility.F90

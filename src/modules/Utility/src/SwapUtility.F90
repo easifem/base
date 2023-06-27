@@ -32,16 +32,16 @@ PUBLIC :: Swap
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_Int8(a, b)
-    INTEGER(Int8), INTENT(INOUT) :: a, b
+    INTEGER(INT8), INTENT(INOUT) :: a, b
   END SUBROUTINE Swap_Int8
   MODULE PURE SUBROUTINE Swap_Int16(a, b)
-    INTEGER(Int16), INTENT(INOUT) :: a, b
+    INTEGER(INT16), INTENT(INOUT) :: a, b
   END SUBROUTINE Swap_Int16
   MODULE PURE SUBROUTINE Swap_Int32(a, b)
-    INTEGER(Int32), INTENT(INOUT) :: a, b
+    INTEGER(INT32), INTENT(INOUT) :: a, b
   END SUBROUTINE Swap_Int32
   MODULE PURE SUBROUTINE Swap_Int64(a, b)
-    INTEGER(Int64), INTENT(INOUT) :: a, b
+    INTEGER(INT64), INTENT(INOUT) :: a, b
   END SUBROUTINE Swap_Int64
 END INTERFACE
 
@@ -59,7 +59,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_r32(a, b)
-    REAL(Real32), INTENT(INOUT) :: a, b
+    REAL(REAL32), INTENT(INOUT) :: a, b
   END SUBROUTINE Swap_r32
 END INTERFACE
 
@@ -77,7 +77,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_r64(a, b)
-    REAL(Real64), INTENT(INOUT) :: a, b
+    REAL(REAL64), INTENT(INOUT) :: a, b
   END SUBROUTINE Swap_r64
 END INTERFACE
 
@@ -96,12 +96,59 @@ END INTERFACE
 #ifndef USE_BLAS95
 INTERFACE
   MODULE PURE SUBROUTINE Swap_r32v(a, b)
-    REAL(Real32), INTENT(INOUT) :: a(:), b(:)
+    REAL(REAL32), INTENT(INOUT) :: a(:), b(:)
   END SUBROUTINE Swap_r32v
+
+  MODULE PURE SUBROUTINE Swap_r64v(a, b)
+    REAL(REAL64), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE Swap_r64v
 END INTERFACE
 
 INTERFACE Swap
-  MODULE PROCEDURE Swap_r32v
+  MODULE PROCEDURE Swap_r32v, Swap_r64v
+END INTERFACE Swap
+#endif
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two integer vectors
+
+INTERFACE
+  MODULE PURE SUBROUTINE Swap_Int8v(a, b)
+    INTEGER(INT8), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE Swap_Int8v
+  MODULE PURE SUBROUTINE Swap_Int16v(a, b)
+    INTEGER(INT16), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE Swap_Int16v
+  MODULE PURE SUBROUTINE Swap_Int32v(a, b)
+    INTEGER(INT32), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE Swap_Int32v
+  MODULE PURE SUBROUTINE Swap_Int64v(a, b)
+    INTEGER(INT64), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE Swap_Int64v
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE Swap_Int8v, Swap_Int16v, Swap_Int32v, Swap_Int64v
+END INTERFACE Swap
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+INTERFACE
+  MODULE PURE SUBROUTINE Swap_Int128v(a, b)
+    INTEGER(INT128), INTENT(INOUT) :: a(:), b(:)
+  END SUBROUTINE Swap_Int128v
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE Swap_Int128v
 END INTERFACE Swap
 #endif
 
@@ -111,27 +158,7 @@ END INTERFACE Swap
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 22 March 2021
-! summary: Swap two vectors of real
-
-#ifndef USE_BLAS95
-INTERFACE
-  MODULE PURE SUBROUTINE Swap_r64v(a, b)
-    REAL(Real64), INTENT(INOUT) :: a(:), b(:)
-  END SUBROUTINE Swap_r64v
-END INTERFACE
-
-INTERFACE Swap
-  MODULE PROCEDURE Swap_r64v
-END INTERFACE Swap
-#endif
-
-!----------------------------------------------------------------------------
-!                                                            Swap@SwapMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:         Subroutine for interchanging two complex numbers
+! summary: Subroutine for interchanging two complex numbers
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_c(a, b)
@@ -177,9 +204,13 @@ END INTERFACE
 !                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-06-27
+! summary: Swap two matrix of real numbers
+
 INTERFACE
   MODULE PURE SUBROUTINE Swap_r32m(a, b)
-    REAL(Real32), INTENT(INOUT) :: a(:, :), b(:, :)
+    REAL(REAL32), INTENT(INOUT) :: a(:, :), b(:, :)
   END SUBROUTINE Swap_r32m
 END INTERFACE
 
@@ -191,9 +222,13 @@ END INTERFACE
 !                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-06-27
+! summary:  Swap two real matrix
+
 INTERFACE
   MODULE PURE SUBROUTINE Swap_r64m(a, b)
-    REAL(Real64), INTENT(INOUT) :: a(:, :), b(:, :)
+    REAL(REAL64), INTENT(INOUT) :: a(:, :), b(:, :)
   END SUBROUTINE Swap_r64m
 END INTERFACE
 
@@ -205,9 +240,59 @@ END INTERFACE
 !                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two integer matrix
+
+INTERFACE
+  MODULE PURE SUBROUTINE Swap_Int8m(a, b)
+    INTEGER(INT8), INTENT(INOUT) :: a(:, :), b(:, :)
+  END SUBROUTINE Swap_Int8m
+
+  MODULE PURE SUBROUTINE Swap_Int16m(a, b)
+    INTEGER(INT16), INTENT(INOUT) :: a(:, :), b(:, :)
+  END SUBROUTINE Swap_Int16m
+
+  MODULE PURE SUBROUTINE Swap_Int32m(a, b)
+    INTEGER(INT32), INTENT(INOUT) :: a(:, :), b(:, :)
+  END SUBROUTINE Swap_Int32m
+
+  MODULE PURE SUBROUTINE Swap_Int64m(a, b)
+    INTEGER(INT64), INTENT(INOUT) :: a(:, :), b(:, :)
+  END SUBROUTINE Swap_Int64m
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE Swap_Int8m, Swap_Int16m, Swap_Int32m, Swap_Int64m
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+#ifdef USE_Int128
+INTERFACE
+  MODULE PURE SUBROUTINE Swap_Int128m(a, b)
+    INTEGER(Int128), INTENT(INOUT) :: a(:, :), b(:, :)
+  END SUBROUTINE Swap_Int128m
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE Swap_Int128m
+END INTERFACE
+#endif
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two scalars with masking
+
 INTERFACE
   MODULE PURE SUBROUTINE masked_Swap_r32s(a, b, mask)
-    REAL(Real32), INTENT(INOUT) :: a, b
+    REAL(REAL32), INTENT(INOUT) :: a, b
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE masked_Swap_r32s
 END INTERFACE
@@ -220,9 +305,13 @@ END INTERFACE
 !                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two scalars with masking
+
 INTERFACE
   MODULE PURE SUBROUTINE masked_Swap_r64s(a, b, mask)
-    REAL(Real64), INTENT(INOUT) :: a, b
+    REAL(REAL64), INTENT(INOUT) :: a, b
     LOGICAL(LGT), INTENT(IN) :: mask
   END SUBROUTINE masked_Swap_r64s
 END INTERFACE
@@ -235,9 +324,69 @@ END INTERFACE
 !                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two scalars with masking
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_Swap_Int8s(a, b, mask)
+    INTEGER(INT8), INTENT(INOUT) :: a, b
+    LOGICAL(LGT), INTENT(IN) :: mask
+  END SUBROUTINE masked_Swap_Int8s
+
+  MODULE PURE SUBROUTINE masked_Swap_Int16s(a, b, mask)
+    INTEGER(INT16), INTENT(INOUT) :: a, b
+    LOGICAL(LGT), INTENT(IN) :: mask
+  END SUBROUTINE masked_Swap_Int16s
+
+  MODULE PURE SUBROUTINE masked_Swap_Int32s(a, b, mask)
+    INTEGER(INT32), INTENT(INOUT) :: a, b
+    LOGICAL(LGT), INTENT(IN) :: mask
+  END SUBROUTINE masked_Swap_Int32s
+
+  MODULE PURE SUBROUTINE masked_Swap_Int64s(a, b, mask)
+    INTEGER(INT64), INTENT(INOUT) :: a, b
+    LOGICAL(LGT), INTENT(IN) :: mask
+  END SUBROUTINE masked_Swap_Int64s
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_Int8s, masked_Swap_Int16s, &
+    & masked_Swap_Int32s, masked_Swap_Int64s
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two scalars with masking
+
+#ifdef USE_Int128
+INTERFACE
+  MODULE PURE SUBROUTINE masked_Swap_Int128s(a, b, mask)
+    INTEGER(Int128), INTENT(INOUT) :: a, b
+    LOGICAL(LGT), INTENT(IN) :: mask
+  END SUBROUTINE masked_Swap_Int128s
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_Int128s
+END INTERFACE
+#endif
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two vectors with masking
+
 INTERFACE
   MODULE PURE SUBROUTINE masked_Swap_r32v(a, b, mask)
-    REAL(Real32), INTENT(INOUT) :: a(:), b(:)
+    REAL(REAL32), INTENT(INOUT) :: a(:), b(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE masked_Swap_r32v
 END INTERFACE
@@ -250,9 +399,13 @@ END INTERFACE
 !                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two vectors with masking
+
 INTERFACE
   MODULE PURE SUBROUTINE masked_Swap_r64v(a, b, mask)
-    REAL(Real64), INTENT(INOUT) :: a(:), b(:)
+    REAL(REAL64), INTENT(INOUT) :: a(:), b(:)
     LOGICAL(LGT), INTENT(IN) :: mask(:)
   END SUBROUTINE masked_Swap_r64v
 END INTERFACE
@@ -265,9 +418,67 @@ END INTERFACE
 !                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two vectors with masking
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_Swap_Int8v(a, b, mask)
+    INTEGER(INT8), INTENT(INOUT) :: a(:), b(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
+  END SUBROUTINE masked_Swap_Int8v
+
+  MODULE PURE SUBROUTINE masked_Swap_Int16v(a, b, mask)
+    INTEGER(INT16), INTENT(INOUT) :: a(:), b(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
+  END SUBROUTINE masked_Swap_Int16v
+
+  MODULE PURE SUBROUTINE masked_Swap_Int32v(a, b, mask)
+    INTEGER(INT32), INTENT(INOUT) :: a(:), b(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
+  END SUBROUTINE masked_Swap_Int32v
+
+  MODULE PURE SUBROUTINE masked_Swap_Int64v(a, b, mask)
+    INTEGER(INT64), INTENT(INOUT) :: a(:), b(:)
+    LOGICAL(LGT), INTENT(IN) :: mask(:)
+  END SUBROUTINE masked_Swap_Int64v
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_Int8v, masked_Swap_Int16v, &
+    & masked_Swap_Int32v, masked_Swap_Int64v
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two vectors with masking
+
+#ifdef USE_Int128
+MODULE PURE SUBROUTINE masked_Swap_Int128v(a, b, mask)
+  INTEGER(Int128), INTENT(INOUT) :: a(:), b(:)
+  LOGICAL(LGT), INTENT(IN) :: mask(:)
+END SUBROUTINE masked_Swap_Int128v
+
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_Int128v
+END INTERFACE
+#endif
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two matrices with masking
+
 INTERFACE
   MODULE PURE SUBROUTINE masked_Swap_r32m(a, b, mask)
-    REAL(Real32), INTENT(INOUT) :: a(:, :), b(:, :)
+    REAL(REAL32), INTENT(INOUT) :: a(:, :), b(:, :)
     LOGICAL(LGT), INTENT(IN) :: mask(:, :)
   END SUBROUTINE masked_Swap_r32m
 END INTERFACE
@@ -280,9 +491,13 @@ END INTERFACE
 !                                                           Swap@SwapMethods
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two matrices with masking
+
 INTERFACE
   MODULE PURE SUBROUTINE masked_Swap_r64m(a, b, mask)
-    REAL(Real64), INTENT(INOUT) :: a(:, :), b(:, :)
+    REAL(REAL64), INTENT(INOUT) :: a(:, :), b(:, :)
     LOGICAL(LGT), INTENT(IN) :: mask(:, :)
   END SUBROUTINE masked_Swap_r64m
 END INTERFACE
@@ -290,6 +505,62 @@ END INTERFACE
 INTERFACE Swap
   MODULE PROCEDURE masked_Swap_r64m
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two matrices with masking
+
+INTERFACE
+  MODULE PURE SUBROUTINE masked_Swap_Int8m(a, b, mask)
+    INTEGER(INT8), INTENT(INOUT) :: a(:, :), b(:, :)
+    LOGICAL(LGT), INTENT(IN) :: mask(:, :)
+  END SUBROUTINE masked_Swap_Int8m
+
+  MODULE PURE SUBROUTINE masked_Swap_Int16m(a, b, mask)
+    INTEGER(INT16), INTENT(INOUT) :: a(:, :), b(:, :)
+    LOGICAL(LGT), INTENT(IN) :: mask(:, :)
+  END SUBROUTINE masked_Swap_Int16m
+
+  MODULE PURE SUBROUTINE masked_Swap_Int32m(a, b, mask)
+    INTEGER(INT32), INTENT(INOUT) :: a(:, :), b(:, :)
+    LOGICAL(LGT), INTENT(IN) :: mask(:, :)
+  END SUBROUTINE masked_Swap_Int32m
+
+  MODULE PURE SUBROUTINE masked_Swap_Int64m(a, b, mask)
+    INTEGER(INT64), INTENT(INOUT) :: a(:, :), b(:, :)
+    LOGICAL(LGT), INTENT(IN) :: mask(:, :)
+  END SUBROUTINE masked_Swap_Int64m
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_Int8m, masked_Swap_Int16m, &
+    & masked_Swap_Int32m, masked_Swap_Int64m
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                           Swap@SwapMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-27
+! summary:  Swap two matrices with masking
+
+#ifdef USE_Int128
+INTERFACE
+  MODULE PURE SUBROUTINE masked_Swap_Int128m(a, b, mask)
+    INTEGER(Int128), INTENT(INOUT) :: a(:, :), b(:, :)
+    LOGICAL(LGT), INTENT(IN) :: mask(:, :)
+  END SUBROUTINE masked_Swap_Int128m
+END INTERFACE
+
+INTERFACE Swap
+  MODULE PROCEDURE masked_Swap_Int128m
+END INTERFACE
+#endif
 
 !----------------------------------------------------------------------------
 !                                                           Swap@SwapMethods
@@ -310,9 +581,9 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_index1(a, b, i1, i2)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
       !! the returned array
-    REAL(Real32), INTENT(IN) :: b(:, :)
+    REAL(REAL32), INTENT(IN) :: b(:, :)
       !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
       !! index 1 is Swapped with index `i1`
@@ -346,9 +617,9 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_index2(a, b, i1, i2)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: a(:, :)
     !! the returned array
-    REAL(Real64), INTENT(IN) :: b(:, :)
+    REAL(REAL64), INTENT(IN) :: b(:, :)
     !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
     !! index 1 is Swapped with index `i1`
@@ -382,9 +653,9 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_index3(a, b, i1, i2, i3)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :)
     !! the returned array
-    REAL(Real32), INTENT(IN) :: b(:, :, :)
+    REAL(REAL32), INTENT(IN) :: b(:, :, :)
     !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
     !! index 1 is Swapped with index `i1`
@@ -421,9 +692,9 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_index4(a, b, i1, i2, i3)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :)
     !! the returned array
-    REAL(Real64), INTENT(IN) :: b(:, :, :)
+    REAL(REAL64), INTENT(IN) :: b(:, :, :)
     !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
     !! index 1 is Swapped with index `i1`
@@ -459,9 +730,9 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_index5(a, b, i1, i2, i3, i4)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
     !! the returned array
-    REAL(Real64), INTENT(IN) :: b(:, :, :, :)
+    REAL(REAL64), INTENT(IN) :: b(:, :, :, :)
     !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
     !! index 1 is Swapped with index `i1`
@@ -500,9 +771,9 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE SUBROUTINE Swap_index6(a, b, i1, i2, i3, i4)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: a(:, :, :, :)
     !! the returned array
-    REAL(Real32), INTENT(IN) :: b(:, :, :, :)
+    REAL(REAL32), INTENT(IN) :: b(:, :, :, :)
     !! input array, it will be untouched
     INTEGER(I4B), INTENT(IN) :: i1
     !! index 1 is Swapped with index `i1`

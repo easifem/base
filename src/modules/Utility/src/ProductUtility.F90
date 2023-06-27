@@ -15,12 +15,10 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-
 MODULE ProductUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
-
 PUBLIC :: OUTERPROD
 PUBLIC :: Cross_Product
 PUBLIC :: Vector_Product
@@ -31,8 +29,8 @@ PUBLIC :: VectorProduct
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:         22 March 2021
-! summary:          This FUNCTION evaluate vectors product
+! date: 22 March 2021
+! summary: This FUNCTION evaluate vectors product
 !
 !# Introduction
 !         This FUNCTION evaluate vectors products
@@ -41,16 +39,16 @@ PUBLIC :: VectorProduct
 INTERFACE
   MODULE PURE FUNCTION vectorProduct_1(a, b) RESULT(c)
     ! Define INTENT of dummy argument
-    REAL(Real64), INTENT(IN) :: a(3), b(3)
-    REAL(Real64) :: c(3)
+    REAL(REAL64), INTENT(IN) :: a(3), b(3)
+    REAL(REAL64) :: c(3)
   END FUNCTION vectorProduct_1
 END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION vectorProduct_2(a, b) RESULT(c)
     ! Define INTENT of dummy argument
-    REAL(Real32), INTENT(IN) :: a(3), b(3)
-    REAL(Real32) :: c(3)
+    REAL(REAL32), INTENT(IN) :: a(3), b(3)
+    REAL(REAL32) :: c(3)
   END FUNCTION vectorProduct_2
 END INTERFACE
 
@@ -477,9 +475,9 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1) )
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r1r1r1
 END INTERFACE
 
@@ -500,12 +498,12 @@ INTERFACE
   MODULE PURE FUNCTION outerprod_r1r1r2(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2))
   END FUNCTION outerprod_r1r1r2
 END INTERFACE
 
@@ -526,13 +524,13 @@ INTERFACE
   MODULE PURE FUNCTION outerprod_r1r1r3(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(c,3))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(c, 3))
   END FUNCTION outerprod_r1r1r3
 END INTERFACE
 
@@ -553,14 +551,14 @@ INTERFACE
   MODULE PURE FUNCTION outerprod_r1r1r4(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:,:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :, :, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(c,3),&
-        & SIZE(c,4))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(c, 3),&
+        & SIZE(c, 4))
   END FUNCTION outerprod_r1r1r4
 END INTERFACE
 
@@ -580,13 +578,13 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r2r1(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r1r2r1
 END INTERFACE
 
@@ -606,14 +604,14 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r2r2(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1),&
-        & SIZE(c,2))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2))
   END FUNCTION outerprod_r1r2r2
 END INTERFACE
 
@@ -633,15 +631,15 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r2r3(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
-    REAL(DFP), INTENT(IN) :: c(:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP), INTENT(IN) :: c(:, :, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(c,3))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(c, 3))
   END FUNCTION outerprod_r1r2r3
 END INTERFACE
 
@@ -661,14 +659,14 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r3r1(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :, :)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(b,3),&
-        & SIZE(c,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(b, 3),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r1r3r1
 END INTERFACE
 
@@ -688,15 +686,15 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r3r2(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:,:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :, :)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(b,3),&
-        & SIZE(c,1),&
-        & SIZE(c,2))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(b, 3),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2))
   END FUNCTION outerprod_r1r3r2
 END INTERFACE
 
@@ -716,15 +714,15 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r4r1(a, b, c) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :, :, :)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(b,3),&
-        & SIZE(b,4),&
-        & SIZE(c,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(b, 3),&
+        & SIZE(b, 4),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r1r4r1
 END INTERFACE
 
@@ -743,14 +741,14 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r1r1(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(c,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r2r1r1
 END INTERFACE
 
@@ -769,15 +767,15 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r1r2(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2))
   END FUNCTION outerprod_r2r1r2
 END INTERFACE
 
@@ -796,16 +794,16 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r1r3(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(c,3))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(c, 3))
   END FUNCTION outerprod_r2r1r3
 END INTERFACE
 
@@ -824,15 +822,15 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r2r1(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:, :)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r2r2r1
 END INTERFACE
 
@@ -851,16 +849,16 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r2r2(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1),&
-        & SIZE(c,2))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2))
   END FUNCTION outerprod_r2r2r2
 END INTERFACE
 
@@ -879,15 +877,15 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r3r1r1(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :, :)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(a,3),&
-        & SIZE(b,1),&
-        & SIZE(c,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r3r1r1
 END INTERFACE
 
@@ -906,16 +904,16 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r3r1r2(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :, :)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(a,3),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2))
   END FUNCTION outerprod_r3r1r2
 END INTERFACE
 
@@ -934,16 +932,16 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r3r2r1(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:,:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :, :)
+    REAL(DFP), INTENT(IN) :: b(:, :)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(a,3),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r3r2r1
 END INTERFACE
 
@@ -962,16 +960,16 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r4r1r1(a, b, c) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:,:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :, :, :)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(a,3),&
-        & SIZE(a,4),&
-        & SIZE(b,1),&
-        & SIZE(c,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(a, 4),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1))
   END FUNCTION outerprod_r4r1r1
 END INTERFACE
 
@@ -995,10 +993,10 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r1r1r1r1
 END INTERFACE
 
@@ -1020,13 +1018,13 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
-    REAL(DFP), INTENT(IN) :: d(:,:)
+    REAL(DFP), INTENT(IN) :: d(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(d,1),&
-        & SIZE(d,2))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1),&
+        & SIZE(d, 2))
   END FUNCTION outerprod_r1r1r1r2
 END INTERFACE
 
@@ -1048,14 +1046,14 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
-    REAL(DFP), INTENT(IN) :: d(:,:,:)
+    REAL(DFP), INTENT(IN) :: d(:, :, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(d,1),&
-        & SIZE(d,2),&
-        & SIZE(d,3))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1),&
+        & SIZE(d, 2),&
+        & SIZE(d, 3))
   END FUNCTION outerprod_r1r1r1r3
 END INTERFACE
 
@@ -1076,14 +1074,14 @@ INTERFACE
   MODULE PURE FUNCTION outerprod_r1r1r2r1(a, b, c, d) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r1r1r2r1
 END INTERFACE
 
@@ -1104,15 +1102,15 @@ INTERFACE
   MODULE PURE FUNCTION outerprod_r1r1r2r2(a, b, c, d) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
-    REAL(DFP), INTENT(IN) :: d(:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :)
+    REAL(DFP), INTENT(IN) :: d(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(d,1),&
-        & SIZE(d,2))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(d, 1),&
+        & SIZE(d, 2))
   END FUNCTION outerprod_r1r1r2r2
 END INTERFACE
 
@@ -1133,15 +1131,15 @@ INTERFACE
   MODULE PURE FUNCTION outerprod_r1r1r3r1(a, b, c, d) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :, :)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(c,3),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(c, 3),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r1r1r3r1
 END INTERFACE
 
@@ -1161,15 +1159,15 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r2r1r1(a, b, c, d) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r1r2r1r1
 END INTERFACE
 
@@ -1189,16 +1187,16 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r2r1r2(a, b, c, d) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :)
     REAL(DFP), INTENT(IN) :: c(:)
-    REAL(DFP), INTENT(IN) :: d(:,:)
+    REAL(DFP), INTENT(IN) :: d(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1),&
-        & SIZE(d,1),&
-        & SIZE(d,2))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1),&
+        & SIZE(d, 2))
   END FUNCTION outerprod_r1r2r1r2
 END INTERFACE
 
@@ -1218,16 +1216,16 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r2r2r1(a, b, c, d) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r1r2r2r1
 END INTERFACE
 
@@ -1247,16 +1245,16 @@ END INTERFACE OUTERPROD
 INTERFACE
   MODULE PURE FUNCTION outerprod_r1r3r1r1(a, b, c, d) RESULT(ans)
     REAL(DFP), INTENT(IN) :: a(:)
-    REAL(DFP), INTENT(IN) :: b(:,:,:)
+    REAL(DFP), INTENT(IN) :: b(:, :, :)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(b,3),&
-        & SIZE(c,1),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(b, 3),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r1r3r1r1
 END INTERFACE
 
@@ -1275,16 +1273,16 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r1r1r1(a, b, c, d) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r2r1r1r1
 END INTERFACE
 
@@ -1303,17 +1301,17 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r1r1r2(a, b, c, d) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
-    REAL(DFP), INTENT(IN) :: d(:,:)
+    REAL(DFP), INTENT(IN) :: d(:, :)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(d,1),&
-        & SIZE(d,2))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1),&
+        & SIZE(d, 2))
   END FUNCTION outerprod_r2r1r1r2
 END INTERFACE
 
@@ -1332,17 +1330,17 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r1r2r1(a, b, c, d) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
     REAL(DFP), INTENT(IN) :: b(:)
-    REAL(DFP), INTENT(IN) :: c(:,:)
+    REAL(DFP), INTENT(IN) :: c(:, :)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(c,2),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(c, 2),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r2r1r2r1
 END INTERFACE
 
@@ -1361,17 +1359,17 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r2r2r1r1(a, b, c, d) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:)
-    REAL(DFP), INTENT(IN) :: b(:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :)
+    REAL(DFP), INTENT(IN) :: b(:, :)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(b,1),&
-        & SIZE(b,2),&
-        & SIZE(c,1),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(b, 1),&
+        & SIZE(b, 2),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r2r2r1r1
 END INTERFACE
 
@@ -1390,17 +1388,17 @@ END INTERFACE OUTERPROD
 
 INTERFACE
   MODULE PURE FUNCTION outerprod_r3r1r1r1(a, b, c, d) RESULT(ans)
-    REAL(DFP), INTENT(IN) :: a(:,:,:)
+    REAL(DFP), INTENT(IN) :: a(:, :, :)
     REAL(DFP), INTENT(IN) :: b(:)
     REAL(DFP), INTENT(IN) :: c(:)
     REAL(DFP), INTENT(IN) :: d(:)
     REAL(DFP) :: ans( &
-        & SIZE(a,1),&
-        & SIZE(a,2),&
-        & SIZE(a,3),&
-        & SIZE(b,1),&
-        & SIZE(c,1),&
-        & SIZE(d,1))
+        & SIZE(a, 1),&
+        & SIZE(a, 2),&
+        & SIZE(a, 3),&
+        & SIZE(b, 1),&
+        & SIZE(c, 1),&
+        & SIZE(d, 1))
   END FUNCTION outerprod_r3r1r1r1
 END INTERFACE
 

@@ -15,20 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-PUBLIC :: ABS
+INTEGER(I4B) :: ii, jj
 
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-12-12
-! update: 2021-12-12
-! summary: FEVariable = FEVariable + FEVariable
-
-INTERFACE
-  MODULE PURE FUNCTION fevar_abs(obj) RESULT(Ans)
-    CLASS(FEVariable_), INTENT(IN) :: obj
-    TYPE(FEVariable_) :: ans
-  END FUNCTION fevar_abs
-END INTERFACE
-
-INTERFACE ABS
-  MODULE PROCEDURE fevar_abs
-END INTERFACE ABS
+DO ii = low, high
+  DO jj = ii, low + 1, -1
+    IF (array(arg(jj)) < array(arg(jj - 1))) THEN
+      CALL SWAP(arg(jj), arg(jj - 1))
+    ELSE
+      EXIT
+    END IF
+  END DO
+END DO

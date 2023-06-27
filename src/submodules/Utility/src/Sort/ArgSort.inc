@@ -20,14 +20,16 @@ CHARACTER(LEN=120) :: name0
 IF (PRESENT(name)) THEN
   name0 = UpperCase(name)
 ELSE
-  name0 = "HEAPSORT"
+  name0 = "INTROSORT"
 END IF
 
+ans = arange(1_I4B, SIZE(x, kind=I4B), 1_I4B)
+
 SELECT CASE (TRIM(name0))
-CASE ("QUICKSORT")
-  !! TODO
 CASE ("HEAPSORT")
   CALL ArgHeapSort(array=x, arg=ans)
-CASE ("INTROSORT")
-  !! TODO
+CASE ("INTROSORT", "QUICKSORT")
+  CALL ArgIntroSort(array=x, arg=ans)
+CASE ("INSERTION")
+  CALL ArgInsertionSort(array=x, arg=ans, low=1_I4B, high=SIZE(x, kind=I4B))
 END SELECT

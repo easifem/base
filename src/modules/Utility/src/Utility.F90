@@ -15,40 +15,36 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE Utility
-USE MappingUtility
-USE BinomUtility
 USE AppendUtility
 USE ApproxUtility
+USE ArangeUtility
 USE AssertUtility
+USE BinomUtility
+USE ContractionUtility
+USE ConvertUtility
+USE DiagUtility
+USE EigenUtility
+USE EyeUtility
 USE FunctionalFortranUtility
 USE GridPointUtility
-USE OnesUtility
-USE ZerosUtility
-USE EyeUtility
-USE DiagUtility
 USE HashingUtility
 USE InputUtility
+USE IntegerUtility
 USE InvUtility
+USE LinearAlgebraUtility
+USE MappingUtility
 USE MatmulUtility
-USE ContractionUtility
+USE MedianUtility
 USE MiscUtility
+USE OnesUtility
+USE PartitionUtility
 USE ProductUtility
+USE PushPopUtility
 USE ReallocateUtility
 USE SortUtility
 USE StringUtility
 USE SwapUtility
-USE ConvertUtility
-USE IntegerUtility
-USE PushPopUtility
-USE PolynomialUtility
-USE EigenUtility
-USE ArangeUtility
 USE SymUtility
 USE TriagUtility
-USE LinearAlgebraUtility
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
+USE ZerosUtility
 END MODULE Utility
