@@ -29,7 +29,9 @@ TARGET_SOURCES(
   ${src_path}/ProductUtility@Methods.F90
   ${src_path}/ArangeUtility@Methods.F90
   ${src_path}/GridPointUtility@Methods.F90
-  ${src_path}/FunctionalFortranUtility@Methods.F90
+  ${src_path}/HeadUtility@Methods.F90
+  ${src_path}/TailUtility@Methods.F90
+  ${src_path}/SplitUtility@Methods.F90
   ${src_path}/OnesUtility@Methods.F90
   ${src_path}/ZerosUtility@Methods.F90
   ${src_path}/EyeUtility@Methods.F90

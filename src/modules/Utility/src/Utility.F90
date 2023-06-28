@@ -25,7 +25,9 @@ USE ConvertUtility
 USE DiagUtility
 USE EigenUtility
 USE EyeUtility
-USE FunctionalFortranUtility
+USE HeadUtility
+USE TailUtility
+USE SplitUtility
 USE GridPointUtility
 USE HashingUtility
 USE InputUtility
