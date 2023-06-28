@@ -24,18 +24,68 @@ CONTAINS
 !                                                                    arange
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE arange_int
+MODULE PROCEDURE arange_Int8
 ! Internal var
-integer(i4b) :: incr
-integer(i4b) :: i
-integer(i4b) :: n
-incr = INPUT(default=1, option=increment)
+INTEGER(INT8) :: incr
+INTEGER(INT8) :: i
+INTEGER(INT8) :: n
+incr = INPUT(default=1_Int8, option=increment)
 n = (iend - istart) / incr + 1
 ALLOCATE (Ans(n))
 DO CONCURRENT(i=1:n)
   Ans(i) = istart + (i - 1) * incr
-end do
-END PROCEDURE arange_int
+END DO
+END PROCEDURE arange_Int8
+
+!----------------------------------------------------------------------------
+!                                                                    arange
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE arange_Int16
+! Internal var
+INTEGER(INT16) :: incr
+INTEGER(INT16) :: i
+INTEGER(INT16) :: n
+incr = INPUT(default=1_Int16, option=increment)
+n = (iend - istart) / incr + 1
+ALLOCATE (Ans(n))
+DO CONCURRENT(i=1:n)
+  Ans(i) = istart + (i - 1) * incr
+END DO
+END PROCEDURE arange_Int16
+
+!----------------------------------------------------------------------------
+!                                                                    arange
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE arange_Int32
+! Internal var
+INTEGER(INT32) :: incr
+INTEGER(INT32) :: i
+INTEGER(INT32) :: n
+incr = INPUT(default=1_Int32, option=increment)
+n = (iend - istart) / incr + 1
+ALLOCATE (Ans(n))
+DO CONCURRENT(i=1:n)
+  Ans(i) = istart + (i - 1) * incr
+END DO
+END PROCEDURE arange_Int32
+!----------------------------------------------------------------------------
+!                                                                    arange
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE arange_Int64
+! Internal var
+INTEGER(INT64) :: incr
+INTEGER(INT64) :: i
+INTEGER(INT64) :: n
+incr = INPUT(default=1_Int64, option=increment)
+n = (iend - istart) / incr + 1
+ALLOCATE (Ans(n))
+DO CONCURRENT(i=1:n)
+  Ans(i) = istart + (i - 1) * incr
+END DO
+END PROCEDURE arange_Int64
 
 !----------------------------------------------------------------------------
 !                                                                    arange
@@ -43,13 +93,13 @@ END PROCEDURE arange_int
 
 MODULE PROCEDURE arange_real64
 ! internal var
-REAL(Real64) :: incr
+REAL(REAL64) :: incr
 INTEGER(I4B) :: i
 INTEGER(I4B) :: n
   !!
-incr = INPUT(Default=1.0_Real64, Option=increment)
+incr = INPUT(Default=1.0_REAL64, Option=increment)
   !!
-n = (iend - istart + 0.5_Real64 * incr) / incr + 1
+n = (iend - istart + 0.5_REAL64 * incr) / incr + 1
 ALLOCATE (Ans(n))
 DO CONCURRENT(i=1:n)
   Ans(i) = istart + (i - 1) * incr
@@ -62,13 +112,13 @@ END PROCEDURE arange_real64
 
 MODULE PROCEDURE arange_real32
 ! internal var
-REAL(Real32) :: incr
+REAL(REAL32) :: incr
 INTEGER(I4B) :: i
 INTEGER(I4B) :: n
   !!
-incr = INPUT(Default=1.0_Real32, Option=increment)
+incr = INPUT(Default=1.0_REAL32, Option=increment)
   !!
-n = (iend - istart + 0.5_Real32 * incr) / incr + 1
+n = (iend - istart + 0.5_REAL32 * incr) / incr + 1
 ALLOCATE (Ans(n))
 DO CONCURRENT(i=1:n)
   Ans(i) = istart + (i - 1) * incr
