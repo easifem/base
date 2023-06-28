@@ -46,6 +46,17 @@ Ans = (ABS(a - b) .LE. eps)
 END PROCEDURE approxeqr_1
 
 !----------------------------------------------------------------------------
+!                                                                 APPROXR
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE approxeqr_2
+REAL(DFP) :: eps
+eps = MAX(ABS(a), ABS(b)) * Zero
+IF (a .EQ. 0.0_DFP .OR. b .EQ. 0.0_DFP) eps = Zero
+Ans = (ABS(a - b) .LE. eps)
+END PROCEDURE approxeqr_2
+
+!----------------------------------------------------------------------------
 !                                                                 APPROXEQF
 !----------------------------------------------------------------------------
 
@@ -63,68 +74,135 @@ END PROCEDURE approxeq_ulp_real
 !                                                                 APPROXLE
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE approxle_real
+MODULE PROCEDURE approxle_1
 Ans = (r1 .LE. r2 + Zero)
-END PROCEDURE
+END PROCEDURE approxle_1
+
+!----------------------------------------------------------------------------
+!                                                                 APPROXLE
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE approxle_2
+Ans = (r1 .LE. r2 + Zero)
+END PROCEDURE approxle_2
 
 !----------------------------------------------------------------------------
 !                                                                   APPROXGE
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE approxge_real
+MODULE PROCEDURE approxge_1
 Ans = (r1 + Zero .GE. r2)
-END PROCEDURE
+END PROCEDURE approxge_1
+
+!----------------------------------------------------------------------------
+!                                                                   APPROXGE
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE approxge_2
+Ans = (r1 + Zero .GE. r2)
+END PROCEDURE approxge_2
 
 !----------------------------------------------------------------------------
 !                                                                     SOFTEQ
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE softeq_real
+MODULE PROCEDURE softeq_1
 Ans = (ABS(r1 - r2) .LE. tol)
-END PROCEDURE
+END PROCEDURE softeq_1
+
+!----------------------------------------------------------------------------
+!                                                                     SOFTEQ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE softeq_2
+Ans = (ABS(r1 - r2) .LE. tol)
+END PROCEDURE softeq_2
 
 !----------------------------------------------------------------------------
 !                                                                   SOFTEQR
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE softeqr_real
+MODULE PROCEDURE softeqr_1
 REAL(DFP) :: eps
 eps = MAX(ABS(r1), ABS(r2)) * tol
 IF (r1 .EQ. 0.0_DFP .OR. r1 .EQ. 0.0_DFP) eps = REAL(Zero, DFP)
 Ans = (ABS(r1 - r2) .LE. eps)
-END PROCEDURE softeqr_real
+END PROCEDURE softeqr_1
+
+!----------------------------------------------------------------------------
+!                                                                   SOFTEQR
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE softeqr_2
+REAL(DFP) :: eps
+eps = MAX(ABS(r1), ABS(r2)) * tol
+IF (r1 .EQ. 0.0_DFP .OR. r1 .EQ. 0.0_DFP) eps = REAL(Zero, DFP)
+Ans = (ABS(r1 - r2) .LE. eps)
+END PROCEDURE softeqr_2
 
 !----------------------------------------------------------------------------
 !                                                                    SOFTLE
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE softle_real
+MODULE PROCEDURE softle_1
 Ans = (r1 .LE. r2 + tol)
-END PROCEDURE softle_real
+END PROCEDURE softle_1
+
+!----------------------------------------------------------------------------
+!                                                                    SOFTLE
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE softle_2
+Ans = (r1 .LE. r2 + tol)
+END PROCEDURE softle_2
 
 !----------------------------------------------------------------------------
 !                                                                     SOFTLT
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE softlt_real
+MODULE PROCEDURE softlt_1
 Ans = (r1 < r2 - tol)
-END PROCEDURE
+END PROCEDURE softlt_1
+
+!----------------------------------------------------------------------------
+!                                                                     SOFTLT
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE softlt_2
+Ans = (r1 < r2 - tol)
+END PROCEDURE softlt_2
 
 !----------------------------------------------------------------------------
 !                                                                     SOFTGE
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE softge_real
+MODULE PROCEDURE softge_1
 Ans = (r1 + tol .GE. r2)
-END PROCEDURE
+END PROCEDURE softge_1
+
+!----------------------------------------------------------------------------
+!                                                                     SOFTGE
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE softge_2
+Ans = (r1 + tol .GE. r2)
+END PROCEDURE softge_2
 
 !----------------------------------------------------------------------------
 !                                                                     SOFTGT
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE softgt_real
+MODULE PROCEDURE softgt_1
 Ans = (r1 > r2 + tol)
-END PROCEDURE softgt_real
+END PROCEDURE softgt_1
+
+!----------------------------------------------------------------------------
+!                                                                     SOFTGT
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE softgt_2
+Ans = (r1 > r2 + tol)
+END PROCEDURE softgt_2
 
 !----------------------------------------------------------------------------
 !
@@ -146,13 +224,37 @@ END PROCEDURE
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE assign_char_to_int
+MODULE PROCEDURE assign_char_to_Int8
 INTEGER(I4B) :: tmpInt
 CHARACTER(4) :: fmt
 tmpInt = LEN(c)
 WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
 READ (c, '(I'//TRIM(fmt)//')') i
-END PROCEDURE
+END PROCEDURE assign_char_to_Int8
+
+MODULE PROCEDURE assign_char_to_Int16
+INTEGER(I4B) :: tmpInt
+CHARACTER(4) :: fmt
+tmpInt = LEN(c)
+WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+READ (c, '(I'//TRIM(fmt)//')') i
+END PROCEDURE assign_char_to_Int16
+
+MODULE PROCEDURE assign_char_to_Int32
+INTEGER(I4B) :: tmpInt
+CHARACTER(4) :: fmt
+tmpInt = LEN(c)
+WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+READ (c, '(I'//TRIM(fmt)//')') i
+END PROCEDURE assign_char_to_Int32
+
+MODULE PROCEDURE assign_char_to_Int64
+INTEGER(I4B) :: tmpInt
+CHARACTER(4) :: fmt
+tmpInt = LEN(c)
+WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+READ (c, '(I'//TRIM(fmt)//')') i
+END PROCEDURE assign_char_to_Int64
 
 !----------------------------------------------------------------------------
 !
@@ -164,19 +266,31 @@ IF (c == 'true') THEN
 ELSE
   b = .FALSE.
 END IF
-END PROCEDURE
+END PROCEDURE assign_char_to_bool
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE assign_char_to_real
+MODULE PROCEDURE assign_char_to_real32
 INTEGER(I4B) :: tmpInt
 CHARACTER(4) :: fmt
 tmpInt = LEN(c)
 WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
 READ (c, '(f'//TRIM(fmt)//'.0)') s
-END PROCEDURE
+END PROCEDURE assign_char_to_real32
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE assign_char_to_real64
+INTEGER(I4B) :: tmpInt
+CHARACTER(4) :: fmt
+tmpInt = LEN(c)
+WRITE (fmt, '(i4)') tmpInt; fmt = ADJUSTL(fmt)
+READ (c, '(f'//TRIM(fmt)//'.0)') s
+END PROCEDURE assign_char_to_real64
 
 !----------------------------------------------------------------------------
 !

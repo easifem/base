@@ -19,6 +19,22 @@ MODULE ApproxUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: OPERATOR(.APPROXEQ.)
+PUBLIC :: OPERATOR(.APPROXEQA.)
+PUBLIC :: OPERATOR(.APPROXEQR.)
+PUBLIC :: OPERATOR(.APPROXEQF.)
+PUBLIC :: OPERATOR(.ARROXLE.)
+PUBLIC :: OPERATOR(.ARROXGE.)
+PUBLIC :: SOFTEQ
+PUBLIC :: SOFTEQR
+PUBLIC :: SOFTLE
+PUBLIC :: SOFTLT
+PUBLIC :: SOFTGE
+PUBLIC :: SOFTGT
+PUBLIC :: OPERATOR(==)
+PUBLIC :: OPERATOR(/=)
+PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: isNumeric
 
 !----------------------------------------------------------------------------
 !                                                     APPROXEQ@ApproxMethods
@@ -55,13 +71,9 @@ INTERFACE OPERATOR(.APPROXEQ.)
   MODULE PROCEDURE approxeq_1, approxeq_2
 END INTERFACE
 
-PUBLIC :: OPERATOR(.APPROXEQ.)
-
 INTERFACE OPERATOR(.APPROXEQA.)
   MODULE PROCEDURE approxeq_1, approxeq_2
 END INTERFACE
-
-PUBLIC :: OPERATOR(.APPROXEQA.)
 
 !----------------------------------------------------------------------------
 !                                                     APPROXR@ApproxMethods
@@ -73,24 +85,23 @@ PUBLIC :: OPERATOR(.APPROXEQA.)
 !
 !# Introduction
 ! This performs a relative comparison by scaling the default epsilon value to
-! the size of the larger of the two. It should be used when @c and @b are of
-! the same magnitude and very large or very small. If either @c a or @c b is
+! the size of the larger of the two. It should be used when c and b are of
+! the same magnitude and very large or very small. If either c a or c b is
 ! zero (exactly) then this routine is equivalent to an absolute comparison.
 !
 ! - TODO add support for Real32
 
-INTERFACE
+INTERFACE OPERATOR(.APPROXEQR.)
   MODULE ELEMENTAL FUNCTION approxeqr_1(a, b) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: a, b
+    REAL(REAL32), INTENT(IN) :: a, b
     LOGICAL(LGT) :: Ans
   END FUNCTION approxeqr_1
-END INTERFACE
 
-INTERFACE OPERATOR(.APPROXEQR.)
-  MODULE PROCEDURE approxeqr_1
-END INTERFACE
-
-PUBLIC :: OPERATOR(.APPROXEQR.)
+  MODULE ELEMENTAL FUNCTION approxeqr_2(a, b) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: a, b
+    LOGICAL(LGT) :: Ans
+  END FUNCTION approxeqr_2
+END INTERFACE OPERATOR(.APPROXEQR.)
 
 !----------------------------------------------------------------------------
 !                                                    APPROXEQF@ApproxMethods
@@ -121,8 +132,6 @@ INTERFACE OPERATOR(.APPROXEQF.)
   MODULE PROCEDURE approxeq_ulp_real
 END INTERFACE
 
-PUBLIC :: OPERATOR(.APPROXEQF.)
-
 !----------------------------------------------------------------------------
 !                                                    APPROXLE@ApproxMethods
 !----------------------------------------------------------------------------
@@ -130,25 +139,24 @@ PUBLIC :: OPERATOR(.APPROXEQF.)
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 Apr 2021
 ! summary: Defines the operator .APPROXLE.
-!
-!# Introduction
-!
-! - TODO change the name to approxle_1
-! - TODO add support for the real32 and real64
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION approxle_real(r1, r2) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: r1
-    REAL(DFP), INTENT(IN) :: r2
+  MODULE ELEMENTAL FUNCTION approxle_1(r1, r2) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: r1
+    REAL(REAL32), INTENT(IN) :: r2
     LOGICAL(LGT) :: Ans
-  END FUNCTION
+  END FUNCTION approxle_1
+
+  MODULE ELEMENTAL FUNCTION approxle_2(r1, r2) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: r1
+    REAL(REAL64), INTENT(IN) :: r2
+    LOGICAL(LGT) :: Ans
+  END FUNCTION approxle_2
 END INTERFACE
 
 INTERFACE OPERATOR(.ARROXLE.)
-  MODULE PROCEDURE approxle_real
+  MODULE PROCEDURE approxle_1, approxle_2
 END INTERFACE
-
-PUBLIC :: OPERATOR(.ARROXLE.)
 
 !----------------------------------------------------------------------------
 !                                                    APPROXGE@ApproxMethods
@@ -157,23 +165,24 @@ PUBLIC :: OPERATOR(.ARROXLE.)
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary:  Defines the operation when comparing two single precision reals
-!
-! - TODO change the name to approxge_1
-! - TODO add support for the real32 and real64
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION approxge_real(r1, r2) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: r1
-    REAL(DFP), INTENT(IN) :: r2
+  MODULE ELEMENTAL FUNCTION approxge_1(r1, r2) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: r1
+    REAL(REAL32), INTENT(IN) :: r2
     LOGICAL(LGT) :: Ans
-  END FUNCTION
+  END FUNCTION approxge_1
+
+  MODULE ELEMENTAL FUNCTION approxge_2(r1, r2) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: r1
+    REAL(REAL64), INTENT(IN) :: r2
+    LOGICAL(LGT) :: Ans
+  END FUNCTION approxge_2
 END INTERFACE
 
 INTERFACE OPERATOR(.ARROXGE.)
-  MODULE PROCEDURE approxge_real
+  MODULE PROCEDURE approxge_1, approxge_2
 END INTERFACE
-
-PUBLIC :: OPERATOR(.ARROXGE.)
 
 !----------------------------------------------------------------------------
 !                                                      SOFTEQ@ApproxMethods
@@ -182,24 +191,26 @@ PUBLIC :: OPERATOR(.ARROXGE.)
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Defines the operator SOFTEQ
-!
-!# Introduction
-! - TODO change the name to softeq_1
-! - TODO add support for the real32 and real64
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION softeq_real(r1, r2, tol) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: r1
-    REAL(DFP), INTENT(IN) :: r2
-    REAL(DFP), INTENT(IN) :: tol
+  MODULE ELEMENTAL FUNCTION softeq_1(r1, r2, tol) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: r1
+    REAL(REAL32), INTENT(IN) :: r2
+    REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
-  END FUNCTION
-END INTERFACE
-INTERFACE SOFTEQ
-  MODULE PROCEDURE softeq_real
+  END FUNCTION softeq_1
+
+  MODULE ELEMENTAL FUNCTION softeq_2(r1, r2, tol) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: r1
+    REAL(REAL64), INTENT(IN) :: r2
+    REAL(REAL64), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION softeq_2
 END INTERFACE
 
-PUBLIC :: SOFTEQ
+INTERFACE SOFTEQ
+  MODULE PROCEDURE softeq_1, softeq_2
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                     SOFTEQR@ApproxMethods
@@ -208,24 +219,26 @@ PUBLIC :: SOFTEQ
 !> author: Vikas Sharma, Ph. D.
 ! date: 3 April 2021
 ! summary: Defines the operator SOFTEQR
-!
-! - TODO change the name to softeqr_1
-! - TODO add support for the real32 and real64
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION softeqr_real(r1, r2, tol) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: r1
-    REAL(DFP), INTENT(IN) :: r2
-    REAL(DFP), INTENT(IN) :: tol
+  MODULE ELEMENTAL FUNCTION softeqr_1(r1, r2, tol) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: r1
+    REAL(REAL32), INTENT(IN) :: r2
+    REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
-  END FUNCTION
+  END FUNCTION softeqr_1
+
+  MODULE ELEMENTAL FUNCTION softeqr_2(r1, r2, tol) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: r1
+    REAL(REAL64), INTENT(IN) :: r2
+    REAL(REAL64), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION softeqr_2
 END INTERFACE
 
 INTERFACE SOFTEQR
-  MODULE PROCEDURE softeqr_real
+  MODULE PROCEDURE softeqr_1, softeqr_2
 END INTERFACE SOFTEQR
-
-PUBLIC :: SOFTEQR
 
 !----------------------------------------------------------------------------
 !                                                       SOFTLE@ApproxMethods
@@ -236,19 +249,24 @@ PUBLIC :: SOFTEQR
 ! summary: SOFTLE
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION softle_real(r1, r2, tol) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: r1
-    REAL(DFP), INTENT(IN) :: r2
-    REAL(DFP), INTENT(IN) :: tol
+  MODULE ELEMENTAL FUNCTION softle_1(r1, r2, tol) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: r1
+    REAL(REAL32), INTENT(IN) :: r2
+    REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
-  END FUNCTION
+  END FUNCTION softle_1
+
+  MODULE ELEMENTAL FUNCTION softle_2(r1, r2, tol) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: r1
+    REAL(REAL64), INTENT(IN) :: r2
+    REAL(REAL64), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION softle_2
 END INTERFACE
 
 INTERFACE SOFTLE
-  MODULE PROCEDURE softle_real
+  MODULE PROCEDURE softle_1, softle_2
 END INTERFACE SOFTLE
-
-PUBLIC :: SOFTLE
 
 !----------------------------------------------------------------------------
 !                                                      SOFTLT@ApproxMethods
@@ -259,57 +277,72 @@ PUBLIC :: SOFTLE
 ! summary: Defines the operation for SOFTLT
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION softlt_real(r1, r2, tol) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: r1
-    REAL(DFP), INTENT(IN) :: r2
-    REAL(DFP), INTENT(IN) :: tol
+  MODULE ELEMENTAL FUNCTION softlt_1(r1, r2, tol) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: r1
+    REAL(REAL32), INTENT(IN) :: r2
+    REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
-  END FUNCTION
+  END FUNCTION softlt_1
+
+  MODULE ELEMENTAL FUNCTION softlt_2(r1, r2, tol) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: r1
+    REAL(REAL64), INTENT(IN) :: r2
+    REAL(REAL64), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION softlt_2
 END INTERFACE
 
 INTERFACE SOFTLT
-  MODULE PROCEDURE softlt_real
+  MODULE PROCEDURE softlt_1, softlt_2
 END INTERFACE SOFTLT
-
-PUBLIC :: SOFTLT
 
 !----------------------------------------------------------------------------
 !                                                       SOFTGE@ApproxMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION softge_real(r1, r2, tol) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: r1
-    REAL(DFP), INTENT(IN) :: r2
-    REAL(DFP), INTENT(IN) :: tol
+  MODULE ELEMENTAL FUNCTION softge_1(r1, r2, tol) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: r1
+    REAL(REAL32), INTENT(IN) :: r2
+    REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
-  END FUNCTION softge_real
+  END FUNCTION softge_1
+
+  MODULE ELEMENTAL FUNCTION softge_2(r1, r2, tol) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: r1
+    REAL(REAL64), INTENT(IN) :: r2
+    REAL(REAL64), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION softge_2
 END INTERFACE
 
 INTERFACE SOFTGE
-  MODULE PROCEDURE softge_real
+  MODULE PROCEDURE softge_1, softge_2
 END INTERFACE SOFTGE
-
-PUBLIC :: SOFTGE
 
 !----------------------------------------------------------------------------
 !                                                      SOFTGT@ApproxMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION softgt_real(r1, r2, tol) RESULT(Ans)
-    REAL(DFP), INTENT(IN) :: r1
-    REAL(DFP), INTENT(IN) :: r2
-    REAL(DFP), INTENT(IN) :: tol
+  MODULE ELEMENTAL FUNCTION softgt_1(r1, r2, tol) RESULT(Ans)
+    REAL(REAL32), INTENT(IN) :: r1
+    REAL(REAL32), INTENT(IN) :: r2
+    REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
-  END FUNCTION
+  END FUNCTION softgt_1
+
+  MODULE ELEMENTAL FUNCTION softgt_2(r1, r2, tol) RESULT(Ans)
+    REAL(REAL64), INTENT(IN) :: r1
+    REAL(REAL64), INTENT(IN) :: r2
+    REAL(REAL64), INTENT(IN) :: tol
+    LOGICAL(LGT) :: Ans
+  END FUNCTION softgt_2
 END INTERFACE
 
 INTERFACE SOFTGT
-  MODULE PROCEDURE softgt_real
+  MODULE PROCEDURE softgt_1, softgt_2
 END INTERFACE SOFTGT
-
-PUBLIC :: SOFTGT
 
 !----------------------------------------------------------------------------
 !                                                           EQ@ApproxMethods
@@ -327,8 +360,6 @@ INTERFACE OPERATOR(==)
   MODULE PROCEDURE equalto_logical
 END INTERFACE
 
-PUBLIC :: OPERATOR(==)
-
 !----------------------------------------------------------------------------
 !                                                           EQ@ApproxMethods
 !----------------------------------------------------------------------------
@@ -345,48 +376,46 @@ INTERFACE OPERATOR(/=)
   MODULE PROCEDURE notequalto_logical
 END INTERFACE
 
-PUBLIC :: OPERATOR(/=)
-
 !----------------------------------------------------------------------------
 !                                                       ASSIGN@ApproxMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_int(i, c)
-    INTEGER(I4B), INTENT(OUT) :: i
+INTERFACE ASSIGNMENT(=)
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_int8(i, c)
+    INTEGER(INT8), INTENT(OUT) :: i
     CHARACTER(*), INTENT(IN) :: c
-  END SUBROUTINE
-END INTERFACE
+  END SUBROUTINE assign_char_to_int8
 
-!----------------------------------------------------------------------------
-!                                                      ASSIGN@ApproxMethods
-!----------------------------------------------------------------------------
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_Int16(i, c)
+    INTEGER(INT16), INTENT(OUT) :: i
+    CHARACTER(*), INTENT(IN) :: c
+  END SUBROUTINE assign_char_to_Int16
 
-INTERFACE
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_Int32(i, c)
+    INTEGER(INT32), INTENT(OUT) :: i
+    CHARACTER(*), INTENT(IN) :: c
+  END SUBROUTINE assign_char_to_Int32
+
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_Int64(i, c)
+    INTEGER(INT64), INTENT(OUT) :: i
+    CHARACTER(*), INTENT(IN) :: c
+  END SUBROUTINE assign_char_to_Int64
+
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_Real32(s, c)
+    REAL(REAL32), INTENT(OUT) :: s
+    CHARACTER(*), INTENT(IN) :: c
+  END SUBROUTINE assign_char_to_Real32
+
+  MODULE ELEMENTAL SUBROUTINE assign_char_to_Real64(s, c)
+    REAL(REAL64), INTENT(OUT) :: s
+    CHARACTER(*), INTENT(IN) :: c
+  END SUBROUTINE assign_char_to_Real64
+
   MODULE ELEMENTAL SUBROUTINE assign_char_to_bool(b, c)
     LOGICAL(LGT), INTENT(OUT) :: b
     CHARACTER(*), INTENT(IN) :: c
-  END SUBROUTINE
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                       ASSIGN@ApproxMethods
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_real(s, c)
-    REAL(DFP), INTENT(OUT) :: s
-    CHARACTER(*), INTENT(IN) :: c
-  END SUBROUTINE
-END INTERFACE
-
-INTERFACE ASSIGNMENT(=)
-  MODULE PROCEDURE assign_char_to_int
-  MODULE PROCEDURE assign_char_to_bool
-  MODULE PROCEDURE assign_char_to_real
-END INTERFACE
-
-PUBLIC :: ASSIGNMENT(=)
+  END SUBROUTINE assign_char_to_bool
+END INTERFACE ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                                                           @ApproxMethods
@@ -398,7 +427,5 @@ INTERFACE
     LOGICAL(LGT) :: bool
   END FUNCTION
 END INTERFACE
-
-PUBLIC :: isNumeric
 
 END MODULE ApproxUtility
