@@ -16,11 +16,11 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 	3 April 2021
-! summary: 	Assert functions
+! date:         3 April 2021
+! summary:         Assert functions
 
 SUBMODULE(AssertUtility) Methods
-USE BaseMethod
+USE BaseMethod, ONLY: ErrorMsg
 IMPLICIT NONE
 CONTAINS
 
@@ -29,16 +29,16 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_eq2
-  IF (n1 .EQ. n2) THEN
-    assert_eq2=n1
-  ELSE
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Assert_Eq()", &
-      & Line = __LINE__, &
-      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
-    STOP
-  END IF
+IF (n1 .EQ. n2) THEN
+  assert_eq2 = n1
+ELSE
+  CALL ErrorMsg( &
+    & File=__FILE__, &
+    & Routine="Assert_Eq()", &
+    & Line=__LINE__, &
+    & MSG=" Sizes of Matrices are not the same; Program Stopped ")
+  STOP
+END IF
 END PROCEDURE assert_eq2
 
 !----------------------------------------------------------------------------
@@ -46,16 +46,16 @@ END PROCEDURE assert_eq2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_eq3
-  IF (n1 == n2 .and. n2 == n3) THEN
-    assert_eq3=n1
-  ELSE
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Assert_Eq()", &
-      & Line = __LINE__, &
-      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
-    STOP
-  END IF
+IF (n1 == n2 .AND. n2 == n3) THEN
+  assert_eq3 = n1
+ELSE
+  CALL ErrorMsg( &
+    & File=__FILE__, &
+    & Routine="Assert_Eq()", &
+    & Line=__LINE__, &
+    & MSG=" Sizes of Matrices are not the same; Program Stopped ")
+  STOP
+END IF
 END PROCEDURE assert_eq3
 
 !----------------------------------------------------------------------------
@@ -63,16 +63,16 @@ END PROCEDURE assert_eq3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_eq4
-  IF (n1 == n2 .and. n2 == n3 .and. n3 == n4) THEN
-    assert_eq4=n1
-  ELSE
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Assert_Eq()", &
-      & Line = __LINE__, &
-      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
-    STOP
-  END IF
+IF (n1 == n2 .AND. n2 == n3 .AND. n3 == n4) THEN
+  assert_eq4 = n1
+ELSE
+  CALL ErrorMsg( &
+    & File=__FILE__, &
+    & Routine="Assert_Eq()", &
+    & Line=__LINE__, &
+    & MSG=" Sizes of Matrices are not the same; Program Stopped ")
+  STOP
+END IF
 END PROCEDURE assert_eq4
 
 !----------------------------------------------------------------------------
@@ -80,16 +80,16 @@ END PROCEDURE assert_eq4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_eqn
-  IF (all(nn(2:) == nn(1))) THEN
-    assert_eqn=nn(1)
-  ELSE
-    CALL ErrorMsg( &
-      & File = __FILE__, &
-      & Routine = "Assert_Eq()", &
-      & Line = __LINE__, &
-      & MSG = " Sizes of Matrices are not the same; Program Stopped " )
-    STOP
-  END IF
+IF (ALL(nn(2:) == nn(1))) THEN
+  assert_eqn = nn(1)
+ELSE
+  CALL ErrorMsg( &
+    & File=__FILE__, &
+    & Routine="Assert_Eq()", &
+    & Line=__LINE__, &
+    & MSG=" Sizes of Matrices are not the same; Program Stopped ")
+  STOP
+END IF
 END PROCEDURE assert_eqn
 
 !----------------------------------------------------------------------------
@@ -97,18 +97,18 @@ END PROCEDURE assert_eqn
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_shape_2
-  INTEGER( I4B ) :: shape_mat( 2 )
-  shape_mat = SHAPE( Mat )
-  IF (all(shape_mat == s) ) THEN
-    RETURN
-  ELSE
-    CALL ErrorMsg( &
-      & File = file, &
-      & Routine = routine, &
-      & Line = line, &
-      & MSG = msg )
-    STOP
-  END IF
+INTEGER(I4B) :: shape_mat(2)
+shape_mat = SHAPE(Mat)
+IF (ALL(shape_mat == s)) THEN
+  RETURN
+ELSE
+  CALL ErrorMsg( &
+    & File=file, &
+    & Routine=routine, &
+    & Line=line, &
+    & MSG=msg)
+  STOP
+END IF
 END PROCEDURE assert_shape_2
 
 !----------------------------------------------------------------------------
@@ -116,15 +116,15 @@ END PROCEDURE assert_shape_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_shape_3
-  INTEGER( I4B ) :: shape_mat( 3 )
-  shape_mat = SHAPE( Mat )
-  IF (all(shape_mat == s) ) THEN
-    RETURN
-  ELSE
-    CALL ErrorMsg( File = file, Routine = routine, Line = line, &
-      & MSG = msg )
-    STOP
-  END IF
+INTEGER(I4B) :: shape_mat(3)
+shape_mat = SHAPE(Mat)
+IF (ALL(shape_mat == s)) THEN
+  RETURN
+ELSE
+  CALL ErrorMsg(File=file, Routine=routine, Line=line, &
+    & MSG=msg)
+  STOP
+END IF
 END PROCEDURE assert_shape_3
 
 !----------------------------------------------------------------------------
@@ -132,15 +132,83 @@ END PROCEDURE assert_shape_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE assert_shape_4
-  INTEGER( I4B ) :: shape_mat( 4 )
-  shape_mat = SHAPE( Mat )
-  IF (all(shape_mat == s) ) THEN
-    RETURN
-  ELSE
-    CALL ErrorMsg( File = file, Routine = routine, Line = line, &
-      & MSG = msg )
-    STOP
-  END IF
+INTEGER(I4B) :: shape_mat(4)
+shape_mat = SHAPE(Mat)
+IF (ALL(shape_mat == s)) THEN
+  RETURN
+ELSE
+  CALL ErrorMsg(File=file, Routine=routine, Line=line, &
+    & MSG=msg)
+  STOP
+END IF
 END PROCEDURE assert_shape_4
+
+!----------------------------------------------------------------------------
+!                                                                     Assert
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE assert_2
+IF (n1 .EQ. n2) THEN
+  RETURN
+ELSE
+  CALL ErrorMsg( &
+    & File=file, &
+    & Routine=routine, &
+    & Line=line, &
+    & MSG=msg)
+  STOP
+END IF
+END PROCEDURE assert_2
+
+!----------------------------------------------------------------------------
+!                                                                  Assert_EQ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE assert_3
+IF (n1 == n2 .AND. n2 == n3) THEN
+  RETURN
+ELSE
+  CALL ErrorMsg( &
+    & File=file, &
+    & Routine=routine, &
+    & Line=line, &
+    & MSG=msg)
+  STOP
+END IF
+END PROCEDURE assert_3
+
+!----------------------------------------------------------------------------
+!                                                                  Assert_EQ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE assert_4
+IF (n1 == n2 .AND. n2 == n3 .AND. n3 == n4) THEN
+  RETURN
+ELSE
+  CALL ErrorMsg( &
+    & File=file, &
+    & Routine=routine, &
+    & Line=line, &
+    & MSG=msg)
+  STOP
+END IF
+END PROCEDURE assert_4
+
+!----------------------------------------------------------------------------
+!                                                                  Assert_EQ
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE assert_n
+IF (ALL(nn(2:) == nn(1))) THEN
+  RETURN
+ELSE
+  CALL ErrorMsg( &
+    & File=file, &
+    & Routine=routine, &
+    & Line=line, &
+    & MSG=msg)
+  STOP
+END IF
+END PROCEDURE assert_n
 
 END SUBMODULE Methods

@@ -19,6 +19,8 @@ MODULE AssertUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: ASSERT
+PUBLIC :: ASSERT_EQ
 
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
@@ -26,7 +28,7 @@ PRIVATE
 
 INTERFACE
   MODULE FUNCTION assert_eq2(n1, n2, string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
+    CHARACTER(*), INTENT(IN) :: string
     INTEGER(I4B), INTENT(IN) :: n1, n2
     INTEGER(I4B) :: assert_eq2
   END FUNCTION
@@ -38,7 +40,7 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION assert_eq3(n1, n2, n3, string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
+    CHARACTER(*), INTENT(IN) :: string
     INTEGER(I4B), INTENT(IN) :: n1, n2, n3
     INTEGER(I4B) :: assert_eq3
   END FUNCTION
@@ -50,7 +52,7 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION assert_eq4(n1, n2, n3, n4, string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
+    CHARACTER(*), INTENT(IN) :: string
     INTEGER(I4B), INTENT(IN) :: n1, n2, n3, n4
     INTEGER(I4B) :: assert_eq4
   END FUNCTION
@@ -62,7 +64,7 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION assert_eqn(nn, string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
+    CHARACTER(*), INTENT(IN) :: string
     INTEGER(I4B), DIMENSION(:), INTENT(IN) :: nn
     INTEGER(I4B) :: assert_eqn
   END FUNCTION
@@ -71,8 +73,6 @@ END INTERFACE
 INTERFACE assert_eq
   MODULE PROCEDURE assert_eqn, assert_eq2, assert_eq3, assert_eq4
 END INTERFACE
-
-PUBLIC :: ASSERT_EQ
 
 !----------------------------------------------------------------------------
 !                                                              Assert@Assert
@@ -83,9 +83,13 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: Mat(:, :)
     INTEGER(I4B), INTENT(IN) :: s(2)
     INTEGER(I4B), INTENT(IN) :: line
-    CHARACTER(LEN=*), INTENT(IN) :: msg, file, routine
+    CHARACTER(*), INTENT(IN) :: msg, file, routine
   END SUBROUTINE
 END INTERFACE
+
+INTERFACE ASSERT
+  MODULE PROCEDURE assert_shape_2
+END INTERFACE ASSERT
 
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
@@ -96,9 +100,13 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: Mat(:, :, :)
     INTEGER(I4B), INTENT(IN) :: s(3)
     INTEGER(I4B), INTENT(IN) :: line
-    CHARACTER(LEN=*), INTENT(IN) :: msg, file, routine
+    CHARACTER(*), INTENT(IN) :: msg, file, routine
   END SUBROUTINE
 END INTERFACE
+
+INTERFACE ASSERT
+  MODULE PROCEDURE assert_shape_3
+END INTERFACE ASSERT
 
 !----------------------------------------------------------------------------
 !                                                             Assert@Assert
@@ -109,15 +117,43 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: Mat(:, :, :, :)
     INTEGER(I4B), INTENT(IN) :: s(4)
     INTEGER(I4B), INTENT(IN) :: line
-    CHARACTER(LEN=*), INTENT(IN) :: msg, file, routine
+    CHARACTER(*), INTENT(IN) :: msg, file, routine
   END SUBROUTINE
 END INTERFACE
 
 INTERFACE ASSERT
-  MODULE PROCEDURE assert_shape_2, assert_shape_3, assert_shape_4
+  MODULE PROCEDURE assert_shape_4
 END INTERFACE ASSERT
 
-PUBLIC :: ASSERT
+!----------------------------------------------------------------------------
+!                                                             Assert@Assert
+!----------------------------------------------------------------------------
+
+INTERFACE ASSERT
+  MODULE SUBROUTINE assert_2(n1, n2, msg, file, line, routine)
+    INTEGER(I4B), INTENT(IN) :: n1, n2
+    INTEGER(I4B), INTENT(IN) :: line
+    CHARACTER(*), INTENT(IN) :: msg, file, routine
+  END SUBROUTINE assert_2
+
+  MODULE SUBROUTINE assert_3(n1, n2, n3, msg, file, line, routine)
+    INTEGER(I4B), INTENT(IN) :: n1, n2, n3
+    INTEGER(I4B), INTENT(IN) :: line
+    CHARACTER(*), INTENT(IN) :: msg, file, routine
+  END SUBROUTINE assert_3
+
+  MODULE SUBROUTINE assert_4(n1, n2, n3, n4, msg, file, line, routine)
+    INTEGER(I4B), INTENT(IN) :: n1, n2, n3, n4
+    INTEGER(I4B), INTENT(IN) :: line
+    CHARACTER(*), INTENT(IN) :: msg, file, routine
+  END SUBROUTINE assert_4
+
+  MODULE SUBROUTINE assert_n(nn, msg, file, line, routine)
+    INTEGER(I4B), DIMENSION(:), INTENT(IN) :: nn
+    INTEGER(I4B), INTENT(IN) :: line
+    CHARACTER(*), INTENT(IN) :: msg, file, routine
+  END SUBROUTINE assert_n
+END INTERFACE ASSERT
 
 !----------------------------------------------------------------------------
 !
