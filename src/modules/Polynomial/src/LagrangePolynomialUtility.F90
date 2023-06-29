@@ -19,7 +19,7 @@
 ! date: 18 Oct 2022
 ! summary:         Methods for Lagrange polynomials are defined
 !
-!{!pages/LagrangePolynomialUtility_.md!}
+!{!pages/LagrangePolynomialUtility.md!}
 
 MODULE LagrangePolynomialUtility
 USE GlobalData

@@ -59,7 +59,7 @@ END INTERFACE Det
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 18 Oct 2022
-! summary:         Inverse of small matrix upto size 4
+! summary: Inverse of small matrix upto size 4
 
 INTERFACE
   MODULE PURE SUBROUTINE Inv_2D(invA, A)

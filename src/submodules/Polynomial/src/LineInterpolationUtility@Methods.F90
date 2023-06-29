@@ -185,7 +185,6 @@ MODULE PROCEDURE InterpolationPoint_Line1
 CHARACTER(20) :: astr
 INTEGER(I4B) :: nsd, ii
 REAL(DFP) :: temp(order + 1), t1
-!!
 IF (order .EQ. 0_I4B) THEN
   IF (PRESENT(xij)) THEN
     nsd = SIZE(xij, 1)
@@ -197,30 +196,20 @@ IF (order .EQ. 0_I4B) THEN
   END IF
   RETURN
 END IF
-!!
 astr = TRIM(UpperCase(layout))
-!!
 SELECT CASE (ipType)
 CASE (Equidistance)
-  !!
   ans = EquidistancePoint_Line(xij=xij, order=order)
-  !!
   IF (astr .EQ. "INCREASING") THEN
     DO ii = 1, SIZE(ans, 1)
       ans(ii, :) = SORT(ans(ii, :))
     END DO
   END IF
-  !!
   RETURN
-  !!
 CASE (GaussLegendre)
-  !!
   CALL LegendreQuadrature(n=order + 1, pt=temp, quadType=Gauss)
-  !!
 CASE (GaussLegendreLobatto)
-  !!
   CALL LegendreQuadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
-  !!
   IF (layout .EQ. "VEFC") THEN
     t1 = temp(order + 1)
     IF (order .GE. 2) THEN
@@ -228,15 +217,10 @@ CASE (GaussLegendreLobatto)
     END IF
     temp(2) = t1
   END IF
-  !!
 CASE (GaussChebyshev)
-  !!
   CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=Gauss)
-  !!
 CASE (GaussChebyshevLobatto)
-  !!
   CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
-  !!
   IF (layout .EQ. "VEFC") THEN
     t1 = temp(order + 1)
     IF (order .GE. 2) THEN
@@ -244,7 +228,6 @@ CASE (GaussChebyshevLobatto)
     END IF
     temp(2) = t1
   END IF
-  !!
 CASE DEFAULT
   CALL ErrorMsg(&
     & msg="Unknown iptype", &
@@ -253,7 +236,7 @@ CASE DEFAULT
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
-!!
+
 IF (ipType .NE. Equidistance) THEN
   IF (PRESENT(xij)) THEN
     nsd = SIZE(xij, 1)
@@ -264,7 +247,6 @@ IF (ipType .NE. Equidistance) THEN
     CALL Reallocate(ans, 1, order + 1)
     ans(1, :) = temp
   END IF
-  !!
 END IF
 END PROCEDURE InterpolationPoint_Line1
 
@@ -275,31 +257,25 @@ END PROCEDURE InterpolationPoint_Line1
 MODULE PROCEDURE InterpolationPoint_Line2
 CHARACTER(20) :: astr
 REAL(DFP) :: t1
-!!
+
 IF (order .EQ. 0_I4B) THEN
   ans = [0.5_DFP * (xij(1) + xij(2))]
   RETURN
 END IF
-!!
+
 astr = TRIM(UpperCase(layout))
-!!
+
 SELECT CASE (ipType)
 CASE (Equidistance)
-  !!
   ans = EquidistancePoint_Line(xij=xij, order=order)
   IF (astr .EQ. "INCREASING") ans = SORT(ans)
   RETURN
-  !!
 CASE (GaussLegendre)
-  !!
   CALL Reallocate(ans, order + 1)
   CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=Gauss)
-  !!
 CASE (GaussLegendreLobatto)
-  !!
   CALL Reallocate(ans, order + 1)
   CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
-  !!
   IF (layout .EQ. "VEFC") THEN
     t1 = ans(order + 1)
     IF (order .GE. 2) THEN
@@ -307,17 +283,12 @@ CASE (GaussLegendreLobatto)
     END IF
     ans(2) = t1
   END IF
-  !!
 CASE (GaussChebyshev)
-  !!
   CALL Reallocate(ans, order + 1)
   CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=Gauss)
-  !!
 CASE (GaussChebyshevLobatto)
-  !!
   CALL Reallocate(ans, order + 1)
   CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
-  !!
   IF (layout .EQ. "VEFC") THEN
     t1 = ans(order + 1)
     IF (order .GE. 2) THEN
@@ -325,7 +296,6 @@ CASE (GaussChebyshevLobatto)
     END IF
     ans(2) = t1
   END IF
-  !!
 CASE DEFAULT
   CALL ErrorMsg(&
     & msg="Unknown iptype", &
@@ -334,11 +304,9 @@ CASE DEFAULT
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
-!!
 IF (ipType .NE. Equidistance) THEN
   ans = FromBiunitLine2Segment(xin=ans, x1=xij(1), x2=xij(2))
 END IF
-!!
 END PROCEDURE InterpolationPoint_Line2
 
 !----------------------------------------------------------------------------
