@@ -25,19 +25,19 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE tail_Int8
-Ans = x(2:)
+ans = x(2:)
 END PROCEDURE tail_Int8
 
 MODULE PROCEDURE tail_Int16
-Ans = x(2:)
+ans = x(2:)
 END PROCEDURE tail_Int16
 
 MODULE PROCEDURE tail_Int32
-Ans = x(2:)
+ans = x(2:)
 END PROCEDURE tail_Int32
 
 MODULE PROCEDURE tail_Int64
-Ans = x(2:)
+ans = x(2:)
 END PROCEDURE tail_Int64
 
 !----------------------------------------------------------------------------
@@ -45,11 +45,11 @@ END PROCEDURE tail_Int64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE tail_Real32
-Ans = x(2:)
+ans = x(2:)
 END PROCEDURE tail_Real32
 
 MODULE PROCEDURE tail_Real64
-Ans = x(2:)
+ans = x(2:)
 END PROCEDURE tail_Real64
 
 !----------------------------------------------------------------------------
@@ -57,7 +57,47 @@ END PROCEDURE tail_Real64
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE tail_char
-Ans = x(2:)
+ans = x(2:)
 END PROCEDURE tail_char
+
+!----------------------------------------------------------------------------
+!                                                                      last
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE last_Int8
+ans = x(SIZE(x))
+END PROCEDURE last_Int8
+
+MODULE PROCEDURE last_Int16
+ans = x(SIZE(x))
+END PROCEDURE last_Int16
+
+MODULE PROCEDURE last_Int32
+ans = x(SIZE(x))
+END PROCEDURE last_Int32
+
+MODULE PROCEDURE last_Int64
+ans = x(SIZE(x))
+END PROCEDURE last_Int64
+
+!----------------------------------------------------------------------------
+!                                                                 last
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE last_Real32
+ans = x(SIZE(x))
+END PROCEDURE last_Real32
+
+MODULE PROCEDURE last_Real64
+ans = x(SIZE(x))
+END PROCEDURE last_Real64
+
+!----------------------------------------------------------------------------
+!                                                                 last
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE last_char
+ans = x(LEN(x):LEN(x))
+END PROCEDURE last_char
 
 END SUBMODULE Methods
