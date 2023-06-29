@@ -33,24 +33,20 @@ PUBLIC :: MeshGrid
 ! date: 16 Sept 2021
 ! summary: Exponential mesh
 
-INTERFACE
+INTERFACE ExpMesh
   MODULE PURE FUNCTION ExpMesh_Real64(rmin, rmax, a, N) RESULT(Ans)
-    REAL(Real64), INTENT(IN) :: rmin
+    REAL(REAL64), INTENT(IN) :: rmin
     !! left end of 1D domain
-    REAL(Real64), INTENT(IN) :: rmax
+    REAL(REAL64), INTENT(IN) :: rmax
     !! right end of 1D domain
-    REAL(Real64), INTENT(IN) :: a
+    REAL(REAL64), INTENT(IN) :: a
     !! Ratio of largest to smallest element, a should be positive
     !! a = 1, then we get uniform mesh
     INTEGER(I4B), INTENT(IN) :: N
     !! Number of elements present in mesh
-    REAL(Real64) :: ans(N + 1)
+    REAL(REAL64) :: ans(N + 1)
     !! Number of nodes in mesh
   END FUNCTION ExpMesh_Real64
-END INTERFACE
-
-INTERFACE ExpMesh
-  MODULE PROCEDURE ExpMesh_Real64
 END INTERFACE ExpMesh
 
 !----------------------------------------------------------------------------
@@ -61,24 +57,20 @@ END INTERFACE ExpMesh
 ! date: 16 Sept 2021
 ! summary: Exponential mesh
 
-INTERFACE
+INTERFACE ExpMesh
   MODULE PURE FUNCTION ExpMesh_Real32(rmin, rmax, a, N) RESULT(Ans)
-    REAL(Real32), INTENT(IN) :: rmin
+    REAL(REAL32), INTENT(IN) :: rmin
     !! left end of 1D domain
-    REAL(Real32), INTENT(IN) :: rmax
+    REAL(REAL32), INTENT(IN) :: rmax
     !! right end of 1D domain
-    REAL(Real32), INTENT(IN) :: a
+    REAL(REAL32), INTENT(IN) :: a
     !! Ratio of largest to smallest element, a should be positive
     !! a = 1, then we get uniform mesh
     INTEGER(I4B), INTENT(IN) :: N
     !! Number of elements present in mesh
-    REAL(Real32) :: ans(N + 1)
+    REAL(REAL32) :: ans(N + 1)
     !! Number of nodes in mesh
   END FUNCTION ExpMesh_Real32
-END INTERFACE
-
-INTERFACE ExpMesh
-  MODULE PROCEDURE ExpMesh_Real32
 END INTERFACE ExpMesh
 
 !----------------------------------------------------------------------------
@@ -89,22 +81,18 @@ END INTERFACE ExpMesh
 ! date: 16 Sept 2021
 ! summary: linspace
 
-INTERFACE
+INTERFACE LinSpace
   MODULE PURE FUNCTION Linspace_Real64(a, b, N) RESULT(Ans)
-    REAL(Real64), INTENT(IN) :: a
+    REAL(REAL64), INTENT(IN) :: a
     !! left end of 1D domain
-    REAL(Real64), INTENT(IN) :: b
+    REAL(REAL64), INTENT(IN) :: b
     !! right end of 1D domain
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
     !! Number of points including a and b
-    REAL(Real64), ALLOCATABLE :: ans(:)
+    REAL(REAL64), ALLOCATABLE :: ans(:)
     !! Number of nodes in mesh
   END FUNCTION Linspace_Real64
-END INTERFACE
-
-INTERFACE Linspace
-  MODULE PROCEDURE Linspace_Real64
-END INTERFACE Linspace
+END INTERFACE LinSpace
 
 !----------------------------------------------------------------------------
 !                                                  Linspace@FunctionalFortran
@@ -118,22 +106,18 @@ END INTERFACE Linspace
 ! Returns a linearly spaced vector with n points in [a, b]
 ! if n is omitted, 100 points will be considered
 
-INTERFACE
+INTERFACE LinSpace
   MODULE PURE FUNCTION Linspace_Real32(a, b, N) RESULT(Ans)
-    REAL(Real32), INTENT(IN) :: a
+    REAL(REAL32), INTENT(IN) :: a
     !! left end of 1D domain
-    REAL(Real32), INTENT(IN) :: b
+    REAL(REAL32), INTENT(IN) :: b
     !! right end of 1D domain
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
     !! Number of points including a and b
-    REAL(Real32), ALLOCATABLE :: ans(:)
+    REAL(REAL32), ALLOCATABLE :: ans(:)
     !! Number of nodes in mesh
   END FUNCTION Linspace_Real32
-END INTERFACE
-
-INTERFACE Linspace
-  MODULE PROCEDURE Linspace_Real32
-END INTERFACE Linspace
+END INTERFACE LinSpace
 
 !----------------------------------------------------------------------------
 !                                                  Logspace@FunctionalFortran
@@ -145,9 +129,9 @@ END INTERFACE Linspace
 
 INTERFACE
   MODULE PURE FUNCTION Logspace_Real64(a, b, N, endPoint, base) RESULT(Ans)
-    REAL(Real64), INTENT(IN) :: a
+    REAL(REAL64), INTENT(IN) :: a
     !! left end of 1D domain
-    REAL(Real64), INTENT(IN) :: b
+    REAL(REAL64), INTENT(IN) :: b
     !! right end of 1D domain
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
     !! Number of points including a and b
@@ -155,7 +139,7 @@ INTERFACE
     !! default is true, if true then include endpoint
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: base
     !! default is 10
-    REAL(Real64), ALLOCATABLE :: ans(:)
+    REAL(REAL64), ALLOCATABLE :: ans(:)
     !! Number of nodes in mesh
   END FUNCTION Logspace_Real64
 END INTERFACE
@@ -174,17 +158,17 @@ END INTERFACE Logspace
 
 INTERFACE
   MODULE PURE FUNCTION Logspace_Real32(a, b, N, endPoint, base) RESULT(Ans)
-    REAL(Real32), INTENT(IN) :: a
+    REAL(REAL32), INTENT(IN) :: a
     !! left end of 1D domain
-    REAL(Real32), INTENT(IN) :: b
+    REAL(REAL32), INTENT(IN) :: b
     !! right end of 1D domain
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: N
-    !! Number of points including a and b
+    !! Number of points including a and b, default is 100
     LOGICAL(LGT), OPTIONAL, INTENT(IN) :: endPoint
     !! default is true, if true then include endpoint
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: base
     !! default is 10
-    REAL(Real32), ALLOCATABLE :: ans(:)
+    REAL(REAL32), ALLOCATABLE :: ans(:)
     !! Number of nodes in mesh
   END FUNCTION Logspace_Real32
 END INTERFACE
@@ -229,10 +213,10 @@ END INTERFACE Logspace
 
 INTERFACE
   MODULE PURE SUBROUTINE MeshGrid2D_Real64(x, y, xgv, ygv)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: x(:, :)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: y(:, :)
-    REAL(Real64), INTENT(IN) :: xgv(:)
-    REAL(Real64), INTENT(IN) :: ygv(:)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: x(:, :)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: y(:, :)
+    REAL(REAL64), INTENT(IN) :: xgv(:)
+    REAL(REAL64), INTENT(IN) :: ygv(:)
   END SUBROUTINE MeshGrid2D_Real64
 END INTERFACE
 
@@ -246,10 +230,10 @@ END INTERFACE MeshGrid
 
 INTERFACE
   MODULE PURE SUBROUTINE MeshGrid2D_Real32(x, y, xgv, ygv)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: x(:, :)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: y(:, :)
-    REAL(Real32), INTENT(IN) :: xgv(:)
-    REAL(Real32), INTENT(IN) :: ygv(:)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: x(:, :)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: y(:, :)
+    REAL(REAL32), INTENT(IN) :: xgv(:)
+    REAL(REAL32), INTENT(IN) :: ygv(:)
   END SUBROUTINE MeshGrid2D_Real32
 END INTERFACE
 
@@ -263,12 +247,12 @@ END INTERFACE MeshGrid
 
 INTERFACE
   MODULE PURE SUBROUTINE MeshGrid3D_Real64(x, y, z, xgv, ygv, zgv)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: x(:, :, :)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: y(:, :, :)
-    REAL(Real64), ALLOCATABLE, INTENT(INOUT) :: z(:, :, :)
-    REAL(Real64), INTENT(IN) :: xgv(:)
-    REAL(Real64), INTENT(IN) :: ygv(:)
-    REAL(Real64), INTENT(IN) :: zgv(:)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: x(:, :, :)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: y(:, :, :)
+    REAL(REAL64), ALLOCATABLE, INTENT(INOUT) :: z(:, :, :)
+    REAL(REAL64), INTENT(IN) :: xgv(:)
+    REAL(REAL64), INTENT(IN) :: ygv(:)
+    REAL(REAL64), INTENT(IN) :: zgv(:)
   END SUBROUTINE MeshGrid3D_Real64
 END INTERFACE
 
@@ -282,12 +266,12 @@ END INTERFACE MeshGrid
 
 INTERFACE
   MODULE PURE SUBROUTINE MeshGrid3D_Real32(x, y, z, xgv, ygv, zgv)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: x(:, :, :)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: y(:, :, :)
-    REAL(Real32), ALLOCATABLE, INTENT(INOUT) :: z(:, :, :)
-    REAL(Real32), INTENT(IN) :: xgv(:)
-    REAL(Real32), INTENT(IN) :: ygv(:)
-    REAL(Real32), INTENT(IN) :: zgv(:)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: x(:, :, :)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: y(:, :, :)
+    REAL(REAL32), ALLOCATABLE, INTENT(INOUT) :: z(:, :, :)
+    REAL(REAL32), INTENT(IN) :: xgv(:)
+    REAL(REAL32), INTENT(IN) :: ygv(:)
+    REAL(REAL32), INTENT(IN) :: zgv(:)
   END SUBROUTINE MeshGrid3D_Real32
 END INTERFACE
 
