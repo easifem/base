@@ -19,6 +19,21 @@ MODULE TriangleInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: LagrangeDegree_Triangle
+PUBLIC :: LagrangeDOF_Triangle
+PUBLIC :: LagrangeInDOF_Triangle
+PUBLIC :: EquidistanceInPoint_Triangle
+PUBLIC :: EquidistancePoint_Triangle
+PUBLIC :: InterpolationPoint_Triangle
+PUBLIC :: LagrangeCoeff_Triangle
+PUBLIC :: Dubiner_Triangle
+PUBLIC :: BarycentricVertexBasis_Triangle
+PUBLIC :: BarycentricEdgeBasis_Triangle
+PUBLIC :: BarycentricHeirarchicalBasis_Triangle
+PUBLIC :: VertexBasis_Triangle
+PUBLIC :: EdgeBasis_Triangle
+PUBLIC :: CellBasis_Triangle
+PUBLIC :: HeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeDegree_Triangle
@@ -35,8 +50,6 @@ INTERFACE
   END FUNCTION LagrangeDegree_Triangle
 END INTERFACE
 
-PUBLIC :: LagrangeDegree_Triangle
-
 !----------------------------------------------------------------------------
 !                                                       LagrangeDOF_Triangle
 !----------------------------------------------------------------------------
@@ -52,8 +65,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeDOF_Triangle
 END INTERFACE
-
-PUBLIC :: LagrangeDOF_Triangle
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeInDOF_Triangle
@@ -76,8 +87,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeInDOF_Triangle
 END INTERFACE
-
-PUBLIC :: LagrangeInDOF_Triangle
 
 !----------------------------------------------------------------------------
 !                                              EquidistanceInPoint_Triangle
@@ -104,8 +113,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistanceInPoint_Triangle
 END INTERFACE
-
-PUBLIC :: EquidistanceInPoint_Triangle
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Triangle
@@ -136,8 +143,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Triangle
 END INTERFACE
-
-PUBLIC :: EquidistancePoint_Triangle
 
 !----------------------------------------------------------------------------
 !                                                BlythPozrikidis_Triangle
@@ -238,26 +243,13 @@ INTERFACE
   END FUNCTION InterpolationPoint_Triangle
 END INTERFACE
 
-PUBLIC :: InterpolationPoint_Triangle
-
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary: Returns the coefficients for ith lagrange polynomial for monomial
-! basis
-!
-!# Introduction
-!
-! ith Lagrange polynomial for interpolation points xij is given by
-!
-!$$
-! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
-!$$
-!
-! This function returns the coefficients $a_{n}$.
+! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff_Triangle1(order, i, xij) RESULT(ans)
@@ -276,26 +268,13 @@ INTERFACE LagrangeCoeff_Triangle
   MODULE PROCEDURE LagrangeCoeff_Triangle1
 END INTERFACE LagrangeCoeff_Triangle
 
-PUBLIC :: LagrangeCoeff_Triangle
-
 !----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary: Returns the coefficients for ith lagrange polynomial for monomial
-! basis
-!
-!# Introduction
-!
-! ith Lagrange polynomial for interpolation points xij is given by
-!
-!$$
-! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
-!$$
-!
-! This function returns the coefficients $a_{n}$
+! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff_Triangle2(order, i, v, isVandermonde) &
@@ -323,18 +302,7 @@ END INTERFACE LagrangeCoeff_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary: Returns the coefficients for ith lagrange polynomial for monomial
-! basis
-!
-!# Introduction
-!
-! ith Lagrange polynomial for interpolation points xij is given by
-!
-!$$
-! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
-!$$
-!
-! This function returns the coefficients $a_{n}$
+! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff_Triangle3(order, i, v, ipiv) RESULT(ans)
@@ -361,18 +329,7 @@ END INTERFACE LagrangeCoeff_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary: Returns the coefficients for ith lagrange polynomial for monomial
-! basis
-!
-!# Introduction
-!
-! ith Lagrange polynomial for interpolation points xij is given by
-!
-!$$
-! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
-!$$
-!
-! This function returns the coefficients $a_{n}$ for ALL i.
+! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff_Triangle4(order, xij) RESULT(ans)
@@ -447,8 +404,6 @@ INTERFACE Dubiner_Triangle
   MODULE PROCEDURE Dubiner_Triangle1
 END INTERFACE Dubiner_Triangle
 
-PUBLIC :: Dubiner_Triangle
-
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
@@ -496,12 +451,12 @@ INTERFACE
     & RESULT(ans)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentrix coords
+    !! number of rows = 3
+    !! number of columns = number of points
     REAL(DFP) :: ans(SIZE(lambda, 2), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION BarycentricVertexBasis_Triangle
 END INTERFACE
-
-PUBLIC :: BarycentricVertexBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                              BarycentricEdgeBasis_Triangle
@@ -527,11 +482,10 @@ INTERFACE
     !! order on edge (e3)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to three.
     REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
   END FUNCTION BarycentricEdgeBasis_Triangle
 END INTERFACE
-
-PUBLIC :: BarycentricEdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
 !
@@ -621,8 +575,6 @@ INTERFACE BarycentricHeirarchicalBasis_Triangle
   MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle1
 END INTERFACE BarycentricHeirarchicalBasis_Triangle
 
-PUBLIC :: BarycentricHeirarchicalBasis_Triangle
-
 !----------------------------------------------------------------------------
 !                                      BarycentricHeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
@@ -668,8 +620,6 @@ INTERFACE
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasis_Triangle
 END INTERFACE
-
-PUBLIC :: VertexBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Triangle2
@@ -719,8 +669,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xij, 2), pe1 + pe2 + pe3 - 3)
   END FUNCTION EdgeBasis_Triangle
 END INTERFACE
-
-PUBLIC :: EdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                        EdgeBasis_Triangle
@@ -778,8 +726,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xij, 2), INT((order - 1) * (order - 2) / 2))
   END FUNCTION CellBasis_Triangle
 END INTERFACE
-
-PUBLIC :: CellBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                      CellBasis_Triangle
@@ -843,8 +789,6 @@ END INTERFACE
 INTERFACE HeirarchicalBasis_Triangle
   MODULE PROCEDURE HeirarchicalBasis_Triangle1
 END INTERFACE HeirarchicalBasis_Triangle
-
-PUBLIC :: HeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                                 Triangle

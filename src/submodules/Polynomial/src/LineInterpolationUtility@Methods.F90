@@ -419,14 +419,16 @@ IF (PRESENT(coeff)) THEN
       CALL Errormsg(&
         & msg="xij should be present!", &
         & file=__FILE__, &
-        & routine="LagrangeEvalAll_Line1", &
+        & routine="LagrangeEvalAll_Line2", &
         & line=__LINE__, &
         & unitno=stderr)
     END IF
     coeff = LagrangeCoeff_Line(order=order, xij=xij)
-    coeff0 = TRANSPOSE(coeff)
+    ! coeff0 = TRANSPOSE(coeff)
+    coeff0 = coeff
   ELSE
-    coeff0 = TRANSPOSE(coeff)
+    ! coeff0 = TRANSPOSE(coeff)
+    coeff0 = coeff
   END IF
 ELSE
   IF (.NOT. PRESENT(xij)) THEN
@@ -437,7 +439,8 @@ ELSE
       & line=__LINE__, &
       & unitno=stderr)
   END IF
-  coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
+  ! coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
+  coeff0 = LagrangeCoeff_Line(order=order, xij=xij)
 END IF
 
 xx(:, 1) = 1.0_DFP

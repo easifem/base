@@ -405,26 +405,6 @@ END INTERFACE LagrangeCoeff_Line
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
 ! summary: Evaluate Lagrange polynomials from 0 to n at single points
-!
-!# Introduction
-!
-! Evaluate Lagrangepolynomials at single point
-!
-!- Two indicate the first call to subroutine set `firstCall` to True.
-!
-!- If `firstCall` is True, then
-!   - If `V` is present and `ipiv` is absent, then on return V contains
-!     vandermonde matrix
-!   - If `V` is present and `ipiv` is present, then on return V contains
-!     LU decomposition of vandermonde matrix and `ipiv` contains
-!     inverse map of pivoting.
-!
-!- If `firstCall` is FALSE, then
-!   - If `V` is present and `ipiv` is absent, then V denotes vandermonde
-!     matrix, which will be used in the computations.
-!   - If `V` is present and `ipiv` is present, then V denotes the
-!     LU decomposition of vandermonde matrix and `ipiv` denotes the
-!     inverse map of pivoting. These information will be used.
 
 INTERFACE
   MODULE FUNCTION LagrangeEvalAll_Line1(order, x, xij, coeff, firstCall) RESULT(ans)

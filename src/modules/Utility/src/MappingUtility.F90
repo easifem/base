@@ -37,6 +37,7 @@ PUBLIC :: FromUnitTriangle2BiUnitSqr
 PUBLIC :: FromBiUnitSqr2UnitTriangle
 PUBLIC :: BarycentricCoordUnitTriangle
 PUBLIC :: BarycentricCoordBiUnitTriangle
+PUBLIC :: BarycentricCoordTriangle
 
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
@@ -315,6 +316,20 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: xin(:, :)
     REAL(DFP) :: ans(3, SIZE(xin, 2))
   END FUNCTION BarycentricCoordBiUnitTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   BarycentricCoordTriangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricCoordTriangle(xin, refTriangle) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! "UNIT"
+    !! "BIUNIT"
+  END FUNCTION BarycentricCoordTriangle
 END INTERFACE
 
 END MODULE MappingUtility
