@@ -34,6 +34,22 @@ PUBLIC :: VertexBasis_Triangle
 PUBLIC :: EdgeBasis_Triangle
 PUBLIC :: CellBasis_Triangle
 PUBLIC :: HeirarchicalBasis_Triangle
+PUBLIC :: RefTriangleCoord
+
+!----------------------------------------------------------------------------
+!                                                           RefTriangleCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference triangle
+
+INTERFACE
+  MODULE PURE FUNCTION RefTriangleCoord(refTriangle) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    REAL(DFP) :: ans(2, 3)
+  END FUNCTION RefTriangleCoord
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeDegree_Triangle
@@ -551,7 +567,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle1(order, &
-    & pe1, pe2, pe3, xij, refTriangle) RESULT(ans)
+    & pe1, pe2, pe3, lambda, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     INTEGER(I4B), INTENT(IN) :: pe1
@@ -560,12 +576,14 @@ INTERFACE
     !! order of interpolation on edge e2
     INTEGER(I4B), INTENT(IN) :: pe3
     !! order of interpolation on edge e3
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points of evaluation in xij format
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 3
+    !! number of cols = number of points
     CHARACTER(*), INTENT(IN) :: refTriangle
     !! reference triangle, "BIUNIT", "UNIT"
     REAL(DFP) :: ans( &
-      & SIZE(xij, 2), &
+      & SIZE(lambda, 2), &
       & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
     !!
   END FUNCTION BarycentricHeirarchicalBasis_Triangle1
@@ -584,16 +602,18 @@ END INTERFACE BarycentricHeirarchicalBasis_Triangle
 ! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE
-  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle2(order, xij, &
+  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle2(order, lambda, &
     & refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of approximation on triangle
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points of evaluation in xij format
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 3
+    !! number of cols = number of points
     CHARACTER(*), INTENT(IN) :: refTriangle
     !! reference triangle, "BIUNIT", "UNIT"
     REAL(DFP) :: ans( &
-      & SIZE(xij, 2), &
+      & SIZE(lambda, 2), &
       & INT((order + 1) * (order + 2) / 2))
     !!
   END FUNCTION BarycentricHeirarchicalBasis_Triangle2

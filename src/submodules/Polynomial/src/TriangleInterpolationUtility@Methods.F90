@@ -21,6 +21,25 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                         RefTriangleCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefTriangleCoord
+CHARACTER(20) :: layout
+layout = TRIM(UpperCase(refTriangle))
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  ans(:, 1) = [-1.0_DFP, -1.0_DFP]
+  ans(:, 2) = [1.0_DFP, -1.0_DFP]
+  ans(:, 3) = [-1.0_DFP, 1.0_DFP]
+CASE ("UNIT")
+  ans(:, 1) = [0.0_DFP, 0.0_DFP]
+  ans(:, 2) = [1.0_DFP, 0.0_DFP]
+  ans(:, 3) = [0.0_DFP, 1.0_DFP]
+END SELECT
+END PROCEDURE RefTriangleCoord
+
+!----------------------------------------------------------------------------
 !                                                   LagrangeDegree_Triangle
 !----------------------------------------------------------------------------
 
@@ -709,20 +728,13 @@ END PROCEDURE BarycentricCellBasis_Triangle2
 
 MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle1
 CHARACTER(20) :: layout
-REAL(DFP) :: lambda(3, SIZE(xij, 2))
 INTEGER(I4B) :: a, b
 INTEGER(I4B) :: maxP, tPoints
-REAL(DFP) :: phi(1:3 * SIZE(xij, 2), &
+REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), &
   & 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2))
-REAL(DFP) :: d_lambda(3 * SIZE(xij, 2))
+REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
 !!
 layout = TRIM(UpperCase(refTriangle))
-!!
-IF (layout .EQ. "BIUNIT") THEN
-  lambda = BarycentricCoordBiUnitTriangle(xin=xij)
-ELSE
-  lambda = BarycentricCoordUnitTriangle(xin=xij)
-END IF
 !!
 tPoints = SIZE(lambda, 2)
 maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2)
@@ -764,7 +776,7 @@ END PROCEDURE BarycentricHeirarchicalBasis_Triangle1
 
 MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle2
 ans = BarycentricHeirarchicalBasis_Triangle1(order=order, pe1=order, &
-  & pe2=order, pe3=order, xij=xij, refTriangle=refTriangle)
+  & pe2=order, pe3=order, lambda=lambda, refTriangle=refTriangle)
 END PROCEDURE BarycentricHeirarchicalBasis_Triangle2
 
 !----------------------------------------------------------------------------
