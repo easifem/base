@@ -314,7 +314,7 @@ END INTERFACE InterpolationPoint_Line
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line1(order, i, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(xij,2)-1
@@ -325,17 +325,13 @@ INTERFACE
     REAL(DFP) :: ans(order + 1)
     !! coefficients
   END FUNCTION LagrangeCoeff_Line1
-END INTERFACE
-
-INTERFACE LagrangeCoeff_Line
-  MODULE PROCEDURE LagrangeCoeff_Line1
 END INTERFACE LagrangeCoeff_Line
 
 !----------------------------------------------------------------------------
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line2(order, i, v, isVandermonde) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(v,2)-1
@@ -348,17 +344,13 @@ INTERFACE
     REAL(DFP) :: ans(order + 1)
     !! coefficients
   END FUNCTION LagrangeCoeff_Line2
-END INTERFACE
-
-INTERFACE LagrangeCoeff_Line
-  MODULE PROCEDURE LagrangeCoeff_Line2
 END INTERFACE LagrangeCoeff_Line
 
 !----------------------------------------------------------------------------
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line3(order, i, v, ipiv) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(x,2)-1
@@ -371,17 +363,13 @@ INTERFACE
     REAL(DFP) :: ans(order + 1)
     !! coefficients
   END FUNCTION LagrangeCoeff_Line3
-END INTERFACE
-
-INTERFACE LagrangeCoeff_Line
-  MODULE PROCEDURE LagrangeCoeff_Line3
 END INTERFACE LagrangeCoeff_Line
 
 !----------------------------------------------------------------------------
 !                                                         LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE LagrangeCoeff_Line
   MODULE FUNCTION LagrangeCoeff_Line4(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(xij,2)-1
@@ -392,10 +380,37 @@ INTERFACE
     !! jth column of ans corresponds to the coeff of lagrange polynomial
     !! at the jth point
   END FUNCTION LagrangeCoeff_Line4
-END INTERFACE
+END INTERFACE LagrangeCoeff_Line
+
+!----------------------------------------------------------------------------
+!                                                       LagrangeCoeff_Line
+!----------------------------------------------------------------------------
 
 INTERFACE LagrangeCoeff_Line
-  MODULE PROCEDURE LagrangeCoeff_Line4
+  MODULE FUNCTION LagrangeCoeff_Line5(order, xij, orthopol, alpha, &
+    & beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial, it should be SIZE(xij,2)-1
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in xij format, size(xij,2) = order+1
+    INTEGER(I4B), INTENT(IN) :: orthopol
+    !! Monomial
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(order + 1, order + 1)
+    !! coefficients
+    !! jth column of ans corresponds to the coeff of lagrange polynomial
+    !! at the jth point
+  END FUNCTION LagrangeCoeff_Line5
 END INTERFACE LagrangeCoeff_Line
 
 !----------------------------------------------------------------------------
@@ -404,10 +419,12 @@ END INTERFACE LagrangeCoeff_Line
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluate Lagrange polynomials from 0 to n at single points
+! summary: Evaluate Lagrange polynomials of order n at single points
 
-INTERFACE
-  MODULE FUNCTION LagrangeEvalAll_Line1(order, x, xij, coeff, firstCall) RESULT(ans)
+INTERFACE LagrangeEvalAll_Line
+  MODULE FUNCTION LagrangeEvalAll_Line1(order, x, xij, coeff, firstCall, &
+    & orthopol, alpha, beta, lambda) &
+    & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x
@@ -420,13 +437,22 @@ INTERFACE
     !! If firstCall is true, then coeff will be made
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: orthopol
+    !! Monomial
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
     REAL(DFP) :: ans(order + 1)
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Line1
-END INTERFACE
-
-INTERFACE LagrangeEvalAll_Line
-  MODULE PROCEDURE LagrangeEvalAll_Line1
 END INTERFACE LagrangeEvalAll_Line
 
 !----------------------------------------------------------------------------
@@ -435,10 +461,11 @@ END INTERFACE LagrangeEvalAll_Line
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluate Lagrange polynomials from 0 to n at several points
+! summary: Evaluate Lagrange polynomials of n at several points
 
-INTERFACE
-  MODULE FUNCTION LagrangeEvalAll_Line2(order, x, xij, coeff, firstCall) &
+INTERFACE LagrangeEvalAll_Line
+  MODULE FUNCTION LagrangeEvalAll_Line2(order, x, xij, coeff, firstCall, &
+    & orthopol, alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
@@ -452,15 +479,24 @@ INTERFACE
     !! If firstCall is true, then coeff will be made
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: orthopol
+    !! Monomial
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
     REAL(DFP) :: ans(SIZE(x), order + 1)
     !! Value of n+1 Lagrange polynomials at point x
     !! ans(:, j) is the value of jth polynomial at x points
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION LagrangeEvalAll_Line2
-END INTERFACE
-
-INTERFACE LagrangeEvalAll_Line
-  MODULE PROCEDURE LagrangeEvalAll_Line2
 END INTERFACE LagrangeEvalAll_Line
 
 END MODULE LineInterpolationUtility

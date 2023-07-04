@@ -357,14 +357,35 @@ CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Line4
 
 !----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Line5
+SELECT CASE (orthopol)
+CASE (Monomial)
+  ans = LagrangeCoeff_Line(order=order, xij=xij)
+CASE DEFAULT
+  ans = EvalAllOrthopol(&
+    & n=order, &
+    & x=xij(1, :), &
+    & orthopol=orthopol, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+  CALL GetInvMat(ans)
+END SELECT
+END PROCEDURE LagrangeCoeff_Line5
+
+!----------------------------------------------------------------------------
 !                                                       LagrangeEvalAll_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line1
 LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(order + 1, order + 1), xx(order + 1)
-INTEGER(I4B) :: ii
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(1, order + 1)
+INTEGER(I4B) :: ii, orthopol0
 
+orthopol0 = input(default=Monomial, option=orthopol)
 firstCall0 = input(default=.FALSE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -377,7 +398,13 @@ IF (PRESENT(coeff)) THEN
         & line=__LINE__, &
         & unitno=stderr)
     END IF
-    coeff = LagrangeCoeff_Line(order=order, xij=xij)
+    coeff = LagrangeCoeff_Line(&
+      & order=order, &
+      & xij=xij, &
+      & orthopol=orthopol0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda)
     coeff0 = TRANSPOSE(coeff)
   ELSE
     coeff0 = TRANSPOSE(coeff)
@@ -391,14 +418,33 @@ ELSE
       & line=__LINE__, &
       & unitno=stderr)
   END IF
-  coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
+  coeff0 = TRANSPOSE(LagrangeCoeff_Line(&
+    & order=order, &
+    & xij=xij, &
+    & orthopol=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & ))
 END IF
 
-xx(1) = 1.0_DFP
-DO ii = 1, order
-  xx(ii + 1) = xx(ii) * x
-END DO
-ans = MATMUL(coeff0, xx)
+SELECT CASE (orthopol0)
+CASE (Monomial)
+  xx(1, 1) = 1.0_DFP
+  DO ii = 1, order
+    xx(1, ii + 1) = xx(1, ii) * x
+  END DO
+CASE DEFAULT
+  xx = EvalAllOrthopol(&
+    & n=order, &
+    & x=[x], &
+    & orthopol=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END SELECT
+
+ans = MATMUL(coeff0, xx(1, :))
 
 END PROCEDURE LagrangeEvalAll_Line1
 
@@ -409,8 +455,9 @@ END PROCEDURE LagrangeEvalAll_Line1
 MODULE PROCEDURE LagrangeEvalAll_Line2
 LOGICAL(LGT) :: firstCall0
 REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x), order + 1)
-INTEGER(I4B) :: ii
+INTEGER(I4B) :: ii, orthopol0
 
+orthopol0 = input(default=Monomial, option=orthopol)
 firstCall0 = input(default=.FALSE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -423,11 +470,15 @@ IF (PRESENT(coeff)) THEN
         & line=__LINE__, &
         & unitno=stderr)
     END IF
-    coeff = LagrangeCoeff_Line(order=order, xij=xij)
-    ! coeff0 = TRANSPOSE(coeff)
+    coeff = LagrangeCoeff_Line(&
+      & order=order, &
+      & xij=xij, &
+      & orthopol=orthopol0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda)
     coeff0 = coeff
   ELSE
-    ! coeff0 = TRANSPOSE(coeff)
     coeff0 = coeff
   END IF
 ELSE
@@ -440,14 +491,34 @@ ELSE
       & unitno=stderr)
   END IF
   ! coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
-  coeff0 = LagrangeCoeff_Line(order=order, xij=xij)
+  coeff0 = LagrangeCoeff_Line(&
+    & order=order, &
+    & xij=xij, &
+    & orthopol=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & )
 END IF
 
-xx(:, 1) = 1.0_DFP
-DO ii = 1, order
-  xx(:, ii + 1) = xx(:, ii) * x
-END DO
+SELECT CASE (orthopol0)
+CASE (Monomial)
+  xx(:, 1) = 1.0_DFP
+  DO ii = 1, order
+    xx(:, ii + 1) = xx(:, ii) * x
+  END DO
+CASE DEFAULT
+  xx = EvalAllOrthopol(&
+    & n=order, &
+    & x=x, &
+    & orthopol=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END SELECT
+
 ans = MATMUL(xx, coeff0)
+
 END PROCEDURE LagrangeEvalAll_Line2
 
 !----------------------------------------------------------------------------
