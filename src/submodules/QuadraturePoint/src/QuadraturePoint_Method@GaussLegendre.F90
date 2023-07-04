@@ -210,69 +210,51 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQP1
-  !!
 SELECT TYPE (refelem)
-  !!
 TYPE IS (ReferenceLine_)
   obj = getGaussLegendreQPLine1(order=order)
-  !!
 TYPE IS (ReferenceTriangle_)
   obj = getGaussLegendreQPTriangle1(order=order)
-  !!
 TYPE IS (ReferenceQuadrangle_)
   obj = getGaussLegendreQPQuadrangle1(order=order)
-  !!
 TYPE IS (ReferenceTetrahedron_)
   obj = getGaussLegendreQPTetrahedron1(order=order)
-  !!
 TYPE IS (ReferenceHexahedron_)
   obj = getGaussLegendreQPHexahedron1(order=order)
-  !!
 TYPE IS (ReferencePrism_)
   obj = getGaussLegendreQPPrism1(order=order)
-  !!
 TYPE IS (ReferencePyramid_)
   obj = getGaussLegendreQPPyramid1(order=order)
-  !!
 TYPE IS (ReferenceElement_)
-    !!
   IF (isLine(refelem%name)) THEN
     obj = getGaussLegendreQPLine1(order=order)
     RETURN
   END IF
-    !!
   IF (isTriangle(refelem%name)) THEN
     obj = getGaussLegendreQPTriangle1(order=order)
     RETURN
   END IF
-    !!
   IF (isQuadrangle(refelem%name)) THEN
     obj = getGaussLegendreQPQuadrangle1(order=order)
     RETURN
   END IF
-    !!
   IF (isTetrahedron(refelem%name)) THEN
     obj = getGaussLegendreQPTetrahedron1(order=order)
     RETURN
   END IF
-    !!
   IF (isHexahedron(refelem%name)) THEN
     obj = getGaussLegendreQPHexahedron1(order=order)
     RETURN
   END IF
-    !!
   IF (isPrism(refelem%name)) THEN
     obj = getGaussLegendreQPPrism1(order=order)
     RETURN
   END IF
-    !!
   IF (isPyramid(refelem%name)) THEN
     obj = getGaussLegendreQPPyramid1(order=order)
     RETURN
   END IF
-  !!
 END SELECT
-  !!
 END PROCEDURE getGaussLegendreQP1
 
 !----------------------------------------------------------------------------
@@ -280,69 +262,51 @@ END PROCEDURE getGaussLegendreQP1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQP2
-  !!
 SELECT TYPE (refelem)
-  !!
 TYPE IS (ReferenceLine_)
   obj = getGaussLegendreQPLine2(nips=nips)
-  !!
 TYPE IS (ReferenceTriangle_)
   obj = getGaussLegendreQPTriangle2(nips=nips)
-  !!
 TYPE IS (ReferenceQuadrangle_)
   obj = getGaussLegendreQPQuadrangle2(nips=nips)
-  !!
 TYPE IS (ReferenceTetrahedron_)
   obj = getGaussLegendreQPTetrahedron2(nips=nips)
-  !!
 TYPE IS (ReferenceHexahedron_)
   obj = getGaussLegendreQPHexahedron2(nips=nips)
-  !!
 TYPE IS (ReferencePrism_)
   obj = getGaussLegendreQPPrism2(nips=nips)
-  !!
 TYPE IS (ReferencePyramid_)
   obj = getGaussLegendreQPPyramid2(nips=nips)
-  !!
 TYPE IS (ReferenceElement_)
-    !!
   IF (isLine(refelem%name)) THEN
     obj = getGaussLegendreQPLine2(nips=nips)
     RETURN
   END IF
-    !!
   IF (isTriangle(refelem%name)) THEN
     obj = getGaussLegendreQPTriangle2(nips=nips)
     RETURN
   END IF
-    !!
   IF (isQuadrangle(refelem%name)) THEN
     obj = getGaussLegendreQPQuadrangle2(nips=nips)
     RETURN
   END IF
-    !!
   IF (isTetrahedron(refelem%name)) THEN
     obj = getGaussLegendreQPTetrahedron2(nips=nips)
     RETURN
   END IF
-    !!
   IF (isHexahedron(refelem%name)) THEN
     obj = getGaussLegendreQPHexahedron2(nips=nips)
     RETURN
   END IF
-    !!
   IF (isPrism(refelem%name)) THEN
     obj = getGaussLegendreQPPrism2(nips=nips)
     RETURN
   END IF
-    !!
   IF (isPyramid(refelem%name)) THEN
     obj = getGaussLegendreQPPyramid2(nips=nips)
     RETURN
   END IF
-  !!
 END SELECT
-  !!
 END PROCEDURE getGaussLegendreQP2
 
 !----------------------------------------------------------------------------
@@ -350,69 +314,51 @@ END PROCEDURE getGaussLegendreQP2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getGaussLegendreQP3
-  !!
 SELECT TYPE (refelem)
-  !!
 TYPE IS (ReferenceLine_)
   obj = getGaussLegendreQPLine1(order=p)
-  !!
 TYPE IS (ReferenceTriangle_)
   obj = getGaussLegendreQPTriangle1(order=p)
-  !!
 TYPE IS (ReferenceQuadrangle_)
   obj = getGaussLegendreQPQuadrangle3(p=p, q=q)
-  !!
 TYPE IS (ReferenceTetrahedron_)
   obj = getGaussLegendreQPTetrahedron1(order=p)
-  !!
 TYPE IS (ReferenceHexahedron_)
   obj = getGaussLegendreQPHexahedron1(order=p)
-  !!
 TYPE IS (ReferencePrism_)
   obj = getGaussLegendreQPPrism1(order=p)
-  !!
 TYPE IS (ReferencePyramid_)
   obj = getGaussLegendreQPPyramid1(order=p)
-  !!
 TYPE IS (ReferenceElement_)
-    !!
   IF (isLine(refelem%name)) THEN
     obj = getGaussLegendreQPLine1(order=p)
     RETURN
   END IF
-    !!
   IF (isTriangle(refelem%name)) THEN
     obj = getGaussLegendreQPTriangle1(order=p)
     RETURN
   END IF
-    !!
   IF (isQuadrangle(refelem%name)) THEN
     obj = getGaussLegendreQPQuadrangle3(p=p, q=q)
     RETURN
   END IF
-    !!
   IF (isTetrahedron(refelem%name)) THEN
     obj = getGaussLegendreQPTetrahedron1(order=p)
     RETURN
   END IF
-    !!
   IF (isHexahedron(refelem%name)) THEN
     obj = getGaussLegendreQPHexahedron1(order=p)
     RETURN
   END IF
-    !!
   IF (isPrism(refelem%name)) THEN
     obj = getGaussLegendreQPPrism1(order=p)
     RETURN
   END IF
-    !!
   IF (isPyramid(refelem%name)) THEN
     obj = getGaussLegendreQPPyramid1(order=p)
     RETURN
   END IF
-  !!
 END SELECT
-  !!
 END PROCEDURE getGaussLegendreQP3
 
 END SUBMODULE GaussLegendre
