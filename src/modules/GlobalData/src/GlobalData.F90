@@ -272,14 +272,19 @@ INTEGER(I4B), PARAMETER :: NormInfinity = 3
 !!
 !! Type of polynomial for scale interpolation
 !!
+INTEGER(I4B), PARAMETER :: Monomial = 0
 INTEGER(I4B), PARAMETER :: LagrangePolynomial = 1
+INTEGER(I4B), PARAMETER :: Lagrange = LagrangePolynomial
 INTEGER(I4B), PARAMETER :: SerendipityPolynomial = 2
+INTEGER(I4B), PARAMETER :: Serendipity = SerendipityPolynomial
 INTEGER(I4B), PARAMETER :: HeirarchicalPolynomial = 3
+INTEGER(I4B), PARAMETER :: Heirarchical = HeirarchicalPolynomial
 INTEGER(I4B), PARAMETER :: Jacobi = 4
 INTEGER(I4B), PARAMETER :: Ultraspherical = 5
 INTEGER(I4B), PARAMETER :: Legendre = 6
 INTEGER(I4B), PARAMETER :: Chebyshev = 7
 INTEGER(I4B), PARAMETER :: Lobatto = 8
+INTEGER(I4B), PARAMETER :: UnscaledLobatto = 9
 !!
 !! Quadrature types
 !!
