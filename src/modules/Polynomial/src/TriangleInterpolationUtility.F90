@@ -19,6 +19,37 @@ MODULE TriangleInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: LagrangeDegree_Triangle
+PUBLIC :: LagrangeDOF_Triangle
+PUBLIC :: LagrangeInDOF_Triangle
+PUBLIC :: EquidistanceInPoint_Triangle
+PUBLIC :: EquidistancePoint_Triangle
+PUBLIC :: InterpolationPoint_Triangle
+PUBLIC :: LagrangeCoeff_Triangle
+PUBLIC :: Dubiner_Triangle
+PUBLIC :: BarycentricVertexBasis_Triangle
+PUBLIC :: BarycentricEdgeBasis_Triangle
+PUBLIC :: BarycentricHeirarchicalBasis_Triangle
+PUBLIC :: VertexBasis_Triangle
+PUBLIC :: EdgeBasis_Triangle
+PUBLIC :: CellBasis_Triangle
+PUBLIC :: HeirarchicalBasis_Triangle
+PUBLIC :: RefTriangleCoord
+
+!----------------------------------------------------------------------------
+!                                                           RefTriangleCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference triangle
+
+INTERFACE
+  MODULE PURE FUNCTION RefTriangleCoord(refTriangle) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    REAL(DFP) :: ans(2, 3)
+  END FUNCTION RefTriangleCoord
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeDegree_Triangle
@@ -35,8 +66,6 @@ INTERFACE
   END FUNCTION LagrangeDegree_Triangle
 END INTERFACE
 
-PUBLIC :: LagrangeDegree_Triangle
-
 !----------------------------------------------------------------------------
 !                                                       LagrangeDOF_Triangle
 !----------------------------------------------------------------------------
@@ -52,8 +81,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeDOF_Triangle
 END INTERFACE
-
-PUBLIC :: LagrangeDOF_Triangle
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeInDOF_Triangle
@@ -76,8 +103,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeInDOF_Triangle
 END INTERFACE
-
-PUBLIC :: LagrangeInDOF_Triangle
 
 !----------------------------------------------------------------------------
 !                                              EquidistanceInPoint_Triangle
@@ -104,8 +129,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistanceInPoint_Triangle
 END INTERFACE
-
-PUBLIC :: EquidistanceInPoint_Triangle
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Triangle
@@ -136,8 +159,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Triangle
 END INTERFACE
-
-PUBLIC :: EquidistancePoint_Triangle
 
 !----------------------------------------------------------------------------
 !                                                BlythPozrikidis_Triangle
@@ -238,26 +259,13 @@ INTERFACE
   END FUNCTION InterpolationPoint_Triangle
 END INTERFACE
 
-PUBLIC :: InterpolationPoint_Triangle
-
 !----------------------------------------------------------------------------
 !                                                    LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary: Returns the coefficients for ith lagrange polynomial for monomial
-! basis
-!
-!# Introduction
-!
-! ith Lagrange polynomial for interpolation points xij is given by
-!
-!$$
-! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
-!$$
-!
-! This function returns the coefficients $a_{n}$.
+! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff_Triangle1(order, i, xij) RESULT(ans)
@@ -276,26 +284,13 @@ INTERFACE LagrangeCoeff_Triangle
   MODULE PROCEDURE LagrangeCoeff_Triangle1
 END INTERFACE LagrangeCoeff_Triangle
 
-PUBLIC :: LagrangeCoeff_Triangle
-
 !----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary: Returns the coefficients for ith lagrange polynomial for monomial
-! basis
-!
-!# Introduction
-!
-! ith Lagrange polynomial for interpolation points xij is given by
-!
-!$$
-! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
-!$$
-!
-! This function returns the coefficients $a_{n}$
+! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff_Triangle2(order, i, v, isVandermonde) &
@@ -323,18 +318,7 @@ END INTERFACE LagrangeCoeff_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary: Returns the coefficients for ith lagrange polynomial for monomial
-! basis
-!
-!# Introduction
-!
-! ith Lagrange polynomial for interpolation points xij is given by
-!
-!$$
-! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
-!$$
-!
-! This function returns the coefficients $a_{n}$
+! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff_Triangle3(order, i, v, ipiv) RESULT(ans)
@@ -361,18 +345,7 @@ END INTERFACE LagrangeCoeff_Triangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary: Returns the coefficients for ith lagrange polynomial for monomial
-! basis
-!
-!# Introduction
-!
-! ith Lagrange polynomial for interpolation points xij is given by
-!
-!$$
-! l_{i}(x) = \sum_{n=0}^{N} a_{n} x^{n}
-!$$
-!
-! This function returns the coefficients $a_{n}$ for ALL i.
+! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE
   MODULE FUNCTION LagrangeCoeff_Triangle4(order, xij) RESULT(ans)
@@ -447,8 +420,6 @@ INTERFACE Dubiner_Triangle
   MODULE PROCEDURE Dubiner_Triangle1
 END INTERFACE Dubiner_Triangle
 
-PUBLIC :: Dubiner_Triangle
-
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
@@ -496,12 +467,12 @@ INTERFACE
     & RESULT(ans)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentrix coords
+    !! number of rows = 3
+    !! number of columns = number of points
     REAL(DFP) :: ans(SIZE(lambda, 2), 3)
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION BarycentricVertexBasis_Triangle
 END INTERFACE
-
-PUBLIC :: BarycentricVertexBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                              BarycentricEdgeBasis_Triangle
@@ -527,11 +498,10 @@ INTERFACE
     !! order on edge (e3)
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to three.
     REAL(DFP) :: ans(SIZE(lambda, 2), pe1 + pe2 + pe3 - 3)
   END FUNCTION BarycentricEdgeBasis_Triangle
 END INTERFACE
-
-PUBLIC :: BarycentricEdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
 !
@@ -597,7 +567,7 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle1(order, &
-    & pe1, pe2, pe3, xij, refTriangle) RESULT(ans)
+    & pe1, pe2, pe3, lambda, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in the cell of triangle, it should be greater than 2
     INTEGER(I4B), INTENT(IN) :: pe1
@@ -606,12 +576,14 @@ INTERFACE
     !! order of interpolation on edge e2
     INTEGER(I4B), INTENT(IN) :: pe3
     !! order of interpolation on edge e3
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points of evaluation in xij format
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 3
+    !! number of cols = number of points
     CHARACTER(*), INTENT(IN) :: refTriangle
     !! reference triangle, "BIUNIT", "UNIT"
     REAL(DFP) :: ans( &
-      & SIZE(xij, 2), &
+      & SIZE(lambda, 2), &
       & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
     !!
   END FUNCTION BarycentricHeirarchicalBasis_Triangle1
@@ -620,8 +592,6 @@ END INTERFACE
 INTERFACE BarycentricHeirarchicalBasis_Triangle
   MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle1
 END INTERFACE BarycentricHeirarchicalBasis_Triangle
-
-PUBLIC :: BarycentricHeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                      BarycentricHeirarchicalBasis_Triangle
@@ -632,16 +602,18 @@ PUBLIC :: BarycentricHeirarchicalBasis_Triangle
 ! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
 
 INTERFACE
-  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle2(order, xij, &
+  MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle2(order, lambda, &
     & refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of approximation on triangle
-    REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points of evaluation in xij format
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 3
+    !! number of cols = number of points
     CHARACTER(*), INTENT(IN) :: refTriangle
     !! reference triangle, "BIUNIT", "UNIT"
     REAL(DFP) :: ans( &
-      & SIZE(xij, 2), &
+      & SIZE(lambda, 2), &
       & INT((order + 1) * (order + 2) / 2))
     !!
   END FUNCTION BarycentricHeirarchicalBasis_Triangle2
@@ -668,8 +640,6 @@ INTERFACE
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasis_Triangle
 END INTERFACE
-
-PUBLIC :: VertexBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Triangle2
@@ -719,8 +689,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xij, 2), pe1 + pe2 + pe3 - 3)
   END FUNCTION EdgeBasis_Triangle
 END INTERFACE
-
-PUBLIC :: EdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                        EdgeBasis_Triangle
@@ -778,8 +746,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xij, 2), INT((order - 1) * (order - 2) / 2))
   END FUNCTION CellBasis_Triangle
 END INTERFACE
-
-PUBLIC :: CellBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                      CellBasis_Triangle
@@ -844,7 +810,65 @@ INTERFACE HeirarchicalBasis_Triangle
   MODULE PROCEDURE HeirarchicalBasis_Triangle1
 END INTERFACE HeirarchicalBasis_Triangle
 
-PUBLIC :: HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+!                                                   LagrangeEvalAll_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-04
+! summary: Evaluate all Lagrange polynomial of order n at single points
+
+INTERFACE LagrangeEvalAll_Triangle
+  MODULE FUNCTION LagrangeEvalAll_Triangle1(order, x, xij, coeff, firstCall) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    !! interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP) :: ans(order + 1)
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Triangle1
+END INTERFACE LagrangeEvalAll_Triangle
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeEvalAll_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-04
+! summary: Evaluate all Lagrange polynomials of order n at several points
+
+INTERFACE LagrangeEvalAll_Triangle
+  MODULE FUNCTION LagrangeEvalAll_Triangle2(order, x, xij, coeff, firstCall) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point of evaluation
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    !! interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, and coeff is present then coefficient will be
+    !! returned in coeff, this can be used latter.
+    !! If firstCall is False, then coeff should be present, in this
+    !! case coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP) :: ans(SIZE(x), order + 1)
+    !! Value of n+1 Lagrange polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+  END FUNCTION LagrangeEvalAll_Triangle2
+END INTERFACE LagrangeEvalAll_Triangle
 
 !----------------------------------------------------------------------------
 !                                                                 Triangle

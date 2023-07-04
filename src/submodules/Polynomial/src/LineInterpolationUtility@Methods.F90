@@ -185,7 +185,6 @@ MODULE PROCEDURE InterpolationPoint_Line1
 CHARACTER(20) :: astr
 INTEGER(I4B) :: nsd, ii
 REAL(DFP) :: temp(order + 1), t1
-!!
 IF (order .EQ. 0_I4B) THEN
   IF (PRESENT(xij)) THEN
     nsd = SIZE(xij, 1)
@@ -197,30 +196,20 @@ IF (order .EQ. 0_I4B) THEN
   END IF
   RETURN
 END IF
-!!
 astr = TRIM(UpperCase(layout))
-!!
 SELECT CASE (ipType)
 CASE (Equidistance)
-  !!
   ans = EquidistancePoint_Line(xij=xij, order=order)
-  !!
   IF (astr .EQ. "INCREASING") THEN
     DO ii = 1, SIZE(ans, 1)
       ans(ii, :) = SORT(ans(ii, :))
     END DO
   END IF
-  !!
   RETURN
-  !!
 CASE (GaussLegendre)
-  !!
   CALL LegendreQuadrature(n=order + 1, pt=temp, quadType=Gauss)
-  !!
 CASE (GaussLegendreLobatto)
-  !!
   CALL LegendreQuadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
-  !!
   IF (layout .EQ. "VEFC") THEN
     t1 = temp(order + 1)
     IF (order .GE. 2) THEN
@@ -228,15 +217,10 @@ CASE (GaussLegendreLobatto)
     END IF
     temp(2) = t1
   END IF
-  !!
 CASE (GaussChebyshev)
-  !!
   CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=Gauss)
-  !!
 CASE (GaussChebyshevLobatto)
-  !!
   CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
-  !!
   IF (layout .EQ. "VEFC") THEN
     t1 = temp(order + 1)
     IF (order .GE. 2) THEN
@@ -244,7 +228,6 @@ CASE (GaussChebyshevLobatto)
     END IF
     temp(2) = t1
   END IF
-  !!
 CASE DEFAULT
   CALL ErrorMsg(&
     & msg="Unknown iptype", &
@@ -253,7 +236,7 @@ CASE DEFAULT
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
-!!
+
 IF (ipType .NE. Equidistance) THEN
   IF (PRESENT(xij)) THEN
     nsd = SIZE(xij, 1)
@@ -264,7 +247,6 @@ IF (ipType .NE. Equidistance) THEN
     CALL Reallocate(ans, 1, order + 1)
     ans(1, :) = temp
   END IF
-  !!
 END IF
 END PROCEDURE InterpolationPoint_Line1
 
@@ -275,31 +257,25 @@ END PROCEDURE InterpolationPoint_Line1
 MODULE PROCEDURE InterpolationPoint_Line2
 CHARACTER(20) :: astr
 REAL(DFP) :: t1
-!!
+
 IF (order .EQ. 0_I4B) THEN
   ans = [0.5_DFP * (xij(1) + xij(2))]
   RETURN
 END IF
-!!
+
 astr = TRIM(UpperCase(layout))
-!!
+
 SELECT CASE (ipType)
 CASE (Equidistance)
-  !!
   ans = EquidistancePoint_Line(xij=xij, order=order)
   IF (astr .EQ. "INCREASING") ans = SORT(ans)
   RETURN
-  !!
 CASE (GaussLegendre)
-  !!
   CALL Reallocate(ans, order + 1)
   CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=Gauss)
-  !!
 CASE (GaussLegendreLobatto)
-  !!
   CALL Reallocate(ans, order + 1)
   CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
-  !!
   IF (layout .EQ. "VEFC") THEN
     t1 = ans(order + 1)
     IF (order .GE. 2) THEN
@@ -307,17 +283,12 @@ CASE (GaussLegendreLobatto)
     END IF
     ans(2) = t1
   END IF
-  !!
 CASE (GaussChebyshev)
-  !!
   CALL Reallocate(ans, order + 1)
   CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=Gauss)
-  !!
 CASE (GaussChebyshevLobatto)
-  !!
   CALL Reallocate(ans, order + 1)
   CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
-  !!
   IF (layout .EQ. "VEFC") THEN
     t1 = ans(order + 1)
     IF (order .GE. 2) THEN
@@ -325,7 +296,6 @@ CASE (GaussChebyshevLobatto)
     END IF
     ans(2) = t1
   END IF
-  !!
 CASE DEFAULT
   CALL ErrorMsg(&
     & msg="Unknown iptype", &
@@ -334,11 +304,9 @@ CASE DEFAULT
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
-!!
 IF (ipType .NE. Equidistance) THEN
   ans = FromBiunitLine2Segment(xin=ans, x1=xij(1), x2=xij(2))
 END IF
-!!
 END PROCEDURE InterpolationPoint_Line2
 
 !----------------------------------------------------------------------------
@@ -389,14 +357,35 @@ CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Line4
 
 !----------------------------------------------------------------------------
+!                                                         LagrangeCoeff_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Line5
+SELECT CASE (orthopol)
+CASE (Monomial)
+  ans = LagrangeCoeff_Line(order=order, xij=xij)
+CASE DEFAULT
+  ans = EvalAllOrthopol(&
+    & n=order, &
+    & x=xij(1, :), &
+    & orthopol=orthopol, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+  CALL GetInvMat(ans)
+END SELECT
+END PROCEDURE LagrangeCoeff_Line5
+
+!----------------------------------------------------------------------------
 !                                                       LagrangeEvalAll_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeEvalAll_Line1
 LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(order + 1, order + 1), xx(order + 1)
-INTEGER(I4B) :: ii
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(1, order + 1)
+INTEGER(I4B) :: ii, orthopol0
 
+orthopol0 = input(default=Monomial, option=orthopol)
 firstCall0 = input(default=.FALSE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -409,7 +398,13 @@ IF (PRESENT(coeff)) THEN
         & line=__LINE__, &
         & unitno=stderr)
     END IF
-    coeff = LagrangeCoeff_Line(order=order, xij=xij)
+    coeff = LagrangeCoeff_Line(&
+      & order=order, &
+      & xij=xij, &
+      & orthopol=orthopol0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda)
     coeff0 = TRANSPOSE(coeff)
   ELSE
     coeff0 = TRANSPOSE(coeff)
@@ -423,14 +418,33 @@ ELSE
       & line=__LINE__, &
       & unitno=stderr)
   END IF
-  coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
+  coeff0 = TRANSPOSE(LagrangeCoeff_Line(&
+    & order=order, &
+    & xij=xij, &
+    & orthopol=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & ))
 END IF
 
-xx(1) = 1.0_DFP
-DO ii = 1, order
-  xx(ii + 1) = xx(ii) * x
-END DO
-ans = MATMUL(coeff0, xx)
+SELECT CASE (orthopol0)
+CASE (Monomial)
+  xx(1, 1) = 1.0_DFP
+  DO ii = 1, order
+    xx(1, ii + 1) = xx(1, ii) * x
+  END DO
+CASE DEFAULT
+  xx = EvalAllOrthopol(&
+    & n=order, &
+    & x=[x], &
+    & orthopol=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END SELECT
+
+ans = MATMUL(coeff0, xx(1, :))
 
 END PROCEDURE LagrangeEvalAll_Line1
 
@@ -441,8 +455,9 @@ END PROCEDURE LagrangeEvalAll_Line1
 MODULE PROCEDURE LagrangeEvalAll_Line2
 LOGICAL(LGT) :: firstCall0
 REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x), order + 1)
-INTEGER(I4B) :: ii
+INTEGER(I4B) :: ii, orthopol0
 
+orthopol0 = input(default=Monomial, option=orthopol)
 firstCall0 = input(default=.FALSE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
@@ -451,14 +466,20 @@ IF (PRESENT(coeff)) THEN
       CALL Errormsg(&
         & msg="xij should be present!", &
         & file=__FILE__, &
-        & routine="LagrangeEvalAll_Line1", &
+        & routine="LagrangeEvalAll_Line2", &
         & line=__LINE__, &
         & unitno=stderr)
     END IF
-    coeff = LagrangeCoeff_Line(order=order, xij=xij)
-    coeff0 = TRANSPOSE(coeff)
+    coeff = LagrangeCoeff_Line(&
+      & order=order, &
+      & xij=xij, &
+      & orthopol=orthopol0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda)
+    coeff0 = coeff
   ELSE
-    coeff0 = TRANSPOSE(coeff)
+    coeff0 = coeff
   END IF
 ELSE
   IF (.NOT. PRESENT(xij)) THEN
@@ -469,14 +490,35 @@ ELSE
       & line=__LINE__, &
       & unitno=stderr)
   END IF
-  coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
+  ! coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
+  coeff0 = LagrangeCoeff_Line(&
+    & order=order, &
+    & xij=xij, &
+    & orthopol=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & )
 END IF
 
-xx(:, 1) = 1.0_DFP
-DO ii = 1, order
-  xx(:, ii + 1) = xx(:, ii) * x
-END DO
+SELECT CASE (orthopol0)
+CASE (Monomial)
+  xx(:, 1) = 1.0_DFP
+  DO ii = 1, order
+    xx(:, ii + 1) = xx(:, ii) * x
+  END DO
+CASE DEFAULT
+  xx = EvalAllOrthopol(&
+    & n=order, &
+    & x=x, &
+    & orthopol=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END SELECT
+
 ans = MATMUL(xx, coeff0)
+
 END PROCEDURE LagrangeEvalAll_Line2
 
 !----------------------------------------------------------------------------

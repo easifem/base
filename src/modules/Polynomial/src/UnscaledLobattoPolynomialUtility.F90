@@ -25,6 +25,16 @@ MODULE UnscaledLobattoPolynomialUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: UnscaledLobattoLeadingCoeff
+PUBLIC :: UnscaledLobattoZeros
+PUBLIC :: UnscaledLobattoEval
+PUBLIC :: UnscaledLobattoEvalAll
+PUBLIC :: UnscaledLobattoMonomialExpansionAll
+PUBLIC :: UnscaledLobattoMonomialExpansion
+PUBLIC :: UnscaledLobattoGradientEvalAll
+PUBLIC :: UnscaledLobattoGradientEval
+PUBLIC :: UnscaledLobattoMassMatrix
+PUBLIC :: UnscaledLobattoStiffnessMatrix
 
 !----------------------------------------------------------------------------
 !                                               UnscaledLobattoLeadingCoeff
@@ -42,8 +52,6 @@ INTERFACE
     !! answer
   END FUNCTION UnscaledLobattoLeadingCoeff
 END INTERFACE
-
-PUBLIC :: UnscaledLobattoLeadingCoeff
 
 !----------------------------------------------------------------------------
 !
@@ -78,8 +86,6 @@ INTERFACE
   END FUNCTION UnscaledLobattoZeros
 END INTERFACE
 
-PUBLIC :: UnscaledLobattoZeros
-
 !----------------------------------------------------------------------------
 !                                                        UnscaledLobattoEval
 !----------------------------------------------------------------------------
@@ -111,8 +117,6 @@ END INTERFACE
 INTERFACE UnscaledLobattoEval
   MODULE PROCEDURE UnscaledLobattoEval1
 END INTERFACE UnscaledLobattoEval
-
-PUBLIC :: UnscaledLobattoEval
 
 !----------------------------------------------------------------------------
 !                                                          UnscaledLobattoEval
@@ -181,8 +185,6 @@ INTERFACE UnscaledLobattoEvalAll
   MODULE PROCEDURE UnscaledLobattoEvalAll1
 END INTERFACE UnscaledLobattoEvalAll
 
-PUBLIC :: UnscaledLobattoEvalAll
-
 !----------------------------------------------------------------------------
 !                                                     UnscaledLobattoEvalAll
 !----------------------------------------------------------------------------
@@ -250,8 +252,6 @@ INTERFACE
   END FUNCTION UnscaledLobattoMonomialExpansionAll
 END INTERFACE
 
-PUBLIC :: UnscaledLobattoMonomialExpansionAll
-
 !----------------------------------------------------------------------------
 !                                           UnscaledLobattoMonomialExpansion
 !----------------------------------------------------------------------------
@@ -274,8 +274,6 @@ INTERFACE
     REAL(DFP) :: ans(1:n + 1)
   END FUNCTION UnscaledLobattoMonomialExpansion
 END INTERFACE
-
-PUBLIC :: UnscaledLobattoMonomialExpansion
 
 !----------------------------------------------------------------------------
 !
@@ -301,8 +299,6 @@ END INTERFACE
 INTERFACE UnscaledLobattoGradientEvalAll
   MODULE PROCEDURE UnscaledLobattoGradientEvalAll1
 END INTERFACE UnscaledLobattoGradientEvalAll
-
-PUBLIC :: UnscaledLobattoGradientEvalAll
 
 !----------------------------------------------------------------------------
 !
@@ -354,8 +350,6 @@ INTERFACE UnscaledLobattoGradientEval
   MODULE PROCEDURE UnscaledLobattoGradientEval1
 END INTERFACE UnscaledLobattoGradientEval
 
-PUBLIC :: UnscaledLobattoGradientEval
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -395,8 +389,6 @@ INTERFACE
   END FUNCTION UnscaledLobattoMassMatrix
 END INTERFACE
 
-PUBLIC :: UnscaledLobattoMassMatrix
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -411,8 +403,6 @@ INTERFACE
     REAL(DFP) :: ans(n + 1, n + 1)
   END FUNCTION UnscaledLobattoStiffnessMatrix
 END INTERFACE
-
-PUBLIC :: UnscaledLobattoStiffnessMatrix
 
 !----------------------------------------------------------------------------
 !

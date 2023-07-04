@@ -26,6 +26,33 @@ USE GlobalData
 USE BaseType, ONLY: iface_1DFunction
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: GetJacobiRecurrenceCoeff
+PUBLIC :: GetJacobiRecurrenceCoeff2
+PUBLIC :: JacobiAlpha
+PUBLIC :: JacobiBeta
+PUBLIC :: JacobiLeadingCoeff
+PUBLIC :: JacobiLeadingCoeffRatio
+PUBLIC :: JacobiNormSQR
+PUBLIC :: JacobiNormSQR2
+PUBLIC :: JacobiNormSQRRatio
+PUBLIC :: JacobiJacobiMatrix
+PUBLIC :: JacobiGaussQuadrature
+PUBLIC :: JacobiJacobiRadauMatrix
+PUBLIC :: JacobiGaussRadauQuadrature
+PUBLIC :: JacobiJacobiLobattoMatrix
+PUBLIC :: JacobiGaussLobattoQuadrature
+PUBLIC :: JacobiZeros
+PUBLIC :: JacobiQuadrature
+PUBLIC :: JacobiEvalAll
+PUBLIC :: JacobiEval
+PUBLIC :: JacobiEvalSum
+PUBLIC :: JacobiGradientEval
+PUBLIC :: JacobiGradientEvalAll
+PUBLIC :: JacobiGradientEvalSum
+PUBLIC :: JacobiTransform
+PUBLIC :: JacobiInvTransform
+PUBLIC :: JacobiGradientCoeff
+PUBLIC :: JacobiDMatrix
 
 !----------------------------------------------------------------------------
 !                                                  GetJacobiRecurrenceCoeff
@@ -50,8 +77,6 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: betaCoeff(0:n - 1)
   END SUBROUTINE GetJacobiRecurrenceCoeff
 END INTERFACE
-
-PUBLIC :: GetJacobiRecurrenceCoeff
 
 !----------------------------------------------------------------------------
 !                                                GetJacobiRecurrenceCoeff2
@@ -83,8 +108,6 @@ INTERFACE
   END SUBROUTINE GetJacobiRecurrenceCoeff2
 END INTERFACE
 
-PUBLIC :: GetJacobiRecurrenceCoeff2
-
 !----------------------------------------------------------------------------
 !                                                               JacobiAlpha
 !----------------------------------------------------------------------------
@@ -105,8 +128,6 @@ INTERFACE
     !! answer
   END FUNCTION JacobiAlpha
 END INTERFACE
-
-PUBLIC :: JacobiAlpha
 
 !----------------------------------------------------------------------------
 !                                                                JacobiBeta
@@ -129,8 +150,6 @@ INTERFACE
   END FUNCTION JacobiBeta
 END INTERFACE
 
-PUBLIC :: JacobiBeta
-
 !----------------------------------------------------------------------------
 !                                                         JacobiLeadingCoeff
 !----------------------------------------------------------------------------
@@ -152,8 +171,6 @@ INTERFACE
   END FUNCTION JacobiLeadingCoeff
 END INTERFACE
 
-PUBLIC :: JacobiLeadingCoeff
-
 !----------------------------------------------------------------------------
 !                                                    JacobiLeadingCoeffRatio
 !----------------------------------------------------------------------------
@@ -174,8 +191,6 @@ INTERFACE
     !! answer
   END FUNCTION JacobiLeadingCoeffRatio
 END INTERFACE
-
-PUBLIC :: JacobiLeadingCoeffRatio
 
 !----------------------------------------------------------------------------
 !                                                             JacobiNormSQR
@@ -203,8 +218,6 @@ INTERFACE
   END FUNCTION JacobiNormSQR
 END INTERFACE
 
-PUBLIC :: JacobiNormSQR
-
 !----------------------------------------------------------------------------
 !                                                            JacobiNormSQR2
 !----------------------------------------------------------------------------
@@ -231,8 +244,6 @@ INTERFACE
   END FUNCTION JacobiNormSQR2
 END INTERFACE
 
-PUBLIC :: JacobiNormSQR2
-
 !----------------------------------------------------------------------------
 !                                                         JacobiNormSQRRatio
 !----------------------------------------------------------------------------
@@ -249,8 +260,6 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION JacobiNormSQRRatio
 END INTERFACE
-
-PUBLIC :: JacobiNormSQRRatio
 
 !----------------------------------------------------------------------------
 !                                                      JacobiJacobiMatrix
@@ -273,8 +282,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
   END SUBROUTINE JacobiJacobiMatrix
 END INTERFACE
-
-PUBLIC :: JacobiJacobiMatrix
 
 !----------------------------------------------------------------------------
 !                                                     JacobiGaussQuadrature
@@ -305,8 +312,6 @@ INTERFACE
   END SUBROUTINE JacobiGaussQuadrature
 END INTERFACE
 
-PUBLIC :: JacobiGaussQuadrature
-
 !----------------------------------------------------------------------------
 !                                                   JacobiJacobiRadauMatrix
 !----------------------------------------------------------------------------
@@ -330,8 +335,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
   END SUBROUTINE JacobiJacobiRadauMatrix
 END INTERFACE
-
-PUBLIC :: JacobiJacobiRadauMatrix
 
 !----------------------------------------------------------------------------
 !                                                JacobiGaussRadauQuadrature
@@ -376,8 +379,6 @@ INTERFACE
   END SUBROUTINE JacobiGaussRadauQuadrature
 END INTERFACE
 
-PUBLIC :: JacobiGaussRadauQuadrature
-
 !----------------------------------------------------------------------------
 !                                                 JacobiJacobiLobattoMatrix
 !----------------------------------------------------------------------------
@@ -399,8 +400,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
   END SUBROUTINE JacobiJacobiLobattoMatrix
 END INTERFACE
-
-PUBLIC :: JacobiJacobiLobattoMatrix
 
 !----------------------------------------------------------------------------
 !                                              JacobiGaussLobattoQuadrature
@@ -441,8 +440,6 @@ INTERFACE
   END SUBROUTINE JacobiGaussLobattoQuadrature
 END INTERFACE
 
-PUBLIC :: JacobiGaussLobattoQuadrature
-
 !----------------------------------------------------------------------------
 !                                                              JacobiZeros
 !----------------------------------------------------------------------------
@@ -460,8 +457,6 @@ INTERFACE
     REAL(DFP) :: ans(n)
   END FUNCTION JacobiZeros
 END INTERFACE
-
-PUBLIC :: JacobiZeros
 
 !----------------------------------------------------------------------------
 !                                                          JacobiQuadrature
@@ -509,26 +504,23 @@ INTERFACE
   END SUBROUTINE JacobiQuadrature
 END INTERFACE
 
-PUBLIC :: JacobiQuadrature
-
 !----------------------------------------------------------------------------
 !                                                             JacobiEvalAll
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Jacobi polynomials from order = 0 to n at several points
+! summary: Evaluate Jacobi polynomials from order = 0 to n at single points
 !
 !# Introduction
 !
-! Evaluate Jacobi polynomials from order = 0 to n at several points
+! Evaluate Jacobi polynomials from order = 0 to n at single points
 !
 !- N, the highest order polynomial to compute. Note that polynomials 0
 ! through N will be computed.
 !- alpha, beta are parameters
 !- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
-! X.
+!- ans(1:N+1), the values of the first N+1 Jacobi polynomials at x
 
 INTERFACE
   MODULE PURE FUNCTION JacobiEvalAll1(n, alpha, beta, x) RESULT(ans)
@@ -546,15 +538,13 @@ INTERFACE JacobiEvalAll
   MODULE PROCEDURE JacobiEvalAll1
 END INTERFACE JacobiEvalAll
 
-PUBLIC :: JacobiEvalAll
-
 !----------------------------------------------------------------------------
 !                                                             JacobiEvalUpto
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Jacobi polynomials from order = 0 to n at several points
+! summary: Evaluate Jacobi polynomial of order = 0 to n at several points
 !
 !# Introduction
 !
@@ -589,18 +579,15 @@ END INTERFACE JacobiEvalAll
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Jacobi polynomials from order = 0 to n at several points
+! summary: Evaluate Jacobi polynomials of order n at single points.
 !
 !# Introduction
 !
-! Evaluate Jacobi polynomials from order = 0 to n at several points
+! Evaluate Jacobi polynomials of order n at single points.
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
+!- N, the order of polynomial to compute.
 !- alpha, beta are parameters
 !- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
-! X.
 
 INTERFACE
   MODULE PURE FUNCTION JacobiEval1(n, alpha, beta, x) RESULT(ans)
@@ -617,26 +604,21 @@ INTERFACE JacobiEval
   MODULE PROCEDURE JacobiEval1
 END INTERFACE JacobiEval
 
-PUBLIC :: JacobiEval
-
 !----------------------------------------------------------------------------
 !                                                             JacobiEvalUpto
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Jacobi polynomials from order = 0 to n at several points
+! summary: Evaluate Jacobi polynomials of order n at several points
 !
 !# Introduction
 !
-! Evaluate Jacobi polynomials from order = 0 to n at several points
+! Evaluate Jacobi polynomials of order n at several points
 !
-!- N, the highest order polynomial to compute. Note that polynomials 0
-! through N will be computed.
+!- N, the order of polynomial to compute.
 !- alpha, beta are parameters
 !- x: the point at which the polynomials are to be evaluated.
-!- ans(M,1:N+1), the values of the first N+1 Jacobi polynomials at the point
-! X.
 
 INTERFACE
   MODULE PURE FUNCTION JacobiEval2(n, alpha, beta, x) RESULT(ans)
@@ -681,8 +663,6 @@ END INTERFACE
 INTERFACE JacobiEvalSum
   MODULE PROCEDURE JacobiEvalSum1
 END INTERFACE JacobiEvalSum
-
-PUBLIC :: JacobiEvalSum
 
 !----------------------------------------------------------------------------
 !                                                             JacobiEvalSum
@@ -740,8 +720,6 @@ INTERFACE JacobiGradientEval
   MODULE PROCEDURE JacobiGradientEval1
 END INTERFACE JacobiGradientEval
 
-PUBLIC :: JacobiGradientEval
-
 !----------------------------------------------------------------------------
 !                                                        JacobiGradientEval
 !----------------------------------------------------------------------------
@@ -791,8 +769,6 @@ END INTERFACE
 INTERFACE JacobiGradientEvalAll
   MODULE PROCEDURE JacobiGradientEvalAll1
 END INTERFACE JacobiGradientEvalAll
-
-PUBLIC :: JacobiGradientEvalAll
 
 !----------------------------------------------------------------------------
 !                                                     JacobiGradientEvalAll
@@ -847,8 +823,6 @@ END INTERFACE
 INTERFACE JacobiGradientEvalSum
   MODULE PROCEDURE JacobiGradientEvalSum1
 END INTERFACE JacobiGradientEvalSum
-
-PUBLIC :: JacobiGradientEvalSum
 
 !----------------------------------------------------------------------------
 !                                                     JacobiGradientEvalSum
@@ -982,8 +956,6 @@ INTERFACE JacobiTransform
   MODULE PROCEDURE JacobiTransform1
 END INTERFACE JacobiTransform
 
-PUBLIC :: JacobiTransform
-
 !----------------------------------------------------------------------------
 !                                                           JacobiTransform
 !----------------------------------------------------------------------------
@@ -1100,8 +1072,6 @@ INTERFACE JacobiInvTransform
   MODULE PROCEDURE JacobiInvTransform1
 END INTERFACE JacobiInvTransform
 
-PUBLIC :: JacobiInvTransform
-
 !----------------------------------------------------------------------------
 !                                                        JacobiInvTransform
 !----------------------------------------------------------------------------
@@ -1165,8 +1135,6 @@ INTERFACE JacobiGradientCoeff
   MODULE PROCEDURE JacobiGradientCoeff1
 END INTERFACE JacobiGradientCoeff
 
-PUBLIC :: JacobiGradientCoeff
-
 !----------------------------------------------------------------------------
 !                                                              JacobiDMatrix
 !----------------------------------------------------------------------------
@@ -1201,7 +1169,5 @@ END INTERFACE
 INTERFACE JacobiDMatrix
   MODULE PROCEDURE JacobiDMatrix1
 END INTERFACE JacobiDMatrix
-
-PUBLIC :: JacobiDMatrix
 
 END MODULE JacobiPolynomialUtility

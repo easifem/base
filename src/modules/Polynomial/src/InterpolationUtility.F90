@@ -16,9 +16,10 @@
 !
 
 MODULE InterpolationUtility
-USE GlobalData, ONLY: I4B, DFP, Real32, Real64
+USE GlobalData, ONLY: I4B, DFP, REAL32, REAL64
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: VandermondeMatrix
 
 !----------------------------------------------------------------------------
 !
@@ -28,24 +29,18 @@ PRIVATE
 ! date: 27 July 2022
 ! summary: Returns vandermonde matrix
 
-INTERFACE
+INTERFACE VandermondeMatrix
   MODULE PURE FUNCTION VandermondeMatrix_Real32(order, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    REAL(Real32), INTENT(IN) :: x(:)
-    REAL(Real32) :: ans(SIZE(x), order + 1)
+    REAL(REAL32), INTENT(IN) :: x(:)
+    REAL(REAL32) :: ans(SIZE(x), order + 1)
   END FUNCTION VandermondeMatrix_Real32
 
   MODULE PURE FUNCTION VandermondeMatrix_Real64(order, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    REAL(Real64), INTENT(IN) :: x(:)
-    REAL(Real64) :: ans(SIZE(x), order + 1)
+    REAL(REAL64), INTENT(IN) :: x(:)
+    REAL(REAL64) :: ans(SIZE(x), order + 1)
   END FUNCTION VandermondeMatrix_Real64
-END INTERFACE
-
-INTERFACE VandermondeMatrix
-  MODULE PROCEDURE VandermondeMatrix_Real32, VandermondeMatrix_Real64
 END INTERFACE VandermondeMatrix
-
-PUBLIC :: VandermondeMatrix
 
 END MODULE InterpolationUtility

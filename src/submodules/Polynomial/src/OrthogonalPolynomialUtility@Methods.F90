@@ -162,6 +162,10 @@ CASE (Legendre)
   ans = LegendreEvalAll(n=n, x=x)
 CASE (Chebyshev)
   ans = Chebyshev1EvalAll(n=n, x=x)
+CASE (Lobatto)
+  ans = LobattoEvalAll(n=n, x=x)
+CASE (UnscaledLobatto)
+  ans = UnscaledLobattoEvalAll(n=n, x=x)
 END SELECT
 END PROCEDURE EvalAllOrthopol
 

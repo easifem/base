@@ -26,6 +26,36 @@ USE GlobalData
 USE BaseType, ONLY: iface_1DFunction
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: LegendreAlpha
+PUBLIC :: LegendreBeta
+PUBLIC :: GetLegendreRecurrenceCoeff
+PUBLIC :: GetLegendreRecurrenceCoeff2
+PUBLIC :: LegendreLeadingCoeff
+PUBLIC :: LegendreLeadingCoeffRatio
+PUBLIC :: LegendreNormSQR
+PUBLIC :: LegendreNormSQR2
+PUBLIC :: LegendreNormSqrRatio
+PUBLIC :: LegendreJacobiMatrix
+PUBLIC :: LegendreGaussQuadrature
+PUBLIC :: LegendreJacobiRadauMatrix
+PUBLIC :: LegendreGaussRadauQuadrature
+PUBLIC :: LegendreJacobiLobattoMatrix
+PUBLIC :: LegendreGaussLobattoQuadrature
+PUBLIC :: LegendreZeros
+PUBLIC :: LegendreQuadrature
+PUBLIC :: LegendreEval
+PUBLIC :: LegendreEvalAll
+PUBLIC :: LegendreMonomialExpansionAll
+PUBLIC :: LegendreMonomialExpansion
+PUBLIC :: LegendreGradientEvalAll
+PUBLIC :: LegendreGradientEval
+PUBLIC :: LegendreEvalSum
+PUBLIC :: LegendreGradientEvalSum
+PUBLIC :: LegendreTransform
+PUBLIC :: LegendreInvTransform
+PUBLIC :: LegendreGradientCoeff
+PUBLIC :: LegendreDMatrix
+PUBLIC :: LegendreDMatEvenOdd
 
 !----------------------------------------------------------------------------
 !                                                             LegendreAlpha
@@ -44,8 +74,6 @@ INTERFACE
   END FUNCTION LegendreAlpha
 END INTERFACE
 
-PUBLIC :: LegendreAlpha
-
 !----------------------------------------------------------------------------
 !                                                              LegendreBeta
 !----------------------------------------------------------------------------
@@ -62,8 +90,6 @@ INTERFACE
     !! answer
   END FUNCTION LegendreBeta
 END INTERFACE
-
-PUBLIC :: LegendreBeta
 
 !----------------------------------------------------------------------------
 !                                                  GetLegendreRecurrenceCoeff
@@ -102,8 +128,6 @@ INTERFACE
   END SUBROUTINE GetLegendreRecurrenceCoeff
 END INTERFACE
 
-PUBLIC :: GetLegendreRecurrenceCoeff
-
 !----------------------------------------------------------------------------
 !                                              GetLegendreRecurrenceCoeff2
 !----------------------------------------------------------------------------
@@ -124,8 +148,6 @@ INTERFACE
     !! size is n
   END SUBROUTINE GetLegendreRecurrenceCoeff2
 END INTERFACE
-
-PUBLIC :: GetLegendreRecurrenceCoeff2
 
 !----------------------------------------------------------------------------
 !                                                         LegendreLeadingCoeff
@@ -153,8 +175,6 @@ INTERFACE
   END FUNCTION LegendreLeadingCoeff
 END INTERFACE
 
-PUBLIC :: LegendreLeadingCoeff
-
 !----------------------------------------------------------------------------
 !                                                 LegendreLeadingCoeffRatio
 !----------------------------------------------------------------------------
@@ -171,8 +191,6 @@ INTERFACE
     !! answer
   END FUNCTION LegendreLeadingCoeffRatio
 END INTERFACE
-
-PUBLIC :: LegendreLeadingCoeffRatio
 
 !----------------------------------------------------------------------------
 !                                                            LegendreNormSQR
@@ -197,8 +215,6 @@ INTERFACE
   END FUNCTION LegendreNormSQR
 END INTERFACE
 
-PUBLIC :: LegendreNormSQR
-
 !----------------------------------------------------------------------------
 !                                                            LegendreNormSQR2
 !----------------------------------------------------------------------------
@@ -222,8 +238,6 @@ INTERFACE
   END FUNCTION LegendreNormSQR2
 END INTERFACE
 
-PUBLIC :: LegendreNormSQR2
-
 !----------------------------------------------------------------------------
 !                                                      LegendreNormSQRRatio
 !----------------------------------------------------------------------------
@@ -238,8 +252,6 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION LegendreNormSQRRatio
 END INTERFACE
-
-PUBLIC :: LegendreNormSqrRatio
 
 !----------------------------------------------------------------------------
 !                                                      LegendreJacobiMatrix
@@ -263,8 +275,6 @@ INTERFACE
     !! recurrence coefficient of monic legendre polynomial, from 0 to n-1
   END SUBROUTINE LegendreJacobiMatrix
 END INTERFACE
-
-PUBLIC :: LegendreJacobiMatrix
 
 !----------------------------------------------------------------------------
 !                                                     LegendreGaussQuadrature
@@ -293,8 +303,6 @@ INTERFACE
   END SUBROUTINE LegendreGaussQuadrature
 END INTERFACE
 
-PUBLIC :: LegendreGaussQuadrature
-
 !----------------------------------------------------------------------------
 !                                               LegendreJacobiRadauMatrix
 !----------------------------------------------------------------------------
@@ -314,8 +322,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
   END SUBROUTINE LegendreJacobiRadauMatrix
 END INTERFACE
-
-PUBLIC :: LegendreJacobiRadauMatrix
 
 !----------------------------------------------------------------------------
 !                                                LegendreGaussRadauQuadrature
@@ -356,8 +362,6 @@ INTERFACE
   END SUBROUTINE LegendreGaussRadauQuadrature
 END INTERFACE
 
-PUBLIC :: LegendreGaussRadauQuadrature
-
 !----------------------------------------------------------------------------
 !                                             LegendreLegendreLobattoMatrix
 !----------------------------------------------------------------------------
@@ -375,8 +379,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
   END SUBROUTINE LegendreJacobiLobattoMatrix
 END INTERFACE
-
-PUBLIC :: LegendreJacobiLobattoMatrix
 
 !----------------------------------------------------------------------------
 !                                              LegendreGaussLobattoQuadrature
@@ -415,8 +417,6 @@ INTERFACE
   END SUBROUTINE LegendreGaussLobattoQuadrature
 END INTERFACE
 
-PUBLIC :: LegendreGaussLobattoQuadrature
-
 !----------------------------------------------------------------------------
 !                                                              LegendreZeros
 !----------------------------------------------------------------------------
@@ -432,8 +432,6 @@ INTERFACE
     REAL(DFP) :: ans(n)
   END FUNCTION LegendreZeros
 END INTERFACE
-
-PUBLIC :: LegendreZeros
 
 !----------------------------------------------------------------------------
 !                                                          LegendreQuadrature
@@ -480,8 +478,6 @@ INTERFACE
   END SUBROUTINE LegendreQuadrature
 END INTERFACE
 
-PUBLIC :: LegendreQuadrature
-
 !----------------------------------------------------------------------------
 !                                                             LegendreEval
 !----------------------------------------------------------------------------
@@ -508,8 +504,6 @@ END INTERFACE
 INTERFACE LegendreEval
   MODULE PROCEDURE LegendreEval1
 END INTERFACE LegendreEval
-
-PUBLIC :: LegendreEval
 
 !----------------------------------------------------------------------------
 !                                                          LegendreEval
@@ -568,8 +562,6 @@ END INTERFACE
 INTERFACE LegendreEvalAll
   MODULE PROCEDURE LegendreEvalAll1
 END INTERFACE LegendreEvalAll
-
-PUBLIC :: LegendreEvalAll
 
 !----------------------------------------------------------------------------
 !                                                           LegendreEvalAll
@@ -644,8 +636,6 @@ INTERFACE
   END FUNCTION LegendreMonomialExpansionAll
 END INTERFACE
 
-PUBLIC :: LegendreMonomialExpansionAll
-
 !----------------------------------------------------------------------------
 !                                             LegendreMonomialExpansion
 !----------------------------------------------------------------------------
@@ -668,8 +658,6 @@ INTERFACE
     REAL(DFP) :: ans(1:n + 1)
   END FUNCTION LegendreMonomialExpansion
 END INTERFACE
-
-PUBLIC :: LegendreMonomialExpansion
 
 !----------------------------------------------------------------------------
 !
@@ -695,8 +683,6 @@ END INTERFACE
 INTERFACE LegendreGradientEvalAll
   MODULE PROCEDURE LegendreGradientEvalAll1
 END INTERFACE LegendreGradientEvalAll
-
-PUBLIC :: LegendreGradientEvalAll
 
 !----------------------------------------------------------------------------
 !
@@ -747,8 +733,6 @@ END INTERFACE
 INTERFACE LegendreGradientEval
   MODULE PROCEDURE LegendreGradientEval1
 END INTERFACE LegendreGradientEval
-
-PUBLIC :: LegendreGradientEval
 
 !----------------------------------------------------------------------------
 !
@@ -801,8 +785,6 @@ INTERFACE LegendreEvalSum
   MODULE PROCEDURE LegendreEvalSum1
 END INTERFACE LegendreEvalSum
 
-PUBLIC :: LegendreEvalSum
-
 !----------------------------------------------------------------------------
 !                                                          LegendreEvalSum
 !----------------------------------------------------------------------------
@@ -853,8 +835,6 @@ END INTERFACE
 INTERFACE LegendreGradientEvalSum
   MODULE PROCEDURE LegendreGradientEvalSum1
 END INTERFACE LegendreGradientEvalSum
-
-PUBLIC :: LegendreGradientEvalSum
 
 !----------------------------------------------------------------------------
 !                                              LegendreGradientEvalSum
@@ -970,8 +950,6 @@ INTERFACE LegendreTransform
   MODULE PROCEDURE LegendreTransform1
 END INTERFACE LegendreTransform
 
-PUBLIC :: LegendreTransform
-
 !----------------------------------------------------------------------------
 !                                                   LegendreTransform
 !----------------------------------------------------------------------------
@@ -1076,8 +1054,6 @@ INTERFACE LegendreInvTransform
   MODULE PROCEDURE LegendreInvTransform1
 END INTERFACE LegendreInvTransform
 
-PUBLIC :: LegendreInvTransform
-
 !----------------------------------------------------------------------------
 !                                                 LegendreInvTransform
 !----------------------------------------------------------------------------
@@ -1134,8 +1110,6 @@ INTERFACE LegendreGradientCoeff
   MODULE PROCEDURE LegendreGradientCoeff1
 END INTERFACE LegendreGradientCoeff
 
-PUBLIC :: LegendreGradientCoeff
-
 !----------------------------------------------------------------------------
 !                                                           LegendreDMatrix
 !----------------------------------------------------------------------------
@@ -1162,8 +1136,6 @@ INTERFACE LegendreDMatrix
   MODULE PROCEDURE LegendreDMatrix1
 END INTERFACE LegendreDMatrix
 
-PUBLIC :: LegendreDMatrix
-
 !----------------------------------------------------------------------------
 !                                                 LegendreDMatEvenOdd
 !----------------------------------------------------------------------------
@@ -1188,8 +1160,6 @@ END INTERFACE
 INTERFACE LegendreDMatEvenOdd
   MODULE PROCEDURE LegendreDMatEvenOdd1
 END INTERFACE LegendreDMatEvenOdd
-
-PUBLIC :: LegendreDMatEvenOdd
 
 !----------------------------------------------------------------------------
 !

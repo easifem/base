@@ -16,6 +16,7 @@
 !
 
 SUBMODULE(MappingUtility) Methods
+USE BaseMethod, ONLY: UpperCase
 IMPLICIT NONE
 CONTAINS
 
@@ -60,7 +61,7 @@ END PROCEDURE FromUnitLine2BiUnitLine
 
 MODULE PROCEDURE FromUnitTriangle2Triangle1
 INTEGER(I4B) :: ii
-DO ii = 1, size(ans, 2)
+DO ii = 1, SIZE(ans, 2)
   ans(:, ii) = x1 + (x2 - x1) * xin(1, ii) + (x3 - x1) * xin(2, ii)
 END DO
 END PROCEDURE FromUnitTriangle2Triangle1
@@ -73,7 +74,7 @@ MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4
 !!
-DO ii = 1, size(ans, 2)
+DO ii = 1, SIZE(ans, 2)
   xi = xin(1, ii)
   eta = xin(2, ii)
   p1 = 0.25 * (1.0 - xi) * (1.0 - eta)
@@ -142,5 +143,21 @@ ans(1, :) = -0.5_DFP * (xin(1, :) + xin(2, :))
 ans(2, :) = 0.5_DFP * (1.0_DFP + xin(1, :))
 ans(3, :) = 0.5_DFP * (1.0_DFP + xin(2, :))
 END PROCEDURE BarycentricCoordBiUnitTriangle
+
+!----------------------------------------------------------------------------
+!                                                   BarycentricCoordTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordTriangle
+CHARACTER(20) :: layout
+layout = TRIM(UpperCase(refTriangle))
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  ans = BarycentricCoordBiUnitTriangle(xin)
+CASE ("UNIT")
+  ans = BarycentricCoordUnitTriangle(xin)
+END SELECT
+
+END PROCEDURE BarycentricCoordTriangle
 
 END SUBMODULE Methods

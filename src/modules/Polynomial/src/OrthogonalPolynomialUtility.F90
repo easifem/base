@@ -19,6 +19,10 @@ MODULE OrthogonalPolynomialUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Clenshaw
+PUBLIC :: ChebClenshaw
+PUBLIC :: JacobiMatrix
+PUBLIC :: EvalAllOrthopol
 
 !----------------------------------------------------------------------------
 !
@@ -41,8 +45,6 @@ END INTERFACE
 INTERFACE Clenshaw
   MODULE PROCEDURE Clenshaw_1
 END INTERFACE Clenshaw
-
-PUBLIC :: Clenshaw
 
 !----------------------------------------------------------------------------
 !
@@ -98,8 +100,6 @@ INTERFACE ChebClenshaw
   MODULE PROCEDURE ChebClenshaw_1
 END INTERFACE ChebClenshaw
 
-PUBLIC :: ChebClenshaw
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -153,8 +153,6 @@ INTERFACE JacobiMatrix
   MODULE PROCEDURE JacobiMatrix_1
 END INTERFACE JacobiMatrix
 
-PUBLIC :: JacobiMatrix
-
 !----------------------------------------------------------------------------
 !                                                           EvalAllOrthopol
 !----------------------------------------------------------------------------
@@ -177,7 +175,5 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x), n + 1)
   END FUNCTION EvalAllOrthopol
 END INTERFACE
-
-PUBLIC :: EvalAllOrthopol
 
 END MODULE OrthogonalPolynomialUtility

@@ -19,6 +19,36 @@ MODULE Chebyshev1PolynomialUtility
 USE GlobalData
 USE BaseType, ONLY: iface_1DFunction
 IMPLICIT NONE
+PUBLIC :: Chebyshev1Alpha
+PUBLIC :: Chebyshev1Beta
+PUBLIC :: GetChebyshev1RecurrenceCoeff
+PUBLIC :: GetChebyshev1RecurrenceCoeff2
+PUBLIC :: Chebyshev1LeadingCoeff
+PUBLIC :: Chebyshev1LeadingCoeffRatio
+PUBLIC :: Chebyshev1NormSQR
+PUBLIC :: Chebyshev1NormSQR2
+PUBLIC :: Chebyshev1NormSQRRatio
+PUBLIC :: Chebyshev1JacobiMatrix
+PUBLIC :: Chebyshev1GaussQuadrature
+PUBLIC :: Chebyshev1JacobiRadauMatrix
+PUBLIC :: Chebyshev1GaussRadauQuadrature
+PUBLIC :: Chebyshev1JacobiLobattoMatrix
+PUBLIC :: Chebyshev1GaussLobattoQuadrature
+PUBLIC :: Chebyshev1Zeros
+PUBLIC :: Chebyshev1Quadrature
+PUBLIC :: Chebyshev1Eval
+PUBLIC :: Chebyshev1EvalAll
+PUBLIC :: Chebyshev1MonomialExpansionAll
+PUBLIC :: Chebyshev1MonomialExpansion
+PUBLIC :: Chebyshev1GradientEvalAll
+PUBLIC :: Chebyshev1GradientEval
+PUBLIC :: Chebyshev1EvalSum
+PUBLIC :: Chebyshev1GradientEvalSum
+PUBLIC :: Chebyshev1Transform
+PUBLIC :: Chebyshev1InvTransform
+PUBLIC :: Chebyshev1GradientCoeff
+PUBLIC :: Chebyshev1DMatrix
+PUBLIC :: Chebyshev1DMatEvenOdd
 
 !----------------------------------------------------------------------------
 !                                                        Chebyshev1Alpha
@@ -37,8 +67,6 @@ INTERFACE
   END FUNCTION Chebyshev1Alpha
 END INTERFACE
 
-PUBLIC :: Chebyshev1Alpha
-
 !----------------------------------------------------------------------------
 !                                                        Chebyshev1Beta
 !----------------------------------------------------------------------------
@@ -55,8 +83,6 @@ INTERFACE
     !! answer
   END FUNCTION Chebyshev1Beta
 END INTERFACE
-
-PUBLIC :: Chebyshev1Beta
 
 !----------------------------------------------------------------------------
 !                                              GetChebyshev1RecurrenceCoeff
@@ -80,8 +106,6 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: betaCoeff(0:n - 1)
   END SUBROUTINE GetChebyshev1RecurrenceCoeff
 END INTERFACE
-
-PUBLIC :: GetChebyshev1RecurrenceCoeff
 
 !----------------------------------------------------------------------------
 !                                              GetChebyshev1RecurrenceCoeff2
@@ -109,8 +133,6 @@ INTERFACE
   END SUBROUTINE GetChebyshev1RecurrenceCoeff2
 END INTERFACE
 
-PUBLIC :: GetChebyshev1RecurrenceCoeff2
-
 !----------------------------------------------------------------------------
 !                                                    Chebyshev1LeadingCoeff
 !----------------------------------------------------------------------------
@@ -127,8 +149,6 @@ INTERFACE
     !! answer
   END FUNCTION Chebyshev1LeadingCoeff
 END INTERFACE
-
-PUBLIC :: Chebyshev1LeadingCoeff
 
 !----------------------------------------------------------------------------
 !                                               Chebyshev1LeadingCoeffRatio
@@ -147,8 +167,6 @@ INTERFACE
   END FUNCTION Chebyshev1LeadingCoeffRatio
 END INTERFACE
 
-PUBLIC :: Chebyshev1LeadingCoeffRatio
-
 !----------------------------------------------------------------------------
 !                                                         Chebyshev1NormSQR
 !----------------------------------------------------------------------------
@@ -163,8 +181,6 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION Chebyshev1NormSQR
 END INTERFACE
-
-PUBLIC :: Chebyshev1NormSQR
 
 !----------------------------------------------------------------------------
 !                                                        Chebyshev1NormSQR2
@@ -181,8 +197,6 @@ INTERFACE
   END FUNCTION Chebyshev1NormSQR2
 END INTERFACE
 
-PUBLIC :: Chebyshev1NormSQR2
-
 !----------------------------------------------------------------------------
 !                                                    Chebyshev1NormSQRRatio
 !----------------------------------------------------------------------------
@@ -197,8 +211,6 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION Chebyshev1NormSQRRatio
 END INTERFACE
-
-PUBLIC :: Chebyshev1NormSQRRatio
 
 !----------------------------------------------------------------------------
 !                                                     Chebyshev1JacobiMatrix
@@ -224,8 +236,6 @@ INTERFACE
   END SUBROUTINE Chebyshev1JacobiMatrix
 END INTERFACE
 
-PUBLIC :: Chebyshev1JacobiMatrix
-
 !----------------------------------------------------------------------------
 !                                                 Chebyshev1GaussQuadrature
 !----------------------------------------------------------------------------
@@ -244,8 +254,6 @@ INTERFACE
     !! the size is 1 to n
   END SUBROUTINE Chebyshev1GaussQuadrature
 END INTERFACE
-
-PUBLIC :: Chebyshev1GaussQuadrature
 
 !----------------------------------------------------------------------------
 !                                               Chebyshev1JacobiRadauMatrix
@@ -272,8 +280,6 @@ INTERFACE
   END SUBROUTINE Chebyshev1JacobiRadauMatrix
 END INTERFACE
 
-PUBLIC :: Chebyshev1JacobiRadauMatrix
-
 !----------------------------------------------------------------------------
 !                                            Chebyshev1GaussRadauQuadrature
 !----------------------------------------------------------------------------
@@ -294,8 +300,6 @@ INTERFACE
     !! the size is 1 to n+1
   END SUBROUTINE Chebyshev1GaussRadauQuadrature
 END INTERFACE
-
-PUBLIC :: Chebyshev1GaussRadauQuadrature
 
 !----------------------------------------------------------------------------
 !                                             Chebyshev1JacobiLobattoMatrix
@@ -319,8 +323,6 @@ INTERFACE
   END SUBROUTINE Chebyshev1JacobiLobattoMatrix
 END INTERFACE
 
-PUBLIC :: Chebyshev1JacobiLobattoMatrix
-
 !----------------------------------------------------------------------------
 !                                            Chebyshev1GaussLobattoQuadrature
 !----------------------------------------------------------------------------
@@ -340,8 +342,6 @@ INTERFACE
   END SUBROUTINE Chebyshev1GaussLobattoQuadrature
 END INTERFACE
 
-PUBLIC :: Chebyshev1GaussLobattoQuadrature
-
 !----------------------------------------------------------------------------
 !                                                            Chebyshev1Zeros
 !----------------------------------------------------------------------------
@@ -353,8 +353,6 @@ INTERFACE
     REAL(DFP) :: ans(n)
   END FUNCTION Chebyshev1Zeros
 END INTERFACE
-
-PUBLIC :: Chebyshev1Zeros
 
 !----------------------------------------------------------------------------
 !                                                        Chebyshev1Quadrature
@@ -401,8 +399,6 @@ INTERFACE
   END SUBROUTINE Chebyshev1Quadrature
 END INTERFACE
 
-PUBLIC :: Chebyshev1Quadrature
-
 !----------------------------------------------------------------------------
 !                                                             Chebyshev1Eval
 !----------------------------------------------------------------------------
@@ -425,8 +421,6 @@ END INTERFACE
 INTERFACE Chebyshev1Eval
   MODULE PROCEDURE Chebyshev1Eval1
 END INTERFACE Chebyshev1Eval
-
-PUBLIC :: Chebyshev1Eval
 
 !----------------------------------------------------------------------------
 !                                                          Chebyshev1Eval
@@ -484,8 +478,6 @@ END INTERFACE
 INTERFACE Chebyshev1EvalAll
   MODULE PROCEDURE Chebyshev1EvalAll1
 END INTERFACE Chebyshev1EvalAll
-
-PUBLIC :: Chebyshev1EvalAll
 
 !----------------------------------------------------------------------------
 !                                                           Chebyshev1EvalAll
@@ -555,8 +547,6 @@ INTERFACE
   END FUNCTION Chebyshev1MonomialExpansionAll
 END INTERFACE
 
-PUBLIC :: Chebyshev1MonomialExpansionAll
-
 !----------------------------------------------------------------------------
 !                                             Chebyshev1MonomialExpansion
 !----------------------------------------------------------------------------
@@ -579,8 +569,6 @@ INTERFACE
     REAL(DFP) :: ans(1:n + 1)
   END FUNCTION Chebyshev1MonomialExpansion
 END INTERFACE
-
-PUBLIC :: Chebyshev1MonomialExpansion
 
 !----------------------------------------------------------------------------
 !
@@ -605,8 +593,6 @@ END INTERFACE
 INTERFACE Chebyshev1GradientEvalAll
   MODULE PROCEDURE Chebyshev1GradientEvalAll1
 END INTERFACE Chebyshev1GradientEvalAll
-
-PUBLIC :: Chebyshev1GradientEvalAll
 
 !----------------------------------------------------------------------------
 !
@@ -656,8 +642,6 @@ END INTERFACE
 INTERFACE Chebyshev1GradientEval
   MODULE PROCEDURE Chebyshev1GradientEval1
 END INTERFACE Chebyshev1GradientEval
-
-PUBLIC :: Chebyshev1GradientEval
 
 !----------------------------------------------------------------------------
 !
@@ -709,8 +693,6 @@ INTERFACE Chebyshev1EvalSum
   MODULE PROCEDURE Chebyshev1EvalSum1
 END INTERFACE Chebyshev1EvalSum
 
-PUBLIC :: Chebyshev1EvalSum
-
 !----------------------------------------------------------------------------
 !                                                         Chebyshev1EvalSum
 !----------------------------------------------------------------------------
@@ -761,8 +743,6 @@ END INTERFACE
 INTERFACE Chebyshev1GradientEvalSum
   MODULE PROCEDURE Chebyshev1GradientEvalSum1
 END INTERFACE Chebyshev1GradientEvalSum
-
-PUBLIC :: Chebyshev1GradientEvalSum
 
 !----------------------------------------------------------------------------
 !                                                  Chebyshev1GradientEvalSum
@@ -877,8 +857,6 @@ END INTERFACE
 INTERFACE Chebyshev1Transform
   MODULE PROCEDURE Chebyshev1Transform1
 END INTERFACE Chebyshev1Transform
-
-PUBLIC :: Chebyshev1Transform
 
 !----------------------------------------------------------------------------
 !                                                   Chebyshev1Transform
@@ -1010,8 +988,6 @@ INTERFACE Chebyshev1InvTransform
   MODULE PROCEDURE Chebyshev1InvTransform1
 END INTERFACE Chebyshev1InvTransform
 
-PUBLIC :: Chebyshev1InvTransform
-
 !----------------------------------------------------------------------------
 !                                                 Chebyshev1InvTransform
 !----------------------------------------------------------------------------
@@ -1068,8 +1044,6 @@ INTERFACE Chebyshev1GradientCoeff
   MODULE PROCEDURE Chebyshev1GradientCoeff1
 END INTERFACE Chebyshev1GradientCoeff
 
-PUBLIC :: Chebyshev1GradientCoeff
-
 !----------------------------------------------------------------------------
 !                                                           Chebyshev1DMatrix
 !----------------------------------------------------------------------------
@@ -1096,8 +1070,6 @@ INTERFACE Chebyshev1DMatrix
   MODULE PROCEDURE Chebyshev1DMatrix1
 END INTERFACE Chebyshev1DMatrix
 
-PUBLIC :: Chebyshev1DMatrix
-
 !----------------------------------------------------------------------------
 !                                                 Chebyshev1DMatEvenOdd
 !----------------------------------------------------------------------------
@@ -1122,7 +1094,5 @@ END INTERFACE
 INTERFACE Chebyshev1DMatEvenOdd
   MODULE PROCEDURE Chebyshev1DMatEvenOdd1
 END INTERFACE Chebyshev1DMatEvenOdd
-
-PUBLIC :: Chebyshev1DMatEvenOdd
 
 END MODULE Chebyshev1PolynomialUtility

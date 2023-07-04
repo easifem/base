@@ -31,13 +31,13 @@ PUBLIC :: arange
 
 INTERFACE
   MODULE PURE FUNCTION arange_Real64(istart, iend, increment) RESULT(Ans)
-    REAL(Real64), INTENT(IN) :: istart
+    REAL(REAL64), INTENT(IN) :: istart
     !! Start value of the array
-    REAL(Real64), INTENT(IN) :: iend
+    REAL(REAL64), INTENT(IN) :: iend
     !! End value of the array
-    REAL(Real64), INTENT(IN), OPTIONAL :: increment
+    REAL(REAL64), INTENT(IN), OPTIONAL :: increment
     !! Array increment
-    REAL(Real64), DIMENSION(:), ALLOCATABLE :: Ans
+    REAL(REAL64), DIMENSION(:), ALLOCATABLE :: Ans
   END FUNCTION arange_Real64
 END INTERFACE
 
@@ -56,13 +56,13 @@ END INTERFACE arange
 
 INTERFACE
   MODULE PURE FUNCTION arange_Real32(istart, iend, increment) RESULT(Ans)
-    REAL(Real32), INTENT(IN) :: istart
+    REAL(REAL32), INTENT(IN) :: istart
     !! Start value of the array
-    REAL(Real32), INTENT(IN) :: iend
+    REAL(REAL32), INTENT(IN) :: iend
     !! End value of the array
-    REAL(Real32), INTENT(IN), OPTIONAL :: increment
+    REAL(REAL32), INTENT(IN), OPTIONAL :: increment
     !! Array increment
-    REAL(Real32), DIMENSION(:), ALLOCATABLE :: Ans
+    REAL(REAL32), DIMENSION(:), ALLOCATABLE :: Ans
   END FUNCTION arange_Real32
 END INTERFACE
 
@@ -90,17 +90,34 @@ END INTERFACE arange
 ! arange(1,10,2)
 !```
 
-INTERFACE
-  MODULE PURE FUNCTION arange_int(istart, iend, increment) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: istart
-    INTEGER(I4B), INTENT(IN) :: iend
-    INTEGER(I4B), INTENT(IN), OPTIONAL :: increment
-    INTEGER(I4B), DIMENSION(:), ALLOCATABLE :: Ans
-  END FUNCTION
-END INTERFACE
-
 INTERFACE arange
-  MODULE PROCEDURE arange_int
+  MODULE PURE FUNCTION arange_Int8(istart, iend, increment) RESULT(Ans)
+    INTEGER(Int8), INTENT(IN) :: istart
+    INTEGER(Int8), INTENT(IN) :: iend
+    INTEGER(Int8), INTENT(IN), OPTIONAL :: increment
+    INTEGER(Int8), DIMENSION(:), ALLOCATABLE :: Ans
+  END FUNCTION arange_Int8
+
+  MODULE PURE FUNCTION arange_Int16(istart, iend, increment) RESULT(Ans)
+    INTEGER(Int16), INTENT(IN) :: istart
+    INTEGER(Int16), INTENT(IN) :: iend
+    INTEGER(Int16), INTENT(IN), OPTIONAL :: increment
+    INTEGER(Int16), DIMENSION(:), ALLOCATABLE :: Ans
+  END FUNCTION arange_Int16
+
+  MODULE PURE FUNCTION arange_Int32(istart, iend, increment) RESULT(Ans)
+    INTEGER(Int32), INTENT(IN) :: istart
+    INTEGER(Int32), INTENT(IN) :: iend
+    INTEGER(Int32), INTENT(IN), OPTIONAL :: increment
+    INTEGER(Int32), DIMENSION(:), ALLOCATABLE :: Ans
+  END FUNCTION arange_Int32
+
+  MODULE PURE FUNCTION arange_Int64(istart, iend, increment) RESULT(Ans)
+    INTEGER(Int64), INTENT(IN) :: istart
+    INTEGER(Int64), INTENT(IN) :: iend
+    INTEGER(Int64), INTENT(IN), OPTIONAL :: increment
+    INTEGER(Int64), DIMENSION(:), ALLOCATABLE :: Ans
+  END FUNCTION arange_Int64
 END INTERFACE arange
 
 END MODULE ArangeUtility

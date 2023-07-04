@@ -15,96 +15,89 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(FunctionalFortranUtility) Methods
+SUBMODULE(TailUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                                     Head
+!                                                                 Tail
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE head_int
-  ans = x( 1 )
-END PROCEDURE head_int
+MODULE PROCEDURE tail_Int8
+ans = x(2:)
+END PROCEDURE tail_Int8
 
-!----------------------------------------------------------------------------
-!                                                                     Head
-!----------------------------------------------------------------------------
+MODULE PROCEDURE tail_Int16
+ans = x(2:)
+END PROCEDURE tail_Int16
 
-MODULE PROCEDURE head_real
-  ans = x( 1 )
-END PROCEDURE head_real
+MODULE PROCEDURE tail_Int32
+ans = x(2:)
+END PROCEDURE tail_Int32
 
-!----------------------------------------------------------------------------
-!                                                                     Head
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE head_char
-  ans( 1:1 ) = x( 1:1 )
-END PROCEDURE head_char
+MODULE PROCEDURE tail_Int64
+ans = x(2:)
+END PROCEDURE tail_Int64
 
 !----------------------------------------------------------------------------
 !                                                                 Tail
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE tail_int
-  Ans = x(2:)
-END PROCEDURE tail_int
+MODULE PROCEDURE tail_Real32
+ans = x(2:)
+END PROCEDURE tail_Real32
 
-!----------------------------------------------------------------------------
-!                                                                 Tail
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE tail_real
-  Ans = x(2:)
-END PROCEDURE tail_real
+MODULE PROCEDURE tail_Real64
+ans = x(2:)
+END PROCEDURE tail_Real64
 
 !----------------------------------------------------------------------------
 !                                                                 Tail
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE tail_char
-  Ans = x(2:)
+ans = x(2:)
 END PROCEDURE tail_char
 
 !----------------------------------------------------------------------------
-!                                                                      SPLIT
+!                                                                      last
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE split_int
-  if(section == 1)then
-    Ans = x(1:size(x)/2)
-  elseif(section == 2)then
-    Ans = x(size(x)/2+1:)
-  endif
-END PROCEDURE
+MODULE PROCEDURE last_Int8
+ans = x(SIZE(x))
+END PROCEDURE last_Int8
+
+MODULE PROCEDURE last_Int16
+ans = x(SIZE(x))
+END PROCEDURE last_Int16
+
+MODULE PROCEDURE last_Int32
+ans = x(SIZE(x))
+END PROCEDURE last_Int32
+
+MODULE PROCEDURE last_Int64
+ans = x(SIZE(x))
+END PROCEDURE last_Int64
 
 !----------------------------------------------------------------------------
-!                                                                      SPLIT
+!                                                                 last
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE split_real
-  if(section == 1)then
-    Ans = x(1:size(x)/2)
-  elseif(section == 2)then
-    Ans = x(size(x)/2+1:)
-  endif
-END PROCEDURE split_real
+MODULE PROCEDURE last_Real32
+ans = x(SIZE(x))
+END PROCEDURE last_Real32
+
+MODULE PROCEDURE last_Real64
+ans = x(SIZE(x))
+END PROCEDURE last_Real64
 
 !----------------------------------------------------------------------------
-!                                                                      SPLIT
+!                                                                 last
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE split_char
-  if (section == 1) then
-    Ans = x(1:len(x) / 2)
-  else if (section == 2) then
-    Ans = x(len(x) / 2 + 1:)
-  else
-    Ans = ''
-  end if
-END PROCEDURE split_char
-
+MODULE PROCEDURE last_char
+ans = x(LEN(x):LEN(x))
+END PROCEDURE last_char
 
 END SUBMODULE Methods

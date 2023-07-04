@@ -137,7 +137,7 @@ END INTERFACE TriuIndx
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-21
-! summary: Returns the indices of lower triangle in an int vector
+! summary: Returns the indices of lower triangle part of a matrix
 
 INTERFACE
   MODULE PURE FUNCTION TrilIndx_1(m, n, diagNo) RESULT(ans)
@@ -147,7 +147,11 @@ INTERFACE
     !! number of columns, default = m
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+    !! ans(:,1) contains the row indices
+    !! ans(:,2) contains the col indices
   END FUNCTION TrilIndx_1
 END INTERFACE
 
@@ -161,14 +165,18 @@ END INTERFACE TrilIndx
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-21
-! summary: Returns the indices of lower triangle in an int vector
+! summary: Returns the indices of lower triangle part of a matrix
 
 INTERFACE
   MODULE PURE FUNCTION TrilIndx_2(A, diagNo) RESULT(ans)
     CLASS(*), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(I4B), ALLOCATABLE :: ans(:, :)
+    !! ans(:,1) contains the row indices
+    !! ans(:,2) contains the col indices
   END FUNCTION TrilIndx_2
 END INTERFACE
 
@@ -182,13 +190,15 @@ END INTERFACE TrilIndx
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-21
-! summary: Returns the  lower triangle part of an int vector
+! summary: Returns the upper triangle part of a matrix.
 
 INTERFACE
   MODULE PURE FUNCTION Triu_1(A, diagNo) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     REAL(REAL32) :: ans(SIZE(A, 1), SIZE(A, 2))
   END FUNCTION Triu_1
 
@@ -196,6 +206,8 @@ INTERFACE
     REAL(REAL64), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     REAL(REAL64) :: ans(SIZE(A, 1), SIZE(A, 2))
   END FUNCTION Triu_2
 
@@ -203,6 +215,8 @@ INTERFACE
     INTEGER(INT8), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT8) :: ans(SIZE(A, 1), SIZE(A, 2))
   END FUNCTION Triu_3
 
@@ -210,6 +224,8 @@ INTERFACE
     INTEGER(INT16), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT16) :: ans(SIZE(A, 1), SIZE(A, 2))
   END FUNCTION Triu_4
 
@@ -217,6 +233,8 @@ INTERFACE
     INTEGER(INT32), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT32) :: ans(SIZE(A, 1), SIZE(A, 2))
   END FUNCTION Triu_5
 
@@ -224,6 +242,8 @@ INTERFACE
     INTEGER(INT64), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT64) :: ans(SIZE(A, 1), SIZE(A, 2))
   END FUNCTION Triu_6
 END INTERFACE
@@ -247,6 +267,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     REAL(REAL32), ALLOCATABLE :: ans(:)
   END FUNCTION Triu_7
   MODULE PURE FUNCTION Triu_8(A, flate, diagNo) RESULT(ans)
@@ -255,6 +277,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     REAL(REAL64), ALLOCATABLE :: ans(:)
   END FUNCTION Triu_8
   MODULE PURE FUNCTION Triu_9(A, flate, diagNo) RESULT(ans)
@@ -263,6 +287,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT8), ALLOCATABLE :: ans(:)
   END FUNCTION Triu_9
   MODULE PURE FUNCTION Triu_10(A, flate, diagNo) RESULT(ans)
@@ -271,6 +297,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT16), ALLOCATABLE :: ans(:)
   END FUNCTION Triu_10
   MODULE PURE FUNCTION Triu_11(A, flate, diagNo) RESULT(ans)
@@ -279,6 +307,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT32), ALLOCATABLE :: ans(:)
   END FUNCTION Triu_11
   MODULE PURE FUNCTION Triu_12(A, flate, diagNo) RESULT(ans)
@@ -287,6 +317,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT64), ALLOCATABLE :: ans(:)
   END FUNCTION Triu_12
 END INTERFACE
@@ -301,49 +333,67 @@ END INTERFACE Triu
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-21
-! summary: Returns the  lower triangle part of an int vector
+! summary: Returns the lower triangle part of a matrix
 
 INTERFACE
   MODULE PURE FUNCTION Tril_1(A, diagNo) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     REAL(REAL32) :: ans(SIZE(A, 1), SIZE(A, 2))
+    !! Lower trianglular matrix
   END FUNCTION Tril_1
 
   MODULE PURE FUNCTION Tril_2(A, diagNo) RESULT(ans)
     REAL(REAL64), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     REAL(REAL64) :: ans(SIZE(A, 1), SIZE(A, 2))
+    !! Lower trianglular matrix
   END FUNCTION Tril_2
 
   MODULE PURE FUNCTION Tril_3(A, diagNo) RESULT(ans)
     INTEGER(INT8), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT8) :: ans(SIZE(A, 1), SIZE(A, 2))
+    !! Lower trianglular matrix
   END FUNCTION Tril_3
 
   MODULE PURE FUNCTION Tril_4(A, diagNo) RESULT(ans)
     INTEGER(INT16), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT16) :: ans(SIZE(A, 1), SIZE(A, 2))
+    !! Lower trianglular matrix
   END FUNCTION Tril_4
 
   MODULE PURE FUNCTION Tril_5(A, diagNo) RESULT(ans)
     INTEGER(INT32), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT32) :: ans(SIZE(A, 1), SIZE(A, 2))
+    !! Lower trianglular matrix
   END FUNCTION Tril_5
 
   MODULE PURE FUNCTION Tril_6(A, diagNo) RESULT(ans)
     INTEGER(INT64), INTENT(IN) :: A(:, :)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT64) :: ans(SIZE(A, 1), SIZE(A, 2))
+    !! Lower trianglular matrix
   END FUNCTION Tril_6
 END INTERFACE
 
@@ -357,7 +407,7 @@ END INTERFACE Tril
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-21
-! summary: Returns the  lower triangle part of an int vector
+! summary: Returns the lower triangle part of a matrix
 
 INTERFACE
   MODULE PURE FUNCTION Tril_7(A, flate, diagNo) RESULT(ans)
@@ -366,6 +416,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     REAL(REAL32), ALLOCATABLE :: ans(:)
   END FUNCTION Tril_7
   MODULE PURE FUNCTION Tril_8(A, flate, diagNo) RESULT(ans)
@@ -374,6 +426,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     REAL(REAL64), ALLOCATABLE :: ans(:)
   END FUNCTION Tril_8
   MODULE PURE FUNCTION Tril_9(A, flate, diagNo) RESULT(ans)
@@ -382,6 +436,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT8), ALLOCATABLE :: ans(:)
   END FUNCTION Tril_9
   MODULE PURE FUNCTION Tril_10(A, flate, diagNo) RESULT(ans)
@@ -390,6 +446,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT16), ALLOCATABLE :: ans(:)
   END FUNCTION Tril_10
   MODULE PURE FUNCTION Tril_11(A, flate, diagNo) RESULT(ans)
@@ -398,6 +456,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT32), ALLOCATABLE :: ans(:)
   END FUNCTION Tril_11
   MODULE PURE FUNCTION Tril_12(A, flate, diagNo) RESULT(ans)
@@ -406,6 +466,8 @@ INTERFACE
     !! This variable is only for creating unique interface
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: diagNo
     !! diagonal number, default = 0
+    !! diagNo>0 means super diagonal
+    !! diagNo<0 means subdiagonal
     INTEGER(INT64), ALLOCATABLE :: ans(:)
   END FUNCTION Tril_12
 END INTERFACE
@@ -420,7 +482,7 @@ END INTERFACE Tril
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-12-21
-! summary: Returns the upper triangle part of an int vector
+! summary: Returns the upper triangle part of a matrix
 
 INTERFACE
   MODULE PURE SUBROUTINE GetTriu_1(A, diagNo, lu)

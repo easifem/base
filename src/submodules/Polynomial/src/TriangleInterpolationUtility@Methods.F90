@@ -21,6 +21,25 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                         RefTriangleCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefTriangleCoord
+CHARACTER(20) :: layout
+layout = TRIM(UpperCase(refTriangle))
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  ans(:, 1) = [-1.0_DFP, -1.0_DFP]
+  ans(:, 2) = [1.0_DFP, -1.0_DFP]
+  ans(:, 3) = [-1.0_DFP, 1.0_DFP]
+CASE ("UNIT")
+  ans(:, 1) = [0.0_DFP, 0.0_DFP]
+  ans(:, 2) = [1.0_DFP, 0.0_DFP]
+  ans(:, 3) = [0.0_DFP, 1.0_DFP]
+END SELECT
+END PROCEDURE RefTriangleCoord
+
+!----------------------------------------------------------------------------
 !                                                   LagrangeDegree_Triangle
 !----------------------------------------------------------------------------
 
@@ -262,7 +281,7 @@ MODULE PROCEDURE BlythPozrikidis_Triangle
 REAL(DFP) :: v(order + 1), xi(order + 1, order + 1), eta(order + 1, order + 1)
 REAL(DFP), ALLOCATABLE :: temp(:, :)
 INTEGER(I4B) :: nsd, N, ii, jj, kk
-CHARACTER(LEN=*), PARAMETER :: myName = "BlythPozrikidis_Triangle"
+CHARACTER(*), PARAMETER :: myName = "BlythPozrikidis_Triangle"
 !!
 v = InterpolationPoint_Line(order=order, ipType=ipType, &
   & xij=[0.0_DFP, 1.0_DFP], layout="INCREASING")
@@ -323,7 +342,7 @@ MODULE PROCEDURE Isaac_Triangle
 REAL(DFP) :: xi(order + 1, order + 1), eta(order + 1, order + 1)
 REAL(DFP), ALLOCATABLE :: temp(:, :), rPoints(:, :)
 INTEGER(I4B) :: nsd, N, cnt, ii, jj
-CHARACTER(LEN=*), PARAMETER :: myName = "Isaac_Triangle"
+CHARACTER(*), PARAMETER :: myName = "Isaac_Triangle"
 !!
 rPoints = RecursiveNode2D(order=order, ipType=ipType)
 N = SIZE(rPoints, 2)
@@ -388,7 +407,7 @@ SUBROUTINE IJ2VEFC(xi, eta, temp, order, N, myname)
   REAL(DFP), INTENT(OUT) :: temp(:, :)
   INTEGER(I4B), INTENT(IN) :: order
   INTEGER(I4B), INTENT(IN) :: N
-  CHARACTER(LEN=*), INTENT(IN) :: myname
+  CHARACTER(*), INTENT(IN) :: myname
   !!
   INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, llt, llr
   !!
@@ -480,7 +499,7 @@ END SUBROUTINE IJ2VEFC
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE InterpolationPoint_Triangle
-CHARACTER(LEN=*), PARAMETER :: myName = "InterpolationPoint_Triangle"
+CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Triangle"
 SELECT CASE (ipType)
 CASE (Equidistance)
   ans = EquidistancePoint_Triangle(xij=xij, order=order)
@@ -569,7 +588,7 @@ END PROCEDURE LagrangeCoeff_Triangle4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Dubiner_Triangle1
-CHARACTER(LEN=20) :: layout
+CHARACTER(20) :: layout
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 !!
 layout = TRIM(UpperCase(refTriangle))
@@ -590,7 +609,7 @@ END PROCEDURE Dubiner_Triangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Dubiner_Triangle2
-CHARACTER(LEN=20) :: layout
+CHARACTER(20) :: layout
 REAL(DFP) :: x0(SIZE(x)), y0(SIZE(y))
 !!
 layout = TRIM(UpperCase(refTriangle))
@@ -708,21 +727,14 @@ END PROCEDURE BarycentricCellBasis_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle1
-CHARACTER(LEN=20) :: layout
-REAL(DFP) :: lambda(3, SIZE(xij, 2))
+CHARACTER(20) :: layout
 INTEGER(I4B) :: a, b
 INTEGER(I4B) :: maxP, tPoints
-REAL(DFP) :: phi(1:3 * SIZE(xij, 2), &
+REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), &
   & 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2))
-REAL(DFP) :: d_lambda(3 * SIZE(xij, 2))
+REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
 !!
 layout = TRIM(UpperCase(refTriangle))
-!!
-IF (layout .EQ. "BIUNIT") THEN
-  lambda = BarycentricCoordBiUnitTriangle(xin=xij)
-ELSE
-  lambda = BarycentricCoordUnitTriangle(xin=xij)
-END IF
 !!
 tPoints = SIZE(lambda, 2)
 maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2, order - 2)
@@ -764,7 +776,7 @@ END PROCEDURE BarycentricHeirarchicalBasis_Triangle1
 
 MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle2
 ans = BarycentricHeirarchicalBasis_Triangle1(order=order, pe1=order, &
-  & pe2=order, pe3=order, xij=xij, refTriangle=refTriangle)
+  & pe2=order, pe3=order, lambda=lambda, refTriangle=refTriangle)
 END PROCEDURE BarycentricHeirarchicalBasis_Triangle2
 
 !----------------------------------------------------------------------------
@@ -772,7 +784,7 @@ END PROCEDURE BarycentricHeirarchicalBasis_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE VertexBasis_Triangle
-CHARACTER(LEN=20) :: layout
+CHARACTER(20) :: layout
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 REAL(DFP) :: Lo1(SIZE(xij, 2), 0:1)
 REAL(DFP) :: Lo2(SIZE(xij, 2), 0:1)
@@ -810,7 +822,7 @@ END PROCEDURE VertexBasis_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EdgeBasis_Triangle
-CHARACTER(LEN=20) :: layout
+CHARACTER(20) :: layout
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 REAL(DFP) :: L1(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3))
 REAL(DFP) :: L2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3))
@@ -846,7 +858,7 @@ END PROCEDURE EdgeBasis_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EdgeBasis_Triangle2
-CHARACTER(LEN=20) :: layout
+CHARACTER(20) :: layout
 INTEGER(I4B) :: maxP, k1, k2, a
 !!
 maxP = MAX(pe1, pe2, pe3)
@@ -883,7 +895,7 @@ END PROCEDURE EdgeBasis_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE CellBasis_Triangle
-CHARACTER(LEN=20) :: layout
+CHARACTER(20) :: layout
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 REAL(DFP) :: L1(SIZE(xij, 2), 0:order)
 REAL(DFP) :: Lo1(SIZE(xij, 2), 0:1)
@@ -947,7 +959,7 @@ END PROCEDURE CellBasis_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasis_Triangle1
-CHARACTER(LEN=20) :: layout
+CHARACTER(20) :: layout
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 REAL(DFP) :: L1(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
 REAL(DFP) :: L2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))

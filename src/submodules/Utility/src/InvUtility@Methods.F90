@@ -74,22 +74,22 @@ PURE FUNCTION det_2d_5(a) RESULT(ans)
   !
   ans = 0.0D+00
   !
-  do k = 1, 5
-    do i = 1, 4
-      do j = 1, 4
-        if (j < k) then
+  DO k = 1, 5
+    DO i = 1, 4
+      DO j = 1, 4
+        IF (j < k) THEN
           inc = 0
-        else
+        ELSE
           inc = 1
-        end if
+        END IF
         b(i, j) = a(i + 1, j + inc)
-      end do
-    end do
+      END DO
+    END DO
     !!
     ans = ans + (-1)**(k + 1) * a(1, k) * det_2D(b)
     !!
-  end do
-end function det_2d_5
+  END DO
+END FUNCTION det_2d_5
 
 !----------------------------------------------------------------------------
 !                                                                        DET
@@ -112,19 +112,30 @@ MODULE PROCEDURE Inv_2D
 !Define internal variables
 REAL(DFP) :: d, co(4, 4)
 
-d = det(A)
-IF (ABS(d) .LT. ZERO) THEN
-  invA = 0.0_DFP
-ELSE
-  SELECT CASE (SIZE(A, 1))
-  CASE (1)
+SELECT CASE (SIZE(A, 1))
+CASE (1)
+  d = det(A)
+  IF (ABS(d) .LT. ZERO) THEN
+    invA = 0.0_DFP
+  ELSE
     invA = 1.0 / d
-  CASE (2)
+  END IF
+
+CASE (2)
+  d = det(A)
+  IF (ABS(d) .LT. ZERO) THEN
+    invA = 0.0_DFP
+  ELSE
     invA(1, 1) = A(2, 2) / d
     invA(1, 2) = -A(1, 2) / d
     invA(2, 1) = -A(2, 1) / d
     invA(2, 2) = A(1, 1) / d
-  CASE (3)
+  END IF
+CASE (3)
+  d = det(A)
+  IF (ABS(d) .LT. ZERO) THEN
+    invA = 0.0_DFP
+  ELSE
     co(1, 1) = (A(2, 2) * A(3, 3) - A(2, 3) * A(3, 2))
     co(1, 2) = -(A(2, 1) * A(3, 3) - A(2, 3) * A(3, 1))
     co(1, 3) = +(A(2, 1) * A(3, 2) - A(2, 2) * A(3, 1))
@@ -135,8 +146,14 @@ ELSE
     co(3, 2) = -(A(1, 1) * A(2, 3) - A(1, 3) * A(2, 1))
     co(3, 3) = +(A(1, 1) * A(2, 2) - A(1, 2) * A(2, 1))
     invA = TRANSPOSE(co(1:3, 1:3)) / d
+  END IF
 
-  CASE (4)
+CASE (4)
+
+  d = det(A)
+  IF (ABS(d) .LT. ZERO) THEN
+    invA = 0.0_DFP
+  ELSE
     co(1, 1) = A(2, 2) * (A(3, 3) * A(4, 4) - A(3, 4) * A(4, 3)) + &
                A(2, 3) * (A(3, 4) * A(4, 2) - A(3, 2) * A(4, 4)) + &
                A(2, 4) * (A(3, 2) * A(4, 3) - A(3, 3) * A(4, 2))
@@ -186,8 +203,10 @@ ELSE
                A(1, 2) * (A(2, 3) * A(3, 1) - A(2, 1) * A(3, 3)) + &
                A(1, 3) * (A(2, 1) * A(3, 2) - A(2, 2) * A(3, 1))
     invA = TRANSPOSE(co) / d
-  END SELECT
-END IF
+  END IF
+
+END SELECT
+
 END PROCEDURE Inv_2D
 
 !----------------------------------------------------------------------------

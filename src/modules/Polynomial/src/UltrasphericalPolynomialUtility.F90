@@ -26,6 +26,34 @@ USE GlobalData
 USE BaseType, ONLY: iface_1DFunction
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: UltrasphericalAlpha
+PUBLIC :: UltrasphericalBeta
+PUBLIC :: GetUltrasphericalRecurrenceCoeff
+PUBLIC :: GetUltrasphericalRecurrenceCoeff2
+PUBLIC :: UltrasphericalLeadingCoeff
+PUBLIC :: UltrasphericalLeadingCoeffRatio
+PUBLIC :: UltrasphericalNormSQR
+PUBLIC :: UltrasphericalNormSQR2
+PUBLIC :: UltrasphericalNormSQRRatio
+PUBLIC :: UltrasphericalJacobiMatrix
+PUBLIC :: UltrasphericalGaussQuadrature
+PUBLIC :: UltrasphericalJacobiRadauMatrix
+PUBLIC :: UltrasphericalGaussRadauQuadrature
+PUBLIC :: UltrasphericalJacobiLobattoMatrix
+PUBLIC :: UltrasphericalGaussLobattoQuadrature
+PUBLIC :: UltrasphericalZeros
+PUBLIC :: UltrasphericalQuadrature
+PUBLIC :: UltrasphericalEval
+PUBLIC :: UltrasphericalEvalAll
+PUBLIC :: UltrasphericalGradientEvalAll
+PUBLIC :: UltrasphericalGradientEval
+PUBLIC :: UltrasphericalEvalSum
+PUBLIC :: UltrasphericalGradientEvalSum
+PUBLIC :: UltrasphericalTransform
+PUBLIC :: UltrasphericalInvTransform
+PUBLIC :: UltrasphericalGradientCoeff
+PUBLIC :: UltrasphericalDMatrix
+PUBLIC :: UltrasphericalDMatEvenOdd
 
 !----------------------------------------------------------------------------
 !                                                        UltrasphericalAlpha
@@ -46,8 +74,6 @@ INTERFACE
   END FUNCTION UltrasphericalAlpha
 END INTERFACE
 
-PUBLIC :: UltrasphericalAlpha
-
 !----------------------------------------------------------------------------
 !                                                        UltrasphericalBeta
 !----------------------------------------------------------------------------
@@ -66,8 +92,6 @@ INTERFACE
     !! answer
   END FUNCTION UltrasphericalBeta
 END INTERFACE
-
-PUBLIC :: UltrasphericalBeta
 
 !----------------------------------------------------------------------------
 !                                           GetUltrasphericalRecurrenceCoeff
@@ -89,8 +113,6 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: betaCoeff(0:n - 1)
   END SUBROUTINE GetUltrasphericalRecurrenceCoeff
 END INTERFACE
-
-PUBLIC :: GetUltrasphericalRecurrenceCoeff
 
 !----------------------------------------------------------------------------
 !                                          GetUltrasphericalRecurrenceCoeff2
@@ -117,8 +139,6 @@ INTERFACE
   END SUBROUTINE GetUltrasphericalRecurrenceCoeff2
 END INTERFACE
 
-PUBLIC :: GetUltrasphericalRecurrenceCoeff2
-
 !----------------------------------------------------------------------------
 !                                                 UltrasphericalLeadingCoeff
 !----------------------------------------------------------------------------
@@ -137,8 +157,6 @@ INTERFACE
     !! answer
   END FUNCTION UltrasphericalLeadingCoeff
 END INTERFACE
-
-PUBLIC :: UltrasphericalLeadingCoeff
 
 !----------------------------------------------------------------------------
 !                                           UltrasphericalLeadingCoeffRatio
@@ -159,8 +177,6 @@ INTERFACE
   END FUNCTION UltrasphericalLeadingCoeffRatio
 END INTERFACE
 
-PUBLIC :: UltrasphericalLeadingCoeffRatio
-
 !----------------------------------------------------------------------------
 !                                                     UltrasphericalNormSQR
 !----------------------------------------------------------------------------
@@ -178,8 +194,6 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION UltrasphericalNormSQR
 END INTERFACE
-
-PUBLIC :: UltrasphericalNormSQR
 
 !----------------------------------------------------------------------------
 !                                                     UltrasphericalNormSQR2
@@ -199,8 +213,6 @@ INTERFACE
   END FUNCTION UltrasphericalNormSQR2
 END INTERFACE
 
-PUBLIC :: UltrasphericalNormSQR2
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -218,8 +230,6 @@ INTERFACE
     REAL(DFP) :: ans
   END FUNCTION UltrasphericalNormSQRRatio
 END INTERFACE
-
-PUBLIC :: UltrasphericalNormSQRRatio
 
 !----------------------------------------------------------------------------
 !                                                 UltrasphericalJacobiMatrix
@@ -247,8 +257,6 @@ INTERFACE
   END SUBROUTINE UltrasphericalJacobiMatrix
 END INTERFACE
 
-PUBLIC :: UltrasphericalJacobiMatrix
-
 !----------------------------------------------------------------------------
 !                                             UltrasphericalGaussQuadrature
 !----------------------------------------------------------------------------
@@ -269,8 +277,6 @@ INTERFACE
     !! the size is 1 to n
   END SUBROUTINE UltrasphericalGaussQuadrature
 END INTERFACE
-
-PUBLIC :: UltrasphericalGaussQuadrature
 
 !----------------------------------------------------------------------------
 !                                            UltrasphericalJacobiRadauMatrix
@@ -293,8 +299,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
   END SUBROUTINE UltrasphericalJacobiRadauMatrix
 END INTERFACE
-
-PUBLIC :: UltrasphericalJacobiRadauMatrix
 
 !----------------------------------------------------------------------------
 !                                         UltrasphericalGaussRadauQuadrature
@@ -321,8 +325,6 @@ INTERFACE
   END SUBROUTINE UltrasphericalGaussRadauQuadrature
 END INTERFACE
 
-PUBLIC :: UltrasphericalGaussRadauQuadrature
-
 !----------------------------------------------------------------------------
 !                                  UltrasphericalUltrasphericalLobattoMatrix
 !----------------------------------------------------------------------------
@@ -342,8 +344,6 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(OUT) :: betaCoeff(0:)
   END SUBROUTINE UltrasphericalJacobiLobattoMatrix
 END INTERFACE
-
-PUBLIC :: UltrasphericalJacobiLobattoMatrix
 
 !----------------------------------------------------------------------------
 !                                      UltrasphericalGaussLobattoQuadrature
@@ -367,8 +367,6 @@ INTERFACE
   END SUBROUTINE UltrasphericalGaussLobattoQuadrature
 END INTERFACE
 
-PUBLIC :: UltrasphericalGaussLobattoQuadrature
-
 !----------------------------------------------------------------------------
 !                                                        UltrasphericalZeros
 !----------------------------------------------------------------------------
@@ -386,8 +384,6 @@ INTERFACE
     REAL(DFP) :: ans(n)
   END FUNCTION UltrasphericalZeros
 END INTERFACE
-
-PUBLIC :: UltrasphericalZeros
 
 !----------------------------------------------------------------------------
 !                                                  UltrasphericalQuadrature
@@ -437,8 +433,6 @@ INTERFACE
   END SUBROUTINE UltrasphericalQuadrature
 END INTERFACE
 
-PUBLIC :: UltrasphericalQuadrature
-
 !----------------------------------------------------------------------------
 !                                                        UltrasphericalEval
 !----------------------------------------------------------------------------
@@ -475,8 +469,6 @@ END INTERFACE
 INTERFACE UltrasphericalEval
   MODULE PROCEDURE UltrasphericalEval1
 END INTERFACE UltrasphericalEval
-
-PUBLIC :: UltrasphericalEval
 
 !----------------------------------------------------------------------------
 !                                                          UltrasphericalEval
@@ -553,8 +545,6 @@ INTERFACE UltrasphericalEvalAll
   MODULE PROCEDURE UltrasphericalEvalAll1
 END INTERFACE UltrasphericalEvalAll
 
-PUBLIC :: UltrasphericalEvalAll
-
 !----------------------------------------------------------------------------
 !                                                      UltrasphericalEvalAll
 !----------------------------------------------------------------------------
@@ -621,8 +611,6 @@ INTERFACE UltrasphericalGradientEvalAll
   MODULE PROCEDURE UltrasphericalGradientEvalAll1
 END INTERFACE UltrasphericalGradientEvalAll
 
-PUBLIC :: UltrasphericalGradientEvalAll
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -679,8 +667,6 @@ INTERFACE UltrasphericalGradientEval
   MODULE PROCEDURE UltrasphericalGradientEval1
 END INTERFACE UltrasphericalGradientEval
 
-PUBLIC :: UltrasphericalGradientEval
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -735,8 +721,6 @@ END INTERFACE
 INTERFACE UltrasphericalEvalSum
   MODULE PROCEDURE UltrasphericalEvalSum1
 END INTERFACE UltrasphericalEvalSum
-
-PUBLIC :: UltrasphericalEvalSum
 
 !----------------------------------------------------------------------------
 !                                                      UltrasphericalEvalSum
@@ -793,8 +777,6 @@ END INTERFACE
 INTERFACE UltrasphericalGradientEvalSum
   MODULE PROCEDURE UltrasphericalGradientEvalSum1
 END INTERFACE UltrasphericalGradientEvalSum
-
-PUBLIC :: UltrasphericalGradientEvalSum
 
 !----------------------------------------------------------------------------
 !                                              UltrasphericalGradientEvalSum
@@ -920,8 +902,6 @@ INTERFACE UltrasphericalTransform
   MODULE PROCEDURE UltrasphericalTransform1
 END INTERFACE UltrasphericalTransform
 
-PUBLIC :: UltrasphericalTransform
-
 !----------------------------------------------------------------------------
 !                                                   UltrasphericalTransform
 !----------------------------------------------------------------------------
@@ -1032,8 +1012,6 @@ INTERFACE UltrasphericalInvTransform
   MODULE PROCEDURE UltrasphericalInvTransform1
 END INTERFACE UltrasphericalInvTransform
 
-PUBLIC :: UltrasphericalInvTransform
-
 !----------------------------------------------------------------------------
 !                                                 UltrasphericalInvTransform
 !----------------------------------------------------------------------------
@@ -1074,7 +1052,6 @@ END INTERFACE UltrasphericalInvTransform
 !
 ! This routine returns the coefficients of gradient of Jacobi expansion.
 ! Input is cofficients of Jacobipolynomials (modal values).
-!
 
 INTERFACE
   MODULE PURE FUNCTION UltrasphericalGradientCoeff1(n, lambda, coeff) &
@@ -1094,8 +1071,6 @@ INTERFACE UltrasphericalGradientCoeff
   MODULE PROCEDURE UltrasphericalGradientCoeff1
 END INTERFACE UltrasphericalGradientCoeff
 
-PUBLIC :: UltrasphericalGradientCoeff
-
 !----------------------------------------------------------------------------
 !                                                     UltrasphericalDMatrix
 !----------------------------------------------------------------------------
@@ -1109,7 +1084,6 @@ PUBLIC :: UltrasphericalGradientCoeff
 ! This routine returns the coefficients of gradient of Ultraspherical
 ! expansion.
 ! Input is cofficients of Ultrasphericalpolynomials (modal values).
-!
 
 INTERFACE
   MODULE PURE FUNCTION UltrasphericalDMatrix1(n, lambda, x, quadType) &
@@ -1130,8 +1104,6 @@ END INTERFACE
 INTERFACE UltrasphericalDMatrix
   MODULE PROCEDURE UltrasphericalDMatrix1
 END INTERFACE UltrasphericalDMatrix
-
-PUBLIC :: UltrasphericalDMatrix
 
 !----------------------------------------------------------------------------
 !                                                 UltrasphericalDMatEvenOdd
@@ -1164,7 +1136,5 @@ END INTERFACE
 INTERFACE UltrasphericalDMatEvenOdd
   MODULE PROCEDURE UltrasphericalDMatEvenOdd1
 END INTERFACE UltrasphericalDMatEvenOdd
-
-PUBLIC :: UltrasphericalDMatEvenOdd
 
 END MODULE UltrasphericalPolynomialUtility
