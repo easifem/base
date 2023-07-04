@@ -32,7 +32,7 @@ CONTAINS
 MODULE PROCEDURE quad_initiate1
 obj%points = points
 obj%tXi = SIZE(points, 1) - 1
-    !! No of row minus one
+! No of row minus one
 END PROCEDURE quad_initiate1
 
 !----------------------------------------------------------------------------
@@ -49,10 +49,10 @@ END PROCEDURE quad_initiate2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_initiate3
-CHARACTER(LEN=30) :: qtype
-!!
+CHARACTER(30) :: qtype
+!
 qtype = UpperCase(quadratureType)
-!!
+!
 SELECT CASE (TRIM(qtype))
 CASE ("GAUSSLEGENDRE")
   obj = GaussLegendreQuadrature(refElem=refElem, order=order)
@@ -71,8 +71,10 @@ END PROCEDURE quad_initiate3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_initiate4
-SELECT CASE (TRIM(quadratureType))
-CASE ("GaussLegendre")
+CHARACTER(30) :: qtype
+qtype = UpperCase(quadratureType)
+SELECT CASE (TRIM(qtype))
+CASE ("GAUSSLEGENDRE")
   obj = GaussLegendreQuadrature(refElem=refElem, nips=nips)
 CASE ("GAUSSLEGENDRELOBATTO")
 CASE ("GAUSSLEGENDRERADAU", "GAUSSLEGENDRERADAULEFT")

@@ -811,6 +811,66 @@ INTERFACE HeirarchicalBasis_Triangle
 END INTERFACE HeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
+!                                                   LagrangeEvalAll_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-04
+! summary: Evaluate all Lagrange polynomial of order n at single points
+
+INTERFACE LagrangeEvalAll_Triangle
+  MODULE FUNCTION LagrangeEvalAll_Triangle1(order, x, xij, coeff, firstCall) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    !! interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP) :: ans(order + 1)
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Triangle1
+END INTERFACE LagrangeEvalAll_Triangle
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeEvalAll_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-04
+! summary: Evaluate all Lagrange polynomials of order n at several points
+
+INTERFACE LagrangeEvalAll_Triangle
+  MODULE FUNCTION LagrangeEvalAll_Triangle2(order, x, xij, coeff, firstCall) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point of evaluation
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    !! interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, and coeff is present then coefficient will be
+    !! returned in coeff, this can be used latter.
+    !! If firstCall is False, then coeff should be present, in this
+    !! case coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP) :: ans(SIZE(x), order + 1)
+    !! Value of n+1 Lagrange polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+  END FUNCTION LagrangeEvalAll_Triangle2
+END INTERFACE LagrangeEvalAll_Triangle
+
+!----------------------------------------------------------------------------
 !                                                                 Triangle
 !----------------------------------------------------------------------------
 
