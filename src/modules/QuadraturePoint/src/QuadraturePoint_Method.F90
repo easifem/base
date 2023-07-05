@@ -23,6 +23,16 @@ USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Initiate
+PUBLIC :: QuadraturePoint
+PUBLIC :: QuadraturePoint_Pointer
+PUBLIC :: DEALLOCATE
+PUBLIC :: GaussLegendreQuadrature
+PUBLIC :: SIZE
+PUBLIC :: getTotalQuadraturepoints
+PUBLIC :: GetQuadraturepoints
+PUBLIC :: Outerprod
+PUBLIC :: Display
 
 !----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods
@@ -46,8 +56,6 @@ END INTERFACE
 INTERFACE Initiate
   MODULE PROCEDURE quad_initiate1
 END INTERFACE
-
-PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods
@@ -143,8 +151,6 @@ INTERFACE QuadraturePoint
   MODULE PROCEDURE quad_Constructor1
 END INTERFACE QuadraturePoint
 
-PUBLIC :: QuadraturePoint
-
 !----------------------------------------------------------------------------
 !                                 QuadraturePoint_Pointer@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -164,8 +170,6 @@ INTERFACE QuadraturePoint_Pointer
   MODULE PROCEDURE quad_Constructor_1
 END INTERFACE QuadraturePoint_Pointer
 
-PUBLIC :: QuadraturePoint_Pointer
-
 !----------------------------------------------------------------------------
 !                                             Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -183,8 +187,6 @@ END INTERFACE
 INTERFACE DEALLOCATE
   MODULE PROCEDURE quad_Deallocate
 END INTERFACE DEALLOCATE
-
-PUBLIC :: DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre
@@ -206,8 +208,6 @@ END INTERFACE
 INTERFACE GaussLegendreQuadrature
   MODULE PROCEDURE getGaussLegendreQP1
 END INTERFACE GaussLegendreQuadrature
-
-PUBLIC :: GaussLegendreQuadrature
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre
@@ -278,8 +278,6 @@ INTERFACE SIZE
   MODULE PROCEDURE quad_Size
 END INTERFACE SIZE
 
-PUBLIC :: SIZE
-
 !----------------------------------------------------------------------------
 !                                       getTotalQuadraturepoints@GetMethods
 !----------------------------------------------------------------------------
@@ -299,8 +297,6 @@ END INTERFACE
 INTERFACE getTotalQuadraturepoints
   MODULE PROCEDURE quad_getTotalQuadraturepoints
 END INTERFACE getTotalQuadraturepoints
-
-PUBLIC :: getTotalQuadraturepoints
 
 !----------------------------------------------------------------------------
 !                                              GetQuadraturePoint@GetMethods
@@ -325,8 +321,6 @@ END INTERFACE
 INTERFACE GetQuadraturepoints
   MODULE PROCEDURE quad_GetQuadraturepoints1
 END INTERFACE
-
-PUBLIC :: GetQuadraturepoints
 
 !----------------------------------------------------------------------------
 !                                              GetQuadraturePoint@GetMethods
@@ -373,8 +367,6 @@ INTERFACE Outerprod
   MODULE PROCEDURE quad_Outerprod
 END INTERFACE Outerprod
 
-PUBLIC :: Outerprod
-
 !----------------------------------------------------------------------------
 !                                                          Display@IOMethods
 !----------------------------------------------------------------------------
@@ -394,7 +386,5 @@ END INTERFACE
 INTERFACE Display
   MODULE PROCEDURE quad_Display
 END INTERFACE Display
-
-PUBLIC :: Display
 
 END MODULE QuadraturePoint_Method
