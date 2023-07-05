@@ -386,7 +386,7 @@ REAL(DFP) :: coeff0(order + 1, order + 1), xx(1, order + 1)
 INTEGER(I4B) :: ii, orthopol0
 
 orthopol0 = input(default=Monomial, option=orthopol)
-firstCall0 = input(default=.FALSE., option=firstCall)
+firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
@@ -458,7 +458,7 @@ REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x), order + 1)
 INTEGER(I4B) :: ii, orthopol0
 
 orthopol0 = input(default=Monomial, option=orthopol)
-firstCall0 = input(default=.FALSE., option=firstCall)
+firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
