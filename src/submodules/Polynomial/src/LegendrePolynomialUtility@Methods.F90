@@ -78,8 +78,8 @@ B = 0.0_DFP
 !!
 DO ii = 1, n
   j = REAL(ii, KIND=DFP)
-  A(ii - 1) = (2.0_DFP * j - 1.0_DFP) / j;
-  C(ii - 1) = (j - 1.0_DFP) / j;
+  A(ii - 1) = (2.0_DFP * j - 1.0_DFP) / j; 
+  C(ii - 1) = (j - 1.0_DFP) / j; 
 END DO
 !!
 END PROCEDURE GetLegendreRecurrenceCoeff2
@@ -273,7 +273,7 @@ END PROCEDURE LegendreJacobiLobattoMatrix
 MODULE PROCEDURE LegendreGaussLobattoQuadrature
 REAL(DFP) :: pn(n + 2), fixvar
 INTEGER(I4B) :: ii
-  !!
+!!
 CALL LegendreJacobiLobattoMatrix(n=n, D=pt, E=pn)
 !!
 #ifdef USE_LAPACK95
@@ -395,7 +395,7 @@ ans = x
 !!
 DO i = 1, n - 1
   !!
-  r_i = real(i, kind=DFP)
+  r_i = REAL(i, kind=DFP)
   c1 = r_i + 1.0_DFP
   c2 = 2.0_DFP * r_i + 1.0_DFP
   c3 = -r_i
@@ -433,7 +433,7 @@ ans = x
 !!
 DO i = 1, n - 1
   !!
-  r_i = real(i, kind=DFP)
+  r_i = REAL(i, kind=DFP)
   c1 = r_i + 1.0_DFP
   c2 = 2.0_DFP * r_i + 1.0_DFP
   c3 = -r_i
@@ -469,7 +469,7 @@ ans(2) = x
 !!
 DO i = 2, n
   !!
-  r_i = real(i, kind=DFP)
+  r_i = REAL(i, kind=DFP)
   c1 = r_i
   c2 = 2.0_DFP * r_i - 1.0_DFP
   c3 = -r_i + 1.0_DFP
@@ -504,7 +504,7 @@ ans(:, 2) = x
 !!
 DO i = 2, n
   !!
-  r_i = real(i, kind=DFP)
+  r_i = REAL(i, kind=DFP)
   c1 = r_i
   c2 = 2.0_DFP * r_i - 1.0_DFP
   c3 = -r_i + 1.0_DFP
@@ -795,9 +795,9 @@ b2 = 0
 !!
 DO j = n - 1, 0, -1
   i = REAL(j, KIND=DFP)
-  t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1);
-  b2 = b1;
-  b1 = t;
+  t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 ans = b1
 END PROCEDURE LegendreGradientEvalSum1
@@ -818,9 +818,9 @@ b2 = 0
 !!
 DO j = n - 1, 0, -1
   i = REAL(j, KIND=DFP)
-  t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1);
-  b2 = b1;
-  b1 = t;
+  t = (2 * i + 3) / (i + 1) * x * b1 - (i + 3) / (i + 2) * b2 + coeff(j + 1); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 ans = b1
 END PROCEDURE LegendreGradientEvalSum2
@@ -847,11 +847,11 @@ END DO
 !!
 DO j = n - k, 0, -1
   i = REAL(j, KIND=DFP)
-  A1 = (2 * i + 2 * k + 1) / (i + 1) * x;
-  A2 = -(i + 2 * k + 1) / (i + 2);
-  t = A1 * b1 + A2 * b2 + coeff(j + k);
-  b2 = b1;
-  b1 = t;
+  A1 = (2 * i + 2 * k + 1) / (i + 1) * x; 
+  A2 = -(i + 2 * k + 1) / (i + 2); 
+  t = A1 * b1 + A2 * b2 + coeff(j + k); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 ans = s * b1
 END PROCEDURE LegendreGradientEvalSum3
@@ -878,11 +878,11 @@ END DO
 !!
 DO j = n - k, 0, -1
   i = REAL(j, KIND=DFP)
-  A1 = (2 * i + 2 * k + 1) / (i + 1) * x;
-  A2 = -(i + 2 * k + 1) / (i + 2);
-  t = A1 * b1 + A2 * b2 + coeff(j + k);
-  b2 = b1;
-  b1 = t;
+  A1 = (2 * i + 2 * k + 1) / (i + 1) * x; 
+  A2 = -(i + 2 * k + 1) / (i + 2); 
+  t = A1 * b1 + A2 * b2 + coeff(j + k); 
+  b2 = b1; 
+  b1 = t; 
 END DO
 !!
 ans = s * b1
@@ -1058,7 +1058,7 @@ PURE SUBROUTINE LegendreDMatrixGL2(n, x, D)
   REAL(DFP) :: rn
   INTEGER(I4B) :: ii, jj, nb2
   !!
-  nb2 = int(n / 2)
+  nb2 = INT(n / 2)
   rn = REAL(n, KIND=DFP)
   !!
   J = LegendreEval(n=n, x=x)
@@ -1139,7 +1139,7 @@ PURE SUBROUTINE LegendreDMatrixG2(n, x, D)
   !!
   !! main
   !!
-  nb2 = int(n / 2)
+  nb2 = INT(n / 2)
   D = 0.0_DFP
   !!
   J = LegendreGradientEval(n=n + 1, x=x)

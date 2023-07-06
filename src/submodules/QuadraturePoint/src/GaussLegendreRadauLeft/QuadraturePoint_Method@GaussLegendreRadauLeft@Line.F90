@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(QuadraturePoint_Method:GaussLegendre) Line
+SUBMODULE(QuadraturePoint_Method:GaussLegendreRadauLeft) GLRL_Line
 IMPLICIT NONE
 CONTAINS
 
@@ -23,32 +23,25 @@ CONTAINS
 !                                                                       Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQPLine1
+MODULE PROCEDURE getGaussLegendreRadauLeftQPLine1
 INTEGER(I4B) :: np
-REAL(DFP) :: pt(1 + INT(order / 2, KIND=I4B))
-REAL(DFP) :: wt(1 + INT(order / 2, KIND=I4B))
-REAL(DFP) :: points(2, 1 + INT(order / 2, KIND=I4B))
-!!
+REAL(DFP) :: pt(2 + INT(order / 2, KIND=I4B))
+REAL(DFP) :: wt(2 + INT(order / 2, KIND=I4B))
 np = SIZE(pt)
-CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
-points = pt.ROWCONCAT.wt
-CALL Initiate(obj=obj, points=points)
-!!
-END PROCEDURE getGaussLegendreQPLine1
+CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
+! points = pt.ROWCONCAT.wt
+CALL Initiate(obj=obj, points=pt.ROWCONCAT.wt)
+END PROCEDURE getGaussLegendreRadauLeftQPLine1
 
 !----------------------------------------------------------------------------
 !                                                                       Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQPLine2
+MODULE PROCEDURE getGaussLegendreRadauLeftQPLine2
 REAL(DFP) :: pt(nips(1))
 REAL(DFP) :: wt(nips(1))
-REAL(DFP) :: points(2, nips(1))
-!!
-CALL LegendreQuadrature(n=nips(1), pt=pt, wt=wt, quadType=Gauss)
-points = pt.ROWCONCAT.wt
-CALL Initiate(obj=obj, points=points)
-!!
-END PROCEDURE getGaussLegendreQPLine2
+CALL LegendreQuadrature(n=nips(1), pt=pt, wt=wt, quadType=GaussRadauLeft)
+CALL Initiate(obj=obj, points=pt.ROWCONCAT.wt)
+END PROCEDURE getGaussLegendreRadauLeftQPLine2
 
-END SUBMODULE Line
+END SUBMODULE GLRL_Line

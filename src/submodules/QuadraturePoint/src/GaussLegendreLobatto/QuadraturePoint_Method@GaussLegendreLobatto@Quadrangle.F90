@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(QuadraturePoint_Method:GaussLegendre) Quadrangle
+SUBMODULE(QuadraturePoint_Method:GaussLegendreLobatto) GLL_Quadrangle
 IMPLICIT NONE
 CONTAINS
 
@@ -23,50 +23,50 @@ CONTAINS
 !                                                                 Quadrangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQPQuadrangle1
+MODULE PROCEDURE getGaussLegendreLobattoQPQuadrangle1
 TYPE(QuadraturePoint_) :: obj1
-obj1 = getGaussLegendreQPLine1(order=order)
+obj1 = getGaussLegendreLobattoQPLine1(order=order)
 obj = Outerprod(obj1=obj1, obj2=obj1)
-CALL Deallocate (obj1)
-END PROCEDURE getGaussLegendreQPQuadrangle1
+CALL DEALLOCATE (obj1)
+END PROCEDURE getGaussLegendreLobattoQPQuadrangle1
 
 !----------------------------------------------------------------------------
 !                                                                Quadrangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQPQuadrangle2
+MODULE PROCEDURE getGaussLegendreLobattoQPQuadrangle2
 TYPE(QuadraturePoint_) :: obj1, obj2
 INTEGER(I4B) :: np(2)
 !!
 IF (SIZE(nips) .EQ. 1) THEN
   np = INT(SQRT(REAL(nips(1))), KIND=I4B)
-  obj1 = getGaussLegendreQPLine2(nips=np(1:1))
+  obj1 = getGaussLegendreLobattoQPLine2(nips=np(1:1))
   obj = Outerprod(obj1=obj1, obj2=obj1)
 ELSE
   np = nips
-  obj1 = getGaussLegendreQPLine2(nips=np(1:1))
-  obj2 = getGaussLegendreQPLine2(nips=np(2:2))
+  obj1 = getGaussLegendreLobattoQPLine2(nips=np(1:1))
+  obj2 = getGaussLegendreLobattoQPLine2(nips=np(2:2))
   obj = Outerprod(obj1=obj1, obj2=obj2)
 END IF
-CALL Deallocate (obj1)
-CALL Deallocate (obj2)
-END PROCEDURE getGaussLegendreQPQuadrangle2
+CALL DEALLOCATE (obj1)
+CALL DEALLOCATE (obj2)
+END PROCEDURE getGaussLegendreLobattoQPQuadrangle2
 
 !----------------------------------------------------------------------------
 !                                                                 Quadrangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQPQuadrangle3
+MODULE PROCEDURE getGaussLegendreLobattoQPQuadrangle3
 TYPE(QuadraturePoint_) :: obj1, obj2
-obj1 = getGaussLegendreQPLine1(order=p)
-obj2 = getGaussLegendreQPLine1(order=q)
+obj1 = getGaussLegendreLobattoQPLine1(order=p)
+obj2 = getGaussLegendreLobattoQPLine1(order=q)
 obj = Outerprod(obj1=obj1, obj2=obj2)
-CALL Deallocate (obj1)
-CALL Deallocate (obj2)
-END PROCEDURE getGaussLegendreQPQuadrangle3
+CALL DEALLOCATE (obj1)
+CALL DEALLOCATE (obj2)
+END PROCEDURE getGaussLegendreLobattoQPQuadrangle3
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE
+END SUBMODULE GLL_Quadrangle

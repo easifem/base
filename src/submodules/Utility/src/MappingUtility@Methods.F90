@@ -92,7 +92,9 @@ END PROCEDURE FromBiUnitQuadrangle2Quadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitTriangle2BiUnitSqr
-ans(1, :) = 2.0_DFP * (1.0_DFP + xin(1, :)) / (1.0_DFP - xin(2, :)) - 1.0_DFP
+! ans(1, :) = 2.0_DFP * (1.0_DFP + xin(1, :)) / (1.0_DFP - xin(2, :)) - 1.0_DFP
+ans(1, :) = (1.0_DFP + zero + 2.0_DFP * xin(1, :) + xin(2, :)) &
+  & / (1.0_DFP + zero - xin(2, :))
 ans(2, :) = xin(2, :)
 END PROCEDURE FromBiUnitTriangle2BiUnitSqr
 
@@ -111,7 +113,8 @@ END PROCEDURE FromBiUnitSqr2BiUnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitSqr
-ans(1, :) = (2.0_DFP * xin(1,:) + xin(2,:) - 1.0_DFP) / (1.0_DFP - xin(2, :))
+ans(1, :) = (2.0_DFP * xin(1, :) + xin(2, :) - 1.0_DFP + zero) &
+  & / (1.0_DFP + zero - xin(2, :))
 ans(2, :) = 2.0_DFP * xin(2, :) - 1.0_DFP
 END PROCEDURE FromUnitTriangle2BiUnitSqr
 

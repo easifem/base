@@ -21,6 +21,31 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                       RefHexahedronCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefHexahedronCoord
+REAL(DFP) :: one, mone
+TYPE(String) :: astr
+
+astr = UpperCase(refHexahedron)
+
+SELECT CASE (astr%chars())
+CASE ("UNIT")
+  one = 1.0_DFP
+  mone = 0.0_DFP
+CASE ("BIUNIT")
+  one = 1.0_DFP
+  mone = -1.0_DFP
+END SELECT
+
+ans(3, 1:4) = mone
+ans(3, 5:8) = one
+ans(1:2, 1:4) = RefQuadrangleCoord(refHexahedron)
+ans(1:2, 5:8) = ans(1:2, 1:4)
+END PROCEDURE RefHexahedronCoord
+
+!----------------------------------------------------------------------------
 !                                                LagrangeDegree_Hexahedron
 !----------------------------------------------------------------------------
 

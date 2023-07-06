@@ -21,6 +21,21 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                              RefLineCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefLineCoord
+TYPE(String) :: astr
+astr = UpperCase(refLine)
+SELECT CASE (astr%chars())
+CASE ("UNIT")
+  ans(1, :) = [0.0_DFP, 1.0_DFP]
+CASE ("BIUNIT")
+  ans(1, :) = [-1.0_DFP, 1.0_DFP]
+END SELECT
+END PROCEDURE RefLineCoord
+
+!----------------------------------------------------------------------------
 !                                                       LagrangeDegree_Line
 !----------------------------------------------------------------------------
 
@@ -386,7 +401,7 @@ REAL(DFP) :: coeff0(order + 1, order + 1), xx(1, order + 1)
 INTEGER(I4B) :: ii, orthopol0
 
 orthopol0 = input(default=Monomial, option=orthopol)
-firstCall0 = input(default=.FALSE., option=firstCall)
+firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
@@ -458,7 +473,7 @@ REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x), order + 1)
 INTEGER(I4B) :: ii, orthopol0
 
 orthopol0 = input(default=Monomial, option=orthopol)
-firstCall0 = input(default=.FALSE., option=firstCall)
+firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN

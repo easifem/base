@@ -21,6 +21,23 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                        RefQuadrangleCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefQuadrangleCoord
+TYPE(String) :: astr
+astr = UpperCase(refQuadrangle)
+SELECT CASE (astr%chars())
+CASE ("UNIT")
+  ans(1, :) = [0.0_DFP, 1.0_DFP, 1.0_DFP, 0.0_DFP]
+  ans(2, :) = [0.0_DFP, 0.0_DFP, 1.0_DFP, 1.0_DFP]
+CASE ("BIUNIT")
+  ans(1, :) = [-1.0_DFP, 1.0_DFP, 1.0_DFP, -1.0_DFP]
+  ans(2, :) = [-1.0_DFP, -1.0_DFP, 1.0_DFP, 1.0_DFP]
+END SELECT
+END PROCEDURE RefQuadrangleCoord
+
+!----------------------------------------------------------------------------
 !                                                 LagrangeDegree_Quadrangle
 !----------------------------------------------------------------------------
 

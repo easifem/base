@@ -29,21 +29,19 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_ref_Triangle
-!
 CALL Reallocate(obj%xij, 3, 3)
-!
 obj%xij = InterpolationPoint_Triangle(  &
   & xij=xij, &
   & order=1, &
   & ipType=Equidistance, &
   & layout="VEFC")
-!
+
 obj%EntityCounts = [3, 3, 1, 0]
 obj%XiDimension = 2
 obj%Name = Triangle3
 obj%order = 1
 obj%nsd = nsd
-!
+
 ALLOCATE (obj%Topology(7))
 obj%Topology(1) = ReferenceTopology([1], Point)
 obj%Topology(2) = ReferenceTopology([2], Point)
@@ -52,9 +50,8 @@ obj%Topology(4) = ReferenceTopology([1, 2], Line2)
 obj%Topology(5) = ReferenceTopology([2, 3], Line2)
 obj%Topology(6) = ReferenceTopology([3, 1], Line2)
 obj%Topology(7) = ReferenceTopology([1, 2, 3], Triangle3)
-!
+
 obj%highorderElement => highorderElement_Triangle
-!
 END PROCEDURE initiate_ref_Triangle
 
 !----------------------------------------------------------------------------

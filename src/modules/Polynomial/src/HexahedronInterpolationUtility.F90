@@ -19,6 +19,25 @@ MODULE HexahedronInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: LagrangeDegree_Hexahedron
+PUBLIC :: LagrangeDOF_Hexahedron
+PUBLIC :: LagrangeInDOF_Hexahedron
+PUBLIC :: EquidistanceInPoint_Hexahedron
+PUBLIC :: EquidistancePoint_Hexahedron
+PUBLIC :: InterpolationPoint_Hexahedron
+PUBLIC :: LagrangeCoeff_Hexahedron
+PUBLIC :: RefHexahedronCoord
+
+!----------------------------------------------------------------------------
+!                                                       RefHexahedronCoord
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION RefHexahedronCoord(refHexahedron) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    REAL(DFP) :: ans(3, 8)
+  END FUNCTION RefHexahedronCoord
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeDegree_Hexahedron
@@ -35,8 +54,6 @@ INTERFACE
   END FUNCTION LagrangeDegree_Hexahedron
 END INTERFACE
 
-PUBLIC :: LagrangeDegree_Hexahedron
-
 !----------------------------------------------------------------------------
 !                                                     LagrangeDOF_Hexahedron
 !----------------------------------------------------------------------------
@@ -52,8 +69,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeDOF_Hexahedron
 END INTERFACE
-
-PUBLIC :: LagrangeDOF_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeInDOF_Hexahedron
@@ -76,8 +91,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeInDOF_Hexahedron
 END INTERFACE
-
-PUBLIC :: LagrangeInDOF_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                           EquidistanceInPoint_Hexahedron
@@ -105,8 +118,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistanceInPoint_Hexahedron
 END INTERFACE
-
-PUBLIC :: EquidistanceInPoint_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Hexahedron
@@ -138,8 +149,6 @@ INTERFACE
   END FUNCTION EquidistancePoint_Hexahedron
 END INTERFACE
 
-PUBLIC :: EquidistancePoint_Hexahedron
-
 !----------------------------------------------------------------------------
 !                                            InterpolationPoint_Hexahedron
 !----------------------------------------------------------------------------
@@ -154,13 +163,11 @@ INTERFACE
     & RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), INTENT(IN) :: ipType
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
   END FUNCTION InterpolationPoint_Hexahedron
 END INTERFACE
-
-PUBLIC :: InterpolationPoint_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Hexahedron
@@ -182,8 +189,6 @@ END INTERFACE
 INTERFACE LagrangeCoeff_Hexahedron
   MODULE PROCEDURE LagrangeCoeff_Hexahedron1
 END INTERFACE LagrangeCoeff_Hexahedron
-
-PUBLIC :: LagrangeCoeff_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Hexahedron

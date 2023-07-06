@@ -15,16 +15,34 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(QuadraturePoint_Method:GaussLegendre ) Prism
+SUBMODULE(QuadraturePoint_Method:GaussLegendre) Prism
 IMPLICIT NONE
 CONTAINS
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE getGaussLegendreQPPrism1
-  RETURN
+CALL ErrorMsg(&
+  & msg="This routine is under development",  &
+  & file=__FILE__,  &
+  & routine="getGaussLegendreQPPrism1()", &
+  & line=__LINE__, &
+  & unitno=stderr)
 END PROCEDURE getGaussLegendreQPPrism1
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE getGaussLegendreQPPrism2
-  RETURN
+CALL ErrorMsg(&
+  & msg="This routine is under development",  &
+  & file=__FILE__,  &
+  & routine="getGaussLegendreQPPrism2()", &
+  & line=__LINE__, &
+  & unitno=stderr)
 END PROCEDURE getGaussLegendreQPPrism2
 
 END SUBMODULE

@@ -57,12 +57,23 @@ SELECT CASE (TRIM(qtype))
 CASE ("GAUSSLEGENDRE")
   obj = GaussLegendreQuadrature(refElem=refElem, order=order)
 CASE ("GAUSSLEGENDRELOBATTO")
+  obj = GaussLegendreLobattoQuadrature(refElem=refElem, order=order)
 CASE ("GAUSSLEGENDRERADAU", "GAUSSLEGENDRERADAULEFT")
+  obj = GaussLegendreRadauLeftQuadrature(refElem=refElem, order=order)
 CASE ("GAUSSLEGENDRERADAURIGHT")
+  obj = GaussLegendreRadauRightQuadrature(refElem=refElem, order=order)
+
 CASE ("GAUSSCHEBYSHEV")
 CASE ("GAUSSCHEBYSHEVLOBATTO")
 CASE ("GAUSSCHEBYSHEVRADAU", "GAUSSCHEBYSHEVRADAULEFT")
 CASE ("GAUSSCHEBYSHEVRADAURIGHT")
+CASE DEFAULT
+  CALL Errormsg(&
+  & msg="No case found for given quadratureType", &
+  & file=__FILE__, &
+  & line=__LINE__,&
+  & routine="quad_initiate3()", &
+  & unitno=stderr)
 END SELECT
 END PROCEDURE quad_initiate3
 
@@ -77,12 +88,24 @@ SELECT CASE (TRIM(qtype))
 CASE ("GAUSSLEGENDRE")
   obj = GaussLegendreQuadrature(refElem=refElem, nips=nips)
 CASE ("GAUSSLEGENDRELOBATTO")
+  obj = GaussLegendreLobattoQuadrature(refElem=refElem, nips=nips)
 CASE ("GAUSSLEGENDRERADAU", "GAUSSLEGENDRERADAULEFT")
+  obj = GaussLegendreRadauLeftQuadrature(refElem=refElem, nips=nips)
 CASE ("GAUSSLEGENDRERADAURIGHT")
+  obj = GaussLegendreRadauRightQuadrature(refElem=refElem, nips=nips)
+
 CASE ("GAUSSCHEBYSHEV")
 CASE ("GAUSSCHEBYSHEVLOBATTO")
 CASE ("GAUSSCHEBYSHEVRADAU", "GAUSSCHEBYSHEVRADAULEFT")
 CASE ("GAUSSCHEBYSHEVRADAURIGHT")
+
+CASE DEFAULT
+  CALL Errormsg(&
+  & msg="No case found for given quadratureType", &
+  & file=__FILE__, &
+  & line=__LINE__,&
+  & routine="quad_initiate3()", &
+  & unitno=stderr)
 END SELECT
 END PROCEDURE quad_initiate4
 

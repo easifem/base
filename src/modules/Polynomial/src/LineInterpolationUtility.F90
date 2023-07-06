@@ -29,6 +29,24 @@ PUBLIC :: EquidistancePoint_Line
 PUBLIC :: InterpolationPoint_Line
 PUBLIC :: LagrangeCoeff_Line
 PUBLIC :: LagrangeEvalAll_Line
+PUBLIC :: RefLineCoord
+
+!----------------------------------------------------------------------------
+!                                                           RefLineCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference triangle
+
+INTERFACE
+  MODULE PURE FUNCTION RefLineCoord(refLine) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! "unit"
+    !! "biunit"
+    REAL(DFP) :: ans(1, 2)
+  END FUNCTION RefLineCoord
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeDegree_Line

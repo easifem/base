@@ -15,16 +15,34 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(QuadraturePoint_Method:GaussLegendre ) Pyramid
+SUBMODULE(QuadraturePoint_Method:GaussLegendre) Pyramid
 IMPLICIT NONE
 CONTAINS
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE getGaussLegendreQPPyramid1
-  RETURN
+CALL ErrorMsg(&
+  & msg="This routine is under development",  &
+  & file=__FILE__,  &
+  & routine="getGaussLegendreQPPyramid1()", &
+  & line=__LINE__, &
+  & unitno=stderr)
 END PROCEDURE getGaussLegendreQPPyramid1
 
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE getGaussLegendreQPPyramid2
-  RETURN
+CALL ErrorMsg(&
+  & msg="This routine is under development",  &
+  & file=__FILE__,  &
+  & routine="getGaussLegendreQPPyramid2()", &
+  & line=__LINE__, &
+  & unitno=stderr)
 END PROCEDURE getGaussLegendreQPPyramid2
 
 END SUBMODULE
