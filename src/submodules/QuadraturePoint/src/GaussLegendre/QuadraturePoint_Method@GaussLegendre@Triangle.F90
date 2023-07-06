@@ -18,7 +18,7 @@
 SUBMODULE(QuadraturePoint_Method:GaussLegendre) Triangle
 IMPLICIT NONE
 
-#include "./GaussLegendre/QuadDataTriangle.inc"
+#include "./QuadDataTriangle.inc"
 
 CONTAINS
 

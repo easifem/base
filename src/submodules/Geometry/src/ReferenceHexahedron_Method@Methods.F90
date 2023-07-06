@@ -29,6 +29,61 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate_ref_Hexahedron
+INTEGER(I4B) :: ii, jj
+INTEGER(I4B) :: p1p2(2, 12), lloop(4, 6), vol(8, 1)
+
+p1p2(:, 1) = [1, 2]
+p1p2(:, 2) = [1, 4]
+p1p2(:, 3) = [1, 5]
+p1p2(:, 4) = [2, 3]
+p1p2(:, 5) = [2, 6]
+p1p2(:, 6) = [3, 4]
+p1p2(:, 7) = [3, 7]
+p1p2(:, 8) = [4, 8]
+p1p2(:, 9) = [5, 6]
+p1p2(:, 10) = [5, 8]
+p1p2(:, 11) = [6, 7]
+p1p2(:, 12) = [7, 8]
+
+lloop(:, 1) = [1, 4, 3, 2]
+lloop(:, 2) = [5, 6, 7, 8]
+lloop(:, 3) = [1, 5, 8, 4]
+lloop(:, 4) = [2, 3, 7, 6]
+lloop(:, 5) = [3, 4, 8, 7]
+lloop(:, 6) = [1, 2, 6, 5]
+
+vol(:, 1) = arange(1_I4B, 8_I4B)
+
+CALL Reallocate(obj%xij, 3, 3)
+obj%xij = RefHexahedronCoord("BIUNIT")
+
+obj%EntityCounts = [8, 12, 6, 1]
+obj%XiDimension = 3
+obj%Name = Hexahedron8
+obj%order = 1
+obj%nsd = nsd
+
+ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+DO ii = 1, obj%EntityCounts(1)
+  obj%Topology(ii) = ReferenceTopology([ii], Point)
+END DO
+
+jj = obj%EntityCounts(1)
+DO ii = 1, obj%EntityCounts(2)
+  obj%Topology(jj + ii) = ReferenceTopology(p1p2(:, ii), Line2)
+END DO
+
+jj = SUM(obj%EntityCounts(1:2))
+DO ii = 1, obj%EntityCounts(3)
+  obj%Topology(jj + ii) = ReferenceTopology(lloop(:, ii), Quadrangle4)
+END DO
+
+jj = SUM(obj%EntityCounts(1:3))
+DO ii = 1, obj%EntityCounts(4)
+  obj%Topology(jj + ii) = ReferenceTopology(vol(:, ii), Hexahedron8)
+END DO
+
+obj%highorderElement => highorderElement_Hexahedron
 END PROCEDURE Initiate_ref_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -36,11 +91,11 @@ END PROCEDURE Initiate_ref_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Hexahedron
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( obj, NSD )
-  END IF
+IF (PRESENT(XiJ)) THEN
+  CALL Initiate(obj, NSD, XiJ)
+ELSE
+  CALL Initiate(obj, NSD)
+END IF
 END PROCEDURE reference_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -48,12 +103,12 @@ END PROCEDURE reference_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Hexahedron_Pointer
-  ALLOCATE( obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( obj, NSD )
-  END IF
+ALLOCATE (obj)
+IF (PRESENT(XiJ)) THEN
+  CALL Initiate(obj, NSD, XiJ)
+ELSE
+  CALL Initiate(obj, NSD)
+END IF
 END PROCEDURE reference_Hexahedron_Pointer
 
 !----------------------------------------------------------------------------
@@ -68,19 +123,19 @@ END PROCEDURE highorderElement_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Hexahedron
-  INTEGER( I4B ) :: Order0( 6 ), Node0( 6, 4 ), FM( 6, 7 ), iFace, b
+INTEGER(I4B) :: Order0(6), Node0(6, 4), FM(6, 7), iFace, b
   !!
-  Order0 = [4, 4, 4, 4, 4, 4]
-  FM = FacetMatrix( RefElem )
-  DO iFace = 1, 6
-    b = FM( iFace, 3 ) + 3
-    Node0( iFace, 1:Order0( iFace ) ) = FM( iFace, 4 : b )
-  END DO
-  CALL POLYHEDRONVOLUME3D( coord = XiJ( 1:3, 1:8 ), &
-    & order_max = 4, face_num = 6,  &
-    & node = Node0, node_num = 8, &
-    & order = Order0, &
-    & volume = Ans )
+Order0 = [4, 4, 4, 4, 4, 4]
+FM = FacetMatrix(RefElem)
+DO iFace = 1, 6
+  b = FM(iFace, 3) + 3
+  Node0(iFace, 1:Order0(iFace)) = FM(iFace, 4:b)
+END DO
+CALL POLYHEDRONVOLUME3D(coord=XiJ(1:3, 1:8), &
+  & order_max=4, face_num=6,  &
+  & node=Node0, node_num=8, &
+  & order=Order0, &
+  & volume=Ans)
 END PROCEDURE Measure_Simplex_Hexahedron
 
 !----------------------------------------------------------------------------

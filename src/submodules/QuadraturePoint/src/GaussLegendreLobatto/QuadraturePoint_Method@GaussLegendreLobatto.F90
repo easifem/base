@@ -15,188 +15,188 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(QuadraturePoint_Method) GaussLegendre
+SUBMODULE(QuadraturePoint_Method) GaussLegendreLobatto
 USE BaseMethod
 IMPLICIT NONE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPLine1(order)  &
+  MODULE FUNCTION getGaussLegendreLobattoQPLine1(order)  &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: order
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPLine1
+  END FUNCTION getGaussLegendreLobattoQPLine1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPLine2(nips)  &
+  MODULE FUNCTION getGaussLegendreLobattoQPLine2(nips)  &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPLine2
+  END FUNCTION getGaussLegendreLobattoQPLine2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPQuadrangle1(order) &
+  MODULE FUNCTION getGaussLegendreLobattoQPQuadrangle1(order) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: order
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPQuadrangle1
+  END FUNCTION getGaussLegendreLobattoQPQuadrangle1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPQuadrangle2(nips) &
+  MODULE FUNCTION getGaussLegendreLobattoQPQuadrangle2(nips) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nips(:)
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPQuadrangle2
+  END FUNCTION getGaussLegendreLobattoQPQuadrangle2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPQuadrangle3(p, q) &
+  MODULE FUNCTION getGaussLegendreLobattoQPQuadrangle3(p, q) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: p
     INTEGER(I4B), INTENT(IN) :: q
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPQuadrangle3
+  END FUNCTION getGaussLegendreLobattoQPQuadrangle3
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPTriangle1(order) &
+  MODULE FUNCTION getGaussLegendreLobattoQPTriangle1(order) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: order
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPTriangle1
+  END FUNCTION getGaussLegendreLobattoQPTriangle1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPTriangle2(nips) RESULT(obj)
+  MODULE FUNCTION getGaussLegendreLobattoQPTriangle2(nips) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nips(:)
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPTriangle2
+  END FUNCTION getGaussLegendreLobattoQPTriangle2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPTetrahedron1(order) &
+  MODULE FUNCTION getGaussLegendreLobattoQPTetrahedron1(order) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: order
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPTetrahedron1
+  END FUNCTION getGaussLegendreLobattoQPTetrahedron1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPTetrahedron2(nips) &
+  MODULE FUNCTION getGaussLegendreLobattoQPTetrahedron2(nips) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPTetrahedron2
+  END FUNCTION getGaussLegendreLobattoQPTetrahedron2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPPyramid1(order) &
+  MODULE FUNCTION getGaussLegendreLobattoQPPyramid1(order) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: order
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPPyramid1
+  END FUNCTION getGaussLegendreLobattoQPPyramid1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPPyramid2(nips) &
+  MODULE FUNCTION getGaussLegendreLobattoQPPyramid2(nips) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPPyramid2
+  END FUNCTION getGaussLegendreLobattoQPPyramid2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPPrism1(order) &
+  MODULE FUNCTION getGaussLegendreLobattoQPPrism1(order) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: order
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPPrism1
+  END FUNCTION getGaussLegendreLobattoQPPrism1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPPrism2(nips) &
+  MODULE FUNCTION getGaussLegendreLobattoQPPrism2(nips) &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPPrism2
+  END FUNCTION getGaussLegendreLobattoQPPrism2
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPHexahedron1(order) &
+  MODULE FUNCTION getGaussLegendreLobattoQPHexahedron1(order) &
       & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: order
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPHexahedron1
+  END FUNCTION getGaussLegendreLobattoQPHexahedron1
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                GaussLegendre@GaussLegendre
+!                                 GaussLegendreLobatto@GaussLegendreLobatto
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION getGaussLegendreQPHexahedron2(nips) &
+  MODULE FUNCTION getGaussLegendreLobattoQPHexahedron2(nips) &
       & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQPHexahedron2
+  END FUNCTION getGaussLegendreLobattoQPHexahedron2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -206,159 +206,180 @@ END INTERFACE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                    GaussLegendreQuadrature
+!                                            GaussLegendreLobattoQuadrature
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQP1
+MODULE PROCEDURE getGaussLegendreLobattoQP1
 SELECT TYPE (refelem)
 TYPE IS (ReferenceLine_)
-  obj = getGaussLegendreQPLine1(order=order)
+  obj = getGaussLegendreLobattoQPLine1(order=order)
 TYPE IS (ReferenceTriangle_)
-  obj = getGaussLegendreQPTriangle1(order=order)
+  obj = getGaussLegendreLobattoQPTriangle1(order=order)
 TYPE IS (ReferenceQuadrangle_)
-  obj = getGaussLegendreQPQuadrangle1(order=order)
+  obj = getGaussLegendreLobattoQPQuadrangle1(order=order)
 TYPE IS (ReferenceTetrahedron_)
-  obj = getGaussLegendreQPTetrahedron1(order=order)
+  obj = getGaussLegendreLobattoQPTetrahedron1(order=order)
 TYPE IS (ReferenceHexahedron_)
-  obj = getGaussLegendreQPHexahedron1(order=order)
+  obj = getGaussLegendreLobattoQPHexahedron1(order=order)
 TYPE IS (ReferencePrism_)
-  obj = getGaussLegendreQPPrism1(order=order)
+  obj = getGaussLegendreLobattoQPPrism1(order=order)
 TYPE IS (ReferencePyramid_)
-  obj = getGaussLegendreQPPyramid1(order=order)
+  obj = getGaussLegendreLobattoQPPyramid1(order=order)
 TYPE IS (ReferenceElement_)
   IF (isLine(refelem%name)) THEN
-    obj = getGaussLegendreQPLine1(order=order)
+    obj = getGaussLegendreLobattoQPLine1(order=order)
     RETURN
   END IF
   IF (isTriangle(refelem%name)) THEN
-    obj = getGaussLegendreQPTriangle1(order=order)
+    obj = getGaussLegendreLobattoQPTriangle1(order=order)
     RETURN
   END IF
   IF (isQuadrangle(refelem%name)) THEN
-    obj = getGaussLegendreQPQuadrangle1(order=order)
+    obj = getGaussLegendreLobattoQPQuadrangle1(order=order)
     RETURN
   END IF
   IF (isTetrahedron(refelem%name)) THEN
-    obj = getGaussLegendreQPTetrahedron1(order=order)
+    obj = getGaussLegendreLobattoQPTetrahedron1(order=order)
     RETURN
   END IF
   IF (isHexahedron(refelem%name)) THEN
-    obj = getGaussLegendreQPHexahedron1(order=order)
+    obj = getGaussLegendreLobattoQPHexahedron1(order=order)
     RETURN
   END IF
   IF (isPrism(refelem%name)) THEN
-    obj = getGaussLegendreQPPrism1(order=order)
+    obj = getGaussLegendreLobattoQPPrism1(order=order)
     RETURN
   END IF
   IF (isPyramid(refelem%name)) THEN
-    obj = getGaussLegendreQPPyramid1(order=order)
+    obj = getGaussLegendreLobattoQPPyramid1(order=order)
     RETURN
   END IF
+CLASS DEFAULT
+  CALL ErrorMsg(&
+    & msg="No case found",  &
+    & file=__FILE__,  &
+    & routine="getGaussLegendreLobattoQP1()", &
+    & line=__LINE__, &
+    & unitno=stderr)
 END SELECT
-END PROCEDURE getGaussLegendreQP1
+END PROCEDURE getGaussLegendreLobattoQP1
 
 !----------------------------------------------------------------------------
-!                                                    GaussLegendreQuadrature
+!                                           GaussLegendreLobattoQuadrature
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQP2
+MODULE PROCEDURE getGaussLegendreLobattoQP2
 SELECT TYPE (refelem)
 TYPE IS (ReferenceLine_)
-  obj = getGaussLegendreQPLine2(nips=nips)
+  obj = getGaussLegendreLobattoQPLine2(nips=nips)
 TYPE IS (ReferenceTriangle_)
-  obj = getGaussLegendreQPTriangle2(nips=nips)
+  obj = getGaussLegendreLobattoQPTriangle2(nips=nips)
 TYPE IS (ReferenceQuadrangle_)
-  obj = getGaussLegendreQPQuadrangle2(nips=nips)
+  obj = getGaussLegendreLobattoQPQuadrangle2(nips=nips)
 TYPE IS (ReferenceTetrahedron_)
-  obj = getGaussLegendreQPTetrahedron2(nips=nips)
+  obj = getGaussLegendreLobattoQPTetrahedron2(nips=nips)
 TYPE IS (ReferenceHexahedron_)
-  obj = getGaussLegendreQPHexahedron2(nips=nips)
+  obj = getGaussLegendreLobattoQPHexahedron2(nips=nips)
 TYPE IS (ReferencePrism_)
-  obj = getGaussLegendreQPPrism2(nips=nips)
+  obj = getGaussLegendreLobattoQPPrism2(nips=nips)
 TYPE IS (ReferencePyramid_)
-  obj = getGaussLegendreQPPyramid2(nips=nips)
+  obj = getGaussLegendreLobattoQPPyramid2(nips=nips)
 TYPE IS (ReferenceElement_)
   IF (isLine(refelem%name)) THEN
-    obj = getGaussLegendreQPLine2(nips=nips)
+    obj = getGaussLegendreLobattoQPLine2(nips=nips)
     RETURN
   END IF
   IF (isTriangle(refelem%name)) THEN
-    obj = getGaussLegendreQPTriangle2(nips=nips)
+    obj = getGaussLegendreLobattoQPTriangle2(nips=nips)
     RETURN
   END IF
   IF (isQuadrangle(refelem%name)) THEN
-    obj = getGaussLegendreQPQuadrangle2(nips=nips)
+    obj = getGaussLegendreLobattoQPQuadrangle2(nips=nips)
     RETURN
   END IF
   IF (isTetrahedron(refelem%name)) THEN
-    obj = getGaussLegendreQPTetrahedron2(nips=nips)
+    obj = getGaussLegendreLobattoQPTetrahedron2(nips=nips)
     RETURN
   END IF
   IF (isHexahedron(refelem%name)) THEN
-    obj = getGaussLegendreQPHexahedron2(nips=nips)
+    obj = getGaussLegendreLobattoQPHexahedron2(nips=nips)
     RETURN
   END IF
   IF (isPrism(refelem%name)) THEN
-    obj = getGaussLegendreQPPrism2(nips=nips)
+    obj = getGaussLegendreLobattoQPPrism2(nips=nips)
     RETURN
   END IF
   IF (isPyramid(refelem%name)) THEN
-    obj = getGaussLegendreQPPyramid2(nips=nips)
+    obj = getGaussLegendreLobattoQPPyramid2(nips=nips)
     RETURN
   END IF
+CLASS DEFAULT
+  CALL ErrorMsg(&
+    & msg="No case found",  &
+    & file=__FILE__,  &
+    & routine="getGaussLegendreLobattoQP1()", &
+    & line=__LINE__, &
+    & unitno=stderr)
 END SELECT
-END PROCEDURE getGaussLegendreQP2
+END PROCEDURE getGaussLegendreLobattoQP2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQP3
+MODULE PROCEDURE getGaussLegendreLobattoQP3
 SELECT TYPE (refelem)
 TYPE IS (ReferenceLine_)
-  obj = getGaussLegendreQPLine1(order=p)
+  obj = getGaussLegendreLobattoQPLine1(order=p)
 TYPE IS (ReferenceTriangle_)
-  obj = getGaussLegendreQPTriangle1(order=p)
+  obj = getGaussLegendreLobattoQPTriangle1(order=p)
 TYPE IS (ReferenceQuadrangle_)
-  obj = getGaussLegendreQPQuadrangle3(p=p, q=q)
+  obj = getGaussLegendreLobattoQPQuadrangle3(p=p, q=q)
 TYPE IS (ReferenceTetrahedron_)
-  obj = getGaussLegendreQPTetrahedron1(order=p)
+  obj = getGaussLegendreLobattoQPTetrahedron1(order=p)
 TYPE IS (ReferenceHexahedron_)
-  obj = getGaussLegendreQPHexahedron1(order=p)
+  obj = getGaussLegendreLobattoQPHexahedron1(order=p)
 TYPE IS (ReferencePrism_)
-  obj = getGaussLegendreQPPrism1(order=p)
+  obj = getGaussLegendreLobattoQPPrism1(order=p)
 TYPE IS (ReferencePyramid_)
-  obj = getGaussLegendreQPPyramid1(order=p)
+  obj = getGaussLegendreLobattoQPPyramid1(order=p)
 TYPE IS (ReferenceElement_)
   IF (isLine(refelem%name)) THEN
-    obj = getGaussLegendreQPLine1(order=p)
+    obj = getGaussLegendreLobattoQPLine1(order=p)
     RETURN
   END IF
   IF (isTriangle(refelem%name)) THEN
-    obj = getGaussLegendreQPTriangle1(order=p)
+    obj = getGaussLegendreLobattoQPTriangle1(order=p)
     RETURN
   END IF
   IF (isQuadrangle(refelem%name)) THEN
-    obj = getGaussLegendreQPQuadrangle3(p=p, q=q)
+    obj = getGaussLegendreLobattoQPQuadrangle3(p=p, q=q)
     RETURN
   END IF
   IF (isTetrahedron(refelem%name)) THEN
-    obj = getGaussLegendreQPTetrahedron1(order=p)
+    obj = getGaussLegendreLobattoQPTetrahedron1(order=p)
     RETURN
   END IF
   IF (isHexahedron(refelem%name)) THEN
-    obj = getGaussLegendreQPHexahedron1(order=p)
+    obj = getGaussLegendreLobattoQPHexahedron1(order=p)
     RETURN
   END IF
   IF (isPrism(refelem%name)) THEN
-    obj = getGaussLegendreQPPrism1(order=p)
+    obj = getGaussLegendreLobattoQPPrism1(order=p)
     RETURN
   END IF
   IF (isPyramid(refelem%name)) THEN
-    obj = getGaussLegendreQPPyramid1(order=p)
+    obj = getGaussLegendreLobattoQPPyramid1(order=p)
     RETURN
   END IF
+CLASS DEFAULT
+  CALL ErrorMsg(&
+    & msg="No case found",  &
+    & file=__FILE__,  &
+    & routine="getGaussLegendreLobattoQP1()", &
+    & line=__LINE__, &
+    & unitno=stderr)
 END SELECT
-END PROCEDURE getGaussLegendreQP3
+END PROCEDURE getGaussLegendreLobattoQP3
 
-END SUBMODULE GaussLegendre
+END SUBMODULE GaussLegendreLobatto

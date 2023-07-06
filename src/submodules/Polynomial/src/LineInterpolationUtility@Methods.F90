@@ -21,6 +21,21 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                              RefLineCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefLineCoord
+TYPE(String) :: astr
+astr = UpperCase(refLine)
+SELECT CASE (astr%chars())
+CASE ("UNIT")
+  ans(1, :) = [0.0_DFP, 1.0_DFP]
+CASE ("BIUNIT")
+  ans(1, :) = [-1.0_DFP, 1.0_DFP]
+END SELECT
+END PROCEDURE RefLineCoord
+
+!----------------------------------------------------------------------------
 !                                                       LagrangeDegree_Line
 !----------------------------------------------------------------------------
 
