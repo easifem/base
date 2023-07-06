@@ -19,6 +19,32 @@ MODULE QuadrangleInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: LagrangeDegree_Quadrangle
+PUBLIC :: LagrangeDOF_Quadrangle
+PUBLIC :: LagrangeInDOF_Quadrangle
+PUBLIC :: EquidistanceInPoint_Quadrangle
+PUBLIC :: EquidistancePoint_Quadrangle
+PUBLIC :: InterpolationPoint_Quadrangle
+PUBLIC :: LagrangeCoeff_Quadrangle
+PUBLIC :: Dubiner_Quadrangle
+PUBLIC :: TensorProdOrthopol_Quadrangle
+PUBLIC :: VertexBasis_Quadrangle
+PUBLIC :: VerticalEdgeBasis_Quadrangle
+PUBLIC :: HorizontalEdgeBasis_Quadrangle
+PUBLIC :: CellBasis_Quadrangle
+PUBLIC :: HeirarchicalBasis_Quadrangle
+PUBLIC :: RefQuadrangleCoord
+
+!----------------------------------------------------------------------------
+!                                                   RefQuadrangleCoord
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION RefQuadrangleCoord(refQuadrangle) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refQuadrangle
+    REAL(DFP) :: ans(2, 4)
+  END FUNCTION RefQuadrangleCoord
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeDegree_Quadrangle
@@ -35,8 +61,6 @@ INTERFACE
   END FUNCTION LagrangeDegree_Quadrangle
 END INTERFACE
 
-PUBLIC :: LagrangeDegree_Quadrangle
-
 !----------------------------------------------------------------------------
 !                                                    LagrangeDOF_Quadrangle
 !----------------------------------------------------------------------------
@@ -52,8 +76,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeDOF_Quadrangle
 END INTERFACE
-
-PUBLIC :: LagrangeDOF_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeInDOF_Quadrangle
@@ -76,8 +98,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeInDOF_Quadrangle
 END INTERFACE
-
-PUBLIC :: LagrangeInDOF_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                             EquidistanceInPoint_Quadrangle
@@ -105,8 +125,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistanceInPoint_Quadrangle
 END INTERFACE
-
-PUBLIC :: EquidistanceInPoint_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Quadrangle
@@ -137,8 +155,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Quadrangle
 END INTERFACE
-
-PUBLIC :: EquidistancePoint_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                             InterpolationPoint_Quadrangle
@@ -189,8 +205,6 @@ INTERFACE InterpolationPoint_Quadrangle
   MODULE PROCEDURE InterpolationPoint_Quadrangle1
 END INTERFACE InterpolationPoint_Quadrangle
 
-PUBLIC :: InterpolationPoint_Quadrangle
-
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Quadrangle
 !----------------------------------------------------------------------------
@@ -211,8 +225,6 @@ END INTERFACE
 INTERFACE LagrangeCoeff_Quadrangle
   MODULE PROCEDURE LagrangeCoeff_Quadrangle1
 END INTERFACE LagrangeCoeff_Quadrangle
-
-PUBLIC :: LagrangeCoeff_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Quadrangle
@@ -335,8 +347,6 @@ INTERFACE Dubiner_Quadrangle
   MODULE PROCEDURE Dubiner_Quadrangle1
 END INTERFACE Dubiner_Quadrangle
 
-PUBLIC :: Dubiner_Quadrangle
-
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial
 !----------------------------------------------------------------------------
@@ -419,8 +429,6 @@ INTERFACE TensorProdOrthopol_Quadrangle
   MODULE PROCEDURE TensorProdOrthopol_Quadrangle1
 END INTERFACE TensorProdOrthopol_Quadrangle
 
-PUBLIC :: TensorProdOrthopol_Quadrangle
-
 !----------------------------------------------------------------------------
 !                                            TensorProdOrthopol_Quadrangle
 !----------------------------------------------------------------------------
@@ -487,8 +495,6 @@ INTERFACE
   END FUNCTION VertexBasis_Quadrangle
 END INTERFACE
 
-PUBLIC :: VertexBasis_Quadrangle
-
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Quadrangle2
 !----------------------------------------------------------------------------
@@ -532,8 +538,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x), qe1 + qe2 - 2)
   END FUNCTION VerticalEdgeBasis_Quadrangle
 END INTERFACE
-
-PUBLIC :: VerticalEdgeBasis_Quadrangle
 
 !----------------------------------------------------------------------------
 !
@@ -579,8 +583,6 @@ INTERFACE
   END FUNCTION HorizontalEdgeBasis_Quadrangle
 END INTERFACE
 
-PUBLIC :: HorizontalEdgeBasis_Quadrangle
-
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
@@ -621,8 +623,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(x), (pb - 1) * (qb - 1))
   END FUNCTION CellBasis_Quadrangle
 END INTERFACE
-
-PUBLIC :: CellBasis_Quadrangle
 
 !----------------------------------------------------------------------------
 !
@@ -686,8 +686,6 @@ END INTERFACE
 INTERFACE HeirarchicalBasis_Quadrangle
   MODULE PROCEDURE HeirarchicalBasis_Quadrangle1
 END INTERFACE HeirarchicalBasis_Quadrangle
-
-PUBLIC :: HeirarchicalBasis_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Quadrangle
