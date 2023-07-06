@@ -15,12 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_H1DivLagrangeMethods
+MODULE ElemshapeData_H1DivLagrangeMethods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                    Initiate@H1DivLagrange
@@ -50,4 +50,4 @@ INTERFACE Initiate
   MODULE PROCEDURE H1Div_Lagrange
 END INTERFACE Initiate
 
-end module ElemshapeData_H1DivLagrangeMethods
+END MODULE ElemshapeData_H1DivLagrangeMethods
