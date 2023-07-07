@@ -670,16 +670,12 @@ END PROCEDURE refelem_ElementTopology2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Facet_Matrix_refelem
-  !
 INTEGER(I4B) :: XiCell, T(4), i, istart, iend, max_nns, nns, tFacet
-  !
-  ! main
-  !
 T(1) = 0
 DO i = 2, 4
   T(i) = SUM(refelem%EntityCounts(1:i - 1))
 END DO
-!>
+
 XiCell = refelem%XiDimension
 SELECT CASE (XiCell)
 CASE (1)
@@ -715,7 +711,6 @@ CASE (2, 3)
     FM(i + 1, 4:(3 + nns)) = refelem%Topology(iStart + i)%Nptrs
   END DO
 END SELECT
-  !
 END PROCEDURE Facet_Matrix_refelem
 
 !----------------------------------------------------------------------------

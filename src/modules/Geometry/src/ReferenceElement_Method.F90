@@ -24,6 +24,41 @@ USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Display
+PUBLIC :: ReferenceTopology
+PUBLIC :: DEALLOCATE
+PUBLIC :: OPERATOR(.NNE.)
+PUBLIC :: Initiate
+PUBLIC :: ASSIGNMENT(=)
+PUBLIC :: ReferenceElement_Pointer
+PUBLIC :: getConnectivity
+PUBLIC :: ElementType
+PUBLIC :: ElementName
+PUBLIC :: TotalNodesInElement
+PUBLIC :: ElementOrder
+PUBLIC :: OPERATOR(.order.)
+PUBLIC :: XiDimension
+PUBLIC :: isVolume
+PUBLIC :: isSurface
+PUBLIC :: isLine
+PUBLIC :: isPoint
+PUBLIC :: isTriangle
+PUBLIC :: isQuadrangle
+PUBLIC :: isTetrahedron
+PUBLIC :: isHexahedron
+PUBLIC :: isPrism
+PUBLIC :: isPyramid
+PUBLIC :: isSerendipityElement
+PUBLIC :: ElementTopology
+PUBLIC :: OPERATOR(.topology.)
+PUBLIC :: FacetMatrix
+PUBLIC :: FacetElements
+PUBLIC :: LocalNodeCoord
+PUBLIC :: MeasureSimplex
+PUBLIC :: ElementQuality
+PUBLIC :: ContainsPoint
+PUBLIC :: TotalEntities
+PUBLIC :: FacetTopology
 
 !----------------------------------------------------------------------------
 !                                                         Display@IOMethods
@@ -44,8 +79,6 @@ END INTERFACE
 INTERFACE Display
   MODULE PROCEDURE refelem_Display
 END INTERFACE Display
-
-PUBLIC :: Display
 
 !----------------------------------------------------------------------------
 !                                                         Display@IOMethods
@@ -113,8 +146,6 @@ INTERFACE ReferenceTopology
   MODULE PROCEDURE refelem_ReferenceTopology
 END INTERFACE ReferenceTopology
 
-PUBLIC :: ReferenceTopology
-
 !----------------------------------------------------------------------------
 !                                            Deallocate@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -141,8 +172,6 @@ END INTERFACE
 INTERFACE DEALLOCATE
   MODULE PROCEDURE refelem_Deallocate1
 END INTERFACE
-
-PUBLIC :: DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                            Deallocate@ConstructorMethods
@@ -190,8 +219,6 @@ INTERFACE OPERATOR(.NNE.)
   MODULE PROCEDURE refelem_NNE1
 END INTERFACE
 
-PUBLIC :: OPERATOR(.NNE.)
-
 !----------------------------------------------------------------------------
 !                                                    NNE@ConstructorMethods
 !----------------------------------------------------------------------------
@@ -237,13 +264,9 @@ INTERFACE Initiate
   MODULE PROCEDURE refelem_Initiate1
 END INTERFACE Initiate
 
-PUBLIC :: Initiate
-
 INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE refelem_Initiate1
 END INTERFACE
-
-PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
 !                               ReferenceElement_Pointer@ConstructorMethods
@@ -272,8 +295,6 @@ END INTERFACE
 INTERFACE ReferenceElement_Pointer
   MODULE PROCEDURE refelem_Constructor_1
 END INTERFACE ReferenceElement_Pointer
-
-PUBLIC :: ReferenceElement_Pointer
 
 !----------------------------------------------------------------------------
 !                                ReferenceElementPointer@ConstructorMethods
@@ -313,8 +334,6 @@ INTERFACE getConnectivity
   MODULE PROCEDURE refelem_getNptrs
 END INTERFACE getConnectivity
 
-PUBLIC :: getConnectivity
-
 !----------------------------------------------------------------------------
 !                                               ElementType@GeometryMethods
 !----------------------------------------------------------------------------
@@ -333,8 +352,6 @@ END INTERFACE
 INTERFACE ElementType
   MODULE PROCEDURE Element_Type
 END INTERFACE ElementType
-
-PUBLIC :: ElementType
 
 !----------------------------------------------------------------------------
 !                                               ElementName@GeometryMethods
@@ -355,8 +372,6 @@ INTERFACE ElementName
   MODULE PROCEDURE Element_Name
 END INTERFACE ElementName
 
-PUBLIC :: ElementName
-
 !----------------------------------------------------------------------------
 !                                       TotalNodesInElement@GeometryMethods
 !----------------------------------------------------------------------------
@@ -375,8 +390,6 @@ END INTERFACE
 INTERFACE TotalNodesInElement
   MODULE PROCEDURE Total_Nodes_In_Element
 END INTERFACE TotalNodesInElement
-
-PUBLIC :: TotalNodesInElement
 
 !----------------------------------------------------------------------------
 !                                              ElementOrder@GeometryMethods
@@ -412,13 +425,9 @@ INTERFACE ElementOrder
   MODULE PROCEDURE Element_Order_RefElem, Element_Order
 END INTERFACE ElementOrder
 
-PUBLIC :: ElementOrder
-
 INTERFACE OPERATOR(.order.)
   MODULE PROCEDURE Element_Order_RefElem, Element_Order
 END INTERFACE OPERATOR(.order.)
-
-PUBLIC :: OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
 !                                               XiDimension@GeometryMethods
@@ -456,8 +465,6 @@ INTERFACE XiDimension
   MODULE PROCEDURE Elem_XiDimension1, Elem_Xidimension2
 END INTERFACE XiDimension
 
-PUBLIC :: XiDimension
-
 !----------------------------------------------------------------------------
 !                                                   isVolume@GeometryMethods
 !----------------------------------------------------------------------------
@@ -472,8 +479,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION isVolume
 END INTERFACE
-
-PUBLIC :: isVolume
 
 !----------------------------------------------------------------------------
 !                                                 isSurface@GeometryMethods
@@ -490,8 +495,6 @@ INTERFACE
   END FUNCTION isSurface
 END INTERFACE
 
-PUBLIC :: isSurface
-
 !----------------------------------------------------------------------------
 !                                                    isLine@GeometryMethods
 !----------------------------------------------------------------------------
@@ -506,8 +509,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION isLine
 END INTERFACE
-
-PUBLIC :: isLine
 
 !----------------------------------------------------------------------------
 !                                                   isPoint@GeometryMethods
@@ -524,8 +525,6 @@ INTERFACE
   END FUNCTION isPoint
 END INTERFACE
 
-PUBLIC :: isPoint
-
 !----------------------------------------------------------------------------
 !                                                 isTriangle@GeometryMethods
 !----------------------------------------------------------------------------
@@ -540,8 +539,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION isTriangle
 END INTERFACE
-
-PUBLIC :: isTriangle
 
 !----------------------------------------------------------------------------
 !                                               isQuadrangle@GeometryMethods
@@ -558,8 +555,6 @@ INTERFACE
   END FUNCTION isQuadrangle
 END INTERFACE
 
-PUBLIC :: isQuadrangle
-
 !----------------------------------------------------------------------------
 !                                             isTetrahedron@GeometryMethods
 !----------------------------------------------------------------------------
@@ -574,8 +569,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION isTetrahedron
 END INTERFACE
-
-PUBLIC :: isTetrahedron
 
 !----------------------------------------------------------------------------
 !                                             isHexahedron@GeometryMethods
@@ -592,8 +585,6 @@ INTERFACE
   END FUNCTION isHexahedron
 END INTERFACE
 
-PUBLIC :: isHexahedron
-
 !----------------------------------------------------------------------------
 !                                                    isPrism@GeometryMethods
 !----------------------------------------------------------------------------
@@ -608,8 +599,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION isPrism
 END INTERFACE
-
-PUBLIC :: isPrism
 
 !----------------------------------------------------------------------------
 !                                                 isPyramid@GeometryMethods
@@ -626,8 +615,6 @@ INTERFACE
   END FUNCTION isPyramid
 END INTERFACE
 
-PUBLIC :: isPyramid
-
 !----------------------------------------------------------------------------
 !                                       isSerendipityElement@GeometryMethods
 !----------------------------------------------------------------------------
@@ -642,8 +629,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION isSerendipityElement
 END INTERFACE
-
-PUBLIC :: isSerendipityElement
 
 !----------------------------------------------------------------------------
 !                                           ElementTopology@GeometryMethods
@@ -684,13 +669,9 @@ INTERFACE ElementTopology
   MODULE PROCEDURE refelem_ElementTopology1, refelem_ElementTopology2
 END INTERFACE ElementTopology
 
-PUBLIC :: ElementTopology
-
 INTERFACE OPERATOR(.topology.)
   MODULE PROCEDURE refelem_ElementTopology1, refelem_ElementTopology2
 END INTERFACE OPERATOR(.topology.)
-
-PUBLIC :: OPERATOR(.topology.)
 
 !----------------------------------------------------------------------------
 !                                               FacetMatrix@GeometryMethods
@@ -722,8 +703,6 @@ INTERFACE FacetMatrix
   MODULE PROCEDURE Facet_Matrix_RefElem
 END INTERFACE FacetMatrix
 
-PUBLIC :: FacetMatrix
-
 !----------------------------------------------------------------------------
 !                                             FacetElements@GeometryMethods
 !----------------------------------------------------------------------------
@@ -742,8 +721,6 @@ END INTERFACE
 INTERFACE FacetElements
   MODULE PROCEDURE RefElem_FacetElements
 END INTERFACE FacetElements
-
-PUBLIC :: FacetElements
 
 !----------------------------------------------------------------------------
 !                                            LocalNodeCoord@GeometryMethods
@@ -785,8 +762,6 @@ INTERFACE LocalNodeCoord
   MODULE PROCEDURE Local_NodeCoord_RefElem
 END INTERFACE LocalNodeCoord
 
-PUBLIC :: LocalNodeCoord
-
 !----------------------------------------------------------------------------
 !                                         MeasureSimplex@GeometryMethods
 !----------------------------------------------------------------------------
@@ -806,8 +781,6 @@ END INTERFACE
 INTERFACE MeasureSimplex
   MODULE PROCEDURE Measure_Simplex
 END INTERFACE MeasureSimplex
-
-PUBLIC :: MeasureSimplex
 
 !----------------------------------------------------------------------------
 !                                            ElementQuality@GeometryMethods
@@ -830,8 +803,6 @@ INTERFACE ElementQuality
   MODULE PROCEDURE Element_Quality
 END INTERFACE ElementQuality
 
-PUBLIC :: ElementQuality
-
 !----------------------------------------------------------------------------
 !                                             ContainsPoint@GeometryMethods
 !----------------------------------------------------------------------------
@@ -853,8 +824,6 @@ INTERFACE ContainsPoint
   MODULE PROCEDURE contains_point
 END INTERFACE ContainsPoint
 
-PUBLIC :: ContainsPoint
-
 !----------------------------------------------------------------------------
 !                                             TotalEntities@GeometryMethods
 !----------------------------------------------------------------------------
@@ -873,8 +842,6 @@ END INTERFACE
 INTERFACE TotalEntities
   MODULE PROCEDURE RefElem_TotalEntities
 END INTERFACE TotalEntities
-
-PUBLIC :: TotalEntities
 
 !----------------------------------------------------------------------------
 !                                             FacetTopology@GeometryMethods
@@ -896,8 +863,6 @@ INTERFACE FacetTopology
   MODULE PROCEDURE RefElem_FacetTopology
 END INTERFACE FacetTopology
 
-PUBLIC :: FacetTopology
-
 !----------------------------------------------------------------------------
 !                                              getVTKelementType@VTKMethods
 !----------------------------------------------------------------------------
@@ -913,7 +878,5 @@ END INTERFACE
 INTERFACE getVTKelementType
   MODULE PROCEDURE get_vtk_elemType
 END INTERFACE getVTKelementType
-
-PUBLIC :: getVTKelementType
 
 END MODULE ReferenceElement_Method
