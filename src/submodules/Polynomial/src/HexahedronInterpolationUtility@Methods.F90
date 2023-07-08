@@ -200,9 +200,49 @@ END PROCEDURE EquidistancePoint_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Hexahedron
+INTEGER(I4B) :: nsd, n, ne, i1, i2, ii
+REAL(DFP) :: x(3, 8), xin(3, 8), F(3, 3)
 
-! TODO #159 Implement EquidistanceInPoint_Hexahedron routine
+x = 0.0_DFP
+xin = 0.0_DFP
+nsd = 3_I4B
 
+IF (PRESENT(xij)) THEN
+  x(1:nsd, 1:8) = xij(1:nsd, 1:8)
+ELSE
+  x = RefHexahedronCoord("BIUNIT")
+END IF
+
+F = 0.0_DFP
+F(1, 1) = NORM2(x(:, 1) - x(:, 2)) / REAL(order, DFP)
+F(2, 2) = NORM2(x(:, 1) - x(:, 4)) / REAL(order, DFP)
+F(3, 3) = NORM2(x(:, 1) - x(:, 5)) / REAL(order, DFP)
+
+n = LagrangeInDOF_Hexahedron(order=order)
+ALLOCATE (ans(nsd, n))
+ans = 0.0_DFP
+
+IF (order .EQ. 1_I4B) RETURN
+
+i2 = 0
+! internal points
+SELECT CASE (order)
+CASE (2_I4B)
+  ans(1:nsd, 1) = SUM(x, dim=2_I4B) / 8.0_DFP
+CASE (3_I4B)
+  xin = MATMUL(F, x)
+  ne = LagrangeInDOF_Hexahedron(order)
+  i1 = i2 + 1
+  i2 = i1 + ne - 1
+  ans(1:nsd, i1:i2) = xin
+CASE DEFAULT
+  xin = MATMUL(F, x)
+  ne = LagrangeInDOF_Hexahedron(order)
+  i1 = i2 + 1
+  i2 = i1 + ne - 1
+  ans(1:nsd, i1:i2) = EquidistancePoint_Hexahedron( &
+    & order=order - 2_I4B, xij=xin)
+END SELECT
 END PROCEDURE EquidistanceInPoint_Hexahedron
 
 !----------------------------------------------------------------------------
