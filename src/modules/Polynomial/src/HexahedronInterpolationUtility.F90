@@ -27,6 +27,36 @@ PUBLIC :: EquidistancePoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron
 PUBLIC :: LagrangeCoeff_Hexahedron
 PUBLIC :: RefHexahedronCoord
+PUBLIC :: EdgeConnectivity_Hexahedron
+PUBLIC :: FacetConnectivity_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                               FacetConnectivity_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-07
+! summary:  This function returns the edge connectivity of Hexahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FacetConnectivity_Hexahedron() RESULT(ans)
+    INTEGER(I4B) :: ans(4, 6)
+  END FUNCTION FacetConnectivity_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               EdgeConnectivity_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-07
+! summary:  This function returns the edge connectivity of Hexahedron
+
+INTERFACE
+  MODULE PURE FUNCTION EdgeConnectivity_Hexahedron() RESULT(ans)
+    INTEGER(I4B) :: ans(2, 12)
+  END FUNCTION EdgeConnectivity_Hexahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                       RefHexahedronCoord
@@ -137,7 +167,7 @@ END INTERFACE
 !- The node numbering is according to Gmsh convention.
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistancePoint_Hexahedron(order, xij) RESULT(ans)
+  MODULE PURE RECURSIVE FUNCTION EquidistancePoint_Hexahedron(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
   !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
