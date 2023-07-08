@@ -197,14 +197,14 @@ END PROCEDURE EquidistancePoint_Quadrangle
 MODULE PROCEDURE EquidistanceInPoint_Quadrangle
 INTEGER(I4B) :: nsd, n, ne, i1, i2
 REAL(DFP) :: x(3, 4), xin(3, 4), e1(3), e2(3), lam, avar, mu
-!!
+
 IF (order .LT. 2_I4B) THEN
   ALLOCATE (ans(0, 0))
   RETURN
 END IF
-  !!
+
 x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
-  !!
+
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x(1:nsd, 1:4) = xij(1:nsd, 1:4)
@@ -215,17 +215,15 @@ ELSE
   x(1:nsd, 3) = [1.0, 1.0, 0.0]
   x(1:nsd, 4) = [-1.0, 1.0, 0.0]
 END IF
-  !!
+
 n = LagrangeInDOF_Quadrangle(order=order)
 ALLOCATE (ans(nsd, n))
 ans = 0.0_DFP
-  !!
-  !! points on face
-  !!
+
+! points on face
 IF (order .EQ. 2_I4B) THEN
   ans(1:nsd, 1) = SUM(x, dim=2_I4B) / 4.0_DFP
 ELSE
-    !!
   e1 = x(:, 2) - x(:, 1)
   avar = NORM2(e1)
   e1 = e1 / avar
@@ -235,7 +233,7 @@ ELSE
   e2 = e2 / avar
   mu = avar / order
   xin(1:nsd, 1) = x(1:nsd, 1) + lam * e1(1:nsd) + mu * e2(1:nsd)
-    !!
+
   e1 = x(:, 3) - x(:, 2)
   avar = NORM2(e1)
   e1 = e1 / avar
@@ -245,7 +243,7 @@ ELSE
   e2 = e2 / avar
   mu = avar / order
   xin(1:nsd, 2) = x(1:nsd, 2) + lam * e1(1:nsd) + mu * e2(1:nsd)
-    !!
+
   e1 = x(:, 2) - x(:, 3)
   avar = NORM2(e1)
   e1 = e1 / avar
@@ -255,7 +253,7 @@ ELSE
   e2 = e2 / avar
   mu = avar / order
   xin(1:nsd, 3) = x(1:nsd, 3) + lam * e1(1:nsd) + mu * e2(1:nsd)
-    !!
+
   e1 = x(:, 3) - x(:, 4)
   avar = NORM2(e1)
   e1 = e1 / avar
@@ -265,13 +263,12 @@ ELSE
   e2 = e2 / avar
   mu = avar / order
   xin(1:nsd, 4) = x(1:nsd, 4) + lam * e1(1:nsd) + mu * e2(1:nsd)
-    !!
+
   ans(1:nsd, 1:) = EquidistancePoint_Quadrangle( &
     & order=order - 2, &
     & xij=xin(1:nsd, 1:4))
-    !!
+
 END IF
-!!
 END PROCEDURE EquidistanceInPoint_Quadrangle
 
 !----------------------------------------------------------------------------
