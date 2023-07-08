@@ -24,6 +24,33 @@ USE GlobalData
 USE BaseType
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Initiate
+PUBLIC :: ReferenceTriangle
+PUBLIC :: ReferenceTriangle_Pointer
+PUBLIC :: HighorderElement_Triangle
+PUBLIC :: Measure_Simplex_Triangle
+PUBLIC :: Angles
+PUBLIC :: Area
+PUBLIC :: ArealVector
+PUBLIC :: Barycentric
+PUBLIC :: Centroid
+PUBLIC :: CircumCenter
+PUBLIC :: CircumCircle
+PUBLIC :: CircumRadius
+PUBLIC :: ContainsLine
+PUBLIC :: Triangle_Contains_Point
+PUBLIC :: Diameter
+PUBLIC :: EdgeLength
+PUBLIC :: Incenter
+PUBLIC :: Incircle
+PUBLIC :: Inradius
+PUBLIC :: Orthocenter
+PUBLIC :: DistanceFromPoint
+PUBLIC :: NearestPoint
+PUBLIC :: RandomPoint
+PUBLIC :: Triangle_Quality
+PUBLIC :: TriangleArea3D
+PUBLIC :: TriangleArea2D
 
 !----------------------------------------------------------------------------
 !                                                         Initiate@Triangle
@@ -68,8 +95,6 @@ INTERFACE Initiate
   MODULE PROCEDURE initiate_ref_Triangle
 END INTERFACE Initiate
 
-PUBLIC :: Initiate
-
 !----------------------------------------------------------------------------
 !                                                 ReferenceTriangle@Triangle
 !----------------------------------------------------------------------------
@@ -107,8 +132,6 @@ INTERFACE ReferenceTriangle
   MODULE PROCEDURE reference_Triangle
 END INTERFACE ReferenceTriangle
 
-PUBLIC :: ReferenceTriangle
-
 !----------------------------------------------------------------------------
 !                                         ReferenceTriangle_Pointer@Triangle
 !----------------------------------------------------------------------------
@@ -145,8 +168,6 @@ END INTERFACE
 INTERFACE ReferenceTriangle_Pointer
   MODULE PROCEDURE reference_Triangle_Pointer
 END INTERFACE ReferenceTriangle_Pointer
-
-PUBLIC :: ReferenceTriangle_Pointer
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeElement@Triangle
@@ -186,8 +207,6 @@ INTERFACE
   END SUBROUTINE highorderElement_Triangle
 END INTERFACE
 
-PUBLIC :: highorderElement_Triangle
-
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Triangle
 !----------------------------------------------------------------------------
@@ -215,8 +234,6 @@ INTERFACE
   END FUNCTION Measure_Simplex_Triangle
 END INTERFACE
 
-PUBLIC :: Measure_Simplex_Triangle
-
 !----------------------------------------------------------------------------
 !                                                            Angles@Triangle
 !----------------------------------------------------------------------------
@@ -236,8 +253,6 @@ END INTERFACE
 INTERFACE Angles
   MODULE PROCEDURE triangle_angles
 END INTERFACE Angles
-
-PUBLIC :: Angles
 
 !----------------------------------------------------------------------------
 !                                                             Area@Triangle
@@ -259,8 +274,6 @@ INTERFACE Area
   MODULE PROCEDURE triangle_area
 END INTERFACE Area
 
-PUBLIC :: Area
-
 !----------------------------------------------------------------------------
 !                                                        ArealVector@Triangle
 !----------------------------------------------------------------------------
@@ -280,8 +293,6 @@ END INTERFACE
 INTERFACE ArealVector
   MODULE PROCEDURE triangle_arealVector
 END INTERFACE ArealVector
-
-PUBLIC :: ArealVector
 
 !----------------------------------------------------------------------------
 !                                                      Barycentric@Triangle
@@ -304,8 +315,6 @@ INTERFACE Barycentric
   MODULE PROCEDURE triangle_barycentric
 END INTERFACE Barycentric
 
-PUBLIC :: Barycentric
-
 !----------------------------------------------------------------------------
 !                                                          Centroid@Triangle
 !----------------------------------------------------------------------------
@@ -326,8 +335,6 @@ INTERFACE Centroid
   MODULE PROCEDURE triangle_centroid
 END INTERFACE Centroid
 
-PUBLIC :: Centroid
-
 !----------------------------------------------------------------------------
 !                                                      CircumCenter@Triangle
 !----------------------------------------------------------------------------
@@ -347,8 +354,6 @@ END INTERFACE
 INTERFACE CircumCenter
   MODULE PROCEDURE triangle_circumcentre
 END INTERFACE CircumCenter
-
-PUBLIC :: CircumCenter
 
 !----------------------------------------------------------------------------
 !                                                      CircumCircle@Triangle
@@ -371,8 +376,6 @@ INTERFACE CircumCircle
   MODULE PROCEDURE triangle_circumcircle
 END INTERFACE CircumCircle
 
-PUBLIC :: CircumCircle
-
 !----------------------------------------------------------------------------
 !                                                      CircumRadius@Triangle
 !----------------------------------------------------------------------------
@@ -388,8 +391,6 @@ END INTERFACE
 INTERFACE CircumRadius
   MODULE PROCEDURE triangle_circumradius
 END INTERFACE CircumRadius
-
-PUBLIC :: CircumRadius
 
 !----------------------------------------------------------------------------
 !                                                     ContainsLine@Triangle
@@ -410,8 +411,6 @@ INTERFACE ContainsLine
   MODULE PROCEDURE triangle_contains_line
 END INTERFACE ContainsLine
 
-PUBLIC :: ContainsLine
-
 !----------------------------------------------------------------------------
 !                                                    ContainsPoint@Triangle
 !----------------------------------------------------------------------------
@@ -423,8 +422,6 @@ INTERFACE
     LOGICAL(LGT) :: Ans
   END FUNCTION triangle_contains_point
 END INTERFACE
-
-PUBLIC :: triangle_contains_point
 
 !----------------------------------------------------------------------------
 !                                                         Diameter@Triangle
@@ -442,8 +439,6 @@ INTERFACE diameter
   MODULE PROCEDURE triangle_diameter
 END INTERFACE diameter
 
-PUBLIC :: diameter
-
 !----------------------------------------------------------------------------
 !                                                       EdgeLength@Triangle
 !----------------------------------------------------------------------------
@@ -459,8 +454,6 @@ END INTERFACE
 INTERFACE EdgeLength
   MODULE PROCEDURE triangle_edge_length
 END INTERFACE EdgeLength
-
-PUBLIC :: EdgeLength
 
 !----------------------------------------------------------------------------
 !                                                         Incenter@Triangle
@@ -478,8 +471,6 @@ INTERFACE Incenter
   MODULE PROCEDURE triangle_incenter
 END INTERFACE Incenter
 
-PUBLIC :: Incenter
-
 !----------------------------------------------------------------------------
 !                                                         Incircle@Triangle
 !----------------------------------------------------------------------------
@@ -495,8 +486,6 @@ END INTERFACE
 INTERFACE Incircle
   MODULE PROCEDURE triangle_incircle
 END INTERFACE Incircle
-
-PUBLIC :: Incircle
 
 !----------------------------------------------------------------------------
 !                                                         Inradius@Triangle
@@ -514,8 +503,6 @@ INTERFACE Inradius
   MODULE PROCEDURE triangle_inradius
 END INTERFACE Inradius
 
-PUBLIC :: Inradius
-
 !----------------------------------------------------------------------------
 !                                                      Orthocenter@Triangle
 !----------------------------------------------------------------------------
@@ -531,8 +518,6 @@ END INTERFACE
 INTERFACE Orthocenter
   MODULE PROCEDURE triangle_orthocenter
 END INTERFACE Orthocenter
-
-PUBLIC :: Orthocenter
 
 !----------------------------------------------------------------------------
 !                                                DistanceFromPoint@Triangle
@@ -551,8 +536,6 @@ INTERFACE DistanceFromPoint
   MODULE PROCEDURE triangle_point_dist
 END INTERFACE DistanceFromPoint
 
-PUBLIC :: DistanceFromPoint
-
 !----------------------------------------------------------------------------
 !                                                      NearestPoint@Triangle
 !----------------------------------------------------------------------------
@@ -569,8 +552,6 @@ END INTERFACE
 INTERFACE NearestPoint
   MODULE PROCEDURE triangle_get_nearest_point
 END INTERFACE NearestPoint
-
-PUBLIC :: NearestPoint
 
 !----------------------------------------------------------------------------
 !                                                       RandomPoint@Triangle
@@ -591,8 +572,6 @@ INTERFACE RandomPoint
   MODULE PROCEDURE triangle_random_point
 END INTERFACE RandomPoint
 
-PUBLIC :: RandomPoint
-
 !----------------------------------------------------------------------------
 !                                                          Quality@Triangle
 !----------------------------------------------------------------------------
@@ -605,8 +584,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION triangle_quality
 END INTERFACE
-
-PUBLIC :: triangle_quality
 
 !----------------------------------------------------------------------------
 !                                                            TriangleArea3D
@@ -630,8 +607,6 @@ INTERFACE
   END SUBROUTINE TriangleArea3D
 END INTERFACE
 
-PUBLIC :: TriangleArea3D
-
 !-----------------------------------------------------------------------------
 !
 !-----------------------------------------------------------------------------
@@ -653,8 +628,6 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: area
   END SUBROUTINE TriangleArea2D
 END INTERFACE
-
-PUBLIC :: TriangleArea2D
 
 !----------------------------------------------------------------------------
 !

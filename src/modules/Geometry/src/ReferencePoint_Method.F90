@@ -24,6 +24,12 @@ USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Initiate
+PUBLIC :: ReferencePoint
+PUBLIC :: ReferencePoint_Pointer
+PUBLIC :: highOrderElement_Point
+PUBLIC :: Measure_Simplex_Point
+PUBLIC :: Point_Quality
 
 !----------------------------------------------------------------------------
 !                                                            Initiate@Methods
@@ -69,8 +75,6 @@ INTERFACE Initiate
   MODULE PROCEDURE refPoint_Initiate
 END INTERFACE Initiate
 
-PUBLIC :: Initiate
-
 !----------------------------------------------------------------------------
 !                                                    ReferencePoint@Methods
 !----------------------------------------------------------------------------
@@ -108,8 +112,6 @@ END INTERFACE
 INTERFACE ReferencePoint
   MODULE PROCEDURE refPoint_Constructor1
 END INTERFACE ReferencePoint
-
-PUBLIC :: ReferencePoint
 
 !----------------------------------------------------------------------------
 !                                             ReferencePoint_Pointer@Methods
@@ -150,8 +152,6 @@ INTERFACE ReferencePoint_Pointer
   MODULE PROCEDURE refPoint_Constructor_1
 END INTERFACE ReferencePoint_Pointer
 
-PUBLIC :: ReferencePoint_Pointer
-
 !----------------------------------------------------------------------------
 !                                                   LagrangeElement@Methods
 !----------------------------------------------------------------------------
@@ -187,8 +187,6 @@ INTERFACE
   END SUBROUTINE highOrderElement_Point
 END INTERFACE
 
-PUBLIC :: highOrderElement_Point
-
 !----------------------------------------------------------------------------
 !                                                      MeasureSimplex@Methods
 !----------------------------------------------------------------------------
@@ -220,8 +218,6 @@ INTERFACE
   END FUNCTION Measure_Simplex_Point
 END INTERFACE
 
-PUBLIC :: Measure_Simplex_Point
-
 !----------------------------------------------------------------------------
 !                                                             Point_quality
 !----------------------------------------------------------------------------
@@ -234,8 +230,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION Point_Quality
 END INTERFACE
-
-PUBLIC :: Point_Quality
 
 !----------------------------------------------------------------------------
 !

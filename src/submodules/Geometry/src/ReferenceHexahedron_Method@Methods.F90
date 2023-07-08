@@ -32,25 +32,8 @@ MODULE PROCEDURE Initiate_ref_Hexahedron
 INTEGER(I4B) :: ii, jj
 INTEGER(I4B) :: p1p2(2, 12), lloop(4, 6), vol(8, 1)
 
-p1p2(:, 1) = [1, 2]
-p1p2(:, 2) = [1, 4]
-p1p2(:, 3) = [1, 5]
-p1p2(:, 4) = [2, 3]
-p1p2(:, 5) = [2, 6]
-p1p2(:, 6) = [3, 4]
-p1p2(:, 7) = [3, 7]
-p1p2(:, 8) = [4, 8]
-p1p2(:, 9) = [5, 6]
-p1p2(:, 10) = [5, 8]
-p1p2(:, 11) = [6, 7]
-p1p2(:, 12) = [7, 8]
-
-lloop(:, 1) = [1, 4, 3, 2]
-lloop(:, 2) = [5, 6, 7, 8]
-lloop(:, 3) = [1, 5, 8, 4]
-lloop(:, 4) = [2, 3, 7, 6]
-lloop(:, 5) = [3, 4, 8, 7]
-lloop(:, 6) = [1, 2, 6, 5]
+p1p2 = EdgeConnectivity_Hexahedron()
+lloop = FacetConnectivity_Hexahedron()
 
 vol(:, 1) = arange(1_I4B, 8_I4B)
 

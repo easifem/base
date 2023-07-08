@@ -24,6 +24,12 @@ USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Initiate
+PUBLIC :: ReferenceLine
+PUBLIC :: ReferenceLine_Pointer
+PUBLIC :: highorderElement_Line
+PUBLIC :: Measure_Simplex_Line
+PUBLIC :: Line_Quality
 
 !----------------------------------------------------------------------------
 !                                                           Initiate@Methods
@@ -55,7 +61,7 @@ PRIVATE
 ! call display( obj1, "obj1 : " )
 !```
 
-INTERFACE
+INTERFACE Initiate
   MODULE SUBROUTINE initiate_ref_Line(obj, nsd, xij)
     CLASS(ReferenceLine_), INTENT(INOUT) :: obj
     !! The instance
@@ -64,13 +70,7 @@ INTERFACE
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     !! Coords of element
   END SUBROUTINE initiate_ref_Line
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE initiate_ref_Line
 END INTERFACE Initiate
-
-PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                     ReferenceLine@Methods
@@ -100,19 +100,13 @@ PUBLIC :: Initiate
 ! call display( obj, 'obj : ' )
 !```
 
-INTERFACE
+INTERFACE ReferenceLine
   MODULE FUNCTION reference_line(nsd, xij) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     TYPE(ReferenceLine_) :: obj
   END FUNCTION reference_line
-END INTERFACE
-
-INTERFACE ReferenceLine
-  MODULE PROCEDURE reference_line
 END INTERFACE ReferenceLine
-
-PUBLIC :: ReferenceLine
 
 !----------------------------------------------------------------------------
 !                                              ReferenceLine_Pointer@Methods
@@ -142,19 +136,13 @@ PUBLIC :: ReferenceLine
 ! call display( obj, "obj : ")
 !```
 
-INTERFACE
+INTERFACE ReferenceLine_Pointer
   MODULE FUNCTION reference_line_pointer_1(nsd, xij) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CLASS(ReferenceLine_), POINTER :: obj
   END FUNCTION reference_line_pointer_1
-END INTERFACE
-
-INTERFACE ReferenceLine_Pointer
-  MODULE PROCEDURE reference_line_Pointer_1
 END INTERFACE ReferenceLine_Pointer
-
-PUBLIC :: ReferenceLine_Pointer
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeElement@Methods
@@ -193,8 +181,6 @@ INTERFACE
   END SUBROUTINE highorderElement_Line
 END INTERFACE
 
-PUBLIC :: highorderElement_Line
-
 !----------------------------------------------------------------------------
 !                                                    MeasureSimplex@Methods
 !----------------------------------------------------------------------------
@@ -227,8 +213,6 @@ INTERFACE
   END FUNCTION Measure_Simplex_Line
 END INTERFACE
 
-PUBLIC :: Measure_Simplex_Line
-
 !----------------------------------------------------------------------------
 !                                                      line_quality@Methods
 !----------------------------------------------------------------------------
@@ -241,8 +225,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION Line_Quality
 END INTERFACE
-
-PUBLIC :: Line_Quality
 
 !----------------------------------------------------------------------------
 !
