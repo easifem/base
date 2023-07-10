@@ -88,6 +88,35 @@ END DO
 END PROCEDURE FromBiUnitQuadrangle2Quadrangle1
 
 !----------------------------------------------------------------------------
+!                                           FromBiUnitHexahedron2Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2Hexahedron1
+INTEGER(I4B) :: ii
+REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
+REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
+!!
+DO ii = 1, SIZE(ans, 2)
+  xi = xin(1, ii)
+  eta = xin(2, ii)
+  zeta = xin(3, ii)
+  p1 = p125 * (one - xi) * (one - eta) * (one - zeta)
+  p2 = p125 * (one + xi) * (one - eta) * (one - zeta)
+  p3 = p125 * (one + xi) * (one + eta) * (one - zeta)
+  p4 = p125 * (one - xi) * (one + eta) * (one - zeta)
+
+  p5 = p125 * (one - xi) * (one - eta) * (one + zeta)
+  p6 = p125 * (one + xi) * (one - eta) * (one + zeta)
+  p7 = p125 * (one + xi) * (one + eta) * (one + zeta)
+  p8 = p125 * (one - xi) * (one + eta) * (one + zeta)
+
+  ans(:, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4 + &
+    & x5 * p5 + x6 * p6 + x7 * p7 + x8 * p8
+
+END DO
+END PROCEDURE FromBiUnitHexahedron2Hexahedron1
+
+!----------------------------------------------------------------------------
 !                                             FromBiUnitTriangle2BiUnitSqr
 !----------------------------------------------------------------------------
 
