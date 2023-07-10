@@ -338,104 +338,7 @@ SUBROUTINE IJ2VEFC(xi, eta, temp, p, q, myname)
   INTEGER(I4B), INTENT(IN) :: p
   INTEGER(I4B), INTENT(IN) :: q
   CHARACTER(*), INTENT(IN) :: myname
-  !
-  INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, llt, llr, N
-  !
-  ! vertices
-  !
-  N = (p + 1) * (q + 1)
-  cnt = 0
-  ll = -1
-  !
-  DO
-    ll = ll + 1
-    !
-    ! v1
-    !
-    cnt = cnt + 1
-    ii = 1 + ll; jj = 1 + ll
-    temp(1, cnt) = xi(ii, jj)
-    temp(2, cnt) = eta(ii, jj)
-    !
-    ! v2
-    !
-    ii = p + 1 - ll
-    jj = 1 + ll
-    IF (cnt .LT. N) THEN
-      cnt = cnt + 1
-      temp(1, cnt) = xi(ii, jj)
-      temp(2, cnt) = eta(ii, jj)
-    END IF
-    !
-    ! v3
-    !
-    ii = p + 1 - ll
-    jj = q + 1 - ll
-    IF (cnt .LT. N) THEN
-      cnt = cnt + 1
-      temp(1, cnt) = xi(ii, jj)
-      temp(2, cnt) = eta(ii, jj)
-    END IF
-    !
-    ! v4
-    !
-    ii = 1 + ll
-    jj = q + 1 - ll
-    IF (cnt .LT. N) THEN
-      cnt = cnt + 1
-      temp(1, cnt) = xi(ii, jj)
-      temp(2, cnt) = eta(ii, jj)
-    END IF
-    !
-    ! nodes on edge 12
-    !
-    jj = ll + 1
-    IF (cnt .LT. N) THEN
-      DO ii = 2 + ll, p - ll
-        cnt = cnt + 1
-        temp(1, cnt) = xi(ii, jj)
-        temp(2, cnt) = eta(ii, jj)
-      END DO
-    END IF
-    !
-    ! nodes on edge 23
-    !
-    ii = p + 1 - ll
-    IF (cnt .LT. N) THEN
-      DO jj = 2 + ll, q - ll
-        cnt = cnt + 1
-        temp(1, cnt) = xi(ii, jj)
-        temp(2, cnt) = eta(ii, jj)
-      END DO
-    END IF
-    !
-    ! nodes on edge 34
-    !
-    jj = q + 1 - ll
-    IF (cnt .LT. N) THEN
-      DO ii = p - ll, 2 + ll, -1
-        cnt = cnt + 1
-        temp(1, cnt) = xi(ii, jj)
-        temp(2, cnt) = eta(ii, jj)
-      END DO
-    END IF
-    !
-    ! nodes on edge 41
-    !
-    ii = ll + 1
-    IF (cnt .LT. N) THEN
-      DO jj = q - ll, 2 + ll, -1
-        cnt = cnt + 1
-        temp(1, cnt) = xi(ii, jj)
-        temp(2, cnt) = eta(ii, jj)
-      END DO
-    END IF
-    !
-    ! internal nodes
-    !
-    IF (cnt .EQ. N) EXIT
-  END DO
-  !
+  CALL IJ2VEFC_Quadrangle_AntiClockwise(xi, eta, temp, p, q, 1_I4B)
 END SUBROUTINE IJ2VEFC
 
 !----------------------------------------------------------------------------
@@ -843,5 +746,143 @@ MODULE PROCEDURE HeirarchicalBasis_Quadrangle2
 ans = HeirarchicalBasis_Quadrangle1(pb=p, pe3=p, pe4=p, &
   & qb=q, qe1=q, qe2=q, xij=xij)
 END PROCEDURE HeirarchicalBasis_Quadrangle2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IJ2VEFC_Quadrangle_Clockwise
+! internal variables
+INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, N
+
+! vertices
+N = (p + 1) * (q + 1)
+cnt = 0
+ll = -1
+
+SELECT CASE (startNode)
+CASE (1)
+  DO
+    ll = ll + 1
+#include "./include/Quadrangle/vertex_1.inc"
+#include "./include/Quadrangle/vertex_4.inc"
+#include "./include/Quadrangle/vertex_3.inc"
+#include "./include/Quadrangle/vertex_2.inc"
+#include "./include/Quadrangle/edge_14.inc"
+#include "./include/Quadrangle/edge_43.inc"
+#include "./include/Quadrangle/edge_32.inc"
+#include "./include/Quadrangle/edge_21.inc"
+    IF (cnt .GE. N) EXIT
+  END DO
+CASE (2)
+  DO
+    ll = ll + 1
+#include "./include/Quadrangle/vertex_2.inc"
+#include "./include/Quadrangle/vertex_1.inc"
+#include "./include/Quadrangle/vertex_4.inc"
+#include "./include/Quadrangle/vertex_3.inc"
+#include "./include/Quadrangle/edge_21.inc"
+#include "./include/Quadrangle/edge_14.inc"
+#include "./include/Quadrangle/edge_43.inc"
+#include "./include/Quadrangle/edge_32.inc"
+    IF (cnt .GE. N) EXIT
+  END DO
+CASE (3)
+  DO
+    ll = ll + 1
+#include "./include/Quadrangle/vertex_3.inc"
+#include "./include/Quadrangle/vertex_2.inc"
+#include "./include/Quadrangle/vertex_1.inc"
+#include "./include/Quadrangle/vertex_4.inc"
+#include "./include/Quadrangle/edge_32.inc"
+#include "./include/Quadrangle/edge_21.inc"
+#include "./include/Quadrangle/edge_14.inc"
+#include "./include/Quadrangle/edge_43.inc"
+    IF (cnt .GE. N) EXIT
+  END DO
+CASE (4)
+  DO
+    ll = ll + 1
+#include "./include/Quadrangle/vertex_4.inc"
+#include "./include/Quadrangle/vertex_3.inc"
+#include "./include/Quadrangle/vertex_2.inc"
+#include "./include/Quadrangle/vertex_1.inc"
+#include "./include/Quadrangle/edge_43.inc"
+#include "./include/Quadrangle/edge_32.inc"
+#include "./include/Quadrangle/edge_21.inc"
+#include "./include/Quadrangle/edge_14.inc"
+    IF (cnt .GE. N) EXIT
+  END DO
+END SELECT
+END PROCEDURE IJ2VEFC_Quadrangle_Clockwise
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IJ2VEFC_Quadrangle_AntiClockwise
+! internal variables
+INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, N
+
+! vertices
+N = (p + 1) * (q + 1)
+cnt = 0
+ll = -1
+
+SELECT CASE (startNode)
+CASE (1)
+  DO
+    ll = ll + 1
+#include "./include/Quadrangle/vertex_1.inc"
+#include "./include/Quadrangle/vertex_2.inc"
+#include "./include/Quadrangle/vertex_3.inc"
+#include "./include/Quadrangle/vertex_4.inc"
+#include "./include/Quadrangle/edge_12.inc"
+#include "./include/Quadrangle/edge_23.inc"
+#include "./include/Quadrangle/edge_34.inc"
+#include "./include/Quadrangle/edge_41.inc"
+    IF (cnt .GE. N) EXIT
+  END DO
+CASE (2)
+  DO
+    ll = ll + 1
+#include "./include/Quadrangle/vertex_2.inc"
+#include "./include/Quadrangle/vertex_3.inc"
+#include "./include/Quadrangle/vertex_4.inc"
+#include "./include/Quadrangle/vertex_1.inc"
+#include "./include/Quadrangle/edge_23.inc"
+#include "./include/Quadrangle/edge_34.inc"
+#include "./include/Quadrangle/edge_41.inc"
+#include "./include/Quadrangle/edge_12.inc"
+    IF (cnt .GE. N) EXIT
+  END DO
+CASE (3)
+  DO
+    ll = ll + 1
+#include "./include/Quadrangle/vertex_3.inc"
+#include "./include/Quadrangle/vertex_4.inc"
+#include "./include/Quadrangle/vertex_1.inc"
+#include "./include/Quadrangle/vertex_2.inc"
+#include "./include/Quadrangle/edge_34.inc"
+#include "./include/Quadrangle/edge_41.inc"
+#include "./include/Quadrangle/edge_12.inc"
+#include "./include/Quadrangle/edge_23.inc"
+    IF (cnt .GE. N) EXIT
+  END DO
+CASE (4)
+  DO
+    ll = ll + 1
+#include "./include/Quadrangle/vertex_4.inc"
+#include "./include/Quadrangle/vertex_1.inc"
+#include "./include/Quadrangle/vertex_2.inc"
+#include "./include/Quadrangle/vertex_3.inc"
+#include "./include/Quadrangle/edge_41.inc"
+#include "./include/Quadrangle/edge_12.inc"
+#include "./include/Quadrangle/edge_23.inc"
+#include "./include/Quadrangle/edge_34.inc"
+    IF (cnt .GE. N) EXIT
+  END DO
+END SELECT
+END PROCEDURE IJ2VEFC_Quadrangle_AntiClockwise
 
 END SUBMODULE Methods

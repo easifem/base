@@ -34,6 +34,8 @@ PUBLIC :: HorizontalEdgeBasis_Quadrangle
 PUBLIC :: CellBasis_Quadrangle
 PUBLIC :: HeirarchicalBasis_Quadrangle
 PUBLIC :: RefQuadrangleCoord
+PUBLIC :: IJ2VEFC_Quadrangle_Clockwise
+PUBLIC :: IJ2VEFC_Quadrangle_AntiClockwise
 
 !----------------------------------------------------------------------------
 !                                                   RefQuadrangleCoord
@@ -185,7 +187,7 @@ END INTERFACE
 ! vertex points, then edge, and then internal nodes. The internal nodes
 ! also follow the same convention. Please read Gmsh manual  on this topic.
 
-INTERFACE
+INTERFACE InterpolationPoint_Quadrangle
   MODULE FUNCTION InterpolationPoint_Quadrangle1(order, ipType, xij, &
     & layout) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
@@ -199,10 +201,6 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint_Quadrangle1
-END INTERFACE
-
-INTERFACE InterpolationPoint_Quadrangle
-  MODULE PROCEDURE InterpolationPoint_Quadrangle1
 END INTERFACE InterpolationPoint_Quadrangle
 
 !----------------------------------------------------------------------------
@@ -717,5 +715,37 @@ END INTERFACE
 INTERFACE HeirarchicalBasis_Quadrangle
   MODULE PROCEDURE HeirarchicalBasis_Quadrangle2
 END INTERFACE HeirarchicalBasis_Quadrangle
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE IJ2VEFC_Quadrangle_Clockwise(xi, eta, temp, &
+    & p, q, startNode)
+    REAL(DFP), INTENT(IN) :: xi(:, :)
+    REAL(DFP), INTENT(IN) :: eta(:, :)
+    REAL(DFP), INTENT(OUT) :: temp(:, :)
+    INTEGER(I4B), INTENT(IN) :: p
+    INTEGER(I4B), INTENT(IN) :: q
+    INTEGER(I4B), INTENT(IN) :: startNode
+  END SUBROUTINE IJ2VEFC_Quadrangle_Clockwise
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE IJ2VEFC_Quadrangle_AntiClockwise(xi, eta, temp, &
+    & p, q, startNode)
+    REAL(DFP), INTENT(IN) :: xi(:, :)
+    REAL(DFP), INTENT(IN) :: eta(:, :)
+    REAL(DFP), INTENT(OUT) :: temp(:, :)
+    INTEGER(I4B), INTENT(IN) :: p
+    INTEGER(I4B), INTENT(IN) :: q
+    INTEGER(I4B), INTENT(IN) :: startNode
+  END SUBROUTINE IJ2VEFC_Quadrangle_AntiClockwise
+END INTERFACE
 
 END MODULE QuadrangleInterpolationUtility
