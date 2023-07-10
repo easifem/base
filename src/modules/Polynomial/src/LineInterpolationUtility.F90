@@ -188,7 +188,7 @@ END INTERFACE EquidistanceInPoint_Line
 !- This function returns the equidistance points on edge
 !- Points are in "VEFC" format, which means `xij(1,1:2)` are end points
 
-INTERFACE
+INTERFACE EquidistancePoint_Line
   MODULE PURE FUNCTION EquidistancePoint_Line1(order, xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -198,10 +198,6 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:)
     !! equidistance points
   END FUNCTION EquidistancePoint_Line1
-END INTERFACE
-
-INTERFACE EquidistancePoint_Line
-  MODULE PROCEDURE EquidistancePoint_Line1
 END INTERFACE EquidistancePoint_Line
 
 !----------------------------------------------------------------------------
@@ -217,7 +213,7 @@ END INTERFACE EquidistancePoint_Line
 !- This function returns the equidistance points on line
 !- All points are inside the interval
 
-INTERFACE
+INTERFACE EquidistancePoint_Line
   MODULE PURE FUNCTION EquidistancePoint_Line2(order, xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -229,10 +225,6 @@ INTERFACE
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! equidistance points in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Line2
-END INTERFACE
-
-INTERFACE EquidistancePoint_Line
-  MODULE PROCEDURE EquidistancePoint_Line2
 END INTERFACE EquidistancePoint_Line
 
 !----------------------------------------------------------------------------
