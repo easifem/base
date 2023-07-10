@@ -31,24 +31,24 @@ PUBLIC :: OPERATOR(.NNE.)
 PUBLIC :: Initiate
 PUBLIC :: ASSIGNMENT(=)
 PUBLIC :: ReferenceElement_Pointer
-PUBLIC :: getConnectivity
+PUBLIC :: GetConnectivity
 PUBLIC :: ElementType
 PUBLIC :: ElementName
 PUBLIC :: TotalNodesInElement
 PUBLIC :: ElementOrder
 PUBLIC :: OPERATOR(.order.)
 PUBLIC :: XiDimension
-PUBLIC :: isVolume
-PUBLIC :: isSurface
-PUBLIC :: isLine
-PUBLIC :: isPoint
-PUBLIC :: isTriangle
-PUBLIC :: isQuadrangle
-PUBLIC :: isTetrahedron
-PUBLIC :: isHexahedron
-PUBLIC :: isPrism
-PUBLIC :: isPyramid
-PUBLIC :: isSerendipityElement
+PUBLIC :: IsVolume
+PUBLIC :: IsSurface
+PUBLIC :: IsLine
+PUBLIC :: IsPoint
+PUBLIC :: IsTriangle
+PUBLIC :: IsQuadrangle
+PUBLIC :: IsTetrahedron
+PUBLIC :: IsHexahedron
+PUBLIC :: IsPrism
+PUBLIC :: IsPyramid
+PUBLIC :: IsSerendipityElement
 PUBLIC :: ElementTopology
 PUBLIC :: OPERATOR(.topology.)
 PUBLIC :: FacetMatrix
@@ -59,6 +59,7 @@ PUBLIC :: ElementQuality
 PUBLIC :: ContainsPoint
 PUBLIC :: TotalEntities
 PUBLIC :: FacetTopology
+PUBLIC :: GetVTKelementType
 
 !----------------------------------------------------------------------------
 !                                                         Display@IOMethods
@@ -323,16 +324,12 @@ END INTERFACE ReferenceElement_Pointer
 ! date: 16 June 2021
 ! summary: Returns the node numbers of reference element
 
-INTERFACE
-  MODULE PURE FUNCTION refelem_getNptrs(obj) RESULT(Ans)
+INTERFACE GetConnectivity
+  MODULE PURE FUNCTION refelem_GetNptrs(obj) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B), ALLOCATABLE :: ans(:)
-  END FUNCTION refelem_getNptrs
-END INTERFACE
-
-INTERFACE getConnectivity
-  MODULE PROCEDURE refelem_getNptrs
-END INTERFACE getConnectivity
+  END FUNCTION refelem_GetNptrs
+END INTERFACE GetConnectivity
 
 !----------------------------------------------------------------------------
 !                                               ElementType@GeometryMethods
@@ -342,15 +339,11 @@ END INTERFACE getConnectivity
 ! date: 21 May 2022
 ! summary: Returns element name in integer from element name
 
-INTERFACE
+INTERFACE ElementType
   MODULE PURE FUNCTION Element_Type(ElemName) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: ElemName
     INTEGER(I4B) :: Ans
   END FUNCTION Element_Type
-END INTERFACE
-
-INTERFACE ElementType
-  MODULE PROCEDURE Element_Type
 END INTERFACE ElementType
 
 !----------------------------------------------------------------------------
@@ -361,15 +354,11 @@ END INTERFACE ElementType
 ! date: 21 May 2022
 ! summary: Returns element name in character from element number/type
 
-INTERFACE
+INTERFACE ElementName
   MODULE PURE FUNCTION Element_Name(ElemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
     CHARACTER(50) :: Ans
   END FUNCTION Element_Name
-END INTERFACE
-
-INTERFACE ElementName
-  MODULE PROCEDURE Element_Name
 END INTERFACE ElementName
 
 !----------------------------------------------------------------------------
@@ -380,15 +369,11 @@ END INTERFACE ElementName
 ! date: 21 May 2022
 ! summary: Returns total numbers of nodes present in a given element
 
-INTERFACE
+INTERFACE TotalNodesInElement
   MODULE PURE FUNCTION Total_Nodes_In_Element(ElemType) RESULT(Ans)
     INTEGER(I4B) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION Total_Nodes_In_Element
-END INTERFACE
-
-INTERFACE TotalNodesInElement
-  MODULE PROCEDURE Total_Nodes_In_Element
 END INTERFACE TotalNodesInElement
 
 !----------------------------------------------------------------------------
@@ -399,12 +384,12 @@ END INTERFACE TotalNodesInElement
 ! date: 21 May 2022
 ! summary: Returns the order of an element
 
-INTERFACE
+INTERFACE ElementOrder
   MODULE PURE FUNCTION Element_Order(ElemType) RESULT(Ans)
     INTEGER(I4B) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION Element_Order
-END INTERFACE
+END INTERFACE ElementOrder
 
 !----------------------------------------------------------------------------
 !                                              ElementOrder@GeometryMethods
@@ -414,15 +399,11 @@ END INTERFACE
 ! date: 21 May 2022
 ! summary: Returns the order of an element
 
-INTERFACE
+INTERFACE ElementOrder
   MODULE PURE FUNCTION Element_Order_RefElem(RefElem) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
     INTEGER(I4B) :: Ans
   END FUNCTION Element_Order_RefElem
-END INTERFACE
-
-INTERFACE ElementOrder
-  MODULE PROCEDURE Element_Order_RefElem, Element_Order
 END INTERFACE ElementOrder
 
 INTERFACE OPERATOR(.order.)
@@ -438,12 +419,12 @@ END INTERFACE OPERATOR(.order.)
 ! update: 2021-11-13
 ! summary: Returns the xidimension of an element
 
-INTERFACE
+INTERFACE XiDimension
   MODULE PURE FUNCTION Elem_XiDimension1(ElemType) RESULT(Ans)
     INTEGER(I4B) :: Ans
     INTEGER(I4B), INTENT(IN) :: ElemType
   END FUNCTION Elem_XiDimension1
-END INTERFACE
+END INTERFACE Xidimension
 
 !----------------------------------------------------------------------------
 !                                                Xidimension@GeometryMethods
@@ -454,15 +435,11 @@ END INTERFACE
 ! update: 2021-11-13
 ! summary: Returns xidimension of the reference element
 
-INTERFACE
+INTERFACE Xidimension
   MODULE PURE FUNCTION Elem_Xidimension2(obj) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B) :: ans
   END FUNCTION Elem_Xidimension2
-END INTERFACE
-
-INTERFACE XiDimension
-  MODULE PROCEDURE Elem_XiDimension1, Elem_Xidimension2
 END INTERFACE XiDimension
 
 !----------------------------------------------------------------------------
