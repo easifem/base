@@ -93,12 +93,28 @@ END INTERFACE
 ! summary:         Returns the total number of degree of freedom for a
 ! lagrange polynomial on Hexahedron
 
-INTERFACE
-  MODULE PURE FUNCTION LagrangeDOF_Hexahedron(order) RESULT(ans)
+INTERFACE LagrangeDOF_Hexahedron
+  MODULE PURE FUNCTION LagrangeDOF_Hexahedron1(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B) :: ans
-  END FUNCTION LagrangeDOF_Hexahedron
-END INTERFACE
+  END FUNCTION LagrangeDOF_Hexahedron1
+END INTERFACE LagrangeDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     LagrangeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns the total number of degree of freedom for a
+! lagrange polynomial on Hexahedron
+
+INTERFACE LagrangeDOF_Hexahedron
+  MODULE PURE FUNCTION LagrangeDOF_Hexahedron2(p, q, r) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    INTEGER(I4B) :: ans
+  END FUNCTION LagrangeDOF_Hexahedron2
+END INTERFACE LagrangeDOF_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeInDOF_Hexahedron
@@ -115,12 +131,34 @@ END INTERFACE
 ! lagrange polynomial in cell of Hexahedron
 !- These dof are strictly inside the Hexahedron
 
-INTERFACE
-  MODULE PURE FUNCTION LagrangeInDOF_Hexahedron(order) RESULT(ans)
+INTERFACE LagrangeInDOF_Hexahedron
+  MODULE PURE FUNCTION LagrangeInDOF_Hexahedron1(order) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B) :: ans
-  END FUNCTION LagrangeInDOF_Hexahedron
-END INTERFACE
+  END FUNCTION LagrangeInDOF_Hexahedron1
+END INTERFACE LagrangeInDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   LagrangeInDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns the total number of degree of freedom for a
+! lagrange polynomial in cell of Hexahedron
+!
+!# Introduction
+!
+!- Returns the total number of degree of freedom for a
+! lagrange polynomial in cell of Hexahedron
+!- These dof are strictly inside the Hexahedron
+
+INTERFACE LagrangeInDOF_Hexahedron
+  MODULE PURE FUNCTION LagrangeInDOF_Hexahedron2(p, q, r) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    INTEGER(I4B) :: ans
+  END FUNCTION LagrangeInDOF_Hexahedron2
+END INTERFACE LagrangeInDOF_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                           EquidistanceInPoint_Hexahedron
@@ -139,13 +177,12 @@ INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Hexahedron(order, xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-  !! number of rows = nsd
-  !! number of cols = 4
+    !! number of rows = 3
+    !! number of cols = 8
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! returned coordinates in $x_{iJ}$ format
+    !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistanceInPoint_Hexahedron
 END INTERFACE
 
@@ -164,18 +201,17 @@ END INTERFACE
 !- The coordinates are distributed uniformly
 !- These coordinates can be used to construct lagrange polynomials
 !- The returned coordinates are in $x_{iJ}$ format.
-!- The node numbering is according to Gmsh convention.
+!- The node numbering is according to Gmsh convention, VEFC.
 
 INTERFACE
-  MODULE PURE RECURSIVE FUNCTION EquidistancePoint_Hexahedron(order, xij) RESULT(ans)
+  MODULE PURE FUNCTION EquidistancePoint_Hexahedron(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-  !! number of rows = nsd
-  !! number of cols = 3
+    !! number of rows = 3
+    !! number of cols = 8
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! returned coordinates in $x_{iJ}$ format
+    !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistancePoint_Hexahedron
 END INTERFACE
 
@@ -187,16 +223,54 @@ END INTERFACE
 ! date: 18 Aug 2022
 ! summary:         Interpolation point
 
-INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Hexahedron(order, ipType, &
-    & layout, xij) &
-    & RESULT(nodecoord)
+INTERFACE InterpolationPoint_Hexahedron
+  MODULE FUNCTION InterpolationPoint_Hexahedron1(order, ipType, &
+    & layout, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     INTEGER(I4B), INTENT(IN) :: ipType
     CHARACTER(*), INTENT(IN) :: layout
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
-  END FUNCTION InterpolationPoint_Hexahedron
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION InterpolationPoint_Hexahedron1
+END INTERFACE InterpolationPoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                             InterpolationPoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-10
+! summary:  Interpolation points
+
+INTERFACE InterpolationPoint_Hexahedron
+  MODULE FUNCTION InterpolationPoint_Hexahedron2(p, q, r, ipType1, ipType2, &
+    & ipType3, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    INTEGER(I4B), INTENT(IN) :: q
+    INTEGER(I4B), INTENT(IN) :: r
+    INTEGER(I4B), INTENT(IN) :: ipType1
+    INTEGER(I4B), INTENT(IN) :: ipType2
+    INTEGER(I4B), INTENT(IN) :: ipType3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION InterpolationPoint_Hexahedron2
+END INTERFACE InterpolationPoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE RECURSIVE PURE SUBROUTINE IJK2VEFC_Hexahedron(xi, eta, zeta, temp, &
+    & p, q, r)
+    REAL(DFP), INTENT(IN) :: xi(:, :, :)
+    REAL(DFP), INTENT(IN) :: eta(:, :, :)
+    REAL(DFP), INTENT(IN) :: zeta(:, :, :)
+    REAL(DFP), INTENT(OUT) :: temp(:, :)
+    INTEGER(I4B), INTENT(IN) :: p
+    INTEGER(I4B), INTENT(IN) :: q
+    INTEGER(I4B), INTENT(IN) :: r
+  END SUBROUTINE IJK2VEFC_Hexahedron
 END INTERFACE
 
 !----------------------------------------------------------------------------
