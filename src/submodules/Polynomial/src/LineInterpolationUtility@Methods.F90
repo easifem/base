@@ -79,21 +79,21 @@ END PROCEDURE LagrangeInDOF_Line
 MODULE PROCEDURE EquidistanceInPoint_Line1
 INTEGER(I4B) :: n, ii
 REAL(DFP) :: avar
-  !!
+!
 IF (order .LE. 1_I4B) THEN
   ALLOCATE (ans(0))
   RETURN
 END IF
-  !!
+!
 n = LagrangeInDOF_Line(order=order)
 ALLOCATE (ans(n))
-  !!
+!
 avar = (xij(2) - xij(1)) / order
-  !!
+!
 DO ii = 1, n
   ans(ii) = xij(1) + ii * avar
 END DO
-  !!
+!
 END PROCEDURE EquidistanceInPoint_Line1
 
 !----------------------------------------------------------------------------
@@ -104,12 +104,12 @@ MODULE PROCEDURE EquidistanceInPoint_Line2
 INTEGER(I4B) :: n, ii, nsd
 REAL(DFP) :: x0(3, 2)
 REAL(DFP) :: avar(3)
-  !!
+!
 IF (order .LE. 1_I4B) THEN
   ALLOCATE (ans(0, 0))
   RETURN
 END IF
-  !!
+!
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x0(1:nsd, 1) = xij(1:nsd, 1)
@@ -119,16 +119,16 @@ ELSE
   x0(1:nsd, 1) = [-1.0, 0.0, 0.0]
   x0(1:nsd, 2) = [1.0, 0.0, 0.0]
 END IF
-  !!
+!
 n = LagrangeInDOF_Line(order=order)
 ALLOCATE (ans(nsd, n))
-  !!
+!
 avar(1:nsd) = (x0(1:nsd, 2) - x0(1:nsd, 1)) / order
-  !!
+!
 DO ii = 1, n
   ans(1:nsd, ii) = x0(1:nsd, 1) + ii * avar(1:nsd)
 END DO
-  !!
+!
 END PROCEDURE EquidistanceInPoint_Line2
 
 !----------------------------------------------------------------------------
@@ -141,10 +141,10 @@ IF (order .EQ. 0_I4B) THEN
   ans(1) = 0.5_DFP * (xij(1) + xij(2))
   RETURN
 END IF
-!!
+!
 ans(1) = xij(1)
 ans(2) = xij(2)
-!!
+!
 IF (order .GE. 2) THEN
   ans(3:) = EquidistanceInPoint_Line(order=order, xij=xij)
 END IF
@@ -156,40 +156,40 @@ END PROCEDURE EquidistancePoint_Line1
 
 MODULE PROCEDURE EquidistancePoint_Line2
 INTEGER(I4B) :: nsd
-  !!
+!
 IF (PRESENT(xij)) THEN
-  !!
+  !
   nsd = SIZE(xij, 1)
-  !!
+  !
   CALL Reallocate(ans, nsd, order + 1)
-  !!
+  !
   IF (order .EQ. 0_I4B) THEN
     ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
     RETURN
   END IF
-  !!
+  !
   ans(1:nsd, 1) = xij(1:nsd, 1)
   ans(1:nsd, 2) = xij(1:nsd, 2)
-  !!
+  !
 ELSE
   nsd = 3_I4B
-  !!
+  !
   CALL Reallocate(ans, nsd, order + 1)
-  !!
+  !
   IF (order .EQ. 0_I4B) THEN
     ans(1:nsd, 1) = 0.0_DFP
     RETURN
   END IF
-  !!
+  !
   ans(1:nsd, 1) = [-1.0, 0.0, 0.0]
   ans(1:nsd, 2) = [1.0, 0.0, 0.0]
-  !!
+  !
 END IF
-  !!
+!
 IF (order .GE. 2) THEN
   ans(1:nsd, 3:) = EquidistanceInPoint_Line(order=order, xij=xij)
 END IF
-  !!
+!
 END PROCEDURE EquidistancePoint_Line2
 
 !----------------------------------------------------------------------------
