@@ -29,6 +29,7 @@ PRIVATE
 PUBLIC :: FromBiunitLine2Segment
 PUBLIC :: FromUnitTriangle2Triangle
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle
+PUBLIC :: FromBiUnitHexahedron2Hexahedron
 PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
 PUBLIC :: FromBiUnitTriangle2BiUnitSqr
@@ -128,7 +129,7 @@ END INTERFACE FromUnitTriangle2Triangle
 ! date: 19 Oct 2022
 ! summary: Map from unit line to physical space
 
-INTERFACE
+INTERFACE FromBiUnitQuadrangle2Quadrangle
   MODULE PURE FUNCTION FromBiUnitQuadrangle2Quadrangle1(xin, x1, x2, x3, x4) &
     & RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
@@ -146,11 +147,44 @@ INTERFACE
     !! mapped coordinates of xin in physical domain
     !! shape(ans) = nsd, N
   END FUNCTION FromBiUnitQuadrangle2Quadrangle1
-END INTERFACE
-
-INTERFACE FromBiUnitQuadrangle2Quadrangle
-  MODULE PROCEDURE FromBiUnitQuadrangle2Quadrangle1
 END INTERFACE FromBiUnitQuadrangle2Quadrangle
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitHexahedron2Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from unit line to physical space
+
+INTERFACE FromBiUnitHexahedron2Hexahedron
+  MODULE PURE FUNCTION FromBiUnitHexahedron2Hexahedron1(xin, &
+    & x1, x2, x3, x4, x5, x6, x7, x8) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP), INTENT(IN) :: x1(:)
+    !! vertex x1 of physical domain, size(x1) = nsd
+    REAL(DFP), INTENT(IN) :: x2(:)
+    !! vertex x2 of physical domain, size(x2) = nsd
+    REAL(DFP), INTENT(IN) :: x3(:)
+    !! vertex x3 of physical domain, size(x3) = nsd
+    REAL(DFP), INTENT(IN) :: x4(:)
+    !! vertex x4 of physical domain, size(x4) = nsd
+    REAL(DFP), INTENT(IN) :: x5(:)
+    !! vertex x5 of physical domain, size(x5) = nsd
+    REAL(DFP), INTENT(IN) :: x6(:)
+    !! vertex x6 of physical domain, size(x6) = nsd
+    REAL(DFP), INTENT(IN) :: x7(:)
+    !! vertex x7 of physical domain, size(x7) = nsd
+    REAL(DFP), INTENT(IN) :: x8(:)
+    !! vertex x8 of physical domain, size(x8) = nsd
+    REAL(DFP) :: ans(SIZE(x1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+  END FUNCTION FromBiUnitHexahedron2Hexahedron1
+END INTERFACE FromBiUnitHexahedron2Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                     FromBiUnitLine2UnitLine

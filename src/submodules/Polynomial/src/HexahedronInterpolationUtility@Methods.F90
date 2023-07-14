@@ -43,14 +43,14 @@ END PROCEDURE EdgeConnectivity_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetConnectivity_Hexahedron
-ans(:, 1) = [1, 4, 3, 2] !! back
-ans(:, 2) = [5, 6, 7, 8] !! front
-ans(:, 3) = [1, 5, 8, 4] !! left
-ans(:, 4) = [2, 3, 7, 6] !! right
-ans(:, 5) = [1, 2, 6, 5] !! top
-ans(:, 6) = [3, 4, 8, 7] !! bottom
+ans(:, 1) = [1, 4, 3, 2] ! back
+ans(:, 2) = [5, 6, 7, 8] ! front
+ans(:, 3) = [1, 5, 8, 4] ! left
+ans(:, 4) = [2, 3, 7, 6] ! right
+ans(:, 5) = [3, 4, 8, 7] ! bottom
+ans(:, 6) = [1, 2, 6, 5] ! top
 
-!! B, F, L, R, T, Bo
+! B, F, L, R, T, Bo
 END PROCEDURE FacetConnectivity_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -103,96 +103,96 @@ END PROCEDURE LagrangeDegree_Hexahedron
 !                                                    LagrangeDOF_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeDOF_Hexahedron
+MODULE PROCEDURE LagrangeDOF_Hexahedron1
 ans = (order + 1)**3
-END PROCEDURE LagrangeDOF_Hexahedron
+END PROCEDURE LagrangeDOF_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDOF_Hexahedron2
+ans = (p + 1) * (q + 1) * (r + 1)
+END PROCEDURE LagrangeDOF_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeInDOF_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeInDOF_Hexahedron
+MODULE PROCEDURE LagrangeInDOF_Hexahedron1
 ans = (order - 1)**3
-END PROCEDURE LagrangeInDOF_Hexahedron
+END PROCEDURE LagrangeInDOF_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                    LagrangeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeInDOF_Hexahedron2
+ans = (p - 1) * (q - 1) * (r - 1)
+END PROCEDURE LagrangeInDOF_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistancePoint_Hexahedron
-INTEGER(I4B) :: nsd, n, ne, i1, i2, ii
-REAL(DFP) :: x(3, 8), xin(3, 8), F(3, 3)
-INTEGER(I4B), PARAMETER :: tEdges = 12, tFacets = 6
-INTEGER(I4B) :: edgeConnectivity(2, tEdges), facetConnectivity(4, tFacets)
+! internal variables
+REAL(DFP) :: x(order + 1), y(order + 1), z(order + 1)
+REAL(DFP), DIMENSION(order + 1, order + 1, order + 1) :: xi, eta, zeta
+REAL(DFP), ALLOCATABLE :: temp(:, :)
+INTEGER(I4B) :: ii, jj, kk, nsd
 
-x = 0.0_DFP
-xin = 0.0_DFP
-nsd = 3_I4B
-
-IF (PRESENT(xij)) THEN
-  x(1:nsd, 1:8) = xij(1:nsd, 1:8)
-ELSE
-  x = RefHexahedronCoord("BIUNIT")
+x = EquidistancePoint_Line(order=order, xij=[-1.0_DFP, 1.0_DFP])
+IF (order .GT. 0_I4B) THEN
+  y(1) = x(1)
+  y(order + 1) = x(2)
 END IF
 
-F = 0.0_DFP
-F(1, 1) = NORM2(x(:, 1) - x(:, 2)) / REAL(order, DFP)
-F(2, 2) = NORM2(x(:, 1) - x(:, 4)) / REAL(order, DFP)
-F(3, 3) = NORM2(x(:, 1) - x(:, 5)) / REAL(order, DFP)
+DO ii = 2, order
+  y(ii) = x(ii + 1)
+END DO
+x = y
+z = x
+nsd = 3
+CALL Reallocate(ans, nsd, (order + 1) * (order + 1) * (order + 1))
+CALL Reallocate(temp, nsd, (order + 1) * (order + 1) * (order + 1))
 
-n = LagrangeDOF_Hexahedron(order=order)
-ALLOCATE (ans(nsd, n))
-ans = 0.0_DFP
-
-! points on vertex
-ans(1:nsd, 1:8) = x(1:nsd, 1:8)
-
-IF (order .EQ. 1_I4B) RETURN
-
-! points on edge
-ne = LagrangeInDOF_Line(order=order)
-edgeConnectivity = EdgeConnectivity_Hexahedron()
-i2 = 8
-DO ii = 1, tEdges
-  i1 = i2 + 1
-  i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Line( &
-    & order=order, &
-    & xij=x(1:nsd, edgeConnectivity(:, ii)))
+DO ii = 1, order + 1
+  DO jj = 1, order + 1
+    DO kk = 1, order + 1
+      xi(ii, jj, kk) = x(ii)
+      eta(ii, jj, kk) = y(jj)
+      zeta(ii, jj, kk) = z(kk)
+    END DO
+  END DO
 END DO
 
-! points on facet
-ne = LagrangeInDOF_Quadrangle(order=order)
-facetConnectivity = FacetConnectivity_Hexahedron()
-DO ii = 1, tFacets
-  i1 = i2 + 1
-  i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistanceInPoint_Quadrangle( &
-    & order=order, &
-    & xij=x(1:nsd, facetConnectivity(:, ii)))
-END DO
+CALL IJK2VEFC_Hexahedron( &
+  & xi=xi,  &
+  & eta=eta, &
+  & zeta=zeta, &
+  & temp=temp, &
+  & p=order, &
+  & q=order, &
+  & r=order)
 
-! internal points
-SELECT CASE (order)
-CASE (2_I4B)
-  i1 = i2 + 1
-  i2 = i1
-  ans(1:nsd, i1:i2) = 0.0_DFP
-CASE (3_I4B)
-  xin = MATMUL(F, x)
-  ne = LagrangeInDOF_Hexahedron(order)
-  i1 = i2 + 1
-  i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = xin
-CASE DEFAULT
-  xin = MATMUL(F, x)
-  ne = LagrangeInDOF_Hexahedron(order)
-  i1 = i2 + 1
-  i2 = i1 + ne - 1
-  ans(1:nsd, i1:i2) = EquidistancePoint_Hexahedron( &
-    & order=order - 2_I4B, xij=xin)
-END SELECT
+IF (PRESENT(xij)) THEN
+  ans = FromBiUnitHexahedron2Hexahedron( &
+    & xin=temp,     &
+    & x1=xij(:, 1), &
+    & x2=xij(:, 2), &
+    & x3=xij(:, 3), &
+    & x4=xij(:, 4), &
+    & x5=xij(:, 5), &
+    & x6=xij(:, 6), &
+    & x7=xij(:, 7), &
+    & x8=xij(:, 8)  &
+    & )
+ELSE
+  ans = temp
+END IF
 
+IF (ALLOCATED(temp)) DEALLOCATE (temp)
 END PROCEDURE EquidistancePoint_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -200,25 +200,409 @@ END PROCEDURE EquidistancePoint_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE EquidistanceInPoint_Hexahedron
+INTEGER(I4B) :: i1, i2, ii
+REAL(DFP), ALLOCATABLE :: ans0(:, :)
 
-! TODO #159 Implement EquidistanceInPoint_Hexahedron routine
-
+ans0 = EquidistancePoint_Hexahedron(order=order, xij=xij)
+i1 = LagrangeDOF_Hexahedron(order=order)
+i2 = LagrangeInDOF_Hexahedron(order=order)
+CALL reallocate(ans, 3, i2)
+ii = i1 - i2
+IF (ii + 1 .LE. SIZE(ans0, 2)) ans = ans0(:, ii + 1:)
+IF (ALLOCATED(ans0)) DEALLOCATE (ans0)
 END PROCEDURE EquidistanceInPoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Hexahedron2
+! internal variables
+REAL(DFP) :: x(p + 1), y(q + 1), z(r + 1)
+REAL(DFP), DIMENSION(p + 1, q + 1, r + 1) :: xi, eta, zeta
+REAL(DFP), ALLOCATABLE :: temp(:, :)
+INTEGER(I4B) :: ii, jj, kk, nsd
+CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Hexahedron2"
+
+x = InterpolationPoint_Line(order=p, ipType=ipType1, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING")
+
+y = InterpolationPoint_Line(order=q, ipType=ipType2, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING")
+
+z = InterpolationPoint_Line(order=r, ipType=ipType3, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING")
+
+nsd = 3
+
+CALL Reallocate(ans, nsd, (p + 1) * (q + 1) * (r + 1))
+CALL Reallocate(temp, nsd, (p + 1) * (q + 1) * (r + 1))
+
+xi = 0.0_DFP
+eta = 0.0_DFP
+zeta = 0.0_DFP
+
+DO ii = 1, p + 1
+  DO jj = 1, q + 1
+    DO kk = 1, r + 1
+      xi(ii, jj, kk) = x(ii)
+      eta(ii, jj, kk) = y(jj)
+      zeta(ii, jj, kk) = z(kk)
+    END DO
+  END DO
+END DO
+
+CALL IJK2VEFC_Hexahedron( &
+  & xi=xi,  &
+  & eta=eta, &
+  & zeta=zeta, &
+  & temp=temp, &
+  & p=p, &
+  & q=q, &
+  & r=r)
+
+IF (PRESENT(xij)) THEN
+  ans = FromBiUnitHexahedron2Hexahedron( &
+    & xin=temp,     &
+    & x1=xij(:, 1), &
+    & x2=xij(:, 2), &
+    & x3=xij(:, 3), &
+    & x4=xij(:, 4), &
+    & x5=xij(:, 5), &
+    & x6=xij(:, 6), &
+    & x7=xij(:, 7), &
+    & x8=xij(:, 8)  &
+    & )
+ELSE
+  ans = temp
+END IF
+END PROCEDURE InterpolationPoint_Hexahedron2
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE IJK2VEFC_Hexahedron
+! internal variables
+INTEGER(I4B) :: cnt, ii, jj, kk, ll, N, &
+  & ii1, ii2, jj1, jj2, kk1, kk2, ijk(3, 8),  &
+  & iedge, iface, p1, p2, dii, djj, dkk, startNode
+INTEGER(I4B), PARAMETER :: tPoints = 8, tEdges = 12, tFacets = 6
+INTEGER(I4B) :: edgeConnectivity(2, tEdges)
+INTEGER(I4B) :: facetConnectivity(4, tFacets)
+REAL(DFP), ALLOCATABLE :: temp2d(:, :), temp_in(:, :)
+REAL(DFP), ALLOCATABLE :: xi_in(:, :, :), eta_in(:, :, :), zeta_in(:, :, :)
+
+! vertices
+IF (ALL([p, q, r] .EQ. 0_I4B)) THEN
+  temp(:, 1) = [xi(1, 1, 1), eta(1, 1, 1), zeta(1, 1, 1)]
+  RETURN
+END IF
+
+N = (p + 1) * (q + 1) * (r + 1)
+cnt = 0
+
+ijk(:, 1) = [1, 1, 1]
+ijk(:, 2) = [p + 1, 1, 1]
+ijk(:, 3) = [p + 1, q + 1, 1]
+ijk(:, 4) = [1, q + 1, 1]
+ijk(:, 5) = [1, 1, r + 1]
+ijk(:, 6) = [p + 1, 1, r + 1]
+ijk(:, 7) = [p + 1, q + 1, r + 1]
+ijk(:, 8) = [1, q + 1, r + 1]
+
+edgeConnectivity = EdgeConnectivity_Hexahedron()
+facetConnectivity = FacetConnectivity_Hexahedron()
+
+IF (ALL([p, q, r] .GE. 1_I4B)) THEN
+  DO ii = 1, 8
+    cnt = cnt + 1
+    temp(:, ii) = [&
+      & xi(ijk(1, ii), ijk(2, ii), ijk(3, ii)), &
+      & eta(ijk(1, ii), ijk(2, ii), ijk(3, ii)), &
+      & zeta(ijk(1, ii), ijk(2, ii), ijk(3, ii))]
+  END DO
+
+  IF (ALL([p, q, r] .EQ. 1_I4B)) RETURN
+
+ELSE
+
+  DO ii = 1, p + 1
+    DO jj = 1, q + 1
+      DO kk = 1, r + 1
+        cnt = cnt + 1
+        temp(:, cnt) = &
+            & [ &
+            & xi(ii, jj, kk),  &
+            & eta(ii, jj, kk), &
+            & zeta(ii, jj, kk) &
+            & ]
+      END DO
+    END DO
+  END DO
+
+END IF
+
+IF (ALL([p, q, r] .GE. 1_I4B)) THEN
+  DO iedge = 1, tEdges
+    p1 = edgeConnectivity(1, iedge)
+    p2 = edgeConnectivity(2, iedge)
+
+    IF (ijk(1, p1) .EQ. ijk(1, p2)) THEN
+      ii1 = ijk(1, p1)
+      ii2 = ii1
+      dii = 1
+    ELSE IF (ijk(1, p1) .LT. ijk(1, p2)) THEN
+      ii1 = ijk(1, p1) + 1
+      ii2 = ijk(1, p2) - 1
+      dii = 1
+    ELSE IF (ijk(1, p1) .GT. ijk(1, p2)) THEN
+      ii1 = ijk(1, p1) - 1
+      ii2 = ijk(1, p2) + 1
+      dii = -1
+    END IF
+
+    IF (ijk(2, p1) .EQ. ijk(2, p2)) THEN
+      jj1 = ijk(2, p1)
+      jj2 = jj1
+      djj = 1
+    ELSE IF (ijk(2, p1) .LT. ijk(2, p2)) THEN
+      jj1 = ijk(2, p1) + 1
+      jj2 = ijk(2, p2) - 1
+      djj = 1
+    ELSE IF (ijk(2, p1) .GT. ijk(2, p2)) THEN
+      jj1 = ijk(2, p1) - 1
+      jj2 = ijk(2, p2) + 1
+      djj = -1
+    END IF
+
+    IF (ijk(3, p1) .EQ. ijk(3, p2)) THEN
+      kk1 = ijk(3, p1)
+      kk2 = kk1
+      dkk = 1
+    ELSE IF (ijk(3, p1) .LT. ijk(3, p2)) THEN
+      kk1 = ijk(3, p1) + 1
+      kk2 = ijk(3, p2) - 1
+      dkk = 1
+    ELSE IF (ijk(3, p1) .GT. ijk(3, p2)) THEN
+      kk1 = ijk(3, p1) - 1
+      kk2 = ijk(3, p2) + 1
+      dkk = -1
+    END IF
+
+    DO ii = ii1, ii2, dii
+      DO jj = jj1, jj2, djj
+        DO kk = kk1, kk2, dkk
+          cnt = cnt + 1
+          temp(:, cnt) = [ &
+            & xi(ii, jj, kk), &
+            & eta(ii, jj, kk), &
+            & zeta(ii, jj, kk)]
+        END DO
+      END DO
+    END DO
+  END DO
+
+  ! face 1, x-y, clockwise, startNode
+  kk = 1
+  startNode = 1
+  CALL Reallocate(temp2d, 2, (p + 1) * (q + 1))
+  CALL IJ2VEFC_Quadrangle_Clockwise( &
+    & xi=xi(:, :, kk), &
+    & eta=eta(:, :, kk), &
+    & temp=temp2d, &
+    & p=p, &
+    & q=q, &
+    & startNode=startNode)
+
+  IF ((p + 1) * (q + 1) .GE. 2 * (p + q) + 1) THEN
+    ii1 = cnt + 1
+    ii2 = cnt + (p - 1) * (q - 1)
+    cnt = ii2
+    temp(1:2, ii1:ii2) = temp2d(1:2, 2 * (p + q) + 1:)
+    temp(3, ii1:ii2) = zeta(1, 1, kk) !!-1.0_DFP ! TODO
+  END IF
+
+  ! face 2, x-y, anticlockwise
+  kk = r + 1
+  startNode = 1
+  CALL IJ2VEFC_Quadrangle_AntiClockwise( &
+    & xi=xi(:, :, kk), &
+    & eta=eta(:, :, kk), &
+    & temp=temp2d, &
+    & p=p, &
+    & q=q, &
+    & startNode=startNode)
+
+  IF ((p + 1) * (q + 1) .GE. 2 * (p + q) + 1) THEN
+    ii1 = cnt + 1
+    ii2 = cnt + (p - 1) * (q - 1)
+    cnt = ii2
+    temp(1:2, ii1:ii2) = temp2d(1:2, 2 * (p + q) + 1:)
+    temp(3, ii1:ii2) = zeta(1, 1, kk) !! 1.0_DFP ! TODO
+  END IF
+
+  ! face-3
+  ! z-y
+  ! clockwise
+  ii = 1
+  startNode = 1
+  CALL Reallocate(temp2d, 2, (r + 1) * (q + 1))
+  CALL IJ2VEFC_Quadrangle_AntiClockwise( &
+    & xi=TRANSPOSE(zeta(ii, :, :)), &
+    & eta=TRANSPOSE(eta(ii, :, :)), &
+    & temp=temp2d, &
+    & p=r, &
+    & q=q, &
+    & startNode=startNode)
+
+  IF ((r + 1) * (q + 1) .GE. 2 * (r + q) + 1) THEN
+    ii1 = cnt + 1
+    ii2 = cnt + (r - 1) * (q - 1)
+    cnt = ii2
+    temp(1, ii1:ii2) = xi(ii, 1, 1) !!-1.0_DFP
+    temp(2, ii1:ii2) = temp2d(2, 2 * (r + q) + 1:)
+    temp(3, ii1:ii2) = temp2d(1, 2 * (r + q) + 1:)
+  END IF
+
+  ! face 4
+  ! z-y
+  ! anticlockwise
+  ii = p + 1
+  startNode = 1
+  CALL IJ2VEFC_Quadrangle_Clockwise( &
+    & xi=TRANSPOSE(zeta(ii, :, :)), &
+    & eta=TRANSPOSE(eta(ii, :, :)), &
+    & temp=temp2d, &
+    & p=r, &
+    & q=q, &
+    & startNode=startNode)
+
+  IF ((r + 1) * (q + 1) .GE. 2 * (r + q) + 1) THEN
+    ii1 = cnt + 1
+    ii2 = cnt + (r - 1) * (q - 1)
+    cnt = ii2
+    temp(1, ii1:ii2) = xi(ii, 1, 1) !!1.0_DFP ! TODO
+    temp(2, ii1:ii2) = temp2d(2, 2 * (r + q) + 1:)
+    temp(3, ii1:ii2) = temp2d(1, 2 * (r + q) + 1:)
+  END IF
+
+  ! face 5
+  ! z-x
+  ! anticlockwise
+  jj = q + 1
+  startNode = 4
+  CALL Reallocate(temp2d, 2, (r + 1) * (p + 1))
+  CALL IJ2VEFC_Quadrangle_AntiClockwise( &
+    & xi=TRANSPOSE(zeta(:, jj, :)), &
+    & eta=TRANSPOSE(xi(:, jj, :)), &
+    & temp=temp2d, &
+    & p=r, &
+    & q=p, &
+    & startNode=startNode)
+
+  IF ((r + 1) * (p + 1) .GE. 2 * (r + p) + 1) THEN
+    ii1 = cnt + 1
+    ii2 = cnt + (r - 1) * (p - 1)
+    cnt = ii2
+    temp(1, ii1:ii2) = temp2d(2, 2 * (r + p) + 1:)
+    temp(2, ii1:ii2) = eta(1, jj, 1)
+    temp(3, ii1:ii2) = temp2d(1, 2 * (r + p) + 1:)
+  END IF
+
+  ! face 6
+  ! z-x
+  ! clockwise
+  jj = 1
+  startNode = 1
+  CALL IJ2VEFC_Quadrangle_Clockwise( &
+    & xi=TRANSPOSE(zeta(:, jj, :)), &
+    & eta=TRANSPOSE(xi(:, jj, :)), &
+    & temp=temp2d, &
+    & p=r, &
+    & q=p, &
+    & startNode=startNode)
+
+  IF ((r + 1) * (p + 1) .GE. 2 * (r + p) + 1) THEN
+    ii1 = cnt + 1
+    ii2 = cnt + (r - 1) * (p - 1)
+    cnt = ii2
+    temp(1, ii1:ii2) = temp2d(2, 2 * (r + p) + 1:)
+    temp(2, ii1:ii2) = eta(1, jj, 1)
+    temp(3, ii1:ii2) = temp2d(1, 2 * (r + p) + 1:)
+  END IF
+
+  ! internal nodes
+  IF (ALL([p, q, r] .GE. 2_I4B)) THEN
+
+    CALL Reallocate(xi_in, MAX(p - 1, 1_I4B), MAX(q - 1_I4B, 1_I4B), MAX(r - 1_I4B, 1_I4B))
+    CALL Reallocate(eta_in, SIZE(xi_in, 1), SIZE(xi_in, 2), SIZE(xi_in, 3))
+    CALL Reallocate(zeta_in, SIZE(xi_in, 1), SIZE(xi_in, 2), SIZE(xi_in, 3))
+    CALL Reallocate(temp_in, 3, SIZE(xi_in))
+
+    IF (p .LE. 1_I4B) THEN
+      ii1 = 1
+      ii2 = 1
+    ELSE
+      ii1 = 2
+      ii2 = p
+    END IF
+
+    IF (q .LE. 1_I4B) THEN
+      jj1 = 1
+      jj2 = 1
+    ELSE
+      jj1 = 2
+      jj2 = q
+    END IF
+
+    IF (r .LE. 1_I4B) THEN
+      kk1 = 1
+      kk2 = 1
+    ELSE
+      kk1 = 2
+      kk2 = r
+    END IF
+
+    xi_in = xi(ii1:p, jj1:q, kk1:r)
+    eta_in = eta(ii1:p, jj1:q, kk1:r)
+    zeta_in = zeta(ii1:p, jj1:q, kk1:r)
+
+    CALL IJK2VEFC_Hexahedron( &
+      & xi=xi_in,  &
+      & eta=eta_in, &
+      & zeta=zeta_in, &
+      & temp=temp_in, &
+      & p=MAX(p - 2, 0_I4B), &
+      & q=MAX(q - 2, 0_I4B), &
+      & r=MAX(r - 2, 0_I4B))
+
+    ii1 = cnt + 1
+    ii2 = ii1 + SIZE(temp_in, 2) - 1
+    temp(1:3, ii1:ii2) = temp_in
+  END IF
+
+END IF
+
+END PROCEDURE IJK2VEFC_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                            InterpolationPoint_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE InterpolationPoint_Hexahedron
-SELECT CASE (ipType)
-CASE (Equidistance)
-  nodecoord = EquidistancePoint_Hexahedron(xij=xij, order=order)
-CASE (GaussLegendre)
-CASE (GaussLegendreLobatto)
-CASE (GaussChebyshev)
-CASE (GaussChebyshevLobatto)
-END SELECT
-END PROCEDURE InterpolationPoint_Hexahedron
+MODULE PROCEDURE InterpolationPoint_Hexahedron1
+ans = InterpolationPoint_Hexahedron( &
+  & p=order, &
+  & q=order, &
+  & r=order, &
+  & ipType1=ipType, &
+  & ipType2=ipType,  &
+  & ipType3=ipType, &
+  & xij=xij)
+END PROCEDURE InterpolationPoint_Hexahedron1
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Hexahedron
@@ -228,12 +612,12 @@ MODULE PROCEDURE LagrangeCoeff_Hexahedron1
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-!!
+!
 ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
 V = LagrangeVandermonde(order=order, xij=xij, elemType=Hexahedron)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-!!
+!
 END PROCEDURE LagrangeCoeff_Hexahedron1
 
 !----------------------------------------------------------------------------
@@ -241,11 +625,11 @@ END PROCEDURE LagrangeCoeff_Hexahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Hexahedron2
-!!
+!
 REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-!!
+!
 vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
 CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
 CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
