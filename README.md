@@ -3,9 +3,9 @@
 
 ![](./figures/what-is-easifem.svg)
 
-| | |
-|---| --- |
-| ![](./figures/logo_hero.svg) |  As the name suggests `easifemBase` (henceforth, read as Base) library is the lowest (or, base) level component in easifem. It contains a lot of valuable routines and derived types.|
+![](./figures/logo_hero.svg)
+
+easifemBase (or, Base) library is the low level component in easifem. It contains routines and derived types which are helpful for implementing numerical methods for solving differential equation.|
 
 In Base library, we do not use object-oriented programming concepts and mainly use [multiple dispatch approach](https://en.wikipedia.org/wiki/Multiple_dispatch). This approach improves the flexibility and speed of easifemBase. All user-defined datatypes are declared in the `BaseType` module, and all methods are exposed through `BaseMethods` modules. In the Base library `string_class` is the only exception, wherein Object-oriented paradigm has been used. Currently, easifemBase has interface with BLAS95, Lapack95, Sparsekit, Metis, PlPlot, SuperLU, ARPACK, etc.
 
