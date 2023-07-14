@@ -1,11 +1,13 @@
 # 𑗕 easifemBase
 
-As the name suggests `easifemBase` (henceforth, read as Base) library is the lowest (or, base) level component in easifem.
-It contains a lot of valuable routines and derived types. In Base library, we do not use object-oriented programming concepts and mainly use [multiple dispatch approach](https://en.wikipedia.org/wiki/Multiple_dispatch). This approach improves the flexibility and speed of easifemBase. All user-defined datatypes are declared in the `BaseType` module, and all methods are exposed through `BaseMethods modules.
 
-In the Base library `string_class` is the only exception, wherein Object-oriented paradigm has been used.
+![](./figures/what-is-easifem.svg)
 
-Currently, easifemBase has interface with BLAS95, Lapack95, Sparsekit, Metis, PlPlot, SuperLU, ARPACK, etc.
+| | |
+|---| --- |
+| ![](./figures/logo_hero.svg) |  As the name suggests `easifemBase` (henceforth, read as Base) library is the lowest (or, base) level component in easifem. It contains a lot of valuable routines and derived types.|
+
+In Base library, we do not use object-oriented programming concepts and mainly use [multiple dispatch approach](https://en.wikipedia.org/wiki/Multiple_dispatch). This approach improves the flexibility and speed of easifemBase. All user-defined datatypes are declared in the `BaseType` module, and all methods are exposed through `BaseMethods` modules. In the Base library `string_class` is the only exception, wherein Object-oriented paradigm has been used. Currently, easifemBase has interface with BLAS95, Lapack95, Sparsekit, Metis, PlPlot, SuperLU, ARPACK, etc.
 
 ## Usage
 
