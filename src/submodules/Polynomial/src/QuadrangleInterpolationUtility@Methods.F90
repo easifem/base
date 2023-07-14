@@ -753,7 +753,12 @@ END PROCEDURE HeirarchicalBasis_Quadrangle2
 
 MODULE PROCEDURE IJ2VEFC_Quadrangle_Clockwise
 ! internal variables
-INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, N
+INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, N, ij(2, 4), iedge, p1, p2
+INTEGER(I4B), PARAMETER :: tEdges = 4
+INTEGER(I4B) :: edgeConnectivity(2, 4), ii1, ii2, dii, jj1, jj2, djj, &
+& pointsOrder(4)
+REAL(DFP), ALLOCATABLE :: xi_in(:, :), eta_in(:, :),  &
+  & temp_in(:, :)
 
 ! vertices
 N = (p + 1) * (q + 1)
@@ -762,58 +767,167 @@ ll = -1
 
 SELECT CASE (startNode)
 CASE (1)
-  DO
-    ll = ll + 1
-#include "./include/Quadrangle/vertex_1.inc"
-#include "./include/Quadrangle/vertex_4.inc"
-#include "./include/Quadrangle/vertex_3.inc"
-#include "./include/Quadrangle/vertex_2.inc"
-#include "./include/Quadrangle/edge_14.inc"
-#include "./include/Quadrangle/edge_43.inc"
-#include "./include/Quadrangle/edge_32.inc"
-#include "./include/Quadrangle/edge_21.inc"
-    IF (cnt .GE. N) EXIT
-  END DO
+  edgeConnectivity(:, 1) = [1, 4]
+  edgeConnectivity(:, 2) = [4, 3]
+  edgeConnectivity(:, 3) = [3, 2]
+  edgeConnectivity(:, 4) = [2, 1]
+  pointsOrder = [1, 4, 3, 2]
 CASE (2)
-  DO
-    ll = ll + 1
-#include "./include/Quadrangle/vertex_2.inc"
-#include "./include/Quadrangle/vertex_1.inc"
-#include "./include/Quadrangle/vertex_4.inc"
-#include "./include/Quadrangle/vertex_3.inc"
-#include "./include/Quadrangle/edge_21.inc"
-#include "./include/Quadrangle/edge_14.inc"
-#include "./include/Quadrangle/edge_43.inc"
-#include "./include/Quadrangle/edge_32.inc"
-    IF (cnt .GE. N) EXIT
-  END DO
+  edgeConnectivity(:, 1) = [2, 1]
+  edgeConnectivity(:, 2) = [1, 4]
+  edgeConnectivity(:, 3) = [4, 3]
+  edgeConnectivity(:, 4) = [3, 2]
+  pointsOrder = [2, 1, 4, 3]
 CASE (3)
-  DO
-    ll = ll + 1
-#include "./include/Quadrangle/vertex_3.inc"
-#include "./include/Quadrangle/vertex_2.inc"
-#include "./include/Quadrangle/vertex_1.inc"
-#include "./include/Quadrangle/vertex_4.inc"
-#include "./include/Quadrangle/edge_32.inc"
-#include "./include/Quadrangle/edge_21.inc"
-#include "./include/Quadrangle/edge_14.inc"
-#include "./include/Quadrangle/edge_43.inc"
-    IF (cnt .GE. N) EXIT
-  END DO
+  edgeConnectivity(:, 1) = [3, 2]
+  edgeConnectivity(:, 2) = [2, 1]
+  edgeConnectivity(:, 3) = [1, 4]
+  edgeConnectivity(:, 4) = [4, 3]
+  pointsOrder = [3, 2, 1, 4]
 CASE (4)
-  DO
-    ll = ll + 1
-#include "./include/Quadrangle/vertex_4.inc"
-#include "./include/Quadrangle/vertex_3.inc"
-#include "./include/Quadrangle/vertex_2.inc"
-#include "./include/Quadrangle/vertex_1.inc"
-#include "./include/Quadrangle/edge_43.inc"
-#include "./include/Quadrangle/edge_32.inc"
-#include "./include/Quadrangle/edge_21.inc"
-#include "./include/Quadrangle/edge_14.inc"
-    IF (cnt .GE. N) EXIT
-  END DO
+  edgeConnectivity(:, 1) = [4, 3]
+  edgeConnectivity(:, 2) = [3, 2]
+  edgeConnectivity(:, 3) = [2, 1]
+  edgeConnectivity(:, 4) = [1, 4]
+  pointsOrder = [4, 3, 2, 1]
 END SELECT
+
+IF (ALL([p, q] .EQ. 0_I4B)) THEN
+  temp(:, 1) = [xi(1, 1), eta(1, 1)]
+  RETURN
+END IF
+
+ij(:, 1) = [1, 1]
+ij(:, 2) = [p + 1, 1]
+ij(:, 3) = [p + 1, q + 1]
+ij(:, 4) = [1, q + 1]
+
+IF (ALL([p, q] .GE. 1_I4B)) THEN
+  DO ii = 1, 4
+    cnt = cnt + 1
+    jj = pointsOrder(ii)
+    temp(1:2, ii) = [ &
+      & xi(ij(1, jj), ij(2, jj)), &
+      & eta(ij(1, jj), ij(2, jj)) &
+      & ]
+  END DO
+  IF (ALL([p, q] .EQ. 1_I4B)) RETURN
+
+ELSE
+  IF (p .EQ. 0_I4B) THEN
+    DO jj = 1, q + 1
+      cnt = cnt + 1
+      temp(1:2, jj) = [xi(1, jj), eta(1, jj)]
+    END DO
+  END IF
+
+  IF (q .EQ. 0_I4B) THEN
+    DO ii = 1, p + 1
+      cnt = cnt + 1
+      temp(1:2, ii) = [xi(ii, 1), eta(ii, 1)]
+    END DO
+  END IF
+
+  ! DO ii = 1, MIN(p, 1) + 1
+  !   DO jj = 1, MIN(q, 1) + 1
+  !     cnt = cnt + 1
+  !     temp(1:2, cnt) = [xi(ii, jj), eta(ii, jj)]
+  !     ! temp(1:2, cnt) = [&
+  !     !   & xi(ij(1, cnt), ij(2, cnt)), &
+  !     !   & eta(ij(1, cnt), ij(2, cnt))]
+  !   END DO
+  ! END DO
+END IF
+
+IF (ALL([p, q] .GE. 1_I4B)) THEN
+  DO iedge = 1, tEdges
+    p1 = edgeConnectivity(1, iedge)
+    p2 = edgeConnectivity(2, iedge)
+
+    IF (ij(1, p1) .EQ. ij(1, p2)) THEN
+      ii1 = ij(1, p1)
+      ii2 = ii1
+      dii = 1
+    ELSE IF (ij(1, p1) .LT. ij(1, p2)) THEN
+      ii1 = ij(1, p1) + 1
+      ii2 = ij(1, p2) - 1
+      dii = 1
+    ELSE IF (ij(1, p1) .GT. ij(1, p2)) THEN
+      ii1 = ij(1, p1) - 1
+      ii2 = ij(1, p2) + 1
+      dii = -1
+    END IF
+
+    IF (ij(2, p1) .EQ. ij(2, p2)) THEN
+      jj1 = ij(2, p1)
+      jj2 = jj1
+      djj = 1
+    ELSE IF (ij(2, p1) .LT. ij(2, p2)) THEN
+      jj1 = ij(2, p1) + 1
+      jj2 = ij(2, p2) - 1
+      djj = 1
+    ELSE IF (ij(2, p1) .GT. ij(2, p2)) THEN
+      jj1 = ij(2, p1) - 1
+      jj2 = ij(2, p2) + 1
+      djj = -1
+    END IF
+
+    DO ii = ii1, ii2, dii
+      DO jj = jj1, jj2, djj
+        cnt = cnt + 1
+        temp(:, cnt) = [xi(ii, jj), eta(ii, jj)]
+      END DO
+    END DO
+  END DO
+
+  ! internal nodes
+  IF (ALL([p, q] .GE. 2_I4B)) THEN
+
+    CALL Reallocate( &
+      & xi_in,  &
+      & MAX(p - 1, 1_I4B), &
+      & MAX(q - 1_I4B, 1_I4B))
+    CALL Reallocate(eta_in, SIZE(xi_in, 1), SIZE(xi_in, 2))
+    CALL Reallocate(temp_in, 2, SIZE(xi_in))
+
+    IF (p .LE. 1_I4B) THEN
+      ii1 = 1
+      ii2 = 1
+    ELSE
+      ii1 = 2
+      ii2 = p
+    END IF
+
+    IF (q .LE. 1_I4B) THEN
+      jj1 = 1
+      jj2 = 1
+    ELSE
+      jj1 = 2
+      jj2 = q
+    END IF
+
+    xi_in = xi(ii1:ii2, jj1:jj2)
+    eta_in = eta(ii1:ii2, jj1:jj2)
+
+    CALL IJ2VEFC_Quadrangle_Clockwise( &
+      & xi=xi_in,  &
+      & eta=eta_in, &
+      & temp=temp_in, &
+      & p=MAX(p - 2, 0_I4B), &
+      & q=MAX(q - 2, 0_I4B), &
+      & startNode=startNode)
+
+    ii1 = cnt + 1
+    ii2 = ii1 + SIZE(temp_in, 2) - 1
+    temp(1:2, ii1:ii2) = temp_in
+  END IF
+
+END IF
+
+IF (ALLOCATED(xi_in)) DEALLOCATE (xi_in)
+IF (ALLOCATED(eta_in)) DEALLOCATE (eta_in)
+IF (ALLOCATED(temp_in)) DEALLOCATE (temp_in)
+
 END PROCEDURE IJ2VEFC_Quadrangle_Clockwise
 
 !----------------------------------------------------------------------------
@@ -822,7 +936,12 @@ END PROCEDURE IJ2VEFC_Quadrangle_Clockwise
 
 MODULE PROCEDURE IJ2VEFC_Quadrangle_AntiClockwise
 ! internal variables
-INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, N
+INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, N, ij(2, 4), iedge, p1, p2
+INTEGER(I4B), PARAMETER :: tEdges = 4
+INTEGER(I4B) :: edgeConnectivity(2, 4), ii1, ii2, dii, jj1, jj2, djj, &
+& pointsOrder(4)
+REAL(DFP), ALLOCATABLE :: xi_in(:, :), eta_in(:, :),  &
+  & temp_in(:, :)
 
 ! vertices
 N = (p + 1) * (q + 1)
@@ -831,58 +950,152 @@ ll = -1
 
 SELECT CASE (startNode)
 CASE (1)
-  DO
-    ll = ll + 1
-#include "./include/Quadrangle/vertex_1.inc"
-#include "./include/Quadrangle/vertex_2.inc"
-#include "./include/Quadrangle/vertex_3.inc"
-#include "./include/Quadrangle/vertex_4.inc"
-#include "./include/Quadrangle/edge_12.inc"
-#include "./include/Quadrangle/edge_23.inc"
-#include "./include/Quadrangle/edge_34.inc"
-#include "./include/Quadrangle/edge_41.inc"
-    IF (cnt .GE. N) EXIT
-  END DO
+  edgeConnectivity(:, 1) = [1, 2]
+  edgeConnectivity(:, 2) = [2, 3]
+  edgeConnectivity(:, 3) = [3, 4]
+  edgeConnectivity(:, 4) = [4, 1]
+  pointsOrder = [1, 2, 3, 4]
 CASE (2)
-  DO
-    ll = ll + 1
-#include "./include/Quadrangle/vertex_2.inc"
-#include "./include/Quadrangle/vertex_3.inc"
-#include "./include/Quadrangle/vertex_4.inc"
-#include "./include/Quadrangle/vertex_1.inc"
-#include "./include/Quadrangle/edge_23.inc"
-#include "./include/Quadrangle/edge_34.inc"
-#include "./include/Quadrangle/edge_41.inc"
-#include "./include/Quadrangle/edge_12.inc"
-    IF (cnt .GE. N) EXIT
-  END DO
+  edgeConnectivity(:, 1) = [2, 3]
+  edgeConnectivity(:, 2) = [3, 4]
+  edgeConnectivity(:, 3) = [4, 1]
+  edgeConnectivity(:, 4) = [1, 2]
+  pointsOrder = [2, 3, 4, 1]
 CASE (3)
-  DO
-    ll = ll + 1
-#include "./include/Quadrangle/vertex_3.inc"
-#include "./include/Quadrangle/vertex_4.inc"
-#include "./include/Quadrangle/vertex_1.inc"
-#include "./include/Quadrangle/vertex_2.inc"
-#include "./include/Quadrangle/edge_34.inc"
-#include "./include/Quadrangle/edge_41.inc"
-#include "./include/Quadrangle/edge_12.inc"
-#include "./include/Quadrangle/edge_23.inc"
-    IF (cnt .GE. N) EXIT
-  END DO
+  edgeConnectivity(:, 1) = [3, 4]
+  edgeConnectivity(:, 2) = [4, 1]
+  edgeConnectivity(:, 3) = [1, 2]
+  edgeConnectivity(:, 4) = [2, 3]
+  pointsOrder = [3, 4, 1, 2]
 CASE (4)
-  DO
-    ll = ll + 1
-#include "./include/Quadrangle/vertex_4.inc"
-#include "./include/Quadrangle/vertex_1.inc"
-#include "./include/Quadrangle/vertex_2.inc"
-#include "./include/Quadrangle/vertex_3.inc"
-#include "./include/Quadrangle/edge_41.inc"
-#include "./include/Quadrangle/edge_12.inc"
-#include "./include/Quadrangle/edge_23.inc"
-#include "./include/Quadrangle/edge_34.inc"
-    IF (cnt .GE. N) EXIT
-  END DO
+  edgeConnectivity(:, 1) = [4, 1]
+  edgeConnectivity(:, 2) = [1, 2]
+  edgeConnectivity(:, 3) = [2, 3]
+  edgeConnectivity(:, 4) = [3, 4]
+  pointsOrder = [4, 1, 2, 3]
 END SELECT
+
+IF (ALL([p, q] .EQ. 0_I4B)) THEN
+  temp(:, 1) = [xi(1, 1), eta(1, 1)]
+  RETURN
+END IF
+
+ij(:, 1) = [1, 1]
+ij(:, 2) = [p + 1, 1]
+ij(:, 3) = [p + 1, q + 1]
+ij(:, 4) = [1, q + 1]
+
+IF (ALL([p, q] .GE. 1_I4B)) THEN
+  DO ii = 1, 4
+    cnt = cnt + 1
+    jj = pointsOrder(ii)
+    temp(1:2, ii) = [&
+      & xi(ij(1, jj), ij(2, jj)), &
+      & eta(ij(1, jj), ij(2, jj)) &
+      & ]
+  END DO
+  IF (ALL([p, q] .EQ. 1_I4B)) RETURN
+
+ELSE
+  DO ii = 1, MIN(p, 1) + 1
+    DO jj = 1, MIN(q, 1) + 1
+      cnt = cnt + 1
+      temp(1:2, cnt) = [&
+        & xi(ij(1, cnt), ij(2, cnt)), &
+        & eta(ij(1, cnt), ij(2, cnt))]
+    END DO
+  END DO
+END IF
+
+IF (ALL([p, q] .GE. 1_I4B)) THEN
+  DO iedge = 1, tEdges
+    p1 = edgeConnectivity(1, iedge)
+    p2 = edgeConnectivity(2, iedge)
+
+    IF (ij(1, p1) .EQ. ij(1, p2)) THEN
+      ii1 = ij(1, p1)
+      ii2 = ii1
+      dii = 1
+    ELSE IF (ij(1, p1) .LT. ij(1, p2)) THEN
+      ii1 = ij(1, p1) + 1
+      ii2 = ij(1, p2) - 1
+      dii = 1
+    ELSE IF (ij(1, p1) .GT. ij(1, p2)) THEN
+      ii1 = ij(1, p1) - 1
+      ii2 = ij(1, p2) + 1
+      dii = -1
+    END IF
+
+    IF (ij(2, p1) .EQ. ij(2, p2)) THEN
+      jj1 = ij(2, p1)
+      jj2 = jj1
+      djj = 1
+    ELSE IF (ij(2, p1) .LT. ij(2, p2)) THEN
+      jj1 = ij(2, p1) + 1
+      jj2 = ij(2, p2) - 1
+      djj = 1
+    ELSE IF (ij(2, p1) .GT. ij(2, p2)) THEN
+      jj1 = ij(2, p1) - 1
+      jj2 = ij(2, p2) + 1
+      djj = -1
+    END IF
+
+    DO ii = ii1, ii2, dii
+      DO jj = jj1, jj2, djj
+        cnt = cnt + 1
+        temp(:, cnt) = [xi(ii, jj), eta(ii, jj)]
+      END DO
+    END DO
+  END DO
+
+  ! internal nodes
+  IF (ALL([p, q] .GE. 2_I4B)) THEN
+
+    CALL Reallocate( &
+      & xi_in,  &
+      & MAX(p - 1, 1_I4B), &
+      & MAX(q - 1_I4B, 1_I4B))
+    CALL Reallocate(eta_in, SIZE(xi_in, 1), SIZE(xi_in, 2))
+    CALL Reallocate(temp_in, 2, SIZE(xi_in))
+
+    IF (p .LE. 1_I4B) THEN
+      ii1 = 1
+      ii2 = 1
+    ELSE
+      ii1 = 2
+      ii2 = p
+    END IF
+
+    IF (q .LE. 1_I4B) THEN
+      jj1 = 1
+      jj2 = 1
+    ELSE
+      jj1 = 2
+      jj2 = q
+    END IF
+
+    xi_in = xi(ii1:ii2, jj1:jj2)
+    eta_in = eta(ii1:ii2, jj1:jj2)
+
+    CALL IJ2VEFC_Quadrangle_Clockwise( &
+      & xi=xi_in,  &
+      & eta=eta_in, &
+      & temp=temp_in, &
+      & p=MAX(p - 2, 0_I4B), &
+      & q=MAX(q - 2, 0_I4B), &
+      & startNode=startNode)
+
+    ii1 = cnt + 1
+    ii2 = ii1 + SIZE(temp_in, 2) - 1
+    temp(1:2, ii1:ii2) = temp_in
+  END IF
+
+END IF
+
+IF (ALLOCATED(xi_in)) DEALLOCATE (xi_in)
+IF (ALLOCATED(eta_in)) DEALLOCATE (eta_in)
+IF (ALLOCATED(temp_in)) DEALLOCATE (temp_in)
+
 END PROCEDURE IJ2VEFC_Quadrangle_AntiClockwise
 
 END SUBMODULE Methods

@@ -721,8 +721,8 @@ END INTERFACE HeirarchicalBasis_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE IJ2VEFC_Quadrangle_Clockwise(xi, eta, temp, &
-    & p, q, startNode)
+  MODULE PURE RECURSIVE SUBROUTINE IJ2VEFC_Quadrangle_Clockwise( &
+    & xi, eta, temp, p, q, startNode)
     REAL(DFP), INTENT(IN) :: xi(:, :)
     REAL(DFP), INTENT(IN) :: eta(:, :)
     REAL(DFP), INTENT(OUT) :: temp(:, :)
@@ -737,8 +737,8 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE IJ2VEFC_Quadrangle_AntiClockwise(xi, eta, temp, &
-    & p, q, startNode)
+  MODULE PURE RECURSIVE SUBROUTINE IJ2VEFC_Quadrangle_AntiClockwise( &
+    & xi, eta, temp, p, q, startNode)
     REAL(DFP), INTENT(IN) :: xi(:, :)
     REAL(DFP), INTENT(IN) :: eta(:, :)
     REAL(DFP), INTENT(OUT) :: temp(:, :)

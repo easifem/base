@@ -330,14 +330,16 @@ IF (ALL([p, q, r] .GE. 1_I4B)) THEN
 
 ELSE
 
-  DO ii = 1, MIN(p, 1) + 1
-    DO jj = 1, MIN(q, 1) + 1
-      DO kk = 1, MIN(r, 1) + 1
+  DO ii = 1, p + 1
+    DO jj = 1, q + 1
+      DO kk = 1, r + 1
         cnt = cnt + 1
-        temp(:, cnt) = [&
-          & xi(ijk(1, cnt), ijk(2, cnt), ijk(3, cnt)), &
-          & eta(ijk(1, cnt), ijk(2, cnt), ijk(3, cnt)), &
-          & zeta(ijk(1, cnt), ijk(2, cnt), ijk(3, cnt))]
+        temp(:, cnt) = &
+            & [ &
+            & xi(ii, jj, kk),  &
+            & eta(ii, jj, kk), &
+            & zeta(ii, jj, kk) &
+            & ]
       END DO
     END DO
   END DO
@@ -424,8 +426,6 @@ IF (ALL([p, q, r] .GE. 1_I4B)) THEN
     temp(3, ii1:ii2) = zeta(1, 1, kk) !!-1.0_DFP ! TODO
   END IF
 
-  RETURN
-
   ! face 2, x-y, anticlockwise
   kk = r + 1
   startNode = 1
@@ -445,11 +445,13 @@ IF (ALL([p, q, r] .GE. 1_I4B)) THEN
     temp(3, ii1:ii2) = zeta(1, 1, kk) !! 1.0_DFP ! TODO
   END IF
 
-  ! face 3, z-y, clockwise
+  ! face-3
+  ! z-y
+  ! clockwise
   ii = 1
-  startNode = 2
+  startNode = 1
   CALL Reallocate(temp2d, 2, (r + 1) * (q + 1))
-  CALL IJ2VEFC_Quadrangle_Clockwise( &
+  CALL IJ2VEFC_Quadrangle_AntiClockwise( &
     & xi=TRANSPOSE(zeta(ii, :, :)), &
     & eta=TRANSPOSE(eta(ii, :, :)), &
     & temp=temp2d, &
@@ -466,10 +468,12 @@ IF (ALL([p, q, r] .GE. 1_I4B)) THEN
     temp(3, ii1:ii2) = temp2d(1, 2 * (r + q) + 1:)
   END IF
 
-  ! face 4, z-y, anticlockwise
+  ! face 4
+  ! z-y
+  ! anticlockwise
   ii = p + 1
-  startNode = 2
-  CALL IJ2VEFC_Quadrangle_AntiClockwise( &
+  startNode = 1
+  CALL IJ2VEFC_Quadrangle_Clockwise( &
     & xi=TRANSPOSE(zeta(ii, :, :)), &
     & eta=TRANSPOSE(eta(ii, :, :)), &
     & temp=temp2d, &
@@ -486,7 +490,9 @@ IF (ALL([p, q, r] .GE. 1_I4B)) THEN
     temp(3, ii1:ii2) = temp2d(1, 2 * (r + q) + 1:)
   END IF
 
-  ! face 5, z-x, anticlockwise
+  ! face 5
+  ! z-x
+  ! anticlockwise
   jj = q + 1
   startNode = 4
   CALL Reallocate(temp2d, 2, (r + 1) * (p + 1))
@@ -507,7 +513,9 @@ IF (ALL([p, q, r] .GE. 1_I4B)) THEN
     temp(3, ii1:ii2) = temp2d(1, 2 * (r + p) + 1:)
   END IF
 
-  ! face 6, z-x, clockwise
+  ! face 6
+  ! z-x
+  ! clockwise
   jj = 1
   startNode = 1
   CALL IJ2VEFC_Quadrangle_Clockwise( &
