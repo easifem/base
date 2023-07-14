@@ -3,7 +3,7 @@
 
 ![](./figures/what-is-easifem.svg)
 
-![](./figures/logo_hero.svg)
+![](./figures/banner.jpeg)
 
 easifemBase (or, Base) library is the low level component in easifem. It contains routines and derived types which are helpful for implementing numerical methods for solving differential equation.|
 
