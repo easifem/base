@@ -34,6 +34,7 @@ PUBLIC :: Display, BlankLines, DashLine
 PUBLIC :: DotLine, EqualLine
 PUBLIC :: TIMESTAMP
 PUBLIC :: setDisplayProfile
+PUBLIC :: ToString, DISP !! from DISPMODULE
 
 CHARACTER(*), PARAMETER :: equal = "=============================="
 CHARACTER(*), PARAMETER :: dot = ".............................."
@@ -53,7 +54,7 @@ TYPE(DISP_SETTINGS), PUBLIC, PARAMETER :: &
   & trim="FALSE", ZEROAS="")
 
 TYPE(DISP_SETTINGS), PARAMETER :: DisplayProfileOriginal = DISP_SETTINGS()
-LOGICAL(LGT), SAVE :: defaultSettingSet = .FALSE.
+LOGICAL(LGT) :: defaultSettingSet = .FALSE.
 
 !----------------------------------------------------------------------------
 !                                                                    Display

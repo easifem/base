@@ -84,7 +84,7 @@ USE Hashing32
 USE OGPF
 USE Test_Method
 USE MdEncode_Method
-USE DISPMODULE
+! USE DISPMODULE
 USE Display_Method
 USE ErrorHandling
 USE Utility
