@@ -6,7 +6,6 @@
 import os
 import platform
 
-
 def installRequest(LIB):
     while True:
         choice = input(f"Do you want to Install {LIB} 'yes' or 'no' [Y/n]: ")

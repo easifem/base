@@ -22,10 +22,10 @@ IMPLICIT NONE
 
 ! ***************** PUBLIC ENTITIES (ONLY PUBLIC TO DISPMODULE, NOT TO USER PROGRAMS) *****************
 PRIVATE
-  public disp_settings, defset, factory_settings, tosset, tosfac, errormsg, tostring_settings
-  public nnblk, upper, readfmt, replace_w, trim_real, get_SE, preparebox, copytobox, boxlist, boxnode
-  public copyseptobox, finishbox, tostring_get_complex, disp_errmsg, tostring_get, find_editdesc_real
-  public check_settings, tostring_check_settings, replace_zeronaninf, settings, trim_s_real
+public :: disp_settings, defset, factory_settings, tosset, tosfac, errormsg, tostring_settings
+public :: nnblk, upper, readfmt, replace_w, trim_real, get_SE, preparebox, copytobox, boxlist, boxnode
+public :: copyseptobox, finishbox, tostring_get_complex, disp_errmsg, tostring_get, find_editdesc_real
+public :: check_settings, tostring_check_settings, replace_zeronaninf, settings, trim_s_real
 
 ! *********************************** GENERAL DECLARATIONS ********************************************
 TYPE disp_settings
@@ -63,10 +63,14 @@ TYPE settings
   LOGICAL trm, number, vec, row, gedit
 END TYPE settings
 
-TYPE(disp_settings), SAVE :: DEFSET, & ! Current default settings for disp
-     &                       FACTORY_SETTINGS ! Original (factory) settings for disp
-TYPE(tostring_settings), SAVE :: tosset, & ! Current settings for tostring
-     &                           tosfac ! Factory settings for tostring
+TYPE(disp_settings) :: DEFSET
+!! Current default settings for disp
+TYPE(disp_settings) :: FACTORY_SETTINGS
+!! Original (factory) settings for disp
+TYPE(tostring_settings) :: tosset
+!! Current settings for tostring
+TYPE(tostring_settings) :: tosfac
+!! Factory settings for tostring
 
 CHARACTER(*), PARAMETER :: errormsg = 'Illegal format'
 

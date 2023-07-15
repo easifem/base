@@ -30,7 +30,7 @@
 !   copy of these procedures (for quad precision).
 
 MODULE DISPMODULE
-USE GlobalData, ONLY: Real64, Real32, I4B, LGT
+USE GlobalData, ONLY: REAL64, REAL32, I4B, LGT
 USE DISPMODULE_UTIL
 USE DISP_I8MOD
 USE DISP_I4MOD
@@ -68,19 +68,19 @@ PUBLIC NULL_UNIT
 
 INTERFACE DISP_SET
   MODULE PROCEDURE disp_set, disp_set_ds
-end interface
+END INTERFACE
 
 INTEGER, PARAMETER :: ASTERISK_UNIT = -3
   !! ASTERIC FILE
-INTEGER, PARAMETER :: PUTSTR_UNIT   = -2
+INTEGER, PARAMETER :: PUTSTR_UNIT = -2
   !!
-INTEGER, PARAMETER :: NULL_UNIT     = -1
+INTEGER, PARAMETER :: NULL_UNIT = -1
   !!
 INTEGER, PARAMETER :: dint = I4B !kind(0)
   !! default integer
-INTEGER, PARAMETER :: sngl = Real32 !kind(0.0)
+INTEGER, PARAMETER :: sngl = REAL32 !kind(0.0)
   !! single precision (default real)
-INTEGER, PARAMETER :: dble = Real64 !kind(0d0)
+INTEGER, PARAMETER :: dble = REAL64 !kind(0d0)
   !! double precision
 INTEGER, PARAMETER :: dlog = LGT !kind(.false.)
   !! default logical
@@ -91,96 +91,96 @@ CONTAINS
 !
 !----------------------------------------------------------------------------
 
-subroutine disp_set(advance, digmax, matsep, orient, sep, style, unit, zeroas)
+SUBROUTINE disp_set(advance, digmax, matsep, orient, sep, style, unit, zeroas)
   ! Change display settings according to individual parameters
   character(*), optional, intent(in) :: advance, sep, matsep, orient, style, zeroas
-  integer, optional, intent(in) :: digmax, unit
-  if (present(advance))    DEFSET%advance = upper(advance)
-  if (present(sep))        DEFSET%sep = sep
-  if (present(sep))        DEFSET%seplen = min(9, len(sep))
-  if (present(zeroas))     DEFSET%zeroas = zeroas
-  if (present(zeroas))     DEFSET%zaslen = min(9, len(zeroas))
-  if (present(matsep))     DEFSET%matsep = matsep
-  if (present(matsep))     DEFSET%matseplen = min(9, len(matsep))
-  if (present(orient))     DEFSET%orient = upper(orient)
-  if (present(style))      DEFSET%style = style
-  if (present(digmax))     DEFSET%digmax = digmax
-  if (present(unit))       DEFSET%unit = unit
-  call check_settings
-end subroutine disp_set
+  INTEGER, OPTIONAL, INTENT(in) :: digmax, unit
+  IF (PRESENT(advance)) DEFSET%advance = upper(advance)
+  IF (PRESENT(sep)) DEFSET%sep = sep
+  IF (PRESENT(sep)) DEFSET%seplen = MIN(9, LEN(sep))
+  IF (PRESENT(zeroas)) DEFSET%zeroas = zeroas
+  IF (PRESENT(zeroas)) DEFSET%zaslen = MIN(9, LEN(zeroas))
+  IF (PRESENT(matsep)) DEFSET%matsep = matsep
+  IF (PRESENT(matsep)) DEFSET%matseplen = MIN(9, LEN(matsep))
+  IF (PRESENT(orient)) DEFSET%orient = upper(orient)
+  IF (PRESENT(style)) DEFSET%style = style
+  IF (PRESENT(digmax)) DEFSET%digmax = digmax
+  IF (PRESENT(unit)) DEFSET%unit = unit
+  CALL check_settings
+END SUBROUTINE disp_set
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine disp_set_factory()
+SUBROUTINE disp_set_factory()
   ! Change display settings to the original default
   DEFSET = FACTORY_SETTINGS
-end subroutine disp_set_factory
+END SUBROUTINE disp_set_factory
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine avoid_compiler_warnings
+SUBROUTINE avoid_compiler_warnings
   ! Routine that exists only to avoid compiler warnings (due to compiler bugs)
-  type(boxlist), pointer :: boxl_dummy1 => null(), boxl_dummy2 => null()
-  type(boxnode), pointer :: boxn_dummy1 => null(), boxn_dummy2 => null()
-  type(tostring_settings), pointer :: ts1 => null(), ts2 => null()
+  TYPE(boxlist), POINTER :: boxl_dummy1 => NULL(), boxl_dummy2 => NULL()
+  TYPE(boxnode), POINTER :: boxn_dummy1 => NULL(), boxn_dummy2 => NULL()
+  TYPE(tostring_settings), POINTER :: ts1 => NULL(), ts2 => NULL()
   ts1 => ts2
   ts2 => ts1
   boxl_dummy2 => boxl_dummy1
   boxl_dummy1 => boxl_dummy2
   boxn_dummy2 => boxn_dummy1
   boxn_dummy1 => boxn_dummy2
-end subroutine avoid_compiler_warnings
+END SUBROUTINE avoid_compiler_warnings
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine tostring_set(sep, rfmt, ifmt, trimb, trimz)
-  character(*), optional, intent(in) :: sep, rfmt, ifmt, trimb, trimz
-  if (present(sep))    tosset%sep    = upper(sep)
-  if (present(sep))    tosset%seplen = min(9, len(sep))
-  if (present(rfmt))   tosset%rfmt   = upper(rfmt)
-  if (present(ifmt))   tosset%ifmt   = upper(ifmt)
-  if (present(trimb))  tosset%trimb  = upper(trimb)
-  if (present(trimz))  tosset%trimz  = upper(trimz)
-  call tostring_check_settings
-end subroutine tostring_set
+SUBROUTINE tostring_set(sep, rfmt, ifmt, trimb, trimz)
+  CHARACTER(*), OPTIONAL, INTENT(in) :: sep, rfmt, ifmt, trimb, trimz
+  IF (PRESENT(sep)) tosset%sep = upper(sep)
+  IF (PRESENT(sep)) tosset%seplen = MIN(9, LEN(sep))
+  IF (PRESENT(rfmt)) tosset%rfmt = upper(rfmt)
+  IF (PRESENT(ifmt)) tosset%ifmt = upper(ifmt)
+  IF (PRESENT(trimb)) tosset%trimb = upper(trimb)
+  IF (PRESENT(trimz)) tosset%trimz = upper(trimz)
+  CALL tostring_check_settings
+END SUBROUTINE tostring_set
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine tostring_set_factory()
-  logical dummy
-  dummy = .false.
-  if (dummy) call avoid_compiler_warnings
+SUBROUTINE tostring_set_factory()
+  LOGICAL dummy
+  dummy = .FALSE.
+  IF (dummy) CALL avoid_compiler_warnings
   tosset = tosfac
-end subroutine tostring_set_factory
+END SUBROUTINE tostring_set_factory
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-subroutine disp_set_ds(settings)
+SUBROUTINE disp_set_ds(settings)
   ! Change display settings according to the structure "settings"
-  type(disp_settings), intent(in) :: settings
+  TYPE(disp_settings), INTENT(in) :: settings
   DEFSET = settings
-  call check_settings
-end subroutine disp_set_ds
+  CALL check_settings
+END SUBROUTINE disp_set_ds
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-function disp_get() result(defs)
+FUNCTION disp_get() RESULT(defs)
   ! Return current display settings
-  type(disp_settings) :: defs
+  TYPE(disp_settings) :: defs
   defs = DEFSET
-end function disp_get
+END FUNCTION disp_get
 
 !----------------------------------------------------------------------------
 !
