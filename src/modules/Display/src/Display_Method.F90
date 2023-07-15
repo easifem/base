@@ -34,6 +34,7 @@ PUBLIC :: Display, BlankLines, DashLine
 PUBLIC :: DotLine, EqualLine
 PUBLIC :: TIMESTAMP
 PUBLIC :: setDisplayProfile
+PUBLIC :: ToString, DISP !! from DISPMODULE
 
 CHARACTER(*), PARAMETER :: equal = "=============================="
 CHARACTER(*), PARAMETER :: dot = ".............................."
