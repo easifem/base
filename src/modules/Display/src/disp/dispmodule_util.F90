@@ -215,7 +215,10 @@ CONTAINS
     integer,      intent(INOUT ) :: wleft       ! number of char-columns in box already written to
     integer i, j
     wleft = wleft + widpj - widj
-    forall(i = 1:widj, j=1:size(s)) boxp(wleft+i, j+lin1-1) = s(j)(i+nblj:i+nblj)
+    ! forall(i = 1:widj, j=1:size(s)) boxp(wleft+i, j+lin1-1) = s(j)(i+nblj:i+nblj)
+    do concurrent(i = 1:widj, j=1:size(s)) 
+      boxp(wleft+i, j+lin1-1) = s(j)(i+nblj:i+nblj)
+    end do
     wleft = wleft + widj
   end subroutine copytobox
 
@@ -226,7 +229,10 @@ CONTAINS
     character,    intent(INOUT ) :: boxp(:,:)
     integer,      intent(INOUT ) :: wleft
     integer i, j
-    forall(i = 1:len(sep), j=1:m) boxp(wleft+i, j+lin1-1) = sep(i:i)
+    ! forall(i = 1:len(sep), j=1:m) boxp(wleft+i, j+lin1-1) = sep(i:i)
+    do concurrent(i = 1:len(sep), j=1:m) 
+      boxp(wleft+i, j+lin1-1) = sep(i:i)
+    end do
     wleft = wleft + len(sep)
   end subroutine copyseptobox
 
@@ -246,7 +252,9 @@ CONTAINS
     do i = 1, size(wid)
       lmargin = max(0, widp(i) - ls(i) - rmargmax)
       k = k + lmargin
-      forall(j = 1:ls(i)) boxp(k+j, lin1) = s(i)(j:j)
+      do concurrent(j = 1:ls(i)) 
+        boxp(k+j, lin1) = s(i)(j:j)
+      end do
       k = k + widp(i) - lmargin + lsep
     enddo
     lin1 = lin1 + 1
@@ -266,11 +274,17 @@ CONTAINS
     if (upper(SE%tsty) == 'LEFT') then
       lin1 = 1
       if (number_cols(SE)) lin1 = min(2,size(boxp,2))
-      forall(i=1:wt) boxp(i,lin1) = title(i:i)
+      ! forall(i=1:wt) boxp(i,lin1) = title(i:i)
+      do concurrent(i=1:wt) 
+        boxp(i,lin1) = title(i:i)
+      end do
     else
       wpadright = (w - wt)/2
       wpadleft = w - wpadright - wt
-      forall(i=1:wt) boxp(wpadleft+i, 1) = title(i:i)
+      ! forall(i=1:wt) boxp(wpadleft+i, 1) = title(i:i)
+      do concurrent(i=1:wt) 
+        boxp(wpadleft+i, 1) = title(i:i)
+      end do
       if (upper(SE%tsty) == 'PAD') then
         boxp(1:wpadleft, 1) = SE%tch
         boxp(w-wpadright+1:w, 1) = SE%tch

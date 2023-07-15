@@ -44,7 +44,7 @@ else:
     user_query = False
     cmake_def = ""
     cmake_def += ' -G "Ninja"'  # Unix Makefiles, Ninja, Ninja Multi-Config
-    cmake_def += " -D USE_OpenMP:BOOL=OFF"  # OFF
+    cmake_def += " -D USE_OpenMP:BOOL=ON"  # OFF
     cmake_def += " -D CMAKE_BUILD_TYPE:STRING=Release"  # Debug
     cmake_def += " -D BUILD_SHARED_LIBS:BOOL=ON"
     cmake_def += " -D USE_PLPLOT:BOOL=ON"
@@ -52,7 +52,7 @@ else:
     cmake_def += " -D USE_BLAS95:BOOL=ON"
     cmake_def += " -D USE_LAPACK95:BOOL=ON"
     cmake_def += " -D USE_FFTW:BOOL=ON"
-    cmake_def += " -D USE_GTK:BOOL=ON"
+    cmake_def += " -D USE_GTK:BOOL=OFF"
     cmake_def += " -D USE_ARPACK:BOOL=ON"
     cmake_def += " -D USE_SUPERLU:BOOL=ON"
     cmake_def += " -D USE_LIS:BOOL=ON"

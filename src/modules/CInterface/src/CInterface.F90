@@ -828,9 +828,9 @@ SUBROUTINE F_C_STRING_PTR(F_string, C_string, C_string_len)
   END IF
   IF (.NOT. C_ASSOCIATED(C_string)) RETURN
   CALL C_F_POINTER(C_string, p_chars, [strlen + 1])
-  FORALL (i=1:strlen)
+  DO CONCURRENT(i=1:strlen)
     p_chars(i) = F_string(i:i)
-  END FORALL
+  END DO
   p_chars(strlen + 1) = NUL
 END SUBROUTINE F_C_STRING_PTR
 
@@ -866,9 +866,9 @@ SUBROUTINE F_C_STRING_CHARS(F_string, C_string, C_string_len)
     strlen = MIN(strlen, C_string_len - 1)
   END IF
   !
-  FORALL (i=1:strlen)
+  DO CONCURRENT(i=1:strlen)
     C_string(i) = F_string(i:i)
-  END FORALL
+  END DO
   !
   C_string(strlen + 1) = NUL
   !
@@ -916,9 +916,9 @@ FUNCTION F_C_STRING_DUP(F_string, length) RESULT(C_string)
     C_string = C_MALLOC(strlen + 1)
     IF (C_ASSOCIATED(C_string)) THEN
       CALL C_F_POINTER(C_string, C_string_ptr, [strlen + 1])
-      FORALL (i=1:strlen)
+      DO CONCURRENT(i=1:strlen)
         C_string_ptr(i) = F_string(i:i)
-      END FORALL
+      END DO
       C_string_ptr(strlen + 1) = NUL
     END IF
   END IF
@@ -961,9 +961,9 @@ FUNCTION C_STRING_VALUE(C_string) RESULT(F_string)
   length = LEN(F_string)
   IF (length .NE. 0) THEN
     CALL C_F_POINTER(C_string, p_chars, [length])
-    FORALL (i=1:length)
+    DO CONCURRENT(i=1:length)
       F_string(i:i) = p_chars(i)
-    END FORALL
+    END DO
   END IF
 END FUNCTION C_STRING_VALUE
 

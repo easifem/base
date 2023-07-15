@@ -25,6 +25,12 @@ IMPLICIT NONE
 PRIVATE
 #include "./iface.inc"
 CONTAINS
+
+#ifndef USE_APPLE_NativeBLAS
+#include "./blas95_src/dcabs1.F90"
+#include "./blas95_src/scabs1.F90"
+#endif
+
 #include "./blas95_src/caxpby.F90"
 #include "./blas95_src/caxpy.F90"
 #include "./blas95_src/ccopy.F90"
@@ -66,7 +72,6 @@ CONTAINS
 #include "./blas95_src/dasum.F90"
 #include "./blas95_src/daxpby.F90"
 #include "./blas95_src/daxpy.F90"
-#include "./blas95_src/dcabs1.F90"
 #include "./blas95_src/dcopy.F90"
 #include "./blas95_src/ddot.F90"
 #include "./blas95_src/dgbmv.F90"
@@ -111,7 +116,6 @@ CONTAINS
 #include "./blas95_src/scasum.F90"
 #include "./blas95_src/scnrm2.F90"
 #include "./blas95_src/scopy.F90"
-#include "./blas95_src/scabs1.F90"
 #include "./blas95_src/sdot.F90"
 #include "./blas95_src/sdsdot.F90"
 #include "./blas95_src/sgbmv.F90"

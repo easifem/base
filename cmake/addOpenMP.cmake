@@ -18,19 +18,53 @@
 #
 #....................................................................
 
+
 IF( ${PROJECT_NAME} MATCHES "easifemBase" )
   OPTION(USE_OpenMP OFF)
   IF(USE_OpenMP)
-    FIND_PACKAGE(OpenMP REQUIRED)
-    IF(OpenMP_FOUND)
-      MESSAGE(STATUS "FOUND OpenMP")
-      MESSAGE(STATUS "OpenMP_Fortran_LIBRARIES: ${OpenMP_Fortran_LIBRARIES}")
-      LIST( APPEND TARGET_COMPILE_DEF "-DUSE_OpenMP" )
-      LIST( APPEND TARGET_COMPILE_OPT ${OpenMP_Fortran_FLAGS} )
-      # TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${OpenMP_Fortran_LIBRARIES})
-      TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_Fortran)
-    ELSE()
-      MESSAGE(ERROR "NOT FOUND OpenMP")
+
+    IF(APPLE)
+      IF(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES "AppleClang")
+        SET(OpenMP_C "${CMAKE_C_COMPILER}" CACHE STRING "" FORCE)
+        SET(OpenMP_C_FLAGS 
+            "-fopenmp=libomp -Wno-unused-command-line-argument" 
+            CACHE STRING 
+            "" 
+            FORCE
+        )
+        SET(OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5" CACHE STRING "" FORCE)
+        SET(OpenMP_libomp_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+        SET(OpenMP_libgomp_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+        SET(OpenMP_libiomp5_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+
+        SET(OpenMP_CXX "${CMAKE_CXX_COMPILER}" CACHE STRING "" FORCE)
+        SET(
+          OpenMP_CXX_FLAGS 
+          "-fopenmp=libomp -Wno-unused-command-line-argument" 
+          CACHE STRING 
+          "" 
+          FORCE
+        )
+
+        SET(OpenMP_CXX_LIB_NAMES "libomp" "libgomp" "libiomp5" CACHE STRING "" FORCE)
+      ENDIF()
     ENDIF()
+
+    FIND_PACKAGE(OpenMP REQUIRED)
+
   ENDIF()
+
+
+  IF(OpenMP_FOUND)
+    MESSAGE(STATUS "FOUND OpenMP")
+    MESSAGE(STATUS "OpenMP_Fortran_LIBRARIES: ${OpenMP_Fortran_LIBRARIES}")
+    LIST( APPEND TARGET_COMPILE_DEF "-DUSE_OpenMP" )
+    LIST( APPEND TARGET_COMPILE_OPT ${OpenMP_Fortran_FLAGS} )
+    # TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${OpenMP_Fortran_LIBRARIES})
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_Fortran)
+  ELSE()
+    MESSAGE(ERROR "NOT FOUND OpenMP")
+  ENDIF()
+
 ENDIF()
+

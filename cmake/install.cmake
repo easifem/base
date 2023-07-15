@@ -20,7 +20,7 @@
 ###############################
 
 INSTALL(
-  TARGETS ${PROJECT_NAME}
+  TARGETS ${PROJECT_NAME} easifemSystemMethodC
   EXPORT ${TARGETS_EXPORT_NAME}
   COMPONENT "${PROJECT_NAME}"
   ARCHIVE

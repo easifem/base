@@ -162,11 +162,13 @@ PUBLIC :: IAMIN
 !
 !----------------------------------------------------------------------------
 
+#ifndef USE_APPLE_NativeBLAS
 INTERFACE CABS1
   MODULE PROCEDURE SCABS1_F95, DCABS1_F95
 END INTERFACE CABS1
 
 PUBLIC :: CABS1
+#endif
 
 !----------------------------------------------------------------------------
 !
