@@ -20,34 +20,40 @@ USE BaseMethod
 IMPLICIT NONE
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+CONTAINS
+
+!----------------------------------------------------------------------------
 !                               GaussLegendreRadauRight@GaussLegendreRadauRight
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE FUNCTION getGaussLegendreRadauRightQPLine1(order)  &
-    & RESULT(obj)
-    INTEGER(I4B), INTENT(IN) :: order
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreRadauRightQPLine1
-END INTERFACE
+FUNCTION getGaussLegendreRadauRightQPLine1(order)  &
+  & RESULT(obj)
+  INTEGER(I4B), INTENT(IN) :: order
+  TYPE(QuadraturePoint_) :: obj
+  INTEGER(I4B) :: np
+  REAL(DFP) :: pt(2 + INT(order / 2, KIND=I4B))
+  REAL(DFP) :: wt(2 + INT(order / 2, KIND=I4B))
+  np = SIZE(pt)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
+  CALL Initiate(obj=obj, points=pt.ROWCONCAT.wt)
+END FUNCTION getGaussLegendreRadauRightQPLine1
 
 !----------------------------------------------------------------------------
 !                              GaussLegendreRadauRight@GaussLegendreRadauRight
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE FUNCTION getGaussLegendreRadauRightQPLine2(nips)  &
-    & RESULT(obj)
-    INTEGER(I4B), INTENT(IN) :: nips(1)
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreRadauRightQPLine2
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
-
-CONTAINS
+FUNCTION getGaussLegendreRadauRightQPLine2(nips)  &
+  & RESULT(obj)
+  INTEGER(I4B), INTENT(IN) :: nips(1)
+  TYPE(QuadraturePoint_) :: obj
+  REAL(DFP) :: pt(nips(1))
+  REAL(DFP) :: wt(nips(1))
+  CALL LegendreQuadrature(n=nips(1), pt=pt, wt=wt, quadType=GaussRadauRight)
+  CALL Initiate(obj=obj, points=pt.ROWCONCAT.wt)
+END FUNCTION getGaussLegendreRadauRightQPLine2
 
 !----------------------------------------------------------------------------
 !                                          GaussLegendreRadauRightQuadrature

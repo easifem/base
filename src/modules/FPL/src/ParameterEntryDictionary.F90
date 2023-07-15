@@ -27,210 +27,310 @@
 ! Stefano Zaghi (@szaghi, https://github.com/szaghi).
 !
 ! You can find the original source at:
-! https://github.com/szaghi/OFF/blob/95691ca15e6d68128ba016e40df74e42123f1c54/src/Data_Type_Hash_Table.f90
+! https://github.com/szaghi/OFF/blob/
+!95691ca15e6d68128ba016e40df74e42123f1c54/
+!src/Data_Type_Hash_Table.f90
 !-----------------------------------------------------------------
 
-module ParameterEntryDictionary
+MODULE ParameterEntryDictionary
 
 USE ParameterEntry
 USE ParameterRootEntry
-USE PENF, only: I4P, str
+USE PENF, ONLY: I4P, str
 
-implicit None
-private
+IMPLICIT NONE
+PRIVATE
 
-integer(I4P), parameter :: DefaultDataBaseSize = 100_I4P
+INTEGER(I4P), PARAMETER :: DefaultDataBaseSize = 100_I4P
 
-type :: ParameterEntryDictionary_t
-  private
-  type(ParameterRootEntry_t), allocatable :: DataBase(:)
-  integer(I4P) :: Size = 0_I4P
-contains
-  private
-  procedure, non_overridable :: Hash => ParameterEntryDictionary_Hash
-  procedure, non_overridable, public :: Init => ParameterEntryDictionary_Init
-  procedure, non_overridable, public :: Set => ParameterEntryDictionary_Set
-  procedure, non_overridable, public :: Get => ParameterEntryDictionary_Get
-        procedure, non_overridable, public :: GetPointer => ParameterEntryDictionary_GetPointer
-        procedure, non_overridable, public :: GetDatabase=> ParameterEntryDictionary_GetDataBase
-  procedure, non_overridable, public :: Del => ParameterEntryDictionary_Delete
-        procedure, non_overridable, public :: IsPresent  => ParameterEntryDictionary_IsPresent
-        procedure, non_overridable, public :: Length     => ParameterEntryDictionary_Length
- procedure, non_overridable, public :: Print => ParameterEntryDictionary_Print
-  procedure, non_overridable, public :: Free => ParameterEntryDictionary_Free
-  final :: ParameterEntryDictionary_Finalize
-end type
+TYPE :: ParameterEntryDictionary_t
+  PRIVATE
+  TYPE(ParameterRootEntry_t), ALLOCATABLE :: DataBase(:)
+  INTEGER(I4P) :: Size = 0_I4P
+CONTAINS
+  PRIVATE
+  PROCEDURE, NON_OVERRIDABLE :: Hash => &
+  & ParameterEntryDictionary_Hash
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Init => &
+  & ParameterEntryDictionary_Init
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Set => &
+  & ParameterEntryDictionary_Set
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Get => &
+  & ParameterEntryDictionary_Get
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: GetPointer => &
+  & ParameterEntryDictionary_GetPointer
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: GetDatabase =>  &
+  & ParameterEntryDictionary_GetDataBase
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Del => &
+  & ParameterEntryDictionary_Delete
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: IsPresent => &
+  & ParameterEntryDictionary_IsPresent
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Length => &
+  & ParameterEntryDictionary_Length
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: PRINT => &
+  & ParameterEntryDictionary_Print
+  PROCEDURE, NON_OVERRIDABLE, PUBLIC :: Free => &
+  & ParameterEntryDictionary_Free
+  FINAL :: ParameterEntryDictionary_Finalize
+END TYPE
 
-public :: ParameterEntryDictionary_t
+PUBLIC :: ParameterEntryDictionary_t
 
-contains
+CONTAINS
 
-function ParameterEntryDictionary_Hash(this, Key) result(Hash)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+FUNCTION ParameterEntryDictionary_Hash(this, Key) RESULT(Hash)
 
   !< String hash function
 
-  class(ParameterEntryDictionary_t), intent(IN) :: this        !< Parameter Entry Dictionary
-  character(len=*), intent(IN) :: Key         !< String Key
-  integer(I4P) :: Hash        !< Hash code
-  character, dimension(len(Key)) :: CharArray   !< Character array containing the Key
-  integer(I4P) :: CharIterator!< Char iterator index
+  CLASS(ParameterEntryDictionary_t), INTENT(IN) :: this
+  !< Parameter Entry Dictionary
+  CHARACTER(*), INTENT(IN) :: Key
+  !< String Key
+  INTEGER(I4P) :: Hash
+  !< Hash code
+  CHARACTER, DIMENSION(LEN(Key)) :: CharArray
+  !< Character array containing the Key
+  INTEGER(I4P) :: CharIterator
+  !< Char iterator index
 
-  forall (CharIterator=1:LEN(Key))
+  DO CONCURRENT(CharIterator=1:LEN(Key))
     CharArray(CharIterator) = Key(CharIterator:CharIterator)
-  end forall
+  END DO
   Hash = MOD(SUM(ICHAR(CharArray)), this%Size)
-end function ParameterEntryDictionary_Hash
+END FUNCTION ParameterEntryDictionary_Hash
 
-subroutine ParameterEntryDictionary_Init(this, Size)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE ParameterEntryDictionary_Init(this, Size)
 
   !< Allocate the database with a given Szie of DefaultDataBaseSize
 
-  class(ParameterEntryDictionary_t), intent(INOUT) :: this   !< Parameter Entry Dictionary
-  integer(I4P), optional, intent(IN) :: Size   !< DataBase Size
+  CLASS(ParameterEntryDictionary_t), INTENT(INOUT) :: this
+  !< Parameter Entry Dictionary
+  INTEGER(I4P), OPTIONAL, INTENT(IN) :: Size
+  !< DataBase Size
 
-  call this%Free()
-  if (present(Size)) then
+  CALL this%Free()
+  IF (PRESENT(Size)) THEN
     this%Size = Size
-  else
+  ELSE
     this%Size = DefaultDataBaseSize
-  end if
-  allocate (this%DataBase(0:this%Size - 1))
-end subroutine ParameterEntryDictionary_Init
+  END IF
+  ALLOCATE (this%DataBase(0:this%Size - 1))
+END SUBROUTINE ParameterEntryDictionary_Init
 
-function ParameterEntryDictionary_isPresent(this, Key) result(isPresent)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+FUNCTION ParameterEntryDictionary_isPresent(this, Key) RESULT(isPresent)
 
   !< Check if a Key is present in the DataBase
 
-  class(ParameterEntryDictionary_t), intent(IN) :: this      !< Parameter Entry Dictionary
-  character(len=*), intent(IN) :: Key       !< String Key
-  logical :: isPresent !< Boolean flag to check if a Key is present
+  CLASS(ParameterEntryDictionary_t), INTENT(IN) :: this
+  !< Parameter Entry Dictionary
+  CHARACTER(*), INTENT(IN) :: Key
+  !< String Key
+  LOGICAL :: isPresent
+  !< Boolean flag to check if a Key is present
 
   isPresent = this%DataBase(this%Hash(Key=Key))%isPresent(Key=Key)
-end function ParameterEntryDictionary_isPresent
+END FUNCTION ParameterEntryDictionary_isPresent
 
-subroutine ParameterEntryDictionary_Set(this, Key, Value)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE ParameterEntryDictionary_Set(this, Key, VALUE)
 
   !< Set a Key/Value pair into the DataBase
 
-  class(ParameterEntryDictionary_t), intent(INOUT) :: this    !< Parameter Entry Dictionary
-  character(len=*), intent(IN) :: Key     !< String Key
-  class(*), pointer, intent(IN) :: Value   !< Value
+  CLASS(ParameterEntryDictionary_t), INTENT(INOUT) :: this
+  !< Parameter Entry Dictionary
+  CHARACTER(*), INTENT(IN) :: Key
+  !< String Key
+  CLASS(*), POINTER, INTENT(IN) :: VALUE
+  !< Value
 
-  call this%DataBase(this%Hash(Key=Key))%AddEntry(Key=Key, Value=Value)
-end subroutine ParameterEntryDictionary_Set
+  CALL this%DataBase(this%Hash(Key=Key))%AddEntry(Key=Key, VALUE=VALUE)
+END SUBROUTINE ParameterEntryDictionary_Set
 
-subroutine ParameterEntryDictionary_Get(this, Key, Value)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
-  !< Return a Value given the Key
-
-  class(ParameterEntryDictionary_t), intent(IN) :: this   !< Parameter Entry Dictionary
-  character(len=*), intent(IN) :: Key    !< String Key
-  class(*), allocatable, intent(INOUT) :: Value  !< Returned value
-  class(ParameterEntry_t), pointer :: Entry  !< Pointer to a Parameter List
-
-  Entry => this%DataBase(this%Hash(Key=Key))%GetEntry(Key=Key)
-  if (associated(Entry)) call Entry%GetValue(Value=Value)
-end subroutine ParameterEntryDictionary_Get
-
-subroutine ParameterEntryDictionary_GetPointer(this, Key, Value)
+SUBROUTINE ParameterEntryDictionary_Get(this, Key, VALUE)
 
   !< Return a Value given the Key
 
-  class(ParameterEntryDictionary_t), intent(IN) :: this   !< Parameter Entry Dictionary
-  character(len=*), intent(IN) :: Key    !< String Key
-  class(*), pointer, intent(INOUT) :: Value  !< Returned value
-  class(ParameterEntry_t), pointer :: Entry  !< Pointer to a Parameter List
-  integer(I4P) :: Hash   !< Hash code corresponding to Key
+  CLASS(ParameterEntryDictionary_t), INTENT(IN) :: this
+  !< Parameter Entry Dictionary
+  CHARACTER(*), INTENT(IN) :: Key !< String Key
+  CLASS(*), ALLOCATABLE, INTENT(INOUT) :: VALUE
+  !< Returned value
+  CLASS(ParameterEntry_t), POINTER :: ENTRY
+  !< Pointer to a Parameter List
 
-  Entry => this%DataBase(this%Hash(Key=Key))%GetEntry(Key=Key)
-  if (associated(Entry)) Value => Entry%PointToValue()
-end subroutine ParameterEntryDictionary_GetPointer
+  ENTRY => this%DataBase(this%Hash(Key=Key))%GetEntry(Key=Key)
+  IF (ASSOCIATED(ENTRY)) CALL ENTRY%GetValue(VALUE=VALUE)
+END SUBROUTINE ParameterEntryDictionary_Get
 
-function ParameterEntryDictionary_GetDataBase(this) result(Database)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE ParameterEntryDictionary_GetPointer(this, Key, VALUE)
+
+  !< Return a Value given the Key
+
+  CLASS(ParameterEntryDictionary_t), INTENT(IN) :: this !< Parameter Entry Dictionary
+  CHARACTER(*), INTENT(IN) :: Key !< String Key
+  CLASS(*), POINTER, INTENT(INOUT) :: VALUE !< Returned value
+  CLASS(ParameterEntry_t), POINTER :: ENTRY !< Pointer to a Parameter List
+  INTEGER(I4P) :: Hash !< Hash code corresponding to Key
+
+  ENTRY => this%DataBase(this%Hash(Key=Key))%GetEntry(Key=Key)
+  IF (ASSOCIATED(ENTRY)) VALUE => ENTRY%PointToValue()
+END SUBROUTINE ParameterEntryDictionary_GetPointer
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+FUNCTION ParameterEntryDictionary_GetDataBase(this) RESULT(Database)
 
   !< Return a pointer to a Dictionary Database
 
-  class(ParameterEntryDictionary_t), target, intent(IN) :: this        !< Parameter Entry Dictionary
-  type(ParameterRootEntry_t), pointer :: Database(:) !< Dictionary Database
+  CLASS(ParameterEntryDictionary_t), TARGET, INTENT(IN) :: this
+  !< Parameter Entry Dictionary
+  TYPE(ParameterRootEntry_t), POINTER :: Database(:)
+  !< Dictionary Database
 
   DataBase => this%Database
-end function ParameterEntryDictionary_GetDataBase
+END FUNCTION ParameterEntryDictionary_GetDataBase
 
-subroutine ParameterEntryDictionary_Delete(this, Key)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE ParameterEntryDictionary_Delete(this, Key)
 
   !< Remove an Entry given a Key
 
-  class(ParameterEntryDictionary_t), intent(INOUT) :: this   !< Parameter Entry Dictionary
-  character(len=*), intent(IN) :: Key    !< String Key
+  CLASS(ParameterEntryDictionary_t), INTENT(INOUT) :: this
+  !< Parameter Entry Dictionary
+  CHARACTER(*), INTENT(IN) :: Key
+  !< String Key
 
-  call this%DataBase(this%Hash(Key=Key))%RemoveEntry(Key=Key)
-end subroutine ParameterEntryDictionary_Delete
+  CALL this%DataBase(this%Hash(Key=Key))%RemoveEntry(Key=Key)
+END SUBROUTINE ParameterEntryDictionary_Delete
 
-function ParameterEntryDictionary_Length(this) result(Length)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+FUNCTION ParameterEntryDictionary_Length(this) RESULT(Length)
 
   !< Return the number of ParameterListEntries contained in the DataBase
 
-  class(ParameterEntryDictionary_t), intent(IN) :: this       !< Parameter Entry Dictionary
-  integer(I4P) :: Length     !< Number of parameters in database
-  integer(I4P) :: DBIterator !< Database Iterator index
+  CLASS(ParameterEntryDictionary_t), INTENT(IN) :: this
+  !< Parameter Entry Dictionary
+  INTEGER(I4P) :: Length
+  !< Number of parameters in database
+  INTEGER(I4P) :: DBIterator
+  !< Database Iterator index
 
   Length = 0
-  if (allocated(this%DataBase)) THEN
-    do DBIterator = lbound(this%DataBase, dim=1), ubound(this%DataBase, dim=1)
+  IF (ALLOCATED(this%DataBase)) THEN
+    DO DBIterator = LBOUND(this%DataBase, dim=1), UBOUND(this%DataBase, dim=1)
       Length = Length + this%DataBase(DBIterator)%Length()
-    end do
-  end if
-end function ParameterEntryDictionary_Length
+    END DO
+  END IF
+END FUNCTION ParameterEntryDictionary_Length
 
-subroutine ParameterentryDictionary_Free(this)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE ParameterentryDictionary_Free(this)
 
   !< Free ParameterListEntries and the DataBase
 
-  class(ParameterEntryDictionary_t), intent(INOUT) :: this       !< Parameter Entry Dictionary
-  integer(I4P) :: DBIterator !< Database Iterator index
+  CLASS(ParameterEntryDictionary_t), INTENT(INOUT) :: this
+  !< Parameter Entry Dictionary
+  INTEGER(I4P) :: DBIterator
+  !< Database Iterator index
 
-  if (allocated(this%DataBase)) THEN
-    do DBIterator = lbound(this%DataBase, dim=1), ubound(this%DataBase, dim=1)
-      call this%DataBase(DBIterator)%Free()
-    end do
-    deallocate (this%DataBase)
-  end if
+  IF (ALLOCATED(this%DataBase)) THEN
+    DO DBIterator = LBOUND(this%DataBase, dim=1), UBOUND(this%DataBase, dim=1)
+      CALL this%DataBase(DBIterator)%Free()
+    END DO
+    DEALLOCATE (this%DataBase)
+  END IF
   this%Size = 0_I4P
-end subroutine ParameterEntryDictionary_Free
+END SUBROUTINE ParameterEntryDictionary_Free
 
-subroutine ParameterEntryDictionary_Finalize(this)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE ParameterEntryDictionary_Finalize(this)
 
   !< Destructor procedure
 
-  type(ParameterEntryDictionary_t), intent(INOUT) :: this    !< Parameter Entry Dictionary
+  TYPE(ParameterEntryDictionary_t), INTENT(INOUT) :: this
+  !< Parameter Entry Dictionary
 
-  call this%Free()
-end subroutine ParameterEntryDictionary_Finalize
+  CALL this%Free()
+END SUBROUTINE ParameterEntryDictionary_Finalize
 
-subroutine ParameterEntryDictionary_Print(this, unit, prefix, iostat, iomsg)
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+SUBROUTINE ParameterEntryDictionary_Print(this, unit, prefix, iostat, iomsg)
 
   !< Print the content of the DataBase
 
-  class(ParameterEntryDictionary_t), intent(IN) :: this    !< Linked List
-  integer(I4P), intent(IN) :: unit    !< Logic unit.
-  character(*), optional, intent(IN) :: prefix  !< Prefixing string.
-  integer(I4P), optional, intent(OUT) :: iostat  !< IO error.
-  character(*), optional, intent(OUT) :: iomsg   !< IO error message.
-  character(len=:), allocatable :: prefd   !< Prefixing string.
-  integer(I4P) :: iostatd !< IO error.
-  character(500) :: iomsgd  !< Temporary variable for IO error message.
-  integer(I4P) :: DBIter  !< Database iterator
+  CLASS(ParameterEntryDictionary_t), INTENT(IN) :: this
+  !< Linked List
+  INTEGER(I4P), INTENT(IN) :: unit
+  !< Logic unit.
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: prefix
+  !< Prefixing string.
+  INTEGER(I4P), OPTIONAL, INTENT(OUT) :: iostat
+  !< IO error.
+  CHARACTER(*), OPTIONAL, INTENT(OUT) :: iomsg
+  !< IO error message.
+  CHARACTER(:), ALLOCATABLE :: prefd
+  !< Prefixing string.
+  INTEGER(I4P) :: iostatd
+  !< IO error.
+  CHARACTER(500) :: iomsgd
+  !< Temporary variable for IO error message.
+  INTEGER(I4P) :: DBIter
+  !< Database iterator
 
-  prefd = ''; if (present(prefix)) prefd = prefix
-  if (allocated(this%DataBase)) then
-    do DBIter = lbound(this%DataBase, dim=1), ubound(this%DataBase, dim=1)
-      call this%DataBase(DBIter)%Print(unit=unit, &
-             prefix=prefd//'  ['//trim(str(no_sign=.true., n=DBIter))//'] ', &
+  prefd = ''; IF (PRESENT(prefix)) prefd = prefix
+  IF (ALLOCATED(this%DataBase)) THEN
+    DO DBIter = LBOUND(this%DataBase, dim=1), UBOUND(this%DataBase, dim=1)
+      CALL this%DataBase(DBIter)%PRINT(unit=unit, &
+             prefix=prefd//'  ['//TRIM(str(no_sign=.TRUE., n=DBIter))//'] ', &
                                        iostat=iostatd, iomsg=iomsgd)
-    end do
-  end if
-  if (present(iostat)) iostat = iostatd
-  if (present(iomsg)) iomsg = iomsgd
-end subroutine ParameterEntryDictionary_Print
+    END DO
+  END IF
+  IF (PRESENT(iostat)) iostat = iostatd
+  IF (PRESENT(iomsg)) iomsg = iomsgd
+END SUBROUTINE ParameterEntryDictionary_Print
 
-end module ParameterEntryDictionary
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+END MODULE ParameterEntryDictionary

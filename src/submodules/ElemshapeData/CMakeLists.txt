@@ -36,14 +36,14 @@ TARGET_SOURCES(
   ${src_path}/ElemshapeData_H1DivSerendipityMethods@Methods.F90
   ${src_path}/ElemshapeData_H1HermitMethods@Methods.F90
   ${src_path}/ElemshapeData_H1HierarchyMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1LagrangeMethods@Hexahedron.F90
-  ${src_path}/ElemshapeData_H1LagrangeMethods@Line.F90
   ${src_path}/ElemshapeData_H1LagrangeMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1LagrangeMethods@Prism.F90
-  ${src_path}/ElemshapeData_H1LagrangeMethods@Pyramid.F90
-  ${src_path}/ElemshapeData_H1LagrangeMethods@Quadrangle.F90
-  ${src_path}/ElemshapeData_H1LagrangeMethods@Tetrahedron.F90
-  ${src_path}/ElemshapeData_H1LagrangeMethods@Triangle.F90
+  ${src_path}/H1Lagrange/H1Lagrange_Line_Methods.F90
+  ${src_path}/H1Lagrange/H1Lagrange_Triangle_Methods.F90
+  ${src_path}/H1Lagrange/H1Lagrange_Quadrangle_Methods.F90
+  ${src_path}/H1Lagrange/H1Lagrange_Prism_Methods.F90
+  ${src_path}/H1Lagrange/H1Lagrange_Pyramid_Methods.F90
+  ${src_path}/H1Lagrange/H1Lagrange_Tetrahedron_Methods.F90
+  ${src_path}/H1Lagrange/H1Lagrange_Hexahedron_Methods.F90
   ${src_path}/ElemshapeData_H1SerendipityMethods@Methods.F90
   ${src_path}/ElemshapeData_HminHmaxMethods@Methods.F90
   ${src_path}/ElemshapeData_HRGNParamMethods@Methods.F90
