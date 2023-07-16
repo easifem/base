@@ -29,21 +29,17 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate_ref_Quadrangle
-  !!
 CALL Reallocate(obj%xij, 3, 4)
-  !!
 obj%xij = InterpolationPoint_Quadrangle(  &
   & xij=xij, &
   & order=1, &
   & ipType=Equidistance, &
   & layout="VEFC")
-  !!
 obj%EntityCounts = [4, 4, 1, 0]
 obj%XiDimension = 2
 obj%Name = Quadrangle4
 obj%order = 1
 obj%NSD = NSD
-  !!
 ALLOCATE (obj%Topology(9))
 obj%Topology(1) = ReferenceTopology([1], Point)
 obj%Topology(2) = ReferenceTopology([2], Point)
@@ -54,9 +50,7 @@ obj%Topology(6) = ReferenceTopology([2, 3], Line2)
 obj%Topology(7) = ReferenceTopology([3, 4], Line2)
 obj%Topology(8) = ReferenceTopology([4, 1], Line2)
 obj%Topology(9) = ReferenceTopology([1, 2, 3, 4], Quadrangle4)
-  !!
 obj%highorderElement => highorderElement_Quadrangle
-  !!
 END PROCEDURE Initiate_ref_Quadrangle
 
 !----------------------------------------------------------------------------
@@ -64,11 +58,7 @@ END PROCEDURE Initiate_ref_Quadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Quadrangle
-IF (PRESENT(xij)) THEN
-  CALL Initiate(obj, NSD, xij)
-ELSE
-  CALL Initiate(obj, NSD)
-END IF
+CALL Initiate(obj=obj, nsd=NSD, xij=xij)
 END PROCEDURE reference_Quadrangle
 
 !----------------------------------------------------------------------------
@@ -77,11 +67,7 @@ END PROCEDURE reference_Quadrangle
 
 MODULE PROCEDURE reference_Quadrangle_Pointer
 ALLOCATE (obj)
-IF (PRESENT(xij)) THEN
-  CALL Initiate(obj, NSD, xij)
-ELSE
-  CALL Initiate(obj, NSD)
-END IF
+CALL Initiate(obj=obj, nsd=NSD, xij=xij)
 END PROCEDURE reference_Quadrangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -95,8 +81,10 @@ SELECT CASE (order)
 CASE (1)
   CALL Initiate(obj=obj, Anotherobj=refelem)
 CASE (2)
-  obj%xij = InterpolationPoint_Quadrangle(xij=refelem%xij(1:3, 1:4), &
-    & order=order, ipType=ipType, &
+  obj%xij = InterpolationPoint_Quadrangle( &
+    & xij=refelem%xij(1:3, 1:4), &
+    & order=order,  &
+    & ipType=ipType, &
     & layout="VEFC")
   NNS = 9
   obj%EntityCounts = [NNS, 4, 1, 0]
@@ -145,9 +133,9 @@ END PROCEDURE highorderElement_Quadrangle
 
 MODULE PROCEDURE Measure_Simplex_Quadrangle
 IF (refelem%nsd .EQ. 2) THEN
-  CALL QUADAREA2D(xij(1:2, 1:4), Ans)
+  CALL QuadArea2D(xij(1:2, 1:4), Ans)
 ELSE
-  CALL QUADAREA3D(xij(1:3, 1:4), Ans)
+  CALL QuadArea3D(xij(1:3, 1:4), Ans)
 END IF
 END PROCEDURE Measure_Simplex_Quadrangle
 
@@ -164,14 +152,12 @@ END PROCEDURE Quadrangle_quality
 
 MODULE PROCEDURE QuadArea3D
 REAL(DFP) :: p(3, 4)
-  !!
-  !! Define a parallelogram by averaging consecutive vertices.
+! Define a parallelogram by averaging consecutive vertices.
 p(1:3, 1:3) = (q(1:3, 1:3) + q(1:3, 2:4)) / 2.0_DFP
 p(1:3, 4) = (q(1:3, 4) + q(1:3, 1)) / 2.0_DFP
-  !!
-  !!  Compute the area.
+!  Compute the area.
 CALL PARALLELOGRAMAREA3D(p, area)
-  !! The quadrilateral's area is twice that of the parallelogram.
+! The quadrilateral's area is twice that of the parallelogram.
 area = 2.0_DFP * area
 END PROCEDURE QuadArea3D
 
@@ -181,32 +167,122 @@ END PROCEDURE QuadArea3D
 
 MODULE PROCEDURE QuadArea2D
 INTEGER(I4B), PARAMETER :: dim_num = 2
-  !!
 REAL(DFP) :: area_triangle
 REAL(DFP) :: t(dim_num, 3)
-  !!
 area = 0.0_DFP
-  !!
-t(1:dim_num, 1:3) = RESHAPE((/ &
-                            q(1:2, 1), q(1:2, 2), q(1:2, 3)/), (/dim_num, 3/))
-  !!
+t(1:dim_num, 1:3) = RESHAPE( &
+  & [q(1:2, 1), q(1:2, 2), q(1:2, 3)], &
+  & [dim_num, 3] &
+  & )
 CALL TRIANGLEAREA2D(t, area_triangle)
-  !!
 area = area + area_triangle
-  !!
-t(1:dim_num, 1:3) = RESHAPE((/ &
-                            q(1:2, 3), q(1:2, 4), q(1:2, 1)/), (/dim_num, 3/))
-  !!
+t(1:dim_num, 1:3) = RESHAPE( &
+  & [q(1:2, 3), q(1:2, 4), q(1:2, 1)],  &
+  & [dim_num, 3])
 CALL TRIANGLEAREA2D(t, area_triangle)
-  !!
 area = area + area_triangle
-  !!
 END PROCEDURE QuadArea2D
 
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 !
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 
-#include "./modified_burkardt.inc"
+PURE FUNCTION R8MATDET4D(a)
+  REAL(DFP), INTENT(IN) :: a(4, 4)
+  REAL(DFP) :: R8MATDET4D
+  R8MATDET4D = &
+    a(1, 1) * ( &
+    a(2, 2) * (a(3, 3) * a(4, 4) - a(3, 4) * a(4, 3)) &
+    - a(2, 3) * (a(3, 2) * a(4, 4) - a(3, 4) * a(4, 2)) &
+    + a(2, 4) * (a(3, 2) * a(4, 3) - a(3, 3) * a(4, 2))) &
+    - a(1, 2) * ( &
+    a(2, 1) * (a(3, 3) * a(4, 4) - a(3, 4) * a(4, 3)) &
+    - a(2, 3) * (a(3, 1) * a(4, 4) - a(3, 4) * a(4, 1)) &
+    + a(2, 4) * (a(3, 1) * a(4, 3) - a(3, 3) * a(4, 1))) &
+    + a(1, 3) * ( &
+    a(2, 1) * (a(3, 2) * a(4, 4) - a(3, 4) * a(4, 2)) &
+    - a(2, 2) * (a(3, 1) * a(4, 4) - a(3, 4) * a(4, 1)) &
+    + a(2, 4) * (a(3, 1) * a(4, 2) - a(3, 2) * a(4, 1))) &
+    - a(1, 4) * ( &
+    a(2, 1) * (a(3, 2) * a(4, 3) - a(3, 3) * a(4, 2)) &
+    - a(2, 2) * (a(3, 1) * a(4, 3) - a(3, 3) * a(4, 1)) &
+    + a(2, 3) * (a(3, 1) * a(4, 2) - a(3, 2) * a(4, 1)))
+END FUNCTION R8MATDET4D
+
+!-----------------------------------------------------------------------------
+!
+!-----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-17
+! summary: Computes the area of a parallelogram in 3D
+!
+!# Introduction
+!
+!    A parallelogram is a polygon having four sides, with the property
+!    that each pair of opposite sides is paralell.
+!    A parallelogram in 3D must have the property that it is "really"
+!    a 2D object, that is, that the four vertices that define it lie
+!    in some plane.
+!    Given the first three vertices of the parallelogram (in 2D or 3D),
+!    P1, P2, and P3, the fourth vertex must satisfy
+!      P4 = P1 + ( P3 - P2 )
+!    This routine uses the fact that the norm of the cross product
+!    of two vectors is the area of the parallelogram they form:
+!      Area = ( P3 - P2 ) x ( P1 - P2 ).
+!
+!        P4<-----P3
+!        /       /
+!       /       /
+!      P1----->P2
+!
+
+PURE SUBROUTINE PARALLELOGRAMAREA3D(p, ans)
+  REAL(DFP), INTENT(IN) :: p(3, 4)
+  REAL(DFP), INTENT(OUT) :: ans
+  REAL(DFP) :: cross(3)
+  ! Compute the cross product vector.
+  cross(1) = (p(2, 2) - p(2, 1)) * (p(3, 3) - p(3, 1)) &
+          & - (p(3, 2) - p(3, 1)) * (p(2, 3) - p(2, 1))
+  cross(2) = (p(3, 2) - p(3, 1)) * (p(1, 3) - p(1, 1)) &
+          & - (p(1, 2) - p(1, 1)) * (p(3, 3) - p(3, 1))
+  cross(3) = (p(1, 2) - p(1, 1)) * (p(2, 3) - p(2, 1)) &
+          & - (p(2, 2) - p(2, 1)) * (p(1, 3) - p(1, 1))
+  ans = SQRT(SUM(cross(1:3)**2))
+END SUBROUTINE PARALLELOGRAMAREA3D
+
+!-----------------------------------------------------------------------------
+!
+!-----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-17
+! summary:  Computes the area of a parallelogram in 2D
+!
+!# Introduction
+!
+!    A parallelogram is a polygon having four sides, with the property
+!    that each pair of opposite sides is paralell.
+!    Given the first three vertices of the parallelogram,
+!    P1, P2, and P3, the fourth vertex must satisfy
+!
+!      P4 = P1 + ( P3 - P2 )
+!
+!    This routine uses the fact that the norm of the cross product
+!    of two vectors is the area of the parallelogram they form:
+!
+!      Area = ( P3 - P2 ) x ( P1 - P2 ).
+!
+!        P4<-----P3
+!        /       /
+!       /       /
+!      P1----->P2
+
+PURE SUBROUTINE PARALLELOGRAMAREA2D(p, ans)
+  REAL(DFP), INTENT(IN) :: p(2, 4)
+  REAL(DFP), INTENT(OUT) :: ans
+  ans = (p(1, 2) - p(1, 1)) * (p(2, 3) - p(2, 1)) &
+    & - (p(2, 2) - p(2, 1)) * (p(1, 3) - p(1, 1))
+END SUBROUTINE PARALLELOGRAMAREA2D
 
 END SUBMODULE Methods
