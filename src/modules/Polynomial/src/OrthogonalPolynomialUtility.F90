@@ -166,6 +166,11 @@ INTERFACE
     !! points of evaluation
     INTEGER(I4B), INTENT(IN) :: orthopol
     !! orthogonal polynomial family
+    !! Legendre
+    !! Jacobi
+    !! Lobatto
+    !! Chebyshev
+    !! Ultraspherical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! alpha1 needed when orthopol1 is "Jacobi"
     REAL(DFP), OPTIONAL, INTENT(IN) :: beta
@@ -173,6 +178,11 @@ INTERFACE
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! lambda1 is needed when orthopol1 is "Ultraspherical"
     REAL(DFP) :: ans(SIZE(x), n + 1)
+    !! The number of rows in ans is equal to the number of points.
+    !! The number of columns are equal to the orthogonal
+    !! polynomials from order  = 0 to n
+    !! Therefore, jth column is denotes the value of jth polynomial
+    !! at all the points.
   END FUNCTION EvalAllOrthopol
 END INTERFACE
 
