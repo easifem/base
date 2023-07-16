@@ -338,7 +338,7 @@ END INTERFACE LagrangeCoeff_Triangle
 
 INTERFACE LagrangeCoeff_Triangle
  MODULE FUNCTION LagrangeCoeff_Triangle4(order, xij, basisType, refTriangle) &
-        & RESULT(ans)
+          & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: xij(:, :)
