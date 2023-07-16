@@ -24,6 +24,14 @@ USE GlobalData
 USE BaseType
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Initiate
+PUBLIC :: ReferenceQuadrangle
+PUBLIC :: ReferenceQuadrangle_Pointer
+PUBLIC :: highorderElement_Quadrangle
+PUBLIC :: Measure_Simplex_Quadrangle
+PUBLIC :: Quadrangle_Quality
+PUBLIC :: QuadArea3D
+PUBLIC :: QuadArea2D
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Quadrangle
@@ -31,38 +39,15 @@ PRIVATE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
-! summary: Returns lagrange Quadrangle element of higher order
-!
-!# Introduction
-!
-! * This routine retuns the lagrance element of higher order
-! * This routine will be called by [[ReferenceQuadrangle_:LagrangeElement]]
-! * Currently upto 3rd order Quadrangle elements are supported.
-!
-!### Usage
-!
-!```fortran
-! subroutine test1
-!   type( ReferenceQuadrangle_ ) :: obj
-!   call initiate( obj, nsd = 2 )
-!   ! call initiate( obj, nsd = 2, xij = xij )
-!   call display( obj, "obj : " )
-! end
-!```
+! summary: Returns linear quadrangle element
 
-INTERFACE
+INTERFACE Initiate
   MODULE SUBROUTINE initiate_ref_Quadrangle(obj, NSD, xij)
     CLASS(ReferenceQuadrangle_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
   END SUBROUTINE initiate_ref_Quadrangle
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE initiate_ref_Quadrangle
 END INTERFACE Initiate
-
-PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                            ReferenceQuadrangle@Quadrangle
@@ -70,36 +55,15 @@ PUBLIC :: Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
-! summary: Returns lagrange Quadrangle element of higher order
-!
-!# Introduction
-!         This routine retuns the lagrance element of higher order
-! This routine will be called by [[ReferenceQuadrangle_:LagrangeElement]]
-! Currently upto 3rd order Quadrangle elements are supported.
-!
-!### Usage
-!
-!```fortran
-! subroutine test2
-!   type( ReferenceQuadrangle_ ) :: obj
-!   obj = referenceQuadrangle( nsd = 2 )
-!   call display( obj, "obj : " )
-! end
-!```
+! summary: Returns Lienar Quadrangle element
 
-INTERFACE
+INTERFACE ReferenceQuadrangle
   MODULE FUNCTION reference_Quadrangle(NSD, xij) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     TYPE(ReferenceQuadrangle_) :: obj
   END FUNCTION reference_Quadrangle
-END INTERFACE
-
-INTERFACE ReferenceQuadrangle
-  MODULE PROCEDURE reference_Quadrangle
 END INTERFACE ReferenceQuadrangle
-
-PUBLIC :: ReferenceQuadrangle
 
 !----------------------------------------------------------------------------
 !                                     ReferenceQuadrangle_Pointer@Quadrangle
@@ -107,36 +71,15 @@ PUBLIC :: ReferenceQuadrangle
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 1 March 2021
-! summary: Returns lagrange Quadrangle element of higher order
-!
-!# Introduction
-!         This routine retuns the lagrance element of higher order
-! This routine will be called by [[ReferenceQuadrangle_:LagrangeElement]]
-! Currently upto 3rd order Quadrangle elements are supported.
-!
-!### Usage
-!
-!```fortran
-! subroutine test3
-!   class( ReferenceElement_ ), pointer :: obj => null()
-!   obj => referenceQuadrangle_pointer( nsd = 2 )
-!   call display( obj, "obj : " )
-! end
-!```
+! summary: Returns linear Quadrangle element
 
-INTERFACE
+INTERFACE ReferenceQuadrangle_Pointer
   MODULE FUNCTION reference_Quadrangle_Pointer(NSD, xij) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CLASS(ReferenceQuadrangle_), POINTER :: obj
   END FUNCTION reference_Quadrangle_Pointer
-END INTERFACE
-
-INTERFACE ReferenceQuadrangle_Pointer
-  MODULE PROCEDURE reference_Quadrangle_Pointer
 END INTERFACE ReferenceQuadrangle_Pointer
-
-PUBLIC :: ReferenceQuadrangle_Pointer
 
 !----------------------------------------------------------------------------
 !                                                LagrangeElement@Quadrangle
@@ -170,8 +113,6 @@ INTERFACE
   END SUBROUTINE highorderElement_Quadrangle
 END INTERFACE
 
-PUBLIC :: highorderElement_Quadrangle
-
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
@@ -183,8 +124,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex_Quadrangle
 END INTERFACE
-
-PUBLIC :: Measure_Simplex_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                         Quadrangle_quality
@@ -198,8 +137,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION Quadrangle_Quality
 END INTERFACE
-
-PUBLIC :: Quadrangle_Quality
 
 !-----------------------------------------------------------------------------
 !
@@ -225,8 +162,6 @@ INTERFACE
   END SUBROUTINE QuadArea3D
 END INTERFACE
 
-PUBLIC :: QuadArea3D
-
 !-----------------------------------------------------------------------------
 !
 !-----------------------------------------------------------------------------
@@ -249,7 +184,5 @@ INTERFACE
     REAL(DFP), INTENT(OUT) :: area
   END SUBROUTINE QuadArea2D
 END INTERFACE
-
-PUBLIC :: QuadArea2D
 
 END MODULE ReferenceQuadrangle_Method
