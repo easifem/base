@@ -55,7 +55,7 @@ INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_1(test, trial, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     CLASS(ElemshapeData_), INTENT(IN) :: trial
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_1
 END INTERFACE
@@ -89,9 +89,9 @@ INTERFACE
     !! trial function
     CLASS(FEVariable_), INTENT(IN) :: k
     !! scalar
-    TYPE(FEVariableScalar_), INTENT( IN ) :: krank
+    TYPE(FEVariableScalar_), INTENT(IN) :: krank
     !! scalar fe variable
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_2
 END INTERFACE
@@ -124,9 +124,9 @@ INTERFACE
     !! trial function
     CLASS(FEVariable_), INTENT(IN) :: k
     !! vector
-    TYPE(FEVariableVector_), INTENT( IN ) :: krank
+    TYPE(FEVariableVector_), INTENT(IN) :: krank
     !! vector
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_3
 END INTERFACE
@@ -161,7 +161,7 @@ INTERFACE
     !! matrix
     TYPE(FEVariableMatrix_), INTENT(IN) :: krank
     !! matrix
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_4
@@ -188,7 +188,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_5(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -197,11 +197,11 @@ INTERFACE
     !! Scalar
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Scalar
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
     !! Scalar
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     !! Scalar
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_5
@@ -228,7 +228,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_6(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -237,11 +237,11 @@ INTERFACE
     !! Scalar
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Vector
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
     !! Scalar
-    TYPE(FEVariableVector_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     !! Vector
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_6
@@ -268,7 +268,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_7(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -277,11 +277,11 @@ INTERFACE
     !! Scalar
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Matrix
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableScalar_), INTENT(IN) :: c1rank
     !! Scalar
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     !! Matrix
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_7
@@ -307,7 +307,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_8(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -316,11 +316,11 @@ INTERFACE
     !! Vector
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Scalar
-    TYPE(FEVariableVector_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableVector_), INTENT(IN) :: c1rank
     !! Vector
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     !! Scalar
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_8
@@ -346,7 +346,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_9(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -355,11 +355,11 @@ INTERFACE
     !! Vector
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Vector
-    TYPE(FEVariableVector_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableVector_), INTENT(IN) :: c1rank
     !! Vector
-    TYPE(FEVariableVector_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     !! Vector
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_9
@@ -379,7 +379,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_10(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -388,11 +388,11 @@ INTERFACE
     !! Vector
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Matrix
-    TYPE(FEVariableVector_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableVector_), INTENT(IN) :: c1rank
     !! Vector
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     !! Matrix
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_10
@@ -412,7 +412,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_11(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -421,11 +421,11 @@ INTERFACE
     !! Matrix
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Scalar
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c1rank
     !! Matrix
-    TYPE(FEVariableScalar_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableScalar_), INTENT(IN) :: c2rank
     !! Scalar
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_11
@@ -445,7 +445,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_12(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -454,11 +454,11 @@ INTERFACE
     !! Matrix
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Vector
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c1rank
     !! Matrix
-    TYPE(FEVariableVector_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableVector_), INTENT(IN) :: c2rank
     !! Vector
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_12
@@ -478,7 +478,7 @@ END INTERFACE DiffusionMatrix
 
 INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_13(test, trial, c1, c2, c1rank, &
-    & c2rank, opt ) RESULT(ans)
+    & c2rank, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     !! test function
     CLASS(ElemshapeData_), INTENT(IN) :: trial
@@ -487,11 +487,11 @@ INTERFACE
     !! Matrix
     CLASS(FEVariable_), INTENT(IN) :: c2
     !! Matrix
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: c1rank
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c1rank
     !! Matrix
-    TYPE(FEVariableMatrix_), INTENT( IN ) :: c2rank
+    TYPE(FEVariableMatrix_), INTENT(IN) :: c2rank
     !! Matrix
-    INTEGER( I4B ), OPTIONAL, INTENT( IN ) :: opt
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
     !! ncopy
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_13
@@ -529,7 +529,7 @@ INTERFACE
   MODULE PURE FUNCTION DiffusionMatrix_14(test, trial, opt) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: test
     CLASS(ElemshapeData_), INTENT(IN) :: trial
-    INTEGER( I4B ), INTENT( IN ) :: opt( 1 )
+    INTEGER(I4B), INTENT(IN) :: opt(1)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_14
 END INTERFACE
@@ -563,9 +563,9 @@ INTERFACE
     !! trial function
     CLASS(FEVariable_), INTENT(IN) :: k
     !! scalar
-    TYPE(FEVariableScalar_), INTENT( IN ) :: krank
+    TYPE(FEVariableScalar_), INTENT(IN) :: krank
     !! scalar fe variable
-    INTEGER( I4B ), INTENT( IN ) :: opt(1)
+    INTEGER(I4B), INTENT(IN) :: opt(1)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
   END FUNCTION DiffusionMatrix_15
 END INTERFACE

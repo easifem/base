@@ -337,16 +337,19 @@ END INTERFACE LagrangeCoeff_Triangle
 ! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE LagrangeCoeff_Triangle
-  MODULE FUNCTION LagrangeCoeff_Triangle4(order, xij, basisType, refTriangle) RESULT(ans)
+ MODULE FUNCTION LagrangeCoeff_Triangle4(order, xij, basisType, refTriangle) &
+        & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomials
-    !! Jacobi
+    !! Jacobi (Dubiner)
     !! Heirarchical
     CHARACTER(*), OPTIONAL, INTENT(IN) :: refTriangle
+    !! UNIT
+    !! BIUNIT
     REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
   END FUNCTION LagrangeCoeff_Triangle4

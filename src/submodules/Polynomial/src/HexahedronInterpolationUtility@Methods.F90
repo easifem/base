@@ -82,9 +82,9 @@ END PROCEDURE RefHexahedronCoord
 !                                                LagrangeDegree_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE LagrangeDegree_Hexahedron
+MODULE PROCEDURE LagrangeDegree_Hexahedron1
 INTEGER(I4B) :: n, ii, jj, kk, indx
-n = LagrangeDOF_Quadrangle(order=order)
+n = LagrangeDOF_Hexahedron(order=order)
 ALLOCATE (ans(n, 3))
 indx = 0
 DO kk = 0, order
@@ -97,7 +97,28 @@ DO kk = 0, order
     END DO
   END DO
 END DO
-END PROCEDURE LagrangeDegree_Hexahedron
+END PROCEDURE LagrangeDegree_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                LagrangeDegree_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeDegree_Hexahedron2
+INTEGER(I4B) :: n, ii, jj, kk, indx
+n = LagrangeDOF_Hexahedron(p=p, q=q, r=r)
+ALLOCATE (ans(n, 3))
+indx = 0
+DO kk = 0, r
+  DO jj = 0, q
+    DO ii = 0, p
+      indx = indx + 1
+      ans(indx, 1) = ii
+      ans(indx, 2) = jj
+      ans(indx, 3) = kk
+    END DO
+  END DO
+END DO
+END PROCEDURE LagrangeDegree_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                                    LagrangeDOF_Hexahedron
@@ -598,6 +619,7 @@ ans = InterpolationPoint_Hexahedron( &
   & p=order, &
   & q=order, &
   & r=order, &
+  & layout=layout, &
   & ipType1=ipType, &
   & ipType2=ipType,  &
   & ipType3=ipType, &
@@ -612,12 +634,12 @@ MODULE PROCEDURE LagrangeCoeff_Hexahedron1
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-!
+
 ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
 V = LagrangeVandermonde(order=order, xij=xij, elemType=Hexahedron)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-!
+
 END PROCEDURE LagrangeCoeff_Hexahedron1
 
 !----------------------------------------------------------------------------
@@ -625,11 +647,9 @@ END PROCEDURE LagrangeCoeff_Hexahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Hexahedron2
-!
 REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-!
 vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
 CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
 CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
@@ -650,9 +670,185 @@ END PROCEDURE LagrangeCoeff_Hexahedron3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Hexahedron4
-ans = LagrangeVandermonde(order=order, xij=xij, elemType=Hexahedron)
+INTEGER(I4B) :: basisType0, ii, jj, kk, indx
+REAL(DFP) :: ans1(SIZE(xij, 2), 0:order)
+REAL(DFP) :: ans2(SIZE(xij, 2), 0:order)
+REAL(DFP) :: ans3(SIZE(xij, 2), 0:order)
+
+basisType0 = input(default=Monomial, option=basisType)
+SELECT CASE (basisType0)
+CASE (Monomial)
+  ans = LagrangeVandermonde(order=order, xij=xij, elemType=Hexahedron)
+
+CASE (Legendre, Jacobi, Lobatto, Chebyshev, Ultraspherical)
+
+  IF (basisType0 .EQ. Jacobi) THEN
+    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+      CALL Errormsg(&
+        & msg="alpha and beta should be present for basisType=Jacobi", &
+        & file=__FILE__, &
+        & routine="LagrangeCoeff_Hexahedron4", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  IF (basisType0 .EQ. Ultraspherical) THEN
+    IF (.NOT. PRESENT(lambda)) THEN
+      CALL Errormsg(&
+        & msg="lambda should be present for basisType=Ultraspherical", &
+        & file=__FILE__, &
+        & routine="LagrangeCoeff_Hexahedron4", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  ans1 = EvalAllOrthopol(  &
+    & n=order, &
+    & x=xij(1, :), &
+    & orthopol=basisType0,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+  ans2 = EvalAllOrthopol(  &
+    & n=order, &
+    & x=xij(2, :), &
+    & orthopol=basisType0,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+  ans3 = EvalAllOrthopol(  &
+    & n=order, &
+    & x=xij(3, :), &
+    & orthopol=basisType0,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+  indx = 0
+  DO kk = 0, order
+    DO jj = 0, order
+      DO ii = 0, order
+        indx = indx + 1
+        ans(:, indx) = ans1(:, ii) * ans2(:, jj) * ans3(:, kk)
+      END DO
+    END DO
+  END DO
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No case found for basisType", &
+    & file=__FILE__, &
+    & routine="LagrangeCoeff_Hexahedron4", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END SELECT
 CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Hexahedron4
+
+!----------------------------------------------------------------------------
+!                                                 LagrangeCoeff_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeCoeff_Hexahedron5
+INTEGER(I4B) :: basisType0, ii, jj, kk, indx, basisType(3)
+REAL(DFP) :: ans1(SIZE(xij, 2), 0:p)
+REAL(DFP) :: ans2(SIZE(xij, 2), 0:q)
+REAL(DFP) :: ans3(SIZE(xij, 2), 0:r)
+
+basisType(1) = input(default=Monomial, option=basisType1)
+basisType(2) = input(default=Monomial, option=basisType2)
+basisType(3) = input(default=Monomial, option=basisType3)
+
+basisType0 = basisType(1)
+SELECT CASE (basisType0)
+CASE (Monomial)
+  ans1 = LagrangeVandermonde(order=p, xij=xij(1:1, :), elemType=Line)
+
+CASE (Legendre, Jacobi, Lobatto, Chebyshev, Ultraspherical)
+
+  ans1 = EvalAllOrthopol(  &
+    & n=p, &
+    & x=xij(1, :), &
+    & orthopol=basisType0,  &
+    & alpha=alpha1,  &
+    & beta=beta1,  &
+    & lambda=lambda1)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No case found for basisType1", &
+    & file=__FILE__, &
+    & routine="LagrangeCoeff_Hexahedron5", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END SELECT
+
+basisType0 = basisType(2)
+SELECT CASE (basisType0)
+CASE (Monomial)
+  ans2 = LagrangeVandermonde(order=q, xij=xij(2:2, :), elemType=Line)
+
+CASE (Legendre, Jacobi, Lobatto, Chebyshev, Ultraspherical)
+
+  ans2 = EvalAllOrthopol(  &
+    & n=q, &
+    & x=xij(2, :), &
+    & orthopol=basisType0,  &
+    & alpha=alpha2,  &
+    & beta=beta2,  &
+    & lambda=lambda2)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No case found for basisType2", &
+    & file=__FILE__, &
+    & routine="LagrangeCoeff_Hexahedron5", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END SELECT
+
+basisType0 = basisType(3)
+SELECT CASE (basisType0)
+CASE (Monomial)
+  ans3 = LagrangeVandermonde(order=r, xij=xij(3:3, :), elemType=Line)
+
+CASE (Legendre, Jacobi, Lobatto, Chebyshev, Ultraspherical)
+
+  ans3 = EvalAllOrthopol(  &
+    & n=r, &
+    & x=xij(3, :), &
+    & orthopol=basisType0,  &
+    & alpha=alpha3,  &
+    & beta=beta3,  &
+    & lambda=lambda3)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No case found for basisType3", &
+    & file=__FILE__, &
+    & routine="LagrangeCoeff_Hexahedron5", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END SELECT
+
+indx = 0
+DO kk = 0, r
+  DO jj = 0, q
+    DO ii = 0, p
+      indx = indx + 1
+      ans(:, indx) = ans1(:, ii) * ans2(:, jj) * ans3(:, kk)
+    END DO
+  END DO
+END DO
+
+CALL GetInvMat(ans)
+END PROCEDURE LagrangeCoeff_Hexahedron5
 
 !----------------------------------------------------------------------------
 !

@@ -541,12 +541,10 @@ MODULE PROCEDURE LagrangeCoeff_Triangle1
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-!!
 ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
 V = LagrangeVandermonde(order=order, xij=xij, elemType=Triangle)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-!!
 END PROCEDURE LagrangeCoeff_Triangle1
 
 !----------------------------------------------------------------------------
@@ -554,11 +552,9 @@ END PROCEDURE LagrangeCoeff_Triangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Triangle2
-!!
 REAL(DFP), DIMENSION(SIZE(v, 1), SIZE(v, 2)) :: vtemp
 INTEGER(I4B), DIMENSION(SIZE(v, 1)) :: ipiv
 INTEGER(I4B) :: info
-!!
 vtemp = v; ans = 0.0_DFP; ans(i) = 1.0_DFP; ipiv = 0_I4B
 CALL GetLU(A=vtemp, IPIV=ipiv, info=info)
 CALL LUSolve(A=vtemp, B=ans, IPIV=ipiv, info=info)
@@ -614,7 +610,7 @@ CASE DEFAULT
   CALL Errormsg(&
     & msg="No case found for basisType", &
     & file=__FILE__, &
-    & routine="LagrangeEvalAll_Triangle1", &
+    & routine="LagrangeCoeff_Triangle4", &
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
