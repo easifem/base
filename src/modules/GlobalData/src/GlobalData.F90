@@ -313,6 +313,12 @@ INTEGER(I4B), PARAMETER :: GaussJacobiRadauLeft = 19
 INTEGER(I4B), PARAMETER :: GaussJacobiRadauRight = 20
 INTEGER(I4B), PARAMETER :: GaussJacobiLobatto = 21
 !!
+INTEGER(I4B), PARAMETER :: GaussUltraspherical = 22
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalRadau = 23
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalRadauLeft = 24
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalRadauRight = 25
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalLobatto = 26
+!!
 !! Type of quadrature points
 !!
 INTEGER(I4B), PARAMETER :: GaussQP = Gauss
