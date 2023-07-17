@@ -25,6 +25,23 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                             QuadrangleName1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadrangleName1
+SELECT CASE (order)
+CASE (1)
+  ans = Quadrangle4
+CASE (2)
+  ans = Quadrangle9
+CASE (3)
+  ans = Quadrangle16
+CASE (4:)
+  ans = Quadrangle16 + order - 3_I4B
+END SELECT
+END PROCEDURE QuadrangleName1
+
+!----------------------------------------------------------------------------
 !                                                                  Initiate
 !----------------------------------------------------------------------------
 
@@ -76,53 +93,92 @@ END PROCEDURE reference_Quadrangle_Pointer
 
 MODULE PROCEDURE highorderElement_Quadrangle
 INTEGER(I4B) :: NNS, I
+INTEGER(I4B), ALLOCATABLE :: aintvec(:)
+
 CALL DEALLOCATE (obj)
 SELECT CASE (order)
 CASE (1)
   CALL Initiate(obj=obj, Anotherobj=refelem)
-CASE (2)
-  obj%xij = InterpolationPoint_Quadrangle( &
-    & xij=refelem%xij(1:3, 1:4), &
-    & order=order,  &
-    & ipType=ipType, &
-    & layout="VEFC")
-  NNS = 9
-  obj%EntityCounts = [NNS, 4, 1, 0]
-  obj%XiDimension = 2
-  obj%Name = Quadrangle9
-  obj%order = order
-  obj%NSD = refelem%NSD
-  ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
-  DO I = 1, NNS
-    obj%Topology(I) = ReferenceTopology([I], Point)
-  END DO
-  obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 5], Line3)
-  obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 6], Line3)
-  obj%Topology(NNS + 3) = ReferenceTopology([3, 4, 7], Line3)
-  obj%Topology(NNS + 4) = ReferenceTopology([4, 1, 8], Line3)
-  obj%Topology(NNS + 5) = ReferenceTopology([1, 2, 3, 4, 5, 6, 7, 8, 9], &
-    & obj%Name)
-  obj%highOrderElement => refelem%highOrderElement
-CASE (3)
+! CASE (2)
+!   obj%xij = InterpolationPoint_Quadrangle( &
+!     & xij=refelem%xij(1:3, 1:4), &
+!     & order=order,  &
+!     & ipType=ipType, &
+!     & layout="VEFC")
+!   NNS = 9
+!   obj%EntityCounts = [NNS, 4, 1, 0]
+!   obj%XiDimension = 2
+!   obj%Name = Quadrangle9
+!   obj%order = order
+!   obj%NSD = refelem%NSD
+!   ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+!   DO I = 1, NNS
+!     obj%Topology(I) = ReferenceTopology([I], Point)
+!   END DO
+!   obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 5], Line3)
+!   obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 6], Line3)
+!   obj%Topology(NNS + 3) = ReferenceTopology([3, 4, 7], Line3)
+!   obj%Topology(NNS + 4) = ReferenceTopology([4, 1, 8], Line3)
+!   obj%Topology(NNS + 5) = ReferenceTopology([1, 2, 3, 4, 5, 6, 7, 8, 9], &
+!     & obj%Name)
+!   obj%highOrderElement => refelem%highOrderElement
+! CASE (3)
+!   obj%xij = InterpolationPoint_Quadrangle( &
+!     & xij=refelem%xij(1:3, 1:4), &
+!     & order=order, &
+!     & ipType=ipType, layout="VEFC")
+!   NNS = 16
+!   obj%EntityCounts = [NNS, 4, 1, 0]
+!   obj%XiDimension = 2
+!   obj%Name = Quadrangle16
+!   obj%order = order
+!   obj%NSD = refelem%NSD
+!   ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+!   DO I = 1, NNS
+!     obj%Topology(I) = ReferenceTopology([I], Point)
+!   END DO
+!   obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 5, 6], Line4)
+!   obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 7, 8], Line4)
+!   obj%Topology(NNS + 3) = ReferenceTopology([3, 4, 9, 10], Line4)
+!   obj%Topology(NNS + 4) = ReferenceTopology([4, 1, 11, 12], Line4)
+!   obj%Topology(NNS + 5) = ReferenceTopology(arange(1, NNS, 1), obj%Name)
+!   obj%highOrderElement => refelem%highOrderElement
+CASE DEFAULT
   obj%xij = InterpolationPoint_Quadrangle( &
     & xij=refelem%xij(1:3, 1:4), &
     & order=order, &
-    & ipType=ipType, layout="VEFC")
-  NNS = 16
+    & ipType=ipType,  &
+    & layout="VEFC")
+  NNS = LagrangeDOF_Quadrangle(order=order)
   obj%EntityCounts = [NNS, 4, 1, 0]
   obj%XiDimension = 2
-  obj%Name = Quadrangle16
+  obj%Name = QuadrangleName(order=order)
   obj%order = order
   obj%NSD = refelem%NSD
   ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
   DO I = 1, NNS
     obj%Topology(I) = ReferenceTopology([I], Point)
   END DO
-  obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 5, 6], Line4)
-  obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 7, 8], Line4)
-  obj%Topology(NNS + 3) = ReferenceTopology([3, 4, 9, 10], Line4)
-  obj%Topology(NNS + 4) = ReferenceTopology([4, 1, 11, 12], Line4)
-  obj%Topology(NNS + 5) = ReferenceTopology(arange(1, NNS, 1), obj%Name)
+  aintvec = [1, 2] .append.arange(5_I4B, 3_I4B + order)
+  obj%Topology(NNS + 1) = ReferenceTopology(aintvec, LineName(order=order))
+
+  aintvec = [2, 3] .append.arange( &
+                                  & 3_I4B + order + 1, &
+                                  & 3_I4B + order + order - 1_I4B)
+  obj%Topology(NNS + 2) = ReferenceTopology(aintvec, LineName(order=order))
+
+  aintvec = [3, 4] .append.arange(&
+                                  & 2_I4B + 2_I4B * order + 1, &
+                                  & 2_I4B + 2_I4B * order + order - 1_I4B)
+  obj%Topology(NNS + 3) = ReferenceTopology(aintvec, LineName(order=order))
+
+  aintvec = [4, 1] .append.arange( &
+                            & 1_I4B + 3_I4B * order + 1,  &
+                            & 1_I4B + 3_I4B * order + order - 1_I4B)
+  obj%Topology(NNS + 4) = ReferenceTopology(aintvec, LineName(order=order))
+
+  obj%Topology(NNS + 5) = ReferenceTopology( &
+                            & arange(1_I4B, NNS, 1_I4B), obj%Name)
   obj%highOrderElement => refelem%highOrderElement
 END SELECT
 END PROCEDURE highorderElement_Quadrangle

@@ -32,6 +32,22 @@ PUBLIC :: Measure_Simplex_Quadrangle
 PUBLIC :: Quadrangle_Quality
 PUBLIC :: QuadArea3D
 PUBLIC :: QuadArea2D
+PUBLIC :: QuadrangleName
+
+!----------------------------------------------------------------------------
+!                                                       QuadrangleName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-17
+! summary:  Returns integer name of quadragle from order
+
+INTERFACE QuadrangleName
+  MODULE PURE FUNCTION QuadrangleName1(order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B) :: ans
+  END FUNCTION QuadrangleName1
+END INTERFACE QuadrangleName
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Quadrangle
