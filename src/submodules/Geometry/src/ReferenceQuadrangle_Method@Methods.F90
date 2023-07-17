@@ -99,50 +99,6 @@ CALL DEALLOCATE (obj)
 SELECT CASE (order)
 CASE (1)
   CALL Initiate(obj=obj, Anotherobj=refelem)
-! CASE (2)
-!   obj%xij = InterpolationPoint_Quadrangle( &
-!     & xij=refelem%xij(1:3, 1:4), &
-!     & order=order,  &
-!     & ipType=ipType, &
-!     & layout="VEFC")
-!   NNS = 9
-!   obj%EntityCounts = [NNS, 4, 1, 0]
-!   obj%XiDimension = 2
-!   obj%Name = Quadrangle9
-!   obj%order = order
-!   obj%NSD = refelem%NSD
-!   ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
-!   DO I = 1, NNS
-!     obj%Topology(I) = ReferenceTopology([I], Point)
-!   END DO
-!   obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 5], Line3)
-!   obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 6], Line3)
-!   obj%Topology(NNS + 3) = ReferenceTopology([3, 4, 7], Line3)
-!   obj%Topology(NNS + 4) = ReferenceTopology([4, 1, 8], Line3)
-!   obj%Topology(NNS + 5) = ReferenceTopology([1, 2, 3, 4, 5, 6, 7, 8, 9], &
-!     & obj%Name)
-!   obj%highOrderElement => refelem%highOrderElement
-! CASE (3)
-!   obj%xij = InterpolationPoint_Quadrangle( &
-!     & xij=refelem%xij(1:3, 1:4), &
-!     & order=order, &
-!     & ipType=ipType, layout="VEFC")
-!   NNS = 16
-!   obj%EntityCounts = [NNS, 4, 1, 0]
-!   obj%XiDimension = 2
-!   obj%Name = Quadrangle16
-!   obj%order = order
-!   obj%NSD = refelem%NSD
-!   ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
-!   DO I = 1, NNS
-!     obj%Topology(I) = ReferenceTopology([I], Point)
-!   END DO
-!   obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 5, 6], Line4)
-!   obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 7, 8], Line4)
-!   obj%Topology(NNS + 3) = ReferenceTopology([3, 4, 9, 10], Line4)
-!   obj%Topology(NNS + 4) = ReferenceTopology([4, 1, 11, 12], Line4)
-!   obj%Topology(NNS + 5) = ReferenceTopology(arange(1, NNS, 1), obj%Name)
-!   obj%highOrderElement => refelem%highOrderElement
 CASE DEFAULT
   obj%xij = InterpolationPoint_Quadrangle( &
     & xij=refelem%xij(1:3, 1:4), &
