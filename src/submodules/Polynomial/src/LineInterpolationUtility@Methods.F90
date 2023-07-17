@@ -200,6 +200,7 @@ MODULE PROCEDURE InterpolationPoint_Line1
 CHARACTER(20) :: astr
 INTEGER(I4B) :: nsd, ii
 REAL(DFP) :: temp(order + 1), t1
+
 IF (order .EQ. 0_I4B) THEN
   IF (PRESENT(xij)) THEN
     nsd = SIZE(xij, 1)
@@ -211,8 +212,11 @@ IF (order .EQ. 0_I4B) THEN
   END IF
   RETURN
 END IF
+
 astr = TRIM(UpperCase(layout))
+
 SELECT CASE (ipType)
+
 CASE (Equidistance)
   ans = EquidistancePoint_Line(xij=xij, order=order)
   IF (astr .EQ. "INCREASING") THEN
@@ -232,8 +236,10 @@ CASE (GaussLegendreLobatto)
     END IF
     temp(2) = t1
   END IF
+
 CASE (GaussChebyshev)
   CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=Gauss)
+
 CASE (GaussChebyshevLobatto)
   CALL Chebyshev1Quadrature(n=order + 1, pt=temp, quadType=GaussLobatto)
   IF (layout .EQ. "VEFC") THEN
@@ -243,6 +249,89 @@ CASE (GaussChebyshevLobatto)
     END IF
     temp(2) = t1
   END IF
+
+CASE (GaussJacobi)
+  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+    CALL ErrorMsg(&
+      & msg="alpha and beta should be present for ipType=GaussJacobi", &
+      & file=__FILE__, &
+      & routine="InterpolationPoint_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  CALL JacobiQuadrature( &
+    & n=order + 1, &
+    & pt=temp, &
+    & quadType=Gauss, &
+    & alpha=alpha, &
+    & beta=beta)
+
+CASE (GaussJacobiLobatto)
+  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+    CALL ErrorMsg(&
+      & msg="alpha and beta should be present for ipType=GaussJacobi", &
+      & file=__FILE__, &
+      & routine="InterpolationPoint_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  CALL JacobiQuadrature( &
+    & n=order + 1, &
+    & pt=temp, &
+    & quadType=GaussLobatto, &
+    & alpha=alpha, &
+    & beta=beta)
+
+  IF (layout .EQ. "VEFC") THEN
+    t1 = temp(order + 1)
+    IF (order .GE. 2) THEN
+      temp(3:) = temp(2:order)
+    END IF
+    temp(2) = t1
+  END IF
+
+CASE (GaussUltraspherical)
+  IF (.NOT. PRESENT(lambda)) THEN
+    CALL ErrorMsg(&
+      & msg="lambda should be present for ipType=GaussUltraspherical", &
+      & file=__FILE__, &
+      & routine="InterpolationPoint_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  CALL UltrasphericalQuadrature( &
+    & n=order + 1, &
+    & pt=temp, &
+    & quadType=Gauss, &
+    & lambda=lambda)
+
+CASE (GaussUltrasphericalLobatto)
+  IF (.NOT. PRESENT(lambda)) THEN
+    CALL ErrorMsg(&
+     & msg="lambda should be present for ipType=GaussUltrasphericalLobatto", &
+      & file=__FILE__, &
+      & routine="InterpolationPoint_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  CALL UltrasphericalQuadrature( &
+    & n=order + 1, &
+    & pt=temp, &
+    & quadType=GaussLobatto, &
+    & lambda=lambda)
+
+  IF (layout .EQ. "VEFC") THEN
+    t1 = temp(order + 1)
+    IF (order .GE. 2) THEN
+      temp(3:) = temp(2:order)
+    END IF
+    temp(2) = t1
+  END IF
+
 CASE DEFAULT
   CALL ErrorMsg(&
     & msg="Unknown iptype", &
@@ -285,9 +374,11 @@ CASE (Equidistance)
   ans = EquidistancePoint_Line(xij=xij, order=order)
   IF (astr .EQ. "INCREASING") ans = SORT(ans)
   RETURN
+
 CASE (GaussLegendre)
   CALL Reallocate(ans, order + 1)
   CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=Gauss)
+
 CASE (GaussLegendreLobatto)
   CALL Reallocate(ans, order + 1)
   CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
@@ -298,9 +389,11 @@ CASE (GaussLegendreLobatto)
     END IF
     ans(2) = t1
   END IF
+
 CASE (GaussChebyshev)
   CALL Reallocate(ans, order + 1)
   CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=Gauss)
+
 CASE (GaussChebyshevLobatto)
   CALL Reallocate(ans, order + 1)
   CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
@@ -311,6 +404,89 @@ CASE (GaussChebyshevLobatto)
     END IF
     ans(2) = t1
   END IF
+
+CASE (GaussJacobi)
+  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+    CALL ErrorMsg(&
+      & msg="alpha and beta should be present for ipType=GaussJacobi", &
+      & file=__FILE__, &
+      & routine="InterpolationPoint_Line2", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  CALL JacobiQuadrature( &
+    & n=order + 1, &
+    & pt=ans, &
+    & quadType=Gauss, &
+    & alpha=alpha, &
+    & beta=beta)
+
+CASE (GaussJacobiLobatto)
+  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+    CALL ErrorMsg(&
+      & msg="alpha and beta should be present for ipType=GaussJacobi", &
+      & file=__FILE__, &
+      & routine="InterpolationPoint_Line2", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  CALL JacobiQuadrature( &
+    & n=order + 1, &
+    & pt=ans, &
+    & quadType=GaussLobatto, &
+    & alpha=alpha, &
+    & beta=beta)
+
+  IF (layout .EQ. "VEFC") THEN
+    t1 = ans(order + 1)
+    IF (order .GE. 2) THEN
+      ans(3:) = ans(2:order)
+    END IF
+    ans(2) = t1
+  END IF
+
+CASE (GaussUltraspherical)
+  IF (.NOT. PRESENT(lambda)) THEN
+    CALL ErrorMsg(&
+      & msg="lambda should be present for ipType=GaussUltraspherical", &
+      & file=__FILE__, &
+      & routine="InterpolationPoint_Line2", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  CALL UltrasphericalQuadrature( &
+    & n=order + 1, &
+    & pt=ans, &
+    & quadType=Gauss, &
+    & lambda=lambda)
+
+CASE (GaussUltrasphericalLobatto)
+  IF (.NOT. PRESENT(lambda)) THEN
+    CALL ErrorMsg(&
+     & msg="lambda should be present for ipType=GaussUltrasphericalLobatto", &
+      & file=__FILE__, &
+      & routine="InterpolationPoint_Line2", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  CALL UltrasphericalQuadrature( &
+    & n=order + 1, &
+    & pt=ans, &
+    & quadType=GaussLobatto, &
+    & lambda=lambda)
+
+  IF (layout .EQ. "VEFC") THEN
+    t1 = ans(order + 1)
+    IF (order .GE. 2) THEN
+      ans(3:) = ans(2:order)
+    END IF
+    ans(2) = t1
+  END IF
+
 CASE DEFAULT
   CALL ErrorMsg(&
     & msg="Unknown iptype", &

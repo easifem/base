@@ -261,9 +261,9 @@ END INTERFACE EquidistancePoint_Line
 !
 !- `layout=INCREASING` points are arranged in increasing order
 
-INTERFACE
+INTERFACE InterpolationPoint_Line
   MODULE FUNCTION InterpolationPoint_Line1(order, ipType, &
-    & layout, xij) RESULT(ans)
+    & layout, xij, alpha, beta, lambda) RESULT(ans)
     !!
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of interpolation
@@ -271,20 +271,22 @@ INTERFACE
     !! Interpolation point type
     !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
     !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! domain of interpolation
     CHARACTER(*), INTENT(IN) :: layout
     !! "VEFC"
     !! "INCREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! domain of interpolation
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in xij format
     !! size(ans,1) = 1
     !! size(ans,2) = order+1
   END FUNCTION InterpolationPoint_Line1
-END INTERFACE
-
-INTERFACE InterpolationPoint_Line
-  MODULE PROCEDURE InterpolationPoint_Line1
 END INTERFACE InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
@@ -295,29 +297,36 @@ END INTERFACE InterpolationPoint_Line
 ! date: 27 Aug 2022
 ! summary: Returns the interpolation point
 
-INTERFACE
+INTERFACE InterpolationPoint_Line
   MODULE FUNCTION InterpolationPoint_Line2(order, ipType, xij, &
-    & layout) RESULT(ans)
+    & layout, alpha, beta, lambda) RESULT(ans)
     !!
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: ipType
     !! Interpolation point type
-    !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
-    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    !! Equidistance
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussChebyshev,
+    !! GaussChebyshevLobatto
+    !! GaussJacobi
+    !! GaussJacobiLobatto
     REAL(DFP), INTENT(IN) :: xij(2)
     !! end points
     CHARACTER(*), INTENT(IN) :: layout
     !! "VEFC"
     !! "INCREASING"
     !! "DECREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
     REAL(DFP), ALLOCATABLE :: ans(:)
     !! one dimensional interpolation point
   END FUNCTION InterpolationPoint_Line2
-END INTERFACE
-
-INTERFACE InterpolationPoint_Line
-  MODULE PROCEDURE InterpolationPoint_Line2
 END INTERFACE InterpolationPoint_Line
 
 !----------------------------------------------------------------------------
