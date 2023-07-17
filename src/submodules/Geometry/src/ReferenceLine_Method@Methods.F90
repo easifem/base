@@ -25,29 +25,48 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                                  LineName
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LineName1
+SELECT CASE (order)
+CASE (1)
+  ans = Line2
+CASE (2)
+  ans = Line3
+CASE (3)
+  ans = Line4
+CASE (4)
+  ans = Line5
+CASE (5)
+  ans = Line6
+CASE (6:)
+  ans = Line6 * 100 + order - 5
+END SELECT
+END PROCEDURE LineName1
+
+!----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_ref_Line
-!
 CALL Reallocate(obj%xij, 3, 2)
-obj%xij = InterpolationPoint_Line(xij=xij, order=1, ipType=Equidistance, &
-& layout="VEFC")
-!
+obj%xij = InterpolationPoint_Line(  &
+  & xij=xij, &
+  & order=1, &
+  & ipType=Equidistance, &
+  & layout="VEFC")
 obj%EntityCounts = [2, 1, 0, 0]
 obj%XiDimension = 1
 obj%order = 1
 obj%nsd = nsd
 obj%Name = Line2
-!
 IF (ALLOCATED(obj%Topology)) DEALLOCATE (obj%Topology)
 ALLOCATE (obj%Topology(3))
 obj%Topology(1) = ReferenceTopology([1], Point)
 obj%Topology(2) = ReferenceTopology([2], Point)
 obj%Topology(3) = ReferenceTopology([1, 2], Line2)
-!
 obj%highorderElement => highorderElement_Line
-!
 END PROCEDURE initiate_ref_Line
 
 !----------------------------------------------------------------------------
