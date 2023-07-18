@@ -367,6 +367,7 @@ IF (order .EQ. 0_I4B) THEN
   RETURN
 END IF
 
+CALL Reallocate(ans, order + 1)
 astr = TRIM(UpperCase(layout))
 
 SELECT CASE (ipType)
@@ -376,11 +377,9 @@ CASE (Equidistance)
   RETURN
 
 CASE (GaussLegendre)
-  CALL Reallocate(ans, order + 1)
   CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=Gauss)
 
 CASE (GaussLegendreLobatto)
-  CALL Reallocate(ans, order + 1)
   CALL LegendreQuadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
   IF (layout .EQ. "VEFC") THEN
     t1 = ans(order + 1)
@@ -391,11 +390,9 @@ CASE (GaussLegendreLobatto)
   END IF
 
 CASE (GaussChebyshev)
-  CALL Reallocate(ans, order + 1)
   CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=Gauss)
 
 CASE (GaussChebyshevLobatto)
-  CALL Reallocate(ans, order + 1)
   CALL Chebyshev1Quadrature(n=order + 1, pt=ans, quadType=GaussLobatto)
   IF (layout .EQ. "VEFC") THEN
     t1 = ans(order + 1)
@@ -425,11 +422,11 @@ CASE (GaussJacobi)
 CASE (GaussJacobiLobatto)
   IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
     CALL ErrorMsg(&
-      & msg="alpha and beta should be present for ipType=GaussJacobi", &
-      & file=__FILE__, &
-      & routine="InterpolationPoint_Line2", &
-      & line=__LINE__, &
-      & unitno=stderr)
+    & msg="alpha and beta should be present for ipType=GaussJacobiLobatto", &
+    & file=__FILE__, &
+    & routine="InterpolationPoint_Line2", &
+    & line=__LINE__, &
+    & unitno=stderr)
   END IF
 
   CALL JacobiQuadrature( &
