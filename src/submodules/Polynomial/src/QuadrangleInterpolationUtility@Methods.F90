@@ -687,7 +687,14 @@ ans = InterpolationPoint_Quadrangle2( &
   & ipType1=ipType, &
   & ipType2=ipType, &
   & xij=xij, &
-  & layout=layout)
+  & layout=layout, &
+  & alpha1=alpha, &
+  & beta1=beta, &
+  & lambda1=lambda, &
+  & alpha2=alpha, &
+  & beta2=beta, &
+  & lambda2=lambda &
+  & )
 END PROCEDURE InterpolationPoint_Quadrangle1
 
 !----------------------------------------------------------------------------
@@ -701,13 +708,21 @@ REAL(DFP) :: x(p + 1), y(q + 1), &
 REAL(DFP), ALLOCATABLE :: temp(:, :)
 INTEGER(I4B) :: ii, jj, kk, nsd
 
-x = InterpolationPoint_Line(order=p, ipType=ipType1, &
+x = InterpolationPoint_Line( &
+  & order=p, &
+  & ipType=ipType1, &
   & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING")
+  & layout="INCREASING", &
+  & alpha=alpha1, &
+  & beta=beta1, &
+  & lambda=lambda1)
 
 y = InterpolationPoint_Line(order=q, ipType=ipType2, &
   & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING")
+  & layout="INCREASING", &
+  & alpha=alpha2, &
+  & beta=beta2, &
+  & lambda=lambda2)
 
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
@@ -748,12 +763,10 @@ MODULE PROCEDURE LagrangeCoeff_Quadrangle1
 REAL(DFP), DIMENSION(SIZE(xij, 2), SIZE(xij, 2)) :: V
 INTEGER(I4B), DIMENSION(SIZE(xij, 2)) :: ipiv
 INTEGER(I4B) :: info
-
 ipiv = 0_I4B; ans = 0.0_DFP; ans(i) = 1.0_DFP
 V = LagrangeVandermonde(order=order, xij=xij, elemType=Quadrangle)
 CALL GetLU(A=V, IPIV=ipiv, info=info)
 CALL LUSolve(A=V, B=ans, IPIV=ipiv, info=info)
-
 END PROCEDURE LagrangeCoeff_Quadrangle1
 
 !----------------------------------------------------------------------------

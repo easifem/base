@@ -314,16 +314,22 @@ END INTERFACE EquidistanceInPoint_Quadrangle
 ! also follow the same convention. Please read Gmsh manual  on this topic.
 
 INTERFACE InterpolationPoint_Quadrangle
-  MODULE FUNCTION InterpolationPoint_Quadrangle1(order, ipType, xij, &
-    & layout) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Quadrangle1(order, ipType, &
+    & layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation point type
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! four vertices of quadrangle in xij format
     CHARACTER(*), INTENT(IN) :: layout
     !! VEFC, INCREASING
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint_Quadrangle1
@@ -360,7 +366,8 @@ END INTERFACE InterpolationPoint_Quadrangle
 
 INTERFACE InterpolationPoint_Quadrangle
   MODULE FUNCTION InterpolationPoint_Quadrangle2(  &
-    & p, q, ipType1, ipType2, xij, layout) RESULT(ans)
+    & p, q, ipType1, ipType2, layout, xij, alpha1, beta1, &
+    & lambda1, alpha2, beta2, lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of element in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -369,10 +376,22 @@ INTERFACE InterpolationPoint_Quadrangle
     !! interpolation point type in x direction
     INTEGER(I4B), INTENT(IN) :: ipType2
     !! interpolation point type in y direction
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! four vertices of quadrangle in xij format
     CHARACTER(*), INTENT(IN) :: layout
     !! VEFC, INCREASING
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! Ultraspherical parameter
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint_Quadrangle2
