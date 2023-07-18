@@ -29,6 +29,7 @@ PUBLIC :: EquidistancePoint_Line
 PUBLIC :: InterpolationPoint_Line
 PUBLIC :: LagrangeCoeff_Line
 PUBLIC :: LagrangeEvalAll_Line
+PUBLIC :: BasisEvalAll_Line
 PUBLIC :: RefLineCoord
 
 !----------------------------------------------------------------------------
@@ -517,5 +518,92 @@ INTERFACE LagrangeEvalAll_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION LagrangeEvalAll_Line2
 END INTERFACE LagrangeEvalAll_Line
+
+!----------------------------------------------------------------------------
+!                                                          BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate polynomials of order n at single points
+
+INTERFACE BasisEvalAll_Line
+  MODULE FUNCTION BasisEvalAll_Line1( &
+    & order, &
+    & x, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! Refline should be  BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(order + 1)
+    !! Value of n+1  polynomials at point x
+  END FUNCTION BasisEvalAll_Line1
+END INTERFACE BasisEvalAll_Line
+
+!----------------------------------------------------------------------------
+!                                                         BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate  polynomials of n at several points
+
+INTERFACE BasisEvalAll_Line
+  MODULE FUNCTION BasisEvalAll_Line2( &
+    & order, &
+    & x, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT
+    !! BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x), order + 1)
+    !! Value of n+1  polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+  END FUNCTION BasisEvalAll_Line2
+END INTERFACE BasisEvalAll_Line
 
 END MODULE LineInterpolationUtility

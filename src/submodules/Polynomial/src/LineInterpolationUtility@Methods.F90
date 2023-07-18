@@ -710,6 +710,132 @@ ans = MATMUL(xx, coeff0)
 END PROCEDURE LagrangeEvalAll_Line2
 
 !----------------------------------------------------------------------------
+!                                                               EvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisEvalAll_Line1
+INTEGER(I4B) :: ii, basisType0
+TYPE(String) :: astr
+astr = UpperCase(refLine)
+
+IF (astr%chars() .EQ. "UNIT") THEN
+  CALL Errormsg(&
+    & msg="refLine should be BIUNIT", &
+    & file=__FILE__, &
+    & routine="BasisEvalAll_Line1", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+
+basisType0 = input(default=Monomial, option=basisType)
+SELECT CASE (basisType0)
+CASE (Monomial)
+  ans(1) = 1.0_DFP
+  DO ii = 1, order
+    ans(ii + 1) = ans(ii) * x
+  END DO
+CASE DEFAULT
+
+  IF (basisType0 .EQ. Jacobi) THEN
+    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+      CALL Errormsg(&
+        & msg="alpha and beta should be present for basisType=Jacobi", &
+        & file=__FILE__, &
+        & routine="BasisEvalAll_Line1", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  IF (basisType0 .EQ. Ultraspherical) THEN
+    IF (.NOT. PRESENT(lambda)) THEN
+      CALL Errormsg(&
+        & msg="lambda should be present for basisType=Ultraspherical", &
+        & file=__FILE__, &
+        & routine="BasisEvalAll_Line1", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  ans = RESHAPE(EvalAllOrthopol(&
+    & n=order, &
+    & x=[x], &
+    & orthopol=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda), [order + 1])
+END SELECT
+
+END PROCEDURE BasisEvalAll_Line1
+
+!----------------------------------------------------------------------------
+!                                                        BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisEvalAll_Line2
+INTEGER(I4B) :: ii, basisType0
+TYPE(String) :: astr
+astr = UpperCase(refLine)
+
+IF (astr%chars() .EQ. "UNIT") THEN
+  CALL Errormsg(&
+    & msg="refLine should be BIUNIT", &
+    & file=__FILE__, &
+    & routine="BasisEvalAll_Line2", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+
+basisType0 = input(default=Monomial, option=basisType)
+SELECT CASE (basisType0)
+CASE (Monomial)
+  ans(:, 1) = 1.0_DFP
+  DO ii = 1, order
+    ans(:, ii + 1) = ans(:, ii) * x
+  END DO
+CASE DEFAULT
+
+  IF (basisType0 .EQ. Jacobi) THEN
+    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+      CALL Errormsg(&
+        & msg="alpha and beta should be present for basisType=Jacobi", &
+        & file=__FILE__, &
+        & routine="BasisEvalAll_Line2", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  IF (basisType0 .EQ. Ultraspherical) THEN
+    IF (.NOT. PRESENT(lambda)) THEN
+      CALL Errormsg(&
+        & msg="lambda should be present for basisType=Ultraspherical", &
+        & file=__FILE__, &
+        & routine="BasisEvalAll_Line2", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  ans = EvalAllOrthopol(&
+    & n=order, &
+    & x=x, &
+    & orthopol=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END SELECT
+
+END PROCEDURE BasisEvalAll_Line2
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
