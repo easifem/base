@@ -21,6 +21,34 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     QuadratureNumber_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadratureNumber_Line
+SELECT CASE (quadType)
+CASE (GaussLegendre, GaussChebyshev, GaussJacobi, GaussUltraspherical)
+  ans = 1_I4B + INT(order / 2, kind=I4B)
+CASE DEFAULT
+  ans = 2_I4B + INT(order / 2, kind=I4B)
+END SELECT
+END PROCEDURE QuadratureNumber_Line
+
+!----------------------------------------------------------------------------
+!                                                           ToVEFC_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE ToVEFC_Line
+REAL(DFP) :: t1
+INTEGER(I4B) :: np
+np = SIZE(pt)
+t1 = pt(np)
+IF (np .GT. 2) THEN
+  pt(3:np) = pt(2:np - 1)
+  pt(2) = t1
+END IF
+END PROCEDURE ToVEFC_Line
+
+!----------------------------------------------------------------------------
 !                                                              RefLineCoord
 !----------------------------------------------------------------------------
 
@@ -834,6 +862,195 @@ CASE DEFAULT
 END SELECT
 
 END PROCEDURE BasisEvalAll_Line2
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Line1
+CHARACTER(20) :: astr
+INTEGER(I4B) :: np, nsd, ii
+REAL(DFP), ALLOCATABLE :: pt(:), wt(:)
+REAL(DFP) :: t1
+LOGICAL(LGT) :: changeLayout
+
+IF (ANY([GaussJacobi, GaussJacobiLobatto] .EQ. quadType)) THEN
+  IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+    CALL ErrorMsg(&
+      & msg="alpha and beta should be present for quadType=GaussJacobi", &
+      & file=__FILE__, &
+      & routine="QuadraturePoint_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+  RETURN
+ELSEIF (ANY([GaussJacobi, GaussJacobiLobatto] .EQ. quadType)) THEN
+  IF (.NOT. PRESENT(lambda)) THEN
+    CALL ErrorMsg(&
+      & msg="lambda should be present for quadType=GaussUltraspherical", &
+      & file=__FILE__, &
+      & routine="QuadraturePoint_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+  RETURN
+END IF
+
+IF (PRESENT(xij)) THEN
+  nsd = SIZE(xij, 1)
+ELSE
+  nsd = 1
+END IF
+
+astr = TRIM(UpperCase(layout))
+np = QuadratureNumber_Line(order=order, quadType=quadType)
+CALL Reallocate(pt, np, wt, np)
+CALL Reallocate(ans, nsd + 1_I4B, np)
+changeLayout = .FALSE.
+
+SELECT CASE (quadType)
+
+CASE (GaussLegendre)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
+
+CASE (GaussLegendreRadauLeft)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
+
+CASE (GaussLegendreRadauRight)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
+
+CASE (GaussLegendreLobatto)
+  CALL LegendreQuadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto)
+  IF (layout .EQ. "VEFC") changeLayout = .TRUE.
+
+CASE (GaussChebyshev)
+  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=Gauss)
+
+CASE (GaussChebyshevRadauLeft)
+  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauLeft)
+
+CASE (GaussChebyshevRadauRight)
+  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussRadauRight)
+
+CASE (GaussChebyshevLobatto)
+  CALL Chebyshev1Quadrature(n=np, pt=pt, wt=wt, quadType=GaussLobatto)
+  IF (layout .EQ. "VEFC") changeLayout = .TRUE.
+
+CASE (GaussJacobi)
+  CALL JacobiQuadrature( &
+    & n=np, &
+    & pt=pt, &
+    & wt=wt, &
+    & quadType=Gauss, &
+    & alpha=alpha, &
+    & beta=beta)
+
+CASE (GaussJacobiRadauLeft)
+  CALL JacobiQuadrature( &
+    & n=np, &
+    & pt=pt, &
+    & wt=wt, &
+    & quadType=GaussRadauLeft, &
+    & alpha=alpha, &
+    & beta=beta)
+
+CASE (GaussJacobiRadauRight)
+  CALL JacobiQuadrature( &
+    & n=np, &
+    & pt=pt, &
+    & wt=wt, &
+    & quadType=GaussRadauRight, &
+    & alpha=alpha, &
+    & beta=beta)
+
+CASE (GaussJacobiLobatto)
+  CALL JacobiQuadrature( &
+    & n=np, &
+    & pt=pt, &
+    & wt=wt, &
+    & quadType=GaussLobatto, &
+    & alpha=alpha, &
+    & beta=beta)
+  IF (layout .EQ. "VEFC") changeLayout = .TRUE.
+
+CASE (GaussUltraspherical)
+  CALL UltrasphericalQuadrature( &
+    & n=np, &
+    & pt=pt, &
+    & wt=wt, &
+    & quadType=Gauss, &
+    & lambda=lambda)
+
+CASE (GaussUltrasphericalRadauLeft)
+  CALL UltrasphericalQuadrature( &
+    & n=np, &
+    & pt=pt, &
+    & wt=wt, &
+    & quadType=GaussRadauLeft, &
+    & lambda=lambda)
+
+CASE (GaussUltrasphericalRadauRight)
+  CALL UltrasphericalQuadrature( &
+    & n=np, &
+    & pt=pt, &
+    & wt=wt, &
+    & quadType=GaussRadauRight, &
+    & lambda=lambda)
+
+CASE (GaussUltrasphericalLobatto)
+  CALL UltrasphericalQuadrature( &
+    & n=np, &
+    & pt=pt, &
+    & wt=wt, &
+    & quadType=GaussLobatto, &
+    & lambda=lambda)
+  IF (layout .EQ. "VEFC") changeLayout = .TRUE.
+
+CASE DEFAULT
+  CALL ErrorMsg(&
+    & msg="Unknown iptype", &
+    & file=__FILE__, &
+    & routine="QuadraturePoint_Line1", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END SELECT
+
+IF (changeLayout) THEN
+  CALL ToVEFC_Line(pt)
+  CALL ToVEFC_Line(wt)
+END IF
+
+IF (PRESENT(xij)) THEN
+  ans(1:nsd, :) = FromBiunitLine2Segment( &
+    & xin=pt, &
+    & x1=xij(:, 1), &
+    & x2=xij(:, 2))
+  ans(nsd + 1, :) = wt
+ELSE
+  ans(1, :) = pt
+  ans(nsd + 1, :) = wt
+END IF
+END PROCEDURE QuadraturePoint_Line1
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Line2
+INTEGER(I4B) :: np
+np = QuadratureNumber_Line(order=order, quadType=quadType)
+CALL Reallocate(ans, np)
+ans = RESHAPE( &
+  QuadraturePoint_Line1(&
+    & order=order, &
+    & quadType=quadType, &
+    & layout=layout, &
+    & xij=RESHAPE(xij, [2, 1]), &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda), [np])
+END PROCEDURE QuadraturePoint_Line2
 
 !----------------------------------------------------------------------------
 !

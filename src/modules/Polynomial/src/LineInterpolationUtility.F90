@@ -31,6 +31,38 @@ PUBLIC :: LagrangeCoeff_Line
 PUBLIC :: LagrangeEvalAll_Line
 PUBLIC :: BasisEvalAll_Line
 PUBLIC :: RefLineCoord
+PUBLIC :: QuadraturePoint_Line
+PUBLIC :: ToVEFC_Line
+
+!----------------------------------------------------------------------------
+!                                                      QuadratureNumber_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary:  REturns the number of quadrature points necessary for given order
+
+INTERFACE
+  MODULE PURE FUNCTION QuadratureNumber_Line(order, quadType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), INTENT(IN) :: quadType
+    INTEGER(I4B) :: ans
+  END FUNCTION QuadratureNumber_Line
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                            ToVEFC_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary:  Change layour of points on line
+
+INTERFACE
+  MODULE PURE SUBROUTINE ToVEFC_Line(pt)
+    REAL(DFP), INTENT(INOUT) :: pt(:)
+  END SUBROUTINE ToVEFC_Line
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                           RefLineCoord
@@ -605,5 +637,100 @@ INTERFACE BasisEvalAll_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION BasisEvalAll_Line2
 END INTERFACE BasisEvalAll_Line
+
+!----------------------------------------------------------------------------
+!                                                      QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-19
+! summary:  Returns quadrature points
+
+INTERFACE QuadraturePoint_Line
+  MODULE FUNCTION QuadraturePoint_Line1( &
+    & order, &
+    & quadType, &
+    & layout, &
+    & xij, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    !!
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of interpolation
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature point type
+    !! Equidistance,
+    !! GaussLegendre,
+    !! GaussLegendreLobatto,
+    !! GaussChebyshev,
+    !! GaussChebyshevLobatto,
+    !! GaussJacobi,
+    !! GaussJacobiLobatto
+    CHARACTER(*), INTENT(IN) :: layout
+    !! "VEFC"
+    !! "INCREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! domain of interpolation
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! quadrature points
+    !! If xij is present then the number of rows in ans
+    !! is same as size(xij,1) + 1.
+    !! If xij is not present then the number of rows in
+    !! ans is 2
+    !! The last row of ans contains the weights
+    !! The first few rows contains the quadrature points
+  END FUNCTION QuadraturePoint_Line1
+END INTERFACE QuadraturePoint_Line
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Aug 2022
+! summary: Returns the interpolation point
+
+INTERFACE QuadraturePoint_Line
+  MODULE FUNCTION QuadraturePoint_Line2( &
+    & order, &
+    & quadType, &
+    & xij, &
+    & layout, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of interpolation
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! Quadrature point type
+    !! Equidistance
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussChebyshev,
+    !! GaussChebyshevLobatto
+    !! GaussJacobi
+    !! GaussJacobiLobatto
+    REAL(DFP), INTENT(IN) :: xij(2)
+    !! end points
+    CHARACTER(*), INTENT(IN) :: layout
+    !! "VEFC"
+    !! "INCREASING"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), ALLOCATABLE :: ans(:)
+    !! one dimensional interpolation point
+  END FUNCTION QuadraturePoint_Line2
+END INTERFACE QuadraturePoint_Line
 
 END MODULE LineInterpolationUtility
