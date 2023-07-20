@@ -1038,18 +1038,14 @@ END PROCEDURE QuadraturePoint_Line1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Line2
-INTEGER(I4B) :: np
-np = QuadratureNumber_Line(order=order, quadType=quadType)
-CALL Reallocate(ans, np)
-ans = RESHAPE( &
-  QuadraturePoint_Line1(&
+ans = QuadraturePoint_Line1(&
     & order=order, &
     & quadType=quadType, &
     & layout=layout, &
-    & xij=RESHAPE(xij, [2, 1]), &
+    & xij=RESHAPE(xij, [1, 2]), &
     & alpha=alpha, &
     & beta=beta, &
-    & lambda=lambda), [np])
+    & lambda=lambda)
 END PROCEDURE QuadraturePoint_Line2
 
 !----------------------------------------------------------------------------

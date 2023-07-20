@@ -728,7 +728,7 @@ INTERFACE QuadraturePoint_Line
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP), ALLOCATABLE :: ans(:)
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! one dimensional interpolation point
   END FUNCTION QuadraturePoint_Line2
 END INTERFACE QuadraturePoint_Line
