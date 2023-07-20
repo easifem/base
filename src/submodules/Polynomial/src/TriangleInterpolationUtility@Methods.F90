@@ -1157,7 +1157,9 @@ ELSE
 END IF
 
 SELECT CASE (basisType0)
+
 CASE (Monomial)
+
   degree = LagrangeDegree_Triangle(order=order)
   tdof = SIZE(xij, 2)
   IF (tdof .NE. SIZE(degree, 1)) THEN
@@ -1172,7 +1174,9 @@ CASE (Monomial)
   DO ii = 1, tdof
     xx(:, ii) = x(1, :)**degree(ii, 1) * x(2, :)**degree(ii, 2)
   END DO
+
 CASE (Heirarchical)
+
   xx = HeirarchicalBasis_Triangle( &
     & order=order, &
     & pe1=order,  &
@@ -1180,12 +1184,16 @@ CASE (Heirarchical)
     & pe3=order,  &
     & xij=x,  &
     & refTriangle=refTriangle)
+
 CASE (Jacobi)
+
   xx = Dubiner_Triangle( &
     & order=order, &
     & xij=x,  &
     & refTriangle=refTriangle)
+
 CASE DEFAULT
+
   CALL Errormsg(&
     & msg="No case found for basisType", &
     & file=__FILE__, &
