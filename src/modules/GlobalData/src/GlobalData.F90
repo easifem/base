@@ -313,6 +313,12 @@ INTEGER(I4B), PARAMETER :: GaussJacobiRadauLeft = 19
 INTEGER(I4B), PARAMETER :: GaussJacobiRadauRight = 20
 INTEGER(I4B), PARAMETER :: GaussJacobiLobatto = 21
 !!
+INTEGER(I4B), PARAMETER :: GaussUltraspherical = 22
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalRadau = 23
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalRadauLeft = 24
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalRadauRight = 25
+INTEGER(I4B), PARAMETER :: GaussUltrasphericalLobatto = 26
+!!
 !! Type of quadrature points
 !!
 INTEGER(I4B), PARAMETER :: GaussQP = Gauss
@@ -343,11 +349,18 @@ INTEGER(I4B), PARAMETER :: ChebyshevLIP = Chebyshev
 !! Types of Element domain
 !!
 INTEGER(I4B), PARAMETER :: Line = 1
+!! order 1
 INTEGER(I4B), PARAMETER :: Line2 = 1
+!! order 1
 INTEGER(I4B), PARAMETER :: Line3 = 8
+!! order 2
 INTEGER(I4B), PARAMETER :: Line4 = 26
+!! order 3
 INTEGER(I4B), PARAMETER :: Line5 = 27
+! order 4
 INTEGER(I4B), PARAMETER :: Line6 = 28
+!! order 5
+!! Line7 onwards numbering starts from 2801, 2802, and so on...
 INTEGER(I4B), PARAMETER :: Triangle = 2
 INTEGER(I4B), PARAMETER :: Triangle3 = 2
 INTEGER(I4B), PARAMETER :: Triangle6 = 9
@@ -359,10 +372,16 @@ INTEGER(I4B), PARAMETER :: Triangle15b = 24
 INTEGER(I4B), PARAMETER :: Triangle15 = 24
 INTEGER(I4B), PARAMETER :: Triangle21 = 25
 INTEGER(I4B), PARAMETER :: Quadrangle = 3
+!! order = 1
 INTEGER(I4B), PARAMETER :: Quadrangle4 = 3
+!! order = 1
 INTEGER(I4B), PARAMETER :: Quadrangle9 = 10
+!! order = 2
 INTEGER(I4B), PARAMETER :: Quadrangle8 = 16
+!! order = 2, Serendipity
 INTEGER(I4B), PARAMETER :: Quadrangle16 = 160
+!! order = 3
+!! Forder order 4, 5, and so on, we use 1601, 1602, 1603, etc.
 INTEGER(I4B), PARAMETER :: Tetrahedron = 4
 INTEGER(I4B), PARAMETER :: Tetrahedron4 = 4
 INTEGER(I4B), PARAMETER :: Tetrahedron10 = 11

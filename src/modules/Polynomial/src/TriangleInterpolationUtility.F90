@@ -36,6 +36,7 @@ PUBLIC :: CellBasis_Triangle
 PUBLIC :: HeirarchicalBasis_Triangle
 PUBLIC :: RefTriangleCoord
 PUBLIC :: LagrangeEvalAll_Triangle
+! PUBLIC :: QuadraturePoint_Triangle
 
 !----------------------------------------------------------------------------
 !                                                           RefTriangleCoord
@@ -337,8 +338,12 @@ END INTERFACE LagrangeCoeff_Triangle
 ! summary: Returns the coefficients for ith lagrange polynomial
 
 INTERFACE LagrangeCoeff_Triangle
- MODULE FUNCTION LagrangeCoeff_Triangle4(order, xij, basisType, refTriangle) &
-        & RESULT(ans)
+  MODULE FUNCTION LagrangeCoeff_Triangle4( &
+    & order, &
+    & xij, &
+    & basisType, &
+    & refTriangle) &
+    & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
     REAL(DFP), INTENT(IN) :: xij(:, :)

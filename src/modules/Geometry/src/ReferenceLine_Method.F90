@@ -30,6 +30,22 @@ PUBLIC :: ReferenceLine_Pointer
 PUBLIC :: highorderElement_Line
 PUBLIC :: Measure_Simplex_Line
 PUBLIC :: Line_Quality
+PUBLIC :: LineName
+
+!----------------------------------------------------------------------------
+!                                                                 LineName
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-17
+! summary:  Returns the integer name of reference line for given order
+
+INTERFACE LineName
+  MODULE PURE FUNCTION LineName1(order) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B) :: ans
+  END FUNCTION LineName1
+END INTERFACE LineName
 
 !----------------------------------------------------------------------------
 !                                                           Initiate@Methods

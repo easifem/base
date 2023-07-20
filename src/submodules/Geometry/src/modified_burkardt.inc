@@ -180,7 +180,7 @@ PURE SUBROUTINE TETRAHEDRONVOLUME3D(tetra, volume)
   a(1:dim_num, 1:4) = tetra(1:dim_num, 1:4)
   a(4, 1:4) = 1.0_DFP
 
-  volume = abs(R8MATDET4D(a)) / 6.0_DFP
+  volume = ABS(R8MATDET4D(a)) / 6.0_DFP
 
 END SUBROUTINE TETRAHEDRONVOLUME3D
 
@@ -235,7 +235,7 @@ PURE SUBROUTINE POLYHEDRONVOLUME3D(coord, order_max, face_num, node, &
   INTEGER(I4B), INTENT(IN) :: order(face_num)
   REAL(DFP), INTENT(OUT) :: volume
 
-  INTEGER(I4B), parameter :: dim_num = 3
+  INTEGER(I4B), PARAMETER :: dim_num = 3
   INTEGER(I4B) :: face
   INTEGER(I4B) :: n1
   INTEGER(I4B) :: n2
