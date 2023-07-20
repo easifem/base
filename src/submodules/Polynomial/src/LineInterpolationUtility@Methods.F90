@@ -868,9 +868,35 @@ END PROCEDURE BasisEvalAll_Line2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Line1
+INTEGER(I4B) :: nips(1)
+nips(1) = QuadratureNumber_Line(order=order, quadType=quadType)
+ans = QuadraturePoint_Line3(nips=nips, quadType=quadType, &
+& layout=layout, xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+END PROCEDURE QuadraturePoint_Line1
+
+!----------------------------------------------------------------------------
+!                                                       QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Line2
+ans = QuadraturePoint_Line1(&
+    & order=order, &
+    & quadType=quadType, &
+    & layout=layout, &
+    & xij=RESHAPE(xij, [1, 2]), &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END PROCEDURE QuadraturePoint_Line2
+
+!----------------------------------------------------------------------------
+!                                                       QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Line3
 CHARACTER(20) :: astr
 INTEGER(I4B) :: np, nsd, ii
-REAL(DFP), ALLOCATABLE :: pt(:), wt(:)
+REAL(DFP) :: pt(nips(1)), wt(nips(1))
 REAL(DFP) :: t1
 LOGICAL(LGT) :: changeLayout
 
@@ -879,7 +905,7 @@ IF (ANY([GaussJacobi, GaussJacobiLobatto] .EQ. quadType)) THEN
     CALL ErrorMsg(&
       & msg="alpha and beta should be present for quadType=GaussJacobi", &
       & file=__FILE__, &
-      & routine="QuadraturePoint_Line1", &
+      & routine="QuadraturePoint_Line3", &
       & line=__LINE__, &
       & unitno=stderr)
   END IF
@@ -889,7 +915,7 @@ ELSEIF (ANY([GaussJacobi, GaussJacobiLobatto] .EQ. quadType)) THEN
     CALL ErrorMsg(&
       & msg="lambda should be present for quadType=GaussUltraspherical", &
       & file=__FILE__, &
-      & routine="QuadraturePoint_Line1", &
+      & routine="QuadraturePoint_Line3", &
       & line=__LINE__, &
       & unitno=stderr)
   END IF
@@ -903,8 +929,7 @@ ELSE
 END IF
 
 astr = TRIM(UpperCase(layout))
-np = QuadratureNumber_Line(order=order, quadType=quadType)
-CALL Reallocate(pt, np, wt, np)
+np = nips(1)
 CALL Reallocate(ans, nsd + 1_I4B, np)
 changeLayout = .FALSE.
 
@@ -1010,7 +1035,7 @@ CASE DEFAULT
   CALL ErrorMsg(&
     & msg="Unknown iptype", &
     & file=__FILE__, &
-    & routine="QuadraturePoint_Line1", &
+    & routine="QuadraturePoint_Line3", &
     & line=__LINE__, &
     & unitno=stderr)
   RETURN
@@ -1031,22 +1056,22 @@ ELSE
   ans(1, :) = pt
   ans(nsd + 1, :) = wt
 END IF
-END PROCEDURE QuadraturePoint_Line1
+END PROCEDURE QuadraturePoint_Line3
 
 !----------------------------------------------------------------------------
-!                                                   QuadraturePoint_Line
+!                                                        QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE QuadraturePoint_Line2
-ans = QuadraturePoint_Line1(&
-    & order=order, &
+MODULE PROCEDURE QuadraturePoint_Line4
+ans = QuadraturePoint_Line3(&
+    & nips=nips, &
     & quadType=quadType, &
     & layout=layout, &
     & xij=RESHAPE(xij, [1, 2]), &
     & alpha=alpha, &
     & beta=beta, &
     & lambda=lambda)
-END PROCEDURE QuadraturePoint_Line2
+END PROCEDURE QuadraturePoint_Line4
 
 !----------------------------------------------------------------------------
 !
