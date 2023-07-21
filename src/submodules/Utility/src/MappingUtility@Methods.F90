@@ -189,7 +189,24 @@ CASE ("BIUNIT")
 CASE ("UNIT")
   ans = BarycentricCoordUnitTriangle(xin)
 END SELECT
-
 END PROCEDURE BarycentricCoordTriangle
+
+!----------------------------------------------------------------------------
+!                                        FromBiUnitTriangle2UnitTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitTriangle2UnitTriangle
+ans(1, :) = 0.5_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :))
+ans(2, :) = 0.5_DFP * (1.0_DFP - xin(1, :)) * (1.0_DFP + xin(2, :))
+END PROCEDURE FromBiUnitTriangle2UnitTriangle
+
+!----------------------------------------------------------------------------
+!                                        FromBiUnitTriangle2UnitTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTriangle2BiUnitTriangle
+ans(1, :) = xin(1, :) - 1.0_DFP
+ans(2, :) = xin(2, :) - 1.0_DFP
+END PROCEDURE FromUnitTriangle2BiUnitTriangle
 
 END SUBMODULE Methods

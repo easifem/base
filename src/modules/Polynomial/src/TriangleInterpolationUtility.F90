@@ -36,7 +36,7 @@ PUBLIC :: CellBasis_Triangle
 PUBLIC :: HeirarchicalBasis_Triangle
 PUBLIC :: RefTriangleCoord
 PUBLIC :: LagrangeEvalAll_Triangle
-! PUBLIC :: QuadraturePoint_Triangle
+PUBLIC :: QuadraturePoint_Triangle
 
 !----------------------------------------------------------------------------
 !                                                           RefTriangleCoord
@@ -877,6 +877,133 @@ INTERFACE LagrangeEvalAll_Triangle
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Triangle2
 END INTERFACE LagrangeEvalAll_Triangle
+
+!----------------------------------------------------------------------------
+!                                            QuadraturePoints_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary:  based quadrature points
+
+INTERFACE QuadraturePoint_Triangle
+  MODULE FUNCTION QuadraturePoint_Triangle1(&
+    & order, &
+    & quadType, &
+    & refTriangle, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION QuadraturePoint_Triangle1
+END INTERFACE QuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!                                            QuadraturePoints_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary:  based quadrature points
+
+INTERFACE QuadraturePoint_Triangle
+  MODULE FUNCTION QuadraturePoint_Triangle2(&
+    & nips, &
+    & quadType, &
+    & refTriangle, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! nips(1) .LE. 79, then we call
+    !! economical quadrature rules.
+    !! Otherwise, this routine will retport
+    !! error
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type,
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION QuadraturePoint_Triangle2
+END INTERFACE QuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!                                            TensorQuadraturePoints_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary: Tensor based quadrature points
+
+INTERFACE TensorQuadraturePoint_Triangle
+  MODULE FUNCTION TensorQuadraturePoint_Triangle1(order, quadType, &
+    & refTriangle, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION TensorQuadraturePoint_Triangle1
+END INTERFACE TensorQuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!                                            TensorQuadraturePoints_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary: Tensor based quadrature points
+
+INTERFACE TensorQuadraturePoint_Triangle
+  MODULE FUNCTION TensorQuadraturePoint_Triangle2(nipsx, nipsy, quadType, &
+    & refTriangle, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 2 or 3.
+    !! The number of columns in xij should be 3
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION TensorQuadraturePoint_Triangle2
+END INTERFACE TensorQuadraturePoint_Triangle
 
 !----------------------------------------------------------------------------
 !                                                                 Triangle

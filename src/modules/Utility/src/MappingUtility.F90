@@ -39,6 +39,8 @@ PUBLIC :: FromBiUnitSqr2UnitTriangle
 PUBLIC :: BarycentricCoordUnitTriangle
 PUBLIC :: BarycentricCoordBiUnitTriangle
 PUBLIC :: BarycentricCoordTriangle
+PUBLIC :: FromBiUnitTriangle2UnitTriangle
+PUBLIC :: FromUnitTriangle2BiUnitTriangle
 
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
@@ -364,6 +366,36 @@ INTERFACE
     !! "UNIT"
     !! "BIUNIT"
   END FUNCTION BarycentricCoordTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitTriangle2UnitTriangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns barycentric coord of unit triangle
+
+INTERFACE
+  MODULE PURE FUNCTION FromBiUnitTriangle2UnitTriangle(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(2, SIZE(xin, 2))
+  END FUNCTION FromBiUnitTriangle2UnitTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            FromUnitTriangle2BiUnitTriangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns barycentric coord of unit triangle
+
+INTERFACE
+  MODULE PURE FUNCTION FromUnitTriangle2BiUnitTriangle(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(2, SIZE(xin, 2))
+  END FUNCTION FromUnitTriangle2BiUnitTriangle
 END INTERFACE
 
 END MODULE MappingUtility
