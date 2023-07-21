@@ -20,6 +20,16 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                               QuadratureNumber_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadratureNumber_Hexahedron
+ans(1) = QuadratureNumber_Line(order=p, quadType=quadType1)
+ans(2) = QuadratureNumber_Line(order=q, quadType=quadType2)
+ans(3) = QuadratureNumber_Line(order=r, quadType=quadType3)
+END PROCEDURE QuadratureNumber_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                               EdgeConnectivity_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -156,31 +166,54 @@ END PROCEDURE LagrangeInDOF_Hexahedron2
 !                                              EquidistancePoint_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE EquidistancePoint_Hexahedron
+MODULE PROCEDURE EquidistancePoint_Hexahedron1
+ans = EquidistancePoint_Hexahedron2(p=order, q=order, r=order, xij=xij)
+END PROCEDURE EquidistancePoint_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                             EquidistancePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistancePoint_Hexahedron2
 ! internal variables
-REAL(DFP) :: x(order + 1), y(order + 1), z(order + 1)
-REAL(DFP), DIMENSION(order + 1, order + 1, order + 1) :: xi, eta, zeta
-REAL(DFP), ALLOCATABLE :: temp(:, :)
+REAL(DFP) :: x(p + 1), y(q + 1), z(r + 1), temp0
+REAL(DFP), DIMENSION(p + 1, q + 1, r + 1) :: xi, eta, zeta
+REAL(DFP) :: temp(3, (p + 1) * (q + 1) * (r + 1))
 INTEGER(I4B) :: ii, jj, kk, nsd
 
-x = EquidistancePoint_Line(order=order, xij=[-1.0_DFP, 1.0_DFP])
-IF (order .GT. 0_I4B) THEN
-  y(1) = x(1)
-  y(order + 1) = x(2)
+x = EquidistancePoint_Line(order=p, xij=[-1.0_DFP, 1.0_DFP])
+y = EquidistancePoint_Line(order=q, xij=[-1.0_DFP, 1.0_DFP])
+z = EquidistancePoint_Line(order=r, xij=[-1.0_DFP, 1.0_DFP])
+IF (p .GT. 0_I4B) THEN
+  temp0 = x(2)
 END IF
-
-DO ii = 2, order
-  y(ii) = x(ii + 1)
+DO ii = 2, p
+  x(ii) = x(ii + 1)
 END DO
-x = y
-z = x
-nsd = 3
-CALL Reallocate(ans, nsd, (order + 1) * (order + 1) * (order + 1))
-CALL Reallocate(temp, nsd, (order + 1) * (order + 1) * (order + 1))
+x(p + 1) = temp0
 
-DO ii = 1, order + 1
-  DO jj = 1, order + 1
-    DO kk = 1, order + 1
+IF (q .GT. 0_I4B) THEN
+  temp0 = y(2)
+END IF
+DO ii = 2, q
+  y(ii) = y(ii + 1)
+END DO
+y(q + 1) = temp0
+
+IF (r .GT. 0_I4B) THEN
+  temp0 = z(2)
+END IF
+DO ii = 2, r
+  z(ii) = z(ii + 1)
+END DO
+z(r + 1) = temp0
+
+nsd = 3
+CALL Reallocate(ans, nsd, (p + 1) * (q + 1) * (r + 1))
+
+DO ii = 1, p + 1
+  DO jj = 1, q + 1
+    DO kk = 1, r + 1
       xi(ii, jj, kk) = x(ii)
       eta(ii, jj, kk) = y(jj)
       zeta(ii, jj, kk) = z(kk)
@@ -193,9 +226,9 @@ CALL IJK2VEFC_Hexahedron( &
   & eta=eta, &
   & zeta=zeta, &
   & temp=temp, &
-  & p=order, &
-  & q=order, &
-  & r=order)
+  & p=p, &
+  & q=q, &
+  & r=r)
 
 IF (PRESENT(xij)) THEN
   ans = FromBiUnitHexahedron2Hexahedron( &
@@ -213,25 +246,48 @@ ELSE
   ans = temp
 END IF
 
-IF (ALLOCATED(temp)) DEALLOCATE (temp)
-END PROCEDURE EquidistancePoint_Hexahedron
+END PROCEDURE EquidistancePoint_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                            EquidistanceInPoint_Hexahedron
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE EquidistanceInPoint_Hexahedron
+MODULE PROCEDURE EquidistanceInPoint_Hexahedron1
+ans = EquidistanceInPoint_Hexahedron2(p=order, q=order, r=order, xij=xij)
+END PROCEDURE EquidistanceInPoint_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                            EquidistanceInPoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EquidistanceInPoint_Hexahedron2
 INTEGER(I4B) :: i1, i2, ii
 REAL(DFP), ALLOCATABLE :: ans0(:, :)
 
-ans0 = EquidistancePoint_Hexahedron(order=order, xij=xij)
-i1 = LagrangeDOF_Hexahedron(order=order)
-i2 = LagrangeInDOF_Hexahedron(order=order)
+ans0 = EquidistancePoint_Hexahedron(p=p, q=q, r=r, xij=xij)
+i1 = LagrangeDOF_Hexahedron(p=p, q=q, r=r)
+i2 = LagrangeInDOF_Hexahedron(p=p, q=q, r=r)
 CALL reallocate(ans, 3, i2)
 ii = i1 - i2
 IF (ii + 1 .LE. SIZE(ans0, 2)) ans = ans0(:, ii + 1:)
 IF (ALLOCATED(ans0)) DEALLOCATE (ans0)
-END PROCEDURE EquidistanceInPoint_Hexahedron
+END PROCEDURE EquidistanceInPoint_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                            InterpolationPoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE InterpolationPoint_Hexahedron1
+ans = InterpolationPoint_Hexahedron( &
+  & p=order, &
+  & q=order, &
+  & r=order, &
+  & layout=layout, &
+  & ipType1=ipType, &
+  & ipType2=ipType,  &
+  & ipType3=ipType, &
+  & xij=xij)
+END PROCEDURE InterpolationPoint_Hexahedron1
 
 !----------------------------------------------------------------------------
 !
@@ -559,7 +615,11 @@ IF (ALL([p, q, r] .GE. 1_I4B)) THEN
   ! internal nodes
   IF (ALL([p, q, r] .GE. 2_I4B)) THEN
 
-    CALL Reallocate(xi_in, MAX(p - 1, 1_I4B), MAX(q - 1_I4B, 1_I4B), MAX(r - 1_I4B, 1_I4B))
+    CALL Reallocate(  &
+      & xi_in, &
+      & MAX(p - 1, 1_I4B), &
+      & MAX(q - 1_I4B, 1_I4B), &
+      & MAX(r - 1_I4B, 1_I4B))
     CALL Reallocate(eta_in, SIZE(xi_in, 1), SIZE(xi_in, 2), SIZE(xi_in, 3))
     CALL Reallocate(zeta_in, SIZE(xi_in, 1), SIZE(xi_in, 2), SIZE(xi_in, 3))
     CALL Reallocate(temp_in, 3, SIZE(xi_in))
@@ -609,22 +669,6 @@ IF (ALL([p, q, r] .GE. 1_I4B)) THEN
 END IF
 
 END PROCEDURE IJK2VEFC_Hexahedron
-
-!----------------------------------------------------------------------------
-!                                            InterpolationPoint_Hexahedron
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE InterpolationPoint_Hexahedron1
-ans = InterpolationPoint_Hexahedron( &
-  & p=order, &
-  & q=order, &
-  & r=order, &
-  & layout=layout, &
-  & ipType1=ipType, &
-  & ipType2=ipType,  &
-  & ipType3=ipType, &
-  & xij=xij)
-END PROCEDURE InterpolationPoint_Hexahedron1
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Hexahedron

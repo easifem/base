@@ -19,16 +19,49 @@ MODULE HexahedronInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: LagrangeDegree_Hexahedron
 PUBLIC :: LagrangeDOF_Hexahedron
 PUBLIC :: LagrangeInDOF_Hexahedron
-PUBLIC :: EquidistanceInPoint_Hexahedron
 PUBLIC :: EquidistancePoint_Hexahedron
+PUBLIC :: EquidistanceInPoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron
-PUBLIC :: LagrangeDegree_Hexahedron
 PUBLIC :: LagrangeCoeff_Hexahedron
 PUBLIC :: RefHexahedronCoord
 PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
+PUBLIC :: QuadratureNumber_Hexahedron
+! PUBLIC :: TensorProdBasis_Hexahedron
+! PUBLIC :: VertexBasis_Hexahedron
+! PUBLIC :: xEdgeBasis_Hexahedron
+! PUBLIC :: yEdgeBasis_Hexahedron
+! PUBLIC :: zEdgeBasis_Hexahedron
+! PUBLIC :: EdgeBasis_Hexahedron
+! PUBLIC :: xFacetBasis_Hexahedron
+! PUBLIC :: yFacetBasis_Hexahedron
+! PUBLIC :: zFacetBasis_Hexahedron
+! PUBLIC :: FacetBasis_Hexahedron
+! PUBLIC :: CellBasis_Hexahedron
+! PUBLIC :: HeirarchicalBasis_Hexahedron
+! PUBLIC :: LagrangeEvalAll_Hexahedron
+! PUBLIC :: QuadraturePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                 QuadratureNumber_Quadrangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION QuadratureNumber_Hexahedron( &
+    & p,  &
+    & q,  &
+    & r,  &
+    & quadType1,  &
+    & quadType2,  &
+    & quadType3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    INTEGER(I4B), INTENT(IN) :: quadType1, quadType2, quadType3
+    INTEGER(I4B) :: ans(3)
+  END FUNCTION QuadratureNumber_Hexahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                               FacetConnectivity_Hexahedron
@@ -196,8 +229,8 @@ END INTERFACE LagrangeInDOF_Hexahedron
 !- This function returns the equidistance points in Hexahedron
 !- All points are inside the Hexahedron
 
-INTERFACE
-  MODULE PURE FUNCTION EquidistanceInPoint_Hexahedron(order, xij) &
+INTERFACE EquidistanceInPoint_Hexahedron
+  MODULE PURE FUNCTION EquidistanceInPoint_Hexahedron1(order, xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
@@ -206,8 +239,34 @@ INTERFACE
     !! number of cols = 8
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! returned coordinates in $x_{iJ}$ format
-  END FUNCTION EquidistanceInPoint_Hexahedron
-END INTERFACE
+  END FUNCTION EquidistanceInPoint_Hexahedron1
+END INTERFACE EquidistanceInPoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                           EquidistanceInPoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 14 Aug 2022
+! summary:         Returns equidistance points in Hexahedron
+!
+!# Introduction
+!
+!- This function returns the equidistance points in Hexahedron
+!- All points are inside the Hexahedron
+
+INTERFACE EquidistanceInPoint_Hexahedron
+  MODULE PURE FUNCTION EquidistanceInPoint_Hexahedron2(p, q, r, xij) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! order in x, y, and z direction
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! number of rows = 3
+    !! number of cols = 8
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+  END FUNCTION EquidistanceInPoint_Hexahedron2
+END INTERFACE EquidistanceInPoint_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Hexahedron
@@ -226,8 +285,8 @@ END INTERFACE
 !- The returned coordinates are in $x_{iJ}$ format.
 !- The node numbering is according to Gmsh convention, VEFC.
 
-INTERFACE
-  MODULE PURE FUNCTION EquidistancePoint_Hexahedron(order, xij) RESULT(ans)
+INTERFACE EquidistancePoint_Hexahedron
+  MODULE PURE FUNCTION EquidistancePoint_Hexahedron1(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
@@ -235,8 +294,42 @@ INTERFACE
     !! number of cols = 8
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! returned coordinates in $x_{iJ}$ format
-  END FUNCTION EquidistancePoint_Hexahedron
-END INTERFACE
+  END FUNCTION EquidistancePoint_Hexahedron1
+END INTERFACE EquidistancePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                              EquidistancePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 12 Aug 2022
+! summary: Returns the nodal coordinates of higher order Hexahedron element
+!
+!# Introduction
+!
+!- This function returns the nodal coordinates of higher order
+! Hexahedron element
+!- The coordinates are distributed uniformly
+!- These coordinates can be used to construct lagrange polynomials
+!- The returned coordinates are in $x_{iJ}$ format.
+!- The node numbering is according to Gmsh convention, VEFC.
+
+INTERFACE EquidistancePoint_Hexahedron
+  MODULE PURE FUNCTION EquidistancePoint_Hexahedron2(p, q, r, xij) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order in y direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order in z direction
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! number of rows = 3
+    !! number of cols = 8
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! returned coordinates in $x_{iJ}$ format
+  END FUNCTION EquidistancePoint_Hexahedron2
+END INTERFACE EquidistancePoint_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                            InterpolationPoint_Hexahedron
@@ -275,8 +368,15 @@ END INTERFACE InterpolationPoint_Hexahedron
 ! summary:  Interpolation points
 
 INTERFACE InterpolationPoint_Hexahedron
-  MODULE FUNCTION InterpolationPoint_Hexahedron2(p, q, r, ipType1, ipType2, &
-    & ipType3, layout, xij) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint_Hexahedron2(  &
+    & p, &
+    & q, &
+    & r, &
+    & ipType1,  &
+    & ipType2, &
+    & ipType3,  &
+    & layout,  &
+    & xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -309,7 +409,11 @@ END INTERFACE InterpolationPoint_Hexahedron
 ! summary:  Convert IJK to VEFC format
 
 INTERFACE
-  MODULE RECURSIVE PURE SUBROUTINE IJK2VEFC_Hexahedron(xi, eta, zeta, temp, &
+  MODULE RECURSIVE PURE SUBROUTINE IJK2VEFC_Hexahedron( &
+    & xi, &
+    & eta, &
+    & zeta, &
+    & temp, &
     & p, q, r)
     REAL(DFP), INTENT(IN) :: xi(:, :, :)
     REAL(DFP), INTENT(IN) :: eta(:, :, :)
@@ -487,23 +591,23 @@ INTERFACE LagrangeCoeff_Hexahedron
     !! Chebyshev
     !! Ultraspherical
     !! Heirarchical
-    REAL(DFP), INTENT(IN) :: alpha1
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
     !! This parameter is needed when basisType1 is Jacobi
-    REAL(DFP), INTENT(IN) :: beta1
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
     !! This parameter is needed when basisType1 is Jacobi
-    REAL(DFP), INTENT(IN) :: lambda1
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
     !! This parameter is needed when basisType1 is Ultraspherical
-    REAL(DFP), INTENT(IN) :: alpha2
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
     !! This parameter is needed when basisType2 is Jacobi
-    REAL(DFP), INTENT(IN) :: beta2
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
     !! This parameter is needed when basisType2 is Jacobi
-    REAL(DFP), INTENT(IN) :: lambda2
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
     !! This parameter is needed when basisType2 is Ultraspherical
-    REAL(DFP), INTENT(IN) :: alpha3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3
     !! This parameter is needed when basisType3 is Jacobi
-    REAL(DFP), INTENT(IN) :: beta3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta3
     !! This parameter is needed when basisType3 is Jacobi
-    REAL(DFP), INTENT(IN) :: lambda3
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda3
     !! This parameter is needed when basisType3 is Ultraspherical
     CHARACTER(*), OPTIONAL, INTENT(IN) :: refHexahedron
     !! UNIT

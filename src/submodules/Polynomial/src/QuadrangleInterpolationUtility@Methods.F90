@@ -95,7 +95,7 @@ END PROCEDURE LagrangeDOF_Quadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDOF_Quadrangle2
-ans = (p - 1) * (q - 1)
+ans = (p + 1) * (q + 1)
 END PROCEDURE LagrangeDOF_Quadrangle2
 
 !----------------------------------------------------------------------------

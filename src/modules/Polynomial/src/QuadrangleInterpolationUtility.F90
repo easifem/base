@@ -44,7 +44,11 @@ PUBLIC :: QuadratureNumber_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION QuadratureNumber_Quadrangle(p, q, quadType1, quadType2) RESULT(ans)
+  MODULE PURE FUNCTION QuadratureNumber_Quadrangle( &
+    & p,  &
+    & q,  &
+    & quadType1,  &
+    & quadType2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p, q
     INTEGER(I4B), INTENT(IN) :: quadType1, quadType2
     INTEGER(I4B) :: ans(2)
