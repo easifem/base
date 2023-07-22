@@ -994,6 +994,7 @@ ans = TensorProdBasis_Quadrangle1( &
   & basisType1=basisType1, &
   & basisType2=basisType2, &
   & alpha1=alpha1, &
+  & alpha2=alpha2, &
   & beta1=beta1, &
   & beta2=beta2, &
   & lambda1=lambda1, &
@@ -1049,12 +1050,12 @@ cnt = 0
 
 DO k2 = 2, qe1
   cnt = cnt + 1
-  ans(:, cnt) = 0.25_DFP * (1.0_DFP - x) * L2(:, k2)
+  ans(:, cnt) = 0.5_DFP * (1.0_DFP - x) * L2(:, k2)
 END DO
 
 DO k2 = 2, qe2
   cnt = cnt + 1
-  ans(:, cnt) = 0.25_DFP * (1.0_DFP + x) * L2(:, k2)
+  ans(:, cnt) = 0.5_DFP * (1.0_DFP + x) * L2(:, k2)
 END DO
 
 END PROCEDURE VerticalEdgeBasis_Quadrangle
@@ -1094,12 +1095,12 @@ cnt = 0
 
 DO k1 = 2, pe3
   cnt = cnt + 1
-  ans(:, cnt) = 0.25_DFP * (1.0_DFP - y) * L1(:, k1)
+  ans(:, cnt) = 0.5_DFP * (1.0_DFP - y) * L1(:, k1)
 END DO
 
 DO k1 = 2, pe4
   cnt = cnt + 1
-  ans(:, cnt) = 0.25_DFP * (1.0_DFP + y) * L1(:, k1)
+  ans(:, cnt) = 0.5_DFP * (1.0_DFP + y) * L1(:, k1)
 END DO
 
 END PROCEDURE HorizontalEdgeBasis_Quadrangle
