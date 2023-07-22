@@ -286,6 +286,15 @@ ans = InterpolationPoint_Hexahedron( &
   & ipType1=ipType, &
   & ipType2=ipType,  &
   & ipType3=ipType, &
+  & alpha1=alpha, &
+  & alpha2=alpha, &
+  & alpha3=alpha, &
+  & beta1=beta, &
+  & beta2=beta, &
+  & beta3=beta, &
+  & lambda1=lambda, &
+  & lambda2=lambda, &
+  & lambda3=lambda, &
   & xij=xij)
 END PROCEDURE InterpolationPoint_Hexahedron1
 
@@ -303,15 +312,21 @@ CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Hexahedron2"
 
 x = InterpolationPoint_Line(order=p, ipType=ipType1, &
   & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING")
+  & layout="INCREASING", &
+  & alpha=alpha1, beta=beta1, lambda=lambda1 &
+  & )
 
 y = InterpolationPoint_Line(order=q, ipType=ipType2, &
   & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING")
+  & layout="INCREASING", &
+  & alpha=alpha2, beta=beta2, lambda=lambda2 &
+  & )
 
 z = InterpolationPoint_Line(order=r, ipType=ipType3, &
   & xij=[-1.0_DFP, 1.0_DFP], &
-  & layout="INCREASING")
+  & layout="INCREASING", &
+  & alpha=alpha3, beta=beta3, lambda=lambda3 &
+  & )
 
 nsd = 3
 
@@ -893,6 +908,521 @@ END DO
 
 CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Hexahedron5
+
+!----------------------------------------------------------------------------
+!                                               TensorProdBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorProdBasis_Hexahedron1
+REAL(DFP) :: x(SIZE(xij, 2)), y(SIZE(xij, 2)), z(SIZE(xij, 2))
+REAL(DFP) :: P1(SIZE(xij, 2), p + 1)
+REAL(DFP) :: Q1(SIZE(xij, 2), q + 1)
+REAL(DFP) :: R1(SIZE(xij, 2), r + 1)
+INTEGER(I4B) :: ii, k1, k2, k3, cnt
+
+x = xij(1, :)
+y = xij(2, :)
+z = xij(3, :)
+
+P1 = BasisEvalAll_Line( &
+  & order=p, &
+  & x=x, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha1, &
+  & beta=beta1, &
+  & lambda=lambda1)
+
+Q1 = BasisEvalAll_Line( &
+  & order=q, &
+  & x=y, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha2, &
+  & beta=beta2, &
+  & lambda=lambda2)
+
+R1 = BasisEvalAll_Line( &
+  & order=r, &
+  & x=z, &
+  & refLine="BIUNIT", &
+  & basisType=basisType3,  &
+  & alpha=alpha3, &
+  & beta=beta3, &
+  & lambda=lambda3)
+
+cnt = 0
+
+DO k3 = 1, r + 1
+  DO k2 = 1, q + 1
+    DO k1 = 1, p + 1
+      cnt = cnt + 1
+      ans(:, cnt) = P1(:, k1) * Q1(:, k2) * R1(:, k3)
+    END DO
+  END DO
+END DO
+
+END PROCEDURE TensorProdBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                 TensorProdBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorProdBasis_Hexahedron2
+REAL(DFP) :: xij(3, SIZE(x) * SIZE(y) * SIZE(z))
+INTEGER(I4B) :: ii, jj, cnt, kk
+
+xij = 0.0_DFP
+cnt = 0
+DO ii = 1, SIZE(x)
+  DO jj = 1, SIZE(y)
+    DO kk = 1, SIZE(z)
+      cnt = cnt + 1
+      xij(1, cnt) = x(ii)
+      xij(2, cnt) = y(jj)
+      xij(3, cnt) = z(kk)
+    END DO
+  END DO
+END DO
+
+ans = TensorProdBasis_Hexahedron1( &
+  & p=p, &
+  & q=q, &
+  & r=r, &
+  & xij=xij, &
+  & basisType1=basisType1, &
+  & basisType2=basisType2, &
+  & basisType3=basisType3, &
+  & alpha1=alpha1, &
+  & alpha2=alpha2, &
+  & alpha3=alpha3, &
+  & beta1=beta1, &
+  & beta2=beta2, &
+  & beta3=beta3, &
+  & lambda1=lambda1, &
+  & lambda2=lambda2, &
+  & lambda3=lambda3)
+
+END PROCEDURE TensorProdBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                     VertexBasis_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasis_Hexahedron1
+ans(:, 1) = 0.125_DFP * (1.0_DFP - x) * (1.0_DFP - y) * (1.0_DFP - z)
+ans(:, 2) = 0.125_DFP * (1.0_DFP + x) * (1.0_DFP - y) * (1.0_DFP - z)
+ans(:, 3) = 0.125_DFP * (1.0_DFP + x) * (1.0_DFP + y) * (1.0_DFP - z)
+ans(:, 4) = 0.125_DFP * (1.0_DFP - x) * (1.0_DFP + y) * (1.0_DFP - z)
+ans(:, 5) = 0.125_DFP * (1.0_DFP - x) * (1.0_DFP - y) * (1.0_DFP + z)
+ans(:, 6) = 0.125_DFP * (1.0_DFP + x) * (1.0_DFP - y) * (1.0_DFP + z)
+ans(:, 7) = 0.125_DFP * (1.0_DFP + x) * (1.0_DFP + y) * (1.0_DFP + z)
+ans(:, 8) = 0.125_DFP * (1.0_DFP - x) * (1.0_DFP + y) * (1.0_DFP + z)
+END PROCEDURE VertexBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   VertexBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasis_Hexahedron2
+ans(:, 1) = L1(:, 0) * L2(:, 0) * L3(:, 0)
+ans(:, 2) = L1(:, 1) * L2(:, 0) * L3(:, 0)
+ans(:, 3) = L1(:, 1) * L2(:, 1) * L3(:, 0)
+ans(:, 4) = L1(:, 0) * L2(:, 1) * L3(:, 0)
+ans(:, 5) = L1(:, 0) * L2(:, 0) * L3(:, 1)
+ans(:, 6) = L1(:, 1) * L2(:, 0) * L3(:, 1)
+ans(:, 7) = L1(:, 1) * L2(:, 1) * L3(:, 1)
+ans(:, 8) = L1(:, 0) * L2(:, 1) * L3(:, 1)
+END PROCEDURE VertexBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                   VertexBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasis_Hexahedron3
+ans = VertexBasis_Hexahedron1( &
+  & x=xij(1, :), &
+  & y=xij(2, :), &
+  & z=xij(3, :) &
+  & )
+END PROCEDURE VertexBasis_Hexahedron3
+
+!----------------------------------------------------------------------------
+!                                                   xEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xEdgeBasis_Hexahedron1
+REAL(DFP) :: L1(1:SIZE(x), 0:MAXVAL([pe1, pe2, pe3, pe4]))
+INTEGER(I4B) :: maxP, k1, cnt
+
+maxP = SIZE(L1, 2) - 1_I4B
+L1 = LobattoEvalAll(n=maxP, x=x)
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L1(:, k1) * (1.0_DFP - y) * (1.0_DFP - z)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L1(:, k1) * (1.0_DFP + y) * (1.0_DFP - z)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L1(:, k1) * (1.0_DFP - y) * (1.0_DFP + z)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L1(:, k1) * (1.0_DFP + y) * (1.0_DFP + z)
+END DO
+
+END PROCEDURE xEdgeBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   xEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xEdgeBasis_Hexahedron2
+INTEGER(I4B) :: cnt, k1
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt) = L1(:, k1) * L2(:, 0) * L3(:, 0)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt) = L1(:, k1) * L2(:, 1) * L3(:, 0)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt) = L1(:, k1) * L2(:, 0) * L3(:, 1)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt) = L1(:, k1) * L2(:, 1) * L3(:, 1)
+END DO
+END PROCEDURE xEdgeBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                     yEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE yEdgeBasis_Hexahedron1
+REAL(DFP) :: L2(1:SIZE(y), 0:MAXVAL([pe1, pe2, pe3, pe4]))
+INTEGER(I4B) :: maxP, k1, cnt
+
+maxP = SIZE(L2, 2) - 1_I4B
+L2 = LobattoEvalAll(n=maxP, x=y)
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L2(:, k1) * (1.0_DFP - x) * (1.0_DFP - z)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L2(:, k1) * (1.0_DFP + x) * (1.0_DFP - z)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L2(:, k1) * (1.0_DFP - x) * (1.0_DFP + z)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L2(:, k1) * (1.0_DFP + x) * (1.0_DFP + z)
+END DO
+
+END PROCEDURE yEdgeBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   yEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE yEdgeBasis_Hexahedron2
+INTEGER(I4B) :: cnt, k1
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt) = L2(:, k1) * L1(:, 0) * L3(:, 0)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt) = L2(:, k1) * L1(:, 1) * L3(:, 0)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt) = L2(:, k1) * L1(:, 0) * L3(:, 1)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt) = L2(:, k1) * L1(:, 1) * L3(:, 1)
+END DO
+END PROCEDURE yEdgeBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                     zEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE zEdgeBasis_Hexahedron1
+REAL(DFP) :: L3(1:SIZE(y), 0:MAXVAL([pe1, pe2, pe3, pe4]))
+INTEGER(I4B) :: maxP, k1, cnt
+
+maxP = SIZE(L3, 2) - 1_I4B
+L3 = LobattoEvalAll(n=maxP, x=z)
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L3(:, k1) * (1.0_DFP - x) * (1.0_DFP - y)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L3(:, k1) * (1.0_DFP + x) * (1.0_DFP - y)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L3(:, k1) * (1.0_DFP - x) * (1.0_DFP + y)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt) = 0.25_DFP * L3(:, k1) * (1.0_DFP + x) * (1.0_DFP + y)
+END DO
+END PROCEDURE zEdgeBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   zEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE zEdgeBasis_Hexahedron2
+INTEGER(I4B) :: cnt, k1
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt) = L3(:, k1) * L1(:, 0) * L2(:, 0)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt) = L3(:, k1) * L1(:, 1) * L2(:, 0)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt) = L3(:, k1) * L1(:, 0) * L2(:, 1)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt) = L3(:, k1) * L1(:, 1) * L2(:, 1)
+END DO
+END PROCEDURE zEdgeBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                     EdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeBasis_Hexahedron1
+SELECT CASE (dim)
+CASE (1_I4B)
+  ans = xEdgeBasis_Hexahedron1(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+    &  x=x, y=y, z=z)
+CASE (2_I4B)
+  ans = yEdgeBasis_Hexahedron1(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+    &  x=x, y=y, z=z)
+CASE (3_I4B)
+  ans = zEdgeBasis_Hexahedron1(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+    &  x=x, y=y, z=z)
+END SELECT
+END PROCEDURE EdgeBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   EdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeBasis_Hexahedron2
+SELECT CASE (dim)
+CASE (1_I4B)
+  ans = xEdgeBasis_Hexahedron2(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+    & L1=L1, L2=L2, L3=L3)
+CASE (2_I4B)
+  ans = yEdgeBasis_Hexahedron2(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+    & L1=L1, L2=L2, L3=L3)
+CASE (3_I4B)
+  ans = zEdgeBasis_Hexahedron2(pe1=pe1, pe2=pe2, pe3=pe3, pe4=pe4, &
+    & L1=L1, L2=L2, L3=L3)
+END SELECT
+END PROCEDURE EdgeBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                    xyFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xyFacetBasis_Hexahedron1
+REAL(DFP) :: L1(1:SIZE(x), 0:n1)
+REAL(DFP) :: L2(1:SIZE(y), 0:n2)
+INTEGER(I4B) :: k1, cnt, k2
+
+L1 = LobattoEvalAll(n=n1, x=x)
+L2 = LobattoEvalAll(n=n2, x=y)
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * L2(:, k2) * 0.5_DFP * (1.0_DFP - z)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * L2(:, k2) * 0.5_DFP * (1.0_DFP + z)
+  END DO
+END DO
+END PROCEDURE xyFacetBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                    xyFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xyFacetBasis_Hexahedron2
+INTEGER(I4B) :: k1, cnt, k2
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * L2(:, k2) * L3(:, 0)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * L2(:, k2) * L3(:, 1)
+  END DO
+END DO
+END PROCEDURE xyFacetBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                    yzFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE yzFacetBasis_Hexahedron1
+REAL(DFP) :: L2(1:SIZE(y), 0:n1)
+REAL(DFP) :: L3(1:SIZE(z), 0:n2)
+INTEGER(I4B) :: k1, cnt, k2
+
+L2 = LobattoEvalAll(n=n1, x=y)
+L3 = LobattoEvalAll(n=n2, x=z)
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L2(:, k1) * L3(:, k2) * 0.5_DFP * (1.0_DFP - x)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L2(:, k1) * L3(:, k2) * 0.5_DFP * (1.0_DFP + x)
+  END DO
+END DO
+END PROCEDURE yzFacetBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                    yzFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE yzFacetBasis_Hexahedron2
+INTEGER(I4B) :: k1, cnt, k2
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L2(:, k1) * L3(:, k2) * L1(:, 0)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L2(:, k1) * L3(:, k2) * L1(:, 1)
+  END DO
+END DO
+END PROCEDURE yzFacetBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                    xzFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xzFacetBasis_Hexahedron1
+REAL(DFP) :: L1(1:SIZE(x), 0:n1)
+REAL(DFP) :: L3(1:SIZE(z), 0:n2)
+INTEGER(I4B) :: k1, cnt, k2
+
+L1 = LobattoEvalAll(n=n1, x=x)
+L3 = LobattoEvalAll(n=n2, x=z)
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * L3(:, k2) * 0.5_DFP * (1.0_DFP - y)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * L3(:, k2) * 0.5_DFP * (1.0_DFP + y)
+  END DO
+END DO
+END PROCEDURE xzFacetBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                    xzFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xzFacetBasis_Hexahedron2
+INTEGER(I4B) :: k1, cnt, k2
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * L3(:, k2) * L2(:, 0)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt) = L1(:, k1) * L3(:, k2) * L2(:, 1)
+  END DO
+END DO
+END PROCEDURE xzFacetBasis_Hexahedron2
 
 !----------------------------------------------------------------------------
 !

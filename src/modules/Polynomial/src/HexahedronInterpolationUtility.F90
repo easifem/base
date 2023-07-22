@@ -30,15 +30,15 @@ PUBLIC :: RefHexahedronCoord
 PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
 PUBLIC :: QuadratureNumber_Hexahedron
-! PUBLIC :: TensorProdBasis_Hexahedron
-! PUBLIC :: VertexBasis_Hexahedron
-! PUBLIC :: xEdgeBasis_Hexahedron
-! PUBLIC :: yEdgeBasis_Hexahedron
-! PUBLIC :: zEdgeBasis_Hexahedron
-! PUBLIC :: EdgeBasis_Hexahedron
-! PUBLIC :: xFacetBasis_Hexahedron
-! PUBLIC :: yFacetBasis_Hexahedron
-! PUBLIC :: zFacetBasis_Hexahedron
+PUBLIC :: TensorProdBasis_Hexahedron
+PUBLIC :: VertexBasis_Hexahedron
+PUBLIC :: xEdgeBasis_Hexahedron
+PUBLIC :: yEdgeBasis_Hexahedron
+PUBLIC :: zEdgeBasis_Hexahedron
+PUBLIC :: EdgeBasis_Hexahedron
+PUBLIC :: xyFacetBasis_Hexahedron
+PUBLIC :: yzFacetBasis_Hexahedron
+PUBLIC :: xzFacetBasis_Hexahedron
 ! PUBLIC :: FacetBasis_Hexahedron
 ! PUBLIC :: CellBasis_Hexahedron
 ! PUBLIC :: HeirarchicalBasis_Hexahedron
@@ -341,7 +341,7 @@ END INTERFACE EquidistancePoint_Hexahedron
 
 INTERFACE InterpolationPoint_Hexahedron
   MODULE FUNCTION InterpolationPoint_Hexahedron1(order, ipType, &
-    & layout, xij) RESULT(ans)
+    & layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order in x, y and z direction
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -352,6 +352,12 @@ INTERFACE InterpolationPoint_Hexahedron
     !! layout can be VEFC or INCREASING
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordiantes of reference hexahedron
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in xij format
     !! rows of ans denotes x, y, z components
@@ -376,7 +382,11 @@ INTERFACE InterpolationPoint_Hexahedron
     & ipType2, &
     & ipType3,  &
     & layout,  &
-    & xij) RESULT(ans)
+    & xij, &
+    & alpha1, beta1, lambda1, &
+    & alpha2, beta2, lambda2, &
+    & alpha3, beta3, lambda3 &
+    & ) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order in x direction
     INTEGER(I4B), INTENT(IN) :: q
@@ -393,6 +403,24 @@ INTERFACE InterpolationPoint_Hexahedron
     !! layout can be VEFC or INCREASING
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinate of reference Hexahedron
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta3
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda3
+    !! Ultraspherical parameter
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in xij format
     !! rows of ans denotes x, y, z components
@@ -616,5 +644,619 @@ INTERFACE LagrangeCoeff_Hexahedron
     !! coefficients
   END FUNCTION LagrangeCoeff_Hexahedron5
 END INTERFACE LagrangeCoeff_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                            TensorProdBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all tensor product orthogoanl polynomial on hexahedron
+
+INTERFACE TensorProdBasis_Hexahedron
+  MODULE FUNCTION TensorProdBasis_Hexahedron1(  &
+    & p,  &
+    & q,  &
+    & r,  &
+    & xij, &
+    & basisType1,  &
+    & basisType2,  &
+    & basisType3,  &
+    & alpha1,  &
+    & beta1,  &
+    & lambda1,  &
+    & alpha2,  &
+    & beta2,  &
+    & lambda2,  &
+    & alpha3,  &
+    & beta3,  &
+    & lambda3) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! highest order in x3 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: basisType1, basisType2, basisType3
+    !! basis type in x1 direction
+    !! Monomials
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when  basisType1 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when basisType1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when basisType1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when basisType2 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3
+    !! alpha3 needed when  basisType3 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta3
+    !! beta3 is needed when basisType3 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda3
+    !! lambda3 is needed when basisType3 is "Ultraspherical"
+    REAL(DFP) :: ans(SIZE(xij, 2), (p + 1) * (q + 1) * (r + 1))
+    !!
+  END FUNCTION TensorProdBasis_Hexahedron1
+END INTERFACE TensorProdBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                            TensorProdBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all tensor product orthogoanl polynomial on quadrangle
+!
+!# Introduction
+!
+! This function returns the tensor product expansion of orthogonal
+! polynomial on biunit quadrangle. Here xij is obtained by
+! outer product of x and y
+
+INTERFACE TensorProdBasis_Hexahedron
+  MODULE FUNCTION TensorProdBasis_Hexahedron2( &
+    & p, &
+    & q, &
+    & r, &
+    & x, &
+    & y, &
+    & z, &
+    & basisType1, &
+    & basisType2, &
+    & basisType3, &
+    & alpha1, &
+    & beta1, &
+    & lambda1, &
+    & alpha2, &
+    & beta2, &
+    & lambda2, &
+    & alpha3,  &
+    & beta3,  &
+    & lambda3) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! highest order in x3 direction
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: basisType1, basisType2, basisType3
+    !! orthogonal polynomial family in x1 direction
+    !! Monomials
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    REAL(DFP) :: ans(SIZE(x) * SIZE(y), (p + 1) * (q + 1) * (r + 1))
+    !! Tensor basis
+    !! The number of rows corresponds to the
+    !! total number of points
+  END FUNCTION TensorProdBasis_Hexahedron2
+END INTERFACE TensorProdBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    VertexBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit hexahedron
+
+INTERFACE VertexBasis_Hexahedron
+  MODULE PURE FUNCTION VertexBasis_Hexahedron1(x, y, z) &
+     & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(x), 8)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasis_Hexahedron1
+END INTERFACE VertexBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    VertexBasis_Hexahedron2
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit quadrangle
+
+INTERFACE
+  MODULE PURE FUNCTION VertexBasis_Hexahedron2(L1, L2, L3) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! L1 Lobatto polynomial evaluated at x coordinates
+    !! L2 is Lobatto polynomial evaluated at y coordinates
+    !! L3 is Lobatto polynomial evaluated at z coordinates
+    REAL(DFP) :: ans(SIZE(L1, 1), 8)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasis_Hexahedron2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    VertexBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit quadrangle
+
+INTERFACE VertexBasis_Hexahedron
+  MODULE PURE FUNCTION VertexBasis_Hexahedron3(xij) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    REAL(DFP) :: ans(SIZE(xij, 2), 8)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasis_Hexahedron3
+END INTERFACE VertexBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     xEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on edges parallel to x axis
+
+INTERFACE xEdgeBasis_Hexahedron
+  MODULE PURE FUNCTION xEdgeBasis_Hexahedron1(  &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & x, &
+    & y,  &
+    & z) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    REAL(DFP) :: ans(SIZE(x), pe1 + pe2 + pe3 + pe4 - 4)
+  END FUNCTION xEdgeBasis_Hexahedron1
+END INTERFACE xEdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE xEdgeBasis_Hexahedron
+  MODULE PURE FUNCTION xEdgeBasis_Hexahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & L1, &
+    & L2, &
+    & L3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4)
+  END FUNCTION xEdgeBasis_Hexahedron2
+END INTERFACE xEdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     yEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on edges parallel to y axis
+
+INTERFACE yEdgeBasis_Hexahedron
+  MODULE PURE FUNCTION yEdgeBasis_Hexahedron1(  &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & x, &
+    & y,  &
+    & z) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    REAL(DFP) :: ans(SIZE(x), pe1 + pe2 + pe3 + pe4 - 4)
+  END FUNCTION yEdgeBasis_Hexahedron1
+END INTERFACE yEdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE yEdgeBasis_Hexahedron
+  MODULE PURE FUNCTION yEdgeBasis_Hexahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & L1, &
+    & L2, &
+    & L3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4)
+  END FUNCTION yEdgeBasis_Hexahedron2
+END INTERFACE yEdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     zEdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on edges parallel to y axis
+
+INTERFACE zEdgeBasis_Hexahedron
+  MODULE PURE FUNCTION zEdgeBasis_Hexahedron1(  &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & x, &
+    & y,  &
+    & z) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    REAL(DFP) :: ans(SIZE(x), pe1 + pe2 + pe3 + pe4 - 4)
+  END FUNCTION zEdgeBasis_Hexahedron1
+END INTERFACE zEdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE zEdgeBasis_Hexahedron
+  MODULE PURE FUNCTION zEdgeBasis_Hexahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & L1, &
+    & L2, &
+    & L3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4)
+  END FUNCTION zEdgeBasis_Hexahedron2
+END INTERFACE zEdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                      EdgeBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on edges parallel to y axis
+
+INTERFACE EdgeBasis_Hexahedron
+  MODULE PURE FUNCTION EdgeBasis_Hexahedron1(  &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & x, &
+    & y,  &
+    & z, &
+    & dim) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    INTEGER(I4B), INTENT(IN) :: dim
+    !! dim specifies the axis orientation, it can be
+    !! dim = 1, means x axis
+    !! dim = 2, means y axis
+    !! dim = 3, means z axis
+    REAL(DFP) :: ans(SIZE(x), pe1 + pe2 + pe3 + pe4 - 4)
+  END FUNCTION EdgeBasis_Hexahedron1
+END INTERFACE EdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE EdgeBasis_Hexahedron
+  MODULE PURE FUNCTION EdgeBasis_Hexahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dim) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    INTEGER(I4B), INTENT(IN) :: dim
+    !! dim specifies the axis orientation, it can be
+    !! dim = 1, means x axis
+    !! dim = 2, means y axis
+    !! dim = 3, means z axis
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4)
+  END FUNCTION EdgeBasis_Hexahedron2
+END INTERFACE EdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    xyFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xyFacet
+
+INTERFACE xyFacetBasis_Hexahedron
+  MODULE PURE FUNCTION xyFacetBasis_Hexahedron1(  &
+    & n1, &
+    & n2, &
+    & x,   &
+    & y,   &
+    & z)   &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xy face
+    !! it should be greater than 3
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xy face
+    !! it should be greater than 3
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    REAL(DFP) :: ans( &
+      & SIZE(x), &
+      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+  END FUNCTION xyFacetBasis_Hexahedron1
+END INTERFACE xyFacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    xyFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xyFacet
+
+INTERFACE xyFacetBasis_Hexahedron
+  MODULE PURE FUNCTION xyFacetBasis_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & L1, &
+    & L2, &
+    & L3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xy face
+    !! it should be greater than 3
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xy face
+    !! it should be greater than 3
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+  END FUNCTION xyFacetBasis_Hexahedron2
+END INTERFACE xyFacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    yzFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on yzFacet
+
+INTERFACE yzFacetBasis_Hexahedron
+  MODULE PURE FUNCTION yzFacetBasis_Hexahedron1(  &
+    & n1, &
+    & n2, &
+    & x,   &
+    & y,   &
+    & z)   &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xy face
+    !! it should be greater than 3
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xy face
+    !! it should be greater than 3
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    REAL(DFP) :: ans( &
+      & SIZE(x), &
+      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+  END FUNCTION yzFacetBasis_Hexahedron1
+END INTERFACE yzFacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on yzFacet
+
+INTERFACE yzFacetBasis_Hexahedron
+  MODULE PURE FUNCTION yzFacetBasis_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & L1, &
+    & L2, &
+    & L3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xy face
+    !! it should be greater than 3
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xy face
+    !! it should be greater than 3
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+  END FUNCTION yzFacetBasis_Hexahedron2
+END INTERFACE yzFacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    xzFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xzFacet
+
+INTERFACE xzFacetBasis_Hexahedron
+  MODULE PURE FUNCTION xzFacetBasis_Hexahedron1(  &
+    & n1, &
+    & n2, &
+    & x,   &
+    & y,   &
+    & z)   &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xy face
+    !! it should be greater than 3
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xy face
+    !! it should be greater than 3
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    REAL(DFP) :: ans( &
+      & SIZE(x), &
+      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+  END FUNCTION xzFacetBasis_Hexahedron1
+END INTERFACE xzFacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    xzFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xzFacet
+
+INTERFACE xzFacetBasis_Hexahedron
+  MODULE PURE FUNCTION xzFacetBasis_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & L1, &
+    & L2, &
+    & L3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xy face
+    !! it should be greater than 3
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xy face
+    !! it should be greater than 3
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+  END FUNCTION xzFacetBasis_Hexahedron2
+END INTERFACE xzFacetBasis_Hexahedron
 
 END MODULE HexahedronInterpolationUtility
