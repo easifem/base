@@ -39,14 +39,216 @@ PUBLIC :: EdgeBasis_Hexahedron
 PUBLIC :: xyFacetBasis_Hexahedron
 PUBLIC :: yzFacetBasis_Hexahedron
 PUBLIC :: xzFacetBasis_Hexahedron
-! PUBLIC :: FacetBasis_Hexahedron
-! PUBLIC :: CellBasis_Hexahedron
-! PUBLIC :: HeirarchicalBasis_Hexahedron
-! PUBLIC :: LagrangeEvalAll_Hexahedron
-! PUBLIC :: QuadraturePoint_Hexahedron
+PUBLIC :: FacetBasis_Hexahedron
+PUBLIC :: CellBasis_Hexahedron
+PUBLIC :: HeirarchicalBasis_Hexahedron
+PUBLIC :: QuadraturePoint_Hexahedron
+PUBLIC :: LagrangeEvalAll_Hexahedron
+PUBLIC :: GetVertexDOF_Hexahedron
+PUBLIC :: GetEdgeDOF_Hexahedron
+PUBLIC :: GetFacetDOF_Hexahedron
+PUBLIC :: GetCellDOF_Hexahedron
 
 !----------------------------------------------------------------------------
-!                                                 QuadratureNumber_Quadrangle
+!                                                    GetVertexDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-24
+! summary:  returns total number of vertex degrees of freedom
+
+INTERFACE
+  MODULE PURE FUNCTION GetVertexDOF_Hexahedron() RESULT(ans)
+    INTEGER(I4B) :: ans
+  END FUNCTION GetVertexDOF_Hexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                     GetEdgeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-24
+! summary:  returns total number of degrees of freedom on edges parallel to
+! some axis
+
+INTERFACE GetEdgeDOF_Hexahedron
+  MODULE PURE FUNCTION GetEdgeDOF_Hexahedron1(pe1, pe2, pe3, pe4)  &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1, pe2, pe3, pe4
+    !! Order of interpolation in x or y or z direction
+    INTEGER(I4B) :: ans
+  END FUNCTION GetEdgeDOF_Hexahedron1
+END INTERFACE GetEdgeDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetEdgeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary:  Returns total number of degrees of freedom on all edges
+
+INTERFACE GetEdgeDOF_Hexahedron
+  MODULE PURE FUNCTION GetEdgeDOF_Hexahedron2(p, q, r)  &
+  & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! Order of approximation in x,y and z direction
+    INTEGER(I4B) :: ans
+  END FUNCTION GetEdgeDOF_Hexahedron2
+END INTERFACE GetEdgeDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetEdgeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary:  Returns total number of degrees of freedom on all edges
+
+INTERFACE GetEdgeDOF_Hexahedron
+  MODULE PURE FUNCTION GetEdgeDOF_Hexahedron3(p)  &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    INTEGER(I4B) :: ans
+  END FUNCTION GetEdgeDOF_Hexahedron3
+END INTERFACE GetEdgeDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetEdgeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary:  Returns total number of degrees of freedom on all edges
+
+INTERFACE GetEdgeDOF_Hexahedron
+  MODULE PURE FUNCTION GetEdgeDOF_Hexahedron4( &
+    & px1, px2, px3, px4, &
+    & py1, py2, py3, py4, &
+    & pz1, pz2, pz3, pz4)  &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: px1, px2, px3, px4
+    !! orders alongs edges parallel to x axis
+    INTEGER(I4B), INTENT(IN) :: py1, py2, py3, py4
+    !! orders along edges parallel to y axis
+    INTEGER(I4B), INTENT(IN) :: pz1, pz2, pz3, pz4
+    !! orders along edges parallel to z axis
+    INTEGER(I4B) :: ans
+  END FUNCTION GetEdgeDOF_Hexahedron4
+END INTERFACE GetEdgeDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary: Returns dof on all facets
+
+INTERFACE GetFacetDOF_Hexahedron
+  MODULE PURE FUNCTION GetFacetDOF_Hexahedron1( &
+    & pxy1, pxy2, &
+    & pxz1, pxz2, &
+    & pyz1, pyz2) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pxy1, pxy2
+    !! orders alongs facets parallel to xy plane
+    INTEGER(I4B), INTENT(IN) :: pxz1, pxz2
+    !! orders along facets parallel to xz plane
+    INTEGER(I4B), INTENT(IN) :: pyz1, pyz2
+    !! orders along facets parallel to yx plane
+    INTEGER(I4B) :: ans
+  END FUNCTION GetFacetDOF_Hexahedron1
+END INTERFACE GetFacetDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary: Returns total degrees of freedom on all facets
+
+INTERFACE GetFacetDOF_Hexahedron
+  MODULE PURE FUNCTION GetFacetDOF_Hexahedron2(p, q, r) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! orders in x, y and z direction
+    INTEGER(I4B) :: ans
+  END FUNCTION GetFacetDOF_Hexahedron2
+END INTERFACE GetFacetDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary: Returns total degree of freedom on a single facet
+
+INTERFACE GetFacetDOF_Hexahedron
+  MODULE PURE FUNCTION GetFacetDOF_Hexahedron3(p, q) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q
+    !! orders alongs facets parallel to xy or xz or yz planes
+    INTEGER(I4B) :: ans
+  END FUNCTION GetFacetDOF_Hexahedron3
+END INTERFACE GetFacetDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary: Returns total degrees of freedom on all facets
+
+INTERFACE GetFacetDOF_Hexahedron
+  MODULE PURE FUNCTION GetFacetDOF_Hexahedron4(p) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! orders alongs facets parallel to xy or xz or yz planes
+    INTEGER(I4B) :: ans
+  END FUNCTION GetFacetDOF_Hexahedron4
+END INTERFACE GetFacetDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary:
+
+INTERFACE GetCellDOF_Hexahedron
+  MODULE PURE FUNCTION GetCellDOF_Hexahedron1(p, q, r) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! orders alongs to x, y, and z directions
+    INTEGER(I4B) :: ans
+  END FUNCTION GetCellDOF_Hexahedron1
+END INTERFACE GetCellDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                     GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-24
+! summary:
+
+INTERFACE GetCellDOF_Hexahedron
+  MODULE PURE FUNCTION GetCellDOF_Hexahedron2(p) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! orders alongs to x, y, and z directions
+    INTEGER(I4B) :: ans
+  END FUNCTION GetCellDOF_Hexahedron2
+END INTERFACE GetCellDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                 QuadratureNumber_Hexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -1097,16 +1299,16 @@ INTERFACE xyFacetBasis_Hexahedron
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n1
     !! order along axis 1 of xy face
-    !! it should be greater than 3
+    !! it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: n2
     !! order along axis 2 of xy face
-    !! it should be greater than 3
+    !! it should be greater than 1
     REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
     !! point of evaluation
     !! these points should be between [-1, 1].
     REAL(DFP) :: ans( &
       & SIZE(x), &
-      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
   END FUNCTION xyFacetBasis_Hexahedron1
 END INTERFACE xyFacetBasis_Hexahedron
 
@@ -1127,15 +1329,15 @@ INTERFACE xyFacetBasis_Hexahedron
     & L3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n1
     !! order along axis 1 of xy face
-    !! it should be greater than 3
+    !! it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: n2
     !! order along axis 2 of xy face
-    !! it should be greater than 3
+    !! it should be greater than 1
     REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
     !! Lobatto polynomials in x, y, and z direction.
     REAL(DFP) :: ans( &
       & SIZE(L1, 1), &
-      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
   END FUNCTION xyFacetBasis_Hexahedron2
 END INTERFACE xyFacetBasis_Hexahedron
 
@@ -1156,17 +1358,17 @@ INTERFACE yzFacetBasis_Hexahedron
     & z)   &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n1
-    !! order along axis 1 of xy face
-    !! it should be greater than 3
+    !! order along axis 1 of yz face
+    !! it should be greater than  1
     INTEGER(I4B), INTENT(IN) :: n2
-    !! order along axis 2 of xy face
-    !! it should be greater than 3
+    !! order along axis 2 of yz face
+    !! it should be greater than 1
     REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
     !! point of evaluation
     !! these points should be between [-1, 1].
     REAL(DFP) :: ans( &
       & SIZE(x), &
-      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
   END FUNCTION yzFacetBasis_Hexahedron1
 END INTERFACE yzFacetBasis_Hexahedron
 
@@ -1186,16 +1388,16 @@ INTERFACE yzFacetBasis_Hexahedron
     & L2, &
     & L3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n1
-    !! order along axis 1 of xy face
-    !! it should be greater than 3
+    !! order along axis 1 of yz face
+    !! it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: n2
-    !! order along axis 2 of xy face
-    !! it should be greater than 3
+    !! order along axis 2 of yz face
+    !! it should be greater than 1
     REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
     !! Lobatto polynomials in x, y, and z direction.
     REAL(DFP) :: ans( &
       & SIZE(L1, 1), &
-      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
   END FUNCTION yzFacetBasis_Hexahedron2
 END INTERFACE yzFacetBasis_Hexahedron
 
@@ -1216,17 +1418,17 @@ INTERFACE xzFacetBasis_Hexahedron
     & z)   &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n1
-    !! order along axis 1 of xy face
-    !! it should be greater than 3
+    !! order along axis 1 of xz face
+    !! it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: n2
-    !! order along axis 2 of xy face
-    !! it should be greater than 3
+    !! order along axis 2 of xz face
+    !! it should be greater than 1
     REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
     !! point of evaluation
     !! these points should be between [-1, 1].
     REAL(DFP) :: ans( &
       & SIZE(x), &
-      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
   END FUNCTION xzFacetBasis_Hexahedron1
 END INTERFACE xzFacetBasis_Hexahedron
 
@@ -1246,17 +1448,540 @@ INTERFACE xzFacetBasis_Hexahedron
     & L2, &
     & L3) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xz face
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xz face
+    !! it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
+  END FUNCTION xzFacetBasis_Hexahedron2
+END INTERFACE xzFacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                    xzFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xzFacet
+
+INTERFACE FacetBasis_Hexahedron
+  MODULE PURE FUNCTION FacetBasis_Hexahedron1(  &
+    & n1, &
+    & n2, &
+    & x,   &
+    & y,   &
+    & z,  &
+    & dim1,  &
+    & dim2)   &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of the face
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of the face
+    !! it should be greater than 1
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    INTEGER(I4B), INTENT(IN) :: dim1
+    !! direction in n1 direction
+    INTEGER(I4B), INTENT(IN) :: dim2
+    !! direction in n2 direction
+    REAL(DFP) :: ans( &
+      & SIZE(x), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
+  END FUNCTION FacetBasis_Hexahedron1
+END INTERFACE FacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                      FacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xzFacet
+
+INTERFACE FacetBasis_Hexahedron
+  MODULE PURE FUNCTION FacetBasis_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dim1,  &
+    & dim2) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
     !! order along axis 1 of xy face
-    !! it should be greater than 3
+    !! it should be greater than 1
     INTEGER(I4B), INTENT(IN) :: n2
     !! order along axis 2 of xy face
+    !! it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    INTEGER(I4B), INTENT(IN) :: dim1
+    !! direction in n1 direction
+    INTEGER(I4B), INTENT(IN) :: dim2
+    !! direction in n2 direction
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
+  END FUNCTION FacetBasis_Hexahedron2
+END INTERFACE FacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                       CellBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on Cell
+
+INTERFACE CellBasis_Hexahedron
+  MODULE PURE FUNCTION CellBasis_Hexahedron1(  &
+    & n1, &
+    & n2, &
+    & n3, &
+    & x,   &
+    & y,   &
+    & z)   &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n3
+    !! order along axis 3
+    !! it should be greater than 1
+    REAL(DFP), INTENT(IN) :: x(:), y(:), z(:)
+    !! point of evaluation
+    !! these points should be between [-1, 1].
+    REAL(DFP) :: ans( &
+      & SIZE(x), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * (n3 - 1_I4B))
+  END FUNCTION CellBasis_Hexahedron1
+END INTERFACE CellBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                      CellBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xzCell
+
+INTERFACE CellBasis_Hexahedron
+  MODULE PURE FUNCTION CellBasis_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & n3, &
+    & L1, &
+    & L2, &
+    & L3) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2
+    !! it should be greater than 3
+    INTEGER(I4B), INTENT(IN) :: n3
+    !! order along axis 3
     !! it should be greater than 3
     REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
     !! Lobatto polynomials in x, y, and z direction.
     REAL(DFP) :: ans( &
       & SIZE(L1, 1), &
-      & (n1 - 1_I4B) * (n1 - 2_I4B) + (n2 - 1_I4B) * (n2 - 2_I4B))
-  END FUNCTION xzFacetBasis_Hexahedron2
-END INTERFACE xzFacetBasis_Hexahedron
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * (n3 - 1_I4B))
+  END FUNCTION CellBasis_Hexahedron2
+END INTERFACE CellBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                               HeirarchicalBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary: Returns the HeirarchicalBasis on Hexahedron
+
+INTERFACE HeirarchicalBasis_Hexahedron
+  MODULE PURE FUNCTION HeirarchicalBasis_Hexahedron1(  &
+    & pb1, pb2, pb3, &
+    & pxy1, pxy2, &
+    & pxz1, pxz2, &
+    & pyz1, pyz2, &
+    & px1, px2, px3, px4, &
+    & py1, py2, py3, py4, &
+    & pz1, pz2, pz3, pz4, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb1, pb2, pb3
+    !! order of interpolation inside the element in x, y, and z dirs
+    INTEGER(I4B), INTENT(IN) :: pxy1, pxy2
+    !! order of interpolation on facets parallel to xy plane
+    INTEGER(I4B), INTENT(IN) :: pxz1, pxz2
+    !! order of interpolation on facets parallel to xz plane
+    INTEGER(I4B), INTENT(IN) :: pyz1, pyz2
+    !! order of interpolation on facets parallel to yz plane
+    INTEGER(I4B), INTENT(IN) :: px1, px2, px3, px4
+    !! order of interpolation on edges parallel to x-axis
+    INTEGER(I4B), INTENT(IN) :: py1, py2, py3, py4
+    !! order of interpolation on edges parallel to y-axis
+    INTEGER(I4B), INTENT(IN) :: pz1, pz2, pz3, pz4
+    !! order of interpolation on edges parallel to z-axis
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP) :: ans(  &
+      & SIZE(xij, 2), &
+      &   8_I4B &
+      & + (pb1 - 1_I4B) * (pb2 - 1_I4B) * (pb3 - 1_I4B) &
+      & + (pxy1 - 1_I4B) * (pxy2 - 1_I4B) * 2_I4B  &
+      & + (pxz1 - 1_I4B) * (pxz2 - 1_I4B) * 2_I4B  &
+      & + (pyz1 - 1_I4B) * (pyz2 - 1_I4B) * 2_I4B  &
+      & + (px1 + px2 + px3 + px4 - 4_I4B) &
+      & + (py1 + py2 + py3 + py4 - 4_I4B) &
+      & + (pz1 + pz2 + pz3 + pz4 - 4_I4B) &
+      & )
+    !!
+  END FUNCTION HeirarchicalBasis_Hexahedron1
+END INTERFACE HeirarchicalBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                               HeirarchicalBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary: Returns the HeirarchicalBasis on Hexahedron
+
+INTERFACE HeirarchicalBasis_Hexahedron
+  MODULE PURE FUNCTION HeirarchicalBasis_Hexahedron2(  &
+    & p, q, r, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! order of interpolation in x, y, and z dirs
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP) :: ans(  &
+      & SIZE(xij, 2), &
+      &   8_I4B &
+      & + (p - 1_I4B) * (q - 1_I4B) * (r - 1_I4B) &
+      & + (p - 1_I4B) * (q - 1_I4B) * 2_I4B  &
+      & + (p - 1_I4B) * (r - 1_I4B) * 2_I4B  &
+      & + (q - 1_I4B) * (r - 1_I4B) * 2_I4B  &
+      & + (4_I4B * p - 4_I4B) &
+      & + (4_I4B * q - 4_I4B) &
+      & + (4_I4B * r - 4_I4B) &
+      & )
+    !!
+  END FUNCTION HeirarchicalBasis_Hexahedron2
+END INTERFACE HeirarchicalBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                 QuadraturePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-19
+! summary:  Returns quadrature points on reference hexahedron
+
+INTERFACE QuadraturePoint_Hexahedron
+  MODULE FUNCTION QuadraturePoint_Hexahedron1( &
+    & order, &
+    & quadType, &
+    & xij, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand in x, y, and z direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev1
+    !! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight
+    !! GaussUltraspherical
+    !! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight
+    !! GaussJacobi
+    !! GaussJacobiLobatto
+    !! GaussJacobiRadauLeft
+    !! GaussJacobiRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordiantes of hexahedron in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! quadrature points in xij format
+  END FUNCTION QuadraturePoint_Hexahedron1
+END INTERFACE QuadraturePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                QuadraturePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Hexahedron
+  MODULE FUNCTION QuadraturePoint_Hexahedron2(  &
+    & p, q, r, &
+    & quadType1, quadType2, quadType3, &
+    & xij, &
+    & alpha1, beta1, lambda1, &
+    & alpha2, beta2, lambda2, &
+    & alpha3, beta3, lambda3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of integrand in x direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of  integrand in y direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order of  integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadType1, quadType2, quadType3
+    !! quadrature point type in x direction
+    !! Equidistance
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev1
+    !! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight
+    !! GaussUltraspherical
+    !! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight
+    !! GaussJacobi
+    !! GaussJacobiLobatto
+    !! GaussJacobiRadauLeft
+    !! GaussJacobiRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! interpolation points in xij format
+  END FUNCTION QuadraturePoint_Hexahedron2
+END INTERFACE QuadraturePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                 QuadraturePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-19
+! summary:  Returns quadrature points on reference quadrangle
+
+INTERFACE QuadraturePoint_Hexahedron
+  MODULE FUNCTION QuadraturePoint_Hexahedron3(nips, quadType, &
+    & xij, alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! number of integration points in x, y, and z direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! interpolation point type
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev1
+    !! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight
+    !! GaussUltraspherical
+    !! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight
+    !! GaussJacobi
+    !! GaussJacobiLobatto
+    !! GaussJacobiRadauLeft
+    !! GaussJacobiRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! interpolation points in xij format
+  END FUNCTION QuadraturePoint_Hexahedron3
+END INTERFACE QuadraturePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                QuadraturePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+INTERFACE QuadraturePoint_Hexahedron
+  MODULE FUNCTION QuadraturePoint_Hexahedron4(  &
+    & nipsx, nipsy, nipsz, &
+    & quadType1, quadType2, quadType3, &
+    & xij, &
+    & alpha1, beta1, lambda1, &
+    & alpha2, beta2, lambda2, &
+    & alpha3, beta3, lambda3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! order of integrand in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! order of  integrand in y direction
+    INTEGER(I4B), INTENT(IN) :: nipsz(1)
+    !! order of  integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadType1, quadType2, quadType3
+    !! quadrature point type in x, y, and z direction
+    !! Equidistance
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev1
+    !! GaussChebyshev1Lobatto
+    !! GaussChebyshev1RadauLeft
+    !! GaussChebyshev1RadauRight
+    !! GaussUltraspherical
+    !! GaussUltrasphericalLobatto
+    !! GaussUltrasphericalRadauLeft
+    !! GaussUltrasphericalRadauRight
+    !! GaussJacobi
+    !! GaussJacobiLobatto
+    !! GaussJacobiRadauLeft
+    !! GaussJacobiRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! four vertices of quadrangle in xij format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi and Ultraspherical parameter
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! interpolation points in xij format
+  END FUNCTION QuadraturePoint_Hexahedron4
+END INTERFACE QuadraturePoint_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  Evaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeEvalAll_Hexahedron
+  MODULE FUNCTION LagrangeEvalAll_Hexahedron1( &
+    & order, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(3)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    !! x(3) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    !! The number of rows in xij is 3
+    !! The number of columns in xij should be equal to total
+    !! degree of freedom
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be computed and returned
+    !! by this routine.
+    !! If firstCall is False, then coeff should be given, which will be
+    !! used.
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Hexahedron1
+END INTERFACE LagrangeEvalAll_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                LagrangeEvalAll_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  Evaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeEvalAll_Hexahedron
+  MODULE FUNCTION LagrangeEvalAll_Hexahedron2( &
+    & order, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Hexahedron2
+END INTERFACE LagrangeEvalAll_Hexahedron
 
 END MODULE HexahedronInterpolationUtility

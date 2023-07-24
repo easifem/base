@@ -20,6 +20,104 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                 GetVertexDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetVertexDOF_Hexahedron
+ans = 8_I4B
+END PROCEDURE GetVertexDOF_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   GetEdgeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeDOF_Hexahedron1
+ans = MAX(pe1 + pe2 + pe3 + pe4 - 4_I4B, 0_I4B)
+END PROCEDURE GetEdgeDOF_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   GetEdgeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeDOF_Hexahedron2
+ans = GetEdgeDOF_Hexahedron(p, p, p, p) &
+  & + GetEdgeDOF_Hexahedron(q, q, q, q) &
+  & + GetEdgeDOF_Hexahedron(r, r, r, r)
+END PROCEDURE GetEdgeDOF_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                   GetEdgeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeDOF_Hexahedron3
+ans = GetEdgeDOF_Hexahedron(p, p, p)
+END PROCEDURE GetEdgeDOF_Hexahedron3
+
+!----------------------------------------------------------------------------
+!                                                   GetEdgeDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetEdgeDOF_Hexahedron4
+ans = GetEdgeDOF_Hexahedron(px1, px2, px3, px4) &
+  & + GetEdgeDOF_Hexahedron(py1, py2, py3, py4) &
+  & + GetEdgeDOF_Hexahedron(pz1, pz2, pz3, pz4)
+END PROCEDURE GetEdgeDOF_Hexahedron4
+
+!----------------------------------------------------------------------------
+!                                                   GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFacetDOF_Hexahedron1
+ans = GetFacetDOF_Hexahedron(pxy1, pxy2) &
+  & + GetFacetDOF_Hexahedron(pxz1, pxz2) &
+  & + GetFacetDOF_Hexahedron(pyz1, pyz2)
+ans = 2_I4B * ans
+END PROCEDURE GetFacetDOF_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFacetDOF_Hexahedron2
+ans = GetFacetDOF_Hexahedron(p, q) &
+  & + GetFacetDOF_Hexahedron(p, r) &
+  & + GetFacetDOF_Hexahedron(q, r)
+ans = ans * 2_I4B
+END PROCEDURE GetFacetDOF_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                   GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFacetDOF_Hexahedron3
+ans = (p - 1) * (q - 1)
+END PROCEDURE GetFacetDOF_Hexahedron3
+
+!----------------------------------------------------------------------------
+!                                                   GetFacetDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetFacetDOF_Hexahedron4
+ans = GetFacetDOF_Hexahedron(p, p) * 6_I4B
+END PROCEDURE GetFacetDOF_Hexahedron4
+
+!----------------------------------------------------------------------------
+!                                                   GetCellDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetCellDOF_Hexahedron1
+ans = (p - 1) * (q - 1) * (r - 1)
+END PROCEDURE GetCellDOF_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                   GetCellDOF_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetCellDOF_Hexahedron2
+ans = GetCellDOF_Hexahedron(p, p, p)
+END PROCEDURE GetCellDOF_Hexahedron2
+
+!----------------------------------------------------------------------------
 !                                               QuadratureNumber_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -307,8 +405,10 @@ MODULE PROCEDURE InterpolationPoint_Hexahedron2
 REAL(DFP) :: x(p + 1), y(q + 1), z(r + 1)
 REAL(DFP), DIMENSION(p + 1, q + 1, r + 1) :: xi, eta, zeta
 REAL(DFP), ALLOCATABLE :: temp(:, :)
-INTEGER(I4B) :: ii, jj, kk, nsd
-CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Hexahedron2"
+INTEGER(I4B) :: ii, jj, kk, nsd, cnt
+TYPE(String) :: astr
+
+astr = TRIM(UpperCase(layout))
 
 x = InterpolationPoint_Line(order=p, ipType=ipType1, &
   & xij=[-1.0_DFP, 1.0_DFP], &
@@ -347,14 +447,28 @@ DO ii = 1, p + 1
   END DO
 END DO
 
-CALL IJK2VEFC_Hexahedron( &
-  & xi=xi,  &
-  & eta=eta, &
-  & zeta=zeta, &
-  & temp=temp, &
-  & p=p, &
-  & q=q, &
-  & r=r)
+IF (astr%chars() .EQ. "VEFC") THEN
+  CALL IJK2VEFC_Hexahedron( &
+    & xi=xi,  &
+    & eta=eta, &
+    & zeta=zeta, &
+    & temp=temp, &
+    & p=p, &
+    & q=q, &
+    & r=r)
+ELSE
+  cnt = 0
+  DO ii = 1, p + 1
+    DO jj = 1, q + 1
+      DO kk = 1, r + 1
+        cnt = cnt + 1
+        temp(1, cnt) = x(ii)
+        temp(2, cnt) = y(ii)
+        temp(3, cnt) = z(ii)
+      END DO
+    END DO
+  END DO
+END IF
 
 IF (PRESENT(xij)) THEN
   ans = FromBiUnitHexahedron2Hexahedron( &
@@ -1006,7 +1120,7 @@ ans = TensorProdBasis_Hexahedron1( &
 END PROCEDURE TensorProdBasis_Hexahedron2
 
 !----------------------------------------------------------------------------
-!                                                     VertexBasis_Quadrangle
+!                                                     VertexBasis_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE VertexBasis_Hexahedron1
@@ -1423,6 +1537,610 @@ DO k1 = 2, n1
   END DO
 END DO
 END PROCEDURE xzFacetBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                      FacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetBasis_Hexahedron1
+
+SELECT CASE (dim1)
+CASE (1_I4B)
+  SELECT CASE (dim2)
+  CASE (2_I4B)
+    ans = xyFacetBasis_Hexahedron1(n1=n1, n2=n2, x=x, y=y, z=z)
+  CASE (3_I4B)
+    ans = xzFacetBasis_Hexahedron1(n1=n1, n2=n2, x=x, y=y, z=z)
+  END SELECT
+CASE (2_I4B)
+  SELECT CASE (dim2)
+  CASE (1_I4B)
+    ans = xyFacetBasis_Hexahedron1(n1=n1, n2=n2, x=x, y=y, z=z)
+  CASE (3_I4B)
+    ans = yzFacetBasis_Hexahedron1(n1=n1, n2=n2, x=x, y=y, z=z)
+  END SELECT
+CASE (3_I4B)
+  SELECT CASE (dim2)
+  CASE (1_I4B)
+    ans = xzFacetBasis_Hexahedron1(n1=n1, n2=n2, x=x, y=y, z=z)
+  CASE (2_I4B)
+    ans = yzFacetBasis_Hexahedron1(n1=n1, n2=n2, x=x, y=y, z=z)
+  END SELECT
+END SELECT
+
+END PROCEDURE FacetBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                     FacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetBasis_Hexahedron2
+
+SELECT CASE (dim1)
+CASE (1_I4B)
+  SELECT CASE (dim2)
+  CASE (2_I4B)
+    ans = xyFacetBasis_Hexahedron2(n1=n1, n2=n2, L1=L1, L2=L2, L3=L3)
+  CASE (3_I4B)
+    ans = xzFacetBasis_Hexahedron2(n1=n1, n2=n2, L1=L1, L2=L2, L3=L3)
+  END SELECT
+CASE (2_I4B)
+  SELECT CASE (dim2)
+  CASE (1_I4B)
+    ans = xyFacetBasis_Hexahedron2(n1=n1, n2=n2, L1=L1, L2=L2, L3=L3)
+  CASE (3_I4B)
+    ans = yzFacetBasis_Hexahedron2(n1=n1, n2=n2, L1=L1, L2=L2, L3=L3)
+  END SELECT
+CASE (3_I4B)
+  SELECT CASE (dim2)
+  CASE (1_I4B)
+    ans = xzFacetBasis_Hexahedron2(n1=n1, n2=n2, L1=L1, L2=L2, L3=L3)
+  CASE (2_I4B)
+    ans = yzFacetBasis_Hexahedron2(n1=n1, n2=n2, L1=L1, L2=L2, L3=L3)
+  END SELECT
+END SELECT
+END PROCEDURE FacetBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                       CellBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CellBasis_Hexahedron1
+REAL(DFP) :: L1(1:SIZE(x), 0:n1)
+REAL(DFP) :: L2(1:SIZE(y), 0:n2)
+REAL(DFP) :: L3(1:SIZE(z), 0:n3)
+INTEGER(I4B) :: k1, cnt, k2, k3
+L1 = LobattoEvalAll(n=n1, x=x)
+L2 = LobattoEvalAll(n=n2, x=y)
+L3 = LobattoEvalAll(n=n3, x=z)
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    DO k3 = 2, n3
+      cnt = cnt + 1
+      ans(:, cnt) = L1(:, k1) * L2(:, k2) * L3(:, k3)
+    END DO
+  END DO
+END DO
+END PROCEDURE CellBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                       CellBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CellBasis_Hexahedron2
+INTEGER(I4B) :: k1, cnt, k2, k3
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    DO k3 = 2, n3
+      cnt = cnt + 1
+      ans(:, cnt) = L1(:, k1) * L2(:, k2) * L3(:, k3)
+    END DO
+  END DO
+END DO
+END PROCEDURE CellBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                               HeirarchicalBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Hexahedron1
+
+#define _maxP_ MAXVAL([pb1, px1, px2, px3, px4, pxy1, pxz1])
+#define _maxQ_ MAXVAL([pb2, py1, py2, py3, py4, pxy2, pyz1])
+#define _maxR_ MAXVAL([pb3, pz1, pz2, pz3, pz4, pxz2, pyz2])
+
+INTEGER(I4B) :: a, b, maxP, maxQ, maxR
+REAL(DFP) :: L1(1:SIZE(xij, 2), 0:_maxP_)
+REAL(DFP) :: L2(1:SIZE(xij, 2), 0:_maxQ_)
+REAL(DFP) :: L3(1:SIZE(xij, 2), 0:_maxR_)
+
+#undef _maxP_
+#undef _maxQ_
+#undef _maxR_
+
+maxP = SIZE(L1, 2) - 1
+maxQ = SIZE(L2, 2) - 1
+maxR = SIZE(L3, 2) - 1
+
+L1 = LobattoEvalAll(n=maxP, x=xij(1, :))
+L2 = LobattoEvalAll(n=maxQ, x=xij(2, :))
+L3 = LobattoEvalAll(n=maxR, x=xij(3, :))
+
+! Vertex basis function
+
+ans(:, 1:8) = VertexBasis_Hexahedron2(L1=L1, L2=L2, L3=L3)
+
+! Edge basis function
+
+b = 8
+
+IF (ANY([px1, px2, px3, px4] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + px1 + px2 + px3 + px4 - 4
+  ans(:, a:b) = xEdgeBasis_Hexahedron2( &
+    & pe1=px1, pe2=px2, pe3=px3, pe4=px4, L1=L1, L2=L2, L3=L3)
+END IF
+
+IF (ANY([py1, py2, py3, py4] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + py1 + py2 + py3 + py4 - 4
+  ans(:, a:b) = yEdgeBasis_Hexahedron2( &
+    & pe1=py1, pe2=py2, pe3=py3, pe4=py4, L1=L1, L2=L2, L3=L3)
+END IF
+
+IF (ANY([pz1, pz2, pz3, pz4] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + pz1 + pz2 + pz3 + pz4 - 4
+  ans(:, a:b) = zEdgeBasis_Hexahedron2( &
+    & pe1=pz1, pe2=pz2, pe3=pz3, pe4=pz4, L1=L1, L2=L2, L3=L3)
+END IF
+
+! Facet basis function
+
+IF (ANY([pxy1, pxy2] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + 2 * (pxy1 - 1) * (pxy2 - 1)
+  ans(:, a:b) = xyFacetBasis_Hexahedron2( &
+    & n1=pxy1, n2=pxy2, L1=L1, L2=L2, L3=L3)
+END IF
+
+IF (ANY([pxz1, pxz2] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + 2 * (pxz1 - 1) * (pxz2 - 1)
+  ans(:, a:b) = xzFacetBasis_Hexahedron2( &
+    & n1=pxz1, n2=pxz2, L1=L1, L2=L2, L3=L3)
+END IF
+
+IF (ANY([pyz1, pyz2] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + 2 * (pyz1 - 1) * (pyz2 - 1)
+  ans(:, a:b) = yzFacetBasis_Hexahedron2( &
+    & n1=pyz1, n2=pyz2, L1=L1, L2=L2, L3=L3)
+END IF
+
+IF (ANY([pb1, pb2, pb3] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + (pb1 - 1) * (pb2 - 1) * (pb3 - 1)
+  ans(:, a:b) = cellBasis_Hexahedron2( &
+    & n1=pb1, n2=pb2, n3=pb3, L1=L1, L2=L2, L3=L3)
+END IF
+END PROCEDURE HeirarchicalBasis_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasis_Hexahedron2
+ans = HeirarchicalBasis_Hexahedron1(&
+  & pb1=p, pb2=q, pb3=r, &
+  & pxy1=p, pxy2=q, &
+  & pxz1=p, pxz2=r, &
+  & pyz1=q, pyz2=r, &
+  & px1=p, px2=p, px3=p, px4=p, &
+  & py1=q, py2=q, py3=q, py4=q, &
+  & pz1=r, pz2=r, pz3=r, pz4=r, &
+  & xij=xij)
+END PROCEDURE HeirarchicalBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                              QuadraturePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Hexahedron1
+ans = QuadraturePoint_Hexahedron2( &
+  & p=order, &
+  & q=order, &
+  & r=order, &
+  & quadType1=quadType, &
+  & quadType2=quadType, &
+  & quadType3=quadType, &
+  & xij=xij, &
+  & alpha1=alpha, &
+  & beta1=beta, &
+  & lambda1=lambda, &
+  & alpha2=alpha, &
+  & beta2=beta, &
+  & lambda2=lambda, &
+  & alpha3=alpha, &
+  & beta3=beta, &
+  & lambda3=lambda &
+  & )
+END PROCEDURE QuadraturePoint_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                                 QuadraturePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Hexahedron2
+! internal variables
+REAL(DFP), ALLOCATABLE :: x(:, :), y(:, :), z(:, :), temp(:, :)
+INTEGER(I4B) :: ii, jj, kk, nsd, np, nq, nr, cnt
+
+x = QuadraturePoint_Line( &
+  & order=p, &
+  & quadType=quadType1, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING", &
+  & alpha=alpha1, &
+  & beta=beta1, &
+  & lambda=lambda1)
+np = SIZE(x, 2)
+
+y = QuadraturePoint_Line( &
+  & order=q,  &
+  & quadType=quadType2, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING", &
+  & alpha=alpha2, &
+  & beta=beta2, &
+  & lambda=lambda2)
+nq = SIZE(y, 2)
+
+z = QuadraturePoint_Line( &
+  & order=r,  &
+  & quadType=quadType2, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING", &
+  & alpha=alpha3, &
+  & beta=beta3, &
+  & lambda=lambda3)
+nr = SIZE(z, 2)
+
+nsd = 3
+CALL Reallocate(ans, 4_I4B, np * nq * nr)
+CALL Reallocate(temp, 4_I4B, np * nq * nr)
+
+cnt = 0
+DO ii = 1, np
+  DO jj = 1, nq
+    DO kk = 1, nr
+      cnt = cnt + 1
+      temp(1, cnt) = x(1, ii)
+      temp(2, cnt) = y(1, jj)
+      temp(3, cnt) = z(1, kk)
+      temp(4, cnt) = x(2, ii) * y(2, jj) * z(2, kk)
+    END DO
+  END DO
+END DO
+
+IF (PRESENT(xij)) THEN
+  ans(1:nsd, :) = FromBiUnitHexahedron2Hexahedron( &
+    & xin=temp(1:3, :), &
+    & x1=xij(:, 1), &
+    & x2=xij(:, 2), &
+    & x3=xij(:, 3), &
+    & x4=xij(:, 4), &
+    & x5=xij(:, 5), &
+    & x6=xij(:, 6), &
+    & x7=xij(:, 7), &
+    & x8=xij(:, 8)  &
+    & )
+  ans(4, :) = temp(4, :)
+ELSE
+  ans = temp
+END IF
+
+IF (ALLOCATED(temp)) DEALLOCATE (temp)
+IF (ALLOCATED(x)) DEALLOCATE (x)
+IF (ALLOCATED(y)) DEALLOCATE (y)
+IF (ALLOCATED(z)) DEALLOCATE (z)
+
+END PROCEDURE QuadraturePoint_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                                QuadraturePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Hexahedron3
+ans = QuadraturePoint_Hexahedron4( &
+  & nipsx=nips, &
+  & nipsy=nips, &
+  & nipsz=nips, &
+  & quadType1=quadType, &
+  & quadType2=quadType, &
+  & quadType3=quadType, &
+  & xij=xij, &
+  & alpha1=alpha, &
+  & beta1=beta, &
+  & lambda1=lambda, &
+  & alpha2=alpha, &
+  & beta2=beta, &
+  & lambda2=lambda, &
+  & alpha3=alpha, &
+  & beta3=beta, &
+  & lambda3=lambda &
+  & )
+END PROCEDURE QuadraturePoint_Hexahedron3
+
+!----------------------------------------------------------------------------
+!                                                QuadraturePoint_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Hexahedron4
+! internal variables
+REAL(DFP) :: x(2, nipsx(1)), y(2, nipsy(1)), z(2, nipsz(1)), &
+& temp(4, nipsy(1) * nipsx(1) * nipsz(1))
+INTEGER(I4B) :: ii, jj, kk, nsd, np, nq, nr, cnt
+
+x = QuadraturePoint_Line( &
+  & nips=nipsx, &
+  & quadType=quadType1, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING", &
+  & alpha=alpha1, &
+  & beta=beta1, &
+  & lambda=lambda1)
+np = SIZE(x, 2)
+
+y = QuadraturePoint_Line( &
+  & nips=nipsy,  &
+  & quadType=quadType2, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING", &
+  & alpha=alpha2, &
+  & beta=beta2, &
+  & lambda=lambda2)
+nq = SIZE(y, 2)
+
+z = QuadraturePoint_Line( &
+  & nips=nipsz,  &
+  & quadType=quadType3, &
+  & xij=[-1.0_DFP, 1.0_DFP], &
+  & layout="INCREASING", &
+  & alpha=alpha3, &
+  & beta=beta3, &
+  & lambda=lambda3)
+nr = SIZE(z, 2)
+
+nsd = 3
+CALL Reallocate(ans, 4_I4B, np * nq * nr)
+
+cnt = 0
+DO ii = 1, np
+  DO jj = 1, nq
+    DO kk = 1, nr
+      cnt = cnt + 1
+      temp(1, cnt) = x(1, ii)
+      temp(2, cnt) = y(1, jj)
+      temp(3, cnt) = z(1, kk)
+      temp(4, cnt) = x(2, ii) * y(2, jj) * z(2, kk)
+    END DO
+  END DO
+END DO
+
+IF (PRESENT(xij)) THEN
+  ans(1:nsd, :) = FromBiUnitHexahedron2Hexahedron( &
+    & xin=temp(1:3, :), &
+    & x1=xij(:, 1), &
+    & x2=xij(:, 2), &
+    & x3=xij(:, 3), &
+    & x4=xij(:, 4), &
+    & x5=xij(:, 5), &
+    & x6=xij(:, 6), &
+    & x7=xij(:, 7), &
+    & x8=xij(:, 8)  &
+    & )
+  ans(4, :) = temp(4, :)
+ELSE
+  ans = temp
+END IF
+
+END PROCEDURE QuadraturePoint_Hexahedron4
+
+!----------------------------------------------------------------------------
+!                                               LagrangeEvallAll_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Hexahedron1
+LOGICAL(LGT) :: firstCall0
+INTEGER(I4B) :: ii, basisType0, tdof
+INTEGER(I4B) :: degree(SIZE(xij, 2), 3)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
+
+basisType0 = INPUT(default=Monomial, option=basisType)
+firstCall0 = INPUT(default=.TRUE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    coeff = LagrangeCoeff_Hexahedron(&
+      & order=order, &
+      & xij=xij, &
+      & basisType=basisType0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda &
+      & )
+    coeff0 = TRANSPOSE(coeff)
+  ELSE
+    coeff0 = TRANSPOSE(coeff)
+  END IF
+ELSE
+  coeff0 = TRANSPOSE( &
+    & LagrangeCoeff_Hexahedron(&
+    & order=order, &
+    & xij=xij, &
+    & basisType=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & ))
+END IF
+
+SELECT CASE (basisType0)
+
+CASE (Monomial)
+
+  degree = LagrangeDegree_Hexahedron(order=order)
+  tdof = SIZE(xij, 2)
+
+  IF (tdof .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(&
+      & msg="tdof is not same as size(degree,1)", &
+      & file=__FILE__, &
+      & routine="LagrangeEvalAll_Hexahedron1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+    RETURN
+  END IF
+
+  DO ii = 1, tdof
+    xx(1, ii) = x(1)**degree(ii, 1) &
+               & * x(2)**degree(ii, 2) &
+               & * x(3)**degree(ii, 3)
+  END DO
+
+CASE (Heirarchical)
+
+  xx = HeirarchicalBasis_Hexahedron( &
+    & p=order, &
+    & q=order,  &
+    & r=order,  &
+    & xij=RESHAPE(x, [3, 1]))
+
+CASE DEFAULT
+
+  xx = TensorProdBasis_Hexahedron( &
+    & p=order, &
+    & q=order, &
+    & r=order, &
+    & xij=RESHAPE(x, [3, 1]),  &
+    & basisType1=basisType0, &
+    & basisType2=basisType0, &
+    & basisType3=basisType0, &
+    & alpha1=alpha, &
+    & beta1=beta, &
+    & lambda1=lambda, &
+    & alpha2=alpha, &
+    & beta2=beta, &
+    & lambda2=lambda,  &
+    & alpha3=alpha, &
+    & beta3=beta, &
+    & lambda3=lambda &
+    & )
+
+END SELECT
+
+ans = MATMUL(coeff0, xx(1, :))
+
+END PROCEDURE LagrangeEvalAll_Hexahedron1
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Hexahedron2
+LOGICAL(LGT) :: firstCall0
+INTEGER(I4B) :: ii, basisType0, tdof
+INTEGER(I4B) :: degree(SIZE(xij, 2), 3)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2))
+REAL(DFP) :: xx(SIZE(x, 2), SIZE(xij, 2))
+
+basisType0 = INPUT(default=Monomial, option=basisType)
+firstCall0 = INPUT(default=.TRUE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    coeff = LagrangeCoeff_Hexahedron(&
+      & order=order, &
+      & xij=xij, &
+      & basisType=basisType0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda &
+      & )
+    coeff0 = coeff
+  ELSE
+    coeff0 = coeff
+  END IF
+ELSE
+  coeff0 = LagrangeCoeff_Hexahedron(&
+    & order=order, &
+    & xij=xij, &
+    & basisType=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & )
+END IF
+
+SELECT CASE (basisType0)
+
+CASE (Monomial)
+
+  degree = LagrangeDegree_Hexahedron(order=order)
+  tdof = SIZE(xij, 2)
+
+  IF (tdof .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(&
+      & msg="tdof is not same as size(degree,1)", &
+      & file=__FILE__, &
+      & routine="LagrangeEvalAll_Hexahedron1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+    RETURN
+  END IF
+
+  DO ii = 1, tdof
+    xx(:, ii) = x(1, :)**degree(ii, 1)  &
+               & * x(2, :)**degree(ii, 2)  &
+               & * x(3, :)**degree(ii, 3)
+  END DO
+
+CASE (Heirarchical)
+
+  xx = HeirarchicalBasis_Hexahedron( &
+    & p=order, &
+    & q=order,  &
+    & r=order,  &
+    & xij=x)
+
+CASE DEFAULT
+
+  xx = TensorProdBasis_Hexahedron( &
+    & p=order, &
+    & q=order, &
+    & r=order, &
+    & xij=x,  &
+    & basisType1=basisType0, &
+    & basisType2=basisType0, &
+    & basisType3=basisType0, &
+    & alpha1=alpha, &
+    & beta1=beta, &
+    & lambda1=lambda, &
+    & alpha2=alpha, &
+    & beta2=beta, &
+    & lambda2=lambda,  &
+    & alpha3=alpha, &
+    & beta3=beta, &
+    & lambda3=lambda)
+
+END SELECT
+
+ans = MATMUL(xx, coeff0)
+
+END PROCEDURE LagrangeEvalAll_Hexahedron2
 
 !----------------------------------------------------------------------------
 !
