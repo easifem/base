@@ -16,7 +16,7 @@
 !
 
 SUBMODULE(MappingUtility) Methods
-USE BaseMethod, ONLY: UpperCase
+USE BaseMethod, ONLY: UpperCase, SOFTLE
 IMPLICIT NONE
 CONTAINS
 
@@ -81,9 +81,7 @@ DO ii = 1, SIZE(ans, 2)
   p2 = 0.25 * (1.0 + xi) * (1.0 - eta)
   p3 = 0.25 * (1.0 + xi) * (1.0 + eta)
   p4 = 0.25 * (1.0 - xi) * (1.0 + eta)
-  !!
   ans(:, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4
-  !!
 END DO
 END PROCEDURE FromBiUnitQuadrangle2Quadrangle1
 
@@ -196,8 +194,7 @@ END PROCEDURE BarycentricCoordTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitTriangle2UnitTriangle
-ans(1, :) = 0.5_DFP * (1.0_DFP + xin(1, :)) * (1.0_DFP - xin(2, :))
-ans(2, :) = 0.5_DFP * (1.0_DFP - xin(1, :)) * (1.0_DFP + xin(2, :))
+ans = 0.5_DFP * (1.0_DFP + xin)
 END PROCEDURE FromBiUnitTriangle2UnitTriangle
 
 !----------------------------------------------------------------------------
@@ -205,8 +202,156 @@ END PROCEDURE FromBiUnitTriangle2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitTriangle
-ans(1, :) = xin(1, :) - 1.0_DFP
-ans(2, :) = xin(2, :) - 1.0_DFP
+ans = -1.0_DFP + 2.0_DFP * xin
 END PROCEDURE FromUnitTriangle2BiUnitTriangle
+
+!----------------------------------------------------------------------------
+!                                     FromBiUnitTetrahedron2UnitTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitTetrahedron2UnitTetrahedron
+ans = 0.5_DFP * (1.0_DFP + xin)
+END PROCEDURE FromBiUnitTetrahedron2UnitTetrahedron
+
+!----------------------------------------------------------------------------
+!                                      FromUnitTetrahedron2BiUnitTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTetrahedron2BiUnitTetrahedron
+ans = -1.0_DFP + 2.0_DFP * xin
+END PROCEDURE FromUnitTetrahedron2BiUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!                                         FromBiUnitTetrahedron2Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitTetrahedron2Tetrahedron
+INTEGER(I4B) :: ii
+DO ii = 1, SIZE(xin, 2)
+  ans(:, ii) = &
+  & -0.5_DFP * (1.0_DFP + xin(1, :) + xin(2, :) + xin(3, :)) * x1(ii) &
+  & + 0.5_DFP * (1.0_DFP + xin(1, :)) * x2(ii)  &
+  & + 0.5_DFP * (1.0_DFP + xin(2, :)) * x3(ii)  &
+  & + 0.5_DFP * (1.0_DFP + xin(3, :)) * x4(ii)
+END DO
+END PROCEDURE FromBiUnitTetrahedron2Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                            FromUnitTetrahedron2Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTetrahedron2Tetrahedron
+INTEGER(I4B) :: ii
+DO ii = 1, SIZE(xin, 2)
+  ans(:, ii) = &
+  &  (1.0_DFP - xin(1, :) - xin(2, :) - xin(3, :)) * x1(ii) &
+  & + xin(1, :) * x2(ii)  &
+  & + xin(2, :) * x3(ii)  &
+  & + xin(3, :) * x4(ii)
+END DO
+END PROCEDURE FromUnitTetrahedron2Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                               BarycentricCoordUnitTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordUnitTetrahedron
+ans(1, :) = 1.0_DFP - xin(1, :) - xin(2, :) - xin(3, :)
+ans(2, :) = xin(1, :)
+ans(3, :) = xin(2, :)
+ans(4, :) = xin(3, :)
+END PROCEDURE BarycentricCoordUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!                                             BarycentricCoordBiUnitTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordBiUnitTetrahedron
+ans(1, :) = -0.5_DFP * (1.0_DFP + xin(1, :) + xin(2, :) + xin(3, :))
+ans(2, :) = 0.5_DFP * (1.0_DFP + xin(1, :))
+ans(3, :) = 0.5_DFP * (1.0_DFP + xin(2, :))
+ans(4, :) = 0.5_DFP * (1.0_DFP + xin(3, :))
+END PROCEDURE BarycentricCoordBiUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!                                                   BarycentricCoordTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCoordTetrahedron
+CHARACTER(20) :: layout
+layout = TRIM(UpperCase(refTetrahedron))
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  ans = BarycentricCoordBiUnitTetrahedron(xin)
+CASE ("UNIT")
+  ans = BarycentricCoordUnitTetrahedron(xin)
+END SELECT
+END PROCEDURE BarycentricCoordTetrahedron
+
+!----------------------------------------------------------------------------
+!                                     FromBiUnitTetrahedron2BiUnitHexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitTetrahedron2BiUnitHexahedron
+INTEGER(I4B) :: ii
+REAL(DFP) :: tol, alpha, beta
+
+tol = 1.0E-12
+
+DO ii = 1, SIZE(xin, 2)
+  alpha = xin(2, ii) + xin(3, ii)
+  beta = 1.0_DFP - xin(3, ii)
+
+  IF (SOFTLE(ABS(alpha), zero, tol)) THEN
+    ans(1, ii) = -1.0_DFP
+  ELSE
+    ans(1, ii) = -(2.0_DFP + 2.0_DFP * xin(1, ii) + alpha) / alpha
+  END IF
+
+  IF (SOFTLE(ABS(beta), zero, tol)) THEN
+    ans(2, ii) = -1.0_DFP
+  ELSE
+    ans(2, ii) = (1.0_DFP + 2.0_DFP * xin(2, ii) + xin(3, ii)) / beta
+  END IF
+
+  ans(3, ii) = xin(3, ii)
+END DO
+
+END PROCEDURE FromBiUnitTetrahedron2BiUnitHexahedron
+
+!----------------------------------------------------------------------------
+!                                     FromBiUnitHexahedron2BiUnitTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron
+ans(1, :) = 0.25_DFP  &
+           & * (1.0_DFP + xin(1, :)) &
+           & * (1.0_DFP - xin(2, :)) &
+           & * (1.0_DFP - xin(3, :)) - 1.0_DFP
+
+ans(2, :) = 0.5_DFP  &
+           & * (1.0_DFP + xin(2, :)) &
+           & * (1.0_DFP - xin(3, :)) - 1.0_DFP
+
+ans(3, :) = xin(3, :)
+END PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron
+
+!----------------------------------------------------------------------------
+!                                     FromUnitTetrahedron2BiUnitHexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitTetrahedron2BiUnitHexahedron
+ans = FromBiUnitTetrahedron2BiUnitHexahedron(&
+  & FromUnitTetrahedron2BiUnitTetrahedron(xin))
+END PROCEDURE FromUnitTetrahedron2BiUnitHexahedron
+
+!----------------------------------------------------------------------------
+!                                     FromBiUnitHexahedron2UnitTetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2UnitTetrahedron
+ans = FromBiUnitTetrahedron2UnitTetrahedron( &
+  & FromBiUnitHexahedron2BiUnitTetrahedron(xin))
+END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron
 
 END SUBMODULE Methods
