@@ -15,10 +15,6 @@
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-#....................................................................
-#
-#....................................................................
-
 FUNCTION(FIND_EASIFEM_DEPENDENCY EXT_PKG_LIST)
   FOREACH(p ${EXT_PKG_LIST})
     FIND_PACKAGE( ${p} REQUIRED )
@@ -30,19 +26,12 @@ FUNCTION(FIND_EASIFEM_DEPENDENCY EXT_PKG_LIST)
   ENDFOREACH()
 ENDFUNCTION(FIND_EASIFEM_DEPENDENCY)
 
-#....................................................................
-#
-#....................................................................
 
 FUNCTION(LINK_EASIFEM_DEPENDENCY EXT_PKG_LIST PROJECT_NAME)
   FOREACH(p ${EXT_PKG_LIST})
     TARGET_LINK_LIBRARIES( ${PROJECT_NAME} PUBLIC ${p}::${p} )
   ENDFOREACH()
 ENDFUNCTION(LINK_EASIFEM_DEPENDENCY)
-
-#....................................................................
-#
-#....................................................................
 
 IF( USE_LAPACK95 )
     LIST(APPEND EXT_PKGS LAPACK95)
