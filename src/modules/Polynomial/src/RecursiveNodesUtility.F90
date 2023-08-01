@@ -19,6 +19,9 @@ MODULE RecursiveNodesUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: RecursiveNode1D
+PUBLIC :: RecursiveNode2D
+PUBLIC :: RecursiveNode3D
 
 !----------------------------------------------------------------------------
 !                                                           RecursiveNode1D
@@ -26,11 +29,11 @@ PRIVATE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary: Convert nodal coordinates to barycentric coordinates
+! summary: RecursiveNodes in 1D
 
 INTERFACE
   MODULE FUNCTION RecursiveNode1D(order, ipType, &
-    & domain) RESULT(ans)
+    & domain, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -50,10 +53,14 @@ INTERFACE
       !! unit (0,1)
       !! biunit (-1, 1)
       !! equilateral
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+      !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+      !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+      !! Ultraspherical polynomial parameter
   END FUNCTION RecursiveNode1D
 END INTERFACE
-
-PUBLIC :: RecursiveNode1D
 
 !----------------------------------------------------------------------------
 !                                                            RecursiveNode2D
@@ -61,10 +68,17 @@ PUBLIC :: RecursiveNode1D
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary: Convert nodal coordinates to barycentric coordinates
+! summary: RecursiveNodes in 2D
 
 INTERFACE
-  MODULE FUNCTION RecursiveNode2D(order, ipType, domain) &
+  MODULE FUNCTION RecursiveNode2D( &
+    & order, &
+    & ipType, &
+    & domain, &
+    & alpha, &
+    & beta, &
+    & lambda  &
+    & ) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0
@@ -85,10 +99,14 @@ INTERFACE
       !! unit
       !! Biunit
       !! Equilateral
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+      !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+      !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+      !! Ultraspherical polynomial parameter
   END FUNCTION RecursiveNode2D
 END INTERFACE
-
-PUBLIC :: RecursiveNode2D
 
 !----------------------------------------------------------------------------
 !                                                            RecursiveNode3D
@@ -96,11 +114,17 @@ PUBLIC :: RecursiveNode2D
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 Sept 2022
-! summary:         Convert nodal coordinates to barycentric coordinates
+! summary: Recursive nodes in 3D
 
 INTERFACE
-  MODULE FUNCTION RecursiveNode3D(order, ipType, &
-    & domain) RESULT(ans)
+  MODULE FUNCTION RecursiveNode3D( &
+    & order, &
+    & ipType, &
+    & domain, &
+    & alpha, &
+    & beta, &
+    & lambda  &
+    & ) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
       !! order >= 0
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -120,13 +144,17 @@ INTERFACE
       !! unit
       !! Biunit
       !! Equilateral
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+      !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+      !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+      !! Ultraspherical polynomial parameter
   END FUNCTION RecursiveNode3D
 END INTERFACE
 
-PUBLIC :: RecursiveNode3D
-
 !----------------------------------------------------------------------------
-!                                                               ToUnit
+!                                                                   ToUnit
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -138,7 +166,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                               ToUnit
+!                                                                    ToUnit
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -150,7 +178,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                               ToUnit
+!                                                                    ToUnit
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -161,7 +189,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                               ToUnit
+!                                                                    ToUnit
 !----------------------------------------------------------------------------
 
 INTERFACE
