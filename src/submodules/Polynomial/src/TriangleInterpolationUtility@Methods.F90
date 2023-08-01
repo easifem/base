@@ -47,14 +47,13 @@ END PROCEDURE RefTriangleCoord
 
 MODULE PROCEDURE LagrangeDegree_Triangle
 INTEGER(I4B) :: n, ii, jj, kk
-!!
+
 n = LagrangeDOF_Triangle(order=order)
 ALLOCATE (ans(n, 2))
-!!
+
 kk = 0
-!!
-!! left diagonal
-!!
+
+! left diagonal
 DO jj = 0, order
   DO ii = 0, order - jj
     kk = kk + 1
@@ -62,9 +61,8 @@ DO jj = 0, order
     ans(kk, 2) = jj
   END DO
 END DO
-!!
+
 !! right diagonal
-!!
 ! DO ii = 0, order
 !   DO jj = 0, order - ii
 !     kk = kk + 1
@@ -72,10 +70,8 @@ END DO
 !     ans(kk, 2) = jj
 !   END DO
 ! END DO
-!!
-!!
+
 !! base
-!!
 ! DO ii = 0, order
 !   DO jj = 0, ii
 !     kk = kk + 1
@@ -83,7 +79,7 @@ END DO
 !     ans(kk, 2) = jj
 !   END DO
 ! END DO
-!!
+
 END PROCEDURE LagrangeDegree_Triangle
 
 !----------------------------------------------------------------------------
@@ -284,24 +280,25 @@ REAL(DFP) :: v(order + 1), xi(order + 1, order + 1), eta(order + 1, order + 1)
 REAL(DFP), ALLOCATABLE :: temp(:, :)
 INTEGER(I4B) :: nsd, N, ii, jj, kk
 CHARACTER(*), PARAMETER :: myName = "BlythPozrikidis_Triangle"
-!!
+
 v = InterpolationPoint_Line(order=order, ipType=ipType, &
-  & xij=[0.0_DFP, 1.0_DFP], layout="INCREASING")
-!!
+  & xij=[0.0_DFP, 1.0_DFP], layout="INCREASING", &
+  & lambda=lambda, beta=beta, alpha=alpha)
+
 N = LagrangeDOF_Triangle(order=order)
-!!
+
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
 ELSE
   nsd = 2
 END IF
-!!
+
 CALL Reallocate(ans, nsd, N)
 CALL Reallocate(temp, 2, N)
-!!
+
 xi = 0.0_DFP
 eta = 0.0_DFP
-!!
+
 DO ii = 1, order + 1
   DO jj = 1, order + 2 - ii
     kk = order + 3 - ii - jj
@@ -309,18 +306,18 @@ DO ii = 1, order + 1
     eta(ii, jj) = (1.0 + 2.0 * v(jj) - v(ii) - v(kk)) / 3.0_DFP
   END DO
 END DO
-!!
+
 IF (layout .EQ. "VEFC") THEN
-  !!
-  CALL IJ2VEFC(xi=xi, eta=eta, temp=temp, order=order, N=N, myname=myname)
-  !!
+
+  CALL IJ2VEFC_Triangle(xi=xi, eta=eta, temp=temp, order=order, N=N)
+
   IF (PRESENT(xij)) THEN
     ans = FromUnitTriangle2Triangle(xin=temp, &
       & x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3))
   ELSE
     ans = temp
   END IF
-  !!
+
 ELSE
   CALL ErrorMsg( &
     & msg="Only layout=VEFC is allowed, given layout is " &
@@ -331,13 +328,13 @@ ELSE
     & unitno=stderr)
   RETURN
 END IF
-!!
+
 IF (ALLOCATED(temp)) DEALLOCATE (temp)
-!!
+
 END PROCEDURE BlythPozrikidis_Triangle
 
 !----------------------------------------------------------------------------
-!                                                   BlythPozrikidis_Triangle
+!                                                            Isaac_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Isaac_Triangle
@@ -345,24 +342,25 @@ REAL(DFP) :: xi(order + 1, order + 1), eta(order + 1, order + 1)
 REAL(DFP), ALLOCATABLE :: temp(:, :), rPoints(:, :)
 INTEGER(I4B) :: nsd, N, cnt, ii, jj
 CHARACTER(*), PARAMETER :: myName = "Isaac_Triangle"
-!!
-rPoints = RecursiveNode2D(order=order, ipType=ipType)
+
+rPoints = RecursiveNode2D(order=order, ipType=ipType, domain="UNIT",  &
+  & alpha=alpha, beta=beta, lambda=lambda)
+
 N = SIZE(rPoints, 2)
-!!
+
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
 ELSE
   nsd = 2
 END IF
-!!
+
 CALL Reallocate(ans, nsd, N)
-!!
+
 !! convert from rPoints to xi and eta
-!!
 cnt = 0
 xi = 0.0_DFP
 eta = 0.0_DFP
-!!
+
 DO ii = 1, order + 1
   DO jj = 1, order + 2 - ii
     cnt = cnt + 1
@@ -370,19 +368,16 @@ DO ii = 1, order + 1
     eta(ii, jj) = rPoints(2, cnt)
   END DO
 END DO
-!!
+
 IF (layout .EQ. "VEFC") THEN
-  !!
   CALL Reallocate(temp, 2, N)
-  CALL IJ2VEFC(xi=xi, eta=eta, temp=temp, order=order, N=N, myname=myname)
-  !!
+  CALL IJ2VEFC_Triangle(xi=xi, eta=eta, temp=temp, order=order, N=N)
   IF (PRESENT(xij)) THEN
     ans = FromUnitTriangle2Triangle(xin=temp, &
       & x1=xij(:, 1), x2=xij(:, 2), x3=xij(:, 3))
   ELSE
     ans = temp
   END IF
-  !!
 ELSE
   CALL ErrorMsg( &
     & msg="Only layout=VEFC is allowed, given layout is " &
@@ -393,108 +388,82 @@ ELSE
     & unitno=stderr)
   RETURN
 END IF
-!!
+
 IF (ALLOCATED(temp)) DEALLOCATE (temp)
 IF (ALLOCATED(rPoints)) DEALLOCATE (rPoints)
-!!
 END PROCEDURE Isaac_Triangle
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE IJ2VEFC(xi, eta, temp, order, N, myname)
-  REAL(DFP), INTENT(IN) :: xi(:, :)
-  REAL(DFP), INTENT(IN) :: eta(:, :)
-  REAL(DFP), INTENT(OUT) :: temp(:, :)
-  INTEGER(I4B), INTENT(IN) :: order
-  INTEGER(I4B), INTENT(IN) :: N
-  CHARACTER(*), INTENT(IN) :: myname
-  !!
-  INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, llt, llr
-  !!
-  !! vertices
-  !!
-  cnt = 0
-  m = order
-  llt = INT((m - 1) / 3)
-  llr = MOD(m - 1, 3)
-  DO ll = 0, llt
-    !!
-    !! v1
-    !!
+MODULE PROCEDURE IJ2VEFC_Triangle
+INTEGER(I4B) :: cnt, m, ii, jj, kk, ll, llt, llr
+
+cnt = 0
+m = order
+llt = INT((m - 1) / 3)
+llr = MOD(m - 1, 3)
+DO ll = 0, llt
+  !! v1
+  cnt = cnt + 1
+  ii = 1 + ll; jj = 1 + ll
+  temp(1, cnt) = xi(ii, jj)
+  temp(2, cnt) = eta(ii, jj)
+  !! v2
+  cnt = cnt + 1
+  ii = m + 1 - 2 * ll; jj = 1 + ll
+  temp(1, cnt) = xi(ii, jj)
+  temp(2, cnt) = eta(ii, jj)
+  !! v3
+  cnt = cnt + 1
+  ii = 1 + ll; jj = m + 1 - 2 * ll
+  temp(1, cnt) = xi(ii, jj)
+  temp(2, cnt) = eta(ii, jj)
+  !! nodes on edge 12
+  jj = ll + 1
+  DO ii = 2 + ll, m - 2 * ll
     cnt = cnt + 1
-    ii = 1 + ll; jj = 1 + ll
     temp(1, cnt) = xi(ii, jj)
     temp(2, cnt) = eta(ii, jj)
-    !!
-    !! v2
-    !!
-    cnt = cnt + 1
-    ii = m + 1 - 2 * ll; jj = 1 + ll
-    temp(1, cnt) = xi(ii, jj)
-    temp(2, cnt) = eta(ii, jj)
-    !!
-    !! v3
-    !!
-    cnt = cnt + 1
-    ii = 1 + ll; jj = m + 1 - 2 * ll
-    temp(1, cnt) = xi(ii, jj)
-    temp(2, cnt) = eta(ii, jj)
-    !!
-    !! nodes on edge 12
-    !!
-    jj = ll + 1
-    DO ii = 2 + ll, m - 2 * ll
-      cnt = cnt + 1
-      temp(1, cnt) = xi(ii, jj)
-      temp(2, cnt) = eta(ii, jj)
-    END DO
-    !!
-    !! nodes on edge 23
-    !!
-    DO jj = 2 + ll, m - 2 * ll
-      cnt = cnt + 1
-      ii = m - ll + 2 - jj
-      temp(1, cnt) = xi(ii, jj)
-      temp(2, cnt) = eta(ii, jj)
-    END DO
-    !!
-    !! nodes on edge 31
-    !!
-    ii = ll + 1
-    DO jj = m - 2 * ll, 2 + ll, -1
-      cnt = cnt + 1
-      temp(1, cnt) = xi(ii, jj)
-      temp(2, cnt) = eta(ii, jj)
-    END DO
-    !!
-    !! internal nodes
-    !!
   END DO
-  !!
-  IF (llr .EQ. 2_I4B) THEN
-    !!
-    !! a internal point
-    !!
+  !! nodes on edge 23
+  DO jj = 2 + ll, m - 2 * ll
     cnt = cnt + 1
-    ll = llt + 1
-    ii = 1 + ll; jj = 1 + ll
+    ii = m - ll + 2 - jj
     temp(1, cnt) = xi(ii, jj)
     temp(2, cnt) = eta(ii, jj)
-  END IF
-  !!
-  IF (cnt .NE. N) THEN
-    CALL ErrorMsg( &
-      & msg="cnt="//tostring(cnt)//" not equal to total DOF, N=" &
-      & //tostring(N), &
-      & file=__FILE__, &
-      & routine=myname, &
-      & line=__LINE__, &
-      & unitno=stderr)
-    RETURN
-  END IF
-END SUBROUTINE IJ2VEFC
+  END DO
+  !! nodes on edge 31
+  ii = ll + 1
+  DO jj = m - 2 * ll, 2 + ll, -1
+    cnt = cnt + 1
+    temp(1, cnt) = xi(ii, jj)
+    temp(2, cnt) = eta(ii, jj)
+  END DO
+  !! internal nodes
+END DO
+
+IF (llr .EQ. 2_I4B) THEN
+  !! a internal point
+  cnt = cnt + 1
+  ll = llt + 1
+  ii = 1 + ll; jj = 1 + ll
+  temp(1, cnt) = xi(ii, jj)
+  temp(2, cnt) = eta(ii, jj)
+END IF
+
+IF (cnt .NE. N) THEN
+  CALL ErrorMsg( &
+    & msg="cnt="//tostring(cnt)//" not equal to total DOF, N=" &
+    & //tostring(N), &
+    & file=__FILE__, &
+    & routine="IJ2VEFC_Triangle()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+END PROCEDURE IJ2VEFC_Triangle
 
 !----------------------------------------------------------------------------
 !                                               InterpolationPoint_Triangle
@@ -502,6 +471,7 @@ END SUBROUTINE IJ2VEFC
 
 MODULE PROCEDURE InterpolationPoint_Triangle
 CHARACTER(*), PARAMETER :: myName = "InterpolationPoint_Triangle"
+
 SELECT CASE (ipType)
 CASE (Equidistance)
   ans = EquidistancePoint_Triangle(xij=xij, order=order)
@@ -515,23 +485,20 @@ CASE (Feket, Hesthaven, ChenBabuska)
 CASE (BlythPozLegendre)
   ans = BlythPozrikidis_Triangle(order=order, &
     & ipType=GaussLegendreLobatto,  &
-    & layout="VEFC", xij=xij)
+    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
 CASE (BlythPozChebyshev)
   ans = BlythPozrikidis_Triangle(order=order, &
     & ipType=GaussChebyshevLobatto,  &
-    & layout="VEFC", xij=xij)
-CASE (GaussLegendreLobatto, IsaacLegendre)
+    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+CASE (IsaacLegendre)
   ans = Isaac_Triangle(order=order, ipType=GaussLegendreLobatto, &
-    & layout="VEFC", xij=xij)
-CASE (GaussChebyshevLobatto, IsaacChebyshev)
+    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+CASE (IsaacChebyshev)
   ans = Isaac_Triangle(order=order, ipType=GaussChebyshevLobatto, &
-    & layout="VEFC", xij=xij)
+    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
 CASE DEFAULT
-  CALL ErrorMsg(msg="Unknown interpolation point type (ipType)", &
-    & file=__FILE__, &
-    & routine=myname, &
-    & line=__LINE__, &
-    & unitno=stderr)
+  ans = Isaac_Triangle(order=order, ipType=ipType, &
+    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
 END SELECT
 END PROCEDURE InterpolationPoint_Triangle
 
