@@ -147,7 +147,6 @@ MODULE PROCEDURE LobattoEvalAll2
 REAL(DFP) :: avar, m
 REAL(DFP) :: p(SIZE(x), n + 1)
 INTEGER(I4B) :: ii
-  !!
 SELECT CASE (n)
 CASE (0)
   ans(:, 1) = 0.5_DFP * (1.0_DFP - x)
@@ -173,15 +172,13 @@ END PROCEDURE LobattoEvalAll2
 MODULE PROCEDURE LobattoKernelEvalAll1
 REAL(DFP) :: m, avar
 INTEGER(I4B) :: ii
-!!
+
 ans = UltrasphericalEvalAll(n=n, x=x, lambda=1.5_DFP)
-!!
 DO ii = 0, n
   m = REAL(ii, KIND=DFP)
   avar = -SQRT(8.0_DFP*(2.0_DFP*m+3.0_DFP))/(m+1.0_DFP)/(m+2.0_DFP)
   ans(:, ii) = avar * ans(:, ii)
 END DO
-!!
 END PROCEDURE LobattoKernelEvalAll1
 
 !----------------------------------------------------------------------------
