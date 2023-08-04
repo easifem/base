@@ -27,37 +27,43 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: FromBiunitLine2Segment
-PUBLIC :: FromUnitTriangle2Triangle
-PUBLIC :: FromBiUnitQuadrangle2Quadrangle
-PUBLIC :: FromBiUnitHexahedron2Hexahedron
 PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
+
+PUBLIC :: FromBiUnitQuadrangle2Quadrangle
+PUBLIC :: FromBiUnitHexahedron2Hexahedron
 
 PUBLIC :: FromBiUnitTriangle2BiUnitSqr
 PUBLIC :: FromBiUnitTriangle2BiUnitQuadrangle
 
-PUBLIC :: FromBiUnitQuadrangle2BiUnitTriangle
 PUBLIC :: FromBiUnitSqr2BiUnitTriangle
+PUBLIC :: FromBiUnitQuadrangle2BiUnitTriangle
 
 PUBLIC :: FromUnitTriangle2BiUnitSqr
 PUBLIC :: FromUnitTriangle2BiUnitQuadrangle
 
-PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
 PUBLIC :: FromBiUnitSqr2UnitTriangle
+PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
+
+PUBLIC :: FromUnitTriangle2Triangle
 
 PUBLIC :: BarycentricCoordUnitTriangle
 PUBLIC :: BarycentricCoordBiUnitTriangle
 PUBLIC :: BarycentricCoordTriangle
+
 PUBLIC :: FromBiUnitTriangle2UnitTriangle
 PUBLIC :: FromUnitTriangle2BiUnitTriangle
 
 PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron
 PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron
+
 PUBLIC :: FromUnitTetrahedron2Tetrahedron
 PUBLIC :: FromBiUnitTetrahedron2Tetrahedron
+
 PUBLIC :: BarycentricCoordUnitTetrahedron
 PUBLIC :: BarycentricCoordBiUnitTetrahedron
 PUBLIC :: BarycentricCoordTetrahedron
+
 PUBLIC :: FromBiUnitTetrahedron2BiUnitHexahedron
 PUBLIC :: FromBiUnitHexahedron2BiUnitTetrahedron
 PUBLIC :: FromUnitTetrahedron2BiUnitHexahedron
