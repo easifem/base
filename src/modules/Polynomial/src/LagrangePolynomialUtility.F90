@@ -120,7 +120,7 @@ END INTERFACE
 ! summary: Equidistance points on 1D/2D/3D elements
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistancePoint(order, elemType, xij) &
+  MODULE FUNCTION EquidistancePoint(order, elemType, xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)

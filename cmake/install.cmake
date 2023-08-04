@@ -15,10 +15,6 @@
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-###############################
-###### I N S T A L L ##########
-###############################
-
 INSTALL(
   TARGETS ${PROJECT_NAME} easifemSystemMethodC
   EXPORT ${TARGETS_EXPORT_NAME}

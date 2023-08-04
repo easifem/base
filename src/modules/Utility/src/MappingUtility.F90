@@ -27,18 +27,47 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: FromBiunitLine2Segment
-PUBLIC :: FromUnitTriangle2Triangle
-PUBLIC :: FromBiUnitQuadrangle2Quadrangle
-PUBLIC :: FromBiUnitHexahedron2Hexahedron
 PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
+
+PUBLIC :: FromBiUnitQuadrangle2Quadrangle
+PUBLIC :: FromBiUnitHexahedron2Hexahedron
+
 PUBLIC :: FromBiUnitTriangle2BiUnitSqr
+PUBLIC :: FromBiUnitTriangle2BiUnitQuadrangle
+
 PUBLIC :: FromBiUnitSqr2BiUnitTriangle
+PUBLIC :: FromBiUnitQuadrangle2BiUnitTriangle
+
 PUBLIC :: FromUnitTriangle2BiUnitSqr
+PUBLIC :: FromUnitTriangle2BiUnitQuadrangle
+
 PUBLIC :: FromBiUnitSqr2UnitTriangle
+PUBLIC :: FromBiUnitQuadrangle2UnitTriangle
+
+PUBLIC :: FromUnitTriangle2Triangle
+
 PUBLIC :: BarycentricCoordUnitTriangle
 PUBLIC :: BarycentricCoordBiUnitTriangle
 PUBLIC :: BarycentricCoordTriangle
+
+PUBLIC :: FromBiUnitTriangle2UnitTriangle
+PUBLIC :: FromUnitTriangle2BiUnitTriangle
+
+PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron
+PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron
+
+PUBLIC :: FromUnitTetrahedron2Tetrahedron
+PUBLIC :: FromBiUnitTetrahedron2Tetrahedron
+
+PUBLIC :: BarycentricCoordUnitTetrahedron
+PUBLIC :: BarycentricCoordBiUnitTetrahedron
+PUBLIC :: BarycentricCoordTetrahedron
+
+PUBLIC :: FromBiUnitTetrahedron2BiUnitHexahedron
+PUBLIC :: FromBiUnitHexahedron2BiUnitTetrahedron
+PUBLIC :: FromUnitTetrahedron2BiUnitHexahedron
+PUBLIC :: FromBiUnitHexahedron2UnitTetrahedron
 
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
@@ -243,7 +272,7 @@ END INTERFACE
 !- Bi unit triangle is defined by (-1,-1), (1,-1), and (-1,1)
 !- Bi unit square is defined by (-1,-1), (1,-1), (1,1), and (-1,1)
 
-INTERFACE
+INTERFACE FromBiUnitTriangle2BiUnitQuadrangle
   MODULE PURE FUNCTION FromBiUnitTriangle2BiUnitSqr(xin) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in biunit triangle in xij format
@@ -252,7 +281,7 @@ INTERFACE
     REAL(DFP) :: ans(2, SIZE(xin, 2))
     !! mapped coordinates of xin in biunit sqr
   END FUNCTION FromBiUnitTriangle2BiUnitSqr
-END INTERFACE
+END INTERFACE FromBiUnitTriangle2BiUnitQuadrangle
 
 !----------------------------------------------------------------------------
 !                                             FromBiUnitSqr2BiUnitTriangle
@@ -267,14 +296,14 @@ END INTERFACE
 !- Bi unit triangle is defined by (-1,-1), (1,-1), and (-1,1)
 !- Bi unit square is defined by (-1,-1), (1,-1), (1,1), and (-1,1)
 
-INTERFACE
+INTERFACE FromBiUnitQuadrangle2BiUnitTriangle
   MODULE PURE FUNCTION FromBiUnitSqr2BiUnitTriangle(xin) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in bi-unit square in xij coordinate
     REAL(DFP) :: ans(2, SIZE(xin, 2))
     !! coordinates in biunit triangle
   END FUNCTION FromBiUnitSqr2BiUnitTriangle
-END INTERFACE
+END INTERFACE FromBiUnitQuadrangle2BiUnitTriangle
 
 !----------------------------------------------------------------------------
 !                                             FromUnitTriangle2BiUnitSqr
@@ -289,7 +318,7 @@ END INTERFACE
 !- Unit triangle is defined by (0,0), (0,1), and (1,0)
 !- Biunit square is defined by (-1,-1), (1,-1), (1,1), and (-1,1)
 
-INTERFACE
+INTERFACE FromUnitTriangle2BiUnitQuadrangle
   MODULE PURE FUNCTION FromUnitTriangle2BiUnitSqr(xin) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in biunit triangle in xij format
@@ -298,7 +327,7 @@ INTERFACE
     REAL(DFP) :: ans(2, SIZE(xin, 2))
     !! mapped coordinates of xin in biunit sqr
   END FUNCTION FromUnitTriangle2BiUnitSqr
-END INTERFACE
+END INTERFACE FromUnitTriangle2BiUnitQuadrangle
 
 !----------------------------------------------------------------------------
 !                                             FromBiUnitSqr2UnitTriangle
@@ -313,14 +342,14 @@ END INTERFACE
 !- Unit triangle is defined by (0,0), (0,1), and (1,0)
 !- Bi unit square is defined by (-1,-1), (1,-1), (1,1), and (-1,1)
 
-INTERFACE
+INTERFACE FromBiUnitQuadrangle2UnitTriangle
   MODULE PURE FUNCTION FromBiUnitSqr2UnitTriangle(xin) RESULT(ans)
     REAL(DFP), INTENT(IN) :: xin(:, :)
     !! coordinates in bi-unit square in xij coordinate
     REAL(DFP) :: ans(2, SIZE(xin, 2))
     !! coordinates in biunit triangle
   END FUNCTION FromBiUnitSqr2UnitTriangle
-END INTERFACE
+END INTERFACE FromBiUnitQuadrangle2UnitTriangle
 
 !----------------------------------------------------------------------------
 !                                              BarycentricCoordUnitTriangle
@@ -364,6 +393,234 @@ INTERFACE
     !! "UNIT"
     !! "BIUNIT"
   END FUNCTION BarycentricCoordTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitTriangle2UnitTriangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns barycentric coord of unit triangle
+
+INTERFACE
+  MODULE PURE FUNCTION FromBiUnitTriangle2UnitTriangle(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(2, SIZE(xin, 2))
+  END FUNCTION FromBiUnitTriangle2UnitTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            FromUnitTriangle2BiUnitTriangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns barycentric coord of unit triangle
+
+INTERFACE
+  MODULE PURE FUNCTION FromUnitTriangle2BiUnitTriangle(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(2, SIZE(xin, 2))
+  END FUNCTION FromUnitTriangle2BiUnitTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                       FromBiUnitTetrahedron2UnitTetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Biunit Tetrahedron to Unit tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FromBiUnitTetrahedron2UnitTetrahedron(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+  END FUNCTION FromBiUnitTetrahedron2UnitTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                      FromUnitTetrahedron2BiUnitTetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Unit Tetrahedron to biunit tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FromUnitTetrahedron2BiUnitTetrahedron(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+  END FUNCTION FromUnitTetrahedron2BiUnitTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          FromBiUnitTetrahedron2Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Biunit Tetrahedron to tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FromBiUnitTetrahedron2Tetrahedron( &
+    & xin, &
+    & x1, &
+    & x2, &
+    & x3, &
+    & x4) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(IN) :: x1(3)
+    !! Coordinate of tetrahedron node 1
+    REAL(DFP), INTENT(IN) :: x2(3)
+    !! Coordinate of tetrahedron node 2
+    REAL(DFP), INTENT(IN) :: x3(3)
+    !! Coordinate of tetrahedron node 3
+    REAL(DFP), INTENT(IN) :: x4(3)
+    !! Coordinate of tetrahedron node 4
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+  END FUNCTION FromBiUnitTetrahedron2Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                          FromUnitTetrahedron2Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-27
+! summary: Unit Tetrahedron to tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FromUnitTetrahedron2Tetrahedron( &
+    & xin, &
+    & x1, &
+    & x2, &
+    & x3, &
+    & x4) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP), INTENT(IN) :: x1(3)
+    !! Coordinate of tetrahedron node 1
+    REAL(DFP), INTENT(IN) :: x2(3)
+    !! Coordinate of tetrahedron node 2
+    REAL(DFP), INTENT(IN) :: x3(3)
+    !! Coordinate of tetrahedron node 3
+    REAL(DFP), INTENT(IN) :: x4(3)
+    !! Coordinate of tetrahedron node 4
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+  END FUNCTION FromUnitTetrahedron2Tetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            BarycentricCoordUnitTetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns barycentric coord of unit triangle
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricCoordUnitTetrahedron(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(4, SIZE(xin, 2))
+  END FUNCTION BarycentricCoordUnitTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                            BarycentricCoordBiUnitTetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns barycentric coord of unit triangle
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricCoordBiUnitTetrahedron(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(4, SIZE(xin, 2))
+  END FUNCTION BarycentricCoordBiUnitTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                   BarycentricCoordTetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricCoordTetrahedron(xin, refTetrahedron) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    REAL(DFP) :: ans(4, SIZE(xin, 2))
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! "UNIT"
+    !! "BIUNIT"
+  END FUNCTION BarycentricCoordTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                     FromBiUnitTetrahedron2BiUnitHexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-27
+! summary: Map from biunit tetrahedron to bi-unit Hexahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FromBiUnitTetrahedron2BiUnitHexahedron(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in biunit tetrahedron in xij format
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+    !! mapped coordinates of xin in biunit hexahedron
+  END FUNCTION FromBiUnitTetrahedron2BiUnitHexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                      FromBiUnitHexahedron2BiUnitTetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-27
+! summary: Map from biunit hexahedron to biunit tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FromBiUnitHexahedron2BiUnitTetrahedron(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in bi-unit hexahedron in xij coordinate
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+    !! coordinates in biunit tetrahedron
+  END FUNCTION FromBiUnitHexahedron2BiUnitTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                      FromUnitTetrahedron2BiUnitHexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-27
+! summary: Map from unit tetrahedron to bi-unit Hexahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FromUnitTetrahedron2BiUnitHexahedron(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in unit tetrahedron in xij format
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+    !! mapped coordinates of xin in biunit hexahedron
+  END FUNCTION FromUnitTetrahedron2BiUnitHexahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                      FromBiUnitHexahedron2BiUnitTetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-07-27
+! summary: Map from unit hexahedron to biunit tetrahedron
+
+INTERFACE
+  MODULE PURE FUNCTION FromBiUnitHexahedron2UnitTetrahedron(xin) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! coordinates in biunit hexahedron in xij coordinate
+    REAL(DFP) :: ans(3, SIZE(xin, 2))
+    !! coordinates in unit tetrahedron
+  END FUNCTION FromBiUnitHexahedron2UnitTetrahedron
 END INTERFACE
 
 END MODULE MappingUtility

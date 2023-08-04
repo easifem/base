@@ -223,11 +223,11 @@ END INTERFACE LobattoEvalAll
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Lobatto bubble functions order = 2 to n at several points
+! summary: Evaluate Lobatto bubble functions order = 0 to n at several points
 !
 !# Introduction
 !
-! Evaluate Lobatto bubble polynomials from order = 2 to n at several points
+! Evaluate Lobatto bubble polynomials from order = 0 to n at several points
 !
 !- N, the highest order polynomial to compute.
 !- x: the point at which the polynomials are to be evaluated.

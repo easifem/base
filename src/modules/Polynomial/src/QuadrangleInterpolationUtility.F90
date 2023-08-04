@@ -44,7 +44,11 @@ PUBLIC :: QuadratureNumber_Quadrangle
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION QuadratureNumber_Quadrangle(p, q, quadType1, quadType2) RESULT(ans)
+  MODULE PURE FUNCTION QuadratureNumber_Quadrangle( &
+    & p,  &
+    & q,  &
+    & quadType1,  &
+    & quadType2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p, q
     INTEGER(I4B), INTENT(IN) :: quadType1, quadType2
     INTEGER(I4B) :: ans(2)
@@ -1260,7 +1264,7 @@ INTERFACE QuadraturePoint_Quadrangle
     INTEGER(I4B), INTENT(IN) :: order
     !! order of integrand in x and y direction
     INTEGER(I4B), INTENT(IN) :: quadType
-    !! interpolation point type
+    !! quadrature point type
     !! GaussLegendre
     !! GaussLegendreLobatto
     !! GaussLegendreRadauLeft
@@ -1302,27 +1306,8 @@ INTERFACE QuadraturePoint_Quadrangle
     !! order of integrand in x direction
     INTEGER(I4B), INTENT(IN) :: q
     !! order of  integrand in y direction
-    INTEGER(I4B), INTENT(IN) :: quadType1
-    !! interpolation point type in x direction
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
-    INTEGER(I4B), INTENT(IN) :: quadType2
-    !! interpolation point type in y direction
+    INTEGER(I4B), INTENT(IN) :: quadType1, quadType2
+    !! quadrature point type in x direction
     !! Equidistance
     !! GaussLegendre
     !! GaussLegendreLobatto
@@ -1415,27 +1400,8 @@ INTERFACE QuadraturePoint_Quadrangle
     !! order of integrand in x direction
     INTEGER(I4B), INTENT(IN) :: nipsy(1)
     !! order of  integrand in y direction
-    INTEGER(I4B), INTENT(IN) :: quadType1
+    INTEGER(I4B), INTENT(IN) :: quadType1, quadType2
     !! interpolation point type in x direction
-    !! Equidistance
-    !! GaussLegendre
-    !! GaussLegendreLobatto
-    !! GaussLegendreRadauLeft
-    !! GaussLegendreRadauRight
-    !! GaussChebyshev1
-    !! GaussChebyshev1Lobatto
-    !! GaussChebyshev1RadauLeft
-    !! GaussChebyshev1RadauRight
-    !! GaussUltraspherical
-    !! GaussUltrasphericalLobatto
-    !! GaussUltrasphericalRadauLeft
-    !! GaussUltrasphericalRadauRight
-    !! GaussJacobi
-    !! GaussJacobiLobatto
-    !! GaussJacobiRadauLeft
-    !! GaussJacobiRadauRight
-    INTEGER(I4B), INTENT(IN) :: quadType2
-    !! interpolation point type in y direction
     !! Equidistance
     !! GaussLegendre
     !! GaussLegendreLobatto
