@@ -27,6 +27,7 @@ PUBLIC :: EquidistancePoint_Triangle
 PUBLIC :: InterpolationPoint_Triangle
 PUBLIC :: LagrangeCoeff_Triangle
 PUBLIC :: Dubiner_Triangle
+PUBLIC :: OrthogonalBasis_Triangle
 PUBLIC :: BarycentricVertexBasis_Triangle
 PUBLIC :: BarycentricEdgeBasis_Triangle
 PUBLIC :: BarycentricHeirarchicalBasis_Triangle
@@ -35,8 +36,24 @@ PUBLIC :: EdgeBasis_Triangle
 PUBLIC :: CellBasis_Triangle
 PUBLIC :: HeirarchicalBasis_Triangle
 PUBLIC :: RefTriangleCoord
+PUBLIC :: RefCoord_Triangle
 PUBLIC :: LagrangeEvalAll_Triangle
 PUBLIC :: QuadraturePoint_Triangle
+PUBLIC :: IJ2VEFC_Triangle
+
+!----------------------------------------------------------------------------
+!                                                         IJ2VEFC_Triangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE SUBROUTINE IJ2VEFC_Triangle(xi, eta, temp, order, N)
+    REAL(DFP), INTENT(IN) :: xi(:, :)
+    REAL(DFP), INTENT(IN) :: eta(:, :)
+    REAL(DFP), INTENT(OUT) :: temp(:, :)
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), INTENT(IN) :: N
+  END SUBROUTINE IJ2VEFC_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                           RefTriangleCoord
@@ -46,12 +63,12 @@ PUBLIC :: QuadraturePoint_Triangle
 ! date:  2023-07-03
 ! summary:  Returns the coordinate of reference triangle
 
-INTERFACE
+INTERFACE RefCoord_Triangle
   MODULE PURE FUNCTION RefTriangleCoord(refTriangle) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: refTriangle
     REAL(DFP) :: ans(2, 3)
   END FUNCTION RefTriangleCoord
-END INTERFACE
+END INTERFACE RefCoord_Triangle
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeDegree_Triangle
@@ -168,10 +185,19 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary:         Blyth Pozrikidis nodes on triangle
+! summary: Blyth Pozrikidis nodes on triangle
+!
+!# Introduction
+!
+! M. G. Blyth and C. Pozrikidis.
+! A lobatto interpolation grid over the triangle.
+! IMA Journal of Applied Mathematics, 71(1):153–169, Feb 2006.
+! URL: http://dx.doi.org/10.1093/imamat/hxh077,
+! doi:10.1093/imamat/hxh077.
 
 INTERFACE
-  MODULE FUNCTION BlythPozrikidis_Triangle(order, ipType, layout, xij) &
+  MODULE FUNCTION BlythPozrikidis_Triangle(order, ipType, layout, xij,  &
+  & alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
@@ -183,6 +209,12 @@ INTERFACE
     CHARACTER(*), INTENT(IN) :: layout
     !! local node numbering layout
     !! only layout = "VEFC" is allowed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
   END FUNCTION BlythPozrikidis_Triangle
@@ -194,10 +226,11 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 27 Oct 2022
-! summary:         Isaac points on triangle
+! summary: Isaac points on triangle
 
 INTERFACE
-  MODULE FUNCTION Isaac_Triangle(order, ipType, layout, xij) &
+  MODULE FUNCTION Isaac_Triangle(order, ipType, layout, xij,  &
+  & alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
@@ -209,6 +242,12 @@ INTERFACE
     CHARACTER(*), INTENT(IN) :: layout
     !! local node numbering layout
     !! only layout = "VEFC" is allowed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
   END FUNCTION Isaac_Triangle
@@ -247,7 +286,7 @@ END INTERFACE
 
 INTERFACE
   MODULE FUNCTION InterpolationPoint_Triangle(order, ipType, &
-    & layout, xij) RESULT(ans)
+    & layout, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -256,6 +295,12 @@ INTERFACE
     !! Coord of domain in xij format
     CHARACTER(*), INTENT(IN) :: layout
     !! local node numbering layout, always VEFC
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! xij coordinates
   END FUNCTION InterpolationPoint_Triangle
@@ -397,7 +442,7 @@ END INTERFACE LagrangeCoeff_Triangle
 ! P_{3,0}
 !$$
 
-INTERFACE
+INTERFACE Dubiner_Triangle
   MODULE PURE FUNCTION Dubiner_Triangle1(order, xij, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial space
@@ -412,11 +457,11 @@ INTERFACE
     !! ans(:, j), jth shape functions at all points
     !! ans(j, :), all shape functions at jth point
   END FUNCTION Dubiner_Triangle1
-END INTERFACE
-
-INTERFACE Dubiner_Triangle
-  MODULE PROCEDURE Dubiner_Triangle1
 END INTERFACE Dubiner_Triangle
+
+INTERFACE OrthogonalBasis_Triangle
+  MODULE PROCEDURE Dubiner_Triangle1
+END INTERFACE OrthogonalBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                                       DubinerPolynomial
@@ -432,7 +477,7 @@ END INTERFACE Dubiner_Triangle
 ! can be biunit or unit. Here x and y are coordinate on line.
 ! xij is given by outerproduct of x and y.
 
-INTERFACE
+INTERFACE Dubiner_Triangle
   MODULE PURE FUNCTION Dubiner_Triangle2(order, x, y, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial space
@@ -446,11 +491,11 @@ INTERFACE
     !! ans(:, j), jth shape functions at all points
     !! ans(j, :), all shape functions at jth point
   END FUNCTION Dubiner_Triangle2
-END INTERFACE
-
-INTERFACE Dubiner_Triangle
-  MODULE PROCEDURE Dubiner_Triangle2
 END INTERFACE Dubiner_Triangle
+
+INTERFACE OrthogonalBasis_Triangle
+  MODULE PROCEDURE Dubiner_Triangle2
+END INTERFACE OrthogonalBasis_Triangle
 
 !----------------------------------------------------------------------------
 !                                          BarycentricVertexBasis_Triangle
@@ -563,7 +608,7 @@ END INTERFACE
 ! date: 27 Oct 2022
 ! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
 
-INTERFACE
+INTERFACE BarycentricHeirarchicalBasis_Triangle
   MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle1(order, &
     & pe1, pe2, pe3, lambda, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -585,10 +630,6 @@ INTERFACE
       & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))
     !!
   END FUNCTION BarycentricHeirarchicalBasis_Triangle1
-END INTERFACE
-
-INTERFACE BarycentricHeirarchicalBasis_Triangle
-  MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle1
 END INTERFACE BarycentricHeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------
@@ -599,7 +640,7 @@ END INTERFACE BarycentricHeirarchicalBasis_Triangle
 ! date: 27 Oct 2022
 ! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
 
-INTERFACE
+INTERFACE BarycentricHeirarchicalBasis_Triangle
   MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Triangle2(order, lambda, &
     & refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -615,10 +656,6 @@ INTERFACE
       & INT((order + 1) * (order + 2) / 2))
     !!
   END FUNCTION BarycentricHeirarchicalBasis_Triangle2
-END INTERFACE
-
-INTERFACE BarycentricHeirarchicalBasis_Triangle
-  MODULE PROCEDURE BarycentricHeirarchicalBasis_Triangle2
 END INTERFACE BarycentricHeirarchicalBasis_Triangle
 
 !----------------------------------------------------------------------------

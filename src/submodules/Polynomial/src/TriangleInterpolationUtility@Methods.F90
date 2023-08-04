@@ -646,18 +646,19 @@ MODULE PROCEDURE BarycentricEdgeBasis_Triangle
 REAL(DFP) :: d_lambda(3 * SIZE(lambda, 2))
 REAL(DFP) :: phi(1:3 * SIZE(lambda, 2), 0:MAX(pe1 - 2, pe2 - 2, pe3 - 2))
 INTEGER(I4B) :: maxP, tPoints
-!!
+
 tPoints = SIZE(lambda, 2)
 maxP = MAX(pe1 - 2, pe2 - 2, pe3 - 2)
-!!
 d_lambda(1:tPoints) = lambda(2, :) - lambda(1, :)
 d_lambda(1 + tPoints:2 * tPoints) = lambda(3, :) - lambda(1, :)
 d_lambda(1 + 2 * tPoints:3 * tPoints) = lambda(3, :) - lambda(2, :)
 phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
-!!
-ans = BarycentricEdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, &
-  & lambda=lambda, phi=phi)
-!!
+ans = BarycentricEdgeBasis_Triangle2( &
+  & pe1=pe1, &
+  & pe2=pe2, &
+  & pe3=pe3, &
+  & lambda=lambda, &
+  & phi=phi)
 END PROCEDURE BarycentricEdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
@@ -667,40 +668,29 @@ END PROCEDURE BarycentricEdgeBasis_Triangle
 MODULE PROCEDURE BarycentricEdgeBasis_Triangle2
 INTEGER(I4B) :: tPoints, a, ii
 REAL(DFP) :: temp(SIZE(lambda, 2))
-!!
+
 ans = 0.0_DFP
 tPoints = SIZE(lambda, 2)
-!!
 a = 0
-!!
 !! edge(1) = (v1, v2)
-!!
 temp = lambda(1, :) * lambda(2, :)
-!!
 DO ii = 1, pe1 - 1
   ans(:, a + ii) = temp * phi(1:tPoints, ii - 1)
 END DO
-!!
 !! edge(2) = (v1, v3)
-!!
 a = pe1 - 1
 temp = lambda(1, :) * lambda(3, :)
-!!
 DO ii = 1, pe2 - 1
   ans(:, a + ii) = temp &
                   & * phi(1 + tPoints:2 * tPoints, ii - 1)
 END DO
-!!
 !! edge(3) = (v2, v3)
-!!
 a = pe1 - 1 + pe2 - 1
 temp = lambda(2, :) * lambda(3, :)
-!!
 DO ii = 1, pe3 - 1
   ans(:, a + ii) = temp &
                   & * phi(1 + 2 * tPoints:3 * tPoints, ii - 1)
 END DO
-!!
 END PROCEDURE BarycentricEdgeBasis_Triangle2
 
 !----------------------------------------------------------------------------
@@ -791,23 +781,21 @@ CHARACTER(20) :: layout
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
 REAL(DFP) :: Lo1(SIZE(xij, 2), 0:1)
 REAL(DFP) :: Lo2(SIZE(xij, 2), 0:1)
-!!
+
 layout = TRIM(UpperCase(refTriangle))
-!!
 SELECT CASE (TRIM(layout))
 CASE ("BIUNIT")
   x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
 CASE ("UNIT")
   x = FromUnitTriangle2BiUnitSqr(xin=xij)
 END SELECT
-!!
+
 Lo1(:, 0) = 0.5_DFP * (1.0 - x(1, :))
 Lo1(:, 1) = 0.5_DFP * (1.0 + x(1, :))
 Lo2(:, 0) = 0.5_DFP * (1.0 - x(2, :))
 Lo2(:, 1) = 0.5_DFP * (1.0 + x(2, :))
-!!
+
 ans = VertexBasis_Triangle2(Lo1=Lo1, Lo2=Lo2)
-!!
 END PROCEDURE VertexBasis_Triangle
 
 !----------------------------------------------------------------------------
@@ -832,28 +820,32 @@ REAL(DFP) :: L2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3))
 REAL(DFP) :: Lo1(SIZE(xij, 2), 0:1)
 REAL(DFP) :: Lo2(SIZE(xij, 2), 0:1)
 INTEGER(I4B) :: maxP
-!!
+
 layout = TRIM(UpperCase(refTriangle))
-!!
 SELECT CASE (TRIM(layout))
 CASE ("BIUNIT")
   x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
 CASE ("UNIT")
   x = FromUnitTriangle2BiUnitSqr(xin=xij)
 END SELECT
-!!
+
 maxP = MAX(pe1, pe2, pe3)
 L1 = JacobiEvalAll(n=maxP, x=x(1, :), alpha=1.0_DFP, beta=1.0_DFP)
 L2 = JacobiEvalAll(n=maxP, x=x(2, :), alpha=1.0_DFP, beta=1.0_DFP)
-!!
+
 Lo1(:, 0) = 0.5_DFP * (1.0 - x(1, :))
 Lo1(:, 1) = 0.5_DFP * (1.0 + x(1, :))
 Lo2(:, 0) = 0.5_DFP * (1.0 - x(2, :))
 Lo2(:, 1) = 0.5_DFP * (1.0 + x(2, :))
-!!
-ans = EdgeBasis_Triangle2(pe1=pe1, pe2=pe2, pe3=pe3, L1=L1, L2=L2, &
-  & Lo1=Lo1, Lo2=Lo2)
-!!
+
+ans = EdgeBasis_Triangle2( &
+  & pe1=pe1, &
+  & pe2=pe2, &
+  & pe3=pe3, &
+  & L1=L1, &
+  & L2=L2, &
+  & Lo1=Lo1, &
+  & Lo2=Lo2)
 END PROCEDURE EdgeBasis_Triangle
 
 !----------------------------------------------------------------------------
@@ -863,34 +855,29 @@ END PROCEDURE EdgeBasis_Triangle
 MODULE PROCEDURE EdgeBasis_Triangle2
 CHARACTER(20) :: layout
 INTEGER(I4B) :: maxP, k1, k2, a
-!!
+
 maxP = MAX(pe1, pe2, pe3)
-!!
 !! edge(1)
-!!
 a = 0
-!!
+
 DO k1 = 2, pe1
   ! ans(:, k1 - 1) = L1(:, k1) * (L2(:, 0)**k1)
   ans(:, k1 - 1) = Lo1(:, 0) * Lo1(:, 1) * L1(:, k1 - 2) * (Lo2(:, 0)**k1)
 END DO
-!!
+
 !! edge(2)
-!!
 a = pe1 - 1
 DO k2 = 2, pe2
   ! ans(:, a + k2 - 1) = L1(:, 0) * L2(:, k2)
   ans(:, a + k2 - 1) = Lo1(:, 0) * Lo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2)
 END DO
-!!
+
 !! edge(3)
-!!
 a = pe1 - 1 + pe2 - 1
 DO k2 = 2, pe3
   ! ans(:, a + k2 - 1) = L1(:, 1) * L2(:, k2)
   ans(:, a + k2 - 1) = Lo1(:, 1) * Lo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2)
 END DO
-!!
 END PROCEDURE EdgeBasis_Triangle2
 
 !----------------------------------------------------------------------------
@@ -1201,6 +1188,7 @@ REAL(DFP), ALLOCATABLE :: temp_t(:, :)
 TYPE(string) :: astr
 
 nips(1) = QuadratureNumberTriangleSolin(order=order)
+
 IF (nips(1) .GT. 0) THEN
   astr = TRIM(UpperCase(refTriangle))
   temp_t = QuadraturePointTriangleSolin(nips=nips)
