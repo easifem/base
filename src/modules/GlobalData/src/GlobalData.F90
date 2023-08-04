@@ -285,6 +285,8 @@ INTEGER(I4B), PARAMETER :: Legendre = 6
 INTEGER(I4B), PARAMETER :: Chebyshev = 7
 INTEGER(I4B), PARAMETER :: Lobatto = 8
 INTEGER(I4B), PARAMETER :: UnscaledLobatto = 9
+INTEGER(I4B), PARAMETER :: Orthogonal = 9
+INTEGER(I4B), PARAMETER :: OrthogonalPolynomial = Orthogonal
 !!
 !! Quadrature types
 !!
