@@ -27,6 +27,7 @@ PUBLIC :: EquidistanceInPoint_Hexahedron
 PUBLIC :: InterpolationPoint_Hexahedron
 PUBLIC :: LagrangeCoeff_Hexahedron
 PUBLIC :: RefHexahedronCoord
+PUBLIC :: RefCoord_Hexahedron
 PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
 PUBLIC :: QuadratureNumber_Hexahedron
@@ -270,7 +271,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:  2023-07-07
+! date: 2023-07-28
 ! summary:  This function returns the edge connectivity of Hexahedron
 
 INTERFACE
@@ -301,14 +302,14 @@ END INTERFACE
 ! date: 2023-07-07
 ! summary:  Returns coordinates of reference Hexahedron
 
-INTERFACE
+INTERFACE RefCoord_Hexahedron
   MODULE PURE FUNCTION RefHexahedronCoord(refHexahedron) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: refHexahedron
     !! UNIT
     !! BIUNIT
     REAL(DFP) :: ans(3, 8)
   END FUNCTION RefHexahedronCoord
-END INTERFACE
+END INTERFACE RefCoord_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeDegree_Hexahedron
@@ -1971,7 +1972,11 @@ INTERFACE LagrangeEvalAll_Hexahedron
     !! Default value of firstCall is True
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomials *Default
-    !! Jacobi=Dubiner
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
     !! Jacobi parameter
