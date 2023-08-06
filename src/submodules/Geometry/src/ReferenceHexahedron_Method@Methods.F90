@@ -37,8 +37,11 @@ lloop = FacetConnectivity_Hexahedron()
 
 vol(:, 1) = arange(1_I4B, 8_I4B)
 
-CALL Reallocate(obj%xij, 3, 3)
-obj%xij = RefHexahedronCoord("BIUNIT")
+IF (PRESENT(xij)) THEN
+  obj%xij = xij
+ELSE
+  obj%xij = RefHexahedronCoord("BIUNIT")
+END IF
 
 obj%EntityCounts = [8, 12, 6, 1]
 obj%XiDimension = 3
