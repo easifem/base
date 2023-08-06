@@ -21,21 +21,50 @@
 MODULE QuadraturePoint_Method
 USE BaseType
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: QuadraturePoint
 PUBLIC :: QuadraturePoint_Pointer
 PUBLIC :: DEALLOCATE
-PUBLIC :: GaussLegendreQuadrature
-PUBLIC :: GaussLegendreLobattoQuadrature
-PUBLIC :: GaussLegendreRadauLeftQuadrature
-PUBLIC :: GaussLegendreRadauRightQuadrature
 PUBLIC :: SIZE
-PUBLIC :: getTotalQuadraturepoints
+PUBLIC :: GetTotalQuadraturepoints
 PUBLIC :: GetQuadraturepoints
 PUBLIC :: Outerprod
 PUBLIC :: Display
+PUBLIC :: QuadraturePointIdToName
+PUBLIC :: QuadraturePointNameToId
+
+!----------------------------------------------------------------------------
+!                                 QuadratuePointNameToId@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-06
+! summary:  Quadrature point name to quadrature point id
+
+INTERFACE
+  MODULE FUNCTION QuadraturePointNameToId(name) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: name
+    INTEGER(I4B) :: ans
+  END FUNCTION QuadraturePointNameToId
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                 QuadratuePointIdToName@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-06
+! summary:  Quadrature point name to quadrature point id
+
+INTERFACE
+  MODULE FUNCTION QuadraturePointIdToName(name) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: name
+    TYPE(String) :: ans
+  END FUNCTION QuadraturePointIdToName
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                Initiate@ConstructorMethods
@@ -86,7 +115,8 @@ END INTERFACE Initiate
 ! summary: This routine initiates the quadrature points
 
 INTERFACE Initiate
-  MODULE SUBROUTINE quad_initiate3(obj, refElem, order, quadratureType)
+  MODULE SUBROUTINE quad_initiate3(obj, refElem, order, quadratureType,  &
+    & alpha, beta, lambda)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -103,6 +133,12 @@ INTERFACE Initiate
     !! "GaussChebyshevLobatto"
     !! "GaussChebyshevRadau", "GaussChebyshevRadauLeft"
     !! "GaussChebyshevRadauRight"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
   END SUBROUTINE quad_initiate3
 END INTERFACE Initiate
 
@@ -115,7 +151,8 @@ END INTERFACE Initiate
 ! summary: This routine initiates the quadrature points
 
 INTERFACE Initiate
-  MODULE SUBROUTINE quad_initiate4(obj, refElem, nips, quadratureType)
+  MODULE SUBROUTINE quad_initiate4(obj, refElem, nips, quadratureType, &
+    & alpha, beta, lambda)
     TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
     !! Total number of xidimension
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
@@ -124,7 +161,99 @@ INTERFACE Initiate
     !! order of integrand
     CHARACTER(*), INTENT(IN) :: quadratureType
     !! Total number quadrature points
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
   END SUBROUTINE quad_initiate4
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiates the quadrature points
+
+INTERFACE Initiate
+  MODULE SUBROUTINE quad_initiate5( &
+    & obj, &
+    & refElem, &
+    & order, &
+    & quadratureType,  &
+    & alpha, beta, lambda)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! Reference-element
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadratureType
+    !! Type of quadrature points
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadau
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev
+    !! GaussChebyshevLobatto
+    !! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft
+    !! GaussChebyshevRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE quad_initiate5
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                               Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiates the quadrature points
+
+INTERFACE Initiate
+  MODULE SUBROUTINE quad_initiate6( &
+    & obj, &
+    & refElem, &
+    & nips, &
+    & quadratureType, &
+    & alpha, &
+    & beta, &
+    & lambda)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! Reference element
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadratureType
+    !! Type of quadrature points
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadau
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev
+    !! GaussChebyshevLobatto
+    !! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft
+    !! GaussChebyshevRadauRight
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+  END SUBROUTINE quad_initiate6
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -135,15 +264,11 @@ END INTERFACE Initiate
 ! date: 23 July 2021
 ! summary: This routine initiate an instance of quadrature points
 
-INTERFACE
+INTERFACE QuadraturePoint
   MODULE PURE FUNCTION quad_Constructor1(points) RESULT(obj)
     TYPE(QuadraturePoint_) :: obj
     REAL(DFP), INTENT(IN) :: points(:, :)
   END FUNCTION quad_Constructor1
-END INTERFACE
-
-INTERFACE QuadraturePoint
-  MODULE PROCEDURE quad_Constructor1
 END INTERFACE QuadraturePoint
 
 !----------------------------------------------------------------------------
@@ -154,15 +279,11 @@ END INTERFACE QuadraturePoint
 ! date: 23 July 2021
 ! summary: Returns a pointer to a newly created instance of quadrature points
 
-INTERFACE
+INTERFACE QuadraturePoint_Pointer
   MODULE PURE FUNCTION quad_Constructor_1(points) RESULT(obj)
     CLASS(QuadraturePoint_), POINTER :: obj
     REAL(DFP), INTENT(IN) :: points(:, :)
   END FUNCTION quad_Constructor_1
-END INTERFACE
-
-INTERFACE QuadraturePoint_Pointer
-  MODULE PROCEDURE quad_Constructor_1
 END INTERFACE QuadraturePoint_Pointer
 
 !----------------------------------------------------------------------------
@@ -173,14 +294,10 @@ END INTERFACE QuadraturePoint_Pointer
 ! date: 23 July 2021
 ! summary: Deallocates the data stored inside the quadrature point
 
-INTERFACE
+INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE quad_Deallocate(obj)
     CLASS(QuadraturePoint_), INTENT(INOUT) :: obj
   END SUBROUTINE quad_Deallocate
-END INTERFACE
-
-INTERFACE DEALLOCATE
-  MODULE PROCEDURE quad_Deallocate
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
@@ -191,16 +308,12 @@ END INTERFACE DEALLOCATE
 ! date: 23 July 2021
 ! summary: This routine returns the size of obj%points,
 
-INTERFACE
+INTERFACE SIZE
   MODULE PURE FUNCTION quad_Size(obj, dims) RESULT(ans)
     CLASS(QuadraturePoint_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: dims
     INTEGER(I4B) :: ans
   END FUNCTION quad_Size
-END INTERFACE
-
-INTERFACE SIZE
-  MODULE PROCEDURE quad_Size
 END INTERFACE SIZE
 
 !----------------------------------------------------------------------------
@@ -211,17 +324,13 @@ END INTERFACE SIZE
 ! date: 23 July 2021
 ! summary: This routine returns total number of quadrature points
 
-INTERFACE
+INTERFACE GetTotalQuadraturepoints
   MODULE PURE FUNCTION quad_getTotalQuadraturepoints(obj, dims) RESULT(ans)
     CLASS(QuadraturePoint_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: dims
     INTEGER(I4B) :: ans
   END FUNCTION quad_getTotalQuadraturepoints
-END INTERFACE
-
-INTERFACE getTotalQuadraturepoints
-  MODULE PROCEDURE quad_getTotalQuadraturepoints
-END INTERFACE getTotalQuadraturepoints
+END INTERFACE GetTotalQuadraturepoints
 
 !----------------------------------------------------------------------------
 !                                              GetQuadraturePoint@GetMethods
