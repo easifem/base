@@ -13,10 +13,9 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
 SUBMODULE(MappingUtility) Methods
-USE BaseMethod, ONLY: UpperCase, SOFTLE
+USE BaseMethod, ONLY: UpperCase, SOFTLE, RefCoord_Hexahedron
 IMPLICIT NONE
 CONTAINS
 
@@ -67,6 +66,42 @@ END DO
 END PROCEDURE FromUnitTriangle2Triangle1
 
 !----------------------------------------------------------------------------
+!                                        FromBiUnitQuadrangle2UnitQuadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1
+ans = FromBiUnitQuadrangle2Quadrangle(&
+  & xin=xin, &
+  & x1=[0.0_DFP, 0.0_DFP],  &
+  & x2=[1.0_DFP, 0.0_DFP],  &
+  & x3=[1.0_DFP, 1.0_DFP],  &
+  & x4=[0.0_DFP, 1.0_DFP])
+END PROCEDURE FromBiUnitQuadrangle2UnitQuadrangle1
+
+!----------------------------------------------------------------------------
+!                                        FromBiUnitQuadrangle2UnitQuadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitQuadrangle2BiUnitQuadrangle1
+INTEGER(I4B) :: ii
+REAL(DFP) :: xi, eta, p1, p2, p3, p4
+
+DO ii = 1, SIZE(ans, 2)
+  xi = xin(1, ii)
+  eta = xin(2, ii)
+  p1 = (1.0 - xi) * (1.0 - eta)
+  p2 = xi * (1.0 - eta)
+  p3 = xi * eta
+  p4 = (1.0 - xi) * eta
+  ans(1:2, ii) =  &
+    &   [-1.0_DFP, -1.0_DFP] * p1  &
+    & + [1.0_DFP, -1.0_DFP] * p2  &
+    & + [1.0_DFP, 1.0_DFP] * p3  &
+    & + [-1.0_DFP, 1.0_DFP] * p4
+END DO
+END PROCEDURE FromUnitQuadrangle2BiUnitQuadrangle1
+
+!----------------------------------------------------------------------------
 !                                           FromBiUnitQuadrangle2Quadrangle
 !----------------------------------------------------------------------------
 
@@ -93,7 +128,7 @@ MODULE PROCEDURE FromBiUnitHexahedron2Hexahedron1
 INTEGER(I4B) :: ii
 REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
 REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
-!!
+
 DO ii = 1, SIZE(ans, 2)
   xi = xin(1, ii)
   eta = xin(2, ii)
@@ -102,17 +137,62 @@ DO ii = 1, SIZE(ans, 2)
   p2 = p125 * (one + xi) * (one - eta) * (one - zeta)
   p3 = p125 * (one + xi) * (one + eta) * (one - zeta)
   p4 = p125 * (one - xi) * (one + eta) * (one - zeta)
-
   p5 = p125 * (one - xi) * (one - eta) * (one + zeta)
   p6 = p125 * (one + xi) * (one - eta) * (one + zeta)
   p7 = p125 * (one + xi) * (one + eta) * (one + zeta)
   p8 = p125 * (one - xi) * (one + eta) * (one + zeta)
-
   ans(:, ii) = x1 * p1 + x2 * p2 + x3 * p3 + x4 * p4 + &
     & x5 * p5 + x6 * p6 + x7 * p7 + x8 * p8
-
 END DO
 END PROCEDURE FromBiUnitHexahedron2Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                       FromBiUnitHexahedron2UnitHexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromBiUnitHexahedron2UnitHexahedron1
+REAL(DFP) :: xij(3, 8)
+xij = RefCoord_Hexahedron(refHexahedron="UNIT")
+ans = FromBiUnitHexahedron2Hexahedron(&
+  & xin=xin,  &
+  & x1=xij(:, 1),  &
+  & x2=xij(:, 2), &
+  & x3=xij(:, 3), &
+  & x4=xij(:, 4), &
+  & x5=xij(:, 5), &
+  & x6=xij(:, 6), &
+  & x7=xij(:, 7), &
+  & x8=xij(:, 8))
+END PROCEDURE FromBiUnitHexahedron2UnitHexahedron1
+
+!----------------------------------------------------------------------------
+!                                           FromBiUnitHexahedron2Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
+INTEGER(I4B) :: ii
+REAL(DFP) :: xi, eta, p1, p2, p3, p4, p5, p6, p7, p8, zeta
+REAL(DFP), PARAMETER :: one = 1.0_DFP, p125 = 0.125_DFP
+REAL(DFP) :: x(3, 8)
+
+x = RefCoord_Hexahedron(refHexahedron="BIUNIT")
+
+DO ii = 1, SIZE(ans, 2)
+  xi = xin(1, ii)
+  eta = xin(2, ii)
+  zeta = xin(3, ii)
+  p1 = (one - xi) * (one - eta) * (one - zeta)
+  p2 = (xi) * (one - eta) * (one - zeta)
+  p3 = (xi) * (eta) * (one - zeta)
+  p4 = (one - xi) * (eta) * (one - zeta)
+  p5 = (one - xi) * (one - eta) * (zeta)
+  p6 = (xi) * (one - eta) * (zeta)
+  p7 = (xi) * (eta) * (zeta)
+  p8 = (one - xi) * (eta) * (zeta)
+  ans(:, ii) = x(:, 1) * p1 + x(:, 2) * p2 + x(:, 3) * p3 + x(:, 4) * p4 + &
+    & x(:, 5) * p5 + x(:, 6) * p6 + x(:, 7) * p7 + x(:, 8) * p8
+END DO
+END PROCEDURE FromUnitHexahedron2BiUnitHexahedron1
 
 !----------------------------------------------------------------------------
 !                                             FromBiUnitTriangle2BiUnitSqr

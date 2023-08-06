@@ -31,7 +31,12 @@ PUBLIC :: FromBiUnitLine2UnitLine
 PUBLIC :: FromUnitLine2BiUnitLine
 
 PUBLIC :: FromBiUnitQuadrangle2Quadrangle
+PUBLIC :: FromBiUnitQuadrangle2UnitQuadrangle
+PUBLIC :: FromUnitQuadrangle2BiUnitQuadrangle
+
 PUBLIC :: FromBiUnitHexahedron2Hexahedron
+PUBLIC :: FromBiUnitHexahedron2UnitHexahedron
+PUBLIC :: FromUnitHexahedron2BiUnitHexahedron
 
 PUBLIC :: FromBiUnitTriangle2BiUnitSqr
 PUBLIC :: FromBiUnitTriangle2BiUnitQuadrangle
@@ -158,6 +163,46 @@ END INTERFACE FromUnitTriangle2Triangle
 ! date: 19 Oct 2022
 ! summary: Map from unit line to physical space
 
+INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
+  MODULE PURE FUNCTION FromBiUnitQuadrangle2UnitQuadrangle1(xin) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Quadrangle in xij format
+    !! SIZE(xin,1) = 2
+    REAL(DFP) :: ans(SIZE(xin, 1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+  END FUNCTION FromBiUnitQuadrangle2UnitQuadrangle1
+END INTERFACE FromBiUnitQuadrangle2UnitQuadrangle
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitQuadrangle2Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from unit line to physical space
+
+INTERFACE FromUnitQuadrangle2BiUnitQuadrangle
+  MODULE PURE FUNCTION FromUnitQuadrangle2BiUnitQuadrangle1(xin) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Quadrangle in xij format
+    !! SIZE(xin,1) = 2
+    REAL(DFP) :: ans(SIZE(xin, 1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+  END FUNCTION FromUnitQuadrangle2BiUnitQuadrangle1
+END INTERFACE FromUnitQuadrangle2BiUnitQuadrangle
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitQuadrangle2Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from unit line to physical space
+
 INTERFACE FromBiUnitQuadrangle2Quadrangle
   MODULE PURE FUNCTION FromBiUnitQuadrangle2Quadrangle1(xin, x1, x2, x3, x4) &
     & RESULT(ans)
@@ -214,6 +259,46 @@ INTERFACE FromBiUnitHexahedron2Hexahedron
     !! shape(ans) = nsd, N
   END FUNCTION FromBiUnitHexahedron2Hexahedron1
 END INTERFACE FromBiUnitHexahedron2Hexahedron
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitHexahedron2Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from biunit hexahedron to unit hexahedron
+
+INTERFACE FromBiUnitHexahedron2UnitHexahedron
+  MODULE PURE FUNCTION FromBiUnitHexahedron2UnitHexahedron1(xin) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP) :: ans(SIZE(xin, 1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+  END FUNCTION FromBiUnitHexahedron2UnitHexahedron1
+END INTERFACE FromBiUnitHexahedron2UnitHexahedron
+
+!----------------------------------------------------------------------------
+!                                            FromBiUnitHexahedron2Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 19 Oct 2022
+! summary: Map from unit hexahedron to biunit hexahedron
+
+INTERFACE FromUnitHexahedron2BiUnitHexahedron
+  MODULE PURE FUNCTION FromUnitHexahedron2BiUnitHexahedron1(xin) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: xin(:, :)
+    !! vertex coordinate of biunit Hexahedron in xij format
+    !! SIZE(xin,1) = 3
+    REAL(DFP) :: ans(SIZE(xin, 1), SIZE(xin, 2))
+    !! mapped coordinates of xin in physical domain
+    !! shape(ans) = nsd, N
+  END FUNCTION FromUnitHexahedron2BiUnitHexahedron1
+END INTERFACE FromUnitHexahedron2BiUnitHexahedron
 
 !----------------------------------------------------------------------------
 !                                                     FromBiUnitLine2UnitLine
