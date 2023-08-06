@@ -136,9 +136,9 @@ IF (PRESENT(xij)) THEN
   x0(1:nsd, 1) = xij(1:nsd, 1)
   x0(1:nsd, 2) = xij(1:nsd, 2)
 ELSE
-  nsd = 3_I4B
-  x0(1:nsd, 1) = [-1.0, 0.0, 0.0]
-  x0(1:nsd, 2) = [1.0, 0.0, 0.0]
+  nsd = 1_I4B
+  x0(1:nsd, 1) = [-1.0]
+  x0(1:nsd, 2) = [1.0]
 END IF
 n = LagrangeInDOF_Line(order=order)
 ALLOCATE (ans(nsd, n))
@@ -182,14 +182,14 @@ IF (PRESENT(xij)) THEN
   ans(1:nsd, 1) = xij(1:nsd, 1)
   ans(1:nsd, 2) = xij(1:nsd, 2)
 ELSE
-  nsd = 3_I4B
+  nsd = 1_I4B
   CALL Reallocate(ans, nsd, order + 1)
   IF (order .EQ. 0_I4B) THEN
     ans(1:nsd, 1) = 0.0_DFP
     RETURN
   END IF
-  ans(1:nsd, 1) = [-1.0, 0.0, 0.0]
-  ans(1:nsd, 2) = [1.0, 0.0, 0.0]
+  ans(1:nsd, 1) = [-1.0]
+  ans(1:nsd, 2) = [1.0]
 END IF
 IF (order .GE. 2) THEN
   ans(1:nsd, 3:) = EquidistanceInPoint_Line(order=order, xij=xij)
@@ -212,7 +212,7 @@ IF (order .EQ. 0_I4B) THEN
     ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
   ELSE
     CALL Reallocate(ans, 1, 1)
-    ans(1:nsd, 1) = 0.0_DFP
+    ans = 0.0_DFP
   END IF
   RETURN
 END IF

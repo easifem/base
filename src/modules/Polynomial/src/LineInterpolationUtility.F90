@@ -161,16 +161,16 @@ END INTERFACE
 !
 !# Introduction
 !
-!- This function returns the equidistance points on edge
+!- This function returns the equidistance points on edge in 1D
 !- All points are inside the interval
 !- Points are in increasing order
 
 INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Line1(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     REAL(DFP), INTENT(IN) :: xij(2)
-  !! coordinates of point 1 and point 2
+    !! coordinates of point 1 and point 2
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION EquidistanceInPoint_Line1
 END INTERFACE
@@ -185,12 +185,16 @@ END INTERFACE EquidistanceInPoint_Line
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary:         Returns equidistance points on edge
+! summary: Returns equidistance points on edge
 !
 !# Introduction
 !
-!- This function returns the equidistance points on edge
+!- This function returns the equidistance points on edge in 1D, 2D, 3D
+!- The end points are specified by `xij(1:nsd, 1)` and `xij(1:nsd, 2)`
+!
 !- All points are inside the interval
+!- The number of space components in `ans` is nsd if xij present
+!- Otherwise, the number of space components in `ans` is 1.
 
 INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Line2(order, xij) RESULT(ans)
@@ -201,7 +205,9 @@ INTERFACE
   !! number of rows = nsd
   !! number of cols = 2
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! returned coordinates in $x_{iJ}$ format
+  !! Equidistnace points in $x_{iJ}$ format
+  !! The number of rows is equal to the number of rows in xij
+  !! (if xij present), otherwise, it is 1.
   END FUNCTION EquidistanceInPoint_Line2
 END INTERFACE
 
@@ -258,6 +264,9 @@ INTERFACE EquidistancePoint_Line
     !! number of cols = 2
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! equidistance points in $x_{iJ}$ format
+    !! If xij is not present, then number of rows in ans
+    !! is 1. If `xij` is present then the number of rows in
+    !! ans is  same as xij.
   END FUNCTION EquidistancePoint_Line2
 END INTERFACE EquidistancePoint_Line
 
