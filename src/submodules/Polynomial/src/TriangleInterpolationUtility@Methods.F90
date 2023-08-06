@@ -105,31 +105,28 @@ END PROCEDURE LagrangeInDOF_Triangle
 MODULE PROCEDURE EquidistancePoint_Triangle
 INTEGER(I4B) :: nsd, n, ne, i1, i2
 REAL(DFP) :: x(3, 3), xin(3, 3), e1(3), e2(3), lam, avar, mu
-  !!
+
 x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
-  !!
+
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x(1:nsd, 1:3) = xij(1:nsd, 1:3)
 ELSE
-  nsd = 3_I4B
-  x(1:nsd, 1) = [0.0, 0.0, 0.0]
-  x(1:nsd, 2) = [1.0, 0.0, 0.0]
-  x(1:nsd, 3) = [0.0, 1.0, 0.0]
+  nsd = 2_I4B
+  x(1:nsd, 1) = [0.0, 0.0]
+  x(1:nsd, 2) = [1.0, 0.0]
+  x(1:nsd, 3) = [0.0, 1.0]
 END IF
-  !!
+
 n = LagrangeDOF_Triangle(order=order)
 ALLOCATE (ans(nsd, n))
 ans = 0.0_DFP
-  !!
-  !! points on vertex
-  !!
+
+!! points on vertex
 ans(1:nsd, 1:3) = x(1:nsd, 1:3)
-  !!
-  !! points on edge
-  !!
+
+!! points on edge
 ne = LagrangeInDOF_Line(order=order)
-  !!
 i2 = 3
 IF (order .GT. 1_I4B) THEN
   i1 = i2 + 1; i2 = i1 + ne - 1
@@ -148,9 +145,8 @@ IF (order .GT. 1_I4B) THEN
     & xij=x(1:nsd, [3, 1]))
     !!
 END IF
-  !!
-  !! points on face
-  !!
+
+!! points on face
 IF (order .GT. 2_I4B) THEN
     !!
   IF (order .EQ. 3_I4B) THEN
@@ -195,7 +191,7 @@ IF (order .GT. 2_I4B) THEN
       !!
   END IF
 END IF
-  !!
+
 END PROCEDURE EquidistancePoint_Triangle
 
 !----------------------------------------------------------------------------
@@ -205,30 +201,29 @@ END PROCEDURE EquidistancePoint_Triangle
 MODULE PROCEDURE EquidistanceInPoint_Triangle
 INTEGER(I4B) :: nsd, n, ne
 REAL(DFP) :: x(3, 3), xin(3, 3), e1(3), e2(3), lam, avar, mu
-  !!
+
 IF (order .LT. 3_I4B) THEN
   ALLOCATE (ans(0, 0))
   RETURN
 END IF
-  !!
+
 x = 0.0_DFP; xin = 0.0_DFP; e1 = 0.0_DFP; e2 = 0.0_DFP
-  !!
+
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x(1:nsd, 1:3) = xij(1:nsd, 1:3)
 ELSE
-  nsd = 3_I4B
-  x(1:nsd, 1) = [0.0, 0.0, 0.0]
-  x(1:nsd, 2) = [1.0, 0.0, 0.0]
-  x(1:nsd, 3) = [0.0, 1.0, 0.0]
+  nsd = 2_I4B
+  x(1:nsd, 1) = [0.0, 0.0]
+  x(1:nsd, 2) = [1.0, 0.0]
+  x(1:nsd, 3) = [0.0, 1.0]
 END IF
-  !!
+
 n = LagrangeInDOF_Triangle(order=order)
 ALLOCATE (ans(nsd, n))
 ans = 0.0_DFP
-  !!
-  !! points on face
-  !!
+
+!! points on face
 IF (order .EQ. 3_I4B) THEN
   ans(1:nsd, 1) = (x(1:nsd, 1) + x(1:nsd, 2) + x(1:nsd, 3)) / 3.0_DFP
 ELSE
@@ -268,7 +263,7 @@ ELSE
     & xij=xin(1:nsd, 1:3))
     !!
 END IF
-  !!
+
 END PROCEDURE EquidistanceInPoint_Triangle
 
 !----------------------------------------------------------------------------
@@ -281,9 +276,14 @@ REAL(DFP), ALLOCATABLE :: temp(:, :)
 INTEGER(I4B) :: nsd, N, ii, jj, kk
 CHARACTER(*), PARAMETER :: myName = "BlythPozrikidis_Triangle"
 
-v = InterpolationPoint_Line(order=order, ipType=ipType, &
-  & xij=[0.0_DFP, 1.0_DFP], layout="INCREASING", &
-  & lambda=lambda, beta=beta, alpha=alpha)
+v = InterpolationPoint_Line( &
+  & order=order, &
+  & ipType=ipType, &
+  & xij=[0.0_DFP, 1.0_DFP], &
+  & layout="INCREASING", &
+  & lambda=lambda, &
+  & beta=beta, &
+  & alpha=alpha)
 
 N = LagrangeDOF_Triangle(order=order)
 
@@ -1294,6 +1294,7 @@ temp_q = QuadraturePoint_Quadrangle(&
   & nipsy=nq,  &
   & quadType1=GaussLegendreLobatto, &
   & quadType2=GaussJacobiRadauLeft, &
+  & refQuadrangle="BIUNIT", &
   & alpha2=1.0_DFP, &
   & beta2=0.0_DFP)
 

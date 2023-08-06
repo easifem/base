@@ -139,13 +139,15 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Triangle(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-  !! coordinates of point 1 and point 2 in $x_{iJ}$ format
-  !! number of rows = nsd
-  !! number of cols = 3
+    !! coordinates of point 1 and point 2 in $x_{iJ}$ format
+    !! number of rows = nsd
+    !! number of cols = 3
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! returned coordinates in $x_{iJ}$ format
+    !! returned coordinates in $x_{iJ}$ format
+    !! If xij is present then number of rows in ans is same as xij
+    !! If xij is not present then number of rows in ans is 2.
   END FUNCTION EquidistanceInPoint_Triangle
 END INTERFACE
 
@@ -938,6 +940,7 @@ INTERFACE QuadraturePoint_Triangle
     !! Reference triangle
     !! Biunit
     !! Unit
+    !! If xij is present,then this parameter is not used
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of triangle.
     !! The number of rows in xij can be 2 or 3.
