@@ -31,6 +31,7 @@ PUBLIC :: LagrangeCoeff_Line
 PUBLIC :: LagrangeEvalAll_Line
 PUBLIC :: BasisEvalAll_Line
 PUBLIC :: RefLineCoord
+PUBLIC :: RefCoord_Line
 PUBLIC :: QuadraturePoint_Line
 PUBLIC :: ToVEFC_Line
 PUBLIC :: QuadratureNumber_Line
@@ -73,14 +74,14 @@ END INTERFACE
 ! date:  2023-07-03
 ! summary:  Returns the coordinate of reference triangle
 
-INTERFACE
+INTERFACE RefCoord_Line
   MODULE PURE FUNCTION RefLineCoord(refLine) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: refLine
     !! "unit"
     !! "biunit"
     REAL(DFP) :: ans(1, 2)
   END FUNCTION RefLineCoord
-END INTERFACE
+END INTERFACE RefCoord_Line
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeDegree_Line
