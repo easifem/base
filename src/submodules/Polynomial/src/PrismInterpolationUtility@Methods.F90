@@ -138,6 +138,58 @@ CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Prism4
 
 !----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Prism1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="QuadraturePoint_Prism1()", &
+& file=__FILE__)
+END PROCEDURE QuadraturePoint_Prism1
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Prism2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="QuadraturePoint_Prism2()", &
+& file=__FILE__)
+END PROCEDURE QuadraturePoint_Prism2
+
+!----------------------------------------------------------------------------
+!                                             TensorQuadraturePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Prism1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="TensorQuadraturePoint_Prism1()", &
+& file=__FILE__)
+END PROCEDURE TensorQuadraturePoint_Prism1
+
+!----------------------------------------------------------------------------
+!                                             TensorQuadraturePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Prism2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="TensorQuadraturePoint_Prism2()", &
+& file=__FILE__)
+END PROCEDURE TensorQuadraturePoint_Prism2
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 

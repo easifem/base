@@ -19,6 +19,15 @@ MODULE PrismInterpolationUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: LagrangeDegree_Prism
+PUBLIC :: LagrangeDOF_Prism
+PUBLIC :: LagrangeInDOF_Prism
+PUBLIC :: EquidistanceInPoint_Prism
+PUBLIC :: EquidistancePoint_Prism
+PUBLIC :: InterpolationPoint_Prism
+PUBLIC :: LagrangeCoeff_Prism
+PUBLIC :: QuadraturePoint_Prism
+PUBLIC :: TensorQuadraturePoint_Prism
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeDegree_Prism
@@ -35,8 +44,6 @@ INTERFACE
   END FUNCTION LagrangeDegree_Prism
 END INTERFACE
 
-PUBLIC :: LagrangeDegree_Prism
-
 !----------------------------------------------------------------------------
 !                                                        LagrangeDOF_Prism
 !----------------------------------------------------------------------------
@@ -52,8 +59,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeDOF_Prism
 END INTERFACE
-
-PUBLIC :: LagrangeDOF_Prism
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeInDOF_Prism
@@ -76,8 +81,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeInDOF_Prism
 END INTERFACE
-
-PUBLIC :: LagrangeInDOF_Prism
 
 !----------------------------------------------------------------------------
 !                                           EquidistanceInPoint_Prism
@@ -105,8 +108,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistanceInPoint_Prism
 END INTERFACE
-
-PUBLIC :: EquidistanceInPoint_Prism
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Prism
@@ -138,8 +139,6 @@ INTERFACE
   END FUNCTION EquidistancePoint_Prism
 END INTERFACE
 
-PUBLIC :: EquidistancePoint_Prism
-
 !----------------------------------------------------------------------------
 !                                            InterpolationPoint_Prism
 !----------------------------------------------------------------------------
@@ -164,8 +163,6 @@ INTERFACE
   END FUNCTION InterpolationPoint_Prism
 END INTERFACE
 
-PUBLIC :: InterpolationPoint_Prism
-
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Prism
 !----------------------------------------------------------------------------
@@ -186,8 +183,6 @@ END INTERFACE
 INTERFACE LagrangeCoeff_Prism
   MODULE PROCEDURE LagrangeCoeff_Prism1
 END INTERFACE LagrangeCoeff_Prism
-
-PUBLIC :: LagrangeCoeff_Prism
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Prism
@@ -254,6 +249,140 @@ END INTERFACE
 INTERFACE LagrangeCoeff_Prism
   MODULE PROCEDURE LagrangeCoeff_Prism4
 END INTERFACE LagrangeCoeff_Prism
+
+!----------------------------------------------------------------------------
+!                                                    QuadraturePoints_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary:  quadrature points on Prism
+
+INTERFACE QuadraturePoint_Prism
+  MODULE FUNCTION QuadraturePoint_Prism1(&
+    & order, &
+    & quadType, &
+    & refPrism, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refPrism
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be  3.
+    !! The number of columns in xij should be 4
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION QuadraturePoint_Prism1
+END INTERFACE QuadraturePoint_Prism
+
+!----------------------------------------------------------------------------
+!                                                     QuadraturePoints_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary:  quadrature points on Prism
+
+INTERFACE QuadraturePoint_Prism
+  MODULE FUNCTION QuadraturePoint_Prism2(&
+    & nips, &
+    & quadType, &
+    & refPrism, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! nips(1) .LE. 79, then we call
+    !! economical quadrature rules.
+    !! Otherwise, this routine will retport
+    !! error
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type,
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refPrism
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be 3
+    !! The number of columns in xij should be 4
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION QuadraturePoint_Prism2
+END INTERFACE QuadraturePoint_Prism
+
+!----------------------------------------------------------------------------
+!                                               TensorQuadraturePoints_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary: Tensor based quadrature points on Prism
+
+INTERFACE TensorQuadraturePoint_Prism
+  MODULE FUNCTION TensorQuadraturePoint_Prism1(order, quadType, &
+    & refPrism, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refPrism
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 4.
+    !! The number of columns in xij should be 4
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION TensorQuadraturePoint_Prism1
+END INTERFACE TensorQuadraturePoint_Prism
+
+!----------------------------------------------------------------------------
+!                                            TensorQuadraturePoints_Prism
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary: Tensor based quadrature points
+
+INTERFACE TensorQuadraturePoint_Prism
+  MODULE FUNCTION TensorQuadraturePoint_Prism2( &
+    & nipsx, &
+    & nipsy, &
+    & nipsz, &
+    & quadType, &
+    & refPrism, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: nipsz(1)
+    !! number of integration points in z direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refPrism
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be 3
+    !! The number of columns in xij should be 4
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION TensorQuadraturePoint_Prism2
+END INTERFACE TensorQuadraturePoint_Prism
 
 !----------------------------------------------------------------------------
 !
