@@ -127,7 +127,7 @@ IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x(1:nsd, 1:4) = xij(1:nsd, 1:4)
 ELSE
-  nsd = 3_I4B
+  nsd = 2_I4B
   x = 0.0_DFP
   x(1:2, :) = RefQuadrangleCoord("BIUNIT")
 END IF
@@ -257,11 +257,11 @@ IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x(1:nsd, 1:4) = xij(1:nsd, 1:4)
 ELSE
-  nsd = 3_I4B
-  x(1:nsd, 1) = [-1.0, -1.0, 0.0]
-  x(1:nsd, 2) = [1.0, -1.0, 0.0]
-  x(1:nsd, 3) = [1.0, 1.0, 0.0]
-  x(1:nsd, 4) = [-1.0, 1.0, 0.0]
+  nsd = 2_I4B
+  x(1:nsd, 1) = [-1.0, -1.0]
+  x(1:nsd, 2) = [1.0, -1.0]
+  x(1:nsd, 3) = [1.0, 1.0]
+  x(1:nsd, 4) = [-1.0, 1.0]
 END IF
 
 n = LagrangeInDOF_Quadrangle(order=order)
@@ -1408,6 +1408,7 @@ ans = QuadraturePoint_Quadrangle2( &
   & quadType1=quadType, &
   & quadType2=quadType, &
   & xij=xij, &
+  & refQuadrangle=refQuadrangle, &
   & alpha1=alpha, &
   & beta1=beta, &
   & lambda1=lambda, &
@@ -1425,6 +1426,9 @@ MODULE PROCEDURE QuadraturePoint_Quadrangle2
 ! internal variables
 REAL(DFP), ALLOCATABLE :: x(:, :), y(:, :), temp(:, :)
 INTEGER(I4B) :: ii, jj, kk, nsd, np, nq
+TYPE(String) :: astr
+
+astr = TRIM(UpperCase(refQuadrangle))
 
 x = QuadraturePoint_Line( &
   & order=p, &
@@ -1476,7 +1480,13 @@ IF (PRESENT(xij)) THEN
     & x4=xij(:, 4))
   ans(nsd + 1, :) = temp(3, :)
 ELSE
-  ans = temp
+  IF (astr%chars() .EQ. "UNIT") THEN
+    ans(1:nsd, :) = FromBiUnitQuadrangle2UnitQuadrangle( &
+      & xin=temp(1:2, :))
+    ans(nsd + 1, :) = temp(3, :)
+  ELSE
+    ans = temp
+  END IF
 END IF
 
 IF (ALLOCATED(temp)) DEALLOCATE (temp)
@@ -1495,6 +1505,7 @@ ans = QuadraturePoint_Quadrangle4( &
   & nipsy=nips, &
   & quadType1=quadType, &
   & quadType2=quadType, &
+  & refQuadrangle=refQuadrangle, &
   & xij=xij, &
   & alpha1=alpha, &
   & beta1=beta, &
@@ -1513,6 +1524,9 @@ MODULE PROCEDURE QuadraturePoint_Quadrangle4
 ! internal variables
 REAL(DFP) :: x(2, nipsx(1)), y(2, nipsy(1)), temp(3, nipsy(1) * nipsx(1))
 INTEGER(I4B) :: ii, jj, kk, nsd, np, nq
+TYPE(String) :: astr
+
+astr = TRIM(UpperCase(refQuadrangle))
 
 x = QuadraturePoint_Line( &
   & nips=nipsx, &
@@ -1563,7 +1577,13 @@ IF (PRESENT(xij)) THEN
     & x4=xij(:, 4))
   ans(nsd + 1, :) = temp(3, :)
 ELSE
-  ans = temp
+  IF (astr%chars() .EQ. "UNIT") THEN
+    ans(1:nsd, :) = FromBiUnitQuadrangle2UnitQuadrangle( &
+      & xin=temp(1:2, :))
+    ans(nsd + 1, :) = temp(3, :)
+  ELSE
+    ans = temp
+  END IF
 END IF
 
 END PROCEDURE QuadraturePoint_Quadrangle4

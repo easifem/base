@@ -33,6 +33,7 @@ PUBLIC :: HorizontalEdgeBasis_Quadrangle
 PUBLIC :: CellBasis_Quadrangle
 PUBLIC :: HeirarchicalBasis_Quadrangle
 PUBLIC :: RefQuadrangleCoord
+PUBLIC :: RefCoord_Quadrangle
 PUBLIC :: IJ2VEFC_Quadrangle_Clockwise
 PUBLIC :: IJ2VEFC_Quadrangle_AntiClockwise
 PUBLIC :: LagrangeEvalAll_Quadrangle
@@ -59,12 +60,12 @@ END INTERFACE
 !                                                   RefQuadrangleCoord
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE RefCoord_Quadrangle
   MODULE PURE FUNCTION RefQuadrangleCoord(refQuadrangle) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: refQuadrangle
     REAL(DFP) :: ans(2, 4)
   END FUNCTION RefQuadrangleCoord
-END INTERFACE
+END INTERFACE RefCoord_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeDegree_Quadrangle
@@ -1259,12 +1260,18 @@ END INTERFACE LagrangeEvalAll_Quadrangle
 ! summary:  Returns quadrature points on reference quadrangle
 
 INTERFACE QuadraturePoint_Quadrangle
-  MODULE FUNCTION QuadraturePoint_Quadrangle1(order, quadType, &
-    & xij, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Quadrangle1( &
+    & order, &
+    & quadType, &
+    & refQuadrangle, &
+    & xij, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order of integrand in x and y direction
+    !! Order of integrand in x and y direction
     INTEGER(I4B), INTENT(IN) :: quadType
-    !! quadrature point type
+    !! Quadrature point type
     !! GaussLegendre
     !! GaussLegendreLobatto
     !! GaussLegendreRadauLeft
@@ -1281,6 +1288,10 @@ INTERFACE QuadraturePoint_Quadrangle
     !! GaussJacobiLobatto
     !! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refQuadrangle
+    !! Reference quadrangle
+    !! UNIT
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -1300,7 +1311,7 @@ END INTERFACE QuadraturePoint_Quadrangle
 
 INTERFACE QuadraturePoint_Quadrangle
   MODULE FUNCTION QuadraturePoint_Quadrangle2(  &
-    & p, q, quadType1, quadType2, xij, alpha1, beta1, &
+    & p, q, quadType1, quadType2, refQuadrangle, xij, alpha1, beta1, &
     & lambda1, alpha2, beta2, lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: p
     !! order of integrand in x direction
@@ -1325,6 +1336,10 @@ INTERFACE QuadraturePoint_Quadrangle
     !! GaussJacobiLobatto
     !! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refQuadrangle
+    !! Reference quadrangle
+    !! UNIT
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
@@ -1354,7 +1369,7 @@ END INTERFACE QuadraturePoint_Quadrangle
 
 INTERFACE QuadraturePoint_Quadrangle
   MODULE FUNCTION QuadraturePoint_Quadrangle3(nips, quadType, &
-    & xij, alpha, beta, lambda) RESULT(ans)
+    & refQuadrangle, xij, alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! number of integration points in x and y direction
     INTEGER(I4B), INTENT(IN) :: quadType
@@ -1375,6 +1390,10 @@ INTERFACE QuadraturePoint_Quadrangle
     !! GaussJacobiLobatto
     !! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refQuadrangle
+    !! Reference quadrangle
+    !! UNIT
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -1394,7 +1413,8 @@ END INTERFACE QuadraturePoint_Quadrangle
 
 INTERFACE QuadraturePoint_Quadrangle
   MODULE FUNCTION QuadraturePoint_Quadrangle4(  &
-    & nipsx, nipsy, quadType1, quadType2, xij, alpha1, beta1, &
+    & nipsx, nipsy, quadType1, quadType2, &
+    & refQuadrangle, xij, alpha1, beta1, &
     & lambda1, alpha2, beta2, lambda2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nipsx(1)
     !! order of integrand in x direction
@@ -1419,6 +1439,10 @@ INTERFACE QuadraturePoint_Quadrangle
     !! GaussJacobiLobatto
     !! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refQuadrangle
+    !! Reference quadrangle
+    !! UNIT
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
