@@ -1,4 +1,5 @@
-#!/bin/python3
+#!/usr/bin/env python3
+#!/Users/easifem/anaconda3/envs/easifem/bin/python3
 
 # This program is a part of EASIFEM library.
 # See. www.easifem.com

@@ -257,6 +257,116 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
+!                                                Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiates the quadrature points
+
+INTERFACE Initiate
+  MODULE SUBROUTINE quad_initiate7( &
+    & obj, &
+    & refElem, &
+    & p, q, r, &
+    & quadratureType1, &
+    & quadratureType2, &
+    & quadratureType3, &
+    & alpha1, beta1, lambda1,  &
+    & alpha2, beta2, lambda2,  &
+    & alpha3, beta3, lambda3)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! Reference-element
+    INTEGER(I4B), INTENT(IN) :: p
+    !! order of integrand in x
+    INTEGER(I4B), INTENT(IN) :: q
+    !! order of integrand in y
+    INTEGER(I4B), INTENT(IN) :: r
+    !! order of integrand in z direction
+    INTEGER(I4B), INTENT(IN) :: quadratureType1
+    !! Type of quadrature points
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadau
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev
+    !! GaussChebyshevLobatto
+    !! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft
+    !! GaussChebyshevRadauRight
+    INTEGER(I4B), INTENT(IN) :: quadratureType2
+    !! Type of quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadratureType3
+    !! Type of quadrature points
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi parameter and Ultraspherical parameters
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi parameter and Ultraspherical parameters
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi parameter and Ultraspherical parameters
+  END SUBROUTINE quad_initiate7
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                               Initiate@ConstructorMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary: This routine initiates the quadrature points
+
+INTERFACE Initiate
+  MODULE SUBROUTINE quad_initiate8( &
+    & obj, &
+    & refElem, &
+    & nipsx, &
+    & nipsy, &
+    & nipsz, &
+    & quadratureType1, &
+    & quadratureType2, &
+    & quadratureType3, &
+    & alpha1, beta1, lambda1, &
+    & alpha2, beta2, lambda2, &
+    & alpha3, beta3, lambda3)
+    TYPE(QuadraturePoint_), INTENT(INOUT) :: obj
+    !! Total number of xidimension
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! Reference element
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: nipsz(1)
+    !! number of integration points in z direction
+    INTEGER(I4B), INTENT(IN) :: quadratureType1
+    !! Type of quadrature points
+    !! GaussLegendre
+    !! GaussLegendreLobatto
+    !! GaussLegendreRadau
+    !! GaussLegendreRadauLeft
+    !! GaussLegendreRadauRight
+    !! GaussChebyshev
+    !! GaussChebyshevLobatto
+    !! GaussChebyshevRadau
+    !! GaussChebyshevRadauLeft
+    !! GaussChebyshevRadauRight
+    INTEGER(I4B), INTENT(IN) :: quadratureType2
+    !! Type of quadrature points
+    INTEGER(I4B), INTENT(IN) :: quadratureType3
+    !! Type of quadrature points
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2, beta2, lambda2
+    !! Jacobi parameter and Ultraspherical parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3, beta3, lambda3
+    !! Jacobi parameter and Ultraspherical parameter
+  END SUBROUTINE quad_initiate8
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
 !                                       QuadraturePoint@ConstructureMethods
 !----------------------------------------------------------------------------
 
@@ -425,14 +535,14 @@ END INTERFACE Display
 ! date: 23 July 2021
 ! summary: Returns the Gauss Legendre Quadrature points based on given order
 
-INTERFACE GaussLegendreQuadrature
-  MODULE FUNCTION getGaussLegendreQP1(refelem, order) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of accuracy in each direction
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQP1
-END INTERFACE GaussLegendreQuadrature
+! INTERFACE GaussLegendreQuadrature
+!   MODULE FUNCTION getGaussLegendreQP1(refelem, order) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: order
+!     !! order of accuracy in each direction
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreQP1
+! END INTERFACE GaussLegendreQuadrature
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre
@@ -442,17 +552,17 @@ END INTERFACE GaussLegendreQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss-Legendre Quadrature points
 
-INTERFACE GaussLegendreQuadrature
-  MODULE FUNCTION getGaussLegendreQP2(refelem, nips) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: nips(:)
-    !! number of integration points
-    !! IF size(nips) = 1, then sqrt(nips(1)) points are used in both dirn
-    !! IF size(nips) = 2, then in x1 direction nips(1) points and in
-    !! x2 direction nips(2) points are used.
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQP2
-END INTERFACE GaussLegendreQuadrature
+! INTERFACE GaussLegendreQuadrature
+!   MODULE FUNCTION getGaussLegendreQP2(refelem, nips) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: nips(:)
+!     !! number of integration points
+!     !! IF size(nips) = 1, then sqrt(nips(1)) points are used in both dirn
+!     !! IF size(nips) = 2, then in x1 direction nips(1) points and in
+!     !! x2 direction nips(2) points are used.
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreQP2
+! END INTERFACE GaussLegendreQuadrature
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre
@@ -462,18 +572,18 @@ END INTERFACE GaussLegendreQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss Legendre Quadrature points based on given order
 
-INTERFACE GaussLegendreQuadrature
-  MODULE FUNCTION getGaussLegendreQP3(refelem, p, q, r) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: p
-    !! order of accuracy in x1 direction
-    INTEGER(I4B), INTENT(IN) :: q
-    !! order of accuracy in x2 direction
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: r
-    !! order of accuracy in x3 direction
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreQP3
-END INTERFACE GaussLegendreQuadrature
+! INTERFACE GaussLegendreQuadrature
+!   MODULE FUNCTION getGaussLegendreQP3(refelem, p, q, r) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: p
+!     !! order of accuracy in x1 direction
+!     INTEGER(I4B), INTENT(IN) :: q
+!     !! order of accuracy in x2 direction
+!     INTEGER(I4B), OPTIONAL, INTENT(IN) :: r
+!     !! order of accuracy in x3 direction
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreQP3
+! END INTERFACE GaussLegendreQuadrature
 
 !----------------------------------------------------------------------------
 !                         GaussLegendreLobattoQuadrature@GaussLegendreLobatto
@@ -483,14 +593,14 @@ END INTERFACE GaussLegendreQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss LegendreLobatto Quadrature points
 
-INTERFACE GaussLegendreLobattoQuadrature
-  MODULE FUNCTION getGaussLegendreLobattoQP1(refelem, order) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of accuracy in each direction
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreLobattoQP1
-END INTERFACE GaussLegendreLobattoQuadrature
+! INTERFACE GaussLegendreLobattoQuadrature
+!   MODULE FUNCTION getGaussLegendreLobattoQP1(refelem, order) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: order
+!     !! order of accuracy in each direction
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreLobattoQP1
+! END INTERFACE GaussLegendreLobattoQuadrature
 
 !----------------------------------------------------------------------------
 !                         GaussLegendreLobattoQuadrature@GaussLegendreLobatto
@@ -500,17 +610,17 @@ END INTERFACE GaussLegendreLobattoQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss-LegendreLobatto Quadrature points
 
-INTERFACE GaussLegendreLobattoQuadrature
-  MODULE FUNCTION getGaussLegendreLobattoQP2(refelem, nips) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: nips(:)
-    !! number of integration points
-    !! IF size(nips) = 1, then sqrt(nips(1)) points are used in both dirn
-    !! IF size(nips) = 2, then in x1 direction nips(1) points and in
-    !! x2 direction nips(2) points are used.
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreLobattoQP2
-END INTERFACE GaussLegendreLobattoQuadrature
+! INTERFACE GaussLegendreLobattoQuadrature
+!   MODULE FUNCTION getGaussLegendreLobattoQP2(refelem, nips) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: nips(:)
+!     !! number of integration points
+!     !! IF size(nips) = 1, then sqrt(nips(1)) points are used in both dirn
+!     !! IF size(nips) = 2, then in x1 direction nips(1) points and in
+!     !! x2 direction nips(2) points are used.
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreLobattoQP2
+! END INTERFACE GaussLegendreLobattoQuadrature
 
 !----------------------------------------------------------------------------
 !                       GaussLegendreLobattoQuadrature@GaussLegendreLobatto
@@ -520,18 +630,18 @@ END INTERFACE GaussLegendreLobattoQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss LegendreLobatto Quadrature points
 
-INTERFACE GaussLegendreLobattoQuadrature
-  MODULE FUNCTION getGaussLegendreLobattoQP3(refelem, p, q, r) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: p
-    !! order of accuracy in x1 direction
-    INTEGER(I4B), INTENT(IN) :: q
-    !! order of accuracy in x2 direction
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: r
-    !! order of accuracy in x3 direction
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreLobattoQP3
-END INTERFACE GaussLegendreLobattoQuadrature
+! INTERFACE GaussLegendreLobattoQuadrature
+!   MODULE FUNCTION getGaussLegendreLobattoQP3(refelem, p, q, r) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: p
+!     !! order of accuracy in x1 direction
+!     INTEGER(I4B), INTENT(IN) :: q
+!     !! order of accuracy in x2 direction
+!     INTEGER(I4B), OPTIONAL, INTENT(IN) :: r
+!     !! order of accuracy in x3 direction
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreLobattoQP3
+! END INTERFACE GaussLegendreLobattoQuadrature
 
 !----------------------------------------------------------------------------
 !                   GaussLegendreRadauLeftQuadrature@GaussLegendreRadauLeft
@@ -541,14 +651,14 @@ END INTERFACE GaussLegendreLobattoQuadrature
 ! date: 23 July 2021
 ! summary: Returns the LegendreRadauLeft Quadrature points
 
-INTERFACE GaussLegendreRadauLeftQuadrature
-  MODULE FUNCTION getGaussLegendreRadauLeftQP1(refelem, order) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of accuracy in each direction
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreRadauLeftQP1
-END INTERFACE GaussLegendreRadauLeftQuadrature
+! INTERFACE GaussLegendreRadauLeftQuadrature
+!   MODULE FUNCTION getGaussLegendreRadauLeftQP1(refelem, order) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: order
+!     !! order of accuracy in each direction
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreRadauLeftQP1
+! END INTERFACE GaussLegendreRadauLeftQuadrature
 
 !----------------------------------------------------------------------------
 !                   GaussLegendreRadauLeftQuadrature@GaussLegendreRadauLeft
@@ -558,17 +668,17 @@ END INTERFACE GaussLegendreRadauLeftQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss-LegendreRadauLeft Quadrature points
 
-INTERFACE GaussLegendreRadauLeftQuadrature
-  MODULE FUNCTION getGaussLegendreRadauLeftQP2(refelem, nips) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: nips(:)
-    !! number of integration points
-    !! IF size(nips) = 1, then sqrt(nips(1)) points are used in both dirn
-    !! IF size(nips) = 2, then in x1 direction nips(1) points and in
-    !! x2 direction nips(2) points are used.
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreRadauLeftQP2
-END INTERFACE GaussLegendreRadauLeftQuadrature
+! INTERFACE GaussLegendreRadauLeftQuadrature
+!   MODULE FUNCTION getGaussLegendreRadauLeftQP2(refelem, nips) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: nips(:)
+!     !! number of integration points
+!     !! IF size(nips) = 1, then sqrt(nips(1)) points are used in both dirn
+!     !! IF size(nips) = 2, then in x1 direction nips(1) points and in
+!     !! x2 direction nips(2) points are used.
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreRadauLeftQP2
+! END INTERFACE GaussLegendreRadauLeftQuadrature
 
 !----------------------------------------------------------------------------
 !                   GaussLegendreRadauLeftQuadrature@GaussLegendreRadauLeft
@@ -578,18 +688,18 @@ END INTERFACE GaussLegendreRadauLeftQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss LegendreRadauLeft Quadrature points
 
-INTERFACE GaussLegendreRadauLeftQuadrature
-  MODULE FUNCTION getGaussLegendreRadauLeftQP3(refelem, p, q, r) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: p
-    !! order of accuracy in x1 direction
-    INTEGER(I4B), INTENT(IN) :: q
-    !! order of accuracy in x2 direction
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: r
-    !! order of accuracy in x3 direction
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreRadauLeftQP3
-END INTERFACE GaussLegendreRadauLeftQuadrature
+! INTERFACE GaussLegendreRadauLeftQuadrature
+!   MODULE FUNCTION getGaussLegendreRadauLeftQP3(refelem, p, q, r) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: p
+!     !! order of accuracy in x1 direction
+!     INTEGER(I4B), INTENT(IN) :: q
+!     !! order of accuracy in x2 direction
+!     INTEGER(I4B), OPTIONAL, INTENT(IN) :: r
+!     !! order of accuracy in x3 direction
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreRadauLeftQP3
+! END INTERFACE GaussLegendreRadauLeftQuadrature
 
 !----------------------------------------------------------------------------
 !                  GaussLegendreRadauRightQuadrature@GaussLegendreRadauRight
@@ -599,14 +709,14 @@ END INTERFACE GaussLegendreRadauLeftQuadrature
 ! date: 23 July 2021
 ! summary: Returns the LegendreRadauRight Quadrature points
 
-INTERFACE GaussLegendreRadauRightQuadrature
-  MODULE FUNCTION getGaussLegendreRadauRightQP1(refelem, order) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of accuracy in each direction
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreRadauRightQP1
-END INTERFACE GaussLegendreRadauRightQuadrature
+! INTERFACE GaussLegendreRadauRightQuadrature
+!   MODULE FUNCTION getGaussLegendreRadauRightQP1(refelem, order) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: order
+!     !! order of accuracy in each direction
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreRadauRightQP1
+! END INTERFACE GaussLegendreRadauRightQuadrature
 
 !----------------------------------------------------------------------------
 !                  GaussLegendreRadauRightQuadrature@GaussLegendreRadauRight
@@ -616,17 +726,17 @@ END INTERFACE GaussLegendreRadauRightQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss-LegendreRadauRight Quadrature points
 
-INTERFACE GaussLegendreRadauRightQuadrature
-  MODULE FUNCTION getGaussLegendreRadauRightQP2(refelem, nips) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: nips(:)
-    !! number of integration points
-    !! IF size(nips) = 1, then sqrt(nips(1)) points are used in both dirn
-    !! IF size(nips) = 2, then in x1 direction nips(1) points and in
-    !! x2 direction nips(2) points are used.
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreRadauRightQP2
-END INTERFACE GaussLegendreRadauRightQuadrature
+! INTERFACE GaussLegendreRadauRightQuadrature
+!   MODULE FUNCTION getGaussLegendreRadauRightQP2(refelem, nips) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: nips(:)
+!     !! number of integration points
+!     !! IF size(nips) = 1, then sqrt(nips(1)) points are used in both dirn
+!     !! IF size(nips) = 2, then in x1 direction nips(1) points and in
+!     !! x2 direction nips(2) points are used.
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreRadauRightQP2
+! END INTERFACE GaussLegendreRadauRightQuadrature
 
 !----------------------------------------------------------------------------
 !                  GaussLegendreRadauRightQuadrature@GaussLegendreRadauRight
@@ -636,18 +746,18 @@ END INTERFACE GaussLegendreRadauRightQuadrature
 ! date: 23 July 2021
 ! summary: Returns the Gauss LegendreRadauRight Quadrature points
 
-INTERFACE GaussLegendreRadauRightQuadrature
-  MODULE FUNCTION getGaussLegendreRadauRightQP3(refelem, p, q, r) RESULT(obj)
-    CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    INTEGER(I4B), INTENT(IN) :: p
-    !! order of accuracy in x1 direction
-    INTEGER(I4B), INTENT(IN) :: q
-    !! order of accuracy in x2 direction
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: r
-    !! order of accuracy in x3 direction
-    TYPE(QuadraturePoint_) :: obj
-  END FUNCTION getGaussLegendreRadauRightQP3
-END INTERFACE GaussLegendreRadauRightQuadrature
+! INTERFACE GaussLegendreRadauRightQuadrature
+!   MODULE FUNCTION getGaussLegendreRadauRightQP3(refelem, p, q, r) RESULT(obj)
+!     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+!     INTEGER(I4B), INTENT(IN) :: p
+!     !! order of accuracy in x1 direction
+!     INTEGER(I4B), INTENT(IN) :: q
+!     !! order of accuracy in x2 direction
+!     INTEGER(I4B), OPTIONAL, INTENT(IN) :: r
+!     !! order of accuracy in x3 direction
+!     TYPE(QuadraturePoint_) :: obj
+!   END FUNCTION getGaussLegendreRadauRightQP3
+! END INTERFACE GaussLegendreRadauRightQuadrature
 
 !----------------------------------------------------------------------------
 !

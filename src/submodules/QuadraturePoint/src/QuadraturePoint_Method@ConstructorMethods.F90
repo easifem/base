@@ -628,6 +628,456 @@ END SELECT
 END PROCEDURE quad_initiate6
 
 !----------------------------------------------------------------------------
+!                                                     QuadraturePoint
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_initiate7
+
+SELECT TYPE (refelem)
+TYPE IS (ReferenceLine_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Line( &
+      & order=p, &
+      & quadType=quadratureType1, &
+      & layout="INCREASING", &
+      & xij=LocalNodeCoord(refElem), &
+      & alpha=alpha1, &
+      & beta=beta1, &
+      & lambda=lambda1) &
+    & )
+
+TYPE IS (ReferenceTriangle_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Triangle( &
+      & order=p, &
+      & quadType=quadratureType1, &
+      & refTriangle="UNIT", &
+      & xij=LocalNodeCoord(refElem)) &
+    & )
+
+TYPE IS (ReferenceQuadrangle_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Quadrangle( &
+      & p=p, &
+      & q=q, &
+      & quadType1=quadratureType1, &
+      & quadType2=quadratureType2, &
+      & refQuadrangle="BIUNIT", &
+      & xij=LocalNodeCoord(refElem), &
+      & alpha1=alpha1, &
+      & beta1=beta1, &
+      & lambda1=lambda1, &
+      & alpha2=alpha2, &
+      & beta2=beta2, &
+      & lambda2=lambda2 &
+    & ))
+
+TYPE IS (ReferenceTetrahedron_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Tetrahedron( &
+      & order=p, &
+      & quadType=quadratureType1, &
+      & refTetrahedron="UNIT", &
+      & xij=LocalNodeCoord(refElem)) &
+    & )
+
+TYPE IS (ReferenceHexahedron_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Hexahedron( &
+      & p=p, &
+      & q=q, &
+      & r=r, &
+      & quadType1=quadratureType1, &
+      & quadType2=quadratureType2, &
+      & quadType3=quadratureType3, &
+      & refHexahedron="BIUNIT", &
+      & xij=LocalNodeCoord(refElem), &
+      & alpha1=alpha1, &
+      & beta1=beta1, &
+      & lambda1=lambda1, &
+      & alpha2=alpha2, &
+      & beta2=beta2, &
+      & lambda2=lambda2, &
+      & alpha3=alpha3,  &
+      & beta3=beta3,  &
+      & lambda3=lambda3 &
+    & ))
+
+TYPE IS (ReferencePrism_)
+
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Prism( &
+      & order=p, &
+      & quadType=quadratureType1, &
+      & refPrism="BIUNIT", &
+      & xij=LocalNodeCoord(refElem)) &
+    & )
+
+TYPE IS (ReferencePyramid_)
+
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Pyramid( &
+      & order=p, &
+      & quadType=quadratureType1, &
+      & refPyramid="BIUNIT", &
+      & xij=LocalNodeCoord(refElem)) &
+    & )
+
+TYPE IS (ReferenceElement_)
+
+  IF (isLine(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Line( &
+        & order=p, &
+        & quadType=quadratureType1, &
+        & layout="INCREASING", &
+        & xij=LocalNodeCoord(refElem), &
+        & alpha=alpha1, &
+        & beta=beta1, &
+        & lambda=lambda1) &
+      & )
+    RETURN
+  END IF
+
+  IF (isTriangle(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Triangle( &
+        & order=p, &
+        & quadType=quadratureType1, &
+        & refTriangle="UNIT", &
+        & xij=LocalNodeCoord(refElem)) &
+      & )
+    RETURN
+  END IF
+
+  IF (isQuadrangle(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Quadrangle( &
+        & p=p, &
+        & q=q, &
+        & quadType1=quadratureType1, &
+        & quadType2=quadratureType2, &
+        & refQuadrangle="BIUNIT", &
+        & xij=LocalNodeCoord(refElem), &
+        & alpha1=alpha1, &
+        & beta1=beta1, &
+        & lambda1=lambda1, &
+        & alpha2=alpha2, &
+        & beta2=beta2, &
+        & lambda2=lambda2 &
+      & ))
+    RETURN
+  END IF
+
+  IF (isTetrahedron(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Tetrahedron( &
+        & order=p, &
+        & quadType=quadratureType1, &
+        & refTetrahedron="UNIT", &
+        & xij=LocalNodeCoord(refElem)) &
+      & )
+    RETURN
+  END IF
+
+  IF (isHexahedron(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Hexahedron( &
+        & p=p, &
+        & q=q, &
+        & r=r, &
+        & quadType1=quadratureType1, &
+        & quadType2=quadratureType2, &
+        & quadType3=quadratureType3, &
+        & refHexahedron="BIUNIT", &
+        & xij=LocalNodeCoord(refElem), &
+        & alpha1=alpha1, &
+        & beta1=beta1, &
+        & lambda1=lambda1, &
+        & alpha2=alpha2, &
+        & beta2=beta2, &
+        & lambda2=lambda2, &
+        & alpha3=alpha3,  &
+        & beta3=beta3,  &
+        & lambda3=lambda3 &
+      & ))
+    RETURN
+  END IF
+
+  IF (isPrism(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Prism( &
+        & order=p, &
+        & quadType=quadratureType1, &
+        & refPrism="BIUNIT", &
+        & xij=LocalNodeCoord(refElem)) &
+      & )
+    RETURN
+  END IF
+
+  IF (isPyramid(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Pyramid( &
+        & order=p, &
+        & quadType=quadratureType1, &
+        & refPyramid="BIUNIT", &
+        & xij=LocalNodeCoord(refElem)) &
+      & )
+    RETURN
+  END IF
+
+CLASS DEFAULT
+  CALL ErrorMsg(&
+    & msg="No case found",  &
+    & file=__FILE__,  &
+    & routine="quad_initiate7()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END SELECT
+
+END PROCEDURE quad_initiate7
+
+!----------------------------------------------------------------------------
+!                                                       QuadraturePoint
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE quad_initiate8
+
+SELECT TYPE (refelem)
+TYPE IS (ReferenceLine_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Line( &
+      & nips=nipsx, &
+      & quadType=quadratureType1, &
+      & layout="INCREASING", &
+      & xij=LocalNodeCoord(refElem), &
+      & alpha=alpha1, &
+      & beta=beta1, &
+      & lambda=lambda1) &
+    & )
+
+TYPE IS (ReferenceTriangle_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Triangle( &
+      & nips=nipsx, &
+      & quadType=quadratureType1, &
+      & refTriangle="UNIT", &
+      & xij=LocalNodeCoord(refElem)) &
+    & )
+
+TYPE IS (ReferenceQuadrangle_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Quadrangle( &
+      & nipsx=nipsx, &
+      & nipsy=nipsy, &
+      & quadType1=quadratureType1, &
+      & quadType2=quadratureType2, &
+      & refQuadrangle="BIUNIT", &
+      & xij=LocalNodeCoord(refElem), &
+      & alpha1=alpha1, &
+      & beta1=beta1, &
+      & lambda1=lambda1, &
+      & alpha2=alpha2, &
+      & beta2=beta2, &
+      & lambda2=lambda2 &
+    & ))
+
+TYPE IS (ReferenceTetrahedron_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Tetrahedron( &
+      & nips=nipsx, &
+      & quadType=quadratureType1, &
+      & refTetrahedron="UNIT", &
+      & xij=LocalNodeCoord(refElem)) &
+    & )
+
+TYPE IS (ReferenceHexahedron_)
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Hexahedron( &
+      & nipsx=nipsx, &
+      & nipsy=nipsy, &
+      & nipsz=nipsz, &
+      & quadType1=quadratureType1, &
+      & quadType2=quadratureType2, &
+      & quadType3=quadratureType3, &
+      & refHexahedron="BIUNIT", &
+      & xij=LocalNodeCoord(refElem), &
+      & alpha1=alpha1, &
+      & beta1=beta1, &
+      & lambda1=lambda1, &
+      & alpha2=alpha2, &
+      & beta2=beta2, &
+      & lambda2=lambda2, &
+      & alpha3=alpha3,  &
+      & beta3=beta3,  &
+      & lambda3=lambda3 &
+    & ))
+
+TYPE IS (ReferencePrism_)
+
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Prism( &
+      & nips=nipsx, &
+      & quadType=quadratureType1, &
+      & refPrism="BIUNIT", &
+      & xij=LocalNodeCoord(refElem)) &
+    & )
+
+TYPE IS (ReferencePyramid_)
+
+  CALL Initiate( &
+    & obj=obj, &
+    & points=QuadraturePoint_Pyramid( &
+      & nips=nipsx, &
+      & quadType=quadratureType1, &
+      & refPyramid="BIUNIT", &
+      & xij=LocalNodeCoord(refElem)) &
+    & )
+
+TYPE IS (ReferenceElement_)
+
+  IF (isLine(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Line( &
+        & nips=nipsx, &
+        & quadType=quadratureType1, &
+        & layout="INCREASING", &
+        & xij=LocalNodeCoord(refElem), &
+        & alpha=alpha1, &
+        & beta=beta1, &
+        & lambda=lambda1) &
+      & )
+    RETURN
+  END IF
+
+  IF (isTriangle(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Triangle( &
+        & nips=nipsx, &
+        & quadType=quadratureType1, &
+        & refTriangle="UNIT", &
+        & xij=LocalNodeCoord(refElem)) &
+      & )
+    RETURN
+  END IF
+
+  IF (isQuadrangle(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Quadrangle( &
+        & nipsx=nipsx, &
+        & nipsy=nipsy, &
+        & quadType1=quadratureType1, &
+        & quadType2=quadratureType2, &
+        & refQuadrangle="BIUNIT", &
+        & xij=LocalNodeCoord(refElem), &
+        & alpha1=alpha1, &
+        & beta1=beta1, &
+        & lambda1=lambda1, &
+        & alpha2=alpha2, &
+        & beta2=beta2, &
+        & lambda2=lambda2 &
+      & ))
+    RETURN
+  END IF
+
+  IF (isTetrahedron(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Tetrahedron( &
+        & nips=nipsx, &
+        & quadType=quadratureType1, &
+        & refTetrahedron="UNIT", &
+        & xij=LocalNodeCoord(refElem)) &
+      & )
+    RETURN
+  END IF
+
+  IF (isHexahedron(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Hexahedron( &
+        & nipsx=nipsx, &
+        & nipsy=nipsy, &
+        & nipsz=nipsz, &
+        & quadType1=quadratureType1, &
+        & quadType2=quadratureType2, &
+        & quadType3=quadratureType3, &
+        & refHexahedron="BIUNIT", &
+        & xij=LocalNodeCoord(refElem), &
+        & alpha1=alpha1, &
+        & beta1=beta1, &
+        & lambda1=lambda1, &
+        & alpha2=alpha2, &
+        & beta2=beta2, &
+        & lambda2=lambda2, &
+        & alpha3=alpha3,  &
+        & beta3=beta3,  &
+        & lambda3=lambda3 &
+      & ))
+    RETURN
+  END IF
+
+  IF (isPrism(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Prism( &
+        & nips=nipsx, &
+        & quadType=quadratureType1, &
+        & refPrism="BIUNIT", &
+        & xij=LocalNodeCoord(refElem)) &
+      & )
+    RETURN
+  END IF
+
+  IF (isPyramid(refelem%name)) THEN
+    CALL Initiate( &
+      & obj=obj, &
+      & points=QuadraturePoint_Pyramid( &
+        & nips=nipsx, &
+        & quadType=quadratureType1, &
+        & refPyramid="BIUNIT", &
+        & xij=LocalNodeCoord(refElem)) &
+      & )
+    RETURN
+  END IF
+
+CLASS DEFAULT
+  CALL ErrorMsg(&
+    & msg="No case found",  &
+    & file=__FILE__,  &
+    & routine="quad_initiate7()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END SELECT
+
+END PROCEDURE quad_initiate8
+
+!----------------------------------------------------------------------------
 !                                                            QuadraturePoint
 !----------------------------------------------------------------------------
 
