@@ -732,7 +732,11 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION JacobianTriangle(from, to) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
+    !! BIUNIT
+    !! UNIT
     CHARACTER(*), INTENT(IN) :: to
+    !! BIUNIT
+    !! UNIT
     REAL(DFP) :: ans
   END FUNCTION JacobianTriangle
 END INTERFACE
@@ -744,7 +748,11 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION JacobianQuadrangle(from, to) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
+    !! BIUNIT
+    !! UNIT
     CHARACTER(*), INTENT(IN) :: to
+    !! BIUNIT
+    !! UNIT
     REAL(DFP) :: ans
   END FUNCTION JacobianQuadrangle
 END INTERFACE
@@ -756,7 +764,11 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION JacobianTetrahedron(from, to) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
+    !! BIUNIT
+    !! UNIT
     CHARACTER(*), INTENT(IN) :: to
+    !! BIUNIT
+    !! UNIT
     REAL(DFP) :: ans
   END FUNCTION JacobianTetrahedron
 END INTERFACE
@@ -768,7 +780,11 @@ END INTERFACE
 INTERFACE
   MODULE PURE FUNCTION JacobianHexahedron(from, to) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
+    !! BIUNIT
+    !! UNIT
     CHARACTER(*), INTENT(IN) :: to
+    !! BIUNIT
+    !! UNIT
     REAL(DFP) :: ans
   END FUNCTION JacobianHexahedron
 END INTERFACE
