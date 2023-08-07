@@ -61,18 +61,23 @@ PUBLIC :: FromUnitTriangle2BiUnitTriangle
 
 PUBLIC :: FromUnitTetrahedron2BiUnitTetrahedron
 PUBLIC :: FromBiUnitTetrahedron2UnitTetrahedron
-
 PUBLIC :: FromUnitTetrahedron2Tetrahedron
 PUBLIC :: FromBiUnitTetrahedron2Tetrahedron
-
 PUBLIC :: BarycentricCoordUnitTetrahedron
 PUBLIC :: BarycentricCoordBiUnitTetrahedron
 PUBLIC :: BarycentricCoordTetrahedron
-
 PUBLIC :: FromBiUnitTetrahedron2BiUnitHexahedron
 PUBLIC :: FromBiUnitHexahedron2BiUnitTetrahedron
 PUBLIC :: FromUnitTetrahedron2BiUnitHexahedron
 PUBLIC :: FromBiUnitHexahedron2UnitTetrahedron
+
+PUBLIC :: JacobianLine
+PUBLIC :: JacobianTriangle
+PUBLIC :: JacobianQuadrangle
+PUBLIC :: JacobianHexahedron
+PUBLIC :: JacobianTetrahedron
+! PUBLIC :: JacobianPrism
+! PUBLIC :: JacobianPyramid
 
 !----------------------------------------------------------------------------
 !                                                     FromBiunitLine2Segment
@@ -707,5 +712,89 @@ INTERFACE
     !! coordinates in unit tetrahedron
   END FUNCTION FromBiUnitHexahedron2UnitTetrahedron
 END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                             JacobianLine
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION JacobianLine(from, to) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+    REAL(DFP) :: ans
+  END FUNCTION JacobianLine
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         JacobianTriangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION JacobianTriangle(from, to) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+    REAL(DFP) :: ans
+  END FUNCTION JacobianTriangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       JacobianQuadrangle
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION JacobianQuadrangle(from, to) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+    REAL(DFP) :: ans
+  END FUNCTION JacobianQuadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       JacobianTetrahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION JacobianTetrahedron(from, to) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+    REAL(DFP) :: ans
+  END FUNCTION JacobianTetrahedron
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                         JacobianHexahedron
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE FUNCTION JacobianHexahedron(from, to) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: from
+    CHARACTER(*), INTENT(IN) :: to
+    REAL(DFP) :: ans
+  END FUNCTION JacobianHexahedron
+END INTERFACE
+
+! !----------------------------------------------------------------------------
+! !                                                            JacobianPrism
+! !----------------------------------------------------------------------------
+!
+! INTERFACE
+!   MODULE PURE FUNCTION JacobianPrism(from, to) RESULT(ans)
+!     CHARACTER(*), INTENT(IN) :: from
+!     CHARACTER(*), INTENT(IN) :: to
+!     REAL(DFP) :: ans
+!   END FUNCTION JacobianPrism
+! END INTERFACE
+!
+! !----------------------------------------------------------------------------
+! !                                                            JacobianPyramid
+! !----------------------------------------------------------------------------
+!
+! INTERFACE
+!   MODULE PURE FUNCTION JacobianPyramid(from, to) RESULT(ans)
+!     CHARACTER(*), INTENT(IN) :: from
+!     CHARACTER(*), INTENT(IN) :: to
+!     REAL(DFP) :: ans
+!   END FUNCTION JacobianPyramid
+! END INTERFACE
 
 END MODULE MappingUtility

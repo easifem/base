@@ -434,4 +434,119 @@ ans = FromBiUnitTetrahedron2UnitTetrahedron( &
   & FromBiUnitHexahedron2BiUnitTetrahedron(xin))
 END PROCEDURE FromBiUnitHexahedron2UnitTetrahedron
 
+!----------------------------------------------------------------------------
+!                                                             JacobianLine
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobianLine
+SELECT CASE (TRIM(from))
+CASE ("BIUNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 1.0_DFP
+  CASE ("UNIT")
+    ans = 0.5_DFP
+  END SELECT
+CASE ("UNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 2.0_DFP
+  CASE ("UNIT")
+    ans = 1.0_DFP
+  END SELECT
+END SELECT
+END PROCEDURE JacobianLine
+
+!----------------------------------------------------------------------------
+!                                                         JacobianTriangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobianTriangle
+SELECT CASE (TRIM(from))
+CASE ("BIUNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 1.0_DFP
+  CASE ("UNIT")
+    ans = 0.25_DFP
+  END SELECT
+CASE ("UNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 4.0_DFP
+  CASE ("UNIT")
+    ans = 1.0_DFP
+  END SELECT
+END SELECT
+END PROCEDURE JacobianTriangle
+
+!----------------------------------------------------------------------------
+!                                                         JacobianQuadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobianQuadrangle
+SELECT CASE (TRIM(from))
+CASE ("BIUNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 1.0_DFP
+  CASE ("UNIT")
+    ans = 0.25_DFP
+  END SELECT
+CASE ("UNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 4.0_DFP
+  CASE ("UNIT")
+    ans = 1.0_DFP
+  END SELECT
+END SELECT
+END PROCEDURE JacobianQuadrangle
+
+!----------------------------------------------------------------------------
+!                                                         JacobianHexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobianHexahedron
+SELECT CASE (TRIM(from))
+CASE ("BIUNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 1.0_DFP
+  CASE ("UNIT")
+    ans = 0.125_DFP
+  END SELECT
+CASE ("UNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 8.0_DFP
+  CASE ("UNIT")
+    ans = 1.0_DFP
+  END SELECT
+END SELECT
+END PROCEDURE JacobianHexahedron
+
+!----------------------------------------------------------------------------
+!                                                         JacobianHexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE JacobianTetrahedron
+SELECT CASE (TRIM(from))
+CASE ("BIUNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 1.0_DFP
+  CASE ("UNIT")
+    ans = 0.125_DFP
+  END SELECT
+CASE ("UNIT")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 8.0_DFP
+  CASE ("UNIT")
+    ans = 1.0_DFP
+  END SELECT
+END SELECT
+END PROCEDURE JacobianTetrahedron
+
 END SUBMODULE Methods
