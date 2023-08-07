@@ -400,14 +400,14 @@ END INTERFACE ElementOrder
 ! summary: Returns the order of an element
 
 INTERFACE ElementOrder
-  MODULE PURE FUNCTION Element_Order_RefElem(RefElem) RESULT(Ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+  MODULE PURE FUNCTION Element_Order_refelem(refelem) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B) :: Ans
-  END FUNCTION Element_Order_RefElem
+  END FUNCTION Element_Order_refelem
 END INTERFACE ElementOrder
 
 INTERFACE OPERATOR(.order.)
-  MODULE PROCEDURE Element_Order_RefElem, Element_Order
+  MODULE PROCEDURE Element_Order_refelem, Element_Order
 END INTERFACE OPERATOR(.order.)
 
 !----------------------------------------------------------------------------
@@ -670,14 +670,14 @@ END INTERFACE OPERATOR(.topology.)
 ! - 4 to NNS + 3 => Local Nptrs
 
 INTERFACE
-  MODULE PURE FUNCTION Facet_Matrix_RefElem(RefElem) RESULT(FM)
+  MODULE PURE FUNCTION Facet_Matrix_refelem(refelem) RESULT(FM)
     INTEGER(I4B), ALLOCATABLE :: FM(:, :)
-    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
-  END FUNCTION Facet_Matrix_RefElem
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+  END FUNCTION Facet_Matrix_refelem
 END INTERFACE
 
 INTERFACE FacetMatrix
-  MODULE PROCEDURE Facet_Matrix_RefElem
+  MODULE PROCEDURE Facet_Matrix_refelem
 END INTERFACE FacetMatrix
 
 !----------------------------------------------------------------------------
@@ -689,14 +689,14 @@ END INTERFACE FacetMatrix
 ! summary: This routine returns the facet elements
 
 INTERFACE
-  MODULE FUNCTION RefElem_FacetElements(RefElem) RESULT(ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+  MODULE FUNCTION refelem_FacetElements(refelem) RESULT(ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
-  END FUNCTION RefElem_FacetElements
+  END FUNCTION refelem_FacetElements
 END INTERFACE
 
 INTERFACE FacetElements
-  MODULE PROCEDURE RefElem_FacetElements
+  MODULE PROCEDURE refelem_FacetElements
 END INTERFACE FacetElements
 
 !----------------------------------------------------------------------------
@@ -728,15 +728,11 @@ END INTERFACE
 ! date: 11 April 2022
 ! summary: Returns the local NodeCoord of an element
 
-INTERFACE
-  MODULE PURE FUNCTION Local_NodeCoord_RefElem(RefElem) RESULT(NodeCoord)
-    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
-    REAL(DFP), ALLOCATABLE :: NodeCoord(:, :)
-  END FUNCTION Local_NodeCoord_RefElem
-END INTERFACE
-
 INTERFACE LocalNodeCoord
-  MODULE PROCEDURE Local_NodeCoord_RefElem
+  MODULE PURE FUNCTION Local_NodeCoord_refelem(refelem) RESULT(nodecoord)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
+  END FUNCTION Local_NodeCoord_refelem
 END INTERFACE LocalNodeCoord
 
 !----------------------------------------------------------------------------
@@ -748,8 +744,8 @@ END INTERFACE LocalNodeCoord
 ! summary: Returns measures for simplex
 
 INTERFACE
-  MODULE PURE FUNCTION Measure_Simplex(RefElem, XiJ) RESULT(Ans)
-    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+  MODULE PURE FUNCTION Measure_Simplex(refelem, XiJ) RESULT(Ans)
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: XiJ(:, :)
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex
@@ -810,14 +806,14 @@ END INTERFACE ContainsPoint
 ! summary: Total entities present in an element
 
 INTERFACE
-  MODULE PURE FUNCTION RefElem_TotalEntities(ElemType) RESULT(Ans)
+  MODULE PURE FUNCTION refelem_TotalEntities(ElemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
     INTEGER(I4B) :: ans(4)
-  END FUNCTION RefElem_TotalEntities
+  END FUNCTION refelem_TotalEntities
 END INTERFACE
 
 INTERFACE TotalEntities
-  MODULE PROCEDURE RefElem_TotalEntities
+  MODULE PROCEDURE refelem_TotalEntities
 END INTERFACE TotalEntities
 
 !----------------------------------------------------------------------------
@@ -829,15 +825,15 @@ END INTERFACE TotalEntities
 ! summary: Returns the facet topology of the given element type
 
 INTERFACE
-  MODULE PURE FUNCTION RefElem_FacetTopology(ElemType, Nptrs) RESULT(Ans)
+  MODULE PURE FUNCTION refelem_FacetTopology(ElemType, Nptrs) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
     INTEGER(I4B), INTENT(IN) :: Nptrs(:)
     TYPE(ReferenceTopology_), ALLOCATABLE :: ans(:)
-  END FUNCTION RefElem_FacetTopology
+  END FUNCTION refelem_FacetTopology
 END INTERFACE
 
 INTERFACE FacetTopology
-  MODULE PROCEDURE RefElem_FacetTopology
+  MODULE PROCEDURE refelem_FacetTopology
 END INTERFACE FacetTopology
 
 !----------------------------------------------------------------------------

@@ -29,118 +29,77 @@ CONTAINS
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Element_Name
-  !
   ! Define internal variables
-  !
 CHARACTER(50) :: Str1
-    !
 SELECT CASE (ElemType)
-    !
 CASE (Point1)
   Str1 = "Point1"
-    !
 CASE (Line2)
   Str1 = "Line2"
-    !
 CASE (Triangle3)
   Str1 = "Triangle3"
-    !
 CASE (Quadrangle4)
   Str1 = "Quadrangle4"
-    !
 CASE (Tetrahedron4)
   Str1 = "Tetrahedron4"
-    !
 CASE (Hexahedron8)
   Str1 = "Hexahedron8"
-    !
 CASE (Prism6)
   Str1 = "Prism6"
-    !
 CASE (Pyramid5)
   Str1 = "Pyramid5"
-    !
-    ! Order=2 elements
-    !
 CASE (Line3)
   Str1 = "Line3"
-    !
 CASE (Triangle6)
   Str1 = "Triangle6"
-    !
 CASE (Quadrangle9)
   Str1 = "Quadrangle9"
-    !
 CASE (Quadrangle8)
   Str1 = "Quadrangle8"
-    !
 CASE (Tetrahedron10)
   Str1 = "Tetrahedron10"
-    !
 CASE (Hexahedron20)
   Str1 = "Hexahedron20"
-    !
 CASE (Hexahedron27)
   Str1 = "Hexahedron27"
-    !
 CASE (Prism15)
   Str1 = "Prism15"
-    !
 CASE (Prism18)
   Str1 = "Prism18"
-    !
 CASE (Pyramid13)
   Str1 = "Pyramid13"
-    !
 CASE (Pyramid14)
   Str1 = "Pyramid14"
-    !
 CASE (Triangle9)
   Str1 = "Triangle9"
-    !
 CASE (Triangle10)
   Str1 = "Triangle10"
-    !
 CASE (Triangle12)
   Str1 = "Triangle12"
-    !
 CASE (Triangle15a)
   Str1 = "Triangle15a"
-    !
 CASE (Triangle15b)
   Str1 = "Triangle15b"
-    !
 CASE (Triangle21)
   Str1 = "Triangle21"
-    !
 CASE (Line4)
   Str1 = "Line4"
-    !
 CASE (Line5)
   Str1 = "Line5"
-    !
 CASE (Line6)
   Str1 = "Line6"
-    !
 CASE (Tetrahedron20)
   Str1 = "Tetrahedron20"
-    !
 CASE (Tetrahedron35)
   Str1 = "Tetrahedron35"
-    !
 CASE (Tetrahedron56)
   Str1 = "Tetrahedron56"
-    !
 CASE (Hexahedron64)
   Str1 = "Hexahedron64"
-    !
 CASE (Hexahedron125)
   Str1 = "Hexahedron125"
-    !
 END SELECT
-  !
 Ans = TRIM(Str1)
-  !
 END PROCEDURE Element_Name
 
 !----------------------------------------------------------------------------
@@ -1232,7 +1191,11 @@ END PROCEDURE Local_nodecoord
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Local_nodecoord_refelem
-IF (ALLOCATED(refelem%xij)) nodecoord = refelem%xij
+IF (ALLOCATED(refelem%xij)) THEN
+nodecoord = refelem%xij
+ELSE
+ALLOCATE(nodecoord(0, 0))
+END if
 END PROCEDURE Local_nodecoord_refelem
 
 !----------------------------------------------------------------------------
@@ -1413,7 +1376,7 @@ END SELECT
 END PROCEDURE refelem_TotalEntities
 
 !----------------------------------------------------------------------------
-!                                                      FacetTopology
+!                                                             FacetTopology
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_FacetTopology
