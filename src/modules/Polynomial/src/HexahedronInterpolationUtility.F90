@@ -1694,6 +1694,7 @@ INTERFACE QuadraturePoint_Hexahedron
   MODULE FUNCTION QuadraturePoint_Hexahedron1( &
     & order, &
     & quadType, &
+    & refHexahedron, &
     & xij, &
     & alpha, &
     & beta, &
@@ -1718,6 +1719,10 @@ INTERFACE QuadraturePoint_Hexahedron
     !! GaussJacobiLobatto
     !! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! Reference hexahedron
+    !! UNIT
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordiantes of hexahedron in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -1739,6 +1744,7 @@ INTERFACE QuadraturePoint_Hexahedron
   MODULE FUNCTION QuadraturePoint_Hexahedron2(  &
     & p, q, r, &
     & quadType1, quadType2, quadType3, &
+    & refHexahedron, &
     & xij, &
     & alpha1, beta1, lambda1, &
     & alpha2, beta2, lambda2, &
@@ -1769,6 +1775,10 @@ INTERFACE QuadraturePoint_Hexahedron
     !! GaussJacobiLobatto
     !! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! Reference hexahedron
+    !! UNIT
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1
@@ -1791,8 +1801,14 @@ END INTERFACE QuadraturePoint_Hexahedron
 ! summary:  Returns quadrature points on reference quadrangle
 
 INTERFACE QuadraturePoint_Hexahedron
-  MODULE FUNCTION QuadraturePoint_Hexahedron3(nips, quadType, &
-    & xij, alpha, beta, lambda) RESULT(ans)
+  MODULE FUNCTION QuadraturePoint_Hexahedron3( &
+    & nips, &
+    & quadType, &
+    & refHexahedron, &
+    & xij, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: nips(1)
     !! number of integration points in x, y, and z direction
     INTEGER(I4B), INTENT(IN) :: quadType
@@ -1813,6 +1829,10 @@ INTERFACE QuadraturePoint_Hexahedron
     !! GaussJacobiLobatto
     !! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! Reference hexahedron
+    !! UNIT
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
@@ -1834,6 +1854,7 @@ INTERFACE QuadraturePoint_Hexahedron
   MODULE FUNCTION QuadraturePoint_Hexahedron4(  &
     & nipsx, nipsy, nipsz, &
     & quadType1, quadType2, quadType3, &
+    & refHexahedron, &
     & xij, &
     & alpha1, beta1, lambda1, &
     & alpha2, beta2, lambda2, &
@@ -1864,6 +1885,10 @@ INTERFACE QuadraturePoint_Hexahedron
     !! GaussJacobiLobatto
     !! GaussJacobiRadauLeft
     !! GaussJacobiRadauRight
+    CHARACTER(*), INTENT(IN) :: refHexahedron
+    !! Reference hexahedron
+    !! UNIT
+    !! BIUNIT
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! four vertices of quadrangle in xij format
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1, beta1, lambda1

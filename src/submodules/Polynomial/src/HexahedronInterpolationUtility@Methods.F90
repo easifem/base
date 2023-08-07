@@ -1756,6 +1756,7 @@ ans = QuadraturePoint_Hexahedron2( &
   & quadType1=quadType, &
   & quadType2=quadType, &
   & quadType3=quadType, &
+  & refHexahedron=refHexahedron, &
   & xij=xij, &
   & alpha1=alpha, &
   & beta1=beta, &
@@ -1777,6 +1778,9 @@ MODULE PROCEDURE QuadraturePoint_Hexahedron2
 ! internal variables
 REAL(DFP), ALLOCATABLE :: x(:, :), y(:, :), z(:, :), temp(:, :)
 INTEGER(I4B) :: ii, jj, kk, nsd, np, nq, nr, cnt
+TYPE(String) :: astr
+
+astr = UpperCase(refHexahedron)
 
 x = QuadraturePoint_Line( &
   & order=p, &
@@ -1838,8 +1842,15 @@ IF (PRESENT(xij)) THEN
     & x8=xij(:, 8)  &
     & )
   ans(4, :) = temp(4, :)
+
 ELSE
-  ans = temp
+  IF (astr%chars() .EQ. "UNIT") THEN
+    ans(1:nsd, :) = FromBiUnitHexahedron2UnitHexahedron( &
+      & xin=temp(1:3, :))
+    ans(4, :) = temp(4, :)
+  ELSE
+    ans = temp
+  END IF
 END IF
 
 IF (ALLOCATED(temp)) DEALLOCATE (temp)
@@ -1861,6 +1872,7 @@ ans = QuadraturePoint_Hexahedron4( &
   & quadType1=quadType, &
   & quadType2=quadType, &
   & quadType3=quadType, &
+  & refHexahedron=refHexahedron, &
   & xij=xij, &
   & alpha1=alpha, &
   & beta1=beta, &
@@ -1883,6 +1895,9 @@ MODULE PROCEDURE QuadraturePoint_Hexahedron4
 REAL(DFP) :: x(2, nipsx(1)), y(2, nipsy(1)), z(2, nipsz(1)), &
 & temp(4, nipsy(1) * nipsx(1) * nipsz(1))
 INTEGER(I4B) :: ii, jj, kk, nsd, np, nq, nr, cnt
+TYPE(String) :: astr
+
+astr = UpperCase(refHexahedron)
 
 x = QuadraturePoint_Line( &
   & nips=nipsx, &
@@ -1943,8 +1958,15 @@ IF (PRESENT(xij)) THEN
     & x8=xij(:, 8)  &
     & )
   ans(4, :) = temp(4, :)
+
 ELSE
-  ans = temp
+  IF (astr%chars() .EQ. "UNIT") THEN
+    ans(1:nsd, :) = FromBiUnitHexahedron2UnitHexahedron( &
+      & xin=temp(1:3, :))
+    ans(4, :) = temp(4, :)
+  ELSE
+    ans = temp
+  END IF
 END IF
 
 END PROCEDURE QuadraturePoint_Hexahedron4
