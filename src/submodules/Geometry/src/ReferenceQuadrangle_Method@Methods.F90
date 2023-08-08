@@ -168,9 +168,9 @@ REAL(DFP) :: p(3, 4)
 p(1:3, 1:3) = (q(1:3, 1:3) + q(1:3, 2:4)) / 2.0_DFP
 p(1:3, 4) = (q(1:3, 4) + q(1:3, 1)) / 2.0_DFP
 !  Compute the area.
-CALL PARALLELOGRAMAREA3D(p, area)
+CALL PARALLELOGRAMAREA3D(p, ans)
 ! The quadrilateral's area is twice that of the parallelogram.
-area = 2.0_DFP * area
+ans = 2.0_DFP * ans
 END PROCEDURE QuadArea3D
 
 !----------------------------------------------------------------------------
@@ -181,18 +181,18 @@ MODULE PROCEDURE QuadArea2D
 INTEGER(I4B), PARAMETER :: dim_num = 2
 REAL(DFP) :: area_triangle
 REAL(DFP) :: t(dim_num, 3)
-area = 0.0_DFP
+ans = 0.0_DFP
 t(1:dim_num, 1:3) = RESHAPE( &
   & [q(1:2, 1), q(1:2, 2), q(1:2, 3)], &
   & [dim_num, 3] &
   & )
 CALL TRIANGLEAREA2D(t, area_triangle)
-area = area + area_triangle
+ans = ans + area_triangle
 t(1:dim_num, 1:3) = RESHAPE( &
   & [q(1:2, 3), q(1:2, 4), q(1:2, 1)],  &
   & [dim_num, 3])
 CALL TRIANGLEAREA2D(t, area_triangle)
-area = area + area_triangle
+ans = ans + area_triangle
 END PROCEDURE QuadArea2D
 
 !-----------------------------------------------------------------------------

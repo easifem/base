@@ -117,11 +117,11 @@ DO iFace = 1, 6
   b = FM(iFace, 3) + 3
   Node0(iFace, 1:Order0(iFace)) = FM(iFace, 4:b)
 END DO
-CALL POLYHEDRONVOLUME3D(coord=XiJ(1:3, 1:8), &
+CALL PolyhedronVolume3d(coord=XiJ(1:3, 1:8), &
   & order_max=4, face_num=6,  &
-  & node=Node0, node_num=8, &
-  & order=Order0, &
-  & volume=Ans)
+  & node=node0, node_num=8, &
+  & order=order0, &
+  & ans=ans)
 END PROCEDURE Measure_Simplex_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -134,7 +134,5 @@ END PROCEDURE Hexahedron_quality
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-
-#include "./modified_burkardt.inc"
 
 END SUBMODULE Methods

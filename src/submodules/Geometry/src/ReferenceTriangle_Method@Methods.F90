@@ -343,38 +343,35 @@ END PROCEDURE triangle_random_point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_quality
-!
 REAL(DFP) :: rvar(3)
-!
+
 SELECT CASE (measure)
-  !
+
 CASE (QualityMeasure%area)
   Ans = Area(refelem=refelem, xij=xij)
-  !
+
 CASE (QualityMeasure%maxangle)
   Ans = MAXVAL(Angles(refelem=refelem, xij=xij))
-  !
+
 CASE (QualityMeasure%minangle)
   Ans = MINVAL(Angles(refelem=refelem, xij=xij))
-  !
+
 CASE (QualityMeasure%angleratio)
   Ans = 3.0_DFP * MINVAL(Angles(refelem=refelem, xij=xij)) / Pi
-  !
+
 CASE (QualityMeasure%radiusRatio)
   Ans = 2.0_DFP * InRadius(refelem=refelem, xij=xij) &
     & / CircumRadius(refelem=refelem, xij=xij)
-  !
+
 CASE (QualityMeasure%edgeRatio)
   rvar = EdgeLength(refelem=refelem, xij=xij)
   Ans = MINVAL(rvar) / MAXVAL(rvar)
-  !
+
 CASE (QualityMeasure%aspectRatio)
   rvar = EdgeLength(refelem=refelem, xij=xij)
   Ans = MAXVAL(rvar) * SUM(rvar) &
-    & / (4.0_DFP * SQRT(3.0_DFP) * Area(refelem=refelem, xij=xij))
-  !
+    & / (4.0_DFP * SQRT(3.0_DFP) * area(refelem=refelem, xij=xij))
 END SELECT
-!
 END PROCEDURE triangle_quality
 
 !-----------------------------------------------------------------------------
