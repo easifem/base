@@ -867,6 +867,21 @@ ans = QuadraturePoint_Line1(&
 END PROCEDURE QuadraturePoint_Line2
 
 !----------------------------------------------------------------------------
+!                                                        QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Line4
+ans = QuadraturePoint_Line3(&
+    & nips=nips, &
+    & quadType=quadType, &
+    & layout=layout, &
+    & xij=RESHAPE(xij, [1, 2]), &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END PROCEDURE QuadraturePoint_Line4
+
+!----------------------------------------------------------------------------
 !                                                       QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
@@ -1028,27 +1043,12 @@ IF (PRESENT(xij)) THEN
     & xin=pt, &
     & x1=xij(:, 1), &
     & x2=xij(:, 2))
-  ans(nsd + 1, :) = wt
+  ans(nsd + 1, :) = wt * NORM2(xij(:, 2) - xij(:, 1)) / 2.0_DFP
 ELSE
   ans(1, :) = pt
   ans(nsd + 1, :) = wt
 END IF
 END PROCEDURE QuadraturePoint_Line3
-
-!----------------------------------------------------------------------------
-!                                                        QuadraturePoint_Line
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE QuadraturePoint_Line4
-ans = QuadraturePoint_Line3(&
-    & nips=nips, &
-    & quadType=quadType, &
-    & layout=layout, &
-    & xij=RESHAPE(xij, [1, 2]), &
-    & alpha=alpha, &
-    & beta=beta, &
-    & lambda=lambda)
-END PROCEDURE QuadraturePoint_Line4
 
 !----------------------------------------------------------------------------
 !
