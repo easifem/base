@@ -521,9 +521,9 @@ END INTERFACE
 ! Therefore, the area of the triangle is half of that value.
 
 INTERFACE
-  MODULE PURE SUBROUTINE TriangleArea3D(t, area)
+  MODULE PURE SUBROUTINE TriangleArea3D(t, ans)
     REAL(DFP), INTENT(IN) :: t(3, 3)
-    REAL(DFP), INTENT(OUT) :: area
+    REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE TriangleArea3D
 END INTERFACE
 
@@ -543,9 +543,9 @@ END INTERFACE
 ! in clockwise order, the area will be negative!
 
 INTERFACE
-  MODULE PURE SUBROUTINE TriangleArea2D(t, area)
+  MODULE PURE SUBROUTINE TriangleArea2D(t, ans)
     REAL(DFP), INTENT(IN) :: t(2, 3)
-    REAL(DFP), INTENT(OUT) :: area
+    REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE TriangleArea2D
 END INTERFACE
 
