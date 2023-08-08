@@ -30,6 +30,7 @@ PUBLIC :: ReferenceTetrahedron_Pointer
 PUBLIC :: highOrderElement_Tetrahedron
 PUBLIC :: Measure_Simplex_Tetrahedron
 PUBLIC :: Tetrahedron_Quality
+PUBLIC :: TetrahedronVolume3D
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Tetrahedron
@@ -108,6 +109,17 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Tetrahedron_Quality
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       TetrahedronVolume3D
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE TetrahedronVolume3D(xij, ans)
+    REAL(DFP), INTENT(IN) :: xij(3, 4)
+    REAL(DFP), INTENT(OUT) :: ans
+  END SUBROUTINE TetrahedronVolume3D
 END INTERFACE
 
 END MODULE ReferenceTetrahedron_Method
