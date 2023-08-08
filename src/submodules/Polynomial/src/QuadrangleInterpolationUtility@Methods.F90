@@ -1478,12 +1478,14 @@ IF (PRESENT(xij)) THEN
     & x2=xij(:, 2), &
     & x3=xij(:, 3), &
     & x4=xij(:, 4))
-  ans(nsd + 1, :) = temp(3, :)
+  ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
+    &  from="BIUNIT", to="QUADRANGLE", xij=xij)
 ELSE
   IF (astr%chars() .EQ. "UNIT") THEN
     ans(1:nsd, :) = FromBiUnitQuadrangle2UnitQuadrangle( &
       & xin=temp(1:2, :))
-    ans(nsd + 1, :) = temp(3, :)
+    ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
+      &  from="BIUNIT", to="UNIT", xij=xij)
   ELSE
     ans = temp
   END IF
@@ -1575,12 +1577,14 @@ IF (PRESENT(xij)) THEN
     & x2=xij(:, 2), &
     & x3=xij(:, 3), &
     & x4=xij(:, 4))
-  ans(nsd + 1, :) = temp(3, :)
+  ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
+    &  from="BIUNIT", to="QUADRANGLE", xij=xij)
 ELSE
   IF (astr%chars() .EQ. "UNIT") THEN
     ans(1:nsd, :) = FromBiUnitQuadrangle2UnitQuadrangle( &
       & xin=temp(1:2, :))
-    ans(nsd + 1, :) = temp(3, :)
+    ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
+      &  from="BIUNIT", to="UNIT", xij=xij)
   ELSE
     ans = temp
   END IF
