@@ -132,7 +132,14 @@ MODULE PROCEDURE Hexahedron_quality
 END PROCEDURE Hexahedron_quality
 
 !----------------------------------------------------------------------------
-!
+!                                                       HexahedronVolume3D
 !----------------------------------------------------------------------------
+
+MODULE PROCEDURE HexahedronVolume3D
+TYPE(ReferenceHexahedron_) :: refelem
+refelem = ReferenceHexahedron(nsd=3_I4B)
+ans = Measure_Simplex_Hexahedron(refelem=refelem, xij=xij)
+CALL DEALLOCATE (refelem)
+END PROCEDURE HexahedronVolume3D
 
 END SUBMODULE Methods
