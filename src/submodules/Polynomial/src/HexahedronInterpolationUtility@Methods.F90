@@ -1841,13 +1841,15 @@ IF (PRESENT(xij)) THEN
     & x7=xij(:, 7), &
     & x8=xij(:, 8)  &
     & )
-  ans(4, :) = temp(4, :)
+  ans(4, :) = temp(4, :) * JacobianHexahedron( &
+    & from="BIUNIT", to="HEXAHEDRON", xij=xij)
 
 ELSE
   IF (astr%chars() .EQ. "UNIT") THEN
     ans(1:nsd, :) = FromBiUnitHexahedron2UnitHexahedron( &
       & xin=temp(1:3, :))
-    ans(4, :) = temp(4, :)
+    ans(4, :) = temp(4, :) * JacobianHexahedron( &
+      & from="BIUNIT", to="UNIT", xij=xij)
   ELSE
     ans = temp
   END IF
@@ -1957,13 +1959,15 @@ IF (PRESENT(xij)) THEN
     & x7=xij(:, 7), &
     & x8=xij(:, 8)  &
     & )
-  ans(4, :) = temp(4, :)
+  ans(4, :) = temp(4, :) * JacobianHexahedron( &
+    & from="BIUNIT", to="HEXAHEDRON", xij=xij)
 
 ELSE
   IF (astr%chars() .EQ. "UNIT") THEN
     ans(1:nsd, :) = FromBiUnitHexahedron2UnitHexahedron( &
       & xin=temp(1:3, :))
-    ans(4, :) = temp(4, :)
+    ans(4, :) = temp(4, :) * JacobianHexahedron( &
+      & from="BIUNIT", to="UNIT", xij=xij)
   ELSE
     ans = temp
   END IF
