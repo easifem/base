@@ -17,7 +17,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2 March 2021
-! summary: 	This submodule contians methods for [[ReferencePyramid_]]
+! summary:         This submodule contians methods for [[ReferencePyramid_]]
 
 SUBMODULE(ReferencePyramid_Method) Methods
 USE BaseMethod
@@ -35,15 +35,15 @@ END PROCEDURE Initiate_ref_Pyramid
 !                                                      ReferencePyramid
 !----------------------------------------------------------------------------
 MODULE PROCEDURE reference_Pyramid
-  CALL Initiate( obj, NSD, XiJ )
+CALL Initiate(obj, NSD, XiJ)
 END PROCEDURE reference_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                      ReferencePyramid
 !----------------------------------------------------------------------------
 MODULE PROCEDURE reference_Pyramid_Pointer
-  ALLOCATE( obj )
-  CALL Initiate( obj, NSD, XiJ )
+ALLOCATE (obj)
+CALL Initiate(obj, NSD, XiJ)
 END PROCEDURE reference_Pyramid_Pointer
 
 !----------------------------------------------------------------------------
@@ -58,23 +58,18 @@ END PROCEDURE highOrderElement_Pyramid
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Pyramid
-  !!
-  INTEGER( I4B ) :: FM( 5, 7 ), Node0( 5, 4 ), Order0( 5 ), iFace, b
-  !!
-  FM = FacetMatrix(RefElem)
-  !!
-  DO iFace = 1, 5
-    Order0( iFace ) = FM( iFace, 3 )
-    b = Order0( iFace ) + 3
-    Node0( iFace, 1:Order0( iFace ) ) = FM( iFace, 4 : b )
-  END DO
-  !!
-  CALL POLYHEDRONVOLUME3D( coord = XiJ( 1:3, 1:5 ), &
-    & order_max = 4, face_num = 5,  &
-    & node = Node0, node_num = 5, &
-    & order = Order0, &
-    & volume = Ans )
-  !!
+INTEGER(I4B) :: FM(5, 7), Node0(5, 4), Order0(5), iFace, b
+FM = FacetMatrix(RefElem)
+DO iFace = 1, 5
+  Order0(iFace) = FM(iFace, 3)
+  b = Order0(iFace) + 3
+  Node0(iFace, 1:Order0(iFace)) = FM(iFace, 4:b)
+END DO
+CALL POLYHEDRONVOLUME3D(coord=XiJ(1:3, 1:5), &
+  & order_max=4, face_num=5,  &
+  & node=Node0, node_num=5, &
+  & order=Order0, &
+  & ans=ans)
 END PROCEDURE Measure_Simplex_Pyramid
 
 !----------------------------------------------------------------------------
@@ -87,7 +82,5 @@ END PROCEDURE Pyramid_quality
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
-
-#include "./modified_burkardt.inc"
 
 END SUBMODULE Methods

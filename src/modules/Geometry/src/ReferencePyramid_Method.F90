@@ -24,6 +24,12 @@ USE GlobalData
 USE BaseType
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Initiate
+PUBLIC :: ReferencePyramid
+PUBLIC :: ReferencePyramid_Pointer
+PUBLIC :: highOrderElement_Pyramid
+PUBLIC :: Measure_Simplex_Pyramid
+PUBLIC :: Pyramid_Quality
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Pyramid
@@ -33,55 +39,37 @@ PRIVATE
 ! date:         1 March 2021
 ! summary: This subroutine for constructing the object
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE initiate_ref_Pyramid(obj, NSD, XiJ)
     CLASS(ReferencePyramid_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
   END SUBROUTINE initiate_ref_Pyramid
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE initiate_ref_Pyramid
 END INTERFACE Initiate
-
-PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                            ReferencePyramid@Pyramid
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ReferencePyramid
   MODULE PURE FUNCTION reference_Pyramid(NSD, XiJ) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     TYPE(ReferencePyramid_) :: obj
   END FUNCTION reference_Pyramid
-END INTERFACE
-
-INTERFACE ReferencePyramid
-  MODULE PROCEDURE reference_Pyramid
 END INTERFACE ReferencePyramid
-
-PUBLIC :: ReferencePyramid
 
 !----------------------------------------------------------------------------
 !                                   ReferencePyramid_Pointer@Pyramid
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ReferencePyramid_Pointer
   MODULE PURE FUNCTION reference_Pyramid_Pointer(NSD, XiJ) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     CLASS(ReferencePyramid_), POINTER :: obj
   END FUNCTION reference_Pyramid_Pointer
-END INTERFACE
-
-INTERFACE ReferencePyramid_Pointer
-  MODULE PROCEDURE reference_Pyramid_Pointer
 END INTERFACE ReferencePyramid_Pointer
-
-PUBLIC :: ReferencePyramid_Pointer
 
 !----------------------------------------------------------------------------
 !                                               LagrangeElement@Pyramid
@@ -96,8 +84,6 @@ INTERFACE
   END SUBROUTINE highOrderElement_Pyramid
 END INTERFACE
 
-PUBLIC :: highOrderElement_Pyramid
-
 !----------------------------------------------------------------------------
 !                                                  MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
@@ -109,8 +95,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex_Pyramid
 END INTERFACE
-
-PUBLIC :: Measure_Simplex_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                            Pyramid_Quality
@@ -124,7 +108,5 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION Pyramid_Quality
 END INTERFACE
-
-PUBLIC :: Pyramid_Quality
 
 END MODULE ReferencePyramid_Method
