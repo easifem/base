@@ -669,15 +669,11 @@ END INTERFACE OPERATOR(.topology.)
 ! - Third column => NNS
 ! - 4 to NNS + 3 => Local Nptrs
 
-INTERFACE
+INTERFACE FacetMatrix
   MODULE PURE FUNCTION Facet_Matrix_refelem(refelem) RESULT(FM)
     INTEGER(I4B), ALLOCATABLE :: FM(:, :)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
   END FUNCTION Facet_Matrix_refelem
-END INTERFACE
-
-INTERFACE FacetMatrix
-  MODULE PROCEDURE Facet_Matrix_refelem
 END INTERFACE FacetMatrix
 
 !----------------------------------------------------------------------------
