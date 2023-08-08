@@ -1207,11 +1207,17 @@ IF (nips(1) .GT. 0) THEN
       & x1=xij(:, 1), &
       & x2=xij(:, 2), &
       & x3=xij(:, 3))
-    ans(nsd + 1, :) = temp_t(3, :)
+
+    ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
+      & from="UNIT", &
+      & to="TRIANGLE", &
+      & xij=xij)
   ELSE
     IF (astr%chars() .EQ. "BIUNIT") THEN
       ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
-      ans(nsd + 1, :) = temp_t(3, :)
+      ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
+        & from="UNIT", &
+        & to="BIUNIT")
     ELSE
       ans = temp_t
     END IF
@@ -1254,11 +1260,17 @@ IF (nips(1) .LE. QuadratureNumberTriangleSolin(order=20_I4B)) THEN
       & x1=xij(:, 1), &
       & x2=xij(:, 2), &
       & x3=xij(:, 3))
-    ans(nsd + 1, :) = temp_t(3, :)
+    ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
+      & from="UNIT", &
+      & to="TRIANGLE", &
+      & xij=xij)
   ELSE
     IF (astr%chars() .EQ. "BIUNIT") THEN
       ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
-      ans(nsd + 1, :) = temp_t(3, :)
+      ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
+        & from="UNIT", &
+        & to="BIUNIT")
+
     ELSE
       ans = temp_t
     END IF
@@ -1273,6 +1285,7 @@ ELSE
     & line=__LINE__, &
     & routine="QuadraturePoint_Triangle2()", &
     & unitNo=stdout)
+  RETURN
 END IF
 END PROCEDURE QuadraturePoint_Triangle2
 
@@ -1316,11 +1329,18 @@ IF (PRESENT(xij)) THEN
     & x1=xij(:, 1), &
     & x2=xij(:, 2), &
     & x3=xij(:, 3))
-  ans(nsd + 1, :) = temp_t(3, :)
+  ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
+    & from="UNIT", &
+    & to="TRIANGLE", &
+    & xij=xij)
 ELSE
   IF (astr%chars() .EQ. "BIUNIT") THEN
     ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
-    ans(nsd + 1, :) = temp_t(3, :)
+
+    ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
+      & from="UNIT", &
+      & to="BIUNIT")
+
   ELSE
     ans = temp_t
   END IF
