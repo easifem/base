@@ -718,9 +718,21 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION JacobianLine(from, to) RESULT(ans)
+  MODULE PURE FUNCTION JacobianLine(from, to, xij) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
+    !! BIUNIT
+    !! UNIT
+    !! LINE
     CHARACTER(*), INTENT(IN) :: to
+    !! BIUNIT
+    !! UNIT
+    !! LINE
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of general line (segment)
+    !! number of rows=1
+    !! number of cols=2
+    !! xij is needed when from or to are LINE
+    !! both from and to cannot be LINE
     REAL(DFP) :: ans
   END FUNCTION JacobianLine
 END INTERFACE
@@ -730,13 +742,21 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION JacobianTriangle(from, to) RESULT(ans)
+  MODULE PURE FUNCTION JacobianTriangle(from, to, xij) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
     !! BIUNIT
     !! UNIT
+    !! TRIANGLE
     CHARACTER(*), INTENT(IN) :: to
     !! BIUNIT
     !! UNIT
+    !! TRIANGLE
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of general TRIANGLE
+    !! number of rows=nsd
+    !! number of cols=3
+    !! xij is needed when `from` or `to` is TRIANGLE
+    !! both `from` and to `cannot` be TRIANGLE
     REAL(DFP) :: ans
   END FUNCTION JacobianTriangle
 END INTERFACE
@@ -746,13 +766,21 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION JacobianQuadrangle(from, to) RESULT(ans)
+  MODULE PURE FUNCTION JacobianQuadrangle(from, to, xij) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
     !! BIUNIT
     !! UNIT
+    !! QUADRANGLE
     CHARACTER(*), INTENT(IN) :: to
     !! BIUNIT
     !! UNIT
+    !! QUADRANGLE
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of general QUADRANGLE
+    !! number of rows=nsd
+    !! number of cols=4
+    !! xij is needed when `from` or `to` is QUADRANGLE
+    !! both `from` and to `cannot` be QUADRANGLE
     REAL(DFP) :: ans
   END FUNCTION JacobianQuadrangle
 END INTERFACE
@@ -762,13 +790,21 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION JacobianTetrahedron(from, to) RESULT(ans)
+  MODULE PURE FUNCTION JacobianTetrahedron(from, to, xij) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
     !! BIUNIT
     !! UNIT
+    !! TETRAHEDRON
     CHARACTER(*), INTENT(IN) :: to
     !! BIUNIT
     !! UNIT
+    !! TETRAHEDRON
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of general TETRAHEDRON
+    !! number of rows=nsd
+    !! number of cols=4
+    !! xij is needed when `from` or `to` is TETRAHEDRON
+    !! both `from` and to `cannot` be TETRAHEDRON
     REAL(DFP) :: ans
   END FUNCTION JacobianTetrahedron
 END INTERFACE
@@ -778,13 +814,21 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE FUNCTION JacobianHexahedron(from, to) RESULT(ans)
+  MODULE PURE FUNCTION JacobianHexahedron(from, to, xij) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: from
     !! BIUNIT
     !! UNIT
+    !! HEXAHEDRON
     CHARACTER(*), INTENT(IN) :: to
     !! BIUNIT
     !! UNIT
+    !! HEXAHEDRON
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of general HEXAHEDRON
+    !! number of rows=nsd
+    !! number of cols=4
+    !! xij is needed when `from` or `to` is HEXAHEDRON
+    !! both `from` and to `cannot` be HEXAHEDRON
     REAL(DFP) :: ans
   END FUNCTION JacobianHexahedron
 END INTERFACE

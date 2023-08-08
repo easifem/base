@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(MappingUtility) Methods
-USE BaseMethod, ONLY: UpperCase, SOFTLE, RefCoord_Hexahedron
+USE BaseMethod, ONLY: UpperCase, SOFTLE, RefCoord_Hexahedron, &
+  & TriangleArea2D, TriangleArea3D
 IMPLICIT NONE
 CONTAINS
 
@@ -446,12 +447,25 @@ CASE ("BIUNIT")
     ans = 1.0_DFP
   CASE ("UNIT")
     ans = 0.5_DFP
+  CASE ("LINE")
+    ans = NORM2(xij(:, 2) - xij(:, 1)) / 2.0_DFP
   END SELECT
 CASE ("UNIT")
   SELECT CASE (TRIM(to))
   CASE ("BIUNIT")
     ans = 2.0_DFP
   CASE ("UNIT")
+    ans = 1.0_DFP
+  CASE ("LINE")
+    ans = NORM2(xij(:, 2) - xij(:, 1))
+  END SELECT
+CASE ("LINE")
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 2.0_DFP / NORM2(xij(:, 2) - xij(:, 1))
+  CASE ("UNIT")
+    ans = 1.0_DFP / NORM2(xij(:, 2) - xij(:, 1))
+  CASE ("LINE")
     ans = 1.0_DFP
   END SELECT
 END SELECT
@@ -462,6 +476,7 @@ END PROCEDURE JacobianLine
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianTriangle
+ans = 1.0_DFP
 SELECT CASE (TRIM(from))
 CASE ("BIUNIT")
   SELECT CASE (TRIM(to))
@@ -469,6 +484,22 @@ CASE ("BIUNIT")
     ans = 1.0_DFP
   CASE ("UNIT")
     ans = 0.25_DFP
+  CASE ("TRIANGLE")
+    IF (PRESENT(xij)) THEN
+
+      IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
+        CALL TriangleArea2D(xij(1:2, 1:3), ans)
+        ans = ans / 2.0_DFP
+        RETURN
+      END IF
+
+      IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+        CALL TriangleArea3D(xij(1:3, 1:3), ans)
+        ans = ans / 2.0_DFP
+        RETURN
+      END IF
+
+    END IF
   END SELECT
 CASE ("UNIT")
   SELECT CASE (TRIM(to))
@@ -476,7 +507,44 @@ CASE ("UNIT")
     ans = 4.0_DFP
   CASE ("UNIT")
     ans = 1.0_DFP
+
+  CASE ("TRIANGLE")
+    IF (PRESENT(xij)) THEN
+
+      IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
+        CALL TriangleArea2D(xij(1:2, 1:3), ans)
+        ans = ans / 0.5_DFP
+        RETURN
+      END IF
+
+      IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+        CALL TriangleArea3D(xij(1:3, 1:3), ans)
+        ans = ans / 0.5_DFP
+        RETURN
+      END IF
+
+    END IF
   END SELECT
+
+CASE ("TRIANGLE")
+
+  IF (PRESENT(xij)) THEN
+    IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
+      CALL TriangleArea2D(xij(1:2, 1:3), ans)
+    ELSE IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+      CALL TriangleArea3D(xij(1:3, 1:3), ans)
+    END IF
+  ELSE
+    RETURN
+  END IF
+
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 2.0_DFP / ans
+  CASE ("UNIT")
+    ans = 0.5_DFP / ans
+  END SELECT
+
 END SELECT
 END PROCEDURE JacobianTriangle
 
