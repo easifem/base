@@ -15,8 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 SUBMODULE(MappingUtility) Methods
-USE BaseMethod, ONLY: UpperCase, SOFTLE, RefCoord_Hexahedron, &
-  & TriangleArea2D, TriangleArea3D
+USE BaseMethod, ONLY: UpperCase, &
+  & SOFTLE, &
+  & RefCoord_Hexahedron, &
+  & TriangleArea2D, &
+  & TriangleArea3D, &
+  & QuadrangleArea2D,  &
+  & QuadrangleArea3D
 IMPLICIT NONE
 CONTAINS
 
@@ -553,6 +558,7 @@ END PROCEDURE JacobianTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianQuadrangle
+ans = 1.0_DFP
 SELECT CASE (TRIM(from))
 CASE ("BIUNIT")
   SELECT CASE (TRIM(to))
@@ -560,6 +566,24 @@ CASE ("BIUNIT")
     ans = 1.0_DFP
   CASE ("UNIT")
     ans = 0.25_DFP
+
+  CASE ("QUADRANGLE")
+    IF (PRESENT(xij)) THEN
+
+      IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
+        CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+        ans = ans / 4.0_DFP
+        RETURN
+      END IF
+
+      IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+        CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
+        ans = ans / 4.0_DFP
+        RETURN
+      END IF
+
+    END IF
+
   END SELECT
 CASE ("UNIT")
   SELECT CASE (TRIM(to))
@@ -567,7 +591,47 @@ CASE ("UNIT")
     ans = 4.0_DFP
   CASE ("UNIT")
     ans = 1.0_DFP
+
+  CASE ("QUADRANGLE")
+
+    IF (PRESENT(xij)) THEN
+
+      IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
+        CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+        ans = ans
+        RETURN
+      END IF
+
+      IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+        CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
+        ans = ans
+        RETURN
+      END IF
+
+    END IF
+
   END SELECT
+
+CASE ("QUADRANGLE")
+
+  IF (PRESENT(xij)) THEN
+
+    IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
+      CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
+    END IF
+
+    IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+      CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
+    END IF
+  END IF
+
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT")
+    ans = 4.0_DFP / ans
+  CASE ("UNIT")
+    ans = 1.0_DFP / ans
+  END SELECT
+
 END SELECT
 END PROCEDURE JacobianQuadrangle
 
