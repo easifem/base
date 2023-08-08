@@ -15,9 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-
-ans = ans // " | "
+ans = ans//"| "
 DO ii = 1, n
-  ans = ans // TOSTRING( val( ii ) ) // " | "
+  ans = ans//TOSTRING(val(ii))//" | "
 END DO
-ans = ans // CHAR_LF
+ans = ans//CHAR_LF

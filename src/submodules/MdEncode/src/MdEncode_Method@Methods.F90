@@ -25,7 +25,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE MdEncode_1
-  !!
+
 SELECT TYPE (val)
 TYPE IS (REAL(REAL32))
   ans = TOSTRING(val)
@@ -43,8 +43,10 @@ TYPE IS (CHARACTER(LEN=*))
   ans = TRIM(val)
 TYPE IS (String)
   ans = TRIM(val)
+CLASS IS (QuadraturePoint_)
+  ans = QuadraturePoint_MdEncode(val)
 END SELECT
-  !!
+
 END PROCEDURE MdEncode_1
 !----------------------------------------------------------------------------
 !                                                   MdEncode_Method@Methods
@@ -52,20 +54,20 @@ END PROCEDURE MdEncode_1
 
 MODULE PROCEDURE MdEncode_2
 INTEGER(I4B) :: ii, n
-  !!
+
 n = SIZE(val)
-ans = " | "
+ans = "| "
 DO ii = 1, n
   ans = ans//" | "
 END DO
 ans = ans//CHAR_LF
-  !!
+
 ans = ans//" | "
 DO ii = 1, n
   ans = ans//" --- | "
 END DO
 ans = ans//CHAR_LF
-  !!
+
 SELECT TYPE (val)
 TYPE IS (REAL(REAL32))
 #include "./inc/MdEncode_2.inc"
@@ -92,7 +94,7 @@ TYPE IS (String)
   END DO
   ans = ans//CHAR_LF
 END SELECT
-  !!
+
 END PROCEDURE MdEncode_2
 
 !----------------------------------------------------------------------------
@@ -101,21 +103,21 @@ END PROCEDURE MdEncode_2
 
 MODULE PROCEDURE MdEncode_3
 INTEGER(I4B) :: ii, jj, m, n
-  !!
+
 m = SIZE(val, 1)
 n = SIZE(val, 2)
-ans = " | "
+ans = "| "
 DO ii = 1, n
   ans = ans//" | "
 END DO
 ans = ans//CHAR_LF
-  !!
+
 ans = ans//" | "
 DO ii = 1, n
   ans = ans//" --- | "
 END DO
 ans = ans//CHAR_LF
-  !!
+
 SELECT TYPE (val)
 TYPE IS (REAL(REAL32))
 #include "./inc/MdEncode_3.inc"
@@ -134,7 +136,7 @@ TYPE IS (CHARACTER(LEN=*))
 TYPE IS (String)
 #include "./inc/MdEncode_3b.inc"
 END SELECT
-  !!
+
 END PROCEDURE MdEncode_3
 
 !----------------------------------------------------------------------------

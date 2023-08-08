@@ -19,8 +19,8 @@
 ! date: 3 March 2021
 ! summary: This submodule contains the IO method for [[QuadraturePoint_]]
 
-SUBMODULE (QuadraturePoint_Method) IOMethods
-Use BaseMethod
+SUBMODULE(QuadraturePoint_Method) IOMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -29,16 +29,49 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_Display
-  !!
-  CALL Display( msg, unitno = unitno )
-  !!
-  IF( .NOT. ALLOCATED( obj%points ) ) THEN
-    RETURN
-  END IF
-  !!
-  CALL Display( obj%points, msg="# points :", unitno=unitno)
-  CALL Display( obj%txi, msg="# txi :", unitno=unitno)
-  !!
+CALL Display(msg, unitno=unitno)
+IF (.NOT. ALLOCATED(obj%points)) THEN
+  RETURN
+END IF
+CALL Display(obj%points, msg="# points :", unitno=unitno)
+CALL Display(obj%txi, msg="# txi :", unitno=unitno)
 END PROCEDURE quad_Display
+
+!----------------------------------------------------------------------------
+!                                                                 MdEncode
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_MdEncode
+INTEGER(I4B) :: ii, n, jj
+
+n = SIZE(obj%points, 2)
+
+ans = "|  |  "
+DO ii = 1, n
+  ans = ans//" | "
+END DO
+ans = ans//CHAR_LF
+
+ans = ans//"| --- | "
+DO ii = 1, n
+  ans = ans//" --- | "
+END DO
+ans = ans//CHAR_LF
+
+DO ii = 1, obj%txi
+  ans = ans//"| x"//tostring(ii)//" | "
+  DO jj = 1, n
+    ans = ans//TOSTRING(obj%points(ii, jj))//" | "
+  END DO
+  ans = ans//CHAR_LF
+END DO
+
+ans = ans//"| w | "
+DO jj = 1, n
+  ans = ans//TOSTRING(obj%points(obj%txi + 1, jj))//" | "
+END DO
+ans = ans//CHAR_LF
+
+END PROCEDURE QuadraturePoint_MdEncode
 
 END SUBMODULE IOMethods

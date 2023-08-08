@@ -33,6 +33,7 @@ PUBLIC :: GetTotalQuadraturepoints
 PUBLIC :: GetQuadraturepoints
 PUBLIC :: Outerprod
 PUBLIC :: Display
+PUBLIC :: QuadraturePoint_MdEncode
 PUBLIC :: QuadraturePointIdToName
 PUBLIC :: QuadraturePointNameToId
 
@@ -515,17 +516,28 @@ END INTERFACE Outerprod
 ! date: 23 July 2021
 ! summary:  Display the content of quadrature point
 
-INTERFACE
+INTERFACE Display
   MODULE SUBROUTINE quad_Display(obj, msg, unitno)
     CLASS(QuadraturePoint_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
   END SUBROUTINE quad_Display
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE quad_Display
 END INTERFACE Display
+
+!----------------------------------------------------------------------------
+!                                                        MdEncode@IOMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 23 July 2021
+! summary:  Display the content of quadrature point
+
+INTERFACE
+  MODULE FUNCTION QuadraturePoint_MdEncode(obj) RESULT(ans)
+    CLASS(QuadraturePoint_), INTENT(IN) :: obj
+    TYPE(String) :: ans
+  END FUNCTION QuadraturePoint_MdEncode
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre
