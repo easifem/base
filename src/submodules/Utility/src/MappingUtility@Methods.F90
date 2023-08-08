@@ -17,11 +17,14 @@
 SUBMODULE(MappingUtility) Methods
 USE BaseMethod, ONLY: UpperCase, &
   & SOFTLE, &
+  & RefCoord_Tetrahedron, &
   & RefCoord_Hexahedron, &
   & TriangleArea2D, &
   & TriangleArea3D, &
   & QuadrangleArea2D,  &
-  & QuadrangleArea3D
+  & QuadrangleArea3D, &
+  & TetrahedronVolume3D, &
+  & HexahedronVolume3D
 IMPLICIT NONE
 CONTAINS
 
@@ -494,15 +497,11 @@ CASE ("BIUNIT")
 
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL TriangleArea2D(xij(1:2, 1:3), ans)
-        ans = ans / 2.0_DFP
-        RETURN
+      ELSE
+        CALL TriangleArea3D(xij(1:3, 1:3), ans)
       END IF
 
-      IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
-        CALL TriangleArea3D(xij(1:3, 1:3), ans)
-        ans = ans / 2.0_DFP
-        RETURN
-      END IF
+      ans = ans / 2.0_DFP
 
     END IF
   END SELECT
@@ -515,19 +514,12 @@ CASE ("UNIT")
 
   CASE ("TRIANGLE")
     IF (PRESENT(xij)) THEN
-
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL TriangleArea2D(xij(1:2, 1:3), ans)
-        ans = ans / 0.5_DFP
-        RETURN
-      END IF
-
-      IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+      ELSE
         CALL TriangleArea3D(xij(1:3, 1:3), ans)
-        ans = ans / 0.5_DFP
-        RETURN
       END IF
-
+      ans = ans / 0.5_DFP
     END IF
   END SELECT
 
@@ -569,22 +561,15 @@ CASE ("BIUNIT")
 
   CASE ("QUADRANGLE")
     IF (PRESENT(xij)) THEN
-
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
-        ans = ans / 4.0_DFP
-        RETURN
-      END IF
-
-      IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+      ELSE
         CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
-        ans = ans / 4.0_DFP
-        RETURN
       END IF
-
+      ans = ans / 4.0_DFP
     END IF
-
   END SELECT
+
 CASE ("UNIT")
   SELECT CASE (TRIM(to))
   CASE ("BIUNIT")
@@ -593,36 +578,25 @@ CASE ("UNIT")
     ans = 1.0_DFP
 
   CASE ("QUADRANGLE")
-
     IF (PRESENT(xij)) THEN
-
       IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
         CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
-        ans = ans
-        RETURN
-      END IF
-
-      IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+      ELSE
         CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
-        ans = ans
-        RETURN
       END IF
-
     END IF
-
   END SELECT
 
 CASE ("QUADRANGLE")
 
   IF (PRESENT(xij)) THEN
-
     IF (SIZE(xij, 1) .EQ. 2_I4B) THEN
       CALL QuadrangleArea2D(xij(1:2, 1:4), ans)
-    END IF
-
-    IF (SIZE(xij, 1) .EQ. 3_I4B) THEN
+    ELSE
       CALL QuadrangleArea3D(xij(1:3, 1:4), ans)
     END IF
+  ELSE
+    RETURN
   END IF
 
   SELECT CASE (TRIM(to))
@@ -640,6 +614,8 @@ END PROCEDURE JacobianQuadrangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianHexahedron
+REAL(DFP) :: ans0
+ans = 1.0_DFP
 SELECT CASE (TRIM(from))
 CASE ("BIUNIT")
   SELECT CASE (TRIM(to))
@@ -647,14 +623,41 @@ CASE ("BIUNIT")
     ans = 1.0_DFP
   CASE ("UNIT")
     ans = 0.125_DFP
+  CASE ("HEXAHEDRON")
+    IF (PRESENT(xij)) THEN
+      CALL HexahedronVolume3D(xij(1:3, 1:8), ans)
+      CALL HexahedronVolume3D(RefCoord_Hexahedron(from), ans0)
+      ans = ans / ans0
+    END IF
   END SELECT
+
 CASE ("UNIT")
   SELECT CASE (TRIM(to))
   CASE ("BIUNIT")
     ans = 8.0_DFP
   CASE ("UNIT")
     ans = 1.0_DFP
+  CASE ("HEXAHEDRON")
+    IF (PRESENT(xij)) THEN
+      CALL HexahedronVolume3D(xij(1:3, 1:8), ans)
+      CALL HexahedronVolume3D(RefCoord_Hexahedron(from), ans0)
+      ans = ans / ans0
+    END IF
   END SELECT
+
+CASE ("HEXAHEDRON")
+  IF (PRESENT(xij)) THEN
+    CALL HexahedronVolume3D(xij(1:3, 1:8), ans0)
+  ELSE
+    RETURN
+  END IF
+
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT", "UNIT")
+    CALL HexahedronVolume3D(RefCoord_Hexahedron(to), ans)
+    ans = ans / ans0
+  END SELECT
+
 END SELECT
 END PROCEDURE JacobianHexahedron
 
@@ -663,6 +666,8 @@ END PROCEDURE JacobianHexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE JacobianTetrahedron
+REAL(DFP) :: ans0
+ans = 1.0_DFP
 SELECT CASE (TRIM(from))
 CASE ("BIUNIT")
   SELECT CASE (TRIM(to))
@@ -670,14 +675,41 @@ CASE ("BIUNIT")
     ans = 1.0_DFP
   CASE ("UNIT")
     ans = 0.125_DFP
+  CASE ("TETRAHEDRON")
+    IF (PRESENT(xij)) THEN
+      CALL TetrahedronVolume3D(xij(1:3, 1:4), ans)
+      CALL TetrahedronVolume3D(RefCoord_Tetrahedron(from), ans0)
+      ans = ans / ans0
+    END IF
   END SELECT
+
 CASE ("UNIT")
   SELECT CASE (TRIM(to))
   CASE ("BIUNIT")
     ans = 8.0_DFP
   CASE ("UNIT")
     ans = 1.0_DFP
+  CASE ("TETRAHEDRON")
+    IF (PRESENT(xij)) THEN
+      CALL TetrahedronVolume3D(xij(1:3, 1:4), ans)
+      CALL TetrahedronVolume3D(RefCoord_Tetrahedron(from), ans0)
+      ans = ans / ans0
+    END IF
   END SELECT
+
+CASE ("TETRAHEDRON")
+  IF (PRESENT(xij)) THEN
+    CALL TetrahedronVolume3D(xij(1:3, 1:4), ans0)
+  ELSE
+    RETURN
+  END IF
+
+  SELECT CASE (TRIM(to))
+  CASE ("BIUNIT", "UNIT")
+    CALL TetrahedronVolume3D(RefCoord_Tetrahedron(to), ans)
+    ans = ans / ans0
+  END SELECT
+
 END SELECT
 END PROCEDURE JacobianTetrahedron
 
