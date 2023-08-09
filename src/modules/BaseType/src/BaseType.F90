@@ -1151,6 +1151,10 @@ PUBLIC :: BaseInterpolation_
 !                                                     LagrangeInterpolation_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Lagrange basis functions
+
 TYPE, EXTENDS(BaseInterpolation_) :: LagrangeInterpolation_
 END TYPE LagrangeInterpolation_
 
@@ -1162,6 +1166,10 @@ TYPE(LagrangeInterpolation_), PARAMETER, PUBLIC :: &
 !----------------------------------------------------------------------------
 !                                                       HermitInterpolation_
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Hermit basis functions
 
 TYPE, EXTENDS(BaseInterpolation_) :: HermitInterpolation_
 END TYPE HermitInterpolation_
@@ -1175,6 +1183,10 @@ TYPE(HermitInterpolation_), PARAMETER, PUBLIC :: &
 !                                                  SerendipityInterpolation_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Serendipity basis functions
+
 TYPE, EXTENDS(BaseInterpolation_) :: SerendipityInterpolation_
 END TYPE SerendipityInterpolation_
 
@@ -1187,6 +1199,10 @@ TYPE(SerendipityInterpolation_), PARAMETER, PUBLIC :: &
 !                                                    HierarchyInterpolation_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Hierarchical basis functions
+
 TYPE, EXTENDS(BaseInterpolation_) :: HierarchyInterpolation_
 END TYPE HierarchyInterpolation_
 
@@ -1194,6 +1210,22 @@ PUBLIC :: HierarchyInterpolation_
 
 TYPE(HierarchyInterpolation_), PARAMETER, PUBLIC :: &
   & TypeHierarchyInterpolation = HierarchyInterpolation_()
+
+!----------------------------------------------------------------------------
+!                                                    OrthogonalInterpolation_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Orthogonal basis functions
+
+TYPE, EXTENDS(BaseInterpolation_) :: OrthogonalInterpolation_
+END TYPE OrthogonalInterpolation_
+
+PUBLIC :: OrthogonalInterpolation_
+
+TYPE(OrthogonalInterpolation_), PARAMETER, PUBLIC :: &
+  & TypeOrthogonalInterpolation = OrthogonalInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                          BaseContinuity_
