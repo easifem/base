@@ -104,7 +104,7 @@ PUBLIC :: BoundingBoxPointer_
 ! date: 25 Feb 2021
 ! summary: A data type for an Array of rank 2 of real numbers
 !
-!{!pages/RealMatrix_.md!}
+!{!pages/docs-api/RealMatrix/RealMatrix_.md!}
 
 TYPE :: RealMatrix_
   INTEGER(I4B) :: tDimension = 0_I4B
@@ -116,7 +116,7 @@ PUBLIC :: RealMatrix_
 
 TYPE(RealMatrix_), PUBLIC, PARAMETER :: &
   & TypeRealMatrix = RealMatrix_( &
-    & Val=NULL())
+  & Val=NULL())
 
 TYPE :: RealMatrixPointer_
   CLASS(RealMatrix_), POINTER :: ptr => NULL()
@@ -1204,8 +1204,8 @@ END TYPE BaseContinuity_
 
 PUBLIC :: BaseContinuity_
 
-TYPE(BaseContinuity_), PARAMETER, PUBLIC :: &
-  & TypeBaseContinuity = BaseContinuity_()
+TYPE(BaseContinuity_), PARAMETER, PUBLIC :: TypeBaseContinuity  &
+  & = BaseContinuity_()
 
 !----------------------------------------------------------------------------
 !                                                                     H1_
@@ -1216,8 +1216,7 @@ END TYPE H1_
 
 PUBLIC :: H1_
 
-TYPE(H1_), PARAMETER, PUBLIC :: &
-  & TypeH1 = H1_()
+TYPE(H1_), PARAMETER, PUBLIC :: TypeH1 = H1_()
 
 !----------------------------------------------------------------------------
 !                                                                   H1DIV_
@@ -1240,8 +1239,7 @@ END TYPE H1CURL_
 
 PUBLIC :: H1CURL_
 
-TYPE(H1CURL_), PARAMETER, PUBLIC :: &
-  & TypeH1CURL = H1CURL_()
+TYPE(H1CURL_), PARAMETER, PUBLIC :: TypeH1CURL = H1CURL_()
 
 !----------------------------------------------------------------------------
 !                                                                      DG_
@@ -1252,8 +1250,7 @@ END TYPE DG_
 
 PUBLIC :: DG_
 
-TYPE(DG_), PARAMETER, PUBLIC :: &
-  & TypeDG = DG_()
+TYPE(DG_), PARAMETER, PUBLIC :: TypeDG = DG_()
 
 !----------------------------------------------------------------------------
 !                                                                 Derivative
