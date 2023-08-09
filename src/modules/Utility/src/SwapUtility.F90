@@ -19,7 +19,6 @@ MODULE SwapUtility
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
-
 PUBLIC :: Swap
 
 !----------------------------------------------------------------------------
@@ -568,7 +567,6 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-20
-! update: 2021-11-20
 ! summary: Swap the index, it is like taking transpose.
 !
 !# Introduction
