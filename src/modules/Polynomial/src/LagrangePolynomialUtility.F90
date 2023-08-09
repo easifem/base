@@ -123,9 +123,24 @@ INTERFACE
   MODULE FUNCTION EquidistancePoint(order, elemType, xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
+    !! Order of element
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of linear elements
+    !! Default values:
+    !! Biunit line
+    !! Unit triangle
+    !! Biunit Quadrangle
+    !! Unit Tetrahedron
+    !! Biunit Hexahedron
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! Element type
+    !! Point, Line, Triangle, Quadrangle, Tetrahedron
+    !! Hexahedron, Prism, Pyramid
     REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Equidistance points in xij format
+    !! Number of rows = nsd
+    !! Number of columns = Number of points
+    !! The number of points depend upon the order and elemType
   END FUNCTION EquidistancePoint
 END INTERFACE
 
@@ -143,16 +158,22 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: elemType
-    !! element type
+    !! element type, following values are allowed.
+    !! Point, Line, Triangle, Quadrangle, Tetrahedron
+    !! Hexahedron, Prism, Pyramid
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation point type
     !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
-    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto,
+    !! GaussUltraspherical, GaussUltrasphericalLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! domain of interpolation, default values are given by
-    !! line = [-1,1]
-    !! triangle = (0,0), (0,1), (1,0)
-    !! quadrangle = [-1,1]x[-1,1]
+    !! Nodal coordinates of linear elements.
+    !! Domain of interpolation, default values are given by:
+    !! Biunit line
+    !! Unit triangle
+    !! Biunit Quadrangle
+    !! Unit Tetrahedron
+    !! Biunit Hexahedron
     CHARACTER(*), INTENT(IN) :: layout
     !! "VEFC" Vertex, Edge, Face, Cell
     !! "INCREASING" incresing order

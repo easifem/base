@@ -163,6 +163,13 @@ CASE (Prism)
   ans = EquidistancePoint_Prism(order=order, xij=xij)
 CASE (Pyramid)
   ans = EquidistancePoint_Pyramid(order=order, xij=xij)
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & unitno=stdout,  &
+    & line=__LINE__,  &
+    & routine="EquidistancePoint()",  &
+    & file=__FILE__)
 END SELECT
 END PROCEDURE EquidistancePoint
 
