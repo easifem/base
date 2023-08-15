@@ -70,30 +70,22 @@ MODULE PROCEDURE quad_Outerprod
 REAL(DFP), ALLOCATABLE :: points(:, :)
 INTEGER(I4B) :: n1, n2, n
 INTEGER(I4B) :: ii, a, b
-!!
+
 n1 = SIZE(obj1, 2)
 n2 = SIZE(obj2, 2)
 n = n1 * n2
-!!
+
 CALL Reallocate(points, 3, n)
-!!
 DO ii = 1, n1
-  !!
   a = (ii - 1) * n2 + 1
   b = ii * n2
-  !!
   points(1, a:b) = obj1%points(1, ii)
-  !!
   points(2, a:b) = obj2%points(1, :)
-  !!
   points(3, a:b) = obj1%points(2, ii) * obj2%points(2, :)
-  !!
 END DO
-!!
+
 CALL Initiate(obj=ans, points=points)
-!!
 IF (ALLOCATED(points)) DEALLOCATE (points)
-!!
 END PROCEDURE quad_Outerprod
 
 END SUBMODULE GetMethods
