@@ -17,6 +17,7 @@
 
 MODULE PyramidInterpolationUtility
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: LagrangeDegree_Pyramid
@@ -28,6 +29,44 @@ PUBLIC :: InterpolationPoint_Pyramid
 PUBLIC :: LagrangeCoeff_Pyramid
 PUBLIC :: QuadraturePoint_Pyramid
 PUBLIC :: TensorQuadraturePoint_Pyramid
+PUBLIC :: RefCoord_Pyramid
+PUBLIC :: RefElemDomain_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                     RefElemDomain_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain_Pyramid(baseContinuity, baseInterpol) &
+    & RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          RefCoord_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary:  Reference Coordinates of pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION RefCoord_Pyramid(refPyramid) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refPyramid
+    REAL(DFP) :: ans(3, 5)
+  END FUNCTION RefCoord_Pyramid
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeDegree_Pyramid
@@ -154,7 +193,7 @@ INTERFACE
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation points
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! layout
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! coords of vertices in $x_{iJ}$ format

@@ -21,6 +21,27 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     RefElemDomain_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Pyramid
+CALL Errormsg(&
+  & msg="[WORK IN PROGRESS] We are working on it", &
+  & file=__FILE__, &
+  & line=__LINE__,&
+  & routine="RefElemDomain_Prism()", &
+  & unitno=stderr)
+END PROCEDURE RefElemDomain_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                          Refcoord_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_Pyramid
+ans = 0.0_DFP
+END PROCEDURE RefCoord_Pyramid
+
+!----------------------------------------------------------------------------
 !                                                LagrangeDegree_Pyramid
 !----------------------------------------------------------------------------
 
