@@ -87,6 +87,8 @@ USE MdEncode_Method
 ! USE DISPMODULE
 USE Display_Method
 USE ErrorHandling
+USE BaseInterpolation_Method
+USE BaseContinuity_Method
 USE Utility
 USE PolynomialUtility
 USE BaseType
@@ -111,4 +113,5 @@ USE Rank2Tensor_Method
 USE VoigtRank2Tensor_Method
 USE CSRSparsity_Method
 USE CSRMatrix_Method
+
 END MODULE BaseMethod
