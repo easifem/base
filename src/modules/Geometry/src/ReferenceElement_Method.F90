@@ -60,6 +60,54 @@ PUBLIC :: ContainsPoint
 PUBLIC :: TotalEntities
 PUBLIC :: FacetTopology
 PUBLIC :: GetVTKelementType
+PUBLIC :: GetTotalEdges
+PUBLIC :: GetTotalFaces
+PUBLIC :: GetTotalCells
+
+!----------------------------------------------------------------------------
+!                                             GetTotalEdges@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-14
+! summary:  Returns number of edges in the element
+
+INTERFACE GetTotalEdges
+  MODULE PURE FUNCTION GetTotalEdges1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalEdges1
+END INTERFACE GetTotalEdges
+
+!----------------------------------------------------------------------------
+!                                             GetTotalFaces@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-14
+! summary:  Returns number of faces in the element
+
+INTERFACE GetTotalFaces
+  MODULE PURE FUNCTION GetTotalFaces1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalFaces1
+END INTERFACE GetTotalFaces
+
+!----------------------------------------------------------------------------
+!                                             GetTotalCells@GeometryMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-14
+! summary:  Returns number of faces in the element
+
+INTERFACE GetTotalCells
+  MODULE PURE FUNCTION GetTotalCells1(elemType) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    INTEGER(I4B) :: ans
+  END FUNCTION GetTotalCells1
+END INTERFACE GetTotalCells
 
 !----------------------------------------------------------------------------
 !                                                         Display@IOMethods
