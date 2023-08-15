@@ -21,6 +21,27 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                       RefElemDomain_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Prism
+CALL Errormsg(&
+  & msg="[WORK IN PROGRESS] We are working on it", &
+  & file=__FILE__, &
+  & line=__LINE__,&
+  & routine="RefElemDomain_Prism()", &
+  & unitno=stderr)
+END PROCEDURE RefElemDomain_Prism
+
+!----------------------------------------------------------------------------
+!                                                          Refcoord_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_Prism
+ans = 0.0_DFP
+END PROCEDURE RefCoord_Prism
+
+!----------------------------------------------------------------------------
 !                                                     LagrangeDegree_Prism
 !----------------------------------------------------------------------------
 
