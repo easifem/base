@@ -174,7 +174,7 @@ END INTERFACE display
 PUBLIC :: display
 
 INTERFACE Reallocate
-  MODULE PROCEDURE String_Reallocate1
+  MODULE PROCEDURE String_Reallocate1, String_Reallocate2
 END INTERFACE Reallocate
 
 PUBLIC :: Reallocate
@@ -188,7 +188,7 @@ PUBLIC :: Reallocate
 ! summary: String data type
 !
 !# Introduction
-! {!pages/String_.md}
+! {!pages/docs-api/String/String_.md}
 
 TYPE :: String
   !< OOP designed string class.
@@ -5611,7 +5611,8 @@ END SUBROUTINE strfind_2
 PURE SUBROUTINE String_Reallocate1(obj, row)
   TYPE(String), ALLOCATABLE, INTENT(INOUT) :: obj(:)
   INTEGER(I4P), INTENT(IN) :: row
-  !!
+  INTEGER(I4P) :: ii
+
   IF (ALLOCATED(obj)) THEN
     IF (SIZE(obj) .NE. row) THEN
       DEALLOCATE (obj)
@@ -5620,8 +5621,42 @@ PURE SUBROUTINE String_Reallocate1(obj, row)
   ELSE
     ALLOCATE (obj(row))
   END IF
-  !!
+  
+  do ii = 1, row
+    obj(ii) = ""
+  end do
 END SUBROUTINE String_Reallocate1
+
+!----------------------------------------------------------------------------
+!                                                                 Reallocate
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 23 July 2022
+! summary: Reallocate string
+
+PURE SUBROUTINE String_Reallocate2(obj, row, col)
+  TYPE(String), ALLOCATABLE, INTENT(INOUT) :: obj(:, :)
+  INTEGER(I4P), INTENT(IN) :: row
+  INTEGER(I4P), INTENT(IN) :: col
+  !!
+  INTEGER(I4P)  :: ii, jj
+
+  IF (ALLOCATED(obj)) THEN
+    IF ( ANY(SHAPE(obj) .NE. [row, col]) ) THEN
+      DEALLOCATE (obj)
+      ALLOCATE (obj(row, col))
+    END IF
+  ELSE
+    ALLOCATE (obj(row, col))
+  END IF
+
+  do jj = 1, col
+    do ii = 1, row
+    obj(ii, jj) = ""
+    end do
+  end do
+END SUBROUTINE String_Reallocate2
 
 END MODULE String_Class
 
