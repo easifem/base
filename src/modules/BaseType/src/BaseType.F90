@@ -1254,24 +1254,23 @@ TYPE(H1_), PARAMETER, PUBLIC :: TypeH1 = H1_()
 !                                                                   H1DIV_
 !----------------------------------------------------------------------------
 
-TYPE, EXTENDS(BaseContinuity_) :: H1DIV_
-END TYPE H1DIV_
+TYPE, EXTENDS(BaseContinuity_) :: HDIV_
+END TYPE HDIV_
 
-PUBLIC :: H1DIV_
+PUBLIC :: HDIV_
 
-TYPE(H1DIV_), PARAMETER, PUBLIC :: &
-  & TypeH1DIV = H1DIV_()
+TYPE(HDIV_), PARAMETER, PUBLIC :: TypeHDIV = HDIV_()
 
 !----------------------------------------------------------------------------
-!                                                                   H1CURL_
+!                                                                   HCURL_
 !----------------------------------------------------------------------------
 
-TYPE, EXTENDS(BaseContinuity_) :: H1CURL_
-END TYPE H1CURL_
+TYPE, EXTENDS(BaseContinuity_) :: HCURL_
+END TYPE HCURL_
 
-PUBLIC :: H1CURL_
+PUBLIC :: HCURL_
 
-TYPE(H1CURL_), PARAMETER, PUBLIC :: TypeH1CURL = H1CURL_()
+TYPE(HCURL_), PARAMETER, PUBLIC :: TypeHCURL = HCURL_()
 
 !----------------------------------------------------------------------------
 !                                                                      DG_
