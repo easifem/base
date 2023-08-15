@@ -17,6 +17,7 @@
 
 MODULE HexahedronInterpolationUtility
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: LagrangeDegree_Hexahedron
@@ -49,6 +50,28 @@ PUBLIC :: GetVertexDOF_Hexahedron
 PUBLIC :: GetEdgeDOF_Hexahedron
 PUBLIC :: GetFacetDOF_Hexahedron
 PUBLIC :: GetCellDOF_Hexahedron
+PUBLIC :: RefElemDomain_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   RefElemDomain_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain_Hexahedron(baseContinuity, baseInterpol) &
+      & RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain_Hexahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                    GetVertexDOF_Hexahedron
@@ -275,7 +298,11 @@ END INTERFACE
 ! summary:  This function returns the edge connectivity of Hexahedron
 
 INTERFACE
-  MODULE PURE FUNCTION FacetConnectivity_Hexahedron() RESULT(ans)
+  MODULE PURE FUNCTION FacetConnectivity_Hexahedron( &
+    & baseInterpol, &
+    & baseContinuity) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    CHARACTER(*), INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(4, 6)
   END FUNCTION FacetConnectivity_Hexahedron
 END INTERFACE
@@ -289,7 +316,11 @@ END INTERFACE
 ! summary:  This function returns the edge connectivity of Hexahedron
 
 INTERFACE
-  MODULE PURE FUNCTION EdgeConnectivity_Hexahedron() RESULT(ans)
+  MODULE PURE FUNCTION EdgeConnectivity_Hexahedron( &
+    & baseInterpol,  &
+    & baseContinuity) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    CHARACTER(*), INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(2, 12)
   END FUNCTION EdgeConnectivity_Hexahedron
 END INTERFACE

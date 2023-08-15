@@ -20,6 +20,14 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                 RefElemDomain_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Hexahedron
+ans = "BIUNIT"
+END PROCEDURE RefElemDomain_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                 GetVertexDOF_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -151,14 +159,38 @@ END PROCEDURE EdgeConnectivity_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetConnectivity_Hexahedron
-ans(:, 1) = [1, 4, 3, 2] ! back
-ans(:, 2) = [5, 6, 7, 8] ! front
-ans(:, 3) = [1, 5, 8, 4] ! left
-ans(:, 4) = [2, 3, 7, 6] ! right
-ans(:, 5) = [3, 4, 8, 7] ! bottom
-ans(:, 6) = [1, 2, 6, 5] ! top
+TYPE(String) :: baseInterpol0
+TYPE(String) :: baseContinuity0
 
-! B, F, L, R, T, Bo
+baseInterpol0 = UpperCase(baseInterpol)
+baseContinuity0 = UpperCase(baseContinuity)
+
+SELECT CASE (baseInterpol0%chars())
+CASE ( &
+  & "HIERARCHYPOLYNOMIAL", &
+  & "HIERARCHY", &
+  & "HEIRARCHYPOLYNOMIAL", &
+  & "HEIRARCHY", &
+  & "HIERARCHYINTERPOLATION", &
+  & "HEIRARCHYINTERPOLATION", &
+  & "ORTHOGONALPOLYNOMIAL", &
+  & "ORTHOGONAL", &
+  & "ORTHOGONALINTERPOLATION")
+  ans(:, 1) = [1, 2, 3, 4] ! back
+  ans(:, 2) = [5, 6, 7, 8] ! front
+  ans(:, 3) = [1, 4, 8, 5] ! left
+  ans(:, 4) = [2, 3, 7, 6] ! right
+  ans(:, 5) = [1, 2, 6, 5] ! bottom
+  ans(:, 6) = [4, 3, 7, 8] ! top
+CASE DEFAULT
+  ans(:, 1) = [1, 4, 3, 2] ! back
+  ans(:, 2) = [5, 6, 7, 8] ! front
+  ans(:, 3) = [1, 5, 8, 4] ! left
+  ans(:, 4) = [2, 3, 7, 6] ! right
+  ans(:, 5) = [1, 2, 6, 5] ! bottom
+  ans(:, 6) = [3, 4, 8, 7] ! top
+END SELECT
+
 END PROCEDURE FacetConnectivity_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -520,8 +552,13 @@ ijk(:, 6) = [p + 1, 1, r + 1]
 ijk(:, 7) = [p + 1, q + 1, r + 1]
 ijk(:, 8) = [1, q + 1, r + 1]
 
-edgeConnectivity = EdgeConnectivity_Hexahedron()
-facetConnectivity = FacetConnectivity_Hexahedron()
+edgeConnectivity = EdgeConnectivity_Hexahedron( &
+  & baseInterpol="Lagrange",  &
+  & baseContinuity="H1")
+
+facetConnectivity = FacetConnectivity_Hexahedron( &
+  & baseInterpol="Lagrange",  &
+  & baseContinuity="H1")
 
 IF (ALL([p, q, r] .GE. 1_I4B)) THEN
   DO ii = 1, 8
