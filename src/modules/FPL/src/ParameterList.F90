@@ -657,15 +657,25 @@ function ParameterList_Set7D(this, Key, Value) result(FPLerror)
   end if
 end function ParameterList_Set7D
 
+!----------------------------------------------------------------------------
+!                                                                 
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-13 
+! summary: Return a scalar Value given the Key
+
 function ParameterList_Get0D(this, Key, Value) result(FPLerror)
-
-  !< Return a scalar Value given the Key
-
-  class(ParameterList_t), intent(IN) :: this           !< Parameter List
-  character(len=*), intent(IN) :: Key            !< String Key
-  class(*), intent(INOUT) :: Value          !< Returned value
-  class(*), pointer :: Wrapper        !< Wrapper
-  integer(I4P) :: FPLerror       !< Error flag
+  class(ParameterList_t), intent(IN) :: this           
+    !! Parameter List
+  character(*), intent(IN) :: Key            
+    !! String Key
+  class(*), intent(INOUT) :: Value          
+    !! Returned value
+  class(*), pointer :: Wrapper        
+    !! Wrapper
+  integer(I4P) :: FPLerror       
+    !! Error flag
 
   FPLerror = FPLSuccess
   nullify (Wrapper)
@@ -676,13 +686,13 @@ function ParameterList_Get0D(this, Key, Value) result(FPLerror)
       call Wrapper%Get(Value=Value)
     class Default
       FPLerror = FPLWrapperError
-                    call msg%Error(txt='Getting [Key="'//Key//'"]: Dimensions do not match. Value was not modified.', &
-                     file=__FILE__, line=__LINE__)
+      call msg%Error(txt='Getting [Key="'//Key//'"]: Dimensions do not match. Value was not modified.', &
+        file=__FILE__, line=__LINE__)
     end select
   else
     FPLerror = FPLWrapperFactoryError
-            call msg%Error(txt='Getting [Key="'//Key//'"]: Not present. Value was not modified.', &
-                   file=__FILE__, line=__LINE__)
+    call msg%Error(txt='Getting [Key="'//Key//'"]: Not present. Value was not modified.', &
+            file=__FILE__, line=__LINE__)
   end if
 end function ParameterList_Get0D
 
