@@ -21,7 +21,73 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                         LagrangeDOF
+!                                                             RefElemDomain
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain
+SELECT CASE (elemType)
+CASE (Point)
+  ans = ""
+
+CASE (Line)
+  ans = RefElemDomain_Line(baseContinuity, baseInterpol)
+
+CASE (Triangle)
+  ans = RefElemDomain_Triangle(baseContinuity, baseInterpol)
+
+CASE (Quadrangle)
+  ans = RefElemDomain_Quadrangle(baseContinuity, baseInterpol)
+
+CASE (Tetrahedron)
+  ans = RefElemDomain_Tetrahedron(baseContinuity, baseInterpol)
+
+CASE (Hexahedron)
+  ans = RefElemDomain_Hexahedron(baseContinuity, baseInterpol)
+
+CASE (Prism)
+  ans = RefElemDomain_Prism(baseContinuity, baseInterpol)
+
+CASE (Pyramid)
+  ans = RefElemDomain_Pyramid(baseContinuity, baseInterpol)
+END SELECT
+
+END PROCEDURE RefElemDomain
+
+!----------------------------------------------------------------------------
+!                                                                  RefCoord
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord
+SELECT CASE (elemType)
+CASE (Point)
+  CALL Reallocate(ans, 3_I4B, 1_I4B)
+
+CASE (Line)
+  ans = RefCoord_Line(refElem)
+
+CASE (Triangle)
+  ans = RefCoord_Triangle(refElem)
+
+CASE (Quadrangle)
+  ans = RefCoord_Quadrangle(refElem)
+
+CASE (Tetrahedron)
+  ans = RefCoord_Tetrahedron(refElem)
+
+CASE (Hexahedron)
+  ans = RefCoord_Hexahedron(refElem)
+
+CASE (Prism)
+  ans = RefCoord_Prism(refElem)
+
+CASE (Pyramid)
+  ans = RefCoord_Pyramid(refElem)
+
+END SELECT
+END PROCEDURE RefCoord
+
+!----------------------------------------------------------------------------
+!                                                               LagrangeDOF
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDOF
@@ -149,20 +215,28 @@ CASE (Point)
   ELSE
     ALLOCATE (ans(0, 0))
   END IF
+
 CASE (Line)
   ans = EquidistancePoint_Line(order=order, xij=xij)
+
 CASE (Triangle)
   ans = EquidistancePoint_Triangle(order=order, xij=xij)
+
 CASE (Quadrangle)
   ans = EquidistancePoint_Quadrangle(order=order, xij=xij)
+
 CASE (Tetrahedron)
   ans = EquidistancePoint_Tetrahedron(order=order, xij=xij)
+
 CASE (Hexahedron)
   ans = EquidistancePoint_Hexahedron(order=order, xij=xij)
+
 CASE (Prism)
   ans = EquidistancePoint_Prism(order=order, xij=xij)
+
 CASE (Pyramid)
   ans = EquidistancePoint_Pyramid(order=order, xij=xij)
+
 CASE DEFAULT
   CALL Errormsg(&
     & msg="No CASE FOUND: elemType="//tostring(elemType), &
@@ -185,34 +259,65 @@ CASE (Point)
   ELSE
     ALLOCATE (ans(0, 0))
   END IF
+
 CASE (Line)
   ans = InterpolationPoint_Line(&
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
     & layout=layout)
+
 CASE (Triangle)
   ans = InterpolationPoint_Triangle( &
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
     & layout=layout)
+
 CASE (Quadrangle)
-  ans = InterpolationPoint_Quadrangle(order=order, ipType=ipType, xij=xij, &
+  ans = InterpolationPoint_Quadrangle( &
+    & order=order, &
+    & ipType=ipType, &
+    & xij=xij, &
     & layout=layout)
+
 CASE (Tetrahedron)
-  ans = InterpolationPoint_Tetrahedron(order=order, ipType=ipType, xij=xij, &
+  ans = InterpolationPoint_Tetrahedron( &
+    & order=order, &
+    & ipType=ipType, &
+    & xij=xij, &
     & layout=layout)
+
 CASE (Hexahedron)
-  ans = InterpolationPoint_Hexahedron(order=order, ipType=ipType, xij=xij, &
-    &layout=layout)
-CASE (Prism)
-  ans = InterpolationPoint_Prism(order=order, ipType=ipType, xij=xij, &
+  ans = InterpolationPoint_Hexahedron( &
+    & order=order, &
+    & ipType=ipType, &
+    & xij=xij, &
     & layout=layout)
+
+CASE (Prism)
+  ans = InterpolationPoint_Prism( &
+    & order=order, &
+    & ipType=ipType, &
+    & xij=xij, &
+    & layout=layout)
+
 CASE (Pyramid)
-  ans = InterpolationPoint_Pyramid(order=order, ipType=ipType, xij=xij, &
-  & layout=layout)
+  ans = InterpolationPoint_Pyramid( &
+    & order=order, &
+    & ipType=ipType, &
+    & xij=xij, &
+    & layout=layout)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & unitno=stdout,  &
+    & line=__LINE__,  &
+    & routine="InterpolationPoint()",  &
+    & file=__FILE__)
 END SELECT
+
 END PROCEDURE InterpolationPoint
 
 !----------------------------------------------------------------------------
@@ -222,21 +327,34 @@ END PROCEDURE InterpolationPoint
 MODULE PROCEDURE LagrangeCoeff1
 SELECT CASE (elemType)
 CASE (Point)
-  !!
 CASE (Line)
   ans = LagrangeCoeff_Line(order=order, xij=xij, i=i)
+
 CASE (Triangle)
   ans = LagrangeCoeff_Triangle(order=order, xij=xij, i=i)
+
 CASE (Quadrangle)
   ans = LagrangeCoeff_Quadrangle(order=order, xij=xij, i=i)
+
 CASE (Tetrahedron)
   ans = LagrangeCoeff_Tetrahedron(order=order, xij=xij, i=i)
+
 CASE (Hexahedron)
   ans = LagrangeCoeff_Hexahedron(order=order, xij=xij, i=i)
+
 CASE (Prism)
   ans = LagrangeCoeff_Prism(order=order, xij=xij, i=i)
+
 CASE (Pyramid)
   ans = LagrangeCoeff_Pyramid(order=order, xij=xij, i=i)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & unitno=stdout,  &
+    & line=__LINE__,  &
+    & routine="LagrangeCoeff1()",  &
+    & file=__FILE__)
 END SELECT
 END PROCEDURE LagrangeCoeff1
 
@@ -247,23 +365,36 @@ END PROCEDURE LagrangeCoeff1
 MODULE PROCEDURE LagrangeCoeff2
 SELECT CASE (elemType)
 CASE (Point)
-  !!
+
 CASE (Line)
   ans = LagrangeCoeff_Line(order=order, xij=xij)
+
 CASE (Triangle)
   ans = LagrangeCoeff_Triangle(order=order, xij=xij)
+
 CASE (Quadrangle)
   ans = LagrangeCoeff_Quadrangle(order=order, xij=xij)
+
 CASE (Tetrahedron)
   ans = LagrangeCoeff_Tetrahedron(order=order, xij=xij)
+
 CASE (Hexahedron)
   ans = LagrangeCoeff_Hexahedron(order=order, xij=xij)
+
 CASE (Prism)
   ans = LagrangeCoeff_Prism(order=order, xij=xij)
+
 CASE (Pyramid)
   ans = LagrangeCoeff_Pyramid(order=order, xij=xij)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & unitno=stdout,  &
+    & line=__LINE__,  &
+    & routine="LagrangeCoeff2()",  &
+    & file=__FILE__)
 END SELECT
-  !!
 END PROCEDURE LagrangeCoeff2
 
 !----------------------------------------------------------------------------
@@ -273,23 +404,36 @@ END PROCEDURE LagrangeCoeff2
 MODULE PROCEDURE LagrangeCoeff3
 SELECT CASE (elemType)
 CASE (Point)
-  !!
+
 CASE (Line)
   ans = LagrangeCoeff_Line(order=order, i=i, v=v, isVandermonde=.TRUE.)
+
 CASE (Triangle)
   ans = LagrangeCoeff_Triangle(order=order, i=i, v=v, isVandermonde=.TRUE.)
+
 CASE (Quadrangle)
   ans = LagrangeCoeff_Quadrangle(order=order, i=i, v=v, isVandermonde=.TRUE.)
+
 CASE (Tetrahedron)
   ans = LagrangeCoeff_Tetrahedron(order=order, i=i, v=v, isVandermonde=.TRUE.)
+
 CASE (Hexahedron)
   ans = LagrangeCoeff_Hexahedron(order=order, i=i, v=v, isVandermonde=.TRUE.)
+
 CASE (Prism)
   ans = LagrangeCoeff_Prism(order=order, i=i, v=v, isVandermonde=.TRUE.)
+
 CASE (Pyramid)
   ans = LagrangeCoeff_Pyramid(order=order, i=i, v=v, isVandermonde=.TRUE.)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & unitno=stdout,  &
+    & line=__LINE__,  &
+    & routine="LagrangeCoeff2()",  &
+    & file=__FILE__)
 END SELECT
-  !!
 END PROCEDURE LagrangeCoeff3
 
 !----------------------------------------------------------------------------
@@ -299,23 +443,36 @@ END PROCEDURE LagrangeCoeff3
 MODULE PROCEDURE LagrangeCoeff4
 SELECT CASE (elemType)
 CASE (Point)
-  !!
+
 CASE (Line)
   ans = LagrangeCoeff_Line(order=order, i=i, v=v, ipiv=ipiv)
+
 CASE (Triangle)
   ans = LagrangeCoeff_Triangle(order=order, i=i, v=v, ipiv=ipiv)
+
 CASE (Quadrangle)
   ans = LagrangeCoeff_Quadrangle(order=order, i=i, v=v, ipiv=ipiv)
+
 CASE (Tetrahedron)
   ans = LagrangeCoeff_Tetrahedron(order=order, i=i, v=v, ipiv=ipiv)
+
 CASE (Hexahedron)
   ans = LagrangeCoeff_Hexahedron(order=order, i=i, v=v, ipiv=ipiv)
+
 CASE (Prism)
   ans = LagrangeCoeff_Prism(order=order, i=i, v=v, ipiv=ipiv)
+
 CASE (Pyramid)
   ans = LagrangeCoeff_Pyramid(order=order, i=i, v=v, ipiv=ipiv)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & unitno=stdout,  &
+    & line=__LINE__,  &
+    & routine="LagrangeCoeff2()",  &
+    & file=__FILE__)
 END SELECT
-  !!
 END PROCEDURE LagrangeCoeff4
 
 !----------------------------------------------------------------------------
