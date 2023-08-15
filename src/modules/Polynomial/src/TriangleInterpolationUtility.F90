@@ -17,6 +17,7 @@
 
 MODULE TriangleInterpolationUtility
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: LagrangeDegree_Triangle
@@ -40,6 +41,49 @@ PUBLIC :: RefCoord_Triangle
 PUBLIC :: LagrangeEvalAll_Triangle
 PUBLIC :: QuadraturePoint_Triangle
 PUBLIC :: IJ2VEFC_Triangle
+PUBLIC :: FacetConnectivity_Triangle
+PUBLIC :: RefElemDomain_Triangle
+
+!----------------------------------------------------------------------------
+!                                                   RefElemDomain_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain_Triangle(baseContinuity, baseInterpol) &
+    & RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain_Triangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               FacetConnectivity_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-10
+! summary:  This function returns the edge connectivity of Triangle
+
+INTERFACE
+  MODULE FUNCTION FacetConnectivity_Triangle( &
+    & baseInterpol, &
+    & baseContinuity) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    INTEGER(I4B) :: ans(2, 3)
+    !! rows represents the end points of an edges
+    !! columns denote the edge (facet)
+  END FUNCTION FacetConnectivity_Triangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                         IJ2VEFC_Triangle
@@ -485,9 +529,11 @@ INTERFACE Dubiner_Triangle
     !! order of polynomial space
     REAL(DFP), INTENT(IN) :: x(:), y(:)
     !! x and y coordinates, total points = SIZE(x)*SIZE(y)
+    !! x denotes the coordinates along the x direction
+    !! y denotes the coordinates along the y direction
     CHARACTER(*), INTENT(IN) :: refTriangle
-    !! "unit"
-    !! "biunit"
+    !! "UNIT"
+    !! "BIUNIT"
     REAL(DFP) :: ans(SIZE(x) * SIZE(y), (order + 1) * (order + 2) / 2)
     !! shape functions
     !! ans(:, j), jth shape functions at all points
@@ -825,17 +871,24 @@ INTERFACE HeirarchicalBasis_Triangle
   MODULE PURE FUNCTION HeirarchicalBasis_Triangle1(order, pe1, pe2, pe3,&
     & xij, refTriangle) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    !! order in the cell of triangle, it should be greater than 2
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
     INTEGER(I4B), INTENT(IN) :: pe1
-    !! order of interpolation on edge e1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
     INTEGER(I4B), INTENT(IN) :: pe2
-    !! order of interpolation on edge e2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
     INTEGER(I4B), INTENT(IN) :: pe3
-    !! order of interpolation on edge e3
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points of evaluation in xij format
+    !! Points of evaluation in xij format
     CHARACTER(*), INTENT(IN) :: refTriangle
-    !! reference triangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
     REAL(DFP) :: ans( &
       & SIZE(xij, 2), &
       & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2))

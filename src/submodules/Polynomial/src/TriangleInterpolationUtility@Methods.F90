@@ -22,6 +22,80 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                   RefElemDomain_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Triangle
+SELECT CASE (UpperCase(baseContinuity))
+CASE ("H1")
+  SELECT CASE (UpperCase(baseInterpol))
+  CASE ("LAGRANGEPOLYNOMIAL", "LAGRANGE", "LAGRANGEINTERPOLATION")
+    ans = "UNIT"
+  CASE ("SERENDIPITYPOLYNOMIAL", "SERENDIPITY", "SERENDIPITYINTERPOLATION")
+    ans = "UNIT"
+  CASE ("HERMITPOLYNOMIAL", "HERMIT", "HERMITINTERPOLATION")
+    ans = "UNIT"
+  CASE ( &
+    & "HIERARCHICALPOLYNOMIAL", &
+    & "HIERARCHY", &
+    & "HEIRARCHICALPOLYNOMIAL", &
+    & "HEIRARCHY", &
+    & "HIERARCHYINTERPOLATION", &
+    & "HEIRARCHYINTERPOLATION")
+    ans = "BIUNIT"
+  CASE ("ORTHOGONALPOLYNOMIAL", "ORTHOGONAL", "ORTHOGONALINTERPOLATION")
+    ans = "BIUNIT"
+  CASE DEFAULT
+    CALL Errormsg(&
+      & msg="No case found for given baseInterpol="//TRIM(baseInterpol), &
+      & file=__FILE__, &
+      & line=__LINE__,&
+      & routine="RefElemDomain_Triangle()", &
+      & unitno=stderr)
+  END SELECT
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No case found for given baseContinuity="//TRIM(baseContinuity), &
+    & file=__FILE__, &
+    & line=__LINE__,&
+    & routine="RefElemDomain_Triangle()", &
+    & unitno=stderr)
+END SELECT
+END PROCEDURE RefElemDomain_Triangle
+
+!----------------------------------------------------------------------------
+!                                                       FacetConnectivity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetConnectivity_Triangle
+TYPE(String) :: baseInterpol0
+TYPE(String) :: baseContinuity0
+
+baseInterpol0 = UpperCase(baseInterpol)
+baseContinuity0 = UpperCase(baseContinuity)
+
+SELECT CASE (baseInterpol0%chars())
+CASE ( &
+  & "HIERARCHYPOLYNOMIAL", &
+  & "HIERARCHY", &
+  & "HEIRARCHYPOLYNOMIAL", &
+  & "HEIRARCHY", &
+  & "HIERARCHYINTERPOLATION", &
+  & "HEIRARCHYINTERPOLATION", &
+  & "ORTHOGONALPOLYNOMIAL", &
+  & "ORTHOGONAL", &
+  & "ORTHOGONALINTERPOLATION")
+  ans(:, 1) = [1, 2]
+  ans(:, 2) = [1, 3]
+  ans(:, 3) = [2, 3]
+CASE DEFAULT
+  ans(:, 1) = [1, 2]
+  ans(:, 2) = [2, 3]
+  ans(:, 3) = [3, 1]
+END SELECT
+END PROCEDURE FacetConnectivity_Triangle
+
+!----------------------------------------------------------------------------
 !                                                         RefTriangleCoord
 !----------------------------------------------------------------------------
 
