@@ -13,12 +13,53 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
 SUBMODULE(QuadrangleInterpolationUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                   RefElemDomain_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Quadrangle
+ans = "BIUNIT"
+END PROCEDURE RefElemDomain_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                       FacetConnectivity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetConnectivity_Quadrangle
+TYPE(String) :: baseInterpol0
+TYPE(String) :: baseContinuity0
+
+baseInterpol0 = UpperCase(baseInterpol)
+baseContinuity0 = UpperCase(baseContinuity)
+
+SELECT CASE (baseInterpol0%chars())
+CASE ( &
+  & "HIERARCHYPOLYNOMIAL", &
+  & "HIERARCHY", &
+  & "HEIRARCHYPOLYNOMIAL", &
+  & "HEIRARCHY", &
+  & "HIERARCHYINTERPOLATION", &
+  & "HEIRARCHYINTERPOLATION", &
+  & "ORTHOGONALPOLYNOMIAL", &
+  & "ORTHOGONAL", &
+  & "ORTHOGONALINTERPOLATION")
+  ans(:, 1) = [1, 2]
+  ans(:, 2) = [4, 3]
+  ans(:, 3) = [1, 4]
+  ans(:, 4) = [2, 3]
+CASE DEFAULT
+  ans(:, 1) = [1, 2]
+  ans(:, 2) = [2, 3]
+  ans(:, 3) = [3, 4]
+  ans(:, 4) = [4, 1]
+END SELECT
+END PROCEDURE FacetConnectivity_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                               QuadratureNumber_Quadrangle
