@@ -32,8 +32,13 @@ MODULE PROCEDURE Initiate_ref_Hexahedron
 INTEGER(I4B) :: ii, jj
 INTEGER(I4B) :: p1p2(2, 12), lloop(4, 6), vol(8, 1)
 
-p1p2 = EdgeConnectivity_Hexahedron()
-lloop = FacetConnectivity_Hexahedron()
+p1p2 = EdgeConnectivity_Hexahedron( &
+  & baseInterpol="LAGRANGE",  &
+  & baseContinuity="H1")
+
+lloop = FacetConnectivity_Hexahedron( &
+  & baseInterpol="LAGRANGE",  &
+  & baseContinuity="H1")
 
 vol(:, 1) = arange(1_I4B, 8_I4B)
 
