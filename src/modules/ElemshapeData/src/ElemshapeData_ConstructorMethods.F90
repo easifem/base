@@ -41,7 +41,7 @@ PUBLIC :: ASSIGNMENT(=)
 !- This subroutine allocates the memory for various matrices in the object.
 !- This subroutine belongs to the generic interface called `Allocate()`.
 
-INTERFACE
+INTERFACE ALLOCATE
   MODULE PURE SUBROUTINE elemsd_Allocate(obj, nsd, xidim, nns, nips)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! object to be returned
@@ -54,10 +54,6 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: nips
     !! number of integration points
   END SUBROUTINE elemsd_Allocate
-END INTERFACE
-
-INTERFACE ALLOCATE
-  MODULE PROCEDURE elemsd_Allocate
 END INTERFACE ALLOCATE
 
 !----------------------------------------------------------------------------
@@ -68,7 +64,7 @@ END INTERFACE ALLOCATE
 ! date: 23 July 2021
 ! summary: This routine initiate the shape data
 
-INTERFACE
+INTERFACE Initiate
   MODULE SUBROUTINE elemsd_initiate1(obj, quad, refelem, continuityType, &
     & interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
@@ -82,10 +78,6 @@ INTERFACE
     CHARACTER(*), INTENT(IN) :: interpolType
     !! interpolation/polynomial family type
   END SUBROUTINE elemsd_initiate1
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE elemsd_initiate1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -96,15 +88,11 @@ END INTERFACE Initiate
 ! date: 20 May 2022
 ! summary: Copy data from an instance of elemshapedata to another instance
 
-INTERFACE
+INTERFACE Initiate
   MODULE SUBROUTINE elemsd_initiate2(obj1, obj2)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj1
     TYPE(ElemshapeData_), INTENT(IN) :: obj2
   END SUBROUTINE elemsd_initiate2
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE elemsd_initiate2
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
@@ -124,15 +112,11 @@ END INTERFACE
 ! This subroutine initiates an instance of ElemshapeData by copying data
 ! from an instance of STElemshapeData.
 
-INTERFACE
+INTERFACE Initiate
   MODULE SUBROUTINE elemsd_initiate3(obj1, obj2)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj1
     TYPE(STElemshapeData_), INTENT(IN) :: obj2
   END SUBROUTINE elemsd_initiate3
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE elemsd_initiate3
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
@@ -152,15 +136,11 @@ END INTERFACE
 ! This routine initiate an instance of STElemshapeData by copying data
 ! from the instance of ElemshapeData
 
-INTERFACE
+INTERFACE Initiate
   MODULE SUBROUTINE elemsd_initiate4(obj1, obj2)
     TYPE(STElemshapeData_), INTENT(INOUT) :: obj1
     TYPE(ElemshapeData_), INTENT(IN) :: obj2
   END SUBROUTINE elemsd_initiate4
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE elemsd_initiate4
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
@@ -179,15 +159,11 @@ END INTERFACE
 ! This routine initiates an instance of STElemshapeData by copying data
 ! from the instance of STElemshapeData.
 
-INTERFACE
+INTERFACE Initiate
   MODULE SUBROUTINE elemsd_initiate5(obj1, obj2)
     TYPE(STElemshapeData_), INTENT(INOUT) :: obj1
     TYPE(STElemshapeData_), INTENT(IN) :: obj2
   END SUBROUTINE elemsd_initiate5
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE elemsd_initiate5
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
@@ -219,16 +195,12 @@ END INTERFACE
 !@endnote
 !
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE stsd_initiate(obj, elemsd)
     TYPE(STElemshapeData_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
     TYPE(ElemshapeData_), INTENT(IN) :: elemsd
     !! It has information about location shape function for time element
   END SUBROUTINE stsd_initiate
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE stsd_initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
@@ -245,14 +217,10 @@ END INTERFACE Initiate
 ! routine belongs to `Allocate()`
 !
 
-INTERFACE
+INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE elemsd_Deallocate(obj)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
   END SUBROUTINE elemsd_Deallocate
-END INTERFACE
-
-INTERFACE DEALLOCATE
-  MODULE PROCEDURE elemsd_Deallocate
 END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
@@ -263,15 +231,11 @@ END INTERFACE DEALLOCATE
 ! date: 30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseInterpolation_]]
 
-INTERFACE
+INTERFACE BaseInterpolation
   MODULE FUNCTION elemsd_BaseInterpolation(childName) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: childName
     CLASS(BaseInterpolation_), POINTER :: ans
   END FUNCTION elemsd_BaseInterpolation
-END INTERFACE
-
-INTERFACE BaseInterpolation
-  MODULE PROCEDURE elemsd_BaseInterpolation
 END INTERFACE BaseInterpolation
 
 !----------------------------------------------------------------------------
@@ -282,15 +246,11 @@ END INTERFACE BaseInterpolation
 ! date: 30 Aug 2021
 ! summary: This routine returns a pointer to a child of [[BaseContinuity_]]
 
-INTERFACE
+INTERFACE BaseContinuity
   MODULE FUNCTION elemsd_BaseContinuity(childName) RESULT(Ans)
     CHARACTER(*), INTENT(IN) :: childName
     CLASS(BaseContinuity_), POINTER :: ans
   END FUNCTION elemsd_BaseContinuity
-END INTERFACE
-
-INTERFACE BaseContinuity
-  MODULE PROCEDURE elemsd_BaseContinuity
 END INTERFACE BaseContinuity
 
 END MODULE ElemshapeData_ConstructorMethods

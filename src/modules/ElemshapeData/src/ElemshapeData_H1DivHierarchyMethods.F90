@@ -15,12 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_H1DivHierarchyMethods
+MODULE ElemshapeData_H1DivHierarchyMethods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                    Initiate@H1DivHierarchy
@@ -41,7 +41,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
-    CLASS(H1Div_), INTENT(IN) :: continuityType
+    CLASS(HDiv_), INTENT(IN) :: continuityType
     CLASS(HierarchyInterpolation_), INTENT(IN) :: interpolType
   END SUBROUTINE H1Div_Hierarchy
 END INTERFACE
@@ -50,4 +50,4 @@ INTERFACE Initiate
   MODULE PROCEDURE H1Div_Hierarchy
 END INTERFACE Initiate
 
-end module ElemshapeData_H1DivHierarchyMethods
+END MODULE ElemshapeData_H1DivHierarchyMethods

@@ -15,12 +15,12 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_H1HermitMethods
+MODULE ElemshapeData_H1HermitMethods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                          Initiate@H1Hermit
@@ -50,4 +50,4 @@ INTERFACE Initiate
   MODULE PROCEDURE H1_Hermit
 END INTERFACE Initiate
 
-end module ElemshapeData_H1HermitMethods
+END MODULE ElemshapeData_H1HermitMethods
