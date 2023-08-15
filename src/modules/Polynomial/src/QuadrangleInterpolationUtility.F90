@@ -16,6 +16,7 @@
 
 MODULE QuadrangleInterpolationUtility
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: LagrangeDegree_Quadrangle
@@ -39,6 +40,49 @@ PUBLIC :: IJ2VEFC_Quadrangle_AntiClockwise
 PUBLIC :: LagrangeEvalAll_Quadrangle
 PUBLIC :: QuadraturePoint_Quadrangle
 PUBLIC :: QuadratureNumber_Quadrangle
+PUBLIC :: FacetConnectivity_Quadrangle
+PUBLIC :: RefElemDomain_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                   RefElemDomain_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain_Quadrangle(baseContinuity, baseInterpol) &
+      & RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain_Quadrangle
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                               FacetConnectivity_Quadrangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-10
+! summary:  This function returns the edge connectivity of Quadrangle
+
+INTERFACE
+  MODULE FUNCTION FacetConnectivity_Quadrangle( &
+    & baseInterpol, &
+    & baseContinuity) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    INTEGER(I4B) :: ans(2, 4)
+    !! rows represents the end points of an edges
+    !! columns denote the edge (facet)
+  END FUNCTION FacetConnectivity_Quadrangle
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                 QuadratureNumber_Quadrangle
