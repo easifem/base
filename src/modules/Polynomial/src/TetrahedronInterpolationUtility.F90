@@ -17,6 +17,7 @@
 
 MODULE TetrahedronInterpolationUtility
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 
@@ -51,6 +52,29 @@ PUBLIC :: GetCellDOF_Tetrahedron
 
 PUBLIC :: LagrangeEvalAll_Tetrahedron
 PUBLIC :: QuadraturePoint_Tetrahedron
+
+PUBLIC :: RefElemDomain_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                                 RefElemDomain_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain_Tetrahedron(baseContinuity, baseInterpol) &
+            & RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain_Tetrahedron
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   GetVertexDOF_Tetrahedron
@@ -149,7 +173,7 @@ END INTERFACE GetFacetDOF_Tetrahedron
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-07-24
-! summary:
+! summary: Returns the number of cell degree of freedom
 
 INTERFACE GetCellDOF_Tetrahedron
   MODULE PURE FUNCTION GetCellDOF_Tetrahedron1(p) &
@@ -165,11 +189,15 @@ END INTERFACE GetCellDOF_Tetrahedron
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date:
-! summary:  This function returns the edge connectivity of Tetrahedron
+! date: 2023-08-10
+! summary:  This function returns the facet-connectivity of Tetrahedron
 
 INTERFACE
-  MODULE PURE FUNCTION FacetConnectivity_Tetrahedron() RESULT(ans)
+  MODULE PURE FUNCTION FacetConnectivity_Tetrahedron( &
+    & baseInterpol, &
+    & baseContinuity) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    CHARACTER(*), INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(3, 4)
   END FUNCTION FacetConnectivity_Tetrahedron
 END INTERFACE
@@ -183,7 +211,11 @@ END INTERFACE
 ! summary:  This function returns the edge connectivity of Tetrahedron
 
 INTERFACE
-  MODULE PURE FUNCTION EdgeConnectivity_Tetrahedron() RESULT(ans)
+  MODULE PURE FUNCTION EdgeConnectivity_Tetrahedron( &
+    & baseInterpol,  &
+    & baseContinuity) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    CHARACTER(*), INTENT(IN) :: baseContinuity
     INTEGER(I4B) :: ans(2, 6)
   END FUNCTION EdgeConnectivity_Tetrahedron
 END INTERFACE

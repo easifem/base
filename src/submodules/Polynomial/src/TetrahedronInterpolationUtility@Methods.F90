@@ -21,6 +21,48 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                 RefElemDomain_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Tetrahedron
+SELECT CASE (UpperCase(baseContinuity))
+CASE ("H1")
+  SELECT CASE (UpperCase(baseInterpol))
+  CASE ("LAGRANGEPOLYNOMIAL", "LAGRANGE", "LAGRANGEINTERPOLATION")
+    ans = "UNIT"
+  CASE ("SERENDIPITYPOLYNOMIAL", "SERENDIPITY", "SERENDIPITYINTERPOLATION")
+    ans = "UNIT"
+  CASE ("HERMITPOLYNOMIAL", "HERMIT", "HERMITINTERPOLATION")
+    ans = "UNIT"
+  CASE ( &
+    & "HIERARCHICALPOLYNOMIAL", &
+    & "HIERARCHY", &
+    & "HEIRARCHICALPOLYNOMIAL", &
+    & "HEIRARCHY", &
+    & "HIERARCHYINTERPOLATION", &
+    & "HEIRARCHYINTERPOLATION")
+    ans = "BIUNIT"
+  CASE ("ORTHOGONALPOLYNOMIAL", "ORTHOGONAL", "ORTHOGONALINTERPOLATION")
+    ans = "BIUNIT"
+  CASE DEFAULT
+    CALL Errormsg(&
+      & msg="No case found for given baseInterpol="//TRIM(baseInterpol), &
+      & file=__FILE__, &
+      & line=__LINE__,&
+      & routine="RefElemDomain_Tetrahedron()", &
+      & unitno=stderr)
+  END SELECT
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No case found for given baseContinuity="//TRIM(baseContinuity), &
+    & file=__FILE__, &
+    & line=__LINE__,&
+    & routine="RefElemDomain_Tetrahedron()", &
+    & unitno=stderr)
+END SELECT
+END PROCEDURE RefElemDomain_Tetrahedron
+
+!----------------------------------------------------------------------------
 !                                                   GetVertexDOF_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -89,10 +131,34 @@ END PROCEDURE EdgeConnectivity_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FacetConnectivity_Tetrahedron
-ans(:, 1) = [1, 3, 2]
-ans(:, 2) = [1, 2, 4]
-ans(:, 3) = [1, 4, 3]
-ans(:, 4) = [2, 3, 4]
+TYPE(String) :: baseInterpol0
+TYPE(String) :: baseContinuity0
+
+baseInterpol0 = UpperCase(baseInterpol)
+baseContinuity0 = UpperCase(baseContinuity)
+
+SELECT CASE (baseInterpol0%chars())
+CASE ( &
+  & "HIERARCHYPOLYNOMIAL", &
+  & "HIERARCHY", &
+  & "HEIRARCHYPOLYNOMIAL", &
+  & "HEIRARCHY", &
+  & "HIERARCHYINTERPOLATION", &
+  & "HEIRARCHYINTERPOLATION", &
+  & "ORTHOGONALPOLYNOMIAL", &
+  & "ORTHOGONAL", &
+  & "ORTHOGONALINTERPOLATION")
+  ans(:, 1) = [1, 2, 3]
+  ans(:, 2) = [1, 2, 4]
+  ans(:, 3) = [1, 3, 4]
+  ans(:, 4) = [2, 3, 4]
+CASE DEFAULT
+  ans(:, 1) = [1, 3, 2]
+  ans(:, 2) = [1, 2, 4]
+  ans(:, 3) = [1, 4, 3]
+  ans(:, 4) = [2, 3, 4]
+END SELECT
+
 END PROCEDURE FacetConnectivity_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -1284,7 +1350,9 @@ i41 = i31 + tPoints
 i32 = i41 + tPoints
 i42 = i32 + tPoints
 i43 = i42 + tPoints
-facetConn = FacetConnectivity_Tetrahedron()
+facetConn = FacetConnectivity_Tetrahedron( &
+  & baseInterpol="HIERARCHY", &
+  & baseContinuity="H1")
 indx1 = ((i21.rowconcat.i21) .rowconcat.i31) .rowconcat.i32
 indx2 = ((i31.rowconcat.i41) .rowconcat.i41) .rowconcat.i42
 
