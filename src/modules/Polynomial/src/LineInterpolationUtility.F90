@@ -30,7 +30,9 @@ PUBLIC :: EquidistancePoint_Line
 PUBLIC :: InterpolationPoint_Line
 PUBLIC :: LagrangeCoeff_Line
 PUBLIC :: LagrangeEvalAll_Line
+PUBLIC :: LagrangeGradientEvalAll_Line
 PUBLIC :: BasisEvalAll_Line
+PUBLIC :: BasisGradientEvalAll_Line
 PUBLIC :: RefLineCoord
 PUBLIC :: RefCoord_Line
 PUBLIC :: QuadraturePoint_Line
@@ -473,13 +475,13 @@ END INTERFACE LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeCoeff_Line
-  MODULE FUNCTION LagrangeCoeff_Line5(order, xij, orthopol, alpha, &
+  MODULE FUNCTION LagrangeCoeff_Line5(order, xij, basisType, alpha, &
     & beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(xij,2)-1
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2) = order+1
-    INTEGER(I4B), INTENT(IN) :: orthopol
+    INTEGER(I4B), INTENT(IN) :: basisType
     !! Monomial
     !! Jacobi
     !! Legendre
@@ -509,13 +511,13 @@ END INTERFACE LagrangeCoeff_Line
 
 INTERFACE LagrangeEvalAll_Line
   MODULE FUNCTION LagrangeEvalAll_Line1(order, x, xij, coeff, firstCall, &
-    & orthopol, alpha, beta, lambda) &
+    & basisType, alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(:, :)
     !! interpolation points
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
     !! coefficient of Lagrange polynomials
@@ -523,7 +525,7 @@ INTERFACE LagrangeEvalAll_Line
     !! If firstCall is true, then coeff will be made
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: orthopol
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomial
     !! Jacobi
     !! Legendre
@@ -550,22 +552,28 @@ END INTERFACE LagrangeEvalAll_Line
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeEvalAll_Line
-  MODULE FUNCTION LagrangeEvalAll_Line2(order, x, xij, coeff, firstCall, &
-    & orthopol, alpha, beta, lambda) &
+  MODULE FUNCTION LagrangeEvalAll_Line2( &
+    & order, x, xij, coeff, firstCall, &
+    & basisType, alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
-    REAL(DFP), INTENT(IN) :: x(:)
-    !! point of evaluation
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    !! size(xij, 1) = nsd
+    !! size(xij, 2) = number of points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(:, :)
     !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
     !! coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: orthopol
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomial
     !! Jacobi
     !! Legendre
@@ -578,7 +586,7 @@ INTERFACE LagrangeEvalAll_Line
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(SIZE(x), order + 1)
+    REAL(DFP) :: ans(SIZE(x, 2), order + 1)
     !! Value of n+1 Lagrange polynomials at point x
     !! ans(:, j) is the value of jth polynomial at x points
     !! ans(i, :) is the value of all polynomials at x(i) point
@@ -586,12 +594,65 @@ INTERFACE LagrangeEvalAll_Line
 END INTERFACE LagrangeEvalAll_Line
 
 !----------------------------------------------------------------------------
+!                                               LagrangeGradientEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate Lagrange polynomials of n at several points
+
+INTERFACE LagrangeGradientEvalAll_Line
+  MODULE FUNCTION LagrangeGradientEvalAll_Line1( &
+    & order, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP), ALLOCATABLE :: ans(:, :, :)
+    !! Value of gradient of n+1 Lagrange polynomials at point x
+    !! ans(I, j, K): I = Lagrnage polynomial number I,
+    !! j = spatial dimension
+    !! K = point of evaluation number k
+  END FUNCTION LagrangeGradientEvalAll_Line1
+END INTERFACE LagrangeGradientEvalAll_Line
+
+!----------------------------------------------------------------------------
 !                                                          BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluate polynomials of order n at single points
+! summary: Evaluate basis functions of order upto n 
 
 INTERFACE BasisEvalAll_Line
   MODULE FUNCTION BasisEvalAll_Line1( &
@@ -627,13 +688,56 @@ INTERFACE BasisEvalAll_Line
   END FUNCTION BasisEvalAll_Line1
 END INTERFACE BasisEvalAll_Line
 
+
+!----------------------------------------------------------------------------
+!                                                 BasisGradientEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate gradient of basis functions of order upto n 
+
+INTERFACE BasisGradientEvalAll_Line
+  MODULE FUNCTION BasisGradientEvalAll_Line1( &
+    & order, &
+    & x, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! Refline should be  BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(order + 1)
+    !! Value of n+1  polynomials at point x
+  END FUNCTION BasisGradientEvalAll_Line1
+END INTERFACE BasisGradientEvalAll_Line
+
 !----------------------------------------------------------------------------
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluate  polynomials of n at several points
+! summary: Evaluate basis functions of order upto n
 
 INTERFACE BasisEvalAll_Line
   MODULE FUNCTION BasisEvalAll_Line2( &
@@ -671,6 +775,52 @@ INTERFACE BasisEvalAll_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION BasisEvalAll_Line2
 END INTERFACE BasisEvalAll_Line
+
+
+!----------------------------------------------------------------------------
+!                                                         BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluateu gradient of basis functions of order upto n
+
+INTERFACE BasisGradientEvalAll_Line
+  MODULE FUNCTION BasisGradientEvalAll_Line2( &
+    & order, &
+    & x, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT
+    !! BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x), order + 1)
+    !! Value of n+1  polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+  END FUNCTION BasisGradientEvalAll_Line2
+END INTERFACE BasisGradientEvalAll_Line
 
 !----------------------------------------------------------------------------
 !                                                      QuadraturePoint_Line
