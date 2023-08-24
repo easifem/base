@@ -13,7 +13,6 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
 SUBMODULE(TetrahedronInterpolationUtility) Methods
 USE BaseMethod
@@ -1887,6 +1886,149 @@ CALL Errormsg(&
   & line=__LINE__, &
   & unitno=stderr)
 END PROCEDURE TensorQuadraturePoint_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!                                       LagrangeGradientEvalAll_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Tetrahedron1
+LOGICAL(LGT) :: firstCall0
+INTEGER(I4B) :: ii, basisType0, tdof, ai, bi, ci
+INTEGER(I4B) :: degree(SIZE(xij, 2), 3)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
+  & xx(SIZE(x, 2), SIZE(xij, 2), 3), ar, br, cr
+TYPE(String) :: ref0
+
+basisType0 = INPUT(default=Monomial, option=basisType)
+firstCall0 = INPUT(default=.TRUE., option=firstCall)
+ref0 = INPUT(default="UNIT", option=refTetrahedron)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    coeff = LagrangeCoeff_Tetrahedron(&
+      & order=order, &
+      & xij=xij, &
+      & basisType=basisType0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda, &
+      & refTetrahedron=ref0%chars() &
+      & )
+    coeff0 = coeff
+  ELSE
+    coeff0 = coeff
+  END IF
+ELSE
+  coeff0 = LagrangeCoeff_Tetrahedron(&
+    & order=order, &
+    & xij=xij, &
+    & basisType=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda, &
+    & refTetrahedron=ref0%chars() &
+    & )
+END IF
+
+SELECT CASE (basisType0)
+
+CASE (Monomial)
+
+  degree = LagrangeDegree_Tetrahedron(order=order)
+  tdof = SIZE(xij, 2)
+
+  IF (tdof .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(&
+      & msg="tdof is not same as size(degree,1)", &
+      & file=__FILE__, &
+      & routine="LagrangeEvalAll_Tetrahedron1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+    RETURN
+  END IF
+
+  DO ii = 1, tdof
+    ai = MAX(degree(ii, 1_I4B) - 1_I4B, 0_I4B)
+    bi = MAX(degree(ii, 2_I4B) - 1_I4B, 0_I4B)
+    ci = MAX(degree(ii, 3_I4B) - 1_I4B, 0_I4B)
+
+    ar = REAL(degree(ii, 1_I4B), DFP)
+    br = REAL(degree(ii, 2_I4B), DFP)
+    cr = REAL(degree(ii, 3_I4B), DFP)
+
+    xx(:, ii, 1) = (ar * x(1, :)**ai) *  &
+                & x(2, :)**degree(ii, 2) *  &
+                & x(3, :)**degree(ii, 3)
+
+    xx(:, ii, 2) = x(1, :)**degree(ii, 1) *  &
+                & (br * x(2, :)**bi) *  &
+                & x(3, :)**degree(ii, 3)
+
+    xx(:, ii, 3) = x(1, :)**degree(ii, 1) *  &
+                & x(2, :)**degree(ii, 2) * &
+                & (cr * x(2, :)**ci)
+  END DO
+
+CASE (Heirarchical)
+
+  xx = HeirarchicalBasisGradient_Tetrahedron( &
+    & order=order, &
+    & xij=x, &
+    & refTetrahedron=ref0%chars())
+
+CASE DEFAULT
+
+  xx = OrthogonalBasisGradient_Tetrahedron( &
+    & order=order, &
+    & xij=x,  &
+    & refTetrahedron=ref0%chars() &
+    & )
+
+END SELECT
+
+DO ii = 1, 3
+  ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+END DO
+END PROCEDURE LagrangeGradientEvalAll_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                                       OrthogonalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasisGradient_Tetrahedron1
+CALL Errormsg(&
+  & msg="WORK IN PROGRESS!!", &
+  & file=__FILE__, &
+  & routine="OrthogonalBasisGradient_Tetrahedron1()", &
+  & line=__LINE__, &
+  & unitno=stderr)
+END PROCEDURE OrthogonalBasisGradient_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                                     HeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
+CALL Errormsg(&
+  & msg="WORK IN PROGRESS!!", &
+  & file=__FILE__, &
+  & routine="HeirarchicalBasisGradient_Tetrahedron1()", &
+  & line=__LINE__, &
+  & unitno=stderr)
+END PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                                     HeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Tetrahedron2
+CALL Errormsg(&
+  & msg="WORK IN PROGRESS!!", &
+  & file=__FILE__, &
+  & routine="HeirarchicalBasisGradient_Tetrahedron2()", &
+  & line=__LINE__, &
+  & unitno=stderr)
+END PROCEDURE HeirarchicalBasisGradient_Tetrahedron2
 
 !----------------------------------------------------------------------------
 !
