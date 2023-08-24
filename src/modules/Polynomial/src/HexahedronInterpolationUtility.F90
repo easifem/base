@@ -33,6 +33,7 @@ PUBLIC :: EdgeConnectivity_Hexahedron
 PUBLIC :: FacetConnectivity_Hexahedron
 PUBLIC :: QuadratureNumber_Hexahedron
 PUBLIC :: TensorProdBasis_Hexahedron
+PUBLIC :: OrthogonalBasis_Hexahedron
 PUBLIC :: VertexBasis_Hexahedron
 PUBLIC :: xEdgeBasis_Hexahedron
 PUBLIC :: yEdgeBasis_Hexahedron
@@ -51,6 +52,10 @@ PUBLIC :: GetEdgeDOF_Hexahedron
 PUBLIC :: GetFacetDOF_Hexahedron
 PUBLIC :: GetCellDOF_Hexahedron
 PUBLIC :: RefElemDomain_Hexahedron
+PUBLIC :: LagrangeGradientEvalAll_Hexahedron
+PUBLIC :: OrthogonalBasisGradient_Hexahedron
+PUBLIC :: TensorProdBasisGradient_Hexahedron
+PUBLIC :: HeirarchicalBasisGradient_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Hexahedron
@@ -945,6 +950,10 @@ INTERFACE TensorProdBasis_Hexahedron
   END FUNCTION TensorProdBasis_Hexahedron1
 END INTERFACE TensorProdBasis_Hexahedron
 
+INTERFACE OrthogonalBasis_Hexahedron
+  MODULE PROCEDURE TensorProdBasis_Hexahedron1
+END INTERFACE OrthogonalBasis_Hexahedron
+
 !----------------------------------------------------------------------------
 !                                            TensorProdBasis_Hexahedron
 !----------------------------------------------------------------------------
@@ -1006,6 +1015,10 @@ INTERFACE TensorProdBasis_Hexahedron
   END FUNCTION TensorProdBasis_Hexahedron2
 END INTERFACE TensorProdBasis_Hexahedron
 
+INTERFACE OrthogonalBasis_Hexahedron
+  MODULE PROCEDURE TensorProdBasis_Hexahedron2
+END INTERFACE OrthogonalBasis_Hexahedron
+
 !----------------------------------------------------------------------------
 !                                                    VertexBasis_Hexahedron
 !----------------------------------------------------------------------------
@@ -1041,6 +1054,36 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(L1, 1), 8)
     !! ans(:,v1) basis function of vertex v1 at all points
   END FUNCTION VertexBasis_Hexahedron2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                    VertexBasis_Hexahedron2
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on biunit quadrangle
+
+INTERFACE
+  MODULE PURE FUNCTION VertexBasisGradient_Hexahedron2( &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3 &
+    & ) RESULT(ans)
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! L1 Lobatto polynomial evaluated at x coordinates
+    !! L2 is Lobatto polynomial evaluated at y coordinates
+    !! L3 is Lobatto polynomial evaluated at z coordinates
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    !! L1 Lobatto polynomial evaluated at x coordinates
+    !! L2 is Lobatto polynomial evaluated at y coordinates
+    !! L3 is Lobatto polynomial evaluated at z coordinates
+    REAL(DFP) :: ans(SIZE(L1, 1), 8, 3)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasisGradient_Hexahedron2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -1122,6 +1165,39 @@ INTERFACE xEdgeBasis_Hexahedron
 END INTERFACE xEdgeBasis_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE xEdgeBasisGradient_Hexahedron
+  MODULE PURE FUNCTION xEdgeBasisGradient_Hexahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4, 3)
+  END FUNCTION xEdgeBasisGradient_Hexahedron2
+END INTERFACE xEdgeBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                     yEdgeBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1182,6 +1258,39 @@ INTERFACE yEdgeBasis_Hexahedron
 END INTERFACE yEdgeBasis_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE yEdgeBasisGradient_Hexahedron
+  MODULE PURE FUNCTION yEdgeBasisGradient_Hexahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4, 3)
+  END FUNCTION yEdgeBasisGradient_Hexahedron2
+END INTERFACE yEdgeBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                     zEdgeBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1240,6 +1349,38 @@ INTERFACE zEdgeBasis_Hexahedron
     REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4)
   END FUNCTION zEdgeBasis_Hexahedron2
 END INTERFACE zEdgeBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE zEdgeBasisGradient_Hexahedron
+  MODULE PURE FUNCTION zEdgeBasisGradient_Hexahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4, 3)
+  END FUNCTION zEdgeBasisGradient_Hexahedron2
+END INTERFACE zEdgeBasisGradient_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                      EdgeBasis_Hexahedron
@@ -1314,6 +1455,44 @@ INTERFACE EdgeBasis_Hexahedron
 END INTERFACE EdgeBasis_Hexahedron
 
 !----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
+INTERFACE EdgeBasisGradient_Hexahedron
+  MODULE PURE FUNCTION EdgeBasisGradient_Hexahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3, &
+    & dim) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on edge e1, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on edge e2, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on edge e3, it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on edge e4, it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    INTEGER(I4B), INTENT(IN) :: dim
+    !! dim specifies the axis orientation, it can be
+    !! dim = 1, means x axis
+    !! dim = 2, means y axis
+    !! dim = 3, means z axis
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 + pe4 - 4, 3)
+  END FUNCTION EdgeBasisGradient_Hexahedron2
+END INTERFACE EdgeBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                    xyFacetBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1374,6 +1553,40 @@ INTERFACE xyFacetBasis_Hexahedron
 END INTERFACE xyFacetBasis_Hexahedron
 
 !----------------------------------------------------------------------------
+!                                                    xyFacetBasis_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xyFacet
+
+INTERFACE xyFacetBasisGradient_Hexahedron
+  MODULE PURE FUNCTION xyFacetBasisGradient_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xy face
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xy face
+    !! it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B, 3)
+  END FUNCTION xyFacetBasisGradient_Hexahedron2
+END INTERFACE xyFacetBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                    yzFacetBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1405,7 +1618,7 @@ INTERFACE yzFacetBasis_Hexahedron
 END INTERFACE yzFacetBasis_Hexahedron
 
 !----------------------------------------------------------------------------
-!
+!                                                    yzFacetBasis_Hexahedron
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1432,6 +1645,40 @@ INTERFACE yzFacetBasis_Hexahedron
       & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
   END FUNCTION yzFacetBasis_Hexahedron2
 END INTERFACE yzFacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                   yzFacetBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on yzFacet
+
+INTERFACE yzFacetBasisGradient_Hexahedron
+  MODULE PURE FUNCTION yzFacetBasisGradient_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of yz face
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of yz face
+    !! it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B, 3)
+  END FUNCTION yzFacetBasisGradient_Hexahedron2
+END INTERFACE yzFacetBasisGradient_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                    xzFacetBasis_Hexahedron
@@ -1492,6 +1739,41 @@ INTERFACE xzFacetBasis_Hexahedron
       & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B)
   END FUNCTION xzFacetBasis_Hexahedron2
 END INTERFACE xzFacetBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                           xzFacetBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xzFacet
+
+INTERFACE xzFacetBasisGradient_Hexahedron
+  MODULE PURE FUNCTION xzFacetBasisGradient_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xz face
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xz face
+    !! it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B, 3_I4B)
+  END FUNCTION xzFacetBasisGradient_Hexahedron2
+END INTERFACE xzFacetBasisGradient_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                                    xzFacetBasis_Hexahedron
@@ -1566,6 +1848,46 @@ INTERFACE FacetBasis_Hexahedron
 END INTERFACE FacetBasis_Hexahedron
 
 !----------------------------------------------------------------------------
+!                                             FacetBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xzFacet
+
+INTERFACE FacetBasisGradient_Hexahedron
+  MODULE PURE FUNCTION FacetBasisGradient_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3, &
+    & dim1,  &
+    & dim2) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1 of xy face
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2 of xy face
+    !! it should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    !! Gradient of Lobatto polynomials in x, y, and z direction.
+    INTEGER(I4B), INTENT(IN) :: dim1
+    !! direction in n1 direction
+    INTEGER(I4B), INTENT(IN) :: dim2
+    !! direction in n2 direction
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * 2_I4B, 3)
+  END FUNCTION FacetBasisGradient_Hexahedron2
+END INTERFACE FacetBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
 !                                                       CellBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1632,6 +1954,45 @@ INTERFACE CellBasis_Hexahedron
       & (n1 - 1_I4B) * (n2 - 1_I4B) * (n3 - 1_I4B))
   END FUNCTION CellBasis_Hexahedron2
 END INTERFACE CellBasis_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                                      CellBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on xzCell
+
+INTERFACE CellBasisGradient_Hexahedron
+  MODULE PURE FUNCTION CellBasisGradient_Hexahedron2( &
+    & n1, &
+    & n2, &
+    & n3, &
+    & L1, &
+    & L2, &
+    & L3, &
+    & dL1, &
+    & dL2, &
+    & dL3 &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n1
+    !! order along axis 1
+    !! it should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: n2
+    !! order along axis 2
+    !! it should be greater than 3
+    INTEGER(I4B), INTENT(IN) :: n3
+    !! order along axis 3
+    !! it should be greater than 3
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:), L3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:), dL3(1:, 0:)
+    !! Lobatto polynomials in x, y, and z direction.
+    REAL(DFP) :: ans( &
+      & SIZE(L1, 1), &
+      & (n1 - 1_I4B) * (n2 - 1_I4B) * (n3 - 1_I4B), 3)
+  END FUNCTION CellBasisGradient_Hexahedron2
+END INTERFACE CellBasisGradient_Hexahedron
 
 !----------------------------------------------------------------------------
 !                                               HeirarchicalBasis_Hexahedron
@@ -2044,5 +2405,204 @@ INTERFACE LagrangeEvalAll_Hexahedron
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Hexahedron2
 END INTERFACE LagrangeEvalAll_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                         LagrangeGradientEvalAll_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate Gradient of Lagrange polynomials
+
+INTERFACE LagrangeGradientEvalAll_Hexahedron
+  MODULE FUNCTION LagrangeGradientEvalAll_Hexahedron1( &
+    & order, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2), 3, SIZE(x, 2))
+    !! Gradient of nth order lagrange polynomial
+    !! ans(I, j, K): I = Lagrnage polynomial number I,
+    !! j = spatial dimension
+    !! K = point of evaluation number k
+  END FUNCTION LagrangeGradientEvalAll_Hexahedron1
+END INTERFACE LagrangeGradientEvalAll_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                        TensorProdBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all tensor product orthogoanl polynomial on hexahedron
+
+INTERFACE TensorProdBasisGradient_Hexahedron
+  MODULE FUNCTION TensorProdBasisGradient_Hexahedron1(  &
+    & p,  &
+    & q,  &
+    & r,  &
+    & xij, &
+    & basisType1,  &
+    & basisType2,  &
+    & basisType3,  &
+    & alpha1,  &
+    & beta1,  &
+    & lambda1,  &
+    & alpha2,  &
+    & beta2,  &
+    & lambda2,  &
+    & alpha3,  &
+    & beta3,  &
+    & lambda3) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p
+    !! highest order in x1 direction
+    INTEGER(I4B), INTENT(IN) :: q
+    !! highest order in x2 direction
+    INTEGER(I4B), INTENT(IN) :: r
+    !! highest order in x3 direction
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    INTEGER(I4B), INTENT(IN) :: basisType1, basisType2, basisType3
+    !! basis type in x1 direction
+    !! Monomials
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Ultraspherical
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha1
+    !! alpha1 needed when  basisType1 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta1
+    !! beta1 is needed when basisType1 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda1
+    !! lambda1 is needed when basisType1 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha2
+    !! alpha2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta2
+    !! beta2 needed when basisType2 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda2
+    !! lambda2 is needed when basisType2 is "Ultraspherical"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha3
+    !! alpha3 needed when  basisType3 "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta3
+    !! beta3 is needed when basisType3 is "Jacobi"
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda3
+    !! lambda3 is needed when basisType3 is "Ultraspherical"
+    REAL(DFP) :: ans(SIZE(xij, 2), (p + 1) * (q + 1) * (r + 1), 3)
+  END FUNCTION TensorProdBasisGradient_Hexahedron1
+END INTERFACE TensorProdBasisGradient_Hexahedron
+
+INTERFACE OrthogonalBasisGradient_Hexahedron
+  MODULE PROCEDURE TensorProdBasisGradient_Hexahedron1
+END INTERFACE OrthogonalBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                      HeirarchicalBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary: Returns the HeirarchicalBasisGradient on Hexahedron
+
+INTERFACE HeirarchicalBasisGradient_Hexahedron
+  MODULE FUNCTION HeirarchicalBasisGradient_Hexahedron1(  &
+    & pb1, pb2, pb3, &
+    & pxy1, pxy2, &
+    & pxz1, pxz2, &
+    & pyz1, pyz2, &
+    & px1, px2, px3, px4, &
+    & py1, py2, py3, py4, &
+    & pz1, pz2, pz3, pz4, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb1, pb2, pb3
+    !! order of interpolation inside the element in x, y, and z dirs
+    INTEGER(I4B), INTENT(IN) :: pxy1, pxy2
+    !! order of interpolation on facets parallel to xy plane
+    INTEGER(I4B), INTENT(IN) :: pxz1, pxz2
+    !! order of interpolation on facets parallel to xz plane
+    INTEGER(I4B), INTENT(IN) :: pyz1, pyz2
+    !! order of interpolation on facets parallel to yz plane
+    INTEGER(I4B), INTENT(IN) :: px1, px2, px3, px4
+    !! order of interpolation on edges parallel to x-axis
+    INTEGER(I4B), INTENT(IN) :: py1, py2, py3, py4
+    !! order of interpolation on edges parallel to y-axis
+    INTEGER(I4B), INTENT(IN) :: pz1, pz2, pz3, pz4
+    !! order of interpolation on edges parallel to z-axis
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP) :: ans(  &
+      & SIZE(xij, 2), &
+      &   8_I4B &
+      & + (pb1 - 1_I4B) * (pb2 - 1_I4B) * (pb3 - 1_I4B) &
+      & + (pxy1 - 1_I4B) * (pxy2 - 1_I4B) * 2_I4B  &
+      & + (pxz1 - 1_I4B) * (pxz2 - 1_I4B) * 2_I4B  &
+      & + (pyz1 - 1_I4B) * (pyz2 - 1_I4B) * 2_I4B  &
+      & + (px1 + px2 + px3 + px4 - 4_I4B) &
+      & + (py1 + py2 + py3 + py4 - 4_I4B) &
+      & + (pz1 + pz2 + pz3 + pz4 - 4_I4B), &
+      & 3_I4B)
+  END FUNCTION HeirarchicalBasisGradient_Hexahedron1
+END INTERFACE HeirarchicalBasisGradient_Hexahedron
+
+!----------------------------------------------------------------------------
+!                                     HeirarchicalBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary: Returns the HeirarchicalBasisGradient on Hexahedron
+
+INTERFACE HeirarchicalBasisGradient_Hexahedron
+  MODULE FUNCTION HeirarchicalBasisGradient_Hexahedron2(  &
+    & p, q, r, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: p, q, r
+    !! order of interpolation in x, y, and z dirs
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points of evaluation in xij format
+    REAL(DFP) :: ans(  &
+      & SIZE(xij, 2), &
+      &   8_I4B &
+      & + (p - 1_I4B) * (q - 1_I4B) * (r - 1_I4B) &
+      & + (p - 1_I4B) * (q - 1_I4B) * 2_I4B  &
+      & + (p - 1_I4B) * (r - 1_I4B) * 2_I4B  &
+      & + (q - 1_I4B) * (r - 1_I4B) * 2_I4B  &
+      & + (4_I4B * p - 4_I4B) &
+      & + (4_I4B * q - 4_I4B) &
+      & + (4_I4B * r - 4_I4B), &
+      & 3_I4B)
+  END FUNCTION HeirarchicalBasisGradient_Hexahedron2
+END INTERFACE HeirarchicalBasisGradient_Hexahedron
 
 END MODULE HexahedronInterpolationUtility

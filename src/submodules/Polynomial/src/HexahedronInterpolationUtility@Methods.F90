@@ -1199,6 +1199,39 @@ ans = VertexBasis_Hexahedron1( &
 END PROCEDURE VertexBasis_Hexahedron3
 
 !----------------------------------------------------------------------------
+!                                             VertexBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasisGradient_Hexahedron2
+ans(:, 1, 1) = dL1(:, 0) * L2(:, 0) * L3(:, 0)
+ans(:, 2, 1) = dL1(:, 1) * L2(:, 0) * L3(:, 0)
+ans(:, 3, 1) = dL1(:, 1) * L2(:, 1) * L3(:, 0)
+ans(:, 4, 1) = dL1(:, 0) * L2(:, 1) * L3(:, 0)
+ans(:, 5, 1) = dL1(:, 0) * L2(:, 0) * L3(:, 1)
+ans(:, 6, 1) = dL1(:, 1) * L2(:, 0) * L3(:, 1)
+ans(:, 7, 1) = dL1(:, 1) * L2(:, 1) * L3(:, 1)
+ans(:, 8, 1) = dL1(:, 0) * L2(:, 1) * L3(:, 1)
+
+ans(:, 1, 2) = L1(:, 0) * dL2(:, 0) * L3(:, 0)
+ans(:, 2, 2) = L1(:, 1) * dL2(:, 0) * L3(:, 0)
+ans(:, 3, 2) = L1(:, 1) * dL2(:, 1) * L3(:, 0)
+ans(:, 4, 2) = L1(:, 0) * dL2(:, 1) * L3(:, 0)
+ans(:, 5, 2) = L1(:, 0) * dL2(:, 0) * L3(:, 1)
+ans(:, 6, 2) = L1(:, 1) * dL2(:, 0) * L3(:, 1)
+ans(:, 7, 2) = L1(:, 1) * dL2(:, 1) * L3(:, 1)
+ans(:, 8, 2) = L1(:, 0) * dL2(:, 1) * L3(:, 1)
+
+ans(:, 1, 3) = L1(:, 0) * L2(:, 0) * dL3(:, 0)
+ans(:, 2, 3) = L1(:, 1) * L2(:, 0) * dL3(:, 0)
+ans(:, 3, 3) = L1(:, 1) * L2(:, 1) * dL3(:, 0)
+ans(:, 4, 3) = L1(:, 0) * L2(:, 1) * dL3(:, 0)
+ans(:, 5, 3) = L1(:, 0) * L2(:, 0) * dL3(:, 1)
+ans(:, 6, 3) = L1(:, 1) * L2(:, 0) * dL3(:, 1)
+ans(:, 7, 3) = L1(:, 1) * L2(:, 1) * dL3(:, 1)
+ans(:, 8, 3) = L1(:, 0) * L2(:, 1) * dL3(:, 1)
+END PROCEDURE VertexBasisGradient_Hexahedron2
+
+!----------------------------------------------------------------------------
 !                                                   xEdgeBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1260,6 +1293,43 @@ DO k1 = 2, pe4
   ans(:, cnt) = L1(:, k1) * L2(:, 1) * L3(:, 1)
 END DO
 END PROCEDURE xEdgeBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                             xEdgeBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xEdgeBasisGradient_Hexahedron2
+INTEGER(I4B) :: cnt, k1
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, k1) * L2(:, 0) * L3(:, 0)
+  ans(:, cnt, 2) = L1(:, k1) * dL2(:, 0) * L3(:, 0)
+  ans(:, cnt, 3) = L1(:, k1) * L2(:, 0) * dL3(:, 0)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, k1) * L2(:, 1) * L3(:, 0)
+  ans(:, cnt, 2) = L1(:, k1) * dL2(:, 1) * L3(:, 0)
+  ans(:, cnt, 3) = L1(:, k1) * L2(:, 1) * dL3(:, 0)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, k1) * L2(:, 0) * L3(:, 1)
+  ans(:, cnt, 2) = L1(:, k1) * dL2(:, 0) * L3(:, 1)
+  ans(:, cnt, 3) = L1(:, k1) * L2(:, 0) * dL3(:, 1)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, k1) * L2(:, 1) * L3(:, 1)
+  ans(:, cnt, 2) = L1(:, k1) * dL2(:, 1) * L3(:, 1)
+  ans(:, cnt, 3) = L1(:, k1) * L2(:, 1) * dL3(:, 1)
+END DO
+END PROCEDURE xEdgeBasisGradient_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                                     yEdgeBasis_Hexahedron
@@ -1325,6 +1395,43 @@ END DO
 END PROCEDURE yEdgeBasis_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                             yEdgeBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE yEdgeBasisGradient_Hexahedron2
+INTEGER(I4B) :: cnt, k1
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 0) * L2(:, k1) * L3(:, 0)
+  ans(:, cnt, 2) = L1(:, 0) * dL2(:, k1) * L3(:, 0)
+  ans(:, cnt, 3) = L1(:, 0) * L2(:, k1) * dL3(:, 0)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 1) * L2(:, k1) * L3(:, 0)
+  ans(:, cnt, 2) = L1(:, 1) * dL2(:, k1) * L3(:, 0)
+  ans(:, cnt, 3) = L1(:, 1) * L2(:, k1) * dL3(:, 0)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 0) * L2(:, k1) * L3(:, 1)
+  ans(:, cnt, 2) = L1(:, 0) * dL2(:, k1) * L3(:, 1)
+  ans(:, cnt, 3) = L1(:, 0) * L2(:, k1) * dL3(:, 1)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 1) * L2(:, k1) * L3(:, 1)
+  ans(:, cnt, 2) = L1(:, 1) * dL2(:, k1) * L3(:, 1)
+  ans(:, cnt, 3) = L1(:, 1) * L2(:, k1) * dL3(:, 1)
+END DO
+END PROCEDURE yEdgeBasisGradient_Hexahedron2
+
+!----------------------------------------------------------------------------
 !                                                     zEdgeBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1387,6 +1494,43 @@ END DO
 END PROCEDURE zEdgeBasis_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                             zEdgeBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE zEdgeBasisGradient_Hexahedron2
+INTEGER(I4B) :: cnt, k1
+
+cnt = 0
+DO k1 = 2, pe1
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 0) * L2(:, 0) * L3(:, k1)
+  ans(:, cnt, 2) = L1(:, 0) * dL2(:, 0) * L3(:, k1)
+  ans(:, cnt, 3) = L1(:, 0) * L2(:, 0) * dL3(:, k1)
+END DO
+
+DO k1 = 2, pe2
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 1) * L2(:, 0) * L3(:, k1)
+  ans(:, cnt, 2) = L1(:, 1) * dL2(:, 0) * L3(:, k1)
+  ans(:, cnt, 3) = L1(:, 1) * L2(:, 0) * dL3(:, k1)
+END DO
+
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 0) * L2(:, 1) * L3(:, k1)
+  ans(:, cnt, 2) = L1(:, 0) * dL2(:, 1) * L3(:, k1)
+  ans(:, cnt, 3) = L1(:, 0) * L2(:, 1) * dL3(:, k1)
+END DO
+
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 1) * L2(:, 1) * L3(:, k1)
+  ans(:, cnt, 2) = L1(:, 1) * dL2(:, 1) * L3(:, k1)
+  ans(:, cnt, 3) = L1(:, 1) * L2(:, 1) * dL3(:, k1)
+END DO
+END PROCEDURE zEdgeBasisGradient_Hexahedron2
+
+!----------------------------------------------------------------------------
 !                                                     EdgeBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1421,6 +1565,54 @@ CASE (3_I4B)
     & L1=L1, L2=L2, L3=L3)
 END SELECT
 END PROCEDURE EdgeBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                             EdgeBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeBasisGradient_Hexahedron2
+SELECT CASE (dim)
+CASE (1_I4B)
+  ans = xEdgeBasisGradient_Hexahedron2( &
+    & pe1=pe1, &
+    & pe2=pe2, &
+    & pe3=pe3, &
+    & pe4=pe4, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+CASE (2_I4B)
+  ans = yEdgeBasisGradient_Hexahedron2( &
+    & pe1=pe1, &
+    & pe2=pe2, &
+    & pe3=pe3, &
+    & pe4=pe4, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+CASE (3_I4B)
+  ans = zEdgeBasisGradient_Hexahedron2( &
+    & pe1=pe1, &
+    & pe2=pe2, &
+    & pe3=pe3, &
+    & pe4=pe4, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+END SELECT
+END PROCEDURE EdgeBasisGradient_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                                    xyFacetBasis_Hexahedron
@@ -1474,6 +1666,33 @@ END DO
 END PROCEDURE xyFacetBasis_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                           xyFacetBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xyFacetBasisGradient_Hexahedron2
+INTEGER(I4B) :: k1, cnt, k2
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dL1(:, k1) * L2(:, k2) * L3(:, 0)
+    ans(:, cnt, 2) = L1(:, k1) * dL2(:, k2) * L3(:, 0)
+    ans(:, cnt, 3) = L1(:, k1) * L2(:, k2) * dL3(:, 0)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dL1(:, k1) * L2(:, k2) * L3(:, 1)
+    ans(:, cnt, 2) = L1(:, k1) * dL2(:, k2) * L3(:, 1)
+    ans(:, cnt, 3) = L1(:, k1) * L2(:, k2) * dL3(:, 1)
+  END DO
+END DO
+END PROCEDURE xyFacetBasisGradient_Hexahedron2
+
+!----------------------------------------------------------------------------
 !                                                    yzFacetBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1525,6 +1744,33 @@ END DO
 END PROCEDURE yzFacetBasis_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                           yzFacetBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE yzFacetBasisGradient_Hexahedron2
+INTEGER(I4B) :: k1, cnt, k2
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dL1(:, 0) * L2(:, k1) * L3(:, k2)
+    ans(:, cnt, 2) = L1(:, 0) * dL2(:, k1) * L3(:, k2)
+    ans(:, cnt, 3) = L1(:, 0) * L2(:, k1) * dL3(:, k2)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dL1(:, 1) * L2(:, k1) * L3(:, k2)
+    ans(:, cnt, 2) = L1(:, 1) * dL2(:, k1) * L3(:, k2)
+    ans(:, cnt, 3) = L1(:, 1) * L2(:, k1) * dL3(:, k2)
+  END DO
+END DO
+END PROCEDURE yzFacetBasisGradient_Hexahedron2
+
+!----------------------------------------------------------------------------
 !                                                    xzFacetBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1574,6 +1820,33 @@ DO k1 = 2, n1
   END DO
 END DO
 END PROCEDURE xzFacetBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                           xzFacetBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE xzFacetBasisGradient_Hexahedron2
+INTEGER(I4B) :: k1, cnt, k2
+
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dL1(:, k1) * L2(:, 0) * L3(:, k2)
+    ans(:, cnt, 2) = L1(:, k1) * dL2(:, 0) * L3(:, k2)
+    ans(:, cnt, 3) = L1(:, k1) * L2(:, 0) * dL3(:, k2)
+  END DO
+END DO
+
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dL1(:, k1) * L2(:, 1) * L3(:, k2)
+    ans(:, cnt, 2) = L1(:, k1) * dL2(:, 1) * L3(:, k2)
+    ans(:, cnt, 3) = L1(:, k1) * L2(:, 1) * dL3(:, k2)
+  END DO
+END DO
+END PROCEDURE xzFacetBasisGradient_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                                      FacetBasis_Hexahedron
@@ -1639,6 +1912,91 @@ END SELECT
 END PROCEDURE FacetBasis_Hexahedron2
 
 !----------------------------------------------------------------------------
+!                                             FacetBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetBasisGradient_Hexahedron2
+
+SELECT CASE (dim1)
+CASE (1_I4B)
+  SELECT CASE (dim2)
+  CASE (2_I4B)
+    ans = xyFacetBasisGradient_Hexahedron2( &
+      & n1=n1, &
+      & n2=n2, &
+      & L1=L1, &
+      & L2=L2, &
+      & L3=L3, &
+      & dL1=dL1, &
+      & dL2=dL2, &
+      & dL3=dL3 &
+      & )
+  CASE (3_I4B)
+    ans = xzFacetBasisGradient_Hexahedron2( &
+      & n1=n1, &
+      & n2=n2, &
+      & L1=L1, &
+      & L2=L2, &
+      & L3=L3, &
+      & dL1=dL1, &
+      & dL2=dL2, &
+      & dL3=dL3 &
+      & )
+  END SELECT
+CASE (2_I4B)
+  SELECT CASE (dim2)
+  CASE (1_I4B)
+    ans = xyFacetBasisGradient_Hexahedron2( &
+      & n1=n1, &
+      & n2=n2, &
+      & L1=L1, &
+      & L2=L2, &
+      & L3=L3, &
+      & dL1=dL1, &
+      & dL2=dL2, &
+      & dL3=dL3 &
+      & )
+  CASE (3_I4B)
+    ans = yzFacetBasisGradient_Hexahedron2( &
+      & n1=n1, &
+      & n2=n2, &
+      & L1=L1, &
+      & L2=L2, &
+      & L3=L3, &
+      & dL1=dL1, &
+      & dL2=dL2, &
+      & dL3=dL3 &
+      & )
+  END SELECT
+CASE (3_I4B)
+  SELECT CASE (dim2)
+  CASE (1_I4B)
+    ans = xzFacetBasisGradient_Hexahedron2( &
+      & n1=n1, &
+      & n2=n2, &
+      & L1=L1, &
+      & L2=L2, &
+      & L3=L3, &
+      & dL1=dL1, &
+      & dL2=dL2, &
+      & dL3=dL3 &
+      & )
+  CASE (2_I4B)
+    ans = yzFacetBasisGradient_Hexahedron2( &
+      & n1=n1, &
+      & n2=n2, &
+      & L1=L1, &
+      & L2=L2, &
+      & L3=L3, &
+      & dL1=dL1, &
+      & dL2=dL2, &
+      & dL3=dL3 &
+      & )
+  END SELECT
+END SELECT
+END PROCEDURE FacetBasisGradient_Hexahedron2
+
+!----------------------------------------------------------------------------
 !                                                       CellBasis_Hexahedron
 !----------------------------------------------------------------------------
 
@@ -1677,6 +2035,25 @@ DO k1 = 2, n1
   END DO
 END DO
 END PROCEDURE CellBasis_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                              CellBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CellBasisGradient_Hexahedron2
+INTEGER(I4B) :: k1, cnt, k2, k3
+cnt = 0
+DO k1 = 2, n1
+  DO k2 = 2, n2
+    DO k3 = 2, n3
+      cnt = cnt + 1
+      ans(:, cnt, 1) = dL1(:, k1) * L2(:, k2) * L3(:, k3)
+      ans(:, cnt, 2) = L1(:, k1) * dL2(:, k2) * L3(:, k3)
+      ans(:, cnt, 3) = L1(:, k1) * L2(:, k2) * dL3(:, k3)
+    END DO
+  END DO
+END DO
+END PROCEDURE CellBasisGradient_Hexahedron2
 
 !----------------------------------------------------------------------------
 !                                               HeirarchicalBasis_Hexahedron
@@ -2204,6 +2581,384 @@ END SELECT
 ans = MATMUL(xx, coeff0)
 
 END PROCEDURE LagrangeEvalAll_Hexahedron2
+
+!----------------------------------------------------------------------------
+!                                       LagrangeGradientEvalAll_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Hexahedron1
+LOGICAL(LGT) :: firstCall0
+INTEGER(I4B) :: ii, basisType0, tdof, ai, bi, ci
+INTEGER(I4B) :: degree(SIZE(xij, 2), 3), d1, d2, d3
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
+  & xx(SIZE(x, 2), SIZE(xij, 2), 3), ar, br, cr
+
+basisType0 = INPUT(default=Monomial, option=basisType)
+firstCall0 = INPUT(default=.TRUE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    coeff = LagrangeCoeff_Hexahedron(&
+      & order=order, &
+      & xij=xij, &
+      & basisType=basisType0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda &
+      & )
+  END IF
+  coeff0 = coeff
+ELSE
+  coeff0 = LagrangeCoeff_Hexahedron(&
+    & order=order, &
+    & xij=xij, &
+    & basisType=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & )
+END IF
+
+SELECT CASE (basisType0)
+
+CASE (Monomial)
+  degree = LagrangeDegree_Hexahedron(order=order)
+  tdof = SIZE(xij, 2)
+
+  IF (tdof .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(&
+      & msg="tdof is not same as size(degree,1)", &
+      & file=__FILE__, &
+      & routine="LagrangeEvalAll_Hexahedron1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+    RETURN
+  END IF
+
+  DO ii = 1, tdof
+    d1 = degree(ii, 1)
+    d2 = degree(ii, 2)
+    d3 = degree(ii, 3)
+
+    ai = MAX(d1 - 1_I4B, 0_I4B)
+    bi = MAX(d2 - 1_I4B, 0_I4B)
+    ci = MAX(d3 - 1_I4B, 0_I4B)
+
+    ar = REAL(d1, DFP)
+    br = REAL(d2, DFP)
+    cr = REAL(d3, DFP)
+
+    xx(:, ii, 1) = (ar * x(1, :)**ai) *  &
+                & x(2, :)**d2 *  &
+                & x(3, :)**d3
+
+    xx(:, ii, 2) = x(1, :)**d1 *  &
+                & (br * x(2, :)**bi) *  &
+                & x(3, :)**d3
+
+    xx(:, ii, 3) = x(1, :)**d1 *  &
+                & x(2, :)**d2 * &
+                & (cr * x(3, :)**ci)
+
+  END DO
+
+CASE (Heirarchical)
+  xx = HeirarchicalBasisGradient_Hexahedron( &
+    & p=order, &
+    & q=order,  &
+    & r=order,  &
+    & xij=x)
+
+CASE DEFAULT
+  xx = OrthogonalBasisGradient_Hexahedron( &
+    & p=order, &
+    & q=order, &
+    & r=order, &
+    & xij=x,  &
+    & basisType1=basisType0, &
+    & basisType2=basisType0, &
+    & basisType3=basisType0, &
+    & alpha1=alpha, &
+    & beta1=beta, &
+    & lambda1=lambda, &
+    & alpha2=alpha, &
+    & beta2=beta, &
+    & lambda2=lambda,  &
+    & alpha3=alpha, &
+    & beta3=beta, &
+    & lambda3=lambda)
+
+END SELECT
+
+DO ii = 1, 3
+  ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+END DO
+
+END PROCEDURE LagrangeGradientEvalAll_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                         TensorProdBasisGradient_Hexahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorProdBasisGradient_Hexahedron1
+REAL(DFP) :: x(SIZE(xij, 2)), y(SIZE(xij, 2)), z(SIZE(xij, 2))
+REAL(DFP) :: P1(SIZE(xij, 2), p + 1)
+REAL(DFP) :: Q1(SIZE(xij, 2), q + 1)
+REAL(DFP) :: R1(SIZE(xij, 2), r + 1)
+REAL(DFP) :: dP1(SIZE(xij, 2), p + 1)
+REAL(DFP) :: dQ1(SIZE(xij, 2), q + 1)
+REAL(DFP) :: dR1(SIZE(xij, 2), r + 1)
+
+INTEGER(I4B) :: ii, k1, k2, k3, cnt
+
+x = xij(1, :)
+y = xij(2, :)
+z = xij(3, :)
+
+P1 = BasisEvalAll_Line( &
+  & order=p, &
+  & x=x, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha1, &
+  & beta=beta1, &
+  & lambda=lambda1)
+
+Q1 = BasisEvalAll_Line( &
+  & order=q, &
+  & x=y, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha2, &
+  & beta=beta2, &
+  & lambda=lambda2)
+
+R1 = BasisEvalAll_Line( &
+  & order=r, &
+  & x=z, &
+  & refLine="BIUNIT", &
+  & basisType=basisType3,  &
+  & alpha=alpha3, &
+  & beta=beta3, &
+  & lambda=lambda3)
+
+dP1 = BasisGradientEvalAll_Line( &
+  & order=p, &
+  & x=x, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha1, &
+  & beta=beta1, &
+  & lambda=lambda1)
+
+dQ1 = BasisGradientEvalAll_Line( &
+  & order=q, &
+  & x=y, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha2, &
+  & beta=beta2, &
+  & lambda=lambda2)
+
+dR1 = BasisGradientEvalAll_Line( &
+  & order=r, &
+  & x=z, &
+  & refLine="BIUNIT", &
+  & basisType=basisType3,  &
+  & alpha=alpha3, &
+  & beta=beta3, &
+  & lambda=lambda3)
+
+cnt = 0
+
+DO k3 = 1, r + 1
+  DO k2 = 1, q + 1
+    DO k1 = 1, p + 1
+      cnt = cnt + 1
+      ans(:, cnt, 1) = dP1(:, k1) * Q1(:, k2) * R1(:, k3)
+      ans(:, cnt, 2) = P1(:, k1) * dQ1(:, k2) * R1(:, k3)
+      ans(:, cnt, 3) = P1(:, k1) * Q1(:, k2) * dR1(:, k3)
+    END DO
+  END DO
+END DO
+END PROCEDURE TensorProdBasisGradient_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                    HeirarchicalBasisGradient_Hexahedron1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Hexahedron1
+#define _maxP_ MAXVAL([pb1, px1, px2, px3, px4, pxy1, pxz1])
+#define _maxQ_ MAXVAL([pb2, py1, py2, py3, py4, pxy2, pyz1])
+#define _maxR_ MAXVAL([pb3, pz1, pz2, pz3, pz4, pxz2, pyz2])
+
+INTEGER(I4B) :: a, b, maxP, maxQ, maxR
+REAL(DFP) :: L1(1:SIZE(xij, 2), 0:_maxP_)
+REAL(DFP) :: L2(1:SIZE(xij, 2), 0:_maxQ_)
+REAL(DFP) :: L3(1:SIZE(xij, 2), 0:_maxR_)
+REAL(DFP) :: dL1(1:SIZE(xij, 2), 0:_maxP_)
+REAL(DFP) :: dL2(1:SIZE(xij, 2), 0:_maxQ_)
+REAL(DFP) :: dL3(1:SIZE(xij, 2), 0:_maxR_)
+
+#undef _maxP_
+#undef _maxQ_
+#undef _maxR_
+
+maxP = SIZE(L1, 2) - 1
+maxQ = SIZE(L2, 2) - 1
+maxR = SIZE(L3, 2) - 1
+
+L1 = LobattoEvalAll(n=maxP, x=xij(1, :))
+L2 = LobattoEvalAll(n=maxQ, x=xij(2, :))
+L3 = LobattoEvalAll(n=maxR, x=xij(3, :))
+
+dL1 = LobattoGradientEvalAll(n=maxP, x=xij(1, :))
+dL2 = LobattoGradientEvalAll(n=maxQ, x=xij(2, :))
+dL3 = LobattoGradientEvalAll(n=maxR, x=xij(3, :))
+
+! Vertex basis function
+ans(:, 1:8, :) = VertexBasisGradient_Hexahedron2( &
+  & L1=L1, &
+  & L2=L2, &
+  & L3=L3, &
+  & dL1=dL1, &
+  & dL2=dL2, &
+  & dL3=dL3  &
+  & )
+
+! Edge basis function
+b = 8
+
+IF (ANY([px1, px2, px3, px4] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + px1 + px2 + px3 + px4 - 4
+  ans(:, a:b, :) = xEdgeBasisGradient_Hexahedron2( &
+    & pe1=px1, &
+    & pe2=px2, &
+    & pe3=px3, &
+    & pe4=px4, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+END IF
+
+IF (ANY([py1, py2, py3, py4] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + py1 + py2 + py3 + py4 - 4
+  ans(:, a:b, :) = yEdgeBasisGradient_Hexahedron2( &
+    & pe1=py1, &
+    & pe2=py2, &
+    & pe3=py3, &
+    & pe4=py4, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+END IF
+
+IF (ANY([pz1, pz2, pz3, pz4] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + pz1 + pz2 + pz3 + pz4 - 4
+  ans(:, a:b, :) = zEdgeBasisGradient_Hexahedron2( &
+    & pe1=pz1, &
+    & pe2=pz2, &
+    & pe3=pz3, &
+    & pe4=pz4, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+END IF
+
+! Facet basis function
+
+IF (ANY([pxy1, pxy2] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + 2 * (pxy1 - 1) * (pxy2 - 1)
+  ans(:, a:b, :) = xyFacetBasisGradient_Hexahedron2( &
+    & n1=pxy1, &
+    & n2=pxy2, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+END IF
+
+IF (ANY([pxz1, pxz2] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + 2 * (pxz1 - 1) * (pxz2 - 1)
+  ans(:, a:b, :) = xzFacetBasisGradient_Hexahedron2( &
+    & n1=pxz1, &
+    & n2=pxz2, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+END IF
+
+IF (ANY([pyz1, pyz2] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + 2 * (pyz1 - 1) * (pyz2 - 1)
+  ans(:, a:b, :) = yzFacetBasisGradient_Hexahedron2( &
+    & n1=pyz1, &
+    & n2=pyz2, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+END IF
+
+IF (ANY([pb1, pb2, pb3] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + (pb1 - 1) * (pb2 - 1) * (pb3 - 1)
+  ans(:, a:b, :) = cellBasisGradient_Hexahedron2( &
+    & n1=pb1, &
+    & n2=pb2, &
+    & n3=pb3, &
+    & L1=L1, &
+    & L2=L2, &
+    & L3=L3, &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dL3=dL3 &
+    & )
+END IF
+END PROCEDURE HeirarchicalBasisGradient_Hexahedron1
+
+!----------------------------------------------------------------------------
+!                                     HeirarchicalBasisGradient_Hexahedron2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Hexahedron2
+ans = HeirarchicalBasisGradient_Hexahedron1(&
+  & pb1=p, pb2=q, pb3=r, &
+  & pxy1=p, pxy2=q, &
+  & pxz1=p, pxz2=r, &
+  & pyz1=q, pyz2=r, &
+  & px1=p, px2=p, px3=p, px4=p, &
+  & py1=q, py2=q, py3=q, py4=q, &
+  & pz1=r, pz2=r, pz3=r, pz4=r, &
+  & xij=xij)
+END PROCEDURE HeirarchicalBasisGradient_Hexahedron2
 
 !----------------------------------------------------------------------------
 !
