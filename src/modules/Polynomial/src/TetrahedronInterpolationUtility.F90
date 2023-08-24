@@ -31,7 +31,6 @@ PUBLIC :: Isaac_Tetrahedron
 PUBLIC :: BlythPozrikidis_Tetrahedron
 PUBLIC :: InterpolationPoint_Tetrahedron
 PUBLIC :: OrthogonalBasis_Tetrahedron
-
 PUBLIC :: BarycentricVertexBasis_Tetrahedron
 PUBLIC :: BarycentricEdgeBasis_Tetrahedron
 PUBLIC :: BarycentricFacetBasis_Tetrahedron
@@ -41,7 +40,6 @@ PUBLIC :: VertexBasis_Tetrahedron
 PUBLIC :: EdgeBasis_Tetrahedron
 PUBLIC :: CellBasis_Tetrahedron
 PUBLIC :: HeirarchicalBasis_Tetrahedron
-
 PUBLIC :: RefCoord_Tetrahedron
 PUBLIC :: FacetConnectivity_Tetrahedron
 PUBLIC :: EdgeConnectivity_Tetrahedron
@@ -49,11 +47,12 @@ PUBLIC :: GetVertexDOF_Tetrahedron
 PUBLIC :: GetEdgeDOF_Tetrahedron
 PUBLIC :: GetFacetDOF_Tetrahedron
 PUBLIC :: GetCellDOF_Tetrahedron
-
 PUBLIC :: LagrangeEvalAll_Tetrahedron
 PUBLIC :: QuadraturePoint_Tetrahedron
-
 PUBLIC :: RefElemDomain_Tetrahedron
+PUBLIC :: LagrangeGradientEvalAll_Tetrahedron
+PUBLIC :: HeirarchicalBasisGradient_Tetrahedron
+PUBLIC :: OrthogonalBasisGradient_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                 RefElemDomain_Tetrahedron
@@ -65,7 +64,7 @@ PUBLIC :: RefElemDomain_Tetrahedron
 
 INTERFACE
   MODULE FUNCTION RefElemDomain_Tetrahedron(baseContinuity, baseInterpol) &
-            & RESULT(ans)
+    & RESULT(ans)
     CHARACTER(*), INTENT(IN) :: baseContinuity
     !! Cointinuity (conformity) of basis functions
     !! "H1", "HDiv", "HCurl", "DG"
@@ -417,7 +416,8 @@ INTERFACE
     & order, &
     & ipType, &
     & layout, &
-    & xij, alpha, &
+    & xij, &
+    & alpha, &
     & beta, &
     & lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -1492,6 +1492,185 @@ INTERFACE TensorQuadraturePoint_Tetrahedron
     !! Quadrature points
   END FUNCTION TensorQuadraturePoint_Tetrahedron2
 END INTERFACE TensorQuadraturePoint_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                       LagrangeGradientEvalAll_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  GradientEvaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeGradientEvalAll_Tetrahedron
+  MODULE FUNCTION LagrangeGradientEvalAll_Tetrahedron1( &
+    & order, &
+    & x, &
+    & xij, &
+    & refTetrahedron, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refTetrahedron
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2), 3, SIZE(x, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeGradientEvalAll_Tetrahedron1
+END INTERFACE LagrangeGradientEvalAll_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                       OrthogonalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Orthogongal basis on Tetrahedron
+
+INTERFACE OrthogonalBasisGradient_Tetrahedron
+  MODULE FUNCTION OrthogonalBasisGradient_Tetrahedron1( &
+    & order, &
+    & xij, &
+    & refTetrahedron) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in reference Tetrahedron.
+    !! The shape functions will be evaluated
+    !! at these points.
+    !! the SIZE(xij,1) = 3, and SIZE(xij, 2) = number of points
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP) :: ans( &
+      & SIZE(xij, 2), &
+      & (order + 1) * (order + 2) * (order + 3) / 6, 3)
+    !! shape functions
+    !! ans(:, j), jth shape functions at all points
+    !! ans(j, :), all shape functions at jth point
+  END FUNCTION OrthogonalBasisGradient_Tetrahedron1
+END INTERFACE OrthogonalBasisGradient_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                    HeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the heirarchical basis functions on Tetrahedron
+
+INTERFACE HeirarchicalBasisGradient_Tetrahedron
+  MODULE FUNCTION HeirarchicalBasisGradient_Tetrahedron1( &
+    & order, &
+    & pe1,  &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & pe5, &
+    & pe6, &
+    & ps1, &
+    & ps2, &
+    & ps3, &
+    & ps4, &
+    & xij, &
+    & refTetrahedron) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order of interpolation on edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order of interpolation on edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order of interpolation on edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order of interpolation on edge parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order of interpolation on facet parallel to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order of interpolation on facet parallel to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order of interpolation on facet parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order of interpolation on facet parallel to xyz
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! order on xij
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP) :: ans( &
+      & SIZE(xij, 2), &
+      & 4 &
+      & + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6 &
+      & + (ps1 - 1) * (ps1 - 2) / 2  &
+      & + (ps2 - 1) * (ps2 - 2) / 2  &
+      & + (ps3 - 1) * (ps3 - 2) / 2  &
+      & + (ps4 - 1) * (ps4 - 2) / 2 &
+      & + (order - 1) * (order - 2) * (order - 3) / 6_I4B, 3)
+  END FUNCTION HeirarchicalBasisGradient_Tetrahedron1
+END INTERFACE HeirarchicalBasisGradient_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                                     HeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the heirarchical basis functions on Tetrahedron
+
+INTERFACE HeirarchicalBasisGradient_Tetrahedron
+  MODULE FUNCTION HeirarchicalBasisGradient_Tetrahedron2( &
+    & order, &
+    & xij, &
+    & refTetrahedron) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! order on xij
+    CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! UNIT or BIUNIT
+    REAL(DFP) :: ans( &
+      & SIZE(xij, 2), &
+      & (order + 1) * (order + 2) * (order + 3) / 6_I4B, 3)
+  END FUNCTION HeirarchicalBasisGradient_Tetrahedron2
+END INTERFACE HeirarchicalBasisGradient_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                                 Tetrahedron
