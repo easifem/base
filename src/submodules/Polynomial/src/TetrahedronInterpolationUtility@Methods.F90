@@ -1152,6 +1152,19 @@ ans = TRANSPOSE(lambda(1:4, :))
 END PROCEDURE BarycentricVertexBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
+!                                 BarycentricVertexBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricVertexBasisGradient_Tetrahedron
+INTEGER(I4B) :: ii
+REAL(DFP) :: eye4_(4, 4)
+eye4_ = eye(4_I4B, 1.0_DFP)
+DO CONCURRENT(ii=1:SIZE(ans, 1))
+  ans(ii, :, :) = eye4_
+END DO
+END PROCEDURE BarycentricVertexBasisGradient_Tetrahedron
+
+!----------------------------------------------------------------------------
 !                                          BarycentricEdgeBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
