@@ -1292,6 +1292,42 @@ END DO
 END PROCEDURE BarycentricEdgeBasis_Tetrahedron2
 
 !----------------------------------------------------------------------------
+!                                   BarycentricEdgeBasisGradient_Tetrahedron2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricEdgeBasisGradient_Tetrahedron2
+INTEGER(I4B) :: a, ii, i1, i2, edges(2, 6), orders(6), iedge, v1, v2, &
+  & tPoints
+REAL(DFP) :: temp(SIZE(lambda, 2), 6)
+
+tPoints = SIZE(lambda, 2)
+ans = 0.0_DFP
+a = 0
+i2 = 0
+temp(:, 1) = lambda(1, :)
+temp(:, 2) = lambda(2, :)
+temp(:, 3) = lambda(3, :)
+temp(:, 4) = lambda(4, :)
+
+edges = EdgeConnectivity_Tetrahedron( &
+  & baseinterpol="Lagrange", &
+  & basecontinuity="H1")
+orders = [pe1, pe2, pe3, pe4, pe5, pe6]
+
+DO iedge = 1, SIZE(edges, 2)
+  v1 = edges(1, iedge); v2 = edges(2, iedge)
+  temp(:, 5) = temp(:, v1) * temp(:, v2)
+  i1 = i2 + 1; i2 = i1 + tPoints - 1
+  DO ii = 1, orders(iedge) - 1
+    a = a + 1
+    temp(:, 6) = temp(:, 5) * dphi(i1:i2, ii - 1)
+    ans(:, a, v1) = temp(:, v2) * phi(i1:i2, ii - 1) - temp(:, 6)
+    ans(:, a, v2) = temp(:, v1) * phi(i1:i2, ii - 1) + temp(:, 6)
+  END DO
+END DO
+END PROCEDURE BarycentricEdgeBasisGradient_Tetrahedron2
+
+!----------------------------------------------------------------------------
 !                                         BarycentricFacetBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
