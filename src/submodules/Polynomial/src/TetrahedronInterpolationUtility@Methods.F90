@@ -2354,6 +2354,7 @@ DO p = 0, order
 
 #define X2P_1 temp(:, 3)
 #define X2P temp(:, 4)
+
   X2P_1 = x2**MAX(p - 1_I4B, 0_I4B)
   X2P = X2P_1 * x2
 
@@ -2425,12 +2426,32 @@ END PROCEDURE OrthogonalBasisGradient_Tetrahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
-CALL Errormsg(&
-  & msg="WORK IN PROGRESS!!", &
-  & file=__FILE__, &
-  & routine="HeirarchicalBasisGradient_Tetrahedron1()", &
-  & line=__LINE__, &
-  & unitno=stderr)
+TYPE(String) :: name
+REAL(DFP) :: ans0(SIZE(ans, 1), SIZE(ans, 2), 4)
+ans0 = BarycentricHeirarchicalBasisGradient_Tetrahedron(&
+  & lambda=BarycentricCoordTetrahedron( &
+    & xin=xij, &
+    & refTetrahedron=refTetrahedron), &
+  & order=order, &
+  & pe1=pe1,  &
+  & pe2=pe2,  &
+  & pe3=pe3,  &
+  & pe4=pe4,  &
+  & pe5=pe5,  &
+  & pe6=pe6,  &
+  & ps1=ps1,  &
+  & ps2=ps2,  &
+  & ps3=ps3,  &
+  & ps4=ps4)
+
+ans(:, :, 1) = ans0(:, :, 2) - ans0(:, :, 1)
+ans(:, :, 2) = ans0(:, :, 3) - ans0(:, :, 1)
+ans(:, :, 3) = ans0(:, :, 4) - ans0(:, :, 1)
+
+name = UpperCase(refTetrahedron)
+IF (name == "BIUNIT") THEN
+  ans = 0.5_DFP * ans
+END IF
 END PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
 
 !----------------------------------------------------------------------------
