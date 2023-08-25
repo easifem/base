@@ -1426,6 +1426,64 @@ END DO
 END PROCEDURE BarycentricFacetBasis_Tetrahedron2
 
 !----------------------------------------------------------------------------
+!                                 BarycentricFacetBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricFacetBasisGradient_Tetrahedron2
+REAL(DFP) :: temp(SIZE(lambda, 2), 8)
+INTEGER(I4B) :: tPoints, i1, i2, ii, a, v1, v2, v3
+INTEGER(I4B) :: i21(2), i31(2), i41(2), i32(2), i42(2), i43(2)
+INTEGER(I4B) :: facetConn(3, 4), fid, n1, n2, cnt, indx1(2, 4), indx2(2, 4)
+
+tPoints = SIZE(lambda, 2)
+i21 = [1, tPoints]
+i31 = i21 + tPoints
+i41 = i31 + tPoints
+i32 = i41 + tPoints
+i42 = i32 + tPoints
+i43 = i42 + tPoints
+facetConn = FacetConnectivity_Tetrahedron( &
+  & baseInterpol="HIERARCHY", &
+  & baseContinuity="H1")
+indx1 = ((i21.rowconcat.i21) .rowconcat.i31) .rowconcat.i32
+indx2 = ((i31.rowconcat.i41) .rowconcat.i41) .rowconcat.i42
+
+ans = 0.0_DFP
+cnt = 0
+temp(:, 1) = lambda(1, :)
+temp(:, 2) = lambda(2, :)
+temp(:, 3) = lambda(3, :)
+temp(:, 4) = lambda(4, :)
+
+DO fid = 1, SIZE(facetConn, 2)
+  v1 = facetConn(1, fid)
+  v2 = facetConn(2, fid)
+  v3 = facetConn(3, fid)
+  i1 = indx1(1, fid)
+  i2 = indx1(1, fid)
+  temp(:, 5) = temp(:, v1) * temp(:, v2) * temp(:, v3)
+
+  DO n1 = 1, ps1 - 1
+    DO n2 = 1, ps1 - 1 - n1
+      cnt = cnt + 1
+      temp(:, 6) = phi(i1:i2, n1 - 1) * phi(i1:i2, n2 - 1)
+      temp(:, 7) = temp(:, 5) * dphi(i1:i2, n1 - 1) * phi(i1:i2, n2 - 1)
+      temp(:, 8) = temp(:, 5) * phi(i1:i2, n1 - 1) * dphi(i1:i2, n2 - 1)
+
+      ans(:, cnt, v1) = temp(:, v2) * temp(:, v3) * temp(:, 6) &
+                    & - temp(:, 7) - temp(:, 8)
+
+      ans(:, cnt, v2) = temp(:, v1) * temp(:, v3) * temp(:, 6) &
+                    & + temp(:, 7)
+
+      ans(:, cnt, v3) = temp(:, v1) * temp(:, v2) * temp(:, 6) &
+                    & + temp(:, 8)
+    END DO
+  END DO
+END DO
+END PROCEDURE BarycentricFacetBasisGradient_Tetrahedron2
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
