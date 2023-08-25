@@ -727,6 +727,30 @@ INTERFACE
   END FUNCTION BarycentricVertexBasis_Tetrahedron
 END INTERFACE
 
+
+!----------------------------------------------------------------------------
+!                                          BarycentricVertexBasis_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Gradient of vertex basis in terms of barycentric coord
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricVertexBasisGradient_Tetrahedron(lambda) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentrix coords
+    !! number of rows = 4
+    !! number of columns = number of points
+    REAL(DFP) :: ans(SIZE(lambda, 2), 4, 4)
+    !! - ans(:,:,i) denotes gradient wrt $\lambda_{i}$
+    !! - index1: point of evaluation
+    !! - index2: vertex basis number
+    !! - index3: gradient 
+  END FUNCTION BarycentricVertexBasisGradient_Tetrahedron
+END INTERFACE
+
 !----------------------------------------------------------------------------
 !                                         BarycentricEdgeBasis_Tetrahedron
 !----------------------------------------------------------------------------
@@ -772,12 +796,12 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!
+!                                           BarycentricEdgeBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 30 Oct 2022
-! summary: Evaluate the edge basis on triangle using barycentric coordinate
+! summary: Evaluate the edge basis on Tetrahedron in terms of barycentric 
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricEdgeBasis_Tetrahedron2( &
@@ -814,6 +838,55 @@ INTERFACE
       & SIZE(lambda, 2), &
       & pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6)
   END FUNCTION BarycentricEdgeBasis_Tetrahedron2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                 BarycentricEdgeBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 30 Oct 2022
+! summary: Eval grad of the basis in terms of barycentric coord
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricEdgeBasisGradient_Tetrahedron2( &
+    & pe1, &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & pe5, &
+    & pe6, &
+    & lambda, &
+    & phi) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on  edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on  edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on  edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order on  edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order on  edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order on  edge parallel to yz
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! size(lambda,1) = 4
+    !! size(lambda,2) = number of points of evaluation
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! lobatto kernel values
+    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    REAL(DFP) :: ans( &
+      & SIZE(lambda, 2), &
+      & pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6, 4)
+    !! - ans(:,:,i) denotes gradient wrt $\lambda_{i}$
+    !! - index1: point of evaluation
+    !! - index2: vertex basis number
+    !! - index3: gradient 
+  END FUNCTION BarycentricEdgeBasisGradient_Tetrahedron2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -895,6 +968,52 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                 BarycentricFacetBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval gradient of facet-basis in terms of barycentric
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricFacetBasisGradient_Tetrahedron2( &
+    & ps1, &
+    & ps2, &
+    & ps3, &
+    & ps4, &
+    & lambda,  &
+    & phi &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order on  edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order on  edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order on  edge parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order on  edge parallel to xyz
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to 4
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! lobatto kernel values
+    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    REAL(DFP) :: ans( &
+      & SIZE(lambda, 2), &
+      &   (ps1 - 1) * (ps1 - 2) / 2  &
+      & + (ps2 - 1) * (ps2 - 2) / 2  &
+      & + (ps3 - 1) * (ps3 - 2) / 2  &
+      & + (ps4 - 1) * (ps4 - 2) / 2, 4)
+    !! - ans(:,:,i) denotes gradient wrt $\lambda_{i}$
+    !! - index1: point of evaluation
+    !! - index2: vertex basis number
+    !! - index3: gradient 
+  END FUNCTION BarycentricFacetBasisGradient_Tetrahedron2
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                          BarycentricCellBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
@@ -923,7 +1042,7 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 28 Oct 2022
-! summary: Eval basis on cell of triangle
+! summary: Evaluate cellbasis function in terms of barycentric coord
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricCellBasis_Tetrahedron2( &
@@ -942,6 +1061,37 @@ INTERFACE
       & SIZE(lambda, 2), &
       & (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B)
   END FUNCTION BarycentricCellBasis_Tetrahedron2
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                   BarycentricCellBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-25
+! summary: Gradient of cellbasis function in terms of barycentric coord
+
+INTERFACE
+  MODULE PURE FUNCTION BarycentricCellBasisGradient_Tetrahedron2( &
+    & pb, lambda, phi) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pb
+    !! order on  facet parallel to xy
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! point of evaluation in terms of barycentric coordinates
+    !! Number of rows in lambda is equal to 4
+    REAL(DFP), INTENT(IN) :: phi(1:, 0:)
+    !! lobatto kernel values
+    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
+    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    REAL(DFP) :: ans( &
+      & SIZE(lambda, 2), &
+      & (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B, 4)
+    !! - ans(:,:,i) denotes gradient wrt $\lambda_{i}$
+    !! - index1: point of evaluation
+    !! - index2: vertex basis number
+    !! - index3: gradient 
+  END FUNCTION BarycentricCellBasisGradient_Tetrahedron2
 END INTERFACE
 
 !----------------------------------------------------------------------------
