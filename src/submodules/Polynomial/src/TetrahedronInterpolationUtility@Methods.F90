@@ -1888,9 +1888,9 @@ END PROCEDURE BarycentricHeirarchicalBasisGradient_Tetrahedron2
 
 MODULE PROCEDURE VertexBasis_Tetrahedron
 ans = BarycentricVertexBasis_Tetrahedron(&
-& lambda=BarycentricCoordTetrahedron( &
-& xin=xij, &
-& refTetrahedron=refTetrahedron))
+  & lambda=BarycentricCoordTetrahedron( &
+  & xin=xij, &
+  & refTetrahedron=refTetrahedron))
 END PROCEDURE VertexBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -1899,15 +1899,15 @@ END PROCEDURE VertexBasis_Tetrahedron
 
 MODULE PROCEDURE EdgeBasis_Tetrahedron
 ans = BarycentricEdgeBasis_Tetrahedron(&
-& lambda=BarycentricCoordTetrahedron( &
-& xin=xij, &
-& refTetrahedron=refTetrahedron), &
-& pe1=pe1,  &
-& pe2=pe2,  &
-& pe3=pe3,  &
-& pe4=pe4,  &
-& pe5=pe5,  &
-& pe6=pe6)
+  & lambda=BarycentricCoordTetrahedron( &
+  & xin=xij, &
+  & refTetrahedron=refTetrahedron), &
+  & pe1=pe1,  &
+  & pe2=pe2,  &
+  & pe3=pe3,  &
+  & pe4=pe4,  &
+  & pe5=pe5,  &
+  & pe6=pe6)
 END PROCEDURE EdgeBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -1916,13 +1916,13 @@ END PROCEDURE EdgeBasis_Tetrahedron
 
 MODULE PROCEDURE FacetBasis_Tetrahedron
 ans = BarycentricFacetBasis_Tetrahedron(&
-& lambda=BarycentricCoordTetrahedron( &
-& xin=xij, &
-& refTetrahedron=refTetrahedron), &
-& ps1=ps1,  &
-& ps2=ps2,  &
-& ps3=ps3,  &
-& ps4=ps4)
+  & lambda=BarycentricCoordTetrahedron( &
+  & xin=xij, &
+  & refTetrahedron=refTetrahedron), &
+  & ps1=ps1,  &
+  & ps2=ps2,  &
+  & ps3=ps3,  &
+  & ps4=ps4)
 END PROCEDURE FacetBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -1931,10 +1931,10 @@ END PROCEDURE FacetBasis_Tetrahedron
 
 MODULE PROCEDURE CellBasis_Tetrahedron
 ans = BarycentricCellBasis_Tetrahedron(&
-& lambda=BarycentricCoordTetrahedron( &
-& xin=xij, &
-& refTetrahedron=refTetrahedron), &
-& pb=pb)
+  & lambda=BarycentricCoordTetrahedron( &
+    & xin=xij, &
+    & refTetrahedron=refTetrahedron), &
+  & pb=pb)
 END PROCEDURE CellBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -1944,8 +1944,8 @@ END PROCEDURE CellBasis_Tetrahedron
 MODULE PROCEDURE HeirarchicalBasis_Tetrahedron1
 ans = BarycentricHeirarchicalBasis_Tetrahedron(&
   & lambda=BarycentricCoordTetrahedron( &
-  & xin=xij, &
-  & refTetrahedron=refTetrahedron), &
+    & xin=xij, &
+    & refTetrahedron=refTetrahedron), &
   & order=order, &
   & pe1=pe1,  &
   & pe2=pe2,  &
@@ -1966,8 +1966,8 @@ END PROCEDURE HeirarchicalBasis_Tetrahedron1
 MODULE PROCEDURE HeirarchicalBasis_Tetrahedron2
 ans = BarycentricHeirarchicalBasis_Tetrahedron(&
   & lambda=BarycentricCoordTetrahedron( &
-  & xin=xij, &
-  & refTetrahedron=refTetrahedron), &
+    & xin=xij, &
+    & refTetrahedron=refTetrahedron), &
   & order=order)
 END PROCEDURE HeirarchicalBasis_Tetrahedron2
 
