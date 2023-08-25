@@ -2459,12 +2459,20 @@ END PROCEDURE HeirarchicalBasisGradient_Tetrahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE HeirarchicalBasisGradient_Tetrahedron2
-CALL Errormsg(&
-  & msg="WORK IN PROGRESS!!", &
-  & file=__FILE__, &
-  & routine="HeirarchicalBasisGradient_Tetrahedron2()", &
-  & line=__LINE__, &
-  & unitno=stderr)
+ans = HeirarchicalBasisGradient_Tetrahedron1( &
+  & order=order, &
+  & pe1=order, &
+  & pe2=order, &
+  & pe3=order, &
+  & pe4=order, &
+  & pe5=order, &
+  & pe6=order, &
+  & ps1=order, &
+  & ps2=order, &
+  & ps3=order, &
+  & ps4=order, &
+  & xij=xij, &
+  & refTetrahedron=refTetrahedron)
 END PROCEDURE HeirarchicalBasisGradient_Tetrahedron2
 
 !----------------------------------------------------------------------------
