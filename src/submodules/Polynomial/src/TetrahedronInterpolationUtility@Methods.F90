@@ -1554,6 +1554,65 @@ END DO
 END PROCEDURE BarycentricCellBasis_Tetrahedron2
 
 !----------------------------------------------------------------------------
+!                                 BarycentricCellBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricCellBasisGradient_Tetrahedron2
+REAL(DFP) :: temp(SIZE(lambda, 2), 13)
+INTEGER(I4B) :: tPoints
+INTEGER(I4B) :: i21(2), i31(2), i41(2)
+INTEGER(I4B) :: n1, n2, n3, cnt
+
+tPoints = SIZE(lambda, 2)
+i21 = [1, tPoints]
+i31 = i21 + tPoints
+i41 = i31 + tPoints
+ans = 0.0_DFP
+cnt = 0
+
+temp(:, 1) = lambda(1, :)
+temp(:, 2) = lambda(2, :)
+temp(:, 3) = lambda(3, :)
+temp(:, 4) = lambda(4, :)
+temp(:, 5) = PRODUCT(temp(:, 1:4), dim=2)
+temp(:, 6) = PRODUCT(temp(:, [2, 3, 4]), dim=2)
+temp(:, 7) = PRODUCT(temp(:, [1, 3, 4]), dim=2)
+temp(:, 8) = PRODUCT(temp(:, [1, 2, 4]), dim=2)
+temp(:, 9) = PRODUCT(temp(:, [1, 2, 3]), dim=2)
+
+DO n1 = 1, pb - 1
+  DO n2 = 1, pb - 1 - n1
+    DO n3 = 1, pb - 1 - n1 - n2
+      cnt = cnt + 1
+      temp(:, 10) = phi(i21(1):i21(2), n1 - 1)  &
+                   & * phi(i31(1):i31(2), n2 - 1)  &
+                   & * phi(i41(1):i41(2), n3 - 1)
+
+      temp(:, 11) = temp(:, 5) * dphi(i21(1):i21(2), n1 - 1)  &
+                   & * phi(i31(1):i31(2), n2 - 1)  &
+                   & * phi(i41(1):i41(2), n3 - 1)
+
+      temp(:, 12) = temp(:, 5) * phi(i21(1):i21(2), n1 - 1)  &
+                   & * dphi(i31(1):i31(2), n2 - 1)  &
+                   & * phi(i41(1):i41(2), n3 - 1)
+
+      temp(:, 13) = temp(:, 5) * phi(i21(1):i21(2), n1 - 1)  &
+                   & * phi(i31(1):i31(2), n2 - 1)  &
+                   & * dphi(i41(1):i41(2), n3 - 1)
+
+      ans(:, cnt, 1) = temp(:, 6) * temp(:, 10) &
+                    &- temp(:, 11) - temp(:, 12) - temp(:, 13)
+
+      ans(:, cnt, 2) = temp(:, 7) * temp(:, 10) + temp(:, 11)
+      ans(:, cnt, 3) = temp(:, 8) * temp(:, 10) + temp(:, 12)
+      ans(:, cnt, 4) = temp(:, 9) * temp(:, 10) + temp(:, 13)
+    END DO
+  END DO
+END DO
+
+END PROCEDURE BarycentricCellBasisGradient_Tetrahedron2
+
+!----------------------------------------------------------------------------
 !                                  BarycentricHeirarchicalBasis_Tetrahedron
 !----------------------------------------------------------------------------
 
