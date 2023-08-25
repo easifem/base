@@ -2325,11 +2325,8 @@ CASE ("UNIT")
   x = FromUnitTetrahedron2BiUnitHexahedron(xin=xij)
 END SELECT
 
-#define x2 temp(:, 1)
-#define x3 temp(:, 2)
-
-x2 = 0.5_DFP * (1.0_DFP - x(2, :))
-x3 = 0.5_DFP * (1.0_DFP - x(3, :))
+temp(:, 1) = 0.5_DFP * (1.0_DFP - x(2, :))
+temp(:, 2) = 0.5_DFP * (1.0_DFP - x(3, :))
 
 P1 = LegendreEvalAll(n=order, x=x(1, :))
 dP1 = LegendreGradientEvalAll(n=order, x=x(1, :))
@@ -2352,11 +2349,8 @@ DO p = 0, order
     & beta=0.0_DFP  &
     & )
 
-#define X2P_1 temp(:, 3)
-#define X2P temp(:, 4)
-
-  X2P_1 = x2**MAX(p - 1_I4B, 0_I4B)
-  X2P = X2P_1 * x2
+  temp(:, 3) = temp(:, 1)**MAX(p - 1_I4B, 0_I4B)
+  temp(:, 4) = temp(:, 3) * temp(:, 1)
 
   DO q = 0, order - p
 
@@ -2376,48 +2370,23 @@ DO p = 0, order
       & beta=0.0_DFP  &
       & )
 
-#define PQ temp(:, 5)
-#define PdQ temp(:, 6)
-#define dPQ temp(:, 7)
-#define PQR temp(:, 8)
-
-    PQ = P1(:, p) * Q1(:, q)
-    PdQ = P1(:, p) * dQ1(:, q)
-    dPQ = dP1(:, p) * Q1(:, q)
-
-#define X3PQ_1 temp(:, 9)
-#define X3PQ temp(:, 10)
-    X3PQ_1 = x3**MAX(p + q - 1_I4B, 0_I4B)
-    X3PQ = X3PQ_1 * x3
+    temp(:, 5) = P1(:, p) * Q1(:, q)
+    temp(:, 6) = P1(:, p) * dQ1(:, q)
+    temp(:, 7) = dP1(:, p) * Q1(:, q)
+    temp(:, 9) = temp(:, 2)**MAX(p + q - 1_I4B, 0_I4B)
+    temp(:, 10) = temp(:, 9) * temp(:, 2)
 
     DO r = 0, order - p - q
-      PQR = PQ * R1(:, r)
-
+      temp(:, 8) = temp(:, 5) * R1(:, r)
       cnt = cnt + 1
-
-      ans(:, cnt, 1) = dPQ * R1(:, r) * X2P * X3PQ
-
-      ans(:, cnt, 2) = PQR * areal * X2P_1 * X3PQ  &
-        & + PdQ * R1(:, r) * X2P * X3PQ
-
-      ans(:, cnt, 2) = PQR * breal * X2P * X3PQ_1  &
-        & + PQ * dR1(:, r) * X2P * X3PQ
-
+      ans(:, cnt, 1) = temp(:, 7) * R1(:, r) * temp(:, 4) * temp(:, 10)
+      ans(:, cnt, 2) = temp(:, 8) * areal * temp(:, 3) * temp(:, 10)  &
+        & + temp(:, 6) * R1(:, r) * temp(:, 4) * temp(:, 10)
+      ans(:, cnt, 2) = temp(:, 8) * breal * temp(:, 4) * temp(:, 9)  &
+        & + temp(:, 5) * dR1(:, r) * temp(:, 4) * temp(:, 10)
     END DO
-
   END DO
 END DO
-
-#undef x2
-#undef x3
-#undef X2P
-#undef X2P_1
-#undef PQ
-#undef PdQ
-#undef dPQ
-#undef PQR
-#undef X3PQ
-#undef X3PQ_1
 
 END PROCEDURE OrthogonalBasisGradient_Tetrahedron1
 
