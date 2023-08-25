@@ -857,7 +857,8 @@ INTERFACE
     & pe5, &
     & pe6, &
     & lambda, &
-    & phi) RESULT(ans)
+    & phi,  &
+    & dphi) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pe1
     !! order on  edge parallel to x
     INTEGER(I4B), INTENT(IN) :: pe2
@@ -876,8 +877,20 @@ INTERFACE
     !! size(lambda,2) = number of points of evaluation
     REAL(DFP), INTENT(IN) :: phi(1:, 0:)
     !! lobatto kernel values
-    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-    !! (lambda3-lambda1), (lambda3-lambda2)
+    !! size(phi1, 1) = 6*number of points 
+    !! - (lambda2-lambda1)
+    !! - (lambda3-lambda1)
+    !! - (lambda4-lambda1)
+    !! - (lambda3-lambda2)
+    !! - (lambda4-lambda2)
+    !! - (lambda4-lambda3)
+    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    REAL(DFP), INTENT(IN) :: dphi(1:, 0:)
+    !! gradient of lobatto kernel 
+    !! size(phi1, 1) = 3*number of points 
+    !! - (lambda2-lambda1),
+    !! - (lambda3-lambda1), 
+    !! - (lambda3-lambda2)
     !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
     REAL(DFP) :: ans( &
       & SIZE(lambda, 2), &
@@ -982,7 +995,8 @@ INTERFACE
     & ps3, &
     & ps4, &
     & lambda,  &
-    & phi &
+    & phi, &
+    & dphi &
     & ) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: ps1
     !! order on  edge parallel to xy
@@ -997,9 +1011,22 @@ INTERFACE
     !! Number of rows in lambda is equal to 4
     REAL(DFP), INTENT(IN) :: phi(1:, 0:)
     !! lobatto kernel values
-    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-    !! (lambda3-lambda1), (lambda3-lambda2)
-    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    !! size(phi1, 1) = 6*number of points 
+    !! - (lambda2-lambda1)
+    !! - (lambda3-lambda1)
+    !! - (lambda4-lambda1)
+    !! - (lambda3-lambda2)
+    !! - (lambda4-lambda2)
+    !! - (lambda4-lambda3)
+    REAL(DFP), INTENT(IN) :: dphi(1:, 0:)
+    !! gradient of lobatto kernel values
+    !! size(phi1, 1) = 6*number of points 
+    !! - (lambda2-lambda1)
+    !! - (lambda3-lambda1)
+    !! - (lambda4-lambda1)
+    !! - (lambda3-lambda2)
+    !! - (lambda4-lambda2)
+    !! - (lambda4-lambda3)
     REAL(DFP) :: ans( &
       & SIZE(lambda, 2), &
       &   (ps1 - 1) * (ps1 - 2) / 2  &
@@ -1009,7 +1036,7 @@ INTERFACE
     !! - ans(:,:,i) denotes gradient wrt $\lambda_{i}$
     !! - index1: point of evaluation
     !! - index2: vertex basis number
-    !! - index3: gradient 
+    !! - index3: gradient
   END FUNCTION BarycentricFacetBasisGradient_Tetrahedron2
 END INTERFACE
 
@@ -1053,10 +1080,14 @@ INTERFACE
     !! point of evaluation in terms of barycentric coordinates
     !! Number of rows in lambda is equal to 4
     REAL(DFP), INTENT(IN) :: phi(1:, 0:)
-    !! lobatto kernel values
-    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-    !! (lambda3-lambda1), (lambda3-lambda2)
-    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    !! Value of lobatto kernel values
+    !! size(phi1, 1) = 6*number of points 
+    !! - (lambda2-lambda1)
+    !! - (lambda3-lambda1)
+    !! - (lambda4-lambda1)
+    !! - (lambda3-lambda2)
+    !! - (lambda4-lambda2)
+    !! - (lambda4-lambda3)
     REAL(DFP) :: ans( &
       & SIZE(lambda, 2), &
       & (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B)
@@ -1073,17 +1104,30 @@ END INTERFACE
 
 INTERFACE
   MODULE PURE FUNCTION BarycentricCellBasisGradient_Tetrahedron2( &
-    & pb, lambda, phi) RESULT(ans)
+    & pb, lambda, phi, dphi) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: pb
     !! order on  facet parallel to xy
     REAL(DFP), INTENT(IN) :: lambda(:, :)
     !! point of evaluation in terms of barycentric coordinates
     !! Number of rows in lambda is equal to 4
     REAL(DFP), INTENT(IN) :: phi(1:, 0:)
-    !! lobatto kernel values
-    !! size(phi1, 1) = 3*number of points (lambda2-lambda1),
-    !! (lambda3-lambda1), (lambda3-lambda2)
-    !! size(phi1, 2) = max(pe1-2, pe2-2, pe3-2)+1
+    !! Value of lobatto kernel values
+    !! size(phi1, 1) = 6*number of points 
+    !! - (lambda2-lambda1)
+    !! - (lambda3-lambda1)
+    !! - (lambda4-lambda1)
+    !! - (lambda3-lambda2)
+    !! - (lambda4-lambda2)
+    !! - (lambda4-lambda3)
+    REAL(DFP), INTENT(IN) :: dphi(1:, 0:)
+    !! Gradient of lobatto kernel values
+    !! size(phi1, 1) = 6*number of points 
+    !! - (lambda2-lambda1)
+    !! - (lambda3-lambda1)
+    !! - (lambda4-lambda1)
+    !! - (lambda3-lambda2)
+    !! - (lambda4-lambda2)
+    !! - (lambda4-lambda3)
     REAL(DFP) :: ans( &
       & SIZE(lambda, 2), &
       & (pb - 1) * (pb - 2) * (pb - 3) / 6_I4B, 4)
@@ -1156,8 +1200,73 @@ INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
 END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
 
 !----------------------------------------------------------------------------
+!                         BarycentricHeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Gradient of heirarchical basis in terms of barycentric coord
+
+INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
+  MODULE PURE FUNCTION BarycentricHeirarchicalBasisGradient_Tetrahedron1( &
+    & order, &
+    & pe1,  &
+    & pe2, &
+    & pe3, &
+    & pe4, &
+    & pe5, &
+    & pe6, &
+    & ps1, &
+    & ps2, &
+    & ps3, &
+    & ps4, &
+    & lambda &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order of interpolation on edge parallel to x
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order of interpolation on edge parallel to y
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order of interpolation on edge parallel to z
+    INTEGER(I4B), INTENT(IN) :: pe4
+    !! order of interpolation on edge parallel to xy
+    INTEGER(I4B), INTENT(IN) :: pe5
+    !! order of interpolation on edge parallel to xz
+    INTEGER(I4B), INTENT(IN) :: pe6
+    !! order of interpolation on edge parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps1
+    !! order of interpolation on facet parallel to xy
+    INTEGER(I4B), INTENT(IN) :: ps2
+    !! order of interpolation on facet parallel to xz
+    INTEGER(I4B), INTENT(IN) :: ps3
+    !! order of interpolation on facet parallel to yz
+    INTEGER(I4B), INTENT(IN) :: ps4
+    !! order of interpolation on facet parallel to xyz
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Barycenteric coordinates
+    !! number of rows = 4
+    !! number of cols = number of points
+    REAL(DFP) :: ans( &
+      & SIZE(lambda, 2), &
+      & 4 &
+      & + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6 &
+      & + (ps1 - 1) * (ps1 - 2) / 2  &
+      & + (ps2 - 1) * (ps2 - 2) / 2  &
+      & + (ps3 - 1) * (ps3 - 2) / 2  &
+      & + (ps4 - 1) * (ps4 - 2) / 2 &
+      & + (order - 1) * (order - 2) * (order - 3) / 6_I4B, 4_I4B)
+  END FUNCTION BarycentricHeirarchicalBasisGradient_Tetrahedron1
+END INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-25 
+! summary:  Evaluate heirarchical basis in terms of barycentric coord
 
 INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
   MODULE PURE FUNCTION BarycentricHeirarchicalBasis_Tetrahedron2( &
@@ -1173,6 +1282,31 @@ INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
       & (order + 1) * (order + 2) * (order + 3) / 6_I4B)
   END FUNCTION BarycentricHeirarchicalBasis_Tetrahedron2
 END INTERFACE BarycentricHeirarchicalBasis_Tetrahedron
+
+!----------------------------------------------------------------------------
+!                        BarycentricHeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-25 
+! summary: Gradient of heirarchical basis in terms of barycentric coord
+
+INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
+  MODULE PURE FUNCTION BarycentricHeirarchicalBasisGradient_Tetrahedron2( &
+    & order, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order in the cell of triangle, it should be greater than 2
+    REAL(DFP), INTENT(IN) :: lambda(:, :)
+    !! Point of evaluation in terms of barycentric coord
+    !! Barycenteric coordinates
+    !! number of rows = 4
+    !! number of cols = number of points
+    REAL(DFP) :: ans( &
+      & SIZE(lambda, 2), &
+      & (order + 1) * (order + 2) * (order + 3) / 6_I4B, 4)
+  END FUNCTION BarycentricHeirarchicalBasisGradient_Tetrahedron2
+END INTERFACE BarycentricHeirarchicalBasisGradient_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                   VertexBasis_Tetrahedron
