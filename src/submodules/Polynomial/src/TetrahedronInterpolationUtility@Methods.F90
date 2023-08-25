@@ -1715,7 +1715,6 @@ IF (order .GE. 4_I4B) THEN
     & lambda=lambda, &
     & phi=phi)
 END IF
-
 END PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron1
 
 !----------------------------------------------------------------------------
@@ -1738,6 +1737,150 @@ ans = BarycentricHeirarchicalBasis_Tetrahedron( &
     & lambda=lambda  &
     & )
 END PROCEDURE BarycentricHeirarchicalBasis_Tetrahedron2
+
+!----------------------------------------------------------------------------
+!                         BarycentricHeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricHeirarchicalBasisGradient_Tetrahedron1
+REAL(DFP) :: phi( &
+  & 1:6 * SIZE(lambda, 2), &
+  & 0:MAX(  &
+  & pe1 - 2, &
+  & pe2 - 2, &
+  & pe3 - 2, &
+  & pe4 - 2, &
+  & pe5 - 2, &
+  & pe6 - 2, &
+  & ps1 - 1, &
+  & ps2 - 1, &
+  & ps3 - 1, &
+  & ps4 - 1, &
+  & order &
+  & ))
+REAL(DFP) :: dphi( &
+  & 1:6 * SIZE(lambda, 2), &
+  & 0:MAX(  &
+  & pe1 - 2, &
+  & pe2 - 2, &
+  & pe3 - 2, &
+  & pe4 - 2, &
+  & pe5 - 2, &
+  & pe6 - 2, &
+  & ps1 - 1, &
+  & ps2 - 1, &
+  & ps3 - 1, &
+  & ps4 - 1, &
+  & order &
+  & ))
+REAL(DFP) :: d_lambda(6 * SIZE(lambda, 2))
+INTEGER(I4B) :: a, b, maxP, tPoints, i1, i2
+
+tPoints = SIZE(lambda, 2)
+maxP = SIZE(phi, 2) - 1_I4B
+
+i1 = 1
+i2 = i1 + tPoints - 1
+d_lambda(i1:i2) = lambda(2, :) - lambda(1, :)
+
+i1 = i2 + 1
+i2 = i1 + tPoints - 1
+d_lambda(i1:i2) = lambda(3, :) - lambda(1, :)
+
+i1 = i2 + 1
+i2 = i1 + tPoints - 1
+d_lambda(i1:i2) = lambda(4, :) - lambda(1, :)
+
+i1 = i2 + 1
+i2 = i1 + tPoints - 1
+d_lambda(i1:i2) = lambda(3, :) - lambda(2, :)
+
+i1 = i2 + 1
+i2 = i1 + tPoints - 1
+d_lambda(i1:i2) = lambda(4, :) - lambda(2, :)
+
+i1 = i2 + 1
+i2 = i1 + tPoints - 1
+d_lambda(i1:i2) = lambda(4, :) - lambda(3, :)
+
+phi = LobattoKernelEvalAll(n=maxP, x=d_lambda)
+dphi = LobattoKernelGradientEvalAll(n=maxP, x=d_lambda)
+
+!! Vertex basis function
+ans = 0.0_DFP
+ans(:, 1:4, :) = BarycentricVertexBasisGradient_Tetrahedron(lambda=lambda)
+b = 4
+
+!! Edge basis function
+IF (ANY([pe1, pe2, pe3, pe4, pe5, pe6] .GE. 2_I4B)) THEN
+  a = b + 1
+  b = a - 1 + pe1 + pe2 + pe3 + pe4 + pe5 + pe6 - 6
+  ans(:, a:b, :) = BarycentricEdgeBasisGradient_Tetrahedron2( &
+    & pe1=pe1,  &
+    & pe2=pe2, &
+    & pe3=pe3, &
+    & pe4=pe4, &
+    & pe5=pe5, &
+    & pe6=pe6, &
+    & lambda=lambda, &
+    & phi=phi,  &
+    & dphi=dphi  &
+    & )
+END IF
+
+!! Facet basis function
+IF (ANY([ps1, ps2, ps3, ps4] .GE. 3_I4B)) THEN
+  a = b + 1
+  b = a - 1  &
+    & + (ps1 - 1_I4B) * (ps1 - 2_I4B) / 2_I4B  &
+    & + (ps2 - 1_I4B) * (ps2 - 2_I4B) / 2_I4B  &
+    & + (ps3 - 1_I4B) * (ps3 - 2_I4B) / 2_I4B  &
+    & + (ps4 - 1_I4B) * (ps4 - 2_I4B) / 2_I4B
+
+  ans(:, a:b, :) = BarycentricFacetBasisGradient_Tetrahedron2( &
+    & ps1=ps1, &
+    & ps2=ps2, &
+    & ps3=ps3, &
+    & ps4=ps4, &
+    & lambda=lambda, &
+    & phi=phi,  &
+    & dphi=dphi  &
+    & )
+END IF
+
+!! Cell basis function
+IF (order .GE. 4_I4B) THEN
+  a = b + 1
+  b = a - 1 &
+    & + (order - 1_I4B) * (order - 2_I4B) * (order - 3_I4B) / 6_I4B
+
+  ans(:, a:b, :) = BarycentricCellBasisGradient_Tetrahedron2( &
+    & pb=order, &
+    & lambda=lambda, &
+    & phi=phi, dphi=dphi)
+END IF
+END PROCEDURE BarycentricHeirarchicalBasisGradient_Tetrahedron1
+
+!----------------------------------------------------------------------------
+!                         BarycentricHeirarchicalBasisGradient_Tetrahedron
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BarycentricHeirarchicalBasisGradient_Tetrahedron2
+ans = BarycentricHeirarchicalBasisGradient_Tetrahedron( &
+    & order=order,  &
+    & pe1=order,  &
+    & pe2=order,  &
+    & pe3=order,  &
+    & pe4=order,  &
+    & pe5=order,  &
+    & pe6=order,  &
+    & ps1=order, &
+    & ps2=order,  &
+    & ps3=order,  &
+    & ps4=order,  &
+    & lambda=lambda  &
+    & )
+END PROCEDURE BarycentricHeirarchicalBasisGradient_Tetrahedron2
 
 !----------------------------------------------------------------------------
 !                                                  VertexBasis_Tetrahedron
