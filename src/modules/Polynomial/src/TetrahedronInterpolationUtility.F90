@@ -38,6 +38,7 @@ PUBLIC :: BarycentricCellBasis_Tetrahedron
 PUBLIC :: BarycentricHeirarchicalBasis_Tetrahedron
 PUBLIC :: VertexBasis_Tetrahedron
 PUBLIC :: EdgeBasis_Tetrahedron
+PUBLIC :: FacetBasis_Tetrahedron
 PUBLIC :: CellBasis_Tetrahedron
 PUBLIC :: HeirarchicalBasis_Tetrahedron
 PUBLIC :: RefCoord_Tetrahedron
@@ -1666,6 +1667,7 @@ INTERFACE QuadraturePoint_Tetrahedron
     !! Reference triangle
     !! BIUNIT
     !! UNIT
+    !! If xij is present then this argument is ignored
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of triangle.
     !! The number of rows in xij should be  3.
@@ -1701,6 +1703,7 @@ INTERFACE QuadraturePoint_Tetrahedron
     !! Reference triangle
     !! BIUNIT
     !! UNIT
+    !! If xij is present then this argument is ignored
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! nodal coordinates of triangle.
     !! The number of rows in xij should be 3

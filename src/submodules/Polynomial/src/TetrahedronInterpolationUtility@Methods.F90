@@ -16,6 +16,11 @@
 
 SUBMODULE(TetrahedronInterpolationUtility) Methods
 USE BaseMethod
+USE QuadraturePoint_Tetrahedron_Solin, ONLY:   &
+& QuadratureNumberTetrahedronSolin,  &
+& QuadratureOrderTetrahedronSolin,  &
+& QuadraturePointTetrahedronSolin,  &
+& MAX_ORDER_TETRAHEDRON_SOLIN
 IMPLICIT NONE
 CONTAINS
 
@@ -2149,12 +2154,49 @@ END PROCEDURE LagrangeEvalAll_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Tetrahedron1
-CALL Errormsg(&
-  & msg="WORK IN PROGRESS!!", &
-  & file=__FILE__, &
-  & routine="QuadraturePoint_Tetrahedron1()", &
-  & line=__LINE__, &
-  & unitno=stderr)
+REAL(DFP), ALLOCATABLE :: temp_t(:, :)
+TYPE(string) :: astr
+
+IF (order .LE. MAX_ORDER_TETRAHEDRON_SOLIN) THEN
+  astr = TRIM(UpperCase(refTetrahedron))
+  temp_t = QuadraturePointTetrahedronSolin(order=order)
+  CALL Reallocate(ans, 4_I4B, SIZE(temp_t, 2, kind=I4B))
+
+  IF (PRESENT(xij)) THEN
+    ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
+      & xin=temp_t(1:3, :), &
+      & x1=xij(:, 1), &
+      & x2=xij(:, 2), &
+      & x3=xij(:, 3), &
+      & x4=xij(:, 4) &
+      & )
+
+    ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
+      & from="UNIT", &
+      & to="TETRAHEDRON", &
+      & xij=xij)
+
+  ELSE
+
+    IF (astr%chars() .EQ. "BIUNIT") THEN
+      ans(1:3, :) = FromUnitTetrahedron2BiUnitTetrahedron(xin=temp_t(1:3, :))
+      ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
+        & from="UNIT", &
+        & to="BIUNIT")
+
+    ELSE
+      ans = temp_t
+    END IF
+  END IF
+
+  IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
+ELSE
+  ans = TensorQuadraturepoint_Tetrahedron( &
+    & order=order, &
+    & quadtype=quadtype, &
+    & refTetrahedron=refTetrahedron, &
+    & xij=xij)
+END IF
 END PROCEDURE QuadraturePoint_Tetrahedron1
 
 !----------------------------------------------------------------------------
@@ -2162,12 +2204,24 @@ END PROCEDURE QuadraturePoint_Tetrahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE QuadraturePoint_Tetrahedron2
-CALL Errormsg(&
-  & msg="WORK IN PROGRESS!!", &
-  & file=__FILE__, &
-  & routine="QuadraturePoint_Tetrahedron2()", &
-  & line=__LINE__, &
-  & unitno=stderr)
+INTEGER(I4B) :: order
+order = QuadratureOrderTetrahedronSolin(nips(1))
+IF (order .LT. 0) THEN
+  ans = Quadraturepoint_Tetrahedron1( &
+    & order=order,  &
+    & quadtype=quadType, &
+    & refTetrahedron=refTetrahedron, &
+    & xij=xij)
+ELSE
+  CALL Errormsg(&
+    & msg="This routine is available for nips = [  &
+    &  1, 4, 5, 11, 14, 24, 31, 43, 53, 126, 210, 330, 495, 715, 1001]  &
+    & TRY CALLING TensorQuadraturePoint_Tetrahedron() instead.", &
+    & file=__FILE__, &
+    & routine="QuadraturePoint_Tetrahedron2()", &
+    & line=__LINE__, &
+    & unitno=stderr)
+END IF
 END PROCEDURE QuadraturePoint_Tetrahedron2
 
 !----------------------------------------------------------------------------
@@ -2175,12 +2229,16 @@ END PROCEDURE QuadraturePoint_Tetrahedron2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron1
-CALL Errormsg(&
-  & msg="WORK IN PROGRESS!!", &
-  & file=__FILE__, &
-  & routine="TensorQuadraturePoint_Tetrahedron1()", &
-  & line=__LINE__, &
-  & unitno=stderr)
+INTEGER(I4B) :: n(4)
+n = 1_I4B + INT(order / 2, kind=I4B)
+n(2) = n(2) + 1
+ans = TensorQuadraturePoint_Tetrahedron2( &
+  & nipsx=n(1), &
+  & nipsy=n(2), &
+  & nipsz=n(3), &
+  & quadType=quadType, &
+  & refTetrahedron=refTetrahedron, &
+  & xij=xij)
 END PROCEDURE TensorQuadraturePoint_Tetrahedron1
 
 !----------------------------------------------------------------------------
@@ -2188,12 +2246,59 @@ END PROCEDURE TensorQuadraturePoint_Tetrahedron1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Tetrahedron2
-CALL Errormsg(&
-  & msg="WORK IN PROGRESS!!", &
-  & file=__FILE__, &
-  & routine="TensorQuadraturePoint_Tetrahedron2()", &
-  & line=__LINE__, &
-  & unitno=stderr)
+INTEGER(I4B) :: n(3), nsd
+REAL(DFP), ALLOCATABLE :: temp_q(:, :), temp_t(:, :)
+TYPE(String) :: astr
+
+astr = TRIM(UpperCase(refTetrahedron))
+n(1) = nipsx(1)
+n(2) = nipsy(1)
+n(3) = nipsz(1)
+
+temp_q = QuadraturePoint_Hexahedron(&
+  & nipsx=n(1:1),  &
+  & nipsy=n(2:2),  &
+  & nipsz=n(3:3),  &
+  & quadType1=GaussLegendreLobatto, &
+  & quadType2=GaussJacobiRadauLeft, &
+  & quadType3=GaussJacobiRadauLeft, &
+  & refHexahedron="BIUNIT", &
+  & alpha2=1.0_DFP, &
+  & beta2=0.0_DFP, &
+  & alpha3=2.0_DFP, &
+  & beta3=0.0_DFP)
+
+CALL Reallocate(temp_t, SIZE(temp_q, 1, KIND=I4B), SIZE(temp_q, 2, KIND=I4B))
+temp_t(1:3, :) = FromBiUnitHexahedron2UnitTetrahedron(xin=temp_q(1:3, :))
+temp_t(4, :) = temp_q(4, :) / 8.0_DFP
+nsd = 3_I4B
+CALL Reallocate(ans, 4_I4B, SIZE(temp_q, 2, KIND=I4B))
+
+IF (PRESENT(xij)) THEN
+  ans(1:3, :) = FromUnitTetrahedron2Tetrahedron(  &
+    & xin=temp_t(1:3, :), &
+    & x1=xij(:, 1), &
+    & x2=xij(:, 2), &
+    & x3=xij(:, 3), &
+    & x4=xij(:, 4) &
+    & )
+  ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
+    & from="UNIT", &
+    & to="TETRAHEDRON", &
+    & xij=xij)
+ELSE
+  IF (astr%chars() .EQ. "BIUNIT") THEN
+    ans(1:3, :) = FromUnitTetrahedron2BiUnitTetrahedron(xin=temp_t(1:3, :))
+    ans(4, :) = temp_t(4, :) * JacobianTetrahedron( &
+      & from="UNIT", &
+      & to="BIUNIT")
+  ELSE
+    ans = temp_t
+  END IF
+END IF
+
+IF (ALLOCATED(temp_q)) DEALLOCATE (temp_q)
+IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
 END PROCEDURE TensorQuadraturePoint_Tetrahedron2
 
 !----------------------------------------------------------------------------
@@ -2316,13 +2421,18 @@ REAL(DFP) :: dR1(SIZE(xij, 2), 0:order)
 REAL(DFP) :: temp(SIZE(xij, 2), 10), areal, breal
 INTEGER(I4B) :: cnt
 INTEGER(I4B) :: p, q, r
+LOGICAL(LGT) :: isBiunit
+REAL(DFP) :: ans0(SIZE(ans, 1), SIZE(ans, 2), SIZE(ans, 3))
 
+ans0 = 0.0_DFP
 layout = TRIM(UpperCase(refTetrahedron))
 SELECT CASE (TRIM(layout))
 CASE ("BIUNIT")
   x = FromBiUnitTetrahedron2BiUnitHexahedron(xin=xij)
+  isBiunit = .TRUE.
 CASE ("UNIT")
   x = FromUnitTetrahedron2BiUnitHexahedron(xin=xij)
+  isBiunit = .FALSE.
 END SELECT
 
 temp(:, 1) = 0.5_DFP * (1.0_DFP - x(2, :))
@@ -2379,14 +2489,53 @@ DO p = 0, order
     DO r = 0, order - p - q
       temp(:, 8) = temp(:, 5) * R1(:, r)
       cnt = cnt + 1
-      ans(:, cnt, 1) = temp(:, 7) * R1(:, r) * temp(:, 4) * temp(:, 10)
-      ans(:, cnt, 2) = temp(:, 8) * areal * temp(:, 3) * temp(:, 10)  &
+      ans0(:, cnt, 1) = temp(:, 7) * R1(:, r) * temp(:, 4) * temp(:, 10)
+      ans0(:, cnt, 2) = temp(:, 8) * areal * temp(:, 3) * temp(:, 10)  &
         & + temp(:, 6) * R1(:, r) * temp(:, 4) * temp(:, 10)
-      ans(:, cnt, 2) = temp(:, 8) * breal * temp(:, 4) * temp(:, 9)  &
+      ans0(:, cnt, 2) = temp(:, 8) * breal * temp(:, 4) * temp(:, 9)  &
         & + temp(:, 5) * dR1(:, r) * temp(:, 4) * temp(:, 10)
     END DO
   END DO
 END DO
+
+IF (isBiunit) THEN
+  temp(:, 1) = x(1, :)
+  temp(:, 2) = x(2, :)
+  temp(:, 3) = x(3, :)
+
+  temp(:, 4) = 2.0_DFP / (temp(:, 2) + temp(:, 3))
+  temp(:, 5) = (1.0_DFP + temp(:, 1)) * temp(:, 4) / (temp(:, 2) + temp(:, 3))
+  temp(:, 6) = 2.0_DFP / (1.0_DFP - temp(:, 3))
+  temp(:, 7) = 1.0_DFP / (1.0_DFP - temp(:, 3))**2
+
+  DO CONCURRENT(p=1:SIZE(ans, 2))
+    ans(:, p, 1) = -temp(:, 4) * ans0(:, p, 1)
+    ans(:, p, 2) = temp(:, 5) * ans0(:, p, 1) + temp(:, 6) * ans0(:, p, 2)
+    ans(:, p, 3) = temp(:, 5) * ans0(:, p, 1)  &
+                & + temp(:, 7) * ans0(:, p, 2)  &
+                & + ans0(:, p, 3)
+  END DO
+
+ELSE
+
+  temp(:, 1:3) = FromUnitTetrahedron2BiUnitTetrahedron(x)
+
+  temp(:, 4) = 2.0_DFP / (temp(:, 2) + temp(:, 3))
+  temp(:, 5) = (1.0_DFP + temp(:, 1)) * temp(:, 4) / (temp(:, 2) + temp(:, 3))
+  temp(:, 6) = 2.0_DFP / (1.0_DFP - temp(:, 3))
+  temp(:, 7) = 1.0_DFP / (1.0_DFP - temp(:, 3))**2
+
+  DO CONCURRENT(p=1:SIZE(ans, 2))
+    ans(:, p, 1) = -temp(:, 4) * ans0(:, p, 1)
+    ans(:, p, 2) = temp(:, 5) * ans0(:, p, 1) + temp(:, 6) * ans0(:, p, 2)
+    ans(:, p, 3) = temp(:, 5) * ans0(:, p, 1)  &
+                & + temp(:, 7) * ans0(:, p, 2)  &
+                & + ans0(:, p, 3)
+  END DO
+
+  ans = 2.0_DFP * ans
+
+END IF
 
 END PROCEDURE OrthogonalBasisGradient_Tetrahedron1
 
