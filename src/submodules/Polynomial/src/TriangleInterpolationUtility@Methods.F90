@@ -549,29 +549,58 @@ SELECT CASE (ipType)
 CASE (Equidistance)
   ans = EquidistancePoint_Triangle(xij=xij, order=order)
 CASE (Feket, Hesthaven, ChenBabuska)
-  CALL ErrorMsg(msg="Feket, Hesthaven, ChenBabuska nodes not available", &
+  CALL ErrorMsg( &
+    & msg="Feket, Hesthaven, ChenBabuska nodes not available", &
     & file=__FILE__, &
     & routine=myname, &
     & line=__LINE__, &
     & unitno=stderr)
   RETURN
 CASE (BlythPozLegendre)
-  ans = BlythPozrikidis_Triangle(order=order, &
+  ans = BlythPozrikidis_Triangle( &
+    & order=order, &
     & ipType=GaussLegendreLobatto,  &
-    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+    & layout="VEFC", &
+    & xij=xij, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
 CASE (BlythPozChebyshev)
-  ans = BlythPozrikidis_Triangle(order=order, &
+  ans = BlythPozrikidis_Triangle( &
+    & order=order, &
     & ipType=GaussChebyshevLobatto,  &
-    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
-CASE (IsaacLegendre)
-  ans = Isaac_Triangle(order=order, ipType=GaussLegendreLobatto, &
-    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
-CASE (IsaacChebyshev)
-  ans = Isaac_Triangle(order=order, ipType=GaussChebyshevLobatto, &
-    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+    & layout="VEFC", &
+    & xij=xij, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+CASE (IsaacLegendre, GaussLegendreLobatto)
+  ans = Isaac_Triangle( &
+    & order=order, &
+    & ipType=GaussLegendreLobatto, &
+    & layout="VEFC", &
+    & xij=xij, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+CASE (IsaacChebyshev, GaussChebyshevLobatto)
+  ans = Isaac_Triangle( &
+    & order=order, &
+    & ipType=GaussChebyshevLobatto, &
+    & layout="VEFC", &
+    & xij=xij, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
 CASE DEFAULT
-  ans = Isaac_Triangle(order=order, ipType=ipType, &
-    & layout="VEFC", xij=xij, alpha=alpha, beta=beta, lambda=lambda)
+  ans = Isaac_Triangle( &
+    & order=order, &
+    & ipType=ipType, &
+    & layout="VEFC", &
+    & xij=xij, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
 END SELECT
 END PROCEDURE InterpolationPoint_Triangle
 
@@ -622,7 +651,7 @@ basisType0 = input(default=Monomial, option=basisType)
 SELECT CASE (basisType0)
 CASE (Monomial)
   ans = LagrangeVandermonde(order=order, xij=xij, elemType=Triangle)
-CASE (Jacobi)
+CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
   IF (PRESENT(refTriangle)) THEN
     ans = Dubiner_Triangle(order=order, xij=xij, refTriangle=refTriangle)
   ELSE
@@ -666,18 +695,14 @@ END PROCEDURE LagrangeCoeff_Triangle4
 MODULE PROCEDURE Dubiner_Triangle1
 CHARACTER(20) :: layout
 REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
-!!
 layout = TRIM(UpperCase(refTriangle))
-!!
 SELECT CASE (TRIM(layout))
 CASE ("BIUNIT")
   x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
 CASE ("UNIT")
   x = FromUnitTriangle2BiUnitSqr(xin=xij)
 END SELECT
-!!
 ans = Dubiner_Quadrangle(order=order, xij=x)
-!!
 END PROCEDURE Dubiner_Triangle1
 
 !----------------------------------------------------------------------------
@@ -687,9 +712,7 @@ END PROCEDURE Dubiner_Triangle1
 MODULE PROCEDURE Dubiner_Triangle2
 CHARACTER(20) :: layout
 REAL(DFP) :: x0(SIZE(x)), y0(SIZE(y))
-!!
 layout = TRIM(UpperCase(refTriangle))
-!!
 SELECT CASE (TRIM(layout))
 CASE ("BIUNIT")
   x0 = x
@@ -698,9 +721,7 @@ CASE ("UNIT")
   x0 = FromUnitLine2BiUnitLine(xin=x)
   y0 = FromUnitLine2BiUnitLine(xin=y)
 END SELECT
-!!
 ans = Dubiner_Quadrangle(order=order, x=x0, y=y0)
-!!
 END PROCEDURE Dubiner_Triangle2
 
 !----------------------------------------------------------------------------
@@ -882,6 +903,19 @@ ans(:, 3) = Lo1(:, 1) * Lo2(:, 1) + Lo1(:, 0) * Lo2(:, 1)
 END PROCEDURE VertexBasis_Triangle2
 
 !----------------------------------------------------------------------------
+!                                             VertexBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasisGradient_Triangle2
+ans(:, 1, 1) = dLo1(:, 0) * Lo2(:, 0)
+ans(:, 1, 2) = Lo1(:, 0) * dLo2(:, 0)
+ans(:, 2, 1) = dLo1(:, 1) * Lo2(:, 0)
+ans(:, 2, 2) = Lo1(:, 1) * dLo2(:, 0)
+ans(:, 3, 1) = dLo1(:, 1) * Lo2(:, 1) + dLo1(:, 0) * Lo2(:, 1)
+ans(:, 3, 2) = Lo1(:, 1) * dLo2(:, 1) + Lo1(:, 0) * dLo2(:, 1)
+END PROCEDURE VertexBasisGradient_Triangle2
+
+!----------------------------------------------------------------------------
 !                                                         EdgeBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -954,6 +988,54 @@ END DO
 END PROCEDURE EdgeBasis_Triangle2
 
 !----------------------------------------------------------------------------
+!                                                EdgeBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE EdgeBasisGradient_Triangle2
+CHARACTER(20) :: layout
+INTEGER(I4B) :: maxP, k1, k2, a
+REAL(DFP), DIMENSION(SIZE(Lo1, 1)) :: avec
+
+maxP = MAX(pe1, pe2, pe3)
+!! edge(1)
+a = 0
+
+DO k1 = 2, pe1
+  avec = dLo1(:, 0) * Lo1(:, 1) * L1(:, k1 - 2) &
+      & + Lo1(:, 0) * dLo1(:, 1) * L1(:, k1 - 2) &
+      & + Lo1(:, 0) * Lo1(:, 1) * dL1(:, k1 - 2)
+
+  ans(:, k1 - 1, 1) = avec * (Lo2(:, 0)**k1)
+
+  ans(:, k1 - 1, 2) = Lo1(:, 0) * Lo1(:, 1)  &
+                     & * L1(:, k1 - 2)  &
+                     & * REAL(k1, DFP)  &
+                     & * (Lo2(:, 0)**(k1 - 1))  &
+                     & * dLo2(:, 0)
+END DO
+
+!! edge(2)
+a = pe1 - 1
+DO k2 = 2, pe2
+  avec = dLo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2) &
+      &+ Lo2(:, 0) * dLo2(:, 1) * L2(:, k2 - 2) &
+      &+ Lo2(:, 0) * Lo2(:, 1) * dL2(:, k2 - 2)
+  ans(:, a + k2 - 1, 1) = dLo1(:, 0) * Lo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2)
+  ans(:, a + k2 - 1, 2) = Lo1(:, 0) * avec
+END DO
+
+!! edge(3)
+a = pe1 - 1 + pe2 - 1
+DO k2 = 2, pe3
+  avec = dLo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2)  &
+      & + Lo2(:, 0) * dLo2(:, 1) * L2(:, k2 - 2)  &
+      & + Lo2(:, 0) * Lo2(:, 1) * dL2(:, k2 - 2)
+  ans(:, a + k2 - 1, 1) = dLo1(:, 1) * Lo2(:, 0) * Lo2(:, 1) * L2(:, k2 - 2)
+  ans(:, a + k2 - 1, 2) = Lo1(:, 1) * avec
+END DO
+END PROCEDURE EdgeBasisGradient_Triangle2
+
+!----------------------------------------------------------------------------
 !                                              CellBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -978,10 +1060,8 @@ Lo1(:, 1) = 0.5_DFP * (1.0 + x(1, :))
 Lo2(:, 0) = 0.5_DFP * (1.0 - x(2, :))
 Lo2(:, 1) = 0.5_DFP * (1.0 + x(2, :))
 L1 = JacobiEvalAll(n=order, x=x(1, :), alpha=1.0_DFP, beta=1.0_DFP)
-!!
 ans = CellBasis_Triangle2(order=order, L1=L1, Lo1=Lo1, &
   & Lo2=Lo2, eta_ij=x)
-!!
 END PROCEDURE CellBasis_Triangle
 
 !----------------------------------------------------------------------------
@@ -1018,6 +1098,57 @@ END DO
 END PROCEDURE CellBasis_Triangle2
 
 !----------------------------------------------------------------------------
+!                                                 CellBasisGradinet_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CellBasisGradient_Triangle2
+REAL(DFP) :: P2(SIZE(eta_ij, 2), 0:order)
+REAL(DFP) :: dP2(SIZE(eta_ij, 2), 0:order)
+
+REAL(DFP) :: temp(SIZE(eta_ij, 2), 13)
+
+REAL(DFP) :: alpha, beta
+INTEGER(I4B) :: k1, k2, max_k2, cnt
+
+alpha = 0.0_DFP
+beta = 1.0_DFP
+cnt = 0
+temp(:, 5) = dLo1(:, 0) * Lo1(:, 1)
+temp(:, 6) = Lo1(:, 0) * dLo1(:, 1)
+temp(:, 7) = Lo1(:, 0) * Lo1(:, 1)
+temp(:, 9) = dLo2(:, 0) * Lo2(:, 1)
+temp(:, 12) = Lo2(:, 0) * Lo2(:, 1)
+temp(:, 13) = Lo2(:, 0) * dLo2(:, 1)
+
+DO k1 = 2, order - 1
+  alpha = 2.0_DFP * k1 - 1.0_DFP
+  max_k2 = MAX(order - k1 - 1, 0)
+  P2(:, 0:max_k2) = JacobiEvalAll(n=max_k2, x=eta_ij(2, :), &
+    & alpha=alpha, beta=beta)
+  dP2(:, 0:max_k2) = JacobiGradientEvalAll(n=max_k2, x=eta_ij(2, :), &
+    & alpha=alpha, beta=beta)
+
+  temp(:, 1) = (temp(:, 5) + temp(:, 6)) * L1(:, k1 - 2)  &
+    & + temp(:, 7) * dL1(:, k1 - 2)
+  temp(:, 11) = Lo2(:, 0)**(k1 - 1)
+  temp(:, 2) = temp(:, 11) * temp(:, 12)
+  temp(:, 3) = temp(:, 7) * L1(:, k1 - 2)
+
+  temp(:, 10) = REAL(k1, dfp) * temp(:, 9) + temp(:, 13)
+  temp(:, 8) = temp(:, 11) * temp(:, 10)
+
+  DO k2 = 2, order - k1 + 1
+    cnt = cnt + 1
+    temp(:, 4) = temp(:, 8) * P2(:, k2 - 2) + temp(:, 2) * dP2(:, k2 - 2)
+
+    ans(:, cnt, 1) = temp(:, 1) * temp(:, 2) * P2(:, k2 - 2)
+    ans(:, cnt, 2) = temp(:, 3) * temp(:, 4)
+  END DO
+
+END DO
+END PROCEDURE CellBasisGradient_Triangle2
+
+!----------------------------------------------------------------------------
 !                                                 HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -1029,33 +1160,29 @@ REAL(DFP) :: L2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
 REAL(DFP) :: Lo1(SIZE(xij, 2), 0:1)
 REAL(DFP) :: Lo2(SIZE(xij, 2), 0:1)
 INTEGER(I4B) :: maxP, a, b, ii
-!!
+
 layout = TRIM(UpperCase(refTriangle))
-!!
 IF (layout .EQ. "BIUNIT") THEN
   x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
 ELSE
   x = FromUnitTriangle2BiUnitSqr(xin=xij)
 END IF
-!!
+
 Lo1(:, 0) = 0.5_DFP * (1.0 - x(1, :))
 Lo1(:, 1) = 0.5_DFP * (1.0 + x(1, :))
 Lo2(:, 0) = 0.5_DFP * (1.0 - x(2, :))
 Lo2(:, 1) = 0.5_DFP * (1.0 + x(2, :))
-!!
+
 !! Vertex basis function
-!!
 ans = 0.0_DFP
 ans(:, 1:3) = VertexBasis_Triangle2(Lo1=Lo1, Lo2=Lo2)
-!!
+
 maxP = MAX(pe1, pe2, pe3, order)
 L1 = JacobiEvalAll(n=maxP, x=x(1, :), alpha=1.0_DFP, beta=1.0_DFP)
 L2 = JacobiEvalAll(n=maxP, x=x(2, :), alpha=1.0_DFP, beta=1.0_DFP)
-!!
+
 !! Edge basis function
-!!
 b = 3
-!!
 IF (pe1 .GE. 2_I4B .OR. pe2 .GE. 2_I4B .OR. pe3 .GE. 2_I4B) THEN
   a = b + 1
   b = a - 1 + pe1 + pe2 + pe3 - 3 !!4+qe1 + qe2 - 2
@@ -1063,16 +1190,14 @@ IF (pe1 .GE. 2_I4B .OR. pe2 .GE. 2_I4B .OR. pe3 .GE. 2_I4B) THEN
     & pe1=pe1, pe2=pe2, pe3=pe3, L1=L1, L2=L2, Lo1=Lo1, &
     & Lo2=Lo2)
 END IF
-!!
+
 !! Cell basis function
-!!
 IF (order .GT. 2_I4B) THEN
   a = b + 1
   b = a - 1 + INT((order - 1) * (order - 2) / 2)
   ans(:, a:b) = CellBasis_Triangle2(order=order, L1=L1, &
     & Lo1=Lo1, Lo2=Lo2, eta_ij=x)
 END IF
-!!
 END PROCEDURE HeirarchicalBasis_Triangle1
 
 !----------------------------------------------------------------------------
@@ -1133,7 +1258,7 @@ CASE (Heirarchical)
     & pe3=order,  &
     & xij=RESHAPE(x, [2, 1]),  &
     & refTriangle=refTriangle)
-CASE (Jacobi)
+CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
   xx = Dubiner_Triangle( &
     & order=order, &
     & xij=RESHAPE(x, [2, 1]),  &
@@ -1148,7 +1273,6 @@ CASE DEFAULT
 END SELECT
 
 ans = MATMUL(coeff0, xx(1, :))
-
 END PROCEDURE LagrangeEvalAll_Triangle1
 
 !----------------------------------------------------------------------------
@@ -1214,7 +1338,7 @@ CASE (Heirarchical)
     & xij=x,  &
     & refTriangle=refTriangle)
 
-CASE (Jacobi)
+CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
 
   xx = Dubiner_Triangle( &
     & order=order, &
@@ -1229,6 +1353,7 @@ CASE DEFAULT
     & routine="LagrangeEvalAll_Triangle1", &
     & line=__LINE__, &
     & unitno=stderr)
+  RETURN
 END SELECT
 
 ans = MATMUL(xx, coeff0)
@@ -1239,7 +1364,7 @@ END PROCEDURE LagrangeEvalAll_Triangle2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE TensorQuadraturePoint_Triangle1
-INTEGER(I4B) :: np(1), nq(2), n
+INTEGER(I4B) :: np(1), nq(1), n
 n = 1_I4B + INT(order / 2, kind=I4B)
 np(1) = n + 1
 nq(1) = n
@@ -1250,6 +1375,68 @@ ans = TensorQuadraturePoint_Triangle2( &
   & refTriangle=refTriangle, &
   & xij=xij)
 END PROCEDURE TensorQuadraturePoint_Triangle1
+
+!----------------------------------------------------------------------------
+!                                           TensorQuadraturePoint_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Triangle2
+INTEGER(I4B) :: np(1), nq(1), nsd
+REAL(DFP), ALLOCATABLE :: temp_q(:, :), temp_t(:, :)
+TYPE(String) :: astr
+
+astr = TRIM(UpperCase(refTriangle))
+np(1) = nipsx(1)
+nq(1) = nipsy(1)
+
+temp_q = QuadraturePoint_Quadrangle(&
+  & nipsx=np,  &
+  & nipsy=nq,  &
+  & quadType1=GaussLegendreLobatto, &
+  & quadType2=GaussJacobiRadauLeft, &
+  & refQuadrangle="BIUNIT", &
+  & alpha2=1.0_DFP, &
+  & beta2=0.0_DFP)
+
+CALL Reallocate(temp_t, SIZE(temp_q, 1, kind=I4B), SIZE(temp_q, 2, kind=I4B))
+temp_t(1:2, :) = FromBiUnitSqr2UnitTriangle(xin=temp_q(1:2, :))
+temp_t(3, :) = temp_q(3, :) / 8.0_DFP
+
+IF (PRESENT(xij)) THEN
+  nsd = SIZE(xij, 1)
+ELSE
+  nsd = 2_I4B
+END IF
+
+CALL Reallocate(ans, nsd + 1_I4B, SIZE(temp_q, 2, kind=I4B))
+
+IF (PRESENT(xij)) THEN
+  ans(1:nsd, :) = FromUnitTriangle2Triangle(  &
+    & xin=temp_t(1:2, :), &
+    & x1=xij(:, 1), &
+    & x2=xij(:, 2), &
+    & x3=xij(:, 3))
+  ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
+    & from="UNIT", &
+    & to="TRIANGLE", &
+    & xij=xij)
+ELSE
+  IF (astr%chars() .EQ. "BIUNIT") THEN
+    ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
+
+    ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
+      & from="UNIT", &
+      & to="BIUNIT")
+
+  ELSE
+    ans = temp_t
+  END IF
+END IF
+
+IF (ALLOCATED(temp_q)) DEALLOCATE (temp_q)
+IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
+
+END PROCEDURE TensorQuadraturePoint_Triangle2
 
 !----------------------------------------------------------------------------
 !                                                 QuadraturePoint_Triangle
@@ -1363,68 +1550,211 @@ END IF
 END PROCEDURE QuadraturePoint_Triangle2
 
 !----------------------------------------------------------------------------
-!                                           TensorQuadraturePoint_Triangle
+!                                           LagrangeGradientEvalAll_Triangle
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE TensorQuadraturePoint_Triangle2
-INTEGER(I4B) :: np(1), nq(2), nsd
-REAL(DFP), ALLOCATABLE :: temp_q(:, :), temp_t(:, :)
-TYPE(String) :: astr
+MODULE PROCEDURE LagrangeGradientEvalAll_Triangle1
+LOGICAL(LGT) :: firstCall0
+INTEGER(I4B) :: ii, basisType0, tdof, ai, bi
+INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
+  & xx(SIZE(x, 2), SIZE(xij, 2), 2), ar, br
 
-astr = TRIM(UpperCase(refTriangle))
-np(1) = nipsx(1)
-nq(1) = nipsy(1)
+basisType0 = input(default=Monomial, option=basisType)
+firstCall0 = input(default=.TRUE., option=firstCall)
 
-temp_q = QuadraturePoint_Quadrangle(&
-  & nipsx=np,  &
-  & nipsy=nq,  &
-  & quadType1=GaussLegendreLobatto, &
-  & quadType2=GaussJacobiRadauLeft, &
-  & refQuadrangle="BIUNIT", &
-  & alpha2=1.0_DFP, &
-  & beta2=0.0_DFP)
-
-CALL Reallocate(temp_t, SIZE(temp_q, 1, kind=I4B), SIZE(temp_q, 2, kind=I4B))
-temp_t(1:2, :) = FromBiUnitSqr2UnitTriangle(xin=temp_q(1:2, :))
-temp_t(3, :) = temp_q(3, :) / 8.0_DFP
-
-IF (PRESENT(xij)) THEN
-  nsd = SIZE(xij, 1)
-ELSE
-  nsd = 2_I4B
-END IF
-
-CALL Reallocate(ans, nsd + 1_I4B, SIZE(temp_q, 2, kind=I4B))
-
-IF (PRESENT(xij)) THEN
-  ans(1:nsd, :) = FromUnitTriangle2Triangle(  &
-    & xin=temp_t(1:2, :), &
-    & x1=xij(:, 1), &
-    & x2=xij(:, 2), &
-    & x3=xij(:, 3))
-  ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
-    & from="UNIT", &
-    & to="TRIANGLE", &
-    & xij=xij)
-ELSE
-  IF (astr%chars() .EQ. "BIUNIT") THEN
-    ans(1:nsd, :) = FromUnitTriangle2BiUnitTriangle(xin=temp_t(1:2, :))
-
-    ans(nsd + 1, :) = temp_t(3, :) * JacobianTriangle( &
-      & from="UNIT", &
-      & to="BIUNIT")
-
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    coeff = LagrangeCoeff_Triangle(&
+      & order=order, &
+      & xij=xij, &
+      & basisType=basisType0, &
+      & refTriangle=refTriangle &
+      & )
+    coeff0 = coeff
   ELSE
-    ans = temp_t
+    coeff0 = coeff
   END IF
+ELSE
+  coeff0 = LagrangeCoeff_Triangle(&
+    & order=order, &
+    & xij=xij, &
+    & basisType=basisType0, &
+    & refTriangle=refTriangle &
+    & )
 END IF
 
-IF (ALLOCATED(temp_q)) DEALLOCATE (temp_q)
-IF (ALLOCATED(temp_t)) DEALLOCATE (temp_t)
+SELECT CASE (basisType0)
 
-END PROCEDURE TensorQuadraturePoint_Triangle2
+CASE (Monomial)
+
+  degree = LagrangeDegree_Triangle(order=order)
+  tdof = SIZE(xij, 2)
+  IF (tdof .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(&
+      & msg="tdof is not same as size(degree,1)", &
+      & file=__FILE__, &
+      & routine="LagrangeGradientEvalAll_Triangle1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+    RETURN
+  END IF
+
+  DO ii = 1, tdof
+    ai = MAX(degree(ii, 1_I4B) - 1_I4B, 0_I4B)
+    bi = MAX(degree(ii, 2_I4B) - 1_I4B, 0_I4B)
+    ar = REAL(degree(ii, 1_I4B), DFP)
+    br = REAL(degree(ii, 2_I4B), DFP)
+    xx(:, ii, 1) = (ar * x(1, :)**ai) * x(2, :)**degree(ii, 2)
+    xx(:, ii, 2) = x(1, :)**degree(ii, 1) * (br * x(2, :)**bi)
+  END DO
+
+CASE (Heirarchical)
+
+  xx = HeirarchicalBasisGradient_Triangle( &
+    & order=order, &
+    & pe1=order,  &
+    & pe2=order,  &
+    & pe3=order,  &
+    & xij=x,  &
+    & refTriangle=refTriangle)
+
+CASE (Jacobi, Orthogonal, Legendre, Lobatto, Ultraspherical)
+
+  xx = OrthogonalBasisGradient_Triangle( &
+    & order=order, &
+    & xij=x,  &
+    & refTriangle=refTriangle)
+
+CASE DEFAULT
+
+  CALL Errormsg(&
+    & msg="No case found for basisType", &
+    & file=__FILE__, &
+    & routine="LagrangeGradientEvalAll_Triangle1", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END SELECT
+
+DO ii = 1, 2
+  ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+END DO
+END PROCEDURE LagrangeGradientEvalAll_Triangle1
+
+!----------------------------------------------------------------------------
+!                                           OrthogonalBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE OrthogonalBasisGradient_Triangle1
+CHARACTER(20) :: layout
+REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
+INTEGER(I4B) :: ii
+
+layout = TRIM(UpperCase(refTriangle))
+SELECT CASE (TRIM(layout))
+CASE ("BIUNIT")
+  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
+CASE ("UNIT")
+  x = FromUnitTriangle2BiUnitSqr(xin=xij)
+END SELECT
+
+ans = DubinerGradient_Quadrangle(order=order, xij=x)
+
+DO ii = 1, SIZE(ans, 2)
+  ans(:, ii, 1) = ans(:, ii, 1) * 4.0_DFP / (1.0_DFP - x(2, :))
+  ans(:, ii, 2) = ans(:, ii, 1) * (1.0_DFP + x(1, :)) * 0.5_DFP  &
+    & + 2.0_DFP * ans(:, ii, 2)
+END DO
+END PROCEDURE OrthogonalBasisGradient_Triangle1
+
+!----------------------------------------------------------------------------
+!                                         HeirarchicalBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Triangle1
+CHARACTER(20) :: layout
+REAL(DFP) :: x(SIZE(xij, 1), SIZE(xij, 2))
+REAL(DFP) :: L1(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
+REAL(DFP) :: L2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
+REAL(DFP) :: dL1(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
+REAL(DFP) :: dL2(SIZE(xij, 2), 0:MAX(pe1, pe2, pe3, order))
+REAL(DFP) :: Lo1(SIZE(xij, 2), 0:1)
+REAL(DFP) :: Lo2(SIZE(xij, 2), 0:1)
+REAL(DFP) :: dLo1(SIZE(xij, 2), 0:1)
+REAL(DFP) :: dLo2(SIZE(xij, 2), 0:1)
+
+INTEGER(I4B) :: maxP, a, b, ii
+
+layout = TRIM(UpperCase(refTriangle))
+
+IF (layout .EQ. "BIUNIT") THEN
+  x = FromBiUnitTriangle2BiUnitSqr(xin=xij)
+ELSE
+  x = FromUnitTriangle2BiUnitSqr(xin=xij)
+END IF
+
+Lo1(:, 0) = 0.5_DFP * (1.0 - x(1, :))
+Lo1(:, 1) = 0.5_DFP * (1.0 + x(1, :))
+Lo2(:, 0) = 0.5_DFP * (1.0 - x(2, :))
+Lo2(:, 1) = 0.5_DFP * (1.0 + x(2, :))
+dLo1(:, 0) = -0.5_DFP
+dLo1(:, 1) = 0.5_DFP
+dLo2(:, 0) = -0.5_DFP
+dLo2(:, 1) = 0.5_DFP
+
+!! Vertex basis function
+ans = 0.0_DFP
+ans(:, 1:3, 1:2) = VertexBasisGradient_Triangle2( &
+  & Lo1=Lo1, &
+  & Lo2=Lo2,  &
+  & dLo1=dLo1, &
+  & dLo2=dLo2  &
+  & )
+
+maxP = MAX(pe1, pe2, pe3, order)
+L1 = JacobiEvalAll(n=maxP, x=x(1, :), alpha=1.0_DFP, beta=1.0_DFP)
+L2 = JacobiEvalAll(n=maxP, x=x(2, :), alpha=1.0_DFP, beta=1.0_DFP)
+dL1 = JacobiGradientEvalAll(n=maxP, x=x(1, :), alpha=1.0_DFP, beta=1.0_DFP)
+dL2 = JacobiGradientEvalAll(n=maxP, x=x(2, :), alpha=1.0_DFP, beta=1.0_DFP)
+
+!! Edge basis function
+b = 3
+IF (pe1 .GE. 2_I4B .OR. pe2 .GE. 2_I4B .OR. pe3 .GE. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + pe1 + pe2 + pe3 - 3 !!4+qe1 + qe2 - 2
+  ans(:, a:b, 1:2) = EdgeBasisGradient_Triangle2( &
+    & pe1=pe1, &
+    & pe2=pe2, &
+    & pe3=pe3, &
+    & L1=L1, &
+    & L2=L2, &
+    & Lo1=Lo1, &
+    & Lo2=Lo2,  &
+    & dL1=dL1, &
+    & dL2=dL2, &
+    & dLo1=dLo1, &
+    & dLo2=dLo2)
+END IF
+
+!! Cell basis function
+IF (order .GT. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + INT((order - 1) * (order - 2) / 2)
+  ans(:, a:b, 1:2) = CellBasisGradient_Triangle2( &
+    & order=order, &
+    & L1=L1, &
+    & Lo1=Lo1, &
+    & Lo2=Lo2, &
+    & dL1=dL1, &
+    & dLo1=dLo1, &
+    & dLo2=dLo2, &
+    & eta_ij=x)
+END IF
+END PROCEDURE HeirarchicalBasisGradient_Triangle1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
 END SUBMODULE Methods

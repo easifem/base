@@ -39,10 +39,13 @@ PUBLIC :: HeirarchicalBasis_Triangle
 PUBLIC :: RefTriangleCoord
 PUBLIC :: RefCoord_Triangle
 PUBLIC :: LagrangeEvalAll_Triangle
+PUBLIC :: LagrangeGradientEvalAll_Triangle
 PUBLIC :: QuadraturePoint_Triangle
 PUBLIC :: IJ2VEFC_Triangle
 PUBLIC :: FacetConnectivity_Triangle
 PUBLIC :: RefElemDomain_Triangle
+PUBLIC :: HeirarchicalBasisGradient_Triangle
+PUBLIC :: OrthogonalBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
 !                                                   RefElemDomain_Triangle
@@ -743,6 +746,30 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                    VertexBasis_Triangle2
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Returns the vertex basis functions on Triangle
+
+INTERFACE
+  MODULE FUNCTION VertexBasisGradient_Triangle2(Lo1, Lo2, dLo1, dLo2) &
+    & RESULT(ans)
+    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
+    !! Lobatto polynomials evaluated at x1
+    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
+    !! Lobatto polynomials evaluated at x2
+    REAL(DFP), INTENT(IN) :: dLo1(1:, 0:)
+    !! Gradient of Lobatto polynomials at x1
+    REAL(DFP), INTENT(IN) :: dLo2(1:, 0:)
+    !! Gradient of Lobatto polynomials at x2
+    REAL(DFP) :: ans(SIZE(Lo1, 1), 3, 2)
+    !! ans(:,v1) basis function of vertex v1 at all points
+  END FUNCTION VertexBasisGradient_Triangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                        EdgeBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -807,6 +834,56 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                        EdgeBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis on left, right edge of biunit Triangle
+!
+!# Introduction
+!
+! Evaluate basis functions on left and right edge of biunit Triangle
+!
+! qe1 and qe2 should be greater than or equal to 2
+
+INTERFACE
+  MODULE FUNCTION EdgeBasisGradient_Triangle2( &
+    & pe1,  &
+    & pe2, &
+    & pe3, &
+    & L1,  &
+    & L2, &
+    & Lo1, &
+    & Lo2,  &
+    & dL1,  &
+    & dL2, &
+    & dLo1, &
+    & dLo2  &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! order on left vertical edge (e1), should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! order on right vertical edge(e2), should be greater than 1
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! order on right vertical edge(e3), should be greater than 1
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:), L2(1:, 0:)
+    !! L1 and L2 are jacobian polynomials
+    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
+    !! coordinates on biunit square domain
+    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
+    !! coordinates on biunit square domain
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:), dL2(1:, 0:)
+    !! L1 and L2 are jacobian polynomials
+    REAL(DFP), INTENT(IN) :: dLo1(1:, 0:)
+    !! coordinates on biunit square domain
+    REAL(DFP), INTENT(IN) :: dLo2(1:, 0:)
+    !! coordinates on biunit square domain
+    REAL(DFP) :: ans(SIZE(L1, 1), pe1 + pe2 + pe3 - 3, 2)
+  END FUNCTION EdgeBasisGradient_Triangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                                      CellBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -860,6 +937,49 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
+!                                                      CellBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 28 Oct 2022
+! summary: Eval basis in the cell of biunit Triangle
+!
+!# Introduction
+!
+! Evaluate basis functions in the cell of biunit Triangle
+
+INTERFACE
+  MODULE PURE FUNCTION CellBasisGradient_Triangle2( &
+    & order, &
+    & eta_ij, &
+    & L1, &
+    & Lo1, &
+    & Lo2,  &
+    & dL1, &
+    & dLo1, &
+    & dLo2  &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of approximation inside the cell, order>2
+    REAL(DFP), INTENT(IN) :: eta_ij(:, :)
+    !! coordinates on biunit square
+    REAL(DFP), INTENT(IN) :: L1(1:, 0:)
+    !! lobatto polynomials
+    REAL(DFP), INTENT(IN) :: Lo1(1:, 0:)
+    !! coordinates on biunit square domain
+    REAL(DFP), INTENT(IN) :: Lo2(1:, 0:)
+    !!
+    REAL(DFP), INTENT(IN) :: dL1(1:, 0:)
+    !! lobatto polynomials
+    REAL(DFP), INTENT(IN) :: dLo1(1:, 0:)
+    !!
+    REAL(DFP), INTENT(IN) :: dLo2(1:, 0:)
+    !!
+    REAL(DFP) :: ans(SIZE(L1, 1), INT((order - 1) * (order - 2) / 2), 2)
+  END FUNCTION CellBasisGradient_Triangle2
+END INTERFACE
+
+!----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Triangle
 !----------------------------------------------------------------------------
 
@@ -905,8 +1025,14 @@ END INTERFACE HeirarchicalBasis_Triangle
 ! summary: Evaluate all Lagrange polynomial of order n at single points
 
 INTERFACE LagrangeEvalAll_Triangle
-  MODULE FUNCTION LagrangeEvalAll_Triangle1(order, x, xij, refTriangle, &
-    & coeff, firstCall, basisType) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Triangle1( &
+    & order, &
+    & x, &
+    & xij, &
+    & refTriangle, &
+    & coeff, &
+    & firstCall, &
+    & basisType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(2)
@@ -941,8 +1067,15 @@ END INTERFACE LagrangeEvalAll_Triangle
 ! summary: Evaluate all Lagrange polynomials of order n at several points
 
 INTERFACE LagrangeEvalAll_Triangle
-  MODULE FUNCTION LagrangeEvalAll_Triangle2(order, x, xij, refTriangle, &
-    & coeff, firstCall, basisType) RESULT(ans)
+  MODULE FUNCTION LagrangeEvalAll_Triangle2( &
+    & order, &
+    & x, &
+    & xij, &
+    & refTriangle, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
@@ -965,13 +1098,14 @@ INTERFACE LagrangeEvalAll_Triangle
     !! Monomials *Default
     !! Jacobi=Dubiner
     !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
     REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Triangle2
 END INTERFACE LagrangeEvalAll_Triangle
 
 !----------------------------------------------------------------------------
-!                                            QuadraturePoints_Triangle
+!                                                 QuadraturePoints_Triangle
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -1097,6 +1231,158 @@ INTERFACE TensorQuadraturePoint_Triangle
     !! Quadrature points
   END FUNCTION TensorQuadraturePoint_Triangle2
 END INTERFACE TensorQuadraturePoint_Triangle
+
+!----------------------------------------------------------------------------
+!                                          LagrangeGradientEvalAll_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate Lagrange polynomials of n at several points
+
+INTERFACE LagrangeGradientEvalAll_Triangle
+  MODULE FUNCTION LagrangeGradientEvalAll_Triangle1( &
+    & order, &
+    & x, &
+    & xij, &
+    & refTriangle, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference triangle
+    !! Biunit
+    !! Unit
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2), 2, SIZE(x, 2))
+    !! Value of gradient of n+1 Lagrange polynomials at point x
+    !! ans(I, j, K): I = Lagrnage polynomial number I,
+    !! j = spatial dimension
+    !! K = point of evaluation number k
+  END FUNCTION LagrangeGradientEvalAll_Triangle1
+END INTERFACE LagrangeGradientEvalAll_Triangle
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on Triangle
+
+INTERFACE HeirarchicalBasisGradient_Triangle
+  MODULE FUNCTION HeirarchicalBasisGradient_Triangle1(order, pe1, pe2, pe3,&
+    & xij, refTriangle) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of approximation inside the triangle (i.e., cell)
+    !! it should be greater than 2 for cell bubble to exist
+    INTEGER(I4B), INTENT(IN) :: pe1
+    !! Order of interpolation on edge e1
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe2
+    !! Order of interpolation on edge e2
+    !! It should be greater than 1 for edge bubble to exists
+    INTEGER(I4B), INTENT(IN) :: pe3
+    !! Order of interpolation on edge e3
+    !! It should be greater than 1 for edge bubble to exists
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! This parameter denotes the type of reference triangle.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Triangle.
+    !! BIUNIT: in this case xij is in biunit triangle.
+    REAL(DFP) :: ans( &
+      & SIZE(xij, 2), &
+      & pe1 + pe2 + pe3 + INT((order - 1) * (order - 2) / 2), 2)
+    !!
+  END FUNCTION HeirarchicalBasisGradient_Triangle1
+END INTERFACE HeirarchicalBasisGradient_Triangle
+
+!----------------------------------------------------------------------------
+!                                         OrthogonalBasisGradient_Triangle
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Dubiner (1991) polynomials on triangle
+!
+!# Introduction
+!
+! Forms Dubiner basis on reference triangle domain. Reference triangle
+! can be biunit or unit.
+!
+! The shape of `ans` is (M,N), where M=SIZE(xij,2) (number of points)
+! N = 0.5*(order+1)*(order+2).
+!
+! In this way, ans(j,:) denotes the values of all polynomial at jth point
+!
+! Polynomials are returned in following way:
+!
+!$$
+! P_{0,0}, P_{0,1}, \cdots , P_{0,order} \\
+! P_{1,0}, P_{1,1}, \cdots , P_{1,order-1} \\
+! P_{2,0}, P_{2,1}, \cdots , P_{2,order-2} \\
+! \cdots
+! P_{order,0}
+!$$
+!
+! For example for order=3, the polynomials are arranged as:
+!
+!$$
+! P_{0,0}, P_{0,1}, P_{0,2}, P_{0,3} \\
+! P_{1,0}, P_{1,1}, P_{1,2} \\
+! P_{2,0}, P_{2,1} \\
+! P_{3,0}
+!$$
+
+INTERFACE OrthogonalBasisGradient_Triangle
+  MODULE FUNCTION OrthogonalBasisGradient_Triangle1( &
+    & order, &
+    & xij, &
+    & refTriangle) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of polynomial space
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! points in reference triangle, shape functions will be evaluated
+    !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
+    CHARACTER(*), INTENT(IN) :: refTriangle
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP) :: ans(SIZE(xij, 2), (order + 1) * (order + 2) / 2, 2)
+    !! Derivative of shape functions
+    !! ans(:, j, 1), derivative wrt x of jth shape functions at all points
+    !! ans(j, :, 1), derivative wrt x of all shape functions at jth point
+  END FUNCTION OrthogonalBasisGradient_Triangle1
+END INTERFACE OrthogonalBasisGradient_Triangle
 
 !----------------------------------------------------------------------------
 !                                                                 Triangle
