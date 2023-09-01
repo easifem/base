@@ -15,8 +15,21 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+INTEGER(I4B) :: ii, n
+n = SIZE(val)
+ans = "| "
+DO ii = 1, n
+  ans = ans//" | "
+END DO
+ans = ans//CHAR_LF
 ans = ans//"| "
 DO ii = 1, n
-  ans = ans//TOSTRING(val(ii))//" | "
+  ans = ans//" --- | "
+END DO
+ans = ans//CHAR_LF
+
+ans = ans//"| "
+DO ii = 1, n
+  ans = ans//MdEncode(val(ii))//" | "
 END DO
 ans = ans//CHAR_LF

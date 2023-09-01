@@ -38,10 +38,45 @@ CHARACTER(5), PARAMETER :: adash = " --- "
 !----------------------------------------------------------------------------
 
 INTERFACE MdEncode
-  MODULE FUNCTION MdEncode_1(val) RESULT(ans)
-    CLASS(*), INTENT(IN) :: val
+  MODULE FUNCTION MdEncode_Int8(val) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: val
     TYPE(String) :: ans
-  END FUNCTION MdEncode_1
+  END FUNCTION MdEncode_Int8
+
+  MODULE FUNCTION MdEncode_Int16(val) RESULT(ans)
+    INTEGER(INT16), INTENT(IN) :: val
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_Int16
+
+  MODULE FUNCTION MdEncode_Int32(val) RESULT(ans)
+    INTEGER(INT32), INTENT(IN) :: val
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_Int32
+
+  MODULE FUNCTION MdEncode_Int64(val) RESULT(ans)
+    INTEGER(INT64), INTENT(IN) :: val
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_Int64
+
+  MODULE FUNCTION MdEncode_Real32(val) RESULT(ans)
+    REAL(REAL32), INTENT(IN) :: val
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_Real32
+
+  MODULE FUNCTION MdEncode_Real64(val) RESULT(ans)
+    REAL(REAL64), INTENT(IN) :: val
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_Real64
+
+  MODULE FUNCTION MdEncode_Char(val) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: val
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_Char
+
+  MODULE FUNCTION MdEncode_String(val) RESULT(ans)
+    TYPE(String), INTENT(IN) :: val
+    TYPE(String) :: ans
+  END FUNCTION MdEncode_String
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
@@ -49,10 +84,40 @@ END INTERFACE MdEncode
 !----------------------------------------------------------------------------
 
 INTERFACE MdEncode
-  MODULE FUNCTION MdEncode_2(val) RESULT(ans)
-    CLASS(*), INTENT(IN) :: val(:)
+  MODULE FUNCTION MdEncode2_Int8(val) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: val(:)
     TYPE(String) :: ans
-  END FUNCTION MdEncode_2
+  END FUNCTION MdEncode2_Int8
+
+  MODULE FUNCTION MdEncode2_Int16(val) RESULT(ans)
+    INTEGER(INT16), INTENT(IN) :: val(:)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode2_Int16
+
+  MODULE FUNCTION MdEncode2_Int32(val) RESULT(ans)
+    INTEGER(INT32), INTENT(IN) :: val(:)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode2_Int32
+
+  MODULE FUNCTION MdEncode2_Int64(val) RESULT(ans)
+    INTEGER(INT64), INTENT(IN) :: val(:)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode2_Int64
+
+  MODULE FUNCTION MdEncode2_Real32(val) RESULT(ans)
+    REAL(REAL32), INTENT(IN) :: val(:)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode2_Real32
+
+  MODULE FUNCTION MdEncode2_Real64(val) RESULT(ans)
+    REAL(REAL64), INTENT(IN) :: val(:)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode2_Real64
+
+  MODULE FUNCTION MdEncode2_String(val) RESULT(ans)
+    TYPE(String), INTENT(IN) :: val(:)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode2_String
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
@@ -60,10 +125,40 @@ END INTERFACE MdEncode
 !----------------------------------------------------------------------------
 
 INTERFACE MdEncode
-  MODULE FUNCTION MdEncode_3(val) RESULT(ans)
-    CLASS(*), INTENT(IN) :: val(:, :)
+  MODULE FUNCTION MdEncode3_Int8(val) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: val(:, :)
     TYPE(String) :: ans
-  END FUNCTION MdEncode_3
+  END FUNCTION MdEncode3_Int8
+
+  MODULE FUNCTION MdEncode3_Int16(val) RESULT(ans)
+    INTEGER(INT16), INTENT(IN) :: val(:, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode3_Int16
+
+  MODULE FUNCTION MdEncode3_Int32(val) RESULT(ans)
+    INTEGER(INT32), INTENT(IN) :: val(:, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode3_Int32
+
+  MODULE FUNCTION MdEncode3_Int64(val) RESULT(ans)
+    INTEGER(INT64), INTENT(IN) :: val(:, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode3_Int64
+
+  MODULE FUNCTION MdEncode3_Real32(val) RESULT(ans)
+    REAL(REAL32), INTENT(IN) :: val(:, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode3_Real32
+
+  MODULE FUNCTION MdEncode3_Real64(val) RESULT(ans)
+    REAL(REAL64), INTENT(IN) :: val(:, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode3_Real64
+
+  MODULE FUNCTION MdEncode3_String(val) RESULT(ans)
+    TYPE(String), INTENT(IN) :: val(:, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode3_String
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
@@ -71,10 +166,40 @@ END INTERFACE MdEncode
 !----------------------------------------------------------------------------
 
 INTERFACE MdEncode
-  MODULE FUNCTION MdEncode_4(val) RESULT(ans)
-    CLASS(*), INTENT(IN) :: val(:, :, :)
+  MODULE FUNCTION MdEncode4_Int8(val) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: val(:, :, :)
     TYPE(String) :: ans
-  END FUNCTION MdEncode_4
+  END FUNCTION MdEncode4_Int8
+
+  MODULE FUNCTION MdEncode4_Int16(val) RESULT(ans)
+    INTEGER(INT16), INTENT(IN) :: val(:, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode4_Int16
+
+  MODULE FUNCTION MdEncode4_Int32(val) RESULT(ans)
+    INTEGER(INT32), INTENT(IN) :: val(:, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode4_Int32
+
+  MODULE FUNCTION MdEncode4_Int64(val) RESULT(ans)
+    INTEGER(INT64), INTENT(IN) :: val(:, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode4_Int64
+
+  MODULE FUNCTION MdEncode4_Real32(val) RESULT(ans)
+    REAL(REAL32), INTENT(IN) :: val(:, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode4_Real32
+
+  MODULE FUNCTION MdEncode4_Real64(val) RESULT(ans)
+    REAL(REAL64), INTENT(IN) :: val(:, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode4_Real64
+
+  MODULE FUNCTION MdEncode4_String(val) RESULT(ans)
+    TYPE(String), INTENT(IN) :: val(:, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode4_String
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
@@ -82,10 +207,40 @@ END INTERFACE MdEncode
 !----------------------------------------------------------------------------
 
 INTERFACE MdEncode
-  MODULE FUNCTION MdEncode_5(val) RESULT(ans)
-    CLASS(*), INTENT(IN) :: val(:, :, :, :)
+  MODULE FUNCTION MdEncode5_Int8(val) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: val(:, :, :, :)
     TYPE(String) :: ans
-  END FUNCTION MdEncode_5
+  END FUNCTION MdEncode5_Int8
+
+  MODULE FUNCTION MdEncode5_Int16(val) RESULT(ans)
+    INTEGER(INT16), INTENT(IN) :: val(:, :, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode5_Int16
+
+  MODULE FUNCTION MdEncode5_Int32(val) RESULT(ans)
+    INTEGER(INT32), INTENT(IN) :: val(:, :, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode5_Int32
+
+  MODULE FUNCTION MdEncode5_Int64(val) RESULT(ans)
+    INTEGER(INT64), INTENT(IN) :: val(:, :, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode5_Int64
+
+  MODULE FUNCTION MdEncode5_Real32(val) RESULT(ans)
+    REAL(REAL32), INTENT(IN) :: val(:, :, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode5_Real32
+
+  MODULE FUNCTION MdEncode5_Real64(val) RESULT(ans)
+    REAL(REAL64), INTENT(IN) :: val(:, :, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode5_Real64
+
+  MODULE FUNCTION MdEncode5_String(val) RESULT(ans)
+    TYPE(String), INTENT(IN) :: val(:, :, :, :)
+    TYPE(String) :: ans
+  END FUNCTION MdEncode5_String
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
@@ -93,14 +248,68 @@ END INTERFACE MdEncode
 !----------------------------------------------------------------------------
 
 INTERFACE MdEncode
-  MODULE FUNCTION MdEncode_6(val, rh, ch) RESULT(ans)
-    CLASS(*), INTENT(IN) :: val(:)
+  MODULE FUNCTION MdEncode6_Int8(val, rh, ch) RESULT(ans)
+    INTEGER(INT8), INTENT(IN) :: val(:)
     TYPE(String), INTENT(IN) :: rh(:)
     !! Row header
     TYPE(String), INTENT(IN) :: ch(:)
     !! Col header
     TYPE(String) :: ans
-  END FUNCTION MdEncode_6
+  END FUNCTION MdEncode6_Int8
+
+  MODULE FUNCTION MdEncode6_Int16(val, rh, ch) RESULT(ans)
+    INTEGER(INT16), INTENT(IN) :: val(:)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode6_Int16
+
+  MODULE FUNCTION MdEncode6_Int32(val, rh, ch) RESULT(ans)
+    INTEGER(INT32), INTENT(IN) :: val(:)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode6_Int32
+
+  MODULE FUNCTION MdEncode6_Int64(val, rh, ch) RESULT(ans)
+    INTEGER(INT64), INTENT(IN) :: val(:)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode6_Int64
+
+  MODULE FUNCTION MdEncode6_Real32(val, rh, ch) RESULT(ans)
+    REAL(REAL32), INTENT(IN) :: val(:)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode6_Real32
+
+  MODULE FUNCTION MdEncode6_Real64(val, rh, ch) RESULT(ans)
+    REAL(REAL64), INTENT(IN) :: val(:)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode6_Real64
+
+  MODULE FUNCTION MdEncode6_String(val, rh, ch) RESULT(ans)
+    TYPE(String), INTENT(IN) :: val(:)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode6_String
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
@@ -108,14 +317,69 @@ END INTERFACE MdEncode
 !----------------------------------------------------------------------------
 
 INTERFACE MdEncode
-  MODULE FUNCTION MdEncode_7(val, rh, ch) RESULT(ans)
-    CLASS(*), INTENT(IN) :: val(:, :)
+  MODULE FUNCTION MdEncode7_Int8(val, rh, ch) RESULT(ans)
+    INTEGER(Int8), INTENT(IN) :: val(:, :)
     TYPE(String), INTENT(IN) :: rh(:)
     !! Row header
     TYPE(String), INTENT(IN) :: ch(:)
     !! Col header
     TYPE(String) :: ans
-  END FUNCTION MdEncode_7
+  END FUNCTION MdEncode7_Int8
+
+  MODULE FUNCTION MdEncode7_Int16(val, rh, ch) RESULT(ans)
+    INTEGER(Int16), INTENT(IN) :: val(:, :)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode7_Int16
+
+  MODULE FUNCTION MdEncode7_Int32(val, rh, ch) RESULT(ans)
+    INTEGER(Int32), INTENT(IN) :: val(:, :)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode7_Int32
+
+  MODULE FUNCTION MdEncode7_Int64(val, rh, ch) RESULT(ans)
+    INTEGER(Int64), INTENT(IN) :: val(:, :)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode7_Int64
+
+  MODULE FUNCTION MdEncode7_Real32(val, rh, ch) RESULT(ans)
+    REAL(Real32) , INTENT(IN) :: val(:, :)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode7_Real32
+
+  MODULE FUNCTION MdEncode7_Real64(val, rh, ch) RESULT(ans)
+    REAL(Real64) , INTENT(IN) :: val(:, :)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode7_Real64
+
+  MODULE FUNCTION MdEncode7_String(val, rh, ch) RESULT(ans)
+    TYPE(String) , INTENT(IN) :: val(:, :)
+    TYPE(String), INTENT(IN) :: rh(:)
+    !! Row header
+    TYPE(String), INTENT(IN) :: ch(:)
+    !! Col header
+    TYPE(String) :: ans
+  END FUNCTION MdEncode7_String
+
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
