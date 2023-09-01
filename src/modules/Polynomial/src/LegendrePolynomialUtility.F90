@@ -666,22 +666,13 @@ END INTERFACE
 !> author: Vikas Sharma, Ph. D.
 ! date: 8 Sept 2022
 ! summary:         Evaluate gradient of legendre polynomial of order upto n
-!
-!# Introduction
-!
-! Evaluate gradient of legendre polynomial of order upto n.
 
-INTERFACE
+INTERFACE LegendreGradientEvalAll
   MODULE PURE FUNCTION LegendreGradientEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans(1:n + 1)
   END FUNCTION LegendreGradientEvalAll1
-END INTERFACE
-!!
-
-INTERFACE LegendreGradientEvalAll
-  MODULE PROCEDURE LegendreGradientEvalAll1
 END INTERFACE LegendreGradientEvalAll
 
 !----------------------------------------------------------------------------
@@ -690,23 +681,14 @@ END INTERFACE LegendreGradientEvalAll
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 8 Sept 2022
-! summary:         Evaluate gradient of legendre polynomial of order upto n
-!
-!# Introduction
-!
-! Evaluate gradient of legendre polynomial of order upto n.
+! summary: Evaluate gradient of legendre polynomial of order upto n
 
-INTERFACE
+INTERFACE LegendreGradientEvalAll
   MODULE PURE FUNCTION LegendreGradientEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
   END FUNCTION LegendreGradientEvalAll2
-END INTERFACE
-!!
-
-INTERFACE LegendreGradientEvalAll
-  MODULE PROCEDURE LegendreGradientEvalAll2
 END INTERFACE LegendreGradientEvalAll
 
 !----------------------------------------------------------------------------
