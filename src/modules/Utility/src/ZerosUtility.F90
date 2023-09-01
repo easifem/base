@@ -21,7 +21,7 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Zeros
-!
+
 !----------------------------------------------------------------------------
 !                                                     Zeros@FunctionalFortran
 !----------------------------------------------------------------------------
@@ -29,30 +29,29 @@ PUBLIC :: Zeros
 INTERFACE
   MODULE PURE FUNCTION Zeros_1(dim1, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
-    INTEGER(Int8), INTENT(IN) :: datatype
-    INTEGER(Int8) :: ans(dim1)
+    INTEGER(INT8), INTENT(IN) :: datatype
+    INTEGER(INT8) :: ans(dim1)
   END FUNCTION Zeros_1
-!!
+
   MODULE PURE FUNCTION Zeros_2(dim1, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
-    INTEGER(Int16), INTENT(IN) :: datatype
-    INTEGER(Int16) :: ans(dim1)
+    INTEGER(INT16), INTENT(IN) :: datatype
+    INTEGER(INT16) :: ans(dim1)
   END FUNCTION Zeros_2
-!!
+
   MODULE PURE FUNCTION Zeros_3(dim1, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
-    INTEGER(Int32), INTENT(IN) :: datatype
-    INTEGER(Int32) :: ans(dim1)
+    INTEGER(INT32), INTENT(IN) :: datatype
+    INTEGER(INT32) :: ans(dim1)
   END FUNCTION Zeros_3
-!!
+
   MODULE PURE FUNCTION Zeros_4(dim1, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
-    INTEGER(Int64), INTENT(IN) :: datatype
-    INTEGER(Int64) :: ans(dim1)
+    INTEGER(INT64), INTENT(IN) :: datatype
+    INTEGER(INT64) :: ans(dim1)
   END FUNCTION Zeros_4
 
 #ifdef USE_Int128
-!!
   MODULE PURE FUNCTION Zeros_5(dim1, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(Int128), INTENT(IN) :: datatype
@@ -78,14 +77,14 @@ END INTERFACE Zeros
 INTERFACE
   MODULE PURE FUNCTION Zeros_6(dim1, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
-    REAL(Real32), INTENT(IN) :: datatype
-    REAL(Real32) :: ans(dim1)
+    REAL(REAL32), INTENT(IN) :: datatype
+    REAL(REAL32) :: ans(dim1)
   END FUNCTION Zeros_6
 !!
   MODULE PURE FUNCTION Zeros_7(dim1, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
-    REAL(Real64), INTENT(IN) :: datatype
-    REAL(Real64) :: ans(dim1)
+    REAL(REAL64), INTENT(IN) :: datatype
+    REAL(REAL64) :: ans(dim1)
   END FUNCTION Zeros_7
 END INTERFACE
 
@@ -101,29 +100,29 @@ INTERFACE
   MODULE PURE FUNCTION Zeros_8(dim1, dim2, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
-    INTEGER(Int8), INTENT(IN) :: datatype
-    INTEGER(Int8) :: ans(dim1, dim2)
+    INTEGER(INT8), INTENT(IN) :: datatype
+    INTEGER(INT8) :: ans(dim1, dim2)
   END FUNCTION Zeros_8
 !!
   MODULE PURE FUNCTION Zeros_9(dim1, dim2, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
-    INTEGER(Int16), INTENT(IN) :: datatype
-    INTEGER(Int16) :: ans(dim1, dim2)
+    INTEGER(INT16), INTENT(IN) :: datatype
+    INTEGER(INT16) :: ans(dim1, dim2)
   END FUNCTION Zeros_9
 !!
   MODULE PURE FUNCTION Zeros_10(dim1, dim2, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
-    INTEGER(Int32), INTENT(IN) :: datatype
-    INTEGER(Int32) :: ans(dim1, dim2)
+    INTEGER(INT32), INTENT(IN) :: datatype
+    INTEGER(INT32) :: ans(dim1, dim2)
   END FUNCTION Zeros_10
 !!
   MODULE PURE FUNCTION Zeros_11(dim1, dim2, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
-    INTEGER(Int64), INTENT(IN) :: datatype
-    INTEGER(Int64) :: ans(dim1, dim2)
+    INTEGER(INT64), INTENT(IN) :: datatype
+    INTEGER(INT64) :: ans(dim1, dim2)
   END FUNCTION Zeros_11
 !!
 #ifdef USE_Int128
@@ -156,15 +155,15 @@ INTERFACE
   MODULE PURE FUNCTION Zeros_13(dim1, dim2, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
-    REAL(Real32), INTENT(IN) :: datatype
-    REAL(Real32) :: ans(dim1, dim2)
+    REAL(REAL32), INTENT(IN) :: datatype
+    REAL(REAL32) :: ans(dim1, dim2)
   END FUNCTION Zeros_13
 !!
   MODULE PURE FUNCTION Zeros_14(dim1, dim2, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
-    REAL(Real64), INTENT(IN) :: datatype
-    REAL(Real64) :: ans(dim1, dim2)
+    REAL(REAL64), INTENT(IN) :: datatype
+    REAL(REAL64) :: ans(dim1, dim2)
   END FUNCTION Zeros_14
 END INTERFACE
 
@@ -181,32 +180,32 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
-    INTEGER(Int8), INTENT(IN) :: datatype
-    INTEGER(Int8) :: ans(dim1, dim2, dim3)
+    INTEGER(INT8), INTENT(IN) :: datatype
+    INTEGER(INT8) :: ans(dim1, dim2, dim3)
   END FUNCTION Zeros_15
 !!
   MODULE PURE FUNCTION Zeros_16(dim1, dim2, dim3, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
-    INTEGER(Int16), INTENT(IN) :: datatype
-    INTEGER(Int16) :: ans(dim1, dim2, dim3)
+    INTEGER(INT16), INTENT(IN) :: datatype
+    INTEGER(INT16) :: ans(dim1, dim2, dim3)
   END FUNCTION Zeros_16
 !!
   MODULE PURE FUNCTION Zeros_17(dim1, dim2, dim3, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
-    INTEGER(Int32), INTENT(IN) :: datatype
-    INTEGER(Int32) :: ans(dim1, dim2, dim3)
+    INTEGER(INT32), INTENT(IN) :: datatype
+    INTEGER(INT32) :: ans(dim1, dim2, dim3)
   END FUNCTION Zeros_17
 !!
   MODULE PURE FUNCTION Zeros_18(dim1, dim2, dim3, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
-    INTEGER(Int64), INTENT(IN) :: datatype
-    INTEGER(Int64) :: ans(dim1, dim2, dim3)
+    INTEGER(INT64), INTENT(IN) :: datatype
+    INTEGER(INT64) :: ans(dim1, dim2, dim3)
   END FUNCTION Zeros_18
 
 #ifdef USE_Int128
@@ -240,16 +239,16 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
-    REAL(Real32), INTENT(IN) :: datatype
-    REAL(Real32) :: ans(dim1, dim2, dim3)
+    REAL(REAL32), INTENT(IN) :: datatype
+    REAL(REAL32) :: ans(dim1, dim2, dim3)
   END FUNCTION Zeros_20
 !!
   MODULE PURE FUNCTION Zeros_21(dim1, dim2, dim3, datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
-    REAL(Real64), INTENT(IN) :: datatype
-    REAL(Real64) :: ans(dim1, dim2, dim3)
+    REAL(REAL64), INTENT(IN) :: datatype
+    REAL(REAL64) :: ans(dim1, dim2, dim3)
   END FUNCTION Zeros_21
 END INTERFACE
 
@@ -268,8 +267,8 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
     INTEGER(I4B), INTENT(IN) :: dim4
-    INTEGER(Int8), INTENT(IN) :: datatype
-    INTEGER(Int8) :: ans(dim1, dim2, dim3, dim4)
+    INTEGER(INT8), INTENT(IN) :: datatype
+    INTEGER(INT8) :: ans(dim1, dim2, dim3, dim4)
   END FUNCTION Zeros_22
 !!
   MODULE PURE FUNCTION Zeros_23(dim1, dim2, dim3, dim4,&
@@ -278,8 +277,8 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
     INTEGER(I4B), INTENT(IN) :: dim4
-    INTEGER(Int16), INTENT(IN) :: datatype
-    INTEGER(Int16) :: ans(dim1, dim2, dim3, dim4)
+    INTEGER(INT16), INTENT(IN) :: datatype
+    INTEGER(INT16) :: ans(dim1, dim2, dim3, dim4)
   END FUNCTION Zeros_23
 !!
   MODULE PURE FUNCTION Zeros_24(dim1, dim2, dim3, dim4,&
@@ -288,8 +287,8 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
     INTEGER(I4B), INTENT(IN) :: dim4
-    INTEGER(Int32), INTENT(IN) :: datatype
-    INTEGER(Int32) :: ans(dim1, dim2, dim3, dim4)
+    INTEGER(INT32), INTENT(IN) :: datatype
+    INTEGER(INT32) :: ans(dim1, dim2, dim3, dim4)
   END FUNCTION Zeros_24
 !!
   MODULE PURE FUNCTION Zeros_25(dim1, dim2, dim3, dim4,&
@@ -298,8 +297,8 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
     INTEGER(I4B), INTENT(IN) :: dim4
-    INTEGER(Int64), INTENT(IN) :: datatype
-    INTEGER(Int64) :: ans(dim1, dim2, dim3, dim4)
+    INTEGER(INT64), INTENT(IN) :: datatype
+    INTEGER(INT64) :: ans(dim1, dim2, dim3, dim4)
   END FUNCTION Zeros_25
 
 #ifdef USE_Int128
@@ -330,15 +329,15 @@ END INTERFACE Zeros
 !                                                     Zeros@FunctionalFortran
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Zeros
   MODULE PURE FUNCTION Zeros_27(dim1, dim2, dim3, dim4, &
       & datatype) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: dim1
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
     INTEGER(I4B), INTENT(IN) :: dim4
-    REAL(Real32), INTENT(IN) :: datatype
-    REAL(Real32) :: ans(dim1, dim2, dim3, dim4)
+    REAL(REAL32), INTENT(IN) :: datatype
+    REAL(REAL32) :: ans(dim1, dim2, dim3, dim4)
   END FUNCTION Zeros_27
 !!
   MODULE PURE FUNCTION Zeros_28(dim1, dim2, dim3, dim4, &
@@ -347,13 +346,51 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: dim2
     INTEGER(I4B), INTENT(IN) :: dim3
     INTEGER(I4B), INTENT(IN) :: dim4
-    REAL(Real64), INTENT(IN) :: datatype
-    REAL(Real64) :: ans(dim1, dim2, dim3, dim4)
+    REAL(REAL64), INTENT(IN) :: datatype
+    REAL(REAL64) :: ans(dim1, dim2, dim3, dim4)
   END FUNCTION Zeros_28
-END INTERFACE
+END INTERFACE Zeros
+
+!----------------------------------------------------------------------------
+!                                                         Zeros
+!----------------------------------------------------------------------------
 
 INTERFACE Zeros
-  MODULE PROCEDURE Zeros_27, Zeros_28
+  MODULE PURE FUNCTION Zeros_29_Int8(s, datatype) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    INTEGER(INT8), INTENT(IN) :: datatype
+    INTEGER(INT8) :: ans(s(1), s(2))
+  END FUNCTION Zeros_29_Int8
+
+  MODULE PURE FUNCTION Zeros_29_Int16(s, datatype) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    INTEGER(INT16), INTENT(IN) :: datatype
+    INTEGER(INT16) :: ans(s(1), s(2))
+  END FUNCTION Zeros_29_Int16
+
+  MODULE PURE FUNCTION Zeros_29_Int32(s, datatype) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    INTEGER(INT32), INTENT(IN) :: datatype
+    INTEGER(INT32) :: ans(s(1), s(2))
+  END FUNCTION Zeros_29_Int32
+
+  MODULE PURE FUNCTION Zeros_29_Int64(s, datatype) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    INTEGER(INT64), INTENT(IN) :: datatype
+    INTEGER(INT64) :: ans(s(1), s(2))
+  END FUNCTION Zeros_29_Int64
+
+  MODULE PURE FUNCTION Zeros_29_Real32(s, datatype) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    REAL(REAL32), INTENT(IN) :: datatype
+    REAL(REAL32) :: ans(s(1), s(2))
+  END FUNCTION Zeros_29_Real32
+
+  MODULE PURE FUNCTION Zeros_29_Real64(s, datatype) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: s(:)
+    REAL(REAL64), INTENT(IN) :: datatype
+    REAL(REAL64) :: ans(s(1), s(2))
+  END FUNCTION Zeros_29_Real64
 END INTERFACE Zeros
 
 !----------------------------------------------------------------------------
