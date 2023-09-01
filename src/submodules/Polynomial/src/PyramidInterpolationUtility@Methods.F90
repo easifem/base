@@ -209,4 +209,43 @@ CALL ErrorMsg(&
 & file=__FILE__)
 END PROCEDURE TensorQuadraturePoint_Pyramid2
 
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Pyramid1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeEvalAll_Pyramid1()", &
+& file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Pyramid2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeEvalAll_Pyramid2()", &
+& file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Pyramid2
+
+!----------------------------------------------------------------------------
+!                                             LagrangeGradientEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Pyramid1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeGradientEvalAll_Pyramid1()", &
+& file=__FILE__)
+END PROCEDURE LagrangeGradientEvalAll_Pyramid1
+
 END SUBMODULE Methods

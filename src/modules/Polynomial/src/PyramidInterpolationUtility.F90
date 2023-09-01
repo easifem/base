@@ -31,6 +31,8 @@ PUBLIC :: QuadraturePoint_Pyramid
 PUBLIC :: TensorQuadraturePoint_Pyramid
 PUBLIC :: RefCoord_Pyramid
 PUBLIC :: RefElemDomain_Pyramid
+PUBLIC :: LagrangeEvalAll_Pyramid
+PUBLIC :: LagrangeGradientEvalAll_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                     RefElemDomain_Pyramid
@@ -187,8 +189,12 @@ END INTERFACE
 ! summary:         Interpolation point on Pyramid
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Pyramid(order, ipType, &
-    & layout, xij) RESULT(nodecoord)
+  MODULE PURE FUNCTION InterpolationPoint_Pyramid( &
+    & order, &
+    & ipType, &
+    & layout, &
+    & xij,  &
+    & alpha, beta, lambda) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
@@ -197,6 +203,8 @@ INTERFACE
     !! layout
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! coords of vertices in $x_{iJ}$ format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Alpha, beta, and lambda
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in $x_{iJ}$ format
   END FUNCTION InterpolationPoint_Pyramid
@@ -422,6 +430,187 @@ INTERFACE TensorQuadraturePoint_Pyramid
     !! Quadrature points
   END FUNCTION TensorQuadraturePoint_Pyramid2
 END INTERFACE TensorQuadraturePoint_Pyramid
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  Evaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeEvalAll_Pyramid
+  MODULE FUNCTION LagrangeEvalAll_Pyramid1( &
+    & order, &
+    & x, &
+    & xij, &
+    & refPyramid, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(3)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    !! x(3) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    !! The number of rows in xij is 3
+    !! The number of columns in xij should be equal to total
+    !! degree of freedom
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPyramid
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be computed and returned
+    !! by this routine.
+    !! If firstCall is False, then coeff should be given, which will be
+    !! used.
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Pyramid1
+END INTERFACE LagrangeEvalAll_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                LagrangeEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  Evaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeEvalAll_Pyramid
+  MODULE FUNCTION LagrangeEvalAll_Pyramid2( &
+    & order, &
+    & x, &
+    & xij, &
+    & refPyramid, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPyramid
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Pyramid2
+END INTERFACE LagrangeEvalAll_Pyramid
+
+!----------------------------------------------------------------------------
+!                                       LagrangeGradientEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  GradientEvaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeGradientEvalAll_Pyramid
+  MODULE FUNCTION LagrangeGradientEvalAll_Pyramid1( &
+    & order, &
+    & x, &
+    & xij, &
+    & refPyramid, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPyramid
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2), 3, SIZE(x, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeGradientEvalAll_Pyramid1
+END INTERFACE LagrangeGradientEvalAll_Pyramid
 
 !----------------------------------------------------------------------------
 !

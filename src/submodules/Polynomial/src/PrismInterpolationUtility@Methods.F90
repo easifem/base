@@ -211,6 +211,45 @@ CALL ErrorMsg(&
 END PROCEDURE TensorQuadraturePoint_Prism2
 
 !----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Prism1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeEvalAll_Prism1()", &
+& file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Prism1
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Prism2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeEvalAll_Prism2()", &
+& file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Prism2
+
+!----------------------------------------------------------------------------
+!                                             LagrangeGradientEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Prism1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeGradientEvalAll_Prism1()", &
+& file=__FILE__)
+END PROCEDURE LagrangeGradientEvalAll_Prism1
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
