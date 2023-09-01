@@ -29,6 +29,53 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate_ref_Tetrahedron
+INTEGER(I4B) :: ii, jj
+INTEGER(I4B), PARAMETER :: tNodes = 4, tFaces=4, tEdges=6
+INTEGER(I4B) :: p1p2(2, tEdges), lloop(3, tFaces), vol(tNodes, 1)
+
+p1p2 = EdgeConnectivity_Tetrahedron( &
+  & baseInterpol="LAGRANGE",  &
+  & baseContinuity="H1")
+
+lloop = FacetConnectivity_Tetrahedron( &
+  & baseInterpol="LAGRANGE",  &
+  & baseContinuity="H1")
+
+vol(:, 1) = arange(1_I4B, tNodes)
+
+IF (PRESENT(xij)) THEN
+  obj%xij = xij
+ELSE
+  obj%xij = RefCoord_Tetrahedron("UNIT")
+END IF
+
+obj%EntityCounts = [tNodes, tEdges, tFaces, 1_I4B]
+obj%XiDimension = 3_I4B
+obj%Name = Tetrahedron4
+obj%order = 1_I4B
+obj%nsd = nsd
+
+ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+DO ii = 1, obj%EntityCounts(1)
+  obj%Topology(ii) = ReferenceTopology([ii], Point)
+END DO
+
+jj = obj%EntityCounts(1)
+DO ii = 1, obj%EntityCounts(2)
+  obj%Topology(jj + ii) = ReferenceTopology(p1p2(:, ii), Line2)
+END DO
+
+jj = SUM(obj%EntityCounts(1:2))
+DO ii = 1, obj%EntityCounts(3)
+  obj%Topology(jj + ii) = ReferenceTopology(lloop(:, ii), Triangle3)
+END DO
+
+jj = SUM(obj%EntityCounts(1:3))
+DO ii = 1, obj%EntityCounts(4)
+  obj%Topology(jj + ii) = ReferenceTopology(vol(:, ii), Tetrahedron4)
+END DO
+
+obj%highorderElement => highorderElement_Tetrahedron
 END PROCEDURE Initiate_ref_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -61,6 +108,7 @@ END PROCEDURE reference_Tetrahedron_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE highOrderElement_Tetrahedron
+! TODO Implement highOrderElement_Tetrahedron
 END PROCEDURE highOrderElement_Tetrahedron
 
 !----------------------------------------------------------------------------
@@ -76,6 +124,7 @@ END PROCEDURE Measure_Simplex_Tetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Tetrahedron_quality
+! TODO Implement Tetrahedron_quality 
 END PROCEDURE Tetrahedron_quality
 
 !----------------------------------------------------------------------------
