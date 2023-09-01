@@ -17,7 +17,7 @@
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
-! summary: Constructor method for [[ElemshapeData_]] and [[STElemShapeData_]]
+! summary: Constructor method for ElemshapeData_ and STElemshapeData_
 
 SUBMODULE(ElemshapeData_ConstructorMethods) Methods
 USE BaseMethod
@@ -307,9 +307,9 @@ DO ip = 1, tip
   obj(ip)%Jt = elemsd%Js(ip)
   CALL getQuadraturePoints( &
     & obj=elemsd%quad, &
-    & weight=obj(ip)%wt,&
-    & num=ip, &
-    & point=x)
+    & weights=obj(ip)%wt,&
+    & points=x, &
+    & num=ip)
   obj(ip)%theta = x(1)
 END DO
 END PROCEDURE stsd_initiate
@@ -339,54 +339,6 @@ TYPE IS (STElemShapeData_)
   IF (ALLOCATED(obj%dNTdXt)) DEALLOCATE (obj%dNTdXt)
 END SELECT
 END PROCEDURE elemsd_Deallocate
-
-!----------------------------------------------------------------------------
-!                                                         BaseInterpolation
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE elemsd_BaseInterpolation
-SELECT CASE (TRIM(childName))
-CASE ("LagrangeInterpolation")
-  ALLOCATE (LagrangeInterpolation_ :: ans)
-CASE ("HermitInterpolation")
-  ALLOCATE (HermitInterpolation_ :: ans)
-CASE ("SerendipityInterpolation")
-  ALLOCATE (SerendipityInterpolation_ :: ans)
-CASE ("HierarchyInterpolation")
-  ALLOCATE (HierarchyInterpolation_ :: ans)
-CASE DEFAULT
-  CALL ErrorMSG( &
-    & Msg="Unknown child name of BaseInterpolation.", &
-    & File="ElemshapeData_Method@Constructor.F90", &
-    & Routine="elemsd_BaseInterpolation()", &
-    & Line=__LINE__, &
-    & UnitNo=stdout)
-END SELECT
-END PROCEDURE elemsd_BaseInterpolation
-
-!----------------------------------------------------------------------------
-!                                                            BaseContinuity
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE elemsd_BaseContinuity
-SELECT CASE (TRIM(childName))
-CASE ("H1")
-  ALLOCATE (H1_ :: ans)
-CASE ("HDiv")
-  ALLOCATE (HDiv_ :: ans)
-CASE ("HCurl")
-  ALLOCATE (HCurl_ :: ans)
-CASE ("DG")
-  ALLOCATE (DG_ :: ans)
-CASE DEFAULT
-  CALL ErrorMSG( &
-    & Msg="Unknown child name of BaseContinuity.", &
-    & File="ElemshapeData_Method@Constructor.F90", &
-    & Routine="elemsd_BaseContinuity()", &
-    & Line=__LINE__, &
-    & UnitNo=stdout)
-END SELECT
-END PROCEDURE elemsd_BaseContinuity
 
 !----------------------------------------------------------------------------
 !

@@ -24,8 +24,6 @@ PRIVATE
 PUBLIC :: Initiate
 PUBLIC :: DEALLOCATE
 PUBLIC :: ALLOCATE
-PUBLIC :: BaseInterpolation
-PUBLIC :: BaseContinuity
 PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
@@ -75,8 +73,10 @@ INTERFACE Initiate
     !! reference element
     CHARACTER(*), INTENT(IN) :: continuityType
     !! continuity/ conformity of shape function
+    !! Base continuity type
     CHARACTER(*), INTENT(IN) :: interpolType
     !! interpolation/polynomial family type
+    !! Base Interpolation type
   END SUBROUTINE elemsd_initiate1
 END INTERFACE Initiate
 
@@ -222,35 +222,5 @@ INTERFACE DEALLOCATE
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
   END SUBROUTINE elemsd_Deallocate
 END INTERFACE DEALLOCATE
-
-!----------------------------------------------------------------------------
-!                                       BaseInterpolation@ConstructorMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 30 Aug 2021
-! summary: This routine returns a pointer to a child of [[BaseInterpolation_]]
-
-INTERFACE BaseInterpolation
-  MODULE FUNCTION elemsd_BaseInterpolation(childName) RESULT(Ans)
-    CHARACTER(*), INTENT(IN) :: childName
-    CLASS(BaseInterpolation_), POINTER :: ans
-  END FUNCTION elemsd_BaseInterpolation
-END INTERFACE BaseInterpolation
-
-!----------------------------------------------------------------------------
-!                                          BaseContinuity@ConstructorMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 30 Aug 2021
-! summary: This routine returns a pointer to a child of [[BaseContinuity_]]
-
-INTERFACE BaseContinuity
-  MODULE FUNCTION elemsd_BaseContinuity(childName) RESULT(Ans)
-    CHARACTER(*), INTENT(IN) :: childName
-    CLASS(BaseContinuity_), POINTER :: ans
-  END FUNCTION elemsd_BaseContinuity
-END INTERFACE BaseContinuity
 
 END MODULE ElemshapeData_ConstructorMethods
