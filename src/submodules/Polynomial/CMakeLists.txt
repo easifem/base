@@ -20,6 +20,7 @@ TARGET_SOURCES(
   ${PROJECT_NAME} PRIVATE
   ${src_path}/LineInterpolationUtility@Methods.F90
   ${src_path}/QuadraturePoint_Triangle_Solin.F90
+  ${src_path}/QuadraturePoint_Tetrahedron_Solin.F90
   ${src_path}/TriangleInterpolationUtility@Methods.F90
   ${src_path}/QuadrangleInterpolationUtility@Methods.F90
   ${src_path}/TetrahedronInterpolationUtility@Methods.F90
