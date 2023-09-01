@@ -169,7 +169,6 @@ END PROCEDURE Element_Name
 !                                                               ElementType
 !----------------------------------------------------------------------------
 MODULE PROCEDURE Element_Type
-!
 SELECT CASE (TRIM(ElemName))
 CASE ("Line0")
   Ans = 0
@@ -242,7 +241,6 @@ CASE ("Hexahedron64")
 CASE ("Hexahedron125")
   Ans = Hexahedron125
 END SELECT
-!
 END PROCEDURE Element_Type
 
 !----------------------------------------------------------------------------
@@ -650,7 +648,6 @@ END PROCEDURE isSerendipityElement
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE refelem_ElementTopology1
-!
 SELECT CASE (ElemType)
 CASE (Line2, &
   & Line3, &
@@ -676,7 +673,6 @@ CASE (Prism6, Prism18, Prism15)
 CASE (Pyramid5, Pyramid13, Pyramid14)
   Ans = Pyramid
 END SELECT
-!
 END PROCEDURE refelem_ElementTopology1
 
 !----------------------------------------------------------------------------
