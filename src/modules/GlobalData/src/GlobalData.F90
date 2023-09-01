@@ -279,6 +279,12 @@ INTEGER(I4B), PARAMETER :: SerendipityPolynomial = 2
 INTEGER(I4B), PARAMETER :: Serendipity = SerendipityPolynomial
 INTEGER(I4B), PARAMETER :: HeirarchicalPolynomial = 3
 INTEGER(I4B), PARAMETER :: Heirarchical = HeirarchicalPolynomial
+INTEGER(I4B), PARAMETER :: HierarchicalPolynomial = 3
+INTEGER(I4B), PARAMETER :: Hierarchical = HierarchicalPolynomial
+INTEGER(I4B), PARAMETER :: HeirarchyPolynomial = 3
+INTEGER(I4B), PARAMETER :: Heirarchy = HeirarchyPolynomial
+INTEGER(I4B), PARAMETER :: HierarchyPolynomial = 3
+INTEGER(I4B), PARAMETER :: Hierarchy = HierarchyPolynomial
 INTEGER(I4B), PARAMETER :: Jacobi = 4
 INTEGER(I4B), PARAMETER :: Ultraspherical = 5
 INTEGER(I4B), PARAMETER :: Legendre = 6
@@ -498,11 +504,11 @@ INTEGER(I4B), PARAMETER, PUBLIC :: LIS_SUPERLU = 29
 INTEGER(I4B), PARAMETER :: NoPrecond = 0
 INTEGER(I4B), PARAMETER :: PrecondLeft = 1
 INTEGER(I4B), PARAMETER :: PrecondRight = 2
-INTEGER(I4B), PARAMETER, PUBLIC :: NO_PRECONDITION = 0
+INTEGER(I4B), PARAMETER, PUBLIC :: NO_PRECONDITION = NoPrecond
 INTEGER(I4B), PARAMETER, PUBLIC :: LEFT_PRECONDITION = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: RIGHT_PRECONDITION = 2
 INTEGER(I4B), PARAMETER, PUBLIC :: LEFT_RIGHT_PRECONDITION = 3
-INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_NONE = 0
+INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_NONE = NoPrecond
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_JACOBI = 1
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_ILU = 2
 INTEGER(I4B), PARAMETER, PUBLIC :: PRECOND_SSOR = 3
@@ -561,6 +567,10 @@ CHARACTER(1), PUBLIC, PARAMETER :: CHAR_SPACE = ' '
 CHARACTER(1), PUBLIC, PARAMETER :: CHAR_CR = CHAR(13)
     !! Character constant for a carraige return
 CHARACTER(1), PUBLIC, PARAMETER :: CHAR_LF = CHAR(10)
+    !! Character constant for a line feed
+CHARACTER(2), PUBLIC, PARAMETER :: CHAR_LF2 = char_lf//char_lf
+    !! Character constant for a line feed
+CHARACTER(3), PUBLIC, PARAMETER :: CHAR_LF3 = char_lf2//char_lf
     !! Character constant for a line feed
 CHARACTER(1), PUBLIC, PARAMETER :: CHAR_TAB = CHAR(9)
 
