@@ -25,14 +25,50 @@ USE Utility, ONLY: UpperCase
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: ASSIGNMENT(=)
-PUBLIC :: BaseContinuity_toString
-PUBLIC :: BaseContinuity_fromString
+PUBLIC :: BaseContinuity_ToString
+PUBLIC :: BaseContinuity_FromString
+PUBLIC :: BaseContinuityPointer_FromString
 
 INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE BaseContinuity_Copy
 END INTERFACE
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                       BaseContinuityPointer_FromString
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 30 Aug 2021
+! summary: This routine returns a pointer to a child of BaseContinuity_
+
+FUNCTION BaseContinuityPointer_FromString(name) RESULT(ans)
+  CHARACTER(*), INTENT(IN) :: name
+  CLASS(BaseContinuity_), POINTER :: ans
+  !!
+  TYPE(String) :: astr
+  astr = TRIM(UpperCase(name))
+
+  SELECT CASE (astr%chars())
+  CASE ("H1")
+    ALLOCATE (H1_ :: ans)
+  CASE ("HDIV")
+    ALLOCATE (HDiv_ :: ans)
+  CASE ("HCURL")
+    ALLOCATE (HCurl_ :: ans)
+  CASE ("DG")
+    ALLOCATE (DG_ :: ans)
+  CASE DEFAULT
+    CALL ErrorMsg(&
+    & msg="NO CASE FOUND for given name="//astr, &
+    & line=__LINE__,  &
+    & unitno=stdout, &
+    & routine="BaseContinuityPointer_FromString()",  &
+    & file=__FILE__ &
+    & )
+  END SELECT
+END FUNCTION BaseContinuityPointer_FromString
 
 !----------------------------------------------------------------------------
 !                                                 BaseContinuity_Copy
@@ -79,7 +115,7 @@ END SUBROUTINE BaseContinuity_Copy
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseContinuity_toString(obj) RESULT(ans)
+FUNCTION BaseContinuity_ToString(obj) RESULT(ans)
   CLASS(BaseContinuity_), INTENT(IN) :: obj
   TYPE(String) :: ans
   SELECT TYPE (obj)
@@ -100,7 +136,7 @@ FUNCTION BaseContinuity_toString(obj) RESULT(ans)
     & file=__FILE__ &
     & )
   END SELECT
-END FUNCTION BaseContinuity_toString
+END FUNCTION BaseContinuity_ToString
 
 !----------------------------------------------------------------------------
 !                                                 BaseContinuity_fromString
@@ -110,7 +146,7 @@ END FUNCTION BaseContinuity_toString
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-SUBROUTINE BaseContinuity_fromString(obj, name)
+SUBROUTINE BaseContinuity_FromString(obj, name)
   CLASS(BaseContinuity_), ALLOCATABLE, INTENT(OUT) :: obj
   CHARACTER(*), INTENT(IN) :: name
   TYPE(String) :: ans
@@ -136,6 +172,6 @@ SUBROUTINE BaseContinuity_fromString(obj, name)
     & file=__FILE__ &
     & )
   END SELECT
-END SUBROUTINE BaseContinuity_fromString
+END SUBROUTINE BaseContinuity_FromString
 
 END MODULE BaseContinuity_Method
