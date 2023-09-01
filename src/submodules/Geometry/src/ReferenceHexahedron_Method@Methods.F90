@@ -107,6 +107,7 @@ END PROCEDURE reference_Hexahedron_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE highorderElement_Hexahedron
+! TODO Implement highorderElement_Hexahedron
 END PROCEDURE highorderElement_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -134,6 +135,7 @@ END PROCEDURE Measure_Simplex_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Hexahedron_quality
+! TODO Implement Hexahedron_quality
 END PROCEDURE Hexahedron_quality
 
 !----------------------------------------------------------------------------
