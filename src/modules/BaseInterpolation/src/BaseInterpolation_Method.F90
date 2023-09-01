@@ -26,26 +26,70 @@ USE Display_Method, ONLY: Tostring
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: ASSIGNMENT(=)
-PUBLIC :: BaseInterpolation_toInteger
-PUBLIC :: BaseInterpolation_fromInteger
-PUBLIC :: BaseInterpolation_toString
-PUBLIC :: BaseInterpolation_fromString
+PUBLIC :: BaseInterpolation_ToInteger
+PUBLIC :: BaseInterpolation_FromInteger
+PUBLIC :: BaseInterpolation_ToString
+PUBLIC :: BaseInterpolation_FromString
+PUBLIC :: BaseInterpolationPointer_FromString
 
-INTERFACE BaseInterpolation_toInteger
-  MODULE PROCEDURE BaseInterpolation_toInteger1
-  MODULE PROCEDURE BaseInterpolation_toInteger2
-END INTERFACE BaseInterpolation_toInteger
+INTERFACE BaseInterpolation_ToInteger
+  MODULE PROCEDURE BaseInterpolation_ToInteger1
+  MODULE PROCEDURE BaseInterpolation_ToInteger2
+END INTERFACE BaseInterpolation_ToInteger
 
-INTERFACE BaseInterpolation_toString
-  MODULE PROCEDURE BaseInterpolation_toString1
-  MODULE PROCEDURE BaseInterpolation_toString2
-END INTERFACE BaseInterpolation_toString
+INTERFACE BaseInterpolation_ToString
+  MODULE PROCEDURE BaseInterpolation_ToString1
+  MODULE PROCEDURE BaseInterpolation_ToString2
+END INTERFACE BaseInterpolation_ToString
 
 INTERFACE ASSIGNMENT(=)
   MODULE PROCEDURE BaseInterpolation_Copy
 END INTERFACE
 
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                       BaseInterpolationPointer_FromString
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-18
+! summary: This routine returns a pointer to a child of BaseInterpolation_
+
+FUNCTION BaseInterpolationPointer_FromString(name) RESULT(Ans)
+  CHARACTER(*), INTENT(IN) :: name
+  CLASS(BaseInterpolation_), POINTER :: ans
+  !!
+  TYPE(String) :: astr
+  astr = TRIM(UpperCase(name))
+
+  SELECT CASE (astr%chars())
+  CASE ("LAGRANGEPOLYNOMIAL", "LAGRANGE", "LAGRANGEINTERPOLATION")
+    ALLOCATE (LagrangeInterpolation_ :: ans)
+  CASE ("SERENDIPITYPOLYNOMIAL", "SERENDIPITY", "SERENDIPITYINTERPOLATION")
+    ALLOCATE (SerendipityInterpolation_ :: ans)
+  CASE ("HERMITPOLYNOMIAL", "HERMIT", "HERMITINTERPOLATION")
+    ALLOCATE (HermitInterpolation_ :: ans)
+  CASE ( &
+    & "HIERARCHICALPOLYNOMIAL", &
+    & "HIERARCHY", &
+    & "HEIRARCHICALPOLYNOMIAL", &
+    & "HEIRARCHY", &
+    & "HIERARCHYINTERPOLATION", &
+    & "HEIRARCHYINTERPOLATION")
+    ALLOCATE (HierarchyInterpolation_ :: ans)
+  CASE ("ORTHOGONALPOLYNOMIAL", "ORTHOGONAL", "ORTHOGONALINTERPOLATION")
+    ALLOCATE (OrthogonalInterpolation_ :: ans)
+  CASE DEFAULT
+    CALL ErrorMsg(&
+    & msg="NO CASE FOUND for type of name="//astr, &
+    & line=__LINE__,  &
+    & unitno=stdout, &
+    & routine="BaseInterpolationPointer_FromString()",  &
+    & file=__FILE__ &
+    & )
+  END SELECT
+END FUNCTION BaseInterpolationPointer_FromString
 
 !----------------------------------------------------------------------------
 !                                                 BaseInterpolation_Copy
@@ -94,7 +138,7 @@ END SUBROUTINE BaseInterpolation_Copy
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseInterpolation_toString1(obj) RESULT(ans)
+FUNCTION BaseInterpolation_ToString1(obj) RESULT(ans)
   CLASS(BaseInterpolation_), INTENT(IN) :: obj
   TYPE(String) :: ans
   SELECT TYPE (obj)
@@ -117,7 +161,7 @@ FUNCTION BaseInterpolation_toString1(obj) RESULT(ans)
     & file=__FILE__ &
     & )
   END SELECT
-END FUNCTION BaseInterpolation_toString1
+END FUNCTION BaseInterpolation_ToString1
 
 !----------------------------------------------------------------------------
 !                                                BaseInterpolation_toInteger
@@ -127,7 +171,7 @@ END FUNCTION BaseInterpolation_toString1
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseInterpolation_toInteger1(obj) RESULT(ans)
+FUNCTION BaseInterpolation_ToInteger1(obj) RESULT(ans)
   CLASS(BaseInterpolation_), INTENT(IN) :: obj
   INTEGER(I4B) :: ans
   SELECT TYPE (obj)
@@ -150,7 +194,7 @@ FUNCTION BaseInterpolation_toInteger1(obj) RESULT(ans)
     & file=__FILE__ &
     & )
   END SELECT
-END FUNCTION BaseInterpolation_toInteger1
+END FUNCTION BaseInterpolation_ToInteger1
 
 !----------------------------------------------------------------------------
 !                                                BaseInterpolation_toInteger
@@ -160,7 +204,7 @@ END FUNCTION BaseInterpolation_toInteger1
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-FUNCTION BaseInterpolation_toInteger2(name) RESULT(ans)
+FUNCTION BaseInterpolation_ToInteger2(name) RESULT(ans)
   CHARACTER(*), INTENT(IN) :: name
   INTEGER(I4B) :: ans
 
@@ -238,7 +282,7 @@ FUNCTION BaseInterpolation_toInteger2(name) RESULT(ans)
       & unitno=stderr)
     RETURN
   END SELECT
-END FUNCTION BaseInterpolation_toInteger2
+END FUNCTION BaseInterpolation_ToInteger2
 
 !----------------------------------------------------------------------------
 !                                                 BaseInterpolation_fromString
@@ -248,7 +292,7 @@ END FUNCTION BaseInterpolation_toInteger2
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-SUBROUTINE BaseInterpolation_fromString(obj, name)
+SUBROUTINE BaseInterpolation_FromString(obj, name)
   CLASS(BaseInterpolation_), ALLOCATABLE, INTENT(OUT) :: obj
   CHARACTER(*), INTENT(IN) :: name
   TYPE(String) :: ans
@@ -282,7 +326,7 @@ SUBROUTINE BaseInterpolation_fromString(obj, name)
     & file=__FILE__ &
     & )
   END SELECT
-END SUBROUTINE BaseInterpolation_fromString
+END SUBROUTINE BaseInterpolation_FromString
 
 !----------------------------------------------------------------------------
 !                                                BaseInterpolation_fromInteger
@@ -292,7 +336,7 @@ END SUBROUTINE BaseInterpolation_fromString
 ! date:  2023-08-09
 ! summary:  Returns a string name of base interpolation type
 
-SUBROUTINE BaseInterpolation_fromInteger(obj, name)
+SUBROUTINE BaseInterpolation_FromInteger(obj, name)
   CLASS(BaseInterpolation_), ALLOCATABLE, INTENT(OUT) :: obj
   INTEGER(I4B), INTENT(IN) :: name
 
@@ -317,13 +361,13 @@ SUBROUTINE BaseInterpolation_fromInteger(obj, name)
     & )
   END SELECT
 
-END SUBROUTINE BaseInterpolation_fromInteger
+END SUBROUTINE BaseInterpolation_FromInteger
 
 !----------------------------------------------------------------------------
 !                                                  QuadraturePointIDToName
 !----------------------------------------------------------------------------
 
-FUNCTION BaseInterpolation_toString2(name) RESULT(ans)
+FUNCTION BaseInterpolation_ToString2(name) RESULT(ans)
   INTEGER(I4B), INTENT(IN) :: name
   TYPE(String) :: ans
 
@@ -400,6 +444,6 @@ FUNCTION BaseInterpolation_toString2(name) RESULT(ans)
       & unitno=stderr)
     RETURN
   END SELECT
-END FUNCTION BaseInterpolation_toString2
+END FUNCTION BaseInterpolation_ToString2
 
 END MODULE BaseInterpolation_Method
