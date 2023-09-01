@@ -36,6 +36,7 @@ PUBLIC :: Display
 PUBLIC :: QuadraturePoint_MdEncode
 PUBLIC :: QuadraturePointIdToName
 PUBLIC :: QuadraturePointNameToId
+PUBLIC :: MdEncode
 
 !----------------------------------------------------------------------------
 !                                 QuadratuePointNameToId@ConstructorMethods
@@ -452,11 +453,11 @@ END INTERFACE GetTotalQuadraturepoints
 ! summary: This routine returns quadrature points
 
 INTERFACE
-  MODULE PURE SUBROUTINE quad_GetQuadraturepoints1(obj, point, weight, num)
+  MODULE PURE SUBROUTINE quad_GetQuadraturepoints1(obj, points, weights, num)
     CLASS(QuadraturePoint_), INTENT(IN) :: obj
-    REAL(DFP), INTENT(INOUT) :: point(3)
+    REAL(DFP), INTENT(INOUT) :: points(3)
     !! [xi, eta, zeta]
-    REAL(DFP), INTENT(INOUT) :: weight
+    REAL(DFP), INTENT(INOUT) :: weights
     !! weights
     INTEGER(I4B), INTENT(IN) :: num
     !! quadrature number
@@ -476,11 +477,11 @@ END INTERFACE
 ! summary: This routine returns total number of quadrature points
 
 INTERFACE
-  MODULE PURE SUBROUTINE quad_GetQuadraturepoints2(obj, point, weight)
+  MODULE PURE SUBROUTINE quad_GetQuadraturepoints2(obj, points, weights)
     CLASS(QuadraturePoint_), INTENT(IN) :: obj
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: point(:, :)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: points(:, :)
     !! Point( :, j ) = [xi, eta, zeta] of jth quadrature point
-    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: weight(:)
+    REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: weights(:)
     !! Weight(j) weight of jth quadrature point
   END SUBROUTINE quad_GetQuadraturepoints2
 END INTERFACE
@@ -532,12 +533,12 @@ END INTERFACE Display
 ! date: 23 July 2021
 ! summary:  Display the content of quadrature point
 
-INTERFACE
+INTERFACE MdEncode
   MODULE FUNCTION QuadraturePoint_MdEncode(obj) RESULT(ans)
     CLASS(QuadraturePoint_), INTENT(IN) :: obj
     TYPE(String) :: ans
   END FUNCTION QuadraturePoint_MdEncode
-END INTERFACE
+END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
 !                                      GaussLegendreQuadrature@GaussLegendre

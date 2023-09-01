@@ -45,9 +45,9 @@ END PROCEDURE quad_getTotalQuadraturepoints
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE quad_GetQuadraturePoints1
-point = 0.0_DFP
-point(1:obj%tXi) = obj%points(1:obj%tXi, Num)
-weight = obj%points(obj%tXi + 1, Num)
+points = 0.0_DFP
+points(1:obj%tXi) = obj%points(1:obj%tXi, Num)
+weights = obj%points(obj%tXi + 1, Num)
 END PROCEDURE quad_GetQuadraturePoints1
 
 !----------------------------------------------------------------------------
@@ -57,9 +57,9 @@ END PROCEDURE quad_GetQuadraturePoints1
 MODULE PROCEDURE quad_GetQuadraturePoints2
 INTEGER(I4B) :: n
 n = SIZE(obj%points, 2) !#column
-CALL Reallocate(point, 3, n)
-point(1:obj%tXi, 1:n) = obj%points(1:obj%tXi, 1:n)
-weight = obj%points(obj%tXi + 1, 1:n)
+CALL Reallocate(points, 3, n)
+points(1:obj%tXi, 1:n) = obj%points(1:obj%tXi, 1:n)
+weights = obj%points(obj%tXi + 1, 1:n)
 END PROCEDURE quad_GetQuadraturePoints2
 
 !----------------------------------------------------------------------------

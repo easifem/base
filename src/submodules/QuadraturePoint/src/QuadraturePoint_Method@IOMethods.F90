@@ -43,34 +43,27 @@ END PROCEDURE quad_Display
 
 MODULE PROCEDURE QuadraturePoint_MdEncode
 INTEGER(I4B) :: ii, n, jj
+TYPE(String), ALLOCATABLE :: rh(:), ch(:)
+
+IF (.NOT. ALLOCATED(obj%points)) THEN
+  ans = ""
+  RETURN
+END IF
 
 n = SIZE(obj%points, 2)
+CALL Reallocate(rh, SIZE(obj, 1))
+CALL Reallocate(ch, SIZE(obj, 2))
 
-ans = "|  |  "
-DO ii = 1, n
-  ans = ans//" | "
+DO ii = 1, SIZE(rh) - 1
+  rh(ii) = "`x"//tostring(ii)//"`"
 END DO
-ans = ans//CHAR_LF
+rh(obj%txi + 1) = "w"
 
-ans = ans//"| --- | "
-DO ii = 1, n
-  ans = ans//" --- | "
-END DO
-ans = ans//CHAR_LF
-
-DO ii = 1, obj%txi
-  ans = ans//"| x"//tostring(ii)//" | "
-  DO jj = 1, n
-    ans = ans//TOSTRING(obj%points(ii, jj))//" | "
-  END DO
-  ans = ans//CHAR_LF
+DO ii = 1, SIZE(ch)
+  ch(ii) = "`p"//tostring(ii)//"`"
 END DO
 
-ans = ans//"| w | "
-DO jj = 1, n
-  ans = ans//TOSTRING(obj%points(obj%txi + 1, jj))//" | "
-END DO
-ans = ans//CHAR_LF
+ans = MdEncode(obj%points, rh=rh, ch=ch)
 
 END PROCEDURE QuadraturePoint_MdEncode
 
