@@ -13,7 +13,11 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
+
+MODULE IntVector_AppendMethod
+USE BaseType, ONLY: IntVector_
+USE GlobalData, ONLY: DFP, I4B, LGT
+PRIVATE
 
 PUBLIC :: Append
 PUBLIC :: H_CONCAT
@@ -22,45 +26,33 @@ PUBLIC :: H_CONCAT
 !                                                         Append@setMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Append
   MODULE PURE SUBROUTINE IntVec_Append_1(obj, VALUE)
     CLASS(IntVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: VALUE
   END SUBROUTINE IntVec_Append_1
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE IntVec_Append_1
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
 !                                                         Append@setMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Append
   MODULE PURE SUBROUTINE IntVec_Append_2(obj, VALUE)
     CLASS(IntVector_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: VALUE(:)
   END SUBROUTINE IntVec_Append_2
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE IntVec_Append_2
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
 !                                                         Append@setMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Append
   MODULE PURE SUBROUTINE IntVec_Append_3(obj, Anotherobj)
     CLASS(IntVector_), INTENT(INOUT) :: obj
     CLASS(IntVector_), INTENT(IN) :: Anotherobj
   END SUBROUTINE IntVec_Append_3
-END INTERFACE
-
-INTERFACE Append
-  MODULE PROCEDURE IntVec_Append_3
 END INTERFACE Append
 
 !----------------------------------------------------------------------------
@@ -71,16 +63,12 @@ END INTERFACE Append
 ! date: 18 June 2021
 ! summary: Horizontally concat two integer vectors
 
-INTERFACE
+INTERFACE H_CONCAT
   MODULE PURE FUNCTION IntVec_H_CONCAT_1(vec1, vec2) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: vec1(:)
     INTEGER(I4B), INTENT(IN) :: vec2(:)
     INTEGER(I4B) :: ans(SIZE(vec1) + SIZE(vec2))
   END FUNCTION IntVec_H_CONCAT_1
-END INTERFACE
-
-INTERFACE H_CONCAT
-  MODULE PROCEDURE IntVec_H_CONCAT_1
 END INTERFACE H_CONCAT
 
 !----------------------------------------------------------------------------
@@ -91,16 +79,12 @@ END INTERFACE H_CONCAT
 ! date:         18 June 2021
 ! summary: Horizontally concat two [[IntVector_]]
 
-INTERFACE
+INTERFACE H_CONCAT
   MODULE PURE FUNCTION IntVec_H_CONCAT_2(obj1, obj2) RESULT(Ans)
     TYPE(IntVector_), INTENT(IN) :: obj1
     TYPE(IntVector_), INTENT(IN) :: obj2
     TYPE(IntVector_) :: ans
   END FUNCTION IntVec_H_CONCAT_2
-END INTERFACE
-
-INTERFACE H_CONCAT
-  MODULE PROCEDURE IntVec_H_CONCAT_2
 END INTERFACE H_CONCAT
 
 !----------------------------------------------------------------------------
@@ -111,16 +95,12 @@ END INTERFACE H_CONCAT
 ! date:         18 June 2021
 ! summary: Horizontally concat a integer vector to a IntVec datatype.
 
-INTERFACE
+INTERFACE H_CONCAT
   MODULE PURE FUNCTION IntVec_H_CONCAT_3(vec1, obj2) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: vec1(:)
     TYPE(IntVector_), INTENT(IN) :: obj2
     TYPE(IntVector_) :: ans
   END FUNCTION IntVec_H_CONCAT_3
-END INTERFACE
-
-INTERFACE H_CONCAT
-  MODULE PROCEDURE IntVec_H_CONCAT_3
 END INTERFACE H_CONCAT
 
 !----------------------------------------------------------------------------
@@ -131,14 +111,14 @@ END INTERFACE H_CONCAT
 ! date:         18 June 2021
 ! summary: Horizontally concat a integer vector to a IntVec datatype.
 
-INTERFACE
+INTERFACE H_CONCAT
   MODULE PURE FUNCTION IntVec_H_CONCAT_4(obj1, vec2) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: vec2(:)
     TYPE(IntVector_), INTENT(IN) :: obj1
     TYPE(IntVector_) :: ans
   END FUNCTION IntVec_H_CONCAT_4
-END INTERFACE
-
-INTERFACE H_CONCAT
-  MODULE PROCEDURE IntVec_H_CONCAT_4
 END INTERFACE H_CONCAT
+
+END MODULE IntVector_AppendMethod
+
+

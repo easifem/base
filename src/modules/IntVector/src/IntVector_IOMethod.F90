@@ -13,8 +13,11 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
+MODULE IntVector_IOMethod
+USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: IntVector_
+PRIVATE
 PUBLIC :: Display
 
 !----------------------------------------------------------------------------
@@ -25,17 +28,13 @@ PUBLIC :: Display
 ! date:         25 Feb 2021
 ! summary: Display the content of [[IntVector_]]
 
-INTERFACE
+INTERFACE Display
   MODULE SUBROUTINE intVec_Display1(obj, msg, UnitNo, orient)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: orient
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
   END SUBROUTINE intVec_Display1
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE intVec_Display1
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
@@ -46,16 +45,13 @@ END INTERFACE Display
 ! date:         25 Feb 2021
 ! summary: Display the content of [[IntVector_]]
 
-INTERFACE
+INTERFACE Display
   MODULE SUBROUTINE intVec_Display2(obj, msg, UnitNo, orient)
     CLASS(IntVector_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
-    CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: orient
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: orient
   END SUBROUTINE intVec_Display2
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE intVec_Display2
 END INTERFACE Display
 
+END MODULE IntVector_IOMethod

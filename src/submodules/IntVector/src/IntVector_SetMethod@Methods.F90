@@ -19,7 +19,7 @@
 ! date:         25 Feb 2021
 ! summary:         This submodule implements set methods of [[IntVector_]]
 
-SUBMODULE(IntVector_Method) SetMethods
+SUBMODULE(IntVector_SetMethod) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_setTotalDimension
-  obj%tDimension = tDimension
+obj%tDimension = tDimension
 END PROCEDURE IntVec_setTotalDimension
 
 !----------------------------------------------------------------------------
@@ -37,13 +37,13 @@ END PROCEDURE IntVec_setTotalDimension
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_set1
-  IF (ALLOCATED(obj%Val)) THEN
-    IF (SIZE(Value) .EQ. 1) THEN
-      obj%Val(Indx) = Value(1)
-    ELSE
-      obj%Val(Indx) = Value
-    END IF
+IF (ALLOCATED(obj%Val)) THEN
+  IF (SIZE(VALUE) .EQ. 1) THEN
+    obj%Val(Indx) = VALUE(1)
+  ELSE
+    obj%Val(Indx) = VALUE
   END IF
+END IF
 END PROCEDURE intVec_set1
 
 !----------------------------------------------------------------------------
@@ -51,9 +51,9 @@ END PROCEDURE intVec_set1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_set2
-  IF (ALLOCATED(obj%Val)) THEN
-    obj%Val(Indx) = Value
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  obj%Val(Indx) = VALUE
+END IF
 END PROCEDURE intVec_set2
 
 !----------------------------------------------------------------------------
@@ -61,30 +61,25 @@ END PROCEDURE intVec_set2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_RemoveDuplicates_1
-  ! Define internal variables
-  INTEGER(I4B) :: i, k, j, N
-  INTEGER(I4B), ALLOCATABLE :: Res(:)
-  !!
-  IF (ALLOCATED(obj%Val)) THEN
-    !!
-    N = SIZE(obj%Val)
-    ALLOCATE (Res(N))
-    Res = 0
-    Res(1) = obj%Val(1)
-    k = 1
-    !!
-    DO i = 2, N
-      IF (.NOT. ANY(Res .EQ. obj%Val(i))) THEN
-        k = k + 1
-        Res(k) = obj%Val(i)
-      END IF
-    END DO
-    !!
-    obj%Val = Res(1:k)
-    DEALLOCATE (Res)
-    !!
-  END IF
-  !!
+! Define internal variables
+INTEGER(I4B) :: i, k, j, N
+INTEGER(I4B), ALLOCATABLE :: Res(:)
+
+IF (ALLOCATED(obj%Val)) THEN
+  N = SIZE(obj%Val)
+  ALLOCATE (Res(N))
+  Res = 0
+  Res(1) = obj%Val(1)
+  k = 1
+  DO i = 2, N
+    IF (.NOT. ANY(Res .EQ. obj%Val(i))) THEN
+      k = k + 1
+      Res(k) = obj%Val(i)
+    END IF
+  END DO
+  obj%Val = Res(1:k)
+  DEALLOCATE (Res)
+END IF
 END PROCEDURE IntVec_RemoveDuplicates_1
 
 !----------------------------------------------------------------------------
@@ -92,11 +87,11 @@ END PROCEDURE IntVec_RemoveDuplicates_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Repeat_1
-  Ans = Repeat(obj%Val, rtimes)
+Ans = REPEAT(obj%Val, rtimes)
 END PROCEDURE IntVec_Repeat_1
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE SetMethods
+END SUBMODULE Methods

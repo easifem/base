@@ -19,7 +19,7 @@
 ! date:         25 Feb 2021
 ! summary:         This submodule implements set methods of [[IntVector_]]
 
-SUBMODULE(IntVector_Method) AppendMethods
+SUBMODULE(IntVector_AppendMethod) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -29,7 +29,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_1
-  CALL Append(obj%Val, Value)
+CALL Append(obj%Val, VALUE)
 END PROCEDURE IntVec_Append_1
 
 !----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ END PROCEDURE IntVec_Append_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_2
-  CALL Append(obj%Val, Value)
+CALL Append(obj%Val, VALUE)
 END PROCEDURE IntVec_Append_2
 
 !----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ END PROCEDURE IntVec_Append_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_Append_3
-  CALL Append(obj%Val, Anotherobj%Val)
+CALL Append(obj%Val, Anotherobj%Val)
 END PROCEDURE IntVec_Append_3
 
 !----------------------------------------------------------------------------
@@ -53,11 +53,11 @@ END PROCEDURE IntVec_Append_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_H_CONCAT_1
-  INTEGER(I4B) :: s1, s2
-  s1 = SIZe(vec1)
-  s2 = SIZe(vec2)
-  ans(1:s1) = vec1(:)
-  ans(s1 + 1:) = vec2(:)
+INTEGER(I4B) :: s1, s2
+s1 = SIZE(vec1)
+s2 = SIZE(vec2)
+ans(1:s1) = vec1(:)
+ans(s1 + 1:) = vec2(:)
 END PROCEDURE IntVec_H_CONCAT_1
 
 !----------------------------------------------------------------------------
@@ -65,12 +65,12 @@ END PROCEDURE IntVec_H_CONCAT_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_H_CONCAT_2
-  INTEGER(I4B) :: s1, s2
-  s1 = SIZE(obj1)
-  s2 = SIZE(obj2)
-  CALL Initiate(ans, s1 + s2)
-  ans%val(1:s1) = obj1%val(:)
-  ans%val(s1 + 1:) = obj2%val(:)
+INTEGER(I4B) :: s1, s2
+s1 = SIZE(obj1)
+s2 = SIZE(obj2)
+CALL Initiate(ans, s1 + s2)
+ans%val(1:s1) = obj1%val(:)
+ans%val(s1 + 1:) = obj2%val(:)
 END PROCEDURE IntVec_H_CONCAT_2
 
 !----------------------------------------------------------------------------
@@ -78,12 +78,12 @@ END PROCEDURE IntVec_H_CONCAT_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_H_CONCAT_3
-  INTEGER(I4B) :: s1, s2
-  s1 = SIZE(vec1)
-  s2 = SIZE(obj2)
-  CALL Initiate(ans, s1 + s2)
-  ans%val(1:s1) = vec1(:)
-  ans%val(s1 + 1:) = obj2%val(:)
+INTEGER(I4B) :: s1, s2
+s1 = SIZE(vec1)
+s2 = SIZE(obj2)
+CALL Initiate(ans, s1 + s2)
+ans%val(1:s1) = vec1(:)
+ans%val(s1 + 1:) = obj2%val(:)
 END PROCEDURE IntVec_H_CONCAT_3
 
 !----------------------------------------------------------------------------
@@ -91,12 +91,12 @@ END PROCEDURE IntVec_H_CONCAT_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE IntVec_H_CONCAT_4
-  INTEGER(I4B) :: s1, s2
-  s1 = SIZE(obj1)
-  s2 = SIZE(vec2)
-  CALL Initiate(ans, s1 + s2)
-  ans%val(1:s1) = obj1%val(:)
-  ans%val(s1 + 1:) = vec2(:)
+INTEGER(I4B) :: s1, s2
+s1 = SIZE(obj1)
+s2 = SIZE(vec2)
+CALL Initiate(ans, s1 + s2)
+ans%val(1:s1) = obj1%val(:)
+ans%val(s1 + 1:) = vec2(:)
 END PROCEDURE IntVec_H_CONCAT_4
 
-END SUBMODULE AppendMethods
+END SUBMODULE Methods

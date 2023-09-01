@@ -15,9 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+MODULE IntVector_GetMethod
+USE GlobalData, ONLY: DFP, I4B, LGT, INT8, INT16, INT32, INT64
+USE BaseType, ONLY: IntVector_
+PRIVATE
+
 PUBLIC :: GET
-PUBLIC :: getPointer
-PUBLIC :: getIndex
+PUBLIC :: GetPointer
+PUBLIC :: GetIndex
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethods
@@ -28,17 +33,13 @@ PUBLIC :: getIndex
 ! update: 2021-11-11
 ! summary: Returns IntVector instance
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_1(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     TYPE(IntVector_), INTENT(IN) :: DataType
     TYPE(IntVector_) :: Val
   END FUNCTION intVec_get_1
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_1
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethods
@@ -49,7 +50,7 @@ END INTERFACE get
 ! update: 2021-11-11
 ! summary: Returns an instance of [[intvector_]], obj(indx)
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_2(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
@@ -57,11 +58,7 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: Indx(:)
     TYPE(IntVector_) :: Val
   END FUNCTION intVec_get_2
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_2
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethods
@@ -72,7 +69,7 @@ END INTERFACE get
 ! update: 2021-11-11
 ! summary: Returns the value using triplets.
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_3(obj, istart, iend, &
     & stride, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
@@ -86,11 +83,7 @@ INTERFACE
     TYPE(IntVector_) :: Val
     !! returned value
   END FUNCTION intVec_get_3
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_3
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethods
@@ -111,17 +104,13 @@ END INTERFACE get
 !
 ! The size of val is size(obj(1)) + size(obj(2)) + ...
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_4(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
     TYPE(IntVector_), INTENT(IN) :: DataType
     TYPE(IntVector_) :: Val
   END FUNCTION intVec_get_4
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_4
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethods
@@ -132,7 +121,7 @@ END INTERFACE get
 ! update: 2021-11-11
 ! summary: Serialized the vector of [[IntVector_]], select values by indx
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_5(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
@@ -140,17 +129,13 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: Indx(:)
     TYPE(IntVector_) :: Val
   END FUNCTION intVec_get_5
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_5
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_6(obj, iStart, iEnd, &
     & Stride, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
@@ -158,364 +143,279 @@ INTERFACE
     TYPE(IntVector_), INTENT(IN) :: DataType
     TYPE(IntVector_) :: Val
   END FUNCTION intVec_get_6
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_6
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_7a(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
-    INTEGER(Int8), INTENT(IN) :: DataType
-    INTEGER(Int8), ALLOCATABLE :: Val(:)
+    INTEGER(INT8), INTENT(IN) :: DataType
+    INTEGER(INT8), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_7a
   MODULE PURE FUNCTION intVec_get_7b(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
-    INTEGER(Int16), INTENT(IN) :: DataType
-    INTEGER(Int16), ALLOCATABLE :: Val(:)
+    INTEGER(INT16), INTENT(IN) :: DataType
+    INTEGER(INT16), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_7b
   MODULE PURE FUNCTION intVec_get_7c(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
-    INTEGER(Int32), INTENT(IN) :: DataType
-    INTEGER(Int32), ALLOCATABLE :: Val(:)
+    INTEGER(INT32), INTENT(IN) :: DataType
+    INTEGER(INT32), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_7c
   MODULE PURE FUNCTION intVec_get_7d(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
-    INTEGER(Int64), INTENT(IN) :: DataType
-    INTEGER(Int64), ALLOCATABLE :: Val(:)
+    INTEGER(INT64), INTENT(IN) :: DataType
+    INTEGER(INT64), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_7d
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_7a, intVec_get_7b, intVec_get_7c, &
-    & intVec_get_7d
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_8a(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: Indx(:)
-    INTEGER(Int8), INTENT(IN) :: DataType
-    INTEGER(Int8), ALLOCATABLE :: Val(:)
+    INTEGER(INT8), INTENT(IN) :: DataType
+    INTEGER(INT8), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_8a
   MODULE PURE FUNCTION intVec_get_8b(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: Indx(:)
-    INTEGER(Int16), INTENT(IN) :: DataType
-    INTEGER(Int16), ALLOCATABLE :: Val(:)
+    INTEGER(INT16), INTENT(IN) :: DataType
+    INTEGER(INT16), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_8b
   MODULE PURE FUNCTION intVec_get_8c(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: Indx(:)
-    INTEGER(Int32), INTENT(IN) :: DataType
-    INTEGER(Int32), ALLOCATABLE :: Val(:)
+    INTEGER(INT32), INTENT(IN) :: DataType
+    INTEGER(INT32), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_8c
   MODULE PURE FUNCTION intVec_get_8d(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: Indx(:)
-    INTEGER(Int64), INTENT(IN) :: DataType
-    INTEGER(Int64), ALLOCATABLE :: Val(:)
+    INTEGER(INT64), INTENT(IN) :: DataType
+    INTEGER(INT64), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_8d
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_8a, intVec_get_8b, intVec_get_8c, &
-    & intVec_get_8d
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_9a(obj, iStart, iEnd, Stride,&
     & DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
-    INTEGER(Int8), INTENT(IN) :: DataType
-    INTEGER(Int8), ALLOCATABLE :: Val(:)
+    INTEGER(INT8), INTENT(IN) :: DataType
+    INTEGER(INT8), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_9a
   MODULE PURE FUNCTION intVec_get_9b(obj, iStart, iEnd, Stride,&
     & DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
-    INTEGER(Int16), INTENT(IN) :: DataType
-    INTEGER(Int16), ALLOCATABLE :: Val(:)
+    INTEGER(INT16), INTENT(IN) :: DataType
+    INTEGER(INT16), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_9b
   MODULE PURE FUNCTION intVec_get_9c(obj, iStart, iEnd, Stride,&
     & DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
-    INTEGER(Int32), INTENT(IN) :: DataType
-    INTEGER(Int32), ALLOCATABLE :: Val(:)
+    INTEGER(INT32), INTENT(IN) :: DataType
+    INTEGER(INT32), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_9c
   MODULE PURE FUNCTION intVec_get_9d(obj, iStart, iEnd, Stride,&
     & DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
-    INTEGER(Int64), INTENT(IN) :: DataType
-    INTEGER(Int64), ALLOCATABLE :: Val(:)
+    INTEGER(INT64), INTENT(IN) :: DataType
+    INTEGER(INT64), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_9d
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_9a, intVec_get_9b, intVec_get_9c, &
-    & intVec_get_9d
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_10a(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    INTEGER(Int8), INTENT(IN) :: DataType
-    INTEGER(Int8), ALLOCATABLE :: Val(:)
+    INTEGER(INT8), INTENT(IN) :: DataType
+    INTEGER(INT8), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_10a
   MODULE PURE FUNCTION intVec_get_10b(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    INTEGER(Int16), INTENT(IN) :: DataType
-    INTEGER(Int16), ALLOCATABLE :: Val(:)
+    INTEGER(INT16), INTENT(IN) :: DataType
+    INTEGER(INT16), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_10b
   MODULE PURE FUNCTION intVec_get_10c(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    INTEGER(Int32), INTENT(IN) :: DataType
-    INTEGER(Int32), ALLOCATABLE :: Val(:)
+    INTEGER(INT32), INTENT(IN) :: DataType
+    INTEGER(INT32), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_10c
   MODULE PURE FUNCTION intVec_get_10d(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    INTEGER(Int64), INTENT(IN) :: DataType
-    INTEGER(Int64), ALLOCATABLE :: Val(:)
+    INTEGER(INT64), INTENT(IN) :: DataType
+    INTEGER(INT64), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_10d
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_10a, intVec_get_10b, intVec_get_10c, &
-    & intVec_get_10d
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_11a(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    INTEGER(Int8), INTENT(IN) :: DataType
+    INTEGER(INT8), INTENT(IN) :: DataType
     INTEGER(I4B), INTENT(IN) :: Indx(:)
-    INTEGER(Int8), ALLOCATABLE :: Val(:)
+    INTEGER(INT8), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_11a
   MODULE PURE FUNCTION intVec_get_11b(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    INTEGER(Int16), INTENT(IN) :: DataType
+    INTEGER(INT16), INTENT(IN) :: DataType
     INTEGER(I4B), INTENT(IN) :: Indx(:)
-    INTEGER(Int16), ALLOCATABLE :: Val(:)
+    INTEGER(INT16), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_11b
   MODULE PURE FUNCTION intVec_get_11c(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    INTEGER(Int32), INTENT(IN) :: DataType
+    INTEGER(INT32), INTENT(IN) :: DataType
     INTEGER(I4B), INTENT(IN) :: Indx(:)
-    INTEGER(Int32), ALLOCATABLE :: Val(:)
+    INTEGER(INT32), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_11c
   MODULE PURE FUNCTION intVec_get_11d(obj, Indx, DataType) &
     & RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
-    INTEGER(Int64), INTENT(IN) :: DataType
+    INTEGER(INT64), INTENT(IN) :: DataType
     INTEGER(I4B), INTENT(IN) :: Indx(:)
-    INTEGER(Int64), ALLOCATABLE :: Val(:)
+    INTEGER(INT64), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_11d
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_11a, intVec_get_11b, intVec_get_11c, &
-    & intVec_get_11d
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_12a(obj, iStart, iEnd, &
     & Stride, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
-    INTEGER(Int8), INTENT(IN) :: DataType
-    INTEGER(Int8), ALLOCATABLE :: Val(:)
+    INTEGER(INT8), INTENT(IN) :: DataType
+    INTEGER(INT8), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_12a
   MODULE PURE FUNCTION intVec_get_12b(obj, iStart, iEnd, &
     & Stride, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
-    INTEGER(Int16), INTENT(IN) :: DataType
-    INTEGER(Int16), ALLOCATABLE :: Val(:)
+    INTEGER(INT16), INTENT(IN) :: DataType
+    INTEGER(INT16), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_12b
   MODULE PURE FUNCTION intVec_get_12c(obj, iStart, iEnd, &
     & Stride, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
-    INTEGER(Int32), INTENT(IN) :: DataType
-    INTEGER(Int32), ALLOCATABLE :: Val(:)
+    INTEGER(INT32), INTENT(IN) :: DataType
+    INTEGER(INT32), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_12c
   MODULE PURE FUNCTION intVec_get_12d(obj, iStart, iEnd, &
     & Stride, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj(:)
     INTEGER(I4B), INTENT(IN) :: iStart, iEnd, Stride
-    INTEGER(Int64), INTENT(IN) :: DataType
-    INTEGER(Int64), ALLOCATABLE :: Val(:)
+    INTEGER(INT64), INTENT(IN) :: DataType
+    INTEGER(INT64), ALLOCATABLE :: Val(:)
   END FUNCTION intVec_get_12d
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_12a, intVec_get_12b, &
-    & intVec_get_12c, intVec_get_12d
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                             get@GetMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE Get
   MODULE PURE FUNCTION intVec_get_13a(obj, indx, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
-    INTEGER(Int8), INTENT(IN) :: DataType
-    INTEGER(Int8) :: val
+    INTEGER(INT8), INTENT(IN) :: DataType
+    INTEGER(INT8) :: val
   END FUNCTION intVec_get_13a
   MODULE PURE FUNCTION intVec_get_13b(obj, indx, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
-    INTEGER(Int16), INTENT(IN) :: DataType
-    INTEGER(Int16) :: val
+    INTEGER(INT16), INTENT(IN) :: DataType
+    INTEGER(INT16) :: val
   END FUNCTION intVec_get_13b
   MODULE PURE FUNCTION intVec_get_13c(obj, indx, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
-    INTEGER(Int32), INTENT(IN) :: DataType
-    INTEGER(Int32) :: val
+    INTEGER(INT32), INTENT(IN) :: DataType
+    INTEGER(INT32) :: val
   END FUNCTION intVec_get_13c
   MODULE PURE FUNCTION intVec_get_13d(obj, indx, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: indx
-    INTEGER(Int64), INTENT(IN) :: DataType
-    INTEGER(Int64) :: val
+    INTEGER(INT64), INTENT(IN) :: DataType
+    INTEGER(INT64) :: val
   END FUNCTION intVec_get_13d
-END INTERFACE
-
-INTERFACE get
-  MODULE PROCEDURE intVec_get_13a, intVec_get_13b, intVec_get_13c, &
-    & intVec_get_13d
-END INTERFACE get
+END INTERFACE Get
 
 !----------------------------------------------------------------------------
 !                                                     getPointers@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE GetPointer
   MODULE FUNCTION intVec_getPointer_1(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN), TARGET :: obj
     TYPE(IntVector_), INTENT(IN) :: DataType
     TYPE(IntVector_), POINTER :: Val
   END FUNCTION intVec_getPointer_1
-END INTERFACE
-
-INTERFACE getPointer
-  MODULE PROCEDURE intVec_getPointer_1
-END INTERFACE getPointer
+END INTERFACE GetPointer
 
 !----------------------------------------------------------------------------
 !                                                    getPointers@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE GetPointer
   MODULE FUNCTION intVec_getPointer_2(obj, DataType) RESULT(Val)
     CLASS(IntVector_), INTENT(IN), TARGET :: obj
     INTEGER(I4B), INTENT(IN) :: DataType
     INTEGER(I4B), POINTER :: Val(:)
   END FUNCTION intVec_getPointer_2
-END INTERFACE
-
-INTERFACE getPointer
-  MODULE PROCEDURE intVec_getPointer_2
-END INTERFACE getPointer
+END INTERFACE GetPointer
 
 !----------------------------------------------------------------------------
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE GetIndex
   MODULE PURE FUNCTION intVec_getIndex1(obj, Val) RESULT(Ans)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: Val
     INTEGER(I4B) :: Ans
   END FUNCTION intVec_getIndex1
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE intVec_getIndex1
-END INTERFACE getIndex
+END INTERFACE GetIndex
 
 !----------------------------------------------------------------------------
 !                                                         getIndex@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE GetIndex
   MODULE PURE FUNCTION intVec_getIndex2(obj, Val) RESULT(Ans)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: Val(:)
     INTEGER(I4B), ALLOCATABLE :: Ans(:)
   END FUNCTION intVec_getIndex2
-END INTERFACE
+END INTERFACE GetIndex
 
-INTERFACE getIndex
-  MODULE PROCEDURE intVec_getIndex2
-END INTERFACE getIndex
-
-!----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION intVec_getIndex3(obj, Val) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: obj(:)
-    INTEGER(I4B), INTENT(IN) :: Val
-    INTEGER(I4B) :: Ans
-  END FUNCTION intVec_getIndex3
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE intVec_getIndex3
-END INTERFACE getIndex
-
-!----------------------------------------------------------------------------
-!                                                         getIndex@getMethod
-!----------------------------------------------------------------------------
-
-INTERFACE
-  MODULE PURE FUNCTION intVec_getIndex4(obj, Val) RESULT(Ans)
-    INTEGER(I4B), INTENT(IN) :: obj(:)
-    INTEGER(I4B), INTENT(IN) :: Val(:)
-    INTEGER(I4B), ALLOCATABLE :: Ans(:)
-  END FUNCTION intVec_getIndex4
-END INTERFACE
-
-INTERFACE getIndex
-  MODULE PROCEDURE intVec_getIndex4
-END INTERFACE getIndex
+END MODULE IntVector_GetMethod
