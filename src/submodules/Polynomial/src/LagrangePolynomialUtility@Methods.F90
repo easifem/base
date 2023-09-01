@@ -265,49 +265,56 @@ CASE (Line)
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
-    & layout=layout)
+    & layout=layout, &
+    & alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Triangle)
   ans = InterpolationPoint_Triangle( &
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
-    & layout=layout)
+    & layout=layout,  &
+    & alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Quadrangle)
   ans = InterpolationPoint_Quadrangle( &
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
-    & layout=layout)
+    & layout=layout,  &
+    & alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Tetrahedron)
   ans = InterpolationPoint_Tetrahedron( &
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
-    & layout=layout)
+    & layout=layout,  &
+    & alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Hexahedron)
   ans = InterpolationPoint_Hexahedron( &
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
-    & layout=layout)
+    & layout=layout,  &
+    & alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Prism)
   ans = InterpolationPoint_Prism( &
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
-    & layout=layout)
+    & layout=layout,  &
+    & alpha=alpha, beta=beta, lambda=lambda)
 
 CASE (Pyramid)
   ans = InterpolationPoint_Pyramid( &
     & order=order, &
     & ipType=ipType, &
     & xij=xij, &
-    & layout=layout)
+    & layout=layout,  &
+    & alpha=alpha, beta=beta, lambda=lambda)
 
 CASE DEFAULT
   CALL Errormsg(&
@@ -316,6 +323,7 @@ CASE DEFAULT
     & line=__LINE__,  &
     & routine="InterpolationPoint()",  &
     & file=__FILE__)
+  RETURN
 END SELECT
 
 END PROCEDURE InterpolationPoint
@@ -474,6 +482,218 @@ CASE DEFAULT
     & file=__FILE__)
 END SELECT
 END PROCEDURE LagrangeCoeff4
+
+!----------------------------------------------------------------------------
+!                                                           LagrangeEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll1
+SELECT CASE (elemType)
+CASE (Point)
+
+CASE (Line)
+  ans = LagrangeEvalAll_Line( &
+    & order=order,  &
+    & xij=xij,  &
+    & x=x,  &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Triangle)
+  ans = LagrangeEvalAll_Triangle( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & refTriangle="UNIT", &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Quadrangle)
+  ans = LagrangeEvalAll_Quadrangle( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Tetrahedron)
+  ans = LagrangeEvalAll_Tetrahedron( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & refTetrahedron="UNIT", &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha, &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Hexahedron)
+  ans = LagrangeEvalAll_Hexahedron( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha, &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Prism)
+  ans = LagrangeEvalAll_Prism( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & refPrism="UNIT", &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha, &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Pyramid)
+  ans = LagrangeEvalAll_Pyramid( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & refPyramid="UNIT", &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha, &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & unitno=stdout,  &
+    & line=__LINE__,  &
+    & routine="LagrangeEvalAll2()",  &
+    & file=__FILE__)
+END SELECT
+END PROCEDURE LagrangeEvalAll1
+
+!----------------------------------------------------------------------------
+!                                                 LagrangeGradientEvalAll
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll1
+SELECT CASE (elemType)
+CASE (Point)
+
+CASE (Line)
+  ans = LagrangeGradientEvalAll_Line( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Triangle)
+  ans = LagrangeGradientEvalAll_Triangle( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & refTriangle="UNIT", &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Quadrangle)
+  ans = LagrangeGradientEvalAll_Quadrangle( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Tetrahedron)
+  ans = LagrangeGradientEvalAll_Tetrahedron( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & refTetrahedron="UNIT", &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Hexahedron)
+  ans = LagrangeGradientEvalAll_Hexahedron( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Prism)
+  ans = LagrangeGradientEvalAll_Prism( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & refPrism="UNIT", &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE (Pyramid)
+  ans = LagrangeGradientEvalAll_Pyramid( &
+    & order=order,  &
+    & x=x,  &
+    & xij=xij,  &
+    & refPyramid="UNIT", &
+    & coeff=coeff,  &
+    & firstCall=firstCall,  &
+    & basisType=basisType,  &
+    & alpha=alpha,  &
+    & beta=beta,  &
+    & lambda=lambda)
+
+CASE DEFAULT
+  CALL Errormsg(&
+    & msg="No CASE FOUND: elemType="//tostring(elemType), &
+    & unitno=stdout,  &
+    & line=__LINE__,  &
+    & routine="LagrangeGradientEvalAll1()",  &
+    & file=__FILE__)
+END SELECT
+END PROCEDURE LagrangeGradientEvalAll1
 
 !----------------------------------------------------------------------------
 !

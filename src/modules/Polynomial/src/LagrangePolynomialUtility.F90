@@ -26,7 +26,6 @@ USE GlobalData
 USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
-
 PUBLIC :: LagrangeDOF
 PUBLIC :: LagrangeInDOF
 PUBLIC :: LagrangeDegree
@@ -36,6 +35,8 @@ PUBLIC :: InterpolationPoint
 PUBLIC :: LagrangeCoeff
 PUBLIC :: RefCoord
 PUBLIC :: RefElemDomain
+PUBLIC :: LagrangeEvalAll
+PUBLIC :: LagrangeGradientEvalAll
 
 !----------------------------------------------------------------------------
 !                                                           RefElemDomain
@@ -201,8 +202,15 @@ END INTERFACE
 ! summary: Get the interpolation point
 
 INTERFACE
-  MODULE FUNCTION InterpolationPoint(order, elemType, ipType, &
-    & xij, layout) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint( &
+    & order, &
+    & elemType, &
+    & ipType, &
+    & xij, &
+    & layout, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: elemType
@@ -228,6 +236,8 @@ INTERFACE
     !! "DECREASING" decreasing order
     !! "XYZ" First X, then Y, then Z
     !! "YXZ" First Y, then X, then Z
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Jacobi and Ultraspherical parameters
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint
@@ -320,6 +330,88 @@ INTERFACE LagrangeCoeff
     !! coefficients
   END FUNCTION LagrangeCoeff4
 END INTERFACE LagrangeCoeff
+
+!----------------------------------------------------------------------------
+!                                                           LagrangeEvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll
+  MODULE FUNCTION LagrangeEvalAll1( &
+    & order, &
+    & elemType, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll1
+END INTERFACE LagrangeEvalAll
+
+!----------------------------------------------------------------------------
+!                                                           LagrangeEvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll
+  MODULE FUNCTION LagrangeGradientEvalAll1( &
+    & order, &
+    & elemType, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    REAL(DFP), ALLOCATABLE :: ans(:, :, :)
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeGradientEvalAll1
+END INTERFACE LagrangeGradientEvalAll
 
 !----------------------------------------------------------------------------
 !
