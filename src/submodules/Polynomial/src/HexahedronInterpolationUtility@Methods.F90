@@ -2691,7 +2691,8 @@ CASE DEFAULT
 END SELECT
 
 DO ii = 1, 3
-  ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+  ! ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+  ans(:, :, ii) = MATMUL(xx(:, :, ii), coeff0)
 END DO
 
 END PROCEDURE LagrangeGradientEvalAll_Hexahedron1
