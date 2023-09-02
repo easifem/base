@@ -330,7 +330,6 @@ IF (ALLOCATED(obj%Thickness)) DEALLOCATE (obj%Thickness)
 IF (ALLOCATED(obj%Coord)) DEALLOCATE (obj%Coord)
 CALL DEALLOCATE (obj%Quad)
 CALL DEALLOCATE (obj%refelem)
-  !!
 SELECT TYPE (obj)
 TYPE IS (STElemShapeData_)
   IF (ALLOCATED(obj%T)) DEALLOCATE (obj%T)

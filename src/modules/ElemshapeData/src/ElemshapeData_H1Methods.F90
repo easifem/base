@@ -13,9 +13,8 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
-MODULE ElemshapeData_H1LagrangeMethods
+MODULE ElemshapeData_H1Methods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
@@ -28,62 +27,52 @@ PUBLIC :: Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
-! summary: This routine initiate the shape data
+! summary: This routine initiates H1 Lagrange polynomials
 
-INTERFACE Initiate
-  MODULE PURE SUBROUTINE H1_Lagrange1( &
+INTERFACE
+  MODULE SUBROUTINE ElemshapeData_H1Methods1( &
     & obj, &
     & quad, &
     & refelem, &
-    & continuityType, &
-    & interpolType)
+    & baseInterpol,  &
+    & basisType,  &
+    & order)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    CLASS(H1_), INTENT(IN) :: continuityType
-    CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
-  END SUBROUTINE H1_Lagrange1
-END INTERFACE Initiate
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpol
+    INTEGER(I4B), INTENT(IN) :: basisType
+    INTEGER(I4B), INTENT(IN) :: order
+  END SUBROUTINE ElemshapeData_H1Methods1
+END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@Methods
+!                                                        Initiate@H1Lagrange
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 2023-08-16
-! summary: This routine initiate the shape data
+! date: 23 July 2021
+! summary: This routine initiates H1 Lagrange polynomials
 
-INTERFACE Initiate
-  MODULE SUBROUTINE H1_Lagrange2( &
+INTERFACE
+  MODULE SUBROUTINE ElemshapeData_H1Methods2( &
     & obj, &
     & quad, &
     & refelem, &
-    & baseContinuity, &
-    & baseInterpolation, &
-    & ipType, &
-    & basisType, &
-    & order,  &
-    & coeff,  &
-    & firstCall,  &
-    & alpha, &
-    & beta, &
-    & lambda)
+    & baseInterpol,  &
+    & basisType,  &
+    & order)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    CLASS(H1_), INTENT(IN) :: baseContinuity
-    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpolation
-    INTEGER(I4B), INTENT(IN) :: ipType
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpol
     INTEGER(I4B), INTENT(IN) :: basisType
     INTEGER(I4B), INTENT(IN) :: order
-    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
-    !! Coefficient of Lagrange polynomials
-    LOGICAL(LGT), OPTIONAL :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
-    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-  END SUBROUTINE H1_Lagrange2
-END INTERFACE Initiate
+  END SUBROUTINE ElemshapeData_H1Methods1
+END INTERFACE
 
-END MODULE ElemshapeData_H1LagrangeMethods
+!----------------------------------------------------------------------------
+!                                                           Initiate@Methods
+!----------------------------------------------------------------------------
+
+END MODULE ElemshapeData_H1Methods

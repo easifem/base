@@ -38,8 +38,12 @@ CONTAINS
 ! reference element itself. The order of shape functions are also included
 ! inside the refelem
 
-PURE SUBROUTINE Line_H1_Lagrange(obj, quad, refelem, &
-  & continuityType, interpolType)
+PURE SUBROUTINE Line_H1_Lagrange( &
+    & obj, &
+    & quad, &
+    & refelem, &
+    & continuityType, &
+    & interpolType)
   CLASS(ElemshapeData_), INTENT(INOUT) :: obj
   CLASS(QuadraturePoint_), INTENT(IN) :: quad
     !! Quadrature points where shapefunctions will be evaluated
@@ -56,7 +60,7 @@ PURE SUBROUTINE Line_H1_Lagrange(obj, quad, refelem, &
 ! main
 !
   CALL Initiate(obj%refelem, refelem)
-  CALL getQuadraturePoints(obj=quad, Point=Xi, Weight=obj%Ws)
+  CALL getQuadraturePoints(obj=quad, points=Xi, weights=obj%Ws)
   obj%quad = quad
   nips = SIZE(obj%Ws)
 !
