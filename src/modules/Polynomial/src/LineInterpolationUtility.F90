@@ -494,7 +494,7 @@ INTERFACE LagrangeCoeff_Line
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(order + 1, order + 1)
+    REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
     !! jth column of ans corresponds to the coeff of lagrange polynomial
     !! at the jth point
@@ -517,9 +517,9 @@ INTERFACE LagrangeEvalAll_Line
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(:, :)
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! interpolation points
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
@@ -538,7 +538,7 @@ INTERFACE LagrangeEvalAll_Line
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(order + 1)
+    REAL(DFP) :: ans(SIZE(xij, 2))
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Line1
 END INTERFACE LagrangeEvalAll_Line
@@ -562,12 +562,12 @@ INTERFACE LagrangeEvalAll_Line
     !! point of evaluation in xij format
     !! size(xij, 1) = nsd
     !! size(xij, 2) = number of points
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(:, :)
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! interpolation points
     !! xij should be present when firstCall is true.
     !! It is used for computing the coeff
     !! If coeff is absent then xij should be present
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
@@ -586,7 +586,7 @@ INTERFACE LagrangeEvalAll_Line
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(SIZE(x, 2), order + 1)
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
     !! Value of n+1 Lagrange polynomials at point x
     !! ans(:, j) is the value of jth polynomial at x points
     !! ans(i, :) is the value of all polynomials at x(i) point
@@ -614,12 +614,12 @@ INTERFACE LagrangeGradientEvalAll_Line
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x(:, :)
     !! point of evaluation in xij format
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(:, :)
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! interpolation points
     !! xij should be present when firstCall is true.
     !! It is used for computing the coeff
     !! If coeff is absent then xij should be present
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
@@ -638,11 +638,12 @@ INTERFACE LagrangeGradientEvalAll_Line
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP), ALLOCATABLE :: ans(:, :, :)
-    !! Value of gradient of n+1 Lagrange polynomials at point x
-    !! ans(I, j, K): I = Lagrnage polynomial number I,
-    !! j = spatial dimension
-    !! K = point of evaluation number k
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 1)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
   END FUNCTION LagrangeGradientEvalAll_Line1
 END INTERFACE LagrangeGradientEvalAll_Line
 
@@ -652,7 +653,7 @@ END INTERFACE LagrangeGradientEvalAll_Line
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluate basis functions of order upto n 
+! summary: Evaluate basis functions of order upto n
 
 INTERFACE BasisEvalAll_Line
   MODULE FUNCTION BasisEvalAll_Line1( &
@@ -688,14 +689,13 @@ INTERFACE BasisEvalAll_Line
   END FUNCTION BasisEvalAll_Line1
 END INTERFACE BasisEvalAll_Line
 
-
 !----------------------------------------------------------------------------
 !                                                 BasisGradientEvalAll_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluate gradient of basis functions of order upto n 
+! summary: Evaluate gradient of basis functions of order upto n
 
 INTERFACE BasisGradientEvalAll_Line
   MODULE FUNCTION BasisGradientEvalAll_Line1( &
@@ -775,7 +775,6 @@ INTERFACE BasisEvalAll_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION BasisEvalAll_Line2
 END INTERFACE BasisEvalAll_Line
-
 
 !----------------------------------------------------------------------------
 !                                                         BasisEvalAll_Line

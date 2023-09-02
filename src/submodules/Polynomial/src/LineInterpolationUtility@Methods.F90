@@ -583,22 +583,24 @@ END PROCEDURE LagrangeCoeff_Line5
 
 MODULE PROCEDURE LagrangeEvalAll_Line1
 LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(order + 1, order + 1), xx(1, order + 1)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
 INTEGER(I4B) :: ii, orthopol0
+
+IF (SIZE(xij, 2) .NE. order + 1) THEN
+  CALL Errormsg(&
+    & msg="Size(xij, 1) .NE. order+1 ", &
+    & file=__FILE__, &
+    & routine="LagrangeEvalAll_Line2", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
 
 orthopol0 = input(default=Monomial, option=basisType)
 firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    IF (.NOT. PRESENT(xij)) THEN
-      CALL Errormsg(&
-        & msg="xij should be present!", &
-        & file=__FILE__, &
-        & routine="LagrangeEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
-    END IF
     coeff = LagrangeCoeff_Line(&
       & order=order, &
       & xij=xij, &
@@ -606,19 +608,9 @@ IF (PRESENT(coeff)) THEN
       & alpha=alpha, &
       & beta=beta, &
       & lambda=lambda)
-    coeff0 = TRANSPOSE(coeff)
-  ELSE
-    coeff0 = TRANSPOSE(coeff)
   END IF
+  coeff0 = TRANSPOSE(coeff)
 ELSE
-  IF (.NOT. PRESENT(xij)) THEN
-    CALL Errormsg(&
-      & msg="xij should be present!", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
   coeff0 = TRANSPOSE(LagrangeCoeff_Line(&
     & order=order, &
     & xij=xij, &
@@ -655,22 +647,24 @@ END PROCEDURE LagrangeEvalAll_Line1
 
 MODULE PROCEDURE LagrangeEvalAll_Line2
 LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(SIZE(x, 2), SIZE(xij, 2))
 INTEGER(I4B) :: ii, orthopol0
 
-orthopol0 = input(default=Monomial, option=basisType)
-firstCall0 = input(default=.TRUE., option=firstCall)
+IF (SIZE(xij, 2) .NE. order + 1) THEN
+  CALL Errormsg(&
+    & msg="Size(xij, 1) .NE. order+1 ", &
+    & file=__FILE__, &
+    & routine="LagrangeEvalAll_Line2", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+
+orthopol0 = Input(default=Monomial, option=basisType)
+firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    IF (.NOT. PRESENT(xij)) THEN
-      CALL Errormsg(&
-        & msg="xij should be present when firstCall is TRUE!", &
-        & file=__FILE__, &
-        & routine="LagrangeEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
-    END IF
     coeff = LagrangeCoeff_Line(&
       & order=order, &
       & xij=xij, &
@@ -678,20 +672,9 @@ IF (PRESENT(coeff)) THEN
       & alpha=alpha, &
       & beta=beta, &
       & lambda=lambda)
-    coeff0 = coeff
-  ELSE
-    coeff0 = coeff
   END IF
+  coeff0 = coeff
 ELSE
-  IF (.NOT. PRESENT(xij)) THEN
-    CALL Errormsg(&
-      & msg="xij should be present!", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-  ! coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
   coeff0 = LagrangeCoeff_Line(&
     & order=order, &
     & xij=xij, &
@@ -809,7 +792,7 @@ SELECT CASE (basisType0)
 CASE (Monomial)
   ans(1) = 0.0_DFP
   DO ii = 1, order
-    ans(ii + 1) = real(ii, dfp) * x**(ii-1)
+    ans(ii + 1) = REAL(ii, dfp) * x**(ii - 1)
   END DO
 CASE DEFAULT
 
@@ -935,7 +918,7 @@ SELECT CASE (basisType0)
 CASE (Monomial)
   ans(:, 1) = 0.0_DFP
   DO ii = 1, order
-    ans(:, ii + 1) = real(ii, dfp) * x**(ii-1)
+    ans(:, ii + 1) = REAL(ii, dfp) * x**(ii - 1)
   END DO
 CASE DEFAULT
 
@@ -973,7 +956,6 @@ CASE DEFAULT
 END SELECT
 
 END PROCEDURE BasisGradientEvalAll_Line2
-
 
 !----------------------------------------------------------------------------
 !                                                   QuadraturePoint_Line
@@ -1199,14 +1181,6 @@ firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    IF (.NOT. PRESENT(xij)) THEN
-      CALL Errormsg(&
-        & msg="xij should be present when firstCall is TRUE!", &
-        & file=__FILE__, &
-        & routine="LagrangeGradientEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
-    END IF
     coeff = LagrangeCoeff_Line(&
       & order=order, &
       & xij=xij, &
@@ -1214,19 +1188,9 @@ IF (PRESENT(coeff)) THEN
       & alpha=alpha, &
       & beta=beta, &
       & lambda=lambda)
-    coeff0 = coeff
-  ELSE
-    coeff0 = coeff
   END IF
+  coeff0 = coeff
 ELSE
-  IF (.NOT. PRESENT(xij)) THEN
-    CALL Errormsg(&
-      & msg="xij should be present!", &
-      & file=__FILE__, &
-      & routine="LagrangeGradientEvalAll_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
   coeff0 = LagrangeCoeff_Line(&
     & order=order, &
     & xij=xij, &
@@ -1239,6 +1203,17 @@ END IF
 
 SELECT CASE (orthopol0)
 CASE (Monomial)
+
+  IF (SIZE(xij, 2) .NE. order + 1) THEN
+    CALL Errormsg(&
+      & msg="size(xij, 2) is not same as order+1", &
+      & file=__FILE__, &
+      & routine="LagrangeGradientEvalAll_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+    RETURN
+  END IF
+
   DO ii = 0, order
     xx(:, ii + 1) = REAL(ii, kind=DFP) * x(1, :)**(MAX(ii - 1_I4B, 0_I4B))
   END DO
@@ -1253,9 +1228,9 @@ CASE DEFAULT
     & lambda=lambda)
 END SELECT
 
-CALL Reallocate(ans, SIZE(coeff0, 1), 1, SIZE(x, 2))
-ans(:, 1, :) = TRANSPOSE(MATMUL(xx, coeff0))
-!! I, j=1, ips = TRANSPOSE(ips, I)
+! ans(:, 1, :) = TRANSPOSE(MATMUL(xx, coeff0))
+
+ans(:, :, 1) = MATMUL(xx, coeff0)
 
 END PROCEDURE LagrangeGradientEvalAll_Line1
 
