@@ -279,7 +279,7 @@ END SELECT
 END PROCEDURE BarycentricCoordTriangle
 
 !----------------------------------------------------------------------------
-!                                        FromBiUnitTriangle2UnitTriangle
+!                                            FromBiUnitTriangle2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitTriangle2UnitTriangle
@@ -287,7 +287,7 @@ ans = 0.5_DFP * (1.0_DFP + xin)
 END PROCEDURE FromBiUnitTriangle2UnitTriangle
 
 !----------------------------------------------------------------------------
-!                                        FromBiUnitTriangle2UnitTriangle
+!                                           FromBiUnitTriangle2UnitTriangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTriangle2BiUnitTriangle
@@ -318,10 +318,10 @@ MODULE PROCEDURE FromBiUnitTetrahedron2Tetrahedron
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(xin, 2)
   ans(:, ii) = &
-  & -0.5_DFP * (1.0_DFP + xin(1, :) + xin(2, :) + xin(3, :)) * x1(ii) &
-  & + 0.5_DFP * (1.0_DFP + xin(1, :)) * x2(ii)  &
-  & + 0.5_DFP * (1.0_DFP + xin(2, :)) * x3(ii)  &
-  & + 0.5_DFP * (1.0_DFP + xin(3, :)) * x4(ii)
+  & -0.5_DFP * (1.0_DFP + xin(1, ii) + xin(2, ii) + xin(3, ii)) * x1(:) &
+  & + 0.5_DFP * (1.0_DFP + xin(1, ii)) * x2(:)  &
+  & + 0.5_DFP * (1.0_DFP + xin(2, ii)) * x3(:)  &
+  & + 0.5_DFP * (1.0_DFP + xin(3, ii)) * x4(:)
 END DO
 END PROCEDURE FromBiUnitTetrahedron2Tetrahedron
 
@@ -333,15 +333,15 @@ MODULE PROCEDURE FromUnitTetrahedron2Tetrahedron
 INTEGER(I4B) :: ii
 DO ii = 1, SIZE(xin, 2)
   ans(:, ii) = &
-  &  (1.0_DFP - xin(1, :) - xin(2, :) - xin(3, :)) * x1(ii) &
-  & + xin(1, :) * x2(ii)  &
-  & + xin(2, :) * x3(ii)  &
-  & + xin(3, :) * x4(ii)
+  &  (1.0_DFP - xin(1, ii) - xin(2, ii) - xin(3, ii)) * x1(:) &
+  & + xin(1, ii) * x2(:)  &
+  & + xin(2, ii) * x3(:)  &
+  & + xin(3, ii) * x4(:)
 END DO
 END PROCEDURE FromUnitTetrahedron2Tetrahedron
 
 !----------------------------------------------------------------------------
-!                                               BarycentricCoordUnitTetrahedron
+!                                            BarycentricCoordUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordUnitTetrahedron
@@ -352,7 +352,7 @@ ans(4, :) = xin(3, :)
 END PROCEDURE BarycentricCoordUnitTetrahedron
 
 !----------------------------------------------------------------------------
-!                                             BarycentricCoordBiUnitTetrahedron
+!                                           BarycentricCoordBiUnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordBiUnitTetrahedron
@@ -363,7 +363,7 @@ ans(4, :) = 0.5_DFP * (1.0_DFP + xin(3, :))
 END PROCEDURE BarycentricCoordBiUnitTetrahedron
 
 !----------------------------------------------------------------------------
-!                                                   BarycentricCoordTetrahedron
+!                                                BarycentricCoordTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE BarycentricCoordTetrahedron
@@ -426,7 +426,7 @@ ans(3, :) = xin(3, :)
 END PROCEDURE FromBiUnitHexahedron2BiUnitTetrahedron
 
 !----------------------------------------------------------------------------
-!                                     FromUnitTetrahedron2BiUnitHexahedron
+!                                       FromUnitTetrahedron2BiUnitHexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromUnitTetrahedron2BiUnitHexahedron
@@ -435,7 +435,7 @@ ans = FromBiUnitTetrahedron2BiUnitHexahedron(&
 END PROCEDURE FromUnitTetrahedron2BiUnitHexahedron
 
 !----------------------------------------------------------------------------
-!                                     FromBiUnitHexahedron2UnitTetrahedron
+!                                       FromBiUnitHexahedron2UnitTetrahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE FromBiUnitHexahedron2UnitTetrahedron
