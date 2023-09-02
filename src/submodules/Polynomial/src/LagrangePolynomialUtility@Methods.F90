@@ -167,40 +167,32 @@ END PROCEDURE LagrangeDegree
 
 MODULE PROCEDURE LagrangeVandermonde
 INTEGER(I4B), ALLOCATABLE :: degree(:, :)
-REAL(DFP), ALLOCATABLE :: x0(:), y0(:), z0(:)
-INTEGER(I4B) :: m, n, jj, nsd
-!
-degree = TRANSPOSE(LagrangeDegree(order=order, elemType=elemType))
+INTEGER(I4B) :: m, n, jj, nsd, ii
+
+degree = LagrangeDegree(order=order, elemType=elemType)
 m = SIZE(xij, 2)
-nsd = SIZE(degree, 1)
-n = SIZE(degree, 2)
+nsd = SIZE(degree, 2)
+n = SIZE(degree, 1)
 ALLOCATE (ans(m, n))
 
 SELECT CASE (nsd)
 CASE (1)
-  x0 = xij(1, :)
   DO jj = 1, n
-    ans(:, jj) = x0**degree(1, jj)
+    ans(:, jj) = xij(1, :)**degree(jj, 1)
   END DO
 CASE (2)
-  x0 = xij(1, :)
-  y0 = xij(2, :)
   DO jj = 1, n
-    ans(:, jj) = x0**degree(1, jj) * y0**degree(2, jj)
+    ans(:, jj) = xij(1, :)**degree(jj, 1) * xij(2, :)**degree(jj, 2)
   END DO
 CASE (3)
-  x0 = xij(1, :)
-  y0 = xij(2, :)
-  z0 = xij(3, :)
-  DO jj = 1, n
-    ans(:, jj) = x0**degree(1, jj) * y0**degree(2, jj) * z0**degree(3, jj)
+  ! ans = 0.0_DFP
+  DO CONCURRENT(jj=1:n, ii=1:m)
+    ans(ii, jj) = (xij(1, ii)**degree(jj, 1)) * (xij(2, ii)**degree(jj, 2))  &
+                 & * (xij(3, ii)**degree(jj, 3))
   END DO
 END SELECT
 
 IF (ALLOCATED(degree)) DEALLOCATE (degree)
-IF (ALLOCATED(x0)) DEALLOCATE (x0)
-IF (ALLOCATED(y0)) DEALLOCATE (y0)
-IF (ALLOCATED(z0)) DEALLOCATE (z0)
 END PROCEDURE LagrangeVandermonde
 
 !----------------------------------------------------------------------------
@@ -598,7 +590,17 @@ SELECT CASE (elemType)
 CASE (Point)
 
 CASE (Line)
-  ans = LagrangeGradientEvalAll_Line( &
+  IF (SIZE(x, 1) .NE. 1 .OR. SIZE(xij, 1) .NE. 1) THEN
+    CALL Errormsg( &
+    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 1",  &
+    & unitno=stderr,  &
+    & line=__LINE__,  &
+    & routine="LagrangeGradientEvalAll1",  &
+    & file=__FILE__)
+    RETURN
+  END IF
+
+  ans(:, :, 1:1) = LagrangeGradientEvalAll_Line( &
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
@@ -610,7 +612,18 @@ CASE (Line)
     & lambda=lambda)
 
 CASE (Triangle)
-  ans = LagrangeGradientEvalAll_Triangle( &
+
+  IF (SIZE(x, 1) .NE. 2 .OR. SIZE(xij, 1) .NE. 2) THEN
+    CALL Errormsg( &
+    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 2",  &
+    & unitno=stderr,  &
+    & line=__LINE__,  &
+    & routine="LagrangeGradientEvalAll1",  &
+    & file=__FILE__)
+    RETURN
+  END IF
+
+  ans(:, :, 1:2) = LagrangeGradientEvalAll_Triangle( &
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
@@ -623,7 +636,17 @@ CASE (Triangle)
     & lambda=lambda)
 
 CASE (Quadrangle)
-  ans = LagrangeGradientEvalAll_Quadrangle( &
+
+  IF (SIZE(x, 1) .NE. 2 .OR. SIZE(xij, 1) .NE. 2) THEN
+    CALL Errormsg( &
+    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 2",  &
+    & unitno=stderr,  &
+    & line=__LINE__,  &
+    & routine="LagrangeGradientEvalAll1",  &
+    & file=__FILE__)
+    RETURN
+  END IF
+  ans(:, :, 1:2) = LagrangeGradientEvalAll_Quadrangle( &
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
@@ -635,7 +658,17 @@ CASE (Quadrangle)
     & lambda=lambda)
 
 CASE (Tetrahedron)
-  ans = LagrangeGradientEvalAll_Tetrahedron( &
+
+  IF (SIZE(x, 1) .NE. 3 .OR. SIZE(xij, 1) .NE. 3) THEN
+    CALL Errormsg( &
+    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3",  &
+    & unitno=stderr,  &
+    & line=__LINE__,  &
+    & routine="LagrangeGradientEvalAll1",  &
+    & file=__FILE__)
+    RETURN
+  END IF
+  ans(:, :, 1:3) = LagrangeGradientEvalAll_Tetrahedron( &
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
@@ -648,7 +681,17 @@ CASE (Tetrahedron)
     & lambda=lambda)
 
 CASE (Hexahedron)
-  ans = LagrangeGradientEvalAll_Hexahedron( &
+
+  IF (SIZE(x, 1) .NE. 3 .OR. SIZE(xij, 1) .NE. 3) THEN
+    CALL Errormsg( &
+    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3",  &
+    & unitno=stderr,  &
+    & line=__LINE__,  &
+    & routine="LagrangeGradientEvalAll1",  &
+    & file=__FILE__)
+    RETURN
+  END IF
+  ans(:, :, 1:3) = LagrangeGradientEvalAll_Hexahedron( &
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
@@ -660,7 +703,17 @@ CASE (Hexahedron)
     & lambda=lambda)
 
 CASE (Prism)
-  ans = LagrangeGradientEvalAll_Prism( &
+
+  IF (SIZE(x, 1) .NE. 3 .OR. SIZE(xij, 1) .NE. 3) THEN
+    CALL Errormsg( &
+    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3",  &
+    & unitno=stderr,  &
+    & line=__LINE__,  &
+    & routine="LagrangeGradientEvalAll1",  &
+    & file=__FILE__)
+    RETURN
+  END IF
+  ans(:, :, 1:3) = LagrangeGradientEvalAll_Prism( &
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
@@ -673,7 +726,17 @@ CASE (Prism)
     & lambda=lambda)
 
 CASE (Pyramid)
-  ans = LagrangeGradientEvalAll_Pyramid( &
+
+  IF (SIZE(x, 1) .NE. 3 .OR. SIZE(xij, 1) .NE. 3) THEN
+    CALL Errormsg( &
+    & msg="SIZE(x, 1) or SIZE(xij, 1) .NE. 3",  &
+    & unitno=stderr,  &
+    & line=__LINE__,  &
+    & routine="LagrangeGradientEvalAll1",  &
+    & file=__FILE__)
+    RETURN
+  END IF
+  ans(:, :, 1:3) = LagrangeGradientEvalAll_Pyramid( &
     & order=order,  &
     & x=x,  &
     & xij=xij,  &
@@ -692,6 +755,7 @@ CASE DEFAULT
     & line=__LINE__,  &
     & routine="LagrangeGradientEvalAll1()",  &
     & file=__FILE__)
+  RETURN
 END SELECT
 END PROCEDURE LagrangeGradientEvalAll1
 

@@ -408,7 +408,7 @@ INTERFACE LagrangeGradientEvalAll
     !! Jacobi=Dubiner
     !! Heirarchical
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    REAL(DFP), ALLOCATABLE :: ans(:, :, :)
+    REAL(DFP) :: ans(size(x, 2), size(xij, 2), size(x, 1))
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeGradientEvalAll1
 END INTERFACE LagrangeGradientEvalAll
