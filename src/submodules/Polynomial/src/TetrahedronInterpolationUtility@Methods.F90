@@ -524,12 +524,6 @@ basisType0 = input(default=Monomial, option=basisType)
 SELECT CASE (basisType0)
 CASE (Monomial)
   ans = LagrangeVandermonde(order=order, xij=xij, elemType=Tetrahedron)
-CASE (Jacobi)
-  IF (PRESENT(refTetrahedron)) THEN
-    ! ans = Dubiner_Tetrahedron(order=order, xij=xij, refTetrahedron=refTetrahedron)
-  ELSE
-    ! ans = Dubiner_Tetrahedron(order=order, xij=xij, refTetrahedron="UNIT")
-  END IF
 CASE (Heirarchical)
   IF (PRESENT(refTetrahedron)) THEN
     ans = HeirarchicalBasis_Tetrahedron(&
@@ -2089,10 +2083,8 @@ IF (PRESENT(coeff)) THEN
       & lambda=lambda, &
       & refTetrahedron=ref0%chars() &
       & )
-    coeff0 = coeff
-  ELSE
-    coeff0 = coeff
   END IF
+  coeff0 = coeff
 ELSE
   coeff0 = LagrangeCoeff_Tetrahedron(&
     & order=order, &
@@ -2328,10 +2320,8 @@ IF (PRESENT(coeff)) THEN
       & lambda=lambda, &
       & refTetrahedron=ref0%chars() &
       & )
-    coeff0 = coeff
-  ELSE
-    coeff0 = coeff
   END IF
+  coeff0 = coeff
 ELSE
   coeff0 = LagrangeCoeff_Tetrahedron(&
     & order=order, &
@@ -2401,8 +2391,10 @@ CASE DEFAULT
 END SELECT
 
 DO ii = 1, 3
-  ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+  ! ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+  ans(:, :, ii) = MATMUL(xx(:, :, ii), coeff0)
 END DO
+
 END PROCEDURE LagrangeGradientEvalAll_Tetrahedron1
 
 !----------------------------------------------------------------------------

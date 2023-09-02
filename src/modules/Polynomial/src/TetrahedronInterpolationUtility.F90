@@ -1834,8 +1834,12 @@ INTERFACE LagrangeGradientEvalAll_Tetrahedron
     !! Jacobi parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(SIZE(xij, 2), 3, SIZE(x, 2))
-    !! Value of n+1 Lagrange polynomials at point x
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 3)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number 
+    !! The third index denotes the spatial dimension in which gradient is 
+    !! computed
   END FUNCTION LagrangeGradientEvalAll_Tetrahedron1
 END INTERFACE LagrangeGradientEvalAll_Tetrahedron
 
