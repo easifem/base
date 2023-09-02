@@ -1571,10 +1571,8 @@ IF (PRESENT(coeff)) THEN
       & basisType=basisType0, &
       & refTriangle=refTriangle &
       & )
-    coeff0 = coeff
-  ELSE
-    coeff0 = coeff
   END IF
+  coeff0 = coeff
 ELSE
   coeff0 = LagrangeCoeff_Triangle(&
     & order=order, &
@@ -1638,7 +1636,8 @@ CASE DEFAULT
 END SELECT
 
 DO ii = 1, 2
-  ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+  ! ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+  ans(:, :, ii) = MATMUL(xx(:, :, ii), coeff0)
 END DO
 END PROCEDURE LagrangeGradientEvalAll_Triangle1
 

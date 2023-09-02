@@ -1282,11 +1282,12 @@ INTERFACE LagrangeGradientEvalAll_Triangle
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(SIZE(xij, 2), 2, SIZE(x, 2))
-    !! Value of gradient of n+1 Lagrange polynomials at point x
-    !! ans(I, j, K): I = Lagrnage polynomial number I,
-    !! j = spatial dimension
-    !! K = point of evaluation number k
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 2)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number 
+    !! The third index denotes the spatial dimension in which gradient is 
+    !! computed
   END FUNCTION LagrangeGradientEvalAll_Triangle1
 END INTERFACE LagrangeGradientEvalAll_Triangle
 
