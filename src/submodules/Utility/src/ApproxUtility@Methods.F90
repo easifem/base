@@ -23,7 +23,8 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxeq_1
-Ans = (ABS(a - b) .LE. Zero)
+REAL(REAL64), PARAMETER :: my_zero = 1.0E-10
+Ans = (ABS(a - b) .LE. my_zero)
 END PROCEDURE approxeq_1
 
 !----------------------------------------------------------------------------
@@ -31,7 +32,8 @@ END PROCEDURE approxeq_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE approxeq_2
-Ans = (ABS(a - b) .LE. Zero)
+REAL(REAL64), PARAMETER :: my_zero = 1.0E-10
+Ans = (ABS(a - b) .LE. my_zero)
 END PROCEDURE approxeq_2
 
 !----------------------------------------------------------------------------

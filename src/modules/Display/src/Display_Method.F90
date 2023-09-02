@@ -84,6 +84,7 @@ INTERFACE Display
     & Display_Mat2_Int32, &
     & Display_Mat2_Int16, &
     & Display_Mat2_Int8, &
+    & Display_Mat2_Bool, &
     & Display_Mat3_Real64, &
     & Display_Mat3_Real32, &
     & Display_Mat3_Int64, &
@@ -848,6 +849,31 @@ SUBROUTINE Display_Mat2_Int8(Val, msg, unitNo, full, advance)
   CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
 #include "./Display_Mat2.inc"
 END SUBROUTINE Display_Mat2_Int8
+
+!----------------------------------------------------------------------------
+!                                                                    Display
+!----------------------------------------------------------------------------
+
+!> author: Dr. Vikas Sharma
+!
+! This subroutine display a matrix of real numbers
+!
+! ## Usage
+! ```fortran
+! integer( i4b ) :: mat(10, 10)
+! call RANDOM_NUMBER(mat)
+! call display( val=mat, msg="var=", unitno=stdout)
+! ```
+
+SUBROUTINE Display_Mat2_Bool(Val, msg, unitNo, full, advance)
+  !   Define intent of dummy variables
+  LOGICAL(LGT), DIMENSION(:, :), INTENT(IN) :: Val
+  CHARACTER(*), INTENT(IN) :: msg
+  INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  LOGICAL(LGT), INTENT(IN), OPTIONAL :: full
+  CHARACTER(*), OPTIONAL, INTENT(IN) :: advance
+#include "./Display_Mat2.inc"
+END SUBROUTINE Display_Mat2_Bool
 
 !----------------------------------------------------------------------------
 !                                                                    Display

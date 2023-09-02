@@ -23,9 +23,9 @@
 
 MODULE LagrangePolynomialUtility
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
-
 PUBLIC :: LagrangeDOF
 PUBLIC :: LagrangeInDOF
 PUBLIC :: LagrangeDegree
@@ -33,6 +33,52 @@ PUBLIC :: LagrangeVandermonde
 PUBLIC :: EquidistancePoint
 PUBLIC :: InterpolationPoint
 PUBLIC :: LagrangeCoeff
+PUBLIC :: RefCoord
+PUBLIC :: RefElemDomain
+PUBLIC :: LagrangeEvalAll
+PUBLIC :: LagrangeGradientEvalAll
+
+!----------------------------------------------------------------------------
+!                                                           RefElemDomain
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain(elemType, baseContinuity, baseInterpol) &
+    & RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! Element type
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                                 RefCoord
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE PURE FUNCTION RefCoord(elemType, refElem) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! Element type
+    CHARACTER(*), INTENT(IN) :: refElem
+    !! "UNIT"
+    !! "BIUNIT"
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+  END FUNCTION RefCoord
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeDOF@BasisMethods
@@ -120,12 +166,30 @@ END INTERFACE
 ! summary: Equidistance points on 1D/2D/3D elements
 
 INTERFACE
-  MODULE PURE FUNCTION EquidistancePoint(order, elemType, xij) &
+  MODULE FUNCTION EquidistancePoint( &
+    & order, &
+    & elemType, &
+    & xij) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! Order of element
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! Element type
+    !! Point, Line, Triangle, Quadrangle, Tetrahedron
+    !! Hexahedron, Prism, Pyramid
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of linear elements
+    !! Default values:
+    !! Biunit line
+    !! Unit triangle
+    !! Biunit Quadrangle
+    !! Unit Tetrahedron
+    !! Biunit Hexahedron
     REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Equidistance points in xij format
+    !! Number of rows = nsd
+    !! Number of columns = Number of points
+    !! The number of points depend upon the order and elemType
   END FUNCTION EquidistancePoint
 END INTERFACE
 
@@ -138,27 +202,42 @@ END INTERFACE
 ! summary: Get the interpolation point
 
 INTERFACE
-  MODULE FUNCTION InterpolationPoint(order, elemType, ipType, &
-    & xij, layout) RESULT(ans)
+  MODULE FUNCTION InterpolationPoint( &
+    & order, &
+    & elemType, &
+    & ipType, &
+    & xij, &
+    & layout, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of interpolation
     INTEGER(I4B), INTENT(IN) :: elemType
-    !! element type
+    !! element type, following values are allowed.
+    !! Point, Line, Triangle, Quadrangle, Tetrahedron
+    !! Hexahedron, Prism, Pyramid
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation point type
     !! Equidistance, GaussLegendre, GaussLegendreLobatto, GaussChebyshev,
-    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto
+    !! GaussChebyshevLobatto, GaussJacobi, GaussJacobiLobatto,
+    !! GaussUltraspherical, GaussUltrasphericalLobatto
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
-    !! domain of interpolation, default values are given by
-    !! line = [-1,1]
-    !! triangle = (0,0), (0,1), (1,0)
-    !! quadrangle = [-1,1]x[-1,1]
+    !! Nodal coordinates of linear elements.
+    !! Domain of interpolation, default values are given by:
+    !! Biunit line
+    !! Unit triangle
+    !! Biunit Quadrangle
+    !! Unit Tetrahedron
+    !! Biunit Hexahedron
     CHARACTER(*), INTENT(IN) :: layout
     !! "VEFC" Vertex, Edge, Face, Cell
     !! "INCREASING" incresing order
     !! "DECREASING" decreasing order
     !! "XYZ" First X, then Y, then Z
     !! "YXZ" First Y, then X, then Z
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Jacobi and Ultraspherical parameters
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! interpolation points in xij format
   END FUNCTION InterpolationPoint
@@ -172,7 +251,7 @@ END INTERFACE
 ! date: 18 Oct 2022
 ! summary:  Returns the coefficient of ith lagrange poly
 
-INTERFACE
+INTERFACE LagrangeCoeff
   MODULE FUNCTION LagrangeCoeff1(order, elemType, i, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
@@ -185,10 +264,6 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xij, 2))
     !! coefficients
   END FUNCTION LagrangeCoeff1
-END INTERFACE
-
-INTERFACE LagrangeCoeff
-  MODULE PROCEDURE LagrangeCoeff1
 END INTERFACE LagrangeCoeff
 
 !----------------------------------------------------------------------------
@@ -199,7 +274,7 @@ END INTERFACE LagrangeCoeff
 ! date: 18 Oct 2022
 ! summary: Returns the coefficient of all lagrange poly
 
-INTERFACE
+INTERFACE LagrangeCoeff
   MODULE FUNCTION LagrangeCoeff2(order, elemType, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial
@@ -210,17 +285,13 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
   END FUNCTION LagrangeCoeff2
-END INTERFACE
-
-INTERFACE LagrangeCoeff
-  MODULE PROCEDURE LagrangeCoeff2
 END INTERFACE LagrangeCoeff
 
 !----------------------------------------------------------------------------
 !                                                             LagrangeCoeff
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE LagrangeCoeff
   MODULE FUNCTION LagrangeCoeff3(order, elemType, i, v, &
     & isVandermonde) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -236,17 +307,13 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(v, 1))
     !! coefficients
   END FUNCTION LagrangeCoeff3
-END INTERFACE
-
-INTERFACE LagrangeCoeff
-  MODULE PROCEDURE LagrangeCoeff3
 END INTERFACE LagrangeCoeff
 
 !----------------------------------------------------------------------------
 !                                                              LagrangeCoeff
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE LagrangeCoeff
   MODULE FUNCTION LagrangeCoeff4(order, elemType, i, v, ipiv) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
@@ -262,11 +329,89 @@ INTERFACE
     REAL(DFP) :: ans(SIZE(v, 1))
     !! coefficients
   END FUNCTION LagrangeCoeff4
-END INTERFACE
-
-INTERFACE LagrangeCoeff
-  MODULE PROCEDURE LagrangeCoeff4
 END INTERFACE LagrangeCoeff
+
+!----------------------------------------------------------------------------
+!                                                           LagrangeEvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeEvalAll
+  MODULE FUNCTION LagrangeEvalAll1( &
+    & order, &
+    & elemType, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll1
+END INTERFACE LagrangeEvalAll
+
+!----------------------------------------------------------------------------
+!                                                           LagrangeEvalAll
+!----------------------------------------------------------------------------
+
+INTERFACE LagrangeGradientEvalAll
+  MODULE FUNCTION LagrangeGradientEvalAll1( &
+    & order, &
+    & elemType, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Jacobi=Dubiner
+    !! Heirarchical
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    REAL(DFP) :: ans(size(x, 2), size(xij, 2), size(x, 1))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeGradientEvalAll1
+END INTERFACE LagrangeGradientEvalAll
 
 !----------------------------------------------------------------------------
 !

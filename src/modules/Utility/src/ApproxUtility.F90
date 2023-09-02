@@ -53,23 +53,19 @@ PUBLIC :: isNumeric
 ! However, it is not appropriate to use when a and b
 ! are either very large or very small.
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION approxeq_1(a, b) RESULT(ans)
+INTERFACE OPERATOR(.APPROXEQ.)
+  MODULE PURE ELEMENTAL FUNCTION approxeq_1(a, b) RESULT(ans)
     REAL(REAL64), INTENT(IN) :: a, b
     LOGICAL(LGT) :: ans
   END FUNCTION approxeq_1
-END INTERFACE
+END INTERFACE OPERATOR(.APPROXEQ.)
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION approxeq_2(a, b) RESULT(ans)
+INTERFACE OPERATOR(.APPROXEQ.)
+  MODULE PURE ELEMENTAL FUNCTION approxeq_2(a, b) RESULT(ans)
     REAL(REAL32), INTENT(IN) :: a, b
     LOGICAL(LGT) :: ans
   END FUNCTION approxeq_2
-END INTERFACE
-
-INTERFACE OPERATOR(.APPROXEQ.)
-  MODULE PROCEDURE approxeq_1, approxeq_2
-END INTERFACE
+END INTERFACE OPERATOR(.APPROXEQ.)
 
 INTERFACE OPERATOR(.APPROXEQA.)
   MODULE PROCEDURE approxeq_1, approxeq_2
@@ -88,16 +84,14 @@ END INTERFACE
 ! the size of the larger of the two. It should be used when c and b are of
 ! the same magnitude and very large or very small. If either c a or c b is
 ! zero (exactly) then this routine is equivalent to an absolute comparison.
-!
-! - TODO add support for Real32
 
 INTERFACE OPERATOR(.APPROXEQR.)
-  MODULE ELEMENTAL FUNCTION approxeqr_1(a, b) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION approxeqr_1(a, b) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: a, b
     LOGICAL(LGT) :: Ans
   END FUNCTION approxeqr_1
 
-  MODULE ELEMENTAL FUNCTION approxeqr_2(a, b) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION approxeqr_2(a, b) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: a, b
     LOGICAL(LGT) :: Ans
   END FUNCTION approxeqr_2
@@ -121,15 +115,11 @@ END INTERFACE OPERATOR(.APPROXEQR.)
 ! - TODO change the name to approxeqf_1
 ! - TODO add support for the real32 and real64
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION approxeq_ulp_real(a, b) RESULT(Ans)
+INTERFACE OPERATOR(.APPROXEQF.)
+  MODULE PURE ELEMENTAL FUNCTION approxeq_ulp_real(a, b) RESULT(Ans)
     REAL(DFP), INTENT(IN) :: a, b
     LOGICAL(LGT) :: Ans
-  END FUNCTION
-END INTERFACE
-
-INTERFACE OPERATOR(.APPROXEQF.)
-  MODULE PROCEDURE approxeq_ulp_real
+  END FUNCTION approxeq_ulp_real
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -140,22 +130,18 @@ END INTERFACE
 ! date: 3 Apr 2021
 ! summary: Defines the operator .APPROXLE.
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION approxle_1(r1, r2) RESULT(Ans)
+INTERFACE OPERATOR(.ARROXLE.)
+  MODULE PURE ELEMENTAL FUNCTION approxle_1(r1, r2) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: r1
     REAL(REAL32), INTENT(IN) :: r2
     LOGICAL(LGT) :: Ans
   END FUNCTION approxle_1
 
-  MODULE ELEMENTAL FUNCTION approxle_2(r1, r2) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION approxle_2(r1, r2) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: r1
     REAL(REAL64), INTENT(IN) :: r2
     LOGICAL(LGT) :: Ans
   END FUNCTION approxle_2
-END INTERFACE
-
-INTERFACE OPERATOR(.ARROXLE.)
-  MODULE PROCEDURE approxle_1, approxle_2
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -166,23 +152,19 @@ END INTERFACE
 ! date: 3 April 2021
 ! summary:  Defines the operation when comparing two single precision reals
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION approxge_1(r1, r2) RESULT(Ans)
+INTERFACE OPERATOR(.APPROXGE.)
+  MODULE PURE ELEMENTAL FUNCTION approxge_1(r1, r2) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: r1
     REAL(REAL32), INTENT(IN) :: r2
     LOGICAL(LGT) :: Ans
   END FUNCTION approxge_1
 
-  MODULE ELEMENTAL FUNCTION approxge_2(r1, r2) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION approxge_2(r1, r2) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: r1
     REAL(REAL64), INTENT(IN) :: r2
     LOGICAL(LGT) :: Ans
   END FUNCTION approxge_2
-END INTERFACE
-
-INTERFACE OPERATOR(.ARROXGE.)
-  MODULE PROCEDURE approxge_1, approxge_2
-END INTERFACE
+END INTERFACE OPERATOR(.APPROXGE.)
 
 !----------------------------------------------------------------------------
 !                                                      SOFTEQ@ApproxMethods
@@ -192,25 +174,21 @@ END INTERFACE
 ! date: 3 April 2021
 ! summary: Defines the operator SOFTEQ
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION softeq_1(r1, r2, tol) RESULT(Ans)
+INTERFACE softeq
+  MODULE PURE ELEMENTAL FUNCTION softeq_1(r1, r2, tol) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: r1
     REAL(REAL32), INTENT(IN) :: r2
     REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softeq_1
 
-  MODULE ELEMENTAL FUNCTION softeq_2(r1, r2, tol) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION softeq_2(r1, r2, tol) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: r1
     REAL(REAL64), INTENT(IN) :: r2
     REAL(REAL64), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softeq_2
-END INTERFACE
-
-INTERFACE SOFTEQ
-  MODULE PROCEDURE softeq_1, softeq_2
-END INTERFACE
+END INTERFACE softeq
 
 !----------------------------------------------------------------------------
 !                                                     SOFTEQR@ApproxMethods
@@ -220,24 +198,20 @@ END INTERFACE
 ! date: 3 April 2021
 ! summary: Defines the operator SOFTEQR
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION softeqr_1(r1, r2, tol) RESULT(Ans)
+INTERFACE SOFTEQR
+  MODULE PURE ELEMENTAL FUNCTION softeqr_1(r1, r2, tol) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: r1
     REAL(REAL32), INTENT(IN) :: r2
     REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softeqr_1
 
-  MODULE ELEMENTAL FUNCTION softeqr_2(r1, r2, tol) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION softeqr_2(r1, r2, tol) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: r1
     REAL(REAL64), INTENT(IN) :: r2
     REAL(REAL64), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softeqr_2
-END INTERFACE
-
-INTERFACE SOFTEQR
-  MODULE PROCEDURE softeqr_1, softeqr_2
 END INTERFACE SOFTEQR
 
 !----------------------------------------------------------------------------
@@ -248,24 +222,20 @@ END INTERFACE SOFTEQR
 ! date: 3 April 2021
 ! summary: SOFTLE
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION softle_1(r1, r2, tol) RESULT(Ans)
+INTERFACE SOFTLE
+  MODULE PURE ELEMENTAL FUNCTION softle_1(r1, r2, tol) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: r1
     REAL(REAL32), INTENT(IN) :: r2
     REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softle_1
 
-  MODULE ELEMENTAL FUNCTION softle_2(r1, r2, tol) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION softle_2(r1, r2, tol) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: r1
     REAL(REAL64), INTENT(IN) :: r2
     REAL(REAL64), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softle_2
-END INTERFACE
-
-INTERFACE SOFTLE
-  MODULE PROCEDURE softle_1, softle_2
 END INTERFACE SOFTLE
 
 !----------------------------------------------------------------------------
@@ -276,88 +246,72 @@ END INTERFACE SOFTLE
 ! date: 3 April 2021
 ! summary: Defines the operation for SOFTLT
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION softlt_1(r1, r2, tol) RESULT(Ans)
+INTERFACE SOFTLT
+  MODULE PURE ELEMENTAL FUNCTION softlt_1(r1, r2, tol) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: r1
     REAL(REAL32), INTENT(IN) :: r2
     REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softlt_1
 
-  MODULE ELEMENTAL FUNCTION softlt_2(r1, r2, tol) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION softlt_2(r1, r2, tol) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: r1
     REAL(REAL64), INTENT(IN) :: r2
     REAL(REAL64), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softlt_2
-END INTERFACE
-
-INTERFACE SOFTLT
-  MODULE PROCEDURE softlt_1, softlt_2
 END INTERFACE SOFTLT
 
 !----------------------------------------------------------------------------
 !                                                       SOFTGE@ApproxMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION softge_1(r1, r2, tol) RESULT(Ans)
+INTERFACE SOFTGE
+  MODULE PURE ELEMENTAL FUNCTION softge_1(r1, r2, tol) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: r1
     REAL(REAL32), INTENT(IN) :: r2
     REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softge_1
 
-  MODULE ELEMENTAL FUNCTION softge_2(r1, r2, tol) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION softge_2(r1, r2, tol) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: r1
     REAL(REAL64), INTENT(IN) :: r2
     REAL(REAL64), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softge_2
-END INTERFACE
-
-INTERFACE SOFTGE
-  MODULE PROCEDURE softge_1, softge_2
 END INTERFACE SOFTGE
 
 !----------------------------------------------------------------------------
 !                                                      SOFTGT@ApproxMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION softgt_1(r1, r2, tol) RESULT(Ans)
+INTERFACE SOFTGT
+  MODULE PURE ELEMENTAL FUNCTION softgt_1(r1, r2, tol) RESULT(Ans)
     REAL(REAL32), INTENT(IN) :: r1
     REAL(REAL32), INTENT(IN) :: r2
     REAL(REAL32), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softgt_1
 
-  MODULE ELEMENTAL FUNCTION softgt_2(r1, r2, tol) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION softgt_2(r1, r2, tol) RESULT(Ans)
     REAL(REAL64), INTENT(IN) :: r1
     REAL(REAL64), INTENT(IN) :: r2
     REAL(REAL64), INTENT(IN) :: tol
     LOGICAL(LGT) :: Ans
   END FUNCTION softgt_2
-END INTERFACE
-
-INTERFACE SOFTGT
-  MODULE PROCEDURE softgt_1, softgt_2
 END INTERFACE SOFTGT
 
 !----------------------------------------------------------------------------
 !                                                           EQ@ApproxMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
-  MODULE ELEMENTAL FUNCTION equalto_logical(l1, l2) RESULT(Ans)
+INTERFACE OPERATOR(==)
+  MODULE PURE ELEMENTAL FUNCTION equalto_logical(l1, l2) RESULT(Ans)
     LOGICAL(LGT), INTENT(IN) :: l1
     LOGICAL(LGT), INTENT(IN) :: l2
     LOGICAL(LGT) :: Ans
   END FUNCTION
-END INTERFACE
-
-INTERFACE OPERATOR(==)
-  MODULE PROCEDURE equalto_logical
 END INTERFACE
 
 !----------------------------------------------------------------------------
@@ -365,7 +319,7 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE ELEMENTAL FUNCTION notequalto_logical(l1, l2) RESULT(Ans)
+  MODULE PURE ELEMENTAL FUNCTION notequalto_logical(l1, l2) RESULT(Ans)
     LOGICAL(LGT), INTENT(IN) :: l1
     LOGICAL(LGT), INTENT(IN) :: l2
     LOGICAL(LGT) :: Ans
@@ -381,48 +335,48 @@ END INTERFACE
 !----------------------------------------------------------------------------
 
 INTERFACE ASSIGNMENT(=)
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_int8(i, c)
+  MODULE PURE ELEMENTAL SUBROUTINE assign_char_to_int8(i, c)
     INTEGER(INT8), INTENT(OUT) :: i
     CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE assign_char_to_int8
 
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_Int16(i, c)
+  MODULE PURE ELEMENTAL SUBROUTINE assign_char_to_Int16(i, c)
     INTEGER(INT16), INTENT(OUT) :: i
     CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE assign_char_to_Int16
 
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_Int32(i, c)
+  MODULE PURE ELEMENTAL SUBROUTINE assign_char_to_Int32(i, c)
     INTEGER(INT32), INTENT(OUT) :: i
     CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE assign_char_to_Int32
 
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_Int64(i, c)
+  MODULE PURE ELEMENTAL SUBROUTINE assign_char_to_Int64(i, c)
     INTEGER(INT64), INTENT(OUT) :: i
     CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE assign_char_to_Int64
 
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_Real32(s, c)
+  MODULE PURE ELEMENTAL SUBROUTINE assign_char_to_Real32(s, c)
     REAL(REAL32), INTENT(OUT) :: s
     CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE assign_char_to_Real32
 
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_Real64(s, c)
+  MODULE PURE ELEMENTAL SUBROUTINE assign_char_to_Real64(s, c)
     REAL(REAL64), INTENT(OUT) :: s
     CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE assign_char_to_Real64
 
-  MODULE ELEMENTAL SUBROUTINE assign_char_to_bool(b, c)
+  MODULE PURE ELEMENTAL SUBROUTINE assign_char_to_bool(b, c)
     LOGICAL(LGT), INTENT(OUT) :: b
     CHARACTER(*), INTENT(IN) :: c
   END SUBROUTINE assign_char_to_bool
-END INTERFACE ASSIGNMENT(=)
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                           @ApproxMethods
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE FUNCTION isNumeric(char_str) RESULT(bool)
+  MODULE PURE FUNCTION isNumeric(char_str) RESULT(bool)
     CHARACTER(*), INTENT(IN) :: char_str
     LOGICAL(LGT) :: bool
   END FUNCTION

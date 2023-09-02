@@ -19,7 +19,7 @@
 ! date:         28 Feb 2021
 ! summary:  This contains Input/Output methods for [[IntVector_]]
 
-SUBMODULE(IntVector_Method) IOMethods
+SUBMODULE(IntVector_IOMethod) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -52,4 +52,4 @@ IF (isAllocated(obj)) THEN
 END IF
 END PROCEDURE intVec_Display2
 
-END SUBMODULE IOMethods
+END SUBMODULE Methods

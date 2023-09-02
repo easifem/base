@@ -75,8 +75,15 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/MdEncode/CMakeLists.txt)
 #ErrorHandling
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/ErrorHandling/CMakeLists.txt)
 
+
 #Utility
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Utility/CMakeLists.txt)
+
+#BaseInterpolation
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseInterpolation/CMakeLists.txt)
+
+#BaseContinuity
+INCLUDE(${CMAKE_CURRENT_LIST_DIR}/BaseContinuity/CMakeLists.txt)
 
 #Polynomial
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Polynomial/CMakeLists.txt)
@@ -110,7 +117,6 @@ INCLUDE(${CMAKE_CURRENT_LIST_DIR}/KeyValue/CMakeLists.txt)
 
 #Vector3D_
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Vector3D/CMakeLists.txt)
-
 
 #Lapack
 INCLUDE(${CMAKE_CURRENT_LIST_DIR}/Lapack/CMakeLists.txt)

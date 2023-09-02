@@ -29,16 +29,10 @@
 !
 
 MODULE IntVector_Method
-USE GlobalData
-USE BaseType
-IMPLICIT NONE
-PRIVATE
-
-#include "./ConstructorMethods.inc"
-#include "./IOMethods.inc"
-#include "./EnquireMethods.inc"
-#include "./GetMethods.inc"
-#include "./SetMethods.inc"
-#include "./AppendMethods.inc"
-
+USE IntVector_ConstructorMethod
+USE IntVector_IOMethod
+USE IntVector_EnquireMethod
+USE IntVector_GetMethod
+USE IntVector_SetMethod
+USE IntVector_AppendMethod
 END MODULE IntVector_Method

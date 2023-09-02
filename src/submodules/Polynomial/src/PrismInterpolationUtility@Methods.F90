@@ -21,6 +21,27 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                       RefElemDomain_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Prism
+CALL Errormsg(&
+  & msg="[WORK IN PROGRESS] We are working on it", &
+  & file=__FILE__, &
+  & line=__LINE__,&
+  & routine="RefElemDomain_Prism()", &
+  & unitno=stderr)
+END PROCEDURE RefElemDomain_Prism
+
+!----------------------------------------------------------------------------
+!                                                          Refcoord_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_Prism
+ans = 0.0_DFP
+END PROCEDURE RefCoord_Prism
+
+!----------------------------------------------------------------------------
 !                                                     LagrangeDegree_Prism
 !----------------------------------------------------------------------------
 
@@ -136,6 +157,97 @@ MODULE PROCEDURE LagrangeCoeff_Prism4
 ans = LagrangeVandermonde(order=order, xij=xij, elemType=Prism)
 CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Prism4
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Prism1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="QuadraturePoint_Prism1()", &
+& file=__FILE__)
+END PROCEDURE QuadraturePoint_Prism1
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Prism2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="QuadraturePoint_Prism2()", &
+& file=__FILE__)
+END PROCEDURE QuadraturePoint_Prism2
+
+!----------------------------------------------------------------------------
+!                                             TensorQuadraturePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Prism1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="TensorQuadraturePoint_Prism1()", &
+& file=__FILE__)
+END PROCEDURE TensorQuadraturePoint_Prism1
+
+!----------------------------------------------------------------------------
+!                                             TensorQuadraturePoint_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Prism2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="TensorQuadraturePoint_Prism2()", &
+& file=__FILE__)
+END PROCEDURE TensorQuadraturePoint_Prism2
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Prism1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeEvalAll_Prism1()", &
+& file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Prism1
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Prism2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeEvalAll_Prism2()", &
+& file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Prism2
+
+!----------------------------------------------------------------------------
+!                                             LagrangeGradientEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Prism1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeGradientEvalAll_Prism1()", &
+& file=__FILE__)
+END PROCEDURE LagrangeGradientEvalAll_Prism1
 
 !----------------------------------------------------------------------------
 !

@@ -59,13 +59,7 @@ END PROCEDURE initiate_ref_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Triangle
-!
-IF (PRESENT(xij)) THEN
-  CALL Initiate(obj, nsd, xij)
-ELSE
-  CALL Initiate(obj, nsd)
-END IF
-!
+CALL Initiate(obj, nsd, xij)
 END PROCEDURE reference_Triangle
 
 !----------------------------------------------------------------------------
@@ -73,15 +67,8 @@ END PROCEDURE reference_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Triangle_Pointer
-!
 ALLOCATE (obj)
-!
-IF (PRESENT(xij)) THEN
-  CALL Initiate(obj, nsd, xij)
-ELSE
-  CALL Initiate(obj, nsd)
-END IF
-!
+CALL Initiate(obj, nsd, xij)
 END PROCEDURE reference_Triangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -90,22 +77,16 @@ END PROCEDURE reference_Triangle_Pointer
 
 MODULE PROCEDURE highorderElement_Triangle
 INTEGER(I4B) :: I, NNS, nsd
-!
 CALL DEALLOCATE (obj)
-!
 obj%xij = InterpolationPoint_Triangle( &
   & xij=refelem%xij(1:3, 1:3), &
   & order=order, &
   & ipType=ipType, &
   & layout="VEFC")
-!
 nsd = refelem%nsd
 obj%highOrderElement => refelem%highOrderElement
-!
 SELECT CASE (order)
-  !
 CASE (1)
-  !
   NNS = 3
   obj%EntityCounts = [NNS, 3, 1, 0]
   obj%XiDimension = 2
@@ -120,9 +101,7 @@ CASE (1)
   obj%Topology(NNS + 2) = ReferenceTopology([2, 3], Line2)
   obj%Topology(NNS + 3) = ReferenceTopology([3, 1], Line2)
   obj%Topology(NNS + 4) = ReferenceTopology([1, 2, 3], obj%Name)
-  !
 CASE (2)
-  !
   NNS = 6
   obj%EntityCounts = [NNS, 3, 1, 0]
   obj%XiDimension = 2
@@ -138,9 +117,7 @@ CASE (2)
   obj%Topology(NNS + 3) = ReferenceTopology([3, 1, 6], Line3)
   obj%Topology(NNS + 4) = ReferenceTopology([1, 2, 3, 4, 5, 6], &
     & obj%Name)
-  !
 CASE (3)
-  !
   NNS = 10
   obj%EntityCounts = [NNS, 3, 1, 0]
   obj%XiDimension = 2
@@ -156,9 +133,7 @@ CASE (3)
   obj%Topology(NNS + 3) = ReferenceTopology([3, 1, 8, 9], Line4)
   obj%Topology(NNS + 4) = ReferenceTopology( &
     & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obj%Name)
-  !
 END SELECT
-!
 END PROCEDURE highorderElement_Triangle
 
 !----------------------------------------------------------------------------
@@ -368,38 +343,35 @@ END PROCEDURE triangle_random_point
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE triangle_quality
-!
 REAL(DFP) :: rvar(3)
-!
+
 SELECT CASE (measure)
-  !
+
 CASE (QualityMeasure%area)
   Ans = Area(refelem=refelem, xij=xij)
-  !
+
 CASE (QualityMeasure%maxangle)
   Ans = MAXVAL(Angles(refelem=refelem, xij=xij))
-  !
+
 CASE (QualityMeasure%minangle)
   Ans = MINVAL(Angles(refelem=refelem, xij=xij))
-  !
+
 CASE (QualityMeasure%angleratio)
   Ans = 3.0_DFP * MINVAL(Angles(refelem=refelem, xij=xij)) / Pi
-  !
+
 CASE (QualityMeasure%radiusRatio)
   Ans = 2.0_DFP * InRadius(refelem=refelem, xij=xij) &
     & / CircumRadius(refelem=refelem, xij=xij)
-  !
+
 CASE (QualityMeasure%edgeRatio)
   rvar = EdgeLength(refelem=refelem, xij=xij)
   Ans = MINVAL(rvar) / MAXVAL(rvar)
-  !
+
 CASE (QualityMeasure%aspectRatio)
   rvar = EdgeLength(refelem=refelem, xij=xij)
   Ans = MAXVAL(rvar) * SUM(rvar) &
-    & / (4.0_DFP * SQRT(3.0_DFP) * Area(refelem=refelem, xij=xij))
-  !
+    & / (4.0_DFP * SQRT(3.0_DFP) * area(refelem=refelem, xij=xij))
 END SELECT
-!
 END PROCEDURE triangle_quality
 
 !-----------------------------------------------------------------------------
@@ -407,23 +379,17 @@ END PROCEDURE triangle_quality
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE TriangleArea3D
-!
 INTEGER(I4B), PARAMETER :: dim_num = 3
 REAL(DFP) :: cross(dim_num)
-!
+
 ! Compute the cross product vector.
-!
 cross(1) = (t(2, 2) - t(2, 1)) * (t(3, 3) - t(3, 1)) &
            - (t(3, 2) - t(3, 1)) * (t(2, 3) - t(2, 1))
-!
 cross(2) = (t(3, 2) - t(3, 1)) * (t(1, 3) - t(1, 1)) &
            - (t(1, 2) - t(1, 1)) * (t(3, 3) - t(3, 1))
-!
 cross(3) = (t(1, 2) - t(1, 1)) * (t(2, 3) - t(2, 1)) &
            - (t(2, 2) - t(2, 1)) * (t(1, 3) - t(1, 1))
-!
-area = 0.5_DFP * SQRT(SUM(cross(1:3)**2))
-!
+ans = 0.5_DFP * SQRT(SUM(cross(1:3)**2))
 END PROCEDURE TriangleArea3D
 
 !-----------------------------------------------------------------------------
@@ -431,14 +397,12 @@ END PROCEDURE TriangleArea3D
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE TriangleArea2D
-!
 INTEGER(I4B), PARAMETER :: dim_num = 2
-!
-area = 0.5_DFP * ( &
-       t(1, 1) * (t(2, 2) - t(2, 3)) &
-       + t(1, 2) * (t(2, 3) - t(2, 1)) &
-       + t(1, 3) * (t(2, 1) - t(2, 2)))
-!
+
+ans = 0.5_DFP * ( &
+      t(1, 1) * (t(2, 2) - t(2, 3)) &
+      + t(1, 2) * (t(2, 3) - t(2, 1)) &
+      + t(1, 3) * (t(2, 1) - t(2, 2)))
 END PROCEDURE TriangleArea2D
 
 !----------------------------------------------------------------------------

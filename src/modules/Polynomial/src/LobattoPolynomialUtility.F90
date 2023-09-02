@@ -30,6 +30,7 @@ PUBLIC :: LobattoZeros
 PUBLIC :: LobattoEval
 PUBLIC :: LobattoEvalAll
 PUBLIC :: LobattoKernelEvalAll
+PUBLIC :: LobattoKernelGradientEvalAll
 PUBLIC :: LobattoMonomialExpansionAll
 PUBLIC :: LobattoMonomialExpansion
 PUBLIC :: LobattoGradientEvalAll
@@ -223,16 +224,16 @@ END INTERFACE LobattoEvalAll
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 6 Sept 2022
-! summary: Evaluate Lobatto bubble functions order = 2 to n at several points
+! summary: Evaluate Lobatto bubble functions order = 0 to n at several points
 !
 !# Introduction
 !
-! Evaluate Lobatto bubble polynomials from order = 2 to n at several points
+! Evaluate Lobatto bubble polynomials from order = 0 to n at several points
 !
 !- N, the highest order polynomial to compute.
 !- x: the point at which the polynomials are to be evaluated.
 
-INTERFACE
+INTERFACE LobattoKernelEvalAll
   MODULE PURE FUNCTION LobattoKernelEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     !! n
@@ -241,11 +242,25 @@ INTERFACE
     !! Evaluate Lobatto polynomial of order = 0 to n (total n+1)
     !! at point x
   END FUNCTION LobattoKernelEvalAll1
-END INTERFACE
-
-INTERFACE LobattoKernelEvalAll
-  MODULE PROCEDURE LobattoKernelEvalAll1
 END INTERFACE LobattoKernelEvalAll
+
+!----------------------------------------------------------------------------
+!                                               LobattoKernelGradientEvalAll
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 6 Sept 2022
+! summary: Gradient of Lobatto bubbles of order = 0 to n
+
+INTERFACE LobattoKernelGradientEvalAll
+  MODULE PURE FUNCTION LobattoKernelGradientEvalAll1(n, x) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: n
+    !! n
+    REAL(DFP), INTENT(IN) :: x(:)
+    REAL(DFP) :: ans(1:SIZE(x), 0:n)
+    !! Gradient of Lobatto bubbles of order 0 to n
+  END FUNCTION LobattoKernelGradientEvalAll1
+END INTERFACE LobattoKernelGradientEvalAll
 
 !----------------------------------------------------------------------------
 !                                             LobattoMonomialExpansionAll
@@ -315,17 +330,12 @@ END INTERFACE
 !
 ! Evaluate gradient of Lobatto polynomial of order upto n.
 
-INTERFACE
+INTERFACE LobattoGradientEvalAll
   MODULE PURE FUNCTION LobattoGradientEvalAll1(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x
     REAL(DFP) :: ans(1:n + 1)
   END FUNCTION LobattoGradientEvalAll1
-END INTERFACE
-!!
-
-INTERFACE LobattoGradientEvalAll
-  MODULE PROCEDURE LobattoGradientEvalAll1
 END INTERFACE LobattoGradientEvalAll
 
 !----------------------------------------------------------------------------
@@ -340,17 +350,12 @@ END INTERFACE LobattoGradientEvalAll
 !
 ! Evaluate gradient of Lobatto polynomial of order upto n.
 
-INTERFACE
+INTERFACE LobattoGradientEvalAll
   MODULE PURE FUNCTION LobattoGradientEvalAll2(n, x) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: n
     REAL(DFP), INTENT(IN) :: x(:)
     REAL(DFP) :: ans(1:SIZE(x), 1:n + 1)
   END FUNCTION LobattoGradientEvalAll2
-END INTERFACE
-!!
-
-INTERFACE LobattoGradientEvalAll
-  MODULE PROCEDURE LobattoGradientEvalAll2
 END INTERFACE LobattoGradientEvalAll
 
 !----------------------------------------------------------------------------

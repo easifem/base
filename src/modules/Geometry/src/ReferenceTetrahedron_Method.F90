@@ -24,6 +24,13 @@ USE GlobalData
 USE BaseType
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: Initiate
+PUBLIC :: ReferenceTetrahedron
+PUBLIC :: ReferenceTetrahedron_Pointer
+PUBLIC :: highOrderElement_Tetrahedron
+PUBLIC :: Measure_Simplex_Tetrahedron
+PUBLIC :: Tetrahedron_Quality
+PUBLIC :: TetrahedronVolume3D
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Tetrahedron
@@ -32,62 +39,38 @@ PRIVATE
 !> author: Vikas Sharma, Ph. D.
 ! date:         1 March 2021
 ! summary: This subroutine for constructing the object
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE initiate_ref_Tetrahedron(obj, NSD, XiJ)
     CLASS(ReferenceTetrahedron_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
   END SUBROUTINE initiate_ref_Tetrahedron
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE initiate_ref_Tetrahedron
 END INTERFACE Initiate
-
-PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                            ReferenceTetrahedron@Tetrahedron
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ReferenceTetrahedron
   MODULE PURE FUNCTION reference_Tetrahedron(NSD, XiJ) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     TYPE(ReferenceTetrahedron_) :: obj
   END FUNCTION reference_Tetrahedron
-END INTERFACE
-
-INTERFACE ReferenceTetrahedron
-  MODULE PROCEDURE reference_Tetrahedron
 END INTERFACE ReferenceTetrahedron
-
-PUBLIC :: ReferenceTetrahedron
 
 !----------------------------------------------------------------------------
 !                                   ReferenceTetrahedron_Pointer@Tetrahedron
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ReferenceTetrahedron_Pointer
   MODULE PURE FUNCTION reference_Tetrahedron_Pointer(NSD, XiJ) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     CLASS(ReferenceTetrahedron_), POINTER :: obj
   END FUNCTION reference_Tetrahedron_Pointer
-END INTERFACE
-
-INTERFACE ReferenceTetrahedron_Pointer
-  MODULE PROCEDURE reference_Tetrahedron_Pointer
 END INTERFACE ReferenceTetrahedron_Pointer
-
-PUBLIC :: ReferenceTetrahedron_Pointer
 
 !----------------------------------------------------------------------------
 !                                               LagrangeElement@Tetrahedron
@@ -103,8 +86,6 @@ INTERFACE
   END SUBROUTINE highOrderElement_Tetrahedron
 END INTERFACE
 
-PUBLIC :: highOrderElement_Tetrahedron
-
 !----------------------------------------------------------------------------
 !                                                 MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
@@ -116,8 +97,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex_Tetrahedron
 END INTERFACE
-
-PUBLIC :: Measure_Simplex_Tetrahedron
 
 !----------------------------------------------------------------------------
 !                                                       Tetrahedron_Quality
@@ -132,6 +111,15 @@ INTERFACE
   END FUNCTION Tetrahedron_Quality
 END INTERFACE
 
-PUBLIC :: Tetrahedron_Quality
+!----------------------------------------------------------------------------
+!                                                       TetrahedronVolume3D
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE TetrahedronVolume3D(xij, ans)
+    REAL(DFP), INTENT(IN) :: xij(3, 4)
+    REAL(DFP), INTENT(OUT) :: ans
+  END SUBROUTINE TetrahedronVolume3D
+END INTERFACE
 
 END MODULE ReferenceTetrahedron_Method

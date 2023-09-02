@@ -32,7 +32,7 @@ CONTAINS
 !                                                    GaussLegendreQuadrature
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQP1
+MODULE PROCEDURE GetGaussLegendreQP1
 SELECT TYPE (refelem)
 TYPE IS (ReferenceLine_)
   obj = getGaussLegendreQPLine1(order=order)
@@ -85,13 +85,13 @@ CLASS DEFAULT
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
-END PROCEDURE getGaussLegendreQP1
+END PROCEDURE GetGaussLegendreQP1
 
 !----------------------------------------------------------------------------
 !                                                    GaussLegendreQuadrature
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQP2
+MODULE PROCEDURE GetGaussLegendreQP2
 SELECT TYPE (refelem)
 TYPE IS (ReferenceLine_)
   obj = getGaussLegendreQPLine2(nips=nips)
@@ -144,13 +144,13 @@ CLASS DEFAULT
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
-END PROCEDURE getGaussLegendreQP2
+END PROCEDURE GetGaussLegendreQP2
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE getGaussLegendreQP3
+MODULE PROCEDURE GetGaussLegendreQP3
 SELECT TYPE (refelem)
 TYPE IS (ReferenceLine_)
   obj = getGaussLegendreQPLine1(order=p)
@@ -203,6 +203,6 @@ CLASS DEFAULT
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
-END PROCEDURE getGaussLegendreQP3
+END PROCEDURE GetGaussLegendreQP3
 
 END SUBMODULE GaussLegendreMethods

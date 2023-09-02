@@ -32,13 +32,21 @@ MODULE PROCEDURE Initiate_ref_Hexahedron
 INTEGER(I4B) :: ii, jj
 INTEGER(I4B) :: p1p2(2, 12), lloop(4, 6), vol(8, 1)
 
-p1p2 = EdgeConnectivity_Hexahedron()
-lloop = FacetConnectivity_Hexahedron()
+p1p2 = EdgeConnectivity_Hexahedron( &
+  & baseInterpol="LAGRANGE",  &
+  & baseContinuity="H1")
+
+lloop = FacetConnectivity_Hexahedron( &
+  & baseInterpol="LAGRANGE",  &
+  & baseContinuity="H1")
 
 vol(:, 1) = arange(1_I4B, 8_I4B)
 
-CALL Reallocate(obj%xij, 3, 3)
-obj%xij = RefHexahedronCoord("BIUNIT")
+IF (PRESENT(xij)) THEN
+  obj%xij = xij
+ELSE
+  obj%xij = RefHexahedronCoord("BIUNIT")
+END IF
 
 obj%EntityCounts = [8, 12, 6, 1]
 obj%XiDimension = 3
@@ -99,6 +107,7 @@ END PROCEDURE reference_Hexahedron_Pointer
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE highorderElement_Hexahedron
+! TODO Implement highorderElement_Hexahedron
 END PROCEDURE highorderElement_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -114,11 +123,11 @@ DO iFace = 1, 6
   b = FM(iFace, 3) + 3
   Node0(iFace, 1:Order0(iFace)) = FM(iFace, 4:b)
 END DO
-CALL POLYHEDRONVOLUME3D(coord=XiJ(1:3, 1:8), &
+CALL PolyhedronVolume3d(coord=XiJ(1:3, 1:8), &
   & order_max=4, face_num=6,  &
-  & node=Node0, node_num=8, &
-  & order=Order0, &
-  & volume=Ans)
+  & node=node0, node_num=8, &
+  & order=order0, &
+  & ans=ans)
 END PROCEDURE Measure_Simplex_Hexahedron
 
 !----------------------------------------------------------------------------
@@ -126,12 +135,18 @@ END PROCEDURE Measure_Simplex_Hexahedron
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Hexahedron_quality
+! TODO Implement Hexahedron_quality
 END PROCEDURE Hexahedron_quality
 
 !----------------------------------------------------------------------------
-!
+!                                                       HexahedronVolume3D
 !----------------------------------------------------------------------------
 
-#include "./modified_burkardt.inc"
+MODULE PROCEDURE HexahedronVolume3D
+TYPE(ReferenceHexahedron_) :: refelem
+refelem = ReferenceHexahedron(nsd=3_I4B)
+ans = Measure_Simplex_Hexahedron(refelem=refelem, xij=xij)
+CALL DEALLOCATE (refelem)
+END PROCEDURE HexahedronVolume3D
 
 END SUBMODULE Methods

@@ -211,4 +211,101 @@ MODULE PROCEDURE Repeat_1f
 #include "./Repeat/Repeat_1.inc"
 END PROCEDURE Repeat_1f
 
+!----------------------------------------------------------------------------
+!                                                                     IndexOf
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetIndex1
+Ans = MINLOC(ABS(obj - val), 1)
+END PROCEDURE GetIndex1
+
+!----------------------------------------------------------------------------
+!                                                                     IndexOf
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE GetIndex2
+INTEGER(I4B) :: i, j, m
+LOGICAL(LGT), ALLOCATABLE :: Search(:)
+  !!
+m = SIZE(val)
+ALLOCATE (Search(m), Ans(m))
+Search = .TRUE.
+Ans = 0
+  !!
+DO i = 1, SIZE(obj)
+  DO j = 1, m
+    IF (Search(j)) THEN
+      IF (val(j) .EQ. obj(i)) THEN
+        Search(j) = .FALSE.
+        Ans(j) = i
+      END IF
+    END IF
+  END DO
+END DO
+END PROCEDURE GetIndex2
+
+!----------------------------------------------------------------------------
+!                                                                    Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Get1_Int8
+ans = 0
+IF (indx .LE. SIZE(val)) ans = val(indx)
+END PROCEDURE Get1_Int8
+
+MODULE PROCEDURE Get1_Int16
+ans = 0
+IF (indx .LE. SIZE(val)) ans = val(indx)
+END PROCEDURE Get1_Int16
+
+MODULE PROCEDURE Get1_Int32
+ans = 0
+IF (indx .LE. SIZE(val)) ans = val(indx)
+END PROCEDURE Get1_Int32
+
+MODULE PROCEDURE Get1_Int64
+ans = 0
+IF (indx .LE. SIZE(val)) ans = val(indx)
+END PROCEDURE Get1_Int64
+
+!----------------------------------------------------------------------------
+!                                                                    Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Get2_Int8
+ans = val(indx)
+END PROCEDURE Get2_Int8
+
+MODULE PROCEDURE Get2_Int16
+ans = val(indx)
+END PROCEDURE Get2_Int16
+
+MODULE PROCEDURE Get2_Int32
+ans = val(indx)
+END PROCEDURE Get2_Int32
+
+MODULE PROCEDURE Get2_Int64
+ans = val(indx)
+END PROCEDURE Get2_Int64
+
+!----------------------------------------------------------------------------
+!                                                                    Get
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE Get3_Int8
+ans = val(istart:iend:stride)
+END PROCEDURE Get3_Int8
+
+MODULE PROCEDURE Get3_Int16
+ans = val(istart:iend:stride)
+END PROCEDURE Get3_Int16
+
+MODULE PROCEDURE Get3_Int32
+ans = val(istart:iend:stride)
+END PROCEDURE Get3_Int32
+
+MODULE PROCEDURE Get3_Int64
+ans = val(istart:iend:stride)
+END PROCEDURE Get3_Int64
+
 END SUBMODULE Methods

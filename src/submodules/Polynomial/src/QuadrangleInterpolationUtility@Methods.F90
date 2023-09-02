@@ -13,12 +13,53 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
 
 SUBMODULE(QuadrangleInterpolationUtility) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
+!----------------------------------------------------------------------------
+!                                                   RefElemDomain_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Quadrangle
+ans = "BIUNIT"
+END PROCEDURE RefElemDomain_Quadrangle
+
+!----------------------------------------------------------------------------
+!                                                       FacetConnectivity
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE FacetConnectivity_Quadrangle
+TYPE(String) :: baseInterpol0
+TYPE(String) :: baseContinuity0
+
+baseInterpol0 = UpperCase(baseInterpol)
+baseContinuity0 = UpperCase(baseContinuity)
+
+SELECT CASE (baseInterpol0%chars())
+CASE ( &
+  & "HIERARCHYPOLYNOMIAL", &
+  & "HIERARCHY", &
+  & "HEIRARCHYPOLYNOMIAL", &
+  & "HEIRARCHY", &
+  & "HIERARCHYINTERPOLATION", &
+  & "HEIRARCHYINTERPOLATION", &
+  & "ORTHOGONALPOLYNOMIAL", &
+  & "ORTHOGONAL", &
+  & "ORTHOGONALINTERPOLATION")
+  ans(:, 1) = [1, 2]
+  ans(:, 2) = [4, 3]
+  ans(:, 3) = [1, 4]
+  ans(:, 4) = [2, 3]
+CASE DEFAULT
+  ans(:, 1) = [1, 2]
+  ans(:, 2) = [2, 3]
+  ans(:, 3) = [3, 4]
+  ans(:, 4) = [4, 1]
+END SELECT
+END PROCEDURE FacetConnectivity_Quadrangle
 
 !----------------------------------------------------------------------------
 !                                               QuadratureNumber_Quadrangle
@@ -95,7 +136,7 @@ END PROCEDURE LagrangeDOF_Quadrangle1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeDOF_Quadrangle2
-ans = (p - 1) * (q - 1)
+ans = (p + 1) * (q + 1)
 END PROCEDURE LagrangeDOF_Quadrangle2
 
 !----------------------------------------------------------------------------
@@ -127,7 +168,7 @@ IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x(1:nsd, 1:4) = xij(1:nsd, 1:4)
 ELSE
-  nsd = 3_I4B
+  nsd = 2_I4B
   x = 0.0_DFP
   x(1:2, :) = RefQuadrangleCoord("BIUNIT")
 END IF
@@ -221,7 +262,6 @@ IF (order .GT. 1_I4B) THEN
 
   END IF
 END IF
-
 END PROCEDURE EquidistancePoint_Quadrangle1
 
 !----------------------------------------------------------------------------
@@ -257,11 +297,11 @@ IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x(1:nsd, 1:4) = xij(1:nsd, 1:4)
 ELSE
-  nsd = 3_I4B
-  x(1:nsd, 1) = [-1.0, -1.0, 0.0]
-  x(1:nsd, 2) = [1.0, -1.0, 0.0]
-  x(1:nsd, 3) = [1.0, 1.0, 0.0]
-  x(1:nsd, 4) = [-1.0, 1.0, 0.0]
+  nsd = 2_I4B
+  x(1:nsd, 1) = [-1.0, -1.0]
+  x(1:nsd, 2) = [1.0, -1.0]
+  x(1:nsd, 3) = [1.0, 1.0]
+  x(1:nsd, 4) = [-1.0, 1.0]
 END IF
 
 n = LagrangeInDOF_Quadrangle(order=order)
@@ -907,13 +947,61 @@ END DO
 END PROCEDURE Dubiner_Quadrangle1
 
 !----------------------------------------------------------------------------
+!                                               DubinerGradient_Quadrangle1
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE DubinerGradient_Quadrangle1
+REAL(DFP), DIMENSION(SIZE(xij, 2), order + 1) :: P1, P2, dP1, dP2
+REAL(DFP), DIMENSION(SIZE(xij, 2)) :: avec, bvec, x, y
+REAL(DFP) :: alpha, beta
+INTEGER(I4B) :: k1, k2, max_k2, cnt
+
+x = xij(1, :)
+y = xij(2, :)
+P1 = LegendreEvalAll(n=order, x=x)
+dP1 = LegendreGradientEvalAll(n=order, x=x)
+
+! we do not need x now, so let store (1-y)/2 in x
+x = 0.5_DFP * (1.0_DFP - y)
+alpha = 1.0_DFP
+beta = 0.0_DFP
+cnt = 0
+
+DO k1 = 0, order
+  bvec = x**(MAX(k1 - 1_I4B, 0_I4B))
+  avec = x * bvec
+  alpha = 2.0_DFP * k1 + 1.0_DFP
+
+  max_k2 = order - k1
+
+  P2(:, 1:max_k2 + 1) = JacobiEvalAll( &
+    & n=max_k2, &
+    & x=y, &
+    & alpha=alpha, &
+    & beta=beta)
+
+  dP2(:, 1:max_k2 + 1) = JacobiGradientEvalAll( &
+    & n=max_k2, &
+    & x=y, &
+    & alpha=alpha, &
+    & beta=beta)
+
+  DO k2 = 0, max_k2
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dP1(:, k1 + 1) * avec * P2(:, k2 + 1)
+    ans(:, cnt, 2) = P1(:, k1 + 1) * bvec *  &
+      & (x * dP2(:, k2 + 1) - 0.5_DFP * REAL(k1, DFP) * P2(:, k2 + 1))
+  END DO
+END DO
+END PROCEDURE DubinerGradient_Quadrangle1
+
+!----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Dubiner_Quadrangle2
 REAL(DFP) :: xij(2, SIZE(x) * SIZE(y))
 INTEGER(I4B) :: ii, jj, cnt
-
 xij = 0.0_DFP
 cnt = 0
 DO ii = 1, SIZE(x)
@@ -923,9 +1011,7 @@ DO ii = 1, SIZE(x)
     xij(2, cnt) = y(jj)
   END DO
 END DO
-
 ans = Dubiner_Quadrangle1(order=order, xij=xij)
-
 END PROCEDURE Dubiner_Quadrangle2
 
 !----------------------------------------------------------------------------
@@ -994,6 +1080,7 @@ ans = TensorProdBasis_Quadrangle1( &
   & basisType1=basisType1, &
   & basisType2=basisType2, &
   & alpha1=alpha1, &
+  & alpha2=alpha2, &
   & beta1=beta1, &
   & beta2=beta2, &
   & lambda1=lambda1, &
@@ -1024,6 +1111,21 @@ ans(:, 4) = L1(:, 0) * L2(:, 1)
 END PROCEDURE VertexBasis_Quadrangle2
 
 !----------------------------------------------------------------------------
+!                                           VertexBasisGradient_Quadrangle2
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VertexBasisGradient_Quadrangle2
+ans(:, 1, 1) = dL1(:, 0) * L2(:, 0)
+ans(:, 2, 1) = dL1(:, 1) * L2(:, 0)
+ans(:, 3, 1) = dL1(:, 1) * L2(:, 1)
+ans(:, 4, 1) = dL1(:, 0) * L2(:, 1)
+ans(:, 1, 2) = L1(:, 0) * dL2(:, 0)
+ans(:, 2, 2) = L1(:, 1) * dL2(:, 0)
+ans(:, 3, 2) = L1(:, 1) * dL2(:, 1)
+ans(:, 4, 2) = L1(:, 0) * dL2(:, 1)
+END PROCEDURE VertexBasisGradient_Quadrangle2
+
+!----------------------------------------------------------------------------
 !                                                    VertexBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -1049,12 +1151,12 @@ cnt = 0
 
 DO k2 = 2, qe1
   cnt = cnt + 1
-  ans(:, cnt) = 0.25_DFP * (1.0_DFP - x) * L2(:, k2)
+  ans(:, cnt) = 0.5_DFP * (1.0_DFP - x) * L2(:, k2)
 END DO
 
 DO k2 = 2, qe2
   cnt = cnt + 1
-  ans(:, cnt) = 0.25_DFP * (1.0_DFP + x) * L2(:, k2)
+  ans(:, cnt) = 0.5_DFP * (1.0_DFP + x) * L2(:, k2)
 END DO
 
 END PROCEDURE VerticalEdgeBasis_Quadrangle
@@ -1079,6 +1181,25 @@ END DO
 END PROCEDURE VerticalEdgeBasis_Quadrangle2
 
 !----------------------------------------------------------------------------
+!                                       VerticalEdgeBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE VerticalEdgeBasisGradient_Quadrangle2
+INTEGER(I4B) :: k2, cnt
+cnt = 0
+DO k2 = 2, qe1
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 0) * L2(:, k2)
+  ans(:, cnt, 2) = L1(:, 0) * dL2(:, k2)
+END DO
+DO k2 = 2, qe2
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, 1) * L2(:, k2)
+  ans(:, cnt, 2) = L1(:, 1) * dL2(:, k2)
+END DO
+END PROCEDURE VerticalEdgeBasisGradient_Quadrangle2
+
+!----------------------------------------------------------------------------
 !                                             HorizontalEdgeBasis_Quadrangle
 !----------------------------------------------------------------------------
 
@@ -1094,12 +1215,12 @@ cnt = 0
 
 DO k1 = 2, pe3
   cnt = cnt + 1
-  ans(:, cnt) = 0.25_DFP * (1.0_DFP - y) * L1(:, k1)
+  ans(:, cnt) = 0.5_DFP * (1.0_DFP - y) * L1(:, k1)
 END DO
 
 DO k1 = 2, pe4
   cnt = cnt + 1
-  ans(:, cnt) = 0.25_DFP * (1.0_DFP + y) * L1(:, k1)
+  ans(:, cnt) = 0.5_DFP * (1.0_DFP + y) * L1(:, k1)
 END DO
 
 END PROCEDURE HorizontalEdgeBasis_Quadrangle
@@ -1110,20 +1231,35 @@ END PROCEDURE HorizontalEdgeBasis_Quadrangle
 
 MODULE PROCEDURE HorizontalEdgeBasis_Quadrangle2
 INTEGER(I4B) :: k1, cnt
-
 cnt = 0
-
 DO k1 = 2, pe3
   cnt = cnt + 1
   ans(:, cnt) = L1(:, k1) * L2(:, 0)
 END DO
-
 DO k1 = 2, pe4
   cnt = cnt + 1
   ans(:, cnt) = L1(:, k1) * L2(:, 1)
 END DO
-
 END PROCEDURE HorizontalEdgeBasis_Quadrangle2
+
+!----------------------------------------------------------------------------
+!                                     HorizontalEdgeBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HorizontalEdgeBasisGradient_Quadrangle2
+INTEGER(I4B) :: k1, cnt
+cnt = 0
+DO k1 = 2, pe3
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, k1) * L2(:, 0)
+  ans(:, cnt, 2) = L1(:, k1) * dL2(:, 0)
+END DO
+DO k1 = 2, pe4
+  cnt = cnt + 1
+  ans(:, cnt, 1) = dL1(:, k1) * L2(:, 1)
+  ans(:, cnt, 2) = L1(:, k1) * dL2(:, 1)
+END DO
+END PROCEDURE HorizontalEdgeBasisGradient_Quadrangle2
 
 !----------------------------------------------------------------------------
 !                                                      CellBasis_Quadrangle
@@ -1154,17 +1290,30 @@ END PROCEDURE CellBasis_Quadrangle
 
 MODULE PROCEDURE CellBasis_Quadrangle2
 INTEGER(I4B) :: k1, k2, cnt
-
 cnt = 0
-
 DO k1 = 2, pb
   DO k2 = 2, qb
     cnt = cnt + 1
     ans(:, cnt) = L1(:, k1) * L2(:, k2)
   END DO
 END DO
-
 END PROCEDURE CellBasis_Quadrangle2
+
+!----------------------------------------------------------------------------
+!                                               CellBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE CellBasisGradient_Quadrangle2
+INTEGER(I4B) :: k1, k2, cnt
+cnt = 0
+DO k1 = 2, pb
+  DO k2 = 2, qb
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dL1(:, k1) * L2(:, k2)
+    ans(:, cnt, 2) = L1(:, k1) * dL2(:, k2)
+  END DO
+END DO
+END PROCEDURE CellBasisGradient_Quadrangle2
 
 !----------------------------------------------------------------------------
 !                                              HeirarchicalBasis_Quadrangle
@@ -1407,6 +1556,7 @@ ans = QuadraturePoint_Quadrangle2( &
   & quadType1=quadType, &
   & quadType2=quadType, &
   & xij=xij, &
+  & refQuadrangle=refQuadrangle, &
   & alpha1=alpha, &
   & beta1=beta, &
   & lambda1=lambda, &
@@ -1424,6 +1574,9 @@ MODULE PROCEDURE QuadraturePoint_Quadrangle2
 ! internal variables
 REAL(DFP), ALLOCATABLE :: x(:, :), y(:, :), temp(:, :)
 INTEGER(I4B) :: ii, jj, kk, nsd, np, nq
+TYPE(String) :: astr
+
+astr = TRIM(UpperCase(refQuadrangle))
 
 x = QuadraturePoint_Line( &
   & order=p, &
@@ -1473,9 +1626,17 @@ IF (PRESENT(xij)) THEN
     & x2=xij(:, 2), &
     & x3=xij(:, 3), &
     & x4=xij(:, 4))
-  ans(nsd + 1, :) = temp(3, :)
+  ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
+    &  from="BIUNIT", to="QUADRANGLE", xij=xij)
 ELSE
-  ans = temp
+  IF (astr%chars() .EQ. "UNIT") THEN
+    ans(1:nsd, :) = FromBiUnitQuadrangle2UnitQuadrangle( &
+      & xin=temp(1:2, :))
+    ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
+      &  from="BIUNIT", to="UNIT", xij=xij)
+  ELSE
+    ans = temp
+  END IF
 END IF
 
 IF (ALLOCATED(temp)) DEALLOCATE (temp)
@@ -1494,6 +1655,7 @@ ans = QuadraturePoint_Quadrangle4( &
   & nipsy=nips, &
   & quadType1=quadType, &
   & quadType2=quadType, &
+  & refQuadrangle=refQuadrangle, &
   & xij=xij, &
   & alpha1=alpha, &
   & beta1=beta, &
@@ -1512,6 +1674,9 @@ MODULE PROCEDURE QuadraturePoint_Quadrangle4
 ! internal variables
 REAL(DFP) :: x(2, nipsx(1)), y(2, nipsy(1)), temp(3, nipsy(1) * nipsx(1))
 INTEGER(I4B) :: ii, jj, kk, nsd, np, nq
+TYPE(String) :: astr
+
+astr = TRIM(UpperCase(refQuadrangle))
 
 x = QuadraturePoint_Line( &
   & nips=nipsx, &
@@ -1560,12 +1725,262 @@ IF (PRESENT(xij)) THEN
     & x2=xij(:, 2), &
     & x3=xij(:, 3), &
     & x4=xij(:, 4))
-  ans(nsd + 1, :) = temp(3, :)
+  ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
+    &  from="BIUNIT", to="QUADRANGLE", xij=xij)
 ELSE
-  ans = temp
+  IF (astr%chars() .EQ. "UNIT") THEN
+    ans(1:nsd, :) = FromBiUnitQuadrangle2UnitQuadrangle( &
+      & xin=temp(1:2, :))
+    ans(nsd + 1, :) = temp(3, :) * JacobianQuadrangle( &
+      &  from="BIUNIT", to="UNIT", xij=xij)
+  ELSE
+    ans = temp
+  END IF
 END IF
 
 END PROCEDURE QuadraturePoint_Quadrangle4
+
+!----------------------------------------------------------------------------
+!                                       LagrangeGradientEvalAll_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Quadrangle1
+LOGICAL(LGT) :: firstCall0
+INTEGER(I4B) :: ii, basisType0, tdof, ai, bi
+INTEGER(I4B) :: degree(SIZE(xij, 2), 2)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), &
+  & xx(SIZE(x, 2), SIZE(xij, 2), 2), ar, br
+
+basisType0 = INPUT(default=Monomial, option=basisType)
+firstCall0 = INPUT(default=.TRUE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    coeff = LagrangeCoeff_Quadrangle(&
+      & order=order, &
+      & xij=xij, &
+      & basisType=basisType0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda &
+      & )
+    coeff0 = coeff
+  ELSE
+    coeff0 = coeff
+  END IF
+ELSE
+  coeff0 = LagrangeCoeff_Quadrangle(&
+    & order=order, &
+    & xij=xij, &
+    & basisType=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & )
+END IF
+
+SELECT CASE (basisType0)
+
+CASE (Monomial)
+
+  degree = LagrangeDegree_Quadrangle(order=order)
+  tdof = SIZE(xij, 2)
+
+  IF (tdof .NE. SIZE(degree, 1)) THEN
+    CALL Errormsg(&
+      & msg="tdof is not same as size(degree,1)", &
+      & file=__FILE__, &
+      & routine="LagrangeEvalAll_Quadrangle1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+  END IF
+
+  DO ii = 1, tdof
+    ai = MAX(degree(ii, 1_I4B) - 1_I4B, 0_I4B)
+    bi = MAX(degree(ii, 2_I4B) - 1_I4B, 0_I4B)
+    ar = REAL(degree(ii, 1_I4B), DFP)
+    br = REAL(degree(ii, 2_I4B), DFP)
+    xx(:, ii, 1) = (ar * x(1, :)**ai) * x(2, :)**degree(ii, 2)
+    xx(:, ii, 2) = x(1, :)**degree(ii, 1) * (br * x(2, :)**bi)
+  END DO
+
+CASE (Heirarchical)
+
+  xx = HeirarchicalBasisGradient_Quadrangle( &
+    & p=order,  &
+    & q=order,  &
+    & xij=x)
+
+CASE DEFAULT
+
+  xx = OrthogonalBasisGradient_Quadrangle( &
+    & p=order, &
+    & q=order, &
+    & xij=x,  &
+    & basisType1=basisType0, &
+    & basisType2=basisType0, &
+    & alpha1=alpha, &
+    & beta1=beta, &
+    & lambda1=lambda, &
+    & alpha2=alpha, &
+    & beta2=beta, &
+    & lambda2=lambda)
+
+END SELECT
+
+DO ii = 1, 2
+  ! ans(:, ii, :) = TRANSPOSE(MATMUL(xx(:, :, ii), coeff0))
+  ans(:, :, ii) = MATMUL(xx(:, :, ii), coeff0)
+END DO
+
+END PROCEDURE LagrangeGradientEvalAll_Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                       HeirarchicalBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Quadrangle1
+INTEGER(I4B) :: a, b, maxP, maxQ
+REAL(DFP) :: L1(1:SIZE(xij, 2), 0:MAX(pe3, pe4, pb))
+REAL(DFP) :: L2(1:SIZE(xij, 2), 0:MAX(qe1, qe2, qb))
+REAL(DFP) :: dL1(1:SIZE(xij, 2), 0:MAX(pe3, pe4, pb))
+REAL(DFP) :: dL2(1:SIZE(xij, 2), 0:MAX(qe1, qe2, qb))
+
+maxP = MAX(pe3, pe4, pb)
+maxQ = MAX(qe1, qe2, qb)
+
+L1 = LobattoEvalAll(n=maxP, x=xij(1, :))
+L2 = LobattoEvalAll(n=maxQ, x=xij(2, :))
+dL1 = LobattoGradientEvalAll(n=maxP, x=xij(1, :))
+dL2 = LobattoGradientEvalAll(n=maxQ, x=xij(2, :))
+
+! Vertex basis function
+ans(:, 1:4, 1:2) = VertexBasisGradient_Quadrangle2( &
+& L1=L1, &
+& L2=L2,  &
+& dL1=dL1, &
+& dL2=dL2  &
+& )
+
+! Edge basis function
+b = 4
+IF (qe1 .GE. 2_I4B .OR. qe2 .GE. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + qe1 + qe2 - 2 !4+qe1 + qe2 - 2
+  ans(:, a:b, 1:2) = VerticalEdgeBasisGradient_Quadrangle2( &
+    & qe1=qe1, &
+    & qe2=qe2, &
+    & L1=L1, &
+    & L2=L2, &
+    & dL1=dL1, &
+    & dL2=dL2 &
+    & )
+END IF
+
+! Edge basis function
+IF (pe3 .GE. 2_I4B .OR. pe4 .GE. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + pe3 + pe4 - 2 !4+pe3 + pe4 - 2
+  ans(:, a:b, 1:2) = HorizontalEdgeBasisGradient_Quadrangle2( &
+    & pe3=pe3, &
+    & pe4=pe4, &
+    & L1=L1, &
+    & L2=L2,  &
+    & dL1=dL1, &
+    & dL2=dL2  &
+    & )
+END IF
+
+! Cell basis function
+IF (pb .GE. 2_I4B .OR. qb .GE. 2_I4B) THEN
+  a = b + 1
+  b = a - 1 + (pb - 1) * (qb - 1)
+  ans(:, a:b, 1:2) = CellBasisGradient_Quadrangle2( &
+  & pb=pb, &
+  & qb=qb, &
+  & L1=L1, &
+  & L2=L2,  &
+  & dL1=dL1, &
+  & dL2=dL2  &
+  & )
+END IF
+END PROCEDURE HeirarchicalBasisGradient_Quadrangle1
+
+!----------------------------------------------------------------------------
+!                                       HeirarchicalBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE HeirarchicalBasisGradient_Quadrangle2
+ans = HeirarchicalBasisGradient_Quadrangle1( &
+  & pb=p,  &
+  & pe3=p,  &
+  & pe4=p, &
+  & qb=q,  &
+  & qe1=q, &
+  & qe2=q,  &
+  & xij=xij)
+END PROCEDURE HeirarchicalBasisGradient_Quadrangle2
+
+!----------------------------------------------------------------------------
+!                                       TensorProdBasisGradient_Quadrangle
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorProdBasisGradient_Quadrangle1
+REAL(DFP) :: x(SIZE(xij, 2)), y(SIZE(xij, 2))
+REAL(DFP) :: P1(SIZE(xij, 2), p + 1), Q1(SIZE(xij, 2), q + 1)
+REAL(DFP) :: dP1(SIZE(xij, 2), p + 1), dQ1(SIZE(xij, 2), q + 1)
+INTEGER(I4B) :: ii, k1, k2, cnt
+
+x = xij(1, :)
+y = xij(2, :)
+
+P1 = BasisEvalAll_Line( &
+  & order=p, &
+  & x=x, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha1, &
+  & beta=beta1, &
+  & lambda=lambda1)
+
+Q1 = BasisEvalAll_Line( &
+  & order=q, &
+  & x=y, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha2, &
+  & beta=beta2, &
+  & lambda=lambda2)
+
+dP1 = BasisGradientEvalAll_Line( &
+  & order=p, &
+  & x=x, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha1, &
+  & beta=beta1, &
+  & lambda=lambda1)
+
+dQ1 = BasisGradientEvalAll_Line( &
+  & order=q, &
+  & x=y, &
+  & refLine="BIUNIT", &
+  & basisType=basisType1,  &
+  & alpha=alpha2, &
+  & beta=beta2, &
+  & lambda=lambda2)
+
+cnt = 0
+
+DO k2 = 1, q + 1
+  DO k1 = 1, p + 1
+    cnt = cnt + 1
+    ans(:, cnt, 1) = dP1(:, k1) * Q1(:, k2)
+    ans(:, cnt, 2) = P1(:, k1) * dQ1(:, k2)
+  END DO
+END DO
+
+END PROCEDURE TensorProdBasisGradient_Quadrangle1
 
 !----------------------------------------------------------------------------
 !                                               QuadraturePoint_Quadrangle3

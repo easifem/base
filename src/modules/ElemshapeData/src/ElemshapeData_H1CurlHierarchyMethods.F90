@@ -15,13 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_H1CurlHierarchyMethods
+MODULE ElemshapeData_H1CurlHierarchyMethods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-private :: Initiate
+PRIVATE :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                    Initiate@H1CurlHierarchy
@@ -42,7 +42,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
-    CLASS(H1Curl_), INTENT(IN) :: continuityType
+    CLASS(HCurl_), INTENT(IN) :: continuityType
     CLASS(HierarchyInterpolation_), INTENT(IN) :: interpolType
   END SUBROUTINE H1Curl_Hierarchy
 END INTERFACE
@@ -51,4 +51,4 @@ INTERFACE Initiate
   MODULE PROCEDURE H1Curl_Hierarchy
 END INTERFACE Initiate
 
-end module ElemshapeData_H1CurlHierarchyMethods
+END MODULE ElemshapeData_H1CurlHierarchyMethods

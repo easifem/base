@@ -30,6 +30,7 @@ PUBLIC :: ReferenceHexahedron_Pointer
 PUBLIC :: highorderElement_Hexahedron
 PUBLIC :: Measure_Simplex_Hexahedron
 PUBLIC :: Hexahedron_Quality
+PUBLIC :: HexahedronVolume3D
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@Hexahedron
@@ -108,6 +109,17 @@ INTERFACE
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Hexahedron_quality
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                       HexahedronVolume3D
+!----------------------------------------------------------------------------
+
+INTERFACE
+  MODULE PURE SUBROUTINE HexahedronVolume3D(xij, ans)
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    REAL(DFP), INTENT(OUT) :: ans
+  END SUBROUTINE HexahedronVolume3D
 END INTERFACE
 
 END MODULE ReferenceHexahedron_Method

@@ -13,7 +13,11 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-!
+
+MODULE IntVector_EnquireMethod
+USE Basetype, ONLY: IntVector_
+USE GlobalData, ONLY: DFP, I4B, LGT, INT8, INT16, INT32, INT64
+PRIVATE
 
 PUBLIC :: OPERATOR(.in.)
 PUBLIC :: isPresent
@@ -29,16 +33,16 @@ PUBLIC :: isInitiated
 ! update: 2021-11-11
 ! summary: Returns true if the instance is allocated
 
-INTERFACE
+INTERFACE isAllocated
   MODULE PURE FUNCTION intVec_isAllocated(obj) RESULT(Ans)
     CLASS(IntVector_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
   END FUNCTION intVec_isAllocated
-END INTERFACE
-
-INTERFACE isAllocated
-  MODULE PROCEDURE intVec_isAllocated
 END INTERFACE isAllocated
+
+INTERFACE Allocated
+  MODULE PROCEDURE intVec_isAllocated
+END INTERFACE Allocated
 
 INTERFACE isInitiated
   MODULE PROCEDURE intVec_isAllocated
@@ -53,17 +57,13 @@ END INTERFACE isInitiated
 ! update: 2021-11-11
 ! summary: Returns true if a integer set is inside another
 
-INTERFACE
+INTERFACE OPERATOR(.in.)
   MODULE PURE FUNCTION intVec_in1(obj1, obj2) RESULT(Ans)
     CLASS(IntVector_), INTENT(IN) :: obj1
     CLASS(IntVector_), INTENT(IN) :: obj2
     LOGICAL(LGT) :: ans
   END FUNCTION intVec_in1
 END INTERFACE
-
-INTERFACE OPERATOR(.in.)
-  MODULE PROCEDURE intVec_in1
-END INTERFACE OPERATOR(.in.)
 
 !----------------------------------------------------------------------------
 !                                             Operator(.in.)@EnquireMethods
@@ -74,68 +74,54 @@ END INTERFACE OPERATOR(.in.)
 ! update: 2021-11-11
 ! summary: Returns true if a integer set is inside another
 
-INTERFACE
-  !!
+INTERFACE OPERATOR(.in.)
   MODULE PURE FUNCTION intVec_in2a(a, obj) RESULT(Ans)
-    INTEGER( Int8 ), INTENT( IN ) :: a
+    INTEGER(INT8), INTENT(IN) :: a
     CLASS(IntVector_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
   END FUNCTION intVec_in2a
-  !!
+
   MODULE PURE FUNCTION intVec_in2b(a, obj) RESULT(Ans)
-    INTEGER( Int16 ), INTENT( IN ) :: a
+    INTEGER(INT16), INTENT(IN) :: a
     CLASS(IntVector_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
   END FUNCTION intVec_in2b
-  !!
+
   MODULE PURE FUNCTION intVec_in2c(a, obj) RESULT(Ans)
-    INTEGER( Int32 ), INTENT( IN ) :: a
+    INTEGER(INT32), INTENT(IN) :: a
     CLASS(IntVector_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
   END FUNCTION intVec_in2c
-  !!
+
   MODULE PURE FUNCTION intVec_in2d(a, obj) RESULT(Ans)
-    INTEGER( Int64 ), INTENT( IN ) :: a
+    INTEGER(INT64), INTENT(IN) :: a
     CLASS(IntVector_), INTENT(IN) :: obj
     LOGICAL(LGT) :: ans
   END FUNCTION intVec_in2d
-  !!
-END INTERFACE
-
-INTERFACE OPERATOR(.in.)
-  MODULE PROCEDURE intVec_in2a, intVec_in2b, intVec_in2c, intVec_in2d
 END INTERFACE OPERATOR(.in.)
 
 !----------------------------------------------------------------------------
 !                                                   isPresent@EnquireMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE isPresent
   MODULE PURE FUNCTION intVec_isPresent1(obj, VALUE) RESULT(Ans)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: VALUE
     LOGICAL(LGT) :: Ans
   END FUNCTION intVec_isPresent1
-END INTERFACE
-
-
-INTERFACE isPresent
-  MODULE PROCEDURE intVec_isPresent1
 END INTERFACE isPresent
 
 !----------------------------------------------------------------------------
 !                                                        isPresent@getMethod
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE isPresent
   MODULE PURE FUNCTION intVec_isPresent2(obj, VALUE) RESULT(Ans)
     CLASS(IntVector_), INTENT(IN) :: obj
     INTEGER(I4B), INTENT(IN) :: VALUE(:)
     LOGICAL(LGT), ALLOCATABLE :: Ans(:)
   END FUNCTION intVec_isPresent2
-END INTERFACE
-
-INTERFACE isPresent
-  MODULE PROCEDURE intVec_isPresent2
 END INTERFACE isPresent
 
+END MODULE IntVector_EnquireMethod

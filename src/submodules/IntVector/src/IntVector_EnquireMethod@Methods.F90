@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(IntVector_Method) EnquireMethods
+SUBMODULE(IntVector_EnquireMethod) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -25,11 +25,11 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_isAllocated
-  IF (ALLOCATED(obj%Val)) THEN
-    ans = .TRUE.
-  ELSE
-    ans = .FALSE.
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  ans = .TRUE.
+ELSE
+  ans = .FALSE.
+END IF
 END PROCEDURE intVec_isAllocated
 
 !----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ END PROCEDURE intVec_isAllocated
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_in1
-  ans = obj1%val.in.obj2%val
+ans = obj1%val.in.obj2%val
 END PROCEDURE intVec_in1
 
 !----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ END PROCEDURE intVec_in1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_in2a
-  ans = ANY(a .EQ. obj%val)
+ans = ANY(a .EQ. obj%val)
 END PROCEDURE intVec_in2a
 
 !----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ END PROCEDURE intVec_in2a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_in2b
-  ans = ANY(a .EQ. obj%val)
+ans = ANY(a .EQ. obj%val)
 END PROCEDURE intVec_in2b
 
 !----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ END PROCEDURE intVec_in2b
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_in2c
-  ans = ANY(a .EQ. obj%val)
+ans = ANY(a .EQ. obj%val)
 END PROCEDURE intVec_in2c
 
 !----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ END PROCEDURE intVec_in2c
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_in2d
-  ans = ANY(a .EQ. obj%val)
+ans = ANY(a .EQ. obj%val)
 END PROCEDURE intVec_in2d
 
 !----------------------------------------------------------------------------
@@ -77,14 +77,14 @@ END PROCEDURE intVec_in2d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_isPresent1
-  INTEGER(I4B) :: i
-  Ans = .FALSE.
-  DO i = 1, SIZE(obj%Val)
-    IF (obj%Val(i) .EQ. VALUE) THEN
-      Ans = .TRUE.
-      EXIT
-    END IF
-  END DO
+INTEGER(I4B) :: i
+Ans = .FALSE.
+DO i = 1, SIZE(obj%Val)
+  IF (obj%Val(i) .EQ. VALUE) THEN
+    Ans = .TRUE.
+    EXIT
+  END IF
+END DO
 END PROCEDURE intVec_isPresent1
 
 !----------------------------------------------------------------------------
@@ -92,23 +92,23 @@ END PROCEDURE intVec_isPresent1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_isPresent2
-  INTEGER(I4B) :: i, m, j
-  LOGICAL(LGT), ALLOCATABLE :: Search(:)
-  m = SIZE(VALUE)
-  ALLOCATE (Ans(m), Search(m))
-  Search = .TRUE.
-  Ans = .FALSE.
+INTEGER(I4B) :: i, m, j
+LOGICAL(LGT), ALLOCATABLE :: Search(:)
+m = SIZE(VALUE)
+ALLOCATE (Ans(m), Search(m))
+Search = .TRUE.
+Ans = .FALSE.
   !!
-  DO i = 1, SIZE(obj%Val)
-    DO j = 1, m
-      IF (Search(j)) THEN
-        IF (VALUE(j) .EQ. obj%Val(i)) THEN
-          Search(j) = .FALSE.
-          Ans(j) = .TRUE.
-        END IF
+DO i = 1, SIZE(obj%Val)
+  DO j = 1, m
+    IF (Search(j)) THEN
+      IF (VALUE(j) .EQ. obj%Val(i)) THEN
+        Search(j) = .FALSE.
+        Ans(j) = .TRUE.
       END IF
-    END DO
+    END IF
   END DO
+END DO
   !!
 END PROCEDURE intVec_isPresent2
 
@@ -116,4 +116,4 @@ END PROCEDURE intVec_isPresent2
 !
 !----------------------------------------------------------------------------
 
-END SUBMODULE EnquireMethods
+END SUBMODULE Methods

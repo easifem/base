@@ -30,8 +30,8 @@ PUBLIC :: ReferenceQuadrangle_Pointer
 PUBLIC :: highorderElement_Quadrangle
 PUBLIC :: Measure_Simplex_Quadrangle
 PUBLIC :: Quadrangle_Quality
-PUBLIC :: QuadArea3D
-PUBLIC :: QuadArea2D
+PUBLIC :: QuadArea3D, QuadrangleArea3D
+PUBLIC :: QuadArea2D, QuadrangleArea2D
 PUBLIC :: QuadrangleName
 
 !----------------------------------------------------------------------------
@@ -171,12 +171,12 @@ END INTERFACE
 !- This algorithm computes the area of the related Varignon parallelogram
 ! first.
 
-INTERFACE
-  MODULE PURE SUBROUTINE QuadArea3D(q, area)
+INTERFACE QuadrangleArea3D
+  MODULE PURE SUBROUTINE QuadArea3D(q, ans)
     REAL(DFP), INTENT(IN) :: q(3, 4)
-    REAL(DFP), INTENT(OUT) :: area
+    REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE QuadArea3D
-END INTERFACE
+END INTERFACE QuadrangleArea3D
 
 !-----------------------------------------------------------------------------
 !
@@ -194,11 +194,11 @@ END INTERFACE
 ! The vertices of the quadrilateral should be listed in counter clockwise
 ! order, so that the area is positive.
 
-INTERFACE
-  MODULE PURE SUBROUTINE QuadArea2D(q, area)
+INTERFACE QuadrangleArea2D
+  MODULE PURE SUBROUTINE QuadArea2D(q, ans)
     REAL(DFP), INTENT(IN) :: q(2, 4)
-    REAL(DFP), INTENT(OUT) :: area
+    REAL(DFP), INTENT(OUT) :: ans
   END SUBROUTINE QuadArea2D
-END INTERFACE
+END INTERFACE QuadrangleArea2D
 
 END MODULE ReferenceQuadrangle_Method

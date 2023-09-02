@@ -17,8 +17,58 @@
 
 MODULE PyramidInterpolationUtility
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
+PUBLIC :: LagrangeDegree_Pyramid
+PUBLIC :: LagrangeDOF_Pyramid
+PUBLIC :: LagrangeInDOF_Pyramid
+PUBLIC :: EquidistanceInPoint_Pyramid
+PUBLIC :: EquidistancePoint_Pyramid
+PUBLIC :: InterpolationPoint_Pyramid
+PUBLIC :: LagrangeCoeff_Pyramid
+PUBLIC :: QuadraturePoint_Pyramid
+PUBLIC :: TensorQuadraturePoint_Pyramid
+PUBLIC :: RefCoord_Pyramid
+PUBLIC :: RefElemDomain_Pyramid
+PUBLIC :: LagrangeEvalAll_Pyramid
+PUBLIC :: LagrangeGradientEvalAll_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                     RefElemDomain_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain_Pyramid(baseContinuity, baseInterpol) &
+    & RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain_Pyramid
+END INTERFACE
+
+!----------------------------------------------------------------------------
+!                                                          RefCoord_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary:  Reference Coordinates of pyramid
+
+INTERFACE
+  MODULE PURE FUNCTION RefCoord_Pyramid(refPyramid) RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: refPyramid
+    REAL(DFP) :: ans(3, 5)
+  END FUNCTION RefCoord_Pyramid
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeDegree_Pyramid
@@ -35,8 +85,6 @@ INTERFACE
   END FUNCTION LagrangeDegree_Pyramid
 END INTERFACE
 
-PUBLIC :: LagrangeDegree_Pyramid
-
 !----------------------------------------------------------------------------
 !                                                       LagrangeDOF_Pyramid
 !----------------------------------------------------------------------------
@@ -52,8 +100,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeDOF_Pyramid
 END INTERFACE
-
-PUBLIC :: LagrangeDOF_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                     LagrangeInDOF_Pyramid
@@ -76,8 +122,6 @@ INTERFACE
     INTEGER(I4B) :: ans
   END FUNCTION LagrangeInDOF_Pyramid
 END INTERFACE
-
-PUBLIC :: LagrangeInDOF_Pyramid
 
 !----------------------------------------------------------------------------
 !                                           EquidistanceInPoint_Pyramid
@@ -105,8 +149,6 @@ INTERFACE
   !! returned coordinates in $x_{iJ}$ format
   END FUNCTION EquidistanceInPoint_Pyramid
 END INTERFACE
-
-PUBLIC :: EquidistanceInPoint_Pyramid
 
 !----------------------------------------------------------------------------
 !                                              EquidistancePoint_Pyramid
@@ -138,8 +180,6 @@ INTERFACE
   END FUNCTION EquidistancePoint_Pyramid
 END INTERFACE
 
-PUBLIC :: EquidistancePoint_Pyramid
-
 !----------------------------------------------------------------------------
 !                                            InterpolationPoint_Pyramid
 !----------------------------------------------------------------------------
@@ -149,22 +189,26 @@ PUBLIC :: EquidistancePoint_Pyramid
 ! summary:         Interpolation point on Pyramid
 
 INTERFACE
-  MODULE PURE FUNCTION InterpolationPoint_Pyramid(order, ipType, &
-    & layout, xij) RESULT(nodecoord)
+  MODULE PURE FUNCTION InterpolationPoint_Pyramid( &
+    & order, &
+    & ipType, &
+    & layout, &
+    & xij,  &
+    & alpha, beta, lambda) RESULT(nodecoord)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of element
     INTEGER(I4B), INTENT(IN) :: ipType
     !! interpolation points
-    CHARACTER(LEN=*), INTENT(IN) :: layout
+    CHARACTER(*), INTENT(IN) :: layout
     !! layout
     REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
     !! coords of vertices in $x_{iJ}$ format
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! Alpha, beta, and lambda
     REAL(DFP), ALLOCATABLE :: nodecoord(:, :)
     !! interpolation points in $x_{iJ}$ format
   END FUNCTION InterpolationPoint_Pyramid
 END INTERFACE
-
-PUBLIC :: InterpolationPoint_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                  LagrangeCoeff_Pyramid
@@ -186,8 +230,6 @@ END INTERFACE
 INTERFACE LagrangeCoeff_Pyramid
   MODULE PROCEDURE LagrangeCoeff_Pyramid1
 END INTERFACE LagrangeCoeff_Pyramid
-
-PUBLIC :: LagrangeCoeff_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                   LagrangeCoeff_Pyramid
@@ -254,6 +296,325 @@ END INTERFACE
 INTERFACE LagrangeCoeff_Pyramid
   MODULE PROCEDURE LagrangeCoeff_Pyramid4
 END INTERFACE LagrangeCoeff_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                    QuadraturePoints_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary:  quadrature points on Pyramid
+
+INTERFACE QuadraturePoint_Pyramid
+  MODULE FUNCTION QuadraturePoint_Pyramid1(&
+    & order, &
+    & quadType, &
+    & refPyramid, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refPyramid
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be  3.
+    !! The number of columns in xij should be 4
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION QuadraturePoint_Pyramid1
+END INTERFACE QuadraturePoint_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                     QuadraturePoints_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary:  quadrature points on Pyramid
+
+INTERFACE QuadraturePoint_Pyramid
+  MODULE FUNCTION QuadraturePoint_Pyramid2(&
+    & nips, &
+    & quadType, &
+    & refPyramid, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nips(1)
+    !! nips(1) .LE. 79, then we call
+    !! economical quadrature rules.
+    !! Otherwise, this routine will retport
+    !! error
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type,
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refPyramid
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be 3
+    !! The number of columns in xij should be 4
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION QuadraturePoint_Pyramid2
+END INTERFACE QuadraturePoint_Pyramid
+
+!----------------------------------------------------------------------------
+!                                               TensorQuadraturePoints_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary: Tensor based quadrature points on Pyramid
+
+INTERFACE TensorQuadraturePoint_Pyramid
+  MODULE FUNCTION TensorQuadraturePoint_Pyramid1(order, quadType, &
+    & refPyramid, xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of integrand
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refPyramid
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij can be 4.
+    !! The number of columns in xij should be 4
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION TensorQuadraturePoint_Pyramid1
+END INTERFACE TensorQuadraturePoint_Pyramid
+
+!----------------------------------------------------------------------------
+!                                            TensorQuadraturePoints_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-20
+! summary: Tensor based quadrature points
+
+INTERFACE TensorQuadraturePoint_Pyramid
+  MODULE FUNCTION TensorQuadraturePoint_Pyramid2( &
+    & nipsx, &
+    & nipsy, &
+    & nipsz, &
+    & quadType, &
+    & refPyramid, &
+    & xij) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: nipsx(1)
+    !! number of integration points in x direction
+    INTEGER(I4B), INTENT(IN) :: nipsy(1)
+    !! number of integration points in y direction
+    INTEGER(I4B), INTENT(IN) :: nipsz(1)
+    !! number of integration points in z direction
+    INTEGER(I4B), INTENT(IN) :: quadType
+    !! quadrature point type
+    !! currently this variable is not used
+    CHARACTER(*), INTENT(IN) :: refPyramid
+    !! Reference triangle
+    !! BIUNIT
+    !! UNIT
+    REAL(DFP), OPTIONAL, INTENT(IN) :: xij(:, :)
+    !! nodal coordinates of triangle.
+    !! The number of rows in xij should be 3
+    !! The number of columns in xij should be 4
+    REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! Quadrature points
+  END FUNCTION TensorQuadraturePoint_Pyramid2
+END INTERFACE TensorQuadraturePoint_Pyramid
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  Evaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeEvalAll_Pyramid
+  MODULE FUNCTION LagrangeEvalAll_Pyramid1( &
+    & order, &
+    & x, &
+    & xij, &
+    & refPyramid, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(3)
+    !! point of evaluation
+    !! x(1) is x coord
+    !! x(2) is y coord
+    !! x(3) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    !! The number of rows in xij is 3
+    !! The number of columns in xij should be equal to total
+    !! degree of freedom
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPyramid
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be computed and returned
+    !! by this routine.
+    !! If firstCall is False, then coeff should be given, which will be
+    !! used.
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Pyramid1
+END INTERFACE LagrangeEvalAll_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                LagrangeEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  Evaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeEvalAll_Pyramid
+  MODULE FUNCTION LagrangeEvalAll_Pyramid2( &
+    & order, &
+    & x, &
+    & xij, &
+    & refPyramid, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPyramid
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
+    !! Value of n+1 Lagrange polynomials at point x
+  END FUNCTION LagrangeEvalAll_Pyramid2
+END INTERFACE LagrangeEvalAll_Pyramid
+
+!----------------------------------------------------------------------------
+!                                       LagrangeGradientEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-23
+! summary:  GradientEvaluate all Lagrange polynomials at several points
+
+INTERFACE LagrangeGradientEvalAll_Pyramid
+  MODULE FUNCTION LagrangeGradientEvalAll_Pyramid1( &
+    & order, &
+    & x, &
+    & xij, &
+    & refPyramid, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda &
+    & ) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! Point of evaluation
+    !! x(1, :) is x coord
+    !! x(2, :) is y coord
+    !! x(3, :) is z coord
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! Interpolation points
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: refPyramid
+    !! UNIT *default
+    !! BIUNIT
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomials *Default
+    !! Legendre
+    !! Lobatto
+    !! Chebyshev
+    !! Jacobi
+    !! Ultraspherical
+    !! Heirarchical
+    !! Orthogonal
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 3)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number 
+    !! The third index denotes the spatial dimension in which gradient is 
+    !! computed
+  END FUNCTION LagrangeGradientEvalAll_Pyramid1
+END INTERFACE LagrangeGradientEvalAll_Pyramid
 
 !----------------------------------------------------------------------------
 !

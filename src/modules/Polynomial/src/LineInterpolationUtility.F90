@@ -17,6 +17,7 @@
 
 MODULE LineInterpolationUtility
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 
@@ -29,11 +30,36 @@ PUBLIC :: EquidistancePoint_Line
 PUBLIC :: InterpolationPoint_Line
 PUBLIC :: LagrangeCoeff_Line
 PUBLIC :: LagrangeEvalAll_Line
+PUBLIC :: LagrangeGradientEvalAll_Line
 PUBLIC :: BasisEvalAll_Line
+PUBLIC :: BasisGradientEvalAll_Line
 PUBLIC :: RefLineCoord
+PUBLIC :: RefCoord_Line
 PUBLIC :: QuadraturePoint_Line
 PUBLIC :: ToVEFC_Line
 PUBLIC :: QuadratureNumber_Line
+PUBLIC :: RefElemDomain_Line
+
+!----------------------------------------------------------------------------
+!                                                       RefElemDomain_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-07-03
+! summary:  Returns the coordinate of reference element
+
+INTERFACE
+  MODULE FUNCTION RefElemDomain_Line(baseContinuity, baseInterpol) &
+    & RESULT(ans)
+    CHARACTER(*), INTENT(IN) :: baseContinuity
+    !! Cointinuity (conformity) of basis functions
+    !! "H1", "HDiv", "HCurl", "DG"
+    CHARACTER(*), INTENT(IN) :: baseInterpol
+    !! Basis function family for Interpolation
+    !! Lagrange, Hierarchy, Serendipity, Hermit, Orthogonal
+    TYPE(String) :: ans
+  END FUNCTION RefElemDomain_Line
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                      QuadratureNumber_Line
@@ -73,14 +99,14 @@ END INTERFACE
 ! date:  2023-07-03
 ! summary:  Returns the coordinate of reference triangle
 
-INTERFACE
+INTERFACE RefCoord_Line
   MODULE PURE FUNCTION RefLineCoord(refLine) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: refLine
     !! "unit"
     !! "biunit"
     REAL(DFP) :: ans(1, 2)
   END FUNCTION RefLineCoord
-END INTERFACE
+END INTERFACE RefCoord_Line
 
 !----------------------------------------------------------------------------
 !                                                       LagrangeDegree_Line
@@ -161,16 +187,16 @@ END INTERFACE
 !
 !# Introduction
 !
-!- This function returns the equidistance points on edge
+!- This function returns the equidistance points on edge in 1D
 !- All points are inside the interval
 !- Points are in increasing order
 
 INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Line1(order, xij) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
-  !! order
+    !! order
     REAL(DFP), INTENT(IN) :: xij(2)
-  !! coordinates of point 1 and point 2
+    !! coordinates of point 1 and point 2
     REAL(DFP), ALLOCATABLE :: ans(:)
   END FUNCTION EquidistanceInPoint_Line1
 END INTERFACE
@@ -185,12 +211,16 @@ END INTERFACE EquidistanceInPoint_Line
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 14 Aug 2022
-! summary:         Returns equidistance points on edge
+! summary: Returns equidistance points on edge
 !
 !# Introduction
 !
-!- This function returns the equidistance points on edge
+!- This function returns the equidistance points on edge in 1D, 2D, 3D
+!- The end points are specified by `xij(1:nsd, 1)` and `xij(1:nsd, 2)`
+!
 !- All points are inside the interval
+!- The number of space components in `ans` is nsd if xij present
+!- Otherwise, the number of space components in `ans` is 1.
 
 INTERFACE
   MODULE PURE FUNCTION EquidistanceInPoint_Line2(order, xij) RESULT(ans)
@@ -201,7 +231,9 @@ INTERFACE
   !! number of rows = nsd
   !! number of cols = 2
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-  !! returned coordinates in $x_{iJ}$ format
+  !! Equidistnace points in $x_{iJ}$ format
+  !! The number of rows is equal to the number of rows in xij
+  !! (if xij present), otherwise, it is 1.
   END FUNCTION EquidistanceInPoint_Line2
 END INTERFACE
 
@@ -258,6 +290,9 @@ INTERFACE EquidistancePoint_Line
     !! number of cols = 2
     REAL(DFP), ALLOCATABLE :: ans(:, :)
     !! equidistance points in $x_{iJ}$ format
+    !! If xij is not present, then number of rows in ans
+    !! is 1. If `xij` is present then the number of rows in
+    !! ans is  same as xij.
   END FUNCTION EquidistancePoint_Line2
 END INTERFACE EquidistancePoint_Line
 
@@ -440,13 +475,13 @@ END INTERFACE LagrangeCoeff_Line
 !----------------------------------------------------------------------------
 
 INTERFACE LagrangeCoeff_Line
-  MODULE FUNCTION LagrangeCoeff_Line5(order, xij, orthopol, alpha, &
+  MODULE FUNCTION LagrangeCoeff_Line5(order, xij, basisType, alpha, &
     & beta, lambda) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial, it should be SIZE(xij,2)-1
     REAL(DFP), INTENT(IN) :: xij(:, :)
     !! points in xij format, size(xij,2) = order+1
-    INTEGER(I4B), INTENT(IN) :: orthopol
+    INTEGER(I4B), INTENT(IN) :: basisType
     !! Monomial
     !! Jacobi
     !! Legendre
@@ -459,7 +494,7 @@ INTERFACE LagrangeCoeff_Line
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(order + 1, order + 1)
+    REAL(DFP) :: ans(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficients
     !! jth column of ans corresponds to the coeff of lagrange polynomial
     !! at the jth point
@@ -476,21 +511,21 @@ END INTERFACE LagrangeCoeff_Line
 
 INTERFACE LagrangeEvalAll_Line
   MODULE FUNCTION LagrangeEvalAll_Line1(order, x, xij, coeff, firstCall, &
-    & orthopol, alpha, beta, lambda) &
+    & basisType, alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
     REAL(DFP), INTENT(IN) :: x
     !! point of evaluation
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! interpolation points
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: orthopol
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomial
     !! Jacobi
     !! Legendre
@@ -503,7 +538,7 @@ INTERFACE LagrangeEvalAll_Line
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(order + 1)
+    REAL(DFP) :: ans(SIZE(xij, 2))
     !! Value of n+1 Lagrange polynomials at point x
   END FUNCTION LagrangeEvalAll_Line1
 END INTERFACE LagrangeEvalAll_Line
@@ -517,22 +552,28 @@ END INTERFACE LagrangeEvalAll_Line
 ! summary: Evaluate Lagrange polynomials of n at several points
 
 INTERFACE LagrangeEvalAll_Line
-  MODULE FUNCTION LagrangeEvalAll_Line2(order, x, xij, coeff, firstCall, &
-    & orthopol, alpha, beta, lambda) &
+  MODULE FUNCTION LagrangeEvalAll_Line2( &
+    & order, x, xij, coeff, firstCall, &
+    & basisType, alpha, beta, lambda) &
     & RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: order
     !! order of Lagrange polynomials
-    REAL(DFP), INTENT(IN) :: x(:)
-    !! point of evaluation
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: xij(1, order + 1)
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    !! size(xij, 1) = nsd
+    !! size(xij, 2) = number of points
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
     !! interpolation points
-    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(order + 1, order + 1)
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
     !! coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
     !! If firstCall is true, then coeff will be made
     !! If firstCall is False, then coeff will be used
     !! Default value of firstCall is True
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: orthopol
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Monomial
     !! Jacobi
     !! Legendre
@@ -545,7 +586,7 @@ INTERFACE LagrangeEvalAll_Line
     !! Jacobi polynomial parameter
     REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
     !! Ultraspherical parameter
-    REAL(DFP) :: ans(SIZE(x), order + 1)
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2))
     !! Value of n+1 Lagrange polynomials at point x
     !! ans(:, j) is the value of jth polynomial at x points
     !! ans(i, :) is the value of all polynomials at x(i) point
@@ -553,12 +594,66 @@ INTERFACE LagrangeEvalAll_Line
 END INTERFACE LagrangeEvalAll_Line
 
 !----------------------------------------------------------------------------
+!                                               LagrangeGradientEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate Lagrange polynomials of n at several points
+
+INTERFACE LagrangeGradientEvalAll_Line
+  MODULE FUNCTION LagrangeGradientEvalAll_Line1( &
+    & order, &
+    & x, &
+    & xij, &
+    & coeff, &
+    & firstCall, &
+    & basisType, &
+    & alpha, beta, lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of Lagrange polynomials
+    REAL(DFP), INTENT(IN) :: x(:, :)
+    !! point of evaluation in xij format
+    REAL(DFP), INTENT(INOUT) :: xij(:, :)
+    !! interpolation points
+    !! xij should be present when firstCall is true.
+    !! It is used for computing the coeff
+    !! If coeff is absent then xij should be present
+    REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(SIZE(xij, 2), SIZE(xij, 2))
+    !! coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x, 2), SIZE(xij, 2), 1)
+    !! Value of gradient of nth order Lagrange polynomials at point x
+    !! The first index denotes point of evaluation
+    !! the second index denotes Lagrange polynomial number
+    !! The third index denotes the spatial dimension in which gradient is
+    !! computed
+  END FUNCTION LagrangeGradientEvalAll_Line1
+END INTERFACE LagrangeGradientEvalAll_Line
+
+!----------------------------------------------------------------------------
 !                                                          BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluate polynomials of order n at single points
+! summary: Evaluate basis functions of order upto n
 
 INTERFACE BasisEvalAll_Line
   MODULE FUNCTION BasisEvalAll_Line1( &
@@ -595,12 +690,54 @@ INTERFACE BasisEvalAll_Line
 END INTERFACE BasisEvalAll_Line
 
 !----------------------------------------------------------------------------
+!                                                 BasisGradientEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate gradient of basis functions of order upto n
+
+INTERFACE BasisGradientEvalAll_Line
+  MODULE FUNCTION BasisGradientEvalAll_Line1( &
+    & order, &
+    & x, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! Refline should be  BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(order + 1)
+    !! Value of n+1  polynomials at point x
+  END FUNCTION BasisGradientEvalAll_Line1
+END INTERFACE BasisGradientEvalAll_Line
+
+!----------------------------------------------------------------------------
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluate  polynomials of n at several points
+! summary: Evaluate basis functions of order upto n
 
 INTERFACE BasisEvalAll_Line
   MODULE FUNCTION BasisEvalAll_Line2( &
@@ -638,6 +775,51 @@ INTERFACE BasisEvalAll_Line
     !! ans(i, :) is the value of all polynomials at x(i) point
   END FUNCTION BasisEvalAll_Line2
 END INTERFACE BasisEvalAll_Line
+
+!----------------------------------------------------------------------------
+!                                                         BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluateu gradient of basis functions of order upto n
+
+INTERFACE BasisGradientEvalAll_Line
+  MODULE FUNCTION BasisGradientEvalAll_Line2( &
+    & order, &
+    & x, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x(:)
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT
+    !! BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(x), order + 1)
+    !! Value of n+1  polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+  END FUNCTION BasisGradientEvalAll_Line2
+END INTERFACE BasisGradientEvalAll_Line
 
 !----------------------------------------------------------------------------
 !                                                      QuadraturePoint_Line

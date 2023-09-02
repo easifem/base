@@ -36,11 +36,11 @@ END PROCEDURE Initiate_ref_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Prism
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( obj, NSD )
-  END IF
+IF (PRESENT(XiJ)) THEN
+  CALL Initiate(obj, NSD, XiJ)
+ELSE
+  CALL Initiate(obj, NSD)
+END IF
 END PROCEDURE reference_Prism
 
 !----------------------------------------------------------------------------
@@ -48,12 +48,12 @@ END PROCEDURE reference_Prism
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Prism_Pointer
-  ALLOCATE( obj )
-  IF( PRESENT( XiJ ) ) THEN
-    CALL Initiate( obj, NSD, XiJ )
-  ELSE
-    CALL Initiate( obj, NSD )
-  END IF
+ALLOCATE (obj)
+IF (PRESENT(XiJ)) THEN
+  CALL Initiate(obj, NSD, XiJ)
+ELSE
+  CALL Initiate(obj, NSD)
+END IF
 END PROCEDURE reference_Prism_Pointer
 
 !----------------------------------------------------------------------------
@@ -68,19 +68,19 @@ END PROCEDURE highOrderElement_Prism
 !-----------------------------------------------------------------------------
 
 MODULE PROCEDURE Measure_Simplex_Prism
-  INTEGER( I4B ) :: FM( 5, 7 ), Node0( 5, 4 ), Order0( 5 ), b, iFace
+INTEGER(I4B) :: fm(5, 7), node0(5, 4), order0(5), b, iface
 
-  FM = FacetMatrix(RefElem)
-  DO iFace = 1, 5
-    Order0( iFace ) = FM( iFace, 3 )
-    b = Order0( iFace ) + 3
-    Node0( iFace, 1:Order0( iFace ) ) = FM( iFace, 4 : b )
-  END DO
-  CALL POLYHEDRONVOLUME3D( coord = XiJ( 1:3, 1:6 ), &
-    & order_max = 4, face_num = 5,  &
-    & node = Node0, node_num = 6, &
-    & order = Order0, &
-    & volume = Ans )
+fm = FacetMatrix(refelem)
+DO iface = 1, 5
+  order0(iface) = fm(iface, 3)
+  b = order0(iface) + 3
+  node0(iface, 1:order0(iface)) = fm(iface, 4:b)
+END DO
+CALL POLYHEDRONVOLUME3D(coord=XiJ(1:3, 1:6), &
+  & order_max=4, face_num=5,  &
+  & node=node0, node_num=6, &
+  & order=order0, &
+  & ans=ans)
 END PROCEDURE Measure_Simplex_Prism
 
 !----------------------------------------------------------------------------
@@ -94,5 +94,35 @@ END PROCEDURE Prism_quality
 !
 !----------------------------------------------------------------------------
 
-#include "./modified_burkardt.inc"
+MODULE PROCEDURE PolyhedronVolume3D
+INTEGER(I4B), PARAMETER :: dim_num = 3
+INTEGER(I4B) :: iFace
+INTEGER(I4B) :: n1
+INTEGER(I4B) :: n2
+INTEGER(I4B) :: n3
+INTEGER(I4B) :: v
+
+ans = 0.0_DFP
+! Triangulate each iFace.
+DO iface = 1, face_num
+  n3 = node(iface, order(iface))
+  DO v = 1, order(iface) - 2
+    n1 = node(iface, v)
+    n2 = node(iface, v + 1)
+    ans = ans &
+          + coord(1, n1) &
+          * (coord(2, n2) * coord(3, n3) - coord(2, n3) * coord(3, n2)) &
+          + coord(1, n2) &
+          * (coord(2, n3) * coord(3, n1) - coord(2, n1) * coord(3, n3)) &
+          + coord(1, n3) &
+          * (coord(2, n1) * coord(3, n2) - coord(2, n2) * coord(3, n1))
+  END DO
+END DO
+ans = ans / 6.0_DFP
+END PROCEDURE PolyhedronVolume3D
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
+
 END SUBMODULE Methods

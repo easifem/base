@@ -20,7 +20,7 @@
 ! date:         25 Feb 2021
 ! summary: This submodule implements get methods of [[IntVector_]]
 
-SUBMODULE(IntVector_Method) GetMethods
+SUBMODULE(IntVector_GetMethod) Methods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -30,9 +30,9 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_1
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = IntVector(obj%Val)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = IntVector(obj%Val)
+END IF
 END PROCEDURE intVec_get_1
 
 !----------------------------------------------------------------------------
@@ -40,9 +40,9 @@ END PROCEDURE intVec_get_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_2
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = IntVector(obj%Val(Indx))
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = IntVector(obj%Val(Indx))
+END IF
 END PROCEDURE intVec_get_2
 
 !----------------------------------------------------------------------------
@@ -50,12 +50,12 @@ END PROCEDURE intVec_get_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_3
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = IntVector(obj%Val( &
-      & istart:&
-      & Input(default=size(obj), option=iend):&
-      & Input(option=stride, default=1)))
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = IntVector(obj%Val( &
+    & istart:&
+    & Input(default=SIZE(obj), option=iend):&
+    & Input(option=stride, default=1)))
+END IF
 END PROCEDURE intVec_get_3
 
 !----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ END PROCEDURE intVec_get_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_4
-  Val = IntVector(get(obj, TypeInt))
+Val = IntVector(get(obj, TypeInt))
 END PROCEDURE intVec_get_4
 
 !----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ END PROCEDURE intVec_get_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_5
-  Val = IntVector(get(obj, Indx, TypeInt))
+Val = IntVector(get(obj, Indx, TypeInt))
 END PROCEDURE intVec_get_5
 
 !----------------------------------------------------------------------------
@@ -79,8 +79,8 @@ END PROCEDURE intVec_get_5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_6
-  Val = IntVector(get(obj, iStart, iEnd, Stride, &
-    & TypeInt))
+Val = IntVector(get(obj, iStart, iEnd, Stride, &
+  & TypeInt))
 END PROCEDURE intVec_get_6
 
 !----------------------------------------------------------------------------
@@ -88,24 +88,24 @@ END PROCEDURE intVec_get_6
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_7a
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val
+END IF
 END PROCEDURE intVec_get_7a
 MODULE PROCEDURE intVec_get_7b
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val
+END IF
 END PROCEDURE intVec_get_7b
 MODULE PROCEDURE intVec_get_7c
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val
+END IF
 END PROCEDURE intVec_get_7c
 MODULE PROCEDURE intVec_get_7d
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val
+END IF
 END PROCEDURE intVec_get_7d
 
 !----------------------------------------------------------------------------
@@ -113,27 +113,27 @@ END PROCEDURE intVec_get_7d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_8a
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val(Indx)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val(Indx)
+END IF
 END PROCEDURE intVec_get_8a
 
 MODULE PROCEDURE intVec_get_8b
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val(Indx)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val(Indx)
+END IF
 END PROCEDURE intVec_get_8b
 
 MODULE PROCEDURE intVec_get_8c
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val(Indx)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val(Indx)
+END IF
 END PROCEDURE intVec_get_8c
 
 MODULE PROCEDURE intVec_get_8d
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val(Indx)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val(Indx)
+END IF
 END PROCEDURE intVec_get_8d
 
 !----------------------------------------------------------------------------
@@ -141,27 +141,27 @@ END PROCEDURE intVec_get_8d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_9a
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val(iStart:iEnd:Stride)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val(iStart:iEnd:Stride)
+END IF
 END PROCEDURE intVec_get_9a
 
 MODULE PROCEDURE intVec_get_9b
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val(iStart:iEnd:Stride)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val(iStart:iEnd:Stride)
+END IF
 END PROCEDURE intVec_get_9b
 
 MODULE PROCEDURE intVec_get_9c
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val(iStart:iEnd:Stride)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val(iStart:iEnd:Stride)
+END IF
 END PROCEDURE intVec_get_9c
 
 MODULE PROCEDURE intVec_get_9d
-  IF (ALLOCATED(obj%Val)) THEN
-    Val = obj%Val(iStart:iEnd:Stride)
-  END IF
+IF (ALLOCATED(obj%Val)) THEN
+  Val = obj%Val(iStart:iEnd:Stride)
+END IF
 END PROCEDURE intVec_get_9d
 
 !----------------------------------------------------------------------------
@@ -169,16 +169,16 @@ END PROCEDURE intVec_get_9d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_10a
-#include "./intvec_get_10.inc"
+#include "./include/intvec_get_10.inc"
 END PROCEDURE intVec_get_10a
 MODULE PROCEDURE intVec_get_10b
-#include "./intvec_get_10.inc"
+#include "./include/intvec_get_10.inc"
 END PROCEDURE intVec_get_10b
 MODULE PROCEDURE intVec_get_10c
-#include "./intvec_get_10.inc"
+#include "./include/intvec_get_10.inc"
 END PROCEDURE intVec_get_10c
 MODULE PROCEDURE intVec_get_10d
-#include "./intvec_get_10.inc"
+#include "./include/intvec_get_10.inc"
 END PROCEDURE intVec_get_10d
 
 !----------------------------------------------------------------------------
@@ -186,16 +186,16 @@ END PROCEDURE intVec_get_10d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_11a
-#include "./intvec_get_11.inc"
+#include "./include/intvec_get_11.inc"
 END PROCEDURE intVec_get_11a
 MODULE PROCEDURE intVec_get_11b
-#include "./intvec_get_11.inc"
+#include "./include/intvec_get_11.inc"
 END PROCEDURE intVec_get_11b
 MODULE PROCEDURE intVec_get_11c
-#include "./intvec_get_11.inc"
+#include "./include/intvec_get_11.inc"
 END PROCEDURE intVec_get_11c
 MODULE PROCEDURE intVec_get_11d
-#include "./intvec_get_11.inc"
+#include "./include/intvec_get_11.inc"
 END PROCEDURE intVec_get_11d
 
 !----------------------------------------------------------------------------
@@ -203,16 +203,16 @@ END PROCEDURE intVec_get_11d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_12a
-#include "./intvec_get_12.inc"
+#include "./include/intvec_get_12.inc"
 END PROCEDURE intVec_get_12a
 MODULE PROCEDURE intVec_get_12b
-#include "./intvec_get_12.inc"
+#include "./include/intvec_get_12.inc"
 END PROCEDURE intVec_get_12b
 MODULE PROCEDURE intVec_get_12c
-#include "./intvec_get_12.inc"
+#include "./include/intvec_get_12.inc"
 END PROCEDURE intVec_get_12c
 MODULE PROCEDURE intVec_get_12d
-#include "./intvec_get_12.inc"
+#include "./include/intvec_get_12.inc"
 END PROCEDURE intVec_get_12d
 
 !----------------------------------------------------------------------------
@@ -220,16 +220,16 @@ END PROCEDURE intVec_get_12d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_get_13a
-#include "./intvec_get_13.inc"
+#include "./include/intvec_get_13.inc"
 END PROCEDURE intVec_get_13a
 MODULE PROCEDURE intVec_get_13b
-#include "./intvec_get_13.inc"
+#include "./include/intvec_get_13.inc"
 END PROCEDURE intVec_get_13b
 MODULE PROCEDURE intVec_get_13c
-#include "./intvec_get_13.inc"
+#include "./include/intvec_get_13.inc"
 END PROCEDURE intVec_get_13c
 MODULE PROCEDURE intVec_get_13d
-#include "./intvec_get_13.inc"
+#include "./include/intvec_get_13.inc"
 END PROCEDURE intVec_get_13d
 
 !----------------------------------------------------------------------------
@@ -237,7 +237,7 @@ END PROCEDURE intVec_get_13d
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getPointer_1
-  Val => obj
+Val => obj
 END PROCEDURE intVec_getPointer_1
 
 !----------------------------------------------------------------------------
@@ -245,7 +245,7 @@ END PROCEDURE intVec_getPointer_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getPointer_2
-  Val => obj%Val
+Val => obj%Val
 END PROCEDURE intVec_getPointer_2
 
 !----------------------------------------------------------------------------
@@ -253,7 +253,7 @@ END PROCEDURE intVec_getPointer_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getIndex1
-  Ans = MINLOC(ABS(obj%Val - val), 1)
+Ans = MINLOC(ABS(obj%Val - val), 1)
 END PROCEDURE intVec_getIndex1
 
 !----------------------------------------------------------------------------
@@ -261,60 +261,24 @@ END PROCEDURE intVec_getIndex1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE intVec_getIndex2
-  !! Ans = MINLOC( ABS( obj%Val - Value ), 1 )
-  INTEGER(I4B) :: i, j, m
-  LOGICAL(LGT), ALLOCATABLE :: Search(:)
-  !!
-  m = SIZE(val)
-  ALLOCATE (Search(m), Ans(m))
-  Search = .TRUE.
-  Ans = 0
-  !!
-  DO i = 1, SIZE(obj%Val)
-    DO j = 1, m
-      IF (Search(j)) THEN
-        IF (val(j) .EQ. obj%Val(i)) THEN
-          Search(j) = .FALSE.
-          Ans(j) = i
-        END IF
+INTEGER(I4B) :: i, j, m
+LOGICAL(LGT), ALLOCATABLE :: Search(:)
+!
+m = SIZE(val)
+ALLOCATE (Search(m), Ans(m))
+Search = .TRUE.
+Ans = 0
+
+DO i = 1, SIZE(obj%Val)
+  DO j = 1, m
+    IF (Search(j)) THEN
+      IF (val(j) .EQ. obj%Val(i)) THEN
+        Search(j) = .FALSE.
+        Ans(j) = i
       END IF
-    END DO
+    END IF
   END DO
-  !!
+END DO
 END PROCEDURE intVec_getIndex2
 
-!----------------------------------------------------------------------------
-!                                                                     IndexOf
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE intVec_getIndex3
-  Ans = MINLOC(ABS(obj - val), 1)
-END PROCEDURE intVec_getIndex3
-
-!----------------------------------------------------------------------------
-!                                                                     IndexOf
-!----------------------------------------------------------------------------
-
-MODULE PROCEDURE intVec_getIndex4
-  !! Ans = MINLOC( ABS( obj%Val - Value ), 1 )
-  INTEGER(I4B) :: i, j, m
-  LOGICAL(LGT), ALLOCATABLE :: Search(:)
-  !!
-  m = SIZE(val)
-  ALLOCATE (Search(m), Ans(m))
-  Search = .TRUE.
-  Ans = 0
-  !!
-  DO i = 1, SIZE(obj)
-    DO j = 1, m
-      IF (Search(j)) THEN
-        IF (val(j) .EQ. obj(i)) THEN
-          Search(j) = .FALSE.
-          Ans(j) = i
-        END IF
-      END IF
-    END DO
-  END DO
-END PROCEDURE intVec_getIndex4
-
-END SUBMODULE GetMethods
+END SUBMODULE Methods

@@ -31,31 +31,33 @@ REAL(DFP) :: avar
 REAL(DFP), PARAMETER :: xij(2) = [0.0_DFP, 1.0_DFP]
 INTEGER(I4B), ALLOCATABLE :: indices(:, :)
 REAL(DFP), ALLOCATABLE :: x(:)
-!!
+
 n = order
 x = InterpolationPoint_Line( &
   & order=order, &
   & ipType=ipType, &
   & xij=xij, &
-  & layout="INCREASING")
-!!
+  & layout="INCREASING", &
+  & alpha=alpha, &
+  & beta=beta, &
+  & lambda=lambda)
+
 indices = GetMultiIndices(n=n, d=d)
 CALL Reallocate(ans, SIZE(indices, 1), SIZE(indices, 2))
-!!
+
 DO jj = 1, SIZE(ans, 2)
   aindx = indices(:, jj) + 1
   avar = x(aindx(1)) + x(aindx(2))
   ans(1, jj) = x(aindx(1)) / avar
   ans(2, jj) = x(aindx(2)) / avar
 END DO
-!!
+
 IF (PRESENT(domain)) THEN
   ans = Coord_Map(x=ans, from="BaryCentric", to=domain)
 END IF
-!!
+
 IF (ALLOCATED(indices)) DEALLOCATE (indices)
 IF (ALLOCATED(x)) DEALLOCATE (x)
-!!
 END PROCEDURE RecursiveNode1D
 
 !----------------------------------------------------------------------------
@@ -69,41 +71,38 @@ INTEGER(I4B) :: aindx(d + 1), indx(d)
 REAL(DFP) :: xi, xt, b(d + 1), bs(d), Xn(order + 1)
 REAL(DFP) :: BX(2, order + 1, order + 1)
 INTEGER(I4B), ALLOCATABLE :: indices(:, :)
-!!
+
 n = order
-CALL BarycentericNodeFamily1D(order=order, ipType=ipType, ans=BX, &
-  & Xn=Xn)
-!!
+CALL BarycentericNodeFamily1D( &
+  & order=order, &
+  & ipType=ipType, &
+  & ans=BX, &
+  & Xn=Xn,  &
+  & alpha=alpha, beta=beta, lambda=lambda)
+
 indices = GetMultiIndices(n=n, d=d)
 CALL Reallocate(ans, SIZE(indices, 1), SIZE(indices, 2))
-!!
+
 DO jj = 1, SIZE(ans, 2)
-  !!
   aindx = indices(:, jj)
   xt = 0.0_DFP
-  !!
+
   DO ii = 1, d + 1
-    !!
     indx = Pop(aindx, ii)
     bs = BX(:, indx(1) + 1, indx(2) + 1)
-    b = Push(vec=bs, value=0.0_DFP, pos=ii)
+    b = Push(vec=bs, VALUE=0.0_DFP, pos=ii)
     xi = Xn(SUM(indx) + 1)
     xt = xt + xi
     ans(1:d + 1, jj) = ans(1:d + 1, jj) + xi * b
-    !!
   END DO
-  !!
   ans(:, jj) = ans(:, jj) / xt
-  !!
 END DO
-!!
+
 IF (PRESENT(domain)) THEN
   ans = Coord_Map(x=ans, from="BaryCentric", to=domain)
 END IF
-!!
-!!
+
 IF (ALLOCATED(indices)) DEALLOCATE (indices)
-!!
 END PROCEDURE RecursiveNode2D
 
 !----------------------------------------------------------------------------
@@ -117,52 +116,62 @@ INTEGER(I4B) :: aindx(d + 1), indx(d)
 REAL(DFP) :: xi, xt, b(d + 1), bs(d), Xn(order + 1)
 REAL(DFP) :: BX(3, order + 1, order + 1, order + 1)
 INTEGER(I4B), ALLOCATABLE :: indices(:, :)
-!!
+
 n = order
-CALL BarycentericNodeFamily2D(order=order, ipType=ipType, ans=BX, Xn=Xn)
-!
+CALL BarycentericNodeFamily2D(order=order, ipType=ipType, ans=BX, Xn=Xn, &
+  & alpha=alpha, &
+  & beta=beta, &
+  & lambda=lambda)
+
 indices = GetMultiIndices(n=n, d=d)
 CALL Reallocate(ans, SIZE(indices, 1), SIZE(indices, 2))
 ans = 0.0_DFP
-!!
+
 DO jj = 1, SIZE(ans, 2)
-  !!
+
   aindx = indices(:, jj)
   xt = 0.0_DFP
-  !!
+
   DO ii = 1, d + 1
-    !!
+
     indx = Pop(aindx, ii)
     bs = BX(:, indx(1) + 1, indx(2) + 1, indx(3) + 1)
-    b = Push(vec=bs, value=0.0_DFP, pos=ii)
+    b = Push(vec=bs, VALUE=0.0_DFP, pos=ii)
     xi = Xn(SUM(indx) + 1)
     xt = xt + xi
     ans(:, jj) = ans(:, jj) + xi * b
-    !!
+
   END DO
-  !!
+
   ans(:, jj) = ans(:, jj) / xt
-  !!
+
 END DO
-!!
+
 IF (PRESENT(domain)) THEN
   ans = Coord_Map(x=ans, from="BaryCentric", to=domain)
 END IF
-!!
+
 IF (ALLOCATED(indices)) DEALLOCATE (indices)
-!!
+
 END PROCEDURE RecursiveNode3D
 
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE BarycentericNodeFamily1D(order, ipType, ans, Xn)
+SUBROUTINE BarycentericNodeFamily1D(order, ipType, ans, Xn, alpha,  &
+  & beta, lambda)
   INTEGER(I4B), INTENT(IN) :: order
   INTEGER(I4B), INTENT(IN) :: ipType
   REAL(DFP), INTENT(OUT) :: ans(2, order + 1, order + 1)
   REAL(DFP), INTENT(OUT) :: Xn(order + 1)
-  !!
+  REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+  REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+  REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
+  !
   INTEGER(I4B) :: ii, jj, n
   INTEGER(I4B), PARAMETER :: d = 1_I4B
   REAL(DFP), ALLOCATABLE :: BXn(:, :)
@@ -171,7 +180,8 @@ SUBROUTINE BarycentericNodeFamily1D(order, ipType, ans, Xn)
   DO ii = 0, order
     n = ii
     indices = GetMultiIndices(n=n, d=d)
-    BXn = RecursiveNode1D(order=n, ipType=ipType)
+    BXn = RecursiveNode1D(order=n, ipType=ipType, &
+    & alpha=alpha, beta=beta, lambda=lambda)
     !!
     DO jj = 1, n + 1
       ans(1:d + 1, indices(1, jj) + 1, indices(2, jj) + 1) = BXn(1:d + 1, jj)
@@ -190,11 +200,17 @@ END SUBROUTINE BarycentericNodeFamily1D
 !
 !----------------------------------------------------------------------------
 
-SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn)
+SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn, alpha, beta, lambda)
   INTEGER(I4B), INTENT(IN) :: order
   INTEGER(I4B), INTENT(IN) :: ipType
   REAL(DFP), INTENT(OUT) :: ans(3, order + 1, order + 1, order + 1)
   REAL(DFP), INTENT(OUT) :: Xn(order + 1)
+  REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+  REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+  REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter
   !!
   INTEGER(I4B) :: ii, jj, n
   INTEGER(I4B), PARAMETER :: d = 2_I4B
@@ -206,7 +222,7 @@ SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn)
   DO ii = 0, order
     n = ii
     indices = GetMultiIndices(n=n, d=d)
-    BXn = RecursiveNode2D(order=n, ipType=ipType)
+    BXn = RecursiveNode2D(order=n, ipType=ipType, alpha=alpha, beta=beta, lambda=lambda )
     !!
     DO jj = 1, SIZE(BXn, 2)
       ans(1:3, &
@@ -218,7 +234,7 @@ SUBROUTINE BarycentericNodeFamily2D(order, ipType, ans, Xn)
   END DO
   !!
   Xn = InterpolationPoint_Line(order=order, ipType=ipType, xij=xij, &
-    & layout="INCREASING")
+    & layout="INCREASING", alpha=alpha, beta=beta, lambda=lambda)
   !!
   ! IF (order .GT. 1) THEN
   !   avar = Xn(2)

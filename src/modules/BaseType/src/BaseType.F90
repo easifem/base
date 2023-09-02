@@ -104,7 +104,7 @@ PUBLIC :: BoundingBoxPointer_
 ! date: 25 Feb 2021
 ! summary: A data type for an Array of rank 2 of real numbers
 !
-!{!pages/RealMatrix_.md!}
+!{!pages/docs-api/RealMatrix/RealMatrix_.md!}
 
 TYPE :: RealMatrix_
   INTEGER(I4B) :: tDimension = 0_I4B
@@ -116,7 +116,7 @@ PUBLIC :: RealMatrix_
 
 TYPE(RealMatrix_), PUBLIC, PARAMETER :: &
   & TypeRealMatrix = RealMatrix_( &
-    & Val=NULL())
+  & Val=NULL())
 
 TYPE :: RealMatrixPointer_
   CLASS(RealMatrix_), POINTER :: ptr => NULL()
@@ -1151,6 +1151,10 @@ PUBLIC :: BaseInterpolation_
 !                                                     LagrangeInterpolation_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Lagrange basis functions
+
 TYPE, EXTENDS(BaseInterpolation_) :: LagrangeInterpolation_
 END TYPE LagrangeInterpolation_
 
@@ -1162,6 +1166,10 @@ TYPE(LagrangeInterpolation_), PARAMETER, PUBLIC :: &
 !----------------------------------------------------------------------------
 !                                                       HermitInterpolation_
 !----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Hermit basis functions
 
 TYPE, EXTENDS(BaseInterpolation_) :: HermitInterpolation_
 END TYPE HermitInterpolation_
@@ -1175,6 +1183,10 @@ TYPE(HermitInterpolation_), PARAMETER, PUBLIC :: &
 !                                                  SerendipityInterpolation_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Serendipity basis functions
+
 TYPE, EXTENDS(BaseInterpolation_) :: SerendipityInterpolation_
 END TYPE SerendipityInterpolation_
 
@@ -1187,6 +1199,10 @@ TYPE(SerendipityInterpolation_), PARAMETER, PUBLIC :: &
 !                                                    HierarchyInterpolation_
 !----------------------------------------------------------------------------
 
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Hierarchical basis functions
+
 TYPE, EXTENDS(BaseInterpolation_) :: HierarchyInterpolation_
 END TYPE HierarchyInterpolation_
 
@@ -1194,6 +1210,22 @@ PUBLIC :: HierarchyInterpolation_
 
 TYPE(HierarchyInterpolation_), PARAMETER, PUBLIC :: &
   & TypeHierarchyInterpolation = HierarchyInterpolation_()
+
+!----------------------------------------------------------------------------
+!                                                    OrthogonalInterpolation_
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-08-09
+! summary: Orthogonal basis functions
+
+TYPE, EXTENDS(BaseInterpolation_) :: OrthogonalInterpolation_
+END TYPE OrthogonalInterpolation_
+
+PUBLIC :: OrthogonalInterpolation_
+
+TYPE(OrthogonalInterpolation_), PARAMETER, PUBLIC :: &
+  & TypeOrthogonalInterpolation = OrthogonalInterpolation_()
 
 !----------------------------------------------------------------------------
 !                                                          BaseContinuity_
@@ -1204,8 +1236,8 @@ END TYPE BaseContinuity_
 
 PUBLIC :: BaseContinuity_
 
-TYPE(BaseContinuity_), PARAMETER, PUBLIC :: &
-  & TypeBaseContinuity = BaseContinuity_()
+TYPE(BaseContinuity_), PARAMETER, PUBLIC :: TypeBaseContinuity  &
+  & = BaseContinuity_()
 
 !----------------------------------------------------------------------------
 !                                                                     H1_
@@ -1216,32 +1248,29 @@ END TYPE H1_
 
 PUBLIC :: H1_
 
-TYPE(H1_), PARAMETER, PUBLIC :: &
-  & TypeH1 = H1_()
+TYPE(H1_), PARAMETER, PUBLIC :: TypeH1 = H1_()
 
 !----------------------------------------------------------------------------
 !                                                                   H1DIV_
 !----------------------------------------------------------------------------
 
-TYPE, EXTENDS(BaseContinuity_) :: H1DIV_
-END TYPE H1DIV_
+TYPE, EXTENDS(BaseContinuity_) :: HDIV_
+END TYPE HDIV_
 
-PUBLIC :: H1DIV_
+PUBLIC :: HDIV_
 
-TYPE(H1DIV_), PARAMETER, PUBLIC :: &
-  & TypeH1DIV = H1DIV_()
+TYPE(HDIV_), PARAMETER, PUBLIC :: TypeHDIV = HDIV_()
 
 !----------------------------------------------------------------------------
-!                                                                   H1CURL_
+!                                                                   HCURL_
 !----------------------------------------------------------------------------
 
-TYPE, EXTENDS(BaseContinuity_) :: H1CURL_
-END TYPE H1CURL_
+TYPE, EXTENDS(BaseContinuity_) :: HCURL_
+END TYPE HCURL_
 
-PUBLIC :: H1CURL_
+PUBLIC :: HCURL_
 
-TYPE(H1CURL_), PARAMETER, PUBLIC :: &
-  & TypeH1CURL = H1CURL_()
+TYPE(HCURL_), PARAMETER, PUBLIC :: TypeHCURL = HCURL_()
 
 !----------------------------------------------------------------------------
 !                                                                      DG_
@@ -1252,8 +1281,7 @@ END TYPE DG_
 
 PUBLIC :: DG_
 
-TYPE(DG_), PARAMETER, PUBLIC :: &
-  & TypeDG = DG_()
+TYPE(DG_), PARAMETER, PUBLIC :: TypeDG = DG_()
 
 !----------------------------------------------------------------------------
 !                                                                 Derivative

@@ -42,7 +42,7 @@ PURE SUBROUTINE Triangle_H1_Lagrange(obj, quad, refelem, &
   REAL(DFP), ALLOCATABLE :: XiEta(:, :)
   !!
   CALL Initiate(obj%refelem, refelem)
-  CALL getQuadraturePoints(obj=quad, point=XiEta, weight=obj%ws)
+  CALL getQuadraturePoints(obj=quad, points=XiEta, weights=obj%ws)
   obj%quad = quad
   nips = SIZE(obj%ws)
   !!

@@ -15,13 +15,17 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_IOMethods
+MODULE ElemshapeData_IOMethods
 USE BaseType
 USE GlobalData
+USE String_Class, ONLY: String
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: Display
+PUBLIC :: ElemshapeData_MdEncode
+PUBLIC :: MdEncode
+PUBLIC :: ElemshapeData_ReactEncode
 
 !----------------------------------------------------------------------------
 !                                                         Display@IOMethods
@@ -30,23 +34,44 @@ PUBLIC :: Display
 !> author: Vikas Sharma, Ph. D.
 ! date: 4 March 2021
 ! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
-!
-!# Introduction
-!
-! This subroutine displays the content of [[elemshapedata_]] and
-! [[stelemshapedata_]] on screen. this routine belongs to `Display()`.
-
-INTERFACE
-  MODULE SUBROUTINE elemsd_display_1(obj, msg, unitNo)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    CHARACTER(LEN=*), INTENT(IN) :: msg
-    INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
-  END SUBROUTINE elemsd_display_1
-END INTERFACE
 
 INTERFACE Display
-  MODULE PROCEDURE elemsd_display_1
+  MODULE SUBROUTINE elemsd_display_1(obj, msg, unitNo)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    CHARACTER(*), INTENT(IN) :: msg
+    INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+  END SUBROUTINE elemsd_display_1
 END INTERFACE Display
+
+!----------------------------------------------------------------------------
+!                                          ElemshapeData_MdEncode@IOMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
+
+INTERFACE MdEncode
+  MODULE FUNCTION ElemshapeData_MdEncode(obj) RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    TYPE(String) :: ans
+  END FUNCTION ElemshapeData_MdEncode
+END INTERFACE MdEncode
+
+!----------------------------------------------------------------------------
+!                                       ElemshapeData_ReactEncode@IOMethods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 4 March 2021
+! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
+
+INTERFACE
+  MODULE FUNCTION ElemshapeData_ReactEncode(obj) RESULT(ans)
+    CLASS(ElemshapeData_), INTENT(IN) :: obj
+    TYPE(String) :: ans
+  END FUNCTION ElemshapeData_ReactEncode
+END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                          Display@IOMethods
@@ -56,16 +81,12 @@ END INTERFACE Display
 ! date: 4 March 2021
 ! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
 
-INTERFACE
+INTERFACE Display
   MODULE SUBROUTINE elemsd_display_2(obj, msg, unitNo)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-    CHARACTER(LEN=*), INTENT(IN) :: msg
+    CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
   END SUBROUTINE elemsd_display_2
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE elemsd_display_2
 END INTERFACE Display
 
-end module ElemshapeData_IOMethods
+END MODULE ElemshapeData_IOMethods

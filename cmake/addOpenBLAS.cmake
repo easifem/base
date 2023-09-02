@@ -15,10 +15,6 @@
 # along with this program.  If not, see <https: //www.gnu.org/licenses/>
 #
 
-#....................................................................
-#
-#....................................................................
-
 IF( ${PROJECT_NAME} MATCHES "easifemBase" )
   #SET(BLA_VENDOR "OpenBLAS")
   FIND_PACKAGE( LAPACK REQUIRED )

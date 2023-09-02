@@ -14,13 +14,13 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-module ElemshapeData_H1DivHermitMethods
+MODULE ElemshapeData_H1DivHermitMethods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                       Initiate@H1DivHermit
@@ -41,7 +41,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
-    CLASS(H1Div_), INTENT(IN) :: continuityType
+    CLASS(HDiv_), INTENT(IN) :: continuityType
     CLASS(HermitInterpolation_), INTENT(IN) :: interpolType
   END SUBROUTINE H1Div_Hermit
 END INTERFACE
@@ -50,4 +50,4 @@ INTERFACE Initiate
   MODULE PROCEDURE H1Div_Hermit
 END INTERFACE Initiate
 
-end module ElemshapeData_H1DivHermitMethods
+END MODULE ElemshapeData_H1DivHermitMethods

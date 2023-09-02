@@ -15,13 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_H1DivSerendipityMethods
+MODULE ElemshapeData_H1DivSerendipityMethods
 USE BaseType
 USE GlobalData
 IMPLICIT NONE
 PRIVATE
 
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                  Initiate@H1DivSerendipity
@@ -42,7 +42,7 @@ INTERFACE
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
     CLASS(ReferenceElement_), INTENT(IN) :: refElem
-    CLASS(H1Div_), INTENT(IN) :: continuityType
+    CLASS(HDiv_), INTENT(IN) :: continuityType
     CLASS(SerendipityInterpolation_), INTENT(IN) :: interpolType
   END SUBROUTINE H1Div_Serendipity
 END INTERFACE
@@ -51,4 +51,4 @@ INTERFACE Initiate
   MODULE PROCEDURE H1Div_Serendipity
 END INTERFACE Initiate
 
-end module ElemshapeData_H1DivSerendipityMethods
+END MODULE ElemshapeData_H1DivSerendipityMethods

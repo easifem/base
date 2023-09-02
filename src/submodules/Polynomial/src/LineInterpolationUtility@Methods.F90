@@ -21,6 +21,14 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                       RefElemDomain_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Line
+ans = "BIUNIT"
+END PROCEDURE RefElemDomain_Line
+
+!----------------------------------------------------------------------------
 !                                                     QuadratureNumber_Line
 !----------------------------------------------------------------------------
 
@@ -107,21 +115,16 @@ END PROCEDURE LagrangeInDOF_Line
 MODULE PROCEDURE EquidistanceInPoint_Line1
 INTEGER(I4B) :: n, ii
 REAL(DFP) :: avar
-!
 IF (order .LE. 1_I4B) THEN
   ALLOCATE (ans(0))
   RETURN
 END IF
-!
 n = LagrangeInDOF_Line(order=order)
 ALLOCATE (ans(n))
-!
 avar = (xij(2) - xij(1)) / order
-!
 DO ii = 1, n
   ans(ii) = xij(1) + ii * avar
 END DO
-!
 END PROCEDURE EquidistanceInPoint_Line1
 
 !----------------------------------------------------------------------------
@@ -132,31 +135,25 @@ MODULE PROCEDURE EquidistanceInPoint_Line2
 INTEGER(I4B) :: n, ii, nsd
 REAL(DFP) :: x0(3, 2)
 REAL(DFP) :: avar(3)
-!
 IF (order .LE. 1_I4B) THEN
   ALLOCATE (ans(0, 0))
   RETURN
 END IF
-!
 IF (PRESENT(xij)) THEN
   nsd = SIZE(xij, 1)
   x0(1:nsd, 1) = xij(1:nsd, 1)
   x0(1:nsd, 2) = xij(1:nsd, 2)
 ELSE
-  nsd = 3_I4B
-  x0(1:nsd, 1) = [-1.0, 0.0, 0.0]
-  x0(1:nsd, 2) = [1.0, 0.0, 0.0]
+  nsd = 1_I4B
+  x0(1:nsd, 1) = [-1.0]
+  x0(1:nsd, 2) = [1.0]
 END IF
-!
 n = LagrangeInDOF_Line(order=order)
 ALLOCATE (ans(nsd, n))
-!
 avar(1:nsd) = (x0(1:nsd, 2) - x0(1:nsd, 1)) / order
-!
 DO ii = 1, n
   ans(1:nsd, ii) = x0(1:nsd, 1) + ii * avar(1:nsd)
 END DO
-!
 END PROCEDURE EquidistanceInPoint_Line2
 
 !----------------------------------------------------------------------------
@@ -169,10 +166,8 @@ IF (order .EQ. 0_I4B) THEN
   ans(1) = 0.5_DFP * (xij(1) + xij(2))
   RETURN
 END IF
-!
 ans(1) = xij(1)
 ans(2) = xij(2)
-!
 IF (order .GE. 2) THEN
   ans(3:) = EquidistanceInPoint_Line(order=order, xij=xij)
 END IF
@@ -184,40 +179,29 @@ END PROCEDURE EquidistancePoint_Line1
 
 MODULE PROCEDURE EquidistancePoint_Line2
 INTEGER(I4B) :: nsd
-!
+
 IF (PRESENT(xij)) THEN
-  !
   nsd = SIZE(xij, 1)
-  !
   CALL Reallocate(ans, nsd, order + 1)
-  !
   IF (order .EQ. 0_I4B) THEN
     ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
     RETURN
   END IF
-  !
   ans(1:nsd, 1) = xij(1:nsd, 1)
   ans(1:nsd, 2) = xij(1:nsd, 2)
-  !
 ELSE
-  nsd = 3_I4B
-  !
+  nsd = 1_I4B
   CALL Reallocate(ans, nsd, order + 1)
-  !
   IF (order .EQ. 0_I4B) THEN
     ans(1:nsd, 1) = 0.0_DFP
     RETURN
   END IF
-  !
-  ans(1:nsd, 1) = [-1.0, 0.0, 0.0]
-  ans(1:nsd, 2) = [1.0, 0.0, 0.0]
-  !
+  ans(1:nsd, 1) = [-1.0]
+  ans(1:nsd, 2) = [1.0]
 END IF
-!
 IF (order .GE. 2) THEN
   ans(1:nsd, 3:) = EquidistanceInPoint_Line(order=order, xij=xij)
 END IF
-!
 END PROCEDURE EquidistancePoint_Line2
 
 !----------------------------------------------------------------------------
@@ -236,7 +220,7 @@ IF (order .EQ. 0_I4B) THEN
     ans(1:nsd, 1) = 0.5_DFP * (xij(1:nsd, 1) + xij(1:nsd, 2))
   ELSE
     CALL Reallocate(ans, 1, 1)
-    ans(1:nsd, 1) = 0.0_DFP
+    ans = 0.0_DFP
   END IF
   RETURN
 END IF
@@ -520,6 +504,7 @@ CASE DEFAULT
     & line=__LINE__, &
     & unitno=stderr)
 END SELECT
+
 IF (ipType .NE. Equidistance) THEN
   ans = FromBiunitLine2Segment(xin=ans, x1=xij(1), x2=xij(2))
 END IF
@@ -577,14 +562,14 @@ END PROCEDURE LagrangeCoeff_Line4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE LagrangeCoeff_Line5
-SELECT CASE (orthopol)
+SELECT CASE (basisType)
 CASE (Monomial)
   ans = LagrangeCoeff_Line(order=order, xij=xij)
 CASE DEFAULT
   ans = EvalAllOrthopol(&
     & n=order, &
     & x=xij(1, :), &
-    & orthopol=orthopol, &
+    & orthopol=basisType, &
     & alpha=alpha, &
     & beta=beta, &
     & lambda=lambda)
@@ -598,46 +583,38 @@ END PROCEDURE LagrangeCoeff_Line5
 
 MODULE PROCEDURE LagrangeEvalAll_Line1
 LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(order + 1, order + 1), xx(1, order + 1)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(1, SIZE(xij, 2))
 INTEGER(I4B) :: ii, orthopol0
 
-orthopol0 = input(default=Monomial, option=orthopol)
+IF (SIZE(xij, 2) .NE. order + 1) THEN
+  CALL Errormsg(&
+    & msg="Size(xij, 1) .NE. order+1 ", &
+    & file=__FILE__, &
+    & routine="LagrangeEvalAll_Line2", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+
+orthopol0 = input(default=Monomial, option=basisType)
 firstCall0 = input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    IF (.NOT. PRESENT(xij)) THEN
-      CALL Errormsg(&
-        & msg="xij should be present!", &
-        & file=__FILE__, &
-        & routine="LagrangeEvalAll_Line1", &
-        & line=__LINE__, &
-        & unitno=stderr)
-    END IF
     coeff = LagrangeCoeff_Line(&
       & order=order, &
       & xij=xij, &
-      & orthopol=orthopol0, &
+      & basisType=orthopol0, &
       & alpha=alpha, &
       & beta=beta, &
       & lambda=lambda)
-    coeff0 = TRANSPOSE(coeff)
-  ELSE
-    coeff0 = TRANSPOSE(coeff)
   END IF
+  coeff0 = TRANSPOSE(coeff)
 ELSE
-  IF (.NOT. PRESENT(xij)) THEN
-    CALL Errormsg(&
-      & msg="xij should be present!", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
   coeff0 = TRANSPOSE(LagrangeCoeff_Line(&
     & order=order, &
     & xij=xij, &
-    & orthopol=orthopol0, &
+    & basisType=orthopol0, &
     & alpha=alpha, &
     & beta=beta, &
     & lambda=lambda &
@@ -670,47 +647,38 @@ END PROCEDURE LagrangeEvalAll_Line1
 
 MODULE PROCEDURE LagrangeEvalAll_Line2
 LOGICAL(LGT) :: firstCall0
-REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x), order + 1)
+REAL(DFP) :: coeff0(SIZE(xij, 2), SIZE(xij, 2)), xx(SIZE(x, 2), SIZE(xij, 2))
 INTEGER(I4B) :: ii, orthopol0
 
-orthopol0 = input(default=Monomial, option=orthopol)
-firstCall0 = input(default=.TRUE., option=firstCall)
+IF (SIZE(xij, 2) .NE. order + 1) THEN
+  CALL Errormsg(&
+    & msg="Size(xij, 1) .NE. order+1 ", &
+    & file=__FILE__, &
+    & routine="LagrangeEvalAll_Line2", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+
+orthopol0 = Input(default=Monomial, option=basisType)
+firstCall0 = Input(default=.TRUE., option=firstCall)
 
 IF (PRESENT(coeff)) THEN
   IF (firstCall0) THEN
-    IF (.NOT. PRESENT(xij)) THEN
-      CALL Errormsg(&
-        & msg="xij should be present!", &
-        & file=__FILE__, &
-        & routine="LagrangeEvalAll_Line2", &
-        & line=__LINE__, &
-        & unitno=stderr)
-    END IF
     coeff = LagrangeCoeff_Line(&
       & order=order, &
       & xij=xij, &
-      & orthopol=orthopol0, &
+      & basisType=orthopol0, &
       & alpha=alpha, &
       & beta=beta, &
       & lambda=lambda)
-    coeff0 = coeff
-  ELSE
-    coeff0 = coeff
   END IF
+  coeff0 = coeff
 ELSE
-  IF (.NOT. PRESENT(xij)) THEN
-    CALL Errormsg(&
-      & msg="xij should be present!", &
-      & file=__FILE__, &
-      & routine="LagrangeEvalAll_Line1", &
-      & line=__LINE__, &
-      & unitno=stderr)
-  END IF
-  ! coeff0 = TRANSPOSE(LagrangeCoeff_Line(order=order, xij=xij))
   coeff0 = LagrangeCoeff_Line(&
     & order=order, &
     & xij=xij, &
-    & orthopol=orthopol0, &
+    & basisType=orthopol0, &
     & alpha=alpha, &
     & beta=beta, &
     & lambda=lambda &
@@ -721,12 +689,12 @@ SELECT CASE (orthopol0)
 CASE (Monomial)
   xx(:, 1) = 1.0_DFP
   DO ii = 1, order
-    xx(:, ii + 1) = xx(:, ii) * x
+    xx(:, ii + 1) = xx(:, ii) * x(1, :)
   END DO
 CASE DEFAULT
   xx = EvalAllOrthopol(&
     & n=order, &
-    & x=x, &
+    & x=x(1, :), &
     & orthopol=orthopol0, &
     & alpha=alpha, &
     & beta=beta, &
@@ -801,6 +769,69 @@ END SELECT
 END PROCEDURE BasisEvalAll_Line1
 
 !----------------------------------------------------------------------------
+!                                                 BasisGradientEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisGradientEvalAll_Line1
+INTEGER(I4B) :: ii, basisType0
+TYPE(String) :: astr
+astr = UpperCase(refLine)
+
+IF (astr%chars() .EQ. "UNIT") THEN
+  CALL Errormsg(&
+    & msg="refLine should be BIUNIT", &
+    & file=__FILE__, &
+    & routine="BasisGradientEvalAll_Line1", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+
+basisType0 = input(default=Monomial, option=basisType)
+SELECT CASE (basisType0)
+CASE (Monomial)
+  ans(1) = 0.0_DFP
+  DO ii = 1, order
+    ans(ii + 1) = REAL(ii, dfp) * x**(ii - 1)
+  END DO
+CASE DEFAULT
+
+  IF (basisType0 .EQ. Jacobi) THEN
+    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+      CALL Errormsg(&
+        & msg="alpha and beta should be present for basisType=Jacobi", &
+        & file=__FILE__, &
+        & routine="BasisGradientEvalAll_Line1", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  IF (basisType0 .EQ. Ultraspherical) THEN
+    IF (.NOT. PRESENT(lambda)) THEN
+      CALL Errormsg(&
+        & msg="lambda should be present for basisType=Ultraspherical", &
+        & file=__FILE__, &
+        & routine="BasisGradientEvalAll_Line1", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  ans = RESHAPE(GradientEvalAllOrthopol(&
+    & n=order, &
+    & x=[x], &
+    & orthopol=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda), [order + 1])
+END SELECT
+
+END PROCEDURE BasisGradientEvalAll_Line1
+
+!----------------------------------------------------------------------------
 !                                                        BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
@@ -864,6 +895,69 @@ END SELECT
 END PROCEDURE BasisEvalAll_Line2
 
 !----------------------------------------------------------------------------
+!                                                  BasisGradientEvalAll_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE BasisGradientEvalAll_Line2
+INTEGER(I4B) :: ii, basisType0
+TYPE(String) :: astr
+astr = UpperCase(refLine)
+
+IF (astr%chars() .EQ. "UNIT") THEN
+  CALL Errormsg(&
+    & msg="refLine should be BIUNIT", &
+    & file=__FILE__, &
+    & routine="BasisGradientEvalAll_Line2", &
+    & line=__LINE__, &
+    & unitno=stderr)
+  RETURN
+END IF
+
+basisType0 = input(default=Monomial, option=basisType)
+SELECT CASE (basisType0)
+CASE (Monomial)
+  ans(:, 1) = 0.0_DFP
+  DO ii = 1, order
+    ans(:, ii + 1) = REAL(ii, dfp) * x**(ii - 1)
+  END DO
+CASE DEFAULT
+
+  IF (basisType0 .EQ. Jacobi) THEN
+    IF (.NOT. PRESENT(alpha) .OR. .NOT. PRESENT(beta)) THEN
+      CALL Errormsg(&
+        & msg="alpha and beta should be present for basisType=Jacobi", &
+        & file=__FILE__, &
+        & routine="BasisGradientEvalAll_Line2", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  IF (basisType0 .EQ. Ultraspherical) THEN
+    IF (.NOT. PRESENT(lambda)) THEN
+      CALL Errormsg(&
+        & msg="lambda should be present for basisType=Ultraspherical", &
+        & file=__FILE__, &
+        & routine="BasisGradientEvalAll_Line2", &
+        & line=__LINE__, &
+        & unitno=stderr)
+      RETURN
+    END IF
+  END IF
+
+  ans = GradientEvalAllOrthopol(&
+    & n=order, &
+    & x=x, &
+    & orthopol=basisType0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END SELECT
+
+END PROCEDURE BasisGradientEvalAll_Line2
+
+!----------------------------------------------------------------------------
 !                                                   QuadraturePoint_Line
 !----------------------------------------------------------------------------
 
@@ -888,6 +982,21 @@ ans = QuadraturePoint_Line1(&
     & beta=beta, &
     & lambda=lambda)
 END PROCEDURE QuadraturePoint_Line2
+
+!----------------------------------------------------------------------------
+!                                                        QuadraturePoint_Line
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Line4
+ans = QuadraturePoint_Line3(&
+    & nips=nips, &
+    & quadType=quadType, &
+    & layout=layout, &
+    & xij=RESHAPE(xij, [1, 2]), &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda)
+END PROCEDURE QuadraturePoint_Line4
 
 !----------------------------------------------------------------------------
 !                                                       QuadraturePoint_Line
@@ -1051,7 +1160,7 @@ IF (PRESENT(xij)) THEN
     & xin=pt, &
     & x1=xij(:, 1), &
     & x2=xij(:, 2))
-  ans(nsd + 1, :) = wt
+  ans(nsd + 1, :) = wt * NORM2(xij(:, 2) - xij(:, 1)) / 2.0_DFP
 ELSE
   ans(1, :) = pt
   ans(nsd + 1, :) = wt
@@ -1059,19 +1168,71 @@ END IF
 END PROCEDURE QuadraturePoint_Line3
 
 !----------------------------------------------------------------------------
-!                                                        QuadraturePoint_Line
+!                                              LagrangeGradientEvalAll_Line
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE QuadraturePoint_Line4
-ans = QuadraturePoint_Line3(&
-    & nips=nips, &
-    & quadType=quadType, &
-    & layout=layout, &
-    & xij=RESHAPE(xij, [1, 2]), &
+MODULE PROCEDURE LagrangeGradientEvalAll_Line1
+LOGICAL(LGT) :: firstCall0
+REAL(DFP) :: coeff0(order + 1, order + 1), xx(SIZE(x, 2), order + 1)
+INTEGER(I4B) :: ii, orthopol0
+
+orthopol0 = input(default=Monomial, option=basisType)
+firstCall0 = input(default=.TRUE., option=firstCall)
+
+IF (PRESENT(coeff)) THEN
+  IF (firstCall0) THEN
+    coeff = LagrangeCoeff_Line(&
+      & order=order, &
+      & xij=xij, &
+      & basisType=orthopol0, &
+      & alpha=alpha, &
+      & beta=beta, &
+      & lambda=lambda)
+  END IF
+  coeff0 = coeff
+ELSE
+  coeff0 = LagrangeCoeff_Line(&
+    & order=order, &
+    & xij=xij, &
+    & basisType=orthopol0, &
+    & alpha=alpha, &
+    & beta=beta, &
+    & lambda=lambda &
+    & )
+END IF
+
+SELECT CASE (orthopol0)
+CASE (Monomial)
+
+  IF (SIZE(xij, 2) .NE. order + 1) THEN
+    CALL Errormsg(&
+      & msg="size(xij, 2) is not same as order+1", &
+      & file=__FILE__, &
+      & routine="LagrangeGradientEvalAll_Line1", &
+      & line=__LINE__, &
+      & unitno=stderr)
+    RETURN
+  END IF
+
+  DO ii = 0, order
+    xx(:, ii + 1) = REAL(ii, kind=DFP) * x(1, :)**(MAX(ii - 1_I4B, 0_I4B))
+  END DO
+
+CASE DEFAULT
+  xx = GradientEvalAllOrthopol(&
+    & n=order, &
+    & x=x(1, :), &
+    & orthopol=orthopol0, &
     & alpha=alpha, &
     & beta=beta, &
     & lambda=lambda)
-END PROCEDURE QuadraturePoint_Line4
+END SELECT
+
+! ans(:, 1, :) = TRANSPOSE(MATMUL(xx, coeff0))
+
+ans(:, :, 1) = MATMUL(xx, coeff0)
+
+END PROCEDURE LagrangeGradientEvalAll_Line1
 
 !----------------------------------------------------------------------------
 !

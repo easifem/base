@@ -25,6 +25,14 @@ USE BaseType
 IMPLICIT NONE
 PRIVATE
 
+PUBLIC :: PolyhedronVolume3D
+PUBLIC :: Initiate
+PUBLIC :: ReferencePrism
+PUBLIC :: ReferencePrism_Pointer
+PUBLIC :: highOrderElement_Prism
+PUBLIC :: Measure_Simplex_Prism
+PUBLIC :: Prism_Quality
+
 !----------------------------------------------------------------------------
 !                                                       Initiate@Prism
 !----------------------------------------------------------------------------
@@ -39,55 +47,37 @@ PRIVATE
 !
 !```
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE initiate_ref_Prism(obj, NSD, XiJ)
     CLASS(ReferencePrism_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
   END SUBROUTINE initiate_ref_Prism
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE initiate_ref_Prism
 END INTERFACE Initiate
-
-PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                            ReferencePrism@Prism
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ReferencePrism
   MODULE PURE FUNCTION reference_Prism(NSD, XiJ) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     TYPE(ReferencePrism_) :: obj
   END FUNCTION reference_Prism
-END INTERFACE
-
-INTERFACE ReferencePrism
-  MODULE PROCEDURE reference_Prism
 END INTERFACE ReferencePrism
-
-PUBLIC :: ReferencePrism
 
 !----------------------------------------------------------------------------
 !                                   ReferencePrism_Pointer@Prism
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ReferencePrism_Pointer
   MODULE PURE FUNCTION reference_Prism_Pointer(NSD, XiJ) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
     CLASS(ReferencePrism_), POINTER :: obj
   END FUNCTION reference_Prism_Pointer
-END INTERFACE
-
-INTERFACE ReferencePrism_Pointer
-  MODULE PROCEDURE reference_Prism_Pointer
 END INTERFACE ReferencePrism_Pointer
-
-PUBLIC :: ReferencePrism_Pointer
 
 !----------------------------------------------------------------------------
 !                                               LagrangeElement@Prism
@@ -102,8 +92,6 @@ INTERFACE
   END SUBROUTINE highOrderElement_Prism
 END INTERFACE
 
-PUBLIC :: highOrderElement_Prism
-
 !----------------------------------------------------------------------------
 !                                                  MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
@@ -115,8 +103,6 @@ INTERFACE
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex_Prism
 END INTERFACE
-
-PUBLIC :: Measure_Simplex_Prism
 
 !----------------------------------------------------------------------------
 !                                                             Prism_Quality
@@ -131,6 +117,57 @@ INTERFACE
   END FUNCTION Prism_Quality
 END INTERFACE
 
-PUBLIC :: Prism_Quality
+!----------------------------------------------------------------------------
+!                                                     POLYHEDRONVOLUME3D
+!----------------------------------------------------------------------------
+
+!> author: John Burkardt, Vikas Sharma
+! date:  2023-08-08
+! summary: computes the volume of a polyhedron in 3D.
+!
+!  Licensing:
+!    This code is distributed under the GNU LGPL license.
+!  Modified:
+!    19 August 2003
+!  Author:
+!    John Burkardt
+!  Parameters:
+!
+!    Input, real ( kind = 8 ) COORD(3,NODE_NUM), the coordinates of
+!    the vertices.  The vertices may be listed in any order.
+!
+!    Input, integer ( kind = 4 ) ORDER_MAX, the maximum number of vertices
+!    that make up a face of the polyhedron.
+!
+!    Input, integer ( kind = 4 ) FACE_NUM, the number of faces of the
+!    polyhedron.
+!
+!    Input, integer ( kind = 4 ) NODE(FACE_NUM,ORDER_MAX).  Face I is
+! defined by
+!    the vertices NODE(I,1) through NODE(I,ORDER(I)).  These vertices
+!    are listed in neighboring order.
+!
+!    Input, integer ( kind = 4 ) NODE_NUM, the number of points stored in
+! COORD.
+!
+!    Input, integer ( kind = 4 ) ORDER(FACE_NUM), the number of vertices
+! making
+!    up each face.
+!
+!    Output, real ( kind = 8 ) VOLUME, the volume of the polyhedron.
+
+INTERFACE
+  MODULE PURE SUBROUTINE PolyhedronVolume3D(  &
+     & coord, order_max, face_num, node, &
+     & node_num, order, ans)
+    INTEGER(I4B), INTENT(IN) :: order_max
+    INTEGER(I4B), INTENT(IN) :: face_num
+    INTEGER(I4B), INTENT(IN) :: node(face_num, order_max)
+    INTEGER(I4B), INTENT(IN) :: node_num
+    REAL(DFP), INTENT(IN) :: coord(3, node_num)
+    INTEGER(I4B), INTENT(IN) :: order(face_num)
+    REAL(DFP), INTENT(OUT) :: ans
+  END SUBROUTINE PolyhedronVolume3D
+END INTERFACE
 
 END MODULE ReferencePrism_Method

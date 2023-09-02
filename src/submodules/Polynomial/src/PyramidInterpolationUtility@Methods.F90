@@ -21,6 +21,27 @@ IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
+!                                                     RefElemDomain_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefElemDomain_Pyramid
+CALL Errormsg(&
+  & msg="[WORK IN PROGRESS] We are working on it", &
+  & file=__FILE__, &
+  & line=__LINE__,&
+  & routine="RefElemDomain_Prism()", &
+  & unitno=stderr)
+END PROCEDURE RefElemDomain_Pyramid
+
+!----------------------------------------------------------------------------
+!                                                          Refcoord_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE RefCoord_Pyramid
+ans = 0.0_DFP
+END PROCEDURE RefCoord_Pyramid
+
+!----------------------------------------------------------------------------
 !                                                LagrangeDegree_Pyramid
 !----------------------------------------------------------------------------
 
@@ -137,7 +158,94 @@ CALL GetInvMat(ans)
 END PROCEDURE LagrangeCoeff_Pyramid4
 
 !----------------------------------------------------------------------------
-!
+!                                                   QuadraturePoint_Prism
 !----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Pyramid1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="QuadraturePoint_Pyramid1()", &
+& file=__FILE__)
+END PROCEDURE QuadraturePoint_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                                   QuadraturePoint_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE QuadraturePoint_Pyramid2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="QuadraturePoint_Pyramid2()", &
+& file=__FILE__)
+END PROCEDURE QuadraturePoint_Pyramid2
+
+!----------------------------------------------------------------------------
+!                                             TensorQuadraturePoint_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Pyramid1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="TensorQuadraturePoint_Pyramid1()", &
+& file=__FILE__)
+END PROCEDURE TensorQuadraturePoint_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                             TensorQuadraturePoint_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE TensorQuadraturePoint_Pyramid2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="TensorQuadraturePoint_Pyramid2()", &
+& file=__FILE__)
+END PROCEDURE TensorQuadraturePoint_Pyramid2
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Pyramid1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeEvalAll_Pyramid1()", &
+& file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Pyramid1
+
+!----------------------------------------------------------------------------
+!                                             LagrangeEvalAll_Pyramid
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeEvalAll_Pyramid2
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeEvalAll_Pyramid2()", &
+& file=__FILE__)
+END PROCEDURE LagrangeEvalAll_Pyramid2
+
+!----------------------------------------------------------------------------
+!                                             LagrangeGradientEvalAll_Prism
+!----------------------------------------------------------------------------
+
+MODULE PROCEDURE LagrangeGradientEvalAll_Pyramid1
+CALL ErrorMsg(&
+& msg="Work in progress",  &
+& unitno=stdout,  &
+& line=__LINE__,  &
+& routine="LagrangeGradientEvalAll_Pyramid1()", &
+& file=__FILE__)
+END PROCEDURE LagrangeGradientEvalAll_Pyramid1
 
 END SUBMODULE Methods
