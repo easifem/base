@@ -62,6 +62,7 @@ IF (PRESENT(coeff)) THEN
     & elemType=refelem%name, &
     & x=pt(1:xidim, :),  &
     & xij=xij, &
+    & domainName=refelem%domainName, &
     & basisType=basisType0,  &
     & alpha=alpha,  &
     & beta=beta,  &
@@ -74,6 +75,7 @@ IF (PRESENT(coeff)) THEN
     & elemType=refelem%name, &
     & x=pt(1:xidim, :),  &
     & xij=xij, &
+    & domainName=refelem%domainName, &
     & basisType=basisType0,  &
     & alpha=alpha,  &
     & beta=beta,  &
@@ -93,6 +95,7 @@ ELSE
     & elemType=refelem%name, &
     & x=pt(1:xidim, :),  &
     & xij=xij, &
+    & domainName=refelem%domainName, &
     & basisType=basisType0,  &
     & alpha=alpha,  &
     & beta=beta,  &
@@ -105,6 +108,7 @@ ELSE
     & elemType=refelem%name, &
     & x=pt(1:xidim, :),  &
     & xij=xij, &
+    & domainName=refelem%domainName, &
     & basisType=basisType0,  &
     & alpha=alpha,  &
     & beta=beta,  &
