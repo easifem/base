@@ -119,7 +119,7 @@ TYPE IS (ReferenceTriangle_)
     & points=QuadraturePoint_Triangle( &
       & order=order, &
       & quadType=quadratureType, &
-      & refTriangle="UNIT", &
+      & refTriangle=refelem%domainName, &
       & xij=LocalNodeCoord(refElem)) &
     & )
 
@@ -129,7 +129,7 @@ TYPE IS (ReferenceQuadrangle_)
     & points=QuadraturePoint_Quadrangle( &
       & order=order, &
       & quadType=quadratureType, &
-      & refQuadrangle="BIUNIT", &
+      & refQuadrangle=refelem%domainName, &
       & xij=LocalNodeCoord(refElem), &
       & alpha=alpha, &
       & beta=beta, &
@@ -142,7 +142,7 @@ TYPE IS (ReferenceTetrahedron_)
     & points=QuadraturePoint_Tetrahedron( &
       & order=order, &
       & quadType=quadratureType, &
-      & refTetrahedron="UNIT", &
+      & refTetrahedron=refelem%domainName, &
       & xij=LocalNodeCoord(refElem)) &
     & )
 
@@ -152,7 +152,7 @@ TYPE IS (ReferenceHexahedron_)
     & points=QuadraturePoint_Hexahedron( &
       & order=order, &
       & quadType=quadratureType, &
-      & refHexahedron="BIUNIT", &
+      & refHexahedron=refelem%domainName, &
       & xij=LocalNodeCoord(refElem), &
       & alpha=alpha,  &
       & beta=beta,  &
@@ -166,7 +166,7 @@ TYPE IS (ReferencePrism_)
     & points=QuadraturePoint_Prism( &
       & order=order, &
       & quadType=quadratureType, &
-      & refPrism="BIUNIT", &
+      & refPrism=refelem%domainName, &
       & xij=LocalNodeCoord(refElem)) &
     & )
 
@@ -177,7 +177,7 @@ TYPE IS (ReferencePyramid_)
     & points=QuadraturePoint_Pyramid( &
       & order=order, &
       & quadType=quadratureType, &
-      & refPyramid="BIUNIT", &
+      & refPyramid=refelem%domainName, &
       & xij=LocalNodeCoord(refElem)) &
     & )
 
@@ -204,7 +204,7 @@ TYPE IS (ReferenceElement_)
       & points=QuadraturePoint_Triangle( &
         & order=order, &
         & quadType=quadratureType, &
-        & refTriangle="UNIT", &
+        & refTriangle=refelem%domainName, &
         & xij=LocalNodeCoord(refElem)) &
       & )
     RETURN
@@ -216,7 +216,7 @@ TYPE IS (ReferenceElement_)
       & points=QuadraturePoint_Quadrangle( &
         & order=order, &
         & quadType=quadratureType, &
-        & refQuadrangle="BIUNIT", &
+        & refQuadrangle=refelem%domainName, &
         & xij=LocalNodeCoord(refElem), &
         & alpha=alpha, &
         & beta=beta, &
@@ -231,7 +231,7 @@ TYPE IS (ReferenceElement_)
       & points=QuadraturePoint_Tetrahedron( &
         & order=order, &
         & quadType=quadratureType, &
-        & refTetrahedron="UNIT", &
+        & refTetrahedron=refelem%domainName, &
         & xij=LocalNodeCoord(refElem)) &
       & )
     RETURN
@@ -243,7 +243,7 @@ TYPE IS (ReferenceElement_)
       & points=QuadraturePoint_Hexahedron( &
         & order=order, &
         & quadType=quadratureType, &
-        & refHexahedron="BIUNIT", &
+        & refHexahedron=refelem%domainName, &
         & xij=LocalNodeCoord(refElem), &
         & alpha=alpha,  &
         & beta=beta,  &
@@ -258,7 +258,7 @@ TYPE IS (ReferenceElement_)
       & points=QuadraturePoint_Prism( &
         & order=order, &
         & quadType=quadratureType, &
-        & refPrism="BIUNIT", &
+        & refPrism=refelem%domainName, &
         & xij=LocalNodeCoord(refElem)) &
       & )
     RETURN
@@ -270,7 +270,7 @@ TYPE IS (ReferenceElement_)
       & points=QuadraturePoint_Pyramid( &
         & order=order, &
         & quadType=quadratureType, &
-        & refPyramid="BIUNIT", &
+        & refPyramid=refelem%domainName, &
         & xij=LocalNodeCoord(refElem)) &
       & )
     RETURN
@@ -278,7 +278,7 @@ TYPE IS (ReferenceElement_)
 
 CLASS DEFAULT
   CALL ErrorMsg(&
-    & msg="No case found",  &
+    & msg="[NO CASE FOUND] for the type of refelem",  &
     & file=__FILE__,  &
     & routine="quad_initiate5()", &
     & line=__LINE__, &
