@@ -496,13 +496,14 @@ INTERFACE Dubiner_Triangle
     INTEGER(I4B), INTENT(IN) :: order
     !! order of polynomial space
     REAL(DFP), INTENT(IN) :: xij(:, :)
-    !! points in reference triangle, shape functions will be evaluated
+    !! Points in reference triangle, shape functions will be evaluated
     !! at these points. SIZE(xij,1) = 2, and SIZE(xij, 2) = number of points
     CHARACTER(*), INTENT(IN) :: refTriangle
-    !! "unit"
-    !! "biunit"
+    !! Reference domain of triangle where xij are defined
+    !! "UNIT"
+    !! "BIUNIT"
     REAL(DFP) :: ans(SIZE(xij, 2), (order + 1) * (order + 2) / 2)
-    !! shape functions
+    !! Shape Functions
     !! ans(:, j), jth shape functions at all points
     !! ans(j, :), all shape functions at jth point
   END FUNCTION Dubiner_Triangle1
@@ -535,6 +536,7 @@ INTERFACE Dubiner_Triangle
     !! x denotes the coordinates along the x direction
     !! y denotes the coordinates along the y direction
     CHARACTER(*), INTENT(IN) :: refTriangle
+    !! Reference domain of triangle where xij are defined
     !! "UNIT"
     !! "BIUNIT"
     REAL(DFP) :: ans(SIZE(x) * SIZE(y), (order + 1) * (order + 2) / 2)
