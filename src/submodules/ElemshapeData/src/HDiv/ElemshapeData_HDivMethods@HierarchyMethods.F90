@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemShapeData_H1CurlSerendipityMethods) Methods
+SUBMODULE(ElemShapeData_HDivMethods) HierarchyMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -23,7 +24,13 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE H1Curl_Serendipity
-END PROCEDURE H1Curl_Serendipity
+MODULE PROCEDURE HDiv_Hierarchy1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="HDiv_Hierarchy1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE HDiv_Hierarchy1
 
-END SUBMODULE Methods
+END SUBMODULE HierarchyMethods

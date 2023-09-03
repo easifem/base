@@ -13,21 +13,24 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
 
-SUBMODULE(ElemShapeData_H1Methods) HermitMethods
+SUBMODULE(ElemshapeData_HDivMethods) SerendipityMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
+
 !----------------------------------------------------------------------------
 !                                                                 Initiate
 !----------------------------------------------------------------------------
-MODULE PROCEDURE H1_Hermit1
+
+MODULE PROCEDURE HDiv_Serendipity1
 CALL Errormsg( &
   & msg="[WORK IN PROGRESS] This method is currently not available",  &
   & line=__LINE__,  &
-  & routine="H1_Hermit1()",  &
+  & routine="HDiv_Serendipity1()",  &
   & unitno=stderr,  &
   & file=__FILE__)
-END PROCEDURE H1_Hermit1
+END PROCEDURE HDiv_Serendipity1
 
-END SUBMODULE HermitMethods
+END SUBMODULE SerendipityMethods
