@@ -21,23 +21,5 @@ TARGET_SOURCES(
   ${src_path}/QuadraturePoint_Method@IOMethods.F90
   ${src_path}/QuadraturePoint_Method@GetMethods.F90
   ${src_path}/QuadraturePoint_Method@ConstructorMethods.F90
-  # ${src_path}/GaussLegendre/QuadraturePoint_Method@GaussLegendre.F90
-  # ${src_path}/GaussLegendre/GaussLegendre_Line_Methods.F90
-  # ${src_path}/GaussLegendre/GaussLegendre_Triangle_Methods.F90
-  # ${src_path}/GaussLegendre/GaussLegendre_Quadrangle_Methods.F90
-  # ${src_path}/GaussLegendre/GaussLegendre_Tetrahedron_Methods.F90
-  # ${src_path}/GaussLegendre/GaussLegendre_Hexahedron_Methods.F90
-  # ${src_path}/GaussLegendre/GaussLegendre_Prism_Methods.F90
-  # ${src_path}/GaussLegendre/GaussLegendre_Pyramid_Methods.F90
-  # ${src_path}/GaussLegendreLobatto/QuadraturePoint_Method@GaussLegendreLobatto.F90
-  # ${src_path}/GaussLegendreLobatto/GaussLegendreLobatto_Line_Methods.F90
-  # ${src_path}/GaussLegendreLobatto/GaussLegendreLobatto_Triangle_Methods.F90
-  # ${src_path}/GaussLegendreLobatto/GaussLegendreLobatto_Quadrangle_Methods.F90
-  # ${src_path}/GaussLegendreLobatto/GaussLegendreLobatto_Tetrahedron_Methods.F90
-  # ${src_path}/GaussLegendreLobatto/GaussLegendreLobatto_Hexahedron_Methods.F90
-  # ${src_path}/GaussLegendreLobatto/GaussLegendreLobatto_Prism_Methods.F90
-  # ${src_path}/GaussLegendreLobatto/GaussLegendreLobatto_Pyramid_Methods.F90
-  # ${src_path}/GaussLegendreRadauLeft/QuadraturePoint_Method@GaussLegendreRadauLeft.F90
-  # ${src_path}/GaussLegendreRadauRight/QuadraturePoint_Method@GaussLegendreRadauRight.F90
 )
 

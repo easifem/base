@@ -29,27 +29,51 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_ref_Triangle
-CALL Reallocate(obj%xij, 3, 3)
-obj%xij = InterpolationPoint_Triangle(  &
-  & xij=xij, &
-  & order=1, &
-  & ipType=Equidistance, &
-  & layout="VEFC")
+REAL(DFP) :: unit_xij(2, 3), biunit_xij(2, 3)
 
-obj%EntityCounts = [3, 3, 1, 0]
-obj%XiDimension = 2
-obj%Name = Triangle3
+CALL DEALLOCATE (obj)
+
+unit_xij = RefCoord_Triangle("UNIT")
+biunit_xij = RefCoord_Triangle("BIUNIT")
+
+IF (PRESENT(xij)) THEN
+  obj%xij = xij(1:2, 1:3)
+  IF (ALL(obj%xij(1:2, 1:3) .approxeq.unit_xij)) THEN
+    obj%domainName = "UNIT"
+  ELSE IF (ALL(obj%xij(1:2, 1:3) .approxeq.biunit_xij)) THEN
+    obj%domainName = "BIUNIT"
+  ELSE
+    obj%domainName = "GENERAL"
+  END IF
+
+ELSE
+
+  IF (PRESENT(domainName)) THEN
+    obj%domainName = UpperCase(domainName)
+    IF (obj%domainName .EQ. "UNIT" .OR. obj%domainName .EQ. "BIUNIT") THEN
+      obj%xij = RefCoord_Triangle(obj%domainName)
+    END IF
+  ELSE
+    obj%domainName = "UNIT"
+    obj%xij = RefCoord_Triangle(obj%domainName)
+  END IF
+
+END IF
+
+obj%entityCounts = [3, 3, 1, 0]
+obj%xiDimension = 2
+obj%name = Triangle3
 obj%order = 1
 obj%nsd = nsd
 
-ALLOCATE (obj%Topology(7))
-obj%Topology(1) = ReferenceTopology([1], Point)
-obj%Topology(2) = ReferenceTopology([2], Point)
-obj%Topology(3) = ReferenceTopology([3], Point)
-obj%Topology(4) = ReferenceTopology([1, 2], Line2)
-obj%Topology(5) = ReferenceTopology([2, 3], Line2)
-obj%Topology(6) = ReferenceTopology([3, 1], Line2)
-obj%Topology(7) = ReferenceTopology([1, 2, 3], Triangle3)
+ALLOCATE (obj%topology(7))
+obj%topology(1) = Referencetopology([1], Point)
+obj%topology(2) = Referencetopology([2], Point)
+obj%topology(3) = Referencetopology([3], Point)
+obj%topology(4) = Referencetopology([1, 2], Line2)
+obj%topology(5) = Referencetopology([2, 3], Line2)
+obj%topology(6) = Referencetopology([3, 1], Line2)
+obj%topology(7) = Referencetopology([1, 2, 3], Triangle3)
 
 obj%highorderElement => highorderElement_Triangle
 END PROCEDURE initiate_ref_Triangle
@@ -59,7 +83,7 @@ END PROCEDURE initiate_ref_Triangle
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Triangle
-CALL Initiate(obj, nsd, xij)
+CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Triangle
 
 !----------------------------------------------------------------------------
@@ -68,7 +92,7 @@ END PROCEDURE reference_Triangle
 
 MODULE PROCEDURE reference_Triangle_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj, nsd, xij)
+CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Triangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -83,56 +107,57 @@ obj%xij = InterpolationPoint_Triangle( &
   & order=order, &
   & ipType=ipType, &
   & layout="VEFC")
+obj%domainName = refelem%domainName
 nsd = refelem%nsd
 obj%highOrderElement => refelem%highOrderElement
 SELECT CASE (order)
 CASE (1)
   NNS = 3
-  obj%EntityCounts = [NNS, 3, 1, 0]
-  obj%XiDimension = 2
-  obj%Name = Triangle3
+  obj%entityCounts = [NNS, 3, 1, 0]
+  obj%xidimension = 2
+  obj%name = Triangle3
   obj%order = order
   obj%nsd = nsd
-  ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
   DO I = 1, NNS
-    obj%Topology(I) = ReferenceTopology([I], Point)
+    obj%topology(I) = ReferenceTopology([I], Point)
   END DO
-  obj%Topology(NNS + 1) = ReferenceTopology([1, 2], Line2)
-  obj%Topology(NNS + 2) = ReferenceTopology([2, 3], Line2)
-  obj%Topology(NNS + 3) = ReferenceTopology([3, 1], Line2)
-  obj%Topology(NNS + 4) = ReferenceTopology([1, 2, 3], obj%Name)
+  obj%topology(NNS + 1) = ReferenceTopology([1, 2], Line2)
+  obj%topology(NNS + 2) = ReferenceTopology([2, 3], Line2)
+  obj%topology(NNS + 3) = ReferenceTopology([3, 1], Line2)
+  obj%topology(NNS + 4) = ReferenceTopology([1, 2, 3], obj%name)
 CASE (2)
   NNS = 6
-  obj%EntityCounts = [NNS, 3, 1, 0]
-  obj%XiDimension = 2
-  obj%Name = Triangle6
+  obj%entityCounts = [NNS, 3, 1, 0]
+  obj%xidimension = 2
+  obj%name = Triangle6
   obj%order = order
   obj%nsd = nsd
-  ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
   DO I = 1, NNS
-    obj%Topology(I) = ReferenceTopology([I], Point)
+    obj%topology(I) = ReferenceTopology([I], Point)
   END DO
-  obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 4], Line3)
-  obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 5], Line3)
-  obj%Topology(NNS + 3) = ReferenceTopology([3, 1, 6], Line3)
-  obj%Topology(NNS + 4) = ReferenceTopology([1, 2, 3, 4, 5, 6], &
-    & obj%Name)
+  obj%topology(NNS + 1) = ReferenceTopology([1, 2, 4], Line3)
+  obj%topology(NNS + 2) = ReferenceTopology([2, 3, 5], Line3)
+  obj%topology(NNS + 3) = ReferenceTopology([3, 1, 6], Line3)
+  obj%topology(NNS + 4) = ReferenceTopology([1, 2, 3, 4, 5, 6], &
+    & obj%name)
 CASE (3)
   NNS = 10
-  obj%EntityCounts = [NNS, 3, 1, 0]
-  obj%XiDimension = 2
-  obj%Name = Triangle10
+  obj%entityCounts = [NNS, 3, 1, 0]
+  obj%xidimension = 2
+  obj%name = Triangle10
   obj%order = order
   obj%nsd = nsd
-  ALLOCATE (obj%Topology(SUM(obj%EntityCounts)))
+  ALLOCATE (obj%topology(SUM(obj%entityCounts)))
   DO I = 1, NNS
-    obj%Topology(I) = ReferenceTopology([I], Point)
+    obj%topology(I) = ReferenceTopology([I], Point)
   END DO
-  obj%Topology(NNS + 1) = ReferenceTopology([1, 2, 4, 5], Line4)
-  obj%Topology(NNS + 2) = ReferenceTopology([2, 3, 6, 7], Line4)
-  obj%Topology(NNS + 3) = ReferenceTopology([3, 1, 8, 9], Line4)
-  obj%Topology(NNS + 4) = ReferenceTopology( &
-    & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obj%Name)
+  obj%topology(NNS + 1) = ReferenceTopology([1, 2, 4, 5], Line4)
+  obj%topology(NNS + 2) = ReferenceTopology([2, 3, 6, 7], Line4)
+  obj%topology(NNS + 3) = ReferenceTopology([3, 1, 8, 9], Line4)
+  obj%topology(NNS + 4) = ReferenceTopology( &
+    & [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obj%name)
 END SELECT
 END PROCEDURE highorderElement_Triangle
 

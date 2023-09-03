@@ -22,57 +22,232 @@ PRIVATE
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                        Initiate@H1Lagrange
+!                                                          Initiate@Methods
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-08-16
+! summary: This routine initiate the shape data
+
+INTERFACE Initiate
+  MODULE SUBROUTINE H1_Lagrange1( &
+    & obj, &
+    & quad, &
+    & refelem, &
+    & baseContinuity, &
+    & baseInterpolation, &
+    & order,  &
+    & ipType, &
+    & basisType, &
+    & coeff,  &
+    & firstCall,  &
+    & alpha, &
+    & beta, &
+    & lambda)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    CLASS(H1_), INTENT(IN) :: baseContinuity
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpolation
+    INTEGER(I4B), INTENT(IN) :: order
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
+    !! Interpolation point type
+    !! Default value is Equidistance
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Basis function types
+    !! Default value is Monomial
+    REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
+    !! Coefficient of Lagrange polynomials
+    LOGICAL(LGT), OPTIONAL :: firstCall
+    !! If firstCall is true, then coeff will be made
+    !! If firstCall is False, then coeff will be used
+    !! Default value of firstCall is True
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+  END SUBROUTINE H1_Lagrange1
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                    Initiate@H1Hierarchy
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-09-02
+! summary: This routine initiate the shape data
+!
+!# Introduction
+!
+! This routine initiates the shape function related data inside the element.
+
+INTERFACE Initiate
+  MODULE SUBROUTINE H1_Hierarchy1( &
+    & obj, &
+    & quad, &
+    & refelem, &
+    & baseContinuity, &
+    & baseInterpolation,  &
+    & order,  &
+    & ipType,  &
+    & basisType,  &
+    & alpha, beta, lambda &
+    &)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! Element shape data
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature point type
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! Reference element type
+    CLASS(H1_), INTENT(IN) :: baseContinuity
+    !! Base continuity type
+    CLASS(HierarchyInterpolation_), INTENT(IN) :: baseInterpolation
+    !! Base Interpolation type
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of polynomials
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
+    !! Interpolation type 
+    !! This argument is not needed
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Basis function type
+    !! This argument is not needed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! alpha and beta are Jacobi polynomial param
+    !! lambda is Ultraspherical polynomial param
+    !! This argument is not needed
+  END SUBROUTINE H1_Hierarchy1
+END INTERFACE Initiate
+
+
+!----------------------------------------------------------------------------
+!                                                    Initiate@H1Orthogonal
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2023-09-02
+! summary: This routine initiate the shape data
+!
+!# Introduction
+!
+! This routine initiates the shape function related data inside the element.
+
+INTERFACE Initiate
+  MODULE SUBROUTINE H1_Orthogonal1( &
+    & obj, &
+    & quad, &
+    & refelem, &
+    & baseContinuity, &
+    & baseInterpolation,  &
+    & order,  &
+    & ipType,  &
+    & basisType,  &
+    & alpha, beta, lambda &
+    &)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! Element shape data
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature point type
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! Reference element type
+    CLASS(H1_), INTENT(IN) :: baseContinuity
+    !! Base continuity type
+    CLASS(OrthogonalInterpolation_), INTENT(IN) :: baseInterpolation
+    !! Base Interpolation type
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Order of polynomials
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
+    !! Interpolation type
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Basis function type
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! alpha and beta are Jacobi polynomial param
+    !! lambda is Ultraspherical polynomial param
+  END SUBROUTINE H1_Orthogonal1
+END INTERFACE Initiate
+
+!----------------------------------------------------------------------------
+!                                                          Initiate@H1Hermit
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
-! summary: This routine initiates H1 Lagrange polynomials
+! summary: This routine initiate the shape data
+!
+!# Introduction
+!
+! This routine initiates the shape function related data inside the element.
 
-INTERFACE
-  MODULE SUBROUTINE ElemshapeData_H1Methods1( &
+INTERFACE Initiate
+  MODULE SUBROUTINE H1_Hermit1( &
     & obj, &
     & quad, &
     & refelem, &
-    & baseInterpol,  &
+    & baseContinuity, &
+    & baseInterpolation,  &
+    & order,  &
+    & ipType,  &
     & basisType,  &
-    & order)
+    & alpha, beta, lambda &
+    &)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature point type
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpol
-    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Reference element type
+    CLASS(H1_), INTENT(IN) :: baseContinuity
+    !! Base continuity type
+    CLASS(HermitInterpolation_), INTENT(IN) :: baseInterpolation
+    !! Base Interpolation type
     INTEGER(I4B), INTENT(IN) :: order
-  END SUBROUTINE ElemshapeData_H1Methods1
-END INTERFACE
+    !! Order of polynomials
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
+    !! Interpolation type
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Basis function type
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! alpha and beta are Jacobi polynomial param
+    !! lambda is Ultraspherical polynomial param
+  END SUBROUTINE H1_Hermit1
+END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                        Initiate@H1Lagrange
+!                                                    Initiate@H1Serendipity
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
-! summary: This routine initiates H1 Lagrange polynomials
+! summary: This routine initiate the shape data
 
-INTERFACE
-  MODULE SUBROUTINE ElemshapeData_H1Methods2( &
+INTERFACE Initiate
+  MODULE SUBROUTINE H1_Serendipity1( &
     & obj, &
     & quad, &
     & refelem, &
-    & baseInterpol,  &
+    & baseContinuity, &
+    & baseInterpolation,  &
+    & order,  &
+    & ipType,  &
     & basisType,  &
-    & order)
+    & alpha, beta, lambda &
+    &)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature point type
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
-    CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpol
-    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Reference element type
+    CLASS(H1_), INTENT(IN) :: baseContinuity
+    !! Base continuity type
+    CLASS(SerendipityInterpolation_), INTENT(IN) :: baseInterpolation
+    !! Base Interpolation type
     INTEGER(I4B), INTENT(IN) :: order
-  END SUBROUTINE ElemshapeData_H1Methods1
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                           Initiate@Methods
-!----------------------------------------------------------------------------
+    !! Order of polynomials
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
+    !! Interpolation type
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Basis function type
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! alpha and beta are Jacobi polynomial param
+    !! lambda is Ultraspherical polynomial param
+  END SUBROUTINE H1_Serendipity1
+END INTERFACE Initiate
 
 END MODULE ElemshapeData_H1Methods

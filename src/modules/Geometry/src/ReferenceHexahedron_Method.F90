@@ -41,10 +41,11 @@ PUBLIC :: HexahedronVolume3D
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Hexahedron(obj, NSD, xij)
+  MODULE PURE SUBROUTINE initiate_ref_Hexahedron(obj, nsd, xij, domainName)
     CLASS(ReferenceHexahedron_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: NSD
+    INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
   END SUBROUTINE initiate_ref_Hexahedron
 END INTERFACE Initiate
 
@@ -53,9 +54,10 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceHexahedron
-  MODULE PURE FUNCTION reference_Hexahedron(NSD, xij) RESULT(obj)
+  MODULE PURE FUNCTION reference_Hexahedron(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     TYPE(ReferenceHexahedron_) :: obj
   END FUNCTION reference_Hexahedron
 END INTERFACE ReferenceHexahedron
@@ -65,9 +67,11 @@ END INTERFACE ReferenceHexahedron
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceHexahedron_Pointer
-  MODULE PURE FUNCTION reference_Hexahedron_Pointer(NSD, xij) RESULT(obj)
+  MODULE FUNCTION reference_Hexahedron_Pointer(nsd, xij, domainName)  &
+    & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     CLASS(ReferenceHexahedron_), POINTER :: obj
   END FUNCTION reference_Hexahedron_Pointer
 END INTERFACE ReferenceHexahedron_Pointer
@@ -77,7 +81,7 @@ END INTERFACE ReferenceHexahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE highorderElement_Hexahedron(refelem, order, obj, &
+  MODULE SUBROUTINE highorderElement_Hexahedron(refelem, order, obj, &
     & ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     INTEGER(I4B), INTENT(IN) :: order

@@ -39,6 +39,11 @@ PUBLIC :: QuadraturePoint_Line
 PUBLIC :: ToVEFC_Line
 PUBLIC :: QuadratureNumber_Line
 PUBLIC :: RefElemDomain_Line
+PUBLIC :: HeirarchicalBasis_Line
+PUBLIC :: HeirarchicalGradientBasis_Line
+PUBLIC :: OrthogonalBasis_Line
+PUBLIC :: OrthogonalBasisGradient_Line
+
 
 !----------------------------------------------------------------------------
 !                                                       RefElemDomain_Line
@@ -690,48 +695,6 @@ INTERFACE BasisEvalAll_Line
 END INTERFACE BasisEvalAll_Line
 
 !----------------------------------------------------------------------------
-!                                                 BasisGradientEvalAll_Line
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date:  2023-06-23
-! summary: Evaluate gradient of basis functions of order upto n
-
-INTERFACE BasisGradientEvalAll_Line
-  MODULE FUNCTION BasisGradientEvalAll_Line1( &
-    & order, &
-    & x, &
-    & refLine, &
-    & basisType, &
-    & alpha, &
-    & beta, &
-    & lambda) RESULT(ans)
-    INTEGER(I4B), INTENT(IN) :: order
-    !! order of  polynomials
-    REAL(DFP), INTENT(IN) :: x
-    !! point of evaluation
-    CHARACTER(*), INTENT(IN) :: refLine
-    !! Refline should be  BIUNIT
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Monomial
-    !! Jacobi
-    !! Ultraspherical
-    !! Legendre
-    !! Chebyshev
-    !! Lobatto
-    !! UnscaledLobatto
-    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
-    !! Jacobi polynomial parameter
-    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
-    !! Jacobi polynomial parameter
-    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
-    !! Ultraspherical parameter
-    REAL(DFP) :: ans(order + 1)
-    !! Value of n+1  polynomials at point x
-  END FUNCTION BasisGradientEvalAll_Line1
-END INTERFACE BasisGradientEvalAll_Line
-
-!----------------------------------------------------------------------------
 !                                                         BasisEvalAll_Line
 !----------------------------------------------------------------------------
 
@@ -782,7 +745,191 @@ END INTERFACE BasisEvalAll_Line
 
 !> author: Vikas Sharma, Ph. D.
 ! date:  2023-06-23
-! summary: Evaluateu gradient of basis functions of order upto n
+! summary: Evaluate basis functions of order upto n
+
+INTERFACE OrthogonalBasis_Line
+  MODULE FUNCTION OrthogonalBasis_Line1( &
+    & order, &
+    & xij, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    !! Number of rows in xij is 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT
+    !! BIUNIT
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2), order + 1)
+    !! Value of n+1  polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+  END FUNCTION OrthogonalBasis_Line1
+END INTERFACE OrthogonalBasis_Line
+
+!----------------------------------------------------------------------------
+!                                                         BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate basis functions of order upto n
+
+INTERFACE OrthogonalBasisGradient_Line
+  MODULE FUNCTION OrthogonalBasisGradient_Line1( &
+    & order, &
+    & xij, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! point of evaluation
+    !! Number of rows in xij is 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! UNIT
+    !! BIUNIT
+    INTEGER(I4B), INTENT(IN) :: basisType
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(SIZE(xij, 2), order + 1, 1)
+    !! Value of n+1  polynomials at point x
+    !! ans(:, j) is the value of jth polynomial at x points
+    !! ans(i, :) is the value of all polynomials at x(i) point
+  END FUNCTION OrthogonalBasisGradient_Line1
+END INTERFACE OrthogonalBasisGradient_Line
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasis_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Evaluate all modal basis (heirarchical polynomial) on Line
+
+INTERFACE HeirarchicalBasis_Line
+  MODULE FUNCTION HeirarchicalBasis_Line1(order, xij, refLine) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Polynomial order of interpolation
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! This parameter denotes the type of reference line.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Line.
+    !! BIUNIT: in this case xij is in biunit Line.
+    REAL(DFP) :: ans(SIZE(xij, 2), order + 1)
+    !! Hierarchical basis
+  END FUNCTION HeirarchicalBasis_Line1
+END INTERFACE HeirarchicalBasis_Line
+
+!----------------------------------------------------------------------------
+!                                              HeirarchicalBasisGradient_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date: 27 Oct 2022
+! summary: Eval gradient of all modal basis (heirarchical polynomial) on Line
+
+INTERFACE HeirarchicalGradientBasis_Line
+  MODULE FUNCTION HeirarchicalGradientBasis_Line1( &
+    & order, &
+    & xij, &
+    & refLine) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! Polynomial order of interpolation
+    REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! Points of evaluation in xij format
+    !! size(xij, 1) should be 1
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! This parameter denotes the type of reference line.
+    !! It can take following values:
+    !! UNIT: in this case xij is in unit Line.
+    !! BIUNIT: in this case xij is in biunit Line.
+    REAL(DFP) :: ans(SIZE(xij, 2), order + 1, 1)
+    !! Gradient of Hierarchical basis
+  END FUNCTION HeirarchicalGradientBasis_Line1
+END INTERFACE HeirarchicalGradientBasis_Line
+
+!----------------------------------------------------------------------------
+!                                                 BasisGradientEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate the gradient of basis functions of order upto n
+
+INTERFACE BasisGradientEvalAll_Line
+  MODULE FUNCTION BasisGradientEvalAll_Line1( &
+    & order, &
+    & x, &
+    & refLine, &
+    & basisType, &
+    & alpha, &
+    & beta, &
+    & lambda) RESULT(ans)
+    INTEGER(I4B), INTENT(IN) :: order
+    !! order of  polynomials
+    REAL(DFP), INTENT(IN) :: x
+    !! point of evaluation
+    CHARACTER(*), INTENT(IN) :: refLine
+    !! Refline should be  BIUNIT
+    INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
+    !! Monomial
+    !! Jacobi
+    !! Ultraspherical
+    !! Legendre
+    !! Chebyshev
+    !! Lobatto
+    !! UnscaledLobatto
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical parameter
+    REAL(DFP) :: ans(order + 1)
+    !! Value of n+1  polynomials at point x
+  END FUNCTION BasisGradientEvalAll_Line1
+END INTERFACE BasisGradientEvalAll_Line
+
+!----------------------------------------------------------------------------
+!                                                         BasisEvalAll_Line
+!----------------------------------------------------------------------------
+
+!> author: Vikas Sharma, Ph. D.
+! date:  2023-06-23
+! summary: Evaluate gradient of basis functions of order upto n
 
 INTERFACE BasisGradientEvalAll_Line
   MODULE FUNCTION BasisGradientEvalAll_Line2( &

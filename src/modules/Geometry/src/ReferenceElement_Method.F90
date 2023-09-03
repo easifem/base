@@ -117,16 +117,12 @@ END INTERFACE GetTotalCells
 ! date: 20 May 2022
 ! summary: Display the ReferenceElement
 
-INTERFACE
+INTERFACE Display
   MODULE SUBROUTINE refelem_Display(obj, msg, unitno)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
   END SUBROUTINE refelem_Display
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE refelem_Display
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
@@ -137,16 +133,12 @@ END INTERFACE Display
 ! date: 20 May 2022
 ! summary: Display reference topology
 
-INTERFACE
+INTERFACE Display
   MODULE SUBROUTINE reftopo_Display(obj, msg, unitno)
     CLASS(ReferenceTopology_), INTENT(IN) :: obj
     CHARACTER(*), INTENT(IN) :: msg
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitno
   END SUBROUTINE reftopo_Display
-END INTERFACE
-
-INTERFACE Display
-  MODULE PROCEDURE reftopo_Display
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
@@ -183,16 +175,12 @@ END INTERFACE Display
 ! call display( obj, "obj=")
 !```
 
-INTERFACE
+INTERFACE ReferenceTopology
   MODULE PURE FUNCTION refelem_ReferenceTopology(Nptrs, Name) RESULT(obj)
     TYPE(ReferenceTopology_) :: obj
     INTEGER(I4B), INTENT(IN) :: Nptrs(:)
     INTEGER(I4B), INTENT(IN) :: Name
   END FUNCTION refelem_ReferenceTopology
-END INTERFACE
-
-INTERFACE ReferenceTopology
-  MODULE PROCEDURE refelem_ReferenceTopology
 END INTERFACE ReferenceTopology
 
 !----------------------------------------------------------------------------
@@ -212,15 +200,11 @@ END INTERFACE ReferenceTopology
 ! call Deallocate( obj )
 !```
 
-INTERFACE
+INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE refelem_Deallocate1(obj)
     CLASS(ReferenceTopology_), INTENT(INOUT) :: obj
   END SUBROUTINE refelem_Deallocate1
-END INTERFACE
-
-INTERFACE DEALLOCATE
-  MODULE PROCEDURE refelem_Deallocate1
-END INTERFACE
+END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                            Deallocate@ConstructorMethods
@@ -230,15 +214,11 @@ END INTERFACE
 ! date: 1 March 2021
 ! summary: Deallocates the data stored inside the [[ReferenceElement_]]
 
-INTERFACE
+INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE refelem_Deallocate2(obj)
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
   END SUBROUTINE refelem_Deallocate2
-END INTERFACE
-
-INTERFACE DEALLOCATE
-  MODULE PROCEDURE refelem_Deallocate2
-END INTERFACE
+END INTERFACE DEALLOCATE
 
 !----------------------------------------------------------------------------
 !                                                     NNE@ConstructorMethods
@@ -257,16 +237,12 @@ END INTERFACE
 ! call display( .NNE. obj, "nne =")
 !```
 
-INTERFACE
+INTERFACE OPERATOR(.NNE.)
   MODULE PURE FUNCTION refelem_NNE1(obj) RESULT(Ans)
     CLASS(ReferenceTopology_), INTENT(IN) :: obj
     INTEGER(I4B) :: Ans
   END FUNCTION refelem_NNE1
-END INTERFACE
-
-INTERFACE OPERATOR(.NNE.)
-  MODULE PROCEDURE refelem_NNE1
-END INTERFACE
+END INTERFACE OPERATOR(.NNE.)
 
 !----------------------------------------------------------------------------
 !                                                    NNE@ConstructorMethods
@@ -277,16 +253,12 @@ END INTERFACE
 ! summary: Returns the total number of nodes in the reference element
 !
 
-INTERFACE
+INTERFACE OPERATOR(.NNE.)
   MODULE PURE FUNCTION refelem_NNE2(obj) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B) :: Ans
   END FUNCTION refelem_NNE2
-END INTERFACE
-
-INTERFACE OPERATOR(.NNE.)
-  MODULE PROCEDURE refelem_NNE2
-END INTERFACE
+END INTERFACE OPERATOR(.NNE.)
 
 !----------------------------------------------------------------------------
 !                                               Initiate@ConstructorMethods
@@ -302,15 +274,11 @@ END INTERFACE
 ! This subroutine also defines an assignment operator for `obj1=obj2`
 ! type opertions
 
-INTERFACE
-  MODULE PURE SUBROUTINE refelem_Initiate1(obj, Anotherobj)
-    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
-    CLASS(ReferenceElement_), INTENT(IN) :: Anotherobj
-  END SUBROUTINE refelem_Initiate1
-END INTERFACE
-
 INTERFACE Initiate
-  MODULE PROCEDURE refelem_Initiate1
+  MODULE PURE SUBROUTINE refelem_Initiate1(obj, anotherobj)
+    CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    CLASS(ReferenceElement_), INTENT(IN) :: anotherobj
+  END SUBROUTINE refelem_Initiate1
 END INTERFACE Initiate
 
 INTERFACE ASSIGNMENT(=)
@@ -325,7 +293,7 @@ END INTERFACE
 ! date: 21 May 2022
 ! summary: Returns a pointer to an instance of ReferenceElement
 
-INTERFACE
+INTERFACE ReferenceElement_Pointer
   MODULE FUNCTION refelem_Constructor_1(xidim, nsd, elemType, &
     & ipType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: xidim
@@ -339,10 +307,6 @@ INTERFACE
     CLASS(ReferenceElement_), POINTER :: ans
       !! reference element
   END FUNCTION refelem_Constructor_1
-END INTERFACE
-
-INTERFACE ReferenceElement_Pointer
-  MODULE PROCEDURE refelem_Constructor_1
 END INTERFACE ReferenceElement_Pointer
 
 !----------------------------------------------------------------------------
@@ -353,15 +317,11 @@ END INTERFACE ReferenceElement_Pointer
 ! date: 21 May 2022
 ! summary: Returns a pointer to an instance of ReferenceElement
 
-INTERFACE
+INTERFACE ReferenceElement_Pointer
   MODULE FUNCTION refelem_Constructor_2(refelem) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     CLASS(ReferenceElement_), POINTER :: ans
   END FUNCTION refelem_Constructor_2
-END INTERFACE
-
-INTERFACE ReferenceElement_Pointer
-  MODULE PROCEDURE refelem_Constructor_2
 END INTERFACE ReferenceElement_Pointer
 
 !----------------------------------------------------------------------------
@@ -672,26 +632,22 @@ END INTERFACE
 !  - Quadrangle
 !  - Tetrahedron
 
-INTERFACE
+INTERFACE ElementTopology
   MODULE PURE FUNCTION refelem_ElementTopology1(ElemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
     INTEGER(I4B) :: Ans
   END FUNCTION refelem_ElementTopology1
-END INTERFACE
+END INTERFACE ElementTopology
 
 !----------------------------------------------------------------------------
 !                                           ElementTopology@GeometryMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE ElementTopology
   MODULE PURE FUNCTION refelem_ElementTopology2(obj) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: obj
     INTEGER(I4B) :: Ans
   END FUNCTION refelem_ElementTopology2
-END INTERFACE
-
-INTERFACE ElementTopology
-  MODULE PROCEDURE refelem_ElementTopology1, refelem_ElementTopology2
 END INTERFACE ElementTopology
 
 INTERFACE OPERATOR(.topology.)
@@ -732,15 +688,11 @@ END INTERFACE FacetMatrix
 ! date: 16 June 2021
 ! summary: This routine returns the facet elements
 
-INTERFACE
+INTERFACE FacetElements
   MODULE FUNCTION refelem_FacetElements(refelem) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     TYPE(ReferenceElement_), ALLOCATABLE :: ans(:)
   END FUNCTION refelem_FacetElements
-END INTERFACE
-
-INTERFACE FacetElements
-  MODULE PROCEDURE refelem_FacetElements
 END INTERFACE FacetElements
 
 !----------------------------------------------------------------------------
@@ -787,16 +739,12 @@ END INTERFACE LocalNodeCoord
 ! date: 11 April 2022
 ! summary: Returns measures for simplex
 
-INTERFACE
+INTERFACE MeasureSimplex
   MODULE PURE FUNCTION Measure_Simplex(refelem, XiJ) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: XiJ(:, :)
     REAL(DFP) :: Ans
   END FUNCTION Measure_Simplex
-END INTERFACE
-
-INTERFACE MeasureSimplex
-  MODULE PROCEDURE Measure_Simplex
 END INTERFACE MeasureSimplex
 
 !----------------------------------------------------------------------------
@@ -807,17 +755,13 @@ END INTERFACE MeasureSimplex
 ! date: 11 April 2022
 ! summary: Measure the quality of the element
 
-INTERFACE
+INTERFACE ElementQuality
   MODULE FUNCTION Element_Quality(refelem, xij, measure) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     INTEGER(I4B), INTENT(IN) :: measure
     REAL(DFP) :: Ans
   END FUNCTION Element_Quality
-END INTERFACE
-
-INTERFACE ElementQuality
-  MODULE PROCEDURE Element_Quality
 END INTERFACE ElementQuality
 
 !----------------------------------------------------------------------------
@@ -828,17 +772,13 @@ END INTERFACE ElementQuality
 ! date: 11 April 2022
 ! summary: Returns true if the given point is inside the element
 
-INTERFACE
+INTERFACE ContainsPoint
   MODULE FUNCTION contains_point(refelem, xij, x) RESULT(Ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     REAL(DFP), INTENT(IN) :: xij(:, :)
     REAL(DFP), INTENT(IN) :: x(:)
     LOGICAL(LGT) :: Ans
   END FUNCTION contains_point
-END INTERFACE
-
-INTERFACE ContainsPoint
-  MODULE PROCEDURE contains_point
 END INTERFACE ContainsPoint
 
 !----------------------------------------------------------------------------
@@ -849,15 +789,11 @@ END INTERFACE ContainsPoint
 ! date: 16 June 2021
 ! summary: Total entities present in an element
 
-INTERFACE
+INTERFACE TotalEntities
   MODULE PURE FUNCTION refelem_TotalEntities(ElemType) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
     INTEGER(I4B) :: ans(4)
   END FUNCTION refelem_TotalEntities
-END INTERFACE
-
-INTERFACE TotalEntities
-  MODULE PROCEDURE refelem_TotalEntities
 END INTERFACE TotalEntities
 
 !----------------------------------------------------------------------------
@@ -868,32 +804,24 @@ END INTERFACE TotalEntities
 ! date: 16 June 2021
 ! summary: Returns the facet topology of the given element type
 
-INTERFACE
+INTERFACE FacetTopology
   MODULE PURE FUNCTION refelem_FacetTopology(ElemType, Nptrs) RESULT(Ans)
     INTEGER(I4B), INTENT(IN) :: ElemType
     INTEGER(I4B), INTENT(IN) :: Nptrs(:)
     TYPE(ReferenceTopology_), ALLOCATABLE :: ans(:)
   END FUNCTION refelem_FacetTopology
-END INTERFACE
-
-INTERFACE FacetTopology
-  MODULE PROCEDURE refelem_FacetTopology
 END INTERFACE FacetTopology
 
 !----------------------------------------------------------------------------
 !                                              getVTKelementType@VTKMethods
 !----------------------------------------------------------------------------
 
-INTERFACE
+INTERFACE GetVTKelementType
   MODULE PURE SUBROUTINE get_vtk_elemType(ElemType, vtk_type, nptrs)
     INTEGER(I4B), INTENT(IN) :: ElemType
     INTEGER(INT8), INTENT(OUT) :: vtk_type
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: nptrs(:)
   END SUBROUTINE get_vtk_elemType
-END INTERFACE
-
-INTERFACE getVTKelementType
-  MODULE PROCEDURE get_vtk_elemType
-END INTERFACE getVTKelementType
+END INTERFACE GetVTKelementType
 
 END MODULE ReferenceElement_Method

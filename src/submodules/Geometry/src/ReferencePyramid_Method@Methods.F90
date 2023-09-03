@@ -29,13 +29,19 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE Initiate_ref_Pyramid
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS]",  &
+  & unitno=stderr,  &
+  & line=__LINE__,  &
+  & file=__FILE__,  &
+  & routine="Initiate_ref_Prism()")
 END PROCEDURE Initiate_ref_Pyramid
 
 !----------------------------------------------------------------------------
 !                                                      ReferencePyramid
 !----------------------------------------------------------------------------
 MODULE PROCEDURE reference_Pyramid
-CALL Initiate(obj, NSD, XiJ)
+CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Pyramid
 
 !----------------------------------------------------------------------------
@@ -43,7 +49,7 @@ END PROCEDURE reference_Pyramid
 !----------------------------------------------------------------------------
 MODULE PROCEDURE reference_Pyramid_Pointer
 ALLOCATE (obj)
-CALL Initiate(obj, NSD, XiJ)
+CALL Initiate(obj=obj, nsd=NSD, xij=xij, domainName=domainName)
 END PROCEDURE reference_Pyramid_Pointer
 
 !----------------------------------------------------------------------------

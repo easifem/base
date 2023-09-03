@@ -178,7 +178,7 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 23 July 2021
-! summary: This routine initiates the quadrature points
+! summary: This routine constructs the quadrature points
 
 INTERFACE Initiate
   MODULE SUBROUTINE quad_initiate5( &

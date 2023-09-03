@@ -50,22 +50,43 @@ END PROCEDURE LineName1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE initiate_ref_Line
-CALL Reallocate(obj%xij, 3, 2)
-obj%xij = InterpolationPoint_Line(  &
-  & xij=xij, &
-  & order=1, &
-  & ipType=Equidistance, &
-  & layout="VEFC")
-obj%EntityCounts = [2, 1, 0, 0]
-obj%XiDimension = 1
+REAL(DFP) :: unit_xij(1, 2), biunit_xij(1, 2)
+
+CALL DEALLOCATE (obj)
+
+unit_xij = RefCoord_Line("UNIT")
+biunit_xij = RefCoord_Line("BIUNIT")
+
+IF (PRESENT(xij)) THEN
+  obj%xij = xij(1:1, 1:2) 
+  IF (ALL(obj%xij(1:1, 1:2) .approxeq.unit_xij)) THEN
+    obj%domainName = "UNIT"
+  ELSE IF (ALL(obj%xij(1:1, 1:2) .approxeq.biunit_xij)) THEN
+    obj%domainName = "BIUNIT"
+  ELSE
+    obj%domainName = "GENERAL"
+  END IF
+ELSE
+  IF (PRESENT(domainName)) THEN
+    obj%domainName = UpperCase(domainName)
+    IF (obj%domainName .EQ. "UNIT" .OR. obj%domainName .EQ. "BIUNIT") THEN
+      obj%xij = RefCoord_Line(obj%domainName)
+    END IF
+  ELSE
+    obj%domainName = "BIUNIT"
+    obj%xij = RefCoord_Line(obj%domainName)
+  END IF
+END IF
+
+obj%entityCounts = [2, 1, 0, 0]
+obj%xiDimension = 1
 obj%order = 1
 obj%nsd = nsd
-obj%Name = Line2
-IF (ALLOCATED(obj%Topology)) DEALLOCATE (obj%Topology)
-ALLOCATE (obj%Topology(3))
-obj%Topology(1) = ReferenceTopology([1], Point)
-obj%Topology(2) = ReferenceTopology([2], Point)
-obj%Topology(3) = ReferenceTopology([1, 2], Line2)
+obj%name = Line2
+ALLOCATE (obj%topology(3))
+obj%topology(1) = ReferenceTopology([1], Point)
+obj%topology(2) = ReferenceTopology([2], Point)
+obj%topology(3) = ReferenceTopology([1, 2], Line2)
 obj%highorderElement => highorderElement_Line
 END PROCEDURE initiate_ref_Line
 
@@ -74,13 +95,7 @@ END PROCEDURE initiate_ref_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Line
-!
-IF (PRESENT(xij)) THEN
-  CALL Initiate(obj, nsd, xij)
-ELSE
-  CALL Initiate(obj, nsd)
-END IF
-!
+CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Line
 
 !----------------------------------------------------------------------------
@@ -88,15 +103,8 @@ END PROCEDURE reference_Line
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE reference_Line_Pointer_1
-!
 ALLOCATE (obj)
-!
-IF (PRESENT(xij)) THEN
-  CALL Initiate(obj, nsd, xij)
-ELSE
-  CALL Initiate(obj, nsd)
-END IF
-!
+CALL Initiate(obj=obj, nsd=nsd, xij=xij, domainName=domainName)
 END PROCEDURE reference_Line_Pointer_1
 
 !----------------------------------------------------------------------------
@@ -104,27 +112,24 @@ END PROCEDURE reference_Line_Pointer_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE highorderElement_Line
-!
-! Define internal variables
-!
 INTEGER(I4B) :: nns, i
-!
-obj%xij = InterpolationPoint_Line(xij=refelem%xij, order=order, &
-  & ipType=ipType, layout="VEFC")
+obj%xij = InterpolationPoint_Line( &
+  & xij=refelem%xij, &
+  & order=order, &
+  & ipType=ipType, &
+  & layout="VEFC")
+obj%domainName = refelem%domainName
 obj%nsd = refelem%nsd
 nns = SIZE(obj%xij, 2)
-obj%EntityCounts = [nns, 1, 0, 0]
-obj%XiDimension = 1
+obj%entityCounts = [nns, 1, 0, 0]
+obj%xiDimension = 1
 obj%order = order
-obj%Name = ElementType("Line"//TRIM(INT2STR(nns)))
-!
-ALLOCATE (obj%Topology(nns + 1))
+obj%name = ElementType("Line"//TRIM(INT2STR(nns)))
+ALLOCATE (obj%topology(nns + 1))
 DO CONCURRENT(i=1:nns)
-  obj%Topology(i) = ReferenceTopology([i], Point)
+  obj%topology(i) = ReferenceTopology([i], Point)
 END DO
-!
-obj%Topology(nns + 1) = ReferenceTopology([(i, i=1, nns)], obj%Name)
-!
+obj%topology(nns + 1) = ReferenceTopology([(i, i=1, nns)], obj%name)
 END PROCEDURE highorderElement_Line
 
 !----------------------------------------------------------------------------
