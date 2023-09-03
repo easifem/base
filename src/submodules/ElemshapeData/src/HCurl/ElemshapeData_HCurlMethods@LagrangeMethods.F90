@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemShapeData_H1DivLagrangeMethods) Methods
+SUBMODULE(ElemShapeData_HCurlMethods) LagrangeMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -23,7 +24,13 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE H1Div_Lagrange
-END PROCEDURE H1Div_Lagrange
+MODULE PROCEDURE HCurl_Lagrange1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="HCurl_Lagrange1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE HCurl_Lagrange1
 
-END SUBMODULE Methods
+END SUBMODULE LagrangeMethods

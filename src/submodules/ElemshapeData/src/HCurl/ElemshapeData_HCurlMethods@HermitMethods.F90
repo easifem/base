@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemShapeData_H1CurlHierarchyMethods) Methods
+SUBMODULE(ElemShapeData_HCurlMethods) HermitMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -23,7 +24,13 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE H1Curl_Hierarchy
-END PROCEDURE H1Curl_Hierarchy
+MODULE PROCEDURE HCurl_Hermit1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="HCurl_Hermit1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE HCurl_Hermit1
 
-END SUBMODULE Methods
+END SUBMODULE HermitMethods

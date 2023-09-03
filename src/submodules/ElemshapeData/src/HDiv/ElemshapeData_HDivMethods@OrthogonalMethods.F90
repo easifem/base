@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemshapeData_H1DivSerendipityMethods) Methods
+SUBMODULE(ElemshapeData_HDivMethods) OrthogonalMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -23,7 +24,13 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE H1Div_Serendipity
-END PROCEDURE H1Div_Serendipity
+MODULE PROCEDURE HDiv_Orthogonal1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="HDiv_Orthogonal1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE HDiv_Orthogonal1
 
-END SUBMODULE Methods
+END SUBMODULE OrthogonalMethods

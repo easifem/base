@@ -26,21 +26,24 @@ TARGET_SOURCES(
   ${src_path}/ElemshapeData_DivergenceMethods@Methods.F90
   ${src_path}/ElemshapeData_GetMethods@Methods.F90
   ${src_path}/ElemshapeData_GradientMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1CurlHermitMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1CurlHierarchyMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1CurlLagrangeMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1CurlSerendipityMethods@Methods.F90
-
-  ${src_path}/ElemshapeData_H1DivHermitMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1DivHierarchyMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1DivLagrangeMethods@Methods.F90
-  ${src_path}/ElemshapeData_H1DivSerendipityMethods@Methods.F90
 
   ${src_path}/H1/ElemshapeData_H1Methods@HermitMethods.F90
   ${src_path}/H1/ElemshapeData_H1Methods@HierarchyMethods.F90
   ${src_path}/H1/ElemshapeData_H1Methods@LagrangeMethods.F90
   ${src_path}/H1/ElemshapeData_H1Methods@OrthogonalMethods.F90
   ${src_path}/H1/ElemshapeData_H1Methods@SerendipityMethods.F90
+
+  ${src_path}/HDiv/ElemshapeData_HDivMethods@HermitMethods.F90
+  ${src_path}/HDiv/ElemshapeData_HDivMethods@HierarchyMethods.F90
+  ${src_path}/HDiv/ElemshapeData_HDivMethods@LagrangeMethods.F90
+  ${src_path}/HDiv/ElemshapeData_HDivMethods@OrthogonalMethods.F90
+  ${src_path}/HDiv/ElemshapeData_HDivMethods@SerendipityMethods.F90
+
+  ${src_path}/HCurl/ElemshapeData_HCurlMethods@HermitMethods.F90
+  ${src_path}/HCurl/ElemshapeData_HCurlMethods@HierarchyMethods.F90
+  ${src_path}/HCurl/ElemshapeData_HCurlMethods@LagrangeMethods.F90
+  ${src_path}/HCurl/ElemshapeData_HCurlMethods@OrthogonalMethods.F90
+  ${src_path}/HCurl/ElemshapeData_HCurlMethods@SerendipityMethods.F90
 
   ${src_path}/ElemshapeData_HminHmaxMethods@Methods.F90
   ${src_path}/ElemshapeData_HRGNParamMethods@Methods.F90

@@ -15,7 +15,8 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemShapeData_H1DivHierarchyMethods) Methods
+SUBMODULE(ElemshapeData_HCurlMethods) SerendipityMethods
+USE BaseMethod
 IMPLICIT NONE
 CONTAINS
 
@@ -23,7 +24,13 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE H1Div_Hierarchy
-END PROCEDURE H1Div_Hierarchy
+MODULE PROCEDURE HCurl_Serendipity1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="HCurl_Serendipity1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE HCurl_Serendipity1
 
-END SUBMODULE Methods
+END SUBMODULE SerendipityMethods
