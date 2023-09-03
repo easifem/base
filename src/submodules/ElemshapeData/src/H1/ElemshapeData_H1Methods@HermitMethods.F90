@@ -15,39 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-MODULE ElemshapeData_H1HermitMethods
-USE BaseType
-USE GlobalData
+SUBMODULE(ElemShapeData_H1Methods) HermitMethods
+USE BaseMethod
 IMPLICIT NONE
-PRIVATE
-PUBLIC :: Initiate
-
+CONTAINS
 !----------------------------------------------------------------------------
-!                                                          Initiate@H1Hermit
+!                                                                 Initiate
 !----------------------------------------------------------------------------
+MODULE PROCEDURE H1_Hermit1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="H1_Hermit1()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE H1_Hermit1
 
-!> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
-!
-!# Introduction
-!
-! This routine initiates the shape function related data inside the element.
-!
-
-INTERFACE
-  MODULE PURE SUBROUTINE H1_Hermit(obj, quad, refElem, &
-    & continuityType, interpolType)
-    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    CLASS(QuadraturePoint_), INTENT(IN) :: quad
-    CLASS(ReferenceElement_), INTENT(IN) :: refElem
-    CLASS(H1_), INTENT(IN) :: continuityType
-    CLASS(HermitInterpolation_), INTENT(IN) :: interpolType
-  END SUBROUTINE H1_Hermit
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE H1_Hermit
-END INTERFACE Initiate
-
-END MODULE ElemshapeData_H1HermitMethods
+END SUBMODULE HermitMethods

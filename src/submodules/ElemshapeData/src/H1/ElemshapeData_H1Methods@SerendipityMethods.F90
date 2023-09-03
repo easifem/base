@@ -15,7 +15,7 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemShapeData_H1SerendipityMethods) Methods
+SUBMODULE(ElemShapeData_H1Methods) SerendipityMethods
 USE BaseMethod
 IMPLICIT NONE
 CONTAINS
@@ -24,7 +24,13 @@ CONTAINS
 !                                                                 Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE H1_Serendipity
-END PROCEDURE H1_Serendipity
+MODULE PROCEDURE H1_Serendipity1
+CALL Errormsg( &
+  & msg="[WORK IN PROGRESS] This method is currently not available",  &
+  & line=__LINE__,  &
+  & routine="H1_Serendipity()",  &
+  & unitno=stderr,  &
+  & file=__FILE__)
+END PROCEDURE H1_Serendipity1
 
-END SUBMODULE Methods
+END SUBMODULE SerendipityMethods

@@ -35,10 +35,9 @@ TARGET_SOURCES(
   ${src_path}/ElemshapeData_H1DivHermitMethods.F90
   ${src_path}/ElemshapeData_H1DivHierarchyMethods.F90
   ${src_path}/ElemshapeData_H1DivSerendipityMethods.F90
-  ${src_path}/ElemshapeData_H1HermitMethods.F90
-  ${src_path}/ElemshapeData_H1HierarchyMethods.F90
-  ${src_path}/ElemshapeData_H1LagrangeMethods.F90
-  ${src_path}/ElemshapeData_H1SerendipityMethods.F90
+
+  ${src_path}/ElemshapeData_H1Methods.F90
+
   ${src_path}/ElemshapeData_HminHmaxMethods.F90
   ${src_path}/ElemshapeData_HRGNParamMethods.F90
   ${src_path}/ElemshapeData_HRQIParamMethods.F90
