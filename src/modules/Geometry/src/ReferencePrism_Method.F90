@@ -40,18 +40,13 @@ PUBLIC :: Prism_Quality
 !> author: Vikas Sharma, Ph. D.
 ! date:         1 March 2021
 ! summary: This subroutine for constructing the object
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Prism(obj, NSD, XiJ)
+  MODULE SUBROUTINE initiate_ref_Prism(obj, nsd, xij, domainName)
     CLASS(ReferencePrism_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
   END SUBROUTINE initiate_ref_Prism
 END INTERFACE Initiate
 
@@ -60,9 +55,10 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferencePrism
-  MODULE PURE FUNCTION reference_Prism(NSD, XiJ) RESULT(obj)
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  MODULE FUNCTION reference_Prism(nsd, xij, domainName) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     TYPE(ReferencePrism_) :: obj
   END FUNCTION reference_Prism
 END INTERFACE ReferencePrism
@@ -72,9 +68,10 @@ END INTERFACE ReferencePrism
 !----------------------------------------------------------------------------
 
 INTERFACE ReferencePrism_Pointer
-  MODULE PURE FUNCTION reference_Prism_Pointer(NSD, XiJ) RESULT(obj)
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  MODULE FUNCTION reference_Prism_Pointer(nsd, xij, domainName) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     CLASS(ReferencePrism_), POINTER :: obj
   END FUNCTION reference_Prism_Pointer
 END INTERFACE ReferencePrism_Pointer

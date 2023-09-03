@@ -58,10 +58,11 @@ END INTERFACE QuadrangleName
 ! summary: Returns linear quadrangle element
 
 INTERFACE Initiate
-  MODULE SUBROUTINE initiate_ref_Quadrangle(obj, NSD, xij)
+  MODULE PURE SUBROUTINE initiate_ref_Quadrangle(obj, NSD, xij, domainName)
     CLASS(ReferenceQuadrangle_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
   END SUBROUTINE initiate_ref_Quadrangle
 END INTERFACE Initiate
 
@@ -74,9 +75,10 @@ END INTERFACE Initiate
 ! summary: Returns Lienar Quadrangle element
 
 INTERFACE ReferenceQuadrangle
-  MODULE FUNCTION reference_Quadrangle(NSD, xij) RESULT(obj)
+  MODULE PURE FUNCTION reference_Quadrangle(NSD, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferenceQuadrangle_) :: obj
   END FUNCTION reference_Quadrangle
 END INTERFACE ReferenceQuadrangle
@@ -90,9 +92,10 @@ END INTERFACE ReferenceQuadrangle
 ! summary: Returns linear Quadrangle element
 
 INTERFACE ReferenceQuadrangle_Pointer
-  MODULE FUNCTION reference_Quadrangle_Pointer(NSD, xij) RESULT(obj)
+MODULE FUNCTION reference_Quadrangle_Pointer(NSD, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: NSD
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferenceQuadrangle_), POINTER :: obj
   END FUNCTION reference_Quadrangle_Pointer
 END INTERFACE ReferenceQuadrangle_Pointer

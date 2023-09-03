@@ -694,11 +694,11 @@ PUBLIC :: ReferenceTopologyPointer_
 ! date: 2 March 2021
 ! summary: An abstract data type for Reference Element
 !
-!{!pages/ReferenceElement_.md}
+!{!pages/docs-api/ReferenceElement/ReferenceElement_.md}
 
 TYPE :: ReferenceElement_
-  REAL(DFP), ALLOCATABLE :: xiJ(:, :)
-    !! Node coord
+  CHARACTER(10) :: domainName = "GENERAL"
+  !! UNIT, BIUNIT, GENERAL
   INTEGER(I4B) :: entityCounts(4) = 0
     !! Number of 0D, 1D, 2D, 3D entities
   INTEGER(I4B) :: xiDimension = 0
@@ -714,7 +714,12 @@ TYPE :: ReferenceElement_
     !! Equidistance, GaussLegendre, GaussLobatto, Chebyshev
   TYPE(ReferenceTopology_), ALLOCATABLE :: topology(:)
     !! Topology information of 0D, 1, 2, 3D entities
-PROCEDURE(highorder_refelem), POINTER, PASS(obj) :: highOrderElement => NULL()
+  REAL(DFP), ALLOCATABLE :: xiJ(:, :)
+    !! Node coord 
+    !! Rows represents the spatial components
+    !! Columns represents the node number
+  PROCEDURE(highorder_refelem), POINTER, PASS(obj) ::  &
+    & highOrderElement => NULL()
     !! Routine to generate hgher order LagrangeElement
 END TYPE ReferenceElement_
 

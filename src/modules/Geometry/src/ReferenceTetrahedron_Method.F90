@@ -41,10 +41,11 @@ PUBLIC :: TetrahedronVolume3D
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Tetrahedron(obj, NSD, XiJ)
+  MODULE PURE SUBROUTINE initiate_ref_Tetrahedron(obj, nsd, xij, domainName)
     CLASS(ReferenceTetrahedron_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
   END SUBROUTINE initiate_ref_Tetrahedron
 END INTERFACE Initiate
 
@@ -53,9 +54,10 @@ END INTERFACE Initiate
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceTetrahedron
-  MODULE PURE FUNCTION reference_Tetrahedron(NSD, XiJ) RESULT(obj)
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  MODULE PURE FUNCTION reference_Tetrahedron(nsd, xij, domainName) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferenceTetrahedron_) :: obj
   END FUNCTION reference_Tetrahedron
 END INTERFACE ReferenceTetrahedron
@@ -65,9 +67,10 @@ END INTERFACE ReferenceTetrahedron
 !----------------------------------------------------------------------------
 
 INTERFACE ReferenceTetrahedron_Pointer
-  MODULE PURE FUNCTION reference_Tetrahedron_Pointer(NSD, XiJ) RESULT(obj)
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  MODULE FUNCTION reference_Tetrahedron_Pointer(nsd, xij, domainName) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferenceTetrahedron_), POINTER :: obj
   END FUNCTION reference_Tetrahedron_Pointer
 END INTERFACE ReferenceTetrahedron_Pointer
@@ -77,10 +80,13 @@ END INTERFACE ReferenceTetrahedron_Pointer
 !----------------------------------------------------------------------------
 
 INTERFACE
-  MODULE PURE SUBROUTINE highOrderElement_Tetrahedron(RefElem, Order, obj, &
+  MODULE SUBROUTINE highOrderElement_Tetrahedron( &
+    & refelem, &
+    & order, &
+    & obj, &
     & ipType)
-    CLASS(ReferenceElement_), INTENT(IN) :: RefElem
-    INTEGER(I4B), INTENT(IN) :: Order
+    CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    INTEGER(I4B), INTENT(IN) :: order
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: ipType
   END SUBROUTINE highOrderElement_Tetrahedron

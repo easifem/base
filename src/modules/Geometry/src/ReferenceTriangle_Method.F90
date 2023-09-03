@@ -84,10 +84,11 @@ PUBLIC :: TriangleArea2D
 !```
 
 INTERFACE Initiate
-  MODULE SUBROUTINE initiate_ref_Triangle(obj, nsd, xij)
+  MODULE PURE SUBROUTINE initiate_ref_Triangle(obj, nsd, xij, domainName)
     CLASS(ReferenceTriangle_), INTENT(INOUT) :: obj
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
   END SUBROUTINE initiate_ref_Triangle
 END INTERFACE Initiate
 
@@ -117,9 +118,10 @@ END INTERFACE Initiate
 !```
 
 INTERFACE ReferenceTriangle
-  MODULE FUNCTION reference_Triangle(nsd, xij) RESULT(obj)
+  MODULE PURE FUNCTION reference_Triangle(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     TYPE(ReferenceTriangle_) :: obj
   END FUNCTION reference_Triangle
 END INTERFACE ReferenceTriangle
@@ -149,16 +151,13 @@ END INTERFACE ReferenceTriangle
 ! end
 !```
 
-INTERFACE
-  MODULE FUNCTION reference_Triangle_pointer(nsd, xij) RESULT(obj)
+INTERFACE ReferenceTriangle_Pointer
+  MODULE FUNCTION reference_Triangle_pointer(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
     CLASS(ReferenceTriangle_), POINTER :: obj
   END FUNCTION reference_Triangle_pointer
-END INTERFACE
-
-INTERFACE ReferenceTriangle_Pointer
-  MODULE PROCEDURE reference_Triangle_Pointer
 END INTERFACE ReferenceTriangle_Pointer
 
 !----------------------------------------------------------------------------
@@ -211,12 +210,6 @@ END INTERFACE
 !
 ! This function returns the measure of linear triangle. This function belongs
 ! to the generic function [[ReferenceElement_Method:MeasureSimplex]].
-!
-!### Usage
-!
-!```fortran
-!
-!```
 
 INTERFACE
   MODULE PURE FUNCTION Measure_Simplex_Triangle(refelem, xij) RESULT(Ans)

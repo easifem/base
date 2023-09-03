@@ -32,7 +32,7 @@ PUBLIC :: Measure_Simplex_Pyramid
 PUBLIC :: Pyramid_Quality
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@Pyramid
+!                                                          Initiate@Pyramid
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -40,39 +40,43 @@ PUBLIC :: Pyramid_Quality
 ! summary: This subroutine for constructing the object
 
 INTERFACE Initiate
-  MODULE PURE SUBROUTINE initiate_ref_Pyramid(obj, NSD, XiJ)
+  MODULE SUBROUTINE initiate_ref_Pyramid(obj, nsd, xij, domainName)
     CLASS(ReferencePyramid_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
   END SUBROUTINE initiate_ref_Pyramid
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                            ReferencePyramid@Pyramid
+!                                                  ReferencePyramid@Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE ReferencePyramid
-  MODULE PURE FUNCTION reference_Pyramid(NSD, XiJ) RESULT(obj)
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  MODULE FUNCTION reference_Pyramid(nsd, xij, domainName) RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     TYPE(ReferencePyramid_) :: obj
   END FUNCTION reference_Pyramid
 END INTERFACE ReferencePyramid
 
 !----------------------------------------------------------------------------
-!                                   ReferencePyramid_Pointer@Pyramid
+!                                          ReferencePyramid_Pointer@Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE ReferencePyramid_Pointer
-  MODULE PURE FUNCTION reference_Pyramid_Pointer(NSD, XiJ) RESULT(obj)
-    INTEGER(I4B), INTENT(IN) :: NSD
-    REAL(DFP), INTENT(IN), OPTIONAL :: XiJ(:, :)
+  MODULE FUNCTION reference_Pyramid_Pointer(nsd, xij, domainName) &
+    & RESULT(obj)
+    INTEGER(I4B), INTENT(IN) :: nsd
+    REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    CHARACTER(*), OPTIONAL, INTENT( IN ) :: domainName
     CLASS(ReferencePyramid_), POINTER :: obj
   END FUNCTION reference_Pyramid_Pointer
 END INTERFACE ReferencePyramid_Pointer
 
 !----------------------------------------------------------------------------
-!                                               LagrangeElement@Pyramid
+!                                                    LagrangeElement@Pyramid
 !----------------------------------------------------------------------------
 
 INTERFACE
@@ -85,7 +89,7 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                  MeasureSimplex@Geometry
+!                                                   MeasureSimplex@Geometry
 !----------------------------------------------------------------------------
 
 INTERFACE

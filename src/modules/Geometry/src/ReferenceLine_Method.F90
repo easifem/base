@@ -78,13 +78,18 @@ END INTERFACE LineName
 !```
 
 INTERFACE Initiate
-  MODULE SUBROUTINE initiate_ref_Line(obj, nsd, xij)
+  MODULE PURE SUBROUTINE initiate_ref_Line(obj, nsd, xij, domainName)
     CLASS(ReferenceLine_), INTENT(INOUT) :: obj
     !! The instance
     INTEGER(I4B), INTENT(IN) :: nsd
     !! Spatial dimension of the problem
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     !! Coords of element
+    CHARACTER(*), INTENT(IN), OPTIONAL :: domainName
+    !! Domain name
+    !! UNIT
+    !! BIUNIT
+    !! GENERAL
   END SUBROUTINE initiate_ref_Line
 END INTERFACE Initiate
 
@@ -117,10 +122,15 @@ END INTERFACE Initiate
 !```
 
 INTERFACE ReferenceLine
-  MODULE FUNCTION reference_line(nsd, xij) RESULT(obj)
+  MODULE PURE FUNCTION reference_line(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     TYPE(ReferenceLine_) :: obj
+    CHARACTER(*), INTENT(IN), OPTIONAL :: domainName
+    !! Domain name
+    !! UNIT
+    !! BIUNIT
+    !! GENERAL
   END FUNCTION reference_line
 END INTERFACE ReferenceLine
 
@@ -153,10 +163,15 @@ END INTERFACE ReferenceLine
 !```
 
 INTERFACE ReferenceLine_Pointer
-  MODULE FUNCTION reference_line_pointer_1(nsd, xij) RESULT(obj)
+  MODULE FUNCTION reference_line_pointer_1(nsd, xij, domainName) RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
     CLASS(ReferenceLine_), POINTER :: obj
+    CHARACTER(*), INTENT(IN), OPTIONAL :: domainName
+    !! Domain name
+    !! UNIT
+    !! BIUNIT
+    !! GENERAL
   END FUNCTION reference_line_pointer_1
 END INTERFACE ReferenceLine_Pointer
 
